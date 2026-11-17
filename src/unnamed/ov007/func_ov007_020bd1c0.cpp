@@ -6,11 +6,12 @@
 #include "Ov007Texture.h"
 #include "BMD_File.h"
 #include "nitro/gx/g3x.h"
+#include "nitro/fx/fx.h"
 #include "Vector3Bits.h"
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
-extern "C" Vector3 data_ov007_020d7c34[];
-extern "C" Vector3 data_ov007_020d7c28;
+extern "C" VecFx32 data_ov007_020d7c34[];
+extern "C" VecFx32 data_ov007_020d7c28;
 
 extern "C" void func_ov007_020bce70(short n, int m);
 extern "C" void *func_ov007_020b3f20(int idx);

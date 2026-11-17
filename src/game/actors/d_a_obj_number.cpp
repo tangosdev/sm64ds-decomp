@@ -14,9 +14,12 @@
  * - data_ov002_0210d9a8 / 0210d9e8 / 0210da08 / 0210da28: this TU
  *   consumes the four handles; overlay .bss owns them. symbols.txt has
  *   no recovered name, so they are not coined.
- * - volatile mPosY in Behavior's landing puff: a plain field read
- *   CSE's with the add and store above it (mPosY, mPos.y and Vector3
- *   copies are all 4 bytes off).
+ * - Particle::System::NewSimple(u32, const Vector3 &) is defined in this
+ *   file, not in its header: Behavior's landing puff is its only user,
+ *   and a body in Particle__System.h renumbers every includer's @NNN.
+ *   The puff reads mPos through that reference, so it reloads mPosY
+ *   after the landing test; three scalar arguments (mPosX/Y/Z, mPos.x/y/z)
+ *   reuse the test's load and come out 4 bytes short.
  * - Render's star walk keeps the `for (;;)` with a break: a `while`
  *   on the FindWithActorID result DIFFs.
  * - SetOwner is a non-virtual member returning this: the only caller,
@@ -32,8 +35,9 @@
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
 
-/* Behavior's position is a VecFx32, preserving the three-word position ABI
- * without emitting Vector3's vague-linkage destructor. */
+inline void *Particle::System::NewSimple(u32 id, const Vector3 &pos) {
+    return NewSimple(id, pos.x, pos.y, pos.z);
+}
 
 extern SharedFilePtr data_ov002_0210da08;
 extern SharedFilePtr data_ov002_0210da28;
@@ -81,9 +85,9 @@ s32 daObjNumber_c::InitResources() {
     }
 
     mState = 0;
-    mStartPosX = mPosX;
-    mStartPosY = mPosY;
-    mStartPosZ = mPosZ;
+    mStartPos.x = mPosX;
+    mStartPos.y = mPosY;
+    mStartPos.z = mPosZ;
     mVertSpeed = 0x14000;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
@@ -108,16 +112,15 @@ s32 daObjNumber_c::Behavior() {
 
     switch (mState) {
     case 0:
-        if (mPosY < mStartPosY) {
-            mPosY = mStartPosY;
+        if (mPosY < mStartPos.y) {
+            mPosY = mStartPos.y;
             mVertSpeed = 0xf000;
             mState++;
         }
         break;
     case 1:
-        if (mPosY < mStartPosY) {
-            /* volatile mPosY: a plain field read CSE's with the add above. */
-            Particle::System::NewSimple(kPtclItemVanish, mPosX, *(volatile int *)&mPosY, mPosZ);
+        if (mPosY < mStartPos.y) {
+            Particle::System::NewSimple(kPtclItemVanish, mPos);
             MarkForDestruction();
         }
         break;
@@ -131,7 +134,7 @@ s32 daObjNumber_c::Behavior() {
                 const Vector3 &op = other->mPos;
                 pos = op;
             }
-            pos.y += mFollowOffsetY + (mPosY - mStartPosY);
+            pos.y += mFollowOffsetY + (mPosY - mStartPos.y);
         }
     }
     Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3, pos.z >> 3);
@@ -145,9 +148,8 @@ s32 daObjNumber_c::Render() {
        kind 6 at camera step 0x64 removes the popup. */
     if (gNextActorUpdateMask & 0x4000000) {
         daStar_c *a = 0;
-        u32 id = 0xb2;
         for (;;) {
-            if ((a = (daStar_c *)FindWithActorID(id, a)) == 0)
+            if ((a = (daStar_c *)FindWithActorID(0xb2, a)) == 0)
                 break;
             if (a->mKind == daStar_c::KIND_6 && a->mCamSeq == 0x64) {
                 MarkForDestruction();

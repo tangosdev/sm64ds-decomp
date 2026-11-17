@@ -185,7 +185,7 @@ src/engine/sound/Sound.cpp:
     .text start:0x02011654 end:0x02013548
     .init start:0x02074da8 end:0x02074dbc
     .ctor start:0x02086b6c end:0x02086b70
-    .data start:0x0208e420 end:0x0208e498
+    .data start:0x0208e420 end:0x0208e4b0
     .bss start:0x0209b470 end:0x0209ba84
 
 src/data/arm9/data_02075264.c:
@@ -1192,7 +1192,7 @@ src/unnamed/arm9/0203/func_0203bb5c.cpp:
     .text start:0x0203bb5c end:0x0203bb60
     .init start:0x020750b4 end:0x020750b8
     .ctor start:0x02086ba4 end:0x02086ba8
-    .bss start:0x020a0df0 end:0x020a0df4
+    .bss start:0x020a0de8 end:0x020a0df8
 
 src/unnamed/arm9/0203/func_0203bb60.c:
     complete
@@ -2473,6 +2473,7 @@ src/MBi_ReceiveRequestDataPiece.c:
 src/engine/mb/MB_Parent.c:
     complete
     .text start:0x02065eb8 end:0x020672d0
+    .data start:0x0209a078 end:0x0209a07c
 
 src/MB_ReadMultiBootParentBssDesc.c:
     complete
@@ -2492,7 +2493,7 @@ src/engine/mb/MB_GameInfo.c:
     complete
     .text start:0x02067f68 end:0x0206879c
 
-src/engine/mb/MB_WmBase.cpp:
+src/engine/mb/MB_WmBase.c:
     complete
     .text start:0x0206879c end:0x0206a318
 

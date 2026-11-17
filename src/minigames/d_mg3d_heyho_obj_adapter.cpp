@@ -1,16 +1,14 @@
 //cpp
-/* dMg3DHeyhoObjAdapter_c translation unit, ov006 0x020c4048..0x020c6f8c, text only: the class's
+/* dMg3DHeyhoObjAdapter_c translation unit, ov006 0x020c4048..0x020c6f8c: the class's
    base constructor (its vtable and RTTI stay at their ROM homes in the module's unowned .data),
    the Heyho (Shy Guy) record's member functions, and the pool functions the Jump scenes call
    (see config/tu_manifest.d/ov006/dMg3DHeyhoObjAdapter_c.json).
    Function order is the reverse of the ROM: mwccarm 2004/b56 emits .text in reverse source order.
 
    leftovers:
-   - Heyho::mMotion is a real pointer to member, and every motion is a Heyho member. The
-     23 pointer-to-member literals the motions are installed from and compared against
-     (pmf_Heyho_*, data_ov006_0213afc8) are the compiler's &Heyho::X temporaries, but they
-     sit in the module's .data, which this text-only TU does not own; the TU reads them by
-     their configured names until it does.
+   - Heyho::mMotion is a real pointer to member, and every motion is a Heyho member. Each
+     &Heyho::X the motions are installed from and compared against is its own {fn, 0}
+     constant in .data (23 of them at 0x0213af18..0x0213afd0, one per use).
    - Heyho::mAnmModel is a real dExtAnmModel_c. Heyho's own constructor and destructor (ROM
      0x020c6f70 and 0x020c6f3c) construct and destroy it.
    - The model and animation handles are file-scope objects; mwcc emits their sinit and
@@ -63,9 +61,6 @@ extern fBase_c *gCurrentScene;
 
 typedef void (Heyho::*HeyhoMotion)();
 
-/* A random int in [0, n) from the actors' random state. */
-#define HEYHO_RAND(n) ((int)(((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n)) >> 12)
-
 extern "C" {
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -73,29 +68,6 @@ extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 
-extern HeyhoMotion pmf_Heyho_MotionPatrolBob;
-extern HeyhoMotion pmf_Heyho_MotionBounceNear;
-extern HeyhoMotion pmf_Heyho_MotionChase;
-extern HeyhoMotion pmf_Heyho_MotionCircleUpper;
-extern HeyhoMotion pmf_Heyho_MotionFlyIn;
-extern HeyhoMotion pmf_Heyho_MotionDiagonal;
-extern HeyhoMotion pmf_Heyho_MotionCircleLower;
-extern HeyhoMotion pmf_Heyho_MotionDiagonalMirror;
-extern HeyhoMotion pmf_Heyho_MotionBounceInRange;
-extern HeyhoMotion pmf_Heyho_MotionRegroup;
-extern HeyhoMotion pmf_Heyho_MotionVShape;
-extern HeyhoMotion pmf_Heyho_StateIdle;
-extern HeyhoMotion pmf_Heyho_MotionBobVertical;
-extern HeyhoMotion pmf_Heyho_MotionHitSpin;
-extern HeyhoMotion pmf_Heyho_MotionHover;
-extern HeyhoMotion pmf_Heyho_StateIdle_2;
-extern HeyhoMotion pmf_Heyho_StateIdle_3;
-extern HeyhoMotion pmf_Heyho_MotionLeave;
-extern HeyhoMotion pmf_Heyho_StateIdle_4;
-extern HeyhoMotion pmf_Heyho_MotionChase_2;
-extern HeyhoMotion pmf_Heyho_MotionLeave_2;
-extern HeyhoMotion pmf_Heyho_MotionHitSpin_2;
-extern HeyhoMotion data_ov006_0213afc8;
 
 extern int sHeyhoUnsettledCount;
 extern int sJumpComboCount;
@@ -167,7 +139,12 @@ void Heyho::StartMotionFlyIn(const HeyhoPath *path) {
     mPath = *path;
 
     /* The ROM re-loads goal.x from the record after the copy instead of
-       reusing the copied register; only a volatile read reproduces it. */
+       reusing the copied register; only a volatile read reproduces it.
+       Measured (#821, 2026-11-16): a plain mPath.goal.x test is 0x1a0
+       against 0x1a8 (the tested value is stored to mPos.x in both
+       branches); testing path->goal.x is one word off (the load is from the
+       source, not mPath); the copy hoisted above one if around VEC_Add, or
+       testing mPos.x after it, 0x190. */
     if (*(volatile int *)&mPath.goal.x > 0) {
         mPos.x = mPath.goal.x;
         mPos.y = mPath.goal.y;
@@ -187,7 +164,7 @@ void Heyho::StartMotionFlyIn(const HeyhoPath *path) {
     mLean = 0;
     mDelay = 8;
     mSeparated = 0;
-    mMotion = pmf_Heyho_MotionFlyIn;
+    mMotion = &Heyho::MotionFlyIn;
 }
 
 /* ---- Heyho::MotionFlyIn ---- */
@@ -278,7 +255,7 @@ void Heyho::StartMotionRegroup(const HeyhoPath *path) {
     mSize = mPath.baseSize;
     mLean = 0;
     mSeparated = 0;
-    mMotion = pmf_Heyho_MotionRegroup;
+    mMotion = &Heyho::MotionRegroup;
 }
 
 /* ---- Heyho::MotionRegroup ---- */
@@ -365,9 +342,9 @@ void Heyho::React() {
        stack layout (two separate locals cost 14 words). */
     Vector3 locals[3];
 
-    if (mMotion == pmf_Heyho_StateIdle)
+    if (mMotion == &Heyho::StateIdle)
         return;
-    if (mMotion == pmf_Heyho_MotionHitSpin_2)
+    if (mMotion == &Heyho::MotionHitSpin)
         return;
 
     /* Same ±256 offsets, registered after the idle and hit-spin early outs. */
@@ -389,7 +366,7 @@ void Heyho::React() {
     mScale.x = 0x1400;
     mScale.y = 0x1400;
     mScale.z = 0x1400;
-    mMotion = pmf_Heyho_MotionLeave_2;
+    mMotion = &Heyho::MotionLeave;
 }
 
 /* ---- Heyho::MotionLeave ---- */
@@ -423,7 +400,7 @@ void Heyho::MotionLeave() {
 /* ---- Heyho::StartMotionHover ---- */
 void Heyho::StartMotionHover() {
     mLean = 0;
-    mMotion = pmf_Heyho_MotionHover;
+    mMotion = &Heyho::MotionHover;
 }
 
 /* ---- Heyho::MotionHover ---- */
@@ -440,7 +417,7 @@ void Heyho::StartMotionPatrolBob() {
     mVel.x = 0x800;
     mVel.y = 0;
     mVel.z = 0;
-    mMotion = pmf_Heyho_MotionPatrolBob;
+    mMotion = &Heyho::MotionPatrolBob;
 }
 
 /* ---- Heyho::MotionPatrolBob ---- */
@@ -467,7 +444,7 @@ void Heyho::StartMotionBobVertical() {
     mVel.x = 0;
     mVel.y = 0x800;
     mVel.z = 0;
-    mMotion = pmf_Heyho_MotionBobVertical;
+    mMotion = &Heyho::MotionBobVertical;
     mLean = 0;
 }
 
@@ -492,7 +469,7 @@ void Heyho::StartMotionBounceNear() {
     mVel.x = mPath.startVel.x;
     mVel.y = mPath.startVel.y;
     mVel.z = mPath.startVel.z;
-    mMotion = pmf_Heyho_MotionBounceNear;
+    mMotion = &Heyho::MotionBounceNear;
 }
 
 /* ---- Heyho::MotionBounceNear ---- */
@@ -592,7 +569,7 @@ void Heyho::StartMotionVShape() {
         Vec3_MulScalarInPlace(&mVel, mSpeed);
     }
 
-    mMotion = pmf_Heyho_MotionVShape;
+    mMotion = &Heyho::MotionVShape;
 }
 
 /* ---- Heyho::MotionVShape ---- */
@@ -647,7 +624,7 @@ void Heyho::StartMotionBounceInRange() {
     mVel.x = mPath.startVel.x;
     mVel.y = mPath.startVel.y;
     mVel.z = mPath.startVel.z;
-    mMotion = pmf_Heyho_MotionBounceInRange;
+    mMotion = &Heyho::MotionBounceInRange;
 }
 
 /* ---- Heyho::MotionBounceInRange ---- */
@@ -715,7 +692,7 @@ void Heyho::StartMotionDiagonal() {
     } else {
         Vec3_MulScalarInPlace(&mVel, mSpeed);
     }
-    mMotion = pmf_Heyho_MotionDiagonal;
+    mMotion = &Heyho::MotionDiagonal;
 }
 
 /* ---- Heyho::MotionDiagonal ---- */
@@ -802,7 +779,7 @@ void Heyho::StartMotionDiagonalMirror() {
     } else {
         Vec3_MulScalarInPlace(&mVel, mSpeed);
     }
-    mMotion = pmf_Heyho_MotionDiagonalMirror;
+    mMotion = &Heyho::MotionDiagonalMirror;
 }
 
 /* ---- Heyho::MotionDiagonalMirror ---- */
@@ -852,7 +829,7 @@ void Heyho::StartMotionCircleUpper() {
     mVel.x = mPath.startVel.x;
     mVel.y = mPath.startVel.y;
     mVel.z = mPath.startVel.z;
-    mMotion = pmf_Heyho_MotionCircleUpper;
+    mMotion = &Heyho::MotionCircleUpper;
 }
 
 /* ---- Heyho::MotionCircleUpper ---- */
@@ -887,7 +864,7 @@ void Heyho::StartMotionCircleLower() {
     mVel.x = mPath.startVel.x;
     mVel.y = mPath.startVel.y;
     mVel.z = mPath.startVel.z;
-    mMotion = pmf_Heyho_MotionCircleLower;
+    mMotion = &Heyho::MotionCircleLower;
 }
 
 /* ---- Heyho::MotionCircleLower ---- */
@@ -919,14 +896,14 @@ void Heyho::MotionCircleLower() {
 /* ---- Heyho::StartMotionChase ---- */
 void Heyho::StartMotionChase() {
     mLean = 0;
-    mDelay = HEYHO_RAND(45) + 15;
+    mDelay = RAND_FX_SCALE(45) + 15;
     mWaypoint.x = mPos.x;
     mWaypoint.y = mPos.y;
     mWaypoint.z = mPos.z;
     mVel.x = mPath.startVel.x;
     mVel.y = mPath.startVel.y;
     mVel.z = mPath.startVel.z;
-    mMotion = pmf_Heyho_MotionChase;
+    mMotion = &Heyho::MotionChase;
 }
 
 /* ---- Heyho::MotionChase ---- */
@@ -1032,7 +1009,7 @@ void Heyho::MotionChase() {
                     mVel.y = w;
                 }
             }
-            mDelay = HEYHO_RAND(45) + 15;
+            mDelay = RAND_FX_SCALE(45) + 15;
         }
     } else {
         int df = mWaypoint.x - mPos.x;
@@ -1048,7 +1025,7 @@ void Heyho::MotionChase() {
 void Heyho::StartMotionHitSpin() {
     mPhase = 0;
     D3D_PlaySeAtX(0x1c8, mPos.x);
-    mMotion = pmf_Heyho_MotionHitSpin;
+    mMotion = &Heyho::MotionHitSpin;
 }
 
 /* ---- Heyho::MotionHitSpin ---- */
@@ -1104,7 +1081,7 @@ void Heyho::Settle() {
 
 /* ---- Heyho::SetIdle ---- */
 void Heyho::SetIdle() {
-    mMotion = pmf_Heyho_StateIdle_2;
+    mMotion = &Heyho::StateIdle;
 }
 
 /* ---- Heyho::StateIdle ---- */
@@ -1120,7 +1097,7 @@ void Heyho::Update() {
 /* ---- Heyho::Draw ---- */
 void Heyho::Draw() {
     Vector3 v;
-    if (mMotion == pmf_Heyho_StateIdle_3)
+    if (mMotion == &Heyho::StateIdle)
         return;
     Vec3_MulScalar(&v, &mScale, mSize);
     mAnmModel.Render(&v);
@@ -1249,7 +1226,7 @@ void Heyho::CheckHitA() {
 /* ---- Heyho::IsChasing ---- */
 /* 1 unless the Heyho is leaving, or chasing while still leaning into a turn. */
 int Heyho::IsChasing() {
-    return mMotion != pmf_Heyho_MotionLeave && (mMotion != pmf_Heyho_MotionChase_2 || mLean == 0);
+    return mMotion != &Heyho::MotionLeave && (mMotion != &Heyho::MotionChase || mLean == 0);
 }
 
 /* ---- Heyho_InitPool ---- */
@@ -1279,12 +1256,12 @@ void Heyho_SpawnAll(void *arg0, int layout) {
             sHeyhos[i].StartMotionFlyIn(&sHeyhoLayoutFlyInPaths[sHeyhoLayout][i]);
             sHeyhos[i].UpdateMatrix();
         } else {
-            int row = HEYHO_RAND(4);
-            int col = HEYHO_RAND(4);
+            int row = RAND_FX_SCALE(4);
+            int col = RAND_FX_SCALE(4);
             int j;
             for (j = 0; j < i - 3; j++) {
                 if (row == data_ov006_021403b8[j]) {
-                    row = HEYHO_RAND(4);
+                    row = RAND_FX_SCALE(4);
                     j = 0;
                 }
             }
@@ -1352,8 +1329,8 @@ void Heyho_DrawAll(void) {
 void Heyho_SettleAll(void) {
     int i;
     for (i = 0; i < sHeyhoCount; i++) {
-        if (sHeyhos[i].mMotion == data_ov006_0213afc8) {
-            sHeyhos[i].StartMotionRegroup(&sHeyhoSettlePaths[HEYHO_RAND(9)][HEYHO_RAND(5)]);
+        if (sHeyhos[i].mMotion == &Heyho::StateIdle) {
+            sHeyhos[i].StartMotionRegroup(&sHeyhoSettlePaths[RAND_FX_SCALE(9)][RAND_FX_SCALE(5)]);
             ApproachLinear(sHeyhoUnsettledCount, sHeyhoCount, 1);
             return;
         }
@@ -1371,7 +1348,7 @@ void Heyho_ReactAll(void) {
 int Heyho_AllIdle(void) {
     int i;
     for (i = 0; i < sHeyhoCount; i++) {
-        if (sHeyhos[i].mMotion != pmf_Heyho_StateIdle_4)
+        if (sHeyhos[i].mMotion != &Heyho::StateIdle)
             return 0;
     }
     return 1;

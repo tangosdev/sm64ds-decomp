@@ -83,7 +83,6 @@ extern void Mg_DrawTopLeftCounter(int score);
 extern void Mg_DrawTopRightCounter(int, int);
 extern void Mg_DrawTopCenterCounter(int a0);
 extern void Mg_SubmitScore(int self);
-extern void Mg_InitBrush(char *, char, int, int);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_SetSharedState(int);
 extern void FreeGfxSlotsById(int n);
@@ -1503,7 +1502,9 @@ void dScMgPachinko2_c::ClearAimLine() {
 
 #pragma push
 /* Kept: without opt_loop_invariants off the hoisted x >> 3 and x & 7 swap
- * order and the row and column take other registers. */
+ * order and the row and column take other registers (10 of 32 words).
+ * Plain (x - 1 + j, y - 1 + i) bodies with it on are 31 words: the ROM
+ * spills the shared 0 for j to the stack (measured #821). */
 #pragma opt_loop_invariants off
 void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
     int i, j, x, lo, hi, col, row, yb, s;
@@ -1526,17 +1527,13 @@ void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
 }
 #pragma pop
 
-#pragma push
-/* Kept: without opt_dead_assignments off the scheduler stores the right pivot
- * x (0x94) before the pivot y (0x22); the stores are otherwise the same. */
-#pragma opt_dead_assignments off
+/* The same guide line as dScMgPachinko_c::DrawAimLine, its twin: two
+ * segments from the fixed pivots (0x6c, 0x22) and (0x94, 0x22). */
 void dScMgPachinko2_c::DrawAimLine() {
     int k;
     int tx;
     int ty;
     int idx;
-    int pivot[2];
-    int rightPivotX;
     volatile unsigned short tmp; /* fill value; see StartRoundEnd */
     int cx;
     int cy;
@@ -1544,7 +1541,6 @@ void dScMgPachinko2_c::DrawAimLine() {
     int dy;
     int adx;
     int ady;
-    int layer;
 
     if (mHeldBall == 0)
         return;
@@ -1554,34 +1550,27 @@ void dScMgPachinko2_c::DrawAimLine() {
         tmp = 0;
         MI_CpuFill16(dst, tmp, 0x6000);
 
-        k = 0;
-        pivot[0] = 0x6c;
-        pivot[1] = 0x22;
-        layer = 2;
-        rightPivotX = 0x94;
-        do {
+        for (k = 0; k < 2; k++) {
             if (k == 0) {
-                int v;
-                cx = pivot[0];
+                cx = 0x6c;
                 tx = mBalls[idx].x >> 12;
-                v = mBalls[idx].y >> 12;
-                if (v >= 0x22)
-                    ty = v + 4;
+                cy = 0x22;
+                ty = mBalls[idx].y >> 12;
+                if (ty >= 0x22)
+                    ty += 4;
                 else
-                    ty = v - 4;
-                cy = pivot[1];
-                tx = tx - 4;
+                    ty -= 4;
+                tx -= 4;
             } else {
-                int v;
-                cx = rightPivotX;
+                cx = 0x94;
                 tx = mBalls[idx].x >> 12;
-                v = mBalls[idx].y >> 12;
-                if (v >= 0x22)
-                    ty = v + 4;
+                cy = 0x22;
+                ty = mBalls[idx].y >> 12;
+                if (ty >= 0x22)
+                    ty += 4;
                 else
-                    ty = v - 4;
-                cy = pivot[1];
-                tx = tx + 4;
+                    ty -= 4;
+                tx += 4;
             }
             dx = tx - cx;
             adx = dx;
@@ -1596,7 +1585,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                 mGuideStep = adx / 2;
                 for (;;) {
                     if (dx == 0) {
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         break;
                     } else if (dx > 0) {
                         cx++;
@@ -1608,7 +1597,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                                 cy--;
                             mGuideStep -= adx;
                         }
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         if (cx == tx)
                             break;
                     } else {
@@ -1621,7 +1610,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                                 cy--;
                             mGuideStep -= adx;
                         }
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         if (cx == tx)
                             break;
                     }
@@ -1630,7 +1619,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                 mGuideStep = ady / 2;
                 for (;;) {
                     if (dy == 0) {
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         break;
                     } else if (dy > 0) {
                         cy++;
@@ -1642,7 +1631,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                                 cx--;
                             mGuideStep -= ady;
                         }
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         if (cy == ty)
                             break;
                     } else {
@@ -1655,20 +1644,18 @@ void dScMgPachinko2_c::DrawAimLine() {
                                 cx--;
                             mGuideStep -= ady;
                         }
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         if (cy != ty)
                             continue;
                         break;
                     }
                 }
             }
-            k++;
-        } while (k < 2);
+        }
     }
     mBalls[idx].prevX = mBalls[idx].x;
     mBalls[idx].prevY = mBalls[idx].y;
 }
-#pragma pop
 
 void dScMgPachinko2_c::Ball_HitAt(int x, int z, int d) {
     int i;
@@ -1751,20 +1738,18 @@ void dScMgPachinko2_c::StartCountdown() {
 
 void dScMgPachinko2_c::Ball_StateWaitGrab(int i) {
     u8 slot;
-    int off;
     int touched;
     int dx, dy;
 
-    slot = gActivePlayerSlot;
-    off = slot * 4;
     touched = 0;
-    if (gTouchHeld[off]) {
-        if (gTouchEdge[off])
+    slot = gActivePlayerSlot;
+    if (gTouchInfo[slot].held) {
+        if (gTouchInfo[slot].edge)
             touched = 1;
     }
     if (touched != 0) {
-        dx = (mBalls[i].x >> 12) - gTouchX[slot * 4];
-        dy = (mBalls[i].y >> 12) - gTouchY[slot * 4];
+        dx = (mBalls[i].x >> 12) - gTouchInfo[slot].x;
+        dy = (mBalls[i].y >> 12) - gTouchInfo[slot].y;
         mBalls[i].state = 1;
         mBalls[i].px = dx << 12;
         mBalls[i].py = dy << 12;
@@ -1776,17 +1761,22 @@ void dScMgPachinko2_c::Ball_StateWaitGrab(int i) {
 /* dScMgPachinko2_c ball i under a live pen record: while the pen is down the
    ball follows the pen (x/y = pen + held offset, clamped to the field, offset
    re-derived); on release it aims the ball at (0x80, 0x20) and launches it.
-   Touch record reads: gTouchX (pen x) is a volatile byte read and
-   gTouchY (pen y) is read through a plain u8 pointer. Measured under
-   2004/b56: both volatile 4 div (ldrb/add and literal/ldr order), both plain
-   arrays 18 div (the y read sinks past the x store), both pointer reads 7 div
-   (r3/r6 colouring); only this pairing reproduces the ROM's literal hoisting
-   and load order at both sites. */
+   Touch record reads: the pen x is a volatile byte read and the pen y a
+   plain byte read, both as a flat byte view of gTouchInfo strided by 4. This
+   is a launder, kept because nothing natural reaches the ROM: plain
+   gTouchInfo[idx].x/.y at both sites is 16 words off (r3/r6 colouring at the
+   first site, the literal hoisting at the second), a volatile TouchInfo at
+   both 165, a volatile &gTouchInfo[idx].x 14; the flat view at only one site
+   leaves 11 (first) or 5 (second). Measured under 2004/b56 against the
+   lane-symbol form this replaced, which compiled the same bytes.
+   Re-measured (#821, 2026-11-16): typed gTouchInfo[idx].x/.y at the first
+   site alone is 5 words off (r3/r6 swapped) with y read first, y declared
+   first, the shift operands swapped or u8 locals; read inline 9; through a
+   TouchInfo reference 0x374. Typed at the second site alone is 11. */
 void dScMgPachinko2_c::Ball_StateAim(int i) {
     int idx = gActivePlayerSlot;
-    int off = idx * 4;
 
-    if (gTouchHeld[off] != 0) {
+    if (gTouchInfo[idx].held != 0) {
         int sx;
         int sy;
         int dx;
@@ -1794,8 +1784,8 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
         int dist;
         int sq;
         int prev;
-        int tx = ((volatile u8 *)gTouchX)[off];
-        int ty = ((u8 *)gTouchY)[off];
+        int tx = ((volatile u8 *)&gTouchInfo->x)[idx * 4];
+        int ty = ((u8 *)&gTouchInfo->y)[idx * 4];
 
         this->mBalls[i].x = this->mBalls[i].px + (tx << 12);
         this->mBalls[i].y = this->mBalls[i].py + (ty << 12);
@@ -1814,8 +1804,9 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
             this->mBalls[i].y = 0x8000;
         }
         {
-            int nx = (this->mBalls[i].x >> 12) - ((volatile u8 *)gTouchX)[gActivePlayerSlot * 4];
-            int ny = (this->mBalls[i].y >> 12) - ((u8 *)gTouchY)[gActivePlayerSlot * 4];
+            int nx =
+                (this->mBalls[i].x >> 12) - ((volatile u8 *)&gTouchInfo->x)[gActivePlayerSlot * 4];
+            int ny = (this->mBalls[i].y >> 12) - ((u8 *)&gTouchInfo->y)[gActivePlayerSlot * 4];
             this->mBalls[i].px = nx << 12;
             this->mBalls[i].py = ny << 12;
         }
@@ -2281,7 +2272,7 @@ s32 dScMgPachinko2_c::InitResources() {
         }
     }
 
-    Mg_InitBrush((char *)this, 0, 2, 0);
+    InitBrush(0, 2, 0);
 
     G2S_SetBG3Priority(2);
     G2S_BG3Mosaic(0);

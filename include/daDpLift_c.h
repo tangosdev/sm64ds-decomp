@@ -29,9 +29,7 @@
 
 struct daDpLift_c : dBgActor_c {
     dExtSimpleModel_c mModel2; /* 0x320 */
-    s32 mBasePosX;             /* 0x370 */
-    s32 mBasePosY;             /* 0x374 */
-    s32 mBasePosZ;             /* 0x378 */
+    Vector3 mBasePos;          /* 0x370 */
     /* Ten points, the n-th 0x1cc000 below the lift's spawn position (n = 1..10). */
     Vector3 mMarkerPositions[10]; /* 0x37c */
     u16 mShakeTimer;              /* 0x3f4 */

@@ -24,7 +24,7 @@
  *   loaded BCA is still the word at +4.
  * - mWithMeshClsn.SetRadius / SetHeight are out of line. Storing mRadius /
  *   mHeight directly drops the call.
- * - func_ov102_0214b53c keeps the volatile stack pins and reads the eating
+ * - func_ov102_0214b53c reads the eating
  *   player (mEatingPlayer, not the carrier): mPos, mAngleX/Y/Z, mHeadMatrix
  *   and mHeadBoneRot, which d_a_ply_methods.cpp fills from bone 15's
  *   rotX/rotY/rotZ.
@@ -332,15 +332,13 @@ int daBmb_c::Behavior()
 
 int daBmb_c::Render()
 {
-    int result = 1;
     if (mShouldRender != 0) {
-        int flags = mFlags;
-        int b = (flags & 0x40000) != 0;
-        if (!b) {
+        int inYoshiMouth = (mFlags & 0x40000) != 0;
+        if (!inYoshiMouth) {
             mAnmModel.Render(&mScale);
         }
     }
-    return result;
+    return 1;
 }
 
 /* ==========================================================================
@@ -696,38 +694,36 @@ void daBmb_c::func_ov102_0214b988() {
 /* ==========================================================================
  *
  * The positions are plain Vector3 locals: its user-declared dtor keeps the
- * never-read eaterPos copy and the zeroing of p. The angle copies are
- * still volatile u16 pins. Two POD Vector3_16 locals in their place lose the
- * dead stores (0x424 against 0x44c), and block-scoped ones keep the stores
- * but schedule p.x/p.y late. The shard's chained `& 0xFFFFFFFFu` masks were
- * C-only and were dropped; the plain `&&` MATCHES.
+ * never-read eaterPos copy and the zeroing of p. The eater's angle and head
+ * rotation are block-scoped Vector3_16 copies, and p is offset x first, then
+ * y, then z; declared at function scope they lose the dead stores (0x424
+ * against 0x44c). mHeadBoneRot is u16[3] in daPly_c.h, so its copy takes a
+ * cast. The shard's chained `& 0xFFFFFFFFu` masks were C-only and were
+ * dropped; the plain `&&` MATCHES.
  * ======================================================================== */
 
 void daBmb_c::func_ov102_0214b53c() {
     extern Matrix4x3 data_020a0e68;
 
-    volatile u16 tmp[6]; /* angle-home pins */
     Vector3 p;
     Vector3 eaterPos;
-    int x0;
     Vector3 d;
-    int xSaved;
-    char *src;
+    Matrix4x3 *src;
     /* Plain short-circuit.  A chain of `& 0xFFFFFFFFu` masks is C-only: under
      -lang c++ the `&&` is a bool and the mask costs three instructions. */
-    if ((mVariant == 2) && ((src = (char *)mCarryMatrix) != 0)) {
-        mAnmModel.mat4x3 = *((Matrix4x3 *)src);
+    if ((mVariant == 2) && ((src = mCarryMatrix) != 0)) {
+        mAnmModel.mat4x3 = *src;
     } else {
         int haveMtx = (int)((mFlags & 0x4000) != 0);
         daPly_c *player0;
         if (((haveMtx != 0) && ((player0 = mCarrier) != 0)) && (player0->mCarryMatrix != 0)) {
-            char *ret = (char *)func_ov002_020e496c(player0);
+            dExtAnmModel_c *ret = (dExtAnmModel_c *)func_ov002_020e496c(player0);
             u8 idx = 0;
             if (mCarrier->IsFrontSliding() != 0) {
                 idx = 1;
             }
             if ((mCarrier->LostGrabbedObject() != 0) &&
-                (((u32)(((u32)(((dExtAnmModel_c *)ret)->currFrame << 4)) >> 0x10)) < 0xe)) {
+                (((u32)(((u32)(ret->currFrame << 4)) >> 0x10)) < 0xe)) {
                 idx = 1;
             }
             if (mCarrier->param1 == 2) {
@@ -776,30 +772,13 @@ void daBmb_c::func_ov102_0214b53c() {
                     p.z = data_020a0e68.m[11];
                     Vec3_LslInPlace((int *)&p, 3);
                     daPly_c *eater = mEatingPlayer;
-                    u16 a8c = *((volatile u16 *)&eater->mAngleX); /* pin angle loads */
-                    u16 a8e = *((volatile u16 *)&eater->mAngleY);
-                    tmp[1] = a8e;
-                    tmp[0] = a8c;
-                    xSaved = p.x;
-                    x0 = *((volatile u16 *)&eater->mAngleZ);
-                    s16 angY = (s16)tmp[1];
-                    tmp[2] = (u16)x0;
-                    u16 v580 = *((volatile u16 *)&eater->mHeadBoneRot[0]);
-                    tmp[4] = eater->mHeadBoneRot[1];
-                    tmp[3] = v580;
-                    s16 v582s = (s16)tmp[4];
-                    tmp[5] = eater->mHeadBoneRot[2];
-                    int diff = (angY + 0x1800) - v582s;
-                    tmp[1] = (u16)diff;
-                    {
-                        u16 ang8e = tmp[1];
-                        u16 v582 = (u16)v582s;
-                        int py = p.y + 0x14000;
-                        p.y = py;
-                        p.y = py + FX_SinIdx(v582 >> 4) * 0x1e;
-                        p.x = xSaved + FX_SinIdx(ang8e >> 4) * 0x3c;
-                        p.z = p.z + FX_CosIdx(ang8e >> 4) * 0x3c;
-                    }
+                    Vector3_16 rot = eater->mAngle;
+                    Vector3_16 head = (const Vector3_16 &)eater->mHeadBoneRot;
+                    rot.y = rot.y + 0x1800 - head.y;
+                    p.x += FX_SinIdx((u16)rot.y >> 4) * 0x3c;
+                    p.y += 0x14000;
+                    p.y += FX_SinIdx((u16)head.y >> 4) * 0x1e;
+                    p.z += FX_CosIdx((u16)rot.y >> 4) * 0x3c;
                 }
             }
             mFuseParticle =

@@ -162,7 +162,7 @@ void daDossy_c::func_ov065_0211956c(dActor_c *other)
 int daDossyCap_c::InitResources()
 {
     mModel.SetFile((BMD_File *)data_ov002_0210d9c0.filePtr, 1, -1);
-    mCapIcon.Link((char *)this, 2, 2, 0);
+    mCapIcon.Link(this, 2, 2, 0);
     mdCcAc_c.Init(this, 0x96000, 0x96000, 0x100002, 0x8000);
     mCarrier = 0;
     return 1;
@@ -251,7 +251,7 @@ int daDossyCap_c::Behavior()
             mFlags &= ~0x20000;
             mEatingPlayer = 0;
             mCapIcon.Unlink();
-            mCapIcon.Link((char *)this, 2, 0, 0);
+            mCapIcon.Link(this, 2, 0, 0);
         }
         return 1;
     }
@@ -601,7 +601,7 @@ int daDossyCap_c::func_ov065_021180d4() {
                 pos.z += FX_MUL(speed, FX_CosIdx(idx));
                 if (dActor_c::Spawn(0x10d, 0x1210, pos, &this->mAngle, this->mAreaId, -1) != 0) {
                     this->mCapIcon.Unlink();
-                    this->mCapIcon.Link((char *)this, 2, 0, 0);
+                    this->mCapIcon.Link(this, 2, 0, 0);
                     this->mCarrier->mRideCooldown = 30;
                 }
                 return 1;

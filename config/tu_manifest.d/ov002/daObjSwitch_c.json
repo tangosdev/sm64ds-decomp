@@ -212,70 +212,70 @@
   ],
   "data": [
     {
-      "symbol": "@868",
+      "symbol": "@839",
       "address": "0x0210987c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c11ResetTimersEv"
     },
     {
-      "symbol": "@862",
+      "symbol": "@833",
       "address": "0x02109884",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c16StatePressedMainEv"
     },
     {
-      "symbol": "@864",
+      "symbol": "@835",
       "address": "0x0210988c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c16StateTickingInitEv"
     },
     {
-      "symbol": "@866",
+      "symbol": "@837",
       "address": "0x02109894",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c16StateTickingMainEv"
     },
     {
-      "symbol": "@860",
+      "symbol": "@831",
       "address": "0x0210989c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c11ResetTimersEv"
     },
     {
-      "symbol": "@874",
+      "symbol": "@845",
       "address": "0x021098a4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c16StateExpiredMainEv"
     },
     {
-      "symbol": "@872",
+      "symbol": "@843",
       "address": "0x021098ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c11ResetTimersEv"
     },
     {
-      "symbol": "@856",
+      "symbol": "@827",
       "address": "0x021098b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c13StateIdleInitEv"
     },
     {
-      "symbol": "@858",
+      "symbol": "@829",
       "address": "0x021098bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c13StateIdleMainEv"
     },
     {
-      "symbol": "@870",
+      "symbol": "@841",
       "address": "0x021098c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -312,28 +312,28 @@
       "evidence": "model resource handle constructed with file ID 0x45c (Resources[0].model)"
     },
     {
-      "symbol": "@851",
+      "symbol": "@822",
       "address": "0x0210dfdc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x45c model handle"
     },
     {
-      "symbol": "@852",
+      "symbol": "@823",
       "address": "0x0210dfe8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x45d collision handle"
     },
     {
-      "symbol": "@853",
+      "symbol": "@824",
       "address": "0x0210dff4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x48f model handle"
     },
     {
-      "symbol": "@854",
+      "symbol": "@825",
       "address": "0x0210e000",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -833,85 +833,85 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@868",
+      "symbol": "@839",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210987c"
     },
     {
-      "symbol": "@862",
+      "symbol": "@833",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02109884"
     },
     {
-      "symbol": "@864",
+      "symbol": "@835",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210988c"
     },
     {
-      "symbol": "@866",
+      "symbol": "@837",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x02109894"
     },
     {
-      "symbol": "@860",
+      "symbol": "@831",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x0210989c"
     },
     {
-      "symbol": "@874",
+      "symbol": "@845",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098a4"
     },
     {
-      "symbol": "@872",
+      "symbol": "@843",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098ac"
     },
     {
-      "symbol": "@856",
+      "symbol": "@827",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098b4"
     },
     {
-      "symbol": "@858",
+      "symbol": "@829",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098bc"
     },
     {
-      "symbol": "@870",
+      "symbol": "@841",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local PMF descriptor is a configured initializer relocation destination at 0x021098c4"
     },
     {
-      "symbol": "@851",
+      "symbol": "@822",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dfdc"
     },
     {
-      "symbol": "@852",
+      "symbol": "@823",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dfe8"
     },
     {
-      "symbol": "@853",
+      "symbol": "@824",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210dff4"
     },
     {
-      "symbol": "@854",
+      "symbol": "@825",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0210e000"
@@ -1321,74 +1321,75 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@851",
-      "to": "@851",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @932 where main emits @918; licensed under the existing pin @851 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @923 to @921 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @923 to @854 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @852 to @850 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @850 to @848 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+      "from": "@888",
+      "to": "@822",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @932 where main emits @918; licensed under the existing pin @822 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @923 to @921 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @923 to @854 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @852 to @850 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @850 to @848 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @848 to @885 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@852",
-      "to": "@852",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @933 where main emits @919; licensed under the existing pin @852 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @924 to @922 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @924 to @855 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @853 to @851 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @851 to @849 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+      "from": "@889",
+      "to": "@823",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @933 where main emits @919; licensed under the existing pin @823 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @924 to @922 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @924 to @855 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @853 to @851 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @851 to @849 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @849 to @886 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@853",
-      "to": "@853",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @934 where main emits @920; licensed under the existing pin @853 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @925 to @923 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @925 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @854 to @852 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @852 to @850 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+      "from": "@890",
+      "to": "@824",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @934 where main emits @920; licensed under the existing pin @824 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @925 to @923 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @925 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @854 to @852 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @852 to @850 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @850 to @887 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@854",
-      "to": "@854",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @935 where main emits @921; licensed under the existing pin @854 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @926 to @924 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @926 to @857 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @855 to @853 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@891",
+      "to": "@825",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @935 where main emits @921; licensed under the existing pin @825 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @926 to @924 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @926 to @857 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @855 to @853 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @853 to @851 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @851 to @888 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@856",
-      "to": "@856",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @937 where main emits @923; licensed under the existing pin @856 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @928 to @926 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @928 to @859 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @857 to @855 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@893",
+      "to": "@827",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @937 where main emits @923; licensed under the existing pin @827 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @928 to @926 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @928 to @859 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @857 to @855 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @855 to @853 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @853 to @890 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@858",
-      "to": "@858",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @939 where main emits @925; licensed under the existing pin @858 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @930 to @928 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @930 to @861 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @859 to @857 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@895",
+      "to": "@829",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @939 where main emits @925; licensed under the existing pin @829 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @930 to @928 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @930 to @861 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @859 to @857 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @857 to @855 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @855 to @892 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@860",
-      "to": "@860",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @941 where main emits @927; licensed under the existing pin @860 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @932 to @930 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @932 to @863 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @861 to @859 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@897",
+      "to": "@831",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @941 where main emits @927; licensed under the existing pin @831 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @932 to @930 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @932 to @863 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @861 to @859 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @859 to @857 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @857 to @894 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@862",
-      "to": "@862",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @943 where main emits @929; licensed under the existing pin @862 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @934 to @932 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @934 to @865 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @863 to @861 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@899",
+      "to": "@833",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @943 where main emits @929; licensed under the existing pin @833 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @934 to @932 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @934 to @865 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @863 to @861 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @861 to @859 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @859 to @896 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@864",
-      "to": "@864",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @945 where main emits @931; licensed under the existing pin @864 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @936 to @934 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @936 to @867 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @865 to @863 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@901",
+      "to": "@835",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @945 where main emits @931; licensed under the existing pin @835 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @936 to @934 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @936 to @867 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @865 to @863 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @863 to @861 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @861 to @898 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@866",
-      "to": "@866",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @947 where main emits @933; licensed under the existing pin @866 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @938 to @936 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @938 to @869 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @867 to @865 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@903",
+      "to": "@837",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @947 where main emits @933; licensed under the existing pin @837 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @938 to @936 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @938 to @869 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @867 to @865 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @865 to @863 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @863 to @900 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@868",
-      "to": "@868",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @949 where main emits @935; licensed under the existing pin @868 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @940 to @938 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @940 to @871 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @869 to @867 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@905",
+      "to": "@839",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @949 where main emits @935; licensed under the existing pin @839 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @940 to @938 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @940 to @871 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @869 to @867 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @867 to @865 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @865 to @902 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@870",
-      "to": "@870",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @951 where main emits @937; licensed under the existing pin @870 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @942 to @940 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @942 to @873 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @871 to @869 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@907",
+      "to": "@841",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @951 where main emits @937; licensed under the existing pin @841 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @942 to @940 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @942 to @873 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @871 to @869 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @869 to @867 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @867 to @904 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@872",
-      "to": "@872",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @953 where main emits @939; licensed under the existing pin @872 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @944 to @942 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @944 to @875 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @873 to @871 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+      "from": "@909",
+      "to": "@843",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @953 where main emits @939; licensed under the existing pin @843 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @944 to @942 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @944 to @875 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @873 to @871 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @871 to @869 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @869 to @906 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@874",
-      "to": "@874",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @955 where main emits @941; licensed under the existing pin @874 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @946 to @944 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @946 to @877 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @875 to @873 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @873 to @871 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+      "from": "@911",
+      "to": "@845",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @955 where main emits @941; licensed under the existing pin @845 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N Re-keyed from @946 to @944 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @946 to @877 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @875 to @873 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @873 to @871 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @871 to @908 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
-  ]
+  ],
+  "rodata": null
 }

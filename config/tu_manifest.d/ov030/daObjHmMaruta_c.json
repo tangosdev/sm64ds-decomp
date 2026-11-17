@@ -377,6 +377,13 @@
       "reason": "fold-lane-c-0929: `return new daObjHmMaruta_c();` synthesizes the implicit default-constructor chain, which pulls in the immediate base class daObjMaruta_c's compiler-emitted base-object destructor as an unwind helper (daObjMaruta_c also has only an inline empty destructor, same as daObjHmMaruta_c). No configured ROM symbol and no inbound relocation after the licensed D1/D0 pair is retained."
     },
     {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's empty destructor from include/types.h, dragged in by the base class daObjMaruta_c's Vector3 members mRestPos and mHitPos: `return new daObjHmMaruta_c();` instantiates the class chain, so mwccarm re-emits ~Vector3() with vague linkage. No section in this TU references it. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by another enrolled source; this object's copy is the identical 4-byte `bx lr` body with no relocations, and rombuild compares it against those cartridge bytes before discarding the duplicate."
+    },
+    {
       "symbol": "_ZTV15daObjHmMaruta_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov030",

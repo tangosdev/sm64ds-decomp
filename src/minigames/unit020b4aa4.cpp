@@ -7,7 +7,7 @@
  *
  * What the code does. sMgCoins is an array of twenty 0x24-byte
  * Sprite records. Each one runs its own member-pointer state every frame
- * (MgCoins_Update through Coin_Update) and, while visible, is
+ * (MgCoins_Update through Sprite::Update) and, while visible, is
  * drawn at its position by MgCoins_Draw. The Sprite states slide a
  * sprite from its position to a target by a fixed step, then hand it the
  * next state; the records at pmf_Coin_MoveThenRise..0x020bc820 hold those
@@ -33,26 +33,27 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
+ * The MgCoins_ functions keep their ROM names (C++ linkage, as their symbols
+ * show); the per-sprite functions are Sprite members.
  *
  * Retired one-function sources (ROM address order):
- *   0x020b4aa4  Coin_FlyToCounter
- *   0x020b4b84  Coin_PlacePayout
- *   0x020b4c30  Coin_MoveThenRefund
- *   0x020b4cc4  Coin_Return
- *   0x020b4d50  Coin_RiseSpent
- *   0x020b4dfc  Coin_MoveThenRiseSpent
- *   0x020b4e78  Coin_Spend
- *   0x020b4f44  Coin_Rise
- *   0x020b4ff0  Coin_MoveThenRise
- *   0x020b506c  Coin_SendOff
- *   0x020b5108  Coin_Launch
- *   0x020b51e4  Coin_Hide
- *   0x020b51f0  Coin_MoveThenBank
- *   0x020b5288  Coin_Move
- *   0x020b52b8  Coin_Draw
- *   0x020b52fc  Coin_Update
- *   0x020b5334  Coin_Reset
+ *   0x020b4aa4  Coin_FlyToCounter (now Sprite::FlyToCounter)
+ *   0x020b4b84  Coin_PlacePayout (now Sprite::PlacePayout)
+ *   0x020b4c30  Coin_MoveThenRefund (now Sprite::MoveThenRefund)
+ *   0x020b4cc4  Coin_Return (now Sprite::Return)
+ *   0x020b4d50  Coin_RiseSpent (now Sprite::RiseSpent)
+ *   0x020b4dfc  Coin_MoveThenRiseSpent (now Sprite::MoveThenRiseSpent)
+ *   0x020b4e78  Coin_Spend (now Sprite::Spend)
+ *   0x020b4f44  Coin_Rise (now Sprite::Rise)
+ *   0x020b4ff0  Coin_MoveThenRise (now Sprite::MoveThenRise)
+ *   0x020b506c  Coin_SendOff (now Sprite::SendOff)
+ *   0x020b5108  Coin_Launch (now Sprite::Launch)
+ *   0x020b51e4  Coin_Hide (now Sprite::Hide)
+ *   0x020b51f0  Coin_MoveThenBank (now Sprite::MoveThenBank)
+ *   0x020b5288  Coin_Move (now Sprite::Move)
+ *   0x020b52b8  Coin_Draw (now Sprite::Draw)
+ *   0x020b52fc  Coin_Update (now Sprite::Update)
+ *   0x020b5334  Coin_Reset (now Sprite::Reset)
  *   0x020b5368  MgCoins_StepPayoutFinish
  *   0x020b53f0  MgCoins_StepPayoutNext
  *   0x020b556c  MgCoins_StepPayoutLayout
@@ -90,14 +91,34 @@
 #include "private/ov006_ec4dc_obj.h"
 
 /* One of the twenty records at sMgCoins. Positions are fx32
-   screen pixels (Coin_Draw draws at mPos >> 12). */
+   screen pixels (Draw puts the sprite at mPos >> 12). */
 struct Sprite;
 typedef void (Sprite::*SpriteFn)();
 struct Sprite {
     Sprite();
     ~Sprite();
 
-    SpriteFn mState;   /* 0x00 run every frame by Coin_Update */
+    void Reset();
+    void Update();
+    void Draw();
+    void Hide();
+    void Launch(Vec2i *);
+    void SendOff();
+    void Spend();
+    void Return();
+    void PlacePayout(Vec2i *);
+
+    /* The states Update runs through mState. */
+    void Move();
+    void MoveThenBank();
+    void MoveThenRise();
+    void Rise();
+    void MoveThenRiseSpent();
+    void RiseSpent();
+    void MoveThenRefund();
+    void FlyToCounter();
+
+    SpriteFn mState;   /* 0x00 run every frame by Update */
     Vec2i mPos;        /* 0x08 */
     Vec2i mTarget;     /* 0x10 */
     Vec2i mStep;       /* 0x18 per-frame step toward mTarget, both positive */
@@ -122,7 +143,7 @@ extern void Mg_DrawCreditsIcon(int a, int b, int c, int d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_GetScoringMode(void);
 extern void Mg_SubmitScore(int score);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, struct Matrix2x2 *d);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
 extern int sMgCoinRiseFrames;
@@ -164,15 +185,6 @@ extern int sMgCoinsDeltaShown;   /* nonzero: MgCoins_Draw shows the count */
 extern unsigned char sMgCoinsVisible[];
 extern int data_020a0db0;
 }
-extern void Coin_PlacePayout(Sprite *s, Vec2i *in);
-extern void Coin_Return(Sprite *s);
-extern void Coin_Spend(Sprite *s);
-extern void Coin_SendOff(Sprite *s);
-extern void Coin_Launch(Sprite *s, Vec2i *in);
-extern void Coin_Hide(Sprite *s);
-extern void Coin_Draw(Sprite *s);
-extern void Coin_Update(Sprite *s);
-extern void Coin_Reset(Sprite *s);
 extern void MgCoins_StepPayoutFinish(void);
 extern void MgCoins_StepPayoutNext(void);
 extern void MgCoins_StepPayoutLayout(void);
@@ -196,7 +208,7 @@ Sprite sMgCoins[0x14];
 void MgCoins_Reset(void) {
     int i;
     for (i = 0; i < 20; i++)
-        Coin_Reset(&sMgCoins[i]);
+        sMgCoins[i].Reset();
     sMgCoinsIndex = 0;
     gMgCoinsInPlay = 0;
     sMgCoinsBetCap = 5;
@@ -222,10 +234,10 @@ void MgCoins_Update(void) {
 
     if (sMgCoinsBetPlaced == 0 && gMgCoinsInPlay != 0) {
         int idx = gActivePlayerSlot;
-        int flag = ((unsigned char (*)[4])gTouchHeld)[idx][0] != 0 && ((unsigned char (*)[4])gTouchEdge)[idx][0] != 0;
+        int flag = gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0;
         if (flag) {
-            int a = ((unsigned char (*)[4])gTouchX)[idx][0];
-            int b = ((unsigned char (*)[4])gTouchY)[idx][0];
+            int a = gTouchInfo[idx].x;
+            int b = gTouchInfo[idx].y;
             if (a < 0x40 && b < 0x50) {
                 MgCoins_AddBetCoin();
             }
@@ -234,7 +246,7 @@ void MgCoins_Update(void) {
 
     p = sMgCoins;
     for (i = 0; i < 20; i++) {
-        Coin_Update(p);
+        p->Update();
         p++;
     }
 
@@ -286,7 +298,7 @@ void MgCoins_Draw(void) {
         MgCoins_DrawDelta(sMgCoinsDelta);
     }
     for (p = sMgCoins, i = 0; i < 20; i++) {
-        Coin_Draw(p);
+        p->Draw();
         p++;
     }
 }
@@ -361,7 +373,7 @@ void MgCoins_StepLaunch(void) {
     n = (n - 0x10) << 12;
     in.x = (idx * 16 + 8) << 12;
     in.y = n;
-    Coin_Launch(&sMgCoins[idx], &in);
+    sMgCoins[idx].Launch(&in);
     Sound::PlayBank2_2D(0x14d);
     {
         int b = sMgCoinsIndex;
@@ -392,7 +404,7 @@ void MgCoins_StepLaunchQuick(void) {
             inA.x = v0;
             inA.y = v1;
         }
-        Coin_Launch(&sMgCoins[sMgCoinsIndex], &inA);
+        sMgCoins[sMgCoinsIndex].Launch(&inA);
         Sound::PlayBank2_2D(0x14d);
         sMgCoinsWait = 0x18;
         if (sMgCoinsIndex == gMgCoinsInPlay - 1) {
@@ -409,7 +421,7 @@ void MgCoins_StepLaunchQuick(void) {
         int v0 = (sMgCoinsIndex * 16 + 8) << 12;
         inB.x = v0;
         inB.y = v1;
-        Coin_Launch(&sMgCoins[sMgCoinsIndex], &inB);
+        sMgCoins[sMgCoinsIndex].Launch(&inB);
     }
     sMgCoinsLaunchPending = 0;
     if (sMgCoinsIndex == gMgCoinsInPlay - 1) {
@@ -466,13 +478,13 @@ void MgCoins_StartRefund(void) {
 }
 
 /* Step: every 0x10 frames send the current sprite off with
-   Coin_SendOff, walking the index down; then wait until the last
+   Sprite::SendOff, walking the index down; then wait until the last
    one is hidden (mVisible 0) and hold 0x3c frames (MgCoins_StepHoldThenFinish). */
 void MgCoins_StepLose(void) {
     if (sMgCoinsToStep > 0) {
         if (ApproachLinear(sMgCoinsWait, 0, 1) == 0)
             return;
-        Coin_SendOff(&sMgCoins[sMgCoinsIndex]);
+        sMgCoins[sMgCoinsIndex].SendOff();
         if (sMgCoinsSoundPending != 0) {
             int t = gMgScene ? gMgScene->mCredits : 0;
             if (t != 0)
@@ -498,7 +510,7 @@ void MgCoins_StepLoseOneMore(void) {
     if (sMgCoinsToStep > 0) {
         if (ApproachLinear(sMgCoinsWait, 0, 1) == 0)
             return;
-        Coin_SendOff(&sMgCoins[sMgCoinsIndex]);
+        sMgCoins[sMgCoinsIndex].SendOff();
         if (sMgCoinsSoundPending != 0) {
             int t = gMgScene ? gMgScene->mCredits : 0;
             if (t == 0 && sMgCoinsIndex == 0)
@@ -527,7 +539,7 @@ void MgCoins_StepHoldThenFinish(void) {
     sMgCoinsStep = 0;
 }
 
-/* Step: every 0x10 frames bring a sprite in with Coin_Spend,
+/* Step: every 0x10 frames bring a sprite in with Sprite::Spend,
    walking the index up and wrapping at 0x14, while the scene's mCredits is
    nonzero; then wait until the last one is hidden (mVisible 0) and hold
    0x3c frames (MgCoins_StepSpendHold). */
@@ -543,7 +555,7 @@ void MgCoins_StepSpend(void) {
                 Sound::PlayBank2_2D(0x14b);
             sMgCoinsSoundPending = 0;
         }
-        Coin_Spend(&sMgCoins[sMgCoinsIndex]);
+        sMgCoins[sMgCoinsIndex].Spend();
         sMgCoinsLastSpent = sMgCoinsIndex;
         if (ApproachLinear(sMgCoinsIndex, 0x14, 1) != 0)
             sMgCoinsIndex = 0;
@@ -566,13 +578,13 @@ void MgCoins_StepSpendHold(void) {
 }
 
 /* Step: every 0xc frames send the current sprite back to the corner with
-   Coin_Return, walking the index down; finish when the last one
+   Sprite::Return, walking the index down; finish when the last one
    reaches the corner. */
 void MgCoins_StepRefund() {
     if (sMgCoinsToStep > 0) {
         if (ApproachLinear(sMgCoinsWait, 0, 1) == 0)
             return;
-        Coin_Return(&sMgCoins[sMgCoinsIndex]);
+        sMgCoins[sMgCoinsIndex].Return();
         sMgCoinsLastReturned = sMgCoinsIndex;
         ApproachLinear(sMgCoinsIndex, 0, 1);
         if (ApproachLinear(sMgCoinsToStep, 0, 1) == 0) {
@@ -592,7 +604,7 @@ void MgCoins_StartPayout(int count) {
     int cond;
     Sprite* it = sMgCoins;
     for (i = 0; i < 20; i++) {
-        Coin_Hide(it);
+        it->Hide();
         it++;
     }
     cond = gMgCoinsShowDelta;
@@ -642,7 +654,7 @@ void MgCoins_StepPayoutLayout(void) {
             }
             sp.x = sp.x + cx;
             sp.y = sp.y + rx;
-            Coin_PlacePayout(e, &sp);
+            e->PlacePayout(&sp);
             e->mDelay += delay;
             idx++;
             e++;
@@ -698,7 +710,7 @@ void MgCoins_StepPayoutNext(void) {
                 }
                 sp.x = sp.x + cx;
                 sp.y = sp.y + rx;
-                Coin_PlacePayout(e, &sp);
+                e->PlacePayout(&sp);
                 e->mDelay = i;
                 idx++;
                 e++;
@@ -728,265 +740,269 @@ void MgCoins_StepPayoutFinish(void) {
 }
 
 /* Reset one sprite: hidden, no delay, plain movement state. */
-void Coin_Reset(Sprite *s) {
-    Coin_Hide(s);
-    s->mDelay = 0;
-    s->mState = pmf_Coin_Move;
+void Sprite::Reset() {
+    Hide();
+    mDelay = 0;
+    mState = pmf_Coin_Move;
 }
 
-void Coin_Update(Sprite *s) {
-    (s->*(s->mState))();
+void Sprite::Update() {
+    (this->*mState)();
 }
 
-void Coin_Draw(Sprite *s) {
-    if (s->mVisible == 0)
+void Sprite::Draw() {
+    if (mVisible == 0)
         return;
-    Mg_DrawCreditsIcon(s->mPos.x >> 12, s->mPos.y >> 12, -1, -1);
+    Mg_DrawCreditsIcon(mPos.x >> 12, mPos.y >> 12, -1, -1);
 }
 
 /* State: move toward the target and stay. */
-void Coin_Move(Sprite *s) {
-    ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
-    ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
+void Sprite::Move() {
+    ApproachLinear(mPos.x, mTarget.x, mStep.x);
+    ApproachLinear(mPos.y, mTarget.y, mStep.y);
 }
 
 /* State: move; on arrival call Mg_GainCredits(1), hide, and stop. */
-void Coin_MoveThenBank(Sprite *s) {
+void Sprite::MoveThenBank() {
     Vec2i out;
-    ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
-    ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-    Vec2_Sub(&out, &s->mTarget, &s->mPos);
+    ApproachLinear(mPos.x, mTarget.x, mStep.x);
+    ApproachLinear(mPos.y, mTarget.y, mStep.y);
+    Vec2_Sub(&out, &mTarget, &mPos);
     if (out.x != 0)
         return;
     if (out.y != 0)
         return;
     Mg_GainCredits(1);
-    Coin_Hide(s);
-    s->mState = pmf_Coin_Move_2;
+    Hide();
+    mState = pmf_Coin_Move_2;
 }
 
-void Coin_Hide(Sprite *s) {
-    s->mVisible = 0;
+void Sprite::Hide() {
+    mVisible = 0;
 }
 
 /* Launch from the corner (12, 12) to `in`, at 1/16 of the distance per
-   frame. Unless the sprite is already in Coin_MoveThenBank, call
+   frame. Unless the sprite is already in Sprite::MoveThenBank, call
    Mg_LoseCredits(1). */
-void Coin_Launch(Sprite *s, Vec2i *in) {
+void Sprite::Launch(Vec2i *in) {
     Vec2i loc0;
     Vec2i loc2;
-    s->mVisible = 1;
-    s->mPos.x = 0xc000;
-    s->mPos.y = 0xc000;
-    s->mTarget.x = in->x;
-    s->mTarget.y = in->y;
-    Vec2_Sub(&loc0, &s->mTarget, &s->mPos);
+    mVisible = 1;
+    mPos.x = 0xc000;
+    mPos.y = 0xc000;
+    mTarget.x = in->x;
+    mTarget.y = in->y;
+    Vec2_Sub(&loc0, &mTarget, &mPos);
     func_0203d680(&loc2, &loc0, 0x100);
-    s->mStep.x = loc2.x;
-    s->mStep.y = loc2.y;
+    mStep.x = loc2.x;
+    mStep.y = loc2.y;
     {
-        int v = s->mStep.x;
+        int v = mStep.x;
         if (v < 0) v = -v;
-        s->mStep.x = v;
+        mStep.x = v;
     }
     {
-        int v = s->mStep.y;
+        int v = mStep.y;
         if (v < 0) v = -v;
-        s->mStep.y = v;
+        mStep.y = v;
     }
-    if (s->mState != pmf_Coin_MoveThenBank)
+    if (mState != pmf_Coin_MoveThenBank)
         Mg_LoseCredits(1);
-    s->mState = pmf_Coin_Move_3;
+    mState = pmf_Coin_Move_3;
 }
 
 /* Send the sprite to x = 128 at 0xc0/0x1000 of the distance per frame
-   (move state Coin_MoveThenRise, then the rise in Coin_Rise). */
-void Coin_SendOff(Sprite *s) {
+   (move state Sprite::MoveThenRise, then the rise in Sprite::Rise). */
+void Sprite::SendOff() {
     Vec2i a;
     Vec2i b;
-    s->mTarget.x = 0x80000;
-    Vec2_Sub(&a, &s->mTarget, &s->mPos);
+    mTarget.x = 0x80000;
+    Vec2_Sub(&a, &mTarget, &mPos);
     func_0203d680(&b, &a, 0xc0);
-    s->mStep.x = b.x;
-    s->mStep.y = b.y;
+    mStep.x = b.x;
+    mStep.y = b.y;
     {
-        int x = s->mStep.x;
+        int x = mStep.x;
         if (x < 0) x = -x;
-        s->mStep.x = x;
+        mStep.x = x;
     }
     {
-        int y = s->mStep.y;
+        int y = mStep.y;
         if (y < 0) y = -y;
-        s->mStep.y = y;
+        mStep.y = y;
     }
-    s->mDelay = 20;
+    mDelay = 20;
     Sound::PlayBank2_2D(0x14a);
-    s->mState = pmf_Coin_MoveThenRise;
+    mState = pmf_Coin_MoveThenRise;
 }
 
-/* State: move; on arrival rise (Coin_Rise). */
-void Coin_MoveThenRise(Sprite *s) {
+/* State: move; on arrival rise (Sprite::Rise). */
+void Sprite::MoveThenRise() {
     Vec2i v;
-    ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
-    ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-    Vec2_Sub(&v, &s->mTarget, &s->mPos);
+    ApproachLinear(mPos.x, mTarget.x, mStep.x);
+    ApproachLinear(mPos.y, mTarget.y, mStep.y);
+    Vec2_Sub(&v, &mTarget, &mPos);
     if (v.x != 0)
         return;
     if (v.y == 0)
-        s->mState = pmf_Coin_Rise;
+        mState = pmf_Coin_Rise;
 }
 
 /* State: rise. g = sMgCoinRiseFrames is 0x14 in the ROM; for mDelay
    0x14 down to 1, y changes by -3.5 px a frame, 0.2 px less each frame,
    ending near +0.3 px (about 32 px up in all). When mDelay reaches 0 the
    sprite leaves play and resets. */
-void Coin_Rise(Sprite *s) {
+void Sprite::Rise() {
     int g = sMgCoinRiseFrames;
-    int n = -((s->mDelay - (g >> 1)) << 12);
-    s->mPos.y += FX_MUL(n / g - 0x600, 0x4000);
-    if (ApproachLinear2(s->mDelay, 0, 1) == 0)
+    int n = -((mDelay - (g >> 1)) << 12);
+    mPos.y += FX_MUL(n / g - 0x600, 0x4000);
+    if (ApproachLinear2(mDelay, 0, 1) == 0)
         return;
     ApproachLinear(gMgCoinsInPlay, 0, 1);
-    Coin_Reset(s);
+    Reset();
 }
 
 /* Bring a sprite from the corner (12, 12) to
-   (128, -Mg_GetTopScreenYOffset() - 16) (move state Coin_MoveThenRiseSpent,
-   then the rise in Coin_RiseSpent). */
-void Coin_Spend(Sprite *s) {
+   (128, -Mg_GetTopScreenYOffset() - 16) (move state Sprite::MoveThenRiseSpent,
+   then the rise in Sprite::RiseSpent). */
+void Sprite::Spend() {
     Vec2i a;
     Vec2i b;
     Mg_LoseCredits(1);
-    s->mVisible = 1;
-    s->mPos.x = 0xc000;
-    s->mPos.y = 0xc000;
-    s->mTarget.x = 0x80000;
-    s->mTarget.y = ((-Mg_GetTopScreenYOffset()) - 0x10) << 12;
-    Vec2_Sub(&a, &s->mTarget, &s->mPos);
+    mVisible = 1;
+    mPos.x = 0xc000;
+    mPos.y = 0xc000;
+    mTarget.x = 0x80000;
+    mTarget.y = ((-Mg_GetTopScreenYOffset()) - 0x10) << 12;
+    Vec2_Sub(&a, &mTarget, &mPos);
     func_0203d680(&b, &a, 0xc0);
-    s->mStep.x = b.x;
-    s->mStep.y = b.y;
+    mStep.x = b.x;
+    mStep.y = b.y;
     {
-        int x = s->mStep.x;
+        int x = mStep.x;
         if (x < 0) x = -x;
-        s->mStep.x = x;
+        mStep.x = x;
     }
     {
-        int y = s->mStep.y;
+        int y = mStep.y;
         if (y < 0) y = -y;
-        s->mStep.y = y;
+        mStep.y = y;
     }
-    s->mDelay = 20;
+    mDelay = 20;
     Sound::PlayBank2_2D(0x14a);
-    s->mState = pmf_Coin_MoveThenRiseSpent;
+    mState = pmf_Coin_MoveThenRiseSpent;
 }
 
-/* State: move; on arrival rise (Coin_RiseSpent). */
-void Coin_MoveThenRiseSpent(Sprite *s) {
+/* State: move; on arrival rise (Sprite::RiseSpent). */
+void Sprite::MoveThenRiseSpent() {
     Vec2i v;
-    ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
-    ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-    Vec2_Sub(&v, &s->mTarget, &s->mPos);
+    ApproachLinear(mPos.x, mTarget.x, mStep.x);
+    ApproachLinear(mPos.y, mTarget.y, mStep.y);
+    Vec2_Sub(&v, &mTarget, &mPos);
     if (v.x != 0)
         return;
     if (v.y == 0)
-        s->mState = pmf_Coin_RiseSpent;
+        mState = pmf_Coin_RiseSpent;
 }
 
-/* State: the same rise as Coin_Rise. */
-void Coin_RiseSpent(Sprite *s) {
+/* State: the same rise as Sprite::Rise. */
+void Sprite::RiseSpent() {
     int g = sMgCoinRiseFrames;
-    int n = -((s->mDelay - (g >> 1)) << 12);
-    s->mPos.y += FX_MUL(n / g - 0x600, 0x4000);
-    if (ApproachLinear2(s->mDelay, 0, 1) == 0)
+    int n = -((mDelay - (g >> 1)) << 12);
+    mPos.y += FX_MUL(n / g - 0x600, 0x4000);
+    if (ApproachLinear2(mDelay, 0, 1) == 0)
         return;
     ApproachLinear(gMgCoinsInPlay, 0, 1);
-    Coin_Reset(s);
+    Reset();
 }
 
 /* Send the sprite back to the corner (12, 12) at 0xc0/0x1000 of the
-   distance per frame (Coin_MoveThenRefund). */
-void Coin_Return(Sprite *s) {
+   distance per frame (Sprite::MoveThenRefund). */
+void Sprite::Return() {
     Vec2i v1;
     Vec2i v2;
     int a, b;
-    s->mTarget.x = 0xc000;
-    s->mTarget.y = 0xc000;
-    Vec2_Sub(&v1, &s->mTarget, &s->mPos);
+    mTarget.x = 0xc000;
+    mTarget.y = 0xc000;
+    Vec2_Sub(&v1, &mTarget, &mPos);
     func_0203d680(&v2, &v1, 0xc0);
-    s->mStep.x = v2.x;
-    s->mStep.y = v2.y;
-    a = s->mStep.x;
+    mStep.x = v2.x;
+    mStep.y = v2.y;
+    a = mStep.x;
     if (a < 0)
         a = -a;
-    s->mStep.x = a;
-    b = s->mStep.y;
+    mStep.x = a;
+    b = mStep.y;
     if (b < 0)
         b = -b;
-    s->mStep.y = b;
-    s->mState = pmf_Coin_MoveThenRefund;
+    mStep.y = b;
+    mState = pmf_Coin_MoveThenRefund;
 }
 
 /* State: move; on arrival leave play, call Mg_GainCredits(1), reset. */
-void Coin_MoveThenRefund(Sprite *s) {
+void Sprite::MoveThenRefund() {
     Vec2i v;
-    ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
-    ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-    Vec2_Sub(&v, &s->mTarget, &s->mPos);
+    ApproachLinear(mPos.x, mTarget.x, mStep.x);
+    ApproachLinear(mPos.y, mTarget.y, mStep.y);
+    Vec2_Sub(&v, &mTarget, &mPos);
     if (v.x != 0)
         return;
     if (v.y != 0)
         return;
     ApproachLinear(gMgCoinsInPlay, 0, 1);
     Mg_GainCredits(1);
-    Coin_Reset(s);
+    Reset();
 }
 
 /* Place a sprite at `in`, visible, aimed at the corner (12, 12) at 1/16 of
-   the distance per frame (Coin_FlyToCounter). */
-void Coin_PlacePayout(Sprite *s, Vec2i *in) {
+   the distance per frame (Sprite::FlyToCounter). */
+void Sprite::PlacePayout(Vec2i *in) {
     Vec2i a;
     Vec2i b;
-    s->mPos.x = in->x;
-    s->mPos.y = in->y;
-    s->mDelay = 0;
-    s->mVisible = 1;
-    s->mTarget.x = 0xc000;
-    s->mTarget.y = 0xc000;
-    Vec2_Sub(&a, &s->mTarget, &s->mPos);
+    mPos.x = in->x;
+    mPos.y = in->y;
+    mDelay = 0;
+    mVisible = 1;
+    mTarget.x = 0xc000;
+    mTarget.y = 0xc000;
+    Vec2_Sub(&a, &mTarget, &mPos);
     func_0203d680(&b, &a, 0x100);
-    s->mStep.x = b.x;
-    s->mStep.y = b.y;
+    mStep.x = b.x;
+    mStep.y = b.y;
     {
-        int x = s->mStep.x;
+        int x = mStep.x;
         if (x < 0)
             x = -x;
-        s->mStep.x = x;
+        mStep.x = x;
     }
     {
-        int y = s->mStep.y;
+        int y = mStep.y;
         if (y < 0)
             y = -y;
-        s->mStep.y = y;
+        mStep.y = y;
     }
-    s->mState = pmf_Coin_FlyToCounter;
+    mState = pmf_Coin_FlyToCounter;
 }
 
 /* State: wait out mDelay, then move; on arrival play sound 0x149, call
    Mg_GainCredits(1), take one from the layout count, and reset. */
-void Coin_FlyToCounter(Sprite *s) {
+void Sprite::FlyToCounter() {
     Vec2i t;
-    if (ApproachLinear2(s->mDelay, 0, 1) == 0) return;
-    ApproachLinear(s->mPos.x, s->mTarget.x, s->mStep.x);
-    ApproachLinear(s->mPos.y, s->mTarget.y, s->mStep.y);
-    Vec2_Sub(&t, &s->mTarget, &s->mPos);
-    if (t.x != 0) return;
-    if (t.y != 0) return;
-    if (ApproachLinear2(s->mDelay, 0, 1) == 0) return;
+    if (ApproachLinear2(mDelay, 0, 1) == 0)
+        return;
+    ApproachLinear(mPos.x, mTarget.x, mStep.x);
+    ApproachLinear(mPos.y, mTarget.y, mStep.y);
+    Vec2_Sub(&t, &mTarget, &mPos);
+    if (t.x != 0)
+        return;
+    if (t.y != 0)
+        return;
+    if (ApproachLinear2(mDelay, 0, 1) == 0)
+        return;
     Sound::PlayBank2_2D(0x149);
     Mg_GainCredits(1);
     ApproachLinear(sMgCoinsPayoutLeft, 0, 1);
-    Coin_Reset(s);
+    Reset();
 }
 
 /* The constructor and destructor are empty and inline: mwcc emits their used

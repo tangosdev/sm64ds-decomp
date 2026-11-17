@@ -28,6 +28,11 @@
       "end": "0x021335ac"
     },
     {
+      "name": ".data",
+      "start": "0x0213cc74",
+      "end": "0x0213cca4"
+    },
+    {
       "name": ".bss",
       "start": "0x021421c4",
       "end": "0x021421ec"
@@ -245,7 +250,50 @@
       "ordinal": 29
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_dScMgJump2_c_State_Idle",
+      "address": "0x0213cc74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgJump2_c::State_Idle (0x020ef47c), emitted by dScMgJump2_c::State_Result; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "g_profile_MG_JUMP2",
+      "address": "0x0213cc7c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "BaseSpawnInfo<dScMgJump2_c>: dScMgJump2_c_classInit and behavior/render priorities 0x175, verified against the cartridge words. It sits inside the PMF run, so this source defines it, as d_s_mg_jump_methods.cpp and d_s_mg_hanachan_methods.cpp define theirs."
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_Play",
+      "address": "0x0213cc84",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgJump2_c::State_Play (0x020ef5ac), emitted by dScMgJump2_c::BeginPlay; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_Result",
+      "address": "0x0213cc8c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgJump2_c::State_Result (0x020ef480), emitted by dScMgJump2_c::State_End; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_Intro",
+      "address": "0x0213cc94",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgJump2_c::State_Intro (0x020ef794), emitted by dScMgJump2_c::BeginIntro; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_End",
+      "address": "0x0213cc9c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgJump2_c::State_End (0x020ef4ec), emitted by dScMgJump2_c::BeginEnd; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    }
+  ],
   "bss": [
     {
       "symbol": "sJump2Back02ModelFile",
@@ -374,7 +422,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -406,6 +454,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213cc74",
+          "end": "0x0213cca4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021421c4",
           "end": "0x021421ec",
@@ -414,7 +469,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 36
+          "LICENSED": 42
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -425,64 +480,110 @@
           {
             "section": ".init",
             "original": [
-              88
+              104
             ],
             "desired": [
-              88
+              104
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              86
+              102
             ],
             "desired": [
-              86
+              102
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              15,
+              17,
+              19
+            ],
+            "desired": [
+              19,
+              9,
+              17,
+              5,
+              7,
+              15
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              22,
-              23
+              13,
+              14,
+              24,
+              35
             ],
             "desired": [
-              6,
-              5,
-              22,
-              23
+              13,
+              14,
+              35,
+              24
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".data",
               "original": [
                 5,
-                6,
-                22,
-                23
+                7,
+                9,
+                15,
+                17,
+                19
               ],
               "desired": [
-                6,
+                19,
+                9,
+                17,
                 5,
-                22,
-                23
+                7,
+                15
               ],
               "slots": [
                 5,
-                6,
-                22,
-                23
+                7,
+                9,
+                15,
+                17,
+                19
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                13,
+                14,
+                24,
+                35
+              ],
+              "desired": [
+                13,
+                14,
+                35,
+                24
+              ],
+              "slots": [
+                13,
+                14,
+                24,
+                35
               ]
             }
           ],
-          "symbolIndices": 4,
+          "symbolIndices": 10,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 6,
           "error": null
         },
         "errors": null
@@ -667,6 +768,36 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021421e0 (emitted @732, renumbered fleet-free)"
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_Idle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_Play",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_Result",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_Intro",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgJump2_c_State_End",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -769,18 +900,103 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021421e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cc74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgJump2_c10State_IdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ef47c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cc7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z22dScMgJump2_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020efaf0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cc84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgJump2_c10State_PlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ef5ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cc8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgJump2_c12State_ResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ef480"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cc94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgJump2_c11State_IntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ef794"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213cc9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgJump2_c9State_EndEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ef4ec"
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "@873",
+      "from": "@900",
       "to": "@158",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @748 where main emits @734; licensed under the existing pin @158. Re-keyed +6 (from @725) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @725) when the TU-local vtable-slot scaffold RoundStartCallbacks was deleted; removing d_s_mg_jump2NewUnkCallback818Hold and its sole Vector3_16f forward declaration re-keyed the compiler labels to @718/@719. Re-keyed -1 (from @718) when Jump3D_AllIdle and Heyho_AllIdle were declared int (void) to match their definitions and State_Result stopped threading their results through an obj local. Re-keyed from @717 to @716 (same symtab index 61, every non-strtab section identical) after include/MgCamera.h typed the minigame camera.; the #821 popup/state rewrites move this local number down by 11. Re-keyed from @705 to @702 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @705 to @727 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @705 to @703 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @705 to @678 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @695 to @701 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @701 to @804 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @804 to @878 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @876 to @873 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @748 where main emits @734; licensed under the existing pin @158. Re-keyed +6 (from @725) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @725) when the TU-local vtable-slot scaffold RoundStartCallbacks was deleted; removing d_s_mg_jump2NewUnkCallback818Hold and its sole Vector3_16f forward declaration re-keyed the compiler labels to @718/@719. Re-keyed -1 (from @718) when Jump3D_AllIdle and Heyho_AllIdle were declared int (void) to match their definitions and State_Result stopped threading their results through an obj local. Re-keyed from @717 to @716 (same symtab index 61, every non-strtab section identical) after include/MgCamera.h typed the minigame camera.; the #821 popup/state rewrites move this local number down by 11. Re-keyed from @705 to @702 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @705 to @727 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @705 to @703 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @705 to @678 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @695 to @701 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @701 to @804 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @804 to @878 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @876 to @873 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @873 to @885 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @885 to @890 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @890 to @900 when the five state transitions became real &dScMgJump2_c::State_* member pointers and the TU defined g_profile_MG_JUMP2 (paired by object: the .init relocations at +0x58 and +0x60)."
     },
     {
-      "from": "@874",
+      "from": "@901",
       "to": "@159",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @749 where main emits @735; licensed under the existing pin @159. Re-keyed +6 (from @726) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @726) when the TU-local vtable-slot scaffold RoundStartCallbacks was deleted; removing d_s_mg_jump2NewUnkCallback818Hold and its sole Vector3_16f forward declaration re-keyed the compiler labels to @718/@719. Re-keyed -1 (from @719) when Jump3D_AllIdle and Heyho_AllIdle were declared int (void) to match their definitions and State_Result stopped threading their results through an obj local. Re-keyed from @718 to @717 (same symtab index 62, every non-strtab section identical) after include/MgCamera.h typed the minigame camera.; the #821 popup/state rewrites move this local number down by 11. Re-keyed from @706 to @703 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @706 to @728 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @706 to @704 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @706 to @679 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @696 to @702 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @702 to @805 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @805 to @879 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @877 to @874 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @749 where main emits @735; licensed under the existing pin @159. Re-keyed +6 (from @726) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @726) when the TU-local vtable-slot scaffold RoundStartCallbacks was deleted; removing d_s_mg_jump2NewUnkCallback818Hold and its sole Vector3_16f forward declaration re-keyed the compiler labels to @718/@719. Re-keyed -1 (from @719) when Jump3D_AllIdle and Heyho_AllIdle were declared int (void) to match their definitions and State_Result stopped threading their results through an obj local. Re-keyed from @718 to @717 (same symtab index 62, every non-strtab section identical) after include/MgCamera.h typed the minigame camera.; the #821 popup/state rewrites move this local number down by 11. Re-keyed from @706 to @703 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @706 to @728 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @706 to @704 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @706 to @679 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @696 to @702 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @702 to @805 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @805 to @879 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @877 to @874 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @874 to @886 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @886 to @891 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @891 to @901 when the five state transitions became real &dScMgJump2_c::State_* member pointers and the TU defined g_profile_MG_JUMP2 (paired by object: the .init relocations at +0x58 and +0x60)."
+    },
+    {
+      "from": "@752",
+      "to": "pmf_dScMgJump2_c_State_Idle",
+      "evidence": "Compiler PMF literal: dScMgJump2_c::State_Result assigns &dScMgJump2_c::State_Idle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dScMgJump2_c::State_Result+0x68 loads 0x0213cc74 in the ROM) and by its own relocation target (dScMgJump2_c::State_Idle at 0x020ef47c)."
+    },
+    {
+      "from": "@692",
+      "to": "pmf_dScMgJump2_c_State_Play",
+      "evidence": "Compiler PMF literal: dScMgJump2_c::BeginPlay assigns &dScMgJump2_c::State_Play, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dScMgJump2_c::BeginPlay+0x28 loads 0x0213cc84 in the ROM) and by its own relocation target (dScMgJump2_c::State_Play at 0x020ef5ac)."
+    },
+    {
+      "from": "@742",
+      "to": "pmf_dScMgJump2_c_State_Result",
+      "evidence": "Compiler PMF literal: dScMgJump2_c::State_End assigns &dScMgJump2_c::State_Result, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dScMgJump2_c::State_End+0x90 loads 0x0213cc8c in the ROM) and by its own relocation target (dScMgJump2_c::State_Result at 0x020ef480)."
+    },
+    {
+      "from": "@678",
+      "to": "pmf_dScMgJump2_c_State_Intro",
+      "evidence": "Compiler PMF literal: dScMgJump2_c::BeginIntro assigns &dScMgJump2_c::State_Intro, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dScMgJump2_c::BeginIntro+0x38 loads 0x0213cc94 in the ROM) and by its own relocation target (dScMgJump2_c::State_Intro at 0x020ef794)."
+    },
+    {
+      "from": "@732",
+      "to": "pmf_dScMgJump2_c_State_End",
+      "evidence": "Compiler PMF literal: dScMgJump2_c::BeginEnd assigns &dScMgJump2_c::State_End, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dScMgJump2_c::BeginEnd+0x28 loads 0x0213cc9c in the ROM) and by its own relocation target (dScMgJump2_c::State_End at 0x020ef4ec)."
     }
   ]
 }

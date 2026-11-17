@@ -858,7 +858,7 @@
       "evidence": "include/dScMgTeresa_c.h line 113 (`u8 unk_1b; /* 0x1b */`); objsnap of d_s_mg_teresa.cpp IDENTICAL to main; ov006 teresa TU tubuild verify"
     },
     {
-      "path": "src/engine/mb/MB_WmBase.cpp",
+      "path": "src/engine/mb/MB_WmBase.c",
       "rule": "raw-offset",
       "match": "(int*)(data_020a9db4+0x1428",
       "count": 1,
@@ -866,7 +866,7 @@
       "evidence": "arm9/MB_WmBase 23/23 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from the standalone shards this fold absorbs (0x0206879c..0x0206a318), with the comment beside each access that says why it stays raw"
     },
     {
-      "path": "src/engine/mb/MB_WmBase.cpp",
+      "path": "src/engine/mb/MB_WmBase.c",
       "rule": "raw-offset",
       "match": "(char*)((a0+0x1f",
       "count": 1,
@@ -874,7 +874,7 @@
       "evidence": "arm9/MB_WmBase 23/23 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from the standalone shards this fold absorbs (0x0206879c..0x0206a318), with the comment beside each access that says why it stays raw"
     },
     {
-      "path": "src/engine/mb/MB_WmBase.cpp",
+      "path": "src/engine/mb/MB_WmBase.c",
       "rule": "raw-offset",
       "match": "(u16*)(base1+0x1e30",
       "count": 1,
@@ -882,7 +882,7 @@
       "evidence": "arm9/MB_WmBase 23/23 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from the standalone shards this fold absorbs (0x0206879c..0x0206a318), with the comment beside each access that says why it stays raw"
     },
     {
-      "path": "src/engine/mb/MB_WmBase.cpp",
+      "path": "src/engine/mb/MB_WmBase.c",
       "rule": "raw-offset",
       "match": "(u16*)(base1+0x1e38",
       "count": 1,
@@ -890,7 +890,7 @@
       "evidence": "arm9/MB_WmBase 23/23 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from the standalone shards this fold absorbs (0x0206879c..0x0206a318), with the comment beside each access that says why it stays raw"
     },
     {
-      "path": "src/engine/mb/MB_WmBase.cpp",
+      "path": "src/engine/mb/MB_WmBase.c",
       "rule": "raw-offset",
       "match": "(short*)(data_020a9db4+0x1e48",
       "count": 1,
@@ -1496,6 +1496,14 @@
       "count": 1,
       "reason": "Declares the write-only byte at 0x4707 that Slot1_InitHud sets to 1, replacing pad_4707[0x1] at the same offset and size; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
       "evidence": "src/minigames/d_s_mg_slots.cpp Slot1_InitHud is the only access; check_header_offsets include/dScMgSlot1_c.h 0 mismatched"
+    },
+    {
+      "path": "src/minigames/d_s_mg_curling2.cpp",
+      "rule": "unknown-field",
+      "match": "unk_55b0",
+      "count": 1,
+      "reason": "dScMgCurling2_c::ResetGame clears 0x55b0 through the existing header member instead of a raw `*((short *)(c + 0x55b0))` store off a `char *c = (char *)this` alias (#821). It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Same shape as the file's unk_55a0 and unk_55c0 stores. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgCurling2_c.h `u16 unk_55b0; /* 0x55b0, write-only: ResetGame zeroes it */`; fdiff _ZN15dScMgCurling2_c9ResetGameEv ov006 58/58 2004/b56"
     }
   ]
 }

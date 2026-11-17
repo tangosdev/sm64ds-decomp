@@ -54,12 +54,6 @@ struct StateEntry {
     PMF handler;
 };
 
-/* The installer walks the enter-table records by hand as {ptr, adj}. */
-typedef void (*FnPtr)(void *);
-struct VtEntry {
-    int field0;
-    int field1;
-};
 
 enum { kMovingBarBigActorId = 0x35 };
 
@@ -68,7 +62,7 @@ static inline int IsBigBar(dActor_c *actor) {
 }
 
 extern StateEntry data_ov015_021149ec[7];
-extern VtEntry data_ov015_02114a24[7];
+extern StateEntry data_ov015_02114a24[7];
 extern StateEntry data_ov015_02114500;
 extern StateEntry data_ov015_021144f0;
 extern StateEntry data_ov015_021144e0;
@@ -76,13 +70,13 @@ extern StateEntry data_ov015_021144d0;
 extern StateEntry data_ov015_02114508;
 extern StateEntry data_ov015_021144d8;
 extern StateEntry data_ov015_021144e8;
-extern VtEntry data_ov015_021144b0;
-extern VtEntry data_ov015_021144f8;
-extern VtEntry data_ov015_021144c8;
-extern VtEntry data_ov015_021144c0;
-extern VtEntry data_ov015_021144a8;
-extern VtEntry data_ov015_021144b8;
-extern VtEntry data_ov015_021144a0;
+extern StateEntry data_ov015_021144b0;
+extern StateEntry data_ov015_021144f8;
+extern StateEntry data_ov015_021144c8;
+extern StateEntry data_ov015_021144c0;
+extern StateEntry data_ov015_021144a8;
+extern StateEntry data_ov015_021144b8;
+extern StateEntry data_ov015_021144a0;
 
 /* Three column symbols of one two-row {model, KCL, CLPS} table.
    A typed ResourceDescriptor[2] changes Init reloc destinations. */
@@ -133,9 +127,9 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     mMeshCollider.SetDepthDir((const Vector3 *)tmp);
     mMeshCollider.SetDepthDirMinDot(0xccd);
 
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     ChangeState(5);
     return 1;
 }
@@ -163,15 +157,7 @@ s32 daObjBk_Dossunbar_c::CleanupResources() {
 
 /* Install mState and run that state's enter function. */
 void daObjBk_Dossunbar_c::ChangeState(int idx) {
-    VtEntry *e = (VtEntry *)((char *)data_ov015_02114a24 + (idx << 3));
-    int f1 = e->field1;
-    void *obj = ((char *)this + (f1 >> 1));
-    FnPtr fn;
-    if (f1 & 1)
-        fn = (FnPtr) * (int *)((char *)*(int **)obj + e->field0);
-    else
-        fn = (FnPtr)e->field0;
-    fn(obj);
+    (this->*(data_ov015_02114a24[idx].handler))();
     mState = idx;
 }
 
@@ -196,11 +182,11 @@ void daObjBk_Dossunbar_c::EnterEaseToMid() {
 
 /* State 1 body: ease X towards home minus 0x168000, then wait-mid. */
 void daObjBk_Dossunbar_c::ExecuteEaseToMid() {
-    Math_Function_0203b0fc(&mPosX, mHomePosX - 0x168000, 0x800, 0x46000);
+    Math_Function_0203b0fc(&mPosX, mHomePos.x - 0x168000, 0x800, 0x46000);
     mStateTimer -= 1;
     if (mStateTimer > 0)
         return;
-    mPosX = mHomePosX - 0x168000;
+    mPosX = mHomePos.x - 0x168000;
     ChangeState(2);
 }
 
@@ -228,11 +214,11 @@ void daObjBk_Dossunbar_c::EnterEaseHome() {
 
 /* State 3 body: ease X back to home, then wait-home. */
 void daObjBk_Dossunbar_c::ExecuteEaseHome() {
-    Math_Function_0203b14c(&mPosX, mHomePosX, 0x800, 0xb4000, 0x28000);
+    Math_Function_0203b14c(&mPosX, mHomePos.x, 0x800, 0xb4000, 0x28000);
     mStateTimer -= 1;
     if (mStateTimer > 0)
         return;
-    mPosX = mHomePosX;
+    mPosX = mHomePos.x;
     ChangeState(5);
 }
 
@@ -246,9 +232,9 @@ void daObjBk_Dossunbar_c::EnterCoastHome() {
 /* State 4 body: coast until X reaches home, then wait-home. */
 void daObjBk_Dossunbar_c::ExecuteCoastHome() {
     UpdatePosWithOnlySpeed(0);
-    if (mPosX < mHomePosX)
+    if (mPosX < mHomePos.x)
         return;
-    mPosX = mHomePosX;
+    mPosX = mHomePos.x;
     ChangeState(5);
 }
 
@@ -274,7 +260,7 @@ void daObjBk_Dossunbar_c::EnterTravelOut() {
 /* State 6 body: travel until X is 0x1ea000 below home, then wait-out. */
 void daObjBk_Dossunbar_c::ExecuteTravelOut() {
     UpdatePosWithOnlySpeed(0);
-    int v = mHomePosX + 0xffe16000;
+    int v = mHomePos.x + 0xffe16000;
     if (mPosX > v)
         return;
     mPosX = v;
@@ -309,7 +295,7 @@ DossunbarCollisionFile gBkDossunbarSCollisionFile(0x058e);
 DossunbarModelFile gBkDossunbarLModelFile(0x058b);
 DossunbarCollisionFile gBkDossunbarLCollisionFile(0x058c);
 
-VtEntry data_ov015_02114a24[7] = {
+StateEntry data_ov015_02114a24[7] = {
     data_ov015_021144b0, data_ov015_021144f8, data_ov015_021144c8, data_ov015_021144c0,
     data_ov015_021144a8, data_ov015_021144b8, data_ov015_021144a0,
 };

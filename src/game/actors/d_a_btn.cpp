@@ -218,7 +218,6 @@ int daBtn_c::InitResources()
     int animIdx;
     u8 idx;
     void *bmd;
-    void *kcl;
     void *anim;
     int i;
 
@@ -246,8 +245,7 @@ int daBtn_c::InitResources()
     }
 
     idx = mIsKing;
-    kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
-    kcl;
+    dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
 
     if (mShadowModel.InitCuboid() == 0) {
         return 0;
@@ -382,18 +380,18 @@ int daBtn_c::Behavior()
     if (mHorzSpeed != 0) {
         if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, false, false, 0x32000)) {
             /* The step would leave the ledge: rewind to last frame's position. */
-            mPosX = mSafePosX;
-            mPosY = mSafePosY;
-            mPosZ = mSafePosZ;
+            mPosX = mSafePos.x;
+            mPosY = mSafePos.y;
+            mPosZ = mSafePos.z;
         } else {
-            mSafePosX = mPosX;
-            mSafePosY = mPosY;
-            mSafePosZ = mPosZ;
+            mSafePos.x = mPosX;
+            mSafePos.y = mPosY;
+            mSafePos.z = mPosZ;
         }
     } else {
-        mSafePosX = mPosX;
-        mSafePosY = mPosY;
-        mSafePosZ = mPosZ;
+        mSafePos.x = mPosX;
+        mSafePos.y = mPosY;
+        mSafePos.z = mPosZ;
     }
 
     UpdateWMClsn(mWithMeshClsn, 0);
@@ -941,7 +939,7 @@ void daBtn_c::func_ov079_02124ed4()
         if (mPounded != 0) {
             mPounded = 0;
             mHitPoints--;
-            func_02012694(0x134, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x134, &mCamSpacePos);
             {
                 s32 *p = &mPounder->mPosX;
                 Particle::System::NewSimple(kPtclWhompPounded, p[0], p[1], p[2]);
@@ -1171,18 +1169,11 @@ void daBtn_c::func_ov079_021246dc()
             if (mPounder->GetTalkState() != 0)
                 return;
             {
-                int idx = mNearestPlayer;
-                daPly_c *other = mPlayers[idx];
-                Vector3 *op = &other->mPos;
-                unsigned short ang;
-                short mag = 0x10e;
-                pos.x = op->x;
-                pos.y = op->y;
-                pos.z = op->z;
-                ang = ::Vec3_HorzAngle(&pos, &mPos);
+                pos = mPlayers[mNearestPlayer]->mPos;
+                unsigned short ang = ::Vec3_HorzAngle(&pos, &mPos);
                 pos.y += 0x32000;
-                pos.x = FX_SinIdx(ang >> 4) * mag + pos.x;
-                pos.z = FX_CosIdx(ang >> 4) * mag + pos.z;
+                pos.x = FX_SinIdx(ang >> 4) * 0x10e + pos.x;
+                pos.z = FX_CosIdx(ang >> 4) * 0x10e + pos.z;
                 if (mPounder->ShowMessage(*this, 0xa5, &pos, 0, 0) == 0)
                     return;
                 mSubState++;
@@ -1196,18 +1187,14 @@ void daBtn_c::func_ov079_021246dc()
             return;
         case 3:
             mState = 9;
-            starPos.x = mPosX;
-            starPos.y = mPosY;
-            starPos.z = mPosZ;
+            starPos = mPos;
             starPos.y += 0x64000;
             func_0201267c(0xc6, &mCamSpacePos);
             Sound::StopLoadedMusic_Layer3();
             func_02011cfc();
             func_ov079_02123d4c(&v, this);
             v.y += 0x50000;
-            dp.x = v.x;
-            dp.y = v.y;
-            dp.z = v.z;
+            dp = v;
             TriplePoofDustAt(dp);
             Particle::System::NewSimple(kPtclWhompKingDefeat, v.x, v.y, v.z);
             mShouldRender = 0;
@@ -1221,9 +1208,7 @@ void daBtn_c::func_ov079_021246dc()
         func_0201267c(0xc6, &mCamSpacePos);
         func_ov079_02123d4c(&v2, this);
         v2.y += 0x28000;
-        dp2.x = v2.x;
-        dp2.y = v2.y;
-        dp2.z = v2.z;
+        dp2 = v2;
         PoofDustAt(dp2);
         Particle::System::NewSimple(kPtclWhompDefeat, v2.x, v2.y, v2.z);
         MarkForDestruction();
@@ -1481,7 +1466,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     if (mIsKing != 0) return;
     if (mDeathState == 8) return;
     player.IncMegaKillCount();
-    func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x1e, &mCamSpacePos);
     Vector3 pos;
     func_ov079_02123d4c(&pos, this);
     Vector3 dust;
@@ -1649,8 +1634,18 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         if (mState != 0xa) {
             /* Both reads are measured. A plain mState read here or at the
                second site below shrinks the function 0x288 -> 0x284; plain
-               reads at both sites give 0x280. */
-            mResumeState = *(volatile s32 *)&mState;
+               reads at both sites give 0x280. Re-measured (#821 r17): the
+               three saves as an inline helper (pointer or reference) are
+               still 0x280; the state test as an inline predicate is 0x298
+               (if chain) or 0x2d0 (switch). Re-measured (#821 r20), plain
+               reads at both sites: storing mResumeState after the other two
+               saves keeps the reload but leaves 16 of 162 words wrong; the
+               outer test on the r1 local, a (u32) or (s32)(u32) cast,
+               `this->` spelling, an empty `== 0xa` arm and the negated
+               `!=` chain are all 0x280. The pointer cast is what
+               matters, not a qualifier: a `volatile s32 *` cast builds the
+               same object. */
+            mResumeState = *(s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
@@ -1672,7 +1667,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
-            mResumeState = *(volatile s32 *)&mState;
+            mResumeState = *(s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }

@@ -108,7 +108,7 @@ extern "C" {
 
 int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Vec2_Sub(int *out, int *a, int *b);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
@@ -119,7 +119,6 @@ void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
-void Mg_DrawCredits(char *, int, int, int);
 void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 
 int sRouletteResultsTimer;
@@ -413,7 +412,7 @@ s32 dScMgRoulette_c::Behavior() {
 }
 
 /* A tail-call veneer to RouletteResults_Draw. */
-void Roulette_DrawResultsThunk(char *) {
+void Roulette_DrawResultsThunk(dScMgRoulette_c *) {
     RouletteResults_Draw();
 }
 
@@ -421,7 +420,7 @@ void Roulette_DrawResultsThunk(char *) {
    countdown (its volume ramps over the last 3 seconds), and moves the camera
    to the current preset. */
 s32 dScMgRoulette_c::Render() {
-    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
 
     {
@@ -430,7 +429,7 @@ s32 dScMgRoulette_c::Render() {
             RouletteRacer_Draw((char *)&mRacers[i]);
     }
 
-    Roulette_DrawResultsThunk((char *)this);
+    Roulette_DrawResultsThunk(this);
 
     {
         int idle = (int)(mBoard.mSpinSpeed == 0);
@@ -751,9 +750,9 @@ void RouletteRacer_Update(RouletteRacer *racer) {
     } else if (state == 2) {
         s32 vec[2];
         u8 idx = gActivePlayerSlot;
-        if (gTouchHeld[idx * 4] != 0) {
-            vec[0] = gTouchX[idx * 4] << 12;
-            vec[1] = gTouchY[idx * 4] << 12;
+        if (gTouchInfo[idx].held != 0) {
+            vec[0] = gTouchInfo[idx].x << 12;
+            vec[1] = gTouchInfo[idx].y << 12;
             RouletteRacer_SetTarget(racer, vec);
         } else {
             type = Roulette_TileAt(racer->targetX >> 12, racer->targetY >> 12);
@@ -780,17 +779,15 @@ void RouletteRacer_Update(RouletteRacer *racer) {
 int RouletteRacer_CheckLandingA(RouletteRacer *racer) {
     int idx;
     int flag;
-    int stride;
     int dx;
     int dy;
-    stride = 4;
     if (sRouletteLandedRacer != 0) {
         return 0;
     }
     idx = gActivePlayerSlot;
     flag = 0;
-    if (gTouchHeld[idx * 4]) {
-        if (gTouchEdge[idx * 4] != 0) {
+    if (gTouchInfo[idx].held) {
+        if (gTouchInfo[idx].edge != 0) {
             flag = 1;
         }
     }
@@ -798,8 +795,8 @@ int RouletteRacer_CheckLandingA(RouletteRacer *racer) {
         return 0;
     }
     idx = gActivePlayerSlot;
-    dx = (racer->x >> 0xc) - gTouchX[idx * stride];
-    dy = (racer->y >> 0xc) - gTouchY[idx * 4];
+    dx = (racer->x >> 0xc) - gTouchInfo[idx].x;
+    dy = (racer->y >> 0xc) - gTouchInfo[idx].y;
     if ((((dx >= (-8)) && (dx < 8)) && (dy >= (-8))) && (dy < 8)) {
         Sound::PlayBank2_2D(0x15d);
         sRouletteLandedRacer = (void *)racer;
@@ -814,18 +811,16 @@ int RouletteRacer_CheckLandingA(RouletteRacer *racer) {
 void RouletteRacer_CheckLandingB(RouletteRacer *racer) {
     int idx;
     int flag;
-    int stride;
     int dx;
     int dy;
     int px, py, touchX, touchY;
     s16 tile;
-    stride = 4;
     if (sRouletteLandedRacer != 0)
         return;
     idx = gActivePlayerSlot;
     flag = 0;
-    if (gTouchHeld[idx * 4]) {
-        if (gTouchEdge[idx * 4] != 0) {
+    if (gTouchInfo[idx].held) {
+        if (gTouchInfo[idx].edge != 0) {
             flag = 1;
         }
     }
@@ -836,10 +831,10 @@ void RouletteRacer_CheckLandingB(RouletteRacer *racer) {
     idx = gActivePlayerSlot;
     px = racer->x;
     py = racer->y;
-    touchX = gTouchX[idx * stride];
+    touchX = gTouchInfo[idx].x;
     tile = racer->tile;
     px >>= 12;
-    touchY = gTouchY[idx * 4];
+    touchY = gTouchInfo[idx].y;
     py >>= 12;
     dx = px - touchX;
     dy = py - touchY;
@@ -1015,15 +1010,13 @@ int RouletteBoard_FreeModels(RouletteBoard *res) {
 
 void RouletteBoard_StartSpin(char *slider) {
     RouletteBoard *board = (RouletteBoard *)slider;
-    unsigned rand;
     board->mBallRadius = 0x4200;
     board->mBallRadiusVel = 0;
     board->mOrbitAngle = 0;
     board->mBoardAngle = 0;
     board->mAngleStep = 0x400;
     board->mBoardSpin = -0x200;
-    rand = (unsigned)RandomIntInternal(&data_0209e650.value);
-    board->mSpinSpeed = ((rand & 0x7fffffff) >> 0x13) + 0x2000;
+    board->mSpinSpeed = RAND_FX() + 0x2000;
     board->mBraking = 0;
     RouletteBoard_SetStateSpin(board);
 }

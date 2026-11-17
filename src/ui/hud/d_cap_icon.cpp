@@ -87,10 +87,10 @@ void dCapIcon_c::Unlink()
  * count, keeps iconKind (kind 3 raises request flag 8) and the bank bit in
  * mFlags bit 0, and clears the list's dispatch state for a bank or kind-3
  * cap. */
-void dCapIcon_c::Link(char *owner, int character, int iconKind, unsigned char bank) {
+void dCapIcon_c::Link(dActor_c *owner, int character, int iconKind, unsigned char bank) {
     mCharacter = character;
-    mOwner = (dActor_c *)owner;
-    mOwnerUniqueID = ((dActor_c *)owner)->uniqueID;
+    mOwner = owner;
+    mOwnerUniqueID = owner->uniqueID;
     mIconKind = iconKind;
     mNext = gCapIconListHeads[character];
     if (gCapIconListHeads[character])

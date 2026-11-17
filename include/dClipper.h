@@ -5,14 +5,9 @@
 #ifndef DCLIPPER_H
 #define DCLIPPER_H
 #include "types.h"
+#include "nitro/fx/fx.h"
 
 struct Matrix4x3;
-/* Same 0xc coordinate layout as Vector3, but deliberately POD. A Vector3[4]
- * member makes mwccarm emit __cxa_vec_cleanup in dClipper's D1/D0; the cartridge's
- * trivial destructors prove these plane records have no element destructor. */
-struct ClipperPlane {
-    fx32 x, y, z;
-};
 
 struct dClipper {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration.
@@ -23,8 +18,11 @@ struct dClipper {
        the frustum's four corner vectors on the stack, cross-multiplies adjacent
        pairs into 0x004/0x010/0x01c/0x028 and normalises each in place. Four
        consecutive 0xc coordinate records are the only shape those calls can
-       be; the lifecycle evidence above decides their POD spelling. */
-    ClipperPlane mPlaneNormals[4];   /* 0x004 */
+       be. They are the SDK's POD VecFx32, not Vector3: a Vector3[4] member
+       makes mwccarm emit __cxa_vec_cleanup in dClipper's D1/D0, and the
+       cartridge's trivial destructors prove these records have no element
+       destructor. */
+    VecFx32 mPlaneNormals[4]; /* 0x004 */
     u8  pad_034[0x18];
     /* SIGNED. UpdateFrustumPlanes sign-extends it into a 64-bit multiply, which a u32
        cannot do; the only other user just stores to it, so nothing disagrees. */

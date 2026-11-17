@@ -85,7 +85,7 @@ struct SnowSpray {
     ~SnowSpray() {}
 
     Vector3 pos; /* 0x00 position, added to vel each tick; drawn at x >> 12.
-                    y is drawn at (y - z - mScrollY) >> 12. z is the height
+                    y is drawn at (y - z - mScroll.y) >> 12. z is the height
                     above the course; the chunk dies once it is below 0 while
                     still falling */
     Vector3 vel; /* 0x0c; z loses 0x200 a tick (gravity) */
@@ -104,7 +104,7 @@ typedef char SnowSpray_size_must_be_0x24[sizeof(SnowSpray) == 0x24 ? 1 : -1];
    touches the array, Bit_InitAll seeds every field. */
 struct dScMgSnowball_bit {
     s32 x;          /* 0x00 Bit_DrawAll draws at x >> 12; the drift states add vx */
-    s32 y;          /* 0x04 drawn at (y - mScrollY) >> 12; Bit_UpdateAll respawns
+    s32 y;          /* 0x04 drawn at (y - mScroll.y) >> 12; Bit_UpdateAll respawns
                        the bit above the view once that reaches 0xc8 */
     s32 vx;         /* 0x08 BitA/BitB drift states ramp it, _StateDriftStop
                        decays it to 0, _StatePause zeroes it */
@@ -137,22 +137,6 @@ typedef char dScMgSnowball_bit_size_must_be_0x24[sizeof(dScMgSnowball_bit) == 0x
 #endif
 
 struct dScMgSnowball_c : dScMgSingle3DBase_c {
-    /* The 2-vector value type the collision ring carries the last hit in
-       (fx32 x, y -- the same pair func_0203d388 rotates in place). THE
-       EMPTY DESTRUCTOR IS LOAD-BEARING, for the reason types.h gives
-       Vector3 one and dScMgFlower_c::Vec2 repeats: a local of this type
-       keeps an 8-byte stack home in the frame's aggregate region instead
-       of being scalarised into two spill words, and UpdateSnowball's
-       frame only lays out as the ROM's (sample at sp+0x38, this pair at
-       sp+0x40, acc at sp+0x48) with that home -- a plain POD pair, an
-       int[2] and two scalar temps all lose it, measured on 2004/b56.
-       Nested so the coined name cannot collide with anything global. */
-    struct Vec2 {
-        fx32 x;
-        fx32 y;
-        ~Vec2() {}
-    };
-
     dScMgSnowball_c();
     virtual ~dScMgSnowball_c();
 
@@ -207,19 +191,13 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
        is the lane's: BuildCourse writes every tile as
        `this + 0x4f38 + lane * 0x5c0 + row * 2`, so the lane index carries
        0x5c0 = 0x2e0 * sizeof(u16) and the row index the halfword. 0x10 lanes
-       times 0x5c0 is 0x5c00, which closes exactly on mPosX. */
+       times 0x5c0 is 0x5c00, which closes exactly on mPos. */
     u16 mTileMap[0x10][0x2e0]; /* 0x4f38 */
-    s32 mPosX;                 /* 0xab38 -- fx32 world position of the ball */
-    s32 mPosY;                 /* 0xab3c */
-    struct PrevPos {
-        s32 x;
-        s32 y;
-    } mPrevPos;             /* 0xab40 -- Behavior's copy of mPos at tick start */
-    s32 mDrawPosX;          /* 0xab48 -- where Render puts the ball sprite */
-    s32 mDrawPosY;          /* 0xab4c */
-    s32 mSoundPosX;         /* 0xab50 -- position of the last roll sound; a new
-                                one fires every 0x30000 of travel */
-    s32 mSoundPosY;         /* 0xab54 */
+    Vector2 mPos;              /* 0xab38 -- fx32 world position of the ball */
+    Vector2 mPrevPos;          /* 0xab40 -- Behavior's copy of mPos at tick start */
+    Vector2 mDrawPos;          /* 0xab48 -- where Render puts the ball sprite */
+    Vector2 mSoundPos;         /* 0xab50 -- position of the last roll sound; a new
+                                   one fires every 0x30000 of travel */
     s32 mUphillDebt;        /* 0xab58 -- Behavior adds every tick's backwards
                                 (+Y) travel here and pays it off from later
                                 downhill travel; only while it is 0 does the
@@ -228,11 +206,10 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
                                 writes the generated corridor's centre lane in
                                 fx32 on the row before the goal */
     Vector2 mVel;           /* 0xab60 -- fx32, length capped at 0x8000 */
-    s32 mScrollX;           /* 0xab68 -- subtracted from every world X to draw */
-    s32 mScrollY;           /* 0xab6c -- mPosY - 0x190000, clamped; drives all
-                                four BG offsets */
-    s32 mTouchX;            /* 0xab70 -- last stylus sample */
-    s32 mTouchY;            /* 0xab74 */
+    Vector2 mScroll;        /* 0xab68 -- subtracted from every world position to
+                                draw; y is mPos.y - 0x190000, clamped, and
+                                drives all four BG offsets */
+    Vector2 mTouch;         /* 0xab70 -- last stylus sample */
     s16 mRollAngle;         /* 0xab78 -- += speed * 0x2710 / mBallSize */
     s16 mAngleY;            /* 0xab7a -- UpdateCamera's Y rotation of
                                 the ball, after Z (mHeadingAngle) and X
@@ -241,7 +218,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s16 mPrevRollAngle;     /* 0xab7e -- Behavior copies 0xab78..0xab7c here */
     s16 mPrevAngleY;        /* 0xab80 -- Behavior's copy of mAngleY */
     s16 mPrevHeadingAngle;  /* 0xab82 */
-    s32   mSpinAxis[3];     /* 0xab84 -- Vector3, seeded (0, 0x1000, 0) */
+    Vector3 mSpinAxis;      /* 0xab84 -- seeded (0, 0x1000, 0) */
     s32   mSpinQuat[4];     /* 0xab90 -- Quaternion_FromVector3 of mSpinAxis */
     s32 mBallSize;          /* 0xaba0 -- grows with downhill (-Y) travel (see
                                 mUphillDebt), capped 0x37000, shrinks by
@@ -272,23 +249,22 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mAllWater;        /* 0xb9e5 -- every probe was in water */
     u8    mSoundPending;    /* 0xb9e6 */
     u8    pad_b9e7[0x1];    /* 0xb9e7 */
-    s32 mHitSoundX;         /* 0xb9e8 -- x of the prop hit; pans sound 0x16a */
-    s32 mHitSoundY;         /* 0xb9ec -- HitsBreakable stores the prop's y
-                                beside mHitSoundX */
+    Vector2 mHitSound;      /* 0xb9e8 -- position of the prop hit; x pans
+                                sound 0x16a */
     s32 mMeltStarted;       /* 0xb9f0 -- Behavior sets it as it moves to state 4
                                 (water or time out); ResetScene clears it. Not
                                 read in this TU */
     s32   mState;           /* 0xb9f4 -- 0 count-in, 1 rolling, 2/3 crash,
                                 4 melt, 5 over */
-    u8    mScreensSwapped;  /* 0xb9f8 -- set once mPosY passes 0xe8000; swaps
+    u8 mScreensSwapped;     /* 0xb9f8 -- set once mPos.y passes 0xe8000; swaps
                                 which physical screen shows the upper half */
     u8    pad_b9f9[0x3];    /* 0xb9f9 */
     s32   mCountdownTimer;  /* 0xb9fc -- 0xf1 down to 0x3c; Render draws the
                                 3-2-1 banner from it */
-    s32   mStartY;          /* 0xba00 -- mPosY starts here (<< 12) */
+    s32 mStartY;            /* 0xba00 -- mPos.y starts here (<< 12) */
     s32   mGoalY;           /* 0xba04 -- the finish; also the progress bar's
                                 other end */
-    s32   mScrollLimit;     /* 0xba08 -- mScrollY stops at (n << 16) - 0x1d0000 */
+    s32 mScrollLimit;       /* 0xba08 -- mScroll.y stops at (n << 16) - 0x1d0000 */
     s32   mCrashTimer;      /* 0xba0c -- counts up through states 2 and 4 */
     s32   mEndDelayTimer;   /* 0xba10 -- 0xb4 frames of state 3 */
     SnowSpray mSprays[0x20];     /* 0xba14 */

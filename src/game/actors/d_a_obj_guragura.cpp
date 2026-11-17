@@ -33,11 +33,6 @@
 
 extern int data_02092768[4];
 
-/* local extern: MTX_Inverse43 has no shared header. */
-extern "C" {
-int MTX_Inverse43(const Matrix4x3 *s, Matrix4x3 *d);
-}
-
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM
  * materialize 0/1 before testing it. */

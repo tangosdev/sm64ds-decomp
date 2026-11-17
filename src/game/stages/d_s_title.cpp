@@ -136,8 +136,8 @@ extern void TitleScrollLevelList(void *self);
 static inline int IsTouchStarted() {
     int started = 0;
     u8 slot = gActivePlayerSlot;
-    if (gTouchHeld[slot * 4] != 0)
-        started = gTouchEdge[slot * 4] != 0;
+    if (gTouchInfo[slot].held != 0)
+        started = gTouchInfo[slot].edge != 0;
     return started;
 }
 

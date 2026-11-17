@@ -38,10 +38,8 @@ struct daObjSimpleLift_c : dBgActor_c {
     /* Where it started; InitResources copies the actor's position in here.
        MEASURED SIZE, do not shrink to the field span: the two factories call
        fBase_c::operator new(0x330), read off the retail instruction, and a span
-       is only a lower bound. These three close it exactly. */
-    s32 mBasePosX;                    /* 0x324 */
-    s32 mBasePosY;                    /* 0x328 */
-    s32 mBasePosZ;                    /* 0x32c */
+       is only a lower bound. This vector closes it exactly. */
+    Vector3 mBasePos; /* 0x324 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

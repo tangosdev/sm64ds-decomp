@@ -32,7 +32,11 @@
     {
       "name": ".data",
       "start": "0x0208e420",
-      "end": "0x0208e498"
+      "end": "0x0208e4b0",
+      "terminal_linker_fill": {
+        "alignment": 4,
+        "value": 0
+      }
     },
     {
       "name": ".bss",
@@ -742,6 +746,13 @@
       "size": "0x50",
       "binding": "STB_GLOBAL",
       "evidence": "SoundPlayerDefault[10], {player, playable sequence count} pairs {9,6} {10,3} {15,1} {17,5} {18,1} {19,1} {28,1} {13,3} {2,2} {3,1}. func_02011c8c applies each pair through Sound::Player::SetPlayableSeqCount; DisableSoundPlayersForCredits sets each player's count to 0. Those two only, so static in the source; no reader outside this TU in config/**/relocs.txt."
+    },
+    {
+      "symbol": "data_0208e498",
+      "address": "0x0208e498",
+      "size": "0x16",
+      "binding": "STB_GLOBAL",
+      "evidence": "string literal \"/data/sound_data.sdat\" (0x16 bytes with its NUL), the archive path func_020133bc passes to NNS_SndArcInit; its only reader is that function's pool word 0x020134a4 in config/arm9/relocs.txt. mwcc emits it after every size-sorted named object, in its own 1-aligned .data section, which is retail's placement after sPlayerSeqLimits."
     }
   ],
   "bss": [
@@ -880,14 +891,21 @@
     }
   ],
   "compiler_only_output": [],
+  "defined_symbol_renames": [
+    {
+      "from": "@2048",
+      "to": "data_0208e498",
+      "evidence": "compiler string literal: the one literal in this TU (func_020133bc's archive path), numbered @2050 by mwcc, keeps its configured address name Re-keyed from @2050 to @2048 after SndRegTable's two this-alias locals were removed (measured from the compiled object)."
+    }
+  ],
   "notes": [
-    "MODULE STATE (2026-11-05): the TU defines its .data 0x0208e420..0x0208e498 (eleven objects) and .bss 0x0209b470..0x0209ba84 (seventeen objects plus the registry). An earlier note here called the module state all .bss and listed data_0209f250/2f8/394; that was wrong. 0x0208e420.. is initialized .data (four s8, three of them -1 and one 0x7f; six int words, all -1; then sPlayerSeqLimits), and 0x0209f250, gCurrentSublevel (0x0209f2f8) and 0x0209f394 are the stage TU's .bss (the 0x0209f1e8..0x0209f5b8 run, d_s_stage_methods.cpp), read here only.",
+    "MODULE STATE (2026-11-05): the TU defines its .data 0x0208e420..0x0208e4b0 (eleven objects, then the archive-path literal and 2 bytes of linker fill) and .bss 0x0209b470..0x0209ba84 (seventeen objects plus the registry). An earlier note here called the module state all .bss and listed data_0209f250/2f8/394; that was wrong. 0x0208e420.. is initialized .data (four s8, three of them -1 and one 0x7f; six int words, all -1; then sPlayerSeqLimits), and 0x0209f250, gCurrentSublevel (0x0209f2f8) and 0x0209f394 are the stage TU's .bss (the 0x0209f1e8..0x0209f5b8 run, d_s_stage_methods.cpp), read here only.",
     "Boundaries. .data starts where _ZTV8dActor_c ends (address point 0x0208e3a4, 0x84 bytes from 0x0208e39c, so it ends at 0x0208e420). .bss starts where d_actor.cpp's actor list ends (0x0209b468..0x0209b470). mwcc sorts a TU's .data and .bss objects by size as one list (notes/mwccarm-codegen.md 6dg). Both runs ascend: 1, 4 and 0x50 bytes in .data; 1, 4, 0x88 and 0x548 in .bss. The run ends with the 0x1000-byte heap data_0209baa0 (32-aligned, behind the 0x1c-byte gap data_0209ba84) and then a size drop at data_0209caa0. The heap is read only by func_020133bc, but it stays unclaimed here.",
-    "The 0x50-before-0x20 order at 0x0208e448/0x0208e498 is not a size-sort break and not a TU boundary. 0x0208e498 holds \"/data/sound_data.sdat\", which is 0x16 bytes, not 0x20. The next 8 bytes, 0x0208e4b0..0x0208e4b8, are _ZTV7dBase_c's preamble (0, then &_ZTI7dBase_c at 0x02086e78). func_020133bc passes the string to NNS_SndArcInit as the archive path. Compiled as a literal, mwcc numbers it @1611 and emits it after every size-sorted named object, in its own .data section. That is retail's placement. It is left extern (data_0208e498) and outside the claim, because it ends at 0x0208e4ae, 2 bytes short of 0x0208e4b0. A claim ending at 0x0208e4b0 would need terminal linker fill, which tubuild licenses only for a claim that owns a whole module section. A deadstrip-data row cannot home the local @1611 either: compiler-only data policy runs before binding rewrites and skips locals.",
+    "The 0x50-before-0x20 order at 0x0208e448/0x0208e498 is not a size-sort break and not a TU boundary. 0x0208e498 holds \"/data/sound_data.sdat\", which is 0x16 bytes, not 0x20. The next 8 bytes, 0x0208e4b0..0x0208e4b8, are _ZTV7dBase_c's preamble (0, then &_ZTI7dBase_c at 0x02086e78). func_020133bc passes the string to NNS_SndArcInit as the archive path. It is a string literal in the source: mwcc numbers it @2050 and emits it after every size-sorted named object, in its own 1-aligned .data section. That is retail's placement. It ends at 0x0208e4ae; 0x0208e4ae..0x0208e4b0 is zero ALIGNALL(4) padding before the next link input. The .data claim ends at 0x0208e4b0 under terminal_linker_fill with interior placement: the fill is exact zero, no configured symbol or relocation touches it, and link_plan proves the next LCF input (dsd's gap object) links at 0x0208e4b0. A claim ending at 0x0208e4ae would instead start that gap object unaligned, and ALIGNALL(4) would shift it and everything after it by 2.",
     "Linkage. Objects with readers outside this TU (config/**/relocs.txt, overlays included) are globals: gSubSoundID, gMusicTrackModeOverride, gSoundMuted, gSoundInitialized, gMusicVolume, gSubVolume, gCurrentMusicID, data_0209b53c. Every other object is static in the source and is published STB_GLOBAL by a symbol_binding_rewrites row, because dsd cannot record a local symbol in symbols.txt. data_0209b484, data_0209b488, data_0209b48c, data_0209b4a4 and data_0209b4a8 keep their address names. The code shows how they are used (heap levels and two sequence handles), not what they were called.",
     "Sound::Play and Sound::Play2D are defined void, matching the plurality of the tree. Callers that consume r0 (PlayCharVoice, PlayBank2_2D/PlayBank3_2D, func_02012174/func_0201277c/func_02012790) keep the extern \"C\" mangled spelling -- the same return-split the shard files already carried, banked in decl-agreement-baseline.json.",
     "Sound::PlaySub and Sound::ChangeMusicVolume keep their literal mangled names: the `5Fix12IiE` encoding cannot be produced by any type this tree defines (the Fix12 wall, see include/Sound.h).",
-    "func_020133bc keeps its shard's opt_propagation-off pragma (load-bearing); the pragma is file-global under deferred codegen, so func_020132d8 and func_020133bc sit inside defer_codegen brackets -- func_020132d8 flushes the deferred queue under on and func_020133bc alone binds off. func_02012468 keeps the u64-mask launder that pins its register birth order.",
+    "func_020133bc has no pragma. Its path local is the literal, assigned before the first func_0201a9fc call, which keeps it in r4 like the ROM. The old opt_propagation-off bracket, and the defer_codegen brackets that scoped it to this one function, compensated for reading an extern array. func_020132d8..func_02013524 now sit with the rest of the file in reverse ROM order. func_02012468 keeps the u64-mask launder that pins its register birth order.",
     "Sound::Player::SetPlayableSeqCount (0x0204fadc), Sound::Func_02048e* (0x02048eb4..) and the rest of the sound-engine internals at 0x0204xxxx/0x0205xxxx are other TUs and are not claimed here.",
     "Static initializer folded: data_0209b53c, the sound-object registry, is now defined in this TU as a SndRegTable (it was an extern char[], built by the handwritten src/unnamed/arm9/0207/__sinit_02074da8.c). SndRegTable gains an inline constructor that runs func_02011a5c, the registry's clear routine; mwcc emits __sinit_Sound.cpp and its .ctor word, both byte- and relocation-identical to retail with the object's .bss. The registry helpers still take char*, so their call sites pass (char *)&data_0209b53c. symbols.txt gains data_0209ba84 to anchor the claim's end: it labels the 0x1c-byte gap between the registry's end and data_0209baa0, the 32-byte-aligned 0x1000-byte sound heap func_020133bc hands to func_02049cd8; nothing references the gap."
   ],
@@ -956,7 +974,7 @@
         {
           "section": ".data",
           "start": "0x0208e420",
-          "end": "0x0208e498",
+          "end": "0x0208e4b0",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -969,7 +987,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 121
+          "LICENSED": 122
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -980,19 +998,19 @@
           {
             "section": ".init",
             "original": [
-              211
+              212
             ],
             "desired": [
-              211
+              212
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              209
+              210
             ],
             "desired": [
-              209
+              210
             ]
           },
           {
@@ -1008,7 +1026,8 @@
               26,
               28,
               29,
-              32
+              32,
+              201
             ],
             "desired": [
               13,
@@ -1021,7 +1040,8 @@
               26,
               25,
               22,
-              32
+              32,
+              201
             ]
           },
           {
@@ -1085,7 +1105,8 @@
                 26,
                 28,
                 29,
-                32
+                32,
+                201
               ],
               "desired": [
                 13,
@@ -1098,7 +1119,8 @@
                 26,
                 25,
                 22,
-                32
+                32,
+                201
               ],
               "slots": [
                 7,
@@ -1111,7 +1133,8 @@
                 26,
                 28,
                 29,
-                32
+                32,
+                201
               ]
             },
             {
@@ -1181,7 +1204,7 @@
               ]
             }
           ],
-          "symbolIndices": 30,
+          "symbolIndices": 31,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -1286,6 +1309,12 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at its configured address"
+    },
+    {
+      "symbol": "data_0208e498",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler string literal (@2050, renamed by defined_symbol_renames); mwcc emits it local after the TU's statics, so it is published global with them at its configured address, as the other statics are"
     },
     {
       "symbol": "sSubVolumeTarget",

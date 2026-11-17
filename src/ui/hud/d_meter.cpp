@@ -46,7 +46,7 @@
  *
  * leftovers:
  * - The HUD globals are data_ names: symbols.txt has no recovered name for them.
- * - InitResources keeps one launder: the volatile pun on mVsTimer in the
+ * - InitResources keeps one launder: the `u16 *` pun on mVsTimer in the
  *   gCurrentSublevel == 0x2B branch (a plain member store emits different code).
  * - gGameMode is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
  *   dMap_c draws its VS icons for.
@@ -283,7 +283,23 @@ int dMeter_c::InitResources() {
         if (gCurrentSublevel == 0x33)
             mVsTimer = 30;
         else if (gCurrentSublevel == 0x2B)
-            *(volatile u16 *)&mVsTimer = 30;
+            /* Kept (#821, measured 2026-11-16 against ov002 0x020fda04,
+               0x750). The ROM keeps three separate 30-stores (strheq,
+               strheq, strhne) after cmp #0x33 and cmp #0x2b.
+                 plain `mVsTimer = 30` here: 0x740, -4 words (this arm
+                   merges with the else).
+                 30u here or in the else, `30 * 1`, `(u16)30`, braces,
+                   `else if (true)`: 0x740.
+                 one unconditional store: 0x6fc. switch: 0x75c.
+                 u16 local holding 30: 0x738. `!IsVsMode()` first: 0x73c.
+                 (#821 r20) `30L`, `(s16)30` or `(u8)30` here, or `30L` in
+                   the else: 0x740. `mVsTimer = mVsTimer = 30` matches but
+                   is the same trick spelled another way.
+               The arms most likely stored different values in another
+               build. Nothing in this ROM says what they were. The `u16 *` pun is
+               what keeps the stores apart; a `volatile` qualifier on it
+               changes nothing. */
+            *(u16 *)&mVsTimer = 30;
         else
             mVsTimer = 30;
     } else {
@@ -804,7 +820,7 @@ void dMeter_c::RenderRedCoins() {
     int count = (unsigned char)gNumRedCoins[idx];
     int sl = flag ? 0x1c : 0xa;
     for (int i = 0; i < count; i++) {
-        OAM::Render(false, &OAM::RED_COIN, 0x10 + i * 0xb, sl, -1, 1, (Matrix2x2 *)0);
+        OAM::Render(false, &OAM::RED_COIN, 0x10 + i * 0xb, sl, -1, 1, 0);
     }
 }
 
@@ -898,7 +914,7 @@ void dMeter_c::RenderSilverStars() {
     if (sl < n) {
         sb = 0x10;
         do {
-            OAM::Render(0, (OamAttr *)data_ov001_020abac8, sb, 0xa, -1, 1, (Matrix2x2 *)0);
+            OAM::Render(0, (OamAttr *)data_ov001_020abac8, sb, 0xa, -1, 1, 0);
             sl++;
             sb += 0x11;
         } while (sl < n);

@@ -1,19 +1,19 @@
 #include "Ov007Picker.h"
-#include "math/CalcLib.h"
+#include "nitro/fx/fx_vec.h"
 
 /* Moves the picked point to src: its follower's velocity and force are
  * cleared and its x/y set. Then mode 0 moves pos to src, mode 1 moves it
  * to src plus hitOffset clamped to the bounds on x and y, and mode 2 moves
  * anchorPos to src. */
-void func_ov007_020c5948(Ov007Picker *s, Vector3 *src) {
+void func_ov007_020c5948(Ov007Picker *s, VecFx32 *src) {
     int i;
     int j;
     Ov007Follower *f;
-    Vector3 *vec;
+    VecFx32 *vec;
     int mode;
-    Vector3 *dst;
-    Vector3 *min;
-    Vector3 *max;
+    VecFx32 *dst;
+    VecFx32 *min;
+    VecFx32 *max;
 
     i = s->hitGroup;
     if (i == -1)

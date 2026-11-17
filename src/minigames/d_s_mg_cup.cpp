@@ -5,10 +5,6 @@
 
 // leftovers:
 // StateShuffle's fake-out angle bump keeps the full assignment; += changes its address calculation.
-// mFx and mCup are still built and torn down through spelled __cxa_vec_ctor /
-// __cxa_vec_cleanup calls: CupFx and CupPos have no constructor or destructor
-// of their own yet (Cup_Nothing, CupFx_ElemDtor, func_0203d738,
-// NullDestructor_0203d47c).
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScMgCup_c_AssetId {
@@ -83,7 +79,6 @@ extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
 extern RestPos sCupHomePositions[];
 extern void Mg_SetSharedState(int c);
-extern void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern void FreeGfxSlotsById(int arg);
 struct CupShuffleOffset {
@@ -101,7 +96,6 @@ extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern unsigned int LoadCompressedFileAt(int, void *);
 extern void *LoadFile(int);
-void func_0203d738(void);
 }
 int CupFx_FindFree(CupFx *fx, int kind, int x, int y);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -110,20 +104,18 @@ int CupFx_Spawn(CupFx *fx, int kind, int x, int y, signed char cup);
 void CupFx_DrawForCup(CupFx *fx, int cup);
 void CupFx_UpdateAll(CupFx *fx);
 void CupFx_ClearAll(CupFx *fx);
-void Cup_Nothing(void);
 
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
 
-/* Reverse of the factory: cups, effects, then the model, which the
-   compiler destroys as a member. The tracker and the base chain are the
-   inlined dScMgSingle3DBase_c destructor. */
-dScMgCup_c::~dScMgCup_c() {
-    __cxa_vec_cleanup(mCup, 3, 8, (dtor_t)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mFx, 0x20, 0x18, (dtor_t)CupFx_ElemDtor);
-}
+/* The body is empty: the compiler destroys mCup, mFx and mModel in reverse
+   of the factory. The tracker and the base chain are the inlined
+   dScMgSingle3DBase_c destructor. */
+dScMgCup_c::~dScMgCup_c() {}
 
-void CupFx_ElemDtor(void) {}
+/* The effect slot's destructor, which __cxa_vec_cleanup runs on each of
+   mFx. Empty, like its constructor. */
+CupFx::~CupFx() {}
 
 int CupFx_FindFree(CupFx *fx, int, int, int) {
     int slot;
@@ -305,9 +297,9 @@ void dScMgCup_c::SetupSwap() {
     mSwapSlotA = sCupSwapFirst[swapPair].a;
     mSwapSlotB = sCupSwapFirst[swapPair].b;
 
-    mMidX = (sCupHomePositions[mSwapSlotB].x + sCupHomePositions[mSwapSlotA].x) / 2;
-    mMidY = (sCupHomePositions[mSwapSlotB].y + sCupHomePositions[mSwapSlotA].y) / 2;
-    mHalfX = mMidX - sCupHomePositions[mSwapSlotA].x;
+    mMid.x = (sCupHomePositions[mSwapSlotB].x + sCupHomePositions[mSwapSlotA].x) / 2;
+    mMid.y = (sCupHomePositions[mSwapSlotB].y + sCupHomePositions[mSwapSlotA].y) / 2;
+    mHalfX = mMid.x - sCupHomePositions[mSwapSlotA].x;
     mShuffleAngle = 0;
 
     {
@@ -377,7 +369,7 @@ void dScMgCup_c::StateResult() {
         mModel.PlayCheer();
         score++;
     } else {
-        Mg_SubCredits(this, 1);
+        SubCredits(1);
         if (mCredits > 0) {
             mTimer = 150;
             mModel.PlayMiss();
@@ -398,14 +390,16 @@ void dScMgCup_c::StateSelect() {
     int cup;
     unsigned char touchX;
     unsigned char touchY;
+    TouchInfo *touch;
 
-    if (gTouchHeld[playerSlot * 4] != 0 && gTouchEdge[playerSlot * 4] != 0)
+    if (gTouchInfo[playerSlot].held != 0 && gTouchInfo[playerSlot].edge != 0)
         touchPressed = 1;
     if (touchPressed == 0)
         return;
 
-    touchX = ((TouchInfo *)gTouchHeld)[playerSlot].x;
-    touchY = ((TouchInfo *)gTouchHeld)[playerSlot].y;
+    touch = &gTouchInfo[playerSlot];
+    touchX = touch->x;
+    touchY = touch->y;
 
     for (cup = 0; cup < 3; cup++) {
         int dx = touchX - (mCup[cup].x >> 12);
@@ -427,10 +421,14 @@ void dScMgCup_c::StateSelect() {
         mTimer = 60;
         FreeGfxSlotsById(0x1d);
 
+        /* The ROM loads touch y and x before it stores mTouchLocked. Without
+           the volatile reads mwcc folds the loads into the stores (8-11 of 97
+           words differ for every statement order, by-value and by-reference
+           inline setters on Presenter tried too). */
         {
             unsigned int currentPlayerSlot = gActivePlayerSlot;
-            unsigned char lockedTouchY = *(volatile unsigned char *)&gTouchY[currentPlayerSlot * 4];
-            unsigned char lockedTouchX = *(volatile unsigned char *)&gTouchX[currentPlayerSlot * 4];
+            unsigned char lockedTouchY = gTouchInfo[currentPlayerSlot].y;
+            unsigned char lockedTouchX = gTouchInfo[currentPlayerSlot].x;
             mModel.mTouchLocked = 1;
             mModel.mTouchX = lockedTouchX;
             mModel.mTouchY = lockedTouchY;
@@ -476,15 +474,15 @@ void dScMgCup_c::StateShuffle() {
         int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
-        mCup[slot].x = mMidX - FX_MUL(cosine, mHalfX);
+        mCup[slot].x = mMid.x - FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        mCup[slot].y = mMidY - FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
+        mCup[slot].y = mMid.y - FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        mCupScale[slot] = ((mCup[slot].y - mMidY) >> 7) + 0x1000;
+        mCupScale[slot] = ((mCup[slot].y - mMid.y) >> 7) + 0x1000;
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
@@ -496,15 +494,15 @@ void dScMgCup_c::StateShuffle() {
         int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
-        mCup[slot].x = mMidX + FX_MUL(cosine, mHalfX);
+        mCup[slot].x = mMid.x + FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        mCup[slot].y = mMidY + FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
+        mCup[slot].y = mMid.y + FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        mCupScale[slot] = ((mCup[slot].y - mMidY) >> 7) + 0x1000;
+        mCupScale[slot] = ((mCup[slot].y - mMid.y) >> 7) + 0x1000;
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
@@ -759,7 +757,7 @@ s32 dScMgCup_c::Render() {
     }
 
     Mg_DrawStockCounter(mCredits, 1);
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     mModel.Draw();
     return 1;
 }
@@ -846,19 +844,18 @@ s32 dScMgCup_c::InitResources() {
     CupFx_ClearAll(mFx);
     return 1;
 }
-/* The constructor is inline, so the factory below holds it: the base
-   constructors, mParticle and mModel are the compiler's, then the two
-   arrays of element records. */
-inline dScMgCup_c::dScMgCup_c() {
-    __cxa_vec_ctor(mFx, 0x20, 0x18, (ctor_t)Cup_Nothing, (dtor_t)CupFx_ElemDtor);
-    __cxa_vec_ctor(mCup, 3, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
-}
+/* The constructor is inline, so the factory below holds it. The body is
+   empty: the base constructors, mParticle, mModel and the two arrays
+   (through __cxa_vec_ctor) are all the compiler's. */
+inline dScMgCup_c::dScMgCup_c() {}
 
 void *dScMgCup_c_classInit() {
     return new dScMgCup_c;
 }
 
-void Cup_Nothing() {}
+/* The effect slot's constructor, which __cxa_vec_ctor runs on each of mFx.
+   Empty, like its destructor. */
+CupFx::CupFx() {}
 
 /* Static-init globals (was the handwritten __sinit_ov006_021303d0 shard).
  * The compiler materializes and copies eight native member-pointer constants;

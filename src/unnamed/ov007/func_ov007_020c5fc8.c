@@ -3,7 +3,7 @@
 #include "common.h"
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
-#include "math/CalcLib.h"
+#include "nitro/fx/fx_vec.h"
 
 /* Re-measures group idx's links at a pose blended between groupPoints
  * (weight t, Q12) and groupPointCopies: x and y blended, z from the copies.
@@ -12,8 +12,8 @@
 void func_ov007_020c5fc8(Ov007Picker *self, int idx, int t) {
     int i;
     int inv;
-    struct Vector3 cur;
-    struct Vector3 prev;
+    VecFx32 cur;
+    VecFx32 prev;
 
     i = 0;
     if ((int)self->groups[idx]->pointCount <= 0)
@@ -21,8 +21,8 @@ void func_ov007_020c5fc8(Ov007Picker *self, int idx, int t) {
 
     inv = 0x1000 - t;
     do {
-        struct Vector3 *a = self->groupPoints[idx];
-        struct Vector3 *b = self->groupPointCopies[idx];
+        VecFx32 *a = self->groupPoints[idx];
+        VecFx32 *b = self->groupPointCopies[idx];
         int va = a[i].x;
         int vb = b[i].x;
         int r = va;

@@ -1,10 +1,10 @@
 //cpp
 #include "private/arm9_archive_table.h"
 
-#include "S82.h"
 #include "nitro/os/system.h"
 
 extern "C" int LoadArchive(int idx);
+extern "C" int func_0204ede8(void *archive, unsigned int fileIndex);
 
 /* The address of archived file val's bytes inside its mounted archive
    (func_0204ede8), mounting the archive first if needed. 0 for a FAT id
@@ -25,7 +25,7 @@ extern "C" int func_020186c0(unsigned int val) {
                     return 0;
                 }
             }
-            return ((S82 *)e->archive)->func_0204ede8(val - e->firstFileId);
+            return func_0204ede8(e->archive, val - e->firstFileId);
         }
         e++;
     }

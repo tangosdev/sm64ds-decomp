@@ -169,12 +169,8 @@ int daObjBk_Lift_c::Behavior() {
 
     if (kind == 1) {
         if (DecIfAbove0_Byte(&mMoveTimer) == 0) {
-            s16 *p = &mPrevAngleY;
-            s16 v = *p;
-            u8 b = 0x87;
-            v = (s16)(v + 0x8000);
-            *p = v;
-            mMoveTimer = b;
+            mPrevAngleY += 0x8000;
+            mMoveTimer = 135;
         }
         UpdatePos(0);
         UpdateModelPosAndRotY();
@@ -194,10 +190,8 @@ int daObjBk_Lift_c::Behavior() {
                 if (flag == 0) {
                     mPosY = (y < bound) ? bound : y;
                     mVertSpeed = 0xa000;
-                    if (mJustSteppedOn == 0) {
-                        flag = 0;
-                        mMove = (u8)flag;
-                    }
+                    if (mJustSteppedOn == 0)
+                        mMove = 0;
                 } else {
                     bound = mMaxPosY;
                     flag = (y <= bound);
@@ -213,9 +207,7 @@ int daObjBk_Lift_c::Behavior() {
         if (IsClsnInRange(0x150000, 0x1000) != 0)
             UpdateClsnPosAndRot();
         if (Vec3_Dist(&mPos, &mPrevPos) != 0) {
-            unsigned z = 0;
-            unsigned r = Sound::PlayLong((unsigned)mSoundID, 3, 0x82, mCamSpacePos, (s16)z);
-            mSoundID = (s32)r;
+            mSoundID = Sound::PlayLong(mSoundID, 3, 0x82, mCamSpacePos, 0);
         }
         mJustSteppedOn = 0;
     } else {

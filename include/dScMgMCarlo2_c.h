@@ -33,6 +33,7 @@
 #define DSCMGMCARLO2_C_H
 #include "dScMgSingle3DBase_c.h"
 #include "Dealer.h"
+#include "Vector2.h"
 
 struct dMgMCarlo2CardObj_c {
     dMgMCarlo2CardObj_c();
@@ -49,12 +50,9 @@ struct dMgMCarlo2CardObj_c {
 
     dMgMCarlo2CardObj_c *mPrev; /* 0x04 */
     dMgMCarlo2CardObj_c *mNext; /* 0x08 */
-    s32 mX;                     /* 0x0c, 20.12 fixed point */
-    s32 mY;                     /* 0x10 */
-    s32 mTargetX;               /* 0x14 */
-    s32 mTargetY;               /* 0x18 */
-    s32 mXStep;                 /* 0x1c */
-    s32 mYStep;                 /* 0x20 */
+    Vector2 mPos;               /* 0x0c, 20.12 fixed point */
+    Vector2 mTarget;            /* 0x14 */
+    Vector2 mStep;              /* 0x1c */
     s32 mLift;                  /* 0x24 */
     s16 mDealDelay;             /* 0x28 */
     s16 mSlot;                  /* 0x2a */

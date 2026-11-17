@@ -38,17 +38,13 @@ struct daYurei_Mucho_c : dEnemyBase_c {
        column of the transformed model matrix (<< 3, y -= 0xa000);
        UpdateShoot passes it to dActor_c::Spawn as the BULLET (0xe9)
        position. */
-    s32 mShotPosX;                    /* 0x3c0 */
-    s32 mShotPosY;                    /* 0x3c4 */
-    s32 mShotPosZ;                    /* 0x3c8 */
+    Vector3 mShotPos; /* 0x3c0 */
     /* InitResources copies the spawn position into these three, Behavior
        re-captures the live position into them in the Yoshi-eat branch, and
-       reads mHomePosY back when steering. */
-    s32 mHomePosX;                    /* 0x3cc */
-    s32 mHomePosY;                    /* 0x3d0 */
-    s32 mHomePosZ;                    /* 0x3d4 */
+       reads mHomePos.y back when steering. */
+    Vector3 mHomePos; /* 0x3cc */
     /* Hover phase: Behavior adds 0x200 a frame and indexes FX_SinCosTable_ to
-       bob mPosY around mHomePosY + 0xb4000. */
+       bob mPosY around mHomePos.y + 0xb4000. */
     s32 mBobAngle;                    /* 0x3d8 */
     s32 mShotCount;                   /* 0x3dc */
     s16 mTargetAngle;                 /* 0x3e0 */

@@ -549,7 +549,7 @@ _ZN11dScMgCoin_c13InitResourcesEv kind:function(arm,size=0x23c) addr:0x020de704
 _Z21dScMgCoin_c_classInitv kind:function(arm,size=0x48) addr:0x020de940
 _ZN10dScMgCup_cD1Ev kind:function(arm,size=0x94) addr:0x020de988
 _ZN10dScMgCup_cD0Ev kind:function(arm,size=0xa8) addr:0x020dea1c
-_Z14CupFx_ElemDtorv kind:function(arm,size=0x4) addr:0x020deac4
+_ZN5CupFxD1Ev kind:function(arm,size=0x4) addr:0x020deac4
 _Z14CupFx_FindFreeP5CupFxiii kind:function(arm,size=0x28) addr:0x020deac8
 _Z16CupFx_MoveForCupP5CupFxiii kind:function(arm,size=0x58) addr:0x020deaf0
 _Z11CupFx_SpawnP5CupFxiiia kind:function(arm,size=0x6c) addr:0x020deb48
@@ -578,7 +578,7 @@ _ZN10dScMgCup_c6RenderEv kind:function(arm,size=0x19c) addr:0x020e0068
 _ZN10dScMgCup_c8BehaviorEv kind:function(arm,size=0x104) addr:0x020e0204
 _ZN10dScMgCup_c13InitResourcesEv kind:function(arm,size=0x26c) addr:0x020e0308
 _Z20dScMgCup_c_classInitv kind:function(arm,size=0xc0) addr:0x020e0574
-_Z11Cup_Nothingv kind:function(arm,size=0x4) addr:0x020e0634
+_ZN5CupFxC1Ev kind:function(arm,size=0x4) addr:0x020e0634
 _ZN14dScMgCurling_cD1Ev kind:function(arm,size=0x24) addr:0x020e0638
 _ZN14dScMgCurling_cD0Ev kind:function(arm,size=0x38) addr:0x020e065c
 _ZN14dScMgCurling_c11Bit_DrawAllEv kind:function(arm,size=0x88) addr:0x020e0694
@@ -1352,7 +1352,7 @@ _ZN15dScMgRoulette_c10StartRoundEi kind:function(arm,size=0xfc) addr:0x021095cc
 _ZN15dScMgRoulette_c11CanEndStateEi kind:function(arm,size=0x144) addr:0x021096c8
 _ZN15dScMgRoulette_c16CleanupResourcesEv kind:function(arm,size=0x28) addr:0x0210980c
 _ZN15dScMgRoulette_c6RenderEv kind:function(arm,size=0x26c) addr:0x02109834
-_Z25Roulette_DrawResultsThunkPc kind:function(arm,size=0xc) addr:0x02109aa0
+_Z25Roulette_DrawResultsThunkP15dScMgRoulette_c kind:function(arm,size=0xc) addr:0x02109aa0
 _ZN15dScMgRoulette_c8BehaviorEv kind:function(arm,size=0x6e8) addr:0x02109aac
 _ZN15dScMgRoulette_c13InitResourcesEv kind:function(arm,size=0x26c) addr:0x0210a194
 _Z25dScMgRoulette_c_classInitv kind:function(arm,size=0xac) addr:0x0210a400
@@ -1571,7 +1571,7 @@ _ZN12dScMgSound_c12Pop08_FinishEi kind:function(arm,size=0x78) addr:0x0211a500
 _ZN12dScMgSound_c9Pop08_FlyEi kind:function(arm,size=0x74) addr:0x0211a578
 _ZN12dScMgSound_c11Pop08_StartEi kind:function(arm,size=0x5c) addr:0x0211a5ec
 _ZN12dScMgSound_c12Pop08_UpdateEi kind:function(arm,size=0x50) addr:0x0211a648
-_ZN12dScMgSound_c12Pop07_FinishEv kind:function(arm,size=0x4) addr:0x0211a698
+_ZN12dScMgSound_c12Pop07_FinishEi kind:function(arm,size=0x4) addr:0x0211a698
 _ZN12dScMgSound_c9Pop07_FlyEi kind:function(arm,size=0x78) addr:0x0211a69c
 _ZN12dScMgSound_c11Pop07_StartEi kind:function(arm,size=0x98) addr:0x0211a714
 _ZN12dScMgSound_c12Pop07_UpdateEi kind:function(arm,size=0x50) addr:0x0211a7ac
@@ -1583,7 +1583,7 @@ _ZN12dScMgSound_c12Pop05_FinishEi kind:function(arm,size=0x78) addr:0x0211aa94
 _ZN12dScMgSound_c9Pop05_FlyEi kind:function(arm,size=0x74) addr:0x0211ab0c
 _ZN12dScMgSound_c11Pop05_StartEi kind:function(arm,size=0x5c) addr:0x0211ab80
 _ZN12dScMgSound_c12Pop05_UpdateEi kind:function(arm,size=0x50) addr:0x0211abdc
-_ZN12dScMgSound_c12Pop04_FinishEv kind:function(arm,size=0x4) addr:0x0211ac2c
+_ZN12dScMgSound_c12Pop04_FinishEi kind:function(arm,size=0x4) addr:0x0211ac2c
 _ZN12dScMgSound_c9Pop04_FlyEi kind:function(arm,size=0xd0) addr:0x0211ac30
 _ZN12dScMgSound_c11Pop04_StartEi kind:function(arm,size=0x44) addr:0x0211ad00
 _ZN12dScMgSound_c12Pop04_UpdateEi kind:function(arm,size=0x50) addr:0x0211ad44
@@ -1599,7 +1599,7 @@ _ZN12dScMgSound_c12Pop01_FinishEi kind:function(arm,size=0xac) addr:0x0211b1cc
 _ZN12dScMgSound_c9Pop01_FlyEi kind:function(arm,size=0x90) addr:0x0211b278
 _ZN12dScMgSound_c11Pop01_StartEi kind:function(arm,size=0x90) addr:0x0211b308
 _ZN12dScMgSound_c12Pop01_UpdateEi kind:function(arm,size=0x50) addr:0x0211b398
-_ZN12dScMgSound_c12Pop00_FinishEv kind:function(arm,size=0x4) addr:0x0211b3e8
+_ZN12dScMgSound_c12Pop00_FinishEi kind:function(arm,size=0x4) addr:0x0211b3e8
 _ZN12dScMgSound_c9Pop00_FlyEi kind:function(arm,size=0x110) addr:0x0211b3ec
 _ZN12dScMgSound_c11Pop00_StartEi kind:function(arm,size=0x94) addr:0x0211b4fc
 _ZN12dScMgSound_c12Pop00_UpdateEi kind:function(arm,size=0x50) addr:0x0211b590
@@ -3278,7 +3278,7 @@ pmf_Heyho_StateIdle_4 kind:data(any) addr:0x0213afa8
 pmf_Heyho_MotionChase_2 kind:data(any) addr:0x0213afb0
 pmf_Heyho_MotionLeave_2 kind:data(any) addr:0x0213afb8
 pmf_Heyho_MotionHitSpin_2 kind:data(any) addr:0x0213afc0
-data_ov006_0213afc8 kind:data(any) addr:0x0213afc8
+data_ov006_0213afc8 kind:data(word[2]) addr:0x0213afc8
 _ZTV22dMg3DHeyhoObjAdapter_c kind:data(any) addr:0x0213afd8
 _ZTS22dMg3DHeyhoObjAdapter_c kind:data(any) addr:0x0213afe4
 _ZTI22dMg3DHeyhoObjAdapter_c kind:data(any) addr:0x0213b000

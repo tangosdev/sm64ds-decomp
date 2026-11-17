@@ -46,11 +46,8 @@ struct daHuwa_c : dEnemyBase_c {
     dCcAc_c mdCcAc_c;               /* 0x19c */
     dBgCh_Actr mWithMeshClsn;       /* 0x1d0 */
     /* InitResources copies the spawn position here. Behavior faces it when
-       there is no player, and when the player has left this radius. Three
-       scalars, not a Vector3: Vector3's destructor would run from ~daHuwa_c. */
-    s32 mHomePosX; /* 0x38c */
-    s32 mHomePosY; /* 0x390 */
-    s32 mHomePosZ; /* 0x394 */
+       there is no player, and when the player has left this radius. */
+    Vector3 mHomePos; /* 0x38c */
     /* Yaw Behavior approaches mAngleY toward. Home, or the player. */
     s16 mTargetAngY; /* 0x398 */
     /* 0 chase, 1 recoil. A player bump sets 1 and counts mStateTimer to 0x14. */

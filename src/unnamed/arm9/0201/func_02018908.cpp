@@ -2,14 +2,17 @@
 #include "types.h"
 #include "Heap.h"
 
-#include "S82.h"
-
 extern "C" {
 
+/* A mounted .narc archive (src/engine/sound/SoundEngine.cpp). */
+struct S82;
+
 /* func_02018908 at 0x02018908 */
+extern int func_0204ee10(struct S82 *archive);
+
 /* Unmount the archive and give its block back to heap. */
 void func_02018908(struct S82 *archive, void *heap) {
-    archive->func_0204ee10();
+    func_0204ee10(archive);
     ((mHeap::Heap_t *)heap)->_Deallocate(archive);
 }
 }

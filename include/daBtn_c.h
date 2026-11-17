@@ -78,9 +78,7 @@ struct daBtn_c : dEnemyBase_c {
     /* Behavior snapshots the live position into these every frame UNLESS
        dEnemyBase_c::IsGoingOffCliff says the next step leaves the ledge, in which
        case it restores the position FROM them instead. */
-    s32                          mSafePosX;             /* 0x3d4 */
-    s32                          mSafePosY;             /* 0x3d8 */
-    s32                          mSafePosZ;             /* 0x3dc */
+    Vector3 mSafePos; /* 0x3d4 */
     /* The model's first bone's rotation, read back every frame by
        func_ov079_02124188; the collision mesh is posed with it. */
     s16                          mBodyPitch;            /* 0x3e0 */

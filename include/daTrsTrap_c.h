@@ -23,9 +23,7 @@ struct daTrsTrap_c : dActor_c {
        master's uniqueID, resolved through dActor_c::FindWithID by the rise
        state. */
     u32 mParentUniqueID;         /* 0x128 */
-    s32 mHomePosX;               /* 0x12c -- placement snapshot; the rise/slide states move mPos* off it */
-    s32 mHomePosY;               /* 0x130 */
-    s32 mHomePosZ;               /* 0x134 */
+    Vector3 mHomePos; /* 0x12c -- placement snapshot; the rise/slide states move mPos* off it */
     s16 mAngVelX;                /* 0x138 -- per-frame tilt, added to mAngleX by the trapdoor state */
     s16 mAngVelY;                /* 0x13a -- per-frame spin, added to mAngleY by the merry-go-round state */
     s16 mAngVelZ;                /* 0x13c -- zeroed with the pair; no state reads it yet */

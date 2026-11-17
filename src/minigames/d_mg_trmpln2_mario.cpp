@@ -22,7 +22,7 @@
  * Their C-linkage declarations live in dMgTrmplnShared.h, which the scenes
  * include too; this file defines them without a linkage wrapper.
  * Trmp3DMario_EnterWalkIn and Trmp3DMario_IsOffstage are the scene's entry
- * points on the same byte view. The dispatch in
+ * points for one Mario and take a dMgTrmpln3DMario_c *. The dispatch in
  * Update and the state tests are spelled out word by word: the typed forms do
  * not reproduce the cartridge. Measured on this tree, `(this->*fn)()` in
  * Update makes mwccarm call its out-of-line PMF helper and lose the
@@ -743,17 +743,17 @@ void dMgTrmpln2Mario_c::EnterBounce() {
 }
 
 void dMgTrmpln2Mario_c::StateRespawnWait() {
-    unsigned int r;
+    fx32 r;
     int tbl;
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mPos.x = ((int)r - 0x800) * 0xc0;
+        r = RAND_FX();
+        mPos.x = (r - 0x800) * 0xc0;
         mVel.y = 0;
         tbl = sTrmp2DriftScale;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mVel.x = FX_MUL(((int)r - 0x800) << 1, tbl);
+        r = RAND_FX();
+        mVel.x = FX_MUL((r - 0x800) << 1, tbl);
         mAnmModel.SetAnim(sTrmpAnimWallJump, 0x40000000, 0x800, 0);
         mPrevPos.x = mPos.x;
         mPrevPos.y = mPos.y;
@@ -1022,7 +1022,7 @@ int Trmp2Mario_Hide(void) {
     int i;
     for (i = 0; i < sTrmp2MarioCount; i++) {
         int *v = ((dMgTrmpln2Mario_c *)sTrmp2Marios)[i].mState;
-        volatile int *q = (int *)pmf_Trmp2Mario_StateHidden_2;
+        int *q = pmf_Trmp2Mario_StateHidden_2;
         if (v[0] != pmf_Trmp2Mario_StateHidden_2[0] ||
             (v[1] != q[1] && ((dMgTrmpln2Mario_c *)sTrmp2Marios)[i].mState[0] != 0))
             return 0;
@@ -1069,7 +1069,7 @@ void Trmp2Mario_MoveToStart(void) {
     for (;;) {
 
         int *v = MARIO2(e)->mState;
-        volatile int *q = (int *)pmf_Trmp2Mario_StateHidden;
+        int *q = pmf_Trmp2Mario_StateHidden;
         if (v[0] == q0 && (v[1] == q[1] || MARIO2(e)->mState[0] == 0)) {
 
             ((dMgTrmpln2Mario_c *)(base + i * 0xdc))->EnterAppearWait((short)(i * 0x14));
@@ -1109,7 +1109,7 @@ void Trmp2Mario_DrawAll(void) {
     v[1] = 0;
     v[2] = -0xff8;
     func_0203cd80(v, -0x2000);
-    func_0203ccd4((Vector3 *)v, -0x3000);
+    func_0203ccd4(v, -0x3000);
     G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
     w.x = 0;
     w.y = 0;
@@ -1833,8 +1833,7 @@ void dMgTrmpln3DMario_c::JumpOff() {
     int b;
 
     mGravityStep = sTrmp3DGravityStep;
-    mVel.x = sTrmp3DJumpOffSpeed +
-             (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19);
+    mVel.x = sTrmp3DJumpOffSpeed + RAND_FX();
 
     b = mPos.x;
     if (b > 0)
@@ -2085,24 +2084,24 @@ void dMgTrmpln3DMario_c::StateWalkIn() {
     JumpOff();
 }
 
-void Trmp3DMario_EnterWalkIn(char *c) {
-    MARIO3D(c)->mGravityStep = 0;
-    MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
-    MARIO3D(c)->mPos.z = 0;
-    MARIO3D(c)->mPrevPos.x = MARIO3D(c)->mPos.x;
-    MARIO3D(c)->mPrevPos.y = MARIO3D(c)->mPos.y;
-    MARIO3D(c)->mPrevPos.z = MARIO3D(c)->mPos.z;
-    MARIO3D(c)->mVel.x = 0x1800;
-    MARIO3D(c)->mVel.y = 0;
-    MARIO3D(c)->mVel.z = 0;
-    MARIO3D(c)->mRotY = 0x4000;
-    MARIO3D(c)->mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
-    int *s = MARIO3D(c)->mState;
+void Trmp3DMario_EnterWalkIn(dMgTrmpln3DMario_c *mario) {
+    mario->mGravityStep = 0;
+    mario->mPos.y = sTrmpRowHeights[0];
+    mario->mPos.z = 0;
+    mario->mPrevPos.x = mario->mPos.x;
+    mario->mPrevPos.y = mario->mPos.y;
+    mario->mPrevPos.z = mario->mPos.z;
+    mario->mVel.x = 0x1800;
+    mario->mVel.y = 0;
+    mario->mVel.z = 0;
+    mario->mRotY = 0x4000;
+    mario->mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
+    int *s = mario->mState;
     W2 *d = &pmf_Trmp3DMario_StateOnGround;
-    if (s[0] != d->w[0] || (s[1] != d->w[1] && MARIO3D(c)->mState[0] != 0)) {
+    if (s[0] != d->w[0] || (s[1] != d->w[1] && mario->mState[0] != 0)) {
         sTrmpMariosInPlay += 1;
     }
-    MARIO3D(c)->mState = pmf_Trmp3DMario_StateWalkIn;
+    mario->mState = pmf_Trmp3DMario_StateWalkIn;
 }
 
 void dMgTrmpln3DMario_c::StateOnGround() {
@@ -2138,7 +2137,7 @@ void dMgTrmpln3DMario_c::StateOnGround() {
 
     if (mAnmModel.file == sTrmpAnimTurnEnd) {
         if (mAnmModel.Finished() != 0)
-            Trmp3DMario_EnterWalkIn((char *)this);
+            Trmp3DMario_EnterWalkIn(this);
     }
 }
 
@@ -2153,14 +2152,14 @@ void dMgTrmpln3DMario_c::EnterOnGround() {
     mState = pmf_Trmp3DMario_StateOnGround_2;
 }
 
-int Trmp3DMario_IsOffstage(int *r0) {
-    int *p = MARIO3D(r0)->mState;
+int Trmp3DMario_IsOffstage(dMgTrmpln3DMario_c *mario) {
+    int *p = mario->mState;
     int *g = pmf_Trmp3DMario_StateOffstage_3;
     int ret = 1;
     if (p[0] == g[0]) {
         if (p[1] == g[1])
             goto zero;
-        if (MARIO3D(r0)->mState[0] != 0)
+        if (mario->mState[0] != 0)
             goto out;
     zero:
         ret = 0;
@@ -2299,7 +2298,7 @@ void Trmp3DMario_DrawAll(void) {
     v[1] = 0;
     v[2] = -0xff8;
     func_0203cd80((int *)v, 0x2000);
-    func_0203ccd4((Vector3 *)v, 0);
+    func_0203ccd4(v, 0);
     G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
 
     w[0] = 0;

@@ -2,11 +2,11 @@
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
 
-extern "C" void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, void *out);
+extern "C" void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, VecFx32 *out);
 
-/* Vector3 declares a constructor and destructor under C++, which makes its
-   assignment copy word by word. The ROM copies these with one ldm/stm, which
-   C++ keeps for a struct with an array member, so the copies go through it. */
+/* C++ copies a struct of three named ints, VecFx32 included, word by word.
+   The ROM copies these with one ldm/stm, which C++ keeps for a struct with an
+   array member, so the copies go through it. */
 struct Vec3Words {
     int w[3];
 };

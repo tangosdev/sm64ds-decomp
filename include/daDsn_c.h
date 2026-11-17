@@ -41,10 +41,12 @@
  *
  * SIZE 0x3a4, from daDsn_c_classInit's literal 932.
  *
- * FOUR FIELDS OF ITS OWN, all of them read by this class's own two slots:
+ * TWO FIELDS OF ITS OWN past the base's cycle span (0x360..0x3a0), both
+ * read by this class's own two slots. Of the base's span it uses mState
+ * (0x398, 0..4: Behavior is the switch on it; InitResources zeroes it) and
+ * mTimer (0x39e: Behavior loads 0x5a frames into it when the Thwomp is
+ * triggered mid-cycle):
  *
- *   0x398  the state, 0..4. Behavior is the switch on it; InitResources zeroes it.
- *   0x39e  a 0x5a-frame timer, set when the Thwomp is triggered mid-cycle.
  *   0x3a0  a countdown Behavior decrements while the model's own 0x3a0 counter is
  *          still running.
  *   0x3a2  the trigger flag. Behavior clears it, InitResources zeroes it.
@@ -80,18 +82,9 @@
 #include "daDsnBase_c.h"
 
 struct daDsn_c : daDsnBase_c {
-    /* Not inherited: daDsnBase_c declares nothing past 0x360. Its methods do
-       reach into this span on both leaves, though, through d_a_dsn_base.cpp's
-       file-local DsnCycle view: the shadow matrix at 0x360 and the rise and
-       ground heights at 0x390/0x394, which daDkk_c.h names mShadowMtx, mRiseY
-       and mGroundY. d_a_dsn.cpp itself touches none of it, so it stays a pad
-       here -- see include/daDsnBase_c.h. */
-    u8 pad_360[0x38];
+    /* 0x360..0x3a0 (mShadowMtx through mLandCount, with mState and mTimer)
+       is daDsnBase_c's cycle span. */
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    s32 mState; /* 0x398 */
-    u8 pad_39c[0x2];
-    u8 mRetrigger; /* 0x39e */
-    u8 pad_39f[0x1];
     u16 mHoldTimer; /* 0x3a0 */
     u8 mTriggered;  /* 0x3a2 */
 

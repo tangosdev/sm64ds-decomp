@@ -37,13 +37,9 @@ struct daSpd_c : dActor_c {
     s32 mShadowMtx[12];                      /* 0x350 */
     /* Current row of data_ov071_02122fa8. Two pointer-to-member calls. */
     void *mStateRow;                         /* 0x380 */
-    s32 mHomeX;                              /* 0x384 */
-    s32 mHomeY;                              /* 0x388 */
-    s32 mHomeZ;                              /* 0x38c */
+    Vector3 mHome;                           /* 0x384 */
     /* Where the bug walks back to. Refreshed from mPos when it lands. */
-    s32 mAnchorX;                            /* 0x390 */
-    s32 mAnchorY;                            /* 0x394 */
-    s32 mAnchorZ;                            /* 0x398 */
+    Vector3 mAnchor;                         /* 0x390 */
     s32 mState;                              /* 0x39c */
     /* Leap range: set from the distance to the player, then counted down. */
     s32 mLeapDist;                           /* 0x3a0 */

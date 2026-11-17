@@ -276,11 +276,11 @@ int daPgMthr_c::StateTalkUpdate() {
             Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
             {
-                int mouth[3];
-                mouth[0] = data_020a0e68.m[9];
-                mouth[1] = data_020a0e68.m[10];
-                mouth[2] = data_020a0e68.m[11];
-                if (mPlayer->ShowMessage(*this, mMessageId, (Vector3 *)mouth, 0, 0)) {
+                Vector3 mouth;
+                mouth.x = data_020a0e68.m[9];
+                mouth.y = data_020a0e68.m[10];
+                mouth.z = data_020a0e68.m[11];
+                if (mPlayer->ShowMessage(*this, mMessageId, &mouth, 0, 0)) {
                     func_0201267c(0xdf, &mCamSpacePos);
                     {
                         u8 *p = &mTalkStep;
@@ -354,8 +354,6 @@ int daPgMthr_c::StateFollowUpdate() {
 }
 
 void daPgMthr_c::UpdateModelAndShadow() {
-    /* Unused, but deleting this local DIFFs. */
-    char *s = (char *)this;
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     /* m[9..11] are mat4x3's translation (pos >> 3). */
     mAnmModel.mat4x3.m[9] = mPosX >> 3;

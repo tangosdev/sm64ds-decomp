@@ -47,7 +47,7 @@ typedef int BOOL;
 
 #define MB_SEND_THRESHOLD 2
 
-/* mb_private.h: the WM callback codes MB_WmBase.cpp passes on. */
+/* mb_private.h: the WM callback codes MB_WmBase.c passes on. */
 #define MB_CALLBACK_CHILD_CONNECTED 0
 #define MB_CALLBACK_CHILD_DISCONNECTED 1
 #define MB_CALLBACK_MP_PARENT_RECV 3
@@ -506,21 +506,13 @@ static int MBi_CommParentSendMsg(u8 type, u16 pollbmp) {
 
 /* Send the download info of the next file (mod 16) that a child in
  * REQ_ACCEPTED has entered, to every such child of that file. */
-/* The SDK's function-local `static s8 prev_fid = -1` of
- * MBi_CommParentSendDLFileInfo: the file whose download info went out last.
- * Its byte (0xff) sits at 0x0209a078, followed by three bytes of linker
- * alignment before MB_FileInfo.c's .data. The object's 1-byte .data ends
- * short of that word, and the TU tooling cannot yet license a claim like that
- * inside arm9's shared .data, so the static keeps its configured address
- * name. */
-extern s8 data_0209a078;
-
 static int MBi_CommParentSendDLFileInfo(void) {
     MBCommParentBlockHeader hd;
     u8 *databuf = ((u8 *)pPwork->common.sendbuf) + MB_COMM_PARENT_HEADER_SIZE;
     u16 child;
     u8 i, fid;
     s8 send_candidate_fid = -1;
+    static s8 prev_fid = -1;
     u8 file_req_num[MB_MAX_FILE];
     u16 pollbmp = 0;
 
@@ -532,7 +524,7 @@ static int MBi_CommParentSendDLFileInfo(void) {
         }
     }
 
-    fid = data_0209a078;
+    fid = prev_fid;
 
     for (i = 0; i < MB_MAX_FILE; i++) {
         fid = ((fid + 1) % MB_MAX_FILE);
@@ -546,7 +538,7 @@ static int MBi_CommParentSendDLFileInfo(void) {
     if (send_candidate_fid == -1)
         return MB_SENDFUNC_STATE_ERR;
 
-    data_0209a078 = send_candidate_fid;
+    prev_fid = send_candidate_fid;
 
     for (child = 1; child <= WM_NUM_MAX_CHILD; child++) {
         if (pPwork->p_comm_state[child - 1] == MB_COMM_PSTATE_REQ_ACCEPTED &&

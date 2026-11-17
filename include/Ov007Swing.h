@@ -49,25 +49,25 @@ typedef struct Ov007Swing {
     Ov007Mesh *mesh;          /* 0x00: func_ov007_020c9d90 binds it */
     Ov007SwingParams *params; /* 0x04 */
     int meshPoint;            /* 0x08: the mesh point nearest the anchor (func_ov007_020c9d90) */
-    Vector3 anchor;           /* 0x0c: func_ov007_020c9f10 places it */
+    VecFx32 anchor;           /* 0x0c: func_ov007_020c9f10 places it */
     /* 0x18: one position per chain point, z = index << 12 apart at build;
      * each chain point's target */
-    Vector3 *chainPositions;
+    VecFx32 *chainPositions;
     /* 0x1c: func_ov007_020c798c point list; its first point is pinned
      * (func_ov007_020ca010) */
     Ov007PointList *chain;
-    Vector3 xPointPos[2];      /* 0x20: xPoints[i]'s targets, spread along x */
-    Vector3 yPointPos[2];      /* 0x38: yPoints[i]'s, spread along y */
+    VecFx32 xPointPos[2];      /* 0x20: xPoints[i]'s targets, spread along x */
+    VecFx32 yPointPos[2];      /* 0x38: yPoints[i]'s, spread along y */
     Ov007Follower *xPoints[2]; /* 0x50: func_ov007_020c844c */
     Ov007Follower *yPoints[2]; /* 0x58 */
     Ov007Link *xLinks[2];      /* 0x60: xPoints[i] to the mesh (func_ov007_020c9d90) */
     Ov007Link *yLinks[2];      /* 0x68 */
 #ifdef __cplusplus
     void func_ov007_020c9fa0();
-    void func_ov007_020c9f10(Vector3 *pos, int w, int h);
+    void func_ov007_020c9f10(VecFx32 *pos, int w, int h);
     void func_ov007_020c9d90(Ov007Mesh *mesh);
     void func_ov007_020c9c24(int shift);
-    void func_ov007_020c9a84(Vector3 *offset, u16 *rotX, u16 *rotY);
+    void func_ov007_020c9a84(VecFx32 *offset, u16 *rotX, u16 *rotY);
 #endif
 } Ov007Swing;
 

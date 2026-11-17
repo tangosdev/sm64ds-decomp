@@ -7,9 +7,13 @@
  *
  * These take the SDK's VecFx32 / VecFx16, not the game's Vector3 / Vector3s.
  * The words are the same, but in C++ Vector3 declares a constructor and a
- * destructor, so a Vector3 * does not convert to a VecFx32 *. Callers still
- * reach these through include/math/CalcLib.h's Vector3 spellings; moving a
- * caller onto this header is matching work (issue #5207).
+ * destructor, so a Vector3 * does not convert to a VecFx32 *. In C++,
+ * include/math/CalcLib.h includes this header and adds inline Vector3
+ * overloads of Add, Subtract, DotProduct, CrossProduct, Mag, Normalize and
+ * Distance that forward here, so a caller passes either type and no call
+ * site casts. C has no overloads: C includers of CalcLib.h still see its
+ * Vector3 declarations instead of these, and the two must not meet in one C
+ * file (issue #5207).
  *
  * Parameters are unnamed on purpose: each named parameter in a declaration
  * costs every C++ file that includes this header a compiler @NNN number.

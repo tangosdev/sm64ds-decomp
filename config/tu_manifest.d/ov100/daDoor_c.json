@@ -388,18 +388,18 @@
       "evidence": "the door resource handle constructed with file ID 0x9c0a"
     },
     {
-      "symbol": "@610",
+      "symbol": "@566",
       "address": "0x02148784",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c0b resource handle"
     },
     {
-      "symbol": "@813",
+      "symbol": "@821",
       "address": "0x02148790",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sBackOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @780. ov095 defines @780 and ov006 unit020cd744 defines @817, so the pin is the unused same-length @813"
+      "evidence": "destructor-registration node for sBackOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @780. ov095 defines @780 and ov006 unit020cd744 defines @817, so the pin is the unused same-length @821"
     },
     {
       "symbol": "sBackOff$782",
@@ -409,18 +409,18 @@
       "evidence": "func_ov100_02144a38's function-local static Vector3(0x4b000, 0, -0x6e000)"
     },
     {
-      "symbol": "@613",
+      "symbol": "@569",
       "address": "0x021487a8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c08 resource handle"
     },
     {
-      "symbol": "@1214",
+      "symbol": "@1088",
       "address": "0x021487b4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sDoorOff; InitResources passes it to __register_global_object. Emitted @1178, which ov089 already defines, so renamed to the unused same-length @1214"
+      "evidence": "destructor-registration node for sDoorOff; InitResources passes it to __register_global_object. Emitted @1178, which ov089 already defines, so renamed to the unused same-length @1088"
     },
     {
       "symbol": "sDoorOff$1180",
@@ -430,18 +430,18 @@
       "evidence": "InitResources' function-local static Vector3(0x4b000, 0, 0)"
     },
     {
-      "symbol": "@1039",
+      "symbol": "@1082",
       "address": "0x021487cc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sEnterPos; func_ov100_021451c4 passes it to __register_global_object. Emitted @1006, which ov065 already defines, so renamed to the unused same-length @1039"
+      "evidence": "destructor-registration node for sEnterPos; func_ov100_021451c4 passes it to __register_global_object. Emitted @1006, which ov065 already defines, so renamed to the unused same-length @1082"
     },
     {
-      "symbol": "@809",
+      "symbol": "@819",
       "address": "0x021487d8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sKeyOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @784, which ov091 already defines, so renamed to the unused same-length @809"
+      "evidence": "destructor-registration node for sKeyOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @784, which ov091 already defines, so renamed to the unused same-length @819"
     },
     {
       "symbol": "sEnterPos$1008",
@@ -458,11 +458,11 @@
       "evidence": "func_ov100_02144a38's function-local static Vector3(-0x4c000, 0, 0x6d000)"
     },
     {
-      "symbol": "@1043",
+      "symbol": "@1084",
       "address": "0x021487fc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sEnterNeg; func_ov100_021451c4 passes it to __register_global_object. Emitted @1010, which ov080 already defines, so renamed to the unused same-length @1043"
+      "evidence": "destructor-registration node for sEnterNeg; func_ov100_021451c4 passes it to __register_global_object. Emitted @1010, which ov080 already defines, so renamed to the unused same-length @1084"
     },
     {
       "symbol": "sEnterNeg$1012",
@@ -472,63 +472,63 @@
       "evidence": "func_ov100_021451c4's function-local static Vector3(0, 0, -0x64000)"
     },
     {
-      "symbol": "@604",
+      "symbol": "@558",
       "address": "0x02148814",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c09 resource handle"
     },
     {
-      "symbol": "@612",
+      "symbol": "@568",
       "address": "0x02148820",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x446 resource handle"
     },
     {
-      "symbol": "@605",
+      "symbol": "@559",
       "address": "0x0214882c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c0a resource handle"
     },
     {
-      "symbol": "@611",
+      "symbol": "@567",
       "address": "0x02148838",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x445 resource handle"
     },
     {
-      "symbol": "@614",
+      "symbol": "@570",
       "address": "0x02148844",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x43e resource handle"
     },
     {
-      "symbol": "@805",
+      "symbol": "@764",
       "address": "0x02148850",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sFrontOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @776, which ov091 already defines, so renamed to the unused same-length @805"
+      "evidence": "destructor-registration node for sFrontOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @776, which ov091 already defines, so renamed to the unused same-length @764"
     },
     {
-      "symbol": "@615",
+      "symbol": "@571",
       "address": "0x0214885c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x43f resource handle"
     },
     {
-      "symbol": "@606",
+      "symbol": "@562",
       "address": "0x02148868",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x441 resource handle"
     },
     {
-      "symbol": "@607",
+      "symbol": "@563",
       "address": "0x02148874",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -542,14 +542,14 @@
       "evidence": "func_ov100_02144a38's function-local static Vector3(0x4b000, 0, 0x6e000)"
     },
     {
-      "symbol": "@608",
+      "symbol": "@564",
       "address": "0x0214888c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x443 resource handle"
     },
     {
-      "symbol": "@609",
+      "symbol": "@565",
       "address": "0x02148898",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -1203,73 +1203,73 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@610",
+      "symbol": "@566",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02148784"
     },
     {
-      "symbol": "@613",
+      "symbol": "@569",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x021487a8"
     },
     {
-      "symbol": "@604",
+      "symbol": "@558",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02148814"
     },
     {
-      "symbol": "@612",
+      "symbol": "@568",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02148820"
     },
     {
-      "symbol": "@605",
+      "symbol": "@559",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x0214882c"
     },
     {
-      "symbol": "@611",
+      "symbol": "@567",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02148838"
     },
     {
-      "symbol": "@614",
+      "symbol": "@570",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02148844"
     },
     {
-      "symbol": "@615",
+      "symbol": "@571",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x0214885c"
     },
     {
-      "symbol": "@606",
+      "symbol": "@562",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02148868"
     },
     {
-      "symbol": "@607",
+      "symbol": "@563",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02148874"
     },
     {
-      "symbol": "@608",
+      "symbol": "@564",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x0214888c"
     },
     {
-      "symbol": "@609",
+      "symbol": "@565",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02148898"
@@ -1287,7 +1287,7 @@
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x021487e4"
     },
     {
-      "symbol": "@1039",
+      "symbol": "@1082",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node; DSD requires a configured global symbol at 0x021487cc"
@@ -1305,7 +1305,7 @@
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x021487c0"
     },
     {
-      "symbol": "@1214",
+      "symbol": "@1088",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node; DSD requires a configured global symbol at 0x021487b4"
@@ -1323,7 +1323,7 @@
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x02148808"
     },
     {
-      "symbol": "@1043",
+      "symbol": "@1084",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node; DSD requires a configured global symbol at 0x021487fc"
@@ -1341,7 +1341,7 @@
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x0214879c"
     },
     {
-      "symbol": "@813",
+      "symbol": "@821",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node; DSD requires a configured global symbol at 0x02148790"
@@ -1359,7 +1359,7 @@
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x021487f0"
     },
     {
-      "symbol": "@809",
+      "symbol": "@819",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node; DSD requires a configured global symbol at 0x021487d8"
@@ -1377,7 +1377,7 @@
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x02148880"
     },
     {
-      "symbol": "@805",
+      "symbol": "@764",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node; DSD requires a configured global symbol at 0x02148850"
@@ -2147,156 +2147,157 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@606",
-      "to": "@614",
-      "evidence": "resource-handle registration node. The sinit's relocations map the previous @579 onto @575 after the six function-local Vector3 statics (uniform -4, same targets, same order). Licensed under the existing pin @614 Re-keyed from @590 to @536 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @536 to @531 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @531 to @603 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@660",
+      "to": "@570",
+      "evidence": "resource-handle registration node. The sinit's relocations map the previous @579 onto @575 after the six function-local Vector3 statics (uniform -4, same targets, same order). Licensed under the existing pin @570 Re-keyed from @590 to @536 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @536 to @531 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @531 to @603 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @603 to @640 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @640 to @652 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @652 to @657 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@607",
-      "to": "@615",
-      "evidence": "mwcc numbers this resource-handle registration node @561 per TU; daObjHeart_c's emitted object already carries @561 globally, so the scratch link would multiply-define it Re-keyed from @591 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @537 to @532 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @532 to @604 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@661",
+      "to": "@571",
+      "evidence": "mwcc numbers this resource-handle registration node @561 per TU; daObjHeart_c's emitted object already carries @561 globally, so the scratch link would multiply-define it Re-keyed from @591 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @537 to @532 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @532 to @604 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @604 to @641 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @641 to @653 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @653 to @658 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@612",
-      "to": "@610",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @580 now; licensed under the existing pin @610 Re-keyed from @596 to @542 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @542 to @537 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @537 to @609 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@666",
+      "to": "@566",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @580 now; licensed under the existing pin @566 Re-keyed from @596 to @542 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @542 to @537 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @537 to @609 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @609 to @646 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @646 to @658 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @658 to @663 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@615",
-      "to": "@613",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @583 now; licensed under the existing pin @613 Re-keyed from @599 to @545 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @545 to @540 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @540 to @612 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@669",
+      "to": "@569",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @583 now; licensed under the existing pin @569 Re-keyed from @599 to @545 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @545 to @540 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @540 to @612 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @612 to @649 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @649 to @661 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @661 to @666 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@604",
-      "to": "@604",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @572 now; licensed under the existing pin @604 Re-keyed from @588 to @534 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @534 to @529 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @529 to @601 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@658",
+      "to": "@558",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @572 now; licensed under the existing pin @558 Re-keyed from @588 to @534 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @534 to @529 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @529 to @601 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @601 to @638 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @638 to @650 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @650 to @655 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@614",
-      "to": "@612",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @582 now; licensed under the existing pin @612 Re-keyed from @598 to @544 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @544 to @539 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @539 to @611 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@668",
+      "to": "@568",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @582 now; licensed under the existing pin @568 Re-keyed from @598 to @544 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @544 to @539 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @539 to @611 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @611 to @648 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @648 to @660 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @660 to @665 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@605",
-      "to": "@605",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @573 now; licensed under the existing pin @605 Re-keyed from @589 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @535 to @530 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @530 to @602 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@659",
+      "to": "@559",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @573 now; licensed under the existing pin @559 Re-keyed from @589 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @535 to @530 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @530 to @602 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @602 to @639 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @639 to @651 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @651 to @656 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@613",
-      "to": "@611",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @581 now; licensed under the existing pin @611 Re-keyed from @597 to @543 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @543 to @538 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @538 to @610 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@667",
+      "to": "@567",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @581 now; licensed under the existing pin @567 Re-keyed from @597 to @543 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @543 to @538 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @538 to @610 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @610 to @647 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @647 to @659 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @659 to @664 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@608",
-      "to": "@606",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @576 now; licensed under the existing pin @606 Re-keyed from @592 to @538 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @538 to @533 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @533 to @605 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@662",
+      "to": "@562",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @576 now; licensed under the existing pin @562 Re-keyed from @592 to @538 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @538 to @533 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @533 to @605 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @605 to @642 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @642 to @654 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @654 to @659 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@609",
-      "to": "@607",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @577 now; licensed under the existing pin @607 Re-keyed from @593 to @539 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @539 to @534 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @534 to @606 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@663",
+      "to": "@563",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @577 now; licensed under the existing pin @563 Re-keyed from @593 to @539 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @539 to @534 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @534 to @606 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @606 to @643 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @643 to @655 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @655 to @660 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@610",
-      "to": "@608",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @578 now; licensed under the existing pin @608 Re-keyed from @594 to @540 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @540 to @535 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @535 to @607 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@664",
+      "to": "@564",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @578 now; licensed under the existing pin @564 Re-keyed from @594 to @540 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @540 to @535 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @535 to @607 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @607 to @644 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @644 to @656 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @656 to @661 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@611",
-      "to": "@609",
-      "evidence": "resource-handle registration node. The sinit's relocations map the previous @584 onto @580 after the six function-local Vector3 statics (uniform -4, same targets, same order). Licensed under the existing pin @609 Re-keyed from @595 to @541 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @541 to @536 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @536 to @608 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@665",
+      "to": "@565",
+      "evidence": "resource-handle registration node. The sinit's relocations map the previous @584 onto @580 after the six function-local Vector3 statics (uniform -4, same targets, same order). Licensed under the existing pin @565 Re-keyed from @595 to @541 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @541 to @536 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @536 to @608 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @608 to @645 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @645 to @657 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @657 to @662 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@805",
-      "to": "@805",
-      "evidence": "sFrontOff's registration node. ov091 already defines @776, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @805 Re-keyed from @791 to @737 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @737 to @735 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @735 to @730 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @730 to @802 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@859",
+      "to": "@764",
+      "evidence": "sFrontOff's registration node. ov091 already defines @776, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @764 Re-keyed from @791 to @737 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @737 to @735 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @735 to @730 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @730 to @802 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @802 to @839 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @839 to @851 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @856 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@813",
-      "to": "@813",
-      "evidence": "sBackOff's registration node. ov095 defines the compiled @780 and ov006 unit020cd744 defines @817, so this maps it to the unused same-length @813 Re-keyed from @795 to @741 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @741 to @739 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @739 to @734 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @734 to @806 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@863",
+      "to": "@821",
+      "evidence": "sBackOff's registration node. ov095 defines the compiled @780 and ov006 unit020cd744 defines @817, so this maps it to the unused same-length @821 Re-keyed from @795 to @741 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @741 to @739 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @739 to @734 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @734 to @806 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @806 to @843 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @843 to @855 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @855 to @860 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@809",
-      "to": "@809",
-      "evidence": "sKeyOff's registration node. ov091 already defines @784, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @809 Re-keyed from @799 to @745 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @745 to @743 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @743 to @738 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @738 to @810 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@867",
+      "to": "@819",
+      "evidence": "sKeyOff's registration node. ov091 already defines @784, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @819 Re-keyed from @799 to @745 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @745 to @743 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @743 to @738 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @738 to @810 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @810 to @847 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @847 to @859 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @859 to @864 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1039",
-      "to": "@1039",
-      "evidence": "sEnterPos's registration node. ov065 already defines @1006, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1039 Re-keyed from @1021 to @967 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @967 to @971 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @971 to @969 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @969 to @964 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @964 to @1036 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@1093",
+      "to": "@1082",
+      "evidence": "sEnterPos's registration node. ov065 already defines @1006, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1082 Re-keyed from @1021 to @967 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @967 to @971 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @971 to @969 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @969 to @964 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @964 to @1036 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @1036 to @1073 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1073 to @1085 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1085 to @1090 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1043",
-      "to": "@1043",
-      "evidence": "sEnterNeg's registration node. ov080 already defines @1010, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1043 Re-keyed from @1025 to @971 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @971 to @975 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @975 to @973 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @973 to @968 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @968 to @1040 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@1097",
+      "to": "@1084",
+      "evidence": "sEnterNeg's registration node. ov080 already defines @1010, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1084 Re-keyed from @1025 to @971 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @971 to @975 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @975 to @973 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @973 to @968 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @968 to @1040 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @1040 to @1077 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1077 to @1089 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1089 to @1094 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1214",
-      "to": "@1214",
-      "evidence": "sDoorOff's registration node. ov089 already defines @1178, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1214 Re-keyed from @1193 to @1139 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1139 to @1143 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1143 to @1147 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1147 to @1145 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @1145 to @1140 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @1140 to @1137 when the cleanup of gotos in func_ov100_021452e4 and Render moved the compiler-local counter by -3 (measured from the compiled object). Re-keyed from @1137 to @1139 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1139 to @1211 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
+      "from": "@1268",
+      "to": "@1088",
+      "evidence": "sDoorOff's registration node. ov089 already defines @1178, and objisolate cannot grow a name, so this maps the compiled name to the unused same-length @1088 Re-keyed from @1193 to @1139 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1139 to @1143 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1143 to @1147 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from @1147 to @1145 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from @1145 to @1140 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @1140 to @1137 when the cleanup of gotos in func_ov100_021452e4 and Render moved the compiler-local counter by -3 (measured from the compiled object). Re-keyed from @1137 to @1139 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1139 to @1211 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from @1211 to @1248 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1248 to @1260 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1260 to @1265 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "_ZGVsFrontOff$802",
+      "from": "_ZGVsFrontOff$856",
       "to": "_ZGVsFrontOff$778",
-      "evidence": "Re-keyed from _ZGVsFrontOff$727 to _ZGVsFrontOff$730 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsFrontOff$788 to _ZGVsFrontOff$734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsFrontOff$734 to _ZGVsFrontOff$732 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsFrontOff$732 to _ZGVsFrontOff$727 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsFrontOff$788 to _ZGVsFrontOff$734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsFrontOff$734 to _ZGVsFrontOff$732 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsFrontOff$732 to _ZGVsFrontOff$727 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from _ZGVsFrontOff$727 to _ZGVsFrontOff$799 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from _ZGVsFrontOff$799 to _ZGVsFrontOff$836 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsFrontOff$836 to _ZGVsFrontOff$848 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsFrontOff$848 to _ZGVsFrontOff$853 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sFrontOff$802",
+      "from": "sFrontOff$856",
       "to": "sFrontOff$778",
-      "evidence": "Re-keyed from sFrontOff$727 to sFrontOff$730 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sFrontOff$788 to sFrontOff$734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sFrontOff$734 to sFrontOff$732 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sFrontOff$732 to sFrontOff$727 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sFrontOff$788 to sFrontOff$734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sFrontOff$734 to sFrontOff$732 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sFrontOff$732 to sFrontOff$727 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from sFrontOff$727 to sFrontOff$799 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from sFrontOff$799 to sFrontOff$836 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sFrontOff$836 to sFrontOff$848 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sFrontOff$848 to sFrontOff$853 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "_ZGVsBackOff$806",
+      "from": "_ZGVsBackOff$860",
       "to": "_ZGVsBackOff$782",
-      "evidence": "Re-keyed from _ZGVsBackOff$731 to _ZGVsBackOff$734 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsBackOff$792 to _ZGVsBackOff$738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsBackOff$738 to _ZGVsBackOff$736 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsBackOff$736 to _ZGVsBackOff$731 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsBackOff$792 to _ZGVsBackOff$738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsBackOff$738 to _ZGVsBackOff$736 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsBackOff$736 to _ZGVsBackOff$731 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from _ZGVsBackOff$731 to _ZGVsBackOff$803 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from _ZGVsBackOff$803 to _ZGVsBackOff$840 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsBackOff$840 to _ZGVsBackOff$852 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsBackOff$852 to _ZGVsBackOff$857 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sBackOff$806",
+      "from": "sBackOff$860",
       "to": "sBackOff$782",
-      "evidence": "Re-keyed from sBackOff$731 to sBackOff$734 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sBackOff$792 to sBackOff$738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sBackOff$738 to sBackOff$736 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sBackOff$736 to sBackOff$731 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sBackOff$792 to sBackOff$738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sBackOff$738 to sBackOff$736 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sBackOff$736 to sBackOff$731 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from sBackOff$731 to sBackOff$803 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from sBackOff$803 to sBackOff$840 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sBackOff$840 to sBackOff$852 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sBackOff$852 to sBackOff$857 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "_ZGVsKeyOff$810",
+      "from": "_ZGVsKeyOff$864",
       "to": "_ZGVsKeyOff$786",
-      "evidence": "Re-keyed from _ZGVsKeyOff$735 to _ZGVsKeyOff$738 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsKeyOff$796 to _ZGVsKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsKeyOff$742 to _ZGVsKeyOff$740 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsKeyOff$740 to _ZGVsKeyOff$735 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsKeyOff$796 to _ZGVsKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsKeyOff$742 to _ZGVsKeyOff$740 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsKeyOff$740 to _ZGVsKeyOff$735 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from _ZGVsKeyOff$735 to _ZGVsKeyOff$807 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from _ZGVsKeyOff$807 to _ZGVsKeyOff$844 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsKeyOff$844 to _ZGVsKeyOff$856 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsKeyOff$856 to _ZGVsKeyOff$861 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sKeyOff$810",
+      "from": "sKeyOff$864",
       "to": "sKeyOff$786",
-      "evidence": "Re-keyed from sKeyOff$735 to sKeyOff$738 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sKeyOff$796 to sKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sKeyOff$742 to sKeyOff$740 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sKeyOff$740 to sKeyOff$735 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sKeyOff$796 to sKeyOff$742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sKeyOff$742 to sKeyOff$740 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sKeyOff$740 to sKeyOff$735 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from sKeyOff$735 to sKeyOff$807 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from sKeyOff$807 to sKeyOff$844 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sKeyOff$844 to sKeyOff$856 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sKeyOff$856 to sKeyOff$861 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "_ZGVsEnterPos$1036",
+      "from": "_ZGVsEnterPos$1090",
       "to": "_ZGVsEnterPos$1008",
-      "evidence": "Re-keyed from _ZGVsEnterPos$961 to _ZGVsEnterPos$964 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterPos$1018 to _ZGVsEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterPos$964 to _ZGVsEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsEnterPos$968 to _ZGVsEnterPos$966 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsEnterPos$966 to _ZGVsEnterPos$961 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterPos$1018 to _ZGVsEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterPos$964 to _ZGVsEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsEnterPos$968 to _ZGVsEnterPos$966 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsEnterPos$966 to _ZGVsEnterPos$961 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from _ZGVsEnterPos$961 to _ZGVsEnterPos$1033 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from _ZGVsEnterPos$1033 to _ZGVsEnterPos$1070 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsEnterPos$1070 to _ZGVsEnterPos$1082 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsEnterPos$1082 to _ZGVsEnterPos$1087 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sEnterPos$1036",
+      "from": "sEnterPos$1090",
       "to": "sEnterPos$1008",
-      "evidence": "Re-keyed from sEnterPos$961 to sEnterPos$964 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterPos$1018 to sEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterPos$964 to sEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sEnterPos$968 to sEnterPos$966 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sEnterPos$966 to sEnterPos$961 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterPos$1018 to sEnterPos$964 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterPos$964 to sEnterPos$968 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sEnterPos$968 to sEnterPos$966 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sEnterPos$966 to sEnterPos$961 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from sEnterPos$961 to sEnterPos$1033 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from sEnterPos$1033 to sEnterPos$1070 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sEnterPos$1070 to sEnterPos$1082 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sEnterPos$1082 to sEnterPos$1087 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "_ZGVsEnterNeg$1040",
+      "from": "_ZGVsEnterNeg$1094",
       "to": "_ZGVsEnterNeg$1012",
-      "evidence": "Re-keyed from _ZGVsEnterNeg$965 to _ZGVsEnterNeg$968 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterNeg$1022 to _ZGVsEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$968 to _ZGVsEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsEnterNeg$972 to _ZGVsEnterNeg$970 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$970 to _ZGVsEnterNeg$965 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsEnterNeg$1022 to _ZGVsEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$968 to _ZGVsEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsEnterNeg$972 to _ZGVsEnterNeg$970 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$970 to _ZGVsEnterNeg$965 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$965 to _ZGVsEnterNeg$1037 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from _ZGVsEnterNeg$1037 to _ZGVsEnterNeg$1074 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsEnterNeg$1074 to _ZGVsEnterNeg$1086 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsEnterNeg$1086 to _ZGVsEnterNeg$1091 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sEnterNeg$1040",
+      "from": "sEnterNeg$1094",
       "to": "sEnterNeg$1012",
-      "evidence": "Re-keyed from sEnterNeg$965 to sEnterNeg$968 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterNeg$1022 to sEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterNeg$968 to sEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sEnterNeg$972 to sEnterNeg$970 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sEnterNeg$970 to sEnterNeg$965 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sEnterNeg$1022 to sEnterNeg$968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterNeg$968 to sEnterNeg$972 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sEnterNeg$972 to sEnterNeg$970 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sEnterNeg$970 to sEnterNeg$965 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from sEnterNeg$965 to sEnterNeg$1037 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from sEnterNeg$1037 to sEnterNeg$1074 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sEnterNeg$1074 to sEnterNeg$1086 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sEnterNeg$1086 to sEnterNeg$1091 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "_ZGVsDoorOff$1211",
+      "from": "_ZGVsDoorOff$1265",
       "to": "_ZGVsDoorOff$1180",
-      "evidence": "Re-keyed from _ZGVsDoorOff$1136 to _ZGVsDoorOff$1139 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsDoorOff$1190 to _ZGVsDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1136 to _ZGVsDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1140 to _ZGVsDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1144 to _ZGVsDoorOff$1142 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1142 to _ZGVsDoorOff$1137 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1137 to _ZGVsDoorOff$1134 when the cleanup of gotos in func_ov100_021452e4 and Render moved the compiler-local counter by -3 (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1134 to _ZGVsDoorOff$1136 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsDoorOff$1190 to _ZGVsDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1136 to _ZGVsDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1140 to _ZGVsDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from _ZGVsDoorOff$1144 to _ZGVsDoorOff$1142 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1142 to _ZGVsDoorOff$1137 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1137 to _ZGVsDoorOff$1134 when the cleanup of gotos in func_ov100_021452e4 and Render moved the compiler-local counter by -3 (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1134 to _ZGVsDoorOff$1136 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from _ZGVsDoorOff$1136 to _ZGVsDoorOff$1208 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from _ZGVsDoorOff$1208 to _ZGVsDoorOff$1245 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsDoorOff$1245 to _ZGVsDoorOff$1257 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsDoorOff$1257 to _ZGVsDoorOff$1262 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sDoorOff$1211",
+      "from": "sDoorOff$1265",
       "to": "sDoorOff$1180",
-      "evidence": "Re-keyed from sDoorOff$1136 to sDoorOff$1139 (measured from the compiled object). Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sDoorOff$1190 to sDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sDoorOff$1136 to sDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1140 to sDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1144 to sDoorOff$1142 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sDoorOff$1142 to sDoorOff$1137 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from sDoorOff$1137 to sDoorOff$1134 when the cleanup of gotos in func_ov100_021452e4 and Render moved the compiler-local counter by -3 (measured from the compiled object). Re-keyed from sDoorOff$1134 to sDoorOff$1136 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sDoorOff$1190 to sDoorOff$1136 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sDoorOff$1136 to sDoorOff$1140 when its int[3]/VecFx32 scratch locals that were cast to Vector3* became real Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1140 to sDoorOff$1144 when Vector3 locals (measured from the compiled object: same section, size and order). Re-keyed from sDoorOff$1144 to sDoorOff$1142 when the gCamera->mFlags pointer locals were removed (measured from the compiled object). Re-keyed from sDoorOff$1142 to sDoorOff$1137 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from sDoorOff$1137 to sDoorOff$1134 when the cleanup of gotos in func_ov100_021452e4 and Render moved the compiler-local counter by -3 (measured from the compiled object). Re-keyed from sDoorOff$1134 to sDoorOff$1136 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from sDoorOff$1136 to sDoorOff$1208 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object). Re-keyed from sDoorOff$1208 to sDoorOff$1245 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sDoorOff$1245 to sDoorOff$1257 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sDoorOff$1257 to sDoorOff$1262 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "externalized_output": [],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "rodata": null
 }

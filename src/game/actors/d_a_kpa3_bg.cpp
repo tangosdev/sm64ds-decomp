@@ -36,13 +36,13 @@
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/MtxStack.h"
 
 struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
 extern "C" int *Vec3_AsrInPlace(VecFx32 *v, int n);
-extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 void func_02012694(unsigned int, const Vector3 *);
 extern "C" int CopyTexPalFromLevelModel(void *);
 

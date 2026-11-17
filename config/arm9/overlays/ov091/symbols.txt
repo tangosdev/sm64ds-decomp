@@ -221,9 +221,9 @@ gPileModelFile kind:bss addr:0x02135654
 data_ov091_02135674 kind:bss addr:0x02135674
 data_ov091_0213567c kind:bss addr:0x0213567c
 data_ov091_02135684 kind:bss addr:0x02135684
-@614 kind:bss addr:0x0213568c
-@613 kind:bss addr:0x02135698
-@615 kind:bss addr:0x021356a4
+@547 kind:bss addr:0x0213568c
+@545 kind:bss addr:0x02135698
+@549 kind:bss addr:0x021356a4
 data_ov091_021356b0 kind:bss addr:0x021356b0
 data_ov091_021356c0 kind:bss addr:0x021356c0
 data_ov091_021356d0 kind:bss addr:0x021356d0

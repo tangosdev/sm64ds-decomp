@@ -29,14 +29,13 @@
 // - LoadTextureTransformers spells `new` as an explicit operator new call
 //   plus a null-guarded constructor call, a form from before the allocator
 //   was named _Znwm, when a new-expression could not link; the fader array passes dFdWipe_c's constructor and destructor by address.
-// - CheckCameraInput keeps `#pragma opt_strength_reduction off`; PS_Update and Behavior keep
-//   `#pragma opt_common_subs off` (switched back on after each), the
+// - CheckCameraInput keeps `#pragma opt_strength_reduction off`; PS_Update keeps
+//   `#pragma opt_common_subs off` (switched back on after it), the
 //   stale-tmpv levers in PS_Update's case 0xa and the `aa` staging in its
 //   case-1 star scroll, and its
 //   sp0..sp10/var_r0/var_sl/var_fp locals stay unrenamed until each slot's
-//   role is recovered. The touch globals (gTouchHeld..gTouchY,
-//   gActivePlayerSlot) have no header;
-//   data_ov001_ and data_ov002_ handles keep linker names.
+//   role is recovered. The data_ov001_ and data_ov002_ handles keep
+//   linker names.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a };
 
@@ -590,8 +589,6 @@ void LoadGroupAndSetBank(int group, int bank);
 void SetMusic(u32 player, u32 music);
 }
 
-/* The TouchInfo record at byte offset off (slot * 4) from gTouchHeld. */
-#define TOUCHP(off) ((TouchInfo *)(gTouchHeld + (off)))
 
 #pragma defer_codegen off
 
@@ -624,14 +621,11 @@ void dScStage_c::VE_Update() {
     s = data_0209f290;
     switch (s) {
     case 0: {
-        u8 idx = gActivePlayerSlot;
         int ok = 0;
-        int off = idx * 4;
         u8 idx2;
-        int off2;
         u8 a;
-        if (gTouchHeld[idx * 4]) {
-            if (gTouchEdge[off])
+        if (gTouchInfo[gActivePlayerSlot].held) {
+            if (gTouchInfo[gActivePlayerSlot].edge)
                 ok = 1;
         }
         if (ok == 0) {
@@ -639,9 +633,9 @@ void dScStage_c::VE_Update() {
                 return;
         }
         idx2 = gActivePlayerSlot;
-        a = gTouchX[idx2 * 4];
-        off2 = idx2 * 4;
-        if (((u8)(a - 8) < 240 && (u8)(gTouchY[off2] - 56) < 32) || IsButtonInputValid() != 0) {
+        a = gTouchInfo[idx2].x;
+        if (((u8)(a - 8) < 240 && (u8)(gTouchInfo[idx2].y - 56) < 32) ||
+            IsButtonInputValid() != 0) {
             if (sSelectedMenuButton == 0) {
                 sMenuHighlightDelay = data_0208ee44 << 2;
             }
@@ -651,15 +645,14 @@ void dScStage_c::VE_Update() {
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
             func_02012790(0x9a);
-            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 40) < 176)
+            if ((u8)(gTouchInfo[gActivePlayerSlot].x - 40) < 176)
                 return;
             return;
         } else {
             u8 idx3 = gActivePlayerSlot;
-            int off3 = idx3 * 4;
-            if ((u8)(gTouchX[idx3 * 4] - 8) >= 240)
+            if ((u8)(gTouchInfo[idx3].x - 8) >= 240)
                 return;
-            if ((u8)(gTouchY[off3] - 104) >= 32)
+            if ((u8)(gTouchInfo[idx3].y - 104) >= 32)
                 return;
             if (sSelectedMenuButton == 1) {
                 sMenuHighlightDelay = data_0208ee44 << 2;
@@ -670,7 +663,7 @@ void dScStage_c::VE_Update() {
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
             func_02012790(0x9b);
-            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+            if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                 return;
             return;
         }
@@ -902,8 +895,8 @@ void dScStage_c::LC_Update() {
         {
             int touched = 0;
             u8 slot = gActivePlayerSlot;
-            if (gTouchHeld[slot * 4] != 0) {
-                if (gTouchEdge[slot * 4] != 0)
+            if (gTouchInfo[slot].held != 0) {
+                if (gTouchInfo[slot].edge != 0)
                     touched = 1;
             }
             if (!touched) {
@@ -913,7 +906,7 @@ void dScStage_c::LC_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 40) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 40) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -922,14 +915,14 @@ void dScStage_c::LC_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 func_02012790(0x57);
                 gLevelClearStep = 4;
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 80) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 80) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -938,14 +931,14 @@ void dScStage_c::LC_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 func_02012790(0x58);
                 gLevelClearStep = 4;
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (!((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 120) < 32) &&
+            if (!((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 120) < 32) &&
                 (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
             if (sSelectedMenuButton == 2)
@@ -955,7 +948,7 @@ void dScStage_c::LC_Update() {
             sMenuWaitTimer = data_0208ee44 << 3;
             func_02012790(0x59);
             gLevelClearStep = 6;
-            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+            if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                 return;
             return;
         }
@@ -1009,6 +1002,12 @@ void dScStage_c::LC_Update() {
         return;
     }
 }
+/* Kept, measured (#821, 2026-11-16): without opt_strength_reduction off this
+ * is 0x450 against the ROM's 0x460, with the loop's gTouchInfo[i] and
+ * data_0209f368[i] reads reduced to walking pointers. Reading the mode
+ * through cam->mode at either site alone leaves 0x450; at both 0x440, where
+ * the ROM forms data_0209f498[i] with mla. Looping to the cached player
+ * count 0x450. */
 #pragma opt_strength_reduction off
 void dScStage_c::CheckCameraInput() {
     ControllerInput *cam = data_0209f498;
@@ -1020,39 +1019,28 @@ void dScStage_c::CheckCameraInput() {
             do {
                 cam->pressed = 0;
                 cam->held = 0;
-                if (((TouchInfo *)gTouchHeld)[i].held != 0) {
+                if (gTouchInfo[i].held != 0) {
                     if (gCamera->mFlags & 0x1000) {
                         // cam->mode here builds 32 bytes shorter; the indexed read is the ROM shape.
                         u8 state = data_0209f498[i].mode;
-                        if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 88 &&
-                                             ((TouchInfo *)gTouchHeld)[i].y >= 138) ||
-                                            (((TouchInfo *)gTouchHeld)[i].x >= 167 &&
-                                             ((TouchInfo *)gTouchHeld)[i].y >= 138))) ||
-                            (state == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 167 &&
-                             ((TouchInfo *)gTouchHeld)[i].y >= 154)) {
-                            if (((((TouchInfo *)gTouchHeld)[i].held &&
-                                  ((TouchInfo *)gTouchHeld)[i].edge)
-                                     ? 1
-                                     : 0) ||
-                                *st == 1) {
+                        if ((state == 0 && ((gTouchInfo[i].x <= 88 && gTouchInfo[i].y >= 138) ||
+                                            (gTouchInfo[i].x >= 167 && gTouchInfo[i].y >= 138))) ||
+                            (state == 2 && gTouchInfo[i].x >= 167 && gTouchInfo[i].y >= 154)) {
+                            if (((gTouchInfo[i].held && gTouchInfo[i].edge) ? 1 : 0) || *st == 1) {
                                 u16 mask;
-                                if ((state == 0 && ((TouchInfo *)gTouchHeld)[i].x < 43) ||
-                                    (((TouchInfo *)gTouchHeld)[i].x >= 167 &&
-                                     ((TouchInfo *)gTouchHeld)[i].x < 209))
+                                if ((state == 0 && gTouchInfo[i].x < 43) ||
+                                    (gTouchInfo[i].x >= 167 && gTouchInfo[i].x < 209))
                                     mask = 0x200;
-                                else if ((state == 0 && ((TouchInfo *)gTouchHeld)[i].x >= 48 &&
-                                          ((TouchInfo *)gTouchHeld)[i].x <= 88) ||
-                                         ((TouchInfo *)gTouchHeld)[i].x >= 214)
+                                else if ((state == 0 && gTouchInfo[i].x >= 48 &&
+                                          gTouchInfo[i].x <= 88) ||
+                                         gTouchInfo[i].x >= 214)
                                     mask = 0x100;
                                 else {
                                     mask = data_0209f368[i];
                                     if (mask == 0)
                                         mask = 0x200;
                                 }
-                                if ((((TouchInfo *)gTouchHeld)[i].held &&
-                                     ((TouchInfo *)gTouchHeld)[i].edge)
-                                        ? 1
-                                        : 0)
+                                if ((gTouchInfo[i].held && gTouchInfo[i].edge) ? 1 : 0)
                                     cam->pressed |= mask;
                                 else
                                     cam->pressed |= mask & (mask ^ data_0209f368[i]);
@@ -1073,25 +1061,18 @@ void dScStage_c::CheckCameraInput() {
                 {
                     u8 state2 = data_0209f498[i].mode;
                     if (state2 != 0) {
-                        if (((((TouchInfo *)gTouchHeld)[i].held &&
-                              ((TouchInfo *)gTouchHeld)[i].edge)
-                                 ? 1
-                                 : 0) &&
-                            ((state2 == 1 && ((TouchInfo *)gTouchHeld)[i].x >= 215 &&
-                              ((TouchInfo *)gTouchHeld)[i].y >= 141) ||
-                             (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 215 &&
-                              ((TouchInfo *)gTouchHeld)[i].y >= 115 &&
-                              ((TouchInfo *)gTouchHeld)[i].y < 151))) {
+                        if (((gTouchInfo[i].held && gTouchInfo[i].edge) ? 1 : 0) &&
+                            ((state2 == 1 && gTouchInfo[i].x >= 215 && gTouchInfo[i].y >= 141) ||
+                             (state2 == 2 && gTouchInfo[i].x >= 215 && gTouchInfo[i].y >= 115 &&
+                              gTouchInfo[i].y < 151))) {
                             gZoomButtonActiveTimer = 16;
                             cam->pressed |= 0x8000;
                             *st = 2;
                             cam->touching = 0;
                         } else if (*st == 2) {
-                            if ((state2 == 1 && ((TouchInfo *)gTouchHeld)[i].x >= 213 &&
-                                 ((TouchInfo *)gTouchHeld)[i].y >= 141) ||
-                                (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 213 &&
-                                 ((TouchInfo *)gTouchHeld)[i].y >= 115 &&
-                                 ((TouchInfo *)gTouchHeld)[i].y < 151)) {
+                            if ((state2 == 1 && gTouchInfo[i].x >= 213 && gTouchInfo[i].y >= 141) ||
+                                (state2 == 2 && gTouchInfo[i].x >= 213 && gTouchInfo[i].y >= 115 &&
+                                 gTouchInfo[i].y < 151)) {
                                 cam->touching = 0;
                             } else {
                                 *st = 0;
@@ -1480,9 +1461,11 @@ void dScStage_c::PS_Cleanup() {
 }
 // Pen-down edge on a held touch.
 static inline int IsTouchPressed(u8 held, u8 slot) {
-    return held != 0 && gTouchEdge[slot * 4] != 0;
+    return held != 0 && gTouchInfo[slot].edge != 0;
 }
 /* Pause-screen update. */
+/* Kept, measured (#821, 2026-11-16): without opt_common_subs off the body is
+ * 0x30a8 against 0x30ac, 33 hunks and 2907 of 3115 words aligned. */
 #pragma opt_common_subs off
 void dScStage_c::PS_Update() {
     u8 var_sl;
@@ -1596,8 +1579,8 @@ void dScStage_c::PS_Update() {
         {
             int touched = 0;
             u8 slot = gActivePlayerSlot;
-            if (gTouchHeld[slot * 4] != 0) {
-                if (gTouchEdge[slot * 4] != 0)
+            if (gTouchInfo[slot].held != 0) {
+                if (gTouchInfo[slot].edge != 0)
                     touched = 1;
             }
             if (!touched) {
@@ -1607,7 +1590,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 32) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 32) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1616,14 +1599,14 @@ void dScStage_c::PS_Update() {
                 dScStage_c::UpdateMenuButtons(0);
                 gGamePaused = 2;
                 func_02012790(3);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 40) < 176)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 40) < 176)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 72) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 72) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1632,14 +1615,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 7;
                 func_02012790(0x53);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 112) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 112) < 32) ||
                 (sSelectedMenuButton == 2 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 2)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1648,14 +1631,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 9;
                 func_02012790(0x54);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 152) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 152) < 32) ||
                 (sSelectedMenuButton == 3 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 3)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1664,7 +1647,7 @@ void dScStage_c::PS_Update() {
                 dScStage_c::UpdateMenuButtons(0);
                 sNextPauseState = 0xc;
                 func_02012790(0x55);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 40) < 176)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 40) < 176)
                     return;
                 return;
             }
@@ -1681,22 +1664,20 @@ void dScStage_c::PS_Update() {
             sp10 = 0x52;
             spC = 0x51;
             do {
-                s32 de_off;
                 u8 sl2;
                 u8 a;
                 u8 vx;
                 var_r0 = sp0;
                 sl2 = gActivePlayerSlot;
                 {
-                    u8 aa = gTouchHeld[sl2 * 4];
+                    u8 aa = gTouchInfo[sl2].held;
                     a = aa;
                 }
-                de_off = sl2 * 4;
-                if ((a != 0) && (TOUCHP(de_off)->edge != 0)) {
+                if ((a != 0) && (gTouchInfo[sl2].edge != 0)) {
                     var_r0 = 1;
                 }
-                if ((var_r0 != 0) && ((vx = TOUCHP(sl2 * 4)->x) < 56U) &&
-                    (TOUCHP(sl2 * 4)->y < 32U)) {
+                if ((var_r0 != 0) && ((vx = gTouchInfo[sl2].x) < 56U) &&
+                    (gTouchInfo[sl2].y < 32U)) {
                     u8 t;
                     sPauseDisplayedCourse = (sPauseDisplayedCourse - 1);
                     var_fp = 1;
@@ -1712,13 +1693,13 @@ void dScStage_c::PS_Update() {
                     }
                 } else {
                     s32 var_r0_2;
-                    if ((a != 0) && (TOUCHP(sl2 * 4)->edge != 0)) {
+                    if ((a != 0) && (gTouchInfo[sl2].edge != 0)) {
                         var_r0_2 = 1;
                     } else {
                         var_r0_2 = sp4;
                     }
                     if (var_r0_2 != 0) {
-                        if (((u8)(TOUCHP(sl2 * 4)->x - 200) < 56U) && (TOUCHP(sl2 * 4)->y < 32U)) {
+                        if (((u8)(gTouchInfo[sl2].x - 200) < 56U) && (gTouchInfo[sl2].y < 32U)) {
                             sPauseDisplayedCourse = (sPauseDisplayedCourse + 1);
                             sPressedPauseArrow = 2;
                             var_fp = 1;
@@ -1779,8 +1760,8 @@ void dScStage_c::PS_Update() {
         {
             int touched = 0;
             u8 slot = gActivePlayerSlot;
-            if (gTouchHeld[slot * 4] != 0) {
-                if (gTouchEdge[slot * 4] != 0)
+            if (gTouchInfo[slot].held != 0) {
+                if (gTouchInfo[slot].edge != 0)
                     touched = 1;
             }
             if (!touched) {
@@ -1790,7 +1771,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 24) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 24) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1799,14 +1780,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 gGamePaused = 2;
                 func_02012790(3);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 64) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 64) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1815,14 +1796,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 7;
                 func_02012790(0x53);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 104) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 104) < 32) ||
                 (sSelectedMenuButton == 2 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 2)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1831,14 +1812,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 9;
                 func_02012790(0x54);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (!((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 144) < 32) &&
+            if (!((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 144) < 32) &&
                 (sSelectedMenuButton != 3 || IsButtonInputValid() == 0))
                 return;
             if (sSelectedMenuButton == 3)
@@ -1883,8 +1864,8 @@ void dScStage_c::PS_Update() {
         {
             int touched = 0;
             u8 slot = gActivePlayerSlot;
-            if (gTouchHeld[slot * 4] != 0) {
-                if (gTouchEdge[slot * 4] != 0)
+            if (gTouchInfo[slot].held != 0) {
+                if (gTouchInfo[slot].edge != 0)
                     touched = 1;
             }
             if (!touched) {
@@ -1894,7 +1875,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 40) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 40) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1903,14 +1884,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 gGamePaused = 2;
                 func_02012790(3);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 80) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 80) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1925,7 +1906,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (!((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 120) < 32) &&
+            if (!((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 120) < 32) &&
                 (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
             if (sSelectedMenuButton == 2)
@@ -2008,38 +1989,36 @@ void dScStage_c::PS_Update() {
         u8 tx;
         u8 relx;
         u8 firstw;
-        int idxa;
         if (sPauseInputLockout != 0)
             return;
-        if (gTouchHeld[gActivePlayerSlot * 4] == 0) {
+        if (gTouchInfo[gActivePlayerSlot].held == 0) {
             if (IsButtonInputValid() == 0)
                 return;
         }
         if (GetOwnerLanguage() == 5) {
             slot = gActivePlayerSlot;
             firstw = 0x64;
-            tx = gTouchX[slot * 4];
+            tx = gTouchInfo[slot].x;
             relx = (tx - 0x44);
         } else if (GetOwnerLanguage() == 3) {
             slot = gActivePlayerSlot;
             firstw = 0x74;
-            tx = gTouchX[slot * 4];
+            tx = gTouchInfo[slot].x;
             relx = (tx - 0x3c);
         } else {
             slot = gActivePlayerSlot;
             firstw = 0x54;
-            tx = gTouchX[slot * 4];
+            tx = gTouchInfo[slot].x;
             relx = (tx - 0x4c);
         }
-        idxa = slot * 4;
-        ty = gTouchY[slot * 4];
+        ty = gTouchInfo[slot].y;
         if ((u8)(ty - 0x1e) < 0x24) {
             if ((u8)(ty - 0x20) >= 0x20)
                 return;
             if (data_0209f2a4 == 1) {
                 int t = 0;
-                if (gTouchHeld[idxa] != 0) {
-                    if (gTouchEdge[idxa] != 0)
+                if (gTouchInfo[slot].held != 0) {
+                    if (gTouchInfo[slot].edge != 0)
                         t = 1;
                 }
                 if (t == 0)
@@ -2050,7 +2029,7 @@ void dScStage_c::PS_Update() {
                                  GX_BG_SCRBASE_0x6800, GX_BG_CHARBASE_0x10000);
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
-                u8 a = gTouchHeld[slot * 4];
+                u8 a = gTouchInfo[slot].held;
                 if (a == 0 || (IsTouchPressed(a, slot) && sSelectedControllerMode == 0)) {
                     sSelectedControllerMode = 0;
                     SetControllerMode(0);
@@ -2072,8 +2051,8 @@ void dScStage_c::PS_Update() {
                 return;
             if (data_0209f2a4 == 2) {
                 int t = 0;
-                if (gTouchHeld[idxa] != 0) {
-                    if (gTouchEdge[idxa] != 0)
+                if (gTouchInfo[slot].held != 0) {
+                    if (gTouchInfo[slot].edge != 0)
                         t = 1;
                 }
                 if (t == 0)
@@ -2084,7 +2063,7 @@ void dScStage_c::PS_Update() {
                                  GX_BG_SCRBASE_0x7000, GX_BG_CHARBASE_0x10000);
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
-                u8 a = gTouchHeld[slot * 4];
+                u8 a = gTouchInfo[slot].held;
                 if (a == 0 || (IsTouchPressed(a, slot) && sSelectedControllerMode == 1)) {
                     sSelectedControllerMode = 1;
                     SetControllerMode(1);
@@ -2106,8 +2085,8 @@ void dScStage_c::PS_Update() {
                 return;
             if (data_0209f2a4 == 3) {
                 int t = 0;
-                if (gTouchHeld[idxa] != 0) {
-                    if (gTouchEdge[idxa] != 0)
+                if (gTouchInfo[slot].held != 0) {
+                    if (gTouchInfo[slot].edge != 0)
                         t = 1;
                 }
                 if (t == 0)
@@ -2118,7 +2097,7 @@ void dScStage_c::PS_Update() {
                                  GX_BG_SCRBASE_0x7800, GX_BG_CHARBASE_0x10000);
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
-                u8 a = gTouchHeld[slot * 4];
+                u8 a = gTouchInfo[slot].held;
                 if (a == 0 || (IsTouchPressed(a, slot) && sSelectedControllerMode == 2)) {
                     sSelectedControllerMode = 2;
                     SetControllerMode(2);
@@ -2137,22 +2116,22 @@ void dScStage_c::PS_Update() {
             }
         } else {
             int t = 0;
-            u8 a0 = gTouchHeld[idxa];
+            u8 a0 = gTouchInfo[slot].held;
             if (a0 != 0) {
-                if (gTouchEdge[idxa] != 0)
+                if (gTouchInfo[slot].edge != 0)
                     t = 1;
             }
             if ((t != 0 && relx < firstw && (u8)(ty - 152) < 32) ||
                 (sPausedWithSelect == 0 && IsTouchPressed(a0, slot) && (u8)(tx - 216) < 32 &&
                  (u8)(ty - 152) < 32) ||
                 IsButtonInputValid() != 0) {
-                if (relx < firstw && (u8)(gTouchY[gActivePlayerSlot * 4] - 152) < 32 &&
+                if (relx < firstw && (u8)(gTouchInfo[gActivePlayerSlot].y - 152) < 32 &&
                     IsButtonInputValid() != 0) {
                     sBackButtonSelected = 0;
                 } else {
                     u8 slot2 = gActivePlayerSlot;
-                    if ((u8)(gTouchX[slot2 * 4] - 216) < 32 &&
-                        (u8)(gTouchY[slot2 * 4] - 152) < 32) {
+                    if ((u8)(gTouchInfo[slot2].x - 216) < 32 &&
+                        (u8)(gTouchInfo[slot2].y - 152) < 32) {
                         sBackButtonSelected = 1;
                     }
                 }
@@ -2209,28 +2188,28 @@ void dScStage_c::PS_Update() {
         u8 tx;
         u8 relx;
         u8 firstw;
-        if (gTouchHeld[gActivePlayerSlot * 4] == 0) {
+        if (gTouchInfo[gActivePlayerSlot].held == 0) {
             if (IsButtonInputValid() == 0)
                 return;
         }
         if (GetOwnerLanguage() == 5) {
             slot = gActivePlayerSlot;
             firstw = 0x70;
-            tx = gTouchX[slot * 4];
+            tx = gTouchInfo[slot].x;
             relx = (tx - 0x40);
         } else if (GetOwnerLanguage() == 3) {
             slot = gActivePlayerSlot;
             firstw = 0x60;
-            tx = gTouchX[slot * 4];
+            tx = gTouchInfo[slot].x;
             relx = (tx - 0x48);
         } else {
             slot = gActivePlayerSlot;
             firstw = 0x50;
-            tx = gTouchX[slot * 4];
+            tx = gTouchInfo[slot].x;
             relx = (tx - 0x50);
         }
         if ((u8)(tx - 0x5a) < 0x14) {
-            ty = gTouchY[slot * 4];
+            ty = gTouchInfo[slot].y;
             if ((u8)(ty - 46) < 20) {
                 if ((u8)(tx - 0x5c) >= 0x10)
                     return;
@@ -2238,8 +2217,8 @@ void dScStage_c::PS_Update() {
                     return;
                 if (data_0209f2a4 == 1) {
                     int t = 0;
-                    if (gTouchHeld[slot * 4] != 0) {
-                        if (gTouchEdge[slot * 4] != 0)
+                    if (gTouchInfo[slot].held != 0) {
+                        if (gTouchInfo[slot].edge != 0)
                             t = 1;
                     }
                     if (t == 0)
@@ -2257,7 +2236,7 @@ void dScStage_c::PS_Update() {
                 dScStage_c::PS_UpdateOptionsMenu();
                 SetSoundMode(data_0209f234);
                 func_02012790(0x64);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 92) < 16)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 92) < 16)
                     return;
                 return;
             }
@@ -2266,17 +2245,17 @@ void dScStage_c::PS_Update() {
             u8 ty2;
             int t6;
             int tmpv;
-            if (((u8)(tx - 234) < 20 && (u8)((ty2 = gTouchY[slot * 4]) - 46) < 20) ||
-                ((u8)(tmpv = tx - 110) < 124 && (u8)((ty2 = gTouchY[slot * 4]) - 38) < 36) ||
-                ((u8)(t6 = tx - 6) < 60 && (u8)((ty2 = gTouchY[slot * 4]) - 38) < 36)) {
+            if (((u8)(tx - 234) < 20 && (u8)((ty2 = gTouchInfo[slot].y) - 46) < 20) ||
+                ((u8)(tmpv = tx - 110) < 124 && (u8)((ty2 = gTouchInfo[slot].y) - 38) < 36) ||
+                ((u8)(t6 = tx - 6) < 60 && (u8)((ty2 = gTouchInfo[slot].y) - 38) < 36)) {
                 if (!((u8)(tx - 0xec) < 0x10 && (u8)(ty2 - 0x30) < 0x10) &&
                     !((u8)(tx - 0x70) < 0x78 && (u8)(ty2 - 40) < 32) &&
                     ((u8)(tx - 8) >= 0x38 || (u8)(ty2 - 0x28) >= 0x20))
                     return;
                 if (data_0209f2a4 == 2) {
                     int t = 0;
-                    if (gTouchHeld[slot * 4] != 0) {
-                        if (gTouchEdge[slot * 4] != 0)
+                    if (gTouchInfo[slot].held != 0) {
+                        if (gTouchInfo[slot].edge != 0)
                             t = 1;
                     }
                     if (t == 0)
@@ -2296,13 +2275,13 @@ void dScStage_c::PS_Update() {
                 Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
                 {
                     u8 s3 = gActivePlayerSlot;
-                    u8 x3 = gTouchX[s3 * 4];
+                    u8 x3 = gTouchInfo[s3].x;
                     if ((u8)(x3 - 0xec) < 0x10) {
-                        if ((u8)(gTouchY[s3 * 4] - 40) < 16)
+                        if ((u8)(gTouchInfo[s3].y - 40) < 16)
                             return;
                     }
                     if ((u8)(x3 - 0x70) < 0x78) {
-                        if ((u8)(gTouchY[s3 * 4] - 32) < 32)
+                        if ((u8)(gTouchInfo[s3].y - 32) < 32)
                             return;
                     }
                     if ((u8)(x3 - 8) < 0x38)
@@ -2311,7 +2290,7 @@ void dScStage_c::PS_Update() {
                 }
             }
             if ((u8)tmpv < 0x3c) {
-                u8 ty2b = gTouchY[slot * 4];
+                u8 ty2b = gTouchInfo[slot].y;
                 if ((u8)(ty2b - 0x56) < 0x24) {
                     tmpv = tx - 0x70;
                     if ((u8)tmpv >= 0x38)
@@ -2321,8 +2300,8 @@ void dScStage_c::PS_Update() {
                         return;
                     if (data_0209f2a4 == 3) {
                         int t = 0;
-                        if (gTouchHeld[slot * 4] != 0) {
-                            if (gTouchEdge[slot * 4] != 0)
+                        if (gTouchInfo[slot].held != 0) {
+                            if (gTouchInfo[slot].edge != 0)
                                 t = 1;
                         }
                         if (t == 0)
@@ -2339,13 +2318,13 @@ void dScStage_c::PS_Update() {
                     sSelectedBacklightButton = 0;
                     sSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateOptionsMenu();
-                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 112) < 56)
+                    if ((u8)(gTouchInfo[gActivePlayerSlot].x - 112) < 56)
                         return;
                     return;
                 }
             }
             if ((u8)(tx - 0xae) < 0x3c) {
-                u8 ty3 = gTouchY[slot * 4];
+                u8 ty3 = gTouchInfo[slot].y;
                 if ((u8)(ty3 - 0x56) < 0x24) {
                     tmpv = tx - 0xb0;
                     if ((u8)tmpv >= 0x38)
@@ -2355,8 +2334,8 @@ void dScStage_c::PS_Update() {
                         return;
                     if (data_0209f2a4 == 4) {
                         int t = 0;
-                        if (gTouchHeld[slot * 4] != 0) {
-                            if (gTouchEdge[slot * 4] != 0)
+                        if (gTouchInfo[slot].held != 0) {
+                            if (gTouchInfo[slot].edge != 0)
                                 t = 1;
                         }
                         if (t == 0)
@@ -2373,13 +2352,13 @@ void dScStage_c::PS_Update() {
                     sSelectedBacklightButton = 1;
                     sSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateOptionsMenu();
-                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 176) < 56)
+                    if ((u8)(gTouchInfo[gActivePlayerSlot].x - 176) < 56)
                         return;
                     return;
                 }
             }
             if ((u8)t6 < 0x4c) {
-                u8 ty4 = gTouchY[slot * 4];
+                u8 ty4 = gTouchInfo[slot].y;
                 if ((u8)(ty4 - 0x56) < 0x24) {
                     tmpv = tx - 8;
                     if ((u8)tmpv >= 0x48)
@@ -2389,8 +2368,8 @@ void dScStage_c::PS_Update() {
                         return;
                     if (data_0209f2a4 == 5) {
                         int t = 0;
-                        if (gTouchHeld[slot * 4] != 0) {
-                            if (gTouchEdge[slot * 4] != 0)
+                        if (gTouchInfo[slot].held != 0) {
+                            if (gTouchInfo[slot].edge != 0)
                                 t = 1;
                         }
                         if (t == 0)
@@ -2415,21 +2394,21 @@ void dScStage_c::PS_Update() {
             }
             {
                 int t = 0;
-                if (gTouchHeld[slot * 4] != 0) {
-                    if (gTouchEdge[slot * 4] != 0)
+                if (gTouchInfo[slot].held != 0) {
+                    if (gTouchInfo[slot].edge != 0)
                         t = 1;
                 }
-                if (t == 0 || !((relx < firstw && (u8)(gTouchY[slot * 4] - 152) < 32) ||
-                                ((u8)(tx - 216) < 32 && (u8)(gTouchY[slot * 4] - 152) < 32))) {
+                if (t == 0 || !((relx < firstw && (u8)(gTouchInfo[slot].y - 152) < 32) ||
+                                ((u8)(tx - 216) < 32 && (u8)(gTouchInfo[slot].y - 152) < 32))) {
                     if (IsButtonInputValid() == 0)
                         return;
                 }
-                if ((relx < firstw && (u8)(gTouchY[gActivePlayerSlot * 4] - 152) < 32) ||
+                if ((relx < firstw && (u8)(gTouchInfo[gActivePlayerSlot].y - 152) < 32) ||
                     IsButtonInputValid() != 0) {
                     sBackButtonSelected = 0;
                 } else {
                     u8 s4 = gActivePlayerSlot;
-                    if ((u8)(gTouchX[s4 * 4] - 216) < 32 && (u8)(gTouchY[s4 * 4] - 152) < 32) {
+                    if ((u8)(gTouchInfo[s4].x - 216) < 32 && (u8)(gTouchInfo[s4].y - 152) < 32) {
                         sBackButtonSelected = 1;
                     }
                 }
@@ -2487,8 +2466,8 @@ void dScStage_c::PS_Update() {
         {
             int touched = 0;
             u8 slot = gActivePlayerSlot;
-            if (gTouchHeld[slot * 4] != 0) {
-                if (gTouchEdge[slot * 4] != 0)
+            if (gTouchInfo[slot].held != 0) {
+                if (gTouchInfo[slot].edge != 0)
                     touched = 1;
             }
             if (!touched) {
@@ -2498,7 +2477,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 40) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 40) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -2507,14 +2486,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 gGamePaused = 2;
                 func_02012790(3);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 80) < 32) ||
+            if (((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 80) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -2523,14 +2502,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 0xe;
                 func_02012790(0x5e);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+                if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (!((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 120) < 32) &&
+            if (!((u8)(gTouchInfo[slot].x - 8) < 240 && (u8)(gTouchInfo[slot].y - 120) < 32) &&
                 (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
             if (sSelectedMenuButton == 2)
@@ -2540,7 +2519,7 @@ void dScStage_c::PS_Update() {
             sMenuWaitTimer = data_0208ee44 << 3;
             sNextPauseState = 0x10;
             func_02012790(0x5f);
-            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
+            if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                 return;
             return;
         }
@@ -2589,8 +2568,8 @@ void dScStage_c::PS_Update() {
         {
             int touched = 0;
             u8 slot = gActivePlayerSlot;
-            if (gTouchHeld[slot * 4] != 0) {
-                if (gTouchEdge[slot * 4] != 0)
+            if (gTouchInfo[slot].held != 0) {
+                if (gTouchInfo[slot].edge != 0)
                     touched = 1;
             }
             if (!touched) {
@@ -2604,10 +2583,10 @@ void dScStage_c::PS_Update() {
             int rel;
             int rely;
             slot = gActivePlayerSlot;
-            tx = gTouchX[slot * 4];
+            tx = gTouchInfo[slot].x;
             rel = tx - 0x28;
             if ((u8)rel < 0x50) {
-                rely = gTouchY[slot * 4] - 152;
+                rely = gTouchInfo[slot].y - 152;
                 if ((u8)rely < 0x20) {
                     if (sSelectedMenuButton == 0)
                         sMenuHighlightDelay = data_0208ee44 << 2;
@@ -2628,7 +2607,7 @@ void dScStage_c::PS_Update() {
                 if ((u8)rel >= 0x50)
                     return;
                 {
-                    rely = gTouchY[slot * 4] - 152;
+                    rely = gTouchInfo[slot].y - 152;
                     if ((u8)rely >= 0x20)
                         return;
                     if (sSelectedMenuButton == 1)
@@ -2680,6 +2659,7 @@ void dScStage_c::PS_Update() {
         return;
     }
 }
+#pragma opt_common_subs on
 
 /* Can the current player pause? Forwards to daPly_c::CanPause on the active
  * entry of the live player list (gPlayers, indexed by gLocalPlayerId).
@@ -2878,8 +2858,9 @@ struct WipeFader {
 extern "C" void FUN_02029980(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
-    data_0209d4b0 = (int)o2;
+    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    WipeFader *o2 = (WipeFader *)wipe;
+    data_0209d4b0 = wipe;
     o2->w8();
     o2->w3(30, 0);
 }
@@ -2887,14 +2868,15 @@ extern "C" void FUN_02029980(void) {
 void FUN_020299f4(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
-    data_0209d4b0 = (int)o2;
+    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    WipeFader *o2 = (WipeFader *)wipe;
+    data_0209d4b0 = wipe;
     o2->w9();
     o2->w4(30, 0);
 }
 
 extern "C" void FUN_02029a68(void) {
-    if (data_0209d4b0 == (int)((dFdWipe_c *)data_0209f324 + 6)) {
+    if (data_0209d4b0 == (dFdWipe_c *)data_0209f324 + 6) {
         data_0209d4b0 = 0;
         G2_BlendNone();
     }
@@ -2911,8 +2893,9 @@ typedef struct WipeEntry {
 void FUN_02029ab0(void) {
     WipeEntry *entry;
     dScene_c::SetAndStopColorFader();
-    entry = (WipeEntry *)((dFdWipe_c *)data_0209f324 + 6);
-    data_0209d4b0 = (int)entry;
+    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    entry = (WipeEntry *)wipe;
+    data_0209d4b0 = wipe;
     entry->field4 = 0xc00;
     entry->field8 = 0;
     data_0209f274 = 1;
@@ -4003,8 +3986,6 @@ static inline u32 MaskOff(u32 x, u32 m) {
     return x & ~m;
 }
 
-#pragma opt_common_subs off
-
 int dScStage_c::Behavior() {
     gActorUpdateMask = gNextActorUpdateMask;
     CheckCameraInput();
@@ -4059,7 +4040,7 @@ int dScStage_c::Behavior() {
                         func_02012790(0x2b);
                     if (gGamePaused == 0) {
                         if (data_0209f304 != 0 || data_0209f2bc != 0) {
-                            data_0209f304 = data_0209f304 - data_0208ee44;
+                            data_0209f304 -= data_0208ee44;
                             if (data_0209f304 == 0 && data_0209f2bc != 0) {
                                 data_0209f2bc -= 1;
                                 data_0209f304 = 40;
@@ -4130,7 +4111,7 @@ int dScStage_c::Behavior() {
                     if (b3 == 0) {
                         if (sPauseInputLockout == 0) {
                             u32 pj = gActivePlayerSlot;
-                            u16 h2 = data_020a0e58[pj].pressed;
+                            int h2 = data_020a0e58[pj].pressed;
                             int t8 = h2 & 8;
                             if ((t8 != 0 && (data_020a0e58[pj].held & 4) == 0) ||
                                 (b1 == 0 && t8 == 0 && (h2 & 4) != 0)) {
@@ -4159,11 +4140,6 @@ int dScStage_c::Behavior() {
     }
     return 1;
 }
-#pragma opt_common_subs on
-
-// The ROM reads the touch records through one base pointer (gTouchHeld) plus
-// field offsets, not through the per-lane gTouchX/gTouchY/gTouchEdge symbols.
-#define TOUCH_DATA ((TouchInfo *)gTouchHeld)
 
 void dScStage_c::CheckInput() {
     u8 mode = gGameMode;
@@ -4203,17 +4179,17 @@ void dScStage_c::CheckInput() {
     do {
         u32 held = data_020a0e58[playerIndex].held;
         u32 pressed = data_020a0e58[playerIndex].pressed;
-        u8 touched = TOUCH_DATA[playerIndex].held;
+        u8 touched = gTouchInfo[playerIndex].held;
         if ((touched != 0 && data_0209d660 != 0) || (*playerInputState != 1 && touched != 0)) {
             control->touching = 1;
             DecIfAbove0_Byte(&control->cnt);
             {
                 int touchStarted =
-                    (TOUCH_DATA[playerIndex].held != 0 && TOUCH_DATA[playerIndex].edge != 0);
+                    (gTouchInfo[playerIndex].held != 0 && gTouchInfo[playerIndex].edge != 0);
                 if (touchStarted != false) {
                     if (control->cnt != 0) {
-                        int originY = TOUCH_DATA[playerIndex].y - control->dy;
-                        int originX = TOUCH_DATA[playerIndex].x - control->dx;
+                        int originY = gTouchInfo[playerIndex].y - control->dy;
+                        int originX = gTouchInfo[playerIndex].x - control->dx;
                         if (originX < 0)
                             originX = 0;
                         else if (originX > 255)
@@ -4230,8 +4206,8 @@ void dScStage_c::CheckInput() {
                 }
             }
             if (DecIfAbove0_Byte(&control->delay) != 0) {
-                control->tx = TOUCH_DATA[playerIndex].x;
-                control->ty = TOUCH_DATA[playerIndex].y;
+                control->tx = gTouchInfo[playerIndex].x;
+                control->ty = gTouchInfo[playerIndex].y;
                 control->mag = 0;
                 control->nx = 0;
                 control->ny = 0;
@@ -4241,8 +4217,8 @@ void dScStage_c::CheckInput() {
                 int deltaY;
                 int distance;
                 int maxDistance;
-                touchX = TOUCH_DATA[playerIndex].x;
-                touchY = TOUCH_DATA[playerIndex].y;
+                touchX = gTouchInfo[playerIndex].x;
+                touchY = gTouchInfo[playerIndex].y;
                 deltaX = touchX - control->tx;
                 deltaY = touchY - control->ty;
                 control->dx = deltaX;
@@ -4274,7 +4250,7 @@ void dScStage_c::CheckInput() {
         } else {
             int touchEnded;
             int directionButtons;
-            touchEnded = (touched == 0 && TOUCH_DATA[playerIndex].edge != 0);
+            touchEnded = (touched == 0 && gTouchInfo[playerIndex].edge != 0);
             if (touchEnded != false)
                 control->cnt = 5;
             DecIfAbove0_Byte(&control->cnt);
@@ -4329,7 +4305,7 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     int dist;
     int step;
     int i;
-    char *p; /* walks mDensity */
+    u8 *p;
 
     this->mEnabled = 1;
     dist = 0x28000 - (nearv << 4);
@@ -4339,9 +4315,8 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     if (dist >= 0x80000)
         dist = 0x7ffff;
     step = (0x100000 - (farv << 4) - dist) >> 5;
-    i = 0;
-    p = (char *)this->mDensity;
-    while (i < 32) {
+    p = this->mDensity;
+    for (i = 0; i < 32; i++) {
         if (dist <= 0) {
             *p = 0;
         } else if (dist > 0x80000) {
@@ -4349,7 +4324,6 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
         } else {
             *p = (dist >> 12);
         }
-        i++;
         p++;
         dist += step;
     }

@@ -42,14 +42,7 @@ enum d_s_mg_jump2_AssetId {
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/gx_bgcnt.h"
-
-/* The list link at the head of each Jump2Popup. Its two methods link `this` into
- * and back out of the live list at sJump2PopupList. */
-struct Jump2PopupLink {
-    struct Jump2PopupLink *next;
-    void Link();   /* push */
-    void Unlink(); /* remove */
-};
+#include "SpawnInfo.h"
 
 /* Three words as an array, not three ints: as separate members the copy
  * in Render is scalarised and grows by 12 bytes. */
@@ -87,20 +80,15 @@ void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern void Mg_SubmitScore(int);
 extern void Mg_SetSharedState(int);
 extern int sJumpComboCount;
-extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Idle)();
-extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_End)();
 extern int sHeyhoUnsettledCount;
 extern int sHeyhoCount;
 extern int sJump3DMariosLeft;
-extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Play)();
-extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Result)();
-extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Intro)();
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Jump3D_InitPool(void *base, int count);
 extern u8 gMainScreenLayers;
-extern s16 data_02082614;
+extern s16 data_02082614[];
 }
 void Jump2Popup_UpdateAll(void);
 extern int Jump3D_AllIdle(void);
@@ -128,6 +116,15 @@ Jump2Popup::Jump2Popup() {}
 dScMgJump2_c *dScMgJump2_c_classInit() {
     return new dScMgJump2_c;
 }
+
+/* The MG_JUMP2 profile. It shares one .data run (0x0213cc74..0x0213cca4)
+ * with the {fn, 0} member-pointer constants the state functions below emit
+ * for each `mState = &dScMgJump2_c::State_*`. */
+BaseSpawnInfo<dScMgJump2_c> g_profile_MG_JUMP2 = {
+    dScMgJump2_c_classInit,
+    0x175,
+    0x175,
+};
 
 /* Slot 18: resets the round and arms the start countdown. */
 void dScMgJump2_c::StartRound(int /* arg */) {
@@ -162,7 +159,7 @@ s32 dScMgJump2_c::InitResources() {
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
-    fov = FX_Div(0xc0000, (s32)data_02082614);
+    fov = FX_Div(0xc0000, data_02082614[0]);
 
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -207,18 +204,17 @@ s32 dScMgJump2_c::InitResources() {
     return 1;
 }
 
-/* The state functions: five are the exec targets the PMF records at
- * pmf_dScMgJump2_c_State_Idle..9c point into (see the header's state-machine note);
- * the other three are the transitions that install a record and arm
- * mStateTimer. mTextureOffsetT accumulates mTextureScrollRate >> 12 each tick and wraps at
- * 0x1000.
+/* The state functions: five run through mState (see the header's
+ * state-machine note); the other three are the transitions that install
+ * one and arm mStateTimer. mTextureOffsetT accumulates
+ * mTextureScrollRate >> 12 each tick and wraps at 0x1000.
  *
  * This one arms the countdown and installs the next state. */
 void dScMgJump2_c::BeginIntro() {
     mStateTimer = 120;
     mTextureOffsetT = 0;
     mTextureScrollRate = 0x4000;
-    mState = pmf_dScMgJump2_c_State_Intro;
+    mState = &dScMgJump2_c::State_Intro;
 }
 
 void dScMgJump2_c::State_Intro() {
@@ -237,7 +233,7 @@ void dScMgJump2_c::State_Intro() {
 
 void dScMgJump2_c::BeginPlay() {
     mStateTimer = 240;
-    mState = pmf_dScMgJump2_c_State_Play;
+    mState = &dScMgJump2_c::State_Play;
 }
 
 void dScMgJump2_c::State_Play() {
@@ -306,7 +302,7 @@ void dScMgJump2_c::State_Play() {
 
 void dScMgJump2_c::BeginEnd() {
     mStateTimer = 32;
-    mState = pmf_dScMgJump2_c_State_End;
+    mState = &dScMgJump2_c::State_End;
 }
 
 void dScMgJump2_c::State_End() {
@@ -320,7 +316,7 @@ void dScMgJump2_c::State_End() {
     }
     Jump3D_SetLowGravity();
     Heyho_ReactAll();
-    mState = pmf_dScMgJump2_c_State_Result;
+    mState = &dScMgJump2_c::State_Result;
 }
 
 void dScMgJump2_c::State_Result() {
@@ -329,7 +325,7 @@ void dScMgJump2_c::State_Result() {
             Mg_SubmitScore(sJumpComboCount);
             Mg_SetSharedState(MG_STATE_GAME_OVER);
             mPromptEnabled = 0;
-            mState = pmf_dScMgJump2_c_State_Idle;
+            mState = &dScMgJump2_c::State_Idle;
         }
     }
     Heyho_SeparateAll();
@@ -364,7 +360,7 @@ void Jump2_SetLights(void) {
     light0[1] = 0;
     light0[2] = -0xff8;
     func_0203cd80(light0, 0x2000);
-    func_0203ccd4((struct Vector3 *)light0, 0);
+    func_0203ccd4(light0, 0);
     G3_LightVector(GX_LIGHTID_0, light0[0], light0[1], light0[2]);
     light1[2] = -0xff8;
     light1[0] = 0;
@@ -372,7 +368,7 @@ void Jump2_SetLights(void) {
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_Identity();
     func_0203cd80(light1, 0x2000);
-    func_0203ccd4((struct Vector3 *)light1, 0);
+    func_0203ccd4(light1, 0);
     G3_LightVector(GX_LIGHTID_1, light1[0], light1[1], light1[2]);
 }
 
@@ -508,14 +504,14 @@ void Jump2Popup ::Spawn(int startX, int startY, int value) {
     life = 0x80;
     active = 1;
     number = (short)value;
-    ((Jump2PopupLink *)this)->Link();
+    Link();
 }
 
 void Jump2Popup::Tick() {
     if (active == 0)
         return;
     if (ApproachLinear2(life, 0, 1) != 0) {
-        ((Jump2PopupLink *)this)->Unlink();
+        Unlink();
         active = 0;
     }
     ApproachLinear(x, targetX, speedX);
