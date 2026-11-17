@@ -10,7 +10,9 @@ extern void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t);
  * The loop test reads limitGroup volatile: plain, mwcc reuses the loop's
  * last load for the test after it and the function compiles 4 bytes short
  * (a while, a guarded do-while and a local copy of limitGroup and
- * groupCount do the same). */
+ * groupCount do the same). Re-measured (#821 r17): limitGroup re-read into
+ * a local after the loop, or the group's points named in the body, are
+ * still 0x98 against 0x9c; the tail as a static inline is 0x78. */
 void func_ov007_020c4dfc(Ov007Picker *self, int half, int color, int alpha) {
     int i;
 

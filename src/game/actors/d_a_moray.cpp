@@ -411,7 +411,9 @@ int daMoray_c::StateSwimOutInit() {
    on its own, measured against the cartridge's 0x1c0: without the propagation
    bracket it is 0x1bc, and with `thrVert = 0x800000` folded into one store 0x1b8.
    The double store to local.z is the ROM's (dropping the first one is 0x1bc).
-   Re-tried after the respellings below, not inherited. */
+   Re-tried after the respellings below, not inherited. Re-measured (#821 r17):
+   without the bracket still 0x1bc, and `thrVert = thrHorz + 0x418000` (the
+   threshold built from the horizontal one) is 0x1b4. */
 #pragma push
 #pragma opt_propagation off
 int daMoray_c::StateDenWaitMain() {

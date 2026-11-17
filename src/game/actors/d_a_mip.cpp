@@ -717,6 +717,13 @@ int daMip_c::StateFleeMain() {
     }
 
     if (TestWaterBelow() == 1) {
+        /* Kept (#821 r17). StateIdleMain's `Vector3 sp(mPosX, mFloorY + 0x3000,
+           mPosZ)` reproduces this code there, but here the block-scope
+           Vector3 lands above node/node2/delta/scaled in the frame: 18-19
+           words of stack offsets differ, wherever those four are declared.
+           An outer `Vector3 pos` assigned `pos = Vector3(...)` is 3 words
+           off (0x68 frame against 0x58); field-by-field stores in any order
+           are 13-14 words off. */
         s32 pair[2];
         pair[0] = mPosX;
         pair[1] = mFloorY;
@@ -856,10 +863,10 @@ int daMip_c::StateStartleInit()
    stored. */
 int daMip_c::StateIdleMain()
 {
-    /* Scratch vectors are the POD VecFx32, not types.h Vector3: the
-       ROM emits no scope-exit cleanup here, so the genuine destructor must
-       not instantiate (its vague-linkage D1 lived in this TU only for
-       these two locals). */
+    /* The splash position is a Vector3 built by its (x, y, z) constructor:
+       that is what loads mFloorY, mPosZ, mPosX in the ROM's order and keeps
+       the three stores. Vector3's empty destructor emits no cleanup; its D1
+       is already this TU's deadstrip-duplicate (Behavior's locals). */
     extern MipStatePair data_ov085_0213066c;
     extern DaMipAnimationFilePtr gMipRunAnimationFile;
     extern DaMipAnimationFilePtr data_ov085_021305b0;
@@ -870,18 +877,9 @@ int daMip_c::StateIdleMain()
     if (player == 0) return 1;
 
     if (TestWaterBelow() == 1) {
-        VecFx32 sp;
-        s32 pair[2];
-        pair[0] = mPosX;
-        pair[1] = mFloorY;
-        s32 z = mPosZ;
-        s32 y = pair[1] + 0x3000;
-        s32 x = pair[0];
-        *((volatile s32*)(&sp.x)) = x;
-        sp.y = y;
-        sp.z = z;
-        mDustParticle =
-            Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x, sp.y, z, 0);
+        Vector3 sp(mPosX, mFloorY + 0x3000, mPosZ);
+        mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x,
+                                                      sp.y, sp.z, 0);
     }
 
     VecFx32 pp;
