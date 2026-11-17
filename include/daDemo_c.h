@@ -123,8 +123,7 @@ struct daDemo_c : dActor_c {
        assets), steps (5fb8) and draws (5f8c). The step handlers and the
        cue handlers are its members, dispatched through member-pointer
        tables (the cue tables are data_ov002_02110f34 and
-       data_ov002_02110f9c); the remaining helpers are still free functions
-       taking the block as char *. Names describe what the code does with
+       data_ov002_02110f9c), and so are the helpers they share. Names describe what the code does with
        each field; the source type is not recovered. */
     struct StaffRoll {
         /* One of the four main-screen stars, one per unlocked character
@@ -256,7 +255,13 @@ struct daDemo_c : dActor_c {
         u8 pad_515[3]; /* 0x515 */
 
         void func_ov002_020f26e0();
+        void func_ov002_020f2790(int, int, int, short);
+        void func_ov002_020f27e8();
+        void func_ov002_020f2958();
+        void func_ov002_020f2984();
+        void func_ov002_020f2990();
         void func_ov002_020f2a48();
+        void func_ov002_020f2a68();
         void func_ov002_020f2a78(int);
         void func_ov002_020f2a88(int);
         void func_ov002_020f2aec(int);
@@ -264,7 +269,12 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f2d0c(int);
         void func_ov002_020f2d70(int);
         void func_ov002_020f2dd4();
+        void func_ov002_020f2ea0();
+        void func_ov002_020f2eac();
+        void func_ov002_020f2f18(int, int);
         void func_ov002_020f2f64();
+        void func_ov002_020f2f9c(int);
+        void func_ov002_020f30d4();
         void func_ov002_020f30f8(int);
         void func_ov002_020f32e4(int);
         void func_ov002_020f3310(int);
@@ -275,6 +285,12 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f3740(int);
         void func_ov002_020f378c(int);
         void func_ov002_020f37a0();
+        void func_ov002_020f37fc();
+        void func_ov002_020f3828();
+        void func_ov002_020f3954();
+        void func_ov002_020f396c();
+        void func_ov002_020f3978();
+        void func_ov002_020f39ec(int);
         void func_ov002_020f3ae8(int);
         void func_ov002_020f3ba0(int);
         void func_ov002_020f3d38(int);
@@ -295,6 +311,8 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f5848(int);
         void func_ov002_020f5894(int);
         void func_ov002_020f5990();
+        void func_ov002_020f5a6c();
+        int func_ov002_020f5a94();
         void func_ov002_020f5ad4();
         void func_ov002_020f5b24();
         void func_ov002_020f5b7c();
@@ -321,6 +339,10 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f5ef0();
         void func_ov002_020f5efc();
         void func_ov002_020f5f0c(int);
+        void func_ov002_020f5f60();
+        void func_ov002_020f5f8c();
+        void func_ov002_020f5fb8();
+        void func_ov002_020f5fe4();
         /* Begin credit line n (1..0x14) in the first credit slot. */
         void StartCredit(int);
     };

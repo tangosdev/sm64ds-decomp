@@ -17795,23 +17795,23 @@
     },
     "ov002:0x020f2790": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2790Pciiis"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2790Eiiis"
     },
     "ov002:0x020f27e8": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f27e8Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f27e8Ev"
     },
     "ov002:0x020f2958": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2958Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2958Ev"
     },
     "ov002:0x020f2984": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2984Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2984Ev"
     },
     "ov002:0x020f2990": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2990Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2990Ev"
     },
     "ov002:0x020f2a48": {
       "author": "tangosdev",
@@ -17819,7 +17819,7 @@
     },
     "ov002:0x020f2a68": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2a68Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a68Ev"
     },
     "ov002:0x020f2a78": {
       "author": "tangosdev",
@@ -17855,15 +17855,15 @@
     },
     "ov002:0x020f2ea0": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2ea0Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2ea0Ev"
     },
     "ov002:0x020f2eac": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2eacPv"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2eacEv"
     },
     "ov002:0x020f2f18": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2f18Pcii"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2f18Eii"
     },
     "ov002:0x020f2f64": {
       "author": "tangosdev",
@@ -17871,11 +17871,11 @@
     },
     "ov002:0x020f2f9c": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f2f9cPvi"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2f9cEi"
     },
     "ov002:0x020f30d4": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f30d4Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f30d4Ev"
     },
     "ov002:0x020f30f8": {
       "author": "tangosdev",
@@ -17919,27 +17919,27 @@
     },
     "ov002:0x020f37fc": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f37fcPc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f37fcEv"
     },
     "ov002:0x020f3828": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f3828Pi"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3828Ev"
     },
     "ov002:0x020f3954": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f3954Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3954Ev"
     },
     "ov002:0x020f396c": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f396cPc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f396cEv"
     },
     "ov002:0x020f3978": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f3978Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3978Ev"
     },
     "ov002:0x020f39ec": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f39ecPci"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f39ecEi"
     },
     "ov002:0x020f3ae8": {
       "author": "tangosdev",
@@ -18023,11 +18023,11 @@
     },
     "ov002:0x020f5a6c": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f5a6cPc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5a6cEv"
     },
     "ov002:0x020f5a94": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f5a94Pv"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5a94Ev"
     },
     "ov002:0x020f5ad4": {
       "author": "tangosdev",
@@ -18135,19 +18135,19 @@
     },
     "ov002:0x020f5f60": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f5f60Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5f60Ev"
     },
     "ov002:0x020f5f8c": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f5f8cPv"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5f8cEv"
     },
     "ov002:0x020f5fb8": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f5fb8Pv"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5fb8Ev"
     },
     "ov002:0x020f5fe4": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020f5fe4Pc"
+      "name": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5fe4Ev"
     },
     "ov002:0x020f63a0": {
       "author": "tangosdev",
