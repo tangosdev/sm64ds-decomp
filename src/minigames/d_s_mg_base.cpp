@@ -113,8 +113,7 @@ extern unsigned char data_0209d458;
 
 /* The scene's five saved records: func_02013580(table, i) reads record i of
    save table `table`, func_02013568(table, i, v) writes it, and
-   Mg_GetSaveTable(scene) picks the table from byte 1 of param1. */
-int Mg_GetSaveTable(void *scene);
+   GetSaveTable() picks the table from byte 1 of param1. */
 
 /* One table of OAM sprite lists per language, indexed by
    GetGameLanguage(); the helpers below hand its lists to the OAM
@@ -215,39 +214,33 @@ s32 GetGameLanguage(void)
 }
 }
 
-namespace s20ad6f4 {
-extern "C" {
-/* Returns mLastRecordRank: the index (0..4) at which Mg_RankSessionBest last
+/* Returns mLastRecordRank: the index (0..4) at which RankSessionBest last
    inserted a score into the five saved records, or -1 if it placed nowhere
-   (the constructor also seeds -1). */
-int Mg_GetLastRecordRank(dScMgBase_c *scene) {
-    return scene->mLastRecordRank;
-}
-}
+   (the constructor also seeds -1). The int is unused: the one caller,
+   DrawRecordTable, passes mRankedScore in r1 (ROM 0x020b1524). */
+int dScMgBase_c::GetLastRecordRank(int) {
+    return mLastRecordRank;
 }
 
-namespace s20ad6fc {
-extern "C" {
 /* Returns the index (0..4) at which `value` would enter the scene's five
    saved records, or -1. Scoring mode 5 (gMgMenuRow.scoringMode) is
    lower-is-better and never places a value <= 0; every other mode is
    higher-is-better. The `(unsigned)` casts make the compares unsigned. */
-int Mg_FindRecordRank(void *scene, int value)
-{
+int dScMgBase_c::FindRecordRank(int value) {
     int i;
     if (gMgMenuRow.scoringMode == 5) {
         if (value <= 0) return -1;
         for (i = 0; i < 5; i++) {
-            if (func_02013580(Mg_GetSaveTable(scene), i) > (unsigned)value) return i;
+            if (func_02013580(GetSaveTable(), i) > (unsigned)value)
+                return i;
         }
     } else {
         for (i = 0; i < 5; i++) {
-            if (func_02013580(Mg_GetSaveTable(scene), i) < (unsigned)value) return i;
+            if (func_02013580(GetSaveTable(), i) < (unsigned)value)
+                return i;
         }
     }
     return -1;
-}
-}
 }
 
 namespace s20ad79c {
@@ -274,8 +267,8 @@ void Mg_SaveRecordPair(int first, int second) {
     if (v0 == Mg_GetSavedRecord0()) {
         if (v1 == Mg_GetSavedRecord1()) return;
     }
-    func_02013568(Mg_GetSaveTable(gMgScene), 0, v0);
-    func_02013568(Mg_GetSaveTable(gMgScene), 1, v1);
+    func_02013568(gMgScene->GetSaveTable(), 0, v0);
+    func_02013568(gMgScene->GetSaveTable(), 1, v1);
     gMgSaveDirty = 1;
 }
 }
@@ -285,9 +278,9 @@ namespace s20ad878 {
 extern "C" {
 /* Saved record 1 of the current scene, or 0 with no scene. */
 int Mg_GetSavedRecord1(void) {
-    void *scene = gMgScene;
+    dScMgBase_c *scene = gMgScene;
     if (scene == 0) return 0;
-    return func_02013580(Mg_GetSaveTable(scene), 1);
+    return func_02013580(scene->GetSaveTable(), 1);
 }
 }
 }
@@ -298,7 +291,7 @@ extern "C" {
    row's record default 0. 0 with no scene. */
 int Mg_GetSavedRecord0(void) {
     if (gMgScene != 0) {
-        int r = func_02013580(Mg_GetSaveTable(gMgScene), 0);
+        int r = func_02013580(gMgScene->GetSaveTable(), 0);
         if (r == 0)
             return gMgMenuRow.recordDefaults.v[0];
         return r;
@@ -313,50 +306,49 @@ extern "C" {
 void Mg_CommitRecords(void) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0) return;
-    Mg_RankSessionBest(scene);
+    scene->RankSessionBest();
 }
 }
 }
 
 namespace s20ad940 {
 extern "C" {
-int Mg_FindRecordRank(void *scene, int value);
 void Mg_ClearNewRecordFlag(void);
 int Mg_GetSubmittedScore(void);
+}
+}
 
 /* Ranks the session best (mSessionBest, from Mg_GetSessionBest) among the
-   five saved records with Mg_FindRecordRank and keeps that rank in
+   five saved records with FindRecordRank and keeps that rank in
    mLastRecordRank (-1 when it placed nowhere). If it placed, the lower rows shift
    down and the submitted score mSubmittedScore (Mg_GetSubmittedScore) -- not the
    ranked value -- is written into that row, and gMgSaveDirty is set to 1.
    Either way the new-record flag is cleared, the session best moves to
    mRankedScore and is then reset to 0. */
-void Mg_RankSessionBest(dScMgBase_c *scene)
-{
-    int n = Mg_FindRecordRank(scene, Mg_GetSessionBest());
-    scene->mLastRecordRank = n;
-    if (scene->mLastRecordRank < 0) {
+void dScMgBase_c::RankSessionBest() {
+    using namespace s20ad940;
+    int n = FindRecordRank(Mg_GetSessionBest());
+    mLastRecordRank = n;
+    if (mLastRecordRank < 0) {
         Mg_ClearNewRecordFlag();
-        scene->mRankedScore = Mg_GetSessionBest();
+        mRankedScore = Mg_GetSessionBest();
         Mg_SetSessionBest(0);
         return;
     }
     int i;
-    for (i = 4; i > scene->mLastRecordRank; i--) {
-        int a = Mg_GetSaveTable(scene);
-        int b = Mg_GetSaveTable(scene);
+    for (i = 4; i > mLastRecordRank; i--) {
+        int a = GetSaveTable();
+        int b = GetSaveTable();
         int v = func_02013580(b, i-1);
         func_02013568(a, i, v);
     }
-    int a = Mg_GetSaveTable(scene);
+    int a = GetSaveTable();
     int v = Mg_GetSubmittedScore();
-    func_02013568(a, scene->mLastRecordRank, v);
+    func_02013568(a, mLastRecordRank, v);
     gMgSaveDirty = 1;
     Mg_ClearNewRecordFlag();
-    scene->mRankedScore = Mg_GetSessionBest();
+    mRankedScore = Mg_GetSessionBest();
     Mg_SetSessionBest(0);
-}
-}
 }
 
 namespace s20ada20 {
@@ -489,13 +481,9 @@ int Mg_GetTopRecord(void) {
 }
 }
 
-namespace s20adc3c {
-extern "C" {
 /* The scene's save-table id: byte 1 of param1. */
-int Mg_GetSaveTable(void *scene) {
-    return (((dScMgBase_c *)scene)->param1 & 0xff00) >> 8;
-}
-}
+int dScMgBase_c::GetSaveTable() {
+    return (param1 & 0xff00) >> 8;
 }
 
 namespace s20adc4c {
@@ -534,7 +522,7 @@ void *Ov004_LoadFileByPath(const char *path) {
 namespace s20adc80 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *, int, int, int, int);
 }
 }
 /* State 1's draw: word 2 of the current language's entry in
@@ -547,7 +535,7 @@ void MgFx::DrawFlyTo() {
 
 namespace s20adcc8 {
 extern "C" {
-extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *a0, int a1, int a2, int a3, int a4);
 }
 }
 /* State 0's draw. The first call builds the 16-entry frame table
@@ -1095,9 +1083,9 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
 
 namespace s20ae858 {
 extern "C" {
-extern "C" {
 int GetGameLanguage(void);
 void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
+}
 }
 
 /* Draws the three-item overlay menu: each item's per-language sprite list
@@ -1106,26 +1094,27 @@ void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
    is FX_Inv of a pulse that mMenuCursorPhase drives through
    FX_SinIdx. Nothing is drawn while mTouchOptions.Draw() returns
    nonzero. */
-extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
+void dScMgBase_c::DrawMenu() {
+    using namespace s20ae858;
     int extra[3];
     s16 *tbl[3];
     int buf[4];
     int i;
 
-    if (scene->mTouchOptions.Draw() != 0)
+    if (mTouchOptions.Draw() != 0)
         return;
 
     extra[0] = *sMgMenuItem0SpritesByLanguage[GetGameLanguage()];
     extra[1] = *sMgMenuItem1SpritesByLanguage[GetGameLanguage()];
     extra[2] = *sMgMenuItem2SpritesByLanguage[GetGameLanguage()];
 
-    tbl[0] = &scene->mMenuItem0X;
-    tbl[1] = &scene->mMenuItem1X;
-    tbl[2] = &scene->mMenuItem2X;
+    tbl[0] = &mMenuItem0X;
+    tbl[1] = &mMenuItem1X;
+    tbl[2] = &mMenuItem2X;
 
     for (i = 0; i < 3; i++) {
-        if (i == scene->mMenuCursor) {
-            int idx = (int)(((u32)scene->mMenuCursorPhase << 0xf) >> 0x10) >> 4;
+        if (i == mMenuCursor) {
+            int idx = (int)(((u32)mMenuCursorPhase << 0xf) >> 0x10) >> 4;
             OamAttr *cursor = (OamAttr *)extra[i];
             s16 *pos;
             u16 v;
@@ -1165,8 +1154,6 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
             Mg_DrawSpriteList(data_ov006_021346bc, pos[0], pos[1], 0);
         }
     }
-}
-}
 }
 
 namespace s20aea30 {
@@ -2025,7 +2012,7 @@ int dScMgBase_c::BeforeRender()
         return 0;
 
     if (mMenuOpen != 0) {
-        Mg_DrawMenu(this);
+        DrawMenu();
         return 0;
     }
 
@@ -2609,45 +2596,40 @@ void dScMgBase_c::DrawTally(int sb) {
     }
 }
 
-namespace s20b14f0 {
-extern "C" {
-extern int Mg_GetLastRecordRank(void *self, int a);
-
 /* Draws the five saved records in rows 0x18 apart from (0xa8, 0x28),
    revealing one more row every 0x14 frames as mRecordRevealTimer counts up. mRecordRevealTimer
    then loops over 0x64..0x8b, and the session best (mRankedScore) blinks on
    that 40-frame loop: in the row of the rank it took (mLastRecordRank, read
-   through Mg_GetLastRecordRank), or in a row below the five when it placed
-   nowhere. Mg_GetLastRecordRank takes only the scene; the second argument
-   passed here is unused. */
-void Mg_DrawRecordTable(dScMgBase_c *scene) {
+   through GetLastRecordRank), or in a row below the five when it placed
+   nowhere. GetLastRecordRank ignores the score passed to it. */
+void dScMgBase_c::DrawRecordTable() {
     int a2 = 0x28;
     int n;
     int i;
     int j;
     int k;
 
-    scene->mRecordRevealTimer += 1;
-    if (scene->mRecordRevealTimer >= 140)
-        scene->mRecordRevealTimer = 100;
+    mRecordRevealTimer += 1;
+    if (mRecordRevealTimer >= 140)
+        mRecordRevealTimer = 100;
 
-    n = Mg_GetLastRecordRank(scene, scene->mRankedScore);
+    n = GetLastRecordRank(mRankedScore);
     if (n >= 0) {
         i = 0;
         if (n > 0) {
             do {
-                if (scene->mRecordRevealTimer >= i * 20)
-                    Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), i));
+                if (mRecordRevealTimer >= i * 20)
+                    DrawRecordRow(0xa8, a2, func_02013580(GetSaveTable(), i));
                 a2 += 0x18;
                 i++;
             } while (i < n);
         }
 
-        if (scene->mRecordRevealTimer >= n * 20) {
-            if (scene->mRecordRevealTimer < 100 || scene->mRecordRevealTimer - 100 < 20)
-                Mg_DrawRecordRow(scene, 0xa8, a2, scene->mRankedScore);
+        if (mRecordRevealTimer >= n * 20) {
+            if (mRecordRevealTimer < 100 || mRecordRevealTimer - 100 < 20)
+                DrawRecordRow(0xa8, a2, mRankedScore);
             else
-                Mg_DrawRecordRow(scene, 0xa8, a2, -1);
+                DrawRecordRow(0xa8, a2, -1);
         }
 
         a2 += 0x18;
@@ -2656,8 +2638,8 @@ void Mg_DrawRecordTable(dScMgBase_c *scene) {
             return;
         do
         {
-            if (scene->mRecordRevealTimer >= j * 20)
-                Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), j));
+            if (mRecordRevealTimer >= j * 20)
+                DrawRecordRow(0xa8, a2, func_02013580(GetSaveTable(), j));
             a2 += 0x18;
             j++;
         } while (j < 5);
@@ -2667,27 +2649,27 @@ void Mg_DrawRecordTable(dScMgBase_c *scene) {
     k = 0;
     do
     {
-        if (scene->mRecordRevealTimer >= k * 20)
-            Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), k));
+        if (mRecordRevealTimer >= k * 20)
+            DrawRecordRow(0xa8, a2, func_02013580(GetSaveTable(), k));
         a2 += 0x18;
         k++;
     } while (k < 5);
 
-    if (scene->mRecordRevealTimer < 100)
+    if (mRecordRevealTimer < 100)
         return;
 
-    if (scene->mRecordRevealTimer - 100 < 20)
-        Mg_DrawRecordRow(scene, 0xa8, a2 + 0x10, scene->mRankedScore);
+    if (mRecordRevealTimer - 100 < 20)
+        DrawRecordRow(0xa8, a2 + 0x10, mRankedScore);
     else
-        Mg_DrawRecordRow(scene, 0xa8, a2 + 0x10, -1);
-}
-}
+        DrawRecordRow(0xa8, a2 + 0x10, -1);
 }
 
 namespace s20b1710 {
 extern "C" {
 extern int GetGameLanguage(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+}
+}
 
 /* Draws one record row at y. In scoring mode 5 (gMgMenuRow.scoringMode)
    `val` is a time in frames, drawn as seconds, sprite word 7, tenths and
@@ -2695,7 +2677,8 @@ extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
    modes 1, 2 and 4 draw two label sprites at x 0x58 and 0x68 first; mode
    3 then draws val 4 px left through Mg_DrawNumber, every other mode
    through Mg_DrawBigNumber. A negative val draws no number. */
-void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val) {
+void dScMgBase_c::DrawRecordRow(int x, int y, int val) {
+    using namespace s20b1710;
     int idx = GetGameLanguage();
     int mode = gMgMenuRow.scoringMode;
     OamAttr **tbl = sMgSpriteTables[idx];
@@ -2751,8 +2734,6 @@ void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val) {
         Mg_DrawNumber(x, y, val, 0, -1, 1, 0xa);
     else
         Mg_DrawBigNumber(x, y, val, 0, -1, 1, 0);
-}
-}
 }
 
 namespace s20b19f0 {
@@ -2901,19 +2882,19 @@ void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int sel, int e) {
 
 namespace s20b1d60 {
 extern "C" {
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
-/* Mg_RenderSpriteOnMtx without a matrix: the wrappers get 0. */
-void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
-  if(a3==-1){
-    RenderOamBothScreens(a0, a1, a2, -1, a4, 0);
-    return;
-  }
-  if(a3==0){
-    Mg_RenderSubSpritePalMtx(a0, a1, a2, -1, a4, 0);
-    return;
-  }
-  Mg_RenderMainSpritePalMtx(a0, a1, a2, -1, a4, 0);
+/* Mg_RenderSpriteOnMtx without a matrix: the wrappers get 0. `screen` picks
+   the wrapper as there; `list` is the sprite list each one hands on to
+   OAM::Render. */
+void Mg_RenderSpriteOnNoMtx(OamAttr *list, int x, int y, int screen, int priority) {
+    if (screen == -1) {
+        RenderOamBothScreens(list, x, y, -1, priority, 0);
+        return;
+    }
+    if (screen == 0) {
+        Mg_RenderSubSpritePalMtx(list, x, y, -1, priority, 0);
+        return;
+    }
+    Mg_RenderMainSpritePalMtx(list, x, y, -1, priority, 0);
 }
 }
 }
@@ -2921,7 +2902,7 @@ void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
 namespace s20b1de8 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *, int, int, int, int);
 
 /* Draws sprite word 2 at (r0, r1) through Mg_RenderSpriteOnNoMtx. */
 void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {
@@ -2955,7 +2936,7 @@ void Mg_DrawTopCenterCounter(int arg) {
 namespace s20b1ea4 {
 extern "C" {
 extern OamAttr *sMgDigitSprites[];
-extern void Mg_RenderSpriteOnNoMtx(void *glyph, int x, int a2, int a3, int a4);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *glyph, int x, int a2, int a3, int a4);
 
 /* Draws `val`, capped at 999999, in digits 8 px apart: glyph
    sMgDigitSprites[fb + digit], where fb 0 means 0xa and 0x14 means
@@ -3113,7 +3094,7 @@ void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u1
 namespace s20b2444 {
 extern "C" {
 extern OamAttr *sMgDigitSprites[];
-extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *a0, int a1, int a2, int a3, int a4);
 
 /* Draws `num` in digits 16 px apart, glyph sMgDigitSprites[idx +
    digit]. The units digit sits at a1 for sel 1 (or any value but 0 and
@@ -3426,14 +3407,10 @@ void dScMgBase_c::StartRound(int arg)
 {
 }
 
-namespace s20b29a0 {
-/* Calls the scene's StartRound (slot 18). Its callers, all in dMgState_c,
-   pass the scene singleton and its mState, declaring the state as a
-   void *, so the parameter stays one here. */
-extern "C" void Mg_CallStartRound(dScMgBase_c *scene, void *state)
-{
-    scene->StartRound((int)state);
-}
+/* Calls StartRound (slot 18) with `state`. Its callers, all in dMgState_c,
+   pass the finished state's mState. */
+void dScMgBase_c::CallStartRound(int state) {
+    StartRound(state);
 }
 
 #pragma push
@@ -3473,7 +3450,7 @@ dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {
     mRankedScore = 0;
     mLastRecordRank = -1;
 
-    Mg_SetTopRecord(func_02013580(Mg_GetSaveTable(this), 0));
+    Mg_SetTopRecord(func_02013580(GetSaveTable(), 0));
 }
 
 /* The destructor clears the shared minigame pointer; CodeWarrior supplies the
