@@ -26253,7 +26253,7 @@ matched: yes</title></rect><rect x="800.16" y="777.78" width="5.28" height="10.1
 module: ov006
 addr: 0x0211a648
 size: 80 bytes
-matched: yes</title></rect><rect x="805.44" y="549.35" width="4.79" height="0.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop07_FinishEv
+matched: yes</title></rect><rect x="805.44" y="549.35" width="4.79" height="0.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop07_FinishEi
 module: ov006
 addr: 0x0211a698
 size: 4 bytes
@@ -26301,7 +26301,7 @@ matched: yes</title></rect><rect x="805.44" y="737.62" width="4.79" height="11.1
 module: ov006
 addr: 0x0211abdc
 size: 80 bytes
-matched: yes</title></rect><rect x="805.44" y="748.80" width="4.79" height="0.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop04_FinishEv
+matched: yes</title></rect><rect x="805.44" y="748.80" width="4.79" height="0.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop04_FinishEi
 module: ov006
 addr: 0x0211ac2c
 size: 4 bytes
@@ -26365,7 +26365,7 @@ matched: yes</title></rect><rect x="1037.15" y="549.35" width="11.21" height="4.
 module: ov006
 addr: 0x0211b398
 size: 80 bytes
-matched: yes</title></rect><rect x="810.23" y="554.13" width="4.85" height="0.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop00_FinishEv
+matched: yes</title></rect><rect x="810.23" y="554.13" width="4.85" height="0.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop00_FinishEi
 module: ov006
 addr: 0x0211b3e8
 size: 4 bytes
