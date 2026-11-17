@@ -85,7 +85,7 @@ struct dScMgBomroom_c : dScMgBase_c {
     void TopDoor_Open();
     void TopDoor_Draw();
     void TopDoor_StateClosing(int index);
-    void TopDoor_StateOpen();
+    void TopDoor_StateOpen(int index);
     void TopDoor_StateOpening(int index);
     void TopDoor_StateShut(int index);
     void TopDoor_Update();
@@ -102,7 +102,7 @@ struct dScMgBomroom_c : dScMgBase_c {
     void PenGate_HideAll();
     void HatchPanel_DrawAll();
     void HatchPanel_StateRevert(int index);
-    void HatchPanel_StateHeld();
+    void HatchPanel_StateHeld(int index);
     void HatchPanel_StateAnimate(int index);
     void HatchPanel_StateIdle(int index);
     void HatchPanel_UpdateAll();
@@ -119,9 +119,9 @@ struct dScMgBomroom_c : dScMgBase_c {
     void Bomb_PushApart(int index);
     void DrawBombs();
     void CheckColorComplete();
-    void BombMarch_LinedUp();
+    void BombMarch_LinedUp(int index);
     void BombMarch_ToLine(int index);
-    void BombMarch_Offscreen();
+    void BombMarch_Offscreen(int index);
     void BombMarch_Exit(int index);
     void BombMarch_ToGate(int index);
     void Bomb_StateMarch(int index);

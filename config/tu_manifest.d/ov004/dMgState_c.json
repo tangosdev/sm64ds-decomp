@@ -27,6 +27,12 @@
       "end": "0x020bc8bc"
     },
     {
+      "name": ".data.statepmf",
+      "input_section": ".data",
+      "start": "0x020bc8bc",
+      "end": "0x020bca44"
+    },
+    {
       "name": ".data.statetext",
       "input_section": ".data",
       "start": "0x020bca44",
@@ -595,6 +601,349 @@
       "evidence": "initialized screen word at 0x020bc8b8"
     },
     {
+      "symbol": "pmf_dMgState_c_NextRound_Update",
+      "address": "0x020bc8bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::NextRound_Update (0x020b841c), emitted by dMgState_c::NextRound_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundBanner5_Update",
+      "address": "0x020bc8c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RoundBanner5_Update (0x020b8284), emitted by dMgState_c::RoundBanner5_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DrawScore",
+      "address": "0x020bc8cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::DrawScore (0x020b6ad8), emitted by dMgState_c::ScoreThenRound_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPrompt_Update",
+      "address": "0x020bc8d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RetryPrompt_Update (0x020b8098), emitted by dMgState_c::RetryPrompt_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateRetryFadeOut",
+      "address": "0x020bc8dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateRetryFadeOut (0x020b7fec), emitted by dMgState_c::RetryPrompt_Update; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Results_Update",
+      "address": "0x020bc8e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Results_Update (0x020b6f88), emitted by dMgState_c::Results_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Win_Update",
+      "address": "0x020bc8ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Win_Update (0x020b7eac), emitted by dMgState_c::Win_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Lose_Update",
+      "address": "0x020bc8f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Lose_Update (0x020b7cd0), emitted by dMgState_c::Lose_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateRetryPrompt",
+      "address": "0x020bc8fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateRetryPrompt (0x020b72d4), emitted by dMgState_c::RetryPromptWideB_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateGameOverToMenu",
+      "address": "0x020bc904",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateGameOverToMenu (0x020b7c04), emitted by dMgState_c::Lose_Update; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_LoseResume_Update",
+      "address": "0x020bc90c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::LoseResume_Update (0x020b7b20), emitted by dMgState_c::LoseResume_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateRetryFadeOut_2",
+      "address": "0x020bc914",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateRetryFadeOut (0x020b7fec), emitted by dMgState_c::UpdateRetryPrompt; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DrawRecordTable",
+      "address": "0x020bc91c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::DrawRecordTable (0x020b68e8), emitted by dMgState_c::Results_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_GameOver_Update",
+      "address": "0x020bc924",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::GameOver_Update (0x020b6c9c), emitted by dMgState_c::GameOver_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Draw_Enter",
+      "address": "0x020bc92c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Draw_Enter (0x020b79b0), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Tie_Enter",
+      "address": "0x020bc934",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Tie_Enter (0x020b798c), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateAfterHidden",
+      "address": "0x020bc93c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateAfterHidden (0x020b7a18), emitted by dMgState_c::LoseResume_Update; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_LoseResume_Enter",
+      "address": "0x020bc944",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::LoseResume_Enter (0x020b7b90), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Lose_Enter",
+      "address": "0x020bc94c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Lose_Enter (0x020b7e38), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Win_Enter",
+      "address": "0x020bc954",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Win_Enter (0x020b7f5c), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPrompt_Enter",
+      "address": "0x020bc95c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RetryPrompt_Enter (0x020b81f8), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundBanner5_Enter",
+      "address": "0x020bc964",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RoundBanner5_Enter (0x020b83ac), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_NextRound_Enter",
+      "address": "0x020bc96c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::NextRound_Enter (0x020b853c), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundClear_Enter",
+      "address": "0x020bc974",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RoundClear_Enter (0x020b8688), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundClearTop_Enter",
+      "address": "0x020bc97c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RoundClearTop_Enter (0x020b7854), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPromptB_Enter",
+      "address": "0x020bc984",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RetryPromptB_Enter (0x020b7744), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateGameOverToMenu_2",
+      "address": "0x020bc98c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateGameOverToMenu (0x020b7c04), emitted by dMgState_c::UpdateAfterHidden; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateFadeThenResume",
+      "address": "0x020bc994",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateFadeThenResume (0x020b7124), emitted by dMgState_c::DigitsThenRound_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_ScoreThenRound_Enter",
+      "address": "0x020bc99c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::ScoreThenRound_Enter (0x020b7594), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPromptWide_Enter",
+      "address": "0x020bc9a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RetryPromptWide_Enter (0x020b7460), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateWaitThenResume",
+      "address": "0x020bc9ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateWaitThenResume (0x020b78f4), emitted by dMgState_c::Draw_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateWaitThenResume_2",
+      "address": "0x020bc9b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateWaitThenResume (0x020b78f4), emitted by dMgState_c::Tie_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DigitsThenRound_Enter",
+      "address": "0x020bc9bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::DigitsThenRound_Enter (0x020b724c), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DrawScoreDigits",
+      "address": "0x020bc9c4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::DrawScoreDigits (0x020b6948), emitted by dMgState_c::DigitsThenRound_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_ResultsNewRecord_Update",
+      "address": "0x020bc9cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::ResultsNewRecord_Update (0x020b6ddc), emitted by dMgState_c::ResultsNewRecord_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_BannerEThenRound_Enter",
+      "address": "0x020bc9d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::BannerEThenRound_Enter (0x020b70b4), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Results_Enter",
+      "address": "0x020bc9dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Results_Enter (0x020b7020), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundClearTop_Update",
+      "address": "0x020bc9e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RoundClearTop_Update (0x020b77b4), emitted by dMgState_c::RoundClearTop_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_ResultsNewRecord_Enter",
+      "address": "0x020bc9ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::ResultsNewRecord_Enter (0x020b6f14), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_GameOver_Enter",
+      "address": "0x020bc9f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::GameOver_Enter (0x020b6d6c), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPromptB_Update",
+      "address": "0x020bc9fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RetryPromptB_Update (0x020b75e4), emitted by dMgState_c::RetryPromptB_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateFadeThenResume_2",
+      "address": "0x020bca04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateFadeThenResume (0x020b7124), emitted by dMgState_c::BannerEThenRound_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Finished_Enter",
+      "address": "0x020bca0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Finished_Enter (0x020b6c10), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateRetryFadeOut_3",
+      "address": "0x020bca14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::UpdateRetryFadeOut (0x020b7fec), emitted by dMgState_c::RetryPromptB_Update; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundClear_Update",
+      "address": "0x020bca1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RoundClear_Update (0x020b8560), emitted by dMgState_c::RoundClear_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_ScoreThenRound_Update",
+      "address": "0x020bca24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::ScoreThenRound_Update (0x020b746c), emitted by dMgState_c::ScoreThenRound_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DrawRecordTable_2",
+      "address": "0x020bca2c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::DrawRecordTable (0x020b68e8), emitted by dMgState_c::ResultsNewRecord_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Finished_Update",
+      "address": "0x020bca34",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::Finished_Update (0x020b6b40), emitted by dMgState_c::Finished_Enter; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPromptWideB_Enter",
+      "address": "0x020bca3c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dMgState_c::RetryPromptWideB_Enter (0x020b743c), emitted by dMgState_c::SetState; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
       "symbol": "sMgStateTextSpritesByLanguage",
       "address": "0x020bca44",
       "size": "0x14",
@@ -652,6 +1001,496 @@
       "addend": 0,
       "target_module": "overlays(6,95)",
       "target_address": "0x02137454"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c16NextRound_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b841c"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c19RoundBanner5_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b8284"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c9DrawScoreEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6ad8"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c18RetryPrompt_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b8098"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c18UpdateRetryFadeOutEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7fec"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c14Results_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6f88"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c10Win_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7eac"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c11Lose_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7cd0"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc8fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c17UpdateRetryPromptEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b72d4"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc904",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c20UpdateGameOverToMenuEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7c04"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc90c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c17LoseResume_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7b20"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc914",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c18UpdateRetryFadeOutEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7fec"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc91c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c15DrawRecordTableEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b68e8"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc924",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c15GameOver_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6c9c"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc92c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c10Draw_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b79b0"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc934",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c9Tie_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b798c"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc93c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c17UpdateAfterHiddenEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7a18"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc944",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c16LoseResume_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7b90"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc94c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c10Lose_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7e38"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc954",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c9Win_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7f5c"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc95c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c17RetryPrompt_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b81f8"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc964",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c18RoundBanner5_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b83ac"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc96c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c15NextRound_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b853c"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc974",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c16RoundClear_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b8688"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc97c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c19RoundClearTop_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7854"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc984",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c18RetryPromptB_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7744"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc98c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c20UpdateGameOverToMenuEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7c04"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc994",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c20UpdateFadeThenResumeEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7124"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc99c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c20ScoreThenRound_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7594"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c21RetryPromptWide_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7460"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c20UpdateWaitThenResumeEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b78f4"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c20UpdateWaitThenResumeEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b78f4"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c21DigitsThenRound_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b724c"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c15DrawScoreDigitsEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6948"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c23ResultsNewRecord_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6ddc"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c22BannerEThenRound_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b70b4"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c13Results_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7020"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c20RoundClearTop_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b77b4"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c22ResultsNewRecord_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6f14"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c14GameOver_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6d6c"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bc9fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c19RetryPromptB_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b75e4"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bca04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c20UpdateFadeThenResumeEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7124"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bca0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c14Finished_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6c10"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bca14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c18UpdateRetryFadeOutEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b7fec"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bca1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c17RoundClear_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b8560"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bca24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c21ScoreThenRound_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b746c"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bca2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c15DrawRecordTableEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b68e8"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bca34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c15Finished_UpdateEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b6b40"
+    },
+    {
+      "section": ".data.statepmf",
+      "source": "0x020bca3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgState_c22RetryPromptWideB_EnterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b743c"
     }
   ],
   "bss": [
@@ -675,7 +1514,8 @@
     "dMgState_c is a COINED class name. tools/rtti_extract.py recovers 429 RTTI records from the cartridge and none of them names it, flat or nested -- the probe does see nested spellings (dMgPsOpt_c::TouchIcon_c, dScMgBase_c::graphCallback_c and dScMgSlot1_c::betIcon_c are all in the same extraction), so the absence is a measurement, not a blind spot. The class is non-polymorphic: no base, no virtual member, no _ZTV/_ZTI/_ZTS emitted by the object and none configured at any address in any symbols.txt. A coined name only blocks promotion when the TU emits RTTI whose home would have to be licensed under the coined spelling, so it does not block here.",
     "This TU is NOT text-only production. SetState owns a function-local static array and its guard word, and tools/objisolate.py plan_many refuses any surviving non-.text section: 'unlicensed content in text-only multi-symbol object: section[5] .bss size 0x4 defines [...]; section[6] .bss size 0xa0 defines [...]'. One-function production isolation escapes that by externalising the two statics, which is why the per-function shard linked and why ov004's symbols.txt carries names for them at all; the multi-symbol path has no externalise step. Hence production_mode intact-object with an explicit .bss claim at 0x020bfd04..0x020bfda8 -- 0x4 for the guard and 0xa0 for twenty 8-byte pointer-to-member slots, ending exactly where ov004's next configured bss symbol begins. Nothing outside this TU reaches those bytes: the only two relocations to them in ov004's relocs.txt come from 0x020b8a14 and 0x020b8a1c, both inside SetState.",
     "The $NN suffix on the two statics is a per-TU mwccarm counter, and it is reconstruction-dependent rather than cartridge evidence. The four-function TU landed on $26 and the one-function shard on $19. This tree emits $184: the folded handlers, the dWipe_c.h include, the dScene_c.h include, and the types.h Vector3 ctors all sit ahead of SetState. The $184 spellings are renamed onto the licensed $170 pins.",
-    "Production reconciles the shard-only $19 and generic aliases to the consolidated compiler-owned $170 BSS symbols atomically with enrollment. Only SetState refers to these two addresses. The explicit ELF binding policy exposes their unchanged storage to DSD without changing their C++ function-local lifetime. The strict control independently substitutes extracted ROM gaps for exact enrolled intact-object claims; candidate admission discards the initial prepared object and recompiles the raw source before ownership and linked-byte audits."
+    "Production reconciles the shard-only $19 and generic aliases to the consolidated compiler-owned $170 BSS symbols atomically with enrollment. Only SetState refers to these two addresses. The explicit ELF binding policy exposes their unchanged storage to DSD without changing their C++ function-local lifetime. The strict control independently substitutes extracted ROM gaps for exact enrolled intact-object claims; candidate admission discards the initial prepared object and recompiles the raw source before ownership and linked-byte audits.",
+    "2026-11-17 (#821): the states install real &dMgState_c:: member pointers. The 49 {fn, 0} constants mwccarm emits for them are the run 0x020bc8bc..0x020bca44 (#5478's .data.gap27), claimed as the named route .data.statepmf; each @NNN is paired with its pmf_dMgState_c_* record by its consumer relocation and its own handler relocation. verify 52/52 TEXT-VERIFIED (base 52/52); linkcheck SCRATCH-DATA-VERIFIED."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -715,7 +1555,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -740,6 +1580,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.statepmf",
+          "start": "0x020bc8bc",
+          "end": "0x020bca44",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.statetext",
           "start": "0x020bca44",
           "end": "0x020bca58",
@@ -755,7 +1602,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 54
+          "LICENSED": 131
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -764,18 +1611,446 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".bss",
+            "section": ".data.layout",
             "original": [
               5,
-              6
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
             ],
             "desired": [
+              26,
+              18,
+              10,
+              19,
+              17,
+              32,
+              20,
+              11,
+              31,
+              9,
+              21,
+              16,
+              30,
+              22,
+              12,
+              7,
+              29,
+              15,
+              23,
+              28,
+              27,
+              24,
+              13,
               5,
-              6
+              8,
+              25,
+              14
+            ]
+          },
+          {
+            "section": ".data.statepmf",
+            "original": [
+              33,
+              35,
+              37,
+              39,
+              41,
+              43,
+              45,
+              47,
+              49,
+              51,
+              53,
+              55,
+              57,
+              59,
+              61,
+              63,
+              65,
+              67,
+              69,
+              71,
+              73,
+              75,
+              77,
+              79,
+              81,
+              83,
+              85,
+              87,
+              89,
+              91,
+              93,
+              95,
+              97,
+              99,
+              101,
+              103,
+              105,
+              107,
+              109,
+              111,
+              113,
+              115,
+              117,
+              119,
+              121,
+              123,
+              125,
+              127,
+              129
+            ],
+            "desired": [
+              39,
+              45,
+              57,
+              77,
+              51,
+              49,
+              55,
+              65,
+              81,
+              79,
+              87,
+              95,
+              97,
+              129,
+              69,
+              83,
+              93,
+              67,
+              63,
+              61,
+              53,
+              71,
+              73,
+              75,
+              85,
+              89,
+              103,
+              111,
+              91,
+              99,
+              109,
+              117,
+              105,
+              125,
+              127,
+              107,
+              113,
+              123,
+              115,
+              119,
+              33,
+              35,
+              121,
+              41,
+              37,
+              47,
+              43,
+              59,
+              101
+            ]
+          },
+          {
+            "section": ".data.statetext",
+            "original": [
+              131
+            ],
+            "desired": [
+              131
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              6,
+              133
+            ],
+            "desired": [
+              6,
+              133
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data.layout",
+              "original": [
+                5,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32
+              ],
+              "desired": [
+                26,
+                18,
+                10,
+                19,
+                17,
+                32,
+                20,
+                11,
+                31,
+                9,
+                21,
+                16,
+                30,
+                22,
+                12,
+                7,
+                29,
+                15,
+                23,
+                28,
+                27,
+                24,
+                13,
+                5,
+                8,
+                25,
+                14
+              ],
+              "slots": [
+                5,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32
+              ]
+            },
+            {
+              "section": ".data.statepmf",
+              "original": [
+                33,
+                35,
+                37,
+                39,
+                41,
+                43,
+                45,
+                47,
+                49,
+                51,
+                53,
+                55,
+                57,
+                59,
+                61,
+                63,
+                65,
+                67,
+                69,
+                71,
+                73,
+                75,
+                77,
+                79,
+                81,
+                83,
+                85,
+                87,
+                89,
+                91,
+                93,
+                95,
+                97,
+                99,
+                101,
+                103,
+                105,
+                107,
+                109,
+                111,
+                113,
+                115,
+                117,
+                119,
+                121,
+                123,
+                125,
+                127,
+                129
+              ],
+              "desired": [
+                39,
+                45,
+                57,
+                77,
+                51,
+                49,
+                55,
+                65,
+                81,
+                79,
+                87,
+                95,
+                97,
+                129,
+                69,
+                83,
+                93,
+                67,
+                63,
+                61,
+                53,
+                71,
+                73,
+                75,
+                85,
+                89,
+                103,
+                111,
+                91,
+                99,
+                109,
+                117,
+                105,
+                125,
+                127,
+                107,
+                113,
+                123,
+                115,
+                119,
+                33,
+                35,
+                121,
+                41,
+                37,
+                47,
+                43,
+                59,
+                101
+              ],
+              "slots": [
+                33,
+                35,
+                37,
+                39,
+                41,
+                43,
+                45,
+                47,
+                49,
+                51,
+                53,
+                55,
+                57,
+                59,
+                61,
+                63,
+                65,
+                67,
+                69,
+                71,
+                73,
+                75,
+                77,
+                79,
+                81,
+                83,
+                85,
+                87,
+                89,
+                91,
+                93,
+                95,
+                97,
+                99,
+                101,
+                103,
+                105,
+                107,
+                109,
+                111,
+                113,
+                115,
+                117,
+                119,
+                121,
+                123,
+                125,
+                127,
+                129
+              ]
+            }
+          ],
+          "symbolIndices": 76,
+          "sectionLinks": 0,
+          "sectionInfos": 49,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -811,18 +2086,557 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "The compiler owns this function-local static. DSD requires a global symbol at the configured BSS address; changing the ELF binding preserves all storage, relocations and emitted bytes."
+    },
+    {
+      "symbol": "pmf_dMgState_c_NextRound_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundBanner5_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DrawScore",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPrompt_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateRetryFadeOut",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Results_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Win_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Lose_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateRetryPrompt",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateGameOverToMenu",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_LoseResume_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateRetryFadeOut_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DrawRecordTable",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_GameOver_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Draw_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Tie_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateAfterHidden",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_LoseResume_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Lose_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Win_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPrompt_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundBanner5_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_NextRound_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundClear_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundClearTop_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPromptB_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateGameOverToMenu_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateFadeThenResume",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_ScoreThenRound_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPromptWide_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateWaitThenResume",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateWaitThenResume_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DigitsThenRound_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DrawScoreDigits",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_ResultsNewRecord_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_BannerEThenRound_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Results_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundClearTop_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_ResultsNewRecord_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_GameOver_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPromptB_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateFadeThenResume_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Finished_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_UpdateRetryFadeOut_3",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RoundClear_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_ScoreThenRound_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_DrawRecordTable_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_Finished_Update",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dMgState_c_RetryPromptWideB_Enter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "defined_symbol_renames": [
     {
       "from": "sEnterTable$207",
       "to": "sEnterTable$170",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin Re-keyed from sEnterTable$216 to sEnterTable$209 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sEnterTable$209 to sEnterTable$207 when the local Mg_CallStartRound declaration, whose two named parameters took numbers, gave way to the dScMgBase_c::CallStartRound member (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin Re-keyed from sEnterTable$216 to sEnterTable$209 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "_ZGVsEnterTable$207",
       "to": "_ZGVsEnterTable$170",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin Re-keyed from _ZGVsEnterTable$216 to _ZGVsEnterTable$209 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsEnterTable$209 to _ZGVsEnterTable$207 when the local Mg_CallStartRound declaration, whose two named parameters took numbers, gave way to the dScMgBase_c::CallStartRound member (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin Re-keyed from _ZGVsEnterTable$216 to _ZGVsEnterTable$209 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@317",
+      "to": "pmf_dMgState_c_NextRound_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::NextRound_Enter assigns &dMgState_c::NextRound_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::NextRound_Enter+0x20 loads 0x020bc8bc in the ROM) and by its own relocation target (dMgState_c::NextRound_Update at 0x020b841c)."
+    },
+    {
+      "from": "@339",
+      "to": "pmf_dMgState_c_RoundBanner5_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::RoundBanner5_Enter assigns &dMgState_c::RoundBanner5_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RoundBanner5_Enter+0x6c loads 0x020bc8c4 in the ROM) and by its own relocation target (dMgState_c::RoundBanner5_Update at 0x020b8284)."
+    },
+    {
+      "from": "@567",
+      "to": "pmf_dMgState_c_DrawScore",
+      "evidence": "Compiler PMF literal: dMgState_c::ScoreThenRound_Enter assigns &dMgState_c::DrawScore, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::ScoreThenRound_Enter+0x4c loads 0x020bc8cc in the ROM) and by its own relocation target (dMgState_c::DrawScore at 0x020b6ad8)."
+    },
+    {
+      "from": "@365",
+      "to": "pmf_dMgState_c_RetryPrompt_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::RetryPrompt_Enter assigns &dMgState_c::RetryPrompt_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPrompt_Enter+0x88 loads 0x020bc8d4 in the ROM) and by its own relocation target (dMgState_c::RetryPrompt_Update at 0x020b8098)."
+    },
+    {
+      "from": "@374",
+      "to": "pmf_dMgState_c_UpdateRetryFadeOut",
+      "evidence": "Compiler PMF literal: dMgState_c::RetryPrompt_Update assigns &dMgState_c::UpdateRetryFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPrompt_Update+0x148 loads 0x020bc8dc in the ROM) and by its own relocation target (dMgState_c::UpdateRetryFadeOut at 0x020b7fec)."
+    },
+    {
+      "from": "@647",
+      "to": "pmf_dMgState_c_Results_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::Results_Enter assigns &dMgState_c::Results_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Results_Enter+0x8c loads 0x020bc8e4 in the ROM) and by its own relocation target (dMgState_c::Results_Update at 0x020b6f88)."
+    },
+    {
+      "from": "@400",
+      "to": "pmf_dMgState_c_Win_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::Win_Enter assigns &dMgState_c::Win_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Win_Enter+0x8c loads 0x020bc8ec in the ROM) and by its own relocation target (dMgState_c::Win_Update at 0x020b7eac)."
+    },
+    {
+      "from": "@419",
+      "to": "pmf_dMgState_c_Lose_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::Lose_Enter assigns &dMgState_c::Lose_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Lose_Enter+0x70 loads 0x020bc8f4 in the ROM) and by its own relocation target (dMgState_c::Lose_Update at 0x020b7cd0)."
+    },
+    {
+      "from": "@593",
+      "to": "pmf_dMgState_c_UpdateRetryPrompt",
+      "evidence": "Compiler PMF literal: dMgState_c::RetryPromptWideB_Enter assigns &dMgState_c::UpdateRetryPrompt, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPromptWideB_Enter+0x20 loads 0x020bc8fc in the ROM) and by its own relocation target (dMgState_c::UpdateRetryPrompt at 0x020b72d4)."
+    },
+    {
+      "from": "@439",
+      "to": "pmf_dMgState_c_UpdateGameOverToMenu",
+      "evidence": "Compiler PMF literal: dMgState_c::Lose_Update assigns &dMgState_c::UpdateGameOverToMenu, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Lose_Update+0x164 loads 0x020bc904 in the ROM) and by its own relocation target (dMgState_c::UpdateGameOverToMenu at 0x020b7c04)."
+    },
+    {
+      "from": "@465",
+      "to": "pmf_dMgState_c_LoseResume_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::LoseResume_Enter assigns &dMgState_c::LoseResume_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::LoseResume_Enter+0x70 loads 0x020bc90c in the ROM) and by its own relocation target (dMgState_c::LoseResume_Update at 0x020b7b20)."
+    },
+    {
+      "from": "@603",
+      "to": "pmf_dMgState_c_UpdateRetryFadeOut_2",
+      "evidence": "Compiler PMF literal: dMgState_c::UpdateRetryPrompt assigns &dMgState_c::UpdateRetryFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::UpdateRetryPrompt+0x150 loads 0x020bc914 in the ROM) and by its own relocation target (dMgState_c::UpdateRetryFadeOut at 0x020b7fec)."
+    },
+    {
+      "from": "@649",
+      "to": "pmf_dMgState_c_DrawRecordTable",
+      "evidence": "Compiler PMF literal: dMgState_c::Results_Enter assigns &dMgState_c::DrawRecordTable, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Results_Enter+0x90 loads 0x020bc91c in the ROM) and by its own relocation target (dMgState_c::DrawRecordTable at 0x020b68e8)."
+    },
+    {
+      "from": "@702",
+      "to": "pmf_dMgState_c_GameOver_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::GameOver_Enter assigns &dMgState_c::GameOver_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::GameOver_Enter+0x6c loads 0x020bc924 in the ROM) and by its own relocation target (dMgState_c::GameOver_Update at 0x020b6c9c)."
+    },
+    {
+      "from": "@223",
+      "to": "pmf_dMgState_c_Draw_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Draw_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x264 loads 0x020bc92c in the ROM) and by its own relocation target (dMgState_c::Draw_Enter at 0x020b79b0)."
+    },
+    {
+      "from": "@225",
+      "to": "pmf_dMgState_c_Tie_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Tie_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x25c loads 0x020bc934 in the ROM) and by its own relocation target (dMgState_c::Tie_Enter at 0x020b798c)."
+    },
+    {
+      "from": "@476",
+      "to": "pmf_dMgState_c_UpdateAfterHidden",
+      "evidence": "Compiler PMF literal: dMgState_c::LoseResume_Update assigns &dMgState_c::UpdateAfterHidden, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::LoseResume_Update+0x64 loads 0x020bc93c in the ROM) and by its own relocation target (dMgState_c::UpdateAfterHidden at 0x020b7a18)."
+    },
+    {
+      "from": "@221",
+      "to": "pmf_dMgState_c_LoseResume_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::LoseResume_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x260 loads 0x020bc944 in the ROM) and by its own relocation target (dMgState_c::LoseResume_Enter at 0x020b7b90)."
+    },
+    {
+      "from": "@219",
+      "to": "pmf_dMgState_c_Lose_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Lose_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x254 loads 0x020bc94c in the ROM) and by its own relocation target (dMgState_c::Lose_Enter at 0x020b7e38)."
+    },
+    {
+      "from": "@217",
+      "to": "pmf_dMgState_c_Win_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Win_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x24c loads 0x020bc954 in the ROM) and by its own relocation target (dMgState_c::Win_Enter at 0x020b7f5c)."
+    },
+    {
+      "from": "@215",
+      "to": "pmf_dMgState_c_RetryPrompt_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RetryPrompt_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x248 loads 0x020bc95c in the ROM) and by its own relocation target (dMgState_c::RetryPrompt_Enter at 0x020b81f8)."
+    },
+    {
+      "from": "@213",
+      "to": "pmf_dMgState_c_RoundBanner5_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RoundBanner5_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x244 loads 0x020bc964 in the ROM) and by its own relocation target (dMgState_c::RoundBanner5_Enter at 0x020b83ac)."
+    },
+    {
+      "from": "@211",
+      "to": "pmf_dMgState_c_NextRound_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::NextRound_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x240 loads 0x020bc96c in the ROM) and by its own relocation target (dMgState_c::NextRound_Enter at 0x020b853c)."
+    },
+    {
+      "from": "@209",
+      "to": "pmf_dMgState_c_RoundClear_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RoundClear_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x238 loads 0x020bc974 in the ROM) and by its own relocation target (dMgState_c::RoundClear_Enter at 0x020b8688)."
+    },
+    {
+      "from": "@227",
+      "to": "pmf_dMgState_c_RoundClearTop_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RoundClearTop_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x250 loads 0x020bc97c in the ROM) and by its own relocation target (dMgState_c::RoundClearTop_Enter at 0x020b7854)."
+    },
+    {
+      "from": "@229",
+      "to": "pmf_dMgState_c_RetryPromptB_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RetryPromptB_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x258 loads 0x020bc984 in the ROM) and by its own relocation target (dMgState_c::RetryPromptB_Enter at 0x020b7744)."
+    },
+    {
+      "from": "@490",
+      "to": "pmf_dMgState_c_UpdateGameOverToMenu_2",
+      "evidence": "Compiler PMF literal: dMgState_c::UpdateAfterHidden assigns &dMgState_c::UpdateGameOverToMenu, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::UpdateAfterHidden+0x104 loads 0x020bc98c in the ROM) and by its own relocation target (dMgState_c::UpdateGameOverToMenu at 0x020b7c04)."
+    },
+    {
+      "from": "@615",
+      "to": "pmf_dMgState_c_UpdateFadeThenResume",
+      "evidence": "Compiler PMF literal: dMgState_c::DigitsThenRound_Enter assigns &dMgState_c::UpdateFadeThenResume, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::DigitsThenRound_Enter+0x80 loads 0x020bc994 in the ROM) and by its own relocation target (dMgState_c::UpdateFadeThenResume at 0x020b7124)."
+    },
+    {
+      "from": "@231",
+      "to": "pmf_dMgState_c_ScoreThenRound_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::ScoreThenRound_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x268 loads 0x020bc99c in the ROM) and by its own relocation target (dMgState_c::ScoreThenRound_Enter at 0x020b7594)."
+    },
+    {
+      "from": "@233",
+      "to": "pmf_dMgState_c_RetryPromptWide_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RetryPromptWide_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x26c loads 0x020bc9a4 in the ROM) and by its own relocation target (dMgState_c::RetryPromptWide_Enter at 0x020b7460)."
+    },
+    {
+      "from": "@500",
+      "to": "pmf_dMgState_c_UpdateWaitThenResume",
+      "evidence": "Compiler PMF literal: dMgState_c::Draw_Enter assigns &dMgState_c::UpdateWaitThenResume, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Draw_Enter+0x64 loads 0x020bc9ac in the ROM) and by its own relocation target (dMgState_c::UpdateWaitThenResume at 0x020b78f4)."
+    },
+    {
+      "from": "@506",
+      "to": "pmf_dMgState_c_UpdateWaitThenResume_2",
+      "evidence": "Compiler PMF literal: dMgState_c::Tie_Enter assigns &dMgState_c::UpdateWaitThenResume, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Tie_Enter+0x20 loads 0x020bc9b4 in the ROM) and by its own relocation target (dMgState_c::UpdateWaitThenResume at 0x020b78f4)."
+    },
+    {
+      "from": "@237",
+      "to": "pmf_dMgState_c_DigitsThenRound_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::DigitsThenRound_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x274 loads 0x020bc9bc in the ROM) and by its own relocation target (dMgState_c::DigitsThenRound_Enter at 0x020b724c)."
+    },
+    {
+      "from": "@617",
+      "to": "pmf_dMgState_c_DrawScoreDigits",
+      "evidence": "Compiler PMF literal: dMgState_c::DigitsThenRound_Enter assigns &dMgState_c::DrawScoreDigits, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::DigitsThenRound_Enter+0x84 loads 0x020bc9c4 in the ROM) and by its own relocation target (dMgState_c::DrawScoreDigits at 0x020b6948)."
+    },
+    {
+      "from": "@668",
+      "to": "pmf_dMgState_c_ResultsNewRecord_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::ResultsNewRecord_Enter assigns &dMgState_c::ResultsNewRecord_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::ResultsNewRecord_Enter+0x6c loads 0x020bc9cc in the ROM) and by its own relocation target (dMgState_c::ResultsNewRecord_Update at 0x020b6ddc)."
+    },
+    {
+      "from": "@239",
+      "to": "pmf_dMgState_c_BannerEThenRound_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::BannerEThenRound_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x278 loads 0x020bc9d4 in the ROM) and by its own relocation target (dMgState_c::BannerEThenRound_Enter at 0x020b70b4)."
+    },
+    {
+      "from": "@241",
+      "to": "pmf_dMgState_c_Results_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Results_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x27c loads 0x020bc9dc in the ROM) and by its own relocation target (dMgState_c::Results_Enter at 0x020b7020)."
+    },
+    {
+      "from": "@526",
+      "to": "pmf_dMgState_c_RoundClearTop_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::RoundClearTop_Enter assigns &dMgState_c::RoundClearTop_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RoundClearTop_Enter+0x9c loads 0x020bc9e4 in the ROM) and by its own relocation target (dMgState_c::RoundClearTop_Update at 0x020b77b4)."
+    },
+    {
+      "from": "@243",
+      "to": "pmf_dMgState_c_ResultsNewRecord_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::ResultsNewRecord_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x280 loads 0x020bc9ec in the ROM) and by its own relocation target (dMgState_c::ResultsNewRecord_Enter at 0x020b6f14)."
+    },
+    {
+      "from": "@245",
+      "to": "pmf_dMgState_c_GameOver_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::GameOver_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x284 loads 0x020bc9f4 in the ROM) and by its own relocation target (dMgState_c::GameOver_Enter at 0x020b6d6c)."
+    },
+    {
+      "from": "@543",
+      "to": "pmf_dMgState_c_RetryPromptB_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::RetryPromptB_Enter assigns &dMgState_c::RetryPromptB_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPromptB_Enter+0x6c loads 0x020bc9fc in the ROM) and by its own relocation target (dMgState_c::RetryPromptB_Update at 0x020b75e4)."
+    },
+    {
+      "from": "@639",
+      "to": "pmf_dMgState_c_UpdateFadeThenResume_2",
+      "evidence": "Compiler PMF literal: dMgState_c::BannerEThenRound_Enter assigns &dMgState_c::UpdateFadeThenResume, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::BannerEThenRound_Enter+0x6c loads 0x020bca04 in the ROM) and by its own relocation target (dMgState_c::UpdateFadeThenResume at 0x020b7124)."
+    },
+    {
+      "from": "@247",
+      "to": "pmf_dMgState_c_Finished_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Finished_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x288 loads 0x020bca0c in the ROM) and by its own relocation target (dMgState_c::Finished_Enter at 0x020b6c10)."
+    },
+    {
+      "from": "@552",
+      "to": "pmf_dMgState_c_UpdateRetryFadeOut_3",
+      "evidence": "Compiler PMF literal: dMgState_c::RetryPromptB_Update assigns &dMgState_c::UpdateRetryFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPromptB_Update+0x148 loads 0x020bca14 in the ROM) and by its own relocation target (dMgState_c::UpdateRetryFadeOut at 0x020b7fec)."
+    },
+    {
+      "from": "@295",
+      "to": "pmf_dMgState_c_RoundClear_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::RoundClear_Enter assigns &dMgState_c::RoundClear_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RoundClear_Enter+0x88 loads 0x020bca1c in the ROM) and by its own relocation target (dMgState_c::RoundClear_Update at 0x020b8560)."
+    },
+    {
+      "from": "@565",
+      "to": "pmf_dMgState_c_ScoreThenRound_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::ScoreThenRound_Enter assigns &dMgState_c::ScoreThenRound_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::ScoreThenRound_Enter+0x48 loads 0x020bca24 in the ROM) and by its own relocation target (dMgState_c::ScoreThenRound_Update at 0x020b746c)."
+    },
+    {
+      "from": "@670",
+      "to": "pmf_dMgState_c_DrawRecordTable_2",
+      "evidence": "Compiler PMF literal: dMgState_c::ResultsNewRecord_Enter assigns &dMgState_c::DrawRecordTable, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::ResultsNewRecord_Enter+0x70 loads 0x020bca2c in the ROM) and by its own relocation target (dMgState_c::DrawRecordTable at 0x020b68e8)."
+    },
+    {
+      "from": "@731",
+      "to": "pmf_dMgState_c_Finished_Update",
+      "evidence": "Compiler PMF literal: dMgState_c::Finished_Enter assigns &dMgState_c::Finished_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Finished_Enter+0x88 loads 0x020bca34 in the ROM) and by its own relocation target (dMgState_c::Finished_Update at 0x020b6b40)."
+    },
+    {
+      "from": "@235",
+      "to": "pmf_dMgState_c_RetryPromptWideB_Enter",
+      "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RetryPromptWideB_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x270 loads 0x020bca3c in the ROM) and by its own relocation target (dMgState_c::RetryPromptWideB_Enter at 0x020b743c)."
     }
   ]
 }

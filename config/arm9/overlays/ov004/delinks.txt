@@ -65,7 +65,7 @@
     .data.gap26 start:0x020bc7d4 end:0x020bc828 kind:data align:4
     .data.coinspr start:0x020bc828 end:0x020bc850 kind:data align:4
     .data.layout start:0x020bc850 end:0x020bc8bc kind:data align:4
-    .data.gap27 start:0x020bc8bc end:0x020bca44 kind:data align:4
+    .data.statepmf start:0x020bc8bc end:0x020bca44 kind:data align:4
     .data.statetext start:0x020bca44 end:0x020bca58 kind:data align:4
     .data.psopt start:0x020bca58 end:0x020bcaa0 kind:data align:4
     .data.menuScreenEnglish start:0x020bcaa0 end:0x020bd074 kind:data align:4
@@ -170,6 +170,7 @@ src/minigames/d_mg_state.cpp:
     complete
     .text start:0x020b67e8 end:0x020b8c18
     .data.layout start:0x020bc850 end:0x020bc8bc
+    .data.statepmf start:0x020bc8bc end:0x020bca44
     .data.statetext start:0x020bca44 end:0x020bca58
     .bss start:0x020bfd04 end:0x020bfda8
 

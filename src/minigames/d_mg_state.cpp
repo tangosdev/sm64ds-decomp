@@ -9,13 +9,12 @@
  * table of member pointers rather than of plain function addresses.
  *
  * The four methods sit in the middle of the unit. Below them, 0x020b67e8 to
- * 0x020b8714, are the state handlers and the helpers they share. The .data
- * records at 0x020bc8bc..0x020bca3c hold 46 pointer-to-member constants over
- * 43 of them (the twenty-entry enter table at 0x020bc92c..0x020bca44 among
- * them), so all 43 are written as dMgState_c members under their address
- * names. The remaining five are genuine free helpers that write the shared
- * .data window (Mg_SetNextBanner, 020b67f8, 020b6808, 020b682c and
- * Mg_ResetBannerLayout).
+ * 0x020b8714, are the state handlers and the helpers they share. The 49
+ * pointer-to-member constants at 0x020bc8bc..0x020bca44 (the twenty that
+ * SetState copies into its enter table among them) point at 43 of them, so all
+ * 43 are written as dMgState_c members under their address names. The
+ * remaining five are genuine free helpers that write the shared .data window
+ * (Mg_SetNextBanner, 020b67f8, 020b6808, 020b682c and Mg_ResetBannerLayout).
  *
  * Edges. 0x020b67e8 is the first function after Sprite::Sprite, the last
  * helper the preceding unit's static initializer (0x020b9ad0) passes for
@@ -47,9 +46,10 @@
  * returns the machine to idle (mState -1).
  *
  * Notes:
- *   - The .data member-pointer records keep their data_ov004_* names and
- *     are declared as dMgState_c::Callback; the comment on each extern names
- *     the member it points at.
+ *   - Every handler is installed as &dMgState_c::X. mwccarm emits each such
+ *     use as its own eight-byte {fn, 0} .data constant, so a handler installed
+ *     from two places has two; those 49 constants are the run at
+ *     0x020bc8bc..0x020bca44.
  *   - The scene is gMgScene, a dScMgBase_c; the states call its StartRound,
  *     CanEndState and OnNewRecord (slots 18-20) and read its mCredits.
  *     W2 preserves the two-word storage view of data_02086b58.
@@ -180,62 +180,6 @@ unsigned char *sMgStateTextSpritesByLanguage[] = {
     (unsigned char *)sMgTextSpritesItalian,
 };
 
-/* Behavior and render records. Each comment names the member the record
-   points at (ov004 relocs.txt). */
-extern dMgState_c::Callback pmf_dMgState_c_NextRound_Update;        /* NextRound_Update */
-extern dMgState_c::Callback pmf_dMgState_c_RoundBanner5_Update;     /* RoundBanner5_Update */
-extern dMgState_c::Callback pmf_dMgState_c_DrawScore;               /* DrawScore */
-extern dMgState_c::Callback pmf_dMgState_c_RetryPrompt_Update;      /* RetryPrompt_Update */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateRetryFadeOut;      /* UpdateRetryFadeOut */
-extern dMgState_c::Callback pmf_dMgState_c_Results_Update;          /* Results_Update */
-extern dMgState_c::Callback pmf_dMgState_c_Win_Update;              /* Win_Update */
-extern dMgState_c::Callback pmf_dMgState_c_Lose_Update;             /* Lose_Update */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateRetryPrompt;       /* UpdateRetryPrompt */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateGameOverToMenu;    /* UpdateGameOverToMenu */
-extern dMgState_c::Callback pmf_dMgState_c_LoseResume_Update;       /* LoseResume_Update */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateRetryFadeOut_2;    /* UpdateRetryFadeOut */
-extern dMgState_c::Callback pmf_dMgState_c_DrawRecordTable;         /* DrawRecordTable */
-extern dMgState_c::Callback pmf_dMgState_c_GameOver_Update;         /* GameOver_Update */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateAfterHidden;       /* UpdateAfterHidden */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateGameOverToMenu_2;  /* UpdateGameOverToMenu */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateFadeThenResume;    /* UpdateFadeThenResume */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateWaitThenResume;    /* UpdateWaitThenResume */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateWaitThenResume_2;  /* UpdateWaitThenResume */
-extern dMgState_c::Callback pmf_dMgState_c_DrawScoreDigits;         /* DrawScoreDigits */
-extern dMgState_c::Callback pmf_dMgState_c_ResultsNewRecord_Update; /* ResultsNewRecord_Update */
-extern dMgState_c::Callback pmf_dMgState_c_RoundClearTop_Update;    /* RoundClearTop_Update */
-extern dMgState_c::Callback pmf_dMgState_c_RetryPromptB_Update;     /* RetryPromptB_Update */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateFadeThenResume_2;  /* UpdateFadeThenResume */
-extern dMgState_c::Callback pmf_dMgState_c_UpdateRetryFadeOut_3;    /* UpdateRetryFadeOut */
-extern dMgState_c::Callback pmf_dMgState_c_RoundClear_Update;       /* RoundClear_Update */
-extern dMgState_c::Callback pmf_dMgState_c_ScoreThenRound_Update;   /* ScoreThenRound_Update */
-extern dMgState_c::Callback pmf_dMgState_c_DrawRecordTable_2;       /* DrawRecordTable */
-extern dMgState_c::Callback pmf_dMgState_c_Finished_Update;         /* Finished_Update */
-
-/* The per-state enter handlers, in state order. These are pointer-to-member
- * constants that mwccarm laid down in ov004's .data; the states they belong to
- * are not yet named, so they are still carried by address. */
-extern dMgState_c::Callback pmf_dMgState_c_RoundClear_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_NextRound_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_RoundBanner5_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_RetryPrompt_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_Win_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_Lose_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_LoseResume_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_Draw_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_Tie_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_RoundClearTop_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_RetryPromptB_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_ScoreThenRound_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_RetryPromptWide_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_RetryPromptWideB_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_DigitsThenRound_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_BannerEThenRound_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_Results_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_ResultsNewRecord_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_GameOver_Enter;
-extern dMgState_c::Callback pmf_dMgState_c_Finished_Enter;
-
 void Mg_ResetBannerLayout(void) {
     sMgClearBannerX = 0x80;
     sMgRecordBannerX = 0x80;
@@ -271,26 +215,26 @@ dMgState_c::dMgState_c() : mState(-1), mTimer(0), unk_020(0), mSuspended(0) {}
 
 void dMgState_c::SetState(s32 state) {
     static Callback sEnterTable[20] = {
-        pmf_dMgState_c_RoundClear_Enter,       /*  0: RoundClear_Enter */
-        pmf_dMgState_c_NextRound_Enter,        /*  1: NextRound_Enter */
-        pmf_dMgState_c_RoundBanner5_Enter,     /*  2: RoundBanner5_Enter */
-        pmf_dMgState_c_RetryPrompt_Enter,      /*  3: RetryPrompt_Enter */
-        pmf_dMgState_c_Win_Enter,              /*  4: Win_Enter */
-        pmf_dMgState_c_Lose_Enter,             /*  5: Lose_Enter */
-        pmf_dMgState_c_LoseResume_Enter,       /*  6: LoseResume_Enter */
-        pmf_dMgState_c_Draw_Enter,             /*  7: Draw_Enter */
-        pmf_dMgState_c_Tie_Enter,              /*  8: Tie_Enter */
-        pmf_dMgState_c_RoundClearTop_Enter,    /*  9: RoundClearTop_Enter */
-        pmf_dMgState_c_RetryPromptB_Enter,     /* 10: RetryPromptB_Enter */
-        pmf_dMgState_c_ScoreThenRound_Enter,   /* 11: ScoreThenRound_Enter */
-        pmf_dMgState_c_RetryPromptWide_Enter,  /* 12: RetryPromptWide_Enter */
-        pmf_dMgState_c_RetryPromptWideB_Enter, /* 13: RetryPromptWideB_Enter */
-        pmf_dMgState_c_DigitsThenRound_Enter,  /* 14: DigitsThenRound_Enter */
-        pmf_dMgState_c_BannerEThenRound_Enter, /* 15: BannerEThenRound_Enter */
-        pmf_dMgState_c_Results_Enter,          /* 16: Results_Enter */
-        pmf_dMgState_c_ResultsNewRecord_Enter, /* 17: ResultsNewRecord_Enter */
-        pmf_dMgState_c_GameOver_Enter,         /* 18: GameOver_Enter */
-        pmf_dMgState_c_Finished_Enter,         /* 19: Finished_Enter */
+        &dMgState_c::RoundClear_Enter,       /*  0 */
+        &dMgState_c::NextRound_Enter,        /*  1 */
+        &dMgState_c::RoundBanner5_Enter,     /*  2 */
+        &dMgState_c::RetryPrompt_Enter,      /*  3 */
+        &dMgState_c::Win_Enter,              /*  4 */
+        &dMgState_c::Lose_Enter,             /*  5 */
+        &dMgState_c::LoseResume_Enter,       /*  6 */
+        &dMgState_c::Draw_Enter,             /*  7 */
+        &dMgState_c::Tie_Enter,              /*  8 */
+        &dMgState_c::RoundClearTop_Enter,    /*  9 */
+        &dMgState_c::RetryPromptB_Enter,     /* 10 */
+        &dMgState_c::ScoreThenRound_Enter,   /* 11 */
+        &dMgState_c::RetryPromptWide_Enter,  /* 12 */
+        &dMgState_c::RetryPromptWideB_Enter, /* 13 */
+        &dMgState_c::DigitsThenRound_Enter,  /* 14 */
+        &dMgState_c::BannerEThenRound_Enter, /* 15 */
+        &dMgState_c::Results_Enter,          /* 16 */
+        &dMgState_c::ResultsNewRecord_Enter, /* 17 */
+        &dMgState_c::GameOver_Enter,         /* 18 */
+        &dMgState_c::Finished_Enter,         /* 19 */
     };
 
     mState = state;
@@ -328,7 +272,7 @@ void dMgState_c::RoundClear_Enter() {
     }
     Mg_ShowBanner(id, sMgClearBannerX, sMgClearBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)4);
-    mBehavior = pmf_dMgState_c_RoundClear_Update;
+    mBehavior = &dMgState_c::RoundClear_Update;
 }
 
 void dMgState_c::RoundClear_Update() {
@@ -358,7 +302,7 @@ void dMgState_c::RoundClear_Update() {
 
 void dMgState_c::NextRound_Enter() {
     mTimer = 15;
-    mBehavior = pmf_dMgState_c_NextRound_Update;
+    mBehavior = &dMgState_c::NextRound_Update;
 }
 
 void dMgState_c::NextRound_Update() {
@@ -388,7 +332,7 @@ void dMgState_c::RoundBanner5_Enter() {
     mTimer = 180;
     Mg_ShowBanner(5, sMgRecordBannerX, sMgRecordBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)1);
-    mBehavior = pmf_dMgState_c_RoundBanner5_Update;
+    mBehavior = &dMgState_c::RoundBanner5_Update;
 }
 
 void dMgState_c::RoundBanner5_Update() {
@@ -426,7 +370,7 @@ void dMgState_c::RetryPrompt_Enter() {
     }
     Mg_ShowBanner(id, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)3);
-    mBehavior = pmf_dMgState_c_RetryPrompt_Update;
+    mBehavior = &dMgState_c::RetryPrompt_Update;
 }
 
 void dMgState_c ::RetryPrompt_Update() {
@@ -434,7 +378,7 @@ void dMgState_c ::RetryPrompt_Update() {
     if (Mg_CheckBannerButton(0)) {
         fader = gSceneFader;
         fader->SetForwardTime(0x1e, 0);
-        mBehavior = pmf_dMgState_c_UpdateRetryFadeOut;
+        mBehavior = &dMgState_c::UpdateRetryFadeOut;
         return;
     }
     if (Mg_CheckBannerButton(2) || Mg_CheckBannerButton(1)) {
@@ -481,7 +425,7 @@ void dMgState_c::Win_Enter() {
     }
     Mg_ShowBanner(id, sMgWinBannerX, sMgWinBannerY, -1, -1, 0xd);
     Sound::PlayBank2_2D(0x136);
-    mBehavior = pmf_dMgState_c_Win_Update;
+    mBehavior = &dMgState_c::Win_Update;
 }
 
 void dMgState_c::Win_Update() {
@@ -508,7 +452,7 @@ void dMgState_c::Lose_Enter() {
     mTimer = 120;
     Mg_ShowBanner(0xa, sMgLoseBannerX, sMgLoseBannerY, -1, -1, 0xd);
     Sound::PlayBank2_2D(0x137);
-    mBehavior = pmf_dMgState_c_Lose_Update;
+    mBehavior = &dMgState_c::Lose_Update;
 }
 
 void dMgState_c::Lose_Update() {
@@ -530,7 +474,7 @@ void dMgState_c::Lose_Update() {
         Mg_RestoreMusic();
         FreeGfxSlotsById(0x1d);
         mTimer = 180;
-        mBehavior = pmf_dMgState_c_UpdateGameOverToMenu;
+        mBehavior = &dMgState_c::UpdateGameOverToMenu;
     } else {
         if (state != 0)
             return;
@@ -573,7 +517,7 @@ void dMgState_c::LoseResume_Enter() {
     mTimer = 120;
     Mg_ShowBanner(0xa, sMgLoseBannerX, sMgLoseBannerY, -1, -1, 0xd);
     Sound::PlayBank2_2D(0x137);
-    mBehavior = pmf_dMgState_c_LoseResume_Update;
+    mBehavior = &dMgState_c::LoseResume_Update;
 }
 
 void dMgState_c::LoseResume_Update() {
@@ -583,7 +527,7 @@ void dMgState_c::LoseResume_Update() {
     if (v != 0)
         return;
     FreeGfxSlotsById(0x1d);
-    mBehavior = pmf_dMgState_c_UpdateAfterHidden;
+    mBehavior = &dMgState_c::UpdateAfterHidden;
     mSuspended = 1;
     gMgCoinsShowDelta = 0;
     sMgCoinsDeltaShown = 0;
@@ -600,7 +544,7 @@ void dMgState_c::UpdateAfterHidden() {
             return;
         Mg_RestoreMusic();
         mTimer = 180;
-        mBehavior = pmf_dMgState_c_UpdateGameOverToMenu_2;
+        mBehavior = &dMgState_c::UpdateGameOverToMenu;
         return;
     }
     g = gMgScene;
@@ -620,12 +564,12 @@ void dMgState_c::UpdateAfterHidden() {
 void dMgState_c::Draw_Enter() {
     mTimer = 120;
     Mg_ShowBanner(0xb, sMgDrawBannerX, sMgDrawBannerY, -1, -1, 0xd);
-    mBehavior = pmf_dMgState_c_UpdateWaitThenResume;
+    mBehavior = &dMgState_c::UpdateWaitThenResume;
 }
 
 void dMgState_c::Tie_Enter() {
     mTimer = 0;
-    mBehavior = pmf_dMgState_c_UpdateWaitThenResume_2;
+    mBehavior = &dMgState_c::UpdateWaitThenResume;
 }
 
 void dMgState_c::UpdateWaitThenResume() {
@@ -655,7 +599,7 @@ void dMgState_c::RoundClearTop_Enter() {
         sMgNextBanner = 0x1d;
     }
     Mg_ShowBanner(id, sMgTopBannerX, sMgTopBannerY - (sMgTopScreenYOffset + 0xc0), -1, -1, 0xa);
-    mBehavior = pmf_dMgState_c_RoundClearTop_Update;
+    mBehavior = &dMgState_c::RoundClearTop_Update;
 }
 
 void dMgState_c::RoundClearTop_Update() {
@@ -680,7 +624,7 @@ void dMgState_c::RetryPromptB_Enter() {
     mTimer = 180;
     Mg_PlayJingle((void *)3);
     Mg_ShowBanner(8, sMgRetryBannerX, sMgRetryBannerY, -1, -1, 0xb);
-    mBehavior = pmf_dMgState_c_RetryPromptB_Update;
+    mBehavior = &dMgState_c::RetryPromptB_Update;
 }
 
 void dMgState_c ::RetryPromptB_Update() {
@@ -688,7 +632,7 @@ void dMgState_c ::RetryPromptB_Update() {
     if (Mg_CheckBannerButton(0)) {
         fader = gSceneFader;
         fader->SetForwardTime(0x1e, 0);
-        mBehavior = pmf_dMgState_c_UpdateRetryFadeOut_3;
+        mBehavior = &dMgState_c::UpdateRetryFadeOut;
         return;
     }
     if (Mg_CheckBannerButton(2) || Mg_CheckBannerButton(1)) {
@@ -710,8 +654,8 @@ void dMgState_c ::RetryPromptB_Update() {
 void dMgState_c::ScoreThenRound_Enter() {
     mTimer = 180;
     Mg_PlayJingle((void *)1);
-    mBehavior = pmf_dMgState_c_ScoreThenRound_Update;
-    mRender = pmf_dMgState_c_DrawScore;
+    mBehavior = &dMgState_c::ScoreThenRound_Update;
+    mRender = &dMgState_c::DrawScore;
 }
 
 void dMgState_c::ScoreThenRound_Update() {
@@ -744,14 +688,14 @@ void dMgState_c::RetryPromptWide_Enter() {
 
 void dMgState_c::RetryPromptWideB_Enter() {
     mTimer = 10;
-    mBehavior = pmf_dMgState_c_UpdateRetryPrompt;
+    mBehavior = &dMgState_c::UpdateRetryPrompt;
 }
 
 void dMgState_c::UpdateRetryPrompt() {
     if (mTimer == 0) {
         if (Mg_CheckBannerButton(0) != 0) {
             gSceneFader->SetForwardTime(0x1e, 0);
-            mBehavior = pmf_dMgState_c_UpdateRetryFadeOut_2;
+            mBehavior = &dMgState_c::UpdateRetryFadeOut;
             return;
         }
         if (Mg_CheckBannerButton(2) == 0) {
@@ -775,8 +719,8 @@ void dMgState_c::DigitsThenRound_Enter() {
     mTimer = 180;
     Mg_ShowBanner(5, sMgRecordBannerX, sMgRecordBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)1);
-    mBehavior = pmf_dMgState_c_UpdateFadeThenResume;
-    mRender = pmf_dMgState_c_DrawScoreDigits;
+    mBehavior = &dMgState_c::UpdateFadeThenResume;
+    mRender = &dMgState_c::DrawScoreDigits;
 }
 
 void dMgState_c::UpdateFadeThenResume() {
@@ -807,7 +751,7 @@ void dMgState_c::BannerEThenRound_Enter() {
     mTimer = 60;
     Mg_ShowBanner(0xe, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)3);
-    mBehavior = pmf_dMgState_c_UpdateFadeThenResume_2;
+    mBehavior = &dMgState_c::UpdateFadeThenResume;
 }
 
 void dMgState_c::Results_Enter() {
@@ -817,8 +761,8 @@ void dMgState_c::Results_Enter() {
     }
     Mg_ShowBanner(7, 0x80, 0x14, -1, -1, 0xd);
     mTimer = 120;
-    mBehavior = pmf_dMgState_c_Results_Update;
-    mRender = pmf_dMgState_c_DrawRecordTable;
+    mBehavior = &dMgState_c::Results_Update;
+    mRender = &dMgState_c::DrawRecordTable;
     Mg_CommitRecords();
 }
 
@@ -842,8 +786,8 @@ void dMgState_c::Results_Update() {
 void dMgState_c::ResultsNewRecord_Enter() {
     Mg_ShowBanner(7, 0x80, 0x14, -1, -1, 0xd);
     mTimer = 300;
-    mBehavior = pmf_dMgState_c_ResultsNewRecord_Update;
-    mRender = pmf_dMgState_c_DrawRecordTable_2;
+    mBehavior = &dMgState_c::ResultsNewRecord_Update;
+    mRender = &dMgState_c::DrawRecordTable;
     Mg_CommitRecords();
 }
 
@@ -897,7 +841,7 @@ void dMgState_c::GameOver_Enter() {
     mTimer = 180;
     Mg_ShowBanner(8, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)3);
-    mBehavior = pmf_dMgState_c_GameOver_Update;
+    mBehavior = &dMgState_c::GameOver_Update;
 }
 
 void dMgState_c::GameOver_Update() {
@@ -934,7 +878,7 @@ void dMgState_c::Finished_Enter() {
     }
     Mg_ShowBanner(id, sMgClearBannerX, sMgClearBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)4);
-    mBehavior = pmf_dMgState_c_Finished_Update;
+    mBehavior = &dMgState_c::Finished_Update;
 }
 
 void dMgState_c::Finished_Update() {

@@ -31,6 +31,11 @@
       "end": "0x02133584"
     },
     {
+      "name": ".data",
+      "start": "0x0213b9ec",
+      "end": "0x0213bafc"
+    },
+    {
       "name": ".bss",
       "start": "0x02141660",
       "end": "0x02141768"
@@ -353,7 +358,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c17TopDoor_StateOpenEv",
+      "symbol": "_ZN14dScMgBomroom_c17TopDoor_StateOpenEi",
       "address": "0x020d5f28",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020d5f28.c",
@@ -472,7 +477,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c20HatchPanel_StateHeldEv",
+      "symbol": "_ZN14dScMgBomroom_c20HatchPanel_StateHeldEi",
       "address": "0x020d64c4",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020d64c4.c",
@@ -591,7 +596,7 @@
       "ordinal": 48
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c17BombMarch_LinedUpEv",
+      "symbol": "_ZN14dScMgBomroom_c17BombMarch_LinedUpEi",
       "address": "0x020d7778",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020d7778.c",
@@ -605,7 +610,7 @@
       "ordinal": 50
     },
     {
-      "symbol": "_ZN14dScMgBomroom_c19BombMarch_OffscreenEv",
+      "symbol": "_ZN14dScMgBomroom_c19BombMarch_OffscreenEi",
       "address": "0x020d7958",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_020d7958.c",
@@ -824,41 +829,6 @@
       "evidence": "initialized ROM object"
     },
     {
-      "symbol": "sBomroomMarkerPlainSprites",
-      "address": "0x02133ae0",
-      "size": "0x10",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sBomroomHatchPanelSprites",
-      "address": "0x021342bc",
-      "size": "0x14",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sBomroomTopDoorSprites",
-      "address": "0x021343b0",
-      "size": "0x14",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sBomroomPenGateSprites",
-      "address": "0x021344ec",
-      "size": "0x28",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sBomroomRoundOverSprites",
-      "address": "0x02134f30",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
       "symbol": "data_ov006_02133a80",
       "address": "0x02133a80",
       "size": "0x18",
@@ -887,6 +857,13 @@
       "evidence": "OAM list ending at attr3 0xffff"
     },
     {
+      "symbol": "sBomroomMarkerPlainSprites",
+      "address": "0x02133ae0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
       "symbol": "data_ov006_02133af0",
       "address": "0x02133af0",
       "size": "0x38",
@@ -913,6 +890,13 @@
       "size": "0x40",
       "binding": "STB_GLOBAL",
       "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "sBomroomHatchPanelSprites",
+      "address": "0x021342bc",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     },
     {
       "symbol": "data_ov006_021342d0",
@@ -955,6 +939,13 @@
       "size": "0x10",
       "binding": "STB_GLOBAL",
       "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "sBomroomTopDoorSprites",
+      "address": "0x021343b0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     },
     {
       "symbol": "data_ov006_021343c4",
@@ -1006,6 +997,13 @@
       "evidence": "OAM list ending at attr3 0xffff"
     },
     {
+      "symbol": "sBomroomPenGateSprites",
+      "address": "0x021344ec",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
       "symbol": "data_ov006_02134514",
       "address": "0x02134514",
       "size": "0x28",
@@ -1055,11 +1053,256 @@
       "evidence": "OAM list ending at attr3 0xffff"
     },
     {
+      "symbol": "sBomroomRoundOverSprites",
+      "address": "0x02134f30",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
       "symbol": "data_ov006_02134f34",
       "address": "0x02134f34",
       "size": "0xa8",
       "binding": "STB_GLOBAL",
       "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_TopDoor_StateOpen",
+      "address": "0x0213b9ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::TopDoor_StateOpen (0x020d5f28), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_HatchPanel_StateAnimate",
+      "address": "0x0213b9f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::HatchPanel_StateAnimate (0x020d64c8), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_TopDoor_StateClosing",
+      "address": "0x0213b9fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::TopDoor_StateClosing (0x020d5eb8), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_ToLine",
+      "address": "0x0213ba04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::BombMarch_ToLine (0x020d777c), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StateSetup",
+      "address": "0x0213ba0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Round_StateSetup (0x020d904c), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateWaiting",
+      "address": "0x0213ba14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Bomb_StateWaiting (0x020d8324), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateHeld",
+      "address": "0x0213ba1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Bomb_StateHeld (0x020d7f5c), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_RoundEnd_Tally",
+      "address": "0x0213ba24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::RoundEnd_Tally (0x020d8af8), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_RoundEnd_StartMarch",
+      "address": "0x0213ba2c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::RoundEnd_StartMarch (0x020d8d84), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_HatchPanel_StateHeld",
+      "address": "0x0213ba34",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::HatchPanel_StateHeld (0x020d64c4), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StatePlay",
+      "address": "0x0213ba3c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Round_StatePlay (0x020d8ff4), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_HatchPanel_StateIdle",
+      "address": "0x0213ba44",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::HatchPanel_StateIdle (0x020d65b4), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_PenGate_StateShut",
+      "address": "0x0213ba4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::PenGate_StateShut (0x020d6264), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_PenGate_StateOpening",
+      "address": "0x0213ba54",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::PenGate_StateOpening (0x020d61dc), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateMarch",
+      "address": "0x0213ba5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Bomb_StateMarch (0x020d7c00), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_PenGate_StateHold",
+      "address": "0x0213ba64",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::PenGate_StateHold (0x020d6170), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StateStart",
+      "address": "0x0213ba6c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Round_StateStart (0x020d9020), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_ToGate",
+      "address": "0x0213ba74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::BombMarch_ToGate (0x020d7a84), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_PenGate_StateClosing",
+      "address": "0x0213ba7c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::PenGate_StateClosing (0x020d6100), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_Exit",
+      "address": "0x0213ba84",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::BombMarch_Exit (0x020d795c), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_Offscreen",
+      "address": "0x0213ba8c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::BombMarch_Offscreen (0x020d7958), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateInPen",
+      "address": "0x0213ba94",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Bomb_StateInPen (0x020d7c4c), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateExploding",
+      "address": "0x0213ba9c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Bomb_StateExploding (0x020d7e7c), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateChainDelay",
+      "address": "0x0213baa4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Bomb_StateChainDelay (0x020d7edc), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateWalk",
+      "address": "0x0213baac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Bomb_StateWalk (0x020d816c), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_TopDoor_StateShut",
+      "address": "0x0213bab4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::TopDoor_StateShut (0x020d5fd8), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_LinedUp",
+      "address": "0x0213babc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::BombMarch_LinedUp (0x020d7778), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_RoundEnd_Finish",
+      "address": "0x0213bac4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::RoundEnd_Finish (0x020d89c4), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_TopDoor_StateOpening",
+      "address": "0x0213bacc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::TopDoor_StateOpening (0x020d5f2c), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_RoundEnd_WaitLinedUp",
+      "address": "0x0213bad4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::RoundEnd_WaitLinedUp (0x020d8cc4), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "g_profile_MG_BOMROOM",
+      "address": "0x0213badc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "defined by this source under its configured name"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_HatchPanel_StateRevert",
+      "address": "0x0213bae4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::HatchPanel_StateRevert (0x020d6454), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StateGameOver",
+      "address": "0x0213baec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Round_StateGameOver (0x020d8f34), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StateEnd",
+      "address": "0x0213baf4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBomroom_c::Round_StateEnd (0x020d8f98), emitted by __sinit_d_s_mg_bomroom.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
     }
   ],
   "bss": [
@@ -1143,6 +1386,204 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_TopDoor_StateOpen",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_HatchPanel_StateAnimate",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_TopDoor_StateClosing",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_ToLine",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StateSetup",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateWaiting",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateHeld",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_RoundEnd_Tally",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_RoundEnd_StartMarch",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_HatchPanel_StateHeld",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StatePlay",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_HatchPanel_StateIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_PenGate_StateShut",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_PenGate_StateOpening",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateMarch",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_PenGate_StateHold",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StateStart",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_ToGate",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_PenGate_StateClosing",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_Exit",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_Offscreen",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateInPen",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateExploding",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateChainDelay",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Bomb_StateWalk",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_TopDoor_StateShut",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_BombMarch_LinedUp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_RoundEnd_Finish",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_TopDoor_StateOpening",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_RoundEnd_WaitLinedUp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_HatchPanel_StateRevert",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StateGameOver",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBomroom_c_Round_StateEnd",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -1845,6 +2286,346 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02134f34"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b9ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c17TopDoor_StateOpenEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d5f28"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b9f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c23HatchPanel_StateAnimateEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d64c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213b9fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c20TopDoor_StateClosingEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d5eb8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c16BombMarch_ToLineEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d777c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c16Round_StateSetupEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d904c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c17Bomb_StateWaitingEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d8324"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c14Bomb_StateHeldEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d7f5c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c14RoundEnd_TallyEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d8af8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c19RoundEnd_StartMarchEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d8d84"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c20HatchPanel_StateHeldEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d64c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c15Round_StatePlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d8ff4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c20HatchPanel_StateIdleEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d65b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c17PenGate_StateShutEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d6264"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c20PenGate_StateOpeningEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d61dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c15Bomb_StateMarchEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d7c00"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c17PenGate_StateHoldEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d6170"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c16Round_StateStartEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d9020"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c16BombMarch_ToGateEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d7a84"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c20PenGate_StateClosingEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d6100"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c14BombMarch_ExitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d795c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c19BombMarch_OffscreenEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d7958"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c15Bomb_StateInPenEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d7c4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213ba9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c19Bomb_StateExplodingEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d7e7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213baa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c20Bomb_StateChainDelayEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d7edc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213baac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c14Bomb_StateWalkEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d816c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213bab4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c17TopDoor_StateShutEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d5fd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213babc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c17BombMarch_LinedUpEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d7778"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213bac4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c15RoundEnd_FinishEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d89c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213bacc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c20TopDoor_StateOpeningEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d5f2c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213bad4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c20RoundEnd_WaitLinedUpEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d8cc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213badc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z24dScMgBomroom_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d9574"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213bae4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c22HatchPanel_StateRevertEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d6454"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213baec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c19Round_StateGameOverEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d8f34"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213baf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14dScMgBomroom_c14Round_StateEndEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020d8f98"
     }
   ],
   "compiler_only_output": [
@@ -1938,7 +2719,8 @@
     "Each member keeps its own legacy shadow types, suffixed with the member's address (S_604c, Obj_6098, PMF_6278, Ent_816c, Work_893c, ...) so that the shards' independently-invented `S`/`C`/`Rec`/`Obj`/`Work`/`Ent`/`Entry` tags coexist. Members derived from .c shards had their `this` parameter renamed to `self_` -- a C++ keyword in the merged TU. The .c shards' `_ZN5Sound12PlayBank2_2DEj` calls are spelled Sound::PlayBank2_2D through include/Sound.h, and _ZN14dScMgBomroom_c15Round_StatePlayEv, recovered as returning the result of a void function through K&R declarations, is void.",
     "The incomplete structs and PMF typedefs above the pointer-to-member dispatchers (C_5fec, C_6278, C_65c8, C_7c00, C_836c, C_91b0) are load-bearing: they are the representation the tables at sBomroomTopDoorStateTable..sBomroomBombStateTable are filled with, and completing a struct changes the pointer-to-member representation mwcc emits.",
     "Static initializer folded: the seven state tables move out of src/unnamed/ov006/__sinit_ov006_0212fd48.c into this TU. Each table is the pointer-to-member type its dispatcher already calls through, plain-copied from the ROM pmf_dScMgBomroom_c_* constants in retail order. mwcc emits __sinit_d_s_mg_bomroom.cpp at 0x368 with the same 40 relocations. .init 0x0212fd48..0x021300b0, .ctor 0x02133580..0x02133584 and .bss 0x02141660..0x02141768 are this TU's. The PMF constants stay ROM data. No compiler temporaries.",
-    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 that every intact entry shares."
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 that every intact entry shares.",
+    "2026-11-17 (#821): the seven state tables are initialized from real &dScMgBomroom_c:: member pointers and the file defines g_profile_MG_BOMROOM. The 33 {fn, 0} constants mwccarm emits for the initializers, with the profile among them, are the run 0x0213b9ec..0x0213bafc, claimed as plain .data inside ov006's shared .data; each @NNN is paired with its pmf_dScMgBomroom_c_* record by its __sinit consumer relocation and its own handler relocation. TopDoor_StateOpen, HatchPanel_StateHeld, BombMarch_LinedUp and BombMarch_Offscreen take the int slot like their table siblings (...Ev -> ...Ei). verify 81/81 TEXT-VERIFIED (base 81/81); linkcheck SCRATCH-DATA-VERIFIED."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -2049,6 +2831,13 @@
           "section": ".ctor",
           "start": "0x02133580",
           "end": "0x02133584",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213b9ec",
+          "end": "0x0213bafc",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -2306,12 +3095,596 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 90
+          "LICENSED": 159
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              277
+            ],
+            "desired": [
+              277
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              275
+            ],
+            "desired": [
+              275
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              183,
+              185,
+              187,
+              189,
+              191,
+              193,
+              196,
+              198,
+              200,
+              202,
+              205,
+              207,
+              209,
+              211,
+              213,
+              215,
+              217,
+              220,
+              222,
+              224,
+              226,
+              228,
+              231,
+              233,
+              235,
+              237,
+              240,
+              242,
+              244,
+              246,
+              249,
+              251,
+              253,
+              255
+            ],
+            "desired": [
+              253,
+              233,
+              255,
+              226,
+              185,
+              205,
+              209,
+              200,
+              196,
+              235,
+              189,
+              231,
+              240,
+              242,
+              217,
+              244,
+              187,
+              220,
+              246,
+              222,
+              224,
+              215,
+              213,
+              211,
+              207,
+              249,
+              228,
+              202,
+              251,
+              198,
+              183,
+              237,
+              193,
+              191
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              195,
+              204,
+              219,
+              230,
+              239,
+              248,
+              257
+            ],
+            "desired": [
+              257,
+              239,
+              204,
+              248,
+              195,
+              230,
+              219
+            ]
+          },
+          {
+            "section": ".data.sBomroomMarkerLitSprites",
+            "original": [
+              7
+            ],
+            "desired": [
+              7
+            ]
+          },
+          {
+            "section": ".data.sBomroomMarkerPlainSprites",
+            "original": [
+              10
+            ],
+            "desired": [
+              10
+            ]
+          },
+          {
+            "section": ".data.sBomroomHatchPanelSprites",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
+            ]
+          },
+          {
+            "section": ".data.sBomroomTopDoorSprites",
+            "original": [
+              14
+            ],
+            "desired": [
+              14
+            ]
+          },
+          {
+            "section": ".data.sBomroomPenGateSprites",
+            "original": [
+              27
+            ],
+            "desired": [
+              27
+            ]
+          },
+          {
+            "section": ".data.sBomroomRoundOverSprites",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133a80",
+            "original": [
+              16
+            ],
+            "desired": [
+              16
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133a98",
+            "original": [
+              17
+            ],
+            "desired": [
+              17
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133ab0",
+            "original": [
+              18
+            ],
+            "desired": [
+              18
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133ac8",
+            "original": [
+              19
+            ],
+            "desired": [
+              19
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133af0",
+            "original": [
+              35
+            ],
+            "desired": [
+              35
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133b28",
+            "original": [
+              34
+            ],
+            "desired": [
+              34
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133b60",
+            "original": [
+              40
+            ],
+            "desired": [
+              40
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133ba0",
+            "original": [
+              42
+            ],
+            "desired": [
+              42
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021342d0",
+            "original": [
+              21
+            ],
+            "desired": [
+              21
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021342f0",
+            "original": [
+              22
+            ],
+            "desired": [
+              22
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134310",
+            "original": [
+              32
+            ],
+            "desired": [
+              32
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134340",
+            "original": [
+              31
+            ],
+            "desired": [
+              31
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134370",
+            "original": [
+              33
+            ],
+            "desired": [
+              33
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021343a0",
+            "original": [
+              9
+            ],
+            "desired": [
+              9
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021343c4",
+            "original": [
+              25
+            ],
+            "desired": [
+              25
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021343e4",
+            "original": [
+              23
+            ],
+            "desired": [
+              23
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134404",
+            "original": [
+              41
+            ],
+            "desired": [
+              41
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134444",
+            "original": [
+              38
+            ],
+            "desired": [
+              38
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134484",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021344a4",
+            "original": [
+              20
+            ],
+            "desired": [
+              20
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021344c4",
+            "original": [
+              26
+            ],
+            "desired": [
+              26
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134514",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213453c",
+            "original": [
+              30
+            ],
+            "desired": [
+              30
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213456c",
+            "original": [
+              36
+            ],
+            "desired": [
+              36
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021345ac",
+            "original": [
+              39
+            ],
+            "desired": [
+              39
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021345ec",
+            "original": [
+              43
+            ],
+            "desired": [
+              43
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213462c",
+            "original": [
+              37
+            ],
+            "desired": [
+              37
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213466c",
+            "original": [
+              44
+            ],
+            "desired": [
+              44
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134f34",
+            "original": [
+              45
+            ],
+            "desired": [
+              45
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                183,
+                185,
+                187,
+                189,
+                191,
+                193,
+                196,
+                198,
+                200,
+                202,
+                205,
+                207,
+                209,
+                211,
+                213,
+                215,
+                217,
+                220,
+                222,
+                224,
+                226,
+                228,
+                231,
+                233,
+                235,
+                237,
+                240,
+                242,
+                244,
+                246,
+                249,
+                251,
+                253,
+                255
+              ],
+              "desired": [
+                253,
+                233,
+                255,
+                226,
+                185,
+                205,
+                209,
+                200,
+                196,
+                235,
+                189,
+                231,
+                240,
+                242,
+                217,
+                244,
+                187,
+                220,
+                246,
+                222,
+                224,
+                215,
+                213,
+                211,
+                207,
+                249,
+                228,
+                202,
+                251,
+                198,
+                183,
+                237,
+                193,
+                191
+              ],
+              "slots": [
+                183,
+                185,
+                187,
+                189,
+                191,
+                193,
+                196,
+                198,
+                200,
+                202,
+                205,
+                207,
+                209,
+                211,
+                213,
+                215,
+                217,
+                220,
+                222,
+                224,
+                226,
+                228,
+                231,
+                233,
+                235,
+                237,
+                240,
+                242,
+                244,
+                246,
+                249,
+                251,
+                253,
+                255
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                195,
+                204,
+                219,
+                230,
+                239,
+                248,
+                257
+              ],
+              "desired": [
+                257,
+                239,
+                204,
+                248,
+                195,
+                230,
+                219
+              ],
+              "slots": [
+                195,
+                204,
+                219,
+                230,
+                239,
+                248,
+                257
+              ]
+            }
+          ],
+          "symbolIndices": 41,
+          "sectionLinks": 0,
+          "sectionInfos": 34,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [],
       "symbolCheckBaselineErrors": [],
@@ -2323,5 +3696,172 @@
       },
       "linkerOutput": null
     }
-  }
+  },
+  "defined_symbol_renames": [
+    {
+      "from": "@2420",
+      "to": "pmf_dScMgBomroom_c_TopDoor_StateOpen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateOpen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x35c loads 0x0213b9ec in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateOpen at 0x020d5f28)."
+    },
+    {
+      "from": "@2402",
+      "to": "pmf_dScMgBomroom_c_HatchPanel_StateAnimate",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateAnimate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x338 loads 0x0213b9f4 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateAnimate at 0x020d64c8)."
+    },
+    {
+      "from": "@2422",
+      "to": "pmf_dScMgBomroom_c_TopDoor_StateClosing",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateClosing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x360 loads 0x0213b9fc in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateClosing at 0x020d5eb8)."
+    },
+    {
+      "from": "@2396",
+      "to": "pmf_dScMgBomroom_c_BombMarch_ToLine",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_ToLine, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x320 loads 0x0213ba04 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_ToLine at 0x020d777c)."
+    },
+    {
+      "from": "@2358",
+      "to": "pmf_dScMgBomroom_c_Round_StateSetup",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateSetup, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2c8 loads 0x0213ba0c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateSetup at 0x020d904c)."
+    },
+    {
+      "from": "@2376",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateWaiting",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateWaiting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2fc loads 0x0213ba14 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateWaiting at 0x020d8324)."
+    },
+    {
+      "from": "@2380",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateHeld",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateHeld, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x31c loads 0x0213ba1c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateHeld at 0x020d7f5c)."
+    },
+    {
+      "from": "@2372",
+      "to": "pmf_dScMgBomroom_c_RoundEnd_Tally",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_Tally, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f0 loads 0x0213ba24 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_Tally at 0x020d8af8)."
+    },
+    {
+      "from": "@2368",
+      "to": "pmf_dScMgBomroom_c_RoundEnd_StartMarch",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_StartMarch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2e0 loads 0x0213ba2c in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_StartMarch at 0x020d8d84)."
+    },
+    {
+      "from": "@2404",
+      "to": "pmf_dScMgBomroom_c_HatchPanel_StateHeld",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateHeld, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x33c loads 0x0213ba34 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateHeld at 0x020d64c4)."
+    },
+    {
+      "from": "@2362",
+      "to": "pmf_dScMgBomroom_c_Round_StatePlay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2d4 loads 0x0213ba3c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StatePlay at 0x020d8ff4)."
+    },
+    {
+      "from": "@2400",
+      "to": "pmf_dScMgBomroom_c_HatchPanel_StateIdle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x32c loads 0x0213ba44 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateIdle at 0x020d65b4)."
+    },
+    {
+      "from": "@2408",
+      "to": "pmf_dScMgBomroom_c_PenGate_StateShut",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateShut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x340 loads 0x0213ba4c in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateShut at 0x020d6264)."
+    },
+    {
+      "from": "@2410",
+      "to": "pmf_dScMgBomroom_c_PenGate_StateOpening",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateOpening, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x344 loads 0x0213ba54 in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateOpening at 0x020d61dc)."
+    },
+    {
+      "from": "@2388",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateMarch",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateMarch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x304 loads 0x0213ba5c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateMarch at 0x020d7c00)."
+    },
+    {
+      "from": "@2412",
+      "to": "pmf_dScMgBomroom_c_PenGate_StateHold",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateHold, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x348 loads 0x0213ba64 in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateHold at 0x020d6170)."
+    },
+    {
+      "from": "@2360",
+      "to": "pmf_dScMgBomroom_c_Round_StateStart",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2cc loads 0x0213ba6c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateStart at 0x020d9020)."
+    },
+    {
+      "from": "@2390",
+      "to": "pmf_dScMgBomroom_c_BombMarch_ToGate",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_ToGate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x308 loads 0x0213ba74 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_ToGate at 0x020d7a84)."
+    },
+    {
+      "from": "@2414",
+      "to": "pmf_dScMgBomroom_c_PenGate_StateClosing",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateClosing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x350 loads 0x0213ba7c in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateClosing at 0x020d6100)."
+    },
+    {
+      "from": "@2392",
+      "to": "pmf_dScMgBomroom_c_BombMarch_Exit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_Exit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x310 loads 0x0213ba84 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_Exit at 0x020d795c)."
+    },
+    {
+      "from": "@2394",
+      "to": "pmf_dScMgBomroom_c_BombMarch_Offscreen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_Offscreen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x318 loads 0x0213ba8c in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_Offscreen at 0x020d7958)."
+    },
+    {
+      "from": "@2386",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateInPen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateInPen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f8 loads 0x0213ba94 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateInPen at 0x020d7c4c)."
+    },
+    {
+      "from": "@2384",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateExploding",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateExploding, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2e8 loads 0x0213ba9c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateExploding at 0x020d7e7c)."
+    },
+    {
+      "from": "@2382",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateChainDelay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateChainDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x328 loads 0x0213baa4 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateChainDelay at 0x020d7edc)."
+    },
+    {
+      "from": "@2378",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateWalk",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x314 loads 0x0213baac in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateWalk at 0x020d816c)."
+    },
+    {
+      "from": "@2416",
+      "to": "pmf_dScMgBomroom_c_TopDoor_StateShut",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateShut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x34c loads 0x0213bab4 in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateShut at 0x020d5fd8)."
+    },
+    {
+      "from": "@2398",
+      "to": "pmf_dScMgBomroom_c_BombMarch_LinedUp",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_LinedUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x324 loads 0x0213babc in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_LinedUp at 0x020d7778)."
+    },
+    {
+      "from": "@2374",
+      "to": "pmf_dScMgBomroom_c_RoundEnd_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f4 loads 0x0213bac4 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_Finish at 0x020d89c4)."
+    },
+    {
+      "from": "@2418",
+      "to": "pmf_dScMgBomroom_c_TopDoor_StateOpening",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateOpening, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x354 loads 0x0213bacc in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateOpening at 0x020d5f2c)."
+    },
+    {
+      "from": "@2370",
+      "to": "pmf_dScMgBomroom_c_RoundEnd_WaitLinedUp",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_WaitLinedUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2ec loads 0x0213bad4 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_WaitLinedUp at 0x020d8cc4)."
+    },
+    {
+      "from": "@2406",
+      "to": "pmf_dScMgBomroom_c_HatchPanel_StateRevert",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateRevert, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x330 loads 0x0213bae4 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateRevert at 0x020d6454)."
+    },
+    {
+      "from": "@2366",
+      "to": "pmf_dScMgBomroom_c_Round_StateGameOver",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateGameOver, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2dc loads 0x0213baec in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateGameOver at 0x020d8f34)."
+    },
+    {
+      "from": "@2364",
+      "to": "pmf_dScMgBomroom_c_Round_StateEnd",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateEnd, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2d8 loads 0x0213baf4 in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateEnd at 0x020d8f98)."
+    }
+  ]
 }

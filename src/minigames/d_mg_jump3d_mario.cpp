@@ -2,11 +2,10 @@
 /* dMgJump3DMario_c: one of the three Marios the two jump minigames
  * (Bounce and Pounce, MG_JUMP and MG_JUMP2) hold as mPlayers[3].
  *
- * A pointer-to-member state machine: mState is installed from the 8-byte
- * records at pmf_dMgJump3DMario_c_StateMove..0213b098. Each update applies gravity,
- * integrates mVel into mPos, runs the current state and re-projects the
- * screen position. Tap near Mario and he bounces; miss and he damps out and
- * respawns.
+ * A pointer-to-member state machine: mState points at the current State*
+ * method. Each update applies gravity, integrates mVel into mPos, runs the
+ * current state and re-projects the screen position. Tap near Mario and he
+ * bounces; miss and he damps out and respawns.
  *
  * Source order is ROM order, which `#pragma defer_codegen off` keeps; do not
  * reorder. The destructor is not virtual, so the first declared virtual
@@ -66,23 +65,6 @@ void func_02016a14(void *self, int a);
 void func_02016a04(void *self, int a);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
-
-/* The mState records this file installs or compares. */
-extern Jump3DState pmf_dMgJump3DMario_c_StateMove;
-extern Jump3DState pmf_dMgJump3DMario_c_StateHold;
-extern Jump3DState pmf_dMgJump3DMario_c_StateDamp;
-extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn;
-extern Jump3DState pmf_dMgJump3DMario_c_StateIdle;
-extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_2;
-extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp;
-extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_3;
-extern Jump3DState pmf_dMgJump3DMario_c_StateBounce;
-extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp_2;
-extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp_3;
-extern Jump3DState pmf_dMgJump3DMario_c_StateBounce_2;
-extern Jump3DState pmf_dMgJump3DMario_c_StateRiseOut;
-extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn_2;
-extern Jump3DState pmf_dMgJump3DMario_c_StateFallOut;
 
 /* Tuning words, read as plain ints. */
 int sJump3DBounceVy = 0x5000;
@@ -226,7 +208,7 @@ void Jump3D_RestoreCount(void) {
 int Jump3D_AllIdle(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
-        if (((dMgJump3DMario_c *)sJump3DMarioPool)[i].mState != pmf_dMgJump3DMario_c_StateIdle)
+        if (((dMgJump3DMario_c *)sJump3DMarioPool)[i].mState != &dMgJump3DMario_c::StateIdle)
             return 0;
     }
     return 1;
@@ -336,11 +318,11 @@ int dMgJump3DMario_c::IsLaunched() {
     int r = 0;
     int m = 1;
 
-    if (mState == pmf_dMgJump3DMario_c_StateIdle_3)
+    if (mState == &dMgJump3DMario_c::StateIdle)
         m = 0;
     if (m != 0) {
         m = 1;
-        if (mState == pmf_dMgJump3DMario_c_StateWindUp_3)
+        if (mState == &dMgJump3DMario_c::StateWindUp)
             m = 0;
         if (m != 0)
             r = 1;
@@ -438,7 +420,7 @@ void dMgJump3DMario_c::EnterDamp()
         Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sJump3DAnimStruggle, 0, kAnimSpeed, 0);
     mTimer = 40;
-    mState = pmf_dMgJump3DMario_c_StateDamp;
+    mState = &dMgJump3DMario_c::StateDamp;
 }
 
 
@@ -520,7 +502,7 @@ void dMgJump3DMario_c::EnterHold()
     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
     Sound_PlayBank1Panned(0, 6, mPos.x);
     mTimer = 32;
-    mState = pmf_dMgJump3DMario_c_StateHold;
+    mState = &dMgJump3DMario_c::StateHold;
 }
 
 
@@ -622,7 +604,7 @@ void dMgJump3DMario_c::StateMove()
 
 void dMgJump3DMario_c::EnterMove()
 {
-    mState = pmf_dMgJump3DMario_c_StateMove;
+    mState = &dMgJump3DMario_c::StateMove;
 }
 
 
@@ -637,7 +619,7 @@ void dMgJump3DMario_c::StateFallOut()
 
 void dMgJump3DMario_c::StartFallOut()
 {
-    if (mState == pmf_dMgJump3DMario_c_StateRespawn_2) {
+    if (mState == &dMgJump3DMario_c::StateRespawn) {
         mVel.y = 0;
         HideAndIdle();
     } else {
@@ -646,7 +628,7 @@ void dMgJump3DMario_c::StartFallOut()
         Sound::PlayBank2_2D(0x1c9);
         mAnmModel.SetAnim(sJump3DAnimStruggle, 0, kAnimSpeed, 0);
         mAnmModel.dExtFrameCtrl_c::currFrame = 0;
-        mState = pmf_dMgJump3DMario_c_StateFallOut;
+        mState = &dMgJump3DMario_c::StateFallOut;
     }
 }
 
@@ -673,20 +655,20 @@ void dMgJump3DMario_c::StartRiseOut()
     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
     Sound::PlayBank2_2D(0x10f);
     func_02012718(0x1b5, mScreenX << 12);
-    mState = pmf_dMgJump3DMario_c_StateRiseOut;
+    mState = &dMgJump3DMario_c::StateRiseOut;
 }
 
 void dMgJump3DMario_c::EnterHit()
 {
     mAnmModel.SetAnim(sJump3DAnimRollJump, 0x40000000, kAnimSpeed, 0);
     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
-    if (mState == pmf_dMgJump3DMario_c_StateWindUp_2) {
+    if (mState == &dMgJump3DMario_c::StateWindUp) {
         func_02012718(0x110, mScreenX << 12);
     } else {
         Sound_PlayBank1Panned(0, 4, mPos.x);
     }
     func_02012718(0x1b5, mScreenX << 12);
-    mState = pmf_dMgJump3DMario_c_StateBounce_2;
+    mState = &dMgJump3DMario_c::StateBounce;
 }
 
 
@@ -744,7 +726,7 @@ void dMgJump3DMario_c::StateBounce()
 
 void dMgJump3DMario_c::EnterBounce()
 {
-    mState = pmf_dMgJump3DMario_c_StateBounce;
+    mState = &dMgJump3DMario_c::StateBounce;
 }
 
 
@@ -766,7 +748,7 @@ void dMgJump3DMario_c::StateWindUp()
 void dMgJump3DMario_c::StartWindUp(int timer)
 {
     mTimer = timer;
-    mState = pmf_dMgJump3DMario_c_StateWindUp;
+    mState = &dMgJump3DMario_c::StateWindUp;
 }
 
 void dMgJump3DMario_c::StateIdle()
@@ -779,7 +761,7 @@ void dMgJump3DMario_c::HideAndIdle()
 {
     mVisible = 0;
     mPos.y = 0;
-    mState = pmf_dMgJump3DMario_c_StateIdle_2;
+    mState = &dMgJump3DMario_c::StateIdle;
 }
 
 void dMgJump3DMario_c::StateRespawn()
@@ -811,7 +793,7 @@ void dMgJump3DMario_c::EnterRespawn()
     mPos.y = 0x100000;
     mVel.y = 0;
     mAnmModel.SetAnim(sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
-    mState = pmf_dMgJump3DMario_c_StateRespawn;
+    mState = &dMgJump3DMario_c::StateRespawn;
 }
 
 
