@@ -151,6 +151,8 @@ void Luigi_PrepareScanlines(void) {
    entry to 0x04000040. The record type retains the table stride. */
 void Luigi_PushScanlineRecord(void) {
     extern u32 data_0209f60c;
+    /* Kept volatile, measured (#821 r49): the H-blank copy above reads it; as a
+       plain u32 this function is 0x4c of 0x44. */
     extern volatile u32 data_0209f608;
     extern struct IrisScanlineTable data_0209f648[];
     data_0209f608 = data_0209f60c;
