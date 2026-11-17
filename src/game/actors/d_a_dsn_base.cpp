@@ -31,7 +31,7 @@
  *   across the three calls is a 20-word DIFF.
  * - The cycle states are StateRise (0), StateHover (1), StateSlam (2),
  *   StateRest (3) and StateRecover (4); both leaves' Behaviors dispatch on
- *   mState. DsnCycle only names the shared tail inside this TU.
+ *   mState, a member of this class (include/daDsnBase_c.h).
  */
 
 #pragma defer_codegen off
@@ -55,24 +55,6 @@ enum {
     kYoshiEggActorID = 9, /* YOSHI_EGG: WakeNearYoshiEgg's target */
     kDosunActorID = 0xa1, /* DOSUN (161): the Thwomp leaf; Grindel takes
                                the particle path in StateSlam */
-};
-
-/* 0x360..0x39f is the same on both leaves, and daDsn_c.h / daDkk_c.h already
- * declare it, so the view stays in this TU. Based at the actor, shadowMtx.m[9]
- * is the store at 0x384. */
-struct DsnCycle {
-    char prefix[0x5c];
-    s32 posX; /* 0x05c */
-    s32 posY; /* 0x060 */
-    s32 posZ; /* 0x064 */
-    char mid[0x360 - 0x68];
-    Matrix4x3 shadowMtx; /* 0x360; translation row is m[9..11] at 0x384 */
-    s32 riseY;           /* 0x390 */
-    s32 groundY;         /* 0x394 */
-    s32 state;           /* 0x398 */
-    s16 turnAng;         /* 0x39c -- Grindel only; this TU does not write it */
-    u8 timer;            /* 0x39e */
-    u8 landCount;        /* 0x39f */
 };
 
 /* arm9 C helpers with no shared header.
@@ -134,24 +116,22 @@ int daDsnBase_c::WakeNearYoshiEgg() {
 /* State 4, the recover. Spends the timer state 3 set, then closes the cycle
  * back to state 0 with a 0x28-frame hover preload. */
 void daDsnBase_c::StateRecover() {
-    DsnCycle *self = (DsnCycle *)this;
-    int timeLeft = DecIfAbove0_Byte(&self->timer);
+    int timeLeft = DecIfAbove0_Byte(&mTimer);
     if (timeLeft == 0) {
-        self->state = 0;
-        self->timer = 40;
+        mState = 0;
+        mTimer = 40;
     }
 }
 
 /* State 3, the rest. Spends the landing timer, then moves to state 4 with
  * a fresh 0x14..0x1d-frame recovery time. */
 void daDsnBase_c::StateRest() {
-    DsnCycle *self = (DsnCycle *)this;
-    if (DecIfAbove0_Byte(&self->timer) != 0)
+    if (DecIfAbove0_Byte(&mTimer) != 0)
         return;
-    self->state = 4;
+    mState = 4;
     unsigned int roll = RandomIntInternal(&data_0209e650.value);
     unsigned int rollHigh = roll >> 16;
-    self->timer = (rollHigh % 10 + 20);
+    mTimer = (rollHigh % 10 + 20);
 }
 
 /* State 2, the slam. Integrates the fall at 0x4000 a frame; on reaching the
@@ -163,13 +143,12 @@ void daDsnBase_c::StateSlam() {
     Vector3 quakePos;
     mVertSpeed = mVertSpeed - 0x4000;
     mPosY = mPosY + mVertSpeed;
-    DsnCycle *cycle = (DsnCycle *)this;
-    if (mPosY > cycle->groundY)
+    if (mPosY > mGroundY)
         return;
-    mPosY = cycle->groundY;
+    mPosY = mGroundY;
     mVertSpeed = 0;
-    cycle->state = 3;
-    cycle->timer = 10;
+    mState = 3;
+    mTimer = 10;
     int isDosun = (actorID == kDosunActorID);
     if (isDosun != 0) {
         HugeLandingDust(true);
@@ -190,23 +169,21 @@ void daDsnBase_c::StateSlam() {
 /* State 1, the hover. Spends the timer state 0 rolled, then drops to
  * state 2. */
 void daDsnBase_c::StateHover() {
-    DsnCycle *self = (DsnCycle *)this;
-    int timeLeft = DecIfAbove0_Byte(&self->timer);
+    int timeLeft = DecIfAbove0_Byte(&mTimer);
     if (timeLeft == 0)
-        self->state = 2;
+        mState = 2;
 }
 
 /* State 0, the rise. Climbs 0xa000 a frame toward the stored top height
  * (0x390); on arrival snaps to it, moves to state 1 and rolls the hover
  * time (0xa..0x27 frames). */
 void daDsnBase_c::StateRise() {
-    DsnCycle *self = (DsnCycle *)this;
-    self->posY += 0xa000;
-    if (self->posY < self->riseY)
+    mPosY += 0xa000;
+    if (mPosY < mRiseY)
         return;
-    self->posY = self->riseY;
-    self->state = 1;
-    self->timer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 30 + 10);
+    mPosY = mRiseY;
+    mState = 1;
+    mTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 30 + 10);
 }
 
 /* The per-frame shadow refresh both Behaviors run after the state step.
@@ -216,9 +193,8 @@ void daDsnBase_c::StateRise() {
  * radius. The clipRadius pointer and the braced clamp are load-bearing;
  * see the file comment. */
 void daDsnBase_c::UpdateDropShadow() {
-    DsnCycle *cycle = (DsnCycle *)this;
     int shadowDrop = 0x20000;
-    int heightAboveGround = mPosY - cycle->groundY;
+    int heightAboveGround = mPosY - mGroundY;
     if (heightAboveGround <= 0x14000) {
         heightAboveGround = 0x14000;
         shadowDrop = 0;
@@ -240,12 +216,11 @@ void daDsnBase_c::UpdateDropShadow() {
         mClipRadius = clamped;
     }
     *clipRadius = *clipRadius >> 3;
-    cycle->shadowMtx = mModel.mat4x3;
-    cycle->shadowMtx.m[9] = cycle->posX >> 3;
-    cycle->shadowMtx.m[10] = (cycle->posY - shadowDrop) >> 3;
-    cycle->shadowMtx.m[11] = cycle->posZ >> 3;
-    DropShadowScaleXYZ(mShadowModel, cycle->shadowMtx, scaleX, heightAboveGround + 0x28000, scaleZ,
-                       0xf);
+    mShadowMtx = mModel.mat4x3;
+    mShadowMtx.m[9] = mPosX >> 3;
+    mShadowMtx.m[10] = (mPosY - shadowDrop) >> 3;
+    mShadowMtx.m[11] = mPosZ >> 3;
+    DropShadowScaleXYZ(mShadowModel, mShadowMtx, scaleX, heightAboveGround + 0x28000, scaleZ, 0xf);
 }
 
 /* Vtable slot 3, inherited by both leaves -- and the key function, so this
@@ -323,18 +298,17 @@ s32 daDsnBase_c::Init() {
     {
         dBgCh_Gnd ground;
         ground.SetObjAndPos(probePos, 0);
-        DsnCycle *cycle = (DsnCycle *)this;
-        cycle->groundY = probePos.y;
+        mGroundY = probePos.y;
         if (ground.DetectClsn())
-            cycle->groundY = ground.clsnY;
+            mGroundY = ground.clsnY;
 
-        cycle->riseY = mPosY + 0x190000;
-        mPosY = cycle->groundY;
-        cycle->timer = 40;
+        mRiseY = mPosY + 0x190000;
+        mPosY = mGroundY;
+        mTimer = 40;
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x3c000;
         mHorzSpeed = 0xc000;
-        cycle->landCount = 0;
+        mLandCount = 0;
     }
     return 1;
 }
