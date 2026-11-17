@@ -42,7 +42,7 @@
  * and for the scene's CanEndState(mState) to return nonzero, in several
  * states around a screen fade (SetForwardTime out, then SetBackwardTime
  * once the fader IsAtEnd). It then frees every graphics slot
- * (FreeGfxSlotsById(0x1d)), passes mState to Mg_CallStartRound and
+ * (FreeGfxSlotsById(0x1d)), passes mState to the scene's CallStartRound and
  * returns the machine to idle (mState -1).
  *
  * Notes:
@@ -54,8 +54,7 @@
  *     CanEndState and OnNewRecord (slots 18-20) and read its mCredits.
  *     W2 preserves the two-word storage view of data_02086b58.
  *   - mState doubles as the id passed to the scene's CanEndState and,
- *     through Mg_CallStartRound, to its StartRound. The `(void *)mState`
- *     spelling follows that helper's declaration.
+ *     through CallStartRound, to its StartRound.
  *
  * Retired one-function sources (ROM address order):
  *   0x020b67e8  Mg_SetNextBanner
@@ -125,14 +124,11 @@ extern int Mg_IsNewRecord(void);
 extern void Mg_RestoreMusic(void);
 extern void Mg_PlayJingle(void *c);
 extern void Mg_StartMusic(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, struct Matrix2x2 *d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_CheckBannerButton(int arg);
 extern void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
-extern void Mg_DrawBlinkSprite(void *, int, int);
-extern void Mg_DrawRecordTable(void *);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
-extern void Mg_CallStartRound(void *c, void *arg);
 }
 extern void func_02012dd0(void *c);
 extern void Mg_SetNextBanner(int);
@@ -286,7 +282,7 @@ void dMgState_c::RoundClear_Update() {
         FreeGfxSlotsById(0x1d);
         Mg_RestoreMusic();
         Mg_StartMusic();
-        Mg_CallStartRound(scene, (void *)mState);
+        scene->CallStartRound(mState);
         mTimer = 0;
         mState = -1;
         unk_020 = 0;
@@ -318,7 +314,7 @@ void dMgState_c::NextRound_Update() {
             return;
         gSceneFader->SetBackwardTime(0x1e, 0);
         FreeGfxSlotsById(0x1d);
-        Mg_CallStartRound(scene, (void *)mState);
+        scene->CallStartRound(mState);
         mTimer = 0;
         mState = -1;
         unk_020 = 0;
@@ -350,7 +346,7 @@ void dMgState_c::RoundBanner5_Update() {
         FreeGfxSlotsById(0x1d);
         Mg_RestoreMusic();
         Mg_StartMusic();
-        Mg_CallStartRound(scene, (void *)mState);
+        scene->CallStartRound(mState);
         mTimer = 0;
         mState = -1;
         unk_020 = 0;
@@ -404,14 +400,14 @@ void dMgState_c ::RetryPrompt_Update() {
 void dMgState_c::UpdateRetryFadeOut() {
     if (gSceneFader->IsAtEnd() == 0)
         return;
-    void *scene = gMgScene;
+    dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
     gSceneFader->SetBackwardTime(0x1e, 0);
     FreeGfxSlotsById(0x1d);
     Mg_RestoreMusic();
     Mg_StartMusic();
-    Mg_CallStartRound(scene, (void *)mState);
+    scene->CallStartRound(mState);
     mTimer = 0;
     mState = -1;
     unk_020 = 0;
@@ -445,7 +441,7 @@ void dMgState_c::Win_Update() {
     FreeGfxSlotsById(0x1d);
     Mg_RestoreMusic();
     Mg_StartMusic();
-    Mg_CallStartRound(scene, (void *)mState);
+    scene->CallStartRound(mState);
     mTimer = 0;
     mState = -1;
     unk_020 = 0;
@@ -490,7 +486,7 @@ void dMgState_c::Lose_Update() {
         FreeGfxSlotsById(0x1d);
         Mg_RestoreMusic();
         Mg_StartMusic();
-        Mg_CallStartRound(scene, (void *)mState);
+        scene->CallStartRound(mState);
         mTimer = 0;
         mState = -1;
         unk_020 = 0;
@@ -558,7 +554,7 @@ void dMgState_c::UpdateAfterHidden() {
         return;
     Mg_RestoreMusic();
     Mg_StartMusic();
-    Mg_CallStartRound(g, (void *)mState);
+    g->CallStartRound(mState);
     mTimer = 0;
     mState = -1;
     unk_020 = 0;
@@ -586,7 +582,7 @@ void dMgState_c::UpdateWaitThenResume() {
     if (scene->CanEndState(mState) == 0)
         return;
     FreeGfxSlotsById(0x1d);
-    Mg_CallStartRound(scene, (void *)mState);
+    scene->CallStartRound(mState);
     mTimer = 0;
     mState = -1;
     unk_020 = 0;
@@ -617,7 +613,7 @@ void dMgState_c::RoundClearTop_Update() {
     FreeGfxSlotsById(0x1d);
     Mg_RestoreMusic();
     Mg_StartMusic();
-    Mg_CallStartRound(scene, (void *)mState);
+    scene->CallStartRound(mState);
     mTimer = 0;
     mState = -1;
     unk_020 = 0;
@@ -673,7 +669,7 @@ void dMgState_c::ScoreThenRound_Update() {
         FreeGfxSlotsById(0x1d);
         Mg_RestoreMusic();
         Mg_StartMusic();
-        Mg_CallStartRound(scene, (void *)mState);
+        scene->CallStartRound(mState);
         mTimer = 0;
         mState = -1;
         unk_020 = 0;
@@ -737,7 +733,7 @@ void dMgState_c::UpdateFadeThenResume() {
         gSceneFader->SetBackwardTime(0x1e, 0);
         Mg_RestoreMusic();
         Mg_StartMusic();
-        Mg_CallStartRound(scene, (void *)mState);
+        scene->CallStartRound(mState);
         FreeGfxSlotsById(0x1d);
         mTimer = 0;
         mState = -1;
@@ -942,13 +938,13 @@ void dMgState_c::DrawScoreDigits() {
 }
 
 void dMgState_c::DrawRecordTable() {
-    void *g = gMgScene;
-    if (g == 0)
+    dScMgBase_c *scene = gMgScene;
+    if (scene == 0)
         return;
-    Mg_DrawRecordTable(g);
+    scene->DrawRecordTable();
     if (mTimer > 0)
         return;
-    Mg_DrawBlinkSprite(g, 0xe0, 0xa0);
+    scene->DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void Mg_PlaceBannersOnTopScreen(void) {

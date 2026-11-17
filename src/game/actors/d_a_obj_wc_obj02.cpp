@@ -116,7 +116,7 @@ int daObjWc_Obj02_c::Behavior() {
     switch (mState) {
     case 0:
         if (mTriggered != 0) {
-            func_02012694(0x17b, (const Vector3 *)&mCamSpacePosX);
+            func_02012694(0x17b, &mCamSpacePos);
             mState++;
         }
         mHorzSpeed = 0xa000;
@@ -139,7 +139,7 @@ int daObjWc_Obj02_c::Behavior() {
                 mState = 0;
             } else {
                 mState++;
-                func_02012694(0x17b, (const Vector3 *)&mCamSpacePosX);
+                func_02012694(0x17b, &mCamSpacePos);
             }
             mStateTimer = 0;
         } else {

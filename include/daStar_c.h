@@ -155,21 +155,17 @@ struct daStar_c : dEnemyBase_c {
         s32  unk_440;
     };
     s32 mHomeState; /* 0x444 -- the State chosen at init; ReturnToHome returns to it; 9 = placed by a marker */
-    s32  mSafePosX;               /* 0x448 -- last position it rested at; the aim point when it lands on a bad floor */
-    s32  mSafePosY;               /* 0x44c */
-    s32  mSafePosZ;               /* 0x450 */
-    s32  mHomePosX;               /* 0x454 -- spawn position (STATE_COLLECT_BEGIN overwrites it with the player's); out-of-bounds reset target, and the floor of a silver star */
-    s32  mHomePosY;               /* 0x458 */
-    s32  mHomePosZ;               /* 0x45c */
-    s32  mCamLookAtX;             /* 0x460 -- camera look-at saved when the cutscene starts */
-    s32  mCamLookAtY;             /* 0x464 */
-    s32  mCamLookAtZ;             /* 0x468 */
-    s32  mCamPosX;                /* 0x46c -- camera position saved when the cutscene starts */
-    s32  mCamPosY;                /* 0x470 */
-    s32  mCamPosZ;                /* 0x474 */
-    s32  mInitPosX;               /* 0x478 -- a copy of the position at InitResources; nothing else reads it */
-    s32  mInitPosY;               /* 0x47c */
-    s32  mInitPosZ;               /* 0x480 */
+    /* last position it rested at; the aim point when it lands on a bad floor */
+    Vector3 mSafePos; /* 0x448 */
+    /* spawn position (STATE_COLLECT_BEGIN overwrites it with the player's);
+       out-of-bounds reset target, and the floor of a silver star */
+    Vector3 mHomePos; /* 0x454 */
+    /* camera look-at saved when the cutscene starts */
+    Vector3 mCamLookAt; /* 0x460 */
+    /* camera position saved when the cutscene starts */
+    Vector3 mCamPos; /* 0x46c */
+    /* a copy of the position at InitResources; nothing else reads it */
+    Vector3 mInitPos;             /* 0x478 */
     s32  mMinPosY;                /* 0x484 -- STAR_CAP_MIN_POS_Y copied at init: below it the star is out of bounds */
     s32 mWaterHeight;             /* 0x488 -- the water surface found by UpdateWater */
     s32 mSoundObjSoundID; /* 0x48c -- the sound id PickCollectSoundID picked; SpawnCollectSoundObj hands it to the sound object's mSoundID */
@@ -225,7 +221,7 @@ struct daStar_c : dEnemyBase_c {
     void SpawnCollectSoundObj(int arg);
     void CheckIceBlock();
     void CollectNoPose(daPly_c *arg);
-    void SeekNewMarker(char *a, int gate);
+    void SeekNewMarker(daPly_c *player, int gate);
     u8 PickTalkState();
     void RelinkMarker();
     void LinkRandomFreeMarker();
@@ -248,7 +244,7 @@ struct daStar_c : dEnemyBase_c {
     void UpdateWater();
     void OnBounceLand();
     void ReturnToHome();
-    volatile unsigned int CheckBounds();
+    void CheckBounds();
     int MaybeAddStarMarker();
     void CollectByEgg(int a);
     int Collect(void *p);

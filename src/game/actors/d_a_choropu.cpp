@@ -572,7 +572,7 @@ void daChoropu_c::func_ov080_02124208()
     }
 
     if ((mdCcAc_c.hitFlags & daChoropu_HIT_MEGA) != 0) {
-        func_02012694(0x1d, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(0x1d, &mCamSpacePos);
         p->IncMegaKillCount();
         func_ov080_02124088();
         return;

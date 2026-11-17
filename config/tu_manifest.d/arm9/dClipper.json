@@ -74,13 +74,6 @@
   "bss": [],
   "compiler_only_output": [
     {
-      "symbol": "_ZN7Vector3D1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "arm9",
-      "canonical_address": "0x020072c0",
-      "reason": "UpdateFrustumPlanes builds four stack Vector3s (v0..v3) so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by an enrolled source; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
-    },
-    {
       "symbol": "_Z31dClipper_EmitDeletingDestructorP8dClipper",
       "disposition": "deadstrip",
       "reason": "Not called and not in the ROM: a source-level forcing function. ~dClipper is inline in include/dClipper.h, so a delete-expression asks for the deleting variant by name. This file compiles under `#pragma defer_codegen off`, where ordinary functions are emitted at parse time in source order, and this forcer is the parse-time trigger that places D0 first. Emitted between the licensed Func_020156DC and D0 sections. Homeless: config/ has no symbol row for it."

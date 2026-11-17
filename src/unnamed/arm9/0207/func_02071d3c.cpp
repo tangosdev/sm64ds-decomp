@@ -23,11 +23,13 @@ extern void func_02071f1c(ThrowContext *context, ActionIterator *it, ExSpecifica
 
 extern unsigned char func_020729f4(struct ActionWalk *c);
 
-struct Tmp {
-    int val;
-    int a;
-    int b;
-    ExSpecification spec;
+/* A catch-clause action as case 12 decodes it: the catch type string, the
+   handler's offset from the function start, and the frame offset of its
+   CatchInfo. The counterpart of ExSpecification. */
+struct ExCatchBlock {
+    int mCatchType;
+    int mPCOffset;
+    int mCatchInfoRef;
 };
 
 /* EH runtime: search the current frame's actions for a handler, walking
@@ -38,7 +40,6 @@ struct Tmp {
    func_02071f1c. Actions 1 and 14, and any unknown action, call the
    terminate path (std::terminate). The other actions are skipped. */
 u8 *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag) {
-    struct Tmp tmp;
     struct ActionWalk buf;
     int state;
 
@@ -52,11 +53,12 @@ u8 *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag) {
         switch (state) {
         case 12:
         {
+            ExCatchBlock catchBlock;
             u8 *cur = buf.iterator.mAction;
-            tmp.val = cur[1] | (cur[2] << 8) | (cur[3] << 16) | (cur[4] << 24);
-            u8 *p = func_02071a50(cur + 5, &tmp.a);
-            p = ReadSignedVarInt(p, &tmp.b);
-            if (__throw_catch_compare((u8 *)self->mThrowType, (u8 *)tmp.val, flag) == 0) {
+            catchBlock.mCatchType = cur[1] | (cur[2] << 8) | (cur[3] << 16) | (cur[4] << 24);
+            u8 *p = func_02071a50(cur + 5, &catchBlock.mPCOffset);
+            p = ReadSignedVarInt(p, &catchBlock.mCatchInfoRef);
+            if (!__throw_catch_compare((u8 *)self->mThrowType, (u8 *)catchBlock.mCatchType, flag)) {
                 continue;
             }
             break;
@@ -64,13 +66,14 @@ u8 *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag) {
 
         case 15:
         {
+            ExSpecification spec;
             u8 *cur = buf.iterator.mAction;
-            u8 *p = func_02071a50(cur + 1, &tmp.spec.mSpecCount);
-            p = func_02071a50(p, &tmp.spec.mPCOffset);
-            p = ReadSignedVarInt(p, &tmp.spec.mCatchInfoRef);
-            tmp.spec.mSpecs = p;
-            if (func_02071f88((void *)self->mThrowType, &tmp.spec) == 0) {
-                func_02071f1c(self, &src->iterator, &tmp.spec, buf.iterator.mAction);
+            u8 *p = func_02071a50(cur + 1, &spec.mSpecCount);
+            p = func_02071a50(p, &spec.mPCOffset);
+            p = ReadSignedVarInt(p, &spec.mCatchInfoRef);
+            spec.mSpecs = p;
+            if (func_02071f88((void *)self->mThrowType, &spec) == 0) {
+                func_02071f1c(self, &src->iterator, &spec, buf.iterator.mAction);
             }
             continue;
         }

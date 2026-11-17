@@ -108,7 +108,7 @@ void daObjBlockItemTag_c::SpawnSilverStar() {
         return;
 
     ((daStar_c *)silverStar)->mMarkerID = starMarker->uniqueID;
-    ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker((char *)silverStar);
+    ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker((daStar_c *)silverStar);
 }
 
 int daObjBlockItemTag_c::CleanupResources() {

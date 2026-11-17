@@ -135,9 +135,7 @@ struct daIbl_c : dEnemyBase_c {
     /* The path node the ball last passed. InitResources seeds it with the actor's
        own position and AdvancePath overwrites it with mNextNodePos each
        time the ball passes the node it was heading for. */
-    s32                          mPrevNodePosX;         /* 0x3dc */
-    s32                          mPrevNodePosY;         /* 0x3e0 */
-    s32                          mPrevNodePosZ;         /* 0x3e4 */
+    Vector3 mPrevNodePos; /* 0x3dc */
     /* Where PathPtr::GetNode writes the node it was asked for -- the node the
        ball is heading for. InitResources compares it against the actor's own
        position to decide whether to skip ahead one node. */

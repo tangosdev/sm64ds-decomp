@@ -126,6 +126,11 @@ struct N {
     struct N *prev;
     struct N *next;
     int pad8;
+    /* Kept volatile (#821 r21): the ROM reloads n->c on every pass of the
+       insert loop and reads node->c before n->c in the first test. A plain
+       field, the real fLiNdBaPr_c with currentPriority, and four loop shapes
+       (for over next, for (;;) with a break, `node->next` twice, while with
+       an inner break) all hoist the n->c load: 0x88 or 0x94 against 0x8c. */
     volatile unsigned short c;
 };
 struct L {

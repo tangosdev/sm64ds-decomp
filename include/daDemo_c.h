@@ -44,6 +44,18 @@ struct daDemo_c : dActor_c {
     };
 
     struct anmModel_c : param_c, dExtAnmModel_c {
+        /* One row of an animation table (data_ov002_0210bc88):
+           func_ov002_020f6514 applies it and func_ov002_020f64ac follows
+           `next` when the animation finishes. */
+        struct AnimEntry {
+            u8 anim;   /* 0x0 - index into mAnimFiles */
+            s8 texSeq; /* 0x1 - index into mTexSeqFiles; negative for none */
+            /* 0x2 - 0 plays the animation once (SetAnim flag 0x40000000).
+               Medium confidence. */
+            u8 loop;
+            s8 next; /* 0x3 - entry to chain to; negative ends the chain */
+        };
+
         /* Stored by func_ov002_020f6618, released by the destructor. */
         SharedFilePtr *mModelFile;    /* 0x70 - BMD handed to SetFile */
         SharedFilePtr **mAnimFiles;   /* 0x74 - BCA files for SetAnim */
@@ -67,8 +79,8 @@ struct daDemo_c : dActor_c {
            this class's destructor variants out of ROM order (tubuild verify
            fails at ordinals 112/113), so both nested classes keep theirs
            implicit. */
-        void func_ov002_020f64ac(char *r4);
-        void func_ov002_020f6514(void *tbl, unsigned char arg);
+        void func_ov002_020f64ac(const AnimEntry *table);
+        void func_ov002_020f6514(const AnimEntry *table, unsigned char entry);
         void func_ov002_020f65b8();
         void func_ov002_020f65ec();
         int func_ov002_020f6618(SharedFilePtr *mdl, int nAnims,
@@ -400,6 +412,8 @@ struct daDemo_c : dActor_c {
 typedef char daDemo_c_size_must_be_0x104[
     sizeof(daDemo_c) == 0x104 ? 1 : -1];
 typedef char daDemo_c_anmModel_c_size_must_be_0x84[sizeof(daDemo_c::anmModel_c) == 0x84 ? 1 : -1];
+typedef char daDemo_c_anmModel_c_AnimEntry_size_must_be_0x4
+    [sizeof(daDemo_c::anmModel_c::AnimEntry) == 0x4 ? 1 : -1];
 typedef char
     daDemo_c_simpleModel_c_size_must_be_0x60[sizeof(daDemo_c::simpleModel_c) == 0x60 ? 1 : -1];
 typedef char daDemo_c_ScrollState_size_must_be_0x36[

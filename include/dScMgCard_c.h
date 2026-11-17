@@ -42,6 +42,7 @@
 #define DSCMGCARD_C_H
 #include "dScMgSingle3DBase_c.h"
 #include "Dealer.h"
+#include "Vector2.h"
 
 /* The card destructors are declared here and defined out of line at the
    bottom of src/minigames/d_s_mg_card.cpp. Defined inline, both D1s come
@@ -64,9 +65,9 @@
    card through the Hud_RenderSprite bank table; Update runs the card's own
    motion state machine; GetOffscreenY answers the off-screen y (-0x60000)
    that DealIn starts the card flying in from. The fields: the 1:4096
-   fixed-point position pair (mX, mY); the deal/move target pair (mTargetX,
-   mTargetY) with its approach steps (mXStep, mYStep); the return/fly-away
-   destination pair (mHomeX, mHomeY) -- SetHome writes it and states 7 and
+   fixed-point position (mPos); the deal/move target (mTarget) with its
+   per-axis approach steps (mStep); the return/fly-away destination
+   (mHome) -- SetHome writes it and states 7 and
    0xa fly toward it; the raise amount and its enable flag (mLift, mLiftFlag,
    0x4000 meaning fully raised, (mLift >> 12) indexing the flip frames);
    the fly-away stagger counter (mFlyDelay); the card's value byte (mValue,
@@ -86,14 +87,10 @@ struct dMgCardObj_c {
     void SetHome(s32 n);         /* ov006 0x020d99ec -- home slot n, state 7 */
     void FlyOff();               /* ov006 0x020d99a4 -- staggered fly-away */
 
-    s32 mX;         /* 0x04 */
-    s32 mY;         /* 0x08 */
-    s32 mTargetX;   /* 0x0c */
-    s32 mTargetY;   /* 0x10 */
-    s32 mXStep;     /* 0x14 */
-    s32 mYStep;     /* 0x18 */
-    s32 mHomeX;     /* 0x1c */
-    s32 mHomeY;     /* 0x20 */
+    Vector2 mPos;    /* 0x04 */
+    Vector2 mTarget; /* 0x0c */
+    Vector2 mStep;   /* 0x14 */
+    Vector2 mHome;   /* 0x1c */
     s32 mLift;      /* 0x24 */
     s16 mFlyDelay;  /* 0x28 */
     u8  mValue;     /* 0x2a */

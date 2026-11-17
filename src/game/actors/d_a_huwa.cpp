@@ -272,17 +272,17 @@ int daHuwa_c::Behavior() {
         ApproachLinear(mHorzSpeed, 0x4000, 0x1000);
         player = ClosestPlayer();
         if (player != 0) {
-            int *src = (int *)((int)player + 0x5c);
-            int playerPos[3];
-            playerPos[0] = src[0];
-            playerPos[1] = src[1];
-            playerPos[2] = src[2];
-            if (Vec3_HorzDist((const Vector3 *)&mHomePosX, (const Vector3 *)playerPos) > 0x3e8000)
-                mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
-            else if (Vec3_HorzDist(&mPos, (const Vector3 *)playerPos) > 0x12c000)
-                mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)playerPos);
+            Vector3 *src = &player->mPos;
+            Vector3 playerPos;
+            playerPos.x = src->x;
+            playerPos.y = src->y;
+            playerPos.z = src->z;
+            if (Vec3_HorzDist(&mHomePos, &playerPos) > 0x3e8000)
+                mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
+            else if (Vec3_HorzDist(&mPos, &playerPos) > 0x12c000)
+                mTargetAngY = Vec3_HorzAngle(&mPos, &playerPos);
         } else {
-            mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
+            mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
         }
         ApproachLinear(mAngleY, mTargetAngY, 0x200);
         mPrevAngleY = mAngleY;
@@ -320,9 +320,9 @@ int daHuwa_c::InitResources() {
     mdCcAc_c.Init(this, 0x3c000, 0x78000, 0x200000, 0xa6efe0);
     mWithMeshClsn.Init(this, 0x3c000, 0x3c000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mState = 0;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;

@@ -86,9 +86,7 @@ struct daObjTatefuda_c : dBgActor_c {
        argument, right after mShadowModel -- the drop shadow's own matrix. A
        Matrix4x3 is 0x30 bytes and closes exactly on 0x3b0. Was pad_380. */
     Matrix4x3 mShadowMat;            /* 0x380 */
-    s32 mHomePosX;                   /* 0x3b0 */
-    s32 mHomePosY;                   /* 0x3b4 */
-    s32 mHomePosZ;                   /* 0x3b8 */
+    Vector3 mHomePos;                /* 0x3b0 */
     s16 mHomeAngleX;                 /* 0x3bc */
     s16 mHomeAngleY;                 /* 0x3be */
     s16 mHomeAngleZ;                 /* 0x3c0 */

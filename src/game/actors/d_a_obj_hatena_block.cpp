@@ -42,9 +42,6 @@
  *   `return new` emits a homeless _ZN10dBgActor_cD2Ev. That is a licensed
  *   deadstrip, the same helper ov045/daObjKm2_Ami_Bou_c records.
  *
- *   HbSpawnFrame stays at file scope so @class$ does not drift (Vector3 has
- *   an inline dtor; the manifest marks it compiler_only).
- *
  *   The (int *) / (Vector3 *) casts around the local position buffers in
  *   the spawn helpers stay: the buffers are plain ints, and a real Vector3
  *   local would emit an extra Vector3 D1 destructor. The copies here are
@@ -930,8 +927,6 @@ int daObjHatenaBlock_c::GetFloorY() {
     return r;
 }
 
-struct HbSpawnFrame { Vector3 pos; int vel[3]; };
-
 /* Cap prize: spawns an OBJ_MARIO_CAP at the prize point with param1 =
    p2 | (p1 << 8) (cap type 0x12 for character p1) and no rotation. If it
    spawned, the cap gets heading (RandomIntInternal() + camera mAngleY +
@@ -939,18 +934,15 @@ struct HbSpawnFrame { Vector3 pos; int vel[3]; };
    units) in mHorzSpeed, and a velocity vector (0, 0x11000, 0) in
    mSpeedX / mVertSpeed / mSpeedZ (0x11000 = 17 units up). */
 void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
-    HbSpawnFrame f;
+    Vector3 pos;
     int rnd;
     dActor_c* o;
     dCamera_c* g;
-    func_ov102_02149684((int *)&f.pos, this);
-    o = dActor_c::Spawn(
-        ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), f.pos, 0, mAreaId, -1);
+    func_ov102_02149684((int *)&pos, this);
+    o = dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), pos, 0, mAreaId, -1);
     if (o == 0) return;
     g = gCamera;
-    f.vel[0] = 0;
-    f.vel[1] = 0x11000;
-    f.vel[2] = 0;
+    Vector3 vel(0, 0x11000, 0);
     rnd = RandomIntInternal(&data_0209e650.value);
     {
         int vsum = rnd + (g->mAngleY + 0x8000);
@@ -958,9 +950,9 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
         o->mPrevAngleY = (short)vsum;
         o->mPrevAngleZ = 0;
         o->mHorzSpeed = 0x3320;
-        o->mSpeedX = f.vel[0];
-        o->mVertSpeed = f.vel[1];
-        o->mSpeedZ = f.vel[2];
+        o->mSpeedX = vel.x;
+        o->mVertSpeed = vel.y;
+        o->mSpeedZ = vel.z;
     }
 }
 

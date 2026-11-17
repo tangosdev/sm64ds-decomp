@@ -147,6 +147,9 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
                                 Behavior and Render */
 };
 
+/* Render's veneer to RouletteResults_Draw; it ignores the scene it is passed. */
+void Roulette_DrawResultsThunk(dScMgRoulette_c *);
+
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgRoulette_c_size_must_be_0x5400[sizeof(dScMgRoulette_c) == 0x5400 ? 1 : -1];

@@ -33,9 +33,7 @@ struct daObjSm_Lift_c : dBgActor_c {
     /* The player touching the lift this frame (HandlePlayerContact sets it,
        Behavior clears it at the end of every frame). */
     dActor_c *mTouchingPlayer; /* 0x320 */
-    s32 mBasePosX;             /* 0x324 */
-    s32 mBasePosY;             /* 0x328 */
-    s32 mBasePosZ;             /* 0x32c */
+    Vector3 mBasePos;          /* 0x324 */
     /* Nonzero while the lift runs along its path. */
     u8 mMoving; /* 0x330 */
     /* Frames left before a stopped lift starts again. */

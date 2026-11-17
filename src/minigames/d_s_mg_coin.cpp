@@ -163,7 +163,6 @@ extern const unsigned char sCoinCaptionBlinkTimes[];
 extern const unsigned char sCoinCaptionBlinkSprites[];
 extern const u16 sCoinCaptionCountInTimes[];
 extern const u8 sCoinCaptionCountInSprites[];
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern const int sCoinSparkleSpawnOffsets[];
 extern const u16 sCoinSparkleAngles[];
@@ -193,7 +192,7 @@ OamAttr data_ov006_02134b44 = {0x00f0, 0x81f0, 0x512f, 0xffff};
 OamAttr *sCoinBagSprites[] = {&data_ov006_02134b44, &data_ov006_02134b3c};
 extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
 extern const int sCoinRowY[];
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern const u16 sCoinBlockFrameSprites[];
 extern void *sCoinBlocksSprites[];
@@ -286,7 +285,12 @@ dScMgCoin_c::~dScMgCoin_c() {}
    fifteen words. The pragma is part of that match. The table stays
    hand-indexed here: through FX_CosIdx / FX_SinIdx the two products take
    swapped registers (21 DIFF in every declaration order of vec, the icon
-   index and fx16 or int locals, with or without the pragma). */
+   index and fx16 or int locals, with or without the pragma).
+   Kept, re-measured (#821, 2026-11-16): without opt_propagation off the body
+   is 21 of 56 words off. c/s locals, a table local, vec[2] = -vec[1]
+   copies, the icon index read after the products, an int spin, an inline i
+   and an i * 2 index all stay at 21; an s16 spin is 22; a &table[i] pointer
+   grows the body to 0x124. */
 #pragma push
 #pragma opt_propagation off
 void dScMgCoin_c::Bag_Draw() {
@@ -541,7 +545,7 @@ void dScMgCoin_c::DrawResultPrompt() {
     if (mCountdown == 0)
         return;
 
-    Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+    DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void dScMgCoin_c::DrawResultNumbers() {

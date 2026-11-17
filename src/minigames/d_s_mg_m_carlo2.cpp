@@ -281,13 +281,13 @@ s32 dScMgMCarlo2_c::Render()
     RenderOamMainScreen(sMCarloHudSprite, 232, 24, -1, -1);
 
     if (this->mRoundState == 5)
-        Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+        DrawBlinkSprite(0xe0, 0xa0);
 
     lifted = sMCarlo2CardsTail;
     for (i = 0; i < 20; i++) {
         if (lifted == 0)
             break;
-        if (lifted->mYStep > 0)
+        if (lifted->mStep.y > 0)
             lifted->Render();
         lifted = lifted->mPrev;
     }
@@ -296,7 +296,7 @@ s32 dScMgMCarlo2_c::Render()
     for (j = 0; j < 20; j++) {
         if (flat == 0)
             break;
-        if (flat->mYStep == 0)
+        if (flat->mStep.y == 0)
             flat->Render();
         flat = flat->mPrev;
     }
@@ -323,8 +323,8 @@ void dMgMCarlo2CardObj_c::Init(int slot){
     if (slot == 0x13)
         sMCarlo2CardsTail = this;
     mVisible = 1;
-    mXStep = 0;
-    mYStep = 0;
+    mStep.x = 0;
+    mStep.y = 0;
     mState = 0;
     mFace = dScMgMCarlo2_c::DrawCardValue();
     mNext = 0;
@@ -333,19 +333,19 @@ void dMgMCarlo2CardObj_c::Init(int slot){
 
 void dMgMCarlo2CardObj_c::DealIn(int slot)
 {
-    int delta[3];
+    Vector2 delta;
 
     if (slot >= 0x14)
         return;
 
     if (mSlot >= 0x14) {
-        mX = (0x70 - ((sMCarlo2DeckSize >> 2) << 1)) << 12;
-        mY = -0x30000;
+        mPos.x = (0x70 - ((sMCarlo2DeckSize >> 2) << 1)) << 12;
+        mPos.y = -0x30000;
         sMCarlo2CardsTail = this;
         mState = 1;
     } else if (mState == 0) {
-        mX = (0x70 - ((sMCarlo2DeckSize >> 2) << 1)) << 12;
-        mY = -0x30000;
+        mPos.x = (0x70 - ((sMCarlo2DeckSize >> 2) << 1)) << 12;
+        mPos.y = -0x30000;
         mState = 4;
         sMCarlo2CardsMoving++;
     } else {
@@ -353,20 +353,19 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
         sMCarlo2CardsMoving++;
     }
 
-    mTargetX = ((slot % 5) * 32 + 0x30) << 12;
-    mTargetY = ((slot / 5) * 0x30) << 12;
+    mTarget.x = ((slot % 5) * 32 + 0x30) << 12;
+    mTarget.y = ((slot / 5) * 0x30) << 12;
     mSlot = slot;
 
-    Vec2_Sub(delta, &mTargetX, &mX);
+    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
 
-    mXStep = delta[0];
-    mYStep = delta[1];
-    func_0203d630(&mXStep, 0x124);
+    mStep = delta;
+    func_0203d630(&mStep.x, 0x124);
 
-    if (mXStep < 0)
-        mXStep = -mXStep;
-    if (mYStep < 0)
-        mYStep = -mYStep;
+    if (mStep.x < 0)
+        mStep.x = -mStep.x;
+    if (mStep.y < 0)
+        mStep.y = -mStep.y;
 }
 
 void dMgMCarlo2CardObj_c::FlipAway(int order) {
@@ -410,8 +409,8 @@ int dMgMCarlo2CardObj_c::HitTest()
                 touching = 1;
         }
         if (touching != 0) {
-            dx = gTouchInfo[idx].x - (mX >> 12);
-            dy = gTouchInfo[idx].y - (mY >> 12);
+            dx = gTouchInfo[idx].x - (mPos.x >> 12);
+            dy = gTouchInfo[idx].y - (mPos.y >> 12);
             if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31)
                 return 1;
         }
@@ -470,22 +469,22 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         return;
     case 1:
     case 4:
-        ApproachLinear(mX, mTargetX, mXStep);
-        ApproachLinear(mY, mTargetY, mYStep);
+        ApproachLinear(mPos.x, mTarget.x, mStep.x);
+        ApproachLinear(mPos.y, mTarget.y, mStep.y);
         ApproachLinear(mLift, 0x4000, 0x300);
-        if (func_0203d5dc(&mX, &mTargetX) != 0)
+        if (func_0203d5dc(&mPos.x, &mTarget.x) != 0)
             return;
         if (mLift != 0x4000)
             return;
         mState = 2;
         ApproachLinear2(sMCarlo2CardsMoving, 0, 1);
-        mXStep = 0;
-        mYStep = 0;
+        mStep.x = 0;
+        mStep.y = 0;
         return;
     case 5:
         if (ApproachLinear2(mDealDelay, 0, 1) == 0)
             return;
-        ApproachLinear(mX, -0x30000, 0x10000);
+        ApproachLinear(mPos.x, -0x30000, 0x10000);
     }
 }
 
@@ -502,8 +501,8 @@ void dMgMCarlo2CardObj_c::Render()
     {
         int idx = (mFace + 1) * 5 + (mLift >> 12);
         unsigned short sprite = sMCarlo2CardFrameSprites[idx];
-        Hud_RenderSprite((void *)sMCarlo2CardSprites.w[sprite], (mX >> 12) + 0x18,
-                         (mY >> 12) + 0x18, -1, -1);
+        Hud_RenderSprite((void *)sMCarlo2CardSprites.w[sprite], (mPos.x >> 12) + 0x18,
+                         (mPos.y >> 12) + 0x18, -1, -1);
     }
 }
 
