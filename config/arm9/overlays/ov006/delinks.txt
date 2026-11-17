@@ -130,6 +130,7 @@ src/minigames/d_s_mg_jump_methods.cpp:
     .text start:0x020edec0 end:0x020eeafc
     .init start:0x02130e9c end:0x02130f00
     .ctor start:0x021335a4 end:0x021335a8
+    .data start:0x0213cb4c end:0x0213cb8c
     .bss start:0x02142188 end:0x021421b0
 
 src/minigames/d_s_mg_jump.cpp:
@@ -141,6 +142,7 @@ src/minigames/d_s_mg_jump2.cpp:
     .text start:0x020eebe8 end:0x020efc0c
     .init start:0x02130f00 end:0x02130f64
     .ctor start:0x021335a8 end:0x021335ac
+    .data start:0x0213cc74 end:0x0213cca4
     .bss start:0x021421c4 end:0x021421ec
 
 src/minigames/d_s_mg_luigi.cpp:
@@ -231,7 +233,7 @@ src/minigames/d_s_mg_smartball.cpp:
 
 src/minigames/d_s_mg_sound.cpp:
     complete
-    .data start:0x0213f6e4 end:0x0213f8d4
+    .data start:0x0213f4fc end:0x0213f8d4
     .rodata.sound_tables start:0x0212ee0c end:0x0212ef5c
     .rodata.sound_note_offsets start:0x0212ef9c end:0x0212efc4
     .text start:0x02119904 end:0x0211cbd0

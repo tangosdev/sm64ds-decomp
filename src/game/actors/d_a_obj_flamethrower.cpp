@@ -90,11 +90,6 @@ int daObjFlamethrower_c::InitResources() {
     int count;
     int i;
     int im1;
-    int zero;
-    int flag;
-    char *rowBase;
-    Vector3 *flamePos;
-    dCcPos_c *collider;
     Vector3 offset;
     Vector3 dst;
     Vector3 firstPos;
@@ -104,76 +99,49 @@ int daObjFlamethrower_c::InitResources() {
     if (gCurrentSublevel == kBigBoosHaunt)
         count = kBbhSegments;
     Matrix4x3_FromRotationXYZExt(&mTransform, mAngleX, mAngleY, mAngleZ);
-    zero = 0;
-    flag = 0;
-    i = 0;
-    if (i < count) {
-        rowBase = (char *)this;
-        flamePos = mFlamePositions;
-        collider = mColliders;
-        do {
-            im1 = i - 1;
-            offset.x = zero;
-            offset.y = zero;
-            offset.z = zero;
-            dst.x = zero;
-            dst.y = zero;
-            dst.z = zero;
-            offset.z = data_ov095_02136fb0[i];
-            MTX_MultVec43(&offset, &mTransform, &dst);
-            if (im1 < 0) {
-                Vec3_Add(&firstPos, &mPos, &dst);
-                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = firstPos.x;
-                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = firstPos.y;
-                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = firstPos.z;
-            } else {
-                Vec3_Add(&nextPos, &mFlamePositions[im1], &dst);
-                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = nextPos.x;
-                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = nextPos.y;
-                ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = nextPos.z;
-            }
-            {
-                short segmentSize = data_ov095_02136f80[i];
-                collider->Init(*flamePos, segmentSize * kRadiusMul, segmentSize * kHeightMul,
-                               kClsnFlags, flag);
-            }
-            rowBase += 0xc;
-            flamePos++;
-            collider++;
-            i++;
-        } while (i < count);
+    for (i = 0; i < count; i++) {
+        im1 = i - 1;
+        offset.x = 0;
+        offset.y = 0;
+        offset.z = 0;
+        dst.x = 0;
+        dst.y = 0;
+        dst.z = 0;
+        offset.z = data_ov095_02136fb0[i];
+        MTX_MultVec43(&offset, &mTransform, &dst);
+        if (im1 < 0) {
+            Vec3_Add(&firstPos, &mPos, &dst);
+            mFlamePositions[i] = firstPos;
+        } else {
+            Vec3_Add(&nextPos, &mFlamePositions[im1], &dst);
+            mFlamePositions[i] = nextPos;
+        }
+        {
+            short segmentSize = data_ov095_02136f80[i];
+            mColliders[i].Init(mFlamePositions[i], segmentSize * kRadiusMul,
+                               segmentSize * kHeightMul, kClsnFlags, 0);
+        }
     }
     return 1;
 }
 
 int daObjFlamethrower_c::Behavior() {
-    char *self;
     int count;
     int i;
     int im1;
-    int zero;
-    int one;
-    int no;
-    int ang0;
-    int ang1;
-    char *ppos;
-    int wavePhase;
-    char *pclsn;
     int j;
     Vector3 in;
     Vector3 dst;
     Vector3 part;
-    Vector3 sum;
-    int sum2[3];
+    Vector3 firstPos;
+    Vector3 nextPos;
     int hidden;
     u32 id;
     dActor_c *other;
     int isPlayer;
     s16 ang;
-    int a2;
     u8 *active;
 
-    self = (char *)this;
     count = kSegments;
     if (gCurrentSublevel == kBigBoosHaunt)
         count = kBbhSegments;
@@ -221,97 +189,64 @@ int daObjFlamethrower_c::Behavior() {
         Matrix4x3_FromRotationXYZExt(&mTransform, mAngleX, mAngleY, mAngleZ);
 
     if (mActiveFlames != 0) {
-        zero = 0;
-        one = 1;
-        no = 0;
-        ang0 = 0;
-        ang1 = 0;
-        i = 0;
-        if (i < count) {
-            ppos = self;
-            wavePhase = i;
-            pclsn = self;
-            do {
-                if (i == (int)mActiveFlames)
-                    break;
-                if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt)) {
-                    im1 = i - 1;
-                    in.x = zero;
-                    in.y = zero;
-                    in.z = zero;
-                    dst.x = zero;
-                    dst.y = zero;
-                    dst.z = zero;
-                    in.z = data_ov095_02136fb0[i];
-                    MTX_MultVec43(&in, &mTransform, &dst);
-                    if (im1 < 0) {
-                        Vec3_Add(&sum, &mPos, &dst);
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum.x;
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum.y;
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum.z;
-                    } else {
-                        Vec3_Add((Vector3 *)sum2, &mFlamePositions[im1], &dst);
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum2[0];
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum2[1];
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];
-                    }
-                    if (gCurrentSublevel == kBigBoosHaunt) {
-                        s16 wave = FX_SinIdx(((u16)(s16)wavePhase) >> 4);
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y =
-                            mPosY + FX_MUL(wave, -0xaa000);
-                    }
-                    ((daObjFlamethrower_c *)pclsn)->mColliders[0].pos.x =
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x;
-                    ((daObjFlamethrower_c *)pclsn)->mColliders[0].pos.y =
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y;
-                    ((daObjFlamethrower_c *)pclsn)->mColliders[0].pos.z =
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z;
-                }
-                id = ((daObjFlamethrower_c *)pclsn)->mColliders[0].otherOwner;
-                if (id != 0) {
-                    other = dActor_c::FindWithID(id);
-                    if (other != 0) {
-                        if (other->actorID == kPlayerActorId)
-                            isPlayer = one;
-                        else
-                            isPlayer = no;
-                        if (isPlayer != 0)
-                            ((daPly_c *)other)->Burn();
-                    }
-                }
-                part = ((daObjFlamethrower_c *)ppos)->mFlamePositions[0];
-                part.y += kParticleLift;
-                if ((param1 & 0xff) != kAltParam) {
-                    ang = data_ov095_02136f80[i];
-                    a2 = ang0;
-                    Particle::System::NewFlamethrowerBlueA(part.x, part.y, part.z, ang, a2);
-                    Particle::System::NewFlamethrowerBlueB(part.x, part.y, part.z, ang,
-                                                           data_ov095_02136f98[i]);
+        for (i = 0; i < count; i++) {
+            if (i == (int)mActiveFlames)
+                break;
+            if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt)) {
+                im1 = i - 1;
+                in.x = 0;
+                in.y = 0;
+                in.z = 0;
+                dst.x = 0;
+                dst.y = 0;
+                dst.z = 0;
+                in.z = data_ov095_02136fb0[i];
+                MTX_MultVec43(&in, &mTransform, &dst);
+                if (im1 < 0) {
+                    Vec3_Add(&firstPos, &mPos, &dst);
+                    mFlamePositions[i] = firstPos;
                 } else {
-                    ang = data_ov095_02136f80[i];
-                    a2 = ang1;
-                    Particle::System::NewFlamethrowerRedA(part.x, part.y, part.z, ang, a2);
-                    Particle::System::NewFlamethrowerRedB(part.x, part.y, part.z, ang,
-                                                          data_ov095_02136f98[i]);
+                    Vec3_Add(&nextPos, &mFlamePositions[im1], &dst);
+                    mFlamePositions[i] = nextPos;
                 }
-                ppos += 0xc;
-                wavePhase += 0x1000;
-                pclsn += 0x3c;
-                i++;
-            } while (i < count);
+                if (gCurrentSublevel == kBigBoosHaunt) {
+                    s16 wave = FX_SinIdx(((u16)(s16)(i * 0x1000)) >> 4);
+                    mFlamePositions[i].y = mPosY + FX_MUL(wave, -0xaa000);
+                }
+                mColliders[i].pos = mFlamePositions[i];
+            }
+            id = mColliders[i].otherOwner;
+            if (id != 0) {
+                other = dActor_c::FindWithID(id);
+                if (other != 0) {
+                    if (other->actorID == kPlayerActorId)
+                        isPlayer = 1;
+                    else
+                        isPlayer = 0;
+                    if (isPlayer != 0)
+                        ((daPly_c *)other)->Burn();
+                }
+            }
+            part = mFlamePositions[i];
+            part.y += kParticleLift;
+            if ((param1 & 0xff) != kAltParam) {
+                ang = data_ov095_02136f80[i];
+                Particle::System::NewFlamethrowerBlueA(part.x, part.y, part.z, ang, 0);
+                Particle::System::NewFlamethrowerBlueB(part.x, part.y, part.z, ang,
+                                                       data_ov095_02136f98[i]);
+            } else {
+                ang = data_ov095_02136f80[i];
+                Particle::System::NewFlamethrowerRedA(part.x, part.y, part.z, ang, 0);
+                Particle::System::NewFlamethrowerRedB(part.x, part.y, part.z, ang,
+                                                      data_ov095_02136f98[i]);
+            }
         }
     }
 
-    j = 0;
-    if (count > 0) {
-        dCcPos_c *pc = mColliders;
-        do {
-            pc->Clear();
-            if (j < (int)mActiveFlames)
-                pc->dCc_c::Update();
-            j++;
-            pc++;
-        } while (j < count);
+    for (j = 0; j < count; j++) {
+        mColliders[j].Clear();
+        if (j < (int)mActiveFlames)
+            mColliders[j].dCc_c::Update();
     }
     return 1;
 }

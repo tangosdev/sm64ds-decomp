@@ -4,8 +4,9 @@
  * (.text 0x0212a554..0x0212b890, to the end of ov006's code), closing with
  * the factory and the petal record's empty constructor.
  *
- * `#pragma defer_codegen off`: functions are emitted in source order and
- * the destructor variants land where they are written. Do not reorder.
+ * `#pragma defer_codegen off` carries the codegen: functions are emitted in
+ * source order and the destructor variants land where they are written. Do
+ * not reorder.
  * The destructor is defined out of line so D1 and D0 come out in cartridge
  * order; the extra D2 is dropped at link. The factory's `new` expands the
  * inline constructor, so it also emits dScMgSingle3DBase_c's D2, likewise
@@ -17,9 +18,8 @@
  * so each lands at its own cartridge address; their extra C2/D2 are dropped
  * at link.
  *
- * comment leftovers:
- *  - The FlowerFace and FallingPetal methods live in
- *    src/minigames/unit020bfec0.cpp.
+ * The FlowerFace and FallingPetal methods live in
+ * src/minigames/unit020bfec0.cpp.
  */
 
 #include "dScMgFlower_c.h"
@@ -47,7 +47,6 @@ struct SpriteAttr {
 };
 
 extern "C" {
-extern void func_0203d388(int *p, s16 angle);
 extern void Mg_SetTopScreenYOffset(int n);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);

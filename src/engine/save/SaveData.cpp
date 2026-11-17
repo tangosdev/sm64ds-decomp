@@ -12,7 +12,7 @@
  * folded at .text 0x02013568..0x02013e80. The span also carries the free
  * functions that
  * share this TU's concern: func_02013c84 copies a file block and either
- * records the character or forwards to SaveFile, ClearSaveBlock zeroes the
+ * records the active file or forwards to SaveFile, ClearSaveBlock zeroes the
  * whole save block, and ClearCapHeldByToad..func_02013a88 are the cap-flag
  * helpers (clear/set/test the 0x8000000<<character and 0x1000000<<character
  * bits) around NumGlowingRabbitsFound. The 0x8000000<<character bit says a
@@ -30,7 +30,7 @@
  *   ClearCapHeldByToad..func_02013a88 -- cap-flag clear/set/test helpers.
  *   PlayerLoseCap..CanPlayerHaveCap -- cap-loss flags on the live block.
  *   SaveCurrentFile..SetDefaultValuesMg -- file and minigame writes.
- *   func_02013c84 -- block copy + character record / SaveFile forwarder.
+ *   func_02013c84 -- block copy + active-file record / SaveFile forwarder.
  *   EraseSaveFile..EraseAllSaveData -- slot and whole-block resets.
  *   ClearSaveBlock -- zero the save block.
  *
@@ -108,10 +108,10 @@ int SaveData::EraseSaveFile(u32 fileID, char *saveArea) {
     return 0;
 }
 
-extern "C" int func_02013c84(u8 charID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
+extern "C" int func_02013c84(int fileID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
     MI_CpuCopy8(src, dest, 0x44);
     if (fileIndex < 0) {
-        data_0209caa0.activeFile = charID;
+        data_0209caa0.activeFile = fileID;
         return 1;
     }
     return SaveData::SaveFile(fileIndex, dest);

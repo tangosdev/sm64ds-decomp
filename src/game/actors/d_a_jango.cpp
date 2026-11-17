@@ -261,9 +261,9 @@ int daJango_c::InitResources()
     path1.FromID(mPathId);
     mPathNodeCount = 4;
     mTerminalVelocity = -0x1e000;               /* fall speed capped at 30 units/frame */
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     /* Init(radius, height, flags, vulnFlags): radii 100 and 60 units, both 160 high. */
     mdCcAc_c1.Init(this, 0x64000, 0xa0000, 0x200002, 0x3eff0);
     mdCcAc_c2.Init(this, 0x3c000, 0xa0000, 0x200000, 0);
@@ -288,9 +288,9 @@ int daJango_c::InitResources()
             spawned->SetRanges(0x64000, 0x258000, 0x1f40000, 0x1f40000);
         }
         /* Start on the path node, already holding the star. */
-        mPosX = mPathNodePosX;
-        mPosY = mPathNodePosY;
-        mPosZ = mPathNodePosZ;
+        mPosX = mPathNodePos.x;
+        mPosY = mPathNodePos.y;
+        mPosZ = mPathNodePos.z;
         ChangeState(JANGO_STATE_FLY_PATH);
     } else {
         pl = gPlayers[0];
@@ -375,16 +375,16 @@ int daJango_c::Behavior()
         dActor_c *p = dActor_c::FindWithID(actorId);
         if (p != 0) {
             if (mCarriedItem == CARRIES_STAR) {
-                p->mPosX = mHeldPosX;
-                p->mPosY = mHeldPosY;
-                p->mPosZ = mHeldPosZ;
+                p->mPosX = mHeldPos.x;
+                p->mPosY = mHeldPos.y;
+                p->mPosZ = mHeldPos.z;
             } else if (static_cast<daObjMarioCap_c *>(p)->mTaken == 0) {
                 /* daObjMarioCap_c::mTaken: the cap sets it to 1 in
                    InitTaken, the same function that clears the +0xc8
                    matrix pointer stored below. */
-                p->mPosX = mHeldPosX;
-                p->mPosY = mHeldPosY;
-                p->mPosZ = mHeldPosZ;
+                p->mPosX = mHeldPos.x;
+                p->mPosY = mHeldPos.y;
+                p->mPosZ = mHeldPos.z;
             } else {
                 mHeldActorID = 0;
                 ((void (*)(int, int))func_02012790)(SND_HELD_RELEASED, 0);
@@ -475,16 +475,16 @@ void daJango_c::UpdateModelAndShadow() {
         actor = dActor_c::FindWithID(mHeldActorID);
         if (actor != 0)
         {
-            mHeldPosX = 0;
-            mHeldPosY = 0;
-            mHeldPosZ = 0;
+            mHeldPos.x = 0;
+            mHeldPos.y = 0;
+            mHeldPos.z = 0;
             MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
-            mHeldPosX = data_020a0e68.t.x;
-            mHeldPosY = data_020a0e68.t.y;
-            mHeldPosZ = data_020a0e68.t.z;
-            mHeldPosX <<= 3;
-            mHeldPosY <<= 3;
-            mHeldPosZ <<= 3;
+            mHeldPos.x = data_020a0e68.t.x;
+            mHeldPos.y = data_020a0e68.t.y;
+            mHeldPos.z = data_020a0e68.t.z;
+            mHeldPos.x <<= 3;
+            mHeldPos.y <<= 3;
+            mHeldPos.z <<= 3;
             if (mCarriedItem == CARRIES_STAR)
             {
                 /* Offset (-13.0, 3.0, -4.0), rotation X/Y/Z = 0, -180, -95.6 degrees. */
@@ -606,9 +606,9 @@ int daJango_c::UpdateFlyPathState() {
         mPosX = node.x;
         mPosY = node.y;
         mPosZ = node.z;
-        mPathNodePosX = mPosX;
-        mPathNodePosY = mPosY;
-        mPathNodePosZ = mPosZ;
+        mPathNodePos.x = mPosX;
+        mPathNodePos.y = mPosY;
+        mPathNodePos.z = mPosZ;
         zero[2] = 0;
         zero[0] = 0;
         zero[1] = 0;
@@ -836,7 +836,7 @@ int daJango_c::EnterSwoopState() {
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
-    func_02012694(SND_AT_SWOOP_ENTER, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(SND_AT_SWOOP_ENTER, &mCamSpacePos);
     mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 3) << 8) + 0x300;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
     return 1;
@@ -942,7 +942,7 @@ int daJango_c::EnterHurtState() {
         mHeldActorID = 0;
         mTimer = 30;
     }
-    func_02012694(SND_AT_HURT_ENTER, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(SND_AT_HURT_ENTER, &mCamSpacePos);
     Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPosX, mPosY, mPosZ);
     mSpeedX = 0;
     mVertSpeed = 0;
@@ -980,17 +980,17 @@ int daJango_c::EnterRiseState() {
 
 /* RISE update: climbs at 20 units per frame while pitch (mPrevAngleX) and roll
    (mPrevAngleZ) level off by 0x300 per frame. Once mPosY is within 2 units
-   below mPathNodePosY or above it, it stops, snaps to that height, restores
+   below mPathNodePos.y or above it, it stops, snaps to that height, restores
    the animation speed to 1.0 and enters CIRCLE. */
 int daJango_c::UpdateRiseState() {
     mVertSpeed = 0x14000;
     ApproachLinear(mPrevAngleX, 0, 0x300);
     ApproachLinear(mPrevAngleZ, 0, 0x300);
-    if (mPosY >= mPathNodePosY - 0x2000) {
+    if (mPosY >= mPathNodePos.y - 0x2000) {
         mSpeedX = 0;
         mVertSpeed = 0;
         mSpeedZ = 0;
-        mPosY = mPathNodePosY;
+        mPosY = mPathNodePos.y;
         mBlendAnmModel.speed = 0x1000;
         ChangeState(JANGO_STATE_CIRCLE);
     }
@@ -1034,7 +1034,6 @@ int daJango_c::HandleCylinderHit() {
     u8 hc;
     u8 st;
     int newchar;
-    int zero;
 
     id = mdCcAc_c1.otherOwner;
     if (id != 0) {

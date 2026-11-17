@@ -53,9 +53,7 @@ struct daWbm_c : dEnemyBase_c {
     Matrix4x3                    mShadowMat;            /* 0x378 */
     /* Where it was placed. InitResources writes these and nothing in the
        class reads them back. */
-    s32                          mSpawnPosX;            /* 0x3a8 */
-    s32                          mSpawnPosY;            /* 0x3ac */
-    s32                          mSpawnPosZ;            /* 0x3b0 */
+    Vector3 mSpawnPos;                                  /* 0x3a8 */
     s16                          unk_3b4;               /* 0x3b4 -- zeroed, never read */
     u8                           mBounceCount;          /* 0x3b6 */
     u8                           pad_3b7[0x1];

@@ -8,7 +8,7 @@ void func_ov007_020c5490(char *obj, struct Matrix2x2 *m) {
     int i;
     int j;
     int restX, restY;
-    Vector3 *e;
+    VecFx32 *e;
     int x, y;
     int dx, dy;
 

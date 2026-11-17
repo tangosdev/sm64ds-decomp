@@ -20,12 +20,9 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 extern "C" {
-/* Shared math worker.
-   local extern: no header in include/ declares it. */
-void VEC_Normalize(const Vector3 *src, Vector3 *dst);
-
 /* local extern: no header in include/ declares these three. */
 extern dBgCh_Lin data_020a0d0c; /* the scratch line, in collider space */
 extern Vector3 data_020a0d60;   /* == data_020a0d0c.lineEnd  (+0x54) */
@@ -120,12 +117,9 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Gnd &ground) {
 int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 centre;
     Vector3 localCentre;
-    /* The local query's push-out bounds, and the same bounds scaled back out.
-       Plain words: Vector3 declares a destructor. */
-    struct {
-        int localMin[3], localMax[3];
-        VecFx32 scaledMin, scaledMax;
-    } bounds;
+    /* The local query's push-out bounds, and the same bounds scaled back out. */
+    Vector3 localMin, localMax;
+    Vector3 scaledMin, scaledMax;
     int inverseScale;
     int localRadius;
     int localExtraExtent;
@@ -145,15 +139,15 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     (dBgCh &)localSphere = sphere;
     hit = dBgW_Kc::DetectClsn(localSphere);
     if (hit) {
-        localSphere.GetPushOutBounds((Vector3 *)bounds.localMin, (Vector3 *)bounds.localMax);
-        bounds.scaledMin.x = FX_MUL(bounds.localMin[0], scale);
-        bounds.scaledMin.y = FX_MUL(bounds.localMin[1], scale);
-        bounds.scaledMin.z = FX_MUL(bounds.localMin[2], scale);
-        bounds.scaledMax.x = FX_MUL(bounds.localMax[0], scale);
-        bounds.scaledMax.y = FX_MUL(bounds.localMax[1], scale);
-        bounds.scaledMax.z = FX_MUL(bounds.localMax[2], scale);
-        sphere.ExpandPushOutBounds(bounds.scaledMin.x, bounds.scaledMin.y, bounds.scaledMin.z,
-                                   bounds.scaledMax.x, bounds.scaledMax.y, bounds.scaledMax.z);
+        localSphere.GetPushOutBounds(&localMin, &localMax);
+        scaledMin.x = FX_MUL(localMin.x, scale);
+        scaledMin.y = FX_MUL(localMin.y, scale);
+        scaledMin.z = FX_MUL(localMin.z, scale);
+        scaledMax.x = FX_MUL(localMax.x, scale);
+        scaledMax.y = FX_MUL(localMax.y, scale);
+        scaledMax.z = FX_MUL(localMax.z, scale);
+        sphere.ExpandPushOutBounds(scaledMin.x, scaledMin.y, scaledMin.z, scaledMax.x, scaledMax.y,
+                                   scaledMax.z);
         (dBgPi &)sphere = (dBgPi &)localSphere;
         sphere.flags |= 1;
         if (localSphere.flags & 4) {

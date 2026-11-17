@@ -215,9 +215,6 @@ void dFdWipe_c::AdvanceFade()
     }
 }
 
-/* This used to reach the model as `(char*)this + 0x10` with dExtSimpleModel_c declared
-   nowhere. Going through the member instead is the same bytes and turns the
-   offset into a checkable claim. */
 void dFdWipe_c::LoadAndSetFile(u16 ov0ID)
 {
     model.LoadAndSetFile(ov0ID, 0, -1);

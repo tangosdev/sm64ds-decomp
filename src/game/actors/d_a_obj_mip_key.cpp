@@ -5,8 +5,8 @@
 // Notes:
 // - unk_190 and unk_19c stay the header's names. The loose update
 //   approaches through mSpeedX/mSpeedZ, and 19c selects the entry.
-// - CollectMinigameKey, StartMinigameMenu, Vec3_VertAngle and MTX_MultVec43
-//   are arm9 C helpers no header declares yet.
+// - CollectMinigameKey, StartMinigameMenu and Vec3_VertAngle are arm9
+//   helpers no header declares yet.
 // - The model handle data_ov085_021305d8 is constructed by daMip_c.
 //   g_profile stays with the registry.
 
@@ -23,9 +23,6 @@
 #include "private/mtx43.h"
 #include "SaveBlock.h"
 
-extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-}
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
@@ -70,14 +67,14 @@ void daObj_Mip_Key_c::FinishConversation() {
 int daObj_Mip_Key_c::StateCarried() {
     daPly_c *other = mPlayer;
     unsigned char mode;
-    int *playerPos;
+    Vector3 *playerPos;
 
     if (other == 0)
         return 1;
 
-    playerPos = (&other->mPosX);
+    playerPos = (&other->mPos);
     Vector3 v;
-    v = *(Vector3 *)playerPos;
+    v = *playerPos;
     v.y += 0xc8000;
     ApproachLinear(mPosY, v.y, 0xa000);
 
@@ -192,7 +189,6 @@ int daObj_Mip_Key_c::StateLoose() {
     Vector3 out;
     Vector3 pp;
     daPly_c *player;
-    int zero;
     Vector3 *ppos;
 
     mAngleX += 0x1000;
@@ -204,14 +200,13 @@ int daObj_Mip_Key_c::StateLoose() {
         return 1;
     }
 
-    zero = 0;
     ppos = &player->mPos;
-    v.x = zero;
-    v.y = zero;
-    v.z = zero;
-    out.x = zero;
-    out.y = zero;
-    out.z = zero;
+    v.x = 0;
+    v.y = 0;
+    v.z = 0;
+    out.x = 0;
+    out.y = 0;
+    out.z = 0;
     pp.x = ppos->x;
     pp.y = ppos->y;
     pp.z = ppos->z;
