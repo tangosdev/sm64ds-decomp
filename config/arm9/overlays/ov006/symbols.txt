@@ -3278,7 +3278,7 @@ pmf_Heyho_StateIdle_4 kind:data(any) addr:0x0213afa8
 pmf_Heyho_MotionChase_2 kind:data(any) addr:0x0213afb0
 pmf_Heyho_MotionLeave_2 kind:data(any) addr:0x0213afb8
 pmf_Heyho_MotionHitSpin_2 kind:data(any) addr:0x0213afc0
-data_ov006_0213afc8 kind:data(any) addr:0x0213afc8
+data_ov006_0213afc8 kind:data(word[2]) addr:0x0213afc8
 _ZTV22dMg3DHeyhoObjAdapter_c kind:data(any) addr:0x0213afd8
 _ZTS22dMg3DHeyhoObjAdapter_c kind:data(any) addr:0x0213afe4
 _ZTI22dMg3DHeyhoObjAdapter_c kind:data(any) addr:0x0213b000
