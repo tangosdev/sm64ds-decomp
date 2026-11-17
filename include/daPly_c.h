@@ -232,19 +232,15 @@ struct daPly_c : dActor_c {
        top (+0x08 height); ClearClimbCollider clears it. Every access is a word. */
     dCc_c *mClimbClsn; /* 0x37c */
     /* ~daPly_c calls _ZN10dBgCh_ActrD1Ev on this FIRST, and dBgCh_Actr
-       asserts 0x1bc -- which closes exactly at mSpawnPosX. */
+       asserts 0x1bc -- which closes exactly at mSpawnPos. */
     dBgCh_Actr mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. daPly_c::InitResources
        writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
        mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.
        Two functions, opposite directions, the same four slots -- which is what
        makes these names evidenced rather than guessed. */
-    s32 mSpawnPosX;            /* 0x53c */
-    s32 mSpawnPosY;            /* 0x540 */
-    s32 mSpawnPosZ;            /* 0x544 */
-    s32 mPreClsnPosX;            /* 0x548 */
-    s32 mPreClsnPosY;            /* 0x54c */
-    s32 mPreClsnPosZ;            /* 0x550 */
+    Vector3 mSpawnPos;   /* 0x53c */
+    Vector3 mPreClsnPos; /* 0x548 */
     /* Floor normal, fx12 (1.0 == 0x1000 -- already rescaled from KCL's 0x400).
      * Stored as three consecutive words by daPly_c::SetFloorSurfaceInfo
      * (0x020c16ec) at 0x020c1768 / 0x020c1770 / 0x020c1778, sourced

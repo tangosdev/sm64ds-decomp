@@ -3248,11 +3248,11 @@ int daPly_c::func_ov002_020c231c() {
         if (f70f == 0)
             return 0;
 
-        VEC_Subtract(&mPos, (Vector3 *)&mPreClsnPosX, &tmp);
+        VEC_Subtract(&mPos, &mPreClsnPos, &tmp);
         tmp.x >>= 1;
         tmp.y >>= 1;
         tmp.z >>= 1;
-        VEC_Add((Vector3 *)&mPreClsnPosX, &tmp, &mPos);
+        VEC_Add(&mPreClsnPos, &tmp, &mPos);
         func_ov002_020c14b8();
 
         if (mGroundY == (s32)0x80000000)
@@ -4085,9 +4085,7 @@ int daPly_c::St_Respawn_Main() {
 int daPly_c::St_Respawn_Init() {
     extern char *gCamera;
     DisableInteraction();
-    mPosX = mSpawnPosX;
-    mPosY = mSpawnPosY;
-    mPosZ = mSpawnPosZ;
+    mPos = mSpawnPos;
     mPosY += 0x3e8000;
     func_02035860(&mMeshClsn, (const Vector3 *)&mPosX);
     mPrevPosX = mPosX;
@@ -4494,9 +4492,7 @@ int daPly_c::St_Talk_Init() {
     mVertAccel = mVertSpeed;
     mSkipGroundUpdate = 1;
     mIsBodyClsnEnabled = 0;
-    mPosX = mPreClsnPosX;
-    mPosY = mPreClsnPosY;
-    mPosZ = mPreClsnPosZ;
+    mPos = mPreClsnPos;
     mStateWork = 0;
     mIsOpeningBigDoor = 0;
     return 1;
@@ -8901,7 +8897,7 @@ int daPly_c::St_Swim_Main() {
         ang = fr[1];
         if (ang < 0x720 && ang > 0x400 && mPosY >= mWaterSurfaceY - 0xc8000) {
             int at;
-            mPosY = mPreClsnPosY - 0x8000;
+            mPosY = mPreClsnPos.y - 0x8000;
             at = cstd::atan2(fr[0], fr[2]);
             vec[0] = 0;
             vec[1] = 0;
@@ -9581,9 +9577,7 @@ int daPly_c::St_CeilingGrate_Main() {
 
     r4 = func_ov002_020cf20c();
     if (r4 == 0x80000000) {
-        mPosX = mPreClsnPosX;
-        mPosY = mPreClsnPosY;
-        mPosZ = mPreClsnPosZ;
+        mPos = mPreClsnPos;
         r4 = mPosY + 0x90000;
     }
 
@@ -20487,9 +20481,7 @@ after_player_slot:
     if (mHasWings != 0)
         mModels.mAnmModel2.Advance();
 
-    mPreClsnPosX = mPosX;
-    mPreClsnPosY = mPosY;
-    mPreClsnPosZ = mPosZ;
+    mPreClsnPos = mPos;
     func_ov002_020bf36c(&mdCcAcPos_c);
     func_ov002_020bf13c();
 
@@ -20675,9 +20667,7 @@ Ld0:
     mMeshClsn.Init(this, 0x32000, 0x32000, &mPrevAngle, &mAngle);
     func_02035644((int *)&mMeshClsn, 0x28000);
     mTerminalVelocity = -0x4b000;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos = mPos;
     mSpawnAngleY = mAngleY;
     mGroundY = 0x80000000;
     mWaterSurfaceY = 0x80000000;
