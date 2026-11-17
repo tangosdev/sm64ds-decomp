@@ -44,6 +44,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx.h"
+#include "nitro/gx/gxcommon.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
@@ -1176,18 +1177,15 @@ namespace s20aea78 {
 extern "C" {
 extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 
-struct BF { unsigned int lo:10; unsigned int hi:22; };
-struct S { int x; BF y; };
-
-/* Draws one sprite-list entry at (a1, a2) through Mg_RenderSpriteOnMtx.
+/* Draws one sprite-list entry at (x, y) through Mg_RenderSpriteOnMtx.
    When the scene's GetDisplayMode (slot 26) returns 2, the copy
-   drawn has 0x200 subtracted from its tile number (attr2 bits 0..9). */
-extern "C" void Mg_DrawSpriteListEntry(S *self, int a1, int a2, Matrix2x2 *a3) {
-    S v = *self;
+   drawn has 0x200 subtracted from its charNo (attr2 bits 0..9). */
+extern "C" void Mg_DrawSpriteListEntry(GXOamAttr *entry, int x, int y, Matrix2x2 *mtx) {
+    GXOamAttr attr = *entry;
     if (gMgScene->GetDisplayMode() == 2) {
-        v.y.lo = (self->y.lo - 0x200) & 0x3ff;
+        attr.charNo = (entry->charNo - 0x200) & 0x3ff;
     }
-    Mg_RenderSpriteOnMtx(&v, a1, a2, 0, -1, a3);
+    Mg_RenderSpriteOnMtx(&attr, x, y, 0, -1, mtx);
 }
 }
 }
