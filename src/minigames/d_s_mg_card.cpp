@@ -729,9 +729,7 @@ int dScMgCard_c::DrawCardValue(void)
       sum += sCardFaceWeights[i];
   }
 
-  sum = (sum *
-         ((int)((((unsigned int)RandomIntInternal(&data_0209e650.value)) & 0x7fffffff) >> 0x13))) >>
-        0xc;
+  sum = RAND_FX_SCALE(sum);
   for (i = 0; i < 6; i++)
   {
       sum -= sCardFaceWeights[i];

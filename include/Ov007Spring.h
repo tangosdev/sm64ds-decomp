@@ -2,6 +2,7 @@
 #define OV007_SPRING_H
 
 #include "types.h"
+#include "nitro/fx/fx.h"
 
 /* Reconstructed names and layouts, not original class identities: the
  * overlay's mass-spring records. The touch picker (Ov007Picker.h) and the
@@ -11,15 +12,15 @@
 /* The 0x24-byte point mass that func_ov007_020c844c allocates and
  * func_ov007_020c83fc resets. Its steppers read every slot:
  * func_ov007_020c81a0 (x/y), func_ov007_020c80c8 (z) and func_ov007_020c831c
- * (3D). The vectors are typed Vector3 because the link steps hand velocity
- * and force to VEC_Add, VEC_Subtract, VEC_DotProduct and VEC_MultAdd (out = b + s * a,
- * per component). */
+ * (3D). The vectors are the SDK's VecFx32 because the link steps hand
+ * velocity and force to VEC_Add, VEC_Subtract, VEC_DotProduct and VEC_MultAdd
+ * (out = b + s * a, per component). */
 typedef struct Ov007Follower {
     /* 0x00: the Q12 position each step moves (func_ov007_020c844c's p). The
      * picker points it at pos, anchorPos or a groupPoints entry */
-    Vector3 *target;
-    Vector3 velocity; /* 0x04: added to *target every step, >> shift */
-    Vector3 force;    /* 0x10: accumulated per frame, cleared at the end of each step */
+    VecFx32 *target;
+    VecFx32 velocity; /* 0x04: added to *target every step, >> shift */
+    VecFx32 force;    /* 0x10: accumulated per frame, cleared at the end of each step */
     /* 0x1c: Q12. func_ov007_020c844c stores the reciprocal (FX_Inv)
      * of its mass, 0x1000 for a mass of 1.0. The steppers take a direct path
      * at 0x1000 and otherwise scale force by it into velocity. Signed, as
@@ -37,7 +38,7 @@ typedef struct Ov007Link {
     Ov007Follower *from; /* 0x00 */
     Ov007Follower *to;   /* 0x04 */
     int length;          /* 0x08: VEC_Mag(dir) */
-    Vector3 dir;         /* 0x0c: from->target - to->target when bound */
+    VecFx32 dir;         /* 0x0c: from->target - to->target when bound */
 } Ov007Link;
 
 /* The 0x14-byte point list func_ov007_020c798c builds. */

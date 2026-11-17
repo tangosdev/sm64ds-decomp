@@ -4,6 +4,7 @@
   "source": "src/engine/mb/MB_Parent.c",
   "promoted_source": "src/engine/mb/MB_Parent.c",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "One contiguous run of the Nitro SDK's mb_parent.c, 0x02065eb8..0x020672d0: 19 functions, gapless in config/arm9/delinks.txt. pret's pmd-sky carries this file as assembly in overlay_00, and 18 of the 19 are matched to its functions by body: the parent states each one sets (MBi_CommChangeParentState's word at pPwork+0x14e8), the message types it sends (0, 1, 2, 3, 4, 5, 6) and receives (7, 8, 9, 10), and the WM callback codes MBi_CommParentCallback switches on.",
@@ -18,6 +19,15 @@
       "name": ".text",
       "start": "0x02065eb8",
       "end": "0x020672d0"
+    },
+    {
+      "name": ".data",
+      "start": "0x0209a078",
+      "end": "0x0209a07c",
+      "terminal_linker_fill": {
+        "alignment": 4,
+        "value": 0
+      }
     }
   ],
   "functions": [
@@ -155,14 +165,23 @@
       "ordinal": 18
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "prev_fid$305",
+      "address": "0x0209a078",
+      "size": "0x1",
+      "binding": "STB_LOCAL",
+      "evidence": "MBi_CommParentSendDLFileInfo's function-local `static s8 prev_fid = -1`, the file whose download info went out last: its byte is 0xff in the ROM, and that function's pool word is its only reference in config/arm9/relocs.txt. mwcc numbers it prev_fid$305 and emits it as the TU's whole .data, 1 byte, 1-aligned."
+    }
+  ],
   "bss": [],
   "relocations": [],
   "compiler_only_output": [],
   "notes": [
     "Hand-assembled, following arm9/PM: tu_map cannot segment arm9/main.",
     "MB_CommIsBootable and MB_CommSetParentStateCallback kept their names. The other 17 were renamed from their func_ names in this change (symbols/actor_renames.tsv records the evidence).",
-    "Built as C, like the SDK's mb_parent.c. The twelve functions the SDK declares static are static here, and their config/arm9/symbols.txt rows carry `local` (the WmCheckParentParameter precedent). The SDK's function-local `static s8 prev_fid = -1` (0x0209a078) stays the extern data_0209a078: as a static its object .data is 1 byte, the ROM's three following bytes are linker alignment before MB_FileInfo.c's .data, and a .data claim ending short of the next word inside arm9's shared .data cannot be licensed yet (a 1-byte claim leaves a 3-byte gap object that shifts the module; terminal_linker_fill requires the claim to own a whole logical section). pPwork is the SDK's macro over mbc (0x020a9db8), which no source delinks yet."
+    "Built as C, like the SDK's mb_parent.c. The twelve functions the SDK declares static are static here, and their config/arm9/symbols.txt rows carry `local` (the WmCheckParentParameter precedent). pPwork is the SDK's macro over mbc (0x020a9db8), which no source delinks yet.",
+    "DATA (2026-11-16): the TU's whole .data is MBi_CommParentSendDLFileInfo's function-local `static s8 prev_fid = -1`, the file whose download info went out last. mwcc numbers it prev_fid$305 and emits it as one 1-aligned byte (0xff) at 0x0209a078; that function's pool word (0x02066464) is its only reference in config/arm9/relocs.txt. Its symbols.txt row is `kind:data(byte) ... local`, as the static functions' rows and ansi_fp.c's literal rows are. A symbol_binding_rewrites row cannot publish it global: it is the first local in the object's symbol table, ahead of the twelve static functions, and objisolate refuses a rewrite that would leave a local after a nonlocal. 0x0209a079..0x0209a07c is zero ALIGNALL(4) padding before the next LCF input, MB_FileInfo.o(.data). The .data claim ends at 0x0209a07c under terminal_linker_fill with interior placement: the fill is exact zero, no configured symbol or relocation touches it, and link_plan proves from MB_FileInfo.o's own section headers that its .data links at 0x0209a07c. A claim ending at 0x0209a079 would leave a 3-byte gap object that ALIGNALL(4) shifts, and everything after it with it. Before this, the static was the extern data_0209a078 and the TU was text-only."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -184,6 +203,76 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "data-verified",
+      "scratch": "build/tu/arm9-MB_Parent/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02065eb8",
+        "end": "0x020672d0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02065eb8",
+          "end": "0x020672d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0209a078",
+          "end": "0x0209a07c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 20
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   }
 }

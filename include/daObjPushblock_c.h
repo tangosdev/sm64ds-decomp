@@ -24,9 +24,7 @@ struct daPly_c;
 
 struct daObjPushblock_c : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
-    s32 mHomePosX;                  /* 0x4dc */
-    s32 mHomePosY;                  /* 0x4e0 */
-    s32 mHomePosZ;                  /* 0x4e4 */
+    Vector3 mHomePos;               /* 0x4dc */
     s32 mGroundY;                   /* 0x4e8 */
     u32 mSlideSound;                /* 0x4ec */
     dActor_c *mLinkedActor;         /* 0x4f0 */

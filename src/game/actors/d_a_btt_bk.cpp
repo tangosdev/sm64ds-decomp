@@ -253,11 +253,9 @@ int daBttBk_c::StateCarriedMain() {
 
 /* State 1 enter. */
 int daBttBk_c::StateCarriedInit() {
-    u32 *flagsPtr = &mFlags;
-    int one = 1;
-    mState = one;
-    *flagsPtr &= ~3;
-    return one;
+    mState = 1;
+    mFlags &= ~3;
+    return 1;
 }
 
 /* State 0 update: fall, bounce at 60% on landing, collide. */

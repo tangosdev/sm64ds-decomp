@@ -2,7 +2,7 @@
 #include "Ov007Light.h"
 #include "Ov007MenuMem.h"
 
-extern Vector3 data_ov007_020d7dac;
+extern VecFx32 data_ov007_020d7dac;
 extern void func_ov007_020c2390(Ov007Light *light);
 
 /* Builds hardware light `id`: white, enabled, shining from
@@ -12,7 +12,7 @@ Ov007Light *func_ov007_020c241c(int id) {
     light->id = id;
     light->source = data_ov007_020d7dac;
     {
-        Vector3 zero = {0, 0, 0};
+        VecFx32 zero = {0, 0, 0};
         light->target = zero;
     }
     light->color = 0x7fff;

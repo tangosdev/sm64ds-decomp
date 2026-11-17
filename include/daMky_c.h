@@ -71,16 +71,12 @@ struct daMky_c : dActor_c {
        &mCapMtx on the spawned cap at +0xc8. */
     Matrix4x3 mCapMtx; /* 0x350 */
     /* Init copies mPos then adds 0x64000 to Y. 02111734 restores from here. */
-    s32 mPerchPosX;         /* 0x380 */
-    s32 mPerchPosY;         /* 0x384 */
-    s32 mPerchPosZ;         /* 0x388 */
-    /* Copy of mPosX/Y/Z seeded in InitResources. UpdateSafePos updates
+    Vector3 mPerchPos; /* 0x380 */
+    /* Copy of mPos seeded in InitResources. UpdateSafePos updates
        it after a ground check; ReturnToPerch also resets it.
        [src/game/actors/d_a_mky.cpp: InitResources, UpdateSafePos,
         ReturnToPerch] */
-    s32 mSpawnPosX;            /* 0x38c */
-    s32 mSpawnPosY;            /* 0x390 */
-    s32 mSpawnPosZ;            /* 0x394 */
+    Vector3 mSpawnPos; /* 0x38c */
     /* PathPtr member, named by daMky_c_classInit_MONKEY_THIEF/_MONKEY_STAR's own C1
        call at +0x398. Trivial (no dtor), so _ZN7daMky_cD0Ev does not destroy
        it. */

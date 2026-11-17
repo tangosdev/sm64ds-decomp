@@ -774,9 +774,7 @@ struct BCA_File;
 
 /* Fire init: plays the file-02123500 animation (flags 0x40000000) at speed 1.0. */
 int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
-    unsigned int flags = 0;
-    BCA_File *file = (BCA_File *)data_ov070_02123500.filePtr;
-    c->mAnmModel.SetAnim(file, 0x40000000, 0x1000, flags);
+    c->mAnmModel.SetAnim((BCA_File *)data_ov070_02123500.filePtr, 0x40000000, 0x1000, 0);
     return 1;
 }
 
@@ -825,7 +823,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
             vel.x = Vec3_VertAngle(&mPos, &fp);
         }
         SpawnFireball(mPos, &vel, 0x1e000, 0xa000, 1);
-        func_02012694(kSndFireSpit, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(kSndFireSpit, &mCamSpacePos);
     }
     if (mAnmModel.dExtFrameCtrl_c::Finished() != 0) {
         mAnmModel.currFrame = 0;

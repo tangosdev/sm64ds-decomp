@@ -34,9 +34,7 @@ struct daBbl_c : dEnemyBase_c {
     dCcAc_c mdCcAc_c;         /* 0x110 */
     dBgCh_Actr mWithMeshClsn; /* 0x144 */
     State *mState;            /* 0x300 -- the table this bubble is running */
-    s32 mSpawnPosX;           /* 0x304 -- where InitResources found the actor */
-    s32 mSpawnPosY;           /* 0x308 */
-    s32 mSpawnPosZ;           /* 0x30c */
+    Vector3 mSpawnPos;        /* 0x304 -- where InitResources found the actor */
     u8 mJumps;                /* 0x310 -- clear: the fixed flame, which only
                                 *          hurts; set: the jumping bubble, which
                                 *          falls under gravity and is hittable */

@@ -549,9 +549,6 @@ void WFSi_TaskThread(void) {
     int i;
     WFSiFileList *node;
     FSArchive *arc = FS_FindArchive(data_02099e6c, 3);
-    int b = 2;
-    int c = 3;
-    int d = 1;
     WFSWork *work = &data_020a1fc0;
     char *base = data_020a2400;
 
@@ -584,10 +581,10 @@ void WFSi_TaskThread(void) {
                 }
             }
             node->ack_seq = 0;
-            node->last_page = b;
-            node->busy_page = c;
+            node->last_page = 2;
+            node->busy_page = 3;
             irq = OS_DisableInterrupts();
-            WFSi_SendOpenAck(base, node, d);
+            WFSi_SendOpenAck(base, node, 1);
             OS_RestoreInterrupts(irq);
         } else {
             FS_CloseFile(&node->file);

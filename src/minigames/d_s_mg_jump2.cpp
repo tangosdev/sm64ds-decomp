@@ -92,7 +92,7 @@ extern void DecompressLZ16(void *src, void *dst);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Jump3D_InitPool(void *base, int count);
 extern u8 gMainScreenLayers;
-extern s16 data_02082614;
+extern s16 data_02082614[];
 }
 void Jump2Popup_UpdateAll(void);
 extern int Jump3D_AllIdle(void);
@@ -154,7 +154,7 @@ s32 dScMgJump2_c::InitResources() {
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
-    fov = FX_Div(0xc0000, (s32)data_02082614);
+    fov = FX_Div(0xc0000, data_02082614[0]);
 
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -356,7 +356,7 @@ void Jump2_SetLights(void) {
     light0[1] = 0;
     light0[2] = -0xff8;
     func_0203cd80(light0, 0x2000);
-    func_0203ccd4((struct Vector3 *)light0, 0);
+    func_0203ccd4(light0, 0);
     G3_LightVector(GX_LIGHTID_0, light0[0], light0[1], light0[2]);
     light1[2] = -0xff8;
     light1[0] = 0;
@@ -364,7 +364,7 @@ void Jump2_SetLights(void) {
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_Identity();
     func_0203cd80(light1, 0x2000);
-    func_0203ccd4((struct Vector3 *)light1, 0);
+    func_0203ccd4(light1, 0);
     G3_LightVector(GX_LIGHTID_1, light1[0], light1[1], light1[2]);
 }
 

@@ -75,9 +75,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        horizontally toward a point 120.0 from it along mAngleY + 0x8000.
        mGroundMissPos is where the forward ground ray found no floor, so
        this is the arena edge the boss teeters at in that state. */
-    s32 mEdgePosX; /* 0x4a8 */
-    s32 mEdgePosY; /* 0x4ac */
-    s32 mEdgePosZ; /* 0x4b0 */
+    Vector3 mEdgePos; /* 0x4a8 */
     /* Scratch word the states use for themselves (most enter handlers that
        rely on it zero it; ..3360 zeroes it from its update instead): a 0/1 latch in several, a frame count that
        runs up to 0x82 in the state at data_ov073_02123340, and in the state
@@ -161,9 +159,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        position here and then, except in the state at data_ov073_021233a0,
        rewinds mPos to mPrevPos. The enter handler of the
        state at data_ov073_021233d0 copies it into mEdgePos. */
-    s32 mGroundMissPosX;                                   /* 0x4ec */
-    s32 mGroundMissPosY;                                   /* 0x4f0 */
-    s32 mGroundMissPosZ;                                   /* 0x4f4 */
+    Vector3 mGroundMissPos; /* 0x4ec */
     /* Particle unique ids: RenewLoopedParticles renews both every call (they
        come back through Particle::System::New) with effects 0x77 and 0x78. */
     u32 mParticleId0;                                      /* 0x4f8 */

@@ -12,7 +12,7 @@
  * offsets tu/tv are refreshed from the next row's normals as the row is walked,
  * so each vertex is emitted with its own row's perturbation. Sibling of
  * func_ov007_020ca86c (the untextured emitter). */
-void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w, s32 h, s32 u0,
+void func_ov007_020caeac(VecFx32 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w, s32 h, s32 u0,
                          s32 v0, s32 du, s32 dv, s32 su, s32 sv, s32 shift) {
     s32 i;
     s32 dir;
@@ -54,7 +54,7 @@ void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w,
         half = du / 2;
         su64 = su;
         sv64 = sv;
-        vstride = w1 * sizeof(Vector3);
+        vstride = w1 * sizeof(VecFx32);
         do {
             s32 j;
             s32 oa;
@@ -67,15 +67,15 @@ void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w,
             for (j = 0; j < w1; j++) {
                 s32 idx;
                 s32 vidx;
-                Vector3 *p;
+                VecFx32 *p;
                 Vector3_16 *q;
-                Vector3 *p2;
+                VecFx32 *p2;
                 s32 t;
                 s32 t2;
                 idx = (dir == 1) ? j : (w1 - 1) - j;
                 vidx = idx + rowbase;
-                voff = vidx * sizeof(Vector3);
-                p = (Vector3 *)((u8 *)vtx + voff);
+                voff = vidx * sizeof(VecFx32);
+                p = (VecFx32 *)((u8 *)vtx + voff);
                 q = (Vector3_16 *)((u8 *)nrm + vidx * sizeof(Vector3_16));
                 n2 = (Vector3_16 *)((u8 *)q + nstride);
                 t = tv[idx];
@@ -90,7 +90,7 @@ void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w,
                 t2 = tv[idx];
                 SEND_TEX(ub + (tu[idx] + du * idx), dv + (t2 + v));
                 SEND_NRM(n2);
-                p2 = (Vector3 *)(vstride + (s32)p);
+                p2 = (VecFx32 *)(vstride + (s32)p);
                 SEND_VTX(p2);
             }
             G3_End();

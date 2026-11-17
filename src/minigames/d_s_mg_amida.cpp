@@ -241,8 +241,8 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
     int i;
     int k;
     int j;
-    int tmp;
-    int rnd;
+    int t;
+    int u;
 
     if (IsVariant2()) {
         switch (mPatternIndex) {
@@ -270,11 +270,11 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         arg1 = 1;
         do {
             for (i = 0; i < 4; i++) {
-                rnd = RandomIntInternal(&data_0209d4b8.value);
-                tmp = mLaneResult[i];
-                j = ((((u32)rnd >> 16) & 0x7fff) * 4) >> 15;
+                t = RandomIntInternal(&data_0209d4b8.value);
+                u = mLaneResult[i];
+                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
                 mLaneResult[i] = mLaneResult[j];
-                mLaneResult[j] = tmp;
+                mLaneResult[j] = u;
             }
             for (k = 0; k < 4; k++) {
                 if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
@@ -291,11 +291,11 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         for (; arg1 < 4; arg1++)
             mLaneResult[arg1] = 0;
         for (i = 0; i < 4; i++) {
-            rnd = RandomIntInternal(&data_0209d4b8.value);
-            tmp = mLaneResult[i];
-            j = ((((u32)rnd >> 16) & 0x7fff) * 4) >> 15;
+            t = RandomIntInternal(&data_0209d4b8.value);
+            u = mLaneResult[i];
+            j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
             mLaneResult[i] = mLaneResult[j];
-            mLaneResult[j] = tmp;
+            mLaneResult[j] = u;
         }
     }
 }
@@ -1662,8 +1662,8 @@ void dScMgAmida_c::SetupRound() {
         mHurry = 0;
         mPenLocked = 0;
         {
-            int lane;
-            for (lane = 0; lane < 4; lane++) {
+            int lane = 0;
+            for (; lane < 4; lane++) {
                 mLanePos[lane].x = (lane * 0x40 + 0x20) << 12;
                 mLanePos[lane].y = 0xb0000;
                 mLaneVel[lane].x = 0;

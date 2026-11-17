@@ -98,14 +98,14 @@ int daObjFl_Amilift_c::MoveAlongPath() {
     Vector3 b;
     int r;
     UpdatePos(0);
-    r = (Vec3_HorzDist(&mPos, (Vector3 *)&mToX) < 0x69000) ? 0 : 0xa000;
+    r = (Vec3_HorzDist(&mPos, &mTo) < 0x69000) ? 0 : 0xa000;
     if (ApproachLinear(mHorzSpeed, r, 0x800) != 0 && r == 0) {
-        mFromX = mToX;
-        mFromY = mToY;
-        mFromZ = mToZ;
-        mPosX = mFromX;
-        mPosY = mFromY;
-        mPosZ = mFromZ;
+        mFrom.x = mTo.x;
+        mFrom.y = mTo.y;
+        mFrom.z = mTo.z;
+        mPosX = mFrom.x;
+        mPosY = mFrom.y;
+        mPosZ = mFrom.z;
         r = 1;
         if (mState == daObjFl_Amilift_c::STATE_FORWARD) {
             ++mNodeIndex;
@@ -120,13 +120,13 @@ int daObjFl_Amilift_c::MoveAlongPath() {
                 r = -1;
             }
         }
-        mPathPtr.GetNode(*(Vector3 *)&mToX, mNodeIndex);
-        a.x = mToX;
-        a.y = mToY;
-        a.z = mToZ;
-        b.x = mFromX;
-        b.y = mFromY;
-        b.z = mFromZ;
+        mPathPtr.GetNode(mTo, mNodeIndex);
+        a.x = mTo.x;
+        a.y = mTo.y;
+        a.z = mTo.z;
+        b.x = mFrom.x;
+        b.y = mFrom.y;
+        b.z = mFrom.z;
         FaceToward(&a, &b);
         return r;
     }
@@ -179,12 +179,12 @@ void daObjFl_Amilift_c::StateWait() {
         }
         mState = daObjFl_Amilift_c::STATE_FORWARD;
         Vector3 v0, v1;
-        v0.x = mToX;
-        v0.y = mToY;
-        v0.z = mToZ;
-        v1.x = mFromX;
-        v1.y = mFromY;
-        v1.z = mFromZ;
+        v0.x = mTo.x;
+        v0.y = mTo.y;
+        v0.z = mTo.z;
+        v1.x = mFrom.x;
+        v1.y = mFrom.y;
+        v1.z = mFrom.z;
         FaceToward(&v0, &v1);
         return;
     }
@@ -210,25 +210,17 @@ s32 daObjFl_Amilift_c::Render() {
 s32 daObjFl_Amilift_c::Behavior() {
     int idx = mState;
     (this->*data_ov064_0211c750[idx].pmf)();
-    unsigned short *p338 = &mStateFrames;
-    *p338 = (*p338 + 1);
+    mStateFrames++;
     if (idx != mState) {
         mStateFrames = 0;
     }
     int target = mRiderOn ? -0x28000 : 0;
     if (ApproachLinear(mSinkOffset, target, 0x5000)) {
-        short *pAng = &mBobPhase;
-        *pAng = (*pAng + 0xa00);
-        unsigned short h = *&mBobPhase;
-        short s = FX_SinIdx(h >> 4);
-        short ten = 10;
-        mBobOffset = s * ten;
+        mBobPhase += 0xa00;
+        mBobOffset = FX_SinIdx((u16)mBobPhase >> 4) * 10;
     }
-    int t330 = mHomeY;
-    int t320 = mSinkOffset;
-    int t324 = mBobOffset;
     int saved = mPosY;
-    mPosY = t324 + (t330 + t320);
+    mPosY = mHome.y + mSinkOffset + mBobOffset;
     UpdateModelPosAndRotY();
     if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
@@ -268,24 +260,24 @@ s32 daObjFl_Amilift_c::InitResources() {
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 1;
 
-    mFromX = mPosX;
-    mFromY = mPosY;
-    mFromZ = mPosZ;
+    mFrom.x = mPosX;
+    mFrom.y = mPosY;
+    mFrom.z = mPosZ;
 
-    mPathPtr.GetNode(*(Vector3 *)&mToX, mNodeIndex);
+    mPathPtr.GetNode(mTo, mNodeIndex);
 
-    nodeA.x = mToX;
-    nodeA.y = mToY;
-    nodeA.z = mToZ;
-    nodeB.x = mFromX;
-    nodeB.y = mFromY;
-    nodeB.z = mFromZ;
+    nodeA.x = mTo.x;
+    nodeA.y = mTo.y;
+    nodeA.z = mTo.z;
+    nodeB.x = mFrom.x;
+    nodeB.y = mFrom.y;
+    nodeB.z = mFrom.z;
 
     FaceToward(&nodeA, &nodeB);
 
-    mHomeX = mPosX;
-    mHomeY = mPosY;
-    mHomeZ = mPosZ;
+    mHome.x = mPosX;
+    mHome.y = mPosY;
+    mHome.z = mPosZ;
 
     return 1;
 }

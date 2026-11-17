@@ -2859,8 +2859,9 @@ struct WipeFader {
 extern "C" void FUN_02029980(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
-    data_0209d4b0 = (int)o2;
+    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    WipeFader *o2 = (WipeFader *)wipe;
+    data_0209d4b0 = wipe;
     o2->w8();
     o2->w3(30, 0);
 }
@@ -2868,14 +2869,15 @@ extern "C" void FUN_02029980(void) {
 void FUN_020299f4(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
-    data_0209d4b0 = (int)o2;
+    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    WipeFader *o2 = (WipeFader *)wipe;
+    data_0209d4b0 = wipe;
     o2->w9();
     o2->w4(30, 0);
 }
 
 extern "C" void FUN_02029a68(void) {
-    if (data_0209d4b0 == (int)((dFdWipe_c *)data_0209f324 + 6)) {
+    if (data_0209d4b0 == (dFdWipe_c *)data_0209f324 + 6) {
         data_0209d4b0 = 0;
         G2_BlendNone();
     }
@@ -2892,8 +2894,9 @@ typedef struct WipeEntry {
 void FUN_02029ab0(void) {
     WipeEntry *entry;
     dScene_c::SetAndStopColorFader();
-    entry = (WipeEntry *)((dFdWipe_c *)data_0209f324 + 6);
-    data_0209d4b0 = (int)entry;
+    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    entry = (WipeEntry *)wipe;
+    data_0209d4b0 = wipe;
     entry->field4 = 0xc00;
     entry->field8 = 0;
     data_0209f274 = 1;
@@ -4303,7 +4306,7 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     int dist;
     int step;
     int i;
-    char *p; /* walks mDensity */
+    u8 *p;
 
     this->mEnabled = 1;
     dist = 0x28000 - (nearv << 4);
@@ -4313,9 +4316,8 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     if (dist >= 0x80000)
         dist = 0x7ffff;
     step = (0x100000 - (farv << 4) - dist) >> 5;
-    i = 0;
-    p = (char *)this->mDensity;
-    while (i < 32) {
+    p = this->mDensity;
+    for (i = 0; i < 32; i++) {
         if (dist <= 0) {
             *p = 0;
         } else if (dist > 0x80000) {
@@ -4323,7 +4325,6 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
         } else {
             *p = (dist >> 12);
         }
-        i++;
         p++;
         dist += step;
     }

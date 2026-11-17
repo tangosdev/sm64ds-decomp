@@ -174,9 +174,9 @@ int daNknk_c::InitResources()
 
     mCliffState = 0;
     mInvincibleTimer = 0;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
@@ -217,9 +217,9 @@ int daNknk_c::Behavior()
         else
             mState = 1;
         if (mWithMeshClsn.IsOnGround() != 0) {
-            mSafePosX = mPosX;
-            mSafePosY = mPosY;
-            mSafePosZ = mPosZ;
+            mSafePos.x = mPosX;
+            mSafePos.y = mPosY;
+            mSafePos.z = mPosZ;
         }
         return 1;
     }
@@ -267,13 +267,13 @@ int daNknk_c::Behavior()
 
         if (mDeathState == 0 && mState != 0) {
             if (IsGoingOffCliff(mWithMeshClsn, 0x32000, 0x3800, false, true, 0x32000) != 0) {
-                mPosX = mSafePosX;
-                mPosY = mSafePosY;
-                mPosZ = mSafePosZ;
+                mPosX = mSafePos.x;
+                mPosY = mSafePos.y;
+                mPosZ = mSafePos.z;
             } else {
-                mSafePosX = mPosX;
-                mSafePosY = mPosY;
-                mSafePosZ = mPosZ;
+                mSafePos.x = mPosX;
+                mSafePos.y = mPosY;
+                mSafePos.z = mPosZ;
             }
         }
 
@@ -439,8 +439,8 @@ void daNknk_c::func_ov062_02118a50()
     if (mHorzSpeed != 0) {
         if (mWithMeshClsn.IsOnWall() != 0) {
             dBgPi *wall = mWithMeshClsn.GetWallResult();
-            wall->surface.CopyNormalTo(*(Vector3*)&mWallNormalX);
-            mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+            wall->surface.CopyNormalTo(mWallNormal);
+            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
         }
         SlideToStop(0x4cc);
         return;
@@ -798,10 +798,8 @@ void daNknk_c::func_ov062_02117c98()
         }
     } else {
         daPly_c *player = (daPly_c *)found;
-        struct {
-            VecFx32 sv;
-            VecFx32 hv;
-        } L;
+        Vector3 plPos; /* copied below and never read; the copy is in the ROM */
+        Vector3 hurtFrom;
         int isPlayer;
         isPlayer = (player->actorID == 0xbf /* PLAYER */) ? 1 : turnAround;
         if (isPlayer == 0)
@@ -816,10 +814,8 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         {
-            s32 *s = &player->mPosX;
-            L.sv.x = s[0];
-            L.sv.y = s[1];
-            L.sv.z = s[2];
+            Vector3 *s = &player->mPos;
+            plPos = *s;
         }
         if (player->IsOnShell()) {
             mDeathState = 5;
@@ -848,13 +844,11 @@ void daNknk_c::func_ov062_02117c98()
             goto tail;
         {
             s32 pw;
-            L.hv.x = mPosX;
-            L.hv.y = mPosY;
-            L.hv.z = mPosZ;
+            hurtFrom = mPos;
             pw = mHorzSpeed;
             if (pw < 0xf000)
                 pw = 0xf000;
-            player->Hurt(*(Vector3 *)&L.hv, 0, pw, 1, 0, 1);
+            player->Hurt(hurtFrom, 0, pw, 1, 0, 1);
             BounceOffHurtPlayer();
             if (mKoopaVariant == 2) {
                 PoofDust();

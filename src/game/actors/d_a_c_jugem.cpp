@@ -116,7 +116,7 @@ int AngleDiff(int a, int b);
 
 /* other overlays / arm9 */
 void func_ov002_020c3e8c(void *player);
-void func_ov002_020c3f18(void *p);
+void func_ov002_020c3f18(daPly_c *player);
 void func_ov002_020c3f2c(void *p);
 
 /* globals */
@@ -599,9 +599,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
         return 1;
     }
 
-    p->mStateTargetX = mPosX;
-    p->mStateTargetY = mPosY;
-    p->mStateTargetZ = mPosZ;
+    p->mStateTarget = mPos;
 
     if (mStateTimer == 0) {
         Sound::PlaySub(0x4a, 0x14, 0x7f, 0x15666, 0);
@@ -651,9 +649,7 @@ int daC_Jugem_c::StateHiddenMain()
         VecFx32 v = *(VecFx32 *)&p->mPosX;
         if ((data_0209caa0.file.flags2 & 0x10000) != 0 && v.z > -0x28000 &&
             p->SetNoControlState(0x12, -1, 0) != 0) {
-            p->mStateTargetX = mPosX;
-            p->mStateTargetY = mPosY;
-            p->mStateTargetZ = mPosZ;
+            p->mStateTarget = mPos;
             *(VecFx32 *)&mPosX = v;
             mPosX -= 0x3e8000;
             mPosY = p->mGroundY + 0x3e8000;

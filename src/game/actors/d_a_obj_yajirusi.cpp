@@ -150,7 +150,7 @@ int daObjYajirusi_c::CleanupResources() {
 // 0x02137d80 (0x3c)
 void daObjYajirusi_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1e, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x1e, &mCamSpacePos);
     KillByMegaChar(player);
 }
 
