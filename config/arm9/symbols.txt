@@ -4942,10 +4942,9 @@ data_020a0dbc kind:bss addr:0x020a0dbc
 data_020a0dd8 kind:bss addr:0x020a0dd8
 data_020a0de0 kind:bss addr:0x020a0de0
 gTouchInfo kind:bss addr:0x020a0de8
-gTouchHeld kind:bss addr:0x020a0de8
-gTouchEdge kind:bss addr:0x020a0de9
-gTouchX kind:bss addr:0x020a0dea
-gTouchY kind:bss addr:0x020a0deb
+data_020a0de9 kind:bss addr:0x020a0de9
+data_020a0dea kind:bss addr:0x020a0dea
+data_020a0deb kind:bss addr:0x020a0deb
 data_020a0df8 kind:bss addr:0x020a0df8
 gActivePlayerSlot kind:bss addr:0x020a0e40
 data_020a0e44 kind:bss addr:0x020a0e44
