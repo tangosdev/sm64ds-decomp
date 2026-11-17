@@ -241,18 +241,16 @@ int daObjMaruta_c::func_ov080_021274ac(ResourceDescriptor *arg) {
 /* -------------------------------------------------------------------------- */
 /* If the other actor's actorID is PLAYER (0xbf), copy its mPos into mHitPos,
    arm mHitByPlayer / mHitTimer, and shove that actor along mAngleY by half
-   of mHorzSpeed. Retain the volatile actor-ID read and the position view:
-   separate scalar member loads change codegen. */
+   of mHorzSpeed. The ID test is held in a local, as the cartridge keeps
+   it in a register (testing it in the if is 12 bytes short). */
 void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
-    int t;
+    int isPlayer;
     int half;
 
-    t = (other->actorID == 0xbf);
-    if (t != 0) {
+    isPlayer = (other->actorID == 0xbf);
+    if (isPlayer != 0) {
         Vector3 *position = &other->mPos;
-        mHitPos.x = position->x;
-        mHitPos.y = position->y;
-        mHitPos.z = position->z;
+        mHitPos = *position;
         mHitByPlayer = 1;
         mHitTimer = 120;
 
