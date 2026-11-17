@@ -25559,7 +25559,7 @@
     },
     "ov006:0x02109aa0": {
       "author": "ruspecial",
-      "name": "_Z25Roulette_DrawResultsThunkPc"
+      "name": "_Z25Roulette_DrawResultsThunkP15dScMgRoulette_c"
     },
     "ov006:0x02109aac": {
       "author": "andrewboudreau",

@@ -3669,7 +3669,6 @@ void dScMgSmartball_c::CountCell() {
 }
 
 unsigned short dScMgSmartball_c::GetTile(int *pos) {
-    unsigned char *base = (unsigned char *)this;
     int a = pos[1];
     if (a >= 0 && a < 0xc0000) {
         int b = pos[0];
@@ -3714,14 +3713,12 @@ void dScMgSmartball_c::UpdateDust() {
  * Leftover: TVec2's empty destructor keeps `v` in memory, and `sa` must be its
  * own assignment before the first product. */
 void dScMgSmartball_c::SpawnDust(int *origin) {
-    char *c = (char *)this;
     int i;
     int j;
 
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 16; j++) {
-            u8 *flag = ((dScMgSmartball_c *)(c + j))->mDustActive;
-            if (*flag == 1) {
+            if (mDustActive[j] == 1) {
                 continue;
             }
             {
@@ -3736,18 +3733,16 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 TVec2 v;
                 sa = (s64)sinA;
                 v.x = FX_MUL(sinB, FX_MUL(sinA, 0x8000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][0] = v.x;
+                mDustPos[j][0] = v.x;
                 cosA = FX_SinCosTable_[(angA >> 4) * 2];
                 v.y = FX_MUL(sinB, FX_MUL(cosA, 0x8000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][1] = v.y;
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][0] += origin[0];
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][1] += origin[1];
-                ((dScMgSmartball_c *)(c + j * 8))->mDustVel[0][0] =
-                    FX_MUL(sinB, FX_MUL(sa, 0x4000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustVel[0][1] =
-                    FX_MUL(sinB, FX_MUL(cosA, 0x4000));
+                mDustPos[j][1] = v.y;
+                mDustPos[j][0] += origin[0];
+                mDustPos[j][1] += origin[1];
+                mDustVel[j][0] = FX_MUL(sinB, FX_MUL(sa, 0x4000));
+                mDustVel[j][1] = FX_MUL(sinB, FX_MUL(cosA, 0x4000));
                 mDustAge[j] = 0;
-                *flag = 1;
+                mDustActive[j] = 1;
             }
             break;
         }
@@ -4842,17 +4837,17 @@ s32 dScMgSmartball_c::Render() {
         /* Continue prompt. */
         if (mPhase == 1 && mResultTimer >= 300) {
             if (col >= 7)
-                Mg_DrawBlinkSprite(g, 0x80, 0xa8);
+                Mg_DrawBlinkSprite(this, 0x80, 0xa8);
             else if (col == 6)
-                Mg_DrawBlinkSprite(g, 0xe0, 0xa8);
+                Mg_DrawBlinkSprite(this, 0xe0, 0xa8);
             else
-                Mg_DrawBlinkSprite(g, 0xe0, 0xa0);
+                Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
         }
     }
 
     /* Sparks, except while draining on the main screen. */
     if ((param1 & 0xff) != 0 || mDraining == 0)
-        ((dScMgSmartball_c *)(g))->RenderSparks();
+        RenderSparks();
 
     /* Score counters at the top of both screens. */
     Mg_DrawTopRightCounter(Mg_GetSubmittedScore(), 6);
@@ -4896,9 +4891,8 @@ s32 dScMgSmartball_c::Render() {
                     }
                     Mg_DrawNumber((*px >> 12) + nd * 8 + 8, *py >> 12, *slot[0], -1, 0, 0, 0);
                 } else {
-                    dScMgSmartball_c *popup = (dScMgSmartball_c *)(g + sb * 8);
-                    int y = popup->mPopupPos[0][1];
-                    int x = popup->mPopupPos[0][0];
+                    int y = mPopupPos[sb][1];
+                    int x = mPopupPos[sb][0];
                     Mg_DrawNumber(x >> 12, y >> 12, cnt, -1, 0, 0, 0);
                 }
             }
@@ -4913,9 +4907,8 @@ s32 dScMgSmartball_c::Render() {
                 int idx = mDustAge[slot] / 5;
                 if (idx > 3)
                     idx = 2;
-                dScMgSmartball_c *dust = (dScMgSmartball_c *)(g + slot * 8);
-                Mg_RenderSpriteBoth(data_ov006_02137a60[idx], dust->mDustPos[0][0] >> 12,
-                                    dust->mDustPos[0][1] >> 12, -1, 0);
+                Mg_RenderSpriteBoth(data_ov006_02137a60[idx], mDustPos[slot][0] >> 12,
+                                    mDustPos[slot][1] >> 12, -1, 0);
             }
         }
     }
@@ -5004,7 +4997,7 @@ s32 dScMgSmartball_c::Render() {
     }
 
     if ((param1 & 0xff) == 0 && mDraining != 0)
-        ((dScMgSmartball_c *)(g))->RenderSparks();
+        RenderSparks();
 
     return 1;
 }
@@ -5027,7 +5020,6 @@ s32 dScMgSmartball_c::Render() {
  * address in a register instead of folding it into an indexed load), and the
  * declarations below must keep C linkage and their `extern` keyword. */
 s32 dScMgSmartball_c::Behavior() {
-    char *c = (char *)this;
     int vec[3];
 
     if (mPromptBlinkCount == 0) {
@@ -5130,9 +5122,9 @@ s32 dScMgSmartball_c::Behavior() {
                         ((i >= 13) ? 0 : mpBalls[i])->ArmExpire(1) != 0) {
                         ((i >= 13) ? 0 : mpBalls[i])->Burst();
                         CopyObjectPos(vec, (i >= 13) ? 0 : mpBalls[i]);
-                        ((dScMgSmartball_c *)c)->EmitScore(vec, 0x7d0, 0, 1);
+                        EmitScore(vec, 0x7d0, 0, 1);
                         Sound::PlayBank2_2D(0x175);
-                        ((dScMgSmartball_c *)(c))->CountOut();
+                        CountOut();
                         found = 1;
                         break;
                     }
@@ -5190,7 +5182,7 @@ s32 dScMgSmartball_c::Behavior() {
         (*p)--;
     }
 
-    ((dScMgSmartball_c *)(c))->UpdateSparks();
+    UpdateSparks();
     return 1;
 }
 
@@ -5241,11 +5233,10 @@ inline void G2_SetOBJMode(OamAttr *oam_, int mode, int cParam) {
  * Leftover: the mode byte needs both the mask and the (u8) cast, and the last
  * Pakkun G2_SetOBJMode reads its colour param from [2] instead of [2]+1. */
 s32 dScMgSmartball_c::InitResources() {
-    char *c = (char *)this;
     void *f;
     s32 i;
-    if ((*((s32 *)(c + 8))) & 0xff) {
-        mLevel = (u8)((*((s32 *)(c + 8))) & 0xFF);
+    if (param1 & 0xff) {
+        mLevel = (u8)(param1 & 0xFF);
         if ((mLevel) > 0x270e) {
             mLevel = 0x270e;
         }
@@ -5291,7 +5282,7 @@ s32 dScMgSmartball_c::InitResources() {
     G2S_BG3Mosaic(false);
     G2S_SetBG3Offset(0, 0);
     G2S_SetBG3Priority(2);
-    if (((u8)(*((s32 *)(c + 8)))) == 0) {
+    if ((u8)param1 == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1FrameNcgPath);
         DecompressLZ16(f, G2_GetBG2CharPtr());
         Ov004_Deallocate(f);
@@ -5318,7 +5309,7 @@ s32 dScMgSmartball_c::InitResources() {
         DecompressLZ16(f, G2S_GetBG3CharPtr());
         Ov004_Deallocate(f);
     }
-    if (((u8)(*((s32 *)(c + 8)))) == 0) {
+    if ((u8)param1 == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NclPath);
         DC_FlushRange(f, 0x1a0);
         GX_LoadBGPltt(f, 0x60, 0x1a0);

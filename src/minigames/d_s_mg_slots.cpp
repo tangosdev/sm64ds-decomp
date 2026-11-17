@@ -95,8 +95,7 @@ extern int data_ov006_0213e948[];
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
-void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
+void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void **sSlotLangSprites[];
 extern SlotState sSlot3StateTable[];
 /* The ROM PMF constants the Slot3 state table copies from (unlicensed
@@ -305,6 +304,9 @@ void dScMgSlot3_c::StateJudge() {
             }
         } while (++reelIndex < 3);
         // Retain the compiler address barrier; deleting it grows this body by 32 bytes.
+        // Plain members (mResultSymbols[0][column], mReelPos[reelIndex], ...) with
+        // for, do-while or an inlined index hoist this+0x5031 into a stack slot:
+        // 0x1c0 against 0x1b8 (2026-11-16).
         self = (char *)((unsigned)self | (unsigned)(column - column));
     }
 
@@ -678,8 +680,8 @@ s32 dScMgSlot3_c::Render() {
         }
     }
 
-    Mg_DrawCredits(c, 0xc, 0xc, 0);
-    Mg_DrawScoreTally(c, 0xe0, 0x14, 1);
+    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 
     if (mState == 3 && mWinColumn >= 0) {
         Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], mWinColumn * 0x50 + 0x20,

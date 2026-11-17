@@ -31,13 +31,11 @@
  *     2026-09-14 and was matched on 2026-10-02.
  *
  * Remaining matching constraints:
- * - StepWalkers and Behavior's piece-update loop step a char* through the
- *   per-walker and per-piece arrays and spell each field as element 0 of
- *   the stepped pointer (`((dScMgAmida_c *)p)->mWalkerDelay[0]`). Indexing
- *   the member directly diffs there: StepWalkers' pointer forms move bytes,
- *   and Behavior's piece walk keeps PIECE_OFF's cast arithmetic (see the
- *   macro). StepWalker, RenderBoard, Render, SetupRound's piece reset and
- *   Behavior's free-slot scan take plain members.
+ * - StepWalkers steps a char* through the per-walker arrays and spells each
+ *   field as element 0 of the stepped pointer
+ *   (`((dScMgAmida_c *)p)->mWalkerDelay[0]`). Indexing the member directly
+ *   diffs there (see the function). Everything else, Behavior's piece
+ *   update included, takes plain members.
  * - StepWalkers keeps both opt pragmas. Without opt_common_subs off the
  *   literal arguments merge; the ROM hoists each one into its own stack
  *   slot ahead of the walker loop. Without opt_strength_reduction off the
@@ -186,31 +184,6 @@ typedef struct {
     int values[14];
 } AmidaRenderPeriods;
 extern AmidaRenderPeriods sAmidaRenderPeriods;
-
-/* PIECE_AT(p) is piece 0 seen from a char* that has been stepped by
-   whole pieces; PIECE_OFF names one field's offset from the scene. Only
-   Behavior's piece-update loop still uses them. The member form
-   `&((dScMgAmida_c *)p)->mPieces[0]` grows Behavior by 0xc (measured
-   2026-10-20). Plain mPieces[piece].field indexing (measured 2026-11-16)
-   is the right size but swaps three register colours: the ROM keeps the
-   stepped scene base in sb, vel in r8 and the posX address / speed in r7,
-   and the indexed form makes the base the last-ranked web. 15 of 477
-   words off with vel stepped as now, 12 with vel = &mPieces[piece].velX
-   per iteration (or block-scoped), 16 with the address inlined into the
-   calls; a block-scoped speed, `timer++` vs `timer = timer + 1`, a do/while
-   or comma-for loop, a u8 counter, and reusing lane/k/j/slot/touchSlot/
-   steps/accum/touched as the counter all stay at 12-20. A typed
-   `dScMgAmida_c_Piece *` walk rebases on mPieces and builds 0x18-0x24
-   bytes short. */
-#define PIECE_OFF(m) ((int)&((dScMgAmida_c *)0)->mPieces[0].m)
-#define PIECE_AT(p) ((dScMgAmida_c_Piece *)((p) + PIECE_OFF(posX)))
-
-/* Launder helpers for Behavior's piece walk: AT makes the compiler
-   materialise each address on its own instead of folding it into a
-   neighbouring add, which is what the ROM does there. */
-#define AT(p, off) (((p)+(off)))
-#define IP(p, o) (*(int*)((p)+(o)))
-#define IAP(p, o) (*(int*)AT(p,(o)))
 
 #pragma defer_codegen off
 
@@ -902,7 +875,10 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
    mwccarm keeps the ROM's branch there instead of predicating it
    (notes/mwccarm-codegen.md 6cn). */
 /* Both kept: measured 2026-11-06, StepWalkers is the only function this
-   bracket reaches and its size changes when EITHER setting goes back on. */
+   bracket reaches and its size changes when EITHER setting goes back on.
+   The `sceneBytes` slot pointers stay too: the ROM forms each one as
+   (this + i*stride) + offset, and &mWalkerDelay[i] / &mWalkerCell[i] /
+   &mWalkerDone[i] put the offset first, 0xe4c against 0xe48 (2026-11-16). */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
@@ -1828,10 +1804,7 @@ s32 dScMgAmida_c::Render() {
 }
 
 s32 dScMgAmida_c::Behavior() {
-    char *raw = (char *)this;
     int piece;
-    char *piecePtr;
-    int *vel;
     int speed;
     int steps;
     int k;
@@ -1959,23 +1932,18 @@ s32 dScMgAmida_c::Behavior() {
             lane++;
         } while (lane < 4);
 
-        piecePtr = raw;
-        vel = &mPieces[0].velX;
         for (piece = 0; piece < 128; piece++) {
-            if (PIECE_AT(piecePtr)->active != 0) {
-                PIECE_AT(piecePtr)->posX += PIECE_AT(piecePtr)->velX;
-                IAP(piecePtr, PIECE_OFF(posY)) += IP(piecePtr, PIECE_OFF(velY));
-                speed = Vec2_Len((const Vector2 *)vel) * 7 / 8;
-                if (func_0203d434(vel) != 0)
-                    func_0203d630(vel, speed);
-                IAP(piecePtr, PIECE_OFF(timer)) = IAP(piecePtr, PIECE_OFF(timer)) + 1;
-                {
-                    if (PIECE_AT(piecePtr)->timer >= 16)
-                        PIECE_AT(piecePtr)->active = 0;
-                }
+            if (mPieces[piece].active != 0) {
+                mPieces[piece].posX += mPieces[piece].velX;
+                mPieces[piece].posY += mPieces[piece].velY;
+                speed = Vec2_Len((const Vector2 *)&mPieces[piece].velX);
+                speed = speed * 7 / 8;
+                if (func_0203d434(&mPieces[piece].velX) != 0)
+                    func_0203d630(&mPieces[piece].velX, speed);
+                mPieces[piece].timer += 1;
+                if (mPieces[piece].timer >= 16)
+                    mPieces[piece].active = 0;
             }
-            piecePtr += 0x18;
-            vel += 6;
         }
 
         for (j = 0; j < 4; j++) {
@@ -2071,7 +2039,7 @@ s32 dScMgAmida_c::InitResources() {
     fillSub = 0;
     MI_CpuFill16(file, fillSub, 0x6000);
 
-    Mg_InitBrush((char *)this, 1, 0, 2);
+    Mg_InitBrush(this, 1, 0, 2);
 
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
                          GX_BG_CHARBASE_0x0c000);

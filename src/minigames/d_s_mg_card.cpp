@@ -56,7 +56,6 @@ extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
 extern int sCardFaceWeights[];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-extern void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern OamAttr *data_ov006_02134028;
 extern void Mg_SaveRecordPair(int a0, int a1);
@@ -652,7 +651,7 @@ s32 dScMgCard_c::Render()
         RenderOamMainScreen(data_ov006_02134028, 40, 56, -1, -1);
     }
 
-    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    Mg_DrawCredits(this, 0xc, 0xc, 0);
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 
     if (this->mScore < this->mHudScore)
@@ -1142,7 +1141,7 @@ void dMgCardObj_c::DealIn(const s32 *src)
     mX = src[0];
     mY = src[1];
     {
-        int *b = (int *)(((int)this + 4));
+        s32 *b = &mX;
         mTargetX = b[0];
         mTargetY = b[1];
     }

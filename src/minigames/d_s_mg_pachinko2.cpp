@@ -83,7 +83,6 @@ extern void Mg_DrawTopLeftCounter(int score);
 extern void Mg_DrawTopRightCounter(int, int);
 extern void Mg_DrawTopCenterCounter(int a0);
 extern void Mg_SubmitScore(int self);
-extern void Mg_InitBrush(char *, char, int, int);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_SetSharedState(int);
 extern void FreeGfxSlotsById(int n);
@@ -2284,7 +2283,7 @@ s32 dScMgPachinko2_c::InitResources() {
         }
     }
 
-    Mg_InitBrush((char *)this, 0, 2, 0);
+    Mg_InitBrush(this, 0, 2, 0);
 
     G2S_SetBG3Priority(2);
     G2S_BG3Mosaic(0);

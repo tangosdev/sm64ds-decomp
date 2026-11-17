@@ -437,8 +437,8 @@ void dScMgTrampoline_c::StatePlay() {
             if (sTrmpComboCount >= 5 || sTrmpMariosInPlay < 3) {
                 int i;
                 for (i = 0; i < 4; i++) {
-                    if (Trmp3DMario_IsOffstage((int *)&mMarios[i])) {
-                        Trmp3DMario_EnterWalkIn((char *)&mMarios[i]);
+                    if (Trmp3DMario_IsOffstage(&mMarios[i])) {
+                        Trmp3DMario_EnterWalkIn(&mMarios[i]);
                         break;
                     }
                 }

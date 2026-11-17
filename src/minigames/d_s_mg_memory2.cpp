@@ -119,7 +119,6 @@ extern int sMemory2EasyDealsPerDifficulty[];
 extern int sMemory2PreviewCountPerDifficulty[];
 extern int sMemory2PreviewTimePerDifficulty[];
 extern void FreeGfxSlotsById(int x);
-void Mg_DrawCredits(void *, int, int, int);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);

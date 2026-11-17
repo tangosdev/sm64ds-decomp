@@ -106,7 +106,6 @@ extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *
 extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
 extern void Mg_SetTopScreenYOffset(int a);
-extern void Mg_InitBrush(char *a, char b, int c, int d);
 extern void func_02012718(int a, int b);
 extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);
@@ -2112,7 +2111,6 @@ s32 dScMgPachinko_c::Behavior()
 /* Vtable slot 0. */
 s32 dScMgPachinko_c::InitResources()
 {
-    char *c = (char *)this;
     char *b;
     char *dst;
     volatile u16 fillScr;
@@ -2173,7 +2171,7 @@ s32 dScMgPachinko_c::InitResources()
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
                           GX_BG_CHARBASE_0x18000);
 
-    Mg_InitBrush(c, 0, 2, 0);
+    Mg_InitBrush(this, 0, 2, 0);
 
     b = (char *)G2S_GetBG2CharPtr();
     fillZero = 0;
