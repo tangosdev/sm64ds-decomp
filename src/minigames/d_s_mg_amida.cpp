@@ -878,7 +878,12 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
    bracket reaches and its size changes when EITHER setting goes back on.
    The `sceneBytes` slot pointers stay too: the ROM forms each one as
    (this + i*stride) + offset, and &mWalkerDelay[i] / &mWalkerCell[i] /
-   &mWalkerDone[i] put the offset first, 0xe4c against 0xe48 (2026-11-16). */
+   &mWalkerDone[i] put the offset first, 0xe4c against 0xe48 (2026-11-16).
+   Round 18, common subexpressions on (strength reduction still off): 0xe54
+   as written; the eight walker-x pointers as &mWalkerCell[walker].x 0xe14,
+   the literal stack slots then right but each case's x compares sharing the
+   walkerX address; only the two goal-check pointers typed 0xe40. Without
+   strength reduction off it is 0xe8c. */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off

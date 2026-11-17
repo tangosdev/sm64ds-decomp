@@ -4660,15 +4660,11 @@ void dScMgSmartball_c::SpawnObjects() {
     __cxa_vec_cleanup(pos, 25, 8, (dtor_t)NullDestructor_0203d47c);
 }
 
-/* Kept (#821): Render needs both pragmas off, and the locals below must stay
- * in this order (each one pins a stack slot). Without SR off the body is
- * 0x1124, not 0x10c0. Indexing every tally, popup and dust array by name
- * with both pragmas on gives 0x10b8: CSE folds the popup's first digit-count
- * read into the address of mPopupScore[sb], where the ROM forms it again with
- * the offset in a register. The same indexed body with either pragma off is
- * 0x109c, and indexing one array alone under the pragmas is 0x10bc. */
+/* Kept (#821): Render needs strength reduction off (without it the body is
+ * larger than the ROM's 0x10c0), and the locals below must stay in this order
+ * (each one pins a stack slot). The tally and popup-score pointers still step
+ * the byte view `g`: the ROM forms (this + i*4) + offset. */
 #pragma push
-#pragma opt_common_subs off
 #pragma opt_strength_reduction off
 /* Slot 9: the frame draw. On the result screen it reveals the tally rows one
  * at a time, then draws the side lamps, every board object and the score
@@ -4869,9 +4865,7 @@ s32 dScMgSmartball_c::Render() {
                     int *px = &((dScMgSmartball_c *)(g + sb * 8))->mPopupPos[0][0];
                     Mg_DrawNumber((*px >> 12) - 0x10, *py >> 12, cnt, -1, 0, 0, 0);
                     nd = 0;
-                    /* Leftover: the score is read again through an int address. */
-                    u = (unsigned int)*(int *)SlotAddress(
-                        this, OFFSET_OF(dScMgSmartball_c, mPopupScore), sb, 4);
+                    u = mPopupScore[sb];
                     if (u != 0) {
                         do {
                             u /= 10;

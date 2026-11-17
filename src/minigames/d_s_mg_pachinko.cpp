@@ -1095,7 +1095,11 @@ static inline int FX_Mul(int v1, int v2)
  * other registers. 36 orders of the scale, sprite and matrix locals, the
  * matrix stores and the x/y reads, swapped FX_MUL operands, a fx32 or long
  * scale and an `idx` local all stay at 6. A ball pointer (local or walked)
- * is 56; a function-scope matrix 42. */
+ * is 56; a function-scope matrix 42.
+ * Re-measured (#821, round 18): FX_MUL without the pragma stays 6 words off
+ * with fx64 casts on both operands or on the scale alone, a block-scope loop
+ * counter and a u16 rotation local. The sine product first is 18 off, fx16
+ * or int sine/cosine locals 42, the scale re-read per product 52. */
 void dScMgPachinko_c::Ball_DrawAll() {
     int i;
     for (i = 0; i < BALL_NUM; i++) {
@@ -1176,7 +1180,9 @@ void dScMgPachinko_c::Ball_CheckPipes(int idx) {
  * the plain typed body (one sqrt expression, while-loop re-roll, every field
  * as mBall[i].f) is 0x260 without it and 0x230 with it. The ROM reaches each
  * field as its own this + offset base indexed by i * 0x38, the shape common
- * subexpressions off gives. */
+ * subexpressions off gives. Round 18: a `ball` pointer for every field is
+ * 0x204 without the pragma and 0x200 with it; the squared length summed in
+ * an s64 local is 0x260 / 0x230, as the one-expression form. */
 void dScMgPachinko_c::Ball_AimAtTarget(int i) {
     int idx;
     int n;
@@ -1730,7 +1736,9 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
  * release branch, FX_CosIdx/FX_SinIdx products included, is exact. 16 held-
  * branch variants (touch locals or inline, int or u32 idx, operand and
  * read order) give 65-71; a shot pointer for the x clamps 62. With the pragma
- * that shape is 0x3e8.
+ * that shape is 0x3e8. Round 18: plain mShot[i] at every use with typed
+ * touch reads is 84 off (0x3e8 with the pragma); the twin's flat byte-view
+ * touch reads bring it to 35, a launder for a pragma, so not taken.
  * The two velocity reads stay hand-indexed into FX_SinCosTable_: through
  * FX_CosIdx / FX_SinIdx the products take swapped registers (17-22 DIFF in
  * eleven spellings: inline, index local, fx16 local, speed read first).
