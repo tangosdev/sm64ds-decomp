@@ -97,9 +97,8 @@ void daObjMaruta_c::UpdateModelTransform() {
 /* ROM ordinal 2 -- func_ov080_021270dc, 0x021270dc, size 0x48 */
 /* -------------------------------------------------------------------------- */
 int daObjMaruta_c::func_ov080_021270dc(ResourceDescriptor *arg) {
-    daObjMaruta_c *self = this;
-    if (self->mMeshCollider.IsEnabled())
-        self->mMeshCollider.Disable();
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
     arg->model->Release();
     arg->collision->Release();
     return 1;
@@ -117,105 +116,104 @@ s32 daObjMaruta_c::Render() {
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
 int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
-    daObjMaruta_c *self = this;
     Vector3 tmp;
     int len;
     int ang;
     s16 v;
     int horz;
 
-    if (self->UpdateKillByMegaChar(-0x1500, 0, 0, 0) != 0)
+    if (UpdateKillByMegaChar(-0x1500, 0, 0, 0) != 0)
         return 1;
-    if ((int)((self->mFlags & 8) != 0) != 0)
+    if ((int)((mFlags & 8) != 0) != 0)
         return 1;
 
-    if (self->mHitByPlayer == 0) {
-        if (DecIfAbove0_Byte(&self->mHitTimer)) {
-            if (self->mRollAngVel > 0) {
-                self->mRollAngVel -= 0x10;
+    if (mHitByPlayer == 0) {
+        if (DecIfAbove0_Byte(&mHitTimer)) {
+            if (mRollAngVel > 0) {
+                mRollAngVel -= 0x10;
             } else {
-                self->mRollAngVel += 0x10;
+                mRollAngVel += 0x10;
             }
-            v = self->mRollAngVel;
+            v = mRollAngVel;
             if (v <= 0x10 && v >= -0x10)
-                self->mRollAngVel = 0;
+                mRollAngVel = 0;
         } else {
-            v = self->mRollAngVel;
+            v = mRollAngVel;
             if (v != 0x100) {
                 if (v > 0x100) {
-                    self->mRollAngVel -= 0x10;
+                    mRollAngVel -= 0x10;
                 } else {
-                    self->mRollAngVel += 0x10;
+                    mRollAngVel += 0x10;
                 }
-                v = self->mRollAngVel;
+                v = mRollAngVel;
                 if (v < 0x110 && v > 0xf0)
-                    self->mRollAngVel = 0x100;
+                    mRollAngVel = 0x100;
             }
         }
-        if (Vec3_Dist(&self->mPos, (Vector3 *)&self->mRestPosX) < 0x2000)
-            self->mRollAngVel = 0;
+        if (Vec3_Dist(&mPos, (Vector3 *)&mRestPosX) < 0x2000)
+            mRollAngVel = 0;
     } else {
-        horz = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mHitPosX);
-        AngleDiff(horz, self->mAngleY);
-        ang = AngleDiff(horz, self->mAngleY);
+        horz = Vec3_HorzAngle(&mPos, (Vector3 *)&mHitPosX);
+        AngleDiff(horz, mAngleY);
+        ang = AngleDiff(horz, mAngleY);
         if (ang > 0x4000) {
-            self->mRollAngVel -= 0x10;
+            mRollAngVel -= 0x10;
         } else {
-            self->mRollAngVel += 0x10;
+            mRollAngVel += 0x10;
         }
-        v = self->mRollAngVel;
+        v = mRollAngVel;
         if (v < -0x200)
             v = -0x200;
         else if (v > 0x200)
             v = 0x200;
-        self->mRollAngVel = v;
+        mRollAngVel = v;
     }
 
     {
-        int d = self->mRollAngVel;
-        self->mHorzSpeed = (d / 64) << 12;
+        int d = mRollAngVel;
+        mHorzSpeed = (d / 64) << 12;
     }
-    self->UpdatePos(0);
-    Vec3_Sub(&tmp, &self->mPos, (Vector3 *)&self->mRestPosX);
+    UpdatePos(0);
+    Vec3_Sub(&tmp, &mPos, (Vector3 *)&mRestPosX);
     len = VEC_Mag(&tmp);
-    ang = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mRestPosX);
-    ang = AngleDiff(ang, self->mAngleY);
+    ang = Vec3_HorzAngle(&mPos, (Vector3 *)&mRestPosX);
+    ang = AngleDiff(ang, mAngleY);
     if (ang >= 0x7f00)
         ang = 0x8000;
     if (ang <= 0x100)
         ang = 0;
     if (len > *maxDist) {
-        self->mPosX = self->mPrevPosX;
-        self->mPosY = self->mPrevPosY;
-        self->mPosZ = self->mPrevPosZ;
+        mPosX = mPrevPosX;
+        mPosY = mPrevPosY;
+        mPosZ = mPrevPosZ;
     }
-    if (ang == self->mPathAngDiff || ang == 0x8000) {
-        self->mPosX = self->mPrevPosX;
-        self->mPosY = self->mPrevPosY;
-        self->mPosZ = self->mPrevPosZ;
-        self->mHitTimer = 10;
+    if (ang == mPathAngDiff || ang == 0x8000) {
+        mPosX = mPrevPosX;
+        mPosY = mPrevPosY;
+        mPosZ = mPrevPosZ;
+        mHitTimer = 10;
     }
-    self->mAngleX += self->mRollAngVel;
-    if ((self->mAngleX & 0x1fff) < 0x210 && self->mRollAngVel != 0) {
-        if (self->mSoundTimer == 0) {
-            Sound::PlayBank3(0x25, self->mCamSpacePos);
-            self->mSoundTimer = 14;
+    mAngleX += mRollAngVel;
+    if ((mAngleX & 0x1fff) < 0x210 && mRollAngVel != 0) {
+        if (mSoundTimer == 0) {
+            Sound::PlayBank3(0x25, mCamSpacePos);
+            mSoundTimer = 14;
         }
     } else {
-        DecIfAbove0_Short(&self->mSoundTimer);
+        DecIfAbove0_Short(&mSoundTimer);
     }
-    self->UpdateModelTransform();
+    UpdateModelTransform();
     {
-        int is66 = (self->actorID == 0x66);
+        int is66 = (actorID == 0x66);
         if (is66 != 0) {
-            if (self->IsClsnInRangeOnScreen(0, 0) != 0)
-                self->UpdateClsnPosAndRot();
+            if (IsClsnInRangeOnScreen(0, 0) != 0)
+                UpdateClsnPosAndRot();
         } else {
-            if (self->IsClsnInRange(0, 0) != 0)
-                self->UpdateClsnPosAndRot();
+            if (IsClsnInRange(0, 0) != 0)
+                UpdateClsnPosAndRot();
         }
     }
-    self->mHitByPlayer = 0;
+    mHitByPlayer = 0;
     return 1;
 }
 
@@ -223,22 +221,20 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
 /* ROM ordinal 5 -- func_ov080_021274ac, 0x021274ac, size 0xe0 */
 /* -------------------------------------------------------------------------- */
 int daObjMaruta_c::func_ov080_021274ac(ResourceDescriptor *arg) {
-    daObjMaruta_c *self = this;
     struct Vector3 d;
-    self->mModel.SetFile(dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
-    self->UpdateModelTransform();
-    self->UpdateClsnPosAndRot();
-    self->mMeshCollider.SetFile(dBgW_Kc::LoadFile(*arg->collision), self->mClsnMat, 0x1000,
-                                self->mAngleY, *(arg->clps));
-    self->mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
-    self->mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
-    self->mRestPosX = self->mPosX;
-    self->mRestPosY = self->mPosY;
-    self->mRestPosZ = self->mPosZ;
-    Vec3_Sub(&d, &self->mPos, (Vector3 *)&self->mRestPosX);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
+    UpdateModelTransform();
+    UpdateClsnPosAndRot();
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*arg->collision), mClsnMat, 0x1000, mAngleY,
+                          *(arg->clps));
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
+    mRestPosX = mPosX;
+    mRestPosY = mPosY;
+    mRestPosZ = mPosZ;
+    Vec3_Sub(&d, &mPos, (Vector3 *)&mRestPosX);
     VEC_Mag(&d);
-    self->mPathAngDiff =
-        AngleDiff(Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mRestPosX), self->mAngleY);
+    mPathAngDiff = AngleDiff(Vec3_HorzAngle(&mPos, (Vector3 *)&mRestPosX), mAngleY);
     return 1;
 }
 
