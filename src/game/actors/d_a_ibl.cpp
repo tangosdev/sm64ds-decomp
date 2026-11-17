@@ -178,7 +178,7 @@ void daIbl_c::CheckContact() {
             Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
             PoofDust();
             MarkForDestruction();
-            func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
             return;
         }
         Sound::PlayBank0(daIbl_SND_HIT_NOT_BROKEN, mCamSpacePos);
@@ -393,7 +393,7 @@ void daIbl_c::PathBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -422,7 +422,7 @@ void daIbl_c::PathBehavior() {
             mRollSoundHandle = 0;
         } else if (mWithMeshClsn.IsOnGround() != 0) {
             if (mWithMeshClsn.JustHitGround() != 0) {
-                func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+                func_02012694(daIbl_SND_LAND, &mCamSpacePos);
                 LandingDust(1);
                 if (vy < -0x14000)
                     mVertSpeed = (int)(-vy + ((u32)-vy >> 31)) >> 1;
@@ -469,7 +469,7 @@ void daIbl_c::RollOffBehavior() {
             return;
 
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -478,7 +478,7 @@ void daIbl_c::RollOffBehavior() {
 
     if (mPosY < mKillY || mHitWall != 0) {
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         TriplePoofDust();
         MarkForDestruction();
         return;
@@ -492,7 +492,7 @@ void daIbl_c::RollOffBehavior() {
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_LAND, &mCamSpacePos);
             LandingDust(1);
 
             if (mVertSpeed < -0x8000)
@@ -542,7 +542,7 @@ void daIbl_c::FreeRollBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -569,7 +569,7 @@ void daIbl_c::FreeRollBehavior() {
         }
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_LAND, &mCamSpacePos);
             LandingDust(1);
         } else {
             mRollSoundHandle =

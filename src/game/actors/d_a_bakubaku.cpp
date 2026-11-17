@@ -559,13 +559,13 @@ void daBakubaku_c::HandleCylinderHit() {
                 SpawnMegaCharParticles(*f, 0);
                 PoofDust();
                 f->IncMegaKillCount();
-                func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
+                func_02012694(0x1e, &mCamSpacePos);
                 KillAndTrackInDeathTable();
                 return;
             }
             if (mMouthOpen != 0) {
                 if (func_ov002_020c5cd8(f, this) == 1) {
-                    func_02012694(0xf6, (const Vector3 *)(&mCamSpacePosX));
+                    func_02012694(0xf6, &mCamSpacePos);
                     return;
                 }
             }
