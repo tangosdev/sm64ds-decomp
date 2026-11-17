@@ -3007,13 +3007,9 @@ block_39:
                     if (mBooFlags.groundSeen != 0) {
                         if ((rc2.DetectClsn() == 0) ||
                             ((mPosY - rc2.clsnY) > 0x12c000)) {
-                            mPosX = mLastGroundPosX;
-                            mPosY = mLastGroundPosY;
-                            mPosZ = mLastGroundPosZ;
+                            mPos = mLastGroundPos;
                         } else {
-                            mLastGroundPosX = mPosX;
-                            mLastGroundPosY = mPosY;
-                            mLastGroundPosZ = mPosZ;
+                            mLastGroundPos = mPos;
                         }
                     } else {
                         goto ray_e;
@@ -3027,9 +3023,7 @@ block_39:
                     ((mPosY - rc2.clsnY) < 0x12c000)) {
                     fp = (u16 *)&this->mBooFlags;
                     *fp = (*fp) | TRS_FLAG_GROUND_SEEN;
-                    mLastGroundPosX = mPosX;
-                    mLastGroundPosY = mPosY;
-                    mLastGroundPosZ = mPosZ;
+                    mLastGroundPos = mPos;
                 }
             }
             UpdateWMClsn(mWithMeshClsn, 0);
