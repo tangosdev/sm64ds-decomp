@@ -117,7 +117,7 @@ extern void func_ov007_020c5a6c(Ov007Picker *, VecFx32 *, int);
 extern "C" void func_ov007_020c5c14(Ov007Picker *picker, VecFx32 *out);
 extern "C" int func_ov007_020c5d5c(void *o);
 extern "C" int func_ov007_020c5db0(void *p);
-extern void func_ov007_020c5dec(Ov007Picker *c);
+extern "C" void func_ov007_020c5dec(Ov007Picker *c);
 extern "C" void func_ov007_020c5ef0(void *o);
 extern "C" int func_ov007_020c8f98(void *p);
 extern "C" void func_ov007_020c9080(void *);
