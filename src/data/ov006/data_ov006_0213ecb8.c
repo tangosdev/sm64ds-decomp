@@ -9,19 +9,14 @@
  */
 #include "types.h"
 
-extern struct OamAttr * sMgTextSpritesEnglish[];
-extern struct OamAttr * sMgTextSpritesFrench[];
-extern struct OamAttr * sMgTextSpritesGerman[];
-extern struct OamAttr * sMgTextSpritesItalian[];
-extern struct OamAttr * sMgTextSpritesSpanish[];
+extern struct OamAttr *sMgTextSpritesEnglish[];
+extern struct OamAttr *sMgTextSpritesFrench[];
+extern struct OamAttr *sMgTextSpritesGerman[];
+extern struct OamAttr *sMgTextSpritesItalian[];
+extern struct OamAttr *sMgTextSpritesSpanish[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
-struct OamAttr ** sSmartballTextSpritesByLanguage[5] = {
-    (struct OamAttr **)&sMgTextSpritesEnglish,
-    (struct OamAttr **)&sMgTextSpritesSpanish,
-    (struct OamAttr **)&sMgTextSpritesFrench,
-    (struct OamAttr **)&sMgTextSpritesGerman,
+struct OamAttr **sSmartballTextSpritesByLanguage[5] = {
+    (struct OamAttr **)&sMgTextSpritesEnglish, (struct OamAttr **)&sMgTextSpritesSpanish,
+    (struct OamAttr **)&sMgTextSpritesFrench,  (struct OamAttr **)&sMgTextSpritesGerman,
     (struct OamAttr **)&sMgTextSpritesItalian,
 };
-#pragma section obj end

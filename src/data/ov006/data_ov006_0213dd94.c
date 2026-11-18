@@ -9,12 +9,9 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 u32 sPanelScrambleWidths[4] = {
     0x06060606,
     0x06060606,
     0x06060606,
     0x00060606,
 };
-#pragma section obj end

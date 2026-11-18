@@ -11,8 +11,6 @@
 
 extern u8 _ZTI19dScMgSingle3DBase_c[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 int sSingle3DCommonNcgByLanguage[7] = {
     0x000000c2,
     0x000000c4,
@@ -22,4 +20,3 @@ int sSingle3DCommonNcgByLanguage[7] = {
     0x00000000,
     (int)&_ZTI19dScMgSingle3DBase_c,
 };
-#pragma section obj end

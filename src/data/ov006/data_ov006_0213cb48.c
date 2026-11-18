@@ -9,7 +9,4 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 int sJumpLastPick = 0xffffffff;
-#pragma section obj end

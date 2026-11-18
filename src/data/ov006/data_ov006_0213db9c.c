@@ -17,9 +17,7 @@ extern int data_ov006_0212ec20[];
 extern int data_ov006_0212ec28[];
 extern int data_ov006_0212ec38[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
-int * sPachinko2PaddleGatherTargets[8] = {
+int *sPachinko2PaddleGatherTargets[8] = {
     (int *)&data_ov006_0212ec28,
     (int *)&data_ov006_0212ec20,
     (int *)&data_ov006_0212ec18,
@@ -29,4 +27,3 @@ int * sPachinko2PaddleGatherTargets[8] = {
     0,
     (int *)&_ZTI16dScMgPachinko2_c,
 };
-#pragma section obj end

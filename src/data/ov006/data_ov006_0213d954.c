@@ -9,9 +9,6 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 unsigned short sPachinkoPopScores[6] = {
     0x0064, 0x00c8, 0x0190, 0x0320, 0x0640, 0x0c80,
 };
-#pragma section obj end

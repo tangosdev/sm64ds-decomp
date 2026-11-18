@@ -13,11 +13,8 @@ extern u32 data_ov006_0213d384[];
 extern u32 data_ov006_0213d3c4[];
 extern u32 data_ov006_0213d40c[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
-unsigned short * sMemory2CardPositionsPerDifficulty[3] = {
+unsigned short *sMemory2CardPositionsPerDifficulty[3] = {
     (unsigned short *)&data_ov006_0213d384,
     (unsigned short *)&data_ov006_0213d3c4,
     (unsigned short *)&data_ov006_0213d40c,
 };
-#pragma section obj end

@@ -5,15 +5,22 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
-extern struct OamAttr * sMgTextSpritesSpanish[];
-extern struct OamAttr * sMgTextSpritesItalian[];
-extern struct OamAttr * sMgTextSpritesGerman[];
-extern struct OamAttr * sMgTextSpritesFrench[];
-extern struct OamAttr * sMgTextSpritesEnglish[];
-void ** sRouletteTextSpritesByLanguage[12] = {
-    (void **)&sMgTextSpritesEnglish, (void **)&sMgTextSpritesSpanish, (void **)&sMgTextSpritesFrench, (void **)&sMgTextSpritesGerman, (void **)&sMgTextSpritesItalian, (void **)0x1fff0aaa, (void **)0x4aaa3554, (void **)0x75545fff,
-    (void **)0x9fff8aaa, (void **)0xcaaab554, (void **)0xf554dfff, (void **)0x00000000,
+extern struct OamAttr *sMgTextSpritesSpanish[];
+extern struct OamAttr *sMgTextSpritesItalian[];
+extern struct OamAttr *sMgTextSpritesGerman[];
+extern struct OamAttr *sMgTextSpritesFrench[];
+extern struct OamAttr *sMgTextSpritesEnglish[];
+void **sRouletteTextSpritesByLanguage[12] = {
+    (void **)&sMgTextSpritesEnglish,
+    (void **)&sMgTextSpritesSpanish,
+    (void **)&sMgTextSpritesFrench,
+    (void **)&sMgTextSpritesGerman,
+    (void **)&sMgTextSpritesItalian,
+    (void **)0x1fff0aaa,
+    (void **)0x4aaa3554,
+    (void **)0x75545fff,
+    (void **)0x9fff8aaa,
+    (void **)0xcaaab554,
+    (void **)0xf554dfff,
+    (void **)0x00000000,
 };
-#pragma section obj end

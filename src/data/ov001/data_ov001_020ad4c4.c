@@ -3,8 +3,6 @@
 
 extern u32 data_ov001_020ad49c[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 u32 data_ov001_020ad4c4[12] = {
     (u32)&data_ov001_020ad49c,
     0xffffffff,
@@ -19,4 +17,3 @@ u32 data_ov001_020ad4c4[12] = {
     0x00008000,
     0x00000000,
 };
-#pragma section obj end

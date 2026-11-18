@@ -24,23 +24,13 @@ extern struct OamAttr data_ov006_0213fe48[];
 extern struct OamAttr data_ov006_0213fe58[];
 extern struct OamAttr data_ov006_0213fe68[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
-void * sBscCardSprites[15] = {
-    (void *)&data_ov006_0213fda8,
-    (void *)&data_ov006_0213fe68,
-    (void *)&data_ov006_0213fdb8,
-    (void *)&data_ov006_0213fdc8,
-    (void *)&data_ov006_0213fdd8,
-    (void *)&data_ov006_0213fe48,
-    (void *)&data_ov006_0213fde8,
-    (void *)&data_ov006_0213fdf8,
-    (void *)&data_ov006_0213fe08,
-    (void *)&data_ov006_0213fe18,
-    (void *)&data_ov006_0213fe28,
-    (void *)&data_ov006_0213fe38,
-    (void *)&data_ov006_0213fe58,
-    0,
+void *sBscCardSprites[15] = {
+    (void *)&data_ov006_0213fda8, (void *)&data_ov006_0213fe68,
+    (void *)&data_ov006_0213fdb8, (void *)&data_ov006_0213fdc8,
+    (void *)&data_ov006_0213fdd8, (void *)&data_ov006_0213fe48,
+    (void *)&data_ov006_0213fde8, (void *)&data_ov006_0213fdf8,
+    (void *)&data_ov006_0213fe08, (void *)&data_ov006_0213fe18,
+    (void *)&data_ov006_0213fe28, (void *)&data_ov006_0213fe38,
+    (void *)&data_ov006_0213fe58, 0,
     (void *)&_ZTI10dScMgBSC_c,
 };
-#pragma section obj end

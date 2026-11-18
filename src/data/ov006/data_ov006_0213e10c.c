@@ -1,21 +1,7 @@
 /* Word table, 13 entries. */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 u32 data_ov006_0213e10c[13] = {
-    0x00600040,
-    0x00a00080,
-    0x004000c0,
-    0x00800060,
-    0x00c000a0,
-    0x00600040,
-    0x00a00080,
-    0x004000c0,
-    0x00800060,
-    0x00c000a0,
-    0x00600040,
-    0x00a00080,
-    0x000000c0,
+    0x00600040, 0x00a00080, 0x004000c0, 0x00800060, 0x00c000a0, 0x00600040, 0x00a00080,
+    0x004000c0, 0x00800060, 0x00c000a0, 0x00600040, 0x00a00080, 0x000000c0,
 };
-#pragma section obj end

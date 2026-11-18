@@ -5,11 +5,8 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".bss" ".bss" ".bss" far_data
-#pragma section obj begin
 struct {
     u8 data_ov006_02142050[2];
     u8 data_ov006_02142052;
     u8 data_ov006_02142053;
 } data_ov006_02142050;
-#pragma section obj end

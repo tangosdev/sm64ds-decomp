@@ -10,21 +10,14 @@
 #include "types.h"
 
 extern u8 _ZTI15dScMgHanachan_c[];
-extern struct OamAttr * sMgTextSpritesEnglish[];
-extern struct OamAttr * sMgTextSpritesFrench[];
-extern struct OamAttr * sMgTextSpritesGerman[];
-extern struct OamAttr * sMgTextSpritesItalian[];
-extern struct OamAttr * sMgTextSpritesSpanish[];
+extern struct OamAttr *sMgTextSpritesEnglish[];
+extern struct OamAttr *sMgTextSpritesFrench[];
+extern struct OamAttr *sMgTextSpritesGerman[];
+extern struct OamAttr *sMgTextSpritesItalian[];
+extern struct OamAttr *sMgTextSpritesSpanish[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
-void * sHanaTextSpritesByLanguage[7] = {
-    (void *)&sMgTextSpritesEnglish,
-    (void *)&sMgTextSpritesSpanish,
-    (void *)&sMgTextSpritesFrench,
-    (void *)&sMgTextSpritesGerman,
-    (void *)&sMgTextSpritesItalian,
-    0,
+void *sHanaTextSpritesByLanguage[7] = {
+    (void *)&sMgTextSpritesEnglish, (void *)&sMgTextSpritesSpanish, (void *)&sMgTextSpritesFrench,
+    (void *)&sMgTextSpritesGerman,  (void *)&sMgTextSpritesItalian, 0,
     (void *)&_ZTI15dScMgHanachan_c,
 };
-#pragma section obj end

@@ -11,8 +11,6 @@
 
 extern u8 _ZTI16dScMgSmartball_c[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 u32 sSmartballCellStartOrder[11] = {
     0x00000003,
     0x00000008,
@@ -26,4 +24,3 @@ u32 sSmartballCellStartOrder[11] = {
     0x00000000,
     (u32)&_ZTI16dScMgSmartball_c,
 };
-#pragma section obj end

@@ -12,8 +12,6 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 int sSmartballLay1Bg2NscPath[178] = {
     0x2f474d2f, 0x64325f64, 0x5f676d5f, 0x735f6762, 0x7472616d, 0x6c61625f, 0x616c5f6c, 0x5f313079,
     0x736e5f32, 0x69622e63, 0x0000006e, 0x2f474d2f, 0x64325f64, 0x5f676d5f, 0x725f6762, 0x6c757365,
@@ -39,4 +37,3 @@ int sSmartballLay1Bg2NscPath[178] = {
     0x69622e6c, 0x0000006e, 0x2f474d2f, 0x64325f64, 0x5f676d5f, 0x72616d73, 0x61625f74, 0x6e5f6c6c,
     0x622e6c63, 0x00006e69,
 };
-#pragma section obj end

@@ -9,9 +9,6 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 unsigned char sSlot1Payouts[8] = {
     0x0f, 0x0a, 0x0a, 0x05, 0x05, 0x14, 0x00, 0x00,
 };
-#pragma section obj end

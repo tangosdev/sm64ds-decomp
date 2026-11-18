@@ -5,7 +5,4 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".bss" ".bss" ".bss" far_data
-#pragma section obj begin
-void * data_ov006_021402fc;
-#pragma section obj end
+void *data_ov006_021402fc;

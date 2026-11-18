@@ -6,7 +6,4 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".bss" ".bss" ".bss" far_data
-#pragma section obj begin
 u32 data_ov001_020ad640;
-#pragma section obj end

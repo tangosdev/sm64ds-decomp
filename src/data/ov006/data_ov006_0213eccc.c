@@ -3,8 +3,6 @@
 
 extern u8 _ZTI24cMgSmartball_propeller_c[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 int sSmartballOptionNcgByLanguage[7] = {
     0x000000de,
     0x000000df,
@@ -14,4 +12,3 @@ int sSmartballOptionNcgByLanguage[7] = {
     0x00000000,
     (int)&_ZTI24cMgSmartball_propeller_c,
 };
-#pragma section obj end

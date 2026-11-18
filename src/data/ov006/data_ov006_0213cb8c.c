@@ -9,11 +9,8 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 int sJumpRenderScale[3] = {
     0x00002800,
     0x00002800,
     0x00001000,
 };
-#pragma section obj end

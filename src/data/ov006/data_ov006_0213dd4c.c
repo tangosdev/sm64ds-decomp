@@ -13,11 +13,8 @@ extern u32 data_ov006_0213df10[];
 extern u32 data_ov006_0213e10c[];
 extern u32 data_ov006_0213e1b4[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
-void * sPanelPuzzleXPerMode[3] = {
+void *sPanelPuzzleXPerMode[3] = {
     (void *)&data_ov006_0213df10,
     (void *)&data_ov006_0213e10c,
     (void *)&data_ov006_0213e1b4,
 };
-#pragma section obj end

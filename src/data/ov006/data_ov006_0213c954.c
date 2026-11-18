@@ -9,7 +9,4 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 int data_ov006_0213c954 = 0x0000000a;
-#pragma section obj end

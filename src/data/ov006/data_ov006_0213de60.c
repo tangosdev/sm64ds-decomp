@@ -1,15 +1,6 @@
 /* Word table, 7 entries. */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 u32 sPanelPuzzleSizes[7] = {
-    0x04040404,
-    0x05050504,
-    0x04040505,
-    0x05040404,
-    0x05050505,
-    0x05050404,
-    0x00000005,
+    0x04040404, 0x05050504, 0x04040505, 0x05040404, 0x05050505, 0x05050404, 0x00000005,
 };
-#pragma section obj end

@@ -9,13 +9,6 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 int sMemory2CardNcgByLanguage[5] = {
-    0x000000ba,
-    0x000000bc,
-    0x000000b7,
-    0x000000b8,
-    0x000000b9,
+    0x000000ba, 0x000000bc, 0x000000b7, 0x000000b8, 0x000000b9,
 };
-#pragma section obj end

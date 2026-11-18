@@ -9,11 +9,8 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 u32 sPanelFlipFrameSprites[3] = {
     0x01050403,
     0x02010000,
     0x00000304,
 };
-#pragma section obj end

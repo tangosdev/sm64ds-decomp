@@ -10,11 +10,8 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
-#pragma section obj begin
 u32 data_ov001_020ad49c[3] = {
     0x5f74616d,
     0x64616873,
     0x0000776f,
 };
-#pragma section obj end
