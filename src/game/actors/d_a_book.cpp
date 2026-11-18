@@ -769,39 +769,27 @@ int daBook_c::InitResources()
     mAngle.y += 0x8000;
     mUniformScale = 0x800;
 
-    {
-        do {
-            if (IsActorID(this, kShootBookActorId)) {
-                mKind = KIND_FLYING_BOOK;
-                mState = STATE_SPAWNED;
-                mCoinType = 0;
-                mdCcAcPos_c.vulnFlags |= 0x26fe0;
-                break;
-            }
-            {
-                if (IsActorID(this, kKillerBookActorId)) {
-                    mKind = KIND_FLYING_BOOK;
-                    mState = STATE_WAIT;
-                    mCoinType = 3;
-                    mdCcAcPos_c.vulnFlags |= 0x2efe0;
-                    break;
-                }
-            }
-            {
-                if (IsActorID(this, kBookSwitchActorId)) {
-                    mKind = KIND_SWITCH_BOOK;
-                    mState = STATE_SWITCH_WAIT;
-                    mCoinType = 0;
-                    mdCcAcPos_c.flags |= 4;
-                    mdCcAcPos_c.vulnFlags |= 0x3c0;
-                    mScale.x = 0x1000;
-                    mScale.y = 0x800;
-                    mScale.z = 0x800;
-                    break;
-                }
-            }
-            return 0;
-        } while (0);
+    if (IsActorID(this, kShootBookActorId)) {
+        mKind = KIND_FLYING_BOOK;
+        mState = STATE_SPAWNED;
+        mCoinType = 0;
+        mdCcAcPos_c.vulnFlags |= 0x26fe0;
+    } else if (IsActorID(this, kKillerBookActorId)) {
+        mKind = KIND_FLYING_BOOK;
+        mState = STATE_WAIT;
+        mCoinType = 3;
+        mdCcAcPos_c.vulnFlags |= 0x2efe0;
+    } else if (IsActorID(this, kBookSwitchActorId)) {
+        mKind = KIND_SWITCH_BOOK;
+        mState = STATE_SWITCH_WAIT;
+        mCoinType = 0;
+        mdCcAcPos_c.flags |= 4;
+        mdCcAcPos_c.vulnFlags |= 0x3c0;
+        mScale.x = 0x1000;
+        mScale.y = 0x800;
+        mScale.z = 0x800;
+    } else {
+        return 0;
     }
     return 1;
 }
@@ -826,7 +814,7 @@ s32 daBook_c::OnAimedAtWithEgg()
 /* KILLER_BOOK answers 2, the others 0. */
 s32 daBook_c::OnYoshiTryEat()
 {
-    unsigned int b = actorID==kKillerBookActorId; return b ? 2 : 0;
+    return IsActorID(this, kKillerBookActorId) ? 2 : 0;
 }
 
 daBook_c *daBook_c_classInit_BOOK_SWITCH() {

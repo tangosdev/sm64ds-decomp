@@ -727,18 +727,13 @@ int daTgz_c::Render()
 
 int daTgz_c::Behavior()
 {
-    int s = mState;
-    do {
-        if (s != 1 || mWithMeshClsn.IsOnGround()) {
-            s = mState;
-            if (s != 4 && s != 5 && IsTooFarAwayFromPlayer(0x5dc000)) {
-                if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
-                    MarkForDestruction();
-                    return 1;
-                }
-                break;
-            }
+    if ((mState != 1 || mWithMeshClsn.IsOnGround()) && mState != 4 && mState != 5 &&
+        IsTooFarAwayFromPlayer(0x5dc000)) {
+        if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
+            MarkForDestruction();
+            return 1;
         }
+    } else {
         this->func_ov077_02124c28();
         this->func_ov077_02125e20();
         MakeVanishLuigiWork(mdCcAc_c);
@@ -748,7 +743,7 @@ int daTgz_c::Behavior()
             func_02012694(0xc4, &mCamSpacePos);
             MarkForDestruction();
         }
-    } while (0);
+    }
     return 1;
 }
 

@@ -114,15 +114,9 @@ void daObjPowerUpItem_c::StateResting()
 {
     VecFx32 pos;
 
-    do {
-        if (param1 == FLOWER_PARAM_PERSISTENT) break;
-        if (DecIfAbove0_Byte(&mLifeTimer) != 0) break;
-        if (IsInYoshiMouth(this))
-            break;
-        if (IsBeingEaten(this))
-            break;
+    if (param1 != FLOWER_PARAM_PERSISTENT && DecIfAbove0_Byte(&mLifeTimer) == 0 &&
+        !IsInYoshiMouth(this) && !IsBeingEaten(this))
         MarkForDestruction();
-    } while (0);
 
     {
         int z = mPos.z;
