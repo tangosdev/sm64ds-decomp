@@ -291,6 +291,8 @@ void dScMgSlot3_c::StateJudge() {
     if (DecIfAbove0_Byte(&mStateTimer) != 0)
         return;
 
+    /* Kept (#821 r73): plain members without self and its barrier are
+       0x1c0 of 0x1b8 (104 words off). */
     self = (char *)this;
     for (column = 0; column < 3; column++) {
         int reelIndex;
@@ -580,6 +582,8 @@ void dScMgSlot3_c::StartRound(int mode) {
  * reel passes and the mResultSymbols reads in the marker scan; mReelStopped[i]
  * and the plain members take their real spellings. */
 s32 dScMgSlot3_c::Render() {
+    /* Kept (#821 r73): mReelPos[i2] / mReelWinPos[i2] for the two
+       c-based reads is 0x65c of 0x668. */
     char *c = (char *)this;
     int i;
 

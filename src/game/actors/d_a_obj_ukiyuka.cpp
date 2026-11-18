@@ -8,7 +8,8 @@
  *
  * Notes:
  * - mBobPhase is stepped through a u16 pun, *(u16 *)&mBobPhase; the plain
- *   s16 member step differs by one word.
+ *   s16 member step differs by one word. Measured (#821 r68): a u16 member
+ *   steps right but turns the later (s64) read's ldrsh into ldrh.
  * - The (s64) cast on mBobPhase before the u16 table index is load-bearing;
  *   the plain (u16) read is two instructions shorter.
  * - FX_SinIdx reads the sine table, which keeps its arm9 linker name,

@@ -258,6 +258,7 @@ int daBombking_c::TickWalkHome() {
     daPly_c *p = this->ClosestPlayer();
     if (p != 0) {
         /* A Vector3 copy of p->mPos is memberwise: 0x124 -> 0x12c. */
+        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 v = *(VecFx32 *)&p->mPos;
         if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&v) < 0x640000) {
             if (this->mArenaPos.y - 0x64000 < v.y) {
@@ -683,6 +684,8 @@ int daBombking_c::TickReturnHome() {
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
+            /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
+            /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
             VecFx32 D = *(VecFx32 *)&pl->mPos;
             if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&D) > 0x640000 ||
                 this->mArenaPos.y - 0x64000 > D.y) {
@@ -863,6 +866,7 @@ int daBombking_c::TickHeldByPlayer() {
         }
         {
             /* A Vector3 copy of obj->mPos is memberwise: 0x1a8 -> 0x1b0. */
+            /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
             VecFx32 copy = *(VecFx32 *)&obj->mPos;
             if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&copy) > 0x640000)
                 goto drop;
@@ -1239,6 +1243,8 @@ int daBombking_c::TickInactive() {
 
     player = this->ClosestPlayer();
     if (player != 0) {
+        /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
+        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 ppos = *(VecFx32 *)&player->mPos;
 
         if (this->mIntroTalked == 0) {

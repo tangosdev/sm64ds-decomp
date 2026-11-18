@@ -120,16 +120,6 @@ extern OwlState data_ov094_02136b50;
 extern OwlState data_ov094_02136b60;
 extern OwlState data_ov094_02136b70;
 
-/* UpdateHover's scratch: v[0..2] is the forward step it rotates into the
-   speed, v[3..5] three zero words nothing reads. Measured (#821 r49):
-   Vector3 fwd(0, 0, 0x5000) alone is 0x230 of 0x23c; adding an unused
-   Vector3(0, 0, 0) after it matches, so the second word triple is a dead
-   12-byte object, not yet identified. */
-struct V6 {
-    int v[6];
-};
-typedef char V6_size_must_be_0x18[sizeof(V6) == 0x18 ? 1 : -1];
-
 enum {
     ACTOR_PLAYER = 0xbf,
     OPACITY_MAX = 0x1f,
@@ -323,8 +313,6 @@ int daOwl_c::EnterCarrying() {
  * back toward it, else it picks a random heading and duration. It bobs on a
  * sine table around the anchor's height and moves along its heading. */
 int daOwl_c::UpdateHover() {
-    V6 buf;
-
     if (mTalkState == TALK_IDLE) {
         if (ClosestPlayer() != 0) {
             daPly_c *player = mTalkTarget;
@@ -354,18 +342,16 @@ int daOwl_c::UpdateHover() {
     ApproachAngle(&mPrevAngle.y, mWanderAngleY, 0xa, 0x200, 0x100);
     ApproachAngle(&mPrevAngle.x, 0, 0xa, 0x200, 0x100);
 
-    buf.v[0] = 0;
-    buf.v[1] = 0;
-    buf.v[2] = 0x5000;
-    buf.v[3] = 0;
-    buf.v[4] = 0;
-    buf.v[5] = 0;
+    /* The forward step rotated into the speed, and a zero vector nothing
+       reads. Without it the function is 0x230 of 0x23c (#821 r49). */
+    Vector3 step(0, 0, 0x5000);
+    Vector3 unused(0, 0, 0);
 
     unk_3e8 += 0x200;
     ApproachLinear(mPos.y, mAnchor.y + FX_MUL(FX_SinIdx((u16)(s16)unk_3e8 >> 4), 0x64000), 0x3000);
 
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-    MTX_MultVec43((Vector3 *)&buf, &data_020a0e68, &mSpeed);
+    MTX_MultVec43(&step, &data_020a0e68, &mSpeed);
     return 1;
 }
 
@@ -387,6 +373,7 @@ int daOwl_c::UpdateTalk() {
         ChangeState(OWL_STATE_HOVER);
         return 1;
     }
+    /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
     VecFx32 v = *(VecFx32 *)&mTalkTarget->mPos;
     Vector3 w;
     w.x = v.x;

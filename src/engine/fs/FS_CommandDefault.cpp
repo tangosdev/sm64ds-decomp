@@ -26,7 +26,10 @@ extern "C" {
 
 /* FSDirPos as its three words. The SDK's file is C, where an FSDirPos
  * assignment is a block move (ldm/stm); in C++ the same assignment copies
- * member by member, so the copies go through this view. */
+ * member by member, so the copies go through this view.
+ * Kept (#821 r71): built as C, every copy here is a plain struct assignment,
+ * but FSi_ReadTable then matches only with the SDK's `volatile` archive
+ * pointer in FSi_IsArchiveSync (0xa8/0xb0 without it, against 0xbc). */
 typedef struct FSDirPosWords {
     u32 w[3];
 } FSDirPosWords;

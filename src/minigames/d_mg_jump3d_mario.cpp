@@ -487,7 +487,7 @@ void dMgJump3DMario_c::EnterHold()
 {
     Vector3 v;
 
-    Vec3_Sub(&v, (const Vector3 *)&mPos, (const Vector3 *)&mAnchor);
+    Vec3_Sub(&v, &mPos, &mAnchor);
     if (NormalizeVec3IfNonZero(&v) != 0) {
         mVel.x = v.x;
         mVel.y = v.y;

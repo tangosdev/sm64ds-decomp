@@ -6035,7 +6035,7 @@
     },
     "arm9:0x0203af34": {
       "author": "tangosdev",
-      "name": "_Z15ApproachLinear2Riii"
+      "name": "_Z15ApproachLinear2Rhii"
     },
     "arm9:0x0203af90": {
       "author": "tangosdev",

@@ -1001,6 +1001,9 @@ int daHanachan_c::Behavior()
 
 int daHanachan_c::InitResources()
 {
+    /* Kept (#821 r73): every row as mSegmentPos[i] / mSegmentRot[i] /
+       mSegmentScale[i] / mTextureSequences[i] / mSegmentRot[prev] is 0x468
+       but 42 words off: the strength-reduced rows rank below segPos. */
     char *c = (char *)this;
     s32 i;
     dExtAnmModel_c *animRow;

@@ -172,7 +172,7 @@ extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;
-extern SharedFilePtr data_ov084_0213089c;
+extern BMA_File data_ov084_0213089c;
 extern KrbAnimationFileHandle data_ov084_02130cc8;
 extern KuriKingModelFilePtr gKurikingModelModelFile;
 extern KuriKingTexSeqFilePtr gKurikingAngerTextureSequenceFile;
@@ -1343,6 +1343,9 @@ void daKuriKing_c::UpdateShadows() {
      * register, where the ROM copies through the this-based one); keeping m
      * as a Matrix4x3 * walk with the rest indexed grows it by 0x10 bytes. */
     mtx = IDENTITY_MATRIX4X3;
+    /* Kept (#821 r73): src as mCylClsnPos[i] is 10 words off (its induction
+       register ranks last), as a Vector3 * walk 3 (no 0x3ac displacement);
+       self as mShadowMatrices[i] grows the body to 0x16c. */
     self = (char *)this;
     src = (char *)this;
     m = (char *)mShadowMatrices;
@@ -1787,10 +1790,9 @@ int daKuriKing_c::InitVanishResources() {
     if (this->mShadowModels[0].InitCylinder() == 0)
         return 0;
 
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr,
-                               *(BMA_File *)&data_ov084_0213089c);
+    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr, data_ov084_0213089c);
 
-    this->mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
+    this->mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
     this->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc8.filePtr, 0, 0x1000, 0);
 
