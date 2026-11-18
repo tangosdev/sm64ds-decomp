@@ -10045,7 +10045,7 @@ int daPly_c::St_OnWall_Main() {
         ApproachLinear(mAngle.y, (s16)a, 0x800);
         mPrevAngle.y = a;
         mHorzSpeed = func_ov002_020bf224(0xa000, 0x2000);
-        ((BgChEvt *)(char *)&mMeshClsn)->func_ov002_020eee3c((char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eee3c(this);
     } else {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             int ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
@@ -14418,15 +14418,14 @@ void daPly_c::func_ov002_020d8a50(int which) {
     if (!model->WillHitFrame(data_ov002_0210a5cc[i2]))
         return;
 
-    /* func_ov002_020ef070/020eeeb8 (d_bg_actor.cpp) take the mover as char *. */
     switch (which) {
     case 0:
     case 1:
-        ((BgChEvt *)&mMeshClsn)->func_ov002_020ef070((char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020ef070(this);
         break;
     case 2:
     case 3:
-        ((BgChEvt *)&mMeshClsn)->func_ov002_020eeeb8((char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eeeb8(this);
         break;
     }
 
