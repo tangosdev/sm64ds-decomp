@@ -20,7 +20,10 @@ typedef struct Matrix3x3 {
 } Matrix3x3;
 
 /* See include/common.h: this type has a second, flat spelling there. Same 0x30
- * bytes; whichever a translation unit sees first stands. */
+ * bytes; whichever a translation unit sees first stands. The Vector3 member
+ * gives this spelling an implicit destructor the cartridge's Matrix4x3 does
+ * not have (common.h records the evidence), so a TU that sees it emits
+ * _ZN9Matrix4x3D1Ev and its manifest licenses that copy deadstrip. */
 #ifndef MATRIX4X3_DEFINED
 #define MATRIX4X3_DEFINED
 typedef struct Matrix4x3 {

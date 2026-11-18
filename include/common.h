@@ -11,7 +11,14 @@
  * wants `m[i]`, the model headers want `.r`/`.t` -- so neither can simply win.
  * Whichever is seen FIRST in a translation unit stands, and the other stands
  * down. Without this a TU that reaches both fails outright, which is what blocked
- * typing dExtSimpleModel_c/dExtAnmModel_c members into the actor headers. */
+ * typing dExtSimpleModel_c/dExtAnmModel_c members into the actor headers.
+ *
+ * No destructor, unlike Vector3: the cartridge shows this type trivially
+ * destructible. daPiano_c's and daObjCvNewsLift_c's destructors leave their
+ * Matrix4x3 arrays alone (an empty ~Matrix4x3() adds a __cxa_vec_cleanup and
+ * 0x18 bytes to each), and __sinit_d_mg3d_esp_anim_set.cpp registers no
+ * destructor for its static one. _ZN9Matrix4x3D1Ev has no ROM home; the TUs
+ * that emit it see math/Matrix.h's spelling and license it deadstrip. */
 #ifndef MATRIX4X3_DEFINED
 #define MATRIX4X3_DEFINED
 struct Matrix4x3 { s32 m[12]; };
