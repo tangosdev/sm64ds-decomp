@@ -161,6 +161,10 @@ u8 OAM::GetObjWidth(int shape, int sizeBits)
  * Render and Reset; optimization_level 2 file-wide breaks three functions,
  * level 3 leaves this one at 0x688. */
 #pragma opt_propagation off
+/* Kept (#821 r79): with loop invariants on, mtxIdx declared in the matrix block is 0x690 but 16
+   words off (the sin/cos/mtx spill slots trade places with halfW/halfH); four declaration
+   orders and scoped halfW/halfH stay there, all three indices scoped is 0x688, mtxIdx at the
+   loop top or inline 0x698. */
 #pragma opt_loop_invariants off
 
 void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palette, int priority,
