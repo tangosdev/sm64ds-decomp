@@ -490,7 +490,7 @@ void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
  * the repo's Vector3 declares an empty destructor, and a real Vector3 global
  * would make __sinit register it with __register_global_object, growing the
  * initializer past its retail 0xa4. */
-VecFx32 data_ov002_0210af00 = { 0x2000, 0x2000, 0x2000 };
+VecFx32 data_ov002_0210af00 = {0x2000, 0x2000, 0x2000};
 
 /* The state names sit in 8-byte slots ahead of the pointer-to-member
  * descriptors. */
