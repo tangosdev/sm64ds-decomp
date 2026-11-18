@@ -303,7 +303,9 @@ int dMeter_c::InitResources() {
                what keeps the stores apart; a `volatile` qualifier on it
                changes nothing. */
             /* Kept (#821 r76): no block-copy or type lever (r72-r75) applies to this scalar pin;
-               the measurements above stand. */
+               the measurements above stand.
+               Kept (#821 r80): getter tried -> a setter on this arm, the else arm or all
+               three lets the stores merge, 0x740 of 0x750. */
             *(u16 *)&mVsTimer = 30;
         else
             mVsTimer = 30;

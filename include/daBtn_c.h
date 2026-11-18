@@ -152,6 +152,9 @@ struct daBtn_c : dEnemyBase_c {
 
     virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 
+    /* mState; defined inline in d_a_btn.cpp, where the hit handler saves it. */
+    s32 GetState() const;
+
     int Behavior();
     int CleanupResources();
     int InitResources();

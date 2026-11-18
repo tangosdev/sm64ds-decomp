@@ -23,7 +23,8 @@
  *   to the stack and loads it back before the call; plain locals fold it,
  *   and by-value, const-reference and the SDK's two-level inline wrappers
  *   do not reproduce the spill either (#821, measured on func_0201cd08:
- *   0xf0 / 0xfc against 0x108).
+ *   0xf0 / 0xfc against 0x108). Kept (#821 r80): getter tried -> a fill-value
+ *   accessor taking the local by reference or pointer is 0xf0 too.
  * - IsStarCollected and Message::DisplayText stay local externs. The header
  *   spellings take s8 / u16 and those parameters emit a narrow the ROM does
  *   not have. DisplayText must see this untruncated.

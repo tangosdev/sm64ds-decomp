@@ -1607,6 +1607,15 @@ int daBtn_c::func_ov079_02123a8c()
     return 0;
 }
 
+/* The saves below read mState through this accessor, so it is loaded again
+   after the state test, as on the cartridge. Measured: a plain read at either
+   save is 0x284 of 0x288 and at both 0x280 (r20: reordered saves, casts,
+   `this->` and the negated test chain are all 0x280; r17: the three saves
+   as an inline helper 0x280, the state test as a predicate 0x298/0x2d0). */
+inline s32 daBtn_c::GetState() const {
+    return mState;
+}
+
 /* A hit from `other`, judged by where it stood a frame ago (pulled back
    0x50 along its heading) against the body's facing. From the front (within
    0x3c00) the body wobbles (state 10); from behind (beyond 0x4400) it drops
@@ -1645,23 +1654,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
-            /* Both reads are measured. A plain mState read here or at the
-               second site below shrinks the function 0x288 -> 0x284; plain
-               reads at both sites give 0x280. Re-measured (#821 r17): the
-               three saves as an inline helper (pointer or reference) are
-               still 0x280; the state test as an inline predicate is 0x298
-               (if chain) or 0x2d0 (switch). Re-measured (#821 r20), plain
-               reads at both sites: storing mResumeState after the other two
-               saves keeps the reload but leaves 16 of 162 words wrong; the
-               outer test on the r1 local, a (u32) or (s32)(u32) cast,
-               `this->` spelling, an empty `== 0xa` arm and the negated
-               `!=` chain are all 0x280. The pointer cast is what
-               matters, not a qualifier: a `volatile s32 *` cast builds the
-               same object. */
-            /* Kept (#821 r76): mState and mResumeState are both s32; the cast is a reload pin, and
-               no block-copy or type lever (r72-r75) applies to this scalar pin (r20: plain is
-               0x280). */
-            mResumeState = *(s32 *)&mState;
+            mResumeState = GetState();
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
@@ -1684,9 +1677,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
-            /* Kept (#821 r76): the same reload pin as above; no block-copy or type lever (r72-r75)
-               applies to this scalar pin. */
-            mResumeState = *(s32 *)&mState;
+            mResumeState = GetState();
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }

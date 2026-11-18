@@ -32,6 +32,12 @@ struct dScMgBase_c : dScene_c {
         Memory::Deallocate(ptr, data_020a0eac);
     }
 
+    /* param1, the spawn word; defined inline in d_s_mg_base.cpp. */
+    u32 GetParam1() const;
+    /* mLevel; defined inline in d_s_mg_hanachan_methods.cpp, the one TU
+       that reads it through the accessor. */
+    u32 GetLevel() const;
+
     /* --- overrides of dScene_c's own virtuals, same signature, in _ZTV order.
            1, 2, 5, 7, 10 re-override slots dScene_c already gave a body;
            6, 9, 12 are the first override below fBase_c's own default. --- */
