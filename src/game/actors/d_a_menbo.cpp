@@ -171,7 +171,9 @@ void daMenbo_c::func_ov090_021310b4() {
     /* Measured (#821 r68): a plain `flags = mdCcAcPos_c.hitFlags` (int or u32
        local, either declaration order) swaps r4/r5 through the function. */
     /* Kept (#821 r76): a register-order pin; no block-copy or type lever (r72-r75) applies to this
-       scalar pin. */
+       scalar pin.
+       Kept (#821 r80): getter tried -> a hit-flags accessor, int or u32, is 0x2c4 with r4/r5
+       swapped (26 words). */
     flags = (int)((long long)*(int *)&mdCcAcPos_c.hitFlags);
 
     if (flags & 0x2400) {
