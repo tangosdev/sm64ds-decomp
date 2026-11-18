@@ -97,6 +97,6 @@ void func_ov007_020c94e4(void) {
  * every caller passes it. */
 int func_ov007_020c94a0(int unused, unsigned int messageIndex) {
     unsigned short entryStrideBits = data_ov007_02104c1c->entryStrideBits;
-    unsigned int entryBitOffset = (unsigned int)(entryStrideBits * (messageIndex & 0xffff));
+    unsigned int entryBitOffset = entryStrideBits * (messageIndex & 0xffff);
     return (int)(data_ov007_02104c24 + *(int *)(data_ov007_02104c18 + (entryBitOffset >> 3)));
 }

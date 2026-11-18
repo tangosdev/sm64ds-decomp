@@ -511,10 +511,10 @@ int fBase_c::Virtual34(u32 a, u32 b)
             int res = OnHeapCreated();
             u32 okA;
             if (flagA != 0) {
-                okA = (u32)res;
+                okA = res;
             } else {
                 void *allocRes = Memory::Allocate(0x10, 4, 0);
-                okA = (allocRes != 0) ? (u32)res : 0;
+                okA = (allocRes != 0) ? res : 0;
             }
             Heap::RestoreFromTemporary();
             if (okA == 0) {
@@ -538,7 +538,7 @@ int fBase_c::Virtual34(u32 a, u32 b)
         u32 flagB = (u32)((Heap *)h)->heapStart & 0x10;
         if (flagB != 0)
             Memory::Allocate(0x10, 4, 0);
-        a = (u32)OnHeapCreated();
+        a = OnHeapCreated();
         if (flagB == 0) {
             void *allocRes2 = Memory::Allocate(0x10, 4, 0);
             if (allocRes2 == 0)
@@ -568,7 +568,7 @@ int fBase_c::Virtual34(u32 a, u32 b)
                 ((Heap *)h)->_Destroy();
                 h = 0;
                 int res3 = OnHeapCreated();
-                u32 okC = (u32)res3;
+                u32 okC = res3;
                 Heap::RestoreFromTemporary();
                 if (okC == 0) {
                     ((Heap *)h2)->_Destroy();
