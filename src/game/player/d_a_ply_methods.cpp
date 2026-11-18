@@ -1427,7 +1427,8 @@ extern "C" void func_ov002_020bcdf0(daPly_c *player) {
             anim = &static_cast<dExtFrameCtrl_c &>(
                 *player->mModels.mBodyModels[player->GetBodyModelID(player->param1 & 0xff, 0)]);
             frame = (unsigned int)(anim->currFrame << 4) >> 0x10;
-            // a spawn flag grows the function 0x27c -> 0x288
+            // a spawn flag grows the function 0x27c -> 0x288. Kept (#821 r93): the
+            // frame test folded into one `(0xbb && frame >= 0x1e) || 0xbc` is 0x278.
             if (frame >= 0x1e)
                 goto particle;
         }
@@ -2337,6 +2338,9 @@ int daPly_c::IsAnim(unsigned int a) {
   BCA_File *v = (BCA_File *)p->filePtr;
   unsigned int id = this->GetBodyModelID(ip&0xff, 0);
   dExtAnmModel_c *model = mModels.mBodyModels[id];
+  /* Kept (#821 r93): the ROM materializes the compare twice. `return model->file == v;`
+     and if/return forms are 0x54 of 0x60; a file-local int predicate on the compare,
+     returned `!= 0`, matches, but no name in the tree or the ROM backs one. */
   int matches = (model->file == v);
   return matches ? 1 : 0;
 }
@@ -3990,18 +3994,14 @@ void daPly_c::func_ov002_020c2b08() {
 
         mIsInShallowWater = 1;
 
-        if (mWaterRunTimer != 0) {
-            if (mHorzSpeed >= 0x1000)
-                goto big_block;
+        if (mWaterRunTimer == 0 || mHorzSpeed < 0x1000) {
+            mWaterRunTimer = 0;
+            mPos.y += mModelOffsetY;
+            if (mPos.y < mGroundY)
+                mPos.y = mGroundY;
+            return;
         }
 
-        mWaterRunTimer = 0;
-        mPos.y += mModelOffsetY;
-        if (mPos.y < mGroundY)
-            mPos.y = mGroundY;
-        return;
-
-    big_block: {
         int limit2 = c->ScaleByCharFactor(0x28000);
 
         if (mHorzSpeed < limit2) {
@@ -4037,7 +4037,6 @@ void daPly_c::func_ov002_020c2b08() {
             }
         }
         return;
-    }
 
     clear_timer:
         mWaterRunTimer = 0;
@@ -16481,7 +16480,9 @@ extern "C" {
 int func_ov002_020dd8b8(daPly_c *player) {
     if (!player->IsState(data_ov002_021105a4))
         return 0;
-    return player->mStateStep == 0 ? 1 : 0;
+    if (player->mStateStep == 0)
+        return 1;
+    return 0;
 }
 }
 
@@ -17179,7 +17180,9 @@ int daPly_c::IsInsideOfCannon() {
 
     if (!this->IsState(data_ov002_021102d4))
         return 0;
-    return mStateStep != 2 ? 1 : 0;
+    if (mStateStep != 2)
+        return 1;
+    return 0;
 }
 
 extern "C" {
@@ -17190,7 +17193,9 @@ int daPly_c::IsBeingShotOutOfCannon() {
 
     if (!this->IsState(data_ov002_021102d4))
         return 0;
-    return mStateStep == 2 ? 1 : 0;
+    if (mStateStep == 2)
+        return 1;
+    return 0;
 }
 
 extern "C" {
