@@ -145,10 +145,13 @@ int SaveData::SaveCurrentFile() {
     return SaveData::SaveMinigames(&data_0209caa0.mg);
 }
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 int SaveData::CanPlayerHaveCap() {
     if (data_0209caa0.file.mCharacter != 3) {
-        int b = (int)(gGameMode == 1);
-        if (b == 0)
+        if (!IsVsMode())
             return 1;
     }
     return 0;
