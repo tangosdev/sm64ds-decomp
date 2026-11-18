@@ -23153,7 +23153,7 @@ matched: yes</title></rect><rect x="892.67" y="349.99" width="23.08" height="9.9
 module: ov006
 addr: 0x020eb610
 size: 344 bytes
-matched: yes</title></rect><rect x="915.76" y="349.99" width="4.83" height="9.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15dScMgHanachan_c7Wiggler7HitTestEPKNS_5PointE
+matched: yes</title></rect><rect x="915.76" y="349.99" width="4.83" height="9.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15dScMgHanachan_c7Wiggler7HitTestEPK7Vector2
 module: ov006
 addr: 0x020eb768
 size: 72 bytes
