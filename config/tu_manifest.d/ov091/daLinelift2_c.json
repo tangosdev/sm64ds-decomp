@@ -28,7 +28,8 @@
       "end": "0x02134b70"
     },
     {
-      "name": ".data",
+      "name": ".data.lift2Main",
+      "input_section": ".data",
       "start": "0x02134e44",
       "end": "0x02134e64"
     },
@@ -616,7 +617,7 @@
       "target_address": "0x021345dc"
     },
     {
-      "section": ".data",
+      "section": ".data.lift2Main",
       "source": "0x02134e44",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -626,7 +627,7 @@
       "target_address": "0x02131f9c"
     },
     {
-      "section": ".data",
+      "section": ".data.lift2Main",
       "source": "0x02134e4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -636,7 +637,7 @@
       "target_address": "0x02131ef0"
     },
     {
-      "section": ".data",
+      "section": ".data.lift2Main",
       "source": "0x02134e54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -686,7 +687,7 @@
       "target_address": "0x021354a8"
     },
     {
-      "section": ".data",
+      "section": ".data.lift2Main",
       "source": "0x02134e5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -696,7 +697,7 @@
       "target_address": "0x02111af4"
     },
     {
-      "section": ".data",
+      "section": ".data.lift2Main",
       "source": "0x02134e60",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -825,7 +826,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.lift2Main",
           "start": "0x02134e44",
           "end": "0x02134e64",
           "differingBytes": 0,

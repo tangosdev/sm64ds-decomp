@@ -27,14 +27,21 @@
       "end": "0x021230b0"
     },
     {
-      "name": ".data",
+      "name": ".data.krpaMain",
+      "input_section": ".data",
       "start": "0x021232f4",
       "end": "0x02123334"
     },
     {
+      "name": ".data.krpaAnim",
+      "input_section": ".data",
+      "start": "0x021234c4",
+      "end": "0x021234f4"
+    },
+    {
       "name": ".rodata",
       "start": "0x021222e8",
-      "end": "0x02122594"
+      "end": "0x02122afc"
     },
     {
       "name": ".bss",
@@ -275,6 +282,20 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN8daKrpa_c19func_ov070_021217acEv"
+    },
+    {
+      "symbol": "data_ov070_021234c4",
+      "address": "0x021234c4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "100-frame idle BCA template: two bones, scale keys at 0x021227d8, rotation at 0x02122594, translation at 0x02122968, tracks at 0x0212259c"
+    },
+    {
+      "symbol": "data_ov070_021234dc",
+      "address": "0x021234dc",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "70-frame spit BCA template: two bones, scale keys at 0x021226bc, rotation at 0x0212262c, translation at 0x02122598, tracks at 0x021225e4; the 12 zero bytes to section end stay unclaimed"
     }
   ],
   "rodata": [
@@ -291,6 +312,90 @@
       "size": "0x190",
       "binding": "STB_GLOBAL",
       "evidence": "100 fixed-point scale words for SetFrames count 0x64"
+    },
+    {
+      "symbol": "data_ov070_02122594",
+      "address": "0x02122594",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle BCA rotation constants, one s16 per bone"
+    },
+    {
+      "symbol": "data_ov070_02122598",
+      "address": "0x02122598",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "spit BCA translation constant"
+    },
+    {
+      "symbol": "data_ov070_0212259c",
+      "address": "0x0212259c",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle BCA bone tracks, two 0x24-byte records"
+    },
+    {
+      "symbol": "data_ov070_021225e4",
+      "address": "0x021225e4",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "spit BCA bone tracks, two 0x24-byte records"
+    },
+    {
+      "symbol": "data_ov070_0212262c",
+      "address": "0x0212262c",
+      "size": "0x90",
+      "binding": "STB_GLOBAL",
+      "evidence": "spit BCA rotation keys, 72 s16"
+    },
+    {
+      "symbol": "data_ov070_021226bc",
+      "address": "0x021226bc",
+      "size": "0xe0",
+      "binding": "STB_GLOBAL",
+      "evidence": "spit BCA scale keys, 56 s32 fixed at 1.0"
+    },
+    {
+      "symbol": "data_ov070_0212279c",
+      "address": "0x0212279c",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "spit BCA scale keys continued, 15 s32 fixed at 1.0"
+    },
+    {
+      "symbol": "data_ov070_021227d8",
+      "address": "0x021227d8",
+      "size": "0xc0",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle BCA scale keys, 48 s32 fixed at 1.0"
+    },
+    {
+      "symbol": "data_ov070_02122898",
+      "address": "0x02122898",
+      "size": "0xbc",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle BCA scale keys continued, 47 s32 fixed at 1.0"
+    },
+    {
+      "symbol": "data_ov070_02122954",
+      "address": "0x02122954",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle BCA scale keys continued, 5 s32 fixed at 1.0"
+    },
+    {
+      "symbol": "data_ov070_02122968",
+      "address": "0x02122968",
+      "size": "0x104",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle BCA translation keys, 65 s32"
+    },
+    {
+      "symbol": "data_ov070_02122a6c",
+      "address": "0x02122a6c",
+      "size": "0x90",
+      "binding": "STB_GLOBAL",
+      "evidence": "idle BCA translation keys continued, 36 s32"
     }
   ],
   "bss": [
@@ -511,16 +616,23 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.krpaMain",
           "start": "0x021232f4",
           "end": "0x02123334",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
+          "section": ".data.krpaAnim",
+          "start": "0x021234c4",
+          "end": "0x021234f4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".rodata",
           "start": "0x021222e8",
-          "end": "0x02122594",
+          "end": "0x02122afc",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -953,7 +1065,7 @@
       "target_address": "0x02122f30"
     },
     {
-      "section": ".data",
+      "section": ".data.krpaMain",
       "source": "0x021232f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -963,7 +1075,7 @@
       "target_address": "0x02121438"
     },
     {
-      "section": ".data",
+      "section": ".data.krpaMain",
       "source": "0x021232fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -973,7 +1085,7 @@
       "target_address": "0x02121548"
     },
     {
-      "section": ".data",
+      "section": ".data.krpaMain",
       "source": "0x02123304",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -983,7 +1095,7 @@
       "target_address": "0x0212156c"
     },
     {
-      "section": ".data",
+      "section": ".data.krpaMain",
       "source": "0x0212330c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -993,7 +1105,7 @@
       "target_address": "0x021214f8"
     },
     {
-      "section": ".data",
+      "section": ".data.krpaMain",
       "source": "0x02123314",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1003,7 +1115,7 @@
       "target_address": "0x021216b8"
     },
     {
-      "section": ".data",
+      "section": ".data.krpaMain",
       "source": "0x0212331c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1013,7 +1125,7 @@
       "target_address": "0x02121710"
     },
     {
-      "section": ".data",
+      "section": ".data.krpaMain",
       "source": "0x02123324",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1023,7 +1135,7 @@
       "target_address": "0x021213cc"
     },
     {
-      "section": ".data",
+      "section": ".data.krpaMain",
       "source": "0x0212332c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1031,6 +1143,86 @@
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x021217ac"
+    },
+    {
+      "section": ".data.krpaAnim",
+      "source": "0x021234cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021227d8",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021227d8"
+    },
+    {
+      "section": ".data.krpaAnim",
+      "source": "0x021234d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122594",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122594"
+    },
+    {
+      "section": ".data.krpaAnim",
+      "source": "0x021234d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122968",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122968"
+    },
+    {
+      "section": ".data.krpaAnim",
+      "source": "0x021234d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212259c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212259c"
+    },
+    {
+      "section": ".data.krpaAnim",
+      "source": "0x021234e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021226bc",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021226bc"
+    },
+    {
+      "section": ".data.krpaAnim",
+      "source": "0x021234e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212262c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212262c"
+    },
+    {
+      "section": ".data.krpaAnim",
+      "source": "0x021234ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122598",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122598"
+    },
+    {
+      "section": ".data.krpaAnim",
+      "source": "0x021234f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021225e4",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021225e4"
     }
   ],
   "production_mode": "intact-object"

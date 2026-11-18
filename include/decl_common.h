@@ -580,7 +580,6 @@ extern u8 data_ov003_020b1181[];
 extern u8 sStarSelectCharYStart[];
 extern u8 sStarSelectCharSpriteStart[];
 extern u8 sStarSelectCharXStart[];
-extern u8 data_ov060_02119268[];
 extern u8 data_ov065_0211cfa4[];
 extern u8 data_ov074_02122d80[];
 extern u8 data_ov080_02127714[];
