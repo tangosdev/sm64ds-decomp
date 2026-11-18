@@ -91,11 +91,14 @@ daObjMcWater_c *daObjMcWater_c_classInit() {
     return new daObjMcWater_c();
 }
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjMcWater_c::InitResources() {
-    int b = (gGameMode == 1);
-    if (b == 0) {
+    if (!IsVsMode()) {
         if (data_0209caa0.file.flags2 & 0x80000) {
             mPos.y = -0x2bc000;
         }
@@ -153,8 +156,7 @@ int daObjMcWater_c::CleanupResources() {
 void daObjMcWater_c::SpawnWaterfalls() {
     Vector3 *vec;
     int i;
-    int b = (gGameMode == 1);
-    if (b != 0) {
+    if (IsVsMode()) {
         if (mPos.x > 0)
             return;
         vec = data_ov009_02113de0;
