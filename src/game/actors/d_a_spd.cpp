@@ -17,8 +17,6 @@
  *    as pointers where the true types break the register convention.
  */
 
-/* common.h first: its flat Matrix4x3 must win the guard; InitResources'
- * whole-matrix store at +0x350 only reproduces with that spelling. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum Scuttlebug_AssetId {
     ASSET_SPIDER_BMD = 0x0425,

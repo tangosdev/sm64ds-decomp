@@ -8,8 +8,7 @@
 /* Reconstructed names and layout, not an original class identity. */
 
 /* The overlay's 0xd8-byte camera (func_ov007_020c023c), defined in
- * Ov007Camera.h. Only a pointer is held here, so the tag stays incomplete
- * and Picker consumers are not made to see math/Matrix.h's Matrix4x3. */
+ * Ov007Camera.h. Only a pointer is held here, so the tag stays incomplete. */
 struct Ov007Camera;
 
 /* The 0x20-byte picker parameters, data_ov007_020d7b60

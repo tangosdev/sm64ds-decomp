@@ -44,9 +44,6 @@
  *    placeholder names.
  */
 
-/* common.h must precede the class headers: both Matrix4x3 spellings are real,
- * Matrix4x3_ApplyInPlace* wants `m[i]` while the model headers want `.r`/`.t`,
- * and whichever is seen first wins for the TU. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daKpa_c_AssetId {
     ASSET_KOOPA_DAMAGE_BCA = 0x035f,

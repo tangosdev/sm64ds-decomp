@@ -11,8 +11,6 @@
  * reorder. The destructor is not virtual, so the first declared virtual
  * (GetPos) is the key function and this file emits the vtable.
  *
- * Include common.h first: the mat4x3 copy in UpdateModelMatrix needs its
- * flat s32 m[12]; math/Matrix.h's nested form scalarizes the copy.
  * decl_common.h is left out because four of the data symbols here collide
  * with its spellings.
  *

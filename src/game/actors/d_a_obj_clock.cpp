@@ -16,8 +16,8 @@
  *   bounds sizes it 0xe0; folding the two stopped quadrants into one test
  *   sizes it 0xf8; mAngle.z = mAngle.z + step sizes it 0xfc; testing
  *   mHandIndex before IsAreaShowing stays 0x100 and 5 words differ.
- * - UpdateModelTransform keeps the three memberwise mat4x3.t stores:
- *   assigning a Vector3 sizes it 0x50 against 0x48.
+ * - UpdateModelTransform keeps the three translation-row stores: a
+ *   Vector3 assignment there sized it 0x50 against 0x48.
  * - data_ov013_021116ac (per-hand speeds) and data_ov013_021116b0 (model
  *   handles) keep linker names: this TU reads them; it does not own that
  *   .data. gNextSublevel (the pending level, -1 when none) and data_0209f2c0
@@ -151,7 +151,7 @@ int daObjClock_c::CleanupResources() {
 }
 
 /* Rebuild mModel.mat4x3 from the actor angles and from position >> 3.
- * Assigning a Vector3 to mat4x3.t sizes this 0x50 against 0x48.
+ * Assigning a Vector3 to the translation row sized this 0x50 against 0x48.
  * The marker above is not decoration -- without it tools/tiers.py folds this
  * body into the preceding member's fragment. */
 void daObjClock_c::UpdateModelTransform() {

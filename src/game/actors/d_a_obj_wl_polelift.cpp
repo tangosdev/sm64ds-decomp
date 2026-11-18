@@ -14,13 +14,6 @@
  * and the vtable at 0x02113ae0 name the class. classInit is
  * reconstructed.
  */
-/* common.h FIRST: UpdateShadow whole-struct-assigns the model matrix
- * into the drop-shadow matrix, and the cartridge does it as one flat
- * twelve-word ldm/stm run. common.h's flat `s32 m[12]` spelling of Matrix4x3
- * is that copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} -- which
- * dExtSimpleModel_c.h would otherwise pull in first -- scalarizes the last three words,
- * because Vector3 declares a destructor and is therefore not POD. Measured:
- * 0x88 emitted against the cartridge's 0x70. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_wl_polelift_AssetId {
     ASSET_WL_POLE_LIFT_BMD = 0x06db

@@ -10,7 +10,6 @@
  *
  * RTTI names daFPknBall_c. One out-of-line destructor under defer_codegen
  * off emits D1, D0, then a homeless D2, and .text follows source order.
- * common.h is first so the particle helper copies the flat Matrix4x3.
  */
 // What stays, and why:
 // - Vec3_Asr, func_02012694 and func_ov002_020ad660 have no shared header,

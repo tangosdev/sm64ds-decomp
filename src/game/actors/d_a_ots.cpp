@@ -56,8 +56,6 @@
  *   two that were leftover shards; names describe the children's slot-0 /
  *   slot-6 wrappers.
  * - BehaviorCommon: the mStateTimer increment stays unsigned short (ldrh).
- * - daOts_c.h first: nested Matrix4x3 for mAnmModel.mat4x3.t (02116bac).
- *   common.h's flat m[12] would stand down if it came first.
  * - 02115f98 keeps integer-array scratch vectors; its vector helpers receive
  *   explicit Vector3 pointer views so these locals stay POD.
  * - bool-widening `int isD8 = (int)(actorID == kBigBullyActorId)` / `isBf` in
@@ -101,8 +99,6 @@
  *   knockback) is unexplained, as is hit flag 0x40000's identity.
  * - Surface types 1, 4, 5 and 0x13 (CheckFloorDeath) are unnamed.
  */
-/* daOts_c.h FIRST: it pulls math/Matrix.h ahead of common.h through dExtAnmModel_c,
- * which is the nested Matrix4x3 spelling 02116bac needs for .t. */
 #include "daOts_c.h"
 #include "common.h"
 #include "dBgCh_Gnd.h"

@@ -34,9 +34,6 @@
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
- *   common.h must be included first. Otherwise dExtSimpleModel_c.h's nested Matrix4x3
- *   wins and UpdateMeshCollider / 02149ff0 change size (0x18 / 0x1c).
- *
  *   The destructor stays inline; out of line, mwccarm emits D0 before D1.
  *
  *   `return new` emits a homeless _ZN10dBgActor_cD2Ev. That is a licensed

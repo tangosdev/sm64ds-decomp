@@ -82,8 +82,6 @@
  *   compiler's literals for those initializers. Indexed entry fields
  *   are the members. 43cc's speed clamp and 55b4's step add the index
  *   in bytes to the field address.
- *   common.h must precede daDemo_c.h: dExtAnmModel_c.h's nested Matrix4x3
- *   otherwise wins and scalarizes Behavior's 12-word matrix copy.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

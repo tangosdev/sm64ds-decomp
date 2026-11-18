@@ -6,9 +6,6 @@
  * daObjWc_Obj03_c (WATER_DIAMOND), not daObjWc_Obj04_c
  * (SWITCH_ACTIVATED_PLANK), and not daObjWc_Mizu_c (WDW_WATER).
  *
- * common.h FIRST: dBgActor_c.h / dExtSimpleModel_c.h otherwise win with math/Matrix.h's
- * nested Matrix4x3, and InitResources' SetFile matrix argument scalarizes.
- *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. Highest-address first.
  * The destructor is inline in include/daObjWc_Obj05_c.h (D1 then D0, no D2).
  *

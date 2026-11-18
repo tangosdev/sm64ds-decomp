@@ -22,10 +22,6 @@
  * data_ov078_* address names, as their handlers keep func_ov078_*.
  */
 
-/* common.h FIRST: daBombking_c.h reaches math/Matrix.h through dExtBlendAnmModel_c.h,
- * and that header spells Matrix4x3 as {Matrix3x3 r; Vector3 t;} where common.h
- * spells it flat as s32 m[12]. Helpers whole-struct-assign the shadow/hold
- * matrices; only the flat spelling reproduces the block move. */
 #include "common.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"

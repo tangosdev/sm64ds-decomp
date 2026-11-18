@@ -67,11 +67,8 @@
  * read and write all of it on both leaves, so it is declared here rather than
  * per leaf. daDkk_c_classInit allocates exactly 928 = 0x3a0, so Grindel adds
  * nothing; Thwomp_Spawn allocates 932 = 0x3a4 for the Thwomp's own two fields.
- * mShadowMtx is a Matrix4x3. In the three TUs that include this header
- * first (d_a_dsn_base.cpp, d_a_dsn.cpp, d_a_dkk.cpp) that is common.h's flat
- * s32 m[12], which has no destructor, so the leaves' inline teardown is
- * unchanged; d_a_yegg.cpp sees math/Matrix.h's spelling and never destroys
- * one of these.
+ * mShadowMtx is a Matrix4x3, which has no destructor, so the leaves' inline
+ * teardown does nothing for it.
  *
  * Field NAMES are coined from what the code does; nothing in the ROM names them.
  */

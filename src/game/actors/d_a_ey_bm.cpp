@@ -13,10 +13,6 @@
  * proven.
  *
  * leftovers:
- * - common.h first is load-bearing: InitResources assigns
- *   IDENTITY_MATRIX4X3 as three 4-word ldm/stm copies, which the flat
- *   s32 m[12] spelling reproduces and math/Matrix.h's nested {r,t}
- *   splits. UpdateShadow's m[9..11] writes come from the same layout.
  * - ROM-descending source order: the factory stays first and
  *   OnYoshiTryEat last. InitResources is the key function; the inline
  *   destructor emits D1 then D0, the RTTI/vtable, and no D2.

@@ -5,9 +5,6 @@
  * maps profile 96 to ARROW_LIFT. Not daObjWc_Mizu_c (WDW_WATER) and not
  * daObjWc_Obj03_c (WATER_DIAMOND).
  *
- * common.h FIRST: dBgActor_c.h / dExtSimpleModel_c.h otherwise win with math/Matrix.h's
- * nested Matrix4x3, and InitResources' SetFile matrix argument scalarizes.
- *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. Highest-address first.
  * The destructor is inline in include/daObjWc_Obj02_c.h (D1 then D0, no D2).
  *

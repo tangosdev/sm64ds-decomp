@@ -7,10 +7,7 @@
  * frame of a stage shakes the ground, then it holds 32 frames and rolls
  * back the other way. A nearby Yoshi egg wakes the mesh collider.
  *
- * common.h is included before daDgr_c.h. Matrix4x3 has two 0x30-byte
- * spellings and whichever a TU sees first wins; the nested one scalarizes
- * the twelve-word copy in UpdateClsnMatrix. mwccarm emits one .text
- * section per function, in reverse source order, so the factory is first.
+ * mwccarm emits one .text section per function, in reverse source order, so the factory is first.
  * D1 at 0x021111a0 and D0 at 0x021111e4 come from the inline destructor in
  * daDgr_c.h. An out-of-line body would emit D2, which this cartridge does
  * not have.

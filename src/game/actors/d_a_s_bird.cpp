@@ -32,8 +32,6 @@
  *   sound 0x6a at mCamSpacePos.
  * - The flock measures from the ClosestPlayer result's mPos.
  * - g_profile_SBIRD stays outside the licensed sections.
- * - common.h is included after the class header so dExtAnmModel_c's
- *   Matrix4x3 spelling wins.
  */
 
 #pragma defer_codegen off

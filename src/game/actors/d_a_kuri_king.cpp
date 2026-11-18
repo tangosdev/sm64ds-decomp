@@ -58,8 +58,6 @@
  *   8-byte records the sinit copies in.
  */
 
-/* common.h BEFORE daKuriKing_c.h: with the structured Matrix4x3,
- * func_ov074_02121270/02121300 go long on whole-matrix assignment. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daKuriKing_c_AssetId {
     ASSET_KURIKING_ANGER_BCA = 0x038f,

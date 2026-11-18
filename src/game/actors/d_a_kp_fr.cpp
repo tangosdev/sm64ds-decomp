@@ -24,9 +24,6 @@
  *   ROM does, not UpdateContinuous.
  */
 
-// leftovers:
-// - `return new` synthesizes a vague-linkage _ZN9Matrix4x3D1Ev over mMatrix
-//   (deadstripped; no ROM symbol).
 #include "daKpFr_c.h"
 #include "nitro/fx/fx.h"
 #include "SpawnInfo.h"

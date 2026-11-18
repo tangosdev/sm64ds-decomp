@@ -34,9 +34,6 @@
  * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names. The model
  *   handle constructs through func_02017acc; the animation handle
  *   constructs through SharedFilePtr::Construct.
- * - This file wants math/Matrix.h's Matrix4x3 so mAnmModel.mat4x3.t is a
- *   Vector3. daObjWakame_c.h brings that spelling in first, so
- *   math/MtxStack.h (which pulls in common.h) is included after it.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

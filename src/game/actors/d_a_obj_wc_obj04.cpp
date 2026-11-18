@@ -6,9 +6,7 @@
  * not daObjWc_Obj02_c (ARROW_LIFT), not daObjWc_Obj03_c (WATER_DIAMOND), not
  * daObjWc_Obj05_c (CAGE_LIFT).
  *
- * common.h FIRST (via dBgActor_c.h): dExtSimpleModel_c.h would otherwise win with
- * math/Matrix.h's nested Matrix4x3, and InitResources' SetFile matrix
- * argument scalarizes. The two helpers write translation as m[9..11].
+ * The two helpers write the translation as m[9..11].
  *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. Highest-address first.
  * The destructor is inline in include/daObjWc_Obj04_c.h (D1 then D0, no D2).

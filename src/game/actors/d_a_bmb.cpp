@@ -1,9 +1,6 @@
 //cpp
 /* Bob-omb (BOB_OMB 206 / BOMBHEI) -- ov102/daBmb_c.
  *
- * common.h FIRST. InitResources and the carry update copy twelve matrix words.
- * math/Matrix.h's nested Matrix4x3 scalarizes that copy (Vector3 is non-POD).
- *
  * Leftovers, remeasured in this file:
  * - Behavior skips 4 bytes past GetFloorResult's dBgPi to the SurfaceInfo
  *   and tests CLPS bit 0x20 (water).

@@ -200,7 +200,7 @@ int daObjCtKaitendai_c::CleanupResources() {
 }
 
 /* Copy the model matrix, plant its translation Y on the floor probe,
- * and drop the shadow. m[10] is that Y in the flat Matrix4x3. */
+ * and drop the shadow. m[10] is that Y. */
 void daObjCtKaitendai_c::UpdateShadow() {
     mShadowMat = mModel.mat4x3;
     mShadowMat.m[10] = (mGroundY + 0x32000) >> 3;

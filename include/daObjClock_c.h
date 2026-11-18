@@ -24,7 +24,8 @@
  * LAYOUT: dActor_c occupies 0x000..0x0cf; four bytes of derived padding precede
  * the owned dExtSimpleModel_c the implicit constructor builds at +0xd4 (_ZN17dExtSimpleModel_cC1Ev);
  * the one-byte hand index follows it at 0x124. UpdateModelTransform writes
- * mModel.mat4x3 from mAngle.x/.y/.z and mModel.mat4x3.t from mPos.x/.y/.z >> 3.
+ * mModel.mat4x3 from mAngle.x/.y/.z and its translation row from
+ * mPos.x/.y/.z >> 3.
  */
 
 #ifdef __cplusplus
