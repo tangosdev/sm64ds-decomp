@@ -66,7 +66,7 @@ struct InfoSequenceEntry {
     u8 playerPriority;
     u8 playerNumber;
 
-    static InfoSequenceEntry *GetWithID(u32 id);
+    static InfoSequenceEntry *GetWithID(int id);
 };
 
 /* Instrument-bank archive metadata. Every recovered consumer treats the first
@@ -76,7 +76,7 @@ struct InfoInstrumentBankEntry {
     u32 fileId;
     u16 waveArchiveIds[4];
 
-    static InfoInstrumentBankEntry *GetWithID(u32 id);
+    static InfoInstrumentBankEntry *GetWithID(int id);
 };
 
 struct Player {
