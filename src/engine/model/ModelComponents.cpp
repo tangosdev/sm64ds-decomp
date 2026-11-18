@@ -537,7 +537,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[1].x = mp->r[1].x;
                     m.r[1].y = mp->r[1].y;
                     m.r[1].z = 0;
-                    VEC_Normalize((const Vector3 *)&m.r[1], (Vector3 *)&m.r[1]);
+                    VEC_Normalize(&m.r[1], &m.r[1]);
                     t = FX_MUL(m.r[1].x, dir->x);
                     m.r[1].x = t;
                     {
@@ -553,7 +553,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[0].x = mp->r[0].x;
                     m.r[0].y = mp->r[0].y;
                     m.r[0].z = 0;
-                    VEC_Normalize((const Vector3 *)&m.r[0], (Vector3 *)&m.r[0]);
+                    VEC_Normalize(&m.r[0], &m.r[0]);
                     m.r[0].x = FX_MUL(m.r[0].x, dir->x);
                     t = FX_MUL(m.r[0].y, dir->y);
                     m.r[1].y = m.r[0].x;
