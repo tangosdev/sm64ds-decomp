@@ -560,6 +560,21 @@ static inline int elem_selectable(Ov007ItemView *elem) {
     return sel;
 }
 
+/* True on the frame the stylus comes down after at least one frame up. */
+static inline int IsFreshTap(Ov007Touch *tp) {
+    int armed = 0;
+    int fresh = 0;
+    if (tp->cur.touch != 0) {
+        if (tp->prev.touch == 0)
+            fresh = 1;
+    }
+    if (fresh) {
+        if (tp->releasedFrames >= 1U)
+            armed = 1;
+    }
+    return armed;
+}
+
 /* Title/menu per-element stylus hit test.
  *
  * func_ov007_020aed98 calls this once per element per frame, for all 24
@@ -568,7 +583,7 @@ static inline int elem_selectable(Ov007ItemView *elem) {
  * func_ov007_020c1db0 maintains. A hit acts by calling
  * func_ov007_020b63e4, which parks the chosen item's id in chosenItemId.
  *
- * Two independent paths:
+ * Two paths; the hold path runs only on frames the press gate stays shut:
  *
  *   1. PRESS. Gated on down-now && !down-last-frame, i.e. the frame the
  *      stylus first touches, plus releasedFrames >= 1. Tests the stylus
@@ -601,57 +616,41 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
     Ov007Touch *tp = (Ov007Touch *)arg1;
     int held = 0;
 
-    do {
-        if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0) {
-            int armed = 0;
-            int fresh = 0;
-            int touching = tp->cur.touch;
-            if (touching != 0) {
-                if (tp->prev.touch == 0)
-                    fresh = 1;
-            }
-            if (fresh) {
-                if (tp->releasedFrames >= 1U)
-                    armed = 1;
-            }
-            if (armed) {
-                int pos_y = elem->sprite->screenY >> 12;
-                int pos_x = elem->sprite->screenX >> 12;
-                int max_y = elem->item->hitBox->maxY + pos_y;
-                int min_y = elem->item->hitBox->minY + pos_y;
-                int max_x = elem->item->hitBox->maxX + pos_x;
-                int min_x = elem->item->hitBox->minX + pos_x;
-                if (touching != 0 && (s32)tp->cur.x >= min_x && (s32)tp->cur.x <= max_x &&
-                    (s32)tp->cur.y >= min_y && (s32)tp->cur.y <= max_y) {
-                    func_ov007_020b63e4((Ov007ItemView *)arg0);
-                } else {
-                    u16 t = elem->item->id;
-                    if ((t == 0xc && WORK->settings->bootArgs->backlightOn == 0) ||
-                        (t == 0xd && WORK->settings->bootArgs->backlightOn != 0)) {
-                        if (touching != 0) {
-                            s32 x = tp->cur.x;
-                            if (x >= 8 && x <= 0x66) {
-                                s32 y = tp->cur.y;
-                                if (y >= 0x50 && y <= 0x60)
-                                    func_ov007_020b63e4((Ov007ItemView *)arg0);
-                            }
-                        }
-                    } else if (t == 9) {
-                        if (touching != 0) {
-                            s32 x = tp->cur.x;
-                            if (x >= 8 && x <= 0x48) {
-                                s32 y = tp->cur.y;
-                                if (y >= 0x20 && y <= 0x30)
-                                    func_ov007_020b63e4((Ov007ItemView *)arg0);
-                            }
-                        }
+    if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0 && IsFreshTap(tp)) {
+        int touching = tp->cur.touch;
+        int pos_y = elem->sprite->screenY >> 12;
+        int pos_x = elem->sprite->screenX >> 12;
+        int max_y = elem->item->hitBox->maxY + pos_y;
+        int min_y = elem->item->hitBox->minY + pos_y;
+        int max_x = elem->item->hitBox->maxX + pos_x;
+        int min_x = elem->item->hitBox->minX + pos_x;
+        if (touching != 0 && (s32)tp->cur.x >= min_x && (s32)tp->cur.x <= max_x &&
+            (s32)tp->cur.y >= min_y && (s32)tp->cur.y <= max_y) {
+            func_ov007_020b63e4((Ov007ItemView *)arg0);
+        } else {
+            u16 t = elem->item->id;
+            if ((t == 0xc && WORK->settings->bootArgs->backlightOn == 0) ||
+                (t == 0xd && WORK->settings->bootArgs->backlightOn != 0)) {
+                if (touching != 0) {
+                    s32 x = tp->cur.x;
+                    if (x >= 8 && x <= 0x66) {
+                        s32 y = tp->cur.y;
+                        if (y >= 0x50 && y <= 0x60)
+                            func_ov007_020b63e4((Ov007ItemView *)arg0);
                     }
                 }
-                break;
+            } else if (t == 9) {
+                if (touching != 0) {
+                    s32 x = tp->cur.x;
+                    if (x >= 8 && x <= 0x48) {
+                        s32 y = tp->cur.y;
+                        if (y >= 0x20 && y <= 0x30)
+                            func_ov007_020b63e4((Ov007ItemView *)arg0);
+                    }
+                }
             }
         }
-
-    if (WORK->states[0]->currentState == 3) {
+    } else if (WORK->states[0]->currentState == 3) {
         /* Through arg0, not elem: reading it through elem lets the compiler
          * keep the item in a register for elem_selectable and drops 12 bytes. */
         u16 t0 = ((Ov007ItemView *)arg0)->item->id;
@@ -679,7 +678,6 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
             }
         }
     }
-    } while (0);
 
     if (held == 0)
         elem->item->state->stateWork = 0;
