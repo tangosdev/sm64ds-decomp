@@ -294,12 +294,12 @@ void daKrpa_c::UpdateModelAndShadow() {
     } else {
         Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
     }
-    this->mAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
-    this->mAnmModel.mat4x3.m[10] = this->mPos.y >> 3;
-    this->mAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
-    this->mMatrix.m[9] = this->mPos.x >> 3;
-    this->mMatrix.m[10] = this->mPos.y >> 3;
-    this->mMatrix.m[11] = this->mPos.z >> 3;
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = this->mPos.y >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
+    this->mMatrix.t.x = this->mPos.x >> 3;
+    this->mMatrix.t.y = this->mPos.y >> 3;
+    this->mMatrix.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, this->mMatrix, this->mScale.x * 0x46,
                         this->mGroundDistance, 0xf);
 }

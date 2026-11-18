@@ -281,14 +281,14 @@ struct daPly_c : dActor_c {
     /* Where a held object rides: func_ov002_020e4768 stores body matrix times
        bone 14's transform here while mHeldObj is set, and points mCarryMatrix
        at it. */
-    struct Matrix4x3 mHeldObjMatrix; /* 0x58c */
+    union Matrix4x3 mHeldObjMatrix; /* 0x58c */
     /* The shadow's matrix: func_ov002_020e444c builds it from mPos (plus
        mModelOffsetY) and passes it to DropShadowRadHeight; while grabbed, the
        grab path stores the full body matrix here as well. */
-    struct Matrix4x3 mShadowMatrix; /* 0x5bc */
+    union Matrix4x3 mShadowMatrix; /* 0x5bc */
     /* Body matrix times bone 15 (face_1), stored by func_ov002_020e4768;
        d_a_bmb.cpp's func_ov102_0214b53c copies it out for the eating player. */
-    struct Matrix4x3 mHeadMatrix; /* 0x5ec */
+    union Matrix4x3 mHeadMatrix; /* 0x5ec */
     /* Yoshi's per-player material word for VS mode. func_ov002_020e5948 sets it
        to word +0x20 of material 0 of Yoshi's body model (GetBodyModelID(3))
        plus mPlayerNo * 2; the draw path copies it into word +0x20 of every

@@ -133,16 +133,16 @@ int daObjRcCarpet_c::CleanupResources() {
 
 void daObjRcCarpet_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = (mPos.y + mRideDipY) >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + mRideDipY) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 void daObjRcCarpet_c::UpdateClsnTransform() {
     mClsnMat = mAnmModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y + mRideDipY;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y + mRideDipY;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 /* ROM ordinals 0/1 are emitted by the inline virtual destructor:*/

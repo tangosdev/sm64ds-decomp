@@ -14,7 +14,7 @@ extern u32 data_020a4bd4;
 extern const int data_02082190[12];
 extern void *data_020a4bd0;
 
-struct Matrix4x3;
+union Matrix4x3;
 struct Vector3;
 
 struct Node {

@@ -530,9 +530,9 @@ void daPgBby_c::UpdateModelAndShadow() {
         mAnmModel.mat4x3 = *carry;
     } else {
         Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-        mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-        mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-        mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+        mAnmModel.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel.mat4x3.t.y = mPos.y >> 3;
+        mAnmModel.mat4x3.t.z = mPos.z >> 3;
     }
 
     if (IsInYoshiMouth(this)) {

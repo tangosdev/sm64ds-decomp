@@ -230,17 +230,17 @@ s32 daDgr_c::CleanupResources() {
 /* dExtSimpleModel_c matrix: X rotation, then translation at 1/8 of the actor position. */
 void daDgr_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationX(&mModel.mat4x3, mAngle.x);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
-/* Collision matrix. Flat Matrix4x3, copied whole, then translation in full units. */
+/* Collision matrix: the model matrix, copied whole, then translation in full units. */
 void daDgr_c::UpdateClsnMatrix() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 

@@ -187,9 +187,9 @@ void daFPkn_c::UpdateClsnOffset()
     int scaledSinAcc0, sinAcc1, cosAcc1, scaledCosAcc0, isFirepakun;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     if ((u32)(mState - STATE_SPIT) > 1) return;
     if (mScale != mMaxScale) return;
@@ -215,9 +215,9 @@ void daFPkn_c::UpdateClsnOffset()
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    mClsnOffset.x = data_020a0e68.m[9];
-    mClsnOffset.y = data_020a0e68.m[10];
-    mClsnOffset.z = data_020a0e68.m[11];
+    mClsnOffset.x = data_020a0e68.t.x;
+    mClsnOffset.y = data_020a0e68.t.y;
+    mClsnOffset.z = data_020a0e68.t.z;
     Vec3_LslInPlace(&mClsnOffset, 3);
     VEC_Subtract(&mClsnOffset, &mPos, &mClsnOffset);
 

@@ -271,9 +271,9 @@ void daObjCtMecha05_c::UpdateShadow() {
     MTX_MultVec43(&offset, &mShadowMatrix, &shadowPos);
     VEC_Add(&shadowPos, &mPos, &shadowPos);
 
-    mShadowMatrix.m[9] = shadowPos.x >> 3;
-    mShadowMatrix.m[10] = mGroundY >> 3;
-    mShadowMatrix.m[11] = shadowPos.z >> 3;
+    mShadowMatrix.t.x = shadowPos.x >> 3;
+    mShadowMatrix.t.y = mGroundY >> 3;
+    mShadowMatrix.t.z = shadowPos.z >> 3;
 
     DropShadowScaleXYZ(mShadowModel, mShadowMatrix, 0xdc000, 0x32000, 0x28a000, 0xf);
 }

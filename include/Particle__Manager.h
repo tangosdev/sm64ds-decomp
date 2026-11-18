@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-struct Matrix4x3;
+union Matrix4x3;
 struct SPLBehavior;
 
 namespace Particle {
