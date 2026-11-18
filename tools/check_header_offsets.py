@@ -91,6 +91,10 @@ def learn_aggregates(*paths):
 
 
 learn_aggregates(REPO / "include" / "types.h")
+# common.h holds the shared engine aggregates (Vector3_16, Matrix4x3, ...) that
+# headers use without defining; without it a field such as `Vector3_16 mAngle;`
+# in a header that only includes common.h is UNPARSED.
+learn_aggregates(REPO / "include" / "common.h")
 
 # `void *p;` / `Model* m;` -- any pointer is 4 bytes on this target.
 # The leading `struct`/`union`/`class`/`enum` is an elaborated type specifier and
