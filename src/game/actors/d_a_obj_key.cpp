@@ -323,12 +323,11 @@ void daObjKey_c::StateFlyToCenter()
 
     case 1:
         {
-        u16 *timer = &mStateTimer;
-        *timer = *timer + 1;
-        if (*timer < 70)
+        mStateTimer++;
+        if (mStateTimer < 70)
             break;
         mStep++;
-        *timer = 0;
+        mStateTimer = 0;
         Sound::PlayBank3(SND_FLY, mCamSpacePos);
         center1.x = 0;
         center1.y = 0;
@@ -521,9 +520,8 @@ void daObjKey_c::StateStarJump()
 
     case 3:
         {
-        u16 *timer = &mStateTimer;
-        *timer = *timer + 1;
-        if (*timer < 30)
+        mStateTimer++;
+        if (mStateTimer < 30)
             return;
         cam->SetLookAt(mSavedCamLookAt);
         cam->SetPos(mSavedCamPos);
