@@ -1745,6 +1745,7 @@ void dScMgBase_c::DrawMenu() {
                r28: the volatile pointer taken from &mtx in this block
                instead of pmtx, 24 of 118 words off. */
             {
+                /* Kept (#821 r79): an inline ClearMtx22 through pmtx or &mtx is 10 words off. */
                 volatile Matrix2x2 *vp = pmtx;
                 vp->m00 = 0;
                 vp->m01 = 0;
@@ -2889,6 +2890,7 @@ int Mg_CheckBannerButton(int arg) {
                    round trip (0x180 against 0x190). */
                 /* Kept (#821 r72): the only shared short pair, Vec2s, belongs
                    to TrmpLine.h; retyping would not remove the volatile. */
+                /* Kept (#821 r79): an inline GetBannerPos(o, &pos) into a plain Vec2 is 0x180. */
                 volatile struct Vec2 pos;
                 int dx, dy;
                 short ty;

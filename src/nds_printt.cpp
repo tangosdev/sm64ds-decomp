@@ -9,6 +9,9 @@ extern "C" void func_020147bc(unsigned short *p, int c);
    the ROM's second `c - 0x2f` but the arms still merge (0xe0) unless one is
    respelled `(int)(c)`, a no-op cast; str[len] in an arm, a merged letter
    test, `(char)c` and a char `out` are 0xe0/0xe4/0xf0/0x100. */
+/* Kept (#821 r79): /=, a radix temporary, '0' + 1 character literals and static inline
+   digit/shift helpers are 0xe0 or 0xdc against 0xec; the division and modulo still share one
+   _s32_div_f. */
 #pragma opt_common_subs off
 
 void nds_printt(unsigned short *dest, const char *str, int value) {

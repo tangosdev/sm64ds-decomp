@@ -299,6 +299,8 @@ int dScMgSnowball_c::HitsBreakable(int *point) {
 // re-reading point[] 0x288. Re-measured (#821 r43), all 0x288: x and courseY
 // shifted in place after the lookup (`x >>= 12`), the lookup reading point[0],
 // x re-read from point[0] after the lookup, and x/courseY declared long.
+/* Kept (#821 r79): localX/localY taken before the tile lookup, the bit-8 tests on localX, and a
+   column pointer for the lookup are 0x230, 0x288 (not identical) and 0x270 against 0x28c. */
 #pragma opt_common_subs off
 int dScMgSnowball_c::HitsWall(int *point) {
     int courseY = point[1];

@@ -355,6 +355,8 @@ void ModelComponents::func_02044b30(int idx) {
            Re-measured (#821 r17): the id loaded into the dead texImageParam,
            a pointer `textures + textureId`, or the rotation index in its own
            local ahead of tex are each 3 words off; tex after sin/cos is 7. */
+        /* Kept (#821 r79): a static TextureIdOf(mat) accessor in the subscript, textures +
+           textureId, and a BMD_Texture pointer are each 3 words off. */
         u32 textureId = *(volatile const u32 *)&mat.textureId;
         const BMD_Texture &tex = modelFile->textures[textureId];
         s16 sin = FX_SinIdx((u16)(mat.texRotation << 4) >> 4);
