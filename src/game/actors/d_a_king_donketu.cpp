@@ -518,27 +518,25 @@ s32 daKing_Donketu_c::HandleHit() {
         v2.x = mPos.x;
         v2.y = mPos.y;
         v2.z = mPos.z;
-        if (((daPly_c *)target)->Hurt(v2, 0, 0x14000, 1, 0, 1) == 0)
-            goto done0;
+        if (((daPly_c *)target)->Hurt(v2, 0, 0x14000, 1, 0, 1) != 0) {
+            s32 *pv = &target->mPos.x;
+            Particle::System::NewSimple(kPtclChiefChillyHitPlayer, pv[0], pv[1], pv[2]);
+            if (mState == &data_ov073_021233d0) {
+                func_02012694(SND_HIT_REGISTERED, &mCamSpacePos);
+                return 1;
+            }
+            mPrevAngle.y += 0x8000;
+            func_02012694(SND_REVERSE_AFTER_HURT, &mCamSpacePos);
+            ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123360);
+            mBlendAnmModel.SetAnim(
+                *(BCA_File *)((BCA_File *)gKingIceDonketuHitAnimationFile.filePtr), 4, 0x40000000,
+                0x1000, 0);
+            mBlendAnmModel.speed = 0x1000;
+            mPhase = 2;
+            mStateParam = 0x2000;
+            mStateTimer = 30;
+        }
     }
-    {
-        s32 *pv = &target->mPos.x;
-        Particle::System::NewSimple(kPtclChiefChillyHitPlayer, pv[0], pv[1], pv[2]);
-    }
-    if (mState == &data_ov073_021233d0) {
-        func_02012694(SND_HIT_REGISTERED, &mCamSpacePos);
-        return 1;
-    }
-    mPrevAngle.y += 0x8000;
-    func_02012694(SND_REVERSE_AFTER_HURT, &mCamSpacePos);
-    ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123360);
-    mBlendAnmModel.SetAnim(*(BCA_File *)((BCA_File *)gKingIceDonketuHitAnimationFile.filePtr), 4,
-                           0x40000000, 0x1000, 0);
-    mBlendAnmModel.speed = 0x1000;
-    mPhase = 2;
-    mStateParam = 0x2000;
-    mStateTimer = 30;
-done0:
     return 0;
 }
 
