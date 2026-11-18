@@ -202,8 +202,8 @@ s32 dScMgBSC_c::CanEndState(int mode) {
    capped at tier 3. */
 void dScMgBSC_c::OnDealDone() {
     int score = mHudScore;
-    int tier = score / 5;
-    if ((unsigned int)tier > 3) {
+    u32 tier = score / 5;
+    if (tier > 3) {
         tier = 3;
     }
     MgCoins_RaiseBet(tier + 1);

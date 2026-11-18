@@ -823,9 +823,9 @@ s32 dScMgSlot3_c::InitResources() {
     mReelDrawY = 0;
 
     for (int i = 0; i < 3; i++) {
-        int rnd = RandomIntInternal(&data_0209e650.value);
+        u32 rnd = RandomIntInternal(&data_0209e650.value);
         u32 divisor = mStripLength;
-        u32 val = ((u32)rnd >> 16) % divisor;
+        u32 val = (rnd >> 16) % divisor;
         mReelPos[i] = val * 0x50000;
     }
 

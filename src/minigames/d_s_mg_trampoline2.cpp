@@ -639,7 +639,7 @@ int Trmp2_PickFaceB(int a) {
 }
 
 void dScMgTrampoline2_c::SpawnWave() {
-    int occupancy;
+    u32 occupancy;
     int column;
     int kind;
     int kinds[7];
@@ -690,7 +690,7 @@ void dScMgTrampoline2_c::SpawnWave() {
                     continue;
                 }
 
-                if ((savedOccupancy = (int)occupancy, (savedOccupancy & rightBit) != 0)) {
+                if ((savedOccupancy = occupancy, (savedOccupancy & rightBit) != 0)) {
                     kinds[i] = kind;
                     faces[i] = 8;
                     occupancy |= Trmp2_OccupancyBits(column, 1);

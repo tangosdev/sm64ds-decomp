@@ -1759,10 +1759,10 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
         return 0;
 
     deltaY = deltaPixels[1];
-    delta[0] = (int)deltaX << 12;
-    delta[1] = (int)deltaY << 12;
-    direction[0] = ((int)deltaX >> 1) << 12;
-    direction[1] = ((int)deltaY >> 1) << 12;
+    delta[0] = deltaX << 12;
+    delta[1] = deltaY << 12;
+    direction[0] = (deltaX >> 1) << 12;
+    direction[1] = (deltaY >> 1) << 12;
 
     {
         int ay = startPoint[1];
