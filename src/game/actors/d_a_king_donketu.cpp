@@ -558,6 +558,8 @@ int daKing_Donketu_c::UpdateDefeat() {
     dCamera_c *cam;
     dActor_c* spawned;
     dActor_c* found;
+    /* Kept (#821 r60): Vector3s keeps the stores but loads ldrsh, not
+       ldrh (5 words); a plain Vector3_16 drops them (0x15c). */
     volatile struct Vector3_16 rot;
     struct Vector3 pos;
     cam = gCamera;

@@ -241,7 +241,8 @@ void daCnn_c::StateFire() {
     /* The launch block keeps the legacy match's statement shape: the
        sine/cosine operands are hoisted by hand and the ball's velocity is
        read through an opaque pointer into a volatile copy. Written as plain
-       member expressions the block schedules differently and grows 4 bytes. */
+       member expressions the block schedules differently and grows 4 bytes.
+       A Vector3 copy of mSpeed drops the stores (#821 r60: 0x2ac / 0x2b0 against 0x2bc). */
     volatile int vel[3];
     daPly_c *closest;
     int timer;
