@@ -41,7 +41,9 @@
 
 #include "math/MtxStack.h"
 /* Kept for UpdateShoot's playerPos (measured r57): any Vector3 copy is
- * memberwise, and the ROM block-moves the player's position. */
+ * memberwise, and the ROM block-moves the player's position.
+ * Kept (#821 r71): `playerPos = pl->mPos` gives UpdateShoot 0x220 (ROM 0x224);
+ * a VecFx32 copy-init cannot feed the Vector3 target without a cast. */
 struct V3A { int w[3]; };
 
 /* Scalar ABI declarations retained by this TU. */
