@@ -1,0 +1,10 @@
+/* ov059 data_ov059_021113ac at 0x021113ac (rodata, 4 bytes): cartridge data. */
+#include "types.h"
+
+#pragma define_section dc8_section ".rodata" ".rodata" ".rodata" far_data
+#pragma section dc8_section begin
+const u32 data_ov059_021113ac[1] = {
+    0x00000444,
+};
+
+#pragma section dc8_section end

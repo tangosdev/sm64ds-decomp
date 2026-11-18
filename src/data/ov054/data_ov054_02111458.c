@@ -1,0 +1,13 @@
+/* ov054 data_ov054_02111458 at 0x02111458 (data, 88 bytes): cartridge data. */
+#include "types.h"
+
+#pragma define_section dc8_section ".data" ".data" ".data" far_data
+#pragma section dc8_section begin
+u32 data_ov054_02111458[22] = {
+    0x125c2226, 0xf31c0000, 0x13242226, 0xecdc02bc, 0x0ed8e225, 0xf12802ee,
+    0x0fa0e225, 0xf25402ee, 0x0ed8e225, 0xf38002ee, 0x0dace225, 0xf44802ee,
+    0x0c80e225, 0xf38002ee, 0x0bb8e225, 0xf25402ee, 0x0c80e225, 0xf12802ee,
+    0x1518e143, 0xf2540000, 0x0dace225, 0xf06002ee,
+};
+
+#pragma section dc8_section end

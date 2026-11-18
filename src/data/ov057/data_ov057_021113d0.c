@@ -1,0 +1,14 @@
+/* ov057 data_ov057_021113d0 at 0x021113d0 (rodata, 104 bytes): cartridge data. */
+#include "types.h"
+
+#pragma define_section dc8_section ".rodata" ".rodata" ".rodata" far_data
+#pragma section dc8_section begin
+const u32 data_ov057_021113d0[26] = {
+    0xfbb0fba5, 0xfbc7fbbc, 0xfbdefbd2, 0xfbf5fbe9, 0xfc0bfc00, 0xfc22fc17,
+    0xfc39fc2e, 0xfc50fc44, 0xfc66fc5b, 0xfc7dfc72, 0xfc94fc89, 0xfcabfc9f,
+    0xfcc1fcb6, 0xfcd8fccd, 0xfceffce4, 0xfd06fcfa, 0xfd1cfd11, 0xfd33fd28,
+    0xfd4afd3f, 0xfd61fd55, 0xfd77fd6c, 0xfd8efd83, 0xfda5fd9a, 0xfdbcfdb0,
+    0xfdd2fdc7, 0xfde9fdde,
+};
+
+#pragma section dc8_section end

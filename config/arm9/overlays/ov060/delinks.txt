@@ -58,3 +58,195 @@ src/game/actors/d_a_f_ring.cpp:
     .data start:0x0211ab20 end:0x0211ab30
     .bss start:0x0211b1f8 end:0x0211b234
 
+src/data/ov060/data_ov060_02119268.c:
+    complete
+    .rodata.kpaHp start:0x02119268 end:0x0211927c
+
+src/data/ov060/data_ov060_02119298.c:
+    complete
+    .rodata.kpaTex start:0x02119298 end:0x021192dc
+
+src/data/ov060/_ZTS7daKpa_c.c:
+    complete
+    .data start:0x0211a5c0 end:0x0211a5cc
+
+src/data/ov060/_ZTI7daKpa_c.c:
+    complete
+    .data start:0x0211a5cc end:0x0211a5d8
+
+src/data/ov060/_ZTI11daKpaTail_c.c:
+    complete
+    .data start:0x0211a5d8 end:0x0211a5e4
+
+src/data/ov060/_ZTS11daKpaTail_c.c:
+    complete
+    .data start:0x0211a5e4 end:0x0211a5f4
+
+src/data/ov060/g_profile_KOOPA.c:
+    complete
+    .data start:0x0211a5f4 end:0x0211a610
+
+src/data/ov060/g_profile_KOOPATAIL.c:
+    complete
+    .data start:0x0211a610 end:0x0211a634
+
+src/data/ov060/ov060_vt_0211a634.c:
+    complete
+    .data start:0x0211a634 end:0x0211a6b8
+
+src/data/ov060/ov060_vt_0211a6b8.c:
+    complete
+    .data start:0x0211a6b8 end:0x0211a734
+
+src/data/ov060/data_ov060_0211a734.c:
+    complete
+    .data start:0x0211a734 end:0x0211a73c
+
+src/data/ov060/data_ov060_0211a73c.c:
+    complete
+    .data start:0x0211a73c end:0x0211a744
+
+src/data/ov060/data_ov060_0211a744.c:
+    complete
+    .data start:0x0211a744 end:0x0211a74c
+
+src/data/ov060/data_ov060_0211a74c.c:
+    complete
+    .data start:0x0211a74c end:0x0211a754
+
+src/data/ov060/data_ov060_0211a754.c:
+    complete
+    .data start:0x0211a754 end:0x0211a75c
+
+src/data/ov060/data_ov060_0211a75c.c:
+    complete
+    .data start:0x0211a75c end:0x0211a764
+
+src/data/ov060/data_ov060_0211a764.c:
+    complete
+    .data start:0x0211a764 end:0x0211a76c
+
+src/data/ov060/data_ov060_0211a76c.c:
+    complete
+    .data start:0x0211a76c end:0x0211a774
+
+src/data/ov060/data_ov060_0211a774.c:
+    complete
+    .data start:0x0211a774 end:0x0211a77c
+
+src/data/ov060/data_ov060_0211a77c.c:
+    complete
+    .data start:0x0211a77c end:0x0211a784
+
+src/data/ov060/data_ov060_0211a784.c:
+    complete
+    .data start:0x0211a784 end:0x0211a78c
+
+src/data/ov060/data_ov060_0211a78c.c:
+    complete
+    .data start:0x0211a78c end:0x0211a794
+
+src/data/ov060/data_ov060_0211a794.c:
+    complete
+    .data start:0x0211a794 end:0x0211a79c
+
+src/data/ov060/data_ov060_0211a79c.c:
+    complete
+    .data start:0x0211a79c end:0x0211a7a4
+
+src/data/ov060/data_ov060_0211a7a4.c:
+    complete
+    .data start:0x0211a7a4 end:0x0211a7ac
+
+src/data/ov060/data_ov060_0211a7ac.c:
+    complete
+    .data start:0x0211a7ac end:0x0211a7b4
+
+src/data/ov060/_ZTI11daKpaFire_c.c:
+    complete
+    .data start:0x0211a7b4 end:0x0211a7c0
+
+src/data/ov060/_ZTS11daKpaFire_c.c:
+    complete
+    .data start:0x0211a7c0 end:0x0211a7d0
+
+src/data/ov060/g_profile_KOOPAFIRE.c:
+    complete
+    .data start:0x0211a7d0 end:0x0211a7f4
+
+src/data/ov060/ov060_vt_0211a7f4.c:
+    complete
+    .data start:0x0211a7f4 end:0x0211a870
+
+src/data/ov060/_ZTI10daKpa2Bg_c.c:
+    complete
+    .data start:0x0211a870 end:0x0211a87c
+
+src/data/ov060/_ZTS10daKpa2Bg_c.c:
+    complete
+    .data start:0x0211a87c end:0x0211a88c
+
+src/data/ov060/g_profile_KOOPA2BG.c:
+    complete
+    .data start:0x0211a88c end:0x0211a8b0
+
+src/data/ov060/ov060_vt_0211a8b0.c:
+    complete
+    .data start:0x0211a8b0 end:0x0211a930
+
+src/data/ov060/_ZTI10daKpa3Bg_c.c:
+    complete
+    .data start:0x0211a948 end:0x0211a954
+
+src/data/ov060/_ZTS10daKpa3Bg_c.c:
+    complete
+    .data start:0x0211a954 end:0x0211a964
+
+src/data/ov060/g_profile_KOOPA3BG.c:
+    complete
+    .data start:0x0211a964 end:0x0211a980
+
+src/data/ov060/data_ov060_0211a980.c:
+    complete
+    .data start:0x0211a980 end:0x0211a9b0
+
+src/data/ov060/ov060_vt_0211a9b0.c:
+    complete
+    .data start:0x0211a9b0 end:0x0211aa30
+
+src/data/ov060/_ZTS9daKirai_c.c:
+    complete
+    .data start:0x0211aa50 end:0x0211aa5c
+
+src/data/ov060/_ZTI9daKirai_c.c:
+    complete
+    .data start:0x0211aa5c end:0x0211aa68
+
+src/data/ov060/g_profile_KIRAI.c:
+    complete
+    .data start:0x0211aa68 end:0x0211aa8c
+
+src/data/ov060/ov060_vt_0211aa8c.c:
+    complete
+    .data start:0x0211aa8c end:0x0211ab08
+
+src/data/ov060/_ZTS9daFRing_c.c:
+    complete
+    .data start:0x0211ab08 end:0x0211ab14
+
+src/data/ov060/_ZTI9daFRing_c.c:
+    complete
+    .data start:0x0211ab14 end:0x0211ab20
+
+src/data/ov060/g_profile_FIRERING.c:
+    complete
+    .data start:0x0211ab30 end:0x0211ab54
+
+src/data/ov060/ov060_vt_0211ab54.c:
+    complete
+    .data start:0x0211ab54 end:0x0211abe0
+
+src/data/ov060/data_ov060_0211b234.c:
+    complete
+    .bss start:0x0211b234 end:0x0211b240
+
