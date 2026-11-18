@@ -94,8 +94,8 @@
  * - The da1up_MushroomType names describe what each type does when it runs;
  *   they are not recovered original names (nor are the address-named
  *   handlers).
- * - mSpeedX / mSpeedZ are dActor_c's velocity x/z words (UpdatePosWithHorzSpeedAndAng
- *   writes them from mHorzSpeed and mPrevAngleY); they stay unnamed here because
+ * - mSpeed.x / mSpeed.z are dActor_c's velocity x/z words (UpdatePosWithHorzSpeedAndAng
+ *   writes them from mHorzSpeed and mPrevAngle.y); they stay unnamed here because
  *   naming them is a shared dActor_c.h change.
  * - The SND3_* names and the effect ids are known by use only (0x68 is played
  *   as a mushroom launches, 0x69 once when type 13 starts).
@@ -236,15 +236,15 @@ void da1up_c::func_ov002_020aefa4() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* The shared per-frame physics step. Moves by mHorzSpeed along mPrevAngleY
+/* The shared per-frame physics step. Moves by mHorzSpeed along mPrevAngle.y
    (UpdatePosWithHorzSpeedAndAng). While on the ground it adds ten times the
    floor normal's x and z to the words at 0xa4 / 0xac (the x and z of a velocity
-   whose y is mVertSpeed: UpdateWaitThenAccelerate saves and restores them as that
-   triple), sets mVertSpeed to -0.4 times its value on the frame it lands and to
+   whose y is mSpeed.y: UpdateWaitThenAccelerate saves and restores them as that
+   triple), sets mSpeed.y to -0.4 times its value on the frame it lands and to
    0 otherwise, and raises mHorzSpeed to the horizontal length of that vector
    when that is larger, capped at 15 units (0xf000). Then it integrates position
    (UpdatePosWithOnlySpeed), runs the wall/floor collision update, and on a wall
-   hit reflects mPrevAngleY about the wall normal.
+   hit reflects mPrevAngle.y about the wall normal.
    The shard carried shadow `dActor_c`/`dEnemyBase_c` tags to name three
    non-virtual methods. The merged TU has both real classes complete through
    da1up_c.h, so the shadows are gone and the calls go through the real types --
@@ -254,22 +254,22 @@ void da1up_c::UpdatePhysics() {
 
     UpdatePosWithHorzSpeedAndAng();
     if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormal.x * 0xa;
-        mSpeedZ += mFloorNormal.z * 0xa;
+        mSpeed.x += mFloorNormal.x * 0xa;
+        mSpeed.z += mFloorNormal.z * 0xa;
         if (mWithMeshClsn.JustHitGround()) {
-            mVertSpeed = -(mVertSpeed << 2) / 10;
+            mSpeed.y = -(mSpeed.y << 2) / 10;
         } else {
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         }
-        if (Vec3_HorzLen((Vector3 *)&mSpeedX) > mHorzSpeed) {
-            mHorzSpeed = Vec3_HorzLen((Vector3 *)&mSpeedX);
+        if (Vec3_HorzLen(&mSpeed) > mHorzSpeed) {
+            mHorzSpeed = Vec3_HorzLen(&mSpeed);
             if (mHorzSpeed >= 0xf000) mHorzSpeed = 0xf000;
         }
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     if (!mWithMeshClsn.IsOnWall()) return;
-    mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+    mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -277,11 +277,11 @@ void da1up_c::UpdatePhysics() {
    player; if there is one, builds the vector to it -- the aim point is the
    player's y lowered by 80 units (0x50000) when func_ov002_020d0d2c says the
    player is in one of two daPly_c states and raised by 120 units (0x78000)
-   otherwise -- and steps mPrevAngleY toward the horizontal bearing and
-   mPrevAngleX toward the pitch (cstd::atan2(horizontal length, height
-   difference)), at most 0x1000 (22.5 degrees) per frame each. mVertSpeed and
+   otherwise -- and steps mPrevAngle.y toward the horizontal bearing and
+   mPrevAngle.x toward the pitch (cstd::atan2(horizontal length, height
+   difference)), at most 0x1000 (22.5 degrees) per frame each. mSpeed.y and
    mHorzSpeed are then 30 units (0x1e) times the cosine and the sine of
-   mPrevAngleX. Always finishes with CollectOnTouch. */
+   mPrevAngle.x. Always finishes with CollectOnTouch. */
 void da1up_c::SteerTowardPlayer() {
     /* Forward: ordinal 11 sits above this one in ROM order. */
 
@@ -289,24 +289,24 @@ void da1up_c::SteerTowardPlayer() {
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;
-        /* mPos is the position. Reading mPosX/Y/Z directly changes the bytes. */
+        /* mPos is the position. Reading mPos.x/.y/.z directly changes the bytes. */
         const Vector3 *s = &p->mPos;
         ppos.x = s->x;
         ppos.y = s->y;
         ppos.z = s->z;
-        diff.x = ppos.x - mPosX;
+        diff.x = ppos.x - mPos.x;
         if (p->func_ov002_020d0d2c() != 0)
-            diff.y = ppos.y - mPosY - 0x50000;
+            diff.y = ppos.y - mPos.y - 0x50000;
         else
-            diff.y = ppos.y - mPosY + 0x78000;
-        diff.z = ppos.z - mPosZ;
+            diff.y = ppos.y - mPos.y + 0x78000;
+        diff.z = ppos.z - mPos.z;
         int len = Vec3_HorzLen(&diff);
         short pitch = cstd::atan2(len, diff.y);
         short yaw = Vec3_HorzAngle(&mPos, &ppos);
-        ApproachLinear(mPrevAngleY, yaw, 0x1000);
-        ApproachLinear(mPrevAngleX, pitch, 0x1000);
-        mVertSpeed = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e;
-        mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * 0x1e;
+        ApproachLinear(mPrevAngle.y, yaw, 0x1000);
+        ApproachLinear(mPrevAngle.x, pitch, 0x1000);
+        mSpeed.y = FX_CosIdx((u16)mPrevAngle.x >> 4) * 0x1e;
+        mHorzSpeed = FX_SinIdx((u16)mPrevAngle.x >> 4) * 0x1e;
     }
     CollectOnTouch();
 }
@@ -399,9 +399,9 @@ void da1up_c::OnTurnIntoEgg(daPly_c &player) {
         Vector3 vec;
         Sound::PlayBank3(SND3_GIVE_LIFE, mCamSpacePos);
         GiveLives(1);
-        vec.x = mPosX;
-        vec.y = mPosY;
-        vec.z = mPosZ;
+        vec.x = mPos.x;
+        vec.y = mPos.y;
+        vec.z = mPos.z;
         vec.y += 0xb4000;
         Spawn(ACTOR_OBJ_1UPLOGO, 8, vec, 0, mAreaId, -1);
         KillAndTrackInDeathTable();
@@ -441,9 +441,9 @@ void da1up_c::CollectOnTouch() {
             struct Vector3 vec;
             Sound::PlayBank3(SND3_GIVE_LIFE, mCamSpacePos);
             GiveLives(1);
-            vec.x = mPosX;
-            vec.y = mPosY;
-            vec.z = mPosZ;
+            vec.x = mPos.x;
+            vec.y = mPos.y;
+            vec.z = mPos.z;
             vec.y += 0xb4000;
             dActor_c::Spawn(
                 ACTOR_OBJ_1UPLOGO, 8, vec, 0, mAreaId, -1);
@@ -454,26 +454,26 @@ void da1up_c::CollectOnTouch() {
 
 /* -------------------------------------------------------------------------- */
 /* The launch arc of the types that pop out (0, 1, 5 and 7). For the first five
-   frames of the state (mStateTimer < 5) it only sets mVertSpeed to 40 units
-   (0x28000). After that, every frame it lowers mPrevAngleX by 0x1000 (22.5
-   degrees): mVertSpeed = 30 units (0x1e) times the cosine of mPrevAngleX plus
+   frames of the state (mStateTimer < 5) it only sets mSpeed.y to 40 units
+   (0x28000). After that, every frame it lowers mPrevAngle.x by 0x1000 (22.5
+   degrees): mSpeed.y = 30 units (0x1e) times the cosine of mPrevAngle.x plus
    2 units (0x2000); mHorzSpeed = -30 units times its sine. */
 void da1up_c::UpdateLaunchArc() {
     if (mStateTimer < 5) {
-        mVertSpeed = 0x28000;
+        mSpeed.y = 0x28000;
         return;
     }
 
-    mPrevAngleX -= 0x1000;
+    mPrevAngle.x -= 0x1000;
 
-    mVertSpeed = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e + 0x2000;
-    mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * -0x1e;
+    mSpeed.y = FX_CosIdx((u16)mPrevAngle.x >> 4) * 0x1e + 0x2000;
+    mHorzSpeed = FX_SinIdx((u16)mPrevAngle.x >> 4) * -0x1e;
 }
 
 /* -------------------------------------------------------------------------- */
 /* Per-frame model matrix and drop shadow, run at the end of every Behavior,
    including the frames UpdateYoshiEat returns nonzero. mModel's matrix gets
-     types 11 and 12: a Y rotation by mAngleY and translation mPos >> 3;
+     types 11 and 12: a Y rotation by mAngle.y and translation mPos >> 3;
      other types:     translation mPos >> 3 only (through Vec3_Asr).
    Nothing more happens while mShown is 0. Otherwise the shadow size is chosen and
    handed to dActor_c::DropShadowRadHeight (shadow, matrix, radius, depth,
@@ -494,10 +494,10 @@ void da1up_c::UpdateModelAndShadow() {
     struct Vector3 v1;
 
     if ((unsigned)(mMushroomType - 0xb) <= 1) {
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.m[9] = mPosX >> 3;
-        mModel.mat4x3.m[10] = mPosY >> 3;
-        mModel.mat4x3.m[11] = mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
+        mModel.mat4x3.m[9] = mPos.x >> 3;
+        mModel.mat4x3.m[10] = mPos.y >> 3;
+        mModel.mat4x3.m[11] = mPos.z >> 3;
     } else {
         Vec3_Asr(&v1, &mPos, 3);
         Matrix4x3_FromTranslation(&mModel.mat4x3, v1.x, v1.y, v1.z);
@@ -509,10 +509,10 @@ void da1up_c::UpdateModelAndShadow() {
         radius = 0x50000;
         depth = 0x50000;
     } else if (!mWithMeshClsn.IsOnGround()) {
-        int y = mPosY;
-        int z = mPosZ;
+        int y = mPos.y;
+        int z = mPos.z;
         int adjustedY;
-        int x = mPosX;
+        int x = mPos.x;
         adjustedY = y + 0x28000;
         v2.x = x;
         v2.y = adjustedY;
@@ -523,7 +523,7 @@ void da1up_c::UpdateModelAndShadow() {
         if (rg.DetectClsn()) {
             depth = rg.clsnY;
         }
-        depth = mPosY - depth;
+        depth = mPos.y - depth;
         if (depth <= 0x1000) depth = 0x1000;
         radius = (mdCcAc_c.radius - 0xa000) * 2 - FX_MUL(depth, 0x180);
         if (radius < 0xa000) radius = 0xa000;
@@ -609,12 +609,12 @@ void da1up_c::UpdateFallThenWait() {
    0. */
 void da1up_c::UpdateRiseThenPopOut() {
     mShown = 1;
-    if (mPosY >= mSpawnPos.y + 0x64000)
+    if (mPos.y >= mSpawnPos.y + 0x64000)
         return;
-    mPosY += 0x5000;
-    if (mPosY < mSpawnPos.y + 0x64000)
+    mPos.y += 0x5000;
+    if (mPos.y < mSpawnPos.y + 0x64000)
         return;
-    mPosY = mSpawnPos.y + 0x64000;
+    mPos.y = mSpawnPos.y + 0x64000;
     mMushroomType = 0;
     mState = 0;
     mStateTimer = 0xffff;
@@ -650,10 +650,10 @@ void da1up_c::UpdateSpawner() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Dispatch-table index 12 (MUSHROOM_SPIN_TRIGGER_FOR_7). Turns mAngleY by 0xc00
+/* Dispatch-table index 12 (MUSHROOM_SPIN_TRIGGER_FOR_7). Turns mAngle.y by 0xc00
    (16.875 degrees) a frame, then runs index 8's handler. */
 void da1up_c::UpdateSpinTriggerFor7() {
-    mAngleY += 0xc00;
+    mAngle.y += 0xc00;
     UpdateTriggerFor7();
 }
 
@@ -670,7 +670,7 @@ void da1up_c::UpdateTriggerFor7() {
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 7 (MUSHROOM_HIDDEN_CHASE). State 0: hidden (mShown 0)
-   until mUnlockCount is 0; then it appears -- mVertSpeed 40 units (0x28000),
+   until mUnlockCount is 0; then it appears -- mSpeed.y 40 units (0x28000),
    state 3, shown, opened to Yoshi (func_ov002_020aefa4), sound 0x68, mFlags bit
    0 cleared. State 3 is the launch arc (UpdateLaunchArc) under physics, with
    the trail effect once mStateTimer is past 17 (0x11); at mStateTimer 0x25 (37)
@@ -685,7 +685,7 @@ void da1up_c::UpdateHiddenChase() {
       if (mUnlockCount != 0)
         return;
 
-      mVertSpeed = 0x28000;
+      mSpeed.y = 0x28000;
       mState = 3;
       mShown = 1;
       func_ov002_020aefa4();
@@ -715,10 +715,10 @@ void da1up_c::UpdateHiddenChase() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Dispatch-table index 11 (MUSHROOM_SPIN_TRIGGER_FOR_5). Turns mAngleY by 0xc00
+/* Dispatch-table index 11 (MUSHROOM_SPIN_TRIGGER_FOR_5). Turns mAngle.y by 0xc00
    (16.875 degrees) a frame, then runs index 6's handler. */
 void da1up_c::UpdateSpinTriggerFor5() {
-    mAngleY += 0xc00;
+    mAngle.y += 0xc00;
     UpdateTriggerFor5();
 }
 
@@ -749,7 +749,7 @@ void da1up_c::UpdateHiddenFlee() {
         mShown = 0;
         if (mUnlockCount != 0)
             return;
-        mVertSpeed = 0x28000;
+        mSpeed.y = 0x28000;
         mState = 3;
         mShown = 1;
         func_ov002_020aefa4();
@@ -783,7 +783,7 @@ void da1up_c::UpdateHiddenFlee() {
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 4 (MUSHROOM_WAIT_THEN_FACE_AWAY). State 0 waits for the
-   player to come within 1000 units (0x3e8), then sets mVertSpeed to 40 units
+   player to come within 1000 units (0x3e8), then sets mSpeed.y to 40 units
    (0x28000) and goes to state 1. State 1 turns away from the player
    (WalkAwayFromPlayer) with the trail effect; unlike types 1 and 5 it sets no
    horizontal speed here; state 2 is the touch check plus
@@ -795,7 +795,7 @@ void da1up_c::UpdateWaitThenFaceAway() {
     switch (mState) {
     case 0:
         if (IsPlayerInRange(0x3e8)) {
-            mVertSpeed = 0x28000;
+            mSpeed.y = 0x28000;
             mState = 1;
         }
         break;
@@ -823,7 +823,7 @@ void da1up_c::UpdateStationary() {
 
 /* -------------------------------------------------------------------------- */
 /* State 1 of index 2 (MUSHROOM_WAIT_THEN_ACCELERATE). On the ground it adds 25
-   units (0x19000) to mHorzSpeed and zeroes mVertSpeed. In the air it multiplies
+   units (0x19000) to mHorzSpeed and zeroes mSpeed.y. In the air it multiplies
    mHorzSpeed by 0xfae / 0x1000 (about 0.98) and passes the product through
    FX_Div(t, 0x1000). mHorzSpeed is capped at 40 units (0x28000). When the
    player is not within 5000 units (0x1388) it goes to state 2. */
@@ -831,7 +831,7 @@ void da1up_c::AccelerateOnGround() {
 
     if (mWithMeshClsn.IsOnGround() != 0) {
         mHorzSpeed += 0x19000;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
     } else {
         int t = FX_MUL(mHorzSpeed, 0xfae);
         mHorzSpeed = FX_Div(t, 0x1000);
@@ -854,12 +854,12 @@ void da1up_c::AccelerateOnGround() {
 void da1up_c::UpdateWaitThenAccelerate() {
     if (mState != 0) {
         Vector3 speed;
-        speed.x = mSpeedX;
-        speed.y = mVertSpeed;
-        speed.z = mSpeedZ;
+        speed.x = mSpeed.x;
+        speed.y = mSpeed.y;
+        speed.z = mSpeed.z;
         UpdatePhysics();
-        mSpeedX = speed.x;
-        mSpeedZ = speed.z;
+        mSpeed.x = speed.x;
+        mSpeed.z = speed.z;
     }
 
     switch (mState) {
@@ -884,13 +884,13 @@ void da1up_c::UpdateWaitThenAccelerate() {
 
 /* -------------------------------------------------------------------------- */
 /* Walking away from the player, called from state 1 of types 1, 4 and 5. Sets
-   mPrevAngleY to the bearing from the mushroom to the closest player plus half
+   mPrevAngle.y to the bearing from the mushroom to the closest player plus half
    a turn (0x8000), runs the touch check, and goes to state 2 when the floor
    collision reports a wall or the player is not within 3000 units. */
 void da1up_c::WalkAwayFromPlayer() {
     daPly_c *p = ClosestPlayer();
     if (p) {
-        mPrevAngleY = Vec3_HorzAngle(&mPos, &p->mPos) + 0x8000;
+        mPrevAngle.y = Vec3_HorzAngle(&mPos, &p->mPos) + 0x8000;
     }
     CollectOnTouch();
     if (mWithMeshClsn.IsOnWall())
@@ -997,7 +997,7 @@ int da1up_c::CleanupResources()
     else data_ov002_0210da30.Release();
   }
   if ((unsigned int)(mMushroomType - 0xb) <= 1)
-      Particle::System::NewSimple(PTCL_TYPE_11_12_CLEANUP, mPosX, mPosY + 0x28000, mPosZ);
+      Particle::System::NewSimple(PTCL_TYPE_11_12_CLEANUP, mPos.x, mPos.y + 0x28000, mPos.z);
   return 1;
 }
 
@@ -1146,16 +1146,16 @@ int da1up_c::InitResources() {
     }
     mBlinkOn = 1;
     mUnlockCount = (param1 >> 4) & 0xf;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     mParticleID = 0;
 
-    if (gCurrentSublevel == 7 && mPosY == 0xdac000 && mPosZ == 0 &&
+    if (gCurrentSublevel == 7 && mPos.y == 0xdac000 && mPos.z == 0 &&
         (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0)) {
         MarkForDestruction();
         return 0;

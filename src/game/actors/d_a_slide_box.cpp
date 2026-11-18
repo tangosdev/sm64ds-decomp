@@ -5,8 +5,8 @@
  * lands it falls with the actor's gravity. On the deck it copies the
  * ship's angles, slides by the sine of the pitch, and steps out from
  * the landing spot by the sine and cosine of the ship's yaw. The deck
- * normal then rebuilds mVertSpeed from the horizontal velocity at
- * mSpeedX / mSpeedZ so the next step stays on the tilt.
+ * normal then rebuilds mSpeed.y from the horizontal velocity at
+ * mSpeed.x / mSpeed.z so the next step stays on the tilt.
  *
  * The rolling-sound gate reads mHorzSpeed after this state has stored
  * 0 there, so the sound does not start.
@@ -26,7 +26,7 @@
  * deslop leftovers:
  * - Behavior: UpdateContinuous() is WRONG-DEST. Both sites must call
  *   the veneer at arm9 0x020383fc, not _ZN10dBgCh_Actr16UpdateContinuousEv.
- * - Behavior: mShip->mAngleX/Y/Z each reloads mShip and grows the
+ * - Behavior: mShip->mAngle.x/.y/.z each reloads mShip and grows the
  *   function 0x2dc to 0x2e0. One pointer, then the three halfwords.
  * - Behavior: keeping the pre-clear slide speed for the rolling-sound
  *   test differs by 99 words. The ROM reloads mHorzSpeed after the
@@ -132,11 +132,11 @@ daSlide_Box_c::~daSlide_Box_c()
 
 void daSlide_Box_c::UpdateModel()
 {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     /* Flat Matrix4x3 (common.h): words 9..11 are the translation, at 1/8. */
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 int daSlide_Box_c::CleanupResources()
@@ -173,29 +173,29 @@ int daSlide_Box_c::Behavior()
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
         if (mWithMeshClsn.IsOnGround()) {
             mState++;
-            mBasePos.x = mPosX;
-            mBasePos.y = mPosY;
-            mBasePos.z = mPosZ;
+            mBasePos.x = mPos.x;
+            mBasePos.y = mPos.y;
+            mBasePos.z = mPos.z;
         }
         break;
     case kStateRide: {
-        /* One pointer, then the three halfwords. mShip->mAngleX/Y/Z
+        /* One pointer, then the three halfwords. mShip->mAngle.x/.y/.z
          * each reloads mShip. */
-        s16 *shipAngles = &mShip->mAngleX;
+        s16 *shipAngles = &mShip->mAngle.x;
         int spd;
-        mAngleX = shipAngles[0];
-        mAngleY = shipAngles[1];
-        mAngleZ = shipAngles[2];
-        mPrevAngleY = mAngleY;
-        mHorzSpeed = FX_SinIdx((u16)mAngleX >> 4) * kSlideScale;
+        mAngle.x = shipAngles[0];
+        mAngle.y = shipAngles[1];
+        mAngle.z = shipAngles[2];
+        mPrevAngle.y = mAngle.y;
+        mHorzSpeed = FX_SinIdx((u16)mAngle.x >> 4) * kSlideScale;
         mHorzPos += mHorzSpeed;
         spd = mHorzPos;
         if (spd >= kHorzPosMax)
             mHorzPos = kHorzPosMax;
         else if (spd < kHorzPosMin)
             mHorzPos = kHorzPosMin;
-        mPosX = mBasePos.x + FixMul(mHorzPos, FX_SinIdx((u16)mAngleY >> 4));
-        mPosZ = mBasePos.z + FixMul(mHorzPos, FX_CosIdx((u16)mAngleY >> 4));
+        mPos.x = mBasePos.x + FixMul(mHorzPos, FX_SinIdx((u16)mAngle.y >> 4));
+        mPos.z = mBasePos.z + FixMul(mHorzPos, FX_CosIdx((u16)mAngle.y >> 4));
         mHorzSpeed = 0;
         UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -203,8 +203,8 @@ int daSlide_Box_c::Behavior()
             dBgPi *floor = mWithMeshClsn.GetFloorResult();
             floor->surface.CopyNormalTo(normal);
             if (normal.y != 0) {
-                mVertSpeed =
-                    -(FX_Div(FixMul(normal.x, mSpeedX) + FixMul(normal.z, mSpeedZ), normal.y) +
+                mSpeed.y =
+                    -(FX_Div(FixMul(normal.x, mSpeed.x) + FixMul(normal.z, mSpeed.z), normal.y) +
                       kDeckSink);
             }
         }
@@ -234,7 +234,7 @@ int daSlide_Box_c::InitResources()
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *clsnFile = dBgW_Kc::LoadFile(ClsnFile);
-    mMeshCollider.SetFile((clsnFile), mClsnMat, kMeshScale, mAngleY,
+    mMeshCollider.SetFile((clsnFile), mClsnMat, kMeshScale, mAngle.y,
                           *(CLPS_Block *)(data_ov016_02113bac));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mWithMeshClsn.Init(this, kClsnRadius, kClsnRadius, 0, 0);

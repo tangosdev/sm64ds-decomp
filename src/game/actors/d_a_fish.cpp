@@ -31,8 +31,8 @@
  *   BCA_File * SetAnim takes.
  * - data_0209caa0 / data_0209f32c are the arm9 level-state words that
  *   carry the "has water" flag and the water height; neither is named yet.
- * - Mtx43 / RawVector3_16 are POD views whose aggregate copies keep the
- *   ROM's ldm/stm / halfword-move shapes.
+ * - Mtx43 is a POD view whose aggregate copy keeps the ROM's ldm/stm
+ *   shape.
  * - func_0203b9b4, Vec3_Sub and Vec3_Asr have no shared header, so they
  *   keep a local extern "C" block.
  */
@@ -114,11 +114,6 @@ enum {
  * schedules differently. Copying through Mtx43 preserves the ROM's three
  * ldm/stm copies.
  */
-/* The same for the spawn rotation: C++'s memberwise Vector3_16 copy loads
- * each field sign-extended; the ROM moves three plain halfwords. */
-struct RawVector3_16 {
-    s16 words[3];
-};
 
 /* The animation file a handle has loaded. */
 static inline BCA_File *LoadedBCA(SharedFilePtr *ptr) {
@@ -148,7 +143,7 @@ s32 daFish_c::InitResources() {
     mIsSpawner = 1;
     mSpawnerID = uniqueID;
     mState = 0;
-    mSurfaceY = mPosY + 0xc8000;
+    mSurfaceY = mPos.y + 0xc8000;
     mStateTimer = 0;
     return 1;
 }
@@ -169,8 +164,8 @@ s32 daFish_c::Behavior() {
         }
         Vec3_Asr(&shiftedPos, &mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, shiftedPos.x, shiftedPos.y, shiftedPos.z);
-        mAngleY = mPrevAngleY;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+        mAngle.y = mPrevAngle.y;
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         mAnmModel.Advance();
     }
@@ -200,7 +195,6 @@ s32 daFish_c::CleanupResources() {
    TU matches without it. */
 void daFish_c::StateWaitForPlayer() {
     Vector3 diff;
-    Vector3_16 rot;
     Vector3 pos;
     int n;
     int i;
@@ -222,13 +216,11 @@ void daFish_c::StateWaitForPlayer() {
         }
     }
 
-    {
-        n = this->param1 & 0xf;
-        *(RawVector3_16 *)&rot = *(RawVector3_16 *)&this->mPrevAngleX;
-        this->mNumFish = 0;
-        if (n < 1)
-            n = 1;
-    }
+    n = this->param1 & 0xf;
+    Vector3_16 rot = this->mPrevAngle;
+    this->mNumFish = 0;
+    if (n < 1)
+        n = 1;
     if (this->mVariant != 0) {
         kind = (this->mVariant + 2) << 4;
     } else {
@@ -239,14 +231,14 @@ void daFish_c::StateWaitForPlayer() {
         int r;
         if (this->mVariant != 0) {
             r = RandomIntInternal(&data_0209e650.value);
-            pos.x = this->mPosX + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.x = this->mPos.x + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
             r = RandomIntInternal(&data_0209e650.value);
-            pos.z = this->mPosZ + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.z = this->mPos.z + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
         } else {
             r = RandomIntInternal(&data_0209e650.value);
-            pos.x = this->mPosX + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.x = this->mPos.x + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
             r = RandomIntInternal(&data_0209e650.value);
-            pos.z = this->mPosZ + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.z = this->mPos.z + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
         }
 
         r = RandomIntInternal(&data_0209e650.value);
@@ -301,7 +293,7 @@ void daFish_c::StateIdle() {
     daPly_c *p = this->ClosestPlayer();
     if (p) {
         s16 ang = Vec3_HorzAngle(&this->mPos, &p->mPos);
-        if (ApproachLinear(this->mPrevAngleY, ang, 0x400) != 0) {
+        if (ApproachLinear(this->mPrevAngle.y, ang, 0x400) != 0) {
             if (this->mModelIndex == 0) {
                 this->mAnmModel.SetAnim((LoadedBCA(&data_ov100_021489cc)), 0, 0x1000, 0);
             }
@@ -338,7 +330,7 @@ void daFish_c::StateFlee() {
     pl = this->ClosestPlayer();
     if (pl == 0)
         return;
-    ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&pl->mPos, &this->mPos), this->mTurnSpeed);
+    ApproachLinear(this->mPrevAngle.y, Vec3_HorzAngle(&pl->mPos, &this->mPos), this->mTurnSpeed);
     Vec3_Sub(&v, &this->mPos, &pl->mPos);
     if (Vec3_HorzLen(&v) <= this->mTriggerDist)
         return;
@@ -357,7 +349,7 @@ void daFish_c::StateWander() {
             return;
     }
     this->mTurnSpeed = 0x800;
-    this->mTargetAngle = this->mPrevAngleY + 0x8000;
+    this->mTargetAngle = this->mPrevAngle.y + 0x8000;
     this->mAnmModel.speed = 0x2000;
     this->mState = 6;
 }
@@ -365,7 +357,7 @@ void daFish_c::StateWander() {
 /* Fish state 6: turn about, then wander again once back in range. */
 void daFish_c::StateTurnAbout() {
     Vector3 v;
-    if (!ApproachLinear(this->mPrevAngleY, this->mTargetAngle, this->mTurnSpeed))
+    if (!ApproachLinear(this->mPrevAngle.y, this->mTargetAngle, this->mTurnSpeed))
         return;
     {
         dActor_c *spawner = dActor_c::FindWithID(this->mSpawnerID);
@@ -395,7 +387,7 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
     this->mIsSpawner = 0;
     this->mSpawnerID = spawnerID;
     if (this->mVariant != 0) {
-        s16 *angle = &this->mPrevAngleY;
+        s16 *angle = &this->mPrevAngle.y;
         *angle = *angle & 0x8000;
         unsigned char v = this->mVariant;
         if (v == 3) {

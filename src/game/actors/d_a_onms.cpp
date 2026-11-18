@@ -19,7 +19,7 @@
  * deslop leftovers:
  * - StateBounce: `return 0` for the tested zero, size 0x1a0 -> 0x1a8.
  *   Building the landing dust without the dead tmp copy, size 0x1a0 -> 0x190.
- * - StateKnocked: o->mPosX/Y/Z instead of int *p = &o->mPosX, size
+ * - StateKnocked: o->mPos.x/.y/.z instead of int *p = &o->mPos.x, size
  *   0x200 -> 0x1f8. Hoisting &floor->surface.clps.w0, 13 words (size stayed
  *   0x200); each call adds 4. mWithMeshClsn.mRadius = 0x78000 instead of
  *   SetRadius (the +0x18 store), size 0x200 -> 0x1fc. UpdateContinuous() relocates to
@@ -76,7 +76,7 @@ enum { kMoveAlongPath = 3 };
 const s32 daOnms_c::sLaunchHorzSpeed[3] = {0x3c000, 0x3c000, 0xc000};
 const s32 daOnms_c::sLaunchVertSpeed[3] = {0x7c000, 0x7c000, 0x8c000};
 
-/* Roll indexes this by mOrientBits. An s8 offset from &mAngleX; negative subtracts. */
+/* Roll indexes this by mOrientBits. An s8 offset from &mAngle.x; negative subtracts. */
 const s8 daOnms_c::sBankAxis[64] = {
     2, 1,  -3, -2, 0,  1,  0,  -2, 2, 1, -3, -2, 0,  1,  0,  -2, 2, 1,  -3, -2, 0,  1,
     0, -2, 2,  1,  -3, -2, 0,  1,  0, 0, 2,  1,  -3, -2, 0,  1,  0, -2, 2,  1,  -3, -2,
@@ -158,8 +158,8 @@ daOnms_c::~daOnms_c()
 /* State 8: sink, then go once 0x3e8000 below the rest height. */
 void daOnms_c::StateSink()
 {
-    mPosY -= 0x5000;
-    if (mPosY < mRestPos.y - 0x3e8000)
+    mPos.y -= 0x5000;
+    if (mPos.y < mRestPos.y - 0x3e8000)
         MarkForDestruction();
 }
 
@@ -181,9 +181,9 @@ int daOnms_c::StateBounce()
         }
     }
 
-    mAngleX += mTumbleVelX;
-    mAngleY += mTumbleVelY;
-    mAngleZ += mTumbleVelZ;
+    mAngle.x += mTumbleVelX;
+    mAngle.y += mTumbleVelY;
+    mAngle.z += mTumbleVelZ;
 
     /* Both early exits return the zero they tested; `return 0` differs. */
     int v = mVertAccel;
@@ -198,18 +198,18 @@ int daOnms_c::StateBounce()
 
     mTumbleVelX = mTumbleVelY = mTumbleVelZ = 0;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
 
-    eq.x = mPosX;
-    eq.y = mPosY;
-    eq.z = mPosZ;
+    eq.x = mPos.x;
+    eq.y = mPos.y;
+    eq.z = mPos.z;
     Earthquake(eq, 0x5dc000);
     func_02012694(0x46, CamPos(this));
 
     /* tmp is a dead copy the ROM keeps; building dust directly differs. */
-    tmp.x = mPosX;
-    tmp.y = mPosY;
-    tmp.z = mPosZ;
+    tmp.x = mPos.x;
+    tmp.y = mPos.y;
+    tmp.z = mPos.z;
     tmp.y -= 0x78000;
     dust = tmp;
     LandingDustAt(dust, 1);
@@ -227,15 +227,15 @@ void daOnms_c::StateKnocked()
     Vector3 v1;
     Vector3 v2;
 
-    mAngleX += mTumbleVelX;
-    mAngleY += mTumbleVelY;
-    mAngleZ += mTumbleVelZ;
+    mAngle.x += mTumbleVelX;
+    mAngle.y += mTumbleVelY;
+    mAngle.z += mTumbleVelZ;
 
     UpdatePos(0);
 
-    saved.x = mPosX;
-    saved.y = mPosY;
-    saved.z = mPosZ;
+    saved.x = mPos.x;
+    saved.y = mPos.y;
+    saved.z = mPos.z;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.IsOnWall() != 0) {
@@ -248,7 +248,7 @@ void daOnms_c::StateKnocked()
     if (mWithMeshClsn.IsOnGround() == 0)
         return;
 
-    mRestPos.y = mPosY;
+    mRestPos.y = mPos.y;
     /* The wrapper returns the sphere query's dBgPi. Its dBgPc base owns
        the surface. Keep each CLPS address at its call site; the earlier
        hoisted-address probe differed by 13 words. */
@@ -257,33 +257,33 @@ void daOnms_c::StateKnocked()
     if (floor->surface.clps.GetSurfaceType() == 9) {
         mMoveDir = kDirSink;
         mHorzSpeed = 0;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         func_02012694(0x178, CamPos(this));
     } else if (floor->surface.clps.GetSoundType() == 8) {
-        /* The player's position is read through p: reading o->mPosX
+        /* The player's position is read through p: reading o->mPos.x
            directly changes the code. */
         dActor_c *o;
         int *p;
         mMoveDir = kDirBounce;
         mWithMeshClsn.SetRadius(0x78000);
         o = mPlayerActor;
-        p = &o->mPosX;
+        p = &o->mPos.x;
         v1.x = p[0];
         v1.y = p[1];
         v1.z = p[2];
         Earthquake(v1, 0xff8000);
-        mPosX = saved.x;
-        mPosY = saved.y;
-        mPosZ = saved.z;
+        mPos.x = saved.x;
+        mPos.y = saved.y;
+        mPos.z = saved.z;
         func_02012694(0x178, CamPos(this));
     } else {
         dActor_c *o;
         int *p;
         TriplePoofDust();
-        Particle::System::NewSimple(kPtclTumbleBoxBreak, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(kPtclTumbleBoxBreak, mPos.x, mPos.y, mPos.z);
         MarkForDestruction();
         o = mPlayerActor;
-        p = &o->mPosX;
+        p = &o->mPos.x;
         v2.x = p[0];
         v2.y = p[1];
         v2.z = p[2];
@@ -332,9 +332,9 @@ void daOnms_c::NextMove()
             mMoveSeqIndex = 0;
         }
     }
-    mOrientBits = (mPrevAngleX >> 0xe) & 3;
-    mOrientBits |= (mPrevAngleY >> 0xc) & 0xc;
-    mOrientBits |= (mPrevAngleZ >> 0xa) & 0x30;
+    mOrientBits = (mPrevAngle.x >> 0xe) & 3;
+    mOrientBits |= (mPrevAngle.y >> 0xc) & 0xc;
+    mOrientBits |= (mPrevAngle.z >> 0xa) & 0x30;
 }
 
 /* State 1: sit still, take the next move after 0x14 frames, watch for a hit. */
@@ -352,11 +352,13 @@ void daOnms_c::StateLand()
     mHorzSpeed = 0;
     if (!mStateTimer) {
         Vector3 v;
-        v.x = mPosX; v.y = mPosY; v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         Earthquake(v, 0x860000);
         func_02012694(0x46, CamPos(this));
     }
-    mPosY = mRestPos.y + 0x3000;
+    mPos.y = mRestPos.y + 0x3000;
     func_ov092_02131578();
 }
 
@@ -382,7 +384,7 @@ void daOnms_c::StateRollPosZ()
 
 /* One frame of an eight-frame roll: hop along the sine table, step, and
    turn the face sBankAxis says is leading. The table is an s8 index from
-   &mAngleX; a negative index subtracts `bank` from that angle instead. */
+   &mAngle.x; a negative index subtracts `bank` from that angle instead. */
 void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
 {
     int idx;
@@ -396,24 +398,24 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
     }
     y = mRestPos.y + 0x3000;
     mv = FX_SinIdx(idx);
-    mPosY = y + ((mv * 0x6793a) >> 12);
+    mPos.y = y + ((mv * 0x6793a) >> 12);
 
-    mPosX += stepX;
-    ang = &mAngleX;
-    mPosZ += stepZ;
+    mPos.x += stepX;
+    ang = &mAngle.x;
+    mPos.z += stepZ;
 
     if (pitch) {
         u8 f = mOrientBits;
         if ((f & 0x10) != 0) {
             if ((f & 0x20) != 0)
-                mAngleY += pitch;
+                mAngle.y += pitch;
             else
-                mAngleY -= pitch;
+                mAngle.y -= pitch;
         } else {
             if ((f & 0x20) != 0)
-                mAngleX -= pitch;
+                mAngle.x -= pitch;
             else
-                mAngleX += pitch;
+                mAngle.x += pitch;
         }
     } else {
         u8 f = mOrientBits;
@@ -430,9 +432,9 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
     if (mStateTimer != 7)
         return;
 
-    mPrevAngleX += mAngleX;
-    mPrevAngleY += mAngleY;
-    mPrevAngleZ += mAngleZ;
+    mPrevAngle.x += mAngle.x;
+    mPrevAngle.y += mAngle.y;
+    mPrevAngle.z += mAngle.z;
 
     if (mMoveKind == kMoveAlongPath)
         mMoveDir = kDirLand;
@@ -455,12 +457,14 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     mMoveDir = kDirKnocked;
     mVertAccel = -0xc000;
     mTerminalVelocity = -0x48000;
-    mVertSpeed = sLaunchVertSpeed[how];
+    mSpeed.y = sLaunchVertSpeed[how];
     mHorzSpeed = sLaunchHorzSpeed[how];
-    if (how < 2) mPrevAngleY = player->mAngleY;
-    else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
+    if (how < 2)
+        mPrevAngle.y = player->mAngle.y;
+    else
+        mPrevAngle.y = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
-    unsigned n = ((u16)mPrevAngleY) >> 4;
+    unsigned n = ((u16)mPrevAngle.y) >> 4;
     mTumbleVelX = (FX_CosIdx(n) >> 2);
     mTumbleVelY = 0;
     mTumbleVelZ = ((-FX_SinIdx(n)) >> 2);
@@ -485,7 +489,7 @@ void daOnms_c::CheckPlayerHit()
     } else if (f & (0x80 | 0x100 | 0x200)) {
         Launch(o, 1);
     } else if (BumpedUnderneathByPlayer(*player) != 0) {
-        if (o->mPosY > mPosY - 0x64000)
+        if (o->mPos.y > mPos.y - 0x64000)
             Launch(o, 2);
     }
     mPlayerActor = o;
@@ -495,23 +499,23 @@ void daOnms_c::CheckPlayerHit()
    the translation row (flat Matrix4x3 words 9..11), then Transform. */
 void daOnms_c::func_ov092_02131a88() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY;
-    mClsnMat.m[11] = mPosZ;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 void daOnms_c::UpdateModelMtx()
 {
     if (mTumbling != 0) {
         data_020a0e68 = mBaseMtx;
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         mModel.mat4x3 = data_020a0e68;
-        mModel.mat4x3.m[9] = mPosX >> 3;
-        mModel.mat4x3.m[10] = mPosY >> 3;
-        mModel.mat4x3.m[11] = mPosZ >> 3;
+        mModel.mat4x3.m[9] = mPos.x >> 3;
+        mModel.mat4x3.m[10] = mPos.y >> 3;
+        mModel.mat4x3.m[11] = mPos.z >> 3;
     } else {
         mModel.mat4x3 = mBaseMtx;
     }
@@ -548,11 +552,11 @@ int daOnms_c::Behavior()
         func_ov092_02131a88();
 
     if (mRollDone == 1) {
-        if (mAngleX != 0 || mAngleY != 0 || mAngleZ != 0) {
+        if (mAngle.x != 0 || mAngle.y != 0 || mAngle.z != 0) {
             mBaseMtx = mModel.mat4x3;
-            mAngleX = 0;
-            mAngleY = 0;
-            mAngleZ = 0;
+            mAngle.x = 0;
+            mAngle.y = 0;
+            mAngle.z = 0;
         }
     }
 
@@ -590,10 +594,10 @@ int daOnms_c::InitResources()
         func_ov092_021313b0();
     }
 
-    mPosY += 0xfa000;
-    mRestPos.x = mPosX;
-    mRestPos.y = mPosY;
-    mRestPos.z = mPosZ;
+    mPos.y += 0xfa000;
+    mRestPos.x = mPos.x;
+    mRestPos.y = mPos.y;
+    mRestPos.z = mPos.z;
     Vec3_Asr(&tmp, ActorPos(this), 3);
 
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
@@ -603,13 +607,13 @@ int daOnms_c::InitResources()
     func_ov092_02131a88();
 
     f = dBgW_Kc::LoadFile(gOnimasuCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngle.y,
                           *(CLPS_Block *)(&data_ov092_02132220));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
-    mOrientBits = ((mAngleX >> 0xe) & 3);
-    mOrientBits |= (mAngleY >> 0xc) & 0xc;
-    mOrientBits |= (mAngleZ >> 0xa) & 0x30;
+    mOrientBits = ((mAngle.x >> 0xe) & 3);
+    mOrientBits |= (mAngle.y >> 0xc) & 0xc;
+    mOrientBits |= (mAngle.z >> 0xa) & 0x30;
 
     {
         Vector3 offset;

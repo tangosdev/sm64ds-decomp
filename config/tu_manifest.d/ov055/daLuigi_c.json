@@ -62,7 +62,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z19func_ov055_02111264v",
+      "symbol": "_ZN9daLuigi_c19func_ov055_02111264Ev",
       "address": "0x02111264",
       "size": "0x00000024",
       "legacy_source": "src/func_ov055_02111264.c",

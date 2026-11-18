@@ -24,8 +24,8 @@ struct daObjRc_Guruguru_c : dBgActor_c {
     /* THIS CLASS'S OWN, in dBgActor_c's TAIL PADDING: the base's last field
        ends at 0x31e and its size rounds to 0x320, so the Itanium ABI puts the
        first derived byte at 0x31e and sizeof stays 0x320. InitResources seeds
-       it with -0x80, or with mAngleZ when the level author set one, and
-       Behavior adds it to mAngleY every frame -- that is the whole spin. */
+       it with -0x80, or with mAngle.z when the level author set one, and
+       Behavior adds it to mAngle.y every frame -- that is the whole spin. */
     s16 mAngVelY; /* 0x31e */
 
     /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place these

@@ -327,6 +327,9 @@ typedef struct WMMeasureChannelCallback {
     unsigned short wlResult;     /* 0x6 */
     unsigned short channel;      /* 0x8 */
     unsigned short ccaBusyRatio; /* 0xa -- percent */
+#ifdef __cplusplus
+    void func_0203f714();
+#endif
 } WMMeasureChannelCallback;
 
 /* NitroSDK WMIndCallback, the record of an INDICATION ARM7 sends outside any

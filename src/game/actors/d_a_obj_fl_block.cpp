@@ -21,8 +21,8 @@
 //   Assigning stoodOnCallback from StoodOnCallback size-DIFFs 0xac->0xa8.
 //   The ROM calls dBgW::SetBeforeClsnCallback and dBgW::SetStoodOnCallback.
 // - Putting the limit on the left of the compare
-//   (`mMaxPosY - 0xc8000 > mPosY`, `mMaxPosY < mPosY`) keeps Behavior at
-//   0xa4 and changes its words. mPosY on the left matches.
+//   (`mMaxPosY - 0xc8000 > mPos.y`, `mMaxPosY < mPos.y`) keeps Behavior at
+//   0xa4 and changes its words. mPos.y on the left matches.
 // - g_profile_FL_BLOCK lives outside this TU.
 // - data_ov064_0211bb0c is an unnamed row in its own module.
 // - The two file handles live at the bottom of this file; the compiler's
@@ -98,12 +98,12 @@ s32 daObjFl_Block_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov022_02114550);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb0c);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov064_0211bb0c);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
-    mMaxPosY = mPosY;
+    mMaxPosY = mPos.y;
     return 1;
 }
 
@@ -112,15 +112,15 @@ s32 daObjFl_Block_c::Behavior() {
 
     if (mHadClsn) {
         /* Sink, but no lower than 200 below the spawn height. */
-        mPosY -= 0x2000;
-        if (mPosY < mMaxPosY - 0xc8000)
-            mPosY = mMaxPosY - 0xc8000;
+        mPos.y -= 0x2000;
+        if (mPos.y < mMaxPosY - 0xc8000)
+            mPos.y = mMaxPosY - 0xc8000;
         mHadClsn = 0;
     } else {
         /* Rise back to the spawn height. */
-        mPosY += 0x2000;
-        if (mPosY > mMaxPosY)
-            mPosY = mMaxPosY;
+        mPos.y += 0x2000;
+        if (mPos.y > mMaxPosY)
+            mPos.y = mMaxPosY;
     }
 
     UpdateModelPosAndRotY();

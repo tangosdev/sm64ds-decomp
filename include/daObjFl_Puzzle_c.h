@@ -37,7 +37,7 @@ struct daObjFl_Puzzle_c : dBgActor_c {
     u8 mStepIndex;   /* 0x328 -- next entry of the script */
     u8 pad_329[0x3];
     s32 unk_32c; /* 0x32c -- only zeroed, in this TU */
-    /* Vertical offset added to mPosY for the model and collision matrices:
+    /* Vertical offset added to mPos.y for the model and collision matrices:
      * 0 on even mStepTimer values and -6 units (-0x6000) on odd ones while timer
      * values 0..0x13 of a move step run, 0 otherwise. */
     s32 mShakeOffsetY; /* 0x330 */

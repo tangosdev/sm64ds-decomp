@@ -6,7 +6,6 @@
 #include "Ov007Figure.h"
 
 void func_ov007_020bc02c(Ov007Model *a, void *b);
-void func_ov007_020be9ac(Ov007Figure *a, Ov007Model *b, void *c);
 void func_ov007_020bbff0(Ov007Model *c);
 
 /* Poses the manager model and both figures against camera 0's view matrix,
@@ -16,8 +15,8 @@ void func_ov007_020b2370(void) {
     Ov007Model *model = g->model;
     Ov007Figure **figures = &g->figure; /* figure, altFigure */
     func_ov007_020bc02c(model, &g->cameras[0]->viewMatrix);
-    func_ov007_020be9ac(figures[0], WORK->model, &WORK->cameras[0]->viewMatrix);
-    func_ov007_020be9ac(figures[1], WORK->model, &WORK->cameras[0]->viewMatrix);
+    figures[0]->func_ov007_020be9ac(WORK->model, &WORK->cameras[0]->viewMatrix);
+    figures[1]->func_ov007_020be9ac(WORK->model, &WORK->cameras[0]->viewMatrix);
     {
         int t = WORK->modelGrowth;
         long long v = ((long long)(0x1000 - t) << 8) + ((long long)t << 12);

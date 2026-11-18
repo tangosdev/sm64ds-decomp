@@ -25,8 +25,9 @@ extern void *data_020a4b68;
 extern int data_02099f24;
 extern const int data_02082178[6];
 namespace Absorb02043fdc {
-struct ProcessListDescriptor;
-void *func_02043fdc(ProcessListDescriptor *list);
+struct ProcessListDescriptor {
+    void *func_02043fdc();
+};
 }
 
 /* If this node is the one currently executing, clear that pointer. */
@@ -64,17 +65,7 @@ struct Thing {
 extern fBase_c::ProcessFunction data_02099f60;
 extern fBase_c::ProcessFunction data_02099f70, data_02099f48, data_02099f68, data_02099f50;
 
-struct ProcessList {
-    fLiNdBaPr_c *head;
-    fLiNdBaPr_c *tail;
-    fBase_c::ProcessFunction callback;
-
-    ProcessList(fBase_c::ProcessFunction &p) {
-        head = 0;
-        tail = 0;
-        callback = p;
-    }
-};
+#include "ProcessList.h"
 
 ProcessTree::Thing data_020a4b6c(data_02099f60);
 ProcessList data_020a4b88(data_02099f70);
@@ -84,15 +75,15 @@ ProcessList data_020a4ba8(data_02099f50);
 
 /* One frame: walk each process list, recording the phase number in
  * data_02099f24 while it runs. */
-void func_02044120(void) {
+void ProcessList::func_02044120() {
     data_02099f24 = 4;
-    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4ba8);
+    ((Absorb02043fdc::ProcessListDescriptor *)&data_020a4ba8)->func_02043fdc();
     data_02099f24 = 2;
-    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b88);
+    ((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b88)->func_02043fdc();
     data_02099f24 = 3;
-    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b78);
+    ((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b78)->func_02043fdc();
     data_02099f24 = 5;
-    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b98);
+    ((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b98)->func_02043fdc();
     data_02099f24 = 1;
     data_020a4b6c.func_020441cc();
     data_02099f24 = 0;
@@ -100,12 +91,14 @@ void func_02044120(void) {
 
 /* Table entry for frame-loop phase i (data_02099f24). The crash screen
  * prints it. */
-int func_020441bc(int i) {
+int ProcessList::func_020441bc(int i) {
     return data_02082178[i];
 }
 
-/* ActorBase_SceneNode.cpp defines it at file scope. */
-fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
+/* ActorBase_SceneNode.cpp defines the method. The return type is not in the mangled name. */
+struct TreeNd {
+    fBase_c::SceneNode *func_0203b394();
+};
 
 namespace ProcessTree {
 /* Walk a tree list, calling the descriptor's callback on each owner.
@@ -116,7 +109,7 @@ int Thing::func_020441cc() {
         return 1;
     node = head;
     while (node) {
-        fBase_c::SceneNode *next = func_0203b394(node);
+        fBase_c::SceneNode *next = ((TreeNd *)node)->func_0203b394();
         (node->owner->*callback)();
         node = next;
     }
@@ -144,56 +137,57 @@ struct LifecycleSequence {
     int f0c;    // 0xc
     s16 f10;    // 0x10
     s16 f12;    // 0x12
+
+    int func_02044284(int flag);
+    int func_0204424c();
+    void func_02044334();
 };
 
-int func_02044284(LifecycleSequence *self, int flag);
-
 /* Step a pending sequence once. Returns 0 while it is still pending. */
-extern "C" int func_0204424c(char *c) {
-    LifecycleSequence *self = (LifecycleSequence *)c;
-    if (self->state == 1)
-        self->state = func_02044284(self, 0);
-    if (self->state == 1)
+int LifecycleSequence::func_0204424c() {
+    if (state == 1)
+        state = func_02044284(0);
+    if (state == 1)
         return 0;
     return 1;
 }
 
 /* Run table entries from idx while each returns state 2. With flag == 0,
  * run at most one. */
-int func_02044284(LifecycleSequence *self, int flag) {
-    void **arr = self->arr;
+int LifecycleSequence::func_02044284(int flag) {
+    void **arr = this->arr;
     s16 i;
 
-    if (arr == 0 || self->state == 2)
+    if (arr == 0 || this->state == 2)
         return 2;
 
-    i = self->idx;
-    while (self->arr[self->idx] != 0) {
-        self->state = self->v08(arr[i]);
-        if (self->state != 2)
+    i = this->idx;
+    while (this->arr[this->idx] != 0) {
+        this->state = this->v08(arr[i]);
+        if (this->state != 2)
             break;
-        self->idx++;
-        self->f12 = 0;
+        this->idx++;
+        this->f12 = 0;
         if (flag == 0)
             break;
-        i = self->idx;
-        arr = self->arr;
+        i = this->idx;
+        arr = this->arr;
     }
-    return self->state;
+    return this->state;
 }
 
 /* Drain a started sequence: call slot 3 on each entry already run, newest
  * first. */
-void func_02044334(LifecycleSequence *self) {
-    if (self->arr == 0)
+void LifecycleSequence::func_02044334() {
+    if (arr == 0)
         return;
-    if (self->state == 0)
+    if (state == 0)
         return;
-    self->idx--;
-    if (self->idx < 0)
+    idx--;
+    if (idx < 0)
         return;
     do {
-        self->m3(self->arr[self->idx]);
-        self->idx--;
-    } while (self->idx >= 0);
+        m3(arr[idx]);
+        idx--;
+    } while (idx >= 0);
 }

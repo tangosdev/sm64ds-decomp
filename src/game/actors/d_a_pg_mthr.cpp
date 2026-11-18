@@ -50,7 +50,7 @@ enum {
     BABY_OWN = 0,
     BABY_OTHER = 1,
     /* 1500.0 and 450.0 in 20.12. The look test also wants the player in
-       front (angle within 0x1400 of mAngleY). */
+       front (angle within 0x1400 of mAngle.y). */
     HOME_RANGE = 0x5dc000,
     LOOK_RANGE = 0x1c2000,
     /* transforms[5]: 5 * sizeof(Matrix4x3) == 0xf0, the bone
@@ -140,22 +140,22 @@ int daPgMthr_c::InitResources()
     ChangeState(0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     /* Mesh radius and height 50.0. */
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     Vector3 pos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn())
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
+        mPos.y = pos.y;
     mHomePos = mPos;
     mPlayer = 0;
     UpdateModelAndShadow();
@@ -271,9 +271,9 @@ int daPgMthr_c::StateTalkUpdate() {
         }
         break;
     case 1:
-        if (ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514)) {
-            Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-            Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+        if (ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514)) {
+            Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
+            Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
             {
                 Vector3 mouth;
@@ -333,8 +333,8 @@ int daPgMthr_c::StateFollowEnter() {
 }
 
 int daPgMthr_c::StateFollowUpdate() {
-    ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514);
-    mPrevAngleY = mAngleY;
+    ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514);
+    mPrevAngle.y = mAngle.y;
     UpdatePos(&mdCcAc_c);
     UpdateFloorAndWalls(&mWithMeshClsn);
     TurnHeadToward((char *)mPlayer);
@@ -354,11 +354,11 @@ int daPgMthr_c::StateFollowUpdate() {
 }
 
 void daPgMthr_c::UpdateModelAndShadow() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     /* m[9..11] are mat4x3's translation (pos >> 3). */
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
     if (mLookAngX != 0 || mLookAngY != 0) {
         Matrix4x3 *bone = &mAnmModel.data.transforms[LOOK_BONE];
@@ -377,8 +377,8 @@ void daPgMthr_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         dBgPi *floor = w->GetFloorResult();
         floor->surface.CopyNormalTo(n);
         if (n.y != 0) {
-            int s = FX_MUL(n.x, mSpeedX) + FX_MUL(n.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(s, n.y) + 0x8000);
+            int s = FX_MUL(n.x, mSpeed.x) + FX_MUL(n.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {
@@ -431,10 +431,10 @@ void daPgMthr_c::TurnHeadToward(char *b) {
     dist = Vec3_HorzDist(&mPos, &who->mPos);
     horzAngle = Vec3_HorzAngle(&mPos, &who->mPos);
 
-    if (dist < LOOK_RANGE && AngleDiff(horzAngle, mAngleY) < 0x1400) {
-        tz = who->mPosZ;
-        ty = who->mPosY + 0x640000;
-        tx = who->mPosX;
+    if (dist < LOOK_RANGE && AngleDiff(horzAngle, mAngle.y) < 0x1400) {
+        tz = who->mPos.z;
+        ty = who->mPos.y + 0x640000;
+        tx = who->mPos.x;
         lookTarget.x = tx;
         lookTarget.z = tz;
         lookTarget.y = ty;
@@ -443,7 +443,7 @@ void daPgMthr_c::TurnHeadToward(char *b) {
         nodePos.y = bone->m[10];
         nodePos.z = bone->m[11];
         vert = Vec3_VertAngle(&nodePos, &lookTarget);
-        delta = horzAngle - mAngleY;
+        delta = horzAngle - mAngle.y;
     } else {
         vert = 0;
         delta = 0;

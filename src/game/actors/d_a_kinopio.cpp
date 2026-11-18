@@ -3,7 +3,7 @@
  *
  * He idles until a Mario (actor 0xbf) touches him, then turns to face the
  * player and talks. His head tracks the closest player and he fades out at a
- * distance. A Toad tied to a star (low byte of mAngleX) whose star is still
+ * distance. A Toad tied to a star (low byte of mAngle.x) whose star is still
  * uncollected, while the player owns the star count data_ov085_0212f27c asks
  * for, says his base line, spawns POWER_STAR 0xb2 after the talk and only
  * then moves on to his next line. If the star is already collected or the
@@ -186,7 +186,7 @@ void daKinopio_c::St_Talk_Main()
     talkState = player->GetTalkState();
     switch (talkState) {
     case 0: {
-        if (ApproachLinear(mAngleY, angleToPlayer, 0x800) == 0)
+        if (ApproachLinear(mAngle.y, angleToPlayer, 0x800) == 0)
             return;
         if (gCurrentSublevel == 0x32) {
             if ((data_0209caa0.file.flags1 & 0x40000000) == 0)
@@ -195,9 +195,9 @@ void daKinopio_c::St_Talk_Main()
         if (Sound::PlaySub(0x25, 20, 127, 0x15666, 1) == 0)
             return;
         {
-            int z = mPosZ;
-            int y = mPosY + 0x46000;
-            messagePos.x = mPosX;
+            int z = mPos.z;
+            int y = mPos.y + 0x46000;
+            messagePos.x = mPos.x;
             messagePos.y = y;
             messagePos.z = z;
         }
@@ -214,9 +214,9 @@ void daKinopio_c::St_Talk_Main()
         mTalkFinished = 1;
         if (mStarID != 0xff && IsStarCollectedInCurLevel(mStarID) == 0) {
             if (NumStars() >= data_ov085_0212f27c[mStarReqIndex]) {
-                starPos.x = mPosX;
-                starPos.y = mPosY;
-                starPos.z = mPosZ;
+                starPos.x = mPos.x;
+                starPos.y = mPos.y;
+                starPos.z = mPos.z;
                 starPos.y += 0xc8000;
                 dActor_c::Spawn(
                     0xb2, mStarID | 0x20, starPos, 0, mAreaId, -1);
@@ -300,10 +300,10 @@ void daKinopio_c::UpdateModelPose()
     u32 id;
     Vector3 capPos;
 
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = (mPosY + 0x4000) >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = (mPos.y + 0x4000) >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 
     data_020a0e68 = mAnmModel.data.transforms[5];
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mHeadYaw);
@@ -333,17 +333,17 @@ void daKinopio_c::UpdateModelPose()
             capPos.y <<= 3;
             capPos.x <<= 3;
             capPos.z <<= 3;
-            actor->mPosX = capPos.x;
-            actor->mPosY = capPos.y;
-            actor->mPosZ = capPos.z;
+            actor->mPos.x = capPos.x;
+            actor->mPos.y = capPos.y;
+            actor->mPos.z = capPos.z;
             actor->mCarryMatrix = &mCapTransform;
         }
     }
 
     mShadowTransform = IDENTITY_MATRIX4X3;
-    mShadowTransform.m[9] = mPosX >> 3;
-    mShadowTransform.m[10] = (mPosY - 0x8000) >> 3;
-    mShadowTransform.m[11] = mPosZ >> 3;
+    mShadowTransform.m[9] = mPos.x >> 3;
+    mShadowTransform.m[10] = (mPos.y - 0x8000) >> 3;
+    mShadowTransform.m[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 15);
 }
 
@@ -388,7 +388,7 @@ int daKinopio_c::Render()
  *
  * The threshold widens from 0xfa000 to 0x1f4000 when gCurrentSublevel is 0x32 -- a
  * mode in which he also slowly rotates his whole body toward the player rather
- * than just his head, and in which he never fades out. mAngleY is his facing,
+ * than just his head, and in which he never fades out. mAngle.y is his facing,
  * and the ApproachLinear on it in that one branch is the only place the body
  * turns.
  *
@@ -430,14 +430,14 @@ int daKinopio_c::Behavior()
         else
             mTargetOpacity = 60;
 
-        if (horzDist < threshold && AngleDiff(yawToPlayer, mAngleY) < 0x3000) {
-            mHeadYawTarget = (s16)(yawToPlayer - mAngleY);
+        if (horzDist < threshold && AngleDiff(yawToPlayer, mAngle.y) < 0x3000) {
+            mHeadYawTarget = (s16)(yawToPlayer - mAngle.y);
             mHeadPitchTarget = pitchToPlayer;
         } else if (gCurrentSublevel != 0x32) {
             mHeadYawTarget = 0;
             mHeadPitchTarget = 0;
         } else {
-            ApproachLinear(mAngleY, yawToPlayer, 0x100);
+            ApproachLinear(mAngle.y, yawToPlayer, 0x100);
             mHeadYawTarget = 0;
             mHeadPitchTarget = 0;
         }
@@ -484,9 +484,9 @@ int daKinopio_c::Behavior()
  *
  * mParam carries three things at once. The low half becomes mMessageID, the
  * dialogue id, with 0xffff meaning "none" and normalising to 0. The TOP byte of
- * mAngleX becomes mVariant, which selects a variant -- value 1 is the one that
+ * mAngle.x becomes mVariant, which selects a variant -- value 1 is the one that
  * preloads the three ov002 models and, in multiplayer, spawns a companion actor
- * 0x10d keyed to the nearest player's character. The LOW byte of mAngleX becomes
+ * 0x10d keyed to the nearest player's character. The LOW byte of mAngle.x becomes
  * mStarID, a star index; 0xff means "not tied to a star".
  *
  * When it IS tied to a star, the dialogue id shifts by one unless the star is
@@ -495,7 +495,7 @@ int daKinopio_c::Behavior()
  * before and after you have earned what he is guarding.
  *
  * Finally he is dropped onto the ground: a dBgCh_Gnd is aimed 0x14000 above his
- * spawn point and, if it hits, mPosY is snapped to the surface. The local
+ * spawn point and, if it hits, mPos.y is snapped to the surface. The local
  * dBgCh_Gnd is declared at that exact mid-function construction point, so the
  * compiler emits both its constructor and destructor naturally. */
 int daKinopio_c::InitResources()
@@ -509,8 +509,8 @@ int daKinopio_c::InitResources()
     mOpacity = 255;
     mTargetOpacity = 255;
     mMessageID = param1;
-    mStarID = (u8)mAngleX;
-    mVariant = (u8)(mAngleX >> 8);
+    mStarID = (u8)mAngle.x;
+    mVariant = (u8)(mAngle.x >> 8);
     if (mMessageID == 0xffff)
         mMessageID = 0;
     mCapUniqueID = 0;
@@ -542,15 +542,15 @@ int daKinopio_c::InitResources()
         }
     }
     SetState(0);
-    objPos.x = mPosX;
-    objPos.y = mPosY;
-    objPos.z = mPosZ;
+    objPos.x = mPos.x;
+    objPos.y = mPos.y;
+    objPos.z = mPos.z;
     objPos.y = objPos.y + 0x14000;
     {
         dBgCh_Gnd ground;
         ground.SetObjAndPos(objPos, 0);
         if (ground.DetectClsn())
-            mPosY = ground.clsnY;
+            mPos.y = ground.clsnY;
     }
     return 1;
 }

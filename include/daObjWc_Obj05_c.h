@@ -21,7 +21,7 @@
  * (D1 restores _ZTV10dBgActor_c, destroys dBgW_KcMbg at 0x124 and dExtSimpleModel_c
  * at 0x0d4, then chains to dActor_c). This class owns the state tail:
  *
- *   0x320  mRestPosY      -- rest height; InitResources snapshots mPosY
+ *   0x320  mRestPosY      -- rest height; InitResources snapshots mPos.y
  *   0x324  mSoundHandle   -- Sound::PlayLong handle
  *   0x328  mDwellTimer    -- dwell timer in state 2, 0x6e frames
  *   0x32a  mPlayerOnTop   -- BeforeClsn helper sets; Behavior consumes
@@ -34,7 +34,7 @@
  */
 
 struct daObjWc_Obj05_c : dBgActor_c {
-    /* InitResources copies mPosY here; state 1 descends to
+    /* InitResources copies mPos.y here; state 1 descends to
      * mRestPosY - 0xa28000 and state 2 climbs back and snaps to it. */
     s32 mRestPosY; /* 0x320 */
     /* Sound::PlayLong's returned handle, fed back as its first argument

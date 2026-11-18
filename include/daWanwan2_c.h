@@ -38,6 +38,8 @@ enum { daWanwan2_NUM_LINKS = 6 };
  * UnchainedChomp_Spawn) constructs it for the WANWAN2
  * registry profile.
  */
+struct ChompState;
+
 struct daWanwan2_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
     dBgCh_Actr        mWithMeshClsn;      /* 0x150 */
@@ -56,7 +58,7 @@ struct daWanwan2_c : dEnemyBase_c {
        allocation). */
     s32 mChainTimer;                        /* 0x6a0 */
     /* The heading to the path node the chomp is walking to: Behavior stores it
-       (Vec3_HorzAngle) on each frame it is not halted and eases mPrevAngleY
+       (Vec3_HorzAngle) on each frame it is not halted and eases mPrevAngle.y
        toward it, and InitResources seeds it with the placed angle. */
     s16 mTargetAngle;                       /* 0x6a4 */
     /* Set to 90 by func_ov100_0214344c on a hit. While Behavior's count-down
@@ -114,6 +116,10 @@ struct daWanwan2_c : dEnemyBase_c {
     int Render();
     int func_ov100_02143370();
     void func_ov100_02143b68();
+    void func_ov100_0214344c();
+    void func_ov100_021435e8();
+    void func_ov100_021437d4();
+    int func_ov100_02143b18(ChompState *p);
 };
 
 #ifndef SM64DS_PLATFORM_PC

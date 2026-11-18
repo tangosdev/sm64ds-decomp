@@ -138,7 +138,7 @@ struct daOts_c : dEnemyBase_c {
            the floor), which is where func_ov064_0211616c spawns its particles. */
         Vector3 mHomePos; /* 0x3a8 */
         /* Handed to DropShadowRadHeight; func_ov064_02116bac rebuilds it every
-           frame as a Y rotation by mAngleY with the translation row set to the
+           frame as a Y rotation by mAngle.y with the translation row set to the
            position divided by 8. */
         Matrix4x3 mShadowMtx;   /* 0x3b4 */
         /* Horizontal angle from the actor to mHomePos (Vec3_HorzAngle), which
@@ -147,7 +147,7 @@ struct daOts_c : dEnemyBase_c {
         u8  pad_3e6[0x2];
         /* Copied from the config block in InitResourcesCommon: horzDecel, modelYOffset,
            shadowRadius. mHorzDecel is the rate STATE_KNOCKED_BACK slows mHorzSpeed
-           to zero. mModelYOffset is added to mPosY for the model matrix and for the
+           to zero. mModelYOffset is added to mPos.y for the model matrix and for the
            floor probe's origin. mShadowRadius is the drop shadow's radius at ground
            level; func_ov064_02116bac shrinks it as the actor rises. */
         s32 mHorzDecel;         /* 0x3e8 */

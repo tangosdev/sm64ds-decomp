@@ -169,7 +169,7 @@ extern daC_Jugem_c::StateFn data_ov085_02130284;
 extern daC_Jugem_c::StateFn data_ov085_0213029c;
 extern daC_Jugem_c::StateFn data_ov085_02130274;
 }
-void func_0201f32c(int a);
+#include "Message.h"
 
 #pragma defer_codegen off
 
@@ -204,10 +204,10 @@ int daC_Jugem_c::StateIntroMain() {
             mHorzSpeed = 0;
             mTimer = 0;
             mAuxCounter = 0;
-            mSpeedX = 0;
-            mVertSpeed = 0;
-            mSpeedZ = 0;
-            mAngleX = 0;
+            mSpeed.x = 0;
+            mSpeed.y = 0;
+            mSpeed.z = 0;
+            mAngle.x = 0;
             daPly_c *player = ClosestPlayer();
             if (player != 0) {
                 func_ov002_020c3e8c(player);
@@ -238,12 +238,12 @@ int daC_Jugem_c::StateApproachMain()
     cam = gCamera;
     cam->SetFlag_3();
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
-    ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
-    ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngle.y, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngle.x, Vec3_VertAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
     ApproachLinear(mHorzSpeed, 0x28000, 0x2000);
-    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c),
+    ApproachLinear(mPrevAngle.y, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c),
                    (s16)mAuxCounter);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mAuxCounter += 5;
     if (mAuxCounter > 0x800)
         mAuxCounter = 0x800;
@@ -284,9 +284,9 @@ int daC_Jugem_c::StateApproachInit()
     cam->SetLookAt(mCamLook);
     cam->SetPos(mCamPos);
     mAuxCounter = 0xa0;
-    mPosX = data_ov085_02130840.x;
-    mPosY = data_ov085_02130840.y;
-    mPosZ = data_ov085_02130840.z;
+    mPos.x = data_ov085_02130840.x;
+    mPos.y = data_ov085_02130840.y;
+    mPos.z = data_ov085_02130840.z;
     return 1;
 }
 
@@ -300,14 +300,14 @@ int daC_Jugem_c::StateBobMain()
     mTimer += 1;
     mAuxCounter += 0x500;
 
-    ApproachLinear(mPosY, FX_MUL(FX_SinIdx((u16)(s16)mAuxCounter >> 4), 0x1a000) + mTarget.y,
+    ApproachLinear(mPos.y, FX_MUL(FX_SinIdx((u16)(s16)mAuxCounter >> 4), 0x1a000) + mTarget.y,
                    0x10000000);
 
     if (mTimer == 50) {
         pl->func_ov002_020c3ea0();
     }
-    mAngleY = 0x6000;
-    mPrevAngleY = mAngleY;
+    mAngle.y = 0x6000;
+    mPrevAngle.y = mAngle.y;
     {
         int a1 = 0x4000;
         if (mTimer >= 75)
@@ -318,8 +318,8 @@ int daC_Jugem_c::StateBobMain()
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
 
     if (mTimer > 120) {
-        mAngleY = 0x4000;
-        mPrevAngleY = mAngleY;
+        mAngle.y = 0x4000;
+        mPrevAngle.y = mAngle.y;
         SetState(data_ov085_02130820);
     }
     return 1;
@@ -331,12 +331,12 @@ int daC_Jugem_c::StateBobInit()
     dCamera_c *cam;
     mTimer = 0;
     mAuxCounter = 0;
-    mPosX = -0x5a0000;
-    mPosY = 0x2c0000;
-    mPosZ = 0x1c6f000;
-    mTarget.x = mPosX;
-    mTarget.y = mPosY;
-    mTarget.z = mPosZ;
+    mPos.x = -0x5a0000;
+    mPos.y = 0x2c0000;
+    mPos.z = 0x1c6f000;
+    mTarget.x = mPos.x;
+    mTarget.y = mPos.y;
+    mTarget.z = mPos.z;
     cam = gCamera;
     cam->SetFlag_3();
     look.x = -0x304000;
@@ -361,7 +361,7 @@ int daC_Jugem_c::StateGuideMain()
     mTimer += 1;
     switch (mTimer) {
     case 1:
-        func_0201f32c(2);
+        Message::func_0201f32c(2);
         break;
     case 20:
         func_ov002_020c3f2c(p);
@@ -370,7 +370,7 @@ int daC_Jugem_c::StateGuideMain()
         data_0209d66c = 1;
         break;
     case 140:
-        func_0201f32c(3);
+        Message::func_0201f32c(3);
         break;
     case 238:
         data_0209d66c = 1;
@@ -378,13 +378,13 @@ int daC_Jugem_c::StateGuideMain()
     case 240: {
         s16 a = mSavedAngleY;
         s16 b;
-        p->mAngleX = 0;
-        p->mAngleY = a;
-        p->mAngleZ = 0;
+        p->mAngle.x = 0;
+        p->mAngle.y = a;
+        p->mAngle.z = 0;
         b = mSavedAngleY;
-        p->mPrevAngleX = 0;
-        p->mPrevAngleY = b;
-        p->mPrevAngleZ = 0;
+        p->mPrevAngle.x = 0;
+        p->mPrevAngle.y = b;
+        p->mPrevAngle.z = 0;
         SetState(data_ov085_021307f0);
     } break;
     }
@@ -405,11 +405,11 @@ int daC_Jugem_c::StateTurnMain()
     daPly_c *p = ClosestPlayer();
     if (!p) return 1;
     {
-        short v = mAngleY;
+        short v = mAngle.y;
         short w = v + 0x8000;
-        p->mAngleX = 0;
-        p->mAngleY = w;
-        p->mAngleZ = 0;
+        p->mAngle.x = 0;
+        p->mAngle.y = w;
+        p->mAngle.z = 0;
         mTimer += 1;
     }
     if (mTimer == 90)
@@ -417,9 +417,9 @@ int daC_Jugem_c::StateTurnMain()
     {
         int s = mTimer;
         if (s > 0x57 && s < 0x5b)
-            ApproachLinear(mAngleX, 0x2000, 0x400);
+            ApproachLinear(mAngle.x, 0x2000, 0x400);
         else
-            ApproachLinear(mAngleX, 0x1000, 0x400);
+            ApproachLinear(mAngle.x, 0x1000, 0x400);
     }
     if (mTimer > 120)
         SetState(data_ov085_021307c0);
@@ -432,7 +432,7 @@ int daC_Jugem_c::StateTurnInit()
     dCamera_c *cam;
     mTimer = 0;
     mTalkPlayer = 0;
-    mAngleZ = 0;
+    mAngle.z = 0;
     cam = gCamera;
     cam->SetFlag_3();
     look.x = 0xffadd000;
@@ -454,15 +454,15 @@ int daC_Jugem_c::StateArriveMain()
     if (p == 0)
         return 1;
     {
-        short t = mAngleY + 0x8000;
-        p->mAngleX = 0;
-        p->mAngleY = t;
-        p->mAngleZ = 0;
+        short t = mAngle.y + 0x8000;
+        p->mAngle.x = 0;
+        p->mAngle.y = t;
+        p->mAngle.z = 0;
     }
-    mAngleY = HorzAngleToCPlayer();
+    mAngle.y = HorzAngleToCPlayer();
     mHidden = 0;
-    mAngleX = 0x1000;
-    mAngleZ = 0x800;
+    mAngle.x = 0x1000;
+    mAngle.z = 0x800;
     mTimer += 1;
     Sound::PlaySub(0x4b, 0x14, 0x7f, 0x15666, false);
     switch (mTimer) {
@@ -470,7 +470,7 @@ int daC_Jugem_c::StateArriveMain()
         p->mMuteSleepVoice = 1;
         break;
     case 120:
-        func_0201f32c(1);
+        Message::func_0201f32c(1);
         break;
     case 130:
         p->mMuteSleepVoice = 0;
@@ -495,7 +495,7 @@ int daC_Jugem_c::StateArriveInit()
     mTarget.z = 0x1a66000;
     player = ClosestPlayer();
     if (player) {
-        mSavedAngleY = player->mAngleY;
+        mSavedAngleY = player->mAngle.y;
         player->func_ov002_020d228c();
     }
     cam = gCamera;
@@ -509,9 +509,9 @@ int daC_Jugem_c::StateArriveInit()
     cam->SetLookAt(look);
     cam->SetPos(pos);
     mStateTimer = 121;
-    mPosX = mTarget.x;
-    mPosY = mTarget.y;
-    mPosZ = mTarget.z;
+    mPos.x = mTarget.x;
+    mPos.y = mTarget.y;
+    mPos.z = mTarget.z;
     mTalkPlayer = 0;
     return 1;
 }
@@ -519,12 +519,12 @@ int daC_Jugem_c::StateArriveInit()
 /* Fly to the target point; when the countdown ends and the talk is over,
    mark for destruction. */
 int daC_Jugem_c::StateLeaveMain() {
-    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &mTarget), 0x800);
-    ApproachLinear(mAngleY, mPrevAngleY, 0x800);
+    ApproachLinear(mPrevAngle.y, ::Vec3_HorzAngle(&mPos, &mTarget), 0x800);
+    ApproachLinear(mAngle.y, mPrevAngle.y, 0x800);
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
-    if (AngleDiff(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &mTarget)) < 0x2000) {
+    if (AngleDiff(mPrevAngle.y, ::Vec3_HorzAngle(&mPos, &mTarget)) < 0x2000) {
         Vec3_ApproachHorz(&mPos, &mTarget, 0x1e000);
-        ApproachLinear(mPosY, mTarget.y, 0x1e000);
+        ApproachLinear(mPos.y, mTarget.y, 0x1e000);
     }
     if (mStateTimer == 0) {
         if (Sound::PlaySub(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
@@ -539,8 +539,8 @@ int daC_Jugem_c::StateLeaveMain() {
 
 int daC_Jugem_c::StateLeaveInit()
 {
-    short r3 = mAngleY;
-    mPrevAngleY = r3;
+    short r3 = mAngle.y;
+    mPrevAngle.y = r3;
     mStateTimer = 70;
     return 1;
 }
@@ -549,7 +549,7 @@ int daC_Jugem_c::StateLeaveInit()
    StateLeave. */
 int daC_Jugem_c::StateTalkMain()
 {
-    ApproachLinear(mAngleY, HorzAngleToCPlayer(), 0x800);
+    ApproachLinear(mAngle.y, HorzAngleToCPlayer(), 0x800);
     switch (mTalkStep) {
     case 0:
         mTalkPlayer->mStateFlags |= 0x400;
@@ -616,13 +616,13 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     in.z = 0xc8000;
     Matrix4x3_FromRotationY(&data_020a0e68, 0);
     MTX_MultVec43(&in, &data_020a0e68, &out);
-    out.x += p->mPosX;
-    out.y += p->mPosY + 0x70000;
-    out.z += p->mPosZ;
+    out.x += p->mPos.x;
+    out.y += p->mPos.y + 0x70000;
+    out.z += p->mPos.z;
 
     ApproachLinear(mPos, out, 0x14000);
-    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &out), 0x800);
-    mAngleY = mPrevAngleY;
+    ApproachLinear(mPrevAngle.y, ::Vec3_HorzAngle(&mPos, &out), 0x800);
+    mAngle.y = mPrevAngle.y;
 
     if (::Vec3_Dist(&mPos, &out) < 0x14000) {
         mTalkPlayer = p;
@@ -634,7 +634,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
 
 int daC_Jugem_c::StateFlyToPlayerInit()
 {
-    mPosZ = 2457600;
+    mPos.z = 2457600;
     mTimer = 0;
     mStateTimer = 40;
     return 1;
@@ -646,16 +646,16 @@ int daC_Jugem_c::StateHiddenMain()
 {
     daPly_c *p = ClosestPlayer();
     if (p != 0) {
-        VecFx32 v = *(VecFx32 *)&p->mPosX;
+        VecFx32 v = *(VecFx32 *)&p->mPos;
         if ((data_0209caa0.file.flags2 & 0x10000) != 0 && v.z > -0x28000 &&
             p->SetNoControlState(0x12, -1, 0) != 0) {
             p->mStateTarget = mPos;
-            *(VecFx32 *)&mPosX = v;
-            mPosX -= 0x3e8000;
-            mPosY = p->mGroundY + 0x3e8000;
-            mTarget.x = mPosX;
-            mTarget.y = mPosY;
-            mTarget.z = mPosZ;
+            *(VecFx32 *)&mPos = v;
+            mPos.x -= 0x3e8000;
+            mPos.y = p->mGroundY + 0x3e8000;
+            mTarget.x = mPos.x;
+            mTarget.y = mPos.y;
+            mTarget.z = mPos.z;
             mHidden = 0;
             SetState(data_ov085_02130800);
         }
@@ -685,31 +685,31 @@ int daC_Jugem_c::StateHoverMain()
     plpos.y = src->y;
     plpos.z = src->z;
     if (gCurrentSublevel == 0x2f) {
-        mPosX = 0;
+        mPos.x = 0;
     } else {
-        mPosX = 0x1086000;
+        mPos.x = 0x1086000;
         if (mAuxCounter == 0) {
             p = ClosestPlayer();
-            if (p != 0 && p->mPosX > 0x1086000) {
+            if (p != 0 && p->mPos.x > 0x1086000) {
                 SpawnSoundObj(0);
                 mAuxCounter = 1;
             }
         }
     }
-    mPosY = plpos.y;
-    mPosZ = plpos.z;
+    mPos.y = plpos.y;
+    mPos.z = plpos.z;
     in.z = ::Vec3_HorzDist(&plpos, &mPos);
     Matrix4x3_FromRotationY(&data_020a0e68, ::Vec3_HorzAngle(&plpos, &mPos));
     MTX_MultVec43(&in, &data_020a0e68, &out);
-    mPosX += out.x;
+    mPos.x += out.x;
     if (gCurrentSublevel == 0x2f) {
-        if (mPosX > 0x79e000) {
-            mPosX = 0x79e000;
+        if (mPos.x > 0x79e000) {
+            mPos.x = 0x79e000;
         }
     }
-    mPosZ += out.z;
-    mPrevAngleY = 0x8000 - cam->mAngleY;
-    mPrevAngleX = -cam->mAngleX;
+    mPos.z += out.z;
+    mPrevAngle.y = 0x8000 - cam->mAngleY;
+    mPrevAngle.x = -cam->mAngleX;
     return 1;
 }
 
@@ -733,9 +733,9 @@ void daC_Jugem_c::UpdateShadow()
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x38000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
     *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
 }
@@ -756,13 +756,10 @@ void daC_Jugem_c::UpdateShadowPlayer()
 
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        mPosX >> 3,
-        (mPosY - 0x38000) >> 3,
-        mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
     *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
 
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
@@ -842,9 +839,9 @@ int daC_Jugem_c::Behavior()
     mAnmModel1.Advance();
     mTextureSequence.Advance();
     if (mState == data_ov085_021307d0) {
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
     }
     if (mState == data_ov085_021307e0)
         return 1;

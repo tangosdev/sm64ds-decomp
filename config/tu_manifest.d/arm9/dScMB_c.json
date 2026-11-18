@@ -55,7 +55,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_02034b1c",
+      "symbol": "_ZN7dScMB_c15graphCallback_c13func_02034b1cEPv",
       "address": "0x02034b1c",
       "size": "0x00000024",
       "legacy_source": "src/func_02034b1c.c",
@@ -625,14 +625,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sPrevHeap$387",
+      "from": "sPrevHeap$388",
       "to": "sPrevHeap$390",
-      "evidence": "configured name kept; the TU emits sPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged)."
+      "evidence": "Re-keyed from sPrevHeap$387 when graphCallback_c::func_02034b1c became a method (measured: same .bss slot). configured name kept; the TU emits sPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged)."
     },
     {
-      "from": "_ZGVsPrevHeap$387",
+      "from": "_ZGVsPrevHeap$388",
       "to": "_ZGVsPrevHeap$390",
-      "evidence": "configured name kept; the TU emits _ZGVsPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged)."
+      "evidence": "Re-keyed from _ZGVsPrevHeap$387 when graphCallback_c::func_02034b1c became a method (measured: same .bss slot). configured name kept; the TU emits _ZGVsPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged)."
     }
   ]
 }

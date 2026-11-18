@@ -20,8 +20,8 @@
  *
  * 0x080..0x0a8 IS dActor_c's OWN LAYOUT, not this class's; real inheritance
  * now supplies those fields directly. This class writes 0x0a4/0x0a8/0x0ac as
- * an (x, vert, z) velocity triple, through dActor_c's mSpeedX, mVertSpeed and
- * mSpeedZ.
+ * an (x, vert, z) velocity triple, through dActor_c's mSpeed.x, mSpeed.y and
+ * mSpeed.z.
  *
  * Provenance table: notes/butterfly-tornado-provenance.md. */
 #ifndef DABTFLY_C_H
@@ -69,7 +69,7 @@ struct daBtfly_c : dActor_c {
        angle from mPos to it as the heading to fly home on. */
     Vector3 mHomePos;       /* 0x3d4 */
     s32 mScale;             /* 0x3e0 -- the single fix12 scale Behavior copies
-                                 into all three of mScaleX/Y/Z. InitResources
+                                 into each axis of dActor_c::mScale. InitResources
                                  sets 0x1000; State6 winds it from
                                  0 up to 0x800 in 0x40 steps, or drops it to 0
                                  for a butterfly that is not kind 1;
@@ -86,7 +86,7 @@ struct daBtfly_c : dActor_c {
                                  against 0x14, 0x3c, 0x6e, 0x78, 0x9d and 100. */
     s16 mWanderAngle;       /* 0x3ec -- a random heading State4
                                  rolls at spawn; after 0x3c frames
-                                 State5 steers mPrevAngleY toward
+                                 State5 steers mPrevAngle.y toward
                                  it instead of toward home. */
     s16 mFlutterPhase;      /* 0x3ee -- a phase angle State7
                                  advances by 0x2710 or 0xfa0 a frame and feeds

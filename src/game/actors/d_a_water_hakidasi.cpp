@@ -127,9 +127,9 @@ int daWater_Hakidasi_c::State0() {
             vec.x += delta.x;
             vec.y += delta.y;
             vec.z += delta.z;
-            player->mPosX = vec.x;
-            player->mPosY = vec.y;
-            player->mPosZ = vec.z;
+            player->mPos.x = vec.x;
+            player->mPos.y = vec.y;
+            player->mPos.z = vec.z;
         }
         mdCcAc_c.Clear();
         mdCcAc_c.dCc_c::Update();
@@ -140,7 +140,7 @@ int daWater_Hakidasi_c::State0() {
 
     if (mNoRings == 0) {
         mParticle =
-            Particle::System::New(mParticle, kPtclWaterSpoutRings, mPosX, mPosY, mPosZ, 0, 0);
+            Particle::System::New(mParticle, kPtclWaterSpoutRings, mPos.x, mPos.y, mPos.z, 0, 0);
         if (mRingsPassed < 5) {
             if (mStateTimer == 0) {
                 Vector3_16 rot = mAngle;
@@ -155,9 +155,9 @@ int daWater_Hakidasi_c::State0() {
                         mSpawnedHead = 0;
                     }
                     ring->mSpawner = this;
-                    ring->mSpeedX = 0;
-                    ring->mVertSpeed = 0x5000;
-                    ring->mSpeedZ = 0;
+                    ring->mSpeed.x = 0;
+                    ring->mSpeed.y = 0x5000;
+                    ring->mSpeed.z = 0;
                 }
                 mStateTimer = 80;
             }
@@ -213,13 +213,13 @@ int daWater_Hakidasi_c::State0() {
             }
         }
     } else {
-        mParticle = Particle::System::New(mParticle, kPtclWaterSpout, mPosX, mPosY, mPosZ, 0, 0);
+        mParticle = Particle::System::New(mParticle, kPtclWaterSpout, mPos.x, mPos.y, mPos.z, 0, 0);
     }
 
     if (mRingsPassed == 5) {
-        rewardPos.x = mPosX;
-        rewardPos.y = mPosY;
-        rewardPos.z = mPosZ;
+        rewardPos.x = mPos.x;
+        rewardPos.y = mPos.y;
+        rewardPos.z = mPos.z;
         rewardPos.y = rewardPos.y - 0x64000;
         mRewardTimer++;
         if (mRewardTimer > 30) {
@@ -282,9 +282,9 @@ s32 daWater_Hakidasi_c::Behavior() {
     if (h->mMain != 0) {
         (this->*(h->mMain))();
     }
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     func_ov064_0211987c();
     return 1;
 }

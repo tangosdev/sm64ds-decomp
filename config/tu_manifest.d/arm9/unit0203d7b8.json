@@ -350,7 +350,7 @@
       "ordinal": 43
     },
     {
-      "symbol": "func_0203f714",
+      "symbol": "_ZN24WMMeasureChannelCallback13func_0203f714Ev",
       "address": "0x0203f714",
       "size": "0x00000104",
       "legacy_source": "src/unnamed/arm9/0203/func_0203f714.c",

@@ -19,7 +19,7 @@
 struct daObjCtMecha04_c : dBgActor_c {
     dExtAnmTexSRT_c mTextureTransformer;           /* 0x320 */
     dExtShadowModel_c mShadowModel;                /* 0x334 */
-    /* UpdateShadow builds this from mAngleY, then writes the actor's X/Z and
+    /* UpdateShadow builds this from mAngle.y, then writes the actor's X/Z and
      * ground Y into its translation before passing it to DropShadowScaleXYZ. */
     Matrix4x3 mShadowMat;                    /* 0x35c */
     s32 mBeltSpeed;                         /* 0x38c */

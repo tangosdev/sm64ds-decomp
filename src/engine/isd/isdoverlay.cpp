@@ -100,13 +100,19 @@ struct OverlayTableHeader {
 struct OverlayTable {
     struct OverlayTableHeader m_header;
     struct OverlayInfo m_info[1];
+
+    void func_0206d940(u32 nIndex);
+    void func_0206d8c4(u32 nIndex);
 };
 
-typedef struct {
+struct SavedIntState {
     u32 irqState;
     u32 fiqState;
     u32 mpuRegion7;
-} SavedIntState;
+
+    void func_0206d890();
+    void func_0206d868() const;
+};
 
 extern struct OverlayTable *data_020a9ec0[2];
 extern const char data_020868fc; /* "isdoverlay.c" */
@@ -123,52 +129,47 @@ extern int func_0206da18(void); /* IRQ::SetIRQState(false) entry */
 extern int func_0206d9cc(void); /* IRQ::SetFIQState(false) entry */
 extern u32 func_0206dab4(u32 value, void *lock);
 
-void func_0206d940(struct OverlayTable *pInfo, u32 nIndex);
-void func_0206d8c4(struct OverlayTable *pInfo, u32 nIndex);
-void func_0206d890(SavedIntState *state);
-void func_0206d868(const SavedIntState *s);
-
 /* Open a gap at nIndex: move entries nIndex.. up one and count one more. */
-void func_0206d940(struct OverlayTable *pInfo, u32 nIndex) {
+void OverlayTable::func_0206d940(u32 nIndex) {
     unsigned int n;
     int i;
-    if (nIndex > pInfo->m_header.m_nInfoCount) {
+    if (nIndex > this->m_header.m_nInfoCount) {
         cstd::__assert(&data_020868fc, 66, &data_02086a30, 1);
     }
-    n = pInfo->m_header.m_nInfoCount;
+    n = this->m_header.m_nInfoCount;
     if (n - nIndex != 0) {
         for (i = (int)n - 1; i >= (int)nIndex; i--)
-            CopyInfo(&pInfo->m_info[i + 1], &pInfo->m_info[i]);
+            CopyInfo(&this->m_info[i + 1], &this->m_info[i]);
     }
-    pInfo->m_header.m_nInfoCount++;
+    this->m_header.m_nInfoCount++;
 }
 
 /* Delete entry nIndex: move the entries above it down one. */
-void func_0206d8c4(struct OverlayTable *pInfo, u32 nIndex) {
+void OverlayTable::func_0206d8c4(u32 nIndex) {
     unsigned int n;
-    if (nIndex >= pInfo->m_header.m_nInfoCount) {
+    if (nIndex >= this->m_header.m_nInfoCount) {
         cstd::__assert(&data_020868fc, 85, &data_02086a08, 1);
     }
-    pInfo->m_header.m_nInfoCount--;
-    for (n = pInfo->m_header.m_nInfoCount; nIndex < n; nIndex++)
-        CopyInfo(&pInfo->m_info[nIndex], &pInfo->m_info[nIndex + 1]);
+    this->m_header.m_nInfoCount--;
+    for (n = this->m_header.m_nInfoCount; nIndex < n; nIndex++)
+        CopyInfo(&this->m_info[nIndex], &this->m_info[nIndex + 1]);
 }
 
 /* Disable IRQ and FIQ, and open MPU data region 7 (0x02600029) for the
  * edit. Saves all three previous states for func_0206d868. */
-void func_0206d890(SavedIntState *state) {
-    state->irqState = func_0206da18();
-    state->fiqState = func_0206d9cc();
-    state->mpuRegion7 = CP15::MPUGetDataRegion7();
+void SavedIntState::func_0206d890() {
+    this->irqState = func_0206da18();
+    this->fiqState = func_0206d9cc();
+    this->mpuRegion7 = CP15::MPUGetDataRegion7();
     CP15::MPUDataRegion7(0x02600029);
 }
 
 /* Put back what func_0206d890 saved. */
-void func_0206d868(const SavedIntState *s) {
-    CP15::MPUDataRegion7(s->mpuRegion7);
+void SavedIntState::func_0206d868() const {
+    CP15::MPUDataRegion7(this->mpuRegion7);
     /* The saved word is 0 or the previous return, not a normalised bool. */
-    ((void (*)(int))IRQ::SetFIQState)(s->fiqState);
-    ((void (*)(int))IRQ::SetIRQState)(s->irqState);
+    ((void (*)(int))IRQ::SetFIQState)(this->fiqState);
+    ((void (*)(int))IRQ::SetIRQState)(this->irqState);
 }
 
 /* Record [nVMA, nVMA + size) at ROM offset lma in table type, in address
@@ -196,7 +197,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
     if (size == 0)
         return 1;
 
-    func_0206d890(&state);
+    (&state)->func_0206d890();
     while (func_0206dab4(0x80, &pInfo->m_header.lock) != 0) {
     }
 
@@ -214,7 +215,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
         u32 ea = pInfo->m_info[i].m_VMA;
         if (ea > nVMA) {
             found = 1;
-            func_0206d940(pInfo, i);
+            pInfo->func_0206d940(i);
             pInfo->m_info[i].m_VMA = nVMA;
             pInfo->m_info[i].romOffset = lma;
             pInfo->m_info[i].m_SIZE = size;
@@ -222,7 +223,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
             j = i + 1;
             while (i + 1 < pInfo->m_header.m_nInfoCount) {
                 if ((unsigned long long)pInfo->m_info[j].m_VMA + pInfo->m_info[j].m_SIZE <= end) {
-                    func_0206d8c4(pInfo, i + 1);
+                    pInfo->func_0206d8c4(i + 1);
                     continue;
                 }
                 {
@@ -257,7 +258,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                     u32 ni;
                     struct OverlayTable *dstb;
                     struct OverlayTable *srcb;
-                    func_0206d940(pInfo, i);
+                    pInfo->func_0206d940(i);
                     ni = i + 1;
                     dstb = EB(pInfo, i);
                     srcb = EB(pInfo, ni);
@@ -280,7 +281,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                         u32 wc = pInfo->m_info[k].m_SIZE;
                         u32 wa = pInfo->m_info[k].m_VMA;
                         if ((unsigned long long)wa + wc <= end) {
-                            func_0206d8c4(pInfo, i + 1);
+                            pInfo->func_0206d8c4(i + 1);
                             continue;
                         }
                         {
@@ -300,7 +301,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                     EB(pInfo, i)->m_info[0].m_VMA += size;
                     EB(pInfo, i)->m_info[0].romOffset += size;
                     EB(pInfo, i)->m_info[0].m_SIZE -= size;
-                    func_0206d940(pInfo, i);
+                    pInfo->func_0206d940(i);
                     pInfo->m_info[i].m_VMA = nVMA;
                     pInfo->m_info[i].romOffset = lma;
                     pInfo->m_info[i].m_SIZE = size;
@@ -311,7 +312,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
     }
 
     if (!found) {
-        func_0206d940(pInfo, i);
+        pInfo->func_0206d940(i);
         pInfo->m_info[i].m_VMA = nVMA;
         pInfo->m_info[i].romOffset = lma;
         pInfo->m_info[i].m_SIZE = size;
@@ -320,7 +321,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
 
     pInfo->m_header.flags &= ~2;
     pInfo->m_header.lock = 0;
-    func_0206d868(&state);
+    (&state)->func_0206d868();
     return 1;
 }
 
@@ -343,7 +344,7 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
     if (size == 0)
         return 1;
 
-    func_0206d890(&state);
+    (&state)->func_0206d890();
     while (func_0206dab4(0x80, &pInfo->m_header.lock) != 0) {
     }
 
@@ -383,7 +384,7 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
             u32 ni;
             struct OverlayTable *dstb;
             struct OverlayTable *srcb;
-            func_0206d940(pInfo, i);
+            pInfo->func_0206d940(i);
             ni = i + 1;
             dstb = EB(pInfo, i);
             srcb = EB(pInfo, ni);
@@ -400,12 +401,12 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
         }
 
         if (pInfo->m_info[i].m_SIZE <= size) {
-            func_0206d8c4(pInfo, i);
+            pInfo->func_0206d8c4(i);
             while (i < pInfo->m_header.m_nInfoCount) {
                 u32 wc = pInfo->m_info[i].m_SIZE;
                 u32 wa = pInfo->m_info[i].m_VMA;
                 if ((unsigned long long)(u32)wa + wc <= end) {
-                    func_0206d8c4(pInfo, i);
+                    pInfo->func_0206d8c4(i);
                     continue;
                 }
                 {
@@ -430,7 +431,7 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
 
     pInfo->m_header.flags &= ~2;
     pInfo->m_header.lock = 0;
-    func_0206d868(&state);
+    (&state)->func_0206d868();
     return 1;
 }
 }

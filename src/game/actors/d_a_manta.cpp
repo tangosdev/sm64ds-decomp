@@ -18,7 +18,7 @@
  *   ring's uniqueID in cartridge order (cmp r0, r1). Swapping the
  *   operands DIFFs. The 0x3ac/+4 dance stays; uniqueID is the word
  *   at +4 of that ring.
- * - Behavior keeps the mSpeedZ copy after the terminal clamp.
+ * - Behavior keeps the mSpeed.z copy after the terminal clamp.
  *   Dropping it loses the reload of dActor_c's z speed.
  * - Matrix4x3 stays decl_common.h's flat s32[12].
  *   UpdateModelAndRingPos indexes .m. common.h must not replace it.
@@ -113,9 +113,9 @@ void daManta_c::HurtTouchingPlayer() {
         return;
     {
         Vector3 hit;
-        hit.x = mPosX;
-        hit.y = mPosY;
-        hit.z = mPosZ;
+        hit.x = mPos.x;
+        hit.y = mPos.y;
+        hit.z = mPos.z;
         ((daPly_c *)actor)->Hurt(hit, 1, 0xc000, 1, 0, 1);
     }
 }
@@ -225,7 +225,7 @@ void daManta_c::UpdateModelAndRingPos() {
     Vector3 scaled;
     Vec3_Asr(&scaled, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
     mRingPos.x = 0;
     mRingPos.y = 0;
@@ -278,25 +278,25 @@ int daManta_c::Behavior() {
             if (mPathNode >= mNumNodes)
                 mPathNode = 0;
         }
-        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &node), 0x60);
-        ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &node), 0x40);
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        ApproachLinear(mPrevAngle.y, Vec3_HorzAngle(&mPos, &node), 0x60);
+        ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &node), 0x40);
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
         forward.y = forward.x = forward.z = 0;
         forward.z = MANTA_FORWARD;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MTX_MultVec43(&forward, &data_020a0e68, (Vector3 *)&mSpeedX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
+        MTX_MultVec43(&forward, &data_020a0e68, &mSpeed);
     }
     {
-        int speed = mVertSpeed + mVertAccel;
+        int speed = mSpeed.y + mVertAccel;
         int clamped = mTerminalVelocity;
-        int keep0ac = mSpeedZ;
+        int keep0ac = mSpeed.z;
         if (speed >= clamped)
             clamped = speed;
-        mVertSpeed = clamped;
-        mSpeedZ = keep0ac;
+        mSpeed.y = clamped;
+        mSpeed.z = keep0ac;
     }
     UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     UpdateModelAndRingPos();
@@ -345,12 +345,12 @@ int daManta_c::InitResources() {
         int kuppa = (int)(gGameMode == 2);
         if (kuppa != 0) {
             mPathNode = 3;
-            mPrevAngleX = (short)0xf303;
-            mPrevAngleY = 0xb50;
-            mPrevAngleZ = 0;
-            mPosX = (int)0xfdfb8000;
-            mPosY = (int)0xff8f8000;
-            mPosZ = 0x29a000;
+            mPrevAngle.x = (short)0xf303;
+            mPrevAngle.y = 0xb50;
+            mPrevAngle.z = 0;
+            mPos.x = (int)0xfdfb8000;
+            mPos.y = (int)0xff8f8000;
+            mPos.z = 0x29a000;
             mFlags = 0;
         }
     }

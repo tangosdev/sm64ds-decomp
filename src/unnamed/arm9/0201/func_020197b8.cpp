@@ -30,7 +30,7 @@ void func_0203bc7c(void);
 }
 
 void func_02023498(void);
-void func_02044120(void);
+#include "ProcessList.h"
 void func_02019404(void);
 extern "C" {
 
@@ -78,7 +78,8 @@ void func_020197b8(void) {
         func_02023498();
         data_0209d50c = 3;
         dScene_c::SpawnIfNecessary();
-        data_0209d50c = 4; func_02044120();
+        data_0209d50c = 4;
+        ProcessList::func_02044120();
         data_0209d50c = 5; func_02019404();
         data_0209d50c = 6;
         data_020a0db0 = data_020a0db0 + 1;

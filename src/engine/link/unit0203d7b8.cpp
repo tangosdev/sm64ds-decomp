@@ -241,7 +241,6 @@ void func_0203f650(int x);
 void func_0203f6a4(int v);
 void func_0203f6b4(void);
 void func_0203f6e8(short v);
-void func_0203f714(WMMeasureChannelCallback *s);
 int func_0203f818(u16 channel);
 void func_0203f8a4(void);
 void func_0203f920(void *arg);
@@ -2253,7 +2252,7 @@ void func_0203f920(void *arg) {
             func_0203f8a4();
         break;
     case WM_APIID_MEASURE_CHANNEL:
-        func_0203f714((WMMeasureChannelCallback *)arg);
+        ((WMMeasureChannelCallback *)arg)->func_0203f714();
         break;
     case WM_APIID_END:
         func_0203f6a4(3);
@@ -2307,16 +2306,16 @@ int func_0203f818(u16 channel) {
    data_020a0fd0 (data_020a0ef4 of them), then measure the next allowed
    channel. Once none is left, draw one of the kept channels with
    OS_GetTickLo and finish with it; a refused request finishes with -3. */
-void func_0203f714(WMMeasureChannelCallback *s) {
+void WMMeasureChannelCallback::func_0203f714() {
     u16 a, cur, v;
     int r;
-    if (s->errcode != WM_ERRCODE_SUCCESS) {
+    if (this->errcode != WM_ERRCODE_SUCCESS) {
         func_0203f6e8(-4);
         return;
     }
-    a = s->ccaBusyRatio;
+    a = this->ccaBusyRatio;
     cur = data_020a0f34;
-    v = s->channel;
+    v = this->channel;
     if (a < cur) {
         data_020a0f34 = a;
         data_020a0ef4 = 1;
@@ -3263,7 +3262,7 @@ void func_0203db0c(int idx, unsigned short val) {
 }
 
 /* Store the camera's input yaw in the input record (data_020a1040.inputYaw);
-   dCamera_c::Behavior passes mAngleY + mInputYawLag. */
+   dCamera_c::Behavior passes mAngle.y + mInputYawLag. */
 void func_0203dafc(int v) {
     data_020a1040.inputYaw = v;
 }

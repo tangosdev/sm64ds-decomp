@@ -126,9 +126,9 @@ void daPeach_c::UpdateLookAt() {
     target.y = target.y - 0x1e000;
     short yaw = Vec3_HorzAngle(&mPos, &target);
     short pitch = Vec3_VertAngle(&mPos, &target);
-    if (dist < 0x15e000 && AngleDiff(yaw, mAngleY) < 0x3000) {
+    if (dist < 0x15e000 && AngleDiff(yaw, mAngle.y) < 0x3000) {
         mTargetLookVertAngle = pitch;
-        mTargetLookHorzAngle = mAngleY - yaw;
+        mTargetLookHorzAngle = mAngle.y - yaw;
     } else {
         mTargetLookVertAngle = 0;
         mTargetLookHorzAngle = 0;
@@ -147,9 +147,9 @@ void daPeach_c::UpdateGroundCollision(dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorN);
         if (floorN.y != 0) {
-            int x = FX_MUL(floorN.x, mSpeedX);
-            int z = FX_MUL(floorN.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(x + z, floorN.y) + 0x8000);
+            int x = FX_MUL(floorN.x, mSpeed.x);
+            int z = FX_MUL(floorN.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(x + z, floorN.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {
@@ -187,10 +187,10 @@ int daPeach_c::IsTouchingPlayer() {
  * the head joint's own matrix (bone 18 of the animated model) is rotated by
  * the two look angles through the scratch matrix at data_020a0e68. */
 void daPeach_c::UpdateModel() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     data_020a0e68 = mAnmModel.data.transforms[18];
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookHorzAngle);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mLookVertAngle);
@@ -209,7 +209,7 @@ int daPeach_c::State0() {
     mAnmModel.SetAnim((BCA_File *)gPeachJumpAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.SetFlags(0x40000000);
     mHorzSpeed = 0x4000;
-    mVertSpeed = 0xa000;
+    mSpeed.y = 0xa000;
     mStateValue = 4;
     return 1;
 }
@@ -226,8 +226,8 @@ int daPeach_c::InitState2() {
 }
 
 int daPeach_c::InitState4() {
-    short angY = mAngleY;
-    mPrevAngleY = angY;
+    short angY = mAngle.y;
+    mPrevAngle.y = angY;
     UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     IsTouchingPlayer();
@@ -252,10 +252,10 @@ int daPeach_c::State3() {
             mTalkState += 1;
         break;
     case 1:
-        if (ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos), 0x514) != 0) {
-            msgPos.x = mPosX;
-            msgPos.y = mPosY;
-            msgPos.z = mPosZ;
+        if (ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos), 0x514) != 0) {
+            msgPos.x = mPos.x;
+            msgPos.y = mPos.y;
+            msgPos.z = mPos.z;
             msgPos.y = msgPos.y + 0xa0000;
             if (mTalkPlayer->ShowMessage(*this, 0xd0, &msgPos, 0, 0) != 0)
                 mTalkState += 1;
@@ -366,9 +366,9 @@ int daPeach_c::InitResources() {
     mWithMeshClsn.Init(this, 0x40000, 0x40000, (Vector3_16 *)0, (Vector3_16 *)0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     SetState(0);
     UpdateModel();
     return 1;

@@ -71,15 +71,15 @@ daObjCtMecha09_c::~daObjCtMecha09_c() {}
 
 /* Drops the beam's shadow when it is close enough to the ground sample. */
 void daObjCtMecha09_c::UpdateShadow() {
-    int d = mPosY - mGroundY;
+    int d = mPos.y - mGroundY;
     if (d < 0)
         d = -d;
     if (d > 0x7d0000)
         return;
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.t.x = mPosX >> 3;
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
+    mShadowMat.t.x = mPos.x >> 3;
     mShadowMat.t.y = (mGroundY + 0x1000) >> 3;
-    mShadowMat.t.z = mPosZ >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1e0000, 0x32000, 0xfa000, 15);
 }
 
@@ -101,7 +101,7 @@ int daObjCtMecha09_c::Render() {
  * hold the beam still. Travel is clamped to [mStartPosY, mEndPosY]. */
 int daObjCtMecha09_c::Behavior() {
     u8 setting = data_0209f2c0;
-    mVertSpeed = mDirection * data_ov065_0211d520[setting];
+    mSpeed.y = mDirection * data_ov065_0211d520[setting];
 
     if (setting == 2) {
         if (DecIfAbove0_Short(&mLegTimer) == 0) {
@@ -113,21 +113,21 @@ int daObjCtMecha09_c::Behavior() {
             mLegTimer = (rnd % 6 + 1) * 30;
             mLegLength = mLegTimer;
         } else if (mLegTimer >= mLegLength - 5) {
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         }
     }
 
     UpdatePos(0);
 
     {
-        int y = mPosY;
+        int y = mPos.y;
         int lo = mStartPosY;
         int hi = mEndPosY;
         int in = 0;
         if (y >= lo)
             in = (y <= hi);
         if (in == 0) {
-            mPosY = (y < lo) ? lo : ((y > hi) ? hi : y);
+            mPos.y = (y < lo) ? lo : ((y > hi) ? hi : y);
             mDirection = -mDirection;
         }
     }
@@ -154,9 +154,9 @@ int daObjCtMecha09_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     kcl = dBgW_Kc::LoadFile(data_ov065_0211d9cc);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov035_02112118);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov035_02112118);
 
-    mStartPosY = mPosY;
+    mStartPosY = mPos.y;
     {
         int distance = param1 & 0xff;
         if (distance != 0xff && distance != 0)
@@ -165,12 +165,12 @@ int daObjCtMecha09_c::InitResources() {
             mEndPosY = mStartPosY + 0x1f4000;
     }
     mTerminalVelocity = -0x3c000;
-    mVertSpeed = 0x6000;
+    mSpeed.y = 0x6000;
     mDirection = 1;
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y -= 0xa000;
     dBgCh_Gnd ray;
     ray.SetObjAndPos(pos, 0);

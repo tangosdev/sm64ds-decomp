@@ -18,8 +18,6 @@
 // - Slot1 InitResources fills the reel strips through a char* cursor stepped
 //   one 21-byte row per reel, cast back to the class for mReelStrip: the
 //   member-indexed form mReelStrip[j][i] DIFFs (measured).
-// - The ROM PMF constants the Slot3 state table copies (data_ov006_0213e5xx)
-//   come from unlicensed .data, in retail copy order.
 // - SaveScreenForMenu/RestoreScreenFromMenu keep slot-identity names from
 //   the vtable; the OAM SECONDSE symbol read at Render is a link artifact of
 //   the address, not a proven field.
@@ -66,6 +64,7 @@ enum dScMgSlots_AssetId {
 #include "LevelRng.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
+#include "SpawnInfo.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -95,16 +94,6 @@ void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5,
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern void **sSlotLangSprites[];
 extern SlotState sSlot3StateTable[];
-/* The ROM PMF constants the Slot3 state table copies from (unlicensed
- * .data), in retail copy order. */
-extern SlotState pmf_Slot3_StateIntro;
-extern SlotState pmf_Slot3_StateSpin;
-extern SlotState pmf_Slot3_StateJudge;
-extern SlotState pmf_Slot3_StatePayout;
-extern SlotState pmf_Slot3_StatePayout_2;
-extern SlotState pmf_Slot3_StateWait;
-extern SlotState pmf_Slot3_StateGameOver;
-extern SlotState pmf_Slot3_StateDone;
 extern void *LoadFile(int handle);
 
 extern u8 gSubScreenLayers;
@@ -113,7 +102,6 @@ extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(int c);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *m);
-extern void *data_ov006_0213e528[];
 void Mg_GainCredits(int x);
 extern int Mg_GetSavedRecord0(void);
 extern int sSlot1ReelPos[][2];
@@ -127,16 +115,33 @@ extern int sSlotReelScrollSpeeds[];
 extern u8 sSlot1Payouts[];
 extern s16 sSlotMatchBlinkX[][2];
 extern s16 sSlotMatchBlinkY[][2];
-extern s16 sSlotWildBlinkX[][2];
-extern s16 sSlotWildBlinkY[][2];
 extern dWipe_c data_0209f61c;
 
 extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
 }
 extern int Sound_PlayIfNotActive(int, int, int, short);
-extern void func_ov001_020ab3f0(void *c);
 int TouchArea_Update(void *c, int x);
+
+/* Slot1's one-cell sprites. Six 16x16 symbol icons, the payout line's
+ * sSlot1Sprites[mMatchedSymbol + 6]; the last is also drawn once per wild
+ * reel (sSlot1Sprites[11]). The 64x64 reel cell is sSlot1Sprites[13], the
+ * symbol Behavior's case 7 rolls onto every reel when the credits run out. */
+OamAttr sSlot1SymbolIcon0 = {0x00f8, 0x41f8, 0x009e, 0xffff};
+OamAttr sSlot1SymbolIcon1 = {0x00f8, 0x41f8, 0x005e, 0xffff};
+OamAttr sSlot1SymbolIcon2 = {0x00f8, 0x41f8, 0x00de, 0xffff};
+OamAttr sSlot1SymbolIcon3 = {0x00f8, 0x41f8, 0x001e, 0xffff};
+OamAttr sSlot1SymbolIcon4 = {0x00f8, 0x41f8, 0x00dc, 0xffff};
+OamAttr sSlot1SymbolIcon5 = {0x00f8, 0x41f8, 0x00da, 0xffff};
+OamAttr sSlot1GameOverReelSprite = {0x40f0, 0xc1e0, 0x012c, 0xffff};
+
+/* The bet icon, plain and lit; betIcon_c::Render picks one by mOn. */
+OamAttr sSlotBetIconSprite = {0x40f7, 0x81f0, 0x00d6, 0xffff};
+OamAttr sSlotBetIconLitSprite = {0x40f8, 0x81f0, 0x10d6, 0xffff};
+OamAttr *sSlotBetIconSprites[2] = {&sSlotBetIconSprite, &sSlotBetIconLitSprite};
+
+/* Where mWildBlink is placed for one and for two wild reels: x, then y. */
+s16 sSlotWildBlinkPos[2][2] = {{0xd8, 0xa0}, {0xd8, 0x88}};
 
 /* ~dScMgSlot1_c() (D1, complete-object destructor). The empty body is the
    original ownership model: the compiler destroys the typed mBetIcon member,
@@ -849,6 +854,8 @@ void *dScMgSlot3_c_classInit(void) {
     return new dScMgSlot3_c;
 }
 
+BaseSpawnInfo<void> g_profile_MG_SLOT3 = {dScMgSlot3_c_classInit, 365, 365};
+
 void SlotLamp::Start() {
     mTimer = 72;
     mOn = 1;
@@ -948,7 +955,7 @@ void dScMgSlot1_c::betIcon_c::OnTouch() {
     }
     BET_ICON(this)->mBetCount += 1;
     Mg_LoseCredits(1);
-    func_ov001_020ab3f0(this);
+    this->func_ov001_020ab3f0();
     sid = 0x163;
     Sound::PlayBank2_2D(sid);
 }
@@ -961,7 +968,7 @@ void dScMgSlot1_c::betIcon_c::Reset() {
 }
 
 void dScMgSlot1_c::betIcon_c::Render() {
-    OAM::RenderSub((OamAttr *)data_ov006_0213e528[mOn], mX, mY, -1, 1);
+    OAM::RenderSub(sSlotBetIconSprites[mOn], mX, mY, -1, 1);
     int i;
     for (i = 0; i < BET_ICON(this)->mBetCount; i++) {
         Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, 0xb0, 0);
@@ -1229,8 +1236,8 @@ s32 dScMgSlot1_c::Behavior() {
                                   sSlotMatchBlinkY[mMatchedSymbol][0]);
             }
             if (mWildCount != 0 && mWildCount < 3) {
-                mWildBlink.Start(sSlotWildBlinkX[mWildCount - 1][0],
-                                 sSlotWildBlinkY[mWildCount - 1][0]);
+                mWildBlink.Start(sSlotWildBlinkPos[mWildCount - 1][0],
+                                 sSlotWildBlinkPos[mWildCount - 1][1]);
             }
             if (mPayoutMultiplier != 0) {
                 mState = 5;
@@ -1457,10 +1464,13 @@ void *dScMgSlot1_c_classInit(void) {
     return new dScMgSlot1_c;
 }
 
-/* Static-init globals (was the handwritten __sinit_ov006_02132894 shard).
- * The Slot3 state table plain-copied from the ROM PMF constants, in
- * retail copy order. */
+BaseSpawnInfo<void> g_profile_MG_SLOT1 = {dScMgSlot1_c_classInit, 364, 364};
+
+/* Slot3's states, indexed by mState. Payout serves both the win (3) and the
+ * loss (4). Each &dScMgSlot3_c::X is its own {function, adjustment} constant
+ * in .data, which the static initializer copies in. */
 SlotState sSlot3StateTable[8] = {
-    pmf_Slot3_StateIntro,    pmf_Slot3_StateSpin, pmf_Slot3_StateJudge,    pmf_Slot3_StatePayout,
-    pmf_Slot3_StatePayout_2, pmf_Slot3_StateWait, pmf_Slot3_StateGameOver, pmf_Slot3_StateDone,
+    &dScMgSlot3_c::StateIntro,    &dScMgSlot3_c::StateSpin,   &dScMgSlot3_c::StateJudge,
+    &dScMgSlot3_c::StatePayout,   &dScMgSlot3_c::StatePayout, &dScMgSlot3_c::StateWait,
+    &dScMgSlot3_c::StateGameOver, &dScMgSlot3_c::StateDone,
 };

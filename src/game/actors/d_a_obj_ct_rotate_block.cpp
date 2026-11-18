@@ -99,7 +99,7 @@ daObjCtRotateBlock_c::~daObjCtRotateBlock_c() {}
 void daObjCtRotateBlock_c::UpdateShadow() {
     int d, b;
     int bval = mFloorY;
-    int aval = mPosY;
+    int aval = mPos.y;
     int diff = aval - bval;
     if (diff < 0)
         diff = -diff;
@@ -111,12 +111,12 @@ void daObjCtRotateBlock_c::UpdateShadow() {
         b = 0x17c000;
         d = b;
     }
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.m[9] = mPosX >> 3;
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = (mFloorY + 0x1000) >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     {
-        int s = FX_SinIdx((u16)(s16)(mAngleZ << 1) >> 4);
+        int s = FX_SinIdx((u16)(s16)(mAngle.z << 1) >> 4);
         int sa = s < 0 ? -s : s;
         int depthAdd = FX_MUL(sa, 0x64000);
         DropShadowScaleXYZ(mShadowModel, mShadowMat, d + depthAdd, b, d, 0xf);
@@ -125,20 +125,20 @@ void daObjCtRotateBlock_c::UpdateShadow() {
 
 void daObjCtRotateBlock_c::UpdateClsn() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY + mOffsetY;
-    mClsnMat.m[11] = mPosZ;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y + mOffsetY;
+    mClsnMat.m[11] = mPos.z;
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 void daObjCtRotateBlock_c::UpdateModel() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = (mPosY + mOffsetY) >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
-    Matrix4x3_FromRotationY(&mRotatingModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = (mPos.y + mOffsetY) >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
+    Matrix4x3_FromRotationY(&mRotatingModel.mat4x3, mAngle.y);
     mRotatingModel.mat4x3.m[9] = mModel.mat4x3.m[9];
-    mRotatingModel.mat4x3.m[10] = mPosY >> 3;
+    mRotatingModel.mat4x3.m[10] = mPos.y >> 3;
     mRotatingModel.mat4x3.m[11] = mModel.mat4x3.m[11];
 }
 
@@ -172,11 +172,11 @@ int daObjCtRotateBlock_c::Behavior() {
                 break;
             Sound::PlayBank3(0x5b, mCamSpacePos);
             mState++;
-            mVertSpeed = -0x5000;
+            mSpeed.y = -0x5000;
             break;
         case 1:
-            mVertSpeed += 0x800;
-            mOffsetY += mVertSpeed;
+            mSpeed.y += 0x800;
+            mOffsetY += mSpeed.y;
             if (mOffsetY < 0)
                 break;
             mOffsetY = 0;
@@ -186,7 +186,7 @@ int daObjCtRotateBlock_c::Behavior() {
         case 2:
             if (DecIfAbove0_Short(&mWaitTimer) != 0)
                 break;
-            if (ApproachLinear(mAngleZ, mTargetAngleZ, 0x4b0) == 0)
+            if (ApproachLinear(mAngle.z, mTargetAngleZ, 0x4b0) == 0)
                 break;
             Sound::PlayBank3(0x40, mCamSpacePos);
             mState = 0;
@@ -237,10 +237,10 @@ int daObjCtRotateBlock_c::InitResources() {
     idx = mVariant;
     if (idx == 0) {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov065_0211cfd0[idx].clps);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *data_ov065_0211cfd0[idx].clps);
     } else {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211cfd0[idx].collision);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov065_0211cfd0[idx].clps);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, *data_ov065_0211cfd0[idx].clps);
     }
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -258,7 +258,7 @@ int daObjCtRotateBlock_c::InitResources() {
         va.x = 0x64000;
         va.z = 0x64000;
 
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         MTX_MultVec43(&va, &data_020a0e68, &vb);
         VEC_Add(&vb, &mPos, &vb);
         vb.y -= 0xd2000;
@@ -270,9 +270,9 @@ int daObjCtRotateBlock_c::InitResources() {
             mFloorY = ground.clsnY;
         }
 
-        vb.x = mPosX;
-        vb.y = mPosY;
-        vb.z = mPosZ;
+        vb.x = mPos.x;
+        vb.y = mPos.y;
+        vb.z = mPos.z;
         vb.y -= 0xd2000;
 
         ground.SetObjAndPos(vb, 0);

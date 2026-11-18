@@ -135,7 +135,7 @@ void daObjTbox_c::State0() {
         playerPos.x = playerPosPtr->x;
         playerPos.y = playerPosPtr->y;
         playerPos.z = playerPosPtr->z;
-        if (AngleDiff(Vec3_HorzAngle(&mPos, &playerPos), mAngleY) < 0x4000) {
+        if (AngleDiff(Vec3_HorzAngle(&mPos, &playerPos), mAngle.y) < 0x4000) {
             int openCount = 0;
             int chestCount = 0;
             dActor_c *chest = FindWithActorID(0xd, 0);
@@ -198,9 +198,9 @@ void daObjTbox_c::State1() {
         daPly_c *player = ClosestPlayer();
 
         Vector3 spawnPos;
-        spawnPos.x = mPosX;
-        spawnPos.y = mPosY;
-        spawnPos.z = mPosZ;
+        spawnPos.x = mPos.x;
+        spawnPos.y = mPos.y;
+        spawnPos.z = mPos.z;
         spawnPos.y += 0xc8000;
 
         if (mIsLastChest == 0) {
@@ -213,9 +213,9 @@ void daObjTbox_c::State1() {
 
         if (player->mIsUnderwater != 0) {
             dActor_c *bubble = dActor_c::Spawn(0x123, 0, spawnPos, 0, mAreaId, -1);
-            bubble->mSpeedX = 0;
-            bubble->mVertSpeed = 0x800;
-            bubble->mSpeedZ = 0;
+            bubble->mSpeed.x = 0;
+            bubble->mSpeed.y = 0x800;
+            bubble->mSpeed.z = 0;
         }
     }
 
@@ -238,9 +238,9 @@ void daObjTbox_c::State2() {
 
     if (mStarID != 0xff) {
         Vector3 spawnPos;
-        spawnPos.x = mPosX;
-        spawnPos.y = mPosY;
-        spawnPos.z = mPosZ;
+        spawnPos.x = mPos.x;
+        spawnPos.y = mPos.y;
+        spawnPos.z = mPos.z;
         spawnPos.y += 0xc8000;
         UntrackAndSpawnStar(mTrackedStarID, mStarID, spawnPos, 4);
     }
@@ -249,10 +249,10 @@ void daObjTbox_c::State2() {
 }
 
 void daObjTbox_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = mPosY >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* D1 and D0 come from the inline destructor in daObjTbox_c.h. */

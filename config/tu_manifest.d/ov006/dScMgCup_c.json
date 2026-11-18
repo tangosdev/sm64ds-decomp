@@ -33,7 +33,8 @@
       "end": "0x021418b0"
     },
     {
-      "name": ".data",
+      "name": ".data.w13b814",
+      "input_section": ".data",
       "start": "0x0213bfe0",
       "end": "0x0213c1e4"
     },
@@ -843,7 +844,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -875,6 +876,19 @@
           "firstDiff": null
         },
         {
+          "section": ".bss",
+          "start": "0x02141870",
+          "end": "0x021418b0",
+          "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.w13b814",
+          "start": "0x0213bfe0",
+          "end": "0x0213c1e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.data_ov006_02139db4",
           "start": "0x02139db4",
           "end": "0x02139dbc",
@@ -885,6 +899,48 @@
           "section": ".data.data_ov006_02139dbc",
           "start": "0x02139dbc",
           "end": "0x02139dc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139df4",
+          "start": "0x02139df4",
+          "end": "0x02139e0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139e4c",
+          "start": "0x02139e4c",
+          "end": "0x02139e74",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139e9c",
+          "start": "0x02139e9c",
+          "end": "0x02139ec4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139ec4",
+          "start": "0x02139ec4",
+          "end": "0x02139eec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213a1ec",
+          "start": "0x0213a1ec",
+          "end": "0x0213a274",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213a274",
+          "start": "0x0213a274",
+          "end": "0x0213a284",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -910,13 +966,6 @@
           "firstDiff": null
         },
         {
-          "section": ".data.data_ov006_02139df4",
-          "start": "0x02139df4",
-          "end": "0x02139e0c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data.data_ov006_02139e0c",
           "start": "0x02139e0c",
           "end": "0x02139e2c",
@@ -931,30 +980,9 @@
           "firstDiff": null
         },
         {
-          "section": ".data.data_ov006_02139e4c",
-          "start": "0x02139e4c",
-          "end": "0x02139e74",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data.data_ov006_02139e74",
           "start": "0x02139e74",
           "end": "0x02139e9c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov006_02139e9c",
-          "start": "0x02139e9c",
-          "end": "0x02139ec4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov006_02139ec4",
-          "start": "0x02139ec4",
-          "end": "0x02139eec",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1006,38 +1034,11 @@
           "end": "0x0213a1ec",
           "differingBytes": 0,
           "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov006_0213a1ec",
-          "start": "0x0213a1ec",
-          "end": "0x0213a274",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov006_0213a274",
-          "start": "0x0213a274",
-          "end": "0x0213a284",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data",
-          "start": "0x0213bfe0",
-          "end": "0x0213c1e4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".bss",
-          "start": "0x02141870",
-          "end": "0x021418b0",
-          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 60
+          "LICENSED": 81
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1048,172 +1049,361 @@
           {
             "section": ".init",
             "original": [
-              119
+              153
             ],
             "desired": [
-              119
+              153
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              117
+              151
             ],
             "desired": [
-              117
+              151
             ]
           },
           {
             "section": ".bss",
             "original": [
-              79
+              86
             ],
             "desired": [
-              79
+              86
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.w13b814",
             "original": [
-              63,
-              65,
-              67,
-              69,
-              71,
-              73,
-              75,
-              77,
+              70,
+              72,
+              74,
+              76,
+              78,
               80,
-              81,
               82,
-              83,
-              85,
-              86,
-              87,
-              88,
-              89,
-              91,
-              92,
-              93,
-              94,
-              95,
-              97,
-              99,
+              84,
+              114,
+              115,
+              116,
+              117,
+              119,
+              120,
+              121,
+              122,
+              123,
+              125,
+              126,
+              127,
+              128,
+              129,
+              131,
+              133,
+              134
+            ],
+            "desired": [
+              122,
+              84,
+              119,
+              76,
+              72,
+              82,
+              78,
+              121,
+              129,
+              74,
+              70,
+              120,
+              80,
+              134,
+              133,
+              125,
+              123,
+              126,
+              114,
+              115,
+              116,
+              117,
+              127,
+              128,
+              131
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139db4",
+            "original": [
+              106
+            ],
+            "desired": [
+              106
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139dbc",
+            "original": [
               100
             ],
             "desired": [
-              88,
-              77,
-              85,
-              69,
-              65,
-              75,
-              71,
-              87,
-              95,
-              67,
-              63,
-              86,
-              73,
-              100,
-              99,
-              91,
-              89,
-              92,
-              80,
-              81,
-              82,
-              83,
-              93,
-              94,
+              100
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139df4",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139e4c",
+            "original": [
+              108
+            ],
+            "desired": [
+              108
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139e9c",
+            "original": [
+              102
+            ],
+            "desired": [
+              102
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139ec4",
+            "original": [
+              104
+            ],
+            "desired": [
+              104
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a1ec",
+            "original": [
+              112
+            ],
+            "desired": [
+              112
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a274",
+            "original": [
+              110
+            ],
+            "desired": [
+              110
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139dc4",
+            "original": [
+              87
+            ],
+            "desired": [
+              87
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139dd4",
+            "original": [
+              88
+            ],
+            "desired": [
+              88
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139de4",
+            "original": [
+              89
+            ],
+            "desired": [
+              89
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139e0c",
+            "original": [
+              90
+            ],
+            "desired": [
+              90
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139e2c",
+            "original": [
+              91
+            ],
+            "desired": [
+              91
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139e74",
+            "original": [
+              92
+            ],
+            "desired": [
+              92
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02139fdc",
+            "original": [
+              93
+            ],
+            "desired": [
+              93
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a01c",
+            "original": [
+              94
+            ],
+            "desired": [
+              94
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a064",
+            "original": [
+              95
+            ],
+            "desired": [
+              95
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a0ac",
+            "original": [
+              96
+            ],
+            "desired": [
+              96
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a0f4",
+            "original": [
               97
+            ],
+            "desired": [
+              97
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a13c",
+            "original": [
+              98
+            ],
+            "desired": [
+              98
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a18c",
+            "original": [
+              99
+            ],
+            "desired": [
+              99
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.w13b814",
               "original": [
-                63,
-                65,
-                67,
-                69,
-                71,
-                73,
-                75,
-                77,
+                70,
+                72,
+                74,
+                76,
+                78,
                 80,
-                81,
                 82,
-                83,
-                85,
-                86,
-                87,
-                88,
-                89,
-                91,
-                92,
-                93,
-                94,
-                95,
-                97,
-                99,
-                100
+                84,
+                114,
+                115,
+                116,
+                117,
+                119,
+                120,
+                121,
+                122,
+                123,
+                125,
+                126,
+                127,
+                128,
+                129,
+                131,
+                133,
+                134
               ],
               "desired": [
-                88,
-                77,
-                85,
-                69,
-                65,
-                75,
-                71,
-                87,
-                95,
-                67,
-                63,
-                86,
-                73,
-                100,
-                99,
-                91,
-                89,
-                92,
-                80,
-                81,
+                122,
+                84,
+                119,
+                76,
+                72,
                 82,
-                83,
-                93,
-                94,
-                97
+                78,
+                121,
+                129,
+                74,
+                70,
+                120,
+                80,
+                134,
+                133,
+                125,
+                123,
+                126,
+                114,
+                115,
+                116,
+                117,
+                127,
+                128,
+                131
               ],
               "slots": [
-                63,
-                65,
-                67,
-                69,
-                71,
-                73,
-                75,
-                77,
+                70,
+                72,
+                74,
+                76,
+                78,
                 80,
-                81,
                 82,
-                83,
-                85,
-                86,
-                87,
-                88,
-                89,
-                91,
-                92,
-                93,
-                94,
-                95,
-                97,
-                99,
-                100
+                84,
+                114,
+                115,
+                116,
+                117,
+                119,
+                120,
+                121,
+                122,
+                123,
+                125,
+                126,
+                127,
+                128,
+                129,
+                131,
+                133,
+                134
               ]
             }
           ],
@@ -1527,7 +1717,7 @@
       "target_address": "0x02141870"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c0f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1537,7 +1727,7 @@
       "target_address": "0x0213a1ec"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c0ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1547,7 +1737,7 @@
       "target_address": "0x0213a274"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c0e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1557,7 +1747,7 @@
       "target_address": "0x02139e4c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c0e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1567,7 +1757,7 @@
       "target_address": "0x02139db4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c0e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1577,7 +1767,7 @@
       "target_address": "0x02139ec4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c0dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1587,7 +1777,7 @@
       "target_address": "0x02139e9c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c0d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1597,7 +1787,7 @@
       "target_address": "0x02139dbc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c030",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1607,7 +1797,7 @@
       "target_address": "0x020dfd48"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c000",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1617,7 +1807,7 @@
       "target_address": "0x020dfcd8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c028",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1627,7 +1817,7 @@
       "target_address": "0x020df5b8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bff8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1637,7 +1827,7 @@
       "target_address": "0x020df540"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c010",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1647,7 +1837,7 @@
       "target_address": "0x020df3bc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c040",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1657,7 +1847,7 @@
       "target_address": "0x020df28c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c008",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1667,7 +1857,7 @@
       "target_address": "0x020df1c0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bfe8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1677,7 +1867,7 @@
       "target_address": "0x020df1bc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c150",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1687,7 +1877,7 @@
       "target_address": "0x0213c048"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c190",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1697,7 +1887,7 @@
       "target_address": "0x02043494"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c18c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1707,7 +1897,7 @@
       "target_address": "0x0204349c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c188",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1717,7 +1907,7 @@
       "target_address": "0x0204357c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c160",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1727,7 +1917,7 @@
       "target_address": "0x02043bf0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c180",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1737,7 +1927,7 @@
       "target_address": "0x0202e398"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c174",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1747,7 +1937,7 @@
       "target_address": "0x0202e3c8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c164",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1757,7 +1947,7 @@
       "target_address": "0x0202e5f0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1767,7 +1957,7 @@
       "target_address": "0x020ad660"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1777,7 +1967,7 @@
       "target_address": "0x020ae3b4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1787,7 +1977,7 @@
       "target_address": "0x020b27f4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1797,7 +1987,7 @@
       "target_address": "0x020b2880"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1807,7 +1997,7 @@
       "target_address": "0x020aeed8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1817,7 +2007,7 @@
       "target_address": "0x020af094"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1827,7 +2017,7 @@
       "target_address": "0x020af04c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1837,7 +2027,7 @@
       "target_address": "0x020af27c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1847,7 +2037,7 @@
       "target_address": "0x020ae128"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1857,7 +2047,7 @@
       "target_address": "0x020ae140"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1867,7 +2057,7 @@
       "target_address": "0x020ae1a0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1877,7 +2067,7 @@
       "target_address": "0x020ae198"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1887,7 +2077,7 @@
       "target_address": "0x020b298c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1897,7 +2087,7 @@
       "target_address": "0x020b2994"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c184",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1907,7 +2097,7 @@
       "target_address": "0x020b04e8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c158",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1917,7 +2107,7 @@
       "target_address": "0x020b0930"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1927,7 +2117,7 @@
       "target_address": "0x0210a708"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1937,7 +2127,7 @@
       "target_address": "0x0210a600"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c17c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1947,7 +2137,7 @@
       "target_address": "0x0210a664"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c170",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1957,7 +2147,7 @@
       "target_address": "0x0210a698"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c168",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1967,7 +2157,7 @@
       "target_address": "0x0210a608"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c15c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1977,7 +2167,7 @@
       "target_address": "0x0210a6e4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c198",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1987,7 +2177,7 @@
       "target_address": "0x020dea1c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c178",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1997,7 +2187,7 @@
       "target_address": "0x020e0068"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c16c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2007,7 +2197,7 @@
       "target_address": "0x020e0204"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c1a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2017,7 +2207,7 @@
       "target_address": "0x020dfed4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c19c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2027,7 +2217,7 @@
       "target_address": "0x020dfeec"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c154",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2037,7 +2227,7 @@
       "target_address": "0x020e0308"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c194",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2047,7 +2237,7 @@
       "target_address": "0x020de988"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c080",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2057,7 +2247,7 @@
       "target_address": "0x0213bfe0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c07c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2067,7 +2257,7 @@
       "target_address": "0x0213c018"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c078",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2077,7 +2267,7 @@
       "target_address": "0x0213c038"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c074",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2087,7 +2277,7 @@
       "target_address": "0x0213bff0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c020",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2097,7 +2287,7 @@
       "target_address": "0x020e0574"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c04c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2107,7 +2297,7 @@
       "target_address": "0x0213c054"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c050",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2117,7 +2307,7 @@
       "target_address": "0x0213bc64"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c048",
       "type": "R_ARM_ABS32",
       "kind": "load",

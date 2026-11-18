@@ -67,56 +67,56 @@
       "ordinal": 3
     },
     {
-      "symbol": "_Z19func_ov077_02124c28P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02124c28Ev",
       "address": "0x02124c28",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov077_02124c28.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_Z19func_ov077_02124ce4P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02124ce4Ev",
       "address": "0x02124ce4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov077_02124ce4.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z19func_ov077_02124d08P7daTgz_cP10dBgCh_Actr",
+      "symbol": "_ZN7daTgz_c19func_ov077_02124d08EP10dBgCh_Actr",
       "address": "0x02124d08",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov077_02124d08.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_Z19func_ov077_02124eb0P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02124eb0Ev",
       "address": "0x02124eb0",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov077_02124eb0.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z19func_ov077_021250a8P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_021250a8Ev",
       "address": "0x021250a8",
       "size": "0x00000128",
       "legacy_source": "src/func_ov077_021250a8.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_Z19func_ov077_021251d0P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_021251d0Ev",
       "address": "0x021251d0",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov077_021251d0.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_Z19func_ov077_02125290P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125290Ev",
       "address": "0x02125290",
       "size": "0x00000074",
       "legacy_source": "src/func_ov077_02125290.c",
       "ordinal": 10
     },
     {
-      "symbol": "_Z19func_ov077_02125304P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125304Ev",
       "address": "0x02125304",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov077_02125304.cpp",
@@ -207,21 +207,21 @@
       "ordinal": 23
     },
     {
-      "symbol": "_Z19func_ov077_02125e20P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125e20Ev",
       "address": "0x02125e20",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov077_02125e20.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_Z19func_ov077_02125e5cP7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125e5cEv",
       "address": "0x02125e5c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov077_02125e5c.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_Z19func_ov077_02125e94P7daTgz_ci",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125e94Ei",
       "address": "0x02125e94",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov077_02125e94.c",
@@ -735,67 +735,67 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@615",
+      "from": "@617",
       "to": "data_ov077_02127c1c",
       "evidence": "compiler temp mapped to 0x02127c1c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @612 to @553 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @553 to @561 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @561 to @598 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @598 to @610 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @610 to @615 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@617",
+      "from": "@619",
       "to": "data_ov077_02127928",
       "evidence": "compiler temp mapped to 0x02127928 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @614 to @555 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @555 to @563 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @563 to @600 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @600 to @612 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @612 to @617 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@619",
+      "from": "@621",
       "to": "data_ov077_02127910",
       "evidence": "compiler temp mapped to 0x02127910 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @616 to @557 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @557 to @565 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @565 to @602 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @602 to @614 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @614 to @619 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@620",
+      "from": "@622",
       "to": "data_ov077_02127908",
       "evidence": "compiler temp mapped to 0x02127908 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @617 to @558 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @558 to @566 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @566 to @603 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @603 to @615 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @615 to @620 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@622",
+      "from": "@624",
       "to": "data_ov077_021278f0",
       "evidence": "compiler temp mapped to 0x021278f0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @619 to @560 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @560 to @568 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @568 to @605 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @605 to @617 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @617 to @622 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@624",
+      "from": "@626",
       "to": "data_ov077_02127918",
       "evidence": "compiler temp mapped to 0x02127918 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @621 to @562 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @562 to @570 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @570 to @607 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @607 to @619 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @619 to @624 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@626",
+      "from": "@628",
       "to": "data_ov077_021278f8",
       "evidence": "compiler temp mapped to 0x021278f8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @623 to @564 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @564 to @572 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @572 to @609 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @609 to @621 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @621 to @626 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@628",
+      "from": "@630",
       "to": "data_ov077_021278e8",
       "evidence": "compiler temp mapped to 0x021278e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @625 to @566 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @566 to @574 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @574 to @611 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @611 to @623 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @623 to @628 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@630",
+      "from": "@632",
       "to": "data_ov077_02127940",
       "evidence": "compiler temp mapped to 0x02127940 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @627 to @568 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @568 to @576 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @576 to @613 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @613 to @625 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @625 to @630 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@632",
+      "from": "@634",
       "to": "data_ov077_02127938",
       "evidence": "compiler temp mapped to 0x02127938 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @629 to @570 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @570 to @578 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @578 to @615 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @615 to @627 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @627 to @632 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@634",
+      "from": "@636",
       "to": "data_ov077_02127930",
       "evidence": "compiler temp mapped to 0x02127930 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @631 to @572 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @572 to @580 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @580 to @617 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @617 to @629 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @629 to @634 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@636",
+      "from": "@638",
       "to": "data_ov077_02127900",
       "evidence": "compiler temp mapped to 0x02127900 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @633 to @574 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @574 to @582 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @582 to @619 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @619 to @631 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @631 to @636 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@638",
+      "from": "@640",
       "to": "data_ov077_02127920",
       "evidence": "compiler temp mapped to 0x02127920 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @635 to @576 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @576 to @584 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @584 to @621 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @621 to @633 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @633 to @638 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
@@ -1723,5 +1723,6 @@
         }
       ]
     }
-  ]
+  ],
+  "rodata": null
 }

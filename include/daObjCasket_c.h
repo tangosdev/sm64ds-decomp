@@ -19,7 +19,7 @@
 struct daObjCasket_c : dBgActor_c {
     s32 mState;         /* 0x320 -- index into the WAIT, STANDUP state table */
     u16 mStateTimer;    /* 0x324 -- WAIT countdown, then the STANDUP shake */
-    s16 mAngleStep;     /* 0x326 -- per-frame step of mAngleX */
+    s16 mAngleStep;     /* 0x326 -- per-frame step of mAngle.x */
     u16 mBehaviorTimer; /* 0x328 -- frame counter; paces the rattle */
     /* 0x32a..0x32b is tail padding: sizeof rounds to 0x32c, the factory's
        allocation size. Nothing reads or writes it. */

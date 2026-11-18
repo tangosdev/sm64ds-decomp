@@ -30,7 +30,7 @@ struct daObjSeesaw_c : dBgActor_c {
     u8 mVariant; /* 0x31e -- 0..6 from actorID; indexes all three ov095 file tables */
     u8 pad_31f[0x1];
     s32 mTiltSound; /* 0x320 -- recycled Sound::PlayLong handle, replayed while |mAngleXSpeed| > 0xa */
-    s16 mAngleXSpeed; /* 0x324 -- the tilt speed SpringAngle and OnStoodOn integrate into mAngleX */
+    s16 mAngleXSpeed; /* 0x324 -- the tilt speed SpringAngle and OnStoodOn integrate into mAngle.x */
     u8 mPoundedThisFrame; /* 0x326 -- set by OnGroundPounded, cleared by the last statement of Behavior */
 
     /* --- vtable --- */

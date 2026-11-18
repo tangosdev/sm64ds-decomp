@@ -141,16 +141,16 @@ int daPgRcer_c::InitResources()
 
     if (NumStars() == 0x96) {
         mdCcAc_c.Init(this, 0xd0000, 0x12c000, 0x800004, 0);
-        mScaleX = 0x1999;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1999;
+        mScale.x = 0x1999;
+        mScale.y = 0x1000;
+        mScale.z = 0x1999;
         mWithMeshClsn.Init(this, 0xd0000, 0xd0000, 0, 0);
         SetRanges(0xf0000, 0xf0000, 0x1c20000, 0x1c20000);
     } else {
         mdCcAc_c.Init(this, 0x82000, 0x12c000, 0x800004, 0);
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScale.x = 0x1000;
+        mScale.y = 0x1000;
+        mScale.z = 0x1000;
         mWithMeshClsn.Init(this, 0x82000, 0x82000, 0, 0);
     }
 
@@ -251,16 +251,16 @@ int daPgRcer_c::StateShowInitText() {
     switch (mActionStep) {
     case 0: {
         short ang = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
-        if (ApproachLinear(mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(mAngle.y, ang, 0x514) != 0) {
             Vector3 pos;
             int msg;
             int eq;
             int y;
             int z;
-            pos.x = mPosX;
-            y = mPosY;
+            pos.x = mPos.x;
+            y = mPos.y;
             pos.y = y;
-            z = mPosZ;
+            z = mPos.z;
             pos.z = z;
             pos.y = y + 0x190000;
             eq = (NumStars() == 0x96);
@@ -297,7 +297,7 @@ int daPgRcer_c::InitStatePrepareForRace() {
     mAnmModel.SetAnim((BCA_File *)gPenguinJumpStAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mVertSpeed = 0x16000;
+    mSpeed.y = 0x16000;
     mActionStep = 0;
     Sound::PlaySub(0x1f, 0x14, 0x7f, 0x15666, 0);
     func_0201267c(0x138, &mCamSpacePos);
@@ -313,8 +313,8 @@ int daPgRcer_c::StatePrepareForRace() {
         }
         break;
     case 1:
-        UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x800);
-        mAngleY = mPrevAngleY;
+        UpdateAngle(mPrevAngle.y, mTargetAngY, 2, 0x800);
+        mAngle.y = mPrevAngle.y;
         UpdatePos(&mdCcAc_c);
         UpdateFloorAndWalls(&mWithMeshClsn);
         if (mWithMeshClsn.JustHitGround() != 0) {
@@ -366,9 +366,9 @@ int daPgRcer_c::StateRace() {
         if (mPlayerCheated == 0 && mPlayerFinished == 0) {
             {
                 Vector3 v;
-                v.x = mPosX;
-                v.y = mPosY;
-                v.z = mPosZ;
+                v.x = mPos.x;
+                v.y = mPos.y;
+                v.z = mPos.z;
                 if (IsNearPathNode(&v, mPenguinCheckpoints)) {
                     mPenguinCheckpoints++;
                 }
@@ -403,9 +403,9 @@ int daPgRcer_c::StateRace() {
             mPathNodeIndex < (int)mPath.NumNodes() - 2) {
             {
                 Vector3 v;
-                v.x = mPosX;
-                v.y = mPosY;
-                v.z = mPosZ;
+                v.x = mPos.x;
+                v.y = mPos.y;
+                v.z = mPos.z;
                 if (IsNearPathNode(&v, mPenguinCheckpoints)) {
                     mPenguinCheckpoints++;
                 }
@@ -438,8 +438,8 @@ int daPgRcer_c::StateRace() {
             mPenguinFinished = 1;
         }
         mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x185, mCamSpacePos, 0);
-        mDustParticle = Particle::System::New(mDustParticle, kPtclSlideDust, mPosX, mPosY + 0x32000,
-                                              mPosZ, 0, 0);
+        mDustParticle = Particle::System::New(mDustParticle, kPtclSlideDust, mPos.x,
+                                              mPos.y + 0x32000, mPos.z, 0, 0);
         break;
 
     case 2:
@@ -479,8 +479,8 @@ int daPgRcer_c::StateFinishRace() {
         mPath.GetNode(node, n - 1);
         mPathDist = Vec3_Dist(&mPos, &node);
         mTargetAngY = Vec3_HorzAngle(&mPos, &node);
-        ApproachLinear(mAngleY, mTargetAngY, 0x200);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, mTargetAngY, 0x200);
+        mPrevAngle.y = mAngle.y;
         if (mPathDist < mHorzSpeed) {
             mHorzSpeed = mPathDist;
             ++mActionStep;
@@ -497,7 +497,7 @@ int daPgRcer_c::StateFinishRace() {
     }
     case 1: {
         short ang = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
-        if (ApproachLinear(mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(mAngle.y, ang, 0x514) != 0) {
             SetState(5);
         }
         break;
@@ -535,12 +535,12 @@ int daPgRcer_c::StateShowFinalText() {
     }
     case 1: {
         short ang = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
-        if (ApproachLinear(mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(mAngle.y, ang, 0x514) != 0) {
             unsigned int id;
             Vector3 v;
-            int z = mPosZ;
-            int y = mPosY + 0x190000;
-            int x = mPosX;
+            int z = mPos.z;
+            int y = mPos.y + 0x190000;
+            int x = mPos.x;
             v.x = x;
             v.y = y;
             v.z = z;
@@ -578,10 +578,10 @@ int daPgRcer_c::StateShowFinalText() {
 }
 
 void daPgRcer_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = mPosY >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
 }
 
@@ -592,11 +592,11 @@ int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
-            int x = FX_MUL(floorNormal.x, mSpeedX);
-            int y = FX_MUL(floorNormal.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(x + y, floorNormal.y) + 0x8000);
-            if (mVertSpeed > 0)
-                mVertSpeed = 0;
+            int x = FX_MUL(floorNormal.x, mSpeed.x);
+            int y = FX_MUL(floorNormal.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(x + y, floorNormal.y) + 0x8000);
+            if (mSpeed.y > 0)
+                mSpeed.y = 0;
         }
     }
     if (clsn->IsOnWall()) {
@@ -613,14 +613,14 @@ void daPgRcer_c::AdvancePathNode() {
 }
 
 int daPgRcer_c::FollowPath() {
-    UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x600);
+    UpdateAngle(mPrevAngle.y, mTargetAngY, 2, 0x600);
     int n = mPathNodeIndex;
     if (n >= (int)mPath.NumNodes() - 2) {
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
     } else {
         Vector3 node;
         mPath.GetNode(node, n + 1);
-        mAngleY = Vec3_HorzAngle(&mPos, &node);
+        mAngle.y = Vec3_HorzAngle(&mPos, &node);
     }
     mPathDist = mPathDist - mHorzSpeed;
     return mPathDist < 0;
@@ -631,7 +631,7 @@ void daPgRcer_c::CheckFallCheat() {
         return;
     daPly_c *t = mTalkPlayer;
     if (t->mIsAirborne != 0) {
-        int vertSpeed = t->mVertSpeed;
+        int vertSpeed = t->mSpeed.y;
         int terminalVel = t->mTerminalVelocity;
         if (vertSpeed > terminalVel)
             return;

@@ -32,7 +32,7 @@ struct ResourceDescriptor;
  *
  * NO FIELDS, and that is measured rather than assumed. Its own Behavior
  * (ov002 0x020b6718, now `_ZN16daObjKaitendai_c8BehaviorEv`) reads this+0x94,
- * which is dBgActor_c's mPrevAngleY, and
+ * which is dBgActor_c's mPrevAngle.y, and
  * otherwise only calls dBgActor_c::UpdateModelPosAndRotY and the guarded
  * UpdateClsnPosAndRot. Its own Render (`func_ov002_020b66f0`) dispatches through
  * the dExtSimpleModel_c at 0xd4. Its own destructor destroys only dBgActor_c's two members. And

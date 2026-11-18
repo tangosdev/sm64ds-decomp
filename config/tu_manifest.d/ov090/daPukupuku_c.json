@@ -208,7 +208,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17PukupukuModelFileC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
@@ -267,7 +267,7 @@
       "source": "0x02133f58",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -450,7 +450,8 @@
     "REFUTED and not carried into the TU: the legacy src/func_ov090_02133200.c claimed 'recovered name: daManta_c_Kill' and 'daManta_c::Kill - recovered from vtable slot identity'. _ZTV9daManta_c spans 0x0213423c..0x021342b8 and its slots hold only daManta_c's own functions; 0x2133200 is in no vtable. Its sole referrer in the ROM is 0x21342b8, the first pointer-to-member entry of daPukupuku_c's state table, which begins exactly where daManta_c's vtable ends -- the likely source of the mis-assignment. No replacement name is coined.",
     "Static initializer folded: the PukupukuModelFile handle (file 0x418), the PukupukuAnimationFilePtr handle (file 0x419), their destructor-registration nodes and the two PukuStateRow state rows make mwcc emit __sinit_d_a_pukupuku.cpp itself (0xd4, raw-byte-identical to retail __sinit_ov090_02133f4c with the same instruction sequence and literal pool); the handwritten src/unnamed/ov090/__sinit_ov090_02133f4c.c is retired. The rows are plain word copies from the four .data descriptors (no destructor registration), so no vector alias is needed. Both compiler temps (@620/@621 nodes) are fleet-unique, so no defined_symbol_renames are needed. This fold does NOT license the .data descriptors, the RTTI chain, the g_profile row or the vtable, which stay compiler-only deadstrip.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "Collision property member calls replace local helper declarations. Reconciled 2 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (35 sections, 128 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 2 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (35 sections, 128 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "Static initializer folded: the PukupukuModelFile handle (file 0x418), the PukupukuAnimationFilePtr handle (file 0x419), their destructor-registration nodes and the two PukuStateRow state rows make mwcc emit __sinit_d_a_pukupuku.cpp itself (0xd4, raw-byte-identical to retail __sinit_ov090_02133f4c with the same instruction sequence and literal pool); the handwritten src/unnamed/ov090/__sinit_ov090_02133f4c.c is retired. The rows are plain word copies from the four .data descriptors (no destructor registration), so no vector alias is needed. Both compiler temps (@626/@621 nodes) are fleet-unique, so no defined_symbol_renames are needed. This fold does NOT license the .data descriptors, the RTTI chain, the g_profile row or the vtable, which stay compiler-only deadstrip."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -755,14 +756,15 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@677",
+      "from": "@680",
       "to": "@620",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @680 to @626 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @626 to @623 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @623 to @660 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @660 to @672 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @672 to @677 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@678",
+      "from": "@681",
       "to": "@737",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @681 to @627 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @627 to @624 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @624 to @661 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @661 to @673 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @673 to @678 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
-  ]
+  ],
+  "rodata": null
 }

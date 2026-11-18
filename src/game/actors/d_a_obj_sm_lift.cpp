@@ -74,15 +74,15 @@ daObjSm_Lift_c::~daObjSm_Lift_c() {}
 void daObjSm_Lift_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     KillByMegaChar(player);
-    mAngleY = mPrevAngleY + 0x4000;
+    mAngle.y = mPrevAngle.y + 0x4000;
 }
 
 void daObjSm_Lift_c::UpdateModelTransform() {
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, 0x4000);
     mModel.mat4x3 = data_020a0e68;
 }
@@ -118,7 +118,7 @@ int daObjSm_Lift_c::Behavior() {
         int dist = Vec3_HorzDist(&mPos, otherPos);
         target =
             (s16)(FX_MUL(dist,
-                         FX_CosIdx((u16)(s16)AngleDiff(Vec3_HorzAngle(&mPos, otherPos), mAngleY) >>
+                         FX_CosIdx((u16)(s16)AngleDiff(Vec3_HorzAngle(&mPos, otherPos), mAngle.y) >>
                                    4)) /
                   256);
     } else {
@@ -130,7 +130,7 @@ int daObjSm_Lift_c::Behavior() {
         }
         target = 0;
     }
-    ApproachLinear(mAngleX, target, 0xc0);
+    ApproachLinear(mAngle.x, target, 0xc0);
 
     if (mMoving != 0) {
         int idx2;
@@ -163,10 +163,10 @@ int daObjSm_Lift_c::Behavior() {
         {
             int len = VEC_Mag(&diff);
             if (len == 0 || len <= mHorzSpeed) {
-                mPosX = nodeA.x;
+                mPos.x = nodeA.x;
                 reached = 1;
-                mPosY = nodeA.y;
-                mPosZ = nodeA.z;
+                mPos.y = nodeA.y;
+                mPos.z = nodeA.z;
             } else {
                 int scale = FX_Div(mHorzSpeed, len);
                 Vec3_MulScalar(&scaled, &diff, scale);
@@ -222,14 +222,14 @@ s32 daObjSm_Lift_c::InitResources() {
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     KCL_File *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
-    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov018_02112f48);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngle.y, *(CLPS_Block *)data_ov018_02112f48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mPauseTimer = 60;
-    mBasePos.x = mPosX;
-    mBasePos.y = mPosY;
-    mBasePos.z = mPosZ;
-    mAngleY -= 0x4000;
+    mBasePos.x = mPos.x;
+    mBasePos.y = mPos.y;
+    mBasePos.z = mPos.z;
+    mAngle.y -= 0x4000;
     PathPtr p;
     p.FromID(mPathId);
     mNodeCount = p.NumNodes();

@@ -106,9 +106,9 @@ int daIDonketu_c::Behavior() {
         if (r == 2) {
             Vector3 v;
             TriplePoofDust();
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             v.y = v.y + 0x64000;
             UntrackAndSpawnStar(mStarSlot, (mStarIdx | 0x40) & 0xff, v, 4);
             MarkForDestruction();
@@ -127,9 +127,9 @@ void daIDonketu_c::UpdateDeathState() {
         return;
     TriplePoofDust();
     Vector3 pos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x64000;
     UntrackAndSpawnStar(mStarSlot, (mStarIdx | 0x40) & 0xff, pos, 4);
 }

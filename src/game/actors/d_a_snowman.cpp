@@ -15,7 +15,7 @@
  * daSnowman_c_classInit (0x02125ec0) abuts the rest and is written last.
  *
  * deslop leftovers:
- * - RotateTowardPlayer: naming player mPosX/Y/Z is 0x190 -> 0x18c.
+ * - RotateTowardPlayer: naming player mPos.x/.y/.z is 0x190 -> 0x18c.
  * - FindClosestPlayerDist: the same loads are 0xb8 -> 0xb4.
  * - StateThrowSnowballExecute: the same loads differ by 3 words; size stays 0x17c.
  * - CheckAttacks: `if (actorID == PLAYER)` is 0x21c -> 0x210.
@@ -150,12 +150,12 @@ void daSnowman_c::ReleaseHeldObjects() {
         if (a) {
             a->mVertAccel = -0x2000;
             unsigned int rv = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf;
-            a->mPrevAngleX = 0;
-            a->mPrevAngleY = rv << 0xc;
-            a->mPrevAngleZ = 0;
-            a->mSpeedX = 0;
-            a->mVertSpeed = 0x14000;
-            a->mSpeedZ = 0;
+            a->mPrevAngle.x = 0;
+            a->mPrevAngle.y = rv << 0xc;
+            a->mPrevAngle.z = 0;
+            a->mSpeed.x = 0;
+            a->mSpeed.y = 0x14000;
+            a->mSpeed.z = 0;
             a->mHorzSpeed = 0xa000;
             a->mCarryMatrix = 0;
         }
@@ -183,7 +183,7 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
     /* Read through one base pointer, y and z first: naming the three
        fields directly reschedules the loads. */
     {
-        int *pp = &player->mPosX;
+        int *pp = &player->mPos.x;
         int py = pp[1];
         int pz = pp[2];
         v.x = pp[0];
@@ -193,20 +193,20 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
     ang = Vec3_HorzAngle(&this->mPos, &v);
 
     /* Both rows in the ROM are 1, 0x1000, 0x1000; idx still selects one. */
-    ApproachAngle(&this->mPrevAngleY, ang, data_ov081_021289a4[idx].divisor,
+    ApproachAngle(&this->mPrevAngle.y, ang, data_ov081_021289a4[idx].divisor,
                   data_ov081_021289a4[idx].band, data_ov081_021289a4[idx].maxStep);
 
     if (idx != 1) {
         this->mInitAngleY = 0;
         this->mTimer = 0;
-    } else if (AngleDiff(ang, this->mAngleY) > 0x200) {
+    } else if (AngleDiff(ang, this->mAngle.y) > 0x200) {
         lim = -0x2000;
         this->mInitAngleY -= 0x100;
         if (this->mInitAngleY < lim) {
             this->mInitAngleY = lim;
             this->mTimer++;
             if (this->mTimer > 40) {
-                this->mStep = this->mAngleY - ang;
+                this->mStep = this->mAngle.y - ang;
                 SetState(&data_ov081_02128e94);
                 return;
             }
@@ -216,9 +216,9 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
         ApproachAngle(&this->mInitAngleY, 0, 1, 0x500, 0x500);
     }
 
-    ApproachAngle(&this->mAngleX, this->mInitAngleY, data_ov081_021289a4[idx].divisor,
+    ApproachAngle(&this->mAngle.x, this->mInitAngleY, data_ov081_021289a4[idx].divisor,
                   data_ov081_021289a4[idx].band, data_ov081_021289a4[idx].maxStep);
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngle.y;
 }
 
 /* Reacts to whatever the collision cylinder touched this frame. */
@@ -239,7 +239,7 @@ void daSnowman_c::CheckAttacks() {
     if (flags & 0x2000) {
         this->mDeathState = 2;
         func_ov002_020aea30(found, 0);
-        this->mPrevAngleY = (this->HorzAngleToCPlayer() + 0x8000);
+        this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
         hit = 1;
     }
     if (flags & 0x40000) {
@@ -252,7 +252,7 @@ void daSnowman_c::CheckAttacks() {
         if (found->mIsMetal == 1) {
             this->mDeathState = 2;
             func_ov002_020aea30(found, 0);
-            this->mPrevAngleY = (this->HorzAngleToCPlayer() + 0x8000);
+            this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
         if (flags & 0x10) {
@@ -268,7 +268,7 @@ void daSnowman_c::CheckAttacks() {
             this->mDeathState = 2;
             func_ov002_020aea30(found, 0);
             this->mDeathSound = 2;
-            this->mPrevAngleY = (this->HorzAngleToCPlayer() + 0x8000);
+            this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
         if (hit == 0) {
@@ -292,7 +292,7 @@ int daSnowman_c::FindClosestPlayerDist() {
             daPly_c *obj = gPlayers[i];
             if (obj != 0) {
                 int dist;
-                int *s = &obj->mPosX;   /* one base pointer; see 0212423c */
+                int *s = &obj->mPos.x; /* one base pointer; see 0212423c */
                 v.x = s[0];
                 v.y = s[1];
                 v.z = s[2];
@@ -315,19 +315,19 @@ int daSnowman_c::FindClosestPlayerDist() {
 int daSnowman_c::StateMeltExecute() {
     Vector3 v;
     if (this->mType != 0 || this->mWithMeshClsn.IsOnGround() != 0) {
-        ApproachLinear(this->mScaleX, 0x1700, 0x50);
-        ApproachLinear(this->mScaleZ, 0x1700, 0x50);
-        ApproachLinear(this->mScaleY, 0, 0x50);
+        ApproachLinear(this->mScale.x, 0x1700, 0x50);
+        ApproachLinear(this->mScale.z, 0x1700, 0x50);
+        ApproachLinear(this->mScale.y, 0, 0x50);
         ApproachLinear(this->mSinkOffsetY, -0x4000, 0x199);
         /* Every read of mStateTimer here is ldrh: it is counted down
            through DecIfAbove0_Short, which takes it unsigned. */
         if ((u16)this->mStateTimer == 0)
             this->mStateTimer = 20;
-        if (this->mScaleY < 0x50) {
+        if (this->mScale.y < 0x50) {
             if (this->mCapPhase == 0) {
-                v.x = this->mPosX;
-                v.y = this->mPosY;
-                v.z = this->mPosZ;
+                v.x = this->mPos.x;
+                v.y = this->mPos.y;
+                v.z = this->mPos.z;
                 SpawnCoins(v, this->mExtraCoinCount + 1, 0xa000, 0);
             }
             ReleaseHeldObjects();
@@ -349,13 +349,13 @@ int daSnowman_c::StateMeltEnter() {
         if (a != 0) {
             a->mVertAccel = -0x2000;
             int rv = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf;
-            a->mPrevAngleX = 0;
-            a->mPrevAngleY = rv << 0xc;
-            a->mPrevAngleZ = 0;
+            a->mPrevAngle.x = 0;
+            a->mPrevAngle.y = rv << 0xc;
+            a->mPrevAngle.z = 0;
             a->mHorzSpeed = 0xa000;
-            a->mSpeedX = 0;
-            a->mVertSpeed = 0x14000;
-            a->mSpeedZ = 0;
+            a->mSpeed.x = 0;
+            a->mSpeed.y = 0x14000;
+            a->mSpeed.z = 0;
             a->mCarryMatrix = 0;
         }
         func_02012790(0xa);
@@ -376,14 +376,14 @@ int daSnowman_c::StateDeathExecute() {
     else
         this->mInitAngleY += 0x200;
 
-    this->mPrevAngleY += this->mInitAngleY;
-    ApproachAngle(&this->mAngleX, -0x2800, 1, 0x500, 0x500);
+    this->mPrevAngle.y += this->mInitAngleY;
+    ApproachAngle(&this->mAngle.x, -0x2800, 1, 0x500, 0x500);
     this->mTimer++;
     if (this->mTimer > 40) {
         if (this->mCapPhase == 0) {
-            v.x = this->mPosX;
-            v.y = this->mPosY;
-            v.z = this->mPosZ;
+            v.x = this->mPos.x;
+            v.y = this->mPos.y;
+            v.z = this->mPos.z;
             SpawnCoins(v, this->mExtraCoinCount + 1, 0xa000, 0);
         }
         ReleaseHeldObjects();
@@ -421,18 +421,18 @@ int daSnowman_c::StateBurrowExecute() {
     this->mParticleID2 =
         Particle::System::New(this->mParticleID2, kPtclSnowmanSinkB, pos.x, pos.y, pos.z, 0, 0);
 
-    if (this->mHomePos.y > this->mPosY) {
-        ApproachAngle(&this->mAngleX, this->mInitAngleY, 1, 0x1000, 0x1000);
+    if (this->mHomePos.y > this->mPos.y) {
+        ApproachAngle(&this->mAngle.x, this->mInitAngleY, 1, 0x1000, 0x1000);
     }
     t = this->mHomePos.y - 0x118000;
-    if (t > this->mPosY) {
-        this->mPosY = t;
-        this->mVertSpeed = 0;
+    if (t > this->mPos.y) {
+        this->mPos.y = t;
+        this->mSpeed.y = 0;
         this->mVertAccel = 0;
         SetState(&data_ov081_02128e84);
     }
-    this->mPrevAngleY += 0x2000;
-    this->mAngleY = this->mPrevAngleY;
+    this->mPrevAngle.y += 0x2000;
+    this->mAngle.y = this->mPrevAngle.y;
     return 1;
 }
 
@@ -447,7 +447,7 @@ int daSnowman_c::StateBurrowEnter() {
             this->mSnowballID = 0;
         }
     }
-    this->mVertSpeed = 0xa000;
+    this->mSpeed.y = 0xa000;
     this->mVertAccel = -0x4000;
     this->mInitAngleY = 0;
     this->mAnmModel.SetAnim((BCA_File *)data_ov081_02128da8.filePtr, 0, 0x1000, 0);
@@ -463,9 +463,9 @@ int daSnowman_c::StateThrowSnowballExecute() {
     if (this->mSnowballID != 0) {
         target = dActor_c::FindWithID(this->mSnowballID);
         if (target != 0) {
-            target->mPosX = this->mHandPos.x;
-            target->mPosY = this->mHandPos.y;
-            target->mPosZ = this->mHandPos.z;
+            target->mPos.x = this->mHandPos.x;
+            target->mPos.y = this->mHandPos.y;
+            target->mPos.z = this->mHandPos.z;
             if (this->mAnmModel.WillHitFrame(0xa) != 0) {
                 in.x = 0; in.y = 0; in.z = 0x1e000;
                 out.x = 0; out.y = 0; out.z = 0;
@@ -473,7 +473,7 @@ int daSnowman_c::StateThrowSnowballExecute() {
                 player = this->ClosestPlayer();
                 if (player != 0) {
                     int angle;
-                    int *q = &player->mPosX;   /* one base pointer; see 0212423c */
+                    int *q = &player->mPos.x; /* one base pointer; see 0212423c */
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];
@@ -487,9 +487,9 @@ int daSnowman_c::StateThrowSnowballExecute() {
                     MTX_MultVec43(&in, &data_020a0e68, &out);
                 }
                 out.y += 0x14000;
-                target->mSpeedX = out.x;
-                target->mVertSpeed = out.y;
-                target->mSpeedZ = out.z;
+                target->mSpeed.x = out.x;
+                target->mSpeed.y = out.y;
+                target->mSpeed.z = out.z;
                 target->mVertAccel = -0x2000;
                 this->mSnowballID = 0;
             }
@@ -512,9 +512,9 @@ int daSnowman_c::StateSpawnSnowballExecute() {
     dActor_c *ball = dActor_c::FindWithID(this->mSnowballID);
     if (ball != 0 && ball->mVertAccel == 0) {
         RotateTowardPlayer(1);
-        ball->mPosX = this->mHandPos.x;
-        ball->mPosY = this->mHandPos.y;
-        ball->mPosZ = this->mHandPos.z;
+        ball->mPos.x = this->mHandPos.x;
+        ball->mPos.y = this->mHandPos.y;
+        ball->mPos.z = this->mHandPos.z;
     }
 
     if ((u16)this->mStateTimer == 0) {
@@ -561,11 +561,11 @@ int daSnowman_c::StateRotateEnter() {
 
 /* State "rise", execute. */
 int daSnowman_c::StateRiseFromGroundExecute() {
-    if (this->mVertSpeed < 0) {
-        if (this->mHomePos.y > this->mPosY) {
-            this->mVertSpeed = 0;
+    if (this->mSpeed.y < 0) {
+        if (this->mHomePos.y > this->mPos.y) {
+            this->mSpeed.y = 0;
             this->mVertAccel = 0;
-            this->mPosY = this->mHomePos.y;
+            this->mPos.y = this->mHomePos.y;
             SetState(&data_ov081_02128e14);
         }
     }
@@ -577,7 +577,7 @@ int daSnowman_c::StateRiseFromGroundExecute() {
 int daSnowman_c::StateRiseFromGroundEnter() {
     struct Vector3 pos;
 
-    this->mVertSpeed = 0x3c000;
+    this->mSpeed.y = 0x3c000;
     this->mVertAccel = -0x4000;
     func_02012694(0xdc, &this->mCamSpacePos);
     pos.x = this->mHomePos.x;
@@ -628,10 +628,10 @@ int daSnowman_c::StateHopExecute() {
     PathPtr p;
     p.FromID(this->mPathId);
     p.GetNode(node, this->mPathNodeIndex);
-    node.y = this->mPosY;
+    node.y = this->mPos.y;
     Vec3_Sub(&diff, &this->mPos, &node);
     len = VEC_Mag(&diff);
-    ApproachAngle(&this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &node), 1, 0x1000, 0x500);
+    ApproachAngle(&this->mPrevAngle.y, Vec3_HorzAngle(&this->mPos, &node), 1, 0x1000, 0x500);
     if (len == 0 || len <= this->mHopStep)
         return 1;
     {
@@ -653,7 +653,7 @@ int daSnowman_c::StateWalkExecute() {
 
     if ((u16)this->mStateTimer == 0) {
         if (this->mStep == 1) {
-            this->mVertSpeed = 0x14000;
+            this->mSpeed.y = 0x14000;
             this->mVertAccel = -0x4000;
             this->mStep = 2;
             func_02012694(0xdd, &this->mCamSpacePos);
@@ -662,9 +662,9 @@ int daSnowman_c::StateWalkExecute() {
         PathPtr p;
         p.FromID(this->mPathId);
         p.GetNode(node, this->mPathNodeIndex);
-        ApproachAngle(&this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &node), 1, 0x1000, 0x500);
+        ApproachAngle(&this->mPrevAngle.y, Vec3_HorzAngle(&this->mPos, &node), 1, 0x1000, 0x500);
 
-        if (AngleDiff(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &node)) < 0x100 &&
+        if (AngleDiff(this->mPrevAngle.y, Vec3_HorzAngle(&this->mPos, &node)) < 0x100 &&
             this->mWithMeshClsn.IsOnGround()) {
             int st = this->mStep;
             if (st != 0) {
@@ -675,7 +675,7 @@ int daSnowman_c::StateWalkExecute() {
                     return 1;
             }
             this->mStep = 0;
-            this->mVertSpeed = 0x3a000;
+            this->mSpeed.y = 0x3a000;
             this->mVertAccel = -0x4000;
             this->mAnmModel.SetAnim((BCA_File *)gSnowmanJumpStAnimationFile.filePtr, 0x40000000,
                                     0x1000, 0);
@@ -695,15 +695,15 @@ int daSnowman_c::StateWalkEnter() {
     PathPtr pp;
     pp.FromID(this->mPathId);
     pp.GetNode(node, this->mPathNodeIndex);
-    node.y = this->mPosY;
+    node.y = this->mPos.y;
     Vec3_Sub(&diff, &this->mPos, &node);
     len = VEC_Mag(&diff);
     this->mHopStep = 0xa000;
     this->mStep = 0;
     if (len == 0 || len <= this->mHopStep) {
-        this->mPosX = node.x;
-        this->mPosY = node.y;
-        this->mPosZ = node.z;
+        this->mPos.x = node.x;
+        this->mPos.y = node.y;
+        this->mPos.z = node.z;
         this->mPathNodeIndex++;
         if (this->mPathNodeIndex >= this->mPathNodeCount)
             this->mPathNodeIndex = 0;
@@ -731,16 +731,16 @@ void daSnowman_c::UpdateModelMatrices() {
 
     this->mAnmModel.UpdateVerts();
 
-    src[0] = this->mPosX;
-    t = this->mPosY;
+    src[0] = this->mPos.x;
+    t = this->mPos.y;
     src[1] = t;
-    src[2] = this->mPosZ;
+    src[2] = this->mPos.z;
     src[1] = t + this->mSinkOffsetY;
     Vec3_Asr((Vector3 *)dst, (Vector3 *)src, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
 
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        this->mAngleX, this->mAngleY, this->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                           this->mAngle.z);
     this->mAnmModel.mat4x3 = data_020a0e68;
 
     if (this->mCapUniqueID != 0) {
@@ -758,9 +758,9 @@ void daSnowman_c::UpdateModelMatrices() {
             this->mCapPos.x <<= 3;
             this->mCapPos.y <<= 3;
             this->mCapPos.z <<= 3;
-            actor->mPosX = this->mCapPos.x;
-            actor->mPosY = this->mCapPos.y;
-            actor->mPosZ = this->mCapPos.z;
+            actor->mPos.x = this->mCapPos.x;
+            actor->mPos.y = this->mCapPos.y;
+            actor->mPos.z = this->mCapPos.z;
 
             Matrix4x3_FromTranslation(&data_020a0e68, 0, 0x4000, 0);
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, 0x2000, 0);
@@ -786,10 +786,8 @@ void daSnowman_c::UpdateModelMatrices() {
     if (this->mType != 0)
         return;
 
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        this->mPosX >> 3,
-        (this->mPosY - 0xe000) >> 3,
-        this->mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x >> 3, (this->mPos.y - 0xe000) >> 3,
+                              this->mPos.z >> 3);
     this->mShadowMatrix = data_020a0e68;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMatrix, 0x78000, 0xc8000, 0xf);
 }
@@ -875,9 +873,9 @@ int daSnowman_c::Behavior()
         }
 
     }
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     DecIfAbove0_Short(&mStateTimer);
     if (mState->execute != 0)
         (this->*mState->execute)();
@@ -921,9 +919,9 @@ int daSnowman_c::InitResources()
     if (mType == 0xff)
         mType = 0;
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
 
     if (GetBitInDeathTable() != 0) {
         if (mType == 2) {
@@ -946,16 +944,16 @@ int daSnowman_c::InitResources()
         mPathNodeCount = pp.NumNodes();
     }
 
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mTerminalVelocity = -0xc8000;
 
     v = data_ov081_02128998;
     mdCcAcPos_c.Init(this, v, 0x3c000, 0x96000, 0x200004, 0x42050);
 
-    mAngleY = mPrevAngleY;
-    mInitAngleY = mAngleY;
+    mAngle.y = mPrevAngle.y;
+    mInitAngleY = mAngle.y;
     mWithMeshClsn.Init(this, 0x14000, 0xf000, 0, 0);
 
     mCoinType = 1;
@@ -970,7 +968,7 @@ int daSnowman_c::InitResources()
         mFlags = 0x10000000;
         SetState(&data_ov081_02128e54);
     } else {
-        mPosY -= 0x118000;
+        mPos.y -= 0x118000;
         SetState(&data_ov081_02128e84);
         if (mType == 3) {
             mCoinType = 0;

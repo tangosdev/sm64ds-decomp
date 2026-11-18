@@ -87,7 +87,7 @@ int GetSoundMode();
 void SetSoundMode(int mode);
 }
 int RunCameraCommand(dCamera_c *camera, u8 *command, int first, int last);
-void func_0201f32c(int messageID);
+#include "Message.h"
 void func_02011c8c();
 void CollectStarInLevel(s8 levelID, s32 starID);
 void DisableSoundPlayersForCredits();
@@ -4662,7 +4662,7 @@ void KuppaScript::Process() {
                     if (first == 0xd && SaveData::IsCharacterUnlocked(1) == 0 &&
                         SaveData::IsCharacterUnlocked(2) == 0)
                         first = 0x16;
-                    func_0201f32c(first);
+                    Message::func_0201f32c(first);
                 } else if (last == frame) {
                     data_0209d66c = 1;
                 }

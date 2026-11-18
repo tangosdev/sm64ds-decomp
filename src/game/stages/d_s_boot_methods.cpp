@@ -218,7 +218,7 @@ s32 dScBoot_c::Behavior() {
                     LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN,
                                          G2S_GetBG1ScrPtr());
                     LoadCompressedFileAt(0x9803, (char *)G2S_GetBG1ScrPtr() + 0x800);
-                    func_0201cd08(0x29a);
+                    Message::func_0201cd08(0x29a);
                     mSelectedButton = 1;
                     UpdateButtonPalettes();
                     SetSubBg0Offset(0, 0);
@@ -310,7 +310,7 @@ s32 dScBoot_c::Behavior() {
         }
 
         case STATE_OPEN_FINAL_CONFIRM:
-            func_0201cd08(0x29b);
+            Message::func_0201cd08(0x29b);
             mSelectedButton = 1;
             UpdateButtonPalettes();
             mState = STATE_FINAL_CONFIRM;

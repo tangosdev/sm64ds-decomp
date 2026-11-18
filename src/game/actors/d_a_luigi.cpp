@@ -27,7 +27,7 @@
  * - Render: inlining mBodyModels[GetBodyModelID(mBodyModelId, 1)] differs
  *   (size stays 0x1b0, 2 relocation destinations wrong). The ROM calls
  *   func_ov002_020e496c.
- * - ExecuteMirror: direct mPosX, mPosZ, mPosY reads differ (size stays
+ * - ExecuteMirror: direct mPos.x, mPos.z, mPos.y reads differ (size stays
  *   0x034). One pointer, x then z then y, stays.
  * - func_ov055_02111264: Sound::Play2D(3, 0x179) differs (size stays 0x024,
  *   the relocation target is func_0201277c). That wrapper is Play2D(3, id).
@@ -96,8 +96,8 @@ extern "C" {
 /* Sound::Play2D(3, id). The ROM calls this wrapper, not Play2D. */
 unsigned int func_0201277c(unsigned int soundID);
 
-/* Depth from mModelOffsetY, mPosY, mSinkDepth and mGroundY; radius from that,
- * mIsBalloon, mIsMega and mScaleY. The definition takes char *. */
+/* Depth from mModelOffsetY, mPos.y, mSinkDepth and mGroundY; radius from that,
+ * mIsBalloon, mIsMega and mScale.y. The definition takes char *. */
 /* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)] as int. */
 int func_ov002_020e496c(daPly_c *player);
 
@@ -137,7 +137,7 @@ int daLuigi_c::InitResources() {
 
     Vec3_Asr((Vector3 *)&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
 
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -165,7 +165,7 @@ int daLuigi_c::Behavior() {
     player = CurrentPlayer();
     if (mState->execute)
         (this->*mState->execute)(player);
-    Matrix4x3_FromTranslation(&mShadowMatrix, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&mShadowMatrix, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
     player->func_ov002_020e4374(&depth, &radius);
     DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, kShadowOpacity);
     /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
@@ -242,23 +242,23 @@ int daLuigi_c::EnterMirror(daPly_c *player) {
 }
 
 int daLuigi_c::ExecuteMirror(daPly_c *player) {
-    /* One base, read x then z then y. Direct mPosX / mPosZ / mPosY
+    /* One base, read x then z then y. Direct mPos.x / mPos.z / mPos.y
      * differ (same size). */
-    int *pos = &player->mPosX;
+    int *pos = &player->mPos.x;
     int x = pos[0];
     int z = pos[2];
     int y = pos[1];
 
-    mPosX = -x;
-    mPosY = y;
-    mPosZ = z;
-    mAngleY = -player->mAngleY;
+    mPos.x = -x;
+    mPos.y = y;
+    mPos.z = z;
+    mAngle.y = -player->mAngle.y;
     return 1;
 }
 
 /* One candidate caller, ov063 0x02118004, relocates to ov027 or ov055, so
  * the owner is unknown. */
-void func_ov055_02111264(void) {
+void daLuigi_c::func_ov055_02111264() {
     data_ov055_02111b68 = kReqFade;
     func_0201277c(kAppearSound);
 }

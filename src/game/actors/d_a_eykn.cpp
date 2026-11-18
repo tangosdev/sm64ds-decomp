@@ -9,15 +9,15 @@
  * - daPly_c::Hurt stays a scalar extern; daPly_c.h does not declare it.
  * - func_0201267c is the bank-3 veneer around Sound::Play. Sound::Play(3,
  *   id, Vector3 &) is +4 a call: St_Die_Init 0xd4->0xd8, St_Attack_Main
- *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePosX
+ *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePos
  *   does not bind to Vector3 &.
  * - dActor_c::func_0200f760 clears cylinder +0x18 bit 2 unless the closest
  *   player's byte at +0x6fb is set. No recovered name.
  * - UpdateCircling `if (actorID == kBigMrI)` is 0x154->0x148. The (int)
  *   flag stays. CheckAttacks' egg test and its player test are each
  *   0x17c->0x170; both at once 0x17c->0x164.
- * - St_Wait_Main `mAngleY += mHorzSpeed` is 0x44->0x48.
- * - St_Attack_Main `(u16)mAngleX/Y/Z` is 44 words off at 0x314. The
+ * - St_Wait_Main `mAngle.y += mHorzSpeed` is 0x44->0x48.
+ * - St_Attack_Main `(u16)mAngle.x/.y/.z` is 44 words off at 0x314. The
  *   unsigned-short pun is what loads them with ldrh.
  * - CheckAttacks as one || is 6 words off at 0x17c. The gotos stay.
  * - St_Die_Main's blue-coin position as plain field copies is 13 words
@@ -155,7 +155,7 @@ int daEykn_c::UpdateCircling()
     int isBig;
     int limit;
 
-    delta = (short)(mAngleY - mTurnRefAngleY);
+    delta = (short)(mAngle.y - mTurnRefAngleY);
     isBig = (actorID == kBigMrI);
     if (isBig != 0)
         limit = kBigTurnLimit;
@@ -270,11 +270,11 @@ void daEykn_c::LookForPlayer()
         return;
     if (Vec3_Dist(&mPos, &p->mPos) > kWatchRange)
         return;
-    if (AngleDiff(Vec3_HorzAngle(&mPos, &p->mPos), mAngleY) > kWatchFov)
+    if (AngleDiff(Vec3_HorzAngle(&mPos, &p->mPos), mAngle.y) > kWatchFov)
         return;
-    int px = p->mPosX;
-    int pz = p->mPosZ;
-    int py = p->mPosY + 0x8c000;
+    int px = p->mPos.x;
+    int pz = p->mPos.z;
+    int py = p->mPos.y + 0x8c000;
     Vector3 v;
     v.x = px;
     v.y = py;
@@ -311,30 +311,30 @@ void daEykn_c::CheckAttacks()
 
     if (mdCcAcPos_c.hitFlags & kKillHit) {
         mParticleID0 =
-            (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
-        mParticleID1 =
-            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
+            (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPos.x, mPos.y, mPos.z, 0, 0);
+        mParticleID1 = Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y,
+                                                          mPos.z, 0);
         SetState(2);
         return;
     }
 
     Vector3 hv;
-    hv.x = mPosX;
-    hv.y = mPosY;
-    hv.z = mPosZ;
+    hv.x = mPos.x;
+    hv.y = mPos.y;
+    hv.z = mPos.z;
     f->Hurt(hv, 2, 0xc000, 1, 0, 1);
 }
 
 
 void daEykn_c::UpdateModelTransform()
 {
-    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = mPosY >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
-    mShadowMat[9] = mPosX >> 3;
-    mShadowMat[10] = mPosY >> 3;
-    mShadowMat[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
+    mShadowMat[9] = mPos.x >> 3;
+    mShadowMat[10] = mPos.y >> 3;
+    mShadowMat[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, mScale * 0xb4, mShadowHeight, 0xf);
 }
 
@@ -347,7 +347,7 @@ int daEykn_c::St_Die_Main()
     u32 id0;
 
     ApproachLinear(mHorzSpeed, mDeathSpinSpeed, 300);
-    mAngleY = (mAngleY + mHorzSpeed);
+    mAngle.y = (mAngle.y + mHorzSpeed);
     mDeathSpinAngle += mHorzSpeed;
     if (mDeathSpinAngle / 131070 != 0) {
         func_0201267c(0x119, &mCamSpacePos);
@@ -358,9 +358,9 @@ int daEykn_c::St_Die_Main()
     if (id0 != 0 && mParticleID1 != 0) {
         Particle::System *p0;
         Particle::System *p1;
-        mParticleID0 = Particle::System::New(id0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
-        mParticleID1 =
-            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
+        mParticleID0 = Particle::System::New(id0, kDeathPtcl0, mPos.x, mPos.y, mPos.z, 0, 0);
+        mParticleID1 = Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y,
+                                                          mPos.z, 0);
         p0 = Particle::System::FromUniqueID(mParticleID0);
         p1 = Particle::System::FromUniqueID(mParticleID1);
         if (p0 != 0) {
@@ -374,7 +374,7 @@ int daEykn_c::St_Die_Main()
     switch (mSubState) {
     case 0: {
         s16 sinv = FX_SinIdx((int)mWobblePhase >> 4);
-        mAngleX = (FX_MUL(mWobbleAmp, sinv));
+        mAngle.x = (FX_MUL(mWobbleAmp, sinv));
         mWobblePhase = ((s16)mWobblePhase + 0xe000);
         ApproachLinear(mWobbleAmp, 0, 0x1b);
         if (DecIfAbove0_Byte(&mSubTimer) == 0) {
@@ -396,9 +396,9 @@ int daEykn_c::St_Die_Main()
             mSubState++;
         }
         scale = mScale;
-        mScaleX = scale;
-        mScaleY = scale;
-        mScaleZ = scale;
+        dActor_c::mScale.x = scale;
+        dActor_c::mScale.y = scale;
+        dActor_c::mScale.z = scale;
         kind = actorID;
         isSmall = (kind == kSmallMrI);
         if (isSmall != 0) {
@@ -418,12 +418,12 @@ int daEykn_c::St_Die_Main()
             /* Plain field copies are 13 words off. */
             int yadj, zcopy, y, z, x;
             Vector3 pos;
-            y = mPosY;
-            z = mPosZ;
+            y = mPos.y;
+            z = mPos.z;
             yadj = 0x78000;
             yadj = y + yadj;
             zcopy = z;
-            x = mPosX;
+            x = mPos.x;
             pos.x = x;
             pos.z = zcopy;
             pos.y = yadj;
@@ -434,9 +434,9 @@ int daEykn_c::St_Die_Main()
             if (isBig != 0) {
                 unsigned char star = (param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, mPos, 4);
-                Particle::System::NewSimple(kPtclTriplePoofA, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(kPtclTriplePoofB, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(kPtclTriplePoofC, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofA, mPos.x, mPos.y, mPos.z);
+                Particle::System::NewSimple(kPtclTriplePoofB, mPos.x, mPos.y, mPos.z);
+                Particle::System::NewSimple(kPtclTriplePoofC, mPos.x, mPos.y, mPos.z);
             }
         }
         func_0201267c(0xc4, &mCamSpacePos);
@@ -455,7 +455,7 @@ int daEykn_c::St_Die_Main()
 /* State 2 init: spin on in the direction of the last turn. */
 int daEykn_c::St_Die_Init()
 {
-    short diff = mAngleY - mTurnRefAngleY;
+    short diff = mAngle.y - mTurnRefAngleY;
     mHorzSpeed = diff;
     if (mHorzSpeed > 0)
         mDeathSpinSpeed = 0x2500;
@@ -497,21 +497,21 @@ int daEykn_c::St_Attack_Main()
         s32 yoff;
 
         pl = mTarget;
-        py = pl->mPosY;
-        pz = pl->mPosZ;
+        py = pl->mPos.y;
+        pz = pl->mPos.z;
         yoff = py + 0x78000;
-        target1.x = pl->mPosX;
+        target1.x = pl->mPos.x;
         target1.y = yoff;
         target1.z = pz;
     }
 
     Vec3_HorzAngle(&mPos, &target1);
     ang = Vec3_VertAngle(&mPos, &target1);
-    UpdateAngle(mAngleX, ang, 2, 0x320);
+    UpdateAngle(mAngle.x, ang, 2, 0x320);
     ang = Vec3_HorzAngle(&mPos, &target1);
-    UpdateAngle(mAngleY, ang, 2, 0x8fc);
+    UpdateAngle(mAngle.y, ang, 2, 0x8fc);
 
-    if ((s16)(mAngleY - mTurnRefAngleY) == 0) {
+    if ((s16)(mAngle.y - mTurnRefAngleY) == 0) {
         if (DecIfAbove0_Byte(&mShotTimer) == 0 && StartEyeAnim() != 0)
             mShotTimer = 83;
         unk_212 = 0xf0;
@@ -524,10 +524,10 @@ int daEykn_c::St_Attack_Main()
         s32 yoff2;
 
         pl2 = mTarget;
-        py2 = pl2->mPosY;
-        pz2 = pl2->mPosZ;
+        py2 = pl2->mPos.y;
+        pz2 = pl2->mPos.z;
         yoff2 = py2 + 0x4b000;
-        target2.x = pl2->mPosX;
+        target2.x = pl2->mPos.x;
         target2.y = yoff2;
         target2.z = pz2;
 
@@ -540,28 +540,28 @@ int daEykn_c::St_Attack_Main()
             int isBig;
             int param;
 
-            px = mPosX;
+            px = mPos.x;
             scale = 0x50000;
             pos.x = px;
-            pos.y = mPosY;
-            pz = mPosZ;
+            pos.y = mPos.y;
+            pz = mPos.z;
             round = 0x800;
             pos.z = pz;
 
             {
                 /* ldrh. A (u16) cast is 44 words off. */
-                unsigned short rx = *(unsigned short *)&mAngleX;
-                unsigned short ry = *(unsigned short *)&mAngleY;
+                unsigned short rx = *(unsigned short *)&mAngle.x;
+                unsigned short ry = *(unsigned short *)&mAngle.y;
                 rot.y = ry;
                 rot.x = rx;
-                unsigned short rz = *(unsigned short *)&mAngleZ;
+                unsigned short rz = *(unsigned short *)&mAngle.z;
                 rot.z = rz;
             }
 
-            s = FX_SinIdx((u16)mAngleY >> 4);
+            s = FX_SinIdx((u16)mAngle.y >> 4);
             pos.x = px + (s32)(((s64)s * scale + round) >> 12);
 
-            s = FX_CosIdx((u16)mAngleY >> 4);
+            s = FX_CosIdx((u16)mAngle.y >> 4);
             pos.z = pz + (s32)(((s64)s * scale + round) >> 12);
 
             rot.x = Vec3_VertAngle(&pos, &target2);
@@ -590,10 +590,10 @@ int daEykn_c::St_Attack_Main()
         s32 yoff3;
 
         p3 = mTarget;
-        y3 = p3->mPosY;
-        z3 = p3->mPosZ;
+        y3 = p3->mPos.y;
+        z3 = p3->mPos.z;
         yoff3 = y3 + 0x8c000;
-        target3.x = p3->mPosX;
+        target3.x = p3->mPos.x;
         target3.y = yoff3;
         target3.z = z3;
     }
@@ -627,8 +627,8 @@ int daEykn_c::St_Attack_Init()
 /* State 0 exec: level out, keep turning, and look for a player. */
 int daEykn_c::St_Wait_Main()
 {
-    ApproachLinear(mAngleX, 0, 0x320);
-    mAngleY = mAngleY + mHorzSpeed;
+    ApproachLinear(mAngle.x, 0, 0x320);
+    mAngle.y = mAngle.y + mHorzSpeed;
     LookForPlayer();
     CheckAttacks();
     return 1;
@@ -638,7 +638,7 @@ int daEykn_c::St_Wait_Main()
 /* State 0 init: drift on in the direction of the last turn. */
 int daEykn_c::St_Wait_Init()
 {
-    short v = mAngleY - mTurnRefAngleY;
+    short v = mAngle.y - mTurnRefAngleY;
     if (v >= 0) mHorzSpeed = 0xc8;
     else mHorzSpeed = -0xc8;
     ResetEyeAnim();
@@ -700,7 +700,7 @@ int daEykn_c::Behavior()
 {
     RunState();
     func_0200f760(&mdCcAcPos_c);
-    mTurnRefAngleY = mAngleY;
+    mTurnRefAngleY = mAngle.y;
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
     UpdateModelTransform();
@@ -738,9 +738,9 @@ s32 daEykn_c::InitResources()
         v.y = -0x4b000;
         v.z = 0;
         mdCcAcPos_c.Init(this, v, 0x55000, 0x96000, 0x200004, 0x42000);
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        dActor_c::mScale.x = 0x1000;
+        dActor_c::mScale.y = 0x1000;
+        dActor_c::mScale.z = 0x1000;
         mScale = 0x1000;
     } else {
         int isBig = (kind == kBigMrI);
@@ -750,9 +750,9 @@ s32 daEykn_c::InitResources()
             v.y = -0x96000;
             v.z = 0;
             mdCcAcPos_c.Init(this, v, 0xaa000, 0x12c000, 0x200004, 0);
-            mScaleX = 0x2000;
-            mScaleY = 0x2000;
-            mScaleZ = 0x2000;
+            dActor_c::mScale.x = 0x2000;
+            dActor_c::mScale.y = 0x2000;
+            dActor_c::mScale.z = 0x2000;
             mScale = 0x2000;
             {
                 unsigned char starID = (param1 & 0xf);
@@ -780,7 +780,7 @@ s32 daEykn_c::InitResources()
     ray.SetObjAndPos(mPos, this);
     int y;
     if (ray.DetectClsn()) {
-        y = (mPosY - ray.clsnY) + 0x1e000;
+        y = (mPos.y - ray.clsnY) + 0x1e000;
     } else {
         y = 0x12c000;
     }

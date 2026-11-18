@@ -148,9 +148,9 @@ int daNknk_c::InitResources()
     {
         mKoopaVariant = 2;
         mAnimSpeed = 0x2000;
-        mScaleX = 0x599;
-        mScaleY = 0x599;
-        mScaleZ = 0x599;
+        mScale.x = 0x599;
+        mScale.y = 0x599;
+        mScale.z = 0x599;
         r = 0x1e000;
         h = 0x32000;
     }
@@ -158,9 +158,9 @@ int daNknk_c::InitResources()
     {
         mKoopaVariant = 0;
         mAnimSpeed = 0x1000;
-        mScaleX = 0xa66;
-        mScaleY = 0xa66;
-        mScaleZ = 0xa66;
+        mScale.x = 0xa66;
+        mScale.y = 0xa66;
+        mScale.z = 0xa66;
         r = 0x3c000;
         h = 0x64000;
         dExtSimpleModel_c::LoadFile(*data_ov062_0211cee0[mModelIndex]);
@@ -175,9 +175,9 @@ int daNknk_c::InitResources()
 
     mCliffState = 0;
     mInvincibleTimer = 0;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
@@ -218,9 +218,9 @@ int daNknk_c::Behavior()
         else
             mState = 1;
         if (mWithMeshClsn.IsOnGround() != 0) {
-            mSafePos.x = mPosX;
-            mSafePos.y = mPosY;
-            mSafePos.z = mPosZ;
+            mSafePos.x = mPos.x;
+            mSafePos.y = mPos.y;
+            mSafePos.z = mPos.z;
         }
         return 1;
     }
@@ -252,8 +252,8 @@ int daNknk_c::Behavior()
         }
 
         {
-            int ang = mPrevAngleY;
-            mAngleY = (s16)ang;
+            int ang = mPrevAngle.y;
+            mAngle.y = (s16)ang;
             {
                 u16 *p100 = &mStateTimer;
                 *p100 = (*p100 + 1);
@@ -268,13 +268,13 @@ int daNknk_c::Behavior()
 
         if (mDeathState == 0 && mState != 0) {
             if (IsGoingOffCliff(mWithMeshClsn, 0x32000, 0x3800, false, true, 0x32000) != 0) {
-                mPosX = mSafePos.x;
-                mPosY = mSafePos.y;
-                mPosZ = mSafePos.z;
+                mPos.x = mSafePos.x;
+                mPos.y = mSafePos.y;
+                mPos.z = mSafePos.z;
             } else {
-                mSafePos.x = mPosX;
-                mSafePos.y = mPosY;
-                mSafePos.z = mPosZ;
+                mSafePos.x = mPos.x;
+                mSafePos.y = mPos.y;
+                mSafePos.z = mPos.z;
             }
         }
 
@@ -364,10 +364,10 @@ void daNknk_c::func_ov062_02118de8()
         mState = 2;
     if (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000) {
         int r = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
-        mTargetAngle = (s16)(mPrevAngleY - r);
+        mTargetAngle = (s16)(mPrevAngle.y - r);
     } else {
         int r = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
-        mTargetAngle = (s16)(mPrevAngleY + r);
+        mTargetAngle = (s16)(mPrevAngle.y + r);
     }
     func_ov062_02118058();
 }
@@ -375,13 +375,13 @@ void daNknk_c::func_ov062_02118de8()
 void daNknk_c::func_ov062_02118cdc()
 {
     if (mTurning) {
-        mTurning = (ApproachLinear(mPrevAngleY, mTargetAngle, 0x200) ^ 1) != 0;
+        mTurning = (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (mPlayerDist >= 0x61a8000) {
             mTargetAngle = mAimAngle;
         }
         mTurning = AngleAwayFromWallOrCliff(mWithMeshClsn, mTargetAngle);
-        ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
+        ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200);
     }
     if (mAnimIndex == 1) {
         SpawnFootstepDust(2, 8, 0x13, 0x19);
@@ -412,7 +412,7 @@ void daNknk_c::func_ov062_02118b4c() {
             SetAnimByIndex(2);
             return;
         }
-        ApproachLinear(mPrevAngleY, mAimAngle, 0x400);
+        ApproachLinear(mPrevAngle.y, mAimAngle, 0x400);
         ApproachLinear(mHorzSpeed, 0x11000, 0x1000);
         return;
     }
@@ -429,7 +429,7 @@ void daNknk_c::func_ov062_02118b4c() {
         SetAnimByIndex(2);
         return;
     }
-    ApproachLinear(mPrevAngleY, (s16)(mAimAngle + 0x8000), 0x400);
+    ApproachLinear(mPrevAngle.y, (s16)(mAimAngle + 0x8000), 0x400);
     ApproachLinear(mHorzSpeed, 0x11000, 0x1000);
 }
 
@@ -441,7 +441,7 @@ void daNknk_c::func_ov062_02118a50()
         if (mWithMeshClsn.IsOnWall() != 0) {
             dBgPi *wall = mWithMeshClsn.GetWallResult();
             wall->surface.CopyNormalTo(mWallNormal);
-            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+            mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
         }
         SlideToStop(0x4cc);
         return;
@@ -488,8 +488,7 @@ void daNknk_c::func_ov062_02118718()
         SpawnFootstepDust(2, 5, 8, 0xb);
 
     if (mTurning) {
-        mTurning =
-            (ApproachLinear(mPrevAngleY, mTargetAngle, 0x200) ^ 1) != 0;
+        mTurning = (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (mPlayerDist >= 0x61a8000)
             mTargetAngle = mAimAngle;
@@ -518,13 +517,13 @@ void daNknk_c::func_ov062_02118718()
         }
 
         if (mPlayerDist > 0x320000 ||
-            (other != 0 && GetSubtraction(mTargetAngle, (mPrevAngleY + 0x8000)) < 0x2000)) {
-            ApproachLinear(mPrevAngleY, mTargetAngle, 0x600);
+            (other != 0 && GetSubtraction(mTargetAngle, (mPrevAngle.y + 0x8000)) < 0x2000)) {
+            ApproachLinear(mPrevAngle.y, mTargetAngle, 0x600);
         } else {
             if (mModelIndex != 0)
-                ApproachLinear(mPrevAngleY, mAimAngle, 0x600);
+                ApproachLinear(mPrevAngle.y, mAimAngle, 0x600);
             else
-                ApproachLinear(mPrevAngleY, (short)(mAimAngle + 0x8000), 0x600);
+                ApproachLinear(mPrevAngle.y, (short)(mAimAngle + 0x8000), 0x600);
         }
     }
 
@@ -532,13 +531,13 @@ void daNknk_c::func_ov062_02118718()
         return;
     if (dist >= 0xc8000)
         return;
-    if (GetSubtraction(mTargetAngle, mPrevAngleY) >= 0xc00)
+    if (GetSubtraction(mTargetAngle, mPrevAngle.y) >= 0xc00)
         return;
 
-    mPrevAngleY = mTargetAngle;
+    mPrevAngle.y = mTargetAngle;
     mState = 2;
     mHorzSpeed += mHorzSpeed / 5;
-    mVertSpeed = dist / 30;
+    mSpeed.y = dist / 30;
     SetAnimByIndex(6);
     mTimer = 20;
 }
@@ -603,7 +602,7 @@ void daNknk_c::func_ov062_021183e0()
         SetAnimByIndex(1);
 
     if (mTurning) {
-        mTurning = (ApproachLinear(mPrevAngleY, mTargetAngle, 0x200) ^ 1) != 0;
+        mTurning = (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (mPlayerDist >= 0x61a8000)
             mTargetAngle = mAimAngle;
@@ -614,14 +613,14 @@ void daNknk_c::func_ov062_021183e0()
                 mTargetAngle = Vec3_HorzAngle(&mPos, &other->mPos);
         }
         mTurning = AngleAwayFromWallOrCliff(mWithMeshClsn, mTargetAngle);
-        ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
+        ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200);
     }
 
-    if (dist < 0xc8000 && GetSubtraction(mTargetAngle, mPrevAngleY) < 0xc00) {
-        mPrevAngleY = mTargetAngle;
+    if (dist < 0xc8000 && GetSubtraction(mTargetAngle, mPrevAngle.y) < 0xc00) {
+        mPrevAngle.y = mTargetAngle;
         mState = 2;
         mHorzSpeed = 0x18000;
-        mVertSpeed = dist / 30;
+        mSpeed.y = dist / 30;
         SetAnimByIndex(6);
         mTimer = 20;
         return;
@@ -639,7 +638,7 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     MtxStack::transS(v.x, v.y, v.z);
-    MtxStack::YrotM(mAngleY);
+    MtxStack::YrotM(mAngle.y);
     /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     /* No drop shadow while in Yoshi's mouth. */
@@ -657,7 +656,7 @@ void daNknk_c::UpdateClosestPlayer(int lim) {
         mPlayerDist = 0x61a8000;
     } else {
         Vector3 v;
-        int* src = &mClosestPlayer->mPosX;
+        int *src = &mClosestPlayer->mPos.x;
         v.x = src[0];
         v.y = src[1];
         v.z = src[2];
@@ -716,7 +715,7 @@ void daNknk_c::func_ov062_02118058() {
         d = Vec3_Dist(&mPos, &o->mPos);
     if (d >= 0x12c000)
         return;
-    int s = GetSubtraction(mAimAngle, mPrevAngleY);
+    int s = GetSubtraction(mAimAngle, mPrevAngle.y);
     if (s >= 0x3000)
         return;
     if (mKoopaVariant == 1)
@@ -730,9 +729,9 @@ void daNknk_c::SlideToStop(int a1) {
     int r = mWithMeshClsn.IsOnGround();
     if (r == 0) return;
     ApproachLinear(mHorzSpeed, 0, a1);
-    int x = mPosX;
-    int y = mPosY;
-    int z = mPosZ;
+    int x = mPos.x;
+    int y = mPos.y;
+    int z = mPos.z;
     Particle::RunningSlidingDustAt(x, y, z);
 }
 
@@ -777,7 +776,7 @@ void daNknk_c::func_ov062_02117c98()
         if (mKoopaVariant == 0) {
             DropShell();
             if (flags & 0x3c0)
-                mPrevAngleY = found->mAngleY;
+                mPrevAngle.y = found->mAngle.y;
         } else {
             if (flags & 0x40040)
                 mDeathState = 2;
@@ -790,9 +789,9 @@ void daNknk_c::func_ov062_02117c98()
             else {
                 mDeathState = 1;
                 func_0201267c(0x113, &mCamSpacePos);
-                mScaleX = 0x1000;
-                mScaleY = 0x1000;
-                mScaleZ = 0x1000;
+                mScale.x = 0x1000;
+                mScale.y = 0x1000;
+                mScale.z = 0x1000;
             }
             func_ov002_020aea30(found, 0);
             return;
@@ -829,9 +828,9 @@ void daNknk_c::func_ov062_02117c98()
             } else {
                 mDeathState = 1;
                 func_ov002_020aea30(found, 0);
-                mScaleX = 0x1000;
-                mScaleY = 0x1000;
-                mScaleZ = 0x1000;
+                mScale.x = 0x1000;
+                mScale.y = 0x1000;
+                mScale.z = 0x1000;
                 func_0201267c(0x113, &mCamSpacePos);
             }
             ((daPly_c *)found)->Bounce(0x28000);
@@ -862,7 +861,7 @@ void daNknk_c::func_ov062_02117c98()
 tail:
     func_ov002_020aea30(found, &mWithMeshClsn);
     if (turnAround)
-        mAngleY = (u16)(mPrevAngleY + 0x8000);
+        mAngle.y = (u16)(mPrevAngle.y + 0x8000);
 }
 
 void daNknk_c::DropShell() {
@@ -873,9 +872,9 @@ void daNknk_c::DropShell() {
     SetAnimByIndex(7);
     {
         Vector3 v;
-        int z = mPosZ;
-        int y = mPosY + 0x3c000;
-        v.x = mPosX;
+        int z = mPos.z;
+        int y = mPos.y + 0x3c000;
+        v.x = mPos.x;
         v.y = y;
         v.z = z;
         dActor_c::Spawn(0x11d /* SHELL */, mModelIndex, v, 0, mAreaId, -1);
@@ -908,7 +907,7 @@ int daNknk_c::DistToClosestPlayer() {
 
 void daNknk_c::BounceOffHurtPlayer() {
     mState = 0;
-    mVertSpeed = 81920;
+    mSpeed.y = 81920;
     mHorzSpeed = 0;
 }
 
@@ -939,9 +938,9 @@ void daNknk_c::func_ov062_02117a3c()
 }
 
 void daNknk_c::SpawnBlueCoin() {
-    int x = mPosX;
-    int z = mPosZ;
-    int y = mPosY + 0x78000;
+    int x = mPos.x;
+    int z = mPos.z;
+    int y = mPos.y + 0x78000;
     Vector3 pos;
     pos.x = x;
     pos.y = y;
@@ -970,10 +969,10 @@ void daNknk_c::SpawnFootstepDust(
         mFootstep = 1;
         func_0201267c(0xe4, &mCamSpacePos);
         if (mAnimIndex == 1) return;
-        ang = (mAngleY + 0x4000);
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        ang = (mAngle.y + 0x4000);
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         iscb = actorID == 0xcb;
         k = iscb ? 0xf : 0xa;
         pos.y = pos.y + (k << 12);
@@ -1009,9 +1008,9 @@ void daNknk_c::SpawnLandingDust() {
 
     if (mLandingDustTimer != 0) return;
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
 
     t = actorID;
     t = t == 0xcb;

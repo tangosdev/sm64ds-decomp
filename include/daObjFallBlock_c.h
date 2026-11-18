@@ -52,8 +52,8 @@
  *          actorID 0x53 (FALL_BLOCK_LLL) with mSuppressed set, Behavior calls
  *          FindLinkedStar to fill it (when 0) or PollLinkedStar to
  *          poll it (when set).
- *   0x334  mShakeX, the shake step added to mAngleX each frame in case 2.
- *   0x336  mTiltVelZ, added to mAngleZ (0x90) each frame in case 2, not mAngleY.
+ *   0x334  mShakeX, the shake step added to mAngle.x each frame in case 2.
+ *   0x336  mTiltVelZ, added to mAngle.z (0x90) each frame in case 2, not mAngle.y.
  *   0x338  mBobPhase, sine phase walked through the sine table in case 1 to bob Y.
  *   0x33a  the per-state frame counter, walked down by DecIfAbove0_Short.
  *   0x33c  the state, 0..3 -- the switch this whole function is built on.

@@ -65,9 +65,9 @@ struct daKpa2Bg_c : dBgActor_c {
     /* THIS CLASS'S OWN, not dBgActor_c's -- dBgActor_c ends at 0x31e. They are what
        push mModel2 from 0x320 to 0x324, and the first two sit in the base's
        tail padding. */
-    s16 mAngleXSpeed;                /* 0x31e -- Behavior adds it to mAngleX every frame */
-    s16 mAngleYSpeed;                /* 0x320 -- ... to mAngleY */
-    s16 mAngleZSpeed;                /* 0x322 -- ... to mAngleZ */
+    s16 mAngleXSpeed;                /* 0x31e -- Behavior adds it to mAngle.x every frame */
+    s16 mAngleYSpeed;                /* 0x320 -- ... to mAngle.y */
+    s16 mAngleZSpeed;                /* 0x322 -- ... to mAngle.z */
     dExtSimpleModel_c mModel2;       /* 0x324 */
     dBgW_KcMbg mMovingMeshCollider2; /* 0x374 */
     u8 pad_53c[0x30];

@@ -75,7 +75,7 @@ s32 daObjMc_Metalnet_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov009_02113e88);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112bf8);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov009_02112bf8);
 
     if ((param1 & 0xff) == 0xff) {
         if (!IsVsMode() && (data_0209caa0.file.flags2 & 0x80000) != 0)

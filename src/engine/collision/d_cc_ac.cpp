@@ -82,7 +82,7 @@ void dCcAcPos_c::Init(dActor_c *actor, const Vector3 &offset, fx32 radius, fx32 
    rotate the offset by the owner's yaw, then translate by the owner's
    position. dCcAcPos_c::Init calls it once at construction.
 
-   mAngleY is s16 and the ROM's load is `ldrsh' -- reading it through the named
+   mAngle.y is s16 and the ROM's load is `ldrsh' -- reading it through the named
    member keeps the sign.
    local extern: no header declares Vec3_RotateYAndTranslate. */
 extern "C" void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, s16 angY, const Vector3 *v);
@@ -90,5 +90,5 @@ extern "C" void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translatio
 void dCcAcPos_c::SetPosRelativeToActor(const Vector3 &offset)
 {
     dActor_c *actor = owner;
-    Vec3_RotateYAndTranslate(&pos, &actor->mPos, actor->mAngleY, &offset);
+    Vec3_RotateYAndTranslate(&pos, &actor->mPos, actor->mAngle.y, &offset);
 }
