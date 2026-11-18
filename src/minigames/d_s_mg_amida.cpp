@@ -235,9 +235,9 @@ int dScMgAmida_c::InitSubScreenBg() {
 /* Refills and shuffles mLaneResult. When IsVariant2() holds, the entries
    come from the pattern index, are copied to mLaneWants, and the table is
    reshuffled until it differs somewhere from that copy as seen through
-   mLanePerm; otherwise the first arg1 entries (at most 4) are 1 and
+   mLanePerm; otherwise the first count entries (at most 4) are 1 and
    the rest 0, shuffled once. */
-void dScMgAmida_c::ShuffleGoals(int arg1) {
+void dScMgAmida_c::ShuffleGoals(int count) {
     int i;
     int k;
     int j;
@@ -267,7 +267,7 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         }
         for (i = 0; i < 4; i++)
             mLaneWants[i] = mLaneResult[i];
-        arg1 = 1;
+        count = 1;
         do {
             for (i = 0; i < 4; i++) {
                 t = RandomIntInternal(&data_0209d4b8.value);
@@ -278,18 +278,18 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
             }
             for (k = 0; k < 4; k++) {
                 if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
-                    arg1 = 0;
+                    count = 0;
                     break;
                 }
             }
-        } while (arg1 == 1);
+        } while (count == 1);
     } else {
-        if (arg1 > 4)
-            arg1 = 4;
-        for (k = 0; k < arg1; k++)
+        if (count > 4)
+            count = 4;
+        for (k = 0; k < count; k++)
             mLaneResult[k] = 1;
-        for (; arg1 < 4; arg1++)
-            mLaneResult[arg1] = 0;
+        for (; count < 4; count++)
+            mLaneResult[count] = 0;
         for (i = 0; i < 4; i++) {
             t = RandomIntInternal(&data_0209d4b8.value);
             u = mLaneResult[i];
@@ -1282,7 +1282,7 @@ void dScMgAmida_c::InitWalkers() {
     int j;
     int k;
     int pick;
-    int tmp;
+    int lane;
     u32 rand;
     int again;
     u8 seenNow[4];
@@ -1298,9 +1298,9 @@ void dScMgAmida_c::InitWalkers() {
             for (k = 0; k < 4; k++) {
                 rand = (u32)RandomIntInternal(&data_0209d4b8.value) >> 16;
                 pick = ((rand & 0x7fff) * 4) >> 15;
-                tmp = this->mLanePerm[k];
+                lane = this->mLanePerm[k];
                 this->mLanePerm[k] = this->mLanePerm[pick];
-                this->mLanePerm[pick] = tmp;
+                this->mLanePerm[pick] = lane;
             }
             if (this->mRoundCount == 0) {
                 again = 0;
@@ -1346,14 +1346,14 @@ void dScMgAmida_c::InitWalkers() {
     } else if (this->mWalkerCount == 1) {
         if (this->mRoundCount == 0) {
             pick = MG_RAND(4);
-            tmp = this->mLanePerm[0];
+            lane = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
-            this->mLanePerm[pick] = tmp;
+            this->mLanePerm[pick] = lane;
         } else {
             pick = MG_RAND(3) + 1;
-            tmp = this->mLanePerm[0];
+            lane = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
-            this->mLanePerm[pick] = tmp;
+            this->mLanePerm[pick] = lane;
         }
     } else {
         again = 1;
@@ -1373,9 +1373,9 @@ void dScMgAmida_c::InitWalkers() {
             for (k = 0; k < 4; k++) {
                 rand = (u32)RandomIntInternal(&data_0209d4b8.value) >> 16;
                 pick = ((rand & 0x7fff) * 4) >> 15;
-                tmp = this->mLanePerm[k];
+                lane = this->mLanePerm[k];
                 this->mLanePerm[k] = this->mLanePerm[pick];
-                this->mLanePerm[pick] = tmp;
+                this->mLanePerm[pick] = lane;
             }
             for (j = 0; j < this->mWalkerCount; j++) {
                 seenNow[this->mLanePerm[j]] = 1;

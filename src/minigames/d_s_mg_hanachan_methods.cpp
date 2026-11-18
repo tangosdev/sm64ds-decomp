@@ -1508,40 +1508,40 @@ void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
     saved = state;
 }
 
-void dScMgHanachan_c::Wiggler::Spawn(int arg1, int arg2) {
+void dScMgHanachan_c::Wiggler::Spawn(int slot, int roundNo) {
     int i;
 
     voice = 0;
     voiceId = 0;
     decoy = 1;
-    index = arg1;
+    index = slot;
     tries = 0;
     bob = (short)(RandomIntInternal(&data_0209e650.value) & 0xfff0);
     bobRate = 0x600;
     busy = 0;
     bloom = 0;
     face = 2;
-    round = arg2;
+    round = roundNo;
     alive = 1;
 
     for (i = 0; i < 5; i++)
         stretch[i] = 0x10000;
 
-    color = (short)Hana_PickUnused(arg1, 0xff);
+    color = (short)Hana_PickUnused(slot, 0xff);
 
     switch (sHanaRoundPattern) {
     case 0:
-        StartPathC(arg1);
+        StartPathC(slot);
         return;
     case 1:
-        StartPathB(arg1);
+        StartPathB(slot);
         return;
     case 2:
-        StartBounce(arg1);
+        StartBounce(slot);
         return;
     case 3:
     default:
-        StartPathA(arg1);
+        StartPathA(slot);
         return;
     }
 }

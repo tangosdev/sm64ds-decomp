@@ -573,7 +573,7 @@ void Heyho::StartMotionVShape() {
 
 /* ---- Heyho::MotionVShape ---- */
 void Heyho::MotionVShape() {
-    Vector3 sp0, spC, sp18, sp24;
+    Vector3 toTop, upDir, toBottom, downDir;
     int r5, r0v;
     int t;
 
@@ -591,21 +591,21 @@ void Heyho::MotionVShape() {
             mWaypoint.x = mPath.range.left;
             mWaypoint.y = mPath.range.top;
         }
-        Vec3_Sub(&sp0, &mWaypoint, &mPos);
-        mVel.x = sp0.x;
-        mVel.y = sp0.y;
-        mVel.z = sp0.z;
-        func_0203ce80(&spC, &mVel);
+        Vec3_Sub(&toTop, &mWaypoint, &mPos);
+        mVel.x = toTop.x;
+        mVel.y = toTop.y;
+        mVel.z = toTop.z;
+        func_0203ce80(&upDir, &mVel);
         Vec3_MulScalarInPlace(&mVel, mSpeed);
         mPhase = 0;
     } else if (r5 != 0 && r0v != 0 && mWaypoint.y == mPath.range.top) {
         mWaypoint.x = (mPath.range.left + mPath.range.right) >> 1;
         mWaypoint.y = mPath.range.bottom;
-        Vec3_Sub(&sp18, &mWaypoint, &mPos);
-        mVel.x = sp18.x;
-        mVel.y = sp18.y;
-        mVel.z = sp18.z;
-        func_0203ce80(&sp24, &mVel);
+        Vec3_Sub(&toBottom, &mWaypoint, &mPos);
+        mVel.x = toBottom.x;
+        mVel.y = toBottom.y;
+        mVel.z = toBottom.z;
+        func_0203ce80(&downDir, &mVel);
         Vec3_MulScalarInPlace(&mVel, mSpeed);
         mPhase = 0;
     }
@@ -696,7 +696,7 @@ void Heyho::StartMotionDiagonal() {
 
 /* ---- Heyho::MotionDiagonal ---- */
 void Heyho::MotionDiagonal() {
-    Vector3 sp0, spC, sp18, sp24;
+    Vector3 toTop, upDir, toBottom, downDir;
     int r5, r0v;
     int t;
 
@@ -708,21 +708,21 @@ void Heyho::MotionDiagonal() {
     if (r5 != 0 && r0v != 0 && mWaypoint.y == mPath.range.bottom) {
         mWaypoint.x = mPath.range.left;
         mWaypoint.y = mPath.range.top;
-        Vec3_Sub(&sp0, &mWaypoint, &mPos);
-        mVel.x = sp0.x;
-        mVel.y = sp0.y;
-        mVel.z = sp0.z;
-        func_0203ce80(&spC, &mVel);
+        Vec3_Sub(&toTop, &mWaypoint, &mPos);
+        mVel.x = toTop.x;
+        mVel.y = toTop.y;
+        mVel.z = toTop.z;
+        func_0203ce80(&upDir, &mVel);
         Vec3_MulScalarInPlace(&mVel, mSpeed);
         mPhase = 0;
     } else if (r5 != 0 && r0v != 0 && mWaypoint.y == mPath.range.top) {
         mWaypoint.x = mPath.range.right;
         mWaypoint.y = mPath.range.bottom;
-        Vec3_Sub(&sp18, &mWaypoint, &mPos);
-        mVel.x = sp18.x;
-        mVel.y = sp18.y;
-        mVel.z = sp18.z;
-        func_0203ce80(&sp24, &mVel);
+        Vec3_Sub(&toBottom, &mWaypoint, &mPos);
+        mVel.x = toBottom.x;
+        mVel.y = toBottom.y;
+        mVel.z = toBottom.z;
+        func_0203ce80(&downDir, &mVel);
         Vec3_MulScalarInPlace(&mVel, mSpeed);
         mPhase = 0;
     }
@@ -783,7 +783,7 @@ void Heyho::StartMotionDiagonalMirror() {
 
 /* ---- Heyho::MotionDiagonalMirror ---- */
 void Heyho::MotionDiagonalMirror() {
-    Vector3 sp0, spC, sp18, sp24;
+    Vector3 toTop, upDir, toBottom, downDir;
     int r5, r0v;
     int t;
 
@@ -795,21 +795,21 @@ void Heyho::MotionDiagonalMirror() {
     if (r5 != 0 && r0v != 0 && mWaypoint.y == mPath.range.bottom) {
         mWaypoint.x = mPath.range.right;
         mWaypoint.y = mPath.range.top;
-        Vec3_Sub(&sp0, &mWaypoint, &mPos);
-        mVel.x = sp0.x;
-        mVel.y = sp0.y;
-        mVel.z = sp0.z;
-        func_0203ce80(&spC, &mVel);
+        Vec3_Sub(&toTop, &mWaypoint, &mPos);
+        mVel.x = toTop.x;
+        mVel.y = toTop.y;
+        mVel.z = toTop.z;
+        func_0203ce80(&upDir, &mVel);
         Vec3_MulScalarInPlace(&mVel, mSpeed);
         mPhase = 0;
     } else if (r5 != 0 && r0v != 0 && mWaypoint.y == mPath.range.top) {
         mWaypoint.x = mPath.range.left;
         mWaypoint.y = mPath.range.bottom;
-        Vec3_Sub(&sp18, &mWaypoint, &mPos);
-        mVel.x = sp18.x;
-        mVel.y = sp18.y;
-        mVel.z = sp18.z;
-        func_0203ce80(&sp24, &mVel);
+        Vec3_Sub(&toBottom, &mWaypoint, &mPos);
+        mVel.x = toBottom.x;
+        mVel.y = toBottom.y;
+        mVel.z = toBottom.z;
+        func_0203ce80(&downDir, &mVel);
         Vec3_MulScalarInPlace(&mVel, mSpeed);
         mPhase = 0;
     }
