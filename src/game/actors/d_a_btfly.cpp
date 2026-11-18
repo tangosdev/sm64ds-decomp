@@ -99,6 +99,10 @@ daBtfly_c::~daBtfly_c()
 {
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 void daBtfly_c::State7()
 {
     int hasContact;
@@ -138,8 +142,7 @@ void daBtfly_c::State7()
         if (hasContact != 0) {
             dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
             if (hit != 0) {
-                int isPlayer = (hit->actorID == 0xbf);
-                if (isPlayer != 0) {
+                if (IsPlayerActor(hit)) {
                     Vector3 pos;
                     pos.x = mPos.x;
                     pos.y = mPos.y;
