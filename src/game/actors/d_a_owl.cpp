@@ -344,7 +344,8 @@ int daOwl_c::UpdateHover() {
     ApproachAngle(&mPrevAngle.x, 0, 0xa, 0x200, 0x100);
 
     /* The forward step rotated into the speed, and a zero vector nothing
-       reads. Without it the function is 0x230 of 0x23c (#821 r49). */
+       reads. Without it the function is 0x230 of 0x23c (#821 r49).
+       Kept (#821 r84): as a `speed` local the transform writes, copied to mSpeed -> 0x254. */
     Vector3 step(0, 0, 0x5000);
     Vector3 unused(0, 0, 0);
 
