@@ -371,8 +371,7 @@ void daTrs_c::func_ov063_021166ac() {
         return;
     if (mBooFlags.carrying) {
         if (this->mCarriedID != TRS_ID_T_BASKET) {
-            s16 *ap = &this->mCarriedAngleY;
-            *ap += 0xc00;
+            this->mCarriedAngleY += 0xc00;
         }
         Matrix4x3_FromRotationY(&this->mCarriedModel.mat4x3, this->mCarriedAngleY);
         this->mCarriedModel.mat4x3.m[9] = this->mCarriedPos.x >> 3;
@@ -2503,13 +2502,11 @@ void daTrs_c::ApproachTargetOpacityAndUpdateScale() {
             if (cur + 0x14 >= tgt) {
                 this->mOpacity = tgt;
             } else {
-                u8 *p = &this->mOpacity;
-                *p += 0x14;
+                this->mOpacity += 0x14;
             }
         } else {
             if (cur - 0x14 > tgt) {
-                u8 *p = &this->mOpacity;
-                *p -= 0x14;
+                this->mOpacity -= 0x14;
             } else {
                 this->mOpacity = tgt;
             }
