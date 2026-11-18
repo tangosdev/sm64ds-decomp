@@ -125,7 +125,7 @@ struct daYegg_c : dEnemyBase_c {
     u8  mBurstDone;                             /* 0x426 -- set at the end of
                                                    func_ov002_020edca4, which returns at
                                                    once if it is already set */
-    u8  mStarSlot;                              /* 0x427 -- dActor_c::TrackStar's answer,
+    s8  mStarSlot;                              /* 0x427 -- dActor_c::TrackStar's answer,
                                                    the same shape as daIDonketu_c's */
     /* param1 >> 4. Bits 0-1: the variant func_ov002_020ec654 tests. Bits 2-5:
        how many coins GetCoinPayoutCount pays. Bit 6: pays a blue coin
