@@ -587,6 +587,10 @@ int daObjBlockS_c::IsOnWaterFloor() {
     return 0;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* Returns 1 when func_02035638 (a hit test on the crate's dBgCh_Actr, a
  * sibling of IsOnWall) holds and the actor owning the collision it reports is
  * a DOSUN, DONKAKU, DONGURU, BATAN or ONIMASU; STATE_IDLE kills the crate
@@ -594,36 +598,17 @@ int daObjBlockS_c::IsOnWaterFloor() {
 int daObjBlockS_c::func_ov098_02138bfc()
 {
     dBgPi *r;
-    void *a;
-    unsigned short type;
+    dActor_c *a;
     if (!func_02035638((unsigned char *)&mWithMeshClsn)) return 0;
     r = mWithMeshClsn.GetSphereResult();
     if (r->GetClsnID() == -1)
         return 0;
     a = dActor_c::FindWithID(r->GetClsnID());
     if (!a) return 0;
-    type = ((dActor_c *)a)->actorID;
-    {
-        int b;
-        do {
-            b = (int)(type == ACTOR_ONIMASU);
-            if (b)
-                break;
-            b = (int)(type == ACTOR_DONKAKU);
-            if (b)
-                break;
-            b = (int)(type == ACTOR_DONGURU);
-            if (b)
-                break;
-            b = (int)(type == ACTOR_DOSUN);
-            if (b)
-                break;
-            b = (int)(type == ACTOR_BATAN);
-            if (!b)
-                return 0;
-        } while (0);
-        return 1;
-    }
+    if (!(IsActorID(a, ACTOR_ONIMASU) || IsActorID(a, ACTOR_DONKAKU) || IsActorID(a, ACTOR_DONGURU) ||
+          IsActorID(a, ACTOR_DOSUN) || IsActorID(a, ACTOR_BATAN)))
+        return 0;
+    return 1;
 }
 
 /* Puts the crate back in its starting condition: zeroes the sink offset,
@@ -796,10 +781,6 @@ void daObjBlockS_c::Kill()
     DisappearPoofDustAt(vec2);
     Sound::PlayBank3(0x41, mCamSpacePos);
     SetState(STATE_BROKEN);
-}
-
-static inline int IsActorID(dActor_c *actor, int id) {
-    return actor->actorID == id;
 }
 
 /* Wall test. Returns early while mWallCooldown, decremented by one per call,
