@@ -34,10 +34,6 @@
    in that .data block. The vtables and records are compared against those
    homes and discarded; this TU claims .text only. */
 
-/* common.h comes first so this TU sees the flat Matrix4x3 { s32 m[12]; }
-   spelling: the constructors' mat4x3 = IDENTITY_MATRIX4X3 copies block-move
-   twelve words under it, where the structured Matrix3x3 + Vector3 spelling
-   scalarizes and lands +0x1c bytes long. */
 #include "common.h"
 #include "math/MtxStack.h"
 #include "dExtSimpleModel_c.h"

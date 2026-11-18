@@ -14,9 +14,6 @@
  * HATENA_SWITCH registry). Retail does not store that spelling. Historical
  * alias QuestionSwitch_Spawn.
  *
- * What stays: the 12-word matrix copies go through Mtx43 -- structured
- *   Matrix4x3 assignment scalarizes; common.h-first would drop mClsnMat.t
- *   used in UpdateClsnTransform.
  * What stays: data_ov002_0210d8b4 / 0210d774 are CLPS blocks this TU does
  *   not own.
  * What stays: data_0209caa0 / data_0209d684 / data_0209d660 are arm9
@@ -41,7 +38,6 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "SaveBlock.h"
 
@@ -269,15 +265,15 @@ void daObjHatenaSwitch_c::UpdateModelTransform() {
     Vec3_Asr(&shifted, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted.x, shifted.y, shifted.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&mAnmModel.mat4x3;
+    mAnmModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = mAnmModel.mat4x3;
 }
 
 void daObjHatenaSwitch_c::UpdateClsnTransform() {
-    *(Mtx43 *)&mClsnMat = *(Mtx43 *)&mAnmModel.mat4x3;
-    mClsnMat.t.x = mPos.x;
-    mClsnMat.t.y = mPos.y;
-    mClsnMat.t.z = mPos.z;
+    mClsnMat = mAnmModel.mat4x3;
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
     mActiveMeshCollider->Transform(mClsnMat, mAngle.y);
 }
 

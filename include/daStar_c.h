@@ -39,12 +39,6 @@
 
 struct daPly_c;
 
-/* The shadow's matrix (a bare 4x3: a real Matrix4x3 member would drag
-   Vector3's destructor into ~daStar_c). tx/ty/tz are the position >> 3. */
-struct daStarShadowMtx { s32 m[9]; s32 tx; s32 ty; s32 tz; };
-#ifndef SM64DS_PLATFORM_PC
-typedef char daStarShadowMtx_size_must_be_0x30[sizeof(struct daStarShadowMtx) == 0x30 ? 1 : -1];
-#endif
 
 struct daStar_c : dEnemyBase_c {
     /* ---- state, indexing data_ov002_021109d8 (the 14-entry pointer-to-member
@@ -142,7 +136,7 @@ struct daStar_c : dEnemyBase_c {
     dExtAnmModel_c mAnmModel2; /* 0x370 -- the translucent "already collected" star */
     dExtShadowModel_c                  mShadowModel;          /* 0x3d4 */
 
-    daStarShadowMtx              mShadowMtx;            /* 0x3fc */
+    Matrix4x3 mShadowMtx; /* 0x3fc */
 
     s32 mGroundY; /* 0x42c -- ProbeGround's downward probe from 50.0 above the star: the hit, or 0x7fffffff */
     u32 mSoundObjID; /* 0x430 -- uniqueID of the sound object SpawnCollectSoundObj spawned, 0 if none */

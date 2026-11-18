@@ -66,10 +66,6 @@
  *   g_profile_* rows live here.
  */
 
-/* common.h first, so this TU reads the flat Matrix4x3 words: the two matrix
-   refreshes copy data_020a0e68 into the object with one ldm/stm block move,
-   which the structured Matrix3x3 + Vector3 spelling scalarizes (0x90 and
-   0x8c bytes against the ROM's 0x74 and 0x78). */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_trs_trap_AssetId {
     ASSET_TH_HONDANA_BMD = 0x06bb,

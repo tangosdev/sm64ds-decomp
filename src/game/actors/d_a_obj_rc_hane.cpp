@@ -40,12 +40,7 @@
  * is part of this TU. Written first here, being the highest-address member.
  *
  *
- * common.h FIRST: UpdateModelTransform assigns a whole Matrix4x3, and the ROM
- * copies it as three 4-word ldm/stm pairs. common.h's flat s32 m[12] is that
- * copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} splits it.
- *
  * Notes:
- * - common.h first (UpdateModelTransform's twelve-word Matrix4x3 copy)
  * - data_ov036_02114070 keeps its linker name (the BMD handle is
  *   constructed by this TU's static initializer, file 1702)
  * - g_profile_RC_HANE stays outside the licensed .text

@@ -22,9 +22,7 @@
  * reverse, so the factory leads and the inline destructor, declared last on
  * the class, emits the retail D1/D0 pair at the bottom with no D2. The
  * class-local operator new routes `new daBgSnmBdy_c()` at fBase_c's
- * allocator, so the compiler owns the vptr store. common.h comes before
- * any matrix header: InitResources copies IDENTITY_MATRIX4X3 into
- * mShadowMat, and only common.h's flat s32 m[12] is that twelve-word copy.
+ * allocator, so the compiler owns the vptr store.
  *
  * deslop leftovers:
  * - daPly_c::Hurt (HurtPlayer): not declared on daPly_c.h.

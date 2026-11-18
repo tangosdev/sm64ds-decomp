@@ -30,10 +30,6 @@
 #include "dExtAnmTexPat_c.h"
 
 struct daC_Jugem_c : dEnemyBase_c {
-    /* Not Matrix4x3: this TU sees math/Matrix.h first, and that spelling's
-       Vector3 destructor would reorder ~daC_Jugem_c. The copies are 12 words. */
-    struct ShadowMat { s32 m[12]; };
-
     /* The state machine this class drives itself with: twelve records, each
        an {enter, run} pair of pointers-to-member, built by the module sinit.
        SetState installs one and runs its enter; Behavior calls the run. */
@@ -45,8 +41,8 @@ struct daC_Jugem_c : dEnemyBase_c {
     StateFn                     *mState;                /* 0x1ec */
     dExtShadowModel_c            mShadowModel1;         /* 0x1f0 */
     dExtShadowModel_c            mShadowModel2;         /* 0x218 */
-    ShadowMat                    mShadowMat1;           /* 0x240 */
-    ShadowMat                    mShadowMat2;           /* 0x270 */
+    Matrix4x3 mShadowMat1;                              /* 0x240 */
+    Matrix4x3 mShadowMat2;                              /* 0x270 */
     daPly_c *mTalkPlayer;                               /* 0x2a0 */
     Vector3 mTarget;                                    /* 0x2a4 */
     Vector3 mCamLook;                                   /* 0x2b0 */

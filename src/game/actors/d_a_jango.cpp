@@ -76,7 +76,6 @@ extern "C" int AngleDiff(int a, int b);
 #include "dExtFrameCtrl_c.h"
 #include "daObjMarioCap_c.h"
 #include "Sound.h"
-#include "private/mtx43.h"
 
 /* Static-init ownership (was the handwritten __sinit_ov062_0211d6fc shard).
  * The file-scope objects at the end of this file construct the four
@@ -131,9 +130,6 @@ enum Bool { FALSE, TRUE };
 
 /* shadow struct 'BCA_File' */
 struct BCA_File;
-
-/* The matrix copies go through Mtx43: assigning this TU's nested
-   Matrix4x3 instead grows .text by 0x38 bytes. */
 
 extern signed char gCurrentSublevel;
 void func_02012694(unsigned int, const Vector3 *);
@@ -462,7 +458,7 @@ void daJango_c::UpdateModelAndShadow() {
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mBlendAnmModel.mat4x3 = data_020a0e68;
 
     if (mHeldActorID != 0)
     {
@@ -473,9 +469,9 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPos.y = 0;
             mHeldPos.z = 0;
             MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
-            mHeldPos.x = data_020a0e68.t.x;
-            mHeldPos.y = data_020a0e68.t.y;
-            mHeldPos.z = data_020a0e68.t.z;
+            mHeldPos.x = data_020a0e68.m[9];
+            mHeldPos.y = data_020a0e68.m[10];
+            mHeldPos.z = data_020a0e68.m[11];
             mHeldPos.x <<= 3;
             mHeldPos.y <<= 3;
             mHeldPos.z <<= 3;
@@ -497,7 +493,7 @@ void daJango_c::UpdateModelAndShadow() {
     }
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
-    *(Mtx43 *)&mShadowMat = *(Mtx43 *)&data_020a0e68;
+    mShadowMat = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x40000, 0x258000, 0xf);
 }
 

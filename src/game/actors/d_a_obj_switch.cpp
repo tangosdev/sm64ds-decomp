@@ -1,6 +1,5 @@
 //cpp
 // Timed floor switches and the switch which reveals a star.
-// Select the shared flat Matrix4x3 before the actor headers, as dBgActor_c.h requires.
 //
 // The state handlers and their helpers are daObjSwitch_c members, and the
 // .data records at 0x0210987c.. store {init, exec} pointer-to-member pairs

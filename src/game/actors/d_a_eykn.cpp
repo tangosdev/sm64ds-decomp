@@ -66,12 +66,8 @@
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
-
-/* The shadow matrix is reset through Mtx43: assigning a Matrix4x3 copies it
-   member by member, 0x1c bytes longer than the cartridge's block copy. */
 
 /* Inferred local resource-family ABI views; these type names are not ROM
  * names. The manifest binds each constructor/destructor to its existing
@@ -329,13 +325,13 @@ void daEykn_c::CheckAttacks()
 void daEykn_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3.t.x = mPos.x >> 3;
-    mAnmModel.mat4x3.t.y = mPos.y >> 3;
-    mAnmModel.mat4x3.t.z = mPos.z >> 3;
-    mShadowMat[9] = mPos.x >> 3;
-    mShadowMat[10] = mPos.y >> 3;
-    mShadowMat[11] = mPos.z >> 3;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, mScale * 0xb4, mShadowHeight, 0xf);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = mPos.y >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
+    DropShadowRadHeight(mShadowModel, mShadowMat, mScale * 0xb4, mShadowHeight, 0xf);
 }
 
 
@@ -774,7 +770,7 @@ s32 daEykn_c::InitResources()
     mTarget = 0;
     mCircleTimer = kCircleFrames;
 
-    *(Mtx43 *)mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+    mShadowMat = IDENTITY_MATRIX4X3;
 
     dBgCh_Gnd ray;
     ray.SetObjAndPos(mPos, this);

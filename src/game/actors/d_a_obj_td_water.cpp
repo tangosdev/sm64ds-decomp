@@ -24,7 +24,6 @@
  * - data_ov032_02113afc / 02113af4 / 02112f64 / 02112fb8 BMD / KCL / BTA /
  *   CLPS handles; this TU consumes them, overlay .data owns them.
  * - S14: g_profile_TD_WATER stays outside the licensed .text.
- * - common.h first (dBgActor_c.h must see common.h ahead of dExtSimpleModel_c.h).
  * - no daPly_c.h / dCamera_c.h.
  */
 

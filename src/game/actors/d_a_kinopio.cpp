@@ -12,9 +12,6 @@
  * player's character.
  *
  * leftovers:
- * - common.h before math/Matrix.h is load-bearing: the flat m[12]
- *   Matrix4x3 keeps the destructor group at D1, D0, D2 where the
- *   cartridge keeps D1 below D0 and no D2 (measured note below).
  * - Source is ROM-ascending under defer_codegen off; the destructor is
  *   header-declared and defined out of line (D1 then D0, no D2).
  * - The qualified `mAnmModel.dExtSimpleModel_c::Render(0)` is the matched
@@ -26,14 +23,6 @@
  *   NumStars and gCurrentSublevel / data_0209caa0 keep linker names; the
  *   ov002 file handles stay address-named.
  */
-/* common.h FIRST, and the order is load-bearing. Both it and math/Matrix.h
- * define Matrix4x3 behind one shared guard -- flat `s32 m[12]` here,
- * `Matrix3x3 r; Vector3 t;` there -- and whichever the TU reaches first
- * stands. The structured spelling pulls in Vector3's destructor, and with
- * two Matrix4x3 members that makes mwccarm emit D2, D0, D1; the cartridge
- * has D1 below D0 and no D2. Measured: math/Matrix.h first emits D2, D0,
- * D1; common.h first emits D1, D0, D2, which links in cartridge order
- * once the homeless D2 is discarded. */
 #include "common.h"
 #include "daKinopio_c.h"
 #include "SharedFilePtr.h"
@@ -290,9 +279,7 @@ void daKinopio_c::RunState()
     (this->*data_ov085_0212fe88[index].main)();
 }
 
-/* The matrix assignments are block copies because this TU sees common.h's
- * flat Matrix4x3 first (see the include note above). transforms[5] is the
- * head bone. */
+/* transforms[5] is the head bone. */
 void daKinopio_c::UpdateModelPose()
 {
     Matrix4x3 *dst;

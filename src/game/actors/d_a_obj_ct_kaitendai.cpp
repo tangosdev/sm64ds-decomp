@@ -27,8 +27,6 @@
  * - data_ov065_0211d334 (the 200/400 speeds) and data_ov065_0211d35c
  *   (the two resource rows) are not this TU's data. Neither are
  *   g_profile_CT_MECHA06 / CT_MECHA07.
- * - common.h stays first. Matrix4x3's flat 12-word spelling is what
- *   puts the shadow's ground height in m[10].
  * - The actor-id nest stays `!= 0x72` then `== 0x73`, and the floor
  *   probe subtracts 0xa000 on its own statement. Either an else-if or
  *   folding the subtract into the y copy comes out 0x13c against
@@ -200,7 +198,7 @@ int daObjCtKaitendai_c::CleanupResources() {
 }
 
 /* Copy the model matrix, plant its translation Y on the floor probe,
- * and drop the shadow. m[10] is that Y in the flat Matrix4x3. */
+ * and drop the shadow. m[10] is that Y. */
 void daObjCtKaitendai_c::UpdateShadow() {
     mShadowMat = mModel.mat4x3;
     mShadowMat.m[10] = (mGroundY + 0x32000) >> 3;

@@ -80,7 +80,7 @@ struct daKpaFire_c : dEnemyBase_c {
     s32 mKpaUniqueID;               /* 0x2cc */
     dCcAc_c mdCcAc_c;               /* 0x2d0 */
     dExtShadowModel_c mShadowModel; /* 0x304 */
-    u8 mShadowMat[0x30];            /* 0x32c -- shadow Matrix4x3 storage */
+    Matrix4x3 mShadowMat;           /* 0x32c -- shadow Matrix4x3 storage */
     s32 mVariant;                   /* 0x35c */
     s32 mFireScale;                 /* 0x360 -- fx32 */
     s32 mGroundY;                   /* 0x364 */

@@ -3,19 +3,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 #include "types.h"
+#include "math/Matrix.h" /* Matrix4x3 */
 
-/* Guarded on the same principle as Vector3_16 below: math/Matrix.h defines this
- * type too, structured as `Matrix3x3 r; Vector3 t;` rather than flat, and any
- * header reaching dExtSimpleModel_c.h -> dExtModel_c.h -> math/Matrix.h brings it in. Both
- * spellings are 0x30 bytes and both are in real use -- Matrix4x3_ApplyInPlace*
- * wants `m[i]`, the model headers want `.r`/`.t` -- so neither can simply win.
- * Whichever is seen FIRST in a translation unit stands, and the other stands
- * down. Without this a TU that reaches both fails outright, which is what blocked
- * typing dExtSimpleModel_c/dExtAnmModel_c members into the actor headers. */
-#ifndef MATRIX4X3_DEFINED
-#define MATRIX4X3_DEFINED
-struct Matrix4x3 { s32 m[12]; };
-#endif
 /* Vector3 lives in types.h (as {fx32 x,y,z}); not redefined here. */
 /* Guarded so dBgW.h, which needs this type and cannot assume common.h
  * was included first, can define it too without colliding. Both spell the guard
@@ -25,7 +14,6 @@ struct Matrix4x3 { s32 m[12]; };
 struct Vector3_16 { s16 x, y, z; };
 #endif
 
-typedef struct Matrix4x3 Matrix4x3;
 typedef struct Vector3_16 Vector3_16;
 
 #endif

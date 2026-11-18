@@ -27,8 +27,6 @@
  *   class RTTI/vtable without a forcing object.
  *   offset is VecFx32 because NitroSDK VEC_Add fills it (its prototype
  *   still says Vector3, #5207); pos and dustPos go to Vector3 game APIs.
- *   common.h first (via dBgActor_c.h): Matrix4x3 is s32 m[12], so the
- *   translation stays m[9]/m[10]/m[11].
  *
  * Known limits:
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit

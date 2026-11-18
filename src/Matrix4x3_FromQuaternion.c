@@ -7,8 +7,9 @@ extern void Matrix3x3_FromQuaternion(
 );
 
 void Matrix4x3_FromQuaternion(const struct Quaternion* q, struct Matrix4x3* mF) {
-    Matrix3x3_FromQuaternion(q, &mF->r);
-    mF->t.x = 0;
-    mF->t.y = 0;
-    mF->t.z = 0;
+    /* The rotation is the 4x3's first nine words, laid out as a 3x3. */
+    Matrix3x3_FromQuaternion(q, (struct Matrix3x3 *)mF);
+    mF->m[9] = 0;
+    mF->m[10] = 0;
+    mF->m[11] = 0;
 }

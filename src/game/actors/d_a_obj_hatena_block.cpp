@@ -34,9 +34,6 @@
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
- *   common.h must be included first. Otherwise dExtSimpleModel_c.h's nested Matrix4x3
- *   wins and UpdateMeshCollider / 02149ff0 change size (0x18 / 0x1c).
- *
  *   The destructor stays inline; out of line, mwccarm emits D0 before D1.
  *
  *   `return new` emits a homeless _ZN10dBgActor_cD2Ev. That is a licensed
@@ -93,7 +90,6 @@
  *   the Vector3 prize points reach it through (int *) casts.
  */
 
-/* common.h first: see the header. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjHatenaBlock_c_AssetId {
     ASSET_HATENA_BOX_BMD = 0x0463,

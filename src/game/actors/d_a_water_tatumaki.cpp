@@ -27,9 +27,6 @@
  *   mPullRadius is 0x90 against ROM 0x98. Deleting unk_190 = 0 is 0x94
  *   against ROM 0x98. The ROM zeroes both heights and then overwrites
  *   them; unk_190 is stored 0 and never read in this TU.
- * - UpdateModelMatrix: mAnmModel.mat4x3 = data_020a0e68 is 0x90 against
- *   ROM 0x74. This TU sees Matrix4x3 as {Matrix3x3 r; Vector3 t}. The ROM
- *   copies twelve words with one three-pass ldm/stm.
  * - Behavior: the spray position is `Vector3 pos = mPos; pos.y += lift;`
  *   (#821). Passing mPos.x, mPos.y + 0x384000, mPos.z directly is 0xc8
  *   against ROM 0xe0.
@@ -52,7 +49,6 @@ enum daWater_Tatumaki_c_AssetId {
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dExtAnmTexSRT_c.h"
-#include "private/mtx43.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
@@ -267,8 +263,7 @@ void daWater_Tatumaki_c::UpdateModelMatrix() {
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    /* Twelve flat words. A Matrix4x3 assignment copies r and t separately. */
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
 }
 
 int daWater_Tatumaki_c::CleanupResources() {

@@ -18,8 +18,7 @@
  * is on the water line). Water chase hands back to idle when it clears.
  * Patrol itself speeds up when a player is close; that is not a fifth state.
  *
- * common.h is included first so Matrix4x3 is the flat twelve words the two
- * matrix copies were matched under. defer_codegen is off, so the bodies are
+ * defer_codegen is off, so the bodies are
  * ROM-ascending. No optimization pragma: the file used to compile with
  * opt_strength_reduction off for the sake of func_ov090_02130f94 alone, whose
  * ripple loop carried a hand-reduced `idx += 3` accumulator. Written as the

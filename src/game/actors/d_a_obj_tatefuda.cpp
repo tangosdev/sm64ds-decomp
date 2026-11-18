@@ -74,16 +74,12 @@ enum daObjTatefuda_c_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
  * each of these before compiling; a real header should usually win. */
-/* The model-matrix copies go through Mtx43: copying that word union retains
- * the ROM block moves in C++ under 2004/b56, where Matrix4x3's own assignment
- * goes member by member. */
 
 /* shadow typedef 's32' */
 typedef int s32;
@@ -979,11 +975,11 @@ void daObjTatefuda_c::AttachToHolder() {
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&body->mat4x3;
+    data_020a0e68 = body->mat4x3;
     MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
-    v.x = data_020a0e68.t.x;
-    v.y = data_020a0e68.t.y;
-    v.z = data_020a0e68.t.z;
+    v.x = data_020a0e68.m[9];
+    v.y = data_020a0e68.m[10];
+    v.z = data_020a0e68.m[11];
 
     mPrevAngle.y = mHoldingPlayer->mAngle.y;
     mAngle.y = mPrevAngle.y;
@@ -995,14 +991,14 @@ void daObjTatefuda_c::AttachToHolder() {
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x,
                                         data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
 
-    mPos.x = data_020a0e68.t.x;
-    mPos.y = data_020a0e68.t.y;
-    mPos.z = data_020a0e68.t.z;
+    mPos.x = data_020a0e68.m[9];
+    mPos.y = data_020a0e68.m[10];
+    mPos.z = data_020a0e68.m[11];
     Vec3_Lsl(&lo, &mPos, 3);
     mPos.x = lo.x;
     mPos.y = lo.y;
     mPos.z = lo.z;
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1021,7 +1017,7 @@ void daObjTatefuda_c::RebuildModelMatrix() {
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* Rebuild the drop shadow's matrix: a rotation about Y by the sign's angle,
@@ -1030,9 +1026,9 @@ void daObjTatefuda_c::RebuildModelMatrix() {
 void daObjTatefuda_c::UpdateShadowMatrix()
 {
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.t.x = mPos.x >> 3;
-    mShadowMat.t.y = mPos.y >> 3;
-    mShadowMat.t.z = mPos.z >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = mPos.y >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
 }
 
 /* The reset: the sign goes back where it was spawned and hides. Sets mHidden

@@ -9,35 +9,34 @@
  * The type names come from the game's mangled symbols. The element counts and
  * Matrix4x3 translation offsets are corroborated by the matched matrix
  * constructors and vector-transform routines.
- *
- * Matrix4x3 embeds Matrix3x3 rather than repeating the nine elements, so the
- * 3x3-taking routines can be handed the rotation part of a 4x3 by name instead
- * of by cast, and the translation reads as a Vector3 instead of as indices 9-11.
- * The layout is unchanged: rotation at 0x00, translation at 0x24.
  */
 typedef struct Matrix3x3 {
     fx32 m[9];
 } Matrix3x3;
 
-/* See include/common.h: this type has a second, flat spelling there. Same 0x30
- * bytes; whichever a translation unit sees first stands. */
-#ifndef MATRIX4X3_DEFINED
-#define MATRIX4X3_DEFINED
+/* A 4x3 matrix as twelve words, row by row: m[0..8] are the X, Y and Z axis
+ * rows and m[9..11] the translation, the layout of the SDK's MtxFx43.
+ *
+ * One flat array, not a 3x3 plus a vector, because that is what the cartridge
+ * shows:
+ *  - Every whole-matrix copy is one twelve-word block (three ldm/stm of four).
+ *    mwccarm splits a struct copy at member boundaries, so any two-member
+ *    layout copies nine words and then three.
+ *  - The type is trivially destructible. daPiano_c's and daObjCvNewsLift_c's
+ *    destructors leave their Matrix4x3 arrays alone, and
+ *    __sinit_d_mg3d_esp_anim_set.cpp registers no destructor for its static
+ *    one; a destructor would add a __cxa_vec_cleanup and 0x18 bytes to each
+ *    of the first two and a registration to the third. A Vector3 member would
+ *    bring one in. */
 typedef struct Matrix4x3 {
-    Matrix3x3 r;   /* 0x00 */
-    Vector3   t;   /* 0x24 */
+    fx32 m[12];
 } Matrix4x3;
-#endif
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Matrix3x3_size_must_be_0x24[
     sizeof(Matrix3x3) == 0x24 ? 1 : -1
 ];
-#endif
-/* With `r` first and 0x24 bytes wide, these two also pin `t` to 0x24. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Matrix4x3_size_must_be_0x30[
     sizeof(Matrix4x3) == 0x30 ? 1 : -1
 ];

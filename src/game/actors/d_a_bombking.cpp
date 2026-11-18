@@ -1,8 +1,7 @@
 //cpp
 /* daBombking_c -- King Bob-omb (BOMBKING), Bob-omb Battlefield.
  * The destructor is out of line and first. defer_codegen off emits D1 then
- * D0 at the head, so source order is ROM order. common.h is first so the
- * shadow and hold copies are flat 12-word moves.
+ * D0 at the head, so source order is ROM order.
  */
 /* leftovers: the held matrix pointer at actor+0xc8 is dActor_c::mCarryMatrix.
  * UpdateHandMatrix stores the king's own as the member; the stores into
@@ -22,10 +21,6 @@
  * data_ov078_* address names, as their handlers keep func_ov078_*.
  */
 
-/* common.h FIRST: daBombking_c.h reaches math/Matrix.h through dExtBlendAnmModel_c.h,
- * and that header spells Matrix4x3 as {Matrix3x3 r; Vector3 t;} where common.h
- * spells it flat as s32 m[12]. Helpers whole-struct-assign the shadow/hold
- * matrices; only the flat spelling reproduces the block move. */
 #include "common.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"

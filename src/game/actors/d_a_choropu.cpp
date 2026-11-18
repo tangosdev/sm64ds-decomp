@@ -612,7 +612,7 @@ void *daChoropu_c::func_ov080_02124360()
 }
 
 /* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngle.y,
- * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set to
+ * with the translation (words 9..11) set to
  * the actor's position >> 3. */
 void daChoropu_c::func_ov080_021243d8()
 {

@@ -24,13 +24,8 @@
  * - Address-valued `&mAngle.y` in Behavior: a named increment CSEs the field
  *   address. The cartridge keeps r1 as &mAngle.y for both the halfword load
  *   and store.
- * - Class header first so dExtSimpleModel_c.h's structured Matrix4x3 (`.t`) wins;
- *   daObjWc_Mizu_c.h would otherwise pull common.h's flat `s32 m[12]`.
  */
 
-/* Class header first: dExtSimpleModel_c.h pulls the structured Matrix4x3 (`.t`) that
- * UpdateModelTransform writes. daObjWc_Mizu_c.h -> dBgActor_c.h would otherwise
- * reach common.h's flat `s32 m[12]` spelling first. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_wc_obj03_AssetId {
     ASSET_WC_OBJ03_BMD = 0x06d0
@@ -148,9 +143,9 @@ int daObjWc_Obj03_c::CleanupResources()
 void daObjWc_Obj03_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.t.x = mPos.x >> 3;
-    mModel.mat4x3.t.y = mPos.y >> 3;
-    mModel.mat4x3.t.z = mPos.z >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */

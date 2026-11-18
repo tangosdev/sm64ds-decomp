@@ -15,7 +15,6 @@
  * _ZTV/_ZTI/_ZTS12daSnowball_c; the manifest's compiler_only_output rows
  * route those (and the homeless D2) to the cartridge's own copies.
  *
- * decl_common.h is first so common.h's Matrix4x3 wins over math/Matrix.h.
  * Under `#pragma defer_codegen off` .text is laid down in source order, so
  * this file is ROM-ascending.
  *

@@ -6,8 +6,6 @@
  * ov062/daHolhei_c. Source order is the reverse of the ROM: mwccarm emits
  * one .text section per function backwards. The destructor stays inline in
  * include/daHolhei_c.h so the cartridge gets D1 then D0 and no D2.
- * common.h is first so Matrix4x3 is the flat s32 m[12]; the nested
- * math/Matrix.h spelling scalarizes a twelve-word copy.
  *
  * The file handles, the carry offsets, the ten state records and
  * g_profile_HOLHEI are this TU's statics; mwcc emits their initializer,

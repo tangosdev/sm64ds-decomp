@@ -2,10 +2,6 @@
 /* daHuwa_c, the Spindrift (HUWAHUWA). ov081, thirteen functions,
  * .text 0x02123740..0x02124090.
  *
- * common.h is first so Matrix4x3 stays the flat { s32 m[12]; }. The death
- * and shadow helpers index that matrix through .m. daHuwa_c.h pulls in
- * math/Matrix.h, whose nested spelling would stand instead if it were first.
- *
  * #pragma defer_codegen off emits .text in source order. One out-of-line
  * destructor is the key function, so this TU emits _ZTV/_ZTI/_ZTS and a D2
  * the cartridge has no home for (manifest: deadstrip).
