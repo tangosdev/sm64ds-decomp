@@ -28,7 +28,8 @@
       "end": "0x021335b0"
     },
     {
-      "name": ".data",
+      "name": ".data.gap57",
+      "input_section": ".data",
       "start": "0x0213cd8c",
       "end": "0x0213ce54"
     },
@@ -144,6 +145,12 @@
       "input_section": ".data",
       "start": "0x0213abc8",
       "end": "0x0213abd8"
+    },
+    {
+      "name": ".data.sLuigiPlaceLimits",
+      "input_section": ".data",
+      "start": "0x0213cee0",
+      "end": "0x0213cf08"
     }
   ],
   "functions": [
@@ -778,6 +785,13 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiPlaceLimits",
+      "address": "0x0213cee0",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "twenty per-board picture limits indexed by mBoard; no relocations"
     }
   ],
   "bss": [
@@ -1012,7 +1026,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -1044,7 +1058,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.gap57",
           "start": "0x0213cd8c",
           "end": "0x0213ce54",
           "differingBytes": 0,
@@ -1141,13 +1155,6 @@
           "firstDiff": null
         },
         {
-          "section": ".data.sLuigiPictureSprites",
-          "start": "0x0213abc8",
-          "end": "0x0213abd8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data.data_ov006_021350dc",
           "start": "0x021350dc",
           "end": "0x021350fc",
@@ -1181,11 +1188,25 @@
           "end": "0x0213abc8",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".data.sLuigiPictureSprites",
+          "start": "0x0213abc8",
+          "end": "0x0213abd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sLuigiPlaceLimits",
+          "start": "0x0213cee0",
+          "end": "0x0213cf08",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 90
+          "LICENSED": 109
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1196,34 +1217,24 @@
           {
             "section": ".init",
             "original": [
-              187
+              208
             ],
             "desired": [
-              187
+              208
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              185
+              206
             ],
             "desired": [
-              185
+              206
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.gap57",
             "original": [
-              114,
-              116,
-              118,
-              120,
-              123,
-              125,
-              127,
-              129,
-              131,
-              133,
               135,
               137,
               139,
@@ -1231,76 +1242,247 @@
               144,
               146,
               148,
-              151,
-              153,
-              155,
+              150,
+              152,
+              154,
+              156,
               158,
               160,
               162,
               165,
-              167
+              167,
+              169,
+              172,
+              174,
+              176,
+              179,
+              181,
+              183,
+              186,
+              188
             ],
             "desired": [
-              137,
-              127,
-              133,
-              131,
-              155,
-              135,
-              146,
-              141,
-              123,
-              114,
-              125,
-              129,
+              158,
+              148,
+              154,
+              152,
+              176,
+              156,
               167,
               162,
-              153,
-              151,
-              165,
-              148,
-              139,
-              116,
-              160,
-              158,
               144,
-              118,
-              120
+              135,
+              146,
+              150,
+              188,
+              183,
+              174,
+              172,
+              186,
+              169,
+              160,
+              137,
+              181,
+              179,
+              165,
+              139,
+              141
             ]
           },
           {
             "section": ".bss",
             "original": [
-              122,
               143,
-              150,
-              157,
-              164
+              164,
+              171,
+              178,
+              185
             ],
             "desired": [
-              164,
-              150,
-              157,
-              122,
-              143
+              185,
+              171,
+              178,
+              143,
+              164
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiTouchSfx",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiCurtainX",
+            "original": [
+              36
+            ],
+            "desired": [
+              36
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiDriftByColumnSpeed",
+            "original": [
+              43
+            ],
+            "desired": [
+              43
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiDriftByRowSpeed",
+            "original": [
+              42
+            ],
+            "desired": [
+              42
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiDriftRandomSpeed",
+            "original": [
+              41
+            ],
+            "desired": [
+              41
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiSwaySpeed",
+            "original": [
+              38
+            ],
+            "desired": [
+              38
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiSwayStartVY",
+            "original": [
+              39
+            ],
+            "desired": [
+              39
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiSwayAccel",
+            "original": [
+              40
+            ],
+            "desired": [
+              40
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiBounceSpeeds",
+            "original": [
+              37
+            ],
+            "desired": [
+              37
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiDriftFixedSpeed",
+            "original": [
+              45
+            ],
+            "desired": [
+              45
+            ]
+          },
+          {
+            "section": ".rodata.sLuigiDriftByLevelSpeed",
+            "original": [
+              44
+            ],
+            "desired": [
+              44
+            ]
+          },
+          {
+            "section": ".data.sLuigiCurtainSprite",
+            "original": [
+              34
+            ],
+            "desired": [
+              34
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021350dc",
+            "original": [
+              33
+            ],
+            "desired": [
+              33
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213aba8",
+            "original": [
+              72
+            ],
+            "desired": [
+              72
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213abb0",
+            "original": [
+              71
+            ],
+            "desired": [
+              71
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213abb8",
+            "original": [
+              70
+            ],
+            "desired": [
+              70
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213abc0",
+            "original": [
+              69
+            ],
+            "desired": [
+              69
+            ]
+          },
+          {
+            "section": ".data.sLuigiPictureSprites",
+            "original": [
+              73
+            ],
+            "desired": [
+              73
+            ]
+          },
+          {
+            "section": ".data.sLuigiPlaceLimits",
+            "original": [
+              47
+            ],
+            "desired": [
+              47
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.gap57",
               "original": [
-                114,
-                116,
-                118,
-                120,
-                123,
-                125,
-                127,
-                129,
-                131,
-                133,
                 135,
                 137,
                 139,
@@ -1308,53 +1490,53 @@
                 144,
                 146,
                 148,
-                151,
-                153,
-                155,
+                150,
+                152,
+                154,
+                156,
                 158,
                 160,
                 162,
                 165,
-                167
+                167,
+                169,
+                172,
+                174,
+                176,
+                179,
+                181,
+                183,
+                186,
+                188
               ],
               "desired": [
-                137,
-                127,
-                133,
-                131,
-                155,
-                135,
-                146,
-                141,
-                123,
-                114,
-                125,
-                129,
+                158,
+                148,
+                154,
+                152,
+                176,
+                156,
                 167,
                 162,
-                153,
-                151,
-                165,
-                148,
-                139,
-                116,
-                160,
-                158,
                 144,
-                118,
-                120
+                135,
+                146,
+                150,
+                188,
+                183,
+                174,
+                172,
+                186,
+                169,
+                160,
+                137,
+                181,
+                179,
+                165,
+                139,
+                141
               ],
               "slots": [
-                114,
-                116,
-                118,
-                120,
-                123,
-                125,
-                127,
-                129,
-                131,
-                133,
                 135,
                 137,
                 139,
@@ -1362,38 +1544,48 @@
                 144,
                 146,
                 148,
-                151,
-                153,
-                155,
+                150,
+                152,
+                154,
+                156,
                 158,
                 160,
                 162,
                 165,
-                167
+                167,
+                169,
+                172,
+                174,
+                176,
+                179,
+                181,
+                183,
+                186,
+                188
               ]
             },
             {
               "section": ".bss",
               "original": [
-                122,
                 143,
-                150,
-                157,
-                164
+                164,
+                171,
+                178,
+                185
               ],
               "desired": [
-                164,
-                150,
-                157,
-                122,
-                143
+                185,
+                171,
+                178,
+                143,
+                164
               ],
               "slots": [
-                122,
                 143,
-                150,
-                157,
-                164
+                164,
+                171,
+                178,
+                185
               ]
             }
           ],
@@ -2080,7 +2272,7 @@
       "target_address": "0x021421ec"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cd8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2090,7 +2282,7 @@
       "target_address": "0x020f15ac"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cd94",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2100,7 +2292,7 @@
       "target_address": "0x020f1cb4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cd9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2110,7 +2302,7 @@
       "target_address": "0x020f192c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cda4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2120,7 +2312,7 @@
       "target_address": "0x020f1a70"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cdac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2130,7 +2322,7 @@
       "target_address": "0x020f06fc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cdb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2140,7 +2332,7 @@
       "target_address": "0x020f17fc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cdbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2150,7 +2342,7 @@
       "target_address": "0x020f0ba0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cdc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2160,7 +2352,7 @@
       "target_address": "0x020f1318"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cdcc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2170,7 +2362,7 @@
       "target_address": "0x020f1e58"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cdd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2180,7 +2372,7 @@
       "target_address": "0x020f3260"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cddc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2190,7 +2382,7 @@
       "target_address": "0x020f1e40"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cde4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2200,7 +2392,7 @@
       "target_address": "0x020f1b98"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cdf4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2210,7 +2402,7 @@
       "target_address": "0x020eff20"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213cdfc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2220,7 +2412,7 @@
       "target_address": "0x020f088c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce04",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2230,7 +2422,7 @@
       "target_address": "0x020f0a6c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2240,7 +2432,7 @@
       "target_address": "0x020f3800"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce14",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2250,7 +2442,7 @@
       "target_address": "0x020f05d8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2260,7 +2452,7 @@
       "target_address": "0x020f13cc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce24",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2270,7 +2462,7 @@
       "target_address": "0x020f31dc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2280,7 +2472,7 @@
       "target_address": "0x020effb8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce34",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2290,7 +2482,7 @@
       "target_address": "0x020f002c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2300,7 +2492,7 @@
       "target_address": "0x020f0bf0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce44",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2310,7 +2502,7 @@
       "target_address": "0x020f319c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap57",
       "source": "0x0213ce4c",
       "type": "R_ARM_ABS32",
       "kind": "load",

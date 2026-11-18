@@ -41,7 +41,7 @@
     {
       "name": ".data",
       "start": "0x0213f8d4",
-      "end": "0x0213f9e4"
+      "end": "0x0213fa04"
     },
     {
       "name": ".data.sTeresaExclaimSprites",
@@ -1459,6 +1459,13 @@
       "size": "0x14",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTeresaPaintMask",
+      "address": "0x0213f9e4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "PaintSquare's eight-row stipple mask, one nibble per column; no relocations; the eight bytes at 0x0213fa04 are _ZTV13dScMgTeresa_c's ABI header and stay ROM"
     }
   ],
   "bss": [
@@ -1691,7 +1698,7 @@
         {
           "section": ".data",
           "start": "0x0213f8d4",
-          "end": "0x0213f9e4",
+          "end": "0x0213fa04",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -2034,7 +2041,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 167
+          "LICENSED": 168
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -2045,112 +2052,114 @@
           {
             "section": ".init",
             "original": [
-              278
+              279
             ],
             "desired": [
-              278
+              279
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              276
+              277
             ],
             "desired": [
-              276
+              277
             ]
           },
           {
             "section": ".bss",
             "original": [
-              211,
-              228,
-              239,
-              258
+              212,
+              229,
+              240,
+              259
             ],
             "desired": [
-              239,
-              211,
-              228,
-              258
+              240,
+              212,
+              229,
+              259
             ]
           },
           {
             "section": ".data",
             "original": [
               17,
-              199,
-              201,
-              203,
-              205,
-              207,
-              209,
-              212,
-              214,
-              216,
-              218,
-              220,
-              222,
-              224,
-              226,
-              229,
-              231,
-              233,
-              235,
-              237,
-              240,
-              242,
-              244,
-              246,
-              248,
-              250,
-              252,
-              254,
-              256,
-              261,
-              262
+              31,
+              200,
+              202,
+              204,
+              206,
+              208,
+              210,
+              213,
+              215,
+              217,
+              219,
+              221,
+              223,
+              225,
+              227,
+              230,
+              232,
+              234,
+              236,
+              238,
+              241,
+              243,
+              245,
+              247,
+              249,
+              251,
+              253,
+              255,
+              257,
+              262,
+              263
             ],
             "desired": [
-              222,
-              214,
-              220,
-              218,
-              250,
-              246,
-              201,
-              240,
-              209,
-              244,
-              256,
-              203,
-              212,
-              224,
-              248,
-              216,
-              205,
-              242,
-              207,
-              226,
-              199,
-              237,
-              235,
-              233,
-              231,
-              229,
-              254,
-              252,
+              223,
+              215,
+              221,
+              219,
+              251,
+              247,
+              202,
+              241,
+              210,
+              245,
+              257,
+              204,
+              213,
+              225,
+              249,
+              217,
+              206,
+              243,
+              208,
+              227,
+              200,
+              238,
+              236,
+              234,
+              232,
+              230,
+              255,
+              253,
+              263,
               262,
-              261,
-              17
+              17,
+              31
             ]
           },
           {
             "section": ".data.sTeresaExclaimSprites",
             "original": [
-              5
+              7
             ],
             "desired": [
-              5
+              7
             ]
           },
           {
@@ -2165,10 +2174,10 @@
           {
             "section": ".data.sTeresaBigBooSprites",
             "original": [
-              34
+              35
             ],
             "desired": [
-              34
+              35
             ]
           },
           {
@@ -2183,10 +2192,10 @@
           {
             "section": ".data.sTeresaMarkerSprites",
             "original": [
-              7
+              5
             ],
             "desired": [
-              7
+              5
             ]
           },
           {
@@ -2201,19 +2210,19 @@
           {
             "section": ".data.sTeresaBooFrameSprites",
             "original": [
-              37
+              38
             ],
             "desired": [
-              37
+              38
             ]
           },
           {
             "section": ".data.data_ov006_02133a60",
             "original": [
-              12
+              13
             ],
             "desired": [
-              12
+              13
             ]
           },
           {
@@ -2228,181 +2237,181 @@
           {
             "section": ".data.data_ov006_0213424c",
             "original": [
-              33
+              34
             ],
             "desired": [
-              33
+              34
             ]
           },
           {
             "section": ".data.data_ov006_02135128",
             "original": [
-              48
+              49
             ],
             "desired": [
-              48
+              49
             ]
           },
           {
             "section": ".data.data_ov006_02135268",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
             "section": ".data.data_ov006_021353a8",
             "original": [
-              53
+              54
             ],
             "desired": [
-              53
+              54
             ]
           },
           {
             "section": ".data.data_ov006_021354f8",
             "original": [
-              50
+              51
             ],
             "desired": [
-              50
+              51
             ]
           },
           {
             "section": ".data.data_ov006_02135648",
             "original": [
-              52
+              53
             ],
             "desired": [
-              52
+              53
             ]
           },
           {
             "section": ".data.data_ov006_02135798",
             "original": [
-              51
+              52
             ],
             "desired": [
-              51
+              52
             ]
           },
           {
             "section": ".data.data_ov006_021358e8",
             "original": [
-              57
+              58
             ],
             "desired": [
-              57
+              58
             ]
           },
           {
             "section": ".data.data_ov006_02135a48",
             "original": [
-              55
+              56
             ],
             "desired": [
-              55
+              56
             ]
           },
           {
             "section": ".data.data_ov006_02135ba8",
             "original": [
-              54
+              55
             ],
             "desired": [
-              54
+              55
             ]
           },
           {
             "section": ".data.data_ov006_02135d08",
             "original": [
-              56
+              57
             ],
             "desired": [
-              56
+              57
             ]
           },
           {
             "section": ".data.data_ov006_02135e68",
             "original": [
-              58
+              59
             ],
             "desired": [
-              58
+              59
             ]
           },
           {
             "section": ".data.data_ov006_02135fe4",
             "original": [
-              44
+              45
             ],
             "desired": [
-              44
+              45
             ]
           },
           {
             "section": ".data.data_ov006_0213609c",
             "original": [
-              46
+              47
             ],
             "desired": [
-              46
+              47
             ]
           },
           {
             "section": ".data.data_ov006_02136154",
             "original": [
-              45
+              46
             ],
             "desired": [
-              45
+              46
             ]
           },
           {
             "section": ".data.data_ov006_0213620c",
             "original": [
-              49
+              50
             ],
             "desired": [
-              49
+              50
             ]
           },
           {
             "section": ".data.data_ov006_0213635c",
             "original": [
-              59
+              60
             ],
             "desired": [
-              59
+              60
             ]
           },
           {
             "section": ".data.data_ov006_02136524",
             "original": [
-              60
+              61
             ],
             "desired": [
-              60
+              61
             ]
           },
           {
             "section": ".data.data_ov006_0213672c",
             "original": [
-              61
+              62
             ],
             "desired": [
-              61
+              62
             ]
           },
           {
             "section": ".data.data_ov006_0213a5f8",
             "original": [
-              36
+              37
             ],
             "desired": [
-              36
+              37
             ]
           },
           {
@@ -2417,64 +2426,64 @@
           {
             "section": ".data.data_ov006_0213a694",
             "original": [
-              40
+              41
             ],
             "desired": [
-              40
+              41
             ]
           },
           {
             "section": ".data.data_ov006_0213a6ec",
             "original": [
-              39
+              40
             ],
             "desired": [
-              39
+              40
             ]
           },
           {
             "section": ".data.data_ov006_0213a744",
             "original": [
-              41
+              43
             ],
             "desired": [
-              41
+              43
             ]
           },
           {
             "section": ".data.data_ov006_0213a79c",
             "original": [
-              43
+              44
             ],
             "desired": [
-              43
+              44
             ]
           },
           {
             "section": ".data.data_ov006_0213a7f4",
             "original": [
-              13
+              14
             ],
             "desired": [
-              13
+              14
             ]
           },
           {
             "section": ".data.data_ov006_0213a804",
             "original": [
-              14
+              12
             ],
             "desired": [
-              14
+              12
             ]
           },
           {
             "section": ".data.data_ov006_0213a814",
             "original": [
-              23
+              22
             ],
             "desired": [
-              23
+              22
             ]
           },
           {
@@ -2489,19 +2498,19 @@
           {
             "section": ".data.data_ov006_0213a844",
             "original": [
-              19
+              21
             ],
             "desired": [
-              19
+              21
             ]
           },
           {
             "section": ".data.data_ov006_0213a85c",
             "original": [
-              22
+              23
             ],
             "desired": [
-              22
+              23
             ]
           },
           {
@@ -2516,64 +2525,64 @@
           {
             "section": ".data.data_ov006_0213a88c",
             "original": [
-              21
+              19
             ],
             "desired": [
-              21
+              19
             ]
           },
           {
             "section": ".data.data_ov006_0213a8a4",
             "original": [
-              28
+              27
             ],
             "desired": [
-              28
+              27
             ]
           },
           {
             "section": ".data.data_ov006_0213a8c4",
             "original": [
-              27
+              33
             ],
             "desired": [
-              27
+              33
             ]
           },
           {
             "section": ".data.data_ov006_0213a8e4",
             "original": [
-              32
+              29
             ],
             "desired": [
-              32
+              29
             ]
           },
           {
             "section": ".data.data_ov006_0213a904",
             "original": [
-              29
+              32
             ],
             "desired": [
-              29
+              32
             ]
           },
           {
             "section": ".data.data_ov006_0213a924",
             "original": [
-              30
+              28
             ],
             "desired": [
-              30
+              28
             ]
           },
           {
             "section": ".data.data_ov006_0213a944",
             "original": [
-              31
+              30
             ],
             "desired": [
-              31
+              30
             ]
           }
         ],
@@ -2582,128 +2591,131 @@
             {
               "section": ".bss",
               "original": [
-                211,
-                228,
-                239,
-                258
+                212,
+                229,
+                240,
+                259
               ],
               "desired": [
-                239,
-                211,
-                228,
-                258
+                240,
+                212,
+                229,
+                259
               ],
               "slots": [
-                211,
-                228,
-                239,
-                258
+                212,
+                229,
+                240,
+                259
               ]
             },
             {
               "section": ".data",
               "original": [
                 17,
-                199,
-                201,
-                203,
-                205,
-                207,
-                209,
-                212,
-                214,
-                216,
-                218,
-                220,
-                222,
-                224,
-                226,
-                229,
-                231,
-                233,
-                235,
-                237,
-                240,
-                242,
-                244,
-                246,
-                248,
-                250,
-                252,
-                254,
-                256,
-                261,
-                262
+                31,
+                200,
+                202,
+                204,
+                206,
+                208,
+                210,
+                213,
+                215,
+                217,
+                219,
+                221,
+                223,
+                225,
+                227,
+                230,
+                232,
+                234,
+                236,
+                238,
+                241,
+                243,
+                245,
+                247,
+                249,
+                251,
+                253,
+                255,
+                257,
+                262,
+                263
               ],
               "desired": [
-                222,
-                214,
-                220,
-                218,
-                250,
-                246,
-                201,
-                240,
-                209,
-                244,
-                256,
-                203,
-                212,
-                224,
-                248,
-                216,
-                205,
-                242,
-                207,
-                226,
-                199,
-                237,
-                235,
-                233,
-                231,
-                229,
-                254,
-                252,
+                223,
+                215,
+                221,
+                219,
+                251,
+                247,
+                202,
+                241,
+                210,
+                245,
+                257,
+                204,
+                213,
+                225,
+                249,
+                217,
+                206,
+                243,
+                208,
+                227,
+                200,
+                238,
+                236,
+                234,
+                232,
+                230,
+                255,
+                253,
+                263,
                 262,
-                261,
-                17
+                17,
+                31
               ],
               "slots": [
                 17,
-                199,
-                201,
-                203,
-                205,
-                207,
-                209,
-                212,
-                214,
-                216,
-                218,
-                220,
-                222,
-                224,
-                226,
-                229,
-                231,
-                233,
-                235,
-                237,
-                240,
-                242,
-                244,
-                246,
-                248,
-                250,
-                252,
-                254,
-                256,
-                261,
-                262
+                31,
+                200,
+                202,
+                204,
+                206,
+                208,
+                210,
+                213,
+                215,
+                217,
+                219,
+                221,
+                223,
+                225,
+                227,
+                230,
+                232,
+                234,
+                236,
+                238,
+                241,
+                243,
+                245,
+                247,
+                249,
+                251,
+                253,
+                255,
+                257,
+                262,
+                263
               ]
             }
           ],
-          "symbolIndices": 35,
+          "symbolIndices": 36,
           "sectionLinks": 0,
           "sectionInfos": 30,
           "error": null

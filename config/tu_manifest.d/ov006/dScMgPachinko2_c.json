@@ -33,7 +33,8 @@
       "end": "0x021427ac"
     },
     {
-      "name": ".data",
+      "name": ".data.gap59",
+      "input_section": ".data",
       "start": "0x0213da5c",
       "end": "0x0213db9c"
     },
@@ -348,6 +349,12 @@
       "input_section": ".rodata",
       "start": "0x0212ec78",
       "end": "0x0212ec80"
+    },
+    {
+      "name": ".data.sPachinko2PaddleGatherTargets",
+      "input_section": ".data",
+      "start": "0x0213db9c",
+      "end": "0x0213dbb4"
     }
   ],
   "functions": [
@@ -1232,6 +1239,13 @@
       "address": "0x0213db58",
       "size": "0x13",
       "evidence": "ROM type-name string '16dScMgPachinko2_c': 18 chars + NUL = 0x13 emitted bytes, followed by 1 byte of alignment padding before sPachinko2PaddleDescendLimits"
+    },
+    {
+      "symbol": "sPachinko2PaddleGatherTargets",
+      "address": "0x0213db9c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "six per-lane gather-target row pointers, relocating onto the int rows at 0x0212ec28/20/18/ebf8/10/38 in that order; the eight bytes at 0x0213dbb4 are _ZTV16dScMgPachinko2_c's ABI header and stay ROM"
     }
   ],
   "bss": [
@@ -1623,7 +1637,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data",
+          "section": ".data.gap59",
           "start": "0x0213da5c",
           "end": "0x0213db9c",
           "differingBytes": 0,
@@ -1992,11 +2006,18 @@
           "end": "0x0212ec80",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".data.sPachinko2PaddleGatherTargets",
+          "start": "0x0213db9c",
+          "end": "0x0213dbb4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 165
+          "LICENSED": 166
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -2007,41 +2028,40 @@
           {
             "section": ".init",
             "original": [
-              280
+              282
             ],
             "desired": [
-              280
+              282
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              278
+              280
             ],
             "desired": [
-              278
+              280
             ]
           },
           {
             "section": ".bss",
             "original": [
-              218,
-              249,
-              260
+              220,
+              251,
+              262
             ],
             "desired": [
-              260,
-              218,
-              249
+              262,
+              220,
+              251
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.gap59",
             "original": [
-              18,
+              24,
               46,
-              58,
-              200,
+              60,
               202,
               204,
               206,
@@ -2050,7 +2070,7 @@
               212,
               214,
               216,
-              219,
+              218,
               221,
               223,
               225,
@@ -2065,94 +2085,95 @@
               243,
               245,
               247,
-              250,
+              249,
               252,
               254,
               256,
               258,
-              263,
-              264
+              260,
+              265,
+              266
             ],
             "desired": [
-              227,
-              200,
-              231,
-              206,
-              212,
+              229,
               202,
-              225,
+              233,
               208,
+              214,
+              204,
+              227,
               210,
-              18,
+              212,
+              24,
+              260,
               258,
               256,
               254,
               252,
-              250,
-              233,
-              214,
-              221,
-              229,
-              204,
-              216,
-              219,
-              223,
               235,
+              216,
+              223,
+              231,
+              206,
+              218,
+              221,
+              225,
+              237,
+              249,
               247,
               245,
               243,
               241,
               239,
-              237,
-              264,
-              263,
-              46,
-              58
+              266,
+              265,
+              60,
+              46
             ]
           },
           {
             "section": ".rodata.sPachinko2CupHopRightStartFrames",
             "original": [
-              5
+              9
             ],
             "desired": [
-              5
+              9
             ]
           },
           {
             "section": ".rodata.sPachinko2CupHopLeftStartFrames",
             "original": [
-              6
+              7
             ],
             "desired": [
-              6
+              7
             ]
           },
           {
             "section": ".rodata.sPachinko2BallWalkOffSprites",
             "original": [
-              7
+              8
             ],
             "desired": [
-              7
+              8
             ]
           },
           {
             "section": ".rodata.sPachinko2PaddleCountPerLanes",
             "original": [
-              14
+              12
             ],
             "desired": [
-              14
+              12
             ]
           },
           {
             "section": ".rodata.sPachinko2CupHopLeftFrames",
             "original": [
-              39
+              14
             ],
             "desired": [
-              39
+              14
             ]
           },
           {
@@ -2167,37 +2188,37 @@
           {
             "section": ".rodata.sPachinko2CupWaitFrames",
             "original": [
-              37
+              32
             ],
             "desired": [
-              37
+              32
             ]
           },
           {
             "section": ".rodata.sPachinko2CupWaitTimes",
             "original": [
-              36
+              37
             ],
             "desired": [
-              36
+              37
             ]
           },
           {
             "section": ".rodata.sPachinko2CupX",
             "original": [
-              35
+              36
             ],
             "desired": [
-              35
+              36
             ]
           },
           {
             "section": ".rodata.sPachinko2CrossRowY",
             "original": [
-              34
+              35
             ],
             "desired": [
-              34
+              35
             ]
           },
           {
@@ -2221,199 +2242,199 @@
           {
             "section": ".rodata.data_ov006_0212ec9c",
             "original": [
-              42
+              45
             ],
             "desired": [
-              42
+              45
             ]
           },
           {
             "section": ".rodata.sPachinko2CupWaitTimesAlt",
             "original": [
-              43
+              44
             ],
             "desired": [
-              43
+              44
             ]
           },
           {
             "section": ".rodata.sPachinko2CupRightStops",
             "original": [
-              48
+              50
             ],
             "desired": [
-              48
+              50
             ]
           },
           {
             "section": ".rodata.sPachinko2CupLeftStops",
             "original": [
-              50
+              51
             ],
             "desired": [
-              50
+              51
             ]
           },
           {
             "section": ".data.sPachinko2PaddleSprite",
             "original": [
-              10
+              5
             ],
             "desired": [
-              10
+              5
             ]
           },
           {
             "section": ".data.sPachinko2SparkSprites",
             "original": [
-              44
+              42
             ],
             "desired": [
-              44
+              42
             ]
           },
           {
             "section": ".data.sPachinko2BallSprite",
             "original": [
-              8
+              10
             ],
             "desired": [
-              8
+              10
             ]
           },
           {
             "section": ".data.sPachinko2BallCountSprites",
             "original": [
-              61
+              63
             ],
             "desired": [
-              61
+              63
             ]
           },
           {
             "section": ".data.data_ov006_02133870",
             "original": [
-              60
+              62
             ],
             "desired": [
-              60
+              62
             ]
           },
           {
             "section": ".data.data_ov006_02136be4",
             "original": [
-              63
+              65
             ],
             "desired": [
-              63
+              65
             ]
           },
           {
             "section": ".data.data_ov006_02136c0c",
             "original": [
-              64
+              66
             ],
             "desired": [
-              64
+              66
             ]
           },
           {
             "section": ".data.data_ov006_02136c34",
             "original": [
-              65
+              67
             ],
             "desired": [
-              65
+              67
             ]
           },
           {
             "section": ".data.data_ov006_02136c7c",
             "original": [
-              66
+              68
             ],
             "desired": [
-              66
+              68
             ]
           },
           {
             "section": ".data.data_ov006_021389f0",
             "original": [
-              27
+              16
             ],
             "desired": [
-              27
+              16
             ]
           },
           {
             "section": ".data.data_ov006_02138c48",
             "original": [
-              57
+              59
             ],
             "desired": [
-              57
+              59
             ]
           },
           {
             "section": ".data.data_ov006_02138c60",
             "original": [
-              56
+              58
             ],
             "desired": [
-              56
+              58
             ]
           },
           {
             "section": ".data.data_ov006_02138c78",
             "original": [
-              55
+              57
             ],
             "desired": [
-              55
+              57
             ]
           },
           {
             "section": ".data.data_ov006_02138c90",
             "original": [
-              52
+              54
             ],
             "desired": [
-              52
+              54
             ]
           },
           {
             "section": ".data.data_ov006_02138ca8",
             "original": [
-              51
+              53
             ],
             "desired": [
-              51
+              53
             ]
           },
           {
             "section": ".data.data_ov006_02138cc0",
             "original": [
-              49
+              52
             ],
             "desired": [
-              49
+              52
             ]
           },
           {
             "section": ".data.data_ov006_02138cd8",
             "original": [
-              53
+              55
             ],
             "desired": [
-              53
+              55
             ]
           },
           {
             "section": ".data.data_ov006_02138cf0",
             "original": [
-              54
+              56
             ],
             "desired": [
-              54
+              56
             ]
           },
           {
@@ -2428,55 +2449,55 @@
           {
             "section": ".rodata.data_ov006_0212ebe8",
             "original": [
-              26
+              27
             ],
             "desired": [
-              26
+              27
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ebf0",
             "original": [
-              13
+              19
             ],
             "desired": [
-              13
+              19
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ebf8",
             "original": [
-              24
+              33
             ],
             "desired": [
-              24
+              33
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec00",
             "original": [
-              29
+              23
             ],
             "desired": [
-              29
+              23
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec10",
             "original": [
-              32
+              28
             ],
             "desired": [
-              32
+              28
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec18",
             "original": [
-              21
+              38
             ],
             "desired": [
-              21
+              38
             ]
           },
           {
@@ -2500,82 +2521,91 @@
           {
             "section": ".rodata.data_ov006_0212ec38",
             "original": [
-              38
+              31
             ],
             "desired": [
-              38
+              31
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec40",
             "original": [
-              28
+              21
             ],
             "desired": [
-              28
+              21
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec48",
             "original": [
-              22
+              29
             ],
             "desired": [
-              22
+              29
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec50",
             "original": [
-              31
+              13
             ],
             "desired": [
-              31
+              13
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec58",
             "original": [
-              33
+              22
             ],
             "desired": [
-              33
+              22
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec60",
             "original": [
-              12
+              39
             ],
             "desired": [
-              12
+              39
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec68",
             "original": [
-              25
+              34
             ],
             "desired": [
-              25
+              34
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec70",
             "original": [
-              16
+              18
             ],
             "desired": [
-              16
+              18
             ]
           },
           {
             "section": ".rodata.data_ov006_0212ec78",
             "original": [
-              23
+              26
             ],
             "desired": [
-              23
+              26
+            ]
+          },
+          {
+            "section": ".data.sPachinko2PaddleGatherTargets",
+            "original": [
+              48
+            ],
+            "desired": [
+              48
             ]
           }
         ],
@@ -2584,28 +2614,27 @@
             {
               "section": ".bss",
               "original": [
-                218,
-                249,
-                260
+                220,
+                251,
+                262
               ],
               "desired": [
-                260,
-                218,
-                249
+                262,
+                220,
+                251
               ],
               "slots": [
-                218,
-                249,
-                260
+                220,
+                251,
+                262
               ]
             },
             {
-              "section": ".data",
+              "section": ".data.gap59",
               "original": [
-                18,
+                24,
                 46,
-                58,
-                200,
+                60,
                 202,
                 204,
                 206,
@@ -2614,7 +2643,7 @@
                 212,
                 214,
                 216,
-                219,
+                218,
                 221,
                 223,
                 225,
@@ -2629,55 +2658,55 @@
                 243,
                 245,
                 247,
-                250,
+                249,
                 252,
                 254,
                 256,
                 258,
-                263,
-                264
+                260,
+                265,
+                266
               ],
               "desired": [
-                227,
-                200,
-                231,
-                206,
-                212,
+                229,
                 202,
-                225,
+                233,
                 208,
+                214,
+                204,
+                227,
                 210,
-                18,
+                212,
+                24,
+                260,
                 258,
                 256,
                 254,
                 252,
-                250,
-                233,
-                214,
-                221,
-                229,
-                204,
-                216,
-                219,
-                223,
                 235,
+                216,
+                223,
+                231,
+                206,
+                218,
+                221,
+                225,
+                237,
+                249,
                 247,
                 245,
                 243,
                 241,
                 239,
-                237,
-                264,
-                263,
-                46,
-                58
+                266,
+                265,
+                60,
+                46
               ],
               "slots": [
-                18,
+                24,
                 46,
-                58,
-                200,
+                60,
                 202,
                 204,
                 206,
@@ -2686,7 +2715,7 @@
                 212,
                 214,
                 216,
-                219,
+                218,
                 221,
                 223,
                 225,
@@ -2701,13 +2730,14 @@
                 243,
                 245,
                 247,
-                250,
+                249,
                 252,
                 254,
                 256,
                 258,
-                263,
-                264
+                260,
+                265,
+                266
               ]
             }
           ],
@@ -3464,7 +3494,7 @@
       "target_address": "0x02138c48"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3474,7 +3504,7 @@
       "target_address": "0x0212ec78"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db70",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3484,7 +3514,7 @@
       "target_address": "0x0212ec70"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db74",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3494,7 +3524,7 @@
       "target_address": "0x0212ec68"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db78",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3504,7 +3534,7 @@
       "target_address": "0x0212ec60"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3514,7 +3544,7 @@
       "target_address": "0x0212ec00"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db80",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3524,7 +3554,7 @@
       "target_address": "0x0212ebd0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db84",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3534,7 +3564,7 @@
       "target_address": "0x0212ec58"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db88",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3544,7 +3574,7 @@
       "target_address": "0x0212ec50"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3554,7 +3584,7 @@
       "target_address": "0x0212ebf0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db90",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3564,7 +3594,7 @@
       "target_address": "0x0212ec48"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db94",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3574,7 +3604,7 @@
       "target_address": "0x0212ec40"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db98",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3584,7 +3614,7 @@
       "target_address": "0x0212ebe8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3594,7 +3624,7 @@
       "target_address": "0x021019e0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da64",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3604,7 +3634,7 @@
       "target_address": "0x02104258"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3614,7 +3644,7 @@
       "target_address": "0x021012cc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da74",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3624,7 +3654,7 @@
       "target_address": "0x02103360"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3634,7 +3664,7 @@
       "target_address": "0x02103870"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da84",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3644,7 +3674,7 @@
       "target_address": "0x02102f3c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3654,7 +3684,7 @@
       "target_address": "0x02101af0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da94",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3664,7 +3694,7 @@
       "target_address": "0x02103608"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213da9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3674,7 +3704,7 @@
       "target_address": "0x0210371c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213daa4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3684,7 +3714,7 @@
       "target_address": "0x0212ec8c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213daa8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3694,7 +3724,7 @@
       "target_address": "0x0212ec9c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213daac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3704,7 +3734,7 @@
       "target_address": "0x020ff690"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213dab4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3714,7 +3744,7 @@
       "target_address": "0x020ff8c8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213dabc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3724,7 +3754,7 @@
       "target_address": "0x020ffb54"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213dac4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3734,7 +3764,7 @@
       "target_address": "0x020ffde4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213dacc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3744,7 +3774,7 @@
       "target_address": "0x020fff54"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213dad4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3754,7 +3784,7 @@
       "target_address": "0x02101224"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213dadc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3764,7 +3794,7 @@
       "target_address": "0x0210397c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213dae4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3774,7 +3804,7 @@
       "target_address": "0x021020c4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213daec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3784,7 +3814,7 @@
       "target_address": "0x021016ec"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213daf4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3794,7 +3824,7 @@
       "target_address": "0x02102fe8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213dafc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3804,7 +3834,7 @@
       "target_address": "0x02103994"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db04",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3814,7 +3844,7 @@
       "target_address": "0x02102274"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3824,7 +3854,7 @@
       "target_address": "0x02101e88"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db14",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3834,7 +3864,7 @@
       "target_address": "0x02101088"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3844,7 +3874,7 @@
       "target_address": "0x021009b8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db24",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3854,7 +3884,7 @@
       "target_address": "0x02100b08"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3864,7 +3894,7 @@
       "target_address": "0x02100bac"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db34",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3874,7 +3904,7 @@
       "target_address": "0x02100d90"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3884,7 +3914,7 @@
       "target_address": "0x02100e3c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db44",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3894,7 +3924,7 @@
       "target_address": "0x02100f7c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3904,7 +3934,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db50",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3914,7 +3944,7 @@
       "target_address": "0x0213db58"
     },
     {
-      "section": ".data",
+      "section": ".data.gap59",
       "source": "0x0213db54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3922,6 +3952,66 @@
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x020bbf6c"
+    },
+    {
+      "section": ".data.sPachinko2PaddleGatherTargets",
+      "source": "0x0213db9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212ec28",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212ec28"
+    },
+    {
+      "section": ".data.sPachinko2PaddleGatherTargets",
+      "source": "0x0213dba0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212ec20",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212ec20"
+    },
+    {
+      "section": ".data.sPachinko2PaddleGatherTargets",
+      "source": "0x0213dba4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212ec18",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212ec18"
+    },
+    {
+      "section": ".data.sPachinko2PaddleGatherTargets",
+      "source": "0x0213dba8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212ebf8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212ebf8"
+    },
+    {
+      "section": ".data.sPachinko2PaddleGatherTargets",
+      "source": "0x0213dbac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212ec10",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212ec10"
+    },
+    {
+      "section": ".data.sPachinko2PaddleGatherTargets",
+      "source": "0x0213dbb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212ec38",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212ec38"
     }
   ],
   "defined_symbol_renames": [
