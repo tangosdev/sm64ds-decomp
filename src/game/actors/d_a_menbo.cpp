@@ -107,6 +107,10 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 static inline int IsGameMode(int mode) {
     return gGameMode == mode;
 }
@@ -610,9 +614,8 @@ void daMenbo_c::OnPendingDestroy()
 /* Skip the frame while the Yoshi-mouth flag is set. */
 int daMenbo_c::Render()
 {
-    unsigned int f = mFlags;
-    int b = ((f & 0x40000) != 0);
-    if (b) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
     mAnmModel.Render(&mScale);
     return 1;
 }
