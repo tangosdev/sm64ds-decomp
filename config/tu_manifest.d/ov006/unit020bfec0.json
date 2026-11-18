@@ -2212,29 +2212,29 @@
       "evidence": "Compiler PMF literal: Dealer::StartShuffle uses &Dealer::StateShuffle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartShuffle+0xac loads 0x0213ac60 in the ROM) and by its own relocation target (Dealer::StateShuffle at 0x020c14bc). Re-keyed from @1106 to @1104 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1106 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
     },
     {
-      "from": "@1373",
+      "from": "@1371",
       "to": "pmf_MascotWalker_StateWalk",
-      "evidence": "Compiler PMF literal: MascotWalker::StartNextPath uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartNextPath+0x15c loads 0x0213ac68 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1373 to @1371 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1373 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: MascotWalker::StartNextPath uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartNextPath+0x15c loads 0x0213ac68 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1373 to @1371 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1373 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1373 to @1371 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
-      "from": "@1407",
+      "from": "@1405",
       "to": "pmf_MascotWalker_StatePause",
-      "evidence": "Compiler PMF literal: MascotWalker::StartPause uses &MascotWalker::StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartPause+0x5c loads 0x0213ac70 in the ROM) and by its own relocation target (MascotWalker::StatePause at 0x020c0264). Re-keyed from @1407 to @1405 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1407 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: MascotWalker::StartPause uses &MascotWalker::StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartPause+0x5c loads 0x0213ac70 in the ROM) and by its own relocation target (MascotWalker::StatePause at 0x020c0264). Re-keyed from @1407 to @1405 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1407 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1407 to @1405 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
-      "from": "@1335",
+      "from": "@1333",
       "to": "pmf_MascotWalker_StateWalk_2",
-      "evidence": "Compiler PMF literal: MascotWalker::Update uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::Update+0x140 loads 0x0213ac78 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1335 to @1333 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1335 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: MascotWalker::Update uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::Update+0x140 loads 0x0213ac78 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1335 to @1333 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1335 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1335 to @1333 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
-      "from": "@1279",
+      "from": "@1277",
       "to": "pmf_Dealer_StateWin",
-      "evidence": "Compiler PMF literal: Dealer::PlayWin uses &Dealer::StateWin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayWin+0x64 loads 0x0213ac80 in the ROM) and by its own relocation target (Dealer::StateWin at 0x020c0b74). Re-keyed from @1279 to @1277 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1279 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::PlayWin uses &Dealer::StateWin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayWin+0x64 loads 0x0213ac80 in the ROM) and by its own relocation target (Dealer::StateWin at 0x020c0b74). Re-keyed from @1279 to @1277 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1279 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1279 to @1277 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
-      "from": "@1415",
+      "from": "@1413",
       "to": "pmf_MascotWalker_StateWalk_3",
-      "evidence": "Compiler PMF literal: MascotWalker::StatePause uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StatePause+0x9c loads 0x0213ac88 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1415 to @1413 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1415 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: MascotWalker::StatePause uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StatePause+0x9c loads 0x0213ac88 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1415 to @1413 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1415 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1415 to @1413 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
       "from": "@1086",
@@ -2242,24 +2242,24 @@
       "evidence": "Compiler PMF literal: Dealer::IsIdleAtRest uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsIdleAtRest+0x60 loads 0x0213ac90 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760). Re-keyed from @1086 to @1084 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1086 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
     },
     {
-      "from": "@1265",
+      "from": "@1263",
       "to": "pmf_Dealer_StateLose",
-      "evidence": "Compiler PMF literal: Dealer::PlayLose uses &Dealer::StateLose, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayLose+0x84 loads 0x0213ac98 in the ROM) and by its own relocation target (Dealer::StateLose at 0x020c0ce8). Re-keyed from @1265 to @1263 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1265 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::PlayLose uses &Dealer::StateLose, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayLose+0x84 loads 0x0213ac98 in the ROM) and by its own relocation target (Dealer::StateLose at 0x020c0ce8). Re-keyed from @1265 to @1263 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1265 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1265 to @1263 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
-      "from": "@1245",
+      "from": "@1243",
       "to": "pmf_Dealer_StateSwap",
-      "evidence": "Compiler PMF literal: Dealer::StartSwap uses &Dealer::StateSwap, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartSwap+0x6c loads 0x0213aca0 in the ROM) and by its own relocation target (Dealer::StateSwap at 0x020c0df0). Re-keyed from @1245 to @1243 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1245 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::StartSwap uses &Dealer::StateSwap, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartSwap+0x6c loads 0x0213aca0 in the ROM) and by its own relocation target (Dealer::StateSwap at 0x020c0df0). Re-keyed from @1245 to @1243 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1245 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1245 to @1243 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
-      "from": "@1225",
+      "from": "@1223",
       "to": "pmf_Dealer_StateReveal",
-      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x8c loads 0x0213aca8 in the ROM) and by its own relocation target (Dealer::StateReveal at 0x020c0f9c). Re-keyed from @1225 to @1223 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1225 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x8c loads 0x0213aca8 in the ROM) and by its own relocation target (Dealer::StateReveal at 0x020c0f9c). Re-keyed from @1225 to @1223 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1225 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1225 to @1223 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
-      "from": "@1222",
+      "from": "@1220",
       "to": "pmf_Dealer_StateDeal_2",
-      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x88 loads 0x0213acb0 in the ROM) and by its own relocation target (Dealer::StateDeal at 0x020c11c0). Re-keyed from @1222 to @1220 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1222 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x88 loads 0x0213acb0 in the ROM) and by its own relocation target (Dealer::StateDeal at 0x020c11c0). Re-keyed from @1222 to @1220 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1222 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1222 to @1220 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
     },
     {
       "from": "@1186",
