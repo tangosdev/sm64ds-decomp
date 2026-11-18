@@ -51,7 +51,6 @@ enum d_a_nknk_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 
@@ -640,7 +639,7 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
     MtxStack::transS(v.x, v.y, v.z);
     MtxStack::YrotM(mAngle.y);
     /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
     /* No drop shadow while in Yoshi's mouth. */
     int inMouth = (mFlags & 0x40000) != 0;
     if (inMouth != 0)

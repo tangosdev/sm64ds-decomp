@@ -38,7 +38,7 @@ struct daEykn_c : dActor_c {
     dCcAcPos_c mdCcAcPos_c;            /* 0x174 */
     /* The shadow's Matrix4x3, spelled flat: a Matrix4x3 member holds a Vector3,
        whose inline destructor reorders this class's D1, D0 and D2 output. */
-    s32 mShadowMat[12];        /* 0x1b4 -- identity; [9..11] track the position */
+    Matrix4x3 mShadowMat;        /* 0x1b4 -- identity; [9..11] track the position */
     const State *mState;       /* 0x1e4 -- current row of the state table */
     s32 mStateID;              /* 0x1e8 -- 0 wait, 1 attack, 2 die; set by each init */
     daPly_c *mTarget;          /* 0x1ec -- the player being watched, or null */

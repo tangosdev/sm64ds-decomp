@@ -73,7 +73,6 @@ enum d_a_btn_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx_trig.h"
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. It
@@ -85,9 +84,6 @@ void StopLoadedMusic_Layer3(void);
 }
 
 struct CLPS_Block;
-
-/* The matrix copies go through Mtx43, one 0x30-byte block copy. Matrix4x3's
-   own assignment goes member by member through Vector3 and comes out longer. */
 
 extern "C" {
 /* ---- this TU ---- */
@@ -1381,7 +1377,7 @@ void daBtn_c::func_ov079_02124188()
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (mAngle.y + mBodyYaw));
 
-    *(Mtx43 *)&mShadowMatrix = *(Mtx43 *)&data_020a0e68;
+    mShadowMatrix = data_020a0e68;
 
     if (mShouldRender == 0)
         return;
@@ -1417,7 +1413,7 @@ void daBtn_c::func_ov079_02124008()
     }
 
     off = (n + 1) * ((s - 0x1000) * 0x168);
-    *(Mtx43 *)&mMeshMatrix = *(Mtx43 *)&mAnmModel.mat4x3;
+    mMeshMatrix = mAnmModel.mat4x3;
 
     Matrix4x3_ApplyInPlaceToRotationY(&mMeshMatrix, mBodyYaw);
     if (mState != 1 && mState != 7) {

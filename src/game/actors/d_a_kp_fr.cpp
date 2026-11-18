@@ -14,8 +14,6 @@
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *   mwcc emits one .text section per ordinary definition in reverse source
  *   order; the inline destructor group comes out retail D1 then D0, no D2.
- *   Mtx43, the flat type for the IDENTITY_MATRIX4X3 copy: the nested
- *   math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes it.
  *   fx32[3] locals instead of Vector3, which declares its own
  *   destructor.
  *   FX_MUL's 64-bit product (one smull) in func_ov070_02121d50 is the
@@ -53,7 +51,6 @@ SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
-#include "private/mtx43.h"
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -69,7 +66,7 @@ int daKpFr_c::InitResources()
     mScale.y = 0x1000;
     mScale.z = 0x1000;
     func_ov070_02122044(0);
-    *(Mtx43 *)&mMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+    mMatrix = IDENTITY_MATRIX4X3;
     return 1;
 }
 

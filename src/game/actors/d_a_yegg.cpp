@@ -84,7 +84,6 @@
 #include "daBtn_c.h"
 #include "daDsn_c.h"
 #include "math/Approach.h"
-#include "private/mtx43.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 
@@ -121,8 +120,7 @@ extern SharedFilePtr data_ov002_0210e6b0;
 extern SharedFilePtr data_ov002_0210eb78;
 extern const s16 data_ov002_021000a8[];
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
-   clash with these. The copies go through the flat Mtx43: assigning this
-   TU's nested Matrix4x3 grows the object by 0x30 bytes. */
+   clash with these. */
 extern Matrix4x3 data_020a0e68;
 
 extern int func_02035638(u8 *p);
@@ -954,17 +952,17 @@ void daYegg_c::UpdateShadow() {
     if (r5 <= 0x1000) r5 = 0x1000;
     r4 = 0x50000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
-    Matrix4x3_FromRotationY(mShadowMtx, mAngle.y);
-    mShadowMtx[9] = mPos.x >> 3;
-    mShadowMtx[10] = mPos.y >> 3;
-    mShadowMtx[11] = mPos.z >> 3;
+    Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
+    mShadowMtx.m[9] = mPos.x >> 3;
+    mShadowMtx.m[10] = mPos.y >> 3;
+    mShadowMtx.m[11] = mPos.z >> 3;
     b = (mFlags & 0x40000) ? 1 : 0;
     if (b == 0 && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
         !mPlayer->func_ov002_020d0d2c()) {
         if (func_ov002_020ec654() == 0) {
-            DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, r4, r5 + 0x28000, 0xf);
+            DropShadowRadHeight(mShadowModel, mShadowMtx, r4, r5 + 0x28000, 0xf);
         } else {
-            DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
+            DropShadowScaleXYZ(mShadowModel, mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
         }
     }
 }
@@ -986,7 +984,7 @@ void daYegg_c::UpdateModelMatrix() {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
     if (on && mPlayer) {
         Vector3 v(0, 0, 0);
-        *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)mPlayer->mCarryMatrix;
+        data_020a0e68 = *mPlayer->mCarryMatrix;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
         v.x = data_020a0e68.m[9];
@@ -1001,7 +999,7 @@ void daYegg_c::UpdateModelMatrix() {
                               FX_MUL(mPos.y + 0x14000, 0x200),
                               ((((long long)mPos.z << 9) + 0x800) >> 12));
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -21,9 +21,6 @@ comment leftovers:
  *     carry-offset vectors are file-scope objects at the end of this file
  *     (folded sinit 0x0212fa40). The records stay StateFn[2]; the sinit
  *     pairs they copy from are unlicensed .data descriptors.
- *   - Matrix copies go through the flat Mtx43: math/Matrix.h's Matrix4x3
- *     is the one this file sees, and assigning it is not the ROM's block
- *     copy (the object grows by 0x30 bytes).
  *   - Position locals are Vector3. Several are written and never read
  *     (StateIntroMain's pos, StateApproachInit's look/pos); Vector3's
  *     declared destructor is what keeps those stores and frame slots.
@@ -54,7 +51,6 @@ enum daC_Jugem_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 
 /* File-scope objects at the end of this file construct the three resource
@@ -734,10 +730,10 @@ void daC_Jugem_c::UpdateShadow()
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel1.mat4x3 = data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
-    *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
+    mShadowMat1 = data_020a0e68;
+    DropShadowRadHeight(mShadowModel1, mShadowMat1, 0x46000, 0x258000, 0xf);
 }
 
 /* The ambient variant's two shadows: one at Lakitu's own position, one
@@ -757,12 +753,12 @@ void daC_Jugem_c::UpdateShadowPlayer()
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel1.mat4x3 = data_020a0e68;
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
-    *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
+    mShadowMat1 = data_020a0e68;
 
-    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel1, mShadowMat1, 0x46000, 0x258000, 0xf);
 
     pl = ClosestPlayer();
     if (pl == 0) return;
@@ -803,8 +799,8 @@ void daC_Jugem_c::UpdateShadowPlayer()
 
     pl->func_ov002_020e4374(&p1, &p2);
 
-    *(Mtx43 *)&mShadowMat2 = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mShadowMat2, p2, p1, 0xf);
+    mShadowMat2 = data_020a0e68;
+    DropShadowRadHeight(mShadowModel2, mShadowMat2, p2, p1, 0xf);
 }
 
 int daC_Jugem_c::CleanupResources()

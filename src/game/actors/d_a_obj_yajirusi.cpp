@@ -38,8 +38,6 @@
  * - Kill copies dustPos memberwise. Vector3's destructor turns a
  *   whole-object assignment into ldm/stm, four instructions where the ROM
  *   stores six.
- * - mShadowMat stays 0x30 raw bytes at +0x348. A Matrix4x3 member
- *   would run Vector3's destructor from this class's D1.
  * - g_profile_YAJIRUSI_R/L live outside this TU.
  * - _ZN7Vector3D1Ev is vague linkage, licensed as a deadstrip
  *   duplicate of arm9 0x020072c0. This TU does not rehome it.
@@ -130,7 +128,7 @@ int daObjYajirusi_c::Behavior() {
         return 1;
     mMeshCollider.SetClipOffsetY(0xc0000);
     mMeshCollider.SetClipRadius(0xe0000);
-    DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x10e000, 0x64000, 0x46000, 15);
+    DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x10e000, 0x64000, 0x46000, 15);
     IsClsnInRangeOnScreen(0x600000, 0);
     return 1;
 }
@@ -203,10 +201,10 @@ void daObjYajirusi_c::Kill() {
 /* Shadow matrix at mShadowMat: rotation from mAngle.y, translation
  * mPos >> 3 (model matrices are in eighths of a unit). */
 void daObjYajirusi_c::UpdateShadowMatrix() {
-    Matrix4x3_FromRotationY(mShadowMat, mAngle.y);
-    ((Matrix4x3 *)mShadowMat)->m[9] = mPos.x >> 3;
-    ((Matrix4x3 *)mShadowMat)->m[10] = mPos.y >> 3;
-    ((Matrix4x3 *)mShadowMat)->m[11] = mPos.z >> 3;
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = mPos.y >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
 }
 
 // 0x02137c2c (0x60), 0x02137be0 (0x4c)

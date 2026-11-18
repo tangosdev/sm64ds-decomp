@@ -56,7 +56,6 @@
 #include "dBgCh_Actr.h"
 #include "Sound.h"
 #include "cstd.h"
-#include "private/mtx43.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
@@ -735,10 +734,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
-        /* Vector3's constructor makes Matrix4x3's own assignment copy the
-           rotation and the translation separately (.text grows by 0x1c
-           bytes). The flat Mtx43 copy is the one this function's bytes are. */
-        *(Mtx43 *)&anim.mat4x3 = *(Mtx43 *)&data_020a0e68;
+        anim.mat4x3 = data_020a0e68;
     }
     return 1;
 }

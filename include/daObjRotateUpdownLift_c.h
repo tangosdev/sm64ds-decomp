@@ -45,9 +45,8 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     /* The drop shadow's matrix: func_ov091_02131160 builds a Y rotation here,
        stores position >> 3 in its translation row (0x36c..0x374) and hands it
        to dActor_c::DropShadowScaleXYZ as the Matrix4x3 & after mShadowModel.
-       Raw bytes: a Matrix4x3 member emits _ZN9Matrix4x3D1Ev in the TU and
-       renumbers its @NNN (measured). Was pad_348. */
-    u8 mShadowMat[0x30];         /* 0x348 */
+       Was pad_348. */
+    Matrix4x3 mShadowMat;         /* 0x348 */
     s32 mSoundHandle;            /* 0x378 */
     s32 mGroundY;            /* 0x37c */
     s16 mSpawnAngleX;            /* 0x380 */

@@ -85,7 +85,6 @@
 #include "daStar_c.h"
 #include "dActor_c.h"
 #include "dCc_c.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 namespace cstd {
@@ -120,9 +119,6 @@ enum {
 
 /* The daPly_c::Hurt call and chain-link arithmetic below use NitroSDK
    VecFx32; the collision offset uses the real Vector3 interface. */
-
-/* func_ov100_02143b68 copies its identity matrix through the flat Mtx43: a
-   copy through the C++ Matrix4x3 splits into two block moves here. */
 
 /* The state machine's pointer-to-member pair. The `self` type is a stand-in,
    NOT the real dActor_c: a pointer-to-member on a non-polymorphic,
@@ -502,7 +498,7 @@ int daWanwan2_c::func_ov100_02143b18(ChompState *p) {
    link's position (mLinkPos >> 3) and a smaller drop shadow (radius 120
    units, depth 500 units). */
 void daWanwan2_c::func_ov100_02143b68() {
-    Mtx43 tmp;
+    Matrix4x3 tmp;
     int i;
     dExtSimpleModel_c *mdst;
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
@@ -510,11 +506,11 @@ void daWanwan2_c::func_ov100_02143b68() {
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
-    tmp = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+    tmp = IDENTITY_MATRIX4X3;
     i = 0;
     mdst = mModels;
     for (; i < daWanwan2_NUM_LINKS; i++) {
-        *(Mtx43 *)&mdst->mat4x3 = tmp;
+        mdst->mat4x3 = tmp;
         mModels[i].mat4x3.m[9] = mLinkPos[i].x >> 3;
         mModels[i].mat4x3.m[10] = mLinkPos[i].y >> 3;
         mModels[i].mat4x3.m[11] = mLinkPos[i].z >> 3;

@@ -20,9 +20,6 @@
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *   mwcc emits one .text section per ordinary definition in reverse source
  *   order; the inline destructor group comes out retail D1 then D0, no D2.
- *   Mtx43, the flat type for InitResources' IDENTITY_MATRIX4X3 copy. This
- *   TU uses the nested Matrix4x3 (.t) that math/Matrix.h brings in via
- *   dExtAnmModel_c.h; putting common.h first would drop .t.
  *   ExecuteKnockedAway calls dBgCh_Actr_UpdateDiscreteNoLava_veneer: the
  *   veneer is the retail call destination.
  */
@@ -48,7 +45,6 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 #include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -115,7 +111,7 @@ int daKrpa_c::InitResources() {
     mScale.x = 0x1000;
     mScale.y = 0x1000;
     mScale.z = 0x1000;
-    *(Mtx43 *)&mMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+    mMatrix = IDENTITY_MATRIX4X3;
 
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);

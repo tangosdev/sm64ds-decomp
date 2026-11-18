@@ -74,16 +74,12 @@ enum daObjTatefuda_c_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
  * each of these before compiling; a real header should usually win. */
-/* The model-matrix copies go through Mtx43: copying that word union retains
- * the ROM block moves in C++ under 2004/b56, where Matrix4x3's own assignment
- * goes member by member. */
 
 /* shadow typedef 's32' */
 typedef int s32;
@@ -979,7 +975,7 @@ void daObjTatefuda_c::AttachToHolder() {
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&body->mat4x3;
+    data_020a0e68 = body->mat4x3;
     MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
@@ -1002,7 +998,7 @@ void daObjTatefuda_c::AttachToHolder() {
     mPos.x = lo.x;
     mPos.y = lo.y;
     mPos.z = lo.z;
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1021,7 +1017,7 @@ void daObjTatefuda_c::RebuildModelMatrix() {
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* Rebuild the drop shadow's matrix: a rotation about Y by the sign's angle,

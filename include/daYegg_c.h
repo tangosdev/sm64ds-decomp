@@ -68,7 +68,7 @@ struct daYegg_c : dEnemyBase_c {
        dActor_c::DropShadow* calls, so it is the drop shadow's transform; the
        shadow code builds it from mAngle.y and mPos >> 3 (words 9..11 are the
        translation). */
-    s32 mShadowMtx[12];                         /* 0x390 */
+    Matrix4x3 mShadowMtx;                         /* 0x390 */
     /* InitResources copies the actor's own position here once, and nothing
        migrated writes it again. */
     Vector3 mSpawnPos; /* 0x3c0 */

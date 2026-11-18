@@ -20,7 +20,6 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
-#include "private/mtx43.h"
 #include "SaveBlock.h"
 
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
@@ -246,13 +245,11 @@ int daObj_Mip_Key_c::ChangeState(MipKeyState *p) {
 // Build the render matrix and place the cylinder shadow.
 
 void daObj_Mip_Key_c::UpdateModelAndShadow() {
-    // Whole Matrix4x3 assignment emits six extra words under 2004/b56.
-    // The model-matrix copy goes through the flat Mtx43 instead.
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    *(Mtx43 *)(&mModel.mat4x3) = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x32000) >> 3, mPos.z >> 3);
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x23000, 0x12c000, 15);
 }

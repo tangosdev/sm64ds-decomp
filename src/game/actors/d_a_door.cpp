@@ -107,15 +107,11 @@ enum daDoor_c_AssetId {
 #include "dExtFrameCtrl_c.h"
 #include "dActor_c.h"
 #include "Sound.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
 /* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
-/* The door's matrix copies go through the flat Mtx43: a copy through the
-   C++ Matrix4x3 is the struct-copy DIFF of notes/cpp-class-form.md (.text
-   grows by 0x3c bytes). */
 /* One entry of data_ov100_02148204, indexed by param1 (the variant). */
 struct DoorEntry {
     SharedFilePtr *file;    /* 0x0: the door model */
@@ -1093,13 +1089,13 @@ s32 daDoor_c::InitResources() {
     Vec3_Asr(&tmp, &mPos, 3);
     MtxStack::transS(tmp.x, tmp.y, tmp.z);
     MtxStack::YrotM(mAngle.y);
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 
     if (e->keyFile != 0) {
         mKeyModel = new dExtSimpleModel_c;
         f = dExtSimpleModel_c::LoadFile(*e->keyFile);
         mKeyModel->SetFile((BMD_File *)f, 1, -1);
-        *(Mtx43 *)&mKeyModel->mat4x3 = *(Mtx43 *)&data_020a0e68;
+        mKeyModel->mat4x3 = data_020a0e68;
     }
 
     {

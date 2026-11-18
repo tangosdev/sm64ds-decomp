@@ -22,8 +22,6 @@
  * - func_02012694 and Vec3_Add have no shared header, so
  *   they keep a local extern "C" block. data_ov079_02128300 / 021282f0 are
  *   the model handles, in overlay data this TU does not own.
- * - Mtx43 keeps the one 0x30-byte mat4x3 block copy; Matrix4x3's
- *   own memberwise assignment comes out 0x18 bytes longer.
  */
 
 #include "daKlr_c.h"
@@ -35,7 +33,6 @@
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
-#include "private/mtx43.h"
 
 struct BMD_File;
 
@@ -239,7 +236,7 @@ void daKlr_c::UpdateModelAndShadow() {
     mModel.mat4x3.m[11] = mPos.z >> 3;
     /* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
        member through Vector3 and comes out 0x18 bytes longer. */
-    *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)&mModel.mat4x3;
+    mModel2.mat4x3 = mModel.mat4x3;
     DropShadowRadHeight(mShadow, mModel.mat4x3, 0x50000, 0x50000, 15);
 }
 

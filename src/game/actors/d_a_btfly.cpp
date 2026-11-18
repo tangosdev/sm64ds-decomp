@@ -31,9 +31,6 @@
  *   dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc).
  * - State7 func_02035638 is mClsnFlags & 0x10. No method; IsOnGround is
  *   mFlags & 0x10.
- * - Behavior scratch matrix: Matrix4x3 assignment is 0x264 vs 0x22c.
- *   The flat Mtx43 copy is the ROM ldm/stm; the real type's translation is a
- *   Vector3 and runs ~Vector3.
  * - State0: building the angle triple before reading param1 differs by
  *   10 words.
  * - daBtfly_c_classInit and g_profile_BUTTERFLY sit past this text run.
@@ -55,14 +52,10 @@ enum daBtfly_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
-#include "private/mtx43.h"
 #include "LevelRng.h"
 
 /* Lays .text down in source order (see the note at the top). */
 #pragma defer_codegen off
-
-/* The model-matrix copies go through Mtx43, a flat 12-word copy. Assigning
- * Matrix4x3 would run ~Vector3 on its translation. */
 
 typedef void (daBtfly_c::*ButterflyState)();
 
@@ -449,11 +442,11 @@ int daBtfly_c::Behavior()
         mAngle.y = mPrevAngle.y;
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         if (mUseAnimModel != 0) {
-            *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+            mAnmModel.mat4x3 = data_020a0e68;
             DropShadowRadHeight(mShadowModel1, mAnmModel.mat4x3, 0x14000, 0x12c000, 0xf);
             mAnmModel.Advance();
         } else {
-            *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+            mModel.mat4x3 = data_020a0e68;
             DropShadowRadHeight(mShadowModel2, mModel.mat4x3, 0x64000, 0x12c000, 0xf);
         }
     }

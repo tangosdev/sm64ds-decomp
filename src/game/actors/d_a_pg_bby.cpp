@@ -19,13 +19,10 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
-/* The carry matrix is copied through the flat Mtx43: assigning Matrix4x3
-   grows .text by 0x1c bytes. */
 /* Descriptive local types and object names, not recovered source spellings.
  * dExtSimpleModel_c and animation handles use different veneers. */
 struct PgBbyModelFile : SharedFilePtr {
@@ -523,7 +520,7 @@ void daPgBby_c::UpdateModelAndShadow() {
             idx = (idx + 2) & 0xff;
         }
         carry = UpdateCarry(*mCarrier, gPenguinBabyCarryOffsets[idx]);
-        *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)carry;
+        mAnmModel.mat4x3 = *carry;
     } else {
         Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
         mAnmModel.mat4x3.m[9] = mPos.x >> 3;

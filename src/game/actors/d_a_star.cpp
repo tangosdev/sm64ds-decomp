@@ -72,7 +72,6 @@ enum daStar_c_AssetId {
 #include "daSoundObj_c.h"
 #include "dExtSimpleModel_c.h"
 #include "Sound.h"
-#include "private/mtx43.h"
 #include "cstd.h"
 #include "Event.h"
 #include "math/Approach.h"
@@ -81,9 +80,6 @@ enum daStar_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "KuppaScript.h"
 
-/* Plain-data stand-in. Matrix4x3 carries a declared destructor, so a local
- * or a struct copy of one adds cleanup code the cartridge does not have; whole
- * matrices are copied through the same-layout Mtx43. */
 /* A state handler: data_ov002_021109d8 holds one pointer-to-member per
    daStar_c::State. */
 typedef void (daStar_c::*StateHandler)();
@@ -150,10 +146,8 @@ extern void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" {
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
-/* local extern: math/MtxStack.h takes Matrix4x3 pointers, and
-   func_ov002_020e8244 passes an Mtx43: its scratch copy cannot be a Matrix4x3,
-   whose Vector3 member brings a destructor (_ZN9Matrix4x3D1Ev) into the TU. */
-extern void MTX_Concat43(void *out, void *a, void *b);
+/* local extern: in this block's void * spelling, like the helpers above. */
+extern void MTX_Concat43(void *a, void *b, void *out);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -677,7 +671,7 @@ int daStarBase_c::Behavior()
         mModel.mat4x3.m[11] = mPos.z >> 3;
     }
     if (mBits.visible) {
-        *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+        mShadowMtx = IDENTITY_MATRIX4X3;
         mShadowMtx.m[9] = mPos.x >> 3;
         mShadowMtx.m[10] = mPos.y >> 3;
         mShadowMtx.m[11] = mPos.z >> 3;
@@ -2176,11 +2170,7 @@ void daStar_c::UpdateModelMatrix() {
         Vec3_Asr(&v, &mPos, 3);
         Matrix4x3_FromTranslation(&mAnmModel1.mat4x3, v.x, v.y, v.z);
     } else if (mCarryMatrix != 0) {
-        /* Mtx43 overlay: the class headers above switch Matrix4x3 to the
-         * structured math/Matrix.h spelling, whose struct-copy codegen
-         * differs from the flat 12-word copy this shard proved. Mtx43 is the
-         * same 12 words; proven byte-identical in isolation. */
-        *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)mCarryMatrix;
+        mAnmModel1.mat4x3 = *mCarryMatrix;
     } else if (!mBits.noSpin) {
         ang = &mAngle.y;
         t = *ang + 0xc00;
@@ -2196,7 +2186,7 @@ void daStar_c::UpdateModelMatrix() {
         mAnmModel1.mat4x3.m[11] = mPos.z >> 3;
     }
 
-    *(Mtx43 *)&mAnmModel2.mat4x3 = *(Mtx43 *)&mAnmModel1.mat4x3;
+    mAnmModel2.mat4x3 = mAnmModel1.mat4x3;
     DrawShadow();
 }
 
@@ -2237,13 +2227,13 @@ void daStar_c::DrawShadow() {
 
     t = delta + 0x28000;
 
-    *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+    mShadowMtx = IDENTITY_MATRIX4X3;
 
-    mShadowMtx.tx = mPos.x >> 3;
-    mShadowMtx.ty = mPos.y >> 3;
-    mShadowMtx.tz = mPos.z >> 3;
+    mShadowMtx.m[9] = mPos.x >> 3;
+    mShadowMtx.m[10] = mPos.y >> 3;
+    mShadowMtx.m[11] = mPos.z >> 3;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMtx, r8, t, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2258,7 +2248,7 @@ Vector3 daStar_c::func_ov002_020e8244() {
     Vector3 result;
     void *out = &result;
     daStar_c *b = this;
-    Mtx43 local;
+    Matrix4x3 local;
     Vector3 zero;
     zero.x = 0;
     zero.y = 0;
@@ -2271,7 +2261,7 @@ Vector3 daStar_c::func_ov002_020e8244() {
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPos.x, b->mPos.y, b->mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngle.y);
-    local = *(Mtx43 *)b->mAnmModel1.data.transforms;
+    local = *b->mAnmModel1.data.transforms;
     MTX_Concat43(&local, &data_020a0e68, &data_020a0e68);
     b->mCenter.x = data_020a0e68.m[9];
     b->mCenter.y = data_020a0e68.m[10];

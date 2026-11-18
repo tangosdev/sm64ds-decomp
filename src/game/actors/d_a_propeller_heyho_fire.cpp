@@ -23,10 +23,6 @@
  * 0x020feabc..0x020ff014, 13 functions. The out-of-line destructor is
  * the key function.
  */
-// What stays:
-// - UpdateModelMatrix copies the scratch matrix as twelve plain words
-//   through Mtx43; a copy of the C++ Matrix4x3 grows .text by 0x1c bytes.
-
 #pragma defer_codegen off
 
 #include "daPropeller_Heyho_Fire_c.h"
@@ -37,7 +33,6 @@
 #include "Sound.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
-#include "private/mtx43.h"
 
 struct BMD_File;
 
@@ -146,7 +141,7 @@ void daPropeller_Heyho_Fire_c::UpdateModelMatrix() {
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* Releases the shared file InitResources claimed. */

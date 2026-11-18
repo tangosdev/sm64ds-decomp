@@ -164,7 +164,6 @@ struct C { char pad[0x37c]; PMF *pp; };
 
 enum Bool { FALSE, TRUE };
 
-#include "private/mtx43.h"
 
 /* The eight file handles __sinit_d_a_king_donketu.cpp constructs below.
  * Construct writes the u16 file ID at +0, the u8 reference count at +2,

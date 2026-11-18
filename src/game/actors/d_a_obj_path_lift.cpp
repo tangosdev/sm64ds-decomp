@@ -171,16 +171,16 @@ void daObjPathLift_c::UpdateShadow() {
     if (scaleZ < 0)
         scaleZ = -scaleZ;
 
-    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngle.y);
-    mShadowMat[9] = mPos.x >> 3;
-    mShadowMat[10] = (mPos.y - yOff) >> 3;
-    mShadowMat[11] = mPos.z >> 3;
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = (mPos.y - yOff) >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
 
     t = gGameMode == 1;
     if (t != false) {
-        DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x118000, 0x7d0000, scaleZ, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x118000, 0x7d0000, scaleZ, 0xf);
     } else {
-        DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x118000, groundDepth, scaleZ,
+        DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x118000, groundDepth, scaleZ,
                            0xf);
     }
 }

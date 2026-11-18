@@ -48,7 +48,6 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/fx/fx_cp.h"
 
@@ -89,9 +88,6 @@ enum {
 
 /* Particle played at the ball's position where it breaks up. */
 enum { daIbl_PTCL_BREAK = 0xf };
-
-/* The model and shadow matrix copies go through the flat Mtx43: assigning
-   the C++ Matrix4x3 grows .text by 0x34 bytes. */
 
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02038414(void *p);
@@ -234,19 +230,18 @@ void daIbl_c::UpdateWallAndFloor() {
    the air (0x32 + 0x190), and opacity 0xf. "Scale" is mDrawScale.x, 0x1000
    being 1.0. */
 void daIbl_c::UpdateModelMatrix() {
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+    mModel.mat4x3 = IDENTITY_MATRIX4X3;
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
-    Mtx43 *shadow = (Mtx43 *)mShadowMtx;
-    *shadow = *(Mtx43 *)&mModel.mat4x3;
+    mShadowMtx = mModel.mat4x3;
     int k = 0x32;
-    mShadowMtx[10] = (mDrawScale.x * k + mPos.y) >> 3;
+    mShadowMtx.m[10] = (mDrawScale.x * k + mPos.y) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
         k += 0x28;
     else
         k += 0x190;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, mDrawScale.x * 0xc8,
+    DropShadowRadHeight(mShadowModel, mShadowMtx, mDrawScale.x * 0xc8,
                         k * mDrawScale.x, 0xf);
 }
 

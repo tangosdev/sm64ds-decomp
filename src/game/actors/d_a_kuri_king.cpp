@@ -1206,7 +1206,7 @@ void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) {
     v->x = 0;
     v->y = 0;
     v->z = 0;
-    data_020a0e68 = *(struct Matrix4x3 *)self->mBodyMatrix;
+    data_020a0e68 = self->mBodyMatrix;
     boneMat = self->mAnmModel.data.transforms + bone;
     MTX_Concat43(boneMat, &data_020a0e68, &data_020a0e68);
     v->x = data_020a0e68.m[9];
@@ -1222,7 +1222,7 @@ void daKuriKing_c::UpdateBodyMatrix() {
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->mScale.x, this->mScale.y, this->mScale.z);
-    *(struct Matrix4x3 *)this->mBodyMatrix = data_020a0e68;
+    this->mBodyMatrix = data_020a0e68;
 }
 
 /* Sizes the four collision cylinders from the current scale and places the

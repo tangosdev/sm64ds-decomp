@@ -850,8 +850,8 @@ skip_angles:
             pos.y = this->mPos.y;
         Vec3_Asr(&v2, &pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
-        *(Matrix4x3 *)(&this->mShadowMtx) = data_020a0e68;
-        DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMtx, 0x140000, 0x64000,
+        this->mShadowMtx = data_020a0e68;
+        DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, 0x140000, 0x64000,
                             0xf);
     }
 }
