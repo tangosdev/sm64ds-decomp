@@ -7,7 +7,7 @@ void func_ov007_020c0308(u16 *screen, int rows, int palette) {
     u32 i = 0;
     u32 hi;
     u32 n;
-    if ((u32)(rows << 5) == 0)
+    if ((rows << 5) == 0)
         return;
     hi = ((u32)(palette << 28)) >> 16;
     n = rows << 5;

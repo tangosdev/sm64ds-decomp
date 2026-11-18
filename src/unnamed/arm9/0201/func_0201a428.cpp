@@ -19,7 +19,7 @@ extern char OV100_TEXT_START;
 
 void *func_0201a458(void) {
     data_0209d524 = mHeap::Heap_t::CreateRootHeap(
-        &OV075_BSS_END, (unsigned int)(&OV100_TEXT_START - &OV075_BSS_END));
+        &OV075_BSS_END, &OV100_TEXT_START - &OV075_BSS_END);
     return data_0209d524;
 }
 
