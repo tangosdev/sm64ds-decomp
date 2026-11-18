@@ -351,9 +351,9 @@ void UnlockMinigame(int minigame) {
 int func_020135d0(int minigame) {
     int res;
     if (minigame < 28) {
-        res = (data_0209caa0.mg.seenLo & (1 << minigame)) ? 0 : 1;
+        res = !(data_0209caa0.mg.seenLo & (1 << minigame));
     } else {
-        res = (data_0209caa0.mg.seenHi & (1 << (minigame - 28))) ? 0 : 1;
+        res = !(data_0209caa0.mg.seenHi & (1 << (minigame - 28)));
     }
     return res;
 }

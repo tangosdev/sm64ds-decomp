@@ -57,5 +57,5 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
         }
     }
 
-    return (o->state == 3) ? (1) : (0);
+    return o->state == 3;
 }
