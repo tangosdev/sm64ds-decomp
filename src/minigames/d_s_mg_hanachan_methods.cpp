@@ -949,42 +949,27 @@ void dScMgHanachan_c::Wiggler::Retarget(int v) {
 /* Second parameter unused by the body -- DrawField passes an index
    this callee ignores; declaring it keeps the caller's argument setup. */
 int dScMgHanachan_c::Wiggler::GetFrame(int) {
-    int r2 = 0;
+    int frame = 0;
     if (busy != 0) {
-        int r1 = flash;
-        if (r1 > 0x20) {
-            r2 = 1;
-            goto end;
-        }
-        if (r1 > 0x10) {
+        if (flash > 0x20) {
+            frame = 1;
+        } else if (flash > 0x10) {
             face = 3;
-            r2 = 5;
-            goto end;
+            frame = 5;
+        } else if (flash > 0) {
+            frame = 4;
         }
-        if (r1 > 0)
-            r2 = 4;
-        goto end;
+    } else if (state == &Wiggler::StateWait || state == &Wiggler::StateHold) {
+        if (hold < 0x10)
+            frame = 5;
+        else if (hold < 0x20)
+            frame = 4;
+        else
+            frame = 0;
+    } else {
+        frame = 0;
     }
-    if (state == &Wiggler::StateWait)
-        goto C;
-    if (state != &Wiggler::StateHold)
-        goto end0;
-C: {
-    int v = hold;
-    if (v < 0x10) {
-        r2 = 5;
-        goto end;
-    }
-    if (v < 0x20)
-        r2 = 4;
-    else
-        r2 = 0;
-    goto end;
-}
-end0:
-    r2 = 0;
-end:
-    return r2;
+    return frame;
 }
 
 int dScMgHanachan_c::Wiggler::GetFlag(int n) {
@@ -1567,79 +1552,33 @@ s32 dScMgHanachan_c::CleanupResources() {
 }
 
 s32 dScMgHanachan_c::Render() {
-    int i;
-    Wiggler *arr;
-
     DrawScoreTally(0xe0, 0x14, 1);
     HanaPopup_DrawAll();
     StarPopup_Draw();
 
-    {
-        {
-            if (mPhase == &dScMgHanachan_c::Phase_Play) {
-                i = 0;
-                if (sHanaFieldWigglerCount > 0) {
-                    arr = mWiggler;
-                    do {
-                        arr->DrawField();
-                        i++;
-                        arr++;
-                    } while (i < sHanaFieldWigglerCount);
-                }
-                goto tail;
-            }
-        }
-    }
-
-    {
-        {
-            if (mPhase == &dScMgHanachan_c::Phase_Result) {
-                int flag = mHit;
-                if (flag != 0) {
-                    if (mPhaseTimer < 90)
-                        goto do_eac;
-                }
-                if (flag != 0)
-                    goto count_loop;
-                if (mPhaseTimer < 138)
-                    goto do_eac;
-                goto count_loop;
-            do_eac:
-                mTarget->DrawField();
-                goto tail;
-            count_loop:
-                i = 0;
-                if (sHanaFieldWigglerCount > 0) {
-                    arr = mWiggler;
-                    do {
-                        arr->DrawField();
-                        i++;
-                        arr++;
-                    } while (i < sHanaFieldWigglerCount);
-                }
-                goto tail;
-            }
-        }
-    }
-
-    {
-        if (mPhase == &dScMgHanachan_c::Phase_NoneB ||
-            mPhase == &dScMgHanachan_c::Phase_WaitTouch) {
+    if (mPhase == &dScMgHanachan_c::Phase_Play) {
+        for (int i = 0; i < sHanaFieldWigglerCount; i++)
+            mWiggler[i].DrawField();
+    } else if (mPhase == &dScMgHanachan_c::Phase_Result) {
+        if ((mHit != 0 && mPhaseTimer < 90) || (mHit == 0 && mPhaseTimer < 138)) {
             mTarget->DrawField();
+        } else {
+            for (int i = 0; i < sHanaFieldWigglerCount; i++)
+                mWiggler[i].DrawField();
         }
+    } else if (mPhase == &dScMgHanachan_c::Phase_NoneB ||
+               mPhase == &dScMgHanachan_c::Phase_WaitTouch) {
+        mTarget->DrawField();
     }
 
-tail:
     mTarget->DrawTarget();
 
-    {
-        if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
-            int idx = GetGameLanguage();
-            void *e = sHanaTextSpritesByLanguage[idx];
-            OamAttr *f = ((OamAttr **)e)[3];
-            DrawOamSprite(f, 128, 16, 0);
-            Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
-        }
+    if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
+        int idx = GetGameLanguage();
+        void *e = sHanaTextSpritesByLanguage[idx];
+        OamAttr *f = ((OamAttr **)e)[3];
+        DrawOamSprite(f, 128, 16, 0);
+        Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
     }
 
     return 1;
