@@ -446,7 +446,7 @@ s32 dScMgJump_c::Render()
     mModel.mat4x3 = data_020a0e68;
 
     {
-        VecFx32 t = *(VecFx32 *)sJumpRenderScale;
+        VecFx32 t = sJumpRenderScale;
         ModelComponents *obj;
         MaterialState *mat;
 
