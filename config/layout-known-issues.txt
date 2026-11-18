@@ -26,3 +26,13 @@ L2 _ZN10dScStage_c7PS_InitEv
 L2 func_ov065_02116364
 L2 func_ov084_021298d0
 L2 func_ov084_0212d564
+
+# --- L3: data TUs in an overlay address bucket -----------------------------------
+# srcpath's address-stem pattern is ^(?:func|FUN|__sinit)_..., so a data_ovNNN_<addr>
+# stem answers "not an address name" whichever bucket holds it. Overlays 8 and 41 carry
+# no code at all: each overlay is one data run, and the bucket for it is
+# src/unnamed/<overlay>/. Naming the files after one interior symbol would split a run
+# across three TUs, and src/data/ is the retracted campaign's shape. Both TUs are
+# otherwise ordinary: their ranges are claimed in the module's delinks.txt.
+L3 src/unnamed/ov008/data_ov008.c
+L3 src/unnamed/ov041/data_ov041.c

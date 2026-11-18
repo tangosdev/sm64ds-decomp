@@ -63,7 +63,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x0211d384",
+      "start": "0x0211d380",
       "end": "0x0211d5bc"
     }
   ],
@@ -513,6 +513,13 @@
     }
   ],
   "bss": [
+    {
+      "symbol": "data_ov075_0211d380",
+      "address": "0x0211d380",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation-sequence selector: -1 means pick a new pattern index from data_ov075_0211b524, otherwise it is the index into data_ov075_0211c688 shifted right by two after use. Zero-filled, so .bss, immediately ahead of the animation file handles."
+    },
     {
       "symbol": "data_ov075_0211d384",
       "address": "0x0211d384",
@@ -1022,7 +1029,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x0211d384",
+          "start": "0x0211d380",
           "end": "0x0211d5bc",
           "comparison": "NOBITS -- symbol/module gates"
         }
