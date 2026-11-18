@@ -2904,7 +2904,7 @@ int func_020092c4(void *cam, Vector3 *out, const Vector3 *target) {
         Vec3_Add(&res, target, &offset);
         *out = res;
     }
-    return arrived == 0 ? 1 : 0;
+    return arrived == 0;
 }
 
 /* Recompute mAngleY and mAngleX from the lookAt -> pos line. */
@@ -2941,7 +2941,7 @@ int dCamera_c::ApproachDist(int dist) {
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     MTX_MultVec43(&v, &data_020a0e68, &pos);
-    return (r == 0) ? 1 : 0;
+    return r == 0;
 }
 
 /* Keep pos out of walls: probe from above the target (flags 0x40200) and
