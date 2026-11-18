@@ -16,9 +16,6 @@
  * - ROM-descending source order: the factory stays first and
  *   OnYoshiTryEat last. InitResources is the key function; the inline
  *   destructor emits D1 then D0, the RTTI/vtable, and no D2.
- * - VecFx32, not Vector3: a Vector3 stack local would
- *   instantiate its vague-linkage D1 into this TU. EyBmVec3's
- *   declared-not-defined destructor is that D1's alias.
  * - The UpdateDiscreteNoLava veneer stays because
  *   the named method is WRONG-DEST (ROM 0x02038420).
  * - data_ov071_021230b8 is this TU's sinit-constructed bss;
@@ -38,19 +35,9 @@
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
 
-/* Dynamic offset at 0x021230b8. A user constructor keeps the three stores in
- * the sinit (bss, not .data). The undefined destructor is Vector3's D1. */
-struct EyBmVec3 {
-    int x, y, z;
-    EyBmVec3(int a, int b, int c) {
-        x = a;
-        y = b;
-        z = c;
-    }
-    ~EyBmVec3();
-};
-
-extern EyBmVec3 data_ov071_021230b8;
+/* The collider offset at 0x021230b8: Vector3's constructor keeps the three
+ * stores in the sinit (bss, not .data). */
+extern Vector3 data_ov071_021230b8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states:
@@ -83,8 +70,7 @@ int daEyBm_c::InitResources() {
     if (!mShadowModel.InitCylinder())
         return 0;
 
-    mdCcAcPos_c.Init(this, *((const Vector3 *)&data_ov071_021230b8), 0x23000, 0x3c000, 0x200002,
-                     0x8000);
+    mdCcAcPos_c.Init(this, data_ov071_021230b8, 0x23000, 0x3c000, 0x200002, 0x8000);
     mScale.x = 0x1000;
     mScale.y = 0x1000;
     mScale.z = 0x1000;
@@ -209,5 +195,5 @@ int daEyBm_c::OnYoshiTryEat() {
     return 4;
 }
 
-EyBmVec3 data_ov071_021230b8(0, -0x19000, 0);
+Vector3 data_ov071_021230b8(0, -0x19000, 0);
 /* The inline class destructor and InitResources vtable instantiation emit both naturally. */

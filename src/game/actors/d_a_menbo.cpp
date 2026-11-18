@@ -647,11 +647,11 @@ int daMenbo_c::Behavior()
             }
         }
         if (mDeathState != 1 && mPos.y <= mSurfaceY) {
-            VecFx32 v;
+            Vector3 v;
             v.x = mPos.x;
             v.y = mPos.y;
             v.z = mPos.z;
-            SpawnCoins(*(const Vector3 *)&v, mExtraCoinCount + 1, 0xa000, 0);
+            SpawnCoins(v, mExtraCoinCount + 1, 0xa000, 0);
             PoofDust();
             KillAndTrackInDeathTable();
         }

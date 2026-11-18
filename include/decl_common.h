@@ -33,6 +33,7 @@ extern "C" {
 
 extern s32 data_ov002_0210af00[3];
 extern Vector3 sMascotWalkerOffset;
+extern Vector3 data_020755d4;
 extern Vector3 data_ov009_02113d8c[];
 extern Vector3 data_ov009_02113de0[];
 extern Vector3 data_ov009_02113e34[];
@@ -41,7 +42,6 @@ extern Vector3 data_ov073_02123040;
 extern Vector3 data_ov090_02134200;
 extern Vector3 data_ov100_02148948;
 extern char CAM_SPACE_CAM_POS_ASR_3;
-extern char data_020755d4;
 extern char data_02075f14[];
 extern char data_02082714[];
 extern char data_020914e0;

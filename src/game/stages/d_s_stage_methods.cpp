@@ -3662,7 +3662,7 @@ void dScStage_c::RenderModelTransparent() {
         }
     }
     dExtSimpleModel_c *model = &mModel;
-    model->Render((const Vector3 *)&data_020755d4);
+    model->Render(&data_020755d4);
 }
 
 void dScStage_c::RenderModel() {
@@ -3707,7 +3707,7 @@ void dScStage_c::RenderModel() {
     }
 
     dExtSimpleModel_c *model = &mModel;
-    model->Render((const Vector3 *)&data_020755d4);
+    model->Render(&data_020755d4);
 }
 
 /* Copy each material's texture/palette parameters from the level model's

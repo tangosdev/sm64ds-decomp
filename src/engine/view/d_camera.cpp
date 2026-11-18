@@ -1389,7 +1389,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
         height = FX_MUL(height, 0x3000);
     }
     goal.y += ScaleHeightByFov(height);
-    horzDist = Vec3_HorzLen((const Vector3 *)&goal);
+    horzDist = Vec3_HorzLen(&goal);
     Vector3 focus;
     Vec3_MulScalar(&focus, &mLookTargetPos, mFocusBlend);
     VEC_Add(&goal, &focus, &goal);

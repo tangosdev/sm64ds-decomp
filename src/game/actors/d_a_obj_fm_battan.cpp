@@ -25,8 +25,6 @@
  *   ROM-low helper last. InitResources is the key function; with the inline
  *   destructor in the real header this emits retail D1 then D0 and the
  *   class RTTI/vtable without a forcing object.
- *   offset is VecFx32 because NitroSDK VEC_Add fills it (its prototype
- *   still says Vector3, #5207); pos and dustPos go to Vector3 game APIs.
  *
  * Known limits:
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
@@ -112,7 +110,7 @@ int daObjFm_Battan_c::Behavior() {
             mAngVelX = -0x1000;
         mAngle.x += mAngVelX;
         if (mAngle.x <= -0x4000) {
-            VecFx32 offset;
+            Vector3 offset;
             Vector3 pos;
             Vector3 dustPos;
 
@@ -126,7 +124,7 @@ int daObjFm_Battan_c::Behavior() {
 
             offset.x = FX_MUL(FX_SinIdx((u16)mAngle.y >> 4), -0x190000);
             offset.z = FX_MUL(FX_CosIdx((u16)mAngle.y >> 4), -0x190000);
-            VEC_Add((Vector3 *)&offset, &mPos, (Vector3 *)&offset);
+            VEC_Add(&offset, &mPos, &offset);
 
             dustPos.x = offset.x;
             dustPos.y = offset.y;

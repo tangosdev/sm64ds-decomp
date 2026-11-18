@@ -435,7 +435,7 @@ void daWanwan2_c::func_ov100_021437d4() {
         if (val <= *heights) val = *heights;
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);
-        hlen = Vec3_HorzLen((const Vector3 *)&delta);
+        hlen = Vec3_HorzLen(&delta);
         angz = (s16)(-cstd::atan2(delta.y, hlen));
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angz);
