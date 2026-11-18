@@ -1883,129 +1883,129 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2208",
-      "to": "pmf_dScMgCurling_c_BitA_StateDriftLeft",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitA_StateDriftLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x290 loads 0x0213c1e4 in the ROM) and by its own relocation target (dScMgCurling_c::BitA_StateDriftLeft at 0x020e0a24)."
-    },
-    {
-      "from": "@2206",
-      "to": "pmf_dScMgCurling_c_BitA_StateDriftRight",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitA_StateDriftRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x28c loads 0x0213c1ec in the ROM) and by its own relocation target (dScMgCurling_c::BitA_StateDriftRight at 0x020e0b64)."
-    },
-    {
       "from": "@2210",
-      "to": "pmf_dScMgCurling_c_BitA_StateDriftStop",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitA_StateDriftStop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x298 loads 0x0213c1f4 in the ROM) and by its own relocation target (dScMgCurling_c::BitA_StateDriftStop at 0x020e091c)."
+      "to": "pmf_dScMgCurling_c_BitA_StateDriftLeft",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitA_StateDriftLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x290 loads 0x0213c1e4 in the ROM) and by its own relocation target (dScMgCurling_c::BitA_StateDriftLeft at 0x020e0a24). Re-keyed from @2208 to @2210 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2174",
-      "to": "pmf_dScMgCurling_c_Scene_End",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_End, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x23c loads 0x0213c1fc in the ROM) and by its own relocation target (dScMgCurling_c::Scene_End at 0x020e2ebc)."
-    },
-    {
-      "from": "@2178",
-      "to": "pmf_dScMgCurling_c_Stone_WaitRelease",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Stone_WaitRelease, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x244 loads 0x0213c204 in the ROM) and by its own relocation target (dScMgCurling_c::Stone_WaitRelease at 0x020e2c08)."
-    },
-    {
-      "from": "@2170",
-      "to": "pmf_dScMgCurling_c_Scene_Play",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_Play, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x230 loads 0x0213c20c in the ROM) and by its own relocation target (dScMgCurling_c::Scene_Play at 0x020e3078)."
-    },
-    {
-      "from": "@2168",
-      "to": "pmf_dScMgCurling_c_Scene_StartRound",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_StartRound, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x22c loads 0x0213c21c in the ROM) and by its own relocation target (dScMgCurling_c::Scene_StartRound at 0x020e3210)."
+      "from": "@2208",
+      "to": "pmf_dScMgCurling_c_BitA_StateDriftRight",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitA_StateDriftRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x28c loads 0x0213c1ec in the ROM) and by its own relocation target (dScMgCurling_c::BitA_StateDriftRight at 0x020e0b64). Re-keyed from @2206 to @2208 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2212",
-      "to": "pmf_dScMgCurling_c_Bit_StateFallStart",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_StateFallStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x29c loads 0x0213c224 in the ROM) and by its own relocation target (dScMgCurling_c::Bit_StateFallStart at 0x020e0884)."
-    },
-    {
-      "from": "@2182",
-      "to": "pmf_dScMgCurling_c_Stone_Collide",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Stone_Collide, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x250 loads 0x0213c22c in the ROM) and by its own relocation target (dScMgCurling_c::Stone_Collide at 0x020e285c)."
-    },
-    {
-      "from": "@2190",
-      "to": "pmf_dScMgCurling_c_Bit_PickKind",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_PickKind, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x264 loads 0x0213c234 in the ROM) and by its own relocation target (dScMgCurling_c::Bit_PickKind at 0x020e1264)."
-    },
-    {
-      "from": "@2186",
-      "to": "pmf_dScMgCurling_c_Aim_WaitTouch",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Aim_WaitTouch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x258 loads 0x0213c23c in the ROM) and by its own relocation target (dScMgCurling_c::Aim_WaitTouch at 0x020e1b54)."
-    },
-    {
-      "from": "@2180",
-      "to": "pmf_dScMgCurling_c_Stone_Slide",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Stone_Slide, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x248 loads 0x0213c244 in the ROM) and by its own relocation target (dScMgCurling_c::Stone_Slide at 0x020e2868)."
-    },
-    {
-      "from": "@2202",
-      "to": "pmf_dScMgCurling_c_BitB_StateDriftStop",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitB_StateDriftStop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x284 loads 0x0213c24c in the ROM) and by its own relocation target (dScMgCurling_c::BitB_StateDriftStop at 0x020e0e18)."
+      "to": "pmf_dScMgCurling_c_BitA_StateDriftStop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitA_StateDriftStop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x298 loads 0x0213c1f4 in the ROM) and by its own relocation target (dScMgCurling_c::BitA_StateDriftStop at 0x020e091c). Re-keyed from @2210 to @2212 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2176",
-      "to": "pmf_dScMgCurling_c_Scene_Idle",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_Idle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x240 loads 0x0213c254 in the ROM) and by its own relocation target (dScMgCurling_c::Scene_Idle at 0x020e2eb8)."
+      "to": "pmf_dScMgCurling_c_Scene_End",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_End, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x23c loads 0x0213c1fc in the ROM) and by its own relocation target (dScMgCurling_c::Scene_End at 0x020e2ebc). Re-keyed from @2174 to @2176 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2184",
-      "to": "pmf_dScMgCurling_c_Stone_Drag",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Stone_Drag, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x254 loads 0x0213c25c in the ROM) and by its own relocation target (dScMgCurling_c::Stone_Drag at 0x020e26f8)."
-    },
-    {
-      "from": "@2200",
-      "to": "pmf_dScMgCurling_c_BitB_StateDriftLeft",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitB_StateDriftLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x27c loads 0x0213c26c in the ROM) and by its own relocation target (dScMgCurling_c::BitB_StateDriftLeft at 0x020e0edc)."
-    },
-    {
-      "from": "@2198",
-      "to": "pmf_dScMgCurling_c_BitB_StateDriftRight",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitB_StateDriftRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x278 loads 0x0213c274 in the ROM) and by its own relocation target (dScMgCurling_c::BitB_StateDriftRight at 0x020e0ff0)."
-    },
-    {
-      "from": "@2216",
-      "to": "pmf_dScMgCurling_c_Bit_StateFallSlowDown",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_StateFallSlowDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x2a4 loads 0x0213c27c in the ROM) and by its own relocation target (dScMgCurling_c::Bit_StateFallSlowDown at 0x020e071c)."
-    },
-    {
-      "from": "@2214",
-      "to": "pmf_dScMgCurling_c_Bit_StateFallSpeedUp",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_StateFallSpeedUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x2a0 loads 0x0213c284 in the ROM) and by its own relocation target (dScMgCurling_c::Bit_StateFallSpeedUp at 0x020e07b0)."
-    },
-    {
-      "from": "@2196",
-      "to": "pmf_dScMgCurling_c_BitB_StatePause",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitB_StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x274 loads 0x0213c28c in the ROM) and by its own relocation target (dScMgCurling_c::BitB_StatePause at 0x020e1100)."
-    },
-    {
-      "from": "@2194",
-      "to": "pmf_dScMgCurling_c_Bit_RunKindA",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_RunKindA, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x270 loads 0x0213c294 in the ROM) and by its own relocation target (dScMgCurling_c::Bit_RunKindA at 0x020e0d84)."
-    },
-    {
-      "from": "@2192",
-      "to": "pmf_dScMgCurling_c_Bit_RunKindB",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_RunKindB, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x26c loads 0x0213c29c in the ROM) and by its own relocation target (dScMgCurling_c::Bit_RunKindB at 0x020e1214)."
-    },
-    {
-      "from": "@2204",
-      "to": "pmf_dScMgCurling_c_BitA_StatePause",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitA_StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x288 loads 0x0213c2a4 in the ROM) and by its own relocation target (dScMgCurling_c::BitA_StatePause at 0x020e0ca0)."
+      "from": "@2180",
+      "to": "pmf_dScMgCurling_c_Stone_WaitRelease",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Stone_WaitRelease, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x244 loads 0x0213c204 in the ROM) and by its own relocation target (dScMgCurling_c::Stone_WaitRelease at 0x020e2c08). Re-keyed from @2178 to @2180 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2172",
-      "to": "pmf_dScMgCurling_c_Scene_Score",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_Score, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x238 loads 0x0213c2b4 in the ROM) and by its own relocation target (dScMgCurling_c::Scene_Score at 0x020e2f78)."
+      "to": "pmf_dScMgCurling_c_Scene_Play",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_Play, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x230 loads 0x0213c20c in the ROM) and by its own relocation target (dScMgCurling_c::Scene_Play at 0x020e3078). Re-keyed from @2170 to @2172 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2170",
+      "to": "pmf_dScMgCurling_c_Scene_StartRound",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_StartRound, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x22c loads 0x0213c21c in the ROM) and by its own relocation target (dScMgCurling_c::Scene_StartRound at 0x020e3210). Re-keyed from @2168 to @2170 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2214",
+      "to": "pmf_dScMgCurling_c_Bit_StateFallStart",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_StateFallStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x29c loads 0x0213c224 in the ROM) and by its own relocation target (dScMgCurling_c::Bit_StateFallStart at 0x020e0884). Re-keyed from @2212 to @2214 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2184",
+      "to": "pmf_dScMgCurling_c_Stone_Collide",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Stone_Collide, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x250 loads 0x0213c22c in the ROM) and by its own relocation target (dScMgCurling_c::Stone_Collide at 0x020e285c). Re-keyed from @2182 to @2184 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2192",
+      "to": "pmf_dScMgCurling_c_Bit_PickKind",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_PickKind, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x264 loads 0x0213c234 in the ROM) and by its own relocation target (dScMgCurling_c::Bit_PickKind at 0x020e1264). Re-keyed from @2190 to @2192 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2188",
+      "to": "pmf_dScMgCurling_c_Aim_WaitTouch",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Aim_WaitTouch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x258 loads 0x0213c23c in the ROM) and by its own relocation target (dScMgCurling_c::Aim_WaitTouch at 0x020e1b54). Re-keyed from @2186 to @2188 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2182",
+      "to": "pmf_dScMgCurling_c_Stone_Slide",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Stone_Slide, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x248 loads 0x0213c244 in the ROM) and by its own relocation target (dScMgCurling_c::Stone_Slide at 0x020e2868). Re-keyed from @2180 to @2182 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2204",
+      "to": "pmf_dScMgCurling_c_BitB_StateDriftStop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitB_StateDriftStop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x284 loads 0x0213c24c in the ROM) and by its own relocation target (dScMgCurling_c::BitB_StateDriftStop at 0x020e0e18). Re-keyed from @2202 to @2204 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2178",
+      "to": "pmf_dScMgCurling_c_Scene_Idle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_Idle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x240 loads 0x0213c254 in the ROM) and by its own relocation target (dScMgCurling_c::Scene_Idle at 0x020e2eb8). Re-keyed from @2176 to @2178 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2186",
+      "to": "pmf_dScMgCurling_c_Stone_Drag",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Stone_Drag, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x254 loads 0x0213c25c in the ROM) and by its own relocation target (dScMgCurling_c::Stone_Drag at 0x020e26f8). Re-keyed from @2184 to @2186 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2202",
+      "to": "pmf_dScMgCurling_c_BitB_StateDriftLeft",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitB_StateDriftLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x27c loads 0x0213c26c in the ROM) and by its own relocation target (dScMgCurling_c::BitB_StateDriftLeft at 0x020e0edc). Re-keyed from @2200 to @2202 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2200",
+      "to": "pmf_dScMgCurling_c_BitB_StateDriftRight",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitB_StateDriftRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x278 loads 0x0213c274 in the ROM) and by its own relocation target (dScMgCurling_c::BitB_StateDriftRight at 0x020e0ff0). Re-keyed from @2198 to @2200 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2218",
+      "to": "pmf_dScMgCurling_c_Bit_StateFallSlowDown",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_StateFallSlowDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x2a4 loads 0x0213c27c in the ROM) and by its own relocation target (dScMgCurling_c::Bit_StateFallSlowDown at 0x020e071c). Re-keyed from @2216 to @2218 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2216",
+      "to": "pmf_dScMgCurling_c_Bit_StateFallSpeedUp",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_StateFallSpeedUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x2a0 loads 0x0213c284 in the ROM) and by its own relocation target (dScMgCurling_c::Bit_StateFallSpeedUp at 0x020e07b0). Re-keyed from @2214 to @2216 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2198",
+      "to": "pmf_dScMgCurling_c_BitB_StatePause",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitB_StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x274 loads 0x0213c28c in the ROM) and by its own relocation target (dScMgCurling_c::BitB_StatePause at 0x020e1100). Re-keyed from @2196 to @2198 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2196",
+      "to": "pmf_dScMgCurling_c_Bit_RunKindA",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_RunKindA, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x270 loads 0x0213c294 in the ROM) and by its own relocation target (dScMgCurling_c::Bit_RunKindA at 0x020e0d84). Re-keyed from @2194 to @2196 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2194",
+      "to": "pmf_dScMgCurling_c_Bit_RunKindB",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Bit_RunKindB, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x26c loads 0x0213c29c in the ROM) and by its own relocation target (dScMgCurling_c::Bit_RunKindB at 0x020e1214). Re-keyed from @2192 to @2194 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2206",
+      "to": "pmf_dScMgCurling_c_BitA_StatePause",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::BitA_StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x288 loads 0x0213c2a4 in the ROM) and by its own relocation target (dScMgCurling_c::BitA_StatePause at 0x020e0ca0). Re-keyed from @2204 to @2206 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2174",
+      "to": "pmf_dScMgCurling_c_Scene_Score",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Scene_Score, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x238 loads 0x0213c2b4 in the ROM) and by its own relocation target (dScMgCurling_c::Scene_Score at 0x020e2f78). Re-keyed from @2172 to @2174 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2190",
       "to": "pmf_dScMgCurling_c_Aim_Swing",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Aim_Swing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x260 loads 0x0213c2bc in the ROM) and by its own relocation target (dScMgCurling_c::Aim_Swing at 0x020e1854)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling.cpp assigns &dScMgCurling_c::Aim_Swing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling.cpp+0x260 loads 0x0213c2bc in the ROM) and by its own relocation target (dScMgCurling_c::Aim_Swing at 0x020e1854). Re-keyed from @2188 to @2190 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

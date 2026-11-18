@@ -670,14 +670,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@426",
+      "from": "@428",
       "to": "@149",
-      "evidence": "compiler temporary; mwcc numbers it @481 per TU and ov060 daKpa3Bg_c (this batch) also defines a global @481, so the scratch link collides Re-keyed from @469 to @426 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temporary; mwcc numbers it @481 per TU and ov060 daKpa3Bg_c (this batch) also defines a global @481, so the scratch link collides Re-keyed from @469 to @426 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @426 to @428 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@425",
+      "from": "@427",
       "to": "@480",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @494 now; licensed under the existing pin @480 Re-keyed from @468 to @425 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @494 now; licensed under the existing pin @480 Re-keyed from @468 to @425 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @425 to @427 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "symbol_binding_rewrites": [
