@@ -1469,7 +1469,8 @@ void daTrs_c::func_ov063_02118b98() {
     if (this->mDeathMode == 0) {
         if (v <= 60)
             return;
-        if (this->mDistToPlayer >= 0x258000) return;
+        if (this->mDistToPlayer >= 0x258000)
+            return;
         {
             dActor_c *r1 = 0;
             for (;;) {
@@ -2098,8 +2099,8 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
         } else {
             unsigned rnd = (unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3f;
             if (this->mStateTimer >= rnd + 0x5a) {
-                int rnd2 =
-                    (int)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff) - 0x2000;
+                int rnd2 = (int)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff) -
+                           0x2000;
                 this->mTargetAngleY = this->mPrevAngle.y + rnd2;
                 this->mStateTimer = 0;
             }
