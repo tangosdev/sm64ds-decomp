@@ -20063,13 +20063,6 @@ void daPly_c::func_ov002_020e444c() {
 // local extern: include-free shard, the call passes the object as an untyped pointer so it cannot use the header member
 
 void daPly_c::func_ov002_020e4768() {
-    struct VTable4 {
-        virtual void v0();
-        virtual void v1();
-        virtual void v2();
-        virtual void v3();
-        virtual void DoThing(int arg);
-    };
     extern Matrix4x3 data_020a0e68;
     unsigned int mid;
     dExtAnm2Model_c *comp;
@@ -20088,10 +20081,8 @@ void daPly_c::func_ov002_020e4768() {
     idx = func_ov002_020becf4(param1 & 0xff, 0);
 
     if (idx == 3) {
-        unsigned int m2 = GetBodyModelID(param1 & 0xff, 0);
-        int a1 = (int)&mModels.mBodyModels[m2]->data.transforms[15];
-        a1 = idx ? a1 : a1;
-        ((VTable4 **)mModels.mHeadModels)[idx]->DoThing(a1);
+        comp = mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+        mModels.mHeadModels[idx]->Virtual10(comp->data.transforms[15]);
     }
 
     {
