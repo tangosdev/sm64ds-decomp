@@ -167,6 +167,9 @@ extern BlockSCollisionFilePtr gBrokenBlockSCollisionFile;
 
 /* Throw speeds (20.12) for the four character weights: horizontal and
    vertical, copied by value in EnterThrown. */
+/* Kept (#821 r72): copied element by element into u32[4] locals, EnterThrown
+   is 0xc8 against 0xa4; u32[4] locals initialised in place match its code but
+   put the tables in .rodata, where the ROM has them in .data (0x0213c4e0). */
 struct BlockSW4 { u32 w[4]; };
 BlockSW4 data_ov098_0213c4e0 = {{0x28000, 0x28000, 0x50000, 0x1e000}};
 BlockSW4 data_ov098_0213c4f0 = {{0x14000, 0x14000, 0x14000, 0xf000}};

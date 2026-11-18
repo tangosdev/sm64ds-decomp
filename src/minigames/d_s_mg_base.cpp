@@ -2887,6 +2887,8 @@ int Mg_CheckBannerButton(int arg) {
                    `o->mX - cx` ints, a plain Vec2 assigned by member, a
                    short[2] and a brace-initialised Vec2 all drop the
                    round trip (0x180 against 0x190). */
+                /* Kept (#821 r72): the only shared short pair, Vec2s, belongs
+                   to TrmpLine.h; retyping would not remove the volatile. */
                 volatile struct Vec2 pos;
                 int dx, dy;
                 short ty;

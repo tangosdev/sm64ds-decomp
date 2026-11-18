@@ -89,20 +89,6 @@ struct PetalPos {
 };
 
 struct dScMgFlower_c : dScMgSingle3DBase_c {
-    /* The 2-vector value type the petal setup swaps through (fx32 x, y --
-       the same pair func_0203d388 rotates in place). THE EMPTY DESTRUCTOR IS
-       LOAD-BEARING, for the reason types.h gives Vector3 one: a local of this
-       type keeps an 8-byte stack home even though every copy through it goes
-       register to register, and DealPetals's frame is 0x1c only with
-       that home (0x14 without it; a plain POD pair, a ctor-only pair, an int[2]
-       and two scalar temps all lose the slot -- measured, 2004/b56). Nested so
-       the coined name cannot collide with anything global. */
-    struct Vec2 {
-        fx32 x;
-        fx32 y;
-        ~Vec2() {}
-    };
-
     /* Declared first and defined out of line, in src/minigames/d_s_mg_flower.cpp:
        see the file banner for the four rounds that settled the form. Its body's
        two explicit calls are the ROM's own order -- the 0x51f8 object, then

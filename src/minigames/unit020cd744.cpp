@@ -1372,6 +1372,8 @@ int TrmpLine::PushJumper() {
  * pointer form and the multiply operand order are all inert on it.
  */
 
+/* Kept (#821 r72): no spare4, or a Vector2 in its place, keeps Build at 0x800
+   but changes its bytes. */
 struct Spare4 {
     s32 v;
     ~Spare4() {}

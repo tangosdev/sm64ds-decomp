@@ -7,6 +7,9 @@
 /* The ROM copies the template with one ldm/stm block. Under C++ a struct of
  * six named ints copies word by word, a struct with an array member as one
  * block, so the copy goes through this. */
+/* Kept (#821 r72): `mesh->params = *params` copies word by word under C++
+   (0x404 against 0x3dc); the mesh shards beside this one (020cb3dc, 020cba78,
+   020cbf8c) are C, where the copy is one block. */
 struct MeshParamsWords {
     int w[6];
 };
