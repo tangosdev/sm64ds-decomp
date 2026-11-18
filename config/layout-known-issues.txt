@@ -26,3 +26,10 @@ L2 _ZN10dScStage_c7PS_InitEv
 L2 func_ov065_02116364
 L2 func_ov084_021298d0
 L2 func_ov084_0212d564
+
+# --- L3: module-wide data TU ------------------------------------------------------
+# ov053 is a data-only overlay: its whole image is one TU, so the file is named
+# for the module (data_ov053) rather than for one address-bearing symbol, and L3
+# sees a name. Splitting it into one file per run would defeat the single-TU
+# shape and reintroduce the per-symbol sections this job replaced.
+L3 src/unnamed/ov053/data_ov053.c
