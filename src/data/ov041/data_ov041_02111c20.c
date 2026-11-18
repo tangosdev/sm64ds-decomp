@@ -1,7 +1,0 @@
-/* ov041 .data at 0x02111c20 (52 bytes). */
-#include "types.h"
-
-u32 data_ov041_02111c20[13] = {
-    0x0000e225, 0xf1a7ff3d, 0x0000e225, 0xf105ff38, 0x0000e225, 0xf067ff34, 0x0000e225,
-    0xefc9ff30, 0xfeade225, 0xe5b3fe64, 0xff59e225, 0xe67ffe78, 0x0048e225,
-};
