@@ -513,7 +513,7 @@ int dMap_c::Render()
                 this->mStarKeyBlinkTimer = 0;
             if (this->mStarKeyMapID >= 0) {
                 if (data_0209d660 == 0 || !(data_020a0db0 & 8)) {
-                    int sel = (this->mStarKeyBlinkTimer < 2) ? 1 : 0;
+                    int sel = this->mStarKeyBlinkTimer < 2;
                     OAM::Render(true, OAM::MM_STAR_KEYS[sel], this->mStarKeyIconX,
                                 this->mStarKeyIconY, -1, 2, 0);
                 }
