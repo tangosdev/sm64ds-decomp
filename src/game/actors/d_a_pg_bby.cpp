@@ -278,19 +278,16 @@ int daPgBby_c::StateHeldEnter() {
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 /* State 2, update: face where the carrier faces; once no longer held, drop
    to the ground under the carrier and return to state 0. */
 int daPgBby_c::StateHeldUpdate() {
     mAngle.y = mCarrier->mAngle.y;
     mPrevAngle.y = mAngle.y;
-    u32 flags = mFlags;
-    int held = (flags & 0x100) != 0;
-    if (held) {
-        int thrown = (flags & 0x2000) != 0;
-        if (!thrown)
-            goto animate;
-    }
-    {
+    if (!IsFlagSet(this, 0x100) || IsFlagSet(this, 0x2000)) {
         daPly_c *carrier = mCarrier;
         Vector3 from;
         int y = carrier->mPos.y;
@@ -304,7 +301,6 @@ int daPgBby_c::StateHeldUpdate() {
         mCarrier = 0;
         ChangeState(0);
     }
-animate:
     mAnmModel.Advance();
     mCylClsn.Clear();
     if (param1 == 0) {
@@ -505,10 +501,6 @@ int daPgBby_c::func_ov072_021212c0()
     return 1;
 }
 
-static inline int IsFlagSet(dActor_c *actor, u32 bit) {
-    return (actor->mFlags & bit) != 0;
-}
-
 /* Place the model: in the carrier's hands (one of four carry offsets) or at
    the actor, then size the drop shadow by the height above the ground. */
 void daPgBby_c::UpdateModelAndShadow() {
@@ -600,6 +592,8 @@ int daPgBby_c::GuardStepHeight() {
         if (ground.DetectClsn() != 0) {
             int d = ground.clsnY - mPos.y;
             if (d < 0) d = -d;
+            /* Kept (#821 r93): `return 0;` here runs ground's destructor on
+               its own exit path, 0xd0 of 0xc0. */
             if (d <= 0x1900)
                 goto bail;
         }
