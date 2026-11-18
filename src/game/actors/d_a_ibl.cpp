@@ -27,7 +27,7 @@
  *   speeds and kill heights chosen from them.
  * - func_020383f0 and func_02038414 are the two probes picked by that
  *   level id. func_02012694 plays a bank-3 sound at a position.
- * - InitResources' param1 shift keeps the spelling the bytes need.
+ * - InitResources shifts param1 through GetParam1(); see the accessor.
  */
 
 #pragma defer_codegen off
@@ -691,6 +691,15 @@ int daIbl_c::Behavior()
     return 1;
 }
 
+/* InitResources shifts param1 down in place with a read through this
+   accessor. A plain `param1 = param1 >> 4` value-numbers both sides together
+   and emits an extra `add r1, r4, #8` at +0x60 (0x390, 186/228 words
+   differ); the cartridge keeps the folded `ldr/lsr/str` (0x38c). Same lever
+   as daDoor_c::GetParam1. */
+inline u32 daIbl_c::GetParam1() const {
+    return param1;
+}
+
 /* Loads the model and shadow, sets gravity (-4 units/frame^2, mVertAccel
    -0x4000) and terminal velocity (-70 units/frame, -0x46000), picks the kind
    from param1's low nibble and sets up that kind. Distances and speeds below
@@ -709,12 +718,8 @@ int daIbl_c::InitResources()
     mTerminalVelocity = -0x46000;
     mVariant = param1 & 0xf;
     /* The spawn word is packed: low nibble was the variant (read above), the
-     * rest shifts down in place here. The redundant cast is load-bearing:
-     * plain `param1 = param1 >> 4` value-numbers both sides together and
-     * emits an extra `add r1, r4, #8` at +0x60 (0x390, 186/228 words
-     * differ); the cast keeps the ROM's folded `ldr/lsr/str` (0x38c, 0
-     * differ). Same lever as daDoor_c::InitResources. */
-    param1 = (u32)param1 >> 4;
+     * rest shifts down in place here. */
+    param1 = GetParam1() >> 4;
     kind = mVariant;
 
     /* Kinds 2 and 4: the path followers. The path ID is the next nibble of

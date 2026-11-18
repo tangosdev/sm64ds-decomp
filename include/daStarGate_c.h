@@ -48,6 +48,9 @@ struct daStarGate_c : dActor_c {
     virtual s32 Render();
     virtual void OnPendingDestroy();
 
+    /* param1, the spawn word; defined inline in d_a_star_gate.cpp. */
+    u32 GetParam1() const;
+
     /* The English method names and pointer parameter spellings below are
        lineage-supported reconstructions. The class ownership, argument count,
        PTMF ABI, and call graph are proven by the ROM. */

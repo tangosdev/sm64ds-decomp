@@ -82,9 +82,9 @@
  *   read it unsigned, hence CAP_TIMER.
  *
  * leftovers:
- *   InitResources keeps two `(u32)param1` read-side casts; spelled plainly,
+ *   InitResources rewrites param1 through GetParam1(); spelled plainly,
  *   2004/b56 materialises the param1 address once for each read-modify-write
- *   and the body grows from 0x4c8 to 0x4d0 (see the comments at both sites).
+ *   and the body grows from 0x4c8 to 0x4d0 (see the accessor).
  *   The data_ov002_0210de* / 0210df* handles have no recovered names in
  *   symbols.txt, so none are coined; the sixteen-byte state records are only
  *   described above.
@@ -270,6 +270,19 @@ daObjMarioCap_c *daObjMarioCap_c_classInit(void) {
     return new daObjMarioCap_c();
 }
 
+/* InitResources rewrites param1 in place twice (case 14's type fix-up and
+   the final 0xfff mask) with a read through this accessor. Spelt plainly
+   (`param1 = param1 - 0xa;`), both sides of the assignment are the same
+   expression, and 2004/b56 value-numbers them together and materialises the
+   address once (`add r3, r5, #8` at +0x37c, then `ldr r0, [r3]` and
+   `str r2, [r3]`), where the ROM folds the offset into both accesses.
+   Measured: with neither accessor read the body is 0x4d0 and 98 of 308
+   words differ; with both it is the ROM's 0x4c8. Same lever as
+   daDoor_c::GetParam1. */
+inline u32 daObjMarioCap_c::GetParam1() const {
+    return param1;
+}
+
 /* Decodes param1 (low byte mType, bits 8..11 mModelIndex, bits 12..15
  * mIconKind), loads the animation files for the type, sets up the model, the
  * two colliders and the gravity, then enters the type's state and registers
@@ -407,17 +420,7 @@ int daObjMarioCap_c::InitResources()
         mIconKind = 2;
         mdCcAc_c.radius = kClsnSizeLarge;
         mdCcAc_c.height = kClsnSizeLarge;
-        /* Spelt plainly (`param1 = param1 - 0xa;`), both sides of this
-           assignment are the same expression, and 2004/b56 value-numbers
-           them together and materialises the address once (`add r3, r5, #8`
-           at +0x37c, then `ldr r0, [r3]` and `str r2, [r3]`), where the ROM
-           folds the offset into both accesses. A redundant cast on the read
-           side is enough to make the two sides textually different and
-           reach the folded form -- no `volatile` needed, so tools/tiers.py
-           never reads this as a codegen trick. Same residue and same lever
-           as daDoor_c::InitResources (src/game/actors/d_a_door.cpp) and the second
-           site below. */
-        param1 = (u32)param1 - 0xa;   /* low byte 14 becomes 4, matching mType below */
+        param1 = GetParam1() - 0xa; /* low byte 14 becomes 4, matching mType below */
         mType = TYPE_RESPAWNING;
         EnterState(&data_ov002_0210df34);
         break;
@@ -463,12 +466,8 @@ int daObjMarioCap_c::InitResources()
         mCapIcon.Link(this, mModelIndex & 0xff, mIconKind, v);
     }
 
-    /* Keep only the type and character bits (0..11) of param1. This is the
-       second materialised param1 read-modify-write, at +0x448; see the first
-       one in case 14 for the mechanism. Measured: with both casts the
-       candidate is 0x4c8 and 0 of 306 words differ; with neither it is 0x4d0,
-       and over the shared prefix 98 of 308 differ. */
-    param1 = (u32)param1 & 0xfff;
+    /* Keep only the type and character bits (0..11) of param1. */
+    param1 = GetParam1() & 0xfff;
     return 1;
 }
 

@@ -3887,7 +3887,7 @@ void dScMgSmartball_c::SpawnObjects() {
         OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtGerman, (int)mLevel & 1);
     } else if (GetOwnerLanguage() == 2) {
         OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtFrench, (int)mLevel & 1);
-    } else if (((int)param1 & 0xff) == 0) {
+    } else if ((param1 & 0xff) == 0) {
         OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtE, (int)mLevel & 1);
     } else {
         OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmt, (int)mLevel & 1);
@@ -3910,7 +3910,7 @@ void dScMgSmartball_c::SpawnObjects() {
         DecompressLZ16(d, mBg2Map);
         Ov004_Deallocate(d);
     }
-    if (((int)param1 & 0xff) == 0) {
+    if ((param1 & 0xff) == 0) {
         void *d = Ov004_LoadFileByPath(sSmartballLay0Bg1FrameNscPath);
         DecompressLZ16(d, G2_GetBG2ScrPtr());
         Ov004_Deallocate(d);
@@ -4050,7 +4050,7 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
 
-    if (((int)param1 & 0xff) == 0) {
+    if ((param1 & 0xff) == 0) {
         mBallCount = 0xc;
     } else {
         mBallCount = 0xd;
@@ -4882,7 +4882,7 @@ s32 dScMgSmartball_c::Behavior() {
                     flag = 1;
                 }
                 if (flag != 0) {
-                    if (((int)param1 & 0xff) == 0) {
+                    if ((param1 & 0xff) == 0) {
                         sMgResultsBannerX = 0x80;
                         sMgResultsBannerY = -0x30;
                     }

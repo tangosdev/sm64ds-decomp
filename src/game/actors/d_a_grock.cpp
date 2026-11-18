@@ -299,7 +299,7 @@ int daGrock_c::Behavior() {
         int dist = DistToCPlayer();
         if (dist > 0x5dc000) {
             u32 threshold = (dist < 0x1770000) ? 112 : 224;
-            if ((u16)mStateTimer >= threshold) {
+            if (mStateTimer >= threshold) {
                 u32 rnd;
 
                 mSpawnCount++;
@@ -321,10 +321,7 @@ int daGrock_c::Behavior() {
                 }
             }
         }
-        {
-            u16 *timer = &mStateTimer;
-            *timer = (u16)(*timer + 1);
-        }
+        mStateTimer++;
     }
     return 1;
 }

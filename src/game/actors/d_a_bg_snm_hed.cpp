@@ -97,10 +97,8 @@ int daBgSnmHed_c::State3() {
         break;
     case 2:
         if (mTalkPlayer->GetTalkState() == -1) {
-            unsigned int param = ((int)param1) & 0xf;
-            param = param & 0xff;
-            param |= 0x40;
-            Spawn(0xb2, param, mPos, 0, mAreaId, -1);
+            u8 starID = param1 & 0xf;
+            Spawn(0xb2, starID | 0x40, mPos, 0, mAreaId, -1);
             mSubstate++;
         }
         break;

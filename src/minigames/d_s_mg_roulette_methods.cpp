@@ -287,7 +287,11 @@ s32 dScMgRoulette_c::Behavior() {
                     /* The int cast keeps the negation out of the add that uses
                        it, as the ROM does; without it Behavior's size changes
                        (measured 2026-11-06). The long long round trip it used
-                       to go through was doing nothing. */
+                       to go through was doing nothing.
+                       Kept (#821 r81): an inline s32 GetDealIndex() in place of
+                       the cast (three spellings) keeps 0x6e8 but swaps the
+                       negate/add and the two stack stores; `0x80000 -
+                       mDealIndex * 0x10000` is 0x6e4. */
                     dealY = (int)(0 - (mDealIndex << 16)) + 0x80000;
                     dealPos[0] = 0x20000;
                     dealPos[1] = dealY;

@@ -44,8 +44,8 @@ class daPly_c;
  * `daDoor_c::` definitions in src/game/actors/d_a_door.cpp, byte-exact under the
  * pinned 2004/b56 and built from that one translation unit. InitResources
  * was the last to convert: it was a C free function taking the object
- * explicitly, and its param1 shift keeps the redundant cast that reaches the
- * ROM's folded read-modify-write (described at that line).
+ * explicitly, and its param1 shift reads through GetParam1() to reach the
+ * ROM's folded read-modify-write (described at the accessor).
  *
  * The flat C placeholder that once restated dActor_c's fields inline
  * (pad_000[0x5c] + unk_05c/unk_060/...) is gone; every member names its
@@ -145,6 +145,9 @@ struct daDoor_c : dActor_c {
     virtual s32 Behavior();               /* slot 6 */
     virtual s32 Render();                 /* slot 9 */
     virtual void OnPendingDestroy();      /* slot 12 */
+
+    /* param1, the spawn word; defined inline in d_a_door.cpp. */
+    u32 GetParam1() const;
 
     /* The helpers the state tables' pointer-to-member pairs name, and the
        ones those call: each takes the door as its implicit this exactly

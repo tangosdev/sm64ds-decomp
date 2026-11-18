@@ -2422,7 +2422,7 @@ int daIwante_c::InitResources() {
     Vector3 v;
     Vector3 w;
 
-    mPartIdx = (s32)param1 & 0xFF;
+    mPartIdx = param1 & 0xFF;
     if (mPartIdx == 0xFF)
         mPartIdx = 0;
     mStarId = (param1 >> 0xC) & 0xF;

@@ -1420,7 +1420,7 @@ s32 dScMgSlot1_c::InitResources() {
     sMgMainBannerX = 0x80;
     sMgMainBannerY = 0x40;
 
-    if ((int)param1 & 0xff) {
+    if (param1 & 0xff) {
         unsigned char *tbl = sSlotReelSymbolsAlt;
         for (j = 0; j < 3; j++) {
             for (i = 0; i < 21; i++) {
