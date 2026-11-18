@@ -256,10 +256,7 @@ int daPopoi_c::Render()
     /* Nothing below the water surface is drawn. */
     if (mPos.y < data_0209f32c)
         return 1;
-    /* Through a pointer, so the call dispatches through vtable slot 5 as the
-       ROM does instead of binding dExtAnmModel_c::Render directly. */
-    dExtAnmModel_c *model = &mAnmModel;
-    model->Render(0);
+    mAnmModel.Render(0);
     return 1;
 }
 

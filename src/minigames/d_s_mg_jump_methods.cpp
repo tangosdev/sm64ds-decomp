@@ -459,10 +459,7 @@ s32 dScMgJump_c::Render()
         func_02045e44(obj, 1, 0);
         mat->texTransT = mAccum;
 
-        {
-            dExtSimpleModel_c *model = &mModel;
-            model->Render((Vector3 *)&t);
-        }
+        mModel.Render((Vector3 *)&t);
     }
 
     Jump3D_DrawAll();

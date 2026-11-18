@@ -529,10 +529,7 @@ s32 daKing_Donketu_c::HandleHit() {
         func_02012694(SND_HIT_REGISTERED, &mCamSpacePos);
         return 1;
     }
-    {
-        s16 *py = &mPrevAngle.y;
-        *py = (*py + 0x8000);
-    }
+    mPrevAngle.y += 0x8000;
     func_02012694(SND_REVERSE_AFTER_HURT, &mCamSpacePos);
     ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123360);
     mBlendAnmModel.SetAnim(*(BCA_File *)((BCA_File *)gKingIceDonketuHitAnimationFile.filePtr), 4,
@@ -1256,10 +1253,8 @@ int daKing_Donketu_c::EnterHitReaction() {
                            0x40000000, fix, t);
     mBlendAnmModel.speed = fix;
     ang = HorzAngleToCPlayer();
-    short *py = &mPrevAngle.y;
     mPrevAngle.y = ang;
-    *py =
-        (short)((int)*py + 0x8000);
+    mPrevAngle.y += 0x8000;
     return 1;
 }
 

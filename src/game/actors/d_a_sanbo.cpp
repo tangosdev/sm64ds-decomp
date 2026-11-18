@@ -173,8 +173,7 @@ int daSanbo_c::Render()
     unsigned int f = mFlags;
     int b = ((f & 0x40000) != 0);
     if(b) return 1;
-    dExtSimpleModel_c *model = &mModel;
-    model->Render(&mScale);
+    mModel.Render(&mScale);
     return 1;
 }
 

@@ -3674,8 +3674,7 @@ void dScStage_c::RenderModelTransparent() {
             }
         }
     }
-    dExtSimpleModel_c *model = &mModel;
-    model->Render(&data_020755d4);
+    mModel.Render(&data_020755d4);
 }
 
 void dScStage_c::RenderModel() {
@@ -3719,8 +3718,7 @@ void dScStage_c::RenderModel() {
         bone++;
     }
 
-    dExtSimpleModel_c *model = &mModel;
-    model->Render(&data_020755d4);
+    mModel.Render(&data_020755d4);
 }
 
 /* Copy each material's texture/palette parameters from the level model's

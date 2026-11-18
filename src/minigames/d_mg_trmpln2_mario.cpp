@@ -187,8 +187,7 @@ Vector3 *dMgTrmpln2Mario_c::GetPos() {
 void dMgTrmpln2Mario_c::Render() {
     if (mVisible == 0)
         return;
-    dExtAnmModel_c *model = &mAnmModel;
-    model->Render(&sTrmp2MarioScale);
+    mAnmModel.Render(&sTrmp2MarioScale);
 }
 
 void dMgTrmpln2Mario_c::UpdateMatrix() {
@@ -368,6 +367,8 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
+        /* Kept (#821 r83): tmp = mContactNormal and the three member copies
+           move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
         tmp.x = src->x;
         tmp.y = src->y;
@@ -556,6 +557,8 @@ void dMgTrmpln2Mario_c::BounceOffLineB() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
+        /* Kept (#821 r83): tmp = mContactNormal and the three member copies
+           move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
         tmp.x = src->x;
         tmp.y = src->y;
@@ -1078,8 +1081,7 @@ Vector3 *dMgTrmpln3DMario_c::GetPos() {
 }
 
 void dMgTrmpln3DMario_c::Render() {
-    dExtAnmModel_c *model = &mAnmModel;
-    model->Render(&sTrmp3DMarioScale);
+    mAnmModel.Render(&sTrmp3DMarioScale);
 }
 
 void dMgTrmpln3DMario_c::UpdateMatrix() {
@@ -1404,6 +1406,8 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
+        /* Kept (#821 r83): tmp = mContactNormal and the three member copies
+           move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
         tmp.x = src->x;
         tmp.y = src->y;
@@ -1591,6 +1595,8 @@ void dMgTrmpln3DMario_c::BounceOffLineB() {
         alongLine = -alongLine;
 
     {
+        /* Kept (#821 r83): tmp = mContactNormal and the three member copies
+           move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
         tmp.x = src->x;
         tmp.y = src->y;
@@ -1671,8 +1677,7 @@ void dMgTrmpln3DMario_c::JumpOff() {
 }
 
 void dMgTrmpln3DMario_c::StateMissed() {
-    s16 *p = &mTimer;
-    *p = *p - 1;
+    mTimer--;
     if (mTimer == 0) {
         Puff_Spawn(mScreenPos[0], 0xc0);
         sTrmpMariosInPlay -= 1;

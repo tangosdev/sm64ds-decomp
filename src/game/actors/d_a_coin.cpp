@@ -613,10 +613,9 @@ void daCoin_c::StateBounce() {
 
     if (normal.x != 0 || normal.z != 0) {
         int slide = data_ov002_020ff078[floorClass];
-        Vector3 *velocity = &mSpeed;
-        velocity->x += normal.x * slide;
+        mSpeed.x += normal.x * slide;
         mSpeed.z += normal.z * slide;
-        mHorzSpeed = Vec3_HorzLen(velocity);
+        mHorzSpeed = Vec3_HorzLen(&mSpeed);
         if (mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             UpdatePosWithHorzSpeedAndAng();

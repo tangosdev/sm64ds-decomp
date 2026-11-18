@@ -47,19 +47,47 @@
   },
   {
    "file": "notes/agents/handoffs/brq-sinit1015.md",
+   "ref": "tools/port_refcheck.py"
+  },
+  {
+   "file": "notes/agents/handoffs/brq-sinit1015.md",
    "ref": "tools/tiers_ratchet.py"
+  },
+  {
+   "file": "notes/agents/handoffs/daYurei_Mucho_c-ov065.md",
+   "ref": "tools/port_refcheck.py"
   },
   {
    "file": "notes/agents/handoffs/daYurei_Mucho_c-ov065.md",
    "ref": "tools/tiers_ratchet.py"
   },
   {
+   "file": "notes/agents/handoffs/fader-clean1018.md",
+   "ref": "port/hal/shims.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/fader-clean1018.md",
+   "ref": "tools/port_refcheck.py"
+  },
+  {
    "file": "notes/agents/handoffs/issue-2410-daMky_c.md",
    "ref": "config/converted-baseline.json"
   },
   {
+   "file": "notes/agents/handoffs/issue-2410-daMky_c.md",
+   "ref": "tools/port_refcheck.py"
+  },
+  {
    "file": "notes/agents/handoffs/issue-2410-humanizer-2.md",
    "ref": "src/func_ov006_020cb030.cpp"
+  },
+  {
+   "file": "notes/agents/handoffs/issue-2410-humanizer-2.md",
+   "ref": "tools/port_refcheck.py"
+  },
+  {
+   "file": "notes/agents/handoffs/issue-2411-humanizer-2.md",
+   "ref": "port/slice_gate9.txt"
   },
   {
    "file": "notes/agents/handoffs/issue-2411-humanizer-2.md",
@@ -91,6 +119,10 @@
   },
   {
    "file": "notes/agents/handoffs/issue-2411.md",
+   "ref": "tools/port_refcheck.py"
+  },
+  {
+   "file": "notes/agents/handoffs/issue-2411.md",
    "ref": "tools/tiers_ratchet.py"
   },
   {
@@ -98,12 +130,28 @@
    "ref": "src/func_ov006_020cb030.cpp"
   },
   {
+   "file": "notes/agents/handoffs/issue-2481-clock-source-review.md",
+   "ref": "tools/port_refcheck.py"
+  },
+  {
+   "file": "notes/agents/handoffs/issue-4570-mario-cap-angle-view1106.md",
+   "ref": "tools/port_refcheck.py"
+  },
+  {
    "file": "notes/agents/handoffs/pr-2445-source-review-fixes.md",
    "ref": "src/_ZN8dActor_cC2Ev.cpp"
   },
   {
+   "file": "notes/agents/handoffs/pr-2450-source-review-fixes.md",
+   "ref": "tools/port_refcheck.py"
+  },
+  {
    "file": "notes/agents/handoffs/prod-snmbdy-0907.md",
    "ref": "config/converted-baseline.json"
+  },
+  {
+   "file": "notes/agents/ov007-path-readability1018.md",
+   "ref": "tools/port_refcheck.py"
   },
   {
    "file": "notes/agents/references/builder-v1.md",
@@ -243,6 +291,14 @@
   },
   {
    "file": "notes/collision-system.md",
+   "ref": "port/slice_gate8.txt"
+  },
+  {
+   "file": "notes/collision-system.md",
+   "ref": "port/tests/smoke_clsn.cpp"
+  },
+  {
+   "file": "notes/collision-system.md",
    "ref": "port/unmatched/MeshCollider_DetectClsn_Sphere.cpp"
   },
   {
@@ -256,6 +312,14 @@
   {
    "file": "notes/collision-system.md",
    "ref": "src/_ZN7dBgW_KcD1Ev.cpp"
+  },
+  {
+   "file": "notes/ctor-migration.md",
+   "ref": "port/hal/actor_vtables.cpp"
+  },
+  {
+   "file": "notes/ctor-migration.md",
+   "ref": "port/slice_gate4b.txt"
   },
   {
    "file": "notes/ctor-migration.md",
@@ -458,6 +522,10 @@
    "ref": "src/randomizer.py"
   },
   {
+   "file": "notes/roadmap.md",
+   "ref": "port/docs/opie-assessment.md"
+  },
+  {
    "file": "notes/rom-build.md",
    "ref": "mods/Player_ScaleByCharFactor.c"
   },
@@ -482,6 +550,10 @@
    "ref": "tools/deepen_rtti.py"
   },
   {
+   "file": "notes/sdk-pret-alignment.md",
+   "ref": "port/tools/hostgen.py"
+  },
+  {
    "file": "notes/sinit-ownership-pilot-ov002.md",
    "ref": "src/unnamed/ov002/__sinit_ov002_02100938.c"
   },
@@ -496,6 +568,10 @@
   {
    "file": "notes/src-domain-buckets.md",
    "ref": "src/unnamed/ov063"
+  },
+  {
+   "file": "notes/system-provenance.md",
+   "ref": "port/ntr/bmd.cpp"
   },
   {
    "file": "notes/tu-cpp-census-2026-08.md",
@@ -530,60 +606,12 @@
    "ref": "src/unnamed/ov045/__sinit_ov045_02112214.c"
   },
   {
-   "file": "port/docs/mmio-inventory.md",
-   "ref": "port/salvage-port-repo-tools"
-  },
-  {
-   "file": "port/docs/mmio-inventory.md",
-   "ref": "port/tools/mmio_inventory.py"
-  },
-  {
-   "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd11fdiv_resultEv.c"
-  },
-  {
-   "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd11ldiv_resultEv.c"
-  },
-  {
-   "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd3divEii.c"
-  },
-  {
-   "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd3modEii.c"
-  },
-  {
-   "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd4ldivEii.c"
-  },
-  {
-   "file": "port/docs/opie-assessment.md",
-   "ref": "include/nitro/hw/X86/ioreg_G3.h"
-  },
-  {
-   "file": "port/docs/opie-assessment.md",
-   "ref": "include/nitro/hw/X86/mmap_global.h"
-  },
-  {
-   "file": "port/docs/opie-assessment.md",
-   "ref": "port/salvage-port-repo-tools"
-  },
-  {
-   "file": "port/docs/opie-assessment.md",
-   "ref": "port/tools/mmio_inventory.py"
-  },
-  {
-   "file": "port/docs/opie-assessment.md",
-   "ref": "src/func_02034da4.c"
-  },
-  {
-   "file": "port/docs/opie-assessment.md",
-   "ref": "src/port"
-  },
-  {
    "file": "tools/build_pin.py",
    "ref": "src/func_ov006_020cb030.cpp"
+  },
+  {
+   "file": "tools/check_dead_references.py",
+   "ref": "port/docs/opie-assessment.md"
   },
   {
    "file": "tools/check_dead_references.py",
@@ -674,8 +702,8 @@
    "ref": "src/b.cpp"
   },
   {
-   "file": "tools/port_refcheck.py",
-   "ref": "port/slice_gate"
+   "file": "tools/port_linked_functions.py",
+   "ref": "port/tools/linkage.py"
   },
   {
    "file": "tools/pr_linkcheck.py",
@@ -760,6 +788,10 @@
   {
    "file": "tools/tubuild.py",
    "ref": "symbols/sections"
+  },
+  {
+   "file": "tools/validate_merge.py",
+   "ref": "tools/port_refcheck.py"
   }
  ]
 }

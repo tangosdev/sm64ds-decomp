@@ -26,9 +26,8 @@
  *   store sizes it 0x48->0x4c.
  * - Behavior's angle store is the compound mSwingAngle += mSwingSpeed;
  *   mSwingAngle = mSwingAngle + mSwingSpeed sizes Behavior 0x190->0x184.
- *   *accelP += (short)(spd * pos) sizes it 0x190->0x198. if (vx * vy > 0)
- *   stays 0x190 and differs by 4 words. if (mSoundTimer != 0) stays 0x190
- *   and differs by 1 word.
+ *   if (vx * vy > 0) stays 0x190 and differs by 4 words. if (mSoundTimer != 0)
+ *   stays 0x190 and differs by 1 word.
  * - The data_ov065_* handles, g_profile_CT_MECHA03, and data_ov035_02112198
  *   are not this TU's data.
  */
@@ -117,17 +116,11 @@ int daObjCtMecha03_c::Behavior() {
             {
                 short vx = mSwingDir;
                 short vy = mSwingAngle;
-                short *accelP = &mSwingSpeed;
                 if (vy * vx > 0) {
                     vx = -vx;
                     mSwingDir = vx;
                 }
-                {
-                    short spd = mSwingAccel;
-                    short pos = mSwingDir;
-                    short accel = *accelP;
-                    *accelP = (spd * pos + accel);
-                }
+                mSwingSpeed += mSwingAccel * mSwingDir;
             }
             if (data_0209f2c0 == 2 && mSwingSpeed == 0) {
                 int roll = RandomIntInternal(&data_0209e650.value);
