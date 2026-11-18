@@ -1022,8 +1022,7 @@ void daKrb_c::ActTumble() {
             mPrevAngle.y = mAngle.y;
             mdCcAc_c.flags &= ~0x20000;
         }
-        dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
-                                   data_ov084_0213089c);
+        dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr), data_ov084_0213089c);
         mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
         mMaterialChanger.currFrame = 0;
         return;
@@ -1728,8 +1727,7 @@ int daKrb_c::InitResources() {
     if (mShadowModel.InitCylinder() == 0)
         return 0;
 
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr,
-                               data_ov084_0213089c);
+    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr, data_ov084_0213089c);
     mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
     mCoinType = COIN_PLAIN;

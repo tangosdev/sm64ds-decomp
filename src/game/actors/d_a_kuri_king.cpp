@@ -1787,8 +1787,7 @@ int daKuriKing_c::InitVanishResources() {
     if (this->mShadowModels[0].InitCylinder() == 0)
         return 0;
 
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr,
-                               data_ov084_0213089c);
+    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr, data_ov084_0213089c);
 
     this->mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
