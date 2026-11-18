@@ -761,27 +761,17 @@ int daObjTatefuda_c::TryStartTalk() {
         return 0;
     if (mPoundsLeft == 0)
         return 0;
-    {
-        daPly_c *other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
-        if (other == 0)
-            goto fail;
-        {
-            if (IsPlayerActor(other))
-                goto success;
-        }
-    fail:
+    daPly_c *other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
+    if (other == 0 || !IsPlayerActor(other))
         return 0;
-    success: {
-        int ang = Vec3_HorzAngle(&mPos, &other->mPos);
-        if (AngleDiff(ang, mAngle.y) > 0x4000)
-            return 0;
-        mTalkingPlayer = other;
-        if (other->StartTalk(*this, false) == 0)
-            return 0;
-        SetState(STATE_TALK);
-        return 1;
-    }
-    }
+    int ang = Vec3_HorzAngle(&mPos, &other->mPos);
+    if (AngleDiff(ang, mAngle.y) > 0x4000)
+        return 0;
+    mTalkingPlayer = other;
+    if (other->StartTalk(*this, false) == 0)
+        return 0;
+    SetState(STATE_TALK);
+    return 1;
 }
 
 /* recovered: shared common types, declarations from a shared header */
