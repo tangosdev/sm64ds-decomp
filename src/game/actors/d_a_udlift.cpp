@@ -152,11 +152,14 @@ void daUdlift_c::OnMeshClsnTouch(void *collider, daUdlift_c *self, daPly_c *play
     self->LatchRider(player);
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* If the touching actor is the player (0xbf), hold it as mRider and mark
  * the lift ridden this frame. */
 void daUdlift_c::LatchRider(daPly_c *player) {
-    int isPlayer = (player->actorID == 0xbf);
-    if (isPlayer) {
+    if (IsPlayerActor(player)) {
         mRider = player;
         mIsRidden = 1;
     }
