@@ -2,8 +2,7 @@
 /* .data data at 0x021136f4; bytes from the cartridge. */
 #include "types.h"
 
-unsigned int data_ov018_021136f4[18] = {
-    0xffff0000, 0xecdc0103, 0xf8f8ee12, 0x00000000, 0xffff0000, 0xf2360032,
-    0x1252ee6c, 0x00000000, 0x00024000, 0xf9c0001f, 0x06a4ff06, 0x00000000,
-    0xff020000, 0x0d69004d, 0x1194ee49, 0x00000000, 0xffff0000, 0xec290031
-};
+unsigned int data_ov018_021136f4[18] = {0xffff0000, 0xecdc0103, 0xf8f8ee12, 0x00000000, 0xffff0000,
+                                        0xf2360032, 0x1252ee6c, 0x00000000, 0x00024000, 0xf9c0001f,
+                                        0x06a4ff06, 0x00000000, 0xff020000, 0x0d69004d, 0x1194ee49,
+                                        0x00000000, 0xffff0000, 0xec290031};

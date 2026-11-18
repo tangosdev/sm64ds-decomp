@@ -4,8 +4,8 @@
 
 struct PgMthrTexSeqFileHandle;
 
-extern struct PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile;  /* local extern: linker-name reference for a data word */
+extern struct PgMthrTexSeqFileHandle
+    gPenguinAngryTextureSequenceFile; /* local extern: linker-name reference for a data word */
 
-extern struct SharedFilePtr * const data_ov018_02112c04[1] = {
-    (struct SharedFilePtr *)&gPenguinAngryTextureSequenceFile
-};
+extern struct SharedFilePtr *const data_ov018_02112c04[1] = {
+    (struct SharedFilePtr *)&gPenguinAngryTextureSequenceFile};

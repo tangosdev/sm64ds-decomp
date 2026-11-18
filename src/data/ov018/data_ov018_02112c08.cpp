@@ -4,8 +4,7 @@
 
 struct PgMthrTexSeqFileHandle;
 
-extern struct PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile;  /* local extern: linker-name reference for a data word */
+extern struct PgMthrTexSeqFileHandle
+    gPenguinWait1TextureSequenceFile; /* local extern: linker-name reference for a data word */
 
-extern unsigned int const data_ov018_02112c08[1] = {
-    (u32)&gPenguinWait1TextureSequenceFile
-};
+extern unsigned int const data_ov018_02112c08[1] = {(u32)&gPenguinWait1TextureSequenceFile};

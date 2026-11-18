@@ -4,9 +4,10 @@
 
 struct PgMthrAnimFileResHandle;
 
-extern struct PgMthrAnimFileResHandle gPenguinWait1AnimationFile;  /* local extern: linker-name reference for a data word */
-extern struct PgMthrAnimFileResHandle gPenguinWalkAnimationFile;  /* local extern: linker-name reference for a data word */
+extern struct PgMthrAnimFileResHandle
+    gPenguinWait1AnimationFile; /* local extern: linker-name reference for a data word */
+extern struct PgMthrAnimFileResHandle
+    gPenguinWalkAnimationFile; /* local extern: linker-name reference for a data word */
 
-extern int const data_ov018_02112c0c[2] = {
-    (int)&gPenguinWait1AnimationFile, (int)&gPenguinWalkAnimationFile
-};
+extern int const data_ov018_02112c0c[2] = {(int)&gPenguinWait1AnimationFile,
+                                           (int)&gPenguinWalkAnimationFile};

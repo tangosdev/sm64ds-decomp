@@ -1672,6 +1672,1062 @@
       "count": 1,
       "reason": "dScMgCurling2_c::ResetGame clears 0x55b0 through the existing header member instead of a raw `*((short *)(c + 0x55b0))` store off a `char *c = (char *)this` alias (#821). It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Same shape as the file's unk_55a0 and unk_55c0 stores. Follow-up: name it if a reader is found.",
       "evidence": "include/dScMgCurling2_c.h `u16 unk_55b0; /* 0x55b0, write-only: ResetGame zeroes it */`; fdiff _ZN15dScMgCurling2_c9ResetGameEv ov006 58/58 2004/b56"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10daPgMthr_cD0Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked1ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked2ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnKickedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnPushedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/BridgePenguin_SpawnInfo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c9Virtual50Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/BridgePenguin_SpawnInfo.cpp ROM window 0x02113a00 size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138d8.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14daObjSm_Lift_c16CleanupResourcesEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138d8.cpp ROM window 0x021138d8 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138d8.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14daObjSm_Lift_c8BehaviorEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138d8.cpp ROM window 0x021138d8 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138d8.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13AfterBehaviorEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138d8.cpp ROM window 0x021138d8 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138d8.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c14BeforeBehaviorEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138d8.cpp ROM window 0x021138d8 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138d8.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138d8.cpp ROM window 0x021138d8 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138d8.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138d8.cpp ROM window 0x021138d8 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138f0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14daObjSm_Lift_c6RenderEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138f0.cpp ROM window 0x021138f0 size 0xc (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138f0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11AfterRenderEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138f0.cpp ROM window 0x021138f0 size 0xc (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138f0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c12BeforeRenderEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138f0.cpp ROM window 0x021138f0 size 0xc (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14daObjSm_Lift_cD0Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14daObjSm_Lift_cD1Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c13OnHeapCreatedEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c16OnPendingDestroyEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual34Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual38Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked1ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked2ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnKickedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnPushedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021138fc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c9Virtual50Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021138fc.cpp ROM window 0x021138fc size 0x38 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113934.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10dBgActor_c4KillEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113934.cpp ROM window 0x02113934 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113934.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14daObjSm_Lift_c15OnHitByMegaCharER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113934.cpp ROM window 0x02113934 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113934.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113934.cpp ROM window 0x02113934 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113934.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113934.cpp ROM window 0x02113934 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113934.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113934.cpp ROM window 0x02113934 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113934.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113934.cpp ROM window 0x02113934 size 0x18 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021139f4.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10daPgMthr_cD1Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021139f4.cpp ROM window 0x021139f4 size 0xc (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021139f4.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c13OnHeapCreatedEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021139f4.cpp ROM window 0x021139f4 size 0xc (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_021139f4.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual38Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_021139f4.cpp ROM window 0x021139f4 size 0xc (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113aa0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c13OnHeapCreatedEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113aa0.cpp ROM window 0x02113aa0 size 0x1c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113aa0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c16OnPendingDestroyEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113aa0.cpp ROM window 0x02113aa0 size 0x1c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113aa0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual34Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113aa0.cpp ROM window 0x02113aa0 size 0x1c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113aa0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual38Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113aa0.cpp ROM window 0x02113aa0 size 0x1c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113aa0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11AfterRenderEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113aa0.cpp ROM window 0x02113aa0 size 0x1c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113aa0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daSCre_cD0Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113aa0.cpp ROM window 0x02113aa0 size 0x1c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113aa0.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daSCre_cD1Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113aa0.cpp ROM window 0x02113aa0 size 0x1c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked1ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked2ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnKickedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnPushedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113abc.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c9Virtual50Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113abc.cpp ROM window 0x02113abc size 0x34 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15daObjIceBoard_c6RenderEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15daObjIceBoard_cD0Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15daObjIceBoard_cD1Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c13OnHeapCreatedEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c16OnPendingDestroyEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual34Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual38Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11AfterRenderEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c12BeforeRenderEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13AfterBehaviorEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b50.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c14BeforeBehaviorEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b50.cpp ROM window 0x02113b50 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b7c.cpp ROM window 0x02113b7c size 0x4 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b80.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b80.cpp ROM window 0x02113b80 size 0x10 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b80.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked1ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b80.cpp ROM window 0x02113b80 size 0x10 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b80.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b80.cpp ROM window 0x02113b80 size 0x10 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b80.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c9Virtual50Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b80.cpp ROM window 0x02113b80 size 0x10 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15daObjIceBoard_c15OnHitByMegaCharER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN15daObjIceBoard_c4KillEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked2ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnKickedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov018/data_ov018_02113b90.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnPushedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov018/data_ov018_02113b90.cpp ROM window 0x02113b90 size 0x30 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10dBgActor_c4KillEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked1ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked2ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnKickedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112d48.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnPushedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112d48.cpp ROM window 0x02112d48 size 0x2c (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14daObjUkiyuka_c6RenderEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN14daObjUkiyuka_c8BehaviorEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN19daObjKm2_Ukishima_c16CleanupResourcesEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c12BeforeRenderEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13AfterBehaviorEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c14BeforeBehaviorEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c18AfterInitResourcesEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f58.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f58.cpp ROM window 0x02112f58 size 0x24 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN10dBgActor_c4KillEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN19daObjKm2_Ukishima_cD0Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN19daObjKm2_Ukishima_cD1Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c13OnHeapCreatedEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c16OnPendingDestroyEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual34Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7fBase_c9Virtual38Ejj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11AfterRenderEj",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked1ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c11OnAttacked2ERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnKickedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c8OnPushedERS_",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov045/data_ov045_02112f7c.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8dActor_c9Virtual50Ev",
+      "count": 2,
+      "reason": "ROM data blob: each word is a vtable slot holding the code address of a virtual override. The stored linker word is the mangled member symbol, and C++ cannot name a virtual member's address in data: &Class::method is a pointer-to-member (a vtable index), not the code word, so the extern spells the linker name the cartridge stores. This is a data word, not a call site.",
+      "evidence": "src/data/ov045/data_ov045_02112f7c.cpp ROM window 0x02112f7c size 0x54 (.data), reproduced byte-for-byte by tools/romdata_check.py --files (VERIFIED, 0 differs); full build reports 2072/2072 source-owned data claims reproducing"
     }
   ]
 }
