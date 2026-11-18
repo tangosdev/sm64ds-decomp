@@ -794,7 +794,6 @@ by his own Y. 4) Unless mDropsShadow is 0, probe the floor with a dBgCh_Gnd from
 none), build the shadow matrix there and call DropShadowRadHeight with radius
 0x140000 (320) and height 0x64000 (100). */
 void daKpa_c::UpdateModelMatrix() {
-    char pad[8];
     Matrix4x3 saved;
     Vector3 pos;
     Vector3 v;
