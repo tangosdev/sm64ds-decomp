@@ -831,7 +831,7 @@ s32 daCoin_c::InitResources()
 
     mCoinFlags = 0;
     ccRadius = 0x64000;
-    behavior = (s32)param1 & 0xf;
+    behavior = param1 & 0xf;
     mBehaviorType = behavior;
     ccHeight = 0x40000;
     behavior = mBehaviorType;
