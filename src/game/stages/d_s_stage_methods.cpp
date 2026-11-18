@@ -492,6 +492,25 @@ static u32 sActorDeathTable[3][16];
 extern dFdBrightness_c *gSceneFader;
 extern dFdColor_c gSceneColorFader;
 extern int gRunningKuppaScript;
+
+/* gGameMode is 0 in the adventure (StartFile stores it), 1 in VS
+   (PrepareVsMode) and 2 in the castle-fall cutscene. These int-returning
+   predicates are what make the ROM materialize 0/1 before testing it. */
+static inline int IsVsMode() {
+    return gGameMode == 1;
+}
+
+static inline int IsGameMode(int mode) {
+    return gGameMode == mode;
+}
+
+static inline int IsCastleFallCutsceneRunning() {
+    return gGameMode == 2;
+}
+
+static inline int IsKuppaScriptRunning() {
+    return gRunningKuppaScript != 0;
+}
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
@@ -720,7 +739,7 @@ void dScStage_c::RenderBouncingArrows() {
         r4 = (data_020a0db0 & 8) ? 0xae : 0xb0;
     }
     A = gGamePaused;
-    if ((A == 0 && gShowTouchScreenArrows != 0 && (int)(gGameMode == 1) == 0) ||
+    if ((A == 0 && gShowTouchScreenArrows != 0 && !IsVsMode()) ||
         (A != 0 && (unsigned char)(sPauseState + 0xf7) <= 2u)) {
         OAM::Render(0, &OAM::BOUNCING_ARROW, 64, r4, -1, -1, 0x1000, 0x1000, 0, -1);
         OAM::Render(0, &OAM::BOUNCING_ARROW, 128, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -1128,8 +1147,7 @@ void dScStage_c::PS_Render() {
         dScStage_c::RenderBouncingArrows();
     }
 
-    int isVsMode = (gGameMode == 1);
-    if (isVsMode != 0 && data_0209fc68 == 0) {
+    if (IsVsMode() && data_0209fc68 == 0) {
         OAM::Render(0, &OAM::VS_PAUSE, 128, 96, -1, -1, 0x1000, 0x1000, 0, -1);
     } else if (sPauseState == 1 || (SublevelToLevel(gCurrentSublevel) == 0x1d &&
                                     (sPauseState < 7U || sPauseState > 8U))) {
@@ -2633,8 +2651,7 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 0x13: {
-        int t = (gGameMode == 1);
-        if (t != false && data_0209fc68 == 0) {
+        if (IsVsMode() && data_0209fc68 == 0) {
             dScene_c::StartSceneFade(6, 1, 0);
             data_0209f280 = 1;
             dScStage_c::PS_Cleanup();
@@ -2726,8 +2743,7 @@ void dScStage_c::PS_Init() {
 }
 
 int func_02029600(int x) {
-    int b = (gGameMode == 2);
-    if (b == 0) {
+    if (!IsCastleFallCutsceneRunning()) {
         unsigned char saved = *&data_ov002_02111148;
         int r = GetMinimapID((dActor_c *)x, -1);
         if (r == saved)
@@ -2965,11 +2981,9 @@ void SetNextLevel(int arg) {
 
 void SetNextStar(void) {
     int level = SublevelToLevel(gNextSublevel);
-    int b;
     if (gNextStarId == 1)
         return;
-    b = (gGameMode == 1);
-    if (b != 0)
+    if (IsVsMode())
         return;
     if (level != -1) {
         if (level <= 0xe)
@@ -3876,7 +3890,7 @@ void dScStage_c::LoadFog() {
 
 /* Static: five globals, no object. */
 int dScStage_c::CanPause() {
-    if (((unsigned)(gGameMode == 1)) == 0)
+    if (!IsVsMode())
         return 1;
     if (data_0209fc68 != 0)
         return 0;
@@ -3927,8 +3941,7 @@ int dScStage_c::Render() {
     dExtShadowModel_c::RenderAll();
     RenderModelTransparent();
     {
-        int isVsMode = (gGameMode == 1);
-        if (isVsMode) {
+        if (IsVsMode()) {
             if (data_0209fc9c == 0 && gGamePaused == 0) {
                 RenderVsModeCountdown();
                 RenderVsModeNewStar();
@@ -3998,8 +4011,7 @@ int dScStage_c::Behavior() {
         return 1;
     }
     {
-        int b = (gGameMode == 1);
-        if (b == 0) {
+        if (!IsVsMode()) {
             UpdateMessage();
         } else {
             u8 c9c = data_0209fc9c;
@@ -4073,9 +4085,8 @@ int dScStage_c::Behavior() {
     if (gNextSublevel >= 0) {
         int lvl = SublevelToLevel(gNextSublevel);
         int lvl2 = SublevelToLevel(gCurrentSublevel);
-        int bb = (gGameMode == 2);
-        if (bb == 0 && lvl <= 0xe && lvl != lvl2 && gCheckpointSublevel < 0 &&
-            (gNextSublevel != 0xc || sNextEntranceId != 4)) {
+        if (!IsCastleFallCutsceneRunning() && lvl <= 0xe && lvl != lvl2 &&
+            gCheckpointSublevel < 0 && (gNextSublevel != 0xc || sNextEntranceId != 4)) {
             dScene_c::SetSceneToSpawn(4, 0);
         } else {
             dScene_c::SetSceneToSpawn(3, 0);
@@ -4084,8 +4095,7 @@ int dScStage_c::Behavior() {
              IsLevelInsideCastle(gNextSublevel) == 0) &&
             (IsLevelTinyHugeIslandOutside(gCurrentSublevel) == 0 ||
              IsLevelTinyHugeIslandOutside(gNextSublevel) == 0)) {
-            int bb2 = (gGameMode == 2);
-            if (bb2 == 0)
+            if (!IsCastleFallCutsceneRunning())
                 Sound::StopLoadedMusic_Layer1(60);
         }
     } else if (data_0209f20c != 0) {
@@ -4099,20 +4109,17 @@ int dScStage_c::Behavior() {
             data_0209d660 == 0 && data_0209d4b0 == 0 && CanPause() != 0 && IsPauseDisabled() == 0 &&
             (u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 &&
             MaskOff(gNextActorUpdateMask, 0) == 0) {
-            u8 st = gGameMode;
-            int b1 = (st == 1);
-            if ((b1 && data_0209fc68 == 0) ||
+            int isVsMode = IsVsMode();
+            if ((isVsMode && data_0209fc68 == 0) ||
                 (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
-                int b2 = (st == 2);
-                if (b2 == 0) {
-                    int b3 = (gRunningKuppaScript != 0);
-                    if (b3 == 0) {
+                if (!IsCastleFallCutsceneRunning()) {
+                    if (!IsKuppaScriptRunning()) {
                         if (sPauseInputLockout == 0) {
                             u32 pj = gActivePlayerSlot;
                             int h2 = data_020a0e58[pj].pressed;
                             int t8 = h2 & 8;
                             if ((t8 != 0 && (data_020a0e58[pj].held & 4) == 0) ||
-                                (b1 == 0 && t8 == 0 && (h2 & 4) != 0)) {
+                                (!isVsMode && t8 == 0 && (h2 & 4) != 0)) {
                                 gGamePaused = 1;
                                 func_02012790(2);
                                 if (gRaceTimer.mIsRunning != 0) {
@@ -4140,12 +4147,10 @@ int dScStage_c::Behavior() {
 }
 
 void dScStage_c::CheckInput() {
-    u8 mode = gGameMode;
-    int isVsMode = (mode == 1);
-    if (isVsMode == false) {
-        int modeIsTwo = (mode == 2);
-        if (modeIsTwo != false || !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
-            (data_0209d660 == 0 && (int)(gRunningKuppaScript != 0) != false)) {
+    if (!IsVsMode()) {
+        if (IsCastleFallCutsceneRunning() ||
+            !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
+            (data_0209d660 == 0 && IsKuppaScriptRunning())) {
             {
                 ControllerInput *control = data_0209f498;
                 int playerIndex;
@@ -4268,8 +4273,7 @@ void dScStage_c::CheckInput() {
             }
         }
         {
-            int skipButtonMapping = (gRunningKuppaScript != 0);
-            if (skipButtonMapping == false) {
+            if (!IsKuppaScriptRunning()) {
                 u16 *buttonMap = data_0209214c[control->mode];
                 u32 buttonIndex = 0;
                 do {
@@ -4343,8 +4347,7 @@ void ResetInput(void) {
     int i;
     for (i = 0; i < gNumPlayers; i++) {
         u8 mode;
-        int m = (gGameMode == 1);
-        if (m == 0)
+        if (!IsVsMode())
             mode = p->mode;
         else
             mode = GetControllerMode(i);
@@ -4376,8 +4379,7 @@ int dScStage_c::CleanupResources() {
         data_020756f0[fileIndex]->Release();
 
     {
-        int atEnd = (gGameMode == 2);
-        if (!atEnd)
+        if (!IsCastleFallCutsceneRunning())
             Sound::ResetPlayerVoiceGroup();
     }
     KuppaScript::End();
@@ -4498,9 +4500,7 @@ void func_ov001_020ab2e4(void);
 int dScStage_c::InitResources() {
 
     if (mWaitingForLoad == 0) {
-        u8 mode = gGameMode;
-        int isVsMode = (mode == 1) ? 1 : 0;
-        if (isVsMode) {
+        if (IsVsMode()) {
             Sound::Player::SetPlayableSeqCount(2, 5);
             int sequenceCount = 3;
             Sound::Player::SetPlayableSeqCount(sequenceCount, sequenceCount);
@@ -4520,10 +4520,8 @@ int dScStage_c::InitResources() {
             if ((1 << sublevelBit) & 0x2A15)
                 specialSublevel = 1;
         }
-        mode = gGameMode;
-        int vsModeReset = (mode == 1) ? 1 : 0;
 
-        if (vsModeReset || sReturnState == 2 || specialSublevel || nextLevel == 0x1D ||
+        if (IsVsMode() || sReturnState == 2 || specialSublevel || nextLevel == 0x1D ||
             nextLevel != previousLevel) {
             int row = 0;
             sEventFlags = 0;
@@ -4541,6 +4539,8 @@ int dScStage_c::InitResources() {
                 int idx = 0;
                 u8 *p1 = (u8 *)gNumRedCoins;
                 u8 *vsStars = (u8 *)gNumStageStars;
+                /* Kept (#821 r87): IsVsMode() here is 12 bytes short of the ROM. */
+                u8 mode = gGameMode;
                 int vsModeCounters = (mode == 1) ? 1 : 0;
                 u8 loadMode = sReturnState;
                 do {
@@ -4626,8 +4626,7 @@ int dScStage_c::InitResources() {
         func_02039218();
         KuppaScript::Reset();
 
-        int vsModeTimers = (gGameMode == 1) ? 1 : 0;
-        if (vsModeTimers != 0) {
+        if (IsVsMode()) {
             data_0209f2bc = 3;
             data_0209f304 = 40;
             data_0209f308 = 0;
@@ -4665,8 +4664,7 @@ int dScStage_c::InitResources() {
         data_02092134 = 0x44444444;
         LoadLevelOverlays(gCurrentSublevel);
 
-        int skipSoundGroup = (gGameMode == 2) ? 1 : 0;
-        if (skipSoundGroup == 0) {
+        if (!IsCastleFallCutsceneRunning()) {
             s8 sublevel = gCurrentSublevel;
             int soundGroup = 0;
             u8 bank = 0x36;
@@ -4698,9 +4696,8 @@ int dScStage_c::InitResources() {
             }
         }
 
-        int vsModeFaders = (gGameMode == 1) ? 1 : 0;
         u16 *faderFileIds;
-        if (vsModeFaders && levelArchive != 0xBF) {
+        if (IsVsMode() && levelArchive != 0xBF) {
             faderFileIds = data_02075600;
         } else if (gCurrentSublevel == 5) {
             faderFileIds = data_020755f0;
@@ -4724,10 +4721,8 @@ int dScStage_c::InitResources() {
         LVL_Overlay *level = (LVL_Overlay *)data_0209f340;
         dScStage_c::LoadClsnAndObjects(*level, gCurrentEntranceId, mMeshCollider);
 
-        int vsModeMusic = (gGameMode == 1) ? 1 : 0;
-        if (vsModeMusic == 0) {
-            int skipMusicSetup = (gRunningKuppaScript != 0) ? 1 : 0;
-            if (skipMusicSetup == 0) {
+        if (!IsVsMode()) {
+            if (!IsKuppaScriptRunning()) {
                 if (!IsLevelInsideCastle(gCurrentSublevel) ||
                     !IsLevelInsideCastle(previousSublevel)) {
                     if (!IsLevelTinyHugeIslandOutside(gCurrentSublevel) ||
@@ -4766,8 +4761,7 @@ int dScStage_c::InitResources() {
         gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
         GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ);
-        int skipSubDisplayLayers = (gGameMode == 2) ? 1 : 0;
-        if (skipSubDisplayLayers == 0) {
+        if (!IsCastleFallCutsceneRunning()) {
             GXS_SetVisiblePlane(gSubScreenLayers);
         }
         dCc_c::listHead = 0;
@@ -4857,8 +4851,8 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadFont3D();
     }
 
-    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
-        (int)(gRunningKuppaScript != 0) == 0) {
+    if (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+        !IsKuppaScriptRunning()) {
         G2S_SetBG0Priority(0);
         G2S_BG0Mosaic(0);
         G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
@@ -5041,12 +5035,10 @@ void LoadLevelOverlays(int level) {
 
 void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
     unsigned int i;
-    int b = (gGameMode == 1);
-    if (b != 0)
+    if (IsVsMode())
         return;
     for (i = 0; i < 7; i++) {
-        b = (gGameMode == 1);
-        if (b == 0 || i == 6) {
+        if (!IsVsMode() || i == 6) {
             unsigned char v = data_02075998[idx][i];
             if (v != 0) {
                 fn(data_02075804[i].t[v]);
@@ -5057,8 +5049,7 @@ void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
         fn((int)&OVERLAY_60_ID);
         return;
     }
-    b = (gGameMode == 1);
-    if (b == 0) {
+    if (!IsVsMode()) {
         fn((int)&OVERLAY_98_ID);
     }
     fn((int)&OVERLAY_102_ID);
