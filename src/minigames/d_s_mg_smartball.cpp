@@ -60,7 +60,9 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "nitro/gx/gx_bgcnt.h"
 
 /* Value types the board objects pass around; no shared header declares them. */
-/* Nine-word copy of sSmartballCellStartOrder. */
+/* Nine-word copy of sSmartballCellStartOrder. Kept (#821 r72): a local
+   `int order[9] = {...}` matches ShuffleCells' code but makes its initializer
+   a TU-local .rodata object the ROM does not have in this unit. */
 struct W9 {
     int w[9];
 };
@@ -3603,6 +3605,8 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
  * `continue` 0x128; indexed with a long counter 0x114, unsigned 0x11c,
  * u8 0x120, short or char 0x124. */
 void dScMgSmartball_c::UpdateScores() {
+    /* Kept (#821 r72): `&mPopupScore[i]` indexing is 0x128, `mPopupScore + i`
+       with a `Vector2 *popup = mPopupPos + i` is 0x11c, against 0x118. */
     char *o = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
@@ -4394,6 +4398,8 @@ void dScMgSmartball_c::SpawnObjects() {
  * at a time, then draws the side lamps, every board object and the score
  * popups. */
 s32 dScMgSmartball_c::Render() {
+    /* Kept (#821 r72): `&mLineTally[row]` and `&mAwardTally[j]` (or `+ row`,
+       `+ j`) give 0x10b8 against 0x10c0. */
     char *g = (char *)this;
     int col;
     int xpos;
