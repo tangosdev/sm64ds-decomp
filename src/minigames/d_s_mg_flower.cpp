@@ -292,7 +292,7 @@ s32 dScMgFlower_c::Behavior() {
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
                         Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].pos.x, &mCursorX);
-                        withinGrabRadius = Vec2_Len(&toCursor) < 0x18000 ? 1 : 0;
+                        withinGrabRadius = Vec2_Len(&toCursor) < 0x18000;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
                             mPetals[attachedIndex].held = 1;
@@ -313,7 +313,7 @@ s32 dScMgFlower_c::Behavior() {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
                             Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].pos.x, &mCursorX);
-                            withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000 ? 1 : 0;
+                            withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
                                 mPetals[freeIndex].driftX = 0;
