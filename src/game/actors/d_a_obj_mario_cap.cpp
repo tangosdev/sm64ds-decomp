@@ -420,7 +420,7 @@ int daObjMarioCap_c::InitResources()
         mIconKind = 2;
         mdCcAc_c.radius = kClsnSizeLarge;
         mdCcAc_c.height = kClsnSizeLarge;
-        param1 = GetParam1() - 0xa;   /* low byte 14 becomes 4, matching mType below */
+        param1 = GetParam1() - 0xa; /* low byte 14 becomes 4, matching mType below */
         mType = TYPE_RESPAWNING;
         EnterState(&data_ov002_0210df34);
         break;
