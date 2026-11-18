@@ -7,7 +7,6 @@
 #include "Vector2.h"
 
 struct TrampolineObjectCallbacks;
-struct V2;
 
 /* TrmpItem, one of Trampoline2's floating rings (its three models are
  * ASSET_RINGA/B/C_BMD, sTrmpItemRing*ModelFile): the 0x1d0-byte record whose
@@ -48,7 +47,7 @@ struct TrmpItem {
     /* Per-frame work on one ring. */
     void ReflectOffLine(TrampolineObjectCallbacks *jumper);
     int HitTest2D(TrampolineObjectCallbacks *jumper, int arg);
-    void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *current, V2 *previous);
+    void ProjectOnLine(TrampolineObjectCallbacks *jumper, Vector2 *current, Vector2 *previous);
     void UpdateMatrix();
     void Update();
     void Init(int *position, int *normal, int itemType, short motionType);

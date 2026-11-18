@@ -59,7 +59,9 @@ SpawnInfo<daPropeller_Heyho_c> g_profile_PROPELLER_HEYHO = {daPropeller_Heyho_c_
 
 /* Kept for the two player-position snapshots (measured r57): any Vector3 copy is
  * memberwise; a `VecFx32 tmp =` copy-init stays in registers in 0211f6e0 and in
- * 0211f48c misses the ROM's posbuf < fp < tmp frame order. */
+ * 0211f48c misses the ROM's posbuf < fp < tmp frame order.
+ * Kept (#821 r71): `tmp = player->mPos` gives 0211f6e0 0x3a8 (ROM 0x3a0) and
+ * `posbuf = pl->mPos` gives 0211f48c 0x160 (ROM 0x164). */
 struct V3w {
     int w[3];
 };
