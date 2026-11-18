@@ -41,7 +41,8 @@ typedef char UkisimaClsnFileHandle_size_must_be_8[sizeof(UkisimaClsnFileHandle) 
 
 #include "ResourceDescriptor.h"
 
-extern s16 data_ov015_02114794;
+/* Starting angle the disc is placed at. */
+s16 data_ov015_02114794 = 0x80;
 extern ResourceDescriptor data_ov015_021147a4;
 struct CLPS_Block {
     u32 tag;

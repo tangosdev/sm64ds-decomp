@@ -11,6 +11,34 @@
       "end": "0x021165b0"
     },
     {
+      "name": ".rodata.entry_langx",
+      "input_section": ".rodata",
+      "start": "0x0211b5d4",
+      "end": "0x0211b5e0"
+    },
+    {
+      "name": ".init",
+      "start": "0x0211bb00",
+      "end": "0x0211c51c"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x0211c5a8",
+      "end": "0x0211c5ac"
+    },
+    {
+      "name": ".data.entry_xbase",
+      "input_section": ".data",
+      "start": "0x0211c6e8",
+      "end": "0x0211c6ec"
+    },
+    {
+      "name": ".data.entry_course",
+      "input_section": ".data",
+      "start": "0x0211c6ec",
+      "end": "0x0211c6f0"
+    },
+    {
       "name": ".data.entry_sprites0",
       "input_section": ".data",
       "start": "0x211c6f0",
@@ -93,16 +121,6 @@
       "input_section": ".data",
       "start": "0x211d2fc",
       "end": "0x211d34c"
-    },
-    {
-      "name": ".init",
-      "start": "0x0211bb00",
-      "end": "0x0211c51c"
-    },
-    {
-      "name": ".ctor",
-      "start": "0x0211c5a8",
-      "end": "0x0211c5ac"
     },
     {
       "name": ".bss",
@@ -338,73 +356,18 @@
   "reconstruction_followup": "The gap contained 60 loose helpers, not 69 (nine upper functions already promoted). Two absorbed here; 58 remain. The next helper 021165b0 overlaps PR #3947. Mesh helpers are a separate dEntObj embedded object. Historical proof records retain their original ranges.",
   "data": [
     {
-      "symbol": "_ZTIN10dScEntry_c6icon_cE",
-      "address": "0x0211c8e0",
-      "size": "0xc"
+      "symbol": "data_ov075_0211c6e8",
+      "address": "0x0211c6e8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "left x of the first player row, indexed by 4 - players in the joined-player layout RenderVsPlayers draws"
     },
     {
-      "symbol": "_ZTIN10dScEntry_c15graphCallback_cE",
-      "address": "0x0211c8ec",
-      "size": "0xc"
-    },
-    {
-      "symbol": "_ZTI10dScEntry_c",
-      "address": "0x0211c8f8",
-      "size": "0xc"
-    },
-    {
-      "symbol": "_ZTS10dScEntry_c",
-      "address": "0x0211c904",
-      "size": "0xd"
-    },
-    {
-      "symbol": "data_ov075_0211c914",
-      "address": "0x0211c914",
-      "size": "0x10"
-    },
-    {
-      "symbol": "data_ov075_0211c924",
-      "address": "0x0211c924",
-      "size": "0x10"
-    },
-    {
-      "symbol": "data_ov075_0211c934",
-      "address": "0x0211c934",
-      "size": "0x10"
-    },
-    {
-      "symbol": "_ZTVN10dScEntry_c6icon_cE",
-      "address": "0x0211c94c",
-      "size": "0x10",
-      "emitted_storage_address": "0x0211c944",
-      "emitted_storage_size": "0x10",
-      "address_point_bias": 8
-    },
-    {
-      "symbol": "_ZTSN10dScEntry_c6icon_cE",
-      "address": "0x0211ca1c",
-      "size": "0x16"
-    },
-    {
-      "symbol": "_ZTVN10dScEntry_c15graphCallback_cE",
-      "address": "0x0211ca3c",
-      "size": "0x18",
-      "emitted_storage_address": "0x0211ca34",
-      "emitted_storage_size": "0x18",
-      "address_point_bias": 8
-    },
-    {
-      "symbol": "_ZTSN10dScEntry_c15graphCallback_cE",
-      "address": "0x0211cb44",
-      "size": "0x20"
-    },
-    {
-      "symbol": "_ZTV10dScEntry_c",
-      "address": "0x0211d304",
-      "size": "0x50",
-      "emitted_storage_address": "0x0211d2fc",
-      "emitted_storage_size": "0x50",
-      "address_point_bias": 8
+      "symbol": "data_ov075_0211c6ec",
+      "address": "0x0211c6ec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "course id started for each VS course slot"
     },
     {
       "symbol": "data_ov075_0211c6f0",
@@ -463,6 +426,69 @@
       "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
     },
     {
+      "symbol": "_ZTIN10dScEntry_c6icon_cE",
+      "address": "0x0211c8e0",
+      "size": "0xc"
+    },
+    {
+      "symbol": "_ZTIN10dScEntry_c15graphCallback_cE",
+      "address": "0x0211c8ec",
+      "size": "0xc"
+    },
+    {
+      "symbol": "_ZTI10dScEntry_c",
+      "address": "0x0211c8f8",
+      "size": "0xc"
+    },
+    {
+      "symbol": "_ZTS10dScEntry_c",
+      "address": "0x0211c904",
+      "size": "0xd"
+    },
+    {
+      "symbol": "data_ov075_0211c914",
+      "address": "0x0211c914",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov075_0211c924",
+      "address": "0x0211c924",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov075_0211c934",
+      "address": "0x0211c934",
+      "size": "0x10"
+    },
+    {
+      "symbol": "_ZTVN10dScEntry_c6icon_cE",
+      "address": "0x0211c94c",
+      "size": "0x10",
+      "emitted_storage_address": "0x0211c944",
+      "emitted_storage_size": "0x10",
+      "address_point_bias": 8
+    },
+    {
+      "symbol": "data_ov075_0211c954",
+      "address": "0x211c954",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
+    },
+    {
+      "symbol": "_ZTSN10dScEntry_c6icon_cE",
+      "address": "0x0211ca1c",
+      "size": "0x16"
+    },
+    {
+      "symbol": "_ZTVN10dScEntry_c15graphCallback_cE",
+      "address": "0x0211ca3c",
+      "size": "0x18",
+      "emitted_storage_address": "0x0211ca34",
+      "emitted_storage_size": "0x18",
+      "address_point_bias": 8
+    },
+    {
       "symbol": "data_ov075_0211cac4",
       "address": "0x211cac4",
       "size": "0x20",
@@ -486,6 +512,18 @@
     {
       "symbol": "data_ov075_0211cb24",
       "address": "0x211cb24",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
+    },
+    {
+      "symbol": "_ZTSN10dScEntry_c15graphCallback_cE",
+      "address": "0x0211cb44",
+      "size": "0x20"
+    },
+    {
+      "symbol": "data_ov075_0211cb64",
+      "address": "0x211cb64",
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
@@ -526,18 +564,12 @@
       "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
     },
     {
-      "symbol": "data_ov075_0211c954",
-      "address": "0x211c954",
-      "size": "0x14",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
-    },
-    {
-      "symbol": "data_ov075_0211cb64",
-      "address": "0x211cb64",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
+      "symbol": "_ZTV10dScEntry_c",
+      "address": "0x0211d304",
+      "size": "0x50",
+      "emitted_storage_address": "0x0211d2fc",
+      "emitted_storage_size": "0x50",
+      "address_point_bias": 8
     }
   ],
   "relocations": [
@@ -2881,6 +2913,27 @@
           "start": "0x0211d5c0",
           "end": "0x0211d980",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.entry_xbase",
+          "start": "0x0211c6e8",
+          "end": "0x0211c6ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.entry_course",
+          "start": "0x0211c6ec",
+          "end": "0x0211c6f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.entry_langx",
+          "start": "0x0211b5d4",
+          "end": "0x0211b5e0",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -4282,5 +4335,13 @@
       "evidence": "compiler-owned destructor-registration node; configured global at 0x0211d710"
     }
   ],
-  "rodata": null
+  "rodata": [
+    {
+      "symbol": "data_ov075_0211b5d4",
+      "address": "0x0211b5d4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "x the language tag is drawn at, indexed by GetLanguageIndex"
+    }
+  ]
 }

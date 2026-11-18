@@ -55,6 +55,16 @@ struct TrapCollisionFilePtr : SharedFilePtr {
     ~TrapCollisionFilePtr();
 };
 
+/* The block the door's mesh collider takes. CLPS.h keeps CLPS_Block opaque:
+   an eight-byte header whose halfword at +4 is the entry stride, then one
+   eight-byte CLPS per collider class. */
+struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    CLPS entries[2];
+};
+
 extern CLPS_Block data_ov010_021122f8;
 extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
@@ -320,3 +330,8 @@ TrapStateRec data_ov010_02112d28 = {
     &daObjC1_Trap_c::StateClosed,  &daObjC1_Trap_c::StateOpening,  &daObjC1_Trap_c::StateOpen,
     &daObjC1_Trap_c::StateClosing, &daObjC1_Trap_c::StateHeldOpen,
 };
+
+/* Door shut, then door held open. The all-ones words the cartridge pads the
+   block out to 32 bytes with are not part of the object. */
+CLPS_Block data_ov010_021122f8 = {
+    0x53504c43, 8, 2, {{0x04000fc1, 0x000000ff}, {0x00000fc1, 0x000000ff}}};

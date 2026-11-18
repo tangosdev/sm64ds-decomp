@@ -9,7 +9,8 @@
   "boundary_evidence": [
     "contiguous linker run: 0x2112bd0..0x2112cb8, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjBk_Ukisima_c",
-    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "The start-angle halfword is now defined here at 0x02114794. The class RTTI records that follow it stay unclaimed."
   ],
   "sections": [
     {
@@ -34,14 +35,20 @@
       "end": "0x02113634"
     },
     {
-      "name": ".bss",
-      "start": "0x02114aac",
-      "end": "0x02114ad4"
+      "name": ".data.uki_angle",
+      "input_section": ".data",
+      "start": "0x02114794",
+      "end": "0x02114796"
     },
     {
       "name": ".data",
       "start": "0x021147a4",
       "end": "0x021147b0"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02114aac",
+      "end": "0x02114ad4"
     }
   ],
   "functions": [
@@ -83,18 +90,25 @@
   ],
   "data": [
     {
-      "symbol": "data_ov015_021147a4",
-      "address": "0x021147a4",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "ResourceDescriptor {model, collision, CLPS} InitResourcesFrom and CleanupResourcesFrom take; the words relocate to 0x02114aac, 0x02114ab4 and the CLPS block at 0x02113614"
-    },
-    {
       "symbol": "data_ov015_02113614",
       "address": "0x02113614",
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "spinning disc CLPS block"
+    },
+    {
+      "symbol": "data_ov015_02114794",
+      "address": "0x02114794",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "starting angle InitResourcesFrom passes for the spinning disc"
+    },
+    {
+      "symbol": "data_ov015_021147a4",
+      "address": "0x021147a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ResourceDescriptor {model, collision, CLPS} InitResourcesFrom and CleanupResourcesFrom take; the words relocate to 0x02114aac, 0x02114ab4 and the CLPS block at 0x02113614"
     }
   ],
   "bss": [
@@ -275,6 +289,13 @@
           "start": "0x02114aac",
           "end": "0x02114ad4",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.uki_angle",
+          "start": "0x02114794",
+          "end": "0x02114796",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

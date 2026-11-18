@@ -9,7 +9,8 @@
   "boundary_evidence": [
     "contiguous class linker run: 0x021111a0..0x021119d0, 17 functions, including the collision callback body, its three-argument adapter, and the actor-table factory",
     "the PMF descriptors at 0x02112a78..0x02112aa0 relocate to the five state methods inside this run, while the class RTTI/SpawnInfo/vtable group at 0x02112aa0..0x02112b64 relocates back to its key function, lifecycle methods, destructor pair, and factory",
-    "the compiler-generated __sinit_d_a_obj_c1_trap.cpp is byte-identical to retail __sinit_ov010_0211203c (0xe0). It constructs the two resource handles and copies the five pointer-to-member descriptors into the state record. The ctor word at 0x0211219c points at that initializer. Class RTTI, profile, and vtable stay externalized."
+    "the compiler-generated __sinit_d_a_obj_c1_trap.cpp is byte-identical to retail __sinit_ov010_0211203c (0xe0). It constructs the two resource handles and copies the five pointer-to-member descriptors into the state record. The ctor word at 0x0211219c points at that initializer. Class RTTI, profile, and vtable stay externalized.",
+    "The native CLPS block is now defined in this TU at 0x021122f8 (0x18 bytes: header plus two entries). The all-ones words that pad it to 32 bytes stay unclaimed."
   ],
   "sections": [
     {
@@ -26,6 +27,12 @@
       "name": ".ctor",
       "start": "0x0211219c",
       "end": "0x021121a0"
+    },
+    {
+      "name": ".data.c1TrapClps",
+      "input_section": ".data",
+      "start": "0x021122f8",
+      "end": "0x02112310"
     },
     {
       "name": ".data",
@@ -178,6 +185,13 @@
     }
   ],
   "data": [
+    {
+      "symbol": "data_ov010_021122f8",
+      "address": "0x021122f8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block the trap door mesh collider takes: CLPS header with stride 8 and two entries (0x04000fc1/0xff shut, 0x00000fc1/0xff held open)"
+    },
     {
       "symbol": "@996",
       "address": "0x02112a78",
@@ -828,6 +842,13 @@
           "start": "0x02112d00",
           "end": "0x02112d50",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.c1TrapClps",
+          "start": "0x021122f8",
+          "end": "0x02112310",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
