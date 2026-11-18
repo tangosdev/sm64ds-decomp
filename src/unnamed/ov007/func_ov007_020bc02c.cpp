@@ -39,18 +39,18 @@ void func_ov007_020bc02c(Ov007Model *m, void *other) {
         while (i < model->modelFile->numBones) {
             Matrix4x3 *a = &m->transforms[i];
             Matrix4x3 *b = &m->nextTransforms[i];
-            a->m[0] = (a->m[0] + b->m[0]) / 2;
-            a->m[1] = (a->m[1] + b->m[1]) / 2;
-            a->m[2] = (a->m[2] + b->m[2]) / 2;
-            a->m[3] = (a->m[3] + b->m[3]) / 2;
-            a->m[4] = (a->m[4] + b->m[4]) / 2;
-            a->m[5] = (a->m[5] + b->m[5]) / 2;
-            a->m[6] = (a->m[6] + b->m[6]) / 2;
-            a->m[7] = (a->m[7] + b->m[7]) / 2;
-            a->m[8] = (a->m[8] + b->m[8]) / 2;
-            a->m[9] = (a->m[9] + b->m[9]) / 2;
-            a->m[10] = (a->m[10] + b->m[10]) / 2;
-            a->m[11] = (a->m[11] + b->m[11]) / 2;
+            a->r.m[0] = (a->r.m[0] + b->r.m[0]) / 2;
+            a->r.m[1] = (a->r.m[1] + b->r.m[1]) / 2;
+            a->r.m[2] = (a->r.m[2] + b->r.m[2]) / 2;
+            a->r.m[3] = (a->r.m[3] + b->r.m[3]) / 2;
+            a->r.m[4] = (a->r.m[4] + b->r.m[4]) / 2;
+            a->r.m[5] = (a->r.m[5] + b->r.m[5]) / 2;
+            a->r.m[6] = (a->r.m[6] + b->r.m[6]) / 2;
+            a->r.m[7] = (a->r.m[7] + b->r.m[7]) / 2;
+            a->r.m[8] = (a->r.m[8] + b->r.m[8]) / 2;
+            a->t.x = (a->t.x + b->t.x) / 2;
+            a->t.y = (a->t.y + b->t.y) / 2;
+            a->t.z = (a->t.z + b->t.z) / 2;
             i++;
         }
     }

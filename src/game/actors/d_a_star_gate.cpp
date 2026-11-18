@@ -131,9 +131,9 @@ int daStarGate_c::InitResources()
         return 0;
 
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     ChangeState(&ST_WAIT, gPlayers[gLocalPlayerId]);
     return 1;
 }
@@ -154,15 +154,15 @@ int daStarGate_c::Render()
 {
     if (IsAreaShowing((s8)mAngle.x) != 0 || IsAreaShowing((s8)mAngle.z) != 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-        mModel.mat4x3.m[9] = (mPos.x + mSpeed.x) >> 3;
-        mModel.mat4x3.m[10] = (mPos.y + mSpeed.y) >> 3;
-        mModel.mat4x3.m[11] = (mPos.z + mSpeed.z) >> 3;
+        mModel.mat4x3.t.x = (mPos.x + mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPos.y + mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPos.z + mSpeed.z) >> 3;
         mModel.Render(0);
 
         Matrix4x3_FromRotationY(&mModel.mat4x3, (s16)(mAngle.y + 0x8000));
-        mModel.mat4x3.m[9] = (mPos.x - mSpeed.x) >> 3;
-        mModel.mat4x3.m[10] = (mPos.y - mSpeed.y) >> 3;
-        mModel.mat4x3.m[11] = (mPos.z - mSpeed.z) >> 3;
+        mModel.mat4x3.t.x = (mPos.x - mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPos.y - mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPos.z - mSpeed.z) >> 3;
         mModel.Render(0);
     }
 

@@ -787,7 +787,7 @@ normal and mAngle.y - 0x4000 (a quarter turn), both through func_02010844.
 then rotations about Y, X and Z; copy it into the model and apply opacity
 mOpacity >> 3 (0..31). 3) For skeleton nodes 3 and 6 (mAnmModel.data.transforms
 [3] and [6]) multiply the node matrix by the model matrix (the product lands
-back in data_020a0e68), read its translation (m[9..11]) and shift it left 3 to
+back in data_020a0e68), read its translation and shift it left 3 to
 full scale: node 3 gives mFootPosB, node 6 gives mFootPosA, each with Y replaced
 by his own Y. 4) Unless mDropsShadow is 0, probe the floor with a dBgCh_Gnd from
 0x32000 (50 units) above him (floor height clsnY, or his own Y if there is
@@ -819,9 +819,9 @@ skip_angles:
     this->mFootPosB.y = 0;
     this->mFootPosB.z = 0;
     MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    this->mFootPosB.x = data_020a0e68.m[9];
-    this->mFootPosB.y = data_020a0e68.m[10];
-    this->mFootPosB.z = data_020a0e68.m[11];
+    this->mFootPosB.x = data_020a0e68.t.x;
+    this->mFootPosB.y = data_020a0e68.t.y;
+    this->mFootPosB.z = data_020a0e68.t.z;
     Vec3_LslInPlace(&this->mFootPosB, 3);
     this->mFootPosB.y = this->mPos.y;
     this->mFootPosA.x = 0;
@@ -829,9 +829,9 @@ skip_angles:
     this->mFootPosA.z = 0;
     data_020a0e68 = saved;
     MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    this->mFootPosA.x = data_020a0e68.m[9];
-    this->mFootPosA.y = data_020a0e68.m[10];
-    this->mFootPosA.z = data_020a0e68.m[11];
+    this->mFootPosA.x = data_020a0e68.t.x;
+    this->mFootPosA.y = data_020a0e68.t.y;
+    this->mFootPosA.z = data_020a0e68.t.z;
     Vec3_LslInPlace(&this->mFootPosA, 3);
     this->mFootPosA.y = this->mPos.y;
     if (this->mDropsShadow == 0)

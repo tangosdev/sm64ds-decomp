@@ -250,9 +250,9 @@ void daObjCtMecha04_c::UpdateShadow() {
         return;
 
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = (mGroundY + 0x1000) >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = (mGroundY + 0x1000) >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
 
     if (IsLargeBelt(this)) {
         DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1f4000, 0x32000, 0x3e8000, 0xf);

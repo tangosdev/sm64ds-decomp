@@ -104,6 +104,6 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             }
         }
 
-        *(Vector3 *)&mat->m[9] = out;
+        *(Vector3 *)&mat->t = out;
     }
 }

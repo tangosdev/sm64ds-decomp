@@ -424,9 +424,9 @@ void daJgm_c::UpdateModels()
         return;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = (mPos.y + mBobOffsetY) >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + mBobOffsetY) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     if (mState == 4) {
         data_020a0e68 = mAnmModel.mat4x3;
@@ -438,9 +438,9 @@ void daJgm_c::UpdateModels()
         mAnmModel.mat4x3 = data_020a0e68;
     }
 
-    mMatrix.m[9] = mPos.x >> 3;
-    mMatrix.m[10] = mPos.y >> 3;
-    mMatrix.m[11] = mPos.z >> 3;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = mPos.y >> 3;
+    mMatrix.t.z = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, mMatrix, 0x5a000, 0x320000, 0xf);
 
@@ -459,9 +459,9 @@ void daJgm_c::UpdateModels()
     data_020a0e68 = mAnmModel.mat4x3;
     MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
 
-    mThrowPos.x = data_020a0e68.m[9];
-    mThrowPos.y = data_020a0e68.m[10];
-    mThrowPos.z = data_020a0e68.m[11];
+    mThrowPos.x = data_020a0e68.t.x;
+    mThrowPos.y = data_020a0e68.t.y;
+    mThrowPos.z = data_020a0e68.t.z;
 
     Vec3_LslInPlace(&mThrowPos, 3);
     Vec3_Asr(&pos, &mThrowPos, 3);
