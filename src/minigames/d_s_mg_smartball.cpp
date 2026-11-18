@@ -94,14 +94,6 @@ typedef struct {
     V2 e;
 } W;
 
-/* Two-word pair with an empty destructor; the destructor keeps the value in
- * memory. */
-struct TVec2 {
-    int x;
-    int y;
-    ~TVec2() {}
-};
-
 /* First virtual slot, as Behavior dispatches it. */
 typedef void (*VFunc)(void *);
 
@@ -3594,7 +3586,7 @@ void dScMgSmartball_c::UpdateDust() {
 }
 
 /* Spawns up to four dust puffs at a point.
- * Leftover: TVec2's empty destructor keeps `v` in memory, and `sa` must be its
+ * Leftover: Vector2's empty destructor keeps `v` in memory, and `sa` must be its
  * own assignment before the first product. */
 void dScMgSmartball_c::SpawnDust(int *origin) {
     int i;
@@ -3614,7 +3606,7 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 s16 sinA = FX_SinCosTable_[(angA >> 4) * 2 + 1];
                 s16 cosA;
                 s64 sa;
-                TVec2 v;
+                Vector2 v;
                 sa = (s64)sinA;
                 v.x = FX_MUL(sinB, FX_MUL(sinA, 0x8000));
                 mDustPos[j].x = v.x;
@@ -3756,7 +3748,7 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
                                        u8 *secondObject) {
     // Leftover: keep the pair materialized in memory; direct casts keep the
     // register assignment.
-    TVec2 delta;
+    Vector2 delta;
     V2 firstPos;
     V2 secondPos;
     V2 firstVelocity;
