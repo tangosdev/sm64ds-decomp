@@ -27923,7 +27923,7 @@
     },
     "ov007:0x020b0da0": {
       "author": "andrewboudreau",
-      "name": "_Z19func_ov007_020b0da0P11Ov007Figure"
+      "name": "func_ov007_020b0da0"
     },
     "ov007:0x020b10dc": {
       "author": "andrewboudreau",

@@ -15,7 +15,7 @@
 extern "C" int func_ov007_020aebac(void);
 extern "C" void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern "C" void func_ov007_020b1fa4(int preset);
-extern void func_ov007_020b0da0(Ov007Figure *figure);
+extern "C" void func_ov007_020b0da0(Ov007Figure *figure);
 extern "C" void func_ov007_020c0638(void *layer, int x, int y, unsigned short tile);
 extern void MenuText_ClearMainPlane(void);
 extern "C" int func_ov007_020bdeb0(int idx);
