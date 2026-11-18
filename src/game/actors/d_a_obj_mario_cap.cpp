@@ -1251,6 +1251,10 @@ int daObjMarioCap_c::Dormant()
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == kActorPlayer;
+}
+
 /* The touch check shared by the states that let the player pick the cap up.
  * If the cap is against a wall, reflects mPrevAngle.y off the wall normal.
  * Then it proceeds only if the collider's other owner is a daPly_c (actor ID
@@ -1281,8 +1285,8 @@ void daObjMarioCap_c::CheckTouch()
     if (mPlayer == 0) return;
 
     {
-        int t = (mPlayer->actorID == kActorPlayer);
-        if (t == false) return;
+        if (!IsPlayerActor(mPlayer))
+            return;
     }
 
     if ((mdCcAc_c.hitFlags & 0x8000) != 0) return;
