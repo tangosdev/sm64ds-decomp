@@ -32,10 +32,12 @@
 // - Ball_AimAtTarget and BobOmb_StateAim keep the field-base addressing
 //   above; natural indexing misses in each (AimAtTarget's note gives the
 //   sizes; StateAim's note gives its two measurements, 2026-11-13).
-//   Re-measured (#821, round 42): AimAtTarget's three trailing
-//   BALL((char *)this + n) writes as mBall[i].f are 0x24c of 0x240, through
-//   the `ball` pointer already in scope 0x234, and with the angle read
-//   through it as well 0x228.
+//   Re-measured (#821, round 42): AimAtTarget's three trailing record
+//   writes as mBall[i].f are 0x24c of 0x240, through the `ball` pointer
+//   already in scope 0x234, and with the angle read through it as well
+//   0x228. They are spelled as `ball`'s own initialiser, re-evaluated
+//   (#821 r73, identical object); `ball->` for any one of the three is
+//   0x23c-0x244.
 // - The BG2 character fills (ClearAimLine, _CheckTargetsLeft,
 //   _DrawAimLine, InitResources) go through a volatile zero; in
 //   ClearAimLine a by-reference fill wrapper is 7 words off
@@ -75,12 +77,10 @@ struct OamAttr;
  * (Ball_AimAtTarget, BobOmb_StateAim) reach a record field as the scene
  * plus the field's whole-scene offset, then add the pre-scaled index
  * i * 0x38; each one's note gives what mBall[i].f / mShot[i].f measured.
- * BALL views one record already stepped by i * 0x38. */
+ * Ball_AimAtTarget spells it through mBall itself; SHOT_OFF is the
+ * whole-scene offset StateAim adds to its scene cursor. */
 #define SHOT_BASE ((int)&((dScMgPachinko_c *)0)->mShot)
-#define BALL_BASE ((int)&((dScMgPachinko_c *)0)->mBall)
-#define BALL(p) ((dScMgPachinko_ball *)((p) + BALL_BASE))
 #define SHOT_OFF(member) (SHOT_BASE + (int)&((dScMgPachinko_shot *)0)->member)
-#define BALL_OFF(member) (BALL_BASE + (int)&((dScMgPachinko_ball *)0)->member)
 
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
 #define PACHINKO_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
@@ -1207,7 +1207,7 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         int yval = *pY;
         int targetX = mTarget[idx].x;
         int entX = *xBase;
-        angBase = (char *)this + BALL_OFF(angle);
+        angBase = (char *)&mBall[0].angle;
         angle = cstd::atan2((targetY - yval) >> 12, (targetX - entX) >> 12);
         *(u16 *)(angBase + n) = (u16)angle;
         u16 angU = *(u16 *)(angBase + n);
@@ -1220,12 +1220,12 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
             fx16 sinv = FX_SinIdx(angU2 >> 4);
             *pVy = FX_MUL(sinv, factor);
         }
-        int fieldByte = BALL((char *)this + n)->level;
+        int fieldByte = ((dScMgPachinko_ball *)((char *)mBall + n))->level;
         int div40 = (fieldByte * 0x180) / 40;
         int e8ret = func_020126e8(*xBase);
         func_020126ac(0x186, 6, 0, div40 - 0x80, e8ret);
-        BALL((char *)this + n)->state = 4;
-        BALL((char *)this + n)->target = (u8)idx;
+        ((dScMgPachinko_ball *)((char *)mBall + n))->state = 4;
+        ((dScMgPachinko_ball *)((char *)mBall + n))->target = (u8)idx;
     }
 }
 #pragma pop
@@ -1717,6 +1717,9 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
  * eleven spellings: inline, index local, fx16 local, speed read first).
  */
 void dScMgPachinko_c::BobOmb_StateAim(int i) {
+    /* Kept (#821 r73): (char *)&mShot[0].f + off is neutral for 11 of the 13
+       fields but not x/y (0x3b4 / 0x3c4), and x/y through an inline
+       (char *)this with the rest field-based is 0x3ac: the cursor copy pins. */
     char *c = (char *)this;
     s32 cx;
     s32 *py;

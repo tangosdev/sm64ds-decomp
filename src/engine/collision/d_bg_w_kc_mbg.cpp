@@ -44,51 +44,51 @@ dBgW_KcMbg::~dBgW_KcMbg() {}
  * The two matrices are Mtx43 views, cleared through r[3].
  * Measured (#821 r62): as Matrix4x3 members cleared through m[9..11],
  * SetFile is 0x260 of 0x240.
- * Measured (#821 r58): without the `self` alias SetFile is 0x234 of 0x240.
+ * The scale and angY parameters shadow the members of the same name, so
+ * those stores and the scale reload are spelled through this->.
  * A Vector3 `up` member gives Scratch a destructor the ROM does not have, and
  * a separate Vector3 local makes SetFile 0x290. So `up`, like the VecFx32
  * upAxis, is cast at WorldToLocalDirection's Vector3 parameters.
  */
 void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 angY,
                          CLPS_Block &clps) {
-    dBgW_KcMbg *self = this;
     struct Scratch {
         Mtx43 rotation;
         Mtx43 scaled;
         VecFx32 up;
     } scratch;
-    self->dBgW_Kc::SetFile(file, clps);
-    self->Reset();
-    self->scale = scale;
-    self->mat = mtx;
-    self->invMat = self->mat;
-    MTX_Inverse43(&self->invMat, &self->invMat);
-    self->angY = angY;
-    self->angVelY = 0;
-    self->pos.x = mtx.t.x;
-    self->pos.y = mtx.t.y;
-    self->pos.z = mtx.t.z;
-    self->velocity.x = self->velocity.y = self->velocity.z = 0;
-    scratch.rotation = *(Mtx43 *)&self->mat;
+    dBgW_Kc::SetFile(file, clps);
+    Reset();
+    this->scale = scale;
+    mat = mtx;
+    invMat = mat;
+    MTX_Inverse43(&invMat, &invMat);
+    this->angY = angY;
+    angVelY = 0;
+    pos.x = mtx.t.x;
+    pos.y = mtx.t.y;
+    pos.z = mtx.t.z;
+    velocity.x = velocity.y = velocity.z = 0;
+    scratch.rotation = *(Mtx43 *)&mat;
     scratch.rotation.r[3].x = 0;
     scratch.rotation.r[3].y = 0;
     scratch.rotation.r[3].z = 0;
-    *(Mtx43 *)&self->invRotMat = scratch.rotation;
-    MTX_Inverse43(&self->invRotMat, &self->invRotMat);
-    self->invScale = FX_Inv(scale);
+    *(Mtx43 *)&invRotMat = scratch.rotation;
+    MTX_Inverse43(&invRotMat, &invRotMat);
+    invScale = FX_Inv(scale);
     data_020a0e68 = mtx;
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, self->scale, self->scale, self->scale);
+    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->scale, this->scale, this->scale);
     scratch.scaled = *(Mtx43 *)&data_020a0e68;
-    self->newScaledMat = data_020a0e68;
-    *(Mtx43 *)&self->invScaledMat = scratch.scaled;
-    MTX_Inverse43(&self->invScaledMat, &self->invScaledMat);
-    self->prevInvScaledMat = self->invScaledMat;
-    *(Mtx43 *)&self->scaledMat = scratch.scaled;
+    newScaledMat = data_020a0e68;
+    *(Mtx43 *)&invScaledMat = scratch.scaled;
+    MTX_Inverse43(&invScaledMat, &invScaledMat);
+    prevInvScaledMat = invScaledMat;
+    *(Mtx43 *)&scaledMat = scratch.scaled;
     scratch.up.x = 0;
     scratch.up.y = 0x1000;
     scratch.up.z = 0;
-    self->WorldToLocalDirection(*(Vector3 *)&scratch.up, *(Vector3 *)&self->upAxis);
-    self->filterByMoveDir = false;
+    WorldToLocalDirection(*(Vector3 *)&scratch.up, *(Vector3 *)&upAxis);
+    filterByMoveDir = false;
 }
 
 void dBgW_KcMbg::Virtual08() {}
