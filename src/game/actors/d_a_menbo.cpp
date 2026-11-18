@@ -163,22 +163,17 @@ void daMenbo_c::func_ov090_021310b4() {
     Vector3 sv;
     Vector3 cv;
     Vector3 hurt;
-    int flags;
-    dActor_c *p;
     sv = data_ov090_0213412c;
     mdCcAcPos_c.SetPosRelativeToActor(sv);
 
     if (mdCcAcPos_c.otherOwner == 0)
         return;
-    if ((p = dActor_c::FindWithID(mdCcAcPos_c.otherOwner)) == 0)
+    /* Measured (#821 r96): p or flags declared at the top of the function
+       swaps r4/r5 (26 words); declared where they are first set, both match. */
+    dActor_c *p = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+    if (p == 0)
         return;
-    /* Measured (#821 r68): a plain `flags = mdCcAcPos_c.hitFlags` (int or u32
-       local, either declaration order) swaps r4/r5 through the function. */
-    /* Kept (#821 r76): a register-order pin; no block-copy or type lever (r72-r75) applies to this
-       scalar pin.
-       Kept (#821 r80): getter tried -> a hit-flags accessor, int or u32, is 0x2c4 with r4/r5
-       swapped (26 words). */
-    flags = (int)((long long)*(int *)&mdCcAcPos_c.hitFlags);
+    int flags = mdCcAcPos_c.hitFlags;
 
     if (flags & 0x2400) {
         mDeathState = 2;
