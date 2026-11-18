@@ -219,11 +219,11 @@ int dActor_c::BeforeBehavior()
             return 0;
     } else {
         if (mClipRadius != 0) {
-            Vector3 tmp;
-            tmp.x = mPos.x >> 3;
-            tmp.y = (mPos.y + mClipOffsetY) >> 3;
-            tmp.z = mPos.z >> 3;
-            MTX_MultVec43(&tmp, &data_0209b3ec, &mCamSpacePos);
+            Vector3 scaledPos;
+            scaledPos.x = mPos.x >> 3;
+            scaledPos.y = (mPos.y + mClipOffsetY) >> 3;
+            scaledPos.z = mPos.z >> 3;
+            MTX_MultVec43(&scaledPos, &data_0209b3ec, &mCamSpacePos);
         }
         if (mFlags & 0x10003) {
             int r = data_0209f43c.ClipSphere(mCamSpacePos, mClipRadius, &mClipResult);

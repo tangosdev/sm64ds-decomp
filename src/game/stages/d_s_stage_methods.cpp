@@ -3408,7 +3408,7 @@ extern "C" void GiveLives(int delta) {
    (int, u32, u32, u32 in decl_common.h) forwards its own four with no
    narrowing; the stack-passed returnState is read back with ldrsb, so it is
    a signed byte. */
-void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState) {
+void LoadLevel(int levelID, u32 entranceID, int starID, u32 loadMode, s8 returnState) {
     int cur;
     int chk;
 
@@ -3423,7 +3423,7 @@ void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState
     else
         gNextStarId = starID;
     SetNextStar();
-    sReturnState = arg3;
+    sReturnState = loadMode;
     if (returnState >= 0) {
         gReturnSublevel = gCurrentSublevel;
         gReturnEntranceId = returnState;
@@ -3451,8 +3451,8 @@ void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState
     }
 }
 
-extern "C" void LoadLevelNoReturn(int levelID, u32 arg1, u32 arg2, u32 arg3) {
-    LoadLevel(levelID, arg1, arg2, arg3, -1);
+extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 starID, u32 loadMode) {
+    LoadLevel(levelID, entranceID, starID, loadMode, -1);
     gReturnSublevel = -1;
     gCheckpointSublevel = -1;
 }
