@@ -44,8 +44,6 @@ BaseSpawnInfo<dScMgJump_c> g_profile_MG_JUMP = {
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-struct V3 { int w[3]; };
-
 /* The 0x30-byte runtime material ModelComponents::materials points at
    (ModelComponents.cpp's MaterialState; dExtModel_c.h types the pointer as
    the file's BMD_Material, whose layout it does not share). Render scrolls
@@ -448,11 +446,10 @@ s32 dScMgJump_c::Render()
     mModel.mat4x3 = data_020a0e68;
 
     {
-        V3 t;
+        VecFx32 t = *(VecFx32 *)sJumpRenderScale;
         ModelComponents *obj;
         MaterialState *mat;
 
-        t = *(V3 *)sJumpRenderScale;
 
         obj = &mModel.data;
         mat = (MaterialState *)obj->materials;
