@@ -269,13 +269,13 @@ void ModelComponents::UpdateVertsUsingBones()
 void func_02044f74(void *g, struct Node *n)
 {
     int m[12];
-    int a = n->f0;
+    s16 a = n->f0;
     func_02048234(m, n->f10, n->f14, n->f18, (u16)((unsigned)n->f1c << 4),
                   (u16)((unsigned)n->f1e << 4), (u16)((unsigned)n->f20 << 4), n->f24, n->f28,
                   n->f2c);
     {
         Matrix4x3 *t = ((struct Sub *)((BMD_File *)g)->skin)->blk;
-        MTX_Concat43((Matrix4x3 *)m, &t[a + n->f8], &t[(s16)a]);
+        MTX_Concat43((Matrix4x3 *)m, &t[a + n->f8], &t[a]);
     }
     if (n->fa != 0)
         func_02044f74(g, n + n->fa);

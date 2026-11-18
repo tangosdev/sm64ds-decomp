@@ -719,9 +719,9 @@ int dEntObj_c::GetExitX(int playerNo) {
 /* The standing x for player slot playerNo, laid out the same way as the
  * exit table above. Here the signed column-map value -1 selects column 3. */
 int dEntObj_c::GetStandingX(int playerNo) {
-    int count = data_0209fc50;
+    u32 count = data_0209fc50;
     int row;
-    if ((unsigned int)count <= 1) {
+    if (count <= 1) {
         row = 0;
     } else {
         row = count - 1;

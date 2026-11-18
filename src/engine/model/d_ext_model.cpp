@@ -772,15 +772,15 @@ dExtFrameCtrl_c::~dExtFrameCtrl_c() {}
 
 void dExtFrameCtrl_c::Advance() {
     u32 f = numFramesAndFlags;
-    u32 len = f & ~0xc0000000;
+    s32 len = f & ~0xc0000000;
     if ((f & 0xc0000000) == 0) {
-        currFrame = (currFrame + speed + (int)len) % (int)len;
+        currFrame = (currFrame + speed + len) % len;
     } else {
         currFrame += speed;
         if (currFrame < 0) {
             currFrame = 0;
-        } else if (currFrame >= (int)len) {
-            currFrame = (int)len - 1;
+        } else if (currFrame >= len) {
+            currFrame = len - 1;
         }
     }
 }

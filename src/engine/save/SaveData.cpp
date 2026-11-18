@@ -210,9 +210,9 @@ int SaveData::NumGlowingRabbitsFound() {
 
 /* Sets flags2 bit (0x100000 << rabbit count). At 7 rabbits, also sets flags1 bit 0x80. */
 void func_02013944(void) {
-    u32 count = SaveData::NumGlowingRabbitsFound();
+    int count = SaveData::NumGlowingRabbitsFound();
     data_0209caa0.file.flags2 |= (0x100000u << count);
-    if ((s32)count >= 7)
+    if (count >= 7)
         data_0209caa0.file.flags1 |= 0x80u;
 }
 
