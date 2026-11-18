@@ -253,10 +253,7 @@ int daNknk_c::Behavior()
         {
             int ang = mPrevAngle.y;
             mAngle.y = (s16)ang;
-            {
-                u16 *p100 = &mStateTimer;
-                *p100 = (*p100 + 1);
-            }
+            mStateTimer++;
         }
         if (state != mState || kind != mKoopaVariant) {
             mStateTimer = 0;
@@ -404,7 +401,7 @@ void daNknk_c::func_ov062_02118b4c() {
         SpawnFootstepDust(2, 5, 8, 0xb);
 
     if (mModelIndex != 0) {
-        if ((u16)mStateTimer > 30 && DistToClosestPlayer() > 0x320000) {
+        if (mStateTimer > 30 && DistToClosestPlayer() > 0x320000) {
             if (ApproachLinear(mHorzSpeed, 0, 0x1000) == 0)
                 return;
             mState = 1;
@@ -421,7 +418,7 @@ void daNknk_c::func_ov062_02118b4c() {
         *aim = (*aim + 0x8000);
         mPlayerDist = 0;
     }
-    if ((u16)mStateTimer > 30 && mPlayerDist > 0x320000) {
+    if (mStateTimer > 30 && mPlayerDist > 0x320000) {
         if (ApproachLinear(mHorzSpeed, 0, 0x1000) == 0)
             return;
         mState = 1;
