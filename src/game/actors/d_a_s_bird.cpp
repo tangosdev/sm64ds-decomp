@@ -163,7 +163,7 @@ void daSBird_c::StateLaunchFlock() {
             copy.z = diff.z;
             if (Vec3_HorzLen(&copy) > 0x7d0000)
                 return;
-            int n = (int)param1 & 0xf;
+            int n = param1 & 0xf;
             if (n > 1) {
                 for (int i = 0; i < n - 1; i++) {
                     daSBird_c *follower =
@@ -224,7 +224,7 @@ void daSBird_c::StateWaitForPlayer() {
    and aims the flock at the fixed target; every bird then waits in state 1. */
 void daSBird_c::StateSpawnFlock() {
     if (mIsLeader) {
-        int n = (int)param1 & 0xf;
+        int n = param1 & 0xf;
         if (n > 1) {
             Vector3_16 rot = mPrevAngle;
             for (int i = 0; i < n - 1; i++) {
