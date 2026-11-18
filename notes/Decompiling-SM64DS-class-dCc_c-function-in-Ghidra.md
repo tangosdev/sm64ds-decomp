@@ -82,7 +82,7 @@ Look:
 
 With `L` we can rename the local variable to `horizontalDistance`:
 
-![Ghidra_Rename_Local_Variable](../docs/images/    Ghidra_Rename_Local_Variable.png)
+![Ghidra_Rename_Local_Variable](../docs/images/Ghidra_Rename_Local_Variable.png)
 
 `CTRL+L` allows retyping the data type of the variable. In this case, we can change it from `int` to `fx32`, which is more appropriate for a variable representing a distance.
 
