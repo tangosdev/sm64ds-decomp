@@ -77,9 +77,7 @@ void daBgSnmHed_c::UpdateModel() {
 }
 
 int daBgSnmHed_c::State3() {
-    /* The POD VecFx32: a Vector3 here schedules the four stores
-       differently. */
-    VecFx32 pos;
+    Vector3 pos;
     pos.x = mPos.x;
     pos.y = mPos.y;
     pos.z = mPos.z;
@@ -94,7 +92,7 @@ int daBgSnmHed_c::State3() {
         }
         break;
     case 1:
-        if (mTalkPlayer->ShowMessage(*this, 0xb1, (Vector3 *)&pos, 0, 2))
+        if (mTalkPlayer->ShowMessage(*this, 0xb1, &pos, 0, 2))
             mSubstate++;
         break;
     case 2:

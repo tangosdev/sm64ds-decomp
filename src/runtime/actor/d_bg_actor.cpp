@@ -118,12 +118,11 @@ int BgChEvt::func_ov002_020ef228(dActor_c *other) {
     return 0;
 }
 
-int BgChEvt::func_ov002_020ef070(char *moverArg) {
+int BgChEvt::func_ov002_020ef070(dActor_c *mover) {
     Vector3 start, end;
 
     dBgCh_Lin line;
 
-    dActor_c *mover = (dActor_c *)moverArg;
     Vector3 *pos = &mover->mPos;
     int x = pos->x;
     start.x = x;
@@ -158,12 +157,11 @@ int BgChEvt::func_ov002_020ef070(char *moverArg) {
     return 0;
 }
 
-int BgChEvt::func_ov002_020eeeb8(char *moverArg) {
+int BgChEvt::func_ov002_020eeeb8(dActor_c *mover) {
     Vector3 start, end;
 
     dBgCh_Lin line;
 
-    dActor_c *mover = (dActor_c *)moverArg;
     Vector3 *pos = &mover->mPos;
     int x = pos->x;
     start.x = x;
@@ -202,9 +200,8 @@ int BgChEvt::func_ov002_020eeeb8(char *moverArg) {
     return 0;
 }
 
-int BgChEvt::func_ov002_020eee3c(char *otherArg) {
+int BgChEvt::func_ov002_020eee3c(dActor_c *other) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)this;
-    dActor_c *other = (dActor_c *)otherArg;
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {

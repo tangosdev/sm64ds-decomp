@@ -10,9 +10,9 @@ class daPly_c;
 struct BgChEvt {
     int func_ov002_020ef2a4(dActor_c *other);
     int func_ov002_020ef228(dActor_c *other);
-    int func_ov002_020ef070(char *moverArg);
-    int func_ov002_020eeeb8(char *moverArg);
-    int func_ov002_020eee3c(char *otherArg);
+    int func_ov002_020ef070(dActor_c *mover);
+    int func_ov002_020eeeb8(dActor_c *mover);
+    int func_ov002_020eee3c(dActor_c *other);
     int func_ov002_020eedc0(dActor_c *other);
     int func_ov002_020eed24(daPly_c *player);
     int func_ov002_020eeca8(dActor_c *other);

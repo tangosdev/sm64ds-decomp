@@ -45,9 +45,6 @@
 
 /* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
    is a different sequence (.text grows by 0xa0 bytes). */
-/* InitResources' local is a VecFx32. Vector3's declared destructor (see
-   include/types.h) costs this TU a numbered .data local if an object of it
-   is declared here, so the local stays POD and casts at the call. */
 #define CurrentPlayer() gPlayers[gLocalPlayerId]
 
 /* Material bits ClearMaterialFlags clears and SetMaterialFlags sets. The reflected
@@ -114,7 +111,7 @@ daLuigi_c *daLuigi_c_classInit() {
 }
 
 int daLuigi_c::InitResources() {
-    VecFx32 t;
+    Vector3 t;
 
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210ebb8), 1, -1);
     mAnmModel.ClearMaterialFlags(kMatClear);
@@ -135,7 +132,7 @@ int daLuigi_c::InitResources() {
 
     mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov002_0210eaa0), 0, kFxOne, 0);
 
-    Vec3_Asr((Vector3 *)&t, &mPos, 3);
+    Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
 

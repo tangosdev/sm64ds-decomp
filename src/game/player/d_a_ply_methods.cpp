@@ -714,14 +714,10 @@ u32 data_ov002_0210a578[3] = {117, 123, 121};
 u32 data_ov002_0210a584[3] = {118, 122, 119};
 }
 
-/* 20.12 offset added before the camera update: (0, -205.0, 410.0). A C struct
- * keeps the literal in .data; Vector3's constructors would make it dynamic. */
-#pragma cplusplus off
-typedef struct PlayerPosOffset {
-    int x, y, z;
-} PlayerPosOffset;
-PlayerPosOffset data_ov002_0210a590 = {0, -0xcd000, 0x19a000};
-#pragma cplusplus on
+/* 20.12 offset added before the camera update: (0, -205.0, 410.0). The SDK's
+ * POD VecFx32 keeps the literal in .data; Vector3's constructors would make
+ * it dynamic. */
+VecFx32 data_ov002_0210a590 = {0, -0xcd000, 0x19a000};
 extern "C" {
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9a8;
@@ -10045,7 +10041,7 @@ int daPly_c::St_OnWall_Main() {
         ApproachLinear(mAngle.y, (s16)a, 0x800);
         mPrevAngle.y = a;
         mHorzSpeed = func_ov002_020bf224(0xa000, 0x2000);
-        ((BgChEvt *)(char *)&mMeshClsn)->func_ov002_020eee3c((char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eee3c(this);
     } else {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             int ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
@@ -14418,15 +14414,14 @@ void daPly_c::func_ov002_020d8a50(int which) {
     if (!model->WillHitFrame(data_ov002_0210a5cc[i2]))
         return;
 
-    /* func_ov002_020ef070/020eeeb8 (d_bg_actor.cpp) take the mover as char *. */
     switch (which) {
     case 0:
     case 1:
-        ((BgChEvt *)&mMeshClsn)->func_ov002_020ef070((char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020ef070(this);
         break;
     case 2:
     case 3:
-        ((BgChEvt *)&mMeshClsn)->func_ov002_020eeeb8((char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eeeb8(this);
         break;
     }
 
