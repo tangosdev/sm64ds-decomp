@@ -384,7 +384,7 @@ int daOwl_c::UpdateTalk() {
     ApproachAngle(&mPrevAngle.y, Vec3_HorzAngle(&mPos, &w), 0xa, 0x200, 0x100);
     Vector3 u;
     v.y += 0xc8000;
-    u.x = v.x - 0;
+    u.x = v.x;
     u.y = v.y;
     u.z = v.z;
     ApproachAngle(&mPrevAngle.x, Vec3_VertAngle(&mPos, &u), 0xa, 0x200, 0x100);
