@@ -432,12 +432,9 @@ int daOwl_c::UpdateDormant() {
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
             MTX_MultVec43(&d, &data_020a0e68, &mAnchor);
             {
-                int *px = &mAnchor.x;
-                int *py = &mAnchor.y;
-                int *pz = &mAnchor.z;
-                *px = *px + mPos.x;
-                *py = *py + mPos.y;
-                *pz = *pz + mPos.z;
+                mAnchor.x += mPos.x;
+                mAnchor.y += mPos.y;
+                mAnchor.z += mPos.z;
             }
             mPrevAngle.y = Vec3_HorzAngle(&mPos, &mAnchor);
             mAngle.y = mPrevAngle.y;
