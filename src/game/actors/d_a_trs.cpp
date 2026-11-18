@@ -417,7 +417,8 @@ void daTrs_c::func_ov063_021166ac() {
         /* The angle triple copies as two halfword loads, then two stores, then
            the third pair: two named u16 temps for x and y reproduce that; a
            Vector3_16 struct copy or three direct member copies alternate
-           load/store (and the s16-typed copy sign-extends, ldrsh). */
+           load/store (and the s16-typed copy sign-extends, ldrsh).
+           Kept (#821 r76): `rot = this->mAngle;` is memberwise ldrsh/strh, 4 words off. */
         u16 ax = *(u16 *)&this->mAngle.x;
         u16 ay = *(u16 *)&this->mAngle.y;
         rot.y = ay;
@@ -655,6 +656,8 @@ void daTrs_c::func_ov063_02116fac() {
 
     switch (this->mState) {
     case 0:
+        /* Kept (#821 r76): BooFlags16 written as its halfword (here and below); no block-copy or
+           type lever (r72-r75) applies to this scalar pin. */
         *(u16 *)&this->mBooFlags &= ~TRS_FLAG_VISIBLE;
         if (this->mBooFlags.canAppear) {
             this->mState++;
@@ -709,6 +712,8 @@ void daTrs_c::func_ov063_02116fac() {
     case 6:
         this->mHorzSpeed = 0;
         this->mOpacity = 0;
+        /* Kept (#821 r76): BooFlags16 written as its halfword; no block-copy or type lever
+           (r72-r75) applies to this scalar pin. */
         *(u16 *)&this->mBooFlags &= ~TRS_FLAG_VISIBLE;
         break;
     }
@@ -3024,6 +3029,8 @@ int daTrs_c::InitResources()
     dActor_c *spawned;
     daPly_c *pp;
 
+    /* Kept (#821 r76): BooFlags16 cleared as its halfword; no block-copy or type lever (r72-r75)
+       applies to this scalar pin. */
     *(u16 *)&mBooFlags = 0;
     mSpawnedActorID = 0;
     cond = 0;
@@ -3122,6 +3129,8 @@ int daTrs_c::InitResources()
                lets mwccarm CSE the field address (addlt r2,r4,#8 + [r2]),
                one instruction the ROM does not have -- it wants [r4,#8] direct.
                Same lever as daKrb_c::OnTurnIntoEgg in src/game/actors/d_a_krb.cpp. */
+            /* Kept (#821 r76): a CSE pin on the store; no block-copy or type lever (r72-r75)
+               applies to this scalar pin. */
             *(int *)&this->param1 = param1 & 0xfff;
         }
         if (DestroyIfCapNotNeeded() == 0) {
