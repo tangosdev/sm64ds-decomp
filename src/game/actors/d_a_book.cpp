@@ -458,7 +458,7 @@ void daBook_c::StateFly() {
         dBgPi *w = mWithMeshClsn.GetWallResult();
         w->surface.CopyNormalTo(normal);
         short angle = cstd::atan2(normal.x, normal.z);
-        if (GetSubtraction(mPrevAngleY, angle) <= 0x4000)
+        if (GetSubtraction(mPrevAngle.y, angle) <= 0x4000)
             return;
     }
     mCoinType = 0;
@@ -488,17 +488,17 @@ void daBook_c::StateWindUp() {
         mHorzSpeed = 0;
         AimAtPlayer();
 
-        mPrevAngleX = -mAimPitch;
-        mAngleX = mPrevAngleX;
-        mPrevAngleY = mAimYaw;
-        mAngleY = mPrevAngleY;
+        mPrevAngle.x = -mAimPitch;
+        mAngle.x = mPrevAngle.x;
+        mPrevAngle.y = mAimYaw;
+        mAngle.y = mPrevAngle.y;
 
         {
             /* velocity = kFlightSpeed along (yaw, pitch) */
-            s32 r = FX_MUL(FX_CosIdx((u16)mAngleX >> 4), 0x32000);
-            mSpeed.x = FX_MUL(r, FX_SinIdx((u16)mAngleY >> 4));
-            mSpeed.y = FX_MUL(FX_SinIdx((u16)mAngleX >> 4), -0x32000);
-            mSpeed.z = FX_MUL(r, FX_CosIdx((u16)mAngleY >> 4));
+            s32 r = FX_MUL(FX_CosIdx((u16)mAngle.x >> 4), 0x32000);
+            mSpeed.x = FX_MUL(r, FX_SinIdx((u16)mAngle.y >> 4));
+            mSpeed.y = FX_MUL(FX_SinIdx((u16)mAngle.x >> 4), -0x32000);
+            mSpeed.z = FX_MUL(r, FX_CosIdx((u16)mAngle.y >> 4));
         }
         return;
     }
@@ -508,13 +508,13 @@ void daBook_c::StateWindUp() {
         return;
 
     AimAtPlayer();
-    ApproachLinear(mAngleY, mAimYaw, 0x7d0);
-    ApproachLinear(mAngleX, -mAimPitch, 0x7d0);
+    ApproachLinear(mAngle.y, mAimYaw, 0x7d0);
+    ApproachLinear(mAngle.x, -mAimPitch, 0x7d0);
 
     if (mStateTimer < 9)
         return;
 
-    ApproachLinear(mAngleZ, mAimRoll, 0x7d0);
+    ApproachLinear(mAngle.z, mAimRoll, 0x7d0);
 
     if (mStateTimer < 19)
         return;
@@ -539,7 +539,7 @@ void daBook_c::StateTiltBack() {
     int r = CheckAttacks();
     if (r)
         return;
-    if (ApproachLinear(mAngleX, -0x2000, 0x200)) {
+    if (ApproachLinear(mAngle.x, -0x2000, 0x200)) {
         int s;
         mHorzSpeed = 0;
         s = mAnmModel.SetFile((BMD_File *)data_ov020_02114aa0.filePtr, 1, -1);
@@ -571,7 +571,8 @@ void daBook_c::StateWait() {
         return;
     {
         short ang = Vec3_HorzAngle(&mPos, &v);
-        if (GetSubtraction(mPrevAngleY, ang) >= 0x3000) return;
+        if (GetSubtraction(mPrevAngle.y, ang) >= 0x3000)
+            return;
     }
     mState = STATE_TILT_BACK;
     mHorzSpeed = 0x5000;
@@ -625,7 +626,7 @@ void daBook_c::Die() {
  * the home height. */
 void daBook_c::UpdateModelMatrix() {
     Matrix4x3 *m = (mUsesAnmModel != 0) ? &mAnmModel.mat4x3 : &mModel.mat4x3;
-    Matrix4x3_FromRotationZXYExt(m, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationZXYExt(m, mAngle.x, mAngle.y, mAngle.z);
     m->m[9] = mPos.x >> 3;
     m->m[10] = mPos.y >> 3;
     m->m[11] = mPos.z >> 3;
@@ -718,7 +719,7 @@ int daBookGen_c::Behavior()
 
             if (Vec3_HorzDist(&mPos, &tmp) < 0x258000) {
                 short angle = Vec3_HorzAngle(&mPos, &tmp);
-                if (GetSubtraction(mAngleY, angle) < 0x2000) {
+                if (GetSubtraction(mAngle.y, angle) < 0x2000) {
                     signed char sc = mAreaId;
                     dActor_c::Spawn(kShootBookActorId, 0, mPos, &mPrevAngle, sc, -1);
                     mSpawnTimer = 0;
@@ -771,7 +772,7 @@ int daBook_c::InitResources()
 
     mShadowMat = IDENTITY_MATRIX4X3;
     mUsesAnmModel = 0;
-    mAngleY += 0x8000;
+    mAngle.y += 0x8000;
     mUniformScale = 0x800;
 
     {

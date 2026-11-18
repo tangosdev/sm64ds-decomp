@@ -171,9 +171,9 @@ void dEnemyBase_c::SpawnCoin()
                 int rnd2 = RandomIntInternal(&data_0209e650.value);
                 int a = (int)((u32)rnd1 >> 16 << 27) >> 16;
                 u32 b = (u32)rnd2 >> 16;
-                coin->mPrevAngleX = 0;
-                coin->mPrevAngleY = (s16)(a * i);
-                coin->mPrevAngleZ = 0;
+                coin->mPrevAngle.x = 0;
+                coin->mPrevAngle.y = (s16)(a * i);
+                coin->mPrevAngle.z = 0;
                 coin->mHorzSpeed = (((b % 50) + 100) << 15) / 100;
             }
         }
@@ -241,7 +241,7 @@ void dEnemyBase_c::func_ov002_020ae968(dActor_c *arg) {
 }
 
 void dEnemyBase_c::func_ov002_020ae954(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngleY;
+    mPrevAngle.y = a->mAngle.y;
     func_ov002_020ae968(a);
 }
 
@@ -262,29 +262,29 @@ void dEnemyBase_c::func_ov002_020ae8b8(dActor_c *arg) {
 }
 
 void dEnemyBase_c::func_ov002_020ae890(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngleY;
+    mPrevAngle.y = a->mAngle.y;
     func_ov002_020ae8b8(a);
     Sound::PlayBank0(0xa, mCamSpacePos);
 }
 
 void dEnemyBase_c::func_ov002_020ae87c(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngleY;
+    mPrevAngle.y = a->mAngle.y;
     func_ov002_020ae8b8(a);
 }
 
 void dEnemyBase_c::func_ov002_020ae844(dActor_c *a, dBgCh_Actr *) {
     s16 angle = Vec3_HorzAngle(&a->mPos, &mPos);
-    mPrevAngleY = angle;
+    mPrevAngle.y = angle;
     func_ov002_020ae968(a);
 }
 
 void dEnemyBase_c::func_ov002_020ae80c(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&a->mPos, &mPos);
     func_ov002_020ae8b8(a);
 }
 
 void dEnemyBase_c::func_ov002_020ae73c(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&a->mPos, &mPos);
     mSpeed.y = 0xa000;
 
     if (IsPlayerActor(a))
@@ -446,7 +446,7 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr &clsn, short &outAngle) {
     if (clsn.IsOnWall()) {
         outAngle = ReflectAngle(mWallNormal.x, mWallNormal.z, outAngle);
     } else if (mCliffState) {
-        outAngle = (short)(mPrevAngleY + 0x8000);
+        outAngle = (short)(mPrevAngle.y + 0x8000);
     } else {
         return 0;
     }
@@ -518,15 +518,15 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
                 mPos.z = o2->z;
                 mPos.y += 0x32000;
                 {
-                    u16 ang = mEatingPlayer->mAngleY;
+                    u16 ang = mEatingPlayer->mAngle.y;
                     mPos.x += FX_MUL(FX_SinIdx(ang >> 4), 0x32000);
                     mPos.z += FX_MUL(FX_CosIdx(ang >> 4), 0x32000);
                 }
                 {
                     Vector3_16 *p = &mEatingPlayer->mAngle;
-                    mPrevAngleX = p->x;
-                    mPrevAngleY = p->y;
-                    mPrevAngleZ = p->z;
+                    mPrevAngle.x = p->x;
+                    mPrevAngle.y = p->y;
+                    mPrevAngle.z = p->z;
                 }
                 v = mEatingPlayer->mHorzSpeed;
             } else {
@@ -558,7 +558,7 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
             mSpeed.z += mFloorNormal.z << 3;
             mHorzSpeed = Vec3_HorzLen(&mSpeed);
         }
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
         if (lim == 0)
             clsn.ClearLimMovFlag();
         return 3;
@@ -617,9 +617,9 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         src.z = pv->z;
     }
 
-    dirvec[0] = FX_SinIdx((u16)mAngleY >> 4);
+    dirvec[0] = FX_SinIdx((u16)mAngle.y >> 4);
     dirvec[1] = 0;
-    dirvec[2] = FX_CosIdx((u16)mAngleY >> 4);
+    dirvec[2] = FX_CosIdx((u16)mAngle.y >> 4);
 
     if (p != 0) {
         Vector3 delta;
@@ -675,7 +675,7 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
    function at the same address. */
 void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player, fx32) {
     mFlags &= ~0x10000001;
-    mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&player.mPos, &mPos);
     mHorzSpeed = 0xa000;
     mSpeed.y = 0x28000;
     mDeathTimer = 30;
@@ -723,17 +723,17 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
     if (&clsn != 0) {
         UpdateWMClsn(clsn, 0);
         if (clsn.IsOnWall() != 0)
-            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+            mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
     }
 
     if (&anim != 0) {
-        mAngleX += mSpinRateX;
-        mAngleY += mSpinRateY;
-        mAngleZ += mSpinRateZ;
+        mAngle.x += mSpinRateX;
+        mAngle.y += mSpinRateY;
+        mAngle.z += mSpinRateZ;
         Vec3_Asr(&v, &mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
         /* Vector3's constructor makes Matrix4x3's own assignment copy the
            rotation and the translation separately (.text grows by 0x1c

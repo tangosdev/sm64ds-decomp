@@ -70,27 +70,27 @@ s32 daObjRc_Guruguru_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov036_02113d78.clsnFile);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov036_02113d78.clps);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *data_ov036_02113d78.clps);
 
     /* The mesh follows the actor's position AND angles -- this platform turns,
        so the collision has to turn with it. */
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     /* The default spin is clockwise at 0x80 units of yaw a frame; a level
-       author overrides both rate and direction through the spawn's mAngleZ. */
+       author overrides both rate and direction through the spawn's mAngle.z. */
     mAngVelY = -0x80;
-    if (mAngleZ != 0)
-        mAngVelY = mAngleZ;
+    if (mAngle.z != 0)
+        mAngVelY = mAngle.z;
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 s32 daObjRc_Guruguru_c::Behavior() {
-    /* `+=`, not `mAngleY = mAngleY + ...`: the compound form CSEs the field
+    /* `+=`, not `mAngle.y = mAngle.y + ...`: the compound form CSEs the field
        address into a register and reuses it for the load and the store, which
        is what the ROM does here. */
-    mAngleY += mAngVelY;
+    mAngle.y += mAngVelY;
 
     if (IsOffScreen(this)) {
         if (mMeshCollider.IsEnabled())

@@ -189,8 +189,8 @@ int daBasabasa_c::ExecuteReturn() {
         if (mPerchTimer > 100) {
             mPerchTimer = 0;
             mFlags |= 1;
-            mPrevAngleX = -0x8000;
-            mAngleX = mPrevAngleX;
+            mPrevAngle.x = -0x8000;
+            mAngle.x = mPrevAngle.x;
             mPos.x = mHomePos.x;
             mPos.y = mHomePos.y;
             mPos.z = mHomePos.z;
@@ -202,10 +202,10 @@ int daBasabasa_c::ExecuteReturn() {
         }
     }
 
-    ApproachAngle(&mPrevAngleX, 0, 0xa, 0x200, 0x100);
-    ApproachAngle(&mPrevAngleY, mTargetAngleY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.x, 0, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngleY, 0xa, 0x200, 0x100);
     v.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
     if (mStateTimer == 0) {
         SetState(&data_ov065_0211d6f0);
@@ -231,11 +231,11 @@ int daBasabasa_c::ExecuteChase() {
     v.y = 0;
     v.z = 0;
     mTargetAngleY = HorzAngleToCPlayer();
-    ApproachLinear(mPrevAngleY, mTargetAngleY, 0x500);
-    ApproachLinear(mPrevAngleX, 0x100, 0x500);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x500);
+    ApproachLinear(mPrevAngle.x, 0x100, 0x500);
     v.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
     MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
     if (Vec3_Dist(&mPos, &mHomePos) > 0x5dc000 || mStateTimer == 0) {
         mPerchTimer = 0;
@@ -258,7 +258,7 @@ int daBasabasa_c::EnterChase() {
 int daBasabasa_c::ExecuteDrop() {
     int floorY, posY;
     daPly_c *p;
-    mPrevAngleY += 0x1000;
+    mPrevAngle.y += 0x1000;
     p = ClosestPlayer();
     posY = mPos.y;
     floorY = posY - 0xc8000;
@@ -322,7 +322,7 @@ void daBasabasa_c::UpdateModelTransform() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     if (mIsFlying == 1) {
         mAnmModel1.mat4x3 = data_020a0e68;
     } else {
@@ -399,9 +399,9 @@ int daBasabasa_c::Behavior() {
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdateModelTransform();
     if (mIsFlying == 1) {
         CheckTouch();
@@ -431,9 +431,9 @@ int daBasabasa_c::InitResources() {
     dExtFrameCtrl_c::LoadFile(data_ov065_0211d6a0);
     mTerminalVelocity = -0xa000;
     mdCcAc_c.Init(this, 0x28000, 0x28000, 0x200000, 0x7eff0);
-    mAngleY = mPrevAngleY;
-    mPrevAngleX = -0x8000;
-    mAngleX = mPrevAngleX;
+    mAngle.y = mPrevAngle.y;
+    mPrevAngle.x = -0x8000;
+    mAngle.x = mPrevAngle.x;
     mIsFlying = 0;
     mAnmModel1.speed = 0x1000;
     mAnmModel2.speed = 0x1000;

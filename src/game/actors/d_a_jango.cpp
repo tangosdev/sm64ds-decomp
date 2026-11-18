@@ -360,9 +360,9 @@ int daJango_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 0);
 
     /* The states steer with mPrevAngle*; the model is turned by mAngle*. */
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdateModelAndShadow();
 
     /* Carry the held actor along: it is moved to mHeldPos every frame. If the
@@ -467,7 +467,7 @@ void daJango_c::UpdateModelAndShadow() {
 
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (mHeldActorID != 0)
@@ -521,7 +521,7 @@ int daJango_c::ChangeState(void *p) {
 
 /* FLY_PATH enter. Clears the three velocity words (mSpeed).
    If mRiseToFarNode is 1 -- ChangeTarget set it because the node it
-   picked is index ^ 2 (assumed to be the far side of the square) -- the vector (0, 0, 20.0) is turned by mAngleY and
+   picked is index ^ 2 (assumed to be the far side of the square) -- the vector (0, 0, 20.0) is turned by mAngle.y and
    then by a pitch of -0x4000 (a quarter turn), and its Y becomes mSpeed.y
    (magnitude 20 units per frame), with mStateTimer = 60 frames. Then starts
    jango_fly.bca (4 blend frames, flags 0, speed 1.0, from frame 0). */
@@ -537,7 +537,7 @@ int daJango_c::EnterFlyPathState() {
         in.x = 0; in.y = 0; in.z = 0;
         out.x = 0; out.y = 0; out.z = 0;
         in.z = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
         MTX_MultVec43(&in, &data_020a0e68, &out);
         mSpeed.y = out.y;
@@ -549,10 +549,10 @@ int daJango_c::EnterFlyPathState() {
 }
 
 /* FLY_PATH update: follow the path through its four nodes.
-   Each frame it steers mPrevAngleY toward the node at mPathNodeIndex and
+   Each frame it steers mPrevAngle.y toward the node at mPathNodeIndex and
    levels the roll. While more than 20 units from the node it is pulled toward
    it by 20 units per frame (diff * (20.0 / len) is subtracted from mPos), but
-   only once mAngleY is within 0x2000 (45 degrees) of the node's direction.
+   only once mAngle.y is within 0x2000 (45 degrees) of the node's direction.
    While mRiseToFarNode is 1 the pull leaves mPos.y alone (the vertical motion comes
    from mSpeed.y, set by c594), and when mStateTimer has run out the vertical
    speed is cleared and the flag dropped. Within 20 units (or exactly on it) it
@@ -560,7 +560,7 @@ int daJango_c::EnterFlyPathState() {
    for the silver-star variant and level ids 0x18/0x19, else b3ac's choice, else a
    random one that differs from the current), mPos is snapped to the node and
    copied to mPathNodePos, the velocity words (mSpeed) are
-   set to (0, 0, 20.0) turned by mAngleY, and the actor re-enters CIRCLE. */
+   set to (0, 0, 20.0) turned by mAngle.y, and the actor re-enters CIRCLE. */
 int daJango_c::UpdateFlyPathState() {
     /* Real PathPtr object (as legacy had it via PathPtr.h): its implicit
        ctor call is genuine ROM bytes. Do NOT byte-buffer this one. */
@@ -576,8 +576,8 @@ int daJango_c::UpdateFlyPathState() {
     path.FromID(mPathId);
     zero[0] = 0; zero[1] = 0; zero[2] = 0; zero[3] = 0; zero[4] = 0; zero[5] = 0;
     path.GetNode(node, mPathNodeIndex);
-    ApproachAngle(&mPrevAngleY, Vec3_HorzAngle(&mPos, &node), 0xa, 0x200, 0x100);
-    ApproachAngle(&mPrevAngleZ, 0, 0xa, 0x100, 0x50);
+    ApproachAngle(&mPrevAngle.y, Vec3_HorzAngle(&mPos, &node), 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.z, 0, 0xa, 0x100, 0x50);
 
     idx = mPathNodeIndex - 1;
     if ((int)idx < 0)
@@ -613,13 +613,13 @@ int daJango_c::UpdateFlyPathState() {
         zero[0] = 0;
         zero[1] = 0;
         zero[2] = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         MTX_MultVec43((Vector3 *)zero, &data_020a0e68, &mSpeed);
         ChangeState(JANGO_STATE_CIRCLE);
         return 1;
     }
 
-    if (AngleDiff(Vec3_HorzAngle(&mPos, &node), mAngleY) < 0x2000) {
+    if (AngleDiff(Vec3_HorzAngle(&mPos, &node), mAngle.y) < 0x2000) {
         int s;
         zero[1] = mPos.y;
         s = FX_Div(0x14000, len);
@@ -644,7 +644,7 @@ int daJango_c::UpdateFlyPathState() {
    level ids 0x18 / 0x19 (gCurrentSublevel is LEVEL_ID in symbols/verified.tsv). Plays
    jango_fly.bca (4 blend frames, flags 0, speed 1.0). */
 int daJango_c::EnterCircleState() {
-    mTargetAngleY = mAngleY;
+    mTargetAngleY = mAngle.y;
     mStateParam = 0;
     mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 3) * 100 + 300;
     if (mHitPlayer == 1) {
@@ -667,7 +667,7 @@ int daJango_c::EnterCircleState() {
 
    1. mTimer != 0 (it has just lost its cargo or its target): head back to the
       spawn point -- mTargetAngleY is the direction to mSpawnPos (or
-      mPrevAngleY + 0x4000 when the wall collider reports a wall), and pitch,
+      mPrevAngle.y + 0x4000 when the wall collider reports a wall), and pitch,
       yaw and roll are stepped toward it at 0x500 / 0x1000 / 0x500 per frame.
       mTimer drops to 0 once within 500 units of mSpawnPos, else it is held at 30.
    2. Otherwise steer the pitch toward mSpawnPos (empty-handed) or toward
@@ -683,7 +683,7 @@ int daJango_c::EnterCircleState() {
       a sharp one starts jango_attack.bca.
    5. If the node picked by ChangeTarget differs (and the actor is not the
       silver-star variant or in level 0x18 / 0x19) the timer is cancelled; once
-      mStateTimer and mLeaveDelay are both 0, it carries or holds something and mAngleY is within 0x2000 (45 degrees) of the
+      mStateTimer and mLeaveDelay are both 0, it carries or holds something and mAngle.y is within 0x2000 (45 degrees) of the
       path node's direction, it enters FLY_PATH.
 
    mStateTimer is declared s16, but the ROM tests it with ldrh in this function
@@ -704,13 +704,13 @@ int daJango_c::UpdateCircleState() {
 
     if (mTimer != 0) {
         if (mWithMeshClsn.IsOnWall() != 0) {
-            mTargetAngleY = (s16)(mPrevAngleY + 0x4000);
+            mTargetAngleY = (s16)(mPrevAngle.y + 0x4000);
         } else {
             mTargetAngleY = Vec3_HorzAngle(&mPos, &mSpawnPos);
         }
-        ApproachLinear(mPrevAngleY, mTargetAngleY, 0x1000);
-        ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &mSpawnPos), 0x500);
-        ApproachLinear(mPrevAngleZ, 0, 0x500);
+        ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x1000);
+        ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &mSpawnPos), 0x500);
+        ApproachLinear(mPrevAngle.z, 0, 0x500);
         if (Vec3_Dist(&mPos, &mSpawnPos) < 0x1f4000) {
             mTimer = 0;
         } else {
@@ -722,24 +722,24 @@ int daJango_c::UpdateCircleState() {
 
     if (mCarriedItem == CARRIES_NO_STAR && mHeldActorID == 0) {
         angV = Vec3_VertAngle(&mPos, &mSpawnPos);
-        angD = (s16)(AngleDiff(mTargetAngleY, mPrevAngleY) / 3);
+        angD = (s16)(AngleDiff(mTargetAngleY, mPrevAngle.y) / 3);
     } else {
         angV = Vec3_VertAngle(&mPos, &mPathNodePos);
-        angD = (s16)(AngleDiff(mTargetAngleY, mPrevAngleY) / 3);
+        angD = (s16)(AngleDiff(mTargetAngleY, mPrevAngle.y) / 3);
     }
 
     if (gCurrentSublevel == 0x10) {
-        ApproachAngle(&mPrevAngleX, angV, 0xa, 0x400, 0x200);
+        ApproachAngle(&mPrevAngle.x, angV, 0xa, 0x400, 0x200);
     } else {
-        ApproachLinear(mPrevAngleX, angV, 0x300);
+        ApproachLinear(mPrevAngle.x, angV, 0x300);
     }
-    ApproachAngle(&mPrevAngleZ, angD, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.z, angD, 0xa, 0x200, 0x100);
 
     if (gCurrentSublevel == 0x10 || mSilverStarFlag == 2) {
-        p94 = &mPrevAngleY;
+        p94 = &mPrevAngle.y;
         *p94 = (s16)(*p94 - 0x200);
     } else {
-        p94 = &mPrevAngleY;
+        p94 = &mPrevAngle.y;
         *p94 = (s16)(*p94 - 0x400);
     }
 
@@ -813,7 +813,7 @@ int daJango_c::UpdateCircleState() {
         PathPtr path;
         path.FromID(mPathId);
         path.GetNode(node, mPathNodeIndex);
-        if (AngleDiff(Vec3_HorzAngle(&mPos, &node), mAngleY) < 0x2000) {
+        if (AngleDiff(Vec3_HorzAngle(&mPos, &node), mAngle.y) < 0x2000) {
             ChangeState(JANGO_STATE_FLY_PATH);
         }
     }
@@ -848,9 +848,9 @@ int daJango_c::EnterSwoopState() {
 
    If a player exists: a vanished player ends the swoop (mTimer = 30, back to
    CIRCLE). Otherwise the target is the player's position with Y = mGroundY + 40
-   units; mTargetAngleY and the pitch are the direction to it, and mPrevAngleY /
-   mPrevAngleX step toward them by mStateParam (level 0x10) or mStateParam + 0x500. The velocity is
-   (0, 0, 30.0) turned by mAngleY then mAngleX. After HandleCylinderHit (the hit
+   units; mTargetAngleY and the pitch are the direction to it, and mPrevAngle.y /
+   mPrevAngle.x step toward them by mStateParam (level 0x10) or mStateParam + 0x500. The velocity is
+   (0, 0, 30.0) turned by mAngle.y then mAngle.x. After HandleCylinderHit (the hit
    and cap-steal tests) the swoop ends (mTimer = 30, CIRCLE) when mStateTimer
    has run out or the wall collider reports a wall. */
 int daJango_c::UpdateSwoopState() {
@@ -889,15 +889,15 @@ int daJango_c::UpdateSwoopState() {
         pitch = Vec3_VertAngle(&mPos, &vv);
     }
     if (gCurrentSublevel == 0x10) {
-        ApproachLinear(mPrevAngleY, mTargetAngleY, (s16)mStateParam);
-        ApproachLinear(mPrevAngleX, pitch, (s16)mStateParam);
+        ApproachLinear(mPrevAngle.y, mTargetAngleY, (s16)mStateParam);
+        ApproachLinear(mPrevAngle.x, pitch, (s16)mStateParam);
     } else {
-        ApproachLinear(mPrevAngleY, mTargetAngleY, (s16)(mStateParam + 0x500));
-        ApproachLinear(mPrevAngleX, pitch, (s16)(mStateParam + 0x500));
+        ApproachLinear(mPrevAngle.y, mTargetAngleY, (s16)(mStateParam + 0x500));
+        ApproachLinear(mPrevAngle.x, pitch, (s16)(mStateParam + 0x500));
     }
     v.z = 0x1e000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
     MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
     HandleCylinderHit();
     if (mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
@@ -978,14 +978,14 @@ int daJango_c::EnterRiseState() {
     return 1;
 }
 
-/* RISE update: climbs at 20 units per frame while pitch (mPrevAngleX) and roll
-   (mPrevAngleZ) level off by 0x300 per frame. Once mPos.y is within 2 units
+/* RISE update: climbs at 20 units per frame while pitch (mPrevAngle.x) and roll
+   (mPrevAngle.z) level off by 0x300 per frame. Once mPos.y is within 2 units
    below mPathNodePos.y or above it, it stops, snaps to that height, restores
    the animation speed to 1.0 and enters CIRCLE. */
 int daJango_c::UpdateRiseState() {
     mSpeed.y = 0x14000;
-    ApproachLinear(mPrevAngleX, 0, 0x300);
-    ApproachLinear(mPrevAngleZ, 0, 0x300);
+    ApproachLinear(mPrevAngle.x, 0, 0x300);
+    ApproachLinear(mPrevAngle.z, 0, 0x300);
     if (mPos.y >= mPathNodePos.y - 0x2000) {
         mSpeed.x = 0;
         mSpeed.y = 0;
@@ -1183,9 +1183,9 @@ int daJango_c::ChangeTarget() {
 }
 
 /* Sets the velocity words (mSpeed) for the circling
-   state: the vector (0, 0, 20.0) turned by mAngleY then mAngleX. Empty-handed
+   state: the vector (0, 0, 20.0) turned by mAngle.y then mAngle.x. Empty-handed
    (nothing carried or held) it is (0, 0, 40.0) instead, and while mTimer is
-   0 mPrevAngleY also drops by 0x100 (about 1.4 degrees) per call. */
+   0 mPrevAngle.y also drops by 0x100 (about 1.4 degrees) per call. */
 void daJango_c::UpdateCircleVelocity() {
     Vector3 v[2];
     v[0].z = 0;
@@ -1200,13 +1200,13 @@ void daJango_c::UpdateCircleVelocity() {
     v[0].z = 0x14000;
     if (mCarriedItem == CARRIES_NO_STAR && mHeldActorID == 0) {
         if (mTimer == 0) {
-            short *a = &mPrevAngleY;
+            short *a = &mPrevAngle.y;
             *a = *a - 0x100;
         }
         v[0].z = 0x28000;
     }
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
     MTX_MultVec43(&v[0], &data_020a0e68, &mSpeed);
 }
 

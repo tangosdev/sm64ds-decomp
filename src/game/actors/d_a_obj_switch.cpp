@@ -161,7 +161,7 @@ int daObjSwitch_c::InitResources()
 
     idx = mResourceIdx;
     f = dBgW_Kc::LoadFile(*data_ov002_021098e8[idx].collision);
-    mMeshCollider.SetFile((KCL_File *)(f), mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)(f), mClsnMat, 0x199, mAngle.y,
                           *data_ov002_021098e8[idx].clps);
 
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
@@ -429,7 +429,7 @@ void daObjSwitch_c::UpdateClsnMatrix() {
     mClsnMat.m[9] = mPos.x;
     mClsnMat.m[10] = mPos.y - mDisplacementY;
     mClsnMat.m[11] = mPos.z;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 int daObjSwitch_c::FindTargetStar() {

@@ -61,20 +61,21 @@
      11 / 12    spinning variants of 6 / 8 that also give a coin and a heal;
      9          spawns one type 5 and two type 11 around its spawn point. */
 enum da1up_MushroomType {
-    MUSHROOM_POP_OUT_DRIFT        = 0,  /* arc out, drift at 2 units a frame, blink, vanish */
-    MUSHROOM_POP_OUT_FLEE         = 1,  /* arc out, then walk away from the player */
-    MUSHROOM_WAIT_THEN_ACCELERATE = 2,  /* wait for the player, then speed up along mPrevAngleY */
-    MUSHROOM_STATIONARY           = 3,  /* no movement; just waits to be touched */
-    MUSHROOM_WAIT_THEN_FACE_AWAY  = 4,  /* wait for the player, hop, then face away from him; no horizontal speed is set here */
-    MUSHROOM_HIDDEN_FLEE          = 5,  /* hidden, then arc out and walk away */
-    MUSHROOM_TRIGGER_FOR_5        = 6,  /* invisible and stationary; touching it unlocks a type 5 */
-    MUSHROOM_HIDDEN_CHASE         = 7,  /* hidden, then arc out and steer toward the player */
-    MUSHROOM_TRIGGER_FOR_7        = 8,  /* invisible and stationary; touching it unlocks a type 7 */
-    MUSHROOM_SPAWNER              = 9,  /* spawns three mushrooms, then removes itself */
-    MUSHROOM_RISE_THEN_POP_OUT    = 10, /* rises 100 units, then continues as type 0 */
-    MUSHROOM_SPIN_TRIGGER_FOR_5   = 11, /* spinning 6, plus a coin and a heal */
-    MUSHROOM_SPIN_TRIGGER_FOR_7   = 12, /* spinning 8, plus a coin and a heal */
-    MUSHROOM_FALL_THEN_WAIT       = 13  /* falls to the ground, then waits to be touched */
+    MUSHROOM_POP_OUT_DRIFT = 0,        /* arc out, drift at 2 units a frame, blink, vanish */
+    MUSHROOM_POP_OUT_FLEE = 1,         /* arc out, then walk away from the player */
+    MUSHROOM_WAIT_THEN_ACCELERATE = 2, /* wait for the player, then speed up along mPrevAngle.y */
+    MUSHROOM_STATIONARY = 3,           /* no movement; just waits to be touched */
+    /* wait for the player, hop, then face away from him; no horizontal speed is set here */
+    MUSHROOM_WAIT_THEN_FACE_AWAY = 4,
+    MUSHROOM_HIDDEN_FLEE = 5,         /* hidden, then arc out and walk away */
+    MUSHROOM_TRIGGER_FOR_5 = 6,       /* invisible and stationary; touching it unlocks a type 5 */
+    MUSHROOM_HIDDEN_CHASE = 7,        /* hidden, then arc out and steer toward the player */
+    MUSHROOM_TRIGGER_FOR_7 = 8,       /* invisible and stationary; touching it unlocks a type 7 */
+    MUSHROOM_SPAWNER = 9,             /* spawns three mushrooms, then removes itself */
+    MUSHROOM_RISE_THEN_POP_OUT = 10,  /* rises 100 units, then continues as type 0 */
+    MUSHROOM_SPIN_TRIGGER_FOR_5 = 11, /* spinning 6, plus a coin and a heal */
+    MUSHROOM_SPIN_TRIGGER_FOR_7 = 12, /* spinning 8, plus a coin and a heal */
+    MUSHROOM_FALL_THEN_WAIT = 13      /* falls to the ground, then waits to be touched */
 };
 
 struct da1up_c : dEnemyBase_c {

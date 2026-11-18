@@ -131,7 +131,7 @@ int daObjCtMecha10_c::InitResources() {
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
         mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj10CollisionFile), mClsnMat, 0x1000,
-                              mAngleY, data_ov035_021121d8);
+                              mAngle.y, data_ov035_021121d8);
         mMeshCollider.SetEdgeToleranceShift(0);
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
         mRotationState = 0;
@@ -165,7 +165,7 @@ int daObjCtMecha10_c::Behavior() {
         return 1;
     }
 
-    if (ApproachLinear(mAngleY, mTargetAngleY, 0xc8) && DecIfAbove0_Short(&mStepTimer) == 0) {
+    if (ApproachLinear(mAngle.y, mTargetAngleY, 0xc8) && DecIfAbove0_Short(&mStepTimer) == 0) {
         mTargetAngleY += mAngleYStep;
 
         u8 setting = data_0209f2c0;

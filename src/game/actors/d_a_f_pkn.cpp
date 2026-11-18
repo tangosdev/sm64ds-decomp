@@ -166,9 +166,9 @@ void daFPkn_c::SpawnDeathBurst()
     pos.y = mPos.y;
     pos.z = mPos.z;
     burstReach = data_ov084_0213029c[frame];
-    product = burstReach * FX_SinIdx((u16)mAngleY >> 4);
+    product = burstReach * FX_SinIdx((u16)mAngle.y >> 4);
     pos.x = pos.x + FX_MUL(product, mScale);
-    product = burstReach * FX_CosIdx((u16)mAngleY >> 4);
+    product = burstReach * FX_CosIdx((u16)mAngle.y >> 4);
     pos.z = pos.z + FX_MUL(product, mScale);
     pos.y = pos.y + mScale * data_ov084_021302c4[frame];
     mParticleHandle1 =
@@ -186,7 +186,7 @@ void daFPkn_c::UpdateClsnOffset()
     Vector3 pos;
     int scaledSinAcc0, sinAcc1, cosAcc1, scaledCosAcc0, isFirepakun;
 
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -383,7 +383,7 @@ void daFPkn_c::StateGrow()
         func_0201267c(SND_GROW_BITE, &mCamSpacePos);
     }
 
-    targetAngle = mAngleY;
+    targetAngle = mAngle.y;
     player = ClosestPlayer();
     /* Read through src before the null test; direct member reads DIFF. */
     src = &player->mPos.x;
@@ -393,7 +393,7 @@ void daFPkn_c::StateGrow()
     if (player != 0) {
         targetAngle = Vec3_HorzAngle(&mPos, &playerPos);
     }
-    ApproachLinear(mAngleY, targetAngle, 0x400);
+    ApproachLinear(mAngle.y, targetAngle, 0x400);
 
     if (mSuppressDeathReward == 1) {
         spawned = dActor_c::Spawn(ACTOR_PAKUN, 0, mPos, &mAngle, mAreaId, -1);
@@ -435,11 +435,11 @@ void daFPkn_c::StateSpit()
                           0);
     } else {
         if (mStateTimer < 58) {
-            targetAngle = mAngleY;
+            targetAngle = mAngle.y;
             player = ClosestPlayer();
             if (player != 0)
                 targetAngle = Vec3_HorzAngle(&mPos, &player->mPos);
-            ApproachLinear(mAngleY, targetAngle, 0x400);
+            ApproachLinear(mAngle.y, targetAngle, 0x400);
         }
     }
 
@@ -455,10 +455,10 @@ void daFPkn_c::StateSpit()
     pos.x = mPos.x;
     pos.y = mPos.y;
     pos.z = mPos.z;
-    pos.x += FX_MUL((mMaxScale * 0x3c), FX_SinIdx((u16)mAngleY >> 4));
-    pos.z += FX_MUL((mMaxScale * 0x3c), FX_CosIdx((u16)mAngleY >> 4));
+    pos.x += FX_MUL((mMaxScale * 0x3c), FX_SinIdx((u16)mAngle.y >> 4));
+    pos.z += FX_MUL((mMaxScale * 0x3c), FX_CosIdx((u16)mAngle.y >> 4));
     pos.y += mMaxScale * 0x5a;
-    mAngleX = 0x1000;
+    mAngle.x = 0x1000;
 
     SpawnFireball(pos, &mAngle, 0x1e000, 0xa000, 3);
     return;
@@ -480,7 +480,7 @@ void daFPkn_c::StateWait()
     int cmp;
 
     if (mSpinCount != 0) {
-        mAngleY += mSpinSpeed;
+        mAngle.y += mSpinSpeed;
         ApproachLinear(mSpinSpeed, 0, 0xc8);
         SpawnDeathBurst();
         if (mAnmModel.Finished() == 0)
@@ -601,7 +601,7 @@ void daFPkn_c::StateWait()
     player = ClosestPlayer();
     if (player == 0)
         return;
-    mAngleY = Vec3_HorzAngle(&mPos, &player->mPos);
+    mAngle.y = Vec3_HorzAngle(&mPos, &player->mPos);
 }
 
 int daFPkn_c::StateInit()

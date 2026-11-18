@@ -34,7 +34,7 @@
  *                              Behavior reads it back as the resting height a
  *                              sine offset is added to.
  *   0x324  mAngleXSpeed    -- the per-tick angular step, +-(0x400/n), added to
- *                              mAngleX every frame of a roll; Behavior only.
+ *                              mAngle.x every frame of a roll; Behavior only.
  *   0x326  mPhaseTimer     -- a phase counter Behavior increments every call and
  *                              compares against several thresholds.
  *   0x328  mRollStage      -- a stage counter, -1 sentinel, incremented up to

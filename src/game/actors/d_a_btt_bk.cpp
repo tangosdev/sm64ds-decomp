@@ -147,7 +147,7 @@ void daBttBk_c::UpdateModelTransform() {
             }
         }
     }
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -161,12 +161,12 @@ void daBttBk_c::UpdateModelTransform() {
     if (rg.DetectClsn()) {
         groundY = rg.clsnY;
     }
-    Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
     mShadowMtx.m[9] = mPos.x >> 3;
     mShadowMtx.m[10] = groundY >> 3;
     mShadowMtx.m[11] = mPos.z >> 3;
     {
-        s16 a = mAngleX;
+        s16 a = mAngle.x;
         int sv = FX_SinIdx((unsigned short)(short)(a << 1) >> 4);
         if (sv < 0)
             sv = -sv;
@@ -201,10 +201,10 @@ int daBttBk_c::StateYoshiMouthInit() {
 /* State 1 update: copies the carrier's angles; breaks the crate unless
  * mFlags bit 8 is set and bit 13 clear. */
 int daBttBk_c::StateCarriedMain() {
-    mAngleX = mCarrier->mAngleX;
-    mAngleY = mCarrier->mAngleY;
-    mPrevAngleX = mAngleX;
-    mPrevAngleY = mAngleY;
+    mAngle.x = mCarrier->mAngle.x;
+    mAngle.y = mCarrier->mAngle.y;
+    mPrevAngle.x = mAngle.x;
+    mPrevAngle.y = mAngle.y;
     {
         int flags = mFlags;
         int hasBit8 = (int)((flags & 0x100) != 0);

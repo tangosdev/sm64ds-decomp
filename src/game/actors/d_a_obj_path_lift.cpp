@@ -67,7 +67,7 @@ int daObjPathLift_c::InitResources() {
     mShadowModel.InitCuboid();
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000, mAngle.y,
                           data_ov002_0210d7d4);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
@@ -139,7 +139,7 @@ int daObjPathLift_c::CleanupResources() {
 }
 
 int daObjPathLift_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, 0);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, 0);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     int z = mPos.z >> 3;
@@ -162,16 +162,16 @@ void daObjPathLift_c::UpdateShadow() {
 
     groundDepth = (mPos.y - mGroundY) + 0x64000;
 
-    sinVal = FX_SinIdx((u16)mAngleX >> 4);
+    sinVal = FX_SinIdx((u16)mAngle.x >> 4);
     yOff = FX_MUL(sinVal, 0x17c000);
     if (yOff < 0)
         yOff = -yOff;
-    cosVal = FX_CosIdx((u16)mAngleX >> 4);
+    cosVal = FX_CosIdx((u16)mAngle.x >> 4);
     scaleZ = FX_MUL(cosVal, 0x17c000);
     if (scaleZ < 0)
         scaleZ = -scaleZ;
 
-    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngle.y);
     mShadowMat[9] = mPos.x >> 3;
     mShadowMat[10] = (mPos.y - yOff) >> 3;
     mShadowMat[11] = mPos.z >> 3;

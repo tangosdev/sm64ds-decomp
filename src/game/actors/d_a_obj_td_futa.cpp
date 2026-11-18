@@ -58,7 +58,7 @@ s32 daObjTdFuta_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov032_02113acc);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov032_02112f98);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov032_02112f98);
 
     return Event::GetBit(0xe) == 0;
 }

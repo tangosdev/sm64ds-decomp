@@ -195,7 +195,7 @@ void daIbl_c::CheckContact() {
 /* The wall and floor probe. mHitWall is cleared, the collision object is
    updated (sublevel 0x19 runs func_020383f0, every other sublevel
    func_02038414; both unidentified), and mHitWall is set when the ball touches
-   a wall and the angle between the ball's heading mPrevAngleY and the wall
+   a wall and the angle between the ball's heading mPrevAngle.y and the wall
    normal's angle exceeds a quarter turn (0x4000), i.e. it is heading into
    the wall. On the ground it copies the floor normal to mFloorNormal and,
    unless it hit a wall, puts X and Z back to last frame's position and, when
@@ -210,7 +210,7 @@ void daIbl_c::UpdateWallAndFloor() {
     if (mWithMeshClsn.IsOnWall() != 0) {
         ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(mWallNormal);
         short a = cstd::atan2(mWallNormal.x, mWallNormal.z);
-        if (GetSubtraction(mPrevAngleY, a) > 0x4000)
+        if (GetSubtraction(mPrevAngle.y, a) > 0x4000)
             mHitWall = 1;
     }
     if (mWithMeshClsn.IsOnGround() == 0)
@@ -369,7 +369,7 @@ int daIbl_c::AdvancePath() {
  * KillAndTrackInDeathTable itself before returning 2) and, on 2, the ball
  * puffs (a Particle) and plays the break sound. Then the contact check, and with mDeathState 8 the handler
  * is done. Otherwise AdvancePath advances along the path and the
- * heading mPrevAngleY turns toward mHeadingToNode by at most 0x800 (11.25
+ * heading mPrevAngle.y turns toward mHeadingToNode by at most 0x800 (11.25
  * degrees) a frame. When the path index wraps (-1) the ball becomes kind 3
  * and, if it is on the ground, has its vertical speed zeroed and is lifted 15
  * units (so it falls again); otherwise it runs the probe. If the path index
@@ -400,7 +400,7 @@ void daIbl_c::PathBehavior() {
         return;
 
     r = AdvancePath();
-    ApproachLinear(mPrevAngleY, mHeadingToNode, 0x800);
+    ApproachLinear(mPrevAngle.y, mHeadingToNode, 0x800);
 
     if (r == -1) {
         mVariant = daIbl_KIND_ROLL_OFF;
@@ -416,7 +416,7 @@ void daIbl_c::PathBehavior() {
         vy = mSpeed.y;
         UpdateWallAndFloor();
         if (mHitWall != 0 && had == 0) {
-            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+            mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
             mRollSoundHandle = 0;
         } else if (mWithMeshClsn.IsOnGround() != 0) {
             if (mWithMeshClsn.JustHitGround() != 0) {
@@ -487,7 +487,7 @@ void daIbl_c::RollOffBehavior() {
         mSpeed.z += mFloorNormal.z * 3;
         mHorzSpeed = Vec3_HorzLen(&mSpeed);
 
-        mPrevAngleY = cstd::atan2(mSpeed.x, mSpeed.z);
+        mPrevAngle.y = cstd::atan2(mSpeed.x, mSpeed.z);
 
         if (mWithMeshClsn.JustHitGround()) {
             func_02012694(daIbl_SND_LAND, &mCamSpacePos);
@@ -550,9 +550,9 @@ void daIbl_c::FreeRollBehavior() {
     UpdateWallAndFloor();
 
     if (mHitWall != 0) {
-        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
-        mSpeed.x = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleY >> 4));
-        mSpeed.z = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleY >> 4));
+        mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
+        mSpeed.x = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngle.y >> 4));
+        mSpeed.z = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngle.y >> 4));
         mSpeed.x -= mWallNormal.x * 3;
         mSpeed.z -= mWallNormal.z * 3;
         mHorzSpeed = Vec3_HorzLen(&mSpeed);
@@ -562,7 +562,7 @@ void daIbl_c::FreeRollBehavior() {
         mHorzSpeed = Vec3_HorzLen(&mSpeed);
         if (mFloorNormal.y == 0x1000 && mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
-            mPrevAngleY = cstd::atan2(mSpeed.x, mSpeed.z);
+            mPrevAngle.y = cstd::atan2(mSpeed.x, mSpeed.z);
             UpdatePosWithHorzSpeedAndAng();
         }
 
@@ -740,7 +740,7 @@ int daIbl_c::InitResources()
             mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
         }
         AdvancePath();
-        mPrevAngleY = mHeadingToNode;
+        mPrevAngle.y = mHeadingToNode;
         mKillY = data_02092138;
         d = gCurrentSublevel;
         /* Sublevel 0x19 is the half-size ball: speed 10 units/frame, scale

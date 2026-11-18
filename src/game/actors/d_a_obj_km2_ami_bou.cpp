@@ -71,7 +71,7 @@ s32 daObjKm2_Ami_Bou_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov045_021131a8);
-    mMeshCollider.SetFile(kcl, mClsnMat, kMeshScale, mAngleY, data_ov045_02112510);
+    mMeshCollider.SetFile(kcl, mClsnMat, kMeshScale, mAngle.y, data_ov045_02112510);
     mdCcAc_c.Init(this, kCylinderRadius, kCylinderHeight, kClsnFlags, 0);
     return 1;
 }

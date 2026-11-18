@@ -85,7 +85,7 @@ void daObjMaruta_c::OnHitByMegaChar(daPly_c &player) {
 /* ROM ordinal 1 -- 0x02127094, size 0x48 */
 /* -------------------------------------------------------------------------- */
 void daObjMaruta_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -152,8 +152,8 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
             mRollAngVel = 0;
     } else {
         horz = Vec3_HorzAngle(&mPos, &mHitPos);
-        AngleDiff(horz, mAngleY);
-        ang = AngleDiff(horz, mAngleY);
+        AngleDiff(horz, mAngle.y);
+        ang = AngleDiff(horz, mAngle.y);
         if (ang > 0x4000) {
             mRollAngVel -= 0x10;
         } else {
@@ -175,7 +175,7 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
     Vec3_Sub(&tmp, &mPos, &mRestPos);
     len = VEC_Mag(&tmp);
     ang = Vec3_HorzAngle(&mPos, &mRestPos);
-    ang = AngleDiff(ang, mAngleY);
+    ang = AngleDiff(ang, mAngle.y);
     if (ang >= 0x7f00)
         ang = 0x8000;
     if (ang <= 0x100)
@@ -191,8 +191,8 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
         mPos.z = mPrevPos.z;
         mHitTimer = 10;
     }
-    mAngleX += mRollAngVel;
-    if ((mAngleX & 0x1fff) < 0x210 && mRollAngVel != 0) {
+    mAngle.x += mRollAngVel;
+    if ((mAngle.x & 0x1fff) < 0x210 && mRollAngVel != 0) {
         if (mSoundTimer == 0) {
             Sound::PlayBank3(0x25, mCamSpacePos);
             mSoundTimer = 14;
@@ -223,7 +223,7 @@ int daObjMaruta_c::func_ov080_021274ac(ResourceDescriptor *arg) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*arg->collision), mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*arg->collision), mClsnMat, 0x1000, mAngle.y,
                           *(arg->clps));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
@@ -232,7 +232,7 @@ int daObjMaruta_c::func_ov080_021274ac(ResourceDescriptor *arg) {
     mRestPos.z = mPos.z;
     Vec3_Sub(&d, &mPos, &mRestPos);
     VEC_Mag(&d);
-    mPathAngDiff = AngleDiff(Vec3_HorzAngle(&mPos, &mRestPos), mAngleY);
+    mPathAngDiff = AngleDiff(Vec3_HorzAngle(&mPos, &mRestPos), mAngle.y);
     return 1;
 }
 
@@ -240,7 +240,7 @@ int daObjMaruta_c::func_ov080_021274ac(ResourceDescriptor *arg) {
 /* ROM ordinal 6 -- 0x0212758c, size 0xcc */
 /* -------------------------------------------------------------------------- */
 /* If the other actor's actorID is PLAYER (0xbf), copy its mPos into mHitPos,
-   arm mHitByPlayer / mHitTimer, and shove that actor along mAngleY by half
+   arm mHitByPlayer / mHitTimer, and shove that actor along mAngle.y by half
    of mHorzSpeed. The ID test is held in a local, as the cartridge keeps
    it in a register (testing it in the if is 12 bytes short). */
 void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
@@ -255,8 +255,8 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
         mHitTimer = 120;
 
         half = mHorzSpeed >> 1;
-        position->x += FX_MUL(half, FX_SinIdx((u16)mAngleY >> 4));
-        position->z += FX_MUL(half, FX_CosIdx((u16)mAngleY >> 4));
+        position->x += FX_MUL(half, FX_SinIdx((u16)mAngle.y >> 4));
+        position->z += FX_MUL(half, FX_CosIdx((u16)mAngle.y >> 4));
     }
 }
 

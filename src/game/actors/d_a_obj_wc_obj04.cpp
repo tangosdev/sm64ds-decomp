@@ -76,7 +76,7 @@ int daObjWc_Obj04_c::InitResources() {
     UpdateClsnMatrix();
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov029_02114324);
-        mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, data_ov029_0211304c);
+        mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngle.y, data_ov029_0211304c);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mState = 0;
@@ -103,7 +103,7 @@ int daObjWc_Obj04_c::Behavior() {
 
         mMeshCollider.Enable(this);
         UpdateClsnMatrix();
-        mMeshCollider.Transform(mClsnMat2, mAngleY);
+        mMeshCollider.Transform(mClsnMat2, mAngle.y);
         break;
 
     case 1: {
@@ -147,7 +147,7 @@ int daObjWc_Obj04_c::CleanupResources() {
 /* -------------------------------------------------------------------------- */
 /* The plank model's matrix: yaw plus position >> 3 (world fix12 to model units). */
 void daObjWc_Obj04_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngle.y);
     mModel2.mat4x3.m[9] = mPos.x >> 3;
     mModel2.mat4x3.m[10] = mPos.y >> 3;
     mModel2.mat4x3.m[11] = mPos.z >> 3;
@@ -157,7 +157,7 @@ void daObjWc_Obj04_c::UpdateModelMatrix() {
 /* -------------------------------------------------------------------------- */
 /* The plank collision matrix: yaw plus the world position. */
 void daObjWc_Obj04_c::UpdateClsnMatrix() {
-    Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
+    Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
     mClsnMat2.m[9] = mPos.x;
     mClsnMat2.m[10] = mPos.y;
     mClsnMat2.m[11] = mPos.z;

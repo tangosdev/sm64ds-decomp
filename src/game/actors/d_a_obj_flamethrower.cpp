@@ -98,7 +98,7 @@ int daObjFlamethrower_c::InitResources() {
     count = kSegments;
     if (gCurrentSublevel == kBigBoosHaunt)
         count = kBbhSegments;
-    Matrix4x3_FromRotationXYZExt(&mTransform, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mTransform, mAngle.x, mAngle.y, mAngle.z);
     for (i = 0; i < count; i++) {
         im1 = i - 1;
         offset.x = 0;
@@ -186,7 +186,7 @@ int daObjFlamethrower_c::Behavior() {
         return 1;
 
     if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt))
-        Matrix4x3_FromRotationXYZExt(&mTransform, mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_FromRotationXYZExt(&mTransform, mAngle.x, mAngle.y, mAngle.z);
 
     if (mActiveFlames != 0) {
         for (i = 0; i < count; i++) {

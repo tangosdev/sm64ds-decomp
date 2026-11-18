@@ -192,9 +192,9 @@ int daBgSnmBdy_c::InitResources()
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
-    mHomeAngleX = mAngleX;
-    mHomeAngleY = mAngleY;
-    mHomeAngleZ = mAngleZ;
+    mHomeAngleX = mAngle.x;
+    mHomeAngleY = mAngle.y;
+    mHomeAngleZ = mAngle.z;
     unk_3a4 = 0x5a;
     SetState(0);
     mTalkPlayer = 0;
@@ -378,8 +378,8 @@ int daBgSnmBdy_c::State3() {
     switch (mSubstate) {
     case 0: {
         int distToLanding = Vec3_HorzDist(&gBgSnmBdyLandingPoint, &mPos);
-        UpdateAngle(mAngleY, Vec3_HorzAngle(&mPos, &gBgSnmBdyLandingPoint), 2, 0x600);
-        mPrevAngleY = mAngleY;
+        UpdateAngle(mAngle.y, Vec3_HorzAngle(&mPos, &gBgSnmBdyLandingPoint), 2, 0x600);
+        mPrevAngle.y = mAngle.y;
         Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x8a, mCamSpacePos, 0);
         if (distToLanding < 0x17c000) {
@@ -402,8 +402,8 @@ int daBgSnmBdy_c::State3() {
             mPos.x = gBgSnmBdyLandingPoint.x;
             mPos.y = gBgSnmBdyLandingPoint.y;
             mPos.z = gBgSnmBdyLandingPoint.z;
-            mAngleX = 0;
-            mAngleY = (short)-0x4000;
+            mAngle.x = 0;
+            mAngle.y = (short)-0x4000;
             mHorzSpeed = 0;
             mSubstate++;
         }
@@ -460,12 +460,12 @@ int daBgSnmBdy_c::State5()
     mPos.x = mHomePos.x;
     mPos.y = mHomePos.y;
     mPos.z = mHomePos.z;
-    mAngleX = mHomeAngleX;
-    mAngleY = mHomeAngleY;
-    mAngleZ = mHomeAngleZ;
-    mPrevAngleX = mAngleX;
-    mPrevAngleY = mAngleY;
-    mPrevAngleZ = mAngleZ;
+    mAngle.x = mHomeAngleX;
+    mAngle.y = mHomeAngleY;
+    mAngle.z = mHomeAngleZ;
+    mPrevAngle.x = mAngle.x;
+    mPrevAngle.y = mAngle.y;
+    mPrevAngle.z = mAngle.z;
     mTalkPlayer = 0;
     SetState(0);
     return 1;
@@ -473,7 +473,7 @@ int daBgSnmBdy_c::State5()
 
 void daBgSnmBdy_c::UpdateModel()
 {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = (mPos.y + mRadius) >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -528,8 +528,8 @@ int daBgSnmBdy_c::AdvancePath()
     int numNodes;
     mPath.GetNode(node, mPathNode);
     int dist = Vec3_HorzDist(&mPos, &node);
-    UpdateAngle(mAngleY, Vec3_HorzAngle(&mPos, &node), 2, 0x600);
-    mPrevAngleY = mAngleY;
+    UpdateAngle(mAngle.y, Vec3_HorzAngle(&mPos, &node), 2, 0x600);
+    mPrevAngle.y = mAngle.y;
     if (dist < mRadius) {
         numNodes = mPath.NumNodes();
         /* Signed compare. mPathNode is u32; comparing it as u32 is unsigned. */
@@ -543,7 +543,7 @@ void daBgSnmBdy_c::UpdateRollAngle()
 {
     int circumference = FX_Mul32x64c(mRadius << 1, FX64C_PI);
     fx32 turns = FX_Div(mHorzSpeed, circumference);
-    mAngleX = (short)(mAngleX + FX_Mul(turns, ANGLE_FULL_TURN));
+    mAngle.x = (short)(mAngle.x + FX_Mul(turns, ANGLE_FULL_TURN));
 }
 
 int daBgSnmBdy_c::IsPlayerNearCenter()

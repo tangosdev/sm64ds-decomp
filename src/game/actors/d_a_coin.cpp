@@ -238,13 +238,13 @@ daStarBase_c *daCoin_c::FindStarMarker() {
     return 0;
 }
 
-/* Bounce off a wall: turns the heading (mPrevAngleY) around the wall normal. */
+/* Bounce off a wall: turns the heading (mPrevAngle.y) around the wall normal. */
 void daCoin_c::BounceOffWall() {
     if (mWithMeshClsn.IsOnWall() == 0) return;
     int normal[3];
     dBgPi *wall = mWithMeshClsn.GetWallResult();
     wall->surface.CopyNormalTo(*(Vector3 *)normal);
-    mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
+    mPrevAngle.y = ReflectAngle(normal[0], normal[2], mPrevAngle.y);
 }
 
 /* Shared per-frame tail of the movement handlers. Counts down the no-collision
@@ -278,7 +278,7 @@ void daCoin_c::Step() {
     mWithMeshClsn.StopDetectingWater();
 }
 
-/* Refreshes the model matrices (rotation from mAngleY, translation as position
+/* Refreshes the model matrices (rotation from mAngle.y, translation as position
  * >> 3) and the shadow, once per frame. The shadow is skipped while the
  * 0x40000 yoshi-mouth state bit is set, for an inactive coin, and for a red
  * coin sitting in a block.
@@ -290,7 +290,7 @@ void daCoin_c::UpdateModelMatrix() {
     int inYoshiMouth;
     int floorState;
 
-    Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngle.y);
     mCommonModel1.mat4x3.m[9] = mPos.x >> 3;
     mCommonModel1.mat4x3.m[10] = mPos.y >> 3;
     mCommonModel1.mat4x3.m[11] = mPos.z >> 3;
@@ -534,9 +534,9 @@ void daCoin_c::StateSlideAwayFromMario() {
     }
     mSpeed.y = 0x23000;
     if (DistToCPlayer() < 0x4b0000) {
-        mPrevAngleY = HorzAngleToCPlayer() + 0x8000;
+        mPrevAngle.y = HorzAngleToCPlayer() + 0x8000;
     } else {
-        mPrevAngleY = HorzAngleToFPlayer();
+        mPrevAngle.y = HorzAngleToFPlayer();
     }
 }
 
@@ -624,7 +624,7 @@ void daCoin_c::StateBounce() {
             mHorzSpeed = 0x1c000;
             UpdatePosWithHorzSpeedAndAng();
         }
-        mPrevAngleY = cstd::atan2(mSpeed.x, mSpeed.z);
+        mPrevAngle.y = cstd::atan2(mSpeed.x, mSpeed.z);
     }
 
     if (mWithMeshClsn.JustHitGround() != 0)
@@ -769,7 +769,7 @@ int daCoin_c::Behavior()
     }
     if (KillIfCollected() != 0)
         return 1;
-    mAngleY += 0xc00;
+    mAngle.y += 0xc00;
     if (CheckInYoshiMouth() != 0) {
         UpdateModelMatrix();
         mdCc_c.Clear();
@@ -852,9 +852,9 @@ s32 daCoin_c::InitResources()
         } else {
             u32 flags = param1;
             if (flags & 8) {
-                mPrevAngleY = (s16)(((flags & 0x70) << 8) + 0x8000);
+                mPrevAngle.y = (s16)(((flags & 0x70) << 8) + 0x8000);
             } else {
-                mPrevAngleY = (s16)((flags & 0x70) << 8);
+                mPrevAngle.y = (s16)((flags & 0x70) << 8);
             }
         }
         mVertAccel = -0x4000;

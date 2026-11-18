@@ -209,7 +209,7 @@ int daObjBC_Switch_c::InitResources() {
 
     kcl = dBgW_Kc::LoadFile(daObjBC_Switch_c_ClsnFile);
     /* Collision scale 0x199 is 0.1 in 20.12. */
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngle.y,
                           *(CLPS_Block *)(&data_ov002_0210d6f4));
 
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);

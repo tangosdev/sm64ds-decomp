@@ -64,7 +64,7 @@
  *   CheckMarioCollision / ActKnockback: the temporary is load-bearing.
  * - CleanupResources and InitResourcesCommon read the config block through
  *   mFileTable every time; caching it in a local size-DIFFs.
- * - ActBackUp: `mPrevAngleY += 0x8000` is the match form (a separate read
+ * - ActBackUp: `mPrevAngle.y += 0x8000` is the match form (a separate read
  *   and add of the field size-DIFFs).
  * - mStateTimer compares stay unsigned short (ldrh) in 0211616c /
  *   ActKnockback / ActBackUp; named s16 > / < DIFFs.
@@ -87,8 +87,8 @@
  * - mHomePos is dual-use: InitResourcesCommon seeds it with the spawn position
  *   and the death branch of CheckFloorDeath overwrites it with the death spot
  *   for the particles.
- * - mPrevAngleY looks like the travel heading: the hit reactions set it, the
- *   walking states copy it into mAngleY after moving, and
+ * - mPrevAngle.y looks like the travel heading: the hit reactions set it, the
+ *   walking states copy it into mAngle.y after moving, and
  *   dActor_c::UpdatePosWithHorzSpeedAndAng reads the s16 at 0x94 as the angle it
  *   moves along. Its real name is not settled here.
  * - The Tail view stands in for members: the children's pad_398 and fields from
@@ -281,12 +281,12 @@ int daOts_c::BehaviorCommon()
                               kAnimSpeedDouble, 0);
         }
         Step();
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
         break;
     case STATE_CHASE:
         ActChaseMario();
         Step();
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
         mAnmModel.speed = kAnimSpeedDouble;
         break;
     case STATE_KNOCKED_BACK:
@@ -362,13 +362,13 @@ int daOts_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* Rebuilds the two matrices every frame: the model matrix (a rotation about Y
- * by mAngleY, translated to mPos plus the model's Y offset) and the drop-shadow
+ * by mAngle.y, translated to mPos plus the model's Y offset) and the drop-shadow
  * matrix (the same rotation, translated to mPos), then drops the shadow. The
  * translation rows are positions divided by 8 (>> 3). The shadow's radius
  * shrinks by 3/32 (0x180 / 0x1000) of the actor's height above the floor, but not
  * below 10 units, and its depth is that height plus 40 units. Opacity is 0xf. */
 void daOts_c::func_ov064_02116bac(){
-    Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
+    Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
     this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
     this->mAnmModel.mat4x3.t.y = (this->mPos.y + tail().mModelYOffset) >> 3;
     this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
@@ -379,7 +379,7 @@ void daOts_c::func_ov064_02116bac(){
     int h = tail().mShadowRadius - rad;
     if (h < 0xa000)
         h = 0xa000; /* shadow radius, at least 10 units */
-    Matrix4x3_FromRotationY(&tail().mShadowMtx, this->mAngleY);
+    Matrix4x3_FromRotationY(&tail().mShadowMtx, this->mAngle.y);
     tail().mShadowMtx.t.x = this->mPos.x >> 3;
     tail().mShadowMtx.t.y = this->mPos.y >> 3;
     tail().mShadowMtx.t.z = this->mPos.z >> 3;
@@ -391,17 +391,17 @@ void daOts_c::func_ov064_02116bac(){
  * nothing in STATE_KNOCKED_BACK, or unless the other collider's owner is the
  * player. The cases, in the order tried:
  *   - hit flags 0x7c0 (punch, kick, breakdance, slide kick, dive -- see the bit
- *     table in dCc_c.h) or a metal player: mPrevAngleY takes the player's
- *     mAngleY and mHorzSpeed becomes 50 units a frame (40 when the player's
+ *     table in dCc_c.h) or a metal player: mPrevAngle.y takes the player's
+ *     mAngle.y and mHorzSpeed becomes 50 units a frame (40 when the player's
  *     param1 is not 2);
- *   - flag 0x2000 (the egg bit): mPrevAngleY takes the player's mPrevAngleY,
+ *   - flag 0x2000 (the egg bit): mPrevAngle.y takes the player's mPrevAngle.y,
  *     mHorzSpeed 40 units a frame;
  *   - not the Big Bully and flag 0x10: killed outright (KillByInvincibleChar);
- *   - flag 0x40000: mPrevAngleY takes the player's mAngleY, mHorzSpeed 57.5
+ *   - flag 0x40000: mPrevAngle.y takes the player's mAngle.y, mHorzSpeed 57.5
  *     units a frame;
  *   - stomped (JumpedOnByPlayer): as the first case;
  *   - a player on a shell: the player's mHorzSpeed is set to minus the bully's,
- *     and the bully turns about (mPrevAngleY = mAngleY + half a turn) at 40 units
+ *     and the bully turns about (mPrevAngle.y = mAngle.y + half a turn) at 40 units
  *     a frame;
  *   - a player with mIsVanish set is left alone; any other player is hurt
  *     (daPly_c::Hurt) and the bully turns about at 20 units a frame (10 for the
@@ -436,7 +436,7 @@ void daOts_c::CheckMarioCollision() {
 
     hitFlags = (s32)this->mdCcAc_c.hitFlags;
     if ((hitFlags & kHitAttackMask) || hitPlayer->mIsMetal != 0) {
-        this->mPrevAngleY = hitPlayer->mAngleY;
+        this->mPrevAngle.y = hitPlayer->mAngle.y;
         if (hitPlayer->param1 == 2)
             this->mHorzSpeed = kHitSpeedHeavy;
         else
@@ -451,7 +451,7 @@ void daOts_c::CheckMarioCollision() {
     }
 
     if (hitFlags & kHitEgg) {
-        this->mPrevAngleY = hitPlayer->mPrevAngleY;
+        this->mPrevAngle.y = hitPlayer->mPrevAngle.y;
         this->mHorzSpeed = kHitSpeedLight;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
@@ -476,7 +476,7 @@ void daOts_c::CheckMarioCollision() {
     }
 
     if (hitFlags & kHitBit40000) {
-        this->mPrevAngleY = hitPlayer->mAngleY;
+        this->mPrevAngle.y = hitPlayer->mAngle.y;
         this->mHorzSpeed = kHitSpeedBit40000;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
@@ -488,7 +488,7 @@ void daOts_c::CheckMarioCollision() {
     }
 
     if (this->JumpedOnByPlayer(this->mdCcAc_c, *hitPlayer) != 0) {
-        this->mPrevAngleY = hitPlayer->mAngleY;
+        this->mPrevAngle.y = hitPlayer->mAngle.y;
         if (hitPlayer->param1 == 2)
             this->mHorzSpeed = kHitSpeedHeavy;
         else
@@ -504,7 +504,7 @@ void daOts_c::CheckMarioCollision() {
 
     if (hitPlayer->IsOnShell() != 0) {
         hitPlayer->mHorzSpeed = -this->mHorzSpeed;
-        this->mPrevAngleY = (s16)(this->mAngleY + 0x8000);
+        this->mPrevAngle.y = (s16)(this->mAngle.y + 0x8000);
         this->mHorzSpeed = kHitSpeedLight;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
@@ -533,7 +533,7 @@ void daOts_c::CheckMarioCollision() {
         }
     }
 
-    this->mPrevAngleY = (s16)(this->mAngleY + 0x8000);
+    this->mPrevAngle.y = (s16)(this->mAngle.y + 0x8000);
     {
         int isD8 = (int)(this->actorID == kBigBullyActorId);
         if (!isD8)
@@ -548,7 +548,7 @@ void daOts_c::CheckMarioCollision() {
 
 /* -------------------------------------------------------------------------- */
 /* STATE_RETURN_HOME's steering: records the angle to mHomePos in Tail::mHomeAngle
- * and turns mPrevAngleY toward it by up to 0x140 a frame (about 1.8 degrees).
+ * and turns mPrevAngle.y toward it by up to 0x140 a frame (about 1.8 degrees).
  * Returns whether the player is within 800 units of mHomePos.
  *
  * N64: obj_return_home_if_safe(o, oHomeX, oPosY, oHomeZ, 800), which the bully's
@@ -558,7 +558,7 @@ void daOts_c::CheckMarioCollision() {
 int daOts_c::ReturnHomeIfSafe() {
     Vector3 v;
     tail().mHomeAngle = Vec3_HorzAngle(&this->mPos, &tail().mHomePos);
-    ApproachLinear(this->mPrevAngleY, tail().mHomeAngle, 0x140);
+    ApproachLinear(this->mPrevAngle.y, tail().mHomeAngle, 0x140);
     v.x = tail().mHomePos.x;
     v.y = tail().mHomePos.y;
     v.z = tail().mHomePos.z;
@@ -635,7 +635,7 @@ void daOts_c::ActChaseMario() {
  * stopped the actor hops: while fewer than two hops are done, each frame on the
  * ground it launches upward at 15 units a frame and counts a hop. After the
  * second hop it waits for the state timer to reach 10 frames (20 for the Big
- * Bully), then goes back to STATE_CHASE with mPrevAngleY = mAngleY and the walk
+ * Bully), then goes back to STATE_CHASE with mPrevAngle.y = mAngle.y and the walk
  * animation at double speed.
  *
  * N64: bully_act_knockback, which also slows to a stop and then returns to the
@@ -657,7 +657,7 @@ void daOts_c::ActKnockback() {
         if (mStateTimer < (unsigned int)lim)
             return;
         tail().mState = STATE_CHASE;
-        this->mPrevAngleY = this->mAngleY;
+        this->mPrevAngle.y = this->mAngle.y;
         {
             BCA_File *anim = (BCA_File *)mFileTable->files[kAnimWalk]->filePtr;
             this->mAnmModel.SetAnim(anim, 0, kAnimSpeedDouble, 0);
@@ -669,9 +669,9 @@ void daOts_c::ActKnockback() {
 
 /* -------------------------------------------------------------------------- */
 /* STATE_LEDGE_TURN's body. On its first frame (state timer 0), if the actor is on
- * the ground, it flips mPrevAngleY by half a turn (0x8000). Every frame it sets
- * mHorzSpeed to 5 units a frame and turns mAngleY toward mPrevAngleY by up to
- * 0x200 (2.8 degrees). After 15 frames it snaps mPrevAngleY to mAngleY, goes back
+ * the ground, it flips mPrevAngle.y by half a turn (0x8000). Every frame it sets
+ * mHorzSpeed to 5 units a frame and turns mAngle.y toward mPrevAngle.y by up to
+ * 0x200 (2.8 degrees). After 15 frames it snaps mPrevAngle.y to mAngle.y, goes back
  * to STATE_RETURN_HOME and restarts the walk animation.
  *
  * N64: bully_act_back_up -- the same half-turn on the state's first frame, the
@@ -679,14 +679,14 @@ void daOts_c::ActKnockback() {
 void daOts_c::ActBackUp() {
     if (mStateTimer == 0) {
         if (mWithMeshClsn.IsOnGround()) {
-            mPrevAngleY += 0x8000;
+            mPrevAngle.y += 0x8000;
         }
     }
     mHorzSpeed = kWalkSpeed;
-    ApproachLinear(mAngleY, mPrevAngleY, 0x200);
+    ApproachLinear(mAngle.y, mPrevAngle.y, 0x200);
     if (mStateTimer < 15)
         return;
-    mPrevAngleY = mAngleY;
+    mPrevAngle.y = mAngle.y;
     tail().mState = STATE_RETURN_HOME;
     BCA_File *f = (BCA_File *)mFileTable->files[kAnimWalk]->filePtr;
     mAnmModel.SetAnim(f, 0, kAnimSpeedNormal, 0);
@@ -800,14 +800,15 @@ int daOts_c::func_ov064_0211616c() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Turns mPrevAngleY toward the closest player by up to `step` a call. Returns 1
+/* Turns mPrevAngle.y toward the closest player by up to `step` a call. Returns 1
  * once it has reached that angle, else 0 (also 0 when there is no player). The
  * children's UpdateRunState use it to face the player. */
 int daOts_c::func_ov064_02116110(short step){
     dActor_c *p = (dActor_c *)this->ClosestPlayer();
     if(p != 0){
         short ang = Vec3_HorzAngle(&this->mPos, &p->mPos);
-        if(ApproachLinear(this->mPrevAngleY, ang, step)) return 1;
+        if (ApproachLinear(this->mPrevAngle.y, ang, step))
+            return 1;
     }
     return 0;
 }

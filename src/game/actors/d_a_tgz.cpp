@@ -157,7 +157,7 @@ int daTgz_c::func_ov077_02124ce4() {
 }
 
 /* Toxic floor destroys the Spiny. A sloped floor rewrites vertical speed
- * from mSpeed.x/mSpeed.z and pitches mAngleX/mAngleZ to the normal. */
+ * from mSpeed.x/mSpeed.z and pitches mAngle.x/mAngle.z to the normal. */
 void daTgz_c::func_ov077_02124d08(dBgCh_Actr *clsn) {
     Vector3 pos;
     Vector3 normal;
@@ -193,8 +193,8 @@ void daTgz_c::func_ov077_02124d08(dBgCh_Actr *clsn) {
                              normal.y) +
                       0x8000);
             }
-            this->mAngleX = this->func_02010844(&normal, this->mAngleY);
-            this->mAngleZ = this->func_02010844(&normal, (this->mAngleY - 0x4000));
+            this->mAngle.x = this->func_02010844(&normal, this->mAngle.y);
+            this->mAngle.z = this->func_02010844(&normal, (this->mAngle.y - 0x4000));
         }
     }
     if (clsn->IsOnWall()) {
@@ -251,7 +251,7 @@ void daTgz_c::func_ov077_02124eb0() {
     }
 
     if (this->mdCcAc_c.hitFlags & 0x10) {
-        this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
+        this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
         player->IncMegaKillCount();
         this->func_ov077_02125e94(5);
         return;
@@ -288,8 +288,8 @@ void daTgz_c::func_ov077_021250a8() {
     }
     int flags = this->mdCcAc_c.hitFlags;
     if ((flags & 0x10) != 0) {
-        this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
-        this->mAngleY = this->mPrevAngleY + 0x8000;
+        this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
+        this->mAngle.y = this->mPrevAngle.y + 0x8000;
         player->IncMegaKillCount();
         this->func_ov077_02125e94(5);
         return;
@@ -311,8 +311,8 @@ void daTgz_c::func_ov077_021251d0() {
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     int aimHeight = this->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY,
-                                           this->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                           this->mAngle.z);
     int aimHeightAgain = this->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-aimHeightAgain) >> 3, 0);
     this->mAnmModel.mat4x3 = data_020a0e68;
@@ -329,7 +329,7 @@ void daTgz_c::func_ov077_02125290() {
         m = &this->mModel.mat4x3;
     else
         m = &this->mAnmModel.mat4x3;
-    Matrix4x3_FromRotationZXYExt(m, this->mAngleX, this->mAngleY, this->mAngleZ);
+    Matrix4x3_FromRotationZXYExt(m, this->mAngle.x, this->mAngle.y, this->mAngle.z);
     m->m[9] = this->mPos.x >> 3;
     m->m[10] = this->mPos.y >> 3;
     m->m[11] = this->mPos.z >> 3;
@@ -352,7 +352,7 @@ void daTgz_c::func_ov077_02125304() {
 
 /* State 5 update: tumble backward until the ground or the 45-frame timer. */
 int daTgz_c::func_ov077_021253a4() {
-    mAngleX = mAngleX - 0x1000;
+    mAngle.x = mAngle.x - 0x1000;
     mAnmModel.dExtFrameCtrl_c::Advance();
     UpdatePos(&mdCcAc_c);
 
@@ -379,8 +379,8 @@ int daTgz_c::func_ov077_02125480() {
     Sound::PlayBank0(9, mCamSpacePos);
     mHorzSpeed = 0xa000;
     mSpeed.y = 0x28000;
-    mAngleX = 0;
-    mAngleZ = 0;
+    mAngle.x = 0;
+    mAngle.z = 0;
     mActionTimer = 45;
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
@@ -398,7 +398,7 @@ int daTgz_c::func_ov077_02125550() {
     int x, y, z;
     int d;
 
-    mAngleX = mAngleX + 0x4e20;
+    mAngle.x = mAngle.x + 0x4e20;
 
     if (mHorzSpeed >= mWithMeshClsn.mRadius || mSpeed.y >= mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -418,7 +418,7 @@ int daTgz_c::func_ov077_02125550() {
             func_0201267c(0x109, &mCamSpacePos);
         } else {
             mSpeed.y = 0;
-            mAngleX = 0;
+            mAngle.x = 0;
             mWithMeshClsn.ClearLimMovFlag();
             this->func_ov077_02125e94(1);
         }
@@ -452,12 +452,12 @@ int daTgz_c::func_ov077_021256b4() {
     mSpeed.y = 0;
 
     carrier = mEatingPlayer;
-    carrierYaw = carrier->mAngleY;
-    mAngleX = 0;
-    mAngleY = carrierYaw;
-    mAngleZ = 0;
+    carrierYaw = carrier->mAngle.y;
+    mAngle.x = 0;
+    mAngle.y = carrierYaw;
+    mAngle.z = 0;
 
-    mPrevAngleY = mAngleY;
+    mPrevAngle.y = mAngle.y;
 
     carrier = mEatingPlayer;
     one = 1;
@@ -466,10 +466,10 @@ int daTgz_c::func_ov077_021256b4() {
     mPos.y = src[1];
     mPos.z = src[2];
 
-    sinv = FX_SinIdx((u16)mAngleY >> 4);
+    sinv = FX_SinIdx((u16)mAngle.y >> 4);
     mPos.x = mPos.x + FX_MUL(sinv, 0x3c000);
     mPos.y = mPos.y + 0x85000;
-    cosv = FX_CosIdx((u16)mAngleY >> 4);
+    cosv = FX_CosIdx((u16)mAngle.y >> 4);
     mPos.z = mPos.z + FX_MUL(cosv, 0x3c000);
 
     carrier = mEatingPlayer;
@@ -534,7 +534,7 @@ int daTgz_c::func_ov077_02125908() {
         mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mChasePlayer = 0;
-        mPrevAngleY = mAngleY;
+        mPrevAngle.y = mAngle.y;
         this->func_ov077_02125e94(1);
     }
 
@@ -562,7 +562,7 @@ int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
     mSpeed.y = 0xd000;
     short ang = Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
-    mPrevAngleY = ang;
+    mPrevAngle.y = ang;
     mWithMeshClsn.SetLimMovFlag();
     mState = 2;
     return 1;
@@ -571,8 +571,8 @@ int daTgz_c::func_ov077_02125a0c() {
 /* State 1 update: walk, turning toward mTurnTarget, until the timer expires. */
 int daTgz_c::func_ov077_02125a54() {
     int d;
-    ApproachLinear(mAngleY, mTurnTarget, 0x64);
-    mPrevAngleY = mAngleY;
+    ApproachLinear(mAngle.y, mTurnTarget, 0x64);
+    mPrevAngle.y = mAngle.y;
     mAnmModel.dExtFrameCtrl_c::Advance();
     this->func_ov077_02124eb0();
     if (mWaterY)
@@ -613,7 +613,7 @@ int daTgz_c::func_ov077_02125bb4() {
     int x, y, z;
     Vector3 vec;
 
-    mAngleX = mAngleX + 0x4e20;
+    mAngle.x = mAngle.x + 0x4e20;
     UpdatePos(&mdCcAc_c);
     this->func_ov077_021250a8();
     mWithMeshClsn.SetLimMovFlag();
@@ -646,9 +646,9 @@ int daTgz_c::func_ov077_02125bb4() {
             MarkForDestruction();
         } else if (mSpeed.y < 0xa000) {
             mSpeed.y = 0;
-            mAngleX = mPrevAngleX;
-            mAngleY = mPrevAngleY;
-            mAngleZ = mPrevAngleZ;
+            mAngle.x = mPrevAngle.x;
+            mAngle.y = mPrevAngle.y;
+            mAngle.z = mPrevAngle.z;
             mWithMeshClsn.ClearLimMovFlag();
             mFlags |= 0x10000000u;
             this->func_ov077_02125e94(1);

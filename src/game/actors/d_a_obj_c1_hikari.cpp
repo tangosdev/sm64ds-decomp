@@ -110,13 +110,13 @@ int daObjC1Hikari_c::Behavior() {
         vMid[0] = 0;
         vMid[1] = 0;
         vMid[2] = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         MTX_MultVec43((Vector3 *)vIn, &data_020a0e68, (Vector3 *)vMid);
         Vec3_Add(&vRes, &mPos, (const Vector3 *)vMid);
 
         switch (p->GetTalkState()) {
         case 0:
-            if (ApproachLinear(p->mAngleY, mAngleY + 0x8000, 0x800)) {
+            if (ApproachLinear(p->mAngle.y, mAngle.y + 0x8000, 0x800)) {
                 Message::PrepareTalk();
                 p->ShowMessage(*this, 0x192, &vRes, 0, 0);
             }
@@ -136,7 +136,7 @@ int daObjC1Hikari_c::Behavior() {
                 if (b) {
                     Vector3 *op = &o->mPos;
                     hv = *op;
-                    if (AngleDiff(Vec3_HorzAngle(&mPos, &hv), mAngleY) < 0x4000) {
+                    if (AngleDiff(Vec3_HorzAngle(&mPos, &hv), mAngle.y) < 0x4000) {
                         daPly_c *player = static_cast<daPly_c *>(o);
                         if (player->mSurfaceType == 0xd) {
                             if (player->StartTalk(*this, false)) {
@@ -156,7 +156,7 @@ int daObjC1Hikari_c::Behavior() {
     vMid2[0] = 0;
     vMid2[1] = 0;
     vMid2[2] = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43((Vector3 *)vIn2, &data_020a0e68, (Vector3 *)vMid2);
     Vec3_Add(&vRes2, &mPos, (const Vector3 *)vMid2);
     mCylinder.pos.x = vRes2.x;
@@ -179,7 +179,7 @@ int daObjC1Hikari_c::CleanupResources() {
 }
 
 void daObjC1Hikari_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;

@@ -256,7 +256,7 @@ int daMip_c::StateSaveTalkMain()
     int state;
 
     mTargetAngY = Vec3_HorzAngle(&mPos, &player->mPos);
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 1, 0x500, 0x500);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 1, 0x500, 0x500);
 
     gb = data_0209d684;
     vec = mPos;
@@ -333,7 +333,7 @@ int daMip_c::StateTalkMain()
         if (mRabbitId == 6) {
             id = 0x13a;
         }
-        if (ApproachLinear(mPrevAngleY, angle, 0x800)) {
+        if (ApproachLinear(mPrevAngle.y, angle, 0x800)) {
             if (Sound::PlaySub(0x26, 0x12, 0x7f, 0x15ccc, 0)) {
                 Message::PrepareTalk();
                 player->ShowMessage(*this, id, &pos, 0, 0);
@@ -381,7 +381,7 @@ int daMip_c::StateReleasedMain()
         if (a || IsBitSet(flags, 0x2000)) {
             /* obj is known non-null here; the ROM still re-tests it. */
             if (a && obj != 0)
-                mPrevAngleY = obj->mAngleY;
+                mPrevAngle.y = obj->mAngle.y;
             mdCcAc_c.flags = mdCcAc_c.flags & ~2;
             mTalkingPlayer = 0;
         }
@@ -465,8 +465,8 @@ int daMip_c::StateCaughtMain()
 
         if (mCatchState != 0) {
             s16 ang = Vec3_HorzAngle(&mPos, &pv);
-            ApproachLinear(mPrevAngleY, ang, 0x800);
-            if (AngleDiff(mPrevAngleY, ang) > 0x200)
+            ApproachLinear(mPrevAngle.y, ang, 0x800);
+            if (AngleDiff(mPrevAngle.y, ang) > 0x200)
                 return 1;
         }
 
@@ -709,7 +709,7 @@ int daMip_c::StateFleeMain() {
     pathptr.FromID(mPathId);
     pathptr.GetNode(node, mPathNodeIndex);
     ang = Vec3_HorzAngle(&mPos, &node);
-    ApproachAngle(&mPrevAngleY, ang, 1, 0x1000, 0x1000);
+    ApproachAngle(&mPrevAngle.y, ang, 1, 0x1000, 0x1000);
     idx = mPathNodeIndex + mPathDir;
     if (idx < 0) {
         idx = mNumPathNodes - 1;
@@ -742,7 +742,7 @@ int daMip_c::StateFleeMain() {
         }
     } else {
         ang = Vec3_HorzAngle(&mPos, &node);
-        if (AngleDiff(ang, mPrevAngleY) < 0x2000) {
+        if (AngleDiff(ang, mPrevAngle.y) < 0x2000) {
             ysave = mPos.y;
             {
                 int s = FX_Div(lim, len);
@@ -900,7 +900,7 @@ int daMip_c::StateIdleMain()
         mActionStep = 1;
     }
 
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 1, 0x500, 0x500);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 1, 0x500, 0x500);
     return 1;
 }
 
@@ -937,7 +937,7 @@ void daMip_c::UpdateMatrixAndShadow()
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
@@ -1244,9 +1244,9 @@ int daMip_c::Behavior()
     if (!IsFlagSet(this, 0x4000)) {
         if ((void *)mState != &data_ov085_021306ac || mCatchState != 0)
             UpdatePos(&mdCcAc_c);
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
         UpdateWMClsn(mWithMeshClsn, 0);
         if ((void *)mState != &data_ov085_021306ac)
             UpdateGrab();

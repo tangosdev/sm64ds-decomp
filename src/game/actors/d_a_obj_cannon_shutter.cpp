@@ -105,7 +105,7 @@ int daObjCannonShutter_c::InitResources() {
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov002_0210e124);
         /* 0x199 is 409/4096, i.e. a collider scale of 0.1. */
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d7f4);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov002_0210d7f4);
     }
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
@@ -150,7 +150,7 @@ int daObjCannonShutter_c::Behavior() {
         } else {
             slide.y = -0x1000; /* -1.0 down */
         }
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         MTX_MultVec43(&slide, &data_020a0e68, &rotated);
         VEC_Add(&mPos, &rotated, &mPos);
         if (Vec3_Dist(&mHomePos, &mPos) > 0xa000) {

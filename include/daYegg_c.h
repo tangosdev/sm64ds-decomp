@@ -66,7 +66,7 @@ struct daYegg_c : dEnemyBase_c {
     daPly_c *mPlayer; /* 0x38c */
     /* A 4x3 matrix of twelve words. It is the Matrix4x3 argument of both
        dActor_c::DropShadow* calls, so it is the drop shadow's transform; the
-       shadow code builds it from mAngleY and mPos >> 3 (words 9..11 are the
+       shadow code builds it from mAngle.y and mPos >> 3 (words 9..11 are the
        translation). */
     s32 mShadowMtx[12];                         /* 0x390 */
     /* InitResources copies the actor's own position here once, and nothing
@@ -79,8 +79,8 @@ struct daYegg_c : dEnemyBase_c {
        offset rotated by mEasedAngle. */
     Vector3 mHoldTarget; /* 0x3d8 */
     /* TWO s16 triples. State 0 (ExecuteFollowPlayer) steps the second toward the
-       first with ApproachAngle and copies its Y into mAngleY; both are seeded
-       from mAngleX/Y/Z in InitResources and from the daPly_c's angles in
+       first with ApproachAngle and copies its Y into mAngle.y; both are seeded
+       from mAngle.x/.y/.z in InitResources and from the daPly_c's angles in
        EnterFollowPlayer. */
     s16 mGoalAngleX;                            /* 0x3e4 */
     s16 mGoalAngleY;                            /* 0x3e6 */

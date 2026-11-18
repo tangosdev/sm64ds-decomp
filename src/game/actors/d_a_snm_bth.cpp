@@ -317,11 +317,11 @@ int daSnmBth_c::InitResources()
     mPos.x = 0x3fa770;
     mPos.y = 0xcb2000;
     mPos.z = 0x46988e;
-    mAngleY = 0x5d30;
+    mAngle.y = 0x5d30;
     Vector3 pos;
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     MTX_Inverse43(&data_020a0e68, &data_020a0e68);
     *(Mtx43 *)&mInvModelMat = *(Mtx43 *)&data_020a0e68;
     return 1;

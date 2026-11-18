@@ -55,7 +55,7 @@
    carrying (0x2): the carried item (mCarriedModel) is placed and drawn.
        Cleared once the carried actor is spawned (021162c8, 02116e14) and on
        the replacement actor RespawnIfHasCap returns.
-   followHeading (0x4): while set, Behavior copies mPrevAngleY into mAngleY.
+   followHeading (0x4): while set, Behavior copies mPrevAngle.y into mAngle.y.
        0211a810 clears it when a knockback starts and 0211a6f0 sets it again
        when it ends; 0211a3d0 clears it when the death spin starts.
    visible (0x8): Render and the placement helpers do nothing while clear.
@@ -218,12 +218,12 @@ struct daTrs_c : dCapEnemy_c {
     u32 mHurtDamage;           /* 0x5ac */
     s16 mAngleToPlayer;        /* 0x5b0 -- Vec3_HorzAngle each Behavior */
     s16 unk_5b2;               /* 0x5b2 -- yaw snapshot, no reader recovered */
-    /* Knockback headings: 0211a810 saves mPrevAngleY in the first and picks
+    /* Knockback headings: 0211a810 saves mPrevAngle.y in the first and picks
        the push direction in the second: the player's yaw, or else by the
-       sign of the cosine of (mPrevAngleY - mAngleToPlayer) (SINE_TABLE
-       FX_SinCosTable_[2d+1]) -- player behind: mPrevAngleY, otherwise
-       mPrevAngleY + 0x8000. 0211a76c holds
-       mPrevAngleY at the second while it runs and 0211a6f0 restores the
+       sign of the cosine of (mPrevAngle.y - mAngleToPlayer) (SINE_TABLE
+       FX_SinCosTable_[2d+1]) -- player behind: mPrevAngle.y, otherwise
+       mPrevAngle.y + 0x8000. 0211a76c holds
+       mPrevAngle.y at the second while it runs and 0211a6f0 restores the
        first. */
     s16 mPreKnockbackAngleY;   /* 0x5b4 */
     s16 mKnockbackAngleY;      /* 0x5b6 */
@@ -235,7 +235,7 @@ struct daTrs_c : dCapEnemy_c {
     /* Carried-item yaw: 021166ac adds 0xc00 a frame unless mCarriedID is
        T_BASKET, so a coin spins and the cage does not. */
     s16 mCarriedAngleY;        /* 0x5ba */
-    /* Desired yaw: 02116fac and 02119cc0 set it and steer mPrevAngleY toward it. */
+    /* Desired yaw: 02116fac and 02119cc0 set it and steer mPrevAngle.y toward it. */
     s16 mTargetAngleY;         /* 0x5bc */
     /* Variant 0xf: frames until the next fireball attack. 0211873c starts
        state 4 at 0; reloaded with 0xb4 + a 6-bit random (02117cdc, 02118458)

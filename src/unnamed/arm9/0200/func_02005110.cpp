@@ -44,7 +44,7 @@ int func_02005110(dCamera_c *cam) {
         if (((daPly_c *)cam->mTargetPlayer)->mOwlFarCamera != 0) {
             eyeDist = 0xd0000;
         }
-        horzAngle = cam->mTargetPlayer->mAngleY;
+        horzAngle = cam->mTargetPlayer->mAngle.y;
     } else {
         Vector3 diff;
         Vector3 sum;

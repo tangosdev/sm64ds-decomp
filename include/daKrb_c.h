@@ -91,7 +91,7 @@ struct daKrb_c : dCapEnemy_c {
     /* Spawn heading, later overwritten with the heading toward the chase target
        or home (func_ov084_02129cf4). */
     s16 mInitAngleY;            /* 0x45a */
-    /* Heading mPrevAngleY is turned toward. */
+    /* Heading mPrevAngle.y is turned toward. */
     s16 mTargetAngleY;      /* 0x45c */
     u8  pad_45e[0x2];
     s32 mGoombaType;            /* 0x460 -- a GoombaType */

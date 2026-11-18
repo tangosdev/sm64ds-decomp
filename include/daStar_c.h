@@ -89,7 +89,7 @@ struct daStar_c : dEnemyBase_c {
 
     /* mStarFlags bits. */
     enum StarFlag {
-        /* clear: UpdateModelMatrix spins it (+0xc00 on mAngleY per frame); set: faces mPrevAngleY, 50.0 up */
+        /* clear: UpdateModelMatrix spins it (+0xc00 on mAngle.y per frame); set: faces mPrevAngle.y, 50.0 up */
         FLAG_NO_SPIN = 0x0001,
         /* Render, the drop shadow and the touch volume all need it; InitResources disables the touch volume while clear */
         FLAG_VISIBLE = 0x0002,

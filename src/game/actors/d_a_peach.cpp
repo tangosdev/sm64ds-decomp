@@ -126,9 +126,9 @@ void daPeach_c::UpdateLookAt() {
     target.y = target.y - 0x1e000;
     short yaw = Vec3_HorzAngle(&mPos, &target);
     short pitch = Vec3_VertAngle(&mPos, &target);
-    if (dist < 0x15e000 && AngleDiff(yaw, mAngleY) < 0x3000) {
+    if (dist < 0x15e000 && AngleDiff(yaw, mAngle.y) < 0x3000) {
         mTargetLookVertAngle = pitch;
-        mTargetLookHorzAngle = mAngleY - yaw;
+        mTargetLookHorzAngle = mAngle.y - yaw;
     } else {
         mTargetLookVertAngle = 0;
         mTargetLookHorzAngle = 0;
@@ -187,7 +187,7 @@ int daPeach_c::IsTouchingPlayer() {
  * the head joint's own matrix (bone 18 of the animated model) is rotated by
  * the two look angles through the scratch matrix at data_020a0e68. */
 void daPeach_c::UpdateModel() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -226,8 +226,8 @@ int daPeach_c::InitState2() {
 }
 
 int daPeach_c::InitState4() {
-    short angY = mAngleY;
-    mPrevAngleY = angY;
+    short angY = mAngle.y;
+    mPrevAngle.y = angY;
     UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     IsTouchingPlayer();
@@ -252,7 +252,7 @@ int daPeach_c::State3() {
             mTalkState += 1;
         break;
     case 1:
-        if (ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos), 0x514) != 0) {
+        if (ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos), 0x514) != 0) {
             msgPos.x = mPos.x;
             msgPos.y = mPos.y;
             msgPos.z = mPos.z;

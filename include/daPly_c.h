@@ -236,7 +236,7 @@ struct daPly_c : dActor_c {
     dBgCh_Actr mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. daPly_c::InitResources
        writes all four from the live values (0x53c..0x544 <- mPos.x/.y/.z, and
-       mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.
+       mSpawnAngleY <- mAngle.y); St_Respawn_Init reads them back the other way.
        Two functions, opposite directions, the same four slots -- which is what
        makes these names evidenced rather than guessed. */
     Vector3 mSpawnPos;   /* 0x53c */
@@ -371,8 +371,8 @@ struct daPly_c : dActor_c {
     s32 mSinkDepth;            /* 0x68c */
     /* Body model offset from mPos. func_ov002_020e444c builds the model
        matrix from (0, mModelOffsetY - mSinkDepth, mModelOffsetZ) rotated by
-       mAngleY, and func_ov002_020e4374 adds mModelOffsetY to the shadow
-       height. States set them (balloon 0x64000, swim from mAngleX, the
+       mAngle.y, and func_ov002_020e4374 adds mModelOffsetY to the shadow
+       height. States set them (balloon 0x64000, swim from mAngle.x, the
        water-run sink); ChangeState zeroes both. */
     s32 mModelOffsetY;           /* 0x690 */
     s32 mModelOffsetZ;           /* 0x694 */
@@ -387,12 +387,12 @@ struct daPly_c : dActor_c {
     s16 mAngleYSpeed;            /* 0x69c */
     /* X-axis counterpart of mAngleYSpeed. St_Fly_Init zeroes both, and
        func_ov002_020df8f0 eases this one toward a stick-times-speed target
-       and adds it to mPrevAngleX (clamped to +-0x2aaa) as mAngleYSpeed is
-       added to mPrevAngleY. St_Balloon_Init sets both to 0x100, and
-       St_Balloon_Main runs (mAngleX, mAngleXSpeed) and (mAngleZ,
+       and adds it to mPrevAngle.x (clamped to +-0x2aaa) as mAngleYSpeed is
+       added to mPrevAngle.y. St_Balloon_Init sets both to 0x100, and
+       St_Balloon_Main runs (mAngle.x, mAngleXSpeed) and (mAngle.z,
        mAngleYSpeed) through func_ov002_020de3d0. Other code borrows the
-       slot: St_Swim_Main loads it from mAngleZ, func_ov002_020cd448 eases
-       it toward mAngleZ by 0x200 and writes it back, and TryEnterStarDoor
+       slot: St_Swim_Main loads it from mAngle.z, func_ov002_020cd448 eases
+       it toward mAngle.z by 0x200 and writes it back, and TryEnterStarDoor
        stores its `kind` here as the yaw func_ov002_020c8a4c rotates the
        approach offset by. */
     s16 mAngleXSpeed;                /* 0x69e */
@@ -515,7 +515,7 @@ struct daPly_c : dActor_c {
     u8 pad_6ef[0x1];
     /* Turn ramp in UpdateWalkingSpeed's walk turning (input mode byte
        data_0209f4ac == 0, stick at least 0xa00): counts up to 0x18 while the
-       stick is 0x1000 or more off mPrevAngleY and drops by 2 otherwise. The
+       stick is 0x1000 or more off mPrevAngle.y and drops by 2 otherwise. The
        ApproachAngle divisor is 0x10 - ramp / 2, so the longer a sharp turn is
        held, the faster the player swings round. */
     u16 mTurnRamp; /* 0x6f0 */
@@ -694,7 +694,7 @@ struct daPly_c : dActor_c {
     /* Root motion for body bone 1, run by func_ov002_020e640c: 0 off; an odd
        value (1 horizontal, 3 with Y) latches the bone's translation into
        mStateTarget and mStateAnchor and steps to the even value, which then
-       moves mPos by the bone's per-frame delta rotated by mAngleY and zeroes
+       moves mPos by the bone's per-frame delta rotated by mAngle.y and zeroes
        the bone. Armed by scripted animations (event case 14 in
        func_ov002_020bd06c, JumboStarCutsceneFalling, func_ov002_020c9ac0,
        func_ov002_020c9c4c) and cleared when they end. */

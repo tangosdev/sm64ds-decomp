@@ -76,7 +76,7 @@ enum { kMoveAlongPath = 3 };
 const s32 daOnms_c::sLaunchHorzSpeed[3] = {0x3c000, 0x3c000, 0xc000};
 const s32 daOnms_c::sLaunchVertSpeed[3] = {0x7c000, 0x7c000, 0x8c000};
 
-/* Roll indexes this by mOrientBits. An s8 offset from &mAngleX; negative subtracts. */
+/* Roll indexes this by mOrientBits. An s8 offset from &mAngle.x; negative subtracts. */
 const s8 daOnms_c::sBankAxis[64] = {
     2, 1,  -3, -2, 0,  1,  0,  -2, 2, 1, -3, -2, 0,  1,  0,  -2, 2, 1,  -3, -2, 0,  1,
     0, -2, 2,  1,  -3, -2, 0,  1,  0, 0, 2,  1,  -3, -2, 0,  1,  0, -2, 2,  1,  -3, -2,
@@ -181,9 +181,9 @@ int daOnms_c::StateBounce()
         }
     }
 
-    mAngleX += mTumbleVelX;
-    mAngleY += mTumbleVelY;
-    mAngleZ += mTumbleVelZ;
+    mAngle.x += mTumbleVelX;
+    mAngle.y += mTumbleVelY;
+    mAngle.z += mTumbleVelZ;
 
     /* Both early exits return the zero they tested; `return 0` differs. */
     int v = mVertAccel;
@@ -227,9 +227,9 @@ void daOnms_c::StateKnocked()
     Vector3 v1;
     Vector3 v2;
 
-    mAngleX += mTumbleVelX;
-    mAngleY += mTumbleVelY;
-    mAngleZ += mTumbleVelZ;
+    mAngle.x += mTumbleVelX;
+    mAngle.y += mTumbleVelY;
+    mAngle.z += mTumbleVelZ;
 
     UpdatePos(0);
 
@@ -332,9 +332,9 @@ void daOnms_c::NextMove()
             mMoveSeqIndex = 0;
         }
     }
-    mOrientBits = (mPrevAngleX >> 0xe) & 3;
-    mOrientBits |= (mPrevAngleY >> 0xc) & 0xc;
-    mOrientBits |= (mPrevAngleZ >> 0xa) & 0x30;
+    mOrientBits = (mPrevAngle.x >> 0xe) & 3;
+    mOrientBits |= (mPrevAngle.y >> 0xc) & 0xc;
+    mOrientBits |= (mPrevAngle.z >> 0xa) & 0x30;
 }
 
 /* State 1: sit still, take the next move after 0x14 frames, watch for a hit. */
@@ -384,7 +384,7 @@ void daOnms_c::StateRollPosZ()
 
 /* One frame of an eight-frame roll: hop along the sine table, step, and
    turn the face sBankAxis says is leading. The table is an s8 index from
-   &mAngleX; a negative index subtracts `bank` from that angle instead. */
+   &mAngle.x; a negative index subtracts `bank` from that angle instead. */
 void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
 {
     int idx;
@@ -401,21 +401,21 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
     mPos.y = y + ((mv * 0x6793a) >> 12);
 
     mPos.x += stepX;
-    ang = &mAngleX;
+    ang = &mAngle.x;
     mPos.z += stepZ;
 
     if (pitch) {
         u8 f = mOrientBits;
         if ((f & 0x10) != 0) {
             if ((f & 0x20) != 0)
-                mAngleY += pitch;
+                mAngle.y += pitch;
             else
-                mAngleY -= pitch;
+                mAngle.y -= pitch;
         } else {
             if ((f & 0x20) != 0)
-                mAngleX -= pitch;
+                mAngle.x -= pitch;
             else
-                mAngleX += pitch;
+                mAngle.x += pitch;
         }
     } else {
         u8 f = mOrientBits;
@@ -432,9 +432,9 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
     if (mStateTimer != 7)
         return;
 
-    mPrevAngleX += mAngleX;
-    mPrevAngleY += mAngleY;
-    mPrevAngleZ += mAngleZ;
+    mPrevAngle.x += mAngle.x;
+    mPrevAngle.y += mAngle.y;
+    mPrevAngle.z += mAngle.z;
 
     if (mMoveKind == kMoveAlongPath)
         mMoveDir = kDirLand;
@@ -459,10 +459,12 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     mTerminalVelocity = -0x48000;
     mSpeed.y = sLaunchVertSpeed[how];
     mHorzSpeed = sLaunchHorzSpeed[how];
-    if (how < 2) mPrevAngleY = player->mAngleY;
-    else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
+    if (how < 2)
+        mPrevAngle.y = player->mAngle.y;
+    else
+        mPrevAngle.y = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
-    unsigned n = ((u16)mPrevAngleY) >> 4;
+    unsigned n = ((u16)mPrevAngle.y) >> 4;
     mTumbleVelX = (FX_CosIdx(n) >> 2);
     mTumbleVelY = 0;
     mTumbleVelZ = ((-FX_SinIdx(n)) >> 2);
@@ -500,16 +502,16 @@ void daOnms_c::func_ov092_02131a88() {
     mClsnMat.m[9] = mPos.x;
     mClsnMat.m[10] = mPos.y;
     mClsnMat.m[11] = mPos.z;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 void daOnms_c::UpdateModelMtx()
 {
     if (mTumbling != 0) {
         data_020a0e68 = mBaseMtx;
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         mModel.mat4x3 = data_020a0e68;
         mModel.mat4x3.m[9] = mPos.x >> 3;
         mModel.mat4x3.m[10] = mPos.y >> 3;
@@ -550,11 +552,11 @@ int daOnms_c::Behavior()
         func_ov092_02131a88();
 
     if (mRollDone == 1) {
-        if (mAngleX != 0 || mAngleY != 0 || mAngleZ != 0) {
+        if (mAngle.x != 0 || mAngle.y != 0 || mAngle.z != 0) {
             mBaseMtx = mModel.mat4x3;
-            mAngleX = 0;
-            mAngleY = 0;
-            mAngleZ = 0;
+            mAngle.x = 0;
+            mAngle.y = 0;
+            mAngle.z = 0;
         }
     }
 
@@ -605,13 +607,13 @@ int daOnms_c::InitResources()
     func_ov092_02131a88();
 
     f = dBgW_Kc::LoadFile(gOnimasuCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngle.y,
                           *(CLPS_Block *)(&data_ov092_02132220));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
-    mOrientBits = ((mAngleX >> 0xe) & 3);
-    mOrientBits |= (mAngleY >> 0xc) & 0xc;
-    mOrientBits |= (mAngleZ >> 0xa) & 0x30;
+    mOrientBits = ((mAngle.x >> 0xe) & 3);
+    mOrientBits |= (mAngle.y >> 0xc) & 0xc;
+    mOrientBits |= (mAngle.z >> 0xa) & 0x30;
 
     {
         Vector3 offset;

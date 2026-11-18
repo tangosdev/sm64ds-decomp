@@ -137,7 +137,7 @@ int daLuigi_c::InitResources() {
 
     Vec3_Asr((Vector3 *)&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
 
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -252,7 +252,7 @@ int daLuigi_c::ExecuteMirror(daPly_c *player) {
     mPos.x = -x;
     mPos.y = y;
     mPos.z = z;
-    mAngleY = -player->mAngleY;
+    mAngle.y = -player->mAngle.y;
     return 1;
 }
 

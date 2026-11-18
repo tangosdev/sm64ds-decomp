@@ -279,8 +279,8 @@ void daGmch_c::CheckPlayerContact()
     }
 
     if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
-        mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngleY = (mPrevAngleY + 0x8000);
+        mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &mPos);
+        mAngle.y = (mPrevAngle.y + 0x8000);
         player->IncMegaKillCount();
         SetState(8);
         return;
@@ -343,18 +343,18 @@ void daGmch_c::UpdateDrawMatrices()
     if (inMouth)
         return;
 
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 
     mAnmModel.ApplyOpacity(mState, 0);
 
-    if (mAngleX != 0) {
+    if (mAngle.x != 0) {
         data_020a0e68 = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
         mAnmModel.mat4x3 = data_020a0e68;
@@ -377,7 +377,7 @@ void daGmch_c::UpdateDrawMatrices()
 
 int daGmch_c::UpdateState8()
 {
-    mAngleX = mAngleX - 0x1000;
+    mAngle.x = mAngle.x - 0x1000;
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
@@ -410,17 +410,17 @@ int daGmch_c::EnterState8()
 int daGmch_c::UpdateState7()
 {
     func_02038414(&mWithMeshClsn);
-    mAngleX = mAngleX + 0x1000;
+    mAngle.x = mAngle.x + 0x1000;
     if (mWithMeshClsn.JustHitGround() != 0) {
         mSpeed.y = mSpeed.y * -0x3c / 100;
     } else if (mWithMeshClsn.IsOnGround() != 0) {
         mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         {
-            short heading = mPrevAngleY;
-            mAngleX = 0;
-            mAngleY = heading;
-            mAngleZ = 0;
+            short heading = mPrevAngle.y;
+            mAngle.x = 0;
+            mAngle.y = heading;
+            mAngle.z = 0;
             ChooseNextState();
         }
     }
@@ -451,9 +451,9 @@ int daGmch_c::EnterState7()
     mHorzSpeed = holder->mHorzSpeed + 0x7000;
     mSpeed.y = zero;
     holder = mEatingPlayer;
-    holderAngle = holder->mAngleY;
-    mAngleY = holderAngle;
-    mPrevAngleY = mAngleY;
+    holderAngle = holder->mAngle.y;
+    mAngle.y = holderAngle;
+    mPrevAngle.y = mAngle.y;
 
     /* Word triple through &mPos.x. Naming the three fields is 0x178 vs 0x17c. */
     holder = mEatingPlayer;
@@ -462,11 +462,11 @@ int daGmch_c::EnterState7()
     mPos.y = holderPos[1];
     mPos.z = holderPos[2];
 
-    angleIdx = ((u16)mAngleY >> 4);
+    angleIdx = ((u16)mAngle.y >> 4);
     trig = FX_SinIdx(angleIdx);
     mPos.x = mPos.x + FX_MUL(trig, 0x50000);
     mPos.y = mPos.y + 0x50000;
-    angleIdx = ((u16)mAngleY >> 4);
+    angleIdx = ((u16)mAngle.y >> 4);
     trig = FX_CosIdx(angleIdx);
     mPos.z = mPos.z + FX_MUL(trig, 0x50000);
 
@@ -526,12 +526,12 @@ int daGmch_c::UpdateState5()
 {
     fx32 distToSpawn = Vec3_Dist(&mPos, &mSpawnPos);
     if (distToSpawn < mHorzSpeed) {
-        mAngleY = Vec3_HorzAngle(&mPos, &mSpawnPos);
-        mPrevAngleY = mAngleY;
+        mAngle.y = Vec3_HorzAngle(&mPos, &mSpawnPos);
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = distToSpawn;
     } else {
-        ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mSpawnPos), 0x2bc);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mSpawnPos), 0x2bc);
+        mPrevAngle.y = mAngle.y;
     }
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
@@ -615,8 +615,8 @@ int daGmch_c::EnterState3()
     mFlags &= ~1;
     mAnmModel.SetAnim((BCA_File *)gGamaguchiJumpAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mAnmModel.currFrame = 0;
-    mAngleY = (short)RandomIntInternal(data_0209e650);
-    mPrevAngleY = mAngleY;
+    mAngle.y = (short)RandomIntInternal(data_0209e650);
+    mPrevAngle.y = mAngle.y;
     mHorzSpeed = 0;
     mPhase = 0;
     mStateIndex = 3;
@@ -648,8 +648,8 @@ int daGmch_c::EnterState2()
 
 int daGmch_c::UpdateState1()
 {
-    ApproachLinear(mAngleY, mTargetAngleY, 0x2bc);
-    mPrevAngleY = mAngleY;
+    ApproachLinear(mAngle.y, mTargetAngleY, 0x2bc);
+    mPrevAngle.y = mAngle.y;
     UpdatePos(&mdCcAc_c);
     ApplySlopeToVertSpeed(&mWithMeshClsn);
     CheckPlayerContact();

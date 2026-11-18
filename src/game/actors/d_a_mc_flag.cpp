@@ -53,7 +53,7 @@ s32 daMcFlag_c::InitResources() {
 /* -------------------------------------------------------------------------- */
 s32 daMcFlag_c::Behavior() {
     mAnmModel.Advance();
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;

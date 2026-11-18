@@ -33,7 +33,7 @@ struct daObjFl_UkiKi_c : dBgActor_c {
     /* Where InitResources found the platform. Behavior rebuilds mPos.y from this
        rest height plus the sine term, so the bob never accumulates drift. */
     s32 mOriginalPosY; /* 0x320 */
-    /* Seeded from mAngleX, += 0x400 per Behavior; (u16)>>4 indexes the shared
+    /* Seeded from mAngle.x, += 0x400 per Behavior; (u16)>>4 indexes the shared
        sin/cos table at arm9 0x02082214. */
     s16 mPhaseAngle; /* 0x324 */
 

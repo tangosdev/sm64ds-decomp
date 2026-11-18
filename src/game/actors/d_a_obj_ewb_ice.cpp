@@ -179,7 +179,7 @@ int daObjEwbIce_c::StateSettled_Enter() {
     return 1;
 }
 
-/* Arena update. Wobble mAngleX while the timer runs; then drop onto the datum. */
+/* Arena update. Wobble mAngle.x while the timer runs; then drop onto the datum. */
 int daObjEwbIce_c::StateArena_Update() {
     mWobbleAmp = kWobbleAmp;
     if (DecIfAbove0_Short(&mTimer) != 0) {
@@ -192,11 +192,11 @@ int daObjEwbIce_c::StateArena_Update() {
         angle = mWobblePhase;
         amp = mWobbleAmp;
         sine = FX_SinIdx(((int)((unsigned)(angle << 16) >> 16)) >> 4);
-        mAngleX = (s16)(amp + FX_MUL(amp, sine));
+        mAngle.x = (s16)(amp + FX_MUL(amp, sine));
         ApproachLinear(mWobbleAmp, 0, kWobbleApproach);
         return 1;
     }
-    mAngleX = 0;
+    mAngle.x = 0;
     mVertAccel = -kFallAccel;
     UpdatePos(0);
     if (mVariant == 0) {
@@ -229,7 +229,7 @@ int daObjEwbIce_c::StateSink_Update() {
             func_02012694(0x171, &mCamSpacePos);
         if (mTimer < kSinkSoundAt) {
             mVertAccel = -kFallAccel;
-            ApproachLinear(mAngleX, kTiltTarget, kTiltStep);
+            ApproachLinear(mAngle.x, kTiltTarget, kTiltStep);
         }
     }
     if (DecIfAbove0_Short(&mTimer) == 0 || data_02092138 - kDeathBelowVoid > mPos.y) {
@@ -322,7 +322,7 @@ int daObjEwbIce_c::Render() {
 int daObjEwbIce_c::Behavior() {
     if (mState->update != 0)
         (this->*(mState->update))();
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;
@@ -355,7 +355,7 @@ int daObjEwbIce_c::InitResources() {
 
     bmd = dExtSimpleModel_c::LoadFile(*((EwbIceFileSlot *)data_ov073_021231bc)[mVariant].file);
     mModel.SetFile(bmd, 1, -1);
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;
@@ -366,7 +366,7 @@ int daObjEwbIce_c::InitResources() {
     {
         u8 variant = mVariant;
         kcl = dBgW_Kc::LoadFile(*((EwbIceFileSlot *)data_ov073_021231c0)[variant].file);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY,
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y,
                               *(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

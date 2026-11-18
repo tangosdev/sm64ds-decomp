@@ -112,9 +112,9 @@ void daObjBlockL_c::NotifyLinkedActor() {
 }
 
 /* Both callers are daObjBlockL_c methods in this TU. The field at 0x8c is the
-   inherited dActor_c::mAngleX; no external state participates. */
+   inherited dActor_c::mAngle.x; no external state participates. */
 bool daObjBlockL_c::HasNonzeroAngleX() {
-    return mAngleX != 0;
+    return mAngle.x != 0;
 }
 
 /* Vtable slot 27. player.IncMegaKillCount() then this class's own Kill
@@ -403,14 +403,14 @@ int daObjBlockL_c::InitResources() {
     if (idx <= 1) {
         if (IsActorID(this, 0x10)) {
             KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
-            mMeshCollider.SetFile(kcl, mClsnMat, 0x1800, mAngleY, *data_ov002_02108ab0[idx].clps);
+            mMeshCollider.SetFile(kcl, mClsnMat, 0x1800, mAngle.y, *data_ov002_02108ab0[idx].clps);
         } else {
             KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
-            mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov002_02108ab0[idx].clps);
+            mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *data_ov002_02108ab0[idx].clps);
         }
     } else {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov002_02108ab0[idx].clps);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, *data_ov002_02108ab0[idx].clps);
     }
 
     if (IsActorID(this, 0x13))

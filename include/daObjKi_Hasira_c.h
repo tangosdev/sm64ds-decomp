@@ -38,7 +38,7 @@ struct daObjKi_Hasira_c : dBgActor_c {
        the first two fields live in the base's tail padding. */
     u8 mState;       /* 0x31e -- 0 wait for a player, 1 turn to face, 2 fall */
     u8 mTurnTimer;   /* 0x31f -- frames spent turning before the fall */
-    s16 mFallSpeed;  /* 0x320 -- added to mAngleX each falling frame */
+    s16 mFallSpeed;  /* 0x320 -- added to mAngle.x each falling frame */
     s16 mFallAccel;  /* 0x322 -- grows by 4 each falling frame */
     daPly_c *mTarget; /* 0x324 -- ClosestPlayer, cached while waiting */
 

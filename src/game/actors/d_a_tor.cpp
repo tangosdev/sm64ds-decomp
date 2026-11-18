@@ -93,7 +93,7 @@ void daTor_c::UpdateSpin(s32 scale)
     mScale.z = mScale.x;
     mSpinPhase += 0x200;
     mHorzSpeed = 0xe000;
-    mAngleY += 0x2c00;
+    mAngle.y += 0x2c00;
     mdCcAc_c.radius = mScale.x * 0x514;
     mdCcAc_c.height = mScale.y * 0xfa0;
     mScale.x <<= 1;
@@ -151,12 +151,12 @@ void daTor_c::State1()
         mChaseTimer < 900) {
         angle = Vec3_HorzAngle(&mPos, &playerPos);
         mAngleToPlayer = angle;
-        ApproachLinear(mPrevAngleY, mAngleToPlayer, 0x200);
+        ApproachLinear(mPrevAngle.y, mAngleToPlayer, 0x200);
         /* ov002 helper wraps daPly_c::IsState(tornado): still being carried. */
         if (mCaughtActor != 0 && func_ov002_020de328(mCaughtActor) != 0)
             ++mTriggerCount;
     } else {
-        ApproachLinear(mPrevAngleY, mAngleToHome, 0x200);
+        ApproachLinear(mPrevAngle.y, mAngleToHome, 0x200);
         if (Vec3_HorzDist(&mHomePos, &mPos) < 0xc8000)
             mState = 2;
     }
@@ -175,7 +175,7 @@ cont:
         Vector3 normal;
         dBgPi *wall = mWithMeshClsn.GetWallResult();
         wall->surface.CopyNormalTo(normal);
-        mPrevAngleY = cstd::atan2(normal.x, normal.z);
+        mPrevAngle.y = cstd::atan2(normal.x, normal.z);
     }
 
     UpdateSpin(0x1000);

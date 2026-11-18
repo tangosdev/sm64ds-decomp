@@ -30,9 +30,9 @@
 #include "dBgActor_c.h"
 
 struct daObjRcBuranko_c : dBgActor_c {
-    s16 mSwingVelZ; /* 0x31e -- signed angular velocity added to mAngleZ each
+    s16 mSwingVelZ; /* 0x31e -- signed angular velocity added to mAngle.z each
                          frame; Behavior nudges it by +/-4 against the sign of
-                         mAngleZ, which is what makes the platform a pendulum
+                         mAngle.z, which is what makes the platform a pendulum
                          rather than a turntable. It occupies the two bytes
                          dBgActor_c's own 0x31e..0x31f tail padding leaves. */
 

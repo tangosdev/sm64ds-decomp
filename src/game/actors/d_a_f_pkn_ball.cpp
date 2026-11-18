@@ -216,7 +216,7 @@ int daFPknBall_c::Behavior() {
     if (mTargetPlayer != 0 && mVariant != VARIANT_KEEPS_HEADING) {
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mTargetPlayer->mPos);
     } else {
-        mTargetAngleY = mAngleY;
+        mTargetAngleY = mAngle.y;
     }
 
     hitByID = mdCcAc_c.otherOwner;
@@ -227,7 +227,7 @@ int daFPknBall_c::Behavior() {
                 if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
                     /* Knocked away from the hitter: a short hop into death state 8. */
                     mFlags &= ~0x10000001;
-                    mPrevAngleY = Vec3_HorzAngle(&((dActor_c *)hitActor)->mPos, &mPos);
+                    mPrevAngle.y = Vec3_HorzAngle(&((dActor_c *)hitActor)->mPos, &mPos);
                     mHorzSpeed = 0xa000;
                     mSpeed.y = 0x28000;
                     mDeathTimer = 30;
@@ -274,16 +274,16 @@ int daFPknBall_c::Behavior() {
 
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (ApproachLinear(mHorzSpeed, mTargetSpeed, 0x999) != 0) {
-        ApproachLinear(mPrevAngleY, mTargetAngleY, 0x200);
+        ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x200);
     }
 
-    /* mPrevAngleY is the heading (ApproachLinear steers it toward
-     * mTargetAngleY) and mPrevAngleX the pitch; FX_SinCosTable_ holds (sin, cos)
+    /* mPrevAngle.y is the heading (ApproachLinear steers it toward
+     * mTargetAngleY) and mPrevAngle.x the pitch; FX_SinCosTable_ holds (sin, cos)
      * pairs in fix12. */
-    flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngleX >> 4)) / 0x1000;
-    mSpeed.x = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 0x1000;
-    mSpeed.y = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 0x1000;
-    mSpeed.z = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 0x1000;
+    flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngle.x >> 4)) / 0x1000;
+    mSpeed.x = (flatSpeed * FX_SinIdx((u16)mPrevAngle.y >> 4)) / 0x1000;
+    mSpeed.y = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngle.x >> 4)) / 0x1000;
+    mSpeed.z = (flatSpeed * FX_CosIdx((u16)mPrevAngle.y >> 4)) / 0x1000;
     mPos.x += mSpeed.x;
     mPos.y += mSpeed.y;
     mPos.z += mSpeed.z;

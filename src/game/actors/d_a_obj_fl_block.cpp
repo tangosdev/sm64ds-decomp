@@ -98,7 +98,7 @@ s32 daObjFl_Block_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov022_02114550);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb0c);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov064_0211bb0c);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);

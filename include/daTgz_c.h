@@ -47,7 +47,7 @@ struct daTgz_c : dActor_c {
     u32 mRippleId;                       /* 0x3e0 */
     u8 mInWater;                         /* 0x3e4 */
     u8 pad_3e5;                          /* 0x3e5 */
-    /* ApproachLinear target for mAngleY while walking. */
+    /* ApproachLinear target for mAngle.y while walking. */
     s16 mTurnTarget;                     /* 0x3e6 */
     /* DecIfAbove0_Byte. State 5 arms 45 frames; state 1 arms a random byte. */
     u8 mActionTimer;                     /* 0x3e8 */

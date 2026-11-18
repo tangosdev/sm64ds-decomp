@@ -139,8 +139,8 @@ int BgChEvt::func_ov002_020ef070(char *moverArg) {
     int reach = 0x64;
     if (mover->param1 == 2)
         reach = 0x82;
-    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
-    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
+    end.x += reach * FX_SinIdx((u16)mover->mAngle.y >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngle.y >> 4);
 
     line.SetObjAndLine(start, end, mover);
     if (line.DetectClsn()) {
@@ -180,8 +180,8 @@ int BgChEvt::func_ov002_020eeeb8(char *moverArg) {
     if (mover->param1 == 2)
         reach = 0x82;
 
-    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
-    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
+    end.x += reach * FX_SinIdx((u16)mover->mAngle.y >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngle.y >> 4);
 
     line.SetObjAndLine(start, end, mover);
 
@@ -390,7 +390,7 @@ int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
  * translation row at 1/8 scale, the model-space unit. */
 void dBgActor_c::UpdateModelPosAndRotY()
 {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -404,7 +404,7 @@ void dBgActor_c::UpdateClsnPosAndRot()
     mClsnMat.m[9] = mPos.x;
     mClsnMat.m[10] = mPos.y;
     mClsnMat.m[11] = mPos.z;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* One frame of the mega-knockback flight KillByMegaChar starts: probe 200
@@ -426,7 +426,7 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, f
     rayEnd.x = 0;
     rayEnd.y = 0;
     rayEnd.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
     MTX_MultVec43(&probe, &data_020a0e68, &rayEnd);
     Vec3_Add(&sum, &mPos, &rayEnd);
     rayEnd = sum;
@@ -434,10 +434,10 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, f
     dBgCh_Lin ray;
     ray.SetObjAndLine(mPos, rayEnd, this);
     if (ray.DetectClsn())
-        mPrevAngleY += 0x8000;
-    mAngleX += angStepX;
-    mAngleY += angStepY;
-    mAngleZ += angStepZ;
+        mPrevAngle.y += 0x8000;
+    mAngle.x += angStepX;
+    mAngle.y += angStepY;
+    mAngle.z += angStepZ;
     UpdatePos(0);
     if (DecIfAbove0_Byte(&mMegaKnockbackTimer) == 0)
         Kill();
@@ -452,7 +452,7 @@ void dBgActor_c::func_ov002_020ee5d0(int pivotY) {
     Vec3_Asr(&modelPos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, modelPos.x, modelPos.y, modelPos.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, pivotY >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -pivotY >> 3, 0);
     mModel.mat4x3 = data_020a0e68;
 }
@@ -497,7 +497,7 @@ void dBgActor_c::KillByMegaChar(daPly_c &player) {
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x14000;
     mSpeed.y = 0x1e000;
-    mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&player.mPos, &mPos);
     mMegaKnockbackTimer = 30;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

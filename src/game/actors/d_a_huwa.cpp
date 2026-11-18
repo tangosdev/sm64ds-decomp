@@ -208,7 +208,7 @@ void daHuwa_c::HandleCylinderHit() {
         mStateTimer = 0;
         mHorzSpeed = -speed;
     }
-    mPrevAngleY = Vec3_HorzAngle(&mPos, &player->mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, &player->mPos);
 
     pos.x = mPos.x;
     pos.y = mPos.y;
@@ -219,7 +219,7 @@ void daHuwa_c::HandleCylinderHit() {
 /* Yaw the model, plant its translation at pos>>3, then the drop shadow.
  * In Yoshi's mouth (mFlags 0x40000) neither the shadow nor Render runs. */
 void daHuwa_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -284,8 +284,8 @@ int daHuwa_c::Behavior() {
         } else {
             mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
         }
-        ApproachLinear(mAngleY, mTargetAngY, 0x200);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, mTargetAngY, 0x200);
+        mPrevAngle.y = mAngle.y;
         break;
     }
     case kStateRecoil:

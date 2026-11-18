@@ -34,8 +34,8 @@
  *   0x394  mGroundY -- Init's ground probe writes it; state 5 here and the
  *          base's fall both snap mPos.y to it.
  *   0x398  mState, the selector Behavior switches on (cases 0..7).
- *   0x39c  mTurnTargetAngle -- state 6 writes mAngleY + 0x8000, state 7
- *          steps mAngleY toward it.
+ *   0x39c  mTurnTargetAngle -- state 6 writes mAngle.y + 0x8000, state 7
+ *          steps mAngle.y toward it.
  *   0x39e  mTimer -- the cycle's frame countdown: the base's hover and rest
  *          states spend it, and here it is the post-landing pause.
  *   0x39f  mLandCount -- Init zeroes it, state 5 counts landings, state 6

@@ -92,7 +92,7 @@ int daObjHsBillboard_c::CleanupResources() {
 
 /* Yaw the model and set its translation to the position >> 3. */
 void daObjHsBillboard_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;

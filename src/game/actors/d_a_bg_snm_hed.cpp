@@ -70,7 +70,7 @@ daBgSnmHed_c::StateEntry gBgSnmHedStates[4] = {
 daBgSnmHed_c::~daBgSnmHed_c() {}
 
 void daBgSnmHed_c::UpdateModel() {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = (mPos.y + 0x96000) >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -108,7 +108,7 @@ int daBgSnmHed_c::State3() {
         break;
     }
     mTextureSequence.Advance();
-    ApproachLinear(mAngleY, -0x4000, 0x514);
+    ApproachLinear(mAngle.y, -0x4000, 0x514);
     mPos.y = (int)0xffc427c0;
     return 1;
 }
@@ -165,7 +165,7 @@ int daBgSnmHed_c::State1() {
     switch (mSubstate) {
     case 0: {
         short angle = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
-        if (ApproachLinear(mAngleY, angle, 0x514)) {
+        if (ApproachLinear(mAngle.y, angle, 0x514)) {
             Vector3 pos;
             pos.x = mPos.x;
             pos.y = mPos.y;
@@ -192,7 +192,7 @@ int daBgSnmHed_c::InitState1() {
 }
 
 int daBgSnmHed_c::State0() {
-    ApproachLinear(mAngleY, -0x4000, 0x514);
+    ApproachLinear(mAngle.y, -0x4000, 0x514);
     mTextureSequence.Advance();
     if (mBodyArriving) {
         SetState(2);

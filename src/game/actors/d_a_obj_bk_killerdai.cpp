@@ -137,7 +137,7 @@ void daObjBkKillerdai_c::Kill() {
 void daObjBkKillerdai_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     KillByMegaChar(player);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 s32 daObjBkKillerdai_c::CleanupResources() {
@@ -164,7 +164,7 @@ s32 daObjBkKillerdai_c::Behavior() {
         daPly_c *player = ClosestPlayer();
         int dist = Vec3_HorzDist(&mPos, &player->mPos);
         s16 ang = Vec3_HorzAngle(&mPos, &player->mPos);
-        if (AngleDiff(ang, mAngleY) < 0x2000 && dist > 0x320000 && dist < 0x5dc000) {
+        if (AngleDiff(ang, mAngle.y) < 0x2000 && dist > 0x320000 && dist < 0x5dc000) {
             long long yll = mPos.y;
             int z = mPos.z;
             int x = mPos.x;
@@ -193,7 +193,7 @@ s32 daObjBkKillerdai_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     file = dBgW_Kc::LoadFile(*data_ov079_02127f64.collision);
-    mMeshCollider.SetFile((KCL_File *)(file), mClsnMat, 0x199, mAngleY, *data_ov079_02127f64.clps);
+    mMeshCollider.SetFile((KCL_File *)(file), mClsnMat, 0x199, mAngle.y, *data_ov079_02127f64.clps);
 
     mSpawnedUniqueID = 0;
 

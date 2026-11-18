@@ -90,7 +90,7 @@ daObjFl_Amilift_c::~daObjFl_Amilift_c() {}
 void daObjFl_Amilift_c::FaceToward(Vector3 *a, Vector3 *b) {
     Vector3 v;
     Vec3_Sub(&v, a, b);
-    mPrevAngleY = cstd::atan2(v.x, v.z);
+    mPrevAngle.y = cstd::atan2(v.x, v.z);
 }
 
 /* Advance along the path by one frame. Speeds up toward 0xa000 and slows to a
@@ -256,7 +256,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     UpdateClsnPosAndRot();
 
     kcl = dBgW_Kc::LoadFile(data_ov064_0211c728);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb6c);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov064_0211bb6c);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);

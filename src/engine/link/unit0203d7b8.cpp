@@ -3262,7 +3262,7 @@ void func_0203db0c(int idx, unsigned short val) {
 }
 
 /* Store the camera's input yaw in the input record (data_020a1040.inputYaw);
-   dCamera_c::Behavior passes mAngleY + mInputYawLag. */
+   dCamera_c::Behavior passes mAngle.y + mInputYawLag. */
 void func_0203dafc(int v) {
     data_020a1040.inputYaw = v;
 }

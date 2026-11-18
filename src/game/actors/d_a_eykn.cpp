@@ -16,8 +16,8 @@
  * - UpdateCircling `if (actorID == kBigMrI)` is 0x154->0x148. The (int)
  *   flag stays. CheckAttacks' egg test and its player test are each
  *   0x17c->0x170; both at once 0x17c->0x164.
- * - St_Wait_Main `mAngleY += mHorzSpeed` is 0x44->0x48.
- * - St_Attack_Main `(u16)mAngleX/Y/Z` is 44 words off at 0x314. The
+ * - St_Wait_Main `mAngle.y += mHorzSpeed` is 0x44->0x48.
+ * - St_Attack_Main `(u16)mAngle.x/.y/.z` is 44 words off at 0x314. The
  *   unsigned-short pun is what loads them with ldrh.
  * - CheckAttacks as one || is 6 words off at 0x17c. The gotos stay.
  * - St_Die_Main's blue-coin position as plain field copies is 13 words
@@ -155,7 +155,7 @@ int daEykn_c::UpdateCircling()
     int isBig;
     int limit;
 
-    delta = (short)(mAngleY - mTurnRefAngleY);
+    delta = (short)(mAngle.y - mTurnRefAngleY);
     isBig = (actorID == kBigMrI);
     if (isBig != 0)
         limit = kBigTurnLimit;
@@ -270,7 +270,7 @@ void daEykn_c::LookForPlayer()
         return;
     if (Vec3_Dist(&mPos, &p->mPos) > kWatchRange)
         return;
-    if (AngleDiff(Vec3_HorzAngle(&mPos, &p->mPos), mAngleY) > kWatchFov)
+    if (AngleDiff(Vec3_HorzAngle(&mPos, &p->mPos), mAngle.y) > kWatchFov)
         return;
     int px = p->mPos.x;
     int pz = p->mPos.z;
@@ -328,7 +328,7 @@ void daEykn_c::CheckAttacks()
 
 void daEykn_c::UpdateModelTransform()
 {
-    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
@@ -347,7 +347,7 @@ int daEykn_c::St_Die_Main()
     u32 id0;
 
     ApproachLinear(mHorzSpeed, mDeathSpinSpeed, 300);
-    mAngleY = (mAngleY + mHorzSpeed);
+    mAngle.y = (mAngle.y + mHorzSpeed);
     mDeathSpinAngle += mHorzSpeed;
     if (mDeathSpinAngle / 131070 != 0) {
         func_0201267c(0x119, &mCamSpacePos);
@@ -374,7 +374,7 @@ int daEykn_c::St_Die_Main()
     switch (mSubState) {
     case 0: {
         s16 sinv = FX_SinIdx((int)mWobblePhase >> 4);
-        mAngleX = (FX_MUL(mWobbleAmp, sinv));
+        mAngle.x = (FX_MUL(mWobbleAmp, sinv));
         mWobblePhase = ((s16)mWobblePhase + 0xe000);
         ApproachLinear(mWobbleAmp, 0, 0x1b);
         if (DecIfAbove0_Byte(&mSubTimer) == 0) {
@@ -455,7 +455,7 @@ int daEykn_c::St_Die_Main()
 /* State 2 init: spin on in the direction of the last turn. */
 int daEykn_c::St_Die_Init()
 {
-    short diff = mAngleY - mTurnRefAngleY;
+    short diff = mAngle.y - mTurnRefAngleY;
     mHorzSpeed = diff;
     if (mHorzSpeed > 0)
         mDeathSpinSpeed = 0x2500;
@@ -507,11 +507,11 @@ int daEykn_c::St_Attack_Main()
 
     Vec3_HorzAngle(&mPos, &target1);
     ang = Vec3_VertAngle(&mPos, &target1);
-    UpdateAngle(mAngleX, ang, 2, 0x320);
+    UpdateAngle(mAngle.x, ang, 2, 0x320);
     ang = Vec3_HorzAngle(&mPos, &target1);
-    UpdateAngle(mAngleY, ang, 2, 0x8fc);
+    UpdateAngle(mAngle.y, ang, 2, 0x8fc);
 
-    if ((s16)(mAngleY - mTurnRefAngleY) == 0) {
+    if ((s16)(mAngle.y - mTurnRefAngleY) == 0) {
         if (DecIfAbove0_Byte(&mShotTimer) == 0 && StartEyeAnim() != 0)
             mShotTimer = 83;
         unk_212 = 0xf0;
@@ -550,18 +550,18 @@ int daEykn_c::St_Attack_Main()
 
             {
                 /* ldrh. A (u16) cast is 44 words off. */
-                unsigned short rx = *(unsigned short *)&mAngleX;
-                unsigned short ry = *(unsigned short *)&mAngleY;
+                unsigned short rx = *(unsigned short *)&mAngle.x;
+                unsigned short ry = *(unsigned short *)&mAngle.y;
                 rot.y = ry;
                 rot.x = rx;
-                unsigned short rz = *(unsigned short *)&mAngleZ;
+                unsigned short rz = *(unsigned short *)&mAngle.z;
                 rot.z = rz;
             }
 
-            s = FX_SinIdx((u16)mAngleY >> 4);
+            s = FX_SinIdx((u16)mAngle.y >> 4);
             pos.x = px + (s32)(((s64)s * scale + round) >> 12);
 
-            s = FX_CosIdx((u16)mAngleY >> 4);
+            s = FX_CosIdx((u16)mAngle.y >> 4);
             pos.z = pz + (s32)(((s64)s * scale + round) >> 12);
 
             rot.x = Vec3_VertAngle(&pos, &target2);
@@ -627,8 +627,8 @@ int daEykn_c::St_Attack_Init()
 /* State 0 exec: level out, keep turning, and look for a player. */
 int daEykn_c::St_Wait_Main()
 {
-    ApproachLinear(mAngleX, 0, 0x320);
-    mAngleY = mAngleY + mHorzSpeed;
+    ApproachLinear(mAngle.x, 0, 0x320);
+    mAngle.y = mAngle.y + mHorzSpeed;
     LookForPlayer();
     CheckAttacks();
     return 1;
@@ -638,7 +638,7 @@ int daEykn_c::St_Wait_Main()
 /* State 0 init: drift on in the direction of the last turn. */
 int daEykn_c::St_Wait_Init()
 {
-    short v = mAngleY - mTurnRefAngleY;
+    short v = mAngle.y - mTurnRefAngleY;
     if (v >= 0) mHorzSpeed = 0xc8;
     else mHorzSpeed = -0xc8;
     ResetEyeAnim();
@@ -700,7 +700,7 @@ int daEykn_c::Behavior()
 {
     RunState();
     func_0200f760(&mdCcAcPos_c);
-    mTurnRefAngleY = mAngleY;
+    mTurnRefAngleY = mAngle.y;
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
     UpdateModelTransform();

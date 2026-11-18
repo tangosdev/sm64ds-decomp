@@ -282,9 +282,9 @@ s32 daWater_Hakidasi_c::Behavior() {
     if (h->mMain != 0) {
         (this->*(h->mMain))();
     }
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     func_ov064_0211987c();
     return 1;
 }

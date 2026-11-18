@@ -193,7 +193,7 @@ int daDossy_c::InitResources()
 
     for (j = 0; j < 7; j++) {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
-        mPlatforms[j].mClsn.dBgW_KcMbg::SetFile(kcl, mPlatforms[j].mClsnNextMat, 0x1000, mAngleY,
+        mPlatforms[j].mClsn.dBgW_KcMbg::SetFile(kcl, mPlatforms[j].mClsnNextMat, 0x1000, mAngle.y,
                                                 *(CLPS_Block *)data_ov065_0211cd68[j]);
         if ((unsigned)j <= 2) {
             mPlatforms[j].mClsn.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
@@ -267,8 +267,8 @@ int daDossyCap_c::Behavior()
     }
     Vector3 *capPos = &carrier->mCapPos;
     mPos = *capPos;
-    mAngleX = mCarrier->mHeadRotX;
-    mAngleY = mCarrier->mAngleY;
+    mAngle.x = mCarrier->mHeadRotX;
+    mAngle.y = mCarrier->mAngle.y;
     unsigned int flags = mCapIcon.mFlags;
     if ((flags << 30) >> 31) {
         this->func_ov065_02118c4c();
@@ -300,7 +300,7 @@ int daDossy_c::Behavior()
     mDistToCenter = Vec3_HorzDist(&mPos, &mSpawnPos);
     mAngToCenter = Vec3_HorzAngle(&mPos, &mSpawnPos);
 
-    offCenter = AngleDiff(mAngToCenter, mAngleY);
+    offCenter = AngleDiff(mAngToCenter, mAngle.y);
 
     /* Her neck's horizontal reach pushes out the inner edge of the ring
        she swims in, or the outer edge once offCenter is 0x4000 or more. */
@@ -369,7 +369,7 @@ int daDossy_c::CleanupResources()
 
 void daDossy_c::func_ov065_02118cc4()
 {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -379,8 +379,8 @@ void daDossyCap_c::func_ov065_02118c4c() {
     Vector3 pos;
     Vec3_Asr(&pos, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
     this->mModel.mat4x3 = data_020a0e68;
 }
 
@@ -391,7 +391,7 @@ void daDossy_c::func_ov065_02118838() {
     s32 i;
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     base = data_020a0e68;
     for (i = 0; i < 7; i++) {
         ModelBone *bone = &mAnmModel.data.bones[data_ov065_0211c078[i]];
@@ -427,19 +427,19 @@ void daDossy_c::func_ov065_02118838() {
             mHomePos = v;
             scaled = FX_SinIdx((u16)mHeadRotX >> 4) * 0x96;
             mCapPos = mHomePos;
-            mCapPos.x += FX_MUL(scaled, FX_SinIdx((u16)mAngleY >> 4));
+            mCapPos.x += FX_MUL(scaled, FX_SinIdx((u16)mAngle.y >> 4));
             mCapPos.y += 0x8c000 - FX_SinIdx((u16)mHeadRotX >> 4) * 0x1e;
-            mCapPos.z += FX_MUL(scaled, FX_CosIdx((u16)mAngleY >> 4));
-            mHomePos.x += FX_SinIdx((u16)mAngleY >> 4) * 0x82;
+            mCapPos.z += FX_MUL(scaled, FX_CosIdx((u16)mAngle.y >> 4));
+            mHomePos.x += FX_SinIdx((u16)mAngle.y >> 4) * 0x82;
             mHomePos.y += 0x50000;
-            mHomePos.z += FX_CosIdx((u16)mAngleY >> 4) * 0x82;
+            mHomePos.z += FX_CosIdx((u16)mAngle.y >> 4) * 0x82;
         }
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY + mPlatforms[i].mRot.y);
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y + mPlatforms[i].mRot.y);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPlatforms[i].mRot.x);
         Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mPlatforms[i].mRot.z);
         mPlatforms[i].mClsnNextMat = data_020a0e68;
-        mPlatforms[i].mClsn.Transform(mPlatforms[i].mClsnNextMat, mAngleY);
+        mPlatforms[i].mClsn.Transform(mPlatforms[i].mClsnNextMat, mAngle.y);
     }
 }
 
@@ -468,21 +468,21 @@ void daDossy_c::func_ov065_02118634()
         int speed;
         dActor_c *player = mClsnPlayer;
         if (player != 0) {
-            target = player->mAngleY;
+            target = player->mAngle.y;
             speed = 0x7000;
         } else {
             s16 a = cstd::atan2(0x7d0000, mDistToCenter - 0x7d0000);
-            if ((s16)(mAngleY - mAngToCenter) < 0)
+            if ((s16)(mAngle.y - mAngToCenter) < 0)
                 a = -a;
             target = mAngToCenter + a;
             speed = 0x3800;
         }
         ApproachLinear(mHorzSpeed, speed, 0x400);
 
-        ApproachLinear(mAngVelY, (s16)(target - mAngleY) / 100, 5);
+        ApproachLinear(mAngVelY, (s16)(target - mAngle.y) / 100, 5);
 
-        mAngleY += mAngVelY;
-        mPrevAngleY = mAngleY;
+        mAngle.y += mAngVelY;
+        mPrevAngle.y = mAngle.y;
 
         mCylClsn1.Clear();
         mCylClsn2.Clear();
@@ -603,7 +603,7 @@ int daDossyCap_c::func_ov065_021180d4() {
                 && player->Unk_020c9e5c(5) == 0) {
                 Vector3 *playerPos = &player->mPos;
                 Vector3 pos = *playerPos;
-                int idx = (u16)player->mAngleY >> 4;
+                int idx = (u16)player->mAngle.y >> 4;
                 int speed = player->mHorzSpeed;
 
                 pos.y += 0x50000;

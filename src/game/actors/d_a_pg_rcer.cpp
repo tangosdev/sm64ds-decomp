@@ -251,7 +251,7 @@ int daPgRcer_c::StateShowInitText() {
     switch (mActionStep) {
     case 0: {
         short ang = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
-        if (ApproachLinear(mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(mAngle.y, ang, 0x514) != 0) {
             Vector3 pos;
             int msg;
             int eq;
@@ -313,8 +313,8 @@ int daPgRcer_c::StatePrepareForRace() {
         }
         break;
     case 1:
-        UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x800);
-        mAngleY = mPrevAngleY;
+        UpdateAngle(mPrevAngle.y, mTargetAngY, 2, 0x800);
+        mAngle.y = mPrevAngle.y;
         UpdatePos(&mdCcAc_c);
         UpdateFloorAndWalls(&mWithMeshClsn);
         if (mWithMeshClsn.JustHitGround() != 0) {
@@ -479,8 +479,8 @@ int daPgRcer_c::StateFinishRace() {
         mPath.GetNode(node, n - 1);
         mPathDist = Vec3_Dist(&mPos, &node);
         mTargetAngY = Vec3_HorzAngle(&mPos, &node);
-        ApproachLinear(mAngleY, mTargetAngY, 0x200);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, mTargetAngY, 0x200);
+        mPrevAngle.y = mAngle.y;
         if (mPathDist < mHorzSpeed) {
             mHorzSpeed = mPathDist;
             ++mActionStep;
@@ -497,7 +497,7 @@ int daPgRcer_c::StateFinishRace() {
     }
     case 1: {
         short ang = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
-        if (ApproachLinear(mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(mAngle.y, ang, 0x514) != 0) {
             SetState(5);
         }
         break;
@@ -535,7 +535,7 @@ int daPgRcer_c::StateShowFinalText() {
     }
     case 1: {
         short ang = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
-        if (ApproachLinear(mAngleY, ang, 0x514) != 0) {
+        if (ApproachLinear(mAngle.y, ang, 0x514) != 0) {
             unsigned int id;
             Vector3 v;
             int z = mPos.z;
@@ -578,7 +578,7 @@ int daPgRcer_c::StateShowFinalText() {
 }
 
 void daPgRcer_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
@@ -613,14 +613,14 @@ void daPgRcer_c::AdvancePathNode() {
 }
 
 int daPgRcer_c::FollowPath() {
-    UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x600);
+    UpdateAngle(mPrevAngle.y, mTargetAngY, 2, 0x600);
     int n = mPathNodeIndex;
     if (n >= (int)mPath.NumNodes() - 2) {
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
     } else {
         Vector3 node;
         mPath.GetNode(node, n + 1);
-        mAngleY = Vec3_HorzAngle(&mPos, &node);
+        mAngle.y = Vec3_HorzAngle(&mPos, &node);
     }
     mPathDist = mPathDist - mHorzSpeed;
     return mPathDist < 0;

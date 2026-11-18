@@ -137,7 +137,7 @@ s32 daShl_c::Behavior()
 
     if (UpdateYoshiEat(mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
-            mSpawnAngleY = mPrevAngleY;
+            mSpawnAngleY = mPrevAngle.y;
             func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
@@ -273,8 +273,8 @@ int daShl_c::func_ov102_0214d1b0()
    Yoshi spat it along -- slide at 30.0, and arm the second cylinder. */
 int daShl_c::func_ov102_0214d148()
 {
-    mPrevAngleY = mSpawnAngleY;
-    mAngleY = mPrevAngleY;
+    mPrevAngle.y = mSpawnAngleY;
+    mAngle.y = mPrevAngle.y;
     mHorzSpeed = 0x1e000;
     mVertAccel = -0x2000;
     mdCc_c2.Init(this, 0x28000, 0x3c000, 0x102002, 0);
@@ -284,7 +284,7 @@ int daShl_c::func_ov102_0214d148()
 /* Sliding: tick. Spin, and keep the second cylinder live. */
 int daShl_c::func_ov102_0214d114()
 {
-    mAngleY += 0x1000;
+    mAngle.y += 0x1000;
     mdCc_c2.Clear();
     mdCc_c2.Update();
     return 1;
@@ -309,7 +309,7 @@ int daShl_c::func_ov102_0214d044()
         return 0;
     }
     mPos = mCarrier->mPos;
-    mAngleY += 0x1000;
+    mAngle.y += 0x1000;
     return 1;
 }
 
@@ -348,14 +348,14 @@ int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 {
     if (mState == &data_ov102_0214ea78.rec)
         return 0;
-    mSpawnAngleY = kicker->mAngleY;
+    mSpawnAngleY = kicker->mAngle.y;
     func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
     return 1;
 }
 
 /* dExtSimpleModel_c matrix and drop shadow. While carried (flag 0x4000) the model
    follows the carrier's hands; otherwise it sits at mPos turned by
-   mAngleY. Flag 0x40000 (hidden) skips the shadow. */
+   mAngle.y. Flag 0x40000 (hidden) skips the shadow. */
 void daShl_c::func_ov102_0214ce60()
 {
     int carried = (mFlags & 0x4000) != 0;
@@ -366,7 +366,7 @@ void daShl_c::func_ov102_0214ce60()
         offset.z = 0x32000;
         mModel.mat4x3 = *UpdateCarry(*mCarrier, offset);
     } else {
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
         mModel.mat4x3.m[9] = mPos.x >> 3;
         mModel.mat4x3.m[10] = mPos.y >> 3;
         mModel.mat4x3.m[11] = mPos.z >> 3;

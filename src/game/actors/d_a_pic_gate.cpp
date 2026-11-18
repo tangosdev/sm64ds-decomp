@@ -109,7 +109,7 @@ void daPicGate_c::BuildGateMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(
         &data_020a0e68, -(((unsigned char)(param1 & 15) + 1) * 0x64000) / 2 >> 3, 0, 0);
     mMtx = data_020a0e68;

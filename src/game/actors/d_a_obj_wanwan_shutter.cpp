@@ -66,7 +66,7 @@ int daObjWanwanShutter_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov014_021149b8);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov014_02114558);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov014_02114558);
     }
     return 1;
 }

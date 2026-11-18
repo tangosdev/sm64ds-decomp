@@ -65,7 +65,7 @@ struct daPukupuku_c : dEnemyBase_c {
        the retail instruction. */
     u8 pad_380[0x4]; /* 0x380 */
     /* InitStateSwim picks it at random; StateSwim points it home when the
-       fish strays and turns mPrevAngleY toward it. */
+       fish strays and turns mPrevAngle.y toward it. */
     s16 mTargetAngleY; /* 0x384 */
     u8 pad_386[0x2];   /* to the ROM's 0x388 */
 };

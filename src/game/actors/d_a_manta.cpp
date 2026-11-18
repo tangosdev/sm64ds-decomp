@@ -225,7 +225,7 @@ void daManta_c::UpdateModelAndRingPos() {
     Vector3 scaled;
     Vec3_Asr(&scaled, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
     mRingPos.x = 0;
     mRingPos.y = 0;
@@ -278,15 +278,15 @@ int daManta_c::Behavior() {
             if (mPathNode >= mNumNodes)
                 mPathNode = 0;
         }
-        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &node), 0x60);
-        ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &node), 0x40);
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        ApproachLinear(mPrevAngle.y, Vec3_HorzAngle(&mPos, &node), 0x60);
+        ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &node), 0x40);
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
         forward.y = forward.x = forward.z = 0;
         forward.z = MANTA_FORWARD;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
         MTX_MultVec43(&forward, &data_020a0e68, &mSpeed);
     }
     {
@@ -345,9 +345,9 @@ int daManta_c::InitResources() {
         int kuppa = (int)(gGameMode == 2);
         if (kuppa != 0) {
             mPathNode = 3;
-            mPrevAngleX = (short)0xf303;
-            mPrevAngleY = 0xb50;
-            mPrevAngleZ = 0;
+            mPrevAngle.x = (short)0xf303;
+            mPrevAngle.y = 0xb50;
+            mPrevAngle.z = 0;
             mPos.x = (int)0xfdfb8000;
             mPos.y = (int)0xff8f8000;
             mPos.z = 0x29a000;

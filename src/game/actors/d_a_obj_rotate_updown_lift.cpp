@@ -4,7 +4,7 @@
  * UPDOWN_LIFT (actor 0x1d) and HS_UPDOWN_LIFT (actor 0x1e) share this
  * class. param1's low nibble is the node the lift starts on. A 10-node
  * path in data_ov091_02134cdc (one 0x78-byte path per variant, each node
- * a 12-byte point) is rotated by mAngleY and added to the spawn position.
+ * a 12-byte point) is rotated by mAngle.y and added to the spawn position.
  * Variant 0 is the default path, variant 1 when gCurrentSublevel (the level
  * id) is 7, variant 2 when the actor is HS_UPDOWN_LIFT. The step along
  * the path is data_ov091_021344e8[variant] (0x5000 for all three).
@@ -17,7 +17,7 @@
  * back on their spawn node through func_ov091_02130fac.
  *
  * Nodes 4..7 set mPitchStep to 0x2000; every other node clears it. The
- * shadow bobs with sin(mAngleX) and scales with the height above mGroundY.
+ * shadow bobs with sin(mAngle.x) and scales with the height above mGroundY.
  *
  * #pragma defer_codegen off lays .text down in source order. The out-of-line
  * destructor emits D1 then D0. The two registry factories abut the rest of
@@ -157,14 +157,14 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     Vector3 pos;
 
     mIsDead = 0;
-    mAngleX = mSpawnAngleX;
-    mAngleY = mSpawnAngleY;
-    mAngleZ = mSpawnAngleZ;
+    mAngle.x = mSpawnAngleX;
+    mAngle.y = mSpawnAngleY;
+    mAngle.z = mSpawnAngleZ;
     mPos.x = mBasePos.x;
     mPos.y = mBasePos.y;
     mPos.z = mBasePos.z;
     mWaypointIndex = (param1 & 15);
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &offset);
     Vec3_Add(&pos, &mBasePos, &offset);
     mPos.x = pos.x;
@@ -200,7 +200,7 @@ void daObjRotateUpdownLift_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePos);
     KillByMegaChar(player);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 // 0x02131160 (0x1e0)
@@ -215,10 +215,10 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     VariantWords shadowSizeZ = data_ov091_02134bb8;
     VariantWords clipCap = data_ov091_02134ba0;
 
-    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngle.y);
     ((Matrix4x3 *)mShadowMat)->t.x = mPos.x >> 3;
 
-    int sine = FX_SinIdx((u16)mAngleX >> 4);
+    int sine = FX_SinIdx((u16)mAngle.x >> 4);
     int sineAbs = sine < 0 ? -sine : sine;
     int scaled = FX_MUL(sineAbs, 0xa0000);
     int variantA = mVariant;
@@ -241,7 +241,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     int shr = FX_MUL(h, 32);
     int variantC = mVariant;
     int sx = shadowSizeX.v[variantC] - shr;
-    int cosine = FX_CosIdx((u16)mAngleX >> 4);
+    int cosine = FX_CosIdx((u16)mAngle.x >> 4);
     int fac = 0xa0000 - shr;
     if (cosine < 0)
         cosine = -cosine;
@@ -253,8 +253,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
 /* Write the model matrix: full rotation, translation at 1/8 of position. */
 void daObjRotateUpdownLift_c::func_ov091_02131340()
 {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3,
-                                 mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;
@@ -377,7 +376,7 @@ int daObjRotateUpdownLift_c::Behavior()
     prevIndex = mWaypointIndex - 1;
     if (prevIndex < 0)
         prevIndex = 9;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &cur);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, &mBasePos, &cur);
@@ -386,7 +385,7 @@ int daObjRotateUpdownLift_c::Behavior()
     span = VEC_Mag(&edge);
     dist = VEC_Mag(&remain);
     along = FX_Div(span - dist, span);
-    mAngleX = (mPitchBase + (s16)FX_MUL(mPitchStep, along));
+    mAngle.x = (mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
         Vec3_Add(&snapped, &mBasePos, &cur);
@@ -469,7 +468,7 @@ int daObjRotateUpdownLift_c::InitResources()
         Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &rotated);
     Vec3_Add(&placed, &mBasePos, &rotated);
     mPos.x = placed.x;
@@ -485,7 +484,7 @@ int daObjRotateUpdownLift_c::InitResources()
 
     variant = mVariant;
     kcl = dBgW_Kc::LoadFile(*data_ov091_02134c34[variant].file);
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngle.y,
                           *(data_ov091_02134c38[variant].clps));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
@@ -503,9 +502,9 @@ int daObjRotateUpdownLift_c::InitResources()
     if (ground.DetectClsn())
         mGroundY = ground.clsnY;
 
-    mSpawnAngleX = mAngleX;
-    mSpawnAngleY = mAngleY;
-    mSpawnAngleZ = mAngleZ;
+    mSpawnAngleX = mAngle.x;
+    mSpawnAngleY = mAngle.y;
+    mSpawnAngleZ = mAngle.z;
     return 1;
 }
 

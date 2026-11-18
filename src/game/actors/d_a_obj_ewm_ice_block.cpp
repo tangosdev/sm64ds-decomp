@@ -143,7 +143,7 @@ int daObjEwmIceBlock_c::InitResources()
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov056_02113314.collision), mClsnMat, 0x199,
-                          mAngleY, *data_ov056_02113314.clps);
+                          mAngle.y, *data_ov056_02113314.clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;

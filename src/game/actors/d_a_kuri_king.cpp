@@ -263,7 +263,7 @@ void daKuriKing_c::SetDefeatTalkCamera() {
     pos.z = this->mPos.z;
     look.y += 0x1a0000;
     in.z = 0x59c000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &out);
     pos.x = pos.x + out.x;
     pos.y = pos.y + 0x300000;
@@ -289,14 +289,14 @@ void daKuriKing_c::LaunchVanishCopies() {
             rv &= 0x1000;
             pos.y = (short)(pos.y + rv);
             short x = pos.x + 0;
-            t->mPrevAngleX = x;
+            t->mPrevAngle.x = x;
             short y = pos.y + 0;
-            t->mPrevAngleY = y;
+            t->mPrevAngle.y = y;
             short z = pos.z + 0;
-            t->mPrevAngleZ = z;
-            t->mAngleX = x;
-            t->mAngleY = y;
-            t->mAngleZ = z;
+            t->mPrevAngle.z = z;
+            t->mAngle.x = x;
+            t->mAngle.y = y;
+            t->mAngle.z = z;
             t->mLaunched = 1;
         }
         a = (daKuriKing_c *)dActor_c::FindWithActorID(0xc7, a);
@@ -335,7 +335,7 @@ int daKuriKing_c::SpawnVanishCopy() {
     basePos.x=spawnPos.x;
     basePos.y=spawnPos.y;
     basePos.z=spawnPos.z;
-    spawnAngle.y = this->mAngleY;
+    spawnAngle.y = this->mAngle.y;
     if(DecIfAbove0_Short(&this->mTimer)==0){
         u8 spawned=this->mSpawnedCount;
         if(spawned<=6){
@@ -674,10 +674,10 @@ void daKuriKing_c::func_ov074_0211ffcc() {
   if (this->DistToCPlayer() >= 0x4b0000) {
       ChangeState(3);
   } else {
-    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x3000) {
-        ChangeState(3);
-        return;
-    }
+      if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngle.y) < 0x3000) {
+          ChangeState(3);
+          return;
+      }
   }
   if (this->mSpawnedCount != 0) return;
   ChangeState(2);
@@ -700,7 +700,7 @@ void daKuriKing_c::UpdateWalk() {
     WalkAlongRing();
     if (this->DistToCPlayer() >= 0x4b0000)
         return;
-    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) <= 0x4000)
+    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngle.y) <= 0x4000)
         return;
     ChangeState(4);
 }
@@ -761,11 +761,11 @@ void daKuriKing_c::UpdateIntroTalk() {
     cam->SetLookAt(look);
     cam->SetPos(pos);
 
-    ang = *(struct Ang16*)&this->mAngleX;
+    ang = *(struct Ang16 *)&this->mAngle.x;
     ang.v[1] += 0x7fff;
-    player->mAngleX = ang.v[0];
-    player->mAngleY = ang.v[1];
-    player->mAngleZ = ang.v[2];
+    player->mAngle.x = ang.v[0];
+    player->mAngle.y = ang.v[1];
+    player->mAngle.z = ang.v[2];
 
     {
         const Vector3 *pv = &player->mPos;
@@ -778,7 +778,7 @@ void daKuriKing_c::UpdateIntroTalk() {
     msgpos[1].z = this->mPos.z;
     msgpos[1].y += 0x78000;
 
-    this->mAngleY = this->mDirection * 0x4500 + this->mWalkAngle;
+    this->mAngle.y = this->mDirection * 0x4500 + this->mWalkAngle;
     this->mTalkPlayer = player;
     if (player->StartTalk(*this, 1) == 0) return;
     Message::PrepareTalk();
@@ -886,13 +886,13 @@ int daKuriKing_c::StopWalking() {
     return 0;
 }
 
-/* If anim 6 is current and mAnmModel has finished, flip mAngleY by half
+/* If anim 6 is current and mAnmModel has finished, flip mAngle.y by half
  * a turn and return 1. Otherwise return 0.
  */
 int daKuriKing_c::FinishTurnAround() {
     if (IsAnimPlaying(6)) {
         if (this->mAnmModel.Finished()) {
-            this->mAngleY += 0x8000;
+            this->mAngle.y += 0x8000;
             return 1;
         }
     }
@@ -1137,7 +1137,7 @@ void daKuriKing_c::HandleCylinderHits() {
                     } else {
                         int ang = Vec3_HorzAngle(&this->mPos, &pl->mPos);
                         dir = 1;
-                        if (AngleDiff(ang, this->mAngleY) > 0x4000)
+                        if (AngleDiff(ang, this->mAngle.y) > 0x4000)
                             dir = -1;
                         PlayAnim(7);
                         ChangeState(8);
@@ -1191,7 +1191,7 @@ void daKuriKing_c::HandleCylinderHits() {
     {
         int ang2 = Vec3_HorzAngle(&this->mPos, &player->mPos);
         dir2 = 1;
-        if (AngleDiff(ang2, this->mAngleY) > 0x4000) {
+        if (AngleDiff(ang2, this->mAngle.y) > 0x4000) {
             PlayAnim(dir2);
             dir2 = -1;
         } else {
@@ -1226,7 +1226,7 @@ void daKuriKing_c::UpdateBodyMatrix() {
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->mScale.x, this->mScale.y, this->mScale.z);
     *(struct Matrix4x3 *)this->mBodyMatrix = data_020a0e68;
 }
@@ -1319,7 +1319,7 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
 }
 
 /* Advances mWalkAngle by mWalkSpeed while on the ground and re-derives the
- * walk velocity from the sine table, then eases mAngleY toward the
+ * walk velocity from the sine table, then eases mAngle.y toward the
  * direction-scaled heading. */
 /* Returns int so callers can `return WalkAlongRing(c)`; the body still
  * falls off the end, which is what the ROM's code does. */
@@ -1329,7 +1329,8 @@ int daKuriKing_c::WalkAlongRing() {
         this->mPos.x = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
         this->mPos.z = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
     }
-    ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
+    ApproachAngle(&this->mAngle.y, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800,
+                  0x10);
 }
 
 void daKuriKing_c::UpdateShadows() {
@@ -1378,10 +1379,10 @@ void daKuriKing_c::UpdateShadows() {
     }
 }
 
-/* Fills the model matrix from mAngleY and the position (model space is
+/* Fills the model matrix from mAngle.y and the position (model space is
  * world >> 3). */
 void daKuriKing_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -1690,7 +1691,8 @@ int daKuriKing_c::RenderVanish() {
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x6400, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                           this->mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x6400, 0);
     this->mAnmModel.mat4x3 = data_020a0e68;
 
@@ -1761,7 +1763,7 @@ int daKuriKing_c::BehaviorVanish() {
         this->UpdatePos(0);
         this->UpdateWMClsn(this->mWithMeshClsn, 0);
 
-        this->mAngleX += 0x1800;
+        this->mAngle.x += 0x1800;
     }
 
     /* One drop shadow, through the first shadow matrix. */
@@ -1800,9 +1802,9 @@ int daKuriKing_c::InitVanishResources() {
 
     this->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc8.filePtr, 0, 0x1000, 0);
 
-    this->mPrevAngleX = this->mAngleX;
-    this->mPrevAngleY = this->mAngleY;
-    this->mPrevAngleZ = this->mAngleZ;
+    this->mPrevAngle.x = this->mAngle.x;
+    this->mPrevAngle.y = this->mAngle.y;
+    this->mPrevAngle.z = this->mAngle.z;
     this->mTerminalVelocity = -0x3c000;
     this->mMegaMushroomID = 0;
 

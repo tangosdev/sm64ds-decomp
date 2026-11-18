@@ -2,7 +2,7 @@
 /* daEyBm_c -- Mr. I's projectile (EYEKUN_BEAM 264), ov071.
  *
  * It flies straight at 10.0 along the pitch and yaw it spawned with
- * (mPrevAngleX / mPrevAngleY) and bursts (particle 0x45) when it touches
+ * (mPrevAngle.x / mPrevAngle.y) and bursts (particle 0x45) when it touches
  * ground or a wall, when it hurts a Mario (daPly_c::Hurt, not while he is
  * vanished), or after 150 frames.
  *
@@ -117,8 +117,8 @@ int daEyBm_c::Behavior() {
         velocity.z = mHorzSpeed;
         velocity.x = 0;
         velocity.y = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
         MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
 
         /* Retail retains a typed whole-vector writeback after the transform. */

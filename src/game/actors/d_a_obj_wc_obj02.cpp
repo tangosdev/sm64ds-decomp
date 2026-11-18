@@ -96,10 +96,10 @@ int daObjWc_Obj02_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov029_02114248);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov029_0211302c);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov029_0211302c);
     }
     {
-        mPrevAngleY += 0x4000;
+        mPrevAngle.y += 0x4000;
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
@@ -134,7 +134,7 @@ int daObjWc_Obj02_c::Behavior() {
     case 2:
     case 4:
         if (mStateTimer >= 60) {
-            mPrevAngleY += 0x8000;
+            mPrevAngle.y += 0x8000;
             if (mState == 4) {
                 mState = 0;
             } else {

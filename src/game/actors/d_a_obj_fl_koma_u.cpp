@@ -85,7 +85,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 }
 
 s32 daObjFl_KomaU_c::Behavior() {
-    mAngleY -= 0x100;
+    mAngle.y -= 0x100;
 
     if (IsOffScreen(this)) {
         if (mMeshCollider.IsEnabled())
@@ -94,7 +94,7 @@ s32 daObjFl_KomaU_c::Behavior() {
     }
 
     UpdateModelPosAndRotY();
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
 
     for (int i = 0; i < 8; i++) {
         Vector3 in;
@@ -149,7 +149,7 @@ s32 daObjFl_KomaU_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov064_0211adbc.collision), mClsnMat, 0x199,
-                          mAngleY, *data_ov064_0211adbc.clps);
+                          mAngle.y, *data_ov064_0211adbc.clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     return 1;
 }

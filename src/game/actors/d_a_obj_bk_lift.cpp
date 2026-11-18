@@ -27,7 +27,7 @@
  * - data_ov015_02113594 is the CLPS block this TU does not own;
  *   FX_SinCosTable_ is arm9's sin/cos table; gCurrentStarId / gCurrentSublevel
  *   are arm9 scene state; g_profile_BK_LIFT01 lives outside this TU.
- * - Behavior kind 1 writes the half-turn through s16 *p = &mPrevAngleY
+ * - Behavior kind 1 writes the half-turn through s16 *p = &mPrevAngle.y
  *   and a u8 temporary for 0x87: a direct member add if-converts
  *   (ldrsheq / addeq / strheq) and Behavior shrinks from 0x1cc to 0x1c4.
  * - Behavior kind 2 keeps the 0/1 flag, the second compare, and the
@@ -129,7 +129,7 @@ int daObjBk_Lift_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov015_02114a5c), mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov015_02114a5c), mClsnMat, 0x199, mAngle.y,
                           data_ov015_02113594);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
@@ -146,16 +146,16 @@ int daObjBk_Lift_c::InitResources() {
     if (ground.DetectClsn())
         mFloorPosY = ground.clsnY;
 
-    u16 angle = mAngleY;
+    u16 angle = mAngle.y;
     int sine = FX_SinIdx(angle >> 4);
     mShadowOffsetX = FX_MUL(sine, 0xc8000);
-    angle = mAngleY;
+    angle = mAngle.y;
     int cosine = FX_CosIdx(angle >> 4);
     mShadowOffsetY = FX_MUL(cosine, 0xc8000);
 
     UpdateShadow();
 
-    mPrevAngleY = mAngleY + 0x8000;
+    mPrevAngle.y = mAngle.y + 0x8000;
     mMoveTimer = 135;
 
     int kind = param1 & 0xff;
@@ -180,7 +180,7 @@ int daObjBk_Lift_c::Behavior() {
 
     if (kind == 1) {
         if (DecIfAbove0_Byte(&mMoveTimer) == 0) {
-            mPrevAngleY += 0x8000;
+            mPrevAngle.y += 0x8000;
             mMoveTimer = 135;
         }
         UpdatePos(0);

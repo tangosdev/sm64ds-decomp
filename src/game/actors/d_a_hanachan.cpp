@@ -343,7 +343,7 @@ void daHanachan_c::StateDamageMain()
     gCamera->SetFlag_3();
     mDriveCamera = 1;
 
-    ApproachLinear(mPlayer->mAngleY, Vec3_HorzAngle(&mSegmentPos[0], &mPlayer->mPos), 0x100);
+    ApproachLinear(mPlayer->mAngle.y, Vec3_HorzAngle(&mSegmentPos[0], &mPlayer->mPos), 0x100);
 
     func_ov002_020c51d0(talk, &st);
 
@@ -655,7 +655,7 @@ void daHanachan_c::StateDemoWaitInit()
             mSegmentPos[seg].y = mPos.y;
             mSegmentPos[seg].z = mPos.z;
             mSegmentRot[seg].y = HorzAngleToCPlayer();
-            mPrevAngleY = mSegmentRot[seg].y;
+            mPrevAngle.y = mSegmentRot[seg].y;
         } else {
             in.z = -mSegmentSpacing[seg];
             in.x = 0;
@@ -932,7 +932,7 @@ int daHanachan_c::Behavior()
             mTextureSequences[0].currFrame = 0;
     }
 
-    mPrevAngleY = mSegmentRot[0].y;
+    mPrevAngle.y = mSegmentRot[0].y;
     UpdatePos(0);
 
     if (mFalling == 0)
@@ -1082,10 +1082,10 @@ int daHanachan_c::InitResources()
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = mPos.x;
             ((daHanachan_c *)posRow)->mSegmentPos[0].y = mPos.y;
             ((daHanachan_c *)posRow)->mSegmentPos[0].z = mPos.z;
-            ((daHanachan_c *)rotRow)->mSegmentRot[0].x = mAngleX;
-            ((daHanachan_c *)rotRow)->mSegmentRot[0].y = mAngleY;
-            ((daHanachan_c *)rotRow)->mSegmentRot[0].z = mAngleZ;
-            mPrevAngleY = ((daHanachan_c *)rotRow)->mSegmentRot[0].y;
+            ((daHanachan_c *)rotRow)->mSegmentRot[0].x = mAngle.x;
+            ((daHanachan_c *)rotRow)->mSegmentRot[0].y = mAngle.y;
+            ((daHanachan_c *)rotRow)->mSegmentRot[0].z = mAngle.z;
+            mPrevAngle.y = ((daHanachan_c *)rotRow)->mSegmentRot[0].y;
         } else {
             va.z = 0 - mSegmentSpacing[i];
             va.x = zeroC;

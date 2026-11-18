@@ -227,7 +227,7 @@ extern daPropeller_Heyho_c::State data_ov070_021235bc;
 /* Per-frame update. In order: Yoshi-mouth handling, then the death sequence
  * (mDeathState != 0), then the current state's main handler, gravity clamped at
  * the terminal speed, movement and wall collision, the mPrevAngle Y/Z -> mAngle
- * Y/Z copy (skipped in the knocked state; mAngleX is not copied), the draw
+ * Y/Z copy (skipped in the knocked state; mAngle.x is not copied), the draw
  * matrices, the hit reaction (skipped in the knocked state), the collider refresh
  * (only while a non-vanished player exists) and the animation advance at speed
  * 1.0. mStateTimer is counted down every frame except in the dive state, whose
@@ -281,8 +281,8 @@ int daPropeller_Heyho_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 0);
 
     if (mCurrentState != &data_ov070_021235bc) {
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
     }
 
     func_ov070_02120070();
@@ -357,7 +357,7 @@ void daPropeller_Heyho_c::func_ov070_02120070() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
     mShadowMatrix = *(Mtx43 *)&data_020a0e68;
@@ -403,7 +403,7 @@ extern daPropeller_Heyho_c::State data_ov070_021235ac;
  * when more than 500 units from it or touching a wall. Smooths the mPrevAngle
  * triple toward the heading (Y), the climb angle to home (X, linear) and a bank of
  * half the turn (Z), then eases the mSpeed velocity words
- * toward a 10.0-unit/frame forward vector rotated by mAngleY and the X tilt. When
+ * toward a 10.0-unit/frame forward vector rotated by mAngle.y and the X tilt. When
  * the timer reaches 0 the state restarts (new heading). With the cooldown expired
  * and the actor within 1500 units of home, a non-vanished player within 1000 units
  * starts the chase. */
@@ -424,16 +424,16 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
         if (this->mStateTimer < 20)
             this->mStateTimer = 20;
     }
-    ApproachAngle(&this->mPrevAngleY, this->mTargetAngY, 0xa, 0x200, 0x100);
+    ApproachAngle(&this->mPrevAngle.y, this->mTargetAngY, 0xa, 0x200, 0x100);
 
-    ApproachLinear(this->mPrevAngleX, Vec3_VertAngle(&this->mPos, &this->mHomePos), 0x100);
+    ApproachLinear(this->mPrevAngle.x, Vec3_VertAngle(&this->mPos, &this->mHomePos), 0x100);
 
-    ApproachAngle(&this->mPrevAngleZ, (this->mPrevAngleY - this->mTargetAngY) / 2, 0xa, 0x100,
+    ApproachAngle(&this->mPrevAngle.z, (this->mPrevAngle.y - this->mTargetAngY) / 2, 0xa, 0x100,
                   0x50);
 
     in[2] = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngle.x);
     MTX_MultVec43((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
 
     ApproachLinear(this->mSpeed.x, out[0], 0x1000);
@@ -509,7 +509,7 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
         this->mPos.x = this->mPrevPos.x;
         this->mPos.y = this->mPrevPos.y;
         this->mPos.z = this->mPrevPos.z;
-        this->mPrevAngleX = 0;
+        this->mPrevAngle.x = 0;
         this->mStateTimer = 0;
         this->mSpeed.y = 0;
         FlyGuy_ChangeState(this, &data_ov070_021235dc);
@@ -534,19 +534,19 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
     vc.z = vb.z;
 
     this->mTargetAngY = Vec3_HorzAngle(&this->mPos, &vc);
-    ApproachAngle(&this->mPrevAngleY, this->mTargetAngY, 1, 0x500, 0x500);
+    ApproachAngle(&this->mPrevAngle.y, this->mTargetAngY, 1, 0x500, 0x500);
 
     vd.x = vb.x;
     vd.y = vb.y;
     vd.z = vb.z;
-    ApproachAngle(&this->mPrevAngleX, Vec3_VertAngle(&this->mPos, &vd), 1, 0x500, 0x500);
+    ApproachAngle(&this->mPrevAngle.x, Vec3_VertAngle(&this->mPos, &vd), 1, 0x500, 0x500);
 
-    ApproachAngle(&this->mPrevAngleZ, (this->mPrevAngleY - this->mTargetAngY) / 2, 0xa, 0x100,
+    ApproachAngle(&this->mPrevAngle.z, (this->mPrevAngle.y - this->mTargetAngY) / 2, 0xa, 0x100,
                   0x50);
 
     vin.z = 0xf000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngle.x);
     MTX_MultVec43(&vin, &data_020a0e68, &this->mSpeed);
 
     if (Vec3_Dist(&this->mPos, &this->mHomePos) > kHomeLeashDist) {
@@ -633,8 +633,8 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     s16 half;
     s32 z;
 
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0x100, 0x1000, 0x1000);
-    ApproachAngle(&mPrevAngleZ, 0, 0x100, 0x1000, 0x1000);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0x100, 0x1000, 0x1000);
+    ApproachAngle(&mPrevAngle.z, 0, 0x100, 0x1000, 0x1000);
 
     if (mAnmModel.dExtFrameCtrl_c::Finished()) {
         if (mStateStep == 0) {
@@ -657,7 +657,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
             mHomePosY = mPos.y;
             mHomePosZ = mPos.z;
         }
-        mPrevAngleX = 0;
+        mPrevAngle.x = 0;
         FlyGuy_ChangeState(this, &data_ov070_021235dc);
         return 1;
     }
@@ -669,7 +669,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
             mHomePosY = mPos.y;
             mHomePosZ = mPos.z;
         }
-        mPrevAngleX = 0;
+        mPrevAngle.x = 0;
         FlyGuy_ChangeState(this, &data_ov070_021235dc);
         return 1;
     }
@@ -684,7 +684,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         mPos.x = mPrevPos.x;
         mPos.y = mPrevPos.y;
         mPos.z = mPrevPos.z;
-        mPrevAngleX = 0;
+        mPrevAngle.x = 0;
         mStateTimer = 0;
         mSpeed.y = 0;
         FlyGuy_ChangeState(this, &data_ov070_021235dc);
@@ -711,7 +711,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         aim.z = tz;
     }
     vAngle = Vec3_VertAngle(&mPos, &aim);
-    ApproachAngle(&mPrevAngleX, vAngle, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.x, vAngle, 0xa, 0x200, 0x100);
 
     v.z = 0x11000;
     if (mPos.y <= tmp.y + 0x5000 || mPos.y <= player->mPos.y + 0x5000 ||
@@ -720,11 +720,11 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         v.z = 0x9000;
     }
 
-    half = (mPrevAngleY - mTargetAngY) / 2;
-    ApproachAngle(&mPrevAngleZ, half, 0xa, 0x100, 0x50);
+    half = (mPrevAngle.y - mTargetAngY) / 2;
+    ApproachAngle(&mPrevAngle.z, half, 0xa, 0x100, 0x50);
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
     MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
 
     return 1;
@@ -786,11 +786,11 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
 #define M(p) (p)
 
 /* Fire main. While the animation frame (integer part of the 20.12 counter) is
- * below 13 it steers mPrevAngleY toward mTargetAngY, which is refreshed from the
+ * below 13 it steers mPrevAngle.y toward mTargetAngY, which is refreshed from the
  * nearest player when there is one. When the animation is about to hit frame 13
  * (WillHitFrame) it spawns the fireball at its own position (SpawnFireball with
  * 30.0 / 10.0 in its two fx32 slots and param1 = 1) with a rotation copied from
- * mAngleX/Y/Z whose X is the vertical angle to the player, and plays sound 0x105.
+ * mAngle.x/.y/.z whose X is the vertical angle to the player, and plays sound 0x105.
  * When the animation has finished it resets the frame to 0, starts the 90-frame
  * cooldown and returns to wander. */
 int daPropeller_Heyho_c::func_ov070_0211f48c() {
@@ -809,11 +809,11 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
             tmp.z = posbuf.z;
             mTargetAngY = Vec3_HorzAngle(&mPos, &tmp);
         }
-        ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x400, 0x200);
+        ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x400, 0x200);
     }
 
     if (mAnmModel.dExtFrameCtrl_c::WillHitFrame(kFireFrame) != 0) {
-        *(V3h*)&vel = *(V3h*)&mAngleX;
+        *(V3h *)&vel = *(V3h *)&mAngle.x;
         if (pl != 0) {
             int *base = (int *)M(&pl->mPos.x);
             fp.x = base[0];
@@ -853,7 +853,7 @@ short daPropeller_Heyho_c::func_ov070_0211f450() {
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
  * mega-character hit leaves it unchanged) it refreshes the effects 0x13a and
- * 0x13b at the position + 80.0 units up each frame (their handles are fed back). Tilts mAngleX toward
+ * 0x13b at the position + 80.0 units up each frame (their handles are fed back). Tilts mAngle.x toward
  * -0x4000 (a quarter turn) with ApproachAngle and then ApproachLinear. When the
  * timer reaches 0 it runs the defeat helper func_ov070_0211f0a4. */
 int daPropeller_Heyho_c::func_ov070_0211f368() {
@@ -871,8 +871,8 @@ int daPropeller_Heyho_c::func_ov070_0211f368() {
         this->mParticle1 =
             Particle::System::NewCleanParticle(this->mParticle1, kPtclDeathB, v.x, v.y, v.z, 0);
     }
-    ApproachAngle(&this->mAngleX, -0x4000, 0xa, 0x200, 0x100);
-    ApproachLinear(this->mAngleX, -0x4000, 0x200);
+    ApproachAngle(&this->mAngle.x, -0x4000, 0xa, 0x200, 0x100);
+    ApproachLinear(this->mAngle.x, -0x4000, 0x200);
     if (this->mStateTimer == 0)
         this->func_ov070_0211f0a4();
     return 1;

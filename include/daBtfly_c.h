@@ -86,7 +86,7 @@ struct daBtfly_c : dActor_c {
                                  against 0x14, 0x3c, 0x6e, 0x78, 0x9d and 100. */
     s16 mWanderAngle;       /* 0x3ec -- a random heading State4
                                  rolls at spawn; after 0x3c frames
-                                 State5 steers mPrevAngleY toward
+                                 State5 steers mPrevAngle.y toward
                                  it instead of toward home. */
     s16 mFlutterPhase;      /* 0x3ee -- a phase angle State7
                                  advances by 0x2710 or 0xfa0 a frame and feeds

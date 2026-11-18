@@ -169,8 +169,8 @@ s32 daFish_c::Behavior() {
         }
         Vec3_Asr(&shiftedPos, &mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, shiftedPos.x, shiftedPos.y, shiftedPos.z);
-        mAngleY = mPrevAngleY;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+        mAngle.y = mPrevAngle.y;
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         mAnmModel.Advance();
     }
@@ -224,7 +224,7 @@ void daFish_c::StateWaitForPlayer() {
 
     {
         n = this->param1 & 0xf;
-        *(RawVector3_16 *)&rot = *(RawVector3_16 *)&this->mPrevAngleX;
+        *(RawVector3_16 *)&rot = *(RawVector3_16 *)&this->mPrevAngle.x;
         this->mNumFish = 0;
         if (n < 1)
             n = 1;
@@ -301,7 +301,7 @@ void daFish_c::StateIdle() {
     daPly_c *p = this->ClosestPlayer();
     if (p) {
         s16 ang = Vec3_HorzAngle(&this->mPos, &p->mPos);
-        if (ApproachLinear(this->mPrevAngleY, ang, 0x400) != 0) {
+        if (ApproachLinear(this->mPrevAngle.y, ang, 0x400) != 0) {
             if (this->mModelIndex == 0) {
                 this->mAnmModel.SetAnim((LoadedBCA(&data_ov100_021489cc)), 0, 0x1000, 0);
             }
@@ -338,7 +338,7 @@ void daFish_c::StateFlee() {
     pl = this->ClosestPlayer();
     if (pl == 0)
         return;
-    ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&pl->mPos, &this->mPos), this->mTurnSpeed);
+    ApproachLinear(this->mPrevAngle.y, Vec3_HorzAngle(&pl->mPos, &this->mPos), this->mTurnSpeed);
     Vec3_Sub(&v, &this->mPos, &pl->mPos);
     if (Vec3_HorzLen(&v) <= this->mTriggerDist)
         return;
@@ -357,7 +357,7 @@ void daFish_c::StateWander() {
             return;
     }
     this->mTurnSpeed = 0x800;
-    this->mTargetAngle = this->mPrevAngleY + 0x8000;
+    this->mTargetAngle = this->mPrevAngle.y + 0x8000;
     this->mAnmModel.speed = 0x2000;
     this->mState = 6;
 }
@@ -365,7 +365,7 @@ void daFish_c::StateWander() {
 /* Fish state 6: turn about, then wander again once back in range. */
 void daFish_c::StateTurnAbout() {
     Vector3 v;
-    if (!ApproachLinear(this->mPrevAngleY, this->mTargetAngle, this->mTurnSpeed))
+    if (!ApproachLinear(this->mPrevAngle.y, this->mTargetAngle, this->mTurnSpeed))
         return;
     {
         dActor_c *spawner = dActor_c::FindWithID(this->mSpawnerID);
@@ -395,7 +395,7 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
     this->mIsSpawner = 0;
     this->mSpawnerID = spawnerID;
     if (this->mVariant != 0) {
-        s16 *angle = &this->mPrevAngleY;
+        s16 *angle = &this->mPrevAngle.y;
         *angle = *angle & 0x8000;
         unsigned char v = this->mVariant;
         if (v == 3) {

@@ -119,7 +119,8 @@ int daObjYajirusi_c::InitResources() {
 
     u32 collisionIndex = mVariant;
     KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov098_0213c380[collisionIndex].clsnFile);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov098_0213c380[collisionIndex].clps);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y,
+                          *data_ov098_0213c380[collisionIndex].clps);
     return 1;
 }
 
@@ -199,10 +200,10 @@ void daObjYajirusi_c::Kill() {
 }
 
 // 0x02137c8c (0x40)
-/* Shadow matrix at mShadowMat: rotation from mAngleY, translation
+/* Shadow matrix at mShadowMat: rotation from mAngle.y, translation
  * mPos >> 3 (model matrices are in eighths of a unit). */
 void daObjYajirusi_c::UpdateShadowMatrix() {
-    Matrix4x3_FromRotationY(mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY(mShadowMat, mAngle.y);
     ((Matrix4x3 *)mShadowMat)->t.x = mPos.x >> 3;
     ((Matrix4x3 *)mShadowMat)->t.y = mPos.y >> 3;
     ((Matrix4x3 *)mShadowMat)->t.z = mPos.z >> 3;

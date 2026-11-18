@@ -173,7 +173,7 @@ int daSpd_c::InitResources() {
     mHome.x = mPos.x;
     mHome.y = mPos.y;
     mHome.z = mPos.z;
-    mHomeAngleY = mAngleY;
+    mHomeAngleY = mAngle.y;
     mAnchor.x = mPos.x;
     mAnchor.y = mPos.y;
     mAnchor.z = mPos.z;
@@ -255,11 +255,11 @@ int daSpd_c::func_ov071_02120200() {
     z = 0;
     mPos.y = mHome.y;
     mPos.z = mHome.z;
-    mPrevAngleY = mHomeAngleY;
+    mPrevAngle.y = mHomeAngleY;
     ang = mHomeAngleY;
-    mAngleX = z;
-    mAngleY = ang;
-    mAngleZ = z;
+    mAngle.x = z;
+    mAngle.y = ang;
+    mAngle.z = z;
     mHorzSpeed = z;
     mTimer = 30;
     mdCcAc_c.Clear();
@@ -325,8 +325,8 @@ int daSpd_c::func_ov071_0211ff84() {
 }
 
 int daSpd_c::func_ov071_0211fee4() {
-    mAngleY = (short)(mAngleY + 0x2bc);
-    mPrevAngleY = mAngleY;
+    mAngle.y = (short)(mAngle.y + 0x2bc);
+    mPrevAngle.y = mAngle.y;
     mAnmModel.Advance();
     unsigned short f = (unsigned short)(mAnmModel.currFrame >> 12);
     if (f == 0 || f == 8 || f == 0x17 || f == 0x1f) {
@@ -347,8 +347,8 @@ int daSpd_c::func_ov071_0211fe38() {
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0xf000;
     mSpeed.y = 0x12000;
-    mAngleY = mLeapAngle;
-    mPrevAngleY = mAngleY;
+    mAngle.y = mLeapAngle;
+    mPrevAngle.y = mAngle.y;
     *p3a0 += 0x12c000;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x2c00;
@@ -418,8 +418,8 @@ int daSpd_c::func_ov071_0211fbf4() {
 
 int daSpd_c::func_ov071_0211fb24() {
     short ang = Vec3_HorzAngle(&mPos, &mAnchor);
-    ApproachLinear(mAngleY, ang, 0x2bc);
-    mPrevAngleY = mAngleY;
+    ApproachLinear(mAngle.y, ang, 0x2bc);
+    mPrevAngle.y = mAngle.y;
     mAnmModel.Advance();
     if (Vec3_Dist(&mPos, &mAnchor) < 0x12c000)
         SetState(2);
@@ -473,12 +473,12 @@ int daSpd_c::func_ov071_0211f8d0() {
     mFlags &= 0xfff7fffe;
     mHorzSpeed = mEatingPlayer->mHorzSpeed + 0x7000;
     mSpeed.y = 0;
-    mAngleY = mEatingPlayer->mAngleY;
-    mPrevAngleY = mAngleY;
+    mAngle.y = mEatingPlayer->mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mPos = mEatingPlayer->mPos;
-    mPos.x += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x5a000);
+    mPos.x += FX_MUL(FX_SinIdx((u16)mAngle.y >> 4), 0x5a000);
     mPos.y += 0x50000;
-    mPos.z += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x5a000);
+    mPos.z += FX_MUL(FX_CosIdx((u16)mAngle.y >> 4), 0x5a000);
     Vector3 v(mEatingPlayer->mPos.x, mEatingPlayer->mPos.y + 0x50000, mEatingPlayer->mPos.z);
     DetectRaycastClsn(v, mPos, 1);
     mEatingPlayer = 0;
@@ -489,7 +489,7 @@ int daSpd_c::func_ov071_0211f8d0() {
 
 int daSpd_c::func_ov071_0211f7d4() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
-    mAngleX = mAngleX + 0x1000;
+    mAngle.x = mAngle.x + 0x1000;
     if (mWithMeshClsn.JustHitGround()) {
         if (mWithMeshClsn.GetFloorResult()->surface.clps.GetSurfaceType() == 4) {
             func_ov071_0211f498();
@@ -500,10 +500,10 @@ int daSpd_c::func_ov071_0211f7d4() {
         mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mFlags |= 1;
-        short heading = mPrevAngleY;
-        mAngleX = 0;
-        mAngleY = heading;
-        mAngleZ = 0;
+        short heading = mPrevAngle.y;
+        mAngle.x = 0;
+        mAngle.y = heading;
+        mAngle.z = 0;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -530,7 +530,7 @@ int daSpd_c::func_ov071_0211f6f8() {
 }
 
 int daSpd_c::func_ov071_0211f694() {
-    mAngleX = mAngleX - 0x1000;
+    mAngle.x = mAngle.x - 0x1000;
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -546,16 +546,16 @@ void daSpd_c::func_ov071_0211f524() {
             return;
     }
 
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 
-    if (mAngleX != 0) {
+    if (mAngle.x != 0) {
         data_020a0e68 = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
         mAnmModel.mat4x3 = data_020a0e68;
@@ -623,8 +623,8 @@ void daSpd_c::func_ov071_0211f29c() {
     }
 
     if (mdCcAc_c.hitFlags & 0x10) {
-        mPrevAngleY = Vec3_HorzAngle(&hitPlayer->mPos, &mPos);
-        mAngleY = (short)(mPrevAngleY + 0x8000);
+        mPrevAngle.y = Vec3_HorzAngle(&hitPlayer->mPos, &mPos);
+        mAngle.y = (short)(mPrevAngle.y + 0x8000);
         hitPlayer->IncMegaKillCount();
         SetState(8);
         return;
@@ -686,7 +686,8 @@ void daSpd_c::func_ov071_0211f0b4() {
     d = Vec3_Dist(&mPos, &p->mPos);
     if (d > 0x5dc000) return;
     ang = Vec3_HorzAngle(&mPos, &p->mPos);
-    if (AngleDiff(ang, mAngleY) > 0x12c) return;
+    if (AngleDiff(ang, mAngle.y) > 0x12c)
+        return;
     mLeapDist = d;
     mLeapAngle = ang;
     SetState(3);

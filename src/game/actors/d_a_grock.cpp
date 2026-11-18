@@ -8,7 +8,7 @@
  * next nibble is the star index. Spawned rocks are actor 0xdd, this class.
  * 0xbf is the player.
  *
- * The travel heading lives in mPrevAngleY. Lateral velocity is mSpeed.x /
+ * The travel heading lives in mPrevAngle.y. Lateral velocity is mSpeed.x /
  * mSpeed.z around mSpeed.y.
  * The rolling sound handle (mRollSoundID) and the rolling dust handle
  * (mDustParticleID) are renewed every frame the rock rolls. A star rock
@@ -109,7 +109,7 @@ void daGrock_c::UpdateModelTransform() {
     Vec3_Asr(&shifted, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted.x, shifted.y, shifted.z);
     mShadowMtx = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3 = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x1f4000, 0x1f4000, 0xf);
 }
@@ -201,11 +201,11 @@ void daGrock_c::HandleMeshCollision() {
         mSpeed.x += normal.x * 5;
         mSpeed.z += normal.z * 5;
         mHorzSpeed = Vec3_HorzLen(&mSpeed);
-        mPrevAngleY = cstd::atan2(mSpeed.x, mSpeed.z);
+        mPrevAngle.y = cstd::atan2(mSpeed.x, mSpeed.z);
         if (mHorzSpeed >= 0x22000) {
             mHorzSpeed = 0x22000;
-            mSpeed.x = FX_SinIdx((u16)mPrevAngleY >> 4) * 0x22;
-            mSpeed.z = FX_CosIdx((u16)mPrevAngleY >> 4) * 0x22;
+            mSpeed.x = FX_SinIdx((u16)mPrevAngle.y >> 4) * 0x22;
+            mSpeed.z = FX_CosIdx((u16)mPrevAngle.y >> 4) * 0x22;
         }
     }
 
@@ -216,9 +216,9 @@ void daGrock_c::HandleMeshCollision() {
     hit->surface.CopyNormalTo(wallNormal);
     {
         short wallAngle = cstd::atan2(wallNormal.x, wallNormal.z);
-        if (GetSubtraction(mPrevAngleY, wallAngle) <= 0x1000)
+        if (GetSubtraction(mPrevAngle.y, wallAngle) <= 0x1000)
             return;
-        mPrevAngleY = ReflectAngle(wallNormal.x, wallNormal.z, mPrevAngleY);
+        mPrevAngle.y = ReflectAngle(wallNormal.x, wallNormal.z, mPrevAngle.y);
         UpdatePosWithHorzSpeedAndAng();
     }
 }
@@ -256,9 +256,9 @@ int daGrock_c::Behavior() {
             s16 *roll;
 
             ApplyGravityAndMove();
-            roll = &mAngleX;
+            roll = &mAngle.x;
             *roll = (s16)(*roll + (mHorzSpeed >> 12) * 0x43);
-            mAngleY = mPrevAngleY;
+            mAngle.y = mPrevAngle.y;
             HandleMeshCollision();
         }
         UpdateModelTransform();
@@ -367,8 +367,8 @@ int daGrock_c::InitResources() {
             mVertAccel = -0x4000;
             mTerminalVelocity = -0x28000;
             mHorzSpeed = 0x1e000;
-            mSpeed.x = FX_SinIdx((u16)mPrevAngleY >> 4) * 0x1e;
-            mSpeed.z = FX_CosIdx((u16)mPrevAngleY >> 4) * 0x1e;
+            mSpeed.x = FX_SinIdx((u16)mPrevAngle.y >> 4) * 0x1e;
+            mSpeed.z = FX_CosIdx((u16)mPrevAngle.y >> 4) * 0x1e;
         }
     } else if (mType == kGrockStarSpawner) {
         mStarID = (u8)((param1 >> 8) & 0xf);

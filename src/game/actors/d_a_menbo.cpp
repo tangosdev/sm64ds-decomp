@@ -274,7 +274,7 @@ void daMenbo_c::func_ov090_02131378() {
  * anchor and sets the patrol speed. */
 int daMenbo_c::func_ov090_021314a0() {
     daPly_c *p = this->ClosestNonVanishPlayer();
-    if (p != 0 && AngleDiff(this->mPrevAngleY, this->HorzAngleToCPlayer()) < 0x2000) {
+    if (p != 0 && AngleDiff(this->mPrevAngle.y, this->HorzAngleToCPlayer()) < 0x2000) {
         int *sv = &p->mPos.x;
         int v[3];
         v[0] = sv[0];
@@ -362,7 +362,7 @@ int daMenbo_c::func_ov090_02131648() {
     in.y = 0x64000;
     in.z = 0x1f4000;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
     MTX_MultVec43(&in, &data_020a0e68, &out);
 
@@ -437,7 +437,7 @@ int daMenbo_c::func_ov090_02131648() {
         mAnimSpeed = 0x1000;
     }
 
-    ApproachLinear(mPrevAngleY, (s16)mTargetAngleY, 0x500);
+    ApproachLinear(mPrevAngle.y, (s16)mTargetAngleY, 0x500);
 
     if (mTurnTimer == 0 && mSpeedHoldTimer == 0) {
         mAnimSpeed = 0x1000;
@@ -492,7 +492,7 @@ int daMenbo_c::func_ov090_02131ac4()
         mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
         this->func_ov090_02131e00(data_ov090_021344e4);
     }
-    ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngleY, 1, 0x100, 0x100);
     if (mStateTimer == 0)
         this->func_ov090_02131e00(data_ov090_021344f4);
     return 1;
@@ -529,14 +529,14 @@ int daMenbo_c::func_ov090_02131c48()
         func_02012694(0xfd, &mCamSpacePos);
 
     if (mTurnTimer == 0 && mWithMeshClsn.IsOnWall() &&
-        AngleDiff(mPrevAngleY, (s16)mTargetAngleY) < 0x200) {
+        AngleDiff(mPrevAngle.y, (s16)mTargetAngleY) < 0x200) {
         s16 *p = (s16 *)&mTargetAngleY;
         *p = *p + 0x4000;
         mTurnTimer = 8;
     }
 
     if (mTurnTimer != 0) {
-        ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x1000, 0x1000);
+        ApproachAngle(&mPrevAngle.y, mTargetAngleY, 1, 0x1000, 0x1000);
     } else {
         if (mAnmModel.Finished()) {
             s32 *q = &mAnimLoops;
@@ -584,7 +584,7 @@ void daMenbo_c::func_ov090_02131e50() {
     src[2] = mPos.z;
     Vec3_Asr(dst, src, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
@@ -642,9 +642,9 @@ int daMenbo_c::Behavior()
         if (mDeathState == 0)
             PoofDust();
         if (mDeathTumble == 3) {
-            ApproachLinear(mAngleX, -32767, 0x500);
-            if (AngleDiff(mAngleX, -32767) < 0x1000) {
-                mAngleY += 0x1000;
+            ApproachLinear(mAngle.x, -32767, 0x500);
+            if (AngleDiff(mAngle.x, -32767) < 0x1000) {
+                mAngle.y += 0x1000;
             }
         }
         if (mDeathState != 1 && mPos.y <= mSurfaceY) {
@@ -702,7 +702,7 @@ int daMenbo_c::Behavior()
 
     if (mState[1])
         (this->*mState[1])();
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mAnmModel.speed = mAnimSpeed;
     mAnmModel.Advance();
     func_ov090_02131e50();
@@ -740,7 +740,7 @@ int daMenbo_c::InitResources()
     v = data_ov090_0213412c;
     mdCcAcPos_c.Init(this, v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
 
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mAnimSpeed = 0x1000;
     mScale.x = 0x1000;
     mScale.y = 0x1000;
@@ -800,8 +800,8 @@ int daMenbo_c::InitResources()
             r = RandomIntInternal(&data_0209e650.value);
             short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
             *(short *)&mTargetAngleY = ang;
-            mPrevAngleY = *(short *)&mTargetAngleY;
-            mAngleY = mPrevAngleY;
+            mPrevAngle.y = *(short *)&mTargetAngleY;
+            mAngle.y = mPrevAngle.y;
         }
         this->func_ov090_02131e00(data_ov090_021344e4);
     }

@@ -167,7 +167,7 @@ int daObjFl_Puzzle_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov064_0211adc8[mType]), 1, -1);
     UpdateModelMatrix();
     UpdateClsnMatrix();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000, mAngle.y,
                           data_ov064_0211baac);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mStepScript = data_ov064_0211c198[mType];
@@ -253,7 +253,7 @@ void daObjFl_Puzzle_c::UpdateModelMatrix() {
 void daObjFl_Puzzle_c::UpdateClsnMatrix() {
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y + mShakeOffsetY, mPos.z);
     mClsnMat = data_020a0e68;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* Step script driver. While mHadClsn is set, writes FLCOIN_FLAG_PLAYER_TOUCHED into the

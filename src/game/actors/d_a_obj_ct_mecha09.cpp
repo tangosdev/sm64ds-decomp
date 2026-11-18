@@ -76,7 +76,7 @@ void daObjCtMecha09_c::UpdateShadow() {
         d = -d;
     if (d > 0x7d0000)
         return;
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
     mShadowMat.t.x = mPos.x >> 3;
     mShadowMat.t.y = (mGroundY + 0x1000) >> 3;
     mShadowMat.t.z = mPos.z >> 3;
@@ -154,7 +154,7 @@ int daObjCtMecha09_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     kcl = dBgW_Kc::LoadFile(data_ov065_0211d9cc);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov035_02112118);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov035_02112118);
 
     mStartPosY = mPos.y;
     {

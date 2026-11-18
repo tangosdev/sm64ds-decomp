@@ -21,8 +21,8 @@
  * What stays:
  * - data_ov029_02114270 is the model SharedFilePtr, defined here; symbols.txt
  *   has no recovered name, so it is not coined.
- * - Address-valued `&mAngleY` in Behavior: a named increment CSEs the field
- *   address. The cartridge keeps r1 as &mAngleY for both the halfword load
+ * - Address-valued `&mAngle.y` in Behavior: a named increment CSEs the field
+ *   address. The cartridge keeps r1 as &mAngle.y for both the halfword load
  *   and store.
  * - Class header first so dExtSimpleModel_c.h's structured Matrix4x3 (`.t`) wins;
  *   daObjWc_Mizu_c.h would otherwise pull common.h's flat `s32 m[12]`.
@@ -89,7 +89,7 @@ int daObjWc_Obj03_c::InitResources()
     mWaterID = 0;
     mWaterParam = param1 & 1;
     mActive = 0;
-    mAngleY = 0;
+    mAngle.y = 0;
     return 1;
 }
 
@@ -102,18 +102,19 @@ int daObjWc_Obj03_c::Behavior()
     CheckClsnWithPlayer();
     if (mActive != 0) {
         /* The address-valued temporary is load-bearing under 2004/b56: the
-         * cartridge keeps r1 as &mAngleY for both the halfword load and store.
+         * cartridge keeps r1 as &mAngle.y for both the halfword load and store.
          * A named increment CSEs the field address. */
-        s16 *angleY = &mAngleY;
+        s16 *angleY = &mAngle.y;
         *angleY = *angleY + 0x400;
         daObjWc_Mizu_c *water = (daObjWc_Mizu_c *)dActor_c::FindWithID(mWaterID);
         if (water != 0) {
             if (mPos.y == water->mPos.y) {
-                if (mAngleY == 0) mActive = 0;
+                if (mAngle.y == 0)
+                    mActive = 0;
             }
             if (mPos.y != water->mTargetPosY) {
                 mActive = 0;
-                mAngleY = 0;
+                mAngle.y = 0;
             }
         }
     }
@@ -146,7 +147,7 @@ int daObjWc_Obj03_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 void daObjWc_Obj03_c::UpdateModelTransform()
 {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;

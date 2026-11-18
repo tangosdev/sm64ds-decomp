@@ -218,8 +218,8 @@ int daKrpa_c::EnterSpit() {
 int daKrpa_c::ExecuteSpit() {
     if (this->mFrameController.cursor == 0x1e) {
         Vector3 firePos;
-        int cosv = FX_CosIdx((u16)this->mAngleY >> 4);
-        int sinv = FX_SinIdx((u16)this->mAngleY >> 4);
+        int cosv = FX_CosIdx((u16)this->mAngle.y >> 4);
+        int sinv = FX_SinIdx((u16)this->mAngle.y >> 4);
         int offZ = FX_MUL(cosv, 0x50000);
         int offX = FX_MUL(sinv, 0x50000);
         int x = this->mPos.x + offX;
@@ -281,7 +281,7 @@ int daKrpa_c::EnterKnockedAway() {
 /* The collision update veneer is retained because it is the retail call
  * destination; the rest are ordinary real class calls. */
 int daKrpa_c::ExecuteKnockedAway() {
-    this->mAngleX = this->mAngleX - 0x1000;
+    this->mAngle.x = this->mAngle.x - 0x1000;
     this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&this->mWithMeshClsn);
@@ -293,10 +293,10 @@ int daKrpa_c::ExecuteKnockedAway() {
 }
 void daKrpa_c::UpdateModelAndShadow() {
     if (this->mStateIndex == 3) {
-        Matrix4x3_FromRotationXYZExt(&this->mAnmModel.mat4x3, this->mAngleX, this->mAngleY,
-                                     this->mAngleZ);
+        Matrix4x3_FromRotationXYZExt(&this->mAnmModel.mat4x3, this->mAngle.x, this->mAngle.y,
+                                     this->mAngle.z);
     } else {
-        Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
+        Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
     }
     this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
     this->mAnmModel.mat4x3.t.y = this->mPos.y >> 3;
@@ -319,7 +319,7 @@ void daKrpa_c::TrackClosestPlayer() {
         return;
     }
     this->mPlayer = player;
-    ApproachLinear(this->mAngleY, Vec3_HorzAngle(&this->mPos, &player->mPos), 0x800);
+    ApproachLinear(this->mAngle.y, Vec3_HorzAngle(&this->mPos, &player->mPos), 0x800);
 }
 void daKrpa_c::HandlePlayerHit() {
     u32 id = this->mdCcAcPos_c.otherOwner;
@@ -339,8 +339,8 @@ void daKrpa_c::HandlePlayerHit() {
     }
     if ((this->mdCcAcPos_c.hitFlags & 0x10) == 0)
         return;
-    this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
-    this->mAngleY = (short)(this->mPrevAngleY + 0x8000);
+    this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
+    this->mAngle.y = (short)(this->mPrevAngle.y + 0x8000);
     player->IncMegaKillCount();
     this->ChangeState(3);
 }

@@ -82,13 +82,13 @@ int dEnemyBase_c::func_ov002_020ad660(void *clsnArg, void *modelArg, int flags) 
         UpdateWMClsn(*clsn, 0);
 
     if (model != 0) {
-        mAngleX += mSpinRateX;
-        mAngleY += mSpinRateY;
-        mAngleZ += mSpinRateZ;
+        mAngle.x += mSpinRateX;
+        mAngle.y += mSpinRateY;
+        mAngle.z += mSpinRateZ;
         Vec3_Asr((Vector3 *)v, &mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
         model->mat4x3 = data_020a0e68;
     }

@@ -96,11 +96,11 @@ int daObjCtMecha05_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *collisionFile = dBgW_Kc::LoadFile(TTC_MovingBar_ClsnFile);
-    mMeshCollider.SetFile(collisionFile, mClsnMat, 0x199, mAngleY, data_ov035_02112258);
+    mMeshCollider.SetFile(collisionFile, mClsnMat, 0x199, mAngle.y, data_ov035_02112258);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetClipRadius(0x1c0000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    mPrevAngleY = mAngleY;
+    mPrevAngle.y = mAngle.y;
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
@@ -126,10 +126,10 @@ int daObjCtMecha05_c::InitResources() {
 int daObjCtMecha05_c::Behavior() {
     if (data_0209f2c0 == 3) {
         int ang;
-        /* ldrh, not the ldrsh a plain s16 mPrevAngleY read would emit. */
-        ang = (u16)mPrevAngleY;
+        /* ldrh, not the ldrsh a plain s16 mPrevAngle.y read would emit. */
+        ang = (u16)mPrevAngle.y;
         mPos.x = mHomePos.x + FX_MUL(FX_SinIdx(ang >> 4), 0xfa000);
-        ang = (u16)mPrevAngleY;
+        ang = (u16)mPrevAngle.y;
         mPos.z = mHomePos.z + FX_MUL(FX_CosIdx(ang >> 4), 0xfa000);
         UpdateModelPosAndRotY();
         UpdateShadow();
@@ -268,7 +268,7 @@ void daObjCtMecha05_c::UpdateShadow() {
     offset.x = 0;
     offset.y = 0;
 
-    Matrix4x3_FromRotationY(&mShadowMatrix, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMatrix, mAngle.y);
     MTX_MultVec43(&offset, &mShadowMatrix, &shadowPos);
     VEC_Add(&shadowPos, &mPos, &shadowPos);
 

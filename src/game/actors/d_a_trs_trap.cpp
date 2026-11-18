@@ -54,8 +54,8 @@
  *   matrix refresh, the settle step and the book-switch callback keep the C
  *   linkage they matched with as separate files; they take the daTrsTrap_c
  *   and read its members.
- * - The trapdoor state adds mAngVelX to mAngleX with a plain `+=`. An
- *   earlier draft spelled it through a `(long long)(int)&mAngleX` launder on
+ * - The trapdoor state adds mAngVelX to mAngle.x with a plain `+=`. An
+ *   earlier draft spelled it through a `(long long)(int)&mAngle.x` launder on
  *   the claim that the member form changes codegen; re-measured for #821, it
  *   reproduces, and retiring the launder renumbers this TU's @NNN locals
  *   (re-keyed in config/tu_manifest.d/ov063/daTrsTrap_c.json).
@@ -169,7 +169,7 @@ void daTrsTrap_c::UpdateModelTransform() {
     int v[3];
     Vec3_Asr(v, &mPos.x, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3 = data_020a0e68;
 }
 
@@ -177,9 +177,9 @@ void daTrsTrap_c::UpdateModelTransform() {
    mesh follows it. Called from InitResources and Behavior. */
 void daTrsTrap_c::UpdateClsnMatrix() {
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mClsnMat = data_020a0e68;
-    mMovingMeshCollider.Transform(mClsnMat, mAngleY);
+    mMovingMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* Staircase settle: frames 0..3 nudge mPos.y by the signed table entry
@@ -200,7 +200,7 @@ void daTrsTrap_c::UpdateMerryGoRound() {
         return;
     }
     mAngVelY = 0x80;
-    t = &mAngleY;
+    t = &mAngle.y;
     *t = (*t + mAngVelY);
     UpdateOccupiedFlag();
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8f, mCamSpacePos, 0);
@@ -309,24 +309,26 @@ void daTrsTrap_c::func_ov063_0211cae8(int m) {
 void daTrsTrap_c::UpdateTiltingTrap() {
     if (mStandingActor != 0) {
         mAngVelX = (s16)((mStandingActor->mPos.z - mPos.z) >> 0xc);
-        mAngleX += mAngVelX;
+        mAngle.x += mAngVelX;
     } else {
-        int a = mAngleX;
+        int a = mAngle.x;
         if (a < 0) a = -a;
         if (a < 0xbb8 || mStateTimer > 15) {
             int v;
             mAngVelX = 0;
-            v = mAngleX;
+            v = mAngle.x;
             if (v > 0) {
-                if (v < 0xc8) mAngleX = 0;
+                if (v < 0xc8)
+                    mAngle.x = 0;
                 else mAngVelX = -0xc8;
             } else {
-                if (v > -0xc8) mAngleX = 0;
+                if (v > -0xc8)
+                    mAngle.x = 0;
                 else mAngVelX = 0xc8;
             }
         }
     }
-    mAngleX += mAngVelX;
+    mAngle.x += mAngVelX;
 }
 
 /* Staircase rise state. Waits until the master step (or this one, for the
@@ -505,10 +507,10 @@ int daTrsTrap_c::InitResources()
         int m = mIndex;
         if (m == 3) {
             mMovingMeshCollider.SetFile((KCL_File *)(data_ov063_0211e28c[m]->filePtr), mClsnMat,
-                                        0x1000, mAngleY, *(data_ov063_0211e9e8[m]));
+                                        0x1000, mAngle.y, *(data_ov063_0211e9e8[m]));
         } else {
             mMovingMeshCollider.SetFile((KCL_File *)(data_ov063_0211e28c[m]->filePtr), mClsnMat,
-                                        0x199, mAngleY, *(data_ov063_0211e9e8[m]));
+                                        0x199, mAngle.y, *(data_ov063_0211e9e8[m]));
         }
     }
 

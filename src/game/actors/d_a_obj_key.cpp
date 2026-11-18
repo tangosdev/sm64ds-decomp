@@ -249,7 +249,7 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
     }
     mTerminalVelocity = TERMINAL_VY;
     mHorzSpeed = Vec3_HorzDist(&mPos, target) / JUMP_FRAMES;
-    mPrevAngleY = Vec3_HorzAngle(&mPos, target);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, target);
 }
 
 /* UnloadKeyModels, 0x021310cc */
@@ -336,7 +336,7 @@ void daObjKey_c::StateFlyToCenter()
         center1.z = 0;
         mSpeed.y = FLY_VY;
         mHorzSpeed = Vec3_HorzDist(&mPos, &center1) / 80;
-        mPrevAngleY = Vec3_HorzAngle(&mPos, &center1);
+        mPrevAngle.y = Vec3_HorzAngle(&mPos, &center1);
         mBounceCount = 0;
         mVertAccel = GRAVITY;
         Message::EndTalk();
@@ -400,7 +400,7 @@ void daObjKey_c::StateFlyToCenter()
     }
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngle.y);
     MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
@@ -557,7 +557,7 @@ void daObjKey_c::StateStarJump()
         mPos.x = pos[0];
         mPos.y = pos[1];
         mPos.z = pos[2];
-        mAngleY = mPlayer->mAngleY;
+        mAngle.y = mPlayer->mAngle.y;
         mAnmModel.Advance();
         if (mAnmModel.Finished())
             mStep++;
@@ -679,7 +679,7 @@ void daObjKey_c::func_ov089_02131df4(daPly_c &p) {
         mPos.x = pos[0];
         mPos.y = pos[1];
         mPos.z = pos[2];
-        mAngleY = mPlayer->mAngleY;
+        mAngle.y = mPlayer->mAngle.y;
         mFlags &= ~FLAG_HIDE;
         Event::SetBit(EVENT_KEY);
     }
@@ -699,12 +699,12 @@ s32 daObjKey_c::OnYoshiTryEat() {
 
 void daObjKey_c::UpdateModelTransform()
 {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     if (data_ov089_021328b4[mState] != 0 && mAnimID == 0) {
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
         mModel.mat4x3.m[9] = mPos.x >> 3;
         mModel.mat4x3.m[10] = (mPos.y + Y_LOOK) >> 3;
         mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -764,11 +764,11 @@ int daObjKey_c::Behavior()
                 mPos.x = pos[0];
                 mPos.y = pos[1];
                 mPos.z = pos[2];
-                mAngleY = mPlayer->mAngleY;
+                mAngle.y = mPlayer->mAngle.y;
             }
             if (mAnmModel.Finished() == 0) {
                 Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
                 MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
                 vec.x = data_020a0e68.m[9];
                 vec.y = data_020a0e68.m[10];
@@ -809,7 +809,7 @@ int daObjKey_c::Behavior()
         mSpinSpeed -= SPIN_STEP;
     else if (mSpinSpeed == 0)
         mSpinSpeed = SPIN_FAST;
-    mAngleY += mSpinSpeed;
+    mAngle.y += mSpinSpeed;
     UpdatePos(0);
     (this->*data_ov089_02132cec.slots[mState])();
     UpdateModelTransform();

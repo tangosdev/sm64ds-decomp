@@ -195,9 +195,9 @@ int daHolhei_c::Behavior()
             (this->*(m->update))();
     }
 
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdatePos(&mdCc_c);
 
     if (mState != &data_ov062_0211dea0) {
@@ -293,7 +293,7 @@ void daHolhei_c::HomeCarryOffset() {
 
 /* Bone 3's transform times the model's yaw, stored where a holder looks. */
 void daHolhei_c::BuildHoldMatrix() {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -347,8 +347,8 @@ int daHolhei_c::func_ov062_02116c78() {
 int daHolhei_c::func_ov062_02116bf8() {
     ApproachLinear(mHorzSpeed, 0, 0x2000);
     if (mTurnWait == 0) {
-        ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
-        if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
+        ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
+        if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
             ChangeState(&data_ov062_0211dee0);
     }
     return 1;
@@ -384,7 +384,7 @@ int daHolhei_c::func_ov062_02116a08() {
         return 1;
     }
 
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
 
     mHorzSpeed = 0xa000;
     pl = ClosestPlayer();
@@ -415,7 +415,7 @@ int daHolhei_c::func_ov062_02116980() {
     mPos.z = mPrevPosZ;
     mHorzSpeed = 0;
     if (AngleDiff(mTargetAngY, Vec3_HorzAngle(&mPos, &mHomePos)) <= 0x2000)
-        mTargetAngY = (s16)(mPrevAngleY - 0x1000);
+        mTargetAngY = (s16)(mPrevAngle.y - 0x1000);
     else
         mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     mStateTimer = 70;
@@ -428,18 +428,18 @@ int daHolhei_c::func_ov062_02116894() {
         return 1;
     if (mHorzSpeed != 0) {
         if (ClassifyObstruction() != 0 || mEdgeStop == 1) {
-            mTargetAngY = (s16)(mPrevAngleY - 0x2000);
+            mTargetAngY = (s16)(mPrevAngle.y - 0x2000);
         } else {
-            mPrevAngleY = mTargetAngY;
+            mPrevAngle.y = mTargetAngY;
             ChangeState(&data_ov062_0211dee0);
             mChaseCooldown = 30;
-            mTargetAngY = mPrevAngleY;
+            mTargetAngY = mPrevAngle.y;
             return 1;
         }
     }
-    if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
+    if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
         mHorzSpeed = 0xa000;
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
     return 1;
 }
 
@@ -455,8 +455,8 @@ int daHolhei_c::func_ov062_02116850() {
 /* Turn toward mTargetAngY. Facing it starts the walk; otherwise the timer
    is refreshed. When the timer expires, cool down and return to the walk. */
 int daHolhei_c::func_ov062_021167c0() {
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
-    if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
+    if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
         mHorzSpeed = 0xa000;
     else
         mStateTimer = 20;
@@ -502,8 +502,8 @@ int daHolhei_c::func_ov062_021165e8()
 
     if (mChargeStep == 0) {
         mTargetAngY = HorzAngleToCPlayer();
-        ApproachAngle(&mPrevAngleY, mTargetAngY, 0x80, 0x200, 0x400);
-        if (AngleDiff(mTargetAngY, mAngleY) < 0x200) {
+        ApproachAngle(&mPrevAngle.y, mTargetAngY, 0x80, 0x200, 0x400);
+        if (AngleDiff(mTargetAngY, mAngle.y) < 0x200) {
             mHorzSpeed = 0x1e000;
             mChargeStep = 1;
             mChasePos.x = pos.x;
@@ -543,7 +543,7 @@ int daHolhei_c::func_ov062_021164e8()
     }
     if (IsFlagSet(this, 0x400) || IsFlagSet(this, 0x2000) || !IsFlagSet(this, 0x100)) {
         dActor_c *held = mHeld;
-        mPrevAngleY = held->mAngleY;
+        mPrevAngle.y = held->mAngle.y;
         mdCc_c.flags |= 2;
         ChangeState(&data_ov062_0211dec0);
         if (mHeld->param1 == 2) {
@@ -616,7 +616,7 @@ int daHolhei_c::func_ov062_021162b8() {
 
 /* Spin, and leave once the timer reaches zero. */
 int daHolhei_c::func_ov062_02116274() {
-    mPrevAngleY += 0x500;
+    mPrevAngle.y += 0x500;
     if (mStateTimer == 0)
         ChangeState(&data_ov062_0211deb0);
     return 1;
@@ -631,7 +631,7 @@ int daHolhei_c::func_ov062_02116238() {
    animation finishes, clear the cylinder bit and leave. */
 int daHolhei_c::func_ov062_021161a8() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
-        func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngleY);
+        func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngle.y);
         mHeld = 0;
         func_02012694(0x126, &mCamSpacePos);
     }
@@ -675,7 +675,7 @@ void daHolhei_c::HandleCylinderHit() {
         return;
     daPly_c *player = static_cast<daPly_c *>(a);
     angle = HorzAngleToCPlayer();
-    angle = AngleDiff(angle, mAngleY);
+    angle = AngleDiff(angle, mAngle.y);
     if (angle > 0x2000) {
         if ((mdCc_c.hitFlags & 0x1000) == 0)
             return;
@@ -702,7 +702,7 @@ int daHolhei_c::ClassifyObstruction() {
     if (mMeshClsn.IsOnGround()) {
         dBgPi *floor = mMeshClsn.GetFloorResult();
         floor->surface.CopyNormalTo(v);
-        slope = func_02010844(&v, mAngleY);
+        slope = func_02010844(&v, mAngle.y);
     }
     if (mMeshClsn.IsOnWall())
         return 1;

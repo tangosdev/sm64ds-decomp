@@ -174,7 +174,7 @@ void daObjPowerUpItem_c::StateOpening()
 }
 
 /* Enter action that starts the pop: puffs particle 0x102 above the flower,
- * plays sound 0x7d, drops the effect handle, takes mAngleY from the camera's
+ * plays sound 0x7d, drops the effect handle, takes mAngle.y from the camera's
  * mAngleY and starts mWobbleTimer at 0x1b. */
 void daObjPowerUpItem_c::BeginOpening()
 {
@@ -188,7 +188,7 @@ void daObjPowerUpItem_c::BeginOpening()
     Particle::System::NewSimple(kPtclPowerFlowerOpen, pos.x, pos.y, pos.z);
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
-    mAngleY = gCamera->mAngleY;
+    mAngle.y = gCamera->mAngleY;
     mWobbleTimer = 27;
 }
 
@@ -220,9 +220,9 @@ void daObjPowerUpItem_c::StateLaunched()
     if (X > 0)
         delta += X;
     if (a > 0)
-        mAngleY += delta;
+        mAngle.y += delta;
     else
-        mAngleY -= delta;
+        mAngle.y -= delta;
 
     mWithMeshClsn.SetRadius(0x3c000);
     mWithMeshClsn.SetHeight(0x3c000);
@@ -377,14 +377,14 @@ void daObjPowerUpItem_c::DropShadow() {
     DropShadowRadHeight(mShadowModel, mShadowMat, r3, 0x3c000, 0xf);
 }
 
-/* dExtSimpleModel_c matrices: rotates mOpenModel's matrix by mAngleY, sets its translation
+/* dExtSimpleModel_c matrices: rotates mOpenModel's matrix by mAngle.y, sets its translation
  * to the position >> 3 and copies it to mCloseModel. */
 void daObjPowerUpItem_c::UpdateMatrices(){
-  Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngleY);
-  mOpenModel.mat4x3.m[9] = mPos.x >> 3;
-  mOpenModel.mat4x3.m[10] = mPos.y >> 3;
-  mOpenModel.mat4x3.m[11] = mPos.z >> 3;
-  mCloseModel.mat4x3 = mOpenModel.mat4x3;
+    Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngle.y);
+    mOpenModel.mat4x3.m[9] = mPos.x >> 3;
+    mOpenModel.mat4x3.m[10] = mPos.y >> 3;
+    mOpenModel.mat4x3.m[11] = mPos.z >> 3;
+    mCloseModel.mat4x3 = mOpenModel.mat4x3;
 }
 
 s32 daObjPowerUpItem_c::CleanupResources()
@@ -482,7 +482,7 @@ int daObjPowerUpItem_c::InitResources()
     } else {
         SetState(FLOWER_STATE_LAUNCHED);
     }
-    mAngleY -= 0x4000;
+    mAngle.y -= 0x4000;
     return 1;
 }
 

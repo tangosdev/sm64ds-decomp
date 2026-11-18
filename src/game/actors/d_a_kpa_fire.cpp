@@ -279,7 +279,7 @@ void daKpaFire_c::func_ov060_02117624() {
  * dExtFrameCtrl_c at Bowser +0x124.
  *
  * Row n of the u16 table data_ov060_02119364 (five halfwords per row, t[0..4])
- * gives the mouth pose. In whole units, turned by Bowser's yaw (mAngleY >> 4,
+ * gives the mouth pose. In whole units, turned by Bowser's yaw (mAngle.y >> 4,
  * times two, indexes the sine table; s0 and s1 are the two entries there):
  * t[0] sideways, t[2] + 20 forward, and t[1] - 90 up. t[4] + 0x818 becomes
  * the fire's pitch word (0x92) and t[3] + yaw - 0x4700 its heading word
@@ -289,7 +289,7 @@ void daKpaFire_c::func_ov060_02117624() {
  * its own position, passing its own pitch/heading words as the spawn rotation.
  *
  * Bowser's position is copied into kpaPos after the sine entries are read.
- * Yaw is the unsigned half of mAngleY. Frame count is the dExtFrameCtrl_c
+ * Yaw is the unsigned half of mAngle.y. Frame count is the dExtFrameCtrl_c
  * inside mAnmModel. */
 void daKpaFire_c::func_ov060_0211747c() {
     daKpa_c *koopa;
@@ -315,7 +315,7 @@ void daKpaFire_c::func_ov060_0211747c() {
     if (n < 0)
         return;
 
-    yaw = (u16)koopa->mAngleY;
+    yaw = (u16)koopa->mAngle.y;
     s1 = FX_CosIdx(yaw >> 4);
     s0 = FX_SinIdx(yaw >> 4);
     {
@@ -340,8 +340,8 @@ void daKpaFire_c::func_ov060_0211747c() {
     this->mPos.x = kpaPos.x + (fwd * s0 + side * s1);
     this->mPos.y = kpaPos.y + ((t[1] - 0x5a) << 12);
     this->mPos.z = kpaPos.z + (fwd * s1 - side * s0);
-    this->mPrevAngleX = (short)(t[4] + 0x818);
-    this->mPrevAngleY = (short)(t[3] + yaw - 0x4700);
+    this->mPrevAngle.x = (short)(t[4] + 0x818);
+    this->mPrevAngle.y = (short)(t[3] + yaw - 0x4700);
 
     if (n & 1)
         return;
@@ -418,7 +418,7 @@ int daKpaFire_c::func_ov060_021172c8(unsigned int n) {
  * (so from 1.0 to just under 2.0); shadow multiplier 0x10. */
 void daKpaFire_c::func_ov060_0211722c() {
     unsigned int r;
-    this->mPrevAngleY = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
+    this->mPrevAngle.y = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
     r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
     if (r % 10 < 2)
         this->mSpeed.y = 0x1e000;
@@ -436,7 +436,7 @@ void daKpaFire_c::func_ov060_0211722c() {
  * is left at the InitResources default. */
 void daKpaFire_c::func_ov060_021171e8() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
-    this->mPrevAngleY = r >> 0x10;
+    this->mPrevAngle.y = r >> 0x10;
     this->mSpeed.y = 0xa000;
     this->mHorzSpeed = 0;
     this->mFireScale = 0x6000;
@@ -447,11 +447,11 @@ void daKpaFire_c::func_ov060_021171e8() {
  * handler. Forms a phase angle ((mTickCount + mPhaseOffset) & 0x3f) << 10 --
  * 64 steps of a full turn (0x10000) -- and nudges x by sin(heading) *
  * sin(phase) and z by cos(heading) * cos(phase), each `<< 2` then `/ 0x1000`
- * (the heading is mPrevAngleY). */
+ * (the heading is mPrevAngle.y). */
 void daKpaFire_c::func_ov060_0211712c() {
     s16 phase = ((mTickCount + mPhaseOffset) & 0x3f) << 10;
-    mPos.x += ((FX_SinIdx((u16)mPrevAngleY >> 4) * FX_SinIdx((u16)phase >> 4)) << 2) / 0x1000;
-    mPos.z += ((FX_CosIdx((u16)mPrevAngleY >> 4) * FX_CosIdx((u16)phase >> 4)) << 2) / 0x1000;
+    mPos.x += ((FX_SinIdx((u16)mPrevAngle.y >> 4) * FX_SinIdx((u16)phase >> 4)) << 2) / 0x1000;
+    mPos.z += ((FX_CosIdx((u16)mPrevAngle.y >> 4) * FX_CosIdx((u16)phase >> 4)) << 2) / 0x1000;
 }
 
 /* Variant 6 and 7 Behavior: a flame that falls, lands, burns down and bursts.
@@ -520,11 +520,11 @@ void daKpaFire_c::func_ov060_02116f74() {
 
 /* Variant 5 Behavior: a spray flame that is thrown along a pitch and heading
  * (the words spawners leave in 0x92 and 0x94, which dActor_c names
- * mPrevAngleX/Y). It never calls UpdatePos; it moves itself by the three
+ * mPrevAngle.x/.y). It never calls UpdatePos; it moves itself by the three
  * velocity words it writes (the mesh collision step in Behavior is separate).
  *
  * Each frame: mFireScale grows by 0x255 (about 0.146) while below 5.0 (0x5000),
- * and the pitch word (mPrevAngleX, signed) loses 0x200 while above 0x800.
+ * and the pitch word (mPrevAngle.x, signed) loses 0x200 while above 0x800.
  * The three velocity words come from the speed (mHorzSpeed), the pitch and the
  * heading: mSpeed.y is -speed * sin(pitch), and mSpeed.x and mSpeed.z are
  * speed * sin(pitch) times cos and -sin of the heading, divided by 896 (0x380,
@@ -536,14 +536,14 @@ void daKpaFire_c::func_ov060_02116f74() {
 void daKpaFire_c::func_ov060_02116d78() {
     if (mFireScale < 0x5000)
         mFireScale += 0x255;
-    if (mPrevAngleX > 0x800)
-        mPrevAngleX -= 0x200;
+    if (mPrevAngle.x > 0x800)
+        mPrevAngle.x -= 0x200;
 
     mSpeed.x =
-        FX_CosIdx((u16)mPrevAngleY >> 4) * (mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
-    mSpeed.y = -mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4);
+        FX_CosIdx((u16)mPrevAngle.y >> 4) * (mHorzSpeed * FX_SinIdx((u16)mPrevAngle.x >> 4)) / 896;
+    mSpeed.y = -mHorzSpeed * FX_SinIdx((u16)mPrevAngle.x >> 4);
     mSpeed.z =
-        FX_SinIdx((u16)mPrevAngleY >> 4) * (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
+        FX_SinIdx((u16)mPrevAngle.y >> 4) * (-mHorzSpeed * FX_SinIdx((u16)mPrevAngle.x >> 4)) / 896;
     mPos.x += mSpeed.x;
     mPos.y += mSpeed.y;
     mPos.z += mSpeed.z;
@@ -569,7 +569,7 @@ void daKpaFire_c::func_ov060_02116d78() {
  * mFireScale 2.0 (0x2000); shadow multiplier 0x10. */
 void daKpaFire_c::func_ov060_02116c68() {
     unsigned int r;
-    this->mPrevAngleY = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10);
+    this->mPrevAngle.y = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10);
     if (this->mSubVariant != 0) {
         r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10;
         this->mHorzSpeed = (int)((r % 10) << 0xc) >> 1;
@@ -720,7 +720,7 @@ void daKpaFire_c::func_ov060_021167ec() {
         return;
     player = this->ClosestPlayer();
     if (player == 0) return;
-    this->mPrevAngleY = Vec3_HorzAngle(&this->mPos, &player->mPos);
+    this->mPrevAngle.y = Vec3_HorzAngle(&this->mPos, &player->mPos);
     this->mFireScale = 0x5000;
     {
         int i = 0;
@@ -728,10 +728,10 @@ void daKpaFire_c::func_ov060_021167ec() {
         do {
             daKpaFire_c *child = (daKpaFire_c *)dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(4, 0),
                                                                 this->mPos, 0, this->mAreaId, -1);
-            short heading = this->mPrevAngleY + ang;
-            child->mPrevAngleX = 0;
-            child->mPrevAngleY = heading;
-            child->mPrevAngleZ = 0;
+            short heading = this->mPrevAngle.y + ang;
+            child->mPrevAngle.x = 0;
+            child->mPrevAngle.y = heading;
+            child->mPrevAngle.z = 0;
             child->mFireScale = this->mFireScale;
             i++;
             ang += 0x5555;
