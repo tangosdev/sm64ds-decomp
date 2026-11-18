@@ -1423,6 +1423,8 @@ void dScStage_c::UpdateMenuButtons(bool b) {
             } else {
                 v = 0x1000;
             }
+            /* Kept (#821 r82): without this no-op narrowing, or with v
+               retyped u16, UpdateMenuButtons is 0x140 of 0x148. */
             v = (u16)v;
         } else {
             v = 0x1000;
