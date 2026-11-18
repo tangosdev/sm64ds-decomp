@@ -1,9 +1,9 @@
 /* ov014 cartridge data at 0x02114868, 12 bytes. */
 #include "types.h"
+#include "rtti_abi.h"
 
 extern u32 _ZTI10dBgActor_c[];
 extern u32 _ZTS20daObjWanwanShutter_c[];
-extern u32 _ZTVN3abi20__si_class_type_infoE[];
 
 #pragma define_section _ZTI20daObjWanwanShutter_c ".data.gap3" ".data.gap3" ".data.gap3" far_data
 #pragma section _ZTI20daObjWanwanShutter_c begin
