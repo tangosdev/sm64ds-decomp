@@ -59,7 +59,9 @@ SpawnInfo<daPropeller_Heyho_c> g_profile_PROPELLER_HEYHO = {daPropeller_Heyho_c_
 
 /* Kept for the two player-position snapshots (measured r57): any Vector3 copy is
  * memberwise; a `VecFx32 tmp =` copy-init stays in registers in 0211f6e0 and in
- * 0211f48c misses the ROM's posbuf < fp < tmp frame order. */
+ * 0211f48c misses the ROM's posbuf < fp < tmp frame order.
+ * Kept (#821 r71): `tmp = player->mPos` gives 0211f6e0 0x3a8 (ROM 0x3a0) and
+ * `posbuf = pl->mPos` gives 0211f48c 0x160 (ROM 0x164). */
 struct V3w {
     int w[3];
 };
@@ -345,13 +347,10 @@ int daPropeller_Heyho_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 #include "common.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 
 extern Matrix4x3 data_020a0e68;
 
-/* The matrix copies go through the flat Mtx43: assigning Matrix4x3 grows
-   .text by 0x34 bytes. */
 
 /* Refreshes the draw matrices: the model matrix from position >> 3 (Vec3_Asr by 3)
  * and the three angles, copied into mAnmModel.mat4x3; the shadow matrix from the
@@ -362,10 +361,10 @@ void daPropeller_Heyho_c::func_ov070_02120070() {
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
-    mShadowMatrix = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMatrix, 0x76000, 0x320000, 0xf);
+    mShadowMatrix = data_020a0e68;
+    DropShadowRadHeight(mShadowModel, mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */

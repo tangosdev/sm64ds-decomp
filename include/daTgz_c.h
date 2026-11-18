@@ -2,7 +2,6 @@
 #define DATGZ_C_H
 
 #include "types.h"
-#include "private/mtx43.h"
 #include "dActor_c.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmModel_c.h"
@@ -31,7 +30,7 @@ struct daTgz_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;            /* 0x1e4 */
     /* Drop-shadow matrix. InitResources copies IDENTITY_MATRIX4X3 here and
        the shadow helper writes the translation as position >> 3. */
-    Mtx43 mShadowMatrix; /* 0x3a0 */
+    Matrix4x3 mShadowMatrix; /* 0x3a0 */
     /* PMF pair. func_ov077_02125e94 stores &gTgzStates[i] (d_a_tgz.cpp).
        func_ov077_02125e5c calls slot 0; func_ov077_02125e20 calls slot 1. */
     void *mStateDesc;                    /* 0x3d0 */

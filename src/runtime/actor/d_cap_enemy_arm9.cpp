@@ -21,15 +21,12 @@
  *    plain `& 4` test is a word shorter.
  *    AddCap's mFlags &= ~1 and its mCapId store go through plain `&member`
  *    pointers.
- *  - UpdateCapPos's matrix copy goes through Mtx43; a plain Matrix4x3
- *    assignment is memberwise and 0x1c bytes longer.
  */
 #include "dCapEnemy_c.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "decl_Enemy.h"
 #include "nitro/fx/fx.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
@@ -127,7 +124,7 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     Vec3_Asr(&asr, &sum, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, rot.x, rot.y, rot.z);
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 void dCapEnemy_c::RenderCapModel(const Vector3 * v)

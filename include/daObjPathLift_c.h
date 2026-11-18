@@ -22,9 +22,7 @@
  * storage. This class's methods reach them as inherited members.
  *
  * mShadowMat is the drop-shadow matrix UpdateShadow fills and hands
- * to dActor_c::DropShadowScaleXYZ; 0x478 + 0x30 = 0x4a8. Kept as s32[12]:
- * a Matrix4x3 member (Vector3 translation) is non-trivial and changes the
- * factory.
+ * to dActor_c::DropShadowScaleXYZ; 0x478 + 0x30 = 0x4a8.
  */
 #ifndef DAOBJPATHLIFT_C_H
 #define DAOBJPATHLIFT_C_H
@@ -37,7 +35,7 @@
 
 struct daObjPathLift_c : dPathLiftActor_c {
     dExtShadowModel_c mShadowModel; /* 0x450 */
-    s32 mShadowMat[12];             /* 0x478 -- [9..11] the translation, pos >> 3 */
+    Matrix4x3 mShadowMat;           /* 0x478 -- [9..11] the translation, pos >> 3 */
     u32 mSoundHandle;               /* 0x4a8 */
     s32 mGroundY;                   /* 0x4ac */
     u8 mTimer;                      /* 0x4b0 */

@@ -9,9 +9,6 @@
  * 40 functions, .text 0x0210788c..0x0210a400.
  *
  * Functions are in reverse ROM order; do not reorder.
- *
- * common.h comes first so its flat Matrix4x3 wins the MATRIX4X3_DEFINED
- * guard; RouletteBoard_Update copies a whole matrix and needs that spelling.
  */
 
 // leftovers:

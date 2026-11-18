@@ -15,15 +15,10 @@
  * What stays, and why (each alternative measured):
  * - InitResources: a local holding dExtSimpleModel_c::LoadFile's return, reused by
  *   Prepare, differs by 34 words (size stays 0x1ec).
- * - InitResources: assigning Matrix4x3 onto both models differs (size stays
- *   0x1ec, 5 relocation destinations wrong). The twelve-word Mtx43 copy stays.
  * - Behavior: or-ing the fade into data_ov055_02111b64 differs by 1 word.
  *   The ROM adds.
  * - Render: *dst = *src in the bone loop differs by 8 words (size stays
  *   0x1b0). The u64 destination round trip stays.
- * - Render: Matrix4x3 assignment of the body matrix, the flipped copy onto
- *   mModel, and transforms[15] together differs (size stays 0x1b0, 1
- *   relocation destination wrong).
  * - Render: inlining mBodyModels[GetBodyModelID(mBodyModelId, 1)] differs
  *   (size stays 0x1b0, 2 relocation destinations wrong). The ROM calls
  *   func_ov002_020e496c.
@@ -43,8 +38,6 @@
 #include "SaveBlock.h"
 #include "math/CalcLib.h"
 
-/* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
-   is a different sequence (.text grows by 0xa0 bytes). */
 #define CurrentPlayer() gPlayers[gLocalPlayerId]
 
 /* Material bits ClearMaterialFlags clears and SetMaterialFlags sets. The reflected
@@ -136,8 +129,8 @@ int daLuigi_c::InitResources() {
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
 
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 
     SetState(&data_ov055_02111b70, CurrentPlayer());
 
@@ -199,17 +192,17 @@ int daLuigi_c::Render() {
     }
 
     mat = &mAnmModel.mat4x3;
-    *(Mtx43 *)mat = *(Mtx43 *)&body->mat4x3;
-    mat->t.x = -mat->t.x;
+    *mat = body->mat4x3;
+    mat->m[9] = -mat->m[9];
     func_0203c178(&data_020a0e68, kMirrorSx, kFxOne, kFxOne);
     MTX_Concat33((const int *)mat, (const int *)&data_020a0e68, (int *)mat);
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)mat;
+    mModel.mat4x3 = *mat;
 
     if (data_ov055_02111b64 & kHideBit)
         return 1;
 
     mAnmModel.dExtSimpleModel_c::Render(0);
-    *(Mtx43 *)&mModel.data.transforms[0] = *(Mtx43 *)&mAnmModel.data.transforms[15];
+    mModel.data.transforms[0] = mAnmModel.data.transforms[15];
     mTextureSequences[0].Update(mAnmModel.data);
     mTextureSequences[0].currFrame = player->mIsVanish << 12;
     mTextureSequences[1].Update(mModel.data);

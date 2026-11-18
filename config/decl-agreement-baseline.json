@@ -1908,9 +1908,6 @@
       "src/minigames/d_s_mg_flower.cpp": [
         "param:#1 V2 *"
       ],
-      "src/minigames/d_s_mg_smartball.cpp": [
-        "param:#1 Vec2 *"
-      ],
       "src/minigames/d_s_mg_snowball.cpp": [
         "param:#1 int *"
       ],
@@ -2678,18 +2675,6 @@
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "param:#1 short *",
         "return:int"
-      ]
-    },
-    "_Z15ApproachLinear2Riii": {
-      "src/game/actors/d_a_gmch.cpp": [
-        "param:#1 int *"
-      ],
-      "src/game/actors/d_a_kinopio.cpp": [
-        "param:#1 int *",
-        "return:void"
-      ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 int *"
       ]
     },
     "_Z15ApproachLinear2Rsss": {
@@ -14628,18 +14613,18 @@
     },
     "func_0203d388": {
       "src/minigames/d_s_mg_smartball.cpp": [
-        "param:#1 V2 *"
+        "param:#1 Vector2 *"
       ]
     },
     "func_0203d434": {
       "src/minigames/d_s_mg_smartball.cpp": [
-        "param:#1 V2 *"
+        "param:#1 Vector2 *"
       ]
     },
     "func_0203d480": {
       "src/minigames/d_s_mg_smartball.cpp": [
-        "param:#1 V2 *",
-        "param:#2 V2 *"
+        "param:#1 Vector2 *",
+        "param:#2 Vector2 *"
       ]
     },
     "func_0203d5dc": {
@@ -14650,7 +14635,7 @@
     },
     "func_0203d630": {
       "src/minigames/d_s_mg_smartball.cpp": [
-        "param:#1 V2 *"
+        "param:#1 Vector2 *"
       ]
     },
     "func_0203d680": {
@@ -15958,12 +15943,6 @@
     "TrmpItem_HitTest2D": {
       "src/minigames/unit020cd744.cpp": [
         "arity:3"
-      ]
-    },
-    "TrmpItem_ProjectOnLine": {
-      "src/minigames/unit020cd744.cpp": [
-        "param:#3 V2 *",
-        "param:#4 V2 *"
       ]
     },
     "TrmpItem_Init": {

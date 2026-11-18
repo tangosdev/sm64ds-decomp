@@ -37,8 +37,7 @@
  *   its inYoshiMouth int (3 words),
  *   Render without the `locked` materialization (3 words), Behavior
  *   with `(mFlags & 8) == 0`, `mStateTimer`/`mStuckTimer` named on
- *   both sides (3 words), 0212abd4 with `mHeadingHoldTimer` named on
- *   both sides of the decrement (2 words).
+ *   both sides (3 words).
  * - data_ov084_02130cf8 is the BMD. 02130278 is the BCA table.
  *   02130ce0/ce8/cf0/cc0/cc8/cd0 are BCA handles (SetAnim reads [1]).
  *   0213089c / 0213088c are BMA. The 021302xx words are the per-type
@@ -176,6 +175,7 @@ int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 extern BMA_File data_ov084_0213088c;
+extern BMA_File data_ov084_0213089c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
 extern int data_ov084_02130228[];
@@ -950,9 +950,9 @@ void daKrb_c::func_ov084_0212a580() {
     Vector3 pos;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.t.x = mPos.x >> 3;
-    mAnmModel.mat4x3.t.y = mPos.y >> 3;
-    mAnmModel.mat4x3.t.z = mPos.z >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     rotation = mAngle;
     int inYoshiMouth = (mFlags & 0x40000) ? 1 : 0;
     if (!inYoshiMouth) {
@@ -1022,9 +1022,8 @@ void daKrb_c::ActTumble() {
             mPrevAngle.y = mAngle.y;
             mdCcAc_c.flags &= ~0x20000;
         }
-        dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
-                                   *(BMA_File *)&data_ov084_0213089c);
-        mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
+        dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr), data_ov084_0213089c);
+        mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
         mMaterialChanger.currFrame = 0;
         return;
     }
@@ -1231,8 +1230,8 @@ void daKrb_c::func_ov084_0212abd4() {
             mTargetHorzSpeed = data_ov084_02130228[mGoombaType];
             mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
 
-            if (*(u16 *)&mHeadingHoldTimer != 0) {
-                *(u16 *)((int)&mHeadingHoldTimer) = *(u16 *)((int)&mHeadingHoldTimer) - 1;
+            if (mHeadingHoldTimer != 0) {
+                mHeadingHoldTimer--;
             } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 3) {
                 mTargetAngleY =
                     mPrevAngle.y + (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
@@ -1728,9 +1727,8 @@ int daKrb_c::InitResources() {
     if (mShadowModel.InitCylinder() == 0)
         return 0;
 
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr,
-                               *(BMA_File *)&data_ov084_0213089c);
-    mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
+    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr, data_ov084_0213089c);
+    mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
     mCoinType = COIN_PLAIN;
 

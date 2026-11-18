@@ -56,7 +56,7 @@ struct daKuriKing_c : dEnemyBase_c {
     /* Body transform. UpdateBodyMatrix builds it from mPos >> 3, mAngle.y and
        mScale; func_ov074_02121270 composes a bone's transform with it to get
        that bone's world position. */
-    s32 mBodyMatrix[12];                          /* 0x37c */
+    Matrix4x3 mBodyMatrix;                        /* 0x37c */
     Vector3 mCylClsnPos[3];                       /* 0x3ac */
     dExtAnmMaterial_c mMaterialChanger;           /* 0x3d0 */
     dExtAnmTexPat_c mTextureSequence;             /* 0x3e4 */

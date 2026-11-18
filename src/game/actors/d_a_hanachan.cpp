@@ -810,9 +810,9 @@ void daHanachan_c::UpdateSegmentModels()
     for (i = 0; i < 5; i++) {
         dExtAnmModel_c *model = &mAnmModels[i];
         Matrix4x3_FromRotationY(&model->mat4x3, mSegmentRot[i].y);
-        mAnmModels[i].mat4x3.t.x = mSegmentPos[i].x >> 3;
-        mAnmModels[i].mat4x3.t.y = mSegmentPos[i].y >> 3;
-        mAnmModels[i].mat4x3.t.z = mSegmentPos[i].z >> 3;
+        mAnmModels[i].mat4x3.m[9] = mSegmentPos[i].x >> 3;
+        mAnmModels[i].mat4x3.m[10] = mSegmentPos[i].y >> 3;
+        mAnmModels[i].mat4x3.m[11] = mSegmentPos[i].z >> 3;
     }
 }
 
@@ -1001,6 +1001,9 @@ int daHanachan_c::Behavior()
 
 int daHanachan_c::InitResources()
 {
+    /* Kept (#821 r73): every row as mSegmentPos[i] / mSegmentRot[i] /
+       mSegmentScale[i] / mTextureSequences[i] / mSegmentRot[prev] is 0x468
+       but 42 words off: the strength-reduced rows rank below segPos. */
     char *c = (char *)this;
     s32 i;
     dExtAnmModel_c *animRow;

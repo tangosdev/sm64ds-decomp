@@ -5,7 +5,10 @@ extern "C" void func_020147bc(unsigned short *p, int c);
 
 /* opt_common_subs stays off: the cartridge keeps the lower-case, upper-case and
    default arms of the digit test as three separate `out = c` tails, and CSE
-   merges them (0xe0 against the ROM's 0xec). */
+   merges them (0xe0 against the ROM's 0xec). Round 66 (#821): `int c` restores
+   the ROM's second `c - 0x2f` but the arms still merge (0xe0) unless one is
+   respelled `(int)(c)`, a no-op cast; str[len] in an arm, a merged letter
+   test, `(char)c` and a char `out` are 0xe0/0xe4/0xf0/0x100. */
 #pragma opt_common_subs off
 
 void nds_printt(unsigned short *dest, const char *str, int value) {

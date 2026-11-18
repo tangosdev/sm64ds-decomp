@@ -75,7 +75,7 @@ struct daKrb_c : dCapEnemy_c {
        word into mFlags (0xb0), not back into param1. */
     s32 mSavedParam;            /* 0x44c */
     /* Wander: frames left before a new heading is chosen. */
-    s16 mHeadingHoldTimer;  /* 0x450 */
+    u16 mHeadingHoldTimer; /* 0x450 */
     /* STATE_TUMBLE: bounce countdown, 60 frames when the tumble starts. */
     u16 mBounceCountdown;   /* 0x452 */
     s16 mWanderRerollTimer; /* 0x454 */

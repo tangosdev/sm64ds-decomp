@@ -70,8 +70,7 @@
 /* leftovers:
  * - defer_codegen off stays file-global: deferred codegen emits D2, D0, D1
  *   and the cartridge has D1 then D0. opt_loop_invariants off stays
- *   file-global for HandleHit. common.h stays first; dExtBlendAnmModel_c's
- *   Matrix4x3 makes the twelve-word copies change size.
+ *   file-global for HandleHit.
  * - struct C is a complete PMF shadow on purpose (mwccarm picks the
  *   pointer-to-member shape from completeness). ChiefChilly_ChangeState
  *   takes C*. The sixteen state labels are descriptions; the sinit owns
@@ -164,7 +163,6 @@ struct C { char pad[0x37c]; PMF *pp; };
 
 enum Bool { FALSE, TRUE };
 
-#include "private/mtx43.h"
 
 /* The eight file handles __sinit_d_a_king_donketu.cpp constructs below.
  * Construct writes the u16 file ID at +0, the u8 reference count at +2,
@@ -867,6 +865,7 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
                 if (actor != 0) {
                     enum Bool eq = (enum Bool)(actor->actorID == ACTOR_PLAYER);
                     if (eq != FALSE) {
+                        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
                         VecFx32 pos = *(VecFx32 *)&actor->mPos;
                         if (mPos.y > pos.y) {
                             ((daPly_c *)actor)->Unk_020c6a10(1);

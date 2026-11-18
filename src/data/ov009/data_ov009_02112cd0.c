@@ -1,0 +1,7 @@
+/* ov009 cartridge data at 0x02112cd0, 52 bytes. */
+#include "types.h"
+
+u32 data_ov009_02112cd0[13] = {
+    0x0000fb82, 0x04020000, 0x0c6e10ff, 0xfc77fe0d, 0x20000000, 0x21ff0504, 0xfda8f31c,
+    0xc00000ac, 0x00200000, 0x0064220b, 0xfb82030c, 0x00000000, 0x10ff1102,
+};

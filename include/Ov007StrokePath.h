@@ -10,9 +10,10 @@ typedef struct Ov007StrokePath {
     u16 pointCount;
     u16 capacity;
     /* X/Y extrema store point indices, not coordinates. The third slots are
-     * only known to be cleared; signedness is not uniquely recoverable. */
-    s16 minPointIndices[3];
-    s16 maxPointIndices[3];
+     * only known to be cleared. Unsigned: both clear chains reload each slot
+     * with ldrh. */
+    u16 minPointIndices[3];
+    u16 maxPointIndices[3];
     int *segmentLengths;
     u16 *segmentAngles;
     int *progressThresholds;

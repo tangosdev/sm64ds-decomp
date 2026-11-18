@@ -137,7 +137,7 @@ so the per-shard citations below are given as member names.
 | 0x3dc | `mStatePmfPair` | `SetState` stores `&mirror + (n<<4)` here; `CallStateEnter` invokes pair slot 0 and `CallStateUpdate` pair slot 1. |
 | 0x3e0 | `mStateIndex` | each of the nine `EnterStateN` members writes its own literal `N` here as its last act. |
 | 0x3e4 | `mNextState` | every path of `ChooseNextState` writes a state number here, then reaches `SetState`. |
-| 0x3f0 | `mState` | set to 1 by `InitResources`; `Render` draws the `dExtAnmModel_c` only above 1 and the `dExtSimpleModel_c` only at or below 0x1f. `UpdateState0` also reaches 0x3f0 as an `int *` through `ApproachLinear2`, so 0x3f0..0x3f3 is one word there. |
+| 0x3f0 | `mState` | set to 1 by `InitResources`; `Render` draws the `dExtAnmModel_c` only above 1 and the `dExtSimpleModel_c` only at or below 0x1f. `UpdateState0` fades it with the byte stepper `ApproachLinear2(unsigned char &, int, int)`. |
 | 0x3f1 | `mPhase` | `UpdateState0` and `UpdateState3` switch on it; `EnterState0` and `EnterState3` reset it to 0. |
 | 0x3f2 | `mTimer` | `EnterState1` and `EnterState8` set it; `UpdateState1` and `UpdateState8` end the state when `DecIfAbove0_Byte` drives it to 0. |
 

@@ -144,7 +144,10 @@ void Heyho::StartMotionFlyIn(const HeyhoPath *path) {
        against 0x1a8 (the tested value is stored to mPos.x in both
        branches); testing path->goal.x is one word off (the load is from the
        source, not mPath); the copy hoisted above one if around VEC_Add, or
-       testing mPos.x after it, 0x190. */
+       testing mPos.x after it, 0x190. r63: a const VecFx32 & or pointer to
+       goal, `0 < x`, or the inverted test, 0x1a0; HeyhoPath::goal as Vector3
+       with `mPos = mPath.goal` gives retail's branches exactly, but the
+       mPath copy then moves goal memberwise instead of ldm/stm (0x1b0). */
     if (*(volatile int *)&mPath.goal.x > 0) {
         mPos.x = mPath.goal.x;
         mPos.y = mPath.goal.y;
@@ -997,7 +1000,7 @@ void Heyho::MotionChase() {
             {
                 int len;
                 Vec3_Sub(&diff, &mWaypoint, &mPos);
-                len = VEC_Mag((const Vector3 *)&mPath.startVel);
+                len = VEC_Mag(&mPath.startVel);
                 if (NormalizeVec3IfNonZero(&diff) != 0) {
                     Vec3_MulScalar(&vel, &diff, len);
                     mVel.x = vel.x;

@@ -4039,6 +4039,7 @@ dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {
     mLevel = gMgMenuRow.level; /* dScMiniGm_c::mStartLevel */
 
     mSceneKind = sMgSceneKindByGame[(param1 >> 16) & 0xff];
+    /* Measured (#821 r68): plain `param1 = param1 & 0xffff` or `&=`, the constructor is 0x180 of 0x17c. */
     *(s32 *)&param1 = param1 & 0xffff;
     mTallyShown = 0;
     mTallyAnimTimer = 0;
