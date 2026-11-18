@@ -9619,6 +9619,81 @@
         "return:int []"
       ]
     },
+    "data_ov007_020ccb7c": {
+      "src/unnamed/ov007/func_ov007_020ade58.c": [
+        "return:Ov007NodeSprites []"
+      ]
+    },
+    "data_ov007_020ccbc4": {
+      "src/unnamed/ov007/func_ov007_020ade58.c": [
+        "return:Ov007ItemLayout []"
+      ]
+    },
+    "data_ov007_020d072c": {
+      "src/ui/menus/unit020b2764.cpp": [
+        "return:int []"
+      ]
+    },
+    "data_ov007_020d7c6c": {
+      "src/ui/menus/unit020be0dc.cpp": [
+        "return:int"
+      ]
+    },
+    "data_ov007_02102f28": {
+      "src/unnamed/ov007/func_ov007_020bce70.cpp": [
+        "return:char []"
+      ]
+    },
+    "data_ov007_02103290": {
+      "include/decl_common.h": [
+        "return:int"
+      ]
+    },
+    "data_ov007_02103360": {
+      "src/ui/menus/unit020b2cdc.cpp": [
+        "return:Ov007Cursor *"
+      ]
+    },
+    "data_ov007_02103368": {
+      "src/ui/menus/unit020b3edc.cpp": [
+        "return:void * (*)(unsigned short)"
+      ]
+    },
+    "data_ov007_0210336c": {
+      "src/ui/menus/unit020b3edc.cpp": [
+        "return:void (*)(void *)"
+      ]
+    },
+    "data_ov007_02103458": {
+      "src/ui/menus/unit020b797c.cpp": [
+        "return:unsigned short"
+      ]
+    },
+    "data_ov007_02104b9c": {
+      "src/ui/menus/unit020b8f50.cpp": [
+        "return:Ov007PickerSprites *"
+      ]
+    },
+    "data_ov007_02104bc0": {
+      "src/ui/menus/unit020be0dc.cpp": [
+        "return:Ov007ParticleSprites *"
+      ]
+    },
+    "data_ov007_02104bc4": {
+      "src/ui/menus/unit020be0dc.cpp": [
+        "return:void * [][]"
+      ]
+    },
+    "data_ov007_02104bd4": {
+      "src/ui/menus/unit020bed60.cpp": [
+        "return:Ov007MeshScene *"
+      ]
+    },
+    "data_ov007_02104c14": {
+      "src/ui/menus/unit020c3ce4.cpp": [
+        "return:int (*)(void)"
+      ]
+    },
     "data_ov007_02104c18": {
       "src/ui/menus/unit020c94a0.cpp": [
         "return:int",
@@ -9627,18 +9702,27 @@
     },
     "data_ov007_02104c1c": {
       "src/ui/menus/unit020c94a0.cpp": [
-        "return:int",
-        "return:void *"
+        "return:MessageInfo *"
       ]
     },
     "data_ov007_02104c20": {
       "src/ui/menus/unit020c94a0.cpp": [
-        "return:void *"
+        "return:MessageBank *"
       ]
     },
     "data_ov007_02104c24": {
       "src/ui/menus/unit020c94a0.cpp": [
         "return:void *"
+      ]
+    },
+    "data_ov007_02104c28": {
+      "include/decl_common.h": [
+        "return:unsigned short"
+      ]
+    },
+    "sScreenFade": {
+      "src/ui/menus/unit020bf690.cpp": [
+        "return:Ov007Fade *"
       ]
     },
     "data_ov009_02113c20": {
