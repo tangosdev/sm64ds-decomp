@@ -137,9 +137,11 @@ extern s16 sTrmp2IntroFromX;
 extern s16 sTrmp2IntroToX;
 extern s16 sTrmpStartTouchY;
 extern short sTrmpStartTouchX;
-/* Kept volatile, measured (#821 r49): as plain s16 StartRound folds the second
-   pair of reads into the first and is 0x118 of 0x120. */
-extern volatile s16 data_020a0dbc[];
+/* The stylus origin (0, 0) a round starts from. StartRound copies the whole
+   pair into mTouchStart and mTouch, and the two struct copies are what keep
+   retail's second pair of reads (field-by-field halfword copies would be
+   folded into one). */
+extern Vec2s data_020a0dbc;
 extern u8 gMainScreenLayers;
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
@@ -282,10 +284,8 @@ s32 dScMgTrampoline2_c::InitResources() {
 void dScMgTrampoline2_c::StartRound(int /* arg */) {
     G2_SetBlendAlpha(1, 0x2e, 0x10, 0x10);
 
-    mTouchStart.x = data_020a0dbc[0];
-    mTouchStart.y = data_020a0dbc[1];
-    mTouch.x = data_020a0dbc[0];
-    mTouch.y = data_020a0dbc[1];
+    mTouchStart = data_020a0dbc;
+    mTouch = data_020a0dbc;
 
     mLevel = 0;
     if (mLevel > 0x270e)
