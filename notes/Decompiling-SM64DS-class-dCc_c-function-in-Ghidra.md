@@ -10,7 +10,7 @@ To decompile a Super Mario 64 DS (SM64DS) class C++ function using Ghidra 12.0.4
 
 Our example function `dCc_c::Process` is located in the directory `src\engine\collision\d_cc.cpp`, [https://github.com/tangosdev/sm64ds-decomp/blob/main/src/engine/collision/d_cc.cpp#L100](https://github.com/tangosdev/sm64ds-decomp/blob/main/src/engine/collision/d_cc.cpp#L100).
 
-![src\engine\collision\d_cc.cpp](../docs/images/Decompiled-dCc_c-Process-in-IDE.png)
+![src\engine\collision\d_cc.cpp](images/Decompiled-dCc_c-Process-in-IDE.png)
 
  You can find the relevant code snippet below:
 ```cpp
@@ -23,11 +23,11 @@ Back to Ghidra, the listing and decompiler windows will show the disassembled an
 
 Default Listing view for `func_02014aa8` (`dCc_c::Process`) in Ghidra:
 
-![func_02014aa8 in Listing](../docs/images/Ghidra-Listing-View-02014aa8-before-edits.png)
+![func_02014aa8 in Listing](images/Ghidra-Listing-View-02014aa8-before-edits.png)
 
 Default Decompiler view for `func_02014aa8` (`dCc_c::Process`) in Ghidra:
 
-![func_02014aa8 in Decompiler](../docs/images/Ghidra-Decompiler-View-02014aa8-before-edits.png)
+![func_02014aa8 in Decompiler](images/Ghidra-Decompiler-View-02014aa8-before-edits.png)
 
 You might think that the decompiled code is not very readable initially (within reason, that's a fine mess!), but you can improve it by renaming variables and functions, adding comments, and using Ghidra's features to enhance the decompilation output. This will help you better understand the function's logic and how it fits into the overall program. 
 
@@ -44,33 +44,33 @@ To create the `dCc_c` class in Ghidra, follow these steps:
 - In the Ghidra Code Browser, navigate to the "Symbol Tree" window. You can open it by going to "Window" > "Symbol Tree" in the menu bar.
 - Right-click on the "Classes" node in the Symbol Tree and select "Create Class" from the context menu.
 - 
-![Creating our dCc_c class](../docs/images/Ghidra-Creating-New-Class.png)
+![Creating our dCc_c class](images/Ghidra-Creating-New-Class.png)
 
 A option will appear to enter the new class name with the default being `NewClass`. Type `dCc_c` and ENTER to create it. It should look like this in the Symbol Tree:
 
-![dCc_c class in Symbol Tree](../docs/images/Ghidra-dCc_c-Class-in-Symbol.png)
+![dCc_c class in Symbol Tree](images/Ghidra-dCc_c-Class-in-Symbol.png)
 
 Now we're ready to edit the function, press `F` in the listing window to open the "Function Edit" dialog. In the textbox, change the name from `func_02014aa8` to `Process`. In the "Return Type" field, change it from `undefined` to `void`.
 
-![Seeing the function edit dialog, setting the name and return type](../docs/images/Ghidra-Function-Edit-Process.png)
+![Seeing the function edit dialog, setting the name and return type](images/Ghidra-Function-Edit-Process.png)
 
 We're not done yet; the scope resolution operator will be used to indicate that `Process` is a member function of the `dCc_c` class. `this` is a pointer to the current instance of the class, and it is passed as an implicit parameter to member functions. However, in this function we set the `Calling Convention` to `__stdcall` due to it being the default calling convention for member functions in C++. Ghidra will use this when the `__thiscall` isn't selected.
 
-![Setting the calling convention](../docs/images/Ghidra-Function-Calling-Convention-Edit.png)
+![Setting the calling convention](images/Ghidra-Function-Calling-Convention-Edit.png)
 
 ### Setting the Class reference
 
 In the `Symbol Tree`, open the function panel to list all the functions in the program. You can do this by going to "Window" > "Functions" in the menu bar. For easier organization, Ghidra sets all of them in folders alphabetically by default. 
 
-![Going to Function Panel](../docs/images/Ghidra-Function-Panel.png)
+![Going to Function Panel](images/Ghidra-Function-Panel.png)
 
 You can find our renamed `Process` function in the list, we can select it, and let's drag it all the way to the `dCc_c` class in the `Symbol Tree`. This will set the class reference for the function, indicating that it is a member of the `dCc_c` class.
 
-![Process function in panel](../docs/images/Ghidra-Process-Function-in-Function-Panel.png)
+![Process function in panel](images/Ghidra-Process-Function-in-Function-Panel.png)
 
 The changes are reflected in the `Listing` and `Decompiler` windows, where the function is now correctly identified as a member of the `dCc_c` class, by virtue of the scope resolution operator `::`. The decompiled code will now show `dCc_c::Process()` instead of just `Process()`, making it clear that this function belongs to the `dCc_c` class.
 
-![Process function compared between Listing and Decompiler](../docs/images/Ghidra_Comparison_Listing_Process_Func_Scope-Resolution_Operator.png)
+![Process function compared between Listing and Decompiler](images/Ghidra_Comparison_Listing_Process_Func_Scope-Resolution_Operator.png)
 
 ## Renaming Decompiled Function Variables
 
@@ -78,19 +78,19 @@ Now we can actually start renaming variables! Take this case for example, the de
 
 Look: 
 
-![Ghidra-Process-Edit-Function_Variable](../docs/images/Ghidra-Process-Edit-Function_Variable.png)
+![Ghidra-Process-Edit-Function_Variable](images/Ghidra-Process-Edit-Function_Variable.png)
 
 With `L` we can rename the local variable to `horizontalDistance`:
 
-![Ghidra_Rename_Local_Variable](../docs/images/Ghidra_Rename_Local_Variable.png)
+![Ghidra_Rename_Local_Variable](images/Ghidra_Rename_Local_Variable.png)
 
 `CTRL+L` allows retyping the data type of the variable. In this case, we can change it from `int` to `fx32`, which is more appropriate for a variable representing a distance.
 
-![Ghidra_Retype_Variable](../docs/images/Ghidra_Retype_Variable.png)
+![Ghidra_Retype_Variable](images/Ghidra_Retype_Variable.png)
 
 For another variable case, also rename `VStack_30` to `separation`. Lucky for us, data type is correct here. One plus, the variable can be inferred to really be a separation distance between two objects in the game world:
 
-![Ghidra_Variable_Inference_var_separation](../docs/images/Ghidra_Variable_Inference_var_separation.png)
+![Ghidra_Variable_Inference_var_separation](images/Ghidra_Variable_Inference_var_separation.png)
 
 `Ghidra` *auto*-decompiled source:
 
@@ -106,17 +106,17 @@ separation.y = otherPosition.y - position->y;
 
 But we're not done yet! We can turn our attention to the `Listing` window and see our `separation` variable has a `undefined[12]` data type.
 
-![Ghidra_seeing_separation_var_on_Listing_view](../docs/images/Ghidra_seeing_separation_var_on_Listing_view.png)
+![Ghidra_seeing_separation_var_on_Listing_view](images/Ghidra_seeing_separation_var_on_Listing_view.png)
 
 We can change it to `Vector3` which is a universal project struct representing a 3D vector in the game. Right-click on the variable and select "Data" > "Change Data Type..." from the context menu. In the "Change Data Type" dialog, type `Vector3` and click "OK" or select it in the dropdown.
 
-![Ghidra_Change_Listing_Data_Type](../docs/images/Ghidra_Change_Listing_Data_Type.png)
+![Ghidra_Change_Listing_Data_Type](images/Ghidra_Change_Listing_Data_Type.png)
 
 ## Exposing hidden local functions variables in Listing and Decompiler windows
 
 The `other` variable, in Ghidra being `pdVar12`, which also servers as an example to show a important implicit, not directly stated feature, that being gradual exposing of decompiled local function variables.
 
-![Ghidra_pdVar12_is_var-other_in_source](../docs/images/Ghidra_pdVar12_is_var-other_in_source.png)
+![Ghidra_pdVar12_is_var-other_in_source](images/Ghidra_pdVar12_is_var-other_in_source.png)
 
 We see, `other` is a pointer to `dCc_c` class, being declared at the function start. However, scrolling to the end:
 
@@ -168,4 +168,4 @@ Now turns into:
 ```
 All instances of `other` were unaffected, and now we can properly rename `pdVar10`, it's own entity|variable, to `nextCollider`, and the decompiled code will match the IDE source code.
 
-![Ghidra-nextCollider-rename-var-retype](../docs/images/Ghidra-nextCollider-rename-var-retype.png)
+![Ghidra-nextCollider-rename-var-retype](images/Ghidra-nextCollider-rename-var-retype.png)
