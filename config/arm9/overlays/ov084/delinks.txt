@@ -6,11 +6,11 @@
     .bss        start:0x02130cc0 end:0x02130ee0 kind:bss align:32
 src/game/actors/d_a_krb.cpp:
     complete
-    .rodata start:0x02130278 end:0x02130294
+    .rodata start:0x02130174 end:0x02130294
     .text start:0x02129020 end:0x0212c10c
     .init start:0x0213035c end:0x02130558
     .ctor start:0x02130860 end:0x02130864
-    .data start:0x021308ac end:0x021309c4
+    .data start:0x02130880 end:0x021309c4
     .bss start:0x02130cc0 end:0x02130d9c
 
 src/game/actors/d_a_red_bombhei.cpp:
@@ -24,6 +24,7 @@ src/game/actors/d_a_red_bombhei.cpp:
 src/game/actors/d_a_f_pkn.cpp:
     complete
     .text start:0x0212d248 end:0x0212eaf0
+    .rodata start:0x02130294 end:0x021302ec
 
 src/game/actors/d_a_pkn.cpp:
     complete
@@ -31,5 +32,5 @@ src/game/actors/d_a_pkn.cpp:
     .init start:0x02130654 end:0x02130860
     .ctor start:0x02130868 end:0x0213086c
     .data start:0x02130ba4 end:0x02130ca4
-    .rodata start:0x021302ec end:0x021302f4
-    .bss start:0x02130df4 end:0x02130ec8
+    .rodata start:0x021302ec end:0x0213035c
+    .bss start:0x02130df4 end:0x02130ee0
