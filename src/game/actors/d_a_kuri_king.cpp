@@ -1335,51 +1335,25 @@ int daKuriKing_c::WalkAlongRing() {
 
 void daKuriKing_c::UpdateShadows() {
     Matrix4x3 mtx;
-    int i, height, rad, posY, radius;
-    char *self, *src;
-    Matrix4x3 *m;
-    dExtShadowModel_c *shadow;
+    int i, height, rad;
 
-    if (this->mNoShadow != 0)
+    if (mNoShadow != 0)
         return;
 
-    /* self and src are this shifted by i shadow matrices (0x30) and i
-     * mCylClsnPos entries (0xc), read back through the class so each load
-     * keeps the member offset.
-     * Measured (2004/b56): mShadowMatrices[i] / mCylClsnPos[i] /
-     * mShadowModels[i] at every use is 8/87 words off (the matrix copy and
-     * the DropShadowRadHeight argument share one this + 0x2ec induction
-     * register, where the ROM copies through the this-based one); keeping m
-     * as a Matrix4x3 * walk with the rest indexed grows it by 0x10 bytes. */
     mtx = IDENTITY_MATRIX4X3;
-    /* Kept (#821 r73): src as mCylClsnPos[i] is 10 words off (its induction
-       register ranks last), as a Vector3 * walk 3 (no 0x3ac displacement);
-       self as mShadowMatrices[i] grows the body to 0x16c. */
-    self = (char *)this;
-    src = (char *)this;
-    m = mShadowMatrices;
-    shadow = mShadowModels;
     for (i = 0; i < 3; i++) {
-        height = this->mPos.y - this->mSpawnPosY;
+        height = mPos.y - mSpawnPosY;
         if (height <= 0x1000)
             height = 0x1000;
-        rad = (this->mdCc_cs[i + 1].radius << 1) - FX_MUL(height, 0x180);
+        rad = (mdCc_cs[i + 1].radius << 1) - FX_MUL(height, 0x180);
         if (rad < 0xa000)
             rad = 0xa000;
-        radius = rad;
-        ((daKuriKing_c *)self)->mShadowMatrices[0] = mtx;
-        ((daKuriKing_c *)self)->mShadowMatrices[0].t.x =
-            ((daKuriKing_c *)src)->mCylClsnPos[0].x >> 3;
-        posY = this->mPos.y;
-        ((daKuriKing_c *)self)->mShadowMatrices[0].t.y = posY >> 3;
+        mShadowMatrices[i] = mtx;
+        mShadowMatrices[i].t.x = mCylClsnPos[i].x >> 3;
+        mShadowMatrices[i].t.y = mPos.y >> 3;
         height += 0x28000;
-        ((daKuriKing_c *)self)->mShadowMatrices[0].t.z =
-            ((daKuriKing_c *)src)->mCylClsnPos[0].z >> 3;
-        DropShadowRadHeight(*shadow, *m, radius, height, 0xf);
-        self += 0x30;
-        src += 0xc;
-        m++;
-        shadow++;
+        mShadowMatrices[i].t.z = mCylClsnPos[i].z >> 3;
+        DropShadowRadHeight(mShadowModels[i], mShadowMatrices[i], rad, height, 0xf);
     }
 }
 
