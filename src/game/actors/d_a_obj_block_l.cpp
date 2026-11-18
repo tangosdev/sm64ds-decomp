@@ -55,7 +55,7 @@ struct daObjBlockLClsnFile : SharedFilePtr {
 };
 
 extern BigBrickBlockAssets data_ov002_02108ab0[];
-extern Vector3 data_ov002_021089e0;
+extern VecFx32 data_ov002_021089e0;
 extern s8 gCurrentSublevel; /* current level */
 extern u8 gCurrentStarId;
 
@@ -305,7 +305,7 @@ int daObjBlockL_c::Render() {
         }
     }
     if (IsActorID(this, 0x10)) {
-        VecFx32 v = *(VecFx32 *)&data_ov002_021089e0;
+        VecFx32 v = data_ov002_021089e0;
         mModel.Render((Vector3 *)&v);
     } else {
         mModel.Render(0);

@@ -749,7 +749,7 @@
 0x0203adec	_Z14ApproachLinearRsss	function
 0x0203ae58	_Z14ApproachLinearRiii	function
 0x0203aed8	_Z15ApproachLinear2Rsss	function
-0x0203af34	_Z15ApproachLinear2Riii	function
+0x0203af34	_Z15ApproachLinear2Rhii	function
 0x0203af90	_Z11UpdateAngleRssis	function
 0x0203b008	ApproachAngle	function
 0x0203b0e8	AngleDiff	function

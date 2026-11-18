@@ -1386,9 +1386,10 @@ void Message::func_02033390(int sub) {
     }
 }
 
-/* byte-forced: this function accesses data_0209fc78 volatile (reload per use);
-   decl_common.h spells it plain. The macro expands each use to a volatile deref
-   of the global -- the inner name paints blue and resolves to the extern. */
+/* byte-forced: this function reloads data_0209fc78 at every use;
+   decl_common.h spells it plain. The macro expands each use to a deref
+   through a cast of its address -- the inner name paints blue and resolves to
+   the extern. Measured (#821 r68): without it the function is 0x380 of 0x388. */
 #define data_0209fc78 (*(u8 *)&data_0209fc78)
 void Message::func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;

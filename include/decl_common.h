@@ -31,7 +31,7 @@ struct FileSaveData;
 extern "C" {
 #endif
 
-extern s32 data_ov002_0210af00[3];
+extern struct VecFx32 data_ov002_0210af00;
 extern Vector3 sMascotWalkerOffset;
 extern Vector3 data_020755d4;
 extern Vector3 data_ov009_02113d8c[];
@@ -114,7 +114,6 @@ extern char data_ov065_0211d748[];
 extern char data_ov073_021231bc[];
 extern char data_ov073_021231c0[];
 extern char data_ov073_021231c4[];
-extern char data_ov084_0213089c;
 extern char data_ov098_0213c384[];
 extern char data_ov100_02148704;
 extern char data_ov102_0214ea48;
@@ -904,7 +903,6 @@ extern void *sSnowballObstacleSprite;
 extern void *sSnowballCourseMeterSprites[2];
 extern void *sSlotLamp1Sprite;
 extern void *sSlotLamp2Sprite;
-extern void *sEsp3DTextureAnim;
 extern void *sHanaTextSpritesByLanguage[];
 extern void *sLuigiBg1NcgPath;
 extern void *sSlot1Sprites[];

@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "nitro/fx/fx.h"
+#include "math/Matrix.h"
 
 struct BMD_File;
 
@@ -16,11 +17,7 @@ struct BMD_File;
  * declares a destructor, so a Vector3 member makes this unit emit an
  * unreferenced ~Vector3() copy and gives EntryMesh a destructor dEntObj_c's
  * object would emit; the ROM has neither (the same reason as dBgW_Kc's
- * upAxis and depthDir). EntryMeshMtx is a Matrix4x3-layout twin for the same reason
- * (math/Matrix.h's Matrix4x3 holds a Vector3 t). */
-struct EntryMeshMtx {
-    s32 m[12];
-};
+ * upAxis and depthDir). */
 
 /* One grid vertex. InitGrid lays the grid out, CalcNormals packs the
  * normals and DrawGrid sends each vertex to the geometry engine. */
@@ -57,10 +54,10 @@ struct EntryMesh {
     u8 pad_12[2];
     /* 0x14: the model matrix CalcMatrix builds and DrawGrid concatenates
        with the camera. */
-    EntryMeshMtx mMtx;
+    Matrix4x3 mMtx;
     /* 0x44: mMtx's inverse, which CalcMatrix stores; nothing in this
        overlay reads it back (medium confidence). */
-    EntryMeshMtx mInvMtx;
+    Matrix4x3 mInvMtx;
     /* 0x74: the point in grid space a ripple starts at (StartRipple;
        TouchAt maps the touch into grid space). */
     VecFx32 mRippleCenter;

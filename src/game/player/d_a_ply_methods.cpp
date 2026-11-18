@@ -19898,7 +19898,7 @@ int daPly_c::func_ov002_020e3f90() {
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    data_020a0e68 = **(Matrix4x3 **)&((dActor_c *)*(char **)&mGrabbedByActor)->mCarryMatrix;
+    data_020a0e68 = *mGrabbedByActor->mCarryMatrix;
     p = (daPly_c *)mGrabbedByActor;
     if ((p)->actorID == 0xbf)
         b = 1;

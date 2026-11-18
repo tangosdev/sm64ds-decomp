@@ -1502,6 +1502,7 @@ void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
         initialHead.x = 0x38000;
 
     aim = -0x8000;
+    /* Measured (#821 r68): initialHead.x/.y read by name, StartPathC is 0x1f4 of 0x214. */
     seg[0].x = *(int *)&initialHead;
     seg[0].y = *((int *)&initialHead + 1);
     ang[0] = aim - 0x2000;

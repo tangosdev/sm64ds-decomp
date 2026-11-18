@@ -17,8 +17,9 @@ void UpdateAngle(short &, short, int, short);
 int ApproachLinear(int &, int, int);
 bool ApproachLinear(short &, short, short);
 
-/* The same with a 32-bit product; the int & overload steps only the low byte. */
-int ApproachLinear2(int &, int, int);
+/* The same with a 32-bit product. The unsigned char & overload is the byte
+ * stepper: it loads and stores its reference with ldrb/strb. */
+int ApproachLinear2(unsigned char &, int, int);
 int ApproachLinear2(short &, short, short);
 
 /* Move a point straight toward target by at most step, an fx32 distance
