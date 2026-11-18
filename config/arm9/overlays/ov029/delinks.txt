@@ -368,9 +368,6 @@ src/data/ov029/_ZTI14daObjWcObj01_c.c:
     complete
     .data start:0x02113bdc end:0x02113be8
 
-src/data/ov029/data_ov029_02113be8.c:
-    complete
-    .data start:0x02113be8 end:0x02113bf4
 
 src/data/ov029/_ZTS14daObjWcObj01_c.c:
     complete
@@ -501,9 +498,6 @@ src/data/ov029/_ZTI15daObjWc_Obj07_c.c:
     complete
     .data start:0x02113fc8 end:0x02113fd4
 
-src/data/ov029/data_ov029_02113fd4.c:
-    complete
-    .data start:0x02113fd4 end:0x02113fe0
 
 src/data/ov029/_ZTS15daObjWc_Obj07_c.c:
     complete

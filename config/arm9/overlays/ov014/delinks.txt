@@ -449,9 +449,6 @@ src/data/ov014/_ZTI14daObjBSwdoor_c.c:
     complete
     .data.gap0 start:0x021145b8 end:0x021145c4
 
-src/data/ov014/data_ov014_021145c4.c:
-    complete
-    .data.gap0 start:0x021145c4 end:0x021145d0
 
 src/data/ov014/_ZTS14daObjBSwdoor_c.c:
     complete

@@ -422,10 +422,6 @@ src/data/ov036/data_ov036_02113cf4.c:
     .data start:0x02113cf4 end:0x02113cf8
 
 
-src/data/ov036/data_ov036_02113d78.c:
-    complete
-    .data start:0x02113d78 end:0x02113d84
-
 src/data/ov036/_ZTI18daObjRc_Guruguru_c.c:
     complete
     .data start:0x02113d84 end:0x02113d90
