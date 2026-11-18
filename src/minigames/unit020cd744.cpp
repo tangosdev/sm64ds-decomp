@@ -725,20 +725,20 @@ void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) 
     mForward.y = normal[1];
     mForward.z = normal[2];
     {
-        int *normalComponents = (int *)&mForward;
-        mSide.x = normalComponents[0];
-        mSide.y = normalComponents[1];
-        mSide.z = normalComponents[2];
+        Vector3 *normalComponents = &mForward;
+        mSide.x = normalComponents->x;
+        mSide.y = normalComponents->y;
+        mSide.z = normalComponents->z;
     }
     func_0203cc28((int *)&mSide, -0x4000);
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
     mPrevPos.z = mPos.z;
     {
-        int *cachedPosition = (int *)&mPrevPos;
-        mSpawnPos.x = cachedPosition[0];
-        mSpawnPos.y = cachedPosition[1];
-        mSpawnPos.z = cachedPosition[2];
+        Vector3 *cachedPosition = &mPrevPos;
+        mSpawnPos.x = cachedPosition->x;
+        mSpawnPos.y = cachedPosition->y;
+        mSpawnPos.z = cachedPosition->z;
     }
     mPrevForward.x = mForward.x;
     mPrevForward.y = mForward.y;

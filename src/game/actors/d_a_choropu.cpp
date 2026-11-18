@@ -349,10 +349,10 @@ void daChoropu_c::func_ov080_02123c24()
             Vector3 pos;
             short horz;
             int diff;
-            int *pb = (int *)((int)&player->mPos.x);
-            pos.x = pb[0];
-            pos.y = pb[1];
-            pos.z = pb[2];
+            Vector3 *pb = &player->mPos;
+            pos.x = pb->x;
+            pos.y = pb->y;
+            pos.z = pb->z;
             horz = Vec3_HorzAngle(&mPos, &pos);
             diff = (short)AngleDiff(mAngle.y, horz);
             if (diff < 0x4000) {

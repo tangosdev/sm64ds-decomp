@@ -788,8 +788,6 @@ void func_02012694(unsigned int a, const Vector3 *p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 
-#define M(p) (p)
-
 /* Fire main. While the animation frame (integer part of the 20.12 counter) is
  * below 13 it steers mPrevAngle.y toward mTargetAngY, which is refreshed from the
  * nearest player when there is one. When the animation is about to hit frame 13
@@ -819,10 +817,10 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
     if (mAnmModel.dExtFrameCtrl_c::WillHitFrame(kFireFrame) != 0) {
         Vector3_16 vel = mAngle;
         if (pl != 0) {
-            int *base = (int *)M(&pl->mPos.x);
-            fp.x = base[0];
-            fp.y = base[1];
-            fp.z = base[2];
+            Vector3 *base = &pl->mPos;
+            fp.x = base->x;
+            fp.y = base->y;
+            fp.z = base->z;
             vel.x = Vec3_VertAngle(&mPos, &fp);
         }
         SpawnFireball(mPos, &vel, 0x1e000, 0xa000, 1);

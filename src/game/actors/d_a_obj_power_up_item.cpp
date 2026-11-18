@@ -122,9 +122,9 @@ void daObjPowerUpItem_c::StateResting()
         int z = mPos.z;
         int x = mPos.x;
         int y = mPos.y + 0x82000;
-        ((int*)&pos)[0] = x;
-        ((int*)&pos)[1] = y;
-        ((int*)&pos)[2] = z;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
         mEffectHandle =
             Particle::System::New(mEffectHandle, kPtclPowerFlowerResting, ((int *)&pos)[0],
                                   ((int *)&pos)[1], ((int *)&pos)[2], 0, 0);

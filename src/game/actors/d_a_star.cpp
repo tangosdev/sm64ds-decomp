@@ -1600,7 +1600,7 @@ void daStar_c::FindMarker() {
  * frames (mHorzSpeed), sets the terminal speed to -50.0 and turns the star
  * toward p. */
 void daStar_c::AimArcTo(Vector3 *p, int n) {
-    int dy = ((int *)p)[1] - mPos.y;
+    int dy = p->y - mPos.y;
     if (dy < 0)
         dy = -dy;
     {
@@ -1615,7 +1615,7 @@ void daStar_c::AimArcTo(Vector3 *p, int n) {
         n = 0x32 - dy;
         mVertAccel = left / den;
     }
-    if (((int *)p)[1] >= mPos.y) {
+    if (p->y >= mPos.y) {
         int v = mVertAccel;
         if (v < 0)
             v = -v;
@@ -2250,7 +2250,7 @@ void daStar_c::DrawShadow() {
 
 Vector3 daStar_c::func_ov002_020e8244() {
     Vector3 result;
-    void *out = &result;
+    Vector3 *out = &result;
     daStar_c *b = this;
     Matrix4x3 local;
     Vector3 zero;
@@ -2258,9 +2258,9 @@ Vector3 daStar_c::func_ov002_020e8244() {
     zero.y = 0;
     zero.z = 0;
     if (func_0203d024(&b->mCenter, &zero) != 0) {
-        ((int *)out)[0] = b->mCenter.x;
-        ((int *)out)[1] = b->mCenter.y;
-        ((int *)out)[2] = b->mCenter.z;
+        out->x = b->mCenter.x;
+        out->y = b->mCenter.y;
+        out->z = b->mCenter.z;
         return result;
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPos.x, b->mPos.y, b->mPos.z);
@@ -2277,9 +2277,9 @@ Vector3 daStar_c::func_ov002_020e8244() {
         int *p = &b->mCenter.y;
         *p = b->mAnmModel1.data.bones->scaleX * 0xd + *p;
     }
-    ((int *)out)[0] = b->mCenter.x;
-    ((int *)out)[1] = b->mCenter.y;
-    ((int *)out)[2] = b->mCenter.z;
+    out->x = b->mCenter.x;
+    out->y = b->mCenter.y;
+    out->z = b->mCenter.z;
     return result;
 }
 

@@ -430,10 +430,10 @@ void daKrb_c::func_ov084_021294d0() {
 
 void daKrb_c::func_ov084_021296b0(void *b) {
     daKrb_c *goomba = (daKrb_c *)this;
-    int *pos = (int *)b;
-    goomba->mHomePos.x = pos[0];
-    goomba->mHomePos.y = pos[1];
-    goomba->mHomePos.z = pos[2];
+    Vector3 *pos = (Vector3 *)b;
+    goomba->mHomePos.x = pos->x;
+    goomba->mHomePos.y = pos->y;
+    goomba->mHomePos.z = pos->z;
 }
 
 /* The reward helper, OnTurnIntoEgg and InitResources mask param1 in place

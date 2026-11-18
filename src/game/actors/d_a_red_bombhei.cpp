@@ -453,12 +453,12 @@ void daRedBombhei_c::UpdateTalk() {
     if (param != 0xffff)
         msgID = (u16)param;
     {
-        int *p = (int *)(unsigned)&player->mPos.x;
-        int a = p[0];
+        Vector3 *p = &player->mPos;
+        int a = p->x;
         playerPos.x = a;
-        int b = p[1];
+        int b = p->y;
         playerPos.y = b;
-        int c = p[2];
+        int c = p->z;
         playerPos.z = c;
     }
     angle = Vec3_HorzAngle(&this->mPos, &playerPos);
@@ -606,14 +606,14 @@ void daRedBombhei_c::UpdateCannonOpening() {
             return;
         }
         case 2: {
-            int *lookAt = (int *)&cam->lookAt;
-            int *pos = (int *)&cam->pos;
-            this->mSavedCamLookAt.x = lookAt[0];
-            this->mSavedCamLookAt.y = lookAt[1];
-            this->mSavedCamLookAt.z = lookAt[2];
-            this->mSavedCamPos.x = pos[0];
-            this->mSavedCamPos.y = pos[1];
-            this->mSavedCamPos.z = pos[2];
+            Vector3 *lookAt = &cam->lookAt;
+            Vector3 *pos = &cam->pos;
+            this->mSavedCamLookAt.x = lookAt->x;
+            this->mSavedCamLookAt.y = lookAt->y;
+            this->mSavedCamLookAt.z = lookAt->z;
+            this->mSavedCamPos.x = pos->x;
+            this->mSavedCamPos.y = pos->y;
+            this->mSavedCamPos.z = pos->z;
             cam->SetFlag_3();
             this->mFlags &= ~1;
             this->mCutsceneStep += 1;
