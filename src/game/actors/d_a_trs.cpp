@@ -1644,8 +1644,6 @@ void daTrs_c::func_ov063_02118f74() {
 
 void daTrs_c::func_ov063_02119074() {
 
-    volatile int dummy[2];
-    (void)&dummy;
     /* ROM: beq body on ==0xc; bne after on !=0xf  =>  body when 0xc OR 0xf */
     if (this->mVariant == 0xc ||
         this->mVariant == 0xf) {
@@ -1668,9 +1666,8 @@ void daTrs_c::func_ov063_02119074() {
         this->mClsnScale =
             data_ov063_0211e1d0[this->mVariant - 0xc];
         scale = this->mClsnScale;
-        this->mScale.x = scale;
-        this->mScale.y = scale;
-        this->mScale.z = scale;
+        /* the Vector3 temporary's stack home is the frame's 12 spare bytes */
+        this->mScale = Vector3(scale, scale, scale);
 
         this->mAnmModel.SetPolygonID(0x16);
 
