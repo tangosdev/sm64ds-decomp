@@ -74,6 +74,9 @@ typedef struct Ov007PickerSprites {
 } Ov007PickerSprites;
 
 /* PickerScene_UpdateMoveAnim copies pos as three words. */
+/* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
+   plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
+   the same copy compiled as C does (measured on func_ov007_020c5dec). */
 typedef struct Vec3Words {
     fx32 w[3];
 } Vec3Words;
