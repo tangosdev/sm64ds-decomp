@@ -185,10 +185,13 @@ s32 daJgm_c::Behavior()
     return 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 s32 daJgm_c::Render()
 {
-    int b = (int)((mFlags & 0x40000) != 0);
-    if (b != 0)
+    if (IsInYoshiMouth(this))
         return 1;
     mTextureSequence.Update(mAnmModel.data);
     mAnmModel.Render(0);
@@ -342,10 +345,6 @@ static inline int IsBeingEaten(dActor_c *actor) {
     return (actor->mFlags & 0x20000) != 0;
 }
 
-static inline int IsInYoshiMouth(dActor_c *actor) {
-    return (actor->mFlags & 0x40000) != 0;
-}
-
 s32 daJgm_c::UpdateYoshiMouthState()
 {
     if (IsInYoshiMouth(this)) {
@@ -427,8 +426,7 @@ s32 daJgm_c::UpdateFallState()
 
 void daJgm_c::UpdateModels()
 {
-    int b = (int)((mFlags & 0x40000) != 0);
-    if (b)
+    if (IsInYoshiMouth(this))
         return;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
