@@ -706,6 +706,8 @@ void dScMgPachinko_c::ClearAimLine() {
 }
 
 #pragma push
+/* Kept (#821 r79): py, line, tileY and lineOfs recomputed in the inner loop, do-while loops and
+   a py counter are 10, 10 and 34 words off of 32. */
 #pragma opt_loop_invariants off
 /* Sets the 2x2 block of pixels centred on (x, y) in the sub BG2 character
    data, 4bpp tiles laid out 32 to a row: y picks the tile row and the
@@ -1049,6 +1051,9 @@ void dScMgPachinko_c::Pipe_ResetAll() {
 }
 
 #pragma push
+/* Kept (#821 r79): FX_Mul's operands swapped, FX_Mul(scale, trig) at the call, a one-expression
+   or s64-parameter FX_Mul, trig locals first, the sine product first and scale re-read per call
+   are 6 to 44 words off of 60; 6 is the floor (scale lands in sl, not ip). */
 #pragma opt_prelinearize off
 static inline int FX_Mul(int v1, int v2)
 {
@@ -1137,6 +1142,8 @@ void dScMgPachinko_c::Ball_CheckPipes(int idx) {
 }
 
 #pragma push
+/* Kept (#821 r79): the angle read as ball->angle with the trig inline in FX_MUL, and a u16 & to
+   the angle slot, are 0x234 and 0x23c against 0x240. */
 #pragma opt_common_subs off
 /* Re-aims ball `i` at a randomly chosen active target. Bails out if no
  * mTarget slot is active, or if the ball has sunk below y=0. Takes the length
