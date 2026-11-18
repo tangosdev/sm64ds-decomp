@@ -588,9 +588,8 @@ int daJango_c::UpdateFlyPathState() {
             if (mPathNodeIndex != r) {
                 mPathNodeIndex = r;
             } else {
-                int *p = &mPathNodeIndex;
-                (*p)++;
-                *p &= 3;
+                mPathNodeIndex++;
+                mPathNodeIndex &= 3;
             }
         }
         mPos.x = node.x;
@@ -1116,11 +1115,8 @@ int daJango_c::ChangeTarget() {
     int bestIdx;
     int bestDist;
 
-    {
-        int *ctr = &mPathPickTick;
-        *ctr = *ctr + 1;
-        *ctr = *ctr & 7;
-    }
+    mPathPickTick++;
+    mPathPickTick &= 7;
     if (mPathPickTick != 0)
         return 0;
 
