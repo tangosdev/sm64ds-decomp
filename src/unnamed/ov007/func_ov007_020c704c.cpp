@@ -9,6 +9,9 @@ extern "C" {
 /* C++ copies a struct of three named ints, VecFx32 included, word by word.
  * The ROM copies these with C's ldm/stm block move, which C++ keeps for a
  * struct with an array member. */
+/* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
+   plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
+   the same copy compiled as C does (measured on func_ov007_020c5dec). */
 typedef struct Vec3Words {
     fx32 w[3];
 } Vec3Words;
