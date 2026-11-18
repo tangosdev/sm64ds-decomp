@@ -42,6 +42,24 @@
       "name": ".bss",
       "start": "0x0211c728",
       "end": "0x0211c768"
+    },
+    {
+      "name": ".data.daObjFlAmiliftZTI",
+      "input_section": ".data",
+      "start": "0x0211bc24",
+      "end": "0x0211bc30"
+    },
+    {
+      "name": ".data.daObjFlAmiliftZTS",
+      "input_section": ".data",
+      "start": "0x0211bc30",
+      "end": "0x0211bc44"
+    },
+    {
+      "name": ".data.daObjFlAmiliftZTV",
+      "input_section": ".data",
+      "start": "0x0211bc60",
+      "end": "0x0211bce8"
     }
   ],
   "functions": [
@@ -172,6 +190,26 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN17daObjFl_Amilift_c19func_ov064_02117b8cEv"
+    },
+    {
+      "symbol": "_ZTI17daObjFl_Amilift_c",
+      "address": "0x0211bc24",
+      "size": "0xc",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS17daObjFl_Amilift_c",
+      "address": "0x0211bc30",
+      "size": "0x14",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTV17daObjFl_Amilift_c",
+      "address": "0x0211bc68",
+      "emitted_storage_address": "0x0211bc60",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
     }
   ],
   "bss": [
@@ -234,27 +272,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "Vector3 four-byte destructor, vague linkage from Vector3 locals. The cartridge owns the one copy at arm9:0x020072c0."
-    },
-    {
-      "symbol": "_ZTV17daObjFl_Amilift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bc68",
-      "reason": "Key-function vtable. symbols.txt address point is ov064:0x0211bc68. (Until the 2026-10-09 classInit tail fold the factory stayed out of this TU; it is now folded in and only stores this vtable.)"
-    },
-    {
-      "symbol": "_ZTI17daObjFl_Amilift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bc24",
-      "reason": "Key-function RTTI. The cartridge copy is ov064:0x0211bc24."
-    },
-    {
-      "symbol": "_ZTS17daObjFl_Amilift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bc30",
-      "reason": "Key-function RTTI name. The cartridge copy is ov064:0x0211bc30."
     },
     {
       "symbol": "_ZTI10dBgActor_c",
@@ -863,6 +880,366 @@
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x02117b8c"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTI",
+      "source": "0x0211bc28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS17daObjFl_Amilift_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211bc30"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTI",
+      "source": "0x0211bc2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "overlay(2)",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTI",
+      "source": "0x0211bc24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "main",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI17daObjFl_Amilift_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211bc24"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bca4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bca0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bce0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bccc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bce4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bcac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjFl_Amilift_cD0Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x021179bc"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjFl_Amilift_c6RenderEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02117cfc"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjFl_Amilift_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02117d24"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjFl_Amilift_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02117cc4"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bc68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjFl_Amilift_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02117e44"
+    },
+    {
+      "section": ".data.daObjFlAmiliftZTV",
+      "source": "0x0211bca8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjFl_Amilift_cD1Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02117978"
     }
   ]
 }

@@ -19,6 +19,11 @@
       "end": "0x02139f70"
     },
     {
+      "name": ".rodata",
+      "start": "0x0213bf60",
+      "end": "0x0213bf90"
+    },
+    {
       "name": ".init",
       "start": "0x0213c058",
       "end": "0x0213c214"
@@ -49,6 +54,18 @@
       "input_section": ".data",
       "start": "0x0213c52c",
       "end": "0x0213c5b4"
+    },
+    {
+      "name": ".data.daObjBlockSZTI",
+      "input_section": ".data",
+      "start": "0x0213c4d4",
+      "end": "0x0213c4e0"
+    },
+    {
+      "name": ".data.daObjBlockSZTS",
+      "input_section": ".data",
+      "start": "0x0213c500",
+      "end": "0x0213c510"
     }
   ],
   "functions": [
@@ -342,6 +359,18 @@
       "evidence": "daObjBlockS_c vtable. Public address point is 0x0213c534; storage begins eight bytes earlier.",
       "emitted_storage_address": "0x0213c52c",
       "address_point_bias": 8
+    },
+    {
+      "symbol": "_ZTI13daObjBlockS_c",
+      "address": "0x0213c4d4",
+      "size": "0xc",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS13daObjBlockS_c",
+      "address": "0x0213c500",
+      "size": "0x10",
+      "evidence": "ROM typeinfo record, exact compiler emission"
     }
   ],
   "bss": [
@@ -437,20 +466,6 @@
       "canonical_module": "ov002",
       "canonical_address": "0x02108a04",
       "reason": "Type-name string `10dBgActor_c`. ROM home ov002:0x02108a04, 0xd bytes."
-    },
-    {
-      "symbol": "_ZTI13daObjBlockS_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov098",
-      "canonical_address": "0x0213c4d4",
-      "reason": "This class's own __si_class_type_info, +8 word relocating to _ZTI10dBgActor_c. ROM home ov098:0x0213c4d4."
-    },
-    {
-      "symbol": "_ZTS13daObjBlockS_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov098",
-      "canonical_address": "0x0213c500",
-      "reason": "This class's own type-name string `13daObjBlockS_c`. ROM home ov098:0x0213c500, 0x10 bytes."
     },
     {
       "symbol": "_ZN13daObjBlockS_cD2Ev",
@@ -582,6 +597,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0213bf60",
+          "end": "0x0213bf90",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0213c058",
           "end": "0x0213c214",
@@ -625,7 +647,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 46
+          "LICENSED": 49
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -634,38 +656,47 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              103
+              7
             ],
             "desired": [
-              103
+              7
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              106
+            ],
+            "desired": [
+              106
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              101
+              104
             ],
             "desired": [
-              101
+              104
             ]
           },
           {
             "section": ".bss",
             "original": [
-              79,
               80,
               81,
               82,
-              83
+              83,
+              86
             ],
             "desired": [
+              81,
+              83,
               80,
               82,
-              79,
-              81,
-              83
+              86
             ]
           },
           {
@@ -675,8 +706,26 @@
               6
             ],
             "desired": [
-              5,
-              6
+              6,
+              5
+            ]
+          },
+          {
+            "section": ".data.blockDesc",
+            "original": [
+              84
+            ],
+            "desired": [
+              84
+            ]
+          },
+          {
+            "section": ".data.blockVt",
+            "original": [
+              87
+            ],
+            "desired": [
+              87
             ]
           }
         ],
@@ -685,29 +734,44 @@
             {
               "section": ".bss",
               "original": [
-                79,
                 80,
                 81,
                 82,
-                83
+                83,
+                86
               ],
               "desired": [
+                81,
+                83,
                 80,
                 82,
-                79,
-                81,
-                83
+                86
               ],
               "slots": [
-                79,
                 80,
                 81,
                 82,
-                83
+                83,
+                86
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                5,
+                6
+              ],
+              "desired": [
+                6,
+                5
+              ],
+              "slots": [
+                5,
+                6
               ]
             }
           ],
-          "symbolIndices": 5,
+          "symbolIndices": 7,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -724,8 +788,7 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null,
-      "localWorkerNote": "Verified on a stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
+      "linkerOutput": null
     }
   },
   "init": [
@@ -815,7 +878,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c064",
+      "source": "0x0213c064",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "symbol": "_ZN13SharedFilePtr13func_02017accEj",
@@ -825,7 +888,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c074",
+      "source": "0x0213c074",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "symbol": "__register_global_object",
@@ -835,7 +898,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c080",
+      "source": "0x0213c080",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
@@ -845,7 +908,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c090",
+      "source": "0x0213c090",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "symbol": "__register_global_object",
@@ -855,7 +918,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1b8",
+      "source": "0x0213c1b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "gBrokenBlockSModelFile",
@@ -865,7 +928,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1c0",
+      "source": "0x0213c1c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "_Z13func_02017ab4i",
@@ -875,7 +938,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1c4",
+      "source": "0x0213c1c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "@1560",
@@ -885,7 +948,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1c8",
+      "source": "0x0213c1c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "gBrokenBlockSCollisionFile",
@@ -895,7 +958,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1d0",
+      "source": "0x0213c1d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
@@ -905,7 +968,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1d4",
+      "source": "0x0213c1d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "@1561",
@@ -915,7 +978,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1d8",
+      "source": "0x0213c1d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c4a8",
@@ -925,7 +988,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1dc",
+      "source": "0x0213c1dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c488",
@@ -935,7 +998,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1e0",
+      "source": "0x0213c1e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c490",
@@ -945,7 +1008,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1e4",
+      "source": "0x0213c1e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c468",
@@ -955,7 +1018,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1e8",
+      "source": "0x0213c1e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c498",
@@ -965,7 +1028,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1ec",
+      "source": "0x0213c1ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c878",
@@ -975,7 +1038,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1f0",
+      "source": "0x0213c1f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c470",
@@ -985,7 +1048,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1f4",
+      "source": "0x0213c1f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c4b0",
@@ -995,7 +1058,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1f8",
+      "source": "0x0213c1f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c480",
@@ -1005,7 +1068,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c1fc",
+      "source": "0x0213c1fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c4a0",
@@ -1015,7 +1078,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c200",
+      "source": "0x0213c200",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c478",
@@ -1025,7 +1088,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c204",
+      "source": "0x0213c204",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c458",
@@ -1035,7 +1098,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c208",
+      "source": "0x0213c208",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c460",
@@ -1045,7 +1108,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c20c",
+      "source": "0x0213c20c",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c4c0",
@@ -1055,7 +1118,7 @@
     },
     {
       "section": ".init",
-      "source": "0x213c210",
+      "source": "0x0213c210",
       "type": "R_ARM_ABS32",
       "kind": "load",
       "symbol": "data_ov098_0213c4b8",
@@ -1070,7 +1133,7 @@
       "kind": "load",
       "symbol": "gBrokenBlockSModelFile",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x0213c850"
     },
     {
@@ -1080,7 +1143,7 @@
       "kind": "load",
       "symbol": "gBrokenBlockSCollisionFile",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x0213c858"
     },
     {
@@ -1090,7 +1153,7 @@
       "kind": "load",
       "symbol": "data_ov002_0210d934",
       "addend": 0,
-      "target_module": "ov002",
+      "target_module": "overlay(2)",
       "target_address": "0x0210d934"
     },
     {
@@ -1100,7 +1163,7 @@
       "kind": "load",
       "symbol": "_ZTI13daObjBlockS_c",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x0213c4d4"
     },
     {
@@ -1110,7 +1173,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_c13InitResourcesEv",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02139d14"
     },
     {
@@ -1120,7 +1183,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02011268"
     },
     {
@@ -1130,7 +1193,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02011244"
     },
     {
@@ -1140,7 +1203,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_c16CleanupResourcesEv",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02139a50"
     },
     {
@@ -1150,7 +1213,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02011220"
     },
     {
@@ -1160,7 +1223,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02011214"
     },
     {
@@ -1170,7 +1233,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_c8BehaviorEv",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02139b0c"
     },
     {
@@ -1180,7 +1243,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010fd4"
     },
     {
@@ -1190,7 +1253,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c13AfterBehaviorEj",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010fc8"
     },
     {
@@ -1200,7 +1263,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_c6RenderEv",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02139aa8"
     },
     {
@@ -1210,7 +1273,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c12BeforeRenderEv",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010f78"
     },
     {
@@ -1220,7 +1283,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c11AfterRenderEj",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010f6c"
     },
     {
@@ -1230,7 +1293,7 @@
       "kind": "load",
       "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02043ac0"
     },
     {
@@ -1240,7 +1303,7 @@
       "kind": "load",
       "symbol": "_ZN7fBase_c9Virtual34Ejj",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x0204357c"
     },
     {
@@ -1250,7 +1313,7 @@
       "kind": "load",
       "symbol": "_ZN7fBase_c9Virtual38Ejj",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x0204349c"
     },
     {
@@ -1260,7 +1323,7 @@
       "kind": "load",
       "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02043494"
     },
     {
@@ -1270,7 +1333,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_cD1Ev",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02138040"
     },
     {
@@ -1280,7 +1343,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_cD0Ev",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x021380bc"
     },
     {
@@ -1290,7 +1353,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_c13OnYoshiTryEatEv",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02139e64"
     },
     {
@@ -1300,7 +1363,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_c13OnTurnIntoEggER7daPly_c",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02139e78"
     },
     {
@@ -1310,7 +1373,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c9Virtual50Ev",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x0201014c"
     },
     {
@@ -1320,7 +1383,7 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_c15OnGroundPoundedER8dActor_c",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02139e44"
     },
     {
@@ -1330,7 +1393,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010144"
     },
     {
@@ -1340,7 +1403,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010140"
     },
     {
@@ -1350,7 +1413,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c8OnKickedERS_",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x0201013c"
     },
     {
@@ -1360,7 +1423,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c8OnPushedERS_",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010138"
     },
     {
@@ -1370,7 +1433,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010134"
     },
     {
@@ -1380,7 +1443,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010130"
     },
     {
@@ -1390,7 +1453,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x0201012c"
     },
     {
@@ -1400,7 +1463,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x02010124"
     },
     {
@@ -1410,7 +1473,7 @@
       "kind": "load",
       "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
       "addend": 0,
-      "target_module": "arm9",
+      "target_module": "main",
       "target_address": "0x020100dc"
     },
     {
@@ -1420,8 +1483,38 @@
       "kind": "load",
       "symbol": "_ZN13daObjBlockS_c4KillEv",
       "addend": 0,
-      "target_module": "ov098",
+      "target_module": "overlay(98)",
       "target_address": "0x02139070"
+    },
+    {
+      "section": ".data.daObjBlockSZTI",
+      "source": "0x0213c4d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS13daObjBlockS_c",
+      "addend": 0,
+      "target_module": "overlay(98)",
+      "target_address": "0x0213c500"
+    },
+    {
+      "section": ".data.daObjBlockSZTI",
+      "source": "0x0213c4dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "overlay(2)",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data.daObjBlockSZTI",
+      "source": "0x0213c4d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "main",
+      "target_address": "0x0209a764"
     }
   ],
   "externalized_output": [],
@@ -1437,5 +1530,13 @@
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570); deleting the local Sub vtable shim for the typed mModel.Render call shifts the two local BSS source names down one; ELF symtab indices 72/73 and sizes 0xc map @1644/@1645 to the same @1560/@1561 targets; TU verify remains 37/37 MATCH with clean objisolate and relocation destinations Re-keyed from @1645 to @1648 when func_ov098_021397c8 and func_ov098_02139850 copy the crate position into a Vector3 local instead of a volatile int[3]; the Vector3 locals draw three more compiler numbers. Re-keyed +19 (@1647/@1648 -> @1666/@1667) when func_ov098_021385e0 reads the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @1667 to @1593 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1593 to @1601 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1601 to @1604 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1601 to @1602 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1602 to @1599 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1599 to @1564 when the never-called hold declarations came out (measured by pairing compiled objects). Re-keyed from @1564 to @1561 when SetState became a member and the byte-offset views gave way to typed receivers (measured by pairing compiled objects). Re-keyed from @1561 to @1568 when the merge with main brought in the redundant-pun removal (#5404, which had moved it to @1613/@1614 on its side) and its #include \"dExtAnmModel_c.h\" (measured by pairing compiled objects; same section, size, type and order). Re-keyed from @1568 to @1588 when the eating player's position became one Vector3 assignment (measured by pairing compiled objects; same section, size, type and order). Re-keyed from @1588 to @1625 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1625 to @1637 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1637 to @1642 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
-  "rodata": null
+  "rodata": [
+    {
+      "symbol": "data_ov098_0213bf60",
+      "address": "0x0213bf60",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "four held-crate hand offsets in 20.12 units, indexed by the row UpdateModelMatrix picks and eased with Math_Function_0203b14c; the ROM keeps it in .rodata"
+    }
+  ]
 }

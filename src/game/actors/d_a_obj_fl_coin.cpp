@@ -103,7 +103,7 @@ struct CLPS_Block {
 };
 extern CLPS_Block data_ov064_0211baac;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
-extern int data_ov064_0211c198[];
+extern s8 *data_ov064_0211c198[];
 
 /* Reconstructed source-style name: SM64DS proves daObjFl_Puzzle_c through RTTI,
  * allocation size, vtable identity, and the FL_PUZZLE registry profile; later
@@ -272,9 +272,9 @@ void daObjFl_Puzzle_c::AdvanceStepScript() {
     }
     if (mStepActive)
         return;
-    mState = ((s8 *)mStepScript)[mStepIndex];
+    mState = mStepScript[mStepIndex];
     mStepIndex++;
-    if (((s8 *)mStepScript)[mStepIndex] == -1) {
+    if (mStepScript[mStepIndex] == -1) {
         mStepIndex = 0;
         if (mCoinMgrId) {
             a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);
@@ -482,6 +482,14 @@ s8 data_ov064_0211c128[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1,
                             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
 s8 data_ov064_0211c144[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1,
                             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+
+/* The script each mType plays, in mType order 0..0xd. */
+s8 *data_ov064_0211c198[14] = {
+    data_ov064_0211bfd8, data_ov064_0211bff4, data_ov064_0211c0f0, data_ov064_0211c10c,
+    data_ov064_0211c010, data_ov064_0211c02c, data_ov064_0211c0d4, data_ov064_0211c0b8,
+    data_ov064_0211c064, data_ov064_0211c048, data_ov064_0211c128, data_ov064_0211c09c,
+    data_ov064_0211c080, data_ov064_0211c144,
+};
 
 SpawnInfo<daObjFl_Puzzle_c> g_profile_FL_PUZZLE = {
     daObjFl_Puzzle_c_classInit, 0x004e, 0x011e, 2, 0, 0x180000, 0x02000000, 0x02000000,

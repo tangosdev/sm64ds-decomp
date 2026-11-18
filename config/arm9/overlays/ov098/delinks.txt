@@ -16,9 +16,13 @@ src/game/actors/d_a_obj_yajirusi.cpp:
     .data.blockHead start:0x0213c380 end:0x0213c398
     .bss start:0x0213c800 end:0x0213c850
 
+    .data.daObjYajirusiZTI start:0x0213c360 end:0x0213c36c
+    .data.daObjYajirusiZTS start:0x0213c36c end:0x0213c37e
+    .data.daObjYajirusiZTV start:0x0213c3d0 end:0x0213c458
 src/game/actors/d_a_obj_block_s.cpp:
     complete
     .text start:0x02138040 end:0x02139f70
+    .rodata start:0x0213bf60 end:0x0213bf90
     .init start:0x0213c058 end:0x0213c214
     .ctor start:0x0213c340 end:0x0213c344
     .data.blockDesc start:0x0213c4c8 end:0x0213c4d4
@@ -26,17 +30,24 @@ src/game/actors/d_a_obj_block_s.cpp:
     .data.blockVt start:0x0213c52c end:0x0213c5b4
     .bss start:0x0213c850 end:0x0213c8e8
 
+    .data.daObjBlockSZTI start:0x0213c4d4 end:0x0213c4e0
+    .data.daObjBlockSZTS start:0x0213c500 end:0x0213c510
 src/game/actors/d_a_obj_fall_block.cpp:
     complete
     .text start:0x02139f70 end:0x0213a900
 
+    .data.daObjFallBlockZTV start:0x0213c5b4 end:0x0213c63c
 src/game/actors/d_a_cnn.cpp:
     complete
     .text start:0x0213a900 end:0x0213b47c
     .init start:0x0213c214 end:0x0213c2b4
     .ctor start:0x0213c344 end:0x0213c348
+    .data.blockTail start:0x0213c63c end:0x0213c644
     .bss start:0x0213c8e8 end:0x0213c91c
 
+    .data.cnnZts start:0x0213c664 end:0x0213c66d
+    .data.cnnZti start:0x0213c670 end:0x0213c67c
+    .data.cnnVt start:0x0213c698 end:0x0213c71c
 src/game/actors/d_a_wbm.cpp:
     complete
     .rodata start:0x0213bf90 end:0x0213bf9c
@@ -44,3 +55,6 @@ src/game/actors/d_a_wbm.cpp:
     .init start:0x0213c2b4 end:0x0213c33c
     .ctor start:0x0213c348 end:0x0213c34c
     .bss start:0x0213c91c end:0x0213c948
+    .data.daWbmZTI start:0x0213c740 end:0x0213c74c
+    .data.daWbmZTS start:0x0213c734 end:0x0213c73d
+    .data.daWbmZTV start:0x0213c768 end:0x0213c7ec

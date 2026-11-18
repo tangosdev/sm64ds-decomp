@@ -201,3 +201,19 @@ DonketuAnimFileHandle gdaBDonketuDonketuDeadAnimationFile(ASSET_DONKETU_DEAD_BCA
 DonketuAnimFileHandle gdaBDonketuDonketuHitAnimationFile(ASSET_DONKETU_HIT_BCA);
 DonketuAnimFileHandle gdaBDonketuDonketuTurnAnimationFile(ASSET_DONKETU_TURN_BCA);
 DonketuAnimFileHandle gdaBDonketuDonketuWalkAnimationFile(ASSET_DONKETU_WALK_BCA);
+
+/* The Big Bully's resource block: the five handles above plus the tuning
+ * InitResourcesCommon, OnAimedAtWithEgg and the shared steps read. */
+BullyResourceConfig data_ov064_0211b93c = {
+    {&gBossDonketuModelFile, &gdaBDonketuDonketuDeadAnimationFile,
+     &gdaBDonketuDonketuHitAnimationFile, &gdaBDonketuDonketuTurnAnimationFile,
+     &gdaBDonketuDonketuWalkAnimationFile},
+    0x6e000,
+    0x8c000,
+    0x2800,
+    0x3c000,
+    0x78000,
+    0xc8000,
+    0x3c000,
+    0x11,
+};

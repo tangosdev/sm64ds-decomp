@@ -32,8 +32,8 @@ struct daObjFl_Puzzle_c : dBgActor_c {
      * PIECE_STATE_INIT. */
     u32 mCoinMgrId; /* 0x320 */
     /* This type's step script: a byte array of PIECE_STATE_* values ended by -1,
-     * taken from the table at 0x0211c198 by mType. Stored as a plain word. */
-    s32 mStepScript; /* 0x324 */
+     * taken from the table at 0x0211c198 by mType. */
+    const s8 *mStepScript; /* 0x324 */
     u8 mStepIndex;   /* 0x328 -- next entry of the script */
     u8 pad_329[0x3];
     s32 unk_32c; /* 0x32c -- only zeroed, in this TU */
