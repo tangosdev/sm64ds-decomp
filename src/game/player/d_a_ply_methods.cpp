@@ -3387,14 +3387,12 @@ void daPly_c::func_ov002_020c133c() {
 }
 
 void daPly_c::func_ov002_020c14b8() {
-    void *self = this;
-    daPly_c *c = (daPly_c *)self;
     dBgCh_Gnd rg;
     Vector3 pos;
     int savedY;
 
     savedY = 0x80000000;
-    if (c->Unk_020c9e5c(7) || c->Unk_020c9e5c(0xa) || c->Unk_020c9e5c(0xb) || c->Unk_020c9e5c(0xe))
+    if (Unk_020c9e5c(7) || Unk_020c9e5c(0xa) || Unk_020c9e5c(0xb) || Unk_020c9e5c(0xe))
         savedY = mPos.y;
     mProbedGroundY = 0x80000000;
     mGroundY = mProbedGroundY;
@@ -3443,7 +3441,7 @@ void daPly_c::func_ov002_020c14b8() {
 
     mStateFlags &= ~1;
     mStateFlags &= ~0x10;
-    c->func_ov002_020c133c();
+    func_ov002_020c133c();
 
     if (savedY != (int)0x80000000)
         mGroundY = savedY;
@@ -3805,8 +3803,6 @@ int daPly_c::func_ov002_020c231c() {
 }
 
 int daPly_c::func_ov002_020c25a8(int arg1) {
-    void *self = this;
-    daPly_c *c = (daPly_c *)self;
     int ret;
     Vector3 v;
     Vector3 wn;
@@ -3830,7 +3826,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
 
     mMeshClsn.StopIgnoringType14Walls();
 
-    if (c->IsState(data_ov002_02110514))
+    if (IsState(data_ov002_02110514))
         mMeshClsn.StartIgnoringType14Walls();
 
     mMeshClsn.ClearFlag400();
@@ -3840,18 +3836,18 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
 
     mMeshClsn.ClearLimMovFlag();
 
-    if (c->IsState(data_ov002_021100f4) && mSpeed.y > 0)
+    if (IsState(data_ov002_021100f4) && mSpeed.y > 0)
         mMeshClsn.SetLimMovFlag();
 
     mMeshClsn.ClearFlag800();
 
-    if (c->IsState(data_ov002_021102ec))
+    if (IsState(data_ov002_021102ec))
         mMeshClsn.SetFlag800();
 
     func_020383e4(&mMeshClsn);
 
     if (mIsMega)
-        ((BgChEvt *)&mMeshClsn)->func_ov002_020eed24(c);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eed24(this);
 
     if (mSpeed.y > 0x1e000)
         mMeshClsn.ClearGroundFlag();
@@ -3925,7 +3921,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     if (ret != 0)
         return ret;
 
-    ret = c->func_ov002_020c2138();
+    ret = func_ov002_020c2138();
     if (ret != 0)
         return ret;
 }
@@ -3959,8 +3955,6 @@ void daPly_c::func_ov002_020c29d4() {
 }
 
 void daPly_c::func_ov002_020c2b08() {
-    void *self = this;
-    daPly_c *c = (daPly_c *)self;
     Vector3 v;
 
     if (param1 != 1)
@@ -3976,7 +3970,7 @@ void daPly_c::func_ov002_020c2b08() {
         if (!SurfaceInfo_TestFlag0x20((int *)&mMeshClsn.GetFloorResult()->surface.clps))
             return;
 
-        limit = c->ScaleByCharFactor(0x20000);
+        limit = ScaleByCharFactor(0x20000);
         if (mHorzSpeed >= limit)
             mWaterRunTimer = 60;
         else
@@ -4002,7 +3996,7 @@ void daPly_c::func_ov002_020c2b08() {
             return;
         }
 
-        int limit2 = c->ScaleByCharFactor(0x28000);
+        int limit2 = ScaleByCharFactor(0x28000);
 
         if (mHorzSpeed < limit2) {
             if (mWaterRunTimer >= 30)
@@ -4028,7 +4022,7 @@ void daPly_c::func_ov002_020c2b08() {
 
         {
             dBgCh_Gnd rg;
-            rg.SetObjAndPos(v, c);
+            rg.SetObjAndPos(v, this);
 
             if (rg.DetectClsn() != 0) {
                 mGroundY = rg.clsnY;
@@ -4051,7 +4045,7 @@ void daPly_c::func_ov002_020c2b08() {
     if (mIsInShallowWater != 0)
         return;
 
-    if (c->IsState(data_ov002_0211013c)) {
+    if (IsState(data_ov002_0211013c)) {
         mWaterRunLatch = 0;
         mDetectWater = 1;
     }

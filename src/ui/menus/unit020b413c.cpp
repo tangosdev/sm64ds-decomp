@@ -611,6 +611,10 @@ static inline int IsFreshTap(Ov007Touch *tp) {
  * edges reading alike.
  */
 void Ov007ItemView::ItemView_HandleTouch(void *touch) {
+    /* Kept (#821 r103): the body holds `this` in two registers. Every
+     * one-pointer spelling compiles short of 0x4ac with 151 words recoloured:
+     * plain `this` or members, `elem = this`, a typed self, any declaration
+     * order (0x4a0), an inline GetItem() getter for the read below (0x4a8). */
     void *self = this;
     Ov007ItemView *elem = (Ov007ItemView *)self;
     Ov007Touch *tp = (Ov007Touch *)touch;
