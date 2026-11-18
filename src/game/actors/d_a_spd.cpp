@@ -340,14 +340,13 @@ int daSpd_c::func_ov071_0211fee4() {
 }
 
 int daSpd_c::func_ov071_0211fe38() {
-    int *p3a0 = &mLeapDist;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0xf000;
     mSpeed.y = 0x12000;
     mAngle.y = mLeapAngle;
     mPrevAngle.y = mAngle.y;
-    *p3a0 += 0x12c000;
+    mLeapDist += 0x12c000;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x2c00;
     mAnmModel.currFrame = 0;
@@ -358,8 +357,7 @@ int daSpd_c::func_ov071_0211fe38() {
 
 int daSpd_c::func_ov071_0211fd58() {
     mAnmModel.Advance();
-    int *p = &mLeapDist;
-    *p -= 0xf000;
+    mLeapDist -= 0xf000;
     if (mLeapDist <= 0) {
         mTimer = 60;
         SetState(2);
