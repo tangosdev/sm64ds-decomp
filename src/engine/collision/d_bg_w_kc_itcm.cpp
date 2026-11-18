@@ -628,8 +628,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             nrm.x = fn[0] << 2;
                             nrm.y = fn[1] << 2;
                             nrm.z = fn[2] << 2;
-                            if (VEC_DotProduct(&nrm, &depthDir) >
-                                depthDirMinDot) {
+                            if (VEC_DotProduct(&nrm, &depthDir) > depthDirMinDot) {
                                 if (faceDot < -f->prismThickness)
                                     continue;
                             } else {

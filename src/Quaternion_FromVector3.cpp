@@ -24,8 +24,7 @@ void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     va.x = a->x;
     va.y = a->y;
     va.z = a->z;
-    if (NormalizeVec3IfNonZero(&vb) != 0 &&
-        NormalizeVec3IfNonZero(&va) != 0) {
+    if (NormalizeVec3IfNonZero(&vb) != 0 && NormalizeVec3IfNonZero(&va) != 0) {
         r4 = FX_Sqrt((VEC_DotProduct(&va, &vb) + 0x1000) << 1);
         vb2.x = vb.x;
         vb2.y = vb.y;
