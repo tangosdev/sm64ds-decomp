@@ -4811,8 +4811,7 @@ s32 dScMgSmartball_c::Behavior() {
             if (mRestFrames >= 60) {
                 mPhase = 1;
             } else {
-                int *p = &mRestFrames;
-                (*p)++;
+                mRestFrames++;
             }
         } else {
             int cur;
@@ -4830,10 +4829,7 @@ s32 dScMgSmartball_c::Behavior() {
 
         if (mDraining != 0) {
             int t;
-            {
-                int *p = &mDrainTimer;
-                (*p)++;
-            }
+            mDrainTimer++;
             if (mDrainTimer == 180) {
                 Mg_RestoreMusic();
                 FreeGfxSlotsById(0x1d);
@@ -4868,14 +4864,12 @@ s32 dScMgSmartball_c::Behavior() {
             gSubScreenLayers[0] |= 1;
         }
         if (mResultSlideX > 0) {
-            int *p = &mResultSlideX;
-            *p -= 4;
+            mResultSlideX -= 4;
         } else {
             int flag = 0;
             mResultSlideX = 0;
             if (mResultTimer < 300) {
-                int *p = &mResultTimer;
-                (*p)++;
+                mResultTimer++;
             } else {
                 int idx = gActivePlayerSlot;
                 if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0) {
@@ -4899,12 +4893,10 @@ s32 dScMgSmartball_c::Behavior() {
     }
 
     if (mGateLampTimer[0] > 0) {
-        int *p = &mGateLampTimer[0];
-        (*p)--;
+        mGateLampTimer[0]--;
     }
     if (mGateLampTimer[1] > 0) {
-        int *p = &mGateLampTimer[1];
-        (*p)--;
+        mGateLampTimer[1]--;
     }
 
     UpdateSparks();
