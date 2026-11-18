@@ -6,10 +6,6 @@
 
 extern "C" {
 
-/* The working vectors are the SDK's POD VecFx32. The vector routines take
- * Vector3 pointers, but Vector3 locals (measured) leave this function's code
- * unchanged and emit an extra out-of-line _ZN7Vector3D1Ev into the object,
- * which the ROM does not have here; the casts mark that ABI boundary. */
 typedef struct {
     int x, y, z, w;
 } Quat;
@@ -19,7 +15,7 @@ extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);
 extern Quat data_02075b04;
 
 void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
-    VecFx32 vb, va, vb2, vcross;
+    Vector3 vb, va, vb2, vcross;
     int r4, absr4, q;
 
     vb.x = b->x;
@@ -28,13 +24,13 @@ void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     va.x = a->x;
     va.y = a->y;
     va.z = a->z;
-    if (NormalizeVec3IfNonZero((Vector3 *)&vb) != 0 &&
-        NormalizeVec3IfNonZero((Vector3 *)&va) != 0) {
-        r4 = FX_Sqrt((VEC_DotProduct((const Vector3 *)&va, (const Vector3 *)&vb) + 0x1000) << 1);
+    if (NormalizeVec3IfNonZero(&vb) != 0 &&
+        NormalizeVec3IfNonZero(&va) != 0) {
+        r4 = FX_Sqrt((VEC_DotProduct(&va, &vb) + 0x1000) << 1);
         vb2.x = vb.x;
         vb2.y = vb.y;
         vb2.z = vb.z;
-        func_0203cebc((Vector3 *)&vcross, (Vector3 *)&vb, (Vector3 *)&va, (Vector3 *)&vb2);
+        func_0203cebc(&vcross, &vb, &va, &vb2);
         vb.x = vcross.x;
         vb.y = vcross.y;
         vb.z = vcross.z;
