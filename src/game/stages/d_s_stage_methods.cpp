@@ -32,9 +32,7 @@
 // - CheckCameraInput keeps `#pragma opt_strength_reduction off`; PS_Update keeps
 //   `#pragma opt_common_subs off` (switched back on after it), the
 //   stale-tmpv levers in PS_Update's case 0xa and the `aa` staging in its
-//   case-1 star scroll, and its
-//   sp0..sp10/var_r0/var_sl/var_fp locals stay unrenamed until each slot's
-//   role is recovered. The data_ov001_ and data_ov002_ handles keep
+//   case-1 star scroll. The data_ov001_ and data_ov002_ handles keep
 //   linker names.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a };
@@ -1130,21 +1128,21 @@ void dScStage_c::PS_Render() {
         dScStage_c::RenderBouncingArrows();
     }
 
-    int r0v = (gGameMode == 1);
-    if (r0v != 0 && data_0209fc68 == 0) {
+    int isVsMode = (gGameMode == 1);
+    if (isVsMode != 0 && data_0209fc68 == 0) {
         OAM::Render(0, &OAM::VS_PAUSE, 128, 96, -1, -1, 0x1000, 0x1000, 0, -1);
     } else if (sPauseState == 1 || (SublevelToLevel(gCurrentSublevel) == 0x1d &&
                                     (sPauseState < 7U || sPauseState > 8U))) {
-        int var_sl;
-        unsigned char var_sb;
-        unsigned char var_r8;
-        int var_r7;
-        int sp18;
-        var_r7 = 0;
-        sp18 = 0;
-        var_r8 = CountStarsCollectedInLevelToDisplay(sPauseDisplayedCourse);
+        int star;
+        unsigned char x;
+        unsigned char starCount;
+        int shown;
+        int missing;
+        shown = 0;
+        missing = 0;
+        starCount = CountStarsCollectedInLevelToDisplay(sPauseDisplayedCourse);
         if (IsStarCollected(sPauseDisplayedCourse, 0) != 0) {
-            var_r8 -= 1;
+            starCount -= 1;
         }
         if (sPauseState == 1 && sCourseArrowsHidden == 0) {
             if (sPressedPauseArrow == 1) {
@@ -1163,28 +1161,28 @@ void dScStage_c::PS_Render() {
             }
         }
         if (sPauseDisplayedCourse != 0xf) {
-            var_sb = 80;
-            var_sl = 1;
-            if (var_r8 != 0) {
+            x = 80;
+            star = 1;
+            if (starCount != 0) {
                 do {
-                    if (IsStarCollected(sPauseDisplayedCourse, var_sl) != 0) {
-                        OAM::Render(false, &OAM::MM_SMALL_STAR, var_sb, 96, -1, -1, 0);
-                        var_r7 = (var_r7 + 1) & 0xff;
+                    if (IsStarCollected(sPauseDisplayedCourse, star) != 0) {
+                        OAM::Render(false, &OAM::MM_SMALL_STAR, x, 96, -1, -1, 0);
+                        shown = (shown + 1) & 0xff;
                     } else {
-                        OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 96, -1, -1, 0);
-                        sp18 = 1;
+                        OAM::Render(false, &OAM::SMALL_STAR_EMPTY, x, 96, -1, -1, 0);
+                        missing = 1;
                     }
-                    var_sb += 16;
-                    var_sl += 1;
-                } while (var_r7 != var_r8);
+                    x += 16;
+                    star += 1;
+                } while (shown != starCount);
             }
-            if (sp18 == 0 && var_r8 != 7) {
-                OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 96, -1, -1, 0);
+            if (missing == 0 && starCount != 7) {
+                OAM::Render(false, &OAM::SMALL_STAR_EMPTY, x, 96, -1, -1, 0);
             }
-            unsigned char r5v = SaveData::GetCoinRecord(sPauseDisplayedCourse);
+            unsigned char coinRecord = SaveData::GetCoinRecord(sPauseDisplayedCourse);
             OAM::Render(false, &OAM::COIN, 112, 112, -1, -1, 0);
             OAM::Render(false, &OAM::TIMES, 128, 120, -1, -1, 0);
-            RenderNumber(r5v, 136, 112, 1, 8);
+            RenderNumber(coinRecord, 136, 112, 1, 8);
             if (IsStarCollected(sPauseDisplayedCourse, 0) != 0) {
                 OAM::Render(false, &OAM::MM_SMALL_STAR, 176, 120, -1, -1, 0);
             }
@@ -1475,14 +1473,9 @@ static inline int IsTouchPressed(u8 held, u8 slot) {
    pragma. */
 #pragma opt_common_subs off
 void dScStage_c::PS_Update() {
-    u8 var_sl;
-    u8 var_fp;
-    s32 sp0;
-    s32 sp4;
-    s32 sp8;
-    s32 spC;
-    s32 sp10;
-    s32 var_r0;
+    u8 found;
+    u8 changed;
+    s32 pressed;
 
     if (sPauseArrowPressTimer != 0) {
         sPauseArrowPressTimer = sPauseArrowPressTimer - data_0208ee44;
@@ -1662,35 +1655,28 @@ void dScStage_c::PS_Update() {
         if (sCourseArrowsHidden != 0)
             return;
         {
-            u8 *de8_sb;
-            var_sl = 0;
-            var_fp = var_sl;
-            sp4 = var_sl;
-            sp8 = var_sl;
-            sp0 = var_sl;
-            sp10 = 0x52;
-            spC = 0x51;
+            found = 0;
+            changed = 0;
             do {
                 u8 sl2;
                 u8 a;
                 u8 vx;
-                var_r0 = sp0;
+                pressed = 0;
                 sl2 = gActivePlayerSlot;
                 {
                     u8 aa = gTouchInfo[sl2].held;
                     a = aa;
                 }
                 if ((a != 0) && (gTouchInfo[sl2].edge != 0)) {
-                    var_r0 = 1;
+                    pressed = 1;
                 }
-                if ((var_r0 != 0) && ((vx = gTouchInfo[sl2].x) < 56U) &&
+                if ((pressed != 0) && ((vx = gTouchInfo[sl2].x) < 56U) &&
                     (gTouchInfo[sl2].y < 32U)) {
-                    u8 t;
                     sPauseDisplayedCourse = (sPauseDisplayedCourse - 1);
-                    var_fp = 1;
-                    t = sPauseDisplayedCourse;
-                    if (t == 0xFF)
+                    changed = 1;
+                    if (sPauseDisplayedCourse == 0xFF)
                         sPauseDisplayedCourse = 0xF;
+                    /* Kept (#821 r84): sPauseArrowPressTimer stored directly -> 8 bytes shorter. */
                     {
                         u8 *p0 = &sPauseArrowPressTimer;
                         u8 *p1 = &sPauseArrowPressTimer;
@@ -1699,19 +1685,20 @@ void dScStage_c::PS_Update() {
                         *p = (data_0208ee44 * 3);
                     }
                 } else {
-                    s32 var_r0_2;
+                    /* Kept (#821 r84): testing a/edge directly in the if -> 0x18 shorter. */
+                    s32 rightPressed;
                     if ((a != 0) && (gTouchInfo[sl2].edge != 0)) {
-                        var_r0_2 = 1;
+                        rightPressed = 1;
                     } else {
-                        var_r0_2 = sp4;
+                        rightPressed = 0;
                     }
-                    if (var_r0_2 != 0) {
+                    if (rightPressed != 0) {
                         if (((u8)(gTouchInfo[sl2].x - 200) < 56U) && (gTouchInfo[sl2].y < 32U)) {
                             sPauseDisplayedCourse = (sPauseDisplayedCourse + 1);
                             sPressedPauseArrow = 2;
-                            var_fp = 1;
+                            changed = 1;
                             if (sPauseDisplayedCourse == 0x10) {
-                                sPauseDisplayedCourse = sp8;
+                                sPauseDisplayedCourse = 0;
                             }
                             sPauseArrowPressTimer = (data_0208ee44 * 3);
                         }
@@ -1719,16 +1706,16 @@ void dScStage_c::PS_Update() {
                 }
                 if ((sPauseDisplayedCourse == 0xF) ||
                     (CountStarsCollectedInLevelToDisplay(sPauseDisplayedCourse) != 0)) {
-                    var_sl = 1;
+                    found = 1;
                     if (sPressedPauseArrow == 1) {
-                        func_02012790(spC);
+                        func_02012790(0x51);
                     } else if (sPressedPauseArrow == 2) {
-                        func_02012790(sp10);
+                        func_02012790(0x52);
                     }
                 }
-            } while (var_sl == 0);
+            } while (found == 0);
         }
-        if (var_fp == 0)
+        if (changed == 0)
             return;
         Message::DisplayText(data_020756d0[sPauseDisplayedCourse]);
         return;
