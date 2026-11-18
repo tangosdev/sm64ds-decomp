@@ -2,6 +2,16 @@
 #include "Ov007Pad.h"
 #include "nitro/pad/pad.h"
 
+/* The pad's inputLock word. Pad_Update clears bit 0 by reading the word
+ * again through this accessor: the cartridge reloads it through [r0,#0x64]
+ * (ldreq/biceq/streq) after the outer test has already read it.
+ * Measured (#821 r20): `&= ~1` and its spellings are a word longer, an
+ * (int) cast or int local on a plain read folds the reload into the outer
+ * test, and a u32 field or 1-bit bitfield is 0x1ec/0x1f0, not 0x1e8. */
+static inline int Pad_GetInputLock(const Ov007Pad *pad) {
+    return pad->inputLock;
+}
+
 /* Reads the keys (KEYINPUT and the ARM7's X/Y, or *src when given) into the
  * pad, honours inputLock, sets the three axes and steps each button's held
  * and released frame counts. */
@@ -21,30 +31,7 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
     }
     if ((pad->inputLock & 1) != 0) {
         if (pad->keys == 0) {
-            /* Kept (#821, measured 2026-11-16 against ov007 0x020c20b8,
-               0x1e8). The ROM reloads inputLock and clears bit 0 through
-               [r0,#0x64] (ldreq/biceq/streq).
-                 `&= ~1`, `= inputLock & ~1`, `&= 0xfffffffe`, `^= 1`, or
-                   an empty else: 0x1ec, +1 word (addeq r2,r0,#0x64, then
-                   ldr/str through r2).
-                 `-= 1`: 0x1ec, 4 words replaced.
-                 if/else arms swapped: 0x1ec, 7 words differ.
-                 `= inputLock & ~1u`, an int local first, or an (int) cast
-                   on the read: 0x1e4, -1 word (the reload is CSE'd into
-                   the outer test).
-                 u32 field: 0x1ec. 1-bit bitfield: 0x1f0.
-                 (#821 r20) signed 1-bit bitfield: 0x1f0. A union of the
-                   int word and a 1-bit field: 0x1ec when the word is
-                   tested (clearing the bit or the word), 0x1f0 when the
-                   bit is tested.
-               ov007's menu (unit020b2cdc.cpp) sets bit 0 of its own
-               inputLock with the same reload-through-a-cast shape. The cast is
-               what forces the reload; a `volatile` qualifier on it changes
-               nothing. */
-            /* Kept (#821 r76): the cast forces the reload; no block-copy or type lever (r72-r75)
-               applies to this scalar pin (r20: 0x1ec/0x1f0). */
-            u32 w = *(u32 *)&pad->inputLock;
-            pad->inputLock = w & ~1u;
+            pad->inputLock = Pad_GetInputLock(pad) & ~1;
         } else {
             pad->keys = 0;
         }
