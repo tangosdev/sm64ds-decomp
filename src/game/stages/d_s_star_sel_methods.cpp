@@ -411,7 +411,7 @@ s32 dScStarSel_c::Render() {
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (data_020a0db0 * 0x300));
                 Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, 0x1400, 0x1400, 0x1400);
             }
-            idx = (IsStarCollectedInLevel(gNextSublevel, i) == 0) ? 1 : 0;
+            idx = IsStarCollectedInLevel(gNextSublevel, i) == 0;
             plate = &models[idx];
             plate->mat4x3 = data_020a0e68;
             plate->Render(0);
