@@ -29,10 +29,9 @@ The compiler and ROM remain on the private worker. For each relay job:
    uncommitted move has no lineage.
 3. Run `python tools/rombuild.py --profile stock --report-json build/head-rom.json`.
 4. Run `python tools/pr_linkcheck.py --base <baseSha> --json build/link.json --md build/link.md`.
-5. If the PR touched `src/` or `include/`, run
-   `python tools/port_refcheck.py --json build/port.json`. No compiler and no ROM, so
-   it costs about a second. It is optional on both sides: a worker that does not run it,
-   or a base that predates the tool, simply reports no port row.
+5. There used to be a port reference check here. It left with `port/`, which now lives
+   in its own repository (https://github.com/tangosdev/sm64ds-pc-port). A base without
+   the tool simply reports no port row, so a worker that still has the step skips it.
 6. Run:
 
    ```sh

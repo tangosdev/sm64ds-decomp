@@ -50,9 +50,8 @@ struct daKuriKing_c : dEnemyBase_c {
     dExtShadowModel_c mShadowModels[3];           /* 0x274 */
     /* One drop-shadow matrix per foot. UpdateShadows sets each to the
        identity with that foot's mCylClsnPos x/z and mPos.y (>> 3) as translation
-       and hands it to DropShadowRadHeight; BehaviorVanish uses [0] alone.
-       Raw words rather than Matrix4x3: see d_a_kuri_king.cpp's deslop notes. */
-    s32 mShadowMatrices[3][12]; /* 0x2ec */
+       and hands it to DropShadowRadHeight; BehaviorVanish uses [0] alone. */
+    Matrix4x3 mShadowMatrices[3]; /* 0x2ec */
     /* Body transform. UpdateBodyMatrix builds it from mPos >> 3, mAngle.y and
        mScale; func_ov074_02121270 composes a bone's transform with it to get
        that bone's world position. */

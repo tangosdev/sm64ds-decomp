@@ -122,7 +122,7 @@ class PlanFollowsPlacement(unittest.TestCase):
         self.tmp.cleanup()
 
     def destinations(self, *selects):
-        moves, skipped = SM.plan(list(selects), files=[])
+        moves, skipped = SM.plan(list(selects))
         return {pathlib.PurePosixPath(m.old).name: m.new for m in moves}, skipped
 
     def test_arm9_address_file_is_sharded_on_the_high_half(self):
@@ -139,20 +139,10 @@ class PlanFollowsPlacement(unittest.TestCase):
         self.assertEqual(d["_ZN7daTrs_c6RenderEv.cpp"], "src/named/ov006/_ZN7daTrs_c6RenderEv.cpp")
         self.assertEqual(d["_ZN7daTrs_c4ThinkEv.cpp"], "src/named/ov006/_ZN7daTrs_c4ThinkEv.cpp")
 
-    def test_a_file_port_names_by_literal_path_is_never_moved(self):
-        moves, skipped = SM.plan(["all"], files=["port/hal/x.cpp"])
-        # `files` only names what port_pinned scans; no port file exists on disk here.
-        self.assertTrue(moves)
-        (self.repo / "port" / "hal").mkdir(parents=True)
-        (self.repo / "port" / "hal" / "x.cpp").write_text('#include "../../src/FreeFn.c"\n')
-        moves, skipped = SM.plan(["all"], files=["port/hal/x.cpp"])
-        self.assertNotIn("src/FreeFn.c", [m.old for m in moves])
-        self.assertIn("src/FreeFn.c", skipped)
-
     def test_apply_then_layout_check_is_clean_and_delinks_follow(self):
         delinks = self.repo / "config" / "arm9" / "delinks.txt"
         delinks.write_text("src/func_02045678.c:\n    .text start:0x02045678 end:0x0204567c\n")
-        moves, _ = SM.plan(["unnamed:arm9"], files=[])
+        moves, _ = SM.plan(["unnamed:arm9"])
         # apply() stages through git; a scratch dir is not a repo, so exercise the two
         # halves it is made of: the rename and the rekey.
         for m in moves:

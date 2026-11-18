@@ -1,9 +1,0 @@
-# Gate-7 slice: dExtAnmModel_c -- the game's own animated-model class, where
-# dExtFrameCtrl_c::Advance owns frame progression (speed, loop/clamp mode bits)
-# instead of a harness counter. Sits on the gate-4/5 stack.
-# dExtAnmModel_c and dExtFrameCtrl_c live in src/engine/model/d_ext_model.cpp,
-# the dExt model family's one production translation unit, which slice 4b
-# already compiles; smoke_modelanim links that slice, so listing it again
-# would define every class twice. mwcc emits C1 and C2 from each one
-# constructor; MSVC emits one symbol, so hal/anim_ctor_bridge.cpp defines
-# dExtAnmModel_c's C1 name and dExtFrameCtrl_c's C2 name.

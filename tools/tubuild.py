@@ -6813,9 +6813,6 @@ def cmd_promote(args):
               f"reference(s), {len(found_stems)} stem reference(s)")
         for x in (found + found_stems)[:6]:
             print(f"        {x}")
-    print("   port/: port/tools reads the ROM-build outputs and src/ by path; a new "
-          "src/ subdirectory may need adding to port/CMakeLists.txt's source globs "
-          "(not checked mechanically here).")
 
     print("\n-- 4b. contributor attribution")
     print("   Who matched each function is function-authors.json, keyed by module and")
