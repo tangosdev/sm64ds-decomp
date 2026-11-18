@@ -748,8 +748,8 @@ void dScMgLuigi_c::AddPenalty(int pictureIndex) {
 void dScMgLuigi_c::DrawWantedIcon() {
     if (mIconOn == 0)
         return;
-    Mg_RenderSubSpriteMtx(sLuigiPictureSprites[mWanted], (unsigned short)mIconX,
-                          (unsigned short)mIconY, 0);
+    Mg_RenderSubSpriteMtx(sLuigiPictureSprites[mWanted], mIconX,
+                          mIconY, 0);
 }
 
 void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
@@ -997,8 +997,8 @@ void dScMgLuigi_c::UpdatePictures() {
 
 void dScMgLuigi_c::BeginCatch(int found) {
     int roundInSet;
-    mIconX = (short)(mPosX[mTarget - 1] >> 0xc);
-    mIconY = (short)(mPosY[mTarget - 1] >> 0xc);
+    mIconX = mPosX[mTarget - 1] >> 0xc;
+    mIconY = mPosY[mTarget - 1] >> 0xc;
     mIconOn = 0x60;
     mState = STATE_CATCH;
     mCatchWait = 0xc8;
