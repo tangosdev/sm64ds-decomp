@@ -5009,7 +5009,9 @@ s32 dScMgSmartball_c::InitResources() {
     DecompressLZ16(f, G2S_GetBG0CharPtr());
     Ov004_Deallocate(f);
     {
-        /* volatile: same stack round trip of the fill value as PaintCell. */
+        /* volatile: same stack round trip of the fill value as PaintCell.
+           r63: a plain 0, MI_CpuClear16, a u16 local and the SDK's static
+           inline MI_CpuFill16 (u16 data parameter) all give 0x8d4 of 0x8dc. */
         volatile u16 v;
         MI_CpuFill16(G2S_GetBG0ScrPtr(), (u16)(v = 0), 0x1000);
     }
