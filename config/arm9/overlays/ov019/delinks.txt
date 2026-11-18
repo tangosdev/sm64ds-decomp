@@ -19,3 +19,219 @@ src/game/actors/d_a_sld_mng.cpp:
     .init start:0x02112b14 end:0x02112b64
     .ctor start:0x02112b68 end:0x02112b6c
     .bss start:0x021135cc end:0x021135e4
+src/data/ov019/data_ov019_02112b80.c:
+    complete
+    .data start:0x02112b80 end:0x02112b84
+
+src/data/ov019/data_ov019_02112b84.c:
+    complete
+    .data start:0x02112b84 end:0x02112b88
+
+src/data/ov019/data_ov019_02112b88.c:
+    complete
+    .data start:0x02112b88 end:0x02112b90
+
+src/data/ov019/data_ov019_02112b90.c:
+    complete
+    .data start:0x02112b90 end:0x02112b98
+
+src/data/ov019/data_ov019_02112b98.c:
+    complete
+    .data start:0x02112b98 end:0x02112ba0
+
+src/data/ov019/data_ov019_02112ba0.c:
+    complete
+    .data start:0x02112ba0 end:0x02112ba8
+
+src/data/ov019/data_ov019_02112ba8.c:
+    complete
+    .data start:0x02112ba8 end:0x02112bb0
+
+src/data/ov019/data_ov019_02112bb0.c:
+    complete
+    .data start:0x02112bb0 end:0x02112bb8
+
+src/data/ov019/data_ov019_02112bb8.c:
+    complete
+    .data start:0x02112bb8 end:0x02112bc0
+
+src/data/ov019/data_ov019_02112bc0.c:
+    complete
+    .data start:0x02112bc0 end:0x02112bc8
+
+src/data/ov019/data_ov019_02112bc8.c:
+    complete
+    .data start:0x02112bc8 end:0x02112bd0
+
+src/data/ov019/data_ov019_02112bd0.c:
+    complete
+    .data start:0x02112bd0 end:0x02112bdc
+
+src/data/ov019/data_ov019_02112bdc.c:
+    complete
+    .data start:0x02112bdc end:0x02112be8
+
+src/data/ov019/data_ov019_02112be8.c:
+    complete
+    .data start:0x02112be8 end:0x02112bec
+
+src/data/ov019/data_ov019_02112bec.c:
+    complete
+    .data start:0x02112bec end:0x02112bf8
+
+src/data/ov019/data_ov019_02112bf8.c:
+    complete
+    .data start:0x02112bf8 end:0x02112c08
+
+src/data/ov019/data_ov019_02112c08.c:
+    complete
+    .data start:0x02112c08 end:0x02112c18
+
+src/data/ov019/data_ov019_02112c18.c:
+    complete
+    .data start:0x02112c18 end:0x02112c28
+
+src/data/ov019/data_ov019_02112c28.c:
+    complete
+    .data start:0x02112c28 end:0x02112c38
+
+src/data/ov019/data_ov019_02112c38.c:
+    complete
+    .data start:0x02112c38 end:0x02112c44
+
+src/data/ov019/data_ov019_02112c44.c:
+    complete
+    .data start:0x02112c44 end:0x02112c48
+
+src/data/ov019/data_ov019_02112c48.c:
+    complete
+    .data start:0x02112c48 end:0x02112c4c
+
+src/data/ov019/data_ov019_02112c4c.c:
+    complete
+    .data start:0x02112c4c end:0x02112c58
+
+src/data/ov019/data_ov019_02112c58.c:
+    complete
+    .data start:0x02112c58 end:0x02112c68
+
+src/data/ov019/data_ov019_02112c68.c:
+    complete
+    .data start:0x02112c68 end:0x02112c84
+
+src/data/ov019/data_ov019_02112c84.c:
+    complete
+    .data start:0x02112c84 end:0x02112c88
+
+src/data/ov019/data_ov019_02112c88.c:
+    complete
+    .data start:0x02112c88 end:0x02112ca8
+
+src/data/ov019/data_ov019_02112ca8.c:
+    complete
+    .data start:0x02112ca8 end:0x02112cc4
+
+src/data/ov019/data_ov019_02112cc4.c:
+    complete
+    .data start:0x02112cc4 end:0x02112cc8
+
+src/data/ov019/data_ov019_02112cc8.c:
+    complete
+    .data start:0x02112cc8 end:0x02112cd0
+
+src/data/ov019/data_ov019_02112cd0.c:
+    complete
+    .data start:0x02112cd0 end:0x02112d04
+
+src/data/ov019/data_ov019_02112d04.c:
+    complete
+    .data start:0x02112d04 end:0x02112d48
+
+src/data/ov019/data_ov019_02112d48.c:
+    complete
+    .data start:0x02112d48 end:0x02112d54
+
+src/data/ov019/data_ov019_02112d54.c:
+    complete
+    .data start:0x02112d54 end:0x02112d98
+
+src/data/ov019/data_ov019_02112d98.c:
+    complete
+    .data start:0x02112d98 end:0x02112db4
+
+src/data/ov019/data_ov019_02112db4.c:
+    complete
+    .data start:0x02112db4 end:0x02112e24
+
+src/data/ov019/data_ov019_02112e24.c:
+    complete
+    .data start:0x02112e24 end:0x02112e5c
+
+src/data/ov019/data_ov019_02112e5c.c:
+    complete
+    .data start:0x02112e5c end:0x02112f2c
+
+src/data/ov019/data_ov019_02112f2c.c:
+    complete
+    .data start:0x02112f2c end:0x02112f58
+
+src/data/ov019/data_ov019_02112f58.c:
+    complete
+    .data start:0x02112f58 end:0x02112f7c
+
+src/data/ov019/data_ov019_02112f7c.c:
+    complete
+    .data start:0x02112f7c end:0x02112fd0
+
+src/data/ov019/data_ov019_02112fd0.c:
+    complete
+    .data start:0x02112fd0 end:0x02112ffc
+
+src/data/ov019/data_ov019_02112ffc.c:
+    complete
+    .data start:0x02112ffc end:0x02113028
+
+src/data/ov019/data_ov019_02113028.c:
+    complete
+    .data start:0x02113028 end:0x021130cc
+
+src/data/ov019/data_ov019_021130cc.c:
+    complete
+    .data start:0x021130cc end:0x021130d0
+
+src/data/ov019/data_ov019_021130d0.c:
+    complete
+    .data start:0x021130d0 end:0x02113228
+
+src/data/ov019/data_ov019_02113228.c:
+    complete
+    .data start:0x02113228 end:0x02113270
+
+src/data/ov019/_ZTI10daSldMng_c.c:
+    complete
+    .data start:0x0211338c end:0x02113398
+
+src/data/ov019/_ZTS10daSldMng_c.c:
+    complete
+    .data start:0x02113398 end:0x021133a8
+
+src/data/ov019/g_profile_SLIDER_MANAGER.c:
+    complete
+    .data start:0x021133a8 end:0x021133cc
+
+src/data/ov019/ov019_vt_021133cc.c:
+    complete
+    .data start:0x021133cc end:0x02113434
+
+src/data/ov019/data_ov019_02113434.c:
+    complete
+    .data start:0x02113434 end:0x02113460
+
+src/data/ov019/data_ov019_021135e4.c:
+    complete
+    .bss start:0x021135e4 end:0x021135f4
+
+src/data/ov019/data_ov019_021135f4.c:
+    complete
+    .bss start:0x021135f4 end:0x02113600
+

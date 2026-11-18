@@ -181,3 +181,119 @@ src/minigames/d_mg_ps_opt.cpp:
     .bss start:0x020bfda8 end:0x020bfeb8
     .data.psopt start:0x020bca58 end:0x020bcaa0
 
+src/data/ov004/_ZTI11dScMgBase_c.c:
+    complete
+    .data.gap23 start:0x020bbf6c end:0x020bbf78
+
+src/data/ov004/_ZTIN11dScMgBase_c15graphCallback_cE.c:
+    complete
+    .data.gap23 start:0x020bbf78 end:0x020bbf84
+
+src/data/ov004/_ZTS11dScMgBase_c.c:
+    complete
+    .data.gap23 start:0x020bbf84 end:0x020bbf94
+
+src/data/ov004/_ZTSN11dScMgBase_c15graphCallback_cE.c:
+    complete
+    .data.gap24 start:0x020bc04c end:0x020bc070
+
+src/data/ov004/sMgBannerButtonsArmed.c:
+    complete
+    .data.gap25 start:0x020bc150 end:0x020bc154
+
+src/data/ov004/sMgWorkBuffer.c:
+    complete
+    .bss start:0x020beb60 end:0x020beb64
+
+src/data/ov004/sMgPaintWord.c:
+    complete
+    .bss start:0x020beb64 end:0x020beb68
+
+src/data/ov004/gMgScene.c:
+    complete
+    .bss start:0x020beb68 end:0x020beb6c
+
+src/data/ov004/sMgTopScreenYOffset.c:
+    complete
+    .bss start:0x020beb6c end:0x020beb70
+
+src/data/ov004/sMgSparkleSpritesGuard.c:
+    complete
+    .bss start:0x020beb70 end:0x020beb74
+
+src/data/ov004/sMgBannerGfxSlotUsed.c:
+    complete
+    .bss start:0x020bf3e8 end:0x020bf3ec
+
+src/data/ov004/gMgCoinsStatus.c:
+    complete
+    .bss start:0x020bf9e4 end:0x020bf9e8
+
+src/data/ov004/sMgCoinsDelta.c:
+    complete
+    .bss start:0x020bf9e8 end:0x020bf9ec
+
+src/data/ov004/sMgCoinsBetPlaced.c:
+    complete
+    .bss start:0x020bf9ec end:0x020bf9f0
+
+src/data/ov004/sMgCoinsSoundPending.c:
+    complete
+    .bss start:0x020bf9f0 end:0x020bf9f4
+
+src/data/ov004/sMgCoinsLastLostAlt.c:
+    complete
+    .bss start:0x020bf9f4 end:0x020bf9f8
+
+src/data/ov004/sMgCoinsPayoutLeft.c:
+    complete
+    .bss start:0x020bf9f8 end:0x020bf9fc
+
+src/data/ov004/sMgCoinsToStep.c:
+    complete
+    .bss start:0x020bf9fc end:0x020bfa00
+
+src/data/ov004/sMgCoinsIndex.c:
+    complete
+    .bss start:0x020bfa00 end:0x020bfa04
+
+src/data/ov004/sMgCoinsWait.c:
+    complete
+    .bss start:0x020bfa04 end:0x020bfa08
+
+src/data/ov004/sMgCoinsLastReturned.c:
+    complete
+    .bss start:0x020bfa08 end:0x020bfa0c
+
+src/data/ov004/sMgCoinsLastSpent.c:
+    complete
+    .bss start:0x020bfa0c end:0x020bfa10
+
+src/data/ov004/sMgCoinsLaunchPending.c:
+    complete
+    .bss start:0x020bfa10 end:0x020bfa14
+
+src/data/ov004/sMgCoinsLastLost.c:
+    complete
+    .bss start:0x020bfa14 end:0x020bfa18
+
+src/data/ov004/gMgCoinsInPlay.c:
+    complete
+    .bss start:0x020bfa18 end:0x020bfa1c
+
+src/data/ov004/sMgCoinsSlowLaunches.c:
+    complete
+    .bss start:0x020bfa1c end:0x020bfa20
+
+src/data/ov004/sMgCoinsStep.c:
+    complete
+    .bss start:0x020bfa20 end:0x020bfa24
+
+src/data/ov004/sMgCoinsDeltaShown.c:
+    complete
+    .bss start:0x020bfa24 end:0x020bfa28
+
+src/data/ov004/data_ov004_020bfeb8.c:
+    complete
+    .bss start:0x020bfeb8 end:0x020bfec0
+

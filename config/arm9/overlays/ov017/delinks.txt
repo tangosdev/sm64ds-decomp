@@ -20,3 +20,135 @@ src/game/actors/d_a_obj_ks_water.cpp:
     .data.ksWaterName start:0x02111a18 end:0x02111a24
     .data.ksClps start:0x02111a94 end:0x02111ab4
     .bss start:0x02111c80 end:0x02111ca8
+src/data/ov017/data_ov017_02111a00.c:
+    complete
+    .data.ksPre start:0x02111a00 end:0x02111a04
+
+src/data/ov017/data_ov017_02111a04.c:
+    complete
+    .data.ksPre start:0x02111a04 end:0x02111a08
+
+src/data/ov017/data_ov017_02111a08.c:
+    complete
+    .data.ksPre start:0x02111a08 end:0x02111a10
+
+src/data/ov017/data_ov017_02111a10.c:
+    complete
+    .data.ksPre start:0x02111a10 end:0x02111a18
+
+src/data/ov017/data_ov017_02111a24.c:
+    complete
+    .data.w11a24 start:0x02111a24 end:0x02111a30
+
+src/data/ov017/data_ov017_02111a30.c:
+    complete
+    .data.w11a24 start:0x02111a30 end:0x02111a40
+
+src/data/ov017/data_ov017_02111a40.c:
+    complete
+    .data.w11a24 start:0x02111a40 end:0x02111a4c
+
+src/data/ov017/data_ov017_02111a4c.c:
+    complete
+    .data.w11a24 start:0x02111a4c end:0x02111a50
+
+src/data/ov017/data_ov017_02111a50.c:
+    complete
+    .data.w11a24 start:0x02111a50 end:0x02111a58
+
+src/data/ov017/data_ov017_02111a58.c:
+    complete
+    .data.w11a24 start:0x02111a58 end:0x02111a60
+
+src/data/ov017/data_ov017_02111a78.c:
+    complete
+    .data.ksMid start:0x02111a78 end:0x02111a94
+
+src/data/ov017/data_ov017_02111ab4.c:
+    complete
+    .data.ksRest start:0x02111ab4 end:0x02111abc
+
+src/data/ov017/data_ov017_02111abc.c:
+    complete
+    .data.ksRest start:0x02111abc end:0x02111ad4
+
+src/data/ov017/data_ov017_02111ad4.c:
+    complete
+    .data.ksRest start:0x02111ad4 end:0x02111af4
+
+src/data/ov017/data_ov017_02111af4.c:
+    complete
+    .data.ksRest start:0x02111af4 end:0x02111afc
+
+src/data/ov017/data_ov017_02111afc.c:
+    complete
+    .data.ksRest start:0x02111afc end:0x02111b14
+
+src/data/ov017/data_ov017_02111b14.c:
+    complete
+    .data.ksRest start:0x02111b14 end:0x02111b2c
+
+src/data/ov017/data_ov017_02111b2c.c:
+    complete
+    .data.ksRest start:0x02111b2c end:0x02111b34
+
+src/data/ov017/data_ov017_02111b34.c:
+    complete
+    .data.ksRest start:0x02111b34 end:0x02111b44
+
+src/data/ov017/data_ov017_02111b44.c:
+    complete
+    .data.ksRest start:0x02111b44 end:0x02111b64
+
+src/data/ov017/data_ov017_02111b64.c:
+    complete
+    .data.ksRest start:0x02111b64 end:0x02111b68
+
+src/data/ov017/data_ov017_02111b68.c:
+    complete
+    .data.ksRest start:0x02111b68 end:0x02111b6c
+
+src/data/ov017/data_ov017_02111b6c.c:
+    complete
+    .data.ksRest start:0x02111b6c end:0x02111b74
+
+src/data/ov017/data_ov017_02111b74.c:
+    complete
+    .data.ksRest start:0x02111b74 end:0x02111b88
+
+src/data/ov017/data_ov017_02111b88.c:
+    complete
+    .data.ksRest start:0x02111b88 end:0x02111bb4
+
+src/data/ov017/_ZTI14daObjKsWater_c.c:
+    complete
+    .data.ksRest start:0x02111bb4 end:0x02111bc0
+
+src/data/ov017/_ZTS14daObjKsWater_c.c:
+    complete
+    .data.ksRest start:0x02111bc0 end:0x02111bd4
+
+src/data/ov017/g_profile_KS_MIZU.c:
+    complete
+    .data.ksRest start:0x02111bd4 end:0x02111be0
+
+src/data/ov017/data_ov017_02111be0.c:
+    complete
+    .data.ksRest start:0x02111be0 end:0x02111bf8
+
+src/data/ov017/ov017_vt_02111bf8.c:
+    complete
+    .data.ksRest start:0x02111bf8 end:0x02111c20
+
+src/data/ov017/data_ov017_02111c20.c:
+    complete
+    .data.ksRest start:0x02111c20 end:0x02111c54
+
+src/data/ov017/data_ov017_02111c54.c:
+    complete
+    .data.ksRest start:0x02111c54 end:0x02111c80
+
+src/data/ov017/data_ov017_02111ca8.c:
+    complete
+    .bss start:0x02111ca8 end:0x02111cc0
+
