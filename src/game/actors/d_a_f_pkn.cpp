@@ -679,13 +679,9 @@ int daFPkn_c::Behavior()
     case STATE_DEFEATED:
         break;
     }
-    /* mStateTimer is s16; the ROM counts it unsigned, and `(u16)mStateTimer + 1` DIFFs. */
-    {
-        unsigned short *timer = &mStateTimer;
-        *timer = *timer + 1;
-        if (prevState != mState)
-            *timer = 0;
-    }
+    mStateTimer++;
+    if (prevState != mState)
+        mStateTimer = 0;
     CheckClsnHits();
     UpdateClsnOffset();
     mdCcAc_c.Clear();

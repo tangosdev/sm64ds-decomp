@@ -1134,6 +1134,8 @@ void daStar_c::StateCollectBegin() {
 
         {
             Vector3 *src = &mPlayer->mPos;
+            /* Kept (#821 r83): mPos = mHomePos, or storing through cache, moves
+               the bytes. */
             Vector3 *cache = &mHomePos;
             mHomePos.x = src->x;
             mHomePos.y = src->y;
@@ -2056,10 +2058,7 @@ void daStar_c::OnBounceLand() {
             if (mWithMeshClsn.GetFloorResult()->surface.clps.GetFloorClass() != 5)
                 return;
         }
-        {
-            short *a = &mPrevAngle.y;
-            *a = *a + 0x8000;
-        }
+        mPrevAngle.y += 0x8000;
     } else {
         dActor_c *q = FarthestPlayer();
         if (q != 0) {

@@ -338,8 +338,7 @@ void dScMgPanel_c::Banner_Draw() {
 void dScMgPanel_c::Banner_StateIdle() {}
 
 void dScMgPanel_c::Banner_StateSettle() {
-    u16 *p = &mBanner.hold;
-    *p = *p + 1;
+    mBanner.hold++;
     if (mBanner.hold < 8)
         return;
     mBanner.hold = 0;
@@ -348,8 +347,7 @@ void dScMgPanel_c::Banner_StateSettle() {
 }
 
 void dScMgPanel_c::Banner_StatePopUp() {
-    u16 *h = &mBanner.hold;
-    *h = *h + 1;
+    mBanner.hold++;
     if (mBanner.hold < 4)
         return;
     mBanner.hold = 0;
@@ -453,8 +451,7 @@ void dScMgPanel_c::IntroCard_StateSlideOut() {
 
 void dScMgPanel_c::IntroCard_StateHold() {
     if (mHold != 0) {
-        u16 *p = &mHold;
-        *p = *p - 1;
+        mHold--;
         if ((s16)mHold < 0)
             mHold = 0;
     } else {

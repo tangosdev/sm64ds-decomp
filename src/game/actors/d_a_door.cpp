@@ -972,12 +972,8 @@ void daDoor_c::OnPendingDestroy() {}
  * 5 Render(const Vector3*), exactly what the ROM dispatches. */
 s32 daDoor_c::Render() {
     if (IsAreaShowing((char)mAngle.x) != 0 || IsAreaShowing((char)mAngle.z) != 0) {
-        /* &mModel is taken HERE and not at the top of the function: hoisting
-           it costs a callee-saved register and a stack adjust the ROM does
-           not have. The ROM computes it lazily, so this does too. */
-        dExtAnmModel_c *body = &mModel;
         dExtSimpleModel_c *key;
-        body->Render(0);
+        mModel.Render(0);
         key = mKeyModel;
         if (key != 0) {
             key->Virtual10(*mModel.data.transforms);

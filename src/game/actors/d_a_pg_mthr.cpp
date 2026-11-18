@@ -263,8 +263,7 @@ int daPgMthr_c::StateTalkUpdate() {
     case 0:
         if (mdCcAc_c.hitFlags & HIT_TOUCH) {
             if (mPlayer->StartTalk(*this, 1)) {
-                u8 *p = &mTalkStep;
-                *p = *p + 1;
+                mTalkStep++;
             }
         } else {
             ChangeState(0);
@@ -282,10 +281,7 @@ int daPgMthr_c::StateTalkUpdate() {
                 mouth.z = data_020a0e68.t.z;
                 if (mPlayer->ShowMessage(*this, mMessageId, &mouth, 0, 0)) {
                     func_0201267c(0xdf, &mCamSpacePos);
-                    {
-                        u8 *p = &mTalkStep;
-                        *p = *p + 1;
-                    }
+                    mTalkStep++;
                 }
             }
         }
@@ -301,10 +297,7 @@ int daPgMthr_c::StateTalkUpdate() {
                 dActor_c::Spawn(ACTOR_POWER_STAR, starParam, mPos, 0, mAreaId, -1);
             }
             mPlayer->DropActor();
-            {
-                u8 *p = &mTalkStep;
-                *p = *p + 1;
-            }
+            mTalkStep++;
         }
         break;
     case 3:

@@ -225,9 +225,8 @@ int daMky_c::CycleIdleAnimation() {
                                                  !IsPlayingAnim(this, gMonkeyWait4AnimationFile))) {
         this->mAnmModel.SetAnim((BCA_File *)(data_ov030_02115bc8[this->mAnimIdx][1]), 0, 0x1000, 0);
         {
-            unsigned char *p = &this->mAnimIdx;
             this->mAnmModel.speed = 0x1000;
-            (*p)++;
+            this->mAnimIdx++;
         }
         if (this->mAnimIdx >= 0xb)
             this->mAnimIdx = 0;
@@ -511,10 +510,7 @@ int daMky_c::func_ov030_02112578()
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait2AnimationFile[1], 0, 0x1000, 0);
             this->mAnmModel.speed = 0x1000;
             this->mHorzSpeed = 0;
-            {
-                u8 *p = &this->mSubState;
-                *p = *p + 1;
-            }
+            this->mSubState++;
         }
         PlayRunFootstepSound();
         break;
@@ -523,8 +519,7 @@ int daMky_c::func_ov030_02112578()
         if (Vec3_Dist(&this->mPos, &player->mPos) < 0x96000) {
             if (player->StartTalk(*this, 1) != 0) {
                 {
-                    u8 *p = &this->mSubState;
-                    *p = *p + 1;
+                    this->mSubState++;
                 }
             }
         }
@@ -537,10 +532,7 @@ int daMky_c::func_ov030_02112578()
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait3AnimationFile[1], 0, 0x1000, 0);
             this->mAnmModel.SetFlags(0);
             func_0201267c(0xd1, &this->mCamSpacePos);
-            {
-                u8 *p = &this->mSubState;
-                *p = *p + 1;
-            }
+            this->mSubState++;
         }
         break;
     }
@@ -548,10 +540,7 @@ int daMky_c::func_ov030_02112578()
         if (player->GetTalkState() == 2) {
             player->HasFinishedTalking();
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile[1], 0, 0x1000, 0);
-            {
-                u8 *p = &this->mSubState;
-                *p = *p + 1;
-            }
+            this->mSubState++;
         }
         break;
     case 4:
@@ -562,10 +551,7 @@ int daMky_c::func_ov030_02112578()
             this->mHorzSpeed = 0xf000;
             this->mSpeed.y = 0x2f000;
             func_0201267c(0xf1, &this->mCamSpacePos);
-            {
-                u8 *p = &this->mSubState;
-                *p = *p + 1;
-            }
+            this->mSubState++;
         }
         break;
     case 5:
@@ -573,10 +559,7 @@ int daMky_c::func_ov030_02112578()
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpEdAnimationFile[1], 0x40000000, 0x1000,
                                     0);
             this->mHorzSpeed = 0;
-            {
-                u8 *p = &this->mSubState;
-                *p = *p + 1;
-            }
+            this->mSubState++;
         }
         break;
     case 6:
@@ -586,18 +569,14 @@ int daMky_c::func_ov030_02112578()
             cage->mHorzSpeed = 0x400;
             Sound::PlaySub(0x20, 0x14, 0x7f, 0x15666, 0);
             this->mActionTimer = 120;
-            {
-                u8 *p = &this->mSubState;
-                *p = *p + 1;
-            }
+            this->mSubState++;
         }
         /* fallthrough */
     case 7: {
         this->mCagePushProgress += 0x400;
         if (this->mCagePushProgress > 0x17ffd) {
             {
-                u8 *p = &this->mSubState;
-                *p = *p + 1;
+                this->mSubState++;
             }
         }
     }
@@ -605,20 +584,14 @@ int daMky_c::func_ov030_02112578()
     case 8:
         if (DecIfAbove0_Byte(&this->mActionTimer) == 0) {
             Sound::PlaySub(0x20, 0x7f, 0, 0x15666, 0);
-            {
-                u8 *p = &this->mSubState;
-                *p = *p + 1;
-            }
+            this->mSubState++;
         }
         break;
     case 9:
         this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile[1], 0x40000000, 0x1000, 0);
         cage->mVertAccel = -0x2000;
         cage->mTerminalVelocity = -0x3c000;
-        {
-            u8 *p = &this->mSubState;
-            *p = *p + 1;
-        }
+        this->mSubState++;
         break;
     case 10:
         if (dActor_c::FindWithActorID(0x67, 0) == 0) {
@@ -934,10 +907,7 @@ int daMky_c::func_ov030_02113324()
 
                 if (this->mPlayer->ShowMessage(*this, 0xc0, &msgPos, 0, 2) != 0) {
                     func_0201267c(0xd1, &this->mCamSpacePos);
-                    {
-                        unsigned char *p = &this->mSubState;
-                        (*p)++;
-                    }
+                    this->mSubState++;
                 }
             }
         }
@@ -950,8 +920,7 @@ int daMky_c::func_ov030_02113324()
                 this->mPlayer->DropActor();
                 ChangeState(8);
             } else if (g == 2) {
-                unsigned char *p = &this->mSubState;
-                (*p)++;
+                this->mSubState++;
             }
         }
         break;
@@ -1140,8 +1109,7 @@ int daMky_c::EnterState3()
             mSubState = 4;
         } else {
             mSubState = 0;
-            unsigned char* f = &this->mHasSpawnedCap;
-            *f ^= 1;
+            this->mHasSpawnedCap ^= 1;
         }
     }
     mState = 3;

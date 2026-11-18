@@ -148,17 +148,16 @@ void dScMgMemory2_c::UpdateCursor() {
     if (mCursor.visible == 0)
         return;
     {
-        unsigned short *timer = (unsigned short *)&mCursor.blinkTimer;
+        /* Kept (#821 r83): blinkTimer++, += 1 and `++blinkTimer < 20` on the
+           member all lose the ROM's register-held timer address. */
+        unsigned short *timer = &mCursor.blinkTimer;
         *timer = *timer + 1;
         if (*timer < 20)
             return;
         *timer = 0;
     }
-    {
-        unsigned char *frame = &mCursor.frame;
-        *frame = *frame + 1;
-        *frame = *frame & 1;
-    }
+    mCursor.frame++;
+    mCursor.frame &= 1;
 }
 
 void dScMgMemory2_c::ShowCursor() {

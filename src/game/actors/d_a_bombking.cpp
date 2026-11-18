@@ -1227,8 +1227,7 @@ int daBombking_c::TickInactive() {
     unsigned int b;
 
     if (this->mMusicLayer3 == 1) {
-        unsigned char *p = &this->mMusicLayer3Timer;
-        *p += 1;
+        this->mMusicLayer3Timer++;
         if (this->mMusicLayer3Timer > 200) {
             this->mFlags = 0x10000003;
             this->mMusicLayer3 = 0;

@@ -1682,20 +1682,15 @@ void cMgSmartball_propeller_c::SaveSnapshot() {
     if (mpManager->mRoundEnded != 0)
         return;
     if (mSpinSpeed < mSpinSpeedTarget) {
-        short *p = &mSpinSpeed;
-        *p = *p + 8;
+        mSpinSpeed += 8;
         if (mSpinSpeed > mSpinSpeedTarget)
             mSpinSpeed = mSpinSpeedTarget;
     } else {
-        short *p = &mSpinSpeed;
-        *p = *p - 8;
+        mSpinSpeed -= 8;
         if (mSpinSpeed < mSpinSpeedTarget)
             mSpinSpeed = mSpinSpeedTarget;
     }
-    {
-        short *q = &mAngle;
-        *q = *q + mSpinSpeed;
-    }
+    mAngle += mSpinSpeed;
     RebuildVerts();
 }
 

@@ -173,19 +173,13 @@ s32 daObjFl_Ring_c::Behavior() {
             s = (daObj_volcanoCannon_c *)dActor_c::Spawn(0xf3, 0, *(Vector3 *)v, 0, mAreaId, -1);
             s->mSpawner = this;
             s->mKillPosY = mPos.y;
-            {
-                u16 *t = &mSpawnCount;
-                *t = *t + 1;
-            }
+            mSpawnCount++;
             mSpawnGuard = 2;
         }
         break;
     }
 
-    {
-        s16 *ip = &mPrevAngle.y;
-        *ip = (s16)(*ip + mPrevAngle.z);
-    }
+    mPrevAngle.y += mPrevAngle.z;
     mAngle.y = mPrevAngle.y;
 
     mMeshCollider.SetClipRadius(0x780000);

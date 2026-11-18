@@ -928,6 +928,8 @@ void dCamera_c::func_0200d064(unsigned char playerID) {
    that asked gives it back by clearing the bit. */
 void dCamera_c::SetFlag_3()
 {
+    /* Kept (#821 r83): `mFlags |= ...` and the value-local forms drop the
+       ROM's separate `add r1,r0,#0x154` for the flags' address. */
     u32 *p = &mFlags;
     u32 v = *p | CAM_FLAG_SCRIPT_HOLD;
     *p = v;
