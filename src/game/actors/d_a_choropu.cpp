@@ -657,16 +657,14 @@ s32 daChoro_Rock_c::CleanupResources()
 /* Draws the mole's model (mAnmModel) with no scale argument. */
 s32 daChoropu_c::Render()
 {
-    dExtSimpleModel_c *m = &mAnmModel;
-    m->Render(0);
+    mAnmModel.Render(0);
     return 1;
 }
 
 /* Draws the rock's model, scaled by mScale. */
 s32 daChoro_Rock_c::Render()
 {
-    dExtSimpleModel_c *m = &mModel;
-    m->Render(&mScale);
+    mModel.Render(&mScale);
     return 1;
 }
 
