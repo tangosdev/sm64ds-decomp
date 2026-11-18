@@ -295,7 +295,7 @@ void UnknownVsPlayer::MoveChoosePose() {
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov075_0211d3c4.filePtr, *textureFile);
     mTextureSequence.SetFile(*textureFile, 0, 0x1000, 0);
     {
-        unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650.value);
+        unsigned int randomValue = RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
         mTextureSequence.currFrame = (u16)((randomValue >> 16) % frameCount) << 12;
     }
@@ -585,7 +585,7 @@ int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
     mTextureSequence.SetFile(*textureFile, 0, 0x1000, 0);
 
     {
-        unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650.value);
+        unsigned randomValue = RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
         mTextureSequence.currFrame = (((randomValue >> 16) % (unsigned)frameCount) << 16) >> 4;
     }
