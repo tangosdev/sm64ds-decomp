@@ -816,9 +816,7 @@ void daNknk_c::func_ov062_02117c98()
         if (player->IsOnShell()) {
             mDeathState = 5;
             turnAround = 1;
-            goto tail;
-        }
-        if (JumpedOnByPlayer(mdCc_c, *player)) {
+        } else if (JumpedOnByPlayer(mdCc_c, *player)) {
             if (mKoopaVariant == 0) {
                 DropShell();
             } else {
@@ -831,14 +829,7 @@ void daNknk_c::func_ov062_02117c98()
             }
             ((daPly_c *)found)->Bounce(0x28000);
             return;
-        }
-        if (player->mIsVanish != 0)
-            goto tail;
-        if ((mdCc_c.hitFlags & 0x400000) == 0)
-            goto tail;
-        if (mState == 0)
-            goto tail;
-        {
+        } else if (player->mIsVanish == 0 && (mdCc_c.hitFlags & 0x400000) != 0 && mState != 0) {
             s32 pw;
             hurtFrom = mPos;
             pw = mHorzSpeed;
