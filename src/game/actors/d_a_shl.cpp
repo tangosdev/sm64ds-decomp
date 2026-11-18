@@ -377,6 +377,10 @@ void daShl_c::func_ov102_0214ce60()
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x50000, 0x50000, 15);
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* What touching the player does, read off the body cylinder's last hit.
    An invincible player (hit flag 0x10) smashes the shell. The variant
    shell only lets itself be picked up (0x1000) while idle. Otherwise
@@ -398,8 +402,7 @@ void daShl_c::func_ov102_0214cbec()
         return;
 
     {
-        int isPlayer = (int)(player->actorID == 0xbf);
-        if (!isPlayer)
+        if (!IsPlayerActor(player))
             return;
     }
     if (mStateTimer != 0)
