@@ -73,7 +73,8 @@ s32 daObjUkiyuka_c::Behavior() {
         return 1;
     }
     /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever (r72-r75) applies to
-       this scalar pin (r68: s16 plain step is -1 word). */
+       this scalar pin (r68: s16 plain step is -1 word).
+       Kept (#821 r80): getter tried -> an s16 or u16 phase accessor in the step is 0xec of 0xf0. */
     *(u16 *)&mBobPhase += 0x100;
     {
         u16 h = (u16)((s64)mBobPhase);
