@@ -2144,7 +2144,10 @@ void dScMgTeresa_c::Scene_StateInit() {
  * off; corner in the for initialiser, a word short; measured 2026-11-07).
  * Re-measured (#821, 2026-11-16): 0x170 without the pragma against the ROM's
  * 0x15c; a ~(0xf << s) mask or a named shift local 0x16c; x = cx - half + i
- * 0x174. */
+ * 0x174. Round 64: what loop-invariant motion moves is the row terms
+ * (y / 8) * 32 and (y & 7) * 4, hoisted out of the inner loop; a block-scope
+ * `yy = y` copy inside the inner loop is copy-propagated away (0x170), and
+ * the setting file-wide breaks TouchTestBoo and CountRubbedTiles. */
 #pragma opt_loop_invariants off
 /* dScMgTeresa_c::PaintSquare - slot 34, a STIPPLED brush.
 
