@@ -67,10 +67,6 @@
  *   The functions are written in REVERSE ROM order, because mwccarm 2004/b56
  *   emits one .text section per function in the reverse of source order.
  *
- *   common.h comes first so Matrix4x3 is the flat s32[12] spelling; math/
- *   Matrix.h through dExtAnmModel_c.h would scalarize the copies in
- *   UpdateMatrix.
- *
  *   The PMF stand-ins (CapStateSelf / CapStateRec / CapEnterSelf). A PMF on
  *   the real dEnemyBase_c makes mwccarm ICE rather than give a diagnostic.
  *

@@ -40,12 +40,9 @@ BaseSpawnInfo<dScMgJump_c> g_profile_MG_JUMP = {
 };
 
 /* Whole-matrix copies go through this so they stay one block move. */
-#include "private/mtx43.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
-
-struct V3 { int w[3]; };
 
 /* The 0x30-byte runtime material ModelComponents::materials points at
    (ModelComponents.cpp's MaterialState; dExtModel_c.h types the pointer as
@@ -253,7 +250,7 @@ s32 dScMgJump_c::InitResources()
     r = mModel.SetFile((BMD_File *)modelFile, 1, -1);
     if (r == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+        mModel.mat4x3 = data_020a0e68;
         return 0;
     }
     Mg_SetTopScreenYOffset(0x10);
@@ -446,14 +443,13 @@ s32 dScMgJump_c::Render()
         G3_LightVector(GX_LIGHTID_1, m[0], m[1], m[2]);
     }
 
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 
     {
-        V3 t;
+        VecFx32 t = sJumpRenderScale;
         ModelComponents *obj;
         MaterialState *mat;
 
-        t = *(V3 *)sJumpRenderScale;
 
         obj = &mModel.data;
         mat = (MaterialState *)obj->materials;

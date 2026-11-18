@@ -27,9 +27,8 @@
  * Leftovers:
  *  - Measured spellings: the mOpacity += / -= 0x14 form; the angle-copy
  *    pointer in func_ov060_02115d68; the overwritten first pos[] stores in
- *    RunIntroTalk; the volatile walk pointer in ActTiltLavaPlatform; the
- *    gotos in func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset
- *    reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
+ *    RunIntroTalk; the gotos in func_ov060_02115c1c; the
+ *    data_ov060_02119294/6/8 + offset reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
  *  - Address-named callees with a known body but no header: func_020092c4 eases
  *    a camera vector toward a target (d_camera.cpp); func_0200fa04 spawns the
  *    boss landing dust (d_actor.cpp); func_02038408 is the
@@ -44,9 +43,6 @@
  *    placeholder names.
  */
 
-/* common.h must precede the class headers: both Matrix4x3 spellings are real,
- * Matrix4x3_ApplyInPlace* wants `m[i]` while the model headers want `.r`/`.t`,
- * and whichever is seen first wins for the TU. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daKpa_c_AssetId {
     ASSET_KOOPA_DAMAGE_BCA = 0x035f,
@@ -853,9 +849,8 @@ skip_angles:
             pos.y = this->mPos.y;
         Vec3_Asr(&v2, &pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
-        *(Matrix4x3 *)(&this->mShadowMtx) = data_020a0e68;
-        DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMtx, 0x140000, 0x64000,
-                            0xf);
+        this->mShadowMtx = data_020a0e68;
+        DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, 0x140000, 0x64000, 0xf);
     }
 }
 
@@ -2442,11 +2437,15 @@ from the previous row's end otherwise) and goes to TiltPlatform; on odd
 frames with v non-zero the arena plays its tilt sound (PlayTiltSound). When no row is
 left, go to BOWSER_STATE_IDLE and zero the arena's three angular speeds and three
 angles, and mSpeed.y. */
-/* p is volatile so the walk reloads the sentinel for each test -- lifetimes
- * on would keep p[2] in a register and skip the ROM's second load, and the
- * flag and the computed value are split so the flag keeps r6. */
+/* p walks the table read-only: as a const short * the walk reloads the
+ * sentinel for each test, as the ROM does (a plain short * keeps p[2] in a
+ * register and skips the second load). The flag and the computed value are
+ * split so the flag keeps r6. */
 void daKpa_c::ActTiltLavaPlatform() {
-    daKpa2Bg_c* found; int i; int flag; volatile short* p;
+    daKpa2Bg_c *found;
+    int i;
+    int flag;
+    const short *p;
     this->mSpeed.y = this->mTerminalVelocity;
     found = (daKpa2Bg_c*)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (found == 0) { this->mState = BOWSER_STATE_IDLE; return; }

@@ -23,8 +23,6 @@
  * - daPly_c.h is needed for ClosestPlayer()->mIsMega.
  */
 
-/* daObjCannonShutter_c.h FIRST: it pulls in dBgActor_c.h, which must reach
-   common.h ahead of dExtSimpleModel_c.h or the wrong Matrix4x3 spelling wins. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_cannon_shutter_AssetId {
     ASSET_CANNON_SHUTTER_BMD = 0x045f,

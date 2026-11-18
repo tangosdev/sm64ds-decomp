@@ -9,8 +9,8 @@
  * names; their definitions at the bottom are this file's static initializer.
  * actorID and mFlags are tested through an int. ExecutePerch keeps its base
  * pointer. mSpeed.z is reloaded because a named temporary moves a word.
- * EnterDrop's PoofPos is a three-int constructor; a Vector3 assignment does
- * not schedule the same stores.
+ * EnterDrop's unused Vector3 temporary is built with Vector3's (x, y, z)
+ * constructor; three field stores do not schedule the same.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -30,14 +30,6 @@ enum daBasabasa_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
-
-/* EnterDrop's unused stack temporary. The three-int constructor is what
- * schedules the stores; a plain Vector3 assignment does not. */
-struct PoofPos {
-    int x, y, z;
-    PoofPos(int a, int b, int c) : x(a), y(b), z(c) {}
-    ~PoofPos() {}
-};
 
 /* The model handles construct through func_02017acc and destroy through
  * func_02017ab4; the animation handles go through SharedFilePtr::Construct
@@ -277,7 +269,7 @@ int daBasabasa_c::EnterDrop() {
     mIsFlying = 0;
     mAnmModel2.speed = 0;
     mAnmModel2.SetAnim((BCA_File *)data_ov065_0211d6a0.filePtr, 0, 0x1000, 0);
-    PoofPos vec(mPos.x, mPos.y + 0x64000, mPos.z);
+    Vector3 vec(mPos.x, mPos.y + 0x64000, mPos.z);
     mStateTimer = 25;
     if (mPos.y == 0x898000)
         mStateTimer = 50;

@@ -438,7 +438,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
        cast anywhere -- the `(const s16 *)` view this used to need was treating the
        symptom. */
     Vector3s cr;
-    s32 nrm[3];
+    VecFx32 nrm;
     s16 *en1;
     s16 *en2;
     s16 *en3;
@@ -625,11 +625,10 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         if (shallowOnly) {
                             if (faceDot < -0x50000) continue;
                         } else if (depthByDir) {
-                            nrm[0] = fn[0] << 2;
-                            nrm[1] = fn[1] << 2;
-                            nrm[2] = fn[2] << 2;
-                            if (VEC_DotProduct((const Vector3 *)nrm, (const Vector3 *)&depthDir) >
-                                depthDirMinDot) {
+                            nrm.x = fn[0] << 2;
+                            nrm.y = fn[1] << 2;
+                            nrm.z = fn[2] << 2;
+                            if (VEC_DotProduct(&nrm, &depthDir) > depthDirMinDot) {
                                 if (faceDot < -f->prismThickness)
                                     continue;
                             } else {

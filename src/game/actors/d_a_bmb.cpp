@@ -1,9 +1,6 @@
 //cpp
 /* Bob-omb (BOB_OMB 206 / BOMBHEI) -- ov102/daBmb_c.
  *
- * common.h FIRST. InitResources and the carry update copy twelve matrix words.
- * math/Matrix.h's nested Matrix4x3 scalarizes that copy (Vector3 is non-POD).
- *
  * Leftovers, remeasured in this file:
  * - Behavior skips 4 bytes past GetFloorResult's dBgPi to the SurfaceInfo
  *   and tests CLPS bit 0x20 (water).
@@ -193,7 +190,7 @@ int daBmb_c::InitResources()
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
-    *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
+    mMatrix = IDENTITY_MATRIX4X3;
     mTurnTimer = 0;
     mFuse = 0;
     mScale.x = FX32_ONE;
@@ -434,14 +431,14 @@ void daBmb_c::func_ov102_0214beb4() {
     mTurnCount += 1;
     daPly_c *o = mChasePlayer;
     if (o == 0) {
-        *(short *)&mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
+        mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
         if (Vec3_Dist(&mPos, &mHomePos) >= 0x500000)
             return;
         unsigned int r = RandomIntInternal(&data_0209e650);
-        *(short *)&mTargetAngY += (short)(r >> 0x10);
+        mTargetAngY += (short)(r >> 0x10);
         return;
     }
-    *(short *)&mTargetAngY = Vec3_HorzAngle(&mPos, &o->mPos);
+    mTargetAngY = Vec3_HorzAngle(&mPos, &o->mPos);
 }
 }
 
@@ -457,15 +454,15 @@ void daBmb_c::func_ov102_0214beb4() {
 void daBmb_c::State1() {
     if (mChasePlayer == 0) {
         mAnmModel.speed = 0x800;
-        ApproachLinear(mPrevAngle.y, (short)mTargetAngY, 0x400);
+        ApproachLinear(mPrevAngle.y, mTargetAngY, 0x400);
     } else {
         mAnmModel.speed = 0x1000;
-        ApproachLinear(mPrevAngle.y, (short)mTargetAngY, 0x800);
+        ApproachLinear(mPrevAngle.y, mTargetAngY, 0x800);
     }
     mAngle.y = mPrevAngle.y;
     mAnmModel.dExtFrameCtrl_c::Advance();
     if (mState == 2) return;
-    if (mPrevAngle.y != (short)mTargetAngY)
+    if (mPrevAngle.y != mTargetAngY)
         return;
     func_ov102_0214c0b8();
 }
@@ -630,7 +627,7 @@ void daBmb_c::func_ov102_0214baa0() {
     mPrevAngle.z = 0;
 
     {
-        s16 angle = *(s16 *)&mHomeAngleY;
+        s16 angle = mHomeAngleY;
         mAngle.y = angle;
         s16 copy = mAngle.y;
         mPrevAngle.y = copy;
@@ -816,11 +813,11 @@ void daBmb_c::UpdateShadow() {
         }
     }
 
-    mMatrix[9] = mPos.x >> 3;
-    mMatrix[10] = v >> 3;
-    mMatrix[11] = mPos.z >> 3;
+    mMatrix.m[9] = mPos.x >> 3;
+    mMatrix.m[10] = v >> 3;
+    mMatrix.m[11] = mPos.z >> 3;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
+    DropShadowRadHeight(mShadowModel, mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
 }
 
 /* ==========================================================================

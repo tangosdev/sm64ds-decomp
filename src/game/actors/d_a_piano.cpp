@@ -10,7 +10,6 @@
  * The inline destructor preserves the retail D1/D0 order.
  *
  * What stays:
- * - common.h supplies the flat Matrix4x3 representation.
  * - Vec3_Sub stays a local extern: no shared header declares it.
  * - The CLPS payload and external g_profile_PIANO are not reconstructed
  *   here.

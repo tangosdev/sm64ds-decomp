@@ -35,8 +35,8 @@
  *   HanaStarPopup view, and StarPopup_Update reaches its timer byte
  *   through a separate symbol, sHanaStarPopups.
  * - Wiggler::DrawTarget repeats Wiggler::DrawField's segment
- *   walk with its own point type, Vec2_ea914, whose trivial destructor
- *   is part of the match.
+ *   walk with Vector2 points, whose declared destructor is part of
+ *   the match.
  * - Wiggler::GetFlag reads the four 2-bit colours in color (+0x74) through
  *   the B72 bitfield view.
  * - Wiggler::DrawField: OAM::Render(int, OamAttr*, int, int, int,
@@ -483,14 +483,8 @@ void HanaPopup_ClearAll(void) {
 
 /* Draws a wiggler's five segments from the tail forward, then one more
    sprite by the head when bloom is set and IsStarVisible agrees. The
-   trivial ~Vec2_ea914 and the strength-reduction bracket are both part of
-   the match. */
-struct Vec2_ea914 {
-    s32 x;
-    s32 y;
-    ~Vec2_ea914() {}
-};
-
+   Vector2's declared destructor and the strength-reduction bracket are
+   both part of the match. */
 void dScMgHanachan_c::Wiggler::DrawTarget() {
     s32 i;
     s16 rot;
@@ -503,11 +497,11 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
     s32 res;
     s32 j;
 
-    Vec2_ea914 pos;
-    Vec2_ea914 va;
-    Vec2_ea914 vb;
-    Vec2_ea914 vout;
-    Vec2_ea914 pts[5];
+    Vector2 pos;
+    Vector2 va;
+    Vector2 vb;
+    Vector2 vout;
+    Vector2 pts[5];
 
     pts[4].x = 0xb4000;
     pts[4].y = 0x80000;
@@ -567,7 +561,7 @@ void dScMgHanachan_c::Wiggler::DrawField() {
        B, (u16)rot, the hoisted zero, res and py, and keeps px in a register.
        Measured 2026-11-16 (#821 r22) against 0x3e0 bytes: plain Vector2
        locals give 0x3dc, the same locals unnested 0x3d8, DrawTarget's
-       Vec2_ea914 shape 0x3e4, and all 72 declaration orders of A/B with
+       destructor-only point shape 0x3e4, and all 72 declaration orders of A/B with
        the points as Vector2 miss the size. */
     struct {
         int A, B, urot, va0x, res;
@@ -1502,6 +1496,7 @@ void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
         initialHead.x = 0x38000;
 
     aim = -0x8000;
+    /* Measured (#821 r68): initialHead.x/.y read by name, StartPathC is 0x1f4 of 0x214. */
     seg[0].x = *(int *)&initialHead;
     seg[0].y = *((int *)&initialHead + 1);
     ang[0] = aim - 0x2000;

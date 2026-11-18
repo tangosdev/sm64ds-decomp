@@ -78,9 +78,9 @@ void EntryMesh::CalcMatrix() {
     Matrix4x3_FromTranslation(&data_020a0e68, (mPos.x - 0xfa000) >> 3, (mPos.y - 0xfa000) >> 3,
                               mPos.z >> 3);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(Matrix4x3 *)&mMtx = data_020a0e68;
+    mMtx = data_020a0e68;
     MTX_Inverse43(&data_020a0e68, &data_020a0e68);
-    *(Matrix4x3 *)&mInvMtx = data_020a0e68;
+    mInvMtx = data_020a0e68;
 }
 
 /* A BMD_Material's two colour words, which BMD_File.h still keeps inside
@@ -268,7 +268,7 @@ void EntryMesh::DrawGrid() {
     int i, j;
 
     G3_PushMtx();
-    MTX_Concat43((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&mMtx, &data_0209b3ec, &tmp);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&tmp);
     G3_MtxMode(GX_MTXMODE_POSITION);

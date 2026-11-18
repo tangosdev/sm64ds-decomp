@@ -3,8 +3,6 @@
  * Definitions run high address first so reverse emission is ROM order.
  *
  * leftovers:
- * - ApproachLinear2(int &) reads and writes the reference through an
- *   unsigned char *. A full-word store widens the byte the ROM keeps.
  * - ApproachAngle calls __aeabi_idiv by hand and widens diff through
  *   (long long). Measured on 2004/b56: with `/` the function changes size,
  *   and with `/` plus natural short/int locals it is 31 of 56 words off,
@@ -53,22 +51,20 @@ void UpdateAngle(short &angle, short target, int divisor, short maxStep) {
 }
 #endif
 
-int ApproachLinear2(int &ref, int target, int step)
-{
-    unsigned char *p = (unsigned char *)&ref;
+int ApproachLinear2(unsigned char &value, int target, int step) {
     int cur;
     int ip;
     if (step != 0) {
-        cur = *p;
+        cur = value;
         if (cur > target)
             step = (short)(-step);
         ip = (short)(cur + step);
         if (step * (ip - target) >= 0) {
-            *p = target;
+            value = target;
             return 1;
         }
-        *p = ip;
-    } else if (*p == target) {
+        value = ip;
+    } else if (value == target) {
         return 1;
     }
     return 0;

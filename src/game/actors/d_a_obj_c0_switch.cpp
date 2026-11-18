@@ -34,8 +34,6 @@
  *   not own. data_0209caa0 is an arm9 shared-flags global.
  */
 
-/* daObjC0_Switch_c.h FIRST: it pulls in dBgActor_c.h, which must reach
-   common.h ahead of dExtSimpleModel_c.h or the wrong Matrix4x3 spelling wins. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_c0_switch_AssetId { ASSET_C0_SWITCH_BMD = 0x05a9, ASSET_C0_SWITCH_KCL = 0x05aa };
 

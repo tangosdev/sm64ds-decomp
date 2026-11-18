@@ -34,9 +34,6 @@
  * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names. The model
  *   handle constructs through func_02017acc; the animation handle
  *   constructs through SharedFilePtr::Construct.
- * - This file wants math/Matrix.h's Matrix4x3 so mAnmModel.mat4x3.t is a
- *   Vector3. daObjWakame_c.h brings that spelling in first, so
- *   math/MtxStack.h (which pulls in common.h) is included after it.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -127,9 +124,9 @@ s32 daObjWakame_c::CleanupResources() {
    are in eighths of a unit, hence the >> 3. */
 void daObjWakame_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.t.x = mPos.x >> 3;
-    mAnmModel.mat4x3.t.y = mPos.y >> 3;
-    mAnmModel.mat4x3.t.z = mPos.z >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */

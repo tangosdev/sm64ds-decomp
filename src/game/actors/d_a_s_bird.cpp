@@ -23,8 +23,8 @@
  * NOTES:
  * - Vec3_Sub has no shared header and keeps a local extern. Random() wraps math/CalcLib.h's RandomIntInternal as
  *   unsigned: a signed % 400 / % 4000 or >> 16 changes codegen.
- * - Behavior builds the model matrix through MtxStack (math/MtxStack.h) but
- *   copies it out as twelve plain words (Mtx43).
+ * - Behavior builds the model matrix through MtxStack (math/MtxStack.h)
+ *   and copies it out whole.
  * - data_ov009_02113c20 / 02113c28 SharedFilePtr handles: the initializer
  *   constructs them as file IDs 1080 / 1081. symbols.txt has no recovered
  *   names, so they are not coined.
@@ -32,8 +32,6 @@
  *   sound 0x6a at mCamSpacePos.
  * - The flock measures from the ClosestPlayer result's mPos.
  * - g_profile_SBIRD stays outside the licensed sections.
- * - common.h is included after the class header so dExtAnmModel_c's
- *   Matrix4x3 spelling wins.
  */
 
 #pragma defer_codegen off
@@ -48,7 +46,6 @@
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 #include "cstd.h"
-#include "private/mtx43.h"
 #include "LevelRng.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
@@ -77,8 +74,6 @@ struct SBirdStateTable {
     }
 };
 
-/* Behavior copies the scratch matrix through the flat Mtx43; a Matrix4x3
-   assignment compiles to a different copy (.text grows by 0x1c bytes). */
 extern SBirdModelFilePtr data_ov009_02113c20;
 extern SBirdAnimationFilePtr data_ov009_02113c28;
 extern SBirdStateTable data_ov009_02113c48;
@@ -271,7 +266,7 @@ s32 daSBird_c::Behavior() {
     mAngle.y = mPrevAngle.y;
     Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngle.z);
     MtxStack::YrotM(mAngle.y);
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&MtxStack::get();
+    mAnmModel.mat4x3 = MtxStack::get();
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x1e000, 0x7d0000, 0xf);
     mAnmModel.Advance();
     return 1;

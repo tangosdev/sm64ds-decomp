@@ -22,9 +22,6 @@
  * daSoundObj_c_classInit is reconstructed (RTTI daSoundObj_c, SOUND_OBJ
  * registry). Retail does not store that spelling.
  *
- * Leftover: func_ov002_020f9468 passes mLoop through `*(bool *)&`.
- *   A bool parameter converts the u8 and the function grows from 0x94
- *   to 0xac.
  * Leftover: SoundObjectCallbackOwner stays a shadow: entries 0-2 of
  *   the callback table are arm9 Sound:: starters, not daSoundObj_c
  *   members, and the sinit fills the table as non-polymorphic {ptr,0}
@@ -59,7 +56,7 @@ struct SoundObjRow {
     s32 soundID;
     s32 volume;
     u16 counterLimit;
-    u8 loop;
+    bool loop;
     u8 pad_0b;
 };
 typedef char SoundObjRow_size_must_be_0x0c[
@@ -183,9 +180,9 @@ int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
        steady-state branch falls through to the one `return 0`. */
     if (*counter < self->mCounterLimit - 15) {
         int vol = self->mVolume;
-        Sound::PlaySub(self->mSoundID, vol, 127, (127 - vol) << 12, *(bool *)&self->mLoop);
+        Sound::PlaySub(self->mSoundID, vol, 127, (127 - vol) << 12, self->mLoop);
         *counter += 1;
-    } else if (Sound::PlaySub(self->mSoundID, 127, 0, kPoolDist, *(bool *)&self->mLoop)) {
+    } else if (Sound::PlaySub(self->mSoundID, 127, 0, kPoolDist, self->mLoop)) {
         return 1;
     }
     return 0;

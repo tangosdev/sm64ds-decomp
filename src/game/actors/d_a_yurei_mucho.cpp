@@ -15,10 +15,9 @@
  * Remaining reconstruction under issue #2478:
  * - mStateTimer comparisons read it through a (u16) cast, because the ROM
  *   loads it with ldrh.
- * - The Mtx43 overlays on mAnmModel.mat4x3 and the scratch matrix, the
- *   Matrix4x3 view of mShadowMat, and the V3A copy of a player's
- *   position in UpdateShoot. Plain Matrix4x3 / Vector3 assignment
- *   scalarizes; UpdateChase's snapshot is a POD VecFx32 copy-init.
+ * - The V3A copy of a player's position in UpdateShoot: Vector3
+ *   assignment scalarizes; UpdateChase's snapshot is a POD VecFx32
+ *   copy-init.
  * - dExtAnmModel_c::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init,
  *   DropShadowRadHeight, KillByInvincibleChar, SpawnCoins, daPly_c::Hurt
  *   and daPly_c::Bounce retain scalar ABI declarations. Native fixed-point
@@ -40,28 +39,12 @@
 #include "LevelRng.h"
 #include "math/CalcLib.h"
 
-/* POD views preserve the retail aggregate copies. Matrix4x3 and Vector3 are
-   available, but their non-POD copies change these two helpers' codegen; see
-   the measured alternatives in the handoff. */
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
-/* Kept for UpdateShoot's L.pp (measured r57): any Vector3 copy is memberwise, and
- * the block-moving VecFx32 copy-init cannot initialize a V3Quint member. */
+/* Kept for UpdateShoot's playerPos (measured r57): any Vector3 copy is
+ * memberwise, and the ROM block-moves the player's position.
+ * Kept (#821 r71): `playerPos = pl->mPos` gives UpdateShoot 0x220 (ROM 0x224);
+ * a VecFx32 copy-init cannot feed the Vector3 target without a cast. */
 struct V3A { int w[3]; };
-
-/* UpdateShoot builds a five-Vector3 aggregate on the stack. Leaving it
-   an unnamed local class works, but mwccarm then mangles its implicit
-   destructor with a file-and-counter tag (_ZN29@class$NNNd_a_yurei_mucho_cppD1Ev)
-   that moves whenever this file does, so the manifest row licensing it would
-   not survive the move out of src_tu/. Naming it at file scope pins the
-   symbol; the emitted bytes are unchanged. */
-struct V3Quint {
-    Vector3 pp;
-    Vector3 spv;
-    Vector3 sout;
-    Vector3 d;
-    Vector3 tgt;
-};
 
 /* Scalar ABI declarations retained by this TU. */
 
@@ -282,17 +265,17 @@ void daYurei_Mucho_c::UpdateModelTransform() {
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
 
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
     mShotPos.x = 0;
     mShotPos.y = 0;
     mShotPos.z = 0;
-    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mAnmModel.mat4x3;
+    data_020a0e68 = mAnmModel.mat4x3;
 
     MTX_Concat43(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
 
-    mShotPos.x = data_020a0e68.t.x;
-    mShotPos.y = data_020a0e68.t.y;
-    mShotPos.z = data_020a0e68.t.z;
+    mShotPos.x = data_020a0e68.m[9];
+    mShotPos.y = data_020a0e68.m[10];
+    mShotPos.z = data_020a0e68.m[11];
     mShotPos.x <<= 3;
     mShotPos.y <<= 3;
     mShotPos.y -= 0xa000;
@@ -300,9 +283,9 @@ void daYurei_Mucho_c::UpdateModelTransform() {
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
 
-    mShadowMat = *(Mtx43 *)&data_020a0e68;
+    mShadowMat = data_020a0e68;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x64000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0x64000, 0x258000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -402,6 +385,8 @@ int daYurei_Mucho_c::UpdateChase() {
     short pitch = 0;
     daPly_c *p = ClosestNonVanishPlayer();
     if (p != 0) {
+        /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
+        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 tmp = *(VecFx32 *)&p->mPos;
         Vector3 v;
         Vector3 a;
@@ -451,12 +436,12 @@ short daYurei_Mucho_c::EnterShoot() {
 /* State main hook at 0x0211d650 +0x08: aim, and spawn the projectile (profile
    0xe9) up to three times before returning to a wait state. */
 int daYurei_Mucho_c::UpdateShoot() {
-    V3Quint L;
+    Vector3 playerPos, shotSpeed, shotVel, shotPos, target;
     daPly_c *pl = ClosestNonVanishPlayer();
     if (pl != 0) {
-        *(V3A *)(&L.pp) = *(V3A *)(&pl->mPos.x);
-        L.tgt = L.pp;
-        mTargetAngle = Vec3_HorzAngle(&mPos, &L.tgt);
+        *(V3A *)(&playerPos) = *(V3A *)(&pl->mPos.x);
+        target = playerPos;
+        mTargetAngle = Vec3_HorzAngle(&mPos, &target);
         ApproachAngle(&mPrevAngle.y, mTargetAngle, 1, 0x500, 0x500);
 
         if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && (u16)mStateTimer == 0 &&
@@ -465,18 +450,18 @@ int daYurei_Mucho_c::UpdateShoot() {
             if (spawned != 0) {
                 dActor_c *shot = (dActor_c *)spawned;
                 func_02012694(0xfb, &mCamSpacePos);
-                L.spv.x = 0;
-                L.spv.y = 0;
-                L.spv.z = 0x1e000;
-                L.sout.x = 0;
-                L.sout.y = 0;
-                L.sout.z = 0;
+                shotSpeed.x = 0;
+                shotSpeed.y = 0;
+                shotSpeed.z = 0x1e000;
+                shotVel.x = 0;
+                shotVel.y = 0;
+                shotVel.z = 0;
                 Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-                MTX_MultVec43(&L.spv, &data_020a0e68, &L.sout);
-                shot->mSpeed.x = L.sout.x;
-                shot->mSpeed.y = L.sout.y;
-                shot->mSpeed.z = L.sout.z;
+                MTX_MultVec43(&shotSpeed, &data_020a0e68, &shotVel);
+                shot->mSpeed.x = shotVel.x;
+                shot->mSpeed.y = shotVel.y;
+                shot->mSpeed.z = shotVel.z;
                 mShotCount += 1;
                 mStateTimer = 4;
             }
@@ -486,10 +471,10 @@ int daYurei_Mucho_c::UpdateShoot() {
     if (mAnmModel.Finished() != 0) {
         if (pl != 0) {
             s32 *dsrc = (s32 *)(&pl->mPos.x);
-            L.d.x = dsrc[0];
-            L.d.y = dsrc[1];
-            L.d.z = dsrc[2];
-            if (Vec3_Dist(&mPos, &L.d) > 0x3e8000) {
+            shotPos.x = dsrc[0];
+            shotPos.y = dsrc[1];
+            shotPos.z = dsrc[2];
+            if (Vec3_Dist(&mPos, &shotPos) > 0x3e8000) {
                 mStateTimer = 0;
                 ChangeState(&data_ov065_0211d670);
             } else {

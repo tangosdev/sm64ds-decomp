@@ -148,11 +148,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x0203d384",
       "reason": "Original stride12,count12 Vector3 flame-position constructor callback."
-    },
-    {
-      "symbol": "_ZN9Matrix4x3D1Ev",
-      "disposition": "deadstrip",
-      "reason": "Unused4-byte compiler-emitted Matrix4x3 destructor has no configured ROM home and no incoming relocation references."
     }
   ],
   "verification": {

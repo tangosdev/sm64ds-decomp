@@ -12,9 +12,7 @@
  * The file compiles under `#pragma defer_codegen off`, so mwccarm lays .text
  * in source order, which is ROM order. Do not reorder. The destructor stays
  * inline in daDsnBase_c.h and the two forcing functions near the top pull
- * its D0 and D1 out here, in the cartridge's order. daDsnBase_c.h is the
- * first include so Matrix4x3 is
- * common.h's flat s32 m[12]. Do not hoist math/Matrix.h.
+ * its D0 and D1 out here, in the cartridge's order.
  *
  * Notes (measured spellings that do not match):
  * - UpdateDropShadow keeps the early `s32 *clipRadius` and the braced

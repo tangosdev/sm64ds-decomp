@@ -140,10 +140,10 @@ int daObjPathLift_c::CleanupResources() {
 
 int daObjPathLift_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, 0);
-    mModel.mat4x3.t.x = mPos.x >> 3;
-    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
     int z = mPos.z >> 3;
-    mModel.mat4x3.t.z = z;
+    mModel.mat4x3.m[11] = z;
     return z;
 }
 
@@ -171,17 +171,16 @@ void daObjPathLift_c::UpdateShadow() {
     if (scaleZ < 0)
         scaleZ = -scaleZ;
 
-    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngle.y);
-    mShadowMat[9] = mPos.x >> 3;
-    mShadowMat[10] = (mPos.y - yOff) >> 3;
-    mShadowMat[11] = mPos.z >> 3;
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = (mPos.y - yOff) >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
 
     t = gGameMode == 1;
     if (t != false) {
-        DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x118000, 0x7d0000, scaleZ, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x118000, 0x7d0000, scaleZ, 0xf);
     } else {
-        DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x118000, groundDepth, scaleZ,
-                           0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x118000, groundDepth, scaleZ, 0xf);
     }
 }
 /* -------------------------------------------------------------------------- */

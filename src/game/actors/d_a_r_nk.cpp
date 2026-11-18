@@ -43,7 +43,6 @@ enum daRNk_c_AssetId {
 #include "math/CalcLib.h"
 #include "Sound.h"
 #include "math/Approach.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
@@ -295,7 +294,7 @@ void daRNk_c::func_ov062_0211aac0(){
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
     /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
-    *(Mtx43 *)&this->mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    this->mAnmModel.mat4x3 = data_020a0e68;
     DropShadowRadHeight(this->mShadowModel, this->mAnmModel.mat4x3, 0xa0000, 0xa0000, 0xf);
 }
 

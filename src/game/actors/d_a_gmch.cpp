@@ -5,9 +5,7 @@
  * defer_codegen off. The factory is the one free function.
  */
 /* leftovers:
- * - common.h stays before daGmch_c.h. InitResources assigns
- *   IDENTITY_MATRIX4X3 into mMatrix; the .r/.t Matrix4x3 spelling is
- *   0x1f0 against the ROM's 0x1d4. decl_common.h is not included.
+ * - decl_common.h is not included.
  * - GetFloorResult / GetWallResult return the raw word; a dBgPi* return
  *   disagrees with the definitions, so the callers still cast.
  *   TouchesWater and FX_Div are the const method and the divide.
@@ -15,9 +13,7 @@
  *   UpdateState6.
  * - UpdateState0 keeps mPhase++. mPhase = (u8)(mPhase + 1) is 0x144
  *   against 0x158, and mSpinAngleY += 0xc00 is four words off.
- * - ApproachLinear2 steps *(int *)&mState because mState, mPhase and
- *   mTimer share one word. State numbers, mFlags bit 0x80000 and hit
- *   mask 0x66fe0 stay numeric.
+ * - State numbers, mFlags bit 0x80000 and hit mask 0x66fe0 stay numeric.
  * - The loaded BCA is data_ov081_02128edc.filePtr. GmchDrawReg is the
  *   one-slot init sentinel the folded sinit needs.
  */
@@ -36,13 +32,6 @@ enum daGmch_c_AssetId {
 #include "types.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
-/* BEFORE daGmch_c.h, and load-bearing: common.h and math/Matrix.h both define
-   Matrix4x3 under one guard and whichever is seen FIRST stands.  InitResources
-   assigns IDENTITY_MATRIX4X3 whole into mMatrix; under common.h flat s32[12]
-   spelling mwccarm block-moves it, under math/Matrix.h Matrix3x3+Vector3
-   spelling it splits into a 9-word ldm/stm plus a CSE tail -- measured here as
-   0x1d4 against 0x1f0, +7 words.  The shards reached the flat spelling through
-   decl_common.h -> common.h; this include is what replaces that route. */
 #include "common.h"
 #include "daGmch_c.h"
 #include "dBgCh_Gnd.h"
@@ -679,7 +668,7 @@ int daGmch_c::UpdateState0()
 {
     switch (mPhase) {
     case 0:
-        if (ApproachLinear2(*(int *)&mState, 1, 2) != 0) {
+        if (ApproachLinear2(mState, 1, 2) != 0) {
             mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0);
             mFlags &= ~0x10000000;
             mPhase++;
@@ -693,7 +682,7 @@ int daGmch_c::UpdateState0()
         }
         break;
     case 2:
-        if (ApproachLinear2(*(int *)&mState, 0x1f, 2) != 0) {
+        if (ApproachLinear2(mState, 0x1f, 2) != 0) {
             mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0x6eff0);
             SetState(3);
         }

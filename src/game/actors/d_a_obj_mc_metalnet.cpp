@@ -13,8 +13,6 @@
  * (src/engine/save/SaveData.cpp); no header declares it yet.
  */
 
-/* daObjMc_Metalnet_c.h FIRST: it pulls in dBgActor_c.h, which must reach
-   common.h ahead of dExtSimpleModel_c.h or the wrong Matrix4x3 spelling wins. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_mc_metalnet_AssetId { ASSET_MC_METALNET_BMD = 0x0691, ASSET_MC_METALNET_KCL = 0x0692 };
 

@@ -22,9 +22,6 @@
  * - func_02012694 (sound 0x1e at mCamSpacePos), Matrix4x3_FromRotationXYZExt,
  *   Vec3_Sub and AngleDiff are arm9 C helpers no header declares yet.
  * - Abstract class: the leaves own classInit.
- * - common.h comes first so UpdateModelTransform's Matrix4x3 translation
- *   stores use the flat s32 m[12] spelling (math/Matrix.h nested form
- *   scalarises).
  */
 
 #pragma defer_codegen off
