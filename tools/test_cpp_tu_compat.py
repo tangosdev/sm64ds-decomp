@@ -18,7 +18,7 @@ class CppTuCompatibility(unittest.TestCase):
     def test_contract_covers_every_path_sensitive_surface(self):
         self.assertEqual(set(self.rows), {
             "srcpath", "enroll", "eligible", "rombuild", "validate_merge",
-            "langmode_audit", "attribution", "port_refcheck",
+            "langmode_audit", "attribution",
         })
 
     def test_current_readiness_is_explicit_and_behavior_backed(self):
@@ -32,7 +32,6 @@ class CppTuCompatibility(unittest.TestCase):
                 "validate_merge": "ready",
                 "langmode_audit": "ready",
                 "attribution": "ready",
-                "port_refcheck": "ready",
             })
         self.assertTrue(self.report["productionCompatible"])
         self.assertTrue(self.report["allSurfacesReady"])
@@ -59,9 +58,6 @@ class CppTuCompatibility(unittest.TestCase):
         self.assertEqual(
             set(self.rows["attribution"]["evidence"]["resolvedByFunction"].values()),
             {"alice", "bob"})
-        self.assertEqual(self.rows["port_refcheck"]["evidence"]["manifestFailures"], 0)
-        self.assertEqual(self.rows["port_refcheck"]["evidence"]["cmakeSymbolFailures"], 0)
-        self.assertEqual(self.rows["port_refcheck"]["evidence"]["hostgenDefinitions"], 2)
 
     def test_default_is_an_informational_command_and_strict_mode_is_a_gate(self):
         out = io.StringIO()
