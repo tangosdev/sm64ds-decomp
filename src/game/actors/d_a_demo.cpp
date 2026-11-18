@@ -2777,9 +2777,7 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     int e;
     int a;
     int f;
-    unsigned char new_var;
     int rv;
-    int new_var2;
     a = ReadUnalignedShort(p + 4) << 12;
     b = ReadUnalignedShort(p + 2) << 12;
     c0 = ReadUnalignedShort(p) << 12;
@@ -2795,14 +2793,13 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     this->mPrevAngle.x = this->mAngle.x;
     this->mPrevAngle.y = this->mAngle.y;
     this->mPrevAngle.z = this->mAngle.z;
-    this->mMagnitude = (new_var = p[0xc]) << 12;
+    this->mMagnitude = p[0xc] << 12;
     this->mScale.x = 0xb33;
     this->mScale.y = 0xb33;
     this->mScale.z = 0xb33;
     rv = mAnmModel->numFramesAndFlags;
-    new_var2 = RandomIntInternal(&data_0209e650);
-    mAnmModel->currFrame =
-        ((unsigned short)(FX_MUL((int)((((unsigned int)new_var2) >> 20) & 0xfff), rv) >> 12)) << 12;
+    u32 rnd = RandomIntInternal(&data_0209e650);
+    mAnmModel->currFrame = ((unsigned short)(FX_MUL((int)((rnd >> 20) & 0xfff), rv) >> 12)) << 12;
     return 1;
 }
 
@@ -3311,6 +3308,8 @@ int daDemo_c::Behavior()
 {
     Vector3 v;
     Vector3 asr;
+    /* Kept (#821 r84): v filled from mPos directly, as a struct copy, via a
+       block-scoped Vector3(x, y + 0x96000, z), or with the sum in yy -> DIFF. */
     int new_var2;
     s32 t;
     t = this->param1;
