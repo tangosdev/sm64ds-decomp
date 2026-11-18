@@ -153,7 +153,10 @@ extern dBgPc data_020a0cec;
    (cls 0) that fails it gets the expensive path -- a real hypotenuse through
    the hardware sqrt, then the contact angle through FX_Div, compared
    against upAxis. IsNearZeroDivisor guards the divisor: |x| <= 8 means near-zero,
-   so bail. */
+   so bail.
+   Kept (#821 r77): sn is the game's Vector3 (SurfaceInfo::CopyNormalTo fills
+   it) and upAxis is dBgW_Kc's POD VecFx32 member (dBgW_Kc.h), so the SDK
+   dot product of the two casts one side whichever overload is called. */
 #define EDGE_FILTER(d, hypv)                                                       \
     if (!(sphere.flags & 2)) {                                                     \
         if (cls == 1) {                                                            \

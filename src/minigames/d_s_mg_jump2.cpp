@@ -43,12 +43,6 @@ enum d_s_mg_jump2_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "SpawnInfo.h"
 
-/* Three words as an array, not three ints: as separate members the copy
- * in Render is scalarised and grows by 12 bytes. */
-struct S3 {
-    int w[3];
-};
-
 typedef void (dScMgJump2_c::*dScMgJump2_cState)();
 
 /* File-scope objects at the end of this file construct the two model
@@ -377,7 +371,6 @@ struct MaterialScrollView {
 };
 
 s32 dScMgJump2_c::Render() {
-    struct S3 scale;
     MaterialScrollView *material;
     int count;
     int x;
@@ -389,7 +382,10 @@ s32 dScMgJump2_c::Render() {
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0xffead000, -0xa0000);
     mModel.mat4x3 = data_020a0e68;
 
-    scale = *(struct S3 *)&sJump2RenderScale;
+    /* Kept (#821 r77): the ROM copy-initializes the scale with one ldm/stm
+       block move, which only a POD VecFx32 gives (a Vector3 copy is
+       memberwise); Render takes the game's Vector3, so it casts there. */
+    VecFx32 scale = sJump2RenderScale;
 
     {
         ModelComponents *components = &mModel.data;

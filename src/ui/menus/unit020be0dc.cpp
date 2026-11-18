@@ -77,6 +77,15 @@ typedef struct Vec3sWords {
     s16 w[3];
 } Vec3sWords;
 
+/* Kept (#821 r77): `(Vector3 *)&bone0->m[9]` in func_ov007_020beb80 and
+   func_ov007_020be0dc's `pos` read a bone Matrix4x3's translation column.
+   Matrix4x3 is one flat fx32 m[12] (math/Matrix.h gives the ROM evidence),
+   so that column has no member to name and a vector view is a cast. The
+   Vec3Words/Vec3sWords copies stay under r72's measurement: their
+   destinations are game vector types whose C++ assignment is memberwise.
+   Re-measured: `prevPos = *pos;` gives func_ov007_020beb80 0x1f0 and
+   `sys->position = *pos;` 0x1ec (ROM 0x1e0). */
+
 /* One 0xc-byte particle tracking record of the kind func_0204dab4 fills (as
  * dPa_c's edStarKiraCallback_c::trackingRecords). func_0204dab4 claims a free
  * record for each particle of the system, tagging it with its mask argument
