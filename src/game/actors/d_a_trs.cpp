@@ -1445,50 +1445,49 @@ void daTrs_c::func_ov063_02118b98() {
     Stop();
 
     v = this->mStateTimer;
-    if (v > 15)
-        goto bigblock;
-    if (v != 15)
-        return;
+    if (v <= 15) {
+        if (v != 15)
+            return;
 
-    {
-        int v2 = this->mDeathMode;
-        if (v2 == 0) {
-            func_ov063_02118eac();
-        } else if (v2 == 1) {
-            func_ov063_02118e5c();
-        } else {
-            func_ov063_02118ea0();
+        {
+            int v2 = this->mDeathMode;
+            if (v2 == 0) {
+                func_ov063_02118eac();
+            } else if (v2 == 1) {
+                func_ov063_02118e5c();
+            } else {
+                func_ov063_02118ea0();
+            }
         }
+
+        this->mPos.x = this->mHomePos.x;
+        this->mPos.y = this->mHomePos.y;
+        this->mPos.z = this->mHomePos.z;
+        return;
     }
 
-    this->mPos.x = this->mHomePos.x;
-    this->mPos.y = this->mHomePos.y;
-    this->mPos.z = this->mHomePos.z;
-    return;
-
-bigblock:
-    if (this->mDeathMode != 0) goto special;
-    if (v <= 60)
-        return;
-    if (this->mDistToPlayer >= 0x258000) return;
-    {
-        dActor_c *r1 = 0;
-        for (;;) {
-            r1 = dActor_c::FindWithActorID(TRS_ID_KAIDAN, r1);
-            if (r1 == 0) goto after_strb;
-            if ((r1->param1 >> 8 & 3) == 0)
-                break;
+    if (this->mDeathMode == 0) {
+        if (v <= 60)
+            return;
+        if (this->mDistToPlayer >= 0x258000) return;
+        {
+            dActor_c *r1 = 0;
+            for (;;) {
+                r1 = dActor_c::FindWithActorID(TRS_ID_KAIDAN, r1);
+                if (r1 == 0)
+                    break;
+                if ((r1->param1 >> 8 & 3) == 0) {
+                    ((daTrsTrap_c *)r1)->mTriggered = 1;
+                    break;
+                }
+            }
         }
-        ((daTrsTrap_c *)r1)->mTriggered = 1;
+        this->MarkForDestruction();
+        func_0201267c(0xd5, &this->mCamSpacePos);
+    } else {
+        this->MarkForDestruction();
+        func_0201267c(0xd5, &this->mCamSpacePos);
     }
-after_strb:
-    this->MarkForDestruction();
-    func_0201267c(0xd5, &this->mCamSpacePos);
-    return;
-
-special:
-    this->MarkForDestruction();
-    func_0201267c(0xd5, &this->mCamSpacePos);
 }
 
 
@@ -2089,40 +2088,37 @@ void daTrs_c::FindParentBigBoo() {
 
 void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
 
-    if (VanishOrAppear() == 0)
-        goto reset;
-
-    if (Vec3_HorzDist(&this->mPos, &this->mHomePos) >= this->mLeashDist) {
-        this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &this->mHomePos);
-        this->mStateTimer = 0;
-    } else if (Vec3_HorzDist(&this->mHomePos, &this->mClosestPlayer->mPos) < this->mLeashDist) {
-        this->mTargetAngleY = this->mAngleToPlayer;
-        this->mStateTimer = 0;
-    } else {
-        unsigned rnd = (unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3f;
-        if (this->mStateTimer >= rnd + 0x5a) {
-            int rnd2 =
-                (int)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff) - 0x2000;
-            this->mTargetAngleY = this->mPrevAngle.y + rnd2;
+    if (VanishOrAppear() != 0) {
+        if (Vec3_HorzDist(&this->mPos, &this->mHomePos) >= this->mLeashDist) {
+            this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &this->mHomePos);
             this->mStateTimer = 0;
+        } else if (Vec3_HorzDist(&this->mHomePos, &this->mClosestPlayer->mPos) < this->mLeashDist) {
+            this->mTargetAngleY = this->mAngleToPlayer;
+            this->mStateTimer = 0;
+        } else {
+            unsigned rnd = (unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3f;
+            if (this->mStateTimer >= rnd + 0x5a) {
+                int rnd2 =
+                    (int)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff) - 0x2000;
+                this->mTargetAngleY = this->mPrevAngle.y + rnd2;
+                this->mStateTimer = 0;
+            }
         }
-    }
 
-    ApproachLinear(this->mPrevAngle.y, this->mTargetAngleY, a2);
-    this->mSpeed.y = 0;
-    SetVelFromPlayerVel(0xa000 - this->mSpeedJitter, a3);
+        ApproachLinear(this->mPrevAngle.y, this->mTargetAngleY, a2);
+        this->mSpeed.y = 0;
+        SetVelFromPlayerVel(0xa000 - this->mSpeedJitter, a3);
 
-    if (this->mHorzSpeed != 0) {
-        Oscillate(0);
+        if (this->mHorzSpeed != 0) {
+            Oscillate(0);
+        } else {
+            func_ov063_0211a960();
+        }
     } else {
+        this->mHorzSpeed = 0;
+        this->mSpeed.y = 0;
         func_ov063_0211a960();
     }
-    return;
-
-reset:
-    this->mHorzSpeed = 0;
-    this->mSpeed.y = 0;
-    func_ov063_0211a960();
 }
 
 void daTrs_c::ChaseMario(int a1, short a2, int a3) {
@@ -2327,45 +2323,40 @@ int daTrs_c::UpdateDuringDeath() {
         this->mPrevAngle.y = this->mClosestPlayer->mAngle.y;
         this->mChildDeaths = 1;
         this->mBooFlags.followHeading = 0;
-        goto fall;
-    }
-
-    if (this->mStateTimer == 5)
-        this->mTargetOpacity = 8;
-
-    if (this->mStateTimer <= 30) {
-        if (this->mWithMeshClsn.IsOnWall() == 0)
-            goto fall;
-    }
-
-    if (this->mVariant == 0xf) {
-        int x = this->mPos.x;
-        v.x = x;
-        v.y = this->mPos.y;
-        v.z = this->mPos.z;
-        if (this->mBooFlags.mirrored)
-            v.x = x * (u32)-1;
-        w = v;
-        this->PoofDustAt(w);
     } else {
-        PoofDust();
-    }
+        if (this->mStateTimer == 5)
+            this->mTargetOpacity = 8;
 
-    this->mChildDeaths = 2;
-
-    if (this->mVariant != 0 && this->mBigBooID != 0) {
-        this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
-        if (this->mFoundActor != 0) {
-            if (this->mVariant != 2) {
-                ((daTrs_c *)this->mFoundActor)->mBooDefeatCount += 1;
+        if (this->mStateTimer > 30 || this->mWithMeshClsn.IsOnWall() != 0) {
+            if (this->mVariant == 0xf) {
+                int x = this->mPos.x;
+                v.x = x;
+                v.y = this->mPos.y;
+                v.z = this->mPos.z;
+                if (this->mBooFlags.mirrored)
+                    v.x = x * (u32)-1;
+                w = v;
+                this->PoofDustAt(w);
+            } else {
+                PoofDust();
             }
-            ((daTrs_c *)this->mFoundActor)->func_ov063_02116244();
-        }
-        this->mFoundActor = 0;
-    }
-    return 1;
 
-fall:
+            this->mChildDeaths = 2;
+
+            if (this->mVariant != 0 && this->mBigBooID != 0) {
+                this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
+                if (this->mFoundActor != 0) {
+                    if (this->mVariant != 2) {
+                        ((daTrs_c *)this->mFoundActor)->mBooDefeatCount += 1;
+                    }
+                    ((daTrs_c *)this->mFoundActor)->func_ov063_02116244();
+                }
+                this->mFoundActor = 0;
+            }
+            return 1;
+        }
+    }
+
     this->mSpeed.y = 0x5000;
     this->mAngle.z += 0x800;
     this->mAngle.y += 0x800;
@@ -2380,18 +2371,15 @@ int daTrs_c::UpdateDuringNonlethalHit(int arg1) {
         u16 t = mStateTimer;
         if (t < 0x20) {
             MoveDuringHit(1, ((arg1 * data_ov063_0211e7e0[t]) << 12) / 5000);
-            goto ret0;
-        }
-        if (t < 0x30) {
+        } else if (t < 0x30) {
             ShakeAfterHit();
-            goto ret0;
+        } else {
+            mdCcAcPos_c.flags &= ~1;
+            ResetAfterHit();
+            mState = 1;
+            return 1;
         }
     }
-    mdCcAcPos_c.flags &= ~1;
-    ResetAfterHit();
-    mState = 1;
-    return 1;
-ret0:
     return 0;
 }
 
@@ -2406,13 +2394,12 @@ int daTrs_c::UpdateAfterBouncedOn(int arg) {
     if (t < 0x20) {
         MoveDuringHit(0, ((arg * data_ov063_0211e7e0[t]) << 12) / 5000);
         rv = 0;
-        goto done;
+    } else {
+        mdCcAcPos_c.flags &= ~1;
+        ResetAfterHit();
+        mState = 1;
+        return 1;
     }
-    mdCcAcPos_c.flags &= ~1;
-    ResetAfterHit();
-    mState = 1;
-    return 1;
-done:
     return rv;
 }
 
@@ -2935,22 +2922,13 @@ block_39:
             v2.z = z;
             rc2.SetObjAndPos(v2, this);
             d1 = (int)(actorID == TRS_ID_TERESA);
-            if (d1 != 0) {
-                if (mVariant < 8) {
-                    if (mBooFlags.groundSeen != 0) {
-                        if ((rc2.DetectClsn() == 0) || ((mPos.y - rc2.clsnY) > 0x12c000)) {
-                            mPos = mLastGroundPos;
-                        } else {
-                            mLastGroundPos = mPos;
-                        }
-                    } else {
-                        goto ray_e;
-                    }
+            if (d1 != 0 && mVariant < 8 && mBooFlags.groundSeen != 0) {
+                if ((rc2.DetectClsn() == 0) || ((mPos.y - rc2.clsnY) > 0x12c000)) {
+                    mPos = mLastGroundPos;
                 } else {
-                    goto ray_e;
+                    mLastGroundPos = mPos;
                 }
             } else {
-            ray_e:
                 if ((rc2.DetectClsn() != 0) && ((mPos.y - rc2.clsnY) < 0x12c000)) {
                     fp = (u16 *)&this->mBooFlags;
                     *fp = (*fp) | TRS_FLAG_GROUND_SEEN;
