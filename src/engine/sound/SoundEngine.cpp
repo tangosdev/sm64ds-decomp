@@ -1771,12 +1771,12 @@ extern "C" void func_0204fed0(struct C *c) {
 }
 
 extern "C" void func_0204fe5c(struct C *c, int volume) {
+    /* Kept (#821 r82): idx read without the new_var copy -> same size,
+       bytes differ. The empty `if (1) {}` before the loop was inert. */
     unsigned char new_var;
     int i = 0;
     c->volume = volume;
     if (c->chanCount > 0) {
-        if (1) {
-        }
         do {
             unsigned char idx = new_var = c->chans[i];
             int r = SND_CalcChannelVolume(c->volume + data_020a5578[idx].field4);
@@ -1800,18 +1800,17 @@ extern "C" void func_0204fde8(struct C *obj) {
 }
 
 extern "C" void func_0204fda4(struct C *c) {
-    int* p;
     func_0204f0b8(c->f28);
     NNS_FndRemoveListObject(&data_020a552c, c);
-    p = &c->fc;
-    *p &= ~1;
-    *p &= ~2;
+    c->fc &= ~1;
+    c->fc &= ~2;
 }
 
 void C::func_0204fce8(void *arg) {
+    /* Kept (#821 r82): the sum written without new_var -> same size, bytes
+       differ. */
     int new_var;
     int i;
-    int *pcount;
     int q = (u32)this->bufSize / (u32)this->blockCount;
     int scaled = q * this->f20;
     for (i = 0; i < this->chanCount; i++) {
@@ -1820,8 +1819,7 @@ void C::func_0204fce8(void *arg) {
     }
 
     this->callback(arg, this->chanCount, data_020a5538, q, this->unk8, this->unk1c);
-    pcount = &this->f20;
-    (*pcount)++;
+    this->f20++;
     if (this->f20 >= this->blockCount) {
         this->f20 = 0;
     }

@@ -111,11 +111,20 @@ daStarGate_c *daStarGate_c_classInit() {
     return new daStarGate_c();
 }
 
+/* InitResources keeps only param1's high halfword, the gate's index into
+   data_ov100_02148390, with a read through this accessor. A plain
+   `param1 = param1 >> 16` lets 2004/b56 value-number both sides and
+   materialise the +8 address once (0xac, one word longer than the
+   cartridge's folded ldr/lsr/str). Same lever as daDoor_c::GetParam1. */
+inline u32 daStarGate_c::GetParam1() const {
+    return param1;
+}
+
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daStarGate_c::InitResources()
 {
-    param1 = (u32)param1 >> 16;
+    param1 = GetParam1() >> 16;
 
     BMD_File *file = dExtSimpleModel_c::LoadFile(gObjStargateModelFile);
     if (!mModel.SetFile(file, 1, 1))

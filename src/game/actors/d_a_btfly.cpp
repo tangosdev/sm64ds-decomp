@@ -24,9 +24,9 @@
  * zero mangled calls.
  *
  * deslop leftovers:
- * - State7 mFlutterPhase: named += is 0x234 vs 0x258. The phase load is
- *   ldrsh plus a zero-extend shift (ldrh of the field is shorter), and the
- *   adds take the int-cast address, not add #0x300.
+ * - State7 mFlutterPhase is a u16: the adds step it as one (ldrh/strh).
+ *   The phase load is ldrsh plus a zero-extend shift, so the read goes
+ *   through an s16 local (ldrh of the field is 8 bytes shorter) (#821 r82).
  * - State7 UpdateContinuous(): WRONG-DEST. ROM calls
  *   dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc).
  * - State7 func_02035638 is mClsnFlags & 0x10. No method; IsOnGround is
@@ -72,10 +72,6 @@ struct BtflyAnimationFilePtr : SharedFilePtr {
     ~BtflyAnimationFilePtr();
 };
 
-/* State7's flutter-phase add. A plain mFlutterPhase += folds to add #0x300;
- * the int cast keeps the pool-offset add the ROM has. */
-#define L(p) ((int)(p))
-
 extern "C" {
 // local extern: CalcLib.h also conflicts with this TU's retained Vec3_Asr and Vec3_HorzLen prototypes.
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -108,18 +104,16 @@ void daBtfly_c::State7()
     int hasContact;
     int v;
 
-    /* Read mFlutterPhase signed, then zero-extend: a single (u16) read
-     * shortens State7 by 8 bytes. */
+    /* The phase is read as a signed angle, then indexed as unsigned: a
+     * single (u16) read shortens State7 by 8 bytes. */
     if (mStateTimer > 120) {
-        int ang = mFlutterPhase;
-        ang = (unsigned short)(short)ang;
-        int idx = ang >> 4;
-        v = FX_MUL(FX_CosIdx(idx), 0xa3);
+        s16 phase = mFlutterPhase;
+        v = FX_MUL(FX_CosIdx((u16)phase >> 4), 0xa3);
         if (v > 0) {
             v = FX_MUL(v, 0x4800);
-            *(u16 *)L(&mFlutterPhase) += 0x2710;
+            mFlutterPhase += 0x2710;
         } else {
-            *(u16 *)L(&mFlutterPhase) += 0xfa0;
+            mFlutterPhase += 0xfa0;
         }
         mScale += v;
     }
@@ -283,12 +277,8 @@ void daBtfly_c::State3()
     ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &mHomePos), 0x50);
     UpdatePos(0);
 
-    {
-        int *p = &mPos.y;
-        *p = *p -
-             (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngle.x >> 4)) +
-              FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * (short)20 / 4);
-    }
+    mPos.y -= FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngle.x >> 4)) +
+              FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * (short)20 / 4;
 
     mStateTimer = mStateTimer + 1;
     if (mStateTimer > 100)

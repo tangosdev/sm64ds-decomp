@@ -903,11 +903,10 @@ void daStar_c::StateFlyToMarker() {
     if (o == 0) { MarkForDestruction(); return; }
     if (Vec3_HorzDist(&mPos, &o->mPos) < mHorzSpeed) {
         int *src = &o->mPos.x;
-        int *yp = &mPos.y;
         mPos.x = src[0];
         mPos.y = src[1];
         mPos.z = src[2];
-        *yp += 0xc8000;
+        mPos.y += 0xc8000;
         mHorzSpeed = 0;
         mSpeed.y = 0x18000;
         if (gCurrentSublevel == 0xb && mStarID == 3)
@@ -1128,8 +1127,6 @@ void daStar_c::StateCollectBegin() {
             mSoundObjMode = 2;
         }
 
-        int *posY = &mPos.y;
-
         mState = STATE_COLLECT_HOLD;
         mBits.collectedModel = 0;
         mBits.visible = 1;
@@ -1144,7 +1141,7 @@ void daStar_c::StateCollectBegin() {
             mPos.x = cache->x;
             mPos.y = cache->y;
             mPos.z = cache->z;
-            *posY += 0x1e000;
+            mPos.y += 0x1e000;
         }
 
         mPrevAngle.y = mPlayer->mAngle.y;
@@ -1178,12 +1175,11 @@ void daStar_c::StateCollectBegin() {
         }
     } else {
         if (func_ov002_020ca0f4(common) != 0) {
-            int *posY2 = &mPos.y;
             int *s = &mPlayer->mPos.x;
             mPos.x = s[0];
             mPos.y = s[1];
             mPos.z = s[2];
-            *posY2 += 0xc8000;
+            mPos.y += 0xc8000;
         } else {
             int ok = (gGameMode == 1);
             if (ok) {

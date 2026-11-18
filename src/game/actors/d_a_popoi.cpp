@@ -25,9 +25,6 @@
  * deslop leftovers:
  *   - TurnAway (data_ov077_02127d18) is its own record, so ChangeState
  *     still takes that object's address as daPopoi_StateRecord *.
- *   - UpdateTurnAwayState calls AngleDiff through an (int(*)(short,short))
- *     pointer cast: decl_common declares (int,int), and the short call-site
- *     typing is byte-load-bearing.
  *   - Render calls dExtAnmModel_c::Render through a dExtAnmModel_c pointer, so it
  *     dispatches through vtable slot 5 as the ROM does.
  *   - unk_41c is only ever zeroed here, and nothing reads it in this file.
@@ -440,11 +437,8 @@ int daPopoi_c::EnterTurnAwayState() {
  * 0x100 (1.4 degrees), set mCooldown to 30 frames and go back to Wander
  * (data_ov077_02127ce8). Returns 1. */
 int daPopoi_c::UpdateTurnAwayState() {
-    /* (short,short) view of AngleDiff (decl_common says int,int); the cast keeps
-       C linkage and the short call-site typing, which is byte-load-bearing. */
-    short tgt = mTargetAngleY;
-    ApproachLinear(mPrevAngle.y, tgt, 0x500);
-    int diff = (AngleDiff)(mPrevAngle.y, mTargetAngleY);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x500);
+    int diff = AngleDiff(mPrevAngle.y, mTargetAngleY);
     if (diff < 0x100) {
         mCooldown = 30;
         ChangeState(&data_ov077_02127ce8); /* Wander */

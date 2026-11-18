@@ -1423,6 +1423,8 @@ void dScStage_c::UpdateMenuButtons(bool b) {
             } else {
                 v = 0x1000;
             }
+            /* Kept (#821 r82): without this no-op narrowing, or with v
+               retyped u16, UpdateMenuButtons is 0x140 of 0x148. */
             v = (u16)v;
         } else {
             v = 0x1000;
@@ -3464,7 +3466,9 @@ extern "C" void SetPlayerGlobals(void) {
        Measured (#821 r68): declared signed char, dScStarSel_c's two stores
        lose the `and #0xff` they share with data_02092128[0]. */
     /* Kept (#821 r76): no block-copy or type lever (r72-r75) applies to this scalar pin; the r68
-       measurement above stands. */
+       measurement above stands.
+       Kept (#821 r80): getter tried -> a store with no read to route; `= -1` and `= 0xff` emit
+       mov r3,#0xff, not mvn r3,#0. */
     *(s8 *)&data_02092114 = -1;
     data_0209f254 = 0;
 }

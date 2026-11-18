@@ -1980,7 +1980,10 @@ s32 dScMgAmida_c::Behavior() {
                             mPieces[slot].posX += mLanePos[j].x;
                             mPieces[slot].posY += mLanePos[j].y;
                             /* (int)cosA: without the cast, or with cosA
-                               declared int, Behavior differs by 13 words. */
+                               declared int, Behavior differs by 13 words.
+                               Kept (#821 r81): re-measured, the plain cosA
+                               still differs; cosA is a local, so no accessor
+                               or block-copy lever applies. */
                             mPieces[slot].velX = FX_MUL(cosB, FX_MUL(0x1000, (int)cosA));
                             mPieces[slot].velY = FX_MUL(cosB, FX_MUL(0x1000, sinA));
                         }

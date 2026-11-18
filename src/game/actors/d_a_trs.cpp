@@ -371,8 +371,7 @@ void daTrs_c::func_ov063_021166ac() {
         return;
     if (mBooFlags.carrying) {
         if (this->mCarriedID != TRS_ID_T_BASKET) {
-            s16 *ap = &this->mCarriedAngleY;
-            *ap += 0xc00;
+            this->mCarriedAngleY += 0xc00;
         }
         Matrix4x3_FromRotationY(&this->mCarriedModel.mat4x3, this->mCarriedAngleY);
         this->mCarriedModel.mat4x3.t.x = this->mCarriedPos.x >> 3;
@@ -656,13 +655,11 @@ void daTrs_c::func_ov063_02116fac() {
 
     switch (this->mState) {
     case 0:
-        /* Kept (#821 r76): BooFlags16 written as its halfword (here and below); no block-copy or
-           type lever (r72-r75) applies to this scalar pin. */
-        *(u16 *)&this->mBooFlags &= ~TRS_FLAG_VISIBLE;
+        this->mBooFlags.visible = 0;
         if (this->mBooFlags.canAppear) {
             this->mState++;
             this->mOpacity = 0xb4;
-            *(u16 *)&this->mBooFlags |= TRS_FLAG_VISIBLE;
+            this->mBooFlags.visible = 1;
         }
         break;
     case 1:
@@ -712,9 +709,7 @@ void daTrs_c::func_ov063_02116fac() {
     case 6:
         this->mHorzSpeed = 0;
         this->mOpacity = 0;
-        /* Kept (#821 r76): BooFlags16 written as its halfword; no block-copy or type lever
-           (r72-r75) applies to this scalar pin. */
-        *(u16 *)&this->mBooFlags &= ~TRS_FLAG_VISIBLE;
+        this->mBooFlags.visible = 0;
         break;
     }
 
@@ -2507,13 +2502,11 @@ void daTrs_c::ApproachTargetOpacityAndUpdateScale() {
             if (cur + 0x14 >= tgt) {
                 this->mOpacity = tgt;
             } else {
-                u8 *p = &this->mOpacity;
-                *p += 0x14;
+                this->mOpacity += 0x14;
             }
         } else {
             if (cur - 0x14 > tgt) {
-                u8 *p = &this->mOpacity;
-                *p -= 0x14;
+                this->mOpacity -= 0x14;
             } else {
                 this->mOpacity = tgt;
             }
@@ -3021,6 +3014,13 @@ int daTBasket_c::Behavior()
     return 1;
 }
 
+/* InitResources drops param1's cap nibble with a read through this
+   accessor. A plain `param1 &= 0xfff` lets mwccarm CSE the field address
+   (addlt r2,r4,#8 + [r2], 0x9a4 of 0x9a0); the cartridge stores to
+   [r4,#8] directly. */
+inline u32 daTrs_c::GetParam1() const {
+    return param1;
+}
 
 int daTrs_c::InitResources()
 {
@@ -3030,7 +3030,9 @@ int daTrs_c::InitResources()
     daPly_c *pp;
 
     /* Kept (#821 r76): BooFlags16 cleared as its halfword; no block-copy or type lever (r72-r75)
-       applies to this scalar pin. */
+       applies to this scalar pin. Kept (#821 r80): getter tried -> no read to route through
+       one; `= BooFlags16()`, a `{0}` or `{}` local and a static const zero copy are all
+       0x9ac of 0x9a0. */
     *(u16 *)&mBooFlags = 0;
     mSpawnedActorID = 0;
     cond = 0;
@@ -3125,13 +3127,7 @@ int daTrs_c::InitResources()
         capIdx = (param1 >> 8) & 0xf;
         AddCap(capIdx);
         if ((mCapId & 7) < 6) {
-            /* int on the store side only: spelling both sides identically
-               lets mwccarm CSE the field address (addlt r2,r4,#8 + [r2]),
-               one instruction the ROM does not have -- it wants [r4,#8] direct.
-               Same lever as daKrb_c::OnTurnIntoEgg in src/game/actors/d_a_krb.cpp. */
-            /* Kept (#821 r76): a CSE pin on the store; no block-copy or type lever (r72-r75)
-               applies to this scalar pin. */
-            *(int *)&this->param1 = param1 & 0xfff;
+            param1 = GetParam1() & 0xfff;
         }
         if (DestroyIfCapNotNeeded() == 0) {
             return 0;

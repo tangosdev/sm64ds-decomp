@@ -96,11 +96,7 @@ int daObjWc_Obj03_c::Behavior()
     if (mWaterID == 0) return 1;
     CheckClsnWithPlayer();
     if (mActive != 0) {
-        /* The address-valued temporary is load-bearing under 2004/b56: the
-         * cartridge keeps r1 as &mAngle.y for both the halfword load and store.
-         * A named increment CSEs the field address. */
-        s16 *angleY = &mAngle.y;
-        *angleY = *angleY + 0x400;
+        mAngle.y += 0x400;
         daObjWc_Mizu_c *water = (daObjWc_Mizu_c *)dActor_c::FindWithID(mWaterID);
         if (water != 0) {
             if (mPos.y == water->mPos.y) {

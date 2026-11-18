@@ -158,6 +158,9 @@ struct daIbl_c : dEnemyBase_c {
     void RollOffBehavior();
     void FreeRollBehavior();
     void SpawnerBehavior();
+
+    /* param1, the spawn word; defined inline in d_a_ibl.cpp. */
+    u32 GetParam1() const;
 };
 
 #ifndef SM64DS_PLATFORM_PC

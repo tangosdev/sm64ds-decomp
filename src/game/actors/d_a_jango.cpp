@@ -588,9 +588,8 @@ int daJango_c::UpdateFlyPathState() {
             if (mPathNodeIndex != r) {
                 mPathNodeIndex = r;
             } else {
-                int *p = &mPathNodeIndex;
-                (*p)++;
-                *p &= 3;
+                mPathNodeIndex++;
+                mPathNodeIndex &= 3;
             }
         }
         mPos.x = node.x;
@@ -674,11 +673,7 @@ int daJango_c::EnterCircleState() {
    5. If the node picked by ChangeTarget differs (and the actor is not the
       silver-star variant or in level 0x18 / 0x19) the timer is cancelled; once
       mStateTimer and mLeaveDelay are both 0, it carries or holds something and mAngle.y is within 0x2000 (45 degrees) of the
-      path node's direction, it enters FLY_PATH.
-
-   mStateTimer is declared s16, but the ROM tests it with ldrh in this function
-   and in c2f4; the declared type compiles those tests to ldrsh, so they read it
-   through a u16 cast (measured: both functions stop matching without it). */
+      path node's direction, it enters FLY_PATH. */
 int daJango_c::UpdateCircleState() {
     s16 angV;
     s16 angD;
@@ -687,8 +682,6 @@ int daJango_c::UpdateCircleState() {
     Vector3 node;
     int thr;
     s8 stage;
-    int *p43c;
-    s16 *p94;
     int *pp;
     int tmp;
 
@@ -726,11 +719,9 @@ int daJango_c::UpdateCircleState() {
     ApproachAngle(&mPrevAngle.z, angD, 0xa, 0x200, 0x100);
 
     if (gCurrentSublevel == 0x10 || mSilverStarFlag == 2) {
-        p94 = &mPrevAngle.y;
-        *p94 = (s16)(*p94 - 0x200);
+        mPrevAngle.y -= 0x200;
     } else {
-        p94 = &mPrevAngle.y;
-        *p94 = (s16)(*p94 - 0x400);
+        mPrevAngle.y -= 0x400;
     }
 
     if (mHeldActorID == 0 && mCarriedItem == CARRIES_NO_STAR) {
@@ -769,8 +760,7 @@ int daJango_c::UpdateCircleState() {
         if (mStateParam == 1) {
             mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
             if (mSilverStarFlag == 2 || (unsigned)(u8)(s8)((s8)gCurrentSublevel - 0x18) <= 1u) {
-                p43c = &mLeaveDelay;
-                *p43c = *p43c - 1;
+                mLeaveDelay--;
                 if (mLeaveDelay <= 0) {
                     mLeaveDelay = 0;
                 }
@@ -779,13 +769,11 @@ int daJango_c::UpdateCircleState() {
         }
     } else if (mStateParam == 0) {
         mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
-        p43c = &mStateParam;
-        *p43c = *p43c + 1;
+        mStateParam++;
     }
 
     if (mStateParam >= 2) {
-        p43c = &mStateParam;
-        *p43c = *p43c + 1;
+        mStateParam++;
         if (mStateParam > 0x18) {
             mStateParam = 0;
         }
@@ -1127,11 +1115,8 @@ int daJango_c::ChangeTarget() {
     int bestIdx;
     int bestDist;
 
-    {
-        int *ctr = &mPathPickTick;
-        *ctr = *ctr + 1;
-        *ctr = *ctr & 7;
-    }
+    mPathPickTick++;
+    mPathPickTick &= 7;
     if (mPathPickTick != 0)
         return 0;
 

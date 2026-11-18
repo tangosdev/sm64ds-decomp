@@ -62,6 +62,8 @@ void func_0206cbc0(struct Csl *sl, u8 *sb, int count)
                     v = (*(u16 *)(sb - 1) & 0xff00) >> 8;
                 else
                     v = *(u16 *)sb & 0xff;
+                /* Kept (#821 r82): dropping this no-op narrowing is 0x110
+                   of 0x118; v retyped u16 is 0x11c. */
                 v = (u16)v;
                 fn(base, v & 0xff);
                 sl->fc += 1;

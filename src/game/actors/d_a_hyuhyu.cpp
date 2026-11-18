@@ -280,7 +280,7 @@ int daHyuhyu_c::StateWaitMain() {
         }
         angle = Vec3_HorzAngle(&mPos, &target);
         ApproachAngle(&mPrevAngle.y, angle, 0xa, 0x200, 0x100);
-        if ((u16)mStateTimer == 0 && Vec3_Dist(&mPos, &target) < 0x3e8000 && angle < 0x1000)
+        if (mStateTimer == 0 && Vec3_Dist(&mPos, &target) < 0x3e8000 && angle < 0x1000)
             SetState(&data_ov091_021356b0);
     }
     return 1;
@@ -375,7 +375,7 @@ int daHyuhyu_c::StateGustFlyMain() {
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
     MTX_MultVec43(&fwd, &data_020a0e68, &mSpeed);
-    if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
+    if (mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
         (mFlags & 8))
         MarkForDestruction();
     return 1;

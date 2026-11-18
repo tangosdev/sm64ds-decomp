@@ -63,7 +63,9 @@ int daSetSE_c::InitResources()
 
     /* The (int) casts are load-bearing, not noise: each forces its boolean
        to materialize into a word before the re-test, and spelling the
-       tests directly comes out six words short of the ROM. */
+       tests directly comes out six words short of the ROM.
+       Kept (#821 r81): `disabled = <the && chain>;` and a
+       `!gRunningKuppaScript` test are both 0xb8 of 0xd0. */
     if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0)
         disabled = 1;
