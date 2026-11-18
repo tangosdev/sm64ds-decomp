@@ -158,9 +158,7 @@ int daObjFloatBoard_c::Behavior() {
 
     if (UpdateWaterY() != 0) {
         if (ApproachLinear(mSinkOffset, mRider != 0 ? -0x28000 : 0, 0x5000) != 0) {
-            short *ctr = &mBobPhase;
-            short cval = *ctr;
-            *ctr = (short)(cval + 0xa00);
+            mBobPhase += 0xa00;
             mBobOffset = 10 * FX_SinIdx((unsigned short)mBobPhase >> 4);
         }
 
