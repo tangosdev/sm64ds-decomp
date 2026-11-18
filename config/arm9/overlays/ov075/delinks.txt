@@ -82,3 +82,15 @@ src/game/stages/d_s_entry_entry.cpp:
     .ctor start:0x0211c5ac end:0x0211c5b0
     .data.entry_tail start:0x0211d34c end:0x0211d364
     .bss start:0x0211d980 end:0x0211d9ac
+
+src/data/ov075/data_ov075_0211d380.c:
+    complete
+    .bss start:0x0211d380 end:0x0211d384
+
+src/data/ov075/data_ov075_0211d9ac.c:
+    complete
+    .bss start:0x0211d9ac end:0x0211d9bc
+
+src/data/ov075/data_ov075_0211d9bc.c:
+    complete
+    .bss start:0x0211d9bc end:0x0211d9c0
