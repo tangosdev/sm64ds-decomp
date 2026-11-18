@@ -6,8 +6,6 @@
  * not daObjWc_Obj02_c (ARROW_LIFT), not daObjWc_Obj03_c (WATER_DIAMOND), not
  * daObjWc_Obj05_c (CAGE_LIFT).
  *
- * The two helpers write the translation as m[9..11].
- *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. Highest-address first.
  * The destructor is inline in include/daObjWc_Obj04_c.h (D1 then D0, no D2).
  *
@@ -145,9 +143,9 @@ int daObjWc_Obj04_c::CleanupResources() {
 /* The plank model's matrix: yaw plus position >> 3 (world fix12 to model units). */
 void daObjWc_Obj04_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngle.y);
-    mModel2.mat4x3.m[9] = mPos.x >> 3;
-    mModel2.mat4x3.m[10] = mPos.y >> 3;
-    mModel2.mat4x3.m[11] = mPos.z >> 3;
+    mModel2.mat4x3.t.x = mPos.x >> 3;
+    mModel2.mat4x3.t.y = mPos.y >> 3;
+    mModel2.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -155,9 +153,9 @@ void daObjWc_Obj04_c::UpdateModelMatrix() {
 /* The plank collision matrix: yaw plus the world position. */
 void daObjWc_Obj04_c::UpdateClsnMatrix() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
-    mClsnMat2.m[9] = mPos.x;
-    mClsnMat2.m[10] = mPos.y;
-    mClsnMat2.m[11] = mPos.z;
+    mClsnMat2.t.x = mPos.x;
+    mClsnMat2.t.y = mPos.y;
+    mClsnMat2.t.z = mPos.z;
 }
 
 /* -------------------------------------------------------------------------- */

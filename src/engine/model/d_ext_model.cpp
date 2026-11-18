@@ -727,8 +727,8 @@ void dExtShadowModel_c::CleanAll() {
     data_0209ceec = 0;
 }
 
-/* The scratch matrix is flat in this TU (common.h): m[10] is the
-   translation's y, lifted two units so the shadow sits above the ground. */
+/* The scratch matrix's translation y is lifted two units so the shadow sits
+   above the ground. */
 void dExtShadowModel_c::RenderAll() {
     dExtShadowModel_c *node = data_0209cef4;
     if (node) {
@@ -736,7 +736,7 @@ void dExtShadowModel_c::RenderAll() {
             ModelComponents *model = node->data;
             func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
             MTX_Concat43(&data_020a0e68, node->mat, &data_020a0e68);
-            data_020a0e68.m[10] += 0x2000;
+            data_020a0e68.t.y += 0x2000;
             MTX_Concat43(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
             model->SetShadowMask(node->opacity);
             model->Render(&data_020a0e68, 0);

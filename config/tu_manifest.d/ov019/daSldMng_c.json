@@ -434,9 +434,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@251",
+      "from": "@253",
       "to": "@203",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @216 to @214 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @214 to @251 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @216 to @214 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @214 to @251 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @251 to @253 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

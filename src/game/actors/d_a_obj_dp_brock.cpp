@@ -155,9 +155,9 @@ int daObjDpBrock_c::CleanupResources() {
  * UpdateModelPosAndRotY does the same for the inherited model. */
 void daObjDpBrock_c::UpdateStepModelPosAndRotY() {
     Matrix4x3_FromRotationY(&mStepModel.mat4x3, mAngle.y);
-    mStepModel.mat4x3.m[9] = mPos.x >> 3;
-    mStepModel.mat4x3.m[10] = mPos.y >> 3;
-    mStepModel.mat4x3.m[11] = mPos.z >> 3;
+    mStepModel.mat4x3.t.x = mPos.x >> 3;
+    mStepModel.mat4x3.t.y = mPos.y >> 3;
+    mStepModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Moves the collider with the block: rotation from mAngle.y, translation
@@ -165,9 +165,9 @@ void daObjDpBrock_c::UpdateStepModelPosAndRotY() {
  * UpdateClsnPosAndRot does the same for the inherited collider. */
 void daObjDpBrock_c::UpdateStepClsnPosAndRot() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
-    mClsnMat2.m[9] = mPos.x;
-    mClsnMat2.m[10] = mPos.y;
-    mClsnMat2.m[11] = mPos.z;
+    mClsnMat2.t.x = mPos.x;
+    mClsnMat2.t.y = mPos.y;
+    mClsnMat2.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat2, mAngle.y);
 }
 

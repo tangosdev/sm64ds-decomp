@@ -45,7 +45,7 @@ struct Vector3;
 struct dCc_c;
 /* Only ever named through a pointer below; the definition lives in common.h /
    math/Matrix.h, which this header deliberately does not pull in. */
-struct Matrix4x3;
+union Matrix4x3;
 struct dExtShadowModel_c;
 
 /* data_020a0eac is the heap every actor is allocated from. operator delete
@@ -104,7 +104,7 @@ struct dActor_c : dBase_c {
     u8  mClipResult;        /* 0x0c4 -- written by the dClipper */
     /* Pointer alignment leaves 0x0c5..0x0c7 unused. Shared by carried actors
        and attached objects; zero selects the actor's own model matrix. */
-    struct Matrix4x3 *mCarryMatrix; /* 0x0c8 */
+    union Matrix4x3 *mCarryMatrix; /* 0x0c8 */
     s8  mAreaId;            /* 0x0cc -- negative means "not area-bound" */
     u8  pad_0cd[0x1];
     s16 mDeathTableID;      /* 0x0ce -- index into the already-killed bitmap */
@@ -385,7 +385,7 @@ struct dActor_c {
     u8  mClipResult;        /* 0x0c4 */
     /* Pointer alignment leaves 0x0c5..0x0c7 unused. Shared by carried actors
        and attached objects; zero selects the actor's own model matrix. */
-    struct Matrix4x3 *mCarryMatrix; /* 0x0c8 */
+    union Matrix4x3 *mCarryMatrix; /* 0x0c8 */
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x1];
     s16 mDeathTableID;      /* 0x0ce */

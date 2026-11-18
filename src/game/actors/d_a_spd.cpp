@@ -543,9 +543,9 @@ void daSpd_c::func_ov071_0211f524() {
     }
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     if (mAngle.x != 0) {
         data_020a0e68 = mAnmModel.mat4x3;
@@ -557,9 +557,9 @@ void daSpd_c::func_ov071_0211f524() {
         mAnmModel.mat4x3 = data_020a0e68;
     }
 
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = mPos.y >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = mPos.y >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
 
     int dh = (mState == 8) ? 0x190000 : 0xc8000;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0xa0000, dh, 0xf);

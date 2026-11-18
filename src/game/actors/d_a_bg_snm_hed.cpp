@@ -71,9 +71,9 @@ daBgSnmHed_c::~daBgSnmHed_c() {}
 
 void daBgSnmHed_c::UpdateModel() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = (mPos.y + 0x96000) >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = (mPos.y + 0x96000) >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daBgSnmHed_c::State3() {

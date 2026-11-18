@@ -50,16 +50,16 @@ daObjKm2_Nobiru_c::~daObjKm2_Nobiru_c() {}
 
 void daObjKm2_Nobiru_c::UpdateColliderTransform() {
     Matrix4x3_FromRotationY(&mColliderTransform, mAngle.y);
-    mColliderTransform.m[9] = mPos.x;
-    mColliderTransform.m[10] = mPos.y;
-    mColliderTransform.m[11] = mPos.z;
+    mColliderTransform.t.x = mPos.x;
+    mColliderTransform.t.y = mPos.y;
+    mColliderTransform.t.z = mPos.z;
 }
 
 void daObjKm2_Nobiru_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daObjKm2_Nobiru_c::CleanupResources() {

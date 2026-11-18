@@ -140,17 +140,17 @@ void daBttBk_c::UpdateModelTransform() {
                 data_020a0e68 = *carrier->mCarryMatrix;
                 Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, t.x, t.y, t.z);
 
-                mPos.x = data_020a0e68.m[9];
-                mPos.y = data_020a0e68.m[10];
-                mPos.z = data_020a0e68.m[11];
+                mPos.x = data_020a0e68.t.x;
+                mPos.y = data_020a0e68.t.y;
+                mPos.z = data_020a0e68.t.z;
                 Vec3_LslInPlace(&mPos, 3);
             }
         }
     }
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     pos.x = mPos.x;
     pos.y = mPos.y;
     pos.z = mPos.z;
@@ -162,9 +162,9 @@ void daBttBk_c::UpdateModelTransform() {
         groundY = rg.clsnY;
     }
     Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = groundY >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = groundY >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
     {
         s16 a = mAngle.x;
         int sv = FX_SinIdx((unsigned short)(short)(a << 1) >> 4);

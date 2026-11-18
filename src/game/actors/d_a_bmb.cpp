@@ -736,9 +736,9 @@ void daBmb_c::func_ov102_0214b53c() {
             mCarryOff[1] = 0;
             mCarryOff[2] = 0;
             Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-            mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-            mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-            mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+            mAnmModel.mat4x3.t.x = mPos.x >> 3;
+            mAnmModel.mat4x3.t.y = mPos.y >> 3;
+            mAnmModel.mat4x3.t.z = mPos.z >> 3;
         }
     }
     int haveMtx2 = (int)((mFlags & 0x4000) != 0);
@@ -748,9 +748,9 @@ void daBmb_c::func_ov102_0214b53c() {
         p.z = 0;
         data_020a0e68 = mAnmModel.mat4x3;
         MTX_Concat43(&mAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        p.x = data_020a0e68.m[9];
-        p.y = data_020a0e68.m[10];
-        p.z = data_020a0e68.m[11];
+        p.x = data_020a0e68.t.x;
+        p.y = data_020a0e68.t.y;
+        p.z = data_020a0e68.t.z;
         Vec3_Lsl(&d, &p, 3);
         p = d;
         int haveMtx3 = (int)((mFlags & 0x4000) != 0);
@@ -764,9 +764,9 @@ void daBmb_c::func_ov102_0214b53c() {
                 if (mEatingPlayer != 0) {
                     eaterPos = mEatingPlayer->mPos;
                     data_020a0e68 = mEatingPlayer->mHeadMatrix;
-                    p.x = data_020a0e68.m[9];
-                    p.y = data_020a0e68.m[10];
-                    p.z = data_020a0e68.m[11];
+                    p.x = data_020a0e68.t.x;
+                    p.y = data_020a0e68.t.y;
+                    p.z = data_020a0e68.t.z;
                     Vec3_LslInPlace((int *)&p, 3);
                     daPly_c *eater = mEatingPlayer;
                     Vector3_16 rot = eater->mAngle;
@@ -813,9 +813,9 @@ void daBmb_c::UpdateShadow() {
         }
     }
 
-    mMatrix.m[9] = mPos.x >> 3;
-    mMatrix.m[10] = v >> 3;
-    mMatrix.m[11] = mPos.z >> 3;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = v >> 3;
+    mMatrix.t.z = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
 }

@@ -292,9 +292,9 @@ void daHolhei_c::HomeCarryOffset() {
 /* Bone 3's transform times the model's yaw, stored where a holder looks. */
 void daHolhei_c::BuildHoldMatrix() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     MTX_Concat43(&mModel.data.transforms[3], &mModel.mat4x3, &mHoldMtx);
     mCarryMatrix = &mHoldMtx;
 }
@@ -302,9 +302,9 @@ void daHolhei_c::BuildHoldMatrix() {
 /* Shadow under this actor. Off the ground the radius grows. */
 void daHolhei_c::UpdateShadow() {
     mShadowMtx = IDENTITY_MATRIX4X3;
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = mPos.y >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = mPos.y >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
     if (mMeshClsn.IsOnGround() != 0) {
         DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x32000, 0xf);
     } else {
@@ -315,9 +315,9 @@ void daHolhei_c::UpdateShadow() {
 /* Shadow under the held actor. mHeld is reloaded before each word. */
 void daHolhei_c::UpdateHeldShadow() {
     mShadowMtx = IDENTITY_MATRIX4X3;
-    mShadowMtx.m[9] = mHeld->mPos.x >> 3;
-    mShadowMtx.m[10] = mHeld->mPos.y >> 3;
-    mShadowMtx.m[11] = mHeld->mPos.z >> 3;
+    mShadowMtx.t.x = mHeld->mPos.x >> 3;
+    mShadowMtx.t.y = mHeld->mPos.y >> 3;
+    mShadowMtx.t.z = mHeld->mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x32000, 0xf);
 }
 

@@ -486,9 +486,9 @@ void daOwl_c::FollowRiderMatrix() {
     data_020a0e68 = *m->mCarryMatrix;
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3000, 0, 0);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x6000, 0x1000, 0x4000);
-    v.x = data_020a0e68.m[9];
-    v.y = data_020a0e68.m[10];
-    v.z = data_020a0e68.m[11];
+    v.x = data_020a0e68.t.x;
+    v.y = data_020a0e68.t.y;
+    v.z = data_020a0e68.t.z;
     mPos.x = v.x << 3;
     mPos.y = v.y << 3;
     mPos.z = v.z << 3;

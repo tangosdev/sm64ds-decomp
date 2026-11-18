@@ -183,9 +183,9 @@ void daObjFallBlock_c::Kill() {
    same row UpdateModelPosAndRotY writes for yaw alone. */
 void daObjFallBlock_c::ApplyModelXyz() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* `player` is never read, matching the ROM body, which only ever takes the

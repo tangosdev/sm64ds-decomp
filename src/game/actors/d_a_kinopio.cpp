@@ -286,9 +286,9 @@ void daKinopio_c::UpdateModelPose()
     Vector3 capPos;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = (mPos.y + 0x4000) >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + 0x4000) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     data_020a0e68 = mAnmModel.data.transforms[5];
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mHeadYaw);
@@ -312,9 +312,9 @@ void daKinopio_c::UpdateModelPose()
                 &data_020a0e68, -0x1000, 0, 0);
             mCapTransform = data_020a0e68;
 
-            capPos.x = data_020a0e68.m[9];
-            capPos.y = data_020a0e68.m[10];
-            capPos.z = data_020a0e68.m[11];
+            capPos.x = data_020a0e68.t.x;
+            capPos.y = data_020a0e68.t.y;
+            capPos.z = data_020a0e68.t.z;
             capPos.y <<= 3;
             capPos.x <<= 3;
             capPos.z <<= 3;
@@ -326,9 +326,9 @@ void daKinopio_c::UpdateModelPose()
     }
 
     mShadowTransform = IDENTITY_MATRIX4X3;
-    mShadowTransform.m[9] = mPos.x >> 3;
-    mShadowTransform.m[10] = (mPos.y - 0x8000) >> 3;
-    mShadowTransform.m[11] = mPos.z >> 3;
+    mShadowTransform.t.x = mPos.x >> 3;
+    mShadowTransform.t.y = (mPos.y - 0x8000) >> 3;
+    mShadowTransform.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 15);
 }
 
