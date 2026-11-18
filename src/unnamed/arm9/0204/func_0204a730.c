@@ -171,7 +171,7 @@ extern void SPLAnim_Texture(void *, void *, int);
 extern void SPLAnim_ChildScale(void *, void *, int);
 extern void SPLAnim_ChildAlpha(void *, void *, int);
 
-void func_0204a730(void *arg0, void *self) {
+void func_0204a730(void *manager, void *self) {
     UpdateDef *sb;
     PtclNode *next;
     UpdateChild *cfg;
@@ -192,7 +192,7 @@ void func_0204a730(void *arg0, void *self) {
     s32 i;
     s32 n;
     PtclSystem *sys = (PtclSystem *)self;
-    PtclManager *mgr = (PtclManager *)arg0;
+    PtclManager *mgr = (PtclManager *)manager;
 
     sb = sys->def;
     cfg = sb->child;

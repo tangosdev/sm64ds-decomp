@@ -13362,26 +13362,26 @@ void daPly_c::func_ov002_020d71a0() {
  * differ, measured); a copy of an array member is one block move, as C
  * made it. */
 
-void daPly_c::func_ov002_020d71ec(int arg1) {
+void daPly_c::func_ov002_020d71ec(int animIdx) {
     extern struct P2 data_ov002_0210eb88;
     P2 slot[2];
     u32 shifted;
     int val;
 
-    if (arg1 != 2) {
+    if (animIdx != 2) {
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
         shifted = ((u32)anim.currFrame << 4) >> 0x10;
         slot[0] = data_ov002_0210a34c;
         slot[1] = data_ov002_0210a084;
-        SetAnim((int)slot[0].w[arg1], 0x40000000, 0x1000, 0);
+        SetAnim((int)slot[0].w[animIdx], 0x40000000, 0x1000, 0);
 
         if (mUseAltBodyModel == 0) {
-            SharedFilePtr *file = (SharedFilePtr *)slot[1].w[arg1];
+            SharedFilePtr *file = (SharedFilePtr *)slot[1].w[animIdx];
             ((dExtAnmModel_c *)mModels.mHeadModels[3])
                 ->SetAnim((BCA_File *)file->filePtr, 0x40000000, 0x1000, 0);
         }
 
-        if (arg1 == 1) {
+        if (animIdx == 1) {
             val = data_ov002_020ff0f8[shifted];
             dExtFrameCtrl_c &body = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
             val = ((u32)val << 0x10) >> 4;
