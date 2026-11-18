@@ -592,7 +592,7 @@
       "ordinal": 81
     },
     {
-      "symbol": "_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj",
+      "symbol": "_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEi",
       "address": "0x02050bb0",
       "legacy_source": "src/_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj.cpp",
       "size": "0x00000064",
@@ -606,7 +606,7 @@
       "ordinal": 83
     },
     {
-      "symbol": "_ZN5Sound17InfoSequenceEntry9GetWithIDEj",
+      "symbol": "_ZN5Sound17InfoSequenceEntry9GetWithIDEi",
       "address": "0x02050c78",
       "legacy_source": "src/_ZN5Sound17InfoSequenceEntry9GetWithIDEj.cpp",
       "size": "0x00000064",

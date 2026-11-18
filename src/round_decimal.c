@@ -39,13 +39,13 @@ void round_decimal(Decimal *dec, int new_length) {
         else
             carry = 1;
     } else {
-        carry = (d > 5) ? 1 : 0;
+        carry = (d > 5);
     }
 
     if (new_length != 0) {
         do {
             e = ((*--q - 0x30) + carry) & 0xff;
-            carry = (e > 9) ? 1 : 0;
+            carry = (e > 9);
             if (carry != 0 || e == 0) {
                 new_length--;
             } else {

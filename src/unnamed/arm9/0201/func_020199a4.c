@@ -168,7 +168,7 @@ void func_020199a4(void) {
         data_0209d4ec = 0;
     func_0201a9ec(&data_0209d574);
     for (;;) {
-        int b = (int)(gGameMode == 1) ? 0 : 1;
+        int b = !(gGameMode == 1);
         if (b == 0)
             func_02030838();
         {
