@@ -9,11 +9,6 @@
 /* 383 word(s) here are addresses with no configured symbol name,
    so they stay literal rather than naming a wrong target. */
 
-extern u32 g_profile_BOOT[];
-extern u32 g_profile_STAGE[];
-extern u32 g_profile_CAMERA[];
-extern u32 g_profile_MULTIBOOT[];
-
 /* 0x02090864: 1564 bytes. */
 char ACTOR_SPAWN_TABLE[1564] = {
     (char)0xa8, 0x14,       0x09, 0x02, 0x64,       0x32,       0x10, 0x02,

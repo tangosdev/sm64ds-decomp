@@ -1678,56 +1678,64 @@
       "rule": "handspelled-member",
       "match": "_ZN9dCamera_c13func_02009d30Ev",
       "count": 2,
-      "reason": "data_02086bc0/data_02086d00 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer-to-member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
-      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare data_02086bc0 as CamScriptOp[] with these handler words; data_02086bc0.c and data_02086d00.c are 4/4 and 5/5 VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+      "reason": "data_02086bc0/data_02086d00/data_02086d80 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer to member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
+      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare the records as CamScriptOp[] with these handler words; data_02086bc0.c/data_02086d00.c/data_02086d80.c are 40/40, 14/14 and 24/24 VERIFIED by romdata_check (740 symbols, 0 differs) and the full build reports 106/106 module fidelity."
     },
     {
       "path": "src/data/arm9/data_02086bc0.c",
       "rule": "handspelled-member",
       "match": "_ZN9dCamera_c13func_02009e70Ev",
       "count": 8,
-      "reason": "data_02086bc0/data_02086d00 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer-to-member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
-      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare data_02086bc0 as CamScriptOp[] with these handler words; data_02086bc0.c and data_02086d00.c are 4/4 and 5/5 VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
-    },
-    {
-      "path": "src/data/arm9/data_02086d00.c",
-      "rule": "handspelled-member",
-      "match": "_ZN9dCamera_c13func_020098e0Ev",
-      "count": 2,
-      "reason": "data_02086bc0/data_02086d00 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer-to-member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
-      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare data_02086bc0 as CamScriptOp[] with these handler words; data_02086bc0.c and data_02086d00.c are 4/4 and 5/5 VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
-    },
-    {
-      "path": "src/data/arm9/data_02086d00.c",
-      "rule": "handspelled-member",
-      "match": "_ZN9dCamera_c13func_02009a8cEv",
-      "count": 2,
-      "reason": "data_02086bc0/data_02086d00 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer-to-member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
-      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare data_02086bc0 as CamScriptOp[] with these handler words; data_02086bc0.c and data_02086d00.c are 4/4 and 5/5 VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
-    },
-    {
-      "path": "src/data/arm9/data_02086d00.c",
-      "rule": "handspelled-member",
-      "match": "_ZN9dCamera_c13func_02009e50Ev",
-      "count": 2,
-      "reason": "data_02086bc0/data_02086d00 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer-to-member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
-      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare data_02086bc0 as CamScriptOp[] with these handler words; data_02086bc0.c and data_02086d00.c are 4/4 and 5/5 VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+      "reason": "data_02086bc0/data_02086d00/data_02086d80 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer to member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
+      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare the records as CamScriptOp[] with these handler words; data_02086bc0.c/data_02086d00.c/data_02086d80.c are 40/40, 14/14 and 24/24 VERIFIED by romdata_check (740 symbols, 0 differs) and the full build reports 106/106 module fidelity."
     },
     {
       "path": "src/data/arm9/data_02086d00.c",
       "rule": "handspelled-member",
       "match": "_ZN9dCamera_c13func_02009e70Ev",
-      "count": 4,
-      "reason": "data_02086bc0/data_02086d00 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer-to-member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
-      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare data_02086bc0 as CamScriptOp[] with these handler words; data_02086bc0.c and data_02086d00.c are 4/4 and 5/5 VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+      "count": 3,
+      "reason": "data_02086bc0/data_02086d00/data_02086d80 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer to member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
+      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare the records as CamScriptOp[] with these handler words; data_02086bc0.c/data_02086d00.c/data_02086d80.c are 40/40, 14/14 and 24/24 VERIFIED by romdata_check (740 symbols, 0 differs) and the full build reports 106/106 module fidelity."
     },
     {
       "path": "src/data/arm9/data_02086d00.c",
       "rule": "handspelled-member",
       "match": "_ZN9dCamera_c13func_0200af0cEv",
       "count": 2,
-      "reason": "data_02086bc0/data_02086d00 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer-to-member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
-      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare data_02086bc0 as CamScriptOp[] with these handler words; data_02086bc0.c and data_02086d00.c are 4/4 and 5/5 VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+      "reason": "data_02086bc0/data_02086d00/data_02086d80 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer to member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
+      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare the records as CamScriptOp[] with these handler words; data_02086bc0.c/data_02086d00.c/data_02086d80.c are 40/40, 14/14 and 24/24 VERIFIED by romdata_check (740 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+    },
+    {
+      "path": "src/data/arm9/data_02086d80.c",
+      "rule": "handspelled-member",
+      "match": "_ZN9dCamera_c13func_02009e70Ev",
+      "count": 2,
+      "reason": "data_02086bc0/data_02086d00/data_02086d80 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer to member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
+      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare the records as CamScriptOp[] with these handler words; data_02086bc0.c/data_02086d00.c/data_02086d80.c are 40/40, 14/14 and 24/24 VERIFIED by romdata_check (740 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+    },
+    {
+      "path": "src/data/arm9/data_02086d80.c",
+      "rule": "handspelled-member",
+      "match": "_ZN9dCamera_c13func_02009e50Ev",
+      "count": 2,
+      "reason": "data_02086bc0/data_02086d00/data_02086d80 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer to member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
+      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare the records as CamScriptOp[] with these handler words; data_02086bc0.c/data_02086d00.c/data_02086d80.c are 40/40, 14/14 and 24/24 VERIFIED by romdata_check (740 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+    },
+    {
+      "path": "src/data/arm9/data_02086d80.c",
+      "rule": "handspelled-member",
+      "match": "_ZN9dCamera_c13func_020098e0Ev",
+      "count": 2,
+      "reason": "data_02086bc0/data_02086d00/data_02086d80 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer to member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
+      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare the records as CamScriptOp[] with these handler words; data_02086bc0.c/data_02086d00.c/data_02086d80.c are 40/40, 14/14 and 24/24 VERIFIED by romdata_check (740 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+    },
+    {
+      "path": "src/data/arm9/data_02086d80.c",
+      "rule": "handspelled-member",
+      "match": "_ZN9dCamera_c13func_02009a8cEv",
+      "count": 2,
+      "reason": "data_02086bc0/data_02086d00/data_02086d80 hold dCamera_c's camera-script records: an 8-byte {handler, adjust} pair whose handler word is the code address of a dCamera_c member function. C cannot form a member function's code address --- a pointer to member is not a function pointer --- so the mangled symbol is the only linkable spelling for that word. The table is the ROM's camScriptOp data; a C++ thunk per handler would add code the cartridge does not contain.",
+      "evidence": "d_camera.cpp and __sinit_d_camera.cpp declare the records as CamScriptOp[] with these handler words; data_02086bc0.c/data_02086d00.c/data_02086d80.c are 40/40, 14/14 and 24/24 VERIFIED by romdata_check (740 symbols, 0 differs) and the full build reports 106/106 module fidelity."
     },
     {
       "path": "src/data/arm9/data_0208ee80.c",
