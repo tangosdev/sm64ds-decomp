@@ -296,9 +296,9 @@ void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
 }
 
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
-    Matrix4x3 temp;
-    MTX_Concat43(&mat4x3, &data_0209b3ec, &temp);
-    data.Render(&temp, (Vector3 *)scale);
+    Matrix4x3 modelView;
+    MTX_Concat43(&mat4x3, &data_0209b3ec, &modelView);
+    data.Render(&modelView, (Vector3 *)scale);
 }
 
 void dExtSimpleModel_c::SetMaterialFlags(u32 mask) {
@@ -614,9 +614,9 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
 }
 
 void dExtCommonModel_c::Render(const Vector3 *scale) {
-    Matrix4x3 temp;
-    MTX_Concat43(&mat4x3, &data_0209b3ec, &temp);
-    data->Render(&temp, (Vector3 *)scale);
+    Matrix4x3 modelView;
+    MTX_Concat43(&mat4x3, &data_0209b3ec, &modelView);
+    data->Render(&modelView, (Vector3 *)scale);
 }
 
 /* ORs flags into every material. */

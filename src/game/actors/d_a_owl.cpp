@@ -172,11 +172,11 @@ daOwl_c::~daOwl_c()
  * state; if the attach is refused the rider is dropped again. */
 void daOwl_c::TryPickUpRider() {
     Vector3 st;
-    Vector3 tmp;
-    tmp.x = data_ov094_02136a1c[0];
-    tmp.y = data_ov094_02136a1c[1];
-    tmp.z = data_ov094_02136a1c[2];
-    mdCcAcPos_c.SetPosRelativeToActor(tmp);
+    Vector3 offset;
+    offset.x = data_ov094_02136a1c[0];
+    offset.y = data_ov094_02136a1c[1];
+    offset.z = data_ov094_02136a1c[2];
+    mdCcAcPos_c.SetPosRelativeToActor(offset);
     if (mdCcAcPos_c.otherOwner == 0)
         return;
     dActor_c *other = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);

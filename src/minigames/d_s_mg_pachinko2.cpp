@@ -1558,7 +1558,7 @@ void dScMgPachinko2_c::UpdateCountdown() {
 void dScMgPachinko2_c::ClearAimLine() {
     /* volatile: the ROM spills the fill value to the stack and reloads it;
        a literal 0 or a plain local is 8 bytes shorter (known unsolved). */
-    volatile unsigned short tmp;
+    volatile unsigned short fill;
     int n = mHeldBall;
     int dx, dy;
 
@@ -1582,8 +1582,8 @@ void dScMgPachinko2_c::ClearAimLine() {
     mHeldBall = 0;
     {
         char *dst = (char *)G2S_GetBG2CharPtr();
-        tmp = 0;
-        MI_CpuFill16(dst, tmp, 0x6000);
+        fill = 0;
+        MI_CpuFill16(dst, fill, 0x6000);
     }
 }
 
@@ -1623,7 +1623,7 @@ void dScMgPachinko2_c::DrawAimLine() {
     int tx;
     int ty;
     int idx;
-    volatile unsigned short tmp; /* fill value; see StartRoundEnd */
+    volatile unsigned short fill; /* fill value; see StartRoundEnd */
     int cx;
     int cy;
     int dx;
@@ -1636,8 +1636,8 @@ void dScMgPachinko2_c::DrawAimLine() {
     idx = mHeldBall - 1;
     if (mBalls[idx].x != mBalls[idx].prevX || mBalls[idx].y != mBalls[idx].prevY) {
         char *dst = (char *)G2S_GetBG2CharPtr();
-        tmp = 0;
-        MI_CpuFill16(dst, tmp, 0x6000);
+        fill = 0;
+        MI_CpuFill16(dst, fill, 0x6000);
 
         for (k = 0; k < 2; k++) {
             if (k == 0) {
@@ -2309,8 +2309,8 @@ s32 dScMgPachinko2_c::InitResources() {
     char *b;
     char *dst;
     /* volatile: the ROM stores each fill value to the stack and reloads it */
-    volatile u16 spC;
-    volatile u16 spE;
+    volatile u16 fill;
+    volatile u16 tile;
     void *objChar;
     void *objPltt;
     void *f;
@@ -2350,15 +2350,15 @@ s32 dScMgPachinko2_c::InitResources() {
                           GX_BG_CHARBASE_0x18000);
 
     b = (char *)G2S_GetBG2CharPtr();
-    spC = 0;
-    MI_CpuFill16(b, spC, 0x6000);
+    fill = 0;
+    MI_CpuFill16(b, fill, 0x6000);
 
     n = 0;
     for (y = 0; y < 24; y++) {
         for (x = 0; x < 32; x++) {
             dst = (char *)((u16 *)G2S_GetBG2ScrPtr() + x + y * 0x20);
-            spE = n;
-            MI_CpuFill16(dst, spE, 2);
+            tile = n;
+            MI_CpuFill16(dst, tile, 2);
             n++;
         }
     }

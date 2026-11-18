@@ -232,7 +232,7 @@ void daWanwan_c::UpdateModelTransform() {
        e->mLinkPos[0] is link i's position and o->mLinkModels[0] is the model
        m points at. Storing the translation through m, or walking mLinkPos
        with a Vector3 pointer, changes the emitted loop. */
-    Matrix4x3 tmp;
+    Matrix4x3 identity;
     int i;
     int t;
     dExtSimpleModel_c *m;
@@ -248,14 +248,14 @@ void daWanwan_c::UpdateModelTransform() {
         t = 0x1000;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180), t + 0x28000,
                         0xf);
-    tmp = IDENTITY_MATRIX4X3;
+    identity = IDENTITY_MATRIX4X3;
     sm = mLinkShadows;
     i = 0;
     m = mLinkModels;
     e = this;
     o = this;
     for (; i < 7; i++) {
-        m->mat4x3 = tmp;
+        m->mat4x3 = identity;
         o->mLinkModels[0].mat4x3.t.x = e->mLinkPos[0].x >> 3;
         o->mLinkModels[0].mat4x3.t.y = e->mLinkPos[0].y >> 3;
         o->mLinkModels[0].mat4x3.t.z = e->mLinkPos[0].z >> 3;
@@ -277,7 +277,7 @@ void daWanwan_c::UpdateChainSegments() {
     Vector3 head;
     Vector3 rotated;
     Vector3 saved;
-    Vector3 tmp;
+    Vector3 linkPos;
     Vector3 sum;
     Vector3 diff;
     Vector3 mul;
@@ -317,11 +317,11 @@ void daWanwan_c::UpdateChainSegments() {
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     MTX_MultVec43(&head, &data_020a0e68, &rotated);
-    Vec3_Add(&tmp, &mPos, &rotated);
-    saved.x = tmp.x;
-    saved.y = tmp.y;
-    saved.z = tmp.z;
-    mLinkPos[0].x = tmp.x;
+    Vec3_Add(&linkPos, &mPos, &rotated);
+    saved.x = linkPos.x;
+    saved.y = linkPos.y;
+    saved.z = linkPos.z;
+    mLinkPos[0].x = linkPos.x;
     mLinkPos[0].y = saved.y;
     mLinkPos[0].z = saved.z;
 
@@ -379,7 +379,7 @@ void daWanwan_c::UpdateChainSegments() {
  * pulled to mChainExtension from the one behind it, link 6 from a point
  * 0x1e000 above the stump. */
 void daWanwan_c::CapChainToPivot() {
-    Vector3 tmp;
+    Vector3 dir;
     Vector3 head;
     Vector3 rotated;
     Vector3 sum;
@@ -428,11 +428,11 @@ void daWanwan_c::CapChainToPivot() {
         cur = (Vector3 *)cursor;
         target = (i == 6) ? &prevpos : cur + 1;
         Vec3_Sub(&diff, cur, target);
-        tmp.x = diff.x;
-        tmp.y = diff.y;
-        tmp.z = diff.z;
-        angY = cstd::atan2(tmp.x, tmp.z);
-        angX = (short)(-cstd::atan2(tmp.y, Vec3_HorzLen(&tmp)));
+        dir.x = diff.x;
+        dir.y = diff.y;
+        dir.z = diff.z;
+        angY = cstd::atan2(dir.x, dir.z);
+        angX = (short)(-cstd::atan2(dir.y, Vec3_HorzLen(&dir)));
         Matrix4x3_FromRotationY(&data_020a0e68, angY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
         MTX_MultVec43(&head, &data_020a0e68, &rotated);

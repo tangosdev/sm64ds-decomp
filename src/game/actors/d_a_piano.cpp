@@ -250,7 +250,7 @@ void daPiano_c::StateAttack() {
     int i;
     Vector3 tip;
     Vector3 hurtPos;
-    Vector3 tmp;
+    Vector3 diff;
     int dist;
     dActor_c *target;
     int k;
@@ -281,8 +281,8 @@ void daPiano_c::StateAttack() {
 
     target = this->mTarget;
     if (target != 0) {
-        Vec3_Sub(&tmp, &this->mPos, &target->mPos);
-        dist = VEC_Mag(&tmp);
+        Vec3_Sub(&diff, &this->mPos, &target->mPos);
+        dist = VEC_Mag(&diff);
         ApproachLinear(this->mPrevAngle.y, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos),
                        0x200);
         this->mAngle.y = this->mPrevAngle.y;

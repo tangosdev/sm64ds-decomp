@@ -197,9 +197,9 @@ int daHyuhyu_c::Behavior() {
         int limit = mTerminalVelocity;
         if (speed >= limit)
             limit = speed;
-        int tmp = mSpeed.z;
+        int speedZ = mSpeed.z;
         mSpeed.y = limit;
-        mSpeed.z = tmp;
+        mSpeed.z = speedZ;
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     HandleCylinderHit();

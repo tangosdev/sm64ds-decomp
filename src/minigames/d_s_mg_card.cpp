@@ -1051,9 +1051,9 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand) {
                         break;
                     }
                     if (nextFace == c) {
-                        s32 tmp = nextFace;
+                        s32 face = nextFace;
                         nextFace = bestFace;
-                        bestFace = tmp;
+                        bestFace = face;
                         break;
                     }
                     p++;

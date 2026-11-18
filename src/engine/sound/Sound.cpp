@@ -98,7 +98,7 @@ extern void *func_02011934(SndRegTable *table, int id);
 extern int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1);
 extern void func_02011698(SndRegTable *table, SndRegEntry *n);
 extern int func_02011654(char *table, char *n);
-extern int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2);
+extern int Player_PlaySoundEffect(NNSSndHandle *handle, int seqArcNo, int index);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 
 /* Module state. Volumes are 0..0x7f; the current ones are 20.12 fixed point
@@ -869,12 +869,12 @@ void *func_02011e94(int *out) {
     return block;
 }
 
-int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2) {
+int Player_PlaySoundEffect(NNSSndHandle *handle, int seqArcNo, int index) {
     if (gSoundInitialized == 0)
         return 1;
-    if (arg1 != 3)
-        return func_02051f1c(handle, arg1, arg2);
-    return func_02051e60(handle, -1, sCurrentBank, -1, arg1, arg2);
+    if (seqArcNo != 3)
+        return func_02051f1c(handle, seqArcNo, index);
+    return func_02051e60(handle, -1, sCurrentBank, -1, seqArcNo, index);
 }
 
 int func_02011dcc(NNSSndHandle *handle, int x) {

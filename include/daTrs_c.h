@@ -380,7 +380,7 @@ struct daTrs_c : dCapEnemy_c {
     int func_ov063_0211a0a8(int a1, int a2, int a3, int a4);
     int GetAttackStatus();
     int UpdateDuringDeath();
-    int UpdateDuringNonlethalHit(int arg1);
+    int UpdateDuringNonlethalHit(int speed);
     int UpdateAfterBouncedOn(int arg);
     void ResetAfterHit();
     void ShakeAfterHit();
@@ -388,7 +388,7 @@ struct daTrs_c : dCapEnemy_c {
     void SetMoveYawForDuringHit(int cond);
     int VanishOrAppear();
     void          func_ov063_0211a960();
-    void Oscillate(int arg1);
+    void Oscillate(int force);
     void ApproachTargetOpacityAndUpdateScale();
     void SpawnCourtyardBooTriplet();
     int ShouldBeActive();

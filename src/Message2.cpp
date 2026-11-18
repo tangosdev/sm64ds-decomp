@@ -281,7 +281,7 @@ void Message::func_0201adfc(void) {
         k = 0;
         if (cnt > 0) {
             int base = data_0209d6a0;
-            u8 *sp2 = data_0209d710;
+            u8 *widths = data_0209d710;
 
             do {
                 u8 bit = pos & 7;
@@ -303,9 +303,9 @@ void Message::func_0201adfc(void) {
                     q[11] = ((u32 *)data_0209d74c)[base + 3] & *omask;
                 }
 
-                pos = (u8)(pos + *sp2);
+                pos = (u8)(pos + *widths);
                 base += 0x10;
-                sp2++;
+                widths++;
                 k++;
             } while (k < cnt);
         }

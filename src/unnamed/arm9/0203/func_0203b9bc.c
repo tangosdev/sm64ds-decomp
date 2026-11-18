@@ -13,7 +13,7 @@ extern TPData data_020a0dd8;
    the last point.
    func_0203df40 copies the result into the local input record. */
 void func_0203b9bc(TPData *out) {
-    TPData tmp[4];
+    TPData samples[4];
     int i;
     int flag;
     int idx;
@@ -27,19 +27,19 @@ void func_0203b9bc(TPData *out) {
         if (data_020a0df8[k].touch != 0)
             flag = 1;
         if (data_020a0df8[k].validity != 0) {
-            tmp[i].touch = 0;
+            samples[i].touch = 0;
         } else {
-            tmp[i].x = data_020a0df8[k].x;
-            tmp[i].y = data_020a0df8[k].y;
-            tmp[i].touch = data_020a0df8[k].touch;
-            tmp[i].validity = data_020a0df8[k].validity;
+            samples[i].x = data_020a0df8[k].x;
+            samples[i].y = data_020a0df8[k].y;
+            samples[i].touch = data_020a0df8[k].touch;
+            samples[i].validity = data_020a0df8[k].validity;
         }
     }
 
-    if (tmp[3].touch != 0 && tmp[2].touch != 0 && tmp[1].touch != 0) {
-        TP_GetCalibratedPoint(&data_020a0dd8, &tmp[2]);
-    } else if (tmp[0].touch != 0 && tmp[1].touch != 0 && tmp[2].touch != 0) {
-        TP_GetCalibratedPoint(&data_020a0dd8, &tmp[1]);
+    if (samples[3].touch != 0 && samples[2].touch != 0 && samples[1].touch != 0) {
+        TP_GetCalibratedPoint(&data_020a0dd8, &samples[2]);
+    } else if (samples[0].touch != 0 && samples[1].touch != 0 && samples[2].touch != 0) {
+        TP_GetCalibratedPoint(&data_020a0dd8, &samples[1]);
     } else if (flag == 0) {
         data_020a0dd8.touch = 0;
         data_020a0dd8.x = 0xff;

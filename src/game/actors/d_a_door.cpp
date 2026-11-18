@@ -462,26 +462,26 @@ void daDoor_c::func_ov100_021446f8(daPly_c *r1) {
    from the end, it sends the camera behind the player (dCamera_c::GoBehindPlayer
    with the current player id) and, when the next-level id is not negative,
    zeroes the animation's speed. */
-int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
+int daDoor_c::func_ov100_02144730(daPly_c *player) {
     mModel.Advance();
     if (data_ov100_02148704 != 0) {
         int f = mModel.currFrame;
         if ((unsigned)(f << 4) >> 16 > (u16)(mModel.GetFrameCount() - 0x28))
-            func_ov100_02145080(arg1);
+            func_ov100_02145080(player);
     }
 
     if (mModel.Finished() != 0) {
         int t;
         if (data_ov100_02148704 != 0)
-            func_ov100_021453d8(&data_ov100_021488a4, (int)arg1);
+            func_ov100_021453d8(&data_ov100_021488a4, (int)player);
         else
-            func_ov100_021453d8(&data_ov100_021488b4, (int)arg1);
+            func_ov100_021453d8(&data_ov100_021488b4, (int)player);
         if (mScale.z < 0)
             t = mAngle.x;
         else
             t = mAngle.z;
         t = (s8)t;
-        arg1->mAreaId = t;
+        player->mAreaId = t;
         ChangeArea(t);
         {
             gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
@@ -493,7 +493,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
             } else if (data_ov100_02148704 == 0) {
-                arg1->PlayMammaMiaSound();
+                player->PlayMammaMiaSound();
             }
         }
     } else {
@@ -795,10 +795,10 @@ void daDoor_c::func_ov100_02145070(int v) {
    and bumps mTimer to 1 on the frame the player is let out. Returns 0 on that
    frame (and, for variant 0xd, while mTimer is nonzero); 1 otherwise. Was a C
    source. */
-int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
+int daDoor_c::func_ov100_02145080(daPly_c *player) {
     if (param1 != DOOR_LAST_KEY_MODEL) {
         if (mTimer == 0) {
-            if (func_ov002_020ca78c(arg1) != 0) {
+            if (func_ov002_020ca78c(player) != 0) {
                 Sound::PlaySub(0x2b, 0, 0x7f, 0x15666, 0);
                 mTimer = 120;
             }
@@ -808,7 +808,7 @@ int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
             return 0;
         }
     } else if (mTimer == 0) {
-        mTimer = arg1->TryExitWhiteDoorWithStar();
+        mTimer = player->TryExitWhiteDoorWithStar();
     } else {
         return 0;
     }
@@ -1021,7 +1021,7 @@ s32 daDoor_c::InitResources() {
     DoorEntry *e;
     void *f;
     void *an;
-    Vector3 tmp;
+    Vector3 scaledPos;
     int r4;
     int b;
     int x;
@@ -1070,8 +1070,8 @@ s32 daDoor_c::InitResources() {
     mModel.SetAnim((BCA_File *)an, 0x40000000, 0x1000, 0);
 
     /* The model matrix takes the position >> 3. */
-    Vec3_Asr(&tmp, &mPos, 3);
-    MtxStack::transS(tmp.x, tmp.y, tmp.z);
+    Vec3_Asr(&scaledPos, &mPos, 3);
+    MtxStack::transS(scaledPos.x, scaledPos.y, scaledPos.z);
     MtxStack::YrotM(mAngle.y);
     mModel.mat4x3 = data_020a0e68;
 

@@ -6,7 +6,7 @@
 #include "math/MtxStack.h"
 
 void Matrix4x3_ApplyInPlaceToTranslation(union Matrix4x3 *mF, fx32 x, fx32 y, fx32 z) {
-    union Matrix4x3 tmp;
-    Matrix4x3_FromTranslation(&tmp, x, y, z);
-    MTX_Concat43(&tmp, mF, mF);
+    union Matrix4x3 trans;
+    Matrix4x3_FromTranslation(&trans, x, y, z);
+    MTX_Concat43(&trans, mF, mF);
 }

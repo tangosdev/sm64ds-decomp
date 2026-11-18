@@ -1170,7 +1170,7 @@ void dScMgSnowball_c::BuildCourse() {
 }
 
 void dScMgSnowball_c::ResetScene() {
-    Vector3 tmp;
+    Vector3 axis;
     int i;
     int y;
     Vector2 *saved;
@@ -1230,7 +1230,7 @@ void dScMgSnowball_c::ResetScene() {
     static Vector3 sUnitY(0, 0x1000, 0);
 
     mSpinAxis = sUnitY;
-    func_0203ce80(&tmp, &mSpinAxis);
+    func_0203ce80(&axis, &mSpinAxis);
 
     mSpinQuat[0] = data_02092768[0];
     mSpinQuat[1] = data_02092768[1];

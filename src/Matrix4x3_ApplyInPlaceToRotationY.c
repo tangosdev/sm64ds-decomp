@@ -6,7 +6,7 @@
 #include "math/MtxStack.h"
 
 void Matrix4x3_ApplyInPlaceToRotationY(union Matrix4x3 *mF, s16 angY) {
-    union Matrix4x3 tmp;
-    Matrix4x3_FromRotationY(&tmp, angY);
-    MTX_Concat43(&tmp, mF, mF);
+    union Matrix4x3 rot;
+    Matrix4x3_FromRotationY(&rot, angY);
+    MTX_Concat43(&rot, mF, mF);
 }

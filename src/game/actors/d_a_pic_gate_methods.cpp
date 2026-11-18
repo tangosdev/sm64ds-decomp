@@ -177,7 +177,7 @@ void daPicGate_c::InitContinuousRipple() {
 
 /* State 0 render. A dead wave draws the flat quad; otherwise a strip per column. */
 void daPicGate_c::DrawRippleImage() {
-    Matrix4x3 tmp;
+    Matrix4x3 modelView;
     int i, j;
 
     if (this->mWaveTimer == 0) {
@@ -186,11 +186,11 @@ void daPicGate_c::DrawRippleImage() {
     }
 
     G3_PushMtx();
-    MTX_Concat43(&this->mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&this->mMtx, &data_0209b3ec, &modelView);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
-    LoadMtx43(&tmp);
+    LoadMtx43(&modelView);
     G3_MtxMode(GX_MTXMODE_POSITION);
-    LoadMtx43(&tmp);
+    LoadMtx43(&modelView);
 
     G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
     G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));

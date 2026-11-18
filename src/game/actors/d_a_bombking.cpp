@@ -566,7 +566,7 @@ int daBombking_c::TickHomeTalk() {
     Vector3 in;
     Vector3 out;
     Vector3 ppos;
-    Vector3 tmp;
+    Vector3 scaled;
     Vector3 dust;
     dCamera_c *cam;
     daPly_c *player;
@@ -585,13 +585,13 @@ int daBombking_c::TickHomeTalk() {
         a.x = data_020a0e68.t.x;
         a.y = data_020a0e68.t.y;
         a.z = data_020a0e68.t.z;
-        Vec3_Lsl(&tmp, &a, 3);
-        a.x = tmp.x;
-        dust.x = tmp.x;
-        a.y = tmp.y;
-        dust.y = tmp.y;
-        a.z = tmp.z;
-        dust.z = tmp.z;
+        Vec3_Lsl(&scaled, &a, 3);
+        a.x = scaled.x;
+        dust.x = scaled.x;
+        a.y = scaled.y;
+        dust.y = scaled.y;
+        a.z = scaled.z;
+        dust.z = scaled.z;
         this->HugeLandingDustAt(dust, 1);
     }
     player = this->mTalkingPlayer;

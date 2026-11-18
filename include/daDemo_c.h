@@ -83,9 +83,8 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f6514(const AnimEntry *table, unsigned char entry);
         void func_ov002_020f65b8();
         void func_ov002_020f65ec();
-        int func_ov002_020f6618(SharedFilePtr *mdl, int nAnims,
-                                SharedFilePtr **anims, int arg5,
-                                unsigned char texByte, SharedFilePtr **texs,
+        int func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, SharedFilePtr **anims,
+                                int snapToFloor, unsigned char texByte, SharedFilePtr **texs,
                                 int tsData);
         virtual ~anmModel_c();
     };
@@ -405,7 +404,7 @@ struct daDemo_c : dActor_c {
     int func_ov002_020f63d4();
     int func_ov002_020f63f8(unsigned char *src);
     int func_ov002_020f6424();
-    int func_ov002_020f6448(unsigned char *arg1);
+    int func_ov002_020f6448(unsigned char *src);
     int func_ov002_020f6a9c();
     int func_ov002_020f6ab8(unsigned char *p);
     int func_ov002_020f6ae4(unsigned char *p);
@@ -414,7 +413,7 @@ struct daDemo_c : dActor_c {
     s32 func_ov002_020f6bc0(unsigned char *data);
     int func_ov002_020f6c24(unsigned char *src);
     int func_ov002_020f6c34(unsigned char *src);
-    int func_ov002_020f6c60(void *arg1, int arg2, int arg3);
+    int func_ov002_020f6c60(void *src, int first, int last);
     int func_ov002_020f6e48(unsigned char *p);
     void func_ov002_020f6f48(Vector3 *v, int amt);
     int func_ov002_020f7020();
@@ -423,7 +422,7 @@ struct daDemo_c : dActor_c {
     int func_ov002_020f72bc();
     int func_ov002_020f7384(unsigned char *flag, int val);
     int func_ov002_020f7410(unsigned char *in, int sel);
-    int func_ov002_020f7538(unsigned char *arg1, int arg2);
+    int func_ov002_020f7538(unsigned char *src, int first);
     int func_ov002_020f7780(void *unused, int mode);
     int func_ov002_020f79c0(void *unused, int mode);
     int func_ov002_020f7bb8(unsigned char *p, u16 id);

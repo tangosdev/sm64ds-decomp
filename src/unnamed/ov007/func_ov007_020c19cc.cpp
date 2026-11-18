@@ -29,7 +29,7 @@ void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
     int prevAng;
     VecFx32 *prev;
     int inv;
-    VecFx32 tmp;
+    VecFx32 endPoint;
     Matrix3x3 mtx;
     VecFx32 *pos;
 
@@ -87,7 +87,7 @@ void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
                         vx = (int)(((s64)inv * px + (s64)t * vx) >> 12);
                     }
                 }
-                tmp.x = vx;
+                endPoint.x = vx;
                 {
                     int vy = p->y;
                     int py = q->y;
@@ -98,7 +98,7 @@ void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
                             vy = (int)(((s64)inv * py + (s64)t * vy) >> 12);
                         }
                     }
-                    tmp.y = vy;
+                    endPoint.y = vy;
                 }
                 {
                     int qz = q->z;
@@ -110,9 +110,9 @@ void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
                             vz = (int)(((s64)inv * qz + (s64)t * vz) >> 12);
                         }
                     }
-                    tmp.z = vz;
+                    endPoint.z = vz;
                 }
-                pos = &tmp;
+                pos = &endPoint;
             }
             {
                 s16 halfd = (s16)(ang - prevAng) / 2;

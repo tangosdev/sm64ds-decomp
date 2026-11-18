@@ -246,7 +246,7 @@ struct dScMgPachinko2_c : dScMgBase_c {
     void Ball_ClearAll();                 /* clear ball flags */
     void Ball_DrawAll();                  /* render balls */
     void Ball_UpdateAll();                /* ball PMF dispatch, sPachinko2BallStateTable */
-    void Ball_StateWaitGrab(int arg1);    /* ball state 0: idle in tray */
+    void Ball_StateWaitGrab(int i);       /* ball state 0: idle in tray */
     void Ball_StateAim(int i);            /* ball state 1: pen drag */
     void Ball_StateFlying(int i);         /* ball state 2: launched flight */
     void Ball_StateTumble(int i);         /* ball state 3 */

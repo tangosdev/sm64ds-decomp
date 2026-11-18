@@ -3387,8 +3387,8 @@ void daPly_c::func_ov002_020c133c() {
 }
 
 void daPly_c::func_ov002_020c14b8() {
-    void *arg0 = this;
-    daPly_c *c = (daPly_c *)arg0;
+    void *self = this;
+    daPly_c *c = (daPly_c *)self;
     dBgCh_Gnd rg;
     Vector3 pos;
     int savedY;
@@ -3531,14 +3531,14 @@ void daPly_c::func_ov002_020c18b0(int p1) {
     }
 }
 
-int daPly_c::func_ov002_020c19d0(int arg1, int arg2) {
+int daPly_c::func_ov002_020c19d0(int dist, int height) {
     int angle = (unsigned short)mAngle.y;
     dBgCh_Lin line;
     int k = angle >> 4;
     int cs = FX_SinCosTable_[k * 2];
     int sn = FX_SinCosTable_[k * 2 + 1];
-    Vector3 v1(this->mPos.x, this->mPos.y + (arg2 << 12), this->mPos.z);
-    Vector3 v2(arg1 * cs + this->mPos.x, this->mPos.y + (arg2 << 12), arg1 * sn + this->mPos.z);
+    Vector3 v1(this->mPos.x, this->mPos.y + (height << 12), this->mPos.z);
+    Vector3 v2(dist * cs + this->mPos.x, this->mPos.y + (height << 12), dist * sn + this->mPos.z);
     Vector3 nrm;
     line.SetObjAndLine(v1, v2, this);
     if (!line.DetectClsn()) {
@@ -3737,7 +3737,7 @@ int daPly_c::func_ov002_020c2270(void *p1, void *p2) {
 }
 
 int daPly_c::func_ov002_020c231c() {
-    Vector3 tmp;
+    Vector3 halfStep;
     Vector3 pos;
     u8 f70f;
     s32 p60;
@@ -3753,11 +3753,11 @@ int daPly_c::func_ov002_020c231c() {
         if (f70f == 0)
             return 0;
 
-        VEC_Subtract(&mPos, &mPreClsnPos, &tmp);
-        tmp.x >>= 1;
-        tmp.y >>= 1;
-        tmp.z >>= 1;
-        VEC_Add(&mPreClsnPos, &tmp, &mPos);
+        VEC_Subtract(&mPos, &mPreClsnPos, &halfStep);
+        halfStep.x >>= 1;
+        halfStep.y >>= 1;
+        halfStep.z >>= 1;
+        VEC_Add(&mPreClsnPos, &halfStep, &mPos);
         func_ov002_020c14b8();
 
         if (mGroundY == (s32)0x80000000)
@@ -3805,8 +3805,8 @@ int daPly_c::func_ov002_020c231c() {
 }
 
 int daPly_c::func_ov002_020c25a8(int arg1) {
-    void *arg0 = this;
-    daPly_c *c = (daPly_c *)arg0;
+    void *self = this;
+    daPly_c *c = (daPly_c *)self;
     int ret;
     Vector3 v;
     Vector3 wn;
@@ -3959,8 +3959,8 @@ void daPly_c::func_ov002_020c29d4() {
 }
 
 void daPly_c::func_ov002_020c2b08() {
-    void *arg0 = this;
-    daPly_c *c = (daPly_c *)arg0;
+    void *self = this;
+    daPly_c *c = (daPly_c *)self;
     Vector3 v;
 
     if (param1 != 1)
@@ -4148,7 +4148,7 @@ void daPly_c::PlayLandingSoundOnce() {
 /* SM64's anim_spline_poll: blend the current four keyframes into out,
    advance, and return 1 once the path has run out. */
 int daPly_c::AnimSplinePoll(int *out) {
-    fx32 tmp[4];
+    fx32 weights[4];
     int i;
     int ret;
     EndingFlyPoint *row;
@@ -4157,13 +4157,13 @@ int daPly_c::AnimSplinePoll(int *out) {
     out[0] = 0;
     out[1] = 0;
     out[2] = 0;
-    SplineGetWeights(tmp);
+    SplineGetWeights(weights);
 
     row = &gJumboStarKeyframes[mSplineKeyframe];
     for (i = 0; i < 4; i++) {
-        out[0] += tmp[i] * row[i].x;
-        out[1] += tmp[i] * row[i].y;
-        out[2] += tmp[i] * row[i].z;
+        out[0] += weights[i] * row[i].x;
+        out[1] += weights[i] * row[i].y;
+        out[2] += weights[i] * row[i].z;
     }
 
     mSplineKeyframeFraction += (row[0].speed << 12) / 1000;
@@ -5674,20 +5674,20 @@ int daPly_c::func_ov002_020c61ac() {
     return 1;
 }
 
-int daPly_c::func_ov002_020c647c(int arg1) {
+int daPly_c::func_ov002_020c647c(int y) {
     Vector3 v1;
     Vector3 v2;
     dBgCh_Lin line;
     int z1 = this->mPos.z;
     int x1 = this->mPos.x;
     v1.x = x1;
-    v1.y = arg1 - 0x1e000;
+    v1.y = y - 0x1e000;
     v1.z = z1;
     int x2 = this->mPos.x;
     int z2 = this->mPos.z;
     v2.x = x2;
     v2.z = z2;
-    v2.y = arg1 + 0xaa000;
+    v2.y = y + 0xaa000;
     int r5 = -64;
     line.SetObjAndLine(v1, v2, this);
     if (line.DetectClsn()) {
@@ -9501,11 +9501,11 @@ void daPly_c::func_ov002_020ce798() {
     }
 }
 
-void daPly_c::func_ov002_020ce8bc(int arg1) {
+void daPly_c::func_ov002_020ce8bc(int moving) {
     Vector3 pos(mPos.x, data_0209f32c + 0x3000, mPos.z);
 
     if (mIsMega != 0) {
-        if (arg1 != 0) {
+        if (moving != 0) {
             mWaterMoveParticle = Particle::System::NewFitWater(
                 mWaterMoveParticle, kPtclMegaWaterSurfaceMove, pos.x, pos.y, pos.z, 0);
         } else {
@@ -9513,7 +9513,7 @@ void daPly_c::func_ov002_020ce8bc(int arg1) {
                 mWaterStillParticle, kPtclMegaWaterSurfaceStill, pos.x, pos.y, pos.z, 0);
         }
     } else {
-        if (arg1 != 0) {
+        if (moving != 0) {
             mWaterMoveParticle = Particle::System::NewFitWater(
                 mWaterMoveParticle, kPtclWaterSurfaceMove, pos.x, pos.y, pos.z, 0);
         } else {
@@ -10188,7 +10188,7 @@ int daPly_c::func_ov002_020cfea4() {
     return 0;
 }
 
-int daPly_c::func_ov002_020d0178(int arg1, int flag) {
+int daPly_c::func_ov002_020d0178(int y, int flag) {
 
     Vector3 normal;
     Vector3 pos1;
@@ -10256,7 +10256,7 @@ int daPly_c::func_ov002_020d0178(int arg1, int flag) {
         int tz = mPos.z;
         int tx = mPos.x;
         lineStart.x = tx;
-        lineStart.y = arg1;
+        lineStart.y = y;
         lineStart.z = tz;
     }
     rl.SetObjAndLine(lineStart, pos1, this);
@@ -11621,7 +11621,7 @@ int daPly_c::St_TurnAround_Main() {
     s16 angle;
     int sel;
     int raw;
-    int tmp;
+    int speed;
 
     raw = mDesiredAngleY;
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
@@ -11629,8 +11629,8 @@ int daPly_c::St_TurnAround_Main() {
         sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
         r5v = GetSlopeDecel(sel);
         ApproachAngle(&mPrevAngle.y, angle, 0x10, 0x1000, 0x200);
-        tmp = ScaleByCharFactor(0x28000);
-        ApproachLinear(mHorzSpeed, -tmp, r5v);
+        speed = ScaleByCharFactor(0x28000);
+        ApproachLinear(mHorzSpeed, -speed, r5v);
     } else {
         this->ChangeState(data_ov002_0211013c);
         return 1;
@@ -11874,9 +11874,9 @@ int daPly_c::UpdateWalkingSpeed() {
                     }
                 }
                 {
-                    int tmp = -((30 - ((int)h)) << 12);
-                    tmp = tmp * 2;
-                    mModelOffsetY = tmp;
+                    int offsetY = -((30 - ((int)h)) << 12);
+                    offsetY = offsetY * 2;
+                    mModelOffsetY = offsetY;
                 }
             }
         }
@@ -13362,26 +13362,26 @@ void daPly_c::func_ov002_020d71a0() {
  * differ, measured); a copy of an array member is one block move, as C
  * made it. */
 
-void daPly_c::func_ov002_020d71ec(int arg1) {
+void daPly_c::func_ov002_020d71ec(int animIdx) {
     extern struct P2 data_ov002_0210eb88;
     P2 slot[2];
     u32 shifted;
     int val;
 
-    if (arg1 != 2) {
+    if (animIdx != 2) {
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
         shifted = ((u32)anim.currFrame << 4) >> 0x10;
         slot[0] = data_ov002_0210a34c;
         slot[1] = data_ov002_0210a084;
-        SetAnim((int)slot[0].w[arg1], 0x40000000, 0x1000, 0);
+        SetAnim((int)slot[0].w[animIdx], 0x40000000, 0x1000, 0);
 
         if (mUseAltBodyModel == 0) {
-            SharedFilePtr *file = (SharedFilePtr *)slot[1].w[arg1];
+            SharedFilePtr *file = (SharedFilePtr *)slot[1].w[animIdx];
             ((dExtAnmModel_c *)mModels.mHeadModels[3])
                 ->SetAnim((BCA_File *)file->filePtr, 0x40000000, 0x1000, 0);
         }
 
-        if (arg1 == 1) {
+        if (animIdx == 1) {
             val = data_ov002_020ff0f8[shifted];
             dExtFrameCtrl_c &body = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
             val = ((u32)val << 0x10) >> 4;
@@ -13457,7 +13457,7 @@ void func_ov002_020d7430(daPly_c &player) {
 int daPly_c::St_YoshiPower_Main() {
     extern int data_ov002_0210e3d8[];
     Vector3_16f dir;
-    Vector3 tmp;
+    Vector3 jointPos;
     Vector3 pos;
     dActor_c *obj0;
     dActor_c *dp;
@@ -13497,12 +13497,12 @@ int daPly_c::St_YoshiPower_Main() {
                     flag = 0;
                 if (flag != 0) {
                     int id1 = this->GetBodyModelID(this->param1 & 0xff, 0);
-                    MTX_MultVec43((Vector3 *)&t4->t, &mModels.mBodyModels[id1]->mat4x3, &tmp);
-                    Vec3_MulScalarInPlace(&tmp, 0x8000);
+                    MTX_MultVec43((Vector3 *)&t4->t, &mModels.mBodyModels[id1]->mat4x3, &jointPos);
+                    Vec3_MulScalarInPlace(&jointPos, 0x8000);
                     dp = mObjInMouth;
-                    dp->mPos.x = tmp.x;
-                    dp->mPos.y = tmp.y;
-                    dp->mPos.z = tmp.z;
+                    dp->mPos.x = jointPos.x;
+                    dp->mPos.y = jointPos.y;
+                    dp->mPos.z = jointPos.z;
                 }
             }
             int id2 = this->GetBodyModelID(this->param1 & 0xff, 0);
@@ -14192,7 +14192,7 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
     }
 }
 
-int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) {
+int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 scaleByChar, u8 arg5, u8 spawnParticles) {
     s16 ang;
     dActor_c *eaten;
     int hasCap;
@@ -14265,7 +14265,7 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) 
         this->mAngle.y = ang;
     }
 
-    if (arg4 == 1) {
+    if (scaleByChar == 1) {
         u16 tv = data_ov002_020ff128[this->param1];
         dmg = (dmg * tv) / 100;
     }
@@ -14282,7 +14282,7 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) 
 
     if (this->mIsUnderwater == 0) {
         if (this->mHurtDamage != 0) {
-            if (arg6 != 0) {
+            if (spawnParticles != 0) {
                 Vector3 v(this->mPos.x, this->mPos.y + 0x50000, this->mPos.z);
                 if (this->mHurtDamage == 1) {
                     Particle::System::NewSimple(kPtclPlayerHurtOneA, v.x, v.y, v.z);
@@ -15531,7 +15531,7 @@ void daPly_c::func_ov002_020db8bc(unsigned char kind) {
 
 void daPly_c::func_ov002_020db8d8() {
     Vector3 backup;
-    Vector3 tmp;
+    Vector3 jointPos;
     Vector3 dir;
     Vector3 scaled;
     int model;
@@ -15541,8 +15541,8 @@ void daPly_c::func_ov002_020db8d8() {
     b = this->mUseAltBodyModel;
     m = &mModels.mHeadModels[(b << 2) + 3]->data.transforms[3];
     model = this->GetBodyModelID(param1 & 0xff, 0);
-    MTX_MultVec43((Vector3 *)&m->t, &mModels.mBodyModels[model]->mat4x3, &tmp);
-    Vec3_MulScalar(&scaled, &tmp, 0x8000);
+    MTX_MultVec43((Vector3 *)&m->t, &mModels.mBodyModels[model]->mat4x3, &jointPos);
+    Vec3_MulScalar(&scaled, &jointPos, 0x8000);
     mPos = scaled;
     dir.x = 0;
     dir.z = 0;
@@ -17345,7 +17345,7 @@ int func_ov002_020df7f4(daPly_c *player) {
 }
 }
 
-int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
+int daPly_c::func_ov002_020df840(void *obj, Vector3 *pos) {
     extern u16 data_0209f49c[];
     if (this->mIsMega != 0 || this->mIsBalloon != 0)
         return 0;
@@ -17354,9 +17354,9 @@ int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
     if (this->mHeldObj != 0)
         return 0;
     this->ChangeState(daPly_c::ST_OWL);
-    this->mHeldObj = (dActor_c *)arg1;
-    this->mAttachOffsetY = arg2->y;
-    this->mAngleYSpeed = Vec3_HorzAngle(&this->mPos, arg2);
+    this->mHeldObj = (dActor_c *)obj;
+    this->mAttachOffsetY = pos->y;
+    this->mAngleYSpeed = Vec3_HorzAngle(&this->mPos, pos);
     return 1;
 }
 
@@ -17548,26 +17548,20 @@ int daPly_c::St_Fly_Main() {
         func_ov002_020df8f0(this);
     }
 
-    Vector3_16f vec16;
-    Vector3 vec32;
-#define spC vec16.x
-#define spE vec16.y
-#define sp10 vec16.z
-#define sp14 vec32.x
-#define sp18 vec32.y
-#define sp1C vec32.z
+    Vector3_16f dir;
+    Vector3 jointPos;
     {
         s16 n = FX_SinCosTable_[((u16)mPrevAngle.x >> 4) * 2 + 1];
         s32 r0 = (s16)-n;
         s16 t = FX_SinCosTable_[((u16)mAngle.y >> 4) * 2];
-        spC = (s16)FX_MUL(r0, t);
-        spE = FX_SinCosTable_[((u16)mAngle.x >> 4) * 2];
+        dir.x = (s16)FX_MUL(r0, t);
+        dir.y = FX_SinCosTable_[((u16)mAngle.x >> 4) * 2];
         s16 t2 = FX_SinCosTable_[((u16)mAngle.y >> 4) * 2 + 1];
-        sp10 = (s16)FX_MUL(r0, t2);
+        dir.z = (s16)FX_MUL(r0, t2);
     }
 
     if (mPrevVertSpeed >= 0x28000) {
-        mParticle1 = Particle::System::New(mParticle1, 0xd1, mPos.x, mPos.y, mPos.z, &vec16, 0);
+        mParticle1 = Particle::System::New(mParticle1, 0xd1, mPos.x, mPos.y, mPos.z, &dir, 0);
     }
 
     if (mPrevVertSpeed >= 0x30000) {
@@ -17583,10 +17577,10 @@ int daPly_c::St_Fly_Main() {
                          ->data.transforms[14];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MTX_MultVec43((Vector3 *)&bone->t, &m2->mat4x3, &vec32);
-                Vec3_MulScalarInPlace(&vec32, 0x8000);
-                mParticle2 = Particle::System::New(mParticle2, 0xd0, sp14, sp18, sp1C,
-                                                   (const Vector3_16f *)(&vec16), 0);
+                MTX_MultVec43((Vector3 *)&bone->t, &m2->mat4x3, &jointPos);
+                Vec3_MulScalarInPlace(&jointPos, 0x8000);
+                mParticle2 = Particle::System::New(mParticle2, 0xd0, jointPos.x, jointPos.y,
+                                                   jointPos.z, (const Vector3_16f *)(&dir), 0);
             }
             {
                 Matrix4x3 *bone =
@@ -17594,10 +17588,10 @@ int daPly_c::St_Fly_Main() {
                          ->data.transforms[11];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MTX_MultVec43((Vector3 *)&bone->t, &m2->mat4x3, &vec32);
-                Vec3_MulScalarInPlace(&vec32, 0x8000);
-                mParticle3 = Particle::System::New(mParticle3, 0xd0, sp14, sp18, sp1C,
-                                                   (const Vector3_16f *)(&vec16), 0);
+                MTX_MultVec43((Vector3 *)&bone->t, &m2->mat4x3, &jointPos);
+                Vec3_MulScalarInPlace(&jointPos, 0x8000);
+                mParticle3 = Particle::System::New(mParticle3, 0xd0, jointPos.x, jointPos.y,
+                                                   jointPos.z, (const Vector3_16f *)(&dir), 0);
             }
         }
     } else {
@@ -17616,12 +17610,6 @@ int daPly_c::St_Fly_Main() {
     return 1;
 }
 
-#undef spC
-#undef spE
-#undef sp10
-#undef sp14
-#undef sp18
-#undef sp1C
 
 int daPly_c::St_Fly_Init() {
     extern int gCamera[];
@@ -18604,8 +18592,8 @@ extern "C" void func_ov002_020e25d4(daPly_c *player) {
 }
 
 extern "C" {
-inline int inline_fn(int *arg0) {
-    return RandomIntInternal(arg0);
+inline int inline_fn(int *state) {
+    return RandomIntInternal(state);
 }
 }
 
@@ -19376,9 +19364,9 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
         if (!ok) return;
     }
 
-    Matrix4x3 tmp;
+    Matrix4x3 saved;
     Matrix4x3 *src = &obj->mat4x3;
-    tmp = *src;
+    saved = *src;
 
     int r0;
     if (ip)
@@ -19400,7 +19388,7 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     obj->SetMaterialFlags(0x80);
     obj->ClearMaterialFlags(0x40);
 
-    *src = tmp;
+    *src = saved;
 }
 
 int daPly_c::func_ov002_020e3f90() {
@@ -19505,7 +19493,7 @@ void daPly_c::func_ov002_020e4374(int *p1, int *p2) {
 
 void daPly_c::func_ov002_020e444c() {
     extern union Matrix4x3 data_020a0e68;
-    int sp8, spC;
+    int depth, radius;
 
     if (func_ov002_020e3f90() == 0) {
         int y = mModelOffsetY + (mPos.y - mSinkDepth) + 0xf000;
@@ -19554,7 +19542,7 @@ void daPly_c::func_ov002_020e444c() {
         }
     }
 
-    func_ov002_020e4374(&sp8, &spC);
+    func_ov002_020e4374(&depth, &radius);
 
     if ((mOpacity | mIsVanish) == 0)
         mHideShadow = 1;
@@ -19565,7 +19553,7 @@ void daPly_c::func_ov002_020e444c() {
             void *a = dActor_c::FindWithID(fr->GetClsnID());
             if (a != 0) {
                 if (IsActorID((dActor_c *)a, 0xa1)) {
-                    sp8 += 0x3c000;
+                    depth += 0x3c000;
                 }
             }
         }
@@ -19574,7 +19562,7 @@ void daPly_c::func_ov002_020e444c() {
     if (mHideShadow != 0)
         return;
 
-    DropShadowRadHeight(mShadowModel, mShadowMatrix, spC, sp8, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, 0xf);
 }
 
 // local extern: include-free shard, the call passes the object as an untyped pointer so it cannot use the header member
@@ -19737,7 +19725,7 @@ int daPly_c::Behavior() {
     extern s16 data_0209f4a6;
     s32 scale;
     s32 r2;
-    s32 temp;
+    s32 size;
     s32 mul;
     s32 fallFlag;
     Vector3 v0;
@@ -19755,9 +19743,9 @@ int daPly_c::Behavior() {
         scale = 0x1400;
         r2 = 0x2000;
     }
-    temp = FX_MUL(r2, 0x32000);
-    mMeshClsn.SetRadius(temp);
-    mMeshClsn.SetHeight(temp);
+    size = FX_MUL(r2, 0x32000);
+    mMeshClsn.SetRadius(size);
+    mMeshClsn.SetHeight(size);
     mdCcAcPos_c.radius = scale * 0x28;
     mul = 0x96;
     if (IsState(data_ov002_021104e4)

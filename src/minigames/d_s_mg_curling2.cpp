@@ -1469,8 +1469,8 @@ s32 dScMgCurling2_c::InitResources() {
     void *f;
     void *c7;
     void *c8;
-    volatile u16 sp4;
-    volatile u16 sp6;
+    volatile u16 bg2Fill;
+    volatile u16 bg0Fill;
 
     if (r6 == 0)
         return 0;
@@ -1497,8 +1497,8 @@ s32 dScMgCurling2_c::InitResources() {
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_MATO_NSC_BIN);
     {
         char *b = (char *)G2_GetBG2ScrPtr();
-        sp4 = 0x4300;
-        MI_CpuFill16(b, sp4, 0x1000);
+        bg2Fill = 0x4300;
+        MI_CpuFill16(b, bg2Fill, 0x1000);
     }
     GX_LoadBG2Scr(f, 0, 0x800);
 
@@ -1507,8 +1507,8 @@ s32 dScMgCurling2_c::InitResources() {
                      GX_BG_CHARBASE_0x20000, GX_BG_EXTPLTT_01);
     {
         char *b = (char *)G2_GetBG0ScrPtr();
-        sp6 = 0x4300;
-        MI_CpuFill16(b, sp6, 0x1000);
+        bg0Fill = 0x4300;
+        MI_CpuFill16(b, bg0Fill, 0x1000);
     }
     GX_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);

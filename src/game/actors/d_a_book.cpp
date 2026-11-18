@@ -133,12 +133,12 @@ void daBook_c::AimAtPlayer() {
     if (!player)
         return;
     Vector3 *playerPos = &player->mPos;
-    Vector3 tmp;
-    tmp.x = playerPos->x;
-    tmp.y = playerPos->y;
-    tmp.z = playerPos->z;
+    Vector3 target;
+    target.x = playerPos->x;
+    target.y = playerPos->y;
+    target.z = playerPos->z;
     Vector3 toPlayer;
-    Vec3_Sub(&toPlayer, &tmp, &mPos);
+    Vec3_Sub(&toPlayer, &target, &mPos);
     mAimYaw = cstd::atan2(toPlayer.x, toPlayer.z);
     mAimPitch = cstd::atan2(toPlayer.y, Vec3_HorzLen(&toPlayer));
     mAimRoll = 0x4000;
@@ -707,12 +707,12 @@ int daBookGen_c::Behavior()
         daPly_c *player = ClosestPlayer();
         if (player != 0) {
 
-            Vector3 tmp;
+            Vector3 target;
             Vector3 *ps = &player->mPos;
-            tmp = *ps;
+            target = *ps;
 
-            if (Vec3_HorzDist(&mPos, &tmp) < 0x258000) {
-                short angle = Vec3_HorzAngle(&mPos, &tmp);
+            if (Vec3_HorzDist(&mPos, &target) < 0x258000) {
+                short angle = Vec3_HorzAngle(&mPos, &target);
                 if (GetSubtraction(mAngle.y, angle) < 0x2000) {
                     signed char sc = mAreaId;
                     dActor_c::Spawn(kShootBookActorId, 0, mPos, &mPrevAngle, sc, -1);
