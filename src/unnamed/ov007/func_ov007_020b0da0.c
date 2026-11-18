@@ -44,7 +44,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
     }
 
     {
-        struct Vector3 out;
+        VecFx32 out;
         out.y = 0;
         out.x = 0;
         out.z = 0;
@@ -104,6 +104,6 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             }
         }
 
-        *(Vector3 *)&mat->t = out;
+        mat->t = out;
     }
 }
