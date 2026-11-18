@@ -1330,7 +1330,7 @@ s32 dScMgSnowball_c::Render() {
                     break;
                 case 3: {
                     int x = mArray2[i].x;
-                    Mg_RenderSpriteBoth(sSnowballObstacleSideSprites[(x < 0x80000) ? 1 : 0],
+                    Mg_RenderSpriteBoth(sSnowballObstacleSideSprites[x < 0x80000],
                                         (x - mScroll.x) >> 0xc,
                                         ((mArray2[i].y - mScroll.y) >> 0xc) - 0x110, -1, 1);
                     break;
@@ -1501,7 +1501,7 @@ s32 dScMgSnowball_c::Behavior() {
         if (mBallSize >= 0x37000)
             mBallSize = 0x37000;
         Vec2_Sub(moved, &mPos.x, &mSoundPos.x);
-        gate = (Vec2_Len((const Vector2 *)moved) >= 0x30000) ? 1 : 0;
+        gate = Vec2_Len((const Vector2 *)moved) >= 0x30000;
         if (gate != 0) {
             mSoundPos = mPos;
             if (mBallSize < 0x10000)
