@@ -2,5 +2,8 @@
 #include "types.h"
 
 u32 data_ov029_02113b80[4] = {
-    0x0f3c0000, 0xeaab0000, 0x00040000, 0x00fa00fe,
+    0x0f3c0000,
+    0xeaab0000,
+    0x00040000,
+    0x00fa00fe,
 };

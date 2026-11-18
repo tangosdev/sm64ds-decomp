@@ -143,9 +143,6 @@ src/data/ov029/data_ov029_02112fd0.c:
     complete
     .data.w12ea0 start:0x02112fd0 end:0x02112fec
 
-src/data/ov029/data_ov029_02112fec.c:
-    complete
-    .data.w12ea0 start:0x02112fec end:0x02112ffc
 
 src/data/ov029/data_ov029_02112ffc.c:
     complete
@@ -391,9 +388,6 @@ src/data/ov029/data_ov029_02113c28.c:
     complete
     .data start:0x02113c28 end:0x02113c2c
 
-src/data/ov029/data_ov029_02113c48.c:
-    complete
-    .data start:0x02113c48 end:0x02113cac
 
 src/data/ov029/_ZTI15daObjWc_Obj02_c.c:
     complete
@@ -415,13 +409,6 @@ src/data/ov029/data_ov029_02113cec.c:
     complete
     .data start:0x02113cec end:0x02113cf0
 
-src/data/ov029/data_ov029_02113cf4.c:
-    complete
-    .data start:0x02113cf4 end:0x02113d30
-
-src/data/ov029/data_ov029_02113d30.c:
-    complete
-    .data start:0x02113d30 end:0x02113d70
 
 src/data/ov029/_ZTI15daObjWc_Obj03_c.c:
     complete
@@ -439,13 +426,6 @@ src/data/ov029/data_ov029_02113da8.c:
     complete
     .data start:0x02113da8 end:0x02113db4
 
-src/data/ov029/data_ov029_02113dc4.c:
-    complete
-    .data start:0x02113dc4 end:0x02113e00
-
-src/data/ov029/data_ov029_02113e00.c:
-    complete
-    .data start:0x02113e00 end:0x02113e30
 
 src/data/ov029/_ZTI15daObjWc_Obj05_c.c:
     complete
@@ -463,9 +443,6 @@ src/data/ov029/data_ov029_02113e6c.c:
     complete
     .data start:0x02113e6c end:0x02113e74
 
-src/data/ov029/data_ov029_02113e88.c:
-    complete
-    .data start:0x02113e88 end:0x02113ef4
 
 src/data/ov029/_ZTI14daObjWcObj06_c.c:
     complete
@@ -486,9 +463,6 @@ src/game/actors/d_a_obj_wc_obj02.cpp:
     .bss start:0x02114248 end:0x02114270
     .data.w12ea0 start:0x0211302c end:0x0211304c
 
-src/data/ov029/data_ov029_0211304c.c:
-    complete
-    .data.w12ea0 start:0x0211304c end:0x0211306c
 
 src/game/actors/d_a_obj_wc_obj03.cpp:
     complete
@@ -522,17 +496,6 @@ src/data/ov029/g_profile_WC_OBJ06.c:
     complete
     .data start:0x02113f20 end:0x02113f44
 
-src/data/ov029/data_ov029_02113f4c.c:
-    complete
-    .data start:0x02113f4c end:0x02113f78
-
-src/data/ov029/data_ov029_02113f78.c:
-    complete
-    .data start:0x02113f78 end:0x02113fc4
-
-src/data/ov029/data_ov029_02113fc4.c:
-    complete
-    .data start:0x02113fc4 end:0x02113fc8
 
 src/data/ov029/_ZTI15daObjWc_Obj07_c.c:
     complete
@@ -566,17 +529,6 @@ src/data/ov029/g_profile_WC_MIZU.c:
     complete
     .data start:0x021140b8 end:0x021140dc
 
-src/data/ov029/data_ov029_021140ec.c:
-    complete
-    .data start:0x021140ec end:0x021140f8
-
-src/data/ov029/data_ov029_021140f8.c:
-    complete
-    .data start:0x021140f8 end:0x02114108
-
-src/data/ov029/data_ov029_02114108.c:
-    complete
-    .data start:0x02114108 end:0x0211415c
 
 src/data/ov029/_ZTI15daObjWc_Obj04_c.c:
     complete
@@ -590,9 +542,6 @@ src/data/ov029/g_profile_WC_OBJ04.c:
     complete
     .data start:0x0211417c end:0x021141a0
 
-src/data/ov029/data_ov029_021141cc.c:
-    complete
-    .data start:0x021141cc end:0x02114220
 
 src/game/actors/d_a_obj_wc_obj07.cpp:
     complete

@@ -44,9 +44,6 @@ src/data/ov036/data_ov036_02112a6c.c:
     complete
     .data start:0x02112a6c end:0x02112a88
 
-src/data/ov036/data_ov036_02112a88.c:
-    complete
-    .data start:0x02112a88 end:0x02112aa4
 
 src/data/ov036/data_ov036_02112aa4.c:
     complete
@@ -68,17 +65,11 @@ src/data/ov036/data_ov036_02112adc.c:
     complete
     .data start:0x02112adc end:0x02112ae8
 
-src/data/ov036/data_ov036_02112ae8.c:
-    complete
-    .data start:0x02112ae8 end:0x02112b08
 
 src/data/ov036/data_ov036_02112b08.c:
     complete
     .data start:0x02112b08 end:0x02112b28
 
-src/data/ov036/data_ov036_02112b28.c:
-    complete
-    .data start:0x02112b28 end:0x02112b48
 
 src/data/ov036/data_ov036_02112b48.c:
     complete
@@ -92,9 +83,6 @@ src/game/actors/d_a_obj_rc_buranko.cpp:
     .bss start:0x02114020 end:0x02114048
     .data start:0x02112b68 end:0x02112b88
 
-src/data/ov036/data_ov036_02112b88.c:
-    complete
-    .data start:0x02112b88 end:0x02112ba8
 
 src/data/ov036/data_ov036_02112ba8.c:
     complete
@@ -108,17 +96,11 @@ src/data/ov036/data_ov036_02112bdc.c:
     complete
     .data start:0x02112bdc end:0x02112be8
 
-src/data/ov036/data_ov036_02112be8.c:
-    complete
-    .data start:0x02112be8 end:0x02112bec
 
 src/data/ov036/data_ov036_02112bec.c:
     complete
     .data start:0x02112bec end:0x02112c08
 
-src/data/ov036/data_ov036_02112c08.c:
-    complete
-    .data start:0x02112c08 end:0x02112c18
 
 src/data/ov036/data_ov036_02112c18.c:
     complete
@@ -368,25 +350,6 @@ src/data/ov036/g_profile_RC_BURANKO.c:
     complete
     .data start:0x02113a74 end:0x02113a98
 
-src/data/ov036/data_ov036_02113aa0.c:
-    complete
-    .data start:0x02113aa0 end:0x02113abc
-
-src/data/ov036/data_ov036_02113abc.c:
-    complete
-    .data start:0x02113abc end:0x02113b10
-
-src/data/ov036/data_ov036_02113b10.c:
-    complete
-    .data start:0x02113b10 end:0x02113b18
-
-src/data/ov036/data_ov036_02113b18.c:
-    complete
-    .data start:0x02113b18 end:0x02113b1c
-
-src/data/ov036/data_ov036_02113b1c.c:
-    complete
-    .data start:0x02113b1c end:0x02113b20
 
 src/data/ov036/_ZTI19daObjRc_Kaitendai_c.c:
     complete
@@ -408,17 +371,6 @@ src/data/ov036/g_profile_RC_KAITEN.c:
     complete
     .data start:0x02113b50 end:0x02113b74
 
-src/data/ov036/data_ov036_02113b7c.c:
-    complete
-    .data start:0x02113b7c end:0x02113b80
-
-src/data/ov036/data_ov036_02113b80.c:
-    complete
-    .data start:0x02113b80 end:0x02113b90
-
-src/data/ov036/data_ov036_02113b90.c:
-    complete
-    .data start:0x02113b90 end:0x02113bf4
 
 src/data/ov036/_ZTI14daObjRc_Hane_c.c:
     complete
@@ -444,9 +396,6 @@ src/data/ov036/data_ov036_02113c28.c:
     complete
     .data start:0x02113c28 end:0x02113c38
 
-src/data/ov036/data_ov036_02113c48.c:
-    complete
-    .data start:0x02113c48 end:0x02113cb4
 
 src/data/ov036/_ZTI16daObjRc_Tikuwa_c.c:
     complete
@@ -472,9 +421,6 @@ src/data/ov036/data_ov036_02113cf4.c:
     complete
     .data start:0x02113cf4 end:0x02113cf8
 
-src/data/ov036/data_ov036_02113d30.c:
-    complete
-    .data start:0x02113d30 end:0x02113d78
 
 src/data/ov036/data_ov036_02113d78.c:
     complete
@@ -496,9 +442,6 @@ src/data/ov036/data_ov036_02113dc4.c:
     complete
     .data start:0x02113dc4 end:0x02113dcc
 
-src/data/ov036/data_ov036_02113e00.c:
-    complete
-    .data start:0x02113e00 end:0x02113e4c
 
 src/game/actors/d_a_obj_rc_hane.cpp:
     complete

@@ -7,6 +7,13 @@ extern u32 gHanachanBody03WalkAnimationFile[];
 extern u32 gHanachanBody04WalkAnimationFile[];
 extern u32 gHanachanHeadWalkAnimationFile[];
 
-const u32 data_ov034_02113874[5] = {
-    (u32)&gHanachanHeadWalkAnimationFile, (u32)&gHanachanBody01WalkAnimationFile, (u32)&gHanachanBody02WalkAnimationFile, (u32)&gHanachanBody03WalkAnimationFile, (u32)&gHanachanBody04WalkAnimationFile,
+#pragma define_section data_ov034_02113874 ".rodata"                                               \
+                                           ".rodata"                                               \
+                                           ".rodata" far_data
+#pragma section data_ov034_02113874 begin
+void *data_ov034_02113874[5] = {
+    (void *)&gHanachanHeadWalkAnimationFile,   (void *)&gHanachanBody01WalkAnimationFile,
+    (void *)&gHanachanBody02WalkAnimationFile, (void *)&gHanachanBody03WalkAnimationFile,
+    (void *)&gHanachanBody04WalkAnimationFile,
 };
+#pragma section data_ov034_02113874 end

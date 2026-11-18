@@ -6,9 +6,21 @@ extern u32 data_ov029_021129a0[];
 extern u32 data_ov029_021129a4[];
 extern u32 data_ov029_021129c0[];
 
-#pragma define_section data_ov029_02112fb8 ".data.w12ea0" ".data.w12ea0" ".data.w12ea0" far_data
+#include "private/BTA_File.h"
+
+#pragma define_section data_ov029_02112fb8 ".data.w12ea0"                                          \
+                                           ".data.w12ea0"                                          \
+                                           ".data.w12ea0" far_data
 #pragma section data_ov029_02112fb8 begin
-u32 data_ov029_02112fb8[6] = {
-    0x0000005b, (u32)&data_ov029_021129a0, (u32)&data_ov029_0211299c, (u32)&data_ov029_021129c0, 0x00000001, (u32)&data_ov029_021129a4,
+
+BTA_File data_ov029_02112fb8 = {
+    0x005b,
+    0,
+    (fx32 *)&data_ov029_021129a0,
+    (u16 *)&data_ov029_0211299c,
+    (fx32 *)&data_ov029_021129c0,
+    0x0001,
+    0,
+    (BTAMaterialRecord *)&data_ov029_021129a4,
 };
 #pragma section data_ov029_02112fb8 end

@@ -3,9 +3,12 @@
 
 extern u32 data_ov014_02113508[];
 
-#pragma define_section data_ov014_021133a0 ".data.gap0" ".data.gap0" ".data.gap0" far_data
+#pragma define_section data_ov014_021133a0 ".data.gap0"                                            \
+                                           ".data.gap0"                                            \
+                                           ".data.gap0" far_data
 #pragma section data_ov014_021133a0 begin
 u32 data_ov014_021133a0[2] = {
-    0x00000009, (u32)&data_ov014_02113508,
+    0x00000009,
+    (u32)&data_ov014_02113508,
 };
 #pragma section data_ov014_021133a0 end

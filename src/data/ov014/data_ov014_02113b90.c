@@ -1,7 +1,9 @@
 /* ov014 cartridge data at 0x02113b90, 72 bytes. */
 #include "types.h"
 
-#pragma define_section data_ov014_02113b90 ".data.gap0" ".data.gap0" ".data.gap0" far_data
+#pragma define_section data_ov014_02113b90 ".data.gap0"                                            \
+                                           ".data.gap0"                                            \
+                                           ".data.gap0" far_data
 #pragma section data_ov014_02113b90 begin
 u32 data_ov014_02113b90[18] = {
     0xeff8101b, 0x10600bbd, 0x0d48ef02, 0x0cb20319, 0x03440c1c, 0x13881482,

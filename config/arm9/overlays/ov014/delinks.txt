@@ -432,9 +432,6 @@ src/data/ov014/data_ov014_0211454c.c:
     complete
     .data.gap0 start:0x0211454c end:0x02114558
 
-src/data/ov014/data_ov014_02114558.c:
-    complete
-    .data.gap0 start:0x02114558 end:0x02114568
 
 src/data/ov014/data_ov014_02114568.c:
     complete
@@ -464,57 +461,6 @@ src/data/ov014/g_profile_SWITCHDOOR.c:
     complete
     .data.gap0 start:0x021145e4 end:0x02114608
 
-src/data/ov014/data_ov014_0211462c.c:
-    complete
-    .data.gap0 start:0x0211462c end:0x02114688
-
-src/data/ov014/data_ov014_021146a0.c:
-    complete
-    .data.gap_pmf start:0x021146a0 end:0x021146a8
-
-src/data/ov014/data_ov014_021146a8.c:
-    complete
-    .data.gap_pmf start:0x021146a8 end:0x021146b0
-
-src/data/ov014/data_ov014_021146b0.c:
-    complete
-    .data.gap_pmf start:0x021146b0 end:0x021146b8
-
-src/data/ov014/data_ov014_021146b8.c:
-    complete
-    .data.gap_pmf start:0x021146b8 end:0x021146c0
-
-src/data/ov014/data_ov014_021146c0.c:
-    complete
-    .data.gap_pmf start:0x021146c0 end:0x021146c8
-
-src/data/ov014/data_ov014_021146c8.c:
-    complete
-    .data.gap_pmf start:0x021146c8 end:0x021146d0
-
-src/data/ov014/data_ov014_021146d0.c:
-    complete
-    .data.gap_pmf start:0x021146d0 end:0x021146d8
-
-src/data/ov014/data_ov014_021146d8.c:
-    complete
-    .data.gap_pmf start:0x021146d8 end:0x021146e0
-
-src/data/ov014/data_ov014_021146e0.c:
-    complete
-    .data.gap_pmf start:0x021146e0 end:0x021146e8
-
-src/data/ov014/data_ov014_021146e8.c:
-    complete
-    .data.gap_pmf start:0x021146e8 end:0x021146f0
-
-src/data/ov014/data_ov014_021146f0.c:
-    complete
-    .data.gap_pmf start:0x021146f0 end:0x021146f8
-
-src/data/ov014/data_ov014_021146f8.c:
-    complete
-    .data.gap_pmf start:0x021146f8 end:0x02114700
 
 src/data/ov014/_ZTI10daWanwan_c.c:
     complete
@@ -536,13 +482,6 @@ src/data/ov014/data_ov014_021147e4.c:
     complete
     .data.gap3 start:0x021147e4 end:0x021147ec
 
-src/data/ov014/data_ov014_02114824.c:
-    complete
-    .data.gap3 start:0x02114824 end:0x02114860
-
-src/data/ov014/data_ov014_02114860.c:
-    complete
-    .data.gap3 start:0x02114860 end:0x02114868
 
 src/data/ov014/_ZTI20daObjWanwanShutter_c.c:
     complete
@@ -564,21 +503,6 @@ src/data/ov014/data_ov014_02114898.c:
     complete
     .data.gap3 start:0x02114898 end:0x021148b0
 
-src/data/ov014/data_ov014_021148b4.c:
-    complete
-    .data.gap3 start:0x021148b4 end:0x021148b8
-
-src/data/ov014/data_ov014_021148b8.c:
-    complete
-    .data.gap3 start:0x021148b8 end:0x021148e0
-
-src/data/ov014/data_ov014_021148e0.c:
-    complete
-    .data.gap3 start:0x021148e0 end:0x021148f0
-
-src/data/ov014/data_ov014_021148f0.c:
-    complete
-    .data.gap3 start:0x021148f0 end:0x02114940
 
 src/game/actors/d_a_obj_b_swdoor.cpp:
     complete

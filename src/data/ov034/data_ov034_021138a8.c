@@ -5,5 +5,6 @@ extern u32 gHanachanBody03WalkEndAnimationFile[];
 extern u32 gHanachanBody04WalkEndAnimationFile[];
 
 const u32 data_ov034_021138a8[2] = {
-    (u32)&gHanachanBody03WalkEndAnimationFile, (u32)&gHanachanBody04WalkEndAnimationFile,
+    (u32)&gHanachanBody03WalkEndAnimationFile,
+    (u32)&gHanachanBody04WalkEndAnimationFile,
 };

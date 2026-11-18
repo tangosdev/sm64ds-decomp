@@ -273,21 +273,6 @@ src/data/ov013/data_ov013_02112118.c:
     complete
     .data start:0x02112118 end:0x02112128
 
-src/data/ov013/data_ov013_02112138.c:
-    complete
-    .data start:0x02112138 end:0x02112158
-
-src/data/ov013/data_ov013_02112158.c:
-    complete
-    .data start:0x02112158 end:0x02112178
-
-src/data/ov013/data_ov013_02112178.c:
-    complete
-    .data start:0x02112178 end:0x02112198
-
-src/data/ov013/data_ov013_02112198.c:
-    complete
-    .data start:0x02112198 end:0x021121a4
 
 src/game/actors/d_a_obj_clock_huriko.cpp:
     complete

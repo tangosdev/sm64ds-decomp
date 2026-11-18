@@ -5,6 +5,13 @@ extern u32 gHanachanBody01DamageAnimationFile[];
 extern u32 gHanachanBody02DamageAnimationFile[];
 extern u32 gHanachanHeadDamageAnimationFile[];
 
-const u32 data_ov034_021138b0[3] = {
-    (u32)&gHanachanHeadDamageAnimationFile, (u32)&gHanachanBody01DamageAnimationFile, (u32)&gHanachanBody02DamageAnimationFile,
+#pragma define_section data_ov034_021138b0 ".rodata"                                               \
+                                           ".rodata"                                               \
+                                           ".rodata" far_data
+#pragma section data_ov034_021138b0 begin
+void *data_ov034_021138b0[3] = {
+    (void *)&gHanachanHeadDamageAnimationFile,
+    (void *)&gHanachanBody01DamageAnimationFile,
+    (void *)&gHanachanBody02DamageAnimationFile,
 };
+#pragma section data_ov034_021138b0 end

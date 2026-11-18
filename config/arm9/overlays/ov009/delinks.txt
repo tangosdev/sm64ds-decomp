@@ -145,9 +145,6 @@ src/data/ov009/data_ov009_02112bec.c:
     complete
     .data start:0x02112bec end:0x02112bf8
 
-src/data/ov009/data_ov009_02112bf8.c:
-    complete
-    .data start:0x02112bf8 end:0x02112c08
 
 src/data/ov009/data_ov009_02112c08.c:
     complete
@@ -157,9 +154,6 @@ src/data/ov009/data_ov009_02112c18.c:
     complete
     .data start:0x02112c18 end:0x02112c38
 
-src/data/ov009/data_ov009_02112c38.c:
-    complete
-    .data start:0x02112c38 end:0x02112c44
 
 src/data/ov009/data_ov009_02112c44.c:
     complete
@@ -313,9 +307,6 @@ src/data/ov009/data_ov009_02113518.c:
     complete
     .data start:0x02113518 end:0x02113534
 
-src/data/ov009/data_ov009_02113534.c:
-    complete
-    .data start:0x02113534 end:0x02113554
 
 src/data/ov009/data_ov009_02113554.c:
     complete
@@ -329,9 +320,6 @@ src/data/ov009/data_ov009_021135f4.c:
     complete
     .data start:0x021135f4 end:0x021136d4
 
-src/data/ov009/data_ov009_021136d4.c:
-    complete
-    .data start:0x021136d4 end:0x021136f4
 
 src/data/ov009/data_ov009_021136f4.c:
     complete
@@ -405,17 +393,6 @@ src/data/ov009/g_profile_SBIRD.c:
     complete
     .data start:0x02113934 end:0x02113958
 
-src/data/ov009/data_ov009_02113980.c:
-    complete
-    .data start:0x02113980 end:0x02113998
-
-src/data/ov009/data_ov009_02113998.c:
-    complete
-    .data start:0x02113998 end:0x021139b0
-
-src/data/ov009/data_ov009_021139b0.c:
-    complete
-    .data start:0x021139b0 end:0x021139d4
 
 src/data/ov009/_ZTI14daObjMcWater_c.c:
     complete
@@ -433,13 +410,6 @@ src/data/ov009/data_ov009_02113a00.c:
     complete
     .data start:0x02113a00 end:0x02113a18
 
-src/data/ov009/data_ov009_02113a50.c:
-    complete
-    .data start:0x02113a50 end:0x02113a74
-
-src/data/ov009/data_ov009_02113a74.c:
-    complete
-    .data start:0x02113a74 end:0x02113a98
 
 src/data/ov009/_ZTI18daObjMc_Metalnet_c.c:
     complete
@@ -457,17 +427,6 @@ src/data/ov009/g_profile_MC_METALNET.c:
     complete
     .data start:0x02113abc end:0x02113ae0
 
-src/data/ov009/data_ov009_02113b10.c:
-    complete
-    .data start:0x02113b10 end:0x02113b2c
-
-src/data/ov009/data_ov009_02113b2c.c:
-    complete
-    .data start:0x02113b2c end:0x02113b50
-
-src/data/ov009/data_ov009_02113b50.c:
-    complete
-    .data start:0x02113b50 end:0x02113b60
 
 src/data/ov009/_ZTI10daMcFlag_c.c:
     complete
@@ -489,13 +448,6 @@ src/data/ov009/data_ov009_02113b90.c:
     complete
     .data start:0x02113b90 end:0x02113ba0
 
-src/data/ov009/data_ov009_02113c08.c:
-    complete
-    .data start:0x02113c08 end:0x02113c14
-
-src/data/ov009/data_ov009_02113c14.c:
-    complete
-    .data start:0x02113c14 end:0x02113c20
 
 src/game/actors/d_a_obj_mc_water.cpp:
     complete

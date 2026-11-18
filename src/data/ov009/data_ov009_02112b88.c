@@ -5,5 +5,7 @@ extern u32 data_ov009_02112b6c[];
 extern u32 data_ov009_02112bac[];
 
 u32 data_ov009_02112b88[3] = {
-    (u32)&data_ov009_02112b6c, (u32)&data_ov009_02112bac, 0x3a980000,
+    (u32)&data_ov009_02112b6c,
+    (u32)&data_ov009_02112bac,
+    0x3a980000,
 };

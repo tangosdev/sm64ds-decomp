@@ -242,17 +242,6 @@ src/data/ov032/data_ov032_021138d8.c:
     complete
     .data start:0x021138d8 end:0x021138e0
 
-src/data/ov032/data_ov032_021138f0.c:
-    complete
-    .data start:0x021138f0 end:0x021138fc
-
-src/data/ov032/data_ov032_021138fc.c:
-    complete
-    .data start:0x021138fc end:0x02113934
-
-src/data/ov032/data_ov032_02113934.c:
-    complete
-    .data start:0x02113934 end:0x02113960
 
 src/data/ov032/_ZTI14daObjTdWater_c.c:
     complete
@@ -270,17 +259,6 @@ src/data/ov032/data_ov032_02113998.c:
     complete
     .data start:0x02113998 end:0x021139a4
 
-src/data/ov032/data_ov032_021139b0.c:
-    complete
-    .data start:0x021139b0 end:0x021139f4
-
-src/data/ov032/data_ov032_021139f4.c:
-    complete
-    .data start:0x021139f4 end:0x02113a00
-
-src/data/ov032/data_ov032_02113a00.c:
-    complete
-    .data start:0x02113a00 end:0x02113a40
 
 src/game/actors/d_a_obj_td_futa.cpp:
     complete

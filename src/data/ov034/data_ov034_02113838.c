@@ -7,6 +7,13 @@ extern u32 gHanachanBody03ModelFile[];
 extern u32 gHanachanBody04ModelFile[];
 extern u32 gHanachanHeadModelFile[];
 
-const u32 data_ov034_02113838[5] = {
-    (u32)&gHanachanHeadModelFile, (u32)&gHanachanBody01ModelFile, (u32)&gHanachanBody02ModelFile, (u32)&gHanachanBody03ModelFile, (u32)&gHanachanBody04ModelFile,
+#pragma define_section data_ov034_02113838 ".rodata"                                               \
+                                           ".rodata"                                               \
+                                           ".rodata" far_data
+#pragma section data_ov034_02113838 begin
+void *data_ov034_02113838[5] = {
+    (void *)&gHanachanHeadModelFile,   (void *)&gHanachanBody01ModelFile,
+    (void *)&gHanachanBody02ModelFile, (void *)&gHanachanBody03ModelFile,
+    (void *)&gHanachanBody04ModelFile,
 };
+#pragma section data_ov034_02113838 end

@@ -357,9 +357,6 @@ src/data/ov056/data_ov056_021125cc.c:
     complete
     .rodata start:0x021125cc end:0x02112610
 
-src/data/ov056/data_ov056_02112610.c:
-    complete
-    .rodata start:0x02112610 end:0x02112968
 
 src/data/ov056/data_ov056_02112968.c:
     complete
@@ -572,9 +569,6 @@ src/data/ov056/g_profile_EWM_ICE_BLOCK.c:
     complete
     .data start:0x02113344 end:0x02113368
 
-src/data/ov056/data_ov056_021133a8.c:
-    complete
-    .data start:0x021133a8 end:0x02113400
 
 src/data/ov056/data_ov056_02113428.c:
     complete

@@ -1,7 +1,9 @@
 /* ov016 cartridge data at 0x021145e4, 72 bytes. */
 #include "types.h"
 
-#pragma define_section data_ov016_021145e4 ".data.hasira" ".data.hasira" ".data.hasira" far_data
+#pragma define_section data_ov016_021145e4 ".data.hasira"                                          \
+                                           ".data.hasira"                                          \
+                                           ".data.hasira" far_data
 #pragma section data_ov016_021145e4 begin
 u32 data_ov016_021145e4[18] = {
     0xff000000, 0x0dde0107, 0x0ddeec78, 0x60000000, 0xffff0000, 0xf6a0004c,

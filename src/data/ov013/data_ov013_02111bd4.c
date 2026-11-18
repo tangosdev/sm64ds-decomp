@@ -2,5 +2,7 @@
 #include "types.h"
 
 u32 data_ov013_02111bd4[3] = {
-    0x01058fc4, 0x000000ff, 0x00058fc4,
+    0x01058fc4,
+    0x000000ff,
+    0x00058fc4,
 };

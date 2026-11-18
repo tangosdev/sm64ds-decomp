@@ -5,5 +5,6 @@ extern u32 data_ov043_02111b80[];
 extern u32 gKm1KurumaCollisionFile[];
 
 u32 data_ov043_0211241c[2] = {
-    (u32)&gKm1KurumaCollisionFile, (u32)&data_ov043_02111b80,
+    (u32)&gKm1KurumaCollisionFile,
+    (u32)&data_ov043_02111b80,
 };
