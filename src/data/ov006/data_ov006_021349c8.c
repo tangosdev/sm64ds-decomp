@@ -1,0 +1,16 @@
+/* Sprite template list, 7 OamAttrs. */
+#include "types.h"
+#include "OamAttr.h"
+
+#pragma define_section obj ".data.gap13" ".data.gap13" ".data.gap13" far_data
+#pragma section obj begin
+struct OamAttr data_ov006_021349c8[7] = {
+    { 0x00f8, 0x41d1, 0xc300, 0x0000 },
+    { 0x00f8, 0x41df, 0xc302, 0x0000 },
+    { 0x00f8, 0x41ec, 0xc304, 0x0000 },
+    { 0x00f8, 0x41f9, 0xc306, 0x0000 },
+    { 0x00f8, 0x4007, 0xc308, 0x0000 },
+    { 0x00f8, 0x4015, 0xc30a, 0x0000 },
+    { 0x00f8, 0x4022, 0xc30c, 0xffff },
+};
+#pragma section obj end

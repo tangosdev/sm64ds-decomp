@@ -1,0 +1,10 @@
+/* Word table, 2 entries. */
+#include "types.h"
+
+#pragma define_section obj ".rodata.gap3" ".rodata.gap3" ".rodata.gap3" far_data
+#pragma section obj begin
+int sPachinkoPipeKinds[2] = {
+    0x00000001,
+    0x00000002,
+};
+#pragma section obj end
