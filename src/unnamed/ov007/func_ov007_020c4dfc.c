@@ -21,6 +21,8 @@ void func_ov007_020c4dfc(Ov007Picker *self, int half, int color, int alpha) {
     int i;
 
     func_ov007_020c4fcc(color, alpha);
+    /* Kept (#821 r76): a reload pin on the loop bound; no block-copy or type lever (r72-r75)
+       applies to this scalar pin (r20: plain 0x98 of 0x9c). */
     for (i = 0; i < *(int *)&self->limitGroup; i++) {
         func_ov007_020c19cc(self->groups[i]->pointCount, self->groupPoints[i], half, 0x1000);
     }
