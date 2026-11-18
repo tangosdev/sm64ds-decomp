@@ -1562,7 +1562,7 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
     g = &data_020a5634;
     DC_FlushRange((void *)b, dd);
     DC_FlushRange((void *)c, dd);
-    stereo = (p5 == 1) ? 1 : 0;
+    stereo = p5 == 1;
     align = 0xffb0ff / p9;
     if (p14 != 0) {
         q = dd;
