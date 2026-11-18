@@ -2965,7 +2965,7 @@ void daKpa_c::UpdateFootfalls() {
        (mAnmModel.currFrame at 0x12c into r0, then mFootfallLatch at 0x446 into r1)
        + lsl#4/lsr#16 extract. */
     int n = (unsigned short)((unsigned)this->mAnmModel.currFrame >> 12);
-    int wasInWindow = (this->mFootfallLatch != 0) ? 1 : 0;
+    int wasInWindow = this->mFootfallLatch != 0;
     int anim = (int)this->mAnmModel.file;
     int foot = 0;
     this->mFootfallLatch = 0;
