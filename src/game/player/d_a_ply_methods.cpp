@@ -724,6 +724,14 @@ static inline int IsHoldingObject(daPly_c *player) {
     return player->mHeldObj != 0;
 }
 
+static inline int IsRidingShell(daPly_c *player) {
+    return player->mRidingShell != 0;
+}
+
+static inline int HasObjInMouth(daPly_c *player) {
+    return player->mObjInMouth != 0;
+}
+
 static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
@@ -1817,14 +1825,12 @@ void daPly_c::func_ov002_020bdc18() {
 
 void daPly_c::IncMegaKillCount() {
     Vector3 v;
-    int new_var3;
     daObj1UpLogo_c *logo;
     int y;
     if ((mIsMega) == 0) {
         return;
     }
     ++mMegaKillCount;
-    new_var3 = -1;
     if (mMegaKillCount >= 8) {
         mMegaKillCount = 8;
         Sound::PlayBank3(0x6e, mCamSpacePos);
@@ -1835,7 +1841,7 @@ void daPly_c::IncMegaKillCount() {
     v.y = y;
     v.z = mPos.z;
     v.y = y + 0x190000;
-    logo = (daObj1UpLogo_c *)Spawn(0x14b, mMegaKillCount, v, 0, mAreaId, new_var3);
+    logo = (daObj1UpLogo_c *)Spawn(0x14b, mMegaKillCount, v, 0, mAreaId, -1);
     if (logo == 0) {
         return;
     }
@@ -2198,11 +2204,8 @@ void daPly_c::UpdateCharacterChange() {
     if (mCapTimer != 0) {
         mCapTimer--;
     }
-    {
-        char* dummy = data_ov002_02110804;
-        func_ov002_020e69c0(dummy);
-        func_ov002_020e6a78(dummy, mCapPaletteBlend);
-    }
+    func_ov002_020e69c0(data_ov002_02110804);
+    func_ov002_020e6a78(data_ov002_02110804, mCapPaletteBlend);
 }
 
 int daPly_c::func_ov002_020bea7c() {
@@ -2352,12 +2355,10 @@ void daPly_c::SetAnim(u32 animId, int flags, fx32 speed, u16 startFrame) {
     u32 texIdx;
     int character;
     u32 fileBase;
-    int flag;
     int texFlags;
     dExtAnmModel_c *body;
 
-    flag = (gGameMode == 1);
-    if (flag) {
+    if (IsVsMode()) {
         if ((int)animId < 0x11 || (int)animId >= 0x72) {
             mStateFlags |= 0x80;
             return;
@@ -2794,12 +2795,9 @@ int daPly_c::func_ov002_020bfec0() {
 
     mQuicksandRunFlags |= 1;
 
-    {
-        int flag = (mRidingShell != 0);
-        if (flag || mQuicksandRunTimer != 0) {
-            mSinkDepth = 0;
-            return 0;
-        }
+    if (IsRidingShell(this) || mQuicksandRunTimer != 0) {
+        mSinkDepth = 0;
+        return 0;
     }
 
     inc = 0x400;
@@ -3726,7 +3724,7 @@ ang = cstd::atan2(this->mWallNormal.x, this->mWallNormal.z);
 if (AngleDiff(ang, this->mPrevAngle.y) < 0x6000)
     return 0;
 if (this->func_ov002_020c200c(ang)) return 1;
-if ((this->mHeldObj ? 1 : 0) || (this->mRidingShell ? 1 : 0)) return 0;
+if (IsHoldingObject(this) || IsRidingShell(this)) return 0;
 if (this->func_ov002_020c1c84(ang)) return 1;
 return this->func_ov002_020c1ad8(ang);
 }
@@ -3826,12 +3824,8 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     func_02037318(&mMeshClsn);
     mMeshClsn.StopDetectingWater();
 
-    {
-        int b1;
-        b1 = (mRidingShell != 0);
-        if (b1 || mDetectWater || mIsBalloon)
-            mMeshClsn.StartDetectingWater();
-    }
+    if (IsRidingShell(this) || mDetectWater || mIsBalloon)
+        mMeshClsn.StartDetectingWater();
 
     mMeshClsn.StopIgnoringVanishSurfaces();
 
@@ -3850,12 +3844,8 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
 
     mMeshClsn.ClearFlag400();
 
-    {
-        int b2;
-        b2 = (mRidingShell != 0);
-        if (b2)
-            mMeshClsn.SetFlag400();
-    }
+    if (IsRidingShell(this))
+        mMeshClsn.SetFlag400();
 
     mMeshClsn.ClearLimMovFlag();
 
@@ -4835,10 +4825,7 @@ int daPly_c::func_ov002_020c47f4() {
     a = ApproachAngle(&this->mAngle.y, (short)(Vec3_HorzAngle(&mStateTarget, &vec) + 0x8000), 4,
                       0x1000, 0x200);
     mHeadRotMode = 3;
-    // early return schedules the r==0 exit before the mHeadRotMode store at +0xb0
-    if (r == 0) goto ret0;
-    if (a == 0) return 1;
-ret0:
+    if (r != 0 && a == 0) return 1;
     return 0;
 }
 
@@ -5617,12 +5604,10 @@ int daPly_c::func_ov002_020c607c(int p1, int p2, int *outptr) {
             dActor_c *found = dActor_c::FindWithID((u32)rc.GetClsnID());
             mLineClsnActor = found;
             if (found != 0) {
-                int flag = (found->mFlags & 0x1000000) ? 1 : 0;
-                if (flag != 0) {
+                if (IsFlagSet(found, 0x1000000)) {
                     return 1;
                 }
-                flag = (found->mFlags & 0x2000000) ? 1 : 0;
-                if (flag != 0) {
+                if (IsFlagSet(found, 0x2000000)) {
                     return 2;
                 }
             }
@@ -5795,10 +5780,7 @@ int daPly_c::St_Squish_Main() {
                 {
                     dActor_c *a = mAttachedActor;
                     if (a != 0) {
-                        u16 id = a->actorID;
-                        int b1 = (id == 0xa4);
-                        int b2;
-                        if (b1 || (b2 = (id == 0xa5)) != 0)
+                        if (IsActorID(a, 0xa4) || IsActorID(a, 0xa5))
                             /* daBtn_c::unk_407: daBtn_c.h is not included here (it would
                                renumber this file's compiler-generated names). */
                             *((u8 *)a + 0x407) = 1;
@@ -6744,7 +6726,6 @@ int daPly_c::St_NoControl_Main() {
 unsigned char daPly_c::func_ov002_020c84b0() {
     Vector3 v;
     short ang;
-dummy_label_675641:;
     v.x = this->mPos.x;
     v.y = this->mPos.y;
     v.z = this->mPos.z;
@@ -7050,7 +7031,6 @@ int daPly_c::func_ov002_020c904c() {
     typedef int s32;
     typedef unsigned char u8;
     int mid;
-    char *anim;
     ApproachLinear(this->mPos.x, this->mStateTarget.x, 0x8000);
     ApproachLinear(this->mPos.z, this->mStateTarget.z, 0x8000);
     if (Math_Function_0203b14c(&mPos.y, (this->mGroundY) + 0x190000, 0x200, 0x64000, 0x10000) ==
@@ -7438,14 +7418,9 @@ int daPly_c::func_ov002_020c9d1c() {
 }
 
 void daPly_c::func_ov002_020c9d68() {
-  if(mIsAirborne == 0){
-      int b = (mRidingShell != 0);
-      // a flag in front of one SetAnim diffs 7 words from +0x10; duplicating SetAnim grows 0x7c -> 0x98
-      if (b == 0)
-          goto tail;
-  }
-  this->SetAnim(0x54, 0x40000000, 0x1000, 0);
-tail:
+    if (mIsAirborne != 0 || IsRidingShell(this)) {
+        this->SetAnim(0x54, 0x40000000, 0x1000, 0);
+    }
     this->mAngle.y = GetAngleToCamera(mPlayerNo);
     this->mPrevAngle.y = this->mAngle.y;
     mStateStep = 0;
@@ -7682,7 +7657,6 @@ int daPly_c::Unk_020ca488() {
  */
 
 int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
-    int *pos = (int *)&pos_;
     if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_0211043c)) {
         if (this->SetNoControlState(0xa, -1, 0)) {
             mStateAnchor = pos_;
@@ -8015,22 +7989,11 @@ void daPly_c::ClearClimbCollider() {
  * coined. */
 
 int daPly_c::StartClimb(dCc_c *clsn) {
-    int b354, b358;
+    if (IsState(data_ov002_0211013c) != 0 || mClimbCooldown != 0 || IsRidingShell(this) ||
+        mClimbClsn != 0 || IsHoldingObject(this) || mIsTakingDamage != 0 || mIsNoControl != 0 ||
+        mIsUnderwater != 0 || mIsMega != 0)
+        return 0;
 
-    if (IsState(data_ov002_0211013c) == 0 && mClimbCooldown == 0) {
-        b354 = (mRidingShell != 0);
-        if (b354 == 0 && mClimbClsn == 0) {
-            b358 = (mHeldObj != 0);
-            if (b358 == 0 && mIsTakingDamage == 0 && mIsNoControl == 0 && mIsUnderwater == 0 &&
-                mIsMega == 0) {
-                // structured returns grow the function 0x1c4 -> 0x1e0
-                goto cont;
-            }
-        }
-    }
-    return 0;
-
-cont:
     if (IsInAir() != 0)
         goto state_check;
     if (IsBeingShotOutOfCannon() != 0)
@@ -8441,7 +8404,6 @@ int daPly_c::St_Climb_Init() {
 int daPly_c::func_ov002_020cbea8() {
     daPly_c *o;
     int amt;
-    int b;
     int ca8;
     int *p;
     int t;
@@ -8453,8 +8415,7 @@ int daPly_c::func_ov002_020cbea8() {
     o = (daPly_c *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
     if (o == 0 || o == this)
         return 0;
-    b = (o->actorID == 0xbf);
-    if (b == 0) return 0;
+    if (!IsPlayerActor(o)) return 0;
     if (mClimbClsn == 0 || o->mClimbClsn == 0)
         return 0;
     if (func_ov002_020cc01c() != 0 || o->func_ov002_020cc01c() != 0)
@@ -8584,8 +8545,7 @@ int daPly_c::St_Shell_Main() {
         if (res->GetClsnID() != -1) {
             dActor_c *a = dActor_c::FindWithID(res->GetClsnID());
             if (a) {
-                u16 type = a->actorID;
-                if ((type == 0x14 ? flag : 0) || (type == 0x15 ? 1 : 0)) {
+                if (IsActorID(a, 0x14) || IsActorID(a, 0x15)) {
                     ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
                     flag = 0;
                 }
@@ -8935,12 +8895,8 @@ int daPly_c::St_MetalWaterGround_Main() {
 
 int daPly_c::St_MetalWaterGround_Init() {
     dActor_c *p = mHeldObj;
-    int b0 = (p != 0);
-    if (b0) {
-        int h = p->actorID;
-        int b1 = (h == 0x10c);
-        int b2;
-        if (b1 || (b2 = (h == 0x10b)) != 0) {
+    if (IsHoldingObject(this)) {
+        if (IsActorID(p, 0x10c) || IsActorID(p, 0x10b)) {
             p->mFlags &= ~0x4000;
             mHeldObj->mFlags &= ~0x100;
             mHeldObj = 0;
@@ -9790,13 +9746,10 @@ int daPly_c::func_ov002_020cef84() {
     v1.y = y1 + 0x64000;
     v2.y = y2 + 0x96000;
     lim = 0x8c000;
-    {
-        int t = mHeldObj != 0;
-        if (t != false) {
-            if (param1 == 2) {
-                v2.y += 0x32000;
-                lim = 0xb4000;
-            }
+    if (IsHoldingObject(this)) {
+        if (param1 == 2) {
+            v2.y += 0x32000;
+            lim = 0xb4000;
         }
     }
     line.StopIgnoringVanishSurfaces();
@@ -9806,8 +9759,7 @@ int daPly_c::func_ov002_020cef84() {
     if (line.DetectClsn()) {
         ::Vector3 cp = line.GetClsnPos();
         if (line.surface.clps.GetSurfaceType() == 3) {
-            int t2 = mHeldObj != 0;
-            if (t2 == false) {
+            if (!IsHoldingObject(this)) {
                 ChangeState(data_ov002_0211001c);
                 mPos.y = cp.y - 0x78000;
                 return 1;
@@ -10398,23 +10350,11 @@ int daPly_c::func_ov002_020d0178(int arg1, int flag) {
 }
 
 int daPly_c::func_ov002_020d0580() {
+    if (GetHealth() == 0 || mIsNoControl != 0 || mIsUnderwater != 0 || IsRidingShell(this) ||
+        mClimbClsn != 0 || IsHoldingObject(this) || mIsTakingDamage != 0 || mIsBalloon != 0 ||
+        IsInAir() == 0 || func_ov002_020d0d2c() != 0)
+        return 0;
 
-    int b354, b358;
-
-    if (GetHealth() != 0 && mIsNoControl == 0 && mIsUnderwater == 0) {
-        b354 = (mRidingShell != 0);
-        if (b354 == 0 && mClimbClsn == 0) {
-            b358 = (mHeldObj != 0);
-            if (b358 == 0 && mIsTakingDamage == 0 && mIsBalloon == 0 && IsInAir() != 0 &&
-                func_ov002_020d0d2c() == 0) {
-                // else-return grows the function 0x140 -> 0x158
-                goto cont;
-            }
-        }
-    }
-    return 0;
-
-cont:
     if (IsState(data_ov002_021105a4)) {
         if (mStateStep != 0)
             return 0;
@@ -10430,25 +10370,16 @@ cont:
 
 int daPly_c::func_ov002_020d06c0() {
 
-    int thresh, b354, b358;
+    int thresh;
 
     if (!IsState(data_ov002_021101b4))
         return 0;
 
-    if (GetHealth() != 0 && mHoldHeavyTimer == 0 && mIsUnderwater == 0) {
-        b354 = (mRidingShell != 0);
-        if (b354 == 0 && mClimbClsn == 0) {
-            b358 = (mHeldObj != 0);
-            if (b358 == 0 && mIsTakingDamage == 0 && mIsBalloon == 0 &&
-                IsState(data_ov002_0211001c) == 0 && mIsAirborne != 0) {
-                // else-return grows the function 0x164 -> 0x17c
-                goto cont;
-            }
-        }
-    }
-    return 0;
+    if (GetHealth() == 0 || mHoldHeavyTimer != 0 || mIsUnderwater != 0 || IsRidingShell(this) ||
+        mClimbClsn != 0 || IsHoldingObject(this) || mIsTakingDamage != 0 || mIsBalloon != 0 ||
+        IsState(data_ov002_0211001c) != 0 || mIsAirborne == 0)
+        return 0;
 
-cont:
     if (mHorzSpeed > ScaleByCharFactor(0x14000))
         return 0;
 
@@ -13169,8 +13100,7 @@ int daPly_c::St_Swallow_Init() {
         if (((dActor_c *)o)->OnYoshiTryEat() == 4) {
             DisableInteraction();
         }
-        int eq = mObjInMouth->actorID == 0xbf;
-        if (eq != 0) {
+        if (IsPlayerActor(mObjInMouth)) {
             this->ChangeState(data_ov002_02110034);
             return 1;
         }
@@ -13351,8 +13281,7 @@ int daPly_c::func_ov002_020d6c60(daPly_c *other) {
     /* early returns change size 0x14c to 0x148 with || and to 0x15c when split */
     if (other->func_ov002_020d82f0() == 0)
         goto ret0a;
-    b = (other->mObjInMouth != 0);
-    if (b == 0)
+    if (!HasObjInMouth(other))
         goto l48;
 ret0a:
     return 0;
@@ -13446,8 +13375,7 @@ int daPly_c::TongueWallProbe() {
 }
 
 int daPly_c::func_ov002_020d7030(void *b) {
-    int flag = (((dActor_c *)b)->mFlags & 0x60000) != 0;
-    if (flag)
+    if (IsFlagSet((dActor_c *)b, 0x60000))
         return 0;
     ((dActor_c *)b)->mFlags |= 0x20000;
     ((dActor_c *)b)->mEatingPlayer = this;
@@ -14528,7 +14456,6 @@ int daPly_c::func_ov002_020d93ac() {
     dActor_c *spawned;
     u32 chr;
     int xv, yv, sum, zv;
-    int b;
     int ang, xx, zz;
 
     // return 0 at each check grows this function 0x120 -> 0x140
@@ -14551,8 +14478,7 @@ int daPly_c::func_ov002_020d93ac() {
     spawned = Spawn(0x10d, (chr << 8) | 5, pos, 0, this->mAreaId, -1);
     if (spawned == 0) goto fail;
 
-    b = (gGameMode == 1);
-    if (!b) {
+    if (!IsVsMode()) {
         ang = GetAngleToCamera(this->mPlayerNo);
         zz = this->mPrevAngle.z;
         xx = this->mPrevAngle.x;
@@ -14579,15 +14505,13 @@ int daPly_c::func_ov002_020d94cc() {
     dActor_c *spawned;
     int ang, xx, zz;
     int xv, yv, sum, zv;
-    int b;
 
     // return 0 at each check grows this function 0x188 -> 0x190
     if ((&gNumStageStars)[this->mPlayerNo] <= 0)
         goto fail;
 
     sndobj = SpawnSoundObj(3);
-    b = (gGameMode == 1);
-    if (b) {
+    if (IsVsMode()) {
         if (sndobj != 0)
             ((daSoundObj_c *)sndobj)->mSoundID = 0x50;
     }
@@ -14602,8 +14526,7 @@ int daPly_c::func_ov002_020d94cc() {
     pos.y = sum;
     pos.z = zv;
 
-    b = (gGameMode == 1);
-    if (b)
+    if (IsVsMode())
         spawned = Spawn(0xb2, 0x10, pos, 0, this->mAreaId, -1);
     else
         spawned = Spawn(0xb3, 0x10, pos, 0, this->mAreaId, -1);
@@ -14612,8 +14535,7 @@ int daPly_c::func_ov002_020d94cc() {
 
     ((daStar_c *)spawned)->SeekNewMarker(this, 0);
 
-    b = (gGameMode == 1);
-    if (!b) {
+    if (!IsVsMode()) {
         ang = GetAngleToCamera(this->mPlayerNo);
         zz = this->mPrevAngle.z;
         xx = this->mPrevAngle.x;
@@ -14857,13 +14779,9 @@ void daPly_c::func_ov002_020d9c70() {
     if (p == 0)
         return;
 
-    {
-        int t = p->actorID;
-        t = t == 0xbf;
-        if (t != false) {
-            func_ov002_020db54c(p, A, 0x20000, Bresult);
-            return;
-        }
+    if (IsPlayerActor(p)) {
+        func_ov002_020db54c(p, A, 0x20000, Bresult);
+        return;
     }
 
     p->mPrevAngle.x = 0;
@@ -15217,14 +15135,11 @@ int daPly_c::DropActor() {
         }
         return 1;
     }
-    {
-        int b = (mObjInMouth != 0);
-        if (!b) {
-            return 0;
-        }
-        this->ChangeState(data_ov002_02110034);
-        return 1;
+    if (!HasObjInMouth(this)) {
+        return 0;
     }
+    this->ChangeState(data_ov002_02110034);
+    return 1;
 }
 
 int daPly_c::func_ov002_020da95c() {
@@ -15314,7 +15229,6 @@ int daPly_c::TryGrab(dActor_c &actor_) {
     }
 
 int daPly_c::func_ov002_020dacb4(dActor_c *actor) {
-    int t;
 
     mHeldObj = actor;
     mHeldObj->mFlags &= ~0x400;
@@ -15325,46 +15239,27 @@ int daPly_c::func_ov002_020dacb4(dActor_c *actor) {
     if (mIsUnderwater != 0) {
         func_ov002_020cd28c(this);
     } else {
-        t = 0;
-        if (mHeldObj->actorID == 0x116)
-            t = 1;
-        if (t != 0) {
+        if (IsActorID(mHeldObj, 0x116)) {
             mStateStep = 0;
             ChangeState(data_ov002_021105ec);
             return 1;
         }
         if (!IsState(data_ov002_021105bc)) {
-            unsigned short fc;
-            int u;
             mStateStep = 0;
-            fc = mHeldObj->actorID;
-            t = 0;
-            if (fc == 0xbd) t = 1;
-            // structured form grows this function 0x1b8 -> 0x1c0
-            if (t != 0) goto chg394;
-            u = fc;
-            u = u == 0xbe;
-            if (u == false) goto chg364;
-        chg394:
-            ChangeState(data_ov002_02110394);
-            goto after;
-        chg364:
-            ChangeState(data_ov002_02110364);
-        after: ;
+            if (IsActorID(mHeldObj, 0xbd) || IsActorID(mHeldObj, 0xbe))
+                ChangeState(data_ov002_02110394);
+            else
+                ChangeState(data_ov002_02110364);
         }
     }
 
     {
         dActor_c *a2 = mHeldObj;
         int offset = 0xc4;
-        int s = a2->mFlags;
-        s = (s & 0x8000) != false;
-        if (s != false) {
+        if (IsFlagSet(a2, 0x8000)) {
             offset = 0x224;
             if (param1 == 2) {
-                int c = a2->actorID;
-                c = c == 0xce;
-                if (c != false) offset = 0xc4;
+                if (IsActorID(a2, 0xce)) offset = 0xc4;
             }
         }
         {
@@ -15391,20 +15286,11 @@ int daPly_c::St_Throw_Main() {
                 r4 = 0;
         }
         dActor_c *q = mHeldObj;
-        unsigned short a = q->actorID;
-        int t1 = (a == 0xbd);
-        // folding the two id tests shrinks this function 0x168 -> 0x164
-        if (!t1) {
-            int t2 = (a == 0xbe);
-            if (!t2)
-                goto Lb8;
-        }
-        r4 = 7;
-        goto Ld0;
-    Lb8:
-        if (IsFlagSet(q, 0x200))
+        if (IsActorID(q, 0xbd) || IsActorID(q, 0xbe)) {
+            r4 = 7;
+        } else if (IsFlagSet(q, 0x200)) {
             r4 = 0xd;
-    Ld0:
+        }
         int id2 = this->GetBodyModelID(param1 & 0xff, 0);
         dExtAnmModel_c *anim2 = mModels.mBodyModels[id2];
         if (anim2->WillHitFrame(r4)) {
@@ -15427,19 +15313,11 @@ int daPly_c::St_Throw_Main() {
 int daPly_c::St_Throw_Init() {
     dActor_c *held = mHeldObj;
     if (!IsFlagSet(held, 0x200)) {
-        unsigned short a = held->actorID;
-        int t1 = (a == 0xbd);
-        // folding the two id tests differs at +0x3c
-        if (!t1) {
-            int t2 = (a == 0xbe);
-            if (!t2)
-                goto anim30;
+        if (IsActorID(held, 0xbd) || IsActorID(held, 0xbe)) {
+            this->SetAnim(0x91, 0x40000000, 0x1000, 0);
+        } else {
+            this->SetAnim(0x30, 0x40000000, 0x1000, 0);
         }
-        this->SetAnim(0x91, 0x40000000, 0x1000, 0);
-        goto voice;
-    anim30:
-        this->SetAnim(0x30, 0x40000000, 0x1000, 0);
-    voice:
         Sound::PlayCharVoice(mCharacter, 0x13, mCamSpacePos);
     } else {
         this->SetAnim(0x8a, 0x40000000, 0x1000, 0);
@@ -15545,8 +15423,7 @@ int daPly_c::St_Grabbed_Cleanup() {
     *&mdCcAcPos_c.flags &= ~2;
     a = (daPly_c *)mGrabbedByActor;
     if (a) {
-        int isBob = (a)->actorID == 0xbf;
-        if (isBob) {
+        if (IsPlayerActor(a)) {
             a->DropActor();
             mGrabbedByActor = 0;
         }
@@ -15748,7 +15625,6 @@ void daPly_c::func_ov002_020db8d8() {
     int model;
     Matrix4x3 *m;
     int b;
-    int cond;
     backup = mPos;
     b = this->mUseAltBodyModel;
     m = &mModels.mHeadModels[(b << 2) + 3]->data.transforms[3];
@@ -15759,8 +15635,7 @@ void daPly_c::func_ov002_020db8d8() {
     dir.x = 0;
     dir.z = 0;
     dir.y = -0x32000;
-    cond = (gGameMode == 1);
-    if (cond != 0) {
+    if (IsVsMode()) {
         SetAttackClsn(&dir, 0x46000, 0x96000, 0x8000, 0);
     } else {
         SetAttackClsn(&dir, 0x32000, 0x64000, 0x8000, 0);
@@ -16637,18 +16512,13 @@ void daPly_c::func_ov002_020dd5ec() {
     extern u16 data_0209f49c[];
     extern int data_ov002_0210e160;
     int model;
-    int *new_var3;
-    int *p;
     int r;
     int idx;
-    int *new_var;
-    int new_var2;
     if (data_0209f498[gActivePlayerSlot].held & 2) {
         mPunchKickStep = 2;
     }
     SetAnim(data_ov002_0210a5c0[mPunchKickStep], 0x40000000, 0x1000, 0);
     model = GetBodyModelID(param1 & 0xff, 0);
-    new_var2 = -0x4000;
     dExtFrameCtrl_c *ctrl = &(dExtFrameCtrl_c &)*mModels.mBodyModels[model];
     if ((this && this) && this) {
     }
@@ -16657,7 +16527,7 @@ void daPly_c::func_ov002_020dd5ec() {
     if ((mPunchKickStep) == 2) {
         if (((data_0209f498[gActivePlayerSlot].held & 2) != 0) || ((mIsAirborne) != 0)) {
             mSpeed.y = 0x20000;
-            mVertAccel = new_var2;
+            mVertAccel = -0x4000;
         } else {
             mSpeed.y = 0xc000;
             mVertAccel = -0x1800;
@@ -18772,7 +18642,6 @@ int daPly_c::St_Jump_Main() {
 /* jump animation, by combo stage */
 /* the winged-jump state */
 int daPly_c::St_Jump_Init() {
-    int t;
 
     mJumpedFromQuicksand = 0;
     if (TrySteepJump() != 0)
@@ -18788,15 +18657,8 @@ int daPly_c::St_Jump_Init() {
         mJumpComboStage = (mJumpComboStage + 1) % 3;
     }
 
-    // if/else around the combo clear grows this function 0x314 -> 0x318
-    if (mSinkDepth > 0x1000)
-        goto clear;
-    t = (mHeldObj != 0);
-    if (t == false)
-        goto skipclear;
-clear:
-    mJumpComboStage = 0;
-skipclear:
+    if (mSinkDepth > 0x1000 || IsHoldingObject(this))
+        mJumpComboStage = 0;
 
     if (mIsMega != 0)
         mJumpComboStage = 0;
@@ -18880,8 +18742,6 @@ int daPly_c::CheckAirCancels() {
     extern u16 data_0209f49e[];
     u16 buttons;
     dActor_c *held;
-    int b1;
-    int b2;
 
     if (func_ov002_020d5c6c())
         return 1;
@@ -18904,11 +18764,8 @@ int daPly_c::CheckAirCancels() {
         goto ret0;
 
     held = mHeldObj;
-    b1 = !!held;
-    if (b1 != false) {
-        b2 = held->mFlags;
-        b2 = ((b2 & 0x200) != 0);
-        if (b2 == false) {
+    if (IsHoldingObject(this)) {
+        if (!IsFlagSet(held, 0x200)) {
             ChangeState(data_ov002_021105d4);
         }
         return 1;
@@ -19638,7 +19495,7 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     extern int data_020a0e68[12];
     void func_0203c178(int *dst, int a, int b, int c);
     void MTX_Concat33(int *dst, const int *a, const int *b);
-    int ip = (gCurrentSublevel == 0x2f) ? 1 : 0;
+    int ip = (gCurrentSublevel == 0x2f);
 
     if (!ip) {
         if (gCurrentSublevel != 5)
@@ -19688,8 +19545,6 @@ int daPly_c::func_ov002_020e3f90() {
     Vector3s angs;
     Vector3 v;
     Vector3 tgt;
-    int b;
-    int t;
     daPly_c *p;
     unsigned int n;
     char* m;
@@ -19699,19 +19554,14 @@ int daPly_c::func_ov002_020e3f90() {
     if (mGrabbedByActor->mCarryMatrix == 0)
         return 0;
 
-    b = 0;
     v.x = 0;
     v.y = 0;
     v.z = 0;
     data_020a0e68 = *mGrabbedByActor->mCarryMatrix;
     p = (daPly_c *)mGrabbedByActor;
-    if ((p)->actorID == 0xbf)
-        b = 1;
-    if (b != 0) {
-        t = (unsigned int)(p->mHeldObj != 0);
-        if (t == 0) return 0;
-        t = (unsigned int)(((int)mFlags & 0x4000) != 0);
-        if (t == 0) return 0;
+    if (IsPlayerActor(p)) {
+        if (!IsHoldingObject(p)) return 0;
+        if (!IsFlagSet(this, 0x4000)) return 0;
         if ((unsigned int)(((int)p->mCharFileBase >> 2) - 0x6c) <= 1) {
             tgt.x = -0x3000;
             tgt.y = -0x1000;
@@ -19739,8 +19589,7 @@ int daPly_c::func_ov002_020e3f90() {
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
         Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
     } else {
-        t = (unsigned int)((p)->actorID == 0xbd);
-        if (t != 0) {
+        if (IsActorID(p, 0xbd)) {
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x5800, -0x6800, -0x2000);
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x3c71, 0x38e, -0x4e38);
         } else {
