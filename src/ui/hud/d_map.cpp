@@ -562,19 +562,19 @@ s32 dMap_c::Behavior()
             data_0209d660 == 0 &&
             ((touching = data_0209f498[gActivePlayerSlot].touching) != 0 ||
              this->mTouchCircleTimer != 0)) {
-        gSubScreenLayers |= 4;
-        if (touching != 0) {
-            this->mTouchCircleTimer = 30;
-            SetSubBg2Offset(256 - data_0209f498[gActivePlayerSlot].tx,
-                            128 - data_0209f498[gActivePlayerSlot].ty);
-        }
-        G2S_SetBlendAlpha(4, 0x28, 4, 0xd);
-        if (data_0209f498[gActivePlayerSlot].mode != 2)
-            G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
-                                  GX_BG_SCRBASE_0x9800, GX_BG_CHARBASE_0x00000);
-        else
-            G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
-                                  GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
+            gSubScreenLayers |= 4;
+            if (touching != 0) {
+                this->mTouchCircleTimer = 30;
+                SetSubBg2Offset(256 - data_0209f498[gActivePlayerSlot].tx,
+                                128 - data_0209f498[gActivePlayerSlot].ty);
+            }
+            G2S_SetBlendAlpha(4, 0x28, 4, 0xd);
+            if (data_0209f498[gActivePlayerSlot].mode != 2)
+                G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
+                                      GX_BG_SCRBASE_0x9800, GX_BG_CHARBASE_0x00000);
+            else
+                G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
+                                      GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
         } else {
             s32 b = (gGameMode == 1);
             if (b != 0 || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
@@ -673,15 +673,27 @@ s32 dMap_c::Behavior()
             if ((SublevelToLevel(gCurrentSublevel) == 0x1d &&
                  (gCurrentSublevel != 1 || (gCurrentSublevel != 0x33 && gCurrentSublevel != 3))) ||
                 (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e)) {
-                if (this->mPlayerIconX[p] < 0x60) { miniPos.x = 0x60000; }
-                else if (this->mPlayerIconX[p] > 0xa0) { miniPos.x = 0xa0000; }
-                if (this->mPlayerIconY[p] < 0x40) { miniPos.z = 0x40000; }
-                else if (this->mPlayerIconY[p] > 0x80) { miniPos.z = 0x80000; }
+                if (this->mPlayerIconX[p] < 0x60) {
+                    miniPos.x = 0x60000;
+                } else if (this->mPlayerIconX[p] > 0xa0) {
+                    miniPos.x = 0xa0000;
+                }
+                if (this->mPlayerIconY[p] < 0x40) {
+                    miniPos.z = 0x40000;
+                } else if (this->mPlayerIconY[p] > 0x80) {
+                    miniPos.z = 0x80000;
+                }
             } else {
-                if (this->mPlayerIconX[p] < 0x24) { miniPos.x = 0x24000; }
-                else if (this->mPlayerIconX[p] > 0xdc) { miniPos.x = 0xdc000; }
-                if (this->mPlayerIconY[p] < 0x24) { miniPos.z = 0x24000; }
-                else if (this->mPlayerIconY[p] > 0x9c) { miniPos.z = 0x9c000; }
+                if (this->mPlayerIconX[p] < 0x24) {
+                    miniPos.x = 0x24000;
+                } else if (this->mPlayerIconX[p] > 0xdc) {
+                    miniPos.x = 0xdc000;
+                }
+                if (this->mPlayerIconY[p] < 0x24) {
+                    miniPos.z = 0x24000;
+                } else if (this->mPlayerIconY[p] > 0x9c) {
+                    miniPos.z = 0x9c000;
+                }
             }
         }
 
@@ -912,7 +924,8 @@ int dMap_c::InitResources()
 
     mTargetInvScale = GetMinimapScale(data_ov002_02111148);
 
-    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 && (int)(gRunningKuppaScript != 0) == 0) {
+    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+        (int)(gRunningKuppaScript != 0) == 0) {
         mInvScale = mTargetInvScale << 1;
         mAngle = 0;
         mInIntroCutscene = 1;
