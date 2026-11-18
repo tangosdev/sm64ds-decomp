@@ -24,8 +24,9 @@
  * - g_profile_SET_SE is ov002 gap data outside this TU (S14), as are the
  *   sound table and the WATERFALL_SOUNDS_DISABLED flag this TU reads and
  *   writes.
- * - InitResources keeps the (int)-cast re-tests (direct tests, bool
- *   locals and inline bool predicates all miss the ROM).
+ * - InitResources tests through the int-returning IsGameMode and
+ *   IsKuppaScriptRunning (#821 r87): direct tests, bool locals and inline
+ *   bool predicates all miss the ROM.
  */
 
 #include "daSetSE_c.h"
@@ -44,6 +45,17 @@ extern int gRunningKuppaScript;    /* RUNNING_KUPPA_SCRIPT */
 
 int IsStarCollectedInLevel(s8 levelID, int starID);
 
+/* gGameMode is 0 in the adventure (StartFile stores it), 1 in VS and 2 in
+   the castle-fall cutscene. These int-returning predicates are what make the
+   ROM materialize 0/1 before testing it. */
+static inline int IsGameMode(int mode) {
+    return gGameMode == mode;
+}
+
+static inline int IsKuppaScriptRunning() {
+    return gRunningKuppaScript != 0;
+}
+
 daSetSE_c *daSetSE_c_classInit() {
     return new daSetSE_c();
 }
@@ -61,13 +73,10 @@ int daSetSE_c::InitResources()
     int soundID = param1 & 15;
     param1 = soundID;
 
-    /* The (int) casts are load-bearing, not noise: each forces its boolean
-       to materialize into a word before the re-test, and spelling the
-       tests directly comes out six words short of the ROM.
-       Kept (#821 r81): `disabled = <the && chain>;` and a
-       `!gRunningKuppaScript` test are both 0xb8 of 0xd0. */
-    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
-        (int)(gRunningKuppaScript != 0) == 0)
+    /* The same test as Message.cpp's and dMap_c's: the adventure, before
+       the intro is done, with no cutscene script running. */
+    if (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+        !IsKuppaScriptRunning())
         disabled = 1;
     else
         disabled = 0;
