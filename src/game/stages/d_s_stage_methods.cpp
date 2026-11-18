@@ -3917,9 +3917,9 @@ int dScStage_c::Render() {
         if (skybox != 0) {
             Matrix4x3 *transform = &skybox->mat4x3;
             Vector3 *cameraPosition = &gCamera->pos;
-            transform->m[9] = cameraPosition->x >> 3;
-            transform->m[10] = cameraPosition->y >> 3;
-            transform->m[11] = cameraPosition->z >> 3;
+            transform->t.x = cameraPosition->x >> 3;
+            transform->t.y = cameraPosition->y >> 3;
+            transform->t.z = cameraPosition->z >> 3;
             mSkyboxModel->Render(0);
         }
     }

@@ -463,14 +463,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@753",
+      "from": "@755",
       "to": "data_ov002_0210d600",
-      "evidence": "Member-pointer constant for daPropeller_Heyho_Fire_c::InitState0. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @757 to @755 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @755 to @753 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "Member-pointer constant for daPropeller_Heyho_Fire_c::InitState0. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @757 to @755 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @755 to @753 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @753 to @755 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@755",
+      "from": "@757",
       "to": "data_ov002_0210d5f8",
-      "evidence": "Member-pointer constant for daPropeller_Heyho_Fire_c::State0. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @759 to @757 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @757 to @755 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "Member-pointer constant for daPropeller_Heyho_Fire_c::State0. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @759 to @757 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @757 to @755 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @755 to @757 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "symbol_binding_rewrites": [

@@ -56,9 +56,9 @@ void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
 
     MTX_Concat43(&rot, &scl, &out);
 
-    out.m[9] = ptcl->offset.x + ptcl->basePosition.x;
-    out.m[10] = ptcl->offset.y + ptcl->basePosition.y;
-    out.m[11] = ptcl->offset.z + ptcl->basePosition.z;
+    out.t.x = ptcl->offset.x + ptcl->basePosition.x;
+    out.t.y = ptcl->offset.y + ptcl->basePosition.y;
+    out.t.z = ptcl->offset.z + ptcl->basePosition.z;
 
     G3_LoadMtx43(mgr->mDrawMatrix);
     G3_MultMtx43(&out);

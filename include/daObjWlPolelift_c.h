@@ -69,7 +69,7 @@ struct daObjWlPolelift_c : dActor_c {
     u16 bounceTimer;                 /* 0x184 */
     u8   pad_186[0x2];               /* 0x186 -- unobserved */
     dExtShadowModel_c shadow;              /* 0x188 */
-    struct Matrix4x3 dropShadowMtx;  /* 0x1b0 */
+    union Matrix4x3 dropShadowMtx;         /* 0x1b0 */
     s32  groundY;                    /* 0x1e0 */
 
     /* Declared first -- the family convention discussed in dActor_c.h.

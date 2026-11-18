@@ -12,6 +12,32 @@
     .data.morayBend start:0x02114908 end:0x02114950 kind:data align:4
     .data.morayTail start:0x02114950 end:0x02114d20 kind:data align:4
     .bss        start:0x02114d20 end:0x02114ea0 kind:bss align:32
+
+src/data/ov016/data_ov016_02113550.c:
+    complete
+    .rodata start:0x02113550 end:0x02113554
+
+src/data/ov016/data_ov016_02113554.c:
+    complete
+    .rodata start:0x02113554 end:0x02113570
+
+src/data/ov016/data_ov016_02113570.c:
+    complete
+    .rodata start:0x02113570 end:0x021135d4
+
+src/data/ov016/data_ov016_021135d4.c:
+    complete
+    .rodata start:0x021135d4 end:0x021135f4
+
+src/data/ov016/data_ov016_021135f4.c:
+    complete
+    .rodata start:0x021135f4 end:0x021136d4
+
+src/data/ov016/data_ov016_021136d4.c:
+    complete
+    .rodata start:0x021136d4 end:0x021136dc
+
+
 src/game/actors/d_a_moray.cpp:
     complete
     .text start:0x021111a0 end:0x0211260c
@@ -20,6 +46,11 @@ src/game/actors/d_a_moray.cpp:
     .data start:0x02114878 end:0x021148c8
     .data.morayBend start:0x02114908 end:0x02114950
     .bss start:0x02114d20 end:0x02114dcc
+
+
+src/data/ov016/data_ov016_021148f0.c:
+    complete
+    .data start:0x021148f0 end:0x02114908
 
 src/game/actors/d_a_obj_ki_fune.cpp:
     complete
@@ -31,6 +62,7 @@ src/game/actors/d_a_obj_ki_fune.cpp:
     .data.morayTail start:0x021149d4 end:0x021149dc
     .bss start:0x02114dcc end:0x02114e1c
 
+
 src/game/actors/d_a_obj_ki_hasira.cpp:
     complete
     .text start:0x02112a00 end:0x02112ef4
@@ -38,6 +70,7 @@ src/game/actors/d_a_obj_ki_hasira.cpp:
     .ctor start:0x02113ac4 end:0x02113ac8
     .data.hasira start:0x02113cac end:0x02113ccc
     .bss start:0x02114e1c end:0x02114e44
+
 
 src/game/actors/d_a_obj_ki_ita.cpp:
     complete
@@ -48,6 +81,7 @@ src/game/actors/d_a_obj_ki_ita.cpp:
     .data.morayTail start:0x02114b8c end:0x02114b98
     .bss start:0x02114e44 end:0x02114e6c
 
+
 src/game/actors/d_a_slide_box.cpp:
     complete
     .text start:0x02112ff8 end:0x0211354c
@@ -55,3 +89,6 @@ src/game/actors/d_a_slide_box.cpp:
     .ctor start:0x02113acc end:0x02113ad0
     .data.slideBox start:0x02113bac end:0x02113bcc
     .bss start:0x02114e6c end:0x02114e94
+src/data/ov016/data_ov016_02114e94.c:
+    complete
+    .bss start:0x02114e94 end:0x02114ea0

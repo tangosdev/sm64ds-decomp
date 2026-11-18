@@ -333,9 +333,9 @@ void daGmch_c::UpdateDrawMatrices()
         return;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     mAnmModel.ApplyOpacity(mState, 0);
 
@@ -356,9 +356,9 @@ void daGmch_c::UpdateDrawMatrices()
 
     mModel.ApplyOpacity((0x20 - mState) & 0xff, 0);
 
-    mMatrix.m[9] = mPos.x >> 3;
-    mMatrix.m[10] = mPos.y >> 3;
-    mMatrix.m[11] = mPos.z >> 3;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = mPos.y >> 3;
+    mMatrix.t.z = mPos.z >> 3;
 
     int dh = (mStateIndex == 8) ? 0x258000 : 0x12c000;
     DropShadowRadHeight(mShadowModel, mMatrix, 0x78000, dh, 0xf);

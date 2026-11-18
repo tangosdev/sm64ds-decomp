@@ -425,9 +425,9 @@ void daObjSwitch_c::OnGroundPounded(dActor_c &other)
 
 void daObjSwitch_c::UpdateClsnMatrix() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y - mDisplacementY;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y - mDisplacementY;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 

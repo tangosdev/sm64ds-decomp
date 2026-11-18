@@ -4557,289 +4557,289 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@500",
-      "to": "pmf_dScMgSound_c_Pop02_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop02_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x550 loads 0x0213f4fc in the ROM) and by its own relocation target (dScMgSound_c::Pop02_Fly at 0x0211b05c)."
-    },
-    {
       "from": "@502",
-      "to": "pmf_dScMgSound_c_Pop02_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop02_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x554 loads 0x0213f504 in the ROM) and by its own relocation target (dScMgSound_c::Pop02_Finish at 0x0211afb0)."
-    },
-    {
-      "from": "@542",
-      "to": "pmf_dScMgSound_c_Pop09_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop09_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5c8 loads 0x0213f50c in the ROM) and by its own relocation target (dScMgSound_c::Pop09_Fly at 0x0211a388)."
-    },
-    {
-      "from": "@552",
-      "to": "pmf_dScMgSound_c_Pop11_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop11_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5d4 loads 0x0213f514 in the ROM) and by its own relocation target (dScMgSound_c::Pop11_Start at 0x0211a048)."
-    },
-    {
-      "from": "@494",
-      "to": "pmf_dScMgSound_c_Pop01_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop01_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x540 loads 0x0213f51c in the ROM) and by its own relocation target (dScMgSound_c::Pop01_Fly at 0x0211b278)."
-    },
-    {
-      "from": "@510",
-      "to": "pmf_dScMgSound_c_Pop04_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop04_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x56c loads 0x0213f524 in the ROM) and by its own relocation target (dScMgSound_c::Pop04_Start at 0x0211ad00)."
-    },
-    {
-      "from": "@498",
-      "to": "pmf_dScMgSound_c_Pop02_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop02_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x530 loads 0x0213f52c in the ROM) and by its own relocation target (dScMgSound_c::Pop02_Start at 0x0211b0ec)."
-    },
-    {
-      "from": "@490",
-      "to": "pmf_dScMgSound_c_Pop00_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop00_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x538 loads 0x0213f534 in the ROM) and by its own relocation target (dScMgSound_c::Pop00_Finish at 0x0211b3e8)."
-    },
-    {
-      "from": "@480",
-      "to": "pmf_dScMgSound_c_Pop10_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop10_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x51c loads 0x0213f53c in the ROM) and by its own relocation target (dScMgSound_c::Pop10_Update at 0x0211a2c4)."
-    },
-    {
-      "from": "@474",
-      "to": "pmf_dScMgSound_c_Pop07_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop07_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x500 loads 0x0213f554 in the ROM) and by its own relocation target (dScMgSound_c::Pop07_Update at 0x0211a7ac)."
-    },
-    {
-      "from": "@478",
-      "to": "pmf_dScMgSound_c_Pop09_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop09_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x518 loads 0x0213f55c in the ROM) and by its own relocation target (dScMgSound_c::Pop09_Update at 0x0211a4b0)."
-    },
-    {
-      "from": "@482",
-      "to": "pmf_dScMgSound_c_Pop11_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop11_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x520 loads 0x0213f564 in the ROM) and by its own relocation target (dScMgSound_c::Pop11_Update at 0x0211a0d8)."
-    },
-    {
-      "from": "@488",
-      "to": "pmf_dScMgSound_c_Pop00_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop00_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x534 loads 0x0213f56c in the ROM) and by its own relocation target (dScMgSound_c::Pop00_Fly at 0x0211b3ec)."
-    },
-    {
-      "from": "@556",
-      "to": "pmf_dScMgSound_c_Pop11_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop11_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5e0 loads 0x0213f574 in the ROM) and by its own relocation target (dScMgSound_c::Pop11_Finish at 0x02119f3c)."
-    },
-    {
-      "from": "@536",
-      "to": "pmf_dScMgSound_c_Pop08_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop08_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5ac loads 0x0213f57c in the ROM) and by its own relocation target (dScMgSound_c::Pop08_Fly at 0x0211a578)."
-    },
-    {
-      "from": "@492",
-      "to": "pmf_dScMgSound_c_Pop01_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop01_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x53c loads 0x0213f584 in the ROM) and by its own relocation target (dScMgSound_c::Pop01_Start at 0x0211b308)."
-    },
-    {
-      "from": "@560",
-      "to": "pmf_dScMgSound_c_Pop12_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop12_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5e8 loads 0x0213f58c in the ROM) and by its own relocation target (dScMgSound_c::Pop12_Fly at 0x02119dc4)."
-    },
-    {
-      "from": "@450",
-      "to": "pmf_dScMgSound_c_Note_StateWait",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4d8 loads 0x0213f594 in the ROM) and by its own relocation target (dScMgSound_c::Note_StateWait at 0x0211bf44)."
-    },
-    {
-      "from": "@550",
-      "to": "pmf_dScMgSound_c_Pop10_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop10_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5cc loads 0x0213f59c in the ROM) and by its own relocation target (dScMgSound_c::Pop10_Finish at 0x0211a128)."
-    },
-    {
-      "from": "@468",
-      "to": "pmf_dScMgSound_c_Pop04_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop04_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x50c loads 0x0213f5a4 in the ROM) and by its own relocation target (dScMgSound_c::Pop04_Update at 0x0211ad44)."
-    },
-    {
-      "from": "@470",
-      "to": "pmf_dScMgSound_c_Pop05_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop05_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x510 loads 0x0213f5ac in the ROM) and by its own relocation target (dScMgSound_c::Pop05_Update at 0x0211abdc)."
-    },
-    {
-      "from": "@462",
-      "to": "pmf_dScMgSound_c_Pop01_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop01_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4f8 loads 0x0213f5b4 in the ROM) and by its own relocation target (dScMgSound_c::Pop01_Update at 0x0211b398)."
-    },
-    {
-      "from": "@546",
-      "to": "pmf_dScMgSound_c_Pop10_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop10_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5c4 loads 0x0213f5bc in the ROM) and by its own relocation target (dScMgSound_c::Pop10_Start at 0x0211a234)."
-    },
-    {
-      "from": "@466",
-      "to": "pmf_dScMgSound_c_Pop03_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop03_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x504 loads 0x0213f5c4 in the ROM) and by its own relocation target (dScMgSound_c::Pop03_Update at 0x0211af60)."
-    },
-    {
-      "from": "@562",
-      "to": "pmf_dScMgSound_c_Pop12_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop12_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5ec loads 0x0213f5cc in the ROM) and by its own relocation target (dScMgSound_c::Pop12_Finish at 0x02119d50)."
-    },
-    {
-      "from": "@540",
-      "to": "pmf_dScMgSound_c_Pop09_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop09_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5b8 loads 0x0213f5d4 in the ROM) and by its own relocation target (dScMgSound_c::Pop09_Start at 0x0211a420)."
-    },
-    {
-      "from": "@516",
-      "to": "pmf_dScMgSound_c_Pop05_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop05_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x57c loads 0x0213f5dc in the ROM) and by its own relocation target (dScMgSound_c::Pop05_Start at 0x0211ab80)."
-    },
-    {
-      "from": "@476",
-      "to": "pmf_dScMgSound_c_Pop08_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop08_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x508 loads 0x0213f5e4 in the ROM) and by its own relocation target (dScMgSound_c::Pop08_Update at 0x0211a648)."
-    },
-    {
-      "from": "@538",
-      "to": "pmf_dScMgSound_c_Pop08_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop08_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5b4 loads 0x0213f5ec in the ROM) and by its own relocation target (dScMgSound_c::Pop08_Finish at 0x0211a500)."
-    },
-    {
-      "from": "@558",
-      "to": "pmf_dScMgSound_c_Pop12_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop12_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5e4 loads 0x0213f5f4 in the ROM) and by its own relocation target (dScMgSound_c::Pop12_Start at 0x02119e5c)."
-    },
-    {
-      "from": "@534",
-      "to": "pmf_dScMgSound_c_Pop08_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop08_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5a8 loads 0x0213f5fc in the ROM) and by its own relocation target (dScMgSound_c::Pop08_Start at 0x0211a5ec)."
-    },
-    {
-      "from": "@484",
-      "to": "pmf_dScMgSound_c_Pop12_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop12_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x524 loads 0x0213f604 in the ROM) and by its own relocation target (dScMgSound_c::Pop12_Update at 0x02119eec)."
-    },
-    {
-      "from": "@486",
-      "to": "pmf_dScMgSound_c_Pop00_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop00_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x528 loads 0x0213f60c in the ROM) and by its own relocation target (dScMgSound_c::Pop00_Start at 0x0211b4fc)."
-    },
-    {
-      "from": "@532",
-      "to": "pmf_dScMgSound_c_Pop07_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop07_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5a4 loads 0x0213f614 in the ROM) and by its own relocation target (dScMgSound_c::Pop07_Finish at 0x0211a698)."
-    },
-    {
-      "from": "@530",
-      "to": "pmf_dScMgSound_c_Pop07_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop07_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5a0 loads 0x0213f61c in the ROM) and by its own relocation target (dScMgSound_c::Pop07_Fly at 0x0211a69c)."
-    },
-    {
-      "from": "@528",
-      "to": "pmf_dScMgSound_c_Pop07_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop07_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x55c loads 0x0213f624 in the ROM) and by its own relocation target (dScMgSound_c::Pop07_Start at 0x0211a714)."
-    },
-    {
-      "from": "@472",
-      "to": "pmf_dScMgSound_c_Pop06_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop06_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x514 loads 0x0213f62c in the ROM) and by its own relocation target (dScMgSound_c::Pop06_Update at 0x0211aa44)."
-    },
-    {
-      "from": "@456",
-      "to": "pmf_dScMgSound_c_Note_StateClosing",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateClosing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4e8 loads 0x0213f634 in the ROM) and by its own relocation target (dScMgSound_c::Note_StateClosing at 0x0211bbe0)."
-    },
-    {
-      "from": "@464",
-      "to": "pmf_dScMgSound_c_Pop02_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop02_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4fc loads 0x0213f63c in the ROM) and by its own relocation target (dScMgSound_c::Pop02_Update at 0x0211b17c)."
-    },
-    {
-      "from": "@554",
-      "to": "pmf_dScMgSound_c_Pop11_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop11_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5dc loads 0x0213f644 in the ROM) and by its own relocation target (dScMgSound_c::Pop11_Fly at 0x02119fb0)."
-    },
-    {
-      "from": "@458",
-      "to": "pmf_dScMgSound_c_Note_StateScroll",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateScroll, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4ec loads 0x0213f64c in the ROM) and by its own relocation target (dScMgSound_c::Note_StateScroll at 0x0211ba88)."
-    },
-    {
-      "from": "@524",
-      "to": "pmf_dScMgSound_c_Pop06_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop06_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x590 loads 0x0213f654 in the ROM) and by its own relocation target (dScMgSound_c::Pop06_Fly at 0x0211a910)."
-    },
-    {
-      "from": "@522",
-      "to": "pmf_dScMgSound_c_Pop06_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop06_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x58c loads 0x0213f664 in the ROM) and by its own relocation target (dScMgSound_c::Pop06_Start at 0x0211a9fc)."
-    },
-    {
-      "from": "@496",
-      "to": "pmf_dScMgSound_c_Pop01_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop01_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x548 loads 0x0213f66c in the ROM) and by its own relocation target (dScMgSound_c::Pop01_Finish at 0x0211b1cc)."
-    },
-    {
-      "from": "@520",
-      "to": "pmf_dScMgSound_c_Pop05_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop05_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x588 loads 0x0213f674 in the ROM) and by its own relocation target (dScMgSound_c::Pop05_Finish at 0x0211aa94)."
-    },
-    {
-      "from": "@514",
-      "to": "pmf_dScMgSound_c_Pop04_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop04_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x574 loads 0x0213f67c in the ROM) and by its own relocation target (dScMgSound_c::Pop04_Finish at 0x0211ac2c)."
-    },
-    {
-      "from": "@518",
-      "to": "pmf_dScMgSound_c_Pop05_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop05_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x580 loads 0x0213f684 in the ROM) and by its own relocation target (dScMgSound_c::Pop05_Fly at 0x0211ab0c)."
-    },
-    {
-      "from": "@548",
-      "to": "pmf_dScMgSound_c_Pop10_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop10_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5d0 loads 0x0213f68c in the ROM) and by its own relocation target (dScMgSound_c::Pop10_Fly at 0x0211a19c)."
-    },
-    {
-      "from": "@452",
-      "to": "pmf_dScMgSound_c_Note_StateOpening",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateOpening, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4dc loads 0x0213f694 in the ROM) and by its own relocation target (dScMgSound_c::Note_StateOpening at 0x0211bc8c)."
-    },
-    {
-      "from": "@454",
-      "to": "pmf_dScMgSound_c_Note_StateOpen",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateOpen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4e4 loads 0x0213f6a4 in the ROM) and by its own relocation target (dScMgSound_c::Note_StateOpen at 0x0211bc68)."
-    },
-    {
-      "from": "@512",
-      "to": "pmf_dScMgSound_c_Pop04_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop04_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x578 loads 0x0213f6ac in the ROM) and by its own relocation target (dScMgSound_c::Pop04_Fly at 0x0211ac30)."
-    },
-    {
-      "from": "@544",
-      "to": "pmf_dScMgSound_c_Pop09_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop09_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5bc loads 0x0213f6b4 in the ROM) and by its own relocation target (dScMgSound_c::Pop09_Finish at 0x0211a314)."
-    },
-    {
-      "from": "@526",
-      "to": "pmf_dScMgSound_c_Pop06_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop06_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x598 loads 0x0213f6bc in the ROM) and by its own relocation target (dScMgSound_c::Pop06_Finish at 0x0211a7fc)."
-    },
-    {
-      "from": "@460",
-      "to": "pmf_dScMgSound_c_Pop00_Update",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop00_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4f0 loads 0x0213f6c4 in the ROM) and by its own relocation target (dScMgSound_c::Pop00_Update at 0x0211b590)."
-    },
-    {
-      "from": "@508",
-      "to": "pmf_dScMgSound_c_Pop03_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop03_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x568 loads 0x0213f6cc in the ROM) and by its own relocation target (dScMgSound_c::Pop03_Finish at 0x0211ad94)."
-    },
-    {
-      "from": "@506",
-      "to": "pmf_dScMgSound_c_Pop03_Fly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop03_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x564 loads 0x0213f6d4 in the ROM) and by its own relocation target (dScMgSound_c::Pop03_Fly at 0x0211ae40)."
+      "to": "pmf_dScMgSound_c_Pop02_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop02_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x550 loads 0x0213f4fc in the ROM) and by its own relocation target (dScMgSound_c::Pop02_Fly at 0x0211b05c). Re-keyed from @500 to @502 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@504",
+      "to": "pmf_dScMgSound_c_Pop02_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop02_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x554 loads 0x0213f504 in the ROM) and by its own relocation target (dScMgSound_c::Pop02_Finish at 0x0211afb0). Re-keyed from @502 to @504 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@544",
+      "to": "pmf_dScMgSound_c_Pop09_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop09_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5c8 loads 0x0213f50c in the ROM) and by its own relocation target (dScMgSound_c::Pop09_Fly at 0x0211a388). Re-keyed from @542 to @544 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@554",
+      "to": "pmf_dScMgSound_c_Pop11_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop11_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5d4 loads 0x0213f514 in the ROM) and by its own relocation target (dScMgSound_c::Pop11_Start at 0x0211a048). Re-keyed from @552 to @554 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@496",
+      "to": "pmf_dScMgSound_c_Pop01_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop01_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x540 loads 0x0213f51c in the ROM) and by its own relocation target (dScMgSound_c::Pop01_Fly at 0x0211b278). Re-keyed from @494 to @496 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@512",
+      "to": "pmf_dScMgSound_c_Pop04_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop04_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x56c loads 0x0213f524 in the ROM) and by its own relocation target (dScMgSound_c::Pop04_Start at 0x0211ad00). Re-keyed from @510 to @512 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@500",
+      "to": "pmf_dScMgSound_c_Pop02_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop02_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x530 loads 0x0213f52c in the ROM) and by its own relocation target (dScMgSound_c::Pop02_Start at 0x0211b0ec). Re-keyed from @498 to @500 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@492",
+      "to": "pmf_dScMgSound_c_Pop00_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop00_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x538 loads 0x0213f534 in the ROM) and by its own relocation target (dScMgSound_c::Pop00_Finish at 0x0211b3e8). Re-keyed from @490 to @492 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@482",
+      "to": "pmf_dScMgSound_c_Pop10_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop10_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x51c loads 0x0213f53c in the ROM) and by its own relocation target (dScMgSound_c::Pop10_Update at 0x0211a2c4). Re-keyed from @480 to @482 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@476",
+      "to": "pmf_dScMgSound_c_Pop07_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop07_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x500 loads 0x0213f554 in the ROM) and by its own relocation target (dScMgSound_c::Pop07_Update at 0x0211a7ac). Re-keyed from @474 to @476 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@480",
+      "to": "pmf_dScMgSound_c_Pop09_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop09_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x518 loads 0x0213f55c in the ROM) and by its own relocation target (dScMgSound_c::Pop09_Update at 0x0211a4b0). Re-keyed from @478 to @480 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@484",
+      "to": "pmf_dScMgSound_c_Pop11_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop11_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x520 loads 0x0213f564 in the ROM) and by its own relocation target (dScMgSound_c::Pop11_Update at 0x0211a0d8). Re-keyed from @482 to @484 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@490",
+      "to": "pmf_dScMgSound_c_Pop00_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop00_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x534 loads 0x0213f56c in the ROM) and by its own relocation target (dScMgSound_c::Pop00_Fly at 0x0211b3ec). Re-keyed from @488 to @490 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@558",
+      "to": "pmf_dScMgSound_c_Pop11_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop11_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5e0 loads 0x0213f574 in the ROM) and by its own relocation target (dScMgSound_c::Pop11_Finish at 0x02119f3c). Re-keyed from @556 to @558 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@538",
+      "to": "pmf_dScMgSound_c_Pop08_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop08_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5ac loads 0x0213f57c in the ROM) and by its own relocation target (dScMgSound_c::Pop08_Fly at 0x0211a578). Re-keyed from @536 to @538 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@494",
+      "to": "pmf_dScMgSound_c_Pop01_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop01_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x53c loads 0x0213f584 in the ROM) and by its own relocation target (dScMgSound_c::Pop01_Start at 0x0211b308). Re-keyed from @492 to @494 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@562",
+      "to": "pmf_dScMgSound_c_Pop12_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop12_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5e8 loads 0x0213f58c in the ROM) and by its own relocation target (dScMgSound_c::Pop12_Fly at 0x02119dc4). Re-keyed from @560 to @562 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@452",
+      "to": "pmf_dScMgSound_c_Note_StateWait",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4d8 loads 0x0213f594 in the ROM) and by its own relocation target (dScMgSound_c::Note_StateWait at 0x0211bf44). Re-keyed from @450 to @452 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@552",
+      "to": "pmf_dScMgSound_c_Pop10_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop10_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5cc loads 0x0213f59c in the ROM) and by its own relocation target (dScMgSound_c::Pop10_Finish at 0x0211a128). Re-keyed from @550 to @552 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@470",
+      "to": "pmf_dScMgSound_c_Pop04_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop04_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x50c loads 0x0213f5a4 in the ROM) and by its own relocation target (dScMgSound_c::Pop04_Update at 0x0211ad44). Re-keyed from @468 to @470 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@472",
+      "to": "pmf_dScMgSound_c_Pop05_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop05_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x510 loads 0x0213f5ac in the ROM) and by its own relocation target (dScMgSound_c::Pop05_Update at 0x0211abdc). Re-keyed from @470 to @472 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@464",
+      "to": "pmf_dScMgSound_c_Pop01_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop01_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4f8 loads 0x0213f5b4 in the ROM) and by its own relocation target (dScMgSound_c::Pop01_Update at 0x0211b398). Re-keyed from @462 to @464 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@548",
+      "to": "pmf_dScMgSound_c_Pop10_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop10_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5c4 loads 0x0213f5bc in the ROM) and by its own relocation target (dScMgSound_c::Pop10_Start at 0x0211a234). Re-keyed from @546 to @548 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@468",
+      "to": "pmf_dScMgSound_c_Pop03_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop03_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x504 loads 0x0213f5c4 in the ROM) and by its own relocation target (dScMgSound_c::Pop03_Update at 0x0211af60). Re-keyed from @466 to @468 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@564",
+      "to": "pmf_dScMgSound_c_Pop12_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop12_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5ec loads 0x0213f5cc in the ROM) and by its own relocation target (dScMgSound_c::Pop12_Finish at 0x02119d50). Re-keyed from @562 to @564 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@542",
+      "to": "pmf_dScMgSound_c_Pop09_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop09_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5b8 loads 0x0213f5d4 in the ROM) and by its own relocation target (dScMgSound_c::Pop09_Start at 0x0211a420). Re-keyed from @540 to @542 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@518",
+      "to": "pmf_dScMgSound_c_Pop05_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop05_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x57c loads 0x0213f5dc in the ROM) and by its own relocation target (dScMgSound_c::Pop05_Start at 0x0211ab80). Re-keyed from @516 to @518 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@478",
+      "to": "pmf_dScMgSound_c_Pop08_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop08_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x508 loads 0x0213f5e4 in the ROM) and by its own relocation target (dScMgSound_c::Pop08_Update at 0x0211a648). Re-keyed from @476 to @478 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@540",
+      "to": "pmf_dScMgSound_c_Pop08_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop08_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5b4 loads 0x0213f5ec in the ROM) and by its own relocation target (dScMgSound_c::Pop08_Finish at 0x0211a500). Re-keyed from @538 to @540 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@560",
+      "to": "pmf_dScMgSound_c_Pop12_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop12_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5e4 loads 0x0213f5f4 in the ROM) and by its own relocation target (dScMgSound_c::Pop12_Start at 0x02119e5c). Re-keyed from @558 to @560 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@536",
+      "to": "pmf_dScMgSound_c_Pop08_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop08_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5a8 loads 0x0213f5fc in the ROM) and by its own relocation target (dScMgSound_c::Pop08_Start at 0x0211a5ec). Re-keyed from @534 to @536 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@486",
+      "to": "pmf_dScMgSound_c_Pop12_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop12_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x524 loads 0x0213f604 in the ROM) and by its own relocation target (dScMgSound_c::Pop12_Update at 0x02119eec). Re-keyed from @484 to @486 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@488",
+      "to": "pmf_dScMgSound_c_Pop00_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop00_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x528 loads 0x0213f60c in the ROM) and by its own relocation target (dScMgSound_c::Pop00_Start at 0x0211b4fc). Re-keyed from @486 to @488 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@534",
+      "to": "pmf_dScMgSound_c_Pop07_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop07_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5a4 loads 0x0213f614 in the ROM) and by its own relocation target (dScMgSound_c::Pop07_Finish at 0x0211a698). Re-keyed from @532 to @534 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@532",
+      "to": "pmf_dScMgSound_c_Pop07_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop07_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5a0 loads 0x0213f61c in the ROM) and by its own relocation target (dScMgSound_c::Pop07_Fly at 0x0211a69c). Re-keyed from @530 to @532 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@530",
+      "to": "pmf_dScMgSound_c_Pop07_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop07_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x55c loads 0x0213f624 in the ROM) and by its own relocation target (dScMgSound_c::Pop07_Start at 0x0211a714). Re-keyed from @528 to @530 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@474",
+      "to": "pmf_dScMgSound_c_Pop06_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop06_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x514 loads 0x0213f62c in the ROM) and by its own relocation target (dScMgSound_c::Pop06_Update at 0x0211aa44). Re-keyed from @472 to @474 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@458",
+      "to": "pmf_dScMgSound_c_Note_StateClosing",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateClosing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4e8 loads 0x0213f634 in the ROM) and by its own relocation target (dScMgSound_c::Note_StateClosing at 0x0211bbe0). Re-keyed from @456 to @458 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@466",
+      "to": "pmf_dScMgSound_c_Pop02_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop02_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4fc loads 0x0213f63c in the ROM) and by its own relocation target (dScMgSound_c::Pop02_Update at 0x0211b17c). Re-keyed from @464 to @466 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@556",
+      "to": "pmf_dScMgSound_c_Pop11_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop11_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5dc loads 0x0213f644 in the ROM) and by its own relocation target (dScMgSound_c::Pop11_Fly at 0x02119fb0). Re-keyed from @554 to @556 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@460",
+      "to": "pmf_dScMgSound_c_Note_StateScroll",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateScroll, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4ec loads 0x0213f64c in the ROM) and by its own relocation target (dScMgSound_c::Note_StateScroll at 0x0211ba88). Re-keyed from @458 to @460 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@526",
+      "to": "pmf_dScMgSound_c_Pop06_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop06_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x590 loads 0x0213f654 in the ROM) and by its own relocation target (dScMgSound_c::Pop06_Fly at 0x0211a910). Re-keyed from @524 to @526 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@524",
+      "to": "pmf_dScMgSound_c_Pop06_Start",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop06_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x58c loads 0x0213f664 in the ROM) and by its own relocation target (dScMgSound_c::Pop06_Start at 0x0211a9fc). Re-keyed from @522 to @524 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@498",
+      "to": "pmf_dScMgSound_c_Pop01_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop01_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x548 loads 0x0213f66c in the ROM) and by its own relocation target (dScMgSound_c::Pop01_Finish at 0x0211b1cc). Re-keyed from @496 to @498 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@522",
+      "to": "pmf_dScMgSound_c_Pop05_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop05_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x588 loads 0x0213f674 in the ROM) and by its own relocation target (dScMgSound_c::Pop05_Finish at 0x0211aa94). Re-keyed from @520 to @522 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@516",
+      "to": "pmf_dScMgSound_c_Pop04_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop04_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x574 loads 0x0213f67c in the ROM) and by its own relocation target (dScMgSound_c::Pop04_Finish at 0x0211ac2c). Re-keyed from @514 to @516 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@520",
+      "to": "pmf_dScMgSound_c_Pop05_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop05_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x580 loads 0x0213f684 in the ROM) and by its own relocation target (dScMgSound_c::Pop05_Fly at 0x0211ab0c). Re-keyed from @518 to @520 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@550",
+      "to": "pmf_dScMgSound_c_Pop10_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop10_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5d0 loads 0x0213f68c in the ROM) and by its own relocation target (dScMgSound_c::Pop10_Fly at 0x0211a19c). Re-keyed from @548 to @550 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@454",
+      "to": "pmf_dScMgSound_c_Note_StateOpening",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateOpening, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4dc loads 0x0213f694 in the ROM) and by its own relocation target (dScMgSound_c::Note_StateOpening at 0x0211bc8c). Re-keyed from @452 to @454 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@456",
+      "to": "pmf_dScMgSound_c_Note_StateOpen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Note_StateOpen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4e4 loads 0x0213f6a4 in the ROM) and by its own relocation target (dScMgSound_c::Note_StateOpen at 0x0211bc68). Re-keyed from @454 to @456 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@514",
+      "to": "pmf_dScMgSound_c_Pop04_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop04_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x578 loads 0x0213f6ac in the ROM) and by its own relocation target (dScMgSound_c::Pop04_Fly at 0x0211ac30). Re-keyed from @512 to @514 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@546",
+      "to": "pmf_dScMgSound_c_Pop09_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop09_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x5bc loads 0x0213f6b4 in the ROM) and by its own relocation target (dScMgSound_c::Pop09_Finish at 0x0211a314). Re-keyed from @544 to @546 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@528",
+      "to": "pmf_dScMgSound_c_Pop06_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop06_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x598 loads 0x0213f6bc in the ROM) and by its own relocation target (dScMgSound_c::Pop06_Finish at 0x0211a7fc). Re-keyed from @526 to @528 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@462",
+      "to": "pmf_dScMgSound_c_Pop00_Update",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop00_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x4f0 loads 0x0213f6c4 in the ROM) and by its own relocation target (dScMgSound_c::Pop00_Update at 0x0211b590). Re-keyed from @460 to @462 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@510",
+      "to": "pmf_dScMgSound_c_Pop03_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop03_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x568 loads 0x0213f6cc in the ROM) and by its own relocation target (dScMgSound_c::Pop03_Finish at 0x0211ad94). Re-keyed from @508 to @510 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@508",
+      "to": "pmf_dScMgSound_c_Pop03_Fly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop03_Fly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x564 loads 0x0213f6d4 in the ROM) and by its own relocation target (dScMgSound_c::Pop03_Fly at 0x0211ae40). Re-keyed from @506 to @508 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@506",
       "to": "pmf_dScMgSound_c_Pop03_Start",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop03_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x558 loads 0x0213f6dc in the ROM) and by its own relocation target (dScMgSound_c::Pop03_Start at 0x0211aed0)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_sound.cpp assigns &dScMgSound_c::Pop03_Start, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_sound.cpp+0x558 loads 0x0213f6dc in the ROM) and by its own relocation target (dScMgSound_c::Pop03_Start at 0x0211aed0). Re-keyed from @504 to @506 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

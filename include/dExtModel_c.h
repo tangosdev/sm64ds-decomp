@@ -231,8 +231,8 @@ struct ModelComponents {
     struct BMD_File *modelFile;        /* 0x00 */
     struct BMD_Material *materials;    /* 0x04 */
     struct ModelBone *bones;           /* 0x08 */
-    struct Matrix4x3 *transforms;      /* 0x0c */
-    struct Matrix4x3 *blendTransforms; /* 0x10 */
+    union Matrix4x3 *transforms;       /* 0x0c */
+    union Matrix4x3 *blendTransforms;  /* 0x10 */
 };
 
 struct dExtModel_c {

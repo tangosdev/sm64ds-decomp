@@ -968,7 +968,7 @@ extern "C" {
 extern SharedFilePtr data_ov002_02110aa4;
 extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
-extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);
+extern void Matrix4x3_ApplyInPlaceToTranslation(union Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 extern u8 gReturnSublevel;
@@ -4268,7 +4268,7 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
     unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
     Vector3 v;
     Vector3 s;
-    MTX_MultVec43((Vector3 *)&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
+    MTX_MultVec43((Vector3 *)&bone->t, &mModels.mBodyModels[id2]->mat4x3, &v);
     Vec3_MulScalar(&s, &v, 0x8000);
     v = s;
     Vec3_RotateYAndTranslate(&v, &v, this->mAngle.y, (const Vector3 *)arg);
@@ -9580,7 +9580,7 @@ int daPly_c::func_ov002_020ce5f8() {
         base = &m1->data.transforms[15];
         idx2 = GetBodyModelID(param1 & 0xff, 0);
         m2 = mModels.mBodyModels[idx2];
-        MTX_MultVec43((Vector3 *)&base->m[9], &m2->mat4x3, &pos);
+        MTX_MultVec43((Vector3 *)&base->t, &m2->mat4x3, &pos);
     }
     Vec3_LslInPlace((int *)&pos, 3);
 
@@ -13528,7 +13528,7 @@ int daPly_c::TongueWallProbe() {
         int model;
         Matrix4x3 *m1 = mModels.mHeadModels[(b << 2) + 3]->data.transforms;
         model = GetBodyModelID(param1 & 0xff, 0);
-        MTX_MultVec43((Vector3 *)&m1->m[9], &mModels.mBodyModels[model]->mat4x3, &p1);
+        MTX_MultVec43((Vector3 *)&m1->t, &mModels.mBodyModels[model]->mat4x3, &p1);
         Vec3_MulScalarInPlace(&p1, 0x8000);
     }
 
@@ -13538,7 +13538,7 @@ int daPly_c::TongueWallProbe() {
         int model2 = GetBodyModelID(param1 & 0xff, 0);
         void *a0, *a1, *a2;
         a1 = mModels.mBodyModels[model2];
-        a0 = &m2i->m[9];
+        a0 = &m2i->t;
         a1 = &((dExtAnmModel_c *)a1)->mat4x3;
         a2 = &p2;
         MTX_MultVec43((Vector3 *)a0, (Matrix4x3 *)a1, (Vector3 *)a2);
@@ -13778,7 +13778,7 @@ int daPly_c::St_YoshiPower_Main() {
                     flag = 0;
                 if (flag != 0) {
                     int id1 = this->GetBodyModelID(this->param1 & 0xff, 0);
-                    MTX_MultVec43((Vector3 *)&t4->m[9], &mModels.mBodyModels[id1]->mat4x3, &tmp);
+                    MTX_MultVec43((Vector3 *)&t4->t, &mModels.mBodyModels[id1]->mat4x3, &tmp);
                     Vec3_MulScalarInPlace(&tmp, 0x8000);
                     dp = mObjInMouth;
                     dp->mPos.x = tmp.x;
@@ -14879,7 +14879,7 @@ void daPly_c::func_ov002_020d98b4() {
         unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
         Vector3 v;
         Vector3 s;
-        MTX_MultVec43((Vector3 *)&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
+        MTX_MultVec43((Vector3 *)&bone->t, &mModels.mBodyModels[id2]->mat4x3, &v);
         Vec3_MulScalar(&s, &v, 0x8000);
         s.y += 0x50000;
         mParticle1 =
@@ -15917,7 +15917,7 @@ void daPly_c::func_ov002_020db8d8() {
     b = this->mUseAltBodyModel;
     m = &mModels.mHeadModels[(b << 2) + 3]->data.transforms[3];
     model = this->GetBodyModelID(param1 & 0xff, 0);
-    MTX_MultVec43((Vector3 *)&m->m[9], &mModels.mBodyModels[model]->mat4x3, &tmp);
+    MTX_MultVec43((Vector3 *)&m->t, &mModels.mBodyModels[model]->mat4x3, &tmp);
     Vec3_MulScalar(&scaled, &tmp, 0x8000);
     mPos = scaled;
     dir.x = 0;
@@ -18003,7 +18003,7 @@ skip:
                          ->data.transforms[14];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MTX_MultVec43((Vector3 *)&bone->m[9], &m2->mat4x3, &vec32);
+                MTX_MultVec43((Vector3 *)&bone->t, &m2->mat4x3, &vec32);
                 Vec3_MulScalarInPlace(&vec32, 0x8000);
                 mParticle2 = Particle::System::New(mParticle2, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
@@ -18014,7 +18014,7 @@ skip:
                          ->data.transforms[11];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MTX_MultVec43((Vector3 *)&bone->m[9], &m2->mat4x3, &vec32);
+                MTX_MultVec43((Vector3 *)&bone->t, &m2->mat4x3, &vec32);
                 Vec3_MulScalarInPlace(&vec32, 0x8000);
                 mParticle3 = Particle::System::New(mParticle3, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
@@ -19866,8 +19866,8 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
         r0 = 0x1086000;
     int t = r0 >> 3;
     t <<= 1;
-    int diff = t - src->m[9];
-    src->m[9] = diff;
+    int diff = t - src->t.x;
+    src->t.x = diff;
 
     func_0203c178(data_020a0e68, -0x1000, 0x1000, 0x1000);
     MTX_Concat33((int *)src, data_020a0e68, (int *)src);
@@ -19948,9 +19948,9 @@ int daPly_c::func_ov002_020e3f90() {
         }
     }
     mShadowMatrix = data_020a0e68;
-    v.x = data_020a0e68.m[9];
-    v.y = data_020a0e68.m[10];
-    v.z = data_020a0e68.m[11];
+    v.x = data_020a0e68.t.x;
+    v.y = data_020a0e68.t.y;
+    v.z = data_020a0e68.t.z;
     mPos.x = v.x << 3;
     mPos.y = v.y << 3;
     mPos.z = v.z << 3;
@@ -19989,7 +19989,7 @@ void daPly_c::func_ov002_020e4374(int *p1, int *p2) {
 }
 
 void daPly_c::func_ov002_020e444c() {
-    extern struct Matrix4x3 data_020a0e68;
+    extern union Matrix4x3 data_020a0e68;
     int sp8, spC;
     int b;
 
@@ -20459,7 +20459,7 @@ after_player_slot:
             Matrix4x3 *t4 = &mModels.mHeadModels[(ch << 2) + 3]->data.transforms[3];
             if (r2 < 0)
                 r2 = -r2;
-            t4->m[11] = r2 >> 3;
+            t4->t.z = r2 >> 3;
         }
     }
 
