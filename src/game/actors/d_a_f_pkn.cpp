@@ -374,43 +374,41 @@ void daFPkn_c::StateGrow()
     dActor_c *spawned;
     int *src;
 
-    if (ApproachLinear(mScale, mMaxScale, mScaleRate) == 0) {
-        goto tail;  /* an early return here DIFFs */
-    }
+    if (ApproachLinear(mScale, mMaxScale, mScaleRate) != 0) {
+        if (mAnmModel.WillHitFrame(0x10) || mAnmModel.WillHitFrame(0x20) ||
+            mAnmModel.WillHitFrame(0x34) || mAnmModel.WillHitFrame(0x4b)) {
+            func_0201267c(SND_GROW_BITE, &mCamSpacePos);
+        }
 
-    if (mAnmModel.WillHitFrame(0x10) || mAnmModel.WillHitFrame(0x20) ||
-        mAnmModel.WillHitFrame(0x34) || mAnmModel.WillHitFrame(0x4b)) {
-        func_0201267c(SND_GROW_BITE, &mCamSpacePos);
-    }
+        targetAngle = mAngle.y;
+        player = ClosestPlayer();
+        /* Read through src before the null test; direct member reads DIFF. */
+        src = &player->mPos.x;
+        playerPos.x = src[0];
+        playerPos.y = src[1];
+        playerPos.z = src[2];
+        if (player != 0) {
+            targetAngle = Vec3_HorzAngle(&mPos, &playerPos);
+        }
+        ApproachLinear(mAngle.y, targetAngle, 0x400);
 
-    targetAngle = mAngle.y;
-    player = ClosestPlayer();
-    /* Read through src before the null test; direct member reads DIFF. */
-    src = &player->mPos.x;
-    playerPos.x = src[0];
-    playerPos.y = src[1];
-    playerPos.z = src[2];
-    if (player != 0) {
-        targetAngle = Vec3_HorzAngle(&mPos, &playerPos);
-    }
-    ApproachLinear(mAngle.y, targetAngle, 0x400);
+        if (mSuppressDeathReward == 1) {
+            spawned = dActor_c::Spawn(ACTOR_PAKUN, 0, mPos, &mAngle, mAreaId, -1);
+            if (spawned == 0)
+                return;
 
-    if (mSuppressDeathReward == 1) {
-        spawned = dActor_c::Spawn(ACTOR_PAKUN, 0, mPos, &mAngle, mAreaId, -1);
-        if (spawned == 0) return;
+            mSuppressDeathReward = 2;
+            ((daPkn_c *)spawned)
+                ->EnterLunge((short)((unsigned int)(mAnmModel.currFrame << 4) >> 16));
+            mdCcAc_c.flags |= 1;
+            mdCcAcPos_c.flags |= 1;
+            return;
+        }
 
-        mSuppressDeathReward = 2;
-        ((daPkn_c *)spawned)->EnterLunge((short)((unsigned int)(mAnmModel.currFrame << 4) >> 16));
+        MarkForDestruction();
+    } else {
         mdCcAc_c.flags |= 1;
-        mdCcAcPos_c.flags |= 1;
-        return;
     }
-
-    MarkForDestruction();
-    return;
-
-tail:
-    mdCcAc_c.flags |= 1;
 }
 
 void daFPkn_c::StateSpit()
