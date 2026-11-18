@@ -697,6 +697,8 @@ void dScMgSnowball_c::RedrawCourse() {
  * and reloaded around the screen-pointer call).
  */
 void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
+    /* Kept (#821 r73): row as (char *)&mTileMap[0][col] read through
+       *(u16 *)row is 0x36c of 0x398; the ROM keeps row this-based. */
     char *scene = (char *)this;
     volatile u16 v0, v1, v2, v3, v4, v5, v6, v7;
     volatile u16 w0, w1, w2, w3, w4, w5, w6, w7;

@@ -1343,6 +1343,9 @@ void daKuriKing_c::UpdateShadows() {
      * register, where the ROM copies through the this-based one); keeping m
      * as a Matrix4x3 * walk with the rest indexed grows it by 0x10 bytes. */
     mtx = IDENTITY_MATRIX4X3;
+    /* Kept (#821 r73): src as mCylClsnPos[i] is 10 words off (its induction
+       register ranks last), as a Vector3 * walk 3 (no 0x3ac displacement);
+       self as mShadowMatrices[i] grows the body to 0x16c. */
     self = (char *)this;
     src = (char *)this;
     m = (char *)mShadowMatrices;

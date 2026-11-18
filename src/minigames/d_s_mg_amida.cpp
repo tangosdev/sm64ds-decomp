@@ -894,6 +894,8 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 void dScMgAmida_c::StepWalkers() {
+    /* Kept (#821 r73): every slot pointer as &mWalkerX[walker] is 0xe4c of
+       0xe48; the ROM forms (this + i * stride) + offset. */
     char *sceneBytes = (char *)this;
     s32 delayIndex;
     s32 walker;
