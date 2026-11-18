@@ -252,13 +252,12 @@ void StarPopup_Draw(void) {
     int x;
     int y;
     s32 r;
-    int *new_var;
-    new_var = (int *)sHanaStarPopup;
-    if (((HanaStarPopup *)sHanaStarPopup)->visible != 1) {
+    HanaStarPopup *popup = (HanaStarPopup *)sHanaStarPopup;
+    if (popup->visible != 1) {
         return;
     }
-    x = ((HanaStarPopup *)sHanaStarPopup)->x >> 12;
-    y = ((HanaStarPopup *)new_var)->y >> 12;
+    x = popup->x >> 12;
+    y = popup->y >> 12;
     r = GetGameLanguage();
     Mg_RenderSubSpriteMtx(((void **)sHanaTextSpritesByLanguage[r])[13], x - 8, y, 0);
     Mg_RenderSubSpriteMtx(sMgDigitSprites[25], x + 8, y, 0);
