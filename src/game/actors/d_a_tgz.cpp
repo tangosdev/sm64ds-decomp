@@ -266,6 +266,14 @@ void daTgz_c::func_ov077_02124eb0() {
     }
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
 /* Hit response during the thrown spin. Mega turns it to face away and
  * knocks it up; fire is ignored; anything else hurts the player. */
 void daTgz_c::func_ov077_021250a8() {
@@ -275,11 +283,9 @@ void daTgz_c::func_ov077_021250a8() {
     daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
     if (player == 0)
         return;
-    int b1 = (player->actorID == 0xbf);
-    if (b1 == 0)
+    if (!IsPlayerActor(player))
         return;
-    int b2 = ((this->mFlags & 0x20000) != 0);
-    if (b2 != 0) {
+    if (IsBeingEaten(this)) {
         this->func_ov077_02125e94(3);
         return;
     }
@@ -332,9 +338,12 @@ void daTgz_c::func_ov077_02125290() {
     m->m[11] = this->mPos.z >> 3;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 void daTgz_c::func_ov077_02125304() {
-    int b = ((this->mFlags & 0x40000) != 0);
-    if (b != 0)
+    if (IsInYoshiMouth(this))
         return;
     if (this->mState == 5)
         this->func_ov077_021251d0();
@@ -490,14 +499,6 @@ int daTgz_c::func_ov077_021256b4() {
 
 static inline int IsFlagSet(dActor_c *actor, u32 bit) {
     return (actor->mFlags & bit) != 0;
-}
-
-static inline int IsBeingEaten(dActor_c *actor) {
-    return (actor->mFlags & 0x20000) != 0;
-}
-
-static inline int IsInYoshiMouth(dActor_c *actor) {
-    return (actor->mFlags & 0x40000) != 0;
 }
 
 /* Held update: stick to the carrier, or on release enter state 4 / the walk. */
