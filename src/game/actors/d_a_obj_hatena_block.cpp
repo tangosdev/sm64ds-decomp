@@ -373,22 +373,12 @@ int daObjHatenaBlock_c::InitResources()
         mStarTracked = TrackStar(mStarId, 2);
     }
 
-    {
-        int b16 = !(actorID != ACTOR_VS_ITEM_BLOCK);
-        if (b16 != 0) {
-            mContentType = 0;
-            dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
-        }
+    if (IsActorID(this, ACTOR_VS_ITEM_BLOCK)) {
+        mContentType = 0;
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
     }
 
-    do {
-        int b14 = !(actorID != ACTOR_HATENA_BLOCK);
-        if (b14 == 0) {
-            int b15 = !(actorID != ACTOR_ITEM_BLOCK);
-            if (b15 == 0)
-                break;
-        }
-
+    if (IsActorID(this, ACTOR_HATENA_BLOCK) || IsActorID(this, ACTOR_ITEM_BLOCK)) {
         switch (mContentType) {
         case CONTENT_COINS:
         case CONTENT_STAR:
@@ -417,7 +407,7 @@ int daObjHatenaBlock_c::InitResources()
             dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
             break;
         }
-    } while (0);
+    }
     return 1;
 }
 
@@ -476,19 +466,12 @@ int daObjHatenaBlock_c::Behavior()
    mScale.x. Always returns 1. */
 int daObjHatenaBlock_c::Render()
 {
-    do {
-        if (mState == STATE_POPPED)
-            break;
-        if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
-            if (IsActorID(this, ACTOR_HATENA_BLOCK)) {
-                mAnmModel.Render(0);
-                break;
-            }
-        }
-        {
+    if (mState != STATE_POPPED) {
+        if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 && IsActorID(this, ACTOR_HATENA_BLOCK))
+            mAnmModel.Render(0);
+        else
             mModel.Render(&mScale);
-        }
-    } while (0);
+    }
     return 1;
 }
 
@@ -499,21 +482,13 @@ int daObjHatenaBlock_c::Render()
    Always returns 1. */
 int daObjHatenaBlock_c::CleanupResources()
 {
-    int b, b2, b3;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 
-    b = (int)(actorID == ACTOR_VS_ITEM_BLOCK);
-    if (b)
+    if (IsActorID(this, ACTOR_VS_ITEM_BLOCK))
         data_ov002_0210da58.Release();
 
-    do {
-        b2 = (int)(actorID == ACTOR_HATENA_BLOCK);
-        if (b2 == 0) {
-            b3 = (int)(actorID == ACTOR_ITEM_BLOCK);
-            if (b3 == 0)
-                break;
-        }
+    if (IsActorID(this, ACTOR_HATENA_BLOCK) || IsActorID(this, ACTOR_ITEM_BLOCK)) {
         switch (mContentType) {
         case CONTENT_STAR:
             UntrackStar(mStarTracked);
@@ -542,7 +517,7 @@ int daObjHatenaBlock_c::CleanupResources()
             gPFlowerCloseModelFile.Release();
             break;
         }
-    } while (0);
+    }
 
     switch (actorID - ACTOR_HATENA_BLOCK) {
     case 0:   /* HATENA_BLOCK */
