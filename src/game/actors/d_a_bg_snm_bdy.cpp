@@ -531,7 +531,8 @@ int daBgSnmBdy_c::AdvancePath()
     if (dist < mRadius) {
         numNodes = mPath.NumNodes();
         mPathNode = mPathNode + 1;
-        if (mPathNode >= numNodes - 1) return 1;
+        if (mPathNode >= numNodes - 1)
+            return 1;
     }
     return 0;
 }

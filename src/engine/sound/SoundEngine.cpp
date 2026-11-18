@@ -1357,7 +1357,8 @@ extern "C" struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(int id) {
     int off = ((struct SndInfoBlock *)sub)->seqArcTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if (id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1388,7 +1389,8 @@ extern "C" struct SndArchiveInfo *NNS_SndArcGetWaveArcInfo(int id) {
     int off = ((struct SndInfoBlock *)sub)->waveArcTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if (id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1403,7 +1405,8 @@ extern "C" struct SndPlayerInfo *NNS_SndArcGetPlayerInfo(int id) {
     int off = ((struct SndInfoBlock *)sub)->playerTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if (id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1418,7 +1421,8 @@ extern "C" struct List *NNS_SndArcGetGroupInfo(int id) {
     int off = ((struct SndInfoBlock *)sub)->groupTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if (id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
