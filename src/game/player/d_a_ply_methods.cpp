@@ -28,6 +28,11 @@
  *   data_ov002_0210a760, which has no recovered name.
  * - The byte at 0x6da is pad_6da. InitResources writes it and nothing reads
  *   it; it has no honest name.
+ * - Kept (#821 r77): the eight `MTX_MultVec43((Vector3 *)&bone->m[9], ...)`
+ *   calls read a bone matrix's translation column. Matrix4x3 is one flat
+ *   fx32 m[12] (the ROM copies it as a single twelve-word block, see
+ *   math/Matrix.h), so that column has no member to name and a vector view
+ *   of m[9..11] can only be a cast.
  * - daPly_c:: methods with no body-local externs carry no extern "C"
  *   wrapper (288 definitions); the remaining 212 keep it: the block gives C
  *   linkage to body-local externs. Externs declared once at file scope below
@@ -716,7 +721,8 @@ u32 data_ov002_0210a584[3] = {118, 122, 119};
 
 /* 20.12 offset added before the camera update: (0, -205.0, 410.0). The SDK's
  * POD VecFx32 keeps the literal in .data; Vector3's constructors would make
- * it dynamic. */
+ * it dynamic. Kept (#821 r77): so func_ov002_020bf40c's VEC_Add, whose
+ * CalcLib.h overload takes the game's Vector3, casts it at the call. */
 VecFx32 data_ov002_0210a590 = {0, -0xcd000, 0x19a000};
 extern "C" {
 extern SharedFilePtr data_ov002_0210d9a0;

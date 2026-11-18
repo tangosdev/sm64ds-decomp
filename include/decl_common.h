@@ -498,7 +498,7 @@ extern signed char data_0209b44c;
 extern signed char data_ov002_02110af0;
 extern signed char data_ov002_02111148;
 extern struct Matrix4x3 data_ov006_0213c85c;
-extern struct Vector3 data_ov002_0210a590;
+extern struct VecFx32 data_ov002_0210a590;
 extern struct Vector3 data_ov002_0210f3b0;
 extern struct Vector3 sPetalUpAxis;
 extern struct Vector3 data_ov063_0211ee74;
