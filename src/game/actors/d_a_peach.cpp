@@ -278,14 +278,17 @@ int daPeach_c::InitState1() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* The same liveness question IsTouchingPlayer asks, written out here
  * instead of called -- the ROM inlines it at this one site. */
 int daPeach_c::InitState3() {
     if (mCylinder.hitFlags & 0x8000000) {
         dActor_c *a = dActor_c::FindWithID(mCylinder.otherOwner);
         if (a) {
-            int match = (a->actorID == 0xbf) ? 1 : 0;
-            if (match != 0) {
+            if (IsPlayerActor(a)) {
                 mTalkPlayer = (daPly_c *)a;
                 if (mTalkPlayer->StartTalk(*this, false)) {
                     SetState(1);
