@@ -161,6 +161,18 @@ daYegg_c::~daYegg_c()
 {
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- HasStarPayout, 0x020ec610, size 0x18 */
 /* -------------------------------------------------------------------------- */
@@ -934,7 +946,6 @@ void daYegg_c::UpdateShadow() {
     Vector3 v;
     int r5;
     int r4;
-    int b;
 
     if (mPlayer->mOpacity < 1)
         return;
@@ -956,8 +967,7 @@ void daYegg_c::UpdateShadow() {
     mShadowMtx.m[9] = mPos.x >> 3;
     mShadowMtx.m[10] = mPos.y >> 3;
     mShadowMtx.m[11] = mPos.z >> 3;
-    b = (mFlags & 0x40000) ? 1 : 0;
-    if (b == 0 && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
+    if (!IsInYoshiMouth(this) && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
         !mPlayer->func_ov002_020d0d2c()) {
         if (func_ov002_020ec654() == 0) {
             DropShadowRadHeight(mShadowModel, mShadowMtx, r4, r5 + 0x28000, 0xf);
@@ -1018,7 +1028,6 @@ int daYegg_c::FindTarget(int a1, int best) {
     dActor_c *found;
     dActor_c *actor;
     int matched;
-    int b;
     /* Kept (#821 r21). The ROM reserves 0x10 bytes of frame it never
        touches; without this the function is 0x15c against 0x168. An unused
        `Vector3 pos;` reproduces it exactly, but a dead local only sizes the
@@ -1044,11 +1053,9 @@ int daYegg_c::FindTarget(int a1, int best) {
             continue;
         if (actor == (dActor_c *)mPlayer)
             continue;
-        b = (actor->mFlags & 0x10000000) != 0;
-        if (!b)
+        if (!IsFlagSet(actor, 0x10000000))
             continue;
-        b = (actor->mFlags & 8) != 0;
-        if (b)
+        if (IsOffScreen(actor))
             continue;
         matched = 0;
         for (int i = 0; i < 5; i++) {
@@ -1223,12 +1230,7 @@ int daYegg_c::CleanupResources()
    is below 1. */
 int daYegg_c::Render()
 {
-    /* The temporary is load-bearing and must not be folded into the `if`, the
-       same way it is in daBakubaku_c::Render: `if (mFlags & 0x40000)` tests the
-       masked word directly, while the ROM materialises the 0/1 first. Folding it
-       changes the function's SIZE, which is what a `999 word(s) differ` says. */
-    int b = ((mFlags & 0x40000) != 0);
-    if (b) return 1;
+    if (IsInYoshiMouth(this)) return 1;
 
     if (mPlayer->IsInsideOfCannon()) return 1;
     if (mPlayer->mOpacity < 1) return 1;
