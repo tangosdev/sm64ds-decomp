@@ -446,8 +446,7 @@ int daYurei_Mucho_c::UpdateShoot() {
         mTargetAngle = Vec3_HorzAngle(&mPos, &target);
         ApproachAngle(&mPrevAngle.y, mTargetAngle, 1, 0x500, 0x500);
 
-        if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && mStateTimer == 0 &&
-            mShotCount < 3) {
+        if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && mStateTimer == 0 && mShotCount < 3) {
             void *spawned = dActor_c::Spawn(0xe9, 1, mShotPos, 0, mAreaId, -1);
             if (spawned != 0) {
                 dActor_c *shot = (dActor_c *)spawned;
