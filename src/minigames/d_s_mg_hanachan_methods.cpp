@@ -1914,12 +1914,17 @@ void dScMgHanachan_c::Phase_SetupRound() {
     }
 }
 
+/* StartRound steps the level with a read through this accessor, and the
+   cartridge re-issues ldr r1,[r4,#0xbc] for it. A plain `mLevel + 1` lets
+   mwccarm keep the +0xbc field address in its own register (add r2,r4,#0xbc /
+   ldr [r2] / str [r2]), a word longer. */
+inline u32 dScMgBase_c::GetLevel() const {
+    return mLevel;
+}
+
 void dScMgHanachan_c::StartRound(int state) {
     if (state == 1) {
-        /* `const` on the read is load-bearing: without it mwcc CSEs the +0xbc field
-           address into its own register (add r2,r4,#0xbc / ldr [r2] / str [r2]) and the
-           function grows a word; the cartridge re-issues ldr r1,[r4,#0xbc]. */
-        mLevel = *(const u32 *)&mLevel + 1;
+        mLevel = GetLevel() + 1;
         if (mLevel > 0x270e)
             mLevel = 0x270e;
     } else if (state == 0x12) {

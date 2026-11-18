@@ -34,6 +34,9 @@ struct dScMgBase_c : dScene_c {
 
     /* param1, the spawn word; defined inline in d_s_mg_base.cpp. */
     u32 GetParam1() const;
+    /* mLevel; defined inline in d_s_mg_hanachan_methods.cpp, the one TU
+       that reads it through the accessor. */
+    u32 GetLevel() const;
 
     /* --- overrides of dScene_c's own virtuals, same signature, in _ZTV order.
            1, 2, 5, 7, 10 re-override slots dScene_c already gave a body;
