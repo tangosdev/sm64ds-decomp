@@ -26,10 +26,6 @@
  *   already-declared Vector3_16 sign-extends instead (measured).
  * - The playerPos and posp pointers stay: reading player->mPos / hit->mPos
  *   field by field without them changes the function's size (measured).
- * - vec, delta and the hit positions stay VecFx32 and are cast to Vector3
- *   at the calls. As Vector3 locals they match State0's bytes, but the TU
- *   then emits Vector3's D1 plus this class's D2, vtable and RTTI, which the
- *   cartridge places elsewhere (measured).
  * - The ring-spawn test reads mStateTimer as u16; the s16 test is one word
  *   off.
  * - The state table is two plain copies of the ROM's pointer-to-member
@@ -92,11 +88,11 @@ daWater_Hakidasi_c::~daWater_Hakidasi_c() {}
  * player passes, as reported in mPassedRing, in spawn order. At a count of 5 it
  * waits 0x1e frames, spawns a STAR (actor 0xb2) and sets mRingsPassed to 0xa. */
 int daWater_Hakidasi_c::State0() {
-    VecFx32 vec;
-    VecFx32 delta;
-    VecFx32 rewardPos;
-    VecFx32 hitPos1;
-    VecFx32 hitPos2;
+    Vector3 vec;
+    Vector3 delta;
+    Vector3 rewardPos;
+    Vector3 hitPos1;
+    Vector3 hitPos2;
     daPly_c *player;
     int dist;
     daWater_Ring_c *ring;
@@ -119,7 +115,7 @@ int daWater_Hakidasi_c::State0() {
             delta.z = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, (s16)(HorzAngleToCPlayer() + 0x8000));
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
-            MTX_MultVec43((Vector3 *)&vec, &data_020a0e68, (Vector3 *)&delta);
+            MTX_MultVec43(&vec, &data_020a0e68, &delta);
             playerPos = &player->mPos;
             vec.x = playerPos->x;
             vec.y = playerPos->y;
@@ -176,7 +172,7 @@ int daWater_Hakidasi_c::State0() {
                             hitPos1.x = posp->x;
                             hitPos1.y = posp->y;
                             hitPos1.z = posp->z;
-                            SpawnNumber(*(Vector3 *)&hitPos1, mRingsPassed, 0, 0, 0);
+                            SpawnNumber(hitPos1, mRingsPassed, 0, 0, 0);
                             mPassedRing = 0;
                             return 1;
                         }
@@ -199,7 +195,7 @@ int daWater_Hakidasi_c::State0() {
                                 hitPos2.x = posp->x;
                                 hitPos2.y = posp->y;
                                 hitPos2.z = posp->z;
-                                SpawnNumber(*(Vector3 *)&hitPos2, mRingsPassed, 0, 0, 0);
+                                SpawnNumber(hitPos2, mRingsPassed, 0, 0, 0);
                                 mPassedRing = 0;
                                 return 1;
                             }
@@ -223,7 +219,7 @@ int daWater_Hakidasi_c::State0() {
         rewardPos.y = rewardPos.y - 0x64000;
         mRewardTimer++;
         if (mRewardTimer > 30) {
-            dActor_c::Spawn(0xb2, mStarID | 0x40, *(Vector3 *)&rewardPos, &mAngle, mAreaId, -1);
+            dActor_c::Spawn(0xb2, mStarID | 0x40, rewardPos, &mAngle, mAreaId, -1);
             mRingsPassed = 0xa;
         }
     }
