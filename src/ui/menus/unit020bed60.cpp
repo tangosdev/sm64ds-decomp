@@ -80,7 +80,7 @@ extern "C" void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, Vec
 extern "C" void func_ov007_020cb3dc(Ov007Mesh *mesh);
 extern "C" void func_ov007_020cba78(Ov007Mesh *mesh, int shift);
 extern void func_ov007_020cbb04(Ov007Mesh *mesh);
-extern Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams *params);
+extern "C" Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams *params);
 extern "C" Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
 
 /* Defined below, after their callers (ROM order). */
