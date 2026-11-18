@@ -3310,7 +3310,6 @@ int daDemo_c::Behavior()
     Vector3 asr;
     /* Kept (#821 r84): v filled from mPos directly, as a struct copy, via a
        block-scoped Vector3(x, y + 0x96000, z), or with the sum in yy -> DIFF. */
-    int new_var2;
     s32 t;
     t = this->param1;
     if (t == 0x2e) {
@@ -3331,9 +3330,9 @@ int daDemo_c::Behavior()
                 s32 xx = this->mPos.x;
                 s32 yy = this->mPos.y;
                 s32 zz = this->mPos.z;
-                new_var2 = yy + 0x96000;
+                s32 probeY = yy + 0x96000;
                 v.x = xx;
-                v.y = new_var2;
+                v.y = probeY;
                 v.z = zz;
             }
             dBgCh_Gnd ground;
