@@ -530,9 +530,9 @@ int daBgSnmBdy_c::AdvancePath()
     mPrevAngle.y = mAngle.y;
     if (dist < mRadius) {
         numNodes = mPath.NumNodes();
-        /* Signed compare. mPathNode is u32; comparing it as u32 is unsigned. */
         mPathNode = mPathNode + 1;
-        if ((int)mPathNode >= numNodes - 1) return 1;
+        if (mPathNode >= numNodes - 1)
+            return 1;
     }
     return 0;
 }

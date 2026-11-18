@@ -256,7 +256,7 @@ s32 daObjBC_Switch_c::Behavior() {
 
     if (mPressed == 1) {
         mAreaId = -1;
-        if (IsAreaShowing((s8)mHomeAreaId) == 0)
+        if (IsAreaShowing(mHomeAreaId) == 0)
             Sound::ChangeMusicVolume(127, 0x3f000);
     }
     if (mPressed == 1) {

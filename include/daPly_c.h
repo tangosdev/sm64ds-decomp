@@ -653,7 +653,7 @@ struct daPly_c : dActor_c {
        latch it on both sides. While it is set, func_ov002_020d8360 ignores
        that player's hit and func_ov002_020d8a50 skips the attack update.
        St_PunchKick_Init, St_SweepKick_Init and ChangeState clear it. */
-    s8 mAttackClashed; /* 0x726 */
+    u8 mAttackClashed; /* 0x726 */
     /* The scripted animation sequence the Kuppa script started. Command
        func_ov002_020bd20c stores its parameter byte here (1-based, 0 for
        none) and zeroes mAnimScriptStep, after func_ov002_020bd06c has

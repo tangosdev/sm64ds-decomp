@@ -33,7 +33,7 @@ struct daObjBC_Switch_c : dBgActor_c {
     u16 mCoinTimerSeed; /* 0x32a */
     u8 mPressed;        /* 0x32c */
     u8 mEventBit;       /* 0x32d */
-    u8 mHomeAreaId;     /* 0x32e */
+    s8 mHomeAreaId;     /* 0x32e */
 
     /* --- vtable --- */
 
