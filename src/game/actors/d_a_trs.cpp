@@ -2736,41 +2736,38 @@ int daTrs_c::Behavior()
         }
         mVertAccel = -0x2000;
         UpdateCarriedItemPos();
-        if (mEatenByYoshi != 0) {
-            if (mSpitOutTimer == 0) {
-                mEatenByYoshi = 0;
-                mSpitOutTimer = 0;
-                mVertAccel = 0;
-                mSpeed.y = 0;
-                goto block_39;
-            }
-        }
-        v = (((mFlags) & 0x40000) ? 1 : 0);
-        if (v != 0) {
-            u8 st = mTalkStep;
-            daPly_c *pl = mEatingPlayer;
-            switch (st) {
-            case 0:
-                if (pl->ShowMessage(*this, 0x15a, 0, 0, 2) != 0) {
-                    bp = &this->mTalkStep;
-                    *bp = (*bp) + 1;
-                    func_0201267c(0xf8, &mCamSpacePos);
+        if (mEatenByYoshi != 0 && mSpitOutTimer == 0) {
+            mEatenByYoshi = 0;
+            mSpitOutTimer = 0;
+            mVertAccel = 0;
+            mSpeed.y = 0;
+        } else {
+            v = (((mFlags) & 0x40000) ? 1 : 0);
+            if (v != 0) {
+                u8 st = mTalkStep;
+                daPly_c *pl = mEatingPlayer;
+                switch (st) {
+                case 0:
+                    if (pl->ShowMessage(*this, 0x15a, 0, 0, 2) != 0) {
+                        bp = &this->mTalkStep;
+                        *bp = (*bp) + 1;
+                        func_0201267c(0xf8, &mCamSpacePos);
+                    }
+                    break;
+                case 1:
+                    if (pl->GetTalkState() == -1) {
+                        pl->DropActor();
+                        bp = &this->mTalkStep;
+                        *bp = (*bp) + 1;
+                    }
+                    break;
                 }
-                break;
-            case 1:
-                if (pl->GetTalkState() == -1) {
-                    pl->DropActor();
-                    bp = &this->mTalkStep;
-                    *bp = (*bp) + 1;
-                }
-                break;
             }
+            func_ov063_021166ac();
+            mdCcAcPos_c.Clear();
+            return 1;
         }
-        func_ov063_021166ac();
-        mdCcAcPos_c.Clear();
-        return 1;
     }
-block_39:
     mTalkStep = 0;
 
     {
