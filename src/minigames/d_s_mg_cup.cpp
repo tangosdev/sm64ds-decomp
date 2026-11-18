@@ -305,29 +305,11 @@ void dScMgCup_c::SetupSwap() {
     mHalfX = mMid.x - sCupHomePositions[mSwapSlotA].x;
     mShuffleAngle = 0;
 
-    {
-        u8 roundRow = mRoundRow;
-        if (roundRow == 7) {
-            if (mSwapsRemaining == mFakeOutAt) {
-                goto set1;
-            }
-        }
-        if (roundRow < 7) {
-            goto set0;
-        }
-        {
-            u32 fakeOutRoll = (u32)RandomIntInternal(&data_0209e650.value);
-            if (((fakeOutRoll >> 0x10) & 7) != 0) {
-                goto set0;
-            }
-        }
-    set1:
+    if ((mRoundRow == 7 && mSwapsRemaining == mFakeOutAt) ||
+        (mRoundRow >= 7 && (((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) & 7) == 0))
         mFakeOut = 1;
-        return;
-    set0:
+    else
         mFakeOut = 0;
-        return;
-    }
 }
 
 void dScMgCup_c::StateIdle() {}

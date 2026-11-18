@@ -1306,6 +1306,11 @@ void daStar_c::StateCollectTalk() {
             }
         }
     } else {
+        /* Kept (#821 r94): the ROM places the save prompt once, after the kind-9
+         * test, and the star-id test jumps back into it. `else if (kind 9 ||
+         * id 0 || func_ov002_020e9630())` passing `mKind == KIND_9 ? 0x11 : 1`
+         * is 0x340 against 0x354; the prompt as an inline helper called from
+         * two early-return ifs is 0x42c (mwcc does not merge the copies). */
         if (mKind == KIND_9) {
             st2 = 0x11;
 LA:

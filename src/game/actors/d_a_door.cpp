@@ -859,6 +859,10 @@ int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
     return 1;
 }
 
+static inline int Abs(int v) {
+    return v < 0 ? -v : v;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov100_021452e4, 0x021452e4, size 0x8c */
 /* -------------------------------------------------------------------------- */
@@ -868,27 +872,15 @@ int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
    degrees) -- the door's mAngle.y when mScale.z is negative, half a turn from
    it otherwise. Was a C source. */
 int daDoor_c::func_ov100_021452e4(daPly_c *r1) {
-    int v, z, a;
-    v = mScale.x;
-    if (v < 0)
-        v = -v;
-    if (v <= 0x4b000) {
-        v = mScale.y;
-        if (v < 0)
-            v = -v;
-        if (v <= 0x32000) {
-            z = mScale.z;
-            v = (z < 0) ? -z : z;
-            if (v <= 0x6e000) {
-                if (z < 0)
-                    a = mAngle.y;
-                else
-                    a = mAngle.y + 0x8000;
-                a = (short)a;
-                if (AngleDiff(a, r1->mAngle.y) < 0x2000)
-                    return 1;
-            }
-        }
+    int a;
+    if (Abs(mScale.x) <= 0x4b000 && Abs(mScale.y) <= 0x32000 && Abs(mScale.z) <= 0x6e000) {
+        if (mScale.z < 0)
+            a = mAngle.y;
+        else
+            a = mAngle.y + 0x8000;
+        a = (short)a;
+        if (AngleDiff(a, r1->mAngle.y) < 0x2000)
+            return 1;
     }
     return 0;
 }
@@ -1031,7 +1023,6 @@ s32 daDoor_c::InitResources() {
     void *an;
     Vector3 tmp;
     int r4;
-    int v;
     int b;
     int x;
     int y;
@@ -1107,25 +1098,10 @@ s32 daDoor_c::InitResources() {
     }
     func_ov100_02145370();
 
-    v = mScale.x;
-    if (v < 0)
-        v = -v;
-    if (v <= 0x4b000) { /* 75 units */
-        v = mScale.y;
-        if (v < 0)
-            v = -v;
-        if (v <= 0x32000) { /* 50 */
-            v = mScale.z;
-            if (v < 0)
-                v = -v;
-            if (v <= 0x1f4000) { /* 500 */
-                func_ov100_021453d8(&data_ov100_02148914, r4);
-                goto done;
-            }
-        }
-    }
-    func_ov100_021453d8(&data_ov100_021488b4, r4);
-done:
+    if (Abs(mScale.x) <= 0x4b000 && Abs(mScale.y) <= 0x32000 && Abs(mScale.z) <= 0x1f4000)
+        func_ov100_021453d8(&data_ov100_02148914, r4);
+    else
+        func_ov100_021453d8(&data_ov100_021488b4, r4);
     return 1;
 }
 

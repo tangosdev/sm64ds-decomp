@@ -845,13 +845,13 @@ void dScMgMemory2_c::ShuffleCards() {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 16; cardIndex++) {
             u32 cardValue = 1 + MG_RAND(8);
-        check0:
-            if (mValueCounts[cardValue] < 2) {
-                mCards[cardIndex].value = cardValue;
-                mValueCounts[cardValue]++;
-            } else {
+            for (;;) {
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
+                    break;
+                }
                 cardValue = 1 + MG_RAND(8);
-                goto check0;
             }
         }
         int positionIndex;
@@ -868,13 +868,13 @@ void dScMgMemory2_c::ShuffleCards() {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 18; cardIndex++) {
             u32 cardValue = 1 + MG_RAND(9);
-        check1:
-            if (mValueCounts[cardValue] < 2) {
-                mCards[cardIndex].value = cardValue;
-                mValueCounts[cardValue]++;
-            } else {
+            for (;;) {
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
+                    break;
+                }
                 cardValue = 1 + MG_RAND(9);
-                goto check1;
             }
         }
         int positionIndex;
@@ -891,13 +891,13 @@ void dScMgMemory2_c::ShuffleCards() {
         int cardIndex;
         for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
             u32 cardValue = 1 + MG_RAND(10);
-        check2:
-            if (mValueCounts[cardValue] < 2) {
-                mCards[cardIndex].value = cardValue;
-                mValueCounts[cardValue]++;
-            } else {
+            for (;;) {
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
+                    break;
+                }
                 cardValue = 1 + MG_RAND(10);
-                goto check2;
             }
         }
         int positionIndex;
