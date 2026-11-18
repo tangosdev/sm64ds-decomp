@@ -93,7 +93,7 @@ int daObjPushblock_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     kcl = dBgW_Kc::LoadFile(data_ov002_0210df94);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *(CLPS_Block *)&data_ov002_0210d7b4);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov002_0210d7b4);
 
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;

@@ -26,16 +26,12 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
     VecFx32 look;
     MtxFx33 rot;
     int mat[12];
-    u32 id;
     u32 v;
     int sx;
     s64 sy; /* s64, not int: int does not match */
 
-    /* polygonIDs.current, read through the whole word: the field read does not match */
-    v = *(u32 *)&sys->polygonIDs << 14;
-    id = v >> 26;
-    v = mgr->mPolygonAttr | 0xc0;
-    v |= id << 24;
+    v = sys->polygonIDs.current << 24;
+    v |= mgr->mPolygonAttr | 0xc0;
     v |= alpha << 16;
     REG_POLYGON_ATTR = v;
     REG_POLYGON_ATTR;

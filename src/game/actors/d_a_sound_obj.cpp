@@ -104,6 +104,8 @@ SoundObjStarter data_ov002_0210c038 = {(int)&func_ov002_020f9468, 0};
 SoundObjStarter data_ov002_0210c040 = {(int)&Sound::PlaySecretSound, 0};
 
 SoundObjectCallback data_ov002_0211110c[7] = {
+    /* Kept (#821 r76): entries 0-2 are arm9 free functions, so no pointer-to-member constant names
+       them; that needs Sound's starters to become members, which is class-identity work. */
     *(SoundObjectCallback *)&data_ov002_0210c040, *(SoundObjectCallback *)&data_ov002_0210c010,
     *(SoundObjectCallback *)&data_ov002_0210c020, *(SoundObjectCallback *)&data_ov002_0210c038,
     *(SoundObjectCallback *)&data_ov002_0210c030, *(SoundObjectCallback *)&data_ov002_0210c018,

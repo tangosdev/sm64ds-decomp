@@ -72,6 +72,8 @@ s32 daObjUkiyuka_c::Behavior() {
         IsClsnInRange(0, 0);
         return 1;
     }
+    /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever (r72-r75) applies to
+       this scalar pin (r68: s16 plain step is -1 word). */
     *(u16 *)&mBobPhase += 0x100;
     {
         u16 h = (u16)((s64)mBobPhase);

@@ -348,6 +348,8 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
                 aff = 0;
             }
             {
+                /* Kept (#821 r76): genuine; the ROM reads attr2 and attr3 as one word and GXOamAttr
+                   has no word member for them. */
                 u32 a23 = *(u32 *)&attr->attr2;
                 u32 a01 = attr->attr01;
                 u32 tile, mosaic, maskbits;

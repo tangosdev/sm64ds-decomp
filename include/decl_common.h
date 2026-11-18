@@ -60,7 +60,7 @@ extern char data_ov002_0210bcf0;
 extern char data_ov002_0210bd24;
 extern char data_ov002_0210d6dc[];
 extern char data_ov002_0210d6f4;
-extern char data_ov002_0210d7b4;
+extern struct CLPS_Block data_ov002_0210d7b4;
 extern char data_ov002_0210f7f4[];
 extern char data_ov002_0211093c;
 struct DemoModelFile;
@@ -99,7 +99,7 @@ extern char data_ov009_02113c20[];
 extern char data_ov009_02113c28[];
 extern struct daObjFloatBoard_c_Resources data_ov016_02114b8c;
 extern char data_ov024_02112d00[];
-extern char data_ov027_021130e8;
+extern struct CLPS_Block data_ov027_021130e8;
 
 extern char data_ov056_02112c68[];
 extern char data_ov063_0211ef80;

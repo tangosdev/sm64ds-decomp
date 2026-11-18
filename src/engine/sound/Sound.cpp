@@ -447,6 +447,9 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
     int x;
     if (c == 0) {
         /* e is bool. A plain test compiles to ldrb; retail loads the whole word. */
+        /* Kept (#821 r76): the ROM reads e as a word. `int e` with plain tests is byte-identical
+           here, but it renames _ZN5Sound7PlaySubEjjjib for every caller, two of them owned
+           elsewhere. */
         if (!*(int *)&e) {
             x = gSubSoundID;
             if ((x >= 0 && x != (int)a) ||

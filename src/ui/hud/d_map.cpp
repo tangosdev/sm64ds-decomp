@@ -646,6 +646,8 @@ L360:
     if (this->mInIntroCutscene == 0) goto L3a4;
     if (gMapIntroRotating == 0)
         goto L3e0;
+    /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever (r72-r75) applies to
+       this scalar pin. */
     *(s16 *)&this->mAngle += 0x40; // measured (#821 r68): the plain u16 `+=` loads ldrh, ROM ldrsh
     if (this->mAngle >= 0x8000)
         gMapIntroRotating = 0;
