@@ -269,6 +269,10 @@ static inline int IsVsMode(void) {
     return gGameMode == 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 void func_02013a88(void);
 void func_020167a4(dExtAnmModel_c *model);
 int func_ov002_020f030c(int x);
@@ -567,8 +571,7 @@ int daObjMarioCap_c::Behavior()
  * the taken state. Always returns 1. */
 int daObjMarioCap_c::Render()
 {
-    int b = (mFlags & 0x40000) ? 1 : 0;
-    if (b)
+    if (IsInYoshiMouth(this))
         return 1;
     if (mDormant == 1 || mScale.x < 0x100)
         return 1;
