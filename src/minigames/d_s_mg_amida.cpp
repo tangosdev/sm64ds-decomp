@@ -892,6 +892,8 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
    every slot pointer typed 0xe4c (s8 * for the two byte arrays the same). */
 #pragma push
 #pragma opt_strength_reduction off
+/* Kept (#821 r79): walker x pointers taken off ent, and the delay loop indexed as
+   mWalkerDelay[delayIndex]--, are 0xe44 and 0xe54 against 0xe48. */
 #pragma opt_common_subs off
 void dScMgAmida_c::StepWalkers() {
     char *sceneBytes = (char *)this;
