@@ -151,8 +151,8 @@ extern float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
-extern struct Matrix4x3 data_020a0e68;
-extern struct Matrix4x3 IDENTITY_MATRIX4X3;
+extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 IDENTITY_MATRIX4X3;
 struct KuriKingBoneIdx {
     int v[3];
 };
@@ -1207,13 +1207,13 @@ void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) {
     data_020a0e68 = self->mBodyMatrix;
     boneMat = self->mAnmModel.data.transforms + bone;
     MTX_Concat43(boneMat, &data_020a0e68, &data_020a0e68);
-    v->x = data_020a0e68.m[9];
-    v->y = data_020a0e68.m[10];
-    v->z = data_020a0e68.m[11];
+    v->x = data_020a0e68.t.x;
+    v->y = data_020a0e68.t.y;
+    v->z = data_020a0e68.t.z;
     Vec3_LslInPlace(v, 3);
 }
 
-extern "C" struct Matrix4x3 data_020a0e68;
+extern "C" union Matrix4x3 data_020a0e68;
 void daKuriKing_c::UpdateBodyMatrix() {
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
@@ -1378,9 +1378,9 @@ void daKuriKing_c::UpdateShadows() {
  * world >> 3). */
 void daKuriKing_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 void daKuriKing_c::UpdateAnimation() {

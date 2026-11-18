@@ -442,14 +442,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@426",
+      "from": "@428",
       "to": "@333",
-      "evidence": "mwcc numbers this destructor-registration node @462 per TU; @462 is already licensed globally elsewhere on the fleet surface, so the scratch link would multiply-define it Re-keyed from @463 to @436 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @436 to @426 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "mwcc numbers this destructor-registration node @462 per TU; @462 is already licensed globally elsewhere on the fleet surface, so the scratch link would multiply-define it Re-keyed from @463 to @436 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @436 to @426 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @426 to @428 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@427",
+      "from": "@429",
       "to": "@334",
-      "evidence": "mwcc numbers this destructor-registration node @463 per TU; @463 is already licensed globally elsewhere on the fleet surface, so the scratch link would multiply-define it Re-keyed from @464 to @437 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @437 to @427 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "mwcc numbers this destructor-registration node @463 per TU; @463 is already licensed globally elsewhere on the fleet surface, so the scratch link would multiply-define it Re-keyed from @464 to @437 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @437 to @427 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @427 to @429 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "undefined_symbol_aliases": [

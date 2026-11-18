@@ -565,9 +565,9 @@ void daMoray_c::UpdatePose() {
         *dst = *modelMtx;
         MTX_Concat43((Matrix4x3 *)((char *)this->mBlendAnmModel.data.transforms + transformOffset),
                      dst, dst);
-        pos->x = dst->m[9];
-        pos->y = dst->m[10];
-        pos->z = dst->m[11];
+        pos->x = dst->t.x;
+        pos->y = dst->t.y;
+        pos->z = dst->t.z;
         row->mSegmentPos[0].x = row->mSegmentPos[0].x << 3;
         row->mSegmentPos[0].y = row->mSegmentPos[0].y << 3;
         row->mSegmentPos[0].z = row->mSegmentPos[0].z << 3;
@@ -593,9 +593,9 @@ void daMoray_c::UpdatePose() {
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x8000, this->mStarSpinAngle);
     MTX_Concat43(&data_020a0e68, &this->mStarMtx, &this->mStarMtx);
     data_020a0e68 = this->mStarMtx;
-    this->mStarPos.x = data_020a0e68.m[9];
-    this->mStarPos.y = data_020a0e68.m[10];
-    this->mStarPos.z = data_020a0e68.m[11];
+    this->mStarPos.x = data_020a0e68.t.x;
+    this->mStarPos.y = data_020a0e68.t.y;
+    this->mStarPos.z = data_020a0e68.t.z;
     this->mStarPos.x <<= 3;
     this->mStarPos.y <<= 3;
     this->mStarPos.z <<= 3;

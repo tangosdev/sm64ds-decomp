@@ -212,7 +212,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     VariantWords clipCap = data_ov091_02134ba0;
 
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
 
     int sine = FX_SinIdx((u16)mAngle.x >> 4);
     int sineAbs = sine < 0 ? -sine : sine;
@@ -221,8 +221,8 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     int base = shadowBaseY.v[variantA];
     int sum = base + scaled;
     int py = mPos.y;
-    mShadowMat.m[10] = (py - sum) >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.y = (py - sum) >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
 
     int variantB = mVariant;
     int h = mPos.y - mGroundY;
@@ -250,9 +250,9 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
 void daObjRotateUpdownLift_c::func_ov091_02131340()
 {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 // 0x02131388 (0x80)

@@ -472,12 +472,12 @@ int daBgSnmBdy_c::State5()
 void daBgSnmBdy_c::UpdateModel()
 {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = (mPos.y + mRadius) >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = (mPos.y + mRadius) >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = (mPos.y + mRadius) >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = (mPos.y + mRadius) >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, mRadius << 1, mRadius << 1, 0xf);
 }
 

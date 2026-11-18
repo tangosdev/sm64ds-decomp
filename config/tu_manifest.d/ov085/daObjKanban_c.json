@@ -528,9 +528,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@711",
+      "from": "@713",
       "to": "@696",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @694 to @753 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx/FX_CosIdx (#821).. Re-keyed from @753 to @684 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @684 to @721 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @721 to @711 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @694 to @753 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx/FX_CosIdx (#821).. Re-keyed from @753 to @684 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @684 to @721 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @721 to @711 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @711 to @713 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

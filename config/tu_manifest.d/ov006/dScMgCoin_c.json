@@ -3031,124 +3031,124 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@329",
-      "to": "pmf_dScMgCoin_c_Bag_StateIdle",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x270 loads 0x0213be44 in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateIdle at 0x020dc294)."
-    },
-    {
       "from": "@331",
-      "to": "pmf_dScMgCoin_c_Bag_StateRise",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x274 loads 0x0213be4c in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateRise at 0x020dc1c4)."
-    },
-    {
-      "from": "@297",
-      "to": "pmf_dScMgCoin_c_Phase_StateScoreDelay",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateScoreDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x224 loads 0x0213be54 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateScoreDelay at 0x020de1d4)."
-    },
-    {
-      "from": "@299",
-      "to": "pmf_dScMgCoin_c_Phase_StateResult",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x228 loads 0x0213be5c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateResult at 0x020de0e0)."
-    },
-    {
-      "from": "@305",
-      "to": "pmf_dScMgCoin_c_Block_StateWander",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateWander, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x238 loads 0x0213be64 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateWander at 0x020dd880)."
-    },
-    {
-      "from": "@291",
-      "to": "pmf_dScMgCoin_c_Phase_StateIntro",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x214 loads 0x0213be6c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateIntro at 0x020de584)."
-    },
-    {
-      "from": "@303",
-      "to": "pmf_dScMgCoin_c_Block_StateHopDown",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateHopDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x234 loads 0x0213be74 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateHopDown at 0x020dda94)."
-    },
-    {
-      "from": "@293",
-      "to": "pmf_dScMgCoin_c_Phase_StatePlay",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x21c loads 0x0213be7c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StatePlay at 0x020de440)."
-    },
-    {
-      "from": "@307",
-      "to": "pmf_dScMgCoin_c_Block_StateDropOnCoin",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateDropOnCoin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x23c loads 0x0213be84 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateDropOnCoin at 0x020dd7c0)."
-    },
-    {
-      "from": "@335",
-      "to": "pmf_dScMgCoin_c_Bag_StateBounceDown",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateBounceDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x27c loads 0x0213be8c in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateBounceDown at 0x020dbf7c)."
-    },
-    {
-      "from": "@317",
-      "to": "pmf_dScMgCoin_c_Coin_StateSettled",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateSettled, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x254 loads 0x0213be94 in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateSettled at 0x020dcffc)."
-    },
-    {
-      "from": "@311",
-      "to": "pmf_dScMgCoin_c_Block_StateFallIn",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateFallIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x244 loads 0x0213be9c in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateFallIn at 0x020dd658)."
-    },
-    {
-      "from": "@295",
-      "to": "pmf_dScMgCoin_c_Phase_StateSettle",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateSettle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x220 loads 0x0213bea4 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateSettle at 0x020de26c)."
-    },
-    {
-      "from": "@325",
-      "to": "pmf_dScMgCoin_c_Caption_StateHidden",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateHidden, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x268 loads 0x0213beac in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateHidden at 0x020dc4b0)."
-    },
-    {
-      "from": "@309",
-      "to": "pmf_dScMgCoin_c_Block_StateResting",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateResting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x240 loads 0x0213beb4 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateResting at 0x020dd7bc)."
-    },
-    {
-      "from": "@327",
-      "to": "pmf_dScMgCoin_c_Caption_StateLoop",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateLoop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x26c loads 0x0213bebc in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateLoop at 0x020dc414)."
-    },
-    {
-      "from": "@319",
-      "to": "pmf_dScMgCoin_c_Caption_StateDelay",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x258 loads 0x0213bec4 in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateDelay at 0x020dc6d0)."
-    },
-    {
-      "from": "@323",
-      "to": "pmf_dScMgCoin_c_Caption_StateBlink",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateBlink, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x260 loads 0x0213becc in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateBlink at 0x020dc4c8)."
-    },
-    {
-      "from": "@321",
-      "to": "pmf_dScMgCoin_c_Caption_StateCountIn",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateCountIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x25c loads 0x0213bed4 in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateCountIn at 0x020dc5c4)."
-    },
-    {
-      "from": "@289",
-      "to": "pmf_dScMgCoin_c_Phase_StateIdle",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x210 loads 0x0213bee4 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateIdle at 0x020de5ac)."
-    },
-    {
-      "from": "@301",
-      "to": "pmf_dScMgCoin_c_Block_StateWaiting",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateWaiting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x22c loads 0x0213beec in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateWaiting at 0x020ddca0)."
+      "to": "pmf_dScMgCoin_c_Bag_StateIdle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x270 loads 0x0213be44 in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateIdle at 0x020dc294). Re-keyed from @329 to @331 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@333",
-      "to": "pmf_dScMgCoin_c_Bag_StateParked",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateParked, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x278 loads 0x0213bef4 in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateParked at 0x020dc154)."
+      "to": "pmf_dScMgCoin_c_Bag_StateRise",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x274 loads 0x0213be4c in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateRise at 0x020dc1c4). Re-keyed from @331 to @333 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@299",
+      "to": "pmf_dScMgCoin_c_Phase_StateScoreDelay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateScoreDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x224 loads 0x0213be54 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateScoreDelay at 0x020de1d4). Re-keyed from @297 to @299 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@301",
+      "to": "pmf_dScMgCoin_c_Phase_StateResult",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x228 loads 0x0213be5c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateResult at 0x020de0e0). Re-keyed from @299 to @301 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@307",
+      "to": "pmf_dScMgCoin_c_Block_StateWander",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateWander, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x238 loads 0x0213be64 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateWander at 0x020dd880). Re-keyed from @305 to @307 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@293",
+      "to": "pmf_dScMgCoin_c_Phase_StateIntro",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x214 loads 0x0213be6c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateIntro at 0x020de584). Re-keyed from @291 to @293 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@305",
+      "to": "pmf_dScMgCoin_c_Block_StateHopDown",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateHopDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x234 loads 0x0213be74 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateHopDown at 0x020dda94). Re-keyed from @303 to @305 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@295",
+      "to": "pmf_dScMgCoin_c_Phase_StatePlay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x21c loads 0x0213be7c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StatePlay at 0x020de440). Re-keyed from @293 to @295 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@309",
+      "to": "pmf_dScMgCoin_c_Block_StateDropOnCoin",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateDropOnCoin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x23c loads 0x0213be84 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateDropOnCoin at 0x020dd7c0). Re-keyed from @307 to @309 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@337",
+      "to": "pmf_dScMgCoin_c_Bag_StateBounceDown",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateBounceDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x27c loads 0x0213be8c in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateBounceDown at 0x020dbf7c). Re-keyed from @335 to @337 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@319",
+      "to": "pmf_dScMgCoin_c_Coin_StateSettled",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateSettled, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x254 loads 0x0213be94 in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateSettled at 0x020dcffc). Re-keyed from @317 to @319 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@313",
-      "to": "pmf_dScMgCoin_c_Coin_StateWaitTouch",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateWaitTouch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x248 loads 0x0213befc in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateWaitTouch at 0x020dd0e0)."
+      "to": "pmf_dScMgCoin_c_Block_StateFallIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateFallIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x244 loads 0x0213be9c in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateFallIn at 0x020dd658). Re-keyed from @311 to @313 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@297",
+      "to": "pmf_dScMgCoin_c_Phase_StateSettle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateSettle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x220 loads 0x0213bea4 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateSettle at 0x020de26c). Re-keyed from @295 to @297 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@327",
+      "to": "pmf_dScMgCoin_c_Caption_StateHidden",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateHidden, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x268 loads 0x0213beac in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateHidden at 0x020dc4b0). Re-keyed from @325 to @327 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@311",
+      "to": "pmf_dScMgCoin_c_Block_StateResting",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateResting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x240 loads 0x0213beb4 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateResting at 0x020dd7bc). Re-keyed from @309 to @311 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@329",
+      "to": "pmf_dScMgCoin_c_Caption_StateLoop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateLoop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x26c loads 0x0213bebc in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateLoop at 0x020dc414). Re-keyed from @327 to @329 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@321",
+      "to": "pmf_dScMgCoin_c_Caption_StateDelay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x258 loads 0x0213bec4 in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateDelay at 0x020dc6d0). Re-keyed from @319 to @321 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@325",
+      "to": "pmf_dScMgCoin_c_Caption_StateBlink",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateBlink, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x260 loads 0x0213becc in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateBlink at 0x020dc4c8). Re-keyed from @323 to @325 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@323",
+      "to": "pmf_dScMgCoin_c_Caption_StateCountIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateCountIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x25c loads 0x0213bed4 in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateCountIn at 0x020dc5c4). Re-keyed from @321 to @323 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@291",
+      "to": "pmf_dScMgCoin_c_Phase_StateIdle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x210 loads 0x0213bee4 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateIdle at 0x020de5ac). Re-keyed from @289 to @291 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@303",
+      "to": "pmf_dScMgCoin_c_Block_StateWaiting",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateWaiting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x22c loads 0x0213beec in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateWaiting at 0x020ddca0). Re-keyed from @301 to @303 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@335",
+      "to": "pmf_dScMgCoin_c_Bag_StateParked",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateParked, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x278 loads 0x0213bef4 in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateParked at 0x020dc154). Re-keyed from @333 to @335 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@315",
+      "to": "pmf_dScMgCoin_c_Coin_StateWaitTouch",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateWaitTouch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x248 loads 0x0213befc in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateWaitTouch at 0x020dd0e0). Re-keyed from @313 to @315 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@317",
       "to": "pmf_dScMgCoin_c_Coin_StateHop",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateHop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x250 loads 0x0213bf04 in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateHop at 0x020dd000)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateHop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x250 loads 0x0213bf04 in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateHop at 0x020dd000). Re-keyed from @315 to @317 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

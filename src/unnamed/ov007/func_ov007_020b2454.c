@@ -4,7 +4,7 @@
 #include "Ov007Work.h"
 #include "Ov007Model.h"
 #include "math/CalcLib.h"
-/* Vector3 VEC_*: base is the bone's translation, m[9..11], as a game Vector3 (#5207). */
+/* Vector3 VEC_*: base is the bone's translation as a game Vector3 (#5207). */
 
 void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
     int w;
@@ -20,17 +20,17 @@ void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
     a.z = 0;
     a.y = 0;
     a.x = 0;
-    base = (Vector3 *)&in->m[9];
+    base = (Vector3 *)&in->t;
     /* figureIndex is only ever 0 or 1 here; the ROM has no default arm either, so
        any other value would read w uninitialised. */
     switch (m->figureIndex) {
     case 0:
-        a.y = FX_MUL((-in->m[4]), 0x8543);
+        a.y = FX_MUL((-in->r.m[4]), 0x8543);
         w = 0xbb8;
         r1->x = r1->x - 0x5000;
         break;
     case 1:
-        a.y = FX_MUL(in->m[1], 0x987b);
+        a.y = FX_MUL(in->r.m[1], 0x987b);
         w = 0x960;
         r1->x = r1->x - 0xa000;
         break;

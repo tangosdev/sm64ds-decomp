@@ -470,14 +470,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@458",
+      "from": "@460",
       "to": "@423",
-      "evidence": "mwcc numbers this destructor-registration node @419 per TU; ov035's daObjCtMecha10_c already licenses @419 globally, so the scratch link would multiply-define it Re-keyed from @480 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "mwcc numbers this destructor-registration node @419 per TU; ov035's daObjCtMecha10_c already licenses @419 globally, so the scratch link would multiply-define it Re-keyed from @480 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @458 to @460 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@459",
+      "from": "@461",
       "to": "@424",
-      "evidence": "mwcc numbers this destructor-registration node @420 per TU; ov035's daObjCtMecha10_c already licenses @420 globally, so the scratch link would multiply-define it Re-keyed from @481 to @459 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "mwcc numbers this destructor-registration node @420 per TU; ov035's daObjCtMecha10_c already licenses @420 globally, so the scratch link would multiply-define it Re-keyed from @481 to @459 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @459 to @461 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "undefined_symbol_aliases": [

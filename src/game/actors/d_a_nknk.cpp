@@ -635,7 +635,6 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
     Vec3_Asr(&v, &mPos, 3);
     MtxStack::transS(v.x, v.y, v.z);
     MtxStack::YrotM(mAngle.y);
-    /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
     mAnmModel.mat4x3 = data_020a0e68;
     /* No drop shadow while in Yoshi's mouth. */
     int inMouth = (mFlags & 0x40000) != 0;

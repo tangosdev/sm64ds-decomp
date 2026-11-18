@@ -3285,7 +3285,7 @@ int daDemo_c::Render() {
     if (param1 == 0x19) {
         /* Draw the model three times: copy INV_VIEW_MATRIX_ASR_3 into its
            mat4x3, then for each entry of data_ov002_0210bb7c overwrite the
-           translation column (m[9..11]) and render. */
+           translation and render. */
         struct {
             Matrix4x3 *p;
             Matrix4x3 *cur;
@@ -3298,9 +3298,9 @@ int daDemo_c::Render() {
         int *tbl = data_ov002_0210bb7c;
         int i = 0;
         do {
-            s.p->m[9] = tbl[0];
-            s.p->m[10] = tbl[1];
-            s.p->m[11] = tbl[2];
+            s.p->t.x = tbl[0];
+            s.p->t.y = tbl[1];
+            s.p->t.z = tbl[2];
             mModel->Render(0);
             tbl += 3;
             i++;

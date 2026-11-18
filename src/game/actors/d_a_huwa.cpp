@@ -123,9 +123,9 @@ void daHuwa_c::KillWithCoins() {
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     MTX_Concat43(&mAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
 
-    dust.x = data_020a0e68.m[9];
-    dust.y = data_020a0e68.m[10];
-    dust.z = data_020a0e68.m[11];
+    dust.x = data_020a0e68.t.x;
+    dust.y = data_020a0e68.t.y;
+    dust.z = data_020a0e68.t.z;
     VEC_Subtract(&dust, &mPos, &dust);
     Vec3_LslInPlace(&dust, 3);
     VEC_Add(&dust, &mPos, &dust);
@@ -216,9 +216,9 @@ void daHuwa_c::HandleCylinderHit() {
  * In Yoshi's mouth (mFlags 0x40000) neither the shadow nor Render runs. */
 void daHuwa_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     if (IsInYoshiMouth(this))
         return;
     if (mWithMeshClsn.IsOnGround() != 0) {

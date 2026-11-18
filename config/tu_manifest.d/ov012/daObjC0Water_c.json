@@ -792,14 +792,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@386",
+      "from": "@388",
       "to": "@414",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @428 now; licensed under the existing pin @414 Re-keyed from @413 to @386 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @428 now; licensed under the existing pin @414 Re-keyed from @413 to @386 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @386 to @388 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@385",
+      "from": "@387",
       "to": "@413",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @427 now; licensed under the existing pin @413 Re-keyed from @412 to @385 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @427 now; licensed under the existing pin @413 Re-keyed from @412 to @385 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @385 to @387 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "rodata": [

@@ -810,9 +810,9 @@ void daHanachan_c::UpdateSegmentModels()
     for (i = 0; i < 5; i++) {
         dExtAnmModel_c *model = &mAnmModels[i];
         Matrix4x3_FromRotationY(&model->mat4x3, mSegmentRot[i].y);
-        mAnmModels[i].mat4x3.m[9] = mSegmentPos[i].x >> 3;
-        mAnmModels[i].mat4x3.m[10] = mSegmentPos[i].y >> 3;
-        mAnmModels[i].mat4x3.m[11] = mSegmentPos[i].z >> 3;
+        mAnmModels[i].mat4x3.t.x = mSegmentPos[i].x >> 3;
+        mAnmModels[i].mat4x3.t.y = mSegmentPos[i].y >> 3;
+        mAnmModels[i].mat4x3.t.z = mSegmentPos[i].z >> 3;
     }
 }
 

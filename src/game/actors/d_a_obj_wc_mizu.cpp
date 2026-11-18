@@ -191,9 +191,9 @@ void daObjWc_Mizu_c::UpdateModelTransform() {
 /* The collision mesh takes the model's rotation with a full-scale translation. */
 void daObjWc_Mizu_c::UpdateClsnTransform() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mWaterHeight;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mWaterHeight;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 

@@ -221,7 +221,7 @@ extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern dCamera_c *gCamera;
-extern struct Matrix4x3 data_020a0e68;
+extern union Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
@@ -234,11 +234,11 @@ extern int RandomIntInternal(int *seed);
 int ChiefChilly_ChangeState(C *c, PMF *p);
 extern void func_02012694(unsigned int a, const Vector3 *b);
 extern "C" {
-extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
+extern void Matrix4x3_ApplyInPlaceToRotationX(union Matrix4x3 *m, short angX);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. This TU's
    locals are the POD VecFx32, so the call casts. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
+extern void Matrix4x3_FromTranslation(union Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 }
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
@@ -306,9 +306,9 @@ void daKing_Donketu_c::SpawnLandingEffects(int strength) {
     data_020a0e68 = mBlendAnmModel.mat4x3;
     MTX_Concat43(&mBlendAnmModel.data.transforms[mStepBoneIdx], &data_020a0e68, &data_020a0e68);
     mStepBoneIdx ^= 1;
-    bonePos.x = data_020a0e68.m[9];
-    bonePos.y = data_020a0e68.m[10];
-    bonePos.z = data_020a0e68.m[11];
+    bonePos.x = data_020a0e68.t.x;
+    bonePos.y = data_020a0e68.t.y;
+    bonePos.z = data_020a0e68.t.z;
     Vec3_Lsl(&shifted, &bonePos, 3);
     bonePos = shifted;
     if (mState == &data_ov073_02123360) {
@@ -1597,9 +1597,9 @@ void daKing_Donketu_c::UpdateModelAndShadow() {
     for (; i < 2; i++) {
         data_020a0e68 = *saved;
         MTX_Concat43(&mBlendAnmModel.data.transforms[i + 2], &data_020a0e68, &data_020a0e68);
-        p->x = data_020a0e68.m[9];
-        p->y = data_020a0e68.m[10];
-        p->z = data_020a0e68.m[11];
+        p->x = data_020a0e68.t.x;
+        p->y = data_020a0e68.t.y;
+        p->z = data_020a0e68.t.z;
         Vec3_Lsl(&out, p, sh);
         mFootPos[i].x = out.x;
         mFootPos[i].y = out.y;
@@ -1759,9 +1759,9 @@ int daKing_Donketu_c::Behavior()
         mBlendAnmModel.WillHitFrame(7) != 0) {
         data_020a0e68 = mBlendAnmModel.mat4x3;
         MTX_Concat43(&mBlendAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        bonePos.x = data_020a0e68.m[9];
-        bonePos.y = data_020a0e68.m[10];
-        bonePos.z = data_020a0e68.m[11];
+        bonePos.x = data_020a0e68.t.x;
+        bonePos.y = data_020a0e68.t.y;
+        bonePos.z = data_020a0e68.t.z;
         Vec3_Lsl(&shifted, &bonePos, 3);
         bonePos = shifted;
         func_02012694(SND_ANIM_FRAME_STOMP, &mCamSpacePos);

@@ -202,9 +202,9 @@ void daObjYajirusi_c::Kill() {
  * mPos >> 3 (model matrices are in eighths of a unit). */
 void daObjYajirusi_c::UpdateShadowMatrix() {
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = mPos.y >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = mPos.y >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
 }
 
 // 0x02137c2c (0x60), 0x02137be0 (0x4c)
