@@ -914,7 +914,7 @@ extern struct MgCamera *sMgMainCamera;
 extern void *sD3DLanguageFile;
 extern void *sJumpBackFile;
 extern void *sRouletteLandedRacer;
-extern void*data_ov010_021122f8;
+extern struct CLPS_Block data_ov010_021122f8;
 extern void*data_ov016_021136dc[];
 extern void*data_ov016_021136e4[];
 extern void*data_ov016_021149d4[];

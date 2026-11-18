@@ -372,6 +372,13 @@
   ],
   "data": [
     {
+      "symbol": "data_ov075_0211b52c",
+      "address": "0x0211b52c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "four player-slot step halfwords; decl_common.h keeps the array non-const"
+    },
+    {
       "symbol": "@1032",
       "address": "0x0211c5c0",
       "size": "0x8",
@@ -489,13 +496,6 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14MoveTurnToExitEv"
-    },
-    {
-      "symbol": "data_ov075_0211b52c",
-      "address": "0x0211b52c",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "four player-slot step halfwords; decl_common.h keeps the array non-const"
     },
     {
       "symbol": "data_ov075_0211c678",
@@ -3360,6 +3360,13 @@
   ],
   "rodata": [
     {
+      "symbol": "data_ov075_0211b524",
+      "address": "0x0211b524",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte pattern; the consumer indexes the first six"
+    },
+    {
       "symbol": "sVsPlayerTakeoffZ",
       "address": "0x211b534",
       "size": "0x10",
@@ -3382,13 +3389,6 @@
       "address": "0x211b594",
       "size": "0x40",
       "evidence": "Native signed32 Q12 constant table; consumer-derived role and observed four-player indexing. Original identifier and original declaration syntax are not recovered."
-    },
-    {
-      "symbol": "data_ov075_0211b524",
-      "address": "0x0211b524",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "eight-byte pattern; the consumer indexes the first six"
     }
   ]
 }
