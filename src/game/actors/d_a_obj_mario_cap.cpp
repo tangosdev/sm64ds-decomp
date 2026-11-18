@@ -1314,7 +1314,8 @@ void daObjMarioCap_c::CheckTouch()
         mModelIndex & 0xff, 0, 0);
 
     {
-        /* `a = b ? a : a` through a Vector3_16 is the MATCH form. */
+        /* `a = b ? a : a` through a Vector3_16 is the MATCH form.
+           Kept (#821 r76): `v = found->mAngle;` (POD Vector3_16 assignment) is 0x204 of 0x21c. */
         daPly_c *found = mPlayer;
         int a = *(u16 *)&found->mAngle.x;
         int b = *(u16 *)&found->mAngle.y;
