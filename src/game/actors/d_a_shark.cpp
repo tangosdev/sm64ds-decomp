@@ -101,6 +101,10 @@ extern SharkStateTable data_ov090_021345cc;
 
 daShark_c::~daShark_c() {}
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* Step the hurt cylinder through its three offsets, then hurt the player
  * touching it unless the player is vanished. */
 void daShark_c::CheckPlayerHit() {
@@ -123,8 +127,8 @@ void daShark_c::CheckPlayerHit() {
         return;
     dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
     {
-        int isPlayer = (hit->actorID == 0xbf); /* PLAYER */
-        if (isPlayer == 0)
+        /* PLAYER */
+        if (!IsPlayerActor(hit))
             return;
     }
     if (((daPly_c *)hit)->mIsVanish)
