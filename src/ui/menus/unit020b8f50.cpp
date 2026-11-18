@@ -113,7 +113,7 @@ extern "C" void func_ov007_020c5188(void *, int);
 extern "C" void func_ov007_020c5490(void *obj, Matrix2x2 *m);
 extern "C" void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
 extern "C" void func_ov007_020c56bc(void *c, int a, int b, int d, int e, int f);
-extern void func_ov007_020c5a6c(Ov007Picker *, VecFx32 *, int);
+extern "C" void func_ov007_020c5a6c(Ov007Picker *, VecFx32 *, int);
 extern "C" void func_ov007_020c5c14(Ov007Picker *picker, VecFx32 *out);
 extern "C" int func_ov007_020c5d5c(void *o);
 extern "C" int func_ov007_020c5db0(void *p);

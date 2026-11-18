@@ -4,7 +4,7 @@
 #include "math/CalcLib.h"
 
 /* recovered: shared common types */
-int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int arg4, int *out) {
+extern "C" int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int arg4, int *out) {
     VecFx32 diff;
     long long d2;
     int i;

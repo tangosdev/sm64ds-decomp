@@ -1,16 +1,5 @@
-//cpp
 #include "Ov007Picker.h"
 #include "nitro/fx/fx_vec.h"
-
-/* C++ copies a struct of three named ints, VecFx32 included, word by word.
-   The ROM copies these with one ldm/stm, which C++ keeps for a struct with an
-   array member, so the copies go through it. */
-/* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
-   plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
-   the same copy compiled as C does (measured on func_ov007_020c5dec). */
-struct Vec3Words {
-    int w[3];
-};
 
 int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int arg4, int *out);
 
@@ -45,7 +34,7 @@ void func_ov007_020c5a6c(Ov007Picker *self, VecFx32 *target, int flag) {
 
     switch (self->mode) {
     case 0:
-        *(Vec3Words *)&self->pos = *(Vec3Words *)hit->target;
+        self->pos = *hit->target;
         func_ov007_020c64c4(self, 1);
         break;
     case 1:
@@ -53,7 +42,7 @@ void func_ov007_020c5a6c(Ov007Picker *self, VecFx32 *target, int flag) {
         break;
     case 2: {
         self->pos.z = self->anchorPos.z;
-        *(Vec3Words *)&self->anchorPos = *(Vec3Words *)hit->target;
+        self->anchorPos = *hit->target;
         Ov007Link *link = self->link;
         VEC_Subtract(link->from->target, link->to->target, &link->dir);
         link->length = VEC_Mag(&link->dir);
