@@ -304,10 +304,9 @@ int daOts_c::BehaviorCommon()
     }
 
     mAnmModel.Advance();
-    unsigned short *p100 = &mStateTimer;
-    *p100 = *p100 + 1;
+    mStateTimer++;
     if (four != tail().mState)
-        *p100 = 0;
+        mStateTimer = 0;
     func_ov064_02116bac();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
