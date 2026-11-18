@@ -1704,7 +1704,9 @@ void dScStage_c::PS_Update() {
                     changed = 1;
                     if (sPauseDisplayedCourse == 0xFF)
                         sPauseDisplayedCourse = 0xF;
-                    /* Kept (#821 r84): sPauseArrowPressTimer stored directly -> 8 bytes shorter. */
+                    /* Kept (#821 r84): sPauseArrowPressTimer stored directly -> 8 bytes shorter.
+                       Kept (#821 r93): the ROM keeps a dead `cmp #0x38` on vx here; the same
+                       test as a ?: or if/else around two identical stores folds it (8 short). */
                     {
                         u8 *p0 = &sPauseArrowPressTimer;
                         u8 *p1 = &sPauseArrowPressTimer;
@@ -1713,14 +1715,7 @@ void dScStage_c::PS_Update() {
                         *p = (data_0208ee44 * 3);
                     }
                 } else {
-                    /* Kept (#821 r84): testing a/edge directly in the if -> 0x18 shorter. */
-                    s32 rightPressed;
-                    if ((a != 0) && (gTouchInfo[sl2].edge != 0)) {
-                        rightPressed = 1;
-                    } else {
-                        rightPressed = 0;
-                    }
-                    if (rightPressed != 0) {
+                    if (IsTouchPressed(a, sl2)) {
                         if (((u8)(gTouchInfo[sl2].x - 200) < 56U) && (gTouchInfo[sl2].y < 32U)) {
                             sPauseDisplayedCourse = (sPauseDisplayedCourse + 1);
                             sPressedPauseArrow = 2;
@@ -4551,9 +4546,9 @@ int dScStage_c::InitResources() {
                 int idx = 0;
                 u8 *p1 = (u8 *)gNumRedCoins;
                 u8 *vsStars = (u8 *)gNumStageStars;
-                /* Kept (#821 r87): IsVsMode() here is 12 bytes short of the ROM. */
-                u8 mode = gGameMode;
-                int vsModeCounters = (mode == 1) ? 1 : 0;
+                /* Sampled once, before the loop: IsVsMode() here, or IsGameMode(1)
+                   tested inside the loop, is 12 bytes short or 12 long. */
+                int vsModeCounters = IsGameMode(1);
                 u8 loadMode = sReturnState;
                 do {
                     if (vsModeCounters || (specialSublevel == 0 && loadMode != 1)) {
