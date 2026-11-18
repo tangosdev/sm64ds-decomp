@@ -11,7 +11,7 @@
  */
 #include "types.h"
 
-extern void _Z13func_0201aca4v();
+extern void _ZN7Message13func_0201aca4Ev();
 extern void _ZN7Message9AddChoiceEv();
 extern void _ZN7Message11AddCharPairEv();
 
@@ -22,7 +22,7 @@ int data_0208ee8c[8] = {
 
 /* 0x0208ee80: 12 bytes. */
 void (*MSG_GEN_TEXT_FUNCS[])(void) = {
-    (void (*)(void))&_Z13func_0201aca4v,
+    (void (*)(void))&_ZN7Message13func_0201aca4Ev,
     (void (*)(void))&_ZN7Message9AddChoiceEv,
     (void (*)(void))&_ZN7Message11AddCharPairEv,
 };

@@ -9,7 +9,7 @@
  */
 #include "types.h"
 
-extern void _Z13func_0203128cv();
+extern void _ZN7Message13func_0203128cEv();
 extern void _ZN7Message11AddChoiceVSEv();
 extern void _ZN7Message13AddCharPairVSEv();
 
@@ -27,7 +27,7 @@ unsigned int data_0209283c[8] = {
 
 /* 0x02092830: 12 bytes. */
 void (*data_02092830[])(void) = {
-    (void (*)(void))&_Z13func_0203128cv,
+    (void (*)(void))&_ZN7Message13func_0203128cEv,
     (void (*)(void))&_ZN7Message11AddChoiceVSEv,
     (void (*)(void))&_ZN7Message13AddCharPairVSEv,
 };

@@ -1760,6 +1760,22 @@
       "count": 2,
       "reason": "The text-expansion dispatch table's second and third entries are code addresses of Message member functions (Message::AddChoice, Message::AddCharPair, and their VS variants). C cannot form a member function's code address, so the mangled symbol is the only linkable spelling for those words.",
       "evidence": "Message2.cpp:103 and Message3.cpp:90 declare these tables as void (*[])(void); data_0208ee80.c and data_02092824.c are VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+    },
+    {
+      "path": "src/data/arm9/data_0208ee80.c",
+      "rule": "handspelled-member",
+      "match": "_ZN7Message13func_0201aca4Ev",
+      "count": 2,
+      "reason": "The text-expansion dispatch table (MSG_GEN_TEXT_FUNCS, and the dScene one at 0x02092830) is a three-word list of code addresses, and all three entries are Message member functions: func_0201aca4/func_0203128c and AddChoice/AddCharPair (plus the VS variants). C cannot form a member function code address -- a pointer-to-member is not a function pointer -- so the mangled symbol is the only linkable spelling for those words.",
+      "evidence": "Message2.cpp:103 and Message3.cpp:90 declare these tables as void (*[])(void); the handlers are Message members at 0x0201aca4 and 0x0203128c; data_0208ee80.c and data_02092824.c are VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
+    },
+    {
+      "path": "src/data/arm9/data_02092824.c",
+      "rule": "handspelled-member",
+      "match": "_ZN7Message13func_0203128cEv",
+      "count": 2,
+      "reason": "The text-expansion dispatch table (MSG_GEN_TEXT_FUNCS, and the dScene one at 0x02092830) is a three-word list of code addresses, and all three entries are Message member functions: func_0201aca4/func_0203128c and AddChoice/AddCharPair (plus the VS variants). C cannot form a member function code address -- a pointer-to-member is not a function pointer -- so the mangled symbol is the only linkable spelling for those words.",
+      "evidence": "Message2.cpp:103 and Message3.cpp:90 declare these tables as void (*[])(void); the handlers are Message members at 0x0201aca4 and 0x0203128c; data_0208ee80.c and data_02092824.c are VERIFIED by romdata_check (863 symbols, 0 differs) and the full build reports 106/106 module fidelity."
     }
   ]
 }
