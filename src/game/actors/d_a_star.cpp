@@ -1479,7 +1479,8 @@ void daStar_c::StateWaitMarker() {
 
     {
         daPly_c *player = static_cast<daPly_c *>(actor->mHitActor);
-        if (!IsVsMode() || player == 0) return;
+        if (!IsVsMode() || player == 0)
+            return;
 
         mBits.noPickup = 1;
         mHorzSpeed = 0xc000;
