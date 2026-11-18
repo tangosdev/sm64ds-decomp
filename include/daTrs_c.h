@@ -294,7 +294,7 @@ struct daTrs_c : dCapEnemy_c {
        sets single bits through mBooFlags, and clears the halfword or changes
        it by the TrsFlag masks (d_a_trs.cpp) through mTrsFlags. */
     union {
-        BooFlags16 mBooFlags;  /* 0x5d4 */
+        BooFlags16 mBooFlags; /* 0x5d4 */
         u16 mTrsFlags;
     };
     u8  pad_5d6[0x2];

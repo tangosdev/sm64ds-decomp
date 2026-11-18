@@ -63,7 +63,7 @@ struct System {
        (pokeplatinum/lib/spl/include/spl_emitter.h); the bit names are the
        ones func_0204a730's view and the update and draw walks already used. */
     union {
-        u32 callbackFlags;         /* 0x1c */
+        u32 callbackFlags; /* 0x1c */
         struct {
             u32 terminate : 1;
             u32 stopGenerate : 1;
