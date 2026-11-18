@@ -1672,6 +1672,422 @@
       "count": 1,
       "reason": "dScMgCurling2_c::ResetGame clears 0x55b0 through the existing header member instead of a raw `*((short *)(c + 0x55b0))` store off a `char *c = (char *)this` alias (#821). It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Same shape as the file's unk_55a0 and unk_55c0 stores. Follow-up: name it if a reader is found.",
       "evidence": "include/dScMgCurling2_c.h `u16 unk_55b0; /* 0x55b0, write-only: ResetGame zeroes it */`; fdiff _ZN15dScMgCurling2_c9ResetGameEv ov006 58/58 2004/b56"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab800.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM13MM_MARIO_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab800.c window 0x020ab800..0x020ab808 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab808.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_MARIO_W_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab808.c window 0x020ab808..0x020ab820 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab820.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_MARIO_L_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab820.c window 0x020ab820..0x020ab838 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab838.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM20MM_MARIO_NO_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab838.c window 0x020ab838..0x020ab850 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab850.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM13MM_LUIGI_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab850.c window 0x020ab850..0x020ab858 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab858.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_LUIGI_W_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab858.c window 0x020ab858..0x020ab870 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab870.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_LUIGI_M_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab870.c window 0x020ab870..0x020ab888 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab888.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM20MM_LUIGI_NO_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab888.c window 0x020ab888..0x020ab8a0 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab8a0.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM13MM_WARIO_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab8a0.c window 0x020ab8a0..0x020ab8a8 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab8a8.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM20MM_WARIO_NO_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab8a8.c window 0x020ab8a8..0x020ab8b8 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab8b8.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_WARIO_L_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab8b8.c window 0x020ab8b8..0x020ab8d0 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab8d0.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_WARIO_M_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab8d0.c window 0x020ab8d0..0x020ab8e8 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab8e8.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM13MM_YOSHI_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab8e8.c window 0x020ab8e8..0x020ab8f0 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab8f0.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_YOSHI_L_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab8f0.c window 0x020ab8f0..0x020ab908 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab908.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_YOSHI_M_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab908.c window 0x020ab908..0x020ab920 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab920.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19MM_YOSHI_W_CAP_ICONE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab920.c window 0x020ab920..0x020ab938 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab948.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM10LIFE_ICONSE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab948.c window 0x020ab948..0x020ab958 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ab9c8.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM5TIMESE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ab9c8.c window 0x020ab9c8..0x020ab9d0 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020aba70.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM7NUMBERSE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020aba70.c window 0x020aba70..0x020abac0 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abac0.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM16SMALL_STAR_EMPTYE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abac0.c window 0x020abac0..0x020abac8 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abad0.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM10POWER_STARE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abad0.c window 0x020abad0..0x020abad8 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abad8.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM4COINE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abad8.c window 0x020abad8..0x020abae0 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abb34.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19PLAYER_SELECT_MARIOE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abb34.c window 0x020abb34..0x020abb54 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abb54.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19PLAYER_SELECT_LUIGIE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abb54.c window 0x020abb54..0x020abb74 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abb74.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19PLAYER_SELECT_WARIOE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abb74.c window 0x020abb74..0x020abb94 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abb94.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19PLAYER_SELECT_YOSHIE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abb94.c window 0x020abb94..0x020abc34 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abd78.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM12POINTER_DOWNE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abd78.c window 0x020abd78..0x020abd80 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abd80.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM13POINTER_RIGHTE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abd80.c window 0x020abd80..0x020abd88 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020abd88.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM14BOUNCING_ARROWE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020abd88.c window 0x020abd88..0x020abd98 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ad04c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM15TOUCH_MODE_TEXTE",
+      "count": 2,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ad04c.c window 0x020ad04c..0x020ad058 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ad04c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM18STANDARD_MODE_TEXTE",
+      "count": 2,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ad04c.c window 0x020ad04c..0x020ad058 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ad04c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19DUAL_HAND_MODE_TEXTE",
+      "count": 2,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ad04c.c window 0x020ad04c..0x020ad058 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ad04c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM21CONTROLLER_MODE_TEXTSE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ad04c.c window 0x020ad04c..0x020ad058 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ad058.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM15TOUCH_MODE_TEXTE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ad058.c window 0x020ad058..0x020ad188 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ad188.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM18STANDARD_MODE_TEXTE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ad188.c window 0x020ad188..0x020ad2d0 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov001/data_ov001_020ad2d0.c",
+      "rule": "handspelled-member",
+      "match": "_ZN3OAM19DUAL_HAND_MODE_TEXTE",
+      "count": 1,
+      "reason": "ROM data symbol: OAM's sprite records and index tables are cartridge data whose linker name is the static-member mangling (_ZN3OAM...E). An OamAttr record or pointer table has no C spelling other than that linker name for the objects it defines or points at. OAM.h declares only part of this set, and include/ is out of scope for this data-only pass; converting these sources to C++ and defining the rest through OAM.h is the follow-up.",
+      "evidence": "src/data/ov001/data_ov001_020ad2d0.c window 0x020ad2d0..0x020ad450 reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgBase_c10OnDealDoneEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgBase_c11OnNewRecordEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgBase_c11PaintSquareEiiii",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgBase_c16InitMainScreenBgEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgBase_c16OnGraphCallback0Ev",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN11dScMgBase_c16OnGraphCallback1Ev",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN12dEnemyBase_c19func_ov002_020ad660EPvS0_i",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c11InitEnginesEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c14GetDisplayModeEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c15InitSubScreenBgEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c16OnGraphCallback2Ev",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c16OnGraphCallback3Ev",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c17SaveScreenForMenuEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c21RestoreScreenFromMenuEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c8OpenMenuEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
+    },
+    {
+      "path": "src/data/ov006/data_ov006_0213c67c.c",
+      "rule": "handspelled-member",
+      "match": "_ZN14dScMgD3DBase_c9CloseMenuEv",
+      "count": 2,
+      "reason": "ROM vtable body: every word is the address of a virtual override. C++ cannot name a virtual member's address in data (&Class::method is a pointer-to-member, a vtable index, not the code word), so the stored linker word keeps the mangled member name. The owning class TU does not claim this slice; this placeholder row is its only source reproduction.",
+      "evidence": "src/data/ov006/data_ov006_0213c67c.c window 0x0213c67c..0x0213c6bc reproduced byte-for-byte by tools/romdata_check.py (VERIFIED, 0 differs); full rombuild reports module fidelity 106/106 exact and 3,436/3,436 source-owned data claims reproducing"
     }
   ]
 }
