@@ -27,6 +27,11 @@
       "end": "0x02074da8"
     },
     {
+      "name": ".rodata",
+      "start": "0x02075244",
+      "end": "0x02075250"
+    },
+    {
       "name": ".ctor",
       "start": "0x02086b68",
       "end": "0x02086b6c"
@@ -719,6 +724,15 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_02075244",
+      "address": "0x02075244",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "The three WDW water levels dActor_c::GetWaterHeightWDW picks between, in 20.12: 45.0, 1000.0 and 2750.0 (0x2d000, 0x3e8000, 0xabe000). In sublevel 0x15 area 0 it indexes the table by gCurrentSublevel - 0x10; no reader outside this TU in config/**/relocs.txt. Declared through decl_common.h as data_02075244[]."
+    }
+  ],
   "bss": [
     {
       "symbol": "data_0209b468",
@@ -817,9 +831,9 @@
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/arm9-Actor/link (gitignored)",
+      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -851,6 +865,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02075244",
+          "end": "0x02075250",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".ctor",
           "start": "0x02086b68",
           "end": "0x02086b6c",
@@ -866,7 +887,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 100
+          "LICENSED": 101
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
