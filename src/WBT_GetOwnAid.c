@@ -1,6 +1,6 @@
 #include "nitro/wbt.h"
 
-extern int data_0209a074;
+int data_0209a074 = -1;
 
 /* NitroSDK WBT_SetOwnAid and WBT_GetOwnAid: this console's aid, 0 on the
  * parent (WBT_InitParent), -1 before a child has one (WBT_InitChild,

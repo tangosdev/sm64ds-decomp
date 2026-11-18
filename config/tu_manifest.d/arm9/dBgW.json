@@ -21,6 +21,11 @@
       "name": ".data",
       "start": "0x02099370",
       "end": "0x020993bc"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a0c80",
+      "end": "0x020a0ce0"
     }
   ],
   "functions": [
@@ -327,12 +332,20 @@
       "evidence": "compiler storage includes the two-word ABI preamble at 0x02099380 (offset-to-top 0, _ZTI4dBgW 0x02099378); the configured public address point is eight bytes later. Thirteen slots: D1 0x0203968c, D0 0x02039668, Virtual08 0x02039620, three zero words for the pure-virtual GetSurfaceInfo/GetNormal/GetTriangleOrigin, then DetectClsn Gnd/Lin/SphCrr, BeforeClsn, TransformPos, GetAngularVelY, GetVelocity -- every reloc word lands on this TU's own members"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_020a0c80",
+      "address": "0x020a0c80",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "dBgW *[0x18]. The enabled-collider registry: Enable stores the collider in a free slot, Disable clears it, IsEnabled scans it, and dScStage_c::ResetMeshColliders clears all 0x18 slots."
+    }
+  ],
   "notes": [
     "Cartridge RTTI names the class dBgW (_ZTS4dBgW at arm9 0x02099370, _ZTI at 0x02099378, vtable address point at 0x02099388). The licensed run is .text 0x02039140..0x020396d8 (40 functions): the lifecycle group, Enable/Disable/IsEnabled with the 0x18-slot registry data_020a0c80, the four static Update* BeforeClsn callbacks, the trivial virtuals, plus two members of neighbouring collision classes the original TU shared (dScStage_c::ResetMeshColliders, dBgCh::ShouldPassThroughImpl) and the TU-local func_ helpers between them.",
     "Deferred codegen emits D2,D0,D1 then the constructor, and plain members in reverse source order; the file defines the trailing setters and the lifecycle pair first. func_02039624 is the shared field-init the ctor and dBgW_Kc::SetFile both call; func_020395fc/fc/f0/04 are the Enable/Disable slot-registry helpers; the ten 8-byte accessors 0x0203938c..0x020393d4 and func_020396c0/func_020396d0 are weak-emitted field accessors the dBgCh query TUs and derived colliders call by address -- they keep func_ names because no class evidence names them.",
     "Only C2 has a configured home: dBgW is a root class whose C1 emits beside C2 and is deadstripped. D2/D0/D1 all have homes -- D1 sits in vtable slot 0, D2 answers derived-class direct calls, D0 is the deleting destructor.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "compiler_only_output": [
     {
@@ -403,7 +416,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -426,11 +439,17 @@
           "end": "0x020993bc",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a0c80",
+          "end": "0x020a0ce0",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 43
+          "LICENSED": 44
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -449,6 +468,15 @@
               5,
               6,
               8
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              10
+            ],
+            "desired": [
+              10
             ]
           }
         ],

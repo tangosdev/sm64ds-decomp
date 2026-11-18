@@ -17,6 +17,9 @@ extern "C" {
 /* local extern: no header declares the CLPS water test (CLPS.h only
    documents it); d_bg_ch_sph_crr_query.cpp defines it with this
    signature. */
+
+/* The enabled colliders, one slot per dBgW instance (dBgW.h). */
+dBgW *data_020a0c80[0x18];
 }
 extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 

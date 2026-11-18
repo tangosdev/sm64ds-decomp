@@ -144,7 +144,6 @@ extern int SublevelToLevel(int);
 extern int VT[];
 extern int __aeabi_idiv(int, int);
 extern int __aeabi_idivmod(int, int);
-extern int data_02075244[];
 extern int data_02086f38[];
 extern int data_02086f48[];
 extern int data_020873dc;

@@ -23,6 +23,11 @@
       "end": "0x02074e80"
     },
     {
+      "name": ".rodata",
+      "start": "0x02075358",
+      "end": "0x020755a0"
+    },
+    {
       "name": ".ctor",
       "start": "0x02086b80",
       "end": "0x02086b84"
@@ -245,6 +250,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02075358",
+          "end": "0x020755a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".ctor",
           "start": "0x02086b80",
           "end": "0x02086b84",
@@ -260,7 +272,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 5
+          "LICENSED": 6
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -271,19 +283,28 @@
           {
             "section": ".init",
             "original": [
-              11
+              12
             ],
             "desired": [
-              11
+              12
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              7
+            ],
+            "desired": [
+              7
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              9
+              10
             ],
             "desired": [
-              9
+              10
             ]
           },
           {
@@ -313,5 +334,14 @@
       },
       "linkerOutput": null
     }
-  }
+  },
+  "rodata": [
+    {
+      "symbol": "data_02075358",
+      "address": "0x02075358",
+      "size": "0x248",
+      "binding": "STB_GLOBAL",
+      "evidence": "boot message block: 64-byte header then the Italian and Spanish title messages"
+    }
+  ]
 }

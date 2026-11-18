@@ -30,6 +30,14 @@ extern "C" {
 
 extern const char data_0209a048[]; /* "rom" */
 
+/* The ROM archive state (private/fs_rom.h): the DMA channel and card lock
+   reads use, the two overlay tables, and the archive itself. */
+u32 fsi_default_dma_no;
+s32 fsi_card_lock_id;
+CARDRomRegion fsi_ovt9;
+CARDRomRegion fsi_ovt7;
+FSArchive fsi_arc_rom;
+
 void CARD_Init(void);
 
 void FSi_OnRomReadDone(void *p_arc);

@@ -3,11 +3,13 @@
 extern u16 data_020a4c48[];
 extern int data_020a4c4c[];
 extern int data_020a4c54[];
-extern int data_02082200;
-extern int data_02082204;
-extern int data_02082208;
-extern int data_0208220c;
-extern int data_02082210;
+/* The volume deltas below are declared in mwcc's .rodata emission order
+   (size-ordered, last-declared last), which is the ROM's address order. */
+extern const int data_0208220c;
+extern const int data_02082208;
+extern const int data_02082204;
+extern const int data_02082200;
+extern const int data_02082210;
 
 /* func_0204921c's twin, for the same sequences and modes: the target volume
    (data_020a4c54) and per-step delta (data_020a4c4c, from the constants
@@ -87,3 +89,11 @@ void func_020494cc(NNSSndHandle *a, int mode) {
         data_020a4c48[1] = 0x100;
     }
 }
+
+/* The per-track volume deltas, one constant per ramp above: 0xba (mode 0/1),
+   0x1451, 0x1451, 0x1451, 0xcb33. */
+const int data_0208220c = 0x1451;
+const int data_02082208 = 0x1451;
+const int data_02082204 = 0x0a28;
+const int data_02082200 = 0x1451;
+const int data_02082210 = 0xcb33;
