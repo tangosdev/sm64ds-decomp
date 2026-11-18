@@ -18,7 +18,14 @@
       "end": "0x02121118"
     },
     {
-      "name": ".data",
+      "name": ".data.brqBta",
+      "input_section": ".data",
+      "start": "0x021231e4",
+      "end": "0x0212320c"
+    },
+    {
+      "name": ".data.brqMain",
+      "input_section": ".data",
       "start": "0x0212323c",
       "end": "0x021232f4"
     },
@@ -36,6 +43,12 @@
       "name": ".bss",
       "start": "0x021235ec",
       "end": "0x02123698"
+    },
+    {
+      "name": ".rodata.brqBta",
+      "input_section": ".rodata",
+      "start": "0x02122244",
+      "end": "0x021222e0"
     },
     {
       "name": ".rodata",
@@ -180,6 +193,18 @@
   ],
   "data": [
     {
+      "symbol": "data_ov070_021231e4",
+      "address": "0x021231e4",
+      "size": "0x10",
+      "evidence": "material name \"mat_bilikyu2\" in a 16-byte slot"
+    },
+    {
+      "symbol": "data_ov070_021231f4",
+      "address": "0x021231f4",
+      "size": "0x18",
+      "evidence": "texture-SRT template: 60 frames, one scale key, 60 rotation keys, one translation key and one material record"
+    },
+    {
       "symbol": "_ZTS7daBrq_c",
       "address": "0x0212323c",
       "size": "0x9",
@@ -207,6 +232,34 @@
     }
   ],
   "rodata": [
+    {
+      "symbol": "data_ov070_02122244",
+      "address": "0x02122244",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "single texture-SRT scale key 1.0"
+    },
+    {
+      "symbol": "data_ov070_02122248",
+      "address": "0x02122248",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "single texture-SRT translation key 0"
+    },
+    {
+      "symbol": "data_ov070_0212224c",
+      "address": "0x0212224c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one material record: id 0xffff, name at 0x021231e4, single S/T keys and 60 rotation keys"
+    },
+    {
+      "symbol": "data_ov070_02122268",
+      "address": "0x02122268",
+      "size": "0x78",
+      "binding": "STB_GLOBAL",
+      "evidence": "60 texture-SRT rotation keys in 0x44 steps, mirrored after 0x800"
+    },
     {
       "symbol": "data_ov070_021222e0",
       "address": "0x021222e0",
@@ -310,7 +363,7 @@
   ],
   "relocations": [
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123248",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -320,7 +373,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x0212324c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -330,7 +383,7 @@
       "target_address": "0x0212323c"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123250",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -340,7 +393,7 @@
       "target_address": "0x0208e390"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123254",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -350,7 +403,7 @@
       "target_address": "0x021210ac"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123274",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -360,7 +413,7 @@
       "target_address": "0x02123248"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123278",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -370,7 +423,7 @@
       "target_address": "0x02120eec"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x0212327c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -380,7 +433,7 @@
       "target_address": "0x02011268"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123280",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -390,7 +443,7 @@
       "target_address": "0x02011244"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123284",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -400,7 +453,7 @@
       "target_address": "0x02120dc4"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123288",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -410,7 +463,7 @@
       "target_address": "0x02011220"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x0212328c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -420,7 +473,7 @@
       "target_address": "0x02011214"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123290",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -430,7 +483,7 @@
       "target_address": "0x02120e8c"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123294",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -440,7 +493,7 @@
       "target_address": "0x02010fd4"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x02123298",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -450,7 +503,7 @@
       "target_address": "0x02010fc8"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x0212329c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -460,7 +513,7 @@
       "target_address": "0x02120e24"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -470,7 +523,7 @@
       "target_address": "0x02010f78"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -480,7 +533,7 @@
       "target_address": "0x02010f6c"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -490,7 +543,7 @@
       "target_address": "0x02120e20"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -500,7 +553,7 @@
       "target_address": "0x0204357c"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -510,7 +563,7 @@
       "target_address": "0x0204349c"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -520,7 +573,7 @@
       "target_address": "0x02043494"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -530,7 +583,7 @@
       "target_address": "0x02120570"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -540,7 +593,7 @@
       "target_address": "0x021205d0"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -550,7 +603,7 @@
       "target_address": "0x02010160"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -560,7 +613,7 @@
       "target_address": "0x02010154"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -570,7 +623,7 @@
       "target_address": "0x0201014c"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -580,7 +633,7 @@
       "target_address": "0x02010148"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -590,7 +643,7 @@
       "target_address": "0x02010144"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -600,7 +653,7 @@
       "target_address": "0x02010140"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -610,7 +663,7 @@
       "target_address": "0x0201013c"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -620,7 +673,7 @@
       "target_address": "0x02010138"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -630,7 +683,7 @@
       "target_address": "0x02010134"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -640,7 +693,7 @@
       "target_address": "0x02010130"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -650,7 +703,7 @@
       "target_address": "0x0201012c"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -660,7 +713,7 @@
       "target_address": "0x02010124"
     },
     {
-      "section": ".data",
+      "section": ".data.brqMain",
       "source": "0x021232f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1038,6 +1091,56 @@
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x0212360c"
+    },
+    {
+      "section": ".rodata.brqBta",
+      "source": "0x02122250",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_021231e4",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021231e4"
+    },
+    {
+      "section": ".data.brqBta",
+      "source": "0x021231f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122244",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122244"
+    },
+    {
+      "section": ".data.brqBta",
+      "source": "0x021231fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122268",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122268"
+    },
+    {
+      "section": ".data.brqBta",
+      "source": "0x02123200",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_02122248",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02122248"
+    },
+    {
+      "section": ".data.brqBta",
+      "source": "0x02123208",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov070_0212224c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212224c"
     }
   ],
   "externalized_output": [
@@ -1280,7 +1383,14 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.brqBta",
+          "start": "0x021231e4",
+          "end": "0x0212320c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.brqMain",
           "start": "0x0212323c",
           "end": "0x021232f4",
           "differingBytes": 0,
@@ -1305,6 +1415,13 @@
           "start": "0x021235ec",
           "end": "0x02123698",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.brqBta",
+          "start": "0x02122244",
+          "end": "0x021222e0",
+          "differingBytes": 0,
+          "firstDiff": null
         },
         {
           "section": ".rodata",

@@ -30,7 +30,14 @@
       "end": "0x02122b40"
     },
     {
-      "name": ".data",
+      "name": ".data.casketStrings",
+      "input_section": ".data",
+      "start": "0x02122e64",
+      "end": "0x02122e74"
+    },
+    {
+      "name": ".data.casketMain",
+      "input_section": ".data",
       "start": "0x02122ecc",
       "end": "0x02122ef4"
     },
@@ -141,6 +148,18 @@
     }
   ],
   "data": [
+    {
+      "symbol": "data_ov071_02122e64",
+      "address": "0x02122e64",
+      "size": "0x8",
+      "evidence": "state name \"WAIT\" in an eight-byte slot"
+    },
+    {
+      "symbol": "data_ov071_02122e6c",
+      "address": "0x02122e6c",
+      "size": "0x8",
+      "evidence": "state name \"STANDUP\" in an eight-byte slot"
+    },
     {
       "symbol": "data_ov071_02122ecc",
       "address": "0x02122ecc",
@@ -371,7 +390,7 @@
       "target_address": "0x02122ecc"
     },
     {
-      "section": ".data",
+      "section": ".data.casketMain",
       "source": "0x02122edc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -381,7 +400,7 @@
       "target_address": "0x02122e64"
     },
     {
-      "section": ".data",
+      "section": ".data.casketMain",
       "source": "0x02122ef0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -574,7 +593,14 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.casketStrings",
+          "start": "0x02122e64",
+          "end": "0x02122e74",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.casketMain",
           "start": "0x02122ecc",
           "end": "0x02122ef4",
           "differingBytes": 0,

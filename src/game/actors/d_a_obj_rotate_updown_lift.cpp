@@ -59,12 +59,15 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
 
-/* Plain 12-byte point. Vector3's destructor is empty but the type is not
-   POD, and the copies below are three-word ldm/stm with no cleanup. */
+/* A 12-byte point. The table is plain words: a Vector3 array would register
+   an exit-time destructor the retail .init does not have. */
+struct UpdownNode {
+    s32 x, y, z;
+};
 
 /* Ten nodes, 0x78 bytes. Three of these sit at data_ov091_02134cdc. */
 struct UpdownPath {
-    Vector3 node[10];
+    UpdownNode node[10];
 };
 
 /* Node 5's Y, one word per path, stride 0x78. The symbol is 0x40 bytes
@@ -122,9 +125,70 @@ VariantWords data_ov091_02134ba0 = {{0x200000, 0x200000, 0x500000}};
 VariantWords data_ov091_02134bac = {{0x3c000, 0x3c000, 0x78000}};
 VariantWords data_ov091_02134bb8 = {{0x32000, 0x32000, 0x78000}};
 extern VariantWords data_ov091_02134bd0;
-extern UpdownFileSlot data_ov091_02134c30[];
 extern UpdownFileSlot data_ov091_02134c34[];
 extern UpdownClpsSlot data_ov091_02134c38[];
+
+/* The three file rows: the default and level-7 variants share the object
+ * files, the HS variant has its own. The CLPS blocks are the course
+ * overlays' shared rock properties. */
+struct UpdownFileRow {
+    SharedFilePtr *file;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+
+extern RotateUpdownLiftModelFile gObjUpdnliftModelFile;
+extern RotateUpdownLiftCollisionFilePtr gObjUpdnliftCollisionFile;
+extern RotateUpdownLiftModelFile gHsUpdownLiftModelFile;
+extern RotateUpdownLiftCollisionFilePtr gHsUpdownLiftCollisionFile;
+extern CLPS_Block data_ov002_0210d834;
+extern CLPS_Block data_ov008_02111244;
+
+UpdownFileRow data_ov091_02134c30[3] = {
+    {&gObjUpdnliftModelFile, &gObjUpdnliftCollisionFile, &data_ov002_0210d834},
+    {&gObjUpdnliftModelFile, &gObjUpdnliftCollisionFile, &data_ov002_0210d834},
+    {&gHsUpdownLiftModelFile, &gHsUpdownLiftCollisionFile, &data_ov008_02111244},
+};
+
+/* Node 5's Y of each path is the watcher's spawn height. */
+UpdownPath data_ov091_02134cdc[3] = {
+    {{
+        {0x0, 0x5a000, 0x0},
+        {0x0, 0x86000, -0x6a000},
+        {0x0, 0xf0000, -0x96000},
+        {0x0, 0x294000, -0x96000},
+        {0x0, 0x2f8000, -0x64000},
+        {0x0, 0x32a000, 0x0},
+        {0x0, 0x2f8000, 0x64000},
+        {0x0, 0x294000, 0x96000},
+        {0x0, 0xf0000, 0x96000},
+        {0x0, 0x86000, 0x6a000},
+    }},
+    {{
+        {0x0, 0x0, 0x0},
+        {0x0, 0x2c000, -0x6a000},
+        {0x0, 0x96000, -0x96000},
+        {0x0, 0x352000, -0x96000},
+        {0x0, 0x3b6000, -0x64000},
+        {0x0, 0x3e8000, 0x0},
+        {0x0, 0x3b6000, 0x64000},
+        {0x0, 0x352000, 0x96000},
+        {0x0, 0x96000, 0x96000},
+        {0x0, 0x2c000, 0x6a000},
+    }},
+    {{
+        {0x0, 0x0, 0x0},
+        {0x0, 0x58000, -0xd4000},
+        {0x0, 0x12c000, -0x12c000},
+        {0x0, 0x514000, -0x12c000},
+        {0x0, 0x5dc000, -0xc8000},
+        {0x0, 0x640000, 0x0},
+        {0x0, 0x5dc000, 0xc8000},
+        {0x0, 0x514000, 0x12c000},
+        {0x0, 0x12c000, 0x12c000},
+        {0x0, 0x58000, 0xd4000},
+    }},
+};
 extern s8 gCurrentSublevel;
 
 extern "C" {
@@ -161,7 +225,8 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPos.z = mBasePos.z;
     mWaypointIndex = (param1 & 15);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &offset);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  &offset);
     Vec3_Add(&pos, &mBasePos, &offset);
     mPos.x = pos.x;
     mPos.y = pos.y;
@@ -373,8 +438,9 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &cur);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  &cur);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, &mBasePos, &cur);
     Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
@@ -459,13 +525,14 @@ int daObjRotateUpdownLift_c::InitResources()
     mWaypointIndex = (param1 & 15);
 
     if (mWaypointIndex == 2) {
-        Vec3_Add(&spawnAt, &mBasePos, &data_ov091_02134cdc[mVariant].node[0]);
+        Vec3_Add(&spawnAt, &mBasePos, (Vector3 *)&data_ov091_02134cdc[mVariant].node[0]);
         spawnAt.y += data_ov091_02134d1c[mVariant].y;
         Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &rotated);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  &rotated);
     Vec3_Add(&placed, &mBasePos, &rotated);
     mPos.x = placed.x;
     mPos.y = placed.y;

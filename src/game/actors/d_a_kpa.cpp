@@ -324,13 +324,13 @@ extern KpaAnimationFileHandle data_ov060_0211aca0;
 extern KpaAnimationFileHandle data_ov060_0211abf8;
 extern KpaAnimationFileHandle data_ov060_0211ac90;
 /* The arena-tilt table walked by ActTiltLavaPlatform. Rows of three halfwords
- * (sign, scale, end frame), each column addressed through its own symbol.
- * It stays a ROM copy: the linker aligns every input section to 4, so a
- * section cannot start at 0x02119296, and one array lets the compiler fold
- * the three bases. */
-extern short data_ov060_02119294[];
-extern short data_ov060_02119296[];
-extern short data_ov060_02119298[];
+ * (sign, scale, end frame). The whole block is one object; the two column
+ * names below address the same rows from +2 and +4. */
+extern const short data_ov060_02119294[];
+extern const short data_ov060_02119296[];
+extern const short data_ov060_02119298[];
+/* Defined at the bottom of this file; read by the per-state ground check. */
+extern const unsigned char data_ov060_02119268[];
 }
 extern void func_02012694(unsigned int id, const Vector3 *v);
 void func_02038408(dBgCh_Actr *self);
@@ -3064,13 +3064,21 @@ KpaTexSequenceFilePtr data_ov060_0211ac28(ASSET_KOOPA_WAIT_BTP);
 KpaTexSequenceFilePtr data_ov060_0211ac30(ASSET_KOOPA_HOLD_BTP);
 
 /* Overlay .rodata. const so the section is not executable; a named route
- * refuses an executable section. data_ov060_02119268 stays the decl_common.h
- * u8[] ROM copy: that declaration is non-const. */
+ * refuses an executable section. */
 extern "C" {
 extern const unsigned char data_ov060_02119264[] = {1, 1, 3, 0};
+/* States that land back on the last ground position when they leave the
+ * ground, indexed by mState. */
+extern const unsigned char data_ov060_02119268[] = {1, 0, 0, 1, 0, 0, 0, 1, 1, 1,
+                                                    1, 1, 0, 0, 1, 1, 1, 0, 1, 1};
 extern SharedFilePtr *const data_ov060_0211927c[] = {&data_ov060_0211ac40, &data_ov060_0211acb8,
                                                      &data_ov060_0211ac10, &data_ov060_0211abf0,
                                                      &data_ov060_0211ac28, &data_ov060_0211ac30};
+/* Arena-tilt rows: sign, scale and end frame; the final row's zero end frame
+ * terminates the walk. */
+extern const short data_ov060_02119294[36] = {1,  10, 40,  0, 0,   74,  -1, -10,  114, 1, -20, 134,
+                                              -1, 20, 154, 1, 40,  164, -1, -40,  174, 1, -80, 179,
+                                              -1, 80, 184, 1, 160, 186, -1, -160, 186, 1, 0,   0};
 extern SharedFilePtr *const data_ov060_021192dc[] = {
     &data_ov060_0211ac88, &data_ov060_0211ac50, &data_ov060_0211ac58, &data_ov060_0211ac60,
     &data_ov060_0211ac18, &data_ov060_0211acd0, &data_ov060_0211ac68, &data_ov060_0211ac70,

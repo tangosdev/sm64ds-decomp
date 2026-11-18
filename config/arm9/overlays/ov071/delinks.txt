@@ -2,7 +2,11 @@
     .rodata     start:0x021226a0 end:0x021226ac kind:rodata align:4
     .init       start:0x021226ac end:0x02122b30 kind:code align:4
     .ctor       start:0x02122b30 end:0x02122b40 kind:rodata align:4
-    .data       start:0x02122b60 end:0x02122f80 kind:data align:32
+    .data       start:0x02122b60 end:0x02122e64 kind:data align:32
+    .data.casketStrings start:0x02122e64 end:0x02122e74 kind:data align:4
+    .data.casketPmf start:0x02122e74 end:0x02122ecc kind:data align:4
+    .data.casketMain start:0x02122ecc end:0x02122ef4 kind:data align:4
+    .data.casketTail start:0x02122ef4 end:0x02122f80 kind:data align:4
     .bss        start:0x02122f80 end:0x02123100 kind:bss align:32
 src/game/actors/d_a_spd.cpp:
     complete
@@ -32,5 +36,6 @@ src/game/actors/d_a_obj_casket.cpp:
     .text start:0x02121fe4 end:0x021226a0
     .init start:0x02122a64 end:0x02122b30
     .ctor start:0x02122b3c end:0x02122b40
-    .data start:0x02122ecc end:0x02122ef4
+    .data.casketStrings start:0x02122e64 end:0x02122e74
+    .data.casketMain start:0x02122ecc end:0x02122ef4
     .bss start:0x021230d0 end:0x021230f8
