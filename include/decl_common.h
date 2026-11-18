@@ -306,7 +306,7 @@ extern int data_ov006_021421b4;
    belongs here either. */
 extern int sTrmpAnyOnLedge;
 extern int data_ov007_02103260;
-extern int data_ov007_02103290;
+extern struct Ov007MenuHooks data_ov007_02103290;
 extern int data_ov007_02103340;
 extern int data_ov007_02103344;
 extern int data_ov014_02114700[];
