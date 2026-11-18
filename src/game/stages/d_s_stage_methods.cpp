@@ -4002,6 +4002,11 @@ void func_02019a58();
 void func_02030a78();
 }
 
+/* State 6 is written by the wireless teardown path. */
+static inline int HasConnectionError() {
+    return data_0209fc68 == 6;
+}
+
 static inline u32 MaskOff(u32 x, u32 m) {
     return x & ~m;
 }
@@ -4031,8 +4036,7 @@ int dScStage_c::Behavior() {
                 return 1;
             }
             if (data_0209fc68 != 0) {
-                int b2 = (data_0209fc68 == 6);
-                if (b2) {
+                if (HasConnectionError()) {
                     if (c9c == 0) {
                         func_02019a58();
                         func_02012790(0x123);
