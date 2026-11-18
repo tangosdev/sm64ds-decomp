@@ -83,9 +83,9 @@ struct daBmb_c : dEnemyBase_c {
     u16                          mNoticeAngle;          /* 0x3ec */
     /* State1 walks mPrevAngle.y toward this. beb4 adds a random kick when
        the Bob-omb is turning with nobody to chase. */
-    s16                          mTargetAngY;           /* 0x3ee */
+    s16 mTargetAngY; /* 0x3ee */
     /* Snapshot of mAngle.y beside the mHomePos* snapshot. */
-    s16                          mHomeAngleY;           /* 0x3f0 */
+    s16 mHomeAngleY;                                    /* 0x3f0 */
     u8                           mTurnCount;            /* 0x3f2 */
     /* Render draws nothing while this is 0. InitResources sets it to 1. */
     u8                           mShouldRender;         /* 0x3f3 */
