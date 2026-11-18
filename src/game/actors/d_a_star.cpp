@@ -135,6 +135,16 @@ extern "C" {
 extern unsigned char gGameMode;
 }
 
+/* gGameMode is 1 in VS mode: PrepareVsMode stores it. These int-returning
+   predicates are what make the ROM materialize 0/1 before testing it. */
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
+static inline int IsSilverStar(dActor_c *actor) {
+    return actor->actorID == ACTOR_SILVER_STAR;
+}
+
 extern void func_02035860(dBgCh_Actr *o, const Vector3 *src);
 extern "C" {
 extern dCamera_c *gCamera;
@@ -405,7 +415,7 @@ s32 daStar_c::InitResources()
     if (!mBits.visible)
         mdCc_c.flags |= 1;
 
-    if (mStarID < 8 && mKind != KIND_5 && mKind != KIND_3 && (s32)(gGameMode == 1) == 0 &&
+    if (mStarID < 8 && mKind != KIND_5 && mKind != KIND_3 && !IsVsMode() &&
         IsStarCollectedInCurLevel(mStarID) != 0) {
         if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             MarkForDestruction();
@@ -421,7 +431,7 @@ s32 daStar_c::InitResources()
         Event::ClearBit(0x1e);
         Event::ClearBit(EVENT_COLLECTING_STAR);
         if (mKind != KIND_3) {
-            if ((s32)(gGameMode == 1) != 0 || (s32)(actorID == ACTOR_SILVER_STAR) != 0) {
+            if (IsVsMode() || IsSilverStar(this)) {
                 sp = (char *)dActor_c::Spawn(ACTOR_STAR_MARKER, 0x50, mPos, 0, mSavedAreaId, -1);
                 if (sp != 0) {
                     mMarkerID = ((dActor_c *)sp)->uniqueID;
@@ -1521,7 +1531,7 @@ void daStar_c::StateSpinAndEnd() {
         if (mSeqTimer < 100)
             return;
         StopCollectSoundObj();
-        if ((int)(gGameMode == 1) != 0) {
+        if (IsVsMode()) {
             MarkForDestruction();
         } else {
             KillAndTrackInDeathTable();
@@ -2136,7 +2146,7 @@ void daStar_c::FinishCollection() {
     StopCollectSoundObj();
     mBits.visible = 0;
     UntrackStar(mMarkerSlot);
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         MarkForDestruction();
     } else {
         KillAndTrackInDeathTable();
