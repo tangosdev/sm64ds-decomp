@@ -243,7 +243,7 @@ extern int sCurlingAimMarkerSprites[];
 extern int data_ov006_0213c954;
 extern int sHanaFieldWigglerCount;
 extern int data_ov006_0213cab8;
-extern int sJumpRenderScale[3];
+extern struct VecFx32 sJumpRenderScale;
 extern int sJumpNcgByLanguage[];
 extern int sJump2RenderScale;
 extern int sJump2NcgByLanguage[];

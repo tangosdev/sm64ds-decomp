@@ -986,7 +986,6 @@ extern dFdColor_c gSceneColorFader;
  * can lower memberwise instead of as a block move, and there a twin can still
  * be load-bearing.
  * ------------------------------------------------------------------------- */
-struct V3Quad { Vector3 a; Vector3 d; Vector3 e; Vector3 b; };
 namespace Sound { void PlayBank0(unsigned int, const Vector3 &); }
 /* Only ever an opaque pointer: the camera's extern, and func_ov002_020ceb7c's
  * parameter, which is a daPly_c (it reads mPos.y, mPlayerNo and mStateWork). */
@@ -4272,15 +4271,21 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
 }
 
 void daPly_c::JumboStarCutsceneFlying() {
-    V3Quad s;
+    Vector3 startOffset, splinePos, delta, particleOffset;
     int hlen;
     int ang;
     unsigned char *p;
 
-    s.a.x = 0; s.a.y = 0; s.a.z = 0x60000;
-    s.b.x = 0; s.b.y = 0; s.b.z = 0x60000;
-    func_ov002_020c37a4((char *)&s.b);
-    s.d.x = 0; s.d.y = 0; s.d.z = 0;
+    startOffset.x = 0;
+    startOffset.y = 0;
+    startOffset.z = 0x60000;
+    particleOffset.x = 0;
+    particleOffset.y = 0;
+    particleOffset.z = 0x60000;
+    func_ov002_020c37a4((char *)&particleOffset);
+    splinePos.x = 0;
+    splinePos.y = 0;
+    splinePos.z = 0;
     switch (mStateWork) {
     case 0:
         this->SetAnim(0xc1, 0, 0x1000, 0);
@@ -4291,25 +4296,25 @@ void daPly_c::JumboStarCutsceneFlying() {
         *p = *p + 1;
         /* fallthrough */
     case 1:
-        if (AnimSplinePoll((int *)&s.d) != 0) {
+        if (AnimSplinePoll((int *)&splinePos) != 0) {
             p = &this->mStateWork;
             *p = *p + 1;
             return;
         }
-        s.e.x = s.d.x - this->mPos.x;
-        s.e.y = s.d.y - this->mPos.y;
-        s.e.z = s.d.z - this->mPos.z;
-        hlen = Vec3_HorzLen(&s.e);
-        ang = cstd::atan2(s.e.x, s.e.z);
-        this->mPos.x = s.d.x;
-        this->mPos.y = s.d.y;
-        this->mPos.z = s.d.z;
-        if ((s.e.x | s.e.z) == 0) {
+        delta.x = splinePos.x - this->mPos.x;
+        delta.y = splinePos.y - this->mPos.y;
+        delta.z = splinePos.z - this->mPos.z;
+        hlen = Vec3_HorzLen(&delta);
+        ang = cstd::atan2(delta.x, delta.z);
+        this->mPos.x = splinePos.x;
+        this->mPos.y = splinePos.y;
+        this->mPos.z = splinePos.z;
+        if ((delta.x | delta.z) == 0) {
             this->mAngle.x = 0;
             this->mAngle.y = 0x7fff;
             return;
         }
-        this->mAngle.x = -cstd::atan2(s.e.y, hlen);
+        this->mAngle.x = -cstd::atan2(delta.y, hlen);
         ApproachLinear2(this->mAngle.z, 0x2000, 0x10);
         this->mAngle.y = ang;
         break;
@@ -13723,13 +13728,12 @@ void func_ov002_020d7430(daPly_c &player) {
  */
 /* local extern: the call passes an untyped this, so it cannot use the header method. */
 /* local extern: the call passes an untyped this, so it cannot use the header method. */
-struct PVec { int x, y, z; PVec() {} ~PVec() {} };
 
 int daPly_c::St_YoshiPower_Main() {
     extern int data_ov002_0210e3d8[];
     Vector3_16f dir;
     Vector3 tmp;
-    PVec pos;
+    Vector3 pos;
     dActor_c *obj0;
     dActor_c *dp;
 
@@ -14234,14 +14238,13 @@ extern "C" int func_ov002_020d85fc(daPly_c *player, daPly_c *arg, int flags) {
     return 0;
 }
 
-struct PVec869c { s32 x, y, z; ~PVec869c() {} };
 
 int daPly_c::func_ov002_020d869c() {
     daPly_c *other;
     u32 flags;
     u32 f2;
     int t;
-    PVec869c p;
+    Vector3 p;
     s32 x;
     s32 y;
     s32 z;
@@ -14326,14 +14329,10 @@ void daPly_c::func_ov002_020d8854() {
     }
 }
 
-// non-trivial destructor keeps the particle-spawn vector on the stack (no SROA)
-struct PVec8944 {
-    int x, y, z;
-    ~PVec8944() {}
-};
+// Vector3's declared destructor keeps the particle-spawn vector on the stack (no SROA)
 
 int daPly_c::func_ov002_020d8944(daPly_c *enemy, daPly_c *v1) {
-    PVec8944 p;
+    Vector3 p;
     Vector3 sum;
     Vector3 asr;
     int b0 = ((unsigned short)(v1)->actorID == 0xbf);
@@ -17354,7 +17353,6 @@ int daPly_c::St_Balloon_Init() {
 
 // local extern: this file's local Vector3/fx32 shadow the shared headers, so it cannot include daPly_c.h and use the member
 
-struct Vector3e968 { int x, y, z; ~Vector3e968(){} };
 
 void daPly_c::func_ov002_020de968() {
     mBalloonTimer = 0;
@@ -17363,7 +17361,7 @@ void daPly_c::func_ov002_020de968() {
     mIsBalloon = 0;
     mOpacity = 0x1f;
     EndPowerupMusic(0x30);
-    Vector3e968 v;
+    Vector3 v;
     v.x = mPos.x;
     v.y = mPos.y;
     v.z = mPos.z;
@@ -20063,13 +20061,6 @@ void daPly_c::func_ov002_020e444c() {
 // local extern: include-free shard, the call passes the object as an untyped pointer so it cannot use the header member
 
 void daPly_c::func_ov002_020e4768() {
-    struct VTable4 {
-        virtual void v0();
-        virtual void v1();
-        virtual void v2();
-        virtual void v3();
-        virtual void DoThing(int arg);
-    };
     extern Matrix4x3 data_020a0e68;
     unsigned int mid;
     dExtAnm2Model_c *comp;
@@ -20088,10 +20079,8 @@ void daPly_c::func_ov002_020e4768() {
     idx = func_ov002_020becf4(param1 & 0xff, 0);
 
     if (idx == 3) {
-        unsigned int m2 = GetBodyModelID(param1 & 0xff, 0);
-        int a1 = (int)&mModels.mBodyModels[m2]->data.transforms[15];
-        a1 = idx ? a1 : a1;
-        ((VTable4 **)mModels.mHeadModels)[idx]->DoThing(a1);
+        comp = mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+        mModels.mHeadModels[idx]->Virtual10(comp->data.transforms[15]);
     }
 
     {
