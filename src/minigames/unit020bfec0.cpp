@@ -13,9 +13,8 @@
  * leftovers:
  * - The record and method names are coined: the ROM carries no symbol table
  *   for this run.
- * - Measured shapes kept for the bytes they produce: FallingPetal::Draw
- *   stores its scale z, y, x, and Dealer::StateReveal keeps its `goto other`
- *   (the structured rewrite moves 92 words).
+ * - Measured shape kept for the bytes it produces: FallingPetal::Draw
+ *   stores its scale z, y, x.
  * - Presenter::Draw's material table stays an int* view: the scrolled words
  *   are fields of the runtime material record (MaterialState, still local to
  *   src/engine/model/ModelComponents.cpp), not of BMD_Material. Dealer::Draw fills its lamp array through a
@@ -1247,47 +1246,44 @@ void Dealer::StartReveal(int count, s16 *counter) {
 }
 
 void Dealer::StateReveal() {
-    if (mModel.file != mDealAnim.filePtr)
-        goto other;
-
-    if (mModel.WillHitFrame(0)) {
-        if (mDealLeft-- <= 0) {
-            int hand;
-            mDealCounter = 0;
-            hand = mHand;
-            if (hand == 0) {
-                mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000, 0x800, 0);
-                if (mDealSoundPlayed != 0)
+    if (mModel.file == mDealAnim.filePtr) {
+        if (mModel.WillHitFrame(0)) {
+            if (mDealLeft-- <= 0) {
+                int hand;
+                mDealCounter = 0;
+                hand = mHand;
+                if (hand == 0) {
+                    mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000, 0x800, 0);
+                    if (mDealSoundPlayed != 0)
+                        return;
+                    Sound::PlayBank2_2D(0x13a);
+                    mDealSoundPlayed = 1;
                     return;
-                Sound::PlayBank2_2D(0x13a);
-                mDealSoundPlayed = 1;
-                return;
-            } else if (hand == 2) {
-                mModel.SetAnim(*(BCA_File *)mDealEnd2Anim.filePtr, 0, 0x40000000, 0x800, 0);
-                if (mDealSoundPlayed != 0)
+                } else if (hand == 2) {
+                    mModel.SetAnim(*(BCA_File *)mDealEnd2Anim.filePtr, 0, 0x40000000, 0x800, 0);
+                    if (mDealSoundPlayed != 0)
+                        return;
+                    Sound::PlayBank2_2D(0x13a);
+                    mDealSoundPlayed = 1;
                     return;
-                Sound::PlayBank2_2D(0x13a);
-                mDealSoundPlayed = 1;
-                return;
-            } else {
-                PlayIdle();
-                return;
+                } else {
+                    PlayIdle();
+                    return;
+                }
             }
         }
-    }
 
-    if (mDealCounter == 0)
-        return;
-    if (!mModel.WillHitFrame(5))
-        return;
-    Sound::PlayBank2_2D(0x142);
-    *mDealCounter += 1;
-    return;
-
-other:
-    if (mModel.file == (BCA_File *)mDealEndAnim.filePtr || mModel.file == mDealEnd2Anim.filePtr) {
-        if (mModel.Finished())
-            PlayIdle();
+        if (mDealCounter == 0)
+            return;
+        if (!mModel.WillHitFrame(5))
+            return;
+        Sound::PlayBank2_2D(0x142);
+        *mDealCounter += 1;
+    } else {
+        if (mModel.file == (BCA_File *)mDealEndAnim.filePtr || mModel.file == mDealEnd2Anim.filePtr) {
+            if (mModel.Finished())
+                PlayIdle();
+        }
     }
 }
 
