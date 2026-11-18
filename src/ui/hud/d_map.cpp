@@ -103,6 +103,13 @@ extern void *data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
 }
 
+/* gGameMode is 0 in the adventure (StartFile stores it), 1 in VS and 2 in
+   the castle-fall cutscene. This int-returning predicate is what makes the
+   ROM materialize 0/1 before testing it. */
+static inline int IsGameMode(int mode) {
+    return gGameMode == mode;
+}
+
 extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 struct MinimapDesc;
@@ -596,8 +603,7 @@ s32 dMap_c::Behavior()
              gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
             SublevelToLevel(gCurrentSublevel) == 4 ||
             (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
-            ((int)(gGameMode == 0) != 0 &&
-             (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+            (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
              this->mInIntroCutscene == 0)) {
             this->mAngle = 0;
         } else if (this->mInIntroCutscene != 0) {
@@ -829,6 +835,10 @@ extern u16 *gMinimapTileObjs;
 extern s32 gRunningKuppaScript;
 }
 
+static inline int IsKuppaScriptRunning() {
+    return gRunningKuppaScript != 0;
+}
+
 int dMap_c::InitResources()
 {
     u16 *p;
@@ -924,8 +934,8 @@ int dMap_c::InitResources()
 
     mTargetInvScale = GetMinimapScale(data_ov002_02111148);
 
-    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
-        (int)(gRunningKuppaScript != 0) == 0) {
+    if (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+        !IsKuppaScriptRunning()) {
         mInvScale = mTargetInvScale << 1;
         mAngle = 0;
         mInIntroCutscene = 1;
