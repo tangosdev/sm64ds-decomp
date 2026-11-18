@@ -104,11 +104,14 @@ s32 daPgBby_c::Behavior()
     return 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 s32 daPgBby_c::Render()
 {
-    unsigned int f = mFlags;
-    int b = ((f & 0x40000) != 0);
-    if (b) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
     mAnmModel.Render(&mScale);
     return 1;
 }
@@ -506,10 +509,6 @@ static inline int IsFlagSet(dActor_c *actor, u32 bit) {
     return (actor->mFlags & bit) != 0;
 }
 
-static inline int IsInYoshiMouth(dActor_c *actor) {
-    return (actor->mFlags & 0x40000) != 0;
-}
-
 /* Place the model: in the carrier's hands (one of four carry offsets) or at
    the actor, then size the drop shadow by the height above the ground. */
 void daPgBby_c::UpdateModelAndShadow() {
@@ -566,8 +565,8 @@ void daPgBby_c::UpdateModelAndShadow() {
 void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
-    int b = ((mFlags & 0x4000) != 0);
-    if (b != 0) return;
+    if (IsFlagSet(this, 0x4000))
+        return;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
