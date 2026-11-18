@@ -997,7 +997,7 @@ void Heyho::MotionChase() {
             {
                 int len;
                 Vec3_Sub(&diff, &mWaypoint, &mPos);
-                len = VEC_Mag((const Vector3 *)&mPath.startVel);
+                len = VEC_Mag(&mPath.startVel);
                 if (NormalizeVec3IfNonZero(&diff) != 0) {
                     Vec3_MulScalar(&vel, &diff, len);
                     mVel.x = vel.x;
