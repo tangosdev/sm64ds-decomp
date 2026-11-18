@@ -367,5 +367,594 @@ src/ov002_handles.cpp:
     .ctor start:0x021080d0 end:0x021080d4
     .bss start:0x0210d9a0 end:0x0210db80
 
+src/data/ov002/data_ov002_020ff028.cpp:
+    complete
+    .rodata start:0x020ff028 end:0x020ff040
 
+src/data/ov002/data_ov002_020ff0a0.cpp:
+    complete
+    .rodata start:0x020ff0a0 end:0x020ff0ac
 
+src/data/ov002/data_ov002_020ff0ac.cpp:
+    complete
+    .rodata start:0x020ff0ac end:0x020ff0b8
+
+src/data/ov002/data_ov002_020ff0d0.cpp:
+    complete
+    .rodata start:0x020ff0d0 end:0x020ff0d4
+
+src/data/ov002/data_ov002_02100000.cpp:
+    complete
+    .rodata start:0x02100000 end:0x021000a0
+
+src/data/ov002/data_ov002_021000a0.cpp:
+    complete
+    .rodata start:0x021000a0 end:0x021000a8
+
+src/data/ov002/data_ov002_021002a0.cpp:
+    complete
+    .rodata start:0x021002a0 end:0x02100320
+
+src/data/ov002/data_ov002_02100320.cpp:
+    complete
+    .rodata start:0x02100320 end:0x02100334
+
+src/data/ov002/data_ov002_02100334.cpp:
+    complete
+    .rodata start:0x02100334 end:0x02100348
+
+src/data/ov002/data_ov002_02100348.cpp:
+    complete
+    .rodata start:0x02100348 end:0x0210035c
+
+src/data/ov002/data_ov002_0210035c.cpp:
+    complete
+    .rodata start:0x0210035c end:0x02100360
+
+src/data/ov002/data_ov002_02100360.cpp:
+    complete
+    .rodata start:0x02100360 end:0x02100364
+
+src/data/ov002/data_ov002_02100364.cpp:
+    complete
+    .rodata start:0x02100364 end:0x02100380
+
+src/data/ov002/data_ov002_02100380.cpp:
+    complete
+    .rodata start:0x02100380 end:0x02100560
+
+src/data/ov002/_ZTI12dEnemyBase_c.cpp:
+    complete
+    .data start:0x021081c0 end:0x021081cc
+
+src/data/ov002/_ZTS12dEnemyBase_c.cpp:
+    complete
+    .data start:0x021081cc end:0x021081e4
+
+src/data/ov002/_ZTI11dCapEnemy_c.cpp:
+    complete
+    .data start:0x02108260 end:0x0210826c
+
+src/data/ov002/_ZTS11dCapEnemy_c.cpp:
+    complete
+    .data start:0x0210826c end:0x02108284
+
+src/data/ov002/_ZTS7da1up_c.cpp:
+    complete
+    .data start:0x02108370 end:0x0210837c
+
+src/data/ov002/_ZTI7da1up_c.cpp:
+    complete
+    .data start:0x0210837c end:0x02108388
+
+src/data/ov002/g_profile_ONEUPKINOKO.cpp:
+    complete
+    .data start:0x02108388 end:0x021083a4
+
+src/data/ov002/g_profile_SCALEUP_KINOKO.cpp:
+    complete
+    .data start:0x021083a4 end:0x021083c8
+
+src/data/ov002/_ZTS7daBar_c.cpp:
+    complete
+    .data start:0x02108444 end:0x02108450
+
+src/data/ov002/_ZTI7daBar_c.cpp:
+    complete
+    .data start:0x02108450 end:0x0210845c
+
+src/data/ov002/g_profile_BAR.cpp:
+    complete
+    .data start:0x0210845c end:0x02108480
+
+src/data/ov002/_ZTI10daCamTag_c.cpp:
+    complete
+    .data start:0x021084fc end:0x02108508
+
+src/data/ov002/_ZTS10daCamTag_c.cpp:
+    complete
+    .data start:0x02108508 end:0x02108518
+
+src/data/ov002/g_profile_CAMERA_TAG.cpp:
+    complete
+    .data start:0x02108518 end:0x0210853c
+
+src/data/ov002/_ZTI11daChScene_c.cpp:
+    complete
+    .data start:0x02108674 end:0x02108680
+
+src/data/ov002/_ZTS11daChScene_c.cpp:
+    complete
+    .data start:0x02108680 end:0x02108690
+
+src/data/ov002/g_profile_CH_SCENE.cpp:
+    complete
+    .data start:0x02108690 end:0x021086b4
+
+src/data/ov002/_ZTI11daFeather_c.cpp:
+    complete
+    .data start:0x02108868 end:0x02108874
+
+src/data/ov002/_ZTS11daFeather_c.cpp:
+    complete
+    .data start:0x02108874 end:0x02108884
+
+src/data/ov002/g_profile_FEATHER.cpp:
+    complete
+    .data start:0x02108884 end:0x021088a8
+
+src/data/ov002/_ZTI12daObjAbuku_c.cpp:
+    complete
+    .data start:0x02108924 end:0x02108930
+
+src/data/ov002/_ZTS12daObjAbuku_c.cpp:
+    complete
+    .data start:0x02108930 end:0x02108940
+
+src/data/ov002/g_profile_OBJ_ABUKU.cpp:
+    complete
+    .data start:0x02108940 end:0x0210895c
+
+src/data/ov002/data_ov002_0210895c.cpp:
+    complete
+    .data start:0x0210895c end:0x02108964
+
+src/data/ov002/data_ov002_021089e0.c:
+    complete
+    .data start:0x021089e0 end:0x021089ec
+
+src/data/ov002/_ZTI10dBgActor_c.cpp:
+    complete
+    .data start:0x021089ec end:0x021089f8
+
+src/data/ov002/_ZTI13daObjBlockL_c.cpp:
+    complete
+    .data start:0x021089f8 end:0x02108a04
+
+src/data/ov002/_ZTS10dBgActor_c.cpp:
+    complete
+    .data start:0x02108a04 end:0x02108a14
+
+src/data/ov002/_ZTS13daObjBlockL_c.cpp:
+    complete
+    .data start:0x02108a14 end:0x02108a24
+
+src/data/ov002/g_profile_BLOCK_L.cpp:
+    complete
+    .data start:0x02108a24 end:0x02108a40
+
+src/data/ov002/g_profile_DP_BLOCK_L.cpp:
+    complete
+    .data start:0x02108a40 end:0x02108a5c
+
+src/data/ov002/g_profile_SW_BLOCK_L.cpp:
+    complete
+    .data start:0x02108a5c end:0x02108a78
+
+src/data/ov002/g_profile_BLOCK_LL.cpp:
+    complete
+    .data start:0x02108a78 end:0x02108a94
+
+src/data/ov002/g_profile_BK_FUTA.cpp:
+    complete
+    .data start:0x02108a94 end:0x02108ab0
+
+src/data/ov002/_ZTI19daObjBlockItemTag_c.cpp:
+    complete
+    .data start:0x02108b7c end:0x02108b88
+
+src/data/ov002/_ZTS19daObjBlockItemTag_c.cpp:
+    complete
+    .data start:0x02108b88 end:0x02108ba0
+
+src/data/ov002/g_profile_BLK_SKINOKO_TAG.cpp:
+    complete
+    .data start:0x02108ba0 end:0x02108bbc
+
+src/data/ov002/g_profile_BLK_GNSHELL_TAG.cpp:
+    complete
+    .data start:0x02108bbc end:0x02108bd8
+
+src/data/ov002/g_profile_BLK_SLVSTAR_TAG.cpp:
+    complete
+    .data start:0x02108bd8 end:0x02108bf4
+
+src/data/ov002/g_profile_BLK_OKINOKO_TAG.cpp:
+    complete
+    .data start:0x02108bf4 end:0x02108c18
+
+src/data/ov002/_ZTI16daObjKinokoTag_c.cpp:
+    complete
+    .data start:0x02108c94 end:0x02108ca0
+
+src/data/ov002/_ZTS16daObjKinokoTag_c.cpp:
+    complete
+    .data start:0x02108ca0 end:0x02108cb4
+
+src/data/ov002/g_profile_KINOKO_TAG.cpp:
+    complete
+    .data start:0x02108cb4 end:0x02108cd0
+
+src/data/ov002/g_profile_KINOKO_CREATE_TAG.cpp:
+    complete
+    .data start:0x02108cd0 end:0x02108cf4
+
+src/data/ov002/_ZTI13daObjDorifu_c.cpp:
+    complete
+    .data start:0x02108d70 end:0x02108d7c
+
+src/data/ov002/_ZTS13daObjDorifu_c.cpp:
+    complete
+    .data start:0x02108d7c end:0x02108d94
+
+src/data/ov002/_ZTI17daObjFloatBoard_c.cpp:
+    complete
+    .data start:0x02108fb4 end:0x02108fc0
+
+src/data/ov002/_ZTS17daObjFloatBoard_c.cpp:
+    complete
+    .data start:0x02108fc0 end:0x02108fdc
+
+src/data/ov002/_ZTI15daObjGuragura_c.cpp:
+    complete
+    .data start:0x0210905c end:0x02109068
+
+src/data/ov002/_ZTS15daObjGuragura_c.cpp:
+    complete
+    .data start:0x02109068 end:0x02109084
+
+src/data/ov002/_ZTI14daObjUkiyuka_c.cpp:
+    complete
+    .data start:0x02109104 end:0x02109110
+
+src/data/ov002/_ZTS14daObjUkiyuka_c.cpp:
+    complete
+    .data start:0x02109110 end:0x0210912c
+
+src/data/ov002/_ZTI16daObjKaitendai_c.cpp:
+    complete
+    .data start:0x021091ac end:0x021091b8
+
+src/data/ov002/_ZTS16daObjKaitendai_c.cpp:
+    complete
+    .data start:0x021091b8 end:0x021091d4
+
+src/data/ov002/_ZTI13daObjKuruma_c.cpp:
+    complete
+    .data start:0x02109254 end:0x02109260
+
+src/data/ov002/_ZTS13daObjKuruma_c.cpp:
+    complete
+    .data start:0x02109260 end:0x02109278
+
+src/data/ov002/_ZTI17daObjKurumajiku_c.cpp:
+    complete
+    .data start:0x021092f8 end:0x02109304
+
+src/data/ov002/_ZTS17daObjKurumajiku_c.cpp:
+    complete
+    .data start:0x02109304 end:0x02109320
+
+src/data/ov002/_ZTI16daObjWaterfall_c.cpp:
+    complete
+    .data start:0x0210945c end:0x02109468
+
+src/data/ov002/_ZTS16daObjWaterfall_c.cpp:
+    complete
+    .data start:0x02109468 end:0x0210947c
+
+src/data/ov002/g_profile_WATERFALL.cpp:
+    complete
+    .data start:0x0210947c end:0x021094a0
+
+src/data/ov002/_ZTI15daObjMarioCap_c.cpp:
+    complete
+    .data start:0x021095ac end:0x021095b8
+
+src/data/ov002/_ZTS15daObjMarioCap_c.cpp:
+    complete
+    .data start:0x021095b8 end:0x021095cc
+
+src/data/ov002/g_profile_OBJ_MARIO_CAP.cpp:
+    complete
+    .data start:0x021095cc end:0x021095f0
+
+src/data/ov002/_ZTI16daObjPushblock_c.cpp:
+    complete
+    .data start:0x0210966c end:0x02109678
+
+src/data/ov002/_ZTS16daObjPushblock_c.cpp:
+    complete
+    .data start:0x02109678 end:0x0210968c
+
+src/data/ov002/g_profile_PUSHBLOCK.cpp:
+    complete
+    .data start:0x0210968c end:0x021096b0
+
+src/data/ov002/_ZTI13daObjSwitch_c.cpp:
+    complete
+    .data start:0x021098cc end:0x021098d8
+
+src/data/ov002/_ZTS13daObjSwitch_c.cpp:
+    complete
+    .data start:0x021098d8 end:0x021098e8
+
+src/data/ov002/data_ov002_021098ec.cpp:
+    complete
+    .data start:0x021098ec end:0x021098f0
+
+src/data/ov002/g_profile_HANSWITCH.cpp:
+    complete
+    .data start:0x02109900 end:0x0210991c
+
+src/data/ov002/g_profile_STAR_SWITCH.cpp:
+    complete
+    .data start:0x0210991c end:0x02109940
+
+src/data/ov002/_ZTI13daObjSwdoor_c.cpp:
+    complete
+    .data start:0x021099c0 end:0x021099cc
+
+src/data/ov002/_ZTS13daObjSwdoor_c.cpp:
+    complete
+    .data start:0x021099cc end:0x021099e4
+
+src/data/ov002/_ZTI15daObjTatefuda_c.cpp:
+    complete
+    .data start:0x02109ab4 end:0x02109ac0
+
+src/data/ov002/_ZTS15daObjTatefuda_c.cpp:
+    complete
+    .data start:0x02109ac0 end:0x02109ad4
+
+src/data/ov002/g_profile_TATEFUDA.cpp:
+    complete
+    .data start:0x02109ad4 end:0x02109af8
+
+src/data/ov002/_ZTI13daObjWakame_c.cpp:
+    complete
+    .data start:0x02109b78 end:0x02109b84
+
+src/data/ov002/_ZTS13daObjWakame_c.cpp:
+    complete
+    .data start:0x02109b84 end:0x02109b94
+
+src/data/ov002/g_profile_WAKAME.cpp:
+    complete
+    .data start:0x02109b94 end:0x02109bb8
+
+src/data/ov002/_ZTI12daObjHeart_c.cpp:
+    complete
+    .data start:0x02109c34 end:0x02109c40
+
+src/data/ov002/_ZTS12daObjHeart_c.cpp:
+    complete
+    .data start:0x02109c40 end:0x02109c50
+
+src/data/ov002/g_profile_HEART.cpp:
+    complete
+    .data start:0x02109c50 end:0x02109c74
+
+src/data/ov002/_ZTI20daObjCannonShutter_c.cpp:
+    complete
+    .data start:0x02109cf0 end:0x02109cfc
+
+src/data/ov002/_ZTS20daObjCannonShutter_c.cpp:
+    complete
+    .data start:0x02109cfc end:0x02109d14
+
+src/data/ov002/g_profile_CANNON_SHUTTER.cpp:
+    complete
+    .data start:0x02109d14 end:0x02109d38
+
+src/data/ov002/_ZTS8daStar_c.cpp:
+    complete
+    .data start:0x0210aa00 end:0x0210aa0c
+
+src/data/ov002/data_ov002_0210aa0c.cpp:
+    complete
+    .data start:0x0210aa0c end:0x0210aa18
+
+src/data/ov002/_ZTI12daStarBase_c.cpp:
+    complete
+    .data start:0x0210aa18 end:0x0210aa24
+
+src/data/ov002/_ZTI8daStar_c.cpp:
+    complete
+    .data start:0x0210aa24 end:0x0210aa30
+
+src/data/ov002/_ZTS12daStarBase_c.cpp:
+    complete
+    .data start:0x0210aa30 end:0x0210aa40
+
+src/data/ov002/g_profile_STAR.cpp:
+    complete
+    .data start:0x0210aa40 end:0x0210aa5c
+
+src/data/ov002/g_profile_SILVER_STAR.cpp:
+    complete
+    .data start:0x0210aa5c end:0x0210aa78
+
+src/data/ov002/g_profile_STARBASE.cpp:
+    complete
+    .data start:0x0210aa78 end:0x0210aa94
+
+src/data/ov002/g_profile_STAR_CAMERA.cpp:
+    complete
+    .data start:0x0210aa94 end:0x0210aab8
+
+src/data/ov002/data_ov002_0210abb8.cpp:
+    complete
+    .data start:0x0210abb8 end:0x0210abc4
+
+src/data/ov002/_ZTS8daTree_c.cpp:
+    complete
+    .data start:0x0210abc4 end:0x0210abd0
+
+src/data/ov002/_ZTI8daTree_c.cpp:
+    complete
+    .data start:0x0210abd0 end:0x0210abdc
+
+src/data/ov002/g_profile_TREE.cpp:
+    complete
+    .data start:0x0210abdc end:0x0210ac00
+
+src/data/ov002/_ZTI11daWarpkun_c.cpp:
+    complete
+    .data start:0x0210ac7c end:0x0210ac88
+
+src/data/ov002/_ZTS11daWarpkun_c.cpp:
+    complete
+    .data start:0x0210ac88 end:0x0210ac98
+
+src/data/ov002/g_profile_WARPKUN.cpp:
+    complete
+    .data start:0x0210ac98 end:0x0210acbc
+
+src/data/ov002/_ZTS8daYegg_c.cpp:
+    complete
+    .data start:0x0210ad78 end:0x0210ad84
+
+src/data/ov002/_ZTI8daYegg_c.cpp:
+    complete
+    .data start:0x0210ad84 end:0x0210ad90
+
+src/data/ov002/g_profile_YOSHI_EGG.cpp:
+    complete
+    .data start:0x0210ad90 end:0x0210adb4
+
+src/data/ov002/data_ov002_0210af68.cpp:
+    complete
+    .data start:0x0210af68 end:0x0210af70
+
+src/data/ov002/_ZTI13daObjNumber_c.cpp:
+    complete
+    .data start:0x0210b0ac end:0x0210b0b8
+
+src/data/ov002/_ZTS13daObjNumber_c.cpp:
+    complete
+    .data start:0x0210b0b8 end:0x0210b0c8
+
+src/data/ov002/g_profile_OBJ_NUMBER.cpp:
+    complete
+    .data start:0x0210b0c8 end:0x0210b0ec
+
+src/data/ov002/_ZTI14daObj1UpLogo_c.cpp:
+    complete
+    .data start:0x0210b168 end:0x0210b174
+
+src/data/ov002/_ZTS14daObj1UpLogo_c.cpp:
+    complete
+    .data start:0x0210b174 end:0x0210b188
+
+src/data/ov002/g_profile_OBJ_1UPLOGO.cpp:
+    complete
+    .data start:0x0210b188 end:0x0210b1ac
+
+src/data/ov002/_ZTI16daObjBC_Switch_c.cpp:
+    complete
+    .data start:0x0210b228 end:0x0210b234
+
+src/data/ov002/_ZTS16daObjBC_Switch_c.cpp:
+    complete
+    .data start:0x0210b234 end:0x0210b248
+
+src/data/ov002/g_profile_BC_SWITCH.cpp:
+    complete
+    .data start:0x0210b248 end:0x0210b26c
+
+src/data/ov002/_ZTI11daESwitch_c.cpp:
+    complete
+    .data start:0x0210b2ec end:0x0210b2f8
+
+src/data/ov002/_ZTI11daECreate_c.cpp:
+    complete
+    .data start:0x0210b2f8 end:0x0210b304
+
+src/data/ov002/_ZTS11daECreate_c.cpp:
+    complete
+    .data start:0x0210b304 end:0x0210b314
+
+src/data/ov002/_ZTS11daESwitch_c.cpp:
+    complete
+    .data start:0x0210b314 end:0x0210b324
+
+src/data/ov002/g_profile_ENEMY_SWITCH.cpp:
+    complete
+    .data start:0x0210b324 end:0x0210b340
+
+src/data/ov002/g_profile_ENEMY_CREATE.cpp:
+    complete
+    .data start:0x0210b340 end:0x0210b364
+
+src/data/ov002/_ZTS9daSetSE_c.cpp:
+    complete
+    .data start:0x0210b464 end:0x0210b470
+
+src/data/ov002/_ZTI9daSetSE_c.cpp:
+    complete
+    .data start:0x0210b470 end:0x0210b47c
+
+src/data/ov002/g_profile_SET_SE.cpp:
+    complete
+    .data start:0x0210b47c end:0x0210b498
+
+src/data/ov002/data_ov002_0210b498.cpp:
+    complete
+    .data start:0x0210b498 end:0x0210b4c8
+
+src/data/ov002/_ZTI12daMugenBGM_c.cpp:
+    complete
+    .data start:0x0210b544 end:0x0210b550
+
+src/data/ov002/_ZTS12daMugenBGM_c.cpp:
+    complete
+    .data start:0x0210b550 end:0x0210b560
+
+src/data/ov002/g_profile_MUGEN_BGM.cpp:
+    complete
+    .data start:0x0210b560 end:0x0210b584
+
+src/data/ov002/data_ov002_0210b9a8.cpp:
+    complete
+    .data start:0x0210b9a8 end:0x0210b9b8
+
+src/data/ov002/_ZTSN8daDemo_c7param_cE.cpp:
+    complete
+    .data start:0x0210b9b8 end:0x0210b9cc
+
+src/data/ov002/data_ov002_02110a48.cpp:
+    complete
+    .bss start:0x02110a48 end:0x02110a5c
+
+src/data/ov002/data_ov002_02110aec.cpp:
+    complete
+    .bss start:0x02110aec end:0x02110af0
+
+src/data/ov002/data_ov002_02110af8.cpp:
+    complete
+    .bss start:0x02110af8 end:0x02110afc
+
+src/data/ov002/gMapCapIconShown.cpp:
+    complete
+    .bss start:0x02111154 end:0x02111160
