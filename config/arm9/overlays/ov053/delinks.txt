@@ -1,18 +1,8 @@
-    .rodata.data_ov053_021111a0 start:0x021111a0 end:0x021111c0 kind:rodata align:4
-    .rodata.data_ov053_021111c0 start:0x021111c0 end:0x02111a4c kind:rodata align:4
-    .rodata.data_ov053_02111a4c start:0x02111a4c end:0x02111a58 kind:rodata align:4
-    .rodata.data_ov053_02111a58 start:0x02111a58 end:0x02111b64 kind:rodata align:4
-    .rodata.data_ov053_02111b64 start:0x02111b64 end:0x02111b6c kind:rodata align:4
-    .rodata.data_ov053_02111b6c start:0x02111b6c end:0x0211236c kind:rodata align:4
+    .rodata     start:0x021111a0 end:0x0211236c kind:rodata align:4
     .ctor       start:0x0211236c end:0x0211236c kind:rodata align:4
     .data       start:0x02112380 end:0x02112560 kind:data align:32
     .bss        start:0x02112560 end:0x02112560 kind:bss align:32
-src/unnamed/ov053/data_ov053.c:
+src/unnamed/ov053/data_ov053_021111a0.c:
     complete
-    .rodata.data_ov053_021111a0 start:0x021111a0 end:0x021111c0
-    .rodata.data_ov053_021111c0 start:0x021111c0 end:0x02111a4c
-    .rodata.data_ov053_02111a4c start:0x02111a4c end:0x02111a58
-    .rodata.data_ov053_02111a58 start:0x02111a58 end:0x02111b64
-    .rodata.data_ov053_02111b64 start:0x02111b64 end:0x02111b6c
-    .rodata.data_ov053_02111b6c start:0x02111b6c end:0x0211236c
+    .rodata start:0x021111a0 end:0x0211236c
     .data start:0x02112380 end:0x02112560

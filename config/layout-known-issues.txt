@@ -28,8 +28,9 @@ L2 func_ov084_021298d0
 L2 func_ov084_0212d564
 
 # --- L3: module-wide data TU ------------------------------------------------------
-# ov053 is a data-only overlay: its whole image is one TU, so the file is named
-# for the module (data_ov053) rather than for one address-bearing symbol, and L3
-# sees a name. Splitting it into one file per run would defeat the single-TU
-# shape and reintroduce the per-symbol sections this job replaced.
-L3 src/unnamed/ov053/data_ov053.c
+# The file carries the module base in its stem, but srcpath._UNNAMED_RE recognises
+# only func/FUN/__sinit as address-named, so a data_ stem still reads as a name to
+# L3. Teaching the pattern about data_ is a tools change; this waiver is the
+# non-tools route until then. Splitting the TU per run would defeat the one-TU
+# shape the job requires.
+L3 src/unnamed/ov053/data_ov053_021111a0.c
