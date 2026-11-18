@@ -92,6 +92,10 @@ extern MantaState data_ov090_0213454c;
  * members above; D0 adds dEnemyBase_c's inline operator delete. */
 daManta_c::~daManta_c() {}
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == MANTA_PLAYER;
+}
+
 /* Cylinder follows data_ov090_02134200. A PLAYER inside it is hurt
  * from this actor's position. */
 void daManta_c::HurtTouchingPlayer() {
@@ -104,8 +108,7 @@ void daManta_c::HurtTouchingPlayer() {
     if (id == 0)
         return;
     dActor_c *actor = dActor_c::FindWithID(id);
-    int isPlayer = (int)(actor->actorID == MANTA_PLAYER);
-    if (isPlayer == 0)
+    if (!IsPlayerActor(actor))
         return;
     {
         Vector3 hit;
@@ -301,6 +304,10 @@ int daManta_c::Behavior() {
     return 1;
 }
 
+static inline int IsGameMode(int mode) {
+    return gGameMode == mode;
+}
+
 int daManta_c::InitResources() {
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov090_02134524), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
@@ -338,8 +345,7 @@ int daManta_c::InitResources() {
     {
         /* ContinueKuppaScriptIfNecessary stores 2 here. That visit snaps
          * the manta onto node 3 at a fixed pose and clears mFlags. */
-        int kuppa = (int)(gGameMode == 2);
-        if (kuppa != 0) {
+        if (IsGameMode(2)) {
             mPathNode = 3;
             mPrevAngle.x = (short)0xf303;
             mPrevAngle.y = 0xb50;
