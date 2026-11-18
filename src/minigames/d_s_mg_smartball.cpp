@@ -2460,8 +2460,9 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     int pass = 0;
     int depth;
     Vector2 work;
-    /* volatile: the ROM keeps the entry velocity on the stack and reloads it. */
-    volatile Vector2 savedVel;
+    /* The entry velocity, for the hit sounds at the end. A Vector2 gets the
+       stack home the ROM stores it to and reloads it from. */
+    Vector2 savedVel;
     Vector2 dist;
     Vector2 delta;
     Vector2 otherPos;
@@ -4975,7 +4976,9 @@ s32 dScMgSmartball_c::InitResources() {
     DecompressLZ16(f, G2S_GetBG0CharPtr());
     Ov004_Deallocate(f);
     {
-        /* volatile: same stack round trip of the fill value as PaintCell. */
+        /* volatile: same stack round trip of the fill value as PaintCell.
+           r63: a plain 0, MI_CpuClear16, a u16 local and the SDK's static
+           inline MI_CpuFill16 (u16 data parameter) all give 0x8d4 of 0x8dc. */
         volatile u16 v;
         MI_CpuFill16(G2S_GetBG0ScrPtr(), (u16)(v = 0), 0x1000);
     }

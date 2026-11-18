@@ -744,16 +744,14 @@ void dScMgMCarlo2_c::UpdateBoard()
                                 dMgMCarlo2CardObj_c* save = h->mNext;
                                 h->mNext = p;
                                 p->mPrev = h;
-                                /* The ROM reloads p->mNext after the step. A plain
-                                   `p = p->mNext` reuses the load (2 DIFF) and a
-                                   while loop is 8 bytes longer, so the volatile
-                                   read stays. */
-                                if (p->mNext != 0) {
-                                    do { p = *(dMgMCarlo2CardObj_c* volatile*)&p->mNext; } while (p->mNext != 0);
+                                /* Splice p's chain in after the tail: walk to its
+                                   last card and hang the old successor off that. */
+                                dMgMCarlo2CardObj_c *last;
+                                for (last = p; last->mNext != 0; last = last->mNext) {
                                 }
-                                p->mNext = save;
-                                if (p->mNext == 0)
-                                    sMCarlo2CardTail = p;
+                                last->mNext = save;
+                                if (last->mNext == 0)
+                                    sMCarlo2CardTail = last;
                             }
                             p = nxt;
                         } while (p != 0);
