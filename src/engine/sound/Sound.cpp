@@ -14,8 +14,9 @@
  *   leaves in r0.
  * - ChangeMusicVolume is Sound::ChangeMusicVolume(unsigned int, int). The
  *   second value is a 0x1000-scaled volume, spelled fx32 in the header.
- * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
- *   unknown load-bearing status.
+ * - `int dd = (int)(((long long)d))' in func_02012468 is load-bearing
+ *   (#821 r97): `int dd = d;`, passing d itself, and x and p declared at
+ *   their first set are each 5 words off.
  */
 #include "types.h"
 #include "Sound.h"

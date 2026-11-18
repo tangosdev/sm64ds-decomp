@@ -883,7 +883,9 @@ void dScMgPachinko2_c::Paddle_StateGather(int i) {
 
         /* Kept: the self-select orders the rsb for deltaX before the y
            subtract. Six plain spellings (no temporaries, deltaY first or
-           last, x/y temporaries) all swap those two words. */
+           last, x/y temporaries) all swap those two words. Kept (#821 r97):
+           eight declaration orders (targetY last, currentY first, a y >> 12
+           or deltaY local, none) are 2 words off as well. */
         currentY = deltaX ? currentY : currentY;
         mPaddles[i].angle = cstd::atan2(targetY - (currentY >> 12), deltaX);
 

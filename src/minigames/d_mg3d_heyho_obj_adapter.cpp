@@ -1297,7 +1297,11 @@ void Heyho_SeparateAll(void) {
             for (j = t + 1; j < sHeyhoCount; j++) {
                 if (sHeyhos[j].IsChasing() != 0) {
                     /* The long long widening is load-bearing (re-measured 2026-11-11):
-                       dropping it costs Heyho_SeparateAll 15 words. */
+                       dropping it costs Heyho_SeparateAll 15 words. Kept (#821 r97):
+                       with it dropped, `Heyho *oj = &sHeyhos[j];` declared here is
+                       7 words off (r7/r8 swap the j stride and oj); oi, pi, ai, v1
+                       and v2 declared at first use as well are 15 to 18, and oj
+                       declared at the top of the j loop is 71 to 92 (size -4/-20). */
                     oj = (Heyho *)((long long)(int)&sHeyhos[j]);
                     pj = &oj->mPos;
                     Vec3_Sub(&v1, pi, pj);
