@@ -25,12 +25,12 @@ void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
        any other value would read w uninitialised. */
     switch (m->figureIndex) {
     case 0:
-        a.y = FX_MUL((-in->r.m[4]), 0x8543);
+        a.y = FX_MUL((-in->r.m[1][1]), 0x8543);
         w = 0xbb8;
         r1->x = r1->x - 0x5000;
         break;
     case 1:
-        a.y = FX_MUL(in->r.m[1], 0x987b);
+        a.y = FX_MUL(in->r.m[0][1], 0x987b);
         w = 0x960;
         r1->x = r1->x - 0xa000;
         break;

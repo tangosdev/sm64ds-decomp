@@ -11,13 +11,15 @@
  * Matrix4x3 translation offsets are corroborated by the matched matrix
  * constructors and vector-transform routines.
  */
+/* A 3x3 matrix, row by row, in the SDK's MtxFx33 shape: m[i] is the X, Y or
+ * Z axis row, m[i][j] its element j. */
 typedef struct Matrix3x3 {
-    fx32 m[9];
+    fx32 m[3][3];
 } Matrix3x3;
 
 /* A 4x3 matrix, row by row: the X, Y and Z axis rows (r, words 0-8) and then
  * the translation (t, words 9-11). Code that works on all twelve words at once
- * indexes m.
+ * indexes m; a single element is r.m[row][column] or t.x, t.y, t.z.
  *
  * A union, the way the SDK's own MtxFx43 is one (named elements overlaid on
  * the array), because that is what the cartridge shows:
