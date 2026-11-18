@@ -719,7 +719,7 @@ void func_ov007_020b2e64(TPData *sample) {
         if (CURSOR->confirm == 0) {
             return;
         }
-        data_ov007_02103364 = (data_ov007_02103364 == 0) ? 1 : 0;
+        data_ov007_02103364 = data_ov007_02103364 == 0;
         Cursor_TouchItem(sample);
         return;
     }
