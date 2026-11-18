@@ -22,10 +22,22 @@
       "end": "0x020ccb54"
     },
     {
+      "name": ".rodata.dsmtData",
+      "input_section": ".rodata",
+      "start": "0x020ccb54",
+      "end": "0x020ccc48"
+    },
+    {
       "name": ".data.dsmtMeta0",
       "input_section": ".data",
       "start": "0x02103260",
       "end": "0x02103290"
+    },
+    {
+      "name": ".data.dsmtCallbacks",
+      "input_section": ".data",
+      "start": "0x02103290",
+      "end": "0x021032a8"
     },
     {
       "name": ".data.dsmtMeta1",
@@ -236,6 +248,13 @@
       "evidence": "Complete native object. RTTI/class identities are ABI evidence; pending-music role and profile priorities are consumer-backed. Original identifiers and TU grouping remain unproven.",
       "emitted_storage_address": "0x021032e0",
       "address_point_bias": 8
+    },
+    {
+      "symbol": "data_ov007_02103290",
+      "address": "0x02103290",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Complete native object: the six menu hooks dScDSMT_c::InitResources hands func_ov007_020b7138 in Ov007MenuHooks order."
     }
   ],
   "bss": [],
@@ -246,7 +265,8 @@
     "Historical text-only promotion evidence: Declaration reconciliations recorded on the previous revision still stand: data_0209b340 stays decl_common.h's `int[]` with byte-view casts in func_ov007_020cc168; data_0209caa0 stays `int[]` (the dispatcher's trailing `data_0209caa0[0x328]` byte read is spelt ((u8*)data_0209caa0)[0x328]); data_0209b33c is `FileSaveData *` (the dispatcher needs flags1, so the opaque `struct E` gave way to the recovered 0x44 layout already used by the pre-fold file); func_ov007_020b7090 takes (u16,u16,u16,u16,int).",
     "Historical text-only promotion evidence: overlay_100/overlay_102 remain two of the pre-existing `dsd check symbols` errors (absolute ARM9-main rows at 0x64/0x66 outside every module's sections) -- baseline errors, unchanged by this fold. The TU does not reference them: its overlay operands are the lcf-defined OVERLAY_100_ID / OVERLAY_102_ID linker constants, declared `extern int` locally exactly as src/game/stages/d_s_mb.cpp does.",
     "Current data ownership uses compiler-native RTTI, names and vtables plus a typed BaseSpawnInfo<dScDSMT_c> and int pending-music definition. The profile has priorities1 and3; factory remains manual construction with a typed return. Existing public numeric vtable aliases are zero-extra-storage identities. Native bindings are retained; no symbol-binding rewrite or integer vtable is introduced.",
-    "classInit is now plain `return new dScDSMT_c;`, superseding the construction-bridge note above: mGraphCallback is a real graphCallback_c member, so the implicit constructor inlines its base-then-derived vptr pair and still calls the out-of-line _ZN10dFdDummy_cC1Ev for fader. It emits the _ZN8dScene_cD2Ev / _ZN7dBase_cD2Ev helpers, which are deadstripped exactly as in dScGameOver_c."
+    "classInit is now plain `return new dScDSMT_c;`, superseding the construction-bridge note above: mGraphCallback is a real graphCallback_c member, so the implicit constructor inlines its base-then-derived vptr pair and still calls the out-of-line _ZN10dFdDummy_cC1Ev for fader. It emits the _ZN8dScene_cD2Ev / _ZN7dBase_cD2Ev helpers, which are deadstripped exactly as in dScGameOver_c.",
+    "2026-11-18 in-TU pass: the scene's read-only data (node sprite table + its eight index arrays, item layout rows, selection table, palette indices) lives in d_s_dsmt.cpp's .rodata run 0x020ccb54..0x020ccc48; the menu hook table is .data.dsmtCallbacks. The eight index arrays keep their ROM data_ov007_ names and are file-scope constants whose manifest rows give their addresses, because mwccarm does not emit separate constants in declaration order; the production link reorders the emitted .rodata input sections by those addresses. The pending-music delay data_ov007_02104c28 stays ROM-owned: dsd sizes the section's last symbol to its end, and the source object is 2 bytes."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -312,7 +332,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -330,9 +350,23 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.dsmtData",
+          "start": "0x020ccb54",
+          "end": "0x020ccc48",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.dsmtMeta0",
           "start": "0x02103260",
           "end": "0x02103290",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.dsmtCallbacks",
+          "start": "0x02103290",
+          "end": "0x021032a8",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -346,7 +380,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 28
+          "LICENSED": 41
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -355,66 +389,127 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".data.dsmtMeta0",
+            "section": ".rodata.dsmtData",
             "original": [
               5,
+              6,
+              7,
               8,
-              15,
-              16,
-              22
+              9,
+              11,
+              12,
+              13,
+              30,
+              39,
+              40,
+              44
             ],
             "desired": [
+              7,
+              13,
+              9,
               5,
+              12,
+              6,
               8,
-              15,
-              22,
-              16
+              30,
+              40,
+              44,
+              39,
+              11
+            ]
+          },
+          {
+            "section": ".data.dsmtMeta0",
+            "original": [
+              10,
+              18,
+              23,
+              26,
+              31
+            ],
+            "desired": [
+              10,
+              18,
+              23,
+              26,
+              31
+            ]
+          },
+          {
+            "section": ".data.dsmtCallbacks",
+            "original": [
+              33
+            ],
+            "desired": [
+              33
             ]
           },
           {
             "section": ".data.dsmtMeta1",
             "original": [
-              24,
-              27,
-              28
+              35,
+              38,
+              42
             ],
             "desired": [
-              24,
-              27,
-              28
+              35,
+              38,
+              42
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data.dsmtMeta0",
+              "section": ".rodata.dsmtData",
               "original": [
                 5,
+                6,
+                7,
                 8,
-                15,
-                16,
-                22
+                9,
+                11,
+                12,
+                13,
+                30,
+                39,
+                40,
+                44
               ],
               "desired": [
+                7,
+                13,
+                9,
                 5,
+                12,
+                6,
                 8,
-                15,
-                22,
-                16
+                30,
+                40,
+                44,
+                39,
+                11
               ],
               "slots": [
                 5,
+                6,
+                7,
                 8,
-                15,
-                16,
-                22
+                9,
+                11,
+                12,
+                13,
+                30,
+                39,
+                40,
+                44
               ]
             }
           ],
-          "symbolIndices": 5,
+          "symbolIndices": 12,
           "sectionLinks": 0,
-          "sectionInfos": 3,
+          "sectionInfos": 1,
           "error": null
         },
         "errors": null
@@ -810,6 +905,242 @@
       "addend": 0,
       "target_address": "0x020cc070",
       "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccb80",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb54",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb54",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccb88",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb70",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb70",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccb90",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb68",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb68",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccb98",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb64",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb64",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccba0",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb5c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb5c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccba8",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb6c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb6c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccbb0",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb64",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb64",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccbb8",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb58",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb58",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020ccbc0",
+      "section": ".rodata.dsmtData",
+      "kind": "load",
+      "symbol": "data_ov007_020ccb60",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccb60",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x02103290",
+      "section": ".data.dsmtCallbacks",
+      "kind": "load",
+      "symbol": "_Z14DSMT_MenuAllocj",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccab4",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x02103294",
+      "section": ".data.dsmtCallbacks",
+      "kind": "load",
+      "symbol": "_Z13DSMT_MenuFreePv",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cca98",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x02103298",
+      "section": ".data.dsmtCallbacks",
+      "kind": "load",
+      "symbol": "_Z21DSMT_MenuMaxAllocSizev",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cca80",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x0210329c",
+      "section": ".data.dsmtCallbacks",
+      "kind": "load",
+      "symbol": "_Z17DSMT_MenuLoadFilei",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cca74",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x021032a0",
+      "section": ".data.dsmtCallbacks",
+      "kind": "load",
+      "symbol": "_Z20DSMT_MenuReleaseFilePv",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cca68",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x021032a4",
+      "section": ".data.dsmtCallbacks",
+      "kind": "load",
+      "symbol": "_Z17DSMT_MenuCallbacki",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cc600",
+      "target_module": "ov007"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov007_020ccb54",
+      "address": "0x020ccb54",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Item 0's animation index array; data_ov007_020ccb7c[0].animIndices is its only reference (func_ov007_020ade58)."
+    },
+    {
+      "symbol": "data_ov007_020ccb58",
+      "address": "0x020ccb58",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Item 7's animation index array, referenced by data_ov007_020ccb7c[7].animIndices."
+    },
+    {
+      "symbol": "data_ov007_020ccb5c",
+      "address": "0x020ccb5c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Item 4's animation index array, referenced by data_ov007_020ccb7c[4].animIndices."
+    },
+    {
+      "symbol": "data_ov007_020ccb60",
+      "address": "0x020ccb60",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Item 8's animation index array, referenced by data_ov007_020ccb7c[8].animIndices."
+    },
+    {
+      "symbol": "data_ov007_020ccb64",
+      "address": "0x020ccb64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Items 3 and 6 share this animation index array (data_ov007_020ccb7c[3] and [6]); same bank and animation."
+    },
+    {
+      "symbol": "data_ov007_020ccb68",
+      "address": "0x020ccb68",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Item 2's animation index array, referenced by data_ov007_020ccb7c[2].animIndices."
+    },
+    {
+      "symbol": "data_ov007_020ccb6c",
+      "address": "0x020ccb6c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Item 5's animation index array, referenced by data_ov007_020ccb7c[5].animIndices."
+    },
+    {
+      "symbol": "data_ov007_020ccb70",
+      "address": "0x020ccb70",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Item 1's animation index array, referenced by data_ov007_020ccb7c[1].animIndices; item 1 has ten animations, the other items one."
+    },
+    {
+      "symbol": "data_ov007_020ccb7c",
+      "address": "0x020ccb7c",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "Complete native object: nine Ov007NodeSprites rows read by func_ov007_020ade58, each animIndices word a real relocation to the arrays above."
+    },
+    {
+      "symbol": "data_ov007_020ccbc4",
+      "address": "0x020ccbc4",
+      "size": "0x5a",
+      "binding": "STB_GLOBAL",
+      "evidence": "Complete native object: nine Ov007ItemLayout rows func_ov007_020ade58 passes func_ov007_020aea6c."
+    },
+    {
+      "symbol": "data_ov007_020ccc20",
+      "address": "0x020ccc20",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "Complete native object: the 3x3 selection-to-target item id table func_ov007_020af84c indexes."
+    },
+    {
+      "symbol": "data_ov007_020ccc44",
+      "address": "0x020ccc44",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Complete native object: the unselected/selected BG map palette indices func_ov007_020b1390 reads."
     }
   ]
 }

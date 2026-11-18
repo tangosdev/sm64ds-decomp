@@ -25,6 +25,17 @@ typedef struct Ov007ItemLayout {
     s16 slideY; /* 0x8 */
 } Ov007ItemLayout;
 
+/* The 8-byte record of data_ov007_020ccb7c, one per menu item:
+ * func_ov007_020ade58 reads the item's sprite bank and node animation count
+ * (func_ov007_020c11ac) from it, and uses animIndices for the node's
+ * per-animation entries in that bank. */
+typedef struct Ov007NodeSprites {
+    u8 bank;      /* 0x00: index into the display's spriteBanks */
+    u8 animCount; /* 0x01: the node's animation count (func_ov007_020c11ac) */
+    char pad_02[2];
+    const u8 *animIndices; /* 0x04: per animation, its index in the bank */
+} Ov007NodeSprites;
+
 /* The 0x14-byte touch rectangles func_ov007_020b4c04 points an item's
  * hitBox at (data_ov007_020d78f8, data_ov007_020d76c0, ...): pixel offsets
  * from the sprite's screen position. No reader of the first word found. */
@@ -93,6 +104,7 @@ typedef struct Ov007ItemView {
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char Ov007ItemLayout_size_must_be_0xa[sizeof(Ov007ItemLayout) == 0xa ? 1 : -1];
+typedef char Ov007NodeSprites_size_must_be_0x8[sizeof(Ov007NodeSprites) == 0x8 ? 1 : -1];
 typedef char Ov007HitBox_size_must_be_0x14[sizeof(Ov007HitBox) == 0x14 ? 1 : -1];
 typedef char Ov007Item_size_must_be_0x2c[sizeof(Ov007Item) == 0x2c ? 1 : -1];
 typedef char Ov007ItemNode_size_must_be_0x8[sizeof(Ov007ItemNode) == 0x8 ? 1 : -1];
