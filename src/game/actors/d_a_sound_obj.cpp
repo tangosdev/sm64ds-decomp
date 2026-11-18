@@ -41,6 +41,7 @@
  */
 
 #include "daSoundObj_c.h"
+#include "Sound.h"
 
 /* opt_loop_invariants is set once, for the whole file. The one loop in
    the file is InitResources' FindWithActorID walk, whose 0x167 and
@@ -68,10 +69,6 @@ typedef char SoundObjRow_size_must_be_0x0c[
 struct SoundObjectCallbackOwner;
 
 typedef int (SoundObjectCallbackOwner::*SoundObjectCallback)(u16 *);
-
-namespace Sound {
-bool PlaySub(u32, u32, u32, int, bool);
-}
 
 extern "C" {
 extern SoundObjRow data_ov002_0210c080[]; /* 7 rows; row 7 is the _ZTV12daSoundObj_c header */
