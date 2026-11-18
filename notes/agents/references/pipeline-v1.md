@@ -33,8 +33,7 @@ open at once, and it exists purely because the validator is one box. See
 fresh base and proves that the composition changed nothing.
 
 dScStage_c 2 is wider than its one row suggests. Besides the source and manifest, a
-promotion edits `delinks.txt`, any `port/`
-slice manifest naming a deleted shard, and any prose naming one. Four non-source
+promotion edits `delinks.txt` and any prose naming a deleted shard. Three non-source
 files is typical.
 
 The writer is **gathering, not authoring**: 387 of 429 classes already have a
