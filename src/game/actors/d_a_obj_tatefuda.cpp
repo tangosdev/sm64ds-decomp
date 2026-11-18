@@ -469,10 +469,7 @@ void daObjTatefuda_c::Thrown()
     daPly_c *found;
     unsigned id;
 
-    {
-        s16 *pa = &mAngle.x;
-        *pa = *pa + 0x2000;
-    }
+    mAngle.x += 0x2000;
     UpdatePos(0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
