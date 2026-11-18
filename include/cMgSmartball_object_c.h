@@ -43,8 +43,6 @@
 #include "types.h"
 
 struct dScMgSmartball_c;
-struct S;
-struct V2xz;
 struct Vector2;
 
 struct cMgSmartball_object_c {
@@ -57,12 +55,9 @@ struct cMgSmartball_object_c {
        the writer half of the mVelocity pair accessors -- the reader halves
        take (out, obj) order, so they stay free functions in the TU. */
     int  PointInTriangle(int *p, int *q0, int *q1, int *q2);
-    /* Callers that keep a corner in a struct pass its address; the layout
+    /* Callers that keep a corner in a Vector2 pass its address; the layout
        is the same pair of ints, so forward to the array body. */
-    int PointInTriangle(S *p, S *q0, S *q1, S *q2) {
-        return PointInTriangle((int *)p, (int *)q0, (int *)q1, (int *)q2);
-    }
-    int PointInTriangle(V2xz *p, V2xz *q0, V2xz *q1, V2xz *q2) {
+    int PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2) {
         return PointInTriangle((int *)p, (int *)q0, (int *)q1, (int *)q2);
     }
     void SetVel(int *v);           /* mVel0/mVel1 = v[0]/v[1] */

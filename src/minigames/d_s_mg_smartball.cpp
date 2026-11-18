@@ -60,17 +60,6 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "nitro/gx/gx_bgcnt.h"
 
 /* Value types the board objects pass around; no shared header declares them. */
-/* The same two words, named x/z by the ball physics. */
-typedef struct V2xz {
-    int x;
-    int z;
-} V2xz;
-
-/* Point and triangle corners passed to PointInTriangle. */
-struct S {
-    int a, b;
-};
-
 /* Nine-word copy of sSmartballCellStartOrder. */
 struct W9 {
     int w[9];
@@ -1300,10 +1289,10 @@ cMgSmartball_slot_c::cMgSmartball_slot_c(dScMgSmartball_c *manager, int index, V
 /* Ball-vs-piranha test: the closed jaws, or the ring around the head while
  * biting. */
 int cMgSmartball_pakkun_c::CheckBall(int *pos) {
-    struct S *v = (struct S *)pos;
-    struct S d;
-    struct S p, t1, t2, t3;
-    struct S p2, t4, t5, t6;
+    Vector2 *v = (Vector2 *)pos;
+    Vector2 d;
+    Vector2 p, t1, t2, t3;
+    Vector2 p2, t4, t5, t6;
     int t;
     int r;
     int yv, xv;
@@ -1311,34 +1300,34 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
 
     if (mIsActive == 0)
         return 0;
-    t = v->a;
-    d.a = t;
-    d.b = v->b;
-    d.a -= mCurrent0;
-    d.b -= mCurrent1;
+    t = v->x;
+    d.x = t;
+    d.y = v->y;
+    d.x -= mCurrent0;
+    d.y -= mCurrent1;
     if (mActionTimer <= 0) {
         t = mCurrent1;
-        if (v->b >= t) {
-            if (func_0203d5bc(&d.a) >= 0x190000)
+        if (v->y >= t) {
+            if (func_0203d5bc(&d.x) >= 0x190000)
                 return 0;
-            return func_0203d5bc(&d.a) >= 0xc4000;
+            return func_0203d5bc(&d.x) >= 0xc4000;
         }
-        if (v->a >= mCurrent0 - 0x14000 && v->a < mCurrent0 + 0x14000 && v->b >= t - 0xc000) {
-            if (v->a >= mCurrent0 - 0x14000 && v->a < mCurrent0 - 0xa000) {
-                p.a = v->a;
-                p.b = v->b;
+        if (v->x >= mCurrent0 - 0x14000 && v->x < mCurrent0 + 0x14000 && v->y >= t - 0xc000) {
+            if (v->x >= mCurrent0 - 0x14000 && v->x < mCurrent0 - 0xa000) {
+                p.x = v->x;
+                p.y = v->y;
                 yv = mCurrent1 - 0xc000;
                 xv = mCurrent0 - 0x14000;
-                t1.a = xv;
-                t1.b = yv;
+                t1.x = xv;
+                t1.y = yv;
                 yv = mCurrent1 - 0xc000;
                 xv = mCurrent0 - 0xa000;
-                t2.a = xv;
-                t2.b = yv;
+                t2.x = xv;
+                t2.y = yv;
                 yv = mCurrent1 - 0x1000;
                 xv = mCurrent0 - 0xa000;
-                t3.a = xv;
-                t3.b = yv;
+                t3.x = xv;
+                t3.y = yv;
                 r = PointInTriangle(&p, &t1, &t2, &t3);
                 if (r == 0)
                     goto in1;
@@ -1346,21 +1335,21 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
             in1:
                 return 1;
             }
-            if (v->a >= mCurrent0 + 0xa000 && v->a < mCurrent0 + 0x16000) {
-                p2.a = v->a;
-                p2.b = v->b;
+            if (v->x >= mCurrent0 + 0xa000 && v->x < mCurrent0 + 0x16000) {
+                p2.x = v->x;
+                p2.y = v->y;
                 yv2 = mCurrent1 - 0xc000;
                 xv2 = mCurrent0 + 0x14000;
-                t4.a = xv2;
-                t4.b = yv2;
+                t4.x = xv2;
+                t4.y = yv2;
                 yv2 = mCurrent1 - 0xc000;
                 xv2 = mCurrent0 + 0xa000;
-                t5.a = xv2;
-                t5.b = yv2;
+                t5.x = xv2;
+                t5.y = yv2;
                 yv2 = mCurrent1 - 0x1000;
                 xv2 = mCurrent0 + 0xa000;
-                t6.a = xv2;
-                t6.b = yv2;
+                t6.x = xv2;
+                t6.y = yv2;
                 r = PointInTriangle(&p2, &t4, &t5, &t6);
                 if (r == 0)
                     goto in2;
@@ -1372,9 +1361,9 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
         }
         return 0;
     }
-    if (func_0203d5bc(&d.a) < 0x100000)
+    if (func_0203d5bc(&d.x) < 0x100000)
         return 0;
-    return func_0203d5bc(&d.a) < 0x190000;
+    return func_0203d5bc(&d.x) < 0x190000;
 }
 
 /* Slot 1: draws the chewing frames while biting, otherwise the idle pair. */
@@ -1557,61 +1546,61 @@ cMgSmartball_dokan_c::cMgSmartball_dokan_c(dScMgSmartball_c *manager, int index,
 }
 
 int cMgSmartball_propeller_c::HitTest(int *pos) {
-    struct S *p = (struct S *)pos;
-    struct S d;
-    struct S s0, s1, s2, s3;
-    struct S t0, t1, t2, t3;
-    struct S u0, u1, u2, u3;
-    struct S v0, v1, v2, v3;
+    Vector2 *p = (Vector2 *)pos;
+    Vector2 d;
+    Vector2 s0, s1, s2, s3;
+    Vector2 t0, t1, t2, t3;
+    Vector2 u0, u1, u2, u3;
+    Vector2 v0, v1, v2, v3;
 
-    d.a = p->a;
-    d.b = p->b;
-    d.a -= mCurrent0;
-    d.b -= mCurrent1;
-    if (func_0203d5bc(&d.a) >= 0x400000)
+    d.x = p->x;
+    d.y = p->y;
+    d.x -= mCurrent0;
+    d.y -= mCurrent1;
+    if (func_0203d5bc(&d.x) >= 0x400000)
         return 0;
 
-    s0.a = p->a;
-    s0.b = p->b;
-    s1.a = mVertices[0].x;
-    s1.b = mVertices[0].y;
-    s2.a = mVertices[1].x;
-    s2.b = mVertices[1].y;
-    s3.a = mVertices[2].x;
-    s3.b = mVertices[2].y;
+    s0.x = p->x;
+    s0.y = p->y;
+    s1.x = mVertices[0].x;
+    s1.y = mVertices[0].y;
+    s2.x = mVertices[1].x;
+    s2.y = mVertices[1].y;
+    s3.x = mVertices[2].x;
+    s3.y = mVertices[2].y;
     if (PointInTriangle(&s0, &s1, &s2, &s3))
         return 1;
 
-    t0.a = p->a;
-    t0.b = p->b;
-    t1.a = mVertices[3].x;
-    t1.b = mVertices[3].y;
-    t2.a = mVertices[1].x;
-    t2.b = mVertices[1].y;
-    t3.a = mVertices[2].x;
-    t3.b = mVertices[2].y;
+    t0.x = p->x;
+    t0.y = p->y;
+    t1.x = mVertices[3].x;
+    t1.y = mVertices[3].y;
+    t2.x = mVertices[1].x;
+    t2.y = mVertices[1].y;
+    t3.x = mVertices[2].x;
+    t3.y = mVertices[2].y;
     if (PointInTriangle(&t0, &t1, &t2, &t3))
         return 1;
 
-    u0.a = p->a;
-    u0.b = p->b;
-    u1.a = mVertices[4].x;
-    u1.b = mVertices[4].y;
-    u2.a = mVertices[5].x;
-    u2.b = mVertices[5].y;
-    u3.a = mVertices[6].x;
-    u3.b = mVertices[6].y;
+    u0.x = p->x;
+    u0.y = p->y;
+    u1.x = mVertices[4].x;
+    u1.y = mVertices[4].y;
+    u2.x = mVertices[5].x;
+    u2.y = mVertices[5].y;
+    u3.x = mVertices[6].x;
+    u3.y = mVertices[6].y;
     if (PointInTriangle(&u0, &u1, &u2, &u3))
         return 1;
 
-    v0.a = p->a;
-    v0.b = p->b;
-    v1.a = mVertices[7].x;
-    v1.b = mVertices[7].y;
-    v2.a = mVertices[5].x;
-    v2.b = mVertices[5].y;
-    v3.a = mVertices[6].x;
-    v3.b = mVertices[6].y;
+    v0.x = p->x;
+    v0.y = p->y;
+    v1.x = mVertices[7].x;
+    v1.y = mVertices[7].y;
+    v2.x = mVertices[5].x;
+    v2.y = mVertices[5].y;
+    v3.x = mVertices[6].x;
+    v3.y = mVertices[6].y;
     return PointInTriangle(&v0, &v1, &v2, &v3) != 0;
 }
 
@@ -2160,18 +2149,18 @@ int cMgSmartball_ball_c::HitDokans(int *arg) {
 }
 
 int cMgSmartball_ball_c::HitPropellers(int *pos) {
-    struct S *r7 = (struct S *)pos;
-    struct S loc;
+    Vector2 *r7 = (Vector2 *)pos;
+    Vector2 loc;
     int i;
-    if (r7->b >= 0x90000)
+    if (r7->y >= 0x90000)
         return 0;
     i = 0;
     if (mpManager->mPropellerCount > 0) {
         do {
             dScMgSmartball_c *base;
             cMgSmartball_propeller_c *propeller;
-            loc.a = r7->a;
-            loc.b = r7->b;
+            loc.x = r7->x;
+            loc.y = r7->y;
             base = mpManager;
             if (i >= base->mPropellerCount)
                 propeller = 0;
@@ -2223,38 +2212,38 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
 }
 
 int cMgSmartball_ball_c::CheckExits(int *pos) {
-    struct S *arg = (struct S *)pos;
-    struct S p, q0, q1, q2;
-    struct S d, e, f, g;
-    if (arg->b >= 0)
+    Vector2 *arg = (Vector2 *)pos;
+    Vector2 p, q0, q1, q2;
+    Vector2 d, e, f, g;
+    if (arg->y >= 0)
         return 0;
-    if (arg->a >= 0x8000 && arg->a < 0x28000) {
-        if (arg->b >= -0x90000 && arg->b < -0x88000) {
+    if (arg->x >= 0x8000 && arg->x < 0x28000) {
+        if (arg->y >= -0x90000 && arg->y < -0x88000) {
             mpManager->KickGate(0);
             return 1;
         }
-        p.a = arg->a;
-        p.b = arg->b;
-        q0.a = 0x8000;
-        q0.b = -0x92000;
-        q1.a = 0x8000;
-        q1.b = -0x90000;
-        q2.a = 0x28000;
-        q2.b = -0x90000;
+        p.x = arg->x;
+        p.y = arg->y;
+        q0.x = 0x8000;
+        q0.y = -0x92000;
+        q1.x = 0x8000;
+        q1.y = -0x90000;
+        q2.x = 0x28000;
+        q2.y = -0x90000;
         if (PointInTriangle(&p, &q0, &q1, &q2)) {
             mpManager->KickGate(0);
             return 1;
         }
     }
-    if (mExitGateOpen == 1 && mVel1 >= 0 && arg->a >= 0xd0000 && arg->a < 0xf8000) {
-        d.a = arg->a;
-        d.b = arg->b;
-        e.a = 0xd8000;
-        e.b = -0x80000;
-        f.a = 0xf8000;
-        f.b = -0x80000;
-        g.a = 0xf8000;
-        g.b = -0x88000;
+    if (mExitGateOpen == 1 && mVel1 >= 0 && arg->x >= 0xd0000 && arg->x < 0xf8000) {
+        d.x = arg->x;
+        d.y = arg->y;
+        e.x = 0xd8000;
+        e.y = -0x80000;
+        f.x = 0xf8000;
+        f.y = -0x80000;
+        g.x = 0xf8000;
+        g.y = -0x88000;
         if (PointInTriangle(&d, &e, &f, &g)) {
             mpManager->KickGate(1);
             return 1;
@@ -2316,24 +2305,24 @@ int cMgSmartball_ball_c::OnSlope(int *p) {
 }
 
 int cMgSmartball_ball_c::NeedsRespawn(int *pos) {
-    struct S *arg = (struct S *)pos;
+    Vector2 *arg = (Vector2 *)pos;
     int z, z2, x;
 
     if (state3a == 1) {
-        int dz = arg->b - mSwallowZ;
-        int dx = arg->a - mSwallowX;
+        int dz = arg->y - mSwallowZ;
+        int dx = arg->x - mSwallowX;
         int dxsq = FX_MUL(dx, dx);
         int dzsq = FX_MUL(dz, dz);
         return dxsq + dzsq >= 0x100000;
     }
 
-    x = arg->a;
+    x = arg->x;
     if (x < 0x8000)
         return 1;
     if (x >= 0xf8000)
         return 1;
     if (x >= 0xd8000 && x < 0xe0000) {
-        z = arg->b;
+        z = arg->y;
         if (z >= -0x80000) {
             if (z < 0x78000)
                 return 1;
@@ -2348,7 +2337,7 @@ int cMgSmartball_ball_c::NeedsRespawn(int *pos) {
         }
     }
 
-    z2 = arg->b;
+    z2 = arg->y;
     if (z2 < 0x80000)
         goto L1dc;
     if (z2 >= 0x88000)
@@ -2356,23 +2345,23 @@ int cMgSmartball_ball_c::NeedsRespawn(int *pos) {
     if (x < 0xe0000)
         return 1;
 L14c: {
-    struct S p, q0, q1, q2;
-    p.a = x;
-    p.b = arg->b;
-    q0.a = 0x8000;
-    q0.b = 0x98000;
-    q1.a = 0x8000;
-    q1.b = 0xa2000;
-    q2.a = 0xe0000;
-    q2.b = 0xa2000;
+    Vector2 p, q0, q1, q2;
+    p.x = x;
+    p.y = arg->y;
+    q0.x = 0x8000;
+    q0.y = 0x98000;
+    q1.x = 0x8000;
+    q1.y = 0xa2000;
+    q2.x = 0xe0000;
+    q2.y = 0xa2000;
     if (PointInTriangle(&p, &q0, &q1, &q2))
         return 1;
 }
-    if (arg->a < 0x8000)
+    if (arg->x < 0x8000)
         goto L238;
-    if (arg->a >= 0xe0000)
+    if (arg->x >= 0xe0000)
         goto L238;
-    if (arg->b < 0xa2000)
+    if (arg->y < 0xa2000)
         goto L238;
     return 1;
 L1dc:
@@ -2468,48 +2457,48 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     int nearKinoko;
     int pass = 0;
     int depth;
-    V2xz work;
+    Vector2 work;
     /* volatile: the ROM keeps the entry velocity on the stack and reloads it. */
-    volatile V2xz savedVel;
-    V2xz dist;
-    V2xz delta;
-    V2xz otherPos;
-    V2xz normal;
-    V2xz unit;
-    V2xz response;
-    V2xz radial;
-    V2xz hazardDelta;
-    V2xz correction;
-    V2xz kinokoPos;
+    volatile Vector2 savedVel;
+    Vector2 dist;
+    Vector2 delta;
+    Vector2 otherPos;
+    Vector2 normal;
+    Vector2 unit;
+    Vector2 response;
+    Vector2 radial;
+    Vector2 hazardDelta;
+    Vector2 correction;
+    Vector2 kinokoPos;
     /* One copy of the probe point per test: the ROM gives each call its own slot. */
-    V2xz respawnProbe;
-    V2xz slopeProbe;
-    V2xz exitProbe;
-    V2xz respawnProbe2;
-    V2xz exitProbe2;
-    V2xz kinokoProbe;
-    V2xz dokanProbe;
-    V2xz pakkunProbe;
-    V2xz switchProbe;
-    V2xz wingProbe;
-    V2xz springProbe;
-    V2xz propellerProbe;
-    V2xz entityPos;
-    V2xz entityDelta;
-    V2xz entityPos2;
-    V2xz radialDelta;
-    V2xz moveDelta;
-    V2xz normalized;
-    V2xz specialPos;
-    V2xz specialDelta0;
-    V2xz specialDelta1;
-    V2xz specialDelta2;
-    V2xz event0;
-    V2xz event1;
-    V2xz event2;
-    V2xz event3;
-    V2xz hazardPos;
-    V2xz hazardPos2;
+    Vector2 respawnProbe;
+    Vector2 slopeProbe;
+    Vector2 exitProbe;
+    Vector2 respawnProbe2;
+    Vector2 exitProbe2;
+    Vector2 kinokoProbe;
+    Vector2 dokanProbe;
+    Vector2 pakkunProbe;
+    Vector2 switchProbe;
+    Vector2 wingProbe;
+    Vector2 springProbe;
+    Vector2 propellerProbe;
+    Vector2 entityPos;
+    Vector2 entityDelta;
+    Vector2 entityPos2;
+    Vector2 radialDelta;
+    Vector2 moveDelta;
+    Vector2 normalized;
+    Vector2 specialPos;
+    Vector2 specialDelta0;
+    Vector2 specialDelta1;
+    Vector2 specialDelta2;
+    Vector2 event0;
+    Vector2 event1;
+    Vector2 event2;
+    Vector2 event3;
+    Vector2 hazardPos;
+    Vector2 hazardPos2;
     int blocked;
     int i;
     int entityLoopIndex;
@@ -2523,7 +2512,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     s64 square;
 
     savedVel.x = mVel0;
-    savedVel.z = mVel1;
+    savedVel.y = mVel1;
     targetIndex = -1;
     i = 0;
     do {
@@ -2548,12 +2537,12 @@ void cMgSmartball_ball_c::UpdatePhysics() {
             nearby[probeIndex] = 0;
             if (probeIndex < mpManager->mKinokoCount) {
                 dist.x = mCurrent0;
-                dist.z = mCurrent1;
+                dist.y = mCurrent1;
                 mgr = mpManager;
                 CopyObjectPos(&kinokoPos,
                               probeIndex >= mgr->mKinokoCount ? 0 : mgr->mpKinokos[probeIndex]);
                 dist.x -= kinokoPos.x;
-                dist.z -= kinokoPos.z;
+                dist.y -= kinokoPos.y;
                 if (func_0203d5bc(&dist.x) <= 0x900000LL) {
                     nearby[probeIndex] = 1;
                     nearKinoko = 1;
@@ -2572,13 +2561,13 @@ outer_loop:
     do {
         hit[i] = 0;
         work.x = 0;
-        work.z = 0;
-        work.z += mRadius;
+        work.y = 0;
+        work.y += mRadius;
         func_0203d388((Vector2 *)&work, angle);
         dot = func_0203d570((Vector2 *)&work, (Vector2 *)&mVel0);
         if (dot >= 0) {
             work.x += mCurrent0;
-            work.z += mCurrent1;
+            work.y += mCurrent1;
             if ((u8)mpManager->param1 == 0) {
                 respawnProbe = work;
                 if (NeedsRespawn(&respawnProbe.x) != 0) {
@@ -2674,7 +2663,7 @@ outer_loop:
             }
         } else {
             work.x += mCurrent0;
-            work.z += mCurrent1;
+            work.y += mCurrent1;
         }
 
     final_checks:
@@ -2725,11 +2714,11 @@ outer_loop:
                                 if (mCurrent1 < 0x90000 || mCurrent0 <= otherPos.x) {
                                     i = 0;
                                     do {
-                                        work.z = mRadius;
+                                        work.y = mRadius;
                                         work.x = 0;
                                         func_0203d388((Vector2 *)&work, angle);
                                         work.x += mCurrent0;
-                                        work.z += mCurrent1;
+                                        work.y += mCurrent1;
                                         Vec2_Sub(&radialDelta.x, &work.x, &otherPos.x);
                                         delta = radialDelta;
                                         if (func_0203d5bc(&delta.x) < 0x40000LL) {
@@ -2753,16 +2742,16 @@ outer_loop:
     }
 
     normal.x = 0;
-    normal.z = 0;
+    normal.y = 0;
     angle = 0;
     i = 0;
     do {
         if (hit[i] == 1) {
             unit.x = 0;
-            unit.z = 0x800;
+            unit.y = 0x800;
             func_0203d388((Vector2 *)&unit, angle);
             normal.x += unit.x;
-            normal.z += unit.z;
+            normal.y += unit.y;
         }
         angle += 0x800;
         i++;
@@ -2771,7 +2760,7 @@ outer_loop:
     func_0203d630((Vector2 *)&normal, 0x800);
     {
         mCurrent0 -= normal.x;
-        mCurrent1 -= normal.z;
+        mCurrent1 -= normal.y;
         Vec2_Sub(&moveDelta.x, &mCurrent0, &mSnapshot0);
     }
     dot = Vec2_Len((const Vector2 *)&moveDelta);
@@ -2782,15 +2771,15 @@ outer_loop:
 
     i = 0;
     response.x = 0;
-    response.z = 0;
+    response.y = 0;
     if (hitExit == 1) {
         do {
             if (hitB[i] == 1) {
                 radial.x = 0;
-                radial.z = 0x1000;
+                radial.y = 0x1000;
                 func_0203d388((Vector2 *)&radial, i * 0x10000 / 32);
                 response.x -= radial.x;
-                response.z -= radial.z;
+                response.y -= radial.y;
             }
             i++;
         } while (i < 32);
@@ -2798,18 +2787,18 @@ outer_loop:
         do {
             if (hitA[i] == 1 && hitC[i] == 0) {
                 radial.x = 0;
-                radial.z = 0x1000;
+                radial.y = 0x1000;
                 func_0203d388((Vector2 *)&radial, i * 0x10000 / 32);
                 response.x -= radial.x;
-                response.z -= radial.z;
+                response.y -= radial.y;
             }
             i++;
         } while (i < 32);
     }
 
-    if (response.x != 0 || response.z != 0) {
+    if (response.x != 0 || response.y != 0) {
         func_0203d480((Vector2 *)&normalized, (Vector2 *)&response);
-        dot = FX_MUL(mVel0, response.x) + FX_MUL(mVel1, response.z);
+        dot = FX_MUL(mVel0, response.x) + FX_MUL(mVel1, response.y);
         if (onSpring == 1) {
             responseScale = FX_MUL(dot, 0x1800);
         } else if (hitSlope == 1) {
@@ -2843,15 +2832,15 @@ outer_loop:
                 ((((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0x10) >> 15)
                  << 12);
             responseScale += FIX_MUL_SU(responseScale, randomScale >> 6);
-            if (mCurrent0 < 0x18000 && response.z > 0) {
+            if (mCurrent0 < 0x18000 && response.y > 0) {
                 response.x = 0;
-                response.z = 0x1000;
+                response.y = 0x1000;
             }
         } else {
             responseScale = FX_MUL(dot, 0x1200);
         }
         mVel0 -= FX_MUL(responseScale, response.x);
-        mVel1 -= FX_MUL(responseScale, response.z);
+        mVel1 -= FX_MUL(responseScale, response.y);
     }
 
     if (onSpring == 1) {
@@ -2864,16 +2853,16 @@ outer_loop:
         if (mCurrent0 < 0xe8000)
             mCurrent0 = 0xe8000;
         CopyObjectPos(&specialPos, mpManager->mpSpring);
-        mCurrent1 = specialPos.z - 0x20001 - mRadius;
+        mCurrent1 = specialPos.y - 0x20001 - mRadius;
         GetObjectDelta(&specialDelta0, mpManager->mpSpring);
-        if (specialDelta0.z >= -0x1000)
+        if (specialDelta0.y >= -0x1000)
             return;
         GetObjectDelta(&specialDelta1, mpManager->mpSpring);
-        if (mVel1 < specialDelta1.z)
+        if (mVel1 < specialDelta1.y)
             return;
         mVel0 = 0;
         GetObjectDelta(&specialDelta2, mpManager->mpSpring);
-        mVel1 = specialDelta2.z;
+        mVel1 = specialDelta2.y;
         if (mVel1 < -0x6000)
             mVel1 = (mVel1 + 0x6000) / 4 - 0x6000;
 
@@ -2903,19 +2892,19 @@ outer_loop:
 
     if (hitSlope == 1) {
         event0.x = savedVel.x;
-        event0.z = savedVel.z;
+        event0.y = savedVel.y;
         PlayHitSound(0x171, &event0.x);
     } else if (hitPropeller == 1) {
         event1.x = savedVel.x;
-        event1.z = savedVel.z;
+        event1.y = savedVel.y;
         PlayHitSound(0x172, &event1.x);
     } else if (hitExit == 1) {
         event2.x = savedVel.x;
-        event2.z = savedVel.z;
+        event2.y = savedVel.y;
         PlayHitSound(0x16f, &event2.x);
     } else if (hitWing == 1) {
         event3.x = savedVel.x;
-        event3.z = savedVel.z;
+        event3.y = savedVel.y;
         PlayHitSound(0x1a3, &event3.x);
     }
 
@@ -2928,19 +2917,19 @@ outer_loop:
         other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
         if (((cMgSmartball_ana_c *)other)->HasBall() == 0) {
             hazardDelta.x = mCurrent0;
-            hazardDelta.z = mCurrent1;
+            hazardDelta.y = mCurrent1;
             other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
             CopyObjectPos(&hazardPos, other);
             hazardDelta.x -= hazardPos.x;
-            hazardDelta.z -= hazardPos.z;
-            hazardDelta.z *= 2;
+            hazardDelta.y -= hazardPos.y;
+            hazardDelta.y *= 2;
             if (func_0203d5bc(&hazardDelta.x) < square) {
                 dot = mRadius + 0x10000 - Vec2_Len((const Vector2 *)&hazardDelta);
                 if (mRadius < dot) {
                     other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
                     CopyObjectPos(&hazardPos2, other);
                     mSwallowX = hazardPos2.x;
-                    mSwallowZ = hazardPos2.z;
+                    mSwallowZ = hazardPos2.y;
                     other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
                     ((cMgSmartball_ana_c *)other)->Swallow();
                     ArmExpire(0x80);
@@ -2951,10 +2940,10 @@ outer_loop:
                 func_0203d434((Vector2 *)&correction);
                 correction.x = FX_MUL(correction.x, dot);
                 correction.x /= 64;
-                correction.z = FX_MUL(correction.z, dot);
-                correction.z /= 64;
+                correction.y = FX_MUL(correction.y, dot);
+                correction.y /= 64;
                 mVel0 -= correction.x;
-                mVel1 -= correction.z;
+                mVel1 -= correction.y;
                 return;
             }
         }
@@ -3034,19 +3023,19 @@ void cMgSmartball_ball_c::Update() {
 
 /* Slot 0: the ball's frame -- expiry, freeze, goal zone, bounce and physics. */
 void cMgSmartball_ball_c::SaveSnapshot() {
-    V2xz vc;
+    Vector2 vc;
     Vector2 vd;
-    V2xz d1;
-    V2xz pa;
-    V2xz pb;
-    V2xz pc;
-    V2xz pd;
-    V2xz pe;
-    V2xz pf;
-    V2xz pg;
-    V2xz ph;
-    V2xz v5c;
-    V2xz d2;
+    Vector2 d1;
+    Vector2 pa;
+    Vector2 pb;
+    Vector2 pc;
+    Vector2 pd;
+    Vector2 pe;
+    Vector2 pf;
+    Vector2 pg;
+    Vector2 ph;
+    Vector2 v5c;
+    Vector2 d2;
     int t;
     int spd;
     int mag;
@@ -3126,23 +3115,23 @@ after2:
     }
     if (state3a == 0) {
         pa.x = mCurrent0;
-        pa.z = mCurrent1;
+        pa.y = mCurrent1;
         pb.x = 0x8000;
-        pb.z = 0x8c000;
+        pb.y = 0x8c000;
         pc.x = 0x8000;
-        pc.z = 0x92000;
+        pc.y = 0x92000;
         pd.x = 0xe0000;
-        pd.z = 0x96000;
+        pd.y = 0x96000;
         if (PointInTriangle(&pa, &pb, &pc, &pd) != 0)
             goto bounce;
         pe.x = mCurrent0;
-        pe.z = mCurrent1;
+        pe.y = mCurrent1;
         pf.x = 0x8000;
-        pf.z = 0x92000;
+        pf.y = 0x92000;
         pg.x = 0xe0000;
-        pg.z = 0x96000;
+        pg.y = 0x96000;
         ph.x = 0xe0000;
-        ph.z = 0x9e000;
+        ph.y = 0x9e000;
         if (PointInTriangle(&pe, &pf, &pg, &ph) != 0) {
         bounce:
             mVel0 += 0x80;
@@ -3154,7 +3143,7 @@ after2:
         }
     }
     if (mVel0 != 0 || mVel1 != 0) {
-        spd = Vec2_Len((const Vector2 *)(V2xz *)&mVel0);
+        spd = Vec2_Len((const Vector2 *)&mVel0);
         if (spd >= 0x8000)
             spd = 0x8000;
         if (func_0203d434((Vector2 *)&mVel0) != 0)
@@ -3168,7 +3157,7 @@ after2:
         UpdatePhysics();
         if (mExitGateOpen == 0) {
             vc.x = 0x20000;
-            vc.z = -0x8000;
+            vc.y = -0x8000;
             func_0203d480((Vector2 *)&v5c, (Vector2 *)&vc);
             {
                 int dz = mCurrent1 + 0x80000;
@@ -3180,7 +3169,7 @@ after2:
                 mExitGateOpen = 1;
         }
     }
-    mag = Vec2_Len((const Vector2 *)(V2xz *)&mVel0);
+    mag = Vec2_Len((const Vector2 *)&mVel0);
     Vec2_Sub(&d2.x, &mCurrent0, &mSnapshot0);
     dist = Vec2_Len((const Vector2 *)&d2);
     if (specialHit != 0)
