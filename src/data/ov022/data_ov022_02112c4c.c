@@ -2,5 +2,7 @@
 #include "types.h"
 
 const u32 data_ov022_02112c4c[3] = {
-    0xfffff172, 0xfffff15e, 0xfffff149,
+    0xfffff172,
+    0xfffff15e,
+    0xfffff149,
 };

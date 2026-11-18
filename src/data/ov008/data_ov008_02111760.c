@@ -2,5 +2,6 @@
 #include "types.h"
 
 u32 data_ov008_02111760[2] = {
-    0x00000000, 0xffff0000,
+    0x00000000,
+    0xffff0000,
 };
