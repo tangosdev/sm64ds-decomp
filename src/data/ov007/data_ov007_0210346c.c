@@ -2,4 +2,4 @@
 #include "types.h"
 #include "Ov007Sprite.h"
 
-Ov007Sprite * data_ov007_0210346c;
+Ov007Sprite *data_ov007_0210346c;

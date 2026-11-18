@@ -2,4 +2,4 @@
 #include "types.h"
 #include "Ov007Work.h"
 
-Ov007Work * data_ov007_0210342c;
+Ov007Work *data_ov007_0210342c;

@@ -3,4 +3,4 @@
 #include "types.h"
 #include "Particle__System.h"
 
-Particle::System * data_ov007_02103450[2];
+Particle::System *data_ov007_02103450[2];

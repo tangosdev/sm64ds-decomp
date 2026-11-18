@@ -3,4 +3,4 @@
 #include "types.h"
 #include "Particle__Manager.h"
 
-Particle::Manager * data_ov007_0210344c;
+Particle::Manager *data_ov007_0210344c;
