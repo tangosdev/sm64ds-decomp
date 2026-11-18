@@ -469,9 +469,9 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPos.y = 0;
             mHeldPos.z = 0;
             MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
-            mHeldPos.x = data_020a0e68.m[9];
-            mHeldPos.y = data_020a0e68.m[10];
-            mHeldPos.z = data_020a0e68.m[11];
+            mHeldPos.x = data_020a0e68.t.x;
+            mHeldPos.y = data_020a0e68.t.y;
+            mHeldPos.z = data_020a0e68.t.z;
             mHeldPos.x <<= 3;
             mHeldPos.y <<= 3;
             mHeldPos.z <<= 3;
@@ -1176,8 +1176,7 @@ void daJango_c::UpdateCircleVelocity() {
     v[0].z = 0x14000;
     if (mCarriedItem == CARRIES_NO_STAR && mHeldActorID == 0) {
         if (mTimer == 0) {
-            short *a = &mPrevAngle.y;
-            *a = *a - 0x100;
+            mPrevAngle.y -= 0x100;
         }
         v[0].z = 0x28000;
     }

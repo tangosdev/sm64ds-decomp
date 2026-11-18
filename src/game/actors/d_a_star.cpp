@@ -666,15 +666,15 @@ int daStarBase_c::Behavior()
     } else {
         mAngle.y += 0x400;
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-        mModel.mat4x3.m[9] = mPos.x >> 3;
-        mModel.mat4x3.m[10] = mPos.y >> 3;
-        mModel.mat4x3.m[11] = mPos.z >> 3;
+        mModel.mat4x3.t.x = mPos.x >> 3;
+        mModel.mat4x3.t.y = mPos.y >> 3;
+        mModel.mat4x3.t.z = mPos.z >> 3;
     }
     if (mBits.visible) {
         mShadowMtx = IDENTITY_MATRIX4X3;
-        mShadowMtx.m[9] = mPos.x >> 3;
-        mShadowMtx.m[10] = mPos.y >> 3;
-        mShadowMtx.m[11] = mPos.z >> 3;
+        mShadowMtx.t.x = mPos.x >> 3;
+        mShadowMtx.t.y = mPos.y >> 3;
+        mShadowMtx.t.z = mPos.z >> 3;
         {
             int d = mPos.y - mGroundY;
             int rad = 0xa0000;
@@ -1134,6 +1134,8 @@ void daStar_c::StateCollectBegin() {
 
         {
             Vector3 *src = &mPlayer->mPos;
+            /* Kept (#821 r83): mPos = mHomePos, or storing through cache, moves
+               the bytes. */
             Vector3 *cache = &mHomePos;
             mHomePos.x = src->x;
             mHomePos.y = src->y;
@@ -2056,10 +2058,7 @@ void daStar_c::OnBounceLand() {
             if (mWithMeshClsn.GetFloorResult()->surface.clps.GetFloorClass() != 5)
                 return;
         }
-        {
-            short *a = &mPrevAngle.y;
-            *a = *a + 0x8000;
-        }
+        mPrevAngle.y += 0x8000;
     } else {
         dActor_c *q = FarthestPlayer();
         if (q != 0) {
@@ -2172,14 +2171,14 @@ void daStar_c::UpdateModelMatrix() {
         t = *ang + 0xc00;
         *ang = t;
         Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mAngle.y);
-        mAnmModel1.mat4x3.m[9] = mPos.x >> 3;
-        mAnmModel1.mat4x3.m[10] = mPos.y >> 3;
-        mAnmModel1.mat4x3.m[11] = mPos.z >> 3;
+        mAnmModel1.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel1.mat4x3.t.y = mPos.y >> 3;
+        mAnmModel1.mat4x3.t.z = mPos.z >> 3;
     } else {
         Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mPrevAngle.y);
-        mAnmModel1.mat4x3.m[9] = mPos.x >> 3;
-        mAnmModel1.mat4x3.m[10] = (mPos.y + 0x32000) >> 3;
-        mAnmModel1.mat4x3.m[11] = mPos.z >> 3;
+        mAnmModel1.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel1.mat4x3.t.y = (mPos.y + 0x32000) >> 3;
+        mAnmModel1.mat4x3.t.z = mPos.z >> 3;
     }
 
     mAnmModel2.mat4x3 = mAnmModel1.mat4x3;
@@ -2225,9 +2224,9 @@ void daStar_c::DrawShadow() {
 
     mShadowMtx = IDENTITY_MATRIX4X3;
 
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = mPos.y >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = mPos.y >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, mShadowMtx, r8, t, 0xf);
 }
@@ -2259,9 +2258,9 @@ Vector3 daStar_c::func_ov002_020e8244() {
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngle.y);
     local = *b->mAnmModel1.data.transforms;
     MTX_Concat43(&local, &data_020a0e68, &data_020a0e68);
-    b->mCenter.x = data_020a0e68.m[9];
-    b->mCenter.y = data_020a0e68.m[10];
-    b->mCenter.z = data_020a0e68.m[11];
+    b->mCenter.x = data_020a0e68.t.x;
+    b->mCenter.y = data_020a0e68.t.y;
+    b->mCenter.z = data_020a0e68.t.z;
     VEC_Subtract(&b->mCenter, &b->mPos, &b->mCenter);
     Vec3_LslInPlace(&b->mCenter, 3);
     VEC_Add(&b->mCenter, &b->mPos, &b->mCenter);

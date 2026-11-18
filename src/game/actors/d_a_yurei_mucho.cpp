@@ -271,9 +271,9 @@ void daYurei_Mucho_c::UpdateModelTransform() {
 
     MTX_Concat43(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
 
-    mShotPos.x = data_020a0e68.m[9];
-    mShotPos.y = data_020a0e68.m[10];
-    mShotPos.z = data_020a0e68.m[11];
+    mShotPos.x = data_020a0e68.t.x;
+    mShotPos.y = data_020a0e68.t.y;
+    mShotPos.z = data_020a0e68.t.z;
     mShotPos.x <<= 3;
     mShotPos.y <<= 3;
     mShotPos.y -= 0xa000;

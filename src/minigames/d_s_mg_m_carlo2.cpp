@@ -418,11 +418,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
 {
     switch (mState) {
     case 0:
-        {
-            short *p = &mDealDelay;
-            short v = *p;
-            *p = (v - 1);
-        }
+        mDealDelay--;
         if (mDealDelay != 0)
             return;
         sMCarlo2DeckSize--;

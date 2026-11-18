@@ -139,9 +139,9 @@ void daMenbo_c::func_ov090_02130f94() {
         data_020a0e68 = *src;
         MTX_Concat43((const Matrix4x3 *)mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
                      &data_020a0e68);
-        v.x = data_020a0e68.m[9];
-        v.y = data_020a0e68.m[10];
-        v.z = data_020a0e68.m[11];
+        v.x = data_020a0e68.t.x;
+        v.y = data_020a0e68.t.y;
+        v.z = data_020a0e68.t.z;
         Vec3_Lsl(&r, &v, sh);
         v.x = r.x;
         v.y = r.y;
@@ -535,8 +535,7 @@ int daMenbo_c::func_ov090_02131c48()
 
     if (mTurnTimer == 0 && mWithMeshClsn.IsOnWall() &&
         AngleDiff(mPrevAngle.y, mTargetAngleY) < 0x200) {
-        s16 *p = &mTargetAngleY;
-        *p = *p + 0x4000;
+        mTargetAngleY += 0x4000;
         mTurnTimer = 8;
     }
 

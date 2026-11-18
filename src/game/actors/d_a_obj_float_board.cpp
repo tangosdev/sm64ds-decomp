@@ -108,9 +108,9 @@ int daObjFloatBoard_c::UpdateWaterY() {
  * from InitResourcesFrom below. */
 void daObjFloatBoard_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* ROM ordinal 4 -- vtable slot 3, ov002 0x020b5be0. THE KEY FUNCTION: the
@@ -158,9 +158,7 @@ int daObjFloatBoard_c::Behavior() {
 
     if (UpdateWaterY() != 0) {
         if (ApproachLinear(mSinkOffset, mRider != 0 ? -0x28000 : 0, 0x5000) != 0) {
-            short *ctr = &mBobPhase;
-            short cval = *ctr;
-            *ctr = (short)(cval + 0xa00);
+            mBobPhase += 0xa00;
             mBobOffset = 10 * FX_SinIdx((unsigned short)mBobPhase >> 4);
         }
 

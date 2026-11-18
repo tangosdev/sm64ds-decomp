@@ -3674,8 +3674,7 @@ void dScStage_c::RenderModelTransparent() {
             }
         }
     }
-    dExtSimpleModel_c *model = &mModel;
-    model->Render(&data_020755d4);
+    mModel.Render(&data_020755d4);
 }
 
 void dScStage_c::RenderModel() {
@@ -3719,8 +3718,7 @@ void dScStage_c::RenderModel() {
         bone++;
     }
 
-    dExtSimpleModel_c *model = &mModel;
-    model->Render(&data_020755d4);
+    mModel.Render(&data_020755d4);
 }
 
 /* Copy each material's texture/palette parameters from the level model's
@@ -3932,9 +3930,9 @@ int dScStage_c::Render() {
         if (skybox != 0) {
             Matrix4x3 *transform = &skybox->mat4x3;
             Vector3 *cameraPosition = &gCamera->pos;
-            transform->m[9] = cameraPosition->x >> 3;
-            transform->m[10] = cameraPosition->y >> 3;
-            transform->m[11] = cameraPosition->z >> 3;
+            transform->t.x = cameraPosition->x >> 3;
+            transform->t.y = cameraPosition->y >> 3;
+            transform->t.z = cameraPosition->z >> 3;
             mSkyboxModel->Render(0);
         }
     }

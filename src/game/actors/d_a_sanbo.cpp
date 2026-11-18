@@ -59,11 +59,11 @@ enum daSanbo_c_AssetId {
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
 extern "C" {
-extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, fx32 x, fx32 y, fx32 z);
+extern void Matrix4x3_FromTranslation(union Matrix4x3 *m, fx32 x, fx32 y, fx32 z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern struct Matrix4x3 data_020a0e68;
+extern union Matrix4x3 data_020a0e68;
 extern void func_02038414(void *p);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
@@ -173,8 +173,7 @@ int daSanbo_c::Render()
     unsigned int f = mFlags;
     int b = ((f & 0x40000) != 0);
     if(b) return 1;
-    dExtSimpleModel_c *model = &mModel;
-    model->Render(&mScale);
+    mModel.Render(&mScale);
     return 1;
 }
 
@@ -483,9 +482,9 @@ void daSanbo_c::UpdateModelAndShadow() {
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
             mModel.mat4x3 = data_020a0e68;
 
-            mMatrix.m[9] = mPos.x >> 3;
-            mMatrix.m[10] = mPos.y >> 3;
-            mMatrix.m[11] = mPos.z >> 3;
+            mMatrix.t.x = mPos.x >> 3;
+            mMatrix.t.y = mPos.y >> 3;
+            mMatrix.t.z = mPos.z >> 3;
 
             DropShadowRadHeight(mShadowModel, mMatrix, 0xa0000, 0x2bc000, 0xf);
             return;
@@ -493,9 +492,9 @@ void daSanbo_c::UpdateModelAndShadow() {
     }
 
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = (mPos.x + mOffset.x) >> 3;
-    mModel.mat4x3.m[10] = (mPos.y + 0x3c000) >> 3;
-    mModel.mat4x3.m[11] = (mPos.z + mOffset.z) >> 3;
+    mModel.mat4x3.t.x = (mPos.x + mOffset.x) >> 3;
+    mModel.mat4x3.t.y = (mPos.y + 0x3c000) >> 3;
+    mModel.mat4x3.t.z = (mPos.z + mOffset.z) >> 3;
 
     if (mNextSegment == 0 || mState == 2 || mState == 5) {
         DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x82000, 0x2bc000, 0xf);

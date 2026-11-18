@@ -217,9 +217,9 @@ int daBombking_c::TickDefeated() {
     data_020a0e68 = this->mBlendAnmModel.mat4x3;
     MTX_Concat43(&this->mBlendAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
 
-    v.x = data_020a0e68.m[9];
-    v.y = data_020a0e68.m[10];
-    v.z = data_020a0e68.m[11];
+    v.x = data_020a0e68.t.x;
+    v.y = data_020a0e68.t.y;
+    v.z = data_020a0e68.t.z;
     Vec3_Lsl(&t, &v, 3);
     v.x = t.x;
     v.y = t.y;
@@ -575,9 +575,9 @@ int daBombking_c::TickHomeTalk() {
         a.z = 0;
         data_020a0e68 = this->mBlendAnmModel.mat4x3;
         MTX_Concat43(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-        a.x = data_020a0e68.m[9];
-        a.y = data_020a0e68.m[10];
-        a.z = data_020a0e68.m[11];
+        a.x = data_020a0e68.t.x;
+        a.y = data_020a0e68.t.y;
+        a.z = data_020a0e68.t.z;
         Vec3_Lsl(&tmp, &a, 3);
         a.x = tmp.x;
         dust.x = tmp.x;
@@ -1151,9 +1151,9 @@ int daBombking_c::TickActivate() {
         s.z = 0;
         data_020a0e68 = this->mBlendAnmModel.mat4x3;
         MTX_Concat43(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-        s.x = data_020a0e68.m[9];
-        s.y = data_020a0e68.m[10];
-        s.z = data_020a0e68.m[11];
+        s.x = data_020a0e68.t.x;
+        s.y = data_020a0e68.t.y;
+        s.z = data_020a0e68.t.z;
         Vec3_Lsl(&d, &s, 3);
         s.x = d.x;
         v.x = d.x;
@@ -1217,8 +1217,7 @@ int daBombking_c::TickInactive() {
     unsigned int b;
 
     if (this->mMusicLayer3 == 1) {
-        unsigned char *p = &this->mMusicLayer3Timer;
-        *p += 1;
+        this->mMusicLayer3Timer++;
         if (this->mMusicLayer3Timer > 200) {
             this->mFlags = 0x10000003;
             this->mMusicLayer3 = 0;
@@ -1318,9 +1317,9 @@ void daBombking_c::UpdateShadow() {
     if (scale < 0xa000)
         scale = 0xa000;
     this->mShadowMtx = IDENTITY_MATRIX4X3;
-    this->mShadowMtx.m[9] = this->mPos.x >> 3;
-    this->mShadowMtx.m[10] = this->mPos.y >> 3;
-    this->mShadowMtx.m[11] = this->mPos.z >> 3;
+    this->mShadowMtx.t.x = this->mPos.x >> 3;
+    this->mShadowMtx.t.y = this->mPos.y >> 3;
+    this->mShadowMtx.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, scale, ip + 0x28000, 0xf);
 }
 
@@ -1330,9 +1329,9 @@ void daBombking_c::UpdateHandMatrix() {
     int i;
 
     Matrix4x3_FromRotationY(&this->mBlendAnmModel.mat4x3, this->mAngle.y);
-    this->mBlendAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
-    this->mBlendAnmModel.mat4x3.m[10] = this->mPos.y >> 3;
-    this->mBlendAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
+    this->mBlendAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mBlendAnmModel.mat4x3.t.y = this->mPos.y >> 3;
+    this->mBlendAnmModel.mat4x3.t.z = this->mPos.z >> 3;
     MTX_Concat43(&this->mBlendAnmModel.data.transforms[10], &this->mBlendAnmModel.mat4x3,
                  &this->mHoldMtx);
 
@@ -1341,9 +1340,9 @@ void daBombking_c::UpdateHandMatrix() {
     this->mThrowPos.x = 0;
     this->mThrowPos.y = 0;
     this->mThrowPos.z = 0;
-    this->mThrowPos.x = this->mHoldMtx.m[9];
-    this->mThrowPos.y = this->mHoldMtx.m[10];
-    this->mThrowPos.z = this->mHoldMtx.m[11];
+    this->mThrowPos.x = this->mHoldMtx.t.x;
+    this->mThrowPos.y = this->mHoldMtx.t.y;
+    this->mThrowPos.z = this->mHoldMtx.t.z;
     Vec3_Lsl(&lv, &this->mThrowPos, 3);
     this->mThrowPos.x = lv.x;
     this->mThrowPos.y = lv.y;

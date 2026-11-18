@@ -2906,10 +2906,7 @@ int daDemo_c::func_ov002_020f72bc()
     this->mScale.x = 0x3000;
     this->mScale.y = 0x3000;
     this->mScale.z = 0x3000;
-    {
-        s16 *p = &this->mAngle.y;
-        *p = *p + 0x400;
-    }
+    this->mAngle.y += 0x400;
     this->mOpacity = 0x1f;
 
     mParticleID[0] =
@@ -3070,10 +3067,8 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
         if (state <= 0x6a) {
             if (state > 0x3c) {
                 Math_Function_0203b0fc(&this->mMagnitude, -0xa000, 0xcc, 0x7fffffff);
-                short *p94 = &this->mPrevAngle.y;
-                short *p92 = &this->mPrevAngle.x;
-                *p94 = *p94 + 0x78;
-                *p92 = *p92 + 0x40;
+                this->mPrevAngle.y += 0x78;
+                this->mPrevAngle.x += 0x40;
 
                 short h = Vec3_HorzAngle((&this->mPos), &cam->pos);
                 ApproachLinear2(this->mAngle.y, h, 0x200);
@@ -3110,10 +3105,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
         this->mSpeed.y = FX_MUL(t, s1);
     }
 
-    {
-        short *pfc = &this->mPhase;
-        *pfc = *pfc + 1;
-    }
+    this->mPhase++;
 
     return 1;
 }
@@ -3137,10 +3129,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         int h;
         int t;
 
-        {
-            short *p94 = &this->mPrevAngle.y;
-            *p94 = *p94 + 0x200;
-        }
+        this->mPrevAngle.y += 0x200;
         Math_Function_0203b0fc(&this->mMagnitude, 0x64000, 0x7a, 0x7fffffff);
 
         this->mAngle.x = cstd::atan2(this->mPos.y - 0x190000, 0xc8000);
@@ -3160,10 +3149,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
         this->mPos.y += FX_MUL(t, 0x96000);
 
-        {
-            short *pfc = &this->mPhase;
-            *pfc = *pfc + *&this->mPhaseStep;
-        }
+        this->mPhase += this->mPhaseStep;
         ApproachAngle(&this->mPhaseStep, 0x200, 0x14, 0x4000, 0);
 
         this->mPos.x += this->mRate;
@@ -3285,7 +3271,7 @@ int daDemo_c::Render() {
     if (param1 == 0x19) {
         /* Draw the model three times: copy INV_VIEW_MATRIX_ASR_3 into its
            mat4x3, then for each entry of data_ov002_0210bb7c overwrite the
-           translation column (m[9..11]) and render. */
+           translation and render. */
         struct {
             Matrix4x3 *p;
             Matrix4x3 *cur;
@@ -3298,9 +3284,9 @@ int daDemo_c::Render() {
         int *tbl = data_ov002_0210bb7c;
         int i = 0;
         do {
-            s.p->m[9] = tbl[0];
-            s.p->m[10] = tbl[1];
-            s.p->m[11] = tbl[2];
+            s.p->t.x = tbl[0];
+            s.p->t.y = tbl[1];
+            s.p->t.z = tbl[2];
             mModel->Render(0);
             tbl += 3;
             i++;

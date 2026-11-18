@@ -617,17 +617,17 @@ void *daChoropu_c::func_ov080_02124360()
 void daChoropu_c::func_ov080_021243d8()
 {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
 void daChoro_Rock_c::func_ov080_02124418() {
     Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngle.y);
-    this->mModel.mat4x3.m[9] = this->mPos.x >> 3;
-    this->mModel.mat4x3.m[10] = this->mPos.y >> 3;
-    this->mModel.mat4x3.m[11] = this->mPos.z >> 3;
+    this->mModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mModel.mat4x3.t.y = this->mPos.y >> 3;
+    this->mModel.mat4x3.t.z = this->mPos.z >> 3;
 }
 
 /* Releases the shared model and animation files; never touches `this`: the model file
@@ -657,16 +657,14 @@ s32 daChoro_Rock_c::CleanupResources()
 /* Draws the mole's model (mAnmModel) with no scale argument. */
 s32 daChoropu_c::Render()
 {
-    dExtSimpleModel_c *m = &mAnmModel;
-    m->Render(0);
+    mAnmModel.Render(0);
     return 1;
 }
 
 /* Draws the rock's model, scaled by mScale. */
 s32 daChoro_Rock_c::Render()
 {
-    dExtSimpleModel_c *m = &mModel;
-    m->Render(&mScale);
+    mModel.Render(&mScale);
     return 1;
 }
 

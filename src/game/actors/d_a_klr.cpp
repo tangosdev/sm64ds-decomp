@@ -231,9 +231,9 @@ void daKlr_c::StateShotDown() {
 /* Pose both models from the actor and drop the shadow under them. */
 void daKlr_c::UpdateModelAndShadow() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     /* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
        member through Vector3 and comes out 0x18 bytes longer. */
     mModel2.mat4x3 = mModel.mat4x3;

@@ -148,17 +148,16 @@ void dScMgMemory2_c::UpdateCursor() {
     if (mCursor.visible == 0)
         return;
     {
-        unsigned short *timer = (unsigned short *)&mCursor.blinkTimer;
+        /* Kept (#821 r83): blinkTimer++, += 1 and `++blinkTimer < 20` on the
+           member all lose the ROM's register-held timer address. */
+        unsigned short *timer = &mCursor.blinkTimer;
         *timer = *timer + 1;
         if (*timer < 20)
             return;
         *timer = 0;
     }
-    {
-        unsigned char *frame = &mCursor.frame;
-        *frame = *frame + 1;
-        *frame = *frame & 1;
-    }
+    mCursor.frame++;
+    mCursor.frame &= 1;
 }
 
 void dScMgMemory2_c::ShowCursor() {
@@ -319,6 +318,8 @@ void dScMgMemory2_c::JudgePair() {
 #pragma push
 #pragma opt_propagation off
 void dScMgMemory2_c::DrawCards() {
+    /* Kept (#821 r73): mCards[cardIndex] at every use is 0xac of 0xa8 (40
+       words off) with the pragma, 0xa8 but 27 off without it. */
     char *raw = (char *)this;
     int cardIndex;
     int sprite, dimmed;

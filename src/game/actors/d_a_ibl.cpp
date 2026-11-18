@@ -231,12 +231,12 @@ void daIbl_c::UpdateWallAndFloor() {
    being 1.0. */
 void daIbl_c::UpdateModelMatrix() {
     mModel.mat4x3 = IDENTITY_MATRIX4X3;
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     mShadowMtx = mModel.mat4x3;
     int k = 0x32;
-    mShadowMtx.m[10] = (mDrawScale.x * k + mPos.y) >> 3;
+    mShadowMtx.t.y = (mDrawScale.x * k + mPos.y) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
         k += 0x28;
     else
@@ -595,12 +595,11 @@ void daIbl_c::FreeRollBehavior() {
    mDispenser, and mLiveBalls counts it. */
 void daIbl_c::SpawnerBehavior() {
     Vector3 pos;
-    u16 *timer = &mStateTimer;
     daPly_c *pl;
     int r1;
 
-    if (*timer != 0) {
-        *timer = *timer - 1;
+    if (mStateTimer != 0) {
+        mStateTimer--;
         return;
     }
 
@@ -648,8 +647,7 @@ void daIbl_c::SpawnerBehavior() {
         a = (daIbl_c *)dActor_c::Spawn(daIbl_ACTOR_IRONBALL, param1, mPos, &mPrevAngle, cc, -1);
         if (a == 0) return;
         {
-            u8 *cnt = &mLiveBalls;
-            *cnt = *cnt + 1;
+            mLiveBalls++;
         }
         a->mDispenser = this;
     }

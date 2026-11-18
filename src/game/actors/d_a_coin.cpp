@@ -291,14 +291,14 @@ void daCoin_c::UpdateModelMatrix() {
     int floorState;
 
     Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngle.y);
-    mCommonModel1.mat4x3.m[9] = mPos.x >> 3;
-    mCommonModel1.mat4x3.m[10] = mPos.y >> 3;
-    mCommonModel1.mat4x3.m[11] = mPos.z >> 3;
+    mCommonModel1.mat4x3.t.x = mPos.x >> 3;
+    mCommonModel1.mat4x3.t.y = mPos.y >> 3;
+    mCommonModel1.mat4x3.t.z = mPos.z >> 3;
     mCommonModel2.mat4x3 = mCommonModel1.mat4x3;
     mShadowMat = IDENTITY_MATRIX4X3;
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = mPos.y >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = mPos.y >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
 
     inYoshiMouth = mFlags & 0x40000;
     inYoshiMouth = inYoshiMouth != 0;
@@ -613,10 +613,9 @@ void daCoin_c::StateBounce() {
 
     if (normal.x != 0 || normal.z != 0) {
         int slide = data_ov002_020ff078[floorClass];
-        Vector3 *velocity = &mSpeed;
-        velocity->x += normal.x * slide;
+        mSpeed.x += normal.x * slide;
         mSpeed.z += normal.z * slide;
-        mHorzSpeed = Vec3_HorzLen(velocity);
+        mHorzSpeed = Vec3_HorzLen(&mSpeed);
         if (mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             UpdatePosWithHorzSpeedAndAng();

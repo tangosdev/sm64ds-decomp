@@ -228,9 +228,9 @@ void daManta_c::UpdateModelAndRingPos() {
     mRingPos.z = 0;
     data_020a0e68 = mAnmModel.mat4x3;
     MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    mRingPos.x = data_020a0e68.m[9];
-    mRingPos.y = data_020a0e68.m[10];
-    mRingPos.z = data_020a0e68.m[11];
+    mRingPos.x = data_020a0e68.t.x;
+    mRingPos.y = data_020a0e68.t.y;
+    mRingPos.z = data_020a0e68.t.z;
     mRingPos.x <<= 3;
     mRingPos.y <<= 3;
     mRingPos.z <<= 3;

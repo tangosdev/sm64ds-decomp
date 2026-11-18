@@ -323,12 +323,11 @@ void daObjKey_c::StateFlyToCenter()
 
     case 1:
         {
-        u16 *timer = &mStateTimer;
-        *timer = *timer + 1;
-        if (*timer < 70)
+        mStateTimer++;
+        if (mStateTimer < 70)
             break;
         mStep++;
-        *timer = 0;
+        mStateTimer = 0;
         Sound::PlayBank3(SND_FLY, mCamSpacePos);
         center1.x = 0;
         center1.y = 0;
@@ -401,9 +400,9 @@ void daObjKey_c::StateFlyToCenter()
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngle.y);
     MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
-    v.x = data_020a0e68.m[9];
-    v.y = data_020a0e68.m[10];
-    v.z = data_020a0e68.m[11];
+    v.x = data_020a0e68.t.x;
+    v.y = data_020a0e68.t.y;
+    v.z = data_020a0e68.t.z;
     VEC_Subtract(&v, &mPos, &v);
     Vec3_LslInPlace(&v, 3);
     VEC_Add(&v, &mPos, &v);
@@ -521,9 +520,8 @@ void daObjKey_c::StateStarJump()
 
     case 3:
         {
-        u16 *timer = &mStateTimer;
-        *timer = *timer + 1;
-        if (*timer < 30)
+        mStateTimer++;
+        if (mStateTimer < 30)
             return;
         cam->SetLookAt(mSavedCamLookAt);
         cam->SetPos(mSavedCamPos);
@@ -699,19 +697,19 @@ s32 daObjKey_c::OnYoshiTryEat() {
 void daObjKey_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     if (data_ov089_021328b4[mState] != 0 && mAnimID == 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-        mModel.mat4x3.m[9] = mPos.x >> 3;
-        mModel.mat4x3.m[10] = (mPos.y + Y_LOOK) >> 3;
-        mModel.mat4x3.m[11] = mPos.z >> 3;
+        mModel.mat4x3.t.x = mPos.x >> 3;
+        mModel.mat4x3.t.y = (mPos.y + Y_LOOK) >> 3;
+        mModel.mat4x3.t.z = mPos.z >> 3;
     }
     mShadowMatrix = IDENTITY_MATRIX4X3;
-    mShadowMatrix.m[9] = mPos.x >> 3;
-    mShadowMatrix.m[10] = mPos.y >> 3;
-    mShadowMatrix.m[11] = mPos.z >> 3;
+    mShadowMatrix.t.x = mPos.x >> 3;
+    mShadowMatrix.t.y = mPos.y >> 3;
+    mShadowMatrix.t.z = mPos.z >> 3;
     /* Shadow only while the idle anim (file 0x801b) is showing. */
     if (mAnmModel.file == data_ov002_02110964.filePtr)
         DropShadowRadHeight(mShadowModel, mShadowMatrix, SHADOW_R, SHADOW_DEPTH, SHADOW_OPACITY);
@@ -769,9 +767,9 @@ int daObjKey_c::Behavior()
                 Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
                 MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
-                vec.x = data_020a0e68.m[9];
-                vec.y = data_020a0e68.m[10];
-                vec.z = data_020a0e68.m[11];
+                vec.x = data_020a0e68.t.x;
+                vec.y = data_020a0e68.t.y;
+                vec.z = data_020a0e68.t.z;
                 VEC_Subtract(&vec, &mPos, &vec);
                 Vec3_LslInPlace(&vec, 3);
                 VEC_Add(&vec, &mPos, &vec);

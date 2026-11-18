@@ -618,14 +618,14 @@ void daBook_c::Die() {
 void daBook_c::UpdateModelMatrix() {
     Matrix4x3 *m = (mUsesAnmModel != 0) ? &mAnmModel.mat4x3 : &mModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, mAngle.x, mAngle.y, mAngle.z);
-    m->m[9] = mPos.x >> 3;
-    m->m[10] = mPos.y >> 3;
-    m->m[11] = mPos.z >> 3;
+    m->t.x = mPos.x >> 3;
+    m->t.y = mPos.y >> 3;
+    m->t.z = mPos.z >> 3;
     int b = (actorID == kKillerBookActorId);
     if (b == 0) return;
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = mHomePosY >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = mHomePosY >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0x64, 0x12c000, 0xf);
 }
 

@@ -7,8 +7,6 @@
  * daKpa2Bg_c_classInit, ROM-ascending under defer_codegen off.
  */
 /* What stays, and why:
- * - Behavior rematerialises &mAngle.x/.y/.z. Plain `mAngle.x += mAngleXSpeed`
- *   is 0x54 against the ROM's 0x68.
  * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosAndAngs on the collider.
  * - data_ov046_021115bc is the CLPS block SetFile takes. data_020a0e68 is
  *   the scratch matrix both matrix helpers write.
@@ -96,20 +94,9 @@ s32 daKpa2Bg_c::Render() {
 }
 
 s32 daKpa2Bg_c::Behavior() {
-    /* mAngle.x / mAngle.y / mAngle.z, reached through rematerialised pointers.
-       The plain member form (`mAngle.x = mAngle.x + mAngleXSpeed;`) is five
-       words SHORTER than the ROM here -- measured, 0x54 against 0x68 -- so
-       the three stores stay spelled the way the cartridge computes them. */
-    s16 *angX = &mAngle.x;
-    s16 *angY = &mAngle.y;
-
-    *angX = *angX + mAngleXSpeed;
-    *angY = *angY + mAngleYSpeed;
-
-    {
-        s16 *angZ = &mAngle.z;
-        *angZ = *angZ + mAngleZSpeed;
-    }
+    mAngle.x += mAngleXSpeed;
+    mAngle.y += mAngleYSpeed;
+    mAngle.z += mAngleZSpeed;
 
     UpdateModelMatrix();
     UpdateClsnMatrix();

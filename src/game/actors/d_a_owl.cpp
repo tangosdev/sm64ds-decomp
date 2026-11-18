@@ -415,13 +415,12 @@ int daOwl_c::UpdateDormant() {
         const Vector3 *playerPos = &p->mPos;
         Vector3 pp;
         Vector3 d;
-        const Vector3 *selfpos = &mPos;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
         mPos.y = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub(&d, selfpos, &pp);
+        Vec3_Sub(&d, &mPos, &pp);
         if (VEC_Mag(&d) < 0x28000) {
             d.x = mPos.x;
             d.y = mPos.y;
@@ -487,9 +486,9 @@ void daOwl_c::FollowRiderMatrix() {
     data_020a0e68 = *m->mCarryMatrix;
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3000, 0, 0);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x6000, 0x1000, 0x4000);
-    v.x = data_020a0e68.m[9];
-    v.y = data_020a0e68.m[10];
-    v.z = data_020a0e68.m[11];
+    v.x = data_020a0e68.t.x;
+    v.y = data_020a0e68.t.y;
+    v.z = data_020a0e68.t.z;
     mPos.x = v.x << 3;
     mPos.y = v.y << 3;
     mPos.z = v.z << 3;

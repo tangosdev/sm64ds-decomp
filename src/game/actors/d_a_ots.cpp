@@ -304,10 +304,9 @@ int daOts_c::BehaviorCommon()
     }
 
     mAnmModel.Advance();
-    unsigned short *p100 = &mStateTimer;
-    *p100 = *p100 + 1;
+    mStateTimer++;
     if (four != tail().mState)
-        *p100 = 0;
+        mStateTimer = 0;
     func_ov064_02116bac();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -365,9 +364,9 @@ int daOts_c::CleanupResources()
  * below 10 units, and its depth is that height plus 40 units. Opacity is 0xf. */
 void daOts_c::func_ov064_02116bac(){
     Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
-    this->mAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
-    this->mAnmModel.mat4x3.m[10] = (this->mPos.y + tail().mModelYOffset) >> 3;
-    this->mAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = (this->mPos.y + tail().mModelYOffset) >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
     int d = this->mPos.y - tail().mFloorY; /* height above the floor, at least 1 unit */
     if (d <= 0x1000)
         d = 0x1000;
@@ -376,9 +375,9 @@ void daOts_c::func_ov064_02116bac(){
     if (h < 0xa000)
         h = 0xa000; /* shadow radius, at least 10 units */
     Matrix4x3_FromRotationY(&tail().mShadowMtx, this->mAngle.y);
-    tail().mShadowMtx.m[9] = this->mPos.x >> 3;
-    tail().mShadowMtx.m[10] = this->mPos.y >> 3;
-    tail().mShadowMtx.m[11] = this->mPos.z >> 3;
+    tail().mShadowMtx.t.x = this->mPos.x >> 3;
+    tail().mShadowMtx.t.y = this->mPos.y >> 3;
+    tail().mShadowMtx.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, tail().mShadowMtx, h, d + 0x28000, 0xf);
 }
 

@@ -347,8 +347,7 @@ void daNknk_c::func_ov062_02118de8()
         return;
     }
     if (mAnmModel.WillHitFrame((unsigned short)(mAnmModel.GetFrameCount() - 1)) != 0) {
-        u16 *hp = &mWalkState;
-        *hp = (*hp + 1);
+        mWalkState++;
     } else {
         func_ov062_02118058();
         return;
@@ -414,8 +413,7 @@ void daNknk_c::func_ov062_02118b4c() {
     }
 
     if (mPlayerDist >= 0x61a8000) {
-        s16 *aim = &mAimAngle;
-        *aim = (*aim + 0x8000);
+        mAimAngle += 0x8000;
         mPlayerDist = 0;
     }
     if (mStateTimer > 30 && mPlayerDist > 0x320000) {
@@ -429,8 +427,6 @@ void daNknk_c::func_ov062_02118b4c() {
     ApproachLinear(mHorzSpeed, 0x11000, 0x1000);
 }
 
-/* The state helpers decrement mTimer and mTurnTimer through a pointer
- * (&mTimer / &mTurnTimer). */
 void daNknk_c::func_ov062_02118a50()
 {
     if (mHorzSpeed != 0) {
@@ -445,8 +441,7 @@ void daNknk_c::func_ov062_02118a50()
 
     {
         if (mTimer != 0) {
-            u16 *p = &mTimer;
-            *p = (*p - 1);
+            mTimer--;
             if (mTimer != 0)
                 return;
             SetAnimByIndex(8);
@@ -498,8 +493,7 @@ void daNknk_c::func_ov062_02118718()
                 AngleAwayFromWallOrCliff(mWithMeshClsn, mTargetAngle);
             if (!mTurning) {
                 if (mTurnTimer != 0) {
-                    u16 *turn = &mTurnTimer;
-                    *turn = (*turn - 1);
+                    mTurnTimer--;
                 } else {
                     if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000)
                         mTargetAngle -=
@@ -567,8 +561,7 @@ void daNknk_c::func_ov062_02118588()
 
     {
         if (mTimer != 0) {
-            u16 *q = &mTimer;
-            *q = (*q - 1);
+            mTimer--;
             if (mTimer != 0)
                 return;
             SetAnimByIndex(8);
@@ -635,7 +628,6 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
     Vec3_Asr(&v, &mPos, 3);
     MtxStack::transS(v.x, v.y, v.z);
     MtxStack::YrotM(mAngle.y);
-    /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
     mAnmModel.mat4x3 = data_020a0e68;
     /* No drop shadow while in Yoshi's mouth. */
     int inMouth = (mFlags & 0x40000) != 0;
@@ -673,26 +665,19 @@ void daNknk_c::UpdateWalkStart() {
     }
     if (mAnmModel.Finished() == 0)
         return;
-    {
-        u16 *p = &mWalkState;
-        *p = (*p + 1);
-    }
+    mWalkState++;
     mTimer = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 70 + 30);
     SetAnimByIndex(1);
 }
 
 void daNknk_c::UpdateWalk() {
     if (mTimer != 0) {
-        u16 *p = &mTimer;
-        *p = (*p - 1);
+        mTimer--;
         return;
     }
     if (mAnmModel.WillHitFrame((unsigned short)(mAnmModel.GetFrameCount() - 1)) == 0)
         return;
-    {
-        u16 *q = &mWalkState;
-        *q = (*q + 1);
-    }
+    mWalkState++;
     SetAnimByIndex(2);
 }
 
