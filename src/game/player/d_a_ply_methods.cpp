@@ -14086,7 +14086,7 @@ void daPly_c::func_ov002_020d8a50(int which) {
         mAttackClsn.Clear();
     }
 
-    if ((u8)mAttackClashed != 0)
+    if (mAttackClashed != 0)
         return;
 
     switch (which) {
