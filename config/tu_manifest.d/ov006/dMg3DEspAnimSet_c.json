@@ -34,7 +34,8 @@
       "end": "0x02141fcc"
     },
     {
-      "name": ".data",
+      "name": ".data.gap54",
+      "input_section": ".data",
       "start": "0x0213c85c",
       "end": "0x0213c88c"
     },
@@ -1363,7 +1364,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data",
+          "section": ".data.gap54",
           "start": "0x0213c85c",
           "end": "0x0213c88c",
           "differingBytes": 0,
@@ -1635,7 +1636,7 @@
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.gap54",
             "original": [
               5
             ],

@@ -58,6 +58,15 @@ OamAttr data_ov006_0213fe58[2] = {{0x00e8, 0x81f0, 0x10c0, 0x0000},
 OamAttr data_ov006_0213fe68[2] = {{0x80e8, 0x81f8, 0x0004, 0x0000},
                                   {0x0008, 0x41f8, 0x0084, 0xffff}};
 
+/* Sprite list per card animation frame: frames 0..2 are the flip, then two
+ * lists for each of the five card values (index frame + value * 2). */
+OamAttr *sBscCardSprites[13] = {
+    data_ov006_0213fda8, data_ov006_0213fe68, data_ov006_0213fdb8, data_ov006_0213fdc8,
+    data_ov006_0213fdd8, data_ov006_0213fe48, data_ov006_0213fde8, data_ov006_0213fdf8,
+    data_ov006_0213fe08, data_ov006_0213fe18, data_ov006_0213fe28, data_ov006_0213fe38,
+    data_ov006_0213fe58,
+};
+
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
 typedef void (dScMgBSC_c::*StateHandler)();

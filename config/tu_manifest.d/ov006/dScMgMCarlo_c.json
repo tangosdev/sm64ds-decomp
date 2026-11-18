@@ -41,7 +41,8 @@
       "end": "0x02142558"
     },
     {
-      "name": ".data",
+      "name": ".data.gap59",
+      "input_section": ".data",
       "start": "0x0213d5e0",
       "end": "0x0213d600"
     }
@@ -379,7 +380,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -417,7 +418,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data",
+          "section": ".data.gap59",
           "start": "0x0213d5e0",
           "end": "0x0213d600",
           "differingBytes": 0,
@@ -426,7 +427,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 28
+          "LICENSED": 29
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -437,23 +438,32 @@
           {
             "section": ".init",
             "original": [
-              87
+              91
             ],
             "desired": [
-              87
+              91
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              85
+              89
             ],
             "desired": [
-              85
+              89
             ]
           },
           {
             "section": ".bss",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
+            ]
+          },
+          {
+            "section": ".data.gap59",
             "original": [
               28
             ],

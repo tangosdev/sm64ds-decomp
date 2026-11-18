@@ -28,7 +28,8 @@
       "end": "0x021335b8"
     },
     {
-      "name": ".data",
+      "name": ".data.gap58",
+      "input_section": ".data",
       "start": "0x0213d248",
       "end": "0x0213d338"
     },
@@ -42,6 +43,18 @@
       "start": "0x0212e8e8",
       "end": "0x0212e954",
       "input_section": ".rodata"
+    },
+    {
+      "name": ".data.data_ov006_0213d40c",
+      "input_section": ".data",
+      "start": "0x0213d40c",
+      "end": "0x0213d45c"
+    },
+    {
+      "name": ".data.sMemory2CardFrameSprites",
+      "input_section": ".data",
+      "start": "0x0213d45c",
+      "end": "0x0213d4cc"
     }
   ],
   "functions": [
@@ -620,6 +633,20 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "Native member-pointer literal: compiler emits exact eight-byte code-address/zero-adjustment representation; relocation destination matches configured method."
+    },
+    {
+      "symbol": "data_ov006_0213d40c",
+      "address": "0x0213d40c",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "the third difficulty's card resting positions, four rows of five x/y screen pairs; sMemory2CardPositionsPerDifficulty[2] points here from the unclaimed cartridge table; no relocations"
+    },
+    {
+      "symbol": "sMemory2CardFrameSprites",
+      "address": "0x0213d45c",
+      "size": "0x70",
+      "binding": "STB_GLOBAL",
+      "evidence": "sprite index by card value and flip frame, indexed value*5+frame; no relocations; the eight bytes at 0x0213d4cc are _ZTV14dScMgMemory2_c's ABI header and stay ROM"
     }
   ],
   "bss": [
@@ -841,7 +868,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -873,7 +900,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.gap58",
           "start": "0x0213d248",
           "end": "0x0213d338",
           "differingBytes": 0,
@@ -891,11 +918,25 @@
           "end": "0x0212e954",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213d40c",
+          "start": "0x0213d40c",
+          "end": "0x0213d45c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sMemory2CardFrameSprites",
+          "start": "0x0213d45c",
+          "end": "0x0213d4cc",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 90
+          "LICENSED": 101
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -906,40 +947,36 @@
           {
             "section": ".init",
             "original": [
-              191
+              200
             ],
             "desired": [
-              191
+              200
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              189
+              198
             ],
             "desired": [
-              189
+              198
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.gap58",
             "original": [
-              103,
-              106,
-              108,
-              110,
               112,
-              114,
+              115,
               117,
               119,
               121,
               123,
-              125,
-              127,
-              129,
-              131,
-              133,
-              135,
+              126,
+              128,
+              130,
+              132,
+              134,
+              136,
               138,
               140,
               142,
@@ -948,87 +985,130 @@
               149,
               151,
               153,
-              155,
-              157,
-              159,
+              156,
+              158,
+              160,
               162,
               164,
-              166
+              166,
+              168,
+              171,
+              173,
+              175
             ],
             "desired": [
-              138,
-              108,
-              162,
-              123,
-              106,
-              149,
-              114,
-              125,
-              103,
-              121,
-              127,
-              131,
-              135,
-              151,
-              166,
-              110,
-              117,
-              119,
-              159,
-              157,
-              155,
-              153,
-              144,
-              112,
               147,
-              129,
-              133,
+              117,
+              171,
+              132,
+              115,
+              158,
+              123,
+              134,
+              112,
+              130,
+              136,
               140,
+              144,
+              160,
+              175,
+              119,
+              126,
+              128,
+              168,
+              166,
+              164,
+              162,
+              153,
+              121,
+              156,
+              138,
               142,
-              164
+              149,
+              151,
+              173
             ]
           },
           {
             "section": ".bss",
             "original": [
-              105,
-              116,
-              137,
+              114,
+              125,
               146,
-              161,
-              168
+              155,
+              170,
+              177
             ],
             "desired": [
-              168,
+              177,
+              155,
+              125,
+              170,
               146,
-              116,
-              161,
-              137,
-              105
+              114
+            ]
+          },
+          {
+            "section": ".rodata.sMemory2Tables",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "desired": [
+              11,
+              10,
+              5,
+              8,
+              6,
+              7,
+              12,
+              13,
+              9
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213d40c",
+            "original": [
+              14
+            ],
+            "desired": [
+              14
+            ]
+          },
+          {
+            "section": ".data.sMemory2CardFrameSprites",
+            "original": [
+              15
+            ],
+            "desired": [
+              15
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.gap58",
               "original": [
-                103,
-                106,
-                108,
-                110,
                 112,
-                114,
+                115,
                 117,
                 119,
                 121,
                 123,
-                125,
-                127,
-                129,
-                131,
-                133,
-                135,
+                126,
+                128,
+                130,
+                132,
+                134,
+                136,
                 138,
                 140,
                 142,
@@ -1037,62 +1117,62 @@
                 149,
                 151,
                 153,
-                155,
-                157,
-                159,
+                156,
+                158,
+                160,
                 162,
                 164,
-                166
+                166,
+                168,
+                171,
+                173,
+                175
               ],
               "desired": [
-                138,
-                108,
-                162,
-                123,
-                106,
-                149,
-                114,
-                125,
-                103,
-                121,
-                127,
-                131,
-                135,
-                151,
-                166,
-                110,
-                117,
-                119,
-                159,
-                157,
-                155,
-                153,
-                144,
-                112,
                 147,
-                129,
-                133,
+                117,
+                171,
+                132,
+                115,
+                158,
+                123,
+                134,
+                112,
+                130,
+                136,
                 140,
+                144,
+                160,
+                175,
+                119,
+                126,
+                128,
+                168,
+                166,
+                164,
+                162,
+                153,
+                121,
+                156,
+                138,
                 142,
-                164
+                149,
+                151,
+                173
               ],
               "slots": [
-                103,
-                106,
-                108,
-                110,
                 112,
-                114,
+                115,
                 117,
                 119,
                 121,
                 123,
-                125,
-                127,
-                129,
-                131,
-                133,
-                135,
+                126,
+                128,
+                130,
+                132,
+                134,
+                136,
                 138,
                 140,
                 142,
@@ -1101,43 +1181,83 @@
                 149,
                 151,
                 153,
-                155,
-                157,
-                159,
+                156,
+                158,
+                160,
                 162,
                 164,
-                166
+                166,
+                168,
+                171,
+                173,
+                175
               ]
             },
             {
               "section": ".bss",
               "original": [
-                105,
-                116,
-                137,
+                114,
+                125,
                 146,
-                161,
-                168
+                155,
+                170,
+                177
               ],
               "desired": [
-                168,
+                177,
+                155,
+                125,
+                170,
                 146,
-                116,
-                161,
-                137,
-                105
+                114
               ],
               "slots": [
-                105,
-                116,
-                137,
+                114,
+                125,
                 146,
-                161,
-                168
+                155,
+                170,
+                177
+              ]
+            },
+            {
+              "section": ".rodata.sMemory2Tables",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ],
+              "desired": [
+                11,
+                10,
+                5,
+                8,
+                6,
+                7,
+                12,
+                13,
+                9
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
               ]
             }
           ],
-          "symbolIndices": 36,
+          "symbolIndices": 45,
           "sectionLinks": 0,
           "sectionInfos": 30,
           "error": null
@@ -1838,7 +1958,7 @@
       "target_address": "0x213d2b8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d248",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1848,7 +1968,7 @@
       "target_address": "0x020f6538"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d250",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1858,7 +1978,7 @@
       "target_address": "0x020f7234"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d258",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1868,7 +1988,7 @@
       "target_address": "0x020f58d0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d260",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1878,7 +1998,7 @@
       "target_address": "0x020f6a78"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d268",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1888,7 +2008,7 @@
       "target_address": "0x020f7280"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d270",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1898,7 +2018,7 @@
       "target_address": "0x020f6084"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d278",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1908,7 +2028,7 @@
       "target_address": "0x020f7190"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d280",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1918,7 +2038,7 @@
       "target_address": "0x020f6a00"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d288",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1928,7 +2048,7 @@
       "target_address": "0x020f75d4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d290",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1938,7 +2058,7 @@
       "target_address": "0x020f6b00"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d298",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1948,7 +2068,7 @@
       "target_address": "0x020f6904"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1958,7 +2078,7 @@
       "target_address": "0x020f67a0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1968,7 +2088,7 @@
       "target_address": "0x020f6678"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1978,7 +2098,7 @@
       "target_address": "0x020f5f0c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1988,7 +2108,7 @@
       "target_address": "0x020f5740"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1998,7 +2118,7 @@
       "target_address": "0x020f7210"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2008,7 +2128,7 @@
       "target_address": "0x020f6bf0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2018,7 +2138,7 @@
       "target_address": "0x020f6b78"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2028,7 +2148,7 @@
       "target_address": "0x020f5cb4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2038,7 +2158,7 @@
       "target_address": "0x020f5de0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2048,7 +2168,7 @@
       "target_address": "0x020f5e70"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2058,7 +2178,7 @@
       "target_address": "0x020f5e74"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d2f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2068,7 +2188,7 @@
       "target_address": "0x020f6230"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d300",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2078,7 +2198,7 @@
       "target_address": "0x020f71c8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d308",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2088,7 +2208,7 @@
       "target_address": "0x020f6088"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d310",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2098,7 +2218,7 @@
       "target_address": "0x020f6830"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d318",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2108,7 +2228,7 @@
       "target_address": "0x020f670c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d320",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2118,7 +2238,7 @@
       "target_address": "0x020f6488"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d328",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2128,7 +2248,7 @@
       "target_address": "0x020f639c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap58",
       "source": "0x0213d330",
       "type": "R_ARM_ABS32",
       "kind": "load",

@@ -43,7 +43,7 @@
     {
       "name": ".data",
       "start": "0x0213fd0c",
-      "end": "0x0213fe8c"
+      "end": "0x0213fec0"
     }
   ],
   "functions": [
@@ -195,6 +195,13 @@
       "size": "0x14",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sBscCardSprites",
+      "address": "0x0213fe8c",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "thirteen card-face pointers in mCardFrame order, each relocating onto one of the two-OamAttr lists at 0x0213fda8..0x0213fe68; the eight bytes at 0x0213fec0 are _ZTV10dScMgBSC_c's ABI header and stay ROM"
     },
     {
       "symbol": "pmf_dScMgBSC_c_StateWaitTable",
@@ -561,14 +568,14 @@
         {
           "section": ".data",
           "start": "0x0213fd0c",
-          "end": "0x0213fe8c",
+          "end": "0x0213fec0",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 55
+          "LICENSED": 56
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -579,28 +586,28 @@
           {
             "section": ".init",
             "original": [
-              116
+              118
             ],
             "desired": [
-              116
+              118
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              114
+              116
             ],
             "desired": [
-              114
+              116
             ]
           },
           {
             "section": ".bss",
             "original": [
-              68
+              70
             ],
             "desired": [
-              68
+              70
             ]
           },
           {
@@ -610,17 +617,17 @@
               7,
               9,
               11,
-              13,
               15,
               17,
+              19,
               21,
               23,
               25,
               27,
               29,
-              31,
-              33,
-              35,
+              30,
+              32,
+              34,
               36,
               45,
               51,
@@ -637,30 +644,32 @@
               63,
               64,
               65,
-              66
+              66,
+              68
             ],
             "desired": [
               36,
               5,
               21,
               23,
-              29,
+              32,
               15,
               9,
-              35,
-              13,
-              33,
-              27,
-              31,
-              25,
-              7,
+              29,
               17,
+              34,
+              27,
+              30,
+              25,
               11,
+              19,
+              7,
               45,
               51,
+              57,
+              54,
               55,
               56,
-              57,
               63,
               58,
               59,
@@ -670,8 +679,8 @@
               64,
               65,
               53,
-              54,
-              66
+              66,
+              68
             ]
           }
         ],
@@ -684,17 +693,17 @@
                 7,
                 9,
                 11,
-                13,
                 15,
                 17,
+                19,
                 21,
                 23,
                 25,
                 27,
                 29,
-                31,
-                33,
-                35,
+                30,
+                32,
+                34,
                 36,
                 45,
                 51,
@@ -711,30 +720,32 @@
                 63,
                 64,
                 65,
-                66
+                66,
+                68
               ],
               "desired": [
                 36,
                 5,
                 21,
                 23,
-                29,
+                32,
                 15,
                 9,
-                35,
-                13,
-                33,
-                27,
-                31,
-                25,
-                7,
+                29,
                 17,
+                34,
+                27,
+                30,
+                25,
                 11,
+                19,
+                7,
                 45,
                 51,
+                57,
+                54,
                 55,
                 56,
-                57,
                 63,
                 58,
                 59,
@@ -744,25 +755,25 @@
                 64,
                 65,
                 53,
-                54,
-                66
+                66,
+                68
               ],
               "slots": [
                 5,
                 7,
                 9,
                 11,
-                13,
                 15,
                 17,
+                19,
                 21,
                 23,
                 25,
                 27,
                 29,
-                31,
-                33,
-                35,
+                30,
+                32,
+                34,
                 36,
                 45,
                 51,
@@ -779,13 +790,14 @@
                 63,
                 64,
                 65,
-                66
+                66,
+                68
               ]
             }
           ],
-          "symbolIndices": 32,
+          "symbolIndices": 33,
           "sectionLinks": 0,
-          "sectionInfos": 16,
+          "sectionInfos": 17,
           "error": null
         },
         "errors": null
@@ -1034,16 +1046,6 @@
   ],
   "relocations": [
     {
-      "section": ".ctor",
-      "source": "0x021335e0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "__sinit_d_s_mg_bsc.cpp",
-      "addend": 0,
-      "target_module": "ov006",
-      "target_address": "0x0213326c"
-    },
-    {
       "section": ".init",
       "source": "0x021333a4",
       "type": "R_ARM_ABS32",
@@ -1192,6 +1194,16 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213fd2c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x021335e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_s_mg_bsc.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213326c"
     },
     {
       "section": ".data",
@@ -1372,6 +1384,136 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213bc64"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fe8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fda8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fda8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fe90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fe68",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fe68"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fe94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fdb8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fdb8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fe98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fdc8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fdc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fe9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fdd8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fdd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fea0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fe48",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fe48"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fea4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fde8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fde8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fea8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fdf8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fdf8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213feac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fe08",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fe08"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213feb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fe18",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fe18"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213feb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fe28",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fe28"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213feb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fe38",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fe38"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213febc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213fe58",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fe58"
     }
   ],
   "undefined_symbol_aliases": [],
