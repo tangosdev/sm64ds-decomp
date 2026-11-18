@@ -2385,16 +2385,11 @@ void daPly_c::SetAnim(u32 animId, int flags, fx32 speed, u16 startFrame) {
 
 /* matched pure C — was HAND-ASM regperm floor; y-early preload cracks r4/r5 */
 void daPly_c::func_ov002_020bf13c() {
-    /* v is the POD VecFx32, not Vector3, measured: v never escapes, and the ROM keeps
-       all three components in registers -- the frame here is 0x10, which is just
-       the volatile pad[4] below. Vector3 declares a destructor, so the object
-       must have an address, and that pushes v onto the stack and grows the frame
-       to 0x20. No other instruction in the function changes. This is a second
-       reason for a POD, besides the copy lowering include/types.h describes. */
-    volatile int pad[4]; // without volatile, the function shrinks 0xe8 to 0xd8
+    /* v is a Vector3: the ROM keeps all three components in registers, and
+       the 0x10 frame it still reserves is v's stack home (Vector3 declares a
+       destructor, so the object keeps an address it never uses). */
     int vel; int* dst; short s, cs; int ang; int r6, flags;
-    VecFx32 v;
-    (void)&pad;
+    Vector3 v;
     if (param1 != 3)
         return;
     dst = (int *)mTrailPos;
@@ -14578,21 +14573,12 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) 
     if (this->mIsUnderwater == 0) {
         if (this->mHurtDamage != 0) {
             if (arg6 != 0) {
-                volatile struct {
-                    int x, y, z;
-                } v; // without volatile, Hurt shrinks 0x348 to 0x344
-                int y = this->mPos.y;
-                int z = this->mPos.z;
-                int x = this->mPos.x;
-                y = y + 0x50000;
-                v.x = x;
-                v.y = y;
-                v.z = z;
-                if (*(int *)&this->mHurtDamage == 1) {
-                    Particle::System::NewSimple(kPtclPlayerHurtOneA, x, y, z);
+                Vector3 v(this->mPos.x, this->mPos.y + 0x50000, this->mPos.z);
+                if (this->mHurtDamage == 1) {
+                    Particle::System::NewSimple(kPtclPlayerHurtOneA, v.x, v.y, v.z);
                     Particle::System::NewSimple(kPtclPlayerHurtOneB, v.x, v.y, v.z);
                 } else {
-                    Particle::System::NewSimple(kPtclPlayerHurtA, x, y, z);
+                    Particle::System::NewSimple(kPtclPlayerHurtA, v.x, v.y, v.z);
                     Particle::System::NewSimple(kPtclPlayerHurtB, v.x, v.y, v.z);
                 }
             }
