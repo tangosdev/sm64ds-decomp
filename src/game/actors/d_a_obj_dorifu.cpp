@@ -101,7 +101,6 @@ s32 daObjDorifu_c::Render() {
  * would be mangled a SECOND time from C++, which this file is. */
 s32 daObjDorifu_c::Behavior() {
     int i;
-    dBgW_KcMbg *clsn;
 
     switch (mState) {
     case STATE_AWAIT_EVENT_SET:
@@ -134,16 +133,14 @@ s32 daObjDorifu_c::Behavior() {
         break;
     }
 
-    clsn = mPlankClsn;
     for (i = 0; i < 5; i++) {
         if (i == mActivePlank) {
-            if (!clsn->IsEnabled())
-                clsn->Enable(this);
+            if (!mPlankClsn[i].IsEnabled())
+                mPlankClsn[i].Enable(this);
         } else {
-            if (clsn->IsEnabled())
-                clsn->Disable();
+            if (mPlankClsn[i].IsEnabled())
+                mPlankClsn[i].Disable();
         }
-        clsn++;
     }
     return 1;
 }
@@ -154,21 +151,14 @@ s32 daObjDorifu_c::Behavior() {
  * instead of emitting the ROM's ldm/stm sequence. */
 s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources) {
     s32 i;
-    daObjDorifuResources *resource;
-    dExtSimpleModel_c *model;
     s32 j;
     Matrix4x3 *sourceMat;
     dExtSimpleModel_c *modelDst;
     dBgW_KcMbg *clsn;
     daObjDorifuResources *clsnResource = resources;
 
-    resource = clsnResource;
-    model = mPlankModels;
-    for (i = 0; i < 5; ++i) {
-        model->SetFile(dExtSimpleModel_c::LoadFile(*resource->modelFile), 1, -1);
-        resource++;
-        model++;
-    }
+    for (i = 0; i < 5; ++i)
+        mPlankModels[i].SetFile(dExtSimpleModel_c::LoadFile(*resources[i].modelFile), 1, -1);
 
     mActivePlank = 4;
     mStepTimer = 2;
