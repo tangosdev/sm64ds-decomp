@@ -2515,8 +2515,6 @@ int dCamera_c::func_02009e50() {
 }
 
 int func_02009e30(dCamera_c *cam) {
-    int dummy = 0;
-    &dummy;
     cam->SetMode(0);
     return 1;
 }

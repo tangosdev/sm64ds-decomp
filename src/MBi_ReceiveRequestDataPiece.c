@@ -13,8 +13,6 @@
  * the completed request rather than a 0/1. This is an older SDK's version
  * of that function, and an SDK function keeps its name across versions. */
 int MBi_ReceiveRequestDataPiece(u8 *a0, int idx) {
-    int new_var;
-    int new_var2;
     MB_CommPWork *g = pPwork;
     int r5 = a0[2];
     int i = idx - 1;
@@ -28,7 +26,6 @@ int MBi_ReceiveRequestDataPiece(u8 *a0, int idx) {
             return 0;
         }
     }
-    new_var = (int)g;
     {
         int stride = g->common.req_data_piece_size;
         MI_CpuCopy8(a0 + 3, row + (r5 * stride), stride);
@@ -40,12 +37,12 @@ int MBi_ReceiveRequestDataPiece(u8 *a0, int idx) {
     }
     {
         int j;
-        int found = new_var2 = 0;
+        int found = 0;
         j = found;
         MB_CommPWork *g2 = pPwork;
         int n = g2->common.req_data_piece_num;
         if (n > 0) {
-            u32 bits = ((MB_CommPWork *)new_var)->req_data_buf.data_bmp[i];
+            u32 bits = g->req_data_buf.data_bmp[i];
             /* Kept (#821 r80): the bound is read again each pass. A plain read is 0xd0 of
                0xd4; an int accessor is 0xd4 but loads the bound at the loop top. */
             do {
