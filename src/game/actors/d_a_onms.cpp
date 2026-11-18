@@ -146,7 +146,7 @@ s32 *data_ov092_02132294[3] = {
     data_ov092_02132350,
     data_ov092_021323dc,
 };
-extern struct Matrix4x3 data_020a0e68;
+extern union Matrix4x3 data_020a0e68;
 
 /* D1 tears down dCcAcPos_c, dBgCh_Actr and the inline dBgActor_c base.
    D0 is that teardown plus the actor-heap free. */
@@ -498,9 +498,9 @@ void daOnms_c::CheckPlayerHit()
    the translation row (words 9..11), then Transform. */
 void daOnms_c::func_ov092_02131a88() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
@@ -512,9 +512,9 @@ void daOnms_c::UpdateModelMtx()
         Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         mModel.mat4x3 = data_020a0e68;
-        mModel.mat4x3.m[9] = mPos.x >> 3;
-        mModel.mat4x3.m[10] = mPos.y >> 3;
-        mModel.mat4x3.m[11] = mPos.z >> 3;
+        mModel.mat4x3.t.x = mPos.x >> 3;
+        mModel.mat4x3.t.y = mPos.y >> 3;
+        mModel.mat4x3.t.z = mPos.z >> 3;
     } else {
         mModel.mat4x3 = mBaseMtx;
     }
