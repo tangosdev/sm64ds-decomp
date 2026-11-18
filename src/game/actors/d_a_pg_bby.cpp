@@ -573,6 +573,10 @@ void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     }
 }
 
+static inline int Abs(int v) {
+    return v < 0 ? -v : v;
+}
+
 /* Refuse a step onto ground more than 0x1.9 away from the current height:
    put the actor back where it was last frame. */
 int daPgBby_c::GuardStepHeight() {
@@ -589,20 +593,12 @@ int daPgBby_c::GuardStepHeight() {
             v.z = z;
         }
         ground.SetObjAndPos(v, this);
-        if (ground.DetectClsn() != 0) {
-            int d = ground.clsnY - mPos.y;
-            if (d < 0) d = -d;
-            /* Kept (#821 r93): `return 0;` here runs ground's destructor on
-               its own exit path, 0xd0 of 0xc0. */
-            if (d <= 0x1900)
-                goto bail;
+        if (ground.DetectClsn() == 0 || Abs(ground.clsnY - mPos.y) > 0x1900) {
+            mPos.x = mPrevPos.x;
+            mPos.y = mPrevPos.y;
+            mPos.z = mPrevPos.z;
+            return 1;
         }
-        mPos.x = mPrevPos.x;
-        mPos.y = mPrevPos.y;
-        mPos.z = mPrevPos.z;
-        return 1;
-    bail:
-        ;
     }
     return 0;
 }
