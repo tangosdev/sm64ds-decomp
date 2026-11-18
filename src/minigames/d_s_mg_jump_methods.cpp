@@ -359,6 +359,10 @@ void dScMgJump_c::BeginFinal()
     mState = &dScMgJump_c::State_Final;
 }
 
+static inline int AllMariosRisenOut() {
+    return sJump3DRisenOutCount == sJump3DMarioCount;
+}
+
 /* Its writes to 0x5004 and 0x5014 are what bound dScMgD3DBase_c's size
  * from above. `shared` is the ov004 scene data; its type is not recovered. */
 void dScMgJump_c::State_Final()
@@ -366,8 +370,8 @@ void dScMgJump_c::State_Final()
   mAccum += mAccumStep >> 12;
   mAccumStep += 0x600;
   Jump3D_UpdateAll();
-  int same = (int)(sJump3DRisenOutCount == sJump3DMarioCount);
-  if(same == 0) return;
+  if (!AllMariosRisenOut())
+      return;
   dScMgBase_c *shared = gMgScene;
   if(shared != 0){
     if(shared->mHudScore < 0x270f){
