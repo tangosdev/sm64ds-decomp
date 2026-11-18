@@ -37,7 +37,7 @@ struct daBrq_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;            /* 0x218 */
     /* Matrix4x3, on three witnesses: InitResources block-copies the identity
        matrix IDENTITY_MATRIX4X3 (0x30 bytes) into it; UpdateModelTransform writes
-       the position (>>3) at m[9]/m[10]/m[11] -- exactly the translation row --
+       the position (>>3) into its translation
        and passes &mMat4x3 as the matrix argument of DropShadowRadHeight. Same
        role as daJgm_c's 0x3f8 translation words. */
     Matrix4x3 mMat4x3;       /* 0x3d4 */

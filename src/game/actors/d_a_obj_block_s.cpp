@@ -1008,9 +1008,9 @@ void daObjBlockS_c::UpdateDropShadow() {
     r4 = 0x64000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
     Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = (mPos.y - 0x14000) >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = (mPos.y - 0x14000) >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
 }
 
@@ -1022,9 +1022,9 @@ void daObjBlockS_c::UpdateMeshCollider() {
     Vector3 pos = mPos;
     pos.y -= mClsnYOffset;
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = pos.x;
-    mClsnMat.m[10] = pos.y;
-    mClsnMat.m[11] = pos.z;
+    mClsnMat.t.x = pos.x;
+    mClsnMat.t.y = pos.y;
+    mClsnMat.t.z = pos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
@@ -1075,9 +1075,9 @@ void daObjBlockS_c::UpdateModelMatrix() {
         Vector3 pos = mPos;
         pos.y -= mClsnYOffset;
         Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-        mModel.mat4x3.m[9] = pos.x >> 3;
-        mModel.mat4x3.m[10] = pos.y >> 3;
-        mModel.mat4x3.m[11] = pos.z >> 3;
+        mModel.mat4x3.t.x = pos.x >> 3;
+        mModel.mat4x3.t.y = pos.y >> 3;
+        mModel.mat4x3.t.z = pos.z >> 3;
         mCarryOffset.x = 0;
         mCarryOffset.y = 0;
         mCarryOffset.z = 0;

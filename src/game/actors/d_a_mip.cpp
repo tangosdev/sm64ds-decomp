@@ -1015,7 +1015,7 @@ int daMip_c::Render()
     return 1;
 }
 
-/* Mirrored second copy. mat4x3.m[9] is the X translation. 0x421800 is
+/* Mirrored second copy. 0x421800 is
    (0x1086000 >> 3) << 1, so the subtract reflects X across
    UpdateMirrorShadow's plane. */
 void daMip_c::RenderMirrorImage()
@@ -1024,7 +1024,7 @@ void daMip_c::RenderMirrorImage()
 
     Matrix4x3 tmp;
     tmp = mAnmModel.mat4x3;
-    mAnmModel.mat4x3.m[9] = 0x421800 - mAnmModel.mat4x3.m[9];
+    mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
     MTX_Concat33(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
     mAnmModel.ClearMaterialFlags(0x80);

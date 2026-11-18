@@ -13,12 +13,12 @@
  * SDK spelling. Both BOOL flags are int, as the SDK's BOOL is: with a bool
  * PerspectiveW_'s definition does not reproduce the ROM body. */
 
-struct Matrix4x3;
+union Matrix4x3;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-void G3i_PerspectiveW_(fx32, fx32, fx32, fx32, fx32, fx32, int, struct Matrix4x3 *);
+void G3i_PerspectiveW_(fx32, fx32, fx32, fx32, fx32, fx32, int, union Matrix4x3 *);
 void G3i_LookAt_(const VecFx32 *, const VecFx32 *, const VecFx32 *, int, MtxFx43 *);
 
 /* Loads the environment-mapping texture matrix: the SDK's MtxFx44, spelled

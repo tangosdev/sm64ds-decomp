@@ -89,7 +89,7 @@ extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
 extern "C" {
-void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
+void Matrix4x3_FromQuaternion(const struct Quaternion *q, union Matrix4x3 *mF);
 void Vec3_Asr(void *d, void *s, int sh);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);

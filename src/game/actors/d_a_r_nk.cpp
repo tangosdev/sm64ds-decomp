@@ -293,7 +293,6 @@ void daRNk_c::func_ov062_0211aac0(){
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
-    /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
     this->mAnmModel.mat4x3 = data_020a0e68;
     DropShadowRadHeight(this->mShadowModel, this->mAnmModel.mat4x3, 0xa0000, 0xa0000, 0xf);
 }
