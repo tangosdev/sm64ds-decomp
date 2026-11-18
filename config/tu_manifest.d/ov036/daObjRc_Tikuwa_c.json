@@ -27,6 +27,12 @@
       "end": "0x021129ec"
     },
     {
+      "name": ".data.data_ov036_02112b48",
+      "input_section": ".data",
+      "start": "0x02112b48",
+      "end": "0x02112b68"
+    },
+    {
       "name": ".bss",
       "start": "0x02114084",
       "end": "0x021140ac"
@@ -111,7 +117,15 @@
       "ordinal": 10
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov036_02112b48",
+      "address": "0x02112b48",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "the donut's collision properties: floor and wall entries"
+    }
+  ],
   "bss": [
     {
       "symbol": "gRcTikuwaCollisionFile",
@@ -331,7 +345,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -363,6 +377,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.data_ov036_02112b48",
+          "start": "0x02112b48",
+          "end": "0x02112b68",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114084",
           "end": "0x021140ac",
@@ -371,7 +392,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 16
+          "LICENSED": 17
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -382,34 +403,43 @@
           {
             "section": ".init",
             "original": [
-              49
+              51
             ],
             "desired": [
-              49
+              51
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              47
+              49
             ],
             "desired": [
-              47
+              49
+            ]
+          },
+          {
+            "section": ".data.data_ov036_02112b48",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
             ]
           },
           {
             "section": ".bss",
             "original": [
-              26,
-              27,
               28,
-              29
+              29,
+              30,
+              31
             ],
             "desired": [
+              31,
               29,
-              27,
-              28,
-              26
+              30,
+              28
             ]
           }
         ],
@@ -418,22 +448,22 @@
             {
               "section": ".bss",
               "original": [
-                26,
-                27,
                 28,
-                29
+                29,
+                30,
+                31
               ],
               "desired": [
+                31,
                 29,
-                27,
-                28,
-                26
+                30,
+                28
               ],
               "slots": [
-                26,
-                27,
                 28,
-                29
+                29,
+                30,
+                31
               ]
             }
           ],

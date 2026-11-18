@@ -28,14 +28,33 @@
       "end": "0x021129e4"
     },
     {
+      "name": ".data.data_ov036_02112bc8",
+      "input_section": ".data",
+      "start": "0x02112bc8",
+      "end": "0x02112be8"
+    },
+    {
+      "name": ".data.data_ov036_02113b18",
+      "input_section": ".data",
+      "start": "0x02113b18",
+      "end": "0x02113b1c"
+    },
+    {
+      "name": ".data.data_ov036_02113b1c",
+      "input_section": ".data",
+      "start": "0x02113b1c",
+      "end": "0x02113b20"
+    },
+    {
+      "name": ".data.data_ov036_02113b2c",
+      "input_section": ".data",
+      "start": "0x02113b2c",
+      "end": "0x02113b38"
+    },
+    {
       "name": ".bss",
       "start": "0x02114048",
       "end": "0x02114070"
-    },
-    {
-      "name": ".data",
-      "start": "0x02113b2c",
-      "end": "0x02113b38"
     }
   ],
   "functions": [
@@ -82,6 +101,27 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "ResourceDescriptor {model, collision, CLPS} InitResourcesFrom and CleanupResourcesFrom take; the words relocate to 0x02114050, 0x02114048 and the CLPS block at 0x02112bc8"
+    },
+    {
+      "symbol": "data_ov036_02112bc8",
+      "address": "0x02112bc8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "the spinning disc's collision properties: floor and wall entries"
+    },
+    {
+      "symbol": "data_ov036_02113b18",
+      "address": "0x02113b18",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "default start angle in a 4-byte retail slot, 0x138 of a 0x10000-per-turn circle"
+    },
+    {
+      "symbol": "data_ov036_02113b1c",
+      "address": "0x02113b1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "alternate start angle in a 4-byte retail slot, selected by param1's low byte"
     }
   ],
   "bss": [
@@ -244,22 +284,43 @@
           "firstDiff": null
         },
         {
-          "section": ".bss",
-          "start": "0x02114048",
-          "end": "0x02114070",
-          "comparison": "NOBITS -- symbol/module gates"
+          "section": ".data.data_ov036_02112bc8",
+          "start": "0x02112bc8",
+          "end": "0x02112be8",
+          "differingBytes": 0,
+          "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.data_ov036_02113b18",
+          "start": "0x02113b18",
+          "end": "0x02113b1c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov036_02113b1c",
+          "start": "0x02113b1c",
+          "end": "0x02113b20",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov036_02113b2c",
           "start": "0x02113b2c",
           "end": "0x02113b38",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02114048",
+          "end": "0x02114070",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -270,47 +331,102 @@
           {
             "section": ".init",
             "original": [
-              47
+              50
             ],
             "desired": [
-              47
+              50
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              48
             ],
             "desired": [
-              45
+              48
+            ]
+          },
+          {
+            "section": ".data.data_ov036_02112bc8",
+            "original": [
+              31
+            ],
+            "desired": [
+              31
+            ]
+          },
+          {
+            "section": ".data.data_ov036_02113b18",
+            "original": [
+              6
+            ],
+            "desired": [
+              6
+            ]
+          },
+          {
+            "section": ".data.data_ov036_02113b1c",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".data.data_ov036_02113b2c",
+            "original": [
+              22
+            ],
+            "desired": [
+              22
             ]
           },
           {
             "section": ".bss",
             "original": [
               7,
-              8,
-              16,
-              25
+              10,
+              26,
+              27
             ],
             "desired": [
+              10,
               7,
-              8,
-              16,
-              25
-            ]
-          },
-          {
-            "section": ".data",
-            "original": [
-              23
-            ],
-            "desired": [
-              23
+              27,
+              26
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                7,
+                10,
+                26,
+                27
+              ],
+              "desired": [
+                10,
+                7,
+                27,
+                26
+              ],
+              "slots": [
+                7,
+                10,
+                26,
+                27
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -323,8 +439,7 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null,
-      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [
@@ -628,7 +743,7 @@
       "target_address": "0x02114064"
     },
     {
-      "section": ".data",
+      "section": ".data.data_ov036_02113b2c",
       "source": "0x02113b2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -638,7 +753,7 @@
       "target_address": "0x02114050"
     },
     {
-      "section": ".data",
+      "section": ".data.data_ov036_02113b2c",
       "source": "0x02113b30",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -648,7 +763,7 @@
       "target_address": "0x02114048"
     },
     {
-      "section": ".data",
+      "section": ".data.data_ov036_02113b2c",
       "source": "0x02113b34",
       "type": "R_ARM_ABS32",
       "kind": "load",

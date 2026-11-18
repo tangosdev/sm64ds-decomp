@@ -30,9 +30,22 @@ struct McMetalnetClsnFileHandle : SharedFilePtr {
     ~McMetalnetClsnFileHandle();
 };
 
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+/* The net's collision properties: one floor entry. */
+CLPS_Block data_ov009_02112bf8 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+
 extern McMetalnetModelFilePtr data_ov009_02113e90;   /* the net's BMD        */
 extern McMetalnetClsnFileHandle data_ov009_02113e88; /* its collision KCL    */
-extern CLPS_Block data_ov009_02112bf8;
 
 /* The global mode byte. Unnamed in config; compared against 1 in fifty-odd
    places across the tree, always to mean "not the ordinary single-player run". */

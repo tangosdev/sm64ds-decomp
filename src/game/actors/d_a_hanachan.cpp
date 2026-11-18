@@ -93,27 +93,27 @@ struct HanachanTextureSeqFileHandle : SharedFilePtr {
 extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
-extern void **data_ov034_02113888[];
-extern void **data_ov034_0211389c[];
-extern void **data_ov034_02113860[];
+extern void *const data_ov034_02113888[];
+extern void *const data_ov034_0211389c[];
+extern void *const data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
-extern int data_ov034_021138c4[];
-extern short data_ov034_02113820[];
-extern void **data_ov034_021138b0[];
+extern const int data_ov034_021138c4[];
+extern const short data_ov034_02113820[];
+extern void *const data_ov034_021138b0[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int data_ov034_02114488[];
 // local extern: no shared header declares Vec3_Add.
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
-extern SharedFilePtr *data_ov034_02113838[];
-extern SharedFilePtr *data_ov034_0211384c[];
-extern void **data_ov034_02113874[];
+extern SharedFilePtr *const data_ov034_02113838[];
+extern SharedFilePtr *const data_ov034_0211384c[];
+extern void *const data_ov034_02113874[];
 extern int func_ov002_020c51d0(void *, void *);
 extern unsigned char data_ov034_0211433c[];
-extern s32 data_ov034_021138d8[];
+extern const s32 data_ov034_021138d8[];
 extern int func_020092c4(void *arg0, void *out, void *target);
-extern u32 data_ov034_02113828[];
+extern const u32 data_ov034_02113828[];
 extern dCamera_c *gCamera;
 }
 
@@ -1194,8 +1194,59 @@ HanachanTextureSeqFileHandle gHanachanBody04TextureSequenceFile(ASSET_HANACHAN_B
 
 typedef void (daHanachan_c::*HanachanStatePmf)();
 
-/* The 8-byte PMF descriptors the static initializer copies into the state
- * table rows, in table order. ROM-supplied .data, referenced by address. */
+/* Tables the body-segment code indexes by part: talk message ids, particle
+ * ids, the model/texture-sequence/animation handles, segment spacing and clip
+ * radius. */
+const short data_ov034_02113820[4] = {0x00c6, 0x00c7, 0x00c8, 0x00c9};
+const u32 data_ov034_02113828[4] = {0x6a, 0x6b, 0x6c, 0};
+SharedFilePtr *const data_ov034_02113838[5] = {
+    &gHanachanHeadModelFile,   &gHanachanBody01ModelFile, &gHanachanBody02ModelFile,
+    &gHanachanBody03ModelFile, &gHanachanBody04ModelFile,
+};
+SharedFilePtr *const data_ov034_0211384c[5] = {
+    &gHanachanHeadTextureSequenceFile,   &gHanachanBody01TextureSequenceFile,
+    &gHanachanBody02TextureSequenceFile, &gHanachanBody03TextureSequenceFile,
+    &gHanachanBody04TextureSequenceFile,
+};
+void *const data_ov034_02113860[5] = {
+    &gHanachanHeadWaitAnimationFile,   &gHanachanBody01WaitAnimationFile,
+    &gHanachanBody02WaitAnimationFile, &gHanachanBody03WaitAnimationFile,
+    &gHanachanBody04WaitAnimationFile,
+};
+void *const data_ov034_02113874[5] = {
+    &gHanachanHeadWalkAnimationFile,   &gHanachanBody01WalkAnimationFile,
+    &gHanachanBody02WalkAnimationFile, &gHanachanBody03WalkAnimationFile,
+    &gHanachanBody04WalkAnimationFile,
+};
+void *const data_ov034_02113888[5] = {
+    &gHanachanHeadWalkStartAnimationFile,   &gHanachanBody01WalkStartAnimationFile,
+    &gHanachanBody02WalkStartAnimationFile, &gHanachanBody03WalkStartAnimationFile,
+    &gHanachanBody04WalkStartAnimationFile,
+};
+void *const data_ov034_0211389c[5] = {
+    &gHanachanHeadWalkEndAnimationFile,   &gHanachanBody01WalkEndAnimationFile,
+    &gHanachanBody02WalkEndAnimationFile, &gHanachanBody03WalkEndAnimationFile,
+    &gHanachanBody04WalkEndAnimationFile,
+};
+void *const data_ov034_021138b0[5] = {
+    &gHanachanHeadDamageAnimationFile,   &gHanachanBody01DamageAnimationFile,
+    &gHanachanBody02DamageAnimationFile, &gHanachanBody03DamageAnimationFile,
+    &gHanachanBody04DamageAnimationFile,
+};
+const int data_ov034_021138c4[5] = {0, 0x00057b2b, 0x000858c9, 0x0007afaf, 0x00081a98};
+const s32 data_ov034_021138d8[5] = {0x0004399a, 0x0003e666, 0x0004b666, 0x0003e666, 0x0004b666};
+
+/* Per-health state timer and the state-name strings the state table's name
+ * pointers reference. */
+unsigned char data_ov034_0211433c[4] = {0x5e, 0x40, 0x22, 0x5e};
+char data_ov034_02114340[8] = "DEAD";
+char data_ov034_02114348[8] = "MOVE";
+char data_ov034_02114350[8] = "DAMAGE";
+
+/* The 8-byte {handler, this-adjust} records the static initializer copies into
+ * the table rows, in table order. b56 emits a named HanachanStatePmf object as
+ * .bss plus an __sinit copy, never as an initialized .data record, so these
+ * stay ROM-owned. */
 extern "C" HanachanStatePmf data_ov034_02114370; /* StateDemoWaitInit */
 extern "C" HanachanStatePmf data_ov034_021143b0; /* StateDemoWaitMain */
 extern "C" HanachanStatePmf data_ov034_021143c0; /* StateDemoCallInit */
@@ -1219,18 +1270,17 @@ extern "C" HanachanStatePmf data_ov034_021143d0; /* StateDamageWaitMain */
 extern "C" HanachanStatePmf data_ov034_021143a0; /* StateDamageStartInit */
 extern "C" HanachanStatePmf data_ov034_02114398; /* StateDamageStartMain */
 
-/* The state-name strings the table's name pointers reference. */
-extern "C" char data_ov034_02114408[]; /* "DEMOWAIT" */
-extern "C" char data_ov034_02114414[]; /* "DEMOCALL" */
-extern "C" char data_ov034_02114420[]; /* "MOVE_STOP" */
-extern "C" char data_ov034_02114438[]; /* "MOVE_START" */
-extern "C" char data_ov034_02114348[]; /* "MOVE" */
-extern "C" char data_ov034_02114350[]; /* "DAMAGE" */
-extern "C" char data_ov034_0211442c[]; /* "DAMAGETALK" */
-extern "C" char data_ov034_02114340[]; /* "DEAD" */
-extern "C" char data_ov034_02114444[]; /* "DAMAGE_STOP" */
-extern "C" char data_ov034_02114450[]; /* "DAMAGE_WAIT" */
-extern "C" char data_ov034_02114468[]; /* "DAMAGE_START" */
+/* State names the table's name pointers reference. */
+char data_ov034_02114408[12] = "DEMOWAIT";
+char data_ov034_02114414[12] = "DEMOCALL";
+char data_ov034_02114420[12] = "MOVE_STOP";
+char data_ov034_0211442c[12] = "DAMAGETALK";
+char data_ov034_02114438[12] = "MOVE_START";
+char data_ov034_02114444[12] = "DAMAGE_STOP";
+char data_ov034_02114450[12] = "DAMAGE_WAIT";
+char data_ov034_02114468[16] = "DAMAGE_START";
+/* Per-segment walk speed targets (20.12: 16.0, 20.0, 24.0, 4.0). */
+int data_ov034_02114488[4] = {0x10000, 0x14000, 0x18000, 0x4000};
 
 daHanachan_c::State data_ov034_02114538[11] = {
     { data_ov034_02114370, data_ov034_021143b0, data_ov034_02114408 },   /* DEMOWAIT */

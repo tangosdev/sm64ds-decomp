@@ -53,6 +53,20 @@ typedef char TikuwaCollisionFilePtr_size_must_be_8[sizeof(TikuwaCollisionFilePtr
 extern TikuwaModelFilePtr gRcTikuwaModelFile;
 extern TikuwaCollisionFilePtr gRcTikuwaCollisionFile;
 
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+/* The donut's floor and wall pair. */
+CLPS_Block data_ov036_02112b48 = {
+    0x53504c43,
+    0x00020008,
+    {0x01000fc0, 0x000000ff, 0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+
 daObjRc_Tikuwa_c::~daObjRc_Tikuwa_c() {}
 
 s32 daObjRc_Tikuwa_c::CleanupResources() {
@@ -124,7 +138,7 @@ s32 daObjRc_Tikuwa_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *(CLPS_Block *)data_ov036_02112b48);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov036_02112b48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);

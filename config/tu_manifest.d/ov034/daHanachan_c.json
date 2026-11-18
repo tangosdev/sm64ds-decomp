@@ -20,6 +20,11 @@
       "end": "0x02113820"
     },
     {
+      "name": ".rodata",
+      "start": "0x02113820",
+      "end": "0x021138ec"
+    },
+    {
       "name": ".init",
       "start": "0x021138ec",
       "end": "0x02114078"
@@ -28,6 +33,30 @@
       "name": ".ctor",
       "start": "0x02114078",
       "end": "0x0211407c"
+    },
+    {
+      "name": ".data.hanachanTimer",
+      "input_section": ".data",
+      "start": "0x0211433c",
+      "end": "0x02114358"
+    },
+    {
+      "name": ".data.hanachanNames",
+      "input_section": ".data",
+      "start": "0x02114408",
+      "end": "0x0211445c"
+    },
+    {
+      "name": ".data.hanachanStartName",
+      "input_section": ".data",
+      "start": "0x02114468",
+      "end": "0x02114478"
+    },
+    {
+      "name": ".data.hanachanSpeeds",
+      "input_section": ".data",
+      "start": "0x02114488",
+      "end": "0x02114498"
     },
     {
       "name": ".data",
@@ -294,6 +323,97 @@
       "size": "0xdc",
       "binding": "STB_GLOBAL",
       "evidence": "eleven-entry Hanachan state table: Init PMF at +0 and Main PMF at +8 copied at static-init time from the ROM PMF descriptors at 0x02114358..0x02114408, name pointer at +0x10 the only static part, matching the retail .data bytes and eleven name-pointer relocations"
+    },
+    {
+      "symbol": "data_ov034_0211433c",
+      "address": "0x0211433c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-health state timer byte value, indexed by mHealth"
+    },
+    {
+      "symbol": "data_ov034_02114340",
+      "address": "0x02114340",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"DEAD\""
+    },
+    {
+      "symbol": "data_ov034_02114348",
+      "address": "0x02114348",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"MOVE\""
+    },
+    {
+      "symbol": "data_ov034_02114350",
+      "address": "0x02114350",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"DAMAGE\""
+    },
+    {
+      "symbol": "data_ov034_02114408",
+      "address": "0x02114408",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"DEMOWAIT\""
+    },
+    {
+      "symbol": "data_ov034_02114414",
+      "address": "0x02114414",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"DEMOCALL\""
+    },
+    {
+      "symbol": "data_ov034_02114420",
+      "address": "0x02114420",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"MOVE_STOP\""
+    },
+    {
+      "symbol": "data_ov034_0211442c",
+      "address": "0x0211442c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"DAMAGETALK\""
+    },
+    {
+      "symbol": "data_ov034_02114438",
+      "address": "0x02114438",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"MOVE_START\""
+    },
+    {
+      "symbol": "data_ov034_02114444",
+      "address": "0x02114444",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"DAMAGE_STOP\""
+    },
+    {
+      "symbol": "data_ov034_02114450",
+      "address": "0x02114450",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"DAMAGE_WAIT\""
+    },
+    {
+      "symbol": "data_ov034_02114468",
+      "address": "0x02114468",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "state name \"DAMAGE_START\""
+    },
+    {
+      "symbol": "data_ov034_02114488",
+      "address": "0x02114488",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "ApproachLinear target speed indexed by 4 - mHealth, and the walk speed"
     }
   ],
   "bss": [
@@ -935,7 +1055,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -953,6 +1073,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02113820",
+          "end": "0x021138ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x021138ec",
           "end": "0x02114078",
@@ -963,6 +1090,34 @@
           "section": ".ctor",
           "start": "0x02114078",
           "end": "0x0211407c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.hanachanTimer",
+          "start": "0x0211433c",
+          "end": "0x02114358",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.hanachanNames",
+          "start": "0x02114408",
+          "end": "0x0211445c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.hanachanStartName",
+          "start": "0x02114468",
+          "end": "0x02114478",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.hanachanSpeeds",
+          "start": "0x02114488",
+          "end": "0x02114498",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -982,7 +1137,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 108
+          "LICENSED": 132
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -991,37 +1146,118 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              166
+              147,
+              148,
+              149,
+              151,
+              153,
+              155,
+              157,
+              159,
+              161,
+              163,
+              164
             ],
             "desired": [
-              166
+              147,
+              148,
+              149,
+              151,
+              153,
+              155,
+              157,
+              159,
+              161,
+              163,
+              164
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              199
+            ],
+            "desired": [
+              199
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              164
+              197
             ],
             "desired": [
-              164
+              197
+            ]
+          },
+          {
+            "section": ".data.hanachanTimer",
+            "original": [
+              165,
+              166,
+              167,
+              168
+            ],
+            "desired": [
+              165,
+              166,
+              167,
+              168
+            ]
+          },
+          {
+            "section": ".data.hanachanNames",
+            "original": [
+              169,
+              170,
+              171,
+              172,
+              173,
+              174,
+              175
+            ],
+            "desired": [
+              169,
+              170,
+              171,
+              172,
+              173,
+              174,
+              175
+            ]
+          },
+          {
+            "section": ".data.hanachanStartName",
+            "original": [
+              176
+            ],
+            "desired": [
+              176
+            ]
+          },
+          {
+            "section": ".data.hanachanSpeeds",
+            "original": [
+              177
+            ],
+            "desired": [
+              177
             ]
           },
           {
             "section": ".data",
             "original": [
-              145
+              178
             ],
             "desired": [
-              145
+              178
             ]
           },
           {
             "section": ".bss",
             "original": [
-              75,
-              76,
               77,
               78,
               79,
@@ -1089,55 +1325,56 @@
               141,
               142,
               143,
-              144
+              144,
+              145,
+              146
             ],
             "desired": [
-              126,
-              114,
-              118,
-              124,
               128,
-              98,
-              106,
-              132,
-              76,
-              104,
-              80,
-              108,
-              112,
-              78,
-              140,
+              116,
               120,
-              94,
+              126,
               130,
-              90,
-              86,
-              142,
-              92,
-              96,
               100,
-              102,
+              108,
               134,
+              78,
+              106,
               82,
               110,
-              84,
-              138,
-              116,
+              114,
+              80,
+              142,
               122,
-              144,
+              96,
+              132,
+              92,
               88,
+              144,
+              94,
+              98,
+              102,
+              104,
               136,
-              77,
+              84,
+              112,
+              86,
+              140,
+              118,
+              124,
+              146,
+              90,
+              138,
               79,
-              141,
               81,
-              83,
               143,
+              83,
               85,
+              145,
               87,
               89,
               91,
-              95,
+              93,
               97,
               99,
               101,
@@ -1155,13 +1392,14 @@
               125,
               127,
               129,
-              93,
               131,
+              95,
               133,
               135,
               137,
               139,
-              75
+              141,
+              77
             ]
           }
         ],
@@ -1170,8 +1408,6 @@
             {
               "section": ".bss",
               "original": [
-                75,
-                76,
                 77,
                 78,
                 79,
@@ -1239,55 +1475,56 @@
                 141,
                 142,
                 143,
-                144
+                144,
+                145,
+                146
               ],
               "desired": [
-                126,
-                114,
-                118,
-                124,
                 128,
-                98,
-                106,
-                132,
-                76,
-                104,
-                80,
-                108,
-                112,
-                78,
-                140,
+                116,
                 120,
-                94,
+                126,
                 130,
-                90,
-                86,
-                142,
-                92,
-                96,
                 100,
-                102,
+                108,
                 134,
+                78,
+                106,
                 82,
                 110,
-                84,
-                138,
-                116,
+                114,
+                80,
+                142,
                 122,
-                144,
+                96,
+                132,
+                92,
                 88,
+                144,
+                94,
+                98,
+                102,
+                104,
                 136,
-                77,
+                84,
+                112,
+                86,
+                140,
+                118,
+                124,
+                146,
+                90,
+                138,
                 79,
-                141,
                 81,
-                83,
                 143,
+                83,
                 85,
+                145,
                 87,
                 89,
                 91,
-                95,
+                93,
                 97,
                 99,
                 101,
@@ -1305,17 +1542,16 @@
                 125,
                 127,
                 129,
-                93,
                 131,
+                95,
                 133,
                 135,
                 137,
                 139,
-                75
+                141,
+                77
               ],
               "slots": [
-                75,
-                76,
                 77,
                 78,
                 79,
@@ -1383,7 +1619,9 @@
                 141,
                 142,
                 143,
-                144
+                144,
+                145,
+                146
               ]
             }
           ],
@@ -1808,6 +2046,356 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02113838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114660"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211383c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01ModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114688"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02ModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114670"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03ModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146f0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04ModelFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114700"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211384c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114730"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113850",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114708"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114690"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113858",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146c0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211385c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114720"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113860",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadWaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114710"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113864",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01WaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114630"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113868",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02WaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114698"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211386c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03WaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114718"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113870",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04WaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114638"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113874",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146b8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113878",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01WalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114728"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211387c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02WalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146b0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113880",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03WalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146c8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113884",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04WalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146a0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113888",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadWalkStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146d0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211388c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01WalkStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114648"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113890",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02WalkStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146d8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113894",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03WalkStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146e0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02113898",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04WalkStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114668"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211389c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadWalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114650"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01WalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114678"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02WalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146f8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03WalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114680"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04WalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114628"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanHeadDamageAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114620"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody01DamageAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114640"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody02DamageAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146a8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody03DamageAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x02114658"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021138c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHanachanBody04DamageAnimationFile",
+      "addend": 0,
+      "target_module": "ov034",
+      "target_address": "0x021146e8"
+    },
     {
       "section": ".data",
       "source": "0x2114610",
@@ -3767,5 +4355,83 @@
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed from @1733 to @1692 when the opt pragma was removed (#821). Re-keyed from @1692 to @1729 when HandlePlayerHits' volatile player-position copy and IsStompedBy's volatile pad became plain Vector3 locals (#821). Re-keyed from @1729 to @1670 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1670 to @1708 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1708 to @1711 when Re-keyed when cast Vector3 views became real Vector3 members/locals (#5210; measured from the compiled object: same section, size and order). (measured from the compiled object: same section, size and order). Re-keyed from @1711 to @1748 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1748 to @1744 when the animation-file externs were spelled void *[] to match decl_common.h (same section, offset, size, type and binding). Re-keyed from @1744 to @1728 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1728 to @1776 when math/CalcLib.h gained its inline Vector3 VEC_* overloads and StateMoveMain's random draws went through the file's LevelRandom inline (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1776 to @1792 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1792 to @1797 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1797 to @1805 after the body-segment transform vectors became Vector3 locals (measured from the compiled object). Re-keyed from @1808 to @1833 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
-  "rodata": null
+  "rodata": [
+    {
+      "symbol": "data_ov034_02113820",
+      "address": "0x02113820",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "four message ids ShowMessage picks with 4 - mHealth"
+    },
+    {
+      "symbol": "data_ov034_02113828",
+      "address": "0x02113828",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "three Particle::System::New ids followed by one zero word"
+    },
+    {
+      "symbol": "data_ov034_02113838",
+      "address": "0x02113838",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "model handle per body part, head then body 01..04"
+    },
+    {
+      "symbol": "data_ov034_0211384c",
+      "address": "0x0211384c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "texture-sequence handle per body part, head then body 01..04"
+    },
+    {
+      "symbol": "data_ov034_02113860",
+      "address": "0x02113860",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "wait animation handle per body part, head then body 01..04"
+    },
+    {
+      "symbol": "data_ov034_02113874",
+      "address": "0x02113874",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "walk animation handle per body part, head then body 01..04"
+    },
+    {
+      "symbol": "data_ov034_02113888",
+      "address": "0x02113888",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "walk-start animation handle per body part, head then body 01..04"
+    },
+    {
+      "symbol": "data_ov034_0211389c",
+      "address": "0x0211389c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "walk-end animation handle per body part, head then body 01..04"
+    },
+    {
+      "symbol": "data_ov034_021138b0",
+      "address": "0x021138b0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "damage animation handle per body part, head then body 01..04"
+    },
+    {
+      "symbol": "data_ov034_021138c4",
+      "address": "0x021138c4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "segment spacing per body part, model-space 20.12 lengths"
+    },
+    {
+      "symbol": "data_ov034_021138d8",
+      "address": "0x021138d8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "segment clip radius per body part, model-space 20.12 lengths"
+    }
+  ]
 }

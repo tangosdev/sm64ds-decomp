@@ -15,9 +15,8 @@
  * the retail D1/D0 pair first and emits no D2 body.
  *
  * Notes:
- * - data_ov009_02112bc4 / 02112c38 BTA/CLPS blocks: this TU consumes
- *   them, overlay .data owns them. The model/KCL handles and the three
- *   spawn tables are defined here.
+ * - The model/KCL handles, the three spawn tables and the BTA/CLPS blocks
+ *   this class loads are defined here.
  * - g_profile_MC_WATER stays outside the licensed .text.
  */
 
@@ -26,16 +25,41 @@
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "SaveBlock.h"
+#include "private/BTA_File.h"
 
 struct BMD_File;
-struct BTA_File;
 struct KCL_File;
-struct CLPS_Block;
 
-extern BTA_File data_ov009_02112bc4;
-extern CLPS_Block data_ov009_02112c38;
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
 extern unsigned char gGameMode;
 extern int data_0209f32c;
+
+/* The texture animation's keys and its one material record live in overlay
+   .rodata; this TU only points at them. */
+extern fx32 data_ov009_02112234[];
+extern u16 data_ov009_0211222c[];
+extern fx32 data_ov009_021122ec[];
+extern BTAMaterialRecord data_ov009_02112238[];
+
+/* The water plane's texture animation: 0x5b frames, constant scale and
+   translation, one material. */
+BTA_File data_ov009_02112bc4 = {
+    0x5b, 0, data_ov009_02112234, data_ov009_0211222c, data_ov009_021122ec,
+    1,    0, data_ov009_02112238,
+};
+
+/* The water surface's collision properties: one floor entry. */
+CLPS_Block data_ov009_02112c38 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fe0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjMcWater_c_AssetId { ASSET_MC_WATER_BMD = 0x0693, ASSET_MC_WATER_KCL = 0x0694 };

@@ -46,7 +46,20 @@ struct Km1KurumajikuCollisionFilePtr : SharedFilePtr {
 };
 
 extern daObjKurumajiku_c::Resources data_ov043_02112344;
-extern struct CLPS_Block data_ov043_02111bc0;
+
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[3];
+};
+
+/* The axle's floor entry; retail's slot is 0x14 bytes. */
+CLPS_Block data_ov043_02111bc0 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fc0, 0x000000ff, 0xffffffff},
+};
 
 /* KM1_KURUMA: the cart this axle drives. InitResourcesFrom spawns four. */
 enum { kCartActorId = 0x88 };

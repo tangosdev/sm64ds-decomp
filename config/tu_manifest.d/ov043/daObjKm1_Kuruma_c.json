@@ -29,6 +29,11 @@
       "end": "0x02111af4"
     },
     {
+      "name": ".data",
+      "start": "0x02112418",
+      "end": "0x02112424"
+    },
+    {
       "name": ".bss",
       "start": "0x02112630",
       "end": "0x02112658"
@@ -71,7 +76,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov043_02112418",
+      "address": "0x02112418",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "resource record: model handle, collision handle, CLPS block"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm1KurumaCollisionFile",
@@ -205,7 +218,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -237,6 +250,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02112418",
+          "end": "0x02112424",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02112630",
           "end": "0x02112658",
@@ -245,7 +265,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 12
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -256,6 +276,15 @@
           {
             "section": ".init",
             "original": [
+              49
+            ],
+            "desired": [
+              49
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
               47
             ],
             "desired": [
@@ -263,12 +292,12 @@
             ]
           },
           {
-            "section": ".ctor",
+            "section": ".data",
             "original": [
-              45
+              23
             ],
             "desired": [
-              45
+              23
             ]
           },
           {
@@ -277,45 +306,17 @@
               5,
               6,
               22,
-              23
+              25
             ],
             "desired": [
-              6,
               5,
+              6,
               22,
-              23
+              25
             ]
           }
         ],
-        "objisolate": {
-          "reordered": [
-            {
-              "section": ".bss",
-              "original": [
-                5,
-                6,
-                22,
-                23
-              ],
-              "desired": [
-                6,
-                5,
-                22,
-                23
-              ],
-              "slots": [
-                5,
-                6,
-                22,
-                23
-              ]
-            }
-          ],
-          "symbolIndices": 4,
-          "sectionLinks": 0,
-          "sectionInfos": 0,
-          "error": null
-        },
+        "objisolate": null,
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -529,16 +530,6 @@
   ],
   "relocations": [
     {
-      "section": ".ctor",
-      "source": "0x02111af0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "__sinit_d_a_obj_km1_kuruma.cpp",
-      "addend": 0,
-      "target_module": "ov043",
-      "target_address": "0x021118d4"
-    },
-    {
       "section": ".init",
       "source": "0x021118e4",
       "type": "R_ARM_PC24",
@@ -637,6 +628,46 @@
       "addend": 0,
       "target_module": "ov043",
       "target_address": "0x0211264c"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02111af0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_km1_kuruma.cpp",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x021118d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112418",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1KurumaModelFile",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112638"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211241c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1KurumaCollisionFile",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112630"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112420",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111b80",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111b80"
     }
   ]
 }

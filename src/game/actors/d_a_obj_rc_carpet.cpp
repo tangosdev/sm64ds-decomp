@@ -61,7 +61,20 @@ extern SharedFilePtr data_ov002_0210d9f0;
 extern CarpetModelFilePtr gRcCarpetModelFile;
 extern CarpetAnimationFilePtr gRcCarpetWaitAnimationFile;
 extern CarpetCollisionFilePtr gRcCarpetCollisionFile;
-extern CLPS_Block data_ov036_02112b28;
+
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+/* The flying carpet's floor entry. */
+CLPS_Block data_ov036_02112b28 = {
+    0x53504c43,
+    0x00010008,
+    {0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
 
 /* Retail resource-pointer table at ov036:0x02113f58. */
 FlyingCarpetResources data_ov036_02113f58 = {&gRcCarpetModelFile, &gRcCarpetCollisionFile,

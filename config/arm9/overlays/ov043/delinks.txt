@@ -5,7 +5,11 @@
     .data.clps0 start:0x02111b60 end:0x02111b78 kind:data align:4
     .data.gap1 start:0x02111b78 end:0x02111ba0 kind:data align:4
     .data.clps1 start:0x02111ba0 end:0x02111bb8 kind:data align:4
-    .data.gap2 start:0x02111bb8 end:0x02111c40 kind:data align:4
+    .data.gap2 start:0x02111bb8 end:0x02111bc0 kind:data align:4
+    .data.data_ov043_02111bc0 start:0x02111bc0 end:0x02111bd4 kind:data align:4
+    .data.gap2b start:0x02111bd4 end:0x02111c00 kind:data align:4
+    .data.data_ov043_02111c00 start:0x02111c00 end:0x02111c20 kind:data align:4
+    .data.gap2c start:0x02111c20 end:0x02111c40 kind:data align:4
     .data.clps2 start:0x02111c40 end:0x02111c58 kind:data align:4
     .data.gap3 start:0x02111c58 end:0x02111c60 kind:data align:4
     .data.clps3 start:0x02111c60 end:0x02111c78 kind:data align:4
@@ -19,6 +23,7 @@ src/game/actors/d_a_obj_km1_ukishima.cpp:
     .init start:0x021117fc end:0x02111868
     .ctor start:0x02111ae8 end:0x02111aec
     .bss start:0x021125e0 end:0x02112608
+    .data.data_ov043_02111c00 start:0x02111c00 end:0x02111c20
 
 src/game/actors/d_a_obj_km1_kurumajiku.cpp:
     complete
@@ -27,6 +32,7 @@ src/game/actors/d_a_obj_km1_kurumajiku.cpp:
     .ctor start:0x02111aec end:0x02111af0
     .bss start:0x02112608 end:0x02112630
     .data start:0x02112344 end:0x02112350
+    .data.data_ov043_02111bc0 start:0x02111bc0 end:0x02111bd4
 
 src/game/actors/d_a_obj_km1_kuruma.cpp:
     complete
@@ -34,6 +40,7 @@ src/game/actors/d_a_obj_km1_kuruma.cpp:
     .init start:0x021118d4 end:0x02111940
     .ctor start:0x02111af0 end:0x02111af4
     .bss start:0x02112630 end:0x02112658
+    .data start:0x02112418 end:0x02112424
 
 src/game/actors/d_a_obj_km1_dorifu.cpp:
     complete
