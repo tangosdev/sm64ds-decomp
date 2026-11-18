@@ -38,8 +38,6 @@ extern Vector3 data_ov009_02113d8c[];
 extern Vector3 data_ov009_02113de0[];
 extern Vector3 data_ov009_02113e34[];
 extern Vector3 data_ov026_02113a9c;
-extern Vector3 data_ov073_02123040;
-extern Vector3 data_ov090_02134200;
 extern Vector3 data_ov100_02148948;
 extern char CAM_SPACE_CAM_POS_ASR_3;
 extern char data_02075f14[];
@@ -343,10 +341,6 @@ extern int data_ov075_0211d380;
 extern int data_ov075_0211d650[];
 extern int data_ov075_0211d930;
 extern int data_ov080_021276c4[];
-extern int data_ov084_02130208[];
-extern int data_ov084_02130228[];
-extern int data_ov084_02130238[];
-extern int data_ov084_02130258[];
 /* data_ov084_02130cc0, data_ov084_02130cc8 and data_ov084_02130d74 are defined
    by d_a_krb.cpp as typed handles and its pointer-to-member state table; the
    TU's own declarations carry the real types. */
@@ -355,7 +349,6 @@ extern int data_ov085_02130830[];
 extern void *data_ov089_02132894[];
 extern int data_ov091_021344e8[];
 extern int data_ov094_02136a1c[];
-extern int data_ov095_02136fb0[];
 extern int data_ov100_02148008[3];
 extern int data_ov100_02148710;
 extern int data_ov100_02148718;
@@ -488,7 +481,6 @@ extern short data_ov036_02113b1c[];
 extern short data_ov065_0211c0b0[];
 extern short data_ov065_0211c0c8[];
 extern short data_ov075_0211b52c[];
-extern short data_ov095_02136f80[];
 extern signed char SUBLEVEL_LEVEL_TABLE[];
 extern signed char data_0209b44c;
 extern signed char data_ov002_02110af0;

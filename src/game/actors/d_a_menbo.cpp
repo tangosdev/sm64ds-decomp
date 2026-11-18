@@ -82,7 +82,12 @@ extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
 extern int           data_0209f32c;
 
-extern Vector3       data_ov090_0213412c;
+/* Cylinder offset (0, 0x1e000, 0): a POD twin, since a Vector3 global
+ * would carry its constructor into .bss. */
+struct MenboCylinderOffset {
+    fx32 x, y, z;
+};
+extern MenboCylinderOffset data_ov090_0213412c;
 extern MenboAnimationFilePtr data_ov090_02134480; /* patrol anim, file 0x3a1 */
 extern MenboAnimationFilePtr data_ov090_02134488; /* water-chase anim, file 0x3a0 */
 extern MenboAnimationFilePtr data_ov090_02134490; /* water-rest anim, file 0x3a2 */
@@ -161,7 +166,9 @@ void daMenbo_c::func_ov090_021310b4() {
     Vector3 hurt;
     int flags;
     dActor_c *p;
-    sv = data_ov090_0213412c;
+    sv.x = data_ov090_0213412c.x;
+    sv.y = data_ov090_0213412c.y;
+    sv.z = data_ov090_0213412c.z;
     mdCcAcPos_c.SetPosRelativeToActor(sv);
 
     if (mdCcAcPos_c.otherOwner == 0)
@@ -740,7 +747,9 @@ int daMenbo_c::InitResources()
 
     mTerminalVelocity = -0x3c000;
 
-    v = data_ov090_0213412c;
+    v.x = data_ov090_0213412c.x;
+    v.y = data_ov090_0213412c.y;
+    v.z = data_ov090_0213412c.z;
     mdCcAcPos_c.Init(this, v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
 
     mAngle.y = mPrevAngle.y;
@@ -853,6 +862,8 @@ daMenbo_c::StateFn data_ov090_021344e4[2] = {
     &daMenbo_c::func_ov090_02131608,
     &daMenbo_c::func_ov090_02131584,
 };
+
+MenboCylinderOffset data_ov090_0213412c = {0, 0x1e000, 0};
 
 /* Reconstructed source-style name: SM64DS proves daMenbo_c through RTTI,
  * allocation size, vtable identity, and the MENBO registry profile;

@@ -88,6 +88,13 @@ short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 
 extern MantaState data_ov090_0213454c;
 
+/* Cylinder offset (0, -0x3c000, 0x50000): a POD twin, since a Vector3
+ * global would carry its constructor into .bss. */
+struct MantaCylinderOffset {
+    fx32 x, y, z;
+};
+extern MantaCylinderOffset data_ov090_02134200;
+
 /* One written destructor. The compiler emits D1 then D0 from the
  * members above; D0 adds dEnemyBase_c's inline operator delete. */
 daManta_c::~daManta_c() {}
@@ -367,3 +374,5 @@ MantaState data_ov090_0213454c = {
     &daManta_c::EnterSwim,
     &daManta_c::ExecuteSwim,
 };
+
+MantaCylinderOffset data_ov090_02134200 = {0, -0x3c000, 0x50000};

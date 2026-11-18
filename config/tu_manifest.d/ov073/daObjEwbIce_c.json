@@ -30,7 +30,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x02123428",
+      "start": "0x02123420",
       "end": "0x021234e0"
     }
   ],
@@ -314,6 +314,20 @@
       "size": "0x10",
       "binding": "STB_GLOBAL",
       "evidence": "{enter, update} state record; the initializer copies the .data PMF literals at 0x02123114 and 0x02123124 into it"
+    },
+    {
+      "symbol": "data_ov073_02123420",
+      "address": "0x02123420",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-variant spawn counter; the code steps one byte, retail reserves a four-byte slot"
+    },
+    {
+      "symbol": "data_ov073_02123424",
+      "address": "0x02123424",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-variant spawn counter, paired with data_ov073_02123420"
     }
   ],
   "undefined_symbol_aliases": [
@@ -916,7 +930,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -949,14 +963,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x02123428",
+          "start": "0x02123420",
           "end": "0x021234e0",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 39
+          "LICENSED": 41
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -967,26 +981,26 @@
           {
             "section": ".init",
             "original": [
-              81
+              83
             ],
             "desired": [
-              81
+              83
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              79
+              81
             ],
             "desired": [
-              79
+              81
             ]
           },
           {
             "section": ".bss",
             "original": [
-              46,
-              47,
+              5,
+              6,
               48,
               49,
               50,
@@ -1000,25 +1014,29 @@
               58,
               59,
               60,
-              61
+              61,
+              62,
+              63
             ],
             "desired": [
-              47,
+              5,
+              6,
               49,
-              57,
               51,
+              59,
               53,
               55,
-              54,
+              57,
               56,
-              48,
+              58,
               50,
               52,
-              46,
+              54,
+              48,
+              63,
+              60,
               61,
-              58,
-              59,
-              60
+              62
             ]
           }
         ],
@@ -1027,8 +1045,8 @@
             {
               "section": ".bss",
               "original": [
-                46,
-                47,
+                5,
+                6,
                 48,
                 49,
                 50,
@@ -1042,29 +1060,33 @@
                 58,
                 59,
                 60,
-                61
+                61,
+                62,
+                63
               ],
               "desired": [
-                47,
+                5,
+                6,
                 49,
-                57,
                 51,
+                59,
                 53,
                 55,
-                54,
+                57,
                 56,
-                48,
+                58,
                 50,
                 52,
-                46,
+                54,
+                48,
+                63,
+                60,
                 61,
-                58,
-                59,
-                60
+                62
               ],
               "slots": [
-                46,
-                47,
+                5,
+                6,
                 48,
                 49,
                 50,
@@ -1078,11 +1100,13 @@
                 58,
                 59,
                 60,
-                61
+                61,
+                62,
+                63
               ]
             }
           ],
-          "symbolIndices": 16,
+          "symbolIndices": 18,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null

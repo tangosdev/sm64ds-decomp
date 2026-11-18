@@ -24,7 +24,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x02130278",
+      "start": "0x02130174",
       "end": "0x02130294"
     },
     {
@@ -39,7 +39,7 @@
     },
     {
       "name": ".data",
-      "start": "0x021308ac",
+      "start": "0x02130880",
       "end": "0x021309c4"
     },
     {
@@ -368,6 +368,27 @@
       "address_point_bias": "0x8",
       "size": "0x84",
       "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains 0x02130948"
+    },
+    {
+      "symbol": "data_ov084_02130880",
+      "address": "0x02130880",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "BMA material name string"
+    },
+    {
+      "symbol": "data_ov084_0213088c",
+      "address": "0x0213088c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "BMA file header: seventeen frame keys"
+    },
+    {
+      "symbol": "data_ov084_0213089c",
+      "address": "0x0213089c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "BMA file header: two frame keys"
     }
   ],
   "bss": [
@@ -675,7 +696,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -694,7 +715,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x02130278",
+          "start": "0x02130174",
           "end": "0x02130294",
           "differingBytes": 0,
           "firstDiff": null
@@ -715,7 +736,7 @@
         },
         {
           "section": ".data",
-          "start": "0x021308ac",
+          "start": "0x02130880",
           "end": "0x021309c4",
           "differingBytes": 0,
           "firstDiff": null
@@ -729,7 +750,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 68
+          "LICENSED": 83
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -740,63 +761,92 @@
           {
             "section": ".rodata",
             "original": [
-              108
+              109,
+              112,
+              113,
+              114,
+              116,
+              122,
+              123,
+              124,
+              125,
+              126,
+              127,
+              128,
+              129
             ],
             "desired": [
-              108
+              112,
+              113,
+              114,
+              116,
+              122,
+              123,
+              124,
+              125,
+              126,
+              127,
+              128,
+              129,
+              109
             ]
           },
           {
             "section": ".init",
             "original": [
-              132
+              152
             ],
             "desired": [
-              132
+              152
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              130
+              150
             ],
             "desired": [
-              130
+              150
             ]
           },
           {
             "section": ".data",
             "original": [
-              73,
-              75,
-              77,
-              97,
-              99,
-              101,
-              103,
-              105,
-              110,
-              112,
-              113
+              74,
+              76,
+              78,
+              98,
+              100,
+              102,
+              104,
+              106,
+              111,
+              118,
+              120,
+              130,
+              132,
+              133
             ],
             "desired": [
-              97,
-              99,
-              101,
-              105,
-              103,
-              112,
-              113,
-              73,
-              75,
-              77,
-              110
+              111,
+              118,
+              120,
+              104,
+              100,
+              98,
+              102,
+              106,
+              132,
+              133,
+              74,
+              76,
+              78,
+              130
             ]
           },
           {
             "section": ".bss",
             "original": [
-              79,
               80,
               81,
               82,
@@ -814,79 +864,136 @@
               94,
               95,
               96,
-              107
+              97,
+              108
             ],
             "desired": [
-              90,
-              94,
-              88,
-              92,
-              86,
-              84,
+              91,
+              95,
+              89,
+              93,
+              87,
+              85,
+              97,
+              81,
+              83,
               96,
               80,
               82,
-              95,
-              79,
-              81,
-              83,
-              85,
-              87,
-              89,
-              91,
-              93,
-              107
+              84,
+              86,
+              88,
+              90,
+              92,
+              94,
+              108
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".rodata",
               "original": [
-                73,
-                75,
-                77,
-                97,
-                99,
-                101,
-                103,
-                105,
-                110,
-                112,
-                113
-              ],
-              "desired": [
-                97,
-                99,
-                101,
-                105,
-                103,
+                109,
                 112,
                 113,
-                73,
-                75,
-                77,
-                110
+                114,
+                116,
+                122,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129
+              ],
+              "desired": [
+                112,
+                113,
+                114,
+                116,
+                122,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                109
               ],
               "slots": [
-                73,
-                75,
-                77,
-                97,
-                99,
-                101,
-                103,
-                105,
-                110,
+                109,
                 112,
-                113
+                113,
+                114,
+                116,
+                122,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                74,
+                76,
+                78,
+                98,
+                100,
+                102,
+                104,
+                106,
+                111,
+                118,
+                120,
+                130,
+                132,
+                133
+              ],
+              "desired": [
+                111,
+                118,
+                120,
+                104,
+                100,
+                98,
+                102,
+                106,
+                132,
+                133,
+                74,
+                76,
+                78,
+                130
+              ],
+              "slots": [
+                74,
+                76,
+                78,
+                98,
+                100,
+                102,
+                104,
+                106,
+                111,
+                118,
+                120,
+                130,
+                132,
+                133
               ]
             },
             {
               "section": ".bss",
               "original": [
-                79,
                 80,
                 81,
                 82,
@@ -904,31 +1011,31 @@
                 94,
                 95,
                 96,
-                107
+                97,
+                108
               ],
               "desired": [
-                90,
-                94,
-                88,
-                92,
-                86,
-                84,
+                91,
+                95,
+                89,
+                93,
+                87,
+                85,
+                97,
+                81,
+                83,
                 96,
                 80,
                 82,
-                95,
-                79,
-                81,
-                83,
-                85,
-                87,
-                89,
-                91,
-                93,
-                107
+                84,
+                86,
+                88,
+                90,
+                92,
+                94,
+                108
               ],
               "slots": [
-                79,
                 80,
                 81,
                 82,
@@ -946,13 +1053,14 @@
                 94,
                 95,
                 96,
-                107
+                97,
+                108
               ]
             }
           ],
-          "symbolIndices": 30,
+          "symbolIndices": 46,
           "sectionLinks": 0,
-          "sectionInfos": 10,
+          "sectionInfos": 15,
           "error": null
         },
         "errors": null
@@ -2155,6 +2263,66 @@
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x02130cf0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130190",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130880",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130880"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021301cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130880",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130880"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130890",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130178",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130178"
+    },
+    {
+      "section": ".data",
+      "source": "0x02130898",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_0213018c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x0213018c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021308a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130174",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130174"
+    },
+    {
+      "section": ".data",
+      "source": "0x021308a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_021301c8",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x021301c8"
     }
   ],
   "defined_symbol_renames": [
@@ -2236,6 +2404,90 @@
       "size": "0x1c",
       "binding": "STB_GLOBAL",
       "evidence": "Native const-pointer list of mutable SharedFilePtr resources. Every entry is a compiler relocation to the actual handle object; all list bytes and destinations match retail. Reconstructed semantic name, not an original-identifier claim."
+    },
+    {
+      "symbol": "data_ov084_02130174",
+      "address": "0x02130174",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "BMA colour-key stream, two entries"
+    },
+    {
+      "symbol": "data_ov084_02130178",
+      "address": "0x02130178",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "BMA colour-key stream, three channels"
+    },
+    {
+      "symbol": "data_ov084_0213018c",
+      "address": "0x0213018c",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "BMA material record: material 0xffff, name `kuribo_all`, thirteen colour keys"
+    },
+    {
+      "symbol": "data_ov084_021301c8",
+      "address": "0x021301c8",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "second BMA material record: same name, thirteen colour keys"
+    },
+    {
+      "symbol": "data_ov084_02130204",
+      "address": "0x02130204",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-Goomba-type material index"
+    },
+    {
+      "symbol": "data_ov084_02130208",
+      "address": "0x02130208",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-type dive hit power"
+    },
+    {
+      "symbol": "data_ov084_02130218",
+      "address": "0x02130218",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-type death sound id"
+    },
+    {
+      "symbol": "data_ov084_02130228",
+      "address": "0x02130228",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-type walk speed"
+    },
+    {
+      "symbol": "data_ov084_02130238",
+      "address": "0x02130238",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-type walk speed, negative direction"
+    },
+    {
+      "symbol": "data_ov084_02130248",
+      "address": "0x02130248",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-type chase speed"
+    },
+    {
+      "symbol": "data_ov084_02130258",
+      "address": "0x02130258",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-type jump speed"
+    },
+    {
+      "symbol": "data_ov084_02130268",
+      "address": "0x02130268",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-type launch speed"
     }
   ]
 }
