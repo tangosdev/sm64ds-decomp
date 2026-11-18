@@ -79,7 +79,10 @@ struct OverlayInfo {
  * The block move's register pressure is what gives _ISDbgLib_UnregistOverlayInfo and
  * _ISDbgLib_RegistOverlayInfo their 0x1c- and 0x44-byte frames. Copied as an
  * OverlayInfo, the same source compiles with 0x14 and 0x34, three
- * instructions short in each. */
+ * instructions short in each.
+ * Kept (#821 r71): OverlayInfo gives the short frames above. The ROM unit
+ * is isdoverlay.c, but this file includes C++ headers, so it cannot be built
+ * as C for C's block move. */
 struct OverlayInfoWords {
     u32 w[4];
 };
