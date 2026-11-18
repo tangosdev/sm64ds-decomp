@@ -212,6 +212,10 @@ int daYegg_c::func_ov002_020ec654() {
     return (((mParamHigh & 3) - 1) & 1) != 0;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- HandleWallHit, 0x020ec670, size 0xb8 */
 /* -------------------------------------------------------------------------- */
@@ -224,7 +228,6 @@ int daYegg_c::func_ov002_020ec654() {
 void daYegg_c::HandleWallHit(int arg) {
     struct dBgPi* cr;
     struct dActor_c* actor;
-    u16 type;
 
     cr = ((dBgCh_Actr *)arg)->GetSphereResult();
     if (cr->GetClsnID() == -1)
@@ -233,22 +236,12 @@ void daYegg_c::HandleWallHit(int arg) {
     actor = dActor_c::FindWithID(cr->GetClsnID());
     if (actor == 0) return;
 
-    type = actor->actorID;
-    {
-        int t = (int)(type == ACTOR_DOSUN);
-        if (t != 0) {
-            ((daDsn_c *)actor)->mTriggered = 1;
-            return;
-        }
+    if (IsActorID(actor, ACTOR_DOSUN)) {
+        ((daDsn_c *)actor)->mTriggered = 1;
+        return;
     }
-    {
-        int t = (int)(type == ACTOR_BATAN);
-        if (t == 0) {
-            t = (int)(type == ACTOR_BATANKING);
-            if (t == 0)
-                return;
-        }
-    }
+    if (!IsActorID(actor, ACTOR_BATAN) && !IsActorID(actor, ACTOR_BATANKING))
+        return;
     ((daBtn_c *)actor)->func_ov079_02123804(this);
 }
 
@@ -1133,6 +1126,10 @@ void daYegg_c::func_ov002_020edca4() {
     mBurstDone = 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- HandleCylinderHit, 0x020eddc4, size 0x190 */
 /* -------------------------------------------------------------------------- */
@@ -1166,8 +1163,7 @@ int daYegg_c::HandleCylinderHit() {
         actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor != 0 && actor != (struct dActor_c *)mPlayer) {
             {
-                int t = (int)(actor->actorID == ACTOR_PLAYER);
-                if (t != 0) {
+                if (IsPlayerActor(actor)) {
                     flags = mdCcAc_c.hitFlags;
                     if (flags & 0x8000) {
                         this->func_ov002_020ed63c(daYegg_STATE_DROP);
