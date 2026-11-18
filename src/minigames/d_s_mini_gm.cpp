@@ -615,8 +615,7 @@ void dScMiniGm_c::LoadGroupIcons() {
             } while (rowB < 9);
 
             {
-                int *slot = &mGfxSlot;
-                *slot = *slot + 1;
+                mGfxSlot++;
                 if (mGfxSlot >= 10)
                     mGfxSlot = resetVal;
             }
@@ -912,8 +911,7 @@ void dScMiniGm_c::UpdateGroupTabs() {
         return;
 
     if (mScrollDelay > 0) {
-        int *pa0 = &mScrollDelay;
-        *pa0 = *pa0 - 1;
+        mScrollDelay--;
         if (mScrollDelay == 0) {
             int f58 = mGroupBase;
             if (f58 != gMgGroupBase) {
