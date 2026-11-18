@@ -9,7 +9,6 @@
  *
  * Text 0x021111a0..0x0211260c. Key function ~daMoray_c (out-of-line; D1/D0
  * at the start of ov016, D2 deadstripped). defer_codegen off keeps ROM order.
- * common.h stays first: the pose reads Matrix4x3 words m[9], m[10], m[11].
  *
  * leftovers:
  * - currFrame >> 12 instead of the << 4 >> 16 shift shrinks 02111758

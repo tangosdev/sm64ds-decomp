@@ -8,11 +8,6 @@
  * far from home it turns back. When the timer expires it pauses (speed 0),
  * then starts swimming again.
  *
- * common.h is first on purpose. Matrix4x3 is either common.h's flat s32 m[12]
- * or math/Matrix.h's nested {r, t}, and the first include wins. The nested
- * form splits the model-matrix copy in UpdateModelMatrix. Nothing here
- * names .r or .t.
- *
  * Source order is the reverse of the ROM. mwccarm emits one .text section per
  * function in reverse source order. Do not reorder. The inline destructor in
  * daPukupuku_c.h emits D1 then D0 from `return new`; g_profile_PUKUPUKU stays

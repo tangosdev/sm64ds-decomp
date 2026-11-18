@@ -14,8 +14,6 @@
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *   mwcc emits one .text section per ordinary definition in reverse source
  *   order; the inline destructor group comes out retail D1 then D0, no D2.
- *   Mtx43, the flat type for the IDENTITY_MATRIX4X3 copy: the nested
- *   math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes it.
  *   fx32[3] locals instead of Vector3, which declares its own
  *   destructor.
  *   FX_MUL's 64-bit product (one smull) in func_ov070_02121d50 is the
@@ -24,9 +22,6 @@
  *   ROM does, not UpdateContinuous.
  */
 
-// leftovers:
-// - `return new` synthesizes a vague-linkage _ZN9Matrix4x3D1Ev over mMatrix
-//   (deadstripped; no ROM symbol).
 #include "daKpFr_c.h"
 #include "nitro/fx/fx.h"
 #include "SpawnInfo.h"
@@ -56,7 +51,6 @@ SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
-#include "private/mtx43.h"
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -72,7 +66,7 @@ int daKpFr_c::InitResources()
     mScale.y = 0x1000;
     mScale.z = 0x1000;
     func_ov070_02122044(0);
-    *(Mtx43 *)&mMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+    mMatrix = IDENTITY_MATRIX4X3;
     return 1;
 }
 
@@ -180,9 +174,9 @@ int daKpFr_c::func_ov070_02121eb0() {
 
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;
-  mMatrix.t.x = mPos.x >> 3;
-  mMatrix.t.y = mPos.y >> 3;
-  mMatrix.t.z = mPos.z >> 3;
+  mMatrix.m[9] = mPos.x >> 3;
+  mMatrix.m[10] = mPos.y >> 3;
+  mMatrix.m[11] = mPos.z >> 3;
   dBgCh_Gnd ground;
   ground.SetObjAndPos(mPos, this);
   if (ground.DetectClsn() != 0)

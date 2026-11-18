@@ -38,12 +38,6 @@
  *   headers.
  */
 
-/* MEASURED -- MUST STAY AHEAD OF daObjBk_Lift_c.h, which reaches math/Matrix.h
-   through dBgW_KcMbg.h. Matrix4x3 has two guarded spellings over the same 0x30
-   bytes and whichever a translation unit sees first stands; UpdateShadow
-   copies one flat, and with math/Matrix.h's structured spelling that copy
-   compiles to 0xb4 against the ROM's 0x9c. Same rule, and the same reason, as
-   the common.h include in include/dBgActor_c.h. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjBk_Lift_c_AssetId { ASSET_BK_LIFT01_BMD = 0x0599, ASSET_BK_LIFT01_KCL = 0x059a };
 

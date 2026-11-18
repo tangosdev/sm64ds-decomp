@@ -1,9 +1,6 @@
 //cpp
 /* Bob-omb (BOB_OMB 206 / BOMBHEI) -- ov102/daBmb_c.
  *
- * common.h FIRST. InitResources and the carry update copy twelve matrix words.
- * math/Matrix.h's nested Matrix4x3 scalarizes that copy (Vector3 is non-POD).
- *
  * Leftovers, remeasured in this file:
  * - Behavior skips 4 bytes past GetFloorResult's dBgPi to the SurfaceInfo
  *   and tests CLPS bit 0x20 (water).
@@ -193,7 +190,7 @@ int daBmb_c::InitResources()
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
-    *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
+    mMatrix = IDENTITY_MATRIX4X3;
     mTurnTimer = 0;
     mFuse = 0;
     mScale.x = FX32_ONE;
@@ -816,11 +813,11 @@ void daBmb_c::UpdateShadow() {
         }
     }
 
-    mMatrix[9] = mPos.x >> 3;
-    mMatrix[10] = v >> 3;
-    mMatrix[11] = mPos.z >> 3;
+    mMatrix.m[9] = mPos.x >> 3;
+    mMatrix.m[10] = v >> 3;
+    mMatrix.m[11] = mPos.z >> 3;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
+    DropShadowRadHeight(mShadowModel, mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
 }
 
 /* ==========================================================================

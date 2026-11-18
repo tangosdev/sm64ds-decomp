@@ -41,9 +41,7 @@
  *    resource handles and 19 state descriptors are now typed objects defined
  *    at the bottom of this file; the 38 pointer-to-member records they copy
  *    from keep their data_ov066 names.
- *  - The model and shadow matrices are copied through Mtx43: assigning
- *    Matrix4x3 grows .text by 0x54 bytes. Vec4 is an unused stack object
- *    with a destructor.
+ *  - Vec4 is an unused stack object with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
  */
 
@@ -93,7 +91,6 @@ enum Eyerok_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "math/MtxStack.h"
@@ -2194,9 +2191,9 @@ int daIwante_c::SetState(void *pv) {
  * mAngle.y, translation = position) and hand it to dBgW_KcMbg::Transform. */
 void daIwante_c::UpdateCollisionMatrix() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
-    mClsnMat2.t.x = mPos.x;
-    mClsnMat2.t.y = mPos.y;
-    mClsnMat2.t.z = mPos.z;
+    mClsnMat2.m[9] = mPos.x;
+    mClsnMat2.m[10] = mPos.y;
+    mClsnMat2.m[11] = mPos.z;
     mMeshCollider2.Transform(mClsnMat2, mAngle.y);
 }
 
@@ -2212,9 +2209,9 @@ void daIwante_c::UpdateModelMatrices() {
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     if (mPartIdx == PART_MAIN)
-        *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)&data_020a0e68;
+        mModel2.mat4x3 = data_020a0e68;
     else
-        *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+        mBlendAnmModel.mat4x3 = data_020a0e68;
     if (mPartIdx == PART_MAIN)
         return;
     if (mRestPos.y >= mPos.y)
@@ -2228,7 +2225,7 @@ void daIwante_c::UpdateModelMatrices() {
         Matrix4x3_FromTranslation(&data_020a0e68, (mPos.x + d) >> 3, (mPos.y - 0x8000) >> 3,
                                   (mPos.z + 0xa0000) >> 3);
     }
-    *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&data_020a0e68;
+    mShadowMtx = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x140000, 0x258000, 0xf);
 }
 

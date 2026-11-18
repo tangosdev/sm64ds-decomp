@@ -16,8 +16,6 @@
  * Source is reverse ROM order: the factory first, the destructor group
  * last. InitResources is the key function; the inline destructor in the
  * header emits retail D1 then D0 plus the complete class data group.
- * common.h comes first so Matrix4x3 is the flat 12-word spelling, and
- * assigning IDENTITY_MATRIX4X3 to mMat4x3 is one block copy.
  *
  * Notes:
  * - UpdateDefeatedState calls the interworking veneer

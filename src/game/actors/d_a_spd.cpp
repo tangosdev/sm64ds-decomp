@@ -17,8 +17,6 @@
  *    as pointers where the true types break the register convention.
  */
 
-/* common.h first: its flat Matrix4x3 must win the guard; InitResources'
- * whole-matrix store at +0x350 only reproduces with that spelling. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum Scuttlebug_AssetId {
     ASSET_SPIDER_BMD = 0x0425,
@@ -189,7 +187,7 @@ int daSpd_c::InitResources() {
     mScale.z = 0x1000;
     mEatingPlayer = 0;
     mTimer = 60;
-    *(Matrix4x3 *)mShadowMtx = IDENTITY_MATRIX4X3;
+    mShadowMtx = IDENTITY_MATRIX4X3;
     func_ov071_0211f524();
     return 1;
 }
@@ -561,12 +559,12 @@ void daSpd_c::func_ov071_0211f524() {
         mAnmModel.mat4x3 = data_020a0e68;
     }
 
-    mShadowMtx[9] = mPos.x >> 3;
-    mShadowMtx[10] = mPos.y >> 3;
-    mShadowMtx[11] = mPos.z >> 3;
+    mShadowMtx.m[9] = mPos.x >> 3;
+    mShadowMtx.m[10] = mPos.y >> 3;
+    mShadowMtx.m[11] = mPos.z >> 3;
 
     int dh = (mState == 8) ? 0x190000 : 0xc8000;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0xa0000, dh, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMtx, 0xa0000, dh, 0xf);
 }
 
 void daSpd_c::func_ov071_0211f498() {

@@ -20,14 +20,10 @@
  *   at +4 of that ring.
  * - Behavior keeps the mSpeed.z copy after the terminal clamp.
  *   Dropping it loses the reload of dActor_c's z speed.
- * - Matrix4x3 stays decl_common.h's flat s32[12].
- *   UpdateModelAndRingPos indexes .m. common.h must not replace it.
  */
 
 #pragma defer_codegen off
 
-/* decl_common.h first: Matrix4x3 must stay the flat s32[12] spelling.
- * UpdateModelAndRingPos indexes .m. */
 #include "decl_common.h"
 #include "daManta_c.h"
 #include "daWater_Ring_c.h"

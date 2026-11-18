@@ -36,7 +36,6 @@ enum dScMgSnowball_c_AssetId {
 
 #pragma defer_codegen off
 
-/* common.h is first so Matrix4x3 is the flat 12-word struct. */
 #include "common.h"
 #include "dScMgSnowball_c.h"
 #include "nitro/hw/registers.h"

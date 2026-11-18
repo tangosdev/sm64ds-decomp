@@ -20,9 +20,6 @@
  *   CodeWarrior emit each definition where it stands, and the destructor pair
  *   comes out D1 then D0. One ~daTgz_c() emits both; a hand-mangled D0 next
  *   to it is the mwccarm ICE (ELFgen.c:483).
- *   decl_common.h comes before any actor header, so Matrix4x3 stays the flat
- *   12-word struct. The nested spelling's Vector3 makes the copy in
- *   func_ov077_021251d0 call a destructor the cartridge does not.
  *
  * deslop leftovers:
  * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPos.x/.y/.z is -4
@@ -343,11 +340,10 @@ void daTgz_c::func_ov077_02125304() {
         this->func_ov077_021251d0();
     else
         this->func_ov077_02125290();
-    this->mShadowMatrix.a[9] = this->mPos.x >> 3;
-    this->mShadowMatrix.a[10] = this->mPos.y >> 3;
-    this->mShadowMatrix.a[11] = this->mPos.z >> 3;
-    this->DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMatrix, 0x50000,
-                              0x320000, 0xf);
+    this->mShadowMatrix.m[9] = this->mPos.x >> 3;
+    this->mShadowMatrix.m[10] = this->mPos.y >> 3;
+    this->mShadowMatrix.m[11] = this->mPos.z >> 3;
+    this->DropShadowRadHeight(this->mShadowModel, this->mShadowMatrix, 0x50000, 0x320000, 0xf);
 }
 
 /* State 5 update: tumble backward until the ground or the 45-frame timer. */
@@ -764,7 +760,7 @@ int daTgz_c::InitResources()
     mScale.z = 0x1000;
     mDespawnTimer = 44;
     this->func_ov077_02125e94(0);
-    mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
+    mShadowMatrix = IDENTITY_MATRIX4X3;
     this->func_ov077_02125304();
     return 1;
 }

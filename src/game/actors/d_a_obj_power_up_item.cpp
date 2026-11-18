@@ -13,9 +13,7 @@
  * function is the registry factory daObjPowerUpItem_c_classInit
  * (0x020b9e0c), `new daObjPowerUpItem_c()`.
  *
- * common.h comes before the class header so the flat Matrix4x3 stands. The
- * two matrix copies were matched against that spelling; Matrix4x3.t is not
- * used. The class header still precedes decl_common.h.
+ * The class header precedes decl_common.h.
  *
  * The flower runs a three-state machine (mState 0..2). The per-state
  * enter/update pairs live in the pointer-to-member table

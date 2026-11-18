@@ -41,9 +41,6 @@
  * - Sound ids, particle ids and timer lengths stay numeric.
  */
 
-/* common.h first, so its flat Matrix4x3 is the spelling this TU sees: with
-   math/Matrix.h's {Matrix3x3, Vector3} form, the matrix copies in
-   func_ov098_0213b584 are memberwise, 0x34 bytes longer. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daWbm_c_AssetId {
     ASSET_WATER_BOMB_BMD = 0x042c

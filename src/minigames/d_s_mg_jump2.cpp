@@ -36,7 +36,6 @@ enum d_s_mg_jump2_AssetId {
 #include "decl_common.h"
 #include "Particle__System.h"
 #include "math/Approach.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g3x.h"
@@ -193,9 +192,7 @@ s32 dScMgJump2_c::InitResources() {
 
     if (mModel.SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        /* Whole-matrix copies go through the flat Mtx43 so they stay one
-           block move; assigning Matrix4x3 grows .text by 0x40 bytes. */
-        *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+        mModel.mat4x3 = data_020a0e68;
         return 0;
     }
 
@@ -390,7 +387,7 @@ s32 dScMgJump2_c::Render() {
     Jump2Popup_DrawAll();
     Jump2_SetLights();
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0xffead000, -0xa0000);
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 
     scale = *(struct S3 *)&sJump2RenderScale;
 

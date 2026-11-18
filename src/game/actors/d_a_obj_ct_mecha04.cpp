@@ -13,8 +13,7 @@
 // What stays, and why (each measured; simplifying changes the emitted bytes):
 // dBgW::SetStoodOnCallback / dBgW::GetStoodOnCallback store/load dBgW+0x1c --
 // the ROM's own call, not an inlineable assignment.
-// common.h first: UpdateShadow writes mShadowMat.m[9..11] on the flat 12-word
-// spelling. InitResources keeps its two-store animationFiles[2] stack array,
+// InitResources keeps its two-store animationFiles[2] stack array,
 // the variant reloads, MoveActorOnBelt's &mPos.x-derived pointer chain and flat
 // sin/cos index, and the int-returning IsOffScreen / IsLargeBelt tests --
 // measured bool-widening / pointer-reuse shapes. `return new`

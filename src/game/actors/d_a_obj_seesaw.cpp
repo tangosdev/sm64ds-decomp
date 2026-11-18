@@ -9,10 +9,6 @@
  * back to level. mVariant, from actorID, selects the SeesawAssets row
  * (model, collision and CLPS).
  *
- * decl_common.h stays first. It pulls common.h's flat Matrix4x3
- * (s32 m[12]). daObjSeesaw_c.h includes dBgW_KcMbg.h, which includes
- * math/Matrix.h, and that nested spelling changes UpdateClsnPosAndRot.
- *
  * #pragma defer_codegen off emits the out-of-line destructor as D1
  * then D0. The cartridge has no D2. The g_profile_* rows stay in
  * their own files.

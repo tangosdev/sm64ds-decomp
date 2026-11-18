@@ -7,11 +7,6 @@
  * sibling water bubble (daObjAbuku_c), blinking through its last 45 ground
  * frames before it pops.
  *
- * common.h FIRST: UpdateModelAndShadow's twelve-word matrix copy wants the
- * flat s32 m[12] spelling, and math/Matrix.h's nested {Matrix3x3 r; Vector3
- * t;} scalarizes it (Vector3 is non-POD). Whichever Matrix4x3 is seen first
- * stands; the func shard already won this way.
- *
  * What stays, and why:
  * - dBgCh_Actr_UpdateContinuous_Veneer: arm9's own 0x020383fc tail; no method.
  * - Vec3_Asr: its definition takes a plain triple and no header declares it,

@@ -16,8 +16,6 @@
  * and the TU keeps all five structor variants.
  *
  * SetFile takes the scale as fx32 (a scalar; it mangles as i).
- * SetFile and Transform copy matrices through a flat 12-word
- * view (the dExtSimpleModel_c::Virtual10 lesson).
  */
 
 

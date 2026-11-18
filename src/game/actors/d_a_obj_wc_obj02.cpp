@@ -5,9 +5,6 @@
  * maps profile 96 to ARROW_LIFT. Not daObjWc_Mizu_c (WDW_WATER) and not
  * daObjWc_Obj03_c (WATER_DIAMOND).
  *
- * common.h FIRST: dBgActor_c.h / dExtSimpleModel_c.h otherwise win with math/Matrix.h's
- * nested Matrix4x3, and InitResources' SetFile matrix argument scalarizes.
- *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. Highest-address first.
  * The destructor is inline in include/daObjWc_Obj02_c.h (D1 then D0, no D2).
  *
@@ -18,7 +15,6 @@
  * - data_ov029_02114250 / 02114248 are this TU's BMD/KCL file handles;
  *   data_ov029_0211302c the CLPS block stays unowned overlay data.
  * - S14: g_profile_WC_OBJ02 stays outside the licensed .text.
- * - common.h first (InitResources SetFile matrix argument).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

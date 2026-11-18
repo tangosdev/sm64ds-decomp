@@ -10,8 +10,6 @@
 // leftovers:
 // - SnowmanBreathParticle is a coined name. ov027 has no type string for
 //   the member struct.
-// - mInvModelMat stays flat words. A Matrix4x3 member reorders the
-//   destructor group to D2, D0, D1.
 // - IsPlayerInRange tests the box as one positive `&&` condition. The
 //   negated `||` form makes the function 4 bytes larger.
 
@@ -27,7 +25,6 @@
 #include "daPly_c.h"
 #include "SaveData.h"
 #include "SpawnInfo.h"
-#include "private/mtx43.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
@@ -44,8 +41,6 @@ extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 }
 
-/* Whole-matrix copies (InitResources, IsPlayerInRange) cast through Mtx43;
- * mInvModelMat is flat words. */
 
 /* Actor ID 0xbf is PLAYER. int-returning, so the ROM materializes the 0/1
  * before testing it; a direct `!=` does not. */
@@ -137,7 +132,9 @@ void SnowmanBreathParticle::UpdatePosition()
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, 0x50000);
     Vector3 offset;
-    offset = data_020a0e68.t;
+    offset.x = data_020a0e68.m[9];
+    offset.y = data_020a0e68.m[10];
+    offset.z = data_020a0e68.m[11];
     VEC_Add(&mPos, &offset, &mPos);
 }
 
@@ -195,7 +192,7 @@ int daSnmBth_c::IsPlayerInRange()
 
     Vector3 playerPos;
     Vec3_Asr(&playerPos, &player->mPos, 3);
-    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mInvModelMat;
+    data_020a0e68 = mInvModelMat;
 
     Vector3 localPos;
     MTX_MultVec43(&playerPos, &data_020a0e68, &localPos);
@@ -323,7 +320,7 @@ int daSnmBth_c::InitResources()
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     MTX_Inverse43(&data_020a0e68, &data_020a0e68);
-    *(Mtx43 *)&mInvModelMat = *(Mtx43 *)&data_020a0e68;
+    mInvModelMat = data_020a0e68;
     return 1;
 }
 

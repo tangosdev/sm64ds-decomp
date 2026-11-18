@@ -6,9 +6,7 @@
  * not daObjWc_Obj02_c (ARROW_LIFT), not daObjWc_Obj03_c (WATER_DIAMOND), not
  * daObjWc_Obj05_c (CAGE_LIFT).
  *
- * common.h FIRST (via dBgActor_c.h): dExtSimpleModel_c.h would otherwise win with
- * math/Matrix.h's nested Matrix4x3, and InitResources' SetFile matrix
- * argument scalarizes. The two helpers write translation as m[9..11].
+ * The two helpers write the translation as m[9..11].
  *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. Highest-address first.
  * The destructor is inline in include/daObjWc_Obj04_c.h (D1 then D0, no D2).
@@ -20,7 +18,6 @@
  * - data_ov029_0211432c / 02114324 are this TU's BMD/KCL file handles;
  *   data_ov029_0211304c the CLPS block stays unowned overlay data.
  * - S14: g_profile_WC_OBJ04 stays outside the licensed .text.
- * - common.h first via dBgActor_c.h (SetFile matrix argument).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

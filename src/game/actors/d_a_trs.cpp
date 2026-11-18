@@ -198,7 +198,6 @@ enum TrsFlag {
     TRS_FLAG_CAM_HELD              = 0x400
 };
 
-inline int inline_fn(int arg0) { return data_020a0e68.m[arg0]; }
 daTrs_c::~daTrs_c()
 {
 }
@@ -224,8 +223,8 @@ void daTrs_c::func_ov063_021160d4() {
     Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x, this->mPos.y, this->mPos.z);
     MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     this->mClsnOff.x = data_020a0e68.m[9];
-    this->mClsnOff.y = inline_fn(10);
-    this->mClsnOff.z = inline_fn(11);
+    this->mClsnOff.y = data_020a0e68.m[10];
+    this->mClsnOff.z = data_020a0e68.m[11];
     VEC_Subtract(&this->mClsnOff, &this->mPos, &this->mClsnOff);
     VEC_Subtract(&this->mClsnOff, &this->mClsnBase, &this->mClsnOff);
     Vec3_MulScalarInPlace(&this->mClsnOff, 0x6800);
