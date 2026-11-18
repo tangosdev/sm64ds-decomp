@@ -2,16 +2,6 @@
 #include "Ov007Pad.h"
 #include "nitro/pad/pad.h"
 
-/* The pad's inputLock word. Pad_Update clears bit 0 by reading the word
- * again through this accessor: the cartridge reloads it through [r0,#0x64]
- * (ldreq/biceq/streq) after the outer test has already read it.
- * Measured (#821 r20): `&= ~1` and its spellings are a word longer, an
- * (int) cast or int local on a plain read folds the reload into the outer
- * test, and a u32 field or 1-bit bitfield is 0x1ec/0x1f0, not 0x1e8. */
-static inline int Pad_GetInputLock(const Ov007Pad *pad) {
-    return pad->inputLock;
-}
-
 /* Reads the keys (KEYINPUT and the ARM7's X/Y, or *src when given) into the
  * pad, honours inputLock, sets the three axes and steps each button's held
  * and released frame counts. */
