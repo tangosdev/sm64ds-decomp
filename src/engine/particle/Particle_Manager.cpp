@@ -79,6 +79,8 @@ struct SystemState {
 };
 
 static inline SystemState &StateOf(Particle::System *system) {
+    /* Kept (#821 r76): not measured; System::callbackFlags takes u32 mask writes in four files, and
+       SystemState is not a type the SDK or pret names. */
     return *(SystemState *)&system->callbackFlags;
 }
 
