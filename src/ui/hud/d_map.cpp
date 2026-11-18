@@ -362,6 +362,10 @@ void dMap_c::OnPendingDestroy()
     this;
 }
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 int dMap_c::Render()
 {
     u8 flag20c = data_0209f20c;
@@ -375,8 +379,7 @@ int dMap_c::Render()
         !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
         (flag20c != 0 && gLevelClearStep < 3)) {
         daPly_c *player = gPlayers[idx];
-        int vs = (gGameMode == 1);
-        if (vs != 0) {
+        if (IsVsMode()) {
             OAM::RenderSub(OAM::MM_VS_PLAYER_ICONS[player->param1 + idx * 4],
                            this->mPlayerIconX[idx], this->mPlayerIconY[idx], -1, 2);
             {
@@ -490,8 +493,7 @@ int dMap_c::Render()
         {
             u8 *p1 = gMapCapIconShown;
             u8 *p2 = gMapCapIconCharacters;
-            int vs2 = (gGameMode == 1);
-            OamAttr **tbl = (vs2 != 0) ? OAM::MM_VS_CAP_ICONS : OAM::MM_CAP_ICONS;
+            OamAttr **tbl = IsVsMode() ? OAM::MM_VS_CAP_ICONS : OAM::MM_CAP_ICONS;
             for (i = 0; i < 9; i++, p1++, p2++) {
                 if (*p1 != 0) {
                     if (data_ov002_02111148 == this->mCapMapIDs[i]) {
@@ -583,8 +585,7 @@ s32 dMap_c::Behavior()
                 G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
                                       GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
         } else {
-            s32 b = (gGameMode == 1);
-            if (b != 0 || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+            if (IsVsMode() || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 gSubScreenLayers &= ~4;
                 if (!(u8)flagsOr) {
                     GXS_SetVisiblePlane(gSubScreenLayers);
@@ -883,8 +884,7 @@ int dMap_c::InitResources()
     }
 
     {
-        int b = (gGameMode == 1);
-        if (!b) {
+        if (!IsVsMode()) {
             UpdateLevelSpecific();
         }
     }
