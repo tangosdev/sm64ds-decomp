@@ -655,6 +655,8 @@ int daMip_c::StateFleeMain() {
     if (pl != 0) {
         /* A POD copy-init is the ROM's ldm/stm; any Vector3 copy is memberwise. */
         /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
+        /* Kept (#821 r77): `Vector3 v = pl->mPos;` grows StateFleeMain
+           0x2a8 -> 0x2b0, so the POD snapshot and its cast into Vec3_Dist stay. */
         VecFx32 v = *(VecFx32 *)&pl->mPos;
         if (Vec3_Dist(&mPos, (const Vector3 *)&v) > 0x4b0000) {
             SetState(&data_ov085_0213069c);
@@ -930,7 +932,11 @@ void daMip_c::UpdateMatrixAndShadow()
 }
 
 /* While carried, the matrix comes from UpdateCarry plus one of four hold
-   offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot. */
+   offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot.
+   Kept (#821 r77): the four offsets are the coined MipVec3 globals (see the
+   note above struct MipVec3), indexed as one array from the first, so the
+   slot reaches UpdateCarry's `const Vector3 &` through a cast until plain
+   Vector3 globals reproduce __sinit. */
 void daMip_c::UpdateCarriedMatrix()
 {
     extern MipVec3 data_ov085_021306ec;
