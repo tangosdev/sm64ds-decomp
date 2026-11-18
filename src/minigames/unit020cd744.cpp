@@ -78,12 +78,6 @@ struct TrampolineContactView : TrampolineObjectCallbacks {
     u16 contactState;   /* +0x18 0 none, 1 hit, 2 hard hit, 3 line end */
 };
 
-/* A 2D point or projection: two fx32 words. Deliberately POD, not Vector2,
-   whose declared destructor would make every local here register a cleanup. */
-struct V2 {
-    int x, y;
-};
-
 /* A line patch vertex: the same three-fx32 spelling as TrmpLine::Vtx. */
 typedef TrmpLine::Vtx Vec3;
 
@@ -609,9 +603,9 @@ void TrmpItem::UpdateWithJumper(TrampolineObjectCallbacks *jumperObject, int arg
 
 // The caller supplies a third argument; this implementation does not read it.
 int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
-    struct V2 currentProjection, previousProjection, lineStart, lineEnd;
-    struct V2 testDirection, firstOffset, secondOffset;
-    struct V2 movementDirection, toEnd, toStart;
+    Vector2 currentProjection, previousProjection, lineStart, lineEnd;
+    Vector2 testDirection, firstOffset, secondOffset;
+    Vector2 movementDirection, toEnd, toStart;
     int currentSide, previousSide, endSide, startSide;
     int result;
 
@@ -668,8 +662,8 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
     return result;
 }
 
-void TrmpItem::ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProjection,
-                             V2 *previousProjection) {
+void TrmpItem::ProjectOnLine(TrampolineObjectCallbacks *jumper, Vector2 *currentProjection,
+                             Vector2 *previousProjection) {
     struct Vector3 currentPosition, previousPosition, currentRelative, previousRelative;
     struct Vector3 *position;
     int across;
@@ -1202,9 +1196,9 @@ int TrmpLine::PushJumper() {
     do {
         int currentAcross, previousAlong, previousAcross;
         Vector3 currentPos, previousPos, movementDelta;
-        struct V2 previousProjection, currentProjection;
-        struct V2 lineStart, lineEnd;
-        struct V2 edgeDirection, firstOffset, secondOffset;
+        Vector2 previousProjection, currentProjection;
+        Vector2 lineStart, lineEnd;
+        Vector2 edgeDirection, firstOffset, secondOffset;
         int crossedLine, previousSide, currentSide;
         Vector3 fromStart, fromEnd, halfLineForStart, halfLineForEnd;
         Vector3 *currentPositionPtr;
@@ -1258,7 +1252,7 @@ int TrmpLine::PushJumper() {
         currentSide = CLAMP(currentSide, -1, 1);
 
         if (previousSide * currentSide <= 0 && previousSide > currentSide) {
-            struct V2 edge, e1, e2;
+            Vector2 edge, e1, e2;
             int startSide, endSide;
             Vec2_Sub((int *)&edge, (int *)&previousProjection, (int *)&currentProjection);
             edgeDirection = edge;
