@@ -93,6 +93,10 @@ int daObjPathLift_c::InitResources() {
     return 1;
 }
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 int daObjPathLift_c::Behavior() {
     UpdatePathModels();
     BaseBehavior();
@@ -106,8 +110,7 @@ int daObjPathLift_c::Behavior() {
     UpdateShadow();
     mMeshCollider.SetClipRadius(0x150000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    int b = (gGameMode == 1);
-    if (b != 0) {
+    if (IsVsMode()) {
         if (mMeshCollider.IsEnabled() == 0) {
             mMeshCollider.Enable(this);
         }
