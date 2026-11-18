@@ -198,6 +198,20 @@ da1up_c::~da1up_c()
 {
 }
 
+extern unsigned char gGameMode;
+
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Trail effect: asks Particle::System::New for one effect at the mushroom's
    position, 30 units (0x1e000) above it. The effect id is 0x108 for the Mega
@@ -206,16 +220,13 @@ da1up_c::~da1up_c()
    the actor is off screen (mFlags bit 3) it only runs when CURRENT_GAMEMODE
    (gGameMode) is 1. */
 void da1up_c::UpdateTrailEffect() {
-    extern unsigned char gGameMode;
-
-    int t1 = (actorID == ACTOR_SCALEUP_KINOKO);
     unsigned int effectID = 0;
-    if (t1 != false) effectID = PTCL_SCALEUP_KINOKO_TRAIL;
+    if (IsActorID(this, ACTOR_SCALEUP_KINOKO))
+        effectID = PTCL_SCALEUP_KINOKO_TRAIL;
 
-    int t2 = ((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
-    if (t2 != false) {
-        int t3 = (gGameMode == 1);
-        if (t3 == false) return;
+    if (IsOffScreen(this)) {
+        if (!IsVsMode())
+            return;
     }
 
     Vector3 pos = mPos;
@@ -992,9 +1003,10 @@ int da1up_c::CleanupResources()
 
   int s = mMushroomType;
   if (s != 0xb && s != 0xc){
-    int b = (actorID == ACTOR_ONEUPKINOKO);
-    if (b != 0) data_ov002_0210d9d8.Release();
-    else data_ov002_0210da30.Release();
+      if (IsActorID(this, ACTOR_ONEUPKINOKO))
+          data_ov002_0210d9d8.Release();
+      else
+          data_ov002_0210da30.Release();
   }
   if ((unsigned int)(mMushroomType - 0xb) <= 1)
       Particle::System::NewSimple(PTCL_TYPE_11_12_CLEANUP, mPos.x, mPos.y + 0x28000, mPos.z);
