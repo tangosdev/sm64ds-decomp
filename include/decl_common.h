@@ -31,7 +31,7 @@ struct FileSaveData;
 extern "C" {
 #endif
 
-extern s32 data_ov002_0210af00[3];
+extern struct VecFx32 data_ov002_0210af00;
 extern Vector3 sMascotWalkerOffset;
 extern Vector3 data_020755d4;
 extern Vector3 data_ov009_02113d8c[];
