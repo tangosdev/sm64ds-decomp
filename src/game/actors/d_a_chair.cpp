@@ -44,6 +44,9 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 
 /* Only ApproachStateValue needs this: without it the two (short)accel casts
  * share one sign-extend and both smulbb become muls (21 of 44 words differ). */
+/* Kept (#821 r79): uncast -accel and mult with +=, a short step local, ?: for the sign flip and
+   a scoped short copy of vel[0] are 0xac or 0xb0; none keeps both smulbb and the second vel
+   load. */
 #pragma opt_common_subs off
 
 /* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
