@@ -222,9 +222,9 @@ void daTrs_c::func_ov063_021160d4() {
     this->mClsnOff.z = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x, this->mPos.y, this->mPos.z);
     MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
-    this->mClsnOff.x = data_020a0e68.m[9];
-    this->mClsnOff.y = data_020a0e68.m[10];
-    this->mClsnOff.z = data_020a0e68.m[11];
+    this->mClsnOff.x = data_020a0e68.t.x;
+    this->mClsnOff.y = data_020a0e68.t.y;
+    this->mClsnOff.z = data_020a0e68.t.z;
     VEC_Subtract(&this->mClsnOff, &this->mPos, &this->mClsnOff);
     VEC_Subtract(&this->mClsnOff, &this->mClsnBase, &this->mClsnOff);
     Vec3_MulScalarInPlace(&this->mClsnOff, 0x6800);
@@ -375,9 +375,9 @@ void daTrs_c::func_ov063_021166ac() {
             *ap += 0xc00;
         }
         Matrix4x3_FromRotationY(&this->mCarriedModel.mat4x3, this->mCarriedAngleY);
-        this->mCarriedModel.mat4x3.m[9] = this->mCarriedPos.x >> 3;
-        this->mCarriedModel.mat4x3.m[10] = this->mCarriedPos.y >> 3;
-        this->mCarriedModel.mat4x3.m[11] = this->mCarriedPos.z >> 3;
+        this->mCarriedModel.mat4x3.t.x = this->mCarriedPos.x >> 3;
+        this->mCarriedModel.mat4x3.t.y = this->mCarriedPos.y >> 3;
+        this->mCarriedModel.mat4x3.t.z = this->mCarriedPos.z >> 3;
     }
 
     if (mState == 3 || mState == 3 || mState == 3 || mState == 3) {
@@ -3249,9 +3249,9 @@ int daTrs_c::InitResources()
     mClsnBase.z = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
-    mClsnBase.x = data_020a0e68.m[9];
-    mClsnBase.y = data_020a0e68.m[10];
-    mClsnBase.z = data_020a0e68.m[11];
+    mClsnBase.x = data_020a0e68.t.x;
+    mClsnBase.y = data_020a0e68.t.y;
+    mClsnBase.z = data_020a0e68.t.z;
     VEC_Subtract(&mClsnBase, &mPos, &mClsnBase);
     mTalkStep = 0;
     mTargetAngleY = mPrevAngle.y;

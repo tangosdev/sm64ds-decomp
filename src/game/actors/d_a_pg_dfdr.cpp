@@ -301,16 +301,16 @@ int daPgDfdr_c::StateWalk() {
 }
 
 /* dExtSimpleModel_c matrix from mAngle.y plus position >> 3; collider copy keeps the
-   full position. Flat Matrix4x3 (common.h before dExtSimpleModel_c.h) is the 12-word copy. */
+   full position. */
 void daPgDfdr_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     mClsnMat = mAnmModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 /* -------------------------------------------------------------------------- */

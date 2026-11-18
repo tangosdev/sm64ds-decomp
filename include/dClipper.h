@@ -7,7 +7,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 
-struct Matrix4x3;
+union Matrix4x3;
 
 struct dClipper {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration.

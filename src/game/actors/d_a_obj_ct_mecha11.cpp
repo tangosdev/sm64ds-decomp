@@ -83,9 +83,9 @@ void daObjCtMecha11_c::UpdateShadow() {
     mClipOffsetY = -half;
     mClipRadius = (int)(clipD + ((unsigned)clipD >> 31)) >> 4;
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = mFloorPosY >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = mFloorPosY >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     int s = FX_CosIdx((u16)mAngle.x >> 4);
     int sa = s < 0 ? -s : s;
     int scaled = FX_MUL(sa, 0x26c000);
@@ -94,9 +94,9 @@ void daObjCtMecha11_c::UpdateShadow() {
 
 void daObjCtMecha11_c::UpdateModel() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daObjCtMecha11_c::CleanupResources() {

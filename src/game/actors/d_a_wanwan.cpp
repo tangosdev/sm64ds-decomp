@@ -220,7 +220,7 @@ int daWanwan_c::CleanupResources() {
 
 /* Place the head and each link, then drop a cylinder shadow under them. */
 void daWanwan_c::UpdateModelTransform() {
-    /* Translation is m[9..11] of each matrix: position >> 3.
+    /* Each matrix's translation is position >> 3.
        m and sm walk mLinkModels and mLinkShadows. e and o are the actor
        address advanced by one Vector3 and one dExtSimpleModel_c per link, so
        e->mLinkPos[0] is link i's position and o->mLinkModels[0] is the model
@@ -234,9 +234,9 @@ void daWanwan_c::UpdateModelTransform() {
     daWanwan_c *o;
     dExtShadowModel_c *sm;
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     t = mPos.y - mSpawnPos.y;
     if (t <= 0x1000)
         t = 0x1000;
@@ -250,9 +250,9 @@ void daWanwan_c::UpdateModelTransform() {
     o = this;
     for (; i < 7; i++) {
         m->mat4x3 = tmp;
-        o->mLinkModels[0].mat4x3.m[9] = e->mLinkPos[0].x >> 3;
-        o->mLinkModels[0].mat4x3.m[10] = e->mLinkPos[0].y >> 3;
-        o->mLinkModels[0].mat4x3.m[11] = e->mLinkPos[0].z >> 3;
+        o->mLinkModels[0].mat4x3.t.x = e->mLinkPos[0].x >> 3;
+        o->mLinkModels[0].mat4x3.t.y = e->mLinkPos[0].y >> 3;
+        o->mLinkModels[0].mat4x3.t.z = e->mLinkPos[0].z >> 3;
         t = e->mLinkPos[0].y - mSpawnPos.y;
         if (t <= 0x1000)
             t = 0x1000;

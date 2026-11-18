@@ -4012,139 +4012,139 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@2455",
-      "to": "pmf_dScMgTeresa_c_Boo_StateFound",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFound, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x27c loads 0x0213f8d4 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFound at 0x0211f040)."
-    },
-    {
-      "from": "@2447",
-      "to": "pmf_dScMgTeresa_c_Boo_StateFly",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x264 loads 0x0213f8dc in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFly at 0x0211f554)."
-    },
-    {
-      "from": "@2453",
-      "to": "pmf_dScMgTeresa_c_Boo_StateHiddenTimed",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateHiddenTimed, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x278 loads 0x0213f8e4 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateHiddenTimed at 0x0211f0d0)."
-    },
-    {
-      "from": "@2451",
-      "to": "pmf_dScMgTeresa_c_Boo_StateHidden",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateHidden, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x270 loads 0x0213f8ec in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateHidden at 0x0211f1a4)."
-    },
-    {
-      "from": "@2481",
-      "to": "pmf_dScMgTeresa_c_BigBoo_StateExit",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateExit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b4 loads 0x0213f8f4 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateExit at 0x0211cef4)."
-    },
-    {
-      "from": "@2477",
-      "to": "pmf_dScMgTeresa_c_BigBoo_StateFlyRight",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateFlyRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2ac loads 0x0213f8fc in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateFlyRight at 0x0211d0f8)."
-    },
-    {
-      "from": "@2435",
-      "to": "pmf_dScMgTeresa_c_Scene_StateInit",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateInit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x248 loads 0x0213f904 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateInit at 0x021200cc)."
-    },
-    {
-      "from": "@2471",
-      "to": "pmf_dScMgTeresa_c_BigBoo_StateDropIn",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateDropIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x29c loads 0x0213f90c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateDropIn at 0x0211d4e8)."
-    },
-    {
-      "from": "@2443",
-      "to": "pmf_dScMgTeresa_c_Scene_StateResult",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x25c loads 0x0213f914 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateResult at 0x0211fd44)."
-    },
-    {
-      "from": "@2475",
-      "to": "pmf_dScMgTeresa_c_BigBoo_StateFlyLeft",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateFlyLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2a8 loads 0x0213f91c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateFlyLeft at 0x0211d224)."
-    },
-    {
-      "from": "@2487",
-      "to": "pmf_dScMgTeresa_c_BigBoo_StateResult",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2c0 loads 0x0213f924 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateResult at 0x0211cd24)."
-    },
-    {
-      "from": "@2437",
-      "to": "pmf_dScMgTeresa_c_Scene_StateReveal",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x24c loads 0x0213f92c in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateReveal at 0x021200a8)."
-    },
-    {
-      "from": "@2445",
-      "to": "pmf_dScMgTeresa_c_Boo_StateAppear",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateAppear, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x260 loads 0x0213f934 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateAppear at 0x0211f5d4)."
-    },
-    {
       "from": "@2457",
-      "to": "pmf_dScMgTeresa_c_Boo_StateFadeIn",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x280 loads 0x0213f93c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeIn at 0x0211ee34)."
-    },
-    {
-      "from": "@2479",
-      "to": "pmf_dScMgTeresa_c_BigBoo_StateOffscreen",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateOffscreen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b0 loads 0x0213f944 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateOffscreen at 0x0211d018)."
+      "to": "pmf_dScMgTeresa_c_Boo_StateFound",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFound, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x27c loads 0x0213f8d4 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFound at 0x0211f040). Re-keyed from @2455 to @2457 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2449",
-      "to": "pmf_dScMgTeresa_c_Boo_StateFadeOut",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x26c loads 0x0213f94c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeOut at 0x0211f224)."
+      "to": "pmf_dScMgTeresa_c_Boo_StateFly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x264 loads 0x0213f8dc in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFly at 0x0211f554). Re-keyed from @2447 to @2449 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2439",
-      "to": "pmf_dScMgTeresa_c_Scene_StatePlay",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x254 loads 0x0213f954 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StatePlay at 0x02120008)."
+      "from": "@2455",
+      "to": "pmf_dScMgTeresa_c_Boo_StateHiddenTimed",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateHiddenTimed, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x278 loads 0x0213f8e4 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateHiddenTimed at 0x0211f0d0). Re-keyed from @2453 to @2455 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2473",
-      "to": "pmf_dScMgTeresa_c_BigBoo_StateHover",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateHover, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2a4 loads 0x0213f95c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateHover at 0x0211d368)."
-    },
-    {
-      "from": "@2441",
-      "to": "pmf_dScMgTeresa_c_Scene_StateRoundEnd",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateRoundEnd, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x258 loads 0x0213f964 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateRoundEnd at 0x0211fe78)."
-    },
-    {
-      "from": "@2459",
-      "to": "pmf_dScMgTeresa_c_Boo_StateFadeAway",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeAway, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x284 loads 0x0213f96c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeAway at 0x0211ebdc)."
-    },
-    {
-      "from": "@2469",
-      "to": "pmf_dScMgTeresa_c_Reveal_StateFinish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateFinish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x298 loads 0x0213f97c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateFinish at 0x0211d86c)."
-    },
-    {
-      "from": "@2467",
-      "to": "pmf_dScMgTeresa_c_Reveal_StateDipAndRise",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateDipAndRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x290 loads 0x0213f984 in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateDipAndRise at 0x0211d924)."
-    },
-    {
-      "from": "@2465",
-      "to": "pmf_dScMgTeresa_c_Reveal_StateAnimate",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateAnimate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x294 loads 0x0213f98c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateAnimate at 0x0211dad0)."
-    },
-    {
-      "from": "@2463",
-      "to": "pmf_dScMgTeresa_c_Reveal_StateSlideIn",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateSlideIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x288 loads 0x0213f994 in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateSlideIn at 0x0211db7c)."
-    },
-    {
-      "from": "@2461",
-      "to": "pmf_dScMgTeresa_c_Reveal_StateStart",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x274 loads 0x0213f99c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateStart at 0x0211dce0)."
-    },
-    {
-      "from": "@2485",
-      "to": "pmf_dScMgTeresa_c_BigBoo_StateGone",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateGone, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2bc loads 0x0213f9a4 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateGone at 0x0211ce90)."
+      "from": "@2453",
+      "to": "pmf_dScMgTeresa_c_Boo_StateHidden",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateHidden, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x270 loads 0x0213f8ec in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateHidden at 0x0211f1a4). Re-keyed from @2451 to @2453 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2483",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateExit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateExit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b4 loads 0x0213f8f4 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateExit at 0x0211cef4). Re-keyed from @2481 to @2483 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2479",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateFlyRight",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateFlyRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2ac loads 0x0213f8fc in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateFlyRight at 0x0211d0f8). Re-keyed from @2477 to @2479 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2437",
+      "to": "pmf_dScMgTeresa_c_Scene_StateInit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateInit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x248 loads 0x0213f904 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateInit at 0x021200cc). Re-keyed from @2435 to @2437 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2473",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateDropIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateDropIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x29c loads 0x0213f90c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateDropIn at 0x0211d4e8). Re-keyed from @2471 to @2473 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2445",
+      "to": "pmf_dScMgTeresa_c_Scene_StateResult",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x25c loads 0x0213f914 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateResult at 0x0211fd44). Re-keyed from @2443 to @2445 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2477",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateFlyLeft",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateFlyLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2a8 loads 0x0213f91c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateFlyLeft at 0x0211d224). Re-keyed from @2475 to @2477 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2489",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateResult",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2c0 loads 0x0213f924 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateResult at 0x0211cd24). Re-keyed from @2487 to @2489 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2439",
+      "to": "pmf_dScMgTeresa_c_Scene_StateReveal",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x24c loads 0x0213f92c in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateReveal at 0x021200a8). Re-keyed from @2437 to @2439 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2447",
+      "to": "pmf_dScMgTeresa_c_Boo_StateAppear",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateAppear, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x260 loads 0x0213f934 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateAppear at 0x0211f5d4). Re-keyed from @2445 to @2447 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2459",
+      "to": "pmf_dScMgTeresa_c_Boo_StateFadeIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x280 loads 0x0213f93c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeIn at 0x0211ee34). Re-keyed from @2457 to @2459 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2481",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateOffscreen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateOffscreen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b0 loads 0x0213f944 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateOffscreen at 0x0211d018). Re-keyed from @2479 to @2481 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2451",
+      "to": "pmf_dScMgTeresa_c_Boo_StateFadeOut",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x26c loads 0x0213f94c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeOut at 0x0211f224). Re-keyed from @2449 to @2451 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2441",
+      "to": "pmf_dScMgTeresa_c_Scene_StatePlay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x254 loads 0x0213f954 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StatePlay at 0x02120008). Re-keyed from @2439 to @2441 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2475",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateHover",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateHover, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2a4 loads 0x0213f95c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateHover at 0x0211d368). Re-keyed from @2473 to @2475 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2443",
+      "to": "pmf_dScMgTeresa_c_Scene_StateRoundEnd",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateRoundEnd, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x258 loads 0x0213f964 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateRoundEnd at 0x0211fe78). Re-keyed from @2441 to @2443 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2461",
+      "to": "pmf_dScMgTeresa_c_Boo_StateFadeAway",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeAway, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x284 loads 0x0213f96c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeAway at 0x0211ebdc). Re-keyed from @2459 to @2461 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2471",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateFinish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateFinish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x298 loads 0x0213f97c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateFinish at 0x0211d86c). Re-keyed from @2469 to @2471 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2469",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateDipAndRise",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateDipAndRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x290 loads 0x0213f984 in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateDipAndRise at 0x0211d924). Re-keyed from @2467 to @2469 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2467",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateAnimate",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateAnimate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x294 loads 0x0213f98c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateAnimate at 0x0211dad0). Re-keyed from @2465 to @2467 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2465",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateSlideIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateSlideIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x288 loads 0x0213f994 in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateSlideIn at 0x0211db7c). Re-keyed from @2463 to @2465 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2463",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateStart",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x274 loads 0x0213f99c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateStart at 0x0211dce0). Re-keyed from @2461 to @2463 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2487",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateGone",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateGone, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2bc loads 0x0213f9a4 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateGone at 0x0211ce90). Re-keyed from @2485 to @2487 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2485",
       "to": "pmf_dScMgTeresa_c_BigBoo_StateRemove",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateRemove, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b8 loads 0x0213f9ac in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateRemove at 0x0211ce94)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateRemove, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b8 loads 0x0213f9ac in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateRemove at 0x0211ce94). Re-keyed from @2483 to @2485 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

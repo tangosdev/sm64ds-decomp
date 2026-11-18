@@ -277,9 +277,9 @@ int daPgMthr_c::StateTalkUpdate() {
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
             {
                 Vector3 mouth;
-                mouth.x = data_020a0e68.m[9];
-                mouth.y = data_020a0e68.m[10];
-                mouth.z = data_020a0e68.m[11];
+                mouth.x = data_020a0e68.t.x;
+                mouth.y = data_020a0e68.t.y;
+                mouth.z = data_020a0e68.t.z;
                 if (mPlayer->ShowMessage(*this, mMessageId, &mouth, 0, 0)) {
                     func_0201267c(0xdf, &mCamSpacePos);
                     {
@@ -355,10 +355,9 @@ int daPgMthr_c::StateFollowUpdate() {
 
 void daPgMthr_c::UpdateModelAndShadow() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    /* m[9..11] are mat4x3's translation (pos >> 3). */
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
     if (mLookAngX != 0 || mLookAngY != 0) {
         Matrix4x3 *bone = &mAnmModel.data.transforms[LOOK_BONE];
@@ -439,9 +438,9 @@ void daPgMthr_c::TurnHeadToward(char *b) {
         lookTarget.z = tz;
         lookTarget.y = ty;
         bone = &mAnmModel.data.transforms[LOOK_BONE];
-        nodePos.x = bone->m[9];
-        nodePos.y = bone->m[10];
-        nodePos.z = bone->m[11];
+        nodePos.x = bone->t.x;
+        nodePos.y = bone->t.y;
+        nodePos.z = bone->t.z;
         vert = Vec3_VertAngle(&nodePos, &lookTarget);
         delta = horzAngle - mAngle.y;
     } else {

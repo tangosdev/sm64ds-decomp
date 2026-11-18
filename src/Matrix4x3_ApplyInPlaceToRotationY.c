@@ -5,9 +5,8 @@
 #include "math/Matrix.h"
 #include "math/MtxStack.h"
 
-void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY)
-{
-    struct Matrix4x3 tmp;
+void Matrix4x3_ApplyInPlaceToRotationY(union Matrix4x3 *mF, s16 angY) {
+    union Matrix4x3 tmp;
     Matrix4x3_FromRotationY(&tmp, angY);
     MTX_Concat43(&tmp, mF, mF);
 }

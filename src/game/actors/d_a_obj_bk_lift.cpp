@@ -243,9 +243,9 @@ int daObjBk_Lift_c::CleanupResources() {
    biased by mShadowOffsetX / mShadowOffsetY and flattened onto mFloorPosY. */
 void daObjBk_Lift_c::UpdateShadow() {
     mShadowMat = mModel.mat4x3;
-    mShadowMat.m[9] = (mPos.x - mShadowOffsetX) >> 3;
-    mShadowMat.m[10] = mFloorPosY >> 3;
-    mShadowMat.m[11] = (mPos.z - mShadowOffsetY) >> 3;
+    mShadowMat.t.x = (mPos.x - mShadowOffsetX) >> 3;
+    mShadowMat.t.y = mFloorPosY >> 3;
+    mShadowMat.t.z = (mPos.z - mShadowOffsetY) >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x190000, 0x28000, 0x258000, 0xf);
 }
 

@@ -23,9 +23,6 @@
  *   dBgCh_Actr::GetSphereResult. DetectClsnSlot0 only queries collider slot zero.
  *   dBgPi::GetOwner returns the result's owner (+0x20). Real
  *   dBgPi copy construction avoids the unwanted default-constructor call.
- * - Native Matrix4x3 copies use common.h's shared flat representation.
- *   common.h and math/Matrix.h still define incompatible C++ forms under
- *   one guard; this TU does not resolve that repository-wide type debt.
  * - The carrier/cap attachment uses dActor_c::mCarryMatrix at +0xc8.
  *   The cap's player pointer is the inherited dActor_c::mEatingPlayer.
  *   PathPtr and line-query construction/cleanup are ordinary C++ calls.
@@ -394,9 +391,9 @@ void daMky_c::UpdateModelAndCap() {
         mAnmModel.mat4x3 = *res;
     } else {
         Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
-        this->mAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
-        this->mAnmModel.mat4x3.m[10] = this->mPos.y >> 3;
-        this->mAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
+        this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+        this->mAnmModel.mat4x3.t.y = this->mPos.y >> 3;
+        this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
     }
 
     if (!IsInYoshiMouth(this)) {
@@ -931,9 +928,9 @@ int daMky_c::func_ov030_02113324()
                 MtxStack::transM(0, 0, -0x64000);
 
                 Vector3 msgPos;
-                msgPos.x = MtxStack::get().m[9];
-                msgPos.y = MtxStack::get().m[10];
-                msgPos.z = MtxStack::get().m[11];
+                msgPos.x = MtxStack::get().t.x;
+                msgPos.y = MtxStack::get().t.y;
+                msgPos.z = MtxStack::get().t.z;
                 msgPos.y = this->mPos.y + 0x64000;
 
                 if (this->mPlayer->ShowMessage(*this, 0xc0, &msgPos, 0, 2) != 0) {
@@ -1056,9 +1053,9 @@ int daMky_c::func_ov030_021136b0()
         MtxStack::transM(0, 0, -0x64000);
         {
             int msgArg = (msg << 16) >> 16;
-            int my = MtxStack::get().m[10];
-            int mx = MtxStack::get().m[9];
-            int mz = MtxStack::get().m[11];
+            int my = MtxStack::get().t.y;
+            int mx = MtxStack::get().t.x;
+            int mz = MtxStack::get().t.z;
             msgPos.x = mx;
             msgPos.y = my;
             msgPos.z = mz;

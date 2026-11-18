@@ -179,14 +179,14 @@ extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
 void Ov007Figure::func_ov007_020beb80() {
     struct ModelComponents *comps = this->model->model;
     Matrix4x3 *bone0 = comps->transforms;
-    int *row = &bone0->m[6];
+    int *row = &bone0->r.m[6];
     int yaw;
     Vector3s motion;
     Particle::System *sys;
     int frames;
     int vel;
     int speed;
-    Vector3 *pos = (Vector3 *)&bone0->m[9];
+    Vector3 *pos = (Vector3 *)&bone0->t;
     yaw = FX_Atan2(row[0], row[2]);
     motion.x = (pos->x - this->prevPos.x);
     motion.y = (pos->y - this->prevPos.y);
@@ -535,7 +535,7 @@ int func_ov007_020be0dc(void) {
         } break;
         }
 
-        pos = (Vector3 *)&Bone0(fig)->m[9];
+        pos = (Vector3 *)&Bone0(fig)->t;
         func_ov007_020bfd70(WORK->cameras[0], pos, &screenX, &screenY);
 
         if (WORK->cameraPreset == 4)
@@ -551,7 +551,7 @@ int func_ov007_020be0dc(void) {
         }
 
         {
-            int *row = &Bone0(fig)->m[6];
+            int *row = &Bone0(fig)->r.m[6];
             int yaw = FX_Atan2(row[0], row[2]);
             int turn = FX_DivS32(yaw << 12, 0xffff);
             unsigned int scale = ((turn * 18) >> 12) & 0xff;

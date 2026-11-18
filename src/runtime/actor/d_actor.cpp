@@ -793,9 +793,9 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Matrix4x3 *bones = body->data.transforms;
     data_020a0e68 = body->mat4x3;
     MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
-    t.x = data_020a0e68.m[9];
-    t.y = data_020a0e68.m[10];
-    t.z = data_020a0e68.m[11];
+    t.x = data_020a0e68.t.x;
+    t.y = data_020a0e68.t.y;
+    t.z = data_020a0e68.t.z;
     mPrevAngle.y = player.mAngle.y;
     mAngle.y = mPrevAngle.y;
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
@@ -804,9 +804,9 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     /* vec is a const reference; Vec3_Asr's definition is not const-qualified. */
     Vec3_Asr(&asr, const_cast<Vector3 *>(&vec), 3);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    mPos.x = data_020a0e68.m[9];
-    mPos.y = data_020a0e68.m[10];
-    mPos.z = data_020a0e68.m[11];
+    mPos.x = data_020a0e68.t.x;
+    mPos.y = data_020a0e68.t.y;
+    mPos.z = data_020a0e68.t.z;
     Vector3 lsl;
     Vec3_Lsl(&lsl, &mPos, 3);
     mPos.x = lsl.x;

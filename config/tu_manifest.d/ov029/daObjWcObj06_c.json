@@ -517,14 +517,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@386",
+      "from": "@388",
       "to": "@82",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @435 to @433. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @82. Re-keyed from @424 to @381 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @381 to @386 when InitResources' ray start and end became Vector3 locals (#821 r58) (measured from the compiled object: same symtab index)."
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @435 to @433. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @82. Re-keyed from @424 to @381 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @381 to @386 when InitResources' ray start and end became Vector3 locals (#821 r58) (measured from the compiled object: same symtab index). Re-keyed from @386 to @388 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@387",
+      "from": "@389",
       "to": "@83",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @436 to @434. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @83. Re-keyed from @425 to @382 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @382 to @387 when InitResources' ray start and end became Vector3 locals (#821 r58) (measured from the compiled object: same symtab index)."
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @436 to @434. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @83. Re-keyed from @425 to @382 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @382 to @387 when InitResources' ray start and end became Vector3 locals (#821 r58) (measured from the compiled object: same symtab index). Re-keyed from @387 to @389 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "relocations": [

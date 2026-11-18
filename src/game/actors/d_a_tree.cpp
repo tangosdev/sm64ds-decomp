@@ -154,9 +154,9 @@ int daTree_c::Render()
                 /* The second argument is the one every retail caller passes;
                    see notes/experiments/applyopacity-api-0920.md. */
                 model->ApplyOpacity(opacity, 0);
-                mat->m[9] = node->pos.x;
-                mat->m[10] = node->pos.y - kCanopyLift;
-                mat->m[11] = node->pos.z;
+                mat->t.x = node->pos.x;
+                mat->t.y = node->pos.y - kCanopyLift;
+                mat->t.z = node->pos.z;
                 model->Render(0);
             }
             node = node->next;
