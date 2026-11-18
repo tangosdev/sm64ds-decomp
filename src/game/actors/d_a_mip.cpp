@@ -90,14 +90,11 @@ typedef int (daMip_c::*daMip_cStateFn)();
  * pairs and read the glowing-rabbit count. mwcc emits __sinit_d_a_mip.cpp
  * from those definitions. The wrapper names are local; the handle
  * constructors and destructors are the ROM resource-family functions,
- * aliased in the manifest. MipVec3's plain overload builds the first vector
- * with ordinary stores; the (int, int, long) overload builds the other
- * three through a volatile lvalue, exactly as retail. Both share the one
- * declared-not-defined destructor; the destructor alias points at the ROM's
- * canonical copy. (This was spelled to keep Vector3's vague-linkage D1 out
- * of the TU; Behavior's Vector3 locals now emit it. r63 measured plain
- * Vector3 globals: __sinit hoists each x `mov` ahead of the address load
- * in vectors 2 to 4, 12 words off, so MipVec3 stays.) */
+ * aliased in the manifest. The carry offsets are one Vector3[4]: mwcc
+ * builds and registers each element in turn, with the destructor alias
+ * pointing at the ROM's canonical Vector3 D1. (r63 measured four separate
+ * Vector3 globals, which hoist each x `mov` ahead of the address load;
+ * the array does not, #821 r77.) */
 struct DaMipModelFile : SharedFilePtr {
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();
@@ -106,24 +103,6 @@ struct DaMipModelFile : SharedFilePtr {
 struct DaMipAnimationFilePtr : SharedFilePtr {
     DaMipAnimationFilePtr(u32 fileID);
     ~DaMipAnimationFilePtr();
-};
-
-struct MipVec3 {
-    int x, y, z;
-    MipVec3(int a, int b, int c)
-    {
-        x = a;
-        y = b;
-        z = c;
-    }
-    MipVec3(int a, int b, long c)
-    {
-        volatile int *p = &x;
-        p[0] = a;
-        p[1] = b;
-        p[2] = c;
-    }
-    ~MipVec3();
 };
 
 struct MipStatePair {
@@ -137,10 +116,7 @@ extern DaMipAnimationFilePtr gMipRunAnimationFile;
 extern DaMipAnimationFilePtr data_ov085_021305b0;
 extern DaMipAnimationFilePtr data_ov085_021305c8;
 extern DaMipAnimationFilePtr data_ov085_021305c0;
-extern MipVec3 data_ov085_021306ec;
-extern MipVec3 data_ov085_021306f8;
-extern MipVec3 data_ov085_02130704;
-extern MipVec3 data_ov085_02130710;
+extern Vector3 data_ov085_021306ec[4];
 extern MipStatePair data_ov085_021306cc;
 extern MipStatePair data_ov085_0213066c;
 extern MipStatePair data_ov085_0213067c;
@@ -932,14 +908,9 @@ void daMip_c::UpdateMatrixAndShadow()
 }
 
 /* While carried, the matrix comes from UpdateCarry plus one of four hold
-   offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot.
-   Kept (#821 r77): the four offsets are the coined MipVec3 globals (see the
-   note above struct MipVec3), indexed as one array from the first, so the
-   slot reaches UpdateCarry's `const Vector3 &` through a cast until plain
-   Vector3 globals reproduce __sinit. */
+   offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot. */
 void daMip_c::UpdateCarriedMatrix()
 {
-    extern MipVec3 data_ov085_021306ec;
     extern Matrix4x3 data_020a0e68;
 
     int idx;
@@ -954,7 +925,7 @@ void daMip_c::UpdateCarriedMatrix()
     if ((int)mTalkingPlayer->param1 == 2) {
         idx = (idx + 2) & 0xff;
     }
-    res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)&(&data_ov085_021306ec)[idx]);
+    res = UpdateCarry(*mTalkingPlayer, data_ov085_021306ec[idx]);
     mAnmModel.mat4x3 = *res;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xc000) >> 3, mPos.z >> 3);
     mShadowMtx = data_020a0e68;
@@ -1410,10 +1381,12 @@ DaMipAnimationFilePtr gMipRunAnimationFile(ASSET_MIP_RUN_BCA);
 DaMipAnimationFilePtr data_ov085_021305b0(ASSET_MIP_RUN_ED_BCA);
 DaMipAnimationFilePtr data_ov085_021305c8(ASSET_MIP_RUN_ST_BCA);
 DaMipAnimationFilePtr data_ov085_021305c0(ASSET_MIP_WAIT_BCA);
-MipVec3 data_ov085_021306ec(0x1c000, -0x2a000, 0x18000);
-MipVec3 data_ov085_021306f8(0x1c000, -0x14000, (long)0x32000);
-MipVec3 data_ov085_02130704(0x2b000, -0x2a000, (long)0x18000);
-MipVec3 data_ov085_02130710(0x30000, -0xa000, (long)0x32000);
+Vector3 data_ov085_021306ec[4] = {
+    Vector3(0x1c000, -0x2a000, 0x18000),
+    Vector3(0x1c000, -0x14000, 0x32000),
+    Vector3(0x2b000, -0x2a000, 0x18000),
+    Vector3(0x30000, -0xa000, 0x32000),
+};
 MipStatePair data_ov085_021306cc = {data_ov085_02130074, data_ov085_02130044};
 MipStatePair data_ov085_0213066c = {data_ov085_02130084, data_ov085_02130094};
 MipStatePair data_ov085_0213067c = {data_ov085_021300b4, data_ov085_0213003c};
