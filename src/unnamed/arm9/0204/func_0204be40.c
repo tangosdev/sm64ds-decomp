@@ -22,17 +22,12 @@ void func_0204be40(ManagerView *mgr, ParticleElement *ptcl) {
     const MtxFx43 *view = mgr->mDrawMatrix;
     VecFx32 trans;
     int mat[12];
-    u32 id;
     u32 v;
     int sx;
     int sy;
 
-    /* Kept (#821 r76): `id = sys->polygonIDs.current` swaps r0/r2 at the load (measured on
-       SPLDraw_DirectionalBillboard); only a copy through v matches, a register pin. */
-    v = *(u32 *)&sys->polygonIDs << 14;
-    id = v >> 26;
-    v = mgr->mPolygonAttr | 0xc0;
-    v |= id << 24;
+    v = sys->polygonIDs.current << 24;
+    v |= mgr->mPolygonAttr | 0xc0;
     v |= alpha << 16;
     REG_POLYGON_ATTR = v;
     REG_POLYGON_ATTR;
