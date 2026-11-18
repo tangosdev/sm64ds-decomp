@@ -69,7 +69,7 @@
     "header_shadows": 1,
     "local_body_no_include": 12,
     "local_body_no_include_cpp": 3,
-    "local_struct_body": 334,
+    "local_struct_body": 332,
     "local_struct_body_cpp": 303,
     "pad_layout": 10
   },
