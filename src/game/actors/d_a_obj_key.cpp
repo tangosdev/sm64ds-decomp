@@ -745,6 +745,10 @@ int daObjKey_c::Render()
     return 1;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 int daObjKey_c::Behavior()
 {
     Vector3 vec;
@@ -786,8 +790,7 @@ int daObjKey_c::Behavior()
         UpdateModelTransform();
         if (mAnmModel.Finished()) {
             /* The flag keeps the ROM's moveq and movne pair. */
-            int isKey = (actorID == ACTOR_OBJ_KEY);
-            if (isKey != 0) {
+            if (IsActorID(this, ACTOR_OBJ_KEY)) {
                 /* Anim 3's file (data_ov089_02132c40, id 0x44f) stays; the others die. */
                 if (mAnmModel.file != data_ov089_02132c40.filePtr)
                     MarkForDestruction();
