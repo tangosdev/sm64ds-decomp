@@ -535,8 +535,7 @@ int daMenbo_c::func_ov090_02131c48()
 
     if (mTurnTimer == 0 && mWithMeshClsn.IsOnWall() &&
         AngleDiff(mPrevAngle.y, mTargetAngleY) < 0x200) {
-        s16 *p = &mTargetAngleY;
-        *p = *p + 0x4000;
+        mTargetAngleY += 0x4000;
         mTurnTimer = 8;
     }
 
