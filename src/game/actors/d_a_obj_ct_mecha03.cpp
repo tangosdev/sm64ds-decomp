@@ -123,13 +123,13 @@ int daObjCtMecha03_c::Behavior() {
                 mSwingSpeed += mSwingAccel * mSwingDir;
             }
             if (data_0209f2c0 == 2 && mSwingSpeed == 0) {
-                int roll = RandomIntInternal(&data_0209e650.value);
-                if ((unsigned)roll % 3 != 0)
+                u32 roll = RandomIntInternal(&data_0209e650.value);
+                if (roll % 3 != 0)
                     mSwingAccel = 0xd;
                 else
                     mSwingAccel = 0x2a;
                 if ((roll & 1) == 0) {
-                    mPauseTimer = ((unsigned)roll >> 0x1b) + 3;
+                    mPauseTimer = (roll >> 0x1b) + 3;
                 }
             }
             if (mSwingSpeed == 0) {

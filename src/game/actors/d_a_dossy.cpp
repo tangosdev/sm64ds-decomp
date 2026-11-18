@@ -242,8 +242,8 @@ int daDossy_c::InitResources()
 }
 
 int daDossyCap_c::func_ov065_02119210() {
-    int flags = this->mCapIcon.mFlags << 30;
-    return ((unsigned)flags >> 31) != 0;
+    u32 flags = this->mCapIcon.mFlags << 30;
+    return (flags >> 31) != 0;
 }
 
 int daDossyCap_c::Behavior()

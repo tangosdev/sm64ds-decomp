@@ -66,9 +66,9 @@ int daChRoom_c::Behavior() {
                 int z = local.z;
                 int distZ = (z < 0) ? -z : z;
                 if (distZ > 0x64000 && distZ < 0x190000) {
-                    int area = (z < 0) ? mAngle.x : mAngle.z;
-                    player->mAreaId = (char)area;
-                    ChangeArea((char)area);
+                    s8 area = (z < 0) ? mAngle.x : mAngle.z;
+                    player->mAreaId = area;
+                    ChangeArea(area);
                 }
             }
         }

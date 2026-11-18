@@ -1687,8 +1687,8 @@ void daKpa_c::ActSpitFireOntoFloor() {
     if (this->mTimer == 0) {
         daPly_c *player = this->mTargetPlayer;
         if (player == 0 || player->GetHealth() > 4) {
-            s32 rnd = RandomIntInternal(&data_0209e650.value);
-            u32 hi = ((u32)rnd) >> 16;
+            u32 rnd = RandomIntInternal(&data_0209e650.value);
+            u32 hi = rnd >> 16;
             u32 m = hi % 10u;
             this->mFireballShots = (char)((m % 3u) + 1);
         } else {

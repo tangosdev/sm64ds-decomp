@@ -1888,10 +1888,10 @@ void daTrs_c::UpdateChase() {
 
     this->mTrsFlags &= ~TRS_FLAG_HIT_BY_PARAM3_PLAYER;
     if (this->mStateTimer == 0) {
-        int r0 = RandomIntInternal(&data_0209e650.value);
-        this->mSpeedJitter = (((unsigned)r0 >> 16) & 0xfff) * 5;
-        int ri = RandomIntInternal(&data_0209e650.value);
-        int x = 0xfff & ((unsigned)ri >> 16);
+        u32 r0 = RandomIntInternal(&data_0209e650.value);
+        this->mSpeedJitter = ((r0 >> 16) & 0xfff) * 5;
+        u32 ri = RandomIntInternal(&data_0209e650.value);
+        int x = 0xfff & (ri >> 16);
         this->mTurnJitter = (int)((((long long)x << 7) + 0x800) >> 12);
     }
     if (this->mChaseDelay == 0) {

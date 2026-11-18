@@ -642,7 +642,7 @@ void daOts_c::ActChaseMario() {
  * hops. */
 void daOts_c::ActKnockback() {
     if (ApproachLinear(this->mHorzSpeed, 0, tail().mHorzDecel) != 0) {
-        int lim = IsActorID(this, kBigBullyActorId) ? 0x14 : 0xa;
+        u32 lim = IsActorID(this, kBigBullyActorId) ? 0x14 : 0xa;
         if (tail().mHopCount < 2) {
             if (this->mWithMeshClsn.IsOnGround()) {
                 unsigned char *p = &tail().mHopCount;
@@ -652,7 +652,7 @@ void daOts_c::ActKnockback() {
             mStateTimer = 0;
             return;
         }
-        if (mStateTimer < (unsigned int)lim)
+        if (mStateTimer < lim)
             return;
         tail().mState = STATE_CHASE;
         this->mPrevAngle.y = this->mAngle.y;

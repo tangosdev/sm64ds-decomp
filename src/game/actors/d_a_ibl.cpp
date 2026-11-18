@@ -600,7 +600,7 @@ void daIbl_c::FreeRollBehavior() {
 void daIbl_c::SpawnerBehavior() {
     Vector3 pos;
     daPly_c *pl;
-    int r1;
+    u32 r1;
 
     if (mStateTimer != 0) {
         mStateTimer--;
@@ -611,7 +611,7 @@ void daIbl_c::SpawnerBehavior() {
         r1 = 3;
     else
         r1 = 6;
-    if (mLiveBalls >= (u32)r1) return;
+    if (mLiveBalls >= r1) return;
 
     pl = ClosestPlayer();
     if (pl == 0) return;

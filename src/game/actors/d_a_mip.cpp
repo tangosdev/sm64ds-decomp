@@ -636,8 +636,8 @@ int daMip_c::StateFleeMain() {
         }
     }
     {
-        s32 t = mAnmModel.currFrame >> 12;
-        if (((u16)t) == 0) {
+        u16 t = mAnmModel.currFrame >> 12;
+        if (t == 0) {
             if (TestWaterBelow() == 1) {
                 func_02012694(0x124, &mCamSpacePos);
                 Particle::System::NewSplash(mPos.x, mFloorY + 0x3000, mPos.z);

@@ -558,10 +558,10 @@ void daBmb_c::func_ov102_0214bc20() {
     Quad a1 = data_ov102_0214e514;
     Quad a2 = data_ov102_0214e524;
     daPly_c *p = mCarrier;
-    int idx = 0;
+    u32 idx = 0;
     if (p != 0) {
         idx = p->param1;
-        if ((unsigned)idx > 4) idx = 4;
+        if (idx > 4) idx = 4;
     }
     mHorzSpeed = a1.v[idx];
     mSpeed.y = a2.v[idx];

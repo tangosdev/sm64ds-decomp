@@ -725,7 +725,7 @@ int daMenbo_c::Behavior()
 int daMenbo_c::InitResources()
 {
     BMD_File *f;
-    int r;
+    u32 r;
     Vector3 pos;
     Vector3 v;
 
@@ -799,7 +799,7 @@ int daMenbo_c::InitResources()
 
         {
             r = RandomIntInternal(&data_0209e650.value);
-            short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
+            short ang = (short)(((r >> 8) & 0xf) << 12);
             mTargetAngleY = ang;
             mPrevAngle.y = mTargetAngleY;
             mAngle.y = mPrevAngle.y;

@@ -561,7 +561,7 @@ int daJango_c::UpdateFlyPathState() {
     Vector3 diff;
     Vector3 scaled;
     int len;
-    u32 idx;
+    s32 idx;
 
     path.FromID(mPathId);
     zero[0] = 0; zero[1] = 0; zero[2] = 0; zero[3] = 0; zero[4] = 0; zero[5] = 0;
@@ -570,7 +570,7 @@ int daJango_c::UpdateFlyPathState() {
     ApproachAngle(&mPrevAngle.z, 0, 0xa, 0x100, 0x50);
 
     idx = mPathNodeIndex - 1;
-    if ((int)idx < 0)
+    if (idx < 0)
         idx = mPathNodeCount - 1;
     path.GetNode(node2, idx);
     Vec3_Sub(&diff, &mPos, &node);
