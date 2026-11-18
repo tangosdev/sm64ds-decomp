@@ -143,8 +143,7 @@ int daBDonketu_c::Behavior() {
         if (mWithMeshClsn.IsOnGround() != 0) {
             func_0200fa8c(0);
             /* Kept as the ROM-matching spelling: a pointer increment. */
-            u8 *count = &mNumBulliesKilled;
-            *count = *count + 1;
+            mNumBulliesKilled++;
         }
         func_ov064_02116bac();
     }
