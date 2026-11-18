@@ -245,7 +245,7 @@ extern int sHanaFieldWigglerCount;
 extern int data_ov006_0213cab8;
 extern struct VecFx32 sJumpRenderScale;
 extern int sJumpNcgByLanguage[];
-extern int sJump2RenderScale;
+extern struct VecFx32 sJump2RenderScale;
 extern int sJump2NcgByLanguage[];
 extern int sMemoryCardNcgByLanguage[];
 extern int sMemory2CardNcgByLanguage[];
