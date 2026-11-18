@@ -739,13 +739,16 @@ int daStarBase_c::Render()
     return 1;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* Gives up the map marker slot (kind 8 never had one), unloads the silver star
  * and number models when InitResources loaded them (silver star, or kind 6),
  * and releases the four animation files it loaded. */
 int daStar_c::CleanupResources()
 {
-    int b = (actorID == ACTOR_STAR);
-    if (b) {
+    if (IsActorID(this, ACTOR_STAR)) {
         int v = mKind;
         if (v != 8) {
             if (v == 6)
@@ -1091,13 +1094,12 @@ void daStar_c::StateTouched() {
  * returns it: for the silver star gNumStageStars[player number] + 0x19, in a VS
  * match 0x4f, otherwise 0x22. */
 int daStar_c::PickCollectSoundID() {
-    int b = (actorID == ACTOR_SILVER_STAR);
-    if (b != 0) {
+    if (IsActorID(this, ACTOR_SILVER_STAR)) {
         unsigned char idx = mPlayer->mPlayerNo;
         mSoundObjSoundID = gNumStageStars[idx] + 0x19;
     } else {
-        int b2 = (gGameMode == 1);
-        if (b2 != 0) mSoundObjSoundID = 0x4f;
+        if (IsVsMode())
+            mSoundObjSoundID = 0x4f;
         else mSoundObjSoundID = 0x22;
     }
     return mSoundObjSoundID;
@@ -1193,8 +1195,7 @@ void daStar_c::StateCollectBegin() {
             mPos.z = s[2];
             mPos.y += 0xc8000;
         } else {
-            int ok = (gGameMode == 1);
-            if (ok) {
+            if (IsVsMode()) {
                 unsigned char idx = common->mPlayerNo;
                 if (gNumStageStars[idx] != 0) {
                     GiveVsStars(idx, -1);
@@ -1718,8 +1719,7 @@ int daStar_c::Collect(void *p) {
     mPlayer = (daPly_c *)p;
 
     if (((daPly_c *)p)->IsOnShell() != 0) {
-        int b = (actorID == ACTOR_SILVER_STAR);
-        if (b) {
+        if (IsActorID(this, ACTOR_SILVER_STAR)) {
             mState = STATE_SPIN_AND_END;
             mBits.collectedModel = 0;
             mSeqTimer = 0;
@@ -1759,8 +1759,7 @@ int daStar_c::Collect(void *p) {
 
     if (sb != 0) {
         {
-            int b1 = (gGameMode == 1);
-            if (!b1) {
+            if (!IsVsMode()) {
                 Event::SetBit(0x1e);
             } else {
                 GiveVsStars(((daPly_c *)p)->mPlayerNo, 1);
@@ -1771,9 +1770,8 @@ int daStar_c::Collect(void *p) {
         }
 
         {
-            int b2 = (gGameMode == 1);
             int b3;
-            if (!b2 && !(b3 = (actorID == ACTOR_SILVER_STAR)) && mStarID < 8 &&
+            if (!IsVsMode() && !(b3 = (actorID == ACTOR_SILVER_STAR)) && mStarID < 8 &&
                 mHomeState != STATE_WAIT_MARKER) {
                 gCollectedStarId = mStarID;
                 if (IsStarCollectedInCurLevel(mStarID) != 0) {
@@ -1806,8 +1804,7 @@ int daStar_c::Collect(void *p) {
         mState = STATE_COLLECT_BEGIN;
         mPlayer = (daPly_c *)p;
         {
-            int b4 = (gGameMode == 1);
-            if (!b4) {
+            if (!IsVsMode()) {
                 mPlayer->mFlags |= CUTSCENE_FLAG;
                 mFlags |= CUTSCENE_FLAG;
                 gNextActorUpdateMask |= CUTSCENE_FLAG;
@@ -1816,8 +1813,7 @@ int daStar_c::Collect(void *p) {
         mdCc_c.flags |= 1;
         mdCc_c.Clear();
         {
-            int b5 = (actorID == ACTOR_STAR);
-            if (b5 && r4 != 0) {
+            if (IsActorID(this, ACTOR_STAR) && r4 != 0) {
                 ((daPly_c *)p)->Heal(0x880);
             }
         }
@@ -2371,8 +2367,8 @@ void daStar_c::UpdateSparkleEffect() {
 /* -------------------------------------------------------------------------- */
 /* Silver star only: keeps trail effect 0x10e (mParticle[3]) at the centre. */
 void daStar_c::UpdateSilverTrailEffect() {
-    int b = (actorID == ACTOR_SILVER_STAR);
-    if (b == 0) return;
+    if (!IsActorID(this, ACTOR_SILVER_STAR))
+        return;
     Vector3 v = this->func_ov002_020e8244();
     mParticle[3] =
         (int)Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
