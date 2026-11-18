@@ -68,6 +68,6 @@ void func_ov007_020bc02c(Ov007Model *m, void *other) {
             if ((flags & 2) == 0)
                 return;
         }
-        m->animTick = (m->animTick == 0) ? 1 : 0;
+        m->animTick = m->animTick == 0;
     }
 }
