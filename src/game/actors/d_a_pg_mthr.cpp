@@ -452,33 +452,22 @@ void daPgMthr_c::BeginTalk(void *found, char *heldRaw) {
     dActor_c *held = (dActor_c *)heldRaw;
     daPly_c *who = (daPly_c *)found;
 
-    if (held) {
-        int baby = held->actorID == ACTOR_BABY_PENGUIN;
-        if (baby != 0) {
-            if (held->param1 == BABY_OTHER) {
-                mPlayer = who;
-                mMessageId = MSG_OTHER_BABY;
-                mHoldingBaby = 1;
-                ChangeState(1);
-                return;
-            }
-        }
+    if (held && IsActorID(held, ACTOR_BABY_PENGUIN) && held->param1 == BABY_OTHER) {
+        mPlayer = who;
+        mMessageId = MSG_OTHER_BABY;
+        mHoldingBaby = 1;
+        ChangeState(1);
+        return;
     }
     if (mGaveStar)
         return;
-    if (held) {
-        int baby = held->actorID == ACTOR_BABY_PENGUIN;
-        if (baby != 0) {
-            if (held->param1 == BABY_OWN) {
-                mMessageId = MSG_OWN_BABY;
-                goto talk;
-            }
-        }
+    if (held && IsActorID(held, ACTOR_BABY_PENGUIN) && held->param1 == BABY_OWN) {
+        mMessageId = MSG_OWN_BABY;
+    } else {
+        if (mHoldingBaby)
+            return;
+        mMessageId = MSG_NO_BABY;
     }
-    if (mHoldingBaby)
-        return;
-    mMessageId = MSG_NO_BABY;
-talk:
     mPlayer = who;
     ChangeState(1);
 }
@@ -488,8 +477,7 @@ daPly_c *daPgMthr_c::FindNewToucher() {
     if (mdCcAc_c.hitFlags & HIT_TOUCH) {
         struct dActor_c *a = dActor_c::FindWithID(mdCcAc_c.otherOwner);
         if (a) {
-            int ok = (a->actorID == ACTOR_PLAYER) ? 1 : (int)newToucher;
-            if (ok) {
+            if (IsActorID(a, ACTOR_PLAYER)) {
                 if (a != mLastPlayer)
                     newToucher = static_cast<daPly_c *>(a);
                 mLastPlayer = a;
