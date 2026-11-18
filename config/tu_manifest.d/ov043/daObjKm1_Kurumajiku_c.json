@@ -30,14 +30,20 @@
       "end": "0x02111af0"
     },
     {
-      "name": ".bss",
-      "start": "0x02112608",
-      "end": "0x02112630"
+      "name": ".data.data_ov043_02111bc0",
+      "input_section": ".data",
+      "start": "0x02111bc0",
+      "end": "0x02111bd4"
     },
     {
       "name": ".data",
       "start": "0x02112344",
       "end": "0x02112350"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02112608",
+      "end": "0x02112630"
     }
   ],
   "functions": [
@@ -84,6 +90,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "Resources {model, collision, CLPS} InitResourcesFrom and CleanupResourcesFrom take; the words relocate to the SharedFilePtrs at 0x02112610 and 0x02112608 and the CLPS block at 0x02111bc0"
+    },
+    {
+      "symbol": "data_ov043_02111bc0",
+      "address": "0x02111bc0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "the axle's collision properties: one floor entry and one fill word"
     }
   ],
   "bss": [
@@ -363,10 +376,11 @@
           "firstDiff": null
         },
         {
-          "section": ".bss",
-          "start": "0x02112608",
-          "end": "0x02112630",
-          "comparison": "NOBITS -- symbol/module gates"
+          "section": ".data.data_ov043_02111bc0",
+          "start": "0x02111bc0",
+          "end": "0x02111bd4",
+          "differingBytes": 0,
+          "firstDiff": null
         },
         {
           "section": ".data",
@@ -374,11 +388,17 @@
           "end": "0x02112350",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02112608",
+          "end": "0x02112630",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 13
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -389,34 +409,28 @@
           {
             "section": ".init",
             "original": [
-              49
+              50
             ],
             "desired": [
-              49
+              50
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
-            "section": ".bss",
+            "section": ".data.data_ov043_02111bc0",
             "original": [
-              5,
-              6,
-              22,
-              25
+              27
             ],
             "desired": [
-              5,
-              6,
-              22,
-              25
+              27
             ]
           },
           {
@@ -426,6 +440,21 @@
             ],
             "desired": [
               23
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              7,
+              8,
+              22,
+              25
+            ],
+            "desired": [
+              7,
+              8,
+              22,
+              25
             ]
           }
         ],
@@ -442,8 +471,7 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null,
-      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
+      "linkerOutput": null
     }
   },
   "init": [

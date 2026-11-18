@@ -26,8 +26,8 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
  * - The daObjWc_Obj07_c_* names are a stale symbols.txt attribution: this TU
  *   is the only consumer and defines both handles (obj07's own handles live
  *   at 0x021142d4/0x021142dc).
- * - data_ov029_02112b2c / 02112fb8 / 02112fec WDW water-level / BTA / CLPS handles;
- *   this TU consumes them, overlay .data owns them.
+ * - data_ov029_02112b2c is this TU's water-level table; the BTA and CLPS
+ *   blocks it loads are defined here too.
  * - S14: g_profile_WC_MIZU stays outside the licensed .text.
  * - UpdateModelTransform (0x021122b4) and UpdateClsnTransform (0x02112250)
  *   are TU-local; Behavior calls both every frame.
@@ -39,11 +39,17 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "nitro/fx/fx_trig.h"
+#include "private/BTA_File.h"
 
 struct BMD_File;
-struct BTA_File;
 struct KCL_File;
-struct CLPS_Block;
+
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -67,10 +73,29 @@ extern const int data_ov029_02112b2c[3] = {
     0x003e8000,
     0x00abe000,
 };
-extern BTA_File data_ov029_02112fb8;
-extern CLPS_Block data_ov029_02112fec;
 extern u8 data_0209f2c0;
 extern int data_0209f32c;
+
+/* The texture animation's keys and its one material record live in overlay
+   .rodata; this TU only points at them. */
+extern fx32 data_ov029_021129a0[];
+extern u16 data_ov029_0211299c[];
+extern fx32 data_ov029_021129c0[];
+extern BTAMaterialRecord data_ov029_021129a4[];
+
+/* The WDW water's texture animation: 0x5b frames, constant scale and
+   translation, one material. */
+BTA_File data_ov029_02112fb8 = {
+    0x5b, 0, data_ov029_021129a0, data_ov029_0211299c, data_ov029_021129c0,
+    1,    0, data_ov029_021129a4,
+};
+
+/* The water surface's collision properties: one floor entry. */
+CLPS_Block data_ov029_02112fec = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fe0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

@@ -11,9 +11,9 @@
  * daObjWc_Obj07_c_classInit is reconstructed (RTTI daObjWc_Obj07_c,
  * WC_UKISIMA registry). Retail does not store that spelling.
  *
- * What stays: the BMD/KCL SharedFilePtrs and CLPS_Block are still
- *   data_ov029_*. The start-angle halfword 02113fc4 sits 4 bytes
- *   before this class's typeinfo at 02113fc8; it is not owned here.
+ * What stays: the BMD/KCL SharedFilePtrs and the CLPS block are still
+ *   data_ov029_*; the start-angle slot 02113fc4 sits 4 bytes before this
+ *   class's typeinfo at 02113fc8 and is defined here.
  * What stays: g_profile_WC_UKISIMA lives outside this TU (S14).
  */
 
@@ -25,8 +25,10 @@ enum d_a_obj_wc_obj07_AssetId { ASSET_WC_OBJ07_BMD = 0x06d7, ASSET_WC_OBJ07_KCL 
 
 #include "ResourceDescriptor.h"
 
-extern ResourceDescriptor data_ov029_02113fd4;
-extern s16 data_ov029_02113fc4;
+/* The board's model, collision and collision-properties table; the CLPS block
+   it points at is shared with the other WDW platform actors. The two handles
+   themselves are constructed below, with the TU's other static-init globals. */
+extern CLPS_Block data_ov029_021130ac;
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -41,12 +43,25 @@ struct WcObj07CollisionFilePtr : SharedFilePtr {
     ~WcObj07CollisionFilePtr();
 };
 
+extern WcObj07ModelFilePtr gWcObj07ModelFile;
+extern WcObj07CollisionFilePtr gWcObj07CollisionFile;
+
+ResourceDescriptor data_ov029_02113fd4 = {
+    &gWcObj07ModelFile,
+    &gWcObj07CollisionFile,
+    &data_ov029_021130ac,
+};
+
+/* The starting angle InitResourcesFrom feeds its rotation clamp. Retail gives
+   it a 4-byte data slot; the tail halfword is zero. */
+s16 data_ov029_02113fc4[2] = {0x444};
+
 daObjWc_Obj07_c *daObjWc_Obj07_c_classInit() {
     return new daObjWc_Obj07_c();
 }
 
 s32 daObjWc_Obj07_c::InitResources() {
-    return InitResourcesFrom(&data_ov029_02113fd4, data_ov029_02113fc4);
+    return InitResourcesFrom(&data_ov029_02113fd4, data_ov029_02113fc4[0]);
 }
 
 s32 daObjWc_Obj07_c::CleanupResources() {

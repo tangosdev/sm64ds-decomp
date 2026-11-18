@@ -148,3 +148,14 @@ struct RcGuruguruCollisionFilePtr : SharedFilePtr {
  * file. */
 RcGuruguruModelFilePtr gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);         /* model */
 RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* collision */
+
+/* The resource-pointer table InitResources and CleanupResources read. The
+   CLPS block it names stays a ROM placeholder (nothing in this TU spells
+   its contents). */
+extern CLPS_Block data_ov036_02112ac8;
+
+RcGuruguruAssets data_ov036_02113d78 = {
+    &gRcGuruguruModelFile,
+    &gRcGuruguruCollisionFile,
+    &data_ov036_02112ac8,
+};

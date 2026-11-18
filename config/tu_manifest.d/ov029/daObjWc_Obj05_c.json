@@ -33,7 +33,7 @@
       "end": "0x021142ac"
     },
     {
-      "name": ".data.w12ea0",
+      "name": ".data.w12ea0b",
       "start": "0x0211306c",
       "end": "0x0211308c",
       "input_section": ".data"
@@ -416,7 +416,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -454,7 +454,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data.w12ea0",
+          "section": ".data.w12ea0b",
           "start": "0x0211306c",
           "end": "0x0211308c",
           "differingBytes": 0,
@@ -463,7 +463,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -474,19 +474,19 @@
           {
             "section": ".init",
             "original": [
-              46
+              47
             ],
             "desired": [
-              46
+              47
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              45
             ],
             "desired": [
-              44
+              45
             ]
           },
           {
@@ -502,6 +502,15 @@
               8,
               14,
               21
+            ]
+          },
+          {
+            "section": ".data.w12ea0b",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
             ]
           }
         ],

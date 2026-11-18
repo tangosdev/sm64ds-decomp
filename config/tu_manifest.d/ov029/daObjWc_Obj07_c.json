@@ -30,6 +30,18 @@
       "name": ".bss",
       "start": "0x021142d4",
       "end": "0x021142fc"
+    },
+    {
+      "name": ".data.data_ov029_02113fc4",
+      "input_section": ".data",
+      "start": "0x02113fc4",
+      "end": "0x02113fc8"
+    },
+    {
+      "name": ".data.data_ov029_02113fd4",
+      "input_section": ".data",
+      "start": "0x02113fd4",
+      "end": "0x02113fe0"
     }
   ],
   "functions": [
@@ -69,7 +81,22 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov029_02113fc4",
+      "address": "0x02113fc4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the start angle InitResourcesFrom clamps the board's rotation to, in a 4-byte retail slot"
+    },
+    {
+      "symbol": "data_ov029_02113fd4",
+      "address": "0x02113fd4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model, collision and CLPS the shared InitResourcesFrom loads"
+    }
+  ],
   "bss": [
     {
       "symbol": "gWcObj07CollisionFile",
@@ -184,7 +211,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -220,11 +247,25 @@
           "start": "0x021142d4",
           "end": "0x021142fc",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.data_ov029_02113fc4",
+          "start": "0x02113fc4",
+          "end": "0x02113fc8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov029_02113fd4",
+          "start": "0x02113fd4",
+          "end": "0x02113fe0",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 13
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -235,34 +276,52 @@
           {
             "section": ".init",
             "original": [
-              45
+              48
             ],
             "desired": [
-              45
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              43
+              46
             ],
             "desired": [
-              43
+              46
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
               6,
-              22,
-              23
+              7,
+              23,
+              24
             ],
             "desired": [
+              7,
               6,
-              5,
-              23,
-              22
+              24,
+              23
+            ]
+          },
+          {
+            "section": ".data.data_ov029_02113fc4",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".data.data_ov029_02113fd4",
+            "original": [
+              25
+            ],
+            "desired": [
+              25
             ]
           }
         ],
@@ -271,22 +330,22 @@
             {
               "section": ".bss",
               "original": [
-                5,
                 6,
-                22,
-                23
+                7,
+                23,
+                24
               ],
               "desired": [
+                7,
                 6,
-                5,
-                23,
-                22
+                24,
+                23
               ],
               "slots": [
-                5,
                 6,
-                22,
-                23
+                7,
+                23,
+                24
               ]
             }
           ],
@@ -610,6 +669,36 @@
       "addend": 0,
       "target_module": "ov029",
       "target_address": "0x02112d24"
+    },
+    {
+      "section": ".data.data_ov029_02113fd4",
+      "source": "0x02113fd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gWcObj07ModelFile",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021142dc"
+    },
+    {
+      "section": ".data.data_ov029_02113fd4",
+      "source": "0x02113fd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gWcObj07CollisionFile",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021142d4"
+    },
+    {
+      "section": ".data.data_ov029_02113fd4",
+      "source": "0x02113fdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_021130ac",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021130ac"
     }
   ]
 }

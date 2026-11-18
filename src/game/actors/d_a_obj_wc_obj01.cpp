@@ -23,7 +23,9 @@ enum d_a_obj_wc_obj01_AssetId { ASSET_WC_OBJ01_BMD = 0x06cc, ASSET_WC_OBJ01_KCL 
 #include "dBgCh_Lin.h"
 #include "SharedFilePtr.h"
 
-extern daObjFloatBoard_c_Resources data_ov029_02113be8;
+/* The board's model, collision and collision-properties table. The handles
+   themselves are constructed below, with the TU's other static-init globals. */
+extern CLPS_Block data_ov029_0211300c;
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -36,6 +38,15 @@ struct WcObj01ModelFilePtr : SharedFilePtr {
 struct WcObj01CollisionFilePtr : SharedFilePtr {
     WcObj01CollisionFilePtr(u32 fileID);
     ~WcObj01CollisionFilePtr();
+};
+
+extern WcObj01ModelFilePtr gWcObj01ModelFile;
+extern WcObj01CollisionFilePtr gWcObj01CollisionFile;
+
+daObjFloatBoard_c_Resources data_ov029_02113be8 = {
+    &gWcObj01ModelFile,
+    &gWcObj01CollisionFile,
+    &data_ov029_0211300c,
 };
 
 enum {
