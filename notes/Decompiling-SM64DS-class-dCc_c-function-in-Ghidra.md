@@ -43,7 +43,7 @@ To create the `dCc_c` class in Ghidra, follow these steps:
 
 - In the Ghidra Code Browser, navigate to the "Symbol Tree" window. You can open it by going to "Window" > "Symbol Tree" in the menu bar.
 - Right-click on the "Classes" node in the Symbol Tree and select "Create Class" from the context menu.
-- 
+
 ![Creating our dCc_c class](images/Ghidra-Creating-New-Class.png)
 
 A option will appear to enter the new class name with the default being `NewClass`. Type `dCc_c` and ENTER to create it. It should look like this in the Symbol Tree:
