@@ -13722,13 +13722,12 @@ void func_ov002_020d7430(daPly_c &player) {
  */
 /* local extern: the call passes an untyped this, so it cannot use the header method. */
 /* local extern: the call passes an untyped this, so it cannot use the header method. */
-struct PVec { int x, y, z; PVec() {} ~PVec() {} };
 
 int daPly_c::St_YoshiPower_Main() {
     extern int data_ov002_0210e3d8[];
     Vector3_16f dir;
     Vector3 tmp;
-    PVec pos;
+    Vector3 pos;
     dActor_c *obj0;
     dActor_c *dp;
 
@@ -14233,14 +14232,13 @@ extern "C" int func_ov002_020d85fc(daPly_c *player, daPly_c *arg, int flags) {
     return 0;
 }
 
-struct PVec869c { s32 x, y, z; ~PVec869c() {} };
 
 int daPly_c::func_ov002_020d869c() {
     daPly_c *other;
     u32 flags;
     u32 f2;
     int t;
-    PVec869c p;
+    Vector3 p;
     s32 x;
     s32 y;
     s32 z;
@@ -14325,14 +14323,10 @@ void daPly_c::func_ov002_020d8854() {
     }
 }
 
-// non-trivial destructor keeps the particle-spawn vector on the stack (no SROA)
-struct PVec8944 {
-    int x, y, z;
-    ~PVec8944() {}
-};
+// Vector3's declared destructor keeps the particle-spawn vector on the stack (no SROA)
 
 int daPly_c::func_ov002_020d8944(daPly_c *enemy, daPly_c *v1) {
-    PVec8944 p;
+    Vector3 p;
     Vector3 sum;
     Vector3 asr;
     int b0 = ((unsigned short)(v1)->actorID == 0xbf);
@@ -17353,7 +17347,6 @@ int daPly_c::St_Balloon_Init() {
 
 // local extern: this file's local Vector3/fx32 shadow the shared headers, so it cannot include daPly_c.h and use the member
 
-struct Vector3e968 { int x, y, z; ~Vector3e968(){} };
 
 void daPly_c::func_ov002_020de968() {
     mBalloonTimer = 0;
@@ -17362,7 +17355,7 @@ void daPly_c::func_ov002_020de968() {
     mIsBalloon = 0;
     mOpacity = 0x1f;
     EndPowerupMusic(0x30);
-    Vector3e968 v;
+    Vector3 v;
     v.x = mPos.x;
     v.y = mPos.y;
     v.z = mPos.z;
