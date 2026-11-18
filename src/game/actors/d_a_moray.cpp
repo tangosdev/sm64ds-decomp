@@ -514,10 +514,6 @@ void daMoray_c::UpdatePose() {
     Vector3 localOffset;
     Vector3 worldTarget;
     Vector3 asr;
-    int i;
-    daMoray_c *row;
-    int transformOffset;
-    Vector3 *pos;
     Matrix4x3 *modelMtx;
     dActor_c *star;
     u32 starUniqueID;
@@ -539,43 +535,27 @@ void daMoray_c::UpdatePose() {
                                            this->mAngle.z);
     this->mBlendAnmModel.mat4x3 = data_020a0e68;
     ApproachLinear(this->mSegmentAngle[6], this->mSegmentAngle[7], 0x40);
-    i = 0;
     modelMtx = &this->mBlendAnmModel.mat4x3;
     this->mSegmentAngle[5] = this->mSegmentAngle[6];
-    /* row steps one Vector3 at a time so the clear and the << 3 hit
-       mSegmentPos[i] through the actor base; pos receives the bone
-       translation before that shift. Measured (#821 r49): this->mSegmentPos[i]
-       for the clear and the shift is the right size but 17 words off
-       (register order); pos-> for all three is 0x2dc of 0x2f8. The bone
-       matrix is a byte offset too: &transforms[bone] with bone++ is 20 bytes
-       off (#821 r65).
-       Kept (#821 r73): &transforms[bone] or transforms + bone, bone++ from 0
-       in any declaration slot, is 0x2f8 but 10 words off (row and the bone
-       base swap r4/r5); a Matrix4x3 * walk is 0x2f4. The cast is of
-       transforms, not of this. */
-    row = this;
-    transformOffset = i;
-    pos = this->mSegmentPos;
-    do {
+    for (int i = 0; i < 7; i++) {
         Matrix4x3 *dst;
-        row->mSegmentPos[0].x = 0;
-        row->mSegmentPos[0].y = 0;
-        row->mSegmentPos[0].z = 0;
+        mSegmentPos[i].x = 0;
+        mSegmentPos[i].y = 0;
+        mSegmentPos[i].z = 0;
         dst = &data_020a0e68;
         *dst = *modelMtx;
-        MTX_Concat43((Matrix4x3 *)((char *)this->mBlendAnmModel.data.transforms + transformOffset),
-                     dst, dst);
-        pos->x = dst->t.x;
-        pos->y = dst->t.y;
-        pos->z = dst->t.z;
-        row->mSegmentPos[0].x = row->mSegmentPos[0].x << 3;
-        row->mSegmentPos[0].y = row->mSegmentPos[0].y << 3;
-        row->mSegmentPos[0].z = row->mSegmentPos[0].z << 3;
-        row = (daMoray_c *)((char *)row + sizeof(Vector3));
-        transformOffset += 0x30;
-        pos++;
-        i++;
-    } while (i < 7);
+        MTX_Concat43(&mBlendAnmModel.data.transforms[i], dst, dst);
+        /* Measured (#821 r96): pos declared at the top of the loop is
+           15 words off (its address takes r6 ahead of the bone row), and
+           the << 3 through pos as well is 0x2e8 of 0x2f8. */
+        Vector3 &pos = mSegmentPos[i];
+        pos.x = dst->t.x;
+        pos.y = dst->t.y;
+        pos.z = dst->t.z;
+        mSegmentPos[i].x <<= 3;
+        mSegmentPos[i].y <<= 3;
+        mSegmentPos[i].z <<= 3;
+    }
     starUniqueID = this->mStarUniqueID;
     if (starUniqueID == 0) {
         return;
