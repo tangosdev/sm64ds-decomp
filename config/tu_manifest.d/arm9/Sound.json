@@ -895,7 +895,7 @@
     {
       "from": "@2050",
       "to": "data_0208e498",
-      "evidence": "compiler string literal: the one literal in this TU (func_020133bc's archive path), numbered @2050 by mwcc, keeps its configured address name Re-keyed from @2050 to @2048 after SndRegTable's two this-alias locals were removed (measured from the compiled object). Re-keyed from @2048 to @2050 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler string literal: the one literal in this TU (func_020133bc's archive path), numbered @2050 by mwcc, keeps its configured address name Re-keyed from @2050 to @2048 after SndRegTable's two this-alias locals were removed (measured from the compiled object). Re-keyed from @2048 to @2050 when the Matrix4x3 union (#821 r69) composed with the r71-r78 stack (#821 r79a) (measured from the compiled object)."
     }
   ],
   "notes": [
