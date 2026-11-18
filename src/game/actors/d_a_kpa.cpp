@@ -2446,7 +2446,10 @@ angles, and mSpeed.y. */
  * register and skips the second load). The flag and the computed value are
  * split so the flag keeps r6. */
 void daKpa_c::ActTiltLavaPlatform() {
-    daKpa2Bg_c* found; int i; int flag; const short* p;
+    daKpa2Bg_c *found;
+    int i;
+    int flag;
+    const short *p;
     this->mSpeed.y = this->mTerminalVelocity;
     found = (daKpa2Bg_c*)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (found == 0) { this->mState = BOWSER_STATE_IDLE; return; }
