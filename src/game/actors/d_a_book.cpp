@@ -184,6 +184,10 @@ void daBook_c::SpawnShootBook() {
     }
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* What a flying book does about whatever GetHitType found. Returns 1
  * when the book is gone. The first count handed to daPly_c::Hurt is 0 for a
  * metal player, 2 for KILLER_BOOK and 1 otherwise; touching the player also
@@ -204,8 +208,7 @@ int daBook_c::CheckAttacks() {
         return 1;
     }
     if (r == HIT_TOUCHED_PLAYER) {
-        int eq = (actorID == kKillerBookActorId);
-        if (eq) {
+        if (IsActorID(this, kKillerBookActorId)) {
             Vector3 v;
             v.x = mPos.x;
             v.y = mPos.y;
@@ -621,8 +624,8 @@ void daBook_c::UpdateModelMatrix() {
     m->m[9] = mPos.x >> 3;
     m->m[10] = mPos.y >> 3;
     m->m[11] = mPos.z >> 3;
-    int b = (actorID == kKillerBookActorId);
-    if (b == 0) return;
+    if (!IsActorID(this, kKillerBookActorId))
+        return;
     mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mHomePosY >> 3;
     mShadowMat.m[11] = mPos.z >> 3;
@@ -767,11 +770,8 @@ int daBook_c::InitResources()
     mUniformScale = 0x800;
 
     {
-        unsigned short id = actorID;
-        unsigned int match1 = (id == kShootBookActorId);
-
         do {
-            if (match1) {
+            if (IsActorID(this, kShootBookActorId)) {
                 mKind = KIND_FLYING_BOOK;
                 mState = STATE_SPAWNED;
                 mCoinType = 0;
@@ -779,8 +779,7 @@ int daBook_c::InitResources()
                 break;
             }
             {
-                unsigned int match2 = (id == kKillerBookActorId);
-                if (match2) {
+                if (IsActorID(this, kKillerBookActorId)) {
                     mKind = KIND_FLYING_BOOK;
                     mState = STATE_WAIT;
                     mCoinType = 3;
@@ -789,8 +788,7 @@ int daBook_c::InitResources()
                 }
             }
             {
-                unsigned int match3 = (id == kBookSwitchActorId);
-                if (match3) {
+                if (IsActorID(this, kBookSwitchActorId)) {
                     mKind = KIND_SWITCH_BOOK;
                     mState = STATE_SWITCH_WAIT;
                     mCoinType = 0;
@@ -820,8 +818,8 @@ int daBookGen_c::InitResources()
 /* KILLER_BOOK cannot be aimed at with an egg; the others report 0x19000. */
 s32 daBook_c::OnAimedAtWithEgg()
 {
-    int eq = (actorID == kKillerBookActorId);
-    if(eq) return 0;
+    if (IsActorID(this, kKillerBookActorId))
+        return 0;
     return 0x19000;
 }
 
