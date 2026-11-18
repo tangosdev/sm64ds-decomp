@@ -260,10 +260,6 @@ struct E
   int field0;
   int field4;
 };
-struct LL {
-  int lo;
-  int hi;
-};
 /* The 16 sequence players at sSeqPlayer: nnsys/snd/player.h's
    NNSSndSeqPlayer (fader at 0x1c, status at 0x2c, playerNo at 0x3c). The
    free list sFreeList and the priority list sPrioList link them
@@ -1771,14 +1767,12 @@ extern "C" void func_0204fed0(struct C *c) {
 }
 
 extern "C" void func_0204fe5c(struct C *c, int volume) {
-    /* Kept (#821 r82): idx read without the new_var copy -> same size,
-       bytes differ. The empty `if (1) {}` before the loop was inert. */
-    unsigned char new_var;
+    unsigned char idx;
     int i = 0;
     c->volume = volume;
     if (c->chanCount > 0) {
         do {
-            unsigned char idx = new_var = c->chans[i];
+            idx = c->chans[i];
             int r = SND_CalcChannelVolume(c->volume + data_020a5578[idx].field4);
             SND_SetChannelVolume(1 << idx, r & 0xff, r >> 8);
             i++;
@@ -1807,15 +1801,13 @@ extern "C" void func_0204fda4(struct C *c) {
 }
 
 void C::func_0204fce8(void *arg) {
-    /* Kept (#821 r82): the sum written without new_var -> same size, bytes
-       differ. */
-    int new_var;
+    /* Kept (#821 r84): bufferAddr added inline (either order) -> bytes differ. */
     int i;
     int q = (u32)this->bufSize / (u32)this->blockCount;
     int scaled = q * this->f20;
     for (i = 0; i < this->chanCount; i++) {
-        new_var = ((LL *)data_020a5578)[this->chans[i]].lo;
-        data_020a5538[i] = new_var + scaled;
+        int bufferAddr = data_020a5578[this->chans[i]].field0;
+        data_020a5538[i] = bufferAddr + scaled;
     }
 
     this->callback(arg, this->chanCount, data_020a5538, q, this->unk8, this->unk1c);

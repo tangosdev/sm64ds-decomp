@@ -28,11 +28,11 @@
  *   data_ov002_0210a760, which has no recovered name.
  * - The byte at 0x6da is pad_6da. InitResources writes it and nothing reads
  *   it; it has no honest name.
- * - Kept (#821 r77): the eight `MTX_MultVec43((Vector3 *)&bone->m[9], ...)`
- *   calls read a bone matrix's translation column. Matrix4x3 is one flat
- *   fx32 m[12] (the ROM copies it as a single twelve-word block, see
- *   math/Matrix.h), so that column has no member to name and a vector view
- *   of m[9..11] can only be a cast.
+ * - Kept (#821 r79a): the eight `MTX_MultVec43((Vector3 *)&bone->t, ...)`
+ *   calls read a bone matrix's translation row t, which is the SDK's POD
+ *   VecFx32 (math/Matrix.h). The MTX_MultVec43 overload these calls take
+ *   (math/MtxStack.h) is the game-type one, const Vector3 *, so the row is
+ *   cast at that boundary.
  * - daPly_c:: methods with no body-local externs carry no extern "C"
  *   wrapper (288 definitions); the remaining 212 keep it: the block gives C
  *   linkage to body-local externs. Externs declared once at file scope below

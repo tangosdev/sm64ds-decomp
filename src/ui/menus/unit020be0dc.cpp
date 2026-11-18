@@ -77,13 +77,12 @@ typedef struct Vec3sWords {
     s16 w[3];
 } Vec3sWords;
 
-/* Kept (#821 r77): `(Vector3 *)&bone0->m[9]` in func_ov007_020beb80 and
-   func_ov007_020be0dc's `pos` read a bone Matrix4x3's translation column.
-   Matrix4x3 is one flat fx32 m[12] (math/Matrix.h gives the ROM evidence),
-   so that column has no member to name and a vector view is a cast. The
-   Vec3Words/Vec3sWords copies stay under r72's measurement: their
-   destinations are game vector types whose C++ assignment is memberwise.
-   Re-measured: `prevPos = *pos;` gives func_ov007_020beb80 0x1f0 and
+/* func_ov007_020beb80 and func_ov007_020be0dc read a bone's translation
+   through `pos`, a pointer to the bone matrix's t row (the SDK's VecFx32,
+   math/Matrix.h). Kept (#821 r77): the Vec3Words/Vec3sWords copies stay
+   under r72's measurement: their destinations are game vector types whose
+   C++ assignment is memberwise. Measured with pos a Vector3 *:
+   `prevPos = *pos;` gives func_ov007_020beb80 0x1f0 and
    `sys->position = *pos;` 0x1ec (ROM 0x1e0). */
 
 /* One 0xc-byte particle tracking record of the kind func_0204dab4 fills (as
@@ -186,7 +185,7 @@ void Ov007Figure::func_ov007_020beb80() {
     int frames;
     int vel;
     int speed;
-    Vector3 *pos = (Vector3 *)&bone0->t;
+    VecFx32 *pos = &bone0->t;
     yaw = FX_Atan2(row[0], row[2]);
     motion.x = (pos->x - this->prevPos.x);
     motion.y = (pos->y - this->prevPos.y);
@@ -516,7 +515,7 @@ int func_ov007_020be0dc(void) {
         particleIndex = data_ov007_02103230;
     } else {
         u8 kind = fig->figureIndex;
-        Vector3 *pos;
+        VecFx32 *pos;
 
         switch (kind) {
         case 0:
@@ -535,7 +534,7 @@ int func_ov007_020be0dc(void) {
         } break;
         }
 
-        pos = (Vector3 *)&Bone0(fig)->t;
+        pos = &Bone0(fig)->t;
         func_ov007_020bfd70(WORK->cameras[0], pos, &screenX, &screenY);
 
         if (WORK->cameraPreset == 4)

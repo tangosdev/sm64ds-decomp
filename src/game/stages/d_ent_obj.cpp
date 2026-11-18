@@ -247,6 +247,8 @@ void UnknownVsPlayer::MovePoseParticles() {
         return;
     Vector3 pos;
     Matrix4x3 *bone = &mModel.data.transforms[15];
+    /* t is the SDK's VecFx32; the game-type MTX_MultVec43 overload
+       (math/MtxStack.h) takes const Vector3 *, so the row is cast here. */
     MTX_MultVec43((const Vector3 *)&bone->t, &mModel.mat4x3, &pos);
     Vec3_MulScalarInPlace(&pos, 0x8000);
     pos.y += 0x28000;

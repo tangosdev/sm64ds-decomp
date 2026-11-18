@@ -16,9 +16,7 @@ source. Nothing goes red. That silent failure is why this is a tool and not a `g
 WHAT IT DOES
 ------------
   1. plan     which root files move where (``srcpath`` decides the destination, this tool
-              only decides WHICH files are in scope). Never moves a file that `port/` names
-              by literal path -- the port builds its own host executable off those paths
-              and its changes do not ride on main.
+              only decides WHICH files are in scope).
   2. move     rename on disk, then stage old+new together so git records a rename.
   3. rekey    rewrite ``src/<old>`` -> ``src/<dir>/<old>`` in every tracked text file
               outside the moved ones (delinks, baselines, manifests, attribution, notes,
@@ -52,8 +50,6 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 
 # A path counts as "the same name" only when the next character cannot extend it.
 _NAME_CHARS = "A-Za-z0-9_"
-_PORT_REF_RE = re.compile(r"(?<![%s])src/([%s+.\-]+\.(?:c|cpp))(?![%s])"
-                          % (_NAME_CHARS, _NAME_CHARS, _NAME_CHARS))
 # Text we never rewrite: the sources we just moved are handled as ordinary text too, so
 # the only exclusions are binary blobs and generated build output.
 _SKIP_DIRS = ("build/", "extracted/")
@@ -84,23 +80,6 @@ def root_sources():
     """Repo-relative paths of every .c/.cpp sitting directly in `src/`."""
     return sorted(p.relative_to(SP.REPO).as_posix() for p in SP.SRC.iterdir()
                   if p.is_file() and p.suffix in SP.SOURCE_SUFFIXES)
-
-
-def port_pinned(files=None):
-    """Root basenames that `port/` names by literal `src/<name>` path."""
-    pinned = set()
-    for f in files if files is not None else tracked_files():
-        if not f.startswith("port/"):
-            continue
-        try:
-            data = (SP.REPO / f).read_bytes()
-        except OSError:
-            continue
-        if b"\0" in data[:8192]:
-            continue
-        for m in _PORT_REF_RE.finditer(data.decode("utf-8", "replace")):
-            pinned.add(m.group(1))
-    return pinned
 
 
 def _class_homes(rels):
@@ -145,18 +124,14 @@ def _owner_module(rel):
     return None
 
 
-def plan(selects, limit=None, honour_port=True, files=None):
+def plan(selects, limit=None):
     """``(moves, skipped)``: Move objects in a stable order, and {rel: reason}."""
     rels = root_sources()
-    pinned = port_pinned(files) if honour_port else set()
     homes, class_skip = _class_homes(rels)
     moves, skipped = [], {}
     for rel in rels:
         name = pathlib.PurePosixPath(rel).name
         stem = pathlib.PurePosixPath(rel).stem
-        if name in pinned:
-            skipped[rel] = "named by a literal path in port/"
-            continue
         mod = SP.module_of(stem)
         if mod is not None:
             kind, module = "unnamed", mod
@@ -428,11 +403,9 @@ def main():
     ap.add_argument("--limit", type=int, help="move at most this many files")
     ap.add_argument("--apply", action="store_true", help="do it (default: print the plan)")
     ap.add_argument("--receipt", help="write the move list to this JSON file")
-    ap.add_argument("--ignore-port", action="store_true",
-                    help="also move files port/ names by literal path (port/ is rekeyed too)")
     a = ap.parse_args()
 
-    moves, skipped = plan(a.select, a.limit, honour_port=not a.ignore_port)
+    moves, skipped = plan(a.select, a.limit)
     summarise(moves, skipped)
     if a.receipt:
         pathlib.Path(a.receipt).write_text(

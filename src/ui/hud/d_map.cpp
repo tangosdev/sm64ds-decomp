@@ -14,8 +14,6 @@
  * against their ROM homes (config/tu_manifest.d/ov002/dMap_c.json).
  *
  * leftovers:
- * - Behavior keeps its goto structure, and InitResources keeps one; the
- *   labels are named for the offset in the ROM function (L274 is +0x274).
  * - The camera's follow word is mTargetPlayer in dCamera_c.h, a dActor_c *;
  *   this TU reads it as the object the map follows.
  * - The player-list copy keeps an (int) launder on &o->mPos: the ROM
@@ -551,341 +549,266 @@ s32 dMap_c::Behavior()
     player = gPlayers[gLocalPlayerId];
     focus = 0;
 
-    if (gSceneFader->IsAtStart() == 0)
-        goto L274;
-    if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
-        goto L274;
-    if (data_0209d4b0 != 0) goto L274;
-    if (data_0209f350[gLocalPlayerId] != 0)
-        goto L274;
-    if (player->Unk_020ca8f8() == 1) goto L274;
+    if (gSceneFader->IsAtStart() != 0 && !(gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING) &&
+        data_0209d4b0 == 0 && data_0209f350[gLocalPlayerId] == 0 && player->Unk_020ca8f8() != 1) {
+        u8 touching;
 
-    if (this->mTouchCircleTimer != 0) {
-        this->mTouchCircleTimer -= data_0208ee44;
-    }
-
-    flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
-    if ((u8)flagsOr) goto L200;
-    if (gNextSublevel >= 0)
-        goto L200;
-    if (data_0209f204 != 0) goto L200;
-    if (data_ov002_02111150 != 0) goto L200;
-    if (data_0209d660 != 0) goto L200;
-    {
-        u8 v = data_0209f498[gActivePlayerSlot].touching;
-        if (v == 0 && this->mTouchCircleTimer == 0) goto L200;
-        gSubScreenLayers |= 4;
-        if (v != 0) {
-            this->mTouchCircleTimer = 30;
-            SetSubBg2Offset(256 - data_0209f498[gActivePlayerSlot].tx,
-                            128 - data_0209f498[gActivePlayerSlot].ty);
+        if (this->mTouchCircleTimer != 0) {
+            this->mTouchCircleTimer -= data_0208ee44;
         }
-        G2S_SetBlendAlpha(4, 0x28, 4, 0xd);
-        if (data_0209f498[gActivePlayerSlot].mode != 2)
-            G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
-                                  GX_BG_SCRBASE_0x9800, GX_BG_CHARBASE_0x00000);
-        else
-            G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
-                                  GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
-        goto L2a4;
-    }
 
-L200: {
-    s32 b = (gGameMode == 1);
-    if (b == 0) {
-        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
-            goto L2a4;
-    }
-    gSubScreenLayers &= ~4;
-    if (!(u8)flagsOr) {
-        GXS_SetVisiblePlane(gSubScreenLayers);
-        G2S_BlendNone();
-    }
-    this->mTouchCircleTimer = 0;
-    goto L2a4;
-}
-
-L274:
-    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0) {
-        if (data_0209d4b0 == 0) goto L2a4;
-    }
-    gSubScreenLayers &= ~4;
-
-L2a4:
-    if (cam == 0) goto L3e8;
-    if (SublevelToLevel(gCurrentSublevel) != 0x1d)
-        goto A1;
-    if (gCurrentSublevel == 1)
-        goto A1;
-    if (gCurrentSublevel == 0x33)
-        goto A1;
-    if (gCurrentSublevel != 3)
-        goto L350;
-A1:
-    if (SublevelToLevel(gCurrentSublevel) == 4)
-        goto L350;
-    if (SublevelToLevel(gCurrentSublevel) != 0x13)
-        goto L318;
-    if (gCurrentSublevel == 0x2e)
-        goto L350;
-L318:
-    {
-    s32 b = (gGameMode == 0);
-    if (b == 0)
-        goto L360;
-    if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)
-        goto L360;
-    if (this->mInIntroCutscene != 0)
-        goto L360;
-    }
-L350:
-    this->mAngle = 0;
-    goto L3e0;
-
-L360:
-    if (this->mInIntroCutscene == 0) goto L3a4;
-    if (gMapIntroRotating == 0)
-        goto L3e0;
-    /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever (r72-r75) applies to
-       this scalar pin.
-       Kept (#821 r80): getter tried -> a u16 angle accessor in the step is 0xcf8 of 0xcfc. */
-    *(s16 *)&this->mAngle += 0x40; // measured (#821 r68): the plain u16 `+=` loads ldrh, ROM ldrsh
-    if (this->mAngle >= 0x8000)
-        gMapIntroRotating = 0;
-    goto L3e0;
-
-L3a4:
-    if (data_0209d660 != 0) goto L3e0;
-    {
-        s32 f = cam->mFlags;
-        if (f & 0xc000) goto L3e0;
-        if (f & 8) goto L3e0;
-    }
-    this->mAngle = (cam->mAngleY & 0xffe0);
-
-L3e0:
-    /* The camera's target player is what the map follows. */
-    focus = cam->mTargetPlayer;
-
-L3e8:
-    if (focus == 0) goto Lae4;
-
-    if (this->mInIntroCutscene == 0) goto L44c;
-    if (data_ov002_02111144 == 0) goto L4d8;
-    this->mInvScale -= 9;
-    if (this->mTargetInvScale <= this->mInvScale) goto L4d8;
-    this->mInvScale = this->mTargetInvScale;
-    data_ov002_02111144 = 0;
-    gMapIntroRotating = 1;
-    goto L4d8;
-
-L44c:
-    if (data_0209d660 == 0) goto L47c;
-    if (this->mInvScale < 0xbb8)
-        this->mInvScale += 0x1c;
-    goto L4d8;
-
-L47c:
-    if (this->mTargetInvScale <= this->mInvScale) goto L4b0;
-    this->mInvScale += 0x1c;
-    if (this->mTargetInvScale < this->mInvScale)
-        this->mInvScale = this->mTargetInvScale;
-    goto L4d8;
-
-L4b0:
-    if (this->mTargetInvScale >= this->mInvScale) goto L4d8;
-    this->mInvScale -= 0x1c;
-    if (this->mTargetInvScale > this->mInvScale)
-        this->mInvScale = this->mTargetInvScale;
-
-L4d8:
-    this->mCurrentScale = FX_Div(this->mScale, this->mInvScale);
-    {
-        fx32 cs = FX_CosIdx(this->mAngle >> 4);
-        this->mBgMatrixA = FX_MUL(cs, this->mInvScale);
-    }
-    {
-        fx32 sn = FX_SinIdx(this->mAngle >> 4);
-        this->mBgMatrixB = FX_MUL(sn, this->mInvScale);
-    }
-    this->mBgMatrixC = -this->mBgMatrixB;
-    this->mBgMatrixD = this->mBgMatrixA;
-    this->mMapCenterWorld = this->mMapOrigin;
-    this->mMapCenterX =
-        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorld.x, this->mScale) + 0x800) >> 12);
-    this->mMapCenterY =
-        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorld.z, this->mScale) + 0x800) >> 12);
-
-    focusPosSrc = &focus->mPos;
-    focusPos = *focusPosSrc;
-    FixTHIPaintingRoomPos(focusPos);
-    GetPosOnMinimap(&focusPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle, &miniPos);
-    {
-        s32 p = gLocalPlayerId;
-        this->mPlayerIconX[p] = (miniPos.x + 0x800) >> 12;
-        this->mPlayerIconY[p] = (miniPos.z + 0x800) >> 12;
-
-        if (SublevelToLevel(gCurrentSublevel) != 0x1d)
-            goto B1;
-        if (gCurrentSublevel != 1)
-            goto L6a4;
-        if (gCurrentSublevel == 0x33)
-            goto B1;
-        if (gCurrentSublevel != 3)
-            goto L6a4;
-B1:
-    if (SublevelToLevel(gCurrentSublevel) != 0x13)
-        goto L6f0;
-    if (gCurrentSublevel != 0x2e)
-        goto L6f0;
-L6a4:
-        if (this->mPlayerIconX[p] < 0x60) { miniPos.x = 0x60000; }
-        else if (this->mPlayerIconX[p] > 0xa0) { miniPos.x = 0xa0000; }
-        if (this->mPlayerIconY[p] < 0x40) { miniPos.z = 0x40000; }
-        else if (this->mPlayerIconY[p] > 0x80) { miniPos.z = 0x80000; }
-        goto L738;
-L6f0:
-        if (this->mPlayerIconX[p] < 0x24) { miniPos.x = 0x24000; }
-        else if (this->mPlayerIconX[p] > 0xdc) { miniPos.x = 0xdc000; }
-        if (this->mPlayerIconY[p] < 0x24) { miniPos.z = 0x24000; }
-        else if (this->mPlayerIconY[p] > 0x9c) { miniPos.z = 0x9c000; }
-    }
-L738:
-    GetPosFromMinimapPos(miniPos, this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
-                         clampedWorld);
-    Vec3_Sub(&scrollDelta, &focusPos, &clampedWorld);
-    VEC_Add(&this->mMapCenterWorld, &scrollDelta, &this->mMapCenterWorld);
-    this->mMapCenterX =
-        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorld.x, this->mScale) + 0x800) >> 12);
-    this->mMapCenterY =
-        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorld.z, this->mScale) + 0x800) >> 12);
-
-    /* Project each object list onto the map. A missing object gets map id -1. Stars whose
-     * kind byte in gStarMarkerTypes is 4 are the ones Render draws as MM_RED_COIN. */
-    for (i = 0; i < 4; i++) {
-        daPly_c *o = gPlayers[i];
-        if (o != 0) {
-            /* the (int) launder keeps the ROM's precomputed copy source */
-            playerPos = *(Vector3 *)((int)&o->mPos);
-            FixTHIPaintingRoomPos(playerPos);
-            GetPosOnMinimap(&playerPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
-                            &miniPos);
-            this->mPlayerIconX[i] = (miniPos.x + 0x800) >> 12;
-            this->mPlayerIconY[i] = (miniPos.z + 0x800) >> 12;
-            if (i != gLocalPlayerId)
-                this->mPlayerMapIDs[i] = GetMinimapID(o, -1);
+        flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
+        if (!(u8)flagsOr && gNextSublevel < 0 && data_0209f204 == 0 && data_ov002_02111150 == 0 &&
+            data_0209d660 == 0 &&
+            ((touching = data_0209f498[gActivePlayerSlot].touching) != 0 ||
+             this->mTouchCircleTimer != 0)) {
+            gSubScreenLayers |= 4;
+            if (touching != 0) {
+                this->mTouchCircleTimer = 30;
+                SetSubBg2Offset(256 - data_0209f498[gActivePlayerSlot].tx,
+                                128 - data_0209f498[gActivePlayerSlot].ty);
+            }
+            G2S_SetBlendAlpha(4, 0x28, 4, 0xd);
+            if (data_0209f498[gActivePlayerSlot].mode != 2)
+                G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
+                                      GX_BG_SCRBASE_0x9800, GX_BG_CHARBASE_0x00000);
             else
-                this->mPlayerMapIDs[i] = GetMinimapID(o, data_ov002_02111148);
+                G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
+                                      GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
         } else {
-            this->mPlayerMapIDs[i] = -1;
+            s32 b = (gGameMode == 1);
+            if (b != 0 || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+                gSubScreenLayers &= ~4;
+                if (!(u8)flagsOr) {
+                    GXS_SetVisiblePlane(gSubScreenLayers);
+                    G2S_BlendNone();
+                }
+                this->mTouchCircleTimer = 0;
+            }
         }
+    } else {
+        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) || data_0209d4b0 != 0)
+            gSubScreenLayers &= ~4;
     }
 
-    for (i = 0; i < 12; i++) {
-        dActor_c *o = STAR_MARKERS[i];
-        if (o != 0) {
-            GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
-                            &miniPos);
-            this->mStarIconX[i] = (miniPos.x + 0x800) >> 12;
-            this->mStarIconY[i] = (miniPos.z + 0x800) >> 12;
-            if (gStarMarkerTypes[i] != 4)
-                this->mStarMapIDs[i] = GetMinimapID(o, -1);
-            else
-                this->mStarMapIDs[i] = 1;
-        } else {
-            this->mStarMapIDs[i] = -1;
+    if (cam != 0) {
+        if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
+             gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
+            SublevelToLevel(gCurrentSublevel) == 4 ||
+            (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
+            ((int)(gGameMode == 0) != 0 &&
+             (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+             this->mInIntroCutscene == 0)) {
+            this->mAngle = 0;
+        } else if (this->mInIntroCutscene != 0) {
+            if (gMapIntroRotating != 0) {
+                /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever
+                   (r72-r75) applies to this scalar pin.
+                   Kept (#821 r80): getter tried -> a u16 angle accessor in the step is 0xcf8
+                   of 0xcfc.
+                   measured (#821 r68): the plain u16 `+=` loads ldrh, ROM ldrsh. */
+                *(s16 *)&this->mAngle += 0x40;
+                if (this->mAngle >= 0x8000)
+                    gMapIntroRotating = 0;
+            }
+        } else if (data_0209d660 == 0 && !(cam->mFlags & 0xc000) && !(cam->mFlags & 8)) {
+            this->mAngle = (cam->mAngleY & 0xffe0);
         }
+        /* The camera's target player is what the map follows. */
+        focus = cam->mTargetPlayer;
     }
 
-    for (i = 0; i < 9; i++) {
-        dActor_c *o = (dActor_c *)data_0209f3e8[i];
-        if (o != 0) {
-            GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
-                            &miniPos);
-            this->mCapIconX[i] = (miniPos.x + 0x800) >> 12;
-            this->mCapIconY[i] = (miniPos.z + 0x800) >> 12;
-            this->mCapMapIDs[i] = GetMinimapID(o, -1);
-        } else {
-            this->mCapMapIDs[i] = -1;
+    if (focus != 0) {
+        if (this->mInIntroCutscene != 0) {
+            if (data_ov002_02111144 != 0) {
+                this->mInvScale -= 9;
+                if (this->mTargetInvScale > this->mInvScale) {
+                    this->mInvScale = this->mTargetInvScale;
+                    data_ov002_02111144 = 0;
+                    gMapIntroRotating = 1;
+                }
+            }
+        } else if (data_0209d660 != 0) {
+            if (this->mInvScale < 0xbb8)
+                this->mInvScale += 0x1c;
+        } else if (this->mTargetInvScale > this->mInvScale) {
+            this->mInvScale += 0x1c;
+            if (this->mTargetInvScale < this->mInvScale)
+                this->mInvScale = this->mTargetInvScale;
+        } else if (this->mTargetInvScale < this->mInvScale) {
+            this->mInvScale -= 0x1c;
+            if (this->mTargetInvScale > this->mInvScale)
+                this->mInvScale = this->mTargetInvScale;
         }
-    }
 
-    /* The star key: Render blinks it under the same two flag tests. */
-    if (data_0209caa0.file.flags1 & 0x40)
-        goto La64;
-    if ((data_0209caa0.file.flags2 & 0x20000) == 0)
-        goto La64;
-    {
-        dActor_c *o = (dActor_c *)data_0209f33c;
-        if (o == 0) { this->mStarKeyMapID = -1; goto La64; }
-        GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+        this->mCurrentScale = FX_Div(this->mScale, this->mInvScale);
+        {
+            fx32 cs = FX_CosIdx(this->mAngle >> 4);
+            this->mBgMatrixA = FX_MUL(cs, this->mInvScale);
+        }
+        {
+            fx32 sn = FX_SinIdx(this->mAngle >> 4);
+            this->mBgMatrixB = FX_MUL(sn, this->mInvScale);
+        }
+        this->mBgMatrixC = -this->mBgMatrixB;
+        this->mBgMatrixD = this->mBgMatrixA;
+        this->mMapCenterWorld = this->mMapOrigin;
+        this->mMapCenterX = this->mMapCenterOffset +
+                            ((FX_MUL(this->mMapCenterWorld.x, this->mScale) + 0x800) >> 12);
+        this->mMapCenterY = this->mMapCenterOffset +
+                            ((FX_MUL(this->mMapCenterWorld.z, this->mScale) + 0x800) >> 12);
+
+        focusPosSrc = &focus->mPos;
+        focusPos = *focusPosSrc;
+        FixTHIPaintingRoomPos(focusPos);
+        GetPosOnMinimap(&focusPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
                         &miniPos);
-        this->mStarKeyIconX = (miniPos.x + 0x800) >> 12;
-        this->mStarKeyIconY = (miniPos.z + 0x800) >> 12;
-        this->mStarKeyMapID = 1;
-    }
+        {
+            s32 p = gLocalPlayerId;
+            this->mPlayerIconX[p] = (miniPos.x + 0x800) >> 12;
+            this->mPlayerIconY[p] = (miniPos.z + 0x800) >> 12;
 
-La64:
-    for (i = 0; i < 8; i++) {
-        dActor_c *o = (dActor_c *)data_0209f3a4[i];
-        if (o != 0) {
-            GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
-                            &miniPos);
-            this->mSpikeBombIconX[i] = (miniPos.x + 0x800) >> 12;
-            this->mSpikeBombIconY[i] = (miniPos.z + 0x800) >> 12;
-            this->mSpikeBombMapIDs[i] = o->mAreaId;
-        } else {
-            this->mSpikeBombMapIDs[i] = -1;
+            /* The small clamp box. Unlike the other three copies of this level test, the ROM
+             * branches on `!= 1` here, so the 0x1d arm passes for every sublevel. */
+            if ((SublevelToLevel(gCurrentSublevel) == 0x1d &&
+                 (gCurrentSublevel != 1 || (gCurrentSublevel != 0x33 && gCurrentSublevel != 3))) ||
+                (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e)) {
+                if (this->mPlayerIconX[p] < 0x60) {
+                    miniPos.x = 0x60000;
+                } else if (this->mPlayerIconX[p] > 0xa0) {
+                    miniPos.x = 0xa0000;
+                }
+                if (this->mPlayerIconY[p] < 0x40) {
+                    miniPos.z = 0x40000;
+                } else if (this->mPlayerIconY[p] > 0x80) {
+                    miniPos.z = 0x80000;
+                }
+            } else {
+                if (this->mPlayerIconX[p] < 0x24) {
+                    miniPos.x = 0x24000;
+                } else if (this->mPlayerIconX[p] > 0xdc) {
+                    miniPos.x = 0xdc000;
+                }
+                if (this->mPlayerIconY[p] < 0x24) {
+                    miniPos.z = 0x24000;
+                } else if (this->mPlayerIconY[p] > 0x9c) {
+                    miniPos.z = 0x9c000;
+                }
+            }
+        }
+
+        GetPosFromMinimapPos(miniPos, this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                             clampedWorld);
+        Vec3_Sub(&scrollDelta, &focusPos, &clampedWorld);
+        VEC_Add(&this->mMapCenterWorld, &scrollDelta, &this->mMapCenterWorld);
+        this->mMapCenterX = this->mMapCenterOffset +
+                            ((FX_MUL(this->mMapCenterWorld.x, this->mScale) + 0x800) >> 12);
+        this->mMapCenterY = this->mMapCenterOffset +
+                            ((FX_MUL(this->mMapCenterWorld.z, this->mScale) + 0x800) >> 12);
+
+        /* Project each object list onto the map. A missing object gets map id -1. Stars whose
+         * kind byte in gStarMarkerTypes is 4 are the ones Render draws as MM_RED_COIN. */
+        for (i = 0; i < 4; i++) {
+            daPly_c *o = gPlayers[i];
+            if (o != 0) {
+                /* the (int) launder keeps the ROM's precomputed copy source */
+                playerPos = *(Vector3 *)((int)&o->mPos);
+                FixTHIPaintingRoomPos(playerPos);
+                GetPosOnMinimap(&playerPos, &this->mMapCenterWorld, this->mCurrentScale,
+                                this->mAngle, &miniPos);
+                this->mPlayerIconX[i] = (miniPos.x + 0x800) >> 12;
+                this->mPlayerIconY[i] = (miniPos.z + 0x800) >> 12;
+                if (i != gLocalPlayerId)
+                    this->mPlayerMapIDs[i] = GetMinimapID(o, -1);
+                else
+                    this->mPlayerMapIDs[i] = GetMinimapID(o, data_ov002_02111148);
+            } else {
+                this->mPlayerMapIDs[i] = -1;
+            }
+        }
+
+        for (i = 0; i < 12; i++) {
+            dActor_c *o = STAR_MARKERS[i];
+            if (o != 0) {
+                GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                                &miniPos);
+                this->mStarIconX[i] = (miniPos.x + 0x800) >> 12;
+                this->mStarIconY[i] = (miniPos.z + 0x800) >> 12;
+                if (gStarMarkerTypes[i] != 4)
+                    this->mStarMapIDs[i] = GetMinimapID(o, -1);
+                else
+                    this->mStarMapIDs[i] = 1;
+            } else {
+                this->mStarMapIDs[i] = -1;
+            }
+        }
+
+        for (i = 0; i < 9; i++) {
+            dActor_c *o = (dActor_c *)data_0209f3e8[i];
+            if (o != 0) {
+                GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                                &miniPos);
+                this->mCapIconX[i] = (miniPos.x + 0x800) >> 12;
+                this->mCapIconY[i] = (miniPos.z + 0x800) >> 12;
+                this->mCapMapIDs[i] = GetMinimapID(o, -1);
+            } else {
+                this->mCapMapIDs[i] = -1;
+            }
+        }
+
+        /* The star key: Render blinks it under the same two flag tests. */
+        if (!(data_0209caa0.file.flags1 & 0x40) && (data_0209caa0.file.flags2 & 0x20000)) {
+            dActor_c *o = (dActor_c *)data_0209f33c;
+            if (o == 0) {
+                this->mStarKeyMapID = -1;
+            } else {
+                GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                                &miniPos);
+                this->mStarKeyIconX = (miniPos.x + 0x800) >> 12;
+                this->mStarKeyIconY = (miniPos.z + 0x800) >> 12;
+                this->mStarKeyMapID = 1;
+            }
+        }
+
+        for (i = 0; i < 8; i++) {
+            dActor_c *o = (dActor_c *)data_0209f3a4[i];
+            if (o != 0) {
+                GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                                &miniPos);
+                this->mSpikeBombIconX[i] = (miniPos.x + 0x800) >> 12;
+                this->mSpikeBombIconY[i] = (miniPos.z + 0x800) >> 12;
+                this->mSpikeBombMapIDs[i] = o->mAreaId;
+            } else {
+                this->mSpikeBombMapIDs[i] = -1;
+            }
         }
     }
 
-Lae4:
     {
-    s32 id = GetMinimapID(focus, data_ov002_02111148);
-    if (id == data_ov002_02111148)
-        goto Lc30;
-    if (id >= 0x10)
-        goto Lc30;
-    if (id < 0)
-        goto Lbf0;
-
-    if (SublevelToLevel(gCurrentSublevel) != 0x1d)
-        goto C1;
-    if (gCurrentSublevel == 1)
-        goto C1;
-    if (gCurrentSublevel == 0x33)
-        goto C1;
-    if (gCurrentSublevel != 3)
-        goto Lb9c;
-C1:
-    if (SublevelToLevel(gCurrentSublevel) == 4)
-        goto Lb9c;
-    if (SublevelToLevel(gCurrentSublevel) != 0x13)
-        goto Lb84;
-    if (gCurrentSublevel == 0x2e)
-        goto Lb9c;
-Lb84:
-    if (SublevelToLevel(gCurrentSublevel) != -1)
-        goto Lbc0;
-Lb9c:
-    REG_DB_BG3CNT = ((0x1f - id) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010);
-    goto Lbdc;
-Lbc0:
-    REG_DB_BG3CNT = ((0x1f - id) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10);
-Lbdc:
-    gSubScreenLayers |= DISPLAY_LAYER_BG3;
-    goto Lc00;
-Lbf0:
-    gSubScreenLayers &= ~DISPLAY_LAYER_BG3;
-Lc00:
-    GXS_SetVisiblePlane(gSubScreenLayers);
-    data_ov002_02111148 = id;
-    this->mTargetInvScale = GetMinimapScale(id);
+        s32 id = GetMinimapID(focus, data_ov002_02111148);
+        if (id != data_ov002_02111148 && id < 0x10) {
+            if (id >= 0) {
+                if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
+                     gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
+                    SublevelToLevel(gCurrentSublevel) == 4 ||
+                    (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
+                    SublevelToLevel(gCurrentSublevel) == -1)
+                    REG_DB_BG3CNT = ((0x1f - id) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010);
+                else
+                    REG_DB_BG3CNT = ((0x1f - id) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10);
+                gSubScreenLayers |= DISPLAY_LAYER_BG3;
+            } else {
+                gSubScreenLayers &= ~DISPLAY_LAYER_BG3;
+            }
+            GXS_SetVisiblePlane(gSubScreenLayers);
+            data_ov002_02111148 = id;
+            this->mTargetInvScale = GetMinimapScale(id);
+        }
     }
-    Lc30:
-        UpdateMinimap((MinimapDesc *)&this->mBgMatrixA, this->mMapCenterX, this->mMapCenterY,
-                      this->mMapCenterX - 0x80, this->mMapCenterY - 0x60);
-        return 1;
+
+    UpdateMinimap((MinimapDesc *)&this->mBgMatrixA, this->mMapCenterX, this->mMapCenterY,
+                  this->mMapCenterX - 0x80, this->mMapCenterY - 0x60);
+    return 1;
 }
 
 /* What InitResources loads the map graphics with. */
@@ -1001,22 +924,14 @@ int dMap_c::InitResources()
 
     mTargetInvScale = GetMinimapScale(data_ov002_02111148);
 
-    {
-        int b1 = (gGameMode == 0);
-        if (b1) {
-            if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
-                int b3 = (gRunningKuppaScript != 0);
-                if (!b3) {
-                    mInvScale = (mTargetInvScale) << 1;
-                    mAngle = 0;
-                    mInIntroCutscene = 1;
-                    goto scale_done;
-                }
-            }
-        }
+    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+        (int)(gRunningKuppaScript != 0) == 0) {
+        mInvScale = mTargetInvScale << 1;
+        mAngle = 0;
+        mInIntroCutscene = 1;
+    } else {
         mInvScale = mTargetInvScale;
         mInIntroCutscene = 0;
-    scale_done:;
     }
 
     data_ov002_02111150 = 0;

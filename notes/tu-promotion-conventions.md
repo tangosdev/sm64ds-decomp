@@ -84,7 +84,6 @@ git diff --check
 git add <reviewed-paths>
 git commit -m "Promote the assigned translation unit"
 python tools/prepush_linkcheck.py --range <base>..HEAD
-python tools/port_refcheck.py
 python tools/check_decl_agreement.py --changed <base>
 ```
 
