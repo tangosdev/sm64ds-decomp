@@ -1198,8 +1198,7 @@ extern "C" void Mg_DrawFx(MgFx *c) {
 namespace s20addcc {
 extern "C" {
 void Mg_GainCredits(int c);
-inline long long inline_fn(int value)
-{
+inline long long inline_fn(int value) {
     return value;
 }
 }
@@ -3725,8 +3724,7 @@ extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 /* Unless asIcons is 1, draws sprite words 0 and 1 at (12, 12) and (30, 12)
    and count from x 0x30. With asIcons 1, draws sprite word 0 count times,
    16 px apart from (12, 12). */
-void Mg_DrawStockCounter(int count, int asIcons)
-{
+void Mg_DrawStockCounter(int count, int asIcons) {
     OamAttr **table = sMgSpriteTables[GetGameLanguage()];
     OamAttr *sb = table[0];
     int b = 12;

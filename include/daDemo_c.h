@@ -83,9 +83,8 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f6514(const AnimEntry *table, unsigned char entry);
         void func_ov002_020f65b8();
         void func_ov002_020f65ec();
-        int func_ov002_020f6618(SharedFilePtr *mdl, int nAnims,
-                                SharedFilePtr **anims, int snapToFloor,
-                                unsigned char texByte, SharedFilePtr **texs,
+        int func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, SharedFilePtr **anims,
+                                int snapToFloor, unsigned char texByte, SharedFilePtr **texs,
                                 int tsData);
         virtual ~anmModel_c();
     };

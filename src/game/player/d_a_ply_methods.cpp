@@ -17579,8 +17579,8 @@ int daPly_c::St_Fly_Main() {
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
                 MTX_MultVec43((Vector3 *)&bone->t, &m2->mat4x3, &jointPos);
                 Vec3_MulScalarInPlace(&jointPos, 0x8000);
-                mParticle2 = Particle::System::New(mParticle2, 0xd0, jointPos.x, jointPos.y, jointPos.z,
-                                                   (const Vector3_16f *)(&dir), 0);
+                mParticle2 = Particle::System::New(mParticle2, 0xd0, jointPos.x, jointPos.y,
+                                                   jointPos.z, (const Vector3_16f *)(&dir), 0);
             }
             {
                 Matrix4x3 *bone =
@@ -17590,8 +17590,8 @@ int daPly_c::St_Fly_Main() {
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
                 MTX_MultVec43((Vector3 *)&bone->t, &m2->mat4x3, &jointPos);
                 Vec3_MulScalarInPlace(&jointPos, 0x8000);
-                mParticle3 = Particle::System::New(mParticle3, 0xd0, jointPos.x, jointPos.y, jointPos.z,
-                                                   (const Vector3_16f *)(&dir), 0);
+                mParticle3 = Particle::System::New(mParticle3, 0xd0, jointPos.x, jointPos.y,
+                                                   jointPos.z, (const Vector3_16f *)(&dir), 0);
             }
         }
     } else {

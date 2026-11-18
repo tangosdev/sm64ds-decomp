@@ -2459,9 +2459,7 @@ int daDemo_c::func_ov002_020f6424()
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f6448(unsigned char *src)
-{
+int daDemo_c::func_ov002_020f6448(unsigned char *src) {
     StaffRoll *p;
     this->mCue = *src;
     p = new StaffRoll;
@@ -2513,8 +2511,8 @@ void daDemo_c::anmModel_c::func_ov002_020f65ec() {
 }
 
 int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, SharedFilePtr **anims,
-                        int snapToFloor, unsigned char texByte, SharedFilePtr **texs, int tsData)
-{
+                                              int snapToFloor, unsigned char texByte,
+                                              SharedFilePtr **texs, int tsData) {
     int i;
     mModelFile = mdl;
     if (SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
@@ -2712,56 +2710,51 @@ int daDemo_c::func_ov002_020f6c34(unsigned char *src)
 }
 
 extern "C" {
-inline unsigned int inline_fn(unsigned int value)
-{
-  return value;
+inline unsigned int inline_fn(unsigned int value) {
+    return value;
 }
 }
 
-int daDemo_c::func_ov002_020f6c60(void *src, int first, int last)
-{
-  u8 *flag = (u8 *) src;
-  Vector3 v;
-  if (first == gKuppaScriptFrame) {
-      if ((*flag) != 0) {
-          int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
-          int m = FX_MUL(r, 0xa000);
-          this->mMagnitude = m + 0x19000;
-      }
-      VEC_Add(&this->mPos, &((dCamera_c *)gCamera)->pos, &this->mPos);
-      if (first > 0x2bc) {
-          this->mPos.y -= 0x96000;
-      }
-      if (first != data_ov002_0210b614) {
-          func_0201267c(0x6a, &this->mCamSpacePos);
-          data_ov002_0210b614 = first;
-      }
-  }
-  if (last == gKuppaScriptFrame) {
-      this->mOpacity = 0;
-      return 1;
-  }
-  this->mOpacity = 0x1f;
-  if ((*flag) == 0)
-  {
-      /* First call stores the look-at point and registers ~Vector3(). */
-      static __attribute__((aligned(8))) Vector3 sLookTarget(0xffdd6000, 0xbe4000, 0x2ae000);
-      func_ov002_020f6f48(&sLookTarget, 0x20);
-  }
-  else
-  {
-      /* Kept (#821 r77): data_ov002_0210b958 is a statically initialized
+int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
+    u8 *flag = (u8 *)src;
+    Vector3 v;
+    if (first == gKuppaScriptFrame) {
+        if ((*flag) != 0) {
+            int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
+            int m = FX_MUL(r, 0xa000);
+            this->mMagnitude = m + 0x19000;
+        }
+        VEC_Add(&this->mPos, &((dCamera_c *)gCamera)->pos, &this->mPos);
+        if (first > 0x2bc) {
+            this->mPos.y -= 0x96000;
+        }
+        if (first != data_ov002_0210b614) {
+            func_0201267c(0x6a, &this->mCamSpacePos);
+            data_ov002_0210b614 = first;
+        }
+    }
+    if (last == gKuppaScriptFrame) {
+        this->mOpacity = 0;
+        return 1;
+    }
+    this->mOpacity = 0x1f;
+    if ((*flag) == 0) {
+        /* First call stores the look-at point and registers ~Vector3(). */
+        static __attribute__((aligned(8))) Vector3 sLookTarget(0xffdd6000, 0xbe4000, 0x2ae000);
+        func_ov002_020f6f48(&sLookTarget, 0x20);
+    } else {
+        /* Kept (#821 r77): data_ov002_0210b958 is a statically initialized
          .data VecFx32 (a Vector3, which declares constructors, would be
          built by __sinit instead), and MtxStack.h's MTX_MultVec43 overload
          takes the game's Vector3. */
-      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
-      Vec3_LslInPlace((int *)&v, 3);
-      func_ov002_020f6f48(&v, 8);
-  }
-  this->mPrevAngle.x = this->mAngle.x;
-  this->mPrevAngle.y = this->mAngle.y;
-  this->mPrevAngle.z = this->mAngle.z;
-  return 1;
+        MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
+        Vec3_LslInPlace((int *)&v, 3);
+        func_ov002_020f6f48(&v, 8);
+    }
+    this->mPrevAngle.x = this->mAngle.x;
+    this->mPrevAngle.y = this->mAngle.y;
+    this->mPrevAngle.z = this->mAngle.z;
+    return 1;
 }
 
 /* Script handler 10: position (p[0..5], whole units shifted into 20.12) and
@@ -2978,8 +2971,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
  * test. mPos = that vector times INV_VIEW_MATRIX_ASR_3, then << 3; mMagnitude
  * approaches src[0] << 12 by src[1] << 8 and drives mOpacity. */
 
-int daDemo_c::func_ov002_020f7538(unsigned char *src, int first)
-{
+int daDemo_c::func_ov002_020f7538(unsigned char *src, int first) {
     int a = src[0];
     int b = src[1];
     int f1 = a << 0xc;
@@ -3028,7 +3020,6 @@ int daDemo_c::func_ov002_020f7538(unsigned char *src, int first)
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
 }
-
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {

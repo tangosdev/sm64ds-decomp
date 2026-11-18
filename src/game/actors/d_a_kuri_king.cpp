@@ -1403,7 +1403,7 @@ int daKuriKing_c::IsAnimPlaying(int idx) {
 void daKuriKing_c::PlayAnim(int idx) {
     void *file1 = data_ov074_02122f34[idx].anim->filePtr;
     int off = idx * 0xc;
-    int flags = *(int*)(data_ov074_02122f3c + off);
+    int flags = *(int *)(data_ov074_02122f3c + off);
     this->mAnmModel.SetAnim((BCA_File *)file1, flags, 0x1000, 0);
     this->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
 }
