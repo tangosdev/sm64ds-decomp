@@ -155,7 +155,11 @@ void dScMgFlower_c::DealPetals() {
         swapIndex = MG_RAND(mPetalsLeft);
         if (swapIndex != shuffleIndex) {
             u16 savedAngle;
-            dScMgFlower_c::Vec2 savedPosition;
+            /* Vector2's empty destructor gives this local the 8-byte stack
+               home that makes DealPetals's frame 0x1c (0x14 without it; a
+               plain POD pair, an int[2] and two scalar temps all lose the
+               slot -- measured, 2004/b56). */
+            Vector2 savedPosition;
             savedAngle = mPetals[shuffleIndex].angle;
             mPetals[shuffleIndex].angle = mPetals[swapIndex].angle;
             mPetals[swapIndex].angle = savedAngle;

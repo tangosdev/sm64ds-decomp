@@ -53,6 +53,9 @@ extern "C" Ov007Follower *func_ov007_020c844c(VecFx32 *p, int q);
    struct whose only member is an array keeps the block move, so every copy
    goes through Vector3Bits (include/Vector3Bits.h). */
 #include "Vector3Bits.h"
+/* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
+   plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
+   the same copy compiled as C does (measured on func_ov007_020c5dec). */
 
 /* *dst = *src, as the block move. */
 static inline void CopyVec3(VecFx32 *dst, const VecFx32 *src) {

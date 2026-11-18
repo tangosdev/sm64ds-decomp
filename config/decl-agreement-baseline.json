@@ -7020,7 +7020,7 @@
     },
     "data_02092768": {
       "src/minigames/unit020bfec0.cpp": [
-        "return:QuaternionBlock"
+        "return:Quaternion"
       ]
     },
     "data_ov006_0213aee8": {

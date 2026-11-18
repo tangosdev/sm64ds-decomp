@@ -8,6 +8,9 @@
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx.h"
 #include "Vector3Bits.h"
+/* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
+   plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
+   the same copy compiled as C does (measured on func_ov007_020c5dec). */
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
 extern "C" VecFx32 data_ov007_020d7c34[];

@@ -41,7 +41,6 @@
  *    resource handles and 19 state descriptors are now typed objects defined
  *    at the bottom of this file; the 38 pointer-to-member records they copy
  *    from keep their data_ov066 names.
- *  - Vec4 is an unused stack object with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
  */
 
@@ -2148,18 +2147,15 @@ int daIwante_c::BodyTalkEnter() {
  * (-3440.0), data_ov066_0211ae08 is incremented. When it exceeds 2 it is reset to
  * 0, the phase becomes PHASE_RISE and the body enters the talk state
  * (data_ov066_0211b0ac). */
-struct Vec4 { int a, b, self, d; ~Vec4(){} };
 int daIwante_c::BodyDormantExecute() {
-    Vec4 sp;
-    /* Reading p->mPos.y and p->mPos.z directly makes this 4 bytes shorter;
-       the pointer to the position triple is what matches. */
+    /* The Vector3 copy owns the 0x10-byte frame; copied from p->mPos
+       directly instead of through pos, it is 4 bytes shorter (#821 r72). */
     daPly_c *p = ClosestPlayer();
     if (p != 0) {
-        s32 *playerPos = &p->mPos.x;
-        int v1 = playerPos[1];
-        int v2 = playerPos[2];
-        if (v1 < -0x300000) {
-            if (!IsOffScreen(this) && v2 < -0xd70000)
+        const Vector3 *pos = &p->mPos;
+        Vector3 playerPos = *pos;
+        if (playerPos.y < -0x300000) {
+            if (!IsOffScreen(this) && playerPos.z < -0xd70000)
                 data_ov066_0211ae08 += 1;
         }
     }

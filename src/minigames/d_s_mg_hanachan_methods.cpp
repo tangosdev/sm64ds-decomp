@@ -85,7 +85,8 @@ extern int sHanaFieldWigglerCount;
 void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
 
-typedef dScMgHanachan_c::Point V2;
+/* Kept (#821 r72): DrawField's points as Vector2 give 0x3d8 against the
+   ROM's 0x3e0; this plain pair keeps the frame. */
 typedef struct {
     int x, y;
 } Vec2;
@@ -171,9 +172,8 @@ extern const int sHanaFieldWigglerCounts[10] = {3, 4, 5, 4, 6, 3, 4, 5, 15, 15};
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 
-/* These helpers read or write two scalar words. Cast the plain Point
-   records at the C ABI boundary rather than giving the externs new types. */
-/* Scalar pair ABI agrees with the arm9 definitions; V2 only names this TU workspace. */
+/* These helpers read or write two scalar words. Cast the Vector2 points
+   at the C ABI boundary rather than giving the externs new types. */
 extern void func_0203d704(int *o, int *a, int *b);
 extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
@@ -863,7 +863,7 @@ void dScMgHanachan_c::Wiggler::Move() {
     StepSegmentsA();
 }
 
-int dScMgHanachan_c::Wiggler::HitTest(const Point *touchPoint) {
+int dScMgHanachan_c::Wiggler::HitTest(const Vector2 *touchPoint) {
     int segmentIndex;
     for (segmentIndex = 0; segmentIndex < 5; segmentIndex++) {
         if (func_0203d5dc((const int *)(&seg[segmentIndex]), (const int *)touchPoint) < 0x14000)
@@ -1095,10 +1095,10 @@ int dScMgHanachan_c::Wiggler::ClampToScreen() {
 }
 
 void dScMgHanachan_c::Wiggler::StepSegmentsA() {
-    V2 segmentOffset;
-    V2 headOffset;
-    V2 segmentPosition;
-    V2 headPosition;
+    Vector2 segmentOffset;
+    Vector2 headOffset;
+    Vector2 segmentPosition;
+    Vector2 headPosition;
     int segmentIndex;
     s16 targetAngle;
     int previousIndex;
@@ -1163,10 +1163,10 @@ void dScMgHanachan_c::Wiggler::StepSegmentsA() {
 }
 
 void dScMgHanachan_c::Wiggler::StepSegmentsB() {
-    V2 segmentOffset;
-    V2 headOffset;
-    V2 segmentPosition;
-    V2 headPosition;
+    Vector2 segmentOffset;
+    Vector2 headOffset;
+    Vector2 segmentPosition;
+    Vector2 headPosition;
     int segmentIndex = 4;
     Vector2 *segment = &seg[segmentIndex];
     int baseSpacing = 0x8000;
@@ -1211,10 +1211,10 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
 }
 
 void dScMgHanachan_c::Wiggler::StepSegmentsC() {
-    V2 segmentOffset;
-    V2 headOffset;
-    V2 segmentPosition;
-    V2 headPosition;
+    Vector2 segmentOffset;
+    Vector2 headOffset;
+    Vector2 segmentPosition;
+    Vector2 headPosition;
     int segmentIndex = 2;
     Vector2 *segment = &seg[segmentIndex];
     int previousIndex;
@@ -1466,11 +1466,11 @@ void dScMgHanachan_c::Wiggler::TurnTowardAim() {
 }
 
 void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
-    V2 initialHead;
-    V2 segmentOffset;
-    V2 headOffset;
-    V2 segmentPosition;
-    V2 headPosition;
+    Vector2 initialHead;
+    Vector2 segmentOffset;
+    Vector2 headOffset;
+    Vector2 segmentPosition;
+    Vector2 headPosition;
     int lastIndex, indexWeight, reverseWeight, spacingOffset, segmentIndex, previousIndex;
 
     bloom = 1;
@@ -1740,7 +1740,7 @@ void dScMgHanachan_c::BeginResult() {
 }
 
 void dScMgHanachan_c::Phase_Play() {
-    V2 a;
+    Vector2 a;
     int vec[4];
     int b = 0;
     int idx = gActivePlayerSlot;

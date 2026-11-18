@@ -21,9 +21,11 @@
  *   src/engine/model/ModelComponents.cpp), not of BMD_Material. Dealer::Draw fills its lamp array through a
  *   walking pointer with an if/else body (indexing or a value-select moves
  *   three words).
- * - The identity quaternion stays a four-word QuaternionBlock: spelling
- *   math/Quaternion.h's named members makes mwcc scalarise
- *   FallingPetal::Update's 16-byte copy.
+ * - FallingPetal::Update copy-initialises its scratch Quaternion from the
+ *   identity: copy-init of a POD is one 16-byte block move, where assigning
+ *   it to a Quaternion declared at the top scalarises (0x180 against 0x16c).
+ *   The arm9 quaternion helpers still take int *, so the scratch pair is
+ *   cast at those calls.
  * - Camera_ProjectToScreen / Camera_ProjectToScreen16 keep `void *pos`
  *   because the scene callers hand them a VecFx32* position and their own
  *   screen output pairs.
@@ -64,14 +66,6 @@ struct Sound {
 };
 
 void CopyToViewMat(const Matrix4x3 *);
-
-/* A quaternion as four raw words. The identity in data_02092768 is copied
-   into a scratch quaternion with a 16-byte block move; spelling the four
-   members out (math/Quaternion.h) makes mwcc scalarise that copy and costs
-   FallingPetal::Update its bytes (measured). */
-struct QuaternionBlock {
-    int w[4];
-};
 
 /* One of the four walks MascotWalker::mPath points at: a point count, then
    the points (coined). */
@@ -140,7 +134,7 @@ VecFx32 data_ov006_0213ace0[3] = {
     {0xc000, 0, -0x11000},
     {0x27000, 0, -0x11000},
 };
-extern QuaternionBlock data_02092768; /* identity */
+extern Quaternion data_02092768; /* identity */
 extern dClipper data_0209f43c;
 extern dFdBrightness_c *gSceneFader;
 /* The presenter's BTA images: each name starts a file the face plays. */
@@ -418,10 +412,10 @@ void FallingPetal::Spawn(const VecFx32 *pos, const VecFx32 *vel) {
     mAxis.y = sAxis.y;
     mAxis.z = sAxis.z;
     func_0203cd80(&mAxis, RandomIntInternal(&data_0209e650.value));
-    mRot[0] = data_02092768.w[0];
-    mRot[1] = data_02092768.w[1];
-    mRot[2] = data_02092768.w[2];
-    mRot[3] = data_02092768.w[3];
+    mRot[0] = data_02092768.x;
+    mRot[1] = data_02092768.y;
+    mRot[2] = data_02092768.z;
+    mRot[3] = data_02092768.w;
     Quaternion_FromVector3(mRot, &sAxis, &mAxis);
     mActive = 1;
 }
@@ -431,8 +425,7 @@ void FallingPetal::Update() {
     Vector3 flow;
     Vector3 drag;
     Vector3 dir;
-    QuaternionBlock target;
-    QuaternionBlock turn;
+    Quaternion target;
     int phase;
     int wave;
     int dot;
@@ -460,10 +453,10 @@ void FallingPetal::Update() {
     dir.z = flow.z;
     if (NormalizeVec3IfNonZero(&dir) == 0)
         return;
-    turn = data_02092768;
+    Quaternion turn = data_02092768;
     Quaternion_FromVector3(&target, &mAxis, &dir);
-    Quaternion_SLerp(turn.w, target.w, 0x200, turn.w);
-    Quaternion_Normalize(turn.w);
+    Quaternion_SLerp((int *)&turn, (int *)&target, 0x200, (int *)&turn);
+    Quaternion_Normalize((int *)&turn);
     Quaternion_Multiply(mRot, &turn, mRot);
 }
 
