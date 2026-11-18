@@ -338,22 +338,6 @@ src/data/ov036/data_ov036_02113a50.c:
     complete
     .data start:0x02113a50 end:0x02113a54
 
-src/data/ov036/_ZTI16daObjRcBuranko_c.c:
-    complete
-    .data start:0x02113a54 end:0x02113a60
-
-src/data/ov036/_ZTS16daObjRcBuranko_c.c:
-    complete
-    .data start:0x02113a60 end:0x02113a74
-
-src/data/ov036/g_profile_RC_BURANKO.c:
-    complete
-    .data start:0x02113a74 end:0x02113a98
-
-
-src/data/ov036/_ZTI19daObjRc_Kaitendai_c.c:
-    complete
-    .data start:0x02113b20 end:0x02113b2c
 
 src/game/actors/d_a_obj_rc_kaitendai.cpp:
     complete
@@ -363,30 +347,11 @@ src/game/actors/d_a_obj_rc_kaitendai.cpp:
     .bss start:0x02114048 end:0x02114070
     .data start:0x02113b2c end:0x02113b38
 
-src/data/ov036/_ZTS19daObjRc_Kaitendai_c.c:
-    complete
-    .data start:0x02113b38 end:0x02113b50
-
-src/data/ov036/g_profile_RC_KAITEN.c:
-    complete
-    .data start:0x02113b50 end:0x02113b74
-
-
-src/data/ov036/_ZTI14daObjRc_Hane_c.c:
-    complete
-    .data start:0x02113bf4 end:0x02113c00
-
-src/data/ov036/_ZTS14daObjRc_Hane_c.c:
-    complete
-    .data start:0x02113c00 end:0x02113c08
 
 src/data/ov036/data_ov036_02113c08.c:
     complete
     .data start:0x02113c08 end:0x02113c14
 
-src/data/ov036/g_profile_RC_HANE.c:
-    complete
-    .data start:0x02113c14 end:0x02113c20
 
 src/data/ov036/data_ov036_02113c20.c:
     complete
@@ -397,21 +362,10 @@ src/data/ov036/data_ov036_02113c28.c:
     .data start:0x02113c28 end:0x02113c38
 
 
-src/data/ov036/_ZTI16daObjRc_Tikuwa_c.c:
-    complete
-    .data start:0x02113cb4 end:0x02113cc0
-
-src/data/ov036/_ZTS16daObjRc_Tikuwa_c.c:
-    complete
-    .data start:0x02113cc0 end:0x02113ccc
-
 src/data/ov036/data_ov036_02113ccc.c:
     complete
     .data start:0x02113ccc end:0x02113cd4
 
-src/data/ov036/g_profile_RC_TIKUWA.c:
-    complete
-    .data start:0x02113cd4 end:0x02113cec
 
 src/data/ov036/data_ov036_02113cec.c:
     complete
@@ -421,18 +375,6 @@ src/data/ov036/data_ov036_02113cf4.c:
     complete
     .data start:0x02113cf4 end:0x02113cf8
 
-
-src/data/ov036/_ZTI18daObjRc_Guruguru_c.c:
-    complete
-    .data start:0x02113d84 end:0x02113d90
-
-src/data/ov036/_ZTS18daObjRc_Guruguru_c.c:
-    complete
-    .data start:0x02113d90 end:0x02113da8
-
-src/data/ov036/g_profile_RC_GURUGURU.c:
-    complete
-    .data start:0x02113da8 end:0x02113dc4
 
 src/data/ov036/data_ov036_02113dc4.c:
     complete

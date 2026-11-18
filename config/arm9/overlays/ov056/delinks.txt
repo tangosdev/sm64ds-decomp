@@ -113,9 +113,6 @@ src/data/ov056/data_ov056_02111a58.c:
     complete
     .rodata start:0x02111a58 end:0x02111a60
 
-src/data/ov056/data_ov056_02111a60.c:
-    complete
-    .rodata start:0x02111a60 end:0x02111a78
 
 src/data/ov056/data_ov056_02111a78.c:
     complete
@@ -189,13 +186,6 @@ src/data/ov056/data_ov056_02111fc0.c:
     complete
     .rodata start:0x02111fc0 end:0x0211208c
 
-src/data/ov056/data_ov056_0211208c.c:
-    complete
-    .rodata start:0x0211208c end:0x021120a4
-
-src/data/ov056/data_ov056_021120a4.c:
-    complete
-    .rodata start:0x021120a4 end:0x021120bc
 
 src/data/ov056/data_ov056_021120bc.c:
     complete
@@ -221,9 +211,6 @@ src/data/ov056/data_ov056_02112138.c:
     complete
     .rodata start:0x02112138 end:0x02112158
 
-src/data/ov056/data_ov056_02112158.c:
-    complete
-    .rodata start:0x02112158 end:0x02112178
 
 src/data/ov056/data_ov056_02112178.c:
     complete
@@ -325,9 +312,6 @@ src/data/ov056/data_ov056_021124c4.c:
     complete
     .rodata start:0x021124c4 end:0x021124d4
 
-src/data/ov056/data_ov056_021124d4.c:
-    complete
-    .rodata start:0x021124d4 end:0x021124ec
 
 src/data/ov056/data_ov056_021124ec.c:
     complete
@@ -557,17 +541,7 @@ src/game/actors/d_a_obj_ewm_ice_block.cpp:
     .ctor start:0x02112bb4 end:0x02112bb8
     .data start:0x02113314 end:0x02113320
     .bss start:0x02113400 end:0x02113428
-src/data/ov056/_ZTI18daObjEwmIceBlock_c.c:
-    complete
-    .data start:0x02113320 end:0x0211332c
 
-src/data/ov056/_ZTS18daObjEwmIceBlock_c.c:
-    complete
-    .data start:0x0211332c end:0x02113344
-
-src/data/ov056/g_profile_EWM_ICE_BLOCK.c:
-    complete
-    .data start:0x02113344 end:0x02113368
 
 
 src/data/ov056/data_ov056_02113428.c:

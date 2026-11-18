@@ -5,9 +5,6 @@
     .data       start:0x02114080 end:0x02114620 kind:data align:32
     .bss        start:0x02114620 end:0x021148e0 kind:bss align:32
 
-src/data/ov034/data_ov034_02113820.c:
-    complete
-    .rodata start:0x02113820 end:0x02113828
 
 src/data/ov034/data_ov034_02113828.c:
     complete
@@ -17,49 +14,16 @@ src/data/ov034/data_ov034_0211382c.c:
     complete
     .rodata start:0x0211382c end:0x02113838
 
-src/data/ov034/data_ov034_02113838.c:
-    complete
-    .rodata start:0x02113838 end:0x0211384c
-
-src/data/ov034/data_ov034_0211384c.c:
-    complete
-    .rodata start:0x0211384c end:0x02113860
-
-src/data/ov034/data_ov034_02113860.c:
-    complete
-    .rodata start:0x02113860 end:0x02113874
-
-src/data/ov034/data_ov034_02113874.c:
-    complete
-    .rodata start:0x02113874 end:0x02113888
-
-src/data/ov034/data_ov034_02113888.c:
-    complete
-    .rodata start:0x02113888 end:0x0211389c
-
-src/data/ov034/data_ov034_0211389c.c:
-    complete
-    .rodata start:0x0211389c end:0x021138a8
 
 src/data/ov034/data_ov034_021138a8.c:
     complete
     .rodata start:0x021138a8 end:0x021138b0
 
-src/data/ov034/data_ov034_021138b0.c:
-    complete
-    .rodata start:0x021138b0 end:0x021138bc
 
 src/data/ov034/data_ov034_021138bc.c:
     complete
     .rodata start:0x021138bc end:0x021138c4
 
-src/data/ov034/data_ov034_021138c4.c:
-    complete
-    .rodata start:0x021138c4 end:0x021138d8
-
-src/data/ov034/data_ov034_021138d8.c:
-    complete
-    .rodata start:0x021138d8 end:0x021138ec
 
 src/data/ov034/data_ov034_02114080.c:
     complete
@@ -198,25 +162,16 @@ src/data/ov034/data_ov034_02114450.c:
     complete
     .data start:0x02114450 end:0x0211445c
 
-src/data/ov034/_ZTI12daHanachan_c.c:
-    complete
-    .data start:0x0211445c end:0x02114468
 
 src/data/ov034/data_ov034_02114468.c:
     complete
     .data start:0x02114468 end:0x02114478
 
-src/data/ov034/_ZTS12daHanachan_c.c:
-    complete
-    .data start:0x02114478 end:0x02114488
 
 src/data/ov034/data_ov034_02114488.c:
     complete
     .data start:0x02114488 end:0x02114498
 
-src/data/ov034/g_profile_HANACHAN.c:
-    complete
-    .data start:0x02114498 end:0x021144bc
 
 src/game/actors/d_a_hanachan.cpp:
     complete

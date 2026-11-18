@@ -14,66 +14,6 @@
     .data start:0x02111c98 end:0x021125e0 kind:data align:4
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
 
-src/data/ov043/data_ov043_02111b00.c:
-    complete
-    .data.gap0 start:0x02111b00 end:0x02111b04
-
-src/data/ov043/data_ov043_02111b04.c:
-    complete
-    .data.gap0 start:0x02111b04 end:0x02111b08
-
-src/data/ov043/data_ov043_02111b08.c:
-    complete
-    .data.gap0 start:0x02111b08 end:0x02111b10
-
-src/data/ov043/data_ov043_02111b10.c:
-    complete
-    .data.gap0 start:0x02111b10 end:0x02111b14
-
-src/data/ov043/data_ov043_02111b14.c:
-    complete
-    .data.gap0 start:0x02111b14 end:0x02111b18
-
-src/data/ov043/data_ov043_02111b18.c:
-    complete
-    .data.gap0 start:0x02111b18 end:0x02111b24
-
-src/data/ov043/data_ov043_02111b24.c:
-    complete
-    .data.gap0 start:0x02111b24 end:0x02111b34
-
-src/data/ov043/data_ov043_02111b34.c:
-    complete
-    .data.gap0 start:0x02111b34 end:0x02111b44
-
-src/data/ov043/data_ov043_02111b44.c:
-    complete
-    .data.gap0 start:0x02111b44 end:0x02111b60
-
-src/data/ov043/data_ov043_02111b80.c:
-    complete
-    .data.gap1 start:0x02111b80 end:0x02111b88
-
-src/data/ov043/data_ov043_02111b88.c:
-    complete
-    .data.gap1 start:0x02111b88 end:0x02111ba0
-
-src/data/ov043/data_ov043_02111bc0.c:
-    complete
-    .data.gap2 start:0x02111bc0 end:0x02111bd4
-
-src/data/ov043/data_ov043_02111bd4.c:
-    complete
-    .data.gap2 start:0x02111bd4 end:0x02111be0
-
-src/data/ov043/data_ov043_02111be0.c:
-    complete
-    .data.gap2 start:0x02111be0 end:0x02111c00
-
-
-src/data/ov043/data_ov043_02111c20.c:
-    complete
-    .data.gap2 start:0x02111c20 end:0x02111c40
 
 src/data/ov043/data_ov043_02111ca0.c:
     complete
@@ -167,26 +107,11 @@ src/data/ov043/data_ov043_02112258.c:
     complete
     .data start:0x02112258 end:0x02112270
 
-src/data/ov043/_ZTI19daObjKm1_Ukishima_c.c:
-    complete
-    .data start:0x02112270 end:0x0211227c
-
-src/data/ov043/_ZTS19daObjKm1_Ukishima_c.c:
-    complete
-    .data start:0x0211227c end:0x02112294
-
-src/data/ov043/g_profile_KM1_UKISHIMA.c:
-    complete
-    .data start:0x02112294 end:0x0211229c
 
 src/data/ov043/data_ov043_0211229c.c:
     complete
     .data start:0x0211229c end:0x021122b8
 
-
-src/data/ov043/_ZTI21daObjKm1_Kurumajiku_c.c:
-    complete
-    .data start:0x02112338 end:0x02112344
 
 src/game/actors/d_a_obj_km1_ukishima.cpp:
     complete
@@ -203,31 +128,17 @@ src/game/actors/d_a_obj_km1_kurumajiku.cpp:
     .bss start:0x02112608 end:0x02112630
     .data start:0x02112344 end:0x02112350
 
-src/data/ov043/_ZTS21daObjKm1_Kurumajiku_c.c:
-    complete
-    .data start:0x02112350 end:0x02112358
 
 src/data/ov043/data_ov043_02112358.c:
     complete
     .data start:0x02112358 end:0x02112368
 
-src/data/ov043/g_profile_KM1_KURUMAJIKU.c:
-    complete
-    .data start:0x02112368 end:0x0211238c
-
-
-src/data/ov043/_ZTI17daObjKm1_Kuruma_c.c:
-    complete
-    .data start:0x0211240c end:0x02112418
 
 
 src/data/ov043/data_ov043_0211241c.c:
     complete
     .data start:0x0211241c end:0x02112424
 
-src/data/ov043/_ZTS17daObjKm1_Kuruma_c.c:
-    complete
-    .data start:0x02112424 end:0x02112428
 
 src/data/ov043/data_ov043_02112428.c:
     complete
@@ -237,9 +148,6 @@ src/data/ov043/data_ov043_02112434.c:
     complete
     .data start:0x02112434 end:0x02112438
 
-src/data/ov043/g_profile_KM1_KURUMA.c:
-    complete
-    .data start:0x02112438 end:0x0211244c
 
 src/data/ov043/data_ov043_0211244c.c:
     complete

@@ -253,21 +253,11 @@ src/data/ov013/data_ov013_021120d8.c:
     complete
     .data start:0x021120d8 end:0x021120e0
 
-src/data/ov013/_ZTI18daObjClockHuriko_c.c:
-    complete
-    .data start:0x021120e0 end:0x021120ec
-
-src/data/ov013/_ZTS18daObjClockHuriko_c.c:
-    complete
-    .data start:0x021120ec end:0x021120f8
 
 src/data/ov013/data_ov013_021120f8.c:
     complete
     .data start:0x021120f8 end:0x02112104
 
-src/data/ov013/g_profile_CLOCK_HURIKO.c:
-    complete
-    .data start:0x02112104 end:0x02112118
 
 src/data/ov013/data_ov013_02112118.c:
     complete
