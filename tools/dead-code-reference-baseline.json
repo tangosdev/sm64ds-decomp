@@ -4,6 +4,9 @@
   "include/ActorBase__SceneNode.h": [
    "src/_ZN7fBase_c9SceneNode5ResetEv.c"
   ],
+  "include/BMD_File.h": [
+   "port/ntr/bmd.cpp"
+  ],
   "include/CccArena.h": [
    "src/_ZN8CccArenaD1Ev.c",
    "src/daObjEwbIce_c_classInit_EWB_ICE_A.c"
@@ -28,6 +31,9 @@
   ],
   "include/RotatingUpDownPlatformUtm.h": [
    "src/RotatingUpDownPlatformUtm_Spawn.c"
+  ],
+  "include/SharedFilePtr.h": [
+   "port/hal/fs.cpp"
   ],
   "include/SurfaceInfo.h": [
    "src/func_ov018_02111bf0.cpp"
@@ -331,27 +337,17 @@
   "include/nitro/hw/registers.h": [
    "notes/phantom-references.md"
   ],
-  "port/hal/cstd_div.c": [
-   "src/_ZN4cstd4fdivEii.c"
-  ],
-  "port/ntr/include/ntr/fs.h": [
-   "tools/extract_rom.py"
-  ],
-  "port/ntr/include/ntr/gx.h": [
-   "notes/assessment.md"
-  ],
-  "port/ntr/include/ntr/mmio.h": [
-   "notes/assessment.md",
-   "port/io.cpp"
-  ],
-  "port/ntr/include/ntr/ppu.h": [
-   "notes/assessment.md"
-  ],
-  "port/ntr/lz77.cpp": [
-   "src/dst"
+  "src/GXi_NopClearFifo128_.c": [
+   "port/ntr/runtime.cpp",
+   "port/tools/hostgen.py"
   ],
   "src/MI_CpuCopy8.c": [
    "src/dst"
+  ],
+  "src/SharedFilePtr.cpp": [
+   "port/CMakeLists.txt",
+   "port/hal/fs.cpp",
+   "port/hal/gx_upload_bridge.cpp"
   ],
   "src/_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv.cpp": [
    "src/func_ov004_020b8c18.c"
@@ -439,6 +435,19 @@
   "src/actors/Goomboss.cpp": [
    "src/func_ov074_0211f154.c",
    "src/func_ov074_02121300.cpp"
+  ],
+  "src/engine/gx/G3X.cpp": [
+   "port/tools/hostgen.py"
+  ],
+  "src/engine/gx/G3i.cpp": [
+   "port/tools/hostgen.py"
+  ],
+  "src/engine/os/OS_Interrupt.cpp": [
+   "port/ntr/runtime.cpp",
+   "port/tools/hostgen.py"
+  ],
+  "src/engine/view/d_camera_dtor.cpp": [
+   "port/hal/host_d0.cpp"
   ],
   "src/func_ov004_020ae5c4.cpp": [
    "src/actors/d_sc_mg_trampoline.cpp"
@@ -1984,6 +1993,10 @@
    "src/_ZN10dBgActor_cD1Ev.cpp",
    "src/actors/dScMgSingle3DBase_c.cpp",
    "src/func_ov002_020ee5d0.c"
+  ],
+  "src/runtime/graphics/fader/d_fader.cpp": [
+   "port/hal/shims.cpp",
+   "port/slice_gate1.txt"
   ],
   "src/unnamed/arm9/0205/func_02059d8c.c": [
    "notes/func_02059d8c-asm-origin.md"
