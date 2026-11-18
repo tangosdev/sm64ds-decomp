@@ -113,7 +113,7 @@ u32  PlayBank2_2D(u32);
 u32 PlayBank3_2D(u32);
 u32  PlayCharVoice(u32, u32, const Vector3 &v);
 int  PlayLong(u32 handle, u32, u32, const Vector3 &pos, s16);
-bool PlaySub(u32, u32, u32, fx32, bool);
+bool PlaySub(u32, u32, u32, fx32, int);
 /* A named parameter here numbers @NNN in every includer. */
 int ChangeMusicVolume(u32, fx32);
 int  PlaySecretSound(dActor_c *actor, u16 *counter);
