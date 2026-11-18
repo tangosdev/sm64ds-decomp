@@ -237,7 +237,11 @@ short EntryMesh::RipplePhase(int dist) {
 
 /* Store each vertex's flat (z = 0) distance from mRippleCenter. tmp is
    copy-initialized from the POD VecFx32, which mwcc block-moves (ldm/stm);
-   assigning it after the declaration copies the three words one by one. */
+   assigning it after the declaration copies the three words one by one.
+   Kept (#821 r77): both VecFx32s reach the game's Vec3_Dist through
+   `(Vector3 *)` casts. A Vector3 tmp built from v->pos grows this function
+   0x78 -> 0x88, and mRippleCenter stays VecFx32 for the reason the header
+   gives (no ~Vector3 in this unit or in EntryMesh). */
 void EntryMesh::CalcDistances() {
     int i;
     for (i = 0; i < mNumVertices; i++) {
