@@ -405,6 +405,8 @@ void Message::func_0201b100(int mode) {
 /* opt_common_subs stays off: the inner loop reads data_0209d74c[j + i * 16] once
  * per store the way the cartridge does, and CSE shares the two loads
  * (0x218 against 0x220). */
+/* Kept (#821 r79): a glyph-word pointer local, the commuted index i * 16 + j, mask pointer
+   locals, and inline GlyphWord/LeftMask/RightMask accessors are 0x218 to 0x224 against 0x220. */
 #pragma opt_common_subs off
 void Message::func_0201b388(int a0) {
     int start;

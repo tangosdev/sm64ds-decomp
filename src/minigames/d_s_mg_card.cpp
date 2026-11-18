@@ -1506,6 +1506,9 @@ dMgDilarCardObj_c::~dMgDilarCardObj_c() {}
  * factory and the dealer card's constructor and still leaves that D1 calling
  * this one (0x24); at 32 StartRound, ArrangeHand and UpdateState change too. */
 #pragma push
+/* Kept (#821 r79): the base destructor defined plainly before the dealer's is a 0x24 D1 that
+   calls D2; an inline definition there or at the end of the file puts D1 between the scene's D1
+   and D0, and D0 is not emitted. */
 #pragma auto_inline on
 dMgCardObj_c::~dMgCardObj_c() {}
 #pragma pop

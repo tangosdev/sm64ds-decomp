@@ -969,6 +969,8 @@ void TrmpLine::Draw() {
            POLYGON_ATTR loads (28 words differ). r63: a const pointer to
            mAlpha, an int or u8 local, and the attribute bits in SDK
            order all leave 30 words different. */
+        /* Kept (#821 r79): an inline LineAlpha(this) returning int or unsigned char, held in
+           polygonAlpha or written into the attribute, is 30 words off. */
         volatile unsigned char *alpha = &mAlpha;
         int polygonAlpha = *alpha;
         REG_POLYGON_ATTR = (((polygonId + 1) << 24) | 0x82) | (polygonAlpha << 16);

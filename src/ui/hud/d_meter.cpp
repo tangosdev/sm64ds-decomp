@@ -95,6 +95,9 @@ extern "C" {
    Quick race (daRNk_c). InitResources clears it. */
 extern unsigned char gShowRaceTimer;
 extern Timer gRaceTimer;
+/* Kept (#821 r79): with the table plain (here and in decl_common.h), an inline DigitPlace(i)
+   returning int or unsigned short, for both reads or the modulo only, and `value %=`, are 0x94
+   against 0x8c. */
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char gLocalPlayerId;
 extern unsigned char gMeterCounterSlideState;

@@ -243,6 +243,9 @@ void daCnn_c::StateFire() {
        read through an opaque pointer into a volatile copy. Written as plain
        member expressions the block schedules differently and grows 4 bytes.
        A Vector3 copy of mSpeed drops the stores (#821 r60: 0x2ac / 0x2b0 against 0x2bc). */
+    /* Kept (#821 r79): an inline TwoStepsAhead(out, from, step) helper fed a Vector3 copy, an
+       assigned copy or &ball->mSpeed, and a plain int[3], are 0x2ac, 0x2c0, 0x2ac and 0x2b0
+       against 0x2bc. */
     volatile int vel[3];
     daPly_c *closest;
     int timer;

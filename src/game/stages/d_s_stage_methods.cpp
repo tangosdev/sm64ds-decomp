@@ -137,6 +137,8 @@ extern s16 gPlayerHealth[];
 extern unsigned int gNextActorUpdateMask;
 extern unsigned int gActorUpdateMask;
 extern u8 data_020755b8[];
+/* Kept (#821 r79): the bound read through an inline ButtonTileCount(idx), the loop as a while
+   on it, and *(data_02075610 + idx) are all 0x148 against 0x154. */
 extern volatile int data_02075610[];
 extern u16 data_020755cc[];
 extern u16 data_020755c0[];
@@ -1466,6 +1468,9 @@ static inline int IsTouchPressed(u8 held, u8 slot) {
 /* Pause-screen update. */
 /* Kept, measured (#821, 2026-11-16): without opt_common_subs off the body is
  * 0x30a8 against 0x30ac, 33 hunks and 2907 of 3115 words aligned. */
+/* Kept (#821 r79): the back-button test as IsTouchPressed(a0, slot) or as a0 != 0 && edge != 0
+   brings PS_Update to its 0x30ac but 916 words off, against 765 for the nested ifs without the
+   pragma. */
 #pragma opt_common_subs off
 void dScStage_c::PS_Update() {
     u8 var_sl;

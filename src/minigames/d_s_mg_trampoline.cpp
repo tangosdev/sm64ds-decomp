@@ -450,7 +450,10 @@ void dScMgTrampoline_c::StateIntro() {
            Re-measured 2026-11-16 (#821 r22): a whole-struct copy
            `Vec2s prev = mTouch` keeps the stack slot but loads it with
            ldrh, not ldrsh (10/104); member-wise Vec2s, s16[2] (assigned
-           or brace-initialised) and (&prev)->x are all kept in registers. */
+           or brace-initialised) and (&prev)->x are all kept in registers.
+           Kept (#821 r79): `const Vec2s prev = mTouch`, `Vec2s prev(mTouch)`
+           and the copy's fields cast back to s16 are 10 words off (ldrh);
+           the copy taken before the FX_Div is 0x1a4. */
         volatile s16 prevX = mTouch.x;
         volatile s16 prevY = mTouch.y;
         int penX = sTrmpStartTouchX * t + sTrmpIntroFromX * (0x1000 - t);
@@ -860,7 +863,9 @@ void dScMgTrampoline_c::InitBrush(int layer) {
 }
 
 /* Kept for PaintSquare: see the file comment above for why it reaches the
-   whole TU instead of just that function. */
+   whole TU instead of just that function. Kept (#821 r79): y recomputed
+   from the row counter and the inner loop as a do-while are 0x180, a
+   tile local 0x188, against 0x170. */
 #pragma opt_loop_invariants off
 
 /* Slot 34, the brush stamp. dScMgD3DBase_c does not override this slot,

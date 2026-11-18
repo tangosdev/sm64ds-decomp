@@ -493,6 +493,8 @@ void Message::AddCharPairVS() {
  * Re-measured (#821 r17): without the bracket it is 0x23c against 0x2b0, the
  * same with the row indices assigned inside the subscripts. */
 #pragma push
+/* Kept (#821 r79): rolled k loops over the four words and a u32 *src row pointer are 0x1ec and
+   0x22c against 0x2b0. */
 #pragma opt_common_subs off
 void Message::func_02031428(void) {
     int cnt;
@@ -1630,6 +1632,8 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
  * r17): still 0x278 without the bracket, and 0x2a8 with the second and third
  * rows re-reading data_0209fc88 for their tile count. */
 #pragma push
+/* Kept (#821 r79): a for loop with (n + 7) / 8 recomputed in the bound and seeds, and a static
+   inline TextCells(n) helper, are 0x288 and 0x278 against 0x298. */
 #pragma opt_common_subs off
 void Message::func_02033bb8(int param0) {
     volatile int li;
