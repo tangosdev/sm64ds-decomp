@@ -27,3 +27,203 @@ src/game/actors/d_a_mky.cpp:
     .ctor start:0x02114dd8 end:0x02114ddc
     .data start:0x02115ac8 end:0x02115b78
     .bss start:0x02115cd0 end:0x02115ebc
+
+src/data/ov030/data_ov030_02114690.cpp:
+    complete
+    .rodata start:0x02114690 end:0x02114694
+
+src/data/ov030/data_ov030_02114694.cpp:
+    complete
+    .rodata start:0x02114694 end:0x02114698
+
+src/data/ov030/data_ov030_02114698.cpp:
+    complete
+    .rodata start:0x02114698 end:0x021146b4
+
+src/data/ov030/data_ov030_021146b4.cpp:
+    complete
+    .rodata start:0x021146b4 end:0x021146f0
+
+src/data/ov030/data_ov030_021146f0.cpp:
+    complete
+    .rodata start:0x021146f0 end:0x02114750
+
+src/data/ov030/data_ov030_02114750.cpp:
+    complete
+    .rodata start:0x02114750 end:0x02114768
+
+src/data/ov030/data_ov030_02114768.cpp:
+    complete
+    .rodata start:0x02114768 end:0x021147c4
+
+src/data/ov030/data_ov030_021147c4.cpp:
+    complete
+    .rodata start:0x021147c4 end:0x02114824
+
+src/data/ov030/data_ov030_02114824.cpp:
+    complete
+    .rodata start:0x02114824 end:0x0211484c
+
+src/data/ov030/data_ov030_02114de0.cpp:
+    complete
+    .data start:0x02114de0 end:0x02114de4
+
+src/data/ov030/data_ov030_02114de4.cpp:
+    complete
+    .data start:0x02114de4 end:0x02114de8
+
+src/data/ov030/data_ov030_02114de8.cpp:
+    complete
+    .data start:0x02114de8 end:0x02114df0
+
+src/data/ov030/data_ov030_02114df0.cpp:
+    complete
+    .data start:0x02114df0 end:0x02114df8
+
+src/data/ov030/data_ov030_02114df8.cpp:
+    complete
+    .data start:0x02114df8 end:0x02114e00
+
+src/data/ov030/data_ov030_02114e00.cpp:
+    complete
+    .data start:0x02114e00 end:0x02114e08
+
+src/data/ov030/data_ov030_02114e08.cpp:
+    complete
+    .data start:0x02114e08 end:0x02114e14
+
+src/data/ov030/data_ov030_02114e14.cpp:
+    complete
+    .data start:0x02114e14 end:0x02114e20
+
+src/data/ov030/data_ov030_02114e20.cpp:
+    complete
+    .data start:0x02114e20 end:0x02114e30
+
+src/data/ov030/data_ov030_02114e30.cpp:
+    complete
+    .data start:0x02114e30 end:0x02114e40
+
+src/data/ov030/data_ov030_02114e40.cpp:
+    complete
+    .data start:0x02114e40 end:0x02114e50
+
+src/data/ov030/data_ov030_02114e50.cpp:
+    complete
+    .data start:0x02114e50 end:0x02114e60
+
+src/data/ov030/data_ov030_02114e60.cpp:
+    complete
+    .data start:0x02114e60 end:0x02114e70
+
+src/data/ov030/data_ov030_02114e70.cpp:
+    complete
+    .data start:0x02114e70 end:0x02114e80
+
+src/data/ov030/data_ov030_02114e80.cpp:
+    complete
+    .data start:0x02114e80 end:0x02114e90
+
+src/data/ov030/data_ov030_02114e90.cpp:
+    complete
+    .data start:0x02114e90 end:0x02114ea8
+
+src/data/ov030/data_ov030_02114ea8.cpp:
+    complete
+    .data start:0x02114ea8 end:0x02114ec4
+
+src/data/ov030/data_ov030_02114ec4.cpp:
+    complete
+    .data start:0x02114ec4 end:0x02114ee4
+
+src/data/ov030/data_ov030_02114f04.cpp:
+    complete
+    .data start:0x02114f04 end:0x02114f24
+
+src/data/ov030/data_ov030_02114f24.cpp:
+    complete
+    .data start:0x02114f24 end:0x02114f44
+
+src/data/ov030/data_ov030_02114f44.cpp:
+    complete
+    .data start:0x02114f44 end:0x02114f74
+
+src/data/ov030/data_ov030_02114f74.cpp:
+    complete
+    .data start:0x02114f74 end:0x02114fac
+
+src/data/ov030/data_ov030_02114fac.cpp:
+    complete
+    .data start:0x02114fac end:0x02114ff4
+
+src/data/ov030/data_ov030_02114ff4.cpp:
+    complete
+    .data start:0x02114ff4 end:0x02115044
+
+src/data/ov030/data_ov030_02115044.cpp:
+    complete
+    .data start:0x02115044 end:0x02115094
+
+src/data/ov030/data_ov030_02115094.cpp:
+    complete
+    .data start:0x02115094 end:0x0211510c
+
+src/data/ov030/data_ov030_0211510c.cpp:
+    complete
+    .data start:0x0211510c end:0x021151ec
+
+src/data/ov030/data_ov030_021151ec.cpp:
+    complete
+    .data start:0x021151ec end:0x02115514
+
+src/data/ov030/data_ov030_02115514.cpp:
+    complete
+    .data start:0x02115514 end:0x02115934
+
+src/data/ov030/_ZTI13daObjHmBskt_c.cpp:
+    complete
+    .data start:0x02115934 end:0x02115940
+
+src/data/ov030/_ZTS13daObjHmBskt_c.cpp:
+    complete
+    .data start:0x02115940 end:0x02115950
+
+src/data/ov030/g_profile_HM_BASKET.cpp:
+    complete
+    .data start:0x02115950 end:0x02115974
+
+src/data/ov030/data_ov030_021159f4.cpp:
+    complete
+    .data start:0x021159f4 end:0x021159f8
+
+src/data/ov030/_ZTI15daObjHmMaruta_c.cpp:
+    complete
+    .data start:0x021159f8 end:0x02115a04
+
+src/data/ov030/_ZTS15daObjHmMaruta_c.cpp:
+    complete
+    .data start:0x02115a10 end:0x02115a24
+
+src/data/ov030/g_profile_HM_MARUTA.cpp:
+    complete
+    .data start:0x02115a24 end:0x02115a48
+
+src/data/ov030/_ZTS7daMky_c.cpp:
+    complete
+    .data start:0x02115b78 end:0x02115b84
+
+src/data/ov030/_ZTI7daMky_c.cpp:
+    complete
+    .data start:0x02115b84 end:0x02115b90
+
+src/data/ov030/g_profile_MONKEY_THIEF.cpp:
+    complete
+    .data start:0x02115b90 end:0x02115bac
+
+src/data/ov030/g_profile_MONKEY_STAR.cpp:
+    complete
+    .data start:0x02115bac end:0x02115bc8
+
+src/data/ov030/data_ov030_02115bc8.cpp:
+    complete
+    .data start:0x02115bc8 end:0x02115bfc
