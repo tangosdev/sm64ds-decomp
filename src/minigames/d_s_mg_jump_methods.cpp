@@ -446,6 +446,9 @@ s32 dScMgJump_c::Render()
     mModel.mat4x3 = data_020a0e68;
 
     {
+        /* Kept (#821 r77): the ROM copy-initializes the scale with one
+           ldm/stm block move, which only a POD VecFx32 gives; Render takes
+           the game's Vector3, so it casts there. */
         VecFx32 t = sJumpRenderScale;
         ModelComponents *obj;
         MaterialState *mat;
