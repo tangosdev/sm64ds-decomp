@@ -829,7 +829,8 @@ void daBmb_c::func_ov102_0214b3f0(int a1) {
     unsigned int v = mState - 3;
     if (v <= 1u) return;
     unsigned short h = mFuse;
-    if (h <= 4u && h != 0u) return;
+    if (h <= 4u && h != 0u)
+        return;
     mCarrier = (daPly_c *)a1;
     func_ov102_0214bd20();
 }
