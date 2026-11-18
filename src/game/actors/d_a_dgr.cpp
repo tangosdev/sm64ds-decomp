@@ -189,9 +189,9 @@ s32 daDgr_c::Behavior() {
             dustPos.y = mBasePosY - kDustDrop;
             along = FX_SinIdx((u16)mAngle.y >> 4);
             dustPos.z = along * kDustReach + mPos.z;
-            mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, dustPos.x, dustPos.y,
-                                                   dustPos.z, (const Vector3_16f *)((void *)0),
-                                                   (dPa_c::level_c::callback_c *)((void *)0));
+            mDustParticle1 = Particle::System::New(
+                mDustParticle1, kDustEffect, dustPos.x, dustPos.y, dustPos.z,
+                (const Vector3_16f *)((void *)0), (dPa_c::level_c::callback_c *)((void *)0));
         }
         {
             s32 along;
@@ -200,9 +200,9 @@ s32 daDgr_c::Behavior() {
             dustPos.x = mPos.x - across * kDustReach;
             along = FX_SinIdx((u16)mAngle.y >> 4);
             dustPos.z = mPos.z - along * kDustReach;
-            mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, dustPos.x, dustPos.y,
-                                                   dustPos.z, (const Vector3_16f *)((void *)0),
-                                                   (dPa_c::level_c::callback_c *)((void *)0));
+            mDustParticle2 = Particle::System::New(
+                mDustParticle2, kDustEffect, dustPos.x, dustPos.y, dustPos.z,
+                (const Vector3_16f *)((void *)0), (dPa_c::level_c::callback_c *)((void *)0));
         }
     }
 
