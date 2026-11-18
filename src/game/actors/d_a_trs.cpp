@@ -355,6 +355,9 @@ void daTrs_c::func_ov063_0211640c() {
     func_ov063_021160d4();
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
 
 void daTrs_c::func_ov063_021166ac() {
 
@@ -404,8 +407,7 @@ void daTrs_c::func_ov063_021166ac() {
                               this->mPos.z >> 3);
     this->mShadowMtx = data_020a0e68;
     {
-        int big = (this->actorID == TRS_ID_BOSS_TERESA);
-        if (big)
+        if (IsActorID(this, TRS_ID_BOSS_TERESA))
             DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
         else
             DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x64000, 0xc8000, 0xf);
@@ -2159,6 +2161,10 @@ int daTrs_c::func_ov063_0211a0a8(int a1, int a2, int a3, int a4) {
     }
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == TRS_ID_PLAYER;
+}
+
 int daTrs_c::GetAttackStatus() {
 
     dActor_c *actor;
@@ -2177,8 +2183,7 @@ int daTrs_c::GetAttackStatus() {
                 this->mTalkPlayer = (daPly_c *)found;
 
                 {
-                    int isBf = (int)(((dActor_c *)found)->actorID == TRS_ID_PLAYER);
-                    if (isBf) {
+                    if (IsPlayerActor((dActor_c *)found)) {
                         if (((dActor_c *)found)->param1 == 3) {
                             u16 *p = (u16 *)&this->mBooFlags;
                             *p |= TRS_FLAG_HIT_BY_PARAM3_PLAYER;
@@ -2210,8 +2215,7 @@ int daTrs_c::GetAttackStatus() {
                 }
 
                 {
-                    int isBigBoo = (int)(this->actorID == TRS_ID_BOSS_TERESA);
-                    if (isBigBoo) {
+                    if (IsActorID(this, TRS_ID_BOSS_TERESA)) {
                         if (player->mIsAirborne != 0) {
                             player->Bounce(0x28000);
                             func_0201267c(0x149, &this->mCamSpacePos);
@@ -2511,8 +2515,7 @@ int daTrs_c::ShouldBeActive() {
 
     int r4;
     int v;
-    int b = (int)(this->actorID == TRS_ID_BOSS_TERESA);
-    if (b != 0 && this->mVariant != 0xf) {
+    if (IsActorID(this, TRS_ID_BOSS_TERESA) && this->mVariant != 0xf) {
         r4 = 0x2e6000;
     } else {
         v = this->mVariant;
@@ -2600,8 +2603,7 @@ void daTrs_c::OnPendingDestroy()
 
 int daTrs_c::Render()
 {
-    int b = (int)((mFlags & 0x40000) != 0);
-    if (b != 0)
+    if (IsInYoshiMouth(this))
         return 1;
 
     {
