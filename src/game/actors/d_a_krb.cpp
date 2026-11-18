@@ -37,8 +37,7 @@
  *   its inYoshiMouth int (3 words),
  *   Render without the `locked` materialization (3 words), Behavior
  *   with `(mFlags & 8) == 0`, `mStateTimer`/`mStuckTimer` named on
- *   both sides (3 words), 0212abd4 with `mHeadingHoldTimer` named on
- *   both sides of the decrement (2 words).
+ *   both sides (3 words).
  * - data_ov084_02130cf8 is the BMD. 02130278 is the BCA table.
  *   02130ce0/ce8/cf0/cc0/cc8/cd0 are BCA handles (SetAnim reads [1]).
  *   0213089c / 0213088c are BMA. The 021302xx words are the per-type
@@ -1231,8 +1230,8 @@ void daKrb_c::func_ov084_0212abd4() {
             mTargetHorzSpeed = data_ov084_02130228[mGoombaType];
             mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
 
-            if (*(u16 *)&mHeadingHoldTimer != 0) {
-                *(u16 *)((int)&mHeadingHoldTimer) = *(u16 *)((int)&mHeadingHoldTimer) - 1;
+            if (mHeadingHoldTimer != 0) {
+                mHeadingHoldTimer--;
             } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 3) {
                 mTargetAngleY =
                     mPrevAngle.y + (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
