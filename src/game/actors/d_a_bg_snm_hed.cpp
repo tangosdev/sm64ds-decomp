@@ -105,7 +105,7 @@ int daBgSnmHed_c::State3() {
     }
     mTextureSequence.Advance();
     ApproachLinear(mAngle.y, -0x4000, 0x514);
-    mPos.y = (int)0xffc427c0;
+    mPos.y = -0x3bd840;
     return 1;
 }
 
@@ -124,7 +124,7 @@ int daBgSnmHed_c::State2() {
     switch (mSubstate) {
     case 0:
         UpdatePos(&mCylinder);
-        if (mSpeed.y < 0 && mPos.y < (int)0xffc427c0) {
+        if (mSpeed.y < 0 && mPos.y < -0x3bd840) {
             pos.x = mPos.x;
             pos.y = mPos.y;
             pos.z = mPos.z;

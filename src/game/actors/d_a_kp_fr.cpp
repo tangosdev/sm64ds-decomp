@@ -219,10 +219,10 @@ void daKpFr_c::func_ov070_02121cbc(){
   if (id == 0) return;
   found = dActor_c::FindWithID(id);
   if (found == 0) return;
-  b = (int)(found->actorID == 0xbf);
+  b = (found->actorID == 0xbf);
   if (b == 0) return;
   player = (daPly_c *)found;
-  b = (int)((mFlags & 0x20000) != 0);
+  b = ((mFlags & 0x20000) != 0);
   if (b != 0) {
     func_ov070_02122044(1);
     return;

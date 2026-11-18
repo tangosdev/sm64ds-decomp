@@ -454,7 +454,7 @@ int daMenbo_c::func_ov090_02131648() {
         }
     }
 
-    if (((u32)(((u32)mAnmModel.currFrame) << 4) >> 0x10) >= 0x10) {
+    if (((u32)(mAnmModel.currFrame << 4) >> 0x10) >= 0x10) {
         p390 = &mAnimLoops;
         *p390 = *p390 + 1;
     }
@@ -508,13 +508,13 @@ int daMenbo_c::func_ov090_02131b94()
 {
     unsigned int r;
     short *s;
-    r = (unsigned)RandomIntInternal(&data_0209e650.value);
+    r = RandomIntInternal(&data_0209e650.value);
     s = &mTargetAngleY;
     *s = (*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
-    r = (unsigned)RandomIntInternal(&data_0209e650.value);
+    r = RandomIntInternal(&data_0209e650.value);
     s = &mTargetAngleY;
     *s = (*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
-    r = (unsigned)RandomIntInternal(&data_0209e650.value);
+    r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = (short)(((r >> 8) & 0x1f) + 150);
     mAnimSpeed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)data_ov090_02134490.filePtr, 0, 0x1000, 0);

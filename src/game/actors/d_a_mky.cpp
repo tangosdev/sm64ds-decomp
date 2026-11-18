@@ -544,7 +544,7 @@ int daMky_c::func_ov030_02112578()
         }
         break;
     case 4:
-        if (ApproachLinear(this->mAngle.y, (s16)0xffffe04e, 0x400) != 0) {
+        if (ApproachLinear(this->mAngle.y, -0x1fb2, 0x400) != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile[1], 0x40000000, 0x1000,
                                     0);
             this->mPrevAngle.y = this->mAngle.y;
@@ -684,11 +684,11 @@ int daMky_c::EnterState7()
         int t2 = op[2];
         this->mPos.z = t2;
     }
-    ang = (u16)this->mAngle.y;
+    ang = this->mAngle.y;
     s = FX_SinIdx(ang >> 4);
     *pos = (*pos) + FX_MUL(s, mul);
     *py = (*py) + 0x50000;
-    ang = (u16)this->mAngle.y;
+    ang = this->mAngle.y;
     s = FX_CosIdx(ang >> 4);
     *pz = (*pz) + FX_MUL(s, mul);
     other = this->mPlayer;

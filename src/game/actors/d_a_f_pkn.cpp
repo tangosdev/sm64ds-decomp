@@ -158,7 +158,7 @@ void daFPkn_c::SpawnDeathBurst()
 
     if (mAnmModel.file != data_ov084_02130e24.filePtr)
         return;
-    frame = (int)((unsigned)(mAnmModel.currFrame << 4) >> 16); /* whole frames */
+    frame = (unsigned)(mAnmModel.currFrame << 4) >> 16; /* whole frames */
     if (frame >= 0xa)
         return;
 
@@ -260,13 +260,13 @@ void daFPkn_c::CheckClsnHits()
 
     hitBits = mdCcAc_c.hitFlags & HIT_DAMAGE;
     if (hitBits != 0) {
-        cmp = (int)(actorID == ACTOR_FIREPAKUN);
+        cmp = (actorID == ACTOR_FIREPAKUN);
         if (cmp != 0)
             func_02012694(SND_HIT, &mCamSpacePos);
         else
             Sound::PlayBank0(SND_HIT_S, mCamSpacePos);
     activate_path:
-        cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
+        cmp = (actorID == ACTOR_FIREPAKUN_S);
         if (cmp != 0) {
             mCoinType = 1; /* the coin kind SpawnCoin drops */
             SpawnCoin();
@@ -296,14 +296,14 @@ void daFPkn_c::CheckClsnHits()
     hitter = dActor_c::FindWithID(otherId);
     if (hitter == 0)
         goto second;
-    cmp = (int)(hitter->actorID == ACTOR_PLAYER);
+    cmp = (hitter->actorID == ACTOR_PLAYER);
     if (cmp == 0)
         goto second;
     if (((daPly_c *)hitter)->mIsMetal != 0) {
         Sound::PlayBank0(SND_HIT_S, mCamSpacePos);
         goto activate_path;
     }
-    cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
+    cmp = (actorID == ACTOR_FIREPAKUN_S);
     if (cmp != 0) {
         daPly_c *player = (daPly_c *)hitter;
         if (JumpedOnByPlayer(mdCcAc_c, *player) != 0) {
@@ -314,7 +314,7 @@ void daFPkn_c::CheckClsnHits()
     }
     if (((daPly_c *)hitter)->mIsVanish != 0)
         goto second;
-    cmp = (int)(actorID == ACTOR_FIREPAKUN);
+    cmp = (actorID == ACTOR_FIREPAKUN);
     if (cmp != 0)
         goto second;
     pos1.x = mPos.x;
@@ -329,7 +329,7 @@ second:
     hitter = dActor_c::FindWithID(otherId);
     if (hitter == 0)
         return;
-    cmp = (int)(hitter->actorID == ACTOR_PLAYER);
+    cmp = (hitter->actorID == ACTOR_PLAYER);
     if (cmp == 0)
         return;
 
@@ -339,7 +339,7 @@ second:
             ((daPly_c *)hitter)->IncMegaKillCount();
             func_02012694(SND_MEGA_KILL, &mCamSpacePos);
         } else {
-            cmp = (int)(actorID == ACTOR_FIREPAKUN);
+            cmp = (actorID == ACTOR_FIREPAKUN);
             if (cmp != 0)
                 func_02012694(SND_HIT, &mCamSpacePos);
             else
@@ -418,7 +418,7 @@ void daFPkn_c::StateSpit()
     if (ApproachLinear(mScale, mMaxScale, mScaleRate) != 0) {
         /* The int flag cmp keeps the ROM's compare; a direct test DIFFs. */
         if (mAnmModel.Finished() != 0) {
-            cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
+            cmp = (actorID == ACTOR_FIREPAKUN_S);
             if (cmp != 0)
                 func_0201267c(SND_SPIT_END_S, &mCamSpacePos);
             else
@@ -435,7 +435,7 @@ void daFPkn_c::StateSpit()
         }
 
         if (mAnmModel.WillHitFrame(0x3a) != 0) {
-            cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
+            cmp = (actorID == ACTOR_FIREPAKUN_S);
             if (cmp != 0)
                 func_0201267c(SND_FIREBALL_S, &mCamSpacePos);
             else

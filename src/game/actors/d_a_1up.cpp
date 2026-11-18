@@ -351,7 +351,7 @@ daPly_c *da1up_c::GetTouchingPlayer() {
    byte-neutral here and stops the call from handing the callee whatever r1
    happens to hold on a host ABI. */
 void da1up_c::UpdateShown(int range) {
-    mShown = (char)IsPlayerInRange(range);
+    mShown = IsPlayerInRange(range);
     if (mShown == 0)
         return;
     func_ov002_020aefa4();

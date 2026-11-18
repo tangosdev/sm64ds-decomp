@@ -237,7 +237,7 @@ void daTrsTrap_c::UpdateBookshelf() {
         pp.y = q[1];
         pp.z = q[2];
     }
-    if (pp.x >= (int)0xffa24000)
+    if (pp.x >= -0x5dc000)
         mVisible = 0;
     else
         mVisible = 1;

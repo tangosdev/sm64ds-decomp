@@ -283,7 +283,7 @@ s32 daStar_c::InitResources()
     mStarFlags = 0;
     mSoundObjMode = 0;
     mCamSeq = 0xffff;
-    mSavedAreaId = (u8)mAreaId;
+    mSavedAreaId = mAreaId;
     mMarkerSlot = -1;
     mScale.x = FX32_ONE;
     mScale.y = FX32_ONE;
@@ -304,7 +304,7 @@ s32 daStar_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov002_02110964);
     dExtFrameCtrl_c::LoadFile(data_ov002_02110934);
 
-    b = (s32)(actorID == ACTOR_STAR);
+    b = (actorID == ACTOR_STAR);
     if (b != 0) {
         if (mAnmModel1.SetFile((BMD_File *)data_ov002_0211094c.filePtr, 1, 1) == 0 ||
             mAnmModel2.SetFile((BMD_File *)data_ov002_0211095c.filePtr, 1, 0x18) == 0)
@@ -326,9 +326,9 @@ s32 daStar_c::InitResources()
         InitKind9();
         return ret;
     }
-    mKind = (s32)((p >> 4) & 0xf);
+    mKind = (p >> 4) & 0xf;
 
-    b = (s32)(actorID == ACTOR_STAR);
+    b = (actorID == ACTOR_STAR);
     if (b != 0) {
         if (gCurrentStarId == (param1 & 0xf) || SublevelToLevel(gCurrentSublevel) > 0xe)
             mMarkerType = 2;
@@ -361,7 +361,7 @@ s32 daStar_c::InitResources()
     if (kind == KIND_0 || (u32)(kind - KIND_5) <= 2) {
         mState = STATE_IDLE;
         if (mKind != KIND_6) {
-            b = (s32)(actorID == ACTOR_SILVER_STAR);
+            b = (actorID == ACTOR_SILVER_STAR);
             if (b != 0) {
                 mVertAccel = -0x2000;
                 mTerminalVelocity = -0x28000;
@@ -572,7 +572,7 @@ int daStarBase_c::InitResources()
 
     if (gGameMode == 1)
         r3 = 1;
-    if (r3 == 0 && SublevelToLevel((s8)gCurrentSublevel) == 0x1d &&
+    if (r3 == 0 && SublevelToLevel(gCurrentSublevel) == 0x1d &&
         IsStarCollectedInCurLevel(mStarID) != 0) {
         MarkForDestruction();
         return 0;
@@ -1528,7 +1528,7 @@ void daStar_c::StateSpinAndEnd() {
             GiveVsStars(mPlayer->mPlayerNo, 1);
             Vector3 center = this->func_ov002_020e8244();
             p = (char *)mPlayer;
-            SpawnNumber(center, (unsigned int)gNumStageStars[mPlayer->mPlayerNo], 1, 0,
+            SpawnNumber(center, gNumStageStars[mPlayer->mPlayerNo], 1, 0,
                         (dActor_c *)p);
             UntrackStar(mMarkerSlot);
         }
@@ -1790,7 +1790,7 @@ int daStar_c::Collect(void *p) {
                     if (mBits.coinReward != 0 && found != 0) {
                         ((dActor_c *)found)->TrackInDeathTable();
                     }
-                    lvl = SublevelToLevel((signed char)gCurrentSublevel);
+                    lvl = SublevelToLevel(gCurrentSublevel);
                     if (lvl <= 0xe) {
                         int rec = SaveData::GetCoinRecord(lvl);
                         if (rec < NumCoins()) {
@@ -1902,14 +1902,14 @@ void daStar_c::AddStarMarker()
     s8 i;
     if (mMarkerSlot >= 0) return;
     for (i = 0; i < 12; i++) {
-        if (STAR_MARKERS[(int)i] != 0)
+        if (STAR_MARKERS[i] != 0)
             continue;
 
         if (mMarkerType == 0) {
             if (mBits.collectedModel) {
-                SetStarMarker((int)i, this, 3);
+                SetStarMarker(i, this, 3);
             } else {
-                SetStarMarker((int)i, this, 2);
+                SetStarMarker(i, this, 2);
             }
         } else {
             if (mMarkerType == 2) {
@@ -1918,7 +1918,7 @@ void daStar_c::AddStarMarker()
                     (((f43c = mKind) == 5 || f43c == 7) && IsStarCollectedInCurLevel(mStarID) != 0))
                     mMarkerType = 3;
             }
-            SetStarMarker((int)i, this, mMarkerType);
+            SetStarMarker(i, this, mMarkerType);
         }
 
         mMarkerSlot = i;
@@ -2320,9 +2320,9 @@ void daStar_c::SpawnCollectEffects() {
     vc.z = FX_MUL(vc.z, mScale.z);
     VEC_Add(&vc, &mPos, &vc);
     mParticle[0] =
-        (u32)Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
+        Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
     mParticle[1] =
-        (u32)Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
+        Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2336,11 +2336,11 @@ void daStar_c::SpawnPoseEffects() {
 
     root = mAnmModel1.data.bones;
 
-    if (!mAnmModel1.Finished() && (u32)(((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
+    if (!mAnmModel1.Finished() && (((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
         root->scaleX != 0) {
         struct Vector3 v1 = this->func_ov002_020e8244();
         mParticle[0] =
-            (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
+            Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
         return;
     }
 
@@ -2364,7 +2364,7 @@ void daStar_c::UpdateSparkleEffect() {
     Vector3 pos = mPos;
     pos.y += 0xd000;
     mParticle[2] =
-        (u32)Particle::System::New(mParticle[2], kPtclStarSparkle, pos.x, pos.y, pos.z, 0, 0);
+        Particle::System::New(mParticle[2], kPtclStarSparkle, pos.x, pos.y, pos.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2376,7 +2376,7 @@ void daStar_c::UpdateSilverTrailEffect() {
         return;
     Vector3 v = this->func_ov002_020e8244();
     mParticle[3] =
-        (int)Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
+        Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -249,11 +249,11 @@ void daGmch_c::CheckPlayerContact()
     if (player == 0)
         return;
 
-    cmp = (int)(player->actorID == ACTOR_PLAYER);
+    cmp = (player->actorID == ACTOR_PLAYER);
     if (cmp == 0)
         return;
 
-    cmp = (int)((mFlags & MFLAG_YOSHI_MOUTH_A) != 0);
+    cmp = ((mFlags & MFLAG_YOSHI_MOUTH_A) != 0);
     if (cmp != 0) {
         SetState(6);
         return;

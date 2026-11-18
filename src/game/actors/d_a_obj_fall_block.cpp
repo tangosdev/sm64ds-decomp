@@ -110,7 +110,7 @@ void daObjFallBlock_c::LinkGroup() {
    Slot 4 is StateIdle. Reaching it clears mSuppressed so
    this FL_KUZURE block renders and runs. A missing star destroys it. */
 void daObjFallBlock_c::PollLinkedStar() {
-    dActor_c *a = dActor_c::FindWithID((unsigned int)mLinkedStarID);
+    dActor_c *a = dActor_c::FindWithID(mLinkedStarID);
     if (a == 0) {
         MarkForDestruction();
         return;
@@ -126,7 +126,7 @@ void daObjFallBlock_c::FindLinkedStar() {
     star = dActor_c::FindWithActorID(ACTOR_STAR, 0);
     while (star) {
         if (static_cast<daStar_c *>(star)->unk_49d == (param1 & 0xf)) {
-            mLinkedStarID = (s32)star->uniqueID;
+            mLinkedStarID = star->uniqueID;
         }
         star = dActor_c::FindWithActorID(ACTOR_STAR, star);
     }

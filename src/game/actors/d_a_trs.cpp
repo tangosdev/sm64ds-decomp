@@ -241,10 +241,10 @@ int daTrs_c::func_ov063_02116190() {
         p = ClosestPlayer();
         if (p != 0 && p->mPos.z >= 0x3e8000)
             return 1;
-    } else if (this->mPos.y <= (int)0xff768000) {
+    } else if (this->mPos.y <= -0x898000) {
         p = ClosestPlayer();
         vec.x = -0xbe000;
-        vec.y = (int)0xff66e000;
+        vec.y = -0x992000;
         vec.z = 0xbe000;
         if (Vec3_HorzDist(&vec, &p->mPos) >= 0x73a000)
             return 1;
@@ -320,7 +320,7 @@ void daTrs_c::func_ov063_0211640c() {
         Vec3_Asr(&t1, &pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t1.x, t1.y, t1.z);
         this->mAnmModel.mat4x3 = data_020a0e68;
-        this->mAnmModel.ApplyOpacity((u8)((int)this->mOpacity >> 3), 1);
+        this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
         func_020167a4(&this->mAnmModel);
         {
             TrsBone *m = (TrsBone *)this->mAnmModel.data.bones;
@@ -334,7 +334,7 @@ void daTrs_c::func_ov063_0211640c() {
         Matrix4x3_FromTranslation(&data_020a0e68, t2.x, t2.y, t2.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, ang);
         this->mAnmModel.mat4x3 = data_020a0e68;
-        this->mAnmModel.ApplyOpacity((u8)((int)this->mOpacity >> 3), 1);
+        this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
     }
 
     if (this->mOpacity >= 0x10) {
@@ -482,8 +482,8 @@ void daTrs_c::func_ov063_02116a1c() {
         ApproachLinear(this->mHorzSpeed, 0x30000, 0x1800);
         t = 0x3e8000;
         v.x = -t;
-        v.z = (int)0xfdcd8000;
-        if (this->mPos.z < (int)0xfec78000) {
+        v.z = -0x2328000;
+        if (this->mPos.z < -0x1388000) {
             /* invert: laundered RMW as THEN, plain zero as ELSE
                -> movls/strbls + bls + unpredicated RMW */
             if (this->mOpacity > 0x14) {
@@ -522,7 +522,7 @@ void daTrs_c::func_ov063_02116bf4() {
             return;
         if (this->mChildDeaths < 5) {
             unsigned char cb = this->mSpawnCount;
-            if (cb != 5 && (int)cb - this->mChildDeaths < 2) {
+            if (cb != 5 && cb - this->mChildDeaths < 2) {
                 daTrs_c *p = (daTrs_c *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
                                                         &this->mPrevAngle, this->mAreaIdx, -1);
                 if (p != 0) {
@@ -663,7 +663,7 @@ void daTrs_c::func_ov063_02116fac() {
     case 2:
         ApproachLinear(this->mHorzSpeed, 0x3a000, 0x1800);
         target = Vector3(-0x3e8000, 0, 0xfea84000);
-        if (this->mPos.z < (int)0xfee08000) {
+        if (this->mPos.z < -0x11f8000) {
             this->mState++;
         }
         break;
@@ -693,7 +693,7 @@ void daTrs_c::func_ov063_02116fac() {
         ApproachLinear(this->mHorzSpeed, 0x3a000, 0x1800);
         target = Vector3(-0x3e8000, 0, 0xfea84000);
         r4 = 0x1000;
-        if (this->mPos.z < (int)0xfec78000) {
+        if (this->mPos.z < -0x1388000) {
             this->mState++;
         }
         break;
@@ -877,12 +877,12 @@ void daTrs_c::func_ov063_021177b0() {
                 look.z = mid.z;
                 look.x = mid.x - scaled;
 
-                if (look.x <= (int)0xFF894000) {
+                if (look.x <= -0x76c000) {
                     ang = Vec3_HorzAngle(&v, &this->mPos);
                     sn = FX_CosIdx((unsigned short)ang >> 4);
-                    t = (int)0xFF894000 - look.x;
+                    t = -0x76c000 - look.x;
                     mid.z = mid.z + FX_MUL(t, sn);
-                    look.x = (int)0xFF894000;
+                    look.x = -0x76c000;
                 }
 
                 func_020092c4(cam, &cam->pos, &look);
@@ -958,7 +958,7 @@ void daTrs_c::func_ov063_02117b0c() {
         }
         {
             void *pl = this->mTalkPlayer;
-            unsigned m = (unsigned)(int)data_ov063_0211e1c8[((daPly_c *)pl)->param1];
+            unsigned m = (int)data_ov063_0211e1c8[((daPly_c *)pl)->param1];
             if (!this->mClosestPlayer->ShowMessage(*this, m, &v, 0, 2))
                 return;
             func_0201277c(0x151);
@@ -1153,7 +1153,7 @@ void daTrs_c::func_ov063_02117cdc() {
             else
                 msg = data_ov063_0211e1dc[this->mTalkPlayer->param1];
         }
-        if (this->mClosestPlayer->ShowMessage(*this, (u32)msg, &w, 0, 2) == 0) {
+        if (this->mClosestPlayer->ShowMessage(*this, msg, &w, 0, 2) == 0) {
             return;
         }
         Sound::LoadAndSetMusic_Layer3(0x2c);
@@ -1295,7 +1295,7 @@ void daTrs_c::func_ov063_0211873c() {
     func_02012694(0x159, &this->mCamSpacePos);
     this->mAnmModel.SetAnim((BCA_File *)data_ov063_0211edcc.filePtr, 0x40000000, 0x1000, 0);
     {
-        unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+        unsigned int rnd = RandomIntInternal(&data_0209e650.value);
         this->mAttackRepeats = (u8)((rnd >> 0x10) % 3);
     }
     this->mHorzSpeed = 0;
@@ -1869,11 +1869,11 @@ void daTrs_c::func_ov063_02119894() {
 
     this->mBooFlags.hitByParam3Player = 0;
     if (this->mStateTimer == 0) {
-        unsigned r0 = (unsigned)RandomIntInternal(&data_0209e650.value);
-        this->mSpeedJitter = (int)(((r0 >> 16) & 0xfff) * 5);
-        r0 = (unsigned)RandomIntInternal(&data_0209e650.value);
+        unsigned r0 = RandomIntInternal(&data_0209e650.value);
+        this->mSpeedJitter = ((r0 >> 16) & 0xfff) * 5;
+        r0 = RandomIntInternal(&data_0209e650.value);
         {
-            int x = (int)((r0 >> 16) & 0xfff);
+            int x = (r0 >> 16) & 0xfff;
             this->mTurnJitter = (int)(((s64)x << 7) + 0x800 >> 12);
         }
     }
@@ -2814,7 +2814,7 @@ int daTrs_c::Behavior()
             v2.y = w;
             v2.z = z;
             rc2.SetObjAndPos(v2, this);
-            d1 = (int)(actorID == TRS_ID_TERESA);
+            d1 = (actorID == TRS_ID_TERESA);
             if (d1 != 0 && mVariant < 8 && mBooFlags.groundSeen != 0) {
                 if ((rc2.DetectClsn() == 0) || ((mPos.y - rc2.clsnY) > 0x12c000)) {
                     mPos = mLastGroundPos;
@@ -2856,7 +2856,7 @@ int daTBasket_c::Behavior()
         LandingDust(false);
     } else if (mWithMeshClsn.IsOnGround()) {
         onGround = 1;
-        if (secretDone != 0 || (u16)mSoundTimer > 60) {
+        if (secretDone != 0 || mSoundTimer > 60) {
             unsigned int id = mdCcAc_c.otherOwner;
             if (id != 0) {
                 dActor_c *touched = dActor_c::FindWithID(id);
@@ -2872,7 +2872,7 @@ int daTBasket_c::Behavior()
         int z = mPos.z;
         int y = mPos.y;
         int x = mPos.x;
-        unsigned int pid = (unsigned int)mParticleID;
+        unsigned int pid = mParticleID;
         mParticleID = Particle::System::New(pid, kPtclBooCageFall, x, y + 0x64000, z, 0, 0);
     }
 
@@ -3084,7 +3084,7 @@ int daTrs_c::InitResources()
         if (mVariant == 0xb) {
             mAreaId = -1;
             pp = ClosestPlayer();
-            if (pp != 0 && pp->mPos.z > (int)0xffaec000) {
+            if (pp != 0 && pp->mPos.z > -0x514000) {
                 mBooFlags.canAppear = 1;
             }
         }
@@ -3095,7 +3095,7 @@ int daTrs_c::InitResources()
         if (mVariant == 4) {
             mAreaId = -1;
             pp = ClosestPlayer();
-            if (pp != 0 && pp->mPos.z > (int)0xffaec000) {
+            if (pp != 0 && pp->mPos.z > -0x514000) {
                 mBooFlags.canAppear = 1;
             }
         } else if (mVariant == 7) {

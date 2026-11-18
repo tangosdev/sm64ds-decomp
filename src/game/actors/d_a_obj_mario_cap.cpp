@@ -947,7 +947,7 @@ int daObjMarioCap_c::Slide()
     if (DecIfAbove0_Short(&mStateTimer) == 0)
         return 1;
     if (CAP_TIMER(this) == 1) {
-        b = (int)((mFlags & 0x60000) != 0);
+        b = ((mFlags & 0x60000) != 0);
         if (b == 0) {
             MarkForDestruction();
             return 1;
@@ -1032,7 +1032,7 @@ int daObjMarioCap_c::InitTaken()
     if (!IsVsMode()) {
         daPly_c *p = mPlayer;
         if (p->mCharacter == 3) {
-            if (mModelIndex == (int)p->param1) {
+            if (mModelIndex == p->param1) {
                 struct Vector3 v;
                 Sound::PlayBank3(kSfx1Up, mCamSpacePos);
                 GiveLives(1);

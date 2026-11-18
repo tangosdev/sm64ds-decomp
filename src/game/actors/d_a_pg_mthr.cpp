@@ -293,7 +293,7 @@ int daPgMthr_c::StateTalkUpdate() {
                 unsigned char slot;
                 mGaveStar = 1;
                 slot = (unsigned char)(param1 & 0xf);
-                starParam = (unsigned)slot | 0x40;
+                starParam = slot | 0x40;
                 dActor_c::Spawn(ACTOR_POWER_STAR, starParam, mPos, 0, mAreaId, -1);
             }
             mPlayer->DropActor();

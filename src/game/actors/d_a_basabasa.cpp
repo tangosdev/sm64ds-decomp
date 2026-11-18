@@ -130,7 +130,7 @@ void daBasabasa_c::CheckTouch() {
     }
 
     /* Through an int: testing actorID in the `if` compiles differently. */
-    isPlayer = (int)(p->actorID == 0xbf);
+    isPlayer = (p->actorID == 0xbf);
     if (isPlayer == 0)
         return;
 

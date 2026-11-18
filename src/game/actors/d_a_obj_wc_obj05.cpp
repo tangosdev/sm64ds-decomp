@@ -120,7 +120,7 @@ s32 daObjWc_Obj05_c::Behavior() {
         mPos.y -= 0x14000;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
         {
-            int v = mRestPosY + (int)0xff5d8000;
+            int v = mRestPosY - 0xa28000;
             if (mPos.y <= v) {
                 mPos.y = v;
                 mState++;

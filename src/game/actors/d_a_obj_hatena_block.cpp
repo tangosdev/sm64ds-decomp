@@ -739,7 +739,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
         Particle::System::NewSimple(kPtclCapBlockBreak, pos.x, pos.y, pos.z);
         break;
     }
-    ch = (int)mHitterParam;
+    ch = mHitterParam;
     if (ch < 0) ch = 0; else if (ch > 3) ch = 3;
     typ = actorID;
     switch (typ - ACTOR_HATENA_BLOCK) {
@@ -909,7 +909,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     dActor_c* o;
     dCamera_c* g;
     func_ov102_02149684((int *)&pos, this);
-    o = dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), pos, 0, mAreaId, -1);
+    o = dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, p2 | (p1 << 8), pos, 0, mAreaId, -1);
     if (o == 0) return;
     g = gCamera;
     Vector3 vel(0, 0x11000, 0);
@@ -1039,10 +1039,10 @@ void daObjHatenaBlock_c::SpawnCoinSpray(Vector3 *pos, int n, unsigned int speed,
         a = dActor_c::Spawn(ACTOR_COIN, 2, *pos, 0, mAreaId, -1);
         if (a != 0) {
             do {
-                rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+                rnd = RandomIntInternal(&data_0209e650.value);
                 dir = (int)((rnd >> 0x10) << 0x1b) >> 0x10;
             } while (dir == prevDir);
-            rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+            rnd = RandomIntInternal(&data_0209e650.value);
             a->mPrevAngle.x = 0;
             q = rnd >> 0x10;
             speed = (speed * (q % 50 + 100)) / 100;
@@ -1063,7 +1063,7 @@ void daObjHatenaBlock_c::SpawnCoinSpray(Vector3 *pos, int n, unsigned int speed,
    dActor_c::GetWaterHeightWDW, the tree does not name 0x21. */
 int daObjHatenaBlock_c::IsHitBlocked() {
     if (gCurrentSublevel == 0x15) {
-        if ((int)(mHomePosY - 0x32000) <= data_0209f32c)
+        if ((mHomePosY - 0x32000) <= data_0209f32c)
             return 1;
     } else {
         if (gCurrentSublevel == 0x21)

@@ -145,7 +145,7 @@ int daDsn_c::Behavior() {
         if (frame != 0) {
             /* (frame - 1) << 12, written as << 16 >> 4. One lsl #12 shrinks
                this function (see the file comment). */
-            mTextureSequence.currFrame = (int)((((unsigned)frame - 1) << 16) >> 4);
+            mTextureSequence.currFrame = (((unsigned)frame - 1) << 16) >> 4;
             frame = (unsigned short)(mTextureSequence.currFrame >> 12);
             if (frame == 0)
                 mHoldTimer = 10;

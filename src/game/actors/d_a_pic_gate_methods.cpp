@@ -340,14 +340,14 @@ s32 daPicGate_c::InitResources() {
     }
 
     mCells = (Vertex *)::operator new[]((unsigned)mNumCells * 0x18u);
-    mTexRecord = (s32)this->LoadTexture((int)((unsigned char)((param1 >> 8) & 0x1f)));
+    mTexRecord = (s32)this->LoadTexture((unsigned char)((param1 >> 8) & 0x1f));
     mWaveParams = (const daPicGate_c::WaveParams *)&kDefaultWave;
     mState = &kStates[(unsigned char)((param1 >> 13) & 3)];
     (this->*mState->init)();
 
     {
-        int width = (int)((unsigned char)(param1 & 15) + 1) * kCell;
-        int height = (int)((unsigned char)((param1 >> 4) & 15) + 1) * kCell;
+        int width = ((unsigned char)(param1 & 15) + 1) * kCell;
+        int height = ((unsigned char)((param1 >> 4) & 15) + 1) * kCell;
         SetRanges(height / 2, width / 2 + kRangePad, kFar, kFar);
     }
     if ((unsigned char)((param1 >> 8) & 0x1f) == kPicUnclipped) {

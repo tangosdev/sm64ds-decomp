@@ -803,7 +803,7 @@ int daRNk_c::func_ov062_02119af0() {
     prevZ = p->mPrevPathPt.z;
     dz = targetZ - posZ;
     dzc = targetZ - prevZ;
-    p->mTargetAngleY = (short)cstd::atan2(dx, dz);
+    p->mTargetAngleY = cstd::atan2(dx, dz);
     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);
     if (dot <= 0 || Vec3_Dist(&p->mPos, &p->mPathTarget) < (p->mHorzSpeed >> 1)) {
         int v = p->mPathTarget.x;
@@ -816,7 +816,7 @@ int daRNk_c::func_ov062_02119af0() {
         }
         int idx = p->mCurPathPt;
         if (idx == 0) return PATH_DONE;
-        p->mPathPtr.GetNode(p->mPathTarget, (unsigned)idx);
+        p->mPathPtr.GetNode(p->mPathTarget, idx);
         return PATH_NODE_REACHED;
     }
     return PATH_TRAVELLING;
@@ -853,7 +853,7 @@ int daRNk_c::func_ov062_021199ac()
         dist = Vec3_Dist(&this->mPos, &other->mPos);
         selfAngle = this->mPrevAngle.y;
         otherAngle = other->mPrevAngle.y;
-        idx = (u16)(s16)(otherAngle - selfAngle);
+        idx = (s16)(otherAngle - selfAngle);
         tableVal = FX_CosIdx(idx >> 4);
         otherK = other->mHorzSpeed;
         fixed1 = FX_MUL(otherK, tableVal);

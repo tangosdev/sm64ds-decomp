@@ -238,7 +238,7 @@ void daMoray_c::UpdateHitCylinders() {
         return;
 
     p = dActor_c::FindWithID(id);
-    t = (int)(p->actorID == ACTOR_PLAYER);
+    t = (p->actorID == ACTOR_PLAYER);
     if (t == 0)
         return;
 

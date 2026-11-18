@@ -566,7 +566,7 @@ void daWanwan_c::PlayLandingEffects() {
 /* Start the release cutscene when the stump's mStepsLeft is 0 and the player
  * accepts the no-control lock. */
 int daWanwan_c::TryStartReleaseCutscene() {
-    daObjPile_c *stump = (daObjPile_c *)dActor_c::FindWithID((unsigned)mStumpUniqueID);
+    daObjPile_c *stump = (daObjPile_c *)dActor_c::FindWithID(mStumpUniqueID);
     if (stump->mStepsLeft == 0 && ClosestPlayer()->SetNoControlState(4, -1, 0) != 0) {
         SetState(3);
         mChainBroken = 1;
@@ -751,7 +751,7 @@ void daWanwan_c::StateEscapeDemoMain() {
     dCamera_c *camera;
 
     Sound::PlaySecretSound(this, &mSecretSound);
-    fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)mFenceUniqueID);
+    fence = (daObjWanwanShutter_c *)dActor_c::FindWithID(mFenceUniqueID);
     {
         s32 *src = &fence->mPos.x;
         partnerPos.x = src[0];

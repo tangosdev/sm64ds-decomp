@@ -113,7 +113,7 @@ daObjSeesaw_c::~daObjSeesaw_c() {}
  * 0x1000, 0x800, 0x1800, 0x1000). A non-player keeps that weight. Mega
  * replaces it with kMegaPoundScale. */
 int daObjSeesaw_c::GetActorWeight(dActor_c *other) {
-    int scale = data_ov095_02136f58[(int)other->param1 & 3];
+    int scale = data_ov095_02136f58[other->param1 & 3];
     unsigned isPlayer = (other->actorID == ACTOR_PLAYER);
     if (isPlayer == 0)
         return scale;

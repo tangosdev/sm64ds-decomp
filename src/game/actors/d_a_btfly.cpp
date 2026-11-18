@@ -239,7 +239,7 @@ void daBtfly_c::State4()
         if (DistToCPlayer() >= 0xc8000)
             return;
         {
-            int sb = (int)((unsigned int)RandomIntInternal(&data_0209e650.value) % 3);
+            int sb = (unsigned int)RandomIntInternal(&data_0209e650.value) % 3;
             int sel;
             int i;
             int mask = typ & 0x30;
@@ -281,7 +281,7 @@ void daBtfly_c::State3()
     UpdatePos(0);
 
     mPos.y -= FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngle.x >> 4)) +
-              FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * (short)20 / 4;
+              FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 20 / 4;
 
     mStateTimer = mStateTimer + 1;
     if (mStateTimer > 100)
@@ -471,7 +471,7 @@ int daBtfly_c::InitResources()
     v.z = 0;
     mdCcAcPos_c.Init(this, v, 0x32000, 0x64000, 0x200000, 0);
 
-    int sub = (int)(u8)(param1 & 0x30);
+    int sub = (u8)(param1 & 0x30);
     if (sub != 0x10 && sub != 0x20) {
         mKind = 0;
         mHorzSpeed = 0x7800;

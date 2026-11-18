@@ -139,7 +139,7 @@ void daGrock_c::HandleCylinderHit() {
         return;
     }
 
-    isPlayer = (int)(other->actorID == 0xbf);
+    isPlayer = (other->actorID == 0xbf);
     if (isPlayer == 0)
         return;
     if (((daPly_c *)other)->mIsVanish != 0)
@@ -264,10 +264,10 @@ int daGrock_c::Behavior() {
         UpdateModelTransform();
         mdCcAcPos_c.Clear();
 
-        if (mPos.z >= (int)0xfe82c000) {
+        if (mPos.z >= -0x17d4000) {
             Vector3 offset;
             offset.x = 0;
-            offset.y = (int)0xffebb000;
+            offset.y = -0x145000;
             offset.z = 0;
             mdCcAcPos_c.SetPosRelativeToActor(offset);
         } else {
@@ -305,7 +305,7 @@ int daGrock_c::Behavior() {
                 mSpawnCount++;
                 mStateTimer = 0;
                 Vector3_16 rot = mPrevAngle;
-                rnd = (u32)RandomIntInternal(&data_0209e650.value);
+                rnd = RandomIntInternal(&data_0209e650.value);
                 rot.y = rot.y + (rnd >> 16) % 0xc00;
                 if (mType == kGrockStarSpawner && mSpawnCount >= 5 && mStarRockOut == 0) {
                     daGrock_c *child;

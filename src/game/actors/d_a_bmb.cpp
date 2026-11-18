@@ -722,7 +722,7 @@ void daBmb_c::func_ov102_0214b53c() {
                 idx = 1;
             }
             if ((mCarrier->LostGrabbedObject() != 0) &&
-                (((u32)(((u32)(ret->currFrame << 4)) >> 0x10)) < 0xe)) {
+                ((((u32)(ret->currFrame << 4)) >> 0x10) < 0xe)) {
                 idx = 1;
             }
             if (mCarrier->param1 == 2) {

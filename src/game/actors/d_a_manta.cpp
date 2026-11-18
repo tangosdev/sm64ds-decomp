@@ -347,11 +347,11 @@ int daManta_c::InitResources() {
          * the manta onto node 3 at a fixed pose and clears mFlags. */
         if (IsGameMode(2)) {
             mPathNode = 3;
-            mPrevAngle.x = (short)0xf303;
+            mPrevAngle.x = -0xcfd;
             mPrevAngle.y = 0xb50;
             mPrevAngle.z = 0;
-            mPos.x = (int)0xfdfb8000;
-            mPos.y = (int)0xff8f8000;
+            mPos.x = -0x2048000;
+            mPos.y = -0x708000;
             mPos.z = 0x29a000;
             mFlags = 0;
         }

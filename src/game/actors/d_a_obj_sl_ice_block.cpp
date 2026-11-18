@@ -137,7 +137,7 @@ int daObjSlIceBlock_c::InitResources() {
         mPrevAngle.y = -0x4000;
         mMinPosY = mPos.y - 0xc8000;
     } else {
-        mDelayTimer = (u8)mNumToBigIce * 20;
+        mDelayTimer = mNumToBigIce * 20;
         mNumToBigIce = 5;
     }
     return 1;

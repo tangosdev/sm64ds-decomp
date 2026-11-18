@@ -526,11 +526,11 @@ void daJgm_c::HandlePlayerCollision()
     if (other == 0)
         return;
 
-    b = (int)(other->actorID == 0xbf);
+    b = (other->actorID == 0xbf);
     if (b == 0)
         return;
 
-    b = (int)((mFlags & 0x20000) != 0);
+    b = ((mFlags & 0x20000) != 0);
     if (b != 0) {
         SetState(2);
         return;
@@ -637,7 +637,7 @@ int daJgm_c::CountSpinies()
 
 void daJgm_c::UpdateHoverBob()
 {
-    unsigned short v = (unsigned short)mBobAngle;
+    unsigned short v = mBobAngle;
     short s = FX_SinIdx(v >> 4);
     long long prod = (long long)s * 0x27000;
     mBobOffsetY = (int)((prod + 0x800) >> 12);

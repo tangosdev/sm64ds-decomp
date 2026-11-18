@@ -264,7 +264,7 @@ void daSnowman_c::CheckAttacks() {
             func_02012694(0x1d, &this->mCamSpacePos);
             hit = 1;
         }
-        if ((flags & 0x40) && (s32)found->param1 == 2) {
+        if ((flags & 0x40) && found->param1 == 2) {
             this->mDeathState = 2;
             func_ov002_020aea30(found, 0);
             this->mDeathSound = 2;
@@ -321,7 +321,7 @@ int daSnowman_c::StateMeltExecute() {
         ApproachLinear(this->mSinkOffsetY, -0x4000, 0x199);
         /* Every read of mStateTimer here is ldrh: it is counted down
            through DecIfAbove0_Short, which takes it unsigned. */
-        if ((u16)this->mStateTimer == 0)
+        if (this->mStateTimer == 0)
             this->mStateTimer = 20;
         if (this->mScale.y < 0x50) {
             if (this->mCapPhase == 0) {
@@ -517,7 +517,7 @@ int daSnowman_c::StateSpawnSnowballExecute() {
         ball->mPos.z = this->mHandPos.z;
     }
 
-    if ((u16)this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         SetState(&data_ov081_02128e44);
         return 1;
     }
@@ -541,7 +541,7 @@ int daSnowman_c::StateSpawnSnowballEnter() {
 /* State "face the player", execute. */
 int daSnowman_c::StateRotateExecute() {
     RotateTowardPlayer(0);
-    if ((u16)this->mStateTimer == 0)
+    if (this->mStateTimer == 0)
         SetState(&data_ov081_02128e34);
     if (FindClosestPlayerDist() > 0x320000)
         SetState(&data_ov081_02128e64);
@@ -651,7 +651,7 @@ int daSnowman_c::StateHopEnter() {
 int daSnowman_c::StateWalkExecute() {
     struct Vector3 node;
 
-    if ((u16)this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         if (this->mStep == 1) {
             this->mSpeed.y = 0x14000;
             this->mVertAccel = -0x4000;

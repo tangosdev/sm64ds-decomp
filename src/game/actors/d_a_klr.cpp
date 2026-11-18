@@ -125,7 +125,7 @@ s32 daKlr_c::Behavior() {
     }
 
     mStateTimer++;
-    if (which != (u32)mState)
+    if (which != mState)
         mStateTimer = 0;
 
     UpdateModelAndShadow();
@@ -167,7 +167,7 @@ void daKlr_c::StateFly() {
         return;
     }
     if (timer < 50) {
-        if ((int)timer % 2)
+        if (timer % 2)
             this->mHorzSpeed = 0x3000;
         else
             this->mHorzSpeed = -0x3000;

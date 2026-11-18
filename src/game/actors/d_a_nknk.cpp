@@ -735,7 +735,7 @@ void daNknk_c::func_ov062_02117c98()
 
     if (flags & 0x10) {
         Vector3_16 v;
-        v.x = (s16)-0x2000;
+        v.x = -0x2000;
         v.y = turnAround;
         v.z = turnAround;
         KillByInvincibleChar(v, *(daPly_c *)found, 0x46000);
