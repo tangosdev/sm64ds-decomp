@@ -643,15 +643,15 @@ void daKuriKing_c::UpdateSummonGoombas() {
         if (this->mSpawnedCount % 2 == 0) sid = 0xeeef;
     }
 
-    daKrb_c *sp2 = (daKrb_c *)dActor_c::Spawn(0xc8, sid, pos, &this->mAngle, this->mAreaId, -1);
-    sp2->mTargetUniqueID = this->uniqueID;
+    daKrb_c *minion = (daKrb_c *)dActor_c::Spawn(0xc8, sid, pos, &this->mAngle, this->mAreaId, -1);
+    minion->mTargetUniqueID = this->uniqueID;
     Vector3 v2;
     v2.x = this->mSpawnPosX;
     v2.y = this->mSpawnPosY;
     v2.z = this->mSpawnPosZ;
-    sp2->func_ov084_021296b0(&v2);
+    minion->func_ov084_021296b0(&v2);
 
-    sp2->mMinionIndex = this->mSpawnedCount;
+    minion->mMinionIndex = this->mSpawnedCount;
     /* Same pool-address increment as mSubState: 0x602 is not an ARM immediate. */
     u8* spawnedCount = (u8*)(((int)&this->mSpawnedCount));
     *spawnedCount = (u8)(*spawnedCount + 1);
@@ -1403,8 +1403,8 @@ int daKuriKing_c::IsAnimPlaying(int idx) {
 void daKuriKing_c::PlayAnim(int idx) {
     void *file1 = data_ov074_02122f34[idx].anim->filePtr;
     int off = idx * 0xc;
-    int arg2 = *(int*)(data_ov074_02122f3c + off);
-    this->mAnmModel.SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
+    int flags = *(int*)(data_ov074_02122f3c + off);
+    this->mAnmModel.SetAnim((BCA_File *)file1, flags, 0x1000, 0);
     this->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
 }
 

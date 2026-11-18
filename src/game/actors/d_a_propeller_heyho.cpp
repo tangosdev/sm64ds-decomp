@@ -280,9 +280,9 @@ int daPropeller_Heyho_c::Behavior()
         if (v >= hi) {
             hi = v;
         }
-        int tmp = mSpeed.z;
+        int speedZ = mSpeed.z;
         mSpeed.y = hi;
-        mSpeed.z = tmp;
+        mSpeed.z = speedZ;
     }
 
     UpdatePosWithOnlySpeed(&mdCcAc_c);
@@ -631,7 +631,7 @@ extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 int daPropeller_Heyho_c::func_ov070_0211f6e0()
 {
     daPly_c *player;
-    Vector3 tmp;
+    Vector3 abovePlayer;
     Vector3 v;
     Vector3 aim;
     s16 vAngle;
@@ -696,21 +696,21 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         return 1;
     }
 
-    *(V3w *)&tmp =
+    *(V3w *)&abovePlayer =
         *(V3w *)&player->mPos.x; /* array-wrapper keeps the ldm/stm block copy under -lang c++ */
     z = 0;
     v.x = z;
     v.y = z;
     v.z = z;
-    tmp.y = player->mGroundY;
+    abovePlayer.y = player->mGroundY;
     if (gCurrentSublevel == kLevel0x16)
-        tmp.y += 0x32000;
+        abovePlayer.y += 0x32000;
     else
-        tmp.y += 0x47000;
+        abovePlayer.y += 0x47000;
     {
-        int tx = tmp.x;
-        int ty = tmp.y;
-        int tz = tmp.z;
+        int tx = abovePlayer.x;
+        int ty = abovePlayer.y;
+        int tz = abovePlayer.z;
         aim.x = tx;
         aim.y = ty;
         aim.z = tz;
@@ -719,7 +719,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     ApproachAngle(&mPrevAngle.x, vAngle, 0xa, 0x200, 0x100);
 
     v.z = 0x11000;
-    if (mPos.y <= tmp.y + 0x5000 || mPos.y <= player->mPos.y + 0x5000 ||
+    if (mPos.y <= abovePlayer.y + 0x5000 || mPos.y <= player->mPos.y + 0x5000 ||
         Vec3_Dist(&mPos, &mHomePos) > kHomeLeashDist) {
         DecIfAbove0_Short(&mStateTimer);
         v.z = 0x9000;
@@ -802,16 +802,16 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
     daPly_c *pl;
     struct Vector3 posbuf;
     struct Vector3 fp;
-    struct Vector3 tmp;
+    struct Vector3 target;
 
     pl = ClosestPlayer();
     if ((unsigned)(mAnmModel.currFrame << 4) >> 0x10 < kFireFrame) {
         if (pl != 0) {
             *(V3w *)&posbuf = *(V3w *)&pl->mPos.x;
-            tmp.x = posbuf.x;
-            tmp.y = posbuf.y;
-            tmp.z = posbuf.z;
-            mTargetAngY = Vec3_HorzAngle(&mPos, &tmp);
+            target.x = posbuf.x;
+            target.y = posbuf.y;
+            target.z = posbuf.z;
+            mTargetAngY = Vec3_HorzAngle(&mPos, &target);
         }
         ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x400, 0x200);
     }

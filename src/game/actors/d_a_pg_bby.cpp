@@ -645,15 +645,15 @@ void daPgBby_c::CheckNearMother() {
    run out, and off screen -- go back to the spawn position. */
 void daPgBby_c::CheckRespawn() {
     Vector3 out;
-    Vector3 tmp;
+    Vector3 scaledPos;
     if (mStateId == 3) return;
     if ((unsigned)mPos.y > (unsigned)(-0x1800000)) {
         if (Vec3_Dist(&mSpawnPos, &mPos) < 0x190000)
             return;
         if (DecIfAbove0_Short(&mRespawnTimer) != 0) return;
     }
-    Vec3_Asr(&tmp, &mSpawnPos, 3);
-    if (data_0209f43c.TransformAndClip(data_0209b3ec, tmp, 0x1f400, out) <= 0xc350000)
+    Vec3_Asr(&scaledPos, &mSpawnPos, 3);
+    if (data_0209f43c.TransformAndClip(data_0209b3ec, scaledPos, 0x1f400, out) <= 0xc350000)
         return;
     mPos.x = mSpawnPos.x;
     mPos.y = mSpawnPos.y;

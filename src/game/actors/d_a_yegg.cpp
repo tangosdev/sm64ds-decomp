@@ -293,7 +293,7 @@ void daYegg_c::PayOut() {
 /* -------------------------------------------------------------------------- */
 /* Spawns `count` blue coins (actor BLUE_COIN, param1 2) at *b in the egg's
  * area. When more than one is asked for, the speed `sl` is raised to at least
- * 0x4000 (4 units). Each coin gets a heading of `arg5` plus a random multiple
+ * 0x4000 (4 units). Each coin is headed at `heading` plus a random multiple
  * of 0x800 (a 32nd of a turn) that differs from the previous coin's, and a
  * speed of `sl` scaled by a random 100 to 149 percent. The scaling compounds,
  * because the product is stored back into `sl`. The four fields written at
@@ -301,7 +301,7 @@ void daYegg_c::PayOut() {
  * word) are dActor_c's
  * mPrevAngle.x/.y/.z and mHorzSpeed; whether the coin reads them as spawn
  * arguments is not shown here. */
-void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
+void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short heading) {
     unsigned int r;
     int zero;
     dActor_c *coin;
@@ -329,7 +329,7 @@ void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
             coin->mPrevAngle.x = zero;
             sl = sl * ((r % 50) + 100) / 100;
             prev = rv;
-            coin->mPrevAngle.y = arg5 + rv;
+            coin->mPrevAngle.y = heading + rv;
             coin->mPrevAngle.z = zero;
             coin->mHorzSpeed = sl;
         }
@@ -543,8 +543,8 @@ void daYegg_c::SeekHoming() {
                     return;
                 }
                 if (o != 0) {
-                    Vector3 tmp = o->OnAimedAtWithEggReturnVec();
-                    if (ApproachLinear(mPos, tmp, mHorzSpeed) != 0) {
+                    Vector3 aimPos = o->OnAimedAtWithEggReturnVec();
+                    if (ApproachLinear(mPos, aimPos, mHorzSpeed) != 0) {
                         switch (o->actorID) {
                         case ACTOR_BOMBKING:
                         case ACTOR_HOLHEI:
@@ -560,7 +560,7 @@ void daYegg_c::SeekHoming() {
                             return;
                         }
                     }
-                    mAngle.y = Vec3_HorzAngle(&mPos, &tmp);
+                    mAngle.y = Vec3_HorzAngle(&mPos, &aimPos);
                 }
                 Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
                 flag = 1;

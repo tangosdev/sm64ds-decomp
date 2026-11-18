@@ -165,7 +165,7 @@ void daOnms_c::StateSink()
 /* State 7: tumble until the box lands, then shake the ground. */
 int daOnms_c::StateBounce()
 {
-    Vector3 tmp;
+    Vector3 dustPos;
     Vector3 eq;
     Vector3 dust;
 
@@ -205,12 +205,12 @@ int daOnms_c::StateBounce()
     Earthquake(eq, 0x5dc000);
     func_02012694(0x46, CamPos(this));
 
-    /* tmp is a dead copy the ROM keeps; building dust directly differs. */
-    tmp.x = mPos.x;
-    tmp.y = mPos.y;
-    tmp.z = mPos.z;
-    tmp.y -= 0x78000;
-    dust = tmp;
+    /* dustPos is a dead copy the ROM keeps; building dust directly differs. */
+    dustPos.x = mPos.x;
+    dustPos.y = mPos.y;
+    dustPos.z = mPos.z;
+    dustPos.y -= 0x78000;
+    dust = dustPos;
     LandingDustAt(dust, 1);
 
     mVertAccel = 0;
@@ -576,7 +576,7 @@ int daOnms_c::Behavior()
 int daOnms_c::InitResources()
 {
     void *f;
-    Vector3 tmp;
+    Vector3 scaledPos;
 
     f = dExtSimpleModel_c::LoadFile(gOnimasuModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
@@ -601,9 +601,9 @@ int daOnms_c::InitResources()
     mRestPos.x = mPos.x;
     mRestPos.y = mPos.y;
     mRestPos.z = mPos.z;
-    Vec3_Asr(&tmp, ActorPos(this), 3);
+    Vec3_Asr(&scaledPos, ActorPos(this), 3);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, scaledPos.x, scaledPos.y, scaledPos.z);
     mModel.mat4x3 = data_020a0e68;
     mBaseMtx = mModel.mat4x3;
 

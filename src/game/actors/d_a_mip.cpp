@@ -888,13 +888,13 @@ void daMip_c::UpdateMatrixAndShadow()
 {
     extern Matrix4x3 data_020a0e68;
 
-    char tmp[0x30];
+    char result[0x30];
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
-    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
+    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, result);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
     mShadowMtx = data_020a0e68;
     DropShadowRadHeight(mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
@@ -1022,8 +1022,8 @@ void daMip_c::RenderMirrorImage()
 {
     extern int data_020a0e68;
 
-    Matrix4x3 tmp;
-    tmp = mAnmModel.mat4x3;
+    Matrix4x3 saved;
+    saved = mAnmModel.mat4x3;
     mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
     MTX_Concat33(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
@@ -1033,7 +1033,7 @@ void daMip_c::RenderMirrorImage()
     mAnmModel.ApplyOpacity(0xff, 0);
     mAnmModel.SetMaterialFlags(0x80);
     mAnmModel.ClearMaterialFlags(0x40);
-    mAnmModel.mat4x3 = tmp;
+    mAnmModel.mat4x3 = saved;
 }
 
 /* The glowing-rabbit chase, and it is mostly a conversation.

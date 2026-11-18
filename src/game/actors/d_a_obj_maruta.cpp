@@ -115,7 +115,7 @@ static inline int IsActorID(dActor_c *actor, int id) {
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
 int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
-    Vector3 tmp;
+    Vector3 offset;
     int len;
     int ang;
     s16 v;
@@ -173,8 +173,8 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
         mHorzSpeed = (d / 64) << 12;
     }
     UpdatePos(0);
-    Vec3_Sub(&tmp, &mPos, &mRestPos);
-    len = VEC_Mag(&tmp);
+    Vec3_Sub(&offset, &mPos, &mRestPos);
+    len = VEC_Mag(&offset);
     ang = Vec3_HorzAngle(&mPos, &mRestPos);
     ang = AngleDiff(ang, mAngle.y);
     if (ang >= 0x7f00)
