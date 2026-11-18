@@ -98,8 +98,9 @@ typedef int (daMip_c::*daMip_cStateFn)();
  * three through a volatile lvalue, exactly as retail. Both share the one
  * declared-not-defined destructor; the destructor alias points at the ROM's
  * canonical copy. (This was spelled to keep Vector3's vague-linkage D1 out
- * of the TU; Behavior's Vector3 locals now emit it, so whether a plain
- * Vector3 reproduces these is open.) */
+ * of the TU; Behavior's Vector3 locals now emit it. r63 measured plain
+ * Vector3 globals: __sinit hoists each x `mov` ahead of the address load
+ * in vectors 2 to 4, 12 words off, so MipVec3 stays.) */
 struct DaMipModelFile : SharedFilePtr {
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();

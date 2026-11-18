@@ -1499,7 +1499,12 @@ dMgDilarCardObj_c::~dMgDilarCardObj_c() {}
  * though it comes later. Without it that D1 calls this class's D2 and is 0x24
  * bytes, not 0x1c. With auto_inline on for the whole file, five scene methods
  * stop matching, so it is scoped to this one definition. Defining this
- * destructor `inline` instead puts its D1 between the scene's D1 and D0. */
+ * destructor `inline` instead puts its D1 between the scene's D1 and D0.
+ * Round 64: both destructors defined `{}` in the class body give the right
+ * bytes for both D1s, but both land between the scene's D1 and D0. auto_inline
+ * on file-wide with inline_max_size 4, 8, 16 or 32 inlines into the class
+ * factory and the dealer card's constructor and still leaves that D1 calling
+ * this one (0x24); at 32 StartRound, ArrangeHand and UpdateState change too. */
 #pragma push
 #pragma auto_inline on
 dMgCardObj_c::~dMgCardObj_c() {}
