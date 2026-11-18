@@ -2276,6 +2276,7 @@ int daTrs_c::GetAttackStatus() {
                     }
                 }
 
+                /* Kept (#821 r83): if (hit && kind) { ... } else { hurt } is byte-identical but re-indents the round-83a s16 *ap local; left for after 83a. */
                 do {
                     if ((this->mdCcAcPos_c.hitFlags & 0x10) != 0) {
                         u8 kind = this->mVariant;
