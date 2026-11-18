@@ -783,63 +783,55 @@ void daNknk_c::func_ov062_02117c98()
         Vector3 hurtFrom;
         int isPlayer;
         isPlayer = (player->actorID == 0xbf /* PLAYER */) ? 1 : turnAround;
-        if (isPlayer == 0)
-            goto tail;
-        if (player->mIsMetal != 0) {
-            if (mKoopaVariant == 0) {
-                DropShell();
-                goto tail;
-            }
-            mDeathState = 6;
-            func_ov002_020aea30(found, 0);
-            return;
-        }
-        {
-            Vector3 *s = &player->mPos;
-            plPos = *s;
-        }
-        if (player->IsOnShell()) {
-            mDeathState = 5;
-            turnAround = 1;
-            goto tail;
-        }
-        if (JumpedOnByPlayer(mdCc_c, *player)) {
-            if (mKoopaVariant == 0) {
-                DropShell();
+        if (isPlayer != 0) {
+            if (player->mIsMetal != 0) {
+                if (mKoopaVariant == 0) {
+                    DropShell();
+                } else {
+                    mDeathState = 6;
+                    func_ov002_020aea30(found, 0);
+                    return;
+                }
             } else {
-                mDeathState = 1;
-                func_ov002_020aea30(found, 0);
-                mScale.x = 0x1000;
-                mScale.y = 0x1000;
-                mScale.z = 0x1000;
-                func_0201267c(0x113, &mCamSpacePos);
-            }
-            ((daPly_c *)found)->Bounce(0x28000);
-            return;
-        }
-        if (player->mIsVanish != 0)
-            goto tail;
-        if ((mdCc_c.hitFlags & 0x400000) == 0)
-            goto tail;
-        if (mState == 0)
-            goto tail;
-        {
-            s32 pw;
-            hurtFrom = mPos;
-            pw = mHorzSpeed;
-            if (pw < 0xf000)
-                pw = 0xf000;
-            player->Hurt(hurtFrom, 0, pw, 1, 0, 1);
-            BounceOffHurtPlayer();
-            if (mKoopaVariant == 2) {
-                PoofDust();
-                SpawnBlueCoin();
-                KillAndTrackInDeathTable();
+                {
+                    Vector3 *s = &player->mPos;
+                    plPos = *s;
+                }
+                if (player->IsOnShell()) {
+                    mDeathState = 5;
+                    turnAround = 1;
+                } else if (JumpedOnByPlayer(mdCc_c, *player)) {
+                    if (mKoopaVariant == 0) {
+                        DropShell();
+                    } else {
+                        mDeathState = 1;
+                        func_ov002_020aea30(found, 0);
+                        mScale.x = 0x1000;
+                        mScale.y = 0x1000;
+                        mScale.z = 0x1000;
+                        func_0201267c(0x113, &mCamSpacePos);
+                    }
+                    ((daPly_c *)found)->Bounce(0x28000);
+                    return;
+                } else if (player->mIsVanish == 0 && (mdCc_c.hitFlags & 0x400000) != 0 &&
+                           mState != 0) {
+                    s32 pw;
+                    hurtFrom = mPos;
+                    pw = mHorzSpeed;
+                    if (pw < 0xf000)
+                        pw = 0xf000;
+                    player->Hurt(hurtFrom, 0, pw, 1, 0, 1);
+                    BounceOffHurtPlayer();
+                    if (mKoopaVariant == 2) {
+                        PoofDust();
+                        SpawnBlueCoin();
+                        KillAndTrackInDeathTable();
+                    }
+                }
             }
         }
     }
 
-tail:
     func_ov002_020aea30(found, &mWithMeshClsn);
     if (turnAround)
         mAngle.y = (u16)(mPrevAngle.y + 0x8000);

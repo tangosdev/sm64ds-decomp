@@ -371,46 +371,41 @@ void daFPkn_c::StateGrow()
     daPly_c *player;
     Vector3 playerPos;
     short targetAngle;
-    dActor_c *spawned;
+    daPkn_c *spawned;
     int *src;
 
-    if (ApproachLinear(mScale, mMaxScale, mScaleRate) == 0) {
-        goto tail;  /* an early return here DIFFs */
-    }
+    if (ApproachLinear(mScale, mMaxScale, mScaleRate) != 0) {
+        if (mAnmModel.WillHitFrame(0x10) || mAnmModel.WillHitFrame(0x20) ||
+            mAnmModel.WillHitFrame(0x34) || mAnmModel.WillHitFrame(0x4b)) {
+            func_0201267c(SND_GROW_BITE, &mCamSpacePos);
+        }
 
-    if (mAnmModel.WillHitFrame(0x10) || mAnmModel.WillHitFrame(0x20) ||
-        mAnmModel.WillHitFrame(0x34) || mAnmModel.WillHitFrame(0x4b)) {
-        func_0201267c(SND_GROW_BITE, &mCamSpacePos);
-    }
+        targetAngle = mAngle.y;
+        player = ClosestPlayer();
+        /* Read through src before the null test; direct member reads DIFF. */
+        src = &player->mPos.x;
+        playerPos.x = src[0];
+        playerPos.y = src[1];
+        playerPos.z = src[2];
+        if (player != 0) {
+            targetAngle = Vec3_HorzAngle(&mPos, &playerPos);
+        }
+        ApproachLinear(mAngle.y, targetAngle, 0x400);
 
-    targetAngle = mAngle.y;
-    player = ClosestPlayer();
-    /* Read through src before the null test; direct member reads DIFF. */
-    src = &player->mPos.x;
-    playerPos.x = src[0];
-    playerPos.y = src[1];
-    playerPos.z = src[2];
-    if (player != 0) {
-        targetAngle = Vec3_HorzAngle(&mPos, &playerPos);
-    }
-    ApproachLinear(mAngle.y, targetAngle, 0x400);
-
-    if (mSuppressDeathReward == 1) {
-        spawned = dActor_c::Spawn(ACTOR_PAKUN, 0, mPos, &mAngle, mAreaId, -1);
-        if (spawned == 0) return;
-
-        mSuppressDeathReward = 2;
-        ((daPkn_c *)spawned)->EnterLunge((short)((unsigned int)(mAnmModel.currFrame << 4) >> 16));
+        if (mSuppressDeathReward == 1) {
+            spawned = (daPkn_c *)dActor_c::Spawn(ACTOR_PAKUN, 0, mPos, &mAngle, mAreaId, -1);
+            if (spawned != 0) {
+                mSuppressDeathReward = 2;
+                spawned->EnterLunge((short)((unsigned int)(mAnmModel.currFrame << 4) >> 16));
+                mdCcAc_c.flags |= 1;
+                mdCcAcPos_c.flags |= 1;
+            }
+        } else {
+            MarkForDestruction();
+        }
+    } else {
         mdCcAc_c.flags |= 1;
-        mdCcAcPos_c.flags |= 1;
-        return;
     }
-
-    MarkForDestruction();
-    return;
-
-tail:
-    mdCcAc_c.flags |= 1;
 }
 
 void daFPkn_c::StateSpit()
@@ -420,54 +415,46 @@ void daFPkn_c::StateSpit()
     int cmp;
     daPly_c *player;
 
-    if (ApproachLinear(mScale, mMaxScale, mScaleRate) == 0)
-        goto cold;  /* the ROM places this branch last */
-
-    /* The int flag cmp keeps the ROM's compare; a direct test DIFFs. */
-    if (mAnmModel.Finished() != 0) {
-        cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
-        if (cmp != 0)
-            func_0201267c(SND_SPIT_END_S, &mCamSpacePos);
-        else
-            func_0201267c(SND_SPIT_END, &mCamSpacePos);
-        mState = STATE_WAIT;
-        mAnmModel.SetAnim((BCA_File *)(((SharedFilePtr *)data_ov084_02130e1c)->filePtr), 0, 0x1000,
-                          0);
-    } else {
-        if (mStateTimer < 58) {
+    if (ApproachLinear(mScale, mMaxScale, mScaleRate) != 0) {
+        /* The int flag cmp keeps the ROM's compare; a direct test DIFFs. */
+        if (mAnmModel.Finished() != 0) {
+            cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
+            if (cmp != 0)
+                func_0201267c(SND_SPIT_END_S, &mCamSpacePos);
+            else
+                func_0201267c(SND_SPIT_END, &mCamSpacePos);
+            mState = STATE_WAIT;
+            mAnmModel.SetAnim((BCA_File *)(((SharedFilePtr *)data_ov084_02130e1c)->filePtr), 0,
+                              0x1000, 0);
+        } else if (mStateTimer < 58) {
             targetAngle = mAngle.y;
             player = ClosestPlayer();
             if (player != 0)
                 targetAngle = Vec3_HorzAngle(&mPos, &player->mPos);
             ApproachLinear(mAngle.y, targetAngle, 0x400);
         }
+
+        if (mAnmModel.WillHitFrame(0x3a) != 0) {
+            cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
+            if (cmp != 0)
+                func_0201267c(SND_FIREBALL_S, &mCamSpacePos);
+            else
+                func_0201267c(SND_FIREBALL, &mCamSpacePos);
+
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
+            pos.x += FX_MUL((mMaxScale * 0x3c), FX_SinIdx((u16)mAngle.y >> 4));
+            pos.z += FX_MUL((mMaxScale * 0x3c), FX_CosIdx((u16)mAngle.y >> 4));
+            pos.y += mMaxScale * 0x5a;
+            mAngle.x = 0x1000;
+
+            SpawnFireball(pos, &mAngle, 0x1e000, 0xa000, 3);
+        }
+    } else if (mScale > (mMaxScale >> 1)) {
+        mdCcAc_c.flags &= ~1;
+        mFlags |= 0x10000000;
     }
-
-    if (mAnmModel.WillHitFrame(0x3a) == 0)
-        return;
-
-    cmp = (int)(actorID == ACTOR_FIREPAKUN_S);
-    if (cmp != 0)
-        func_0201267c(SND_FIREBALL_S, &mCamSpacePos);
-    else
-        func_0201267c(SND_FIREBALL, &mCamSpacePos);
-
-    pos.x = mPos.x;
-    pos.y = mPos.y;
-    pos.z = mPos.z;
-    pos.x += FX_MUL((mMaxScale * 0x3c), FX_SinIdx((u16)mAngle.y >> 4));
-    pos.z += FX_MUL((mMaxScale * 0x3c), FX_CosIdx((u16)mAngle.y >> 4));
-    pos.y += mMaxScale * 0x5a;
-    mAngle.x = 0x1000;
-
-    SpawnFireball(pos, &mAngle, 0x1e000, 0xa000, 3);
-    return;
-
-cold:
-    if (mScale <= (mMaxScale >> 1))
-        return;
-    mdCcAc_c.flags &= ~1;
-    mFlags |= 0x10000000;
 }
 
 void daFPkn_c::StateWait()

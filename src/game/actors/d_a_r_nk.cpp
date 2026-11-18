@@ -848,41 +848,27 @@ int daRNk_c::func_ov062_021199ac()
     s32 r;
 
     other = (daIbl_c *)this->ClosestWithActorID(kIronBallActorId);
-    if (other == 0)
-        goto ret0;
-    if (other->mVariant != 2)
-        goto ret0;
+    if (other != 0 && other->mVariant == 2) {
+        angle = Vec3_HorzAngle(&this->mPos, &other->mPos);
+        dist = Vec3_Dist(&this->mPos, &other->mPos);
+        selfAngle = this->mPrevAngle.y;
+        otherAngle = other->mPrevAngle.y;
+        idx = (u16)(s16)(otherAngle - selfAngle);
+        tableVal = FX_CosIdx(idx >> 4);
+        otherK = other->mHorzSpeed;
+        fixed1 = FX_MUL(otherK, tableVal);
 
-    angle = Vec3_HorzAngle(&this->mPos, &other->mPos);
-    dist = Vec3_Dist(&this->mPos, &other->mPos);
-    selfAngle = this->mPrevAngle.y;
-    otherAngle = other->mPrevAngle.y;
-    idx = (u16)(s16)(otherAngle - selfAngle);
-    tableVal = FX_CosIdx(idx >> 4);
-    otherK = other->mHorzSpeed;
-    fixed1 = FX_MUL(otherK, tableVal);
-
-    r = this->GetSubtraction(selfAngle, angle);
-    if (r < 0x4000) {
-        s32 selfK;
-        s32 fixed2;
-        if (dist >= kBallAheadRange)
-            goto ret0;
-        selfK = this->mHorzSpeed;
-        fixed2 = FX_MUL(selfK, 0xb33);
-        if (fixed1 < fixed2)
-            return BALL_AHEAD_JUMP;
-        this->mHorzSpeed -= 0x2000;
-        goto ret0;
-    } else {
-        if (dist >= kBallBehindRange)
-            goto ret0;
-        if (fixed1 > this->mHorzSpeed)
+        r = this->GetSubtraction(selfAngle, angle);
+        if (r < 0x4000) {
+            if (dist < kBallAheadRange) {
+                if (fixed1 < FX_MUL(this->mHorzSpeed, 0xb33))
+                    return BALL_AHEAD_JUMP;
+                this->mHorzSpeed -= 0x2000;
+            }
+        } else if (dist < kBallBehindRange && fixed1 > this->mHorzSpeed) {
             return BALL_BEHIND_STOP_AND_JUMP;
-        goto ret0;
+        }
     }
-
-ret0:
     return BALL_NONE;
 }
 

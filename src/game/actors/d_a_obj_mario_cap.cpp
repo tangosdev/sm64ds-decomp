@@ -723,14 +723,11 @@ void daObjMarioCap_c::UpdateMatrix()
         }
 
         off = 0;
-        {
-            int t = mModelIndex;
-            if (t == 0)
-                goto neg;
-            if (t == 1) {
-            neg:
-                off = -10;
-            }
+        switch (mModelIndex) {
+        case 0:
+        case 1:
+            off = -10;
+            break;
         }
         Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
         mShadowMat.t.x = mPos.x >> 3;

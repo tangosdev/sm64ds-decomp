@@ -136,36 +136,33 @@ void daTor_c::State1()
     mHorzSpeed = 0x14000;
 
     daPly_c *player = ClosestPlayer();
-    if (player == 0)
-        goto null_player;
+    if (player != 0) {
+        /* One pointer, not three named loads: those change codegen; see file header. */
+        {
+            s32 *pos = &((dActor_c *)player)->mPos.x;
+            playerPos.x = pos[0];
+            playerPos.y = pos[1];
+            playerPos.z = pos[2];
+        }
 
-    /* One pointer, not three named loads: those change codegen; see file header. */
-    {
-        s32 *pos = &((dActor_c *)player)->mPos.x;
-        playerPos.x = pos[0];
-        playerPos.y = pos[1];
-        playerPos.z = pos[2];
-    }
-
-    if (Vec3_HorzDist(&mHomePos, &playerPos) < mChaseRange && mTriggerCount == 0 &&
-        mChaseTimer < 900) {
-        angle = Vec3_HorzAngle(&mPos, &playerPos);
-        mAngleToPlayer = angle;
-        ApproachLinear(mPrevAngle.y, mAngleToPlayer, 0x200);
-        /* ov002 helper wraps daPly_c::IsState(tornado): still being carried. */
-        if (mCaughtActor != 0 && func_ov002_020de328(mCaughtActor) != 0)
-            ++mTriggerCount;
+        if (Vec3_HorzDist(&mHomePos, &playerPos) < mChaseRange && mTriggerCount == 0 &&
+            mChaseTimer < 900) {
+            angle = Vec3_HorzAngle(&mPos, &playerPos);
+            mAngleToPlayer = angle;
+            ApproachLinear(mPrevAngle.y, mAngleToPlayer, 0x200);
+            /* ov002 helper wraps daPly_c::IsState(tornado): still being carried. */
+            if (mCaughtActor != 0 && func_ov002_020de328(mCaughtActor) != 0)
+                ++mTriggerCount;
+        } else {
+            ApproachLinear(mPrevAngle.y, mAngleToHome, 0x200);
+            if (Vec3_HorzDist(&mHomePos, &mPos) < 0xc8000)
+                mState = 2;
+        }
     } else {
-        ApproachLinear(mPrevAngle.y, mAngleToHome, 0x200);
-        if (Vec3_HorzDist(&mHomePos, &mPos) < 0xc8000)
-            mState = 2;
+        mState = 2;
+        return;
     }
 
-    goto cont;
-null_player:
-    mState = 2;
-    return;
-cont:
     if (Vec3_Dist(&mPos, &playerPos) > 0xbb8000 || mChaseTimer >= 900)
         mState = 2;
 
