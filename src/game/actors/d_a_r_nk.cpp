@@ -486,7 +486,7 @@ void daRNk_c::func_ov062_0211a1f4()
             this->mState = daRNk_c::STATE_PULL_UP;
             this->mStep = 0;
             gRaceTimer.StopTimer();
-            this->mPlayerWon = (flag->mHasTouchedFlag != 0) ? 1 : 0;
+            this->mPlayerWon = flag->mHasTouchedFlag != 0;
             flag->mHasTouchedFlag = 1;
             return;
         }
@@ -561,7 +561,7 @@ void daRNk_c::func_ov062_0211a1f4()
             this->mStep = 0;
             gRaceTimer.StopTimer();
             flag = (daRFlag_c *)dActor_c::FindWithID(this->mFlagID);
-            this->mPlayerWon = (flag->mHasTouchedFlag != 0) ? 1 : 0;
+            this->mPlayerWon = flag->mHasTouchedFlag != 0;
             flag->mHasTouchedFlag = 1;
             SET_ANIM(this, ANIM_LAND, kAnimPlayOnce);
             return;
