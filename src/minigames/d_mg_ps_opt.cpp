@@ -90,7 +90,6 @@ extern unsigned char gSubScreenLayers;
 extern unsigned char data_0208ee3c;
 }
 int TouchArea_Update(void *icon, int touch);
-void func_ov001_020ab3f0(void *icon);
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
 
 /* One icon's half extents. The destructor is the shared empty arm9 one
@@ -185,7 +184,7 @@ u8 dMgPsOpt_c::Update() {
     case kPanelOpen:
         if (TouchArea_Update(&mIcons[kIconBack], -1)) {
             /* Back: pulse the button, then let state 2 run the delay down. */
-            func_ov001_020ab3f0(&mIcons[kIconBack]);
+            mIcons[kIconBack].func_ov001_020ab3f0();
             mCloseTimer = 20;
             mActive = kPanelClosing;
             func_02012790(kSndBack);
@@ -204,7 +203,7 @@ u8 dMgPsOpt_c::Update() {
                     else
                         mode = (mode + 1) & 0xff;
                     mIcons[kIconSoundNext].mOn = 0;
-                    func_ov001_020ab3f0(&mIcons[kIconSoundNext]);
+                    mIcons[kIconSoundNext].func_ov001_020ab3f0();
                     changed = 1;
                 } else if (TouchArea_Update(&mIcons[kIconSoundPrev], -1)) {
                     if (mode == 0)
@@ -212,7 +211,7 @@ u8 dMgPsOpt_c::Update() {
                     else
                         mode = (mode - 1) & 0xff;
                     mIcons[kIconSoundPrev].mOn = 0;
-                    func_ov001_020ab3f0(&mIcons[kIconSoundPrev]);
+                    mIcons[kIconSoundPrev].func_ov001_020ab3f0();
                     changed = 1;
                 }
 

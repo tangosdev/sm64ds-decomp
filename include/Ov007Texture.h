@@ -22,6 +22,12 @@ typedef struct Ov007Texture {
     u32 plttSize;        /* 0x20: palette bytes, colour count << 1 */
     u32 plttAddr;        /* 0x24: VRAM slot the palette was loaded at */
     u16 plttColorCount;  /* 0x28 */
+#ifdef __cplusplus
+    void func_ov007_020c15ec();
+    void func_ov007_020c1620();
+    void func_ov007_020c14b8();
+    void func_ov007_020c1448(u32 texGen, u32 repeat, u32 flip, u32 color0);
+#endif
 } Ov007Texture;
 
 #ifndef SM64DS_PLATFORM_PC

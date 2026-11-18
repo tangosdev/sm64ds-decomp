@@ -74,7 +74,7 @@ struct daBook_c : dEnemyBase_c {
     s16                          mAimRoll;              /* 0x448 */
     u8  pad_44a[0x2];
     /* Uniform scale in fix12 (0x1000 is 1.0): 0.5 at spawn, then grows to 1.5
-       through the wind-up. It is copied into mScaleX/Y/Z and sizes the collider. */
+       through the wind-up. It is copied into mScale and sizes the collider. */
     s32                          mUniformScale;         /* 0x44c */
     /* Nonzero once the animated model is in use: Render draws mAnmModel
        instead of mModel, and UpdateModelMatrix builds the matrix in it. */

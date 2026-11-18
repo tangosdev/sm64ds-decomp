@@ -31,7 +31,8 @@
       "end": "0x02133584"
     },
     {
-      "name": ".data",
+      "name": ".data.w13b814",
+      "input_section": ".data",
       "start": "0x0213b9ec",
       "end": "0x0213bafc"
     },
@@ -2288,7 +2289,7 @@
       "target_address": "0x02134f34"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213b9ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2298,7 +2299,7 @@
       "target_address": "0x020d5f28"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213b9f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2308,7 +2309,7 @@
       "target_address": "0x020d64c8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213b9fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2318,7 +2319,7 @@
       "target_address": "0x020d5eb8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba04",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2328,7 +2329,7 @@
       "target_address": "0x020d777c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2338,7 +2339,7 @@
       "target_address": "0x020d904c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba14",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2348,7 +2349,7 @@
       "target_address": "0x020d8324"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2358,7 +2359,7 @@
       "target_address": "0x020d7f5c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba24",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2368,7 +2369,7 @@
       "target_address": "0x020d8af8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2378,7 +2379,7 @@
       "target_address": "0x020d8d84"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba34",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2388,7 +2389,7 @@
       "target_address": "0x020d64c4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2398,7 +2399,7 @@
       "target_address": "0x020d8ff4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba44",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2408,7 +2409,7 @@
       "target_address": "0x020d65b4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2418,7 +2419,7 @@
       "target_address": "0x020d6264"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2428,7 +2429,7 @@
       "target_address": "0x020d61dc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2438,7 +2439,7 @@
       "target_address": "0x020d7c00"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba64",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2448,7 +2449,7 @@
       "target_address": "0x020d6170"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2458,7 +2459,7 @@
       "target_address": "0x020d9020"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba74",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2468,7 +2469,7 @@
       "target_address": "0x020d7a84"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2478,7 +2479,7 @@
       "target_address": "0x020d6100"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba84",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2488,7 +2489,7 @@
       "target_address": "0x020d795c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2498,7 +2499,7 @@
       "target_address": "0x020d7958"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba94",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2508,7 +2509,7 @@
       "target_address": "0x020d7c4c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213ba9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2518,7 +2519,7 @@
       "target_address": "0x020d7e7c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213baa4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2528,7 +2529,7 @@
       "target_address": "0x020d7edc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213baac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2538,7 +2539,7 @@
       "target_address": "0x020d816c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bab4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2548,7 +2549,7 @@
       "target_address": "0x020d5fd8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213babc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2558,7 +2559,7 @@
       "target_address": "0x020d7778"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bac4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2568,7 +2569,7 @@
       "target_address": "0x020d89c4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bacc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2578,7 +2579,7 @@
       "target_address": "0x020d5f2c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bad4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2588,7 +2589,7 @@
       "target_address": "0x020d8cc4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213badc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2598,7 +2599,7 @@
       "target_address": "0x020d9574"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bae4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2608,7 +2609,7 @@
       "target_address": "0x020d6454"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213baec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2618,7 +2619,7 @@
       "target_address": "0x020d8f34"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213baf4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2835,7 +2836,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.w13b814",
           "start": "0x0213b9ec",
           "end": "0x0213bafc",
           "differingBytes": 0,
@@ -3122,7 +3123,7 @@
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.w13b814",
             "original": [
               183,
               185,
@@ -3536,7 +3537,7 @@
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.w13b814",
               "original": [
                 183,
                 185,

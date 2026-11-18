@@ -139,7 +139,7 @@ s32 daObjTdWater_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov032_02113af4);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov032_02112fb8);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov032_02112fb8);
     mMeshCollider.Enable(this);
 
     /* The water only survives the spawn while the level's event bit 0xe is

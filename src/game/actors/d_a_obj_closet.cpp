@@ -26,7 +26,7 @@
  *   They are Vector3, whose user-declared destructor keeps mwccarm from
  *   dropping the stores; a POD VecFx32 triple loses them (0x30c against
  *   the ROM's 0x3e0). The same aggregate stores make each FX_SinIdx /
- *   FX_CosIdx re-read mAngleY, as the ROM does.
+ *   FX_CosIdx re-read mAngle.y, as the ROM does.
  * - Behavior: the player's and the touching actor's positions are copied
  *   through a `const Vector3 &`; a direct `= actor->mPos` is a word short.
  * - Behavior: the jingles call func_02012790 (Sound.h), the ROM's wrapper
@@ -94,8 +94,8 @@ s32 daObjCloset_c::Behavior() {
     if (target) {
         selfPos = mPos;
         frontPos = mPos;
-        frontPos.x += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), kFrontReach);
-        frontPos.z += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), kFrontReach);
+        frontPos.x += FX_MUL(FX_SinIdx((u16)mAngle.y >> 4), kFrontReach);
+        frontPos.z += FX_MUL(FX_CosIdx((u16)mAngle.y >> 4), kFrontReach);
         {
             const Vector3 &plyPos = target->mPos;
             playerPos = plyPos;
@@ -104,8 +104,8 @@ s32 daObjCloset_c::Behavior() {
         switch (target->GetTalkState()) {
         case 0: {
             /* Face the cupboard: half a turn off its yaw, stepped by 0x800. */
-            short facing = (mAngleY + kHalfTurn);
-            if (ApproachLinear(target->mAngleY, facing, kTurnStep) != 0) {
+            short facing = (mAngle.y + kHalfTurn);
+            if (ApproachLinear(target->mAngle.y, facing, kTurnStep) != 0) {
                 mMessageID = kMenuMessage;
                 Message::PrepareTalk();
                 target->ShowMessage2(*this, (s16)mMessageID, 0, 1, 0);
@@ -165,7 +165,7 @@ s32 daObjCloset_c::Behavior() {
                 actorPos = ap;
             }
             angleToActor = Vec3_HorzAngle(&mPos, &actorPos);
-            diff = AngleDiff(angleToActor, mAngleY);
+            diff = AngleDiff(angleToActor, mAngle.y);
             if (diff < kQuarterTurn) {
                 if (((daPly_c *)actor)->StartTalk(*this, 0) != 0) {
                     mTalkingPlayer = (daPly_c *)actor;
@@ -181,7 +181,7 @@ s32 daObjCloset_c::Behavior() {
             colliderPos = mPos;
             {
                 int dist = ((2 - j) * kCylinderSpacing) << 12;
-                s16 side = mAngleY + kQuarterTurn;
+                s16 side = mAngle.y + kQuarterTurn;
                 colliderPos.x += FX_MUL(FX_SinIdx((u16)side >> 4), dist);
                 colliderPos.z += FX_MUL(FX_CosIdx((u16)side >> 4), dist);
             }

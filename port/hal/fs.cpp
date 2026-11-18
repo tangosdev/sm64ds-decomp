@@ -202,15 +202,18 @@ void *_ZN13SharedFilePtr4LoadEv(struct SharedFilePtrC *self)
     return dst;
 }
 
-/* Construct: host ABI spells out both args (see header comment) */
-void func_02017e0c(void *self, u32 arg); /* portable src/ */
-struct SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(
+} /* extern "C" */
+
+/* Construct: host ABI spells out both args (see header comment).
+   func_02017e0c is SharedFilePtr's method, so the call is a member call. */
+#include "SharedFilePtr.h"
+
+extern "C" struct SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(
         struct SharedFilePtrC *self, u32 ov0FileID)
 {
-    func_02017e0c(self, ov0FileID);
+    static_cast<SharedFilePtr *>(static_cast<void *>(self))->func_02017e0c(ov0FileID);
     return self;
 }
-} /* extern "C" */
 
 /* The seam above is spelled as a C function because that is how src/ reached it
    before the callers were converted. include/SharedFilePtr.h now declares Load as
@@ -218,7 +221,6 @@ struct SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(
    one -- so this target, whose build of that file leaves out the card-hardware
    SharedFilePtr::Load (#ifndef _MSC_VER), has to export the member too. Same seam,
    one spelling forwarding to the other. */
-#include "SharedFilePtr.h"
 
 void *SharedFilePtr::Load()
 {

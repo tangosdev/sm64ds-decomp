@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+struct dExtModel_c;
+
 /* A handle to a file shared between actors: callers hold one, ask it to load, and
  * release it when the actor is cleaned up.
  *
@@ -41,6 +43,22 @@ struct SharedFilePtr {
        went unnoticed. A return type is not part of an Itanium mangled name,
        so this changes no symbol. */
     void *Load();
+    /* Address-named. Parameters are unnamed: a named parameter here renumbers
+       @NNN in every translation unit that includes this header. */
+    void *func_02017e48(unsigned int);
+    void *func_02017e34();
+    void func_02017e0c(unsigned int);
+    void func_02017c24();
+    void *func_02017b4c(unsigned int);
+    void *func_02017ae4(unsigned int);
+    void *func_02017acc(unsigned int);
+    int func_02017a9c();
+    void *func_02017a24(unsigned int);
+    int func_02017a0c();
+    int func_020179b4(dExtModel_c *, int);
+    void *func_020178cc(unsigned int);
+    int func_020178b4();
+    void *func_0201787c();
 };
 
 #ifndef SM64DS_PLATFORM_PC

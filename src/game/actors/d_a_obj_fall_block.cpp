@@ -24,8 +24,8 @@
 //   veneer (size 0x14); a near branch to RequestShake is 0xc.
 // - RequestShake keeps the unused second parameter. The veneer forwards
 //   it, and a 1-arg callee drops `mov r1, r2`.
-// - Behavior case 2 keeps the masked address of mAngleX (this+0x8c) and
-//   mAngleZ (this+0x90). Named stores change the size. Case 1 keeps
+// - Behavior case 2 keeps the masked address of mAngle.x (this+0x8c) and
+//   mAngle.z (this+0x90). Named stores change the size. Case 1 keeps
 //   `(long long)sinv * 0x19000`.
 // - Kill materialises `(actorID == KM2_KUZURE)` into an int before the
 //   branch. Folding the test changes the compare.
@@ -80,7 +80,7 @@ void daObjFallBlock_c_EmitDestructor(daObjFallBlock_c *p) {
 }
 
 /* Once (mGroupLinked). Same-id neighbours closer than 0x96000 become
-   mNextInGroup when they sit within a quarter-turn of mAngleY, and
+   mNextInGroup when they sit within a quarter-turn of mAngle.y, and
    mPrevInGroup otherwise. Vec3_HorzAngle / Vec3_Dist / AngleDiff. */
 void daObjFallBlock_c::LinkGroup() {
     if (mGroupLinked != 0)
@@ -92,7 +92,7 @@ void daObjFallBlock_c::LinkGroup() {
             Vector3 *a = &mPos;
             int ang = Vec3_HorzAngle(a, b);
             if (Vec3_Dist(a, b) < 0x96000) {
-                if (AngleDiff(ang, mAngleY) < 0x4000)
+                if (AngleDiff(ang, mAngle.y) < 0x4000)
                     mNextInGroup = (daObjFallBlock_c *)r;
                 else
                     mPrevInGroup = (daObjFallBlock_c *)r;
@@ -133,13 +133,13 @@ void daObjFallBlock_c::FindLinkedStar() {
    frames before it will accept another stand. */
 void daObjFallBlock_c::ResetMotion() {
     mState = 0;
-    mAngleX = 0;
-    mAngleZ = 0;
+    mAngle.x = 0;
+    mAngle.z = 0;
     mShakeX = 0;
     mTiltVelZ = 0;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mStateTimer = 4;
 }
 
@@ -157,9 +157,9 @@ void daObjFallBlock_c::ResetMotion() {
 void daObjFallBlock_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x32000;
     u32 id = 0x48;
     /* THE INTERMEDIATE IS LOAD-BEARING. `if (actorID == 0x8b)` folds the test
@@ -178,19 +178,19 @@ void daObjFallBlock_c::Kill() {
     PoofDustAt(dustPos);
     Sound::PlayBank3(0x41, mCamSpacePos);
     mStateTimer = 30;
-    mPosX = mRestPos.x;
-    mPosY = mRestPos.y;
-    mPosZ = mRestPos.z;
+    mPos.x = mRestPos.x;
+    mPos.y = mRestPos.y;
+    mPos.z = mRestPos.z;
     mReady = 0;
 }
 
 /* Full XYZ model matrix. Translation is model space, position >> 3,
    same row UpdateModelPosAndRotY writes for yaw alone. */
 void daObjFallBlock_c::ApplyModelXyz() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* `player` is never read, matching the ROM body, which only ever takes the
@@ -306,7 +306,7 @@ s32 daObjFallBlock_c::Behavior() {
             sinv = FX_SinIdx((u16)mBobPhase >> 4);
             /* (long long) is load-bearing: a plain int mul changes the code
                size. */
-            mPosY = mRestPos.y + FX_MUL(sinv, 0x19000);
+            mPos.y = mRestPos.y + FX_MUL(sinv, 0x19000);
             {
                 s16 *bobPhase = &mBobPhase;
                 *bobPhase = (s16)(*bobPhase + 0x3000);
@@ -315,14 +315,14 @@ s32 daObjFallBlock_c::Behavior() {
         break;
 
     case 2:
-        if (mAngleX < 0x400) {
+        if (mAngle.x < 0x400) {
             s16 *shakeX = &mShakeX;
             *shakeX = (s16)(*shakeX + 0x80);
         } else {
             if (mMeshCollider.IsEnabled() != 0)
                 mMeshCollider.Disable();
         }
-        yaw = mAngleZ;
+        yaw = mAngle.z;
         if (yaw > -0x400) {
             if (yaw < 0x400) {
                 s16 *tiltVelZ = &mTiltVelZ;
@@ -330,27 +330,27 @@ s32 daObjFallBlock_c::Behavior() {
             }
         }
         {
-            /* Integer-cast address form: plain mAngleX / mAngleZ
+            /* Integer-cast address form: plain mAngle.x / mAngle.z
                read-modify-writes shrink Behavior by 8 bytes. */
-            s16 t = *(s16 *)((int)&mAngleX);
+            s16 t = *(s16 *)((int)&mAngle.x);
             t = (s16)(t + mShakeX);
-            *(s16 *)((int)&mAngleX) = t;
-            t = (s16)(*(s16 *)((int)&mAngleZ) + mTiltVelZ);
-            *(s16 *)((int)&mAngleZ) = t;
+            *(s16 *)((int)&mAngle.x) = t;
+            t = (s16)(*(s16 *)((int)&mAngle.z) + mTiltVelZ);
+            *(s16 *)((int)&mAngle.z) = t;
             UpdatePos(0);
         }
         if (DecIfAbove0_Short(&mStateTimer) == 0) {
-            mPosX = mRestPos.x;
-            mPosY = mRestPos.y;
-            mPosZ = mRestPos.z;
+            mPos.x = mRestPos.x;
+            mPos.y = mRestPos.y;
+            mPos.z = mRestPos.z;
             st = &mState;
             *st = (u8)(*st + 1);
         } else {
-            if (mPosY < mKillY) {
+            if (mPos.y < mKillY) {
                 Kill();
-                mPosX = mRestPos.x;
-                mPosY = mRestPos.y;
-                mPosZ = mRestPos.z;
+                mPos.x = mRestPos.x;
+                mPos.y = mRestPos.y;
+                mPos.z = mRestPos.z;
                 st = &mState;
                 *st = (u8)(*st + 1);
             }
@@ -358,9 +358,9 @@ s32 daObjFallBlock_c::Behavior() {
         break;
 
     case 3:
-        mPosX = mRestPos.x;
-        mPosY = mRestPos.y;
-        mPosZ = mRestPos.z;
+        mPos.x = mRestPos.x;
+        mPos.y = mRestPos.y;
+        mPos.z = mRestPos.z;
         is53 = (int)(actorID == ACTOR_FL_KUZURE);
         if (is53 == 0) {
             pl = ClosestPlayer();
@@ -400,12 +400,12 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*fp->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*fp->collision), mClsnMat, 0x199, mAngleY, *fp->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*fp->collision), mClsnMat, 0x199, mAngle.y, *fp->clps);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
-    v.x = mPosX;
-    y = mPosY;
+    v.x = mPos.x;
+    y = mPos.y;
     v.y = y;
-    v.z = mPosZ;
+    v.z = mPos.z;
     v.y = y - 0x64000;
     {
         dBgCh_Gnd rc;
@@ -418,9 +418,9 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
         on = 1;
         mStateTimer = 4;
         mReady = on;
-        mRestPos.x = mPosX;
-        mRestPos.y = mPosY;
-        mRestPos.z = mPosZ;
+        mRestPos.x = mPos.x;
+        mRestPos.y = mPos.y;
+        mRestPos.z = mPos.z;
         mLinkedStarID = 0;
         if (actorID != ACTOR_FL_KUZURE)
             on = 0;

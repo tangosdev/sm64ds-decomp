@@ -35,7 +35,7 @@
  * - OnTurnIntoEgg's R6Player and UpdateWallAndWater's R10dBgCh_Actr take
  *   reference spelling; a pointer emits identical ARM. SetState's `int`
  *   signedness is indistinguishable.
- * - func_0201267c (throw SFX 0xd2 at +0x74, mCamSpacePosX),
+ * - func_0201267c (throw SFX 0xd2 at +0x74, mCamSpacePos),
  *   FX_SinCosTable_ (sin/cos pairs) and data_020a0e68 (arm9 scratch
  *   matrix) keep linker names.
  * - This TU claims .text only: the SharedFilePtr handles, the BCA/BTP
@@ -165,9 +165,9 @@ s32 daJgm_c::InitResources()
 
     mVertAccel = 0;
     mTerminalVelocity = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mSpawnPos = mPos;
     mSoundHandle = 0;
 
@@ -258,7 +258,8 @@ s32 daJgm_c::UpdateHoverState()
         /* Nested on purpose: one flat && chain is 12 bytes shorter. */
         daPly_c *p = ClosestNonVanishPlayer();
         if (p != 0) {
-            if (p->mPosY < mPosY && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 && CountSpinies() < 4)
+            if (p->mPos.y < mPos.y && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 &&
+                CountSpinies() < 4)
                 SetState(1);
             else
                 mTimer = 150;
@@ -339,10 +340,10 @@ s32 daJgm_c::UpdateYoshiMouthState()
 {
     if (((mFlags & 0x40000) ? 1 : 0) != 0) {
         dActor_c *carrier = mEatingPlayer;
-        s32 *carrierPos = &carrier->mPosX;
-        mPosX = carrierPos[0];
-        mPosY = carrierPos[1];
-        mPosZ = carrierPos[2];
+        s32 *carrierPos = &carrier->mPos.x;
+        mPos.x = carrierPos[0];
+        mPos.y = carrierPos[1];
+        mPos.z = carrierPos[2];
     }
     {
         int flags = mFlags;
@@ -360,11 +361,11 @@ s32 daJgm_c::EnterSpitState()
     mFlags &= ~0x80000;
 
     mHorzSpeed = mEatingPlayer->mHorzSpeed + 0xa000;
-    mPrevAngleY = mEatingPlayer->mAngleY;
+    mPrevAngle.y = mEatingPlayer->mAngle.y;
     mPos = mEatingPlayer->mPos;
-    mPosX += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
-    mPosY += 0x50000;
-    mPosZ += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
+    mPos.x += FX_MUL(FX_SinIdx((u16)mPrevAngle.y >> 4), 0x50000);
+    mPos.y += 0x50000;
+    mPos.z += FX_MUL(FX_CosIdx((u16)mPrevAngle.y >> 4), 0x50000);
 
     mAngVelY = 0x7000;
     mTimer = 30;
@@ -375,7 +376,7 @@ s32 daJgm_c::EnterSpitState()
 
 s32 daJgm_c::UpdateSpitState()
 {
-    mAngleY = (short)(mAngleY + mAngVelY);
+    mAngle.y = (short)(mAngle.y + mAngVelY);
     ApproachLinear2(mAngVelY, 0, 0x300);
     UpdatePos(&mdCcAcPos_c);
     UpdateWallAndWater(mWithMeshClsn);
@@ -393,15 +394,15 @@ s32 daJgm_c::EnterFallState()
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0x28000;
+    mSpeed.y = 0x28000;
     mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov077_02127b28.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     {
         int aimHeight = OnAimedAtWithEgg();
-        Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + aimHeight, mPosZ);
+        Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y + aimHeight, mPos.z);
         int aimHeightAgain = OnAimedAtWithEgg();
-        Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + aimHeightAgain, mPosZ);
+        Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y + aimHeightAgain, mPos.z);
     }
     mState = 4;
     return 1;
@@ -409,7 +410,7 @@ s32 daJgm_c::EnterFallState()
 
 s32 daJgm_c::UpdateFallState()
 {
-    mAngleX = (short)(mAngleX - 0x1000);
+    mAngle.x = (short)(mAngle.x - 0x1000);
     mAnmModel.Advance();
     UpdatePos(&mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -424,24 +425,24 @@ void daJgm_c::UpdateModels()
     if (b)
         return;
 
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = (mPosY + mBobOffsetY) >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = (mPos.y + mBobOffsetY) >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 
     if (mState == 4) {
         data_020a0e68 = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
         mAnmModel.mat4x3 = data_020a0e68;
     }
 
-    mMatrix.m[9] = mPosX >> 3;
-    mMatrix.m[10] = mPosY >> 3;
-    mMatrix.m[11] = mPosZ >> 3;
+    mMatrix.m[9] = mPos.x >> 3;
+    mMatrix.m[10] = mPos.y >> 3;
+    mMatrix.m[11] = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, mMatrix, 0x5a000, 0x320000, 0xf);
 
@@ -468,7 +469,7 @@ void daJgm_c::UpdateModels()
     Vec3_Asr(&pos, &mThrowPos, 3);
 
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, offset.x, offset.y, offset.z);
 
     mModel.mat4x3 = data_020a0e68;
@@ -494,8 +495,8 @@ void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)
         rg.StartDetectingWater();
         if (rg.DetectClsn() != 0) {
             int yy = rg.clsnY + 0x3c000;
-            if (mPosY < yy)
-                mPosY = yy;
+            if (mPos.y < yy)
+                mPos.y = yy;
         }
         rg.StopDetectingWater();
     }
@@ -542,8 +543,8 @@ void daJgm_c::HandlePlayerCollision()
     }
 
     if (mdCcAcPos_c.hitFlags & 0x10) {
-        mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngleY = (short)(mPrevAngleY + 0x8000);
+        mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &mPos);
+        mAngle.y = (short)(mPrevAngle.y + 0x8000);
         player->IncMegaKillCount();
         SetState(4);
         return;
@@ -580,7 +581,7 @@ void daJgm_c::UpdateFlight() {
         chaseRange = (param1 != 0) ? 0x1068000 : 0x7d0000;
         for (;;) {
             if (Vec3_HorzDist(&mSpawnPos, &p->mPos) < chaseRange) {
-                int d = mSpawnPos.y - p->mPosY;
+                int d = mSpawnPos.y - p->mPos.y;
                 if (d < 0)
                     d = -d;
                 if (d < 0x5dc000) {
@@ -596,12 +597,12 @@ void daJgm_c::UpdateFlight() {
     }
     int hd = Vec3_HorzDist(&mPos, target);
     short ha = Vec3_HorzAngle(&mPos, target);
-    ApproachLinear(mAngleY, ha, 0x5e8);
+    ApproachLinear(mAngle.y, ha, 0x5e8);
     if (mTurnDir != 0)
-        mPrevAngleY = (short)(mAngleY - TurnOffsetFromDist(hd));
+        mPrevAngle.y = (short)(mAngle.y - TurnOffsetFromDist(hd));
     else
-        mPrevAngleY = (short)(mAngleY + TurnOffsetFromDist(hd));
-    ApproachLinear(mPosY, target->y + 0x12c000, 0x2000);
+        mPrevAngle.y = (short)(mAngle.y + TurnOffsetFromDist(hd));
+    ApproachLinear(mPos.y, target->y + 0x12c000, 0x2000);
     UpdatePos(&mdCcAcPos_c);
     UpdateWallAndWater(mWithMeshClsn);
 }

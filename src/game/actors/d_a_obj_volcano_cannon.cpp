@@ -67,7 +67,7 @@ void daObj_volcanoCannon_c::CheckPlayerHit() {
 /* The state's behavior handler, bound through data_ov022_02114424.
  * The flame dies once it falls below mKillPosY or mKillTimer runs out. */
 int daObj_volcanoCannon_c::ExecuteFly() {
-    int y = mPosY;
+    int y = mPos.y;
     int killY = mKillPosY;
     if (y < killY) {
         MarkForDestruction();
@@ -88,12 +88,12 @@ int daObj_volcanoCannon_c::ExecuteFly() {
 int daObj_volcanoCannon_c::EnterFly() {
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
     mKillTimer = 60;
-    mPrevAngleY = (short)((r & 0xf) << 0xc);
+    mPrevAngle.y = (short)((r & 0xf) << 0xc);
     mHorzSpeed = (r & 0x1f) + 0x14;
     mHorzSpeed <<= 0xc;
     mVertAccel = -0x4000;
-    mVertSpeed = (r & 0x3f) + 0x28;
-    mVertSpeed <<= 0xc;
+    mSpeed.y = (r & 0x3f) + 0x28;
+    mSpeed.y <<= 0xc;
     return 1;
 }
 
@@ -124,7 +124,7 @@ int daObj_volcanoCannon_c::Behavior() {
     mCylinderClsn.Update();
     if (!IsOffScreen(this)) {
         mParticleID =
-            Particle::System::NewCleanParticle(mParticleID, 0x129, mPosX, mPosY, mPosZ, 0);
+            Particle::System::NewCleanParticle(mParticleID, 0x129, mPos.x, mPos.y, mPos.z, 0);
     }
     return 1;
 }

@@ -112,16 +112,14 @@ void dCapIcon_c::Link(dActor_c *owner, int character, int iconKind, unsigned cha
  * absorbed helper below is defined first so reverse emission puts it
  * highest (0x020ab3f0). */
 
-void func_ov001_020ab3f0(void *p) {
-    /* The dThIcon_c press pulse (callers pass &mIcons[i]). */
-    dThIcon_c *icon = (dThIcon_c *)p;
-    if (icon->mOn != 0) {
-        icon->mOn = 0;
+void dThIcon_c::func_ov001_020ab3f0() {
+    if (mOn != 0) {
+        mOn = 0;
     } else {
-        icon->mOn = 1;
+        mOn = 1;
     }
-    icon->mReady = 0;
-    icon->mPressTimer = icon->mPressTime;
+    mReady = 0;
+    mPressTimer = mPressTime;
 }
 
 dCapIcon_c::dCapIcon_c()

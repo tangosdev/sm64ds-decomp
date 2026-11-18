@@ -82,7 +82,7 @@ struct daObjSwdoor_c : dBgActor_c {
        param1; UpdateShutter (the per-frame body both leaves run as
        Behavior) runs on them. The first two sit in dBgActor_c's
        tail padding, which mwccarm lets a derived class reuse.
-       mTurnDir is param1 bit 0: nonzero turns mAngleY by +0x100 a frame
+       mTurnDir is param1 bit 0: nonzero turns mAngle.y by +0x100 a frame
        while turning, zero by -0x100. mState runs 0 (wait for the event),
        1 (turning), 2 (done). mTimer is the start-up delay (5), then the
        0x40-frame turn. mEventBit is param1 bits 1..5, the Event bit that

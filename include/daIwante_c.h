@@ -90,7 +90,7 @@ struct daIwante_c : dBgActor_c {
     Vector3 mSpawnPos; /* 0x4b0 */
     /* The point a hand is currently moving to. The state handlers fill it
        (from the closest player's position, or a fixed spot) and then walk
-       mPosX/Z toward it with Vec3_ApproachHorz / ApproachLinear. */
+       mPos.x/.z toward it with Vec3_ApproachHorz / ApproachLinear. */
     Vector3 mTargetPos; /* 0x4bc */
     /* Per-frame step handed to ApproachLinear(mHorzSpeed, 0x258000, step):
        the sideways-run states bump it by 0x1a or 0x130 each frame while it is
@@ -178,7 +178,7 @@ struct daIwante_c : dBgActor_c {
     void SetLoweredPose();           /* common state cleanup on exit */
     int WaitForHandsReady();         /* body: wait for both hands to report in */
     int FollowPhase();               /* hand: follow the phase into a state */
-    int GetPlayerDepthBand();        /* closest player's depth band (mPosZ) */
+    int GetPlayerDepthBand();        /* closest player's depth band (mPos.z) */
     void PoundGround(int strength);  /* landing dust + shake */
     int ClampToArena();              /* keep a hand inside the arena */
     int HandDefeatExecute();         /* defeat run (hand) */

@@ -8,9 +8,9 @@
  * floor ten units under the spawn point, and hands the mesh
  * dBgW::UpdatePosAndAngs. Behavior is the cog. Clock setting 0 is the
  * slow hand (yaw speed 200), 1 the fast hand (400), 2 the random hand,
- * 3 the stopped hand. The speed lives in mPrevAngleZ, the random-hand
- * target in mPrevAngleX, and the accumulated yaw in mPrevAngleY, which
- * is copied to mAngleY for the model and the mesh.
+ * 3 the stopped hand. The speed lives in mPrevAngle.z, the random-hand
+ * target in mPrevAngle.x, and the accumulated yaw in mPrevAngle.y, which
+ * is copied to mAngle.y for the model and the mesh.
  *
  * The destructor pair comes off the inline ~daObjCtKaitendai_c() in the
  * header. Source order is reverse ROM order (2004/b56 emits .text back
@@ -20,10 +20,10 @@
  * - dBgW::SetBeforeClsnCallback is the store of dBgW::beforeClsnCallback (+0x18).
  *   This InitResources calls it with &dBgW::UpdatePosAndAngs.
  * - The sign flip and the yaw add go through a pointer. Writing
- *   mPrevAngleX = mPrevAngleX * -1 comes out 0x12c, and
- *   mPrevAngleY = mPrevAngleY + mPrevAngleZ comes out 0x134, against
+ *   mPrevAngle.x = mPrevAngle.x * -1 comes out 0x12c, and
+ *   mPrevAngle.y = mPrevAngle.y + mPrevAngle.z comes out 0x134, against
  *   Behavior's 0x138. The pointer is what keeps the halfword multiply
- *   and the reload into mAngleY.
+ *   and the reload into mAngle.y.
  * - data_ov065_0211d334 (the 200/400 speeds) and data_ov065_0211d35c
  *   (the two resource rows) are not this TU's data. Neither are
  *   g_profile_CT_MECHA06 / CT_MECHA07.
@@ -126,13 +126,13 @@ int daObjCtKaitendai_c::InitResources() {
     UpdateClsnPosAndRot();
 
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov065_0211d35c[mVariant].collision), mClsnMat,
-                          0x199, mAngleY, *data_ov065_0211d35c[mVariant].clps);
+                          0x199, mAngle.y, *data_ov065_0211d35c[mVariant].clps);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y = pos.y - 0xa000;
 
     {
@@ -151,31 +151,31 @@ int daObjCtKaitendai_c::Behavior() {
     switch (data_0209f2c0) {
     case 0: /* slow hand */
     case 1: /* fast hand */
-        mPrevAngleZ = data_ov065_0211d334[data_0209f2c0];
+        mPrevAngle.z = data_ov065_0211d334[data_0209f2c0];
         break;
 
     case 2: /* random hand */
-        if (ApproachLinear(mPrevAngleZ, mPrevAngleX, 0x32) != 0) {
+        if (ApproachLinear(mPrevAngle.z, mPrevAngle.x, 0x32) != 0) {
             u16 roll = ((u32)RandomIntInternal(&data_0209e650.value) >> 16);
 
-            mPrevAngleX = ((roll % 7) * 0xc8);
+            mPrevAngle.x = ((roll % 7) * 0xc8);
             if (roll >= 0x7fff) {
-                s16 *target = &mPrevAngleX;
+                s16 *target = &mPrevAngle.x;
                 *target *= -1;
             }
         }
         break;
 
     case 3: /* stopped hand */
-        mPrevAngleZ = 0;
+        mPrevAngle.z = 0;
         break;
     }
 
     {
-        s16 *yaw = &mPrevAngleY;
-        *yaw = (*yaw + mPrevAngleZ);
+        s16 *yaw = &mPrevAngle.y;
+        *yaw = (*yaw + mPrevAngle.z);
     }
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 
     UpdateModelPosAndRotY();
     UpdateShadow();

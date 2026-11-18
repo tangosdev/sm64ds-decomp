@@ -79,9 +79,9 @@ int daPiano_c::InitResources() {
     mAnmModel.SetAnim((BCA_File *)f, 0, 0x1000, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mWithMeshClsn.Init(this, 0x159000, 0x159000, 0, 0);
     for (i = 0, cylinder = mCylinderClsn; i < 2; i++) {
         /* Sensor cylinders, 155.0 radius by 250.0 tall, tracking mPos.
@@ -91,7 +91,7 @@ int daPiano_c::InitResources() {
         cylinder++;
     }
     f = dBgW_Kc::LoadFile(gPianoCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x199, mAngle.y,
                           *(CLPS_Block *)&data_ov063_0211ecb8);
     UpdateModelMatrix();
     UpdateClsnMatrix();
@@ -105,12 +105,12 @@ int daPiano_c::Behavior() {
     CallStateBehavior();
     UpdatePos(0);
     if (Vec3_HorzDist(&mHomePos, &mPos) > 0x180000) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
     }
-    if (mPosY <= mMinPosY)
-        mPosY = mMinPosY;
+    if (mPos.y <= mMinPosY)
+        mPos.y = mMinPosY;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     mWithMeshClsn.SetRadius(0x159000);
     mWithMeshClsn.SetHeight(0x159000);
@@ -178,7 +178,7 @@ void daPiano_c::SetState(int state) {
 /* True when the candidate target is moving (either speed above 20.0). The
  * piano itself is not read. */
 int daPiano_c::IsTargetMoving(dActor_c *cand) {
-    if (cand->mVertSpeed > 0x14000 || cand->mHorzSpeed > 0x14000)
+    if (cand->mSpeed.y > 0x14000 || cand->mHorzSpeed > 0x14000)
         return 1;
     return 0;
 }
@@ -219,8 +219,8 @@ void daPiano_c::StateSearch() {
     }
 
     tip = this->mPos;
-    tip.x += FX_MUL(FX_SinIdx((u16)this->mAngleY >> 4), 0x24000);
-    tip.z += FX_MUL(FX_CosIdx((u16)this->mAngleY >> 4), 0x24000);
+    tip.x += FX_MUL(FX_SinIdx((u16)this->mAngle.y >> 4), 0x24000);
+    tip.z += FX_MUL(FX_CosIdx((u16)this->mAngle.y >> 4), 0x24000);
 
     this->mCylinderClsn[0].pos = this->mPos;
     this->mCylinderClsn[1].pos = tip;
@@ -283,8 +283,9 @@ void daPiano_c::StateAttack() {
     if (target != 0) {
         Vec3_Sub(&tmp, &this->mPos, &target->mPos);
         dist = VEC_Mag(&tmp);
-        ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos), 0x200);
-        this->mAngleY = this->mPrevAngleY;
+        ApproachLinear(this->mPrevAngle.y, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos),
+                       0x200);
+        this->mAngle.y = this->mPrevAngle.y;
         if (dist > 0x3ab000) {
             if ((u16)(this->mAnmModel.currFrame >> 12) == 0) {
                 SetState(kStateSearch);
@@ -301,8 +302,8 @@ void daPiano_c::StateAttack() {
     this->mAnmModel.Advance();
 
     tip = this->mPos;
-    tip.x += FX_MUL(FX_SinIdx((u16)this->mAngleY >> 4), 0x24000);
-    tip.z += FX_MUL(FX_CosIdx((u16)this->mAngleY >> 4), 0x24000);
+    tip.x += FX_MUL(FX_SinIdx((u16)this->mAngle.y >> 4), 0x24000);
+    tip.z += FX_MUL(FX_CosIdx((u16)this->mAngle.y >> 4), 0x24000);
 
     this->mCylinderClsn[0].pos = this->mPos;
     this->mCylinderClsn[1].pos = tip;
@@ -319,20 +320,20 @@ void daPiano_c::StateAttack() {
 
 /* Sync the model matrix from the facing and position (eighths). */
 void daPiano_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Refresh the collision matrix from the model matrix and position, then
  * refit the mesh collider to it. */
 void daPiano_c::UpdateClsnMatrix() {
     mClsnMat = mAnmModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY;
-    mClsnMat.m[11] = mPosZ;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* Pose the three drop shadows: rotate a body-frame offset by the facing,
@@ -347,12 +348,12 @@ void daPiano_c::UpdateShadows() {
     out.y = 0;
     out.z = 0;
     in.z = -0x10000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &out);
     VEC_Add(&out, &mPos, &out);
-    Matrix4x3_FromRotationY(&mShadowMats[2], mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMats[2], mAngle.y);
     mShadowMats[2].m[9] = out.x >> 3;
-    mShadowMats[2].m[10] = mPosY >> 3;
+    mShadowMats[2].m[10] = mPos.y >> 3;
     mShadowMats[2].m[11] = out.z >> 3;
 
     out.x = 0;
@@ -361,12 +362,12 @@ void daPiano_c::UpdateShadows() {
     in.y = 0;
     in.z = 0;
     in.x = -0x60000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &out);
     VEC_Add(&out, &mPos, &out);
-    Matrix4x3_FromRotationY(&mShadowMats[0], mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMats[0], mAngle.y);
     mShadowMats[0].m[9] = out.x >> 3;
-    mShadowMats[0].m[10] = mPosY >> 3;
+    mShadowMats[0].m[10] = mPos.y >> 3;
     mShadowMats[0].m[11] = out.z >> 3;
 
     out.x = 0;
@@ -375,12 +376,12 @@ void daPiano_c::UpdateShadows() {
     in.x = 0;
     in.y = 0;
     in.z = -0x10000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &out);
     VEC_Add(&out, &mPos, &out);
-    Matrix4x3_FromRotationY(&mShadowMats[1], mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMats[1], mAngle.y);
     mShadowMats[1].m[9] = out.x >> 3;
-    mShadowMats[1].m[10] = mPosY >> 3;
+    mShadowMats[1].m[10] = mPos.y >> 3;
     mShadowMats[1].m[11] = out.z >> 3;
 
     DropShadowRadHeight(mShadowModel3, mShadowMats[2], 0xf0000, 0x50000, 0xf);

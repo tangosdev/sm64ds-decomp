@@ -25,8 +25,18 @@
  */
 #include "fBase_c.h"
 
-/* Defined last below (reverse emission); func_0203b394 calls it. */
-fBase_c::SceneNode *func_0203b358(fBase_c::SceneNode *node);
+/* SceneNode's declaration lives in fBase_c.h, which this pass cannot add
+   methods to. TreeNd is that node: parent, child, prev, next, owner. */
+struct TreeNd {
+    TreeNd *parent;
+    TreeNd *child;
+    TreeNd *prev;
+    TreeNd *next;
+    fBase_c *owner;
+
+    TreeNd *func_0203b394();
+    TreeNd *func_0203b358();
+};
 
 #ifndef SM64DS_PLATFORM_PC
 /* Five words: parent, child, prev, next, owner. fBase_c.h asserts the whole
@@ -58,9 +68,11 @@ struct N {
     struct N *f4;   /* 0x4 */
     struct N *f8;   /* 0x8 */
     struct N *fc;   /* 0xc */
+
+    int func_0203b438(struct N *b, struct N *c);
 };
 
-int func_0203b438(struct N *a, struct N *b, struct N *c) {
+int N::func_0203b438(struct N *b, struct N *c) {
     struct N *t;
     struct N *n;
     if (b != 0) {
@@ -79,9 +91,9 @@ int func_0203b438(struct N *a, struct N *b, struct N *c) {
                 b->f8 = t;
             }
         } else {
-            if (a->f0 != 0)
+            if (this->f0 != 0)
                 return 0;
-            a->f0 = b;
+            this->f0 = b;
         }
     } else {
         /* The else arm places this return ahead of the shared return 1,
@@ -98,9 +110,11 @@ struct Node {
     struct Node *f4;
     struct Node *f8;
     struct Node *fc;
+
+    int func_0203b3c0(struct Node *n);
 };
 
-int func_0203b3c0(int *list, struct Node *n) {
+int Node::func_0203b3c0(struct Node *n) {
     if (n != 0) {
         if (n->f4 != 0)
             return 0;
@@ -110,7 +124,7 @@ int func_0203b3c0(int *list, struct Node *n) {
             if (n->f0 != 0) {
                 n->f0->f4 = n->fc;
             } else {
-                *list = 0;
+                f0 = 0;
             }
         }
         if (n->fc != 0) {
@@ -136,22 +150,22 @@ int func_0203b3c0(int *list, struct Node *n) {
  * emission order; nothing in this ROM names them, so they keep their
  * address names. */
 
-/* The pre-order successor of `node`: its first child, else the first node
+/* The pre-order successor of this node: its first child, else the first node
  * after its subtree (func_0203b358). */
-fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node) {
-    fBase_c::SceneNode *p = node->child;
+TreeNd *TreeNd::func_0203b394() {
+    TreeNd *p = child;
     if (p == 0)
-        p = func_0203b358(node);
+        p = func_0203b358();
     return p;
 }
 
-/* The first node after `node`'s subtree: its next sibling, else the next
+/* The first node after this node's subtree: its next sibling, else the next
  * sibling of the nearest ancestor that has one; 0 past the root. */
-fBase_c::SceneNode *func_0203b358(fBase_c::SceneNode *node) {
-    fBase_c::SceneNode *n;
-    if (node->next)
-        return node->next;
-    n = node->parent;
+TreeNd *TreeNd::func_0203b358() {
+    TreeNd *n;
+    if (next)
+        return next;
+    n = parent;
     while (n) {
         if (n->next)
             return n->next;

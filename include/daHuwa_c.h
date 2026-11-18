@@ -48,7 +48,7 @@ struct daHuwa_c : dEnemyBase_c {
     /* InitResources copies the spawn position here. Behavior faces it when
        there is no player, and when the player has left this radius. */
     Vector3 mHomePos; /* 0x38c */
-    /* Yaw Behavior approaches mAngleY toward. Home, or the player. */
+    /* Yaw Behavior approaches mAngle.y toward. Home, or the player. */
     s16 mTargetAngY; /* 0x398 */
     /* 0 chase, 1 recoil. A player bump sets 1 and counts mStateTimer to 0x14. */
     u8 mState; /* 0x39a */

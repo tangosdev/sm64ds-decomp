@@ -1,6 +1,6 @@
 _ZN9daLuigi_cD1Ev kind:function(arm,size=0x58) addr:0x021111a0
 _ZN9daLuigi_cD0Ev kind:function(arm,size=0x6c) addr:0x021111f8
-_Z19func_ov055_02111264v kind:function(arm,size=0x24) addr:0x02111264
+_ZN9daLuigi_c19func_ov055_02111264Ev kind:function(arm,size=0x24) addr:0x02111264
 _ZN9daLuigi_c13ExecuteMirrorEP7daPly_c kind:function(arm,size=0x34) addr:0x02111288
 _ZN9daLuigi_c11EnterMirrorEP7daPly_c kind:function(arm,size=0x8) addr:0x021112bc
 _ZN9daLuigi_c8SetStateEP12daLuigiStateP7daPly_c kind:function(arm,size=0x54) addr:0x021112c4

@@ -7,7 +7,7 @@
  * Init also stores kBobAmplitude into mBobAmplitude.
  * InitResourcesFrom loads slot 0 with dExtSimpleModel_c::LoadFile, slot 1
  * with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, copies
- * mPosY to mRestY, and stores arg 3 at mBobAmplitude. ov045 sinit
+ * mPos.y to mRestY, and stores arg 3 at mBobAmplitude. ov045 sinit
  * constructs those SharedFilePtrs as file IDs 1643 / 1644.
  *
  * daObjKm2_Ukishima_c_classInit is reconstructed (RTTI

@@ -19,7 +19,7 @@
  * - The 0/1 the ROM materializes in HandleCylinderHit, UpdateModelTransform
  *   and Render comes from the int-returning IsPlayerActor / IsInYoshiMouth
  *   inlines. A direct `!=` or bit test is 16 / 12 / 12 bytes short.
- * - Behavior copying player->mPosX/Y/Z instead of int* at player+0x5c: 0x264 -> 0x260
+ * - Behavior copying player->mPos.x/.y/.z instead of int* at player+0x5c: 0x264 -> 0x260
  *   (-4).
  */
 
@@ -112,19 +112,19 @@ void daHuwa_c::KillWithCoins() {
     Vector3 dustCopy;
     Vector3 coins;
 
-    dust.x = mPosX;
-    dust.y = mPosY;
-    dust.z = mPosZ;
+    dust.x = mPos.x;
+    dust.y = mPos.y;
+    dust.z = mPos.z;
     dust.y += mdCcAc_c.height - 0x50000;
     dustCopy = dust;
     PoofDustAt(dustCopy);
 
-    coins.x = mPosX;
-    coins.y = mPosY;
-    coins.z = mPosZ;
+    coins.x = mPos.x;
+    coins.y = mPos.y;
+    coins.z = mPos.z;
     SpawnCoins(coins, 3, 0xa000, 0);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     MTX_Concat43(&mAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
 
     dust.x = data_020a0e68.m[9];
@@ -208,21 +208,21 @@ void daHuwa_c::HandleCylinderHit() {
         mStateTimer = 0;
         mHorzSpeed = -speed;
     }
-    mPrevAngleY = Vec3_HorzAngle(&mPos, &player->mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, &player->mPos);
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     player->Hurt(pos, 2, 0xc000, 1, 0, 1);
 }
 
 /* Yaw the model, plant its translation at pos>>3, then the drop shadow.
  * In Yoshi's mouth (mFlags 0x40000) neither the shadow nor Render runs. */
 void daHuwa_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     if (IsInYoshiMouth(this))
         return;
     if (mWithMeshClsn.IsOnGround() != 0) {
@@ -284,8 +284,8 @@ int daHuwa_c::Behavior() {
         } else {
             mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
         }
-        ApproachLinear(mAngleY, mTargetAngY, 0x200);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, mTargetAngY, 0x200);
+        mPrevAngle.y = mAngle.y;
         break;
     }
     case kStateRecoil:
@@ -300,9 +300,9 @@ int daHuwa_c::Behavior() {
     UpdateWMClsn(mWithMeshClsn, 0);
 
     if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
     }
     UpdateModelTransform();
     mdCcAc_c.Clear();
@@ -320,9 +320,9 @@ int daHuwa_c::InitResources() {
     mdCcAc_c.Init(this, 0x3c000, 0x78000, 0x200000, 0xa6efe0);
     mWithMeshClsn.Init(this, 0x3c000, 0x3c000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mState = 0;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;

@@ -121,7 +121,7 @@ struct daObjGuragura_c : dBgActor_c {
     /* The shared halves of the descendants' slot-0 and slot-3 overrides. */
     s32 InitResourcesFrom(ResourceDescriptor *descriptor);
     s32 CleanupResourcesFrom(ResourceDescriptor *descriptor);
-    /* Live quaternion, position >> 3 and mAngleY into the model matrix. */
+    /* Live quaternion, position >> 3 and mAngle.y into the model matrix. */
     void UpdateModelMatrix();
     /* A rider landed: aim mTiltTarget under it and arm mSettleDelay. */
     void TiltToward(unsigned char *rider);

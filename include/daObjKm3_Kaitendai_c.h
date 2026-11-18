@@ -11,7 +11,7 @@
  * CleanupResources) and hands this overlay's model/collision
  * descriptor to the shared ov002 helpers. The default per-frame rotation
  * increment is one of two statics, chosen by param1's low byte. Shared setup
- * can override it with a nonzero spawn mAngleZ.
+ * can override it with a nonzero spawn mAngle.z.
  *
  * `daObjKm3_Kaitendai_c` is the RTTI name.
  */

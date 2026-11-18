@@ -1,12 +1,12 @@
+//cpp
 #include "types.h"
 #include "Ov007Sprite.h"
 #include "Ov007Texture.h"
 #include "nitro/fx/fx.h"
-extern void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
-extern void Texture_BindPalette(Ov007Texture *tex);
-extern void func_ov007_020c49bc(int width, int height, fx32 s0, fx32 t0, int repeatU, int repeatV,
-                                u16 *tilemap, int texWidth);
-extern int data_ov007_0210325c;
+extern "C" void Texture_BindPalette(Ov007Texture *tex);
+extern "C" void func_ov007_020c49bc(int width, int height, fx32 s0, fx32 t0, int repeatU,
+                                    int repeatV, u16 *tilemap, int texWidth);
+extern "C" int data_ov007_0210325c;
 #include "nitro/gx/g3imm_cmd.h"
 
 /* The NitroSDK immediate-mode commands evaluate their arguments right to
@@ -17,7 +17,8 @@ extern int data_ov007_0210325c;
  * polygon id `polygonId`, offset by `vec`; `flags` is the sprite's
  * drawFlags for the plain pass (func_ov007_020c421c passes 0 for its
  * shadow pass). */
-void func_ov007_020c4684(Ov007Sprite *s, u16 color, int alpha, int polygonId, int flags, s16 *vec) {
+extern "C" void func_ov007_020c4684(Ov007Sprite *s, u16 color, int alpha, int polygonId, int flags,
+                                    s16 *vec) {
     int tw = 0;
     u16 *tilemap;
     u16 repeatU = s->repeatU;
@@ -39,13 +40,13 @@ void func_ov007_020c4684(Ov007Sprite *s, u16 color, int alpha, int polygonId, in
     if (alpha == 0) {
         return;
     }
-    tex = s->frames[s->frame];
+    tex = (Ov007Texture *)s->frames[s->frame];
     G3_Color(color);
     if (tex != 0) {
         tw = 8 << tex->sizeS;
         th = 8 << tex->sizeT;
     }
-    func_ov007_020c1448(tex, 1, s->texRepeat, s->texFlip, s->texColor0);
+    tex->func_ov007_020c1448(1, s->texRepeat, s->texFlip, s->texColor0);
     Texture_BindPalette(tex);
     texW = tw;
     REG_POLYGON_ATTR = s->polygonAttr | 0x80 | (polygonId << 24) | (alpha << 16);

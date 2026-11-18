@@ -3,7 +3,7 @@
  *
  * An invisible trigger: while a daPly_c overlaps its cylinder, Behavior fires
  * WarpPlayer for that player's number and the destination carried in the
- * spawn param, then latches mAngleY until the cylinder empties. mAngleY is
+ * spawn param, then latches mAngle.y until the cylinder empties. mAngle.y is
  * that warp-in-progress latch here, not an angle.
  *
  * param1 (spawn param) layout, read by InitResources and Behavior:
@@ -50,17 +50,17 @@ s32 daWarpkun_c::InitResources() {
     return 1;
 }
 
-/* ROM ordinal 5 -- vtable slot 6. `mAngleY == 0' gates the warp; the found
+/* ROM ordinal 5 -- vtable slot 6. `mAngle.y == 0' gates the warp; the found
    actor's actorID/mPlayerNo are real daPly_c members once cast. */
 s32 daWarpkun_c::Behavior() {
     u32 hitId = mdCcAc_c.otherOwner;
     if (hitId != 0) {
-        if (mAngleY == 0) {
+        if (mAngle.y == 0) {
             dActor_c *hit = dActor_c::FindWithID(hitId);
             if (hit != 0 && IsPlayerActor(hit)) {
                 daPly_c *player = static_cast<daPly_c *>(hit);
                 if (IsPlayerWarping(player->mPlayerNo) != 0) {
-                    mAngleY = 1;
+                    mAngle.y = 1;
                 } else if (player->CanWarp()) {
                     u32 warpParam = (param1 >> 12) + 1;
                     WarpPlayer(player->mPlayerNo, warpParam & 0xff);
@@ -68,7 +68,7 @@ s32 daWarpkun_c::Behavior() {
             }
         }
     } else {
-        mAngleY = 0;
+        mAngle.y = 0;
     }
 
     mdCcAc_c.Clear();

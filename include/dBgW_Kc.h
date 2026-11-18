@@ -2,6 +2,7 @@
 #define DBGW_KC_H
 
 #include "types.h"
+#include "nitro/fx/fx.h"
 #include "dBgW.h"
 #include "CLPS_BlockRef.h"
 
@@ -79,14 +80,10 @@ struct dBgW_Kc : dBgW {
        SetFile here seeds that same vector unrotated. DetectClsn(dBgCh_SphCrr&)
        dots surface normals against it in the floor edge test and measures the
        wall-reject slab along it (notes/collision-query-classes.md).
-       It and depthDir are plain three-word vectors, not Vector3: a Vector3
+       It and depthDir are the SDK's POD VecFx32, not Vector3: a Vector3
        member makes d_bg_w_kc.cpp emit an unreferenced ~Vector3() copy, which
-       the ROM's object does not have. The type is named because an unnamed
-       one takes a compiler @NNN number in every consumer. */
-    struct PlainVec {
-        fx32 x, y, z;
-    };
-    PlainVec upAxis; /* 0x28 */
+       the ROM's object does not have. */
+    VecFx32 upAxis; /* 0x28 */
     /* The penetration-depth policy of DetectClsn(dBgCh_SphCrr&): how far behind a
        face the sphere centre may sit and still be pushed out. By default it is
        the file's prismThickness. shallowOnly caps every face at 5.0 (0x50000
@@ -98,7 +95,7 @@ struct dBgW_Kc : dBgW {
     bool shallowOnly; /* 0x34 */
     bool depthByDir;  /* 0x35 */
     u8 pad_36[2];
-    PlainVec depthDir;   /* 0x38 - init the unit X vector */
+    VecFx32 depthDir;    /* 0x38 - init the unit X vector */
     fx32 depthDirMinDot; /* 0x44 - init -0x1000 */
     /* The edge-contact policy of the same query
        (notes/collision-query-classes.md):
@@ -164,7 +161,6 @@ struct dBgW_Kc : dBgW {
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgW_Kc_size_must_be_0x50[sizeof(dBgW_Kc) == 0x50 ? 1 : -1];
-typedef char dBgW_Kc_PlainVec_size_must_be_0xc[sizeof(dBgW_Kc::PlainVec) == 0xc ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

@@ -15,7 +15,7 @@ struct daESwitch_c : dActor_c {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dCcAc_c mdCcAc_c; /* 0x0d4 */
     /* The tag sets an Event bit while something stands in its collider.
-       mHoldDuration comes from the spawn rotation Z word (mAngleZ slot), or
+       mHoldDuration comes from the spawn rotation Z word (mAngle.z slot), or
        0x96 (150 frames) when that is not positive; mHoldTimer counts it down
        and clears both the collider flag and the Event bit when it runs out.
        mIsReusable is bit 5 of param1: set, the tag re-arms by reloading

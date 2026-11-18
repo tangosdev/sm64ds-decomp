@@ -26,13 +26,13 @@ daECreate_c *daECreate_c_classInit() {
 }
 
 int daESwitch_c::InitResources() {
-    mdCcAc_c.Init(this, ((mAngleX + 1) * 100) << 12, ((mAngleY + 1) * 200) << 12, 2, 0x400000);
+    mdCcAc_c.Init(this, ((mAngle.x + 1) * 100) << 12, ((mAngle.y + 1) * 200) << 12, 2, 0x400000);
     mEventID = param1 & 0x1f;
     mIsReusable = (param1 >> 5) & 1;
-    if (mAngleZ <= 0)
+    if (mAngle.z <= 0)
         mHoldDuration = 150;
     else
-        mHoldDuration = mAngleZ;
+        mHoldDuration = mAngle.z;
     mHoldTimer = 0;
     Event::ClearBit(mEventID);
     return 1;
@@ -40,7 +40,7 @@ int daESwitch_c::InitResources() {
 
 int daECreate_c::InitResources() {
     mActorToSpawn = 0xce;
-    mEventBit = mAngleZ & 0x1f;
+    mEventBit = mAngle.z & 0x1f;
     mPreviousEventBit = Event::GetBit(mEventBit);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
     return 1;

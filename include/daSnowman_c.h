@@ -56,7 +56,7 @@ struct daSnowman_c : dEnemyBase_c {
     s32 mCapUniqueID;                 /* 0x400 */
     u8  pad_404[0x4];
     /* Coined. Walk uses it as a hop-phase counter (0 start, 1 landed,
-       then frames until the next hop). Spin stores mAngleY - player
+       then frames until the next hop). Spin stores mAngle.y - player
        angle and uses the sign to pick the spin direction. */
     s32 mStep;                        /* 0x408 */
     s32 mClosestPlayerIdx;            /* 0x40c -- coined; written by FindClosestPlayerDist */
@@ -72,7 +72,7 @@ struct daSnowman_c : dEnemyBase_c {
     Vector3 mCapPos;                  /* 0x440 -- coined; the cap actor is pinned here */
     Vector3 mHomePos;                 /* 0x44c */
     s32 mHopStep;                     /* 0x458 -- coined; distance moved per frame toward a path node */
-    s32 mSinkOffsetY;                 /* 0x45c -- coined; added to mPosY when rendering */
+    s32 mSinkOffsetY;                 /* 0x45c -- coined; added to mPos.y when rendering */
     u32 mParticleID1;                 /* 0x460 -- coined; Particle::System::New handle */
     u32 mParticleID2;                 /* 0x464 -- coined; Particle::System::New handle */
     /* Coined. Set to 2 on a 0x40 hit while the player's param1 is 2.

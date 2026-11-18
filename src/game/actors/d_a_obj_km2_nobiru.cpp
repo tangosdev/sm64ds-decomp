@@ -49,17 +49,17 @@ extern CLPS_Block data_ov045_021125b0;
 daObjKm2_Nobiru_c::~daObjKm2_Nobiru_c() {}
 
 void daObjKm2_Nobiru_c::UpdateColliderTransform() {
-    Matrix4x3_FromRotationY(&mColliderTransform, mAngleY);
-    mColliderTransform.m[9] = mPosX;
-    mColliderTransform.m[10] = mPosY;
-    mColliderTransform.m[11] = mPosZ;
+    Matrix4x3_FromRotationY(&mColliderTransform, mAngle.y);
+    mColliderTransform.m[9] = mPos.x;
+    mColliderTransform.m[10] = mPos.y;
+    mColliderTransform.m[11] = mPos.z;
 }
 
 void daObjKm2_Nobiru_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 int daObjKm2_Nobiru_c::CleanupResources() {
@@ -105,7 +105,7 @@ int daObjKm2_Nobiru_c::InitResources() {
 
     /* dBgW_Kc::SetEdgeToleranceShift stays a call because the direct
      * mCollider.edgeToleranceShift = 4 store makes InitResources differ. */
-    mCollider.SetFile(dBgW_Kc::LoadFile(PoleLift_ClsnFile), mColliderTransform, 0x1000, mAngleY,
+    mCollider.SetFile(dBgW_Kc::LoadFile(PoleLift_ClsnFile), mColliderTransform, 0x1000, mAngle.y,
                       data_ov045_021125b0);
     mCollider.SetEdgeToleranceShift(4);
     mCollider.tolerantWallEdges = true;

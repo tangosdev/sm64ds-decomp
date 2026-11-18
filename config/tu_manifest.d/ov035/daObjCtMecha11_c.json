@@ -505,7 +505,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19Mecha11ModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's PC24 relocation"
@@ -519,7 +519,7 @@
     },
     {
       "symbol": "_ZN18Mecha11ClsnFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor's PC24 relocation"
@@ -576,7 +576,7 @@
       "source": "0x02111fd0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -596,7 +596,7 @@
       "source": "0x02111fec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"

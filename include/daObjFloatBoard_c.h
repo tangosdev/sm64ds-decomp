@@ -34,7 +34,7 @@
  * members and its ancestors', never a descendant's.
  *
  *   0x320  the rest X. The Init helper (InitResourcesFrom) and each leaf
- *          Init seed it from mPosX; the Wet-Dry World leaves read it back
+ *          Init seed it from mPos.x; the Wet-Dry World leaves read it back
  *          through their RestPos overlay.
  *   0x324  the water surface height. UpdateWaterY, the helper this
  *          class's Behavior calls to ask whether the board is on water, writes it

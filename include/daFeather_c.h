@@ -34,7 +34,7 @@ struct daFeather_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x158 */
     dExtShadowModel_c mShadowModel; /* 0x314 */
     /* The shadow matrix, rebuilt every frame by UpdateModelAndShadow out of
-       mAngleY and the position and handed to DropShadowRadHeight.
+       mAngle.y and the position and handed to DropShadowRadHeight.
        Only this TU includes this header, and it includes common.h first, so
        the FLAT Matrix4x3 wins here: with math/Matrix.h's nested spelling
        the TU's copies would scalarize (Vector3 is non-POD) and the inline
@@ -42,7 +42,7 @@ struct daFeather_c : dActor_c {
     Matrix4x3 mShadowMtx; /* 0x33c */
     u8 pad_36c[0xc];      /* 0x36c -- unread */
     /* The float. mSwayAngle advances 0x400 per airborne frame and eases back
-       to 0 on the ground. Its sine and cosine drive mAngleX/mAngleZ and,
+       to 0 on the ground. Its sine and cosine drive mAngle.x/mAngle.z and,
        scaled by mDriftSpeed, mHorzSpeed. mDriftSpeed itself eases toward 0x10000 every frame. */
     s32 mDriftSpeed; /* 0x378 */
     s16 mSwayAngle;  /* 0x37c */

@@ -30,11 +30,11 @@
  * That means everything from 0x320 to 0x334 is POD, read from InitResources
  * (func_ov025_021117dc) and Behavior (func_ov025_021113f0):
  *
- *   0x320  mBasePosY       -- InitResources copies mPosY (dActor_c +0x60) here;
+ *   0x320  mBasePosY       -- InitResources copies mPos.y (dActor_c +0x60) here;
  *                              Behavior reads it back as the resting height a
  *                              sine offset is added to.
  *   0x324  mAngleXSpeed    -- the per-tick angular step, +-(0x400/n), added to
- *                              mAngleX every frame of a roll; Behavior only.
+ *                              mAngle.x every frame of a roll; Behavior only.
  *   0x326  mPhaseTimer     -- a phase counter Behavior increments every call and
  *                              compares against several thresholds.
  *   0x328  mRollStage      -- a stage counter, -1 sentinel, incremented up to

@@ -54,10 +54,8 @@ struct SuikomiStateTable {
 };
 extern SuikomiStateTable data_ov026_02113f58;
 
-/* The collider offset. A VecFx32, not Vector3: a Vector3 local
- * would emit Vector3's inline destructor, which this TU's manifest does not
- * license. */
-extern VecFx32 data_ov026_02113f4c;
+/* The collider offset. */
+extern Vector3 data_ov026_02113f4c;
 
 #pragma defer_codegen off
 
@@ -121,9 +119,9 @@ int daWater_Suikomi_c::Behavior() {
         (this->*(s->mMain))();
     }
     UpdatePos(&mdCcAcPos_c);
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     func_ov026_02112324();
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
@@ -131,10 +129,10 @@ int daWater_Suikomi_c::Behavior() {
 }
 
 int daWater_Suikomi_c::InitResources() {
-    VecFx32 vec;
+    Vector3 vec;
     unk_314 = param1 & 0xff;
     vec = data_ov026_02113f4c;
-    mdCcAcPos_c.Init(this, *(Vector3 *)&vec, 0x64000, 0xa4000, 0x800006, 0);
+    mdCcAcPos_c.Init(this, vec, 0x64000, 0xa4000, 0x800006, 0);
     SetState(&data_ov026_02113f58.state);
     return 1;
 }

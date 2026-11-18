@@ -37,6 +37,9 @@ typedef struct Ov007BootArgs {
     /* 0x9c: dScDSMT_c::InitResources copies data_0209d6fc here, the
      * message file Message.cpp reads */
     void *messages;
+#ifdef __cplusplus
+    void func_ov007_020b7eec();
+#endif
 } Ov007BootArgs;
 
 #ifndef SM64DS_PLATFORM_PC
@@ -71,5 +74,19 @@ typedef struct Ov007Settings {
 #ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Settings_size_must_be_0x3c[sizeof(Ov007Settings) == 0x3c ? 1 : -1];
 #endif
+
+/* func_ov007_020b7138's first argument: the hooks dScDSMT_c hands the menu
+ * (data_ov007_02103290). */
+struct Ov007MenuHooks {
+    int alloc;               /* 0x00: installed by MenuMem_SetAllocHook */
+    int free;                /* 0x04: MenuMem_SetFreeHook */
+    int query;               /* 0x08: MenuMem_SetMaxAllocSizeHook */
+    int fileLoad;            /* 0x0c: func_ov007_020b4100 */
+    int fileRelease;         /* 0x10: func_ov007_020b4100 */
+    int (*callback)(int id); /* 0x14: becomes the work block's callback */
+#ifdef __cplusplus
+    int func_ov007_020b7138(Ov007BootArgs *bootArgs);
+#endif
+};
 
 #endif

@@ -38,6 +38,7 @@ struct OamAnimation {
 #ifdef __cplusplus
     OamAnimation();
     ~OamAnimation();
+    void func_02020820(int *src, int screen, int loops, u8 enabled, u8 affine);
 #endif
 };
 

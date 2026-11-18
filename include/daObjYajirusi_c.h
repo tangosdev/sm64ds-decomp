@@ -38,18 +38,16 @@ struct daObjYajirusi_c {
     u8  pad_004[0x8];
     u16 actorID;                       /* 0x00c */
     u8  pad_00e[0x4e];
-     /* dActor_c's position and camera-space position, at dActor_c's own offsets
-        (include/dActor_c.h lines 59-65). The flat view drops the inheritance but
-        src/game/actors/d_a_obj_yajirusi.cpp (Kill) still reads these four fields by
-        name, so they are pinned here rather than buried in padding. */
-    s32 mPosX;                         /* 0x05c */
-    s32 mPosY;                         /* 0x060 */
-    s32 mPosZ;                         /* 0x064 */
+    /* dActor_c's position, camera-space position and angle, at dActor_c's own
+       offsets (include/dActor_c.h). The flat view drops the inheritance but
+       src/game/actors/d_a_obj_yajirusi.cpp still reads these three fields by
+       name, so they are pinned here rather than buried in padding. */
+    Vector3 mPos; /* 0x05c */
     u8  pad_068[0xc];
-    s32 mCamSpacePosX;                 /* 0x074 */
-    u8  pad_078[0x16];
-    s16 mAngleY;                       /* 0x08e */
-    u8  pad_090[0x44];
+    Vector3 mCamSpacePos; /* 0x074 */
+    u8 pad_080[0xc];
+    Vector3_16 mAngle; /* 0x08c */
+    u8 pad_092[0x42];
     dExtSimpleModel_c mModel;          /* 0x0d4 */
     dBgW_KcMbg mMeshCollider;          /* 0x124 */
     Matrix4x3 mClsnMat;                /* 0x2ec */
@@ -85,9 +83,9 @@ struct daObjYajirusi_c {
 };
 
 static_assert(offsetof(daObjYajirusi_c, actorID) == 0x00c, "daObjYajirusi_c actorID");
-static_assert(offsetof(daObjYajirusi_c, mPosX) == 0x05c, "daObjYajirusi_c mPosX");
-static_assert(offsetof(daObjYajirusi_c, mCamSpacePosX) == 0x074, "daObjYajirusi_c mCamSpacePosX");
-static_assert(offsetof(daObjYajirusi_c, mAngleY) == 0x08e, "daObjYajirusi_c mAngleY");
+static_assert(offsetof(daObjYajirusi_c, mPos) == 0x05c, "daObjYajirusi_c mPos");
+static_assert(offsetof(daObjYajirusi_c, mCamSpacePos) == 0x074, "daObjYajirusi_c mCamSpacePos");
+static_assert(offsetof(daObjYajirusi_c, mAngle) == 0x08c, "daObjYajirusi_c mAngle");
 static_assert(offsetof(daObjYajirusi_c, mModel) == 0x0d4, "daObjYajirusi_c mModel");
 static_assert(offsetof(daObjYajirusi_c, mMeshCollider) == 0x124, "daObjYajirusi_c collider");
 static_assert(offsetof(daObjYajirusi_c, mClsnMat) == 0x2ec, "daObjYajirusi_c matrix");

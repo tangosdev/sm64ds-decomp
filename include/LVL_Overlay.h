@@ -125,6 +125,9 @@ struct LVL_Overlay {
         s16      z;             /* 0x06 */
         Vector3s rot;           /* 0x08 */
         u16      param;         /* 0x0e */
+#ifdef __cplusplus
+        void func_0202b0e0(int count);
+#endif
     };
 
     /* 8 bytes. LoadSimpleObjects (ov002:0x020fe960). No rotation field: spawn

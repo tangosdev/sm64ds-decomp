@@ -80,9 +80,9 @@ void daObjFire_c::OnTurnIntoEgg(daPly_c &player) {}
 
 int daObjFire_c::InitResources() {
     mdCcAc_c.Init(this, 0x41000, 0x41000, 0x200002, 0x8000);
-    mFlamePos.x = mPosX;
-    mFlamePos.y = mPosY;
-    mFlamePos.z = mPosZ;
+    mFlamePos.x = mPos.x;
+    mFlamePos.y = mPos.y;
+    mFlamePos.z = mPos.z;
     return 1;
 }
 
@@ -107,9 +107,9 @@ int daObjFire_c::Behavior() {
         return 1;
     }
 
-    mPosX = mFlamePos.x;
-    mPosY = mFlamePos.y;
-    mPosZ = mFlamePos.z;
+    mPos.x = mFlamePos.x;
+    mPos.y = mFlamePos.y;
+    mPos.z = mFlamePos.z;
     mFlags &= ~0xc0000;
 
     if (IsBlueFlame(this))

@@ -206,7 +206,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17MantaModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
@@ -277,7 +277,7 @@
       "source": "0x02133eb8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -780,24 +780,25 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@905",
+      "from": "@908",
       "to": "@766",
       "evidence": "Measured local resource-field reconstruction changes compiler input @790 to @789; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @907 to @853 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @853 to @852 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @852 to @890 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @890 to @900 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @900 to @905 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@906",
+      "from": "@909",
       "to": "@767",
       "evidence": "Measured local resource-field reconstruction changes compiler input @791 to @790; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @908 to @854 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @854 to @853 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @853 to @891 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @891 to @901 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @901 to @906 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@908",
+      "from": "@911",
       "to": "@769",
       "evidence": "Measured local resource-field reconstruction changes compiler input @793 to @792; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @910 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @856 to @855 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @855 to @893 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @893 to @903 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @903 to @908 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@910",
+      "from": "@913",
       "to": "@771",
       "evidence": "Measured local resource-field reconstruction changes compiler input @795 to @794; section, offset, size, binding, bytes and typed relocation destinations preserved. Canonical destination unchanged. Re-keyed from @912 to @858 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @858 to @857 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @857 to @895 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @895 to @905 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @905 to @910 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
-  ]
+  ],
+  "rodata": null
 }

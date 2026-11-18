@@ -53,13 +53,13 @@ int daObjWcObj01_c::InitResources() {
 
     if (InitResourcesFrom(&data_ov029_02113be8) != 0) {
         waterY = GetWaterHeightWDW();
-        if (mPosY > waterY) {
+        if (mPos.y > waterY) {
             dBgCh_Lin line;
-            x = mPosX;
+            x = mPos.x;
             end.x = x;
-            y = mPosY;
+            y = mPos.y;
             end.y = y;
-            z = mPosZ;
+            z = mPos.z;
             start.y = y;
             end.z = z;
             start.x = x;
@@ -68,15 +68,15 @@ int daObjWcObj01_c::InitResources() {
             end.y = waterY;
             line.SetObjAndLine(start, end, this);
             if (line.DetectClsn() == 0) {
-                mPosY = waterY;
+                mPos.y = waterY;
             } else {
                 Vector3 hit = line.GetClsnPos();
-                mPosY = hit.y;
+                mPos.y = hit.y;
             }
         }
-        mRestPosX = mPosX;
-        mWaterY = mPosY;
-        mRestPosZ = mPosZ;
+        mRestPosX = mPos.x;
+        mWaterY = mPos.y;
+        mRestPosZ = mPos.z;
         return 1;
     }
     return 0;

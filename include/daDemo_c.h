@@ -123,8 +123,7 @@ struct daDemo_c : dActor_c {
        assets), steps (5fb8) and draws (5f8c). The step handlers and the
        cue handlers are its members, dispatched through member-pointer
        tables (the cue tables are data_ov002_02110f34 and
-       data_ov002_02110f9c); the remaining helpers are still free functions
-       taking the block as char *. Names describe what the code does with
+       data_ov002_02110f9c). Names describe what the code does with
        each field; the source type is not recovered. */
     struct StaffRoll {
         /* One of the four main-screen stars, one per unlocked character
@@ -256,7 +255,13 @@ struct daDemo_c : dActor_c {
         u8 pad_515[3]; /* 0x515 */
 
         void func_ov002_020f26e0();
+        void func_ov002_020f2790(int p1, int p2, int p3, s16 p4);
+        int func_ov002_020f27e8();
+        void func_ov002_020f2958();
+        int func_ov002_020f2984();
+        int func_ov002_020f2990();
         void func_ov002_020f2a48();
+        void func_ov002_020f2a68();
         void func_ov002_020f2a78(int);
         void func_ov002_020f2a88(int);
         void func_ov002_020f2aec(int);
@@ -264,7 +269,12 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f2d0c(int);
         void func_ov002_020f2d70(int);
         void func_ov002_020f2dd4();
+        void func_ov002_020f2ea0();
+        void func_ov002_020f2eac();
+        void func_ov002_020f2f18(int a, int b);
         void func_ov002_020f2f64();
+        void func_ov002_020f2f9c(int count);
+        void func_ov002_020f30d4();
         void func_ov002_020f30f8(int);
         void func_ov002_020f32e4(int);
         void func_ov002_020f3310(int);
@@ -275,6 +285,12 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f3740(int);
         void func_ov002_020f378c(int);
         void func_ov002_020f37a0();
+        void func_ov002_020f37fc();
+        void func_ov002_020f3828();
+        void func_ov002_020f3954();
+        void func_ov002_020f396c();
+        void func_ov002_020f3978();
+        void func_ov002_020f39ec(int idx);
         void func_ov002_020f3ae8(int);
         void func_ov002_020f3ba0(int);
         void func_ov002_020f3d38(int);
@@ -295,6 +311,8 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f5848(int);
         void func_ov002_020f5894(int);
         void func_ov002_020f5990();
+        void func_ov002_020f5a6c();
+        int func_ov002_020f5a94();
         void func_ov002_020f5ad4();
         void func_ov002_020f5b24();
         void func_ov002_020f5b7c();
@@ -321,6 +339,10 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f5ef0();
         void func_ov002_020f5efc();
         void func_ov002_020f5f0c(int);
+        void func_ov002_020f5f60();
+        int func_ov002_020f5f8c();
+        int func_ov002_020f5fb8();
+        void func_ov002_020f5fe4();
         /* Begin credit line n (1..0x14) in the first credit slot. */
         void StartCredit(int);
     };
@@ -333,18 +355,18 @@ struct daDemo_c : dActor_c {
     u32 mParticleID[3];     /* 0x0e8 - Particle::System::New handles, passed back likewise */
     /* A fix12 magnitude each script handler sets or eases, then scales by:
        the speed along the model's facing (6c60, 6e48, 6f48) or along
-       mPrevAngleX (7780), the orbit radius (79c0), the opacity level that
+       mPrevAngle.x (7780), the orbit radius (79c0), the opacity level that
        mOpacity takes as mMagnitude >> 12 (71c4, 7410, 7538), and the
        segment progress MovePointAlongSpline advances (7bb8). Medium confidence:
        no single role covers every reader. */
     s32 mMagnitude; /* 0x0f4 */
     /* A fix12 rate eased toward a target: the sink speed 7038 subtracts
-       from mPosY (scaled by 0x199), the x drift 79c0 adds to mPosX, and
+       from mPos.y (scaled by 0x199), the x drift 79c0 adds to mPos.x, and
        the 0..0x1000 blend weight 7538 interpolates two vectors by. */
     s32 mRate; /* 0x0f8 */
     /* The handler's phase: the path segment MovePointAlongSpline walks (7bb8),
        the frame count 7780 compares against 0x3c/0x6a/0xa9, and the sine
-       angle 79c0 bobs mPosY by. */
+       angle 79c0 bobs mPos.y by. */
     s16 mPhase;     /* 0x0fc */
     s16 mPhaseStep; /* 0x0fe - 79c0 adds it to mPhase each frame and eases it toward 0x200 */
     /* Script cue: handlers 20, 21 and 23 copy it from the record's first

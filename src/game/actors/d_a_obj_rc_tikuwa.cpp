@@ -93,9 +93,9 @@ s32 daObjRc_Tikuwa_c::Behavior() {
         TriplePoofDust();
         if (mMeshCollider.IsEnabled() != 0)
             mMeshCollider.Disable();
-        mPosX = mHomePos.x;
-        mPosY = mHomePos.y;
-        mPosZ = mHomePos.z;
+        mPos.x = mHomePos.x;
+        mPos.y = mHomePos.y;
+        mPos.z = mHomePos.z;
         mState = 2;
         break;
     case 2: {
@@ -103,7 +103,7 @@ s32 daObjRc_Tikuwa_c::Behavior() {
         if (dist <= 0x3e8000)
             break;
         if (dist < 0x7d0000) {
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mClsnTimer = 0;
             mHadClsn = 0;
             mState = 0;
@@ -124,15 +124,15 @@ s32 daObjRc_Tikuwa_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov036_02112b48);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *(CLPS_Block *)data_ov036_02112b48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);
     mTerminalVelocity = -0x1e000;
     mVertAccel = ~0x198;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     return 1;
 }
 

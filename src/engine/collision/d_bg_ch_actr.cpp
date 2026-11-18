@@ -117,7 +117,7 @@ void dBgCh_Actr::CommitFloorHit(s32 wasOnGround) {
     dBgS_RideCallBack(GetFloorResult(), mActor);
     SetGroundFlag();
     if (GetLimMovFlag() == 0)
-        mActor->mVertSpeed = 0;
+        mActor->mSpeed.y = 0;
 }
 
 void dBgCh_Actr::UpdateDiscreteNoLava()
@@ -182,7 +182,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     sphere.y = y + mHeight;
     mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
     mSphereClsn.mMaxNormalY = mMaxNormalY;
-    if (pos->y - actor->mPrevPosY > 0) {
+    if (pos->y - actor->mPrevPos.y > 0) {
         mSphereClsn.flags |= 0x20;
     }
     if (mSphereClsn.DetectClsnSlot0()) {

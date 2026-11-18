@@ -1,7 +1,11 @@
 #!/usr/bin/env python
-"""3-way union resolver for the JSON baselines + actor_renames.tsv + attribution.json.
+"""3-way union resolver for the append-only merge-conflict files:
+symbols/actor_renames.tsv, attribution.json, config/decl-agreement-baseline.json and
+dead-reference-baseline.json. It does not touch langmode-baseline.json (the langmode
+ratchet baseline lives on the chaos-data branch).
 
-Usage: python resolve_baseline.py [path ...]   (defaults: all conflicted files it knows)
+Usage: python tools/resolve_union_conflicts.py [path ...]   (defaults: all conflicted files it knows)
+Run it from the repo root in the middle of a conflicted merge.
 Reads :2: (ours) and :3: (theirs) stages from the index, writes the union to the
 worktree, and `git add`s it. Files it doesn't own are left alone.
 """

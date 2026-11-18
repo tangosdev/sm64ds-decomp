@@ -40,7 +40,8 @@
       "end": "0x0213358c"
     },
     {
-      "name": ".data",
+      "name": ".data.w13b814",
+      "input_section": ".data",
       "start": "0x0213be44",
       "end": "0x0213bf48"
     },
@@ -1146,7 +1147,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.w13b814",
           "start": "0x0213be44",
           "end": "0x0213bf48",
           "differingBytes": 0,
@@ -1393,7 +1394,7 @@
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.w13b814",
             "original": [
               8,
               10,
@@ -1676,7 +1677,7 @@
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.w13b814",
               "original": [
                 8,
                 10,
@@ -2512,7 +2513,7 @@
       "target_address": "0x0213aa24"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be44",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2522,7 +2523,7 @@
       "target_address": "0x020dc294"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2532,7 +2533,7 @@
       "target_address": "0x020dc1c4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2542,7 +2543,7 @@
       "target_address": "0x020de1d4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2552,7 +2553,7 @@
       "target_address": "0x020de0e0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be64",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2562,7 +2563,7 @@
       "target_address": "0x020dd880"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2572,7 +2573,7 @@
       "target_address": "0x020de584"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be74",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2582,7 +2583,7 @@
       "target_address": "0x020dda94"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2592,7 +2593,7 @@
       "target_address": "0x020de440"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be84",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2602,7 +2603,7 @@
       "target_address": "0x020dd7c0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2612,7 +2613,7 @@
       "target_address": "0x020dbf7c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be94",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2622,7 +2623,7 @@
       "target_address": "0x020dcffc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213be9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2632,7 +2633,7 @@
       "target_address": "0x020dd658"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bea4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2642,7 +2643,7 @@
       "target_address": "0x020de26c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213beac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2652,7 +2653,7 @@
       "target_address": "0x020dc4b0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213beb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2662,7 +2663,7 @@
       "target_address": "0x020dd7bc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bebc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2672,7 +2673,7 @@
       "target_address": "0x020dc414"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bec4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2682,7 +2683,7 @@
       "target_address": "0x020dc6d0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213becc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2692,7 +2693,7 @@
       "target_address": "0x020dc4c8"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bed4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2702,7 +2703,7 @@
       "target_address": "0x020dc5c4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bedc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2712,7 +2713,7 @@
       "target_address": "0x020de940"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bee4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2722,7 +2723,7 @@
       "target_address": "0x020de5ac"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213beec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2732,7 +2733,7 @@
       "target_address": "0x020ddca0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bef4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2742,7 +2743,7 @@
       "target_address": "0x020dc154"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213befc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2752,7 +2753,7 @@
       "target_address": "0x020dd0e0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf04",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2762,7 +2763,7 @@
       "target_address": "0x020dd000"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2772,7 +2773,7 @@
       "target_address": "0x021341e4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf10",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2782,7 +2783,7 @@
       "target_address": "0x021341dc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf14",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2792,7 +2793,7 @@
       "target_address": "0x021341d4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf18",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2802,7 +2803,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2812,7 +2813,7 @@
       "target_address": "0x0213bf24"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf20",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2822,7 +2823,7 @@
       "target_address": "0x020bbf6c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf34",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2832,7 +2833,7 @@
       "target_address": "0x021373a4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf38",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2842,7 +2843,7 @@
       "target_address": "0x021373fc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2852,7 +2853,7 @@
       "target_address": "0x0213734c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf40",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2862,7 +2863,7 @@
       "target_address": "0x021372f4"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213bf44",
       "type": "R_ARM_ABS32",
       "kind": "load",

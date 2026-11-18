@@ -11,7 +11,7 @@
  *   0  daTor_c::State0 -- dormant at home. Holds the scale at 0
  *      until a player comes within 0x5dc000, then spins up over 0x3c frames
  *      and hands over to state 1.
- *   1  daTor_c::State1 -- hunting. Steers mPrevAngleY toward the
+ *   1  daTor_c::State1 -- hunting. Steers mPrevAngle.y toward the
  *      player while the player is within mChaseRange of home, toward home
  *      otherwise, runs the two particle emitters, and drops to state 2 when
  *      it gets home, loses the player, or mChaseTimer reaches 0x384.

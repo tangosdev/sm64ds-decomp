@@ -24,8 +24,8 @@ struct daTrsTrap_c : dActor_c {
        state. */
     u32 mParentUniqueID;         /* 0x128 */
     Vector3 mHomePos; /* 0x12c -- placement snapshot; the rise/slide states move mPos* off it */
-    s16 mAngVelX;                /* 0x138 -- per-frame tilt, added to mAngleX by the trapdoor state */
-    s16 mAngVelY;                /* 0x13a -- per-frame spin, added to mAngleY by the merry-go-round state */
+    s16 mAngVelX;     /* 0x138 -- per-frame tilt, added to mAngle.x by the trapdoor state */
+    s16 mAngVelY;     /* 0x13a -- per-frame spin, added to mAngle.y by the merry-go-round state */
     s16 mAngVelZ;                /* 0x13c -- zeroed with the pair; no state reads it yet */
     u8  pad_13e[0x2];
     /* 0 KAIDAN, 1 TERESAPIT, 2 BOOKSHELF, 3 MERRYGOROUND. Indexes the model,
@@ -90,6 +90,7 @@ struct daTrsTrap_c : dActor_c {
        callback word; it forwards the colliding actor to LatchStandingActor. */
     static void OnMeshClsnTouch(dBgW *, dActor_c *, dActor_c *);
     void LatchStandingActor(dActor_c *);
+    void func_ov063_0211cae8(int m);
 };
 
 #ifndef SM64DS_PLATFORM_PC

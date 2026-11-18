@@ -30,7 +30,7 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     dExtAnmModel_c mAnmModel;         /* 0x300 */
     dExtShadowModel_c mShadowModel;         /* 0x364 */
     /* DropShadowRadHeight matrix. UpdateModelTransform writes a translation of
-       (mPosX, mPosY - 0x18000, mPosZ) >> 3. Mtx43 rather than Matrix4x3:
+       (mPos.x, mPos.y - 0x18000, mPos.z) >> 3. Mtx43 rather than Matrix4x3:
        the latter embeds a Vector3 whose destructor would run in D1/D0. */
     Mtx43 mShadowMat;                 /* 0x38c */
     State *mCurrentState;             /* 0x3bc */
@@ -44,7 +44,7 @@ struct daYurei_Mucho_c : dEnemyBase_c {
        reads mHomePos.y back when steering. */
     Vector3 mHomePos; /* 0x3cc */
     /* Hover phase: Behavior adds 0x200 a frame and indexes FX_SinCosTable_ to
-       bob mPosY around mHomePos.y + 0xb4000. */
+       bob mPos.y around mHomePos.y + 0xb4000. */
     s32 mBobAngle;                    /* 0x3d8 */
     s32 mShotCount;                   /* 0x3dc */
     s16 mTargetAngle;                 /* 0x3e0 */

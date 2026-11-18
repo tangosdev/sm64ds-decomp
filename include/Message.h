@@ -77,6 +77,50 @@ struct Message {
     static void DisplayStarNameForStarSelect(u32 star);
     static void DisplayCourseNameForStarSelect(u32 course);
     static void LoadTextVS();
+
+    /* Address-named helpers. Static, like the rest of Message: the bodies
+       drive the message globals and do not read this. Parameters are unnamed
+       so this declaration does not renumber @NNN in includers. */
+    static void func_0201cd08(int);
+    static void func_0201cebc(short);
+    static void func_0201cfb8(int);
+    static void func_0201d418(int, int);
+    static void func_0201d850(u32);
+    static void func_0201e220(int);
+    static void func_0201eaac();
+    static void func_0201ef38();
+    static void func_0201ef50(int);
+    static void func_0201f108();
+    static void func_0201f138();
+    static void func_0201f32c(int);
+    static int func_0201fb4c();
+    static void func_0201fc88(s16);
+    static void func_0201aca4();
+    static void func_0201adfc();
+    static void func_0201b100(int);
+    static void func_0201b388(int);
+    static void func_0201b6f8(int);
+    static void func_02031028(int);
+    static void func_0203128c();
+    static void func_02031428();
+    static void func_020316d8(int, int, u32, void *);
+    static void func_020318a4(int);
+    static void func_020319fc(int);
+    static void func_02031cd4(void *);
+    static int func_020321fc();
+    static void func_020326ac();
+    static void func_02032f54();
+    static void func_02032f9c(int);
+    static void func_020331fc(int, int, int);
+    static void func_02033390(int);
+    static void func_02033464(int, int, int);
+    static void func_020337ec();
+    static void func_020338b0(int, int, short, int);
+    static void func_02033a80(int);
+    static void func_02033bb8(int);
+    static void func_02033e50(int, int);
+    static void func_02034504();
+    static void func_020345b0(int);
 #endif
 };
 

@@ -4,16 +4,15 @@
  *
  * InitResources loads the shared float-board model and collision, then
  * if the board spawned above the water it raycasts down onto the surface
- * (or the first hit under it) and writes that Y into mPosY. It then
- * copies mPosX/Y/Z onto mRestPosX, mWaterY, mRestPosZ.
+ * (or the first hit under it) and writes that Y into mPos.y. It then
+ * copies mPos.x/.y/.z onto mRestPosX, mWaterY, mRestPosZ.
  *
  * daObjWcObj06_c_classInit is reconstructed (RTTI daObjWcObj06_c,
  * WC_OBJ06 registry). Retail does not store that spelling.
  *
  * What stays:
- * - startEnd is two Vector3 copies flattened into one int[6]
- *   (start = pos; end = pos; start.y += 20; end.y = waterY); the store
- *   order is the ROM's.
+ * - The ray's start and end are written field by field, in the ROM's store
+ *   order (start = pos; end = pos; start.y += 20; end.y = waterY).
  * - g_profile_WC_OBJ06 is ov029 data outside this TU (S14).
  */
 
@@ -68,36 +67,36 @@ daObjWcObj06_c *daObjWcObj06_c_classInit() {
 }
 
 int daObjWcObj06_c::InitResources() {
-    int startEnd[6]; /* start[3] then end[3] */
+    Vector3 start, end;
     int waterY;
     int x, y, z;
 
     if (InitResourcesFrom(&data_ov029_02113f00) != 0) {
         waterY = GetWaterHeightWDW();
-        if (mPosY > waterY) {
+        if (mPos.y > waterY) {
             dBgCh_Lin line;
-            x = mPosX;
-            startEnd[3] = x; /* end.x */
-            y = mPosY;
-            startEnd[4] = y; /* end.y temp */
-            z = mPosZ;
-            startEnd[1] = y; /* start.y temp */
-            startEnd[5] = z; /* end.z */
-            startEnd[0] = x; /* start.x */
-            startEnd[2] = z; /* start.z */
-            startEnd[1] = y + kRayStartAbove;
-            startEnd[4] = waterY;
-            line.SetObjAndLine(*(Vector3 *)&startEnd[0], *(Vector3 *)&startEnd[3], this);
+            x = mPos.x;
+            end.x = x;
+            y = mPos.y;
+            end.y = y;
+            z = mPos.z;
+            start.y = y;
+            end.z = z;
+            start.x = x;
+            start.z = z;
+            start.y = y + kRayStartAbove;
+            end.y = waterY;
+            line.SetObjAndLine(start, end, this);
             if (line.DetectClsn() == 0) {
-                mPosY = waterY;
+                mPos.y = waterY;
             } else {
                 Vector3 hit = line.GetClsnPos();
-                mPosY = hit.y;
+                mPos.y = hit.y;
             }
         }
-        mRestPosX = mPosX;
-        mWaterY = mPosY;
-        mRestPosZ = mPosZ;
+        mRestPosX = mPos.x;
+        mWaterY = mPos.y;
+        mRestPosZ = mPos.z;
         return 1;
     }
     return 0;

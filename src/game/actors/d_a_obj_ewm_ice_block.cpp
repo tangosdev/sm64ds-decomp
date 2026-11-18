@@ -89,9 +89,9 @@ int daObjEwmIceBlock_c::Behavior()
         mPath.GetNode(node, delta);
     } else {
         if (delta < 0 || delta >= (int)mPath.NumNodes()) {
-            node.x = mPosX;
-            node.y = mPosY;
-            node.z = mPosZ;
+            node.x = mPos.x;
+            node.y = mPos.y;
+            node.z = mPos.z;
         } else {
             mPath.GetNode(node, delta);
         }
@@ -143,7 +143,7 @@ int daObjEwmIceBlock_c::InitResources()
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov056_02113314.collision), mClsnMat, 0x199,
-                          mAngleY, *data_ov056_02113314.clps);
+                          mAngle.y, *data_ov056_02113314.clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;

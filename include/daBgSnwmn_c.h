@@ -51,7 +51,7 @@ struct daBgSnwmn_c : dActor_c {
     virtual s32 Render();            /* slot  9 */
     virtual void OnPendingDestroy(); /* slot 12 */
 
-    /* Builds both model matrices from mAngleY/mPos* and drops the shadow.
+    /* Builds both model matrices from mAngle.y/mPos* and drops the shadow.
        Called once from InitResources. */
     void UpdateModelTransform();
 

@@ -283,28 +283,28 @@
       "ordinal": 36
     },
     {
-      "symbol": "func_02043f4c",
+      "symbol": "_ZN9ActorList13func_02043f4cEjP9fLiNdBa_c",
       "address": "0x02043f4c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0204/func_02043f4c.c",
       "ordinal": 37
     },
     {
-      "symbol": "_Z13func_02043f98PP9fLiNdBa_cj",
+      "symbol": "_ZN9ActorList13func_02043f98Ej",
       "address": "0x02043f98",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0204/func_02043f98.c",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN14Absorb02043fdc13func_02043fdcEPNS_21ProcessListDescriptorE",
+      "symbol": "_ZN14Absorb02043fdc21ProcessListDescriptor13func_02043fdcEv",
       "address": "0x02043fdc",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/arm9/0204/func_02043fdc.cpp",
       "ordinal": 39
     },
     {
-      "symbol": "_Z13func_0204405cPvS_",
+      "symbol": "_ZN14Absorb0204405c1L13func_0204405cEPv",
       "address": "0x0204405c",
       "size": "0x0000008c",
       "legacy_source": "src/func_0204405c.c",

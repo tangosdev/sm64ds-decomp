@@ -59,6 +59,7 @@ struct daLuigi_c : dActor_c {
     int SetState(daLuigiState *state, daPly_c *player);
     int EnterMirror(daPly_c *player);
     int ExecuteMirror(daPly_c *player);
+    static void func_ov055_02111264();
 };
 
 #ifndef SM64DS_PLATFORM_PC

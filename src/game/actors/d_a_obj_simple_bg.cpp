@@ -178,15 +178,15 @@ int daObjSimpleBg_c::InitResources() {
     idx = mVariant;
     if (idx == 0 || idx == 2) {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov102_0214e188[idx].clsnFile);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov102_0214e188[idx].clps);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *data_ov102_0214e188[idx].clps);
     } else {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov102_0214e188[idx].clsnFile);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov102_0214e188[idx].clps);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, *data_ov102_0214e188[idx].clps);
     }
 
     if (IsBkTower(this) && gCurrentSublevel == 7) {
         if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
-            if (mPosY >= 0xdac000)
+            if (mPos.y >= 0xdac000)
                 return 0;
         }
     }

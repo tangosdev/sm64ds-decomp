@@ -86,7 +86,7 @@ int daObjKi_Fune_c::InitResources() {
     SharedFilePtr *collisionFile = (SharedFilePtr *)data_ov016_021136dc[idx];
     KCL_File *collision = dBgW_Kc::LoadFile(*collisionFile);
     CLPS_Block *clps = (CLPS_Block *)clpsBlocks[idx];
-    mMeshCollider.SetFile(collision, mClsnMat, 0x1000, mAngleY, *clps);
+    mMeshCollider.SetFile(collision, mClsnMat, 0x1000, mAngle.y, *clps);
     if (mModelIndex == 0) {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
@@ -109,7 +109,7 @@ int daObjKi_Fune_c::Behavior() {
     mMeshCollider.SetClipRadius(0x2000000);
     if (mModelIndex == 0) {
         mBobAngle += 0xda;
-        mAngleX = (s16)((FX_SinIdx((u16)mBobAngle >> 4) << 10) >> 12);
+        mAngle.x = (s16)((FX_SinIdx((u16)mBobAngle >> 4) << 10) >> 12);
         if (DistToCPlayer() < 0xbb8000) {
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, mCamSpacePos, 0);
         }
@@ -133,10 +133,10 @@ int daObjKi_Fune_c::CleanupResources() {
 }
 
 void daObjKi_Fune_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_ki_fune.cpp. */
