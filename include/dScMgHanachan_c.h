@@ -40,12 +40,8 @@ struct dScMgHanachan_c : dScMgBase_c {
     s32 mTimeLeft;   /* 0x4670 seconds left */
     s32 mTimeTick;   /* 0x4674 counts down one second */
     /* Descriptive record names; the ROM supplies the field layout, not names.
-       Point is the by-value pair the methods keep in locals; the stored
-       segment points are Vector2, whose arm9 structors the ROM passes for
+       The segment points are Vector2, whose arm9 structors the ROM passes for
        them. */
-    struct Point {
-        s32 x, y;
-    };
     struct Wiggler {
         typedef void (Wiggler::*State)();
         State state;         /* 0x00 tick callback */
@@ -94,7 +90,7 @@ struct dScMgHanachan_c : dScMgBase_c {
            Descriptive names, reconstructed like the rest. */
         void UpdateSway();
         void Move();
-        int HitTest(const Point *);
+        int HitTest(const Vector2 *);
         int IsStarVisible();
         void StopIfIdle();
         void OnTouched();
@@ -140,7 +136,6 @@ struct dScMgHanachan_c : dScMgBase_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     dScMgHanachan_c_Phase_size_must_be_0x08[sizeof(dScMgHanachan_c::Phase) == 0x08 ? 1 : -1];
-typedef char dScMgHanachan_c_point_size_must_be_8[sizeof(dScMgHanachan_c::Point) == 8 ? 1 : -1];
 typedef char
     dScMgHanachan_c_wiggler_size_must_be_0x98[sizeof(dScMgHanachan_c::Wiggler) == 0x98 ? 1 : -1];
 typedef char dScMgHanachan_c_size_must_be_0x4f68[sizeof(dScMgHanachan_c) == 0x4f68 ? 1 : -1];
