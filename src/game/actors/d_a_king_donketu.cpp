@@ -1286,6 +1286,10 @@ int daKing_Donketu_c::EnterTurnToSpawn() {
     return 1;
 }
 
+static inline int IsNoControl(daPly_c *player) {
+    return player->mIsNoControl != 0;
+}
+
 /* ..3360 update, the chase, in legs selected by mPhase. mNoGroundAhead being
    1 sends the boss to ..3390 first.
      leg 0  with mStateTimer at 0: mTargetAngle = the angle to the player. If
@@ -1384,18 +1388,10 @@ int daKing_Donketu_c::UpdateChase() {
         if (mPhase == 2) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                int t;
-                if (p->GetHurtState() == 4)
-                    goto hz;
-                if (p->GetHurtState() == 5)
-                    goto hz;
-                t = p->mIsNoControl ? 1 : 0;
-                if (t == 1) {
-                hz:
+                if (p->GetHurtState() == 4 || p->GetHurtState() == 5 || IsNoControl(p) == 1)
                     mTargetAngle = Vec3_HorzAngle(&mPos, &mSpawnPos);
-                } else {
+                else
                     mTargetAngle = HorzAngleToCPlayer();
-                }
             }
         }
         mHorzSpeed = 0;
