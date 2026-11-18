@@ -596,8 +596,7 @@ int daMky_c::func_ov030_02112578()
         }
         /* fallthrough */
     case 7: {
-        s32 *pp = &this->mCagePushProgress;
-        *pp = *pp + 0x400;
+        this->mCagePushProgress += 0x400;
         if (this->mCagePushProgress > 0x17ffd) {
             {
                 u8 *p = &this->mSubState;
@@ -1029,10 +1028,7 @@ int daMky_c::func_ov030_021136b0()
             if (this->mPlayerWasOwnCharacter != 0)
                 func_02012790(0xa);
         }
-        {
-            u8 *st = &this->mSubState;
-            (*st)++;
-        }
+        this->mSubState++;
         /* fall through */
     case 1: {
         s16 ang;
@@ -1065,10 +1061,7 @@ int daMky_c::func_ov030_021136b0()
             msgPos.y = this->mPos.y + 0x64000;
             if (this->mPlayer->ShowMessage(*this, msgArg, &msgPos, 0, 2) != 0) {
                 func_0201267c(0xd1, &this->mCamSpacePos);
-                {
-                    u8 *st = &this->mSubState;
-                    (*st)++;
-                }
+                this->mSubState++;
             }
         }
         break;
@@ -1082,10 +1075,7 @@ int daMky_c::func_ov030_021136b0()
             } else {
                 this->mPlayer->DropActor();
             }
-            {
-                u8 *st = &this->mSubState;
-                (*st)++;
-            }
+            this->mSubState++;
         }
         break;
     case 3: {
@@ -1119,10 +1109,7 @@ int daMky_c::func_ov030_021136b0()
             p->mIsVanish == 0 &&
             p->mHasWings == 0) {
             this->mSubState = 0;
-            {
-                u8 *f = &this->mHasSpawnedCap;
-                *f ^= 1;
-            }
+            this->mHasSpawnedCap ^= 1;
             break;
         }
         /* fall through */
