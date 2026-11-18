@@ -3,8 +3,6 @@
  * daWanwan_c -- Bob-omb Battlefield Chain Chomp. Seven links, the stump it
  * spawns (STUMP 0x1b, daObjPile_c) and the fence it finds
  * (CHAIN_CHOMP_FENCE 0x29, daObjWanwanShutter_c).
- *
- * common.h stays first so the shadow matrix copy stays twelve words.
  */
 /* leftovers: the rows of data_ov014_0211476c reach the twelve state members
  * through 8-byte PMF descriptors that stay ROM-supplied data; the table copies

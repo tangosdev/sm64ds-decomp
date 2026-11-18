@@ -2,9 +2,8 @@
 /* daOnms_c -- the rolling crush box (profile ONIMASU), ov092.
  *
  * defer_codegen off emits this file in source order, which is the ROM order.
- * The out-of-line destructor is the key function (D1 then D0). daOnms_c.h is
- * included first so common.h's flat Matrix4x3 stands; the matrix copies below
- * are twelve words, not .r/.t. The factory daOnms_c_classInit
+ * The out-of-line destructor is the key function (D1 then D0).
+ * The factory daOnms_c_classInit
  * (0x02132018..0x02132074, historical alias ToxBox_Spawn) now appends after
  * InitResources, at the end of source order: fBase_c::operator new(size_t)
  * forwards `return new daOnms_c();` to the same _ZN7fBase_cnwEm allocator the
@@ -496,7 +495,7 @@ void daOnms_c::CheckPlayerHit()
 }
 
 /* Copy the model matrix over the collider and put the actor position in
-   the translation row (flat Matrix4x3 words 9..11), then Transform. */
+   the translation row (words 9..11), then Transform. */
 void daOnms_c::func_ov092_02131a88() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPos.x;

@@ -965,7 +965,6 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN16dScMgSmartball_cD2Ev",
-        "_ZN5TVec2D1Ev",
         "_ZN19cMgSmartball_wing_cC2EP16dScMgSmartball_ci7Vector2",
         "_ZN25cMgSmartball_pushswitch_cC2EP16dScMgSmartball_ci7Vector2",
         "_ZN20cMgSmartball_board_cC2EP16dScMgSmartball_ci7Vector2",
@@ -997,7 +996,6 @@
         "_ZN21cMgSmartball_spring_cC2EP16dScMgSmartball_ci7Vector2",
         "_ZN24cMgSmartball_propeller_cC2EP16dScMgSmartball_ci7Vector2",
         "_ZN25cMgSmartball_pushswitch_cC2EP16dScMgSmartball_ci7Vector2",
-        "_ZN5TVec2D1Ev",
         "_ZN7Vector2C1Ev",
         "_ZN7Vector2D1Ev"
       ],
@@ -1307,11 +1305,6 @@
       "symbol": "_ZN16dScMgSmartball_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Compiler-generated base destructor accompanying the complete/deleting destructor pair. No configured ROM home or retained caller."
-    },
-    {
-      "symbol": "_ZN5TVec2D1Ev",
-      "disposition": "deadstrip",
-      "reason": "Empty local two-word pair destructor, emitted as an unreferenced vague function. No configured ROM home or retained relocation; exact reduction checks references."
     },
     {
       "symbol": "_ZN19cMgSmartball_wing_cC2EP16dScMgSmartball_ci7Vector2",

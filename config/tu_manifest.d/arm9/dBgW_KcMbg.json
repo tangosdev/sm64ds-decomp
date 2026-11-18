@@ -218,11 +218,6 @@
       "reason": "Vague-linkage copy of Vector3's empty destructor, instantiated by the members that hold Vector3 locals (DetectClsn, Transform's RawVector3 spellings dodge it; the typed query vectors do not). The cartridge keeps canonical copies at arm9:0x020072c0 and arm9:0x02011508; this one is discarded."
     },
     {
-      "symbol": "_ZN9Matrix4x3D1Ev",
-      "disposition": "deadstrip",
-      "reason": "Vague-linkage copy of Matrix4x3's empty destructor, dragged in by the members that keep Matrix4x3 locals. No canonical owner in the cartridge run -- discarded."
-    },
-    {
       "symbol": "_ZTV10dBgW_KcMbg",
       "disposition": "deadstrip-data",
       "reason": "Key function is the out-of-line destructor, so this TU emits the vtable. symbols.txt names the address point arm9:0x02099434; the emitted copy is licensed deadstrip-data against that canonical home."
@@ -268,12 +263,10 @@
     "functions_declared": 21,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev",
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN7Vector3D1Ev",
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         5,
@@ -284,11 +277,10 @@
         10,
         11,
         12,
-        13,
         14,
         15,
-        21,
-        30
+        16,
+        23
       ],
       "data": [
         "_ZTV10dBgW_KcMbg",
@@ -462,9 +454,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@308",
+      "from": "@306",
       "to": "@260",
-      "evidence": "the node's emitted number moves with this TU's named declarations (@253 when it was pinned, @242 now); ov015 daObjBkBillboard_c defines @253 as a global, so the pin is the unused @260; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); dropping the named-parameter func_02039db8 prototype for the LocalToWorldDirection member lowers it by 3 to @317 (measured from verify's EXTRA list); Re-keyed from @317 to @312 after the dBgW_Kc ITCM accessors became members (five named parameters in removed local externs; measured). Re-keyed from @312 to @311 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @312 to @264 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @312 to @311 after func_020398fc became dBgW_KcMbg::SetFilterByMoveDir (named-parameter forward declaration removed; measured). Re-keyed from @262 to @256 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @256 to @291 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @291 to @303 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @303 to @308 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "the node's emitted number moves with this TU's named declarations (@253 when it was pinned, @242 now); ov015 daObjBkBillboard_c defines @253 as a global, so the pin is the unused @260; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); dropping the named-parameter func_02039db8 prototype for the LocalToWorldDirection member lowers it by 3 to @317 (measured from verify's EXTRA list); Re-keyed from @317 to @312 after the dBgW_Kc ITCM accessors became members (five named parameters in removed local externs; measured). Re-keyed from @312 to @311 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @312 to @264 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @312 to @311 after func_020398fc became dBgW_KcMbg::SetFilterByMoveDir (named-parameter forward declaration removed; measured). Re-keyed from @262 to @256 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @256 to @291 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @291 to @303 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @303 to @308 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @308 to @306 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "relocations": [

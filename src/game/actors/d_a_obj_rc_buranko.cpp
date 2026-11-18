@@ -39,9 +39,6 @@
  *   handles; data_ov036_02112b68 is the CLPS block. This TU consumes them,
  *   overlay .bss/.data owns them.
  * What stays: g_profile_RC_BURANKO lives outside this TU (S14).
- * What stays: common.h first so UpdateModelMatrix's Matrix4x3 translation
- *   stores use the flat s32 m[12] spelling (math/Matrix.h nested form
- *   scalarises).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

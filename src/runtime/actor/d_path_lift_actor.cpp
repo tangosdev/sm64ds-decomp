@@ -364,7 +364,7 @@ void dPathLiftActor_c::RenderPathModels()
     int i = 0;
     dExtSimpleModel_c *model = mModels;
     do {
-        VecFx32 local = *(VecFx32 *)&data_ov002_0210af00;
+        VecFx32 local = data_ov002_0210af00;
         model->Render((Vector3 *)&local);
         i++;
         model++;
@@ -421,9 +421,9 @@ void dPathLiftActor_c::UpdatePathModels()
         }
         if (modelNode < (int)mPath.NumNodes() && modelNode >= 0) {
             mPath.GetNode(node, modelNode);
-            mModels[i].mat4x3.t.x = node.x >> 3;
-            mModels[i].mat4x3.t.y = node.y >> 3;
-            mModels[i].mat4x3.t.z = node.z >> 3;
+            mModels[i].mat4x3.m[9] = node.x >> 3;
+            mModels[i].mat4x3.m[10] = node.y >> 3;
+            mModels[i].mat4x3.m[11] = node.z >> 3;
         }
     }
 }
@@ -486,11 +486,11 @@ void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
     static_cast<dPathLiftActor_c *>(lift)->AfterClsn((int)rider);
 }
 
-/* The path-follow scale applied to the path models. Spelled as three s32s:
+/* The path-follow scale applied to the path models. The SDK's POD VecFx32:
  * the repo's Vector3 declares an empty destructor, and a real Vector3 global
  * would make __sinit register it with __register_global_object, growing the
  * initializer past its retail 0xa4. */
-s32 data_ov002_0210af00[3] = { 0x2000, 0x2000, 0x2000 };
+VecFx32 data_ov002_0210af00 = {0x2000, 0x2000, 0x2000};
 
 /* The state names sit in 8-byte slots ahead of the pointer-to-member
  * descriptors. */

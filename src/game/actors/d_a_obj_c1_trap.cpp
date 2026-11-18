@@ -12,17 +12,12 @@
  * then D0 pair without a D2 or a forcing helper.
  *
  * What stays, and why:
- * - VecFx32 POD locals; Vector3's empty destructor would add an
- *   unrelated helper to this TU
  * - InitResources adds to mAngle.y through a pointer local (plain
  *   `mAngle.y += 0x8000` CSE/size-DIFFs)
  * - data_ov010_02112d08 / 02112d00 are this file's resource handles;
  *   data_ov010_02112d28 is the state record the compiler copies into .bss;
  *   data_ov010_021122f8 is CLPS
- * - common.h first via dBgActor_c.h (Matrix4x3 copies in UpdateModel/Collision)
  * - func_ov010_02111984 three-argument C ABI collider adapter
- * - VecFx32 POD locals stay trivial; math/CalcLib.h's vector helpers operate
- *   on the same three-word buffers through their Vector3 pointer interface
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -37,9 +32,6 @@ enum d_a_obj_c1_trap_AssetId { ASSET_C1_TRAP_BMD = 0x05af, ASSET_C1_TRAP_KCL = 0
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
-
-/* The two copied position locals must stay POD. The shared Vector3 has an
- * empty destructor, which would add an unrelated compiler helper to this TU. */
 
 typedef void (daObjC1_Trap_c::*TrapState)();
 
@@ -92,10 +84,10 @@ void daObjC1_Trap_c::func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor
 void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     daObjC1_Trap_c *spawner;
     u32 spawnerID;
-    VecFx32 otherPos;
-    VecFx32 spawnerPos;
-    VecFx32 *otherPosition;
-    VecFx32 *spawnerPosition;
+    Vector3 otherPos;
+    Vector3 spawnerPos;
+    const Vector3 *otherPosition;
+    const Vector3 *spawnerPosition;
     s16 angle;
     s16 relativeAngle;
     s32 distance;
@@ -117,17 +109,17 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     if (!isPlayer)
         return;
 
-    otherPosition = (VecFx32 *)&other.mPos;
-    spawnerPosition = (VecFx32 *)&spawner->mPos;
+    otherPosition = &other.mPos;
+    spawnerPosition = &spawner->mPos;
     otherPos.x = otherPosition->x;
     otherPos.y = otherPosition->y;
     otherPos.z = otherPosition->z;
     spawnerPos.x = spawnerPosition->x;
     spawnerPos.y = spawnerPosition->y;
     spawnerPos.z = spawnerPosition->z;
-    angle = Vec3_HorzAngle((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
+    angle = Vec3_HorzAngle(&spawnerPos, &otherPos);
     relativeAngle = (angle + spawner->mAngle.y);
-    distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
+    distance = Vec3_HorzDist(&spawnerPos, &otherPos);
     projection = FX_SinIdx((u16)relativeAngle >> 4);
     projectedDistance = FX_MUL(distance, projection);
     if (projectedDistance < 0x10e000)

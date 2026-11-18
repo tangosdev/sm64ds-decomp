@@ -19,14 +19,6 @@
 // argument, while the real method is __thiscall with `this` in ECX, so these
 // have to be genuine forwarding functions. A /alternatename alias would link
 // and then corrupt the stack.
-//
-// common.h comes FIRST deliberately. It and math/Matrix.h share one include
-// guard for two spellings of Matrix4x3 (flat `s32 m[12]` versus structured
-// `Matrix3x3 r; Vector3 t;`), and whichever a TU sees first stands. dExtSimpleModel_c
-// embeds one, so a TU that saw the other spelling could disagree about
-// sizeof(dExtSimpleModel_c) -- and placement new here would construct against the wrong
-// layout. src/engine/model/d_ext_model.cpp orders its includes the same way, for
-// the same reason.
 #include "common.h"
 
 #include <new>

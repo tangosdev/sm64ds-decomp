@@ -56,9 +56,7 @@ struct daGmch_c : dActor_c {
        is above 1 and the static model when it is at or below 0x1f, so both
        draw for 2..0x1f and only the animated model draws above 0x1f.
        [_ZN8daGmch_c13InitResourcesEv, _ZN8daGmch_c6RenderEv, now in src/game/actors/d_a_gmch.cpp] */
-    /* UpdateState0 also reaches this offset as an `int *` through
-       ApproachLinear2, so the four bytes 0x3f0..0x3f3 are read and written as
-       one word there and as three separate bytes everywhere else.
+    /* UpdateState0 fades it with the byte stepper ApproachLinear2.
        [UpdateState0, Render, InitResources] */
     u8  mState;            /* 0x3f0 */
     /* The phase within a state: the two multi-phase states switch on it and

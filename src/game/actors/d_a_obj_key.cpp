@@ -19,7 +19,6 @@
  *   bosses call them by name.
  * - StateFlyToCenter / StateStarJump: mStateTimer is counted through a u16
  *   pointer; the ROM compares it unsigned.
- * - common.h's flat Matrix4x3 keeps the translation in m[9..11].
  * - The carry sparkle reads the first bone's word at +0xc; BMD_Bone does not
  *   name it.
  * - g_profile_OBJ_KEY / LAST_STAR stay outside this TU.

@@ -18,8 +18,7 @@
  * is on the water line). Water chase hands back to idle when it clears.
  * Patrol itself speeds up when a player is close; that is not a fifth state.
  *
- * common.h is included first so Matrix4x3 is the flat twelve words the two
- * matrix copies were matched under. defer_codegen is off, so the bodies are
+ * defer_codegen is off, so the bodies are
  * ROM-ascending. No optimization pragma: the file used to compile with
  * opt_strength_reduction off for the sake of func_ov090_02130f94 alone, whose
  * ripple loop carried a hand-reduced `idx += 3` accumulator. Written as the
@@ -169,6 +168,8 @@ void daMenbo_c::func_ov090_021310b4() {
         return;
     if ((p = dActor_c::FindWithID(mdCcAcPos_c.otherOwner)) == 0)
         return;
+    /* Measured (#821 r68): a plain `flags = mdCcAcPos_c.hitFlags` (int or u32
+       local, either declaration order) swaps r4/r5 through the function. */
     flags = (int)((long long)*(int *)&mdCcAcPos_c.hitFlags);
 
     if (flags & 0x2400) {
@@ -285,7 +286,7 @@ int daMenbo_c::func_ov090_021314a0() {
             w[0] = v[0];
             w[1] = v[1];
             w[2] = v[2];
-            this->mTargetAngleY = (u16)Vec3_HorzAngle(&this->mPos, (const Vector3 *)w);
+            this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, (const Vector3 *)w);
             this->mChaseLatch = 1;
             return 1;
         }
@@ -293,7 +294,7 @@ int daMenbo_c::func_ov090_021314a0() {
     if (this->mChaseLatch == 1) {
         this->mHorzSpeed = 0x9000;
         this->mChaseLatch = 0;
-        this->mTargetAngleY = (u16)Vec3_HorzAngle(&this->mPos, &this->mAnchorPos);
+        this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &this->mAnchorPos);
     }
     return 0;
 }
@@ -379,8 +380,8 @@ int daMenbo_c::func_ov090_02131648() {
         if (mProbeLatch == 0) {
             ha = Vec3_HorzAngle(&mPos, &mAnchorPos);
             sh = (rnd & 3) << 0xc;
-            mTargetAngleY = (u16)ha;
-            p39a = (s16 *)&mTargetAngleY;
+            mTargetAngleY = ha;
+            p39a = &mTargetAngleY;
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
             mPos.x = mPrevPos.x;
@@ -395,7 +396,7 @@ int daMenbo_c::func_ov090_02131648() {
     if (dist > 0x3c0000) {
         if (mFarLatch == 0 && mProbeLatch == 0) {
             ha = Vec3_HorzAngle(&mPos, &mAnchorPos);
-            mTargetAngleY = (u16)ha;
+            mTargetAngleY = ha;
             angleSet = 1;
             mPos.x = mPrevPos.x;
             mPos.y = mPrevPos.y;
@@ -410,8 +411,8 @@ int daMenbo_c::func_ov090_02131648() {
         if (mWallLatch == 0 && mFarLatch == 0 && mProbeLatch == 0) {
             ha = Vec3_HorzAngle(&mPos, &mAnchorPos);
             sh = (rnd & 3) << 0xc;
-            mTargetAngleY = (u16)ha;
-            p39a = (s16 *)&mTargetAngleY;
+            mTargetAngleY = ha;
+            p39a = &mTargetAngleY;
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
             mPos.x = mPrevPos.x;
@@ -425,7 +426,7 @@ int daMenbo_c::func_ov090_02131648() {
 
     if (mWanderTimer == 0 && mWallLatch == 0 && mFarLatch == 0 && mProbeLatch == 0) {
         mWanderTimer = (u16)((rnd + 50) & 0x3f);
-        p39a = (s16 *)&mTargetAngleY;
+        p39a = &mTargetAngleY;
         *p39a = *p39a + (0x1800 - ((rnd & 3) << 0xc));
     }
 
@@ -437,7 +438,7 @@ int daMenbo_c::func_ov090_02131648() {
         mAnimSpeed = 0x1000;
     }
 
-    ApproachLinear(mPrevAngle.y, (s16)mTargetAngleY, 0x500);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x500);
 
     if (mTurnTimer == 0 && mSpeedHoldTimer == 0) {
         mAnimSpeed = 0x1000;
@@ -505,10 +506,10 @@ int daMenbo_c::func_ov090_02131b94()
     unsigned int r;
     short *s;
     r = (unsigned)RandomIntInternal(&data_0209e650.value);
-    s = (short *)&mTargetAngleY;
+    s = &mTargetAngleY;
     *s = (*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650.value);
-    s = (short *)&mTargetAngleY;
+    s = &mTargetAngleY;
     *s = (*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650.value);
     mStateTimer = (short)(((r >> 8) & 0x1f) + 150);
@@ -529,8 +530,8 @@ int daMenbo_c::func_ov090_02131c48()
         func_02012694(0xfd, &mCamSpacePos);
 
     if (mTurnTimer == 0 && mWithMeshClsn.IsOnWall() &&
-        AngleDiff(mPrevAngle.y, (s16)mTargetAngleY) < 0x200) {
-        s16 *p = (s16 *)&mTargetAngleY;
+        AngleDiff(mPrevAngle.y, mTargetAngleY) < 0x200) {
+        s16 *p = &mTargetAngleY;
         *p = *p + 0x4000;
         mTurnTimer = 8;
     }
@@ -648,11 +649,11 @@ int daMenbo_c::Behavior()
             }
         }
         if (mDeathState != 1 && mPos.y <= mSurfaceY) {
-            VecFx32 v;
+            Vector3 v;
             v.x = mPos.x;
             v.y = mPos.y;
             v.z = mPos.z;
-            SpawnCoins(*(const Vector3 *)&v, mExtraCoinCount + 1, 0xa000, 0);
+            SpawnCoins(v, mExtraCoinCount + 1, 0xa000, 0);
             PoofDust();
             KillAndTrackInDeathTable();
         }
@@ -799,8 +800,8 @@ int daMenbo_c::InitResources()
         {
             r = RandomIntInternal(&data_0209e650.value);
             short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
-            *(short *)&mTargetAngleY = ang;
-            mPrevAngle.y = *(short *)&mTargetAngleY;
+            mTargetAngleY = ang;
+            mPrevAngle.y = mTargetAngleY;
             mAngle.y = mPrevAngle.y;
         }
         this->func_ov090_02131e00(data_ov090_021344e4);

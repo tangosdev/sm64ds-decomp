@@ -40,16 +40,12 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
 struct BCA_File;
 
-/* The one whole-matrix copy below goes through Mtx43. The translation-vector
-   spelling in math/Matrix.h lowers the same assignment to two ldm/stm pairs
-   plus three word copies; the cartridge has three pairs. */
 
 enum {
     kPlayerActorID        = 0xbf,
@@ -242,13 +238,13 @@ s32 daRedBombhei_c::CleanupResources()
 /* Places the model and drops the shadow under the body. */
 void daRedBombhei_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
-    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
-    this->mAnmModel.mat4x3.t.y = (this->mPos.y + 0x4000) >> 3;
-    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
-    *(Mtx43 *)&this->mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
-    this->mShadowMat.t.x = this->mPos.x >> 3;
-    this->mShadowMat.t.y = (this->mPos.y - 0x8000) >> 3;
-    this->mShadowMat.t.z = this->mPos.z >> 3;
+    this->mAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.m[10] = (this->mPos.y + 0x4000) >> 3;
+    this->mAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
+    this->mShadowMat = IDENTITY_MATRIX4X3;
+    this->mShadowMat.m[9] = this->mPos.x >> 3;
+    this->mShadowMat.m[10] = (this->mPos.y - 0x8000) >> 3;
+    this->mShadowMat.m[11] = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMat, 0x64000, 0x32000, 15);
 }
 

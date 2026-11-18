@@ -73,18 +73,16 @@ a single `s16` at 0x31e, in this class's tail padding, and its `Behavior` reads
 `this+0x31e` and reproduces. Ending at 0x324 satisfies `daKpa2Bg_c` and
 contradicts the other four.
 
-### `#include "common.h"` must come first — LOAD-BEARING
+### `Matrix4x3` is one flat array (formerly: `common.h` must come first)
 
-`Matrix4x3` has two guarded spellings that share the same 0x30 bytes: `common.h`'s
-flat `s32 m[12]`, and `math/Matrix.h`'s `{ Matrix3x3 r; Vector3 t; }`. Whichever a
-translation unit sees first stands. `dExtSimpleModel_c.h` pulls in the second one, so without
-the explicit `common.h` line ahead of it `dBgActor_c`'s TUs would get `.r`/`.t`.
-
-The ROM says it was the flat one here: `UpdateClsnPosAndRot` copies
-`mModel.mat4x3` into `mClsnMat` as three `ldm`/`stm` pairs of four registers —
-twelve flat words. The `{r, t}` spelling copies the two members separately, 9
-words then 3, and the function comes out 0x74 against the ROM's 0x64. Both were
-built.
+`Matrix4x3` used to have two guarded spellings over the same 0x30 bytes:
+`common.h`'s flat `s32 m[12]` and `math/Matrix.h`'s `{ Matrix3x3 r; Vector3 t; }`,
+whichever a translation unit saw first. The ROM says it was the flat one:
+`UpdateClsnPosAndRot` copies `mModel.mat4x3` into `mClsnMat` as three
+`ldm`/`stm` pairs of four registers, twelve flat words. The `{r, t}` spelling
+copies the two members separately, 9 words then 3, and the function comes out
+0x74 against the ROM's 0x64. Both were built. Since #821 `math/Matrix.h` holds
+the only definition, `fx32 m[12]`, and include order no longer matters.
 
 ### `virtual ~dBgActor_c() {}` is inline on purpose — LOAD-BEARING
 

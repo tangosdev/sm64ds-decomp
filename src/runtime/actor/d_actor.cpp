@@ -26,9 +26,6 @@
  *   _ZN8Vector3sD1Ev into its helper slot (0x02011508, four bytes) between C1
  *   and C2. The union and dBase_c destructors mwcc emits in the same slot have
  *   no ROM home and are deadstripped.
- *
- * common.h is included before any math/Matrix.h consumer, so Matrix4x3 is the
- * flat s32 m[12] spelling; UpdateCarry's twelve-word copies depend on that.
  */
 
 /* Includes are the union of the 91 legacy sources' (header-guarded). */

@@ -50,16 +50,12 @@
  * - func_ov074_0212087c and func_ov074_02121270 take the object as arg1 (out
  *   param in arg0), and func_ov074_0212007c/021201ec/021203e0 are (void)
  *   stubs whose data records don't carry `this`. Those five stay free.
- * - mBodyMatrix is raw s32 words reached through a Matrix4x3 cast; a
- *   Matrix4x3 member there would run ~Vector3 from ~daKuriKing_c.
- *   mShadowMatrices is left untyped with it [GUESS: same ~Vector3 cost].
+ * - mShadowMatrices is still s32 words reached through Matrix4x3 casts.
  * - State dispatch stays a pointer-to-member on a non-virtual stand-in:
  *   daKuriKing_c has virtuals, so its own member pointers are wider than the
  *   8-byte records the sinit copies in.
  */
 
-/* common.h BEFORE daKuriKing_c.h: with the structured Matrix4x3,
- * func_ov074_02121270/02121300 go long on whole-matrix assignment. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daKuriKing_c_AssetId {
     ASSET_KURIKING_ANGER_BCA = 0x038f,
@@ -176,7 +172,7 @@ extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;
-extern SharedFilePtr data_ov084_0213089c;
+extern BMA_File data_ov084_0213089c;
 extern KrbAnimationFileHandle data_ov084_02130cc8;
 extern KuriKingModelFilePtr gKurikingModelModelFile;
 extern KuriKingTexSeqFilePtr gKurikingAngerTextureSequenceFile;
@@ -1208,7 +1204,7 @@ void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) {
     v->x = 0;
     v->y = 0;
     v->z = 0;
-    data_020a0e68 = *(struct Matrix4x3 *)self->mBodyMatrix;
+    data_020a0e68 = self->mBodyMatrix;
     boneMat = self->mAnmModel.data.transforms + bone;
     MTX_Concat43(boneMat, &data_020a0e68, &data_020a0e68);
     v->x = data_020a0e68.m[9];
@@ -1224,7 +1220,7 @@ void daKuriKing_c::UpdateBodyMatrix() {
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->mScale.x, this->mScale.y, this->mScale.z);
-    *(struct Matrix4x3 *)this->mBodyMatrix = data_020a0e68;
+    this->mBodyMatrix = data_020a0e68;
 }
 
 /* Sizes the four collision cylinders from the current scale and places the
@@ -1347,6 +1343,9 @@ void daKuriKing_c::UpdateShadows() {
      * register, where the ROM copies through the this-based one); keeping m
      * as a Matrix4x3 * walk with the rest indexed grows it by 0x10 bytes. */
     mtx = IDENTITY_MATRIX4X3;
+    /* Kept (#821 r73): src as mCylClsnPos[i] is 10 words off (its induction
+       register ranks last), as a Vector3 * walk 3 (no 0x3ac displacement);
+       self as mShadowMatrices[i] grows the body to 0x16c. */
     self = (char *)this;
     src = (char *)this;
     m = (char *)mShadowMatrices;
@@ -1791,10 +1790,9 @@ int daKuriKing_c::InitVanishResources() {
     if (this->mShadowModels[0].InitCylinder() == 0)
         return 0;
 
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr,
-                               *(BMA_File *)&data_ov084_0213089c);
+    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr, data_ov084_0213089c);
 
-    this->mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
+    this->mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
     this->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc8.filePtr, 0, 0x1000, 0);
 

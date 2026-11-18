@@ -18,9 +18,6 @@
  *   against the ROM's 0x114, so the call stays.
  * - St_Wait_Main reads the closest player's position through the pointer
  *   &closest->mPos; copying mPos.x..mPos.z by name is one instruction short.
- * - mModel.mat4x3.t does not compile: common.h's flat Matrix4x3
- *   (s32 m[12]) is the one this TU sees, so the translation row is
- *   m[9], m[10] and m[11].
  * - data_ov071_02122ecc, data_ov071_021230d0 and data_ov071_021230d8 are
  *   defined at the end of this file so their dynamic init stays out of
  *   .text.

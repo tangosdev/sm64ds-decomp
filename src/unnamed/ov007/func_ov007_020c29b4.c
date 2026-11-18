@@ -11,12 +11,6 @@ void func_ov007_020c29b4(Ov007StrokePath *path) {
     path->xCoords = 0;
     path->yCoords = 0;
     path->pointStorage = 0;
-    /* The clear chains reload each slot unsigned (ldrh), as in
-     * func_ov007_020c26fc; reading the header's s16 directly emits ldrsh. */
-    path->minPointIndices[2] = 0;
-    path->minPointIndices[1] = *(u16 *)&path->minPointIndices[2];
-    path->minPointIndices[0] = *(u16 *)&path->minPointIndices[1];
-    path->maxPointIndices[2] = 0;
-    path->maxPointIndices[1] = *(u16 *)&path->maxPointIndices[2];
-    path->maxPointIndices[0] = *(u16 *)&path->maxPointIndices[1];
+    path->minPointIndices[0] = path->minPointIndices[1] = path->minPointIndices[2] = 0;
+    path->maxPointIndices[0] = path->maxPointIndices[1] = path->maxPointIndices[2] = 0;
 }

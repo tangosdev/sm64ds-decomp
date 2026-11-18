@@ -1033,6 +1033,9 @@ void dMeter_c::RenderLifeCount() {
  * The divisor table is volatile in the ROM's own spelling and stays that way --
  * it forces the 100/10/1 loads to be re-read per iteration instead of folded
  * into immediates, which is what makes this a loop at all.
+ * r63: a plain or const table keeps the divisor in a register across the
+ * division call, so the modulo's reload of data_ov002_0210c208[i] is lost
+ * (0x94 against 0x8c).
  */
 void dMeter_c::CalculateDigits(unsigned short value) {
     int flag = 0;

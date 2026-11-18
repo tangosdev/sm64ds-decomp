@@ -11,10 +11,6 @@
 
 /**
  * Jolly Roger Bay Bubba (`BAKUBAKU` 228).
- *
- * common.h is first so Matrix4x3 is the flat 12-word spelling. dExtSimpleModel_c.h's
- * nested { Matrix3x3 r; Vector3 t } scalarizes mShadowMat, and Vector3's
- * destructor would then run from this class's inline D1.
  */
 struct daBakubaku_c : dEnemyBase_c {
     /* The { enter, main } record the state machine runs; the five tables

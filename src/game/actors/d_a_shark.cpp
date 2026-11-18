@@ -6,10 +6,6 @@
  * within 0x258000 of the current node, turns toward that node, and moves
  * forward at 0x14000. The hurt cylinder cycles three lateral offsets.
  *
- * common.h FIRST. UpdateModelMatrix copies data_020a0e68 into
- * mAnmModel.mat4x3 as twelve words. common.h's flat s32 m[12] is that
- * copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} scalarizes it.
- *
  * #pragma defer_codegen off emits .text in source order. The out-of-line
  * destructor is the key function, so it emits D1 then D0. The factory
  * (daShark_c_classInit, 0x02133ca0..0x02133ce8, historical alias

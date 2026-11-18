@@ -3455,7 +3455,9 @@ extern "C" void SetPlayerGlobals(void) {
         InitControllerMode(i, mode);
         i++;
     } while (i < 4);
-    /* A signed byte here: decl_common.h types it unsigned for its other readers. */
+    /* A signed byte here: decl_common.h types it unsigned for its other readers.
+       Measured (#821 r68): declared signed char, dScStarSel_c's two stores
+       lose the `and #0xff` they share with data_02092128[0]. */
     *(s8 *)&data_02092114 = -1;
     data_0209f254 = 0;
 }
@@ -3662,7 +3664,7 @@ void dScStage_c::RenderModelTransparent() {
         }
     }
     dExtSimpleModel_c *model = &mModel;
-    model->Render((const Vector3 *)&data_020755d4);
+    model->Render(&data_020755d4);
 }
 
 void dScStage_c::RenderModel() {
@@ -3707,7 +3709,7 @@ void dScStage_c::RenderModel() {
     }
 
     dExtSimpleModel_c *model = &mModel;
-    model->Render((const Vector3 *)&data_020755d4);
+    model->Render(&data_020755d4);
 }
 
 /* Copy each material's texture/palette parameters from the level model's
@@ -3919,9 +3921,9 @@ int dScStage_c::Render() {
         if (skybox != 0) {
             Matrix4x3 *transform = &skybox->mat4x3;
             Vector3 *cameraPosition = &gCamera->pos;
-            transform->t.x = cameraPosition->x >> 3;
-            transform->t.y = cameraPosition->y >> 3;
-            transform->t.z = cameraPosition->z >> 3;
+            transform->m[9] = cameraPosition->x >> 3;
+            transform->m[10] = cameraPosition->y >> 3;
+            transform->m[11] = cameraPosition->z >> 3;
             mSkyboxModel->Render(0);
         }
     }

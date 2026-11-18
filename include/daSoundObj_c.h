@@ -23,7 +23,7 @@ struct daSoundObj_c : dActor_c {
     s32 mVolume;                 /* 0x0d8 -- PlaySub arg 2 */
     u16 mCounter;                /* 0x0dc */
     u16 mCounterLimit;           /* 0x0de */
-    u8  mLoop;                   /* 0x0e0 -- PlaySub arg 5 */
+    bool mLoop;                  /* 0x0e0 -- PlaySub arg 5 */
     u8  pad_0e1[0x3];
 
     /* INLINE: out of line, mwccarm emits D0 before D1 (the reverse of the

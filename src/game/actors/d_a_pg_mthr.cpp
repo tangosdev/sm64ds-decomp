@@ -3,7 +3,7 @@
  * - GetFloorResult and GetWallResult are not on the header.
  * - func_0201267c is Sound::Play(3, id, pos).
  * - data_ov018_* handles are constructed by the sinit. g_profile is
- *   not this TU. common.h stays first so the matrix copy stays flat.
+ *   not this TU.
  * - CheckFollow keeps the (int) actorID compare. UpdateModelAndShadow
  *   keeps the bone store. The follow state reloads mPlayer.
  *

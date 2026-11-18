@@ -502,11 +502,6 @@
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Compiler-emitted base-object destructor helper; the ROM carries D1/D0 for this chain only."
-    },
-    {
-      "symbol": "_ZN9Matrix4x3D1Ev",
-      "disposition": "deadstrip",
-      "reason": "Compiler-emitted trivial destructor for an inline value member; no configured ROM symbol."
     }
   ],
   "verification": {
@@ -522,15 +517,13 @@
         "_ZN16daObjDlPyramid_cD2Ev",
         "_ZN21daObjDlPyramidDummy_cD2Ev",
         "_ZN7Vector3D1Ev",
-        "_ZN10dBgActor_cD2Ev",
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN10dBgActor_cD2Ev"
       ],
       "deadstripped": [
         "_ZN10dBgActor_cD2Ev",
         "_ZN16daObjDlPyramid_cD2Ev",
         "_ZN21daObjDlPyramidDummy_cD2Ev",
-        "_ZN7Vector3D1Ev",
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         9,
@@ -540,7 +533,6 @@
         19,
         41,
         42,
-        43,
         48,
         49,
         50,
@@ -749,14 +741,14 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@707",
+      "from": "@682",
       "to": "@593",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @702 to @669 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @669 to @686 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @686 to @698 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @698 to @703 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @703 to @707 when daObjDlPyramid_c's home position became a Vector3 member (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @702 to @669 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @669 to @686 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @686 to @698 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @698 to @703 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @703 to @707 when daObjDlPyramid_c's home position became a Vector3 member (measured from the compiled object). Re-keyed from @707 to @682 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@708",
+      "from": "@683",
       "to": "@594",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @703 to @670 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @670 to @687 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @687 to @699 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @699 to @704 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @704 to @708 when daObjDlPyramid_c's home position became a Vector3 member (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @703 to @670 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @670 to @687 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @687 to @699 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @699 to @704 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @704 to @708 when daObjDlPyramid_c's home position became a Vector3 member (measured from the compiled object). Re-keyed from @708 to @683 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

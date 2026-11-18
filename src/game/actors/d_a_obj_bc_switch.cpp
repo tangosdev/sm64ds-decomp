@@ -93,8 +93,6 @@
  *   [8] 0x020f15cc  src/daObjBC_Switch_c_classInit.c
  */
 
-/* daObjBC_Switch_c.h FIRST: it pulls in dBgActor_c.h, which must reach
-   common.h ahead of dExtSimpleModel_c.h or the wrong Matrix4x3 spelling wins. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_bc_switch_AssetId {
     ASSET_B_COIN_SWITCH_BMD = 0x043c,
