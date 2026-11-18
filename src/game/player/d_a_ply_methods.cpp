@@ -3710,7 +3710,8 @@ ang = cstd::atan2(this->mWallNormal.x, this->mWallNormal.z);
 if (AngleDiff(ang, this->mPrevAngle.y) < 0x6000)
     return 0;
 if (this->func_ov002_020c200c(ang)) return 1;
-if (IsHoldingObject(this) || IsRidingShell(this)) return 0;
+if (IsHoldingObject(this) || IsRidingShell(this))
+    return 0;
 if (this->func_ov002_020c1c84(ang)) return 1;
 return this->func_ov002_020c1ad8(ang);
 }
@@ -4657,7 +4658,8 @@ int daPly_c::func_ov002_020c4188() {
 }
 
 void daPly_c::func_ov002_020c43c4(unsigned int idx) {
-    if (IsVsMode()) return;
+    if (IsVsMode())
+        return;
     switch (idx) {
     case 1:
         if (data_0209caa0.file.flags2 & 0x400)
@@ -4703,8 +4705,8 @@ int daPly_c::func_ov002_020c44c4() {
     int r4val;
 
     r4val = -1;
-    if (!IsVsMode() &&
-        ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning()))
+    if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
+                        IsCastleFallCutsceneRunning()))
         return 0;
 
     if (SaveData::CountStarsCollectedInLevel(SublevelToLevel(gCurrentSublevel)) != 0) {
@@ -4811,7 +4813,8 @@ int daPly_c::func_ov002_020c47f4() {
     a = ApproachAngle(&this->mAngle.y, (short)(Vec3_HorzAngle(&mStateTarget, &vec) + 0x8000), 4,
                       0x1000, 0x200);
     mHeadRotMode = 3;
-    if (r != 0 && a == 0) return 1;
+    if (r != 0 && a == 0)
+        return 1;
     return 0;
 }
 
@@ -8371,7 +8374,8 @@ int daPly_c::func_ov002_020cbea8() {
     o = (daPly_c *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
     if (o == 0 || o == this)
         return 0;
-    if (!IsPlayerActor(o)) return 0;
+    if (!IsPlayerActor(o))
+        return 0;
     if (mClimbClsn == 0 || o->mClimbClsn == 0)
         return 0;
     if (func_ov002_020cc01c() != 0 || o->func_ov002_020cc01c() != 0)
@@ -11148,8 +11152,8 @@ int daPly_c::St_Wait_Cleanup() {
     void *r4 = gCamera;
     ((dCamera_c *)r4)->mFlags &= ~0x2000;
     mSleepStage = 0;
-    if (!IsVsMode() &&
-        ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning())) {
+    if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
+                        IsCastleFallCutsceneRunning())) {
         if (mAnimScriptId == 0xf)
             mRootMotionMode = 0;
         mAnimScriptId = 0;
@@ -11193,8 +11197,8 @@ int daPly_c::St_Wait_Main() {
             }
         }
         case 0: {
-            if (!IsVsMode() &&
-                (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) || IsCastleFallCutsceneRunning()))
+            if (!IsVsMode() && (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
+                                IsCastleFallCutsceneRunning()))
                 func_ov002_020bcdf0(this);
             else if (func_ov002_020d2fdc() != 0)
                 break;
@@ -11312,8 +11316,8 @@ int daPly_c::St_Wait_Main() {
                 mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(1)) {
                 Sound::PlayCharVoice(mCharacter, 0x2a, mCamSpacePos);
             }
-            if (!IsVsMode() &&
-                ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning()))
+            if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
+                                IsCastleFallCutsceneRunning()))
                 break;
             if (mStateTimer == 0) {
                 Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
@@ -11370,8 +11374,8 @@ int daPly_c::St_Wait_Main() {
                 }
             }
             {
-                if (!IsVsMode() &&
-                    ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning()))
+                if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
+                                    IsCastleFallCutsceneRunning()))
                     break;
                 if (func_ov002_020d2da0() == 1 || mSleepBubbleScale.x >= 0x3000 ||
                     mIsInShallowWater != 0 || (unsigned short)(mStateFlags & 4)) {
@@ -11569,8 +11573,8 @@ int daPly_c::func_ov002_020d2fdc() {
 
 int daPly_c::St_Wait_Init() {
     mStatePhase = 0;
-    if (!IsVsMode() &&
-        ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning())) {
+    if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
+                        IsCastleFallCutsceneRunning())) {
         this->SetAnim(0xb3, 0, 0x1000, 0);
         mStateStep = 0;
         return 1;
@@ -11754,7 +11758,8 @@ int daPly_c::St_Walk_Main() {
         }
     } else if (mHorzSpeed == 0 &&
                (data_0209f498[gActivePlayerSlot].mag <
-                    ((data_0209f498[gActivePlayerSlot].mode != 2) ? 0x471 : 0x555) - (mIsWalkPace << 7) ||
+                    ((data_0209f498[gActivePlayerSlot].mode != 2) ? 0x471 : 0x555) -
+                        (mIsWalkPace << 7) ||
                 (u16)(mStateFlags & 0xc) != 0)) {
         if (mIsMega != 0) {
             if (this->FinishedAnim() && this->IsAnim(0x9d)) {
@@ -12000,8 +12005,8 @@ int daPly_c::St_Walk_Init() {
     }
 
     if (data_0209f498[gActivePlayerSlot].mag == 0) {
-        if (IsVsMode() ||
-            ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning())) {
+        if (IsVsMode() || ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
+                           !IsCastleFallCutsceneRunning())) {
             if (mIsMega != 0) {
                 this->SetAnim(0xa0, 0, 0x1000, 0);
             } else {
@@ -12167,8 +12172,8 @@ void daPly_c::func_ov002_020d4748() {
             thr = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x955 : 0xaaa;
             if (data_0209f498[gActivePlayerSlot].mag > thr)
                 this->mStateStep = 0;
-            if (!IsVsMode() &&
-                (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) || IsCastleFallCutsceneRunning()))
+            if (!IsVsMode() && (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
+                                IsCastleFallCutsceneRunning()))
                 this->mStateStep = 0;
         } else {
             this->mStateStep = 0;
@@ -12994,7 +12999,8 @@ int daPly_c::St_Swallow_Main() {
                 if (((dActor_c *)q)->OnYoshiTryEat() != 1 &&
                     (unsigned short)(mStateFlags & 0x1000) == 0) {
                     unsigned char flag = 0;
-                    if (IsActorID(mObjInMouth, 0xc2) || *(int *)((char *)data_0209ee90 + 0x238) != 0) {
+                    if (IsActorID(mObjInMouth, 0xc2) ||
+                        *(int *)((char *)data_0209ee90 + 0x238) != 0) {
                         flag |= 1;
                     }
                     mEggParams |= (flag + 1);
@@ -14318,7 +14324,8 @@ int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
     }
 
     {
-        if (IsVsMode()) return 0;
+        if (IsVsMode())
+            return 0;
     }
 
     if (*(int*)(data_0209ee90 + 0x248) == 0) {
@@ -15046,7 +15053,8 @@ int daPly_c::DropActor() {
 
 int daPly_c::func_ov002_020da95c() {
     dActor_c *p = mHeldObj;
-    if (!IsHoldingObject(this)) return 0;
+    if (!IsHoldingObject(this))
+        return 0;
     p->mFlags &= ~0x800;
     mHeldObj->mFlags &= ~0x4000;
     mHeldObj->mFlags |= 0x1000;
@@ -15090,7 +15098,8 @@ int daPly_c::func_ov002_020daa74() {
 
 int daPly_c::ReleaseHeldActor() {
     dActor_c *p = mHeldObj;
-    if (!IsHoldingObject(this)) return 0;
+    if (!IsHoldingObject(this))
+        return 0;
     if (IsPlayerActor(p)) {
         func_ov002_020db54c(p, 0x10000, 0x10000, mAngle.y);
     }
@@ -15111,7 +15120,8 @@ int daPly_c::ReleaseHeldActor() {
 
 int daPly_c::TryGrab(dActor_c &actor_) {
     dActor_c *actor = &actor_;
-    if (IsHoldingObject(this)) return 0;
+    if (IsHoldingObject(this))
+        return 0;
     if ((actor->mFlags & 0x80) == 0) return 0;
     if ((IsState(data_ov002_02110574) && mPunchKickStep != 2) || IsState(data_ov002_0211067c)) {
         func_ov002_020dacb4(actor);
@@ -15161,7 +15171,8 @@ int daPly_c::func_ov002_020dacb4(dActor_c *actor) {
         if (IsFlagSet(a2, 0x8000)) {
             offset = 0x224;
             if (param1 == 2) {
-                if (IsActorID(a2, 0xce)) offset = 0xc4;
+                if (IsActorID(a2, 0xce))
+                    offset = 0xc4;
             }
         }
         {
@@ -18944,12 +18955,10 @@ int daPly_c::ChangeState(daPly_c::State &state) {
         return 0;
     }
 
-    {
-        if (IsHoldingObject(this)) {
+    if (IsHoldingObject(this)) {
         if (newState == &data_ov002_0211013c) {
             mStateStep = 1;
             newState = &data_ov002_02110364;
-        }
         }
     }
 
@@ -19409,8 +19418,10 @@ int daPly_c::func_ov002_020e3f90() {
     data_020a0e68 = *mGrabbedByActor->mCarryMatrix;
     p = (daPly_c *)mGrabbedByActor;
     if (IsPlayerActor(p)) {
-        if (!IsHoldingObject(p)) return 0;
-        if (!IsFlagSet(this, 0x4000)) return 0;
+        if (!IsHoldingObject(p))
+            return 0;
+        if (!IsFlagSet(this, 0x4000))
+            return 0;
         if ((unsigned int)(((int)p->mCharFileBase >> 2) - 0x6c) <= 1) {
             tgt.x = -0x3000;
             tgt.y = -0x1000;
@@ -20252,16 +20263,15 @@ void daPly_c::func_ov002_020e5948() {
 
     if (!IsVsMode()) {
         mModels.mSleepBubbleModel = new dExtSimpleModel_c;
-        mModels.mSleepBubbleModel->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1,
-                                           -1);
+        mModels.mSleepBubbleModel->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1, -1);
 
         if (gCurrentSublevel != 2 && gCurrentSublevel != 5 && gCurrentSublevel != 4) {
             mLoadedResourceFlags |= 0x20;
             mModels.mBodyModels[4] = new dExtAnm2Model_c;
             mModels.mBodyModels[4]->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1,
                                             -1);
-            mModels.mBodyModels[4]->Func_020162C4(
-                (BCA_File *)data_ov002_020ff480[0xC6]->filePtr, 0, 0x1000, 0);
+            mModels.mBodyModels[4]->Func_020162C4((BCA_File *)data_ov002_020ff480[0xC6]->filePtr, 0,
+                                                  0x1000, 0);
             mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8), 1, 1);
             mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0, 0x1000, 0);
             mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
