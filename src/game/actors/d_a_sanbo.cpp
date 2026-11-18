@@ -691,8 +691,8 @@ int daSanbo_c::CalcShyAwayAngle(int x) {
         return 0;
     int rate = FX_Div(0x4000, 0xc8000);
     int drop = FX_MUL(rate, x);
-    int r = 0x8000 - drop;
-    return (short)r;
+    s16 r = 0x8000 - drop;
+    return r;
 }
 
 void daSanbo_c::PoofAndDestroy() {

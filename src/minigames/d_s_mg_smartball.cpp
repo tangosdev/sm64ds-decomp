@@ -3543,10 +3543,10 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 continue;
             }
             {
-                int rnd1 = RandomIntInternal(&data_0209d4b8.value);
-                int rnd2 = RandomIntInternal(&data_0209d4b8.value);
-                int angB = ((((unsigned int)rnd2 >> 16) & 0x7fff) * 0x8000) >> 16;
-                int angA = ((((unsigned int)rnd1 >> 16) & 0x7fff) * 0x20000) >> 16;
+                u32 rnd1 = RandomIntInternal(&data_0209d4b8.value);
+                u32 rnd2 = RandomIntInternal(&data_0209d4b8.value);
+                int angB = (((rnd2 >> 16) & 0x7fff) * 0x8000) >> 16;
+                int angA = (((rnd1 >> 16) & 0x7fff) * 0x20000) >> 16;
                 s16 sinB = FX_SinCosTable_[(angB >> 4) * 2 + 1];
                 s16 sinA = FX_SinCosTable_[(angA >> 4) * 2 + 1];
                 s16 cosA;

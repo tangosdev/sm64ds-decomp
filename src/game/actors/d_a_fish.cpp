@@ -220,24 +220,24 @@ void daFish_c::StateWaitForPlayer() {
     }
 
     for (i = 0; i < n; i++) {
-        int r;
+        u32 r;
         if (this->mVariant != 0) {
             r = RandomIntInternal(&data_0209e650.value);
-            pos.x = this->mPos.x + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.x = this->mPos.x + ((r % 0x140) - 0xa0) * 0x1000;
             r = RandomIntInternal(&data_0209e650.value);
-            pos.z = this->mPos.z + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.z = this->mPos.z + ((r % 0x140) - 0xa0) * 0x1000;
         } else {
             r = RandomIntInternal(&data_0209e650.value);
-            pos.x = this->mPos.x + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.x = this->mPos.x + ((r % 0x2bc) - 0x15e) * 0x1000;
             r = RandomIntInternal(&data_0209e650.value);
-            pos.z = this->mPos.z + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.z = this->mPos.z + ((r % 0x2bc) - 0x15e) * 0x1000;
         }
 
         r = RandomIntInternal(&data_0209e650.value);
-        pos.y = (this->mSurfaceY - 0x64000) - (((unsigned)r >> 11 & 0xfff) * 0xc8);
+        pos.y = (this->mSurfaceY - 0x64000) - ((r >> 11 & 0xfff) * 0xc8);
 
         r = RandomIntInternal(&data_0209e650.value);
-        rot.y = rot.y + (s16)((unsigned)r >> 16);
+        rot.y = rot.y + (s16)(r >> 16);
 
         {
             dActor_c *fish = dActor_c::Spawn(kFishActorID, kind, pos, &rot, this->mAreaId, -1);

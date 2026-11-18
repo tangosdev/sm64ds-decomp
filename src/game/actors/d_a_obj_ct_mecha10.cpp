@@ -170,17 +170,17 @@ int daObjCtMecha10_c::Behavior() {
         u8 setting = data_0209f2c0;
         mStepTimer = data_ov035_02111ef4[mRotationState][setting];
         if (setting == CLOCK_SETTING_RANDOM) {
-            int rnd = RandomIntInternal(&data_0209e650.value);
+            u32 rnd = RandomIntInternal(&data_0209e650.value);
             if (DecIfAbove0_Short(&mDirTimer) == 0) {
-                if ((unsigned int)rnd % 3 != 0) {
+                if (rnd % 3 != 0) {
                     mAngleYStep = data_ov035_02111ef0[mRotationState];
                     mDirTimer = (rnd & 3) * 60 + 90;
                 } else {
                     mAngleYStep = -data_ov035_02111ef0[mRotationState];
-                    mDirTimer = (((unsigned int)rnd % 3) + 1) * 30;
+                    mDirTimer = ((rnd % 3) + 1) * 30;
                 }
             }
-            mStepTimer = ((unsigned int)rnd % 3) * 20 + 10;
+            mStepTimer = (rnd % 3) * 20 + 10;
         }
     }
 

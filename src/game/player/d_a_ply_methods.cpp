@@ -2348,7 +2348,7 @@ int daPly_c::IsAnim(unsigned int a) {
 void daPly_c::SetAnim(u32 animId, int flags, fx32 speed, u16 startFrame) {
     u32 capChar;
     SharedFilePtr *capFile;
-    u32 texIdx;
+    s32 texIdx;
     int character;
     u32 fileBase;
     int texFlags;
@@ -2390,11 +2390,11 @@ void daPly_c::SetAnim(u32 animId, int flags, fx32 speed, u16 startFrame) {
         startFrame);
 
     character = param1;
-    if ((int)texIdx >= 0x60)
+    if (texIdx >= 0x60)
         texIdx = 0x60;
     texIdx += character & 3;
     texFlags = 0;
-    if (((int)texIdx >> 2) == 1)
+    if ((texIdx >> 2) == 1)
         texFlags = 0x40000000;
     mModels.mTexSeqBody[character].SetFile(*(BTP_File *)data_ov002_020ff2f0[texIdx]->filePtr,
                                            texFlags, 0x1000, 0);
@@ -2470,14 +2470,14 @@ int daPly_c::func_ov002_020bf27c(int value) {
 
 void daPly_c::SetVertSpeedByCharFactor(fx32 speed) {
     void *c = this;
-    unsigned int factor = data_ov002_020ff140[param1];
-    this->mSpeed.y = FX_MUL(speed, (int)factor);
+    fx32 factor = data_ov002_020ff140[param1];
+    this->mSpeed.y = FX_MUL(speed, factor);
 }
 
 fx32 daPly_c::ScaleByCharFactor(fx32 a) {
     int idx = param1 & 0xff;
-    unsigned int t = data_ov002_020ff170[idx];
-    return FX_MUL(a, (int)t);
+    fx32 t = data_ov002_020ff170[idx];
+    return FX_MUL(a, t);
 }
 
 /* Add delta to *p and clamp it to [-limit, limit]. Does not read the player. */
@@ -2843,7 +2843,7 @@ int daPly_c::func_ov002_020c0108(int p1) {
         s32 s;
         s32 iX, iY;
         s32 w;
-        int idx;
+        u32 idx;
         int numNodes;
         int i;
         int aH, aV;
@@ -2858,7 +2858,7 @@ int daPly_c::func_ov002_020c0108(int p1) {
         }
 
         idx = path.GetUnk004() & 0xff;
-        if ((u32)idx >= 4)
+        if (idx >= 4)
             idx = 1;
 
         aH = Vec3_HorzAngle(&nodes[0], &nodes[1]);
@@ -9084,7 +9084,7 @@ int daPly_c::St_Swim_Main() {
     unsigned short a4;
     int strokeStep;
     int targetSpeed;
-    unsigned int t5;
+    s32 t5;
 
     if (mIsMetal != 0) {
         this->ChangeState(data_ov002_021106ac);
@@ -9270,7 +9270,7 @@ int daPly_c::St_Swim_Main() {
                 *mModels.mBodyModels[this->GetBodyModelID((unsigned char)param1, 0)];
             t5 = ((unsigned int)anim.currFrame << 4) >> 0x10;
         }
-        if ((int)t5 >= 5 && (int)t5 <= 7) {
+        if (t5 >= 5 && t5 <= 7) {
             mAttackClsn.Update();
         }
         break;
@@ -9633,8 +9633,8 @@ int daPly_c::UpdateSwimHealth() {
 }
 
 fx32 daPly_c::func_ov002_020cedb0(fx32 a) {
-    unsigned int t = data_ov002_020ff158[param1];
-    return FX_MUL(a, (int)t);
+    fx32 t = data_ov002_020ff158[param1];
+    return FX_MUL(a, t);
 }
 
 int daPly_c::func_ov002_020cede0() {
@@ -11872,7 +11872,7 @@ int daPly_c::UpdateWalkingSpeed() {
                     }
                 }
                 {
-                    int offsetY = -((30 - ((int)h)) << 12);
+                    int offsetY = -((30 - h) << 12);
                     offsetY = offsetY * 2;
                     mModelOffsetY = offsetY;
                 }
@@ -13364,7 +13364,7 @@ void daPly_c::func_ov002_020d71ec(int animIdx) {
     extern struct P2 data_ov002_0210eb88;
     P2 slot[2];
     u32 shifted;
-    int val;
+    u32 val;
 
     if (animIdx != 2) {
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
@@ -13382,7 +13382,7 @@ void daPly_c::func_ov002_020d71ec(int animIdx) {
         if (animIdx == 1) {
             val = data_ov002_020ff0f8[shifted];
             dExtFrameCtrl_c &body = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
-            val = ((u32)val << 0x10) >> 4;
+            val = (val << 0x10) >> 4;
             body.currFrame = val;
             ((dExtAnmModel_c *)mModels.mHeadModels[3])->currFrame = val;
         }
@@ -13468,9 +13468,9 @@ int daPly_c::St_YoshiPower_Main() {
     switch (mStateStep) {
     case 0: {
         if (mStateArg == 0) {
-            int t4 = (((dExtAnmModel_c *)mModels.mHeadModels[3])->currFrame >> 0xc) << 0x10;
+            u32 t4 = (((dExtAnmModel_c *)mModels.mHeadModels[3])->currFrame >> 0xc) << 0x10;
             dExtFrameCtrl_c &anim0 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
-            anim0.currFrame = (unsigned int)t4 >> 4;
+            anim0.currFrame = t4 >> 4;
             mStateArg = 1;
         }
         if (this->func_ov002_020d6998() != 0) {
@@ -16401,7 +16401,7 @@ void daPly_c::func_ov002_020dd5ec() {
     extern u16 data_0209f49c[];
     extern int data_ov002_0210e160;
     int model;
-    int r;
+    u32 r;
     int idx;
     if (data_0209f498[gActivePlayerSlot].held & 2) {
         mPunchKickStep = 2;
@@ -16427,7 +16427,7 @@ void daPly_c::func_ov002_020dd5ec() {
     idx = mPunchKickStep;
     if (idx != 2) {
         r = RandomIntInternal(&data_ov002_0210e160);
-        idx = (idx + (((unsigned int)r) >> 4)) & 1;
+        idx = (idx + (r >> 4)) & 1;
     }
     Sound::PlayCharVoice(mCharacter, data_ov002_020ff194[idx], mCamSpacePos);
     if ((mIsMega) != 0) {

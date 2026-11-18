@@ -91,7 +91,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
     int pfx0;
     int pfx1;
     int lim;
-    int e8;
+    u32 e8;
     int j;
     int state;
     int flags;
@@ -104,7 +104,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
     int exp;
     int len;
     int act;
-    int cls;
+    u32 cls;
     int *ip;
     u64 r;
     int cc;
@@ -457,7 +457,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
                     conv = 8;
             }
             cls = conv - 11;
-            if ((unsigned int)cls <= 1)
+            if (cls <= 1)
                 isg = 1;
             else
                 isg = 0;
@@ -465,7 +465,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
                 prec = 6;
             if (prec > 58)
                 prec = 58;
-            if ((unsigned int)cls <= 1) {
+            if (cls <= 1) {
                 if (exp < -4 || exp >= prec) {
                     conv = (conv == 11) ? 8 : 9;
                 } else {
@@ -479,13 +479,13 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
                 nfrac -= (conv == 10) ? exp + 1 : 1;
             }
             e8 = conv - 8;
-            if ((unsigned)e8 <= 1)
+            if (e8 <= 1)
                 d = v;
             r = 0x4014000000000000ULL;
             for (fi = 0; fi <= nfrac; fi++)
                 r = func_0206bdb4(r, 1);
             d = func_0206c51c(d, r);
-            if ((unsigned)e8 <= 1) {
+            if (e8 <= 1) {
                 if (isg == 0 || exp != 0) {
                     if (exp >= 0) {
                         epos = 1;

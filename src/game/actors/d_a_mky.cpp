@@ -805,8 +805,8 @@ int daMky_c::func_ov030_02113094()
         break;
     }
     case 1: {
-        int msg = (this->mHasSpawnedCap != 0) ? 0xc2 : 0xc3;
-        if (this->mPlayer->ShowMessage(*this, (s16)msg, 0, 0, 0) != 0) {
+        s16 msg = (this->mHasSpawnedCap != 0) ? 0xc2 : 0xc3;
+        if (this->mPlayer->ShowMessage(*this, msg, 0, 0, 0) != 0) {
             func_0201267c(0xd1, &this->mCamSpacePos);
             this->mSubState++;
         }

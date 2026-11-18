@@ -166,10 +166,10 @@ void dEnemyBase_c::SpawnCoin()
             dActor_c *coin =
                 dActor_c::Spawn(data_ov002_020ff014[mCoinType - 1], 0xf2, v, 0, mAreaId, -1);
             if (coin != 0) {
-                int rnd1 = RandomIntInternal(&data_0209e650.value);
-                int rnd2 = RandomIntInternal(&data_0209e650.value);
-                int a = (int)((u32)rnd1 >> 16 << 27) >> 16;
-                u32 b = (u32)rnd2 >> 16;
+                u32 rnd1 = RandomIntInternal(&data_0209e650.value);
+                u32 rnd2 = RandomIntInternal(&data_0209e650.value);
+                int a = (int)(rnd1 >> 16 << 27) >> 16;
+                u32 b = rnd2 >> 16;
                 coin->mPrevAngle.x = 0;
                 coin->mPrevAngle.y = (s16)(a * i);
                 coin->mPrevAngle.z = 0;

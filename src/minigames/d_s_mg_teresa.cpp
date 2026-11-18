@@ -933,8 +933,8 @@ void dScMgTeresa_c::BigBoo_StateHover(int i) {
     {
         /* The draw lands in its own int: through MG_RAND the pick colours
            differently (5 words). */
-        int rnd = RandomIntInternal(&data_0209d4b8.value);
-        mBigBoo[i].state = sTeresaBigBooHoverPicks[((((u32)rnd >> 16) & 0x7fff) * 2) >> 15];
+        u32 rnd = RandomIntInternal(&data_0209d4b8.value);
+        mBigBoo[i].state = sTeresaBigBooHoverPicks[(((rnd >> 16) & 0x7fff) * 2) >> 15];
     }
     mBigBoo[i].frameTimer = 0;
     mBigBoo[i].frame = 0;

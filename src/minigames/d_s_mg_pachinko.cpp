@@ -1006,8 +1006,8 @@ void dScMgPachinko_c::Pipe_StateRise(int i) {
 /* Rolls a random kind for pipe n from sPachinkoPipeKinds and resets it to
    rise (or, for kind 2, sink). */
 void dScMgPachinko_c::Pipe_StatePick(int n) {
-    int rnd = RandomIntInternal(&data_0209d4b8.value);
-    int kind = sPachinkoPipeKinds[((((unsigned)rnd >> 16) & 0x7fff) * 2) >> 15];
+    u32 rnd = RandomIntInternal(&data_0209d4b8.value);
+    int kind = sPachinkoPipeKinds[(((rnd >> 16) & 0x7fff) * 2) >> 15];
     mPipe[n].state = kind;
     mPipe[n].phase = 0;
     if (mPipe[n].state == 2) {
@@ -1572,15 +1572,15 @@ void dScMgPachinko_c::SpawnWave() {
     }
     mWaveTimer = 80;
     for (i = 0; i < BALL_NUM; i++) {
-        int ra;
-        int rb;
+        u32 ra;
+        u32 rb;
         if (mBall[i].active != 0)
             continue;
         mBall[i].active = 1;
         ra = RandomIntInternal(&data_0209d4b8.value);
         rb = RandomIntInternal(&data_0209d4b8.value);
-        mBall[i].x = (sPachinkoWaveColumnX[(((u32)rb >> 16) & 0x7fff) * 5 >> 15] +
-                      ((((u32)ra >> 16) & 0x7fff) * 4 >> 15) * 8)
+        mBall[i].x = (sPachinkoWaveColumnX[((rb >> 16) & 0x7fff) * 5 >> 15] +
+                      (((ra >> 16) & 0x7fff) * 4 >> 15) * 8)
                      << 12;
         mBall[i].y = -0x100000;
         mBall[i].velX = 0;
@@ -1588,7 +1588,7 @@ void dScMgPachinko_c::SpawnWave() {
         mBall[i].state = 0;
         mBall[i].started = 0;
         ra = RandomIntInternal(&data_0209d4b8.value);
-        mBall[i].timer = ((((u32)ra >> 16) & 0x7fff) * 8 >> 15) << 4;
+        mBall[i].timer = (((ra >> 16) & 0x7fff) * 8 >> 15) << 4;
         mBall[i].rotation = 0;
         mBall[i].sound = 0;
         mBall[i].level = mWaveLevel;

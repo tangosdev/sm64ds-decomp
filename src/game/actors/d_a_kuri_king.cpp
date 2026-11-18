@@ -824,7 +824,7 @@ int daKuriKing_c::AdvanceMaterialChanger() {
     unsigned short tbl = data_ov074_02122e04[idx];
     unsigned int v = (val << 4) >> 0x10;
     if (v >= tbl) {
-        this->mMaterialChanger.currFrame = (unsigned int)tbl << 0xc;
+        this->mMaterialChanger.currFrame = tbl << 0xc;
         return 1;
     }
     return 0;

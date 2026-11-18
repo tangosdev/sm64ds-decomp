@@ -1088,7 +1088,7 @@ void dScMgLuigi_c::CheckTouch() {
 void dScMgLuigi_c::PlaceBoardLayout() {
     extern u8 sLuigiBoardModes[];
     int layout;
-    int randomValue;
+    u32 randomValue;
     int i;
 
     layout = sLuigiBoardModes[mBoard];
@@ -1099,9 +1099,9 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int firstCharacter;
         pictureIndex = 0;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        firstCharacter = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+        firstCharacter = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        mTarget = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+        mTarget = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
         for (i = 0; i < 2; i++) {
             for (column = 0; column < 2; column++) {
                 mPosX[pictureIndex] = (0x70 + column * 0x20) << 12;
@@ -1120,7 +1120,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int column;
         pictureIndex = 0;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 16 >> 15) + 1;
+        mTarget = (((randomValue >> 16) & 0x7fff) * 16 >> 15) + 1;
         for (i = 0; i < 4; i++) {
             for (column = 0; column < 4; column++) {
                 u8 characterOffset;
@@ -1129,10 +1129,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
                 mActive[pictureIndex] = 1;
                 mKind[pictureIndex] = PICTURE_RESTART;
                 randomValue = RandomIntInternal(&data_0209d4b8.value);
-                mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+                mCharacter[pictureIndex] = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
                 if (mWanted == mCharacter[pictureIndex]) {
                     randomValue = RandomIntInternal(&data_0209d4b8.value);
-                    characterOffset = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
+                    characterOffset = ((randomValue >> 16) & 0x7fff) * 3 >> 15;
                     mCharacter[pictureIndex] += characterOffset + 1;
                     mCharacter[pictureIndex] &= 3;
                 }
@@ -1147,7 +1147,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int column;
         pictureIndex = 0;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 0x30 >> 15) + 1;
+        mTarget = (((randomValue >> 16) & 0x7fff) * 0x30 >> 15) + 1;
         for (i = 0; i < 6; i++) {
             for (column = 0; column < 8; column++) {
                 u8 characterOffset;
@@ -1156,10 +1156,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
                 mActive[pictureIndex] = 1;
                 mKind[pictureIndex] = PICTURE_RESTART;
                 randomValue = RandomIntInternal(&data_0209d4b8.value);
-                mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+                mCharacter[pictureIndex] = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
                 if (mWanted == mCharacter[pictureIndex]) {
                     randomValue = RandomIntInternal(&data_0209d4b8.value);
-                    characterOffset = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
+                    characterOffset = ((randomValue >> 16) & 0x7fff) * 3 >> 15;
                     mCharacter[pictureIndex] += characterOffset + 1;
                     mCharacter[pictureIndex] &= 3;
                 }
@@ -1173,7 +1173,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int i;
         pictureIndex = 0;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 8 >> 15) + 1;
+        mTarget = (((randomValue >> 16) & 0x7fff) * 8 >> 15) + 1;
         for (i = 0; i < 8; i++) {
             u8 characterOffset;
             mPosX[pictureIndex] = (0x10 + i * 0x20) << 12;
@@ -1181,10 +1181,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
             mActive[pictureIndex] = 1;
             mKind[pictureIndex] = PICTURE_RESTART;
             randomValue = RandomIntInternal(&data_0209d4b8.value);
-            mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
+            mCharacter[pictureIndex] = ((randomValue >> 16) & 0x7fff) * 3 >> 15;
             if (mWanted == mCharacter[pictureIndex]) {
                 randomValue = RandomIntInternal(&data_0209d4b8.value);
-                characterOffset = ((((u32)randomValue >> 16) & 0x7fff) * 2 >> 15) + 1;
+                characterOffset = (((randomValue >> 16) & 0x7fff) * 2 >> 15) + 1;
                 mCharacter[pictureIndex] += characterOffset;
                 if (mCharacter[pictureIndex] >= 3)
                     mCharacter[pictureIndex] = 0;
@@ -1214,7 +1214,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
     int col;
     int row;
     int attempts;
-    int randomValue; /* LUIGI_RAND(4) for the first roll: PlaceNextPicture 49 words off */
+    u32 randomValue; /* LUIGI_RAND(4) for the first roll: PlaceNextPicture 49 words off */
 
     if (mFilled != 0)
         return;
@@ -1229,7 +1229,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
     pictureIndex = mTarget;
 
     randomValue = RandomIntInternal(&data_0209d4b8.value);
-    mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+    mCharacter[pictureIndex] = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
     {
         u8 *character = &mCharacter[pictureIndex];
         if (mWanted == mCharacter[pictureIndex]) {

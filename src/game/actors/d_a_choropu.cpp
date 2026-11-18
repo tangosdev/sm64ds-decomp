@@ -289,12 +289,12 @@ void daChoropu_c::func_ov080_02123c24()
 {
     int amt;
     unsigned int state;
-    int raw;
+    u32 raw;
 
     mAnmModel.Advance();
     raw = mAnmModel.currFrame;
     amt = 0;
-    state = ((unsigned int)raw << 4) >> 16;   /* whole frame number */
+    state = (raw << 4) >> 16; /* whole frame number */
 
     if (state == 6) {
         u32 *p150 = (u32 *)((int)&mdCcAc_c.flags);
@@ -722,12 +722,12 @@ s32 daChoro_Rock_c::Behavior()
         if (!mIsSmall) {
             /* A big rock breaks into two small ones on landing. */
             dActor_c *s;
-            int r;
+            u32 r;
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
             s->mPrevAngle.x = 0;
-            s->mPrevAngle.y = (short)((unsigned int)r >> 8);
+            s->mPrevAngle.y = (short)(r >> 8);
             s->mPrevAngle.z = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
             s->mSpeed.x = 0;
@@ -737,7 +737,7 @@ s32 daChoro_Rock_c::Behavior()
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
             s->mPrevAngle.x = 0;
-            s->mPrevAngle.y = (short)((unsigned int)r >> 8);
+            s->mPrevAngle.y = (short)(r >> 8);
             s->mPrevAngle.z = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
             s->mSpeed.x = 0;

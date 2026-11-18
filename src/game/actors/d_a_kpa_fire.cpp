@@ -540,8 +540,8 @@ void daKpaFire_c::func_ov060_02116d78() {
 
     func_ov060_02116518(PARTICLE_SCALED_9A, 1, mFireScale * 0xc);
     if (mWithMeshClsn.IsOnGround() != 0) {
-        int rnd = RandomIntInternal(&data_0209e650.value);
-        unsigned int roll = (unsigned int)rnd >> 16;
+        u32 rnd = RandomIntInternal(&data_0209e650.value);
+        unsigned int roll = rnd >> 16;
         if (roll % 17 != 0)
             dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), mPos, 0, mAreaId, -1);
         MarkForDestruction();

@@ -574,13 +574,14 @@ void dScMgPachinko2_c::Cup_HideAll() {
 }
 
 void dScMgPachinko2_c::ChooseLaneConfig() {
-    unsigned int nextConfig, configOffset;
+    s32 nextConfig;
+    unsigned int configOffset;
     if (mLevel != 0) {
         nextConfig = PACHINKO_RAND(6);
         if (mLaneConfig == nextConfig) {
             configOffset = PACHINKO_RAND(5) + 1;
             nextConfig = nextConfig + configOffset;
-            if ((int)nextConfig >= 6)
+            if (nextConfig >= 6)
                 nextConfig -= 6;
         }
         mLaneConfig = nextConfig;

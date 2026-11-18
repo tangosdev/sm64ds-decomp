@@ -1387,8 +1387,8 @@ void dMgCardObj_c::FlyOff() {
     mHome.x = -0x28000;
     mHome.y = mPos.y;
     int t = mPos.x;
-    unsigned ip = 0x80000 - t;
-    mFlyDelay = ((int)ip / 0x10000);
+    s32 ip = 0x80000 - t;
+    mFlyDelay = ip / 0x10000;
     mStep.x = 0x10000;
     mStep.y = 0;
     mState = 0xa;

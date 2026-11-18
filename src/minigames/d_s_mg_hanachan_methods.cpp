@@ -1687,8 +1687,8 @@ void dScMgHanachan_c::Phase_Play() {
     if (b != 0) {
         Wiggler *p;
         Vector2 *src;
-        a.x = gTouchInfo[(unsigned int)idx].x << 12;
-        a.y = gTouchInfo[(unsigned int)idx].y << 12;
+        a.x = gTouchInfo[idx].x << 12;
+        a.y = gTouchInfo[idx].y << 12;
         p = mTarget;
         src = p->seg;
         vec[0] = src->x;

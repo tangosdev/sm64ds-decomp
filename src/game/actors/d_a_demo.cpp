@@ -3301,7 +3301,7 @@ int daDemo_c::Behavior()
     Vector3 asr;
     /* Kept (#821 r84): v filled from mPos directly, as a struct copy, via a
        block-scoped Vector3(x, y + 0x96000, z), or with the sum in yy -> DIFF. */
-    s32 t;
+    u32 t;
     t = this->param1;
     if (t == 0x2e) {
         return func_ov002_020f63d4();
@@ -3309,7 +3309,7 @@ int daDemo_c::Behavior()
     if (t == 0x2f) {
         return func_ov002_020f23f0();
     }
-    if ((((u32)t) >= 0x1a) && (((u32)t) <= 0x2d)) {
+    if ((t >= 0x1a) && (t <= 0x2d)) {
         UpdatePosWithOnlySpeed(0);
     } else {
         UpdatePos(0);
@@ -3340,7 +3340,7 @@ int daDemo_c::Behavior()
     Vec3_Asr(&asr, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     t = this->param1;
-    if ((((u32)t) >= 0x1a) && (((u32)t) <= 0x2d)) {
+    if ((t >= 0x1a) && (t <= 0x2d)) {
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
                                                this->mAngle.z);
     } else {

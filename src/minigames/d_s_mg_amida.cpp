@@ -241,7 +241,7 @@ void dScMgAmida_c::ShuffleGoals(int count) {
     int i;
     int k;
     int j;
-    int t;
+    u32 t;
     int u;
 
     if (IsVariant2()) {
@@ -272,7 +272,7 @@ void dScMgAmida_c::ShuffleGoals(int count) {
             for (i = 0; i < 4; i++) {
                 t = RandomIntInternal(&data_0209d4b8.value);
                 u = mLaneResult[i];
-                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+                j = (((t >> 16) & 0x7fff) * 4) >> 15;
                 mLaneResult[i] = mLaneResult[j];
                 mLaneResult[j] = u;
             }
@@ -293,7 +293,7 @@ void dScMgAmida_c::ShuffleGoals(int count) {
         for (i = 0; i < 4; i++) {
             t = RandomIntInternal(&data_0209d4b8.value);
             u = mLaneResult[i];
-            j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+            j = (((t >> 16) & 0x7fff) * 4) >> 15;
             mLaneResult[i] = mLaneResult[j];
             mLaneResult[j] = u;
         }
@@ -1823,7 +1823,7 @@ s32 dScMgAmida_c::Behavior() {
     int lane;
     int j;
     int slot;
-    int randA, randB;
+    u32 randA, randB;
     u32 randBits15, randAngle15;
     s16 cosA;
     int idxA;
@@ -1963,8 +1963,8 @@ s32 dScMgAmida_c::Behavior() {
                     if (mPieces[slot].active != 1) {
                         randA = RandomIntInternal(&data_0209d4b8.value);
                         randB = RandomIntInternal(&data_0209d4b8.value);
-                        randBits15 = ((u32)randB >> 16) & 0x7fff;
-                        randAngle15 = ((u32)randA >> 16) & 0x7fff;
+                        randBits15 = (randB >> 16) & 0x7fff;
+                        randAngle15 = (randA >> 16) & 0x7fff;
                         cosB = FX_CosIdx((int)((randBits15 << 15) >> 16) >> 4);
                         idxA = (int)((randAngle15 << 17) >> 16) >> 4;
                         cosA = FX_CosIdx(idxA);

@@ -441,7 +441,7 @@ int daTrsTrap_c::Behavior()
 int daTrsTrap_c::InitResources()
 {
     u16 actorType;
-    s32 param;
+    u32 param;
     s32 dx;
     int i;
     int bit;
@@ -449,7 +449,7 @@ int daTrsTrap_c::InitResources()
     void *sp;
 
     param = param1;
-    mStepIndex = ((u32)param >> 8) & 3;
+    mStepIndex = (param >> 8) & 3;
     mParentUniqueID = 0;
     mVisible = 1;
     actorType = actorID;
