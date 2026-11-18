@@ -738,7 +738,7 @@ void dEntObj_c::SetCamera() {
     Matrix4x3 view;
     G3i_PerspectiveW_(data_02082614[10], data_02082614[11], 0x1555, 0x1000, 0x1388000, 0x1000, true,
                       0);
-    G3i_LookAt_(&mCamPos, (Vector3 *)&data_ov075_0211c660, &mCamTarget, true, &view);
+    G3i_LookAt_(&mCamPos, &data_ov075_0211c660, &mCamTarget, true, &view);
     CopyToViewMat(&view);
     data_0209f43c.Func_020156DC(0x1555, 0x105b, 0x1000, 0x1388000);
 }
@@ -890,7 +890,7 @@ int dEntObj_c::InitResources() {
         mAnmModel.SetAnim((BCA_File *)data_ov075_0211d3e4.filePtr, 0, 0x1000, 0);
     }
 
-    mMesh.Init((Vector3 *)&data_ov075_0211c654, 0);
+    mMesh.Init(&data_ov075_0211c654, 0);
     mParticle.Initialise();
 
     player = mPlayers;
