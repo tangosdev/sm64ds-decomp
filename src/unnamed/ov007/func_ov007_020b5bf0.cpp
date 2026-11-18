@@ -47,8 +47,7 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
                 int amplitude;
                 int tilt;
 
-                angle = (u16)angle;
-                sine = FX_SinIdx(angle >> 4);
+                sine = FX_SinIdx((u16)angle >> 4);
                 decay = 0x1000 - progress;
                 id = item->id;
                 wave = FX_MUL(sine, decay);
