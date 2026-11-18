@@ -14,14 +14,14 @@
  * - dActor_c::func_0200f760 clears cylinder +0x18 bit 2 unless the closest
  *   player's byte at +0x6fb is set. No recovered name.
  * - UpdateCircling `if (actorID == kBigMrI)` is 0x154->0x148, so it goes
- *   through IsActorID. CheckAttacks' egg test and its player test are each
- *   0x17c->0x170; both at once 0x17c->0x164.
+ *   through IsActorID. CheckAttacks' egg test and its player test go
+ *   through IsActorID and IsPlayerActor; written plainly they are each
+ *   0x17c->0x170, both at once 0x17c->0x164.
  * - St_Wait_Main `mAngle.y += mHorzSpeed` is 0x44->0x48.
  * - St_Attack_Main `(u16)mAngle.x/.y/.z` is 44 words off at 0x314. The
  *   unsigned-short pun is what loads them with ldrh.
  *   Kept (#821 r82): `rot = mAngle;`, plain field copies in either order and
  *   a Vector3_16 copy-init -> ldrsh, 44 words off (copy-init 0x32c).
- * - CheckAttacks as one || is 6 words off at 0x17c. The gotos stay.
  * - St_Die_Main's blue-coin position as plain field copies is 13 words
  *   off at 0x3dc.
  * - St_Attack_Main's three aim points written off mTarget are
@@ -295,9 +295,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 void daEykn_c::CheckAttacks()
 {
     dActor_c *egg = FindEgg(mdCcAcPos_c);
-    int isEgg9;
-    if ((egg != 0 && (isEgg9 = (int)(egg->actorID == kYoshiEgg), isEgg9 != 0)) ||
-        FindExplosionActor(mdCcAcPos_c) != 0) {
+    if ((egg != 0 && IsActorID(egg, kYoshiEgg)) || FindExplosionActor(mdCcAcPos_c) != 0) {
         Sound::PlayBank0(9, mCamSpacePos);
         SetState(2);
         return;
