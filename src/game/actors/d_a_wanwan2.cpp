@@ -690,27 +690,13 @@ int daWanwan2_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov100_021486b4);
     LoadSilverStarAndNumber();
 
-    {
-        int i = 0;
-        dExtSimpleModel_c *model = mModels;
-        do {
-            model->SetFile((BMD_File *)data_ov100_021486a4.filePtr, 1, -1);
-            i++;
-            model++;
-        } while (i < daWanwan2_NUM_LINKS);
-    }
+    for (int i = 0; i < daWanwan2_NUM_LINKS; i++)
+        mModels[i].SetFile((BMD_File *)data_ov100_021486a4.filePtr, 1, -1);
 
     /* The body's drop shadow, then one per link. */
     mShadowModel.InitCylinder();
-    {
-        int i = 0;
-        dExtShadowModel_c *shadow = mShadowModels;
-        do {
-            shadow->InitCylinder();
-            i++;
-            shadow++;
-        } while (i < daWanwan2_NUM_LINKS);
-    }
+    for (int i = 0; i < daWanwan2_NUM_LINKS; i++)
+        mShadowModels[i].InitCylinder();
 
     mPathID = param1 & 0xff;
     mSpawnParam = (param1 >> 8) & 0xf;

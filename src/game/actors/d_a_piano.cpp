@@ -203,7 +203,6 @@ void daPiano_c::StateSearch() {
     daPly_c *cand;
     int dist;
     int j;
-    dCcAcPos_c *cc;
 
     bestDist = 0x7fffffff;
     for (i = 0; i < gNumPlayers; i++) {
@@ -226,11 +225,9 @@ void daPiano_c::StateSearch() {
     this->mCylinderClsn[0].pos = this->mPos;
     this->mCylinderClsn[1].pos = tip;
 
-    cc = this->mCylinderClsn;
     for (j = 0; j < 2; j++) {
         this->mCylinderClsn[j].radius = 0x9b000;
-        cc->Clear();
-        cc++;
+        this->mCylinderClsn[j].Clear();
     }
 }
 
@@ -257,7 +254,6 @@ void daPiano_c::StateAttack() {
     int dist;
     dActor_c *target;
     int k;
-    dCcAcPos_c *cc;
 
     if (DecIfAbove0_Byte(&this->mAttackTimer) != 0)
         return;
@@ -312,13 +308,11 @@ void daPiano_c::StateAttack() {
     this->mCylinderClsn[0].pos = this->mPos;
     this->mCylinderClsn[1].pos = tip;
 
-    cc = this->mCylinderClsn;
     for (k = 0; k < 2; k++) {
         this->mCylinderClsn[k].radius = 0x9b000;
-        cc->Clear();
+        this->mCylinderClsn[k].Clear();
         if (this->ClosestPlayer()->mIsVanish == 0)
-            cc->Update();
-        cc++;
+            this->mCylinderClsn[k].Update();
     }
 }
 

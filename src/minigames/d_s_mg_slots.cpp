@@ -292,7 +292,8 @@ void dScMgSlot3_c::StateJudge() {
         return;
 
     /* Kept (#821 r73): plain members without self and its barrier are
-       0x1c0 of 0x1b8 (104 words off). */
+       0x1c0 of 0x1b8 (104 words off). r96: the same with block-scoped
+       loop indices, as for or do-while. */
     self = (char *)this;
     for (column = 0; column < 3; column++) {
         int reelIndex;
