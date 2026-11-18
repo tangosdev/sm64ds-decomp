@@ -34,94 +34,14 @@ src/game/actors/d_a_shark.cpp:
     .data start:0x021343a0 end:0x021343b0
     .bss start:0x021345a4 end:0x021345e0
 
-src/data/ov090/_ZTS9daMenbo_c.c:
-    complete
-    .data start:0x02134120 end:0x0213412c
-
 src/data/ov090/data_ov090_0213412c.c:
     complete
     .data start:0x0213412c end:0x02134138
-
-src/data/ov090/_ZTI9daMenbo_c.c:
-    complete
-    .data start:0x02134138 end:0x02134144
-
-src/data/ov090/g_profile_MENBO.c:
-    complete
-    .data start:0x02134144 end:0x02134168
-
-src/data/ov090/ov090_vt_02134168.c:
-    complete
-    .data start:0x02134168 end:0x021341e4
-
-src/data/ov090/_ZTS9daManta_c.c:
-    complete
-    .data start:0x021341f4 end:0x02134200
 
 src/data/ov090/data_ov090_02134200.c:
     complete
     .data start:0x02134200 end:0x0213420c
 
-src/data/ov090/_ZTI9daManta_c.c:
-    complete
-    .data start:0x0213420c end:0x02134218
-
-src/data/ov090/g_profile_MANTA.c:
-    complete
-    .data start:0x02134218 end:0x0213423c
-
-src/data/ov090/ov090_vt_0213423c.c:
-    complete
-    .data start:0x0213423c end:0x021342b8
-
-src/data/ov090/data_ov090_021342b8.c:
-    complete
-    .data start:0x021342b8 end:0x021342c0
-
-src/data/ov090/data_ov090_021342c0.c:
-    complete
-    .data start:0x021342c0 end:0x021342c8
-
-src/data/ov090/data_ov090_021342c8.c:
-    complete
-    .data start:0x021342c8 end:0x021342d0
-
-src/data/ov090/data_ov090_021342d0.c:
-    complete
-    .data start:0x021342d0 end:0x021342d8
-
 src/data/ov090/data_ov090_021342d8.c:
     complete
     .data start:0x021342d8 end:0x021342e4
-
-src/data/ov090/_ZTI12daPukupuku_c.c:
-    complete
-    .data start:0x021342e4 end:0x021342f0
-
-src/data/ov090/_ZTS12daPukupuku_c.c:
-    complete
-    .data start:0x021342f0 end:0x02134300
-
-src/data/ov090/g_profile_PUKUPUKU.c:
-    complete
-    .data start:0x02134300 end:0x02134324
-
-src/data/ov090/ov090_vt_02134324.c:
-    complete
-    .data start:0x02134324 end:0x021343a0
-
-src/data/ov090/_ZTS9daShark_c.c:
-    complete
-    .data start:0x021343b0 end:0x021343bc
-
-src/data/ov090/_ZTI9daShark_c.c:
-    complete
-    .data start:0x021343bc end:0x021343c8
-
-src/data/ov090/g_profile_SHARK.c:
-    complete
-    .data start:0x021343c8 end:0x021343ec
-
-src/data/ov090/ov090_vt_021343ec.c:
-    complete
-    .data start:0x021343ec end:0x02134480

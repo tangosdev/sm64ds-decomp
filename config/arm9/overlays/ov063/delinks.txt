@@ -39,90 +39,6 @@ src/game/actors/d_a_trs_trap_classinits.cpp:
     complete
     .text start:0x0211d270 end:0x0211d3a0
 
-src/data/ov063/_ZTS7daTrs_c.c:
-    complete
-    .data start:0x0211e720 end:0x0211e72c
-
-src/data/ov063/_ZTI11daTBasket_c.c:
-    complete
-    .data start:0x0211e72c end:0x0211e738
-
-src/data/ov063/_ZTI7daTrs_c.c:
-    complete
-    .data start:0x0211e738 end:0x0211e744
-
-src/data/ov063/_ZTI11daTrsIcon_c.c:
-    complete
-    .data start:0x0211e744 end:0x0211e750
-
-src/data/ov063/_ZTS11daTBasket_c.c:
-    complete
-    .data start:0x0211e750 end:0x0211e760
-
-src/data/ov063/_ZTS11daTrsIcon_c.c:
-    complete
-    .data start:0x0211e760 end:0x0211e770
-
-src/data/ov063/g_profile_TERESA.c:
-    complete
-    .data start:0x0211e770 end:0x0211e78c
-
-src/data/ov063/g_profile_BOSS_TERESA.c:
-    complete
-    .data start:0x0211e78c end:0x0211e7a8
-
-src/data/ov063/g_profile_T_BASKET.c:
-    complete
-    .data start:0x0211e7a8 end:0x0211e7c4
-
-src/data/ov063/g_profile_ICON_TERESA.c:
-    complete
-    .data start:0x0211e7c4 end:0x0211e7e0
-
-src/data/ov063/data_ov063_0211e7e0.c:
-    complete
-    .data start:0x0211e7e0 end:0x0211e828
-
-src/data/ov063/ov063_vt_0211e828.c:
-    complete
-    .data start:0x0211e828 end:0x0211e8ac
-
-src/data/ov063/ov063_vt_0211e930.c:
-    complete
-    .data start:0x0211e930 end:0x0211e9ac
-
-src/data/ov063/_ZTI11daTrsTrap_c.c:
-    complete
-    .data start:0x0211e9cc end:0x0211e9d8
-
-src/data/ov063/_ZTS11daTrsTrap_c.c:
-    complete
-    .data start:0x0211e9d8 end:0x0211e9e8
-
-src/data/ov063/g_profile_KAIDAN.c:
-    complete
-    .data.tail start:0x0211ea10 end:0x0211ea2c
-
-src/data/ov063/g_profile_BOOKSHELF.c:
-    complete
-    .data.tail start:0x0211ea2c end:0x0211ea48
-
-src/data/ov063/g_profile_MERRYGOROUND.c:
-    complete
-    .data.tail start:0x0211ea48 end:0x0211ea64
-
-src/data/ov063/g_profile_TERESAPIT.c:
-    complete
-    .data.tail start:0x0211ea64 end:0x0211ea88
-
-src/data/ov063/ov063_vt_0211ea88.c:
-    complete
-    .data.tail start:0x0211ea88 end:0x0211eb04
-
-src/data/ov063/_ZTI20daObjTh_Fall_Block_c.c:
-    complete
-    .data.tail start:0x0211eb04 end:0x0211eb10
-
 src/game/actors/d_a_obj_th_fall_block.cpp:
     complete
     .data.tail start:0x0211eb10 end:0x0211eb1c
@@ -139,42 +55,6 @@ src/game/actors/d_a_piano.cpp:
     .ctor start:0x0211e708 end:0x0211e70c
     .data.piano start:0x0211ecb8 end:0x0211ecf8
     .bss start:0x0211ef80 end:0x0211efdc
-src/data/ov063/_ZTS20daObjTh_Fall_Block_c.c:
-    complete
-    .data.tail start:0x0211eb1c end:0x0211eb34
-
-src/data/ov063/g_profile_TH_DOWN_B.c:
-    complete
-    .data.tail start:0x0211eb34 end:0x0211eb58
-
-src/data/ov063/ov063_vt_0211eb58.c:
-    complete
-    .data.tail start:0x0211eb58 end:0x0211ebd8
-
-src/data/ov063/data_ov063_0211ebd8.c:
-    complete
-    .data.tail start:0x0211ebd8 end:0x0211ebf8
-
-src/data/ov063/data_ov063_0211ec38.c:
-    complete
-    .data.mid start:0x0211ec38 end:0x0211ec58
-
-src/data/ov063/_ZTS9daPiano_c.c:
-    complete
-    .data.piano start:0x0211ecf8 end:0x0211ed04
-
-src/data/ov063/_ZTI9daPiano_c.c:
-    complete
-    .data.piano start:0x0211ed04 end:0x0211ed10
-
-src/data/ov063/g_profile_PIANO.c:
-    complete
-    .data.piano start:0x0211ed10 end:0x0211ed34
-
-src/data/ov063/ov063_vt_0211ed34.c:
-    complete
-    .data.piano start:0x0211ed34 end:0x0211edc0
-
 src/data/ov063/data_ov063_0211efdc.c:
     complete
     .bss start:0x0211efdc end:0x0211efe0

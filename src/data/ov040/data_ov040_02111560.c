@@ -1,12 +1,7 @@
 /* ov040 data_ov040_02111560 at 0x02111560 (data, 60 bytes): cartridge data. */
 #include "types.h"
 
-#pragma define_section dc8_section ".data" ".data" ".data" far_data
-#pragma section dc8_section begin
 u32 data_ov040_02111560[15] = {
-    0x0c670008, 0xe822fb1e, 0xc0000000, 0x00020000, 0x0c670008, 0xe822fb1e,
-    0xc0000000, 0x00070000, 0xf4480031, 0xe7c81838, 0x00000000, 0x00f30000,
-    0xe9580031, 0xfbf6fe80, 0x00000000,
+    0x0c670008, 0xe822fb1e, 0xc0000000, 0x00020000, 0x0c670008, 0xe822fb1e, 0xc0000000, 0x00070000,
+    0xf4480031, 0xe7c81838, 0x00000000, 0x00f30000, 0xe9580031, 0xfbf6fe80, 0x00000000,
 };
-
-#pragma section dc8_section end

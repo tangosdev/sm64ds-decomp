@@ -6,10 +6,6 @@ src/data/ov057/data_ov057_021111a4.c:
     complete
     .rodata start:0x021111a4 end:0x021111a8
 
-src/data/ov057/data_ov057_021111a8.c:
-    complete
-    .rodata start:0x021111a8 end:0x021111c4
-
 src/data/ov057/data_ov057_021111c4.c:
     complete
     .rodata start:0x021111c4 end:0x021111ec
@@ -74,25 +70,9 @@ src/data/ov057/data_ov057_021114a8.c:
     complete
     .data start:0x021114a8 end:0x021114ac
 
-src/data/ov057/data_ov057_021114ac.c:
-    complete
-    .data start:0x021114ac end:0x021114b4
-
-src/data/ov057/data_ov057_021114b4.c:
-    complete
-    .data start:0x021114b4 end:0x021114bc
-
 src/data/ov057/data_ov057_021114bc.c:
     complete
     .data start:0x021114bc end:0x021114c4
-
-src/data/ov057/data_ov057_021114c4.c:
-    complete
-    .data start:0x021114c4 end:0x021114cc
-
-src/data/ov057/data_ov057_021114cc.c:
-    complete
-    .data start:0x021114cc end:0x021114d8
 
 src/data/ov057/data_ov057_021114d8.c:
     complete
@@ -109,14 +89,6 @@ src/data/ov057/data_ov057_021114f8.c:
 src/data/ov057/data_ov057_02111508.c:
     complete
     .data start:0x02111508 end:0x0211150c
-
-src/data/ov057/data_ov057_0211150c.c:
-    complete
-    .data start:0x0211150c end:0x02111520
-
-src/data/ov057/data_ov057_02111520.c:
-    complete
-    .data start:0x02111520 end:0x0211153c
 
 src/data/ov057/data_ov057_0211153c.c:
     complete
@@ -141,18 +113,6 @@ src/data/ov057/data_ov057_0211157c.c:
 src/data/ov057/data_ov057_0211159c.c:
     complete
     .data start:0x0211159c end:0x021115bc
-
-src/data/ov057/data_ov057_021115bc.c:
-    complete
-    .data start:0x021115bc end:0x021115e0
-
-src/data/ov057/data_ov057_021115e0.c:
-    complete
-    .data start:0x021115e0 end:0x021115e4
-
-src/data/ov057/data_ov057_021115e4.c:
-    complete
-    .data start:0x021115e4 end:0x021115ec
 
 src/data/ov057/data_ov057_021115ec.c:
     complete

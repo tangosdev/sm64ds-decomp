@@ -39,14 +39,6 @@ src/data/ov019/data_ov019_02112b98.c:
     complete
     .data start:0x02112b98 end:0x02112ba0
 
-src/data/ov019/data_ov019_02112ba0.c:
-    complete
-    .data start:0x02112ba0 end:0x02112ba8
-
-src/data/ov019/data_ov019_02112ba8.c:
-    complete
-    .data start:0x02112ba8 end:0x02112bb0
-
 src/data/ov019/data_ov019_02112bb0.c:
     complete
     .data start:0x02112bb0 end:0x02112bb8
@@ -62,10 +54,6 @@ src/data/ov019/data_ov019_02112bc0.c:
 src/data/ov019/data_ov019_02112bc8.c:
     complete
     .data start:0x02112bc8 end:0x02112bd0
-
-src/data/ov019/data_ov019_02112bd0.c:
-    complete
-    .data start:0x02112bd0 end:0x02112bdc
 
 src/data/ov019/data_ov019_02112bdc.c:
     complete
@@ -115,21 +103,9 @@ src/data/ov019/data_ov019_02112c58.c:
     complete
     .data start:0x02112c58 end:0x02112c68
 
-src/data/ov019/data_ov019_02112c68.c:
-    complete
-    .data start:0x02112c68 end:0x02112c84
-
 src/data/ov019/data_ov019_02112c84.c:
     complete
     .data start:0x02112c84 end:0x02112c88
-
-src/data/ov019/data_ov019_02112c88.c:
-    complete
-    .data start:0x02112c88 end:0x02112ca8
-
-src/data/ov019/data_ov019_02112ca8.c:
-    complete
-    .data start:0x02112ca8 end:0x02112cc4
 
 src/data/ov019/data_ov019_02112cc4.c:
     complete
@@ -158,10 +134,6 @@ src/data/ov019/data_ov019_02112d54.c:
 src/data/ov019/data_ov019_02112d98.c:
     complete
     .data start:0x02112d98 end:0x02112db4
-
-src/data/ov019/data_ov019_02112db4.c:
-    complete
-    .data start:0x02112db4 end:0x02112e24
 
 src/data/ov019/data_ov019_02112e24.c:
     complete
@@ -206,26 +178,6 @@ src/data/ov019/data_ov019_021130d0.c:
 src/data/ov019/data_ov019_02113228.c:
     complete
     .data start:0x02113228 end:0x02113270
-
-src/data/ov019/_ZTI10daSldMng_c.c:
-    complete
-    .data start:0x0211338c end:0x02113398
-
-src/data/ov019/_ZTS10daSldMng_c.c:
-    complete
-    .data start:0x02113398 end:0x021133a8
-
-src/data/ov019/g_profile_SLIDER_MANAGER.c:
-    complete
-    .data start:0x021133a8 end:0x021133cc
-
-src/data/ov019/ov019_vt_021133cc.c:
-    complete
-    .data start:0x021133cc end:0x02113434
-
-src/data/ov019/data_ov019_02113434.c:
-    complete
-    .data start:0x02113434 end:0x02113460
 
 src/data/ov019/data_ov019_021135e4.c:
     complete

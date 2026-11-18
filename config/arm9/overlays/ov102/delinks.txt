@@ -11,54 +11,6 @@ src/game/actors/d_a_obj_simple_bg.cpp:
     .ctor start:0x0214e0a0 end:0x0214e0a4
     .bss start:0x0214e6e0 end:0x0214e7d0
 
-src/data/ov102/_ZTI15daObjSimpleBg_c.c:
-    complete
-    .data start:0x0214e0c0 end:0x0214e0cc
-
-src/data/ov102/_ZTS15daObjSimpleBg_c.c:
-    complete
-    .data start:0x0214e0cc end:0x0214e0e0
-
-src/data/ov102/g_profile_KI_IWA.c:
-    complete
-    .data start:0x0214e0e0 end:0x0214e0fc
-
-src/data/ov102/g_profile_KI_HASIRA_DAI.c:
-    complete
-    .data start:0x0214e0fc end:0x0214e118
-
-src/data/ov102/g_profile_BK_TOWER.c:
-    complete
-    .data start:0x0214e118 end:0x0214e134
-
-src/data/ov102/g_profile_DOKAN.c:
-    complete
-    .data start:0x0214e134 end:0x0214e150
-
-src/data/ov102/g_profile_MC_DODAI.c:
-    complete
-    .data start:0x0214e150 end:0x0214e16c
-
-src/data/ov102/g_profile_MC_HAZAD.c:
-    complete
-    .data start:0x0214e16c end:0x0214e188
-
-src/data/ov102/data_ov102_0214e188.c:
-    complete
-    .data start:0x0214e188 end:0x0214e18c
-
-src/data/ov102/data_ov102_0214e18c.c:
-    complete
-    .data start:0x0214e18c end:0x0214e190
-
-src/data/ov102/data_ov102_0214e190.c:
-    complete
-    .data start:0x0214e190 end:0x0214e1d8
-
-src/data/ov102/ov102_vt_0214e1d8.c:
-    complete
-    .data start:0x0214e1d8 end:0x0214e258
-
 src/game/actors/d_a_obj_hatena_block.cpp:
     complete
     .data start:0x0214e258 end:0x0214e4fc
@@ -83,18 +35,3 @@ src/game/actors/d_a_shl.cpp:
     .data start:0x0214e5d4 end:0x0214e614
     .bss start:0x0214ea48 end:0x0214eaa0
     .rodata start:0x0214d70c end:0x0214d714
-src/data/ov102/_ZTS7daShl_c.c:
-    complete
-    .data start:0x0214e614 end:0x0214e620
-
-src/data/ov102/_ZTI7daShl_c.c:
-    complete
-    .data start:0x0214e620 end:0x0214e62c
-
-src/data/ov102/g_profile_SHELL.c:
-    complete
-    .data start:0x0214e62c end:0x0214e650
-
-src/data/ov102/ov102_vt_0214e650.c:
-    complete
-    .data start:0x0214e650 end:0x0214e6e0

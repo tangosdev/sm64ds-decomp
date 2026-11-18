@@ -23,21 +23,9 @@ src/data/ov031/data_ov031_02111508.c:
     complete
     .data start:0x02111508 end:0x0211150c
 
-src/data/ov031/data_ov031_0211150c.c:
-    complete
-    .data start:0x0211150c end:0x02111510
-
-src/data/ov031/data_ov031_02111510.c:
-    complete
-    .data start:0x02111510 end:0x02111518
-
 src/data/ov031/data_ov031_02111518.c:
     complete
     .data start:0x02111518 end:0x02111520
-
-src/data/ov031/data_ov031_02111520.c:
-    complete
-    .data start:0x02111520 end:0x0211152c
 
 src/data/ov031/data_ov031_0211152c.c:
     complete
@@ -50,26 +38,6 @@ src/data/ov031/data_ov031_0211153c.c:
 src/data/ov031/data_ov031_02111548.c:
     complete
     .data start:0x02111548 end:0x0211154c
-
-src/data/ov031/data_ov031_0211154c.c:
-    complete
-    .data start:0x0211154c end:0x0211155c
-
-src/data/ov031/data_ov031_0211155c.c:
-    complete
-    .data start:0x0211155c end:0x02111560
-
-src/data/ov031/data_ov031_02111560.c:
-    complete
-    .data start:0x02111560 end:0x02111578
-
-src/data/ov031/data_ov031_02111578.c:
-    complete
-    .data start:0x02111578 end:0x0211159c
-
-src/data/ov031/data_ov031_0211159c.c:
-    complete
-    .data start:0x0211159c end:0x021115a8
 
 src/data/ov031/data_ov031_021115a8.c:
     complete
@@ -155,41 +123,9 @@ src/data/ov031/data_ov031_02111844.c:
     complete
     .data start:0x02111844 end:0x021118e8
 
-src/data/ov031/_ZTI18daObjHsBillboard_c.c:
-    complete
-    .data start:0x021118e8 end:0x021118f4
-
-src/data/ov031/_ZTS18daObjHsBillboard_c.c:
-    complete
-    .data start:0x021118f4 end:0x0211190c
-
-src/data/ov031/g_profile_HS_MOON.c:
-    complete
-    .data start:0x0211190c end:0x02111928
-
-src/data/ov031/g_profile_HS_STAR.c:
-    complete
-    .data start:0x02111928 end:0x0211192c
-
 src/data/ov031/data_ov031_0211192c.c:
     complete
     .data start:0x0211192c end:0x02111944
-
-src/data/ov031/g_profile_HS_Y_STAR.c:
-    complete
-    .data start:0x02111944 end:0x02111960
-
-src/data/ov031/g_profile_HS_B_STAR.c:
-    complete
-    .data start:0x02111960 end:0x02111984
-
-src/data/ov031/ov031_vt_02111984.c:
-    complete
-    .data start:0x02111984 end:0x02111994
-
-src/data/ov031/data_ov031_02111994.c:
-    complete
-    .data start:0x02111994 end:0x02111a00
 
 src/data/ov031/data_ov031_02111a50.c:
     complete

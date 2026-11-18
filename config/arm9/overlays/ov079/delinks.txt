@@ -25,26 +25,6 @@ src/game/actors/d_a_klr.cpp:
     .data start:0x02127e9c end:0x02127eac
     .bss start:0x021282e0 end:0x021282f0
 
-src/data/ov079/_ZTS7daBtn_c.c:
-    complete
-    .data.w127c28 start:0x02127c28 end:0x02127c34
-
-src/data/ov079/_ZTI7daBtn_c.c:
-    complete
-    .data.w127c28 start:0x02127c34 end:0x02127c40
-
-src/data/ov079/g_profile_BATANKING.c:
-    complete
-    .data.w127c28 start:0x02127c40 end:0x02127c5c
-
-src/data/ov079/g_profile_BATAN.c:
-    complete
-    .data.w127c28 start:0x02127c5c end:0x02127c80
-
-src/data/ov079/ov079_vt_02127c80.c:
-    complete
-    .data.w127c28 start:0x02127c80 end:0x02127cfc
-
 src/game/actors/d_a_obj_bk_killerdai.cpp:
     complete
     .data.bkKillerdaiClps start:0x02127e7c end:0x02127e9c
@@ -54,54 +34,6 @@ src/game/actors/d_a_obj_bk_killerdai.cpp:
     .ctor start:0x02127b90 end:0x02127b94
     .bss start:0x021282f0 end:0x02128340
 
-src/data/ov079/_ZTS7daKlr_c.c:
-    complete
-    .data start:0x02127eac end:0x02127eb8
-
-src/data/ov079/_ZTI7daKlr_c.c:
-    complete
-    .data start:0x02127eb8 end:0x02127ec4
-
-src/data/ov079/g_profile_KILLER.c:
-    complete
-    .data start:0x02127ec4 end:0x02127ee8
-
-src/data/ov079/ov079_vt_02127ee8.c:
-    complete
-    .data start:0x02127ee8 end:0x02127f64
-
-src/data/ov079/_ZTI18daObjBkKillerdai_c.c:
-    complete
-    .data start:0x02127f70 end:0x02127f7c
-
-src/data/ov079/_ZTS18daObjBkKillerdai_c.c:
-    complete
-    .data start:0x02127f7c end:0x02127f94
-
-src/data/ov079/g_profile_BK_KILLER_DAI.c:
-    complete
-    .data start:0x02127f94 end:0x02127fb8
-
-src/data/ov079/ov079_vt_02127fb8.c:
-    complete
-    .data start:0x02127fb8 end:0x02127fec
-
-src/data/ov079/data_ov079_02127fec.c:
-    complete
-    .data start:0x02127fec end:0x02128008
-
-src/data/ov079/data_ov079_02128008.c:
-    complete
-    .data start:0x02128008 end:0x02128038
-
-src/data/ov079/_ZTI14daObjBk_Kabe_c.c:
-    complete
-    .data start:0x02128038 end:0x02128044
-
-src/data/ov079/_ZTS14daObjBk_Kabe_c.c:
-    complete
-    .data start:0x02128044 end:0x02128058
-
 src/game/actors/d_a_obj_bk_kabe.cpp:
     complete
     .data start:0x02128058 end:0x02128070
@@ -109,18 +41,6 @@ src/game/actors/d_a_obj_bk_kabe.cpp:
     .init start:0x02127acc end:0x02127b88
     .ctor start:0x02127b94 end:0x02127b98
     .bss start:0x02128340 end:0x02128390
-src/data/ov079/g_profile_BK_KABE00.c:
-    complete
-    .data start:0x02128070 end:0x0212808c
-
-src/data/ov079/g_profile_BK_KABE01.c:
-    complete
-    .data start:0x0212808c end:0x021280b0
-
-src/data/ov079/ov079_vt_021280b0.c:
-    complete
-    .data start:0x021280b0 end:0x02128140
-
 src/data/ov079/data_ov079_02128390.c:
     complete
     .bss start:0x02128390 end:0x021283a0

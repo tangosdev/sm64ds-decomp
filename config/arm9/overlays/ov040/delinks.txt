@@ -17,18 +17,6 @@ src/data/ov040/data_ov040_021111cc.c:
     complete
     .data start:0x021111cc end:0x021111d4
 
-src/data/ov040/data_ov040_021111d4.c:
-    complete
-    .data start:0x021111d4 end:0x021111dc
-
-src/data/ov040/data_ov040_021111dc.c:
-    complete
-    .data start:0x021111dc end:0x021111e4
-
-src/data/ov040/data_ov040_021111e4.c:
-    complete
-    .data start:0x021111e4 end:0x021111ec
-
 src/data/ov040/data_ov040_021111ec.c:
     complete
     .data start:0x021111ec end:0x021111f0
@@ -45,10 +33,6 @@ src/data/ov040/data_ov040_02111200.c:
     complete
     .data start:0x02111200 end:0x02111204
 
-src/data/ov040/data_ov040_02111204.c:
-    complete
-    .data start:0x02111204 end:0x02111210
-
 src/data/ov040/data_ov040_02111210.c:
     complete
     .data start:0x02111210 end:0x02111218
@@ -56,10 +40,6 @@ src/data/ov040/data_ov040_02111210.c:
 src/data/ov040/data_ov040_02111218.c:
     complete
     .data start:0x02111218 end:0x02111228
-
-src/data/ov040/data_ov040_02111228.c:
-    complete
-    .data start:0x02111228 end:0x02111244
 
 src/data/ov040/data_ov040_02111244.c:
     complete
@@ -76,10 +56,6 @@ src/data/ov040/data_ov040_02111290.c:
 src/data/ov040/data_ov040_021112b0.c:
     complete
     .data start:0x021112b0 end:0x021112d0
-
-src/data/ov040/data_ov040_021112d0.c:
-    complete
-    .data start:0x021112d0 end:0x02111310
 
 src/data/ov040/data_ov040_02111310.c:
     complete

@@ -6,10 +6,6 @@ src/data/ov046/data_ov046_021111a4.c:
     complete
     .rodata start:0x021111a4 end:0x021111a8
 
-src/data/ov046/data_ov046_021111a8.c:
-    complete
-    .rodata start:0x021111a8 end:0x021111c4
-
 src/data/ov046/data_ov046_021111c4.c:
     complete
     .rodata start:0x021111c4 end:0x021111ec
@@ -74,25 +70,9 @@ src/data/ov046/data_ov046_0211150c.c:
     complete
     .data start:0x0211150c end:0x02111514
 
-src/data/ov046/data_ov046_02111514.c:
-    complete
-    .data start:0x02111514 end:0x0211151c
-
 src/data/ov046/data_ov046_0211151c.c:
     complete
     .data start:0x0211151c end:0x02111520
-
-src/data/ov046/data_ov046_02111520.c:
-    complete
-    .data start:0x02111520 end:0x02111524
-
-src/data/ov046/data_ov046_02111524.c:
-    complete
-    .data start:0x02111524 end:0x0211152c
-
-src/data/ov046/data_ov046_0211152c.c:
-    complete
-    .data start:0x0211152c end:0x02111538
 
 src/data/ov046/data_ov046_02111538.c:
     complete
@@ -102,25 +82,9 @@ src/data/ov046/data_ov046_0211153c.c:
     complete
     .data start:0x0211153c end:0x02111548
 
-src/data/ov046/data_ov046_02111548.c:
-    complete
-    .data start:0x02111548 end:0x0211155c
-
-src/data/ov046/data_ov046_0211155c.c:
-    complete
-    .data start:0x0211155c end:0x02111560
-
-src/data/ov046/data_ov046_02111560.c:
-    complete
-    .data start:0x02111560 end:0x0211157c
-
 src/data/ov046/data_ov046_0211157c.c:
     complete
     .data start:0x0211157c end:0x0211159c
-
-src/data/ov046/data_ov046_0211159c.c:
-    complete
-    .data start:0x0211159c end:0x021115bc
 
 src/data/ov046/data_ov046_021115bc.c:
     complete

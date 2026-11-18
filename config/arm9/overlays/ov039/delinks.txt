@@ -21,33 +21,9 @@ src/data/ov039/data_ov039_02111408.c:
     complete
     .data start:0x02111408 end:0x0211140c
 
-src/data/ov039/data_ov039_0211140c.c:
-    complete
-    .data start:0x0211140c end:0x02111414
-
-src/data/ov039/data_ov039_02111414.c:
-    complete
-    .data start:0x02111414 end:0x0211141c
-
-src/data/ov039/data_ov039_0211141c.c:
-    complete
-    .data start:0x0211141c end:0x02111428
-
-src/data/ov039/data_ov039_02111428.c:
-    complete
-    .data start:0x02111428 end:0x02111438
-
-src/data/ov039/data_ov039_02111438.c:
-    complete
-    .data start:0x02111438 end:0x02111454
-
 src/data/ov039/data_ov039_02111454.c:
     complete
     .data start:0x02111454 end:0x02111470
-
-src/data/ov039/data_ov039_02111470.c:
-    complete
-    .data start:0x02111470 end:0x02111498
 
 src/data/ov039/data_ov039_02111498.c:
     complete
@@ -152,23 +128,3 @@ src/data/ov039/data_ov039_02111760.c:
 src/data/ov039/data_ov039_02111768.c:
     complete
     .data start:0x02111768 end:0x02111818
-
-src/data/ov039/_ZTI11daObjKumo_c.c:
-    complete
-    .data start:0x02111818 end:0x02111824
-
-src/data/ov039/_ZTS11daObjKumo_c.c:
-    complete
-    .data start:0x02111824 end:0x02111834
-
-src/data/ov039/g_profile_OBJ_KUMO.c:
-    complete
-    .data start:0x02111834 end:0x02111844
-
-src/data/ov039/data_ov039_02111844.c:
-    complete
-    .data start:0x02111844 end:0x02111858
-
-src/data/ov039/ov039_vt_02111858.c:
-    complete
-    .data start:0x02111858 end:0x021118e0

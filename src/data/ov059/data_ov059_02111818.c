@@ -1,11 +1,6 @@
 /* ov059 data_ov059_02111818 at 0x02111818 (data, 28 bytes): cartridge data. */
 #include "types.h"
 
-#pragma define_section dc8_section ".data" ".data" ".data" far_data
-#pragma section dc8_section begin
 u32 data_ov059_02111818[7] = {
-    0x0ad20009, 0x14ac00af, 0x2aaa0000, 0x3f000000, 0xebd10030, 0x02c10552,
-    0x09f40000,
+    0x0ad20009, 0x14ac00af, 0x2aaa0000, 0x3f000000, 0xebd10030, 0x02c10552, 0x09f40000,
 };
-
-#pragma section dc8_section end

@@ -14,37 +14,9 @@ src/data/ov044/data_ov044_02111360.c:
     complete
     .data start:0x02111360 end:0x02111364
 
-src/data/ov044/data_ov044_02111364.c:
-    complete
-    .data start:0x02111364 end:0x0211136c
-
-src/data/ov044/data_ov044_0211136c.c:
-    complete
-    .data start:0x0211136c end:0x02111374
-
-src/data/ov044/data_ov044_02111374.c:
-    complete
-    .data start:0x02111374 end:0x0211137c
-
-src/data/ov044/data_ov044_0211137c.c:
-    complete
-    .data start:0x0211137c end:0x02111388
-
 src/data/ov044/data_ov044_02111388.c:
     complete
     .data start:0x02111388 end:0x02111398
-
-src/data/ov044/data_ov044_02111398.c:
-    complete
-    .data start:0x02111398 end:0x021113ac
-
-src/data/ov044/data_ov044_021113ac.c:
-    complete
-    .data start:0x021113ac end:0x021113b0
-
-src/data/ov044/data_ov044_021113b0.c:
-    complete
-    .data start:0x021113b0 end:0x021113cc
 
 src/data/ov044/data_ov044_021113cc.c:
     complete

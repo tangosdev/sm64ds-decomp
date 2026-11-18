@@ -13,41 +13,13 @@ src/data/ov058/data_ov058_02111704.c:
     complete
     .data start:0x02111704 end:0x0211170c
 
-src/data/ov058/data_ov058_0211170c.c:
-    complete
-    .data start:0x0211170c end:0x02111714
-
-src/data/ov058/data_ov058_02111714.c:
-    complete
-    .data start:0x02111714 end:0x0211171c
-
 src/data/ov058/data_ov058_0211171c.c:
     complete
     .data start:0x0211171c end:0x02111720
 
-src/data/ov058/data_ov058_02111720.c:
-    complete
-    .data start:0x02111720 end:0x02111724
-
-src/data/ov058/data_ov058_02111724.c:
-    complete
-    .data start:0x02111724 end:0x0211172c
-
-src/data/ov058/data_ov058_0211172c.c:
-    complete
-    .data start:0x0211172c end:0x02111734
-
-src/data/ov058/data_ov058_02111734.c:
-    complete
-    .data start:0x02111734 end:0x0211173c
-
 src/data/ov058/data_ov058_0211173c.c:
     complete
     .data start:0x0211173c end:0x02111740
-
-src/data/ov058/data_ov058_02111740.c:
-    complete
-    .data start:0x02111740 end:0x02111744
 
 src/data/ov058/data_ov058_02111744.c:
     complete
@@ -61,25 +33,13 @@ src/data/ov058/data_ov058_02111760.c:
     complete
     .data start:0x02111760 end:0x02111768
 
-src/data/ov058/data_ov058_02111768.c:
-    complete
-    .data start:0x02111768 end:0x02111784
-
 src/data/ov058/data_ov058_02111784.c:
     complete
     .data start:0x02111784 end:0x021117a4
 
-src/data/ov058/data_ov058_021117a4.c:
-    complete
-    .data start:0x021117a4 end:0x021117c8
-
 src/data/ov058/data_ov058_021117c8.c:
     complete
     .data start:0x021117c8 end:0x021117f8
-
-src/data/ov058/data_ov058_021117f8.c:
-    complete
-    .data start:0x021117f8 end:0x02111830
 
 src/data/ov058/data_ov058_02111830.c:
     complete
@@ -132,35 +92,3 @@ src/data/ov058/data_ov058_02111994.c:
 src/data/ov058/data_ov058_021119a0.c:
     complete
     .data start:0x021119a0 end:0x02111a30
-
-src/data/ov058/_ZTI13daObjCloset_c.c:
-    complete
-    .data start:0x02111a30 end:0x02111a3c
-
-src/data/ov058/_ZTS13daObjCloset_c.c:
-    complete
-    .data start:0x02111a3c end:0x02111a4c
-
-src/data/ov058/g_profile_PL_CLOSET.c:
-    complete
-    .data start:0x02111a4c end:0x02111a58
-
-src/data/ov058/data_ov058_02111a58.c:
-    complete
-    .data start:0x02111a58 end:0x02111a70
-
-src/data/ov058/ov058_vt_02111a70.c:
-    complete
-    .data start:0x02111a70 end:0x02111a78
-
-src/data/ov058/data_ov058_02111a78.c:
-    complete
-    .data start:0x02111a78 end:0x02111abc
-
-src/data/ov058/data_ov058_02111abc.c:
-    complete
-    .data start:0x02111abc end:0x02111ad4
-
-src/data/ov058/data_ov058_02111ad4.c:
-    complete
-    .data start:0x02111ad4 end:0x02111af4

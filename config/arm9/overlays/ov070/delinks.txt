@@ -41,10 +41,6 @@ src/data/ov070/data_ov070_02122244.c:
     complete
     .rodata start:0x02122244 end:0x02122248
 
-src/data/ov070/data_ov070_0212224c.c:
-    complete
-    .rodata start:0x0212224c end:0x02122268
-
 src/data/ov070/data_ov070_02122268.c:
     complete
     .rodata start:0x02122268 end:0x021222e0
@@ -89,141 +85,9 @@ src/data/ov070/data_ov070_02122a6c.c:
     complete
     .rodata start:0x02122a6c end:0x02122afc
 
-src/data/ov070/data_ov070_021230c0.c:
-    complete
-    .data start:0x021230c0 end:0x021230c8
-
-src/data/ov070/data_ov070_021230c8.c:
-    complete
-    .data start:0x021230c8 end:0x021230d0
-
-src/data/ov070/data_ov070_021230d0.c:
-    complete
-    .data start:0x021230d0 end:0x021230d8
-
-src/data/ov070/data_ov070_021230d8.c:
-    complete
-    .data start:0x021230d8 end:0x021230e0
-
-src/data/ov070/data_ov070_021230e0.c:
-    complete
-    .data start:0x021230e0 end:0x021230e8
-
-src/data/ov070/data_ov070_021230e8.c:
-    complete
-    .data start:0x021230e8 end:0x021230f0
-
-src/data/ov070/data_ov070_021230f0.c:
-    complete
-    .data start:0x021230f0 end:0x021230f8
-
-src/data/ov070/data_ov070_021230f8.c:
-    complete
-    .data start:0x021230f8 end:0x02123100
-
-src/data/ov070/data_ov070_02123100.c:
-    complete
-    .data start:0x02123100 end:0x02123108
-
-src/data/ov070/data_ov070_02123108.c:
-    complete
-    .data start:0x02123108 end:0x02123110
-
-src/data/ov070/data_ov070_02123110.c:
-    complete
-    .data start:0x02123110 end:0x02123118
-
-src/data/ov070/data_ov070_02123118.c:
-    complete
-    .data start:0x02123118 end:0x02123120
-
 src/data/ov070/data_ov070_021231e4.c:
     complete
     .data start:0x021231e4 end:0x021231f4
-
-src/data/ov070/data_ov070_021231f4.c:
-    complete
-    .data start:0x021231f4 end:0x0212320c
-
-src/data/ov070/data_ov070_0212320c.c:
-    complete
-    .data start:0x0212320c end:0x02123214
-
-src/data/ov070/data_ov070_02123214.c:
-    complete
-    .data start:0x02123214 end:0x0212321c
-
-src/data/ov070/data_ov070_0212321c.c:
-    complete
-    .data start:0x0212321c end:0x02123224
-
-src/data/ov070/data_ov070_02123224.c:
-    complete
-    .data start:0x02123224 end:0x0212322c
-
-src/data/ov070/data_ov070_0212322c.c:
-    complete
-    .data start:0x0212322c end:0x02123234
-
-src/data/ov070/data_ov070_02123234.c:
-    complete
-    .data start:0x02123234 end:0x0212323c
-
-src/data/ov070/_ZTS8daKrpa_c.c:
-    complete
-    .data start:0x02123334 end:0x02123340
-
-src/data/ov070/_ZTI8daKrpa_c.c:
-    complete
-    .data start:0x02123340 end:0x0212334c
-
-src/data/ov070/g_profile_KERONPA.c:
-    complete
-    .data start:0x0212334c end:0x02123370
-
-src/data/ov070/ov070_vt_02123370.c:
-    complete
-    .data start:0x02123370 end:0x021233ec
-
-src/data/ov070/data_ov070_021233ec.c:
-    complete
-    .data start:0x021233ec end:0x021233f4
-
-src/data/ov070/data_ov070_021233f4.c:
-    complete
-    .data start:0x021233f4 end:0x021233fc
-
-src/data/ov070/data_ov070_021233fc.c:
-    complete
-    .data start:0x021233fc end:0x02123404
-
-src/data/ov070/data_ov070_02123404.c:
-    complete
-    .data start:0x02123404 end:0x0212340c
-
-src/data/ov070/_ZTS8daKpFr_c.c:
-    complete
-    .data start:0x0212340c end:0x02123418
-
-src/data/ov070/_ZTI8daKpFr_c.c:
-    complete
-    .data start:0x02123418 end:0x02123424
-
-src/data/ov070/g_profile_KERONPA_FIRE.c:
-    complete
-    .data start:0x02123424 end:0x02123448
-
-src/data/ov070/ov070_vt_02123448.c:
-    complete
-    .data start:0x02123448 end:0x021234c4
-
-src/data/ov070/data_ov070_021234c4.c:
-    complete
-    .data start:0x021234c4 end:0x021234dc
-
-src/data/ov070/data_ov070_021234dc.c:
-    complete
-    .data start:0x021234dc end:0x02123500
 
 src/data/ov070/data_ov070_0212370c.c:
     complete

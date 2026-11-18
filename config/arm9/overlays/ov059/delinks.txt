@@ -6,10 +6,6 @@ src/data/ov059/data_ov059_021111a4.c:
     complete
     .rodata start:0x021111a4 end:0x021111a8
 
-src/data/ov059/data_ov059_021111a8.c:
-    complete
-    .rodata start:0x021111a8 end:0x021111e0
-
 src/data/ov059/data_ov059_021111e0.c:
     complete
     .rodata start:0x021111e0 end:0x021111ec
@@ -74,21 +70,9 @@ src/data/ov059/data_ov059_021114c8.c:
     complete
     .data start:0x021114c8 end:0x021114cc
 
-src/data/ov059/data_ov059_021114cc.c:
-    complete
-    .data start:0x021114cc end:0x021114d4
-
-src/data/ov059/data_ov059_021114d4.c:
-    complete
-    .data start:0x021114d4 end:0x021114dc
-
 src/data/ov059/data_ov059_021114dc.c:
     complete
     .data start:0x021114dc end:0x021114e8
-
-src/data/ov059/data_ov059_021114e8.c:
-    complete
-    .data start:0x021114e8 end:0x021114f4
 
 src/data/ov059/data_ov059_021114f4.c:
     complete
@@ -102,22 +86,6 @@ src/data/ov059/data_ov059_02111510.c:
     complete
     .data start:0x02111510 end:0x02111520
 
-src/data/ov059/data_ov059_02111520.c:
-    complete
-    .data start:0x02111520 end:0x02111530
-
-src/data/ov059/data_ov059_02111530.c:
-    complete
-    .data start:0x02111530 end:0x0211153c
-
-src/data/ov059/data_ov059_0211153c.c:
-    complete
-    .data start:0x0211153c end:0x02111548
-
-src/data/ov059/data_ov059_02111548.c:
-    complete
-    .data start:0x02111548 end:0x0211155c
-
 src/data/ov059/data_ov059_0211155c.c:
     complete
     .data start:0x0211155c end:0x02111560
@@ -125,10 +93,6 @@ src/data/ov059/data_ov059_0211155c.c:
 src/data/ov059/data_ov059_02111560.c:
     complete
     .data start:0x02111560 end:0x02111564
-
-src/data/ov059/data_ov059_02111564.c:
-    complete
-    .data start:0x02111564 end:0x0211159c
 
 src/data/ov059/data_ov059_0211159c.c:
     complete

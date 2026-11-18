@@ -15,10 +15,6 @@ src/data/ov023/data_ov023_02111764.c:
     complete
     .rodata start:0x02111764 end:0x02111768
 
-src/data/ov023/data_ov023_02111768.c:
-    complete
-    .rodata start:0x02111768 end:0x02111784
-
 src/data/ov023/data_ov023_02111784.c:
     complete
     .rodata start:0x02111784 end:0x02111834
@@ -75,10 +71,6 @@ src/data/ov023/data_ov023_02111b24.c:
     complete
     .data start:0x02111b24 end:0x02111b28
 
-src/data/ov023/data_ov023_02111b28.c:
-    complete
-    .data start:0x02111b28 end:0x02111b30
-
 src/data/ov023/data_ov023_02111b30.c:
     complete
     .data start:0x02111b30 end:0x02111b34
@@ -86,10 +78,6 @@ src/data/ov023/data_ov023_02111b30.c:
 src/data/ov023/data_ov023_02111b34.c:
     complete
     .data start:0x02111b34 end:0x02111b38
-
-src/data/ov023/data_ov023_02111b38.c:
-    complete
-    .data start:0x02111b38 end:0x02111b40
 
 src/data/ov023/data_ov023_02111b40.c:
     complete
@@ -99,10 +87,6 @@ src/data/ov023/data_ov023_02111b44.c:
     complete
     .data start:0x02111b44 end:0x02111b48
 
-src/data/ov023/data_ov023_02111b48.c:
-    complete
-    .data start:0x02111b48 end:0x02111b54
-
 src/data/ov023/data_ov023_02111b54.c:
     complete
     .data start:0x02111b54 end:0x02111b60
@@ -111,45 +95,17 @@ src/data/ov023/data_ov023_02111b60.c:
     complete
     .data start:0x02111b60 end:0x02111b64
 
-src/data/ov023/data_ov023_02111b64.c:
-    complete
-    .data start:0x02111b64 end:0x02111b68
-
 src/data/ov023/data_ov023_02111b68.c:
     complete
     .data start:0x02111b68 end:0x02111b6c
-
-src/data/ov023/data_ov023_02111b6c.c:
-    complete
-    .data start:0x02111b6c end:0x02111b70
 
 src/data/ov023/data_ov023_02111b70.c:
     complete
     .data start:0x02111b70 end:0x02111b74
 
-src/data/ov023/data_ov023_02111b74.c:
-    complete
-    .data start:0x02111b74 end:0x02111b88
-
-src/data/ov023/data_ov023_02111b88.c:
-    complete
-    .data start:0x02111b88 end:0x02111ba4
-
 src/data/ov023/data_ov023_02111ba4.c:
     complete
     .data start:0x02111ba4 end:0x02111bc0
-
-src/data/ov023/data_ov023_02111bc0.c:
-    complete
-    .data start:0x02111bc0 end:0x02111bd4
-
-src/data/ov023/data_ov023_02111bd4.c:
-    complete
-    .data start:0x02111bd4 end:0x02111be0
-
-src/data/ov023/data_ov023_02111be0.c:
-    complete
-    .data start:0x02111be0 end:0x02111bf8
 
 src/data/ov023/data_ov023_02111bf8.c:
     complete

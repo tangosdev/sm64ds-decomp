@@ -37,14 +37,6 @@ src/game/actors/d_a_cnn.cpp:
     .ctor start:0x0213c344 end:0x0213c348
     .bss start:0x0213c8e8 end:0x0213c91c
 
-src/data/ov098/data_ov098_0213bf60.c:
-    complete
-    .rodata start:0x0213bf60 end:0x0213bf64
-
-src/data/ov098/data_ov098_0213bf68.c:
-    complete
-    .rodata start:0x0213bf68 end:0x0213bf90
-
 src/game/actors/d_a_wbm.cpp:
     complete
     .rodata start:0x0213bf90 end:0x0213bf9c
@@ -52,169 +44,13 @@ src/game/actors/d_a_wbm.cpp:
     .init start:0x0213c2b4 end:0x0213c33c
     .ctor start:0x0213c348 end:0x0213c34c
     .bss start:0x0213c91c end:0x0213c948
-src/data/ov098/_ZTI15daObjYajirusi_c.c:
+src/data/ov098/data_ov098_0213bf60.c:
     complete
-    .data.blockHead start:0x0213c360 end:0x0213c36c
+    .rodata start:0x0213bf60 end:0x0213bf64
 
-src/data/ov098/_ZTS15daObjYajirusi_c.c:
+src/data/ov098/data_ov098_0213bf68.c:
     complete
-    .data.blockHead start:0x0213c36c end:0x0213c380
-
-src/data/ov098/g_profile_YAJIRUSI_L.c:
-    complete
-    .data.blockHead start:0x0213c398 end:0x0213c3b4
-
-src/data/ov098/g_profile_YAJIRUSI_R.c:
-    complete
-    .data.blockHead start:0x0213c3b4 end:0x0213c3d8
-
-src/data/ov098/ov098_vt_0213c3d8.c:
-    complete
-    .data.blockHead start:0x0213c3d8 end:0x0213c434
-
-src/data/ov098/MgShellSmash_SpawnInfo.c:
-    complete
-    .data.blockHead start:0x0213c434 end:0x0213c458
-
-src/data/ov098/data_ov098_0213c458.c:
-    complete
-    .data.blockHead start:0x0213c458 end:0x0213c460
-
-src/data/ov098/data_ov098_0213c460.c:
-    complete
-    .data.blockHead start:0x0213c460 end:0x0213c468
-
-src/data/ov098/data_ov098_0213c468.c:
-    complete
-    .data.blockHead start:0x0213c468 end:0x0213c470
-
-src/data/ov098/data_ov098_0213c470.c:
-    complete
-    .data.blockHead start:0x0213c470 end:0x0213c478
-
-src/data/ov098/data_ov098_0213c478.c:
-    complete
-    .data.blockHead start:0x0213c478 end:0x0213c480
-
-src/data/ov098/data_ov098_0213c480.c:
-    complete
-    .data.blockHead start:0x0213c480 end:0x0213c488
-
-src/data/ov098/data_ov098_0213c488.c:
-    complete
-    .data.blockHead start:0x0213c488 end:0x0213c490
-
-src/data/ov098/data_ov098_0213c490.c:
-    complete
-    .data.blockHead start:0x0213c490 end:0x0213c498
-
-src/data/ov098/data_ov098_0213c498.c:
-    complete
-    .data.blockHead start:0x0213c498 end:0x0213c4a0
-
-src/data/ov098/data_ov098_0213c4a0.c:
-    complete
-    .data.blockHead start:0x0213c4a0 end:0x0213c4a8
-
-src/data/ov098/data_ov098_0213c4a8.c:
-    complete
-    .data.blockHead start:0x0213c4a8 end:0x0213c4b0
-
-src/data/ov098/data_ov098_0213c4b0.c:
-    complete
-    .data.blockHead start:0x0213c4b0 end:0x0213c4b8
-
-src/data/ov098/data_ov098_0213c4b8.c:
-    complete
-    .data.blockHead start:0x0213c4b8 end:0x0213c4c0
-
-src/data/ov098/data_ov098_0213c4c0.c:
-    complete
-    .data.blockHead start:0x0213c4c0 end:0x0213c4c8
-
-src/data/ov098/_ZTI13daObjBlockS_c.c:
-    complete
-    .data start:0x0213c4d4 end:0x0213c4e0
-
-src/data/ov098/_ZTS13daObjBlockS_c.c:
-    complete
-    .data start:0x0213c500 end:0x0213c510
-
-src/data/ov098/g_profile_BLOCK_S.c:
-    complete
-    .data start:0x0213c510 end:0x0213c52c
-
-src/data/ov098/ov098_vt_0213c5bc.c:
-    complete
-    .data.blockTail start:0x0213c5bc end:0x0213c63c
-
-src/data/ov098/data_ov098_0213c63c.c:
-    complete
-    .data.blockTail start:0x0213c63c end:0x0213c644
-
-src/data/ov098/data_ov098_0213c644.c:
-    complete
-    .data.blockTail start:0x0213c644 end:0x0213c64c
-
-src/data/ov098/data_ov098_0213c64c.c:
-    complete
-    .data.blockTail start:0x0213c64c end:0x0213c654
-
-src/data/ov098/data_ov098_0213c654.c:
-    complete
-    .data.blockTail start:0x0213c654 end:0x0213c65c
-
-src/data/ov098/data_ov098_0213c65c.c:
-    complete
-    .data.blockTail start:0x0213c65c end:0x0213c664
-
-src/data/ov098/_ZTS7daCnn_c.c:
-    complete
-    .data.blockTail start:0x0213c664 end:0x0213c670
-
-src/data/ov098/_ZTI7daCnn_c.c:
-    complete
-    .data.blockTail start:0x0213c670 end:0x0213c67c
-
-src/data/ov098/g_profile_CANNON.c:
-    complete
-    .data.blockTail start:0x0213c67c end:0x0213c6a0
-
-src/data/ov098/ov098_vt_0213c6a0.c:
-    complete
-    .data.blockTail start:0x0213c6a0 end:0x0213c71c
-
-src/data/ov098/data_ov098_0213c71c.c:
-    complete
-    .data.blockTail start:0x0213c71c end:0x0213c724
-
-src/data/ov098/data_ov098_0213c724.c:
-    complete
-    .data.blockTail start:0x0213c724 end:0x0213c72c
-
-src/data/ov098/data_ov098_0213c72c.c:
-    complete
-    .data.blockTail start:0x0213c72c end:0x0213c734
-
-src/data/ov098/_ZTS7daWbm_c.c:
-    complete
-    .data.blockTail start:0x0213c734 end:0x0213c740
-
-src/data/ov098/_ZTI7daWbm_c.c:
-    complete
-    .data.blockTail start:0x0213c740 end:0x0213c74c
-
-src/data/ov098/g_profile_WATERBOMB.c:
-    complete
-    .data.blockTail start:0x0213c74c end:0x0213c770
-
-src/data/ov098/ov098_vt_0213c770.c:
-    complete
-    .data.blockTail start:0x0213c770 end:0x0213c78c
-
-src/data/ov098/data_ov098_0213c78c.c:
-    complete
-    .data.blockTail start:0x0213c78c end:0x0213c800
+    .rodata start:0x0213bf68 end:0x0213bf90
 
 src/data/ov098/data_ov098_0213c948.c:
     complete

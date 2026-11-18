@@ -5,18 +5,6 @@ src/data/ov050/data_ov050_021111c0.c:
     complete
     .data start:0x021111c0 end:0x021111c4
 
-src/data/ov050/data_ov050_021111c4.c:
-    complete
-    .data start:0x021111c4 end:0x021111cc
-
-src/data/ov050/data_ov050_021111cc.c:
-    complete
-    .data start:0x021111cc end:0x021111d4
-
-src/data/ov050/data_ov050_021111d4.c:
-    complete
-    .data start:0x021111d4 end:0x021111e0
-
 src/data/ov050/data_ov050_021111e0.c:
     complete
     .data start:0x021111e0 end:0x021111ec
@@ -29,33 +17,9 @@ src/data/ov050/data_ov050_021111fc.c:
     complete
     .data start:0x021111fc end:0x02111204
 
-src/data/ov050/data_ov050_02111204.c:
-    complete
-    .data start:0x02111204 end:0x02111210
-
-src/data/ov050/data_ov050_02111210.c:
-    complete
-    .data start:0x02111210 end:0x02111218
-
 src/data/ov050/data_ov050_02111218.c:
     complete
     .data start:0x02111218 end:0x02111220
-
-src/data/ov050/data_ov050_02111220.c:
-    complete
-    .data start:0x02111220 end:0x02111228
-
-src/data/ov050/data_ov050_02111228.c:
-    complete
-    .data start:0x02111228 end:0x02111244
-
-src/data/ov050/data_ov050_02111244.c:
-    complete
-    .data start:0x02111244 end:0x02111248
-
-src/data/ov050/data_ov050_02111248.c:
-    complete
-    .data start:0x02111248 end:0x02111270
 
 src/data/ov050/data_ov050_02111270.c:
     complete

@@ -9,53 +9,13 @@ src/data/ov037/data_ov037_021111c4.c:
     complete
     .data start:0x021111c4 end:0x021111c8
 
-src/data/ov037/data_ov037_021111c8.c:
-    complete
-    .data start:0x021111c8 end:0x021111d0
-
-src/data/ov037/data_ov037_021111d0.c:
-    complete
-    .data start:0x021111d0 end:0x021111d8
-
 src/data/ov037/data_ov037_021111d8.c:
     complete
     .data start:0x021111d8 end:0x021111e0
 
-src/data/ov037/data_ov037_021111e0.c:
-    complete
-    .data start:0x021111e0 end:0x021111ec
-
-src/data/ov037/data_ov037_021111ec.c:
-    complete
-    .data start:0x021111ec end:0x021111fc
-
-src/data/ov037/data_ov037_021111fc.c:
-    complete
-    .data start:0x021111fc end:0x02111204
-
 src/data/ov037/data_ov037_02111204.c:
     complete
     .data start:0x02111204 end:0x02111208
-
-src/data/ov037/data_ov037_02111208.c:
-    complete
-    .data start:0x02111208 end:0x02111210
-
-src/data/ov037/data_ov037_02111210.c:
-    complete
-    .data start:0x02111210 end:0x02111218
-
-src/data/ov037/data_ov037_02111218.c:
-    complete
-    .data start:0x02111218 end:0x02111228
-
-src/data/ov037/data_ov037_02111228.c:
-    complete
-    .data start:0x02111228 end:0x02111244
-
-src/data/ov037/data_ov037_02111244.c:
-    complete
-    .data start:0x02111244 end:0x02111250
 
 src/data/ov037/data_ov037_02111250.c:
     complete
