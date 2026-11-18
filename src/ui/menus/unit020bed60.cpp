@@ -69,7 +69,7 @@ extern Ov007Sprite *NumberSprite_Create(int index);
 extern "C" void func_ov007_020bce70(short n, int frames);
 extern "C" void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, VecFx32 *out);
 extern int func_ov007_020c1da0(int i);
-extern "C" int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int arg4, int *out);
+extern "C" int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int maxDist, int *out);
 extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020ca1d4(Ov007MeshWave *wave, Ov007Mesh *mesh);
 extern void func_ov007_020ca26c(Ov007MeshWave *wave);
@@ -85,7 +85,7 @@ extern "C" Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width,
 extern "C" Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
 
 /* Defined below, after their callers (ROM order). */
-void func_ov007_020bed60(int arg0, int arg1, int arg2);
+void func_ov007_020bed60(int x, int y, int strength);
 extern "C" void func_ov007_020beeb0(void);
 
 #define SCENE data_ov007_02104bd4
@@ -94,17 +94,17 @@ extern "C" void func_ov007_020beeb0(void);
  * unprojected through the camera at the camera's depth, then
  * func_ov007_020c30ac finds the mesh vertex nearest it. Returns its index,
  * or -1. */
-int Ov007Mesh::func_ov007_020bf630(Ov007Camera *camera, int x, int y, int arg5) {
+int Ov007Mesh::func_ov007_020bf630(Ov007Camera *camera, int x, int y, int maxDist) {
     VecFx32 local;
     func_ov007_020bfe4c(camera, x << 0xc, y << 0xc, -camera->distance, &local);
     {
         Ov007Grid *grid = this->grid;
-        return func_ov007_020c30ac(this->verts, grid->columns * grid->rows, &local, arg5, 0);
+        return func_ov007_020c30ac(this->verts, grid->columns * grid->rows, &local, maxDist, 0);
     }
 }
 
 /* Places swing idx on item view idx + 0xe's sprite: a copy of the sprite,
- * set the camera's distance in front of it (arg0 is cameras[0] for both
+ * set the camera's distance in front of it (camera is cameras[0] for both
  * callers), is sized and moved into the world, and the swing takes its
  * position and world size and is bound to the mesh. */
 void func_ov007_020bf57c(Ov007Camera *camera, int idx) {
@@ -352,19 +352,19 @@ void func_ov007_020bee14(void) {
     func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[1], &v, 0x3e8, 1);
 }
 
-/* Pokes the mesh at screen point (arg0, arg1): func_ov007_020bf630 picks the
+/* Pokes the mesh at screen point (x, y): func_ov007_020bf630 picks the
  * grid point under it through the camera, func_ov007_020ca578 pushes that
- * point with strength arg2, and the waves hold off for 0x78 ticks. */
-void func_ov007_020bed60(int arg0, int arg1, int arg2) {
+ * point with that strength, and the waves hold off for 0x78 ticks. */
+void func_ov007_020bed60(int x, int y, int strength) {
     Ov007Mesh *mesh = SCENE->mesh;
     Ov007Camera *camera = WORK->cameras[0];
-    int res = mesh->func_ov007_020bf630(camera, arg0, arg1, -1);
+    int res = mesh->func_ov007_020bf630(camera, x, y, -1);
     if (res == -1)
         return;
     {
         int m = FX_ModS32(res, mesh->grid->columns);
         int d = FX_DivS32(res, mesh->grid->columns);
-        func_ov007_020ca578(mesh, m, d, arg2);
+        func_ov007_020ca578(mesh, m, d, strength);
     }
     SCENE->wave->delay = 120;
 }
