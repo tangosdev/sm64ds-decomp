@@ -282,7 +282,8 @@ int dCapEnemy_c::func_02005e28()
 void dCapEnemy_c::Unk_02005d94()
 {
     if (!(mCapId & 0x80)) return;
-    if (!IsOffScreen(this) && !IsVsMode()) return;
+    if (!IsOffScreen(this) && !IsVsMode())
+        return;
     mCapId &= 7;
     if (func_02005e28())
         mCapId |= 0x80;
