@@ -380,6 +380,10 @@ void daBmb_c::func_ov102_0214c0b8() {
  * Vector3 views; no owning Vector3 temporaries are introduced.
  * ======================================================================== */
 
+static inline int IsGrabbed(daPly_c *player) {
+    return player->mGrabbedByActor != 0;
+}
+
 void daBmb_c::State0() {
     DecIfAbove0_Short(&mTurnTimer);
     if (mVariant != 1) {
@@ -407,8 +411,7 @@ void daBmb_c::State0() {
             s16 target = Vec3_HorzAngle(&mPos, &mChasePlayer->mPos);
             if (mVariant == 3) {
                 /* daPly_c::mGrabbedByActor: stop turning toward a held player. */
-                int b = (mChasePlayer->mGrabbedByActor != 0);
-                if (b)
+                if (IsGrabbed(mChasePlayer))
                     target = mPrevAngle.y;
             }
             ApproachLinear(mPrevAngle.y, target, 0x800);
@@ -513,31 +516,23 @@ void daBmb_c::func_ov102_0214bd20() {
  * to func_ov102_0214c0b8.  Always advances the animation.
  * ======================================================================== */
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 void daBmb_c::State3()
 {
-    /* Nothing names these two mFlags bits yet, so they keep neutral names rather
-     * than a guessed meaning. Both booleans are materialized on purpose: the
-     * cartridge tests the flag word into a register and then re-tests that, and
-     * folding either into its `if` collapses the pair.
+    /* Nothing names these two mFlags bits yet, so they are tested through
+     * IsFlagSet rather than a guessed meaning. The int-returning predicate is
+     * what leaves the cartridge's materialized 0/1 behind each test.
      *
      * The empty 0x100 arm is real -- on that bit this state does nothing at all,
      * and the else-branch is what carries the work. */
-    int flags = mFlags;
-    int flag0x400 = (int) ((flags & 0x400) != 0);
-    if (flag0x400)
-    {
+    if (IsFlagSet(this, 0x400)) {
         func_ov102_0214b3b8();
-    }
-    else
-    {
-        int flag0x100 = (int) ((flags & 0x100) != 0);
-        if (flag0x100)
-        {
-        }
-        else
-        {
-            func_ov102_0214c0b8();
-        }
+    } else if (IsFlagSet(this, 0x100)) {
+    } else {
+        func_ov102_0214c0b8();
     }
     mAnmModel.dExtFrameCtrl_c::Advance();
 }
@@ -652,13 +647,16 @@ void daBmb_c::func_ov102_0214baa0() {
  * 0x10000001 and turns rendering back on.
  * ======================================================================== */
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 void daBmb_c::State5()
 {
     if (DistToCPlayer() < 0x7d0000)
         return;
     if ((mFlags & 8) == 0) {
-        int b = (gGameMode == 1);
-        if (b == 0)
+        if (!IsVsMode())
             return;
     }
     func_ov102_0214c0b8();
@@ -699,6 +697,10 @@ void daBmb_c::func_ov102_0214b988() {
  * dropped; the plain `&&` MATCHES.
  * ======================================================================== */
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 void daBmb_c::func_ov102_0214b53c() {
     extern Matrix4x3 data_020a0e68;
 
@@ -711,9 +713,9 @@ void daBmb_c::func_ov102_0214b53c() {
     if ((mVariant == 2) && ((src = mCarryMatrix) != 0)) {
         mAnmModel.mat4x3 = *src;
     } else {
-        int haveMtx = (int)((mFlags & 0x4000) != 0);
         daPly_c *player0;
-        if (((haveMtx != 0) && ((player0 = mCarrier) != 0)) && (player0->mCarryMatrix != 0)) {
+        if ((IsFlagSet(this, 0x4000) && ((player0 = mCarrier) != 0)) &&
+            (player0->mCarryMatrix != 0)) {
             dExtAnmModel_c *ret = (dExtAnmModel_c *)func_ov002_020e496c(player0);
             u8 idx = 0;
             if (mCarrier->IsFrontSliding() != 0) {
@@ -741,8 +743,7 @@ void daBmb_c::func_ov102_0214b53c() {
             mAnmModel.mat4x3.m[11] = mPos.z >> 3;
         }
     }
-    int haveMtx2 = (int)((mFlags & 0x4000) != 0);
-    if ((haveMtx2 != 0) || (mFuse != 0)) {
+    if (IsFlagSet(this, 0x4000) || (mFuse != 0)) {
         p.x = 0;
         p.y = 0;
         p.z = 0;
@@ -753,14 +754,12 @@ void daBmb_c::func_ov102_0214b53c() {
         p.z = data_020a0e68.m[11];
         Vec3_Lsl(&d, &p, 3);
         p = d;
-        int haveMtx3 = (int)((mFlags & 0x4000) != 0);
-        if (haveMtx3 != 0) {
+        if (IsFlagSet(this, 0x4000)) {
             mCarryParticle =
                 Particle::System::New(mCarryParticle, kPtclBobOmbCarried, p.x, p.y, p.z, 0, 0);
         }
         if (mFuse != 0) {
-            int haveShadow = (int)((mFlags & 0x40000) != 0);
-            if (haveShadow != 0) {
+            if (IsInYoshiMouth(this)) {
                 if (mEatingPlayer != 0) {
                     eaterPos = mEatingPlayer->mPos;
                     data_020a0e68 = mEatingPlayer->mHeadMatrix;
