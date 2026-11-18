@@ -539,7 +539,9 @@ void daMoray_c::UpdatePose() {
        mSegmentPos[i] through the actor base; pos receives the bone
        translation before that shift. Measured (#821 r49): this->mSegmentPos[i]
        for the clear and the shift is the right size but 17 words off
-       (register order); pos-> for all three is 0x2dc of 0x2f8. */
+       (register order); pos-> for all three is 0x2dc of 0x2f8. The bone
+       matrix is a byte offset too: &transforms[bone] with bone++ is 20 bytes
+       off (#821 r65). */
     row = this;
     transformOffset = i;
     pos = this->mSegmentPos;
