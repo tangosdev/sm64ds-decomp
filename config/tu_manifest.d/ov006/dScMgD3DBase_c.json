@@ -40,7 +40,8 @@
       "input_section": ".rodata"
     },
     {
-      "name": ".data",
+      "name": ".data.w13b814",
+      "input_section": ".data",
       "start": "0x0213c5e8",
       "end": "0x0213c610"
     }
@@ -339,7 +340,7 @@
   ],
   "relocations": [
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c5e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -349,7 +350,7 @@
       "target_address": "0x020bcaa0"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c5ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -359,7 +360,7 @@
       "target_address": "0x020bdccc"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c5f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -369,7 +370,7 @@
       "target_address": "0x020bd074"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c5f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -379,7 +380,7 @@
       "target_address": "0x020be34c"
     },
     {
-      "section": ".data",
+      "section": ".data.w13b814",
       "source": "0x0213c5f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -539,7 +540,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.w13b814",
           "start": "0x0213c5e8",
           "end": "0x0213c610",
           "differingBytes": 0,
@@ -548,7 +549,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 35
+          "LICENSED": 38
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -559,19 +560,19 @@
           {
             "section": ".init",
             "original": [
-              83
+              87
             ],
             "desired": [
-              83
+              87
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              81
+              85
             ],
             "desired": [
-              81
+              85
             ]
           },
           {
@@ -582,15 +583,35 @@
               7,
               8,
               9,
-              27
+              31
             ],
             "desired": [
+              7,
               6,
               9,
-              8,
-              7,
               5,
-              27
+              8,
+              31
+            ]
+          },
+          {
+            "section": ".rodata.sD3DSoundPanOffsets",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
+            ]
+          },
+          {
+            "section": ".data.w13b814",
+            "original": [
+              26,
+              28
+            ],
+            "desired": [
+              26,
+              28
             ]
           }
         ],
@@ -604,15 +625,15 @@
                 7,
                 8,
                 9,
-                27
+                31
               ],
               "desired": [
+                7,
                 6,
                 9,
-                8,
-                7,
                 5,
-                27
+                8,
+                31
               ],
               "slots": [
                 5,
@@ -620,7 +641,7 @@
                 7,
                 8,
                 9,
-                27
+                31
               ]
             }
           ],

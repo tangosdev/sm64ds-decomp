@@ -27,6 +27,12 @@
       "end": "0x021402fc"
     },
     {
+      "name": ".data.pmf_Dealer",
+      "input_section": ".data",
+      "start": "0x0213ac48",
+      "end": "0x0213acc0"
+    },
+    {
       "name": ".data.sMascotWalkerPaths",
       "input_section": ".data",
       "start": "0x0213acc0",
@@ -61,6 +67,30 @@
       "input_section": ".data",
       "start": "0x0213ad88",
       "end": "0x0213adb8"
+    },
+    {
+      "name": ".data.pmf_Presenter",
+      "input_section": ".data",
+      "start": "0x0213adb8",
+      "end": "0x0213add8"
+    },
+    {
+      "name": ".data.pmf_PresenterWin",
+      "input_section": ".data",
+      "start": "0x0213ade0",
+      "end": "0x0213ade8"
+    },
+    {
+      "name": ".data.pmf_PresenterMiss",
+      "input_section": ".data",
+      "start": "0x0213adf0",
+      "end": "0x0213ae00"
+    },
+    {
+      "name": ".data.pmf_FlowerFace",
+      "input_section": ".data",
+      "start": "0x0213aec0",
+      "end": "0x0213aee8"
     },
     {
       "name": ".data.data_ov006_0213aee8",
@@ -724,6 +754,111 @@
   ],
   "data": [
     {
+      "symbol": "pmf_Dealer_StateDeal",
+      "address": "0x0213ac48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateDeal (0x020c11c0), emitted by Dealer::StartDeal; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle",
+      "address": "0x0213ac50",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateIdle (0x020c1760), emitted by Dealer::PlayIdle; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle_2",
+      "address": "0x0213ac58",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateIdle (0x020c1760), emitted by Dealer::IsIdle; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateShuffle",
+      "address": "0x0213ac60",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateShuffle (0x020c14bc), emitted by Dealer::StartShuffle; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk",
+      "address": "0x0213ac68",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &MascotWalker::StateWalk (0x020c0364), emitted by MascotWalker::StartNextPath; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StatePause",
+      "address": "0x0213ac70",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &MascotWalker::StatePause (0x020c0264), emitted by MascotWalker::StartPause; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk_2",
+      "address": "0x0213ac78",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &MascotWalker::StateWalk (0x020c0364), emitted by MascotWalker::Update; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateWin",
+      "address": "0x0213ac80",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateWin (0x020c0b74), emitted by Dealer::PlayWin; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk_3",
+      "address": "0x0213ac88",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &MascotWalker::StateWalk (0x020c0364), emitted by MascotWalker::StatePause; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle_3",
+      "address": "0x0213ac90",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateIdle (0x020c1760), emitted by Dealer::IsIdleAtRest; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateLose",
+      "address": "0x0213ac98",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateLose (0x020c0ce8), emitted by Dealer::PlayLose; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateSwap",
+      "address": "0x0213aca0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateSwap (0x020c0df0), emitted by Dealer::StartSwap; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateReveal",
+      "address": "0x0213aca8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateReveal (0x020c0f9c), emitted by Dealer::IsBusy; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateDeal_2",
+      "address": "0x0213acb0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateDeal (0x020c11c0), emitted by Dealer::IsBusy; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Dealer_StateReveal_2",
+      "address": "0x0213acb8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Dealer::StateReveal (0x020c0f9c), emitted by Dealer::StartReveal; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
       "symbol": "sMascotWalkerPaths",
       "address": "0x0213acc0",
       "size": "0x20",
@@ -764,6 +899,90 @@
       "size": "0x30",
       "binding": "STB_GLOBAL",
       "evidence": "fourth walk path's point list (four VecFx32 positions, 20.12): the reverse tour"
+    },
+    {
+      "symbol": "pmf_Presenter_StateIdle",
+      "address": "0x0213adb8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Presenter::StateIdle (0x020c27c4), emitted by Presenter::IsIdle; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Presenter_StateSurprisedThenSmile",
+      "address": "0x0213adc0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Presenter::StateSurprisedThenSmile (0x020c24e4), emitted by Presenter::PlayCheer; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Presenter_StateIdle_2",
+      "address": "0x0213adc8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Presenter::StateIdle (0x020c27c4), emitted by Presenter::PlayIdle; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Presenter_StateSurprisedThenIdle",
+      "address": "0x0213add0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Presenter::StateSurprisedThenIdle (0x020c22d8), emitted by Presenter::PlayCheerLoop; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Presenter_StateWin",
+      "address": "0x0213ade0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Presenter::StateWin (0x020c26f4), emitted by Presenter::PlayMatch; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Presenter_StateMistake",
+      "address": "0x0213adf0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Presenter::StateMistake (0x020c263c), emitted by Presenter::PlayMiss; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Presenter_StateLoseStart",
+      "address": "0x0213adf8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Presenter::StateLoseStart (0x020c23a8), emitted by Presenter::PlayLose; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StateIdle",
+      "address": "0x0213aec0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &FlowerFace::StateIdle (0x020c3ad8), emitted by FlowerFace::PlayIdle; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StatePick",
+      "address": "0x0213aec8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &FlowerFace::StatePick (0x020c395c), emitted by FlowerFace::PlayPetalPulled; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StateHate",
+      "address": "0x0213aed0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &FlowerFace::StateHate (0x020c38ac), emitted by FlowerFace::PlayHate; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StateLike",
+      "address": "0x0213aed8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &FlowerFace::StateLike (0x020c3904), emitted by FlowerFace::PlayLike; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StateIdle_2",
+      "address": "0x0213aee0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &FlowerFace::StateIdle (0x020c3ad8), emitted by FlowerFace::IsIdle; paired by its consumer relocation and by its own {fn, 0} relocation target"
     },
     {
       "symbol": "data_ov006_0213aee8",
@@ -943,6 +1162,13 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
+          "section": ".data.pmf_Dealer",
+          "start": "0x0213ac48",
+          "end": "0x0213acc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.sMascotWalkerPaths",
           "start": "0x0213acc0",
           "end": "0x0213ace0",
@@ -985,6 +1211,34 @@
           "firstDiff": null
         },
         {
+          "section": ".data.pmf_Presenter",
+          "start": "0x0213adb8",
+          "end": "0x0213add8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.pmf_PresenterWin",
+          "start": "0x0213ade0",
+          "end": "0x0213ade8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.pmf_PresenterMiss",
+          "start": "0x0213adf0",
+          "end": "0x0213ae00",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.pmf_FlowerFace",
+          "start": "0x0213aec0",
+          "end": "0x0213aee8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.data_ov006_0213aee8",
           "start": "0x0213aee8",
           "end": "0x0213af18",
@@ -994,7 +1248,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 96
+          "LICENSED": 130
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1006,17 +1260,290 @@
             "section": ".bss",
             "original": [
               5,
-              6,
-              7
+              60,
+              61
             ],
             "desired": [
               5,
+              60,
+              61
+            ]
+          },
+          {
+            "section": ".data.pmf_Dealer",
+            "original": [
+              8,
+              10,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26,
+              28,
+              30,
+              36,
+              46,
+              48,
+              50
+            ],
+            "desired": [
+              46,
+              50,
+              28,
+              48,
+              14,
+              8,
+              16,
+              22,
+              36,
+              26,
+              24,
+              30,
+              10,
+              18,
+              20
+            ]
+          },
+          {
+            "section": ".data.sMascotWalkerPaths",
+            "original": [
+              62
+            ],
+            "desired": [
+              62
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213ace0",
+            "original": [
+              64
+            ],
+            "desired": [
+              64
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213ad04",
+            "original": [
+              65
+            ],
+            "desired": [
+              65
+            ]
+          },
+          {
+            "section": ".data.sDealerIdentityMtx",
+            "original": [
+              67
+            ],
+            "desired": [
+              67
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213ad58",
+            "original": [
+              68
+            ],
+            "desired": [
+              68
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213ad88",
+            "original": [
+              69
+            ],
+            "desired": [
+              69
+            ]
+          },
+          {
+            "section": ".data.pmf_Presenter",
+            "original": [
+              12,
+              34,
+              42,
+              44
+            ],
+            "desired": [
+              44,
+              34,
+              42,
+              12
+            ]
+          },
+          {
+            "section": ".data.pmf_PresenterWin",
+            "original": [
+              40
+            ],
+            "desired": [
+              40
+            ]
+          },
+          {
+            "section": ".data.pmf_PresenterMiss",
+            "original": [
+              32,
+              38
+            ],
+            "desired": [
+              38,
+              32
+            ]
+          },
+          {
+            "section": ".data.pmf_FlowerFace",
+            "original": [
               6,
-              7
+              52,
+              54,
+              56,
+              58
+            ],
+            "desired": [
+              58,
+              56,
+              52,
+              54,
+              6
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213aee8",
+            "original": [
+              66
+            ],
+            "desired": [
+              66
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data.pmf_Dealer",
+              "original": [
+                8,
+                10,
+                14,
+                16,
+                18,
+                20,
+                22,
+                24,
+                26,
+                28,
+                30,
+                36,
+                46,
+                48,
+                50
+              ],
+              "desired": [
+                46,
+                50,
+                28,
+                48,
+                14,
+                8,
+                16,
+                22,
+                36,
+                26,
+                24,
+                30,
+                10,
+                18,
+                20
+              ],
+              "slots": [
+                8,
+                10,
+                14,
+                16,
+                18,
+                20,
+                22,
+                24,
+                26,
+                28,
+                30,
+                36,
+                46,
+                48,
+                50
+              ]
+            },
+            {
+              "section": ".data.pmf_Presenter",
+              "original": [
+                12,
+                34,
+                42,
+                44
+              ],
+              "desired": [
+                44,
+                34,
+                42,
+                12
+              ],
+              "slots": [
+                12,
+                34,
+                42,
+                44
+              ]
+            },
+            {
+              "section": ".data.pmf_PresenterMiss",
+              "original": [
+                32,
+                38
+              ],
+              "desired": [
+                38,
+                32
+              ],
+              "slots": [
+                32,
+                38
+              ]
+            },
+            {
+              "section": ".data.pmf_FlowerFace",
+              "original": [
+                6,
+                52,
+                54,
+                56,
+                58
+              ],
+              "desired": [
+                58,
+                56,
+                52,
+                54,
+                6
+              ],
+              "slots": [
+                6,
+                52,
+                54,
+                56,
+                58
+              ]
+            }
+          ],
+          "symbolIndices": 26,
+          "sectionLinks": 0,
+          "sectionInfos": 26,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -1072,13 +1599,284 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213ad58"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer9StateDealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c11c0"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c1760"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c1760"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer12StateShuffleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c14bc"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12MascotWalker9StateWalkEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0364"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12MascotWalker10StatePauseEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0264"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12MascotWalker9StateWalkEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0364"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer8StateWinEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0b74"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12MascotWalker9StateWalkEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0364"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c1760"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213ac98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer9StateLoseEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0ce8"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213aca0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer9StateSwapEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0df0"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213aca8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer11StateRevealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0f9c"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213acb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer9StateDealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c11c0"
+    },
+    {
+      "section": ".data.pmf_Dealer",
+      "source": "0x0213acb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Dealer11StateRevealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c0f9c"
+    },
+    {
+      "section": ".data.pmf_Presenter",
+      "source": "0x0213adb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9Presenter9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c27c4"
+    },
+    {
+      "section": ".data.pmf_Presenter",
+      "source": "0x0213adc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9Presenter23StateSurprisedThenSmileEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c24e4"
+    },
+    {
+      "section": ".data.pmf_Presenter",
+      "source": "0x0213adc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9Presenter9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c27c4"
+    },
+    {
+      "section": ".data.pmf_Presenter",
+      "source": "0x0213add0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9Presenter22StateSurprisedThenIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c22d8"
+    },
+    {
+      "section": ".data.pmf_PresenterWin",
+      "source": "0x0213ade0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9Presenter8StateWinEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c26f4"
+    },
+    {
+      "section": ".data.pmf_PresenterMiss",
+      "source": "0x0213adf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9Presenter12StateMistakeEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c263c"
+    },
+    {
+      "section": ".data.pmf_PresenterMiss",
+      "source": "0x0213adf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9Presenter14StateLoseStartEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c23a8"
+    },
+    {
+      "section": ".data.pmf_FlowerFace",
+      "source": "0x0213aec0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10FlowerFace9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c3ad8"
+    },
+    {
+      "section": ".data.pmf_FlowerFace",
+      "source": "0x0213aec8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10FlowerFace9StatePickEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c395c"
+    },
+    {
+      "section": ".data.pmf_FlowerFace",
+      "source": "0x0213aed0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10FlowerFace9StateHateEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c38ac"
+    },
+    {
+      "section": ".data.pmf_FlowerFace",
+      "source": "0x0213aed8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10FlowerFace9StateLikeEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c3904"
+    },
+    {
+      "section": ".data.pmf_FlowerFace",
+      "source": "0x0213aee0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10FlowerFace9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c3ad8"
     }
   ],
   "notes": [
     "Text-only fold; data and bss stay in the ROM image. The unit is probably more than one original TU (by data use, three groups), but nothing in the ROM can cut it.",
     "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy.",
     "Function-local static folded: FallingPetal_Spawn's spin axis is now `static Vector3 sAxis(0, 0x1000, 0);`, replacing the externs sFallingPetal_Spawn_UnitYGuard/DtorRec and sFallingPetalAxis and the handwritten guard block that called func_020731dc with _ZN7Vector3D1Ev. mwcc emits the guard test, stores and registration itself, byte- and relocation-identical; the TU becomes intact-object to own the three .bss objects.",
-    "2026-11-17 (#821): MascotWalker, Dealer, Presenter and FlowerFace hold their state as a real member pointer (StateFn mState, each class's own void (C::*)() type), and the 27 pmf_* records are declared as those types. The StateSlot / VolatileStateSlot views, the per-class state typedefs and the launders around them (volatile word reads, the u64 identity mask, the long long stateRecord pointer, the no-op ternary, the hand-expanded {fn, adj} comparisons) are gone: the setters assign, the dispatches call (this->*mState)(), and the IsIdle, IsIdleAtRest and IsBusy tests return their comparisons directly (the 0/1 flag shapes were not load-bearing either). The records stay extern: they sit in .data between the walker's paths, the dealer's matrices and the presenter's BTA records, whose types are not established. sAxis$691 / _ZGVsAxis$691 / @694 re-keyed to $687 / @690. tubuild verify 93/93 TEXT-VERIFIED (base 93/93); linkcheck SCRATCH-DATA-VERIFIED."
+    "2026-11-17 (#821): MascotWalker, Dealer, Presenter and FlowerFace hold their state as a real member pointer (StateFn mState, each class's own void (C::*)() type), and the 27 pmf_* records are declared as those types. The StateSlot / VolatileStateSlot views, the per-class state typedefs and the launders around them (volatile word reads, the u64 identity mask, the long long stateRecord pointer, the no-op ternary, the hand-expanded {fn, adj} comparisons) are gone: the setters assign, the dispatches call (this->*mState)(), and the IsIdle, IsIdleAtRest and IsBusy tests return their comparisons directly (the 0/1 flag shapes were not load-bearing either). The records stay extern: they sit in .data between the walker's paths, the dealer's matrices and the presenter's BTA records, whose types are not established. sAxis$691 / _ZGVsAxis$691 / @694 re-keyed to $687 / @690. tubuild verify 93/93 TEXT-VERIFIED (base 93/93); linkcheck SCRATCH-DATA-VERIFIED.",
+    "2026-11-17 (#821): the 27 pmf_* externs are gone. Each state assignment and IsIdle / IsIdleAtRest / IsBusy compare names &Class::State, and mwcc emits each use as its own 8-byte {fn, 0} .data literal (@NNN), so the same handler used in two functions is two records (the _2 / _3 names). The unit owns them through five named .data routes: .data.pmf_Dealer 0x0213ac48..0x0213acc0 (dealer and walker), .data.pmf_Presenter 0x0213adb8..0x0213add8, .data.pmf_PresenterWin 0x0213ade0..0x0213ade8, .data.pmf_PresenterMiss 0x0213adf0..0x0213ae00 and .data.pmf_FlowerFace 0x0213aec0..0x0213aee8. Each literal is renamed from its compiler number by object pairing (the consumer relocation in the ROM and the literal's own handler relocation agree) with a LOCAL->GLOBAL binding rewrite. The words between the routes stay ROM bytes: data_ov006_0213add8 / 0213ade8 are the \"m_eye_r\" / \"m_eye_l\" strings the .rodata BTA material records at 0x0212b908.. point at, and 0x0213ae00..0x0213aec0 are the eight presenter BTA headers that point into that same unclaimed .rodata. sAxis$687 / _ZGVsAxis$687 / @690 re-keyed to $696 / @699 (paired by section offset, size, type and name)."
   ],
   "compiler_only_output": [
     {
@@ -1213,23 +2011,320 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static Vector3; DSD requires a configured global symbol at 0x021402f0, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
+    },
+    {
+      "symbol": "pmf_Dealer_StateDeal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateShuffle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StatePause",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateWin",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_MascotWalker_StateWalk_3",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateIdle_3",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateLose",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateSwap",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateReveal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateDeal_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Dealer_StateReveal_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Presenter_StateIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Presenter_StateSurprisedThenSmile",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Presenter_StateIdle_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Presenter_StateSurprisedThenIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Presenter_StateWin",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Presenter_StateMistake",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Presenter_StateLoseStart",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StateIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StatePick",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StateHate",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StateLike",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_FlowerFace_StateIdle_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "sAxis$687",
+      "from": "sAxis$696",
       "to": "sAxis$543",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from sAxis$658 to sAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from sAxis$657 to sAxis$649 (same symtab index 194, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sAxis$649 to sAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from sAxis$657 to sAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 194, whose section, offset, size, type and binding agree with the base object. Re-keyed from sAxis$653 to sAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sAxis$619 to sAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from sAxis$622 to sAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from sAxis$629 to sAxis$666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$666 to sAxis$678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$678 to sAxis$691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$691 to sAxis$687 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from sAxis$658 to sAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from sAxis$657 to sAxis$649 (same symtab index 194, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sAxis$649 to sAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from sAxis$657 to sAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 194, whose section, offset, size, type and binding agree with the base object. Re-keyed from sAxis$653 to sAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sAxis$619 to sAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from sAxis$622 to sAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from sAxis$629 to sAxis$666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$666 to sAxis$678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$678 to sAxis$691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$691 to sAxis$687 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from sAxis$687 to sAxis$696 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsAxis$687",
+      "from": "_ZGVsAxis$696",
       "to": "_ZGVsAxis$543",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from _ZGVsAxis$658 to _ZGVsAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$649 (same symtab index 192, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsAxis$649 to _ZGVsAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 192, whose section, offset, size, type and binding agree with the base object. Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsAxis$619 to _ZGVsAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from _ZGVsAxis$622 to _ZGVsAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from _ZGVsAxis$629 to _ZGVsAxis$666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$666 to _ZGVsAxis$678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$678 to _ZGVsAxis$691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$691 to _ZGVsAxis$687 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from _ZGVsAxis$658 to _ZGVsAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$649 (same symtab index 192, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsAxis$649 to _ZGVsAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 192, whose section, offset, size, type and binding agree with the base object. Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsAxis$619 to _ZGVsAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from _ZGVsAxis$622 to _ZGVsAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from _ZGVsAxis$629 to _ZGVsAxis$666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$666 to _ZGVsAxis$678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$678 to _ZGVsAxis$691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$691 to _ZGVsAxis$687 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from _ZGVsAxis$687 to _ZGVsAxis$696 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object)."
     },
     {
-      "from": "@690",
+      "from": "@699",
       "to": "@546",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from @661 to @660 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from @660 to @652 (same symtab index 193, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @652 to @660 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from @660 to @656 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 193, whose section, offset, size, type and binding agree with the base object. Re-keyed from @656 to @659 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @656 to @651 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @656 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @622 to @625 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @625 to @638 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from @632 to @669 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @669 to @681 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @681 to @694 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @694 to @690 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from @661 to @660 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from @660 to @652 (same symtab index 193, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @652 to @660 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from @660 to @656 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 193, whose section, offset, size, type and binding agree with the base object. Re-keyed from @656 to @659 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @656 to @651 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @656 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @622 to @625 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @625 to @638 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from @632 to @669 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @669 to @681 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @681 to @694 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @694 to @690 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from @690 to @699 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object)."
+    },
+    {
+      "from": "@1139",
+      "to": "pmf_Dealer_StateDeal",
+      "evidence": "Compiler PMF literal: Dealer::StartDeal uses &Dealer::StateDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartDeal+0x98 loads 0x0213ac48 in the ROM) and by its own relocation target (Dealer::StateDeal at 0x020c11c0)."
+    },
+    {
+      "from": "@1066",
+      "to": "pmf_Dealer_StateIdle",
+      "evidence": "Compiler PMF literal: Dealer::PlayIdle uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayIdle+0x9c loads 0x0213ac50 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760)."
+    },
+    {
+      "from": "@1075",
+      "to": "pmf_Dealer_StateIdle_2",
+      "evidence": "Compiler PMF literal: Dealer::IsIdle uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsIdle+0x44 loads 0x0213ac58 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760)."
+    },
+    {
+      "from": "@1106",
+      "to": "pmf_Dealer_StateShuffle",
+      "evidence": "Compiler PMF literal: Dealer::StartShuffle uses &Dealer::StateShuffle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartShuffle+0xac loads 0x0213ac60 in the ROM) and by its own relocation target (Dealer::StateShuffle at 0x020c14bc)."
+    },
+    {
+      "from": "@1373",
+      "to": "pmf_MascotWalker_StateWalk",
+      "evidence": "Compiler PMF literal: MascotWalker::StartNextPath uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartNextPath+0x15c loads 0x0213ac68 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364)."
+    },
+    {
+      "from": "@1407",
+      "to": "pmf_MascotWalker_StatePause",
+      "evidence": "Compiler PMF literal: MascotWalker::StartPause uses &MascotWalker::StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartPause+0x5c loads 0x0213ac70 in the ROM) and by its own relocation target (MascotWalker::StatePause at 0x020c0264)."
+    },
+    {
+      "from": "@1335",
+      "to": "pmf_MascotWalker_StateWalk_2",
+      "evidence": "Compiler PMF literal: MascotWalker::Update uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::Update+0x140 loads 0x0213ac78 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364)."
+    },
+    {
+      "from": "@1279",
+      "to": "pmf_Dealer_StateWin",
+      "evidence": "Compiler PMF literal: Dealer::PlayWin uses &Dealer::StateWin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayWin+0x64 loads 0x0213ac80 in the ROM) and by its own relocation target (Dealer::StateWin at 0x020c0b74)."
+    },
+    {
+      "from": "@1415",
+      "to": "pmf_MascotWalker_StateWalk_3",
+      "evidence": "Compiler PMF literal: MascotWalker::StatePause uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StatePause+0x9c loads 0x0213ac88 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364)."
+    },
+    {
+      "from": "@1086",
+      "to": "pmf_Dealer_StateIdle_3",
+      "evidence": "Compiler PMF literal: Dealer::IsIdleAtRest uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsIdleAtRest+0x60 loads 0x0213ac90 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760)."
+    },
+    {
+      "from": "@1265",
+      "to": "pmf_Dealer_StateLose",
+      "evidence": "Compiler PMF literal: Dealer::PlayLose uses &Dealer::StateLose, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayLose+0x84 loads 0x0213ac98 in the ROM) and by its own relocation target (Dealer::StateLose at 0x020c0ce8)."
+    },
+    {
+      "from": "@1245",
+      "to": "pmf_Dealer_StateSwap",
+      "evidence": "Compiler PMF literal: Dealer::StartSwap uses &Dealer::StateSwap, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartSwap+0x6c loads 0x0213aca0 in the ROM) and by its own relocation target (Dealer::StateSwap at 0x020c0df0)."
+    },
+    {
+      "from": "@1225",
+      "to": "pmf_Dealer_StateReveal",
+      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x8c loads 0x0213aca8 in the ROM) and by its own relocation target (Dealer::StateReveal at 0x020c0f9c)."
+    },
+    {
+      "from": "@1222",
+      "to": "pmf_Dealer_StateDeal_2",
+      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x88 loads 0x0213acb0 in the ROM) and by its own relocation target (Dealer::StateDeal at 0x020c11c0)."
+    },
+    {
+      "from": "@1186",
+      "to": "pmf_Dealer_StateReveal_2",
+      "evidence": "Compiler PMF literal: Dealer::StartReveal uses &Dealer::StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartReveal+0x58 loads 0x0213acb8 in the ROM) and by its own relocation target (Dealer::StateReveal at 0x020c0f9c)."
+    },
+    {
+      "from": "@818",
+      "to": "pmf_Presenter_StateIdle",
+      "evidence": "Compiler PMF literal: Presenter::IsIdle uses &Presenter::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::IsIdle+0x44 loads 0x0213adb8 in the ROM) and by its own relocation target (Presenter::StateIdle at 0x020c27c4)."
+    },
+    {
+      "from": "@890",
+      "to": "pmf_Presenter_StateSurprisedThenSmile",
+      "evidence": "Compiler PMF literal: Presenter::PlayCheer uses &Presenter::StateSurprisedThenSmile, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayCheer+0xa4 loads 0x0213adc0 in the ROM) and by its own relocation target (Presenter::StateSurprisedThenSmile at 0x020c24e4)."
+    },
+    {
+      "from": "@848",
+      "to": "pmf_Presenter_StateIdle_2",
+      "evidence": "Compiler PMF literal: Presenter::PlayIdle uses &Presenter::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayIdle+0xd8 loads 0x0213adc8 in the ROM) and by its own relocation target (Presenter::StateIdle at 0x020c27c4)."
+    },
+    {
+      "from": "@924",
+      "to": "pmf_Presenter_StateSurprisedThenIdle",
+      "evidence": "Compiler PMF literal: Presenter::PlayCheerLoop uses &Presenter::StateSurprisedThenIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayCheerLoop+0xa4 loads 0x0213add0 in the ROM) and by its own relocation target (Presenter::StateSurprisedThenIdle at 0x020c22d8)."
+    },
+    {
+      "from": "@862",
+      "to": "pmf_Presenter_StateWin",
+      "evidence": "Compiler PMF literal: Presenter::PlayMatch uses &Presenter::StateWin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayMatch+0xa4 loads 0x0213ade0 in the ROM) and by its own relocation target (Presenter::StateWin at 0x020c26f4)."
+    },
+    {
+      "from": "@875",
+      "to": "pmf_Presenter_StateMistake",
+      "evidence": "Compiler PMF literal: Presenter::PlayMiss uses &Presenter::StateMistake, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayMiss+0x8c loads 0x0213adf0 in the ROM) and by its own relocation target (Presenter::StateMistake at 0x020c263c)."
+    },
+    {
+      "from": "@908",
+      "to": "pmf_Presenter_StateLoseStart",
+      "evidence": "Compiler PMF literal: Presenter::PlayLose uses &Presenter::StateLoseStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayLose+0xa0 loads 0x0213adf8 in the ROM) and by its own relocation target (Presenter::StateLoseStart at 0x020c23a8)."
+    },
+    {
+      "from": "@638",
+      "to": "pmf_FlowerFace_StateIdle",
+      "evidence": "Compiler PMF literal: FlowerFace::PlayIdle uses &FlowerFace::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayIdle+0x4c loads 0x0213aec0 in the ROM) and by its own relocation target (FlowerFace::StateIdle at 0x020c3ad8)."
+    },
+    {
+      "from": "@658",
+      "to": "pmf_FlowerFace_StatePick",
+      "evidence": "Compiler PMF literal: FlowerFace::PlayPetalPulled uses &FlowerFace::StatePick, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayPetalPulled+0x144 loads 0x0213aec8 in the ROM) and by its own relocation target (FlowerFace::StatePick at 0x020c395c)."
+    },
+    {
+      "from": "@680",
+      "to": "pmf_FlowerFace_StateHate",
+      "evidence": "Compiler PMF literal: FlowerFace::PlayHate uses &FlowerFace::StateHate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayHate+0x50 loads 0x0213aed0 in the ROM) and by its own relocation target (FlowerFace::StateHate at 0x020c38ac)."
+    },
+    {
+      "from": "@670",
+      "to": "pmf_FlowerFace_StateLike",
+      "evidence": "Compiler PMF literal: FlowerFace::PlayLike uses &FlowerFace::StateLike, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayLike+0x50 loads 0x0213aed8 in the ROM) and by its own relocation target (FlowerFace::StateLike at 0x020c3904)."
+    },
+    {
+      "from": "@622",
+      "to": "pmf_FlowerFace_StateIdle_2",
+      "evidence": "Compiler PMF literal: FlowerFace::IsIdle uses &FlowerFace::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::IsIdle+0x44 loads 0x0213aee0 in the ROM) and by its own relocation target (FlowerFace::StateIdle at 0x020c3ad8)."
     }
   ]
 }

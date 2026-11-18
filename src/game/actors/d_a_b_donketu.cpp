@@ -76,9 +76,9 @@ int daBDonketu_c::InitResources() {
         int ang;
 
         {
-            int tz = mPosZ;
-            int ty = mPosY + 0x32000;
-            int tx = mPosX;
+            int tz = mPos.z;
+            int ty = mPos.y + 0x32000;
+            int tx = mPos.x;
             probe.x = tx;
             probe.y = ty;
             probe.z = tz;
@@ -97,8 +97,8 @@ int daBDonketu_c::InitResources() {
             int idx = (u16)(s16)ang >> 4;
             dActor_c *spawned;
 
-            spawnPos.x = mPosX + FX_SinIdx(idx) * 500 - 0x64000;
-            spawnPos.z = mPosZ - FX_CosIdx(idx) * 500;
+            spawnPos.x = mPos.x + FX_SinIdx(idx) * 500 - 0x64000;
+            spawnPos.z = mPos.z - FX_CosIdx(idx) * 500;
 
             spawned = dActor_c::Spawn(0xd7, -1, spawnPos, (Vector3_16 *)0, mAreaId, -1);
             if (spawned != 0) {
@@ -133,12 +133,12 @@ int daBDonketu_c::Behavior() {
         int limit;
         if (Sound::PlaySecretSound(this, &mSecretSoundCounter) != 0)
             mSecretSoundCounter = 0;
-        speed = mVertSpeed + mVertAccel;
+        speed = mSpeed.y + mVertAccel;
         limit = mTerminalVelocity;
         if (speed >= limit)
             limit = speed;
-        mVertSpeed = limit;
-        mPosY = mPosY + mVertSpeed;
+        mSpeed.y = limit;
+        mPos.y = mPos.y + mSpeed.y;
         UpdateWMClsn(mWithMeshClsn, 0);
         if (mWithMeshClsn.IsOnGround() != 0) {
             func_0200fa8c(0);
@@ -166,9 +166,9 @@ void daBDonketu_c::UpdateDeathState() {
         return;
     TriplePoofDust();
     Vector3 pos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x64000;
     UntrackAndSpawnStar(mTrackStarID, (mStarID | 0x40) & 0xff, pos, 4);
 }

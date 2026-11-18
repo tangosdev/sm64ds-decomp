@@ -175,7 +175,7 @@ int daUdlift_c::InitResources()
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov095_02136f68[mVariant]), 1, -1);
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov095_02136f74[mVariant]), mClsnMat, 0x199,
-                          mAngleY, *data_ov095_021375a4[mVariant]);
+                          mAngle.y, *data_ov095_021375a4[mVariant]);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&daUdlift_c::OnMeshClsnTouch);
     mRider = 0;
@@ -185,10 +185,10 @@ int daUdlift_c::InitResources()
        says how far down it travels. The mMode == 2 arm is unreachable here:
        only 0 and 1 are ever stored. */
     if (mMode == 2)
-        mTopY = mPosY + ((u16)mPrevAngleZ << 12);
+        mTopY = mPos.y + ((u16)mPrevAngle.z << 12);
     else
-        mTopY = mPosY;
-    mBottomY = mTopY - ((u16)mPrevAngleX << 12);
+        mTopY = mPos.y;
+    mBottomY = mTopY - ((u16)mPrevAngle.x << 12);
     mMiddleY = (mTopY + mBottomY) / 2;
     mIsAtBottom = 0;
     mIsArmed = 1;
@@ -222,7 +222,7 @@ int daUdlift_c::Behavior()
     }
     mIsRidden = 0;
     if (mClosestPlayer != 0)
-        mPlayerPosY = mClosestPlayer->mPosY;
+        mPlayerPosY = mClosestPlayer->mPos.y;
     return 1;
 }
 
@@ -261,14 +261,14 @@ void daUdlift_c::StateWait()
         if (player == 0)
             return;
         middleY = mMiddleY;
-        if (player->mPosY > middleY)
+        if (player->mPos.y > middleY)
             return;
         /* RC_RIFT02 does not follow the player across the middle. The (int)
            flag keeps the branch; a plain compare shrinks this function. */
         if ((int)(actorID == RC_RIFT02) != 0)
             return;
         if (mPlayerPosY > middleY) {
-            mPosY = mBottomY;
+            mPos.y = mBottomY;
             mIsAtBottom = 1;
         } else {
             mState = 2;
@@ -285,10 +285,10 @@ void daUdlift_c::StateWait()
     if (player == 0)
         return;
     middleY = mMiddleY;
-    if (player->mPosY < middleY)
+    if (player->mPos.y < middleY)
         return;
     if (mPlayerPosY < middleY) {
-        mPosY = mTopY;
+        mPos.y = mTopY;
         mIsAtBottom = 0;
     } else {
         mState = 1;
@@ -300,18 +300,18 @@ void daUdlift_c::StateMoveUp()
 {
     Vector3 &camPos = mCamSpacePos;
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x82, camPos, 0);
-    ApproachLinear(mVertSpeed, (10 << 12), (2 << 12));
-    mPosY += mVertSpeed;
-    if (mPosY < mTopY)
+    ApproachLinear(mSpeed.y, (10 << 12), (2 << 12));
+    mPos.y += mSpeed.y;
+    if (mPos.y < mTopY)
         return;
-    mPosY = mTopY;
+    mPos.y = mTopY;
     mIsAtBottom = 0;
 
     if (mMode != 0) {
         mState = 3;
         return;
     }
-    if (mClosestPlayer != 0 && mClosestPlayer->mPosY <= mMiddleY) {
+    if (mClosestPlayer != 0 && mClosestPlayer->mPos.y <= mMiddleY) {
         mState = 2;
         return;
     }
@@ -329,11 +329,11 @@ void daUdlift_c::StateMoveDown()
     if (mStateTimer == 0 && (int)(actorID == UDLIFT) != 0)
         Sound::PlayBank3(0x40, mCamSpacePos);
 
-    ApproachLinear(mVertSpeed, -(10 << 12), -(2 << 12));
-    mPosY += mVertSpeed;
-    if (mPosY > mBottomY)
+    ApproachLinear(mSpeed.y, -(10 << 12), -(2 << 12));
+    mPos.y += mSpeed.y;
+    if (mPos.y > mBottomY)
         return;
-    mPosY = mBottomY;
+    mPos.y = mBottomY;
     mIsAtBottom = 1;
 
     if (mMode == 1) {
@@ -344,7 +344,7 @@ void daUdlift_c::StateMoveDown()
         mState = 3;
         return;
     }
-    if (mClosestPlayer != 0 && mClosestPlayer->mPosY >= mMiddleY) {
+    if (mClosestPlayer != 0 && mClosestPlayer->mPos.y >= mMiddleY) {
         mState = 1;
         return;
     }
@@ -355,15 +355,15 @@ void daUdlift_c::StateMoveDown()
  * and call Earthquake at the lift, then climb again once re-armed. */
 void daUdlift_c::StateStopAtBottom()
 {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     if (mStateTimer == 0) {
         Vector3 &camPos = mCamSpacePos;
         Sound::PlayBank3(0x6b, camPos);
         /* memberwise stores: the (x,y,z) ctor form batches the loads */
         Vector3 pos;
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         Earthquake(pos, (800 << 12));
     }
     if (mIsArmed == 1)
@@ -374,14 +374,14 @@ void daUdlift_c::StateStopAtBottom()
  * again once re-armed. */
 void daUdlift_c::StateStop()
 {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     if (mStateTimer == 0) {
         Vector3 &camPos = mCamSpacePos;
         Sound::PlayBank3(0x6b, camPos);
         Vector3 pos;
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         Earthquake(pos, (800 << 12));
     }
     if (mIsArmed == 1)

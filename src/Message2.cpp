@@ -9,8 +9,8 @@
  *   run ROM-ascending.
  * - The G2/G2S getters are declared locally in their namespaces. No
  *   header declares them yet.
- * - data_0209d6f4 is u8 * here. Message.cpp spells the same word volatile int
- *   because one store there must not be coalesced. This TU only reads bytes.
+ * - data_0209d6f4 is u8 * here. Message.cpp spells the same word int, for
+ *   the cursor arithmetic it does there. This TU only reads bytes.
  * - MsgTextChar is local. The bytes at data_0209d6f4 are the text cursor,
  *   and no header describes them.
  * - Address-named helpers stay address-named. The ROM has no English name
@@ -175,7 +175,7 @@ void Message::AddChoice() {
     }
 }
 
-void func_0201aca4(void) {
+void Message::func_0201aca4(void) {
 
     struct MsgTextChar {
         u8 unk0;
@@ -239,7 +239,7 @@ void Message::AddCharPair() {
     AddChar((data_0208ee6c[idx] + 1) & 0xff);
 }
 
-void func_0201adfc(void) {
+void Message::func_0201adfc(void) {
     int n;
     int i;
     int j;
@@ -314,7 +314,7 @@ void func_0201adfc(void) {
     data_0209d6a0 += 3;
 }
 
-void func_0201b100(int mode) {
+void Message::func_0201b100(int mode) {
     int base;
     int opcode;
     unsigned int acc;
@@ -401,7 +401,12 @@ void func_0201b100(int mode) {
     }
 }
 
-void func_0201b388(int a0) {
+#pragma push
+/* opt_common_subs stays off: the inner loop reads data_0209d74c[j + i * 16] once
+ * per store the way the cartridge does, and CSE shares the two loads
+ * (0x218 against 0x220). */
+#pragma opt_common_subs off
+void Message::func_0201b388(int a0) {
     int start;
     int *sl;
     int j;
@@ -410,7 +415,6 @@ void func_0201b388(int a0) {
     int off;
     u8 n;
     int step;
-    int *buf;
 
     if (data_0209d668 != 0) {
         sl = (int *)((u32)G2S_GetBG0CharPtr() + ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
@@ -427,7 +431,6 @@ void func_0201b388(int a0) {
                      ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
     }
 
-    buf = data_0209d74c;
     start = data_0209d65c;
     n = data_0209d6a4;
     step = (a0 - 1) << 5;
@@ -438,9 +441,9 @@ void func_0201b388(int a0) {
             int blk = sb >> 3;
             u8 col = sb & 7;
             int row = blk * 8;
-            sl[row] = sl[row] | (data_0208eeac[col] & buf[j + i * 16]);
+            sl[row] = sl[row] | (data_0208eeac[col] & data_0209d74c[j + i * 16]);
             if (col != 0) {
-                (sl + row)[8] = data_0208ee8c[col] & buf[j + i * 16];
+                (sl + row)[8] = data_0208ee8c[col] & data_0209d74c[j + i * 16];
             }
             sb = (sb + data_0209d710[i]) & 0xff;
         }
@@ -453,6 +456,7 @@ void func_0201b388(int a0) {
 
     data_0209d6c0 = data_0209d6c0 + 1;
 }
+#pragma pop
 
 void Message::AddChar(u8 c) {
     int i;
@@ -496,7 +500,7 @@ void Message::AddChar(u8 c) {
     }
 }
 
-void func_0201b6f8(int mode) {
+void Message::func_0201b6f8(int mode) {
     int i;
     u8 *p = data_0209d6f4;
     data_0209d6a4 = 0;

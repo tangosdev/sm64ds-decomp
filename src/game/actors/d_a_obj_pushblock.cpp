@@ -93,24 +93,24 @@ int daObjPushblock_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     kcl = dBgW_Kc::LoadFile(data_ov002_0210df94);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)&data_ov002_0210d7b4);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *(CLPS_Block *)&data_ov002_0210d7b4);
 
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mWithMeshClsn.Init(this, 0x96000, 0x96000, 0, 0);
 
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y = v.y + 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(v, 0);
     mGroundY = v.y;
     if (ground.DetectClsn())
         mGroundY = ground.clsnY;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     return 1;
 }
 
@@ -142,7 +142,7 @@ int daObjPushblock_c::Behavior() {
         dst.z = 0;
         v.y = 0x96000;
         v.z = 0x96000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
         MTX_MultVec43(&v, &data_020a0e68, &dst);
         VEC_Add(&dst, &mPos, &dst);
         dBgCh_Gnd ray;
@@ -179,9 +179,9 @@ int daObjPushblock_c::Behavior() {
                 pos.z = homeZ;
                 pos.y = homeY + 0x96000;
                 q = mLinkedActor;
-                q->mPosX = homeX;
-                q->mPosY = pos.y;
-                q->mPosZ = pos.z;
+                q->mPos.x = homeX;
+                q->mPos.y = pos.y;
+                q->mPos.z = pos.z;
                 ((daSCoin_c *)mLinkedActor)->Collect();
             }
             mLinkedActor = 0;
@@ -254,7 +254,7 @@ int daObjPushblock_c::CleanupResources() {
 int daObjPushblock_c::OnPushed(dActor_c &other) {
     dActor_c *pusher = &other;
     if (pusher != 0) {
-        mPrevAngleY = pusher->mAngleY;
+        mPrevAngle.y = pusher->mAngle.y;
         if (pusher->param1 == 2)
             mHorzSpeed = 0x8000;
         else
@@ -292,9 +292,9 @@ void daObjPushblock_c::OnHitByMegaChar(daPly_c &player) {
 void daObjPushblock_c::Kill() {
     Vector3 vec;
     Vector3 vec2;
-    vec.x = mPosX;
-    vec.y = mPosY;
-    vec.z = mPosZ;
+    vec.x = mPos.x;
+    vec.y = mPos.y;
+    vec.z = mPos.z;
     vec.y += 0x96000;
     Particle::System::NewSimple(kPtclStoneBlockBreak, vec.x, vec.y, vec.z);
     vec2.x = vec.x;

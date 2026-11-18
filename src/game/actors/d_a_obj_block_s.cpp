@@ -131,7 +131,7 @@ namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
 }
 int SurfaceInfo_TestFlag0x20(int *p);
-int func_ov002_020ef228(dBgCh_Actr *c, dActor_c *other);
+#include "BgChEvt.h"
 int func_ov002_020f030c(int x);
 extern "C" int func_ov002_020e496c(daPly_c *c);
 
@@ -286,7 +286,7 @@ void daObjBlockS_c::UpdateBouncing() {
     if (mWithMeshClsn.IsOnGround() != 0) {
         Sound::PlayBank3(0x51, mCamSpacePos);
         DecIfAbove0_Byte(&mBounceCount);
-        mVertSpeed = mBounceCount * 0xa000;
+        mSpeed.y = mBounceCount * 0xa000;
         mHorzSpeed = mBounceCount * 0x5000;
     }
     if (mHorzSpeed == 0 && mBounceCount == 0) {
@@ -318,7 +318,7 @@ void daObjBlockS_c::EnterBouncing() {
     mClsnYOffset = 0;
     mFlags &= ~0x80000;
     mBounceCount = 3;
-    mVertSpeed = mBounceCount * 0xa000;
+    mSpeed.y = mBounceCount * 0xa000;
     mHorzSpeed = mBounceCount * 0x5000;
     mEatingPlayer = 0;
     mHoldingPlayer = 0;
@@ -358,7 +358,7 @@ void daObjBlockS_c::UpdateSpitOut() {
 /* STATE_SPIT_OUT, enter. Zeroes the sink offset and target, then puts the
  * crate 80 units ahead of mEatingPlayer along that player's Y angle (the x
  * offset is FX_SinIdx and the z offset FX_CosIdx of that angle, scaled by
- * 0x50000) and 80 units above it, facing the same way (mAngleY, mPrevAngleY). Clears mFlags bit
+ * 0x50000) and 80 units above it, facing the same way (mAngle.y, mPrevAngle.y). Clears mFlags bit
  * 0x80000, launches it with horizontal speed 30 units (0x1e000) and vertical
  * speed 15 units (0xf000), hands mEatingPlayer over to mPrevHolder and sets
  * dCc_c flags bit 0x2000 on the first cylinder. */
@@ -371,24 +371,24 @@ void daObjBlockS_c::EnterSpitOut() {
     mClsnYOffset = 0;
 
     obj = mEatingPlayer;
-    angle = obj->mAngleY;
-    mAngleY = angle;
-    mPrevAngleY = mAngleY;
+    angle = obj->mAngle.y;
+    mAngle.y = angle;
+    mPrevAngle.y = mAngle.y;
 
     mPos = mEatingPlayer->mPos;
 
-    xw = FX_SinIdx((unsigned short)mAngleY >> 4);
-    mPosX += FX_MUL(xw, 0x50000);
+    xw = FX_SinIdx((unsigned short)mAngle.y >> 4);
+    mPos.x += FX_MUL(xw, 0x50000);
 
-    mPosY += 0x50000;
+    mPos.y += 0x50000;
 
-    zw = FX_CosIdx((unsigned short)mAngleY >> 4);
-    mPosZ += FX_MUL(zw, 0x50000);
+    zw = FX_CosIdx((unsigned short)mAngle.y >> 4);
+    mPos.z += FX_MUL(zw, 0x50000);
 
     mFlags &= ~0x80000;
 
     mHorzSpeed = 0x1e000;
-    mVertSpeed = 0xf000;
+    mSpeed.y = 0xf000;
     mPrevHolder = mEatingPlayer;
     mEatingPlayer = 0;
     mdCcAcPos_c1.flags |= 0x2000;
@@ -450,7 +450,7 @@ void daObjBlockS_c::EnterThrown() {
     }
 
     mHorzSpeed = arr1.w[idx];
-    mVertSpeed = arr2.w[idx];
+    mSpeed.y = arr2.w[idx];
 
     mPrevHolder = mHoldingPlayer;
     mHoldingPlayer = 0;
@@ -525,7 +525,7 @@ void daObjBlockS_c::UpdateIdle() {
     int flag = (mFlags & ACTOR_FLAG_OFF_SCREEN) != 0;
     if (flag) {
         if (mHorzSpeed == 0) {
-            if (mVertSpeed == 0) {
+            if (mSpeed.y == 0) {
                 return;
             }
         }
@@ -626,7 +626,7 @@ int daObjBlockS_c::func_ov098_02138bfc()
 /* Puts the crate back in its starting condition: zeroes the sink offset,
  * target, particle handles and mBreakTimer, restores the home position and
  * angles, zeroes horizontal / vertical speed and the two velocity words
- * around mVertSpeed, then initialises both cylinders at the crate's
+ * around mSpeed.y, then initialises both cylinders at the crate's
  * own position:
  *   cylinder 1, radius 60 (0x3c000), height 110 (0x6e000), flags 0x200002,
  *     vulnFlags 0x4d390 -- the bits dCc_c.h labels mega / kick / breakdance /
@@ -641,16 +641,16 @@ void daObjBlockS_c::ResetToHome() {
     mParticleHandle1 = 0;
     mParticleHandle2 = 0;
     mBreakTimer = 0;
-    mPosX = mHomePos.x;
-    mPosY = mHomePos.y;
-    mPosZ = mHomePos.z;
-    mAngleX = mHomeAngleX;
-    mAngleY = mHomeAngleY;
-    mAngleZ = mHomeAngleZ;
+    mPos.x = mHomePos.x;
+    mPos.y = mHomePos.y;
+    mPos.z = mHomePos.z;
+    mAngle.x = mHomeAngleX;
+    mAngle.y = mHomeAngleY;
+    mAngle.z = mHomeAngleZ;
     mHorzSpeed = 0;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
 
     ((struct Vector3 *)(((long long)(int)&zero)))->x = 0;
     ((struct Vector3 *)(((long long)(int)&zero)))->y = 0;
@@ -672,9 +672,9 @@ void daObjBlockS_c::ResetToHome() {
 void daObjBlockS_c::SpawnBreakCoins() {
     Vector3 v;
     if (mCoinsPaid == 1) return;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     SpawnCoins(v, 3, 0xf000, 0);
     mCoinsPaid = 1;
 }
@@ -757,9 +757,9 @@ void daObjBlockS_c::HandleHits() {
 
     {
         struct Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         a->Hurt(v, 1, 0xc000, 1, 0, 1);
     }
 }
@@ -775,9 +775,9 @@ void daObjBlockS_c::Kill()
     Vector3 vec2;
     int x, y, z;
     SpawnBreakCoins();
-    x = mPosX;
-    y = mPosY + 0x28000;
-    z = mPosZ;
+    x = mPos.x;
+    y = mPos.y + 0x28000;
+    z = mPos.z;
     vec.x = x;
     vec.y = y;
     vec.z = z;
@@ -797,7 +797,7 @@ void daObjBlockS_c::Kill()
  * ID, or no actor is found for it, that check is skipped). Then func_ov002_020ef228 (nonzero) restarts
  * mWallCooldown at 3 and ends the test. Otherwise, with a wall hit, the crate
  * is killed if it is faster than 20 units per frame (0x14000), and
- * if not mPrevAngleY is reflected off the wall's normal (ReflectAngle on the
+ * if not mPrevAngle.y is reflected off the wall's normal (ReflectAngle on the
  * normal's x and z). */
 void daObjBlockS_c::HandleWallHit() {
     if (DecIfAbove0_Byte(&mWallCooldown) != 0)
@@ -815,7 +815,7 @@ void daObjBlockS_c::HandleWallHit() {
             }
         }
     }
-    if (func_ov002_020ef228(&mWithMeshClsn, this) != 0) {
+    if (((BgChEvt *)&mWithMeshClsn)->func_ov002_020ef228(this) != 0) {
         mWallCooldown = 3;
         return;
     }
@@ -827,7 +827,7 @@ void daObjBlockS_c::HandleWallHit() {
     }
     Vector3 v;
     mWithMeshClsn.GetWallResult()->surface.CopyNormalTo(v);
-    mPrevAngleY = ReflectAngle(v.x, v.z, mPrevAngleY);
+    mPrevAngle.y = ReflectAngle(v.x, v.z, mPrevAngle.y);
 }
 
 /* Ground contact and slide step; returns 1 when it ran to the end, 0 when the
@@ -846,22 +846,22 @@ void daObjBlockS_c::HandleWallHit() {
  * The slide: CopyNormalTo fills mFloorNormal.x/Y/Z, n is the floor's CLPS
  * floor class (CLPS::GetFloorClass; include/daPly_c.h calls it the slipperiness class),
  * hl its slide acceleration (func_ov002_020f02c8). a1 is the current
- * velocity (mHorzSpeed along mPrevAngleY, through the sin / cos table at
+ * velocity (mHorzSpeed along mPrevAngle.y, through the sin / cos table at
  * FX_SinCosTable_), a2 is hl in the direction atan2 of the normal's x and z
  * gives (through the same table), scaled by Vec3_HorzLen of the normal;
- * their sum becomes the new mPrevAngleY and mHorzSpeed (capped at 100 units,
- * 0x64000). mVertSpeed is set to -((normalX * mSpeedX + normalZ * mSpeedZ)
- * / normalY + 8 units); mSpeedX / mSpeedZ sit either side of mVertSpeed and
+ * their sum becomes the new mPrevAngle.y and mHorzSpeed (capped at 100 units,
+ * 0x64000). mSpeed.y is set to -((normalX * mSpeed.x + normalZ * mSpeed.z)
+ * / normalY + 8 units); mSpeed.x / mSpeed.z sit either side of mSpeed.y and
  * are treated here as its x and z companions, which this file does not
  * otherwise confirm. When func_ov002_020f035c(n, mFloorNormal.y) (the
  * per-class slope test, include/daPly_c.h) is nonzero, the crate is nearly
- * level (|mAngleX| and |mAngleZ| below 0x10) and mHorzSpeed is above 5 units
- * (0x5000), sound bank 0x51 plays if mVertSpeed is above 10 units and
- * mVertSpeed is then clamped to a limit derived from the speed. Friction
+ * level (|mAngle.x| and |mAngle.z| below 0x10) and mHorzSpeed is above 5 units
+ * (0x5000), sound bank 0x51 plays if mSpeed.y is above 10 units and
+ * mSpeed.y is then clamped to a limit derived from the speed. Friction
  * slows mHorzSpeed by 0.5 unit per frame (0x800); while it has not reached
  * 0 and is above 10 units (0xa000) the sliding-dust particle and the slide
  * sound (mSlideSoundHandle) run (the extra compare of mClsnYOffsetTarget
- * with 0xa0 is true for every value this file stores there). Finally mAngleX / mAngleZ ease (a quarter of the
+ * with 0xa0 is true for every value this file stores there). Finally mAngle.x / mAngle.z ease (a quarter of the
  * difference, at most 0x1000 per call) toward the angles func_02010844 gives
  * for the floor normal, the crate's yaw and the yaw minus a quarter turn. */
 int daObjBlockS_c::UpdateFloorContact() {
@@ -905,7 +905,7 @@ int daObjBlockS_c::UpdateFloorContact() {
         return 0;
     }
 
-    if (mVertSpeed < -0xb000) {
+    if (mSpeed.y < -0xb000) {
         Kill();
     }
 
@@ -917,7 +917,7 @@ int daObjBlockS_c::UpdateFloorContact() {
 
 
     {
-        int sPrev = (u16)mPrevAngleY >> 4;
+        int sPrev = (u16)mPrevAngle.y >> 4;
         s32 speed = mHorzSpeed;
         a1.x = FX_MUL(speed, FX_SinIdx(sPrev));
         a1.y = 0;
@@ -932,55 +932,55 @@ int daObjBlockS_c::UpdateFloorContact() {
     mHorzSpeed = Vec3_HorzLen(&sum);
     if (mHorzSpeed > 0x64000)
         mHorzSpeed = 0x64000;
-    mPrevAngleY = newAng;
-    AngleDiff(mPrevAngleY, mAngleY);
+    mPrevAngle.y = newAng;
+    AngleDiff(mPrevAngle.y, mAngle.y);
 
     {
-        s32 m0 = FX_MUL(mFloorNormal.x, mSpeedX);
-        s32 m1 = FX_MUL(mFloorNormal.z, mSpeedZ);
-        mVertSpeed = -(FX_Div(m0 + m1, mFloorNormal.y) + 0x8000);
+        s32 m0 = FX_MUL(mFloorNormal.x, mSpeed.x);
+        s32 m1 = FX_MUL(mFloorNormal.z, mSpeed.z);
+        mSpeed.y = -(FX_Div(m0 + m1, mFloorNormal.y) + 0x8000);
     }
 
     if (func_ov002_020f035c(n, mFloorNormal.y) != 0 && mHorzSpeed > 0x5000) {
-        int q0 = mAngleX;
+        int q0 = mAngle.x;
         int q1;
         int sd;
         if (q0 < 0) q0 = ((-q0) << 16) >> 16;
         if (q0 < 0x10) {
-            q1 = mAngleZ;
+            q1 = mAngle.z;
             if (q1 < 0) q1 = ((-q1) << 16) >> 16;
             if (q1 < 0x10) {
                 sd = FX_Div(FX_MUL(mHorzSpeed, 8), 0xa);
                 if (sd < 0) sd = -sd;
-                if (mVertSpeed > 0xa000)
+                if (mSpeed.y > 0xa000)
                     Sound::PlayBank3(0x51, mCamSpacePos);
-                if (mVertSpeed > sd)
-                    mVertSpeed = sd;
+                if (mSpeed.y > sd)
+                    mSpeed.y = sd;
             }
         }
     }
 
     if (ApproachLinear(mHorzSpeed, 0, 0x800) == 0 && mClsnYOffsetTarget != 0xa0 &&
         mHorzSpeed > 0xa000) {
-        Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
+        Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
         mSlideSoundHandle = Sound::PlayLong(mSlideSoundHandle, 3, 0x93, mCamSpacePos, 0);
     }
 
     {
-        s16 r5 = func_02010844(&mFloorNormal, mAngleY);
-        s16 r4 = func_02010844(&mFloorNormal, (s16)(mAngleY - 0x4000));
-        UpdateAngle(mAngleX, r5, 4, 0x1000);
-        UpdateAngle(mAngleZ, r4, 4, 0x1000);
+        s16 r5 = func_02010844(&mFloorNormal, mAngle.y);
+        s16 r4 = func_02010844(&mFloorNormal, (s16)(mAngle.y - 0x4000));
+        UpdateAngle(mAngle.x, r5, 4, 0x1000);
+        UpdateAngle(mAngle.z, r4, 4, 0x1000);
     }
     return 1;
 }
 
 /* Drop shadow. Probes for ground 10 units below the crate (0xa000) with
  * dBgCh_Gnd and stores the ground height in mGroundY (the probe's own Y if
- * nothing is found). The height above it, h = mPosY - mGroundY, is floored
+ * nothing is found). The height above it, h = mPos.y - mGroundY, is floored
  * at 1 unit (0x1000); the shadow's scale is 100 units minus h * 0x180 / 0x1000
  * (so 3/32 of h), floored at 10 units (0xa000). Builds mShadowMtx from
- * mAngleY, puts its translation row at the crate's position (y lowered by
+ * mAngle.y, puts its translation row at the crate's position (y lowered by
  * 20 units, 0x14000; all three >> 3) and calls dActor_c::DropShadowScaleXYZ with it,
  * mShadowModel, that scale twice and h + 40 units (0x28000) in between,
  * and 0xf last (the opacity argument in include/dActor_c.h; the ScaleXYZ in
@@ -990,9 +990,9 @@ void daObjBlockS_c::UpdateDropShadow() {
     int r5;
     int r4;
 
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y -= 0xa000;
     dBgCh_Gnd rg;
     rg.SetObjAndPos(v, 0);
@@ -1000,20 +1000,20 @@ void daObjBlockS_c::UpdateDropShadow() {
     if (rg.DetectClsn()) {
         mGroundY = rg.clsnY;
     }
-    r5 = mPosY - mGroundY;
+    r5 = mPos.y - mGroundY;
     if (r5 <= 0x1000) r5 = 0x1000;
     r4 = 0x64000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
-    Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
-    mShadowMtx.m[9] = mPosX >> 3;
-    mShadowMtx.m[10] = (mPosY - 0x14000) >> 3;
-    mShadowMtx.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
+    mShadowMtx.m[9] = mPos.x >> 3;
+    mShadowMtx.m[10] = (mPos.y - 0x14000) >> 3;
+    mShadowMtx.m[11] = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
 }
 
 /* Collider transform. Copies the model matrix (mModel's mat4x3, at 0xf0)
  * into mClsnMat, overwrites its translation row with the crate's position
- * lowered by mClsnYOffset, and hands it and mAngleY to dBgW_KcMbg::Transform
+ * lowered by mClsnYOffset, and hands it and mAngle.y to dBgW_KcMbg::Transform
  * on mMeshCollider. */
 void daObjBlockS_c::UpdateMeshCollider() {
     Vector3 pos = mPos;
@@ -1022,7 +1022,7 @@ void daObjBlockS_c::UpdateMeshCollider() {
     mClsnMat.m[9] = pos.x;
     mClsnMat.m[10] = pos.y;
     mClsnMat.m[11] = pos.z;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* dExtSimpleModel_c matrix. When mHoldingPlayer is set, mFlags bit 0x4000 is set and the
@@ -1071,7 +1071,7 @@ void daObjBlockS_c::UpdateModelMatrix() {
     {
         Vector3 pos = mPos;
         pos.y -= mClsnYOffset;
-        Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
         mModel.mat4x3.m[9] = pos.x >> 3;
         mModel.mat4x3.m[10] = pos.y >> 3;
         mModel.mat4x3.m[11] = pos.z >> 3;
@@ -1152,9 +1152,9 @@ int daObjBlockS_c::Behavior()
     }
 
     if (mBreakTimer != 0) {
-        x = mPosX;
-        z = mPosZ;
-        y = mPosY + 0x50000;
+        x = mPos.x;
+        z = mPos.z;
+        y = mPos.y + 0x50000;
         v.x = x;
         v.y = y;
         v.z = z;
@@ -1165,9 +1165,9 @@ int daObjBlockS_c::Behavior()
                 Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
         } else {
             SpawnBreakCoins();
-            x = mPosX;
-            z = mPosZ;
-            y = mPosY + 0x28000;
+            x = mPos.x;
+            z = mPos.z;
+            y = mPos.y + 0x28000;
             vec.x = x;
             vec.y = y;
             vec.z = z;
@@ -1180,9 +1180,9 @@ int daObjBlockS_c::Behavior()
         }
     }
 
-    t.x = mPosX;
-    t.y = mPosY;
-    t.z = mPosZ;
+    t.x = mPos.x;
+    t.y = mPos.y;
+    t.z = mPos.z;
     t.y = t.y - mClsnYOffset;
     mdCcAcPos_c1.pos.x = t.x;
     mdCcAcPos_c1.pos.y = t.y;
@@ -1198,7 +1198,7 @@ int daObjBlockS_c::Behavior()
  * angles as the home, then builds the crate from the ResourceDescriptor at
  * data_ov098_0213c4c8 (model file, collision file, CLPS block): model,
  * cuboid shadow, KCL mesh collider (SetFile with mClsnMat, an fx32 0x199
- * (about 0.1), mAngleY and the CLPS block word) and the dBgCh_Actr (Init with radius 40 and height
+ * (about 0.1), mAngle.y and the CLPS block word) and the dBgCh_Actr (Init with radius 40 and height
  * 40 units, 0x28000 each) with water detection on. Gravity is -2 units per
  * frame^2 (-0x2000) with a terminal velocity of -60 units per frame
  * (-0x3c000). Enters STATE_IDLE, clears mEatingPlayer and resets the crate
@@ -1210,15 +1210,15 @@ int daObjBlockS_c::InitResources()
         res = &data_ov098_0213c4c8;
     if (res == 0)
         return 0;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
-    mHomeAngleX = mAngleX;
-    mHomeAngleY = mAngleY;
-    mHomeAngleZ = mAngleZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
+    mHomeAngleX = mAngle.x;
+    mHomeAngleY = mAngle.y;
+    mHomeAngleZ = mAngle.z;
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*res->model), 1, -1);
     mShadowModel.InitCuboid();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*res->collision), mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*res->collision), mClsnMat, 0x199, mAngle.y,
                           *res->clps);
     mWithMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();

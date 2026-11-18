@@ -25,7 +25,7 @@
  * HandleContact when the mouth-state flag is set. Consumers that used the old duplicated names
  * were repointed to the inherited dActor_c/fBase_c names: mActorID ->
  * actorID, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
- * mFlags (mPosX/Y/Z, mScaleX/Y/Z, mAreaId already share dActor_c's names).
+ * mFlags (mPos, mScale, mAreaId already share dActor_c's names).
  *
  * mWithMeshClsn was mistyped `u8` at 0x194 in the generated header --
  * daMky_c_classInit_MONKEY_THIEF/_MONKEY_STAR call _ZN10dBgCh_ActrC1Ev at that

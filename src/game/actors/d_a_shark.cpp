@@ -31,7 +31,7 @@
  * - CheckPlayerHit: `if (hit->actorID != 0xbf)` is size 0x120 to 0x114.
  *   The int temporary stays.
  * - Behavior: clamping with `speed < mTerminalVelocity` and dropping the
- *   mSpeedZ copy is size 0x1c0 to 0x1b8 and shifts the calls
+ *   mSpeed.z copy is size 0x1c0 to 0x1b8 and shifts the calls
  *   (WRONG-DEST, UpdateModelMatrix against 0x02010d40). The
  *   compare-into-terminal and the copy stay.
  */
@@ -133,9 +133,9 @@ void daShark_c::CheckPlayerHit() {
     }
     if (((daPly_c *)hit)->mIsVanish)
         return;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     ((daPly_c *)hit)->Hurt(pos, 3, 0xc000, 1, 0, 1);
 }
 
@@ -179,7 +179,7 @@ void daShark_c::UpdateModelMatrix() {
 
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
@@ -219,27 +219,27 @@ int daShark_c::Behavior() {
             if (mPathNodeIdx >= mPathNodeCount)
                 mPathNodeIdx = 0;
         }
-        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &node), 0x180);
-        ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &node), 0x40);
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        ApproachLinear(mPrevAngle.y, Vec3_HorzAngle(&mPos, &node), 0x180);
+        ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &node), 0x40);
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
         velocity.y = velocity.x = velocity.z = 0;
         velocity.z = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MTX_MultVec43(&velocity, &data_020a0e68, (Vector3 *)&mSpeedX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
+        MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
     }
     {
-        /* mSpeedZ is the z word of the vector just stored at mSpeedX.
+        /* mSpeed.z is the z word of the vector just stored at mSpeed.x.
          * The copy is load-bearing. */
-        int speed = mVertSpeed + mVertAccel;
+        int speed = mSpeed.y + mVertAccel;
         int terminalVelocity = mTerminalVelocity;
-        int kept = mSpeedZ;
+        int kept = mSpeed.z;
         if (speed >= terminalVelocity)
             terminalVelocity = speed;
-        mVertSpeed = terminalVelocity;
-        mSpeedZ = kept;
+        mSpeed.y = terminalVelocity;
+        mSpeed.z = kept;
     }
     UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     UpdateModelMatrix();

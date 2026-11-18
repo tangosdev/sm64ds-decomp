@@ -10,7 +10,7 @@
  */
 // Notes (measured spellings that do not match):
 // - Behavior and UpdateDeathState each build the coin position in separate
-//   locals. `pos.y = mPosY + 0x136000` costs 9 words of Behavior.
+//   locals. `pos.y = mPos.y + 0x136000` costs 9 words of Behavior.
 // - mStateTimer is read and written through a u16 pointer. A plain member
 //   increment does not match UpdateRunState.
 // - The four Play*Sound methods call Sound.h's func_0201267c, the
@@ -69,16 +69,16 @@ int daDonketu_c::InitResources() {
 
 /* 0 runs the shared worker, 1 is already handled, 2 drops a coin (actor
  * 0x120, subtype 2) and bumps the Big Bully's kill count. The same drop is
- * written again in UpdateDeathState. The coin faces mPrevAngleY + 0x8000
+ * written again in UpdateDeathState. The coin faces mPrevAngle.y + 0x8000
  * plus a 10-bit roll, and launches upward.
  */
 int daDonketu_c::Behavior() {
     int outcome = UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3);
     if (outcome != 0) {
         if (outcome == 2) {
-            Vector3 pos(mPosX, mPosY + 0x136000, mPosZ);
+            Vector3 pos(mPos.x, mPos.y + 0x136000, mPos.z);
             int roll = RandomIntInternal(&data_0209e650.value);
-            int yrot = mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff);
+            int yrot = mPrevAngle.y + 0x8000 + (((u32)roll >> 8) & 0x3ff);
             Vector3_16 rot;
             rot.x = 0;
             rot.z = 0;
@@ -87,9 +87,9 @@ int daDonketu_c::Behavior() {
             dActor_c *coin = dActor_c::Spawn(0x120, 2, pos, &rot, mAreaId, -1);
             if (coin) {
                 coin->mHorzSpeed = 0xa000;
-                coin->mSpeedX = 0;
-                coin->mVertSpeed = 0x50000;
-                coin->mSpeedZ = 0;
+                coin->mSpeed.x = 0;
+                coin->mSpeed.y = 0x50000;
+                coin->mSpeed.z = 0;
             }
             daBDonketu_c *bigBully = (daBDonketu_c *)dActor_c::FindWithID(mBigBullyID);
             if (bigBully)
@@ -107,25 +107,25 @@ int daDonketu_c::Behavior() {
 void daDonketu_c::UpdateDeathState() {
     if (func_ov064_0211616c() == 0)
         return;
-    int pz = mPosZ;
-    int py = mPosY + 0x136000;
-    int px = mPosX;
+    int pz = mPos.z;
+    int py = mPos.y + 0x136000;
+    int px = mPos.x;
     Vector3 pos;
     pos.x = px;
     pos.y = py;
     pos.z = pz;
     int roll = RandomIntInternal(&data_0209e650.value);
     Vector3_16 rot;
-    s16 ang = (mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff));
+    s16 ang = (mPrevAngle.y + 0x8000 + (((u32)roll >> 8) & 0x3ff));
     rot.x = 0;
     rot.z = 0;
     rot.y = ang;
     dActor_c *coin = dActor_c::Spawn(0x120, 2, pos, &rot, mAreaId, -1);
     if (coin) {
         coin->mHorzSpeed = 0xa000;
-        coin->mSpeedX = 0;
-        coin->mVertSpeed = 0x50000;
-        coin->mSpeedZ = 0;
+        coin->mSpeed.x = 0;
+        coin->mSpeed.y = 0x50000;
+        coin->mSpeed.z = 0;
     }
     dActor_c *spawner = dActor_c::FindWithID(mBigBullyID);
     if (spawner) {

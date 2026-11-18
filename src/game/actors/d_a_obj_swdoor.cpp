@@ -74,7 +74,7 @@ s32 daObjSwdoor_c::Render() {
  * runs 0, 1, 2:
  *   0  wait for the event bit and for the timer to run out, then arm a
  *      0x40-frame timer, clear the 0x1 bit of mFlags and play sound 0x3f;
- *   1  turn mAngleY by 0x100 a frame (direction from mTurnDir) until the timer
+ *   1  turn mAngle.y by 0x100 a frame (direction from mTurnDir) until the timer
  *      runs out, then set the 0x1 bit of mFlags again;
  *   2  done. */
 s32 daObjSwdoor_c::UpdateShutter() {
@@ -92,9 +92,9 @@ s32 daObjSwdoor_c::UpdateShutter() {
     case 1:
         if (DecIfAbove0_Byte(&mTimer) != 0) {
             if (mTurnDir != 0) {
-                mAngleY += 0x100;
+                mAngle.y += 0x100;
             } else {
-                mAngleY -= 0x100;
+                mAngle.y -= 0x100;
             }
         } else {
             mState++;
@@ -119,7 +119,7 @@ s32 daObjSwdoor_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000, mAngle.y,
                           *descriptor->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);

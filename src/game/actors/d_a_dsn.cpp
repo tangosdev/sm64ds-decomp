@@ -21,7 +21,7 @@
  *   `(((unsigned)frame - 1) << 16) >> 4`.
  * - OnHitByMegaChar: `Vector3 poofPosCopy = poofPos` is ldm/stm and shrinks
  *   the function 0x9c to 0x94. The three field stores are the ROM copies.
- * - OnHitByMegaChar: Sound::Play(3, 0x1e, &mCamSpacePosX) grows it 0x9c to
+ * - OnHitByMegaChar: Sound::Play(3, 0x1e, &mCamSpacePos) grows it 0x9c to
  *   0xa0 and the reloc is _ZN5Sound4PlayEjjRK7Vector3, not func_02012694.
  *   func_02012694 is the bank-3 veneer the ROM calls.
  * - The seven cycle helpers (StateRise .. StateRecover, UpdateDropShadow,
@@ -207,9 +207,9 @@ int daDsn_c::Behavior() {
 void daDsn_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Vector3 poofPos;
-    poofPos.x = mPosX;
-    poofPos.y = mPosY;
-    poofPos.z = mPosZ;
+    poofPos.x = mPos.x;
+    poofPos.y = mPos.y;
+    poofPos.z = mPos.z;
     poofPos.y += OnAimedAtWithEgg();
     Particle::System::NewSimple(kPtclStoneBlockBreak, poofPos.x, poofPos.y, poofPos.z);
     Vector3 poofPosCopy;

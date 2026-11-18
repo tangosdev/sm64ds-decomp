@@ -10,22 +10,22 @@
  * kept deliberately so this header does not contradict include/dActor_c.h, but
  * what this class actually does with them is:
  *
- *   mScaleX  0x080   HALF-WIDTH of the trigger box. InitResources derives it
+ *   mScale.x 0x080   HALF-WIDTH of the trigger box. InitResources derives it
  *                    from the spawn param's low nibble, ((n+1) * 0x64000) >> 1,
  *                    and Behavior tests |local.x| <= it.
- *   mScaleY  0x084   HEIGHT of the box, from the next nibble, tested as
+ *   mScale.y 0x084   HEIGHT of the box, from the next nibble, tested as
  *                    0 <= local.y <= it. Two levels (0x20, 0x22) override both
  *                    with fixed sizes.
- *   mScaleZ  0x088   NOT a size at all: last frame's local z of the player.
+ *   mScale.z 0x088   NOT a size at all: last frame's local z of the player.
  *                    Behavior XORs it with this frame's and tests the sign, so
  *                    the door fires on the frame the player CROSSES its plane,
  *                    then stores the new value. It is the only one of the three
  *                    written every frame.
- *   mAngleX  0x08c   genuinely an angle -- fed to the matrix below. Also
+ *   mAngle.x 0x08c   genuinely an angle -- fed to the matrix below. Also
  *                    doubles as a flag: zero means an untilted door, which gets
  *                    its box grown by 0x64000 in both axes and dropped 0x32000.
- *   mAngleY  0x08e   genuinely an angle.
- *   mAngleZ  0x090   NOT an angle: the exit band, 0/1/2, chosen from how high
+ *   mAngle.y 0x08e   genuinely an angle.
+ *   mAngle.z 0x090   NOT an angle: the exit band, 0/1/2, chosen from how high
  *                    up the box the player crossed.
  *   mHorzSpeed 0x098 NOT a speed: the pull-through depth. Non-zero puts the
  *                    door in its second mode, where each frame drags the player
@@ -52,14 +52,14 @@
 /* daChScene_c is a real dActor_c, like every other actor in this family
  * (daChRoom_c_Spawn's neighbor, daBar_c_classInit, and daCamTag_c_Spawn; the
  * bar factory's historical alias was InvisiblePole_Spawn) --
- * mParam/mPosX/mScaleX/mAngleX/mHorzSpeed are dActor_c's own fields
+ * mParam/mPos.x/mScale.x/mAngle.x/mHorzSpeed are dActor_c's own fields
  * (param1 at 0x008 via fBase_c, the rest at 0x05c..0x098), inherited rather
  * than re-declared flat as they were before. The non-motion reuse those fields
  * get here is documented in the file comment above.
  */
 struct daChScene_c : dActor_c {
     /* WORLD -> DOOR-LOCAL. InitResources builds translation, then rotation Y by
-       -mAngleY and X by -mAngleX, then inverts in place -- so every Behavior
+       -mAngle.y and X by -mAngle.x, then inverts in place -- so every Behavior
        test runs in the door's own frame and the box tests are plain axis
        comparisons. */
     Matrix4x3 mInvMat; /* 0x0d4 */

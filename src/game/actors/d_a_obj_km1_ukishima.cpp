@@ -77,13 +77,13 @@ s32 daObjKm1_Ukishima_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov043_021125e0);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov043_02111c00);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov043_02111c00);
 
     /* The mesh moves with the actor's velocity rather than its transform --
        the island slides, it does not carry a rotating platform's matrix. */
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
-    mPrevAngleY = mAngleY;
+    mPrevAngle.y = mAngle.y;
     mHorzSpeed = 0xa000;
     mTurnTimer = 60;
     return 1;
@@ -96,11 +96,11 @@ s32 daObjKm1_Ukishima_c::Behavior() {
         mTurnTimer = 60;
         /* A quarter turn, applied to the heading UpdatePos integrates along.
            MEASURED: it has to be the compound assign. Spelled out as
-           `mPrevAngleY = mPrevAngleY + 0x4000` mwcc reloads the field address
+           `mPrevAngle.y = mPrevAngle.y + 0x4000` mwcc reloads the field address
            for the store, the block gets short enough to if-convert, and the
            ROM's `bne` around it becomes moveq/strbeq/ldrsheq -- 0x70 bytes
            against the cartridge's 0x78. */
-        mPrevAngleY += 0x4000;
+        mPrevAngle.y += 0x4000;
     }
 
     UpdatePos(0);

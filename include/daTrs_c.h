@@ -48,20 +48,20 @@
    check_header_offsets can parse the member declaration. Bit N is the N-th
    field; d_a_trs.cpp's TrsFlag enum spells the same bits as masks for the
    sites that matched as a halfword read-modify-write. From the uses:
-   limitZ (0x1): InitResources sets it when LEVEL_ID is 0xc, mPosX is 0xbb8000
-       and mAreaId is 2. Behavior then keeps mPosZ >= -0x12c000, and with it
+   limitZ (0x1): InitResources sets it when LEVEL_ID is 0xc, mPos.x is 0xbb8000
+       and mAreaId is 2. Behavior then keeps mPos.z >= -0x12c000, and with it
        set 02116190's leave test is the player's z >= 0x3e8000 instead of the
        y / horizontal-distance test.
    carrying (0x2): the carried item (mCarriedModel) is placed and drawn.
        Cleared once the carried actor is spawned (021162c8, 02116e14) and on
        the replacement actor RespawnIfHasCap returns.
-   followHeading (0x4): while set, Behavior copies mPrevAngleY into mAngleY.
+   followHeading (0x4): while set, Behavior copies mPrevAngle.y into mAngle.y.
        0211a810 clears it when a knockback starts and 0211a6f0 sets it again
        when it ends; 0211a3d0 clears it when the death spin starts.
    visible (0x8): Render and the placement helpers do nothing while clear.
    canAppear (0x10): variants 4 and 0xb leave state 0 only while set.
        For those variants InitResources sets it when the closest player's
-       mPosZ is above -0x514000 (signed); Behavior's area-reset block sets it
+       mPos.z is above -0x514000 (signed); Behavior's area-reset block sets it
        too.
    groundSeen (0x20): Behavior's ground ray found floor less than 0x12c000
        below. While set, a TERESA below variant 8 falls back to mLastGroundPos
@@ -185,10 +185,10 @@ struct daTrs_c : dCapEnemy_c {
        appears (02119074); 021189f4 hands it >> 0xc to Sound::PlaySub. */
     s32 mSavedMusicVolume;     /* 0x57c */
     s32 mDistToPlayer;         /* 0x580 -- Vec3_HorzDist each Behavior */
-    /* The Boo's base scale. Oscillate sets mScaleX/Y/Z (what
+    /* The Boo's base scale. Oscillate sets mScale (what
        Render draws) to this plus a wobble and sizes mdCcAcPos_c from them;
        the appear path copies it in directly. Runtime (EU, blinded 7/7):
-       poking this resized the drawn Boo; a direct mScaleX write was undone.
+       poking this resized the drawn Boo; a direct mScale.x write was undone.
        Both no-op shams were among 4 dropped pairs, so none was scored. */
     s32 mClsnScale;            /* 0x584 */
     /* Per-chase randoms, redrawn by 02119894/02119960 whenever mStateTimer
@@ -218,24 +218,24 @@ struct daTrs_c : dCapEnemy_c {
     u32 mHurtDamage;           /* 0x5ac */
     s16 mAngleToPlayer;        /* 0x5b0 -- Vec3_HorzAngle each Behavior */
     s16 unk_5b2;               /* 0x5b2 -- yaw snapshot, no reader recovered */
-    /* Knockback headings: 0211a810 saves mPrevAngleY in the first and picks
+    /* Knockback headings: 0211a810 saves mPrevAngle.y in the first and picks
        the push direction in the second: the player's yaw, or else by the
-       sign of the cosine of (mPrevAngleY - mAngleToPlayer) (SINE_TABLE
-       FX_SinCosTable_[2d+1]) -- player behind: mPrevAngleY, otherwise
-       mPrevAngleY + 0x8000. 0211a76c holds
-       mPrevAngleY at the second while it runs and 0211a6f0 restores the
+       sign of the cosine of (mPrevAngle.y - mAngleToPlayer) (SINE_TABLE
+       FX_SinCosTable_[2d+1]) -- player behind: mPrevAngle.y, otherwise
+       mPrevAngle.y + 0x8000. 0211a76c holds
+       mPrevAngle.y at the second while it runs and 0211a6f0 restores the
        first. */
     s16 mPreKnockbackAngleY;   /* 0x5b4 */
     s16 mKnockbackAngleY;      /* 0x5b6 */
     /* Phase of the squash-and-stretch wobble: Oscillate reads it
-       >> 4 as a sine-table index and moves mScaleX / mScaleY by opposite
+       >> 4 as a sine-table index and moves mScale.x / mScale.y by opposite
        amounts. Only zero is ever stored (InitResources, twice), so the name
        rests on that one reader. Medium confidence. */
     u16 mWobblePhase; /* 0x5b8 */
     /* Carried-item yaw: 021166ac adds 0xc00 a frame unless mCarriedID is
        T_BASKET, so a coin spins and the cage does not. */
     s16 mCarriedAngleY;        /* 0x5ba */
-    /* Desired yaw: 02116fac and 02119cc0 set it and steer mPrevAngleY toward it. */
+    /* Desired yaw: 02116fac and 02119cc0 set it and steer mPrevAngle.y toward it. */
     s16 mTargetAngleY;         /* 0x5bc */
     /* Variant 0xf: frames until the next fireball attack. 0211873c starts
        state 4 at 0; reloaded with 0xb4 + a 6-bit random (02117cdc, 02118458)
@@ -369,6 +369,7 @@ struct daTrs_c : dCapEnemy_c {
     void          func_ov063_02119cc0(int unused, s16 a2, int a3);
     void ChaseMario(int a1, short a2, int a3);
     void SetVelFromPlayerVel(int a, int b);
+    int func_ov063_0211a0a8(int a1, int a2, int a3, int a4);
     int GetAttackStatus();
     int UpdateDuringDeath();
     int UpdateDuringNonlethalHit(int arg1);

@@ -3,7 +3,7 @@
  *
  * Behavior turns the player's offset into the box's frame. Inside the box
  * and 100..400 units off its plane, it moves the player to the area on that
- * side: mAngleX on the -z side, mAngleZ on the +z side.
+ * side: mAngle.x on the -z side, mAngle.z on the +z side.
  *
  * Notes:
  * - Vec3_Sub / Vec3_RotateYAndTranslate have no owning header; tree-wide
@@ -41,9 +41,9 @@ extern "C" SpawnInfo<daChRoom_c> g_profile_CH_ROOM = {
     daChRoom_c_classInit, 0x015c, 0x015c, 0, 0, 0, 0, 0};
 
 int daChRoom_c::InitResources() {
-    mScaleX = (((param1 & 15) + 1) * 0x64000) >> 1;
-    mScaleY = (((param1 >> 4 & 15) + 1) * 0x64000);
-    mAngleY = -mAngleY;
+    mScale.x = (((param1 & 15) + 1) * 0x64000) >> 1;
+    mScale.y = (((param1 >> 4 & 15) + 1) * 0x64000);
+    mAngle.y = -mAngle.y;
     return 1;
 }
 
@@ -55,18 +55,18 @@ int daChRoom_c::Behavior() {
 
     player = gPlayers[gLocalPlayerId];
     Vec3_Sub(&delta, &player->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&local, &data_020a0ebc, mAngleY, &delta);
+    Vec3_RotateYAndTranslate(&local, &data_020a0ebc, mAngle.y, &delta);
 
     distX = local.x;
     if (distX < 0)
         distX = -distX;
-    if (distX < mScaleX) {
+    if (distX < mScale.x) {
         if (local.y > -0x96000) {
-            if (local.y < mScaleY) {
+            if (local.y < mScale.y) {
                 int z = local.z;
                 int distZ = (z < 0) ? -z : z;
                 if (distZ > 0x64000 && distZ < 0x190000) {
-                    int area = (z < 0) ? mAngleX : mAngleZ;
+                    int area = (z < 0) ? mAngle.x : mAngle.z;
                     player->mAreaId = (char)area;
                     ChangeArea((char)area);
                 }

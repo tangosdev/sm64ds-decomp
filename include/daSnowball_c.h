@@ -61,12 +61,12 @@ struct daSnowball_c : dEnemyBase_c {
     dExtSimpleModel_c mModel;       /* 0x300 */
     dExtShadowModel_c mShadowModel; /* 0x350 */
     daSnowball_StateRec *mStateRec; /* 0x378 -- installed by SetState */
-    /* Where the actor was placed: InitResources copies mPosX/Y/Z here before
+    /* Where the actor was placed: InitResources copies mPos.x/.y/.z here before
        lifting the snowball 0x32000 (50 units) above it. */
     Vector3 mSpawnPos; /* 0x37c */
     /* Cleared by the enter helper; set to 1 by the update helper the first time
        the snowball is below mSpawnPos.y while mTerminalVelocity still holds its
-       initial -0x3c000, at which point that helper also zeroes mVertSpeed and
+       initial -0x3c000, at which point that helper also zeroes mSpeed.y and
        mVertAccel. Only those two helpers touch it. */
     s32 mReachedSpawnY; /* 0x388 */
 

@@ -179,22 +179,22 @@ int daBgSnmBdy_c::InitResources()
         return 0;
     mCylinder.Init(this, 0x82000, 0x104000, 0x800004, 0);
     mWithMeshClsn.Init(this, 0x82000, 0x82000, 0, 0);
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn())
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
-    mHomeAngleX = mAngleX;
-    mHomeAngleY = mAngleY;
-    mHomeAngleZ = mAngleZ;
+        mPos.y = pos.y;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
+    mHomeAngleX = mAngle.x;
+    mHomeAngleY = mAngle.y;
+    mHomeAngleZ = mAngle.z;
     unk_3a4 = 0x5a;
     SetState(0);
     mTalkPlayer = 0;
@@ -258,10 +258,10 @@ int daBgSnmBdy_c::InitState0()
 {
     mVertAccel = 0;
     mTerminalVelocity = 0;
-    mScaleX = 0x800;
-    mScaleY = 0x800;
-    mScaleZ = 0x800;
-    mRadius = FX_Mul(mScaleX, 0x82000);
+    mScale.x = 0x800;
+    mScale.y = 0x800;
+    mScale.z = 0x800;
+    mRadius = FX_Mul(mScale.x, 0x82000);
     mCylinder.radius = mRadius;
     mCylinder.height = mRadius << 1;
     mWithMeshClsn.SetRadius(mRadius);
@@ -295,9 +295,9 @@ int daBgSnmBdy_c::InitState1()
 int daBgSnmBdy_c::State1()
 {
     Vector3 messagePos;
-    messagePos.x = mPosX;
-    messagePos.y = mPosY;
-    messagePos.z = mPosZ;
+    messagePos.x = mPos.x;
+    messagePos.y = mPos.y;
+    messagePos.z = mPos.z;
     messagePos.y += 0x96000;
     switch (mSubstate) {
     case 0:
@@ -335,12 +335,12 @@ int daBgSnmBdy_c::State2()
     int newScale;
     ApproachLinear(mHorzSpeed, 0x28000, 0x400);
     if (DecIfAbove0_Short(&mStateTimer) == 0) {
-        growScale = mScaleX;
+        growScale = mScale.x;
         ApproachLinear(growScale, 0x1800, 0x11);
         newScale = growScale;
-        mScaleX = newScale;
-        mScaleY = newScale;
-        mScaleZ = newScale;
+        mScale.x = newScale;
+        mScale.y = newScale;
+        mScale.z = newScale;
         mRadius = FX_Mul(growScale, 0x82000);
         mCylinder.radius = mRadius;
         mCylinder.height = mRadius << 1;
@@ -354,7 +354,7 @@ int daBgSnmBdy_c::State2()
         else
             SetState(4);
     }
-    Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
+    Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
     mSoundID = Sound::PlayLong(mSoundID, 3, 0x8a, mCamSpacePos, 0);
     UpdateRollAngle();
     UpdatePos(&mCylinder);
@@ -378,16 +378,16 @@ int daBgSnmBdy_c::State3() {
     switch (mSubstate) {
     case 0: {
         int distToLanding = Vec3_HorzDist(&gBgSnmBdyLandingPoint, &mPos);
-        UpdateAngle(mAngleY, Vec3_HorzAngle(&mPos, &gBgSnmBdyLandingPoint), 2, 0x600);
-        mPrevAngleY = mAngleY;
-        Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
+        UpdateAngle(mAngle.y, Vec3_HorzAngle(&mPos, &gBgSnmBdyLandingPoint), 2, 0x600);
+        mPrevAngle.y = mAngle.y;
+        Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x8a, mCamSpacePos, 0);
         if (distToLanding < 0x17c000) {
             daBgSnmHed_c *head =
                 (daBgSnmHed_c *)dActor_c::FindWithActorID(0x111, 0); /* BIG_SNOWMAN_HEAD */
             head->mBodyArriving = 1;
             func_0201267c(0x114, &mCamSpacePos);
-            mVertSpeed = 0x1d000;
+            mSpeed.y = 0x1d000;
             mHorzSpeed = 0xe000;
             mSubstate++;
         }
@@ -395,15 +395,15 @@ int daBgSnmBdy_c::State3() {
     case 1:
         if (mWithMeshClsn.JustHitGround() != 0) {
             Vector3 landPos;
-            landPos.x = mPosX;
-            landPos.y = mPosY;
-            landPos.z = mPosZ;
+            landPos.x = mPos.x;
+            landPos.y = mPos.y;
+            landPos.z = mPos.z;
             Earthquake(landPos, 0x5dc000);
-            mPosX = gBgSnmBdyLandingPoint.x;
-            mPosY = gBgSnmBdyLandingPoint.y;
-            mPosZ = gBgSnmBdyLandingPoint.z;
-            mAngleX = 0;
-            mAngleY = (short)-0x4000;
+            mPos.x = gBgSnmBdyLandingPoint.x;
+            mPos.y = gBgSnmBdyLandingPoint.y;
+            mPos.z = gBgSnmBdyLandingPoint.z;
+            mAngle.x = 0;
+            mAngle.y = (short)-0x4000;
             mHorzSpeed = 0;
             mSubstate++;
         }
@@ -430,13 +430,13 @@ int daBgSnmBdy_c::InitState4()
 int daBgSnmBdy_c::State4()
 {
     ApproachLinear(mHorzSpeed, 0x28000, 0x400);
-    Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
+    Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
     mSoundID = Sound::PlayLong(mSoundID, 3, 0x8a, mCamSpacePos, 0);
     UpdateRollAngle();
     UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     HurtPlayer();
-    if (mPosY < (int)0xfe363c80)
+    if (mPos.y < (int)0xfe363c80)
         SetState(5);
     return 1;
 }
@@ -457,15 +457,15 @@ int daBgSnmBdy_c::State5()
     Vec3_Asr(&homePos, &mHomePos, 3);
     if (data_0209f43c.TransformAndClip(data_0209b3ec, homePos, 0x1f400, clipResult) < 0x1194000)
         return 1;
-    mPosX = mHomePos.x;
-    mPosY = mHomePos.y;
-    mPosZ = mHomePos.z;
-    mAngleX = mHomeAngleX;
-    mAngleY = mHomeAngleY;
-    mAngleZ = mHomeAngleZ;
-    mPrevAngleX = mAngleX;
-    mPrevAngleY = mAngleY;
-    mPrevAngleZ = mAngleZ;
+    mPos.x = mHomePos.x;
+    mPos.y = mHomePos.y;
+    mPos.z = mHomePos.z;
+    mAngle.x = mHomeAngleX;
+    mAngle.y = mHomeAngleY;
+    mAngle.z = mHomeAngleZ;
+    mPrevAngle.x = mAngle.x;
+    mPrevAngle.y = mAngle.y;
+    mPrevAngle.z = mAngle.z;
     mTalkPlayer = 0;
     SetState(0);
     return 1;
@@ -473,13 +473,13 @@ int daBgSnmBdy_c::State5()
 
 void daBgSnmBdy_c::UpdateModel()
 {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = (mPosY + mRadius) >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
-    mShadowMat.m[9] = mPosX >> 3;
-    mShadowMat.m[10] = (mPosY + mRadius) >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = (mPos.y + mRadius) >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = (mPos.y + mRadius) >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, mRadius << 1, mRadius << 1, 0xf);
 }
 
@@ -496,9 +496,9 @@ void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
     floorResult->surface.CopyNormalTo(normal);
     if (normal.y == 0) return;
     {
-        int alongX = FX_Mul(normal.x, mSpeedX);
-        int alongZ = FX_Mul(normal.z, mSpeedZ);
-        mVertSpeed = -(FX_Div(alongX + alongZ, normal.y) + 0x8000);
+        int alongX = FX_Mul(normal.x, mSpeed.x);
+        int alongZ = FX_Mul(normal.z, mSpeed.z);
+        mSpeed.y = -(FX_Div(alongX + alongZ, normal.y) + 0x8000);
     }
 }
 
@@ -514,9 +514,9 @@ int daBgSnmBdy_c::HurtPlayer()
     if (actor == 0 || !IsPlayerActor(actor))
         return 0;
     if (mHorzSpeed != 0) {
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         static_cast<daPly_c *>(actor)->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
     return 1;
@@ -528,8 +528,8 @@ int daBgSnmBdy_c::AdvancePath()
     int numNodes;
     mPath.GetNode(node, mPathNode);
     int dist = Vec3_HorzDist(&mPos, &node);
-    UpdateAngle(mAngleY, Vec3_HorzAngle(&mPos, &node), 2, 0x600);
-    mPrevAngleY = mAngleY;
+    UpdateAngle(mAngle.y, Vec3_HorzAngle(&mPos, &node), 2, 0x600);
+    mPrevAngle.y = mAngle.y;
     if (dist < mRadius) {
         numNodes = mPath.NumNodes();
         /* Signed compare. mPathNode is u32; comparing it as u32 is unsigned. */
@@ -543,7 +543,7 @@ void daBgSnmBdy_c::UpdateRollAngle()
 {
     int circumference = FX_Mul32x64c(mRadius << 1, FX64C_PI);
     fx32 turns = FX_Div(mHorzSpeed, circumference);
-    mAngleX = (short)(mAngleX + FX_Mul(turns, ANGLE_FULL_TURN));
+    mAngle.x = (short)(mAngle.x + FX_Mul(turns, ANGLE_FULL_TURN));
 }
 
 int daBgSnmBdy_c::IsPlayerNearCenter()

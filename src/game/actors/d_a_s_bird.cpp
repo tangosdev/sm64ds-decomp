@@ -108,7 +108,7 @@ void daSBird_c::AttachToLeader(int ownerID) {
 void daSBird_c::StateFly() {
     UpdatePos(0);
     dActor_c *owner = dActor_c::FindWithID(mOwnerID);
-    if (owner == 0 || owner->mPosY > 0xbb8000) {
+    if (owner == 0 || owner->mPos.y > 0xbb8000) {
         MarkForDestruction();
         return;
     }
@@ -119,7 +119,7 @@ void daSBird_c::StateFly() {
         Vec3_Sub(&d1, &mTargetPos, &mPos);
         diff = d1;
         s32 hl = Vec3_HorzLen(&diff);
-        mTargetPitch = cstd::atan2(hl, mPosY + 0xfd8f0000);
+        mTargetPitch = cstd::atan2(hl, mPos.y + 0xfd8f0000);
         mTargetYaw = cstd::atan2(diff.z, diff.x);
     } else {
         Vector3 d2;
@@ -131,19 +131,19 @@ void daSBird_c::StateFly() {
         mFlySpeed = VEC_Mag(&diff) / 25 + 0x14000;
     }
 
-    ApproachLinear(mPrevAngleX, mTargetPitch, 0x8c);
-    ApproachLinear(mPrevAngleY, mTargetYaw, 0x320);
+    ApproachLinear(mPrevAngle.x, mTargetPitch, 0x8c);
+    ApproachLinear(mPrevAngle.y, mTargetYaw, 0x320);
 
-    s32 dd = (s16)(mPrevAngleY - mTargetYaw);
+    s32 dd = (s16)(mPrevAngle.y - mTargetYaw);
     if (dd < -0x3000)
         dd = -0x3000;
     else if (dd > 0x3000)
         dd = 0x3000;
     mBank = (s16)dd;
-    ApproachLinear(mAngleZ, mBank, 0x258);
+    ApproachLinear(mAngle.z, mBank, 0x258);
 
-    mHorzSpeed = FX_MUL(mFlySpeed, FX_CosIdx((u16)mPrevAngleX >> 4));
-    mVertSpeed = FX_MUL(mFlySpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
+    mHorzSpeed = FX_MUL(mFlySpeed, FX_CosIdx((u16)mPrevAngle.x >> 4));
+    mSpeed.y = FX_MUL(mFlySpeed, FX_SinIdx((u16)mPrevAngle.x >> 4));
 }
 
 /* State 2. Spawn the flock and take off in one step: when the closest player is
@@ -184,8 +184,8 @@ void daSBird_c::StateLaunchFlock() {
         }
         func_0201267c(0x6a, &mCamSpacePos);
     }
-    mPrevAngleX = 5000 - Random() % 4000;
-    mPrevAngleY = Random() >> 16;
+    mPrevAngle.x = 5000 - Random() % 4000;
+    mPrevAngle.y = Random() >> 16;
     mFlySpeed = 0x28000;
     mState = 3;
     mFlags &= ~0x10000;
@@ -219,7 +219,7 @@ void daSBird_c::StateWaitForPlayer() {
         if (leader->mState != 3)
             return;
     }
-    mPrevAngleX = 5000 - Random() % 4000;
+    mPrevAngle.x = 5000 - Random() % 4000;
     mFlySpeed = 0x28000;
     mState = 3;
     mFlags &= ~0x10000;
@@ -234,9 +234,9 @@ void daSBird_c::StateSpawnFlock() {
             Vector3_16 rot = mPrevAngle;
             for (int i = 0; i < n - 1; i++) {
                 Vector3 pos;
-                pos.x = mPosX + (int)((Random() % 400) - 160) * 0x1000;
-                pos.y = mPosY;
-                pos.z = mPosZ + (int)((Random() % 400) - 160) * 0x1000;
+                pos.x = mPos.x + (int)((Random() % 400) - 160) * 0x1000;
+                pos.y = mPos.y;
+                pos.z = mPos.z + (int)((Random() % 400) - 160) * 0x1000;
                 rot.y = (short)(rot.y + (short)(Random() >> 16));
                 daSBird_c *follower =
                     (daSBird_c *)dActor_c::Spawn(0x157, 0, pos, &rot, mAreaId, -1);
@@ -268,9 +268,9 @@ s32 daSBird_c::Behavior() {
     Vector3 tmp;
     Vec3_Asr(&tmp, &mPos, 3);
     MtxStack::transS(tmp.x, tmp.y, tmp.z);
-    mAngleY = mPrevAngleY;
-    Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngleZ);
-    MtxStack::YrotM(mAngleY);
+    mAngle.y = mPrevAngle.y;
+    Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngle.z);
+    MtxStack::YrotM(mAngle.y);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&MtxStack::get();
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x1e000, 0x7d0000, 0xf);
     mAnmModel.Advance();
@@ -283,14 +283,14 @@ s32 daSBird_c::InitResources() {
     BCA_File *animFile = dExtFrameCtrl_c::LoadFile(data_ov009_02113c28);
     mAnmModel.SetAnim((BCA_File *)animFile, 0, 0x1000, 0);
     mShadowModel.InitCylinder();
-    mPosY += 0xa000;
+    mPos.y += 0xa000;
     mVertAccel = 0;
     mTerminalVelocity = -0x32000;
     mIsLeader = 1;
     mOwnerID = uniqueID;
-    mTargetPos.x = mPosX;
-    mTargetPos.y = mPosY;
-    mTargetPos.z = mPosZ;
+    mTargetPos.x = mPos.x;
+    mTargetPos.y = mPos.y;
+    mTargetPos.z = mPos.z;
     mState = 0;
     return 1;
 }

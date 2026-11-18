@@ -121,9 +121,9 @@ void daObjPowerUpItem_c::StateResting()
     } while (0);
 
     {
-        int z = mPosZ;
-        int x = mPosX;
-        int y = mPosY + 0x82000;
+        int z = mPos.z;
+        int x = mPos.x;
+        int y = mPos.y + 0x82000;
         ((int*)&pos)[0] = x;
         ((int*)&pos)[1] = y;
         ((int*)&pos)[2] = z;
@@ -139,10 +139,10 @@ void daObjPowerUpItem_c::BeginResting()
     mEffectHandle = 0;
 }
 
-/* Pop animation: while mWobbleTimer counts down, mScaleX and mScaleY follow the
+/* Pop animation: while mWobbleTimer counts down, mScale.x and mScale.y follow the
  * table pair selected by mWobbleAngle (scaled by the fraction of the timer
  * left) and the angle advances 0x2000 a frame. When the timer is spent,
- * mScaleY eases back to 0xfa0 and, once there, the flower enters
+ * mScale.y eases back to 0xfa0 and, once there, the flower enters
  * FLOWER_STATE_RESTING. */
 void daObjPowerUpItem_c::StateOpening()
 {
@@ -155,18 +155,18 @@ void daObjPowerUpItem_c::StateOpening()
         int u1 = FX_MUL(t1, 0x332);
         int v1 = u1 + 0xffa;
         int w1 = FX_MUL(v1, 0xfa0);
-        mScaleY = w1;
+        mScale.y = w1;
         signed short even = FX_SinIdx(hw >> 4);
         int t2 = FX_MUL(even, fdivResult);
         int u2 = FX_MUL(t2, 0x332);
         int v2 = u2 + 0xffa;
         int w2 = FX_MUL(v2, 0xfa0);
-        mScaleX = w2;
+        mScale.x = w2;
         // materialized base for halfword at offset >= 0x100
         short* p = (short*)(((int)this + 0x3c8));
         *p = *p + 0x2000;
     } else {
-        int ret = ApproachLinear(mScaleY, 0xfa0, 0x199);
+        int ret = ApproachLinear(mScale.y, 0xfa0, 0x199);
         if (ret) {
             SetState(FLOWER_STATE_RESTING);
         }
@@ -174,21 +174,21 @@ void daObjPowerUpItem_c::StateOpening()
 }
 
 /* Enter action that starts the pop: puffs particle 0x102 above the flower,
- * plays sound 0x7d, drops the effect handle, takes mAngleY from the camera's
+ * plays sound 0x7d, drops the effect handle, takes mAngle.y from the camera's
  * mAngleY and starts mWobbleTimer at 0x1b. */
 void daObjPowerUpItem_c::BeginOpening()
 {
     Vector3 pos;
-    int x = mPosX;
-    int y = mPosY + 0x82000;
-    int z = mPosZ;
+    int x = mPos.x;
+    int y = mPos.y + 0x82000;
+    int z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;
     Particle::System::NewSimple(kPtclPowerFlowerOpen, pos.x, pos.y, pos.z);
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
-    mAngleY = gCamera->mAngleY;
+    mAngle.y = gCamera->mAngleY;
     mWobbleTimer = 27;
 }
 
@@ -209,10 +209,10 @@ void daObjPowerUpItem_c::StateLaunched()
     int gy;
     int diff;
 
-    mEffectHandle = (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPosX,
-                                               mPosY, mPosZ, 0, 0);
+    mEffectHandle = (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPos.x,
+                                               mPos.y, mPos.z, 0, 0);
 
-    a = mVertSpeed;
+    a = mSpeed.y;
     mag = (a < 0) ? -a : a;
     y = FX_MUL(mag, 0x120000);
     X = (s16)(y / 0x1000);
@@ -220,9 +220,9 @@ void daObjPowerUpItem_c::StateLaunched()
     if (X > 0)
         delta += X;
     if (a > 0)
-        mAngleY += delta;
+        mAngle.y += delta;
     else
-        mAngleY -= delta;
+        mAngle.y -= delta;
 
     mWithMeshClsn.SetRadius(0x3c000);
     mWithMeshClsn.SetHeight(0x3c000);
@@ -230,15 +230,15 @@ void daObjPowerUpItem_c::StateLaunched()
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.TouchesWater()) {
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         dBgCh_Gnd rg;
         rg.SetObjAndPos(pos, 0);
         if (rg.DetectClsn()) {
             gy = rg.clsnY;
             pos.y = gy;
-            diff = mPosY - gy;
+            diff = mPos.y - gy;
             if (diff < 0)
                 diff = -diff;
             if (diff > 0x64000) {
@@ -270,7 +270,7 @@ void daObjPowerUpItem_c::BeginLaunched()
     mEffectHandle = 0;
     mVertAccel = 0xfffff998;
     mTerminalVelocity = -0xf000;
-    mVertSpeed = 0xd000;
+    mSpeed.y = 0xd000;
 }
 
 /* Switches to state `i` and runs that state's enter action. */
@@ -369,7 +369,7 @@ void daObjPowerUpItem_c::DropShadow() {
     mShadowMat.m[10] = mGroundY >> 3;
     r3 = 0x78000;
     if (mState == FLOWER_STATE_LAUNCHED) {
-        int d = mPosY - mGroundY;
+        int d = mPos.y - mGroundY;
         if (d <= 0x1000) d = 0x1000;
         r3 = 0x64000 - FX_MUL(d, 0x180);
         if (r3 < 0x3c000) r3 = 0x3c000;
@@ -377,14 +377,14 @@ void daObjPowerUpItem_c::DropShadow() {
     DropShadowRadHeight(mShadowModel, mShadowMat, r3, 0x3c000, 0xf);
 }
 
-/* dExtSimpleModel_c matrices: rotates mOpenModel's matrix by mAngleY, sets its translation
+/* dExtSimpleModel_c matrices: rotates mOpenModel's matrix by mAngle.y, sets its translation
  * to the position >> 3 and copies it to mCloseModel. */
 void daObjPowerUpItem_c::UpdateMatrices(){
-  Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngleY);
-  mOpenModel.mat4x3.m[9] = mPosX >> 3;
-  mOpenModel.mat4x3.m[10] = mPosY >> 3;
-  mOpenModel.mat4x3.m[11] = mPosZ >> 3;
-  mCloseModel.mat4x3 = mOpenModel.mat4x3;
+    Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngle.y);
+    mOpenModel.mat4x3.m[9] = mPos.x >> 3;
+    mOpenModel.mat4x3.m[10] = mPos.y >> 3;
+    mOpenModel.mat4x3.m[11] = mPos.z >> 3;
+    mCloseModel.mat4x3 = mOpenModel.mat4x3;
 }
 
 s32 daObjPowerUpItem_c::CleanupResources()
@@ -420,9 +420,9 @@ int daObjPowerUpItem_c::Behavior()
 {
     int b = (int)((mFlags & 0x40000) != 0);
     if (b != 0) return 1;
-    mScaleX = 0xfa0;
-    mScaleY = 0xfa0;
-    mScaleZ = 0xfa0;
+    mScale.x = 0xfa0;
+    mScale.y = 0xfa0;
+    mScale.z = 0xfa0;
     UpdateState();
     CheckPickup();
     UpdateMatrices();
@@ -453,18 +453,18 @@ int daObjPowerUpItem_c::InitResources()
     mTerminalVelocity = -0xf000;
     UpdateMatrices();
 
-    mScaleX = 0xfa0;
-    mScaleY = 0xfa0;
-    mScaleZ = 0xfa0;
+    mScale.x = 0xfa0;
+    mScale.y = 0xfa0;
+    mScale.z = 0xfa0;
 
     mdCcAc_c.Init(this, 0x32000, 0x64000, 0x800002, 0x8000);
     mWithMeshClsn.Init(this, 0x3c000, 0x3c000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     /* ground probe: a ray starting 0x14000 above the flower */
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
@@ -482,7 +482,7 @@ int daObjPowerUpItem_c::InitResources()
     } else {
         SetState(FLOWER_STATE_LAUNCHED);
     }
-    mAngleY -= 0x4000;
+    mAngle.y -= 0x4000;
     return 1;
 }
 

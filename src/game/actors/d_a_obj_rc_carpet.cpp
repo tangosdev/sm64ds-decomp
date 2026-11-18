@@ -91,7 +91,7 @@ int daObjRcCarpet_c::InitResources() {
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     KCL_File *collisionFile = dBgW_Kc::LoadFile(*data_ov036_02113f58.collision);
-    mMeshCollider.SetFile(collisionFile, mClsnMat, 0x199, mAngleY, *data_ov036_02113f58.clps);
+    mMeshCollider.SetFile(collisionFile, mClsnMat, 0x199, mAngle.y, *data_ov036_02113f58.clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
@@ -132,18 +132,18 @@ int daObjRcCarpet_c::CleanupResources() {
 }
 
 void daObjRcCarpet_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = (mPosY + mRideDipY) >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = (mPos.y + mRideDipY) >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 void daObjRcCarpet_c::UpdateClsnTransform() {
     mClsnMat = mAnmModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY + mRideDipY;
-    mClsnMat.m[11] = mPosZ;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y + mRideDipY;
+    mClsnMat.m[11] = mPos.z;
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 /* ROM ordinals 0/1 are emitted by the inline virtual destructor:*/
 

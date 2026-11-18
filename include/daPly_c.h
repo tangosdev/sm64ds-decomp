@@ -45,7 +45,7 @@ struct daShl_c;
 
 struct daPly_c : dActor_c {
     /* 0x000..0x0d3 is dActor_c's, inherited rather than duplicated. It used to be
-       written out inline here -- mParam at 0x008 was fBase_c's param1, mPosX
+       written out inline here -- mParam at 0x008 was fBase_c's param1, mPos.x
        at 0x05c was dActor_c's, and so on. The names were reconciled first so that
        deleting the block is all that happens here. sizeof(dActor_c) is 0xd4, so
        daPly_c's own fields start exactly where the base ends. */
@@ -235,8 +235,8 @@ struct daPly_c : dActor_c {
        asserts 0x1bc -- which closes exactly at mSpawnPos. */
     dBgCh_Actr mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. daPly_c::InitResources
-       writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
-       mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.
+       writes all four from the live values (0x53c..0x544 <- mPos.x/.y/.z, and
+       mSpawnAngleY <- mAngle.y); St_Respawn_Init reads them back the other way.
        Two functions, opposite directions, the same four slots -- which is what
        makes these names evidenced rather than guessed. */
     Vector3 mSpawnPos;   /* 0x53c */
@@ -253,7 +253,7 @@ struct daPly_c : dActor_c {
      * func_ov002_020c25a8 writes all three from
      * mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn)
      * -- the same helper, the same shape, one surface over. It then pushes the
-     * actor out along it (`mPosX -= mWallNormal.x * 2`, `mPosZ -= mWallNormal.z * 2`).
+     * actor out along it (`mPos.x -= mWallNormal.x * 2`, `mPos.z -= mWallNormal.z * 2`).
      * Seven bodies read the pair back as `cstd::atan2(mWallNormal.x, mWallNormal.z)`
      * to get the wall's facing: St_Shell_Main, St_OnWall_Main (twice),
      * St_Balloon_Main, St_CrazedCrate_Main, func_ov002_020c2138,
@@ -311,8 +311,8 @@ struct daPly_c : dActor_c {
     s32 mGroundY;            /* 0x644 */
     /* The floor probe in func_ov002_020c14b8 stores its clsnY here
        (0x80000000 on a miss) and copies it to mGroundY; four no-control
-       sequences then overwrite mGroundY with mPosY, but not this copy.
-       func_ov002_020c0fb4 tests mPosY against it on a lava floor. */
+       sequences then overwrite mGroundY with mPos.y, but not this copy.
+       func_ov002_020c0fb4 tests mPos.y against it on a lava floor. */
     s32 mProbedGroundY; /* 0x648 */
     /* Height of the water surface above the player: set from a dBgCh_Gnd
        probe that detects water when the hit's CLPS has the water bit (0x20),
@@ -371,8 +371,8 @@ struct daPly_c : dActor_c {
     s32 mSinkDepth;            /* 0x68c */
     /* Body model offset from mPos. func_ov002_020e444c builds the model
        matrix from (0, mModelOffsetY - mSinkDepth, mModelOffsetZ) rotated by
-       mAngleY, and func_ov002_020e4374 adds mModelOffsetY to the shadow
-       height. States set them (balloon 0x64000, swim from mAngleX, the
+       mAngle.y, and func_ov002_020e4374 adds mModelOffsetY to the shadow
+       height. States set them (balloon 0x64000, swim from mAngle.x, the
        water-run sink); ChangeState zeroes both. */
     s32 mModelOffsetY;           /* 0x690 */
     s32 mModelOffsetZ;           /* 0x694 */
@@ -387,12 +387,12 @@ struct daPly_c : dActor_c {
     s16 mAngleYSpeed;            /* 0x69c */
     /* X-axis counterpart of mAngleYSpeed. St_Fly_Init zeroes both, and
        func_ov002_020df8f0 eases this one toward a stick-times-speed target
-       and adds it to mPrevAngleX (clamped to +-0x2aaa) as mAngleYSpeed is
-       added to mPrevAngleY. St_Balloon_Init sets both to 0x100, and
-       St_Balloon_Main runs (mAngleX, mAngleXSpeed) and (mAngleZ,
+       and adds it to mPrevAngle.x (clamped to +-0x2aaa) as mAngleYSpeed is
+       added to mPrevAngle.y. St_Balloon_Init sets both to 0x100, and
+       St_Balloon_Main runs (mAngle.x, mAngleXSpeed) and (mAngle.z,
        mAngleYSpeed) through func_ov002_020de3d0. Other code borrows the
-       slot: St_Swim_Main loads it from mAngleZ, func_ov002_020cd448 eases
-       it toward mAngleZ by 0x200 and writes it back, and TryEnterStarDoor
+       slot: St_Swim_Main loads it from mAngle.z, func_ov002_020cd448 eases
+       it toward mAngle.z by 0x200 and writes it back, and TryEnterStarDoor
        stores its `kind` here as the yaw func_ov002_020c8a4c rotates the
        approach offset by. */
     s16 mAngleXSpeed;                /* 0x69e */
@@ -515,13 +515,13 @@ struct daPly_c : dActor_c {
     u8 pad_6ef[0x1];
     /* Turn ramp in UpdateWalkingSpeed's walk turning (input mode byte
        data_0209f4ac == 0, stick at least 0xa00): counts up to 0x18 while the
-       stick is 0x1000 or more off mPrevAngleY and drops by 2 otherwise. The
+       stick is 0x1000 or more off mPrevAngle.y and drops by 2 otherwise. The
        ApproachAngle divisor is 0x10 - ramp / 2, so the longer a sharp turn is
        held, the faster the player swings round. */
     u16 mTurnRamp; /* 0x6f0 */
     /* A squash-and-stretch on mScale, run each frame by UpdateScaleAnim
        and started by func_ov002_020db8bc(kind), which sets the step to 1 and
-       zeroes mScaleAnimTimer. Kinds 0 and 1 step mScaleY through the tables
+       zeroes mScaleAnimTimer. Kinds 0 and 1 step mScale.y through the tables
        data_ov002_020ff2c0 / data_ov002_020ff230 with X and Z set to
        (0x1000 - Y) / 2 + 0x1000: 0 after a stomp (func_ov002_020d869c),
        1 after St_Squish and a long fall (CheckFallDamage). Kind 2 grows
@@ -578,7 +578,7 @@ struct daPly_c : dActor_c {
     u8  mStateArg;            /* 0x70c */
     u8  mIsFallScreaming;            /* 0x70d */
     u8  mSlideType;            /* 0x70e */
-    /* Set when func_ov002_020c231c snaps mPosY onto mGroundY on a class-1
+    /* Set when func_ov002_020c231c snaps mPos.y onto mGroundY on a class-1
        floor; while set, the next call snaps again within the same 0xc8000
        window. Cleared on every other exit. */
     u8 mSnapToFloor;        /* 0x70f */
@@ -637,7 +637,7 @@ struct daPly_c : dActor_c {
        0x2b in step 4). daC_Jugem_c::StateArriveMain sets it on the closest
        player at its first tick and clears it at tick 0x82. */
     u8 mMuteSleepVoice; /* 0x723 */
-    /* St_Owl_Main sets it in step 1 once mPosY is below mAttachOffsetY -
+    /* St_Owl_Main sets it in step 1 once mPos.y is below mAttachOffsetY -
        0xed8000, calls func_0201f32c(0xa3) and hands the camera to
        func_0200d3f8 with no look target; it clears it in step 3 once camera
        flag 0x8000 is clear. That camera state's main, func_02005110, pulls
@@ -694,7 +694,7 @@ struct daPly_c : dActor_c {
     /* Root motion for body bone 1, run by func_ov002_020e640c: 0 off; an odd
        value (1 horizontal, 3 with Y) latches the bone's translation into
        mStateTarget and mStateAnchor and steps to the even value, which then
-       moves mPos by the bone's per-frame delta rotated by mAngleY and zeroes
+       moves mPos by the bone's per-frame delta rotated by mAngle.y and zeroes
        the bone. Armed by scripted animations (event case 14 in
        func_ov002_020bd06c, JumboStarCutsceneFalling, func_ov002_020c9ac0,
        func_ov002_020c9c4c) and cleared when they end. */

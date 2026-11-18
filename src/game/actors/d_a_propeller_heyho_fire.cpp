@@ -15,7 +15,7 @@
  * actor that touched the hit cylinder is the player (actor ID 0xbf) and not
  * vanished, the fireball bursts and hurts it -- unless the player is metal.
  * Then the fireball flips its facing half a turn, stops its horizontal
- * motion and launches upward (mVertSpeed 0x1e000, mVertAccel -0x4000). Each burst
+ * motion and launches upward (mSpeed.y 0x1e000, mVertAccel -0x4000). Each burst
  * plays sound 0x166 through func_02012694, which tail-calls
  * Sound::Play(3, id, pos).
  *
@@ -83,17 +83,17 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
         return;
     }
     if (player->mIsMetal != 0) {
-        /* Deflected: mPrevAngleY (which Behavior copies into mAngleY)
-           swings half a turn, so only the facing flips. mSpeedX and mSpeedZ
+        /* Deflected: mPrevAngle.y (which Behavior copies into mAngle.y)
+           swings half a turn, so only the facing flips. mSpeed.x and mSpeed.z
            are the x and z of the velocity UpdatePosWithOnlySpeed adds, so
            zeroing them stops the horizontal motion; the vertical speed
            becomes 0x1e000 up with -0x4000 acceleration. */
         mDeflected = 1;
         Sound::Play(0, 0xa5, mCamSpacePos);
-        mPrevAngleY -= 0x8000;
-        mSpeedX = 0;
-        mVertSpeed = 0x1e000;
-        mSpeedZ = 0;
+        mPrevAngle.y -= 0x8000;
+        mSpeed.x = 0;
+        mSpeed.y = 0x1e000;
+        mSpeed.z = 0;
         mVertAccel = -0x4000;
         return;
     }
@@ -104,9 +104,9 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
     if ((flags & 0x10) != 0) {
         return;
     }
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     player->Hurt(v, 1, 0xc000, 1, 0, 1);
 }
 
@@ -145,7 +145,7 @@ void daPropeller_Heyho_Fire_c::UpdateModelMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
@@ -170,21 +170,21 @@ int daPropeller_Heyho_Fire_c::Behavior() {
         (this->*(h->mMain))();
     }
     {
-        /* Gravity, clamped at terminal velocity. mSpeedZ is read and written
+        /* Gravity, clamped at terminal velocity. mSpeed.z is read and written
            back unchanged -- the ROM really does reload and restore it here. */
-        int speed = mVertSpeed;
+        int speed = mSpeed.y;
         int accel = mVertAccel;
         int limit = mTerminalVelocity;
-        int keep = mSpeedZ;
+        int keep = mSpeed.z;
         int next = speed + accel;
         if (next >= limit)
             limit = next;
-        mVertSpeed = limit;
-        mSpeedZ = keep;
+        mSpeed.y = limit;
+        mSpeed.z = keep;
         UpdatePosWithOnlySpeed(&mdCcAc_c);
     }
     UpdateWMClsn(mWithMeshClsn, 0);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     UpdateModelMatrix();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -200,7 +200,7 @@ int daPropeller_Heyho_Fire_c::InitResources() {
         unk_358 = 0;
     mTerminalVelocity = -0x64000;
     mdCcAc_c.Init(this, 0xa000, 0xa000, 0x200004, 0);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mWithMeshClsn.Init(this, 0xa000, 0xa000, 0, 0);
     SetState(&data_ov002_02111190);
     return 1;

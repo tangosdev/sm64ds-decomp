@@ -65,7 +65,7 @@ void daObjGuragura_c_EmitDestructor(daObjGuragura_c *p) {
 
 /* ROM ordinal 2 -- 0x020b6074, size 0x88.
  * Per-frame tilt: live quaternion to a matrix, offset by position >> 3,
- * apply mAngleY, publish as the model matrix. */
+ * apply mAngle.y, publish as the model matrix. */
 void daObjGuragura_c::UpdateModelMatrix() {
     Matrix4x3 q;
     Vector3 v;
@@ -73,7 +73,7 @@ void daObjGuragura_c::UpdateModelMatrix() {
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     MTX_Concat43(&q, &data_020a0e68, &data_020a0e68);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     mModel.mat4x3 = data_020a0e68;
 }
 
@@ -125,7 +125,7 @@ s32 daObjGuragura_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000, mAngle.y,
                           *descriptor->clps);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     return 1;

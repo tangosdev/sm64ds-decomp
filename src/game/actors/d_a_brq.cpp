@@ -230,9 +230,9 @@ s32 daBrq_c::EnterActiveState() {
     mStateTimer = 15;
     mTurnSpeed = 0;
     mSpinAngle = 0;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mState = 1;
     return 1;
 }
@@ -241,9 +241,9 @@ s32 daBrq_c::UpdateActiveState() {
     ApproachLinear(mTurnSpeed, 1000, 20);
 
     if ((u8)(param1 & 1)) {
-        mPrevAngleY = mPrevAngleY + mTurnSpeed;
+        mPrevAngle.y = mPrevAngle.y + mTurnSpeed;
     } else {
-        mPrevAngleY = mPrevAngleY - mTurnSpeed;
+        mPrevAngle.y = mPrevAngle.y - mTurnSpeed;
     }
 
     mOrbitAngle = mOrbitAngle + 0xa00;
@@ -252,18 +252,18 @@ s32 daBrq_c::UpdateActiveState() {
 
     mOrbitCenter = mPos;
 
-    mCylinderOffset.x = FX_MUL(orbitRadius, FX_SinIdx((u16)mPrevAngleY >> 4));
+    mCylinderOffset.x = FX_MUL(orbitRadius, FX_SinIdx((u16)mPrevAngle.y >> 4));
     mCylinderOffset.y = FX_MUL(0x14000, FX_SinIdx((u16)mOrbitAngle >> 4));
-    mCylinderOffset.z = FX_MUL(orbitRadius, FX_CosIdx((u16)mPrevAngleY >> 4));
+    mCylinderOffset.z = FX_MUL(orbitRadius, FX_CosIdx((u16)mPrevAngle.y >> 4));
 
     VEC_Add(&mOrbitCenter, &mCylinderOffset, &mOrbitCenter);
 
     mSpinAngle = mSpinAngle + 0x4000;
 
     int scale = FX_MUL(0x555, FX_SinIdx((u16)mSpinAngle >> 4)) + 0x800;
-    mScaleX = scale;
-    mScaleY = scale;
-    mScaleZ = scale;
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
 
     mAnmModel.Advance();
     mTextureSequence.Advance();
@@ -282,15 +282,15 @@ s32 daBrq_c::EnterDefeatedState() {
     mFlags &= ~1;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mPosX = mOrbitCenter.x;
-    mPosY = mOrbitCenter.y;
-    mPosZ = mOrbitCenter.z;
+    mPos.x = mOrbitCenter.x;
+    mPos.y = mOrbitCenter.y;
+    mPos.z = mOrbitCenter.z;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0x28000;
+    mSpeed.y = 0x28000;
     mStateTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov070_0212360c.filePtr, 0x40000000, 0x1000, 0);
-    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y, mPos.z);
     mState = 2;
     return 1;
 }
@@ -299,7 +299,7 @@ s32 daBrq_c::EnterDefeatedState() {
  * dBgCh_Actr::UpdateDiscreteNoLava body at 0x02037024. */
 
 s32 daBrq_c::UpdateDefeatedState() {
-    mAngleX = (mAngleX - 0x1000);
+    mAngle.x = (mAngle.x - 0x1000);
     mAnmModel.Advance();
     UpdatePos(&mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -315,13 +315,13 @@ void daBrq_c::UpdateModelTransform() {
     int shadowDepth;
 
     if (mState == 2) {
-        Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-        mAnmModel.mat4x3.m[9] = mPosX >> 3;
-        mAnmModel.mat4x3.m[10] = mPosY >> 3;
-        mAnmModel.mat4x3.m[11] = mPosZ >> 3;
-        mMat4x3.m[9] = mPosX >> 3;
-        mMat4x3.m[10] = mPosY >> 3;
-        mMat4x3.m[11] = mPosZ >> 3;
+        Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+        mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+        mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+        mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+        mMat4x3.m[9] = mPos.x >> 3;
+        mMat4x3.m[10] = mPos.y >> 3;
+        mMat4x3.m[11] = mPos.z >> 3;
     } else {
         mAnmModel.mat4x3.m[9] = mOrbitCenter.x >> 3;
         mAnmModel.mat4x3.m[10] = mOrbitCenter.y >> 3;
@@ -336,15 +336,15 @@ void daBrq_c::UpdateModelTransform() {
     if (gCurrentSublevel == 0x11) {
         Vector3 pos;
         int y;
-        pos.x = mPosX;
-        y = mPosY;
+        pos.x = mPos.x;
+        y = mPos.y;
         pos.y = y;
-        pos.z = mPosZ;
+        pos.z = mPos.z;
         pos.y = y - 0xa000;
         dBgCh_Gnd ground;
         ground.SetObjAndPos(pos, 0);
         if (ground.DetectClsn() != 0) {
-            shadowDepth = (mPosY - ground.clsnY) + 0x28000;
+            shadowDepth = (mPos.y - ground.clsnY) + 0x28000;
         }
     }
 
@@ -365,8 +365,8 @@ s32 daBrq_c::HandlePlayerCollision() {
         return 0;
 
     if (mdCcAcPos_c.hitFlags & 0x10) {
-        mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngleY = (mPrevAngleY + 0x8000);
+        mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &mPos);
+        mAngle.y = (mPrevAngle.y + 0x8000);
         player->IncMegaKillCount();
         SetState(2);
     } else {

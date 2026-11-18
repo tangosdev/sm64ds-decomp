@@ -8,7 +8,7 @@ extern "C" {
 
 extern int myFS_OpenFile(FSFile *p_file, const char *path);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
-extern int func_0204ee40(void *a, void *b, void *c);
+extern int func_0204ee40(void *archive, void *name, void *narc);
 
 /* LoadArchive's loader: read the .narc at path whole into one heap block,
    after a 0x60-byte head, and mount it there under name (func_0204ee40).

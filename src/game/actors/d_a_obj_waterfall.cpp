@@ -15,7 +15,7 @@
  * - gCurrentSublevel is LEVEL_ID in verified.tsv; a local
  *   `signed char &LEVEL_ID` alias size-DIFFs, so the rename belongs in
  *   symbols.txt.
- * - Behavior passes mPosX/Y/Z as three scalars: z is the first stack
+ * - Behavior passes mPos.x/.y/.z as three scalars: z is the first stack
  *   argument, stored on its own rather than through an ldm of mPos.
  */
 
@@ -62,6 +62,6 @@ s32 daObjWaterfall_c::InitResources() {
 
 s32 daObjWaterfall_c::Behavior() {
     mParticleHandle =
-        Particle::System::New(mParticleHandle, mParticleID, mPosX, mPosY, mPosZ, 0, 0);
+        Particle::System::New(mParticleHandle, mParticleID, mPos.x, mPos.y, mPos.z, 0, 0);
     return 1;
 }

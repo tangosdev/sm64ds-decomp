@@ -123,6 +123,13 @@
   "bss": [],
   "compiler_only_output": [
     {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's trivial destructor, emitted because UpdateCapPos and ReleaseCap keep their Add/Asr results in Vector3 locals. The canonical cartridge copy is arm9:0x020072c0; isolation discards this one."
+    },
+    {
       "symbol": "_Z5PinD1P11dCapEnemy_c",
       "disposition": "deadstrip",
       "reason": "Homeless. The inline destructor is vague linkage and otherwise trails C2, so this call is the odr-use that emits D1's section before C2. The function is not in the ROM and nothing that survives references it."

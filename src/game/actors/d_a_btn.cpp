@@ -94,7 +94,6 @@ extern "C" {
 void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
 }
 
-void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 int IsStarCollectedInCurLevel(int a);
 extern "C" void func_02011cfc(void);
 void func_02011d38(void);
@@ -287,11 +286,11 @@ int daBtn_c::InitResources()
     if (idx == 0) {
         mMovingMeshCollider.dBgW_KcMbg::SetFile(
             (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix, 0x199,
-            mAngleY, *(CLPS_Block *)data_ov079_02127ba0);
+            mAngle.y, *(CLPS_Block *)data_ov079_02127ba0);
     } else {
         mMovingMeshCollider.dBgW_KcMbg::SetFile(
             (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix, 0x1000,
-            mAngleY, data_ov015_021135d4);
+            mAngle.y, data_ov015_021135d4);
     }
 
     mMovingMeshCollider.SetShallowOnly();
@@ -310,7 +309,7 @@ int daBtn_c::InitResources()
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
 
     mState = 0;
-    mTargetAngle = mPrevAngleY;
+    mTargetAngle = mPrevAngle.y;
     mSubState = 0;
     mSubTimer = 0;
 
@@ -318,12 +317,12 @@ int daBtn_c::InitResources()
     anim = ((SharedFilePtr *)data_ov079_021275ec[idx * 5 + 3])->filePtr;
     mAnmModel.SetAnim((BCA_File *)anim, 0, 0x1000, 0);
 
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
-    mSpawnAngleX = mAngleX;
-    mSpawnAngleY = mAngleY;
-    mSpawnAngleZ = mAngleZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
+    mSpawnAngleX = mAngle.x;
+    mSpawnAngleY = mAngle.y;
+    mSpawnAngleZ = mAngle.z;
 
     if (mIsKing != 0) {
         mVertAccel = -0x8000;
@@ -395,18 +394,18 @@ int daBtn_c::Behavior()
     if (mHorzSpeed != 0) {
         if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, false, false, 0x32000)) {
             /* The step would leave the ledge: rewind to last frame's position. */
-            mPosX = mSafePos.x;
-            mPosY = mSafePos.y;
-            mPosZ = mSafePos.z;
+            mPos.x = mSafePos.x;
+            mPos.y = mSafePos.y;
+            mPos.z = mSafePos.z;
         } else {
-            mSafePos.x = mPosX;
-            mSafePos.y = mPosY;
-            mSafePos.z = mPosZ;
+            mSafePos.x = mPos.x;
+            mSafePos.y = mPos.y;
+            mSafePos.z = mPos.z;
         }
     } else {
-        mSafePos.x = mPosX;
-        mSafePos.y = mPosY;
-        mSafePos.z = mPosZ;
+        mSafePos.x = mPos.x;
+        mSafePos.y = mPos.y;
+        mSafePos.z = mPos.z;
     }
 
     UpdateWMClsn(mWithMeshClsn, 0);
@@ -489,7 +488,7 @@ void daBtn_c::func_ov079_02125b44()
         case 0:
             if (mNearestDist < 0x190000) {
                 daPly_c *p = mPlayers[mNearestPlayer];
-                if (p->mPosY >= mPosY - 0xa000) {
+                if (p->mPos.y >= mPos.y - 0xa000) {
                     if (p->StartTalk(*this, true) != 0) {
                         mSubState++;
                     }
@@ -499,10 +498,10 @@ void daBtn_c::func_ov079_02125b44()
             mHitPoints = 3;
             break;
         case 1:
-            if (ApproachLinear(mPrevAngleY, mTargetAngle, 0x800) != 0) {
+            if (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x800) != 0) {
                 mSubState++;
             }
-            mAngleY = mPrevAngleY;
+            mAngle.y = mPrevAngle.y;
             break;
         case 2:
             if (mPlayers[mNearestPlayer]->GetTalkState() == 0) {
@@ -510,7 +509,7 @@ void daBtn_c::func_ov079_02125b44()
                 int y;
                 {
                     daPly_c *p = mPlayers[mNearestPlayer];
-                    int *src = &p->mPosX;
+                    int *src = &p->mPos.x;
                     pos.x = src[0];
                     pos.y = src[1];
                     pos.z = src[2];
@@ -666,8 +665,8 @@ void daBtn_c::func_ov079_021256d4()
     mAnmModel.speed = 0x1000;
     func_ov079_02123bcc();
 
-    ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
-    mAngleY = mPrevAngleY;
+    ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200);
+    mAngle.y = mPrevAngle.y;
 
     if (mStateTimer > 30) {
         if (mFrontDist < 0x5dc000) {
@@ -690,7 +689,7 @@ void daBtn_c::func_ov079_021256d4()
 
     r = mPlayers[mNearestPlayer];
     if (r != 0) {
-        if (mPosY - r->mPosY <= 0x37f000)
+        if (mPos.y - r->mPos.y <= 0x37f000)
             return;
     }
 
@@ -704,24 +703,24 @@ void daBtn_c::func_ov079_021256d4()
         Sound::StopLoadedMusic_Layer3();
         func_02011cfc();
         mState = 0;
-        mPosX = mSpawnPos.x;
-        mPosY = mSpawnPos.y;
+        mPos.x = mSpawnPos.x;
+        mPos.y = mSpawnPos.y;
         five = 5;
-        mPosZ = mSpawnPos.z;
+        mPos.z = mSpawnPos.z;
         tab = (SharedFilePtr **)data_ov079_021275ec;
         t = mSpawnAngleX;
         ma = &mAnmModel;
-        mAngleX = t;
+        mAngle.x = t;
         t = mSpawnAngleY;
-        mAngleY = t;
+        mAngle.y = t;
         t = mSpawnAngleZ;
-        mAngleZ = t;
+        mAngle.z = t;
         t = mSpawnAngleX;
-        mPrevAngleX = t;
+        mPrevAngle.x = t;
         t = mSpawnAngleY;
-        mPrevAngleY = t;
+        mPrevAngle.y = t;
         t = mSpawnAngleZ;
-        mPrevAngleZ = t;
+        mPrevAngle.z = t;
         mTextureSequence.currFrame = 0;
         mHorzSpeed = 0;
         anim = ((SharedFilePtr *)tab[mIsKing * five + 3])->filePtr;
@@ -764,22 +763,22 @@ void daBtn_c::func_ov079_02125504()
         func_0201267c(0xc5, &mCamSpacePos);
 
         if ((gNextActorUpdateMask & 0x800000) == 0) {
-            v[1].x = mPosX;
-            v[1].y = mPosY;
-            v[1].z = mPosZ;
+            v[1].x = mPos.x;
+            v[1].y = mPos.y;
+            v[1].z = mPos.z;
             Earthquake(v[1], 0x320000);
         }
 
         {
-            s16 a0 = mAngleY;
+            s16 a0 = mAngle.y;
             s16 a1 = mBodyYaw;
             s32 py;
-            px = mPosX;
+            px = mPos.x;
             v[0].x = px;
-            py = mPosY;
+            py = mPos.y;
             t = (a0 + a1 + 0x4000);
             v[0].y = py;
-            pz = mPosZ;
+            pz = mPos.z;
             v[0].z = pz;
             v[0].y = py + 0x28000;
         }
@@ -815,7 +814,7 @@ void daBtn_c::func_ov079_021254b4()
 
 /* State 4, the fall: keep the mesh collider live, hop on the first frame,
    and from frame 8 tip forward with a growing mPitchSpeed until the body is
-   flat (mAngleX 0x4000), which lands it in state 5. The mesh is raised with
+   flat (mAngle.x 0x4000), which lands it in state 5. The mesh is raised with
    the tilt so the face stays on the ground. */
 void daBtn_c::func_ov079_0212538c()
 {
@@ -823,7 +822,7 @@ void daBtn_c::func_ov079_0212538c()
     mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
     if (mStateTimer == 0)
-        mVertSpeed = data_ov079_021275e4[mIsKing];
+        mSpeed.y = data_ov079_021275e4[mIsKing];
     if (mStateTimer < 8)
         return;
     if (mIsKing) {
@@ -831,19 +830,19 @@ void daBtn_c::func_ov079_0212538c()
     } else {
         mPitchSpeed += 0x100;
     }
-    mAngleX += mPitchSpeed;
-    if (mAngleX > 0x4000) {
+    mAngle.x += mPitchSpeed;
+    if (mAngle.x > 0x4000) {
         mPitchSpeed = 0;
-        mAngleX = 0x4000;
+        mAngle.x = 0x4000;
         mState = 5;
         func_0201267c(0xc6, &mCamSpacePos);
     }
     if (mIsKing) {
-        mTipLift = mAngleX * 0x15;
+        mTipLift = mAngle.x * 0x15;
         if (mTipLift >= 0x53000)
             mTipLift = 0x53000;
     } else {
-        mTipLift = mAngleX * 0xa;
+        mTipLift = mAngle.x * 0xa;
         if (mTipLift >= 0x25000)
             mTipLift = 0x25000;
     }
@@ -861,19 +860,19 @@ void daBtn_c::func_ov079_02125240(){
         return;
     if (!mWithMeshClsn.IsOnGround())
         return;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mMovingMeshCollider.ClearDepthByDir();
     mMovingMeshCollider.SetShallowOnly();
     mSubState++;
     mAnmModel.SetAnim(
         (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 1])->filePtr), 0x40000000,
         0x1000, 0);
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    mMovingMeshCollider.SetStoodOnCallback(func_ov079_0212522c);
+    mMovingMeshCollider.SetStoodOnCallback(daBtn_c::func_ov079_0212522c);
     if (mIsKing != 0) {
         func_ov079_02123d4c(&a, this);
         func_0200fa04(&a, 0);
@@ -888,7 +887,7 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daBtn_c::func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off
@@ -931,7 +930,7 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
         if (t - 1 > 1) return;
         const Vector3 &p = other->mPos;
         v2 = p;
-        if (v2.y - mPosY < 0x2bc000)
+        if (v2.y - mPos.y < 0x2bc000)
             return;
         if (DecIfAbove0_Byte(&mCoinsLeft) == 0) return;
         w2 = v2;
@@ -956,7 +955,7 @@ void daBtn_c::func_ov079_02124ed4()
             mHitPoints--;
             func_02012694(0x134, &mCamSpacePos);
             {
-                s32 *p = &mPounder->mPosX;
+                s32 *p = &mPounder->mPos.x;
                 Particle::System::NewSimple(kPtclWhompPounded, p[0], p[1], p[2]);
             }
             if (mHitPoints == 0) {
@@ -977,9 +976,9 @@ void daBtn_c::func_ov079_02124ed4()
         v = mSubTimer;
         if (v <= 10) {
             if (v % 2) {
-                mPosY += 0x10000;
+                mPos.y += 0x10000;
             } else {
-                mPosY -= 0x10000;
+                mPos.y -= 0x10000;
             }
             return;
         }
@@ -1001,11 +1000,11 @@ void daBtn_c::func_ov079_02124dec()
     if (mSubState == 0) {
         if (mTouched != 0) {
             if (mPounded != 0) {
-                int x = mPosX;
+                int x = mPos.x;
                 v1.x = x;
-                int y = mPosY;
+                int y = mPos.y;
                 v1.y = y;
-                int z = mPosZ;
+                int z = mPos.z;
                 y = y + 0x78000;
 
                 w1.x = x;
@@ -1083,15 +1082,15 @@ void daBtn_c::func_ov079_02124b08()
         return;
     }
 
-    if (mAngleX > 0) {
+    if (mAngle.x > 0) {
         if (mSubTimer >= 12) {
             mPitchSpeed = -0x290;
-            mAngleX += mPitchSpeed;
+            mAngle.x += mPitchSpeed;
         }
         mSubTimer++;
     } else {
         mPitchSpeed = 0;
-        mAngleX = 0;
+        mAngle.x = 0;
         if (mAnmModel.Finished() != 0) {
             mAnmModel.SetAnim(
                 (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 4])->filePtr),
@@ -1145,8 +1144,8 @@ void daBtn_c::func_ov079_021249f0()
         if (mStateTimer >= 32) {
             mSubState++;
         } else {
-            mPrevAngleY += 0x400;
-            mAngleY = mPrevAngleY;
+            mPrevAngle.y += 0x400;
+            mAngle.y = mPrevAngle.y;
         }
     } else {
         mHorzSpeed = data_ov079_021275dc[mIsKing];
@@ -1243,13 +1242,13 @@ void daBtn_c::func_ov079_02124638()
     if (mWobbleTimer-- != 0) {
         u32 t = mWobbleTimer;
         if (t <= 0x50) {
-            mAngleX = 0;
+            mAngle.x = 0;
             return;
         }
         {
             s32 amp = ((t - 0x50) << 6);
             u16 ang = (s16)(t << 13);
-            mAngleX = FX_MUL(amp, FX_SinIdx(ang >> 4));
+            mAngle.x = FX_MUL(amp, FX_SinIdx(ang >> 4));
         }
         return;
     }
@@ -1270,25 +1269,25 @@ void daBtn_c::func_ov079_02124530()
             mPitchSpeed += 0xe0;
         else
             mPitchSpeed += 0x140;
-        mAngleX += mPitchSpeed;
-        if (mAngleX > 0x4000) {
+        mAngle.x += mPitchSpeed;
+        if (mAngle.x > 0x4000) {
             mPitchSpeed = 0;
-            mAngleX = 0x4000;
+            mAngle.x = 0x4000;
             mState = 5;
             func_0201267c(0xc6, &mCamSpacePos);
         }
         if (mIsKing) {
-            mTipLift = mAngleX * 0x15;
+            mTipLift = mAngle.x * 0x15;
             if (mTipLift >= 0x53000)
                 mTipLift = 0x53000;
         } else {
-            mTipLift = mAngleX * 0xa;
+            mTipLift = mAngle.x * 0xa;
             if (mTipLift >= 0x25000)
                 mTipLift = 0x25000;
         }
         return;
     }
-    mPosY += (mIsKing + 1) << 15;
+    mPos.y += (mIsKing + 1) << 15;
 }
 
 /* Keep the mesh collider enabled only near a player: always for a hidden
@@ -1314,10 +1313,10 @@ int daBtn_c::func_ov079_021243e0(int range)
         return 0;
     }
 
-    v.x = mPosX;
-    y = mPosY;
+    v.x = mPos.x;
+    y = mPos.y;
     v.y = y;
-    v.z = mPosZ;
+    v.z = mPos.z;
     if (range == 0) {
         int radius = mClipRadius;
         v.y = y + mClipOffsetY;
@@ -1350,37 +1349,37 @@ void daBtn_c::func_ov079_02124188()
     int lean;
     ModelBone *bone;
 
-    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
 
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = (mPosY + mTipLift) >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + mTipLift) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     bone = mAnmModel.data.bones;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
 
     mBodyPitch = -bone->rotY;
     mBodyYaw = bone->rotX;
     mBodyRoll = (bone->rotZ - 0x4000);
 
     if (mIsKing != 0) {
-        tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
+        tiltSin = FX_SinIdx((unsigned short)mAngle.x >> 4);
         lean = tiltSin * 0x190;
         shadowRad = tiltSin * 0x1a9 + 0xc8000;
     } else {
-        tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
+        tiltSin = FX_SinIdx((unsigned short)mAngle.x >> 4);
         lean = tiltSin * 0xc8;
         shadowRad = tiltSin * 0xd2 + 0x64000;
     }
 
-    pos.x += FX_MUL(lean, FX_SinIdx((unsigned short)mAngleY >> 4));
-    pos.z += FX_MUL(lean, FX_CosIdx((unsigned short)mAngleY >> 4));
+    pos.x += FX_MUL(lean, FX_SinIdx((unsigned short)mAngle.y >> 4));
+    pos.z += FX_MUL(lean, FX_CosIdx((unsigned short)mAngle.y >> 4));
 
     ::Vec3_Asr(&asr, &pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (mAngleY + mBodyYaw));
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (mAngle.y + mBodyYaw));
 
     *(Mtx43 *)&mShadowMatrix = *(Mtx43 *)&data_020a0e68;
 
@@ -1401,7 +1400,7 @@ void daBtn_c::func_ov079_02124188()
    actor, raised by mTipLift and lowered again by the squash. */
 void daBtn_c::func_ov079_02124008()
 {
-    s16 a = (mAngleX + mBodyPitch);
+    s16 a = (mAngle.x + mBodyPitch);
     int s;
     u8 n = mIsKing;
     int off;
@@ -1427,9 +1426,9 @@ void daBtn_c::func_ov079_02124008()
     }
     Matrix4x3_ApplyInPlaceToScale(&mMeshMatrix, 0x1000, s, 0x1000);
 
-    mMeshMatrix.t.x = mPosX;
-    mMeshMatrix.t.y = mPosY + mTipLift - off;
-    mMeshMatrix.t.z = mPosZ;
+    mMeshMatrix.t.x = mPos.x;
+    mMeshMatrix.t.y = mPos.y + mTipLift - off;
+    mMeshMatrix.t.z = mPos.z;
 
     mMovingMeshCollider.Transform(mMeshMatrix, mBodyYaw);
 }
@@ -1445,8 +1444,8 @@ void daBtn_c::func_ov079_02123f34()
     s16 angle;
     Vector3 v;
 
-    mTargetAngle = mPrevAngleY;
-    minAngle = mPrevAngleY;
+    mTargetAngle = mPrevAngle.y;
+    minAngle = mPrevAngle.y;
     minDist2 = 0x7fffffff;
     minDist = 0x7fffffff;
     for (i = 0; i < 4; i++) {
@@ -1465,7 +1464,7 @@ void daBtn_c::func_ov079_02123f34()
             minDist = dist;
             minAngle = angle;
         }
-        if (GetSubtraction(angle, mPrevAngleY) < 0x2000) {
+        if (GetSubtraction(angle, mPrevAngle.y) < 0x2000) {
             if (dist < minDist2) {
                 minDist2 = dist;
                 mFrontPlayer = i;
@@ -1504,22 +1503,22 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
    free form is the byte-exact shape, and the callers that need the member
    view reach it through vecret below. */
 extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
-    out->x = self->mPosX;
-    out->y = self->mPosY;
-    out->z = self->mPosZ;
+    out->x = self->mPos.x;
+    out->y = self->mPos.y;
+    out->z = self->mPos.z;
     {
         int m;
         int d;
         if (self->mIsKing) {
-            m = FX_SinIdx((unsigned short)self->mAngleX >> 4) * 0x190;
+            m = FX_SinIdx((unsigned short)self->mAngle.x >> 4) * 0x190;
         } else {
-            m = FX_SinIdx((unsigned short)self->mAngleX >> 4) * 0xc8;
+            m = FX_SinIdx((unsigned short)self->mAngle.x >> 4) * 0xc8;
         }
-        out->x = out->x + FX_MUL(m, FX_SinIdx((unsigned short)self->mAngleY >> 4));
+        out->x = out->x + FX_MUL(m, FX_SinIdx((unsigned short)self->mAngle.y >> 4));
         d = self->OnAimedAtWithEgg();
         {
             out->y += d;
-            out->z = out->z + FX_MUL(m, FX_CosIdx((unsigned short)self->mAngleY >> 4));
+            out->z = out->z + FX_MUL(m, FX_CosIdx((unsigned short)self->mAngle.y >> 4));
         }
     }
 }
@@ -1537,11 +1536,14 @@ int daBtn_c::func_ov079_02123bcc() {
     s16 cosv, sinv, sin2, cos2;
     int a0, a1, a2, raw, ang;
     player = mPlayers[mNearestPlayer];
-    p = &player->mPosX;
+    p = &player->mPos.x;
     v[0] = p[0]; v[1] = p[1]; v[2] = p[2];
-    if (v[1] > mPosY) return 0;
+    if (v[1] > mPos.y)
+        return 0;
     dist = ::Vec3_HorzDist((const ::Vector3 *)v, &mPos);
-    a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
+    a0 = mAngle.y;
+    a1 = mBodyYaw;
+    a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
     cosv = FX_CosIdx((u16)(s16)ang >> 4);
     hc = FX_MUL(dist, cosv);
@@ -1560,9 +1562,9 @@ int daBtn_c::func_ov079_02123bcc() {
             nz = cos2 * 5 + vz;
             i = mNearestPlayer;
             player = mPlayers[i];
-            player->mPosX = nx;
-            player->mPosY = vy;
-            player->mPosZ = nz;
+            player->mPos.x = nx;
+            player->mPos.y = vy;
+            player->mPos.z = nz;
             return 1;
         }
     }
@@ -1572,10 +1574,10 @@ int daBtn_c::func_ov079_02123bcc() {
 s32 daBtn_c::OnAimedAtWithEgg() {
     int idx;
     if(mIsKing!=0){
-        idx = ((unsigned short)mAngleX >> 4);
+        idx = ((unsigned short)mAngle.x >> 4);
         return FX_CosIdx(idx) * 0x11d + 0x4b000;
     }
-    idx = ((unsigned short)mAngleX >> 4);
+    idx = ((unsigned short)mAngle.x >> 4);
     return FX_CosIdx(idx) * 0x90 + 0x24000;
 }
 
@@ -1595,9 +1597,9 @@ int daBtn_c::func_ov079_02123a8c()
 
     dActor_c *closest = ClosestWithActorID(9);
     if (closest) {
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         v.y = v.y + OnAimedAtWithEgg();
         int dist = ::Vec3_Dist(&v, &closest->mPos);
         if (dist < (mClipRadius << 3)) {
@@ -1625,20 +1627,20 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
     /* Copied through a pointer: `v = other->mPrevPos` loads the three words
        in a different order and moves the literal pool. */
     {
-        int* q = &other->mPrevPosX;
+        int *q = &other->mPrevPos.x;
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
     }
 
-    sinv = FX_SinIdx((u16)other->mPrevAngleY >> 4);
-    cosv = FX_CosIdx(other->mPrevAngleY >> 4);
+    sinv = FX_SinIdx((u16)other->mPrevAngle.y >> 4);
+    cosv = FX_CosIdx(other->mPrevAngle.y >> 4);
     v.x = v.x - sinv * 0x50;
     v.z = v.z - cosv * 0x50;
 
     ang = ::Vec3_HorzAngle(&mPos, &v);
 
-    if (AngleDiff(ang, (s16)(mAngleY + mBodyYaw)) < 0x3c00) {
+    if (AngleDiff(ang, (s16)(mAngle.y + mBodyYaw)) < 0x3c00) {
         int r1 = mState;
         if (!(r1 == 1 || r1 == 2 || r1 == 7 || r1 == 0xa)) {
             if (r1 != 0) return;
@@ -1671,7 +1673,8 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         return;
     }
 
-    if (AngleDiff(ang, (s16)(mAngleY + mBodyYaw)) <= 0x4400) return;
+    if (AngleDiff(ang, (s16)(mAngle.y + mBodyYaw)) <= 0x4400)
+        return;
 
     {
         int r1 = mState;
@@ -1688,7 +1691,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         }
         {
             Vector3 pos;
-            int* q = &other->mPosX;
+            int *q = &other->mPos.x;
             pos.x = q[0];
             pos.y = q[1];
             pos.z = q[2];

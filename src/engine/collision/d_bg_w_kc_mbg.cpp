@@ -51,6 +51,10 @@ dBgW_KcMbg::~dBgW_KcMbg() {}
 /* The scratch aggregate holds two complete matrices and the local up axis.
  * Matrix words are copied through Mtx43; a Matrix4x3 assignment
  * scalarizes.
+ * Measured (#821 r58): without the `self` alias SetFile is 0x234 of 0x240.
+ * A Vector3 `up` member gives Scratch a destructor the ROM does not have, and
+ * a separate Vector3 local makes SetFile 0x290. So `up`, like the VecFx32
+ * upAxis, is cast at WorldToLocalDirection's Vector3 parameters.
  */
 void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 angY,
                          CLPS_Block &clps) {

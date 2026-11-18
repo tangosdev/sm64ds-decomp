@@ -59,8 +59,8 @@ struct daRNk_c : dEnemyBase_c {
        reads it back. */
     Vector3         mSpawnPos;                       /* 0x39c */
     /* The angle Koopa is turning toward. Both the talk states and the path
-       follower write it and ApproachLinear walks mPrevAngleY (the heading
-       Behavior copies into mAngleY) to it, 0x800 a frame. */
+       follower write it and ApproachLinear walks mPrevAngle.y (the heading
+       Behavior copies into mAngle.y) to it, 0x800 a frame. */
     s16             mTargetAngleY;                   /* 0x3a8 */
     s16             unk_3aa;                         /* 0x3aa -- zeroed by InitResources and when the race is accepted; no reader */
     /* Latched once the player has been seen being shot out of a cannon while
@@ -82,7 +82,7 @@ struct daRNk_c : dEnemyBase_c {
     u8              mPlayerWon;                      /* 0x3af */
     /* Star-marker slot reserved by TrackStar (the s8& UntrackAndSpawnStar
        takes) and the star number it was reserved for, which InitResources
-       takes from the low nibble of mAngleX. */
+       takes from the low nibble of mAngle.x. */
     s8              mTrackedStar;                    /* 0x3b0 */
     u8              mStarID;                         /* 0x3b1 */
     /* Latch for the stride effects in func_ov062_02119800: 1 once the

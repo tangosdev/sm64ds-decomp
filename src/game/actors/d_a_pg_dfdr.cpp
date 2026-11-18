@@ -136,15 +136,15 @@ s32 daPgDfdr_c::InitResources() {
                              *(BTP_File *)data_ov027_02113c94.filePtr);
     mTextureSequence.SetFile(*(BTP_File *)data_ov027_02113c94.filePtr, 0, 0x1000, 0);
 
-    mAngleY = 0xdd30;
-    mPrevAngleY = mAngleY;
-    mPosX = 0x6c4000;
-    mPosY = 0xcb2000;
-    mPosZ = 0x182bb8;
+    mAngle.y = 0xdd30;
+    mPrevAngle.y = mAngle.y;
+    mPos.x = 0x6c4000;
+    mPos.y = 0xcb2000;
+    mPos.z = 0x182bb8;
     UpdateModelMatrix();
 
     file = dBgW_Kc::LoadFile(data_ov027_02113c6c);
-    mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngle.y,
                           *(CLPS_Block *)&data_ov027_021130e8);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
@@ -153,19 +153,19 @@ s32 daPgDfdr_c::InitResources() {
     mdCcAc_c.Init(this, 0x82000, 0xc8000, 0x800004, 0);
     SetState(kStateWalk);
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn())
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+        mPos.y = pos.y;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     return 1;
 }
 
@@ -234,12 +234,12 @@ int daPgDfdr_c::InitStateTurn() {
     return 1;
 }
 
-/* State 0 tick: after the pause, turn mAngleY toward this step's end heading. */
+/* State 0 tick: after the pause, turn mAngle.y toward this step's end heading. */
 int daPgDfdr_c::StateTurn() {
     if (DecIfAbove0_Byte(&mTimer) == 0) {
         unsigned char step = mStepIndex;
         short endHeading = data_ov027_02113a1c[step].endHeading;
-        if (ApproachLinear(mAngleY, endHeading, 0x514) != 0) {
+        if (ApproachLinear(mAngle.y, endHeading, 0x514) != 0) {
             SetState(kStateWalk);
         }
     }
@@ -251,7 +251,7 @@ int daPgDfdr_c::StateTurn() {
 void daPgDfdr_c::InitStateWalk() {
     mDistanceLeft = data_ov027_02113a1c[mStepIndex].distance;
     mHorzSpeed = data_ov027_02113a1c[mStepIndex].speed;
-    mPrevAngleY = data_ov027_02113a1c[mStepIndex].startHeading;
+    mPrevAngle.y = data_ov027_02113a1c[mStepIndex].startHeading;
     if (data_ov027_02113a1c[mStepIndex].startHeading !=
         data_ov027_02113a1c[mStepIndex].endHeading) {
         mAnmModel.SetAnim((BCA_File *)data_ov027_02113c8c.filePtr, 0, 0x1000, 0);
@@ -301,18 +301,18 @@ int daPgDfdr_c::StateWalk() {
     return 1;
 }
 
-/* dExtSimpleModel_c matrix from mAngleY plus position >> 3; collider copy keeps the
+/* dExtSimpleModel_c matrix from mAngle.y plus position >> 3; collider copy keeps the
    full position. Flat Matrix4x3 (common.h before dExtSimpleModel_c.h) is the 12-word copy. */
 void daPgDfdr_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     mClsnMat = mAnmModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY;
-    mClsnMat.m[11] = mPosZ;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 /* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- _ZN10daPgDfdr_cD1Ev 0x021118c8 size 0x5c and        */

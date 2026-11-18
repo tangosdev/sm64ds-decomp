@@ -31,7 +31,7 @@
 
 struct daObjCtMecha08_c : dBgActor_c {
     u8  pad_31e[0x2];
-    /* InitResources copies mPos here; Behavior clamps mPosY to
+    /* InitResources copies mPos here; Behavior clamps mPos.y to
        [mHomePos.y, mHomePos.y + 0x14a000]. */
     Vector3 mHomePos;                 /* 0x320 */
     u16 mMoveTimer;                   /* 0x32c -- DecIfAbove0_Short'ed; reloaded from the per-setting table on expiry */

@@ -98,10 +98,10 @@ void daObjPile_c::Sink(int flag) {
     if (flag != 0) {
         unsigned char n = mStepsLeft;
         int m = n * 0x3c;
-        mPosY -= m << 12;
+        mPos.y -= m << 12;
         mStepsLeft = 0;
     } else {
-        mPosY -= 0x3c000;
+        mPos.y -= 0x3c000;
         mStepsLeft--;
     }
     mAttackCooldown = 15;
@@ -166,7 +166,7 @@ s32 daObjPile_c::Render() {
 
 s32 daObjPile_c::Behavior() {
     daPly_c *player = ClosestPlayer();
-    if (mStepsLeft == 3 && GetBitInDeathTable() == 0 && player->mPosY < mPosY + 0x64000) {
+    if (mStepsLeft == 3 && GetBitInDeathTable() == 0 && player->mPos.y < mPos.y + 0x64000) {
         /* The player is less than 100 units above the pile: watch how far it
            circles the pile, and drop coins once the summed turn passes three
            full turns (0x30000 in 0x10000-per-turn angle units). */
@@ -190,9 +190,9 @@ s32 daObjPile_c::Behavior() {
                     a = -a;
                 if (a > 0x30000 && mBusy == 0 && GetBitInDeathTable() == 0) {
                     Vector3 v;
-                    v.x = mPosX;
-                    v.y = mPosY;
-                    v.z = mPosZ;
+                    v.x = mPos.x;
+                    v.y = mPos.y;
+                    v.z = mPos.z;
                     v.y += 0xc8000;
                     SpawnCoins(Vector3(v.x, v.y, v.z), 5, 0x5000, 0);
                     TrackInDeathTable();
@@ -212,7 +212,7 @@ s32 daObjPile_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *k = dBgW_Kc::LoadFile(gPileCollisionFile);
-    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)data_ov002_0210d874);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y, *(CLPS_Block *)data_ov002_0210d874);
     mStepsLeft = 3;
     return 1;
 }

@@ -46,12 +46,24 @@ struct fBaseActorInfo {
    array spelling, so every call site passes the bare name and every reloc is
    the same addend-0 reference it always was. */
 namespace Absorb0203b3c0 {
-struct Node;
-int func_0203b3c0(int *list, Node *node);
+struct Node {
+    struct Node *f0;
+    struct Node *f4;
+    struct Node *f8;
+    struct Node *fc;
+
+    int func_0203b3c0(Node *n);
+};
 }
 namespace Absorb0203b438 {
-struct N;
-int func_0203b438(N *root, N *node, N *parent);
+struct N {
+    struct N *f0;
+    struct N *f4;
+    struct N *f8;
+    struct N *fc;
+
+    int func_0203b438(N *node, N *parent);
+};
 }
 extern "C" {
 
@@ -60,7 +72,6 @@ extern int  func_0203b20c(void *list, void *node);
 extern int  func_0203b244(void *list, void *node);
 }
 
-extern int  func_0204405c(void *list, void *node);
 extern "C" {
 
 extern int  func_0203b2ec(void *l, void *n, void *p);
@@ -80,9 +91,10 @@ extern u8   data_020a4b48;
 extern void *data_020a4b64;
 extern fBaseActorInfo **data_020a4bb8;
 
-struct LifecycleSequence;
-extern void func_02044334(LifecycleSequence *p);
-extern "C" int func_0204424c(char *p);
+struct LifecycleSequence {
+    int func_0204424c();
+    void func_02044334();
+};
 
 /* Heap's methods and fields come from include/Heap.h. The heap locals stay
    `void *` (and are cast at each use): Virtual34 and Virtual38 read its
@@ -136,11 +148,13 @@ struct N {
 struct L {
     struct N *head;
     struct N *tail;
+
+    int func_0204405c(void *nodep);
 };
 }
 
-int func_0204405c(void *list, void *nodep) {
-    Absorb0204405c::L *l = (Absorb0204405c::L *)list;
+int Absorb0204405c::L::func_0204405c(void *nodep) {
+    Absorb0204405c::L *l = (Absorb0204405c::L *)this;
     Absorb0204405c::N *n = (Absorb0204405c::N *)nodep;
     Absorb0204405c::N *node;
     Absorb0204405c::N *next;
@@ -168,17 +182,20 @@ struct ProcessListDescriptor {
     fLiNdBaPr_c *head;       // 0x0
     fLiNdBaPr_c *tail;       // 0x4
     ProcessCallback callback; // 0x8
+
+    void *func_02043fdc();
 };
 
-void *func_02043fdc(ProcessListDescriptor *list) {
+void *ProcessListDescriptor::func_02043fdc() {
     fLiNdBaPr_c *node;
-    if (list->callback == 0) return (void *)1;
-    node = list->head;
+    if (callback == 0)
+        return (void *)1;
+    node = head;
     while (node != 0) {
         fLiNdBaPr_c *next;
         data_020a4b68 = node;
         next = node->next;
-        (node->owner->*list->callback)();
+        (node->owner->*callback)();
         node = next;
     }
     data_020a4b68 = node;
@@ -186,8 +203,19 @@ void *func_02043fdc(ProcessListDescriptor *list) {
 }
 }
 
-fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key) {
-    fLiNdBa_c *node = *head;
+/* The global actor list's first word is the head pointer. &list.first is the
+   list object, so these are ActorList methods. The same struct is declared in
+   d_actor.cpp, which owns the object. */
+struct ActorList {
+    fLiNdBa_c *first;
+    fLiNdBa_c *last;
+
+    fLiNdBa_c *func_02043f98(unsigned int key);
+    fLiNdBa_c *func_02043f4c(unsigned int key, fLiNdBa_c *after);
+};
+
+fLiNdBa_c *ActorList::func_02043f98(unsigned int key) {
+    fLiNdBa_c *node = first;
     while (node != 0) {
         if (!OwnerUniqueIDDiffers(node, key))
             return node;
@@ -196,8 +224,8 @@ fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key) {
     return 0;
 }
 
-extern "C" fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key, fLiNdBa_c *after) {
-    fLiNdBa_c *node = after ? after->next : *head;
+fLiNdBa_c *ActorList::func_02043f4c(unsigned int key, fLiNdBa_c *after) {
+    fLiNdBa_c *node = after ? after->next : first;
     while (node != 0) {
         if (!OwnerActorIDDiffers(node, key))
             return node;
@@ -214,9 +242,9 @@ fBase_c::fBase_c() : manager(this)
     actorID = data_020a4b54;
     mGroupType = data_020a4b48;
 
-    Absorb0203b438::func_0203b438((Absorb0203b438::N *)data_020a4b6c,
-                                  (Absorb0203b438::N *)&manager.sceneNode,
-                                  (Absorb0203b438::N *)data_020a4b64);
+    ((Absorb0203b438::N *)data_020a4b6c)
+        ->func_0203b438((Absorb0203b438::N *)&manager.sceneNode,
+                        (Absorb0203b438::N *)data_020a4b64);
 
     fBaseActorInfo *info = data_020a4bb8[actorID];
     manager.SetBehaviorPriority(info->behaviorPriority);
@@ -282,8 +310,8 @@ void fBase_c::AfterInitResources(u32 vfSuccess)
         mDeferExecute = 1;
         return;
     }
-    func_0204405c(data_020a4b78, &manager.behaviorNode);
-    func_0204405c(data_020a4b98, &manager.renderNode);
+    ((Absorb0204405c::L *)data_020a4b78)->func_0204405c(&manager.behaviorNode);
+    ((Absorb0204405c::L *)data_020a4b98)->func_0204405c(&manager.renderNode);
     aliveState = 1;
 }
 
@@ -296,7 +324,7 @@ s32 fBase_c::CleanupResources()
 /* vtable slot 4. Wait for pending lifecycle work and remaining scene children. */
 int fBase_c::BeforeCleanupResources()
 {
-    if ((lifecycleState != 0 && func_0204424c((char *)lifecycleState) == 0) ||
+    if ((lifecycleState != 0 && ((LifecycleSequence *)lifecycleState)->func_0204424c() == 0) ||
         manager.sceneNode.child != 0)
         return 0;
     return 1;
@@ -309,12 +337,13 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
-    Absorb0203b3c0::func_0203b3c0(data_020a4b6c, (Absorb0203b3c0::Node *)&manager.sceneNode);
+    ((Absorb0203b3c0::Node *)data_020a4b6c)
+        ->func_0203b3c0((Absorb0203b3c0::Node *)&manager.sceneNode);
     func_0203b27c(data_020a4ba8, &manager.behaviorNode);
     if (heap)
         ((Heap *)heap)->_Destroy();
     if (lifecycleState)
-        func_02044334((LifecycleSequence *)lifecycleState);
+        ((LifecycleSequence *)lifecycleState)->func_02044334();
     this->~fBase_c();   /* vtable+0x40 = slot 16 = D1 */
     Memory::Deallocate(this, data_020a0eac);
 }
@@ -407,7 +436,7 @@ int fBase_c::connectProc() {
                     func_0203b27c(data_020a4b78, &manager.behaviorNode);
                     m = (&manager.behaviorNode);
                     m->currentPriority = m->nextPriority;
-                    func_0204405c(data_020a4b78, m);
+                    ((Absorb0204405c::L *)data_020a4b78)->func_0204405c(m);
                 }
             }
             {
@@ -417,7 +446,7 @@ int fBase_c::connectProc() {
                     func_0203b27c(data_020a4b98, &manager.renderNode);
                     m = (&manager.renderNode);
                     m->currentPriority = m->nextPriority;
-                    func_0204405c(data_020a4b98, m);
+                    ((Absorb0204405c::L *)data_020a4b98)->func_0204405c(m);
                 }
             }
         } else if (!IsDyingState(state)) {
@@ -426,8 +455,8 @@ int fBase_c::connectProc() {
                 func_0203b244(data_020a4b88, &manager.behaviorNode);
             } else if (mDeferExecute != 0) {
                 mDeferExecute = 0;
-                func_0204405c(data_020a4b78, &manager.behaviorNode);
-                func_0204405c(data_020a4b98, &manager.renderNode);
+                ((Absorb0204405c::L *)data_020a4b78)->func_0204405c(&manager.behaviorNode);
+                ((Absorb0204405c::L *)data_020a4b98)->func_0204405c(&manager.renderNode);
                 aliveState = 1;
             }
         }
@@ -700,14 +729,22 @@ int fBase_c::drawPack() {
 /* Scene-tree walk: func_0203b394 steps to the first child or, failing
    that, to func_0203b358's next node outside the subtree, which is also
    where the walk ends. */
-extern fBase_c::SceneNode *func_0203b358(fBase_c::SceneNode *node);
-extern fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
+struct TreeNd {
+    TreeNd *parent;
+    TreeNd *child;
+    TreeNd *prev;
+    TreeNd *next;
+    fBase_c *owner;
+
+    TreeNd *func_0203b394();
+    TreeNd *func_0203b358();
+};
 
 /* Is any descendant still uncreated (aliveState 0)? d_scene.cpp waits on
    this before it moves on. */
 int fBase_c::checkChildProcessCreateState() {
     fBase_c::SceneNode *base = &manager.sceneNode;
-    fBase_c::SceneNode *end = func_0203b358(base);
+    fBase_c::SceneNode *end = (fBase_c::SceneNode *)((TreeNd *)base)->func_0203b358();
     fBase_c::SceneNode *node = base->child;
     int uncreated;
     while (node != 0 && node != end) {
@@ -715,7 +752,7 @@ int fBase_c::checkChildProcessCreateState() {
         uncreated = !node->owner->aliveState;
         if (uncreated != 0)
             return 1;
-        node = func_0203b394(node);
+        node = (fBase_c::SceneNode *)((TreeNd *)node)->func_0203b394();
     }
     return 0;
 }

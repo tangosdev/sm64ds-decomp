@@ -76,21 +76,21 @@ s32 daObjHmBskt_c::InitResources() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
 
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
     KCL_File *clsnFile = dBgW_Kc::LoadFile(data_ov030_02115c80);
-    mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov030_02114ee4);
+    mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngle.y, data_ov030_02114ee4);
 
     Vector3 starPos;
-    starPos.x = mPosX;
-    starPos.y = mPosY;
-    starPos.z = mPosZ;
+    starPos.x = mPos.x;
+    starPos.y = mPos.y;
+    starPos.z = mPos.z;
     starPos.y += 0x3c000;
     mStarActor = dActor_c::Spawn(0xb2, (u8)(param1 & 15) | 0x50, starPos, 0, mAreaId, -1);
 
@@ -99,7 +99,7 @@ s32 daObjHmBskt_c::InitResources() {
 
 s32 daObjHmBskt_c::Behavior() {
     IsClsnInRangeOnScreen(0, 0);
-    mAngleY = mAngleY + mHorzSpeed;
+    mAngle.y = mAngle.y + mHorzSpeed;
 
     if (mVertAccel != 0) {
         mFlags &= ~1;
@@ -143,13 +143,13 @@ int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
     if (!g)
         return g;
     mStarActor->MarkForDestruction();
-    int px = mPosX;
-    int pz = mPosZ;
-    int py = mPosY + 0x96000;
+    int px = mPos.x;
+    int pz = mPos.z;
+    int py = mPos.y + 0x96000;
     Vector3 p(px, py, pz);
     dActor_c::Spawn(0xb2, (unsigned char)(param1 & 15) | 0x20, p, 0, mAreaId, -1);
-    Particle::System::NewSimple(kPtclBlockBreakA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclBlockBreakB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclBlockBreakA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclBlockBreakB, mPos.x, mPos.y, mPos.z);
     MarkForDestruction();
 }
 

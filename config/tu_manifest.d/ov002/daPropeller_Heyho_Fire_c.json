@@ -463,12 +463,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@754",
+      "from": "@757",
       "to": "data_ov002_0210d600",
       "evidence": "Member-pointer constant for daPropeller_Heyho_Fire_c::InitState0. The initializer relocation names that method, so this local keeps the configured image."
     },
     {
-      "from": "@756",
+      "from": "@759",
       "to": "data_ov002_0210d5f8",
       "evidence": "Member-pointer constant for daPropeller_Heyho_Fire_c::State0. The initializer relocation names that method, so this local keeps the configured image."
     }

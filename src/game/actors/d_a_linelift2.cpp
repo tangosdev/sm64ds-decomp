@@ -22,11 +22,9 @@
  */
 
 // Notes:
-// - (Vector3 *)&mSpeedX: dActor_c stores the speed as three scalars, so
-//   VEC_Add takes the first word's address.
 // - Vec3_Sub is defined on a file-local struct Vec3, so no shared header
 //   declares it yet; it is declared here. VEC_Add takes Vector3 now.
-// - Behavior lowers mPosY by the sink offset and restores it before the
+// - Behavior lowers mPos.y by the sink offset and restores it before the
 //   model update, which the cartridge does too; the dead store is its own.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -127,7 +125,7 @@ int daLinelift2_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*gLinelift2ModelFiles[mVariant]), 1, -1);
 
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*gLinelift2CollisionFiles[mVariant]), mClsnMat, 0x199,
-                          mAngleY, *gLinelift2ClpsBlocks[mVariant]);
+                          mAngle.y, *gLinelift2ClpsBlocks[mVariant]);
 
     UpdateClsnPosAndRot();
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
@@ -136,9 +134,9 @@ int daLinelift2_c::InitResources() {
     mPathPtr.FromID(param1 & 15);
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 0;
-    mBasePos.x = mPosX;
-    mBasePos.y = mPosY;
-    mBasePos.z = mPosZ;
+    mBasePos.x = mPos.x;
+    mBasePos.y = mPos.y;
+    mBasePos.z = mPos.z;
     mPathPtr.GetNode(mTargetPos, mNodeIndex);
 
     /* The first node is usually where we are standing; head for the next one. */
@@ -147,7 +145,7 @@ int daLinelift2_c::InitResources() {
         mPathPtr.GetNode(mTargetPos, mNodeIndex);
     }
 
-    mBaseAngleY = mAngleY;
+    mBaseAngleY = mAngle.y;
     mSinkOffsetY = 0;
     mIsPressed = 0;
     return 1;
@@ -166,10 +164,10 @@ int daLinelift2_c::Behavior() {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     }
     if (mVariant == 0) {
-        int saved = mPosY;
+        int saved = mPos.y;
         ApproachLinear(mSinkOffsetY, mIsPressed ? cSinkDepth : 0, cSinkRate);
-        mPosY -= mSinkOffsetY;
-        mPosY = saved;
+        mPos.y -= mSinkOffsetY;
+        mPos.y = saved;
     }
     UpdateModelPosAndRotY();
     if (IsClsnInRange(0, 0) != 0)
@@ -216,9 +214,9 @@ void daLinelift2_c::StateForward() {
     if (StepAlongPath() == -1) {
         mState = 2;
     }
-    s16 old = mAngleY;
-    mAngleY = mBaseAngleY;
-    if (old != mAngleY) {
+    s16 old = mAngle.y;
+    mAngle.y = mBaseAngleY;
+    if (old != mAngle.y) {
         mMeshCollider.SetBeforeClsnCallback(0);
     } else {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
@@ -228,9 +226,9 @@ void daLinelift2_c::StateForward() {
 /* State 2: run back facing the other way. Resource set 0 pauses 20 frames
    first and settles in state 0 at the start; the other set loops. */
 void daLinelift2_c::StateReturn() {
-    s16 old = mAngleY;
-    mAngleY = mBaseAngleY + 0x8000;
-    if (old != mAngleY) {
+    s16 old = mAngle.y;
+    mAngle.y = mBaseAngleY + 0x8000;
+    if (old != mAngle.y) {
         mMeshCollider.SetBeforeClsnCallback(0);
     } else {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
@@ -244,7 +242,7 @@ void daLinelift2_c::StateReturn() {
         return;
     }
     mState = 0;
-    mAngleY = mBaseAngleY;
+    mAngle.y = mBaseAngleY;
 }
 
 /* One step along the path. Moves by the velocity; within half a step of the
@@ -253,15 +251,15 @@ void daLinelift2_c::StateReturn() {
    off either end of the path, 1 on reaching a node, 0 in between. */
 int daLinelift2_c::StepAlongPath() {
     int result;
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, &mSpeed, &mPos);
     if (Vec3_Dist(&mPos, &mTargetPos) < (mHorzSpeed >> 1)) {
         result = 1;
         mBasePos.x = mTargetPos.x;
         mBasePos.y = mTargetPos.y;
         mBasePos.z = mTargetPos.z;
-        mPosX = mBasePos.x;
-        mPosY = mBasePos.y;
-        mPosZ = mBasePos.z;
+        mPos.x = mBasePos.x;
+        mPos.y = mBasePos.y;
+        mPos.z = mBasePos.z;
         if (mState == 1) {
             mNodeIndex++;
             if (mNodeIndex >= mNodeCount) {
@@ -293,17 +291,17 @@ int daLinelift2_c::StepAlongPath() {
 }
 
 /* Aim the velocity from `from` toward `to` at mHorzSpeed: pitch into
-   mPrevAngleX, heading into mPrevAngleY, components into mSpeedX /
-   mVertSpeed / mSpeedZ. */
+   mPrevAngle.x, heading into mPrevAngle.y, components into mSpeed.x /
+   mSpeed.y / mSpeed.z. */
 void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
     Vector3 d;
     Vec3_Sub(&d, to, from);
-    mPrevAngleY = cstd::atan2(d.x, d.z);
-    mPrevAngleX = cstd::atan2(d.y, Vec3_HorzLen(&d));
-    s32 horz = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleX >> 4));
-    mSpeedX = FX_MUL(horz, FX_SinIdx((u16)mPrevAngleY >> 4));
-    mVertSpeed = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
-    mSpeedZ = FX_MUL(horz, FX_CosIdx((u16)mPrevAngleY >> 4));
+    mPrevAngle.y = cstd::atan2(d.x, d.z);
+    mPrevAngle.x = cstd::atan2(d.y, Vec3_HorzLen(&d));
+    s32 horz = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngle.x >> 4));
+    mSpeed.x = FX_MUL(horz, FX_SinIdx((u16)mPrevAngle.y >> 4));
+    mSpeed.y = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngle.x >> 4));
+    mSpeed.z = FX_MUL(horz, FX_CosIdx((u16)mPrevAngle.y >> 4));
 }
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header

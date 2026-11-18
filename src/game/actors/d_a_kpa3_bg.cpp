@@ -113,7 +113,7 @@ s32 daKpa3Bg_c::InitResources()
     data_0208e738 = 1;
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]), mClsnMat, 0x1000,
-                          mAngleY, *data_ov060_0211a980[mVariant]);
+                          mAngle.y, *data_ov060_0211a980[mVariant]);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mMeshCollider.Enable(this);
@@ -196,7 +196,7 @@ void daKpa3Bg_c::StateCheck() {
  * from this variant's (x, z, angle) row: func_02012694 takes its position
  * from mCamSpacePos, so the point is written there and the old value put
  * back afterwards. Before mPhase 22 it calls Earthquake and moves up at
- * mVertSpeed 0x8000 (8.0) with no gravity; from 22 mVertAccel is -0x4000.
+ * mSpeed.y 0x8000 (8.0) with no gravity; from 22 mVertAccel is -0x4000.
  * Every even mPhase below 14 puffs dust at two points either side of the
  * row's angle, closing in as mPhase grows. Past mPhase 300 the platform
  * destroys itself.
@@ -224,7 +224,7 @@ void daKpa3Bg_c::StateFall() {
         mVertAccel = -0x4000;
     } else {
         Earthquake(Vector3(mPos), 0x7d0000);
-        mVertSpeed = 0x8000;
+        mSpeed.y = 0x8000;
         mVertAccel = 0;
     }
 
@@ -248,10 +248,10 @@ void daKpa3Bg_c::StateFall() {
         PoofDustAt(Vector3(dustPos));
     }
 
-    mVertSpeed += mVertAccel;
-    if (mVertSpeed <= mTerminalVelocity)
-        mVertSpeed = mTerminalVelocity;
-    mPosY += mVertSpeed;
+    mSpeed.y += mVertAccel;
+    if (mSpeed.y <= mTerminalVelocity)
+        mSpeed.y = mTerminalVelocity;
+    mPos.y += mSpeed.y;
     if (mPhase > 300)
         MarkForDestruction();
     mPhase++;

@@ -19,7 +19,7 @@
 //   Sound::PlayBank3.
 // - The wall normal goes through the CopyNormalTo reference pun. Vec3 POD
 //   twins (player copy, diff, normal, hurt pos): a Vector3 local emits its
-//   destructor call. Copying player->mPosX field by field changes State2's
+//   destructor call. Copying player->mPos.x field by field changes State2's
 //   size.
 // - g_profile_CHAIR is not in this TU. data_ov020_02114af0 is the model
 //   handle.
@@ -94,9 +94,9 @@ s32 daChair_c::InitResources() {
     mClsnOffset.z = 0;
     mCylinder.Init(this, mClsnOffset, 0x32000, 0x64000, 0x200004, 0);
     mState = 0;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mShadowMat = IDENTITY_MATRIX4X3;
     return 1;
 }
@@ -135,19 +135,19 @@ s32 daChair_c::CleanupResources() {
 }
 
 void daChair_c::UpdateModel() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
-    mShadowMat.m[9] = mPosX >> 3;
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mHomePos.y >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x32000, 0x1e000, 0xf);
 }
 
 void daChair_c::Break() {
-    Particle::System::NewSimple(kPtclChairBreakA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclChairBreakB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclChairBreakA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclChairBreakB, mPos.x, mPos.y, mPos.z);
     PoofDust();
     MarkForDestruction();
 }
@@ -207,15 +207,15 @@ void daChair_c::State1() {
         targetPos.z = av->z;
         if (Vec3_Dist(&mPos, &targetPos) >= 0xfa000)
             return;
-        delta = (Vec3_HorzAngle(&mPos, &targetPos) - mAngleY + 0x2000);
+        delta = (Vec3_HorzAngle(&mPos, &targetPos) - mAngle.y + 0x2000);
         if (delta & 0x4000) {
-            mTrackedAngle = &mAngleZ;
+            mTrackedAngle = &mAngle.z;
             if (delta > 0)
                 mTargetAngle = 0x4000;
             else
                 mTargetAngle = -0x4000;
         } else {
-            mTrackedAngle = &mAngleX;
+            mTrackedAngle = &mAngle.x;
             if (delta < 0)
                 mTargetAngle = 0x5800;
             else
@@ -241,19 +241,19 @@ void daChair_c::State1() {
 
     mStateTimer++;
     if (mStateTimer & 8) {
-        if (mAngleX >= 0) {
+        if (mAngle.x >= 0) {
             wobble = -4;
         } else {
             func_0201267c(kSfxWobble, &mCamSpacePos);
             wobble = 4;
         }
-        mPosX -= wobble << 12;
-        mPosZ -= wobble << 12;
-        mAngleZ = (wobble * 0x32);
-        mAngleX = mAngleZ;
+        mPos.x -= wobble << 12;
+        mPos.z -= wobble << 12;
+        mAngle.z = (wobble * 0x32);
+        mAngle.x = mAngle.z;
     } else {
-        mAngleZ = 0;
-        mAngleX = mAngleZ;
+        mAngle.z = 0;
+        mAngle.x = mAngle.z;
     }
 
     if (mStateTimer < 30)
@@ -272,11 +272,11 @@ void daChair_c::State2() {
 
     if (mStateTimer <= 70) {
         if (mStateTimer < 50)
-            mVertSpeed = 0x6000;
+            mSpeed.y = 0x6000;
         else
-            mVertSpeed = 0;
-        ApproachStateValue(&mAngleX, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
-        ApproachStateValue(&mAngleZ, &mStateValue2, 0, 0, 0x14, 1);
+            mSpeed.y = 0;
+        ApproachStateValue(&mAngle.x, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
+        ApproachStateValue(&mAngle.z, &mStateValue2, 0, 0, 0x14, 1);
         if (mStateTimer == 70)
             func_0201267c(kSfxWindup, &mCamSpacePos);
     } else {
@@ -292,23 +292,23 @@ void daChair_c::State2() {
                 player = ClosestPlayer();
                 if (player == 0)
                     return;
-                /* Copied through a plain vector. Copying player->mPosX
+                /* Copied through a plain vector. Copying player->mPos.x
                  * field by field changes the code size. */
-                pp = (VecFx32 *)&player->mPosX;
+                pp = (VecFx32 *)&player->mPos;
                 playerPos.x = pp->x;
                 playerPos.y = pp->y;
                 playerPos.z = pp->z;
                 Vec3_Sub(&diff, &playerPos, &mPos);
-                mPrevAngleY = cstd::atan2(diff.x, diff.z);
-                mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen(&diff)) * -1;
-                /* mSpeedX / mSpeedZ: lateral velocity beside mVertSpeed. */
-                reach = FX_MUL(FX_CosIdx((u16)mPrevAngleX >> 4), 0x32000);
-                mSpeedX = FX_MUL(reach, FX_SinIdx((u16)mPrevAngleY >> 4));
-                mVertSpeed = FX_MUL(FX_SinIdx((u16)mPrevAngleX >> 4), -0x32000);
-                mSpeedZ = FX_MUL(reach, FX_CosIdx((u16)mPrevAngleY >> 4));
+                mPrevAngle.y = cstd::atan2(diff.x, diff.z);
+                mPrevAngle.x = cstd::atan2(diff.y, Vec3_HorzLen(&diff)) * -1;
+                /* mSpeed.x / mSpeed.z: lateral velocity beside mSpeed.y. */
+                reach = FX_MUL(FX_CosIdx((u16)mPrevAngle.x >> 4), 0x32000);
+                mSpeed.x = FX_MUL(reach, FX_SinIdx((u16)mPrevAngle.y >> 4));
+                mSpeed.y = FX_MUL(FX_SinIdx((u16)mPrevAngle.x >> 4), -0x32000);
+                mSpeed.z = FX_MUL(reach, FX_CosIdx((u16)mPrevAngle.y >> 4));
             } else {
                 if (mActionTimer > 20) {
-                    mAngleY += 0x2710;
+                    mAngle.y += 0x2710;
                 }
             }
         } else {
@@ -318,13 +318,13 @@ void daChair_c::State2() {
                 dBgPi *wall = mWithMeshClsn.GetWallResult();
                 VecFx32 normal;
                 wall->surface.CopyNormalTo((Vector3 &)normal);
-                if (GetSubtraction(mPrevAngleY, cstd::atan2(normal.x, normal.z)) > 0x4000)
+                if (GetSubtraction(mPrevAngle.y, cstd::atan2(normal.x, normal.z)) > 0x4000)
                     Break();
             }
         }
     }
 
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, &mSpeed, &mPos);
 
     {
         u32 id = mCylinder.otherOwner;
@@ -344,9 +344,9 @@ void daChair_c::State2() {
             return;
         {
             Vector3 pos;
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
             ((daPly_c *)actor)->Hurt(pos, 2, 0xc000, 1, 0, 1);
         }
     }
@@ -366,7 +366,7 @@ void daChair_c::State3() {
     sample = FX_SinIdx((u16)*ip >> 4);
     wrapped = angle;
     offset = (s16)sample * (s16)0x50;
-    if (ip != &mAngleX) {
+    if (ip != &mAngle.x) {
         mClsnOffset.x = -offset;
         mClsnOffset.y = 0;
         mClsnOffset.z = 0;
@@ -378,10 +378,10 @@ void daChair_c::State3() {
     if (wrapped >= 0x4000) {
         s16 past = (wrapped - 0x4000);
         s16 tip = FX_SinIdx((u16)past >> 4);
-        mPosY = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
+        mPos.y = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
     } else {
         s16 tip = FX_SinIdx((u16)wrapped >> 4);
-        mPosY = (s16)tip * (s16)0x28 + mHomePos.y;
+        mPos.y = (s16)tip * (s16)0x28 + mHomePos.y;
     }
 }
 

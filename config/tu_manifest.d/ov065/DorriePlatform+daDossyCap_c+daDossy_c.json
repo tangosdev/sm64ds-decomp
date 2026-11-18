@@ -68,7 +68,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "_Z19func_ov065_021180d4P12daDossyCap_c",
+      "symbol": "_ZN12daDossyCap_c19func_ov065_021180d4Ev",
       "address": "0x021180d4",
       "size": "0x00000174",
       "legacy_source": "src/func_ov065_021180d4.c",
@@ -110,7 +110,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "_Z19func_ov065_02118c4cP12daDossyCap_c",
+      "symbol": "_ZN12daDossyCap_c19func_ov065_02118c4cEv",
       "address": "0x02118c4c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov065_02118c4c.c",
@@ -159,7 +159,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "_Z19func_ov065_02119210P12daDossyCap_c",
+      "symbol": "_ZN12daDossyCap_c19func_ov065_02119210Ev",
       "address": "0x02119210",
       "size": "0x00000018",
       "legacy_source": "src/func_ov065_02119210.c",
@@ -194,14 +194,14 @@
       "ordinal": 22
     },
     {
-      "symbol": "_Z19func_ov065_021195bcP4dBgWP8dActor_cS2_",
+      "symbol": "_ZN9daDossy_c19func_ov065_021195bcEP4dBgWP8dActor_cS3_",
       "address": "0x021195bc",
       "size": "0x00000014",
       "legacy_source": "src/func_ov065_021195bc.c",
       "ordinal": 23
     },
     {
-      "symbol": "_Z19func_ov065_021195d0P4dBgWP8dActor_cS2_",
+      "symbol": "_ZN9daDossy_c19func_ov065_021195d0EP4dBgWP8dActor_cS3_",
       "address": "0x021195d0",
       "size": "0x00000014",
       "legacy_source": "src/func_ov065_021195d0.c",
@@ -580,7 +580,7 @@
       "source": "0x0211c450",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -660,7 +660,7 @@
       "source": "0x0211c4c0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -680,7 +680,7 @@
       "source": "0x0211c4dc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -700,7 +700,7 @@
       "source": "0x0211c4f8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -720,7 +720,7 @@
       "source": "0x0211c514",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -740,7 +740,7 @@
       "source": "0x0211c530",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -760,7 +760,7 @@
       "source": "0x0211c54c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -780,7 +780,7 @@
       "source": "0x0211c568",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1229,7 +1229,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17DossyModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle construction destination and the SharedFilePtr model family identity"
@@ -1257,7 +1257,7 @@
     },
     {
       "symbol": "_ZN24DossyCollisionFileHandleC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail collision-handle construction destination and the SharedFilePtr collision family identity"
@@ -1750,72 +1750,72 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@985",
+      "from": "@982",
       "to": "@300",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1013 to @1017; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @300 ROM pin. Re-keyed from @998 to @985 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1039 to @965 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @965 to @973 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @973 to @962 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @962 to @934 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @934 to @931 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @931 to @968 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @968 to @980 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @980 to @985 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@986",
+      "from": "@983",
       "to": "@1000",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1014 to @1018; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1000 ROM pin. Re-keyed from @999 to @986 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1040 to @966 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @966 to @974 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @974 to @963 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @963 to @935 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @935 to @932 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @932 to @969 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @969 to @981 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @981 to @986 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@987",
+      "from": "@984",
       "to": "@1001",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1015 to @1019; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1001 ROM pin. Re-keyed from @1000 to @987 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1041 to @967 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @967 to @975 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @975 to @964 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @964 to @936 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @936 to @933 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @933 to @970 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @970 to @982 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @982 to @987 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@988",
+      "from": "@985",
       "to": "@1002",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1016 to @1020; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1002 ROM pin. Re-keyed from @1001 to @988 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1042 to @968 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @968 to @976 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @976 to @965 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @965 to @937 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @937 to @934 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @934 to @971 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @971 to @983 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @983 to @988 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@989",
+      "from": "@986",
       "to": "@1003",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1017 to @1021; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1003 ROM pin. Re-keyed from @1002 to @989 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1043 to @969 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @969 to @977 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @977 to @966 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @966 to @938 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @938 to @935 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @935 to @972 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @972 to @984 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @984 to @989 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@990",
+      "from": "@987",
       "to": "@1004",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1018 to @1022; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1004 ROM pin. Re-keyed from @1003 to @990 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1044 to @970 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @970 to @978 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @978 to @967 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @967 to @939 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @939 to @936 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @936 to @973 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @973 to @985 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @985 to @990 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@991",
+      "from": "@988",
       "to": "@1005",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1019 to @1023; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1005 ROM pin. Re-keyed from @1004 to @991 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1045 to @971 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @971 to @979 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @979 to @968 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @968 to @940 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @940 to @937 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @937 to @974 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @974 to @986 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @986 to @991 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@992",
+      "from": "@989",
       "to": "@1006",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1020 to @1024; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1006 ROM pin. Re-keyed from @1005 to @992 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1046 to @972 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @972 to @980 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @980 to @969 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @969 to @941 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @941 to @938 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @938 to @975 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @975 to @987 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @987 to @992 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@993",
+      "from": "@990",
       "to": "@1007",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1021 to @1025; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1007 ROM pin. Re-keyed from @1006 to @993 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1047 to @973 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @973 to @981 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @981 to @970 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @970 to @942 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @942 to @939 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @939 to @976 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @976 to @988 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @988 to @993 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@994",
+      "from": "@991",
       "to": "@1008",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1022 to @1026; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1008 ROM pin. Re-keyed from @1007 to @994 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1048 to @974 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @974 to @982 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @982 to @971 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @971 to @943 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @943 to @940 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @940 to @977 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @977 to @989 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @989 to @994 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@995",
+      "from": "@992",
       "to": "@1009",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1023 to @1027; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @1009 ROM pin. Re-keyed from @1008 to @995 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1049 to @975 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @975 to @983 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @983 to @972 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @972 to @944 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @944 to @941 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @941 to @978 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @978 to @990 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @990 to @995 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@997",
+      "from": "@994",
       "to": "@2700",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1025 to @1029; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2700 ROM pin. Re-keyed from @1010 to @997 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1051 to @977 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @977 to @985 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @985 to @974 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @974 to @946 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @946 to @943 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @943 to @980 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @980 to @992 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @992 to @997 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@999",
+      "from": "@996",
       "to": "@2701",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1027 to @1031; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2701 ROM pin. Re-keyed from @1012 to @999 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1053 to @979 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @979 to @987 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @987 to @976 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @976 to @948 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @948 to @945 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @945 to @982 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @982 to @994 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @994 to @999 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1001",
+      "from": "@998",
       "to": "@2702",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1029 to @1033; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2702 ROM pin. Re-keyed from @1014 to @1001 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1055 to @981 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @981 to @989 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @989 to @978 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @978 to @950 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @950 to @947 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @947 to @984 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @984 to @996 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @996 to @1001 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }

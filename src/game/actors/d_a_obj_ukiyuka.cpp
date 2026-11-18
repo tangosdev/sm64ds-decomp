@@ -3,8 +3,8 @@
  * Abstract: slots 0 (InitResources) and 3 (CleanupResources) are pure.
  * daObjFl_Ukiyuka_c (ov022) and daObjKm2_Ukishima_c (ov045) implement them
  * by handing their own Resources record to InitResourcesFrom /
- * CleanupResourcesFrom. Setup seeds mRestY from mPosY and mBobAmplitude
- * from its argument; Behavior bobs mPosY on a sine of mBobPhase.
+ * CleanupResourcesFrom. Setup seeds mRestY from mPos.y and mBobAmplitude
+ * from its argument; Behavior bobs mPos.y on a sine of mBobPhase.
  *
  * Notes:
  * - mBobPhase is stepped through a u16 pun, *(u16 *)&mBobPhase; the plain
@@ -74,10 +74,10 @@ s32 daObjUkiyuka_c::Behavior() {
     *(u16 *)&mBobPhase += 0x100;
     {
         u16 h = (u16)((s64)mBobPhase);
-        mPosY -= FX_MUL(mBobAmplitude, FX_SinIdx(h >> 4));
+        mPos.y -= FX_MUL(mBobAmplitude, FX_SinIdx(h >> 4));
     }
     {
-        int d = mPosY - mRestY;
+        int d = mPos.y - mRestY;
         if (d < 0)
             d = -d;
         if (d == 0)
@@ -91,15 +91,15 @@ s32 daObjUkiyuka_c::Behavior() {
 
 /* ROM ordinal 5 -- ov002 0x020b6584, size 0x88.
  * Shared resource setup both leaves call. Slot 0 is dExtSimpleModel_c::LoadFile, slot 1
- * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then mRestY = mPosY
+ * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then mRestY = mPos.y
  * and mBobAmplitude = bobAmplitude. */
 int daObjUkiyuka_c::InitResourcesFrom(Resources *resources, int bobAmplitude) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*resources->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x1000, mAngle.y,
                           *resources->clps);
-    mRestY = mPosY;
+    mRestY = mPos.y;
     mBobAmplitude = bobAmplitude;
     return 1;
 }
