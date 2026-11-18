@@ -745,14 +745,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
    0x7f000 (127.0 as fx32) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
 int daDoor_c::func_ov100_02144f84() {
-    if (*data_ov100_02148708 != 0)
-        goto fail;
-    if (gMusicVolume != 0x7f000)
-        goto fail;
-    if (gSubVolume == 0)
-        return 1;
-fail:
-    return 0;
+    return *data_ov100_02148708 == 0 && gMusicVolume == 0x7f000 && gSubVolume == 0;
 }
 
 /* -------------------------------------------------------------------------- */
