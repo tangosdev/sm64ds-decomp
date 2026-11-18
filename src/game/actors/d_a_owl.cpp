@@ -52,9 +52,9 @@
  * Leftover: the rider matrix pointer at +0xc8, and the model matrix at +0x328
  *   and bone-matrix pointer at +0x320, stay raw offsets from the actor.
  *   Writing them as mAnmModel members hoists the base.
- * Leftover: UpdateHover narrows `player->mStateFlags & 0x800` to u16 before
- *   the test; the ROM masks, then shifts the result through 16 bits.
- *   Kept (#821 r82): the plain mask test -> 0x234 of 0x23c (ands, no shift).
+ * Note: UpdateHover holds `player->mStateFlags & 0x800` in a u16 local; the
+ *   ROM masks, then shifts the result through 16 bits. The plain mask test
+ *   is 0x234 of 0x23c (ands, no shift; #821 r82).
  * Leftover: RandomIntInternal returns int (math/CalcLib.h); UpdateHover and
  *   EnterHover shift it as u32, the ROM's logical shift. Behavior tests the
  *   carry state twice; the else is what the ROM emits.
@@ -318,7 +318,8 @@ int daOwl_c::UpdateHover() {
         if (ClosestPlayer() != 0) {
             daPly_c *player = mTalkTarget;
             if (player != 0) {
-                if ((u16)(player->mStateFlags & 0x800) == 0) {
+                u16 busy = player->mStateFlags & 0x800;
+                if (busy == 0) {
                     if (player->StartTalk(*this, 1) != 0) {
                         if (mTalkTarget->ShowMessage(*this, 0xa2, &mPos, 0, 0) == 1) {
                             func_02012694(0x176, &mCamSpacePos);
