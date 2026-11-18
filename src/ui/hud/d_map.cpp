@@ -383,7 +383,7 @@ int dMap_c::Render()
             OAM::RenderSub(OAM::MM_VS_PLAYER_ICONS[player->param1 + idx * 4],
                            this->mPlayerIconX[idx], this->mPlayerIconY[idx], -1, 2);
             {
-                u16 ang = (s16)this->mAngle + ((player->mAngle.y ^ 0xffff) + 0x8001);
+                u16 ang = this->mAngle + ((player->mAngle.y ^ 0xffff) + 0x8001);
                 s16 cs = FX_CosIdx((u16)(s16)ang >> 4);
                 this->mArrowMatrixA = (s16)FX_MUL(cs, this->mArrowScale);
                 s16 sn = FX_SinIdx((u16)(s16)ang >> 4);
@@ -431,7 +431,7 @@ int dMap_c::Render()
                         if (s == 1)
                             ang = (player->mAngle.y ^ 0xffff) + 0x8001;
                         else
-                            ang = (s16)this->mAngle + ((player->mAngle.y ^ 0xffff) + 0x8001);
+                            ang = this->mAngle + ((player->mAngle.y ^ 0xffff) + 0x8001);
                         {
                             s16 cs = FX_CosIdx((u16)(s16)ang >> 4);
                             this->mArrowMatrixA = (s16)FX_MUL(cs, this->mArrowScale);
@@ -540,9 +540,6 @@ int dMap_c::Render()
 
 /* One frame of the minimap: pick the map for the focus object, scroll and
  * scale the BG, then project every icon onto the screen.
- *
- * mAngle is a u16 in the header; the one `+= 0x40` reads it as s16, hence
- * the cast at that site.
  */
 s32 dMap_c::Behavior()
 {
@@ -609,13 +606,8 @@ s32 dMap_c::Behavior()
             this->mAngle = 0;
         } else if (this->mInIntroCutscene != 0) {
             if (gMapIntroRotating != 0) {
-                /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever
-                   (r72-r75) applies to this scalar pin.
-                   Kept (#821 r80): getter tried -> a u16 angle accessor in the step is 0xcf8
-                   of 0xcfc.
-                   measured (#821 r68): the plain u16 `+=` loads ldrh, ROM ldrsh. */
-                *(s16 *)&this->mAngle += 0x40;
-                if (this->mAngle >= 0x8000)
+                this->mAngle += 0x40;
+                if ((u16)this->mAngle >= 0x8000)
                     gMapIntroRotating = 0;
             }
         } else if (data_0209d660 == 0 && !(cam->mFlags & 0xc000) && !(cam->mFlags & 8)) {
@@ -650,11 +642,11 @@ s32 dMap_c::Behavior()
 
         this->mCurrentScale = FX_Div(this->mScale, this->mInvScale);
         {
-            fx32 cs = FX_CosIdx(this->mAngle >> 4);
+            fx32 cs = FX_CosIdx((u16)this->mAngle >> 4);
             this->mBgMatrixA = FX_MUL(cs, this->mInvScale);
         }
         {
-            fx32 sn = FX_SinIdx(this->mAngle >> 4);
+            fx32 sn = FX_SinIdx((u16)this->mAngle >> 4);
             this->mBgMatrixB = FX_MUL(sn, this->mInvScale);
         }
         this->mBgMatrixC = -this->mBgMatrixB;

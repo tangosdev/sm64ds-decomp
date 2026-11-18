@@ -7,11 +7,9 @@
  * from its argument; Behavior bobs mPos.y on a sine of mBobPhase.
  *
  * Notes:
- * - mBobPhase is stepped through a u16 pun, *(u16 *)&mBobPhase; the plain
- *   s16 member step differs by one word. Measured (#821 r68): a u16 member
- *   steps right but turns the later (s64) read's ldrsh into ldrh.
- * - The (s64) cast on mBobPhase before the u16 table index is load-bearing;
- *   the plain (u16) read is two instructions shorter.
+ * - mBobPhase is a u16 (the step loads it with ldrh); Behavior reads it
+ *   back into an s16 phase and indexes the table with (u16)phase >> 4,
+ *   which is the ldrsh + zero-extend the ROM shows.
  * - FX_SinIdx reads the sine table, which keeps its arm9 linker name,
  *   FX_SinCosTable_.
  * - Abstract class: no factory, no g_profile row.
@@ -65,22 +63,16 @@ s32 daObjUkiyuka_c::Render() {
 }
 
 /* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6494.
- * mBobPhase is declared s16 but stepped as u16; mRestTimer is passed to
- * DecIfAbove0_Short by address. */
+ * mRestTimer is passed to DecIfAbove0_Short by address. */
 s32 daObjUkiyuka_c::Behavior() {
     if (DecIfAbove0_Short(&mRestTimer) != 0) {
         IsClsnInRange(0, 0);
         return 1;
     }
-    /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever (r72-r75) applies to
-       this scalar pin (r68: s16 plain step is -1 word).
-       Kept (#821 r80): getter tried -> an s16 or u16 phase accessor in the step is 0xec of 0xf0.
-       Kept (#821 r81): the (s64) read -> an inline s16 GetBobPhase(), a plain u16 or int read,
-       or (u16)GetBobPhase() >> 4 are all 0xe8 of 0xf0 (ldrh replaces ldrsh + zero-extend). */
-    *(u16 *)&mBobPhase += 0x100;
+    mBobPhase += 0x100;
     {
-        u16 h = (u16)((s64)mBobPhase);
-        mPos.y -= FX_MUL(mBobAmplitude, FX_SinIdx(h >> 4));
+        s16 phase = mBobPhase;
+        mPos.y -= FX_MUL(mBobAmplitude, FX_SinIdx((u16)phase >> 4));
     }
     {
         int d = mPos.y - mRestY;
