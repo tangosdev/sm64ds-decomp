@@ -1,7 +1,0 @@
-/* ov036 cartridge data at 0x021138fc, 56 bytes. */
-#include "types.h"
-
-u32 data_ov036_021138fc[14] = {
-    0x00000000, 0xffff0000, 0xe5d40131, 0x01c2f934, 0x00000000, 0x2d010000, 0x1525001d,
-    0xf70d0cb6, 0x40000000, 0xff010000, 0x19d5010a, 0xfdf6fcec, 0x00000000, 0xffff0000,
-};

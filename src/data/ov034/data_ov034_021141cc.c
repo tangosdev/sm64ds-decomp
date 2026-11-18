@@ -1,7 +1,0 @@
-/* ov034 cartridge data at 0x021141cc, 48 bytes. */
-#include "types.h"
-
-u32 data_ov034_021141cc[12] = {
-    0xfe7000a1, 0x03520578, 0x00000000, 0xffff0000, 0xf8f8001e, 0x0708060e,
-    0x00000000, 0xff060000, 0xf9f2002c, 0x07080514, 0x00000000, 0x3c070000,
-};

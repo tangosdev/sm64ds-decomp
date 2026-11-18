@@ -1,7 +1,0 @@
-/* ov032 cartridge data at 0x02113434, 56 bytes. */
-#include "types.h"
-
-u32 data_ov032_02113434[14] = {
-    0xe9bc0a36, 0xfb50f31c, 0x09c4443f, 0xf7680d48, 0xe570e10c, 0xf380f830, 0xe570e10b,
-    0xf380f9c0, 0x0000ec3d, 0xfa241004, 0xe638e029, 0x0384f4de, 0xe638e225, 0x0384f768,
-};
