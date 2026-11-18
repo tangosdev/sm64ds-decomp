@@ -264,19 +264,8 @@ u8 dMgPsOpt_c::Update() {
         break;
     }
 
-    {
-        int count = mIconCount;
-        int i = 0;
-
-        if (count > 0) {
-            TouchIcon_c *icon = mIcons;
-            do {
-                icon->Behavior();
-                i++;
-                icon++;
-            } while (i < mIconCount);
-        }
-    }
+    for (int i = 0; i < mIconCount; i++)
+        mIcons[i].Behavior();
 
     return mActive;
 }
@@ -299,13 +288,11 @@ int dMgPsOpt_c::Draw() {
 /* 1 when no live icon is still counting down a press. BeforeBehavior uses
    that as the gate before CloseMenu closes the panel. */
 int dMgPsOpt_c::IsIdle() {
-    TouchIcon_c *icon = mIcons;
     int i;
 
     for (i = 0; i < mIconCount; i++) {
-        if (icon->mPressTimer != 0)
+        if (mIcons[i].mPressTimer != 0)
             return 0;
-        icon++;
     }
 
     return 1;
