@@ -136,8 +136,7 @@ void dCapEnemy_c::RenderCapModel(const Vector3 * v)
     mModel.Render(v);
 }
 
-struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 &v)
-{
+struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 &v) {
     struct dActor_c *ret = 0;
 
     if ((mCapId & 7) < 6) {
@@ -145,8 +144,7 @@ struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 &v)
         if (mCapId < 6u) {
             Vector3 out;
             Vec3_Add(&out, &mPos, &v);
-            ret = dActor_c::Spawn(0x10d, 0x1012 | (mCapId << 8), out, &mAngle,
-                                  mAreaId, -1);
+            ret = dActor_c::Spawn(0x10d, 0x1012 | (mCapId << 8), out, &mAngle, mAreaId, -1);
             if (mCapBank != 0) {
                 mCapId |= 8;
             } else {
@@ -159,8 +157,7 @@ struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 &v)
     return ret;
 }
 
-int dCapEnemy_c::GetCapEatenOffIt(const Vector3 &v)
-{
+int dCapEnemy_c::GetCapEatenOffIt(const Vector3 &v) {
     Vector3 local = v;
     dActor_c *p;
     p = ReleaseCap(local);
