@@ -2675,17 +2675,20 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                     if (entityLoopIndex != mIndex) {
                         other = entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
                         if (((cMgSmartball_ball_c *)other)->state3a == 0) {
-                            other = entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
+                            other =
+                                entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
                             if (((cMgSmartball_object_c *)other)->mIsActive != 0) {
-                                other =
-                                    entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
+                                other = entityLoopIndex >= 0xd
+                                            ? 0
+                                            : mpManager->mpBalls[entityLoopIndex];
                                 CopyObjectPos(&entityPos, other);
                                 Vec2_Sub(&entityDelta.x, &mCurrent0, &entityPos.x);
                                 delta = entityDelta;
                                 if (func_0203d5bc(&delta.x) <= 0x100000LL) {
                                     angle = 0;
                                     mgr = mpManager;
-                                    other = entityLoopIndex >= 0xd ? 0 : mgr->mpBalls[entityLoopIndex];
+                                    other =
+                                        entityLoopIndex >= 0xd ? 0 : mgr->mpBalls[entityLoopIndex];
                                     CopyObjectPos(&entityPos2, other);
                                     otherPos = entityPos2;
                                     if (mCurrent1 < 0x90000 || mCurrent0 <= otherPos.x) {
