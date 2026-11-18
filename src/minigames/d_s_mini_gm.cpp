@@ -788,7 +788,7 @@ void dScMiniGm_c::DrawNumber(int x, int y, int val) {
 }
 
 void dScMiniGm_c::DrawNewBadges() {
-    int g = (mIconBlinkPhase >= 0x20) ? 1 : 0;
+    int g = mIconBlinkPhase >= 0x20;
     int start, end;
     if (gMgMenuPage == 1) {
         start = 6;
