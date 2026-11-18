@@ -175,17 +175,20 @@ void daBttBk_c::UpdateModelTransform() {
     }
 }
 
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* State 2 update: once neither flag bit 17 nor 18 is set, forget the eating
  * player and go back to state 0. */
 int daBttBk_c::StateYoshiMouthMain() {
-    int flags = mFlags;
-    int inYoshiMouthA = (flags & 0x20000) ? 1 : 0;
-    if (inYoshiMouthA == 0) {
-        int inYoshiMouthB = (flags & 0x40000) ? 1 : 0;
-        if (inYoshiMouthB == 0) {
-            mEatingPlayer = 0;
-            SetState(0);
-        }
+    if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
+        mEatingPlayer = 0;
+        SetState(0);
     }
     return 1;
 }
@@ -310,10 +313,7 @@ s32 daBttBk_c::CleanupResources() {
 void daBttBk_c::OnPendingDestroy() {}
 
 int daBttBk_c::Render() {
-    int flags = mFlags;
-    flags = flags & 0x40000;
-    flags = flags ? 1 : 0;
-    if (flags)
+    if (IsInYoshiMouth(this))
         return 1;
     mModel.Render(0);
     return 1;
