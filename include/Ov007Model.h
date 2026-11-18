@@ -49,10 +49,10 @@ typedef struct Ov007Model {
     struct ModelComponents *model; /* 0x00: func_ov007_020bc6d4 builds it from the BMD file */
     /* 0x04: the pose model->transforms points at (one matrix per bone);
      * func_02046564-sized, as dExtSimpleModel_c's transformsBuf */
-    struct Matrix4x3 *transforms;
+    union Matrix4x3 *transforms;
     /* 0x08: flags & 2 only: the next frame's pose; on in-between frames
      * func_ov007_020bc02c averages it into transforms */
-    struct Matrix4x3 *nextTransforms;
+    union Matrix4x3 *nextTransforms;
     /* 0x0c: flags & 4 only; func_020462bc-sized, as dExtBlendAnmModel_c's */
     void *blendBuffer;
     s32 numBoneAnims;              /* 0x10 */
@@ -72,7 +72,7 @@ typedef struct Ov007Model {
     char pad_52[2];
     /* 0x54: what func_ov007_020bbff0 renders the model with;
      * func_ov007_020bc968 builds it */
-    struct Matrix4x3 matrix;
+    union Matrix4x3 matrix;
     /* 0x84, medium confidence: one word per BMD material, allocated by
      * func_ov007_020bc6d4; func_ov007_020bc47c copies each material's +0x1c
      * into it, the word func_02044b30 writes to REG_TEXIMAGE_PARAM

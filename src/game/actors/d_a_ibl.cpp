@@ -235,12 +235,12 @@ void daIbl_c::UpdateWallAndFloor() {
    being 1.0. */
 void daIbl_c::UpdateModelMatrix() {
     mModel.mat4x3 = IDENTITY_MATRIX4X3;
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     mShadowMtx = mModel.mat4x3;
     int k = 0x32;
-    mShadowMtx.m[10] = (mDrawScale.x * k + mPos.y) >> 3;
+    mShadowMtx.t.y = (mDrawScale.x * k + mPos.y) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
         k += 0x28;
     else

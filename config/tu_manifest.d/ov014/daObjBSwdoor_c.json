@@ -386,14 +386,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@346",
+      "from": "@348",
       "to": "@636",
-      "evidence": "compiler temporary; mwcc numbers it @369 per TU and ov036 defines a global @369, so the scratch link collides | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @368 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temporary; mwcc numbers it @369 per TU and ov036 defines a global @369, so the scratch link collides | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @368 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @346 to @348 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@347",
+      "from": "@349",
       "to": "@633",
-      "evidence": "compiler temporary; mwcc numbers it @370 per TU and ov036 defines a global @370, so the scratch link collides | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @369 to @347 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temporary; mwcc numbers it @370 per TU and ov036 defines a global @370, so the scratch link collides | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @369 to @347 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @347 to @349 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "relocations": [

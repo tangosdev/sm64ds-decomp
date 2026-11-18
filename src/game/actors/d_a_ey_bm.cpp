@@ -135,9 +135,9 @@ int daEyBm_c::CleanupResources() {
 }
 
 void daEyBm_c::UpdateShadow() {
-    mMatrix.m[9] = mPos.x >> 3;
-    mMatrix.m[10] = mPos.y >> 3;
-    mMatrix.m[11] = mPos.z >> 3;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = mPos.y >> 3;
+    mMatrix.t.z = mPos.z >> 3;
 
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);

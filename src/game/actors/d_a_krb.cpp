@@ -959,9 +959,9 @@ void daKrb_c::func_ov084_0212a580() {
     Vector3 pos;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     rotation = mAngle;
     if (!IsInYoshiMouth(this)) {
         if (mWithMeshClsn.IsOnGround())

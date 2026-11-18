@@ -144,10 +144,9 @@ extern int sMgClearBannerY;
 Matrix4x3 data_ov006_0213c85c = {0x1000, 0x0, 0x0,    0x0,     0x1000,  0x0,
                                  0x0,    0x0, 0x1000, 0x8c000, 0x8c000, 0x40000};
 
-/* Both models' starting matrix. Declaring it non-volatile adds 32 bytes to
-   dScMg3DEsp_c::InitResources, and copying it without the stack temporary
-   removes 32. */
-extern volatile Matrix4x3 sEsp3DIdentityMtx;
+/* Both models' starting matrix. InitResources copies it through a stack
+   temporary; copying it without the temporary removes 32 bytes. */
+extern Matrix4x3 sEsp3DIdentityMtx;
 
 /* ---- dScMg3DEsp_c: the destructor (key function) ---------------------- */
 
@@ -1285,8 +1284,8 @@ s32 dScMg3DEsp_c::InitResources()
     if (gIrieBackModelFile.func_020179b4(&mModel2, 1) == 0)
         return 0;
 
-    tmp = (Matrix4x3 &)sEsp3DIdentityMtx;
-    mModel1.mat4x3 = (Matrix4x3 &)sEsp3DIdentityMtx;
+    tmp = sEsp3DIdentityMtx;
+    mModel1.mat4x3 = sEsp3DIdentityMtx;
     mModel2.mat4x3 = tmp;
 
     gSubScreenLayers |= 4;

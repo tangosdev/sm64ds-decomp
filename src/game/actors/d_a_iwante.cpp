@@ -2186,9 +2186,9 @@ int daIwante_c::SetState(void *pv) {
  * mAngle.y, translation = position) and hand it to dBgW_KcMbg::Transform. */
 void daIwante_c::UpdateCollisionMatrix() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
-    mClsnMat2.m[9] = mPos.x;
-    mClsnMat2.m[10] = mPos.y;
-    mClsnMat2.m[11] = mPos.z;
+    mClsnMat2.t.x = mPos.x;
+    mClsnMat2.t.y = mPos.y;
+    mClsnMat2.t.z = mPos.z;
     mMeshCollider2.Transform(mClsnMat2, mAngle.y);
 }
 

@@ -3926,144 +3926,144 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2815",
+      "from": "@2817",
       "to": "pmf_dScMgPachinko2_c_Paddle_StateOrbit",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateOrbit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x298 loads 0x0213da5c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateOrbit at 0x021019e0). Re-keyed from @2816 to @2815 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2819",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateCross",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateCross, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x29c loads 0x0213da6c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateCross at 0x021012cc). Re-keyed from @2820 to @2819 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2795",
-      "to": "pmf_dScMgPachinko2_c_Ball_StateFlying",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateFlying, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x264 loads 0x0213da74 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateFlying at 0x02103360). Re-keyed from @2796 to @2795 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2801",
-      "to": "pmf_dScMgPachinko2_c_Ball_StateWalkOff",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateWalkOff, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x270 loads 0x0213da7c in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateWalkOff at 0x02103870). Re-keyed from @2802 to @2801 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2791",
-      "to": "pmf_dScMgPachinko2_c_Ball_StateWaitGrab",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateWaitGrab, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x258 loads 0x0213da84 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateWaitGrab at 0x02102f3c). Re-keyed from @2792 to @2791 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2813",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateBoxLoop",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateBoxLoop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x294 loads 0x0213da8c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateBoxLoop at 0x02101af0). Re-keyed from @2814 to @2813 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2797",
-      "to": "pmf_dScMgPachinko2_c_Ball_StateTumble",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateTumble, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x268 loads 0x0213da94 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateTumble at 0x02103608). Re-keyed from @2798 to @2797 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2799",
-      "to": "pmf_dScMgPachinko2_c_Ball_StateHop",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateHop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x26c loads 0x0213da9c in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateHop at 0x0210371c). Re-keyed from @2800 to @2799 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2845",
-      "to": "pmf_dScMgPachinko2_c_Cup_StateDecide",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateDecide, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2cc loads 0x0213daac in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateDecide at 0x020ff690). Re-keyed from @2846 to @2845 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2843",
-      "to": "pmf_dScMgPachinko2_c_Cup_StateHopRight",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateHopRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c8 loads 0x0213dab4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateHopRight at 0x020ff8c8). Re-keyed from @2844 to @2843 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2841",
-      "to": "pmf_dScMgPachinko2_c_Cup_StateHopLeft",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateHopLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c4 loads 0x0213dabc in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateHopLeft at 0x020ffb54). Re-keyed from @2842 to @2841 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2839",
-      "to": "pmf_dScMgPachinko2_c_Cup_StateWait",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c0 loads 0x0213dac4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateWait at 0x020ffde4). Re-keyed from @2840 to @2839 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2837",
-      "to": "pmf_dScMgPachinko2_c_Cup_StateInit",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateInit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2bc loads 0x0213dacc in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateInit at 0x020fff54). Re-keyed from @2838 to @2837 after the data/batch-01 merge (paired by consumer relocation)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateOrbit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x298 loads 0x0213da5c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateOrbit at 0x021019e0). Re-keyed from @2816 to @2815 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2815 to @2817 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2821",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StatePause",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x278 loads 0x0213dad4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StatePause at 0x02101224). Re-keyed from @2822 to @2821 after the data/batch-01 merge (paired by consumer relocation)."
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateCross",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateCross, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x29c loads 0x0213da6c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateCross at 0x021012cc). Re-keyed from @2820 to @2819 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2819 to @2821 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2797",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateFlying",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateFlying, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x264 loads 0x0213da74 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateFlying at 0x02103360). Re-keyed from @2796 to @2795 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2795 to @2797 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2803",
-      "to": "pmf_dScMgPachinko2_c_Ball_StateRemove",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateRemove, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x274 loads 0x0213dadc in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateRemove at 0x0210397c). Re-keyed from @2804 to @2803 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2809",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateDescend",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateDescend, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x284 loads 0x0213dae4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateDescend at 0x021020c4). Re-keyed from @2810 to @2809 after the data/batch-01 merge (paired by consumer relocation)."
-    },
-    {
-      "from": "@2817",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateWeave",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateWeave, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a0 loads 0x0213daec in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateWeave at 0x021016ec). Re-keyed from @2818 to @2817 after the data/batch-01 merge (paired by consumer relocation)."
+      "to": "pmf_dScMgPachinko2_c_Ball_StateWalkOff",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateWalkOff, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x270 loads 0x0213da7c in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateWalkOff at 0x02103870). Re-keyed from @2802 to @2801 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2801 to @2803 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2793",
-      "to": "pmf_dScMgPachinko2_c_Ball_StateAim",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateAim, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x25c loads 0x0213daf4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateAim at 0x02102fe8). Re-keyed from @2794 to @2793 after the data/batch-01 merge (paired by consumer relocation)."
+      "to": "pmf_dScMgPachinko2_c_Ball_StateWaitGrab",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateWaitGrab, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x258 loads 0x0213da84 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateWaitGrab at 0x02102f3c). Re-keyed from @2792 to @2791 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2791 to @2793 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2805",
-      "to": "pmf_dScMgPachinko2_c_Ball_StateScored",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateScored, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x27c loads 0x0213dafc in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateScored at 0x02103994). Re-keyed from @2806 to @2805 after the data/batch-01 merge (paired by consumer relocation)."
+      "from": "@2815",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateBoxLoop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateBoxLoop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x294 loads 0x0213da8c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateBoxLoop at 0x02101af0). Re-keyed from @2814 to @2813 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2813 to @2815 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2807",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateSpawn",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSpawn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x280 loads 0x0213db04 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSpawn at 0x02102274). Re-keyed from @2808 to @2807 after the data/batch-01 merge (paired by consumer relocation)."
+      "from": "@2799",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateTumble",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateTumble, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x268 loads 0x0213da94 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateTumble at 0x02103608). Re-keyed from @2798 to @2797 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2797 to @2799 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2811",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateSweep",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSweep, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x288 loads 0x0213db0c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSweep at 0x02101e88). Re-keyed from @2812 to @2811 after the data/batch-01 merge (paired by consumer relocation)."
+      "from": "@2801",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateHop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateHop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x26c loads 0x0213da9c in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateHop at 0x0210371c). Re-keyed from @2800 to @2799 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2799 to @2801 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2847",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateDecide",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateDecide, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2cc loads 0x0213daac in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateDecide at 0x020ff690). Re-keyed from @2846 to @2845 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2845 to @2847 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2845",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateHopRight",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateHopRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c8 loads 0x0213dab4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateHopRight at 0x020ff8c8). Re-keyed from @2844 to @2843 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2843 to @2845 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2843",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateHopLeft",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateHopLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c4 loads 0x0213dabc in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateHopLeft at 0x020ffb54). Re-keyed from @2842 to @2841 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2841 to @2843 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2841",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateWait",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c0 loads 0x0213dac4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateWait at 0x020ffde4). Re-keyed from @2840 to @2839 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2839 to @2841 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2839",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateInit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateInit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2bc loads 0x0213dacc in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateInit at 0x020fff54). Re-keyed from @2838 to @2837 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2837 to @2839 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2823",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateKnockedDown",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateKnockedDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x290 loads 0x0213db14 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateKnockedDown at 0x02101088). Re-keyed from @2824 to @2823 after the data/batch-01 merge (paired by consumer relocation)."
+      "to": "pmf_dScMgPachinko2_c_Paddle_StatePause",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x278 loads 0x0213dad4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StatePause at 0x02101224). Re-keyed from @2822 to @2821 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2821 to @2823 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2835",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateFlyAway",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateFlyAway, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b8 loads 0x0213db1c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateFlyAway at 0x021009b8). Re-keyed from @2836 to @2835 after the data/batch-01 merge (paired by consumer relocation)."
+      "from": "@2805",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateRemove",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateRemove, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x274 loads 0x0213dadc in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateRemove at 0x0210397c). Re-keyed from @2804 to @2803 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2803 to @2805 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2833",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateDropBalls",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateDropBalls, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b4 loads 0x0213db24 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateDropBalls at 0x02100b08). Re-keyed from @2834 to @2833 after the data/batch-01 merge (paired by consumer relocation)."
+      "from": "@2811",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateDescend",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateDescend, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x284 loads 0x0213dae4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateDescend at 0x021020c4). Re-keyed from @2810 to @2809 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2809 to @2811 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2831",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateGather",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateGather, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b0 loads 0x0213db2c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateGather at 0x02100bac). Re-keyed from @2832 to @2831 after the data/batch-01 merge (paired by consumer relocation)."
+      "from": "@2819",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateWeave",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateWeave, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a0 loads 0x0213daec in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateWeave at 0x021016ec). Re-keyed from @2818 to @2817 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2817 to @2819 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2829",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateRiseHome",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateRiseHome, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2ac loads 0x0213db34 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateRiseHome at 0x02100d90). Re-keyed from @2830 to @2829 after the data/batch-01 merge (paired by consumer relocation)."
+      "from": "@2795",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateAim",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateAim, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x25c loads 0x0213daf4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateAim at 0x02102fe8). Re-keyed from @2794 to @2793 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2793 to @2795 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2827",
-      "to": "pmf_dScMgPachinko2_c_Paddle_StateSwing",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSwing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a8 loads 0x0213db3c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSwing at 0x02100e3c). Re-keyed from @2828 to @2827 after the data/batch-01 merge (paired by consumer relocation)."
+      "from": "@2807",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateScored",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateScored, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x27c loads 0x0213dafc in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateScored at 0x02103994). Re-keyed from @2806 to @2805 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2805 to @2807 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2809",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateSpawn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSpawn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x280 loads 0x0213db04 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSpawn at 0x02102274). Re-keyed from @2808 to @2807 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2807 to @2809 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2813",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateSweep",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSweep, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x288 loads 0x0213db0c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSweep at 0x02101e88). Re-keyed from @2812 to @2811 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2811 to @2813 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2825",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateKnockedDown",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateKnockedDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x290 loads 0x0213db14 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateKnockedDown at 0x02101088). Re-keyed from @2824 to @2823 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2823 to @2825 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2837",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateFlyAway",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateFlyAway, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b8 loads 0x0213db1c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateFlyAway at 0x021009b8). Re-keyed from @2836 to @2835 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2835 to @2837 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2835",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateDropBalls",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateDropBalls, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b4 loads 0x0213db24 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateDropBalls at 0x02100b08). Re-keyed from @2834 to @2833 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2833 to @2835 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2833",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateGather",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateGather, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b0 loads 0x0213db2c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateGather at 0x02100bac). Re-keyed from @2832 to @2831 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2831 to @2833 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2831",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateRiseHome",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateRiseHome, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2ac loads 0x0213db34 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateRiseHome at 0x02100d90). Re-keyed from @2830 to @2829 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2829 to @2831 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2829",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateSwing",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSwing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a8 loads 0x0213db3c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSwing at 0x02100e3c). Re-keyed from @2828 to @2827 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2827 to @2829 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2827",
       "to": "pmf_dScMgPachinko2_c_Paddle_StateFallToGround",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateFallToGround, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a4 loads 0x0213db44 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateFallToGround at 0x02100f7c). Re-keyed from @2826 to @2825 after the data/batch-01 merge (paired by consumer relocation)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateFallToGround, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a4 loads 0x0213db44 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateFallToGround at 0x02100f7c). Re-keyed from @2826 to @2825 after the data/batch-01 merge (paired by consumer relocation). Re-keyed from @2825 to @2827 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }
