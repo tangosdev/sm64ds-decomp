@@ -33,6 +33,24 @@
       "name": ".bss",
       "start": "0x0211c9bc",
       "end": "0x0211c9f8"
+    },
+    {
+      "name": ".data.daObjShellZTI",
+      "input_section": ".data",
+      "start": "0x0211c588",
+      "end": "0x0211c594"
+    },
+    {
+      "name": ".data.daObjShellZTS",
+      "input_section": ".data",
+      "start": "0x0211c594",
+      "end": "0x0211c5a3"
+    },
+    {
+      "name": ".data.daObjShellZTV",
+      "input_section": ".data",
+      "start": "0x0211c5c0",
+      "end": "0x0211c644"
     }
   ],
   "functions": [
@@ -93,7 +111,28 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI12daObjShell_c",
+      "address": "0x0211c588",
+      "size": "0xc",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS12daObjShell_c",
+      "address": "0x0211c594",
+      "size": "0xf",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTV12daObjShell_c",
+      "address": "0x0211c5c8",
+      "emitted_storage_address": "0x0211c5c0",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov064_0211c9bc",
@@ -359,27 +398,6 @@
       "reason": "This TU defines every out-of-line virtual daObjShell_c declares, so it is the class's key-function TU and emits the direct base dActor_c's type-name string as vague linkage. Its canonical arm9 home (0x0208e384) lies outside this entry's claimed ranges and romdata_check proves this copy before it is discarded."
     },
     {
-      "symbol": "_ZTI12daObjShell_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211c588",
-      "reason": "This TU defines every out-of-line virtual daObjShell_c declares, so it is the class's key-function TU and emits this class's own __si_class_type_info record. The cartridge keeps it in this same overlay at 0x0211c588, outside this entry's claimed .text range 0x0211a930..0x0211adb0, so the emitted copy is discarded after romdata_check proves it."
-    },
-    {
-      "symbol": "_ZTS12daObjShell_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211c594",
-      "reason": "This TU defines every out-of-line virtual daObjShell_c declares, so it is the class's key-function TU and emits this class's own type-name string, the literal \"12daObjShell_c\". The cartridge keeps it in this same overlay at 0x0211c594, outside this entry's claimed .text range, so the emitted copy is discarded after romdata_check proves it."
-    },
-    {
-      "symbol": "_ZTV12daObjShell_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211c5c8",
-      "reason": "This TU defines every out-of-line virtual daObjShell_c declares, so it is the class's key-function TU and emits this class's own vtable. The cartridge keeps it in this same overlay; 0x0211c5c8 is the public address point, eight bytes past the offset-to-top and typeinfo words the emitted 0x84-byte object begins with, and it lies outside this entry's claimed .text range, so the emitted copy is discarded after romdata_check proves it."
-    },
-    {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
@@ -634,6 +652,356 @@
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c9e0"
+    },
+    {
+      "section": ".data.daObjShellZTI",
+      "source": "0x0211c58c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS12daObjShell_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211c594"
+    },
+    {
+      "section": ".data.daObjShellZTI",
+      "source": "0x0211c590",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data.daObjShellZTI",
+      "source": "0x0211c588",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "main",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12daObjShell_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211c588"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c604",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c600",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c640",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c63c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c638",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c634",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c630",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c62c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c628",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c624",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c620",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c61c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c618",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c614",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c610",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c60c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daObjShell_cD0Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211a968"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daObjShell_c6RenderEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211aa30"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daObjShell_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211aa58"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daObjShell_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211a9f4"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c5c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daObjShell_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211acc4"
+    },
+    {
+      "section": ".data.daObjShellZTV",
+      "source": "0x0211c608",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daObjShell_cD1Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211a930"
     }
   ]
 }

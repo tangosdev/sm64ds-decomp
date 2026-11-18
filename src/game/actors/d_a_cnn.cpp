@@ -73,8 +73,9 @@ typedef void (daCnn_c::*State)();
    InitResources preloads for the bombs it fires. */
 extern SharedFilePtr data_ov098_0213c91c;
 extern SharedFilePtr data_ov002_0210da38;
-/* The smoke particles' base rotation, x/y/z. */
-extern u16 data_ov098_0213c63c[3];
+/* The smoke particles' base rotation, x/y/z. The two bytes after it are the
+ * linker's ALIGN(4) fill before the next .data.blockTail object. */
+u16 data_ov098_0213c63c[3] = {0, 0x1000, 0};
 
 /* local extern: arm9/ov002/ov102 C helpers with no shared header yet. The
    two daPly_c helpers are defined in d_a_ply_methods.cpp, the Bob-omb one in

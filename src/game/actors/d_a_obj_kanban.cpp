@@ -41,8 +41,13 @@ struct KanbanModelFilePtr : SharedFilePtr {
  * at the end of this file so the constructor does not enter .text. */
 extern KanbanModelFilePtr data_ov085_02130858;
 
-/* the collider's offset, in .rodata */
-extern Vector3 data_ov085_0212f29c;
+/* The collider's offset. A POD twin of Vector3: types.h gives Vector3 a
+ * constructor, so a const Vector3 global would be built at static-init time,
+ * while the cartridge keeps this object in .rodata. */
+struct KanbanClsnOffset {
+    fx32 x, y, z;
+};
+extern const KanbanClsnOffset data_ov085_0212f29c = {0, -0x28000, 0};
 
 /* local extern: no shared header declares these. */
 extern "C" {

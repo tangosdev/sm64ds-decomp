@@ -42,12 +42,48 @@
     {
       "name": ".data",
       "start": "0x0211bfd8",
-      "end": "0x0211c198"
+      "end": "0x0211c1d0"
     },
     {
       "name": ".bss",
       "start": "0x0211c7d8",
       "end": "0x0211c934"
+    },
+    {
+      "name": ".data.daObjFlCoinZTI",
+      "input_section": ".data",
+      "start": "0x0211bf98",
+      "end": "0x0211bfa4"
+    },
+    {
+      "name": ".data.daObjFlCoinZTS",
+      "input_section": ".data",
+      "start": "0x0211bfb0",
+      "end": "0x0211bfc1"
+    },
+    {
+      "name": ".data.daObjFlCoinZTV",
+      "input_section": ".data",
+      "start": "0x0211c1d0",
+      "end": "0x0211c254"
+    },
+    {
+      "name": ".data.daObjFlPuzzleZTI",
+      "input_section": ".data",
+      "start": "0x0211bfa4",
+      "end": "0x0211bfb0"
+    },
+    {
+      "name": ".data.daObjFlPuzzleZTS",
+      "input_section": ".data",
+      "start": "0x0211bfc4",
+      "end": "0x0211bfd7"
+    },
+    {
+      "name": ".data.daObjFlPuzzleZTV",
+      "input_section": ".data",
+      "start": "0x0211c254",
+      "end": "0x0211c2dc"
     }
   ],
   "functions": [
@@ -355,6 +391,53 @@
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "mesh collider CLPS block for the puzzle piece"
+    },
+    {
+      "symbol": "data_ov064_0211c198",
+      "address": "0x0211c198",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-type step-script pointers, indexed by mType; each word points at one of the fourteen s8 scripts above"
+    },
+    {
+      "symbol": "_ZTI14daObjFl_Coin_c",
+      "address": "0x0211bf98",
+      "size": "0xc",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS14daObjFl_Coin_c",
+      "address": "0x0211bfb0",
+      "size": "0x11",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTV14daObjFl_Coin_c",
+      "address": "0x0211c1d8",
+      "emitted_storage_address": "0x0211c1d0",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
+    },
+    {
+      "symbol": "_ZTI16daObjFl_Puzzle_c",
+      "address": "0x0211bfa4",
+      "size": "0xc",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS16daObjFl_Puzzle_c",
+      "address": "0x0211bfc4",
+      "size": "0x13",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTV16daObjFl_Puzzle_c",
+      "address": "0x0211c25c",
+      "emitted_storage_address": "0x0211c254",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
     }
   ],
   "bss": [
@@ -734,7 +817,7 @@
         {
           "section": ".data",
           "start": "0x0211bfd8",
-          "end": "0x0211c198",
+          "end": "0x0211c1d0",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1031,48 +1114,6 @@
       "canonical_module": "ov002",
       "canonical_address": "0x02108a04",
       "reason": "Inherited vague-linkage record. romdata_check proves the compiler copy against its canonical home before text-only isolation discards it."
-    },
-    {
-      "symbol": "_ZTI14daObjFl_Coin_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bf98",
-      "reason": "The coin class's key function emits the ROM typeinfo at ov064 0x0211bf98. romdata_check proves it before isolation discards this copy."
-    },
-    {
-      "symbol": "_ZTS14daObjFl_Coin_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bfb0",
-      "reason": "The coin class emits the type-name string 14daObjFl_Coin_c at ov064 0x0211bfb0. romdata_check proves the payload before isolation."
-    },
-    {
-      "symbol": "_ZTV14daObjFl_Coin_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211c1d8",
-      "reason": "The coin class emits its vtable. The public address point is ov064 0x0211c1d8; storage starts eight bytes earlier. romdata_check proves the slots before isolation."
-    },
-    {
-      "symbol": "_ZTI16daObjFl_Puzzle_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bfa4",
-      "reason": "The piece class's key function emits the ROM typeinfo at ov064 0x0211bfa4. romdata_check proves it before isolation discards this copy."
-    },
-    {
-      "symbol": "_ZTS16daObjFl_Puzzle_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bfc4",
-      "reason": "The piece class emits the type-name string 16daObjFl_Puzzle_c at ov064 0x0211bfc4. romdata_check proves the payload before isolation."
-    },
-    {
-      "symbol": "_ZTV16daObjFl_Puzzle_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211c25c",
-      "reason": "The piece class emits its vtable. The public address point is ov064 0x0211c25c; storage starts eight bytes earlier. romdata_check proves the slots before isolation."
     },
     {
       "symbol": "_Z39daObjFl_Puzzle_c_EmitDeletingDestructorP16daObjFl_Puzzle_c",
@@ -2189,6 +2230,856 @@
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211b1d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c198",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bfd8",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bfd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c19c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bff4",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bff4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c0f0",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c0f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c10c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c10c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c010",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c010"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c02c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c02c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c0d4",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c0d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c0b8",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c0b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c064",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c064"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c048",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c048"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c128",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c128"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c09c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c09c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c080",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c080"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c1cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211c144",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c144"
+    },
+    {
+      "section": ".data.daObjFlCoinZTI",
+      "source": "0x0211bf9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS14daObjFl_Coin_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211bfb0"
+    },
+    {
+      "section": ".data.daObjFlCoinZTI",
+      "source": "0x0211bfa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data.daObjFlCoinZTI",
+      "source": "0x0211bf98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "main",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI14daObjFl_Coin_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211bf98"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c214",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c210",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c20c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c208",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c6RenderEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043af0"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043bf0"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c250",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c24c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c248",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c244",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c240",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c23c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c238",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c234",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c230",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c22c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c228",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c224",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c220",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c204",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c200",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c21c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjFl_Coin_cD0Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118c10"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjFl_Coin_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211915c"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c1d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjFl_Coin_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02119284"
+    },
+    {
+      "section": ".data.daObjFlCoinZTV",
+      "source": "0x0211c218",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjFl_Coin_cD1Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118bec"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTI",
+      "source": "0x0211bfa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS16daObjFl_Puzzle_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211bfc4"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTI",
+      "source": "0x0211bfac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "overlay(2)",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTI",
+      "source": "0x0211bfa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "main",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c258",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI16daObjFl_Puzzle_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211bfa4"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c28c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c27c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c278",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c270",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c26c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c264",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c260",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c2a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFl_Puzzle_cD0Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118b94"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFl_Puzzle_c6RenderEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02119088"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c274",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFl_Puzzle_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x021190b0"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c268",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFl_Puzzle_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211904c"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c25c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFl_Puzzle_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x021191a8"
+    },
+    {
+      "section": ".data.daObjFlPuzzleZTV",
+      "source": "0x0211c29c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFl_Puzzle_cD1Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118b50"
     }
   ]
 }

@@ -242,30 +242,30 @@ extern EyerokTextureSequencePtr data_ov066_0211aebc;
 
 /* ---- ov066 .bss / .data byte flags and counters, shared by all three parts ---- */
 /* Hands that have reached their spot in pattern 8, one bit per hand. */
-extern unsigned char data_ov066_0211ae00;
+unsigned char data_ov066_0211ae00 __attribute__((aligned(4)));
 /* The fight phase (PHASE_* / PATTERN_*). */
-extern unsigned char data_ov066_0211ae04;
+unsigned char data_ov066_0211ae04 __attribute__((aligned(4)));
 /* Completion count. In the dormant state it counts frames with the player in
  * the trigger area; later it counts hands finished with the current pattern
  * (a hand defeated also adds one, and each finishing hand adds one more when
  * only one is left; the pattern 9 hand stores 2 outright); the decision state
  * clears it. */
-extern unsigned char data_ov066_0211ae08;
+unsigned char data_ov066_0211ae08 __attribute__((aligned(4)));
 /* A bit per hand used as a handshake: a hand sets its bit in when it has
  * finished rising or entered a pattern, the body waits for HANDS_BOTH
  * (WaitForHandsReady), then writes the picked hand's part number here, and
  * that hand clears its bit when its turn is over. (In pattern 8 both hands
  * move; there it only selects which side, 1 -> X = 820.0.) */
-extern unsigned char data_ov066_0211ae0c;
+unsigned char data_ov066_0211ae0c __attribute__((aligned(4)));
 /* Alternates the picked hand between turns of patterns 5..7: 0 -> hand 2,
  * 1 -> hand 1. */
-extern unsigned char data_ov066_0211ae10;
+unsigned char data_ov066_0211ae10 __attribute__((aligned(4)));
 /* Hands still alive, one bit per hand (HANDS_BOTH at the start; a defeated
  * hand's bit is XORed out). 0 means the fight is won. */
-extern unsigned char data_ov066_0211abe0;
+unsigned char data_ov066_0211abe0 = 3;
 /* Threshold for the special pattern: the decision state picks pattern 8 / 9
  * once mPickCount exceeds this + 3. Starts at 1. */
-extern int data_ov066_0211abe4;
+int data_ov066_0211abe4 = 1;
 /* Offset of a hand's hit volume from its position, fx32 x/y/z. One global
  * shared by both hands, rewritten by SetRestHitVolume and
  * SetPoundHitVolume, so it holds whatever the last of those calls left. */
@@ -2612,12 +2612,11 @@ daIwante_c *daIwante_c_classInit(void) {
  * (aliased in this unit's manifest), and the register call is the
  * runtime's own __register_global_object. */
 
-/* The 38 pointer-to-member records (ov066 .data 0x0211abe8..0x0211ad18) are ROM
- * data this unit only names. A member-pointer initializer is not static here:
- * mwccarm would emit a runtime copy for each record and grow __sinit past the
- * ROM's 0x7a8 bytes, so the records keep their ROM bytes and the initializer
- * copies from them. The first word is the handler, the second the
- * pointer-adjustor word (0). */
+/* The 38 pointer-to-member records (ov066 .data 0x0211abe8..0x0211ad18) are
+ * { handler, adjustment } pairs. mwcc defers a member-pointer initializer to
+ * __sinit and puts the named object in .bss, so each record is a static POD
+ * pair whose handler word names the member's mangled symbol; the state
+ * descriptors read it back through the union's PMF view. */
 extern EyerokPMF data_ov066_0211abe8;
 extern EyerokPMF data_ov066_0211abf0;
 extern EyerokPMF data_ov066_0211abf8;

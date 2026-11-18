@@ -42,6 +42,24 @@
       "name": ".bss",
       "start": "0x0211c790",
       "end": "0x0211c7b8"
+    },
+    {
+      "name": ".data.daObjFlKomaUZTI",
+      "input_section": ".data",
+      "start": "0x0211bdcc",
+      "end": "0x0211bdd8"
+    },
+    {
+      "name": ".data.daObjFlKomaUZTS",
+      "input_section": ".data",
+      "start": "0x0211bdd8",
+      "end": "0x0211bdea"
+    },
+    {
+      "name": ".data.daObjFlKomaUZTV",
+      "input_section": ".data",
+      "start": "0x0211be08",
+      "end": "0x0211be90"
     }
   ],
   "functions": [
@@ -111,6 +129,26 @@
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "mesh collider CLPS block for the spinning top"
+    },
+    {
+      "symbol": "_ZTI15daObjFl_KomaU_c",
+      "address": "0x0211bdcc",
+      "size": "0xc",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS15daObjFl_KomaU_c",
+      "address": "0x0211bdd8",
+      "size": "0x12",
+      "evidence": "ROM typeinfo record, exact compiler emission"
+    },
+    {
+      "symbol": "_ZTV15daObjFl_KomaU_c",
+      "address": "0x0211be10",
+      "emitted_storage_address": "0x0211be08",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
     }
   ],
   "bss": [
@@ -226,27 +264,6 @@
       "reason": "inherited vague-linkage RTTI name; compared against the ov002 copy before text isolation",
       "canonical_module": "ov002",
       "canonical_address": "0x02108a04"
-    },
-    {
-      "symbol": "_ZTV15daObjFl_KomaU_c",
-      "disposition": "deadstrip-data",
-      "reason": "compiler-emitted vtable; compared at the public address point before text isolation",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211be10"
-    },
-    {
-      "symbol": "_ZTI15daObjFl_KomaU_c",
-      "disposition": "deadstrip-data",
-      "reason": "leaf RTTI record; compared against the ov064 copy before text isolation",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bdcc"
-    },
-    {
-      "symbol": "_ZTS15daObjFl_KomaU_c",
-      "disposition": "deadstrip-data",
-      "reason": "leaf RTTI name string; compared against the ov064 copy before text isolation",
-      "canonical_module": "ov064",
-      "canonical_address": "0x0211bdd8"
     }
   ],
   "verification": {
@@ -702,6 +719,366 @@
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211b0e4"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTI",
+      "source": "0x0211bdd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS15daObjFl_KomaU_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211bdd8"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTI",
+      "source": "0x0211bdd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "overlay(2)",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTI",
+      "source": "0x0211bdcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "main",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI15daObjFl_KomaU_c",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211bdcc"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15daObjFl_KomaU_cD0Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118194"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15daObjFl_KomaU_c6RenderEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x0211824c"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15daObjFl_KomaU_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118274"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15daObjFl_KomaU_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118204"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15daObjFl_KomaU_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118480"
+    },
+    {
+      "section": ".data.daObjFlKomaUZTV",
+      "source": "0x0211be50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15daObjFl_KomaU_cD1Ev",
+      "addend": 0,
+      "target_module": "overlay(64)",
+      "target_address": "0x02118138"
     }
   ]
 }

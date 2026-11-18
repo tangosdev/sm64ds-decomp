@@ -30,8 +30,6 @@ struct daDonketu_c : daOts_c {
 
     /* methods */
     int Behavior();
-    int CleanupResources();
-    int Render();
     int InitResources();
     virtual int UpdateRunState();
     virtual void UpdateDeathState();
