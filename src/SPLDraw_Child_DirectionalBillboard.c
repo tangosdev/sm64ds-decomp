@@ -31,7 +31,8 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
     int sx;
     s64 sy; /* s64, not int: int does not match */
 
-    /* polygonIDs.current, read through the whole word: the field read does not match */
+    /* Kept (#821 r76): `id = sys->polygonIDs.current` swaps r0/r2 at the load (measured on
+       SPLDraw_DirectionalBillboard); only a copy through v matches, a register pin. */
     v = *(u32 *)&sys->polygonIDs << 14;
     id = v >> 26;
     v = mgr->mPolygonAttr | 0xc0;
