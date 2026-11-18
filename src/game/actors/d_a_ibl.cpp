@@ -595,12 +595,11 @@ void daIbl_c::FreeRollBehavior() {
    mDispenser, and mLiveBalls counts it. */
 void daIbl_c::SpawnerBehavior() {
     Vector3 pos;
-    u16 *timer = &mStateTimer;
     daPly_c *pl;
     int r1;
 
-    if (*timer != 0) {
-        *timer = *timer - 1;
+    if (mStateTimer != 0) {
+        mStateTimer--;
         return;
     }
 
@@ -648,8 +647,7 @@ void daIbl_c::SpawnerBehavior() {
         a = (daIbl_c *)dActor_c::Spawn(daIbl_ACTOR_IRONBALL, param1, mPos, &mPrevAngle, cc, -1);
         if (a == 0) return;
         {
-            u8 *cnt = &mLiveBalls;
-            *cnt = *cnt + 1;
+            mLiveBalls++;
         }
         a->mDispenser = this;
     }
