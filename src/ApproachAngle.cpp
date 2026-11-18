@@ -51,8 +51,7 @@ void UpdateAngle(short &angle, short target, int divisor, short maxStep) {
 }
 #endif
 
-int ApproachLinear2(unsigned char &value, int target, int step)
-{
+int ApproachLinear2(unsigned char &value, int target, int step) {
     int cur;
     int ip;
     if (step != 0) {
