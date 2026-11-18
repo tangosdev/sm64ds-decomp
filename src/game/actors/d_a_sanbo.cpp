@@ -383,15 +383,21 @@ int daSanbo_c::EnterInMouth() {
     return 1;
 }
 
-int daSanbo_c::UpdateInMouth() {
-    int flags = mFlags;
-    int held = (flags & 0x20000) ? 1 : 0;
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
 
-    if (held == 0) {
-        held = (flags & 0x40000) ? 1 : 0;
-        if (held == 0)
-            PoofAndDestroy();
-    }
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
+int daSanbo_c::UpdateInMouth() {
+    if (!IsBeingEaten(this) && !IsInYoshiMouth(this))
+        PoofAndDestroy();
     return 1;
 }
 
@@ -451,9 +457,7 @@ int daSanbo_c::EnterMegaKill() {
 }
 
 int daSanbo_c::UpdateMegaKill() {
-    int head = (actorID == SANBO_HEAD) ? 1 : 0;
-
-    if (head != 0)
+    if (IsActorID(this, SANBO_HEAD))
         mAngle.x = (mAngle.x - 0x1000);
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
