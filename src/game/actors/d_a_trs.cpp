@@ -182,8 +182,8 @@ enum TrsActorID {
     TRS_ID_END_OF        = 0x187
 };
 
-/* mBooFlags' bits as masks, for the sites that matched as a read-modify-write
-   of the whole halfword (see BooFlags16 in daTrs_c.h for what each bit does). */
+/* mBooFlags' bits as masks on mTrsFlags, the same halfword, for the sites that
+   read-modify-write it whole (see BooFlags16 in daTrs_c.h for what each bit does). */
 enum TrsFlag {
     TRS_FLAG_LIMIT_Z               = 0x1,
     TRS_FLAG_CARRYING              = 0x2,
@@ -461,8 +461,7 @@ void daTrs_c::func_ov063_02116a1c() {
             return;
         }
         if (this->mBooFlags.canAppear) {
-            unsigned short *fp = (unsigned short *)&this->mBooFlags;
-            *fp |= TRS_FLAG_VISIBLE;
+            this->mTrsFlags |= TRS_FLAG_VISIBLE;
             this->mOpacity = 0xb4;
             scale = this->mClsnScale;
             this->mScale.x = scale;
@@ -510,10 +509,9 @@ void daTrs_c::func_ov063_02116bf0() {
    while fewer than two are alive, five at most. */
 void daTrs_c::func_ov063_02116bf4() {
 
-    unsigned short *ip = (unsigned short *)&this->mBooFlags;
     unsigned char st;
 
-    *ip = (unsigned short)(*ip & ~TRS_FLAG_VISIBLE);
+    this->mTrsFlags &= ~TRS_FLAG_VISIBLE;
     this->mdCcAcPos_c.flags = this->mdCcAcPos_c.flags | 1;
     func_ov063_02119c18(TRS_ID_MERRYGOROUND);
 
@@ -974,10 +972,7 @@ void daTrs_c::func_ov063_02117b0c() {
         Sound::StopLoadedMusic_Layer3();
         Sound::ChangeMusicVolume(0x7f, 0x7222);
         func_02011cfc();
-        {
-            u16 *fl = (u16 *)&this->mBooFlags;
-            *fl = (u16)(*fl & ~TRS_FLAG_CAM_HELD);
-        }
+        this->mTrsFlags &= ~TRS_FLAG_CAM_HELD;
         {
             gCamera->mFlags &= ~8;
         }
@@ -1453,23 +1448,20 @@ special:
 void daTrs_c::func_ov063_02118cd8() {
 
     if (this->mStateTimer == 0) {
-        unsigned int v = *(unsigned short *)&this->mBooFlags;
-        if ((v << 25 >> 31) == 0) {
+        if (!this->mBooFlags.hitByParam3Player) {
             this->mHitPoints--;
         }
     }
     if (this->mHitPoints == 0) {
-        unsigned short *p;
         if (UpdateDuringDeath() == 0)
             return;
         this->mdCcAcPos_c.flags |= 1;
-        p = (unsigned short *)&this->mBooFlags;
-        *p &= ~TRS_FLAG_VISIBLE;
+        this->mTrsFlags &= ~TRS_FLAG_VISIBLE;
         this->mState = 4;
         this->mPrevAngle.x = 0;
         this->mPrevAngle.y = 0;
         this->mPrevAngle.z = 0;
-        *p |= TRS_FLAG_DEFEATED;
+        this->mTrsFlags |= TRS_FLAG_DEFEATED;
         return;
     }
     if (this->mStateTimer == 0) {
@@ -1742,10 +1734,7 @@ void daTrs_c::func_ov063_0211934c() {
             cap = RespawnIfHasCap();
             if (cap == 0)
                 return;
-            {
-                u16 *p = (u16 *)&((daTrs_c *)cap)->mBooFlags;
-                *p &= ~TRS_FLAG_CARRYING;
-            }
+            ((daTrs_c *)cap)->mTrsFlags &= ~TRS_FLAG_CARRYING;
         }
         return;
     }
@@ -1820,10 +1809,7 @@ void daTrs_c::func_ov063_0211934c() {
             cap2 = RespawnIfHasCap();
             if (cap2 == 0)
                 return;
-            {
-                u16 *p = (u16 *)&((daTrs_c *)cap2)->mBooFlags;
-                *p &= ~TRS_FLAG_CARRYING;
-            }
+            ((daTrs_c *)cap2)->mTrsFlags &= ~TRS_FLAG_CARRYING;
         }
             return;
         }
@@ -1847,8 +1833,7 @@ void daTrs_c::func_ov063_0211934c() {
 
             cap3 = RespawnIfHasCap();
             if (cap3 != 0) {
-                u16 *p = (u16 *)&((daTrs_c *)cap3)->mBooFlags;
-                *p &= ~TRS_FLAG_CARRYING;
+                ((daTrs_c *)cap3)->mTrsFlags &= ~TRS_FLAG_CARRYING;
             }
         }
         return;
@@ -1878,20 +1863,14 @@ void daTrs_c::UpdateDying() {
         this->mAngle.z = src[2];
         daTrs_c *r = (daTrs_c *)RespawnIfHasCap();
         if (r == 0) return;
-        {
-            u16 *p = (u16 *)&r->mBooFlags;
-            *p &= ~TRS_FLAG_CARRYING;
-        }
+        r->mTrsFlags &= ~TRS_FLAG_CARRYING;
     } else {
         this->mState = 5;
         this->mSubState = 0;
         {
             this->mdCcAcPos_c.flags |= 1;
         }
-        {
-            u16* p = (u16*)&this->mBooFlags;
-            *p &= ~TRS_FLAG_VISIBLE;
-        }
+        this->mTrsFlags &= ~TRS_FLAG_VISIBLE;
     }
 }
 
@@ -1920,11 +1899,9 @@ void daTrs_c::func_ov063_02119894() {
 }
 
 
-#define M(p) (p)
 void daTrs_c::UpdateChase() {
 
-    unsigned short *p = (unsigned short *)M(&this->mBooFlags);
-    *p &= ~TRS_FLAG_HIT_BY_PARAM3_PLAYER;
+    this->mTrsFlags &= ~TRS_FLAG_HIT_BY_PARAM3_PLAYER;
     if (this->mStateTimer == 0) {
         int r0 = RandomIntInternal(&data_0209e650.value);
         this->mSpeedJitter = (((unsigned)r0 >> 16) & 0xfff) * 5;
@@ -2185,8 +2162,7 @@ int daTrs_c::GetAttackStatus() {
                 {
                     if (IsPlayerActor((dActor_c *)found)) {
                         if (((dActor_c *)found)->param1 == 3) {
-                            u16 *p = (u16 *)&this->mBooFlags;
-                            *p |= TRS_FLAG_HIT_BY_PARAM3_PLAYER;
+                            this->mTrsFlags |= TRS_FLAG_HIT_BY_PARAM3_PLAYER;
                         }
                     }
                 }
@@ -2654,7 +2630,6 @@ int daTrs_c::Behavior()
     char *q;
     Vector3_16 *prev;
     s32 *p19c;
-    u16 *fp;
     u8 *bp;
     s32 y;
     s32 w;
@@ -2699,16 +2674,14 @@ int daTrs_c::Behavior()
                     }
                     p = RespawnIfHasCap();
                     if (p != 0) {
-                        fp = (u16 *)&((daTrs_c *)p)->mBooFlags;
-                        *fp = (*fp) & (~TRS_FLAG_CARRYING);
+                        ((daTrs_c *)p)->mTrsFlags &= ~TRS_FLAG_CARRYING;
                     }
                 }
             } else {
                 mState = 5;
                 mSubState = 0;
                 this->mdCcAcPos_c.flags = this->mdCcAcPos_c.flags | 1;
-                fp = (u16 *)&this->mBooFlags;
-                *fp = (*fp) & (~TRS_FLAG_VISIBLE);
+                this->mTrsFlags &= ~TRS_FLAG_VISIBLE;
             }
         }
         return 1;
@@ -2722,7 +2695,6 @@ int daTrs_c::Behavior()
             if (mBooFlags.defeated == 0) {
                 prev = &mPrevAngle;
                 mPos.x = mHomePos.x;
-                fp = (u16 *)&this->mBooFlags;
                 mPos.y = mHomePos.y;
                 mPos.z = mHomePos.z;
                 mPrevAngle.x = mHomeAngleX;
@@ -2731,7 +2703,7 @@ int daTrs_c::Behavior()
                 mAngle.x = prev->x;
                 mAngle.y = prev->y;
                 mAngle.z = prev->z;
-                *fp = (*fp) | TRS_FLAG_CAN_APPEAR;
+                mTrsFlags |= TRS_FLAG_CAN_APPEAR;
                 mState = 0;
                 mHorzSpeed = 0;
                 mVertAccel = 0;
@@ -2897,8 +2869,7 @@ block_39:
             } else {
             ray_e:
                 if ((rc2.DetectClsn() != 0) && ((mPos.y - rc2.clsnY) < 0x12c000)) {
-                    fp = (u16 *)&this->mBooFlags;
-                    *fp = (*fp) | TRS_FLAG_GROUND_SEEN;
+                    mTrsFlags |= TRS_FLAG_GROUND_SEEN;
                     mLastGroundPos = mPos;
                 }
             }
@@ -2974,11 +2945,7 @@ int daTrs_c::InitResources()
     dActor_c *spawned;
     daPly_c *pp;
 
-    /* Kept (#821 r76): BooFlags16 cleared as its halfword; no block-copy or type lever (r72-r75)
-       applies to this scalar pin. Kept (#821 r80): getter tried -> no read to route through
-       one; `= BooFlags16()`, a `{0}` or `{}` local and a static const zero copy are all
-       0x9ac of 0x9a0. */
-    *(u16 *)&mBooFlags = 0;
+    mTrsFlags = 0;
     mSpawnedActorID = 0;
     cond = 0;
     if (actorID == TRS_ID_BOSS_TERESA) cond = 1;

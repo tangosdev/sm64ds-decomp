@@ -290,8 +290,13 @@ struct daTrs_c : dCapEnemy_c {
     u8  mAttackRepeats;        /* 0x5d2 */
     u8  unk_5d3;               /* 0x5d3 -- zeroed, no reader recovered */
     /* Typed (not a u8 placeholder) so member access compiles to the ROM's
-       add+ldrh instead of a literal-pool address load. */
-    BooFlags16 mBooFlags;      /* 0x5d4 */
+       add+ldrh instead of a literal-pool address load. The code tests and
+       sets single bits through mBooFlags, and clears the halfword or changes
+       it by the TrsFlag masks (d_a_trs.cpp) through mTrsFlags. */
+    union {
+        BooFlags16 mBooFlags; /* 0x5d4 */
+        u16 mTrsFlags;
+    };
     u8  pad_5d6[0x2];
     /* Recycled effect handles (0x95/0x96/0x97/0x98), like daBmb_c's. */
     u32 mParticle0;            /* 0x5d8 */
