@@ -35,7 +35,9 @@ enum d_s_mg_trampoline2_AssetId {
  * spelling of the same body 0x188; for loops with x and y as products of
  * the counters 0x184-0x18c; the layer read once before the loops 0x188.
  * The siblings in d_s_mg_trampoline.cpp and d_s_mg_teresa.cpp keep the
- * same pragma. TUBUILD CONFLICT
+ * same pragma. Kept (#821 r79): y recomputed from the row counter, the
+ * inner loop as a do-while and a row pointer are 0x180/0x180/0x18c.
+ * TUBUILD CONFLICT
  * lines stay; the manifest pairs them.
  *
  * leftovers:
@@ -371,7 +373,9 @@ void dScMgTrampoline2_c::StateIntro() {
            Measured 2026-11-16 (#821 r22): plain s16 locals shrink it
            to 0x198 of 0x1a0; a whole-struct copy `Vec2s prev = mTouch`
            keeps the stack slot but loads it with ldrh, not ldrsh
-           (10/104). */
+           (10/104). Kept (#821 r79): memberwise Vec2s prev, an s16 prev[2]
+           array, int locals and `prev = mTouch` assigned after declaration
+           are 0x198. */
         volatile s16 old9c = mTouch.x;
         volatile s16 old9e = mTouch.y;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);
@@ -827,6 +831,13 @@ int dScMgTrampoline2_c::OnGraphCallback3() {
     return dScMgD3DBase_c::OnGraphCallback3() != 0;
 }
 
+/* A stylus point's x. Read through this accessor, OnGraphCallback0
+   loads mTouchStart.x again for the line it creates, as the cartridge
+   does, after the edge test has already read it. */
+static inline s16 PointX(const Vec2s *point) {
+    return point->x;
+}
+
 /* OnGraphCallback0: the vtable slot is this class's own; the name is inferred. */
 int dScMgTrampoline2_c::OnGraphCallback0() {
 
@@ -848,17 +859,7 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
-        /* Kept volatile: the ROM reloads mTouchStart.x for the Create copy
-           after the edge test. dScMgTrampoline_c's twin gets that reload from
-           `from = mTouchStart; to = mTouch;` (struct copies, lowered after
-           CSE), but here buf[0] carries the fill value and only an
-           address-taken array reproduces its strh/ldrh spill. Measured
-           2026-11-16 against 0x1a0: a plain `a` read gives 0x19c (r1 forwarded
-           into buf[1]); Vec2s struct copies with a separate u16 fill, u16
-           fill[1] or Vec2s line[2] give 0x198 (the fill folds to a register,
-           frame 0x10 -> 0x8). The twin's `volatile u16 fill` would match but
-           only moves the volatile. */
-        s16 a = *(volatile s16 *)&mTouchStart.x;
+        s16 a = PointX(&mTouchStart);
         if ((a < 0x18 && mTouch.x < 0x18) || (a > 0xe8 && mTouch.x > 0xe8)) {
             func_02012790(0xe);
         } else {

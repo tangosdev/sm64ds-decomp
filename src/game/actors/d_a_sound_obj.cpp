@@ -49,6 +49,8 @@
    motion on they are hoisted into callee-saved registers: 0x15c, not
    0x14c. Re-measured (#821 r17): the loop as a goto back-edge is also
    0x15c. */
+/* Kept (#821 r79): a do-while with the combined test, continue on actor == this, and
+   gSubSoundID re-read in the PlaySub call are 0x160, 0x15c and 0x150 against 0x14c. */
 #pragma opt_loop_invariants off
 
 /* One row of the 0xc-stride sound table: the four members InitResources

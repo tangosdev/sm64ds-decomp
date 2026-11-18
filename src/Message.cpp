@@ -312,6 +312,8 @@ void Message::DisplayOptionsMenuText(s16 n) {
  * (0x1e0 against 0x20c). Reading the count back from data_0209d6b0 for the second
  * copy forces the reload but not the same schedule (0x210). */
 #pragma push
+/* Kept (#821 r79): a for loop with (n + 7) / 8 recomputed in the bound and both seeds, and a
+   static inline TextCells(n) helper, are 0x1f4 and 0x1e0 against 0x20c. */
 #pragma opt_common_subs off
 void LoadControllerModeText(int param0) {
     int n, m, i;

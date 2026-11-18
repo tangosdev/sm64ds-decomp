@@ -558,6 +558,8 @@ int daKing_Donketu_c::UpdateDefeat() {
     dActor_c* found;
     /* Kept (#821 r60): Vector3s keeps the stores but loads ldrsh, not
        ldrh (5 words); a plain Vector3_16 drops them (0x15c). */
+    /* Kept (#821 r79): Vector3_16 rot copy-initialised or assigned from mAngle, directly or
+       through a pointer, is 0x15c; the stores are dropped. */
     volatile struct Vector3_16 rot;
     struct Vector3 pos;
     cam = gCamera;

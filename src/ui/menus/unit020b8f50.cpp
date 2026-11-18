@@ -1478,6 +1478,8 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
            direct SCENE->/WORK->/SPRITES-> spellings with or without scene and
            sprite locals, and the sprite reads first all schedule the work
            chain ahead of the scene: 16 to 20 of 120 words wrong. */
+        /* Kept (#821 r79): inline GetScene()/GetWork() accessors, for both reads, either one,
+           or as initialisers, are 16 to 20 words off. */
         c = *((Ov007PickerScene *volatile *)&data_ov007_02104ba0);
         g = *((Ov007Work *volatile *)&data_ov007_0210342c);
         flag = c->awaitingTap;

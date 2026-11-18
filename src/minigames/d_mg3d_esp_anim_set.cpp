@@ -918,6 +918,8 @@ extern const unsigned char sEsp3DCardsPerDifficulty[4] = {2, 3, 4, 5};
 /* Kept volatile (r63): the ROM reloads the layout pointer for mY after the
    mX store. Typed as a plain int table or as a `[const] unsigned short
    *[const]` pointer table, it is hoisted out of the deal loop (0x1b4 of 0x1bc). */
+/* Kept (#821 r79): an inline CardLayout(n) at both reads or the mY read only, and an inline
+   CardLayoutWord(n, k), are 0x1b4. */
 extern int volatile data_ov006_0213c818[];
 
 void dScMg3DEsp_c::DealCards() {

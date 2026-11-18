@@ -1509,7 +1509,7 @@ matched: yes</title></rect><rect x="275.18" y="135.93" width="3.25" height="7.43
 module: arm9
 addr: 0x02012bbc
 size: 36 bytes
-matched: yes</title></rect><rect x="278.44" y="135.93" width="29.98" height="7.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound7PlaySubEjjjib
+matched: yes</title></rect><rect x="278.44" y="135.93" width="29.98" height="7.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound7PlaySubEjjjii
 module: arm9
 addr: 0x02012be0
 size: 332 bytes

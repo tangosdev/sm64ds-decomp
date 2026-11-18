@@ -138,14 +138,14 @@ struct N {
     struct N *prev;
     struct N *next;
     int pad8;
-    /* Kept volatile (#821 r21): the ROM reloads n->c on every pass of the
-       insert loop and reads node->c before n->c in the first test. A plain
-       field, the real fLiNdBaPr_c with currentPriority, and four loop shapes
-       (for over next, for (;;) with a break, `node->next` twice, while with
-       an inner break) all hoist the n->c load: 0x88 or 0x94 against 0x8c.
-       r63: `n->c >= next->c`, a `&n->c` local and for(;;) give 0x88; a
-       separate walk pointer (for over next, or prev/node) gives 0x90. */
-    volatile unsigned short c;
+    unsigned short c;
+
+    /* Read through this getter, the insert loop loads n's priority again
+       on every pass, as the cartridge does (#821 r79; it replaced a
+       volatile c). */
+    unsigned short GetPriority() const {
+        return c;
+    }
 };
 struct L {
     struct N *head;
@@ -165,9 +165,9 @@ int Absorb0204405c::L::func_0204405c(void *nodep) {
         return 0;
     if (node == 0)
         return func_0203b244(l, n);
-    if (node->c > n->c)
+    if (node->GetPriority() > n->GetPriority())
         return func_0203b2ec(l, n, 0);
-    while ((next = node->next) != 0 && next->c <= n->c)
+    while ((next = node->next) != 0 && next->GetPriority() <= n->GetPriority())
         node = next;
     return func_0203b2ec(l, n, node);
 }

@@ -6,15 +6,13 @@
 /* Advances the draw limit along the committed strokes' progress
  * thresholds to progress x: 0 inside a stroke, 1 when it steps on to the
  * next stroke, 2 once it passes the last stroke. */
-/* opt_common_subs stays off: the cartridge re-reads the stroke's threshold on
-   each pass of the advance loop, and CSE hoists it (0xf0 against 0xf8).
-   Re-measured (#821 r17): `++`, `= limitIndex + 1` and `j = ++limitIndex`
-   for the step, and the loop as a while on the threshold test, are all
-   0xf0 (0xf4 with j assigned in the condition); the progressThresholds
-   pointer stays cached in a register across the loop. Round 66: reading
-   obj->progressThresholds[j] again after the loop is 0xf4; re-reading j, an
-   &thresholds[j] pointer and the denominator first are 0xf0. */
-#pragma opt_common_subs off
+/* The stroke's progress threshold at point k. Read through this accessor,
+   the advance loop re-reads the threshold on each pass as the cartridge
+   does; that took the place of opt_common_subs off (#821 r79). */
+static inline int GetProgressThreshold(const Ov007StrokePath *path, int k) {
+    return path->progressThresholds[k];
+}
+
 int Ov007Picker::func_ov007_020c5014(int x) {
     Ov007StrokePath *obj;
     int i;
@@ -26,7 +24,7 @@ int Ov007Picker::func_ov007_020c5014(int x) {
     if (i < groupCount) {
         obj = groups[i];
         j = limitIndex;
-        if (x >= obj->progressThresholds[j]) {
+        if (x >= GetProgressThreshold(obj, j)) {
             for (;;) {
                 limitIndex += 1;
                 j = limitIndex;
@@ -43,7 +41,7 @@ int Ov007Picker::func_ov007_020c5014(int x) {
                     limitIndex = 0;
                     return 1;
                 }
-                if (x < obj->progressThresholds[j])
+                if (x < GetProgressThreshold(obj, j))
                     break;
             }
         }

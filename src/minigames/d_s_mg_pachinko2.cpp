@@ -1590,6 +1590,8 @@ void dScMgPachinko2_c::ClearAimLine() {
  * order and the row and column take other registers (10 of 32 words).
  * Plain (x - 1 + j, y - 1 + i) bodies with it on are 31 words: the ROM
  * spills the shared 0 for j to the stack (measured #821). */
+/* Kept (#821 r79): x, lo, hi and col recomputed in the inner loop, do-while loops and an x
+   counter are 10, 10 and 34 words off of 32. */
 #pragma opt_loop_invariants off
 void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
     int i, j, x, lo, hi, col, row, yb, s;
@@ -1869,6 +1871,8 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
         int dist;
         int sq;
         int prev;
+        /* Kept (#821 r79): inline TouchX/TouchY(slot) accessors returning int or u8, at both
+           sites or either alone, are 16 words off. */
         int tx = ((volatile u8 *)&gTouchInfo->x)[idx * 4];
         int ty = ((u8 *)&gTouchInfo->y)[idx * 4];
 
