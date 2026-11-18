@@ -343,10 +343,7 @@ void dScMgPanel_c::Banner_StateSettle() {
     if (mBanner.hold < 8)
         return;
     mBanner.hold = 0;
-    {
-        int *q = &mBanner.y;
-        *q = *q + 0x4000;
-    }
+    mBanner.y += 0x4000;
     mBanner.state = 2;
 }
 
@@ -356,10 +353,7 @@ void dScMgPanel_c::Banner_StatePopUp() {
     if (mBanner.hold < 4)
         return;
     mBanner.hold = 0;
-    {
-        int *w = &mBanner.y;
-        *w = *w - 0x4000;
-    }
+    mBanner.y -= 0x4000;
     mBanner.state = 1;
 }
 
