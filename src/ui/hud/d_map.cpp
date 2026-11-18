@@ -647,7 +647,8 @@ L360:
     if (gMapIntroRotating == 0)
         goto L3e0;
     /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever (r72-r75) applies to
-       this scalar pin. */
+       this scalar pin.
+       Kept (#821 r80): getter tried -> a u16 angle accessor in the step is 0xcf8 of 0xcfc. */
     *(s16 *)&this->mAngle += 0x40; // measured (#821 r68): the plain u16 `+=` loads ldrh, ROM ldrsh
     if (this->mAngle >= 0x8000)
         gMapIntroRotating = 0;
