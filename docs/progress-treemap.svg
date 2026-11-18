@@ -8409,7 +8409,7 @@ matched: yes</title></rect><rect x="163.37" y="676.26" width="8.08" height="8.30
 module: arm9
 addr: 0x02050b4c
 size: 100 bytes
-matched: yes</title></rect><rect x="171.45" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj
+matched: yes</title></rect><rect x="171.45" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEi
 module: arm9
 addr: 0x02050bb0
 size: 100 bytes
@@ -8417,7 +8417,7 @@ matched: yes</title></rect><rect x="179.53" y="676.26" width="8.08" height="8.30
 module: arm9
 addr: 0x02050c14
 size: 100 bytes
-matched: yes</title></rect><rect x="187.61" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound17InfoSequenceEntry9GetWithIDEj
+matched: yes</title></rect><rect x="187.61" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound17InfoSequenceEntry9GetWithIDEi
 module: arm9
 addr: 0x02050c78
 size: 100 bytes
