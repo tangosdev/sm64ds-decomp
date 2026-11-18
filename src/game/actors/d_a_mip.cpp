@@ -653,6 +653,7 @@ int daMip_c::StateFleeMain() {
     pl = ClosestPlayer();
     if (pl != 0) {
         /* A POD copy-init is the ROM's ldm/stm; any Vector3 copy is memberwise. */
+        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 v = *(VecFx32 *)&pl->mPos;
         if (Vec3_Dist(&mPos, (const Vector3 *)&v) > 0x4b0000) {
             SetState(&data_ov085_0213069c);
