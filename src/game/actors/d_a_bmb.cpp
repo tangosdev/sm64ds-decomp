@@ -825,14 +825,12 @@ void daBmb_c::UpdateShadow() {
 extern "C" {
 
 void daBmb_c::func_ov102_0214b3f0(int a1) {
-    unsigned int v = mState - 3;
-    if (v <= 1u) return;
-    unsigned short h = mFuse;
-    if (h > 4u) goto do_call;
-    if (h != 0u) return;
-do_call:
-    mCarrier = (daPly_c *)a1;
-    func_ov102_0214bd20();
+    if (mState == 3 || mState == 4)
+        return;
+    if (mFuse > 4 || mFuse == 0) {
+        mCarrier = (daPly_c *)a1;
+        func_ov102_0214bd20();
+    }
 }
 }
 
@@ -1087,79 +1085,63 @@ int daBmb_c::func_ov102_0214ab1c() {
     daPly_c *player;
 
     int eatState = UpdateYoshiEat(mWithMeshClsn);
-    if (eatState == 0) {
-        goto ret0;
-    }
+    if (eatState != 0) {
+        mFlags &= ~0x10000000u;
 
-    mFlags &= ~0x10000000u;
+        player = mEatingPlayer;
+        if (player != 0) {
+            if (player->IsInsideOfCannon() == 0 && player->IsBeingShotOutOfCannon() == 0) {
+                if (UpdateFuse() == 0) {
+                    mFlags &= ~0xe0000u;
+                    mEatenByYoshi = 0;
+                    return 1;
+                }
+            } else {
+                func_ov102_0214b384(3);
+            }
+        }
 
-    player = mEatingPlayer;
-    if (player != 0) {
-        if (player->IsInsideOfCannon() != 0) {
-            goto shocked;
+        if (mVariant == 2) {
+            mVariant = 3;
+            mState = 0;
+            mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
+            mTurnTimer = 512;
+            mVertAccel = -0x2000;
+            mdCc_c.flags &= ~2u;
         }
-        if (player->IsBeingShotOutOfCannon() != 0) {
-            goto shocked;
+
+        if (eatState == 2) {
+            func_ov102_0214b384(0x50);
         }
-        if (UpdateFuse() == 0) {
-            mFlags &= ~0xe0000u;
+
+        if (eatState == 3) {
+            if (mWithMeshClsn.IsOnGround() != 0) {
+                unk_3f4 = 3;
+            }
+        }
+
+        if (mEatenByYoshi != 0) {
+            if (mSpitOutTimer == 5) {
+                mdCc_c.flags &= ~0x8000u;
+            }
+        }
+
+        if (SpawnParticlesIfHitOtherObj(mdCc_c) != 0 ||
+            (eatState == 3 && mWithMeshClsn.IsOnGround() != 0)) {
+            func_ov102_0214b384(4);
             mEatenByYoshi = 0;
             return 1;
         }
-        goto after_cannon;
-    shocked:
-        func_ov102_0214b384(3);
-    }
-after_cannon:
 
-    if (mVariant == 2) {
-        mVariant = 3;
-        mState = 0;
-        mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
-        mTurnTimer = 512;
-        mVertAccel = -0x2000;
-        mdCc_c.flags &= ~2u;
-    }
-
-    if (eatState == 2) {
-        func_ov102_0214b384(0x50);
-    }
-
-    if (eatState == 3) {
-        if (mWithMeshClsn.IsOnGround() != 0) {
-            unk_3f4 = 3;
+        mdCc_c.Clear();
+        if (mEatenByYoshi != 0) {
+            if (mSpitOutTimer == 0) {
+                mdCc_c.dCc_c::Update();
+            }
         }
+        func_ov102_0214b53c();
+        return 1;
     }
-
-    if (mEatenByYoshi != 0) {
-        if (mSpitOutTimer == 5) {
-            mdCc_c.flags &= ~0x8000u;
-        }
-    }
-
-    if (SpawnParticlesIfHitOtherObj(mdCc_c) != 0) {
-        goto hit;
-    }
-    if (eatState != 3 || mWithMeshClsn.IsOnGround() == 0) {
-        goto skip_hit;
-    }
-
-hit:
-    func_ov102_0214b384(4);
-    mEatenByYoshi = 0;
-    return 1;
-
-skip_hit:
-    mdCc_c.Clear();
-    if (mEatenByYoshi != 0) {
-        if (mSpitOutTimer == 0) {
-            mdCc_c.dCc_c::Update();
-        }
-    }
-    func_ov102_0214b53c();
-    return 1;
-
-ret0:
     return 0;
 }
 
