@@ -322,18 +322,18 @@ void daPiano_c::StateAttack() {
 /* Sync the model matrix from the facing and position (eighths). */
 void daPiano_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Refresh the collision matrix from the model matrix and position, then
  * refit the mesh collider to it. */
 void daPiano_c::UpdateClsnMatrix() {
     mClsnMat = mAnmModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
@@ -353,9 +353,9 @@ void daPiano_c::UpdateShadows() {
     MTX_MultVec43(&in, &data_020a0e68, &out);
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[2], mAngle.y);
-    mShadowMats[2].m[9] = out.x >> 3;
-    mShadowMats[2].m[10] = mPos.y >> 3;
-    mShadowMats[2].m[11] = out.z >> 3;
+    mShadowMats[2].t.x = out.x >> 3;
+    mShadowMats[2].t.y = mPos.y >> 3;
+    mShadowMats[2].t.z = out.z >> 3;
 
     out.x = 0;
     out.y = 0;
@@ -367,9 +367,9 @@ void daPiano_c::UpdateShadows() {
     MTX_MultVec43(&in, &data_020a0e68, &out);
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[0], mAngle.y);
-    mShadowMats[0].m[9] = out.x >> 3;
-    mShadowMats[0].m[10] = mPos.y >> 3;
-    mShadowMats[0].m[11] = out.z >> 3;
+    mShadowMats[0].t.x = out.x >> 3;
+    mShadowMats[0].t.y = mPos.y >> 3;
+    mShadowMats[0].t.z = out.z >> 3;
 
     out.x = 0;
     out.y = 0;
@@ -381,9 +381,9 @@ void daPiano_c::UpdateShadows() {
     MTX_MultVec43(&in, &data_020a0e68, &out);
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[1], mAngle.y);
-    mShadowMats[1].m[9] = out.x >> 3;
-    mShadowMats[1].m[10] = mPos.y >> 3;
-    mShadowMats[1].m[11] = out.z >> 3;
+    mShadowMats[1].t.x = out.x >> 3;
+    mShadowMats[1].t.y = mPos.y >> 3;
+    mShadowMats[1].t.z = out.z >> 3;
 
     DropShadowRadHeight(mShadowModel3, mShadowMats[2], 0xf0000, 0x50000, 0xf);
     DropShadowScaleXYZ(mShadowModel1, mShadowMats[0], 0xa0000, 0x50000, 0x110000, 0xf);

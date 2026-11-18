@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-struct Matrix4x3;
+union Matrix4x3;
 
 /* The quaternion Matrix3x3_FromQuaternion and Matrix4x3_FromQuaternion take:
  * four fx32 in x, y, z, w order, as the two matrix builders read them. */
@@ -23,7 +23,7 @@ void Quaternion_FromVector3(void *, Vector3 *, Vector3 *);
 void Quaternion_Normalize(int *);
 void Quaternion_SLerp(int *, int *, int, int *);
 void Quaternion_Multiply(void *, void *, void *);
-void Matrix4x3_FromQuaternion(const struct Quaternion *, struct Matrix4x3 *);
+void Matrix4x3_FromQuaternion(const struct Quaternion *, union Matrix4x3 *);
 
 #ifdef __cplusplus
 }

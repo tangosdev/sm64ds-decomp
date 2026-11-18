@@ -723,10 +723,9 @@ void daObjMarioCap_c::UpdateMatrix()
             }
         }
         Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-        /* m[9..11] is the translation row. */
-        mShadowMat.m[9] = mPos.x >> 3;
-        mShadowMat.m[10] = (y + (off << 12)) >> 3;
-        mShadowMat.m[11] = mPos.z >> 3;
+        mShadowMat.t.x = mPos.x >> 3;
+        mShadowMat.t.y = (y + (off << 12)) >> 3;
+        mShadowMat.t.z = mPos.z >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, 0x32000, 0xf);
     }
 }

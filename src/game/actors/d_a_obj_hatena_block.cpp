@@ -566,9 +566,9 @@ int daObjHatenaBlock_c::CleanupResources()
    SAVE_FLAGS1_BIT31 clear then copies the matrix into mAnmModel as well. */
 void daObjHatenaBlock_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = (mPos.y + mBounceYOffs) >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = (mPos.y + mBounceYOffs) >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     if (data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)
         return;
     int b = (int)(actorID == ACTOR_HATENA_BLOCK);
@@ -610,9 +610,9 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     mClipRadius = (int)(paddedHeight + ((unsigned)paddedHeight >> 31)) >> 4;
     shadowScale = FX_MUL(shadowScale, mScale.x);
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = (mPos.y - 0x20000) >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = (mPos.y - 0x20000) >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, shadowScale, height + 0x14000, shadowScale, 0xf);
 }
 
@@ -621,9 +621,9 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
    shifted), and heading mAngle.y. */
 void daObjHatenaBlock_c::UpdateMeshCollider() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y + mBounceYOffs;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y + mBounceYOffs;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 

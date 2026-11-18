@@ -425,9 +425,9 @@ void dPathLiftActor_c::UpdatePathModels()
         }
         if (modelNode < (int)mPath.NumNodes() && modelNode >= 0) {
             mPath.GetNode(node, modelNode);
-            mModels[i].mat4x3.m[9] = node.x >> 3;
-            mModels[i].mat4x3.m[10] = node.y >> 3;
-            mModels[i].mat4x3.m[11] = node.z >> 3;
+            mModels[i].mat4x3.t.x = node.x >> 3;
+            mModels[i].mat4x3.t.y = node.y >> 3;
+            mModels[i].mat4x3.t.z = node.z >> 3;
         }
     }
 }

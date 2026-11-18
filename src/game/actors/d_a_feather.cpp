@@ -206,9 +206,9 @@ void daFeather_c::UpdateModelAndShadow() {
     b = (gGameMode == 1);
     if (b) {
         Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
-        mShadowMtx.m[9] = mPos.x >> 3;
-        mShadowMtx.m[10] = mPos.y >> 3;
-        mShadowMtx.m[11] = mPos.z >> 3;
+        mShadowMtx.t.x = mPos.x >> 3;
+        mShadowMtx.t.y = mPos.y >> 3;
+        mShadowMtx.t.z = mPos.z >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMtx, 0x96000, 0x320000, 0xf);
         return;
     }
@@ -233,9 +233,9 @@ void daFeather_c::UpdateModelAndShadow() {
             r4 = 0xa000;
 
         Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
-        mShadowMtx.m[9] = mPos.x >> 3;
-        mShadowMtx.m[10] = mPos.y >> 3;
-        mShadowMtx.m[11] = mPos.z >> 3;
+        mShadowMtx.t.x = mPos.x >> 3;
+        mShadowMtx.t.y = mPos.y >> 3;
+        mShadowMtx.t.z = mPos.z >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMtx, r4, r5 + 0x28000, 0xf);
     }
 }

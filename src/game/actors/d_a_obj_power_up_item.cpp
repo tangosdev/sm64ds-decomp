@@ -364,7 +364,7 @@ void daObjPowerUpItem_c::DropShadow() {
     if (b != 0)
         return;
     mShadowMat = mOpenModel.mat4x3;
-    mShadowMat.m[10] = mGroundY >> 3;
+    mShadowMat.t.y = mGroundY >> 3;
     r3 = 0x78000;
     if (mState == FLOWER_STATE_LAUNCHED) {
         int d = mPos.y - mGroundY;
@@ -379,9 +379,9 @@ void daObjPowerUpItem_c::DropShadow() {
  * to the position >> 3 and copies it to mCloseModel. */
 void daObjPowerUpItem_c::UpdateMatrices(){
     Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngle.y);
-    mOpenModel.mat4x3.m[9] = mPos.x >> 3;
-    mOpenModel.mat4x3.m[10] = mPos.y >> 3;
-    mOpenModel.mat4x3.m[11] = mPos.z >> 3;
+    mOpenModel.mat4x3.t.x = mPos.x >> 3;
+    mOpenModel.mat4x3.t.y = mPos.y >> 3;
+    mOpenModel.mat4x3.t.z = mPos.z >> 3;
     mCloseModel.mat4x3 = mOpenModel.mat4x3;
 }
 
