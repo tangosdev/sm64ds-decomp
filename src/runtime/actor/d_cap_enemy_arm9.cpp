@@ -21,9 +21,8 @@
  *    plain `& 4` test is a word shorter.
  *    AddCap's mFlags &= ~1 and its mCapId store go through plain `&member`
  *    pointers.
- *  - UpdateCapPos keeps a POD VecFx32 local: Vector3's empty destructor
- *    changes the frame. Its matrix copy goes through Mtx43; a plain
- *    Matrix4x3 assignment is memberwise and 0x1c bytes longer.
+ *  - UpdateCapPos's matrix copy goes through Mtx43; a plain Matrix4x3
+ *    assignment is memberwise and 0x1c bytes longer.
  */
 #include "dCapEnemy_c.h"
 #include "daPly_c.h"
@@ -123,9 +122,9 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     }
     if (mCapId >= 6) return;
 
-    VecFx32 sum, asr;
-    Vec3_Add((Vector3 *)&sum, &mPos, &pos);
-    Vec3_Asr((Vector3 *)&asr, (Vector3 *)&sum, 3);
+    Vector3 sum, asr;
+    Vec3_Add(&sum, &mPos, &pos);
+    Vec3_Asr(&asr, &sum, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, rot.x, rot.y, rot.z);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -137,17 +136,16 @@ void dCapEnemy_c::RenderCapModel(const Vector3 * v)
     mModel.Render(v);
 }
 
-struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
+struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 &v)
 {
-    const struct Vector3 *v = &v_;
     struct dActor_c *ret = 0;
 
     if ((mCapId & 7) < 6) {
         func_02005ed8();
         if (mCapId < 6u) {
-            VecFx32 out;
-            Vec3_Add((Vector3 *)&out, &mPos, v);
-            ret = dActor_c::Spawn(0x10d, 0x1012 | (mCapId << 8), *(const Vector3 *)&out, &mAngle,
+            Vector3 out;
+            Vec3_Add(&out, &mPos, &v);
+            ret = dActor_c::Spawn(0x10d, 0x1012 | (mCapId << 8), out, &mAngle,
                                   mAreaId, -1);
             if (mCapBank != 0) {
                 mCapId |= 8;
@@ -161,15 +159,11 @@ struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
     return ret;
 }
 
-int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
+int dCapEnemy_c::GetCapEatenOffIt(const Vector3 &v)
 {
-    const Vector3 *v = &v_;
-    VecFx32 local;
+    Vector3 local = v;
     dActor_c *p;
-    local.x = v->x;
-    local.y = v->y;
-    local.z = v->z;
-    p = ReleaseCap(*(const Vector3 *)&local);
+    p = ReleaseCap(local);
     if (p != 0 && p != this) {
         unsigned char idx;
         p->mEatingPlayer = mEatingPlayer;
