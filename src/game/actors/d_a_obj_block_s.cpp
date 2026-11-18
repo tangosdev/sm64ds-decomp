@@ -605,6 +605,7 @@ int daObjBlockS_c::func_ov098_02138bfc()
     type = ((dActor_c *)a)->actorID;
     {
         int b;
+        /* Kept (#821 r83): one || or && test -> 0xa8 of 0xe4; switch fallthrough 0xb0; one if-return per type 0xc0. */
         do {
             b = (int)(type == ACTOR_ONIMASU);
             if (b)
