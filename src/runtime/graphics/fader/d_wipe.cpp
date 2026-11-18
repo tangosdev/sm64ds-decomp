@@ -362,7 +362,7 @@ void dWipe_c::BuildStarTable() {
     int a, b;
     s64 d64;
 
-    idx = (data_0209f608 == 0) ? 1 : 0;
+    idx = data_0209f608 == 0;
     buf = (struct WindowEdges *)(data_0209f648 + idx * 0x300);
     fill = 0x80807F7F;
     i = 0;
@@ -461,7 +461,7 @@ void dWipe_c::BuildCircleTable() {
     int j;
     volatile int fill;
 
-    idx = (data_0209f608 == 0) ? 1 : 0;
+    idx = data_0209f608 == 0;
     fill = 0x80807f7f;
     buf = (struct WindowEdges *)(data_0209f648 + idx * 0x300);
 
