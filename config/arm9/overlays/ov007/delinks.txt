@@ -2855,3 +2855,87 @@ src/data/ov007/data_ov007_020cf0cc.c:
 src/data/ov007/data_ov007_020cfdec.c:
     complete
     .rodata.gap25 start:0x020cfdec end:0x020cfe94
+
+src/data/ov007/data_ov007_020d0194.c:
+    complete
+    .rodata.menu start:0x020d0194 end:0x020d020c
+
+src/data/ov007/data_ov007_020d020c.c:
+    complete
+    .rodata.menu start:0x020d020c end:0x020d042c
+
+src/data/ov007/data_ov007_020d042c.c:
+    complete
+    .rodata.menu start:0x020d042c end:0x020d072c
+
+src/data/ov007/data_ov007_020d072c.c:
+    complete
+    .rodata.menu start:0x020d072c end:0x020d147c
+
+src/data/ov007/data_ov007_020d147c.c:
+    complete
+    .rodata.menu start:0x020d147c end:0x020d2b5c
+
+src/data/ov007/data_ov007_020d2b5c.c:
+    complete
+    .rodata.menu start:0x020d2b5c end:0x020d403c
+
+src/data/ov007/data_ov007_020d403c.c:
+    complete
+    .rodata.menu start:0x020d403c end:0x020d7584
+
+src/data/ov007/data_ov007_020d7a24.c:
+    complete
+    .rodata.menu start:0x020d7a24 end:0x020d7a34
+
+src/data/ov007/data_ov007_020d7c28.c:
+    complete
+    .rodata.menu start:0x020d7c28 end:0x020d7c34
+
+src/data/ov007/data_ov007_020d7c34.c:
+    complete
+    .rodata.menu start:0x020d7c34 end:0x020d7c58
+
+src/data/ov007/data_ov007_020d7c6c.c:
+    complete
+    .rodata.menu start:0x020d7c6c end:0x020d7c98
+
+src/data/ov007/data_ov007_020d7c98.c:
+    complete
+    .rodata.menu start:0x020d7c98 end:0x020d7c9c
+
+src/data/ov007/data_ov007_020d7c9c.c:
+    complete
+    .rodata.menu start:0x020d7c9c end:0x020d7cb0
+
+src/data/ov007/data_ov007_020d7cb0.c:
+    complete
+    .rodata.menu start:0x020d7cb0 end:0x020d7cc8
+
+src/data/ov007/data_ov007_020d7cc8.c:
+    complete
+    .rodata.menu start:0x020d7cc8 end:0x020d7cf8
+
+src/data/ov007/data_ov007_020d7cf8.c:
+    complete
+    .rodata.menu start:0x020d7cf8 end:0x020d7d60
+
+src/data/ov007/data_ov007_020d7d60.c:
+    complete
+    .rodata.menu start:0x020d7d60 end:0x020d7d6c
+
+src/data/ov007/data_ov007_020d7d6c.c:
+    complete
+    .rodata.menu start:0x020d7d6c end:0x020d7d7c
+
+src/data/ov007/data_ov007_020d7d7c.c:
+    complete
+    .rodata.menu start:0x020d7d7c end:0x020d7d94
+
+src/data/ov007/data_ov007_020d7d94.c:
+    complete
+    .rodata.menu start:0x020d7d94 end:0x020d7dac
+
+src/data/ov007/data_ov007_020d7dac.c:
+    complete
+    .rodata.menu start:0x020d7dac end:0x020d7db8
