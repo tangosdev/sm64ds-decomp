@@ -952,24 +952,15 @@ s32 daCoin_c::InitResources()
     mWithMeshClsn.StartDetectingWater();
 
     behavior = mBehaviorType;
-    do {
-        if (behavior == 8) {
-            mDisappearTimer = 45;
-            mdCc_c.flags |= 1;
-            break;
-        }
-        if (behavior == 6) {
-            int inMode1;
-            inMode1 = gGameMode;
-            inMode1 = (inMode1 == 1);
-            if (inMode1 == 0) {
-                mDisappearTimer = 0xffffu;
-                mdCc_c.flags |= 1;
-                break;
-            }
-        }
+    if (behavior == 8) {
+        mDisappearTimer = 45;
+        mdCc_c.flags |= 1;
+    } else if (behavior == 6 && !IsVsMode()) {
+        mDisappearTimer = 0xffffu;
+        mdCc_c.flags |= 1;
+    } else {
         mDisappearTimer = 210;
-    } while (0);
+    }
 
     *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~1) | 1;
 
