@@ -50,7 +50,6 @@
  * - func_ov074_0212087c and func_ov074_02121270 take the object as arg1 (out
  *   param in arg0), and func_ov074_0212007c/021201ec/021203e0 are (void)
  *   stubs whose data records don't carry `this`. Those five stay free.
- * - mShadowMatrices is still s32 words reached through Matrix4x3 casts.
  * - State dispatch stays a pointer-to-member on a non-virtual stand-in:
  *   daKuriKing_c has virtuals, so its own member pointers are wider than the
  *   8-byte records the sinit copies in.
@@ -1328,7 +1327,8 @@ int daKuriKing_c::WalkAlongRing() {
 void daKuriKing_c::UpdateShadows() {
     Matrix4x3 mtx;
     int i, height, rad, posY, radius;
-    char *self, *src, *m;
+    char *self, *src;
+    Matrix4x3 *m;
     dExtShadowModel_c *shadow;
 
     if (this->mNoShadow != 0)
@@ -1336,7 +1336,7 @@ void daKuriKing_c::UpdateShadows() {
 
     /* self and src are this shifted by i shadow matrices (0x30) and i
      * mCylClsnPos entries (0xc), read back through the class so each load
-     * keeps the member offset. Words 9..11 are a matrix's translation row.
+     * keeps the member offset.
      * Measured (2004/b56): mShadowMatrices[i] / mCylClsnPos[i] /
      * mShadowModels[i] at every use is 8/87 words off (the matrix copy and
      * the DropShadowRadHeight argument share one this + 0x2ec induction
@@ -1348,7 +1348,7 @@ void daKuriKing_c::UpdateShadows() {
        self as mShadowMatrices[i] grows the body to 0x16c. */
     self = (char *)this;
     src = (char *)this;
-    m = (char *)mShadowMatrices;
+    m = mShadowMatrices;
     shadow = mShadowModels;
     for (i = 0; i < 3; i++) {
         height = this->mPos.y - this->mSpawnPosY;
@@ -1358,18 +1358,18 @@ void daKuriKing_c::UpdateShadows() {
         if (rad < 0xa000)
             rad = 0xa000;
         radius = rad;
-        *(Matrix4x3 *)((daKuriKing_c *)self)->mShadowMatrices[0] = mtx;
-        ((daKuriKing_c *)self)->mShadowMatrices[0][9] =
+        ((daKuriKing_c *)self)->mShadowMatrices[0] = mtx;
+        ((daKuriKing_c *)self)->mShadowMatrices[0].t.x =
             ((daKuriKing_c *)src)->mCylClsnPos[0].x >> 3;
         posY = this->mPos.y;
-        ((daKuriKing_c *)self)->mShadowMatrices[0][10] = posY >> 3;
+        ((daKuriKing_c *)self)->mShadowMatrices[0].t.y = posY >> 3;
         height += 0x28000;
-        ((daKuriKing_c *)self)->mShadowMatrices[0][11] =
+        ((daKuriKing_c *)self)->mShadowMatrices[0].t.z =
             ((daKuriKing_c *)src)->mCylClsnPos[0].z >> 3;
-        DropShadowRadHeight(*shadow, *(Matrix4x3 *)m, radius, height, 0xf);
+        DropShadowRadHeight(*shadow, *m, radius, height, 0xf);
         self += 0x30;
         src += 0xc;
-        m += 0x30;
+        m++;
         shadow++;
     }
 }
@@ -1762,14 +1762,13 @@ int daKuriKing_c::BehaviorVanish() {
     }
 
     /* One drop shadow, through the first shadow matrix. */
-    *(Matrix4x3 *)mShadowMatrices[0] = IDENTITY_MATRIX4X3;
+    mShadowMatrices[0] = IDENTITY_MATRIX4X3;
 
-    mShadowMatrices[0][9] = this->mPos.x >> 3;
-    mShadowMatrices[0][10] = this->mPos.y >> 3;
-    mShadowMatrices[0][11] = this->mPos.z >> 3;
+    mShadowMatrices[0].t.x = this->mPos.x >> 3;
+    mShadowMatrices[0].t.y = this->mPos.y >> 3;
+    mShadowMatrices[0].t.z = this->mPos.z >> 3;
 
-    DropShadowRadHeight(this->mShadowModels[0], *(Matrix4x3 *)mShadowMatrices[0], 0x8c000, 0x3e8000,
-                        0xf);
+    DropShadowRadHeight(this->mShadowModels[0], mShadowMatrices[0], 0x8c000, 0x3e8000, 0xf);
 
     return 1;
 }
