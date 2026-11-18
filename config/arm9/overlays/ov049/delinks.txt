@@ -1,3 +1,87 @@
     .ctor       start:0x021111a0 end:0x021111a0 kind:rodata align:4
     .data       start:0x021111c0 end:0x021114e0 kind:data align:32
     .bss        start:0x021114e0 end:0x021114e0 kind:bss align:32
+src/data/ov049/data_ov049_021111c0.c:
+    complete
+    .data start:0x021111c0 end:0x021111c8
+
+src/data/ov049/data_ov049_021111c8.c:
+    complete
+    .data start:0x021111c8 end:0x021111d0
+
+src/data/ov049/data_ov049_021111d0.c:
+    complete
+    .data start:0x021111d0 end:0x021111d8
+
+src/data/ov049/data_ov049_021111d8.c:
+    complete
+    .data start:0x021111d8 end:0x021111e4
+
+src/data/ov049/data_ov049_021111e4.c:
+    complete
+    .data start:0x021111e4 end:0x021111ec
+
+src/data/ov049/data_ov049_021111ec.c:
+    complete
+    .data start:0x021111ec end:0x021111fc
+
+src/data/ov049/data_ov049_021111fc.c:
+    complete
+    .data start:0x021111fc end:0x02111204
+
+src/data/ov049/data_ov049_02111204.c:
+    complete
+    .data start:0x02111204 end:0x02111210
+
+src/data/ov049/data_ov049_02111210.c:
+    complete
+    .data start:0x02111210 end:0x02111218
+
+src/data/ov049/data_ov049_02111218.c:
+    complete
+    .data start:0x02111218 end:0x02111228
+
+src/data/ov049/data_ov049_02111228.c:
+    complete
+    .data start:0x02111228 end:0x02111238
+
+src/data/ov049/data_ov049_02111238.c:
+    complete
+    .data start:0x02111238 end:0x02111244
+
+src/data/ov049/data_ov049_02111244.c:
+    complete
+    .data start:0x02111244 end:0x02111274
+
+src/data/ov049/data_ov049_02111274.c:
+    complete
+    .data start:0x02111274 end:0x021112b0
+
+src/data/ov049/data_ov049_021112b0.c:
+    complete
+    .data start:0x021112b0 end:0x021112b4
+
+src/data/ov049/data_ov049_021112b4.c:
+    complete
+    .data start:0x021112b4 end:0x02111354
+
+src/data/ov049/data_ov049_02111354.c:
+    complete
+    .data start:0x02111354 end:0x021113ac
+
+src/data/ov049/data_ov049_021113ac.c:
+    complete
+    .data start:0x021113ac end:0x021113b0
+
+src/data/ov049/data_ov049_021113b0.c:
+    complete
+    .data start:0x021113b0 end:0x021113d0
+
+src/data/ov049/data_ov049_021113d0.c:
+    complete
+    .data start:0x021113d0 end:0x02111438
+
+src/data/ov049/data_ov049_02111438.c:
+    complete
+    .data start:0x02111438 end:0x021114e0
+

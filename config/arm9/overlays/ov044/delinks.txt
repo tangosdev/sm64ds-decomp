@@ -10,3 +10,91 @@ src/game/actors/d_a_obj_kb1_billboard.cpp:
     .ctor start:0x02111354 end:0x02111358
     .data start:0x021115bc end:0x02111680
     .bss start:0x02111680 end:0x02111694
+src/data/ov044/data_ov044_02111360.c:
+    complete
+    .data start:0x02111360 end:0x02111364
+
+src/data/ov044/data_ov044_02111364.c:
+    complete
+    .data start:0x02111364 end:0x0211136c
+
+src/data/ov044/data_ov044_0211136c.c:
+    complete
+    .data start:0x0211136c end:0x02111374
+
+src/data/ov044/data_ov044_02111374.c:
+    complete
+    .data start:0x02111374 end:0x0211137c
+
+src/data/ov044/data_ov044_0211137c.c:
+    complete
+    .data start:0x0211137c end:0x02111388
+
+src/data/ov044/data_ov044_02111388.c:
+    complete
+    .data start:0x02111388 end:0x02111398
+
+src/data/ov044/data_ov044_02111398.c:
+    complete
+    .data start:0x02111398 end:0x021113ac
+
+src/data/ov044/data_ov044_021113ac.c:
+    complete
+    .data start:0x021113ac end:0x021113b0
+
+src/data/ov044/data_ov044_021113b0.c:
+    complete
+    .data start:0x021113b0 end:0x021113cc
+
+src/data/ov044/data_ov044_021113cc.c:
+    complete
+    .data start:0x021113cc end:0x021113d0
+
+src/data/ov044/data_ov044_021113d0.c:
+    complete
+    .data start:0x021113d0 end:0x021113ec
+
+src/data/ov044/data_ov044_021113ec.c:
+    complete
+    .data start:0x021113ec end:0x0211142c
+
+src/data/ov044/data_ov044_0211142c.c:
+    complete
+    .data start:0x0211142c end:0x02111438
+
+src/data/ov044/data_ov044_02111438.c:
+    complete
+    .data start:0x02111438 end:0x0211150c
+
+src/data/ov044/data_ov044_0211150c.c:
+    complete
+    .data start:0x0211150c end:0x02111520
+
+src/data/ov044/data_ov044_02111520.c:
+    complete
+    .data start:0x02111520 end:0x0211153c
+
+src/data/ov044/data_ov044_0211153c.c:
+    complete
+    .data start:0x0211153c end:0x02111548
+
+src/data/ov044/data_ov044_02111548.c:
+    complete
+    .data start:0x02111548 end:0x0211155c
+
+src/data/ov044/data_ov044_0211155c.c:
+    complete
+    .data start:0x0211155c end:0x02111560
+
+src/data/ov044/data_ov044_02111560.c:
+    complete
+    .data start:0x02111560 end:0x0211159c
+
+src/data/ov044/data_ov044_0211159c.c:
+    complete
+    .data start:0x0211159c end:0x021115bc
+
+src/data/ov044/data_ov044_02111694.c:
+    complete
+    .bss start:0x02111694 end:0x021116a0
+

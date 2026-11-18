@@ -1,0 +1,15 @@
+/* ov047 data_ov047_02111cd4 at 0x02111cd4 (data, 128 bytes): cartridge data. */
+#include "types.h"
+
+#pragma define_section dc8_section ".data" ".data" ".data" far_data
+#pragma section dc8_section begin
+u32 data_ov047_02111cd4[32] = {
+    0x53504c43, 0x000c0008, 0x00048fc0, 0x000000ff, 0x0004afc0, 0x000000ff,
+    0x00049fc0, 0x000000ff, 0x005c8fc0, 0x00000001, 0x01048fc0, 0x000000ff,
+    0x00248fc0, 0x000000ff, 0x01048fcc, 0x000000ff, 0x0104afcc, 0x000000ff,
+    0x0004afc4, 0x000000ff, 0x0004afc5, 0x000000ff, 0x00048fc4, 0x000000ff,
+    0x00048fc5, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+    0xffffffff, 0xffffffff,
+};
+
+#pragma section dc8_section end

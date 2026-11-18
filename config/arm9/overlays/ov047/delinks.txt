@@ -48,3 +48,239 @@ src/game/actors/d_a_obj_km3_dorifu.cpp:
     .data.km3DorifuMidClps start:0x02111bb4 end:0x02111bd4
     .data start:0x02112508 end:0x02112530
     .bss start:0x02112658 end:0x02112720
+src/data/ov047/data_ov047_021119e0.c:
+    complete
+    .data_pre start:0x021119e0 end:0x021119e8
+
+src/data/ov047/data_ov047_021119e8.c:
+    complete
+    .data_pre start:0x021119e8 end:0x021119f0
+
+src/data/ov047/data_ov047_021119f0.c:
+    complete
+    .data_pre start:0x021119f0 end:0x021119fc
+
+src/data/ov047/data_ov047_021119fc.c:
+    complete
+    .data_pre start:0x021119fc end:0x02111a08
+
+src/data/ov047/data_ov047_02111a08.c:
+    complete
+    .data_pre start:0x02111a08 end:0x02111a14
+
+src/data/ov047/data_ov047_02111a14.c:
+    complete
+    .data_pre start:0x02111a14 end:0x02111a20
+
+src/data/ov047/data_ov047_02111a20.c:
+    complete
+    .data_pre start:0x02111a20 end:0x02111a30
+
+src/data/ov047/data_ov047_02111a30.c:
+    complete
+    .data_pre start:0x02111a30 end:0x02111a40
+
+src/data/ov047/data_ov047_02111a40.c:
+    complete
+    .data_pre start:0x02111a40 end:0x02111a4c
+
+src/data/ov047/data_ov047_02111a4c.c:
+    complete
+    .data_pre start:0x02111a4c end:0x02111a58
+
+src/data/ov047/data_ov047_02111a58.c:
+    complete
+    .data_pre start:0x02111a58 end:0x02111a74
+
+src/data/ov047/data_ov047_02111ad4.c:
+    complete
+    .data.before_km3_axle_clps start:0x02111ad4 end:0x02111af4
+
+src/data/ov047/data_ov047_02111af4.c:
+    complete
+    .data.before_km3_axle_clps start:0x02111af4 end:0x02111b14
+
+src/data/ov047/data_ov047_02111b14.c:
+    complete
+    .data.before_km3_axle_clps start:0x02111b14 end:0x02111b34
+
+src/data/ov047/data_ov047_02111b34.c:
+    complete
+    .data.before_km3_axle_clps start:0x02111b34 end:0x02111b44
+
+src/data/ov047/data_ov047_02111b44.c:
+    complete
+    .data.before_km3_axle_clps start:0x02111b44 end:0x02111b54
+
+src/data/ov047/data_ov047_02111b64.c:
+    complete
+    .data_mid start:0x02111b64 end:0x02111b68
+
+src/data/ov047/data_ov047_02111b68.c:
+    complete
+    .data_mid start:0x02111b68 end:0x02111b6c
+
+src/data/ov047/data_ov047_02111b6c.c:
+    complete
+    .data_mid start:0x02111b6c end:0x02111b74
+
+src/data/ov047/data_ov047_02111b74.c:
+    complete
+    .data_mid start:0x02111b74 end:0x02111b88
+
+src/data/ov047/data_ov047_02111b88.c:
+    complete
+    .data_mid start:0x02111b88 end:0x02111b94
+
+src/data/ov047/data_ov047_02111b94.c:
+    complete
+    .data_mid start:0x02111b94 end:0x02111bb4
+
+src/data/ov047/data_ov047_02111bd4.c:
+    complete
+    .data.w11bd4 start:0x02111bd4 end:0x02111be0
+
+src/data/ov047/data_ov047_02111be0.c:
+    complete
+    .data.w11bd4 start:0x02111be0 end:0x02111bf4
+
+src/data/ov047/data_ov047_02111c14.c:
+    complete
+    .data start:0x02111c14 end:0x02111c20
+
+src/data/ov047/data_ov047_02111c20.c:
+    complete
+    .data start:0x02111c20 end:0x02111c4c
+
+src/data/ov047/data_ov047_02111c4c.c:
+    complete
+    .data start:0x02111c4c end:0x02111c54
+
+src/data/ov047/data_ov047_02111c54.c:
+    complete
+    .data start:0x02111c54 end:0x02111c84
+
+src/data/ov047/data_ov047_02111c84.c:
+    complete
+    .data start:0x02111c84 end:0x02111cc8
+
+src/data/ov047/data_ov047_02111cc8.c:
+    complete
+    .data start:0x02111cc8 end:0x02111cd4
+
+src/data/ov047/data_ov047_02111cd4.c:
+    complete
+    .data start:0x02111cd4 end:0x02111d54
+
+src/data/ov047/data_ov047_02111d54.c:
+    complete
+    .data start:0x02111d54 end:0x02111ecc
+
+src/data/ov047/data_ov047_02111ecc.c:
+    complete
+    .data start:0x02111ecc end:0x02111fc0
+
+src/data/ov047/data_ov047_02111fc0.c:
+    complete
+    .data start:0x02111fc0 end:0x0211208c
+
+src/data/ov047/data_ov047_0211208c.c:
+    complete
+    .data start:0x0211208c end:0x021120a4
+
+src/data/ov047/data_ov047_021120a4.c:
+    complete
+    .data start:0x021120a4 end:0x021120bc
+
+src/data/ov047/data_ov047_021120bc.c:
+    complete
+    .data start:0x021120bc end:0x021120d8
+
+src/data/ov047/data_ov047_021120d8.c:
+    complete
+    .data start:0x021120d8 end:0x021120f8
+
+src/data/ov047/data_ov047_021120f8.c:
+    complete
+    .data start:0x021120f8 end:0x02112104
+
+src/data/ov047/data_ov047_02112104.c:
+    complete
+    .data start:0x02112104 end:0x02112118
+
+src/data/ov047/data_ov047_02112118.c:
+    complete
+    .data start:0x02112118 end:0x02112138
+
+src/data/ov047/data_ov047_02112138.c:
+    complete
+    .data start:0x02112138 end:0x02112158
+
+src/data/ov047/data_ov047_02112158.c:
+    complete
+    .data start:0x02112158 end:0x02112178
+
+src/data/ov047/data_ov047_02112178.c:
+    complete
+    .data start:0x02112178 end:0x02112198
+
+src/data/ov047/data_ov047_02112198.c:
+    complete
+    .data start:0x02112198 end:0x021121b8
+
+src/data/ov047/data_ov047_021121b8.c:
+    complete
+    .data start:0x021121b8 end:0x021121c0
+
+src/data/ov047/data_ov047_021121c0.c:
+    complete
+    .data start:0x021121c0 end:0x021121dc
+
+src/data/ov047/data_ov047_021121dc.c:
+    complete
+    .data start:0x021121dc end:0x021121f8
+
+src/data/ov047/data_ov047_021121f8.c:
+    complete
+    .data start:0x021121f8 end:0x0211224c
+
+src/data/ov047/_ZTI17daObjKm3_Dorifu_c.c:
+    complete
+    .data start:0x021124cc end:0x021124d4
+
+src/data/ov047/data_ov047_021124d4.c:
+    complete
+    .data start:0x021124d4 end:0x021124d8
+
+src/data/ov047/_ZTS17daObjKm3_Dorifu_c.c:
+    complete
+    .data start:0x021124d8 end:0x021124ec
+
+src/data/ov047/g_profile_KM3_DORIFU.c:
+    complete
+    .data start:0x021124ec end:0x021124f8
+
+src/data/ov047/data_ov047_021124f8.c:
+    complete
+    .data start:0x021124f8 end:0x021124fc
+
+src/data/ov047/data_ov047_021124fc.c:
+    complete
+    .data start:0x021124fc end:0x02112508
+
+src/data/ov047/data_ov047_02112530.c:
+    complete
+    .data start:0x02112530 end:0x0211254c
+
+src/data/ov047/ov047_vt_0211254c.c:
+    complete
+    .data start:0x0211254c end:0x02112570
+
+src/data/ov047/data_ov047_02112570.c:
+    complete
+    .data start:0x02112570 end:0x02112590
+
+src/data/ov047/data_ov047_02112590.c:
+    complete
+    .data start:0x02112590 end:0x021125cc
+
