@@ -41,6 +41,12 @@ enum {
     kChainMax = 0x64000    /* fully extended lunge */
 };
 
+/* This int-returning predicate is what makes the ROM materialize 0/1
+   before testing it. */
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; animation handles construct through SharedFilePtr::Construct
  * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
@@ -483,10 +489,7 @@ void daWanwan_c::HandleCylinderHit() {
     if (other == 0)
         return;
 
-    /* Each actor-ID test turns the comparison into 0/1 and tests that
-       against 0 (moveq/movne/cmp). A plain `==` drops those three
-       instructions, 12 bytes shorter per test. */
-    if ((int)(other->actorID == kYoshiEggId) != 0) {
+    if (IsActorID(other, kYoshiEggId)) {
         if (mdCcAcPos_c.hitFlags & 0x2000) {
             mScale.x = 0x2000;
             mScale.y = mScale.x;
@@ -504,7 +507,7 @@ void daWanwan_c::HandleCylinderHit() {
         return;
     }
 
-    if ((int)(other->actorID == kPlayerActorId) != 0) {
+    if (IsActorID(other, kPlayerActorId)) {
         ang = Vec3_HorzAngle(&mPos, &other->mPos);
         if (mdCcAcPos_c.hitFlags & 0x10) {
             SetState(5);
@@ -521,7 +524,7 @@ void daWanwan_c::HandleCylinderHit() {
 
     if (mState == 4)
         return;
-    if ((int)(other->actorID == kBobOmbActorId) != 0) {
+    if (IsActorID(other, kBobOmbActorId)) {
         ((daBmb_c *)other)->func_ov102_0214ae1c();
         SetState(4);
     }

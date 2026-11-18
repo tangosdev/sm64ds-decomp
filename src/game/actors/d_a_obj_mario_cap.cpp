@@ -228,7 +228,7 @@ void  Matrix4x3_FromRotationY(void *m, int angle);
 /* -- data -- */
 extern Matrix4x3      data_020a0e68;
 extern int            data_02092138;
-extern u8 gGameMode[];
+extern u8 gGameMode;
 
 extern daObjMarioCapFileHandle data_ov002_0210de00, data_ov002_0210de08;
 extern daObjMarioCapFileHandle data_ov002_0210de10, data_ov002_0210de18;
@@ -262,6 +262,13 @@ extern SharedFilePtr *data_ov002_020ff0a0[];
 extern SharedFilePtr *const data_ov002_020ff0b8[];
 extern int *const data_ov002_020ff0c4[];
 }
+
+/* gGameMode is 1 in VS mode: PrepareVsMode stores it. This int-returning
+   predicate is what makes the ROM materialize 0/1 before testing it. */
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 void func_02013a88(void);
 void func_020167a4(dExtAnmModel_c *model);
 int func_ov002_020f030c(int x);
@@ -877,7 +884,7 @@ int daObjMarioCap_c::InitSlide()
     state = mType;
     if (state == 5 || state == 7 || state == 9) {
         CAP_TIMER(this) = 0xd2;
-        if ((int)(gGameMode[0] == 1) == 0)
+        if (!IsVsMode())
             CAP_TIMER(this) = 0x78;
         mStartTimer = CAP_TIMER(this);
     }
@@ -1022,21 +1029,18 @@ int daObjMarioCap_c::InitTaken()
         mPlayer = ClosestPlayer();
     }
 
-    {
-        unsigned b = (gGameMode[0] == 1);
-        if (b == 0) {
-            daPly_c *p = mPlayer;
-            if (p->mCharacter == 3) {
-                if (mModelIndex == (int)p->param1) {
-                    struct Vector3 v;
-                    Sound::PlayBank3(kSfx1Up, mCamSpacePos);
-                    GiveLives(1);
-                    v.x = mPos.x;
-                    v.y = mPos.y;
-                    v.z = mPos.z;
-                    v.y += 0x64000;
-                    dActor_c::Spawn(kActor1UpLogo, 8, v, 0, mAreaId, -1);
-                }
+    if (!IsVsMode()) {
+        daPly_c *p = mPlayer;
+        if (p->mCharacter == 3) {
+            if (mModelIndex == (int)p->param1) {
+                struct Vector3 v;
+                Sound::PlayBank3(kSfx1Up, mCamSpacePos);
+                GiveLives(1);
+                v.x = mPos.x;
+                v.y = mPos.y;
+                v.z = mPos.z;
+                v.y += 0x64000;
+                dActor_c::Spawn(kActor1UpLogo, 8, v, 0, mAreaId, -1);
             }
         }
     }

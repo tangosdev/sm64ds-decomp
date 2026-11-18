@@ -71,6 +71,17 @@ unsigned char IsAreaShowing(int area);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
 
+/* Actor ID 0xc is STAR_SWITCH (the other profile this class serves is
+   HANSWITCH); 0xbf is PLAYER. These int-returning predicates are what make
+   the ROM materialize 0/1 before testing it. */
+static inline int IsStarSwitch(dActor_c *actor) {
+    return actor->actorID == 0xc;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* Reconstructed source-style name: SM64DS proves daObjSwitch_c through RTTI,
  * allocation size, vtable identity, and the HANSWITCH registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -106,8 +117,8 @@ void daObjSwitch_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *o
  * enough, and the player must be within 0x98 units of the switch. */
 void daObjSwitch_c::OnStoodOn(dActor_c *other) {
     daPly_c *player = static_cast<daPly_c *>(other);
-    unsigned int isPlayer = other->actorID == 0xbf;
-    if (isPlayer == 0) return;
+    if (!IsPlayerActor(other))
+        return;
     if (player->mIsUnderwater != 0) {
         if (player->mIsMetal == 0) {
             if (player->mIsMega == 0) return;
@@ -129,27 +140,22 @@ int daObjSwitch_c::InitResources()
     mTargetActor = 0;
     mHomeAreaId = mAreaId;
 
-    {
-        // Keep the integer boolean: the direct condition changes the retail body.
-        int b = 0;
-        if (actorID == 0xc) b = 1;
-        if (b) {
-            mFlags |= 0x4000000;
-            mSwitchType = 2;
-            mStarID = param1;
-            if (mStarID == 0xff)
-                mStarID = 0;
-            mTimeLimit = (param1 >> 8) & 0xff;
-            LoadSilverStarAndNumber();
-            dExtSimpleModel_c::LoadFile(data_ov002_0211092c);
-            mResourceIdx = 1;
-        } else {
-            mSwitchType = param1 & 3;
-            mEventBit = (param1 >> 3) & 15;
-            mTimeLimit = (param1 >> 8) & 0xff;
-            Event::ClearBit(mEventBit);
-            mResourceIdx = 0;
-        }
+    if (IsStarSwitch(this)) {
+        mFlags |= 0x4000000;
+        mSwitchType = 2;
+        mStarID = param1;
+        if (mStarID == 0xff)
+            mStarID = 0;
+        mTimeLimit = (param1 >> 8) & 0xff;
+        LoadSilverStarAndNumber();
+        dExtSimpleModel_c::LoadFile(data_ov002_0211092c);
+        mResourceIdx = 1;
+    } else {
+        mSwitchType = param1 & 3;
+        mEventBit = (param1 >> 3) & 15;
+        mTimeLimit = (param1 >> 8) & 0xff;
+        Event::ClearBit(mEventBit);
+        mResourceIdx = 0;
     }
 
     idx = mResourceIdx;
@@ -195,19 +201,16 @@ int daObjSwitch_c::Behavior()
         }
     }
 
-    {
-        int isType = (int)(actorID == 0xc);
-        if (isType != 0) {
-            if (FindTargetStar() != 0) {
-                a = dActor_c::FindWithID(mTargetActorID);
-                if (a != 0) {
-                    mTargetActor = a;
-                }
+    if (IsStarSwitch(this)) {
+        if (FindTargetStar() != 0) {
+            a = dActor_c::FindWithID(mTargetActorID);
+            if (a != 0) {
+                mTargetActor = a;
             }
         }
     }
 
-    if ((int)(actorID == 0xc) != 0) {
+    if (IsStarSwitch(this)) {
         id344 = mTargetActorID;
         if (id344 == 0) {
             ScaleOverTime(2, 3, 0x333, 0x1000);
@@ -260,14 +263,12 @@ int daObjSwitch_c::Render()
 
 int daObjSwitch_c::CleanupResources()
 {
-    int t;
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
     data_ov002_021098e8[mResourceIdx].model->Release();
     data_ov002_021098e8[mResourceIdx].collision->Release();
-    t = actorID == 0xc;
-    if (t != false) {
+    if (IsStarSwitch(this)) {
         UnloadSilverStarAndNumber();
         data_ov002_0211092c.Release();
     }
@@ -329,7 +330,7 @@ void daObjSwitch_c::StatePressedMain() {
     ScaleOverTime(2, 3, 0x1000, 0x333);
     if (mTimer != 3) return;
     Sound::PlayBank3(0x3e, mCamSpacePos);
-    if ((int)(actorID == 0xc) != 0) {
+    if (IsStarSwitch(this)) {
         dActor_c *p = mTargetActor;
         if (p != 0) {
             static_cast<daStar_c *>(p)->SetSwitchState(1);
@@ -383,17 +384,14 @@ void daObjSwitch_c::StateUnpressedMain() {
     ScaleOverTime(2, 3, 0x333, 0x1000);
     if (mTimer != 3) return;
     Sound::PlayBank3(0x3e, mCamSpacePos);
-    {
-        int b = (actorID == 0xc);
-        if (b) {
-            dActor_c *p = mTargetActor;
-            if (p != 0 && static_cast<daStar_c *>(p)->mPlayer == 0) {
-                static_cast<daStar_c *>(p)->SetSwitchState(0);
-            }
-            mAreaId = mHomeAreaId;
-        } else {
-            Event::ClearBit(mEventBit);
+    if (IsStarSwitch(this)) {
+        dActor_c *p = mTargetActor;
+        if (p != 0 && static_cast<daStar_c *>(p)->mPlayer == 0) {
+            static_cast<daStar_c *>(p)->SetSwitchState(0);
         }
+        mAreaId = mHomeAreaId;
+    } else {
+        Event::ClearBit(mEventBit);
     }
     SetState(0);
 }

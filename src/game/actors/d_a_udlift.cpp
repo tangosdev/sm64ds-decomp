@@ -28,14 +28,13 @@
  * write the destructor out of line.
  *
  * NOTES:
- * - InitResources, StateWait, StateMoveDown: the actorID test has to be
- *   `(int)(actorID == id) != 0`. A plain `actorID == id`, and that compare
- *   without the `(int)` cast, both shrink the same three functions.
+ * - InitResources, StateWait, StateMoveDown: the actorID test goes through
+ *   the int-returning IsActorID, which materializes 0/1 before the branch.
+ *   A plain `actorID == id` shrinks the same three functions:
  *   InitResources 0x18c->0x160, and its LoadFile reloc then names
  *   _ZN7dBgW_Kc8LoadFileER13SharedFilePtr instead of 0x02017a3c.
- *   StateWait 0xf4->0xe8. StateMoveDown 0x120->0x114.
- *   Kept (#821 r81): re-measured; a switch on actorID in InitResources is
- *   0x16c of 0x18c.
+ *   StateWait 0xf4->0xe8. StateMoveDown 0x120->0x114. A switch on actorID
+ *   in InitResources is 0x16c of 0x18c (#821 r81).
  * - InitResources: dBgW::SetBeforeClsnCallback and dBgW::SetStoodOnCallback store dBgW+0x18
  *   (beforeClsnCallback) and dBgW+0x1c (the rider callback). Writing those
  *   fields directly shrinks InitResources 0x18c->0x184 and drops the two
@@ -83,6 +82,11 @@ enum {
     RC_RIFT02 = 0x83      /* Rainbow Ride */
 };
 
+/* This int-returning predicate is what makes the ROM materialize 0/1
+   before testing it. */
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
 
 /* File-scope objects at the end of this file construct the six resource
  * handles (model files 0x6bf/0x5db/0x6ab, collision files 0x6c0/0x5dc/0x6ac)
@@ -161,13 +165,11 @@ void daUdlift_c::LatchRider(daPly_c *player) {
 int daUdlift_c::InitResources()
 {
     mMode = 0;
-    /* The (int) flags keep the branch shape. A plain compare shrinks this
-       function and retargets LoadFile. */
-    if ((int)(actorID == UDLIFT_TERESA) != 0) {
+    if (IsActorID(this, UDLIFT_TERESA)) {
         mVariant = 0;
-    } else if ((int)(actorID == UDLIFT) != 0) {
+    } else if (IsActorID(this, UDLIFT)) {
         mVariant = 1;
-    } else if ((int)(actorID == RC_RIFT02) != 0) {
+    } else if (IsActorID(this, RC_RIFT02)) {
         mVariant = 2;
         mMode = 1;
     } else {
@@ -265,9 +267,8 @@ void daUdlift_c::StateWait()
         middleY = mMiddleY;
         if (player->mPos.y > middleY)
             return;
-        /* RC_RIFT02 does not follow the player across the middle. The (int)
-           flag keeps the branch; a plain compare shrinks this function. */
-        if ((int)(actorID == RC_RIFT02) != 0)
+        /* RC_RIFT02 does not follow the player across the middle. */
+        if (IsActorID(this, RC_RIFT02))
             return;
         if (mPlayerPosY > middleY) {
             mPos.y = mBottomY;
@@ -325,10 +326,10 @@ void daUdlift_c::StateMoveUp()
 void daUdlift_c::StateMoveDown()
 {
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x82, mCamSpacePos, 0);
-    /* UDLIFT plays a one-shot (bank 3, id 0x40) on the first frame. The (int) flag keeps the
-       branch; a plain compare shrinks this function. One Vector3& shared
-       with PlayLong also grows it, so this call names mCamSpacePos again. */
-    if (mStateTimer == 0 && (int)(actorID == UDLIFT) != 0)
+    /* UDLIFT plays a one-shot (bank 3, id 0x40) on the first frame. One
+       Vector3& shared with PlayLong grows this function, so this call names
+       mCamSpacePos again. */
+    if (mStateTimer == 0 && IsActorID(this, UDLIFT))
         Sound::PlayBank3(0x40, mCamSpacePos);
 
     ApproachLinear(mSpeed.y, -(10 << 12), -(2 << 12));

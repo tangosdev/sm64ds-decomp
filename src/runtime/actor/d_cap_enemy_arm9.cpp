@@ -40,6 +40,12 @@ extern daPly_c *gPlayers[];
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
+/* gGameMode is 1 in VS mode: PrepareVsMode stores it. This int-returning
+   predicate is what makes the ROM materialize 0/1 before testing it. */
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 dCapEnemy_c::dCapEnemy_c() {}
 
 /* The call is not in the ROM. It is the odr-use that makes mwcc emit the
@@ -230,7 +236,7 @@ int dCapEnemy_c::GetCapState() {
 int dCapEnemy_c::DestroyIfCapNotNeeded() {
     if (mCapId >= 6)
         return 1;
-    if ((int)(gGameMode == 1) != 0)
+    if (IsVsMode())
         return 1;
     daPly_c *p = ClosestPlayer();
     if (p == 0) {

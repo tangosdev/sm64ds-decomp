@@ -189,6 +189,16 @@ extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix,
 }
 void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);
 
+/* gGameMode is 1 in VS mode: PrepareVsMode stores it. These int-returning
+   predicates are what make the ROM materialize 0/1 before testing it. */
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* The block's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
    the cartridge already carries, so the wrappers get no bodies of their own.
@@ -438,12 +448,12 @@ int daObjHatenaBlock_c::Behavior()
             mMeshCollider.Disable();
         }
     } else if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
-               (int)(actorID == ACTOR_HATENA_BLOCK) != 0) {
+               IsActorID(this, ACTOR_HATENA_BLOCK)) {
         mAnmModel.Advance();
         if (mMeshCollider.IsEnabled() != 0) {
             mMeshCollider.Disable();
         }
-    } else if ((int)(gGameMode == 1) != 0) {
+    } else if (IsVsMode()) {
         if (mMeshCollider.IsEnabled() == 0) {
             mMeshCollider.Enable(this);
         }
@@ -1005,7 +1015,7 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
     rot.x = *(u16 *)(data_020a0edc);
     rot.y = *(u16 *)(data_020a0edc + 2);
     rot.z = *(u16 *)(data_020a0edc + 4);
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         rot.y = mAngle.y;
     } else {
         rot.y = gCamera->mAngleY + 0x4000;
