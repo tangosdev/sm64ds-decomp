@@ -198,12 +198,8 @@ s32 daObjCloset_c::Behavior() {
 }
 
 s32 daObjCloset_c::InitResources() {
-    int i;
-    dCcAcPos_c *collider = mColliders;
-    for (i = 0; i < kCylinderCount; i++) {
-        collider->Init(this, mPos, kCylinderRadius, kCylinderHeight, kCylinderFlags, 0);
-        collider++;
-    }
+    for (int i = 0; i < kCylinderCount; i++)
+        mColliders[i].Init(this, mPos, kCylinderRadius, kCylinderHeight, kCylinderFlags, 0);
     return 1;
 }
 
