@@ -109,6 +109,7 @@ void daObjPowerUpItem_c::StateResting()
     int flags;
     VecFx32 pos;
 
+    /* Kept (#821 r83): one && test -> 0xa4 of 0xbc; nested ifs 0xa4; one combined flag mask 0x9c. */
     do {
         if (param1 == FLOWER_PARAM_PERSISTENT) break;
         if (DecIfAbove0_Byte(&mLifeTimer) != 0) break;

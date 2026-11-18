@@ -367,6 +367,7 @@ int daObjHatenaBlock_c::InitResources()
         }
     }
 
+    /* Kept (#821 r83): if (HATENA || ITEM) { switch } or an inverted early return -> 0x33c of 0x348; early return keeping the locals 0x354. */
     do {
         int b14 = !(actorID != ACTOR_HATENA_BLOCK);
         if (b14 == 0) {
@@ -462,6 +463,7 @@ int daObjHatenaBlock_c::Behavior()
    mScale.x. Always returns 1. */
 int daObjHatenaBlock_c::Render()
 {
+    /* Kept (#821 r83): early returns -> 0x98 of 0x80; nested if 0x8c; else-if 0x74; early return + if/else -> same size, bytes differ. */
     do {
         if (mState == STATE_POPPED)
             break;
@@ -494,6 +496,7 @@ int daObjHatenaBlock_c::CleanupResources()
     if (b)
         data_ov002_0210da58.Release();
 
+    /* Kept (#821 r83): if (HATENA || ITEM) { switch } -> 0x214 of 0x220; matches only with b2/b3 assigned inside the || test as dead stores. */
     do {
         b2 = (int)(actorID == ACTOR_HATENA_BLOCK);
         if (b2 == 0) {

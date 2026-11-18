@@ -389,19 +389,15 @@ int daBombking_c::EnterCarryPlayer() {
 
 /* -------------------------------------------------------------------------- */
 int daBombking_c::TickGrabPlayer() {
-    if (CheckKnockbackHit() != 1) {
-        if (this->mHeldActor == 0) goto L6c;
-        if (this->mHeldActor->GetHealth() != 0)
-            goto L6c;
+    if (CheckKnockbackHit() == 1 || (this->mHeldActor != 0 && this->mHeldActor->GetHealth() == 0)) {
+        DetonateSpawnedBombs();
+        if (this->mHeldActor != 0) {
+            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
+            this->mTalkingPlayer = this->mHeldActor;
+            this->mHeldActor = 0;
+        }
+        return 1;
     }
-    DetonateSpawnedBombs();
-    if (this->mHeldActor != 0) {
-        func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
-        this->mTalkingPlayer = this->mHeldActor;
-        this->mHeldActor = 0;
-    }
-    return 1;
-L6c:
     if ((&this->mBlendAnmModel)->Finished()) {
         KingBobOmb_SetState(data_ov078_0212709c);
     }
@@ -795,44 +791,42 @@ int daBombking_c::EnterBounceOffHill() {
 
 /* -------------------------------------------------------------------------- */
 int daBombking_c::TickThrown() {
-    if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
-    this->mHorzSpeed = 0;
-    if ((this->mArenaPos.y - 0x28000) > this->mPos.y) {
-        func_02012694(0x128, &this->mCamSpacePos);
-        KingBobOmb_SetState(&data_ov078_021270ac);
-        goto done;
-    }
-    if (this->mActionStep == 0) {
-        func_02012694(0x128, &this->mCamSpacePos);
-        func_02012694(0x12b, &this->mCamSpacePos);
-        ShakeScreen(0x7d0000);
-        func_0200fa8c(1);
-        this->mActionStep = 1;
-        this->mHealth -= 1;
-    }
-    if (this->mHealth > 0) {
-        KingBobOmb_SetState(&data_ov078_021270ec);
-        goto done;
-    }
-    daPly_c *other = this->mTalkingPlayer;
-    if (other == 0) goto done;
-    if ((unsigned short)(other->mStateFlags & 0x800) != 0) goto done;
-    if (other->StartTalk(*this, 1) == 0)
-        goto done;
+    if (this->mWithMeshClsn.IsOnGround() != 0) {
+        this->mHorzSpeed = 0;
+        if ((this->mArenaPos.y - 0x28000) > this->mPos.y) {
+            func_02012694(0x128, &this->mCamSpacePos);
+            KingBobOmb_SetState(&data_ov078_021270ac);
+        } else {
+            if (this->mActionStep == 0) {
+                func_02012694(0x128, &this->mCamSpacePos);
+                func_02012694(0x12b, &this->mCamSpacePos);
+                ShakeScreen(0x7d0000);
+                func_0200fa8c(1);
+                this->mActionStep = 1;
+                this->mHealth -= 1;
+            }
+            if (this->mHealth > 0) {
+                KingBobOmb_SetState(&data_ov078_021270ec);
+            } else {
+                daPly_c *other = this->mTalkingPlayer;
+                if (other != 0 && (unsigned short)(other->mStateFlags & 0x800) == 0 &&
+                    other->StartTalk(*this, 1) != 0) {
+                    short msg = 0;
+                    Sound::ChangeMusicVolume(0x14, 0x15666);
+                    if (gCurrentStarId == 1) {
+                        msg += (short)(other->param1 + 0x9a);
+                    } else {
+                        msg = 0x95;
+                    }
 
-    short msg = 0;
-    Sound::ChangeMusicVolume(0x14, 0x15666);
-    if (gCurrentStarId == 1) {
-        msg += (short)(other->param1 + 0x9a);
-    } else {
-        msg = 0x95;
+                    if (other->ShowMessage(*this, msg, &this->mPos, 0, 0) != 0) {
+                        func_02012694(0x12a, &this->mCamSpacePos);
+                        KingBobOmb_SetState(&data_ov078_0212705c);
+                    }
+                }
+            }
+        }
     }
-
-    if (other->ShowMessage(*this, msg, &this->mPos, 0, 0) == 0)
-        goto done;
-    func_02012694(0x12a, &this->mCamSpacePos);
-    KingBobOmb_SetState(&data_ov078_0212705c);
-done:
     return 1;
 }
 
@@ -874,20 +868,16 @@ int daBombking_c::TickHeldByPlayer() {
             /* A Vector3 copy of obj->mPos is memberwise: 0x1a8 -> 0x1b0. */
             /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
             VecFx32 copy = *(VecFx32 *)&obj->mPos;
-            if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&copy) > 0x640000)
-                goto drop;
-            if (this->mArenaPos.y - 0xa000 <= copy.y)
-                goto flags;
+            if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&copy) > 0x640000 ||
+                this->mArenaPos.y - 0xa000 > copy.y) {
+                this->mHeldActor->DropActor();
+                this->mHeldActor = 0;
+                KingBobOmb_SetState(&data_ov078_0212708c);
+                return 1;
+            }
         }
     }
 
-drop:
-    this->mHeldActor->DropActor();
-    this->mHeldActor = 0;
-    KingBobOmb_SetState(&data_ov078_0212708c);
-    return 1;
-
-flags:
     {
         int flags = this->mFlags;
         int b0 = (flags & 0x400) != 0;

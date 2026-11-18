@@ -770,25 +770,19 @@ int daBook_c::InitResources()
         unsigned short id = actorID;
         unsigned int match1 = (id == kShootBookActorId);
 
-        do {
-            if (match1) {
+        if (match1) {
+            mKind = KIND_FLYING_BOOK;
+            mState = STATE_SPAWNED;
+            mCoinType = 0;
+            mdCcAcPos_c.vulnFlags |= 0x26fe0;
+        } else {
+            unsigned int match2 = (id == kKillerBookActorId);
+            if (match2) {
                 mKind = KIND_FLYING_BOOK;
-                mState = STATE_SPAWNED;
-                mCoinType = 0;
-                mdCcAcPos_c.vulnFlags |= 0x26fe0;
-                break;
-            }
-            {
-                unsigned int match2 = (id == kKillerBookActorId);
-                if (match2) {
-                    mKind = KIND_FLYING_BOOK;
-                    mState = STATE_WAIT;
-                    mCoinType = 3;
-                    mdCcAcPos_c.vulnFlags |= 0x2efe0;
-                    break;
-                }
-            }
-            {
+                mState = STATE_WAIT;
+                mCoinType = 3;
+                mdCcAcPos_c.vulnFlags |= 0x2efe0;
+            } else {
                 unsigned int match3 = (id == kBookSwitchActorId);
                 if (match3) {
                     mKind = KIND_SWITCH_BOOK;
@@ -799,11 +793,11 @@ int daBook_c::InitResources()
                     mScale.x = 0x1000;
                     mScale.y = 0x800;
                     mScale.z = 0x800;
-                    break;
+                } else {
+                    return 0;
                 }
             }
-            return 0;
-        } while (0);
+        }
     }
     return 1;
 }

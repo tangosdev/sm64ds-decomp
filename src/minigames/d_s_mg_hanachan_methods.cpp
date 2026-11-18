@@ -955,36 +955,23 @@ int dScMgHanachan_c::Wiggler::GetFrame(int) {
         int r1 = flash;
         if (r1 > 0x20) {
             r2 = 1;
-            goto end;
-        }
-        if (r1 > 0x10) {
+        } else if (r1 > 0x10) {
             face = 3;
             r2 = 5;
-            goto end;
-        }
-        if (r1 > 0)
+        } else if (r1 > 0) {
             r2 = 4;
-        goto end;
-    }
-    if (state == &Wiggler::StateWait)
-        goto C;
-    if (state != &Wiggler::StateHold)
-        goto end0;
-C: {
-    int v = hold;
-    if (v < 0x10) {
-        r2 = 5;
-        goto end;
-    }
-    if (v < 0x20)
-        r2 = 4;
-    else
+        }
+    } else if (state == &Wiggler::StateWait || state == &Wiggler::StateHold) {
+        int v = hold;
+        if (v < 0x10)
+            r2 = 5;
+        else if (v < 0x20)
+            r2 = 4;
+        else
+            r2 = 0;
+    } else {
         r2 = 0;
-    goto end;
-}
-end0:
-    r2 = 0;
-end:
+    }
     return r2;
 }
 
@@ -1575,62 +1562,36 @@ s32 dScMgHanachan_c::Render() {
     HanaPopup_DrawAll();
     StarPopup_Draw();
 
-    {
-        {
-            if (mPhase == &dScMgHanachan_c::Phase_Play) {
-                i = 0;
-                if (sHanaFieldWigglerCount > 0) {
-                    arr = mWiggler;
-                    do {
-                        arr->DrawField();
-                        i++;
-                        arr++;
-                    } while (i < sHanaFieldWigglerCount);
-                }
-                goto tail;
-            }
+    if (mPhase == &dScMgHanachan_c::Phase_Play) {
+        i = 0;
+        if (sHanaFieldWigglerCount > 0) {
+            arr = mWiggler;
+            do {
+                arr->DrawField();
+                i++;
+                arr++;
+            } while (i < sHanaFieldWigglerCount);
         }
-    }
-
-    {
-        {
-            if (mPhase == &dScMgHanachan_c::Phase_Result) {
-                int flag = mHit;
-                if (flag != 0) {
-                    if (mPhaseTimer < 90)
-                        goto do_eac;
-                }
-                if (flag != 0)
-                    goto count_loop;
-                if (mPhaseTimer < 138)
-                    goto do_eac;
-                goto count_loop;
-            do_eac:
-                mTarget->DrawField();
-                goto tail;
-            count_loop:
-                i = 0;
-                if (sHanaFieldWigglerCount > 0) {
-                    arr = mWiggler;
-                    do {
-                        arr->DrawField();
-                        i++;
-                        arr++;
-                    } while (i < sHanaFieldWigglerCount);
-                }
-                goto tail;
-            }
-        }
-    }
-
-    {
-        if (mPhase == &dScMgHanachan_c::Phase_NoneB ||
-            mPhase == &dScMgHanachan_c::Phase_WaitTouch) {
+    } else if (mPhase == &dScMgHanachan_c::Phase_Result) {
+        int flag = mHit;
+        if ((flag != 0 && mPhaseTimer < 90) || (flag == 0 && mPhaseTimer < 138)) {
             mTarget->DrawField();
+        } else {
+            i = 0;
+            if (sHanaFieldWigglerCount > 0) {
+                arr = mWiggler;
+                do {
+                    arr->DrawField();
+                    i++;
+                    arr++;
+                } while (i < sHanaFieldWigglerCount);
+            }
         }
+    } else if (mPhase == &dScMgHanachan_c::Phase_NoneB ||
+               mPhase == &dScMgHanachan_c::Phase_WaitTouch) {
+        mTarget->DrawField();
     }
 
-tail:
     mTarget->DrawTarget();
 
     {

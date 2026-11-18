@@ -997,18 +997,17 @@ int daKing_Donketu_c::EnterWaypointHop() {
 int daKing_Donketu_c::func_ov073_02120610() {
     Vector3 v;
 
-    if (mStateTimer == 0)
-        goto mainblock;
-
-    if (mStateTimer == 1) {
-        mSpeed.y = 0x5a000;
-        mBlendAnmModel.SetAnim(
-            *(BCA_File *)((BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr), 4, 0, 0x1000, 0);
-        mBlendAnmModel.speed = 0x2000;
+    if (mStateTimer != 0) {
+        if (mStateTimer == 1) {
+            mSpeed.y = 0x5a000;
+            mBlendAnmModel.SetAnim(
+                *(BCA_File *)((BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr), 4, 0, 0x1000,
+                0);
+            mBlendAnmModel.speed = 0x2000;
+        }
+        return 1;
     }
-    return 1;
 
-mainblock:
     ApproachLinear(mAngle.x, 0, 0x2000);
     if (mHitsRemaining == 2) {
         v = mWaypointsB[mWaypointCursor];
@@ -1384,14 +1383,8 @@ int daKing_Donketu_c::UpdateChase() {
         if (mPhase == 2) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                int t;
-                if (p->GetHurtState() == 4)
-                    goto hz;
-                if (p->GetHurtState() == 5)
-                    goto hz;
-                t = p->mIsNoControl ? 1 : 0;
-                if (t == 1) {
-                hz:
+                if (p->GetHurtState() == 4 || p->GetHurtState() == 5 ||
+                    (p->mIsNoControl ? 1 : 0) == 1) {
                     mTargetAngle = Vec3_HorzAngle(&mPos, &mSpawnPos);
                 } else {
                     mTargetAngle = HorzAngleToCPlayer();

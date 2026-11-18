@@ -933,6 +933,7 @@ s32 daCoin_c::InitResources()
     mWithMeshClsn.StartDetectingWater();
 
     behavior = mBehaviorType;
+    /* Kept (#821 r83): else-if or switch fallthrough -> 0x520 of 0x52c; nested if 0x534; duplicated store 0x538; only an inline (int)(gGameMode == 1) == 0 cast matches. */
     do {
         if (behavior == 8) {
             mDisappearTimer = 45;

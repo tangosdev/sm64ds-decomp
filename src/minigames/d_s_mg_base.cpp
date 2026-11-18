@@ -1841,6 +1841,7 @@ void dScMgBase_c::UpdateMenu() {
     if (gTouchInfo[idx].held != 0) {
         unlocked = (gTouchInfo[idx].edge != 0);
     }
+    /* Kept (#821 r83): else-if chain with ABS() -> 0x384 of 0x3b4; with a ternary abs -> same size, bytes differ. */
     do {
         if (unlocked == 0)
             break;

@@ -601,6 +601,7 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
     Ov007Touch *tp = (Ov007Touch *)arg1;
     int held = 0;
 
+    /* Kept (#821 r83): an armed flag gating the second test, nested or not -> 0x4a0 of 0x4ac. */
     do {
         if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0) {
             int armed = 0;

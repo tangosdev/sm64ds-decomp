@@ -1204,7 +1204,9 @@ void cMgSmartball_slot_c::UpdateSpin() {
 }
 
 /* Slot 1: draws the reel window and the three reels.
- * Leftover: inline_fn, the x mask and the goto loop are required.
+ * Leftover: inline_fn and the x mask are required. The reel loop is a
+ * do-while: written as a for loop it tests before the first pass and the
+ * reel-loop bytes differ (#821 r83).
  * Kept (#821 r82): the empty `if (1) {}` in the first loop was inert and is
  * gone; plain additions for inline_fn -> same size, reel-loop bytes differ. */
 inline int inline_fn(int arg0, int arg1) {
@@ -1222,25 +1224,23 @@ void cMgSmartball_slot_c::Update() {
 
     i = 0;
     x = 0;
-second_loop: {
-    xo = (x - 0x18) & 0xFFFFFFFFFFFFFFFF;
-    Mg_RenderSpriteBoth(sSmartballSlotReelEndSprite,
-                        inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
-                        inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12), -1, 3);
-    Mg_RenderSpriteBoth(sSmartballSlotReelLowerSprite,
-                        inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
-                        inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x10, -1, 3);
-    Mg_RenderSpriteBoth(sSmartballSlotReelUpperSprite,
-                        inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
-                        inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x20, -1, 3);
-    Mg_RenderSpriteBoth(sSmartballSlotReelEndSprite,
-                        inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
-                        inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x30, -1, 3);
-    x += 0x18;
-    i++;
-    if (i < 3)
-        goto second_loop;
-}
+    do {
+        xo = (x - 0x18) & 0xFFFFFFFFFFFFFFFF;
+        Mg_RenderSpriteBoth(sSmartballSlotReelEndSprite,
+                            inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
+                            inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12), -1, 3);
+        Mg_RenderSpriteBoth(sSmartballSlotReelLowerSprite,
+                            inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
+                            inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x10, -1, 3);
+        Mg_RenderSpriteBoth(sSmartballSlotReelUpperSprite,
+                            inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
+                            inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x20, -1, 3);
+        Mg_RenderSpriteBoth(sSmartballSlotReelEndSprite,
+                            inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
+                            inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x30, -1, 3);
+        x += 0x18;
+        i++;
+    } while (i < 3);
 }
 
 /* Slot 0: runs the spin cooldown, the queued spins and the stop timer, then
@@ -1331,10 +1331,8 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
                 t3.x = xv;
                 t3.y = yv;
                 r = PointInTriangle(&p, &t1, &t2, &t3);
-                if (r == 0)
-                    goto in1;
-                return 0;
-            in1:
+                if (r != 0)
+                    return 0;
                 return 1;
             }
             if (v->x >= mCurrent0 + 0xa000 && v->x < mCurrent0 + 0x16000) {
@@ -1353,10 +1351,8 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
                 t6.x = xv2;
                 t6.y = yv2;
                 r = PointInTriangle(&p2, &t4, &t5, &t6);
-                if (r == 0)
-                    goto in2;
-                return 0;
-            in2:
+                if (r != 0)
+                    return 0;
                 return 1;
             }
             return 0;
@@ -1934,7 +1930,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot() {
                         hit = Vec2_Len(&bufB) < 0x11000;
                         if (hit != 0) {
                             mHitTimer = 4;
-                            goto done;
+                            break;
                         }
                     }
                     obj = mpManager;
@@ -1944,7 +1940,6 @@ void cMgSmartball_kinoko_c::SaveSnapshot() {
         }
     }
 
-done:
     if (mVariant == 1) {
         if (mHitTimer <= 0) {
             mRadius += 0x1000;
@@ -2335,36 +2330,25 @@ int cMgSmartball_ball_c::NeedsRespawn(int *pos) {
     }
 
     z2 = arg->y;
-    if (z2 < 0x80000)
-        goto L1dc;
-    if (z2 >= 0x88000)
-        goto L14c;
-    if (x < 0xe0000)
-        return 1;
-L14c: {
-    Vector2 p, q0, q1, q2;
-    p.x = x;
-    p.y = arg->y;
-    q0.x = 0x8000;
-    q0.y = 0x98000;
-    q1.x = 0x8000;
-    q1.y = 0xa2000;
-    q2.x = 0xe0000;
-    q2.y = 0xa2000;
-    if (PointInTriangle(&p, &q0, &q1, &q2))
-        return 1;
-}
-    if (arg->x < 0x8000)
-        goto L238;
-    if (arg->x >= 0xe0000)
-        goto L238;
-    if (arg->y < 0xa2000)
-        goto L238;
-    return 1;
-L1dc:
-    if (z2 >= -0x70000)
-        goto L238;
-    {
+    if (z2 >= 0x80000) {
+        if (z2 < 0x88000 && x < 0xe0000)
+            return 1;
+        {
+            Vector2 p, q0, q1, q2;
+            p.x = x;
+            p.y = arg->y;
+            q0.x = 0x8000;
+            q0.y = 0x98000;
+            q1.x = 0x8000;
+            q1.y = 0xa2000;
+            q2.x = 0xe0000;
+            q2.y = 0xa2000;
+            if (PointInTriangle(&p, &q0, &q1, &q2))
+                return 1;
+        }
+        if (arg->x >= 0x8000 && arg->x < 0xe0000 && arg->y >= 0xa2000)
+            return 1;
+    } else if (z2 < -0x70000) {
         int u = x - 0x80000;
         int v = z2 + 0x70000;
         int usq = FX_MUL(u, u);
@@ -2372,7 +2356,6 @@ L1dc:
         if (usq + vsq >= 0x3840000)
             return 1;
     }
-L238:
     return 0;
 }
 
@@ -2399,45 +2382,36 @@ void cMgSmartball_ball_c::QueueBehind() {
     }
 
     vm1 = val - 1;
-    if (vm1 == cur) {
+    if ((vm1 == cur && ((cur >= 0xd) ? 0 : mgr->mpBalls[cur])->mInPlay != 0) ||
+        (val == cur && mInPlay == 0)) {
         p = (cur >= 0xd) ? 0 : mgr->mpBalls[cur];
-        if (p->mInPlay != 0)
-            goto block1;
-    }
+        CopyObjectPos(local1, p);
+        newpos = local1[0] - 0x10000;
+        pos = mCurrent0;
+        if (pos < newpos && pos < 0xc8000)
+            mCurrent0 = newpos;
+        else
+            mCurrent0 = mSnapshot0;
+        mVel0 = 0;
+        mVel1 = 0;
 
-    if (val != cur || mInPlay != 0)
-        goto block2;
+        mCurrent1 = FX_Div(FX_MUL(mCurrent0, 0xa000), 0xd8000) + 0x90000;
 
-block1:
-    p = (cur >= 0xd) ? 0 : mgr->mpBalls[cur];
-    CopyObjectPos(local1, p);
-    newpos = local1[0] - 0x10000;
-    pos = mCurrent0;
-    if (pos < newpos && pos < 0xc8000)
-        mCurrent0 = newpos;
-    else
-        mCurrent0 = mSnapshot0;
-    mVel0 = 0;
-    mVel1 = 0;
+        if (mIndex > mpManager->mServeIndex) {
+            mQueueGap = (mIndex - mpManager->mServeIndex) * 0xf;
+        }
+    } else {
+        p = (vm1 >= 0xd) ? 0 : mgr->mpBalls[vm1];
+        CopyObjectPos(local2, p);
+        mCurrent0 = local2[0] - 0x10000;
+        mVel0 = 0;
+        mVel1 = 0;
 
-    mCurrent1 = FX_Div(FX_MUL(mCurrent0, 0xa000), 0xd8000) + 0x90000;
+        mCurrent1 = FX_Div(FX_MUL(mCurrent0, 0xa000), 0xd8000) + 0x90000;
 
-    if (mIndex > mpManager->mServeIndex) {
-        mQueueGap = (mIndex - mpManager->mServeIndex) * 0xf;
-    }
-    return;
-
-block2:
-    p = (vm1 >= 0xd) ? 0 : mgr->mpBalls[vm1];
-    CopyObjectPos(local2, p);
-    mCurrent0 = local2[0] - 0x10000;
-    mVel0 = 0;
-    mVel1 = 0;
-
-    mCurrent1 = FX_Div(FX_MUL(mCurrent0, 0xa000), 0xd8000) + 0x90000;
-
-    if (mIndex > mpManager->mServeIndex) {
-        mQueueGap = (mIndex - mpManager->mServeIndex) * 0xf;
+        if (mIndex > mpManager->mServeIndex) {
+            mQueueGap = (mIndex - mpManager->mServeIndex) * 0xf;
+        }
     }
 }
 
@@ -2552,220 +2526,222 @@ void cMgSmartball_ball_c::UpdatePhysics() {
 
     depth = 0;
 
-outer_loop:
-    angle = 0;
-    blocked = 0;
-    i = 0;
     do {
-        hit[i] = 0;
-        work.x = 0;
-        work.y = 0;
-        work.y += mRadius;
-        func_0203d388((Vector2 *)&work, angle);
-        dot = func_0203d570((Vector2 *)&work, (Vector2 *)&mVel0);
-        if (dot >= 0) {
-            work.x += mCurrent0;
-            work.y += mCurrent1;
-            if ((u8)mpManager->param1 == 0) {
-                respawnProbe = work;
-                if (NeedsRespawn(&respawnProbe.x) != 0) {
-                    hit[i] = 1;
-                    hitA[i] = 1;
-                    anyHit = 1;
-                    blocked = 1;
-                    goto final_checks;
-                } else {
-                    slopeProbe = work;
-                    if (OnSlope(&slopeProbe.x) != 0) {
+        angle = 0;
+        blocked = 0;
+        i = 0;
+        do {
+            hit[i] = 0;
+            work.x = 0;
+            work.y = 0;
+            work.y += mRadius;
+            func_0203d388((Vector2 *)&work, angle);
+            dot = func_0203d570((Vector2 *)&work, (Vector2 *)&mVel0);
+            if (dot >= 0) {
+                work.x += mCurrent0;
+                work.y += mCurrent1;
+                if ((u8)mpManager->param1 == 0) {
+                    respawnProbe = work;
+                    if (NeedsRespawn(&respawnProbe.x) != 0) {
                         hit[i] = 1;
                         hitA[i] = 1;
                         anyHit = 1;
-                        hitSlope = 1;
+                        blocked = 1;
+                        goto final_checks;
+                    } else {
+                        slopeProbe = work;
+                        if (OnSlope(&slopeProbe.x) != 0) {
+                            hit[i] = 1;
+                            hitA[i] = 1;
+                            anyHit = 1;
+                            hitSlope = 1;
+                            blocked = 1;
+                        } else {
+                            exitProbe = work;
+                            if (CheckExits(&exitProbe.x) != 0) {
+                                hit[i] = 1;
+                                hitA[i] = 1;
+                                anyHit = 1;
+                                hitB[i] = 1;
+                                hitExit = 1;
+                                blocked = 1;
+                            }
+                        }
+                    }
+                } else {
+                    respawnProbe2 = work;
+                    if (NeedsRespawn(&respawnProbe2.x) != 0) {
+                        hit[i] = 1;
+                        hitA[i] = 1;
+                        anyHit = 1;
                         blocked = 1;
                     } else {
-                        exitProbe = work;
-                        if (CheckExits(&exitProbe.x) != 0) {
+                        exitProbe2 = work;
+                        if (CheckExits(&exitProbe2.x) != 0) {
                             hit[i] = 1;
                             hitA[i] = 1;
                             anyHit = 1;
                             hitB[i] = 1;
                             hitExit = 1;
                             blocked = 1;
-                        }
-                    }
-                }
-            } else {
-                respawnProbe2 = work;
-                if (NeedsRespawn(&respawnProbe2.x) != 0) {
-                    hit[i] = 1;
-                    hitA[i] = 1;
-                    anyHit = 1;
-                    blocked = 1;
-                } else {
-                    exitProbe2 = work;
-                    if (CheckExits(&exitProbe2.x) != 0) {
-                        hit[i] = 1;
-                        hitA[i] = 1;
-                        anyHit = 1;
-                        hitB[i] = 1;
-                        hitExit = 1;
-                        blocked = 1;
-                        goto final_checks;
-                    } else {
-                        if (nearKinoko == 1) {
-                            kinokoProbe = work;
-                            if (HitKinokos(&kinokoProbe.x) != 0) {
-                                hit[i] = 1;
-                                hitA[i] = 1;
-                                anyHit = 1;
-                                specialHit = 1;
-                                hitKinoko = 1;
-                                blocked = 1;
-                                goto final_checks;
-                            }
-                        }
-                        dokanProbe = work;
-                        if (HitDokans(&dokanProbe.x) != 0) {
-                            hit[i] = 1;
-                            hitA[i] = 1;
-                            anyHit = 1;
-                            blocked = 1;
+                            goto final_checks;
                         } else {
-                            pakkunProbe = work;
-                            if (HitPakkuns(&pakkunProbe.x) != 0) {
+                            if (nearKinoko == 1) {
+                                kinokoProbe = work;
+                                if (HitKinokos(&kinokoProbe.x) != 0) {
+                                    hit[i] = 1;
+                                    hitA[i] = 1;
+                                    anyHit = 1;
+                                    specialHit = 1;
+                                    hitKinoko = 1;
+                                    blocked = 1;
+                                    goto final_checks;
+                                }
+                            }
+                            dokanProbe = work;
+                            if (HitDokans(&dokanProbe.x) != 0) {
                                 hit[i] = 1;
                                 hitA[i] = 1;
                                 anyHit = 1;
                                 blocked = 1;
                             } else {
-                                switchProbe = work;
-                                if (HitSwitches(&switchProbe.x) != 0) {
+                                pakkunProbe = work;
+                                if (HitPakkuns(&pakkunProbe.x) != 0) {
                                     hit[i] = 1;
                                     hitA[i] = 1;
                                     anyHit = 1;
                                     blocked = 1;
                                 } else {
-                                    wingProbe = work;
-                                    if (HitWing(&wingProbe.x) != 0) {
+                                    switchProbe = work;
+                                    if (HitSwitches(&switchProbe.x) != 0) {
                                         hit[i] = 1;
                                         hitA[i] = 1;
                                         anyHit = 1;
                                         blocked = 1;
-                                        hitWing = 1;
+                                    } else {
+                                        wingProbe = work;
+                                        if (HitWing(&wingProbe.x) != 0) {
+                                            hit[i] = 1;
+                                            hitA[i] = 1;
+                                            anyHit = 1;
+                                            blocked = 1;
+                                            hitWing = 1;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-        } else {
-            work.x += mCurrent0;
-            work.y += mCurrent1;
-        }
-
-    final_checks:
-        if (blocked == 0) {
-            springProbe = work;
-            if (AtSpring(&springProbe.x) != 0) {
-                hit[i] = 1;
-                hitA[i] = 1;
-                anyHit = 1;
-                blocked = 1;
-                if (angle == 0)
-                    onSpring = 1;
             } else {
-                propellerProbe = work;
-                if (HitPropellers(&propellerProbe.x) != 0) {
+                work.x += mCurrent0;
+                work.y += mCurrent1;
+            }
+
+        final_checks:
+            if (blocked == 0) {
+                springProbe = work;
+                if (AtSpring(&springProbe.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
                     blocked = 1;
-                    hitPropeller = 1;
+                    if (angle == 0)
+                        onSpring = 1;
+                } else {
+                    propellerProbe = work;
+                    if (HitPropellers(&propellerProbe.x) != 0) {
+                        hit[i] = 1;
+                        hitA[i] = 1;
+                        anyHit = 1;
+                        blocked = 1;
+                        hitPropeller = 1;
+                    }
                 }
             }
-        }
-        angle += 0x800;
-        i++;
-    } while (i < 32);
+            angle += 0x800;
+            i++;
+        } while (i < 32);
 
-    if (pass < 0x11 && state3a == 0) {
-        entityLoopIndex = 0;
-        if (mpManager->mBallCount > 0) {
-            do {
-                if (entityLoopIndex != mIndex) {
-                    other = entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
-                    if (((cMgSmartball_ball_c *)other)->state3a == 0) {
+        if (pass < 0x11 && state3a == 0) {
+            entityLoopIndex = 0;
+            if (mpManager->mBallCount > 0) {
+                do {
+                    if (entityLoopIndex != mIndex) {
                         other = entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
-                        if (((cMgSmartball_object_c *)other)->mIsActive != 0) {
+                        if (((cMgSmartball_ball_c *)other)->state3a == 0) {
                             other =
                                 entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
-                            CopyObjectPos(&entityPos, other);
-                            Vec2_Sub(&entityDelta.x, &mCurrent0, &entityPos.x);
-                            delta = entityDelta;
-                            if (func_0203d5bc(&delta.x) <= 0x100000LL) {
-                                angle = 0;
-                                mgr = mpManager;
-                                other = entityLoopIndex >= 0xd ? 0 : mgr->mpBalls[entityLoopIndex];
-                                CopyObjectPos(&entityPos2, other);
-                                otherPos = entityPos2;
-                                if (mCurrent1 < 0x90000 || mCurrent0 <= otherPos.x) {
-                                    i = 0;
-                                    do {
-                                        work.y = mRadius;
-                                        work.x = 0;
-                                        func_0203d388((Vector2 *)&work, angle);
-                                        work.x += mCurrent0;
-                                        work.y += mCurrent1;
-                                        Vec2_Sub(&radialDelta.x, &work.x, &otherPos.x);
-                                        delta = radialDelta;
-                                        if (func_0203d5bc(&delta.x) < 0x40000LL) {
-                                            targetIndex = entityLoopIndex;
-                                            hit[i] = 1;
-                                            hitA[i] = 1;
-                                            hitC[i] = 1;
-                                            blocked = 1;
-                                        }
-                                        angle += 0x800;
-                                        i++;
-                                    } while (i < 32);
+                            if (((cMgSmartball_object_c *)other)->mIsActive != 0) {
+                                other = entityLoopIndex >= 0xd
+                                            ? 0
+                                            : mpManager->mpBalls[entityLoopIndex];
+                                CopyObjectPos(&entityPos, other);
+                                Vec2_Sub(&entityDelta.x, &mCurrent0, &entityPos.x);
+                                delta = entityDelta;
+                                if (func_0203d5bc(&delta.x) <= 0x100000LL) {
+                                    angle = 0;
+                                    mgr = mpManager;
+                                    other =
+                                        entityLoopIndex >= 0xd ? 0 : mgr->mpBalls[entityLoopIndex];
+                                    CopyObjectPos(&entityPos2, other);
+                                    otherPos = entityPos2;
+                                    if (mCurrent1 < 0x90000 || mCurrent0 <= otherPos.x) {
+                                        i = 0;
+                                        do {
+                                            work.y = mRadius;
+                                            work.x = 0;
+                                            func_0203d388((Vector2 *)&work, angle);
+                                            work.x += mCurrent0;
+                                            work.y += mCurrent1;
+                                            Vec2_Sub(&radialDelta.x, &work.x, &otherPos.x);
+                                            delta = radialDelta;
+                                            if (func_0203d5bc(&delta.x) < 0x40000LL) {
+                                                targetIndex = entityLoopIndex;
+                                                hit[i] = 1;
+                                                hitA[i] = 1;
+                                                hitC[i] = 1;
+                                                blocked = 1;
+                                            }
+                                            angle += 0x800;
+                                            i++;
+                                        } while (i < 32);
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                entityLoopIndex++;
-            } while (entityLoopIndex < mpManager->mBallCount);
+                    entityLoopIndex++;
+                } while (entityLoopIndex < mpManager->mBallCount);
+            }
         }
-    }
 
-    normal.x = 0;
-    normal.y = 0;
-    angle = 0;
-    i = 0;
-    do {
-        if (hit[i] == 1) {
-            unit.x = 0;
-            unit.y = 0x800;
-            func_0203d388((Vector2 *)&unit, angle);
-            normal.x += unit.x;
-            normal.y += unit.y;
+        normal.x = 0;
+        normal.y = 0;
+        angle = 0;
+        i = 0;
+        do {
+            if (hit[i] == 1) {
+                unit.x = 0;
+                unit.y = 0x800;
+                func_0203d388((Vector2 *)&unit, angle);
+                normal.x += unit.x;
+                normal.y += unit.y;
+            }
+            angle += 0x800;
+            i++;
+        } while (i < 32);
+        func_0203d434((Vector2 *)&normal);
+        func_0203d630((Vector2 *)&normal, 0x800);
+        {
+            mCurrent0 -= normal.x;
+            mCurrent1 -= normal.y;
+            Vec2_Sub(&moveDelta.x, &mCurrent0, &mSnapshot0);
         }
-        angle += 0x800;
-        i++;
-    } while (i < 32);
-    func_0203d434((Vector2 *)&normal);
-    func_0203d630((Vector2 *)&normal, 0x800);
-    {
-        mCurrent0 -= normal.x;
-        mCurrent1 -= normal.y;
-        Vec2_Sub(&moveDelta.x, &mCurrent0, &mSnapshot0);
-    }
-    dot = Vec2_Len((const Vector2 *)&moveDelta);
-    depth += 0x80;
-    pass++;
-    if (blocked == 1 && pass < 0x21 && depth <= dot)
-        goto outer_loop;
+        dot = Vec2_Len((const Vector2 *)&moveDelta);
+        depth += 0x80;
+        pass++;
+    } while (blocked == 1 && pass < 0x21 && depth <= dot);
 
     i = 0;
     response.x = 0;
