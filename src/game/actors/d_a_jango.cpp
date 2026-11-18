@@ -1176,8 +1176,7 @@ void daJango_c::UpdateCircleVelocity() {
     v[0].z = 0x14000;
     if (mCarriedItem == CARRIES_NO_STAR && mHeldActorID == 0) {
         if (mTimer == 0) {
-            short *a = &mPrevAngle.y;
-            *a = *a - 0x100;
+            mPrevAngle.y -= 0x100;
         }
         v[0].z = 0x28000;
     }
