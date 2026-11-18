@@ -296,7 +296,10 @@ void dScMgMemory_c::JudgePair() {
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     /* Kept (#821 r73): mCards[cardIndex] at every use is 0xac of 0xa8 (40
-       words off) with the pragma, 0xa8 but 27 off without it. */
+       words off) with the pragma, 0xa8 but 27 off without it.
+       r96: the same with a block-scoped `for (int cardIndex ...)` and
+       spriteIndex/dimmed declared at first use: unchanged (0xbc of 0xa8
+       with the pragma, 27 words off without). */
     char *raw = (char *)this;
     int cardIndex;
     int spriteIndex, dimmed;
