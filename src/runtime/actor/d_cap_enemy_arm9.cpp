@@ -46,6 +46,10 @@ static inline int IsVsMode(void) {
     return gGameMode == 1;
 }
 
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 dCapEnemy_c::dCapEnemy_c() {}
 
 /* The call is not in the ROM. It is the odr-use that makes mwcc emit the
@@ -208,9 +212,7 @@ int dCapEnemy_c::GetCapState() {
         return 2;
     }
 
-    unsigned char val = gGameMode;
-    int check = (val == 1) ? 1 : 0;
-    if (check == 0) {
+    if (!IsVsMode()) {
         daPly_c *p = ClosestPlayer();
         if (p != 0) {
             int s = mCapId & 7;
@@ -257,11 +259,9 @@ void dCapEnemy_c::func_02005ed8() {
 
 int dCapEnemy_c::func_02005e28()
 {
-    int b;
     int i;
     int n;
-    b = (gGameMode == 1);
-    if (b != 0) {
+    if (IsVsMode()) {
         n = data_0208a0e0;
         for (i = 0; i < n; i++) {
             daPly_c *p = gPlayers[i];
@@ -275,21 +275,14 @@ int dCapEnemy_c::func_02005e28()
         int r1;
         if (p != 0) r1 = p->param1;
         else r1 = mCapId;
-        return (r1 == mCapId) ? 1 : 0;
+        return r1 == mCapId;
     }
 }
 
 void dCapEnemy_c::Unk_02005d94()
 {
-    int b1;
-    int b2;
     if (!(mCapId & 0x80)) return;
-    b1 = (mFlags & 8) ? 1 : 0;
-    if (b1 == 0) {
-        unsigned char *q = &gGameMode;
-        b2 = (q[0] == 1) ? 1 : 0;
-        if (b2 == 0) return;
-    }
+    if (!IsOffScreen(this) && !IsVsMode()) return;
     mCapId &= 7;
     if (func_02005e28())
         mCapId |= 0x80;
