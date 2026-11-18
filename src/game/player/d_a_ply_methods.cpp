@@ -4276,10 +4276,16 @@ void daPly_c::JumboStarCutsceneFlying() {
     int ang;
     unsigned char *p;
 
-    startOffset.x = 0; startOffset.y = 0; startOffset.z = 0x60000;
-    particleOffset.x = 0; particleOffset.y = 0; particleOffset.z = 0x60000;
+    startOffset.x = 0;
+    startOffset.y = 0;
+    startOffset.z = 0x60000;
+    particleOffset.x = 0;
+    particleOffset.y = 0;
+    particleOffset.z = 0x60000;
     func_ov002_020c37a4((char *)&particleOffset);
-    splinePos.x = 0; splinePos.y = 0; splinePos.z = 0;
+    splinePos.x = 0;
+    splinePos.y = 0;
+    splinePos.z = 0;
     switch (mStateWork) {
     case 0:
         this->SetAnim(0xc1, 0, 0x1000, 0);
