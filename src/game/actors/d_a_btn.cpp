@@ -218,22 +218,23 @@ daBtn_c *daBtn_c_classInit_BATANKING() {
     return new daBtn_c();
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* Load the class's model, animations (and the king's face texture), set up
    the shadow, the collision mesh and the wall probe, record the spawn pose,
    and start waiting (state 0) on the walk animation. The king claims its
    star marker, and does not come back once that star is collected. */
 int daBtn_c::InitResources()
 {
-    u16 id;
     int animIdx;
     u8 idx;
     void *bmd;
     void *anim;
     int i;
 
-    id = actorID;
-    int b = (id == 0xa5);
-    if (b) {
+    if (IsActorID(this, 0xa5)) {
         mIsKing = 1;
         bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128168);
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
@@ -888,6 +889,10 @@ void daBtn_c::func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *oth
 }
 #pragma long_calls off
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* Contact from the lying body's back. Only players count. A contact that
    func_ov002_020dd8b8 accepts is a hit: it arms mPounded and remembers the
    player (the king ignores it while a resumed state 0 is pending). Any
@@ -900,8 +905,8 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
        SpawnCoins. All four are stored, as in the ROM. */
     Vector3 v1, v2;
     Vector3 w1, w2;
-    int eq = (other->actorID == 0xbf);
-    if (!eq) return;
+    if (!IsPlayerActor(other))
+        return;
     mTouched = 1;
     if (func_ov002_020dd8b8(other) != 0) {
         if (mResumePending != 0 && mIsKing != 0) {
