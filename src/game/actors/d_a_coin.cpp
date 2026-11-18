@@ -464,10 +464,7 @@ void daCoin_c::StateFollowTarget() {
         mPos.y = targetPos[1];
         mPos.z = targetPos[2];
     }
-    {
-        int *posY = &mPos.y;
-        *posY += 0xc8000;
-    }
+    mPos.y += 0xc8000;
     if (mDisappearTimer < 65)
         return;
     MarkForDestruction();
