@@ -1335,14 +1335,14 @@ extern "C" void *NNS_SndArcGetSeqArcParam(int a, int idx) {
     return &e->bankId;
 }
 
-Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(int id)
-{
+Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(int id) {
     char *root = sCurrent;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->seqTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if (id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1367,14 +1367,14 @@ extern "C" struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(int id) {
     return (v == 0) ? 0 : (struct SndArchiveInfo *)(base + v);
 }
 
-Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(int id)
-{
+Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(int id) {
     char *root = sCurrent;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->bankTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if (id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
