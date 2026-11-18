@@ -201,7 +201,7 @@ int daObjBC_Switch_c::InitResources() {
     bmd = dExtSimpleModel_c::LoadFile(daObjBC_Switch_c_ModelFile);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
 
-    mEventBit = (int)param1 & 15;
+    mEventBit = param1 & 15;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
