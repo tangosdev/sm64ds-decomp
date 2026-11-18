@@ -220,6 +220,7 @@ jobs:
             tools.test_delaunder \
             tools.test_dsd_pin \
             tools.test_enroll \
+            tools.test_fakematch_inventory \
             tools.test_langmode_audit \
             tools.test_layout \
             tools.test_linkcheck \
