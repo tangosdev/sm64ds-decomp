@@ -111,11 +111,6 @@
       "reason": "Compiler-generated base-object destructor. dScMgFlower_c declares its destructor out of line, so mwccarm emits all three variants; under this file's `#pragma defer_codegen off` the group emits D1, D0, D2, and D1/D0 reproduce the cartridge byte for byte at 0x0212a554 and 0x0212a5c8 with their bodies inlined rather than chained. Nothing in the object references D2: the vtable's slots 16 and 17 name D1 and D0, and the reloc-destination audit is clean over all nine licensed members. config/arm9/overlays/*/symbols.txt gives _ZN13dScMgFlower_cD2Ev no home anywhere in the ROM, which is the cartridge saying the retail link dead-stripped the same unreferenced variant. Homeless, so a plain deadstrip rather than deadstrip-duplicate."
     },
     {
-      "symbol": "_ZN13dScMgFlower_c4Vec2D1Ev",
-      "disposition": "deadstrip",
-      "reason": "Four-byte `bx lr` for the nested dScMgFlower_c::Vec2's empty destructor, emitted as vague linkage because the type has a user-declared destructor (which is load-bearing -- it is what keeps _ZN13dScMgFlower_c10DealPetalsEv's swap temp an 8-byte stack home; see include/dScMgFlower_c.h). No caller survives: mwccarm inlines the empty body at the one use site, _ZN13dScMgFlower_c10DealPetalsEv reproduces its 0x310 cartridge bytes with clean relocation destinations, and no ROM symbol of this spelling exists in any module's symbols.txt. Homeless, so a plain deadstrip."
-    },
-    {
       "symbol": "_ZN7Vector2D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_symbol": "NullDestructor_0203d47c",
@@ -249,11 +244,9 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN13dScMgFlower_cD2Ev",
-        "_ZN13dScMgFlower_c4Vec2D1Ev",
         "_ZN19dScMgSingle3DBase_cD2Ev"
       ],
       "deadstripped": [
-        "_ZN13dScMgFlower_c4Vec2D1Ev",
         "_ZN13dScMgFlower_cD2Ev",
         "_ZN19dScMgSingle3DBase_cD2Ev"
       ],
