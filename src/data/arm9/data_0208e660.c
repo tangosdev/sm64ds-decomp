@@ -3,6 +3,9 @@
  * CPSR registers), then the _ZTS/_ZTI records of the dCc/dCcAc/dCcPos/
  * dCcAcPos/dClipper classes and the dExt* model family.
  * ROM 0x0208e660..0x0208e6bc, 92 bytes, 7 configured symbols.
+ * A _ZTI record's first word is its abi RTTI vtable address
+ * (__si_class_type_info 0x0209a764, __class_type_info 0x0209a774); it stays
+ * a number because the tree declares no _ZTV array.
  *
  * Order: mwcc emits one .data section per object and the linker
  * concatenates them in declaration order, so the definitions below are
@@ -16,27 +19,25 @@ extern char _ZTS8dCcPos_c[12];
 extern u32 _ZTI8dCcPos_c[3];
 extern u32 _ZTI7dCcAc_c[3];
 extern u32 _ZTS10dCcAcPos_c[6];
-extern u8 _ZTVN3abi17__class_type_infoE[];
 extern char _ZTS5dCc_c[];
-extern u8 _ZTVN3abi20__si_class_type_infoE[];
 
 /* 0x0208e698: 12 bytes. */
 u32 _ZTI7dCcAc_c[3] = {
-    (u32)_ZTVN3abi20__si_class_type_infoE,
+    0x0209a764,
     (u32)_ZTS7dCcAc_c,
     (u32)_ZTI5dCc_c,
 };
 
 /* 0x0208e68c: 12 bytes. */
 u32 _ZTI8dCcPos_c[3] = {
-    (u32)_ZTVN3abi20__si_class_type_infoE,
+    0x0209a764,
     (u32)_ZTS8dCcPos_c,
     (u32)_ZTI5dCc_c,
 };
 
 /* 0x0208e680: 12 bytes. */
 u32 _ZTI10dCcAcPos_c[3] = {
-    (u32)_ZTVN3abi20__si_class_type_infoE,
+    0x0209a764,
     (u32)_ZTS10dCcAcPos_c,
     (u32)_ZTI7dCcAc_c,
 };
@@ -49,7 +50,7 @@ char _ZTS7dCcAc_c[12] = "7dCcAc_c";
 
 /* 0x0208e660: 8 bytes. */
 u32 _ZTI5dCc_c[2] = {
-    (u32)_ZTVN3abi17__class_type_infoE,
+    0x0209a774,
     (u32)_ZTS5dCc_c,
 };
 

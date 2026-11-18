@@ -5,6 +5,9 @@
  * and 0x02086e84..0x02086f7c holds the look-at/position offset triples.
  * Consumer: src/engine/view/d_camera.cpp, __sinit_d_camera.cpp.
  * ROM 0x02086e40..0x02086ef0, 176 bytes, 15 configured symbols.
+ * A _ZTI record's first word is its abi RTTI vtable address
+ * (__si_class_type_info 0x0209a764); it stays a number because the tree
+ * declares no _ZTV array.
  *
  * Order: mwcc emits one .data section per object and the linker
  * concatenates them in declaration order, so the definitions below are
@@ -24,7 +27,6 @@ extern char _ZTS9dCamera_c[12];
 extern u32 _ZTI7dBase_c[3];
 extern u32 _ZTI7dView_c[3];
 extern int _Z13func_02005110P9dCamera_c();
-extern u8 _ZTVN3abi20__si_class_type_infoE[];
 extern u32 _ZTI7fBase_c[];
 
 /* 0x02086ed8: 12 bytes. */
@@ -32,7 +34,7 @@ Vector3 data_02086ed8 = {0x00258000, 0x00000000, (int)0xffe70000u};
 
 /* 0x02086ecc: 12 bytes. */
 u32 _ZTI7dView_c[3] = {
-    (u32)_ZTVN3abi20__si_class_type_infoE,
+    0x0209a764,
     (u32)_ZTS7dView_c,
     (u32)_ZTI7dBase_c,
 };
@@ -57,7 +59,7 @@ char _ZTS7dBase_c[12] = "7dBase_c";
 
 /* 0x02086e78: 12 bytes. */
 u32 _ZTI7dBase_c[3] = {
-    (u32)_ZTVN3abi20__si_class_type_infoE,
+    0x0209a764,
     (u32)_ZTS7dBase_c,
     (u32)_ZTI7fBase_c,
 };
@@ -79,7 +81,7 @@ CamPmf data_02086e40 = {(void *)&_Z13func_02005110P9dCamera_c, 0};
 
 /* 0x02086ee4: 12 bytes. */
 u32 _ZTI9dCamera_c[3] = {
-    (u32)_ZTVN3abi20__si_class_type_infoE,
+    0x0209a764,
     (u32)_ZTS9dCamera_c,
     (u32)_ZTI7dView_c,
 };

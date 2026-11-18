@@ -3,7 +3,8 @@
  * the random_next generator state.
  * ROM 0x0209a330..0x0209a414, 228 bytes, 2 configured symbols.
  *
- * Unclaimed, all zero, left to the linker gap: data_0209a414 (0x0209a414, 4 bytes).
+ * Unclaimed, all zero, left to the linker gap: data_0209a414
+ * (0x0209a414, 4 bytes).
  */
 #include "types.h"
 #include "file_struc.h"

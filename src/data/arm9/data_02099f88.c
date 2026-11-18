@@ -4,10 +4,7 @@
  * ROM 0x02099f88..0x02099fa4, 28 bytes, 2 configured symbols.
  */
 #include "types.h"
-
-typedef struct {
-    int x, y, z;
-} VecFx32;
+#include "nitro/fx/fx.h"
 
 /* 0x02099f88: 12 bytes. */
 VecFx32 data_02099f88 = {0x00001000, 0x00001000, 0x00001000};

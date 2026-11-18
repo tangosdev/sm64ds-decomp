@@ -4,14 +4,16 @@
  * u16 (code, glyph) map Message2/Message3 index.
  * Consumer: src/Message.cpp, Message2.cpp, Message3.cpp.
  * ROM 0x0208f304..0x0208f30c, 8 bytes, 1 configured symbols.
+ * A _ZTI record's first word is its abi RTTI vtable address
+ * (__class_type_info 0x0209a774); it stays a number because the tree
+ * declares no _ZTV array.
  */
 #include "types.h"
 
-extern u8 _ZTVN3abi17__class_type_infoE[];
 extern char _ZTSN5dPa_c7level_c10callback_cE[];
 
 /* 0x0208f304: 8 bytes. */
 u32 _ZTIN5dPa_c7level_c10callback_cE[2] = {
-    (u32)_ZTVN3abi17__class_type_infoE,
+    0x0209a774,
     (u32)_ZTSN5dPa_c7level_c10callback_cE,
 };

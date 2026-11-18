@@ -5,6 +5,9 @@
  * gLastCourseSublevel/gPlayerHealth save-and-progress words.
  * Consumers: d_s_boot, d_s_stage, daPly_c.
  * ROM 0x020914a8..0x020914e0, 56 bytes, 5 configured symbols.
+ * A _ZTI record's first word is its abi RTTI vtable address
+ * (__si_class_type_info 0x0209a764); it stays a number because the tree
+ * declares no _ZTV array.
  *
  * Order: mwcc emits one .data section per object and the linker
  * concatenates them in declaration order, so the definitions below are
@@ -16,12 +19,11 @@ extern char _ZTS8dScene_c[12];
 extern char _ZTS9dScBoot_c[12];
 extern u32 _ZTI8dScene_c[3];
 extern struct dScBoot_c *_Z19dScBoot_c_classInitv();
-extern u8 _ZTVN3abi20__si_class_type_infoE[];
 extern u32 _ZTI7dBase_c[];
 
 /* 0x020914c8: 12 bytes. */
 u32 _ZTI9dScBoot_c[3] = {
-    (u32)_ZTVN3abi20__si_class_type_infoE,
+    0x0209a764,
     (u32)_ZTS9dScBoot_c,
     (u32)_ZTI8dScene_c,
 };
@@ -40,7 +42,7 @@ u32 g_profile_BOOT[2] = {
 
 /* 0x020914d4: 12 bytes. */
 u32 _ZTI8dScene_c[3] = {
-    (u32)_ZTVN3abi20__si_class_type_infoE,
+    0x0209a764,
     (u32)_ZTS8dScene_c,
     (u32)_ZTI7dBase_c,
 };

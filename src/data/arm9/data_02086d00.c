@@ -5,6 +5,9 @@
  * and 0x02086e84..0x02086f7c holds the look-at/position offset triples.
  * Consumer: src/engine/view/d_camera.cpp, __sinit_d_camera.cpp.
  * ROM 0x02086d00..0x02086e40, 320 bytes, 40 configured symbols.
+ * A _ZTI record's first word is its abi RTTI vtable address
+ * (__class_type_info 0x0209a774); it stays a number because the tree
+ * declares no _ZTV array.
  *
  * Order: mwcc emits one .data section per object and the linker
  * concatenates them in declaration order, so the definitions below are
@@ -35,7 +38,6 @@ extern int _Z24CutsceneKeyDanceJumpCvarP9dCamera_cPh();
 extern int func_02009dd0();
 extern int _Z18RotateAndMoveVec3fP9dCamera_cPh();
 extern int _Z25CutsceneDanceCloseupStartP9dCamera_c();
-extern u8 _ZTVN3abi17__class_type_infoE[];
 extern char _ZTS7fBase_c[];
 extern struct dCamera_c *dCamera_c_classInit();
 extern int _Z13func_020084b0P9dCamera_cPhii();
@@ -139,7 +141,7 @@ u32 g_profile_CAMERA[2] = {
 
 /* 0x02086d70: 8 bytes. */
 u32 _ZTI7fBase_c[2] = {
-    (u32)_ZTVN3abi17__class_type_infoE,
+    0x0209a774,
     (u32)_ZTS7fBase_c,
 };
 
