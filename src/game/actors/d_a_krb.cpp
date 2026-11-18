@@ -1645,42 +1645,36 @@ int daKrb_c::Behavior() {
     func_ov084_0212a580();
     func_ov084_02129238();
 
-    do {
-        if (mState == STATE_WALK) {
-            int b = (mFlags & 8) ? 1 : 0;
-            if (b == 0) {
-                if (Vec3_Dist(&mPos, &mStuckCheckPos) < 0xa000) { /* moved less than 10.0 */
-                    mStuckTimer += 1;
-                    if (mCapId < 6 && mStuckTimer == 30) {
-                        BeginJump();
-                        mUnstickTimer = 90;
-                    }
-                    if (mStuckTimer >= 300 && mUnstickTimer == 0) {
-                        func_ov084_021296cc();
-                        SpawnCoin();
-                        func_ov084_02129498();
-                        v2.x = 0;
-                        v2.y = 0x6c000; /* 108.0 */
-                        v2.z = 0;
-                        ReleaseCap(v2);
-                        mPos.x = mHomePos.x;
-                        mPos.y = mHomePos.y;
-                        mPos.z = mHomePos.z;
-                        RespawnIfHasCap();
-                        return 1;
-                    }
-                } else {
-                    mStuckTimer = 0;
-                    mStuckCheckPos.x = mPos.x;
-                    mStuckCheckPos.y = mPos.y;
-                    mStuckCheckPos.z = mPos.z;
-                }
-                break;
+    if (mState == STATE_WALK && ((mFlags & 8) ? 1 : 0) == 0) {
+        if (Vec3_Dist(&mPos, &mStuckCheckPos) < 0xa000) { /* moved less than 10.0 */
+            mStuckTimer += 1;
+            if (mCapId < 6 && mStuckTimer == 30) {
+                BeginJump();
+                mUnstickTimer = 90;
             }
-        }
-        if (mUnstickTimer == 0)
+            if (mStuckTimer >= 300 && mUnstickTimer == 0) {
+                func_ov084_021296cc();
+                SpawnCoin();
+                func_ov084_02129498();
+                v2.x = 0;
+                v2.y = 0x6c000; /* 108.0 */
+                v2.z = 0;
+                ReleaseCap(v2);
+                mPos.x = mHomePos.x;
+                mPos.y = mHomePos.y;
+                mPos.z = mHomePos.z;
+                RespawnIfHasCap();
+                return 1;
+            }
+        } else {
             mStuckTimer = 0;
-    } while (0);
+            mStuckCheckPos.x = mPos.x;
+            mStuckCheckPos.y = mPos.y;
+            mStuckCheckPos.z = mPos.z;
+        }
+    } else if (mUnstickTimer == 0) {
+        mStuckTimer = 0;
+    }
     return 1;
 }
 
