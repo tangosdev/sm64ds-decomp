@@ -443,14 +443,11 @@ int ChangeMusicVolume(unsigned int a, int b) {
 }
 
 namespace Sound {
-bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
+bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, int e) {
     int x;
     if (c == 0) {
-        /* e is bool. A plain test compiles to ldrb; retail loads the whole word. */
-        /* Kept (#821 r76): the ROM reads e as a word. `int e` with plain tests is byte-identical
-           here, but it renames _ZN5Sound7PlaySubEjjjib for every caller, two of them owned
-           elsewhere. */
-        if (!*(int *)&e) {
+        /* e is a word-sized flag: retail tests it with a full-word ldr, never ldrb. */
+        if (!e) {
             x = gSubSoundID;
             if ((x >= 0 && x != (int)a) ||
                 (gSubVolume == 0 && sMusicVolumeTarget == (int)b && gMusicVolume == (int)(b << 12)))
@@ -458,7 +455,7 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
         }
     } else {
         x = gSubSoundID;
-        if (x < 0 || *(int *)&e) { /* same full-word load as above */
+        if (x < 0 || e) {
             if (x != (int)a) {
                 gSubSoundID = a;
                 if (a != 0x35 && a != 0x36) {
