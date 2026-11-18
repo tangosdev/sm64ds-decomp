@@ -17,8 +17,8 @@
  * - Particle::System::NewSimple(u32, const Vector3 &) is defined in this
  *   file, not in its header: Behavior's landing puff is its only user,
  *   and a body in Particle__System.h renumbers every includer's @NNN.
- *   The puff reads mPos through that reference, so it reloads mPosY
- *   after the landing test; three scalar arguments (mPosX/Y/Z, mPos.x/y/z)
+ *   The puff reads mPos through that reference, so it reloads mPos.y
+ *   after the landing test; three scalar arguments (mPos.x, mPos.y, mPos.z)
  *   reuse the test's load and come out 4 bytes short.
  * - Render's star walk keeps the `for (;;)` with a break: a `while`
  *   on the FindWithActorID result DIFFs.
@@ -85,10 +85,10 @@ s32 daObjNumber_c::InitResources() {
     }
 
     mState = 0;
-    mStartPos.x = mPosX;
-    mStartPos.y = mPosY;
-    mStartPos.z = mPosZ;
-    mVertSpeed = 0x14000;
+    mStartPos.x = mPos.x;
+    mStartPos.y = mPos.y;
+    mStartPos.z = mPos.z;
+    mSpeed.y = 0x14000;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
     mDelay = 0;
@@ -105,21 +105,21 @@ s32 daObjNumber_c::Behavior() {
     if (mDelay != 0)
         return 1;
 
-    mVertSpeed += mVertAccel;
-    if (mVertSpeed < mTerminalVelocity)
-        mVertSpeed = mTerminalVelocity;
-    mPosY += mVertSpeed;
+    mSpeed.y += mVertAccel;
+    if (mSpeed.y < mTerminalVelocity)
+        mSpeed.y = mTerminalVelocity;
+    mPos.y += mSpeed.y;
 
     switch (mState) {
     case 0:
-        if (mPosY < mStartPos.y) {
-            mPosY = mStartPos.y;
-            mVertSpeed = 0xf000;
+        if (mPos.y < mStartPos.y) {
+            mPos.y = mStartPos.y;
+            mSpeed.y = 0xf000;
             mState++;
         }
         break;
     case 1:
-        if (mPosY < mStartPos.y) {
+        if (mPos.y < mStartPos.y) {
             Particle::System::NewSimple(kPtclItemVanish, mPos);
             MarkForDestruction();
         }
@@ -134,7 +134,7 @@ s32 daObjNumber_c::Behavior() {
                 const Vector3 &op = other->mPos;
                 pos = op;
             }
-            pos.y += mFollowOffsetY + (mPosY - mStartPos.y);
+            pos.y += mFollowOffsetY + (mPos.y - mStartPos.y);
         }
     }
     Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3, pos.z >> 3);
@@ -190,6 +190,6 @@ daObjNumber_c *daObjNumber_c::SetOwner(dActor_c *owner) {
     if (!owner)
         return this;
     mOwnerUniqueID = owner->uniqueID;
-    mFollowOffsetY = mPosY - owner->mPosY;
+    mFollowOffsetY = mPos.y - owner->mPos.y;
     return this;
 }

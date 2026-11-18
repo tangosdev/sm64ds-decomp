@@ -64,33 +64,33 @@ s32 daChScene_c::InitResources() {
 
     if ((unsigned char)(param1 >> 24) == 0x12) {
         if (IsStarCollectedInLevel(0x12, 1) != 0) {
-            mPosX += 0x802000;
+            mPos.x += 0x802000;
         }
     }
 
     if (gCurrentSublevel == 0x20) {
-        mScaleX = 0x2bc0000;
-        mScaleY = 0x3200000;
+        mScale.x = 0x2bc0000;
+        mScale.y = 0x3200000;
     } else if (gCurrentSublevel == 0x22) {
-        mScaleX = 0x3e80000;
-        mScaleY = 0x3e80000;
+        mScale.x = 0x3e80000;
+        mScale.y = 0x3e80000;
     } else {
-        mScaleX = (unsigned int)(((param1 & 15) + 1) * 0x64000) >> 1;
-        mScaleY = (((param1 >> 4) & 15) + 1) * 0x64000;
+        mScale.x = (unsigned int)(((param1 & 15) + 1) * 0x64000) >> 1;
+        mScale.y = (((param1 >> 4) & 15) + 1) * 0x64000;
     }
 
-    if (mAngleX == 0) {
-        mScaleX += 0x64000;
-        mScaleY += 0x64000;
-        mPosY -= 0x32000;
+    if (mAngle.x == 0) {
+        mScale.x += 0x64000;
+        mScale.y += 0x64000;
+        mPos.y -= 0x32000;
     }
 
-    Matrix4x3_FromTranslation(&mInvMat, mPosX, mPosY, mPosZ);
-    Matrix4x3_ApplyInPlaceToRotationY(&mInvMat, -mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&mInvMat, -mAngleX);
+    Matrix4x3_FromTranslation(&mInvMat, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&mInvMat, -mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&mInvMat, -mAngle.x);
     MTX_Inverse43(&mInvMat, &mInvMat);
 
-    mPosY += mScaleY >> 1;
+    mPos.y += mScale.y >> 1;
     return 1;
 }
 
@@ -125,15 +125,15 @@ s32 daChScene_c::Behavior() {
                     int a = out2.x;
                     if (a < 0)
                         a = -a;
-                    if (a <= mScaleX) {
-                        if (out2.y >= 0 && out2.y <= mScaleY) {
-                            if ((out2.z ^ mScaleZ) < 0) {
+                    if (a <= mScale.x) {
+                        if (out2.y >= 0 && out2.y <= mScale.y) {
+                            if ((out2.z ^ mScale.z) < 0) {
                                 dCamera_c *cam;
-                                mAngleZ = 0;
+                                mAngle.z = 0;
                                 if (out2.y > 0x100000) {
-                                    mAngleZ = 2;
+                                    mAngle.z = 2;
                                 } else if (out2.y > 0x60000) {
-                                    mAngleZ = 1;
+                                    mAngle.z = 1;
                                 }
                                 cam = gCamera;
                                 if (player->Unk_020c9e5c(7)) {
@@ -142,7 +142,7 @@ s32 daChScene_c::Behavior() {
                                     cam->SetFlag_3();
                                 } else {
                                     player->SetNoControlState(6, -1, 0);
-                                    if (mAngleX != 0) {
+                                    if (mAngle.x != 0) {
                                         dActor_c *o;
                                         LoadDestinationLevel();
                                         StartExitFaderWipe(5);
@@ -176,7 +176,7 @@ s32 daChScene_c::Behavior() {
                         }
                     }
                 }
-                mScaleZ = out2.z;
+                mScale.z = out2.z;
             }
         }
     }
@@ -205,7 +205,7 @@ s32 daChScene_c::CleanupResources() {
    names: level in the top byte, entrance in the next, and LoadLevel's last
    argument in the third (0xff passes as -1). */
 void daChScene_c::LoadDestinationLevel() {
-    data_0209f2c0 = (u8)mAngleZ;
+    data_0209f2c0 = (u8)mAngle.z;
     {
         u32 v = param1;
         u32 hi = v >> 24;

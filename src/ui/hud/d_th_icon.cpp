@@ -24,7 +24,6 @@
 
 /* local extern: arm9 C helpers with no shared header. */
 extern "C" int func_0203da9c(void);
-void func_ov001_020ab3f0(void *);
 
 extern int data_0208ee44;
 
@@ -106,5 +105,5 @@ void dThIcon_c::Select() {
         mOn = 1;
         return;
     }
-    func_ov001_020ab3f0(this);
+    func_ov001_020ab3f0();
 }

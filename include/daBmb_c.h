@@ -82,10 +82,10 @@ struct daBmb_c : dEnemyBase_c {
     /* Half-angle window. 0214b988 will not chase a player outside it.
        InitResources stores 0x2000. */
     u16                          mNoticeAngle;          /* 0x3ec */
-    /* State1 walks mPrevAngleY toward this. beb4 adds a random kick when
+    /* State1 walks mPrevAngle.y toward this. beb4 adds a random kick when
        the Bob-omb is turning with nobody to chase. */
     u16                          mTargetAngY;           /* 0x3ee */
-    /* Snapshot of mAngleY beside the mHomePos* snapshot. */
+    /* Snapshot of mAngle.y beside the mHomePos* snapshot. */
     u16                          mHomeAngleY;           /* 0x3f0 */
     u8                           mTurnCount;            /* 0x3f2 */
     /* Render draws nothing while this is 0. InitResources sets it to 1. */

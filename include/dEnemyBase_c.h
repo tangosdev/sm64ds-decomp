@@ -183,6 +183,7 @@ struct dEnemyBase_c : dActor_c {
            background-actor form of the same operation and ends in the same
            parameter. */
     void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, fx32 unused_);
+    int func_ov002_020ad660(void *clsnArg, void *modelArg, int flags);
     /* Death. func_ov002_020aea30 starts the death mDeathState selects, through
        the eight start handlers in data_ov002_0210db80; UpdateDeath runs one of
        the per-frame handlers in data_ov002_0210dbc0 each frame. */

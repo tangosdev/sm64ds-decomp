@@ -40,7 +40,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "_Z13func_0201aca4v",
+      "symbol": "_ZN7Message13func_0201aca4Ev",
       "address": "0x0201aca4",
       "size": "0x00000108",
       "legacy_source": "src/unnamed/arm9/0201/func_0201aca4.c",
@@ -54,21 +54,21 @@
       "ordinal": 4
     },
     {
-      "symbol": "_Z13func_0201adfcv",
+      "symbol": "_ZN7Message13func_0201adfcEv",
       "address": "0x0201adfc",
       "size": "0x00000304",
       "legacy_source": "src/unnamed/arm9/0201/func_0201adfc.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z13func_0201b100i",
+      "symbol": "_ZN7Message13func_0201b100Ei",
       "address": "0x0201b100",
       "size": "0x00000288",
       "legacy_source": "src/unnamed/arm9/0201/func_0201b100.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z13func_0201b388i",
+      "symbol": "_ZN7Message13func_0201b388Ei",
       "address": "0x0201b388",
       "size": "0x00000220",
       "legacy_source": "src/unnamed/arm9/0201/func_0201b388.c",
@@ -82,7 +82,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_Z13func_0201b6f8i",
+      "symbol": "_ZN7Message13func_0201b6f8Ei",
       "address": "0x0201b6f8",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/arm9/0201/func_0201b6f8.c",

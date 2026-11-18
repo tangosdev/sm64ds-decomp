@@ -187,7 +187,9 @@ def attach_text_and_manifests(index, records):
         manifest = json.loads(index.read(path))
         module = relocs.normalize_module(manifest.get("module", ""))
         for field in ("data", "rodata", "bss", "ctor", "init", "exception", "exceptix"):
-            for item in manifest.get(field, []):
+            # A manifest may carry the key with an explicit null: 47 on main
+            # spell ``rodata`` that way. Null is absent, not a list.
+            for item in manifest.get(field) or []:
                 if not isinstance(item, dict):
                     continue
                 for row in by_identity.get((module, item.get("symbol")), []):

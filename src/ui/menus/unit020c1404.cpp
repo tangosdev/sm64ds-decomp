@@ -52,7 +52,6 @@ extern u32 data_ov007_02104be0; /* end of the palette region */
 extern u32 data_ov007_02104be4; /* end of the texture region */
 extern u32 data_ov007_02104be8; /* next free palette slot */
 
-void func_ov007_020c15ec(Ov007Texture *tex);
 void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize, u32 *plttSize);
 
 /* Resets both regions to start at 0: the texture region's end from the
@@ -183,7 +182,7 @@ Ov007Texture *Texture_Create(int fmt, int texSrc, int sizeS, int sizeT, int pltt
     Ov007Texture *tex = (Ov007Texture *)func_ov007_020c3df4(0, sizeof(Ov007Texture));
     int width = 8 << sizeS;
     int height = 8 << sizeT;
-    func_ov007_020c15ec(tex);
+    tex->func_ov007_020c15ec();
     tex->fmt = fmt;
     tex->texSrc = (const void *)texSrc;
     tex->sizeS = sizeS;
@@ -202,24 +201,24 @@ Ov007Texture *Texture_Create(int fmt, int texSrc, int sizeS, int sizeT, int pltt
  * pooled `ldr ip,[pc]; bx ip` form; bracketed because the pragma is
  * positional. */
 #pragma long_calls on
-extern "C" void func_ov007_020c1620(void *tex) {
-    func_ov007_020c3d1c(tex);
+void Ov007Texture::func_ov007_020c1620() {
+    func_ov007_020c3d1c(this);
 }
 #pragma long_calls off
 
 /* Clears a texture record. */
-void func_ov007_020c15ec(Ov007Texture *tex) {
-    tex->flags = 0;
-    tex->fmt = 0;
-    tex->texSrc = 0;
-    tex->sizeS = 0;
-    tex->sizeT = 0;
-    tex->texSize = 0;
-    tex->texAddr = 0;
-    tex->plttSrc = 0;
-    tex->plttColorCount = 0;
-    tex->plttSize = 0;
-    tex->plttAddr = 0;
+void Ov007Texture::func_ov007_020c15ec() {
+    this->flags = 0;
+    this->fmt = 0;
+    this->texSrc = 0;
+    this->sizeS = 0;
+    this->sizeT = 0;
+    this->texSize = 0;
+    this->texAddr = 0;
+    this->plttSrc = 0;
+    this->plttColorCount = 0;
+    this->plttSize = 0;
+    this->plttAddr = 0;
 }
 
 /* Loads a record's texels at the next free texture slot, if it has any;
@@ -259,20 +258,19 @@ void Texture_LoadPalette(Ov007Texture *tex) {
 }
 
 /* Loads a record's texels and palette into VRAM. */
-extern "C" void func_ov007_020c14b8(Ov007Texture *tex) {
-    Texture_LoadTexels(tex);
-    Texture_LoadPalette(tex);
+void Ov007Texture::func_ov007_020c14b8() {
+    Texture_LoadTexels(this);
+    Texture_LoadPalette(this);
 }
 
 /* Binds a record's texels for drawing: TEXIMAGE_PARAM gets its VRAM slot,
  * format and size with the given coordinate source (texGen), repeat, flip
  * and colour-0 bits. No record selects no texture. */
-extern "C" void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip,
-                                    u32 color0) {
-    if (self != 0) {
-        G3_TexImageParam((GXTexFmt)self->fmt, (GXTexGen)texGen, (GXTexSizeS)self->sizeS,
-                         (GXTexSizeT)self->sizeT, (GXTexRepeat)repeat, (GXTexFlip)flip,
-                         (GXTexPlttColor0)color0, self->texAddr);
+void Ov007Texture::func_ov007_020c1448(u32 texGen, u32 repeat, u32 flip, u32 color0) {
+    if (this != 0) {
+        G3_TexImageParam((GXTexFmt)this->fmt, (GXTexGen)texGen, (GXTexSizeS)this->sizeS,
+                         (GXTexSizeT)this->sizeT, (GXTexRepeat)repeat, (GXTexFlip)flip,
+                         (GXTexPlttColor0)color0, this->texAddr);
     } else {
         reg_G3_TEXIMAGE_PARAM = 0x40000000;
     }

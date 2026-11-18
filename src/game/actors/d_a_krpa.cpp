@@ -112,15 +112,15 @@ int daKrpa_c::InitResources() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
     ChangeState(0);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     *(Mtx43 *)&mMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);
     if (ground.DetectClsn())
-        groundDistance = (mPosY - ground.clsnY) + 0x1e000;
+        groundDistance = (mPos.y - ground.clsnY) + 0x1e000;
     else
         groundDistance = 0x1f4000;
     mGroundDistance = groundDistance;
@@ -191,7 +191,7 @@ int daKrpa_c::EnterIdle() {
 }
 int daKrpa_c::ExecuteIdle() {
     if (this->mPlayer) {
-        if (this->mPosY > data_0209f32c) {
+        if (this->mPos.y > data_0209f32c) {
             if (DecIfAbove0_Byte(&this->mStateTimer) == 0)
                 this->ChangeState(1);
         }
@@ -200,9 +200,9 @@ int daKrpa_c::ExecuteIdle() {
     }
     this->mAnmModel.Advance();
     u32 frame = this->mFrameController.NextFrame();
-    this->mScaleX = frame;
-    this->mScaleY = frame;
-    this->mScaleZ = frame;
+    this->mScale.x = frame;
+    this->mScale.y = frame;
+    this->mScale.z = frame;
     this->TrackClosestPlayer();
     this->HandlePlayerHit();
     this->mdCcAcPos_c.Clear();
@@ -218,13 +218,13 @@ int daKrpa_c::EnterSpit() {
 int daKrpa_c::ExecuteSpit() {
     if (this->mFrameController.cursor == 0x1e) {
         Vector3 firePos;
-        int cosv = FX_CosIdx((u16)this->mAngleY >> 4);
-        int sinv = FX_SinIdx((u16)this->mAngleY >> 4);
+        int cosv = FX_CosIdx((u16)this->mAngle.y >> 4);
+        int sinv = FX_SinIdx((u16)this->mAngle.y >> 4);
         int offZ = FX_MUL(cosv, 0x50000);
         int offX = FX_MUL(sinv, 0x50000);
-        int x = this->mPosX + offX;
-        int z = this->mPosZ + offZ;
-        int y = this->mPosY - 0x29000;
+        int x = this->mPos.x + offX;
+        int z = this->mPos.z + offZ;
+        int y = this->mPos.y - 0x29000;
         firePos.x = x;
         firePos.z = z;
         firePos.y = y;
@@ -235,9 +235,9 @@ int daKrpa_c::ExecuteSpit() {
         this->ChangeState(0);
     this->mAnmModel.Advance();
     u32 frame = this->mFrameController.NextFrame();
-    this->mScaleX = frame;
-    this->mScaleY = frame;
-    this->mScaleZ = frame;
+    this->mScale.x = frame;
+    this->mScale.y = frame;
+    this->mScale.z = frame;
     this->TrackClosestPlayer();
     this->HandlePlayerHit();
     this->mdCcAcPos_c.Clear();
@@ -267,21 +267,21 @@ int daKrpa_c::EnterKnockedAway() {
     this->mVertAccel = -0x2000;
     this->mTerminalVelocity = -0x3c000;
     this->mHorzSpeed = 0xa000;
-    this->mVertSpeed = 0x28000;
-    this->mScaleX = 0x1000;
-    this->mScaleY = 0x1000;
-    this->mScaleZ = 0x1000;
+    this->mSpeed.y = 0x28000;
+    this->mScale.x = 0x1000;
+    this->mScale.y = 0x1000;
+    this->mScale.z = 0x1000;
     this->mStateTimer = 45;
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
-    Particle::System::NewSimple(kPtclKnockAwayA, this->mPosX, this->mPosY, this->mPosZ);
-    Particle::System::NewSimple(kPtclKnockAwayB, this->mPosX, this->mPosY, this->mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, this->mPos.x, this->mPos.y, this->mPos.z);
+    Particle::System::NewSimple(kPtclKnockAwayB, this->mPos.x, this->mPos.y, this->mPos.z);
     this->mStateIndex = 3;
     return 1;
 }
 /* The collision update veneer is retained because it is the retail call
  * destination; the rest are ordinary real class calls. */
 int daKrpa_c::ExecuteKnockedAway() {
-    this->mAngleX = this->mAngleX - 0x1000;
+    this->mAngle.x = this->mAngle.x - 0x1000;
     this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&this->mWithMeshClsn);
@@ -293,18 +293,18 @@ int daKrpa_c::ExecuteKnockedAway() {
 }
 void daKrpa_c::UpdateModelAndShadow() {
     if (this->mStateIndex == 3) {
-        Matrix4x3_FromRotationXYZExt(&this->mAnmModel.mat4x3, this->mAngleX, this->mAngleY,
-                                     this->mAngleZ);
+        Matrix4x3_FromRotationXYZExt(&this->mAnmModel.mat4x3, this->mAngle.x, this->mAngle.y,
+                                     this->mAngle.z);
     } else {
-        Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
+        Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
     }
-    this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
-    this->mAnmModel.mat4x3.t.y = this->mPosY >> 3;
-    this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
-    this->mMatrix.t.x = this->mPosX >> 3;
-    this->mMatrix.t.y = this->mPosY >> 3;
-    this->mMatrix.t.z = this->mPosZ >> 3;
-    DropShadowRadHeight(this->mShadowModel, this->mMatrix, this->mScaleX * 0x46,
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = this->mPos.y >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
+    this->mMatrix.t.x = this->mPos.x >> 3;
+    this->mMatrix.t.y = this->mPos.y >> 3;
+    this->mMatrix.t.z = this->mPos.z >> 3;
+    DropShadowRadHeight(this->mShadowModel, this->mMatrix, this->mScale.x * 0x46,
                         this->mGroundDistance, 0xf);
 }
 
@@ -319,7 +319,7 @@ void daKrpa_c::TrackClosestPlayer() {
         return;
     }
     this->mPlayer = player;
-    ApproachLinear(this->mAngleY, Vec3_HorzAngle(&this->mPos, &player->mPos), 0x800);
+    ApproachLinear(this->mAngle.y, Vec3_HorzAngle(&this->mPos, &player->mPos), 0x800);
 }
 void daKrpa_c::HandlePlayerHit() {
     u32 id = this->mdCcAcPos_c.otherOwner;
@@ -339,8 +339,8 @@ void daKrpa_c::HandlePlayerHit() {
     }
     if ((this->mdCcAcPos_c.hitFlags & 0x10) == 0)
         return;
-    this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
-    this->mAngleY = (short)(this->mPrevAngleY + 0x8000);
+    this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
+    this->mAngle.y = (short)(this->mPrevAngle.y + 0x8000);
     player->IncMegaKillCount();
     this->ChangeState(3);
 }

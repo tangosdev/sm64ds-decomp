@@ -17,11 +17,11 @@
  *
  * mBobPhase sits at 0x31e in dBgActor_c's tail padding; mBasePosY /
  * mBobAmplitude follow. InitResources seeds all three; Behavior advances
- * the phase and bobs mPosY on a sine of it. Nothing writes mAngle*.
+ * the phase and bobs mPos.y on a sine of it. Nothing writes mAngle*.
  */
 struct daObjEmmLog_c : dBgActor_c {
-    s16 mBobPhase;          /* 0x31e -- seeded from mAngleX, += 0x200 per Behavior */
-    s32 mBasePosY;          /* 0x320 -- InitResources copies mPosY */
+    s16 mBobPhase;          /* 0x31e -- seeded from mAngle.x, += 0x200 per Behavior */
+    s32 mBasePosY;          /* 0x320 -- InitResources copies mPos.y */
     s32 mBobAmplitude;      /* 0x324 -- 0x64000, or the spawn byte * 0xa000 */
 
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */

@@ -221,7 +221,7 @@ daObjKey_c::~daObjKey_c()
 void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
 {
     /* One register each: dy becomes the frames to the peak, height the frames after it. */
-    int dy = target->y - mPosY;
+    int dy = target->y - mPos.y;
     if (dy < 0)
         dy = -dy;
     {
@@ -236,20 +236,20 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
         height = JUMP_FRAMES - dy;
         mVertAccel = left / den;
     }
-    if (target->y >= mPosY) {
+    if (target->y >= mPos.y) {
         int a = mVertAccel;
         if (a < 0)
             a = -a;
-        mVertSpeed = height * a;
+        mSpeed.y = height * a;
     } else {
         int a = mVertAccel;
         if (a < 0)
             a = -a;
-        mVertSpeed = (dy + 1) * a;
+        mSpeed.y = (dy + 1) * a;
     }
     mTerminalVelocity = TERMINAL_VY;
     mHorzSpeed = Vec3_HorzDist(&mPos, target) / JUMP_FRAMES;
-    mPrevAngleY = Vec3_HorzAngle(&mPos, target);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, target);
 }
 
 /* UnloadKeyModels, 0x021310cc */
@@ -334,9 +334,9 @@ void daObjKey_c::StateFlyToCenter()
         center1.x = 0;
         center1.y = 0;
         center1.z = 0;
-        mVertSpeed = FLY_VY;
+        mSpeed.y = FLY_VY;
         mHorzSpeed = Vec3_HorzDist(&mPos, &center1) / 80;
-        mPrevAngleY = Vec3_HorzAngle(&mPos, &center1);
+        mPrevAngle.y = Vec3_HorzAngle(&mPos, &center1);
         mBounceCount = 0;
         mVertAccel = GRAVITY;
         Message::EndTalk();
@@ -344,33 +344,33 @@ void daObjKey_c::StateFlyToCenter()
         }
 
     case 2:
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         v.y = v.y + Y_LOOK;
         ApproachLinear(mCamLookAt, v, CAM_STEP);
         cam->SetLookAt(mCamLookAt);
         center2.x = 0;
         center2.y = 0;
         center2.z = 0;
-        Vec3_ApproachHorz(&mPosX, &center2, mHorzSpeed);
+        Vec3_ApproachHorz(&mPos.x, &center2, mHorzSpeed);
         if (mBounceCount == 0) {
-            if (mVertSpeed < 0) {
+            if (mSpeed.y < 0) {
                 int floor = mHomePos.y;
-                if (mPosY < floor) {
-                    mPosY = floor;
-                    mVertSpeed = BOUNCE_VY;
+                if (mPos.y < floor) {
+                    mPos.y = floor;
+                    mSpeed.y = BOUNCE_VY;
                     mHorzSpeed = 0;
                     mBounceCount++;
                     Sound::PlayBank3(SND_BOUNCE, mCamSpacePos);
                 }
             }
         } else {
-            if (mVertSpeed < 0) {
+            if (mSpeed.y < 0) {
                 int hover = mHomePos.y + HOVER_Y;
-                if (mPosY < hover) {
-                    mPosY = hover;
-                    mVertSpeed = 0;
+                if (mPos.y < hover) {
+                    mPos.y = hover;
+                    mSpeed.y = 0;
                     mVertAccel = 0;
                     mStep++;
                     mStateTimer = 0;
@@ -399,8 +399,8 @@ void daObjKey_c::StateFlyToCenter()
         }
     }
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngleY);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngle.y);
     MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
@@ -408,7 +408,7 @@ void daObjKey_c::StateFlyToCenter()
     VEC_Subtract(&v, &mPos, &v);
     Vec3_LslInPlace(&v, 3);
     VEC_Add(&v, &mPos, &v);
-    v.y = mScaleX * 13 + v.y;
+    v.y = mScale.x * 13 + v.y;
     mParticleID[0] = Particle::System::New(mParticleID[0], FX_TRAIL_A, v.x, v.y, v.z, 0, 0);
     mParticleID[1] = Particle::System::New(mParticleID[1], FX_TRAIL_B, v.x, v.y, v.z, 0, 0);
     mParticleID[2] = Particle::System::New(mParticleID[2], FX_TRAIL_C, v.x, v.y, v.z, 0, 0);
@@ -424,9 +424,9 @@ void daObjKey_c::StateStarJump()
     dCamera_c *cam = gCamera;
 
     if (mStep < 3) {
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         v.y = v.y + Y_SPARK;
         mParticleID[0] = Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
     }
@@ -451,13 +451,13 @@ void daObjKey_c::StateStarJump()
             mSavedCamPos.y = pos->y;
             mSavedCamPos.z = pos->z;
             cam->SetFlag_3();
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             v.y = v.y + Y_LOOK;
             cam->SetLookAt(v);
             player = ClosestPlayer();
-            playerPos = &player->mPosX;
+            playerPos = &player->mPos.x;
             v.x = playerPos[0];
             v.y = playerPos[1];
             v.z = playerPos[2];
@@ -494,11 +494,11 @@ void daObjKey_c::StateStarJump()
         cam->SetLookAt(v);
         if (Vec3_HorzDist(&mPos, &mJumpTarget) >= mHorzSpeed)
             return;
-        mPosX = mJumpTarget.x;
-        mPosY = mJumpTarget.y;
-        mPosZ = mJumpTarget.z;
-        mPosY += LAND_Y;
-        mVertSpeed = POP_VY;
+        mPos.x = mJumpTarget.x;
+        mPos.y = mJumpTarget.y;
+        mPos.z = mJumpTarget.z;
+        mPos.y += LAND_Y;
+        mSpeed.y = POP_VY;
         mVertAccel = GRAVITY;
         mHorzSpeed = 0;
         mStep++;
@@ -507,7 +507,7 @@ void daObjKey_c::StateStarJump()
     case 2:
         cam->SetLookAt(v);
         if (mWithMeshClsn.JustHitGround()) {
-            mVertSpeed = -mVertSpeed >> 1;
+            mSpeed.y = -mSpeed.y >> 1;
             func_02012694(SND_LAND, &mCamSpacePos);
             return;
         }
@@ -553,15 +553,15 @@ void daObjKey_c::StateStarJump()
 
     case 5:
         {
-            s32 *pos = &mPlayer->mPosX;
-            mPosX = pos[0];
-            mPosY = pos[1];
-            mPosZ = pos[2];
-            mAngleY = mPlayer->mAngleY;
-            mAnmModel.Advance();
-            if (mAnmModel.Finished())
-                mStep++;
-            return;
+        s32 *pos = &mPlayer->mPos.x;
+        mPos.x = pos[0];
+        mPos.y = pos[1];
+        mPos.z = pos[2];
+        mAngle.y = mPlayer->mAngle.y;
+        mAnmModel.Advance();
+        if (mAnmModel.Finished())
+            mStep++;
+        return;
         }
     }
 }
@@ -588,9 +588,9 @@ void daObjKey_c::StateDrop()
             mSavedCamPos.y = pos->y;
             mSavedCamPos.z = pos->z;
             cam->SetFlag_3();
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             v.y = v.y + Y_LOOK;
             cam->SetLookAt(v);
             mStep++;
@@ -598,19 +598,19 @@ void daObjKey_c::StateDrop()
         }
 
     case 1:
-        /* Offset after the copy: mPosY + Y_LOOK in the copy reorders the loads. */
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        /* Offset after the copy: mPos.y + Y_LOOK in the copy reorders the loads. */
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         v.y = v.y + Y_LOOK;
         cam->SetLookAt(v);
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         v.y = v.y + Y_SPARK;
         mParticleID[0] = Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
         if (mWithMeshClsn.JustHitGround()) {
-            mVertSpeed = -mVertSpeed >> 1;
+            mSpeed.y = -mSpeed.y >> 1;
             func_02012694(SND_LAND, &mCamSpacePos);
             return;
         }
@@ -674,12 +674,12 @@ void daObjKey_c::func_ov089_02131df4(daPly_c &p) {
     func_ov089_0213115c(ANIM_CARRY);
     mPlayer = player;
     {
-        /* Through a pointer: mPlayer->mPosX folds the offset into each load. */
-        s32 *pos = &mPlayer->mPosX;
-        mPosX = pos[0];
-        mPosY = pos[1];
-        mPosZ = pos[2];
-        mAngleY = mPlayer->mAngleY;
+        /* Through a pointer: mPlayer->mPos.x folds the offset into each load. */
+        s32 *pos = &mPlayer->mPos.x;
+        mPos.x = pos[0];
+        mPos.y = pos[1];
+        mPos.z = pos[2];
+        mAngle.y = mPlayer->mAngle.y;
         mFlags &= ~FLAG_HIDE;
         Event::SetBit(EVENT_KEY);
     }
@@ -699,20 +699,20 @@ s32 daObjKey_c::OnYoshiTryEat() {
 
 void daObjKey_c::UpdateModelTransform()
 {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     if (data_ov089_021328b4[mState] != 0 && mAnimID == 0) {
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.m[9] = mPosX >> 3;
-        mModel.mat4x3.m[10] = (mPosY + Y_LOOK) >> 3;
-        mModel.mat4x3.m[11] = mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
+        mModel.mat4x3.m[9] = mPos.x >> 3;
+        mModel.mat4x3.m[10] = (mPos.y + Y_LOOK) >> 3;
+        mModel.mat4x3.m[11] = mPos.z >> 3;
     }
     mShadowMatrix = IDENTITY_MATRIX4X3;
-    mShadowMatrix.m[9] = mPosX >> 3;
-    mShadowMatrix.m[10] = mPosY >> 3;
-    mShadowMatrix.m[11] = mPosZ >> 3;
+    mShadowMatrix.m[9] = mPos.x >> 3;
+    mShadowMatrix.m[10] = mPos.y >> 3;
+    mShadowMatrix.m[11] = mPos.z >> 3;
     /* Shadow only while the idle anim (file 0x801b) is showing. */
     if (mAnmModel.file == data_ov002_02110964.filePtr)
         DropShadowRadHeight(mShadowModel, mShadowMatrix, SHADOW_R, SHADOW_DEPTH, SHADOW_OPACITY);
@@ -759,16 +759,16 @@ int daObjKey_c::Behavior()
         if (animID == ANIM_CARRY) {
             daPly_c *player = mPlayer;
             if (player != 0) {
-                /* Through a pointer: player->mPosX folds the offset into each load. */
-                s32 *pos = &player->mPosX;
-                mPosX = pos[0];
-                mPosY = pos[1];
-                mPosZ = pos[2];
-                mAngleY = mPlayer->mAngleY;
+                /* Through a pointer: player->mPos.x folds the offset into each load. */
+                s32 *pos = &player->mPos.x;
+                mPos.x = pos[0];
+                mPos.y = pos[1];
+                mPos.z = pos[2];
+                mAngle.y = mPlayer->mAngle.y;
             }
             if (mAnmModel.Finished() == 0) {
-                Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+                Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
+                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
                 MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
                 vec.x = data_020a0e68.m[9];
                 vec.y = data_020a0e68.m[10];
@@ -809,7 +809,7 @@ int daObjKey_c::Behavior()
         mSpinSpeed -= SPIN_STEP;
     else if (mSpinSpeed == 0)
         mSpinSpeed = SPIN_FAST;
-    mAngleY += mSpinSpeed;
+    mAngle.y += mSpinSpeed;
     UpdatePos(0);
     (this->*data_ov089_02132cec.slots[mState])();
     UpdateModelTransform();
@@ -842,9 +842,9 @@ int daObjKey_c::InitResources()
         if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)&data_ov002_0211094c)->filePtr, 1, 1) == 0)
             return 0;
         mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
-        mScaleX = SCALE_STAR;
-        mScaleY = SCALE_STAR;
-        mScaleZ = SCALE_STAR;
+        mScale.x = SCALE_STAR;
+        mScale.y = SCALE_STAR;
+        mScale.z = SCALE_STAR;
         offset7.x = data_ov089_02132b40.x;
         offset7.y = data_ov089_02132b40.y;
         offset7.z = data_ov089_02132b40.z;
@@ -869,10 +869,10 @@ int daObjKey_c::InitResources()
             }
         }
         mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
-        mScaleX = SCALE_KEY;
-        mScaleY = SCALE_KEY;
-        mScaleZ = SCALE_KEY;
-        mVertSpeed = POP_VY;
+        mScale.x = SCALE_KEY;
+        mScale.y = SCALE_KEY;
+        mScale.z = SCALE_KEY;
+        mSpeed.y = POP_VY;
         offset.x = data_ov089_02132ca4.x;
         offset.y = data_ov089_02132ca4.y;
         offset.z = data_ov089_02132ca4.z;
@@ -885,9 +885,9 @@ int daObjKey_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mWithMeshClsn.SetLimMovFlag();
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mStateTimer = 0;
     mStep = 0;
     mBounceCount = 0;

@@ -708,7 +708,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN18DorifuModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination for the five model handles"
@@ -722,7 +722,7 @@
     },
     {
       "symbol": "_ZN20DorifuClsnFileHandleC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination for the five collision handles"
@@ -967,7 +967,7 @@
       "source": "0x0211182c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -987,7 +987,7 @@
       "source": "0x02111848",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1007,7 +1007,7 @@
       "source": "0x02111864",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1027,7 +1027,7 @@
       "source": "0x02111880",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1047,7 +1047,7 @@
       "source": "0x0211189c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1067,7 +1067,7 @@
       "source": "0x021118b8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1087,7 +1087,7 @@
       "source": "0x021118d4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1107,7 +1107,7 @@
       "source": "0x021118f0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1127,7 +1127,7 @@
       "source": "0x0211190c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1147,7 +1147,7 @@
       "source": "0x02111928",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"

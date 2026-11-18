@@ -35,7 +35,7 @@ struct daObjHeart_c : dActor_c {
     virtual s32 Behavior();         /* slot  6 */
     virtual s32 Render();           /* slot  9 */
 
-    /* Rebuilds mAnmModel's rotation/translation from mAngleY/mPos. */
+    /* Rebuilds mAnmModel's rotation/translation from mAngle.y/mPos. */
     void UpdateModelMatrix();
 };
 

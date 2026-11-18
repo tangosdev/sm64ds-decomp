@@ -29,7 +29,7 @@ struct daWanwan_c : dEnemyBase_c {
     s32 mLinkFloorY[6];                                    /* 0x5d0 */
     u8  pad_5e8[4];
     /* InitResources copies the position here, then adds 0xc8000 to the live
-       position. Behavior clamps mPosY up to mSpawnPos.y + 0xc8000. */
+       position. Behavior clamps mPos.y up to mSpawnPos.y + 0xc8000. */
     Vector3 mSpawnPos;      /* 0x5ec */
     s32 mChainExtension;    /* 0x5f8 -- leash slack; RestrictToChain uses it * 7 */
     u16 mActionTimer;       /* 0x5fc -- DecIfAbove0_Short */
@@ -44,7 +44,7 @@ struct daWanwan_c : dEnemyBase_c {
     s32 mState;             /* 0x610 -- index into data_ov014_0211476c; SetState stores it */
     u8  pad_614[4];
     s32 mReleaseSpeed;      /* 0x618 -- release step 6 approach speed */
-    u8  mIsOnGround;        /* 0x61c -- set when mPosY was clamped to the rest height */
+    u8 mIsOnGround;         /* 0x61c -- set when mPos.y was clamped to the rest height */
     u8  mWasOnGround;       /* 0x61d -- previous frame; landing fires on the rising edge */
 
     /* Defined INLINE on purpose. Out of line, mwccarm emits D2, D0, D1; the ROM

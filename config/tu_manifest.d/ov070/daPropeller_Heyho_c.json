@@ -54,28 +54,28 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f0a4Ev",
       "address": "0x0211f0a4",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov070_0211f0a4.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f100Ev",
       "address": "0x0211f100",
       "size": "0x00000268",
       "legacy_source": "src/func_ov070_0211f100.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f368Ev",
       "address": "0x0211f368",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov070_0211f368.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f450Ev",
       "address": "0x0211f450",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov070_0211f450.c",
@@ -89,7 +89,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f5f0Ev",
       "address": "0x0211f5f0",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov070_0211f5f0.cpp",
@@ -103,7 +103,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f694Ev",
       "address": "0x0211f694",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov070_0211f694.cpp",
@@ -117,35 +117,35 @@
       "ordinal": 10
     },
     {
-      "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fa80Ev",
       "address": "0x0211fa80",
       "size": "0x00000064",
       "legacy_source": "src/func_ov070_0211fa80.c",
       "ordinal": 11
     },
     {
-      "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fae4Ev",
       "address": "0x0211fae4",
       "size": "0x0000027c",
       "legacy_source": "src/func_ov070_0211fae4.c",
       "ordinal": 12
     },
     {
-      "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd60Ev",
       "address": "0x0211fd60",
       "size": "0x00000038",
       "legacy_source": "src/func_ov070_0211fd60.c",
       "ordinal": 13
     },
     {
-      "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd98Ev",
       "address": "0x0211fd98",
       "size": "0x00000210",
       "legacy_source": "src/func_ov070_0211fd98.c",
       "ordinal": 14
     },
     {
-      "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
+      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211ffa8Ev",
       "address": "0x0211ffa8",
       "size": "0x00000078",
       "legacy_source": "src/func_ov070_0211ffa8.cpp",
@@ -441,7 +441,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14HeyhoModelFileC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
@@ -470,39 +470,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@982",
-      "to": "@140",
-      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @998 in the current object. Preserve the established fleet-unique @140 alias for the first registration node. Re-keyed from @998 to @997 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @997 to @982 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @981 to @927 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @927 to @976 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @976 to @952 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @952 to @933 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @933 to @930 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @930 to @967 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @967 to @979 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @979 to @984 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
-    },
-    {
       "from": "@983",
-      "to": "@141",
-      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @999 in the current object. Preserve the established fleet-unique @141 alias for the second registration node. Re-keyed from @999 to @998 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @998 to @983 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @982 to @928 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @928 to @977 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @977 to @953 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @953 to @934 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @934 to @931 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @931 to @968 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @968 to @980 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @980 to @985 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "to": "@140",
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @998 in the current object. Preserve the established fleet-unique @140 alias for the first registration node. Re-keyed from @998 to @997 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @997 to @982 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @981 to @927 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @927 to @976 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @976 to @952 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @952 to @933 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @933 to @930 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @930 to @967 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @967 to @979 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @979 to @984 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @985 to @983 when the V3h block-copy wrapper gave way to a Vector3_16 copy-init of mAngle (#821) (paired by section index, offset, size, type, binding and bytes)."
     },
     {
       "from": "@984",
-      "to": "@142",
-      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1000 in the current object. Preserve the established fleet-unique @142 alias for the third registration node. Re-keyed from @1000 to @999 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @999 to @984 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @983 to @929 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @929 to @978 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @978 to @954 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @954 to @935 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @935 to @932 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @932 to @969 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @969 to @981 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @981 to @986 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "to": "@141",
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @999 in the current object. Preserve the established fleet-unique @141 alias for the second registration node. Re-keyed from @999 to @998 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @998 to @983 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @982 to @928 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @928 to @977 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @977 to @953 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @953 to @934 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @934 to @931 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @931 to @968 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @968 to @980 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @980 to @985 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @986 to @984 when the V3h block-copy wrapper gave way to a Vector3_16 copy-init of mAngle (#821) (paired by section index, offset, size, type, binding and bytes)."
     },
     {
       "from": "@985",
-      "to": "@143",
-      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1001 in the current object. Preserve the established fleet-unique @143 alias for the fourth registration node. Re-keyed from @1001 to @1000 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1000 to @985 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @984 to @930 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @930 to @979 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @979 to @955 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @955 to @936 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @936 to @933 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @933 to @970 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @970 to @982 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @982 to @987 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "to": "@142",
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1000 in the current object. Preserve the established fleet-unique @142 alias for the third registration node. Re-keyed from @1000 to @999 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @999 to @984 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @983 to @929 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @929 to @978 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @978 to @954 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @954 to @935 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @935 to @932 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @932 to @969 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @969 to @981 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @981 to @986 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @987 to @985 when the V3h block-copy wrapper gave way to a Vector3_16 copy-init of mAngle (#821) (paired by section index, offset, size, type, binding and bytes)."
     },
     {
       "from": "@986",
-      "to": "@144",
-      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1002 in the current object. Preserve the established fleet-unique @144 alias for the fifth registration node. Re-keyed from @1002 to @1001 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1001 to @986 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @985 to @931 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @931 to @980 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @980 to @956 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @956 to @937 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @937 to @934 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @934 to @971 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @971 to @983 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @983 to @988 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "to": "@143",
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1001 in the current object. Preserve the established fleet-unique @143 alias for the fourth registration node. Re-keyed from @1001 to @1000 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1000 to @985 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @984 to @930 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @930 to @979 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @979 to @955 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @955 to @936 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @936 to @933 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @933 to @970 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @970 to @982 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @982 to @987 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @988 to @986 when the V3h block-copy wrapper gave way to a Vector3_16 copy-init of mAngle (#821) (paired by section index, offset, size, type, binding and bytes)."
     },
     {
       "from": "@987",
-      "to": "@145",
-      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1003 in the current object. Preserve the established fleet-unique @145 alias for the sixth registration node. Re-keyed from @1003 to @1002 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1002 to @987 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @986 to @932 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @932 to @981 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @981 to @957 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @957 to @938 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @938 to @935 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @935 to @972 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @972 to @984 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @984 to @989 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "to": "@144",
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1002 in the current object. Preserve the established fleet-unique @144 alias for the fifth registration node. Re-keyed from @1002 to @1001 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1001 to @986 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @985 to @931 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @931 to @980 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @980 to @956 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @956 to @937 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @937 to @934 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @934 to @971 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @971 to @983 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @983 to @988 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @989 to @987 when the V3h block-copy wrapper gave way to a Vector3_16 copy-init of mAngle (#821) (paired by section index, offset, size, type, binding and bytes)."
     },
     {
       "from": "@988",
+      "to": "@145",
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1003 in the current object. Preserve the established fleet-unique @145 alias for the sixth registration node. Re-keyed from @1003 to @1002 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1002 to @987 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @986 to @932 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @932 to @981 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @981 to @957 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @957 to @938 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @938 to @935 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @935 to @972 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @972 to @984 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @984 to @989 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @990 to @988 when the V3h block-copy wrapper gave way to a Vector3_16 copy-init of mAngle (#821) (paired by section index, offset, size, type, binding and bytes)."
+    },
+    {
+      "from": "@989",
       "to": "@146",
-      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1004 in the current object. Preserve the established fleet-unique @146 alias for the seventh registration node. Re-keyed from @1004 to @1003 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1003 to @988 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @987 to @933 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @933 to @982 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @982 to @958 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @958 to @939 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @939 to @936 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @936 to @973 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @973 to @985 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @985 to @990 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1004 in the current object. Preserve the established fleet-unique @146 alias for the seventh registration node. Re-keyed from @1004 to @1003 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1003 to @988 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @987 to @933 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @933 to @982 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @982 to @958 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @958 to @939 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @939 to @936 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @936 to @973 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @973 to @985 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @985 to @990 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @991 to @989 when the V3h block-copy wrapper gave way to a Vector3_16 copy-init of mAngle (#821) (paired by section index, offset, size, type, binding and bytes)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -937,7 +937,7 @@
       "source": "0x02122b0c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1421,7 +1421,8 @@
     "27/27 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled (create refuses extern-C-wrapped bodies). Carries the NEW struct-copy lever: mwccarm's C++ front end scalarizes a plain struct assignment where the C front end emits an ldm/stm block copy; an array-wrapper view (struct V3w { int w[3]; }) restores the block copy -- fixed func_ov070_0211f48c (-4B) and func_ov070_0211f6e0 (+8B) after fdiff proved the idiom byte-exact. Also: two members keep their own int-target ApproachAngle view via BLOCK-SCOPE extern declarations (C++ name hiding), because the TU-wide extern-C declaration cannot serve both signatures and the parameter width is byte-load-bearing. FlyGuy_Spawn (now the reconstructed daPropeller_Heyho_c_classInit) stores &_ZTV19daPropeller_Heyho_c[2] (+8 rule).",
     "Static initializer folded: the HeyhoModelFile handle (file 0x411), the six HeyhoAnimationFilePtr handles (files 0x417/0x412/0x413/0x414/0x415/0x416), their destructor-registration nodes and the six state-record copies make mwcc emit __sinit_d_a_propeller_heyho.cpp itself (0x284, raw-byte-identical to retail __sinit_ov070_02122afc with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @992-@998 clashed with the fleet and are renamed (@992->@140, @993->@141, @994->@142, @995->@143, @996->@144, @997->@145, @998->@146). This fold does NOT license the .data PMF descriptors or any other .data.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "Collision property member calls replace local helper declarations. Reconciled 7 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (62 sections, 299 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 7 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (62 sections, 299 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "Static initializer folded: the HeyhoModelFile handle (file 0x411), the six HeyhoAnimationFilePtr handles (files 0x417/0x412/0x413/0x414/0x415/0x416), their destructor-registration nodes and the six state-record copies make mwcc emit __sinit_d_a_propeller_heyho.cpp itself (0x284, raw-byte-identical to retail __sinit_ov070_02122afc with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @992-@998 clashed with the fleet and are renamed (@992->@931, @993->@932, @994->@933, @995->@934, @996->@935, @997->@936, @998->@937). This fold does NOT license the .data PMF descriptors or any other .data."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1737,7 +1738,7 @@
       "reason": "The genuine Vector3 locals make mwcc emit the deliberately empty inline destructor as vague linkage. This object's copy is the exact four-byte `bx lr` body at its canonical arm9 home, and no surviving section references the discarded duplicate."
     },
     {
-      "symbol": "_ZN19daPropeller_Heyho_c33@class$360d_a_propeller_heyho_cppD1Ev",
+      "symbol": "_ZN19daPropeller_Heyho_c33@class$363d_a_propeller_heyho_cppD1Ev",
       "disposition": "deadstrip",
       "reason": "The mHomePos union overlays the existing three scalar coordinates with a Vector3 view. mwcc emits this four-byte empty destructor for the union's nontrivial Vector3 member; it is compiler-only output with no retail function home."
     }
@@ -2012,28 +2013,28 @@
           },
           {
             "ordinal": 2,
-            "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f0a4Ev",
             "identical": true,
             "relocCount": 3,
             "differences": []
           },
           {
             "ordinal": 3,
-            "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f100Ev",
             "identical": true,
             "relocCount": 18,
             "differences": []
           },
           {
             "ordinal": 4,
-            "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f368Ev",
             "identical": true,
             "relocCount": 5,
             "differences": []
           },
           {
             "ordinal": 5,
-            "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f450Ev",
             "identical": true,
             "relocCount": 0,
             "differences": []
@@ -2047,7 +2048,7 @@
           },
           {
             "ordinal": 7,
-            "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f5f0Ev",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2061,7 +2062,7 @@
           },
           {
             "ordinal": 9,
-            "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f694Ev",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2075,35 +2076,35 @@
           },
           {
             "ordinal": 11,
-            "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fa80Ev",
             "identical": true,
             "relocCount": 3,
             "differences": []
           },
           {
             "ordinal": 12,
-            "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fae4Ev",
             "identical": true,
             "relocCount": 23,
             "differences": []
           },
           {
             "ordinal": 13,
-            "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd60Ev",
             "identical": true,
             "relocCount": 2,
             "differences": []
           },
           {
             "ordinal": 14,
-            "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd98Ev",
             "identical": true,
             "relocCount": 21,
             "differences": []
           },
           {
             "ordinal": 15,
-            "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211ffa8Ev",
             "identical": true,
             "relocCount": 5,
             "differences": []
@@ -2259,22 +2260,22 @@
             "size": "0x0000005c"
           },
           {
-            "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f0a4Ev",
             "section": ".text",
             "size": "0x0000005c"
           },
           {
-            "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f100Ev",
             "section": ".text",
             "size": "0x00000268"
           },
           {
-            "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f368Ev",
             "section": ".text",
             "size": "0x000000e8"
           },
           {
-            "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f450Ev",
             "section": ".text",
             "size": "0x0000003c"
           },
@@ -2284,7 +2285,7 @@
             "size": "0x00000164"
           },
           {
-            "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f5f0Ev",
             "section": ".text",
             "size": "0x0000003c"
           },
@@ -2294,7 +2295,7 @@
             "size": "0x00000068"
           },
           {
-            "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f694Ev",
             "section": ".text",
             "size": "0x0000004c"
           },
@@ -2304,27 +2305,27 @@
             "size": "0x000003a0"
           },
           {
-            "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fa80Ev",
             "section": ".text",
             "size": "0x00000064"
           },
           {
-            "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fae4Ev",
             "section": ".text",
             "size": "0x0000027c"
           },
           {
-            "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd60Ev",
             "section": ".text",
             "size": "0x00000038"
           },
           {
-            "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd98Ev",
             "section": ".text",
             "size": "0x00000210"
           },
           {
-            "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211ffa8Ev",
             "section": ".text",
             "size": "0x00000078"
           },
@@ -2796,28 +2797,28 @@
           },
           {
             "ordinal": 2,
-            "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f0a4Ev",
             "identical": true,
             "relocCount": 3,
             "differences": []
           },
           {
             "ordinal": 3,
-            "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f100Ev",
             "identical": true,
             "relocCount": 18,
             "differences": []
           },
           {
             "ordinal": 4,
-            "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f368Ev",
             "identical": true,
             "relocCount": 5,
             "differences": []
           },
           {
             "ordinal": 5,
-            "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f450Ev",
             "identical": true,
             "relocCount": 0,
             "differences": []
@@ -2831,7 +2832,7 @@
           },
           {
             "ordinal": 7,
-            "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f5f0Ev",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2845,7 +2846,7 @@
           },
           {
             "ordinal": 9,
-            "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f694Ev",
             "identical": true,
             "relocCount": 2,
             "differences": []
@@ -2859,35 +2860,35 @@
           },
           {
             "ordinal": 11,
-            "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fa80Ev",
             "identical": true,
             "relocCount": 3,
             "differences": []
           },
           {
             "ordinal": 12,
-            "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fae4Ev",
             "identical": true,
             "relocCount": 23,
             "differences": []
           },
           {
             "ordinal": 13,
-            "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd60Ev",
             "identical": true,
             "relocCount": 2,
             "differences": []
           },
           {
             "ordinal": 14,
-            "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd98Ev",
             "identical": true,
             "relocCount": 21,
             "differences": []
           },
           {
             "ordinal": 15,
-            "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211ffa8Ev",
             "identical": true,
             "relocCount": 5,
             "differences": []
@@ -3043,22 +3044,22 @@
             "size": "0x0000005c"
           },
           {
-            "symbol": "_Z19func_ov070_0211f0a4P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f0a4Ev",
             "section": ".text",
             "size": "0x0000005c"
           },
           {
-            "symbol": "_Z19func_ov070_0211f100P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f100Ev",
             "section": ".text",
             "size": "0x00000268"
           },
           {
-            "symbol": "_Z19func_ov070_0211f368P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f368Ev",
             "section": ".text",
             "size": "0x000000e8"
           },
           {
-            "symbol": "_Z19func_ov070_0211f450P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f450Ev",
             "section": ".text",
             "size": "0x0000003c"
           },
@@ -3068,7 +3069,7 @@
             "size": "0x00000164"
           },
           {
-            "symbol": "_Z19func_ov070_0211f5f0P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f5f0Ev",
             "section": ".text",
             "size": "0x0000003c"
           },
@@ -3078,7 +3079,7 @@
             "size": "0x00000068"
           },
           {
-            "symbol": "_Z19func_ov070_0211f694P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211f694Ev",
             "section": ".text",
             "size": "0x0000004c"
           },
@@ -3088,27 +3089,27 @@
             "size": "0x000003a0"
           },
           {
-            "symbol": "_Z19func_ov070_0211fa80P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fa80Ev",
             "section": ".text",
             "size": "0x00000064"
           },
           {
-            "symbol": "_Z19func_ov070_0211fae4P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fae4Ev",
             "section": ".text",
             "size": "0x0000027c"
           },
           {
-            "symbol": "_Z19func_ov070_0211fd60P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd60Ev",
             "section": ".text",
             "size": "0x00000038"
           },
           {
-            "symbol": "_Z19func_ov070_0211fd98P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211fd98Ev",
             "section": ".text",
             "size": "0x00000210"
           },
           {
-            "symbol": "_Z19func_ov070_0211ffa8P19daPropeller_Heyho_c",
+            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_0211ffa8Ev",
             "section": ".text",
             "size": "0x00000078"
           },

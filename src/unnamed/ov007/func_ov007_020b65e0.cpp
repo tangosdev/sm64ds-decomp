@@ -1,0 +1,112 @@
+//cpp
+#include "Ov007Work.h"
+#include "Ov007MenuMem.h"
+#include "Ov007Texture.h"
+
+extern "C" void func_ov007_020c937c(void *state);
+extern "C" void func_ov007_020c020c(struct Ov007Camera *cam);
+extern "C" void func_ov007_020c2410(void *p);
+extern "C" void func_ov007_020c2018(void *p);
+extern "C" void func_ov007_020c22f8(void *p);
+extern "C" void func_ov007_020c9080(void *p);
+extern "C" void func_ov007_020b3edc(int a);
+extern "C" void func_ov007_020c9460(void *p);
+extern "C" void ItemView_Destroy(struct Ov007ItemView *view);
+extern "C" void func_ov007_020b6cd0(void);
+extern "C" void func_ov007_020b283c(void);
+extern "C" void PickerScene_Destroy(void);
+extern "C" void func_ov007_020bf304(void);
+
+/* Teardown of the data_ov007_0210342c manager. */
+extern "C" void func_ov007_020b65e0(void) {
+    int i;
+
+    if (WORK->states[0] != 0) {
+        func_ov007_020c937c(WORK->states[0]);
+        WORK->states[0] = 0;
+    }
+    if (WORK->states[1] != 0) {
+        func_ov007_020c937c(WORK->states[1]);
+        WORK->states[1] = 0;
+    }
+    if (WORK->states[2] != 0) {
+        func_ov007_020c937c(WORK->states[2]);
+        WORK->states[2] = 0;
+    }
+    if (WORK->cameras[0] != 0) {
+        func_ov007_020c020c(WORK->cameras[0]);
+        WORK->cameras[0] = 0;
+    }
+    if (WORK->cameras[1] != 0) {
+        func_ov007_020c020c(WORK->cameras[1]);
+        WORK->cameras[1] = 0;
+    }
+    if (WORK->lights[0] != 0) {
+        func_ov007_020c2410(WORK->lights[0]);
+        WORK->lights[0] = 0;
+    }
+    if (WORK->lights[1] != 0) {
+        func_ov007_020c2410(WORK->lights[1]);
+        WORK->lights[1] = 0;
+    }
+    if (WORK->touch != 0) {
+        func_ov007_020c2018(WORK->touch);
+        WORK->touch = 0;
+    }
+    if (WORK->pad != 0) {
+        func_ov007_020c22f8(WORK->pad);
+        WORK->pad = 0;
+    }
+    if (WORK->tweens[0] != 0) {
+        func_ov007_020c9080(WORK->tweens[0]);
+        WORK->tweens[0] = 0;
+    }
+    if (WORK->tweens[1] != 0) {
+        func_ov007_020c9080(WORK->tweens[1]);
+        WORK->tweens[1] = 0;
+    }
+    if (WORK->settings != 0) {
+        func_ov007_020c3d1c(WORK->settings);
+        WORK->settings = 0;
+    }
+
+    for (i = 0; i < 11; i++) {
+        if (WORK->textures[i] != 0) {
+            ((Ov007Texture *)WORK->textures[i])->func_ov007_020c1620();
+            WORK->textures[i] = 0;
+        }
+    }
+
+    func_ov007_020b3edc(0x16);
+
+    if (WORK->paletteState != 0) {
+        func_ov007_020c937c(WORK->paletteState);
+        WORK->paletteState = 0;
+    }
+
+    for (i = 0; i < 3; i++) {
+        if (WORK->paletteBufs[i] != 0) {
+            func_ov007_020c9460(WORK->paletteBufs[i]);
+            WORK->paletteBufs[i] = 0;
+        }
+    }
+
+    for (i = 0; i < 24; i++) {
+        if (WORK->itemViews[i] != 0) {
+            ItemView_Destroy(WORK->itemViews[i]);
+            WORK->itemViews[i] = 0;
+        }
+    }
+
+    func_ov007_020b6cd0();
+    func_ov007_020b283c();
+    PickerScene_Destroy();
+    func_ov007_020bf304();
+
+    if (WORK == 0) {
+        return;
+    }
+
+    func_ov007_020c3d1c(WORK);
+    WORK = 0;
+}

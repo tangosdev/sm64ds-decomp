@@ -2,10 +2,7 @@
 #include "dExtSimpleModel_c.h"
 #include "Ov007Model.h"
 
-struct Dst;
-struct Desc;
-struct ElemA;
-void func_020462d0(Dst *a, Desc *b, ElemA *c);
+#include "Dst.h"
 void func_020462b4(int *p, int v);
 extern "C" void func_ov007_020bc434(Ov007Model *m);
 
@@ -19,7 +16,7 @@ extern "C" void func_ov007_020bc47c(Ov007Model *self) {
     if ((self->flags & 8) == 0) {
         dExtSimpleModel_c::LoadTexAndPal(*m->modelFile);
     }
-    func_020462d0((Dst *)m, (Desc *)m->modelFile, (ElemA *)self->transforms);
+    ((RuntimeModel *)m)->func_020462d0((Desc *)m->modelFile, (ElemA *)self->transforms);
     if ((self->flags & 4) != 0) {
         func_020462b4((int *)m, (int)self->blendBuffer);
     }

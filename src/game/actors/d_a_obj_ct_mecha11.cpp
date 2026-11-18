@@ -3,7 +3,7 @@
  * 9 function(s), .text 0x021116ec..0x02111bd0. Tick Tock Clock's spinning
  * platform (profile CT_MECHA11).
  *
- * Behavior adds a clock-setting step to mAngleX. Setting 2 rolls a sign
+ * Behavior adds a clock-setting step to mAngle.x. Setting 2 rolls a sign
  * and, for the first five frames of the burst, adds nothing. InitResources
  * loads the model and the moving mesh, then probes a short way down for the
  * floor the cuboid shadow sits on. UpdateShadow widens the clip as the
@@ -72,7 +72,7 @@ short data_ov035_02112b80[2] = {0x00c8, 0x0258};
 daObjCtMecha11_c::~daObjCtMecha11_c() {}
 
 void daObjCtMecha11_c::UpdateShadow() {
-    int d1 = mPosY - mFloorPosY;
+    int d1 = mPos.y - mFloorPosY;
     int ad = d1 < 0 ? -d1 : d1;
     if (ad > 0x7d0000)
         return;
@@ -82,21 +82,21 @@ void daObjCtMecha11_c::UpdateShadow() {
         clipD = 0x350000;
     mClipOffsetY = -half;
     mClipRadius = (int)(clipD + ((unsigned)clipD >> 31)) >> 4;
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.m[9] = mPosX >> 3;
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mFloorPosY >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
-    int s = FX_CosIdx((u16)mAngleX >> 4);
+    mShadowMat.m[11] = mPos.z >> 3;
+    int s = FX_CosIdx((u16)mAngle.x >> 4);
     int sa = s < 0 ? -s : s;
     int scaled = FX_MUL(sa, 0x26c000);
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x12c000, 0x32000, scaled + 0x50000, 0xf);
 }
 
 void daObjCtMecha11_c::UpdateModel() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 int daObjCtMecha11_c::CleanupResources() {
@@ -115,7 +115,7 @@ int daObjCtMecha11_c::Render() {
 
 int daObjCtMecha11_c::Behavior() {
     unsigned char idx = data_0209f2c0;
-    mPrevAngleX = data_ov035_02112b80[idx];
+    mPrevAngle.x = data_ov035_02112b80[idx];
     if (idx == 2) {
         if (DecIfAbove0_Short(&mRandTimer) == 0) {
             int r = (unsigned short)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
@@ -129,17 +129,17 @@ int daObjCtMecha11_c::Behavior() {
             if (mRandTimer < mRandFrames - 5) {
                 /* The temporary keeps the 0x92 address in its own register
                  * beside the this+0x300 base the timer already computed. */
-                short *angleStep = &mPrevAngleX;
+                short *angleStep = &mPrevAngle.x;
                 *angleStep = (*angleStep * mRandDirection);
             } else {
-                mPrevAngleX = 0;
+                mPrevAngle.x = 0;
             }
         }
     }
     mMeshCollider.SetClipRadius(0x180000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    short *angle = &mAngleX;
-    *angle = (*angle + mPrevAngleX);
+    short *angle = &mAngle.x;
+    *angle = (*angle + mPrevAngle.x);
     UpdateModel();
     UpdateShadow();
     if (IsClsnInRange(0x180000, 0x1000))
@@ -154,13 +154,13 @@ int daObjCtMecha11_c::InitResources() {
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *kf = dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
-    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngle.y, data_ov035_02112238);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y = v.y - 0xa000;
     dBgCh_Gnd rg;
     rg.SetObjAndPos(v, 0);

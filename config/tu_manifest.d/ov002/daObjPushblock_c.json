@@ -190,7 +190,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "target_module": "arm9",
       "target_address": "0x02017acc"
     },
@@ -210,7 +210,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "target_module": "arm9",
       "target_address": "0x02017b4c"
     },
@@ -298,7 +298,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN21PushblockModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
@@ -312,7 +312,7 @@
     },
     {
       "symbol": "_ZN20PushblockClsnFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"

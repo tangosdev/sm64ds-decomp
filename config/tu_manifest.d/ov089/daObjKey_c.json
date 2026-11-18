@@ -412,7 +412,8 @@
     "Widened from the ten-function span 0x02131b18..0x021327d0. The folded files were _ZN10daObjKey_cD1Ev.cpp, _ZN10daObjKey_cD0Ev.cpp, func_ov089_02130fb4.c, UnloadKeyModels.cpp, LoadKeyModels.cpp, func_ov089_0213115c.cpp, func_ov089_021311c0.c, func_ov089_0213162c.c, d_a_obj_key_last_star.c and d_a_obj_key_obj_key.c; attribution.json keeps each one's credit through a path#symbol override.",
     "Static initializer folded: the four ObjKeyModelFile handles (files 0x44d, 0x49c, 0x49d, 0x49e), the four ObjKeyAnimationFilePtr handles (files 0x44e, 0x44f, 0x450, 0x451), their destructor-registration nodes, the eight PMF descriptors and the ObjKeyStateTable make mwcc emit __sinit_d_a_obj_key.cpp itself (0x220, raw-byte-identical to retail __sinit_ov089_021328d4 with the same relocation sites); the handwritten src/unnamed/ov089/__sinit_ov089_021328d4.c is retired. mwcc numbers the descriptors @528-@542 per TU and the fleet already defines those names, so defined_symbol_renames carries them as @700-@710/@724/@726. The offset vector at 0x02132ca4 is a plain ObjKeyVec3 triple: a Vector3 static would register a destructor the retail initializer never calls. This fold does NOT license the .rodata file tables (0x02132880..0x021328d4), the b40 Vector3, the RTTI chain, the two g_profile rows or the vtable.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "Collision property member calls replace local helper declarations. Reconciled 16 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (61 sections, 304 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 16 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (61 sections, 304 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "Static initializer folded: the four ObjKeyModelFile handles (files 0x44d, 0x49c, 0x49d, 0x49e), the four ObjKeyAnimationFilePtr handles (files 0x44e, 0x44f, 0x450, 0x451), their destructor-registration nodes, the eight PMF descriptors and the ObjKeyStateTable make mwcc emit __sinit_d_a_obj_key.cpp itself (0x220, raw-byte-identical to retail __sinit_ov089_021328d4 with the same relocation sites); the handwritten src/unnamed/ov089/__sinit_ov089_021328d4.c is retired. mwcc numbers the descriptors @528-@542 per TU and the fleet already defines those names, so defined_symbol_renames carries them as @630-@640/@642/@644. The offset vector at 0x02132ca4 is a plain ObjKeyVec3 triple: a Vector3 static would register a destructor the retail initializer never calls. This fold does NOT license the .rodata file tables (0x02132880..0x021328d4), the b40 Vector3, the RTTI chain, the two g_profile rows or the vtable."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -890,7 +891,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN15ObjKeyModelFileC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
@@ -1183,7 +1184,7 @@
       "source": "0x021328e4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1203,7 +1204,7 @@
       "source": "0x02132900",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1223,7 +1224,7 @@
       "source": "0x0213291c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1243,7 +1244,7 @@
       "source": "0x02132938",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1701,82 +1702,82 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1283",
+      "from": "@1286",
       "to": "@2708",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1248 to @1194 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1194 to @1242 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1242 to @1240 when a redundant cast was removed (same section, offset, size, type and binding). Re-keyed from @1240 to @1225 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1225 to @1266 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1266 to @1278 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1278 to @1283 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1284",
+      "from": "@1287",
       "to": "@1175",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1249 to @1195 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1195 to @1243 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1243 to @1241 when a redundant cast was removed (same section, offset, size, type and binding). Re-keyed from @1241 to @1226 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1226 to @1267 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1267 to @1279 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1279 to @1284 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1285",
+      "from": "@1288",
       "to": "@2709",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1250 to @1196 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1196 to @1244 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1244 to @1242 when a redundant cast was removed (same section, offset, size, type and binding). Re-keyed from @1242 to @1227 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1227 to @1268 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1268 to @1280 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1280 to @1285 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1286",
+      "from": "@1289",
       "to": "@1177",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1251 to @1197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1197 to @1245 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1245 to @1243 when a redundant cast was removed (same section, offset, size, type and binding). Re-keyed from @1243 to @1228 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1228 to @1269 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1269 to @1281 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1281 to @1286 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1287",
+      "from": "@1290",
       "to": "@1178",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1252 to @1198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1198 to @1246 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1246 to @1244 when a redundant cast was removed (same section, offset, size, type and binding). Re-keyed from @1244 to @1229 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1229 to @1270 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1270 to @1282 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1282 to @1287 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1288",
+      "from": "@1291",
       "to": "@1179",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1253 to @1199 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1199 to @1247 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1247 to @1245 when a redundant cast was removed (same section, offset, size, type and binding). Re-keyed from @1245 to @1230 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1230 to @1271 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1271 to @1283 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1283 to @1288 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1289",
+      "from": "@1292",
       "to": "@1180",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1254 to @1200 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1200 to @1248 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1248 to @1246 when a redundant cast was removed (same section, offset, size, type and binding). Re-keyed from @1246 to @1231 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1231 to @1272 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1272 to @1284 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1284 to @1289 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1290",
+      "from": "@1293",
       "to": "@1181",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1255 to @1201 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1201 to @1249 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1249 to @1247 when a redundant cast was removed (same section, offset, size, type and binding). Re-keyed from @1247 to @1232 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1232 to @1273 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1273 to @1285 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1285 to @1290 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@681",
+      "from": "@684",
       "to": "@726",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @605 to @551 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @551 to @627 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @627 to @664 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @664 to @676 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @676 to @681 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@683",
+      "from": "@686",
       "to": "@710",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @607 to @553 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @553 to @629 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @629 to @666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @666 to @678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @678 to @683 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@685",
+      "from": "@688",
       "to": "@708",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @609 to @555 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @555 to @631 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @631 to @668 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @668 to @680 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @680 to @685 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@687",
+      "from": "@690",
       "to": "@724",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @611 to @557 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @557 to @633 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @633 to @670 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @670 to @682 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @682 to @687 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@689",
+      "from": "@692",
       "to": "@704",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @613 to @559 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @559 to @635 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @635 to @672 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @672 to @684 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @684 to @689 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@691",
+      "from": "@694",
       "to": "@702",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @615 to @561 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @561 to @637 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @637 to @674 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @674 to @686 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @686 to @691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@693",
+      "from": "@696",
       "to": "@700",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @617 to @563 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @563 to @639 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @639 to @676 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @676 to @688 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @688 to @693 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@695",
+      "from": "@698",
       "to": "@706",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @619 to @565 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @565 to @641 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @641 to @678 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @678 to @690 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @690 to @695 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }

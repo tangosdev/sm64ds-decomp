@@ -175,9 +175,9 @@ s32 daRedBombhei_c::InitResources()
     mShutterID = 0;
 
     {
-        int z = mPosZ;
-        int y = mPosY + 0x64000;
-        pos.x = mPosX;
+        int z = mPos.z;
+        int y = mPos.y + 0x64000;
+        pos.x = mPos.x;
         pos.y = y;
         pos.z = z;
     }
@@ -185,7 +185,7 @@ s32 daRedBombhei_c::InitResources()
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn() != 0)
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
 
     if (IsCharacterSpecific() != 0) {
         u8 character = ClosestPlayer()->mCharacter;
@@ -214,7 +214,7 @@ s32 daRedBombhei_c::Behavior()
         playerPos = *src;
         if (Vec3_HorzDist(&mPos, &playerPos) < 0x12c000) {
             short angle = Vec3_HorzAngle(&mPos, &playerPos);
-            ApproachLinear(mAngleY, angle, 0x100);
+            ApproachLinear(mAngle.y, angle, 0x100);
         }
     }
     mAnmModel.Advance();
@@ -241,14 +241,14 @@ s32 daRedBombhei_c::CleanupResources()
 
 /* Places the model and drops the shadow under the body. */
 void daRedBombhei_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
-    this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
-    this->mAnmModel.mat4x3.t.y = (this->mPosY + 0x4000) >> 3;
-    this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
+    Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = (this->mPos.y + 0x4000) >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
     *(Mtx43 *)&this->mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
-    this->mShadowMat.t.x = this->mPosX >> 3;
-    this->mShadowMat.t.y = (this->mPosY - 0x8000) >> 3;
-    this->mShadowMat.t.z = this->mPosZ >> 3;
+    this->mShadowMat.t.x = this->mPos.x >> 3;
+    this->mShadowMat.t.y = (this->mPos.y - 0x8000) >> 3;
+    this->mShadowMat.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMat, 0x64000, 0x32000, 15);
 }
 
@@ -292,7 +292,7 @@ int daRedBombhei_c::PanCameraBack() {
     }
     int lookAtDone = StepCameraPoint(&lookAt, &this->mSavedCamLookAt);
     posDone = StepCameraPoint(&pos, &this->mSavedCamPos);
-    if ((this->mAngleX & 0xff) == kVariantCannonCut) {
+    if ((this->mAngle.x & 0xff) == kVariantCannonCut) {
         lookAtDone = 1;
         posDone = 1;
         cam->SetLookAt(this->mSavedCamLookAt);
@@ -327,7 +327,7 @@ int daRedBombhei_c::PanCameraToShutter() {
             offset.x = 0;
             offset.y = 0;
             offset.z = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, shutter->mAngleY);
+            Matrix4x3_FromRotationY(&data_020a0e68, shutter->mAngle.y);
             MTX_MultVec43(&targetLookAt, &data_020a0e68, &offset);
             Vec3_Add(&sum, &shutter->mPos, &offset);
             targetLookAt = sum;
@@ -347,7 +347,7 @@ int daRedBombhei_c::PanCameraToShutter() {
             }
             lookAtDone = StepCameraPoint(&lookAt, &targetLookAt);
             posDone = StepCameraPoint(&pos, &targetPos);
-            if ((this->mAngleX & 0xff) == kVariantCannonCut) {
+            if ((this->mAngle.x & 0xff) == kVariantCannonCut) {
                 lookAtDone = 1;
                 posDone = 1;
                 cam->SetLookAt(targetLookAt);
@@ -364,7 +364,7 @@ int daRedBombhei_c::PanCameraToShutter() {
 
 /* Is this the buddy that opens the cannon? */
 int daRedBombhei_c::IsCannonRole() {
-    int variant = this->mAngleX;
+    int variant = this->mAngle.x;
     int result = 1;
     variant = variant & 0xff;
     if (variant == kVariantCannonPan) return result;
@@ -374,7 +374,7 @@ int daRedBombhei_c::IsCannonRole() {
 
 /* Is this the red-coin tutor? */
 int daRedBombhei_c::IsRedCoinRole() {
-    return (this->mAngleX & 0xff) == kVariantRedCoins;
+    return (this->mAngle.x & 0xff) == kVariantRedCoins;
 }
 
 /* Was this buddy placed for one character only? */
@@ -397,9 +397,9 @@ int daRedBombhei_c::IsCharacterSpecific() {
 void daRedBombhei_c::ShowTalkMessage(int msgID, u8 msgFlag) {
     daPly_c *player = this->mTalkPlayer;
     Vector3 pos;
-    int x = this->mPosX;
-    int z = this->mPosZ;
-    int y = this->mPosY + 0x32000;
+    int x = this->mPos.x;
+    int z = this->mPos.z;
+    int y = this->mPos.y + 0x32000;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -457,7 +457,7 @@ void daRedBombhei_c::UpdateTalk() {
     if (param != 0xffff)
         msgID = (u16)param;
     {
-        int *p = (int *)(unsigned)&player->mPosX;
+        int *p = (int *)(unsigned)&player->mPos.x;
         int a = p[0];
         playerPos.x = a;
         int b = p[1];
@@ -476,7 +476,7 @@ void daRedBombhei_c::UpdateTalk() {
 
     switch (player->GetTalkState()) {
     case 0:
-        if (ApproachLinear(this->mAngleY, angle, 0x800) != 0) {
+        if (ApproachLinear(this->mAngle.y, angle, 0x800) != 0) {
             if (IsRedCoinRole() != 0) {
                 if ((data_0209caa0.file.flags2 & 0x8000) == 0) {
                     data_0209caa0.file.flags2 |= 0x8000;
@@ -587,7 +587,7 @@ void daRedBombhei_c::UpdateCannonOpening() {
     dCamera_c *cam = gCamera;
     Vector3 playerPos;
     s16 angle;
-    int *src = &player->mPosX;
+    int *src = &player->mPos.x;
 
     playerPos.x = src[0];
     playerPos.y = src[1];
@@ -600,7 +600,7 @@ void daRedBombhei_c::UpdateCannonOpening() {
         switch (player->GetTalkState()) {
         case 0: {
             int msg;
-            if (ApproachLinear(this->mAngleY, angle, 0x800) == 0)
+            if (ApproachLinear(this->mAngle.y, angle, 0x800) == 0)
                 return;
             msg = gCurrentSublevel == 6 ? 0x8f : 0x14a;
             if (this->mShutterID != 0)

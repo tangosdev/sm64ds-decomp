@@ -53,7 +53,7 @@
 #include "nitro/fx/fx_cp.h"
 
 /* The position overload reads mPos through its reference, so the break puff
-   reloads mPosY after the kill-height test (a scalar mPosY reuses the test's
+   reloads mPos.y after the kill-height test (a scalar mPos.y reuses the test's
    load and RollOffBehavior comes out 0x1e8 against the ROM's 0x1ec).
    d_a_obj_number.cpp defines it the same way; a body in
    Particle__System.h would renumber every includer's @NNN. */
@@ -95,7 +95,6 @@ enum { daIbl_PTCL_BREAK = 0xf };
 
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02038414(void *p);
-int func_ov002_020ad660(void *a, void *b, void *d, int e);
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -167,7 +166,7 @@ void daIbl_c::CheckContact() {
     if ((fl & daIbl_HIT_MEGA) != 0) {
         Vector3_16 s;
         u32 r = OnAimedAtWithEgg();
-        mPosY += r;
+        mPos.y += r;
         s.x = 0; s.y = 0; s.z = 0;
         KillByInvincibleChar(s, *a, 0);
         mWithMeshClsn.ClearGroundFlag();
@@ -175,7 +174,7 @@ void daIbl_c::CheckContact() {
     }
     if ((fl & daIbl_HIT_ATTACK) != 0) {
         if (a->param1 == 2) {
-            Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos.x, mPos.y, mPos.z);
             PoofDust();
             MarkForDestruction();
             func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
@@ -186,9 +185,9 @@ void daIbl_c::CheckContact() {
     }
     {
         Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         a->Hurt(v, 2, 0xc000, 1, 0, 1);
     }
 }
@@ -196,11 +195,11 @@ void daIbl_c::CheckContact() {
 /* The wall and floor probe. mHitWall is cleared, the collision object is
    updated (sublevel 0x19 runs func_020383f0, every other sublevel
    func_02038414; both unidentified), and mHitWall is set when the ball touches
-   a wall and the angle between the ball's heading mPrevAngleY and the wall
+   a wall and the angle between the ball's heading mPrevAngle.y and the wall
    normal's angle exceeds a quarter turn (0x4000), i.e. it is heading into
    the wall. On the ground it copies the floor normal to mFloorNormal and,
    unless it hit a wall, puts X and Z back to last frame's position and, when
-   the floor normal's Y is non-zero, sets mVertSpeed to -(slope + 8
+   the floor normal's Y is non-zero, sets mSpeed.y to -(slope + 8
    units/frame), where slope = (n.x * vel.x + n.z * vel.z) / n.y, so the ball
    keeps to the slope. */
 void daIbl_c::UpdateWallAndFloor() {
@@ -211,38 +210,38 @@ void daIbl_c::UpdateWallAndFloor() {
     if (mWithMeshClsn.IsOnWall() != 0) {
         ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(mWallNormal);
         short a = cstd::atan2(mWallNormal.x, mWallNormal.z);
-        if (GetSubtraction(mPrevAngleY, a) > 0x4000)
+        if (GetSubtraction(mPrevAngle.y, a) > 0x4000)
             mHitWall = 1;
     }
     if (mWithMeshClsn.IsOnGround() == 0)
         return;
     ((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))->CopyNormalTo(mFloorNormal);
     if (mHitWall != 0) return;
-    mPosX = mPrevPosX;
-    mPosZ = mPrevPosZ;
+    mPos.x = mPrevPos.x;
+    mPos.z = mPrevPos.z;
     if (mFloorNormal.y == 0)
         return;
-    int s = FX_MUL(mFloorNormal.x, mSpeedX) + FX_MUL(mFloorNormal.z, mSpeedZ);
-    mVertSpeed = -(FX_Div(s, mFloorNormal.y) + 0x8000);
+    int s = FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z);
+    mSpeed.y = -(FX_Div(s, mFloorNormal.y) + 0x8000);
 }
 
 /* Per-frame model and shadow matrices. The model matrix is the identity with
    its translation set to mPos >> 3 (the ball's position in model units). It
    is copied to the shadow's matrix, whose Y translation is then replaced with
-   (50 units * scale + mPosY) >> 3 -- 50 units times the draw scale above the
+   (50 units * scale + mPos.y) >> 3 -- 50 units times the draw scale above the
    ball's position -- and the drop shadow is cast with radius 200 units * scale,
    depth 90 units * scale on the ground (0x32 + 0x28) or 450 units * scale in
    the air (0x32 + 0x190), and opacity 0xf. "Scale" is mDrawScale.x, 0x1000
    being 1.0. */
 void daIbl_c::UpdateModelMatrix() {
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&IDENTITY_MATRIX4X3;
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     Mtx43 *shadow = (Mtx43 *)mShadowMtx;
     *shadow = *(Mtx43 *)&mModel.mat4x3;
     int k = 0x32;
-    mShadowMtx[10] = (mDrawScale.x * k + mPosY) >> 3;
+    mShadowMtx[10] = (mDrawScale.x * k + mPos.y) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
         k += 0x28;
     else
@@ -267,12 +266,12 @@ void daIbl_c::UpdateModelMatrix() {
  */
 int daIbl_c::AdvancePath() {
     int px = mNextNodePos.x;
-    int ax = mPosX;
+    int ax = mPos.x;
     int prevx = mPrevNodePos.x;
     /* name A  = node.x - prev.x  (C8)  -- high-priority web -> r8 */
     int A = px - prevx;
     int pz = mNextNodePos.z;
-    int az = mPosZ;
+    int az = mPos.z;
     int prevz = mPrevNodePos.z;
     int py = mNextNodePos.y;
     int prevy = mPrevNodePos.y;
@@ -280,7 +279,7 @@ int daIbl_c::AdvancePath() {
     int B = py - prevy;
     /* name C8 = node.z - prev.z  (C6) */
     int C8 = pz - prevz;
-    int ay = mPosY;
+    int ay = mPos.y;
     /* name C7 = node.y - pos.y   (Csl) */
     int C7 = py - ay;
     /* name C6 = node.x - pos.x   (true A) */
@@ -370,7 +369,7 @@ int daIbl_c::AdvancePath() {
  * KillAndTrackInDeathTable itself before returning 2) and, on 2, the ball
  * puffs (a Particle) and plays the break sound. Then the contact check, and with mDeathState 8 the handler
  * is done. Otherwise AdvancePath advances along the path and the
- * heading mPrevAngleY turns toward mHeadingToNode by at most 0x800 (11.25
+ * heading mPrevAngle.y turns toward mHeadingToNode by at most 0x800 (11.25
  * degrees) a frame. When the path index wraps (-1) the ball becomes kind 3
  * and, if it is on the ground, has its vertical speed zeroed and is lifted 15
  * units (so it falls again); otherwise it runs the probe. If the path index
@@ -387,11 +386,11 @@ void daIbl_c::PathBehavior() {
     int vy;
 
     MakeVanishLuigiWork(mdCcAc_c);
-    r = func_ov002_020ad660(this, &mWithMeshClsn, &mModel, 3);
+    r = this->func_ov002_020ad660(&mWithMeshClsn, &mModel, 3);
     if (r != 0) {
         if (r != 2)
             return;
-        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos.x, mPos.y, mPos.z);
         func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
@@ -401,30 +400,30 @@ void daIbl_c::PathBehavior() {
         return;
 
     r = AdvancePath();
-    ApproachLinear(mPrevAngleY, mHeadingToNode, 0x800);
+    ApproachLinear(mPrevAngle.y, mHeadingToNode, 0x800);
 
     if (r == -1) {
         mVariant = daIbl_KIND_ROLL_OFF;
         /* mVariant was just set to 3, so the != 4 test cannot fail here. */
         if (mVariant != daIbl_KIND_PATH_RAMP && mWithMeshClsn.IsOnGround() != 0) {
-            mVertSpeed = 0;
-            mPosY += 0xf000;
+            mSpeed.y = 0;
+            mPos.y += 0xf000;
         } else {
             UpdateWallAndFloor();
         }
     } else {
         int had = (mHitWall != 0);
-        vy = mVertSpeed;
+        vy = mSpeed.y;
         UpdateWallAndFloor();
         if (mHitWall != 0 && had == 0) {
-            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+            mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
             mRollSoundHandle = 0;
         } else if (mWithMeshClsn.IsOnGround() != 0) {
             if (mWithMeshClsn.JustHitGround() != 0) {
                 func_02012694(daIbl_SND_LAND, &mCamSpacePos);
                 LandingDust(1);
                 if (vy < -0x14000)
-                    mVertSpeed = (int)(-vy + ((u32)-vy >> 31)) >> 1;
+                    mSpeed.y = (int)(-vy + ((u32)-vy >> 31)) >> 1;
                 mRollSoundHandle = 0;
             } else {
                 mRollSoundHandle =
@@ -435,9 +434,9 @@ void daIbl_c::PathBehavior() {
             } else if (mVariant == daIbl_KIND_PATH_RAMP) {
                 ApproachLinear(mHorzSpeed, 0x23000, 0x400);
             } else {
-                mSpeedX += mFloorNormal.x;
-                mSpeedZ += mFloorNormal.z;
-                mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
+                mSpeed.x += mFloorNormal.x;
+                mSpeed.z += mFloorNormal.z;
+                mHorzSpeed = Vec3_HorzLen(&mSpeed);
             }
         }
     }
@@ -462,12 +461,12 @@ void daIbl_c::RollOffBehavior() {
     int r;
 
     MakeVanishLuigiWork(mdCcAc_c);
-    r = func_ov002_020ad660(this, &mWithMeshClsn, &mModel, 3);
+    r = this->func_ov002_020ad660(&mWithMeshClsn, &mModel, 3);
     if (r != 0) {
         if (r != 2)
             return;
 
-        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos.x, mPos.y, mPos.z);
         func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
@@ -475,7 +474,7 @@ void daIbl_c::RollOffBehavior() {
     CheckContact();
     UpdateWallAndFloor();
 
-    if (mPosY < mKillY || mHitWall != 0) {
+    if (mPos.y < mKillY || mHitWall != 0) {
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos);
         func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         TriplePoofDust();
@@ -484,18 +483,18 @@ void daIbl_c::RollOffBehavior() {
     }
 
     if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormal.x * 3;
-        mSpeedZ += mFloorNormal.z * 3;
-        mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
+        mSpeed.x += mFloorNormal.x * 3;
+        mSpeed.z += mFloorNormal.z * 3;
+        mHorzSpeed = Vec3_HorzLen(&mSpeed);
 
-        mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
+        mPrevAngle.y = cstd::atan2(mSpeed.x, mSpeed.z);
 
         if (mWithMeshClsn.JustHitGround()) {
             func_02012694(daIbl_SND_LAND, &mCamSpacePos);
             LandingDust(1);
 
-            if (mVertSpeed < -0x8000)
-                mVertSpeed = mVertSpeed * -3 / 2;
+            if (mSpeed.y < -0x8000)
+                mSpeed.y = mSpeed.y * -3 / 2;
         } else {
             mRollSoundHandle =
                 Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, mCamSpacePos, 0);
@@ -506,11 +505,11 @@ void daIbl_c::RollOffBehavior() {
         int v;
         int lim;
 
-        v = mVertSpeed + mVertAccel;
+        v = mSpeed.y + mVertAccel;
         lim = mTerminalVelocity;
         if (v >= lim)
             lim = v;
-        mVertSpeed = lim;
+        mSpeed.y = lim;
     }
 
     UpdatePosWithOnlySpeed(0);
@@ -536,11 +535,11 @@ void daIbl_c::RollOffBehavior() {
 void daIbl_c::FreeRollBehavior() {
     int r;
     MakeVanishLuigiWork(mdCcAc_c);
-    r = func_ov002_020ad660(this, &mWithMeshClsn, &mModel, 3);
+    r = this->func_ov002_020ad660(&mWithMeshClsn, &mModel, 3);
     if (r != 0) {
         if (r != 2)
             return;
-        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos.x, mPos.y, mPos.z);
         func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
@@ -551,19 +550,19 @@ void daIbl_c::FreeRollBehavior() {
     UpdateWallAndFloor();
 
     if (mHitWall != 0) {
-        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
-        mSpeedX = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleY >> 4));
-        mSpeedZ = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleY >> 4));
-        mSpeedX -= mWallNormal.x * 3;
-        mSpeedZ -= mWallNormal.z * 3;
-        mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
+        mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
+        mSpeed.x = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngle.y >> 4));
+        mSpeed.z = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngle.y >> 4));
+        mSpeed.x -= mWallNormal.x * 3;
+        mSpeed.z -= mWallNormal.z * 3;
+        mHorzSpeed = Vec3_HorzLen(&mSpeed);
     } else if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormal.x * 3;
-        mSpeedZ += mFloorNormal.z * 3;
-        mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
+        mSpeed.x += mFloorNormal.x * 3;
+        mSpeed.z += mFloorNormal.z * 3;
+        mHorzSpeed = Vec3_HorzLen(&mSpeed);
         if (mFloorNormal.y == 0x1000 && mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
-            mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
+            mPrevAngle.y = cstd::atan2(mSpeed.x, mSpeed.z);
             UpdatePosWithHorzSpeedAndAng();
         }
 
@@ -577,11 +576,11 @@ void daIbl_c::FreeRollBehavior() {
     }
 
     {
-        int nv = mVertSpeed + mVertAccel;
+        int nv = mSpeed.y + mVertAccel;
         int lim = mTerminalVelocity;
         if (nv >= lim)
             lim = nv;
-        mVertSpeed = lim;
+        mSpeed.y = lim;
     }
     UpdatePosWithOnlySpeed(0);
     UpdateModelMatrix();
@@ -634,7 +633,8 @@ void daIbl_c::SpawnerBehavior() {
     }
 
     if ((param1 & 0xf) != daIbl_KIND_PATH_RAMP) {
-        if (pos.y >= mPosY - 0x28000) return;
+        if (pos.y >= mPos.y - 0x28000)
+            return;
     }
 
     {
@@ -731,16 +731,16 @@ int daIbl_c::InitResources()
         mPathPtr.FromID(param1 & 0xf);
         mNumPathNodes = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
-        mPrevNodePos.x = mPosX;
-        mPrevNodePos.y = mPosY;
-        mPrevNodePos.z = mPosZ;
+        mPrevNodePos.x = mPos.x;
+        mPrevNodePos.y = mPos.y;
+        mPrevNodePos.z = mPos.z;
         mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
         if (Vec3_Equal(&mPos, &mNextNodePos)) {
             mPathNodeIndex += 1;
             mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
         }
         AdvancePath();
-        mPrevAngleY = mHeadingToNode;
+        mPrevAngle.y = mHeadingToNode;
         mKillY = data_02092138;
         d = gCurrentSublevel;
         /* Sublevel 0x19 is the half-size ball: speed 10 units/frame, scale

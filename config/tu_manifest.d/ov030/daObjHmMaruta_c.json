@@ -496,7 +496,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN18MarutaModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination for the model handle"
@@ -510,7 +510,7 @@
     },
     {
       "symbol": "_ZN20MarutaClsnFileHandleC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination for the collision handle"
@@ -525,12 +525,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@351",
+      "from": "@348",
       "to": "@613",
       "evidence": "mwcc numbers this registration node @363 per TU and another module already defines @363 Re-keyed from @373 to @351 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@352",
+      "from": "@349",
       "to": "@166",
       "evidence": "mwcc numbers this registration node @364 per TU and another module already defines @364 Re-keyed from @374 to @352 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
@@ -567,7 +567,7 @@
       "source": "0x021148c8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -587,7 +587,7 @@
       "source": "0x021148e4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"

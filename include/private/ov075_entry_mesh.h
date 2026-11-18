@@ -16,7 +16,7 @@ struct BMD_File;
  * declares a destructor, so a Vector3 member makes this unit emit an
  * unreferenced ~Vector3() copy and gives EntryMesh a destructor dEntObj_c's
  * object would emit; the ROM has neither (the same reason as dBgW_Kc's
- * PlainVec). EntryMeshMtx is a Matrix4x3-layout twin for the same reason
+ * upAxis and depthDir). EntryMeshMtx is a Matrix4x3-layout twin for the same reason
  * (math/Matrix.h's Matrix4x3 holds a Vector3 t). */
 struct EntryMeshMtx {
     s32 m[12];

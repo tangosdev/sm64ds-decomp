@@ -17,7 +17,7 @@
  *   and data_ov064_0211bb2c CLPS; symbols.txt has no recovered names.
  * - common.h first (dBgActor_c.h already pulls it; dExtSimpleModel_c.h's
  *   nested Matrix4x3 would scalarize a 12-word copy).
- * - Behavior writes mPrevAngleZ through a short* (member assignment
+ * - Behavior writes mPrevAngle.z through a short* (member assignment
  *   size-DIFFs).
  * - Inline destructor (out-of-line emits D0 before D1 plus a homeless D2).
  */
@@ -76,7 +76,7 @@ s32 daObjFl_London_c::InitResources() {
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
     KCL_File *k = dBgW_Kc::LoadFile(data_ov022_02114578);
-    mMeshCollider.SetFile(k, mClsnMat, 0x1000, mAngleY, data_ov064_0211bb2c);
+    mMeshCollider.SetFile(k, mClsnMat, 0x1000, mAngle.y, data_ov064_0211bb2c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mFlag = 0;
     mCooldown = 15;
@@ -86,20 +86,20 @@ s32 daObjFl_London_c::InitResources() {
 s32 daObjFl_London_c::Behavior() {
     if (DecIfAbove0_Byte(&mCooldown) == 0) {
         if (mFlag == 0) {
-            /* MATCH: mPrevAngleZ = mPrevAngleZ - 0x100 size-DIFFs (member
+            /* MATCH: mPrevAngle.z = mPrevAngle.z - 0x100 size-DIFFs (member
              * addressing CSEs the field). */
-            short *p = &mPrevAngleZ;
+            short *p = &mPrevAngle.z;
             *p = *p - 0x100;
-            if (mPrevAngleZ <= -0x2000) {
-                mPrevAngleZ = -0x2000;
+            if (mPrevAngle.z <= -0x2000) {
+                mPrevAngle.z = -0x2000;
                 mCooldown = 15;
                 mFlag = 1;
             }
         } else {
-            short *p = &mPrevAngleZ;
+            short *p = &mPrevAngle.z;
             *p = *p + 0x100;
-            if (mPrevAngleZ >= 0) {
-                mPrevAngleZ = 0;
+            if (mPrevAngle.z >= 0) {
+                mPrevAngle.z = 0;
                 mCooldown = 15;
                 mFlag = 0;
             }
@@ -112,7 +112,7 @@ s32 daObjFl_London_c::Behavior() {
                 Sound::PlayBank3(0x35, mCamSpacePos);
         }
     }
-    mAngleZ = mPrevAngleZ;
+    mAngle.z = mPrevAngle.z;
     UpdateModelMatrix();
     if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
@@ -137,10 +137,10 @@ s32 daObjFl_London_c::CleanupResources() {
  * position at 1/8 scale. Both callers (InitResources and Behavior) are in
  * this TU. */
 void daObjFl_London_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Both destructors are emitted from the INLINE `~daObjFl_London_c() {}` in

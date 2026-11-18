@@ -107,8 +107,8 @@ s32 daFRing_c::Behavior() {
     mTextureTransformer2.Advance();
     static_cast<dExtFrameCtrl_c &>(mAnmModel1).Advance();
     static_cast<dExtFrameCtrl_c &>(mAnmModel2).Advance();
-    Matrix4x3_FromTranslation(&mAnmModel1.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
-    Matrix4x3_FromTranslation(&mAnmModel2.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&mAnmModel1.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
+    Matrix4x3_FromTranslation(&mAnmModel2.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
     if (static_cast<dExtFrameCtrl_c &>(mAnmModel1).Finished())
         MarkForDestruction();
     return 1;

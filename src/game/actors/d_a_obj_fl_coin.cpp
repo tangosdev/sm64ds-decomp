@@ -167,7 +167,7 @@ int daObjFl_Puzzle_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov064_0211adc8[mType]), 1, -1);
     UpdateModelMatrix();
     UpdateClsnMatrix();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000, mAngle.y,
                           data_ov064_0211baac);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mStepScript = data_ov064_0211c198[mType];
@@ -241,9 +241,9 @@ int daObjFl_Puzzle_c::CleanupResources() {
 /* dExtSimpleModel_c matrix translation: the position (plus the shake offset on Y), each
  * axis shifted right by 3. */
 void daObjFl_Puzzle_c::UpdateModelMatrix() {
-    int x = mPosX >> 3;
-    int y = (mPosY + mShakeOffsetY) >> 3;
-    int z = mPosZ >> 3;
+    int x = mPos.x >> 3;
+    int y = (mPos.y + mShakeOffsetY) >> 3;
+    int z = mPos.z >> 3;
     Matrix4x3_FromTranslation(&mModel.mat4x3, x, y, z);
 }
 
@@ -251,9 +251,9 @@ void daObjFl_Puzzle_c::UpdateModelMatrix() {
  * matrix at 0x020a0e68, copies it into mClsnMat, and hands it to the moving
  * mesh collider along with the Y angle. */
 void daObjFl_Puzzle_c::UpdateClsnMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY + mShakeOffsetY, mPosZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y + mShakeOffsetY, mPos.z);
     mClsnMat = data_020a0e68;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* Step script driver. While mHadClsn is set, writes FLCOIN_FLAG_PLAYER_TOUCHED into the
@@ -315,8 +315,8 @@ void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
         return;
     }
 
-    mPosX += dx;
-    mPosZ += dz;
+    mPos.x += dx;
+    mPos.z += dz;
 }
 
 /* PIECE_STATE_INIT. Finds the FL_COIN manager; if there is one, remembers its

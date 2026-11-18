@@ -17,7 +17,7 @@
  *   (+0x18). Assigning the member directly sizes InitResources 0x110
  *   against the ROM's 0x114, so the call stays.
  * - St_Wait_Main reads the closest player's position through the pointer
- *   &closest->mPos; copying mPosX..mPosZ by name is one instruction short.
+ *   &closest->mPos; copying mPos.x..mPos.z by name is one instruction short.
  * - mModel.mat4x3.t does not compile: common.h's flat Matrix4x3
  *   (s32 m[12]) is the one this TU sees, so the translation row is
  *   m[9], m[10] and m[11].
@@ -106,17 +106,17 @@ int daObjCasket_c::InitResources() {
     worldOffset.x = 0;
     worldOffset.y = 0;
     worldOffset.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&localOffset, &data_020a0e68, &worldOffset);
     Vector3 newPos;
     Vec3_Add(&newPos, &mPos, &worldOffset);
-    mPosX = newPos.x;
-    mPosY = newPos.y;
-    mPosZ = newPos.z;
+    mPos.x = newPos.x;
+    mPos.y = newPos.y;
+    mPos.z = newPos.z;
 
     UpdateModelTransform();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199, mAngle.y,
                           data_ov063_0211ebd8);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     return 1;
@@ -170,7 +170,7 @@ void daObjCasket_c::St_Wait_Init() {
     mStateTimer = 60;
 }
 
-/* State 0 exec, WAIT. While mAngleX is not 0, swing back down, gathering
+/* State 0 exec, WAIT. While mAngle.x is not 0, swing back down, gathering
  * speed toward -0x7d0 a frame; on reaching 0, call dActor_c::Earthquake at the
  * actor's position, spawn dust at the point 200 units back along the facing and
  * play sound 0x5a. Once flat, go to STANDUP when a player is within 300 units
@@ -182,13 +182,13 @@ void daObjCasket_c::St_Wait_Main() {
     Vector3 quakePos;
     Vector3 dustPos;
 
-    if (mAngleX != 0) {
+    if (mAngle.x != 0) {
         ApproachLinear(mAngleStep, -0x7d0, 0xc8);
-        if (ApproachLinear(mAngleX, 0, -mAngleStep) == 0)
+        if (ApproachLinear(mAngle.x, 0, -mAngleStep) == 0)
             return;
-        quakePos.x = mPosX;
-        quakePos.y = mPosY;
-        quakePos.z = mPosZ;
+        quakePos.x = mPos.x;
+        quakePos.y = mPos.y;
+        quakePos.z = mPos.z;
         Earthquake(quakePos, 0x5dc000);
 
         landLocal.x = 0;
@@ -197,7 +197,7 @@ void daObjCasket_c::St_Wait_Main() {
         landWorld.x = 0;
         landWorld.y = 0;
         landWorld.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         MTX_MultVec43(&landLocal, &data_020a0e68, &landWorld);
         VEC_Add(&landWorld, &mPos, &landWorld);
         dustPos.x = landWorld.x;
@@ -221,7 +221,7 @@ void daObjCasket_c::St_Wait_Main() {
         reachWorld.x = 0;
         reachWorld.y = 0;
         reachWorld.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         MTX_MultVec43(&reachLocal, &data_020a0e68, &reachWorld);
         VEC_Add(&reachWorld, &mPos, &reachWorld);
         if (Vec3_HorzDist(&reachWorld, &playerPos) >= 0x12c000)
@@ -239,35 +239,35 @@ void daObjCasket_c::St_StandUp_Init() {
     Sound::PlayBank3(0x58, mCamSpacePos);
 }
 
-/* State 1 exec, STANDUP. Swing mAngleX up to 0x4000, gathering speed toward
+/* State 1 exec, STANDUP. Swing mAngle.x up to 0x4000, gathering speed toward
  * 0x3e8 a frame. Then the timer counts down from 60: while it is 30 or less,
- * mAngleZ alternates between -0xc8 and 0xc8 each frame and sound 0x59 plays
- * every fourth frame. At zero, go back to WAIT and level mAngleZ. */
+ * mAngle.z alternates between -0xc8 and 0xc8 each frame and sound 0x59 plays
+ * every fourth frame. At zero, go back to WAIT and level mAngle.z. */
 void daObjCasket_c::St_StandUp_Main() {
-    if (mAngleX != 0x4000) {
+    if (mAngle.x != 0x4000) {
         ApproachLinear(mAngleStep, 0x3e8, 0xc8);
-        ApproachLinear(mAngleX, 0x4000, mAngleStep);
+        ApproachLinear(mAngle.x, 0x4000, mAngleStep);
         return;
     }
     DecIfAbove0_Short(&mStateTimer);
     if (mStateTimer == 0) {
         SetState(0);
-        mAngleZ = 0;
+        mAngle.z = 0;
         return;
     }
     if (mStateTimer > 30)
         return;
     if (mBehaviorTimer % 4 == 0)
         Sound::PlayBank3(0x59, mCamSpacePos);
-    mAngleZ = (mBehaviorTimer & 1) * 0x190 - 0xc8;
+    mAngle.z = (mBehaviorTimer & 1) * 0x190 - 0xc8;
 }
 
 /* Puts the model where the actor is. */
 void daObjCasket_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Definition order is the retail initializer's construction order: the

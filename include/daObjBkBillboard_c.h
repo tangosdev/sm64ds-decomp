@@ -22,7 +22,7 @@ struct daObjBkBillboard_c : dActor_c {
     virtual s32 CleanupResources(); /* slot  3 */
     virtual s32 Render();           /* slot  9 */
 
-    /* Yaw from mAngleY, translation from mPos >> 3. */
+    /* Yaw from mAngle.y, translation from mPos >> 3. */
     void UpdateModelMatrix();
 };
 

@@ -35,8 +35,8 @@
  * - Render is the member dExtModel_c.h declares; it walks modelFile->bones as
  *   BMD_Bone and materials as BMD_Material (BMD_File.h).
  * - MeshPart/MeshEntry are func_02044534's Part/Entry renamed: func_0204488c's
- *   same-named records differ. Vec3w is the array view for the ROM's ldm-shaped
- *   3-word copy (the daPly_c P2w precedent); the scalar spelling scalarizes.
+ *   same-named records differ. The default scale is a VecFx32 copy-init of
+ *   data_02099f88, the ROM's ldm/stm copy; an assignment scalarizes.
  * - func_02044534 walks include/private/mtx43.h's Mtx43 r[] rows. The
  *   Matrix4x3 this file sees through dExtModel_c.h is math/Matrix.h's
  *   rotation-plus-translation pair, with no per-axis rows, so the sites that
@@ -96,7 +96,6 @@ struct Node {
 };
 
 
-typedef struct Vec3w { int w[3]; } Vec3w;
 struct Buf8 { s16 v[8]; };
 struct MeshPart {
     int count;
@@ -488,10 +487,6 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
 void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     int i;
     struct MeshEntry* e;
-    VecFx32 dirv;
-    Mtx43 mw;
-    Mtx43 m;
-    int out[9];
     VecFx32 *dir;
     struct MeshPart* part;
     int j;
@@ -499,8 +494,8 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     struct MeshEntry* base;
     int cnt;
 
+    VecFx32 dirv = data_02099f88;
     dir = &dirv;
-    *(struct Vec3w *)&dirv = *(struct Vec3w *)&data_02099f88;
     if (scale)
         dir = (VecFx32 *)scale;
     i = 0;
@@ -515,6 +510,9 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
         j = 0;
         if (part->count > 0) {
             do {
+                Mtx43 mw;
+                Mtx43 m;
+                int out[9];
                 int t;
                 int ix;
                 ix = part->ids[j];
@@ -539,7 +537,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[1].x = mp->r[1].x;
                     m.r[1].y = mp->r[1].y;
                     m.r[1].z = 0;
-                    VEC_Normalize((const Vector3 *)&m.r[1], (Vector3 *)&m.r[1]);
+                    VEC_Normalize(&m.r[1], &m.r[1]);
                     t = FX_MUL(m.r[1].x, dir->x);
                     m.r[1].x = t;
                     {
@@ -555,7 +553,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[0].x = mp->r[0].x;
                     m.r[0].y = mp->r[0].y;
                     m.r[0].z = 0;
-                    VEC_Normalize((const Vector3 *)&m.r[0], (Vector3 *)&m.r[0]);
+                    VEC_Normalize(&m.r[0], &m.r[0]);
                     m.r[0].x = FX_MUL(m.r[0].x, dir->x);
                     t = FX_MUL(m.r[0].y, dir->y);
                     m.r[1].y = m.r[0].x;

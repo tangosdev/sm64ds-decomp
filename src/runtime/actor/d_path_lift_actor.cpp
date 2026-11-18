@@ -139,13 +139,13 @@ void dPathLiftActor_c::StateFall()
            into mFallAngle makes mwcc reuse the signed load and drops 12 bytes. */
         raw = mFallAngle;
         v = FX_SinIdx((u16)(int)(long long)raw >> 4);
-        mPosY = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
+        mPos.y = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
         *(u16 *)((int)&mFallAngle) = (u16)(*(u16 *)((int)&mFallAngle) + 0x3000);
         return;
     }
     UpdatePos(0);
     if (HasNonzeroAngleZ() != 0)
-        ApproachLinear(mAngleX, 0x3000, 0x100);
+        ApproachLinear(mAngle.x, 0x3000, 0x100);
     if (DecIfAbove0_Byte(&mTriggerDelay) != 0)
         return;
     if (IsUnk42cSet() != 0) {
@@ -165,10 +165,10 @@ void dPathLiftActor_c::StateFallInit() {
         mTerminalVelocity = -0x3c000;
     }
     mTriggerDelay = 250;
-    mPrevAngleX = mAngleX;
-    mPrevAngleY = mAngleY;
-    mPrevAngleZ = mAngleZ;
-    mVertSpeed = 0;
+    mPrevAngle.x = mAngle.x;
+    mPrevAngle.y = mAngle.y;
+    mPrevAngle.z = mAngle.z;
+    mSpeed.y = 0;
     if (HasNonzeroAngleZ() == 0) {
         mFallDelay = 60;
         mFallBounceTimer = 0;
@@ -176,7 +176,7 @@ void dPathLiftActor_c::StateFallInit() {
         mFallDelay = 30;
         mFallBounceTimer = 24;
         mFallAngle = 0;
-        mFallStartY = mPosY;
+        mFallStartY = mPos.y;
     }
     if (IsActorID(this, 0x82))
         mHorzSpeed = Vec3_HorzDist(&mPos, &mPrevPos);
@@ -220,9 +220,9 @@ void dPathLiftActor_c::StatePath()
         mPath.GetNode(srcNode, srcIdx);
     } else {
         if (srcIdx < 0 || srcIdx >= (int)mPath.NumNodes()) {
-            srcNode.x = mPosX;
-            srcNode.y = mPosY;
-            srcNode.z = mPosZ;
+            srcNode.x = mPos.x;
+            srcNode.y = mPos.y;
+            srcNode.z = mPos.z;
         } else {
             mPath.GetNode(srcNode, srcIdx);
         }
@@ -245,16 +245,16 @@ void dPathLiftActor_c::StatePath()
             targetPitch = Vec3_VertAngle(&destNode, &srcNode);
         }
     } else {
-        targetYaw = mAngleY;
-        targetPitch = mAngleX;
+        targetYaw = mAngle.y;
+        targetPitch = mAngle.x;
     }
 
     yawDiff = AngleDiff(mPrevPathAngle.y, targetYaw);
     pitchDiff = AngleDiff(mPrevPathAngle.x, targetPitch);
     pitchStep = (pitchDiff / segFrames);
-    ApproachLinear(mAngleY, targetYaw, (short)(yawDiff / segFrames));
+    ApproachLinear(mAngle.y, targetYaw, (short)(yawDiff / segFrames));
     if (HasNonzeroAngleZ() != 0) {
-        ApproachLinear(mAngleX, targetPitch, pitchStep);
+        ApproachLinear(mAngle.x, targetPitch, pitchStep);
     }
 
     if (destDist == 0 || destDist <= mHorzSpeed) {
@@ -290,9 +290,9 @@ void dPathLiftActor_c::StatePath()
         }
     }
 
-    mPrevPathAngle.x = mAngleX;
-    mPrevPathAngle.y = mAngleY;
-    mPrevPathAngle.z = mAngleZ;
+    mPrevPathAngle.x = mAngle.x;
+    mPrevPathAngle.y = mAngle.y;
+    mPrevPathAngle.z = mAngle.z;
 }
 
 // 0x020efa44 (0x10)
@@ -326,30 +326,30 @@ void dPathLiftActor_c::BaseInitResources()
     if (Param08ModeIs1Or2()) SetState(0);
     else SetState(1);
 
-    mPrevPathAngle.x = mAngleX;
-    mPrevPathAngle.y = mAngleY;
-    mPrevPathAngle.z = mAngleZ;
-    mInitialPos.x = mPosX;
-    mInitialPos.y = mPosY;
-    mInitialPos.z = mPosZ;
-    mInitialAngle.x = mAngleX;
-    mInitialAngle.y = mAngleY;
-    mInitialAngle.z = mAngleZ;
+    mPrevPathAngle.x = mAngle.x;
+    mPrevPathAngle.y = mAngle.y;
+    mPrevPathAngle.z = mAngle.z;
+    mInitialPos.x = mPos.x;
+    mInitialPos.y = mPos.y;
+    mInitialPos.z = mPos.z;
+    mInitialAngle.x = mAngle.x;
+    mInitialAngle.y = mAngle.y;
+    mInitialAngle.z = mAngle.z;
     mMeshCollider.SetStoodOnCallback(&func_ov002_020eff90);
 }
 
 // 0x020efbdc (0x98)
 void dPathLiftActor_c::ResetPath()
 {
-    mPosX = mInitialPos.x;
-    mPosY = mInitialPos.y;
-    mPosZ = mInitialPos.z;
-    mAngleX = mInitialAngle.x;
-    mAngleY = mInitialAngle.y;
-    mAngleZ = mInitialAngle.z;
-    mPrevAngleX = mInitialAngle.x;
-    mPrevAngleY = mInitialAngle.y;
-    mPrevAngleZ = mInitialAngle.z;
+    mPos.x = mInitialPos.x;
+    mPos.y = mInitialPos.y;
+    mPos.z = mInitialPos.z;
+    mAngle.x = mInitialAngle.x;
+    mAngle.y = mInitialAngle.y;
+    mAngle.z = mInitialAngle.z;
+    mPrevAngle.x = mInitialAngle.x;
+    mPrevAngle.y = mInitialAngle.y;
+    mPrevAngle.z = mInitialAngle.z;
     mCurrPathNode = 0;
     mHorzSpeed = mPathSpeed;
     if (Param08ModeIs1Or2()) SetState(0);
@@ -430,7 +430,7 @@ void dPathLiftActor_c::UpdatePathModels()
 
 // 0x020efe68 (0x14)
 int dPathLiftActor_c::HasNonzeroAngleZ() const {
-    return mAngleZ != 0;
+    return mAngle.z != 0;
 }
 
 // 0x020efe7c (0x20)

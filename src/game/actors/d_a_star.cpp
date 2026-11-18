@@ -147,7 +147,6 @@ extern dCamera_c *gCamera;
 extern unsigned char IsAreaShowing(int idx);
 extern void func_02012694(unsigned int a, const Vector3 *p);
 
-extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" {
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
@@ -282,9 +281,9 @@ s32 daStar_c::InitResources()
     mCamSeq = 0xffff;
     mSavedAreaId = (u8)mAreaId;
     mMarkerSlot = -1;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mMarkerID = 0;
     mSoundObjID = 0;
     mParticle[3] = 0;
@@ -364,9 +363,9 @@ s32 daStar_c::InitResources()
                 mTerminalVelocity = -0x28000;
             }
         } else {
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             v.y = v.y + 0xa000;
             sp = (char *)dActor_c::Spawn(ACTOR_STAR_MARKER, 0x40, v, 0, mSavedAreaId, -1);
             if (sp != 0) {
@@ -375,20 +374,20 @@ s32 daStar_c::InitResources()
                 return 0;
             }
             if (NumVsStarsObtained() == 5) {
-                mScaleX = FX32_ONE;
-                mScaleY = FX32_ONE;
-                mScaleZ = FX32_ONE;
+                mScale.x = FX32_ONE;
+                mScale.y = FX32_ONE;
+                mScale.z = FX32_ONE;
             } else {
-                mScaleX = 0;
-                mScaleY = 0;
-                mScaleZ = 0;
+                mScale.x = 0;
+                mScale.y = 0;
+                mScale.z = 0;
             }
         }
         if (mKind != KIND_0)
             mdCc_c.flags |= 1;
     } else if (kind == KIND_1) {
         mState = STATE_BOUNCE;
-        mVertSpeed = 0x20000;
+        mSpeed.y = 0x20000;
         SetDefaultGravity();
         mStateTimer = 15;
         mSparkleTimer = 50;
@@ -491,9 +490,9 @@ int daStarBase_c::InitResources()
     ground.StartDetectingWater();
 
     {
-        s32 pyb = mPosY;
-        s32 pz = mPosZ;
-        s32 px = mPosX;
+        s32 pyb = mPos.y;
+        s32 pz = mPos.z;
+        s32 px = mPos.x;
         s32 pyy = pyb + 0x1e000;
         pos.x = px;
         pos.y = pyy;
@@ -560,9 +559,9 @@ int daStarBase_c::InitResources()
         mdCcAcPos_c.flags |= 1;
     }
     r3 = 0;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mLinkedStarID = r3;
     mLinkedStarDeathTableID = -1;
     mHitActor = 0;
@@ -590,9 +589,9 @@ int daStarBase_c::InitResources()
 int daStar_c::Behavior()
 {
     CheckIceBlock();
-    mCenterX = 0;
-    mCenterY = 0;
-    mCenterZ = 0;
+    mCenter.x = 0;
+    mCenter.y = 0;
+    mCenter.z = 0;
 
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         int state = mState;
@@ -669,22 +668,21 @@ int daStarBase_c::Behavior()
                 }
             }
         }
-        Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mPosY >> 3,
-                                  mPosZ >> 3);
+        Matrix4x3_FromTranslation(&mModel.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
     } else {
-        mAngleY += 0x400;
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.t.x = mPosX >> 3;
-        mModel.mat4x3.t.y = mPosY >> 3;
-        mModel.mat4x3.t.z = mPosZ >> 3;
+        mAngle.y += 0x400;
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
+        mModel.mat4x3.t.x = mPos.x >> 3;
+        mModel.mat4x3.t.y = mPos.y >> 3;
+        mModel.mat4x3.t.z = mPos.z >> 3;
     }
     if (mBits.visible) {
         *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&IDENTITY_MATRIX4X3;
-        mShadowMtx.t.x = mPosX >> 3;
-        mShadowMtx.t.y = mPosY >> 3;
-        mShadowMtx.t.z = mPosZ >> 3;
+        mShadowMtx.t.x = mPos.x >> 3;
+        mShadowMtx.t.y = mPos.y >> 3;
+        mShadowMtx.t.z = mPos.z >> 3;
         {
-            int d = mPosY - mGroundY;
+            int d = mPos.y - mGroundY;
             int rad = 0xa0000;
             if (mState != 0)
                 rad = 0xc8000;
@@ -718,7 +716,7 @@ int daStarBase_c::Behavior()
 int daStar_c::Render()
 {
     int locked;
-    if (mScaleX == 0 || (locked = (mFlags & 0x40000) != 0) || !mBits.visible)
+    if (mScale.x == 0 || (locked = (mFlags & 0x40000) != 0) || !mBits.visible)
         return 1;
     else {
         if (!mBits.collectedModel)
@@ -816,12 +814,12 @@ void daStar_c::StateLaunch() {
     gNextActorUpdateMask |= CUTSCENE_FLAG;
     mCamSeq = 0;
     func_02012694(0x57, &mCamSpacePos);
-    mVertSpeed = 0x20000;
+    mSpeed.y = 0x20000;
     SetDefaultGravity();
     other = dActor_c::FindWithID(mMarkerID);
     if (mKind == KIND_4) {
         if (other == 0 || Vec3_HorzDist(&mPos, &other->mPos) == 0) {
-            mVertSpeed = 0x18000;
+            mSpeed.y = 0x18000;
             mState = STATE_LAND;
         } else {
             mState = STATE_FLY_TO_MARKER;
@@ -865,10 +863,10 @@ void daStar_c::StateLaunch() {
  * (AimArcTo, arc value 400.0) and becomes STATE_FLY_TO_MARKER. The
  * trail effect, sound object 6 and the ground probe run every frame. */
 void daStar_c::StateRise() {
-    if (mVertSpeed <= -0x20000) {
+    if (mSpeed.y <= -0x20000) {
         dActor_c *other = dActor_c::FindWithID(mMarkerID);
         if (other == 0 || Vec3_HorzDist(&mPos, &other->mPos) == 0) {
-            mVertSpeed = 0x18000;
+            mSpeed.y = 0x18000;
             mState = STATE_LAND;
         } else {
             Vector3 *pp = &other->mPos;
@@ -910,18 +908,18 @@ void daStar_c::StateFlyToMarker() {
     dActor_c *o = dActor_c::FindWithID(mMarkerID);
     if (o == 0) { MarkForDestruction(); return; }
     if (Vec3_HorzDist(&mPos, &o->mPos) < mHorzSpeed) {
-        int *src = &o->mPosX;
-        int *yp = &mPosY;
-        mPosX = src[0];
-        mPosY = src[1];
-        mPosZ = src[2];
+        int *src = &o->mPos.x;
+        int *yp = &mPos.y;
+        mPos.x = src[0];
+        mPos.y = src[1];
+        mPos.z = src[2];
         *yp += 0xc8000;
         mHorzSpeed = 0;
-        mVertSpeed = 0x18000;
+        mSpeed.y = 0x18000;
         if (gCurrentSublevel == 0xb && mStarID == 3)
-            mVertSpeed = 0x10000;
+            mSpeed.y = 0x10000;
         else
-            mVertSpeed = 0x18000;
+            mSpeed.y = 0x18000;
         SetDefaultGravity();
         mState = STATE_LAND;
     }
@@ -938,7 +936,7 @@ void daStar_c::StateFlyToMarker() {
  * STATE_IDLE and sets mCamSeq to 0x1d6; the cutscene camera then counts up and
  * restores the saved view at step 0x1f4. */
 void daStar_c::StateLand() {
-    if (mVertSpeed <= -0x18000) {
+    if (mSpeed.y <= -0x18000) {
         StopMotion();
         mdCc_c.flags &= ~1;
     } else {
@@ -984,10 +982,10 @@ void daStar_c::StateIdle() {
             }
         }
         if (en != 0) {
-            if (mScaleX != 0x1000 && (gNextActorUpdateMask & CUTSCENE_FLAG) == 0) {
+            if (mScale.x != 0x1000 && (gNextActorUpdateMask & CUTSCENE_FLAG) == 0) {
                 mFlags |= CUTSCENE_FLAG;
                 gNextActorUpdateMask |= CUTSCENE_FLAG;
-            } else if (mScaleX == 0x1000) {
+            } else if (mScale.x == 0x1000) {
                 mAppearTimer = lim + 11;
                 mBits.appeared = 1;
                 AddStarMarker();
@@ -999,8 +997,8 @@ void daStar_c::StateIdle() {
                     if (mCamSeq == 0xffff)
                         mCamSeq = 0x64;
                 }
-            } else if (mScaleX != 0x1000) {
-                spd = mScaleX;
+            } else if (mScale.x != 0x1000) {
+                spd = mScale.x;
                 if (mAppearTimer >= lim + 0xa) {
                     if (ApproachLinear(spd, 0x1000, step) != 0) {
                         AddStarMarker();
@@ -1011,9 +1009,9 @@ void daStar_c::StateIdle() {
                 }
                 {
                     int v = spd;
-                    mScaleX = v;
-                    mScaleY = v;
-                    mScaleZ = v;
+                    mScale.x = v;
+                    mScale.y = v;
+                    mScale.z = v;
                 }
             } else {
                 if (!mBits.switchStar)
@@ -1031,11 +1029,11 @@ void daStar_c::StateIdle() {
             mdCc_c.flags |= 1;
             if (mAppearTimer != 0) {
                 mAppearTimer -= 1;
-            } else if (mScaleX != 0) {
+            } else if (mScale.x != 0) {
                 int step2;
                 if (mStateTimer == 0)
                     func_02012790(0x42);
-                spd2 = mScaleX;
+                spd2 = mScale.x;
                 if (mStateTimer <= 15) {
                     mStateTimer += 1;
                     step2 = 0;
@@ -1048,9 +1046,9 @@ void daStar_c::StateIdle() {
                 }
                 {
                     int v2 = spd2;
-                    mScaleX = v2;
-                    mScaleY = v2;
-                    mScaleZ = v2;
+                    mScale.x = v2;
+                    mScale.y = v2;
+                    mScale.z = v2;
                 }
                 if ((gNextActorUpdateMask & CUTSCENE_FLAG) == 0) {
                     mFlags |= CUTSCENE_FLAG;
@@ -1063,9 +1061,9 @@ void daStar_c::StateIdle() {
         int t = actorID;
         t = t == ACTOR_SILVER_STAR;
         if (t != false) {
-            if (mPosY <= mHomePos.y) {
-                mPosY = mHomePos.y;
-                mVertSpeed = 0x10000;
+            if (mPos.y <= mHomePos.y) {
+                mPos.y = mHomePos.y;
+                mSpeed.y = 0x10000;
             }
         } else {
             RearmSoundObj6();
@@ -1136,7 +1134,7 @@ void daStar_c::StateCollectBegin() {
             mSoundObjMode = 2;
         }
 
-        int *posY = &mPosY;
+        int *posY = &mPos.y;
 
         mState = STATE_COLLECT_HOLD;
         mBits.collectedModel = 0;
@@ -1149,23 +1147,23 @@ void daStar_c::StateCollectBegin() {
             mHomePos.x = src->x;
             mHomePos.y = src->y;
             mHomePos.z = src->z;
-            mPosX = cache->x;
-            mPosY = cache->y;
-            mPosZ = cache->z;
+            mPos.x = cache->x;
+            mPos.y = cache->y;
+            mPos.z = cache->z;
             *posY += 0x1e000;
         }
 
-        mPrevAngleY = mPlayer->mAngleY;
-        mAngleX = 0;
+        mPrevAngle.y = mPlayer->mAngle.y;
+        mAngle.x = 0;
 
         if (common->mIsMega != 0) {
-            mScaleX = 0x3000;
-            mScaleY = 0x3000;
-            mScaleZ = 0x3000;
+            mScale.x = 0x3000;
+            mScale.y = 0x3000;
+            mScale.z = 0x3000;
         } else {
-            mScaleX = FX32_ONE;
-            mScaleY = FX32_ONE;
-            mScaleZ = FX32_ONE;
+            mScale.x = FX32_ONE;
+            mScale.y = FX32_ONE;
+            mScale.z = FX32_ONE;
         }
 
         StopMotion();
@@ -1186,11 +1184,11 @@ void daStar_c::StateCollectBegin() {
         }
     } else {
         if (func_ov002_020ca0f4(common) != 0) {
-            int *posY2 = &mPosY;
-            int *s = &mPlayer->mPosX;
-            mPosX = s[0];
-            mPosY = s[1];
-            mPosZ = s[2];
+            int *posY2 = &mPos.y;
+            int *s = &mPlayer->mPos.x;
+            mPos.x = s[0];
+            mPos.y = s[1];
+            mPos.z = s[2];
             *posY2 += 0xc8000;
         } else {
             int ok = (gGameMode == 1);
@@ -1201,7 +1199,7 @@ void daStar_c::StateCollectBegin() {
                 }
             }
             mState = STATE_BOUNCE;
-            mVertSpeed = 0x20000;
+            mSpeed.y = 0x20000;
             mHorzSpeed = 0xc000;
             SetDefaultGravity();
             mdCc_c.flags &= ~1;
@@ -1218,11 +1216,11 @@ void daStar_c::StateCollectBegin() {
 /* STATE_COLLECT_HOLD: copies the player's position and facing, starts the pose
  * animation and becomes STATE_COLLECT_TALK. */
 void daStar_c::StateCollectHold() {
-    int *s = &mPlayer->mPosX;
-    mPosX = s[0];
-    mPosY = s[1];
-    mPosZ = s[2];
-    mPrevAngleY = mPlayer->mAngleY;
+    int *s = &mPlayer->mPos.x;
+    mPos.x = s[0];
+    mPos.y = s[1];
+    mPos.z = s[2];
+    mPrevAngle.y = mPlayer->mAngle.y;
     mState = STATE_COLLECT_TALK;
     mSeqTimer = 0;
     mTalkStep = 0;
@@ -1254,16 +1252,14 @@ void daStar_c::StateCollectTalk() {
     u32 r2v;
     u32 b2;
     bool st;
-    VecFx32 t1;
-    VecFx32 t2;
     int *src;
     u8 st2;
 
-    src = &mPlayer->mPosX;
-    mPosX = src[0];
-    mPosY = src[1];
-    mPosZ = src[2];
-    mPrevAngleY = mPlayer->mAngleY;
+    src = &mPlayer->mPos.x;
+    mPos.x = src[0];
+    mPos.y = src[1];
+    mPos.z = src[2];
+    mPrevAngle.y = mPlayer->mAngle.y;
     if (mKind == KIND_9) {
         if (mMusicTimer < 120) {
             Sound::ChangeMusicVolume(0, 0x7f000);
@@ -1292,8 +1288,8 @@ void daStar_c::StateCollectTalk() {
             int idx = mPlayer->mPlayerNo;
             if (gNumStageStars[idx] == 4) {
                 GiveVsStars(idx, 1);
-                func_ov002_020e8244(&t1, this);
-                SpawnNumber(*(Vector3 *)&t1, 5, st, 0, mPlayer);
+                Vector3 t1 = this->func_ov002_020e8244();
+                SpawnNumber(t1, 5, st, 0, mPlayer);
                 FinishCollection();
             }
         } else if (mode == 5) {
@@ -1301,8 +1297,8 @@ void daStar_c::StateCollectTalk() {
             if (!(gNumStageStars[idx2] == 5 && r2v == false)) {
                 if (r2v == false)
                     GiveVsStars(idx2, 1);
-                func_ov002_020e8244(&t2, this);
-                SpawnNumber(*(Vector3 *)&t2, gNumStageStars[mPlayer->mPlayerNo], st, 0, mPlayer);
+                Vector3 t2 = this->func_ov002_020e8244();
+                SpawnNumber(t2, gNumStageStars[mPlayer->mPlayerNo], st, 0, mPlayer);
                 FinishCollection();
             }
         }
@@ -1365,7 +1361,7 @@ void daStar_c::StateSaveMessage() {
             Sound::ChangeMusicVolume(0x40, 0xcb33);
         }
     }
-    mPrevAngleY = mPlayer->mAngleY;
+    mPrevAngle.y = mPlayer->mAngle.y;
     switch (mTalkStep) {
     case 2:
         if (mPlayer->GetTalkState() == -1) {
@@ -1415,20 +1411,20 @@ void daStar_c::StateSaveMessage() {
  * runs once mStateTimer has counted out, unless the no-pickup flag is set. */
 void daStar_c::StateBounce() {
     CheckBounds();
-    mPrevPosY = mPosY;
+    mPrevPos.y = mPos.y;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
-        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+        mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
     }
     UpdateWater();
     if (mWithMeshClsn.JustHitGround()) {
         OnBounceLand();
     } else if (mWithMeshClsn.IsOnGround()) {
-        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+        mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
         if (mBits.water == WATER_IN)
-            mVertSpeed = 0xe000;
+            mSpeed.y = 0xe000;
         else
-            mVertSpeed = 0x17000;
+            mSpeed.y = 0x17000;
     }
     if (mStateTimer == 0) {
         if (!mBits.noPickup)
@@ -1474,7 +1470,7 @@ void daStar_c::StateWaitMarker() {
     mBits.noPickup = 0;
     mStateTimer = 15;
     mState = STATE_BOUNCE;
-    mVertSpeed = 0x20000;
+    mSpeed.y = 0x20000;
     SetDefaultGravity();
 
     mdCc_c.flags &= ~1;
@@ -1487,7 +1483,7 @@ void daStar_c::StateWaitMarker() {
 
         mBits.noPickup = 1;
         mHorzSpeed = 0xc000;
-        mPrevAngleY = GetAngleToCamera(r3->mPlayerNo) + 0x8000;
+        mPrevAngle.y = GetAngleToCamera(r3->mPlayerNo) + 0x8000;
     }
 }
 
@@ -1513,20 +1509,19 @@ void daStar_c::StatePlayAndEnd() {
  * at frame 100 it stops the sound object and destroys itself (VS match) or
  * records itself in the death table. */
 void daStar_c::StateSpinAndEnd() {
-    int v[3];
     char *p;
     int *src;
     unsigned short t;
 
     mSeqTimer += 1;
-    mAngleY += 0x800;
+    mAngle.y += 0x800;
     t = mSeqTimer;
     if (t >= 0x1e) {
         if (t == 0x1e) {
             GiveVsStars(mPlayer->mPlayerNo, 1);
-            func_ov002_020e8244(v, this);
+            Vector3 center = this->func_ov002_020e8244();
             p = (char *)mPlayer;
-            SpawnNumber(*(Vector3 *)v, (unsigned int)gNumStageStars[mPlayer->mPlayerNo], 1, 0,
+            SpawnNumber(center, (unsigned int)gNumStageStars[mPlayer->mPlayerNo], 1, 0,
                         (dActor_c *)p);
             UntrackStar(mMarkerSlot);
         }
@@ -1540,11 +1535,11 @@ void daStar_c::StateSpinAndEnd() {
             KillAndTrackInDeathTable();
         }
     } else {
-        src = &mPlayer->mPosX;
-        mPosX = src[0];
-        mPosY = src[1];
-        mPosZ = src[2];
-        mPosY += 0x104000;
+        src = &mPlayer->mPos.x;
+        mPos.x = src[0];
+        mPos.y = src[1];
+        mPos.z = src[2];
+        mPos.y += 0x104000;
         SpawnCollectEffects();
     }
 }
@@ -1594,12 +1589,12 @@ void daStar_c::FindMarker() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 50 -- AimArcTo, 0x020e947c, size 0x114 */
 /* -------------------------------------------------------------------------- */
-/* Aims a hop at *p: derives mVertAccel and mVertSpeed from the height
+/* Aims a hop at *p: derives mVertAccel and mSpeed.y from the height
  * difference to p and the arc value n, spreads the horizontal distance over 50
  * frames (mHorzSpeed), sets the terminal speed to -50.0 and turns the star
  * toward p. */
 void daStar_c::AimArcTo(Vector3 *p, int n) {
-    int dy = ((int *)p)[1] - mPosY;
+    int dy = ((int *)p)[1] - mPos.y;
     if (dy < 0)
         dy = -dy;
     {
@@ -1614,20 +1609,20 @@ void daStar_c::AimArcTo(Vector3 *p, int n) {
         n = 0x32 - dy;
         mVertAccel = left / den;
     }
-    if (((int *)p)[1] >= mPosY) {
+    if (((int *)p)[1] >= mPos.y) {
         int v = mVertAccel;
         if (v < 0)
             v = -v;
-        mVertSpeed = n * v;
+        mSpeed.y = n * v;
     } else {
         int v = mVertAccel;
         if (v < 0)
             v = -v;
-        mVertSpeed = (dy + 1) * v;
+        mSpeed.y = (dy + 1) * v;
     }
     mTerminalVelocity = -0x32000;
     mHorzSpeed = Vec3_HorzDist(&mPos, p) / 50;
-    mPrevAngleY = Vec3_HorzAngle(&mPos, p);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, p);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1636,7 +1631,7 @@ void daStar_c::AimArcTo(Vector3 *p, int n) {
 /* Stops the star: vertical speed, gravity, terminal speed and horizontal speed
  * all zero. */
 void daStar_c::StopMotion() {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0;
@@ -1941,18 +1936,18 @@ void daStar_c::AddStarMarker()
 void daStar_c::CheckBounds() {
     int v;
     int y;
-    v = mPosX;
+    v = mPos.x;
     y = 0;
     if (y > v) {
         v = -v;
     }
     if (v <= 0x13880000) {
-        v = mPosZ;
+        v = mPos.z;
         if (v < y) {
             v = -v;
         }
         if (v <= 0x13880000) {
-            y = mPosY;
+            y = mPos.y;
             if ((y >= mMinPosY) && (y <= 0x13880000)) {
                 return;
             }
@@ -2009,7 +2004,7 @@ void daStar_c::ReturnToHome() {
     mPos = mHomePos;
     func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
     mState = mHomeState;
-    mVertSpeed = 0x20000;
+    mSpeed.y = 0x20000;
     SetDefaultGravity();
     mStateTimer = 15;
 }
@@ -2022,7 +2017,7 @@ void daStar_c::ReturnToHome() {
  * floor types 1 and 9 it aims back at the last safe position
  * (AimArcTo, arc 200.0); on 4 and 5 it goes home
  * (ReturnToHome); on any other floor it saves the spot as safe and sets
- * mPrevAngleY from the closest player when one is within 1200.0 (away from it
+ * mPrevAngle.y from the closest player when one is within 1200.0 (away from it
  * on a flat floor, toward it on a steep one), or toward the farthest player
  * when none is near. */
 void daStar_c::OnBounceLand() {
@@ -2038,10 +2033,10 @@ void daStar_c::OnBounceLand() {
     func_02012694(0x55, &mCamSpacePos);
     if (mBits.water == WATER_IN) {
         mHorzSpeed = 0xc000;
-        mVertSpeed = 0xe000;
+        mSpeed.y = 0xe000;
     } else {
         mHorzSpeed = 0xc000;
-        mVertSpeed = 0x17000;
+        mSpeed.y = 0x17000;
     }
     r = mWithMeshClsn.GetFloorResult()->surface.clps.GetSurfaceType();
     if (r == 1 || r == 9) {
@@ -2058,13 +2053,13 @@ void daStar_c::OnBounceLand() {
     p = (dActor_c *)ClosestPlayer();
     if (p == 0) return;
     {
-        int *s = &p->mPosX;
+        int *s = &p->mPos.x;
         v.x = s[0];
         v.y = s[1];
         v.z = s[2];
     }
     if (Vec3_Dist(&mPos, &v) < 0x4b0000) {
-        mPrevAngleY = Vec3_HorzAngle(&v, &mPos);
+        mPrevAngle.y = Vec3_HorzAngle(&v, &mPos);
         if (mFloorNormal.y >= *(short *)(data_02082714 + 0x56)) {
             if (gCurrentSublevel != 0x1d)
                 return;
@@ -2072,13 +2067,13 @@ void daStar_c::OnBounceLand() {
                 return;
         }
         {
-            short *a = &mPrevAngleY;
+            short *a = &mPrevAngle.y;
             *a = *a + 0x8000;
         }
     } else {
         dActor_c *q = FarthestPlayer();
         if (q != 0) {
-            mPrevAngleY = Vec3_HorzAngle(&mPos, &q->mPos);
+            mPrevAngle.y = Vec3_HorzAngle(&mPos, &q->mPos);
         }
     }
 }
@@ -2102,16 +2097,16 @@ void daStar_c::UpdateWater() {
         }
         if (mBits.water == WATER_NONE) {
             mBits.water = WATER_TOUCH;
-            mPosY = mPrevPosY;
+            mPos.y = mPrevPos.y;
             mWithMeshClsn.ClearGroundFlag();
             mWithMeshClsn.ClearJustHitGroundFlag();
             mWithMeshClsn.StopDetectingWater();
         }
         dBgCh_Gnd rc;
         rc.StartDetectingWater();
-        ty = mPosY;
-        tz = mPosZ;
-        tx = mPosX;
+        ty = mPos.y;
+        tz = mPos.z;
+        tx = mPos.x;
         ta = ty + 0xa0000;
         v.x = tx;
         v.y = ta;
@@ -2121,17 +2116,17 @@ void daStar_c::UpdateWater() {
             if (SurfaceInfo_TestFlag0x20((int *)&rc.surface) != 0) {
                 mWaterHeight = rc.clsnY;
                 data_0209f32c = mWaterHeight;
-                if (mWaterHeight >= mPosY + 0x3c000) {
+                if (mWaterHeight >= mPos.y + 0x3c000) {
                     mBits.water = WATER_IN;
                     mVertAccel = -0x700;
                     mTerminalVelocity = -0x10000;
                     mHorzSpeed = 0xc000;
-                    mVertSpeed = 0;
+                    mSpeed.y = 0;
                 }
             }
         }
     } else {
-        if (data_0209f32c < mPosY + 0x3c000) {
+        if (data_0209f32c < mPos.y + 0x3c000) {
             mBits.water = WATER_NONE;
             SetDefaultGravity();
             mWithMeshClsn.StartDetectingWater();
@@ -2170,7 +2165,7 @@ void daStar_c::FinishCollection() {
 /* Builds the model matrix for this frame. Kind 8 sits at its position. A
  * matrix pointer in the unnamed dActor_c word at +0xc8 is copied as it is.
  * Otherwise the star spins about Y by 0xc00 per frame, or, with the no-spin
- * flag, faces mPrevAngleY and hangs 50.0 higher. The translucent model takes a
+ * flag, faces mPrevAngle.y and hangs 50.0 higher. The translucent model takes a
  * copy, then DrawShadow draws the shadow. */
 void daStar_c::UpdateModelMatrix() {
     struct Vector3 v;
@@ -2187,18 +2182,18 @@ void daStar_c::UpdateModelMatrix() {
          * same 12 words; proven byte-identical in isolation. */
         *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)mCarryMatrix;
     } else if (!mBits.noSpin) {
-        ang = &mAngleY;
+        ang = &mAngle.y;
         t = *ang + 0xc00;
         *ang = t;
-        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mAngleY);
-        mAnmModel1.mat4x3.t.x = mPosX >> 3;
-        mAnmModel1.mat4x3.t.y = mPosY >> 3;
-        mAnmModel1.mat4x3.t.z = mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mAngle.y);
+        mAnmModel1.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel1.mat4x3.t.y = mPos.y >> 3;
+        mAnmModel1.mat4x3.t.z = mPos.z >> 3;
     } else {
-        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mPrevAngleY);
-        mAnmModel1.mat4x3.t.x = mPosX >> 3;
-        mAnmModel1.mat4x3.t.y = (mPosY + 0x32000) >> 3;
-        mAnmModel1.mat4x3.t.z = mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mPrevAngle.y);
+        mAnmModel1.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel1.mat4x3.t.y = (mPos.y + 0x32000) >> 3;
+        mAnmModel1.mat4x3.t.z = mPos.z >> 3;
     }
 
     *(Mtx43 *)&mAnmModel2.mat4x3 = *(Mtx43 *)&mAnmModel1.mat4x3;
@@ -2225,14 +2220,14 @@ void daStar_c::DrawShadow() {
     if (mBits.noSpin)
         return;
 
-    r2 = mScaleX;
+    r2 = mScale.x;
     rad = r2 * 0x64;
     flag2 = actorID;
     flag2 = flag2 == ACTOR_STAR;
     if (flag2 != false)
         rad = r2 * 0xa0;
 
-    delta = mPosY - mGroundY;
+    delta = mPos.y - mGroundY;
     if (delta <= 0x1000)
         delta = 0x1000;
 
@@ -2244,9 +2239,9 @@ void daStar_c::DrawShadow() {
 
     *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
-    mShadowMtx.tx = mPosX >> 3;
-    mShadowMtx.ty = mPosY >> 3;
-    mShadowMtx.tz = mPosZ >> 3;
+    mShadowMtx.tx = mPos.x >> 3;
+    mShadowMtx.ty = mPos.y >> 3;
+    mShadowMtx.tz = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t, 0xf);
 }
@@ -2254,41 +2249,44 @@ void daStar_c::DrawShadow() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 33 -- func_ov002_020e8244, 0x020e8244, size 0x154 */
 /* -------------------------------------------------------------------------- */
-/* The star's centre, written to *out. Cached in mCenterX/Y/Z (Behavior zeroes
+/* The star's centre, written to *out. Cached in mCenter (Behavior zeroes
  * the cache each frame). Otherwise it multiplies the first bone's matrix with
  * a translation and Y rotation of the star, scales the result about the star's
  * position (<< 3) and raises Y by 13 times a word of the bone data at +0xc. */
 
-void func_ov002_020e8244(void *out, daStar_c *b)
-{
+Vector3 daStar_c::func_ov002_020e8244() {
+    Vector3 result;
+    void *out = &result;
+    daStar_c *b = this;
     Mtx43 local;
     Vector3 zero;
     zero.x = 0;
     zero.y = 0;
     zero.z = 0;
-    if (func_0203d024((struct Vector3 *)&b->mCenterX, &zero) != 0) {
-        ((int *)out)[0] = b->mCenterX;
-        ((int *)out)[1] = b->mCenterY;
-        ((int *)out)[2] = b->mCenterZ;
-        return;
+    if (func_0203d024(&b->mCenter, &zero) != 0) {
+        ((int *)out)[0] = b->mCenter.x;
+        ((int *)out)[1] = b->mCenter.y;
+        ((int *)out)[2] = b->mCenter.z;
+        return result;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, b->mPosX, b->mPosY, b->mPosZ);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngleY);
+    Matrix4x3_FromTranslation(&data_020a0e68, b->mPos.x, b->mPos.y, b->mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngle.y);
     local = *(Mtx43 *)b->mAnmModel1.data.transforms;
     MTX_Concat43(&local, &data_020a0e68, &data_020a0e68);
-    b->mCenterX = data_020a0e68.t.x;
-    b->mCenterY = data_020a0e68.t.y;
-    b->mCenterZ = data_020a0e68.t.z;
-    VEC_Subtract((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
-    Vec3_LslInPlace(&b->mCenterX, 3);
-    VEC_Add((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
+    b->mCenter.x = data_020a0e68.t.x;
+    b->mCenter.y = data_020a0e68.t.y;
+    b->mCenter.z = data_020a0e68.t.z;
+    VEC_Subtract(&b->mCenter, &b->mPos, &b->mCenter);
+    Vec3_LslInPlace(&b->mCenter, 3);
+    VEC_Add(&b->mCenter, &b->mPos, &b->mCenter);
     {
-        int *p = &b->mCenterY;
+        int *p = &b->mCenter.y;
         *p = b->mAnmModel1.data.bones->scaleX * 0xd + *p;
     }
-    ((int *)out)[0] = b->mCenterX;
-    ((int *)out)[1] = b->mCenterY;
-    ((int *)out)[2] = b->mCenterZ;
+    ((int *)out)[0] = b->mCenter.x;
+    ((int *)out)[1] = b->mCenter.y;
+    ((int *)out)[2] = b->mCenter.z;
+    return result;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2297,9 +2295,9 @@ void func_ov002_020e8244(void *out, daStar_c *b)
 /* Keeps trail effect 0x113 (mParticle[0]) 13.0 above the star. */
 void daStar_c::UpdateTrailEffect() {
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y += 0xd000;
     mParticle[0] = Particle::System::New(mParticle[0], kPtclStarTrail, v.x, v.y, v.z, 0, 0);
 }
@@ -2313,19 +2311,18 @@ void daStar_c::UpdateTrailEffect() {
  * scale. */
 void daStar_c::SpawnCollectEffects() {
     Vector3 vc;
-    Vector3 v;
     if (mAnmModel1.Finished())
         return;
-    func_ov002_020e8244(&v, this);
+    Vector3 v = this->func_ov002_020e8244();
     vc.x = v.x;
     vc.y = v.y;
     vc.z = v.z;
     if (mState != STATE_SPIN_AND_END)
         vc.y = v.y + 0x32000;
     VEC_Subtract(&vc, &mPos, &vc);
-    vc.x = FX_MUL(vc.x, mScaleX);
-    vc.y = FX_MUL(vc.y, mScaleY);
-    vc.z = FX_MUL(vc.z, mScaleZ);
+    vc.x = FX_MUL(vc.x, mScale.x);
+    vc.y = FX_MUL(vc.y, mScale.y);
+    vc.z = FX_MUL(vc.z, mScale.z);
     VEC_Add(&vc, &mPos, &vc);
     mParticle[0] =
         (u32)Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
@@ -2341,14 +2338,12 @@ void daStar_c::SpawnCollectEffects() {
  * reached. */
 void daStar_c::SpawnPoseEffects() {
     ModelBone *root;
-    struct Vector3 v1;
-    struct Vector3 v2;
 
     root = mAnmModel1.data.bones;
 
     if (!mAnmModel1.Finished() && (u32)(((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
         root->scaleX != 0) {
-        func_ov002_020e8244(&v1, this);
+        struct Vector3 v1 = this->func_ov002_020e8244();
         mParticle[0] =
             (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
         return;
@@ -2356,7 +2351,7 @@ void daStar_c::SpawnPoseEffects() {
 
     if (!mAnmModel1.WillHitFrame(0x75))
         return;
-    func_ov002_020e8244(&v2, this);
+    struct Vector3 v2 = this->func_ov002_020e8244();
     Particle::System::NewSimple(kPtclStarPoseEnd, v2.x, v2.y, v2.z);
 }
 
@@ -2382,10 +2377,9 @@ void daStar_c::UpdateSparkleEffect() {
 /* -------------------------------------------------------------------------- */
 /* Silver star only: keeps trail effect 0x10e (mParticle[3]) at the centre. */
 void daStar_c::UpdateSilverTrailEffect() {
-    Vector3 v;
     int b = (actorID == ACTOR_SILVER_STAR);
     if (b == 0) return;
-    func_ov002_020e8244(&v, this);
+    Vector3 v = this->func_ov002_020e8244();
     mParticle[3] =
         (int)Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
 }
@@ -2446,9 +2440,9 @@ void daStarBase_c::Collect()
         mBits.visible = 0;
     }
     mdCcAcPos_c.Clear();
-    Particle::System::NewSimple(kPtclStarMarkerCollectA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclStarMarkerCollectB, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclStarMarkerCollectC, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclStarMarkerCollectA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclStarMarkerCollectB, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclStarMarkerCollectC, mPos.x, mPos.y, mPos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2459,9 +2453,9 @@ void daStarBase_c::Collect()
 void daStar_c::ProbeGround() {
     dBgCh_Gnd rc;
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y += 0x32000;
     rc.SetObjAndPos(v, 0);
     rc.mProbeHeight = 0x3e8000;
@@ -2506,9 +2500,9 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
     int dist;
     unsigned int r6 = 0;
 
-    vec[0].x = mPosX;
-    vec[0].y = mPosY;
-    vec[0].z = mPosZ;
+    vec[0].x = mPos.x;
+    vec[0].y = mPos.y;
+    vec[0].z = mPos.z;
     ((dCamera_c *)cam)->SetLookAt(vec[0]);
 
     vec[0].y += 0xc8000;
@@ -2551,9 +2545,9 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
             dBgCh_Lin rl;
             Vector3 a;
             Vector3 b;
-            a.x = mPosX;
-            a.y = mPosY;
-            a.z = mPosZ;
+            a.x = mPos.x;
+            a.y = mPos.y;
+            a.z = mPos.z;
             b.x = vec[0].x;
             b.y = vec[0].y;
             b.z = vec[0].z;
@@ -2593,10 +2587,10 @@ void daStar_c::StepCameraCutscene() {
     if (mCamSeq == 0xffff)
         return;
 
-    v.x = mPosX;
+    v.x = mPos.x;
     cam = gCamera;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.y = mPos.y;
+    v.z = mPos.z;
 
     switch (mCamSeq) {
     case 0:
@@ -2639,7 +2633,7 @@ void daStar_c::StepCameraCutscene() {
         break;
     case 0x65:
         cam->SetLookAt(v);
-        if (mScaleX == 0x1000 || mScaleX == 0)
+        if (mScale.x == 0x1000 || mScale.x == 0)
             mCamSeq = 0x1b6;
         break;
     case 0x1f4:
@@ -2703,10 +2697,10 @@ void daStar_c::RelinkMarker() {
     daStarBase_c *a = (daStarBase_c *)dActor_c::FindWithID(mMarkerID);
     int* s;
     mBits.water = WATER_NONE;
-    s = &a->mPosX;
-    mPosX = s[0];
-    mPosY = s[1];
-    mPosZ = s[2];
+    s = &a->mPos.x;
+    mPos.x = s[0];
+    mPos.y = s[1];
+    mPos.z = s[2];
     func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
     if (a->mState == STATE_LAND) {
         mHomeState = a->mLinkedStarState;
@@ -2754,10 +2748,10 @@ void daStarBase_c::SpawnRedCoinStarIfNecessary()
     int y;
     if (mBits.spawned) return;
     if (NumRedCoins() != 8) return;
-    v.x = mPosX;
-    y = mPosY;
+    v.x = mPos.x;
+    y = mPos.y;
     v.y = y;
-    v.z = mPosZ;
+    v.z = mPos.z;
     v.y = y + 0x78000;
     star = (daStar_c *)dActor_c::Spawn(ACTOR_STAR, mStarID, v, 0, mAreaId, -1);
     if (star == 0) return;
@@ -2778,7 +2772,7 @@ void daStar_c::SeekNewMarker(daPly_c *player, int gate) {
         struct Vector3 pos[2];
         bool b;
         int* v;
-        v = &player->mPosX;
+        v = &player->mPos.x;
         pos[0].x = v[0];
         pos[0].y = v[1];
         pos[0].z = v[2];
@@ -2954,9 +2948,9 @@ void daStar_c::InitKind9() {
 /* Puts the appearing star back to nothing: scale 0, switch off, map marker
  * given up, appear and state timers cleared. */
 void daStar_c::ResetAppearance() {
-    mScaleX = 0;
-    mScaleY = 0;
-    mScaleZ = 0;
+    mScale.x = 0;
+    mScale.y = 0;
+    mScale.z = 0;
     mBits.switchOn = 0;
     UntrackStar(mMarkerSlot);
     mBits.appeared = 0;

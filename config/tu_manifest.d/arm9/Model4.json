@@ -229,7 +229,7 @@
       "ordinal": 29
     },
     {
-      "symbol": "_Z13func_020462d0P3DstP4DescP5ElemA",
+      "symbol": "_ZN12RuntimeModel13func_020462d0EP4DescP5ElemA",
       "address": "0x020462d0",
       "size": "0x00000294",
       "legacy_source": "src/func_020462d0.c",

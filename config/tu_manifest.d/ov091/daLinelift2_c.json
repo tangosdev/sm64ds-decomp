@@ -282,7 +282,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN21Linelift2ModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
@@ -296,7 +296,7 @@
     },
     {
       "symbol": "_ZN25Linelift2CollisionFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
@@ -390,7 +390,7 @@
       "source": "0x021345ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -410,7 +410,7 @@
       "source": "0x02134608",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -430,7 +430,7 @@
       "source": "0x02134624",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -450,7 +450,7 @@
       "source": "0x02134640",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"

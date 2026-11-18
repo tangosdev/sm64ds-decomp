@@ -77,3 +77,51 @@ src/game/actors/d_a_obj_bk_fall_block.cpp:
     .bss start:0x02114ad4 end:0x02114afc
     .data.fb_clps start:0x021136b4 end:0x021136d4
     .data.fb_res start:0x02114880 end:0x0211488c
+
+src/data/ov015/data_ov015_02112e0c.c:
+    complete
+    .rodata start:0x02112e0c end:0x02112e10
+
+src/data/ov015/data_ov015_02112e10.c:
+    complete
+    .rodata start:0x02112e10 end:0x02112e14
+
+src/data/ov015/data_ov015_02112e14.c:
+    complete
+    .rodata start:0x02112e14 end:0x02112e30
+
+src/data/ov015/data_ov015_02112e30.c:
+    complete
+    .rodata start:0x02112e30 end:0x02112e5c
+
+src/data/ov015/data_ov015_02112e5c.c:
+    complete
+    .rodata start:0x02112e5c end:0x02112f2c
+
+src/data/ov015/data_ov015_02112f2c.c:
+    complete
+    .rodata start:0x02112f2c end:0x02112f58
+
+src/data/ov015/data_ov015_02112f58.c:
+    complete
+    .rodata start:0x02112f58 end:0x02112f7c
+
+src/data/ov015/data_ov015_02112f7c.c:
+    complete
+    .rodata start:0x02112f7c end:0x02112f9c
+
+src/data/ov015/data_ov015_02114824.c:
+    complete
+    .data start:0x02114824 end:0x02114860
+
+src/data/ov015/data_ov015_02114860.c:
+    complete
+    .data start:0x02114860 end:0x02114868
+
+src/data/ov015/data_ov015_0211487c.c:
+    complete
+    .data start:0x0211487c end:0x02114880
+
+src/data/ov015/data_ov015_02114afc.c:
+    complete
+    .bss start:0x02114afc end:0x02114b00

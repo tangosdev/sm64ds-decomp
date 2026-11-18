@@ -92,7 +92,7 @@ s32 daObjWc_Obj05_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *mc = dBgW_Kc::LoadFile(gWcObj05CollisionFile);
-    mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngleY, data_ov029_0211306c);
+    mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngle.y, data_ov029_0211306c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mPrevPlayerOnTop = 0;
@@ -102,7 +102,7 @@ s32 daObjWc_Obj05_c::InitResources() {
         mState = 3;
     else
         mState = 0;
-    mRestPosY = mPosY;
+    mRestPosY = mPos.y;
     return 1;
 }
 
@@ -121,12 +121,12 @@ s32 daObjWc_Obj05_c::Behavior() {
         mPrevPlayerOnTop = mPlayerOnTop;
         break;
     case 1: {
-        mPosY -= 0x14000;
+        mPos.y -= 0x14000;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
         {
             int v = mRestPosY + (int)0xff5d8000;
-            if (mPosY <= v) {
-                mPosY = v;
+            if (mPos.y <= v) {
+                mPos.y = v;
                 mState++;
                 mDwellTimer = 0;
             }
@@ -137,9 +137,9 @@ s32 daObjWc_Obj05_c::Behavior() {
         if ((u16)mDwellTimer >= 110) {
             int snd = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
             mSoundHandle = snd;
-            mPosY += 0xa000;
-            if (mPosY >= mRestPosY) {
-                mPosY = mRestPosY;
+            mPos.y += 0xa000;
+            if (mPos.y >= mRestPosY) {
+                mPos.y = mRestPosY;
                 mState = 0;
                 mDwellTimer = 0;
             }
@@ -157,7 +157,7 @@ s32 daObjWc_Obj05_c::Behavior() {
     if (IsClsnInRange(0, 0)) {
         UpdateClsnPosAndRot();
     }
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
     mPlayerOnTop = 0;
     return 1;
 }

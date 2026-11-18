@@ -51,9 +51,9 @@ struct daStarBase_c : dActor_c {
                                      tree; the name records the copy. */
     s32 mGroundY;                /* 0x1c8 -- the ground height under the
                                      marker: InitResources raycasts down with
-                                     a dBgCh_Gnd from mPosY + 0x1e000 and
+                                     a dBgCh_Gnd from mPos.y + 0x1e000 and
                                      stores the result's own +0x44. Behavior
-                                     turns mPosY - mGroundY into the shadow's
+                                     turns mPos.y - mGroundY into the shadow's
                                      drop height. */
     u32 mLinkedStarID;           /* 0x1cc -- uniqueID of the star (daStar_c) this
                                      marker is linked to, 0 for none. Stored by

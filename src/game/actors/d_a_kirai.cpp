@@ -110,15 +110,15 @@ int daKirai_c::IsInTriggerRange(Vector3 *pos) {
 void daKirai_c::Explode() {
     Vector3 v;
     mStateIndex = 1;
-    Particle::System::NewSimple(kPtclSpikeBombExplodeA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclSpikeBombExplodeB, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclSpikeBombExplodeC, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclSpikeBombExplodeD, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclSpikeBombExplodeE, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeB, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeC, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeD, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeE, mPos.x, mPos.y, mPos.z);
     func_02012694(0x2f, &mCamSpacePos);
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     Earthquake(v, 0x7d0000);
     mTimer = 0;
     Disarm();
@@ -126,15 +126,15 @@ void daKirai_c::Explode() {
 
 /* Place the model and fade it. */
 void daKirai_c::UpdateModelTransform() {
-    Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
     mModel.ApplyOpacity((u8)(mOpacity >> 3), 1);
 }
 
 /* Re-arm. */
 void daKirai_c::Rearm() {
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mOpacity = 0xff;
     mStateIndex = 0;
     mdCcAcPos_c.flags &= ~1;
@@ -194,13 +194,13 @@ void daKirai_c::StateSpent() {
 /* Exploding: swell, fade and rise for 0x1c frames, then disarm. */
 void daKirai_c::StateExploding() {
     int scale = (mTimer * 9 << 12) / 14 + 0x1000;
-    mScaleX = scale;
-    mScaleY = scale;
-    mScaleZ = scale;
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
     mOpacity -= 0xa;
     if (mOpacity < 0xa)
         mOpacity = 0;
-    mPosY += mVertSpeed;
+    mPos.y += mSpeed.y;
     if (mTimer == 28)
         Disarm();
     mTimer++;
@@ -211,9 +211,9 @@ void daKirai_c::StateSwelling() {
     int scale;
     mdCcAcPos_c.flags |= 1;
     scale = (mTimer * 9 << 12) / 14 + 0x1000;
-    mScaleX = scale;
-    mScaleY = scale;
-    mScaleZ = scale;
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
     if (mTimer == 28)
         Disarm();
     mTimer++;
@@ -233,19 +233,19 @@ void daKirai_c::StateArmed() {
         return;
     if (!IsPlayerActor(a))
         return;
-    Particle::System::NewSimple(kPtclSpikeBombExplodeA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclSpikeBombExplodeB, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclSpikeBombExplodeC, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclSpikeBombExplodeD, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclSpikeBombExplodeE, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeB, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeC, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeD, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeE, mPos.x, mPos.y, mPos.z);
     func_02012694(0x2f, &mCamSpacePos);
-    quakePos.x = mPosX;
-    quakePos.y = mPosY;
-    quakePos.z = mPosZ;
+    quakePos.x = mPos.x;
+    quakePos.y = mPos.y;
+    quakePos.z = mPos.z;
     Earthquake(quakePos, 0x7d0000);
-    hurtPos.x = mPosX;
-    hurtPos.y = mPosY;
-    hurtPos.z = mPosZ;
+    hurtPos.x = mPos.x;
+    hurtPos.y = mPos.y;
+    hurtPos.z = mPos.z;
     ((daPly_c *)a)->Hurt(hurtPos, 2, 0xc000, 1, 0, 1);
     Disarm();
 }
@@ -286,18 +286,18 @@ int daKirai_c::InitResources() {
     v.y = -0x96000;
     v.z = 0;
     mdCcAcPos_c.Init(this, v, 0x96000, 0x12c000, 0x204004, 0);
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mOpacity = 0xff;
     z.x = 0;
     z.y = 0;
     z.z = 0;
     Vec3_HorzAngle(&z, &mPos);
     mHomeYOffset = 0x2ee000;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mHomePos.y += mHomeYOffset >> 3;
     mHomeHorzDist = Vec3_HorzLen(&mPos);
     mStateIndex = 0;

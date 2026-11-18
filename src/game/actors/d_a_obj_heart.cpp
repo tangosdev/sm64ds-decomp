@@ -50,10 +50,10 @@ extern "C" int Math_Function_0203b14c(int *ptr, int target, int rate, int limit,
 daObjHeart_c::~daObjHeart_c() {}
 
 void daObjHeart_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 s32 daObjHeart_c::CleanupResources() {

@@ -26,7 +26,7 @@
  *
  * Notes:
  * - Kill stores pos and dustPos memberwise; a Vector3 assignment does not
- *   match. Behavior widens mPosY through `long long` before the
+ *   match. Behavior widens mPos.y through `long long` before the
  *   spawn-height add.
  * - Actor 0xde is the bill, daKlr_c (g_profile_KILLER's id half reads
  *   0xde); Behavior hands it this launcher through daKlr_c::mLauncher.
@@ -119,9 +119,9 @@ daObjBkKillerdai_c::~daObjBkKillerdai_c() {}
 void daObjBkKillerdai_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
-    fx32 x = mPosX;
-    fx32 y = mPosY + 0x96000;
-    fx32 z = mPosZ;
+    fx32 x = mPos.x;
+    fx32 y = mPos.y + 0x96000;
+    fx32 z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -137,7 +137,7 @@ void daObjBkKillerdai_c::Kill() {
 void daObjBkKillerdai_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     KillByMegaChar(player);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 s32 daObjBkKillerdai_c::CleanupResources() {
@@ -155,7 +155,7 @@ s32 daObjBkKillerdai_c::Render() {
     return 1;
 }
 
-/* mPosY is widened through a long long before the spawn-height add; a
+/* mPos.y is widened through a long long before the spawn-height add; a
  * plain add misses. */
 s32 daObjBkKillerdai_c::Behavior() {
     if (UpdateKillByMegaChar(0x2000, 0, 0, 0xc8000))
@@ -164,10 +164,10 @@ s32 daObjBkKillerdai_c::Behavior() {
         daPly_c *player = ClosestPlayer();
         int dist = Vec3_HorzDist(&mPos, &player->mPos);
         s16 ang = Vec3_HorzAngle(&mPos, &player->mPos);
-        if (AngleDiff(ang, mAngleY) < 0x2000 && dist > 0x320000 && dist < 0x5dc000) {
-            long long yll = mPosY;
-            int z = mPosZ;
-            int x = mPosX;
+        if (AngleDiff(ang, mAngle.y) < 0x2000 && dist > 0x320000 && dist < 0x5dc000) {
+            long long yll = mPos.y;
+            int z = mPos.z;
+            int x = mPos.x;
             int y = (int)yll + 0x96000;
             Vector3 pos;
             pos.x = x;
@@ -193,7 +193,7 @@ s32 daObjBkKillerdai_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     file = dBgW_Kc::LoadFile(*data_ov079_02127f64.collision);
-    mMeshCollider.SetFile((KCL_File *)(file), mClsnMat, 0x199, mAngleY, *data_ov079_02127f64.clps);
+    mMeshCollider.SetFile((KCL_File *)(file), mClsnMat, 0x199, mAngle.y, *data_ov079_02127f64.clps);
 
     mSpawnedUniqueID = 0;
 
@@ -204,7 +204,7 @@ s32 daObjBkKillerdai_c::InitResources() {
     }
     if (course == 7) {
         if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
-            if (mPosY >= 0xdac000)
+            if (mPos.y >= 0xdac000)
                 return 0;
         }
     }

@@ -98,9 +98,9 @@ int daTree_c::InitResources()
     if (*slot == 0)
         mModel[variant].LoadAndSetFile(data_ov002_0210abb8[variant], 1, 1);
     node = new TreeNode;
-    node->pos.x = mPosX;
-    node->pos.y = mPosY;
-    node->pos.z = mPosZ;
+    node->pos.x = mPos.x;
+    node->pos.y = mPos.y;
+    node->pos.z = mPos.z;
     Vec3_AsrInPlace(&node->pos, 3);
     node->pos.y += kCanopyLift;
     node->clsn.Init(mPos, kClsnRadius, kClsnHeight, kClsnFlags, 0);

@@ -125,7 +125,7 @@ int daObjBk_Botaosi_c::OnAttacked2(dActor_c &other) {
 
 /* -------------------------------------------------------------------------- */
 /* The hit handler OnKicked and OnAttacked2 share. The first hit starts the
-   wobble; a hit within 0x2000 of mAngleY knocks toward -1, one more than
+   wobble; a hit within 0x2000 of mAngle.y knocks toward -1, one more than
    0x6000 off it toward +1, and one from the flank in between changes
    nothing else. A hit from well above while the wobble is still strong
    tips the plank over. The second `diff < 0x2000` test is dead, but the
@@ -141,7 +141,7 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
         mState++;
 
     angle = Vec3_HorzAngle(&mPos, &other->mPos);
-    diff = AngleDiff(angle, mAngleY);
+    diff = AngleDiff(angle, mAngle.y);
     if (diff < 0x2000) {
         mKnockDir = -1;
     } else {
@@ -154,7 +154,7 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
 
     if (mState == 1) {
         if (mWobbleTimer >= 800) {
-            if (other->mPosY > mPosY + 0x64000)
+            if (other->mPos.y > mPos.y + 0x64000)
                 mState++;
         }
     }
@@ -162,7 +162,7 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Re-aims the cuboid shadow. The plank's tilt (the sine of mAngleX, scaled
+/* Re-aims the cuboid shadow. The plank's tilt (the sine of mAngle.x, scaled
    by 0x7d0) sets how far the shadow stretches and toward which end: a
    non-positive tilt turns it a further half turn. It is centred half a lean
    out from mFront*, and once the plank goes over it drops to mFrontFloorY.
@@ -171,7 +171,7 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
 void daObjBk_Botaosi_c::UpdateShadow() {
     u16 yaw;
     int lean = 0;
-    int sine = FX_SinIdx((u16)mAngleX >> 4);
+    int sine = FX_SinIdx((u16)mAngle.x >> 4);
     int tilt = FX_MUL(sine, 0x7d0000);
     yaw = 0x8000;
     if (tilt <= 0) {
@@ -179,16 +179,16 @@ void daObjBk_Botaosi_c::UpdateShadow() {
         tilt = -tilt;
     }
     lean = lean + tilt;
-    Matrix4x3_FromRotationY(&mShadowMat, (s16)(mAngleY + yaw));
+    Matrix4x3_FromRotationY(&mShadowMat, (s16)(mAngle.y + yaw));
     {
         int front = mFrontPos.x;
-        int cosine = FX_CosIdx((u16)(s16)(mAngleY + yaw) >> 4);
+        int cosine = FX_CosIdx((u16)(s16)(mAngle.y + yaw) >> 4);
         mShadowMat.t.x = (front + FX_MUL(cosine, (lean >> 1))) >> 3;
     }
     mShadowMat.t.y = mFrontPos.y >> 3;
     {
         int front = mFrontPos.z;
-        int sine2 = FX_SinIdx((u16)(s16)(mAngleY + yaw) >> 4);
+        int sine2 = FX_SinIdx((u16)(s16)(mAngle.y + yaw) >> 4);
         mShadowMat.t.z = (front + FX_MUL(sine2, (lean >> 1))) >> 3;
     }
     if (mState >= 2)
@@ -200,10 +200,10 @@ void daObjBk_Botaosi_c::UpdateShadow() {
 /* mModel's matrix from all three angles, the position in its translation
    row. */
 void daObjBk_Botaosi_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -233,9 +233,9 @@ int daObjBk_Botaosi_c::Behavior() {
         int amp = mKnockDir;
         int prod = amp * s;
         int d = FX_MUL(prod, mWobbleTimer);
-        mAngleX = d;
+        mAngle.x = d;
         if (mWobbleTimer <= 0) {
-            mAngleX = 0;
+            mAngle.x = 0;
             mWobbleAng = 0;
             mState = 0;
         } else {
@@ -247,36 +247,36 @@ int daObjBk_Botaosi_c::Behavior() {
     case 2: {
         int amt = mKnockDir << 0x17;
         mFallAngVel += amt >> 16;
-        mAngleX += mFallAngVel;
+        mAngle.x += mFallAngVel;
         if (mKnockDir == -1) {
-            if (mAngleX < -0x4000) {
-                mAngleX = -0x4000;
+            if (mAngle.x < -0x4000) {
+                mAngle.x = -0x4000;
                 mFallAngVel = 0;
                 mState++;
 
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 Earthquake(pos, 0x2000000);
                 Sound::PlayBank3(0x44, mCamSpacePos);
             }
         } else {
             mJumpSpeed += 0x2000;
-            mPosY += mJumpSpeed;
+            mPos.y += mJumpSpeed;
             int limit = mOriginalPosY + 0x46000;
-            if (mPosY > limit) {
-                mPosY = limit;
+            if (mPos.y > limit) {
+                mPos.y = limit;
             }
-            if (mAngleX > 0x4000) {
-                mAngleX = 0x4000;
+            if (mAngle.x > 0x4000) {
+                mAngle.x = 0x4000;
                 mFallAngVel = 0;
                 mState++;
 
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 Earthquake(pos, 0x2000000);
                 Sound::PlayBank3(0x44, mCamSpacePos);
             }
@@ -305,10 +305,10 @@ int daObjBk_Botaosi_c::InitResources() {
     mShadowModel.InitCuboid();
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov015_02114974), mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov015_02114974), mClsnMat, 0x1000, mAngle.y,
                           data_ov015_02113574);
 
-    mAngleY += 0x8000;
+    mAngle.y += 0x8000;
     a.x = 0;
     a.y = 0;
     a.z = -0xfa000;
@@ -316,7 +316,7 @@ int daObjBk_Botaosi_c::InitResources() {
     b.y = 0;
     b.z = 0;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&a, &data_020a0e68, &b);
     Vec3_Add(&c, &b, &mPos);
     c.y += 0x14000;
@@ -335,7 +335,7 @@ int daObjBk_Botaosi_c::InitResources() {
     b.y = 0;
     b.z = 0;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&a, &data_020a0e68, &b);
     Vec3_Add(&d, &b, &mPos);
 
@@ -343,11 +343,11 @@ int daObjBk_Botaosi_c::InitResources() {
     mFrontPos.x = d.x;
     mFrontPos.y = d.y;
     mFrontPos.z = d.z;
-    mOriginalPosY = mPosY;
+    mOriginalPosY = mPos.y;
     mKnockDir = one;
 
     if (gCurrentSublevel == 7 && (gCurrentStarId == 1 || IsStarCollectedInCurLevel(one) == 0) &&
-        mPosY >= 0xdac000) {
+        mPos.y >= 0xdac000) {
         return 0;
     }
     return 1;

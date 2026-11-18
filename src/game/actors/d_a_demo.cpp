@@ -145,8 +145,8 @@ struct OamAttr;
 
 #pragma defer_codegen off
 
-/* The staff-roll block's helpers are free functions that take the block
-   as char *; they read it through this record. */
+/* StaffRoll's helpers are members and reach its stars, dolls and window
+   fields by name. */
 typedef daDemo_c::StaffRoll StaffRoll;
 
 /* shadow typedef 's16' */
@@ -252,8 +252,6 @@ extern struct OamAttr *data_ov002_0210b6a8[];
 extern const int data_ov002_02100140[];
 }
 
-extern void func_ov002_020f2790(char *c, int p1, int p2, int p3, short p4);
-extern int func_ov002_020f2984(char *p);
 
 extern "C" int GetOwnerLanguage(void);
 extern "C" {
@@ -263,26 +261,22 @@ extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int 
 extern struct OamAttr* data_ov002_0210b988[];
 }
 
-extern void func_0201ef50(int v);
-extern void func_0201f108(void);
+#include "Message.h"
 extern "C" {
 
 extern struct OamAttr *data_ov002_0210bba0[];
 }
 
-extern int func_ov002_020f5a94(void *c);
 extern "C" {
 extern int *data_ov002_0210b97c[];
 }
 
-extern void func_ov002_020f2f18(char *c, int a, int b);
 extern "C" {
 extern void SetSubBg2Offset(int a, int b);
 extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
 }
 
-extern void func_ov002_020f3828(int *c);
 extern "C" {
 extern int data_ov002_021002a0[];
 extern StaffRollStep data_ov002_02110e34[];
@@ -308,20 +302,10 @@ extern const int data_ov002_02100170[];
 extern StaffRollStep data_ov002_02110e64[];
 }
 
-extern void func_ov002_020f39ec(char *c, int i);
 extern "C" {
 extern StaffRollStep data_ov002_02110e7c[];
 }
 
-extern void func_ov002_020f5a6c(char* p);
-extern void func_ov002_020f396c(char* p);
-extern void func_ov002_020f30d4(char* p);
-extern void func_ov002_020f2ea0(char* p);
-extern void func_ov002_020f2a68(char* p);
-extern void func_ov002_020f2958(char* c);
-extern void func_ov002_020f37fc(char*);
-extern void func_ov002_020f2f9c(void *, int);
-extern void func_ov002_020f3954(char *);
 extern "C" {
 /* local extern dropped: decl_common.h already declares LoadFont(u8) */
 extern StaffRollCue data_ov002_02110f9c[];
@@ -333,14 +317,6 @@ extern void DecompressLZ16(void *src, void *dst);
 extern "C" void Deallocate(void *p);
 extern "C" void GXS_LoadBG1Scr(const void *src, int offset, int count);
 extern "C" void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
-extern void func_ov002_020f5f60(char *c);
-extern int func_ov002_020f5fb8(void* c);
-extern int func_ov002_020f5f8c(void* c);
-extern void func_ov002_020f2eac(void *c);
-extern void func_ov002_020f3978(char *c);
-extern int func_ov002_020f27e8(char *c);
-extern int func_ov002_020f2990(char *c);
-extern void func_ov002_020f5fe4(char *c);
 
 extern void func_02012694(unsigned int, const Vector3 *);
 extern "C" {
@@ -356,8 +332,6 @@ extern int data_ov002_0210b958[3];
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern void func_0201f138(void);
-extern void func_0201ef38(void);
 extern "C" {
 
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
@@ -370,7 +344,7 @@ extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
 extern unsigned char gLocalPlayerId;
 extern void *gPlayers[];
-/* void *: every caller passes &mPosX and POD int[3] scratch; retyping that
+/* void *: every caller passes &mPos.x and POD int[3] scratch; retyping that
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 extern int data_ov002_0210b964[3];
@@ -662,80 +636,71 @@ void StaffRoll::func_ov002_020f26e0() {
     }
 }
 
-void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
-{
-    ((StaffRoll *)c)->kira.unk308 = p3;
-    ((StaffRoll *)c)->kira.unk30c = p4;
-    ((StaffRoll *)c)->kiraParticle =
-        Particle::System::New(((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12,
-                              p2 << 12, 0, 0, &((StaffRoll *)c)->kira);
+void StaffRoll::func_ov002_020f2790(int p1, int p2, int p3, s16 p4) {
+    kira.unk308 = p3;
+    kira.unk30c = p4;
+    kiraParticle = Particle::System::New(kiraParticle, kPtclEndingStarSparkle, p1 << 12, p2 << 12,
+                                         0, 0, &kira);
 }
 
-int func_ov002_020f27e8(char *c)
-{
-    if (((StaffRoll *)c)->burstActive == 0)
-        return ((StaffRoll *)c)->burstActive;
+int StaffRoll::func_ov002_020f27e8() {
+    if (burstActive == 0)
+        return burstActive;
 
-    ((StaffRoll *)c)->burstTimer += 1;
+    burstTimer += 1;
 
-    if (((StaffRoll *)c)->burstDefParam != 0x1000) {
-        if (((StaffRoll *)c)->burstTimer ==
-            data_ov002_02100140[((StaffRoll *)c)->burstPeriods & 3]) {
-            ((StaffRoll *)c)->burstDefParam += 0x199;
-            if (((StaffRoll *)c)->burstDefParam >= 0x1000)
-                ((StaffRoll *)c)->burstDefParam = 0x1000;
+    if (burstDefParam != 0x1000) {
+        if (burstTimer == data_ov002_02100140[burstPeriods & 3]) {
+            burstDefParam += 0x199;
+            if (burstDefParam >= 0x1000)
+                burstDefParam = 0x1000;
         }
     }
 
-    if (((StaffRoll *)c)->burstSysParam != 0x800) {
-        if (((StaffRoll *)c)->burstPeriods >= 5) {
-            if ((((StaffRoll *)c)->burstTimer & 3) == 3) {
-                ((StaffRoll *)c)->burstSysParam += 0x199;
-                if (((StaffRoll *)c)->burstSysParam >= 0x800)
-                    ((StaffRoll *)c)->burstSysParam = 0x800;
+    if (burstSysParam != 0x800) {
+        if (burstPeriods >= 5) {
+            if ((burstTimer & 3) == 3) {
+                burstSysParam += 0x199;
+                if (burstSysParam >= 0x800)
+                    burstSysParam = 0x800;
             }
         }
     }
 
-    func_ov002_020f2790(c, 0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
-                        ((StaffRoll *)c)->burstSysParam);
-    func_ov002_020f2790(c, 0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
-                        ((StaffRoll *)c)->burstSysParam);
+    func_ov002_020f2790(0x80, 0x60, burstDefParam, burstSysParam);
+    func_ov002_020f2790(0x80, 0x60, burstDefParam, burstSysParam);
 
-    if (((StaffRoll *)c)->burstTimer >= 30) {
-        ((StaffRoll *)c)->burstTimer = 0;
-        ((StaffRoll *)c)->burstPeriods += 1;
+    if (burstTimer >= 30) {
+        burstTimer = 0;
+        burstPeriods += 1;
     }
-    if (((StaffRoll *)c)->burstPeriods < 0xa)
-        return ((StaffRoll *)c)->burstPeriods;
-    return func_ov002_020f2984(c);
+    if (burstPeriods < 0xa)
+        return burstPeriods;
+    return func_ov002_020f2984();
 }
 
-void func_ov002_020f2958(char *c)
-{
-    ((StaffRoll *)c)->burstActive = 1;
-    ((StaffRoll *)c)->burstDefParam = 0x199;
-    ((StaffRoll *)c)->burstSysParam = 0x199;
-    ((StaffRoll *)c)->burstTimer = 0;
-    ((StaffRoll *)c)->burstPeriods = 0;
+void StaffRoll::func_ov002_020f2958() {
+    burstActive = 1;
+    burstDefParam = 0x199;
+    burstSysParam = 0x199;
+    burstTimer = 0;
+    burstPeriods = 0;
 }
 
-int func_ov002_020f2984(char *p)
-{
-    ((StaffRoll *)p)->burstActive = 0;
-    return (int)p;
+int StaffRoll::func_ov002_020f2984() {
+    burstActive = 0;
+    return (int)this;
 }
 
-int func_ov002_020f2990(char* c)
-{
+int StaffRoll::func_ov002_020f2990() {
     int x, y;
     int idx;
 
-    if (((StaffRoll *)c)->endVisible == 0)
-        return (int)c;
+    if (endVisible == 0)
+        return (int)this;
 
-    x = ((StaffRoll *)c)->endX >> 0xc;
-    y = ((StaffRoll *)c)->endY >> 0xc;
+    x = endX >> 0xc;
+    y = endY >> 0xc;
     idx = 0;
     if (GetOwnerLanguage() == 3) idx = 1;
     else if (GetOwnerLanguage() == 2 || GetOwnerLanguage() == 5) idx = 2;
@@ -752,11 +717,10 @@ void StaffRoll::func_ov002_020f2a48() {
     endY = 393216;
 }
 
-void func_ov002_020f2a68(char *p)
-{
+void StaffRoll::func_ov002_020f2a68() {
     /* 0x1d8/0x1d9: see func_ov002_020f2990. */
-    ((StaffRoll *)p)->endActive = 0;
-    ((StaffRoll *)p)->endVisible = 0;
+    endActive = 0;
+    endVisible = 0;
 }
 
 void StaffRoll::func_ov002_020f2a78(int i) {
@@ -772,52 +736,50 @@ void StaffRoll::func_ov002_020f2a88(int i) {
 }
 
 void StaffRoll::func_ov002_020f2aec(int idx) {
-    StaffRoll *s = this;
 
-    if (s->credit[idx].timer == 0) {
+    if (credit[idx].timer == 0) {
         gSubScreenLayers |= 1;
     }
-    s->credit[idx].timer++;
-    s->credit[idx].blendTimer++;
+    credit[idx].timer++;
+    credit[idx].blendTimer++;
 
-    if (s->credit[idx].blendTimer >= 2) {
-        s->credit[idx].blendTimer = 0;
-        s->credit[idx].blend++;
-        unsigned char cnt = s->credit[idx].blend;
+    if (credit[idx].blendTimer >= 2) {
+        credit[idx].blendTimer = 0;
+        credit[idx].blend++;
+        unsigned char cnt = credit[idx].blend;
         G2S_SetBlendAlpha(1, 0x36, cnt, 0x10 - cnt);
     }
 
-    if (s->credit[idx].timer < 30) {
+    if (credit[idx].timer < 30) {
         return;
     }
-    s->credit[idx].timer = 0;
-    s->credit[idx].step++;
+    credit[idx].timer = 0;
+    credit[idx].step++;
     G2S_BlendNone();
 }
 
 void StaffRoll::func_ov002_020f2bf4(int idx) {
-    StaffRoll *s = this;
 
-    s->credit[idx].timer++;
-    s->credit[idx].blendTimer++;
+    credit[idx].timer++;
+    credit[idx].blendTimer++;
 
-    if (s->credit[idx].blendTimer >= 2) {
-        s->credit[idx].blendTimer = 0;
-        s->credit[idx].blend++;
-        unsigned char cnt = s->credit[idx].blend;
+    if (credit[idx].blendTimer >= 2) {
+        credit[idx].blendTimer = 0;
+        credit[idx].blend++;
+        unsigned char cnt = credit[idx].blend;
         G2S_SetBlendAlpha(1, 0x36, 0x10 - cnt, cnt);
     }
 
-    if (s->credit[idx].timer < 30) {
+    if (credit[idx].timer < 30) {
         return;
     }
-    s->credit[idx].timer = 0;
-    s->credit[idx].step++;
-    s->credit[idx].message++;
-    s->credit[idx].blend = 0;
-    s->credit[idx].blendTimer = 0;
+    credit[idx].timer = 0;
+    credit[idx].step++;
+    credit[idx].message++;
+    credit[idx].blend = 0;
+    credit[idx].blendTimer = 0;
     gSubScreenLayers &= ~1;
-    func_0201ef50(s->credit[idx].message);
+    Message::func_0201ef50(credit[idx].message);
 }
 
 void StaffRoll::func_ov002_020f2d0c(int i) {
@@ -857,39 +819,33 @@ void StaffRoll::StartCredit(int n) {
     credit[0].blend = 0;
     n = (n - 1) << 1;
     credit[0].message = (unsigned char)n;
-    func_0201f108();
-    func_0201ef50(n & 0xff);
+    Message::func_0201f108();
+    Message::func_0201ef50(n & 0xff);
     gSubScreenLayers |= 1;
 }
 
-void func_ov002_020f2ea0(char *p)
-{
-    ((StaffRoll *)p)->credit[0].active = 0;
+void StaffRoll::func_ov002_020f2ea0() {
+    credit[0].active = 0;
 }
 
-void func_ov002_020f2eac(void *c) {
+void StaffRoll::func_ov002_020f2eac() {
     int i;
-    char *p = (char *)c;
     for (i = 0; i < 5; i++) {
-        if (((StaffRoll *)p)->dolls[0].visible != 0) {
-            OAM::RenderSub(data_ov002_0210bba0[((StaffRoll *)p)->dolls[0].frame],
-                           ((StaffRoll *)p)->dolls[0].x >> 12, ((StaffRoll *)p)->dolls[0].y >> 12,
-                           -1, ((StaffRoll *)p)->dolls[0].priority);
+        if (dolls[i].visible != 0) {
+            OAM::RenderSub(data_ov002_0210bba0[dolls[i].frame], dolls[i].x >> 12, dolls[i].y >> 12,
+                           -1, dolls[i].priority);
         }
-        p += 0x14;
     }
 }
 
-void func_ov002_020f2f18(char* c, int a, int b)
-{
+void StaffRoll::func_ov002_020f2f18(int a, int b) {
     int i = 0;
     do {
-        if (((StaffRoll *)c)->dolls[0].active != 0) {
-            ((StaffRoll *)c)->dolls[0].x -= a;
-            ((StaffRoll *)c)->dolls[0].y -= b;
+        if (dolls[i].active != 0) {
+            dolls[i].x -= a;
+            dolls[i].y -= b;
         }
         i++;
-        c += 0x14;
     } while (i < 5);
 }
 
@@ -902,11 +858,9 @@ void StaffRoll::func_ov002_020f2f64() {
     }
 }
 
-void func_ov002_020f2f9c(void* self, int count)
-{
-    char* sl = (char*)self;
+void StaffRoll::func_ov002_020f2f9c(int count) {
     int i;
-    int idx = func_ov002_020f5a94(self) - 2;
+    int idx = func_ov002_020f5a94() - 2;
     if (idx < 0) idx = 0;
     for (i = 0; i < count + 1; i++) {
         int ok = 0;
@@ -921,25 +875,22 @@ void func_ov002_020f2f9c(void* self, int count)
         }
         if (ok) {
             int* p;
-            ((StaffRoll *)sl)->dolls[0].active = 1;
-            ((StaffRoll *)sl)->dolls[0].visible = 1;
+            dolls[i].active = 1;
+            dolls[i].visible = 1;
             p = data_ov002_0210b97c[idx];
-            ((StaffRoll *)sl)->dolls[0].x = (p[i * 4 + 0] + 0xe0) << 12;
-            ((StaffRoll *)sl)->dolls[0].y = (p[i * 4 + 1] + 0x66) << 12;
-            ((StaffRoll *)sl)->dolls[0].priority = (u8)p[i * 4 + 2];
-            ((StaffRoll *)sl)->dolls[0].frame = (u8)p[i * 4 + 3];
+            dolls[i].x = (p[i * 4 + 0] + 0xe0) << 12;
+            dolls[i].y = (p[i * 4 + 1] + 0x66) << 12;
+            dolls[i].priority = (u8)p[i * 4 + 2];
+            dolls[i].frame = (u8)p[i * 4 + 3];
         }
-        sl += 0x14;
     }
 }
 
-void func_ov002_020f30d4(char *p)
-{
+void StaffRoll::func_ov002_020f30d4() {
     int i;
     for (i = 0; i < 5; i++) {
-        ((StaffRoll *)p)->dolls[0].active = 0;
-        ((StaffRoll *)p)->dolls[0].visible = 0;
-        p += 0x14;
+        dolls[i].active = 0;
+        dolls[i].visible = 0;
     }
 }
 
@@ -982,7 +933,7 @@ void StaffRoll::func_ov002_020f30f8(int i) {
         this->window[i].bgY = 0;
 
     cc = this->window[i].bgX - oldA;
-    func_ov002_020f2f18((char *)this, cc, this->window[i].bgY - oldB);
+    this->func_ov002_020f2f18(cc, this->window[i].bgY - oldB);
 
     ee = this->window[i].right >> 12;
     ff = this->window[i].bottom >> 12;
@@ -1106,49 +1057,45 @@ void StaffRoll::func_ov002_020f37a0() {
     (this->*data_ov002_02110e4c[this->window[0].kind])(0);
 }
 
-void func_ov002_020f37fc(char *c)
-{
-    func_ov002_020f3828((int*)c);
-    ((StaffRoll *)c)->window[0].active = 1;
-    ((StaffRoll *)c)->window[0].kind = 2;
-    ((StaffRoll *)c)->window[0].step = 0;
+void StaffRoll::func_ov002_020f37fc() {
+    func_ov002_020f3828();
+    window[0].active = 1;
+    window[0].kind = 2;
+    window[0].step = 0;
 }
 
-void func_ov002_020f3828(int *c)
-{
-    ((StaffRoll *)c)->window[0].left = 0x80000;
-    ((StaffRoll *)c)->window[0].top = 0x66000;
-    ((StaffRoll *)c)->window[0].right = 0xfc000;
-    ((StaffRoll *)c)->window[0].bottom = 0xbc000;
+void StaffRoll::func_ov002_020f3828() {
+    window[0].left = 0x80000;
+    window[0].top = 0x66000;
+    window[0].right = 0xfc000;
+    window[0].bottom = 0xbc000;
     GXS_SetVisibleWnd(GX_WNDMASK_W1);
     G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
                                GX_WND_PLANEMASK_OBJ,
                            true);
     G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0, true);
     {
-        int a = ((StaffRoll *)c)->window[0].left >> 12;
-        int d = ((StaffRoll *)c)->window[0].right >> 12;
-        int e = ((StaffRoll *)c)->window[0].bottom >> 12;
-        int b = ((StaffRoll *)c)->window[0].top >> 12;
+        int a = window[0].left >> 12;
+        int d = window[0].right >> 12;
+        int e = window[0].bottom >> 12;
+        int b = window[0].top >> 12;
         G2S_SetWnd1Position(a, b, d, e);
     }
-    ((StaffRoll *)c)->window[0].bgX = -0x60000;
-    ((StaffRoll *)c)->window[0].bgY = -0x38000;
-    SetSubBg1Offset(((StaffRoll *)c)->window[0].bgX >> 12, ((StaffRoll *)c)->window[0].bgY >> 12);
-    SetSubBg2Offset(((StaffRoll *)c)->window[0].bgX >> 12, ((StaffRoll *)c)->window[0].bgY >> 12);
+    window[0].bgX = -0x60000;
+    window[0].bgY = -0x38000;
+    SetSubBg1Offset(window[0].bgX >> 12, window[0].bgY >> 12);
+    SetSubBg2Offset(window[0].bgX >> 12, window[0].bgY >> 12);
     gSubScreenLayers |= 6;
 }
 
-void func_ov002_020f3954(char *p)
-{
-    ((StaffRoll *)p)->window[0].active = 1;
-    ((StaffRoll *)p)->window[0].kind = 1;
-    ((StaffRoll *)p)->window[0].step = 0;
+void StaffRoll::func_ov002_020f3954() {
+    window[0].active = 1;
+    window[0].kind = 1;
+    window[0].step = 0;
 }
 
-void func_ov002_020f396c(char *p)
-{
-    ((StaffRoll *)p)->window[0].active = 0;
+void StaffRoll::func_ov002_020f396c() {
+    window[0].active = 0;
 }
 
 extern "C" {
@@ -1156,39 +1103,38 @@ extern "C" {
 extern void *data_ov002_0210b998[];
 }
 
-void func_ov002_020f3978(char *c) {
+void StaffRoll::func_ov002_020f3978() {
+    Star *star = stars;
     int i;
     for (i = 0; i < 4; i++) {
-        if (((StaffRoll *)c)->stars[0].visible) {
-            OAM::Render(true, (OamAttr *)data_ov002_0210b998[i],
-                        ((StaffRoll *)c)->stars[0].x >> 0xc, ((StaffRoll *)c)->stars[0].y >> 0xc,
-                        -1, 1, 0);
+        if (star->visible) {
+            OAM::Render(true, (OamAttr *)data_ov002_0210b998[i], star->x >> 0xc, star->y >> 0xc, -1,
+                        1, 0);
         }
-        c += 0x4c;
+        star++;
     }
 }
 
-void func_ov002_020f39ec(char *self, int idx) {
-    StaffRoll *s = (StaffRoll *)self;
-    s->stars[idx].frameTimer++;
-    if (s->stars[idx].frameTimer < 4)
+void StaffRoll::func_ov002_020f39ec(int idx) {
+    stars[idx].frameTimer++;
+    if (stars[idx].frameTimer < 4)
         return;
-    s->stars[idx].frameTimer = 0;
-    s->stars[idx].frame++;
-    if (s->stars[idx].holdFrame != 0) {
-        if (s->stars[idx].frame >= 0x10)
-            s->stars[idx].frame = 0x10;
-    } else if (s->stars[idx].frame >= 0x20) {
-        s->stars[idx].frame = 0;
+    stars[idx].frameTimer = 0;
+    stars[idx].frame++;
+    if (stars[idx].holdFrame != 0) {
+        if (stars[idx].frame >= 0x10)
+            stars[idx].frame = 0x10;
+    } else if (stars[idx].frame >= 0x20) {
+        stars[idx].frame = 0;
     }
 
     for (int i = 0; i < 4; i++) {
-        int v = data_ov002_021002a0[s->stars[idx].frame];
+        int v = data_ov002_021002a0[stars[idx].frame];
         int src = i * 0x800 + ((v & 7) << 8);
         if (v & 8)
             src += 0x2000;
-        MI_CpuCopy16(s->starChars + src,
-                     (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
+        MI_CpuCopy16(starChars + src, (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400,
+                     0x100);
     }
 }
 
@@ -1349,7 +1295,7 @@ void StaffRoll::func_ov002_020f3de4(int i) {
     this->stars[i].heading += this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(this) - 1)
+    if (i != this->func_ov002_020f5a94() - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
@@ -1409,7 +1355,7 @@ void StaffRoll::func_ov002_020f40fc(int i) {
             this->stars[i].speed = 0x2000;
         }
 
-        if (func_ov002_020f5a94(this) != 3)
+        if (this->func_ov002_020f5a94() != 3)
             return;
         if ((unsigned int)this->stars[i].orbitTravel < 0xc000)
             return;
@@ -1450,7 +1396,7 @@ void StaffRoll::func_ov002_020f40fc(int i) {
  * within 2 units (phase++, orbitTravel reset, heading 0xc000) or turns the
  * heading toward atan2(dy,dx) in 0x100 steps. Arrived stars orbit at radius
  * around (0x80000,0x60000) at angSpeed. When the last star
- * (func_ov002_020f5a94(this)-1) has orbited past 0x10000, every active star
+ * (this->func_ov002_020f5a94()-1) has orbited past 0x10000, every active star
  * is re-armed: step bumped, loops/phase/orbitTravel cleared, radius 0x38000,
  * heading from data_ov002_021000b8[j] (0 for j==2 when the unlock count is
  * 3).
@@ -1532,7 +1478,7 @@ void StaffRoll::func_ov002_020f43cc(int idx) {
         this->stars[idx].heading -= this->stars[idx].angSpeed;
         this->stars[idx].orbitTravel += this->stars[idx].angSpeed;
     }
-    if (idx != func_ov002_020f5a94(this) - 1)
+    if (idx != this->func_ov002_020f5a94() - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000U)
         return;
@@ -1545,7 +1491,7 @@ void StaffRoll::func_ov002_020f43cc(int idx) {
                 this->stars[j].phase = 0;
                 this->stars[j].radius = 0x38000;
                 this->stars[j].heading = data_ov002_021000b8[j];
-                if (func_ov002_020f5a94(this) == 3) {
+                if (this->func_ov002_020f5a94() == 3) {
                     if (j == 2)
                         this->stars[j].heading = 0;
                 }
@@ -1598,7 +1544,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
             this->stars[i].speed = -0x2000;
         }
 
-        if (func_ov002_020f5a94(this) != 3)
+        if (this->func_ov002_020f5a94() != 3)
             return;
         if (i != 2)
             return;
@@ -1610,7 +1556,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
     this->stars[i].flyTimer++;
     this->stars[i].x += this->stars[i].speed;
 
-    if (func_ov002_020f5a94(this) == 3 && i == 2) {
+    if (this->func_ov002_020f5a94() == 3 && i == 2) {
         this->stars[i].speed += 0x300;
     } else if (i == 0 || i == 3) {
         this->stars[i].speed += 0x300;
@@ -1629,7 +1575,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
         this->stars[i].heading = 0x8000;
         this->stars[i].delay = (u16)(data_ov002_02100110[i] << 6);
 
-        if (func_ov002_020f5a94(this) == 3) {
+        if (this->func_ov002_020f5a94() == 3) {
             if (i == 2)
                 this->stars[i].delay = 0x40;
         }
@@ -1724,7 +1670,7 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
     this->stars[i].heading -= this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(this) - 1)
+    if (i != this->func_ov002_020f5a94() - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
@@ -1738,7 +1684,7 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
                 this->stars[j].phase = 0;
                 this->stars[j].radius = 0x38000;
                 this->stars[j].heading = data_ov002_021000c8[j];
-                if (func_ov002_020f5a94(this) == 3) {
+                if (this->func_ov002_020f5a94() == 3) {
                     if (j == 2)
                         this->stars[j].heading = 0;
                 }
@@ -1811,7 +1757,7 @@ void StaffRoll::func_ov002_020f4d70(int i) {
         this->stars[i].loops = 0;
         this->stars[i].delay = data_ov002_021000f0[i] << 6;
 
-        if (func_ov002_020f5a94(this) == 3) {
+        if (this->func_ov002_020f5a94() == 3) {
             if (i == 2)
                 this->stars[i].delay = 0x40;
         }
@@ -1916,7 +1862,7 @@ void StaffRoll::func_ov002_020f5010(int i) {
     this->stars[i].heading += this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(this) - 1)
+    if (i != this->func_ov002_020f5a94() - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
@@ -2135,28 +2081,28 @@ void StaffRoll::func_ov002_020f5990() {
         if (this->stars[i].active == 0)
             continue;
         (this->*data_ov002_02110e7c[this->stars[i].state])(i);
-        func_ov002_020f39ec((char *)this, i);
+        this->func_ov002_020f39ec(i);
         if (this->stars[i].sparkling == 0)
             continue;
         if (i != this->kiraStar)
             continue;
-        func_ov002_020f2790((char *)this, (s16)(this->stars[i].x >> 12),
-                            (s16)(this->stars[i].y >> 12), this->stars[i].kiraDefParam,
-                            this->stars[i].kiraSysParam);
+        this->func_ov002_020f2790((s16)(this->stars[i].x >> 12), (s16)(this->stars[i].y >> 12),
+                                  this->stars[i].kiraDefParam, this->stars[i].kiraSysParam);
     }
 }
 
-void func_ov002_020f5a6c(char *p) {
+void StaffRoll::func_ov002_020f5a6c() {
+    Star *star = stars;
     int i;
     for (i = 0; i < 4; i++) {
-        ((StaffRoll *)p)->stars[0].active = 0;
-        ((StaffRoll *)p)->stars[0].visible = 0;
-        ((StaffRoll *)p)->stars[0].holdFrame = 0;
-        p += 0x4c;
+        star->active = 0;
+        star->visible = 0;
+        star->holdFrame = 0;
+        star++;
     }
 }
 
-int func_ov002_020f5a94(void *unused){
+int StaffRoll::func_ov002_020f5a94() {
     unsigned char count = 0;
     int i;
     for (i = 0; i < 4; i++) {
@@ -2171,12 +2117,12 @@ void StaffRoll::func_ov002_020f5ad4() {
     unk1f4 = 0;
     kiraStar = 0;
     holdOrbit = 0;
-    func_ov002_020f5a6c((char *)this);
-    func_ov002_020f396c((char *)this);
-    func_ov002_020f30d4((char *)this);
-    func_ov002_020f2ea0((char *)this);
-    func_ov002_020f2a68((char *)this);
-    func_ov002_020f2984((char *)this);
+    this->func_ov002_020f5a6c();
+    this->func_ov002_020f396c();
+    this->func_ov002_020f30d4();
+    this->func_ov002_020f2ea0();
+    this->func_ov002_020f2a68();
+    this->func_ov002_020f2984();
 }
 
 void StaffRoll::func_ov002_020f5b24() {
@@ -2273,7 +2219,7 @@ void StaffRoll::func_ov002_020f5cd0() {
 }
 
 void StaffRoll::func_ov002_020f5d34() {
-    int n = func_ov002_020f5a94(this);
+    int n = this->func_ov002_020f5a94();
     int i;
     for (i = 0; i < n; i++) {
         /* +0x38 is Star::pad_38: written twice here, read nowhere. */
@@ -2294,7 +2240,7 @@ void StaffRoll::func_ov002_020f5d34() {
         this->stars[i].step = 0;
         this->stars[i].sparkling = 0;
     }
-    func_ov002_020f2958((char *)this);
+    this->func_ov002_020f2958();
 }
 
 extern StaffRollCue data_ov002_02110f34[];
@@ -2303,45 +2249,45 @@ void StaffRoll::func_ov002_020f5dd8(int idx) {
 }
 
 void StaffRoll::func_ov002_020f5e18() {
-    func_ov002_020f37fc((char *)this);
-    func_ov002_020f2f9c(this, 4);
+    this->func_ov002_020f37fc();
+    this->func_ov002_020f2f9c(4);
 }
 
 void StaffRoll::func_ov002_020f5e38() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 4);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(4);
 }
 
 void StaffRoll::func_ov002_020f5e58() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 3);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(3);
 }
 
 void StaffRoll::func_ov002_020f5e78() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 2);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(2);
 }
 
 void StaffRoll::func_ov002_020f5e98() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 1);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(1);
 }
 
 void StaffRoll::func_ov002_020f5eb8() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 0);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(0);
 }
 
 void StaffRoll::func_ov002_020f5ed8() {
-    func_ov002_020f3828((int *)this);
+    this->func_ov002_020f3828();
 }
 
 void StaffRoll::func_ov002_020f5ee4() {
-    func_ov002_020f3828((int *)this);
+    this->func_ov002_020f3828();
 }
 
 void StaffRoll::func_ov002_020f5ef0() {
-    func_ov002_020f3954((char *)this);
+    this->func_ov002_020f3954();
 }
 
 /* func_ov002_020f5efc @ 0x20f5efc (ov002) -- tail-call veneer to LoadFont (0x201fcd4) with r0=0.
@@ -2355,31 +2301,29 @@ void StaffRoll::func_ov002_020f5f0c(int idx) {
     this->StartCredit(idx);
 }
 
-void func_ov002_020f5f60(char *c)
-{
-    void *p = ((StaffRoll *)c)->starChars;
+void StaffRoll::func_ov002_020f5f60() {
+    void *p = starChars;
     if (p == 0)
         return;
     ::operator delete(p);
-    ((StaffRoll *)c)->starChars = 0;
+    starChars = 0;
 }
 
-int func_ov002_020f5f8c(void* c){
-    ((StaffRoll *)c)->func_ov002_020f26e0();
-    func_ov002_020f3978((char *)c);
-    func_ov002_020f2eac(c);
-    return func_ov002_020f2990((char *)c);
+int StaffRoll::func_ov002_020f5f8c() {
+    func_ov002_020f26e0();
+    func_ov002_020f3978();
+    func_ov002_020f2eac();
+    return func_ov002_020f2990();
 }
 
-int func_ov002_020f5fb8(void* c){
-    ((StaffRoll *)c)->func_ov002_020f5990();
-    ((StaffRoll *)c)->func_ov002_020f37a0();
-    ((StaffRoll *)c)->func_ov002_020f2dd4();
-    return func_ov002_020f27e8((char *)c);
+int StaffRoll::func_ov002_020f5fb8() {
+    func_ov002_020f5990();
+    func_ov002_020f37a0();
+    func_ov002_020f2dd4();
+    return func_ov002_020f27e8();
 }
 
-void func_ov002_020f5fe4(char* c)
-{
+void StaffRoll::func_ov002_020f5fe4() {
     void *f;
     void *r5;
 
@@ -2473,20 +2417,20 @@ void func_ov002_020f5fe4(char* c)
         Deallocate(r5);
     }
 
-    ((StaffRoll *)c)->starChars = 0;
-    if (((StaffRoll *)c)->starChars == 0) {
-        ((StaffRoll *)c)->starChars = (u8 *)::operator new[](0x4000);
+    starChars = 0;
+    if (starChars == 0) {
+        starChars = (u8 *)::operator new[](0x4000);
     }
     f = LoadFile(ASSET_D_2D_ED_STAR_NCG_BIN);
-    DecompressLZ16(f, ((StaffRoll *)c)->starChars);
+    DecompressLZ16(f, starChars);
     Deallocate(f);
 
-    ((StaffRoll *)c)->func_ov002_020f5ad4();
+    func_ov002_020f5ad4();
 }
 
 int daDemo_c::func_ov002_020f63a0()
 {
-    func_ov002_020f5f60((char *)this->mStaffRoll);
+    this->mStaffRoll->func_ov002_020f5f60();
     if (this->mStaffRoll != 0) {
         ::operator delete(this->mStaffRoll);
         this->mStaffRoll = 0;
@@ -2497,8 +2441,8 @@ int daDemo_c::func_ov002_020f63a0()
 
 int daDemo_c::func_ov002_020f63d4()
 {
-    func_ov002_020f5fb8(this->mStaffRoll);
-    func_ov002_020f5f8c(this->mStaffRoll);
+    this->mStaffRoll->func_ov002_020f5fb8();
+    this->mStaffRoll->func_ov002_020f5f8c();
     return 1;
 }
 
@@ -2526,7 +2470,7 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
     this->mStaffRoll = p;
     if (this->mStaffRoll == 0)
         return 0;
-    func_ov002_020f5fe4((char *)this->mStaffRoll);
+    this->mStaffRoll->func_ov002_020f5fe4();
     return func_ov002_020f6424();
 }
 
@@ -2715,7 +2659,7 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 {
     unsigned int v = ReadUnalignedInt(p);
-    func_02012694(v, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(v, &mCamSpacePos);
     return 1;
 }
 
@@ -2733,8 +2677,8 @@ int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
     target.x = ReadUnalignedShort(p) << 12;
     target.y = y;
     target.z = z;
-    this->mAngleY = Vec3_HorzAngle(&this->mPos, &target);
-    this->mPrevAngleY = this->mAngleY;
+    this->mAngle.y = Vec3_HorzAngle(&this->mPos, &target);
+    this->mPrevAngle.y = this->mAngle.y;
     this->mHorzSpeed = ReadUnalignedShort(p + 6);
     return 1;
 }
@@ -2746,11 +2690,11 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
     x = ReadUnalignedShort(data) << 12;
-    this->mPosX = x;
-    this->mPosY = y;
-    this->mPosZ = z;
-    this->mAngleY = ReadUnalignedShort(data + 6);
-    this->mPrevAngleY = this->mAngleY;
+    this->mPos.x = x;
+    this->mPos.y = y;
+    this->mPos.z = z;
+    this->mAngle.y = ReadUnalignedShort(data + 6);
+    this->mPrevAngle.y = this->mAngle.y;
     return 1;
 }
 
@@ -2779,7 +2723,7 @@ inline unsigned int inline_fn(unsigned int arg0)
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
 {
   u8 *flag = (u8 *) arg1;
-  VecFx32 v;
+  Vector3 v;
   if (arg2 == gKuppaScriptFrame) {
       if ((*flag) != 0) {
           int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
@@ -2788,7 +2732,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
       }
       VEC_Add(&this->mPos, &((dCamera_c *)gCamera)->pos, &this->mPos);
       if (arg2 > 0x2bc) {
-          this->mPosY -= 0x96000;
+          this->mPos.y -= 0x96000;
       }
       if (arg2 != data_ov002_0210b614) {
           func_0201267c(0x6a, &this->mCamSpacePos);
@@ -2808,13 +2752,13 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
-      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, (Vector3 *)&v);
+      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
       Vec3_LslInPlace((int *)&v, 3);
-      func_ov002_020f6f48((Vector3 *)&v, 8);
+      func_ov002_020f6f48(&v, 8);
   }
-  this->mPrevAngleX = this->mAngleX;
-  this->mPrevAngleY = this->mAngleY;
-  this->mPrevAngleZ = this->mAngleZ;
+  this->mPrevAngle.x = this->mAngle.x;
+  this->mPrevAngle.y = this->mAngle.y;
+  this->mPrevAngle.z = this->mAngle.z;
   return 1;
 }
 
@@ -2837,22 +2781,22 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     a = ReadUnalignedShort(p + 4) << 12;
     b = ReadUnalignedShort(p + 2) << 12;
     c0 = ReadUnalignedShort(p) << 12;
-    this->mPosX = c0;
-    this->mPosY = b;
-    this->mPosZ = a;
+    this->mPos.x = c0;
+    this->mPos.y = b;
+    this->mPos.z = a;
     d = ReadUnalignedShort(p + 0xa);
     e = ReadUnalignedShort(p + 8);
     f = ReadUnalignedShort(p + 6);
-    this->mAngleX = (short)f;
-    this->mAngleY = (short)e;
-    this->mAngleZ = (short)d;
-    this->mPrevAngleX = this->mAngleX;
-    this->mPrevAngleY = this->mAngleY;
-    this->mPrevAngleZ = this->mAngleZ;
+    this->mAngle.x = (short)f;
+    this->mAngle.y = (short)e;
+    this->mAngle.z = (short)d;
+    this->mPrevAngle.x = this->mAngle.x;
+    this->mPrevAngle.y = this->mAngle.y;
+    this->mPrevAngle.z = this->mAngle.z;
     this->mMagnitude = (new_var = p[0xc]) << 12;
-    this->mScaleX = 0xb33;
-    this->mScaleY = 0xb33;
-    this->mScaleZ = 0xb33;
+    this->mScale.x = 0xb33;
+    this->mScale.y = 0xb33;
+    this->mScale.z = 0xb33;
     rv = mAnmModel->numFramesAndFlags;
     new_var2 = RandomIntInternal(&data_0209e650);
     mAnmModel->currFrame =
@@ -2860,20 +2804,20 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     return 1;
 }
 
-/* Turn mAngleX/mAngleY toward v by 1/amt of the remaining difference per
- * call (step capped at 0x4000, 90 degrees), then set mSpeedX, mVertSpeed and
- * mSpeedZ to mMagnitude times rotation elements 6..8 of the animated model's
+/* Turn mAngle.x/mAngle.y toward v by 1/amt of the remaining difference per
+ * call (step capped at 0x4000, 90 degrees), then set mSpeed.x, mSpeed.y and
+ * mSpeed.z to mMagnitude times rotation elements 6..8 of the animated model's
  * matrix. */
 
 void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
 {
     Matrix4x3 *m;
-    ApproachAngle(&this->mAngleX, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
-    ApproachAngle(&this->mAngleY, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
+    ApproachAngle(&this->mAngle.x, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
+    ApproachAngle(&this->mAngle.y, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
     m = &this->mAnmModel->mat4x3;
-    this->mSpeedX = FX_MUL(this->mMagnitude, m->m[6]);
-    this->mVertSpeed = FX_MUL(this->mMagnitude, m->m[7]);
-    this->mSpeedZ = FX_MUL(this->mMagnitude, m->m[8]);
+    this->mSpeed.x = FX_MUL(this->mMagnitude, m->m[6]);
+    this->mSpeed.y = FX_MUL(this->mMagnitude, m->m[7]);
+    this->mSpeed.z = FX_MUL(this->mMagnitude, m->m[8]);
 }
 
 /* Script handler 9: clear mFlags bit 0x2. */
@@ -2892,7 +2836,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
         mParticleID[1] = 0;
         mParticleID[2] = 0;
     }
-    if (this->mPosY >= 0x514000) {
+    if (this->mPos.y >= 0x514000) {
         if (mRate < 0x3c000) {
             mRate += 0x5000;
         }
@@ -2907,12 +2851,12 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
             obj->func_ov002_020f6514(data_ov002_0210bc88, 1);
         }
     }
-    this->mPosY -= FX_MUL(mRate, 0x199);
+    this->mPos.y -= FX_MUL(mRate, 0x199);
     {
         struct Vector3 pos;
-        int z = this->mPosZ;
-        int x = this->mPosX;
-        int y = this->mPosY + 0x50000;
+        int z = this->mPos.z;
+        int x = this->mPos.x;
+        int y = this->mPos.y + 0x50000;
         pos.x = x;
         pos.y = y;
         pos.z = z;
@@ -2938,9 +2882,9 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
     }
     {
         struct Vector3 pos;
-        int z = this->mPosZ;
-        int x = this->mPosX;
-        int y = this->mPosY + 0x50000;
+        int z = this->mPos.z;
+        int x = this->mPos.x;
+        int y = this->mPos.y + 0x50000;
         pos.x = x;
         pos.y = y;
         pos.z = z;
@@ -2957,11 +2901,11 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
 
 int daDemo_c::func_ov002_020f72bc()
 {
-    this->mScaleX = 0x3000;
-    this->mScaleY = 0x3000;
-    this->mScaleZ = 0x3000;
+    this->mScale.x = 0x3000;
+    this->mScale.y = 0x3000;
+    this->mScale.z = 0x3000;
     {
-        s16* p = &this->mAngleY;
+        s16 *p = &this->mAngle.y;
         *p = *p + 0x400;
     }
     this->mOpacity = 0x1f;
@@ -2981,12 +2925,12 @@ int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
     if (*flag != 0) {
         if (val == gKuppaScriptFrame)
             func_02012790(0x17);
-        ApproachLinear(this->mPosY, 0xfa000, 0xa000);
+        ApproachLinear(this->mPos.y, 0xfa000, 0xa000);
         this->mOpacity = 0x1f;
     } else {
         if (val == gKuppaScriptFrame)
             func_02012790(0x16);
-        if (ApproachLinear(this->mPosY, 0x32000, 0x5000) != 0)
+        if (ApproachLinear(this->mPos.y, 0x32000, 0x5000) != 0)
             this->mOpacity = 0;
     }
     return 1;
@@ -3001,7 +2945,6 @@ int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
 
 int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
 {
-    unsigned char *self = (unsigned char *)this;
     int a = in[0] << 12;
     int b = in[1] << 8;
     int t;
@@ -3010,15 +2953,15 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         p->x = -0x5d00;
         p->y = 0x1800;
         p->z = -0x16000;
-        this->mAngleX = 0;
-        this->mAngleY = 0xffffb3c0;
-        this->mAngleZ = 0;
-        func_0201f138();
+        this->mAngle.x = 0;
+        this->mAngle.y = 0xffffb3c0;
+        this->mAngle.z = 0;
+        Message::func_0201f138();
     }
     MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
-    Vec3_LslInPlace(&this->mPosX, 3);
+    Vec3_LslInPlace(&this->mPos.x, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
-        func_0201ef38();
+        Message::func_0201ef38();
     this->mOpacity = this->mMagnitude >> 12;
     {
         unsigned char r = *(&this->mOpacity);
@@ -3047,12 +2990,12 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     int f2 = b << 8;
     const Vector3 *base;
     int scale;
-    VecFx32 tmp, diff, scaled, sum;
+    Vector3 tmp, diff, scaled, sum;
 
     if (f1 != 0 && arg2 == gKuppaScriptFrame) {
-        this->mAngleX = 0xd00;
-        this->mAngleY = -0x7300;
-        this->mAngleZ = 0x2f00;
+        this->mAngle.x = 0xd00;
+        this->mAngle.y = -0x7300;
+        this->mAngle.z = 0x2f00;
         this->mRate = 0;
     }
 
@@ -3070,12 +3013,12 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     }
 
     Math_Function_0203b0fc(&this->mRate, scale, 0x40, 0x100);
-    Vec3_Sub((Vector3 *)&diff, &sViewEnd, base);
+    Vec3_Sub(&diff, &sViewEnd, base);
     tmp.x = diff.x;
     tmp.y = diff.y;
     tmp.z = diff.z;
-    Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&tmp, this->mRate);
-    Vec3_Add((Vector3 *)&sum, base, (const Vector3 *)&scaled);
+    Vec3_MulScalar(&scaled, &tmp, this->mRate);
+    Vec3_Add(&sum, base, &scaled);
 
     {
         Vector3 *dp = ((anmModel_c *)this->mAnmModel)->mScale;
@@ -3084,7 +3027,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
         dp->z = sum.z;
     }
     MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &data_0209b41c, &this->mPos);
-    Vec3_LslInPlace(&this->mPosX, 3);
+    Vec3_LslInPlace(&this->mPos.x, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
@@ -3110,59 +3053,59 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
             idx = gLocalPlayerId;
             {
-                short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
+                short ang = ((dActor_c *)gPlayers[idx])->mAngle.y;
 
-                Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, (ang + 0x8000), v);
+                Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, (ang + 0x8000), v);
             }
         }
 
-        this->mPrevAngleX = 0x1000;
-        this->mPrevAngleY = -0x7000;
-        this->mAngleY = this->mPrevAngleY;
+        this->mPrevAngle.x = 0x1000;
+        this->mPrevAngle.y = -0x7000;
+        this->mAngle.y = this->mPrevAngle.y;
         this->mOpacity = 0x1f;
     } else {
         short state = *&this->mPhase;
         if (state <= 0x6a) {
             if (state > 0x3c) {
                 Math_Function_0203b0fc(&this->mMagnitude, -0xa000, 0xcc, 0x7fffffff);
-                short *p94 = &this->mPrevAngleY;
-                short *p92 = &this->mPrevAngleX;
+                short *p94 = &this->mPrevAngle.y;
+                short *p92 = &this->mPrevAngle.x;
                 *p94 = *p94 + 0x78;
                 *p92 = *p92 + 0x40;
 
                 short h = Vec3_HorzAngle((&this->mPos), &cam->pos);
-                ApproachLinear2(this->mAngleY, h, 0x200);
+                ApproachLinear2(this->mAngle.y, h, 0x200);
             }
 
             state = *&this->mPhase;
             if (state > 0x69) {
-                this->mPrevAngleX = 0xe00;
+                this->mPrevAngle.x = 0xe00;
             }
         } else {
             Math_Function_0203b0fc(&this->mMagnitude, 0x3c000, 0xcc, 0x7fffffff);
 
             short h = Vec3_HorzAngle((&this->mPos), &cam->pos);
-            ApproachLinear2(this->mAngleY, h, 0x200);
+            ApproachLinear2(this->mAngle.y, h, 0x200);
 
             state = *&this->mPhase;
             if (state < 0xa9) {
-                UpdateAngle(this->mPrevAngleY, 0x1800, 0x1e, 0x4000);
+                UpdateAngle(this->mPrevAngle.y, 0x1800, 0x1e, 0x4000);
             }
-            ApproachLinear(this->mPrevAngleX, -0x3000, 0x70);
+            ApproachLinear(this->mPrevAngle.x, -0x3000, 0x70);
         }
     }
 
     {
-        unsigned short a = this->mPrevAngleX;
+        unsigned short a = this->mPrevAngle.x;
         int t = this->mMagnitude;
         short s0 = FX_SinCosTable_[((a >> 4) << 1) + 1];
         this->mHorzSpeed = FX_MUL(t, s0);
     }
     {
-        unsigned short a = this->mPrevAngleX;
+        unsigned short a = this->mPrevAngle.x;
         int t = this->mMagnitude;
         int s1 = -FX_SinCosTable_[(a >> 4) << 1];
-        this->mVertSpeed = FX_MUL(t, s1);
+        this->mSpeed.y = FX_MUL(t, s1);
     }
 
     {
@@ -3182,9 +3125,9 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         *&this->mPhase = -0x1000;
         *&this->mPhaseStep = 0x800;
         this->mRate = -0xc8000;
-        this->mPrevAngleY = -0x8000;
-        this->mAngleY = -0x4000;
-        this->mPrevAngleX = 0x800;
+        this->mPrevAngle.y = -0x8000;
+        this->mAngle.y = -0x4000;
+        this->mPrevAngle.x = 0x800;
         this->mOpacity = 0x1f;
     } else {
         int v[3];
@@ -3193,14 +3136,14 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         int t;
 
         {
-            short *p94 = &this->mPrevAngleY;
+            short *p94 = &this->mPrevAngle.y;
             *p94 = *p94 + 0x200;
         }
         Math_Function_0203b0fc(&this->mMagnitude, 0x64000, 0x7a, 0x7fffffff);
 
-        this->mAngleX = cstd::atan2(this->mPosY - 0x190000, 0xc8000);
+        this->mAngle.x = cstd::atan2(this->mPos.y - 0x190000, 0xc8000);
 
-        ApproachAngle(&this->mAngleY, (short)(this->mPrevAngleY + 0x8000), 4, 0x4000, 0);
+        ApproachAngle(&this->mAngle.y, (short)(this->mPrevAngle.y + 0x8000), 4, 0x4000, 0);
 
         data_ov002_02110ddc[2] = this->mMagnitude;
         v[0] = data_ov002_0210b964[0];
@@ -3209,12 +3152,12 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         w[0] = data_ov002_02110ddc[0];
         w[1] = data_ov002_02110ddc[1];
         w[2] = data_ov002_02110ddc[2];
-        Vec3_RotateYAndTranslate(&this->mPosX, v, this->mPrevAngleY, w);
+        Vec3_RotateYAndTranslate(&this->mPos.x, v, this->mPrevAngle.y, w);
 
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
         {
-            int *p60 = &this->mPosY;
+            int *p60 = &this->mPos.y;
             *p60 = *p60 + FX_MUL(t, 0x96000);
         }
 
@@ -3225,7 +3168,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         ApproachAngle(&this->mPhaseStep, 0x200, 0x14, 0x4000, 0);
 
         {
-            int *p5c = &this->mPosX;
+            int *p5c = &this->mPos.x;
             *p5c = *p5c + this->mRate;
         }
         Math_Function_0203b0fc(&this->mRate, 0, 0xcc, 0x7fffffff);
@@ -3281,10 +3224,10 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
     src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
-    Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, heading, src);
+    Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, heading, src);
 
-    this->mAngleX = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
-    this->mAngleY = cstd::atan2(v1.x, v1.z);
+    this->mAngle.x = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
+    this->mAngle.y = cstd::atan2(v1.x, v1.z);
 
     return 1;
 }
@@ -3404,9 +3347,9 @@ int daDemo_c::Behavior()
         anmModel_c *g = (anmModel_c *)this->mAnmModel;
         if ((g != 0) && (g->mSnapToFloor != 0)) {
             {
-                s32 xx = this->mPosX;
-                s32 yy = this->mPosY;
-                s32 zz = this->mPosZ;
+                s32 xx = this->mPos.x;
+                s32 yy = this->mPos.y;
+                s32 zz = this->mPos.z;
                 new_var2 = yy + 0x96000;
                 v.x = xx;
                 v.y = new_var2;
@@ -3416,8 +3359,8 @@ int daDemo_c::Behavior()
             ground.SetObjAndPos(v, 0);
             if (ground.DetectClsn() != 0) {
                 s32 h = ground.clsnY;
-                if ((this->mPosY) < h) {
-                    this->mPosY = h;
+                if ((this->mPos.y) < h) {
+                    this->mPos.y = h;
                     this->mGroundFlags |= 1;
                 }
             }
@@ -3427,11 +3370,11 @@ int daDemo_c::Behavior()
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     t = this->param1;
     if ((((u32)t) >= 0x1a) && (((u32)t) <= 0x2d)) {
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY,
-                                               this->mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                               this->mAngle.z);
     } else {
-        Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngleX, this->mAngleY,
-                                               this->mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                               this->mAngle.z);
     }
     if (this->mModel != 0) {
         this->mModel->mat4x3 = data_020a0e68;
@@ -3508,9 +3451,9 @@ int daDemo_c::InitResources()
                                       0, 0, 0, -1) == 0)
             return 0;
     }
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     return 1;
 }
 

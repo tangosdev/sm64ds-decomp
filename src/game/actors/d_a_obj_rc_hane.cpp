@@ -120,15 +120,15 @@ s32 daObjRc_Hane_c::InitResources() {
     mReverseMotion = param1 & 1;
     mPlaySound = (param1 >> 8) & 1;
     if (mReverseMotion != 0) {
-        mAngleX += 0x2400;
-        mAngleY += 0x8000;
-        mAngleZ += 0x8000;
+        mAngle.x += 0x2400;
+        mAngle.y += 0x8000;
+        mAngle.z += 0x8000;
     }
 
     /* Behavior rocks AROUND these, so they have to be the placed angles. */
-    mBaseAngleX = mAngleX;
-    mBaseAngleY = mAngleY;
-    mBaseAngleZ = mAngleZ;
+    mBaseAngleX = mAngle.x;
+    mBaseAngleY = mAngle.y;
+    mBaseAngleZ = mAngle.z;
     mFrame = 0;
     return 1;
 }
@@ -146,11 +146,11 @@ s32 daObjRc_Hane_c::Behavior() {
        wing sweeps the other way, but still pitches up on the same beat. */
     s16 a = mFrame << 10;
     if (mReverseMotion == 0) {
-        mAngleY = mBaseAngleY + FX_MUL(FX_SinIdx((u16)a >> 4), 0x2000);
-        mAngleX = mBaseAngleX + FX_MUL(FX_CosIdx((u16)a >> 4), 0x800);
+        mAngle.y = mBaseAngleY + FX_MUL(FX_SinIdx((u16)a >> 4), 0x2000);
+        mAngle.x = mBaseAngleX + FX_MUL(FX_CosIdx((u16)a >> 4), 0x800);
     } else {
-        mAngleY = mBaseAngleY - FX_MUL(FX_SinIdx((u16)a >> 4), 0x2000);
-        mAngleX = mBaseAngleX + FX_MUL(FX_CosIdx((u16)a >> 4), 0x800);
+        mAngle.y = mBaseAngleY - FX_MUL(FX_SinIdx((u16)a >> 4), 0x2000);
+        mAngle.x = mBaseAngleX + FX_MUL(FX_CosIdx((u16)a >> 4), 0x800);
     }
 
     mFrame++;
@@ -188,12 +188,12 @@ s32 daObjRc_Hane_c::Render() {
 void daObjRc_Hane_c::UpdateModelTransform() {
     int v[3];
 
-    Vec3_Asr(v, &mPosX, 3);
+    Vec3_Asr(v, &mPos.x, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
 
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
 
     mModel.mat4x3 = data_020a0e68;
 }

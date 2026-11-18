@@ -27,7 +27,7 @@ struct daObjDlPyramid_c : dBgActor_c {
        collider update rebuilds it from the yaw and the actor position.
        0x370 + 0x30 lands exactly on mHomePos. */
     Matrix4x3 mClsnMat2;  /* 0x370 */
-    Vector3 mHomePos;     /* 0x3a0 -- InitResources copies mPosX/Y/Z here */
+    Vector3 mHomePos;     /* 0x3a0 -- InitResources copies mPos.x/.y/.z here */
     s32 mSpinParticleID;  /* 0x3ac */
     s16 mAngVelY;         /* 0x3b0 */
     u16 mStateTimer;      /* 0x3b2 */

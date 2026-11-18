@@ -70,7 +70,7 @@ struct daJango_c : dEnemyBase_c {
     void                        *mState;                /* 0x42c */
     /* The path node Klepto is at. InitResources has PathPtr::GetNode write the
        node at mPathNodeIndex here (the carrying-a-star branch then teleports the
-       actor onto it: `mPosX = mPathNodePos.x;` ...), and UpdateFlyPathState sets
+       actor onto it: `mPos.x = mPathNodePos.x;` ...), and UpdateFlyPathState sets
        it to the actor's own position each time it snaps onto a node. */
     Vector3 mPathNodePos; /* 0x430 */
     /* Two uses on the one word. In UpdateCircleState (circling) it is a phase
@@ -86,7 +86,7 @@ struct daJango_c : dEnemyBase_c {
        EnterCircleState stores 0, or 2 for the silver-star variant and level ids
        0x18 and 0x19, and UpdateCircleState takes one off whenever the phase
        counter above moves from 1 to 2 (again only for those variants). The actor
-       leaves for the path only when this and mStateTimer are both 0 and mAngleY
+       leaves for the path only when this and mStateTimer are both 0 and mAngle.y
        is within 45 degrees of the node's direction. */
     s32 mLeaveDelay; /* 0x440 */
     /* Counted down by DecIfAbove0_Short at the top of every frame. While it is
@@ -116,10 +116,10 @@ struct daJango_c : dEnemyBase_c {
        The name rests on the ACTOR_SILVER_STAR spawns. */
     u8                           mSilverStarFlag;       /* 0x448 */
     u8  pad_449[0x1];
-    /* The yaw the actor is steering its mPrevAngleY toward. Written with
+    /* The yaw the actor is steering its mPrevAngle.y toward. Written with
        Vec3_HorzAngle toward the spawn point or the player (InitResources, the
-       circling and swoop states), with mAngleY on entering CIRCLE, or with
-       mPrevAngleY + 0x4000 after a wall hit, and read as the target of
+       circling and swoop states), with mAngle.y on entering CIRCLE, or with
+       mPrevAngle.y + 0x4000 after a wall hit, and read as the target of
        ApproachLinear / AngleDiff. */
     s16                          mTargetAngleY;         /* 0x44a */
     /* The uniqueID of the held actor (not its actorID); 0 when nothing is held. */

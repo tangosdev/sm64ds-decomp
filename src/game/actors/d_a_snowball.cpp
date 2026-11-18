@@ -40,7 +40,7 @@
  *   named by value here for that reason.
  * - mdCcAc_c's `flags`/`vulnFlags` words (0x200004 / 0x40010) are likewise
  *   given as numbers.
- * - mSpeedX / mSpeedZ are dActor_c's x/z velocity words (as da1up_c's banner
+ * - mSpeed.x / mSpeed.z are dActor_c's x/z velocity words (as da1up_c's banner
  *   records); they stay unnamed because naming them is a shared header change.
  */
 
@@ -79,7 +79,7 @@ enum { ACTOR_ID_PLAYER = 191 };
 enum { PTCL_SNOWBALL_BURST = 0x11c };
 
 /* Sound id handed to func_02012694, the bank-3 wrapper (it calls
- * Sound::Play(3, id, pos)). Played at the camera-space position (mCamSpacePosX)
+ * Sound::Play(3, id, pos)). Played at the camera-space position (mCamSpacePos)
  * on two of the four burst paths: timer expiry or mesh-collision ground in the
  * update helper, and after daPly_c::Hurt in the contact handler. The two
  * hit-flag / metal-player bursts are silent. Only the number is known here. */
@@ -122,7 +122,7 @@ void daSnowball_c::HandleContact() {
         return;
     flags = mdCcAc_c.hitFlags;
     if ((flags & SNOWBALL_HIT_BIT_0x10) || (flags & SNOWBALL_HIT_BIT_0x40000)) {
-        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPos.x, mPos.y, mPos.z);
         MarkForDestruction();
         return;
     }
@@ -133,7 +133,7 @@ void daSnowball_c::HandleContact() {
             if (player->mIsVanish != 0)
                 return;
             if (player->mIsMetal == 1) {
-                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPos.x, mPos.y, mPos.z);
                 MarkForDestruction();
                 return;
             }
@@ -142,12 +142,12 @@ void daSnowball_c::HandleContact() {
                    (1, 0xc000, 1, 0, 1) daBasabasa_c and daSpd_c pass; 0xc000
                    is fx32 12.0. */
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 player->Hurt(pos, 1, 0xc000, 1, 0, 1);
                 func_02012694(SND3_SNOWBALL_BURST, &mCamSpacePos);
-                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPos.x, mPos.y, mPos.z);
                 MarkForDestruction();
                 return;
             }
@@ -160,7 +160,7 @@ void daSnowball_c::HandleContact() {
  *
  * 1. While mReachedSpawnY is still 0 and mTerminalVelocity still holds the
  *    -0x3c000 (-60 units/frame) InitResources set: the first frame the snowball
- *    is below its spawn height (mSpawnPos.y > mPosY) zero mVertSpeed and
+ *    is below its spawn height (mSpawnPos.y > mPos.y) zero mSpeed.y and
  *    mVertAccel and set mReachedSpawnY. The snowball then hovers at (just
  *    below) the height it was placed at instead of falling further.
  * 2. Burst, with the bank-3 sound, when mStateTimer has run out to 0 or the
@@ -170,18 +170,18 @@ void daSnowball_c::HandleContact() {
  * Always returns 1. */
 int daSnowball_c::State0() {
     if (this->mReachedSpawnY == 0 && this->mTerminalVelocity == -0x3c000) {
-        if (this->mSpawnPos.y > this->mPosY) {
-            this->mVertSpeed = 0;
+        if (this->mSpawnPos.y > this->mPos.y) {
+            this->mSpeed.y = 0;
             this->mVertAccel = 0;
             this->mReachedSpawnY = 1;
         }
     }
     if (this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
         func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePos);
-        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
+        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPos.x, this->mPos.y, this->mPos.z);
         MarkForDestruction();
     }
-    if (this->mSpeedX != 0 || this->mSpeedZ != 0) {
+    if (this->mSpeed.x != 0 || this->mSpeed.z != 0) {
         HandleContact();
     }
     return 1;
@@ -212,7 +212,7 @@ void daSnowball_c::UpdateModelMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3 = data_020a0e68;
 }
 
@@ -237,13 +237,13 @@ int daSnowball_c::Render() {
  *   - count mStateTimer down towards 0 (DecIfAbove0_Short stops at 0);
  *   - run the installed state record's update function (State0 for the
  *     record InitResources installs), if it has one;
- *   - mVertSpeed = max(mVertSpeed + mVertAccel, mTerminalVelocity), i.e. fall
+ *   - mSpeed.y = max(mSpeed.y + mVertAccel, mTerminalVelocity), i.e. fall
  *     under gravity but not faster than the terminal velocity (both negative);
- *   - move by speed, update the mesh collision, copy mPrevAngleY into mAngleY,
+ *   - move by speed, update the mesh collision, copy mPrevAngle.y into mAngle.y,
  *     rebuild the model matrix;
  *   - clear the cylinder and, if there is a closest player and it is not
  *     vanished (mIsVanish), re-register it with dCcAc_c::Update.
- * What stays: the read and write-back of mSpeedZ around the mVertSpeed store is
+ * What stays: the read and write-back of mSpeed.z around the mSpeed.y store is
  * a no-op in source terms; it stays as written, the shape these bytes were
  * matched with. */
 int daSnowball_c::Behavior() {
@@ -251,16 +251,16 @@ int daSnowball_c::Behavior() {
     daSnowball_StateRec *rec = mStateRec;
     if (rec->update != 0)
         (this->*(rec->update))();
-    int v = mVertSpeed + mVertAccel;
+    int v = mSpeed.y + mVertAccel;
     int hi = mTerminalVelocity;
     if (v >= hi)
         hi = v;
-    int tmp = mSpeedZ;
-    mVertSpeed = hi;
-    mSpeedZ = tmp;
+    int tmp = mSpeed.z;
+    mSpeed.y = hi;
+    mSpeed.z = tmp;
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     UpdateModelMatrix();
     mdCcAc_c.Clear();
     daPly_c *player = ClosestPlayer();
@@ -286,11 +286,11 @@ int daSnowball_c::InitResources() {
     mTerminalVelocity = -0x3c000;
     mdCcAc_c.Init(this, 0x1e000, 0x1e000, SNOWBALL_CC_FLAGS, SNOWBALL_CC_VULN);
 
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
-    mPosY += 0x32000;
-    mAngleY = mPrevAngleY;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
+    mPos.y += 0x32000;
+    mAngle.y = mPrevAngle.y;
     mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);
 
     SetState(&data_ov081_02128eb4);

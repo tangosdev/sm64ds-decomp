@@ -37,18 +37,20 @@
 #include "dBgCh_Actr.h"
 
 struct daMenbo_c : dEnemyBase_c {
+    /* A state: {entry, update}. func_ov090_02131e00 installs one and runs
+       its entry; Behavior runs the update every frame. */
+    typedef int (daMenbo_c::*StateFn)();
+
     dCcAcPos_c    mdCcAcPos_c; /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x150 */
     dExtAnmModel_c mAnmModel;                         /* 0x30c */
-    void*                        mState;                /* 0x370 */
+    StateFn *mState;                                  /* 0x370 */
     /* Where the skeeter drops anchor: InitResources and, whenever it is off
        the water, the water-rest and water-chase updates (02131ac4, 02131c48)
        copy mPos here. Patrol (02131648) and 021314a0 aim back at it through
        Vec3_HorzAngle, and patrol turns around past 0x3c0000 from it. Was
        unk_374/378/37c. */
-    s32 mAnchorPosX; /* 0x374 */
-    s32 mAnchorPosY; /* 0x378 */
-    s32 mAnchorPosZ; /* 0x37c */
+    Vector3 mAnchorPos; /* 0x374 */
     /* The four ripple particles func_ov090_02130f94 re-feeds every frame,
        one per leg bone, through Particle::System::New. Was pad_380. */
     u32 mRippleParticles[4]; /* 0x380 */
@@ -112,8 +114,10 @@ struct daMenbo_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+    void func_ov090_02130f94();
     void func_ov090_021310b4();
     void func_ov090_02131378();
+    int func_ov090_021314a0();
 
     /* State machine: the four nodes pair an entry with an update; both are
        pointer-to-member slots on this class (idle, water chase, water rest,
@@ -126,6 +130,7 @@ struct daMenbo_c : dEnemyBase_c {
     int func_ov090_02131b94();
     int func_ov090_02131c48();
     int func_ov090_02131db0();
+    int func_ov090_02131e00(StateFn *state);
     void func_ov090_02131e50();
 };
 

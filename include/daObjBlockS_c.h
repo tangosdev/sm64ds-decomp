@@ -73,15 +73,15 @@ struct daObjBlockS_c : dBgActor_c {
        state's hit test will not hurt it. */
     dActor_c *mPrevHolder;      /* 0x5e8 */
     /* Y of the ground under the crate: dBgCh_Gnd::DetectClsn is run at a point
-       10 units below mPosY, and this holds its clsnY, or that probe point's own
-       Y when nothing is found. mPosY minus this is the shadow's drop height. */
+       10 units below mPos.y, and this holds its clsnY, or that probe point's own
+       Y when nothing is found. mPos.y minus this is the shadow's drop height. */
     s32 mGroundY;               /* 0x5ec */
     /* Depth, fix12, that mClsnYOffset is easing toward. Set from the floor's
        surface type 6..9 (30 / 45 / 60 / 100 units; include/daPly_c.h calls
        those the quicksand tiers) and zeroed on entering every state
        except STATE_IDLE. */
     s32 mClsnYOffsetTarget;     /* 0x5f0 */
-    s32 mClsnYOffset;           /* 0x5f4 -- how far the model, collider and cylinders sit below mPosY */
+    s32 mClsnYOffset; /* 0x5f4 -- how far the model, collider and cylinders sit below mPos.y */
     /* Handle threaded through Sound::PlayLong in the slide step, which plays
        it together with the sliding-dust particle. */
     u32 mSlideSoundHandle;      /* 0x5f8 */
