@@ -22,10 +22,6 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
  * destructor in include/daObjWc_Mizu_c.h emits the retail D1/D0 pair first
  * and emits no D2 body.
  *
- * common.h FIRST: UpdateClsnTransform assigns a whole Matrix4x3, and the ROM
- * copies it as three 4-word ldm/stm pairs. common.h's flat s32 m[12] is that
- * copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} splits it.
- *
  * NOTES:
  * - The daObjWc_Obj07_c_* names are a stale symbols.txt attribution: this TU
  *   is the only consumer and defines both handles (obj07's own handles live

@@ -11,7 +11,9 @@
    Re-measured (#821 r17): `++`, `= limitIndex + 1` and `j = ++limitIndex`
    for the step, and the loop as a while on the threshold test, are all
    0xf0 (0xf4 with j assigned in the condition); the progressThresholds
-   pointer stays cached in a register across the loop. */
+   pointer stays cached in a register across the loop. Round 66: reading
+   obj->progressThresholds[j] again after the loop is 0xf4; re-reading j, an
+   &thresholds[j] pointer and the denominator first are 0xf0. */
 #pragma opt_common_subs off
 int Ov007Picker::func_ov007_020c5014(int x) {
     Ov007StrokePath *obj;

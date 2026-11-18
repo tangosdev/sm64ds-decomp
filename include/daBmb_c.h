@@ -60,10 +60,9 @@ struct daBmb_c : dEnemyBase_c {
        calls DropActor and Hurt, then clears it; 0214b3f0 sets it and
        0214b3b8 clears it. InitResources zeroes it. */
     daPly_c *mCarrier; /* 0x390 */
-    /* Twelve words, not a Matrix4x3: this header is included by files that
-       do not pull common.h. InitResources copies IDENTITY_MATRIX4X3 here.
+    /* The shadow's matrix. InitResources copies IDENTITY_MATRIX4X3 here.
        0214b444 writes the translation at [9..11] before the shadow drop. */
-    s32                          mMatrix[12];           /* 0x394 */
+    Matrix4x3 mMatrix;                                  /* 0x394 */
     Vector3 mHomePos;                                   /* 0x3c4 */
     /* UpdateCarry offset. Zeroed when the Bob-omb is not in a player's hand. */
     s32                          mCarryOff[3];          /* 0x3d0 */
@@ -84,9 +83,9 @@ struct daBmb_c : dEnemyBase_c {
     u16                          mNoticeAngle;          /* 0x3ec */
     /* State1 walks mPrevAngle.y toward this. beb4 adds a random kick when
        the Bob-omb is turning with nobody to chase. */
-    u16                          mTargetAngY;           /* 0x3ee */
+    s16 mTargetAngY; /* 0x3ee */
     /* Snapshot of mAngle.y beside the mHomePos* snapshot. */
-    u16                          mHomeAngleY;           /* 0x3f0 */
+    s16 mHomeAngleY;                                    /* 0x3f0 */
     u8                           mTurnCount;            /* 0x3f2 */
     /* Render draws nothing while this is 0. InitResources sets it to 1. */
     u8                           mShouldRender;         /* 0x3f3 */

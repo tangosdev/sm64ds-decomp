@@ -8,8 +8,8 @@ extern void func_ov007_020c39f8(void *mat, int a, int b, int c);
 void func_ov007_020bc968(Ov007Model *m, void *other) {
     MTX_Identity43_(&m->matrix);
     func_ov007_020c39f8(&m->matrix, m->rotX, m->rotY, m->rotZ);
-    m->matrix.t.x = m->pos.x;
-    m->matrix.t.y = m->pos.y;
-    m->matrix.t.z = m->pos.z;
+    m->matrix.m[9] = m->pos.x;
+    m->matrix.m[10] = m->pos.y;
+    m->matrix.m[11] = m->pos.z;
     MTX_Concat43(&m->matrix, other, &m->matrix);
 }

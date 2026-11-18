@@ -15,10 +15,9 @@
  * Remaining reconstruction under issue #2478:
  * - mStateTimer comparisons read it through a (u16) cast, because the ROM
  *   loads it with ldrh.
- * - The Mtx43 overlays on mAnmModel.mat4x3 and the scratch matrix, the
- *   Matrix4x3 view of mShadowMat, and the V3A copy of a player's
- *   position in UpdateShoot. Plain Matrix4x3 / Vector3 assignment
- *   scalarizes; UpdateChase's snapshot is a POD VecFx32 copy-init.
+ * - The V3A copy of a player's position in UpdateShoot: Vector3
+ *   assignment scalarizes; UpdateChase's snapshot is a POD VecFx32
+ *   copy-init.
  * - dExtAnmModel_c::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init,
  *   DropShadowRadHeight, KillByInvincibleChar, SpawnCoins, daPly_c::Hurt
  *   and daPly_c::Bounce retain scalar ABI declarations. Native fixed-point
@@ -40,10 +39,6 @@
 #include "LevelRng.h"
 #include "math/CalcLib.h"
 
-/* POD views preserve the retail aggregate copies. Matrix4x3 and Vector3 are
-   available, but their non-POD copies change these two helpers' codegen; see
-   the measured alternatives in the handoff. */
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 /* Kept for UpdateShoot's L.pp (measured r57): any Vector3 copy is memberwise, and
  * the block-moving VecFx32 copy-init cannot initialize a V3Quint member. */
@@ -282,17 +277,17 @@ void daYurei_Mucho_c::UpdateModelTransform() {
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
 
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
     mShotPos.x = 0;
     mShotPos.y = 0;
     mShotPos.z = 0;
-    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mAnmModel.mat4x3;
+    data_020a0e68 = mAnmModel.mat4x3;
 
     MTX_Concat43(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
 
-    mShotPos.x = data_020a0e68.t.x;
-    mShotPos.y = data_020a0e68.t.y;
-    mShotPos.z = data_020a0e68.t.z;
+    mShotPos.x = data_020a0e68.m[9];
+    mShotPos.y = data_020a0e68.m[10];
+    mShotPos.z = data_020a0e68.m[11];
     mShotPos.x <<= 3;
     mShotPos.y <<= 3;
     mShotPos.y -= 0xa000;
@@ -300,9 +295,9 @@ void daYurei_Mucho_c::UpdateModelTransform() {
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
 
-    mShadowMat = *(Mtx43 *)&data_020a0e68;
+    mShadowMat = data_020a0e68;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x64000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0x64000, 0x258000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -402,6 +397,8 @@ int daYurei_Mucho_c::UpdateChase() {
     short pitch = 0;
     daPly_c *p = ClosestNonVanishPlayer();
     if (p != 0) {
+        /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
+        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 tmp = *(VecFx32 *)&p->mPos;
         Vector3 v;
         Vector3 a;

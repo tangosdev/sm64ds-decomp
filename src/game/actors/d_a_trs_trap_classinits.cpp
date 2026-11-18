@@ -27,8 +27,6 @@
  * functions last-defined first.
  *
  * NOTES:
- * - The synthesized ctor emits a vague-linkage _ZN9Matrix4x3D1Ev over
- *   mClsnMat (homeless; licensed deadstrip in this TU's manifest entry).
  * - LatchStandingActor keeps its int temporary: `if (actor->actorID == 0xbf)`
  *   does not match the ROM.
  */

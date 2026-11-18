@@ -58,12 +58,8 @@ typedef char SnowmanBreathParticle_size_must_be_0x60[
 struct daSnmBth_c : dActor_c {
     static const int PARTICLE_NUM = 50;
     SnowmanBreathParticle mParticles[PARTICLE_NUM]; /* 0x0d4 */
-    /* Inverse model matrix, flat words. A Matrix4x3 member (math/Matrix.h's
-       spelling, whose Vector3 `t` has an inline destructor) makes the
-       out-of-line ~daSnmBth_c emit D2, D0, D1 even under
-       `defer_codegen off`; the cartridge has D1 then D0. Same as
-       daSpd_c's and daIwante_c's shadow matrices. */
-    s32 mInvModelMat[12];                  /* 0x1394 */
+    /* The inverse model matrix, for the player's local-range test. */
+    Matrix4x3 mInvModelMat;                /* 0x1394 */
     daPly_c *mTalkPlayer;                  /* 0x13c4 */
     s32 mTalkTimer;                        /* 0x13c8 */
     u32 mSoundHandle;                      /* 0x13cc */

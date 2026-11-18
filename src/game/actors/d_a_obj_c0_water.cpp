@@ -30,8 +30,6 @@
  * - homeless _ZN10dBgActor_cD2Ev from the inline dtor chain (deadstrip).
  */
 
-/* daObjC0Water_c.h FIRST: it pulls in dBgActor_c.h, which must reach
-   common.h ahead of dExtSimpleModel_c.h or the wrong Matrix4x3 spelling wins. */
 #include "daObjC0Water_c.h"
 #include "SharedFilePtr.h"
 #include "dMap_c.h"

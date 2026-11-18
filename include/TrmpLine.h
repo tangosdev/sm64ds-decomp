@@ -18,9 +18,8 @@ typedef char Vec2s_size_must_be_0x4[sizeof(Vec2s) == 0x4 ? 1 : -1];
  * (ROM 0x020d100c and 0x020d1008): the constructor marks the slot free, the
  * destructor is empty. The methods address these fields by name; only
  * TrmpLine::Create's slot walk keeps char * arithmetic.
- * Unnamed regions are touched in one place at most. mAlpha is a byte, but the
- * fade states step it with the int ApproachLinear2 through an (int *) cast of
- * its address. */
+ * Unnamed regions are touched in one place at most. The fade states step the
+ * byte mAlpha with the byte stepper ApproachLinear2. */
 struct TrmpLine {
     typedef void (TrmpLine::*StateFn)();
 

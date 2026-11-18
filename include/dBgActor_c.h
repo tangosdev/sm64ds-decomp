@@ -11,10 +11,6 @@
 struct daPly_c;
 struct player_;
 
-/* MEASURED -- MUST STAY FIRST, ahead of dExtSimpleModel_c.h. Matrix4x3 has two guarded
-   spellings sharing the same 0x30 bytes; whichever a TU sees first stands, and
-   dExtSimpleModel_c.h pulls in the wrong one. UpdateClsnPosAndRot then compiles to 0x74
-   against the ROM's 0x64. notes/platform-provenance.md. */
 #include "common.h"
 
 #include "dActor_c.h"

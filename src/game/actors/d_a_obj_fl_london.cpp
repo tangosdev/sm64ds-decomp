@@ -15,8 +15,6 @@
  * What stays, and why:
  * - data_ov022_02114580 / data_ov022_02114578 SharedFilePtr handles
  *   and data_ov064_0211bb2c CLPS; symbols.txt has no recovered names.
- * - common.h first (dBgActor_c.h already pulls it; dExtSimpleModel_c.h's
- *   nested Matrix4x3 would scalarize a 12-word copy).
  * - Behavior writes mPrevAngle.z through a short* (member assignment
  *   size-DIFFs).
  * - Inline destructor (out-of-line emits D0 before D1 plus a homeless D2).

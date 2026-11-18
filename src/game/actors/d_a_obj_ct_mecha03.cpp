@@ -9,8 +9,7 @@
  * front); the factory stays first and the inline destructor stays in the
  * header. `return new` emits a homeless _ZN10dBgActor_cD2Ev (compiler-only
  * deadstrip).
- * common.h stays first. Shadow and model matrices are the flat 12-word
- * Matrix4x3; translation is m[9], m[10], m[11].
+ * The shadow and model matrices' translation is m[9], m[10], m[11].
  *
  * What stays, and why:
  * - dBgW_KcMbg::SetFile, dActor_c::DropShadowScaleXYZ and
@@ -31,7 +30,6 @@
  *   *accelP += (short)(spd * pos) sizes it 0x190->0x198. if (vx * vy > 0)
  *   stays 0x190 and differs by 4 words. if (mSoundTimer != 0) stays 0x190
  *   and differs by 1 word.
- * - Matrix4x3.t is not a member of the flat spelling.
  * - The data_ov065_* handles, g_profile_CT_MECHA03, and data_ov035_02112198
  *   are not this TU's data.
  */

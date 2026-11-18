@@ -292,7 +292,7 @@ int daPopoi_c::CleanupResources()
 }
 
 /* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngle.y,
- * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set
+ * with the translation (words 9..11) set
  * to the actor's position >> 3. Called from Behavior after the position writeback. */
 void daPopoi_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);

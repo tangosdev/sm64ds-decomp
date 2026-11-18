@@ -1017,10 +1017,6 @@ int Message::func_020321fc(void) {
     return 0;
 }
 
-/* opt_common_subs stays off for register colour only: without it case 6
- * swaps the slot index and the held byte (r3/r2), 8 words, same size. */
-#pragma push
-#pragma opt_common_subs off
 void Message::func_020326ac(void) {
     switch (data_0209fcc8) {
     case 0:
@@ -1203,7 +1199,6 @@ void Message::func_020326ac(void) {
     }
     }
 }
-#pragma pop
 
 /* Splits the VS-mode text blob at 0x0209fd14 into the four pointers the renderer
  * reads. The blob's own header carries the offset from its second section to the
@@ -1391,9 +1386,10 @@ void Message::func_02033390(int sub) {
     }
 }
 
-/* byte-forced: this function accesses data_0209fc78 volatile (reload per use);
-   decl_common.h spells it plain. The macro expands each use to a volatile deref
-   of the global -- the inner name paints blue and resolves to the extern. */
+/* byte-forced: this function reloads data_0209fc78 at every use;
+   decl_common.h spells it plain. The macro expands each use to a deref
+   through a cast of its address -- the inner name paints blue and resolves to
+   the extern. Measured (#821 r68): without it the function is 0x380 of 0x388. */
 #define data_0209fc78 (*(u8 *)&data_0209fc78)
 void Message::func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;

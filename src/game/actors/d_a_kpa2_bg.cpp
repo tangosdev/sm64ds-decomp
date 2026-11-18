@@ -7,9 +7,6 @@
  * daKpa2Bg_c_classInit, ROM-ascending under defer_codegen off.
  */
 /* What stays, and why:
- * - common.h stays first. Matrix4x3 has two 0x30 spellings; these helpers
- *   whole-assign the flat s32 m[12] form. The class header's .r/.t spelling
- *   inflates UpdateClsnMatrix and UpdateModelMatrix.
  * - Behavior rematerialises &mAngle.x/.y/.z. Plain `mAngle.x += mAngleXSpeed`
  *   is 0x54 against the ROM's 0x68.
  * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosAndAngs on the collider.

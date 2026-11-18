@@ -8,11 +8,6 @@
   "bss": [],
   "compiler_only_output": [
     {
-      "disposition": "deadstrip",
-      "reason": "mwccarm emits Matrix4x3's vague-linkage D1 while lowering the synthesized ctor from `return new daTrsTrap_c()` over the Matrix4x3 member at 0x324 (same shape as ov070/daKpFr_c); no configured ROM symbol of that name exists in any module and no surviving reference reaches it",
-      "symbol": "_ZN9Matrix4x3D1Ev"
-    },
-    {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
@@ -99,16 +94,13 @@
     "object": "build/tu/ov063-daTrsTrap_c_classInit/d_a_trs_trap_classinits.o (gitignored)",
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN9Matrix4x3D1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN7Vector3D1Ev",
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        10,
-        11
+        10
       ],
       "data": [],
       "dataExternalized": []

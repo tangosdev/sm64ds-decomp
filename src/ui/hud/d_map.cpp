@@ -646,7 +646,7 @@ L360:
     if (this->mInIntroCutscene == 0) goto L3a4;
     if (gMapIntroRotating == 0)
         goto L3e0;
-    *(s16 *)&this->mAngle += 0x40;   // read signed here; the header member is u16
+    *(s16 *)&this->mAngle += 0x40; // measured (#821 r68): the plain u16 `+=` loads ldrh, ROM ldrsh
     if (this->mAngle >= 0x8000)
         gMapIntroRotating = 0;
     goto L3e0;

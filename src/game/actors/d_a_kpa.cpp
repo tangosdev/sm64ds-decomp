@@ -43,9 +43,6 @@
  *    placeholder names.
  */
 
-/* common.h must precede the class headers: both Matrix4x3 spellings are real,
- * Matrix4x3_ApplyInPlace* wants `m[i]` while the model headers want `.r`/`.t`,
- * and whichever is seen first wins for the TU. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daKpa_c_AssetId {
     ASSET_KOOPA_DAMAGE_BCA = 0x035f,
@@ -852,9 +849,8 @@ skip_angles:
             pos.y = this->mPos.y;
         Vec3_Asr(&v2, &pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
-        *(Matrix4x3 *)(&this->mShadowMtx) = data_020a0e68;
-        DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMtx, 0x140000, 0x64000,
-                            0xf);
+        this->mShadowMtx = data_020a0e68;
+        DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, 0x140000, 0x64000, 0xf);
     }
 }
 

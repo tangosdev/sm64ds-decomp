@@ -33,8 +33,6 @@
  *   compile as C++; 02117624 uses a POD matrix view for its block copy.
  * - Particle::System::callbackScale and callbackVelocity are named.
  *   The word at +0x44 is Particle::System::emitRadius.
- * - DropShadowRadHeight's matrix is `mShadowMat`, raw `u8[0x30]` storage.
- *   daKpaFire_c.h has no Matrix4x3 member there.
  * - Sound 0x180, player param1 == 3, and the particle kind pairs are
  *   named only by the use-site enums below.
  * - data_ov060_0211af74 and data_ov060_0211afb4 are this TU's owned
@@ -57,15 +55,10 @@
 #include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
 #include "Sound.h"
-
-/* The shadow update copies its matrix through Mtx43: the plain word union
- * keeps the block copy in C++ with Vector3's user-declared constructor in
- * scope. */
 
 /* The variant tables. Behavior calls data_ov060_0211afb4[mVariant].pmf and
  * InitResources calls data_ov060_0211af74[mVariant]. Both hold
@@ -256,16 +249,13 @@ int daKpaFire_c::CleanupResources()
  * Matrix4x3 at 0x32c of the actor, and draws the dExtShadowModel_c at 0x304 with
  * radius mShadowRadiusMul * mFireScale, the second fx32 argument (dActor_c.h
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
- * that value means is not decoded; every caller passes 0xf).
- * The Matrix4x3 at 0x32c remains the header's `mShadowMat` storage; copying it
- * through the Mtx43 view keeps the block copy intact in C++. */
+ * that value means is not decoded; every caller passes 0xf). */
 void daKpaFire_c::func_ov060_02117624() {
     if (mDropsShadow == 0)
         return;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, mGroundY >> 3, mPos.z >> 3);
-    *(Mtx43 *)mShadowMat = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, mShadowRadiusMul * mFireScale,
-                        0x1e000, 0xf);
+    mShadowMat = data_020a0e68;
+    DropShadowRadHeight(mShadowModel, mShadowMat, mShadowRadiusMul * mFireScale, 0x1e000, 0xf);
 }
 
 /* Variant 0 Behavior: ride Bowser's mouth.

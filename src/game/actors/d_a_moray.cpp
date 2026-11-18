@@ -9,7 +9,6 @@
  *
  * Text 0x021111a0..0x0211260c. Key function ~daMoray_c (out-of-line; D1/D0
  * at the start of ov016, D2 deadstripped). defer_codegen off keeps ROM order.
- * common.h stays first: the pose reads Matrix4x3 words m[9], m[10], m[11].
  *
  * leftovers:
  * - currFrame >> 12 instead of the << 4 >> 16 shift shrinks 02111758
@@ -414,7 +413,14 @@ int daMoray_c::StateSwimOutInit() {
    The double store to local.z is the ROM's (dropping the first one is 0x1bc).
    Re-tried after the respellings below, not inherited. Re-measured (#821 r17):
    without the bracket still 0x1bc, and `thrVert = thrHorz + 0x418000` (the
-   threshold built from the horizontal one) is 0x1b4. */
+   threshold built from the horizontal one) is 0x1b4.
+   Round 64: without the bracket the only loss of substance is thrAng folded
+   into `cmp r0, #0x3300` (the ROM holds it in r4). Setting thrAng = 0x3300
+   again in the entrance-1 arm keeps it a variable and gives 0x1c0, but 9
+   words still differ (the player-position copy and entrance take r2/r1/r0
+   for the ROM's r3/r2/r1), and that second store would be a matching device
+   anyway; `playerPos = player->mPos` is 0x1bc; the pragma file-wide breaks
+   UpdatePose, InitResources, UpdateHitCylinders and Render. */
 #pragma push
 #pragma opt_propagation off
 int daMoray_c::StateDenWaitMain() {
@@ -540,7 +546,9 @@ void daMoray_c::UpdatePose() {
        mSegmentPos[i] through the actor base; pos receives the bone
        translation before that shift. Measured (#821 r49): this->mSegmentPos[i]
        for the clear and the shift is the right size but 17 words off
-       (register order); pos-> for all three is 0x2dc of 0x2f8. */
+       (register order); pos-> for all three is 0x2dc of 0x2f8. The bone
+       matrix is a byte offset too: &transforms[bone] with bone++ is 20 bytes
+       off (#821 r65). */
     row = this;
     transformOffset = i;
     pos = this->mSegmentPos;

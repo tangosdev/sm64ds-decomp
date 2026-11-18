@@ -10,10 +10,6 @@
  * emits D1 then D0 with no D2. Do not reorder, and do not write
  * the destructor out of line.
  *
- * common.h stays above daSanbo_c.h. Matrix4x3 has to be the flat
- * s32[12] here: the structured spelling scalarises InitResources'
- * copy of IDENTITY_MATRIX4X3 (0x23c against the cartridge's 0x220).
- *
  * All helpers are daSanbo_c members; the func_ov096_<addr> names are
  * ours, not recovered. The state pairs they serve live in
  * data_ov096_02137b48, filled by this translation unit's native
@@ -36,7 +32,6 @@
  *   before copying it onto the model. Actor id 0x135 is only the id that function shoves
  *   the segment away from.
  */
-/* common.h first: Matrix4x3 must stay the flat s32[12] spelling. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daSanbo_c_AssetId {
     ASSET_SANBO_BODY_BMD = 0x041a,

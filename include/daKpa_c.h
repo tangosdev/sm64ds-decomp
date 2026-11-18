@@ -46,9 +46,8 @@ struct daKpa_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;                             /* 0x14c */
     dExtShadowModel_c mShadowModel;                               /* 0x308 */
     /* The shadow's world matrix: a Matrix4x3 written from the scratch matrix at
-       0x020a0e68 each frame and handed to dActor_c::DropShadowRadHeight. Left a
-       byte array so this header does not have to pull Matrix4x3 in. */
-    u8  mShadowMtx[0x30];         /* 0x330 */
+       0x020a0e68 each frame and handed to dActor_c::DropShadowRadHeight. */
+    Matrix4x3 mShadowMtx; /* 0x330 */
     /* The body cylinder. Its dCc_c flags word (+0x18, so 0x378) bit 0 is
        "disabled"; its radius (+0x04, so 0x364) is set to 180 units when the
        defeat knock-back starts; its otherOwner (+0x24, so 0x384) is the uniqueID of

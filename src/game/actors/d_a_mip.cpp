@@ -8,9 +8,7 @@
  * - g_profile_MIP stays outside this TU. The file handles, the eight
  *   state records, the carry offsets and the rabbit-count int are
  *   the folded sinit objects at the end of this file.
- * - Matrix copies go through Mtx43. Matrix4x3 embeds
- *   Vector3, and a typed copy emits ~Vector3.
- *   TestWaterBelow's ground probe stays a stack buffer; clsnY is
+ * - TestWaterBelow's ground probe stays a stack buffer; clsnY is
  *   detect[12].
  * - Render writes mMaterialColor into each material's texImageParam.
  *   numMaterials is still read through the first word of ModelComponents.
@@ -47,7 +45,6 @@ enum daMip_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
-#include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 
@@ -657,6 +654,7 @@ int daMip_c::StateFleeMain() {
     pl = ClosestPlayer();
     if (pl != 0) {
         /* A POD copy-init is the ROM's ldm/stm; any Vector3 copy is memberwise. */
+        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 v = *(VecFx32 *)&pl->mPos;
         if (Vec3_Dist(&mPos, (const Vector3 *)&v) > 0x4b0000) {
             SetState(&data_ov085_0213069c);
@@ -924,11 +922,11 @@ void daMip_c::UpdateMatrixAndShadow()
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mAnmModel.mat4x3 = data_020a0e68;
     MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
-    mShadowMtx = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
+    mShadowMtx = data_020a0e68;
+    DropShadowRadHeight(mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
 /* While carried, the matrix comes from UpdateCarry plus one of four hold
@@ -939,7 +937,7 @@ void daMip_c::UpdateCarriedMatrix()
     extern Matrix4x3 data_020a0e68;
 
     int idx;
-    void* res;
+    Matrix4x3 *res;
     if (!mTalkingPlayer) return;
     if (!mTalkingPlayer->mCarryMatrix)
         return;
@@ -951,10 +949,10 @@ void daMip_c::UpdateCarriedMatrix()
         idx = (idx + 2) & 0xff;
     }
     res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)&(&data_ov085_021306ec)[idx]);
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)res;
+    mAnmModel.mat4x3 = *res;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xc000) >> 3, mPos.z >> 3);
-    mShadowMtx = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
+    mShadowMtx = data_020a0e68;
+    DropShadowRadHeight(mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
 /* Second shadow, on the far side of the mirror plane at x = 0x1086000. */
@@ -983,8 +981,8 @@ void daMip_c::UpdateMirrorShadow()
         vd.z = vd.z + res.z;
         Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
     }
-    mMirrorMtx = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mMirrorMtx, 0x46000, 0x258000, 0xf);
+    mMirrorMtx = data_020a0e68;
+    DropShadowRadHeight(mShadowModel2, mMirrorMtx, 0x46000, 0x258000, 0xf);
 }
 
 /* Seven releases, straight-line. Not address order, so not a table walk.
@@ -1047,17 +1045,16 @@ int daMip_c::Render()
     return 1;
 }
 
-/* Mirrored second copy. mat4x3.t is the translation. 0x421800 is
+/* Mirrored second copy. mat4x3.m[9] is the X translation. 0x421800 is
    (0x1086000 >> 3) << 1, so the subtract reflects X across
-   UpdateMirrorShadow's plane. The saved and restored matrix is an Mtx43
-   so the copy stays a block move. */
+   UpdateMirrorShadow's plane. */
 void daMip_c::RenderMirrorImage()
 {
     extern int data_020a0e68;
 
-    Mtx43 tmp;
-    tmp = *(Mtx43 *)&mAnmModel.mat4x3;
-    mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
+    Matrix4x3 tmp;
+    tmp = mAnmModel.mat4x3;
+    mAnmModel.mat4x3.m[9] = 0x421800 - mAnmModel.mat4x3.m[9];
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
     MTX_Concat33(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
     mAnmModel.ClearMaterialFlags(0x80);
@@ -1066,7 +1063,7 @@ void daMip_c::RenderMirrorImage()
     mAnmModel.ApplyOpacity(0xff, 0);
     mAnmModel.SetMaterialFlags(0x80);
     mAnmModel.ClearMaterialFlags(0x40);
-    *(Mtx43 *)&mAnmModel.mat4x3 = tmp;
+    mAnmModel.mat4x3 = tmp;
 }
 
 /* The glowing-rabbit chase, and it is mostly a conversation.

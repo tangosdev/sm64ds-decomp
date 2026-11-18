@@ -26,8 +26,8 @@
 // the build):
 // mMeshCollider.beforeClsnCallback goes through dBgW::SetBeforeClsnCallback (direct member
 // store does not compile; the C-cast store shrinks InitResources).
-// mClsnMat2 and mStepModel.mat4x3 stay flat s32 m[12] (.t does not compile;
-// Vector3 overlays and address temps move bytes in both updates).
+// mClsnMat2's and mStepModel.mat4x3's translation rows are stored word by word
+// (Vector3 overlays and address temps move bytes in both updates).
 // InitResources, Behavior and the updates keep scalar pos (Vector3 refs grow them).
 // mStateTimer++ and mStateTimer == kFramesPerState stay (the +1/+50 forms
 // move bytes).

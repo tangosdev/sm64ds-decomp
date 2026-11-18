@@ -1621,7 +1621,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
     up.y = 0x1000;
     up.z = 0;
 
-    VEC_Subtract((Vector3 *)&camera->mLookAt, (Vector3 *)&camera->mPos, &forward);
+    VEC_Subtract(&camera->mLookAt, &camera->mPos, (VecFx32 *)&forward);
     if (NormalizeVec3IfNonZero(&forward)) {
         func_0203cebc(&scratch0, &right, &forward, &up);
         if (NormalizeVec3IfNonZero(&right)) {
