@@ -2498,6 +2498,10 @@ int daKpa_c::CheckFallenOffStage() {
     return 0;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == BOWSER_ACTOR_PLAYER;
+}
+
 /*
 Hold state BOWSER_HOLD_NONE (0), the normal per-frame handler, called through the
 hold table by BowserLoop. Clears mHoldStep. Unless he is defeated, if the
@@ -2523,8 +2527,7 @@ void daKpa_c::FreeUpdate() {
     if (this->mState != BOWSER_STATE_DEFEATED && (id = this->mdCcAcPos_c.otherOwner) != 0) {
         daPly_c *f = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (f != 0) {
-            int b = (((dActor_c *)f)->actorID == BOWSER_ACTOR_PLAYER);
-            if (b) {
+            if (IsPlayerActor(f)) {
                 Vector3 v;
                 v.x = this->mPos.x;
                 v.y = this->mPos.y;
