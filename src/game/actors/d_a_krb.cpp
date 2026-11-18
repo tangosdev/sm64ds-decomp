@@ -189,9 +189,7 @@ extern int data_ov084_02130208[];
 extern int data_ov084_02130238[];
 extern int data_ov084_02130218[];
 
-daKrb_c::~daKrb_c()
-{
-}
+daKrb_c::~daKrb_c() {}
 
 static inline int IsActorID(dActor_c *actor, int id) {
     return actor->actorID == id;
