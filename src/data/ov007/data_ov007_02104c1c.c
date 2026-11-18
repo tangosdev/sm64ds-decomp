@@ -1,4 +1,7 @@
-/* 0x02104c1c: the INF1 header (MessageInfo * in unit020c94a0.cpp). */
+/* 0x02104c1c: the bound message bank's INF1 header, set by
+ * func_ov007_020c951c (unit020c94a0.cpp). */
 #include "types.h"
 
-int data_ov007_02104c1c;
+struct MessageInfo;
+
+struct MessageInfo *data_ov007_02104c1c;

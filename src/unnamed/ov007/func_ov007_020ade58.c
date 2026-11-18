@@ -12,17 +12,6 @@ extern void func_ov007_020c10b0(Ov007OamNode *parent, Ov007OamNode *child);
 extern void func_ov007_020c0af4(Ov007OamList *list, Ov007OamNode *node);
 extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
 
-/* data_ov007_020ccb7c: one 8-byte row per item. data_ov007_020ccb7d is
- * the same table's animCount byte, read by its own symbol. */
-typedef struct Ov007NodeSprites {
-    u8 bank;      /* 0x00: index into the display's spriteBanks */
-    u8 animCount; /* 0x01: the node's animation count (func_ov007_020c11ac) */
-    char pad_02[2];
-    u8 *animIndices; /* 0x04: per animation, its index in the bank */
-} Ov007NodeSprites;
-
-typedef char Ov007NodeSprites_size_must_be_0x8[sizeof(Ov007NodeSprites) == 0x8 ? 1 : -1];
-
 extern Ov007NodeSprites data_ov007_020ccb7c[];
 
 /* Builds item node `index` (func_ov007_020b6d40 builds nine): the item, with

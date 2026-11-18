@@ -1,4 +1,6 @@
-/* 0x02104b9c: an Ov007PickerSprites * slot. */
+/* 0x02104b9c: the picker's sprite set, built by unit020b8f50.cpp. */
 #include "types.h"
 
-void *data_ov007_02104b9c;
+struct Ov007PickerSprites;
+
+struct Ov007PickerSprites *data_ov007_02104b9c;

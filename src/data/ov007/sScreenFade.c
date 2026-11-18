@@ -1,4 +1,6 @@
-/* 0x02104bd8: the sScreenFade record. */
+/* 0x02104bd8: the screen fade record unit020bf690.cpp allocates. */
 #include "types.h"
 
-int sScreenFade;
+struct Ov007Fade;
+
+struct Ov007Fade *sScreenFade;

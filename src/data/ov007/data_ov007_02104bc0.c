@@ -1,4 +1,6 @@
-/* 0x02104bc0: s32 menu value. */
+/* 0x02104bc0: the particle sprites unit020be0dc.cpp allocates. */
 #include "types.h"
 
-int data_ov007_02104bc0;
+struct Ov007ParticleSprites;
+
+struct Ov007ParticleSprites *data_ov007_02104bc0;

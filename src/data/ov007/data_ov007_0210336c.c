@@ -1,4 +1,5 @@
-/* 0x0210336c: the file-release hook (Ov007FileRelease in unit020b3edc.cpp). */
+/* 0x0210336c: the overlay's file-release hook, bound by func_ov007_020b3edc
+ * and called per released file. */
 #include "types.h"
 
-void *data_ov007_0210336c;
+void (*data_ov007_0210336c)(void *file);
