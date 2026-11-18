@@ -1271,8 +1271,7 @@ s32 dScMg3DEsp_c::InitResources()
     if (gEspIrieModelFile.func_020179b4(&mModel1, 1) == 0)
         return 0;
 
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gEspIrieModelFile.filePtr,
-                             sEsp3DTextureAnim);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gEspIrieModelFile.filePtr, sEsp3DTextureAnim);
     mTextureTransformer.SetFile(sEsp3DTextureAnim, 0, 0x1000, 0);
 
     if (mEspModel.InitResources() == 0)
