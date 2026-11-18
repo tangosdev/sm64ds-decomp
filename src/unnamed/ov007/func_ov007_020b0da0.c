@@ -1,4 +1,3 @@
-//cpp
 #include "types.h"
 #include "dExtModel_c.h"
 #include "Ov007MenuState.h"
@@ -15,17 +14,6 @@
 #include "Ov007Figure.h"
 #include "math/ProgressRatio.h"
 #include "math/MtxStack.h"
-
-/* Vector3 declares a constructor and destructor under C++, which makes its
- * assignment copy word by word. The ROM copies these with C's ldm/stm block
- * move, which C++ keeps for a struct with an array member. */
-/* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
-   plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
-   the same copy compiled as C does (measured on func_ov007_020c5dec). */
-typedef struct Vec3Words {
-    fx32 w[3];
-} Vec3Words;
-
 
 /* stateWork bits, by what this file does with them; medium confidence */
 #define OV007_FIGURE_SWAY 1    /* rock the model and bob it (periods 160 and 40 ticks) */
@@ -116,6 +104,6 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             }
         }
 
-        *(Vec3Words *)&mat->t = *(Vec3Words *)&out;
+        *(Vector3 *)&mat->t = out;
     }
 }

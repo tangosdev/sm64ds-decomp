@@ -1,18 +1,7 @@
-//cpp
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
 
-extern "C" void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, VecFx32 *out);
-
-/* C++ copies a struct of three named ints, VecFx32 included, word by word.
-   The ROM copies these with one ldm/stm, which C++ keeps for a struct with an
-   array member, so the copies go through it. */
-/* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
-   plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
-   the same copy compiled as C does (measured on func_ov007_020c5dec). */
-struct Vec3Words {
-    int w[3];
-};
+extern void func_ov007_020bfe4c(Ov007Camera *o, int x, int y, int z, VecFx32 *out);
 
 /* Re-unprojects every committed stroke point through the camera, resets the
    live points to it, and puts pos back at its rest position. */
@@ -25,10 +14,10 @@ void func_ov007_020c5dec(Ov007Picker *c) {
             Ov007StrokePath *group = c->groups[i];
             func_ov007_020bfe4c(o, group->xCoords[j], group->yCoords[j], -o->distance,
                                 &c->groupPointCopies[i][j]);
-            *(Vec3Words *)&c->groupPoints[i][j] = *(Vec3Words *)&c->groupPointCopies[i][j];
+            c->groupPoints[i][j] = c->groupPointCopies[i][j];
         }
     }
-    *(Vec3Words *)&c->pos = *(Vec3Words *)&c->restPos;
+    c->pos = c->restPos;
     c->hitGroup = c->hitIndex = -1;
     c->hitOffset.x = c->hitOffset.y = c->hitOffset.z = 0;
 }

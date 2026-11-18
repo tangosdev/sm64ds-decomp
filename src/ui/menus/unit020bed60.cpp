@@ -69,7 +69,7 @@ extern Ov007Sprite *NumberSprite_Create(int index);
 extern "C" void func_ov007_020bce70(short n, int frames);
 extern "C" void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, VecFx32 *out);
 extern int func_ov007_020c1da0(int i);
-extern int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int arg4, int *out);
+extern "C" int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int arg4, int *out);
 extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020ca1d4(Ov007MeshWave *wave, Ov007Mesh *mesh);
 extern void func_ov007_020ca26c(Ov007MeshWave *wave);
@@ -80,7 +80,8 @@ extern "C" void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, Vec
 extern "C" void func_ov007_020cb3dc(Ov007Mesh *mesh);
 extern "C" void func_ov007_020cba78(Ov007Mesh *mesh, int shift);
 extern void func_ov007_020cbb04(Ov007Mesh *mesh);
-extern Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams *params);
+extern "C" Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width,
+                                          Ov007MeshParams *params);
 extern "C" Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
 
 /* Defined below, after their callers (ROM order). */
