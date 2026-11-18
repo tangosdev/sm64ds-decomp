@@ -6,13 +6,10 @@
 
 extern "C" {
 
-/* Trivial 12-byte working storage. The vector routines take Vector3 pointers,
- * but making these locals Vector3 objects emits its inline destructor; cast
- * the same-layout buffers at those ABI boundaries to preserve the original
- * lifetime and code generation. */
-typedef struct {
-    int x, y, z;
-} Vec3;
+/* The working vectors are the SDK's POD VecFx32. The vector routines take
+ * Vector3 pointers, but Vector3 locals (measured) leave this function's code
+ * unchanged and emit an extra out-of-line _ZN7Vector3D1Ev into the object,
+ * which the ROM does not have here; the casts mark that ABI boundary. */
 typedef struct {
     int x, y, z, w;
 } Quat;
@@ -22,7 +19,7 @@ extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);
 extern Quat data_02075b04;
 
 void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
-    Vec3 vb, va, vb2, vcross;
+    VecFx32 vb, va, vb2, vcross;
     int r4, absr4, q;
 
     vb.x = b->x;

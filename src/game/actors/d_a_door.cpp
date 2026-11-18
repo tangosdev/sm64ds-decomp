@@ -59,15 +59,17 @@
  *
  * comment leftovers:
  * - the member names keep their addresses (nothing here says what the
- *   original called them), and func_ov100_02144f84 / func_ov100_02144fcc /
- *   func_ov100_02145014 / func_ov100_02145070 stay free -- the shared
- *   countdown helpers, which d_a_ply_methods.cpp, daMugenBGM_c and d_a_star_gate.cpp
- *   also call and which take no door.
- * - dActor_c's mScaleX/Y/Z and mAngleX/Z carry other things for a door
+ *   original called them). func_ov100_02144f84 / func_ov100_02144fcc /
+ *   func_ov100_02145014 / func_ov100_02145070 are static: they take no door.
+ * - the callees with Fix12<int> parameters (Sound, dExtAnmModel_c::SetAnim),
+ *   the SaveData, Sound::PlayCharVoice and dExtFrameCtrl_c::LoadFile calls, and the
+ *   dExtSimpleModel_c loaders InitResources calls stay spelled as mangled extern-C free
+ *   functions.
+ * - dActor_c's mScale and mAngle.x/.z carry other things for a door
  *   (the player's position in the door's frame, and two area ids), and
- *   mSpeedX/mVertSpeed/mSpeedZ hold the message position; the base names
- *   cannot change on one derived class's evidence, so the functions that read
- *   them describe them in their own comments.
+ *   mSpeed holds the message position; the base name cannot change on
+ *   one derived class's evidence, so the functions that read it describe
+ *   it in their own comments.
  * - the sound ids other than the two swing pairs, the message ids, camera
  *   flag bits 0xc00 (not in include/dCamera_c.h) and SaveData flags2 bit 16 stay
  *   numbers; their meanings are not recovered here.
@@ -187,10 +189,6 @@ struct Vector3_16;
 /* Defined below, called before their definitions. These four are the shared
    countdown helpers -- free functions, not members: d_a_ply_methods.cpp, daMugenBGM_c
    and d_a_star_gate.cpp call them too, and none takes the door. */
-int func_ov100_02144f84(void);
-int func_ov100_02144fcc(void);
-int func_ov100_02145014(void);
-void func_ov100_02145070(int v);
 extern "C" unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, const Vector3 *b);
 unsigned char NumStars(void);
@@ -369,7 +367,7 @@ int daDoor_c::func_ov100_02144468(int p) {
 /* State 02148924, execute member. Go to state data_ov100_021488b4 once
    func_ov100_02144fcc reports the shared countdown done. Was a C source. */
 int daDoor_c::func_ov100_021444e8(int a1) {
-    if (func_ov100_02144fcc()) {
+    if (daDoor_c::func_ov100_02144fcc()) {
         func_ov100_021453d8(&data_ov100_021488b4, a1);
     }
     return 1;
@@ -459,7 +457,7 @@ void daDoor_c::func_ov100_021446f8(daPly_c *r1) {
    frame count minus 0x28 (40) it runs func_ov100_02145080 every frame. When
    the animation finishes it goes to state data_ov100_021488a4 (latch set) or
    data_ov100_021488b4, stores the area id on the far side (the low byte of
-   mAngleX when mScaleZ is negative, else of mAngleZ -- see Render) as the
+   mAngle.x when mScale.z is negative, else of mAngle.z -- see Render) as the
    player's mAreaId and ChangeArea's it, clears the DOOR_CAMERA_FLAGS camera
    bits and plays the swing-end sound. Before the end: with a nonzero
    mKeyModelIdx, on the frame 0x1c (28) from the end it clears the camera
@@ -482,10 +480,10 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
             func_ov100_021453d8(&data_ov100_021488a4, (int)arg1);
         else
             func_ov100_021453d8(&data_ov100_021488b4, (int)arg1);
-        if (mScaleZ < 0)
-            t = mAngleX;
+        if (mScale.z < 0)
+            t = mAngle.x;
         else
-            t = mAngleZ;
+            t = mAngle.z;
         t = (s8)t;
         arg1->mAreaId = t;
         ChangeArea(t);
@@ -531,14 +529,14 @@ int daDoor_c::func_ov100_0214491c() {
 /* -------------------------------------------------------------------------- */
 /* State 021488f4, enter member (and what func_ov100_021446f8 carries on
    with): rewind the door animation, show both areas the door joins (the low
-   bytes of mAngleX and mAngleZ), set the camera flag bits DOOR_CAMERA_FLAGS,
+   bytes of mAngle.x and mAngle.z), set the camera flag bits DOOR_CAMERA_FLAGS,
    play the swing-start sound and zero mTimer. Was a C source, which read the
    two area halfwords through an inline helper; func_ov100_021446f8 calls it
    with the player and a third argument it never reads. */
 int daDoor_c::func_ov100_02144950(daPly_c *pl, int unused) {
     mModel.currFrame = 0;
-    ShowArea((signed char)mAngleX);
-    ShowArea((signed char)mAngleZ);
+    ShowArea((signed char)mAngle.x);
+    ShowArea((signed char)mAngle.z);
     gCamera->mFlags |= DOOR_CAMERA_FLAGS;
     func_02012694((param1 == DOOR_ALT_SOUND) ? SND_SWING_START_ALT : SND_SWING_START,
                   &mCamSpacePos);
@@ -591,7 +589,7 @@ int daDoor_c::func_ov100_02144a38(daPly_c *p) {
 
     e = &data_ov100_02148204[param1];
 
-    Vec3_RotateYAndTranslate(&pos, &p->mPos, p->mAngleY, &sKeyOff);
+    Vec3_RotateYAndTranslate(&pos, &p->mPos, p->mAngle.y, &sKeyOff);
 
     {
         void *actor = dActor_c::Spawn(ACTOR_OBJ_KEY, e->keyIndex, pos, &p->mAngle, p->mAreaId, -1);
@@ -640,7 +638,7 @@ int daDoor_c::func_ov100_02144c64() {
    daPly_c::GetTalkState() returns -1 and the player has left the door's box,
    go to state data_ov100_02148924. Was a C source. */
 int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
-    func_ov100_02145014();
+    daDoor_c::func_ov100_02145014();
     if (r1->GetTalkState() == -1) {
         if (func_ov100_021452e4(r1) == 0) {
             func_ov100_021453d8(&data_ov100_02148924, (int)r1);
@@ -655,8 +653,8 @@ int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
 /* State 021488c4, enter member. Play sound 0xb8 at the door and start the
    shared countdown at 0x87 (135). Was a C source. */
 int daDoor_c::func_ov100_02144ccc() {
-    func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
-    func_ov100_02145070(0x87);
+    func_02012694(0xb8, &mCamSpacePos);
+    daDoor_c::func_ov100_02145070(0x87);
     return 1;
 }
 
@@ -681,7 +679,7 @@ int daDoor_c::func_ov100_02144ccc() {
        data_ov100_02148904 for a nonzero mKeyModelIdx, else
        data_ov100_021488f4.
    Where ShowMessage, TryTalkToDoor or TryTalkToKeyDoor returns 0, control
-   goes to the last case. The message position is mSpeedX (see
+   goes to the last case. The message position is mSpeed (see
    InitResources). Was a C source. */
 int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
     DoorEntry *entry;
@@ -691,9 +689,9 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
         if (entry->starsNeeded >= 0) {
             if ((data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) == 0) {
                 if (NumStars() < entry->starsNeeded) {
-                    if (func_ov100_02144f84() == 0)
+                    if (daDoor_c::func_ov100_02144f84() == 0)
                         return 1;
-                    if (b->ShowMessage(*this, entry->msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
+                    if (b->ShowMessage(*this, entry->msg, &mSpeed, 0, 2) != 0) {
                         func_ov100_021453d8(&data_ov100_021488c4, (int)b);
                         return 1;
                     }
@@ -708,7 +706,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                 int val = data_0209caa0.file.flags1;
                 if ((val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift)) == 0) {
                     if ((val & (DOOR_SAVE_HAVE_KEY << e9)) == 0) {
-                        if (func_ov100_02144f84() == 0)
+                        if (daDoor_c::func_ov100_02144f84() == 0)
                             return 1;
                         {
                             int msg;
@@ -725,7 +723,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                                 }
                                 msg = sel ? entry->msg : 0x17;
                             }
-                            if (b->ShowMessage(*this, (short)msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
+                            if (b->ShowMessage(*this, (short)msg, &mSpeed, 0, 2) != 0) {
                                 func_ov100_021453d8(&data_ov100_021488c4, (int)b);
                                 if (entry->keyIndex == 5)
                                     data_0209caa0.file.flags2 |= 0x10000;
@@ -750,7 +748,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
 /* 1 when the shared countdown is zero, the music volume gMusicVolume is at
    0x7f000 (127.0 as fx32) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
-int func_ov100_02144f84(void) {
+int daDoor_c::func_ov100_02144f84() {
     if (*data_ov100_02148708 != 0)
         goto fail;
     if (gMusicVolume != 0x7f000)
@@ -767,8 +765,8 @@ fail:
 /* Tick the shared countdown (func_ov100_02145014); when it is done, call
    Sound::PlaySub(0x24, 0x7f, 0, 0x7222 = 7.13 as fx32, 0) and return its
    result, else 0. */
-int func_ov100_02144fcc(void) {
-    int r = func_ov100_02145014();
+int daDoor_c::func_ov100_02144fcc() {
+    int r = daDoor_c::func_ov100_02145014();
     if (r == 0)
         return 0;
     return Sound::PlaySub(0x24, 0x7f, 0, 0x7222, 0);
@@ -781,7 +779,7 @@ int func_ov100_02144fcc(void) {
    the ticked value is still nonzero, call Sound::PlaySub(0x24, 0x14, 0x7f,
    0x15666 = 21.4 as fx32, 0). Returns 1 once the countdown is zero. Was a C
    source. */
-int func_ov100_02145014(void) {
+int daDoor_c::func_ov100_02145014() {
     int r = DecIfAbove0_Short(data_ov100_02148708);
     if (r) {
         Sound::PlaySub(0x24, 0x14, 0x7f, 0x15666, 0);
@@ -793,7 +791,7 @@ int func_ov100_02145014(void) {
 /* ROM ordinal 19 -- func_ov100_02145070, 0x02145070, size 0x10 */
 /* -------------------------------------------------------------------------- */
 /* Start the shared countdown at v. Was a C source. */
-void func_ov100_02145070(int v) {
+void daDoor_c::func_ov100_02145070(int v) {
     data_ov100_02148708[0] = v;
 }
 
@@ -831,21 +829,21 @@ int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov100_02145170, 0x02145170, size 0x54 */
 /* -------------------------------------------------------------------------- */
-/* Place the player at the door: offset a, facing the door's mAngleY turned
-   half round, when mScaleZ > 0; offset b, facing mAngleY, otherwise -- the new facing also copied to the player's
-   mPrevAngleY, and either offset rotated by mAngleY about the door's
+/* Place the player at the door: offset a, facing the door's mAngle.y turned
+   half round, when mScale.z > 0; offset b, facing mAngle.y, otherwise -- the new facing also copied to the player's
+   mPrevAngle.y, and either offset rotated by mAngle.y about the door's
    position. Was a C source taking the door and the player as char *. */
 void daDoor_c::func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b) {
     Vector3 *v;
-    if (mScaleZ > 0) {
-        pl->mAngleY = mAngleY + 0x8000;
+    if (mScale.z > 0) {
+        pl->mAngle.y = mAngle.y + 0x8000;
         v = a;
     } else {
-        pl->mAngleY = mAngleY;
+        pl->mAngle.y = mAngle.y;
         v = b;
     }
-    pl->mPrevAngleY = pl->mAngleY;
-    Vec3_RotateYAndTranslate(&pl->mPos, &mPos, mAngleY, v);
+    pl->mPrevAngle.y = pl->mAngle.y;
+    Vec3_RotateYAndTranslate(&pl->mPos, &mPos, mAngle.y, v);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -853,14 +851,14 @@ void daDoor_c::func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b) {
 /* -------------------------------------------------------------------------- */
 /* Send the player through: unless no state was given (then
    data_ov100_021488f4 is used without asking), the player must be able to
-   enter from its side (daPly_c::CanEnterDoor, told whether mScaleZ <= 0);
+   enter from its side (daPly_c::CanEnterDoor, told whether mScale.z <= 0);
    place it through func_ov100_02145170 with the offsets (0, 0, 100) and
    (0, 0, -100) units, go to the given state and call SetTouchScreenDelay.
    Returns 0 when the player cannot enter. */
 int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
     if (r5 == 0) {
         r5 = &data_ov100_021488f4;
-    } else if (r4->CanEnterDoor(mScaleZ <= 0) == 0) {
+    } else if (r4->CanEnterDoor(mScale.z <= 0) == 0) {
         return 0;
     }
     /* 100 units to either side of the door. */
@@ -876,29 +874,29 @@ int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
 /* ROM ordinal 23 -- func_ov100_021452e4, 0x021452e4, size 0x8c */
 /* -------------------------------------------------------------------------- */
 /* 1 when the player is inside the door's box (the player's door-relative
-   offset in mScaleX/Y/Z within 75, 50 and 110 units, bounds inclusive) and
-   AngleDiff between the player's mAngleY and the door's is below 0x2000 (45
-   degrees) -- the door's mAngleY when mScaleZ is negative, half a turn from
+   offset in mScale within 75, 50 and 110 units, bounds inclusive) and
+   AngleDiff between the player's mAngle.y and the door's is below 0x2000 (45
+   degrees) -- the door's mAngle.y when mScale.z is negative, half a turn from
    it otherwise. Was a C source. */
 int daDoor_c::func_ov100_021452e4(daPly_c *r1) {
     int v, z, a;
-    v = mScaleX;
+    v = mScale.x;
     if (v < 0)
         v = -v;
     if (v <= 0x4b000) {
-        v = mScaleY;
+        v = mScale.y;
         if (v < 0)
             v = -v;
         if (v <= 0x32000) {
-            z = mScaleZ;
+            z = mScale.z;
             v = (z < 0) ? -z : z;
             if (v <= 0x6e000) {
                 if (z < 0)
-                    a = mAngleY;
+                    a = mAngle.y;
                 else
-                    a = mAngleY + 0x8000;
+                    a = mAngle.y + 0x8000;
                 a = (short)a;
-                if (AngleDiff(a, r1->mAngleY) < 0x2000)
+                if (AngleDiff(a, r1->mAngle.y) < 0x2000)
                     return 1;
             }
         }
@@ -910,14 +908,14 @@ int daDoor_c::func_ov100_021452e4(daPly_c *r1) {
 /* ROM ordinal 24 -- func_ov100_02145370, 0x02145370, size 0x68 */
 /* -------------------------------------------------------------------------- */
 /* The player's position in the door's frame (the offset from the door,
-   rotated by minus mAngleY), stored into the door's
-   mScaleX/Y/Z, which a door does not use as a scale; returns the player
+   rotated by minus mAngle.y), stored into the door's
+   mScale, which a door does not use as a scale; returns the player
    (gPlayers[gLocalPlayerId], the current one). Was a C source. */
 daPly_c *daDoor_c::func_ov100_02145370() {
     Vector3 v;
     daPly_c *r5 = gPlayers[gLocalPlayerId];
     Vec3_Sub(&v, &r5->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, (-mAngleY), &v);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, (-mAngle.y), &v);
     return r5;
 }
 
@@ -965,10 +963,10 @@ void daDoor_c::OnPendingDestroy() {}
  * hand the door's bone transforms to the key model hanging off 0x138
  * (mKeyModel) and draw that too.
  *
- *   0x08c / 0x090   dActor_c::mAngleX / mAngleZ, which a daDoor_c does NOT
+ *   0x08c / 0x090   dActor_c::mAngle.x / mAngle.z, which a daDoor_c does NOT
  *                   use as angles: each holds a signed BYTE area id, one
  *                   per side (`ldrsh`, then sign-extended through byte
- *                   width before IsAreaShowing sees it). Only mAngleY is a
+ *                   width before IsAreaShowing sees it). Only mAngle.y is a
  *                   real angle for this class.
  *   0x0e8           mModel.data.transforms, the door's own bone transform
  *                   array (dExtModel_c::data at +0x08, ModelComponents::
@@ -977,7 +975,7 @@ void daDoor_c::OnPendingDestroy() {}
  * The two virtual calls are dExtSimpleModel_c's slot 4 Virtual10(Matrix4x3&) and slot
  * 5 Render(const Vector3*), exactly what the ROM dispatches. */
 s32 daDoor_c::Render() {
-    if (IsAreaShowing((char)mAngleX) != 0 || IsAreaShowing((char)mAngleZ) != 0) {
+    if (IsAreaShowing((char)mAngle.x) != 0 || IsAreaShowing((char)mAngle.z) != 0) {
         /* &mModel is taken HERE and not at the top of the function: hoisting
            it costs a callee-saved register and a stack adjust the ROM does
            not have. The ROM computes it lazily, so this does too. */
@@ -1013,27 +1011,25 @@ s32 daDoor_c::Behavior() {
 /* vtable slot 0. Was a C source taking the object explicitly.
  *
  * Shift param1 down to the variant; offset the door by (75, 0, 0) units
- * (0x4b000, rotated by mAngleY); load the door model; in game
+ * (0x4b000, rotated by mAngle.y); load the door model; in game
  * mode 0, pick and load the key-model file (mKeyFile, see the header); start
  * the door animation (speed 0x1000 = 1.0); build the model matrix from the
- * position >> 3 and mAngleY and give it to the door model and, when the entry
+ * position >> 3 and mAngle.y and give it to the door model and, when the entry
  * has a second file, a freshly built key model; then choose the starting
- * state: data_ov100_02148914 if the player stands inside |mScaleX| <= 75,
- * |mScaleY| <= 50, |mScaleZ| <= 500 units of the door (mScaleX/Y/Z are the
+ * state: data_ov100_02148914 if the player stands inside |mScale.x| <= 75,
+ * |mScale.y| <= 50, |mScale.z| <= 500 units of the door (mScale is the
  * player's offset, set by func_ov100_02145370), else data_ov100_021488b4.
  *
- * 0x05c/0x060/0x064 are mPosX/Y/Z and 0x08e mAngleY, so the opening call
+ * 0x05c/0x060/0x064 are mPos.x/.y/.z and 0x08e mAngle.y, so the opening call
  * moves the door by (75, 0, 0) units rotated by its own facing angle; the two
  * matrix stores are the same store to the door model and the key model.
  *
- * The block near the end writes mPosX, mPosY + 0xb4000 (180 units up) and
- * mPosZ into 0x0a4/0x0a8/0x0ac. That triple is the Vector3 func_ov100_02144cf8
- * hands to daPly_c::ShowMessage. dActor_c.h names the middle of those three
- * `mVertSpeed`, which cannot be what a daDoor_c is storing there -- three
- * consecutive words taking a position triple say 0x0a4..0x0af is a second
- * Vector3 for at least this class. Left spelt as dActor_c has it, because
- * renaming a base field on one derived class's evidence is a dActor_c
- * change, not a daDoor_c one. */
+ * The block near the end writes mPos.x, mPos.y + 0xb4000 (180 units up) and
+ * mPos.z into mSpeed. That vector is the one func_ov100_02144cf8 hands to
+ * daPly_c::ShowMessage: a door reuses the velocity it never moves by as
+ * the message position. Left spelt as dActor_c has it, because renaming
+ * a base field on one derived class's evidence is a dActor_c change, not
+ * a daDoor_c one. */
 s32 daDoor_c::InitResources() {
     unsigned int idx;
     DoorEntry *e;
@@ -1059,7 +1055,7 @@ s32 daDoor_c::InitResources() {
     /* 75 units along the door's facing. */
     static Vector3 sDoorOff(0x4b000, 0, 0);
 
-    Vec3_RotateYAndTranslate(&mPos, &mPos, mAngleY, &sDoorOff);
+    Vec3_RotateYAndTranslate(&mPos, &mPos, mAngle.y, &sDoorOff);
 
     idx = param1;
     e = &data_ov100_02148204[idx];
@@ -1096,7 +1092,7 @@ s32 daDoor_c::InitResources() {
     /* The model matrix takes the position >> 3. */
     Vec3_Asr(&tmp, &mPos, 3);
     MtxStack::transS(tmp.x, tmp.y, tmp.z);
-    MtxStack::YrotM(mAngleY);
+    MtxStack::YrotM(mAngle.y);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (e->keyFile != 0) {
@@ -1108,29 +1104,29 @@ s32 daDoor_c::InitResources() {
 
     {
         int w;
-        y = mPosY;
-        z = mPosZ;
-        x = mPosX;
+        y = mPos.y;
+        z = mPos.z;
+        x = mPos.x;
         w = y + 0xb4000; /* 180 units up */
-        mSpeedX = x;
-        mVertSpeed = w;
+        mSpeed.x = x;
+        mSpeed.y = w;
         {
             unsigned char bi = gLocalPlayerId;
-            mSpeedZ = z;
+            mSpeed.z = z;
             r4 = (int)gPlayers[bi];
         }
     }
     func_ov100_02145370();
 
-    v = mScaleX;
+    v = mScale.x;
     if (v < 0)
         v = -v;
     if (v <= 0x4b000) { /* 75 units */
-        v = mScaleY;
+        v = mScale.y;
         if (v < 0)
             v = -v;
         if (v <= 0x32000) { /* 50 */
-            v = mScaleZ;
+            v = mScale.z;
             if (v < 0)
                 v = -v;
             if (v <= 0x1f4000) { /* 500 */

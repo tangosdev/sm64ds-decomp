@@ -41,7 +41,7 @@ s32 daObjLava_c::InitResources() {
 }
 
 s32 daObjLava_c::Behavior() {
-    /* The ROM forms &player->mPosX once and loads all three words off it, which
+    /* The ROM forms &player->mPos.x once and loads all three words off it, which
      * is what taking the position as a Vector3 does; three separate member
      * loads off the daPly_c pointer keep the 0x5c/0x60/0x64 offsets instead. */
     Vector3 *pos = &ClosestPlayer()->mPos;

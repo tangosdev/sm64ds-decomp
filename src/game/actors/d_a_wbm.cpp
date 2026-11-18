@@ -149,17 +149,17 @@ int daWbm_c::InitResources()
     {
         if (mVariant == 2)
         {
-            mScaleX = 0x800;
-            mScaleY = 0x800;
-            mScaleZ = 0x800;
+            mScale.x = 0x800;
+            mScale.y = 0x800;
+            mScale.z = 0x800;
             mdCcAc_c.Init(this, 0x14000, 0x28000, 0x200004, 0);
             mWithMeshClsn.Init(this, 0x1e000, 0x1e000, 0, 0);
         }
         else
         {
-            mScaleX = 0x1000;
-            mScaleY = 0x1000;
-            mScaleZ = 0x1000;
+            mScale.x = 0x1000;
+            mScale.y = 0x1000;
+            mScale.z = 0x1000;
             mdCcAc_c.Init(this, 0x28000, 0x50000, 0x204004, 0);
             mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
         }
@@ -168,9 +168,9 @@ int daWbm_c::InitResources()
     mStateTimer = 0;
     mBounceCount = 0;
     unk_3b4 = 0;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
 
     if ((unsigned int)(mVariant - 1) <= 1)
     {
@@ -246,7 +246,7 @@ void daWbm_c::StateFall()
         MarkForDestruction();
         return;
     }
-    if (mPosY < 0x1800000)
+    if (mPos.y < 0x1800000)
         return;
     MarkForDestruction();
 }
@@ -282,11 +282,11 @@ void daWbm_c::StateDrop()
     if (Vec3_HorzDist(&spawnPos, &mPos) > 0x5dc000)
         return;
     playerY = spawnPos.y;
-    bombY = mPosY;
+    bombY = mPos.y;
     if (playerY > bombY)
         return;
 
-    angle = player->mPrevAngleY;
+    angle = player->mPrevAngle.y;
     speed = player->mHorzSpeed;
     y = playerY + 0x480000;
     uangle = (u32)(angle << 16) >> 16;
@@ -324,38 +324,38 @@ void daWbm_c::StateBounce()
                 mBouncePhase++;
         }
         mSquashSpeed = FX_Div(FX_MUL(mSquashSpeed, 0xb00), 0x1000);
-        mScaleY = mSquashScale;
-        mScaleZ = 0x2000 - mScaleY;
-        mScaleX = mScaleZ;
+        mScale.y = mSquashScale;
+        mScale.z = 0x2000 - mScale.y;
+        mScale.x = mScale.z;
     } else if (state == 1) {
         int approach = ApproachLinear(mSquashScale, 0x1000, mSquashSpeed);
         if (approach != 0) {
             daPly_c *player;
             mBouncePhase++;
-            mVertSpeed = (mBounceCount << 13) + 0x30000;
+            mSpeed.y = (mBounceCount << 13) + 0x30000;
             mHorzSpeed = 0x6000;
             player = ClosestPlayer();
             if (player != 0) {
-                mPrevAngleY = Vec3_HorzAngle(&mPos, &player->mPos);
+                mPrevAngle.y = Vec3_HorzAngle(&mPos, &player->mPos);
             } else {
                 Burst();
                 return;
             }
         }
         mSquashSpeed = FX_Div(FX_MUL(mSquashSpeed, 0x1400), 0x1000);
-        mScaleY = mSquashScale;
-        mScaleZ = 0x2000 - mScaleY;
-        mScaleX = mScaleZ;
+        mScale.y = mSquashScale;
+        mScale.z = 0x2000 - mScale.y;
+        mScale.x = mScale.z;
     } else {
-        if (mVertSpeed >= 0) {
-            mScaleX = 0xf00;
-            mScaleY = 0x1200;
-            mScaleZ = 0xf00;
+        if (mSpeed.y >= 0) {
+            mScale.x = 0xf00;
+            mScale.y = 0x1200;
+            mScale.z = 0xf00;
         } else {
             mState = 1;
-            mScaleX = 0x1000;
-            mScaleY = 0x1000;
-            mScaleZ = 0x1000;
+            mScale.x = 0x1000;
+            mScale.y = 0x1000;
+            mScale.z = 0x1000;
         }
     }
 }
@@ -375,13 +375,13 @@ int daWbm_c::func_ov098_0213b6e0()
                function is shorter than the ROM's. */
             int cmp = actorID == ACTOR_PLAYER;
             if (cmp) {
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 other->Hurt(pos, 1, 0xc000, 1, 0, 1);
                 if (mVariant == 1) {
-                    Particle::System::NewSimple(kPtclWaterBombBurstA, mPosX, mPosY, mPosZ);
-                    Particle::System::NewSimple(kPtclWaterBombBurstB, mPosX, mPosY, mPosZ);
+                    Particle::System::NewSimple(kPtclWaterBombBurstA, mPos.x, mPos.y, mPos.z);
+                    Particle::System::NewSimple(kPtclWaterBombBurstB, mPos.x, mPos.y, mPos.z);
                     Burst();
                     return 1;
                 }
@@ -406,13 +406,13 @@ void daWbm_c::Burst()
     for (i = 0; i < 5; i++) {
         dActor_c *frag =
             dActor_c::Spawn(ACTOR_WATERBOMB, 2, mPos, (const Vector3_16 *)0, mAreaId, -1);
-        frag->mSpeedX = 0;
-        frag->mVertSpeed = 0x14000;
-        frag->mSpeedZ = 0;
+        frag->mSpeed.x = 0;
+        frag->mSpeed.y = 0x14000;
+        frag->mSpeed.z = 0;
         frag->mHorzSpeed = 0x14000;
-        frag->mPrevAngleX = 0;
-        frag->mPrevAngleY = data_ov098_0213bf90[i];
-        frag->mPrevAngleZ = 0;
+        frag->mPrevAngle.x = 0;
+        frag->mPrevAngle.y = data_ov098_0213bf90[i];
+        frag->mPrevAngle.z = 0;
     }
     func_0201267c(0xda, &mCamSpacePos);
     MarkForDestruction();
@@ -425,19 +425,19 @@ void daWbm_c::func_ov098_0213b584()
     Vec3_Asr(&shadowPos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shadowPos.x, shadowPos.y, shadowPos.z);
     mShadowMat = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     mModel.mat4x3 = data_020a0e68;
-    DropShadowRadHeight(mShadowModel, mShadowMat, mScaleX * 0xa0, 0x3e8000, 6);
+    DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0xa0, 0x3e8000, 6);
 }
 
 /* Stop, start the squash from the current height and count the bounce. */
 void daWbm_c::Land()
 {
     mSquashSpeed = 0x600;
-    mSquashScale = mScaleY;
+    mSquashScale = mScale.y;
     mBounceCount++;
     unk_3b4 = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
     mBouncePhase = 0;
     func_0201267c(0xd9, &mCamSpacePos);

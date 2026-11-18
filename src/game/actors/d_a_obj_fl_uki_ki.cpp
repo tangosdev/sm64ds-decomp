@@ -2,7 +2,7 @@
 /*
  * daObjFl_UkiKi_c: the FL_UKI_KI profile (actor 82), a bobbing platform in
  * Lethal Lava Land (ov022; the tree names its files FloatingFloorLllBig_*). A
- * dBgActor_c that remembers its spawn height, sets mPosY to that height plus
+ * dBgActor_c that remembers its spawn height, sets mPos.y to that height plus
  * a sine term every frame, and re-syncs the mesh collider when it is in
  * range.
  *
@@ -85,21 +85,21 @@ s32 daObjFl_UkiKi_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(FloatingFloorLllBig_ClsnFile);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba6c);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov064_0211ba6c);
 
     /* The platform carries the mesh along by velocity rather than by its
        transform -- it slides straight up and down. */
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
-    mOriginalPosY = mPosY;
-    mPhaseAngle = mAngleX;
+    mOriginalPosY = mPos.y;
+    mPhaseAngle = mAngle.x;
     return 1;
 }
 
 /* Bob 30 units either side of mOriginalPosY, one cycle per 64 frames
  * (mPhaseAngle advances 0x400 of 0x10000 a frame). */
 s32 daObjFl_UkiKi_c::Behavior() {
-    mPosY = FX_SinIdx((u16)mPhaseAngle >> 4) * (s16)30 + mOriginalPosY;
+    mPos.y = FX_SinIdx((u16)mPhaseAngle >> 4) * (s16)30 + mOriginalPosY;
     mPhaseAngle += 0x400;
 
     UpdateModelPosAndRotY();

@@ -79,9 +79,9 @@
  *
  *   CheckTouch's angle copy keeps `a = b ? a : a` through a Vector3_16.
  *
- *   Reading the player's angles / position as plain members (`closest->mAngleX`)
+ *   Reading the player's angles / position as plain members (`closest->mAngle.x`)
  *   misses in InitAnim (0x19c vs 0x1a0 bytes) and Taken
- *   (0x224 vs 0x21c); taking `&player->mAngleX` / `&player->mPosX` and indexing
+ *   (0x224 vs 0x21c); taking `&player->mAngle.x` / `&player->mPos.x` and indexing
  *   the pointer matches. mStateTimer is s16 in dEnemyBase_c but the helpers
  *   read it unsigned, hence CAP_TIMER.
  *
@@ -340,9 +340,9 @@ int daObjMarioCap_c::InitResources()
 
     mShadowModel.InitCylinder();
 
-    mScaleX = 0x1000;           /* 1.0 */
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000; /* 1.0 */
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
 
     flag = 0;
 
@@ -478,7 +478,7 @@ int daObjMarioCap_c::InitResources()
 
 /* Per frame, for a cap with an icon: waits (dormant) while bit 1 of the
  * icon's flags is clear; when it comes on, the cap pops in -- scale reset to 0,
- * thrown up at 15 units a frame (mVertSpeed 0xf000), a puff of dust -- and
+ * thrown up at 15 units a frame (mSpeed.y 0xf000), a puff of dust -- and
  * scales up while it falls: the scale chases a target that starts at 2.0 and eases
  * down to 1.0, so it overshoots to about 1.25 before settling at 1.0. Then: the current
  * state's per-frame function, the render-matrix update, the model animation
@@ -491,13 +491,13 @@ int daObjMarioCap_c::Behavior()
         if (((Flags3eb *)&mCapIcon.mFlags)->real == 0) {
             mDormant = 1;
         } else if (mDormant == 1) {
-            mScaleX = 0;
-            mScaleY = 0;
-            mScaleZ = 0;
+            mScale.x = 0;
+            mScale.y = 0;
+            mScale.z = 0;
             mDormant = 0;
             mPopScale = 0x2000;     /* 2.0 */
             mPopIn = 1;
-            mVertSpeed = 0xf000;    /* 15 units a frame, upward */
+            mSpeed.y = 0xf000; /* 15 units a frame, upward */
             SmallPoofDust();
         }
     }
@@ -510,13 +510,13 @@ int daObjMarioCap_c::Behavior()
        follows it by 0.25 a frame, and the cap moves and collides meanwhile. */
     if (mIconKind != 0xff && mPopIn != 0) {
         ApproachLinear(mPopScale, 0x1000, 0x200);
-        ApproachLinear(mScaleX, mPopScale, 0x400);
-        mScaleZ = mScaleX;
-        mScaleY = mScaleZ;
+        ApproachLinear(mScale.x, mPopScale, 0x400);
+        mScale.z = mScale.x;
+        mScale.y = mScale.z;
         UpdatePos(&mdCcAc_c);
         UpdateWMClsn(mWithMeshClsn, 0);
         if (mWithMeshClsn.IsOnGround() != 0) {
-            if (mScaleX == 0x1000) {
+            if (mScale.x == 0x1000) {
                 mPopIn = 0;
             }
         }
@@ -566,8 +566,10 @@ int daObjMarioCap_c::Behavior()
 int daObjMarioCap_c::Render()
 {
     int b = (mFlags & 0x40000) ? 1 : 0;
-    if (b) return 1;
-    if (mDormant == 1 || mScaleX < 0x100) return 1;
+    if (b)
+        return 1;
+    if (mDormant == 1 || mScale.x < 0x100)
+        return 1;
 
     int t = mType;
     if (t == 4 || t == 17 || t == 5 || t == 18 || t == 16 || t == 11 || (unsigned)(t - 6) <= 3) {
@@ -670,9 +672,9 @@ void daObjMarioCap_c::UpdateMatrix()
     int m = mType;
     if (m != 5 && m != 0x12 && m != 0x10 && m != 0xb && m != 7 && m != 9 &&
         m != 0x14 && m != 0x15 && m != 0x16) {
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
     }
 
     if (mCarryMatrix != 0) {
@@ -686,8 +688,7 @@ void daObjMarioCap_c::UpdateMatrix()
     /* position / 8: the model matrix's translation scale */
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX,
-                                           mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
 
     {
@@ -700,11 +701,11 @@ void daObjMarioCap_c::UpdateMatrix()
             return;
     }
 
-    if (mScaleX < 0x500)
+    if (mScale.x < 0x500)
         return;
 
     {
-        int y = mPosY;
+        int y = mPos.y;
         int off;
         if (mWithMeshClsn.IsOnGround() == 0) {
             probe = mPos;
@@ -726,11 +727,11 @@ void daObjMarioCap_c::UpdateMatrix()
                 off = -10;
             }
         }
-        Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+        Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
         /* m[9..11] is the translation row. */
-        mShadowMat.m[9] = mPosX >> 3;
+        mShadowMat.m[9] = mPos.x >> 3;
         mShadowMat.m[10] = (y + (off << 12)) >> 3;
-        mShadowMat.m[11] = mPosZ >> 3;
+        mShadowMat.m[11] = mPos.z >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, 0x32000, 0xf);
     }
 }
@@ -778,7 +779,7 @@ int daObjMarioCap_c::Wait() {
         SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
     CheckTouch();
-    if (data_02092138 > mPosY) {
+    if (data_02092138 > mPos.y) {
         SaveData::PlayerLoseCap();
         MarkForDestruction();
     }
@@ -797,7 +798,7 @@ int daObjMarioCap_c::InitTimedWait()
  * Returns 1. */
 int daObjMarioCap_c::TimedWait()
 {
-    if (data_02092138 > mPosY || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+    if (data_02092138 > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
         (mFlags & 8)) {
         MarkForDestruction();
         return 1;
@@ -831,7 +832,7 @@ int daObjMarioCap_c::InitTimedWait2()
  * TimedWait. Returns 1. */
 int daObjMarioCap_c::TimedWait2()
 {
-    if (data_02092138 > mPosY || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+    if (data_02092138 > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
         (mFlags & 8)) {
         MarkForDestruction();
         return 1;
@@ -862,9 +863,9 @@ int daObjMarioCap_c::Fall() {
       SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
   }
-  if (data_02092138 > mPosY) {
-    SaveData::PlayerLoseCap();
-    MarkForDestruction();
+  if (data_02092138 > mPos.y) {
+      SaveData::PlayerLoseCap();
+      MarkForDestruction();
   }
   return 1;
 }
@@ -915,11 +916,11 @@ int daObjMarioCap_c::InitSlide()
  * 0x5000..0xa000 (5..10 units a frame; func_ov002_020f02c8, which maps the
  * surface value to it), aimed along mSlopeAngle and scaled by the horizontal
  * length of the floor normal. That is added to the cap's own velocity
- * (mHorzSpeed along mPrevAngleY) and the sum becomes the new heading and
- * speed, capped at 0xf000 (15 units a frame). mVertSpeed is set from the floor
+ * (mHorzSpeed along mPrevAngle.y) and the sum becomes the new heading and
+ * speed, capped at 0xf000 (15 units a frame). mSpeed.y is set from the floor
  * normal and the words at 0x0a4 / 0x0ac, with 0x8000 (8 units a frame) of
- * extra downward bias, and mAngleX / mAngleZ move toward the floor's tilt
- * along and across mAngleY (UpdateAngle with arguments 4 and 0x1000). Returns 1. */
+ * extra downward bias, and mAngle.x / mAngle.z move toward the floor's tilt
+ * along and across mAngle.y (UpdateAngle with arguments 4 and 0x1000). Returns 1. */
 int daObjMarioCap_c::Slide()
 {
     struct Vector3 ownVel;
@@ -972,8 +973,8 @@ int daObjMarioCap_c::Slide()
     slopePush = func_ov002_020f02c8(surface);
     func_ov002_020f030c(surface);
     spd = mHorzSpeed;
-    s = FX_SinIdx((u16)mPrevAngleY >> 4);
-    co = FX_CosIdx((u16)mPrevAngleY >> 4);
+    s = FX_SinIdx((u16)mPrevAngle.y >> 4);
+    co = FX_CosIdx((u16)mPrevAngle.y >> 4);
     /* Velocity in the plane: the cap's own speed along its heading, plus the
        floor's push along the slope. */
     ownVel.x = FX_MUL(spd, s);
@@ -990,14 +991,14 @@ int daObjMarioCap_c::Slide()
     mHorzSpeed = Vec3_HorzLen(&out);
     if (mHorzSpeed > 0xf000)
         mHorzSpeed = 0xf000;
-    mPrevAngleY = ang;
-    mVertSpeed = -(
-        FX_Div(FX_MUL(mFloorNormal.x, mSpeedX) + FX_MUL(mFloorNormal.z, mSpeedZ), mFloorNormal.y) +
-        0x8000);
-    pitch = func_02010844(&mFloorNormal, mAngleY);
-    roll = func_02010844(&mFloorNormal, mAngleY - 0x4000);
-    UpdateAngle(mAngleX, pitch, 4, 0x1000);
-    UpdateAngle(mAngleZ, roll, 4, 0x1000);
+    mPrevAngle.y = ang;
+    mSpeed.y = -(FX_Div(FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z),
+                        mFloorNormal.y) +
+                 0x8000);
+    pitch = func_02010844(&mFloorNormal, mAngle.y);
+    roll = func_02010844(&mFloorNormal, mAngle.y - 0x4000);
+    UpdateAngle(mAngle.x, pitch, 4, 0x1000);
+    UpdateAngle(mAngle.z, roll, 4, 0x1000);
     return 1;
 }
 
@@ -1011,9 +1012,9 @@ int daObjMarioCap_c::Slide()
  * starts the 150-frame removal timer and resets the scale to 1.0. Returns 1. */
 int daObjMarioCap_c::InitTaken()
 {
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mVertAccel = 0;
     mTakenStep = 0;
     mBlinkHidden = 0;
@@ -1036,9 +1037,9 @@ int daObjMarioCap_c::InitTaken()
                     struct Vector3 v;
                     Sound::PlayBank3(kSfx1Up, mCamSpacePos);
                     GiveLives(1);
-                    v.x = mPosX;
-                    v.y = mPosY;
-                    v.z = mPosZ;
+                    v.x = mPos.x;
+                    v.y = mPos.y;
+                    v.z = mPos.z;
                     v.y += 0x64000;
                     dActor_c::Spawn(kActor1UpLogo, 8, v, 0, mAreaId, -1);
                 }
@@ -1047,9 +1048,9 @@ int daObjMarioCap_c::InitTaken()
     }
 
     mStateTimer = 150;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     return 1;
 }
 
@@ -1076,20 +1077,20 @@ int daObjMarioCap_c::Taken() {
     mCarryMatrix = 0;
 
     {
-        s16 *q = &mPlayer->mAngleX;
-        mPrevAngleX = q[0];
-        mPrevAngleY = q[1];
-        mPrevAngleZ = q[2];
+        s16 *q = &mPlayer->mAngle.x;
+        mPrevAngle.x = q[0];
+        mPrevAngle.y = q[1];
+        mPrevAngle.z = q[2];
     }
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
 
     {
-        s32 *q = &mPlayer->mPosX;
-        mPosX = q[0];
-        mPosY = q[1];
-        mPosZ = q[2];
+        s32 *q = &mPlayer->mPos.x;
+        mPos.x = q[0];
+        mPos.y = q[1];
+        mPos.z = q[2];
     }
 
     switch (mTakenStep) {
@@ -1138,7 +1139,7 @@ int daObjMarioCap_c::Taken() {
  * index them by mModelIndex). Returns 1. */
 int daObjMarioCap_c::InitAnim()
 {
-    /* Reading the angles through closest->mAngleX / &mAnmModel methods
+    /* Reading the angles through closest->mAngle.x / &mAnmModel methods
        changes the size; the pointer-to-first-member form below is the one
        that matches. */
     int state;
@@ -1150,13 +1151,13 @@ int daObjMarioCap_c::InitAnim()
     if (state == 0xa || state == 0xf) {
         daPly_c *closest = ClosestPlayer();
         if (closest != 0) {
-            s16* src = &closest->mAngleX;
-            mPrevAngleX = src[0];
-            mPrevAngleY = src[1];
-            mPrevAngleZ = src[2];
-            mAngleX = mPrevAngleX;
-            mAngleY = mPrevAngleY;
-            mAngleZ = mPrevAngleZ;
+            s16 *src = &closest->mAngle.x;
+            mPrevAngle.x = src[0];
+            mPrevAngle.y = src[1];
+            mPrevAngle.z = src[2];
+            mAngle.x = mPrevAngle.x;
+            mAngle.y = mPrevAngle.y;
+            mAngle.z = mPrevAngle.z;
             mPlayer = closest;
         }
     }
@@ -1196,18 +1197,18 @@ int daObjMarioCap_c::Anim()
 
     if (mType == 0xa || mType == 0xf) {
         if (mPlayer != 0) {
-            sp = &mPlayer->mAngleX;
-            mPrevAngleX = sp[0];
-            mPrevAngleY = sp[1];
-            mPrevAngleZ = sp[2];
-            mAngleX = mPrevAngleX;
-            mAngleY = mPrevAngleY;
-            mAngleZ = mPrevAngleZ;
+            sp = &mPlayer->mAngle.x;
+            mPrevAngle.x = sp[0];
+            mPrevAngle.y = sp[1];
+            mPrevAngle.z = sp[2];
+            mAngle.x = mPrevAngle.x;
+            mAngle.y = mPrevAngle.y;
+            mAngle.z = mPrevAngle.z;
 
-            ip = &mPlayer->mPosX;
-            mPosX = ip[0];
-            mPosY = ip[1];
-            mPosZ = ip[2];
+            ip = &mPlayer->mPos.x;
+            mPos.x = ip[0];
+            mPos.y = ip[1];
+            mPos.z = ip[2];
         }
     }
 
@@ -1249,7 +1250,7 @@ int daObjMarioCap_c::Dormant()
 }
 
 /* The touch check shared by the states that let the player pick the cap up.
- * If the cap is against a wall, reflects mPrevAngleY off the wall normal.
+ * If the cap is against a wall, reflects mPrevAngle.y off the wall normal.
  * Then it proceeds only if the collider's other owner is a daPly_c (actor ID
  * kActorPlayer), hitFlags bit 0x8000 is clear, the player is not collecting
  * a cap, and it is not a player with param1 3 that has an object in its
@@ -1269,7 +1270,7 @@ void daObjMarioCap_c::CheckTouch()
     if (mWithMeshClsn.IsOnWall() != 0) {
         dBgPi *wr = mWithMeshClsn.GetWallResult();
         wr->surface.CopyNormalTo(normal);
-        mPrevAngleY = ReflectAngle(normal.x, normal.z, mPrevAngleY);
+        mPrevAngle.y = ReflectAngle(normal.x, normal.z, mPrevAngle.y);
     }
 
     if (mdCcAc_c.otherOwner == 0) return;
@@ -1319,18 +1320,18 @@ void daObjMarioCap_c::CheckTouch()
     {
         /* `a = b ? a : a` through a Vector3_16 is the MATCH form. */
         daPly_c *found = mPlayer;
-        int a = *(u16*)&found->mAngleX;
-        int b = *(u16*)&found->mAngleY;
+        int a = *(u16 *)&found->mAngle.x;
+        int b = *(u16 *)&found->mAngle.y;
         a = b ? a : a;
         v.x = a;
         v.y = b;
-        v.z = *(u16*)&found->mAngleZ;
-        mPrevAngleX = v.x;
-        mPrevAngleY = v.y;
-        mPrevAngleZ = *(s16*)&v.z;
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        v.z = *(u16 *)&found->mAngle.z;
+        mPrevAngle.x = v.x;
+        mPrevAngle.y = v.y;
+        mPrevAngle.z = *(s16 *)&v.z;
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
     }
 
     EnterState(&data_ov002_0210df54);

@@ -79,7 +79,8 @@ int daObjAbuku_c::Behavior() {
     if (DecIfAbove0_Short((unsigned short *)(&mLifeTimer)) == 0 || IsNearWaterSurface()) {
         Pop();
     }
-    mParticle = (int)Particle::System::New(mParticle, kPtclAbukuBubble, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle =
+        (int)Particle::System::New(mParticle, kPtclAbukuBubble, mPos.x, mPos.y, mPos.z, 0, 0);
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -93,9 +94,9 @@ int daObjAbuku_c::IsNearWaterSurface() {
     dBgCh_Gnd rg;
     Vector3 probe;
     rg.StartDetectingWater();
-    int x = mPosX;
-    int y = mPosY;
-    int z = mPosZ;
+    int x = mPos.x;
+    int y = mPos.y;
+    int z = mPos.z;
     int yk = y + 0x1f4000;
     probe.x = x;
     probe.y = yk;
@@ -113,6 +114,6 @@ int daObjAbuku_c::IsNearWaterSurface() {
 /* -------------------------------------------------------------------------- */
 void daObjAbuku_c::Pop() {
     Sound::PlayBank3(0xb, mCamSpacePos);
-    Particle::System::NewSimple(kPtclAbukuPop, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclAbukuPop, mPos.x, mPos.y, mPos.z);
     MarkForDestruction();
 }

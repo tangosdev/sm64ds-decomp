@@ -5,7 +5,7 @@
 #include "dBgActor_c.h"
 
 /* Lethal Lava Land bobbing platform (registry profile FL_UKI_KI, actor 82): a
- * dBgActor_c whose Behavior drives mPosY off the shared sine table and drags
+ * dBgActor_c whose Behavior drives mPos.y off the shared sine table and drags
  * the mesh collider along with it.
  *
  * NAME: daObjFl_UkiKi_c is the cartridge's own RTTI spelling -- _ZTS at ov022
@@ -30,10 +30,10 @@
 struct daObjFl_UkiKi_c : dBgActor_c {
     /* dBgActor_c's fields end at 0x31e; mOriginalPosY needs 4-byte alignment. */
     u8 pad_31e[0x2];
-    /* Where InitResources found the platform. Behavior rebuilds mPosY from this
+    /* Where InitResources found the platform. Behavior rebuilds mPos.y from this
        rest height plus the sine term, so the bob never accumulates drift. */
     s32 mOriginalPosY; /* 0x320 */
-    /* Seeded from mAngleX, += 0x400 per Behavior; (u16)>>4 indexes the shared
+    /* Seeded from mAngle.x, += 0x400 per Behavior; (u16)>>4 indexes the shared
        sin/cos table at arm9 0x02082214. */
     s16 mPhaseAngle; /* 0x324 */
 

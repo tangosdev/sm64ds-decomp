@@ -4,7 +4,7 @@
  */
 // Notes:
 // - unk_190 and unk_19c stay the header's names. The loose update
-//   approaches through mSpeedX/mSpeedZ, and 19c selects the entry.
+//   approaches through mSpeed.x/mSpeed.z, and 19c selects the entry.
 // - CollectMinigameKey, StartMinigameMenu and Vec3_VertAngle are arm9
 //   helpers no header declares yet.
 // - The model handle data_ov085_021305d8 is constructed by daMip_c.
@@ -76,10 +76,10 @@ int daObj_Mip_Key_c::StateCarried() {
     Vector3 v;
     v = *playerPos;
     v.y += 0xc8000;
-    ApproachLinear(mPosY, v.y, 0xa000);
+    ApproachLinear(mPos.y, v.y, 0xa000);
 
-    mPosX = v.x;
-    mPosZ = v.z;
+    mPos.x = v.x;
+    mPos.z = v.z;
     mode = data_0209d684;
 
     switch (mTalkState) {
@@ -159,10 +159,10 @@ int daObj_Mip_Key_c::StateCarried() {
 
 int daObj_Mip_Key_c::StateCarriedEnter() {
     int kind;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
-    mAngleX = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
+    mAngle.x = 0;
     kind = unk_19c;
     if (kind != 0x4d) {
         if (kind != 7) {
@@ -191,7 +191,7 @@ int daObj_Mip_Key_c::StateLoose() {
     daPly_c *player;
     Vector3 *ppos;
 
-    mAngleX += 0x1000;
+    mAngle.x += 0x1000;
     if (mStateTimer != 0) {
         return 1;
     }
@@ -210,16 +210,16 @@ int daObj_Mip_Key_c::StateLoose() {
     pp.x = ppos->x;
     pp.y = ppos->y;
     pp.z = ppos->z;
-    mPrevAngleY = Vec3_HorzAngle(&mPos, &pp);
-    mPrevAngleX = Vec3_VertAngle(&mPos, &pp);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, &pp);
+    mPrevAngle.x = Vec3_VertAngle(&mPos, &pp);
     v.z = 0x14000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
     MTX_MultVec43(&v, &data_020a0e68, &out);
-    ApproachLinear(mSpeedX, out.x, 0x1000);
-    ApproachLinear(mVertSpeed, out.y, 0x1000);
-    ApproachLinear(mSpeedZ, out.z, 0x1000);
-    if (pp.y + 0x64000 > mPosY) {
+    ApproachLinear(mSpeed.x, out.x, 0x1000);
+    ApproachLinear(mSpeed.y, out.y, 0x1000);
+    ApproachLinear(mSpeed.z, out.z, 0x1000);
+    if (pp.y + 0x64000 > mPos.y) {
         mPlayer = player;
         ChangeState(&data_ov085_0213072c);
     }
@@ -230,7 +230,7 @@ int daObj_Mip_Key_c::StateLoose() {
 
 int daObj_Mip_Key_c::StateLooseEnter() {
     mStateTimer = 10;
-    mVertSpeed = 81920;
+    mSpeed.y = 81920;
     return 1;
 }
 
@@ -251,9 +251,9 @@ void daObj_Mip_Key_c::UpdateModelAndShadow() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)(&mModel.mat4x3) = *(Mtx43 *)&data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x32000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x32000) >> 3, mPos.z >> 3);
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x23000, 0x12c000, 15);
 }
 
@@ -269,7 +269,7 @@ void daObj_Mip_Key_c::OnPendingDestroy() {}
 
 int daObj_Mip_Key_c::Render() {
     if (mState == &data_ov085_0213072c) {
-        mAngleY += 0x500;
+        mAngle.y += 0x500;
     }
     UpdateModelAndShadow();
     mModel.Render(0);
@@ -281,14 +281,14 @@ int daObj_Mip_Key_c::Behavior() {
     DecIfAbove0_Short(&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
-    int nextSpeed = mVertSpeed + mVertAccel;
+    int nextSpeed = mSpeed.y + mVertAccel;
     int capped = mTerminalVelocity;
     if (nextSpeed >= capped)
         capped = nextSpeed;
-    /* The read-back-and-store of mSpeedZ is what the ROM does; it is not dead. */
-    int unk0acCopy = mSpeedZ;
-    mVertSpeed = capped;
-    mSpeedZ = unk0acCopy;
+    /* The read-back-and-store of mSpeed.z is what the ROM does; it is not dead. */
+    int unk0acCopy = mSpeed.z;
+    mSpeed.y = capped;
+    mSpeed.z = unk0acCopy;
     UpdatePosWithOnlySpeed(0);
     return 1;
 }

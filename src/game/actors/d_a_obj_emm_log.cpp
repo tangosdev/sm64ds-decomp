@@ -2,7 +2,7 @@
 /**
  * Tiny-Huge Island rolling log -- ov052/daObjEmmLog_c (7 functions).
  *
- * ROM run 0x021111a0..0x02111440. Bobs mPosY on a sine of mBobPhase;
+ * ROM run 0x021111a0..0x02111440. Bobs mPos.y on a sine of mBobPhase;
  * nothing writes mAngle*.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
@@ -62,16 +62,16 @@ s32 daObjEmmLog_c::InitResources() {
     UpdateClsnPosAndRot();
 
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov052_021124d4.collision), mClsnMat, 0x1000,
-                          mAngleY, *data_ov052_021124d4.clps);
+                          mAngle.y, *data_ov052_021124d4.clps);
 
-    mBasePosY = mPosY;
+    mBasePosY = mPos.y;
     u8 amplitude = param1 & 0xff;
     if (amplitude == 0xff || param1 == 0)
         mBobAmplitude = 0x64000;
     else
         mBobAmplitude = amplitude * 0xa000;
 
-    mBobPhase = mAngleX;
+    mBobPhase = mAngle.x;
     return 1;
 }
 
@@ -80,7 +80,7 @@ s32 daObjEmmLog_c::Behavior() {
 
     int s = FX_SinIdx((u16)mBobPhase >> 4);
     int m = FX_MUL(mBobAmplitude, s);
-    mPosY = mBasePosY + m;
+    mPos.y = mBasePosY + m;
 
     mBobPhase += 0x200;
 

@@ -150,9 +150,9 @@ s32 daBakubaku_c::InitResources()
     headOffset.z = data_ov032_021137d8.z;
     mHeadClsn.Init(this, headOffset, 0x64000, 0x8c000, kCcEnemy | kCcCharProjectile, 0);
 
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
 
     mWithMeshClsn.Init(this, 0x64000, 0, 0, 0);
 
@@ -176,9 +176,9 @@ s32 daBakubaku_c::Behavior()
     if (state->main != 0)
         (this->*(state->main))();
 
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdatePos(&mBodyClsn);
     UpdateWMClsn(mWithMeshClsn, 0);
     UpdateModelMatrix();
@@ -228,12 +228,9 @@ void daBakubaku_c::UpdateModelMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(
-        &data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
-    Matrix4x3_FromTranslation(
-        &data_020a0e68, mPosX >> 3,
-        (mPosY - 0x5a000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x5a000) >> 3, mPos.z >> 3);
     mShadowMat = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0xfa000, 0x258000, 0xf);
 }
@@ -271,9 +268,9 @@ int daBakubaku_c::ExecuteWander() {
         ang = Vec3_HorzAngle(&mPos, &mSpawnPos);
         mAngTarget = ang;
     }
-    ApproachLinear(mPrevAngleY, mAngTarget, 0x100);
+    ApproachLinear(mPrevAngle.y, mAngTarget, 0x100);
     ang = Vec3_VertAngle(&mPos, &mSpawnPos);
-    ApproachLinear(mPrevAngleX, ang, 0x100);
+    ApproachLinear(mPrevAngle.x, ang, 0x100);
     in.z = 0;
     in.z = 0x5000;
     in.x = 0;
@@ -281,10 +278,10 @@ int daBakubaku_c::ExecuteWander() {
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
     MTX_MultVec43(&in, &data_020a0e68, &out);
-    mVertSpeed = out.y;
+    mSpeed.y = out.y;
     if (FindChaseTarget() == 1) {
         SetState(&data_ov032_02113aac);
         return 1;
@@ -305,9 +302,9 @@ int daBakubaku_c::EnterPause() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = ((r >> 8) & 0x1f) + 20;
     mAnmModel.speed = 0x1000;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     return 1;
 }
 
@@ -343,14 +340,14 @@ int daBakubaku_c::ExecuteChase() {
     mAngTarget = Vec3_HorzAngle(&mPos, &mTargetPos);
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
     int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
-    ApproachLinear(mPrevAngleY, mAngTarget, 0x200);
+    ApproachLinear(mPrevAngle.y, mAngTarget, 0x200);
     if (Vec3_HorzDist(&mPos, &mTargetPos) < 0x258000) {
-        int d = AngleDiff(mAngleY, mAngTarget);
+        int d = AngleDiff(mAngle.y, mAngTarget);
         if (d < (int)(short)(s5 + 0x200)) {
             mAngTarget = Vec3_VertAngle(&mPos, &mTargetPos);
             mFlags = 0;
             mAnmModel.speed = 0x1000;
-            mDiveStartY = mPosY;
+            mDiveStartY = mPos.y;
             mStateTimer = 0;
             mHorzSpeed = 0x14000;
             unk_429 = 0;
@@ -380,10 +377,10 @@ int daBakubaku_c::EnterDive() {
 int daBakubaku_c::ExecuteDive() {
     s16 speed;
     speed = 0x3000;
-    if (data_0209f32c - 0x64000 > mPosY)
+    if (data_0209f32c - 0x64000 > mPos.y)
         speed = 0;
     if (mLungePhase == 0) {
-        if (data_0209f32c > mPosY) {
+        if (data_0209f32c > mPos.y) {
             if (mAngTarget > 0)
                 mLungePhase = 1;
         }
@@ -394,9 +391,9 @@ int daBakubaku_c::ExecuteDive() {
             Vector3 splashPosition;
             Vector3 forwardOffset;
             Vector3 rotatedOffset;
-            splashPosition.x = mPosX;
-            splashPosition.y = mPosY;
-            splashPosition.z = mPosZ;
+            splashPosition.x = mPos.x;
+            splashPosition.y = mPos.y;
+            splashPosition.z = mPos.z;
             forwardOffset.z = 0;
             forwardOffset.x = 0;
             forwardOffset.y = 0;
@@ -404,7 +401,7 @@ int daBakubaku_c::ExecuteDive() {
             rotatedOffset.y = 0;
             rotatedOffset.z = 0;
             forwardOffset.z = 0xa0000;
-            Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+            Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
             MTX_MultVec43(&forwardOffset, &data_020a0e68, &rotatedOffset);
             splashPosition.x += rotatedOffset.x;
             splashPosition.z += rotatedOffset.z;
@@ -422,9 +419,9 @@ int daBakubaku_c::ExecuteDive() {
     if (ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         speed = 0;
         mHorzSpeed = 0;
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
     } else {
         Vector3 in2;
         Vector3 out2;
@@ -435,21 +432,21 @@ int daBakubaku_c::ExecuteDive() {
         out2.x = 0;
         out2.y = 0;
         out2.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
         MTX_MultVec43(&in2, &data_020a0e68, &out2);
-        mVertSpeed = out2.y;
+        mSpeed.y = out2.y;
     }
     ApproachLinear(mAngTarget, speed, 0x200);
-    ApproachLinear(mPrevAngleX, mAngTarget, 0x200);
+    ApproachLinear(mPrevAngle.x, mAngTarget, 0x200);
     if (mAnmModel.Finished() != 0) {
         mMouthOpen = 0;
         if (speed == 0) {
-            s16 a = mPrevAngleX;
+            s16 a = mPrevAngle.x;
             if (a < 0) a = -a;
             if (a < 0x100) {
                 mChaseCooldown = 100;
-                mAngTarget = mAngleY;
+                mAngTarget = mAngle.y;
                 mFlags = 3; /* profile clip bits 1|2 */
                 mBodyClsn.flags &= ~kCcCharMove;
                 mHeadClsn.flags &= ~kCcCharMove;
@@ -485,9 +482,9 @@ int daBakubaku_c::ExecuteSurface() {
 
     if (ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         mHorzSpeed = 0;
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
     } else {
         Vector3 in;
         Vector3 out;
@@ -498,22 +495,22 @@ int daBakubaku_c::ExecuteSurface() {
         out.x = 0;
         out.y = 0;
         out.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
         MTX_MultVec43(&in, &data_020a0e68, &out);
-        mVertSpeed = out.y;
+        mSpeed.y = out.y;
     }
 
     /* Once the lunge has started or the bite animation is over, level out
        and go back to wandering; until then, pitch toward the player. */
     if (mLungePhase != 0 || mAnmModel.Finished() != 0) {
-        ApproachLinear(mPrevAngleX, 0, 0x200);
+        ApproachLinear(mPrevAngle.x, 0, 0x200);
         mLungePhase = 1;
         mMouthOpen = 0;
-        if (AngleDiff(mPrevAngleX, 0) < 0x200) {
-            mPrevAngleX = 0;
+        if (AngleDiff(mPrevAngle.x, 0) < 0x200) {
+            mPrevAngle.x = 0;
             mChaseCooldown = 100;
-            mAngTarget = mAngleY;
+            mAngTarget = mAngle.y;
             mFlags = 3;
             mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
             SetState(&data_ov032_02113a8c);
@@ -521,14 +518,14 @@ int daBakubaku_c::ExecuteSurface() {
     } else {
         Vector3 vec;
         unsigned int n;
-        const s32 *playerPos = &r5->mPosX;
+        const s32 *playerPos = &r5->mPos.x;
         vec.x = playerPos[0];
         vec.y = playerPos[1];
         vec.z = playerPos[2];
-        if (data_0209f32c > mPosY) {
-            ApproachLinear(mPrevAngleX, 0, 0x200);
+        if (data_0209f32c > mPos.y) {
+            ApproachLinear(mPrevAngle.x, 0, 0x200);
         } else {
-            ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &vec), 0x200);
+            ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &vec), 0x200);
         }
         n = (unsigned int)(mAnmModel.currFrame << 4) >> 0x10;
         if (n > 0x14 && n < 0x3c)
@@ -595,9 +592,9 @@ void daBakubaku_c::HandleCylinderHit() {
     if (mState == &data_ov032_02113a7c) return;
 
     Vector3 hv;
-    hv.x = mPosX;
-    hv.y = mPosY;
-    hv.z = mPosZ;
+    hv.x = mPos.x;
+    hv.y = mPos.y;
+    hv.z = mPos.z;
     f2->Hurt(hv, 2, 0xc000, 1, 0, 1);
 }
 
@@ -611,7 +608,8 @@ int daBakubaku_c::ShouldReturnHome() {
     if (Vec3_HorzDist(&mSpawnPos, &mPos) > 0x4b0000)
         return 1;
     if (mState != &data_ov032_02113abc) {
-        if (data_0209f32c < mPosY) return 1;
+        if (data_0209f32c < mPos.y)
+            return 1;
     }
     return 0;
 }

@@ -2,7 +2,7 @@
 /* Koopa the Quick (daRNk_c), ov062 0x0211975c..0x0211af38. He waits, offers
  * a race, runs the path to the flag, and talks about who arrived first.
  * param1's low nibble is the path id; bits 4..9 and 10..15 are jump nodes.
- * mAngleX's low nibble is the star number. Highest address first. The
+ * mAngle.x's low nibble is the star number. Highest address first. The
  * destructor is inline, so D1 then D0 come from daRNk_c.h.
  */
 // leftovers:
@@ -206,17 +206,17 @@ int daRNk_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     SET_ANIM(this, ANIM_IDLE, kAnimLoop);
-    mScaleX = 0x14cc;   /* 0x14cc / 0x1000 = ~1.3 (1.2998) */
-    mScaleY = 0x14cc;
-    mScaleZ = 0x14cc;
+    mScale.x = 0x14cc; /* 0x14cc / 0x1000 = ~1.3 (1.2998) */
+    mScale.y = 0x14cc;
+    mScale.z = 0x14cc;
     /* Body cylinder: radius 120 units, height 300 units. */
     mdCcAc_c.Init(this, 0x78000, 0x12c000, 0x800004, 0);
     mState = 0;
     unk_3aa = 0;
     mHasFinished = 0;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mVertAccel = -0x2000;           /* gravity: 2 units a frame squared */
     mTerminalVelocity = -0x3c000;   /* 60 units a frame */
     /* Mesh collision: 120 units by 120 units. */
@@ -224,9 +224,9 @@ int daRNk_c::InitResources()
     mPathPtr.FromID(param1 & 0xf);
     mNumPathPts = mPathPtr.NumNodes();
     mCurPathPt = 0;
-    mPrevPathPt.x = mPosX;
-    mPrevPathPt.y = mPosY;
-    mPrevPathPt.z = mPosZ;
+    mPrevPathPt.x = mPos.x;
+    mPrevPathPt.y = mPos.y;
+    mPrevPathPt.z = mPos.z;
     mPathPtr.GetNode(mPathTarget, mCurPathPt);
     mHasPlayerUsedCannon = 0;
     mPathPtToJumpAt1 = ((param1 >> 4) + 1) & 0x3f;
@@ -235,7 +235,7 @@ int daRNk_c::InitResources()
         mPathPtToJumpAt1 = 0xff;
     if (mPathPtToJumpAt2 <= 1)
         mPathPtToJumpAt2 = 0xff;
-    mStarID = mAngleX & 0xf;
+    mStarID = mAngle.x & 0xf;
     mTrackedStar = TrackStar(mStarID, 2);
     mFlagID = 0;
     mPlayer = 0;
@@ -261,14 +261,14 @@ int daRNk_c::CleanupResources()
 }
 
 /* Per frame: run the handler for mState, advance the animation, put the
-   steered heading (mPrevAngleY) into mAngleY, move and collide, refresh the
+   steered heading (mPrevAngle.y) into mAngle.y, move and collide, refresh the
    body cylinder and draw the drop shadow. */
 int daRNk_c::Behavior()
 {
     StateFunc *states = data_ov062_0211e0a4;
     (this->*states[mState])();
     mAnmModel.Advance();
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     UpdatePos(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     mdCcAc_c.Clear();
@@ -293,7 +293,7 @@ void daRNk_c::func_ov062_0211aac0(){
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
     /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
     *(Mtx43 *)&this->mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(this->mShadowModel, this->mAnmModel.mat4x3, 0xa0000, 0xa0000, 0xf);
@@ -345,7 +345,7 @@ void daRNk_c::func_ov062_0211a9c4()
 }
 
 /* STATE_OFFER_RACE. Offer the race after the player finishes talking.
- *   step 0  turn toward the player (0x800 a frame, mAngleY following); once
+ *   step 0  turn toward the player (0x800 a frame, mAngle.y following); once
  *           facing, switch to the talk animation, play the cue, and for Mario
  *           note it in mIsTalkingToMario (func_02012790(0xa) is called too;
  *           its meaning is not recovered)
@@ -362,7 +362,7 @@ void daRNk_c::func_ov062_0211a740()
 {
     switch (this->mStep) {
     case 0:
-        if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0) {
+        if (ApproachLinear(this->mPrevAngle.y, this->mTargetAngleY, kTurnStep) != 0) {
             SET_ANIM(this, ANIM_TALK, kAnimLoop);
             this->mStep += 1;
             func_0201267c(kSfxTurnToTalk, &this->mCamSpacePos);
@@ -371,7 +371,7 @@ void daRNk_c::func_ov062_0211a740()
                 this->mIsTalkingToMario = 1;
             }
         }
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngle.y;
         return;
     case 1:
         if (this->mPlayer->GetTalkState() != 0)
@@ -388,9 +388,9 @@ void daRNk_c::func_ov062_0211a740()
             }
 
             {
-                int z = this->mPosZ;
-                int y = this->mPosY + kMsgAnchorHeight;
-                int x = this->mPosX;
+                int z = this->mPos.z;
+                int y = this->mPos.y + kMsgAnchorHeight;
+                int x = this->mPos.x;
                 v.x = x;
                 v.y = y;
                 v.z = z;
@@ -496,7 +496,7 @@ void daRNk_c::func_ov062_0211a1f4()
            floor tilts (atan2 of the floor normal's x and z) is at least 0x6000
            (135 degrees), scale by normalY * 7 - 6 (1.0 on level ground, less
            on a slope); otherwise full speed (1.0). */
-        if (this->GetSubtraction(this->mPrevAngleY,
+        if (this->GetSubtraction(this->mPrevAngle.y,
                                  cstd::atan2(this->mFloorNormal.x, this->mFloorNormal.z)) >= 0x6000)
             speedScale = this->mFloorNormal.y * 7 - 0x6000;
         else
@@ -524,7 +524,7 @@ void daRNk_c::func_ov062_0211a1f4()
             int acc = speedMul * 0x6000;
             ApproachLinear(this->mHorzSpeed, FX_MUL(acc, speedScale), speedMul * 0x19a);
         }
-        ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep);
+        ApproachLinear(this->mPrevAngle.y, this->mTargetAngleY, kTurnStep);
         if (this->mAnmModel.file == (BCA_File *)ANIM_RUN) {
             this->mAnmModel.speed = this->mHorzSpeed >> 3;
         } else {
@@ -551,7 +551,7 @@ void daRNk_c::func_ov062_0211a1f4()
         /* Walked off an edge: kick up 10 units a frame, keep 0xd00/0x1000 (81%)
            of his speed, and go to the in-the-air step. */
         SET_ANIM(this, ANIM_JUMP, kAnimPlayOnce);
-        this->mVertSpeed = 0xa000;
+        this->mSpeed.y = 0xa000;
         this->mHorzSpeed = FX_MUL(this->mHorzSpeed, 0xd00);
         this->mStep = 3;
         return;
@@ -567,7 +567,7 @@ void daRNk_c::func_ov062_0211a1f4()
             SET_ANIM(this, ANIM_LAND, kAnimPlayOnce);
             return;
         }
-        ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep);
+        ApproachLinear(this->mPrevAngle.y, this->mTargetAngleY, kTurnStep);
         if (this->mWithMeshClsn.IsOnGround() == 0)
             return;
         this->mStep = 2;
@@ -672,9 +672,9 @@ void daRNk_c::func_ov062_02119be0() {
         this->mRestartTalk = 0;
         return;
     case 1:
-        if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0)
+        if (ApproachLinear(this->mPrevAngle.y, this->mTargetAngleY, kTurnStep) != 0)
             this->mStep++;
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngle.y;
         return;
     case 2:
         if (this->mPlayer->param1 == 0) {
@@ -696,9 +696,9 @@ void daRNk_c::func_ov062_02119be0() {
         x = this->mPlayer->GetTalkState();
         if (x != 0)
             return;
-        x = this->mPosX;
-        z = this->mPosZ;
-        y = this->mPosY + kMsgAnchorHeight;
+        x = this->mPos.x;
+        z = this->mPos.z;
+        y = this->mPos.y + kMsgAnchorHeight;
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
@@ -712,9 +712,9 @@ void daRNk_c::func_ov062_02119be0() {
         SET_ANIM(this, ANIM_IDLE, kAnimLoop);
         this->mStateTimer = 60;
         if (this->mPlayerWon != 0) {
-            starPos.x = this->mPosX;
-            starPos.y = this->mPosY;
-            starPos.z = this->mPosZ;
+            starPos.x = this->mPos.x;
+            starPos.y = this->mPos.y;
+            starPos.z = this->mPos.z;
             starPos.y += kStarSpawnHeight;
             this->UntrackAndSpawnStar(this->mTrackedStar, this->mStarID, starPos, 4);
             return;
@@ -743,9 +743,9 @@ void daRNk_c::func_ov062_02119be0() {
         this->mStep++;
         return;
     case 6:
-        if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0)
+        if (ApproachLinear(this->mPrevAngle.y, this->mTargetAngleY, kTurnStep) != 0)
             this->mStep++;
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngle.y;
         return;
     case 7: {
         daPly_c *p = this->mPlayer;
@@ -757,9 +757,9 @@ void daRNk_c::func_ov062_02119be0() {
         if (x != 0)
             return;
     }
-        x = this->mPosX;
-        z = this->mPosZ;
-        y = this->mPosY + kMsgAnchorHeight;
+        x = this->mPos.x;
+        z = this->mPos.z;
+        y = this->mPos.y + kMsgAnchorHeight;
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
@@ -796,12 +796,12 @@ int daRNk_c::func_ov062_02119af0() {
     int prevZ;
 
     targetX = p->mPathTarget.x;
-    posX = p->mPosX;
+    posX = p->mPos.x;
     prevX = p->mPrevPathPt.x;
     dx = targetX - posX;
     dxc = targetX - prevX;  /* computed here, not after dz: first-use order drives the allocator under propagation (the standalone .c used #pragma opt_propagation off instead, which is file-final in a merged TU) */
     targetZ = p->mPathTarget.z;
-    posZ = p->mPosZ;
+    posZ = p->mPos.z;
     prevZ = p->mPrevPathPt.z;
     dz = targetZ - posZ;
     dzc = targetZ - prevZ;
@@ -857,8 +857,8 @@ int daRNk_c::func_ov062_021199ac()
 
     angle = Vec3_HorzAngle(&this->mPos, &other->mPos);
     dist = Vec3_Dist(&this->mPos, &other->mPos);
-    selfAngle = this->mPrevAngleY;
-    otherAngle = other->mPrevAngleY;
+    selfAngle = this->mPrevAngle.y;
+    otherAngle = other->mPrevAngle.y;
     idx = (u16)(s16)(otherAngle - selfAngle);
     tableVal = FX_CosIdx(idx >> 4);
     otherK = other->mHorzSpeed;
@@ -893,7 +893,7 @@ ret0:
 void daRNk_c::func_ov062_02119954()
 {
     SET_ANIM(this, ANIM_JUMP, kAnimPlayOnce);
-    this->mVertSpeed = 0x2d000;
+    this->mSpeed.y = 0x2d000;
     this->mVertAccel = -0x4000;
     this->mStep = 3;
 }
@@ -912,7 +912,7 @@ void daRNk_c::func_ov062_02119800()
             return;
         func_0201267c(kSfxFootstep, &this->mCamSpacePos);
         this->mFootstepDone = 1;
-        s16 ang = this->mAngleY + 0x4000; /* a quarter turn: the sideways direction */
+        s16 ang = this->mAngle.y + 0x4000; /* a quarter turn: the sideways direction */
         Vector3 pos = this->mPos;
         pos.y += 0x1e000;
         if (kind <= 8) {

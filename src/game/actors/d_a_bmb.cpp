@@ -25,7 +25,7 @@
  * - mWithMeshClsn.SetRadius / SetHeight are out of line. Storing mRadius /
  *   mHeight directly drops the call.
  * - func_ov102_0214b53c reads the eating
- *   player (mEatingPlayer, not the carrier): mPos, mAngleX/Y/Z, mHeadMatrix
+ *   player (mEatingPlayer, not the carrier): mPos, mAngle.x/.y/.z, mHeadMatrix
  *   and mHeadBoneRot, which d_a_ply_methods.cpp fills from bone 15's
  *   rotX/rotY/rotZ.
  * - ov078/daBombking_c writes mHurtDamage and mDetonate by those names.
@@ -106,7 +106,7 @@ extern unsigned char gGameMode;
 }
 void GiveCoins(int who, int count);
 int SurfaceInfo_TestFlag0x20(int *si);
-int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
+#include "BgChEvt.h"
 
 /* ==========================================================================
  *
@@ -190,15 +190,15 @@ int daBmb_c::InitResources()
         mCoinType = 1;
     }
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
     mTurnTimer = 0;
     mFuse = 0;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mCarrier = 0;
     mTurnCount = 0;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
@@ -207,7 +207,7 @@ int daBmb_c::InitResources()
     mCarryMatrix = 0;
     mHurtDamage = 2;
     mDetonate = 0;
-    mHomeAngleY = mAngleY;
+    mHomeAngleY = mAngle.y;
     return 1;
 }
 
@@ -391,13 +391,13 @@ void daBmb_c::State0() {
             func_ov102_0214b988();
             if (mChasePlayer != 0) {
                 mHorzSpeed = 0;
-                mVertSpeed = 0x14000;
+                mSpeed.y = 0x14000;
                 mState = 2;
             } else {
                 if (mVariant == 5) {
                     s16 ang = Vec3_HorzAngle(&mPos, &mHomePos);
-                    ApproachLinear(mPrevAngleY, ang, 0x200);
-                    mAngleY = mPrevAngleY;
+                    ApproachLinear(mPrevAngle.y, ang, 0x200);
+                    mAngle.y = mPrevAngle.y;
                 } else {
                     if (mTurnTimer == 0 || Vec3_Dist(&mPos, &mHomePos) >= 0x500000) {
                         mHorzSpeed = 0x5000;
@@ -412,10 +412,10 @@ void daBmb_c::State0() {
                 /* daPly_c::mGrabbedByActor: stop turning toward a held player. */
                 int b = (mChasePlayer->mGrabbedByActor != 0);
                 if (b)
-                    target = mPrevAngleY;
+                    target = mPrevAngle.y;
             }
-            ApproachLinear(mPrevAngleY, target, 0x800);
-            mAngleY = mPrevAngleY;
+            ApproachLinear(mPrevAngle.y, target, 0x800);
+            mAngle.y = mPrevAngle.y;
         }
         mAnmModel.speed = mHorzSpeed >> 3;
     }
@@ -457,15 +457,15 @@ void daBmb_c::func_ov102_0214beb4() {
 void daBmb_c::State1() {
     if (mChasePlayer == 0) {
         mAnmModel.speed = 0x800;
-        ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x400);
+        ApproachLinear(mPrevAngle.y, (short)mTargetAngY, 0x400);
     } else {
         mAnmModel.speed = 0x1000;
-        ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x800);
+        ApproachLinear(mPrevAngle.y, (short)mTargetAngY, 0x800);
     }
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mAnmModel.dExtFrameCtrl_c::Advance();
     if (mState == 2) return;
-    if (mPrevAngleY != (short)mTargetAngY)
+    if (mPrevAngle.y != (short)mTargetAngY)
         return;
     func_ov102_0214c0b8();
 }
@@ -479,9 +479,9 @@ void daBmb_c::State1() {
 void daBmb_c::func_ov102_0214bd90(){
   if (mWithMeshClsn.JustHitGround()) {
     struct Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     func_0200fc44(&v, 1);
   }
   if (mWithMeshClsn.IsOnGround()) {
@@ -572,7 +572,7 @@ void daBmb_c::func_ov102_0214bc20() {
         if ((unsigned)idx > 4) idx = 4;
     }
     mHorzSpeed = a1.v[idx];
-    mVertSpeed = a2.v[idx];
+    mSpeed.y = a2.v[idx];
     mState = 4;
     mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
     mVertAccel = -0x2000;
@@ -612,28 +612,28 @@ void daBmb_c::func_ov102_0214baa0() {
     mdCc_c.Clear();
 
     mFlags &= 0xfff1fffe;
-    mPosX = mHomePos.x;
-    mPosY = mHomePos.y;
-    mPosZ = mHomePos.z;
+    mPos.x = mHomePos.x;
+    mPos.y = mHomePos.y;
+    mPos.z = mHomePos.z;
     mShouldRender = 0;
     mChasePlayer = 0;
     mCarrier = 0;
     mFuse = 0;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
-    mAngleX = 0;
-    mAngleY = 0;
-    mAngleZ = 0;
-    mPrevAngleX = 0;
-    mPrevAngleY = 0;
-    mPrevAngleZ = 0;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
+    mAngle.x = 0;
+    mAngle.y = 0;
+    mAngle.z = 0;
+    mPrevAngle.x = 0;
+    mPrevAngle.y = 0;
+    mPrevAngle.z = 0;
 
     {
         s16 angle = *(s16 *)&mHomeAngleY;
-        mAngleY = angle;
-        s16 copy = mAngleY;
-        mPrevAngleY = copy;
+        mAngle.y = angle;
+        s16 copy = mAngle.y;
+        mPrevAngle.y = copy;
     }
 
     mdCc_c.flags &= ~0x4002;
@@ -685,7 +685,7 @@ void daBmb_c::func_ov102_0214b988() {
         const Vector3 &p = pl->mPos;
         v = p;
     }
-    if (AngleDiff(Vec3_HorzAngle(&mPos, &v), mAngleY) >= mNoticeAngle)
+    if (AngleDiff(Vec3_HorzAngle(&mPos, &v), mAngle.y) >= mNoticeAngle)
         return;
     mChasePlayer = pl;
     func_ov102_0214b384(0x96);
@@ -738,10 +738,10 @@ void daBmb_c::func_ov102_0214b53c() {
             mCarryOff[0] = 0;
             mCarryOff[1] = 0;
             mCarryOff[2] = 0;
-            Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-            mAnmModel.mat4x3.m[9] = mPosX >> 3;
-            mAnmModel.mat4x3.m[10] = mPosY >> 3;
-            mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+            Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+            mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+            mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+            mAnmModel.mat4x3.m[11] = mPos.z >> 3;
         }
     }
     int haveMtx2 = (int)((mFlags & 0x4000) != 0);
@@ -797,7 +797,7 @@ void daBmb_c::UpdateShadow() {
     if (b)
         return;
 
-    v = mPosY;
+    v = mPos.y;
     if (mWithMeshClsn.IsOnGround() == 0) {
         dBgCh_Gnd rg;
         rg.SetObjAndPos(mPos, (dActor_c *)0);
@@ -811,16 +811,16 @@ void daBmb_c::UpdateShadow() {
             daPly_c *p = mCarrier;
             if (p != 0) {
                 if (p->mCarryMatrix != 0)
-                    v = p->mPosY;
+                    v = p->mPos.y;
             }
         }
     }
 
-    mMatrix[9] = mPosX >> 3;
+    mMatrix[9] = mPos.x >> 3;
     mMatrix[10] = v >> 3;
-    mMatrix[11] = mPosZ >> 3;
+    mMatrix[11] = mPos.z >> 3;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mMatrix, mScaleX * 0x50, 0x1e000, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
 }
 
 /* ==========================================================================
@@ -849,7 +849,7 @@ void daBmb_c::func_ov102_0214b3b8() {
     if (mState != 3)
         return;
     func_ov102_0214bc20();
-    mPrevAngleY = mCarrier->mAngleY;
+    mPrevAngle.y = mCarrier->mAngle.y;
     mCarrier = 0;
 }
 }
@@ -891,14 +891,14 @@ int daBmb_c::UpdateFuse() {
             }
             {
                 int v = ((5 - mFuse) << 12) / 4 + 0x1000;
-                mScaleZ = v;
-                mScaleY = mScaleZ;
-                mScaleX = mScaleY;
+                mScale.z = v;
+                mScale.y = mScale.z;
+                mScale.x = mScale.y;
                 mdCc_c.radius = v * 0x3c;
                 mdCc_c.height = v * 0x50;
                 mWithMeshClsn.SetRadius(v * 0x3c);
                 mWithMeshClsn.SetHeight(v * 0x3c);
-                func_ov002_020ef228(&mWithMeshClsn, this);
+                ((BgChEvt *)&mWithMeshClsn)->func_ov002_020ef228(this);
             }
             {
                 mdCc_c.flags &= ~4;
@@ -942,7 +942,7 @@ void daBmb_c::func_ov102_0214b128() {
         dActor_c *hitter = dActor_c::FindWithID(mdCc_c.otherOwner);
         if (!hitter) return;
         func_ov102_0214bc20();
-        mPrevAngleY = hitter->mAngleY;
+        mPrevAngle.y = hitter->mAngle.y;
         UpdatePos(&mdCc_c);
         mWithMeshClsn.ClearGroundFlag();
     }
@@ -988,10 +988,10 @@ void daBmb_c::func_ov102_0214ae1c() {
     Vector3 v;
     int y, z, w;
     mdCc_c.flags &= ~0x8000;
-    y = mPosY;
-    z = mPosZ;
+    y = mPos.y;
+    z = mPos.z;
     w = y + 0x78000;
-    v.x = mPosX;
+    v.x = mPos.x;
     v.y = w;
     v.z = z;
     if (mCoinType) {
@@ -999,19 +999,19 @@ void daBmb_c::func_ov102_0214ae1c() {
         mCoinType = 0;
     }
     func_0201267c(0x10c, &mCamSpacePos);
-    v.y = mPosY + 0x64000;
+    v.y = mPos.y + 0x64000;
     Particle::System::NewSimple(kPtclBobOmbExplodeA, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeB, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeC, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeD, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeE, v.x, v.y, v.z);
-    func_ov002_020ef228(&mWithMeshClsn, this);
+    ((BgChEvt *)&mWithMeshClsn)->func_ov002_020ef228(this);
     if (mCarrier) {
         Vector3 w;
         mCarrier->DropActor();
-        w.x = mPosX;
-        w.y = mPosY;
-        w.z = mPosZ;
+        w.x = mPos.x;
+        w.y = mPos.y;
+        w.z = mPos.z;
         mCarrier->Hurt(w, 2, 0xc000, 1, 0, 1);
         mCarrier = 0;
     } else if (mdCc_c.otherOwner) {
@@ -1019,18 +1019,18 @@ void daBmb_c::func_ov102_0214ae1c() {
         if (a) {
             if (mdCc_c.hitFlags & 0x400000) {
                 Vector3 w;
-                w.x = mPosX;
-                w.y = mPosY;
-                w.z = mPosZ;
+                w.x = mPos.x;
+                w.y = mPos.y;
+                w.z = mPos.z;
                 ((daPly_c *)a)->Hurt(w, mHurtDamage, 0xc000, 1, 0, 1);
             }
         }
     }
     if (mEatingPlayer) {
         Vector3 w;
-        w.x = mPosX;
-        w.y = mPosY;
-        w.z = mPosZ;
+        w.x = mPos.x;
+        w.y = mPos.y;
+        w.z = mPos.z;
         mEatingPlayer->Hurt(w, mHurtDamage, 0xc000, 1, 0, 1);
         mEatingPlayer->func_ov002_020d718c();
         mEatingPlayer = 0;
@@ -1057,7 +1057,7 @@ void daBmb_c::OnTurnIntoEgg(daPly_c &player) {
 void daBmb_c::func_ov102_0214ad40() {
     if ((unsigned char)(mVariant + 0xfe) > 1)
         return;
-    if (mPosY >= mHomePos.y - 0x12c000)
+    if (mPos.y >= mHomePos.y - 0x12c000)
         return;
     {
         unsigned short v = mFuse;
@@ -1184,9 +1184,9 @@ int daBmb_c::func_ov102_0214aa18() {
         mdCc_c.dCc_c::Update();
         if (mWithMeshClsn.JustHitGround()) {
             Vector3 v;
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             func_0200fc44(&v, 1);
         }
         if (mWithMeshClsn.IsOnGround() == 0)

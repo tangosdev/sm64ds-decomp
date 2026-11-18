@@ -29,8 +29,8 @@
  * Everything below 0x0d4 duplicated dActor_c's own fields under placeholder
  * names -- dActor_c ends at exactly 0x0d4. Consumer fields were repointed to
  * the inherited dActor_c/fBase_c names: mParam -> param1, unk_08e ->
- * mAngleY, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
- * mFlags (mPosX/Y/Z and mScaleX/Y/Z already shared dActor_c's names).
+ * mAngle.y, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
+ * mFlags (mPos and mScale already shared dActor_c's names).
  *
  * mShadowModel was mistyped `u8` at 0x174 in the generated header --
  * daObjPowerUpItem_c_classInit calls _ZN17dExtShadowModel_cC1Ev at that offset, so it is the
@@ -74,7 +74,7 @@ struct daObjPowerUpItem_c : dActor_c {
        first argument each frame, cleared to 0 when a state ends. */
     u32 mEffectHandle;            /* 0x3c4 */
     /* Angle stepped by 0x2000 per frame while the flower is popping; its top
-       twelve bits index the s16 table FX_SinCosTable_ that scales mScaleX/Y. */
+       twelve bits index the s16 table FX_SinCosTable_ that scales mScale.x/Y. */
     u16 mWobbleAngle;            /* 0x3c8 */
     /* Seeded 0xb4 (180 frames, three seconds) in InitResources. Render skips
        drawing on odd values once it is below 0x2d, so the flower blinks through

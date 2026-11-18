@@ -32,6 +32,7 @@
 #include "SaveBlock.h"
 #include "dCamera_c.h"
 #include "daPly_c.h"
+#include "daDoor_c.h"
 
 extern signed char data_ov002_02110af0;
 extern signed char gCurrentAreaId;
@@ -47,7 +48,6 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short angle, const Vector3 *v);
 }
 u8 NumStars(void);
-int func_ov100_02144f84(void);
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` inherits fBase_c::operator new. */
 /* -------------------------------------------------------------------------- */
@@ -65,7 +65,7 @@ int daMugenBGM_c::InitResources() {
     const daMugenBGM_c *ro = this;
     param1 = ro->param1 & 15;
     if (param1 != 1) {
-        data_ov002_02110af4 = mAngleY;
+        data_ov002_02110af4 = mAngle.y;
         p = ::operator new(0x28);
         data_ov002_02110af8 = p;
         if (p != 0) {
@@ -74,7 +74,7 @@ int daMugenBGM_c::InitResources() {
         data_ov002_02110af0 = mAreaId;
     }
     mAreaId = -1;
-    mAngleY = -mAngleY;
+    mAngle.y = -mAngle.y;
     return 1;
 }
 
@@ -88,7 +88,7 @@ int daMugenBGM_c::Behavior() {
     Vector3 rotated;
 
     Vec3_Sub(&diff, &gPlayers[gLocalPlayerId]->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&rotated, &data_020a0ebc, mAngleY, &diff);
+    Vec3_RotateYAndTranslate(&rotated, &data_020a0ebc, mAngle.y, &diff);
 
     if (param1 == 1) {
         int z = rotated.z;
@@ -120,7 +120,7 @@ int daMugenBGM_c::Behavior() {
                 int d;
                 vol = 0;
                 flag = 127;
-                d = AngleDiff(mAngleY, gCamera->mAngleY) - 0x2000;
+                d = AngleDiff(mAngle.y, gCamera->mAngleY) - 0x2000;
                 if (d < 0)
                     d = 0;
                 else if (d > 0x4000)
@@ -139,7 +139,7 @@ int daMugenBGM_c::Behavior() {
     }
 
     if (mHorzSpeed == 0) {
-        if (func_ov100_02144f84() == 0)
+        if (daDoor_c::func_ov100_02144f84() == 0)
             return 1;
         mHorzSpeed = 1;
     }

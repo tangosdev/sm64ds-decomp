@@ -25,7 +25,7 @@
  *   func_ov077_021251d0 call a destructor the cartridge does not.
  *
  * deslop leftovers:
- * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPosX/Y/Z is -4
+ * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPos.x/.y/.z is -4
  *   (0x17c->0x178, 0xac->0xa8). The ROM keeps add #0x5c then [0]/[4]/[8].
  */
 #include "decl_common.h"
@@ -99,17 +99,6 @@ extern int data_0209f32c;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern signed char gCurrentSublevel;
 }
-int func_ov077_02124c28(daTgz_c *self);
-void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn);
-void func_ov077_021251d0(daTgz_c *self);
-void func_ov077_02125290(daTgz_c *self);
-void func_ov077_02125e20(daTgz_c *self);
-void func_ov077_02125e5c(daTgz_c *self);
-void func_ov077_02125e94(daTgz_c *self, int state);
-int func_ov077_02124ce4(daTgz_c *self);
-void func_ov077_02124eb0(daTgz_c *self);
-void func_ov077_021250a8(daTgz_c *self);
-void func_ov077_02125304(daTgz_c *self);
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
@@ -135,41 +124,41 @@ int daTgz_c::OnAimedAtWithEgg()
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height in mWaterY. Returns how far above it the Spiny is (0 while
  * nothing has been found). */
-int func_ov077_02124c28(daTgz_c *self) {
-    if (self->mWaterY == 0) {
+int daTgz_c::func_ov077_02124c28() {
+    if (this->mWaterY == 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
         {
-            int y = self->mPosY;
-            int z = self->mPosZ;
+            int y = this->mPos.y;
+            int z = this->mPos.z;
             int y2 = y + 0xc8000;
-            int x = self->mPosX;
+            int x = this->mPos.x;
             pos.x = x;
             pos.y = y2;
             pos.z = z;
         }
-        rg.SetObjAndPos(pos, self);
+        rg.SetObjAndPos(pos, this);
         rg.StartDetectingWater();
         if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0)
-            self->mWaterY = rg.clsnY;
+            this->mWaterY = rg.clsnY;
         else
             return 0;
         rg.StopDetectingWater();
     }
-    return self->mPosY - self->mWaterY;
+    return this->mPos.y - this->mWaterY;
 }
 
 /* Is the Spiny below the cached water surface? */
-int func_ov077_02124ce4(daTgz_c *self) {
-    int waterY = self->mWaterY;
+int daTgz_c::func_ov077_02124ce4() {
+    int waterY = this->mWaterY;
     if (waterY == 0)
         return 0;
-    return waterY > self->mPosY;
+    return waterY > this->mPos.y;
 }
 
 /* Toxic floor destroys the Spiny. A sloped floor rewrites vertical speed
- * from mSpeedX/mSpeedZ and pitches mAngleX/mAngleZ to the normal. */
-void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
+ * from mSpeed.x/mSpeed.z and pitches mAngle.x/mAngle.z to the normal. */
+void daTgz_c::func_ov077_02124d08(dBgCh_Actr *clsn) {
     Vector3 pos;
     Vector3 normal;
     Vector3 wallnormal;
@@ -178,20 +167,20 @@ void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         dBgCh_Gnd rc;
         {
-            int actorY = self->mPosY;
-            int pz = self->mPosZ;
+            int actorY = this->mPos.y;
+            int pz = this->mPos.z;
             int py = actorY + 0xc8000;
-            pos.x = self->mPosX;
+            pos.x = this->mPos.x;
             pos.y = py;
             pos.z = pz;
         }
         rc.StartDetectingToxic();
-        rc.SetObjAndPos(pos, self);
+        rc.SetObjAndPos(pos, this);
         if (rc.DetectClsn()) {
-            if (func_02037e20((int *)&rc.surface) != 0 && self->mPosY < rc.clsnY) {
-                self->PoofDust();
-                func_02012694(0xc4, &self->mCamSpacePos);
-                self->MarkForDestruction();
+            if (func_02037e20((int *)&rc.surface) != 0 && this->mPos.y < rc.clsnY) {
+                this->PoofDust();
+                func_02012694(0xc4, &this->mCamSpacePos);
+                this->MarkForDestruction();
                 return;
             }
             {
@@ -199,13 +188,13 @@ void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
                 fr->surface.CopyNormalTo(normal);
             }
             if (normal.y != 0) {
-                self->mVertSpeed =
-                    -(FX_Div(FX_MUL(normal.x, self->mSpeedX) + FX_MUL(normal.z, self->mSpeedZ),
+                this->mSpeed.y =
+                    -(FX_Div(FX_MUL(normal.x, this->mSpeed.x) + FX_MUL(normal.z, this->mSpeed.z),
                              normal.y) +
                       0x8000);
             }
-            self->mAngleX = self->func_02010844(&normal, self->mAngleY);
-            self->mAngleZ = self->func_02010844(&normal, (self->mAngleY - 0x4000));
+            this->mAngle.x = this->func_02010844(&normal, this->mAngle.y);
+            this->mAngle.z = this->func_02010844(&normal, (this->mAngle.y - 0x4000));
         }
     }
     if (clsn->IsOnWall()) {
@@ -216,24 +205,24 @@ void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
 
 /* Hit response while walking or spinning. Egg and the knock-up destroy or
  * launch; a shell / metal / attack hit in state 1 starts the chase. */
-void func_ov077_02124eb0(daTgz_c *self) {
+void daTgz_c::func_ov077_02124eb0() {
     daPly_c *player;
     int b;
 
-    if (self->FindEgg(self->mdCcAc_c) != 0) {
+    if (this->FindEgg(this->mdCcAc_c) != 0) {
         int v[3];
-        v[0] = self->mPosX;
-        v[1] = self->mPosY;
-        v[2] = self->mPosZ;
-        self->SpawnCoins(*(const Vector3 *)v, 1, 0x2000, 0);
-        self->PoofDust();
-        func_02012694(0xc4, &self->mCamSpacePos);
-        self->MarkForDestruction();
+        v[0] = this->mPos.x;
+        v[1] = this->mPos.y;
+        v[2] = this->mPos.z;
+        this->SpawnCoins(*(const Vector3 *)v, 1, 0x2000, 0);
+        this->PoofDust();
+        func_02012694(0xc4, &this->mCamSpacePos);
+        this->MarkForDestruction();
         return;
     }
 
     {
-        unsigned int id = self->mdCcAc_c.otherOwner;
+        unsigned int id = this->mdCcAc_c.otherOwner;
         if (id == 0)
             return;
         player = (daPly_c *)dActor_c::FindWithID(id);
@@ -245,47 +234,45 @@ void func_ov077_02124eb0(daTgz_c *self) {
     if (b == 0)
         return;
 
-    b = ((self->mFlags & 0x20000) != 0);
+    b = ((this->mFlags & 0x20000) != 0);
     if (b != 0) {
-        func_ov077_02125e94(self, 3);
+        this->func_ov077_02125e94(3);
         return;
     }
 
     /* 0x403c0 = punch | kick | breakdance | slide kick | fire. */
-    if ((self->mdCcAc_c.hitFlags & 0x403c0)
-        || player->IsOnShell() != 0
-        || player->mIsMetal != 0) {
-        if (self->mState != 1)
+    if ((this->mdCcAc_c.hitFlags & 0x403c0) || player->IsOnShell() != 0 || player->mIsMetal != 0) {
+        if (this->mState != 1)
             return;
-        Sound::PlayBank0(0xb5, self->mCamSpacePos);
-        self->mChasePlayer = player;
-        func_ov077_02125e94(self, 2);
+        Sound::PlayBank0(0xb5, this->mCamSpacePos);
+        this->mChasePlayer = player;
+        this->func_ov077_02125e94(2);
         return;
     }
 
-    if (self->mdCcAc_c.hitFlags & 0x10) {
-        self->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &self->mPos);
+    if (this->mdCcAc_c.hitFlags & 0x10) {
+        this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
         player->IncMegaKillCount();
-        func_ov077_02125e94(self, 5);
+        this->func_ov077_02125e94(5);
         return;
     }
 
-    if (self->mState == 4)
+    if (this->mState == 4)
         return;
 
     {
         int v[3];
-        v[0] = self->mPosX;
-        v[1] = self->mPosY;
-        v[2] = self->mPosZ;
+        v[0] = this->mPos.x;
+        v[1] = this->mPos.y;
+        v[2] = this->mPos.z;
         player->Hurt(*(const Vector3 *)v, 2, 0xc000, 1, 0, 1);
     }
 }
 
 /* Hit response during the thrown spin. Mega turns it to face away and
  * knocks it up; fire is ignored; anything else hurts the player. */
-void func_ov077_021250a8(daTgz_c *self) {
-    unsigned int id = self->mdCcAc_c.otherOwner;
+void daTgz_c::func_ov077_021250a8() {
+    unsigned int id = this->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
     daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
@@ -294,91 +281,91 @@ void func_ov077_021250a8(daTgz_c *self) {
     int b1 = (player->actorID == 0xbf);
     if (b1 == 0)
         return;
-    int b2 = ((self->mFlags & 0x20000) != 0);
+    int b2 = ((this->mFlags & 0x20000) != 0);
     if (b2 != 0) {
-        func_ov077_02125e94(self, 3);
+        this->func_ov077_02125e94(3);
         return;
     }
-    int flags = self->mdCcAc_c.hitFlags;
+    int flags = this->mdCcAc_c.hitFlags;
     if ((flags & 0x10) != 0) {
-        self->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &self->mPos);
-        self->mAngleY = self->mPrevAngleY + 0x8000;
+        this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
+        this->mAngle.y = this->mPrevAngle.y + 0x8000;
         player->IncMegaKillCount();
-        func_ov077_02125e94(self, 5);
+        this->func_ov077_02125e94(5);
         return;
     }
     if ((flags & 0x40000) != 0)
         return;
     Vector3 v;
-    v.x = self->mPosX;
-    v.y = self->mPosY;
-    v.z = self->mPosZ;
+    v.x = this->mPos.x;
+    v.y = this->mPos.y;
+    v.z = this->mPos.z;
     player->Hurt(v, 2, 0xc000, 1, 0, 1);
 }
 
 /* Tumble matrix: translate to pos>>3, up by the egg-aim height, rotate, then
  * back down by that height, and keep the result on the anim model's matrix. */
-void func_ov077_021251d0(daTgz_c *self) {
+void daTgz_c::func_ov077_021251d0() {
     int v[3];
-    Vec3_Asr(reinterpret_cast<Vector3 *>(v), &self->mPos, 3);
+    Vec3_Asr(reinterpret_cast<Vector3 *>(v), &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    int aimHeight = self->OnAimedAtWithEgg();
+    int aimHeight = this->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
-    int aimHeightAgain = self->OnAimedAtWithEgg();
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                           this->mAngle.z);
+    int aimHeightAgain = this->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-aimHeightAgain) >> 3, 0);
-    self->mAnmModel.mat4x3 = data_020a0e68;
+    this->mAnmModel.mat4x3 = data_020a0e68;
 }
 
 /* Upright matrix on the still model in states 0 and 4, otherwise on the anim. */
-void func_ov077_02125290(daTgz_c *self) {
-    int v = self->mState;
+void daTgz_c::func_ov077_02125290() {
+    int v = this->mState;
     int b = 1;
     Matrix4x3 *m;
     if (v != 0)
         b = (v == 4);
     if (b)
-        m = &self->mModel.mat4x3;
+        m = &this->mModel.mat4x3;
     else
-        m = &self->mAnmModel.mat4x3;
-    Matrix4x3_FromRotationZXYExt(m, self->mAngleX, self->mAngleY, self->mAngleZ);
-    m->m[9] = self->mPosX >> 3;
-    m->m[10] = self->mPosY >> 3;
-    m->m[11] = self->mPosZ >> 3;
+        m = &this->mAnmModel.mat4x3;
+    Matrix4x3_FromRotationZXYExt(m, this->mAngle.x, this->mAngle.y, this->mAngle.z);
+    m->m[9] = this->mPos.x >> 3;
+    m->m[10] = this->mPos.y >> 3;
+    m->m[11] = this->mPos.z >> 3;
 }
 
-void func_ov077_02125304(daTgz_c *self) {
-    int b = ((self->mFlags & 0x40000) != 0);
+void daTgz_c::func_ov077_02125304() {
+    int b = ((this->mFlags & 0x40000) != 0);
     if (b != 0)
         return;
-    if (self->mState == 5)
-        func_ov077_021251d0(self);
+    if (this->mState == 5)
+        this->func_ov077_021251d0();
     else
-        func_ov077_02125290(self);
-    self->mShadowMatrix.a[9] = self->mPosX >> 3;
-    self->mShadowMatrix.a[10] = self->mPosY >> 3;
-    self->mShadowMatrix.a[11] = self->mPosZ >> 3;
-    self->DropShadowRadHeight(self->mShadowModel, *(Matrix4x3 *)&self->mShadowMatrix, 0x50000,
+        this->func_ov077_02125290();
+    this->mShadowMatrix.a[9] = this->mPos.x >> 3;
+    this->mShadowMatrix.a[10] = this->mPos.y >> 3;
+    this->mShadowMatrix.a[11] = this->mPos.z >> 3;
+    this->DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMatrix, 0x50000,
                               0x320000, 0xf);
 }
 
 /* State 5 update: tumble backward until the ground or the 45-frame timer. */
 int daTgz_c::func_ov077_021253a4() {
-    mAngleX = mAngleX - 0x1000;
+    mAngle.x = mAngle.x - 0x1000;
     mAnmModel.dExtFrameCtrl_c::Advance();
     UpdatePos(&mdCcAc_c);
 
-    if (mHorzSpeed >= mWithMeshClsn.mRadius || mVertSpeed >= mWithMeshClsn.mRadius)
+    if (mHorzSpeed >= mWithMeshClsn.mRadius || mSpeed.y >= mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.JustHitGround() || DecIfAbove0_Byte(&mActionTimer) == 0) {
         Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         SpawnCoins(v, 1, 0x2000, 0);
         PoofDust();
         func_02012694(0xc4, &mCamSpacePos);
@@ -391,16 +378,16 @@ int daTgz_c::func_ov077_021253a4() {
 int daTgz_c::func_ov077_02125480() {
     Sound::PlayBank0(9, mCamSpacePos);
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0x28000;
-    mAngleX = 0;
-    mAngleZ = 0;
+    mSpeed.y = 0x28000;
+    mAngle.x = 0;
+    mAngle.z = 0;
     mActionTimer = 45;
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int aimHeight = OnAimedAtWithEgg();
-    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + aimHeight, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y + aimHeight, mPos.z);
     int aimHeightAgain = OnAimedAtWithEgg();
-    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + aimHeightAgain, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y + aimHeightAgain, mPos.z);
     mState = 5;
     return 1;
 }
@@ -411,33 +398,33 @@ int daTgz_c::func_ov077_02125550() {
     int x, y, z;
     int d;
 
-    mAngleX = mAngleX + 0x4e20;
+    mAngle.x = mAngle.x + 0x4e20;
 
-    if (mHorzSpeed >= mWithMeshClsn.mRadius || mVertSpeed >= mWithMeshClsn.mRadius)
+    if (mHorzSpeed >= mWithMeshClsn.mRadius || mSpeed.y >= mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.JustHitGround()) {
-        mVertSpeed = mVertSpeed * -0x3c / 100;
-        if (mVertSpeed > 0x8000) {
-            x = mPosX;
-            y = mPosY + 0x28000;
-            z = mPosZ;
+        mSpeed.y = mSpeed.y * -0x3c / 100;
+        if (mSpeed.y > 0x8000) {
+            x = mPos.x;
+            y = mPos.y + 0x28000;
+            z = mPos.z;
             vec.x = x;
             vec.y = y;
             vec.z = z;
             Particle::System::NewSimple(kPtclLandingDust, vec.x, vec.y, vec.z);
             func_0201267c(0x109, &mCamSpacePos);
         } else {
-            mVertSpeed = 0;
-            mAngleX = 0;
+            mSpeed.y = 0;
+            mAngle.x = 0;
             mWithMeshClsn.ClearLimMovFlag();
-            func_ov077_02125e94(this, 1);
+            this->func_ov077_02125e94(1);
         }
     }
 
-    d = mWaterY ? mPosY - mWaterY : 0;
+    d = mWaterY ? mPos.y - mWaterY : 0;
     if (d < -0xc8000) {
         PoofDust();
         func_02012694(0x166, &mCamSpacePos);
@@ -445,7 +432,7 @@ int daTgz_c::func_ov077_02125550() {
     }
 
     UpdatePos(&mdCcAc_c);
-    func_ov077_02124eb0(this);
+    this->func_ov077_02124eb0();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -462,35 +449,35 @@ int daTgz_c::func_ov077_021256b4() {
 
     mFlags &= ~0x80000;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
 
     carrier = mEatingPlayer;
-    carrierYaw = carrier->mAngleY;
-    mAngleX = 0;
-    mAngleY = carrierYaw;
-    mAngleZ = 0;
+    carrierYaw = carrier->mAngle.y;
+    mAngle.x = 0;
+    mAngle.y = carrierYaw;
+    mAngle.z = 0;
 
-    mPrevAngleY = mAngleY;
+    mPrevAngle.y = mAngle.y;
 
     carrier = mEatingPlayer;
     one = 1;
-    int *src = &carrier->mPosX;
-    mPosX = src[0];
-    mPosY = src[1];
-    mPosZ = src[2];
+    int *src = &carrier->mPos.x;
+    mPos.x = src[0];
+    mPos.y = src[1];
+    mPos.z = src[2];
 
-    sinv = FX_SinIdx((u16)mAngleY >> 4);
-    mPosX = mPosX + FX_MUL(sinv, 0x3c000);
-    mPosY = mPosY + 0x85000;
-    cosv = FX_CosIdx((u16)mAngleY >> 4);
-    mPosZ = mPosZ + FX_MUL(cosv, 0x3c000);
+    sinv = FX_SinIdx((u16)mAngle.y >> 4);
+    mPos.x = mPos.x + FX_MUL(sinv, 0x3c000);
+    mPos.y = mPos.y + 0x85000;
+    cosv = FX_CosIdx((u16)mAngle.y >> 4);
+    mPos.z = mPos.z + FX_MUL(cosv, 0x3c000);
 
     carrier = mEatingPlayer;
     {
-        int ty = carrier->mPosY;
-        int tz = carrier->mPosZ;
+        int ty = carrier->mPos.y;
+        int tz = carrier->mPos.z;
         int ty2 = ty + 0x50000;
-        int tx = carrier->mPosX;
+        int tx = carrier->mPos.x;
         v.x = tx;
         v.y = ty2;
         v.z = tz;
@@ -511,18 +498,18 @@ int daTgz_c::func_ov077_02125830() {
         dActor_c *carrier = mEatingPlayer;
         /* Address of the triple, then [0]/[4]/[8]. Three field loads fold the
            0x5c into the ldr and drop the add the ROM kept. */
-        int *src = &carrier->mPosX;
-        mPosX = src[0];
-        mPosY = src[1];
-        mPosZ = src[2];
+        int *src = &carrier->mPos.x;
+        mPos.x = src[0];
+        mPos.y = src[1];
+        mPos.z = src[2];
     }
     {
         int flags = mFlags;
         if (((flags & 0x80000) ? 1 : 0) != 0)
-            func_ov077_02125e94(this, 4);
+            this->func_ov077_02125e94(4);
         else if (((flags & 0x20000) ? 1 : 0) == 0 && ((flags & 0x40000) ? 1 : 0) == 0) {
             mEatingPlayer = 0;
-            func_ov077_02125e94(this, 1);
+            this->func_ov077_02125e94(1);
         }
     }
     return 1;
@@ -542,17 +529,17 @@ int daTgz_c::func_ov077_02125908() {
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround() != 0)
-        mVertSpeed = mVertSpeed * -50 / 100;
+        mSpeed.y = mSpeed.y * -50 / 100;
     else if (mWithMeshClsn.IsOnGround() != 0) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mChasePlayer = 0;
-        mPrevAngleY = mAngleY;
-        func_ov077_02125e94(this, 1);
+        mPrevAngle.y = mAngle.y;
+        this->func_ov077_02125e94(1);
     }
 
     if (mWaterY != 0)
-        v = mPosY - mWaterY;
+        v = mPos.y - mWaterY;
     else
         v = 0;
 
@@ -564,7 +551,7 @@ int daTgz_c::func_ov077_02125908() {
 
     mAnmModel.dExtFrameCtrl_c::Advance();
     UpdatePos(&mdCcAc_c);
-    func_ov077_02124eb0(this);
+    this->func_ov077_02124eb0();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -573,9 +560,9 @@ int daTgz_c::func_ov077_02125908() {
 /* State 2 entry: hop toward the player that just hit us. */
 int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
-    mVertSpeed = 0xd000;
+    mSpeed.y = 0xd000;
     short ang = Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
-    mPrevAngleY = ang;
+    mPrevAngle.y = ang;
     mWithMeshClsn.SetLimMovFlag();
     mState = 2;
     return 1;
@@ -584,12 +571,12 @@ int daTgz_c::func_ov077_02125a0c() {
 /* State 1 update: walk, turning toward mTurnTarget, until the timer expires. */
 int daTgz_c::func_ov077_02125a54() {
     int d;
-    ApproachLinear(mAngleY, mTurnTarget, 0x64);
-    mPrevAngleY = mAngleY;
+    ApproachLinear(mAngle.y, mTurnTarget, 0x64);
+    mPrevAngle.y = mAngle.y;
     mAnmModel.dExtFrameCtrl_c::Advance();
-    func_ov077_02124eb0(this);
+    this->func_ov077_02124eb0();
     if (mWaterY)
-        d = mPosY - mWaterY;
+        d = mPos.y - mWaterY;
     else
         d = 0;
     if (d < -0xc8000) {
@@ -598,11 +585,11 @@ int daTgz_c::func_ov077_02125a54() {
         MarkForDestruction();
     }
     UpdatePos(&mdCcAc_c);
-    func_ov077_02124d08(this, &mWithMeshClsn);
+    this->func_ov077_02124d08(&mWithMeshClsn);
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     if (DecIfAbove0_Byte(&mActionTimer) == 0)
-        func_ov077_02125e94(this, 1);
+        this->func_ov077_02125e94(1);
     return 1;
 }
 
@@ -626,19 +613,19 @@ int daTgz_c::func_ov077_02125bb4() {
     int x, y, z;
     Vector3 vec;
 
-    mAngleX = mAngleX + 0x4e20;
+    mAngle.x = mAngle.x + 0x4e20;
     UpdatePos(&mdCcAc_c);
-    func_ov077_021250a8(this);
+    this->func_ov077_021250a8();
     mWithMeshClsn.SetLimMovFlag();
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
-    underwater = func_ov077_02124ce4(this);
+    underwater = this->func_ov077_02124ce4();
     if (underwater) {
         if (mInWater == 0) {
             func_02012694(0xe2, &mCamSpacePos);
-            Particle::System::NewBigSplash(mPosX, data_0209f32c, mPosZ);
+            Particle::System::NewBigSplash(mPos.x, data_0209f32c, mPos.z);
             mRippleId =
-                Particle::System::New(mRippleId, kPtclRipple, mPosX, data_0209f32c, mPosZ, 0, 0);
+                Particle::System::New(mRippleId, kPtclRipple, mPos.x, data_0209f32c, mPos.z, 0, 0);
         }
         mVertAccel = -0x400;
         mTerminalVelocity = -0x5000;
@@ -651,24 +638,24 @@ int daTgz_c::func_ov077_02125bb4() {
     mInWater = underwater;
 
     if (mWithMeshClsn.JustHitGround()) {
-        mVertSpeed = (mVertSpeed * -0x3c) / 100;
-        d = mWaterY ? mPosY - mWaterY : 0;
+        mSpeed.y = (mSpeed.y * -0x3c) / 100;
+        d = mWaterY ? mPos.y - mWaterY : 0;
         if (d < -0xc8000) {
             PoofDust();
             func_02012694(0x166, &mCamSpacePos);
             MarkForDestruction();
-        } else if (mVertSpeed < 0xa000) {
-            mVertSpeed = 0;
-            mAngleX = mPrevAngleX;
-            mAngleY = mPrevAngleY;
-            mAngleZ = mPrevAngleZ;
+        } else if (mSpeed.y < 0xa000) {
+            mSpeed.y = 0;
+            mAngle.x = mPrevAngle.x;
+            mAngle.y = mPrevAngle.y;
+            mAngle.z = mPrevAngle.z;
             mWithMeshClsn.ClearLimMovFlag();
             mFlags |= 0x10000000u;
-            func_ov077_02125e94(this, 1);
+            this->func_ov077_02125e94(1);
         } else {
-            x = mPosX;
-            y = mPosY + 0x28000;
-            z = mPosZ;
+            x = mPos.x;
+            y = mPos.y + 0x28000;
+            z = mPos.z;
             vec.x = x;
             vec.y = y;
             vec.z = z;
@@ -687,25 +674,25 @@ int daTgz_c::func_ov077_02125dd4() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x4000;
-    mVertSpeed = 0x19000;
+    mSpeed.y = 0x19000;
     mWithMeshClsn.SetLimMovFlag();
     mState = 0;
     return 1;
 }
 
-void func_ov077_02125e20(daTgz_c *self) {
-    TgzState *p = (TgzState *)self->mStateDesc + 1;
-    (self->* *p)();
+void daTgz_c::func_ov077_02125e20() {
+    TgzState *p = (TgzState *)this->mStateDesc + 1;
+    (this->**p)();
 }
 
-void func_ov077_02125e5c(daTgz_c *self) {
-    TgzState *p = (TgzState *)self->mStateDesc;
-    (self->* *p)();
+void daTgz_c::func_ov077_02125e5c() {
+    TgzState *p = (TgzState *)this->mStateDesc;
+    (this->**p)();
 }
 
-void func_ov077_02125e94(daTgz_c *self, int i) {
-    self->mStateDesc = &gTgzStates[i];
-    func_ov077_02125e5c(self);
+void daTgz_c::func_ov077_02125e94(int i) {
+    this->mStateDesc = &gTgzStates[i];
+    this->func_ov077_02125e5c();
 }
 
 int daTgz_c::CleanupResources()
@@ -746,11 +733,11 @@ int daTgz_c::Behavior()
                 break;
             }
         }
-        func_ov077_02124c28(this);
-        func_ov077_02125e20(this);
+        this->func_ov077_02124c28();
+        this->func_ov077_02125e20();
         MakeVanishLuigiWork(mdCcAc_c);
-        func_ov077_02125304(this);
-        if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
+        this->func_ov077_02125304();
+        if (gCurrentSublevel == 0x1c && mPos.y <= -0x1600000) {
             PoofDust();
             func_02012694(0xc4, &mCamSpacePos);
             MarkForDestruction();
@@ -772,13 +759,13 @@ int daTgz_c::InitResources()
         return 0;
     mdCcAc_c.Init(this, 0x2d000, 0x3c000, 0x200000, 0x4a3d0);
     mWithMeshClsn.Init(this, 0x2d000, 0, &mPrevAngle, &mAngle);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mDespawnTimer = 44;
-    func_ov077_02125e94(this, 0);
+    this->func_ov077_02125e94(0);
     mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
-    func_ov077_02125304(this);
+    this->func_ov077_02125304();
     return 1;
 }
 

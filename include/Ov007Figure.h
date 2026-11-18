@@ -28,6 +28,13 @@ struct Ov007Figure {
      * func_ov007_020b0a20 installs func_ov007_020b0da0 there, which clears
      * it when its motion ends */
     void (*update)(Ov007Figure *);
+#ifdef __cplusplus
+    void func_ov007_020beb80();
+    void func_ov007_020bea44();
+    void func_ov007_020be9ac(struct Ov007Model *owner, void *viewMatrix);
+    void func_ov007_020be980(int anim, int a2);
+    int func_ov007_020be964();
+#endif
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -86,7 +86,7 @@ s32 daObjWlKoopaShutter_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *k = dBgW_Kc::LoadFile(BowserShutter_ClsnFile);
-        mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, data_ov026_02112f74);
+        mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y, data_ov026_02112f74);
     }
     if (data_0209caa0.file.flags1 & 0x204)
         return 0;

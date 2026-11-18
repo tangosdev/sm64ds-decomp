@@ -57,7 +57,7 @@ struct daObjSm_Lift_c : dBgActor_c {
     virtual s32 Render();                         /* slot  9 */
     virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 
-    /* Place the model at mPos, turned by mAngleY and mAngleX plus a quarter
+    /* Place the model at mPos, turned by mAngle.y and mAngle.x plus a quarter
        turn of yaw. */
     void UpdateModelTransform();
     /* The collider's stood-on hook: remember a touching player.

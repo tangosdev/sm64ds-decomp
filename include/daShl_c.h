@@ -43,7 +43,7 @@ struct daShl_c : dEnemyBase_c {
        compares it against the four file-scope records by ADDRESS. */
     ShlState *mState;          /* 0x3ac */
     /* Where it was spawned: InitResources copies mPos here verbatim, and
-       Behavior stashes mPrevAngleY into mSpawnAngleY when the shell is spat
+       Behavior stashes mPrevAngle.y into mSpawnAngleY when the shell is spat
        back out of Yoshi's mouth. */
     Vector3 mSpawnPos;         /* 0x3b0 */
     s16 mSpawnAngleY;          /* 0x3bc */

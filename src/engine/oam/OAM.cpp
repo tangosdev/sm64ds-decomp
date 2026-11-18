@@ -63,19 +63,19 @@ int func_0202043c(void *thiz);
 
 /* -------------------------------------------------------------------------- */
 
-void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine) {
-    anim->frames = (const OamAnimFrame *)src[0];
-    anim->frameCount = src[1];
-    func_0202043c(anim);
-    anim->palette = -1;
-    anim->priority = -1;
-    anim->scaleX = 0x1000;
-    anim->scaleY = 0x1000;
-    anim->rotation = 0;
-    anim->loops = loops;
-    anim->enabled = enabled;
-    anim->affine = affine;
-    anim->screen = screen;
+void OamAnimation::func_02020820(int *src, int screen, int loops, u8 enabled, u8 affine) {
+    this->frames = (const OamAnimFrame *)src[0];
+    this->frameCount = src[1];
+    func_0202043c(this);
+    this->palette = -1;
+    this->priority = -1;
+    this->scaleX = 0x1000;
+    this->scaleY = 0x1000;
+    this->rotation = 0;
+    this->loops = loops;
+    this->enabled = enabled;
+    this->affine = affine;
+    this->screen = screen;
 }
 
 /* -------------------------------------------------------------------------- */

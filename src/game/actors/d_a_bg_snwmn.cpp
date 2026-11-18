@@ -82,22 +82,22 @@ s32 daBgSnwmn_c::InitResources() {
 
     mCylClsn.Init(this, data_ov072_02122c70, 0xc3000, 0x17c000, 0x800004, 0);
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn())
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
-    mPosY += 0xc3000;
+        mPos.y = pos.y;
+    mPos.y += 0xc3000;
     mVertAccel = 0;
     mTerminalVelocity = 0;
-    mScaleX = 0x1800;
-    mScaleY = 0x1800;
-    mScaleZ = 0x1800;
+    mScale.x = 0x1800;
+    mScale.y = 0x1800;
+    mScale.z = 0x1800;
     UpdateModelTransform();
     return 1;
 }
@@ -127,15 +127,15 @@ s32 daBgSnwmn_c::CleanupResources() {
 }
 
 void daBgSnwmn_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mModel1.mat4x3, mAngleY);
-    mModel1.mat4x3.t.x = mPosX >> 3;
-    mModel1.mat4x3.t.y = (mPosY + 0x13b000) >> 3;
-    mModel1.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mModel1.mat4x3, mAngle.y);
+    mModel1.mat4x3.t.x = mPos.x >> 3;
+    mModel1.mat4x3.t.y = (mPos.y + 0x13b000) >> 3;
+    mModel1.mat4x3.t.z = mPos.z >> 3;
 
-    Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngleY);
-    mModel2.mat4x3.t.x = mPosX >> 3;
-    mModel2.mat4x3.t.y = mPosY >> 3;
-    mModel2.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngle.y);
+    mModel2.mat4x3.t.x = mPos.x >> 3;
+    mModel2.mat4x3.t.y = mPos.y >> 3;
+    mModel2.mat4x3.t.z = mPos.z >> 3;
 
     DropShadowRadHeight(mShadow, mModel2.mat4x3, 0xe6000, 0x12c000, 15);
 }

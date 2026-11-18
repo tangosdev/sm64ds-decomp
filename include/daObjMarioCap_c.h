@@ -107,7 +107,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
        has lost the cap), 2 = the hat has been handed over, waiting for the
        animation to end. 0 for an ordinary pickup. */
     u8  mTakenStep;                             /* 0x401 */
-    /* 1 while the cap is scaling in after its icon bit came on: mScaleX
+    /* 1 while the cap is scaling in after its icon bit came on: mScale.x
        starts at 0 and chases mPopScale, which itself settles to 1.0. Cleared
        once the cap is on the ground at full scale. */
     u8  mPopIn;                                 /* 0x402 */
@@ -124,7 +124,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
        nothing in this file reads it back. */
     s32 unk_408;                                /* 0x408 */
     /* Pop-in scale target, fix12: starts at 0x2000 (2.0), eased toward 0x1000
-       (1.0) at 0x200 a frame while mScaleX chases it at 0x400 a frame. */
+       (1.0) at 0x200 a frame while mScale.x chases it at 0x400 a frame. */
     s32 mPopScale;                              /* 0x40c */
 
     /* INLINE, AND DECLARED FIRST. The cartridge puts D1 at 0x020b6f18 below

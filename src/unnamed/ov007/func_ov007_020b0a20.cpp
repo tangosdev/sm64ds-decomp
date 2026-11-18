@@ -16,8 +16,6 @@ extern "C" int func_ov007_020aebac(void);
 extern "C" void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern "C" void func_ov007_020b1fa4(int preset);
 extern void func_ov007_020b0da0(Ov007Figure *figure);
-extern "C" void func_ov007_020be980(Ov007Figure *fig, int anim, int a2);
-extern "C" int func_ov007_020be964(Ov007Figure *fig);
 extern "C" void func_ov007_020c0638(void *layer, int x, int y, unsigned short tile);
 extern void MenuText_ClearMainPlane(void);
 extern "C" int func_ov007_020bdeb0(int idx);
@@ -50,8 +48,8 @@ extern "C" void func_ov007_020b0a20(void) {
         RequestScreenFade(4, 6, 0);
         func_ov007_020b1fa4(4);
         WORK->figure->update = func_ov007_020b0da0;
-        func_ov007_020be980(WORK->figure, 1, 0);
-        func_ov007_020be964(WORK->figure);
+        WORK->figure->func_ov007_020be980(1, 0);
+        WORK->figure->func_ov007_020be964();
         func_ov007_020c0638(WORK->layerSlots[6]->layer, 0, 0, 0);
         MenuText_ClearMainPlane();
         model->scale.z = (func_ov007_020aebac() == 0) ? 0xDAC : 0x1770;
@@ -71,7 +69,7 @@ extern "C" void func_ov007_020b0a20(void) {
     }
     if (WORK->figure->update == 0) {
         if (model->boneAnim->state != 0) {
-            func_ov007_020be980(WORK->figure, 1, 0);
+            WORK->figure->func_ov007_020be980(1, 0);
         } else if (noSaveFiles != 0) {
             /* scale falls from 0x1770 to 0xdac over frames 0x10..0x14 */
             int shrink = RangeRatio(model->boneAnim->frame, 0x10, 0x14);
@@ -98,7 +96,7 @@ extern "C" void func_ov007_020b0a20(void) {
         } else {
             func_ov007_020bde70(0x33, 0x1E);
         }
-        func_ov007_020be964(WORK->figure);
+        WORK->figure->func_ov007_020be964();
         model->boneAnim->framePos = (model->boneAnim->frameCount - 1) << 12;
     }
     if (startFade != 0) {

@@ -127,7 +127,6 @@ extern "C" void func_02030a78(void);
 extern "C" void func_02030a6c(void);
 void func_020337ec(void);
 int TouchArea_Update(void *, int);
-void func_ov001_020ab3f0(void *);
 
 extern u8 data_0208f274;
 extern OamAttr *data_0208a0f8[];
@@ -226,7 +225,6 @@ extern "C" void func_02030994(void);
 extern "C" void func_020201c0(void);
 void func_0202048c(OamAnimation *dst, int a, int b);
 extern "C" void func_02020768(char *thiz);
-void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine);
 void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
 extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 mode, u32 arg3);
@@ -436,9 +434,9 @@ s32 dScEntry_c::InitResultResources() {
         } while (j < 4);
     }
     if (found >= 0) {
-        func_02032f9c((s8)(u8)found);
+        Message::func_02032f9c((s8)(u8)found);
     } else {
-        func_02033390(1);
+        Message::func_02033390(1);
     }
 
     k = 0;
@@ -448,7 +446,7 @@ s32 dScEntry_c::InitResultResources() {
         base = (4 - n) * 0x40 + 0xa5;
         do {
             unsigned char ch = func_02030958(k);
-            func_02033464((unsigned short)(base + acc), (signed char)ch, 1);
+            Message::func_02033464((unsigned short)(base + acc), (signed char)ch, 1);
             k = k + 1;
             acc = acc + step;
         } while (k < n);
@@ -597,7 +595,7 @@ void dScEntry_c::EnterSettingsSync() {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     gSubScreenLayers &= ~1;
     ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
-    func_020338b0(0x145, 0xb0, 0x1d, -1);
+    Message::func_020338b0(0x145, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
     mIconCount = 0;
     func_02020334();
@@ -662,14 +660,14 @@ void dScEntry_c::UpdateSoundSettings() {
                     else
                         newmode = (mode + 1) & 0xff;
                     mIcons[1].mOn = 0;
-                    func_ov001_020ab3f0(&mIcons[1]);
+                    mIcons[1].func_ov001_020ab3f0();
                 } else {
                     if (mode == 0)
                         newmode = 2;
                     else
                         newmode = (mode - 1) & 0xff;
                     mIcons[0].mOn = 0;
-                    func_ov001_020ab3f0(&mIcons[0]);
+                    mIcons[0].func_ov001_020ab3f0();
                 }
                 SetSoundMode(newmode);
                 Message::DisplayOptionsMenuTextVS((GetSoundMode() + 9));
@@ -890,7 +888,7 @@ void dScEntry_c::EnterControlSettings() {
     else
         SetBg2Offset(0, 256);
 
-    func_02033bb8(5);
+    Message::func_02033bb8(5);
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 5;
     G2_SetBlendBrightness(0xb, ~5);
@@ -904,7 +902,7 @@ void dScEntry_c::EnterQuitMessage() {
         gMainScreenLayers & ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     gSubScreenLayers = gSubScreenLayers & (~1);
     ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
-    func_020338b0(0x145, 0xb0, 0x17, -1);
+    Message::func_020338b0(0x145, 0xb0, 0x17, -1);
     gSubScreenLayers = gSubScreenLayers | 5;
     mIconCount = 0;
     G2_SetBlendBrightness(0x1f, ~5);
@@ -1026,7 +1024,7 @@ void dScEntry_c::UpdateRematchSync() {
 void dScEntry_c::EnterRematchSync() {
     gSubScreenLayers &= ~1;
     ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
-    func_020338b0(0x145, 0xb0, 0x1d, -1);
+    Message::func_020338b0(0x145, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
     mIconCount = 0;
     if (data_0209fc58 == 0) {
@@ -1271,15 +1269,15 @@ void dScEntry_c::EnterResults() {
 
     if (data_0209b2f0[id] != 0) {
         LoadCompressedFileAt(0x8404, G2S_GetBG3ScrPtr());
-        func_02020820(&mOamAnimations[0], &data_ov075_0211ca64, 1, 1, 1, 1);
-        func_02020820(&mOamAnimations[1], &data_ov075_0211ca6c, 1, 0, 0, 0);
-        func_02020820(&mOamAnimations[2], &data_ov075_0211ca74, 1, 1, 1, 1);
+        mOamAnimations[0].func_02020820(&data_ov075_0211ca64, 1, 1, 1, 1);
+        mOamAnimations[1].func_02020820(&data_ov075_0211ca6c, 1, 0, 0, 0);
+        mOamAnimations[2].func_02020820(&data_ov075_0211ca74, 1, 1, 1, 1);
     } else {
         LoadCompressedFileAt(0x8401, G2S_GetBG3ScrPtr());
-        func_02020820(&mOamAnimations[0], &data_ov075_0211cc44, 1, 1, 1, 1);
-        func_02020820(&mOamAnimations[1], &data_ov075_0211cc4c, 1, 0, 0, 0);
-        func_02020820(&mOamAnimations[2], &data_ov075_0211cc54, 1, 0, 0, 0);
-        func_02020820(&mOamAnimations[3], &data_ov075_0211cc5c, 1, 0, 0, 0);
+        mOamAnimations[0].func_02020820(&data_ov075_0211cc44, 1, 1, 1, 1);
+        mOamAnimations[1].func_02020820(&data_ov075_0211cc4c, 1, 0, 0, 0);
+        mOamAnimations[2].func_02020820(&data_ov075_0211cc54, 1, 0, 0, 0);
+        mOamAnimations[3].func_02020820(&data_ov075_0211cc5c, 1, 0, 0, 0);
     }
 
     mOamAnimations[0].palette = id + 0xa;
@@ -1291,9 +1289,9 @@ void dScEntry_c::EnterResults() {
         MI_CpuFill32(bg0, zero, 0x800);
     }
 
-    func_02033390(0);
+    Message::func_02033390(0);
 
-    func_020331fc(0x40, 0x20, func_0203da9c() << 24 >> 24);
+    Message::func_020331fc(0x40, 0x20, func_0203da9c() << 24 >> 24);
 
     gSubScreenLayers |= 1;
 
@@ -1386,7 +1384,7 @@ void dScEntry_c::UpdateCourseSelect() {
         action = func_020200b8();
         if (action == 0) {
             int index;
-            func_ov001_020ab3f0(&mIcons[data_0209b2e4]);
+            mIcons[data_0209b2e4].func_ov001_020ab3f0();
             mIcons[data_0209b2e4].mReady = 0;
             index = 0;
             for (; index < 4; index++) {
@@ -1455,9 +1453,9 @@ void dScEntry_c::EnterCourseSelect() {
     LoadCompressedFileAt(0x8407, G2S_GetBG3ScrPtr());
 
     if (func_0203d9b4() != 0)
-        func_020338b0(0x205, 0xb0, 0x21, -1);
+        Message::func_020338b0(0x205, 0xb0, 0x21, -1);
     else
-        func_020338b0(0x225, 0xb0, 0x1d, -1);
+        Message::func_020338b0(0x225, 0xb0, 0x1d, -1);
 
     gSubScreenLayers |= 5;
 
@@ -1599,7 +1597,7 @@ void dScEntry_c::EnterPlayerSync() {
         gSubScreenLayers &= ~5;
         void *screen = LoadFile(0x8409);
         ENTRY_GRAPH_CALLBACK->QueueBg2Screen(screen);
-        func_020338b0(0x225, 0xb0, 0x1d, -1);
+        Message::func_020338b0(0x225, 0xb0, 0x1d, -1);
         gSubScreenLayers |= 5;
         mIconCount = 0;
         mWaiting.wavePhase = 0;
@@ -1677,7 +1675,7 @@ void dScEntry_c::EnterSessionStart() {
     gSubScreenLayers &= ~5;
     ENTRY_GRAPH_CALLBACK->QueueBg2Screen(data_0209b2e8);
     data_0209b2e8 = 0;
-    func_020338b0(0x225, 0xb0, 0x1d, -1);
+    Message::func_020338b0(0x225, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
     mIconCount = 0;
     mWaiting.wavePhase = 0;
@@ -1803,7 +1801,7 @@ void dScEntry_c::UpdateRecruit() {
     int localPlayer = func_0203da9c();
     int playerCount = data_0209fc50;
     for (int i = 1; i < 4; i++) {
-        func_02033464((unsigned char)i, (signed char)i, 0);
+        Message::func_02033464((unsigned char)i, (signed char)i, 0);
     }
     mEntObj->func_ov075_02115134();
     mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x11c, 0);
@@ -1815,7 +1813,7 @@ void dScEntry_c::UpdateRecruit() {
                 return;
         }
     }
-    func_ov001_020ab3f0(&mIcons[0]);
+    mIcons[0].func_ov001_020ab3f0();
     if (playerCount <= 1) {
         ChangeStepsAfterDelay(&data_ov075_0211d8a0, 20);
     } else {
@@ -1829,7 +1827,7 @@ void dScEntry_c::UpdateRecruit() {
 void dScEntry_c::EnterRecruit() {
     gSubScreenLayers &= ~1;
     ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
-    func_020337ec();
+    Message::func_020337ec();
     gSubScreenLayers |= 5;
     mIcons[0].Place(0xa, 0, 128, 168);
     mIconCount = 1;
@@ -1891,11 +1889,11 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         {
             if ((disconnectFlags & 0x30) != 0 || mBehaviorStep == data_ov075_0211d920) {
                 if (GetOwnerLanguage() == 3)
-                    func_020338b0(0xa5, 0xb0, 0x15, -1);
+                    Message::func_020338b0(0xa5, 0xb0, 0x15, -1);
                 else
-                    func_020338b0(0xc5, 0xb0, 0x15, -1);
+                    Message::func_020338b0(0xc5, 0xb0, 0x15, -1);
             } else {
-                func_020338b0(0xc5, 0xb0, 0x13, -1);
+                Message::func_020338b0(0xc5, 0xb0, 0x13, -1);
             }
         }
         mBehaviorStep = 0;
@@ -1912,9 +1910,9 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         if ((func_0203d974() && data_0209fc5c[0] == 0) ||
             (func_0203d9b4() && activePeerMask == 0)) {
             if (func_0203d974())
-                func_020338b0(0x125, 0xb0, 0x1b, 0);
+                Message::func_020338b0(0x125, 0xb0, 0x1b, 0);
             else
-                func_020338b0(0x125, 0xb0, 0x1a, -1);
+                Message::func_020338b0(0x125, 0xb0, 0x1a, -1);
             func_02030a78();
             ChangeStepsAfterDelay(reinterpret_cast<const StepSet *>(&data_ov075_0211d930), 180);
             gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
@@ -1926,7 +1924,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
             for (player = 0; player < 4; player++) {
                 int bit = 1 << player;
                 if (disconnectFlags & bit) {
-                    func_020338b0(0x125, 0xb0, 0x1c, (s8)(u8)player);
+                    Message::func_020338b0(0x125, 0xb0, 0x1c, (s8)(u8)player);
                     data_0209fc58 = data_0209fc58 & ~bit;
                     ChangeStepsAfterDelay(resumeSteps, 120);
                     func_02012790(0x12a);

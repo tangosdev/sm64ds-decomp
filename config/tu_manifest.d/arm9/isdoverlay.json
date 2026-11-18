@@ -36,28 +36,28 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_0206d868",
+      "symbol": "_ZNK13SavedIntState13func_0206d868Ev",
       "address": "0x0206d868",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d868.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_0206d890",
+      "symbol": "_ZN13SavedIntState13func_0206d890Ev",
       "address": "0x0206d890",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d890.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_0206d8c4",
+      "symbol": "_ZN12OverlayTable13func_0206d8c4Ej",
       "address": "0x0206d8c4",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d8c4.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_0206d940",
+      "symbol": "_ZN12OverlayTable13func_0206d940Ej",
       "address": "0x0206d940",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206d940.cpp",

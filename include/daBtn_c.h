@@ -68,9 +68,9 @@ struct daBtn_c : dEnemyBase_c {
     /* func_ov079_02123f34: the bearing to the nearest watched player. */
     s16                          mTargetAngle;          /* 0x3b8 */
     u8  pad_3ba[0x2];
-    /* InitResources copies mPosX/mPosY/mPosZ here once. */
+    /* InitResources copies mPos.x/mPos.y/mPos.z here once. */
     Vector3 mSpawnPos; /* 0x3bc */
-    /* Added to mAngleX every frame while the body tips over (states 4 and 11)
+    /* Added to mAngle.x every frame while the body tips over (states 4 and 11)
        or rises again (state 6). */
     s32                          mPitchSpeed;           /* 0x3c8 */
     s32                          unk_3cc;               /* 0x3cc -- zeroed with mPitchSpeed, no reader */
@@ -84,7 +84,7 @@ struct daBtn_c : dEnemyBase_c {
     s16                          mBodyPitch;            /* 0x3e0 */
     s16                          mBodyYaw;              /* 0x3e2 */
     s16                          mBodyRoll;             /* 0x3e4 */
-    /* InitResources copies mAngleX/mAngleY/mAngleZ here once. */
+    /* InitResources copies mAngle here once. */
     s16                          mSpawnAngleX;          /* 0x3e6 */
     s16                          mSpawnAngleY;          /* 0x3e8 */
     s16                          mSpawnAngleZ;          /* 0x3ea */
@@ -193,6 +193,7 @@ struct daBtn_c : dEnemyBase_c {
     /* Contact while the body lies flat: hits arm mPounded, other touches
        pay out one coin apiece while mCoinsLeft lasts. */
     void func_ov079_02125058(dActor_c *other);
+    static void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
     void func_ov079_02124dec();
     void func_ov079_02124ed4();
     void func_ov079_02125504();

@@ -145,7 +145,6 @@ void ChangeMusicVolume(u32 a, int f);
 }
 extern unsigned short data_ov074_02122e04[];
 extern "C" int ApproachAngle(short *, short, int, int, int);
-void func_ov084_021296b0(void *a, void *b);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
 extern "C" int Math_Function_0203b14c(int* p, int a, int b, int d, int e);
@@ -186,8 +185,7 @@ extern SharedFilePtr *const sKurikingMinionAnimationFiles[7];
 extern SharedFilePtr *const sKurikingAnimationFiles[12];
 
 /* Intra-TU forward decls: calls run both ways across the file. */
-void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone);
-void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_);
+void func_ov074_02121270(Vector3 *, daKuriKing_c *, int);
 void func_ov074_021203e0(void);
 void func_ov074_021201ec(void);
 void func_ov074_0212007c(void);
@@ -257,15 +255,15 @@ void daKuriKing_c::SetDefeatTalkCamera() {
     cam->SetFlag_3();
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
-    look.x = this->mPosX;
-    look.y = this->mPosY;
-    look.z = this->mPosZ;
-    pos.x = this->mPosX;
-    pos.y = this->mPosY;
-    pos.z = this->mPosZ;
+    look.x = this->mPos.x;
+    look.y = this->mPos.y;
+    look.z = this->mPos.z;
+    pos.x = this->mPos.x;
+    pos.y = this->mPos.y;
+    pos.z = this->mPos.z;
     look.y += 0x1a0000;
     in.z = 0x59c000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &out);
     pos.x = pos.x + out.x;
     pos.y = pos.y + 0x300000;
@@ -284,21 +282,21 @@ void daKuriKing_c::LaunchVanishCopies() {
             int rv = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
             t->mTimer = 48;
             t->mHorzSpeed = ((rv & 0xf) << 0xc) + 0x16000;
-            t->mSpeedX = 0;
-            t->mVertSpeed = ((rv & 0x1f) << 0xc) + 0x60000;
-            t->mSpeedZ = 0;
+            t->mSpeed.x = 0;
+            t->mSpeed.y = ((rv & 0x1f) << 0xc) + 0x60000;
+            t->mSpeed.z = 0;
             Vector3_16 pos = t->mPrevAngle;
             rv &= 0x1000;
             pos.y = (short)(pos.y + rv);
             short x = pos.x + 0;
-            t->mPrevAngleX = x;
+            t->mPrevAngle.x = x;
             short y = pos.y + 0;
-            t->mPrevAngleY = y;
+            t->mPrevAngle.y = y;
             short z = pos.z + 0;
-            t->mPrevAngleZ = z;
-            t->mAngleX = x;
-            t->mAngleY = y;
-            t->mAngleZ = z;
+            t->mPrevAngle.z = z;
+            t->mAngle.x = x;
+            t->mAngle.y = y;
+            t->mAngle.z = z;
             t->mLaunched = 1;
         }
         a = (daKuriKing_c *)dActor_c::FindWithActorID(0xc7, a);
@@ -330,14 +328,14 @@ int daKuriKing_c::SpawnVanishCopy() {
     daPly_c *player;
     spawnPos.x=0; spawnPos.y=0; spawnPos.z=0;
     spawnAngle.x=0; spawnAngle.y=0; spawnAngle.z=0;
-    spawnPos.x=this->mPosX;
-    spawnPos.y=this->mPosY;
-    spawnPos.z=this->mPosZ;
+    spawnPos.x = this->mPos.x;
+    spawnPos.y = this->mPos.y;
+    spawnPos.z = this->mPos.z;
     spawnPos.y+=0xe4000;
     basePos.x=spawnPos.x;
     basePos.y=spawnPos.y;
     basePos.z=spawnPos.z;
-    spawnAngle.y = this->mAngleY;
+    spawnAngle.y = this->mAngle.y;
     if(DecIfAbove0_Short(&this->mTimer)==0){
         u8 spawned=this->mSpawnedCount;
         if(spawned<=6){
@@ -415,7 +413,7 @@ void daKuriKing_c::UpdateDefeat() {
                     s32 flag = (actor->mFlags & 0x40000) ? 1 : 0;
                     if (flag == 0) {
                         Vector3 v2;
-                        s32* src = &actor->mPosX;
+                        s32 *src = &actor->mPos.x;
                         v2.x = src[0];
                         v2.y = src[1];
                         v2.z = src[2];
@@ -484,9 +482,9 @@ void daKuriKing_c::UpdateDefeat() {
         this->mSubState += 1;
         return;
     case 4:
-        vzero.x = this->mPosX;
-        vzero.y = this->mPosY;
-        vzero.z = this->mPosZ;
+        vzero.x = this->mPos.x;
+        vzero.y = this->mPos.y;
+        vzero.z = this->mPos.z;
         vzero.y = vzero.y + 0x12c000;
         dActor_c::Spawn(0x11a, 2, vzero, 0, this->mAreaId, -1);
         func_02012694(0xbb, &this->mCamSpacePos);
@@ -500,9 +498,9 @@ void daKuriKing_c::UpdateDefeat() {
 void daKuriKing_c::EnterDefeat() {
     this->mSizeIndex = 0;
     int v = data_ov074_02122e4c[1];
-    this->mScaleX = v;
-    this->mScaleY = v;
-    this->mScaleZ = v;
+    this->mScale.x = v;
+    this->mScale.y = v;
+    this->mScale.z = v;
     this->mTextureSequence.currFrame = 0x2000;
     this->mMaterialChanger.currFrame = ((int)data_ov074_02122e04[1]) << 0xc;
     this->mSubState = 0;
@@ -623,8 +621,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
         return;
     if (DecIfAbove0_Short(&this->mTimer) != 0) return;
 
-    Vector3 pos;
-    func_ov074_0212087c((int*)&pos, this, this->mSpawnedCount);
+    Vector3 pos = this->func_ov074_0212087c(this->mSpawnedCount);
     Vector3 pp;
     pp.x = pos.x;
     pp.y = pos.y;
@@ -642,7 +639,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
     v2.x = this->mSpawnPosX;
     v2.y = this->mSpawnPosY;
     v2.z = this->mSpawnPosZ;
-    func_ov084_021296b0(sp2, &v2);
+    sp2->func_ov084_021296b0(&v2);
 
     sp2->mMinionIndex = this->mSpawnedCount;
     /* Same pool-address increment as mSubState: 0x602 is not an ARM immediate. */
@@ -677,10 +674,10 @@ void daKuriKing_c::func_ov074_0211ffcc() {
   if (this->DistToCPlayer() >= 0x4b0000) {
       ChangeState(3);
   } else {
-    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x3000) {
-        ChangeState(3);
-        return;
-    }
+      if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngle.y) < 0x3000) {
+          ChangeState(3);
+          return;
+      }
   }
   if (this->mSpawnedCount != 0) return;
   ChangeState(2);
@@ -703,7 +700,7 @@ void daKuriKing_c::UpdateWalk() {
     WalkAlongRing();
     if (this->DistToCPlayer() >= 0x4b0000)
         return;
-    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) <= 0x4000)
+    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngle.y) <= 0x4000)
         return;
     ChangeState(4);
 }
@@ -737,8 +734,6 @@ void func_ov074_021201ec(void) {}
  * by mMusicStarted) and the state advances to 1.
  */
 void daKuriKing_c::UpdateIntroTalk() {
-    struct Ang16 { short v[3]; };
-    struct Ang16 ang;
     struct Vector3 look, pos;
     struct Vector3 msgpos[2];
     daPly_c *player;
@@ -749,12 +744,12 @@ void daKuriKing_c::UpdateIntroTalk() {
     cam = gCamera;
     cam->SetFlag_3();
 
-    look.x = this->mPosX;
-    look.y = this->mPosY;
-    look.z = this->mPosZ;
-    pos.x = this->mPosX;
-    pos.y = this->mPosY;
-    pos.z = this->mPosZ;
+    look.x = this->mPos.x;
+    look.y = this->mPos.y;
+    look.z = this->mPos.z;
+    pos.x = this->mPos.x;
+    pos.y = this->mPos.y;
+    pos.z = this->mPos.z;
     look.x += 0x130000;
     look.y = 0x1cd000;
     look.z -= 0x2a0000;
@@ -764,11 +759,9 @@ void daKuriKing_c::UpdateIntroTalk() {
     cam->SetLookAt(look);
     cam->SetPos(pos);
 
-    ang = *(struct Ang16*)&this->mAngleX;
-    ang.v[1] += 0x7fff;
-    player->mAngleX = ang.v[0];
-    player->mAngleY = ang.v[1];
-    player->mAngleZ = ang.v[2];
+    Vector3_16 ang = this->mAngle;
+    ang.y += 0x7fff;
+    player->mAngle = ang;
 
     {
         const Vector3 *pv = &player->mPos;
@@ -776,12 +769,12 @@ void daKuriKing_c::UpdateIntroTalk() {
         msgpos[0].y = pv->y;
         msgpos[0].z = pv->z;
     }
-    msgpos[1].x = this->mPosX;
-    msgpos[1].y = this->mPosY;
-    msgpos[1].z = this->mPosZ;
+    msgpos[1].x = this->mPos.x;
+    msgpos[1].y = this->mPos.y;
+    msgpos[1].z = this->mPos.z;
     msgpos[1].y += 0x78000;
 
-    this->mAngleY = this->mDirection * 0x4500 + this->mWalkAngle;
+    this->mAngle.y = this->mDirection * 0x4500 + this->mWalkAngle;
     this->mTalkPlayer = player;
     if (player->StartTalk(*this, 1) == 0) return;
     Message::PrepareTalk();
@@ -845,26 +838,26 @@ int daKuriKing_c::StepScaleTransition() {
 
     if (Math_Function_0203b14c(&this->mCurrentScale, this->mTargetScale, 0x78, 0x100, 0x20) == 0) {
         if (this->mScalePhase == 0) {
-            this->mScaleX = this->mCurrentScale;
-            this->mScaleY = this->mCurrentScale;
-            this->mScaleZ = this->mCurrentScale;
+            this->mScale.x = this->mCurrentScale;
+            this->mScale.y = this->mCurrentScale;
+            this->mScale.z = this->mCurrentScale;
         }
         if (this->mScaleSteps <= 1) return 1;
         this->mScaleSteps--;
         if (this->mState == 6) {
-            v.x = this->mPosX;
-            v.y = this->mPosY;
-            v.z = this->mPosZ;
+            v.x = this->mPos.x;
+            v.y = this->mPos.y;
+            v.z = this->mPos.z;
             v.y += FX_MUL(this->mCurrentScale, 0x190000);
             Particle::System::NewSimple(kPtclHugeLandingDust, v.x, v.y, v.z);
         }
     }
     k = ((u16)mScalePhase >> 4) * 2;
     d = mTargetScale - mCurrentScale + 0x11e;
-    mScaleY = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
-    mScaleX = mCurrentScale;
-    mScaleX = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
-    this->mScaleZ = this->mScaleX;
+    mScale.y = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
+    mScale.x = mCurrentScale;
+    mScale.x = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
+    this->mScale.z = this->mScale.x;
     this->mScalePhase += 0x1230;
     return 0;
 }
@@ -889,13 +882,13 @@ int daKuriKing_c::StopWalking() {
     return 0;
 }
 
-/* If anim 6 is current and mAnmModel has finished, flip mAngleY by half
+/* If anim 6 is current and mAnmModel has finished, flip mAngle.y by half
  * a turn and return 1. Otherwise return 0.
  */
 int daKuriKing_c::FinishTurnAround() {
     if (IsAnimPlaying(6)) {
         if (this->mAnmModel.Finished()) {
-            this->mAngleY += 0x8000;
+            this->mAngle.y += 0x8000;
             return 1;
         }
     }
@@ -910,16 +903,18 @@ void daKuriKing_c::TurnIfPlayerBehind() {
     this->mDirection *= -1;
 }
 
-void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
+Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
+    Vector3 result;
+    int *out = (int *)&result;
     int n;
 
     n = n_;
 
-    out[0] = self->mPosX;
-    out[1] = self->mPosY;
-    out[2] = self->mPosZ;
+    out[0] = mPos.x;
+    out[1] = mPos.y;
+    out[2] = mPos.z;
 
-    if ((int)self->ClosestPlayer()->param1 == 3) {
+    if ((int)ClosestPlayer()->param1 == 3) {
         int rem;
         int quo;
         int scale;
@@ -931,7 +926,7 @@ void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
 
         rem = n % 3;
         quo = n / 3;
-        mode = self->mSizeIndex;
+        mode = mSizeIndex;
         if (mode == 3) {
             scale = 0x546000;
         } else if (mode == 2) {
@@ -940,10 +935,10 @@ void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
             scale = quo * 0xb4000 + 0x438000;
         }
 
-        q = self->mScaleX / 0x1000;
+        q = mScale.x / 0x1000;
         sum = (s16)(q * 0x350 + 0x500) + (s16)(rem * 0x600);
-        prod = self->mDirection * sum;
-        diff = (self->mWalkAngle + self->mMaxWalkSpeed) - prod;
+        prod = mDirection * sum;
+        diff = (mWalkAngle + mMaxWalkSpeed) - prod;
         out[0] = FX_MUL(scale, FX_SinIdx((u16)(s16)diff >> 4));
         out[1] += 0x32000;
         out[2] = FX_MUL(scale, FX_CosIdx((u16)(s16)diff >> 4));
@@ -960,7 +955,7 @@ void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
         int diff2;
 
         lim = 3;
-        if (self->mSizeIndex == 1)
+        if (mSizeIndex == 1)
             lim = 5;
 
         if (n < lim) {
@@ -975,15 +970,16 @@ void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
             scale2 = 0x4e2000 + (rem2 * 0x64 << 12);
         }
 
-        q2 = self->mScaleX / 0x1000;
+        q2 = mScale.x / 0x1000;
         sum2 = (s16)(q2 * 0x350 + 0x250) + (s16)(one * 0x600);
-        prod2 = self->mDirection * sum2;
+        prod2 = mDirection * sum2;
         prod3 = sign * prod2;
-        diff2 = (self->mWalkAngle + self->mWalkSpeed) - prod3;
+        diff2 = (mWalkAngle + mWalkSpeed) - prod3;
         out[0] = FX_MUL(scale2, FX_SinIdx((u16)(s16)diff2 >> 4));
         out[1] += 0x32000;
         out[2] = FX_MUL(scale2, FX_CosIdx((u16)(s16)diff2 >> 4));
     }
+    return result;
 }
 
 int daKuriKing_c::CalcWalkAnimSpeed() {
@@ -1011,9 +1007,9 @@ void daKuriKing_c::SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode
     s32 iX, iY;
     s32 s, w;
 
-    dst.x = this->mPosX;
-    dst.y = this->mPosY;
-    dst.z = this->mPosZ;
+    dst.x = this->mPos.x;
+    dst.y = this->mPos.y;
+    dst.z = this->mPos.z;
     {
         Vector3 *pv = &other->mPos;
         src.x = pv->x;
@@ -1108,9 +1104,9 @@ void daKuriKing_c::HandleCylinderHits() {
                             pl->Unk_020c6a10(2);
                             this->mHurtTimer = 30;
                         } else {
-                            v1.x = this->mPosX;
-                            v1.y = this->mPosY;
-                            v1.z = this->mPosZ;
+                            v1.x = this->mPos.x;
+                            v1.y = this->mPos.y;
+                            v1.z = this->mPos.z;
                             pl->Hurt(v1, 1, 0x5000, 1, 0, 1);
                         }
                     } else if (cur == &this->mdCc_cs[3]) {
@@ -1118,15 +1114,15 @@ void daKuriKing_c::HandleCylinderHits() {
                             pl->Unk_020c6a10(2);
                             this->mHurtTimer = 30;
                         } else {
-                            v2.x = this->mPosX;
-                            v2.y = this->mPosY;
-                            v2.z = this->mPosZ;
+                            v2.x = this->mPos.x;
+                            v2.y = this->mPos.y;
+                            v2.z = this->mPos.z;
                             pl->Hurt(v2, 1, 0x5000, 1, 0, 1);
                         }
                     } else {
-                        v3.x = this->mPosX;
-                        v3.y = this->mPosY;
-                        v3.z = this->mPosZ;
+                        v3.x = this->mPos.x;
+                        v3.y = this->mPos.y;
+                        v3.z = this->mPos.z;
                         pl->Hurt(v3, 1, 0x5000, 1, 0, 1);
                         this->mHurtTimer = 16;
                     }
@@ -1137,7 +1133,7 @@ void daKuriKing_c::HandleCylinderHits() {
                     } else {
                         int ang = Vec3_HorzAngle(&this->mPos, &pl->mPos);
                         dir = 1;
-                        if (AngleDiff(ang, this->mAngleY) > 0x4000)
+                        if (AngleDiff(ang, this->mAngle.y) > 0x4000)
                             dir = -1;
                         PlayAnim(7);
                         ChangeState(8);
@@ -1153,14 +1149,14 @@ void daKuriKing_c::HandleCylinderHits() {
                             else
                                 ChangeState(4);
                             if ((int)pl->param1 == 0) {
-                                v0.x = this->mPosX;
-                                v0.y = this->mPosY;
-                                v0.z = this->mPosZ;
+                                v0.x = this->mPos.x;
+                                v0.y = this->mPos.y;
+                                v0.z = this->mPos.z;
                                 if (this->mMegaMushroomID == 0 &&
                                     dActor_c::FindWithID(this->mMegaMushroomID) == 0) {
                                     int k =
                                         ((u16)(s16)(this->mDirection *
-                                                        ((s16)((this->mScaleX / 0x1000) * 0x350 +
+                                                        ((s16)((this->mScale.x / 0x1000) * 0x350 +
                                                                0x500) +
                                                          0x600) +
                                                     (this->mWalkAngle + this->mMaxWalkSpeed))) >>
@@ -1191,7 +1187,7 @@ void daKuriKing_c::HandleCylinderHits() {
     {
         int ang2 = Vec3_HorzAngle(&this->mPos, &player->mPos);
         dir2 = 1;
-        if (AngleDiff(ang2, this->mAngleY) > 0x4000) {
+        if (AngleDiff(ang2, this->mAngle.y) > 0x4000) {
             PlayAnim(dir2);
             dir2 = -1;
         } else {
@@ -1226,8 +1222,8 @@ void daKuriKing_c::UpdateBodyMatrix() {
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->mScaleX, this->mScaleY, this->mScaleZ);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->mScale.x, this->mScale.y, this->mScale.z);
     *(struct Matrix4x3 *)this->mBodyMatrix = data_020a0e68;
 }
 
@@ -1244,18 +1240,18 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     int d, a, b;
     int tx, ty, tz;
 
-    y0 = FX_MUL(this->mScaleY, 0x40000);
-    rad[1] = FX_MUL(this->mScaleX, 0x50000);
-    hgt[1] = FX_MUL(this->mScaleY, 0x40000);
-    yoff[1] = FX_MUL(this->mScaleY, -0x10000);
-    rad[2] = FX_MUL(this->mScaleX, 0x50000);
-    hgt[2] = FX_MUL(this->mScaleY, 0x40000);
-    yoff[2] = FX_MUL(this->mScaleY, -0x10000);
-    h0 = FX_MUL(this->mScaleY, 0x96000);
-    r0 = FX_MUL(this->mScaleX, 0x5a000);
-    yoff[0] = FX_MUL(this->mScaleY, 0x14000);
-    rad[0] = FX_MUL(this->mScaleX, 0xb4000);
-    hgt[0] = FX_MUL(this->mScaleY, 0x104000);
+    y0 = FX_MUL(this->mScale.y, 0x40000);
+    rad[1] = FX_MUL(this->mScale.x, 0x50000);
+    hgt[1] = FX_MUL(this->mScale.y, 0x40000);
+    yoff[1] = FX_MUL(this->mScale.y, -0x10000);
+    rad[2] = FX_MUL(this->mScale.x, 0x50000);
+    hgt[2] = FX_MUL(this->mScale.y, 0x40000);
+    yoff[2] = FX_MUL(this->mScale.y, -0x10000);
+    h0 = FX_MUL(this->mScale.y, 0x96000);
+    r0 = FX_MUL(this->mScale.x, 0x5a000);
+    yoff[0] = FX_MUL(this->mScale.y, 0x14000);
+    rad[0] = FX_MUL(this->mScale.x, 0xb4000);
+    hgt[0] = FX_MUL(this->mScale.y, 0x104000);
     for (i = 0; i < 3; i++) {
         int ax, ay, az;
         func_ov074_02121270(&v[2], this, bone.v[i]);
@@ -1272,19 +1268,19 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
         this->mdCc_cs[i + 1].pos.z = az;
     }
 
-    tx = this->mPosX;
-    ty = this->mPosY + y0;
-    tz = this->mPosZ;
+    tx = this->mPos.x;
+    ty = this->mPos.y + y0;
+    tz = this->mPos.z;
     this->mdCc_cs[0].radius = r0;
     this->mdCc_cs[0].height = h0;
     this->mdCc_cs[0].pos.x = tx;
     this->mdCc_cs[0].pos.y = ty;
     this->mdCc_cs[0].pos.z = tz;
 
-    d = FX_MUL(this->mScaleY, -0x4a000);
+    d = FX_MUL(this->mScale.y, -0x4a000);
     a = this->mCylClsnPos[2].y + d;
     b = this->mCylClsnPos[1].y + d;
-    if (a < this->mPosY) {
+    if (a < this->mPos.y) {
         if (this->mFoot2Latch == 0) {
             this->mLeftFootSteppedOnGround = 1;
         } else {
@@ -1295,7 +1291,7 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
         this->mFoot2Latch = 0;
         this->mLeftFootSteppedOnGround = 0;
     }
-    if (b < this->mPosY) {
+    if (b < this->mPos.y) {
         if (this->mFoot1Latch == 0) {
             this->mRightFootSteppedOnGround = 1;
         } else {
@@ -1319,17 +1315,18 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
 }
 
 /* Advances mWalkAngle by mWalkSpeed while on the ground and re-derives the
- * walk velocity from the sine table, then eases mAngleY toward the
+ * walk velocity from the sine table, then eases mAngle.y toward the
  * direction-scaled heading. */
 /* Returns int so callers can `return WalkAlongRing(c)`; the body still
  * falls off the end, which is what the ROM's code does. */
 int daKuriKing_c::WalkAlongRing() {
     if (this->mWithMeshClsn.IsOnGround()) {
         this->mWalkAngle += this->mWalkSpeed;
-        this->mPosX = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
-        this->mPosZ = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
+        this->mPos.x = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
+        this->mPos.z = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
     }
-    ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
+    ApproachAngle(&this->mAngle.y, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800,
+                  0x10);
 }
 
 void daKuriKing_c::UpdateShadows() {
@@ -1355,7 +1352,7 @@ void daKuriKing_c::UpdateShadows() {
     m = (char *)mShadowMatrices;
     shadow = mShadowModels;
     for (i = 0; i < 3; i++) {
-        height = this->mPosY - this->mSpawnPosY;
+        height = this->mPos.y - this->mSpawnPosY;
         if (height <= 0x1000)
             height = 0x1000;
         rad = (this->mdCc_cs[i + 1].radius << 1) - FX_MUL(height, 0x180);
@@ -1365,7 +1362,7 @@ void daKuriKing_c::UpdateShadows() {
         *(Matrix4x3 *)((daKuriKing_c *)self)->mShadowMatrices[0] = mtx;
         ((daKuriKing_c *)self)->mShadowMatrices[0][9] =
             ((daKuriKing_c *)src)->mCylClsnPos[0].x >> 3;
-        posY = this->mPosY;
+        posY = this->mPos.y;
         ((daKuriKing_c *)self)->mShadowMatrices[0][10] = posY >> 3;
         height += 0x28000;
         ((daKuriKing_c *)self)->mShadowMatrices[0][11] =
@@ -1378,13 +1375,13 @@ void daKuriKing_c::UpdateShadows() {
     }
 }
 
-/* Fills the model matrix from mAngleY and the position (model space is
+/* Fills the model matrix from mAngle.y and the position (model space is
  * world >> 3). */
 void daKuriKing_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 void daKuriKing_c::UpdateAnimation() {
@@ -1595,19 +1592,19 @@ int daKuriKing_c::InitResources()
 
     mSizeIndex = 3;
     p = (void *)(s32)data_ov074_02122e4c[mSizeIndex];
-    mScaleX = (s32)p;
-    mScaleY = (s32)p;
-    mScaleZ = (s32)p;
+    mScale.x = (s32)p;
+    mScale.y = (s32)p;
+    mScale.z = (s32)p;
     mVertAccel = -0xa000;
     mTerminalVelocity = -0x3c000;
 
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPosX = mPos.x;
+    mSpawnPosY = mPos.y;
+    mSpawnPosZ = mPos.z;
 
     k = 0;
     do {
-        mdCc_cs[k].Init(this, mPos, mScaleX * 0xa, mScaleY * 0xa, 0x200004, 0x26fe0);
+        mdCc_cs[k].Init(this, mPos, mScale.x * 0xa, mScale.y * 0xa, 0x200004, 0x26fe0);
         k++;
     } while (k < 4);
 
@@ -1638,17 +1635,17 @@ int daKuriKing_c::InitResources()
     mWalkAngle = 0x1000;
     mWalkAngle += mWalkSpeed;
 
-    mPosX = FX_MUL(FX_SinIdx((u16)mWalkAngle >> 4), 0x546000);
-    mPosZ = FX_MUL(FX_CosIdx((u16)mWalkAngle >> 4), 0x546000);
+    mPos.x = FX_MUL(FX_SinIdx((u16)mWalkAngle >> 4), 0x546000);
+    mPos.z = FX_MUL(FX_CosIdx((u16)mWalkAngle >> 4), 0x546000);
 
     {
         s32 a2;
         s32 a1;
         s32 a0;
         s32 a3;
-        a2 = mPosY;
-        a1 = mPosZ;
-        a0 = mPosX;
+        a2 = mPos.y;
+        a1 = mPos.z;
+        a0 = mPos.x;
         a3 = a2 + 0x64000;
         pos.x = a0;
         pos.y = a3;
@@ -1658,7 +1655,7 @@ int daKuriKing_c::InitResources()
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn() != 0) {
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     }
 
     UpdateBodyMatrix();
@@ -1690,7 +1687,8 @@ int daKuriKing_c::RenderVanish() {
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x6400, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                           this->mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x6400, 0);
     this->mAnmModel.mat4x3 = data_020a0e68;
 
@@ -1731,13 +1729,13 @@ int daKuriKing_c::BehaviorVanish() {
         }
         this->mSubState++;
 
-        this->mVertSpeed = this->mHorzSpeed + 0xa000;
+        this->mSpeed.y = this->mHorzSpeed + 0xa000;
     }
 
     {
-        int yy = this->mPosY;
-        int zz = this->mPosZ;
-        int xx = this->mPosX;
+        int yy = this->mPos.y;
+        int zz = this->mPos.z;
+        int xx = this->mPos.x;
         int py = yy + 0x190000;
         pos.x = xx;
         pos.y = py;
@@ -1750,10 +1748,8 @@ int daKuriKing_c::BehaviorVanish() {
     rg.StopDetectingOrdinary();
     rg.SetObjAndPos(pos, this);
 
-    if (rg.DetectClsn() != 0
-        && func_02037e20((int *)&rg.surface) != 0
-        && rg.clsnY != (int)0x80000000
-        && this->mPosY < rg.clsnY) {
+    if (rg.DetectClsn() != 0 && func_02037e20((int *)&rg.surface) != 0 &&
+        rg.clsnY != (int)0x80000000 && this->mPos.y < rg.clsnY) {
         this->PoofDust();
         this->MarkForDestruction();
         return 1;
@@ -1763,15 +1759,15 @@ int daKuriKing_c::BehaviorVanish() {
         this->UpdatePos(0);
         this->UpdateWMClsn(this->mWithMeshClsn, 0);
 
-        this->mAngleX += 0x1800;
+        this->mAngle.x += 0x1800;
     }
 
     /* One drop shadow, through the first shadow matrix. */
     *(Matrix4x3 *)mShadowMatrices[0] = IDENTITY_MATRIX4X3;
 
-    mShadowMatrices[0][9] = this->mPosX >> 3;
-    mShadowMatrices[0][10] = this->mPosY >> 3;
-    mShadowMatrices[0][11] = this->mPosZ >> 3;
+    mShadowMatrices[0][9] = this->mPos.x >> 3;
+    mShadowMatrices[0][10] = this->mPos.y >> 3;
+    mShadowMatrices[0][11] = this->mPos.z >> 3;
 
     DropShadowRadHeight(this->mShadowModels[0], *(Matrix4x3 *)mShadowMatrices[0], 0x8c000, 0x3e8000,
                         0xf);
@@ -1802,9 +1798,9 @@ int daKuriKing_c::InitVanishResources() {
 
     this->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc8.filePtr, 0, 0x1000, 0);
 
-    this->mPrevAngleX = this->mAngleX;
-    this->mPrevAngleY = this->mAngleY;
-    this->mPrevAngleZ = this->mAngleZ;
+    this->mPrevAngle.x = this->mAngle.x;
+    this->mPrevAngle.y = this->mAngle.y;
+    this->mPrevAngle.z = this->mAngle.z;
     this->mTerminalVelocity = -0x3c000;
     this->mMegaMushroomID = 0;
 

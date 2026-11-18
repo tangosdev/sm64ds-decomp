@@ -150,7 +150,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_Z19func_ov080_02124418P14daChoro_Rock_c",
+      "symbol": "_ZN14daChoro_Rock_c19func_ov080_02124418Ev",
       "address": "0x02124418",
       "size": "0x00000040",
       "legacy_source": "src/func_ov080_02124418.c",
@@ -393,7 +393,8 @@
     "classInit fold (0930c): daChoro_Rock_c_classInit and daChoropu_c_classInit are folded in last, in ROM order, under the file's `#pragma defer_codegen off`, each as `return new X();`. The retired one-function sources hand-called fBase_c::operator new (852 = 0x354 / 396 = 0x18c), the base constructor (dEnemyBase_c C2 / dActor_c C2), the vtable store and the member C1 constructors (dExtSimpleModel_c 0x110, dCcAc_c 0x160, dBgCh_Actr 0x194 / dExtAnmModel_c 0xd4, dCcAc_c 0x138); neither class has a user-declared constructor, so the synthesized ones emit the identical sequence and no new compiler-only output. tubuild verify: 26/26 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED. Retired src/d_a_choro_rock.c and src/d_a_choropu.c; their credit carries in attribution.json as path#symbol overrides.",
     "Static initializer folded: the two ChoropuModelFile handles (files 0x2d1, 0x2d6), the four ChoropuAnimationFilePtr handles (files 0x2d2, 0x2d3, 0x2d4, 0x2d5), their destructor-registration nodes, the six PMF descriptors and the six state rows make mwcc emit __sinit_d_a_choropu.cpp itself (0x1a0, raw-byte-identical to retail __sinit_ov080_021278c0 with the same relocation sites); the handwritten src/unnamed/ov080/__sinit_ov080_021278c0.c is retired. All twelve compiler temps (@1010-@1015 nodes, @1017-@1027 descriptors) are fleet-unique, so no defined_symbol_renames are needed. Every state slot targets a daChoropu_c member method, so the rows stay plain PMF pairs with no free-function union. This fold does NOT license the rodata handle table (0x0212766c), the RTTI chains, the g_profile rows or the vtables, which stay compiler-only deadstrip.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "Collision property member calls replace local helper declarations. Reconciled 12 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (64 sections, 289 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 12 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (64 sections, 289 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "Static initializer folded: the two ChoropuModelFile handles (files 0x2d1, 0x2d6), the four ChoropuAnimationFilePtr handles (files 0x2d2, 0x2d3, 0x2d4, 0x2d5), their destructor-registration nodes, the six PMF descriptors and the six state rows make mwcc emit __sinit_d_a_choropu.cpp itself (0x1a0, raw-byte-identical to retail __sinit_ov080_021278c0 with the same relocation sites); the handwritten src/unnamed/ov080/__sinit_ov080_021278c0.c is retired. All twelve compiler temps (@1020-@1025 nodes, @1027-@1037 descriptors) are fleet-unique, so no defined_symbol_renames are needed. Every state slot targets a daChoropu_c member method, so the rows stay plain PMF pairs with no free-function union. This fold does NOT license the rodata handle table (0x0212766c), the RTTI chains, the g_profile rows or the vtables, which stay compiler-only deadstrip."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -863,7 +864,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16ChoropuModelFileC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
@@ -982,7 +983,7 @@
       "source": "0x021278d0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1002,7 +1003,7 @@
       "source": "0x021278ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1420,62 +1421,62 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1055",
+      "from": "@1057",
       "to": "@1010",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1070 to @1016 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1016 to @1028 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1028 to @1035 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1035 to @1031 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1031 to @1018 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1018 to @1055 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1056",
+      "from": "@1058",
       "to": "@1011",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1071 to @1017 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1017 to @1029 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1029 to @1036 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1036 to @1032 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1032 to @1019 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1019 to @1056 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1057",
+      "from": "@1059",
       "to": "@1012",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1072 to @1018 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1018 to @1030 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1030 to @1037 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1037 to @1033 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1033 to @1020 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1020 to @1057 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1058",
+      "from": "@1060",
       "to": "@1013",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1073 to @1019 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1019 to @1031 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1031 to @1038 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1038 to @1034 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1034 to @1021 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1021 to @1058 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1059",
+      "from": "@1061",
       "to": "@1014",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1074 to @1020 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1020 to @1032 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1032 to @1039 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1039 to @1035 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1035 to @1022 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1022 to @1059 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1060",
+      "from": "@1062",
       "to": "@1015",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1075 to @1021 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1021 to @1033 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1033 to @1040 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1040 to @1036 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1036 to @1023 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1023 to @1060 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1062",
+      "from": "@1064",
       "to": "@1017",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1077 to @1023 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1023 to @1035 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1035 to @1042 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1042 to @1038 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1038 to @1025 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1025 to @1062 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1064",
+      "from": "@1066",
       "to": "@1019",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1079 to @1025 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1025 to @1037 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1037 to @1044 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1044 to @1040 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1040 to @1027 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1027 to @1064 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1066",
+      "from": "@1068",
       "to": "@1021",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1081 to @1027 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1027 to @1039 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1039 to @1046 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1046 to @1042 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1042 to @1029 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1029 to @1066 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1068",
+      "from": "@1070",
       "to": "@1023",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1083 to @1029 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1029 to @1041 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1041 to @1048 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1048 to @1044 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1044 to @1031 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1031 to @1068 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1070",
+      "from": "@1072",
       "to": "@1025",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1085 to @1031 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1031 to @1043 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1043 to @1050 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1050 to @1046 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1046 to @1033 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1033 to @1070 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1072",
+      "from": "@1074",
       "to": "@1027",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1087 to @1033 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1033 to @1045 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1045 to @1052 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1052 to @1048 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1048 to @1035 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1035 to @1072 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }

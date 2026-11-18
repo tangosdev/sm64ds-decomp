@@ -24,7 +24,7 @@ struct daObjFl_Block_c : dBgActor_c {
     /* dBgActor_c ends at 0x31e (its own sizeof rounds 0x31e up to 0x320);
        these two bytes are the base's tail padding, unused here. */
     u8 pad_31e[0x2];
-    s32 mMaxPosY; /* 0x320 -- spawn height; InitResources copies mPosY */
+    s32 mMaxPosY; /* 0x320 -- spawn height; InitResources copies mPos.y */
     u8 mHadClsn;  /* 0x324 -- set by the collision callback
                                OnStoodOn when actor 0xbf (the
                                player) touches the block; Behavior clears it */

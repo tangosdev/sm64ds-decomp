@@ -8,7 +8,7 @@
 /* Notes: the shared file handles and the four state records keep address
  * names; their definitions at the bottom are this file's static initializer.
  * actorID and mFlags are tested through an int. ExecutePerch keeps its base
- * pointer. mSpeedZ is reloaded because a named temporary moves a word.
+ * pointer. mSpeed.z is reloaded because a named temporary moves a word.
  * EnterDrop's PoofPos is a three-int constructor; a Vector3 assignment does
  * not schedule the same stores.
  */
@@ -147,9 +147,9 @@ void daBasabasa_c::CheckTouch() {
         SmallPoofDust();
         KillAndTrackInDeathTable();
         func_02012694(0x112, &mCamSpacePos);
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         SpawnCoins(pos, mExtraCoinCount + 1, 0xa000, 0);
         return;
     }
@@ -162,9 +162,9 @@ void daBasabasa_c::CheckTouch() {
         return;
     }
     Vector3 pos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     p->Hurt(pos, 1, 0xc000, 1, 0, 1);
     if (mCurrentState != &data_ov065_0211d6e0)
         return;
@@ -189,24 +189,24 @@ int daBasabasa_c::ExecuteReturn() {
         if (mPerchTimer > 100) {
             mPerchTimer = 0;
             mFlags |= 1;
-            mPrevAngleX = -0x8000;
-            mAngleX = mPrevAngleX;
-            mPosX = mHomePos.x;
-            mPosY = mHomePos.y;
-            mPosZ = mHomePos.z;
-            mSpeedX = 0;
-            mVertSpeed = 0;
-            mSpeedZ = 0;
+            mPrevAngle.x = -0x8000;
+            mAngle.x = mPrevAngle.x;
+            mPos.x = mHomePos.x;
+            mPos.y = mHomePos.y;
+            mPos.z = mHomePos.z;
+            mSpeed.x = 0;
+            mSpeed.y = 0;
+            mSpeed.z = 0;
             SetState(&data_ov065_0211d700);
             return 1;
         }
     }
 
-    ApproachAngle(&mPrevAngleX, 0, 0xa, 0x200, 0x100);
-    ApproachAngle(&mPrevAngleY, mTargetAngleY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.x, 0, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngleY, 0xa, 0x200, 0x100);
     v.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
     if (mStateTimer == 0) {
         SetState(&data_ov065_0211d6f0);
     }
@@ -231,12 +231,12 @@ int daBasabasa_c::ExecuteChase() {
     v.y = 0;
     v.z = 0;
     mTargetAngleY = HorzAngleToCPlayer();
-    ApproachLinear(mPrevAngleY, mTargetAngleY, 0x500);
-    ApproachLinear(mPrevAngleX, 0x100, 0x500);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x500);
+    ApproachLinear(mPrevAngle.x, 0x100, 0x500);
     v.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
+    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
     if (Vec3_Dist(&mPos, &mHomePos) > 0x5dc000 || mStateTimer == 0) {
         mPerchTimer = 0;
         SetState(&data_ov065_0211d6f0);
@@ -258,9 +258,9 @@ int daBasabasa_c::EnterChase() {
 int daBasabasa_c::ExecuteDrop() {
     int floorY, posY;
     daPly_c *p;
-    mPrevAngleY += 0x1000;
+    mPrevAngle.y += 0x1000;
     p = ClosestPlayer();
-    posY = mPosY;
+    posY = mPos.y;
     floorY = posY - 0xc8000;
     if (p != 0) {
         floorY = p->mGroundY + 0x50000;
@@ -277,9 +277,9 @@ int daBasabasa_c::EnterDrop() {
     mIsFlying = 0;
     mAnmModel2.speed = 0;
     mAnmModel2.SetAnim((BCA_File *)data_ov065_0211d6a0.filePtr, 0, 0x1000, 0);
-    PoofPos vec(mPosX, mPosY + 0x64000, mPosZ);
+    PoofPos vec(mPos.x, mPos.y + 0x64000, mPos.z);
     mStateTimer = 25;
-    if (mPosY == 0x898000)
+    if (mPos.y == 0x898000)
         mStateTimer = 50;
     func_02012694(0xf9, &mCamSpacePos);
     return 1;
@@ -289,8 +289,8 @@ int daBasabasa_c::ExecutePerch() {
     daPly_c *p = ClosestNonVanishPlayer();
     if (p) {
         Vector3 v;
-        /* One base pointer: reading p->mPosX and so on directly compiles differently. */
-        int *q = &p->mPosX;
+        /* One base pointer: reading p->mPos.x and so on directly compiles differently. */
+        int *q = &p->mPos.x;
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
@@ -322,13 +322,13 @@ void daBasabasa_c::UpdateModelTransform() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     if (mIsFlying == 1) {
         mAnmModel1.mat4x3 = data_020a0e68;
     } else {
         mAnmModel2.mat4x3 = data_020a0e68;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
     mShadowMatrix = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMatrix, 0x32000, 0x258000, 0xf);
 }
@@ -387,21 +387,21 @@ int daBasabasa_c::Behavior() {
         }
     }
     {
-        /* Gravity, clamped at terminal velocity. mSpeedZ is reloaded and
+        /* Gravity, clamped at terminal velocity. mSpeed.z is reloaded and
            stored back unchanged, as in the ROM. */
-        int fallSpeed = mVertSpeed + mVertAccel;
+        int fallSpeed = mSpeed.y + mVertAccel;
         int clamped = mTerminalVelocity;
         if (fallSpeed >= clamped)
             clamped = fallSpeed;
-        int keep = mSpeedZ;
-        mVertSpeed = clamped;
-        mSpeedZ = keep;
+        int keep = mSpeed.z;
+        mSpeed.y = clamped;
+        mSpeed.z = keep;
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdateModelTransform();
     if (mIsFlying == 1) {
         CheckTouch();
@@ -431,16 +431,16 @@ int daBasabasa_c::InitResources() {
     dExtFrameCtrl_c::LoadFile(data_ov065_0211d6a0);
     mTerminalVelocity = -0xa000;
     mdCcAc_c.Init(this, 0x28000, 0x28000, 0x200000, 0x7eff0);
-    mAngleY = mPrevAngleY;
-    mPrevAngleX = -0x8000;
-    mAngleX = mPrevAngleX;
+    mAngle.y = mPrevAngle.y;
+    mPrevAngle.x = -0x8000;
+    mAngle.x = mPrevAngle.x;
     mIsFlying = 0;
     mAnmModel1.speed = 0x1000;
     mAnmModel2.speed = 0x1000;
     mWithMeshClsn.Init(this, 0x28000, 0x1e000, 0, 0);
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mCoinType = 1;
     SetState(&data_ov065_0211d700);
     return 1;

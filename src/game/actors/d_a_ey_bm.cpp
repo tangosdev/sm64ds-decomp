@@ -2,7 +2,7 @@
 /* daEyBm_c -- Mr. I's projectile (EYEKUN_BEAM 264), ov071.
  *
  * It flies straight at 10.0 along the pitch and yaw it spawned with
- * (mPrevAngleX / mPrevAngleY) and bursts (particle 0x45) when it touches
+ * (mPrevAngle.x / mPrevAngle.y) and bursts (particle 0x45) when it touches
  * ground or a wall, when it hurts a Mario (daPly_c::Hurt, not while he is
  * vanished), or after 150 frames.
  *
@@ -89,9 +89,9 @@ int daEyBm_c::InitResources() {
 
     mdCcAcPos_c.Init(this, *((const Vector3 *)&data_ov071_021230b8), 0x23000, 0x3c000, 0x200002,
                      0x8000);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mWithMeshClsn.Init(this, 0x19000, 0x19000, 0, 0);
     mVertAccel = 0;
     mTerminalVelocity = 0;
@@ -117,12 +117,12 @@ int daEyBm_c::Behavior() {
         velocity.z = mHorzSpeed;
         velocity.x = 0;
         velocity.y = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MTX_MultVec43(&velocity, &data_020a0e68, (Vector3 *)&mSpeedX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
+        MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
 
         /* Retail retains a typed whole-vector writeback after the transform. */
-        *(VecFx32 *)&mSpeedX = *(VecFx32 *)&mSpeedX;
+        mSpeed = mSpeed;
 
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
         UpdateCollision(mWithMeshClsn);
@@ -140,9 +140,9 @@ int daEyBm_c::Behavior() {
 
 int daEyBm_c::Render() {
     mParticle1 =
-        Particle::System::NewCleanParticle(mParticle1, kPtclMrIBeamA, mPosX, mPosY, mPosZ, 0);
+        Particle::System::NewCleanParticle(mParticle1, kPtclMrIBeamA, mPos.x, mPos.y, mPos.z, 0);
     mParticle2 =
-        Particle::System::NewCleanParticle(mParticle2, kPtclMrIBeamB, mPosX, mPosY, mPosZ, 0);
+        Particle::System::NewCleanParticle(mParticle2, kPtclMrIBeamB, mPos.x, mPos.y, mPos.z, 0);
     return 1;
 }
 void daEyBm_c::OnPendingDestroy() {}
@@ -152,15 +152,15 @@ int daEyBm_c::CleanupResources() {
 }
 
 void daEyBm_c::UpdateShadow() {
-    mMatrix.m[9] = mPosX >> 3;
-    mMatrix.m[10] = mPosY >> 3;
-    mMatrix.m[11] = mPosZ >> 3;
+    mMatrix.m[9] = mPos.x >> 3;
+    mMatrix.m[10] = mPos.y >> 3;
+    mMatrix.m[11] = mPos.z >> 3;
 
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);
     fx32 depth;
     if (ground.DetectClsn())
-        depth = (mPosY - ground.clsnY) + 0x1e000;
+        depth = (mPos.y - ground.clsnY) + 0x1e000;
     else
         depth = 0x1f4000;
     DropShadowRadHeight(mShadowModel, mMatrix, 0x50000, depth, 0xf);
@@ -186,9 +186,9 @@ void daEyBm_c::HurtPlayer() {
         return;
 
     Vector3 position;
-    position.x = mPosX;
-    position.y = mPosY;
-    position.z = mPosZ;
+    position.x = mPos.x;
+    position.y = mPos.y;
+    position.z = mPos.z;
     player->Hurt(position, 1, 0xc000, 1, 0, 1);
     SpawnDestroyEffect();
 }
@@ -205,7 +205,7 @@ void daEyBm_c::UpdateCollision(dBgCh_Actr &collision) {
 
 /* 0x02121b08, size 0x48. */
 void daEyBm_c::SpawnDestroyEffect() {
-    mParticle1 = Particle::System::New(0, kPtclMrIBeamBurst, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle1 = Particle::System::New(0, kPtclMrIBeamBurst, mPos.x, mPos.y, mPos.z, 0, 0);
     MarkForDestruction();
 }
 

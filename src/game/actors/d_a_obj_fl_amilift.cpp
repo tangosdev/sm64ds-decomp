@@ -90,7 +90,7 @@ daObjFl_Amilift_c::~daObjFl_Amilift_c() {}
 void daObjFl_Amilift_c::FaceToward(Vector3 *a, Vector3 *b) {
     Vector3 v;
     Vec3_Sub(&v, a, b);
-    mPrevAngleY = cstd::atan2(v.x, v.z);
+    mPrevAngle.y = cstd::atan2(v.x, v.z);
 }
 
 /* Advance along the path by one frame. Speeds up toward 0xa000 and slows to a
@@ -108,9 +108,9 @@ int daObjFl_Amilift_c::MoveAlongPath() {
         mFrom.x = mTo.x;
         mFrom.y = mTo.y;
         mFrom.z = mTo.z;
-        mPosX = mFrom.x;
-        mPosY = mFrom.y;
-        mPosZ = mFrom.z;
+        mPos.x = mFrom.x;
+        mPos.y = mFrom.y;
+        mPos.z = mFrom.z;
         r = 1;
         if (mState == daObjFl_Amilift_c::STATE_FORWARD) {
             ++mNodeIndex;
@@ -224,12 +224,12 @@ s32 daObjFl_Amilift_c::Behavior() {
         mBobPhase += 0xa00;
         mBobOffset = FX_SinIdx((u16)mBobPhase >> 4) * 10;
     }
-    int saved = mPosY;
-    mPosY = mHome.y + mSinkOffset + mBobOffset;
+    int saved = mPos.y;
+    mPos.y = mHome.y + mSinkOffset + mBobOffset;
     UpdateModelPosAndRotY();
     if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
-    mPosY = saved;
+    mPos.y = saved;
     mRiderOn = 0;
     return 1;
 }
@@ -256,7 +256,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     UpdateClsnPosAndRot();
 
     kcl = dBgW_Kc::LoadFile(data_ov064_0211c728);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb6c);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov064_0211bb6c);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
@@ -265,9 +265,9 @@ s32 daObjFl_Amilift_c::InitResources() {
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 1;
 
-    mFrom.x = mPosX;
-    mFrom.y = mPosY;
-    mFrom.z = mPosZ;
+    mFrom.x = mPos.x;
+    mFrom.y = mPos.y;
+    mFrom.z = mPos.z;
 
     mPathPtr.GetNode(mTo, mNodeIndex);
 
@@ -280,9 +280,9 @@ s32 daObjFl_Amilift_c::InitResources() {
 
     FaceToward(&nodeA, &nodeB);
 
-    mHome.x = mPosX;
-    mHome.y = mPosY;
-    mHome.z = mPosZ;
+    mHome.x = mPos.x;
+    mHome.y = mPos.y;
+    mHome.z = mPos.z;
 
     return 1;
 }

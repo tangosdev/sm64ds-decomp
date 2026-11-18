@@ -225,10 +225,10 @@ int daObjShell_c::CleanupResources() {
  * this overlay does it. InitResources calls it once, at spawn. Named after
  * daObjTbox_c::UpdateModelTransform, its twin two TUs earlier in this overlay. */
 void daObjShell_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = mPosY >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* The destructors (D0 0x0211a968, D1 0x0211a930) are not written here on

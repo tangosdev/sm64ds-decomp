@@ -79,12 +79,12 @@ s32 daPgBby_c::InitResources()
     mCylClsn.Init(this, 0x28000, 0x50000, 0x800004, 0x9000);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
-    mScaleX = 0x400;
-    mScaleY = 0x400;
-    mScaleZ = 0x400;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
+    mScale.x = 0x400;
+    mScale.y = 0x400;
+    mScale.z = 0x400;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mEatingPlayer = 0;
     mCarrier = 0;
@@ -172,8 +172,8 @@ int daPgBby_c::StateKeepDistanceUpdate() {
     switch (mSubState) {
     case 0:
         angle = (Vec3_HorzAngle(&mPos, &player->mPos) + 0x8000);
-        ApproachLinear(mAngleY, angle, 0x514);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, angle, 0x514);
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = 0x5000;
         if (dist >= 0x1c2000) {
             mSubState = 2;
@@ -181,8 +181,8 @@ int daPgBby_c::StateKeepDistanceUpdate() {
         break;
     case 1:
         angle = Vec3_HorzAngle(&mPos, &player->mPos);
-        ApproachLinear(mAngleY, angle, 0x514);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, angle, 0x514);
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = 0x5000;
         if (dist > 0x384000) {
             mSubState = 2;
@@ -228,7 +228,7 @@ int daPgBby_c::StateKeepDistanceUpdate() {
 /* State 1, enter: a hop. */
 int daPgBby_c::StateDiveEnter() {
     mHorzSpeed = 0x19000;
-    mVertSpeed = 0xc000;
+    mSpeed.y = 0xc000;
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyDiveAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mSubState = 0;
     mStateId = 1;
@@ -281,8 +281,8 @@ int daPgBby_c::StateHeldEnter() {
 /* State 2, update: face where the carrier faces; once no longer held, drop
    to the ground under the carrier and return to state 0. */
 int daPgBby_c::StateHeldUpdate() {
-    mAngleY = mCarrier->mAngleY;
-    mPrevAngleY = mAngleY;
+    mAngle.y = mCarrier->mAngle.y;
+    mPrevAngle.y = mAngle.y;
     u32 flags = mFlags;
     int held = (flags & 0x100) != 0;
     if (held) {
@@ -293,9 +293,9 @@ int daPgBby_c::StateHeldUpdate() {
     {
         daPly_c *carrier = mCarrier;
         Vector3 from;
-        int y = carrier->mPosY;
-        int z = carrier->mPosZ;
-        int x = carrier->mPosX;
+        int y = carrier->mPos.y;
+        int z = carrier->mPos.z;
+        int x = carrier->mPos.x;
         int aboveY = y + 0x32000;
         from.x = x;
         from.y = aboveY;
@@ -329,14 +329,14 @@ int daPgBby_c::StateWalkToMotherEnter() {
    units from her. */
 int daPgBby_c::StateWalkToMotherUpdate() {
     int dist = Vec3_Dist(&mPos, &mMother->mPos);
-    short tgt = mAngleY;
+    short tgt = mAngle.y;
     if (dist > 0xdc000) {
         tgt = Vec3_HorzAngle(&mPos, &mMother->mPos);
     } else if (dist < 0xc8000) {
         tgt = (Vec3_HorzAngle(&mPos, &mMother->mPos) + 0x8000);
     }
-    ApproachLinear(mAngleY, tgt, 0x2bc);
-    mPrevAngleY = mAngleY;
+    ApproachLinear(mAngle.y, tgt, 0x2bc);
+    mPrevAngle.y = mAngle.y;
     mAnmModel.Advance();
     UpdatePos(&mCylClsn);
     UpdateFloorAndWalls(&mWithMeshClsn);
@@ -436,46 +436,46 @@ int daPgBby_c::func_ov072_02121368()
 
     mFlags &= ~0x80000;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
 
     eater = mEatingPlayer;
-    posX = &mPosX;
-    angle = eater->mAngleY;
+    posX = &mPos.x;
+    angle = eater->mAngle.y;
     dist = 0x50000;
     round = 0x800;
-    mAngleY = angle;
-    angle = mAngleY;
-    posY = &mPosY;
-    posZ = &mPosZ;
-    mPrevAngleY = angle;
+    mAngle.y = angle;
+    angle = mAngle.y;
+    posY = &mPos.y;
+    posZ = &mPos.z;
+    mPrevAngle.y = angle;
 
     eater = mEatingPlayer;
     {
-        s32 *src = &eater->mPosX;
+        s32 *src = &eater->mPos.x;
         s32 srcX = src[0];
         fromp = &from;
-        mPosX = srcX;
+        mPos.x = srcX;
         s32 srcY = src[1];
         store = 1;
-        mPosY = srcY;
+        mPos.y = srcY;
         s32 srcZ = src[2];
-        mPosZ = srcZ;
+        mPos.z = srcZ;
     }
 
-    index = mAngleY;
+    index = mAngle.y;
     angle = FX_SinIdx(index >> 4);
     *posX = *posX + (int)(((s64)angle * dist + round) >> 12);
     *posY = *posY + dist;
 
-    index = mAngleY;
+    index = mAngle.y;
     angle = FX_CosIdx(index >> 4);
     *posZ = *posZ + (int)(((s64)angle * dist + round) >> 12);
 
     eater = mEatingPlayer;
-    y = eater->mPosY;
-    z = eater->mPosZ;
+    y = eater->mPos.y;
+    z = eater->mPos.z;
     aboveY = y + dist;
-    x = eater->mPosX;
+    x = eater->mPos.x;
     from.x = x;
     from.y = aboveY;
     from.z = z;
@@ -492,9 +492,9 @@ int daPgBby_c::func_ov072_021212c0()
 {
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        mVertSpeed = (mVertSpeed * -0x28) / 100;
+        mSpeed.y = (mSpeed.y * -0x28) / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         ChangeState(0);
     }
@@ -525,10 +525,10 @@ void daPgBby_c::UpdateModelAndShadow() {
         carry = UpdateCarry(*mCarrier, gPenguinBabyCarryOffsets[idx]);
         *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)carry;
     } else {
-        Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-        mAnmModel.mat4x3.t.x = mPosX >> 3;
-        mAnmModel.mat4x3.t.y = mPosY >> 3;
-        mAnmModel.mat4x3.t.z = mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+        mAnmModel.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel.mat4x3.t.y = mPos.y >> 3;
+        mAnmModel.mat4x3.t.z = mPos.z >> 3;
     }
 
     if ((mFlags & 0x40000) ? 1 : 0) {
@@ -538,14 +538,14 @@ void daPgBby_c::UpdateModelAndShadow() {
     shadowHeight = 0xb4000;
     shadowRadius = 0x5a000;
     if (mCarrier && ((mFlags & 0x4000) ? 1 : 0)) {
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         v.y -= 0xa000;
         dBgCh_Gnd ground;
         ground.SetObjAndPos(v, 0);
         if (ground.DetectClsn()) {
-            shadowHeight = mPosY - ground.clsnY;
+            shadowHeight = mPos.y - ground.clsnY;
             if (shadowHeight < 0x1000) shadowHeight = 0x1000;
             shadowRadius = shadowRadius - FX_MUL(shadowHeight, 0x180);
             if (shadowRadius < 0x1000) shadowRadius = 0x1000;
@@ -567,9 +567,9 @@ void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
-            int x = FX_MUL(floorNormal.x, mSpeedX);
-            int y = FX_MUL(floorNormal.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(x + y, floorNormal.y) + 0x8000);
+            int x = FX_MUL(floorNormal.x, mSpeed.x);
+            int y = FX_MUL(floorNormal.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(x + y, floorNormal.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {
@@ -585,23 +585,23 @@ int daPgBby_c::GuardStepHeight() {
     if (mWithMeshClsn.IsOnGround()) {
         dBgCh_Gnd ground;
         {
-            int z = mPosZ;
-            int y = mPosY + 0x1e000;
-            int x = mPosX;
+            int z = mPos.z;
+            int y = mPos.y + 0x1e000;
+            int x = mPos.x;
             v.x = x;
             v.y = y;
             v.z = z;
         }
         ground.SetObjAndPos(v, this);
         if (ground.DetectClsn() != 0) {
-            int d = ground.clsnY - mPosY;
+            int d = ground.clsnY - mPos.y;
             if (d < 0) d = -d;
             if (d <= 0x1900)
                 goto bail;
         }
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
         return 1;
     bail:
         ;
@@ -653,7 +653,7 @@ void daPgBby_c::CheckRespawn() {
     Vector3 out;
     Vector3 tmp;
     if (mStateId == 3) return;
-    if ((unsigned)mPosY > (unsigned)(-0x1800000)) {
+    if ((unsigned)mPos.y > (unsigned)(-0x1800000)) {
         if (Vec3_Dist(&mSpawnPos, &mPos) < 0x190000)
             return;
         if (DecIfAbove0_Short(&mRespawnTimer) != 0) return;
@@ -661,9 +661,9 @@ void daPgBby_c::CheckRespawn() {
     Vec3_Asr(&tmp, &mSpawnPos, 3);
     if (data_0209f43c.TransformAndClip(data_0209b3ec, tmp, 0x1f400, out) <= 0xc350000)
         return;
-    mPosX = mSpawnPos.x;
-    mPosY = mSpawnPos.y;
-    mPosZ = mSpawnPos.z;
+    mPos.x = mSpawnPos.x;
+    mPos.y = mSpawnPos.y;
+    mPos.z = mSpawnPos.z;
 }
 
 s32 daPgBby_c::OnYoshiTryEat()

@@ -78,8 +78,8 @@ int daObjKanban_c::Behavior() {
     if (tgt != 0) {
         mine = mPos;
         pos = mPos;
-        pos.x += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x5a000);
-        pos.z += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x5a000);
+        pos.x += FX_MUL(FX_SinIdx((u16)mAngle.y >> 4), 0x5a000);
+        pos.z += FX_MUL(FX_CosIdx((u16)mAngle.y >> 4), 0x5a000);
         {
             const Vector3 &plyPos = tgt->mPos;
             tpos = plyPos;
@@ -91,7 +91,7 @@ int daObjKanban_c::Behavior() {
             case 0:
                 if (Vec3_HorzDist(&tpos, &pos) < 0x32000) {
                     mState += 1;
-                } else if (ApproachLinear(tgt->mAngleY, Vec3_HorzAngle(&tpos, &pos), 0x800)) {
+                } else if (ApproachLinear(tgt->mAngle.y, Vec3_HorzAngle(&tpos, &pos), 0x800)) {
                     mState += 1;
                     tgt->func_ov002_020bec9c(1, 0, 0x1000, 0);
                 }
@@ -103,7 +103,7 @@ int daObjKanban_c::Behavior() {
                 }
                 break;
             case 2:
-                if (ApproachLinear(tgt->mAngleY, (s16)(mAngleY + 0x8000), 0x800)) {
+                if (ApproachLinear(tgt->mAngle.y, (s16)(mAngle.y + 0x8000), 0x800)) {
                     mMessageID = 0;
                     if (param1 != 0xffff)
                         mMessageID = (s16)param1;
@@ -133,7 +133,7 @@ int daObjKanban_c::Behavior() {
                 if (isPlayer != 0) {
                     const Vector3 &plyPos = other->mPos;
                     opos = plyPos;
-                    if (AngleDiff(Vec3_HorzAngle(&mPos, &opos), mAngleY) < 0x4000) {
+                    if (AngleDiff(Vec3_HorzAngle(&mPos, &opos), mAngle.y) < 0x4000) {
                         if (static_cast<daPly_c *>(other)->StartTalk(*this, 0))
                             mTalkingPlayer = static_cast<daPly_c *>(other);
                     }

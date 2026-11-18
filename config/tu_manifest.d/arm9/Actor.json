@@ -592,7 +592,7 @@
       "ordinal": 78
     },
     {
-      "symbol": "_Z13func_02010e78PK7Vector3PK10Vector3_16as",
+      "symbol": "_ZN8SpawnArg13func_02010e78EPK10Vector3_16as",
       "address": "0x02010e78",
       "size": "0x00000054",
       "legacy_source": "src/func_02010e78.c",
@@ -735,26 +735,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "This TU odr-uses Vector3 (members pass it by reference and build by-value temporaries), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
-    },
-    {
-      "symbol": "_ZN8dActor_c21@class$161d_actor_cppD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Unnamed Vector3 union destructor emitted between C1 and C2. No symbols.txt row names it. Deadstripped so the kept constructor order is C1, Vector3sD1, C2."
-    },
-    {
-      "symbol": "_ZN8dActor_c21@class$158d_actor_cppD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Unnamed Vector3 union destructor emitted between C1 and C2. No symbols.txt row names it. Deadstripped so the kept constructor order is C1, Vector3sD1, C2."
-    },
-    {
-      "symbol": "_ZN8dActor_c21@class$155d_actor_cppD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Unnamed Vector3 union destructor emitted between C1 and C2. No symbols.txt row names it. Deadstripped so the kept constructor order is C1, Vector3sD1, C2."
-    },
-    {
-      "symbol": "_ZN8dActor_c21@class$152d_actor_cppD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Unnamed Vector3 union destructor emitted between C1 and C2. No symbols.txt row names it. Deadstripped so the kept constructor order is C1, Vector3sD1, C2."
     },
     {
       "symbol": "_ZN7dBase_cD2Ev",

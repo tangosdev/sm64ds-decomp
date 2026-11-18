@@ -168,14 +168,14 @@ int daHolhei_c::InitResources()
     mdCc_c.Init(this, 0xc8000, 0xfa000, 0x200004, 0x3010);
     mModel.speed = 0x1000;
     mMeshClsn.Init(this, 0x118000, 0x118000, 0, 0);
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mCoinType = 1;
     mExtraCoinCount = 4;
-    mPrevPosX = mPosX;
-    mPrevPosY = mPosY;
-    mPrevPosZ = mPosZ;
+    mPrevPosX = mPos.x;
+    mPrevPosY = mPos.y;
+    mPrevPosZ = mPos.z;
     ChangeState(&data_ov062_0211dee0);
     return 1;
 }
@@ -195,9 +195,9 @@ int daHolhei_c::Behavior()
             (this->*(m->update))();
     }
 
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdatePos(&mdCc_c);
 
     if (mState != &data_ov062_0211dea0) {
@@ -205,10 +205,10 @@ int daHolhei_c::Behavior()
             int atEdge = 0;
             signed char t = gCurrentSublevel;
             if (t == 0x16) {
-                if (mPosX > (int)0xff95c000)
+                if (mPos.x > (int)0xff95c000)
                     atEdge = 1;
             } else if (t == 0x15) {
-                if (mPosZ < (int)0xff2f4000)
+                if (mPos.z < (int)0xff2f4000)
                     atEdge = 1;
             }
             if (atEdge != 0
@@ -216,17 +216,17 @@ int daHolhei_c::Behavior()
                     && IsGoingOffCliff(mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, 0x32000))) {
                 mHorzSpeed = 0;
                 mEdgeStop = 1;
-                mPosX = mPrevPosX;
-                mPosY = mPrevPosY;
-                mPosZ = mPrevPosZ;
+                mPos.x = mPrevPosX;
+                mPos.y = mPrevPosY;
+                mPos.z = mPrevPosZ;
             } else {
                 if (mEdgeStop == 1)
                     mEdgeStop = 0;
             }
         }
-        mPrevPosX = mPosX;
-        mPrevPosY = mPosY;
-        mPrevPosZ = mPosZ;
+        mPrevPosX = mPos.x;
+        mPrevPosY = mPos.y;
+        mPrevPosZ = mPos.z;
         UpdateWMClsn(mMeshClsn, 3);
     }
 
@@ -293,10 +293,10 @@ void daHolhei_c::HomeCarryOffset() {
 
 /* Bone 3's transform times the model's yaw, stored where a holder looks. */
 void daHolhei_c::BuildHoldMatrix() {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
     MTX_Concat43(&mModel.data.transforms[3], &mModel.mat4x3, &mHoldMtx);
     mCarryMatrix = &mHoldMtx;
 }
@@ -304,9 +304,9 @@ void daHolhei_c::BuildHoldMatrix() {
 /* Shadow under this actor. Off the ground the radius grows. */
 void daHolhei_c::UpdateShadow() {
     mShadowMtx = IDENTITY_MATRIX4X3;
-    mShadowMtx.m[9] = mPosX >> 3;
-    mShadowMtx.m[10] = mPosY >> 3;
-    mShadowMtx.m[11] = mPosZ >> 3;
+    mShadowMtx.m[9] = mPos.x >> 3;
+    mShadowMtx.m[10] = mPos.y >> 3;
+    mShadowMtx.m[11] = mPos.z >> 3;
     if (mMeshClsn.IsOnGround() != 0) {
         DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x32000, 0xf);
     } else {
@@ -317,9 +317,9 @@ void daHolhei_c::UpdateShadow() {
 /* Shadow under the held actor. mHeld is reloaded before each word. */
 void daHolhei_c::UpdateHeldShadow() {
     mShadowMtx = IDENTITY_MATRIX4X3;
-    mShadowMtx.m[9] = mHeld->mPosX >> 3;
-    mShadowMtx.m[10] = mHeld->mPosY >> 3;
-    mShadowMtx.m[11] = mHeld->mPosZ >> 3;
+    mShadowMtx.m[9] = mHeld->mPos.x >> 3;
+    mShadowMtx.m[10] = mHeld->mPos.y >> 3;
+    mShadowMtx.m[11] = mHeld->mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x32000, 0xf);
 }
 
@@ -347,8 +347,8 @@ int daHolhei_c::func_ov062_02116c78() {
 int daHolhei_c::func_ov062_02116bf8() {
     ApproachLinear(mHorzSpeed, 0, 0x2000);
     if (mTurnWait == 0) {
-        ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
-        if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
+        ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
+        if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
             ChangeState(&data_ov062_0211dee0);
     }
     return 1;
@@ -384,7 +384,7 @@ int daHolhei_c::func_ov062_02116a08() {
         return 1;
     }
 
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
 
     mHorzSpeed = 0xa000;
     pl = ClosestPlayer();
@@ -410,12 +410,12 @@ int daHolhei_c::func_ov062_02116a08() {
 
 /* Step back to the saved position and pick a new facing toward home. */
 int daHolhei_c::func_ov062_02116980() {
-    mPosX = mPrevPosX;
-    mPosY = mPrevPosY;
-    mPosZ = mPrevPosZ;
+    mPos.x = mPrevPosX;
+    mPos.y = mPrevPosY;
+    mPos.z = mPrevPosZ;
     mHorzSpeed = 0;
     if (AngleDiff(mTargetAngY, Vec3_HorzAngle(&mPos, &mHomePos)) <= 0x2000)
-        mTargetAngY = (s16)(mPrevAngleY - 0x1000);
+        mTargetAngY = (s16)(mPrevAngle.y - 0x1000);
     else
         mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     mStateTimer = 70;
@@ -428,24 +428,24 @@ int daHolhei_c::func_ov062_02116894() {
         return 1;
     if (mHorzSpeed != 0) {
         if (ClassifyObstruction() != 0 || mEdgeStop == 1) {
-            mTargetAngY = (s16)(mPrevAngleY - 0x2000);
+            mTargetAngY = (s16)(mPrevAngle.y - 0x2000);
         } else {
-            mPrevAngleY = mTargetAngY;
+            mPrevAngle.y = mTargetAngY;
             ChangeState(&data_ov062_0211dee0);
             mChaseCooldown = 30;
-            mTargetAngY = mPrevAngleY;
+            mTargetAngY = mPrevAngle.y;
             return 1;
         }
     }
-    if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
+    if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
         mHorzSpeed = 0xa000;
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
     return 1;
 }
 
 /* Stop, and aim the next turn at home. */
 int daHolhei_c::func_ov062_02116850() {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     mStateTimer = 20;
     mHorzSpeed = 0;
@@ -455,8 +455,8 @@ int daHolhei_c::func_ov062_02116850() {
 /* Turn toward mTargetAngY. Facing it starts the walk; otherwise the timer
    is refreshed. When the timer expires, cool down and return to the walk. */
 int daHolhei_c::func_ov062_021167c0() {
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
-    if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
+    if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
         mHorzSpeed = 0xa000;
     else
         mStateTimer = 20;
@@ -502,8 +502,8 @@ int daHolhei_c::func_ov062_021165e8()
 
     if (mChargeStep == 0) {
         mTargetAngY = HorzAngleToCPlayer();
-        ApproachAngle(&mPrevAngleY, mTargetAngY, 0x80, 0x200, 0x400);
-        if (AngleDiff(mTargetAngY, mAngleY) < 0x200) {
+        ApproachAngle(&mPrevAngle.y, mTargetAngY, 0x80, 0x200, 0x400);
+        if (AngleDiff(mTargetAngY, mAngle.y) < 0x200) {
             mHorzSpeed = 0x1e000;
             mChargeStep = 1;
             mChasePos.x = pos.x;
@@ -543,11 +543,11 @@ int daHolhei_c::func_ov062_021164e8()
     }
     if (IsFlagSet(this, 0x400) || IsFlagSet(this, 0x2000) || !IsFlagSet(this, 0x100)) {
         dActor_c *held = mHeld;
-        mPrevAngleY = held->mAngleY;
+        mPrevAngle.y = held->mAngle.y;
         mdCc_c.flags |= 2;
         ChangeState(&data_ov062_0211dec0);
         if (mHeld->param1 == 2) {
-            mVertSpeed = 0x50000;
+            mSpeed.y = 0x50000;
             mHorzSpeed = 0x14000;
         }
         mHeld = 0;
@@ -558,7 +558,7 @@ int daHolhei_c::func_ov062_021164e8()
 /* Pop off: gravity, a launch, and a clear of the runtime flags. */
 int daHolhei_c::func_ov062_02116498() {
     mVertAccel = -0x4000;
-    mVertSpeed = 0x3c000;
+    mSpeed.y = 0x3c000;
     mHorzSpeed = 0xa000;
     mTerminalVelocity = -0x64000;
     func_02012694(0xf7, &mCamSpacePos);
@@ -569,7 +569,7 @@ int daHolhei_c::func_ov062_02116498() {
 /* Below the death plane, or on landing: poof, shake, drop coins, die. */
 int daHolhei_c::func_ov062_021163b0() {
     Vector3 v[2];
-    if (data_02092138 > mPosY) {
+    if (data_02092138 > mPos.y) {
         KillAndTrackInDeathTable();
         return 1;
     }
@@ -578,13 +578,13 @@ int daHolhei_c::func_ov062_021163b0() {
         KillAndTrackInDeathTable();
         func_02012694(0x125, &mCamSpacePos);
         gCamera->func_0200d8c8(&mPos, 0x7d0000);
-        v[0].x = mPosX;
-        v[0].y = mPosY;
-        v[0].z = mPosZ;
+        v[0].x = mPos.x;
+        v[0].y = mPos.y;
+        v[0].z = mPos.z;
         v[0].y += 0x32000;
-        v[1].x = mPosX;
-        v[1].y = mPosY;
-        v[1].z = mPosZ;
+        v[1].x = mPos.x;
+        v[1].y = mPos.y;
+        v[1].z = mPos.z;
         SpawnCoins(v[1], mExtraCoinCount + 1, 0xa000, 0);
     }
     return 1;
@@ -616,7 +616,7 @@ int daHolhei_c::func_ov062_021162b8() {
 
 /* Spin, and leave once the timer reaches zero. */
 int daHolhei_c::func_ov062_02116274() {
-    mPrevAngleY += 0x500;
+    mPrevAngle.y += 0x500;
     if (mStateTimer == 0)
         ChangeState(&data_ov062_0211deb0);
     return 1;
@@ -631,7 +631,7 @@ int daHolhei_c::func_ov062_02116238() {
    animation finishes, clear the cylinder bit and leave. */
 int daHolhei_c::func_ov062_021161a8() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
-        func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngleY);
+        func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngle.y);
         mHeld = 0;
         func_02012694(0x126, &mCamSpacePos);
     }
@@ -675,7 +675,7 @@ void daHolhei_c::HandleCylinderHit() {
         return;
     daPly_c *player = static_cast<daPly_c *>(a);
     angle = HorzAngleToCPlayer();
-    angle = AngleDiff(angle, mAngleY);
+    angle = AngleDiff(angle, mAngle.y);
     if (angle > 0x2000) {
         if ((mdCc_c.hitFlags & 0x1000) == 0)
             return;
@@ -702,7 +702,7 @@ int daHolhei_c::ClassifyObstruction() {
     if (mMeshClsn.IsOnGround()) {
         dBgPi *floor = mMeshClsn.GetFloorResult();
         floor->surface.CopyNormalTo(v);
-        slope = func_02010844(&v, mAngleY);
+        slope = func_02010844(&v, mAngle.y);
     }
     if (mMeshClsn.IsOnWall())
         return 1;

@@ -183,7 +183,7 @@ struct dScMgSlot1_c : dScMgBase_c {
 
     betIcon_c mBetIcon;    /* 0x4660 -- RTTI-proven nested touch icon */
     SlotBlink mMatchBlink; /* 0x4684 -- placed from sSlotMatchBlinkX/Y[mMatchedSymbol] */
-    SlotBlink mWildBlink;  /* 0x4690 -- placed from sSlotWildBlinkX/Y[mWildCount - 1] */
+    SlotBlink mWildBlink;  /* 0x4690 -- placed from sSlotWildBlinkPos[mWildCount - 1] */
     SlotLamp mPayoutLamp;  /* 0x469c -- started when a spin pays out */
     u32 mReelScroll[3];    /* 0x46a4 -- fx32 distance to the next symbol */
     s32 mSpinSoundHandle;  /* 0x46b0 -- returned by Sound_PlayIfNotActive */

@@ -1,7 +1,7 @@
 //cpp
 /* Lethal Lava Land's seesaw platform (registry profile FL_SEESAW), a
  * dBgActor_c leaf. While mSwingCooldown is zero Behavior adds mSwingStep
- * to mAngleX every frame; once the tilt passes +-0x400 the step's sign
+ * to mAngle.x every frame; once the tilt passes +-0x400 the step's sign
  * flips and the cooldown reloads to 0x1e.
  *
  * _ZTS16daObjFl_Seesaw_c is "16daObjFl_Seesaw_c" at ov022 0x02113ffc and
@@ -50,13 +50,13 @@ extern CLPS_Block data_ov064_0211bacc;
 /* Vtable slots 16 (D1) and 17 (D0). */
 daObjFl_Seesaw_c::~daObjFl_Seesaw_c() {}
 
-/* Writes mModel's transform from mPosX/Y/Z and mAngleX/Y/Z -- the base's
+/* Writes mModel's transform from mPos.x/.y/.z and mAngle.x/.y/.z -- the base's
  * UpdateModelPosAndRotY job, on three axes. */
 void daObjFl_Seesaw_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 s32 daObjFl_Seesaw_c::CleanupResources() {
@@ -77,8 +77,8 @@ s32 daObjFl_Seesaw_c::Render() {
 s32 daObjFl_Seesaw_c::Behavior() {
     mMeshCollider.SetClipRadius(0x650000);
     if (DecIfAbove0_Byte(&mSwingCooldown) == 0) {
-        mAngleX += mSwingStep;
-        if (mAngleX >= 0x400 || mAngleX <= -0x400) {
+        mAngle.x += mSwingStep;
+        if (mAngle.x >= 0x400 || mAngle.x <= -0x400) {
             mSwingStep = -mSwingStep;
             mSwingCooldown = 30;
         }
@@ -96,7 +96,7 @@ s32 daObjFl_Seesaw_c::InitResources() {
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov022_021145a0);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov064_0211bacc);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov064_0211bacc);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mSwingStep = -0x10;
     return 1;
