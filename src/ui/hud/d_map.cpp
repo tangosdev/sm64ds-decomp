@@ -551,31 +551,21 @@ s32 dMap_c::Behavior()
     player = gPlayers[gLocalPlayerId];
     focus = 0;
 
-    if (gSceneFader->IsAtStart() == 0)
-        goto L274;
-    if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
-        goto L274;
-    if (data_0209d4b0 != 0) goto L274;
-    if (data_0209f350[gLocalPlayerId] != 0)
-        goto L274;
-    if (player->Unk_020ca8f8() == 1) goto L274;
+    if (gSceneFader->IsAtStart() != 0 && !(gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING) &&
+        data_0209d4b0 == 0 && data_0209f350[gLocalPlayerId] == 0 && player->Unk_020ca8f8() != 1) {
+        u8 touching;
 
-    if (this->mTouchCircleTimer != 0) {
-        this->mTouchCircleTimer -= data_0208ee44;
-    }
+        if (this->mTouchCircleTimer != 0) {
+            this->mTouchCircleTimer -= data_0208ee44;
+        }
 
-    flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
-    if ((u8)flagsOr) goto L200;
-    if (gNextSublevel >= 0)
-        goto L200;
-    if (data_0209f204 != 0) goto L200;
-    if (data_ov002_02111150 != 0) goto L200;
-    if (data_0209d660 != 0) goto L200;
-    {
-        u8 v = data_0209f498[gActivePlayerSlot].touching;
-        if (v == 0 && this->mTouchCircleTimer == 0) goto L200;
+        flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
+        if (!(u8)flagsOr && gNextSublevel < 0 && data_0209f204 == 0 && data_ov002_02111150 == 0 &&
+            data_0209d660 == 0 &&
+            ((touching = data_0209f498[gActivePlayerSlot].touching) != 0 ||
+             this->mTouchCircleTimer != 0)) {
         gSubScreenLayers |= 4;
-        if (v != 0) {
+        if (touching != 0) {
             this->mTouchCircleTimer = 30;
             SetSubBg2Offset(256 - data_0209f498[gActivePlayerSlot].tx,
                             128 - data_0209f498[gActivePlayerSlot].ty);
@@ -587,85 +577,45 @@ s32 dMap_c::Behavior()
         else
             G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
                                   GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
-        goto L2a4;
+        } else {
+            s32 b = (gGameMode == 1);
+            if (b != 0 || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+                gSubScreenLayers &= ~4;
+                if (!(u8)flagsOr) {
+                    GXS_SetVisiblePlane(gSubScreenLayers);
+                    G2S_BlendNone();
+                }
+                this->mTouchCircleTimer = 0;
+            }
+        }
+    } else {
+        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) || data_0209d4b0 != 0)
+            gSubScreenLayers &= ~4;
     }
 
-L200: {
-    s32 b = (gGameMode == 1);
-    if (b == 0) {
-        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
-            goto L2a4;
+    if (cam != 0) {
+        if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
+             gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
+            SublevelToLevel(gCurrentSublevel) == 4 ||
+            (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
+            ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+             this->mInIntroCutscene == 0)) {
+            this->mAngle = 0;
+        } else if (this->mInIntroCutscene != 0) {
+            if (gMapIntroRotating != 0) {
+                /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever (r72-r75) applies to
+                   this scalar pin.
+                   Kept (#821 r80): getter tried -> a u16 angle accessor in the step is 0xcf8 of 0xcfc. */
+                *(s16 *)&this->mAngle += 0x40; // measured (#821 r68): the plain u16 `+=` loads ldrh, ROM ldrsh
+                if (this->mAngle >= 0x8000)
+                    gMapIntroRotating = 0;
+            }
+        } else if (data_0209d660 == 0 && !(cam->mFlags & 0xc000) && !(cam->mFlags & 8)) {
+            this->mAngle = (cam->mAngleY & 0xffe0);
+        }
+        /* The camera's target player is what the map follows. */
+        focus = cam->mTargetPlayer;
     }
-    gSubScreenLayers &= ~4;
-    if (!(u8)flagsOr) {
-        GXS_SetVisiblePlane(gSubScreenLayers);
-        G2S_BlendNone();
-    }
-    this->mTouchCircleTimer = 0;
-    goto L2a4;
-}
-
-L274:
-    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0) {
-        if (data_0209d4b0 == 0) goto L2a4;
-    }
-    gSubScreenLayers &= ~4;
-
-L2a4:
-    if (cam == 0) goto L3e8;
-    if (SublevelToLevel(gCurrentSublevel) != 0x1d)
-        goto A1;
-    if (gCurrentSublevel == 1)
-        goto A1;
-    if (gCurrentSublevel == 0x33)
-        goto A1;
-    if (gCurrentSublevel != 3)
-        goto L350;
-A1:
-    if (SublevelToLevel(gCurrentSublevel) == 4)
-        goto L350;
-    if (SublevelToLevel(gCurrentSublevel) != 0x13)
-        goto L318;
-    if (gCurrentSublevel == 0x2e)
-        goto L350;
-L318:
-    {
-    s32 b = (gGameMode == 0);
-    if (b == 0)
-        goto L360;
-    if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)
-        goto L360;
-    if (this->mInIntroCutscene != 0)
-        goto L360;
-    }
-L350:
-    this->mAngle = 0;
-    goto L3e0;
-
-L360:
-    if (this->mInIntroCutscene == 0) goto L3a4;
-    if (gMapIntroRotating == 0)
-        goto L3e0;
-    /* Kept (#821 r76): a sign pun on a scalar; no block-copy or type lever (r72-r75) applies to
-       this scalar pin.
-       Kept (#821 r80): getter tried -> a u16 angle accessor in the step is 0xcf8 of 0xcfc. */
-    *(s16 *)&this->mAngle += 0x40; // measured (#821 r68): the plain u16 `+=` loads ldrh, ROM ldrsh
-    if (this->mAngle >= 0x8000)
-        gMapIntroRotating = 0;
-    goto L3e0;
-
-L3a4:
-    if (data_0209d660 != 0) goto L3e0;
-    {
-        s32 f = cam->mFlags;
-        if (f & 0xc000) goto L3e0;
-        if (f & 8) goto L3e0;
-    }
-    this->mAngle = (cam->mAngleY & 0xffe0);
-
-L3e0:
-    /* The camera's target player is what the map follows. */
-    focus = cam->mTargetPlayer;
 
 L3e8:
     if (focus == 0) goto Lae4;
@@ -1001,22 +951,13 @@ int dMap_c::InitResources()
 
     mTargetInvScale = GetMinimapScale(data_ov002_02111148);
 
-    {
-        int b1 = (gGameMode == 0);
-        if (b1) {
-            if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
-                int b3 = (gRunningKuppaScript != 0);
-                if (!b3) {
-                    mInvScale = (mTargetInvScale) << 1;
-                    mAngle = 0;
-                    mInIntroCutscene = 1;
-                    goto scale_done;
-                }
-            }
-        }
+    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 && (int)(gRunningKuppaScript != 0) == 0) {
+        mInvScale = mTargetInvScale << 1;
+        mAngle = 0;
+        mInIntroCutscene = 1;
+    } else {
         mInvScale = mTargetInvScale;
         mInIntroCutscene = 0;
-    scale_done:;
     }
 
     data_ov002_02111150 = 0;
