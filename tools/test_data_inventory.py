@@ -78,6 +78,16 @@ from:0x00001004 kind:load to:0x00001004 module:overlay(1)
         self.assertEqual(row["manifest_claims"][0]["verification"], "not-reverified")
         self.assertTrue(all(v == "unreviewed" for v in row["interpretation"].values()))
 
+    def test_null_section_lists_are_absent_not_errors(self):
+        """47 main manifests carry an explicit null instead of an empty list."""
+        self.write("config/tu_manifest.d/arm9/null-sections.json", json.dumps({
+            "module": "arm9", "id": "arm9/null-sections", "source": "src/caller.cpp",
+            "status": "promoted", "rodata": None, "symbol_binding_rewrites": None,
+            "data": [{"symbol": "gData", "size": "0x8"}]}))
+        sections = [c["section"] for c in self.row(self.report())["manifest_claims"]]
+        self.assertIn("data", sections)
+        self.assertNotIn("rodata", sections)
+
     def test_unlabelled_prefix_and_tail_are_in_section_coverage(self):
         r = self.report()
         section = next(s for s in r["section_coverage"] if s["module"] == "arm9" and s["section"] == ".data")
