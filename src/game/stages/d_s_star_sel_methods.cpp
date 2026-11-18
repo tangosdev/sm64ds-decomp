@@ -23,22 +23,15 @@
 #include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
 #include "dScStarSel_c.h"
-/* decl_common.h still spells these three camera vectors as void*. The
-   LookAt call reads each as twelve bytes. Hide that declaration. */
-#define data_ov003_020b132c data_ov003_020b132c_decl
-#define data_ov003_020b1338 data_ov003_020b1338_decl
-#define data_ov003_020b1344 data_ov003_020b1344_decl
 #include "decl_common.h"
-#undef data_ov003_020b132c
-#undef data_ov003_020b1338
-#undef data_ov003_020b1344
+#include "nitro/fx/fx.h"
 
 /* Eye, focus, and up for G3i_LookAt_. 20.12 fixed-point.
    extern keeps the retail global binding; a plain const would be local.
    The first two are declared out of address order: mwcc emits that pair reversed. */
-extern const s32 data_ov003_020b1338[3] = {0, 0x1000, 0};
-extern const s32 data_ov003_020b132c[3] = {0, 0, 0x00f60000};
-extern const s32 data_ov003_020b1344[3] = {0, 0, 0};
+extern const VecFx32 data_ov003_020b1338 = {0, 0x1000, 0};
+extern const VecFx32 data_ov003_020b132c = {0, 0, 0x00f60000};
+extern const VecFx32 data_ov003_020b1344 = {0, 0, 0};
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "OAM.h"
@@ -406,8 +399,8 @@ s32 dScStarSel_c::Render() {
 
     if (SublevelToLevel(gNextSublevel) <= 0xe) {
         G3i_PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000, 0x1000, 1, 0);
-        G3i_LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
-                    (const Vector3 *)&data_ov003_020b1344, true, &mtx);
+        G3i_LookAt_(&data_ov003_020b132c, &data_ov003_020b1338, &data_ov003_020b1344, true,
+                    (MtxFx43 *)&mtx);
         CopyToViewMat(&mtx);
 
         /* The plates are 0x18000 apart, centred on x = 0, and sit at y = 0x28000. */
