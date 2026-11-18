@@ -27,3 +27,23 @@ src/game/actors/d_a_kuri_king.cpp:
     .data.kuriMeta1 start:0x02122e78 end:0x02122f34
     .bss start:0x02122fe0 end:0x021231a0
 
+src/data/ov074/data_ov074_02122e4c.c:
+    complete
+    .data.kuriMiddle start:0x02122e4c end:0x02122e5c
+
+src/data/ov074/data_ov074_02122e5c.c:
+    complete
+    .data.kuriMiddle start:0x02122e5c end:0x02122e78
+
+src/data/ov074/data_ov074_02122f34.c:
+    complete
+    .data.kuriTail start:0x02122f34 end:0x02122f38
+
+src/data/ov074/data_ov074_02122f38.c:
+    complete
+    .data.kuriTail start:0x02122f38 end:0x02122f3c
+
+src/data/ov074/data_ov074_02122f3c.c:
+    complete
+    .data.kuriTail start:0x02122f3c end:0x02122fe0
+

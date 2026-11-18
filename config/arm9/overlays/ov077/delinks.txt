@@ -26,3 +26,87 @@ src/game/actors/d_a_popoi.cpp:
     .ctor start:0x021277d4 end:0x021277d8
     .data start:0x02127a00 end:0x02127a50
     .bss start:0x02127c88 end:0x02127d40
+src/data/ov077/data_ov077_02127230.c:
+    complete
+    .rodata start:0x02127230 end:0x02127238
+
+src/data/ov077/data_ov077_02127238.c:
+    complete
+    .rodata start:0x02127238 end:0x02127240
+
+src/data/ov077/data_ov077_021277e0.c:
+    complete
+    .data start:0x021277e0 end:0x021277e8
+
+src/data/ov077/data_ov077_021277e8.c:
+    complete
+    .data start:0x021277e8 end:0x021277f0
+
+src/data/ov077/data_ov077_021277f0.c:
+    complete
+    .data start:0x021277f0 end:0x021277f8
+
+src/data/ov077/data_ov077_021277f8.c:
+    complete
+    .data start:0x021277f8 end:0x02127800
+
+src/data/ov077/data_ov077_02127800.c:
+    complete
+    .data start:0x02127800 end:0x02127808
+
+src/data/ov077/data_ov077_02127808.c:
+    complete
+    .data start:0x02127808 end:0x02127810
+
+src/data/ov077/data_ov077_02127810.c:
+    complete
+    .data start:0x02127810 end:0x02127818
+
+src/data/ov077/data_ov077_02127818.c:
+    complete
+    .data start:0x02127818 end:0x02127820
+
+src/data/ov077/data_ov077_02127820.c:
+    complete
+    .data start:0x02127820 end:0x02127828
+
+src/data/ov077/data_ov077_02127828.c:
+    complete
+    .data start:0x02127828 end:0x02127830
+
+src/data/ov077/_ZTS7daJgm_c.c:
+    complete
+    .data start:0x02127830 end:0x0212783c
+
+src/data/ov077/_ZTI7daJgm_c.c:
+    complete
+    .data start:0x0212783c end:0x02127848
+
+src/data/ov077/g_profile_JUGEM.c:
+    complete
+    .data start:0x02127848 end:0x0212786c
+
+src/data/ov077/ov077_vt_0212786c.c:
+    complete
+    .data start:0x0212786c end:0x021278e8
+
+src/data/ov077/_ZTS9daPopoi_c.c:
+    complete
+    .data start:0x02127a50 end:0x02127a5c
+
+src/data/ov077/data_ov077_02127a5c.c:
+    complete
+    .data start:0x02127a5c end:0x02127a68
+
+src/data/ov077/_ZTI9daPopoi_c.c:
+    complete
+    .data start:0x02127a68 end:0x02127a74
+
+src/data/ov077/g_profile_POPOI.c:
+    complete
+    .data start:0x02127a74 end:0x02127a98
+
+src/data/ov077/ov077_vt_02127a98.c:
+    complete
+    .data start:0x02127a98 end:0x02127b20
+
