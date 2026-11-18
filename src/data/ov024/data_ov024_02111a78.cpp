@@ -1,0 +1,9 @@
+//cpp
+/* .rodata data at 0x02111a78; bytes from the cartridge. */
+#include "types.h"
+
+extern unsigned int const data_ov024_02111a78[17] = {
+    0x033f0333, 0x0355034a, 0x036c0361, 0x03830377, 0x039a038e, 0x03b003a5,
+    0x03c703bc, 0x03de03d2, 0x03f503e9, 0x040b0400, 0x04220417, 0x0439042e,
+    0x04500444, 0x0466045b, 0x047d0472, 0x04940489, 0x04ab049f
+};
