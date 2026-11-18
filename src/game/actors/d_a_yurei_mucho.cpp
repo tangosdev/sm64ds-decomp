@@ -13,8 +13,6 @@
  * State records at the end of this file name.
  *
  * Remaining reconstruction under issue #2478:
- * - mStateTimer comparisons read it through a (u16) cast, because the ROM
- *   loads it with ldrh.
  * - The V3A copy of a player's position in UpdateShoot: Vector3
  *   assignment scalarizes; UpdateChase's snapshot is a POD VecFx32
  *   copy-init.
@@ -334,7 +332,7 @@ int daYurei_Mucho_c::UpdateIdle() {
 
     if (Vec3_Dist(&mPos, &mHomePos) > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
         mTargetAngle = Vec3_HorzAngle(&mPos, &mHomePos);
-        if ((u16)mStateTimer < 20)
+        if (mStateTimer < 20)
             mStateTimer = 20;
     }
 
@@ -345,7 +343,7 @@ int daYurei_Mucho_c::UpdateIdle() {
     Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &mSpeed);
 
-    if ((u16)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         ChangeState(&data_ov065_0211d670);
         return 1;
     }
@@ -420,7 +418,7 @@ int daYurei_Mucho_c::UpdateChase() {
     }
     ApproachAngle(&mPrevAngle.y, mTargetAngle, 1, 0x500, 0x500);
     ApproachAngle(&mPrevAngle.x, pitch, 1, 0x500, 0x500);
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         ChangeState(&data_ov065_0211d650);
     return 1;
 }
@@ -448,7 +446,7 @@ int daYurei_Mucho_c::UpdateShoot() {
         mTargetAngle = Vec3_HorzAngle(&mPos, &target);
         ApproachAngle(&mPrevAngle.y, mTargetAngle, 1, 0x500, 0x500);
 
-        if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && (u16)mStateTimer == 0 &&
+        if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && mStateTimer == 0 &&
             mShotCount < 3) {
             void *spawned = dActor_c::Spawn(0xe9, 1, mShotPos, 0, mAreaId, -1);
             if (spawned != 0) {
@@ -519,7 +517,7 @@ int daYurei_Mucho_c::EnterBumped() {
 int daYurei_Mucho_c::UpdateBumped() {
     ApproachAngle(&mAngle.x, -0x4000, 0xa, 0x200, 0x100);
     ApproachLinear(mAngle.x, -0x4000, 0x200);
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         KillWithCoins();
     return 1;
 }
