@@ -520,6 +520,10 @@ void dScMgAmida_c::CheckEdgeBoost() {
     }
 }
 
+static inline int Abs(int v) {
+    return v < 0 ? -v : v;
+}
+
 /* The pen handler: follows the stylus while it is down, and on release
    turns the stroke into a rung between two neighbouring lanes, probed with
    ProbeRung before it is painted. Point's special members are
@@ -581,17 +585,8 @@ void dScMgAmida_c::HandlePen() {
         if (released != 0) {
             if (this->mPenStart.x != -1 && this->mPenStart.y != -1 && oldX != -1 && oldY != -1) {
                 if (this->mLineStartSet == 0) {
-                    int d1 = oldX - this->mPenStart.x;
-                    if (d1 < 0)
-                        d1 = -d1;
-                    do {
-                        if (d1 < 0x10) {
-                            int d2 = oldY - this->mPenStart.y;
-                            if (d2 < 0)
-                                d2 = -d2;
-                            if (d2 < 0x10)
-                                break;
-                        }
+                    if (Abs(oldX - this->mPenStart.x) >= 0x10 ||
+                        Abs(oldY - this->mPenStart.y) >= 0x10) {
                         if (oldX >= 0x21 && oldX <= 0x3f) {
                             if (this->mPenStart.x >= 0x41 && this->mPenStart.x <= 0x5f) {
                                 this->mLineStart.x = 0x60;
@@ -641,7 +636,7 @@ void dScMgAmida_c::HandlePen() {
                                 this->mLineEndSet = 1;
                             }
                         }
-                    } while (0);
+                    }
                 } else if (this->mLineEndSet == 0) {
                     int dx, dsx, adx, adsx;
                     dx = oldX - this->mLineStart.x;
