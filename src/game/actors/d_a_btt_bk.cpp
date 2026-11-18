@@ -208,6 +208,7 @@ int daBttBk_c::StateCarriedMain() {
     {
         int flags = mFlags;
         int hasBit8 = (int)((flags & 0x100) != 0);
+        /* Kept (#821 r83): `||` or an early-exit if -> 0x104 of 0x110; hoisting the flag -> bytes differ; only an inline (int)(... != 0) != 0 cast matches. */
         do {
             if (hasBit8 != 0) {
                 int hasBit13 = (int)((flags & 0x2000) != 0);
