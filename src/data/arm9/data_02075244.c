@@ -3,5 +3,7 @@
 #include "types.h"
 
 extern const int data_02075244[3] = {
-    0x2d000, 0x3e8000, 0xabe000,
+    0x2d000,
+    0x3e8000,
+    0xabe000,
 };

@@ -6,4 +6,4 @@ typedef struct {
     int x, y, z, w;
 } Quat;
 
-extern const Quat data_02075b04 = { 0, 0, 0, 0x1000 };
+extern const Quat data_02075b04 = {0, 0, 0, 0x1000};
