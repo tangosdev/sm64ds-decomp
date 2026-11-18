@@ -720,6 +720,34 @@ u32 data_ov002_0210a578[3] = {117, 123, 121};
 u32 data_ov002_0210a584[3] = {118, 122, 119};
 }
 
+static inline int IsHoldingObject(daPly_c *player) {
+    return player->mHeldObj != 0;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
+static inline int IsCastleFallCutsceneRunning(void) {
+    return gGameMode == 2;
+}
+
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
 /* 20.12 offset added before the camera update: (0, -205.0, 410.0). The SDK's
  * POD VecFx32 keeps the literal in .data; Vector3's constructors would make
  * it dynamic. Kept (#821 r77): so func_ov002_020bf40c's VEC_Add, whose
@@ -1745,19 +1773,12 @@ void daPly_c::func_ov002_020bda48() {
 int daPly_c::HasNoCap() {
     if (gCurrentSublevel == 0x1f)
         return 0;
-    int r = (gGameMode == 2);
-    if(!r){
-        if(!this->IsState(data_ov002_0211058c)){
-            r = (gGameMode == 1);
-            if(!r){
-                if (SaveData::HasPlayerLostCap())
-                    return 1;
-            }
-        }
-    }
-    if(param1 == 3) return 0;
-    r = mHasNoCap != 0;
-    return r;
+    if (!IsCastleFallCutsceneRunning() && !this->IsState(data_ov002_0211058c) && !IsVsMode() &&
+        SaveData::HasPlayerLostCap())
+        return 1;
+    if (param1 == 3)
+        return 0;
+    return mHasNoCap != 0;
 }
 
 void daPly_c::func_ov002_020bdb50(int arg) {
@@ -1772,8 +1793,7 @@ void daPly_c::func_ov002_020bdb50(int arg) {
     }
     {
         dActor_c *obj = mObjInMouth;
-        int b1 = (obj->actorID == 0xbf);
-        if (b1) {
+        if (IsPlayerActor(obj)) {
             func_ov002_020d5cec(obj);
             (this->mStateFlags) &= ~2;
         } else {
@@ -1918,8 +1938,7 @@ void daPly_c::func_ov002_020bdf8c() {
 }
 
 void daPly_c::func_ov002_020be008() {
-    int b = (gGameMode == 1);
-    if (b != 0)
+    if (IsVsMode())
         return;
     if (WasState(&data_ov002_021104b4) == 0)
         return;
@@ -4662,8 +4681,7 @@ int daPly_c::func_ov002_020c4188() {
 }
 
 void daPly_c::func_ov002_020c43c4(unsigned int idx) {
-    int b = (gGameMode == 1);
-    if (b != 0) return;
+    if (IsVsMode()) return;
     switch (idx) {
     case 1:
         if (data_0209caa0.file.flags2 & 0x400)
@@ -4707,27 +4725,12 @@ int daPly_c::func_ov002_020c44c4() {
     Vector3 pos;
     int state;
     int r4val;
-    u8 f2d8;
-    int b0, b1;
 
-    f2d8 = gGameMode;
     r4val = -1;
-    b0 = (f2d8 == 1);
-    // returns nested ahead of the body grow the function 0x29c -> 0x2a4
-    if (b0 != 0) {
-        goto cont;
-    }
-    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0) {
-        goto ret0;
-    }
-    b1 = (f2d8 == 2);
-    if (b1 == 0) {
-        goto cont;
-    }
-ret0:
-    return 0;
+    if (!IsVsMode() &&
+        ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning()))
+        return 0;
 
-cont:
     if (SaveData::CountStarsCollectedInLevel(SublevelToLevel(gCurrentSublevel)) != 0) {
         return 0;
     }
@@ -5293,8 +5296,7 @@ int daPly_c::St_DeadPit_Main() {
     case 0:
         break;
     case 1: {
-        int b = (gGameMode == 1);
-        if (b) {
+        if (IsVsMode()) {
             if (mStateWaitTimer == 0) {
                 this->ChangeState(data_ov002_021104fc);
                 return 1;
@@ -5378,8 +5380,7 @@ int daPly_c::St_DeadPit_Main() {
 int daPly_c::St_DeadPit_Init() {
     ReleaseHeldActor();
     if (mObjInMouth != 0) {
-        int b = (mObjInMouth->actorID == 0xbf);
-        if (b) {
+        if (IsPlayerActor(mObjInMouth)) {
             func_ov002_020d5cec(mObjInMouth);
             mStateFlags &= ~2;
             mObjInMouth->mEatingPlayer = 0;
@@ -6277,24 +6278,9 @@ void daPly_c::func_ov002_020c7350() {
         data_0209f20c = 1;
     }
 
-    {
-        u8 v = gGameMode;
-        int isOne = (v == 1);
-        // a doAnim flag grows the function 0x2a0 -> 0x2b0
-        if (isOne != false)
-            goto setanim2;
-        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
-            goto skip_setanim2;
-        {
-            int isTwo = (v == 2);
-            if (isTwo != false)
-                goto skip_setanim2;
-        }
-    setanim2:
+    if (IsVsMode() ||
+        ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning()))
         this->SetAnim(0x47, 0, 0x1000, 0);
-    skip_setanim2:
-        ;
-    }
 
     mStateWork = 2;
 }
@@ -6416,8 +6402,7 @@ int daPly_c::St_LevelEnter_Init() {
         mPos.y = hit;
         mStateWork = 2;
         {
-            int b = (gGameMode == 2);
-            if (b == 0)
+            if (!IsCastleFallCutsceneRunning())
                 mStateWaitTimer = 30;
             else mStateWaitTimer = 0;
         }
@@ -7164,7 +7149,7 @@ int daPly_c::func_ov002_020c92fc() {
 
     if (this->FinishedAnim()) {
         if (mStateStep == 9) {
-            if ((int)(gGameMode == 1) == 0) {
+            if (!IsVsMode()) {
                 if ((data_0209caa0.file.flags2 & 0x10000000) == 0 &&
                     SaveData::IsCharacterUnlocked(0) == 0 && mHatCharacter == 0 &&
                     mPrevCharacter == 3) {
@@ -7823,17 +7808,12 @@ void daPly_c::func_ov002_020ca940() {
     extern dCamera_c *gCamera;
     u8 old;
     dCamera_c *h;
-    int b;
 
     if (mIsNoControl != 0)
         return;
 
-    b = gGameMode;
-    b = b == 1;
-    if (b == false) {
-        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
-            return;
-    }
+    if (!IsVsMode() && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
+        return;
 
     if (data_0209f498[(u8)gActivePlayerSlot].pressed & 0x8000) {
         old = mUseFarCamera;
@@ -7851,9 +7831,7 @@ void daPly_c::func_ov002_020ca940() {
             mUseFarCamera = 2;
         case 2:
             if (mIsMega == 0) {
-                b = gGameMode;
-                b = b == 1;
-                if (b == false) {
+                if (!IsVsMode()) {
                     if (IsState(data_ov002_0211013c) || IsState(data_ov002_0211043c) ||
                         IsState(daPly_c::ST_WAIT)) {
                         mStateFlags |= 4;
@@ -9192,7 +9170,6 @@ int daPly_c::St_Swim_Main() {
     unsigned short a4;
     int strokeStep;
     int targetSpeed;
-    int has;
     unsigned int t5;
 
     if (mIsMetal != 0) {
@@ -9364,8 +9341,7 @@ int daPly_c::St_Swim_Main() {
             speedStep = 0;
         ApproachLinear(mPrevVertSpeed, targetSpeed, speedStep);
         if (this->FinishedAnim() != 0) {
-            has = (mHeldObj != 0) ? 1 : 0;
-            if (has != 0) {
+            if (IsHoldingObject(this)) {
                 mStateStep = 8;
                 mStateTimer = 240;
                 mHeldObj->mFlags |= 0x4000;
@@ -9401,12 +9377,7 @@ int daPly_c::St_Swim_Main() {
             mStateStep = 9;
             EndStateMusic(0x33);
         }
-        if (mStateTimer != 0) {
-            has = (mHeldObj != 0) ? 1 : 0;
-            // retesting mStateTimer grows the function 0x9d8 -> 0x9e0
-            if (has == 0) goto case8_block107;
-        } else {
-        case8_block107:
+        if (mStateTimer == 0 || !IsHoldingObject(this)) {
             ReleaseHeldActor();
             StartAnim0xAB();
             EndStateMusic(0x33);
@@ -10177,8 +10148,7 @@ int daPly_c::func_ov002_020cfd84(void *a, void *b) {
         if (result.GetClsnID() != -1) {
             void *act = dActor_c::FindWithID(result.GetClsnID());
             if (act != 0) {
-                int t = (((dActor_c *)act)->actorID == 0x12a);
-                if (t == 0) {
+                if (!IsActorID((dActor_c *)act, 0x12a)) {
                     return 1;
                 }
             }
@@ -11114,12 +11084,10 @@ int daPly_c::St_HoldLight_Main() {
                 dActor_c *light = mHeldObj;
                 u32 animId = 0x33;
                 if (light != 0) {
-                    int b = (light->mFlags & 0x8000) != 0;
-                    if (b) {
+                    if (IsFlagSet(light, 0x8000)) {
                         animId = 0x87;
                         if (param1 == 2) {
-                            int b2 = (light->actorID == 0xce);
-                            if (b2) {
+                            if (IsActorID(light, 0xce)) {
                                 animId = 0x33;
                             }
                         }
@@ -11144,11 +11112,10 @@ int daPly_c::St_HoldLight_Init() {
         dActor_c *held = mHeldObj;
         unsigned int anim = 0x2f;
         if (held != 0) {
-            int b = (int)((held->mFlags & 0x8000) != 0);
-            if (b != 0) {
+            if (IsFlagSet(held, 0x8000)) {
                 anim = 0x86;
                 if (param1 == 2) {
-                    if ((int)(held->actorID == 0xce) != 0)
+                    if (IsActorID(held, 0xce))
                         anim = 0x2f;
                 }
             }
@@ -11296,21 +11263,13 @@ int daPly_c::St_Wait_Cleanup() {
     void *r4 = gCamera;
     ((dCamera_c *)r4)->mFlags &= ~0x2000;
     mSleepStage = 0;
-    do {
-        unsigned char v = gGameMode;
-        int b0 = (v == 1);
-        if (b0 == 0) {
-            if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0) {
-                int b1 = (v == 2);
-                if (b1 == 0)
-                    break;
-            }
-            if (mAnimScriptId == 0xf)
-                mRootMotionMode = 0;
-            mAnimScriptId = 0;
-            mAnimScriptStep = 0;
-        }
-    } while (0);
+    if (!IsVsMode() &&
+        ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning())) {
+        if (mAnimScriptId == 0xf)
+            mRootMotionMode = 0;
+        mAnimScriptId = 0;
+        mAnimScriptStep = 0;
+    }
     return 1;
 }
 
@@ -11349,23 +11308,12 @@ int daPly_c::St_Wait_Main() {
             }
         }
         case 0: {
-            /* structured form changes size 0x99c to 0x9cc */
-            unsigned char f2d8_0 = gGameMode;
-            int b0 = (f2d8_0 == 1);
-            if (b0 == 0) {
-                if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
-                    int b1 = (f2d8_0 == 2);
-                    if (b1)
-                        goto blk0_34;
-                    goto blk0_35;
-                }
-            blk0_34:
+            if (!IsVsMode() &&
+                (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) || IsCastleFallCutsceneRunning()))
                 func_ov002_020bcdf0(this);
-                goto blk0_36;
-            }
-        blk0_35:
-            if (func_ov002_020d2fdc() == 0) {
-            blk0_36: {
+            else if (func_ov002_020d2fdc() != 0)
+                break;
+            {
                 int idx0 = gActivePlayerSlot * 0x18;
                 short lvl0 = *(short *)(data_0209f4a0 + idx0);
                 if (lvl0 != 0) {
@@ -11379,7 +11327,6 @@ int daPly_c::St_Wait_Main() {
                     int thr0b = (*(data_0209f4ae + idx0) != 2) ? 0x471 : 0x555;
                     func_ov002_020d22ec(thr0b);
                 }
-            }
             }
             break;
         }
@@ -11480,17 +11427,9 @@ int daPly_c::St_Wait_Main() {
                 mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(1)) {
                 Sound::PlayCharVoice(mCharacter, 0x2a, mCamSpacePos);
             }
-            {
-                unsigned char f2d8_2 = gGameMode;
-                int b2a = (f2d8_2 == 1);
-                if (b2a == 0) {
-                    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
-                        break;
-                    int b2b = (f2d8_2 == 2);
-                    if (b2b != false)
-                        break;
-                }
-            }
+            if (!IsVsMode() &&
+                ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning()))
+                break;
             if (mStateTimer == 0) {
                 Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
                 this->SetAnim(0xa, 0x40000000, 0x1000, 0);
@@ -11546,15 +11485,9 @@ int daPly_c::St_Wait_Main() {
                 }
             }
             {
-                unsigned char f2d8_4 = gGameMode;
-                int b4a = (f2d8_4 == 1);
-                if (b4a == 0) {
-                    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
-                        break;
-                    int b4b = (f2d8_4 == 2);
-                    if (b4b != false)
-                        break;
-                }
+                if (!IsVsMode() &&
+                    ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning()))
+                    break;
                 if (func_ov002_020d2da0() == 1 || mSleepBubbleScale.x >= 0x3000 ||
                     mIsInShallowWater != 0 || (unsigned short)(mStateFlags & 4)) {
                     func_ov002_020d2e74(this);
@@ -11750,48 +11683,28 @@ int daPly_c::func_ov002_020d2fdc() {
 }
 
 int daPly_c::St_Wait_Init() {
-
-    unsigned char f2d8;
-    int b0;
-
     mStatePhase = 0;
-    f2d8 = gGameMode;
-    b0 = (f2d8 == 1);
-    if (b0 != 0) goto L80;
-    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
-        goto L50;
-    {
-        int b1 = (f2d8 == 2);
-        if (b1 == 0) goto L80;
+    if (!IsVsMode() &&
+        ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning())) {
+        this->SetAnim(0xb3, 0, 0x1000, 0);
+        mStateStep = 0;
+        return 1;
     }
-L50:
-    this->SetAnim(0xb3, 0, 0x1000, 0);
-    mStateStep = 0;
-    return 1;
 
-L80:
-    if (mIsMega == 0) goto Ld8;
-    if (b0 != 0) goto Lbc;
-    if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)
-        goto Lbc;
-    this->SetAnim(0xa0, 0, 0x1000, 0);
-Lbc:
-    mStateTimer = 900;
-    return 1;
+    if (mIsMega != 0) {
+        if (!IsVsMode() && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
+            this->SetAnim(0xa0, 0, 0x1000, 0);
+        mStateTimer = 900;
+        return 1;
+    }
 
-Ld8:
-    /* early returns shrink 0x1dc to 0x1d0; || changes beq at +0xe0 from #0x5c to #0x2c */
-    if (mToxicSurfaceY == 0x80000000)
-        goto L13c;
-    if (mPos.y >= mToxicSurfaceY - 0x64000)
-        goto L13c;
-    if (mIsMetal != 0) goto L13c;
-    if (mIsVanish != 0) goto L13c;
-    mStateStep = 0xa;
-    this->SetAnim(5, 0, 0x1000, 0);
-    return 1;
+    if (mToxicSurfaceY != 0x80000000 && mPos.y < mToxicSurfaceY - 0x64000 && mIsMetal == 0 &&
+        mIsVanish == 0) {
+        mStateStep = 0xa;
+        this->SetAnim(5, 0, 0x1000, 0);
+        return 1;
+    }
 
-L13c:
     mStateStep = 0;
     if (mSinkDepth > 0x32000) {
         this->SetAnim(0x7d, 0, 0x1000, 0);
@@ -12226,24 +12139,17 @@ int daPly_c::St_Walk_Init() {
     }
 
     if (data_0209f498[gActivePlayerSlot].mag == 0) {
-        /* structured form rewrites the mode test into r2 and flips == 2 at +0xa4 */
-        int byte1 = gGameMode;
-        int cond = (byte1 == 1);
-        if (cond) goto do_anim;
-        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
-            goto merge;
-        cond = (byte1 == 2);
-        if (cond) goto merge;
-do_anim:
-        if (mIsMega != 0) {
-            this->SetAnim(0xa0, 0, 0x1000, 0);
-        } else {
-            this->SetAnim(0x47, 0, 0x1000, 0);
+        if (IsVsMode() ||
+            ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning())) {
+            if (mIsMega != 0) {
+                this->SetAnim(0xa0, 0, 0x1000, 0);
+            } else {
+                this->SetAnim(0x47, 0, 0x1000, 0);
+            }
         }
-} else {
-    func_ov002_020d4748();
-}
-merge:
+    } else {
+        func_ov002_020d4748();
+    }
     mStateTimer = 0;
     if (data_0209f498[gActivePlayerSlot].touching == 0) {
         if (mHorzSpeed == 0) {
@@ -12395,25 +12301,14 @@ void daPly_c::func_ov002_020d4748() {
         }
     } else {
         if (data_0209f498[gActivePlayerSlot].touching != 0) {
-            unsigned char* p = &this->mStateStep;
-            unsigned char d;
-            int b;
             int thr;
-            *p = *p + 1;
+            mStateStep++;
             thr = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x955 : 0xaaa;
             if (data_0209f498[gActivePlayerSlot].mag > thr)
                 this->mStateStep = 0;
-            d = gGameMode;
-            b = (d == 1);
-            /* one condition shrinks 0x4e8 to 0x4dc; two stores grow it to 0x4f0 */
-            if (b == false) {
-                if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
-                    int b2 = (d == 2);
-                    if (b2 == false) goto after6e3;
-                }
+            if (!IsVsMode() &&
+                (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) || IsCastleFallCutsceneRunning()))
                 this->mStateStep = 0;
-            }
-        after6e3:;
         } else {
             this->mStateStep = 0;
         }
@@ -13229,8 +13124,7 @@ int daPly_c::St_Swallow_Main() {
     } else if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(7) != 0) {
         p360 = mObjInMouth;
         if (p360 != 0) {
-            int b = (p360->actorID == 0xbf);
-            if (b != 0) {
+            if (IsPlayerActor(p360)) {
                 p360->mAngle.x = mAngle.x;
                 p360->mAngle.y = mAngle.y;
                 p360->mAngle.z = mAngle.z;
@@ -13242,8 +13136,7 @@ int daPly_c::St_Swallow_Main() {
                 if (((dActor_c *)q)->OnYoshiTryEat() != 1 &&
                     (unsigned short)(mStateFlags & 0x1000) == 0) {
                     unsigned char flag = 0;
-                    int b_c2 = (mObjInMouth->actorID == 0xc2);
-                    if (b_c2 || *(int *)((char *)data_0209ee90 + 0x238) != 0) {
+                    if (IsActorID(mObjInMouth, 0xc2) || *(int *)((char *)data_0209ee90 + 0x238) != 0) {
                         flag |= 1;
                     }
                     mEggParams |= (flag + 1);
@@ -13308,8 +13201,7 @@ int daPly_c::func_ov002_020d6790() {
     dActor_c *o = mObjInMouth;
     if (o == 0) return 0;
 
-    int isbf = (o->actorID == 0xbf);
-    if (isbf) {
+    if (IsPlayerActor(o)) {
         if (mIsNoControl == 0 && mIsTakingDamage == 0) {
             ChangeState(data_ov002_02110034);
             DisableInteraction();
@@ -13333,8 +13225,7 @@ int daPly_c::func_ov002_020d6790() {
         /* a return in each case grows 0x208 to 0x214 */
         goto ret0;
     case 5: {
-        int eq132 = (mObjInMouth->actorID == 0x132);
-        if (eq132) {
+        if (IsActorID(mObjInMouth, 0x132)) {
             func_ov002_020d8118();
         }
         mObjInMouth->OnTurnIntoEgg(*this);
@@ -13396,8 +13287,7 @@ int daPly_c::func_ov002_020d6998() {
             other = dActor_c::FindWithID(id);
             if (other != 0 && other != this) {
                 if (IsCollectingCap() == 0 && ((dActor_c *)other)->OnYoshiTryEat() != 0) {
-                    u8 isType = (((dActor_c *)other)->actorID == 0xbf);
-                    if (isType) {
+                    if (IsPlayerActor((dActor_c *)other)) {
                         if (((dActor_c *)other)->param1 == 3) {
                             if (func_ov002_020d6c60((daPly_c *)other) != 0)
                                 return 1;
@@ -13504,7 +13394,6 @@ int daPly_c::TongueWallProbe() {
     dBgCh_Lin rl;
     dActor_c *actor;
     s16 ang;
-    int t;
     int idx;
 
     {
@@ -13537,7 +13426,7 @@ int daPly_c::TongueWallProbe() {
 
     dBgPi res(rl);
     actor = dActor_c::FindWithID(res.GetClsnID());
-    if (actor != 0 && (t = (int)(actor->actorID == 0xc2)) != 0) {
+    if (actor != 0 && IsActorID(actor, 0xc2)) {
         return 0;
     }
 
@@ -13667,8 +13556,7 @@ void daPly_c::func_ov002_020d71ec(int arg1) {
 int daPly_c::St_YoshiPower_Cleanup() {
     dActor_c *eaten = mObjInMouth;
     if (eaten != 0) {
-        int t = (int)((eaten->mFlags & 0x20000) != 0);
-        if (t != 0) {
+        if (IsBeingEaten(eaten)) {
             eaten->mFlags &= ~0xe0000;
             func_ov002_020d718c();
             return 1;
@@ -13676,7 +13564,7 @@ int daPly_c::St_YoshiPower_Cleanup() {
         eaten->mFlags &= ~0x20000;
     }
     if (mUseAltBodyModel == 0) {
-        if (mObjInMouth != 0 && (int)(mObjInMouth->actorID == 0xbf) == 0) {
+        if (mObjInMouth != 0 && !IsPlayerActor(mObjInMouth)) {
             func_ov002_020d6790();
         } else {
             func_ov002_020d718c();
@@ -13778,8 +13666,7 @@ int daPly_c::St_YoshiPower_Main() {
                 dp->mPos.y = src->y;
                 dp->mPos.z = src->z;
                 dActor_c *o = mObjInMouth;
-                int cond = (o->actorID == 0xbf);
-                if (cond != 0) {
+                if (IsPlayerActor(o)) {
                     o->mFlags &= ~0x20000;
                     if (((daPly_c *)mObjInMouth)->func_ov002_020d5ed0() == 0) {
                         func_ov002_020d718c();
@@ -13805,8 +13692,7 @@ int daPly_c::St_YoshiPower_Main() {
                 if (mModels.mBodyModels[id3]->WillHitFrame(0xc) != 0) {
                     mUseAltBodyModel = 1;
                     if (mObjInMouth->OnYoshiTryEat() == 5) {
-                        int cond2 = (mObjInMouth->actorID == 0x132);
-                        if (cond2 != 0) {
+                        if (IsActorID(mObjInMouth, 0x132)) {
                             func_ov002_020d8118();
                         }
                         mObjInMouth->OnTurnIntoEgg(*this);
@@ -13891,8 +13777,7 @@ int daPly_c::St_YoshiPower_Main() {
         if (mModels.mBodyModels[id7]->WillHitFrame(4) != 0) {
             obj0 = mObjInMouth;
             if (obj0 != 0) {
-                int cond3 = (obj0->actorID == 0xbf);
-                if (cond3 != 0) {
+                if (IsPlayerActor(obj0)) {
                     func_ov002_020d5cec(obj0);
                     mStateFlags &= ~2;
                 } else {
@@ -14233,7 +14118,6 @@ int daPly_c::func_ov002_020d869c() {
     daPly_c *other;
     u32 flags;
     u32 f2;
-    int t;
     Vector3 p;
     s32 x;
     s32 y;
@@ -14246,8 +14130,7 @@ int daPly_c::func_ov002_020d869c() {
     other = (daPly_c *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
     if (other == 0 || other == this)
         return 0;
-    t = (int)(other->actorID == 0xbf);
-    if (t == 0)
+    if (!IsPlayerActor(other))
         return 0;
 
     flags = mdCcAcPos_c.hitFlags & 0x27fe0;
@@ -14293,8 +14176,7 @@ void daPly_c::func_ov002_020d8854() {
     if (other == 0)
         return;
     {
-        int b = (other->actorID == 0xbf);
-        if (b != 0) {
+        if (IsPlayerActor(other)) {
             if (other->mPlayerNo <= mPlayerNo)
                 return;
             if ((mAttackClsn.hitFlags & 0x3c0) == 0)
@@ -14325,8 +14207,7 @@ int daPly_c::func_ov002_020d8944(daPly_c *enemy, daPly_c *v1) {
     Vector3 p;
     Vector3 sum;
     Vector3 asr;
-    int b0 = ((unsigned short)(v1)->actorID == 0xbf);
-    if (b0) {
+    if (IsPlayerActor(v1)) {
         s16 ang = Vec3_HorzAngle(&(enemy)->mPos, &(v1)->mPos);
         if (AngleDiff(ang, (enemy)->mAngle.y) >= 0x4000)
             return 0;
@@ -14499,8 +14380,7 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) 
     }
     eaten = this->mObjInMouth;
     if (eaten != 0) {
-        int match = (eaten->actorID == 0xbf);
-        if (match) {
+        if (IsPlayerActor(eaten)) {
             func_ov002_020d5cec(eaten);
             this->mStateFlags &= ~2;
         }
@@ -14602,8 +14482,7 @@ int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
     }
 
     {
-        int b = (gGameMode == 1);
-        if (b != 0) return 0;
+        if (IsVsMode()) return 0;
     }
 
     if (*(int*)(data_0209ee90 + 0x248) == 0) {
@@ -15006,12 +14885,12 @@ void daPly_c::func_ov002_020d9c70() {
     }
 }
 
-/* The state test compares the comparison as an int,
- * `(int)(x == 0xbf) == 0`.  In C++ the comparison is a bool: tested
- * directly, the 0/1 is folded into the branch (12 bytes short), and
- * widened to long long, as the C shard spelled it, the early return's 0
- * is loaded ahead of the branch and reused below it (29 words differ).
- * The int view keeps the 0/1 and gives the return 0 its own path. */
+/* The held-actor test goes through IsPlayerActor, whose int result keeps
+ * the 0/1. In C++ the comparison is a bool: tested directly, the 0/1 is
+ * folded into the branch (12 bytes short), and widened to long long, as
+ * the C shard spelled it, the early return's 0 is loaded ahead of the
+ * branch and reused below it (29 words differ). The int view keeps the
+ * 0/1 and gives the return 0 its own path. */
 int daPly_c::func_ov002_020d9dcc() {
     extern s16 data_0209f4a0[];
     dActor_c *p;
@@ -15020,7 +14899,7 @@ int daPly_c::func_ov002_020d9dcc() {
         return 0;
 
     p = mHeldObj;
-    if (p == 0 || (int)(p->actorID == 0xbf) == 0)
+    if (p == 0 || !IsPlayerActor(p))
         return 0;
 
     if (data_0209f498[gActivePlayerSlot].mag == 0 || mIsAirborne != 0) {
@@ -15104,8 +14983,7 @@ int daPly_c::St_SwingPlayer_Main() {
         if ((data_0209f498[gActivePlayerSlot].pressed & 1) != 0) {
             dActor_c *p = mHeldObj;
             if (p != 0) {
-                int b = (p->mFlags & 0x200) != 0;
-                if (!b) {
+                if (!IsFlagSet(p, 0x200)) {
                     func_ov002_020d9c70();
                     func_ov002_020da95c();
                     SetAnim(0x6e, 0x40000000, 0x1000, 0);
@@ -15301,10 +15179,8 @@ int daPly_c::St_GrabBowserTail_Init() {
 int daPly_c::DropActor() {
 
     u32 *s = (u32 *)mHeldObj;
-    int present = (s != 0);
-    if (present) {
-        int held = ((((dActor_c *)s)->mFlags & 0x200) != 0);
-        if (!held) {
+    if (IsHoldingObject(this)) {
+        if (!IsFlagSet((dActor_c *)s, 0x200)) {
             u32 *s_ptr1 = &((dActor_c *)s)->mFlags;
             *s_ptr1 &= ~0x4000u;
 
@@ -15353,8 +15229,7 @@ int daPly_c::DropActor() {
 
 int daPly_c::func_ov002_020da95c() {
     dActor_c *p = mHeldObj;
-    int t = (p != 0);
-    if (t == 0) return 0;
+    if (!IsHoldingObject(this)) return 0;
     p->mFlags &= ~0x800;
     mHeldObj->mFlags &= ~0x4000;
     mHeldObj->mFlags |= 0x1000;
@@ -15365,12 +15240,10 @@ int daPly_c::func_ov002_020da95c() {
 
 int daPly_c::DropHeldObj() {
     dActor_c *s = mHeldObj;
-    int b = (s != 0);
-    if (!b)
+    if (!IsHoldingObject(this))
         return 0;
     {
-        int e = (s->actorID == 0xbf);
-        if (e)
+        if (IsPlayerActor(s))
             func_ov002_020db54c(s, 0x10000, 0x10000, mAngle.y);
     }
     mHeldObj->mFlags &= ~0x4000;
@@ -15382,16 +15255,14 @@ int daPly_c::DropHeldObj() {
 
 int daPly_c::func_ov002_020daa74() {
     dActor_c *s = mHeldObj;
-    int b = (s != 0);
-    if (!b)
+    if (!IsHoldingObject(this))
         return 0;
     s->mFlags &= ~0x4000;
     mHeldObj->mFlags |= 0x400;
     mHeldObj->mFlags &= ~0x100;
     {
         dActor_c *s2 = mHeldObj;
-        int e = (s2->actorID == 0xbf);
-        if (e) {
+        if (IsPlayerActor(s2)) {
             int c_val = this->mAngle.y;
             func_ov002_020db54c(s2, 0x30000, 0x10000, c_val);
         }
@@ -15402,11 +15273,8 @@ int daPly_c::func_ov002_020daa74() {
 
 int daPly_c::ReleaseHeldActor() {
     dActor_c *p = mHeldObj;
-    int ok = (p != 0);
-    int is_bf;
-    if (ok == 0) return 0;
-    is_bf = (int)(p->actorID == 0xbf);
-    if (is_bf != 0) {
+    if (!IsHoldingObject(this)) return 0;
+    if (IsPlayerActor(p)) {
         func_ov002_020db54c(p, 0x10000, 0x10000, mAngle.y);
     }
     mHeldObj->mFlags &= ~0x4000;
@@ -15426,19 +15294,15 @@ int daPly_c::ReleaseHeldActor() {
 
 int daPly_c::TryGrab(dActor_c &actor_) {
     dActor_c *actor = &actor_;
-    int b = (mHeldObj != 0);
-    if (b) return 0;
+    if (IsHoldingObject(this)) return 0;
     if ((actor->mFlags & 0x80) == 0) return 0;
     if ((IsState(data_ov002_02110574) && mPunchKickStep != 2) || IsState(data_ov002_0211067c)) {
         func_ov002_020dacb4(actor);
         return 1;
     }
     {
-        unsigned short t = actor->actorID;
-        int b0 = (t == 0xbd);
-        if (!b0) {
-            int b1 = (t == 0xbe);
-            if (!b1) {
+        if (!IsActorID(actor, 0xbd)) {
+            if (!IsActorID(actor, 0xbe)) {
                 if (IsState(data_ov002_021105bc)) {
                     func_ov002_020dacb4(actor);
                     return 1;
@@ -15537,17 +15401,14 @@ int daPly_c::St_Throw_Main() {
         }
         r4 = 7;
         goto Ld0;
-    Lb8: {
-        int b = (q->mFlags & 0x200) ? 1 : 0;
-        if (b)
+    Lb8:
+        if (IsFlagSet(q, 0x200))
             r4 = 0xd;
-    }
     Ld0:
         int id2 = this->GetBodyModelID(param1 & 0xff, 0);
         dExtAnmModel_c *anim2 = mModels.mBodyModels[id2];
         if (anim2->WillHitFrame(r4)) {
-            int b2 = (mHeldObj->mFlags & 0x200) ? 1 : 0;
-            if (b2 == 0)
+            if (!IsFlagSet(mHeldObj, 0x200))
                 func_ov002_020daa74();
             else
                 DropHeldObj();
@@ -15565,8 +15426,7 @@ int daPly_c::St_Throw_Main() {
  */
 int daPly_c::St_Throw_Init() {
     dActor_c *held = mHeldObj;
-    int b = (held->mFlags & 0x200) ? 1 : 0;
-    if (!b) {
+    if (!IsFlagSet(held, 0x200)) {
         unsigned short a = held->actorID;
         int t1 = (a == 0xbd);
         // folding the two id tests differs at +0x3c
@@ -15659,8 +15519,7 @@ int daPly_c::St_Thrown_Main() {
 }
 
 int daPly_c::St_Thrown_Init() {
-    int b = (mFlags & 0x400) ? 1 : 0;
-    if (b)
+    if (IsFlagSet(this, 0x400))
         mStateTimer = 4;
     Sound::PlayCharVoice(mCharacter, 0x1d, mCamSpacePos);
     this->SetAnim(0x15, 0x40000000, 0x1000, 0x12);
@@ -15706,8 +15565,7 @@ int daPly_c::St_Grabbed_Main() {
     mPeakY = mPos.y;
     grab = mGrabbedByActor;
     if (grab != 0) {
-        int isBob = (grab->actorID == 0xbf);
-        if (isBob != 0) {
+        if (IsPlayerActor(grab)) {
             ret = func_ov002_020beb38();
             if (ret != 0) {
                 p = &mStateStep;
@@ -15764,8 +15622,7 @@ extern "C" void func_ov002_020db54c(void *self, int a, int b, short c) {
     p->mSpeed.y = b;
     node = p->mGrabbedByActor;
     if (node != 0) {
-        int bb = (int)(((dActor_c *)node)->actorID == 0xbf);
-        if (bb != 0) {
+        if (IsPlayerActor((dActor_c *)node)) {
             Vector3 *src = &((dActor_c *)node)->mPos;
             Vector3 v;
             int ty;
@@ -15787,8 +15644,7 @@ extern "C" void func_ov002_020db54c(void *self, int a, int b, short c) {
 extern "C" {
 int func_ov002_020db5f4(daPly_c *c, dActor_c *arg) {
     daPly_c *player = c;
-    int b = ((arg)->actorID == 0xbf);
-    if (b == 0) {
+    if (!IsPlayerActor(arg)) {
         if (c->func_ov002_020d82f0() == 0)
             return 0;
     }
@@ -15916,7 +15772,7 @@ void daPly_c::func_ov002_020dba0c() {
     Vector3 v;
     int r2, r3;
     unsigned int a5;
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         v.z = 0xa0000;
         v.x = 0;
         r2 = 0x78000;
@@ -15950,7 +15806,7 @@ void daPly_c::func_ov002_020dba0c() {
 void daPly_c::func_ov002_020dbaec() {
     Vector3 v;
     int r2, r3;
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         v.z = 0xa0000;
         v.x = 0;
         r2 = 0x78000;
@@ -15981,7 +15837,7 @@ void daPly_c::func_ov002_020dbaec() {
 void daPly_c::func_ov002_020dbbc0() {
     Vector3 v;
     int r2, r3;
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         v.z = 0xa0000;
         v.x = 0;
         r2 = 0x78000;
@@ -16011,8 +15867,7 @@ void daPly_c::func_ov002_020dbbc0() {
 
 void daPly_c::func_ov002_020dbc94() {
     Vector3 v;
-    int b = (gGameMode == 1);
-    if (b) {
+    if (IsVsMode()) {
         int r2 = 0x82000;
         v.x = 0;
         v.y = -0x32000;
@@ -16036,7 +15891,7 @@ void daPly_c::func_ov002_020dbc94() {
 void daPly_c::func_ov002_020dbd94() {
     Vector3 v;
     int r2, r3;
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         v.z = 0x8c000;
         v.x = 0;
         v.y = 0xa000;
@@ -16066,7 +15921,7 @@ void daPly_c::func_ov002_020dbd94() {
 void daPly_c::func_ov002_020dbe70() {
     Vector3 v;
     int r2, r3;
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         v.z = 0x78000;
         v.x = 0;
         v.y = 0xa000;
@@ -16096,7 +15951,7 @@ void daPly_c::func_ov002_020dbe70() {
 void daPly_c::func_ov002_020dbf4c() {
     Vector3 v;
     int r2, r3;
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         v.x = 0;
         v.y = 0xa000;
         v.z = 0x50000;
@@ -16589,15 +16444,12 @@ int daPly_c::St_StomachSlide_Main() {
         mAngle.x = mAngle.z;
         if (mStateStep == 0) {
             dActor_c *light = mHeldObj;
-            int haveLight = (light != 0);
-            if (haveLight) {
+            if (IsHoldingObject(this)) {
                 u32 animId = 0x18;
-                int b1 = (light->mFlags & 0x8000) != 0;
-                if (b1) {
+                if (IsFlagSet(light, 0x8000)) {
                     animId = 0x8b;
                     if (param1 == 2) {
-                        int b2 = (light->actorID == 0xce);
-                        if (b2) {
+                        if (IsActorID(light, 0xce)) {
                             animId = 0x18;
                         }
                     }
@@ -16877,7 +16729,7 @@ void daPly_c::func_ov002_020dd8f4() {
 void daPly_c::func_ov002_020dd908() {
     int i;
     Vector3 v;
-    if ((int)(gGameMode == 1) == 0)
+    if (!IsVsMode())
         return;
     for (i = 0; i < gNumPlayers; i++) {
         char *o = gPlayers[i];
@@ -17048,8 +16900,7 @@ int daPly_c::St_GroundPound_Init() {
 
 int daPly_c::BeginAttack() {
     extern char data_0209f49c[];
-    int b = (mHeldObj != 0);
-    if (b) {
+    if (IsHoldingObject(this)) {
         ChangeState(data_ov002_021105d4);
         return 1;
     }
@@ -18036,15 +17887,14 @@ int daPly_c::St_Fly_Init() {
 }
 
 void daPly_c::func_ov002_020e032c() {
-    unsigned char st;
     if (mHasWings == 0)
         return;
     mHasWings = 0;
-    st = gGameMode;
-    if ((int)(st == 1) == 0) {
+    if (!IsVsMode()) {
         if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
             return;
-        if ((int)(st == 2) != 0) return;
+        if (IsCastleFallCutsceneRunning())
+            return;
     }
     EndPowerupMusic(0x33);
 }
@@ -18052,16 +17902,14 @@ void daPly_c::func_ov002_020e032c() {
 void daPly_c::InitWingFeathers(bool b_) {
     int b = b_;
 
-    int t0 = (gGameMode == 1);
-    if (!t0) {
+    if (!IsVsMode()) {
         if (param1 != 0) return;
     }
     func_ov002_020bdd2c();
     mHasWings = 1;
     mPowerupTimer = 1800;
     {
-        int t1 = (gGameMode == 1);
-        if (!t1)
+        if (!IsVsMode())
             StartPowerupMusic(0x33);
         else
             StartPowerupMusic(0x4e);
@@ -18104,8 +17952,7 @@ int daPly_c::St_Land_Main() {
             if (this->IsAnim(0x4e) != 0) {
                 mAngle.y = mPrevAngle.y;
             }
-            int v = (mHeldObj != 0);
-            if (v != 0) {
+            if (IsHoldingObject(this)) {
                 mJumpComboTimer = 0;
             }
             this->ChangeState(data_ov002_0211019c);
@@ -18296,11 +18143,9 @@ int daPly_c::St_SlopeJump_Init() {
 }
 
 int daPly_c::func_ov002_020e0ccc(void *st) {
-    int b;
     if (st == 0)
         return 0;
-    b = (int)(((dActor_c *)st)->actorID == 0xc1);
-    if (b == 0)
+    if (!IsActorID((dActor_c *)st, 0xc1))
         return 0;
     ChangeState(data_ov002_02110484);
     return 1;
@@ -19394,8 +19239,7 @@ int daPly_c::ChangeState(daPly_c::State &state) {
     }
 
     {
-        int b = (mHeldObj != 0);
-        if (b) {
+        if (IsHoldingObject(this)) {
         if (newState == &data_ov002_0211013c) {
             mStateStep = 1;
             newState = &data_ov002_02110364;
@@ -19467,7 +19311,6 @@ int daPly_c::ChangeState(daPly_c::State &state) {
    comes from daPly_c.h. */
 
 int daPly_c::CleanupResources() {
-    enum { false_, true_ };
     struct VB { virtual void v0(); virtual void v1(); };
     void UnloadSilverStarAndNumber(void);
     void UnloadKeyModels(int n);
@@ -19475,7 +19318,6 @@ int daPly_c::CleanupResources() {
     extern SharedFilePtr data_ov002_0210e750;
     extern SharedFilePtr data_ov002_0210eb88;
     int i;
-    u32 b;
 
     func_ov002_020bdd2c();
     func_ov002_020bdef0();
@@ -19532,9 +19374,7 @@ int daPly_c::CleanupResources() {
             ::operator delete[]((void *)mHeldObjQueue);
     }
     ((data_ov002_020ff480[mCharFileBase + (param1 & 3)]))->Release();
-    b = gGameMode;
-    b = b == 1;
-    if (b != false_)
+    if (IsVsMode())
         func_ov002_020bebd4();
     data_ov002_0210ec50.Release();
     data_ov002_0210ebb8.Release();
@@ -19581,9 +19421,7 @@ int daPly_c::CleanupResources() {
     data_ov002_0210ecb8.Release();
     data_ov002_0210e8d0.Release();
     data_ov002_0210ebd8.Release();
-    b = gGameMode;
-    b = b == 1;
-    if (b == false_) {
+    if (!IsVsMode()) {
         data_ov002_0210d9a8.Release();
         data_ov002_02110aa4.Release();
         data_ov002_0210da38.Release();
@@ -19644,9 +19482,7 @@ int daPly_c::CleanupResources() {
         data_ov002_0210d9c0.Release();
     if (mLoadedResourceFlags & 0x10)
         UnloadKeyModels(mKeyModelId);
-    b = gGameMode;
-    b = b == 1;
-    if (b == false_) {
+    if (!IsVsMode()) {
         if (mLoadedResourceFlags & 0x20) {
             data_ov002_0210e6f8.Release();
             data_ov002_0210e7b0.Release();
@@ -19679,8 +19515,7 @@ int daPly_c::Render() {
         virtual void m18(void* a, void* b);
     };
     extern int data_020a0e68;
-    int t = (gGameMode == 1);
-    if (t != false) {
+    if (IsVsMode()) {
         if (data_0209fc5c[mPlayerNo] == 0)
             return 1;
     }
@@ -19700,8 +19535,7 @@ int daPly_c::Render() {
         if (mIsBalloon == 0) {
             bodyMdl->ApplyOpacity(mOpacity, 0);
             {
-                int t2 = (gGameMode == 1);
-                if (t2 != false) {
+                if (IsVsMode()) {
                     if (param1 == 3) {
                         int *p = (int *)(int)&bodyMdl->data;
                         BMD_File *hdr = (BMD_File *)p[0];
@@ -19742,8 +19576,7 @@ int daPly_c::Render() {
             if (mdl4 != 0 && i != 9 && i != 8) {
                 mdl4->ApplyOpacity(mOpacity, 0);
                 {
-                    int t3 = (gGameMode == 1);
-                    if (t3 != false) {
+                    if (IsVsMode()) {
                         if (param1 == 3) {
                             int *p = (int *)(int)&mModels.mHeadModels[i]->data;
                             BMD_File *hdr = (BMD_File *)p[0];
@@ -19959,7 +19792,6 @@ void daPly_c::func_ov002_020e4374(int *p1, int *p2) {
 void daPly_c::func_ov002_020e444c() {
     extern union Matrix4x3 data_020a0e68;
     int sp8, spC;
-    int b;
 
     if (func_ov002_020e3f90() == 0) {
         int y = mModelOffsetY + (mPos.y - mSinkDepth) + 0xf000;
@@ -20018,8 +19850,7 @@ void daPly_c::func_ov002_020e444c() {
         if (fr->GetClsnID() != -1) {
             void *a = dActor_c::FindWithID(fr->GetClsnID());
             if (a != 0) {
-                b = (int)(((dActor_c *)a)->actorID == 0xa1);
-                if (b != 0) {
+                if (IsActorID((dActor_c *)a, 0xa1)) {
                     sp8 += 0x3c000;
                 }
             }
@@ -20058,8 +19889,7 @@ void daPly_c::func_ov002_020e4768() {
     }
 
     {
-        int hasFlag = (mHeldObj != 0);
-        if (hasFlag) {
+        if (IsHoldingObject(this)) {
             mid = GetBodyModelID(param1 & 0xff, 0);
             comp = mModels.mBodyModels[mid];
             data_020a0e68 = comp->mat4x3;
@@ -20094,11 +19924,9 @@ int func_ov002_020e496c(daPly_c *c) {
 
 int daPly_c::func_ov002_020e4990() {
     int id;
-    int b;
     id = GetBodyModelID(param1 & 0xff, 0);
     func_0201628c(((int *)mModels.mBodyModels)[id], 8);
-    b = mHeldObj ? 1 : 0;
-    if (b == 0)
+    if (!IsHoldingObject(this))
         return 0;
     if (IsAnim(0x30) || IsAnim(0x2f) || IsAnim(0x33) || IsAnim(0x18) || IsAnim(0x8a) ||
         IsAnim(0x87) || IsAnim(0x8b) || IsAnim(0x6d) || IsAnim(0x6f) || IsAnim(0x6c) ||
@@ -20442,14 +20270,17 @@ after_player_slot:
 
 #undef LAU
 
+static inline int IsKuppaScriptRunning() {
+    return gRunningKuppaScript != 0;
+}
+
 // Match: daPly_c::InitResources (ov002:0x020e558c).
 // The 0x14-byte block allocated for mHeldObjQueue is zeroed in place with
 // mwccarm's __builtin__clear intrinsic: that is the compiler's inline CLEAR
 // (5 x 4 strb post-inc, subs/bne) aimed at the heap pointer itself. Value-
 // init, placement new, struct assignment and memset all go through a stack
 // temporary or an out-of-line __clear/memset call instead.
-// Also: pin gGameMode in local `d` so ==2 keeps r1 bool (preserves r0);
-// decl order td,tx,tz + load order for dBgCh_Gnd pos regs.
+// Also: decl order td,tx,tz + load order for dBgCh_Gnd pos regs.
 
 s32 daPly_c::InitResources() {
     extern void func_02035644(int *p, int a);
@@ -20462,7 +20293,6 @@ s32 daPly_c::InitResources() {
     unsigned int a, b;
     u8 n8;
     u8 sub;
-    int t;
     int changed;
     int i; unsigned int u;
     u8 f254;
@@ -20477,8 +20307,7 @@ s32 daPly_c::InitResources() {
     mCharacter = b & 7;
     pad_6da[0] = sub;
     changed = 0;
-    t = (unsigned int)(gGameMode == 1);
-    if (t == 0) {
+    if (!IsVsMode()) {
         if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             data_0209f254 = 0;
             cur = mCharacter;
@@ -20492,25 +20321,14 @@ s32 daPly_c::InitResources() {
         if (data_02092114 >= 0) sub = mCharacter;
     }
     param1 = sub;
-    {
-        unsigned int d = gGameMode;
-        t = (unsigned int)(d == 2);
-        // structured form grows this function 0x3bc -> 0x3c4
-        if (t != 0)
-            goto Ld0;
-        t = (unsigned int)(d == 1);
+    if (!IsCastleFallCutsceneRunning() &&
+        (IsVsMode() || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0 ||
+         IsKuppaScriptRunning())) {
+        if (mPlayerNo == gLocalPlayerId) {
+            PlayCharacterSound();
+            func_ov002_020e6350();
+        }
     }
-    if (t != 0) goto Lac;
-    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0)
-        goto Lac;
-    t = (unsigned int)(gRunningKuppaScript != 0);
-    if (t == 0) goto Ld0;
-Lac:
-    if (mPlayerNo == gLocalPlayerId) {
-        PlayCharacterSound();
-        func_ov002_020e6350();
-    }
-Ld0:
     func_ov002_020e5948();
     if (changed != 0)
         func_ov002_020beabc();
@@ -20650,72 +20468,62 @@ void daPly_c::func_ov002_020e5948() {
     dExtAnmTexPat_c::LoadFile(data_ov002_0210e8d0);
     dExtAnmTexPat_c::LoadFile(data_ov002_0210ebd8);
 
-    {
-        s32 mode;
-        mode = gGameMode;
-        mode = (mode == 1);
-        if (mode == 0) {
-            dExtFrameCtrl_c::LoadFile(data_ov002_0210e750);
-            dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
-            dExtSimpleModel_c::LoadFile(data_ov002_02110aa4);
-            dExtFrameCtrl_c::LoadFile(data_ov002_0210e588);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e7e8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e450);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e788);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e1e8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e1e0);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e4d0);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e4e8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e1d0);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e800);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e4b8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e270);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e458);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210ea70);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e540);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e8e8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210eca8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210ec98);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e600);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210ea88);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e910);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e460);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e2f0);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e958);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210eb38);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e660);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210ea30);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e3e8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210eb90);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e6b8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e620);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e6a0);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210eb58);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e3e0);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210eb10);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e708);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210ebc8);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e6e0);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e430);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210ec40);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e738);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e250);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210ec10);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210ec00);
-            dExtAnmTexPat_c::LoadFile(data_ov002_0210e728);
-        }
+    if (!IsVsMode()) {
+        dExtFrameCtrl_c::LoadFile(data_ov002_0210e750);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
+        dExtSimpleModel_c::LoadFile(data_ov002_02110aa4);
+        dExtFrameCtrl_c::LoadFile(data_ov002_0210e588);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e7e8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e450);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e788);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e1e8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e1e0);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e4d0);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e4e8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e1d0);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e800);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e4b8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e270);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e458);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210ea70);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e540);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e8e8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210eca8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210ec98);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e600);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210ea88);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e910);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e460);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e2f0);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e958);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210eb38);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e660);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210ea30);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e3e8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210eb90);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e6b8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e620);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e6a0);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210eb58);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e3e0);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210eb10);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e708);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210ebc8);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e6e0);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e430);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210ec40);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e738);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e250);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210ec10);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210ec00);
+        dExtAnmTexPat_c::LoadFile(data_ov002_0210e728);
     }
 
-    {
-        s32 mode;
-        mode = gGameMode;
-        mode = (mode == 1);
-        if (mode == 0) {
-            mCharFileBase = 0;
-        } else {
-            mCharFileBase = 0x44;
-            func_ov002_020bec2c();
-        }
+    if (!IsVsMode()) {
+        mCharFileBase = 0;
+    } else {
+        mCharFileBase = 0x44;
+        func_ov002_020bec2c();
     }
 
     dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[(s32)mCharFileBase]);
@@ -20762,31 +20570,26 @@ void daPly_c::func_ov002_020e5948() {
         j++;
     } while (j < 4);
 
-    {
-        s32 mode;
-        mode = gGameMode;
-        mode = (mode == 1);
-        if (mode == 0) {
-            mModels.mSleepBubbleModel = new dExtSimpleModel_c;
-            mModels.mSleepBubbleModel->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1,
-                                               -1);
+    if (!IsVsMode()) {
+        mModels.mSleepBubbleModel = new dExtSimpleModel_c;
+        mModels.mSleepBubbleModel->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1,
+                                           -1);
 
-            if (gCurrentSublevel != 2 && gCurrentSublevel != 5 && gCurrentSublevel != 4) {
-                mLoadedResourceFlags |= 0x20;
-                mModels.mBodyModels[4] = new dExtAnm2Model_c;
-                mModels.mBodyModels[4]->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1,
-                                                -1);
-                mModels.mBodyModels[4]->Func_020162C4(
-                    (BCA_File *)data_ov002_020ff480[0xC6]->filePtr, 0, 0x1000, 0);
-                mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8), 1, 1);
-                mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0, 0x1000, 0);
-                mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
-                mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000, 0);
-            }
-        } else {
+        if (gCurrentSublevel != 2 && gCurrentSublevel != 5 && gCurrentSublevel != 4) {
+            mLoadedResourceFlags |= 0x20;
+            mModels.mBodyModels[4] = new dExtAnm2Model_c;
+            mModels.mBodyModels[4]->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1,
+                                            -1);
+            mModels.mBodyModels[4]->Func_020162C4(
+                (BCA_File *)data_ov002_020ff480[0xC6]->filePtr, 0, 0x1000, 0);
+            mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8), 1, 1);
+            mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0, 0x1000, 0);
             mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
             mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000, 0);
         }
+    } else {
+        mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
+        mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000, 0);
     }
 
     mShadowModel.InitCylinder();
@@ -20797,13 +20600,8 @@ void daPly_c::func_ov002_020e5948() {
         (mPlayerNo << 1) + ((dExtAnmModel_c *)ma)->data.materials->texImageParam;
 
     n = 0;
-    {
-        s32 mode;
-        mode = gGameMode;
-        mode = (mode == 1);
-        if (mode != 0)
-            n = 0x11;
-    }
+    if (IsVsMode())
+        n = 0x11;
 
     if (n < 0x19) {
         outer = n * 4;
@@ -20838,8 +20636,7 @@ void daPly_c::PlayCharacterSound() {
 }
 
 void daPly_c::func_ov002_020e6350() {
-    int b = (gGameMode == 1);
-    if (b != 0)
+    if (IsVsMode())
         return;
     func_02011ee4((void *)data_ov002_020ff0f4[param1 & 3]);
 }
