@@ -162,12 +162,10 @@ void TitlePrintLevelRow(int level, int row, int col) {
     d += 3;
     MI_CpuFill16(d2, t2, 2);
     int cnt = 0x1d - col;
-    volatile const signed char *s =
-        reinterpret_cast<const signed char *>(sTitleLevelEntries[level].name);
+    const signed char *s = reinterpret_cast<const signed char *>(sTitleLevelEntries[level].name);
     while (*s != 0) {
-        t3 = *s;
+        t3 = *s++;
         MI_CpuFill16(d, t3, 2);
-        s++;
         d++;
         cnt--;
     }

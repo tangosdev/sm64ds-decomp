@@ -1,0 +1,7 @@
+/* ov026 .data at 0x021130d0 (48 bytes). */
+#include "types.h"
+
+u32 data_ov026_021130d0[12] = {
+    0xff020017, 0x00197fff, 0x7fffff02, 0xff02001b, 0x001d7fff, 0xffffff08,
+    0xff020025, 0x00277f00, 0x7f01ff02, 0xff020029, 0x002b7f02, 0x7f03ff02,
+};

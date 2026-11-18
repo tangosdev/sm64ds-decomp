@@ -34,3 +34,35 @@ src/game/actors/d_a_obj_cv_shutter.cpp:
     .data.cvShutterClps start:0x02113a00 end:0x02113a20
     .data.cvres start:0x021148d0 end:0x021148dc
     .bss start:0x02114a64 end:0x02114a8c
+
+src/data/ov021/data_ov021_02114860.c:
+    complete
+    .data start:0x02114860 end:0x02114874
+
+src/data/ov021/data_ov021_02114874.c:
+    complete
+    .data start:0x02114874 end:0x0211487c
+
+src/data/ov021/data_ov021_0211487c.c:
+    complete
+    .data start:0x0211487c end:0x0211488c
+
+src/data/ov021/data_ov021_0211488c.c:
+    complete
+    .data start:0x0211488c end:0x02114898
+
+src/data/ov021/data_ov021_02114898.c:
+    complete
+    .data start:0x02114898 end:0x021148b4
+
+src/data/ov021/data_ov021_021148b4.c:
+    complete
+    .data start:0x021148b4 end:0x021148b8
+
+src/data/ov021/data_ov021_021148b8.c:
+    complete
+    .data start:0x021148b8 end:0x021148c4
+
+src/data/ov021/data_ov021_02114a8c.c:
+    complete
+    .bss start:0x02114a8c end:0x02114aa0

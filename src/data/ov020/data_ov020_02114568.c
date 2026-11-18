@@ -1,0 +1,7 @@
+/* ov020 .data at 0x02114568 (48 bytes). */
+#include "types.h"
+
+u32 data_ov020_02114568[12] = {
+    0x0b5400d2, 0xfcae0000, 0x00000000, 0xffff0000, 0x0b5400d2, 0xfd120000,
+    0x00000000, 0xffff0000, 0x0b5400d2, 0xfd760000, 0x00000000, 0xffff0000,
+};
