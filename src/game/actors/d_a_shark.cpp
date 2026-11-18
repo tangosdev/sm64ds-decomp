@@ -138,11 +138,7 @@ void daShark_c::CheckPlayerHit() {
 /* Swim per-frame: the swim sound at the clip's first frame, the clip, then
  * the hit check. */
 int daShark_c::StateSwim(daShark_c *self) {
-    int frame = self->mAnmModel.currFrame;
-
-    frame = (frame >> 12) << 16;
-    frame = (unsigned int)frame >> 16;
-    if (frame == 0)
+    if ((u16)(self->mAnmModel.currFrame >> 12) == 0)
         func_02012694(9, &self->mCamSpacePos);
     self->mAnmModel.speed = 0x1000;
     self->mAnmModel.Advance();

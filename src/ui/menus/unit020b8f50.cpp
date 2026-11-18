@@ -533,7 +533,9 @@ void PickerScene_HandleDrawingKeys(void) {
            Retyping data_ov007_02104ba0 as an Ov007PickerScene * changes
            nothing either way. */
         /* Kept (#821 r76): a reload pin; no block-copy or type lever (r72-r75) applies to this
-           scalar pin. */
+           scalar pin.
+           Kept (#821 r80): getter tried -> a scene accessor, as this local or in the test, is
+           0x410 of 0x414, as plain. */
         Ov007PickerScene *b = *(Ov007PickerScene **)&data_ov007_02104ba0;
         int n = r5->groupCount;
         if (n >= b->strokeCount)

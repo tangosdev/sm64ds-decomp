@@ -168,7 +168,7 @@ int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target, s16 thresh, s3
     if (now >= target)
         accel = (short)-accel;
     if ((short)vel[0] * (short)accel < 0)
-        accel = (short)accel * (short)mult;
+        accel = (short)accel * mult;
     vel[0] = vel[0] + accel;
     return 0;
 }

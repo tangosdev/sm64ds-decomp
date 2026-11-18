@@ -1004,6 +1004,15 @@ s32 daDoor_c::Behavior() {
     return 1;
 }
 
+/* InitResources shifts param1 down in place with a read through this
+   accessor. Spelt plainly (`param1 = param1 >> 0x10;`), 2004/b56
+   value-numbers both sides together and materialises the address once --
+   one instruction longer than the ROM, which keeps the offset folded into
+   both accesses. */
+inline u32 daDoor_c::GetParam1() const {
+    return param1;
+}
+
 /* vtable slot 0. Was a C source taking the object explicitly.
  *
  * Shift param1 down to the variant; offset the door by (75, 0, 0) units
@@ -1040,13 +1049,8 @@ s32 daDoor_c::InitResources() {
     int z;
 
     /* The spawn word arrives packed: this door's variant index is param1's
-       high halfword, and every later read of param1 is that index. Spelt
-       plainly (`param1 = param1 >> 0x10;`), 2004/b56 value-numbers both
-       sides together and materialises the address once -- one instruction
-       longer than the ROM, which keeps the offset folded into both
-       accesses. The redundant cast on the read side reaches the folded
-       form. */
-    param1 = (u32)param1 >> 0x10;
+       high halfword, and every later read of param1 is that index. */
+    param1 = GetParam1() >> 0x10;
 
     /* 75 units along the door's facing. */
     static Vector3 sDoorOff(0x4b000, 0, 0);

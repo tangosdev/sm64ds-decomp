@@ -1365,6 +1365,8 @@ int TrmpLine::PushJumper() {
  *   notes/mwccarm-codegen.md 6bk). The ROM re-reads both halfwords from memory
  *   after writing them, and the cast is its own CSE class, so the stores above
  *   do not forward into it.
+ *   Kept (#821 r82): plain startPoint[0] > endPoint[0], and the whole swap as
+ *   an inline helper, both forward the stores -> 0x7f8 of 0x800.
  *
  * `colWeight += 0x555` sits at the tail of the inner loop with the other two
  * induction steps. Placed between the two `cell->x` statements instead, which is
@@ -1407,10 +1409,10 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     mEnd[0] = endPoint[0];
     mEnd[1] = endPoint[1];
 
-    startPoint[0] = (startPoint[0] - 0x80);
-    startPoint[1] = (s16)(0 - startPoint[1]);
-    endPoint[0] = (endPoint[0] - 0x80);
-    endPoint[1] = (s16)(0 - endPoint[1]);
+    startPoint[0] = startPoint[0] - 0x80;
+    startPoint[1] = -startPoint[1];
+    endPoint[0] = endPoint[0] - 0x80;
+    endPoint[1] = -endPoint[1];
 
     const s16 *startCmp = startPoint;
     const s16 *endCmp = endPoint;

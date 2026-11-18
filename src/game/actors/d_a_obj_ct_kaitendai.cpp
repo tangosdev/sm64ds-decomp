@@ -158,8 +158,7 @@ int daObjCtKaitendai_c::Behavior() {
 
             mPrevAngle.x = ((roll % 7) * 0xc8);
             if (roll >= 0x7fff) {
-                s16 *target = &mPrevAngle.x;
-                *target *= -1;
+                mPrevAngle.x *= -1;
             }
         }
         break;

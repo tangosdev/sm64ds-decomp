@@ -912,7 +912,7 @@ int daSnowman_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gSnowmanJumpStAnimationFile);
     dExtFrameCtrl_c::LoadFile(gSnowmanJumpEdAnimationFile);
 
-    mPathId = (s32)param1 & 0xff;
+    mPathId = param1 & 0xff;
     mType = ((s32)param1 & 0xff00) >> 8;
     if (mPathId == 0xff)
         mPathId = 0;

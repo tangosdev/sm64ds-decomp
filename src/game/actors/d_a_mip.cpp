@@ -688,10 +688,7 @@ int daMip_c::StateFleeMain() {
     }
     if ((len == 0) || (len <= lim)) {
         mPos = node;
-        {
-            s32 *p = &mPathNodeIndex;
-            *p = (*p) + mPathDir;
-        }
+        mPathNodeIndex += mPathDir;
         if (mPathNodeIndex >= mNumPathNodes) {
             mPathNodeIndex = 0;
         }

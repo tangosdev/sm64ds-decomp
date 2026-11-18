@@ -175,7 +175,7 @@ void daBDonketu_c::UpdateDeathState() {
 
 /* Charge timer, then run. Key function: the inline destructor emits no vtable. */
 int daBDonketu_c::UpdateRunState() {
-    if ((u16)mStateTimer < 10) {
+    if (mStateTimer < 10) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)
@@ -186,11 +186,10 @@ int daBDonketu_c::UpdateRunState() {
         return (int)timer;
     }
     mHorzSpeed = 0x14000;
-    u16 *timer = &mStateTimer;
-    u32 value = *timer;
+    u32 value = mStateTimer;
     if (value > 0x23) {
         value = 0;
-        *timer = 0;
+        mStateTimer = 0;
     }
     return value;
 }

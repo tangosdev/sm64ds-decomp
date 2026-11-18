@@ -34,6 +34,8 @@
  *   InitResources 0x18c->0x160, and its LoadFile reloc then names
  *   _ZN7dBgW_Kc8LoadFileER13SharedFilePtr instead of 0x02017a3c.
  *   StateWait 0xf4->0xe8. StateMoveDown 0x120->0x114.
+ *   Kept (#821 r81): re-measured; a switch on actorID in InitResources is
+ *   0x16c of 0x18c.
  * - InitResources: dBgW::SetBeforeClsnCallback and dBgW::SetStoodOnCallback store dBgW+0x18
  *   (beforeClsnCallback) and dBgW+0x1c (the rider callback). Writing those
  *   fields directly shrinks InitResources 0x18c->0x184 and drops the two

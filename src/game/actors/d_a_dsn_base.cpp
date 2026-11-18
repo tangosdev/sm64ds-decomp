@@ -15,10 +15,9 @@
  * its D0 and D1 out here, in the cartridge's order.
  *
  * Notes (measured spellings that do not match):
- * - UpdateDropShadow keeps the early `s32 *clipRadius` and the braced
- *   mClipRadius clamp. An if-clamp in that spot is a 64-word DIFF.
- *   Dropping the pointer and shifting mClipRadius directly is a 1-word
- *   DIFF.
+ * - UpdateDropShadow keeps the braced mClipRadius clamp. An if-clamp in
+ *   that spot is a 64-word DIFF. (#821 r82: the early `s32 *clipRadius`
+ *   pointer is gone; `mClipRadius >>= 3` is byte-identical.)
  * - StateSlam keeps `int isDosun` and `if (isDosun != 0)`.
  *   Comparing actorID in the if size-DIFFs 0xf0 -> 0xe4. Combining
  *   dustPos.y into `mPos.y + 0x3c000` size-DIFFs 0xf0 -> 0xec.
@@ -188,8 +187,7 @@ void daDsnBase_c::StateRise() {
  * Scales the drop shadow with the height above groundY, grows mClipRadius
  * with that height, and copies the model matrix into shadowMtx with the
  * translation shifted. mClipRadius is also WakeNearYoshiEgg's trigger
- * radius. The clipRadius pointer and the braced clamp are load-bearing;
- * see the file comment. */
+ * radius. The braced clamp is load-bearing; see the file comment. */
 void daDsnBase_c::UpdateDropShadow() {
     int shadowDrop = 0x20000;
     int heightAboveGround = mPos.y - mGroundY;
@@ -198,7 +196,6 @@ void daDsnBase_c::UpdateDropShadow() {
         shadowDrop = 0;
     }
     int radius = FX_MUL(heightAboveGround, 0x60);
-    s32 *clipRadius = &mClipRadius;
     DsnBaseFileTable *files = mFileTable;
     int scaleX = files->shadowExtentX - radius;
     if (scaleX < 0xa000)
@@ -213,7 +210,7 @@ void daDsnBase_c::UpdateDropShadow() {
             clamped = 0x200000;
         mClipRadius = clamped;
     }
-    *clipRadius = *clipRadius >> 3;
+    mClipRadius >>= 3;
     mShadowMtx = mModel.mat4x3;
     mShadowMtx.t.x = mPos.x >> 3;
     mShadowMtx.t.y = (mPos.y - shadowDrop) >> 3;

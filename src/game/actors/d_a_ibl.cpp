@@ -27,7 +27,7 @@
  *   speeds and kill heights chosen from them.
  * - func_020383f0 and func_02038414 are the two probes picked by that
  *   level id. func_02012694 plays a bank-3 sound at a position.
- * - InitResources' param1 shift keeps the spelling the bytes need.
+ * - InitResources shifts param1 through GetParam1(); see the accessor.
  */
 
 #pragma defer_codegen off
@@ -256,7 +256,6 @@ void daIbl_c::UpdateModelMatrix() {
  *    match the ROM (A holds C8, B holds C7, C8 holds C6, ...).
  *  - Sign result s8/s6 names are swapped vs the values they hold so free-reg
  *    dest colors land on r1/r3 like the ROM; mul uses those names accordingly.
- *  - u64-launder materializes pidx between the first path-node load and store.
  */
 int daIbl_c::AdvancePath() {
     int px = mNextNodePos.x;
@@ -339,13 +338,12 @@ int daIbl_c::AdvancePath() {
     dot = s6 * sA + s7 * ssl + s8 * sB;
     if (dot <= 0) {
         int v = mNextNodePos.x;
-        int *pidx = &mPathNodeIndex;
         mPrevNodePos.x = v;
         v = mNextNodePos.y;
         mPrevNodePos.y = v;
         v = mNextNodePos.z;
         mPrevNodePos.z = v;
-        *pidx = *pidx + 1;
+        mPathNodeIndex++;
         if (mPathNodeIndex >= mNumPathNodes) {
             mPathNodeIndex = 0;
         }
@@ -691,6 +689,15 @@ int daIbl_c::Behavior()
     return 1;
 }
 
+/* InitResources shifts param1 down in place with a read through this
+   accessor. A plain `param1 = param1 >> 4` value-numbers both sides together
+   and emits an extra `add r1, r4, #8` at +0x60 (0x390, 186/228 words
+   differ); the cartridge keeps the folded `ldr/lsr/str` (0x38c). Same lever
+   as daDoor_c::GetParam1. */
+inline u32 daIbl_c::GetParam1() const {
+    return param1;
+}
+
 /* Loads the model and shadow, sets gravity (-4 units/frame^2, mVertAccel
    -0x4000) and terminal velocity (-70 units/frame, -0x46000), picks the kind
    from param1's low nibble and sets up that kind. Distances and speeds below
@@ -709,12 +716,8 @@ int daIbl_c::InitResources()
     mTerminalVelocity = -0x46000;
     mVariant = param1 & 0xf;
     /* The spawn word is packed: low nibble was the variant (read above), the
-     * rest shifts down in place here. The redundant cast is load-bearing:
-     * plain `param1 = param1 >> 4` value-numbers both sides together and
-     * emits an extra `add r1, r4, #8` at +0x60 (0x390, 186/228 words
-     * differ); the cast keeps the ROM's folded `ldr/lsr/str` (0x38c, 0
-     * differ). Same lever as daDoor_c::InitResources. */
-    param1 = (u32)param1 >> 4;
+     * rest shifts down in place here. */
+    param1 = GetParam1() >> 4;
     kind = mVariant;
 
     /* Kinds 2 and 4: the path followers. The path ID is the next nibble of

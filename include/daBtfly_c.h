@@ -88,7 +88,7 @@ struct daBtfly_c : dActor_c {
                                  rolls at spawn; after 0x3c frames
                                  State5 steers mPrevAngle.y toward
                                  it instead of toward home. */
-    s16 mFlutterPhase;      /* 0x3ee -- a phase angle State7
+    u16 mFlutterPhase;      /* 0x3ee -- a phase angle State7
                                  advances by 0x2710 or 0xfa0 a frame and feeds
                                  to the sine table to pump mScale. Zeroed by
                                  State6. */

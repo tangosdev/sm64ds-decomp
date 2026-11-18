@@ -515,7 +515,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     }
 
     rsc = sphere.radius << 4;
-    /* Demotes rsc into the temp pool at sp+0x104. An inline spelling recomputes it. */
+    /* Demotes rsc into the temp pool at sp+0x104. An inline spelling recomputes it.
+       Kept (#821 r81): re-measured; without the self-assignment DetectClsn keeps
+       0x1bc8 but the bytes differ. rsc is a local, so no accessor lever applies. */
     rsc = (s32)rsc;
 
     hiPX = loPX = 0;

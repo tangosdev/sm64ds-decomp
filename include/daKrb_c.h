@@ -130,6 +130,9 @@ struct daKrb_c : dCapEnemy_c {
     void OnTurnIntoEgg(daPly_c &player);        /* slot 19 */
     int OnAimedAtWithEgg();                     /* slot 29 */
 
+    /* param1, the spawn word; defined inline in d_a_krb.cpp. */
+    u32 GetParam1() const;
+
     void func_ov084_021290d4();
     void func_ov084_02129168(dActor_c *actor);
     void func_ov084_02129238();

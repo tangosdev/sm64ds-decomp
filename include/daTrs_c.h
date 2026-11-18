@@ -303,6 +303,9 @@ struct daTrs_c : dCapEnemy_c {
     virtual int  OnYoshiTryEat();      /* slot 18 */
     virtual int  OnAimedAtWithEgg();   /* slot 29 */
 
+    /* param1, the spawn word; defined inline in d_a_trs.cpp. */
+    u32 GetParam1() const;
+
     int  Behavior();           /* slot 6, fBase_c */
     int  CleanupResources();
     int  InitResources();

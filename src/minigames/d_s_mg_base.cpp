@@ -4032,6 +4032,13 @@ short sMgSceneKindByGame[] = {
 }
 }
 
+/* The constructor keeps param1's low half with a read through this
+   accessor. Measured (#821 r68): a plain `param1 = param1 & 0xffff` or
+   `&=` makes the constructor 0x180 of 0x17c. */
+inline u32 dScMgBase_c::GetParam1() const {
+    return param1;
+}
+
 dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {
     using s20b2adc::sMgSceneKindByGame;
     mMenuOpen = 0;
@@ -4043,10 +4050,7 @@ dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {
     mLevel = gMgMenuRow.level; /* dScMiniGm_c::mStartLevel */
 
     mSceneKind = sMgSceneKindByGame[(param1 >> 16) & 0xff];
-    /* Measured (#821 r68): plain `param1 = param1 & 0xffff` or `&=`, the constructor is 0x180 of 0x17c. */
-    /* Kept (#821 r76): no block-copy or type lever (r72-r75) applies to this scalar pin; the r68
-       measurement above stands. */
-    *(s32 *)&param1 = param1 & 0xffff;
+    param1 = GetParam1() & 0xffff;
     mTallyShown = 0;
     mTallyAnimTimer = 0;
 

@@ -478,8 +478,7 @@ void Cursor_UpdateState(void) {
                 if (s2->stateTicks <= 1) {
                     {
                         Ov007Pad *o = WORK->pad;
-                        /* the const re-read is codegen: `|= 1` is 4 bytes longer */
-                        o->inputLock = *(const int *)&o->inputLock | 1;
+                        o->inputLock = Pad_GetInputLock(o) | 1;
                     }
                     func_ov007_020c2090(WORK->pad);
                 }

@@ -46,6 +46,8 @@ int MBi_ReceiveRequestDataPiece(u8 *a0, int idx) {
         int n = g2->common.req_data_piece_num;
         if (n > 0) {
             u32 bits = ((MB_CommPWork *)new_var)->req_data_buf.data_bmp[i];
+            /* Kept (#821 r80): the bound is read again each pass. A plain read is 0xd0 of
+               0xd4; an int accessor is 0xd4 but loads the bound at the loop top. */
             do {
                 if ((1u << j) & bits) {
                     found++;

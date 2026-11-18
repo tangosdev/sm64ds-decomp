@@ -25,8 +25,7 @@ void func_ov007_020ae454(Ov007ItemNode *self) {
         r4 = ProgressRatio(d, b);
         int t = ((r4 * (s->wiggleFrames * 45)) >> 0xc) << 0x10;
         int r = FX_DivS32(t, 360);
-        r = (unsigned short)r;
-        int sv = FX_SinIdx(r >> 4);
+        int sv = FX_SinIdx((u16)r >> 4);
         int inv = 0x1000 - r4;
         int prod = FX_MUL(sv, inv);
         int e = s->layout->homeY;
