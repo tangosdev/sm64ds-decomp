@@ -52,8 +52,9 @@
  * Leftover: the rider matrix pointer at +0xc8, and the model matrix at +0x328
  *   and bone-matrix pointer at +0x320, stay raw offsets from the actor.
  *   Writing them as mAnmModel members hoists the base.
- * Leftover: state-timer reads use a u16 cast. mStateTimer is s16; the ROM
- *   loads it unsigned.
+ * Leftover: UpdateHover narrows `player->mStateFlags & 0x800` to u16 before
+ *   the test; the ROM masks, then shifts the result through 16 bits.
+ *   Kept (#821 r82): the plain mask test -> 0x234 of 0x23c (ands, no shift).
  * Leftover: RandomIntInternal returns int (math/CalcLib.h); UpdateHover and
  *   EnterHover shift it as u32, the ROM's logical shift. Behavior tests the
  *   carry state twice; the else is what the ROM emits.
@@ -336,7 +337,7 @@ int daOwl_c::UpdateHover() {
         mWanderAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
     } else if (OWL_TIMER(this) == 0) {
         mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
-        mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50);
+        mStateTimer = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50;
     }
 
     ApproachAngle(&mPrevAngle.y, mWanderAngleY, 0xa, 0x200, 0x100);
@@ -360,7 +361,7 @@ int daOwl_c::UpdateHover() {
 int daOwl_c::EnterHover() {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
     mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
-    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50);
+    mStateTimer = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50;
     mAnimSpeed = 0x1000;
     return 1;
 }
