@@ -51,9 +51,6 @@ Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
  * ground-and-vertical-speed test. */
 #include "dEnemyBase_c.h"
 #include "dBgCh_Actr.h"
-/* common.h before dExtSimpleModel_c.h, so Matrix4x3 stays the flat 12-word
- * spelling. The structured spelling scalarizes the copy at the end of this
- * function. */
 #include "common.h"
 #include "dExtSimpleModel_c.h"
 #include "math/MtxStack.h"

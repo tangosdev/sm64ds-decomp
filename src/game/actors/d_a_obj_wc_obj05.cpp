@@ -16,7 +16,6 @@
  * - gWcObj05ModelFile / 02114284 are this TU's BMD/KCL file handles;
  *   data_ov029_0211306c the CLPS block stays unowned overlay data.
  * - S14: g_profile_WC_OBJ05 stays outside the licensed .text.
- * - common.h first (InitResources SetFile matrix argument).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

@@ -21,7 +21,6 @@
  * mKind picks the state machine (flying: mState 0..5, switch: 6..10).
  * defer_codegen off emits each function in source order. Each destructor
  * emits D1 then D0; D2 has no ROM home. Both vtables are keyed here.
- * common.h comes first so InitResources' mShadowMat copy stays twelve words.
  */
 /* leftovers: GetWallResult is not a dBgCh_Actr method; the call is
  * dBgCh_Actr_UpdateContinuous_Veneer, not UpdateContinuous.

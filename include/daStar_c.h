@@ -136,7 +136,7 @@ struct daStar_c : dEnemyBase_c {
     dExtAnmModel_c mAnmModel2; /* 0x370 -- the translucent "already collected" star */
     dExtShadowModel_c                  mShadowModel;          /* 0x3d4 */
 
-    Matrix4x3                    mShadowMtx;            /* 0x3fc */
+    Matrix4x3 mShadowMtx; /* 0x3fc */
 
     s32 mGroundY; /* 0x42c -- ProbeGround's downward probe from 50.0 above the star: the hit, or 0x7fffffff */
     u32 mSoundObjID; /* 0x430 -- uniqueID of the sound object SpawnCollectSoundObj spawned, 0 if none */

@@ -56,7 +56,7 @@ struct daMip_c : dEnemyBase_c {
     s32                          mState;                /* 0x364 */
     dExtShadowModel_c                  mShadowModel1;         /* 0x368 */
     /* 0212bcc8 / 0212bdbc copy data_020a0e68 here then DropShadowRadHeight. */
-    Matrix4x3 mShadowMtx;                                         /* 0x390 */
+    Matrix4x3 mShadowMtx;                                     /* 0x390 */
     dExtShadowModel_c                  mShadowModel2;         /* 0x3c0 */
     /* Mirror-shadow matrix, x reflected across 0x1086000. */
     Matrix4x3 mMirrorMtx; /* 0x3e8 */

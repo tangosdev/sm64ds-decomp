@@ -19,7 +19,6 @@
  * - data_ov010_02112d08 / 02112d00 are this file's resource handles;
  *   data_ov010_02112d28 is the state record the compiler copies into .bss;
  *   data_ov010_021122f8 is CLPS
- * - common.h first via dBgActor_c.h (Matrix4x3 copies in UpdateModel/Collision)
  * - func_ov010_02111984 three-argument C ABI collider adapter
  * - VecFx32 POD locals stay trivial; math/CalcLib.h's vector helpers operate
  *   on the same three-word buffers through their Vector3 pointer interface

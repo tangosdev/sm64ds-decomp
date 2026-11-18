@@ -36,9 +36,8 @@ struct daEykn_c : dActor_c {
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
     dCcAcPos_c mdCcAcPos_c;            /* 0x174 */
-    /* The shadow's Matrix4x3, spelled flat: a Matrix4x3 member holds a Vector3,
-       whose inline destructor reorders this class's D1, D0 and D2 output. */
-    Matrix4x3 mShadowMat;        /* 0x1b4 -- identity; [9..11] track the position */
+    /* The shadow's matrix. */
+    Matrix4x3 mShadowMat;      /* 0x1b4 -- identity; [9..11] track the position */
     const State *mState;       /* 0x1e4 -- current row of the state table */
     s32 mStateID;              /* 0x1e8 -- 0 wait, 1 attack, 2 die; set by each init */
     daPly_c *mTarget;          /* 0x1ec -- the player being watched, or null */

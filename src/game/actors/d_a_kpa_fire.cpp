@@ -33,8 +33,6 @@
  *   compile as C++; 02117624 uses a POD matrix view for its block copy.
  * - Particle::System::callbackScale and callbackVelocity are named.
  *   The word at +0x44 is Particle::System::emitRadius.
- * - DropShadowRadHeight's matrix is `mShadowMat`, raw `u8[0x30]` storage.
- *   daKpaFire_c.h has no Matrix4x3 member there.
  * - Sound 0x180, player param1 == 3, and the particle kind pairs are
  *   named only by the use-site enums below.
  * - data_ov060_0211af74 and data_ov060_0211afb4 are this TU's owned
@@ -257,8 +255,7 @@ void daKpaFire_c::func_ov060_02117624() {
         return;
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, mGroundY >> 3, mPos.z >> 3);
     mShadowMat = data_020a0e68;
-    DropShadowRadHeight(mShadowModel, mShadowMat, mShadowRadiusMul * mFireScale,
-                        0x1e000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, mShadowRadiusMul * mFireScale, 0x1e000, 0xf);
 }
 
 /* Variant 0 Behavior: ride Bowser's mouth.

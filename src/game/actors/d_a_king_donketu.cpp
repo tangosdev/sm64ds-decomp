@@ -70,8 +70,7 @@
 /* leftovers:
  * - defer_codegen off stays file-global: deferred codegen emits D2, D0, D1
  *   and the cartridge has D1 then D0. opt_loop_invariants off stays
- *   file-global for HandleHit. common.h stays first; dExtBlendAnmModel_c's
- *   Matrix4x3 makes the twelve-word copies change size.
+ *   file-global for HandleHit.
  * - struct C is a complete PMF shadow on purpose (mwccarm picks the
  *   pointer-to-member shape from completeness). ChiefChilly_ChangeState
  *   takes C*. The sixteen state labels are descriptions; the sinit owns

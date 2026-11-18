@@ -21,8 +21,6 @@
  *   is read through a dActor_c cast rather than pulling in daPly_c.h.
  * - data_020a0e68 is the shared scratch matrix; no header owns it, TU-local.
  */
-/* dBgActor_c.h FIRST: it pulls common.h ahead of dExtSimpleModel_c.h, which is the
- * Matrix4x3-spelling rule its own header comment records. */
 #include "dBgActor_c.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"

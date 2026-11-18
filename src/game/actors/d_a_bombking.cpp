@@ -1,8 +1,7 @@
 //cpp
 /* daBombking_c -- King Bob-omb (BOMBKING), Bob-omb Battlefield.
  * The destructor is out of line and first. defer_codegen off emits D1 then
- * D0 at the head, so source order is ROM order. common.h is first so the
- * shadow and hold copies are flat 12-word moves.
+ * D0 at the head, so source order is ROM order.
  */
 /* leftovers: the held matrix pointer at actor+0xc8 is dActor_c::mCarryMatrix.
  * UpdateHandMatrix stores the king's own as the member; the stores into

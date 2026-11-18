@@ -241,8 +241,7 @@ void daIbl_c::UpdateModelMatrix() {
         k += 0x28;
     else
         k += 0x190;
-    DropShadowRadHeight(mShadowModel, mShadowMtx, mDrawScale.x * 0xc8,
-                        k * mDrawScale.x, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMtx, mDrawScale.x * 0xc8, k * mDrawScale.x, 0xf);
 }
 
 /* Path-node advance. mNextNodePos is the node the ball is heading for and

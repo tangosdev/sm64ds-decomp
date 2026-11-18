@@ -53,7 +53,7 @@ struct daObjYajirusi_c {
     Matrix4x3 mClsnMat;                /* 0x2ec */
     u8  pad_31c[0x4];
     dExtShadowModel_c mShadowModel;          /* 0x320 */
-    Matrix4x3 mShadowMat;                     /* 0x348 */
+    Matrix4x3 mShadowMat;                    /* 0x348 */
     u8 pad_378[0x4];
     u8 mVariant;                        /* 0x37c */
     u8  pad_37d[0x3];

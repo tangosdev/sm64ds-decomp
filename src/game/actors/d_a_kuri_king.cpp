@@ -50,9 +50,7 @@
  * - func_ov074_0212087c and func_ov074_02121270 take the object as arg1 (out
  *   param in arg0), and func_ov074_0212007c/021201ec/021203e0 are (void)
  *   stubs whose data records don't carry `this`. Those five stay free.
- * - mBodyMatrix is raw s32 words reached through a Matrix4x3 cast; a
- *   Matrix4x3 member there would run ~Vector3 from ~daKuriKing_c.
- *   mShadowMatrices is left untyped with it [GUESS: same ~Vector3 cost].
+ * - mShadowMatrices is still s32 words reached through Matrix4x3 casts.
  * - State dispatch stays a pointer-to-member on a non-virtual stand-in:
  *   daKuriKing_c has virtuals, so its own member pointers are wider than the
  *   8-byte records the sinit copies in.

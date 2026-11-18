@@ -30,7 +30,7 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     dExtShadowModel_c mShadowModel;         /* 0x364 */
     /* DropShadowRadHeight matrix. UpdateModelTransform writes a translation of
        (mPos.x, mPos.y - 0x18000, mPos.z) >> 3. */
-    Matrix4x3 mShadowMat;                 /* 0x38c */
+    Matrix4x3 mShadowMat;             /* 0x38c */
     State *mCurrentState;             /* 0x3bc */
     /* Bone-derived shot origin. UpdateModelTransform fills it from the last
        column of the transformed model matrix (<< 3, y -= 0xa000);

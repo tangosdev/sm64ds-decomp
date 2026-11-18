@@ -60,10 +60,9 @@ struct daBmb_c : dEnemyBase_c {
        calls DropActor and Hurt, then clears it; 0214b3f0 sets it and
        0214b3b8 clears it. InitResources zeroes it. */
     daPly_c *mCarrier; /* 0x390 */
-    /* Twelve words, not a Matrix4x3: this header is included by files that
-       do not pull common.h. InitResources copies IDENTITY_MATRIX4X3 here.
+    /* The shadow's matrix. InitResources copies IDENTITY_MATRIX4X3 here.
        0214b444 writes the translation at [9..11] before the shadow drop. */
-    Matrix4x3                    mMatrix;           /* 0x394 */
+    Matrix4x3 mMatrix;                                  /* 0x394 */
     Vector3 mHomePos;                                   /* 0x3c4 */
     /* UpdateCarry offset. Zeroed when the Bob-omb is not in a player's hand. */
     s32                          mCarryOff[3];          /* 0x3d0 */

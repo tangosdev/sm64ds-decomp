@@ -90,7 +90,6 @@
  *   the Vector3 prize points reach it through (int *) casts.
  */
 
-/* common.h first: see the header. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjHatenaBlock_c_AssetId {
     ASSET_HATENA_BOX_BMD = 0x0463,

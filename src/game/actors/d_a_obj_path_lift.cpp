@@ -180,8 +180,7 @@ void daObjPathLift_c::UpdateShadow() {
     if (t != false) {
         DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x118000, 0x7d0000, scaleZ, 0xf);
     } else {
-        DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x118000, groundDepth, scaleZ,
-                           0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x118000, groundDepth, scaleZ, 0xf);
     }
 }
 /* -------------------------------------------------------------------------- */

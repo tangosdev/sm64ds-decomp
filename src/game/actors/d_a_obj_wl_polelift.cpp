@@ -1,6 +1,5 @@
 //cpp
 /* leftovers:
- * - common.h stays first.
  * - The destructor stays inline. Out of line it emits D0 before D1,
  *   and a D2.
  * - data_ov026_02113ea0 is the BMD handle and data_ov026_02113a9c

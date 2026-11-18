@@ -41,8 +41,8 @@ struct daC_Jugem_c : dEnemyBase_c {
     StateFn                     *mState;                /* 0x1ec */
     dExtShadowModel_c            mShadowModel1;         /* 0x1f0 */
     dExtShadowModel_c            mShadowModel2;         /* 0x218 */
-    Matrix4x3                    mShadowMat1;           /* 0x240 */
-    Matrix4x3                    mShadowMat2;           /* 0x270 */
+    Matrix4x3 mShadowMat1;                              /* 0x240 */
+    Matrix4x3 mShadowMat2;                              /* 0x270 */
     daPly_c *mTalkPlayer;                               /* 0x2a0 */
     Vector3 mTarget;                                    /* 0x2a4 */
     Vector3 mCamLook;                                   /* 0x2b0 */

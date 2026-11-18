@@ -12,9 +12,6 @@
  * player's character.
  *
  * leftovers:
- * - common.h before math/Matrix.h is load-bearing: the flat m[12]
- *   Matrix4x3 keeps the destructor group at D1, D0, D2 where the
- *   cartridge keeps D1 below D0 and no D2 (measured note below).
  * - Source is ROM-ascending under defer_codegen off; the destructor is
  *   header-declared and defined out of line (D1 then D0, no D2).
  * - The qualified `mAnmModel.dExtSimpleModel_c::Render(0)` is the matched

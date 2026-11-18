@@ -263,7 +263,6 @@ void daWater_Tatumaki_c::UpdateModelMatrix() {
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    /* Twelve flat words. A Matrix4x3 assignment copies r and t separately. */
     mAnmModel.mat4x3 = data_020a0e68;
 }
 

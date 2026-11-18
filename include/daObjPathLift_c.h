@@ -35,7 +35,7 @@
 
 struct daObjPathLift_c : dPathLiftActor_c {
     dExtShadowModel_c mShadowModel; /* 0x450 */
-    Matrix4x3 mShadowMat;             /* 0x478 -- [9..11] the translation, pos >> 3 */
+    Matrix4x3 mShadowMat;           /* 0x478 -- [9..11] the translation, pos >> 3 */
     u32 mSoundHandle;               /* 0x4a8 */
     s32 mGroundY;                   /* 0x4ac */
     u8 mTimer;                      /* 0x4b0 */
