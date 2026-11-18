@@ -48,7 +48,7 @@ typedef struct Ov007Mesh {
     int *texOffsetS;           /* 0x30: func_ov007_020caeac's per-column tu scratch */
     int *texOffsetT;           /* 0x34: its tv scratch */
 #ifdef __cplusplus
-    int func_ov007_020bf630(struct Ov007Camera *camera, int x, int y, int arg5);
+    int func_ov007_020bf630(struct Ov007Camera *camera, int x, int y, int maxDist);
 #endif
 } Ov007Mesh;
 

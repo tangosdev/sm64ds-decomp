@@ -1278,11 +1278,11 @@ void daStar_c::StateCollectTalk() {
     }
     r2v = gGameMode == 1;
     if (r2v != false || (b2 = (actorID == ACTOR_SILVER_STAR)) != 0) {
-        u32 tmp;
+        u32 isSilver;
         u16 mode;
-        tmp = actorID;
-        tmp = tmp == ACTOR_SILVER_STAR;
-        if (tmp != false)
+        isSilver = actorID;
+        isSilver = isSilver == ACTOR_SILVER_STAR;
+        if (isSilver != false)
             st = 1;
         else
             st = 0;

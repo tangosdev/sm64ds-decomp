@@ -336,7 +336,7 @@ void dMgTrmpln2Mario_c::StateBounce() {
 }
 
 void dMgTrmpln2Mario_c::BounceOffLineA() {
-    Vector3 tmp, tmp2, tmp3;
+    Vector3 normal, intoNormal, bounce;
     int alongLine, lineHalfLength, dot, scale, fdivr, v, fx, cur;
 
     alongLine = mContactOffset;
@@ -344,23 +344,23 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
-        /* Kept (#821 r83): tmp = mContactNormal and the three member copies
+        /* Kept (#821 r83): normal = mContactNormal and the three member copies
            move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
-        tmp.x = src->x;
-        tmp.y = src->y;
-        tmp.z = src->z;
+        normal.x = src->x;
+        normal.y = src->y;
+        normal.z = src->z;
     }
 
-    dot = VEC_DotProduct(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &normal);
     scale = FX_MUL(dot, 0x1400);
-    Vec3_MulScalar(&tmp2, &tmp, scale);
-    VEC_Subtract(&mVel, &tmp2, &mVel);
+    Vec3_MulScalar(&intoNormal, &normal, scale);
+    VEC_Subtract(&mVel, &intoNormal, &mVel);
 
     fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmp2RiseSpeedMax, fdivr);
-    Vec3_MulScalar(&tmp3, &tmp, scale);
-    VEC_Add(&mVel, &tmp3, &mVel);
+    Vec3_MulScalar(&bounce, &normal, scale);
+    VEC_Add(&mVel, &bounce, &mVel);
 
     v = mVel.x;
     if (v < -0x3000)
@@ -379,9 +379,9 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
 
     {
         Vector3_16 vec16;
-        int y = tmp.y;
-        int z = tmp.z;
-        int x = tmp.x;
+        int y = normal.y;
+        int z = normal.z;
+        int x = normal.x;
         vec16.x = (s16)x;
         vec16.y = (s16)y;
         vec16.z = (s16)z;
@@ -497,9 +497,9 @@ void dMgTrmpln2Mario_c::StateWallBounce() {
 }
 
 void dMgTrmpln2Mario_c::BounceOffLineB() {
-    Vector3 tmp;
-    Vector3 tmp2;
-    Vector3 tmp3;
+    Vector3 normal;
+    Vector3 intoNormal;
+    Vector3 bounce;
     int alongLine;
     int lineHalfLength;
     int dot;
@@ -512,23 +512,23 @@ void dMgTrmpln2Mario_c::BounceOffLineB() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
-        /* Kept (#821 r83): tmp = mContactNormal and the three member copies
+        /* Kept (#821 r83): normal = mContactNormal and the three member copies
            move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
-        tmp.x = src->x;
-        tmp.y = src->y;
-        tmp.z = src->z;
+        normal.x = src->x;
+        normal.y = src->y;
+        normal.z = src->z;
     }
 
-    dot = VEC_DotProduct(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &normal);
     scale = FX_MUL(dot, 0x1200);
-    Vec3_MulScalar(&tmp2, &tmp, scale);
-    VEC_Subtract(&mVel, &tmp2, &mVel);
+    Vec3_MulScalar(&intoNormal, &normal, scale);
+    VEC_Subtract(&mVel, &intoNormal, &mVel);
 
     fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmpSpeedScale, fdivr);
-    Vec3_MulScalar(&tmp3, &tmp, scale);
-    VEC_Add(&mVel, &tmp3, &mVel);
+    Vec3_MulScalar(&bounce, &normal, scale);
+    VEC_Add(&mVel, &bounce, &mVel);
 
     vx = mVel.x;
     if (vx < -0x2800)
@@ -1303,9 +1303,9 @@ void dMgTrmpln3DMario_c::StateHardBounce() {
 }
 
 void dMgTrmpln3DMario_c::BounceOffLineA() {
-    Vector3 tmp;
-    Vector3 tmp2;
-    Vector3 tmp4;
+    Vector3 normal;
+    Vector3 intoNormal;
+    Vector3 bounce;
     int alongLine;
     int lineHalfLength;
     int dot;
@@ -1317,18 +1317,18 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
-        /* Kept (#821 r83): tmp = mContactNormal and the three member copies
+        /* Kept (#821 r83): normal = mContactNormal and the three member copies
            move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
-        tmp.x = src->x;
-        tmp.y = src->y;
-        tmp.z = src->z;
+        normal.x = src->x;
+        normal.y = src->y;
+        normal.z = src->z;
     }
 
-    dot = VEC_DotProduct(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &normal);
     scale = FX_MUL(dot, 0x1400);
-    Vec3_MulScalar(&tmp2, &tmp, scale);
-    VEC_Subtract(&mVel, &tmp2, &mVel);
+    Vec3_MulScalar(&intoNormal, &normal, scale);
+    VEC_Subtract(&mVel, &intoNormal, &mVel);
 
     fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
 
@@ -1336,9 +1336,9 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
 
     {
         Vector3_16 v;
-        v.x = (s16)tmp.x;
-        v.y = (s16)tmp.y;
-        v.z = (s16)tmp.z;
+        v.x = (s16)normal.x;
+        v.y = (s16)normal.y;
+        v.z = (s16)normal.z;
 
         Particle::System::New(0, kPtclMgTrampolineBounceA, mPos.x << 3, mPos.y << 3, mPos.z << 3,
                               (const Vector3_16f *)(&v), 0);
@@ -1350,8 +1350,8 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
                                         mPos.y << 3, mPos.z << 3, 0, 0);
 
     scale = FX_MUL(sTrmp3DHardBounceScale, fdivr);
-    Vec3_MulScalar(&tmp4, &tmp, scale);
-    VEC_Add(&mVel, &tmp4, &mVel);
+    Vec3_MulScalar(&bounce, &normal, scale);
+    VEC_Add(&mVel, &bounce, &mVel);
 
     {
         int v = mVel.x;
@@ -1467,9 +1467,9 @@ void dMgTrmpln3DMario_c::StateBounce() {
 }
 
 void dMgTrmpln3DMario_c::BounceOffLineB() {
-    Vector3 tmp;
-    Vector3 tmp2;
-    Vector3 tmp3;
+    Vector3 normal;
+    Vector3 intoNormal;
+    Vector3 bounce;
     int alongLine;
     int lineHalfLength;
     int dot;
@@ -1483,25 +1483,25 @@ void dMgTrmpln3DMario_c::BounceOffLineB() {
         alongLine = -alongLine;
 
     {
-        /* Kept (#821 r83): tmp = mContactNormal and the three member copies
+        /* Kept (#821 r83): normal = mContactNormal and the three member copies
            move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
-        tmp.x = src->x;
-        tmp.y = src->y;
-        tmp.z = src->z;
+        normal.x = src->x;
+        normal.y = src->y;
+        normal.z = src->z;
     }
 
-    dot = VEC_DotProduct(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &normal);
     scale = FX_MUL(dot, 0x1200);
-    Vec3_MulScalar(&tmp2, &tmp, scale);
-    VEC_Subtract(&mVel, &tmp2, &mVel);
+    Vec3_MulScalar(&intoNormal, &normal, scale);
+    VEC_Subtract(&mVel, &intoNormal, &mVel);
 
     fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     mGravityStep = sTrmp3DGravityStep;
 
     scale = FX_MUL(sTrmp3DBounceScale, fdivr);
-    Vec3_MulScalar(&tmp3, &tmp, scale);
-    VEC_Add(&mVel, &tmp3, &mVel);
+    Vec3_MulScalar(&bounce, &normal, scale);
+    VEC_Add(&mVel, &bounce, &mVel);
 
     vx = mVel.x;
     if (vx < -0x1000)
@@ -1974,10 +1974,10 @@ void Trmp3DMario_UpdateAll(void) {
     Puff_UpdateAll();
 }
 
-void Trmp3DMario_ResetAll(unsigned int n, int arg1) {
+void Trmp3DMario_ResetAll(unsigned int n, int spawnHeight) {
     int i;
     Trmp3DMario_SetTuning((n % 5 + n / 5) * 0x150 + 0x1000);
-    Trmp3DMario_SetSpawnHeight(arg1);
+    Trmp3DMario_SetSpawnHeight(spawnHeight);
     sTrmp3DLives = 3;
     sTrmpComboCount = 0;
     sTrmpMariosInPlay = 0;

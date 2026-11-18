@@ -501,7 +501,7 @@ int daWanwan2_c::func_ov100_02143b18(ChompState *p) {
    link's position (mLinkPos >> 3) and a smaller drop shadow (radius 120
    units, depth 500 units). */
 void daWanwan2_c::func_ov100_02143b68() {
-    Matrix4x3 tmp;
+    Matrix4x3 identity;
     int i;
     dExtSimpleModel_c *mdst;
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
@@ -509,11 +509,11 @@ void daWanwan2_c::func_ov100_02143b68() {
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
-    tmp = IDENTITY_MATRIX4X3;
+    identity = IDENTITY_MATRIX4X3;
     i = 0;
     mdst = mModels;
     for (; i < daWanwan2_NUM_LINKS; i++) {
-        mdst->mat4x3 = tmp;
+        mdst->mat4x3 = identity;
         mModels[i].mat4x3.t.x = mLinkPos[i].x >> 3;
         mModels[i].mat4x3.t.y = mLinkPos[i].y >> 3;
         mModels[i].mat4x3.t.z = mLinkPos[i].z >> 3;

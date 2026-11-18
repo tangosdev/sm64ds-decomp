@@ -201,7 +201,7 @@ dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void) {
 
 void dScMgTrampoline2_c::InitDisplay() {
     void *objChar, *objPltt, *bgChar, *bgScr, *bgPltt;
-    volatile u16 sp0;
+    volatile u16 fill;
 
     objChar = LoadFile(sTrmp2NcgByLanguage[GetGameLanguage()]);
     objPltt = LoadFile(ASSET_D_2D_MG_TRAMPOLINE_NCL_BIN);
@@ -216,8 +216,8 @@ void dScMgTrampoline2_c::InitDisplay() {
 
     {
         char *dst = (char *)G2_GetBG2CharPtr();
-        sp0 = 0;
-        MI_CpuFill16(dst, sp0, 0x4000);
+        fill = 0;
+        MI_CpuFill16(dst, fill, 0x4000);
     }
     DecompressLZ16(bgChar, ((char *)G2_GetBG2CharPtr() + 0x4000));
     DecompressLZ16(bgScr, G2_GetBG2ScrPtr());
@@ -356,8 +356,8 @@ void dScMgTrampoline2_c::StateIntro() {
 
         {
             int dst = (int)G2_GetBG3CharPtr();
-            volatile u16 tmp = 0;
-            MI_CpuFill16((void *)dst, tmp, 0x6000);
+            volatile u16 fill = 0;
+            MI_CpuFill16((void *)dst, fill, 0x6000);
         }
 
         TrmpLine::CreateStartLineT2();

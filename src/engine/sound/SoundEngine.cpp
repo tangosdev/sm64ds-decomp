@@ -1908,13 +1908,13 @@ extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *handle, int fade) {
     NNSi_SndPlayerStopSeq(handle->player, fade);
 }
 
-extern "C" void NNS_SndPlayerStopSeqByPlayerNo(int idx, int arg1) {
+extern "C" void NNS_SndPlayerStopSeqByPlayerNo(int idx, int fade) {
     int i;
     NNSSndSeqPlayer *p = sSeqPlayer;
     SoundPlayerRecord *player = &sPlayer[idx];
     for (i = 0; i < 16; i++, p++) {
         if (p->status != 0 && p->player == player) {
-            NNSi_SndPlayerStopSeq(p, arg1);
+            NNSi_SndPlayerStopSeq(p, fade);
         }
     }
 }

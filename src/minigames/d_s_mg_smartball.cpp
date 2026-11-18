@@ -753,7 +753,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     int count;
     int bingo;
     int m;
-    int tmp;
+    int score;
     int slot;
     int v;
     int a[2];
@@ -896,11 +896,11 @@ void cMgSmartball_board_c::ClaimCell(int i) {
         return;
     m = 0;
     if (count > 0) {
-        tmp = sSmartballCellScores[0];
+        score = sSmartballCellScores[0];
         do {
             d[0] = mCurrent0;
             d[1] = mCurrent1;
-            mpManager->EmitScore(d, tmp, 0, 1);
+            mpManager->EmitScore(d, score, 0, 1);
             mpManager->CountLine(1);
             m++;
         } while (m < count);
@@ -1032,11 +1032,11 @@ void cMgSmartball_board_c::RestoreInitial() {
 }
 
 void cMgSmartball_board_c::ShuffleCells() {
-    struct W9 tmp;
+    struct W9 startOrder;
     int i;
-    tmp = sSmartballCellStartOrder;
+    startOrder = sSmartballCellStartOrder;
     for (i = 0; i < 9; i++) {
-        sSmartballCellOrder[i] = tmp.w[i] - 1;
+        sSmartballCellOrder[i] = startOrder.w[i] - 1;
     }
 }
 
@@ -1208,8 +1208,8 @@ void cMgSmartball_slot_c::UpdateSpin() {
  * do-while (a for loop is 2 words off).
  * Kept (#821 r82): the empty `if (1) {}` in the first loop was inert and is
  * gone; plain additions for inline_fn -> same size, reel-loop bytes differ. */
-inline int inline_fn(int arg0, int arg1) {
-    return arg0 + arg1;
+inline int inline_fn(int base, int offset) {
+    return base + offset;
 }
 
 void cMgSmartball_slot_c::Update() {
@@ -1801,16 +1801,16 @@ int cMgSmartball_ana_c::HasBall() {
 }
 
 void cMgSmartball_ana_c::Swallow() {
-    int tmp1[2];
-    int tmp2[2];
+    int sparkPos[2];
+    int scorePos[2];
     mRespawnTimer = 60;
     mHasBall = 1;
-    tmp1[0] = mCurrent0;
-    tmp1[1] = mCurrent1;
-    mpManager->EmitSparks(tmp1, 0);
-    tmp2[0] = mCurrent0;
-    tmp2[1] = mCurrent1;
-    mpManager->EmitScore(tmp2, 0x7d0, 0, 1);
+    sparkPos[0] = mCurrent0;
+    sparkPos[1] = mCurrent1;
+    mpManager->EmitSparks(sparkPos, 0);
+    scorePos[0] = mCurrent0;
+    scorePos[1] = mCurrent1;
+    mpManager->EmitScore(scorePos, 0x7d0, 0, 1);
     mpManager->CountAna();
     func_02012718(0xe0, mCurrent0);
 }
@@ -3598,10 +3598,10 @@ void dScMgSmartball_c::UpdateScores() {
             if (*delay > 0) {
                 *delay -= 1;
                 if (*delay <= 0) {
-                    int tmp[2];
-                    tmp[0] = *posX;
-                    tmp[1] = *posY;
-                    EmitScore(tmp, *score, 0, *multiplier);
+                    int pos[2];
+                    pos[0] = *posX;
+                    pos[1] = *posY;
+                    EmitScore(pos, *score, 0, *multiplier);
                     continue;
                 }
             }

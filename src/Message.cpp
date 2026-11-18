@@ -278,8 +278,8 @@ void Message::DisplayLevelClearText(u16 msgID, u8 course) {
     func_0201e220(1);
 }
 
-void Message::func_0201cfb8(int arg0) {
-    data_0209d6d4 = arg0;
+void Message::func_0201cfb8(int msgID) {
+    data_0209d6d4 = msgID;
     data_0209d660 = 0;
     func_0201eaac();
     data_0209d668 = 1;
@@ -1265,13 +1265,13 @@ static inline int IsGameMode(int mode) {
     return gGameMode == mode;
 }
 
-/* Opens message arg0. Places the box one of three ways: against the left edge in
+/* Opens message msgID. Places the box one of three ways: against the left edge in
    game mode 0 before the intro is done (unless a Kuppa script runs), low on
    the screen in game mode 2, and centred otherwise. Then clears the target
    screen's text tiles and map, lays the box's tiles out row by row from tile
    0x200 (0x2200 on the sub screen), and pumps Message::Update until the
    open state reaches 4. */
-void Message::func_0201f32c(int arg0) {
+void Message::func_0201f32c(int msgID) {
     MessageEntry *entry;
     u8 disp2;
     u8 t;
@@ -1287,10 +1287,10 @@ void Message::func_0201f32c(int arg0) {
     volatile s32 subZero;
     volatile s32 bg3Zero;
 
-    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)arg0)
+    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)msgID)
         return;
 
-    data_0209d6d4 = arg0;
+    data_0209d6d4 = msgID;
     func_0201eaac();
 
     data_0209d660 = 1;

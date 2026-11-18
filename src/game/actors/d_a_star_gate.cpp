@@ -195,10 +195,10 @@ bool daStarGate_c::ChangeState(State *nextState, daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
-    Vector3 tmp;
+    Vector3 toPlayer;
     daPly_c *player = gPlayers[gLocalPlayerId];
-    Vec3_Sub(&tmp, &player->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngle.y, &tmp);
+    Vec3_Sub(&toPlayer, &player->mPos, &mPos);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngle.y, &toPlayer);
     return player;
 }
 

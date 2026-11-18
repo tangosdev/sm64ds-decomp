@@ -5,7 +5,7 @@
 void func_ov007_020c684c(char *o)
 {
     Ov007Picker *p = (Ov007Picker *)o;
-    VecFx32 tmp;
+    VecFx32 zero;
     VecFx32 *tp;
     p->mode = 1;
     p->word00 = 0;
@@ -17,7 +17,7 @@ void func_ov007_020c684c(char *o)
     p->posOffset.x = p->posOffset.y;
     p->restPos = p->pos;
     p->anchorPos = p->pos;
-    tp = (VecFx32 *)(&tmp);
+    tp = (VecFx32 *)(&zero);
     tp->x = 0;
     tp->y = 0;
     tp->z = 0;

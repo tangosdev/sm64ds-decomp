@@ -2266,7 +2266,7 @@ int daTrs_c::UpdateDuringDeath() {
     return 0;
 }
 
-int daTrs_c::UpdateDuringNonlethalHit(int arg1) {
+int daTrs_c::UpdateDuringNonlethalHit(int speed) {
     u16 t;
 
     Stop();
@@ -2274,7 +2274,7 @@ int daTrs_c::UpdateDuringNonlethalHit(int arg1) {
         SetMoveYawForDuringHit(1);
     t = mStateTimer;
     if (t < 0x20) {
-        MoveDuringHit(1, ((arg1 * data_ov063_0211e7e0[t]) << 12) / 5000);
+        MoveDuringHit(1, ((speed * data_ov063_0211e7e0[t]) << 12) / 5000);
     } else if (t < 0x30) {
         ShakeAfterHit();
     } else {
@@ -2368,9 +2368,9 @@ void daTrs_c::func_ov063_0211a960() {
 
 }
 
-void daTrs_c::Oscillate(int arg1) {
+void daTrs_c::Oscillate(int force) {
 
-    if (mOpacity != 0xff && arg1 == 0)
+    if (mOpacity != 0xff && force == 0)
         return;
     mScale.x = mClsnScale + (FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
     mScale.y = mClsnScale + -(FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
@@ -2422,7 +2422,7 @@ void daTrs_c::ApproachTargetOpacityAndUpdateScale() {
 void daTrs_c::SpawnCourtyardBooTriplet() {
 
     Vector3 pos;
-    Vector3 tmp;
+    Vector3 spawnPos;
     Vector3_16 rot;
     int i;
 
@@ -2438,8 +2438,8 @@ void daTrs_c::SpawnCourtyardBooTriplet() {
     }
 
     for (i = 0; i < 3; i++) {
-        Vec3_Add(&tmp, &this->mPos, &sSpawnOff[i]);
-        pos = tmp;
+        Vec3_Add(&spawnPos, &this->mPos, &sSpawnOff[i]);
+        pos = spawnPos;
         rot.x = this->mPrevAngle.x;
         rot.y = this->mPrevAngle.y;
         rot.z = this->mPrevAngle.z;
@@ -2895,7 +2895,7 @@ inline u32 daTrs_c::GetParam1() const {
 int daTrs_c::InitResources()
 {
     int cond;
-    int tmp598;
+    int zBias;
     dActor_c *spawned;
     daPly_c *pp;
 
@@ -2923,10 +2923,10 @@ int daTrs_c::InitResources()
         mClsnRadius = 0xc8;
         mClsnHeight = 0x104;
         mClsnZBias = -0x14000;
-        tmp598 = mClsnZBias;
+        zBias = mClsnZBias;
         mClsnOff.x = 0;
         mClsnOff.y = 0;
-        mClsnOff.z = tmp598;
+        mClsnOff.z = zBias;
         mdCcAcPos_c.Init(this, mClsnOff, mClsnRadius << 0xc, mClsnHeight << 0xc, 0x200000, 0x207e0);
         if (mVariant != 0xf) {
             mWithMeshClsn.Init(this, 0xdc000, 0xdc000, 0, 0);
@@ -2941,18 +2941,18 @@ int daTrs_c::InitResources()
         mHitPoints = 1;
         if (mVariant == 5) {
             mClsnZBias = -0x24000;
-            tmp598 = mClsnZBias;
+            zBias = mClsnZBias;
             mClsnOff.x = 0;
             mClsnOff.y = 0;
-            mClsnOff.z = tmp598;
+            mClsnOff.z = zBias;
             mClsnRadius = 0x43;
             mClsnHeight = 0x5a;
         } else {
             mClsnZBias = -0x14000;
-            tmp598 = mClsnZBias;
+            zBias = mClsnZBias;
             mClsnOff.x = 0;
             mClsnOff.y = 0;
-            mClsnOff.z = tmp598;
+            mClsnOff.z = zBias;
             mClsnRadius = 0x4a;
             mClsnHeight = 0x64;
         }

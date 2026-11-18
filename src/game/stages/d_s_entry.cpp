@@ -400,8 +400,8 @@ extern s16 gNumCoins[];
 extern char data_0209ee90[];
 }
 
-static inline int EntryPlayerIndex(int arg0) {
-    return func_02030958(arg0);
+static inline int EntryPlayerIndex(int slot) {
+    return func_02030958(slot);
 }
 
 void dScEntry_c::RenderPlayerScores() {

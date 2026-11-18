@@ -10,7 +10,7 @@ extern void func_ov007_020c831c(Ov007Follower *f, int damping, int shift);
 
 #define DIVR(x) FX_MUL(x, -1000)
 
-void func_ov007_020c5188(char *sb, int arg1) {
+void func_ov007_020c5188(char *sb, int shift) {
     Ov007Picker *self = (Ov007Picker *)sb;
     int p;
     int oc;
@@ -27,7 +27,7 @@ void func_ov007_020c5188(char *sb, int arg1) {
     VecFx32 *min;
     VecFx32 *max;
 
-    p = arg1;
+    p = shift;
     damping = self->params->damping;
     count = 1 << p;
     backup = self->pos;

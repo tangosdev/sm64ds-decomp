@@ -260,9 +260,9 @@ s32 daSBird_c::Render() {
 
 s32 daSBird_c::Behavior() {
     (this->*data_ov009_02113c48.slots[mState])();
-    Vector3 tmp;
-    Vec3_Asr(&tmp, &mPos, 3);
-    MtxStack::transS(tmp.x, tmp.y, tmp.z);
+    Vector3 scaledPos;
+    Vec3_Asr(&scaledPos, &mPos, 3);
+    MtxStack::transS(scaledPos.x, scaledPos.y, scaledPos.z);
     mAngle.y = mPrevAngle.y;
     Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngle.z);
     MtxStack::YrotM(mAngle.y);

@@ -145,12 +145,12 @@ void *SharedFilePtr::Load() {
         t = func_02018ac4((unsigned int *)cp);
         csize = fsize - 4;
         fsize = t;
-        void *tmp = Memory::Allocate(csize);
-        MI_CpuCopy8(cp, tmp, csize);
+        void *compressed = Memory::Allocate(csize);
+        MI_CpuCopy8(cp, compressed, csize);
         Memory::Deallocate((void *)raw);
         raw = (int)Memory::Allocate(fsize);
-        DecompressLZ16(tmp, (void *)raw);
-        Memory::Deallocate(tmp);
+        DecompressLZ16(compressed, (void *)raw);
+        Memory::Deallocate(compressed);
     }
     DC_StoreRange((void *)raw, fsize);
     filePtr = (void *)raw;

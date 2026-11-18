@@ -87,7 +87,7 @@ typedef struct Ov007ItemView {
     s16 slideToX;                  /* 0x18 */
     s16 slideToY;                  /* 0x1a */
 #ifdef __cplusplus
-    void ItemView_HandleTouch(void *arg1);
+    void ItemView_HandleTouch(void *touch);
 #endif
 } Ov007ItemView;
 

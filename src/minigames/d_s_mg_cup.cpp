@@ -86,7 +86,7 @@ struct CupShuffleOffset {
 };
 extern CupShuffleOffset sCupShuffleOffsets[];
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Mg_DrawStockCounter(int arg0, int arg1);
+void Mg_DrawStockCounter(int count, int asIcons);
 void Mg_DrawScoreTally(void *a, int b, int c, int d);
 char data_ov006_02139df4[24] = {(char)0xe8, 0,          (char)0xe5, 65, (char)0xb6, 53,
                                 0,          0,          (char)0xf8, 64, (char)0xdd, 65,

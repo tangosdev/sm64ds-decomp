@@ -159,7 +159,7 @@ struct daDoor_c : dActor_c {
     int func_ov100_021444e8(int a1);        /* state 02148924 execute */
     int func_ov100_02144528(daPly_c *pl);   /* state 02148904 execute */
     void func_ov100_021446f8(daPly_c *r1);  /* state 02148904 enter */
-    int func_ov100_02144730(daPly_c *arg1); /* states 021488f4/02148914 execute */
+    int func_ov100_02144730(daPly_c *player); /* states 021488f4/02148914 execute */
     int func_ov100_0214491c();              /* state 02148914 enter */
     int func_ov100_02144950(daPly_c *pl, int unused); /* state 021488f4 enter */
     int func_ov100_021449c8(daPly_c *a2);             /* state 021488e4 execute */
@@ -173,7 +173,7 @@ struct daDoor_c : dActor_c {
     static int func_ov100_02144fcc();
     static int func_ov100_02145014();
     static void func_ov100_02145070(int v);
-    int func_ov100_02145080(daPly_c *arg1); /* the exit timing */
+    int func_ov100_02145080(daPly_c *player);                      /* the exit timing */
     void func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b); /* place the player */
     int func_ov100_021451c4(void *r5, daPly_c *r4);                /* send the player through */
     int func_ov100_021452e4(daPly_c *r1);     /* player inside the door's box */

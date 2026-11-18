@@ -120,7 +120,7 @@ extern s16 data_02082414;
 extern "C" int Trmp3DMario_InitPool(unsigned char *a0, int a1);
 void TrmpFx_InitPool(void *records, int count);
 void TrmpLine_LoadTextures(void);
-extern "C" void Trmp3DMario_ResetAll(unsigned int n, int arg1);
+extern "C" void Trmp3DMario_ResetAll(unsigned int n, int spawnHeight);
 void TrmpFx_ClearAll(void);
 
 extern int sTrmpPuffXByLanguage[];
@@ -433,8 +433,8 @@ void dScMgTrampoline_c::StateIntro() {
 
         {
             int dst = (int)G2_GetBG3CharPtr();
-            volatile u16 tmp = 0;
-            MIi_CpuClear16(tmp, (char *)dst, 0x6000);
+            volatile u16 fill = 0;
+            MIi_CpuClear16(fill, (char *)dst, 0x6000);
         }
 
         TrmpLine::CreateStartLineT1();

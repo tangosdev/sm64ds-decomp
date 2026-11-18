@@ -578,8 +578,8 @@ static inline int IsFreshTap(Ov007Touch *tp) {
 /* Title/menu per-element stylus hit test.
  *
  * func_ov007_020aed98 calls this once per element per frame, for all 24
- * elements: ItemView_HandleTouch(work->itemViews[i], work->touch). arg0 is
- * the element (an Ov007ItemView), arg1 is the Ov007Touch record that
+ * elements: ItemView_HandleTouch(work->itemViews[i], work->touch). self is
+ * the element (an Ov007ItemView), touch is the Ov007Touch record that
  * func_ov007_020c1db0 maintains. A hit acts by calling
  * func_ov007_020b63e4, which parks the chosen item's id in chosenItemId.
  *
@@ -610,10 +610,10 @@ static inline int IsFreshTap(Ov007Touch *tp) {
  * FREE at 0; the transform is written out longhand only to keep the four
  * edges reading alike.
  */
-void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
-    void *arg0 = this;
-    Ov007ItemView *elem = (Ov007ItemView *)arg0;
-    Ov007Touch *tp = (Ov007Touch *)arg1;
+void Ov007ItemView::ItemView_HandleTouch(void *touch) {
+    void *self = this;
+    Ov007ItemView *elem = (Ov007ItemView *)self;
+    Ov007Touch *tp = (Ov007Touch *)touch;
     int held = 0;
 
     if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0 && IsFreshTap(tp)) {
@@ -626,7 +626,7 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
         int min_x = elem->item->hitBox->minX + pos_x;
         if (touching != 0 && tp->cur.x >= min_x && tp->cur.x <= max_x && tp->cur.y >= min_y &&
             tp->cur.y <= max_y) {
-            func_ov007_020b63e4((Ov007ItemView *)arg0);
+            func_ov007_020b63e4((Ov007ItemView *)self);
         } else {
             u16 t = elem->item->id;
             if ((t == 0xc && WORK->settings->bootArgs->backlightOn == 0) ||
@@ -636,7 +636,7 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
                     if (x >= 8 && x <= 0x66) {
                         s32 y = tp->cur.y;
                         if (y >= 0x50 && y <= 0x60)
-                            func_ov007_020b63e4((Ov007ItemView *)arg0);
+                            func_ov007_020b63e4((Ov007ItemView *)self);
                     }
                 }
             } else if (t == 9) {
@@ -645,15 +645,15 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
                     if (x >= 8 && x <= 0x48) {
                         s32 y = tp->cur.y;
                         if (y >= 0x20 && y <= 0x30)
-                            func_ov007_020b63e4((Ov007ItemView *)arg0);
+                            func_ov007_020b63e4((Ov007ItemView *)self);
                     }
                 }
             }
         }
     } else if (WORK->states[0]->currentState == 3) {
-        /* Through arg0, not elem: reading it through elem lets the compiler
+        /* Through self, not elem: reading it through elem lets the compiler
          * keep the item in a register for elem_selectable and drops 12 bytes. */
-        u16 t0 = ((Ov007ItemView *)arg0)->item->id;
+        u16 t0 = ((Ov007ItemView *)self)->item->id;
         if (t0 == 3 || t0 == 6) {
             if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0 && tp->cur.touch != 0 &&
                 PickerScene_GetDisplayState()->currentState == 5 &&
@@ -673,7 +673,7 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
                      * just above it: reusing the bound local compiles eight bytes
                      * short. */
                     if (elem->item->state->stateWork > 0x3a)
-                        func_ov007_020b63e4((Ov007ItemView *)arg0);
+                        func_ov007_020b63e4((Ov007ItemView *)self);
                 }
             }
         }

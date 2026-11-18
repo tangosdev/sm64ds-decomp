@@ -272,8 +272,8 @@ s32 dScMiniGm_c::InitResources()
     int flag;
     int j2, j3;
     const MgEntry *tbl2;
-    volatile u16 sp0;
-    volatile u16 sp2;
+    volatile u16 charFill;
+    volatile u16 scrFill;
     char *dst;
     void *f;
 
@@ -426,11 +426,11 @@ s32 dScMiniGm_c::InitResources()
     SetSubBg0Offset(mSubBgScrollX, 0);
 
     dst = (char *)G2S_GetBG0CharPtr();
-    sp0 = 0;
-    MI_CpuFill16(dst, sp0, 0x8000);
+    charFill = 0;
+    MI_CpuFill16(dst, charFill, 0x8000);
     dst = (char *)G2S_GetBG0ScrPtr();
-    sp2 = 0x1f;
-    MI_CpuFill16(dst, sp2, 0x1000);
+    scrFill = 0x1f;
+    MI_CpuFill16(dst, scrFill, 0x1000);
 
     LoadGroupIcons();
 

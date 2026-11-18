@@ -227,7 +227,7 @@ void func_0202048c(OamAnimation *dst, int a, int b);
 extern "C" void func_02020768(char *thiz);
 void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
-extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 mode, u32 arg3);
+extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 starID, u32 loadMode);
 extern u8 data_02092778;
 extern "C" u8 func_02020364(int player);
 extern "C" u8 func_020201f0(int);
@@ -360,7 +360,7 @@ void dScEntry_c::TallyRoundWinners() {
 
 s32 dScEntry_c::InitResultResources() {
     int k;
-    void *tmp;
+    void *pltt;
     int id0;
     int id1;
     int i;
@@ -377,9 +377,9 @@ s32 dScEntry_c::InitResultResources() {
     G2_BG1Mosaic(0);
 
     LoadCompressedFileAt(0x8413, G2_GetBG2CharPtr());
-    tmp = LoadFile(0x8414);
-    GX_LoadBGPltt(tmp, 0, 0x1c0);
-    Deallocate(tmp);
+    pltt = LoadFile(0x8414);
+    GX_LoadBGPltt(pltt, 0, 0x1c0);
+    Deallocate(pltt);
 
     n = data_0209fc50;
     if (n == 2) {
@@ -405,18 +405,18 @@ s32 dScEntry_c::InitResultResources() {
     }
 
     LoadCompressedFileAt(data_ov075_0211c990[GetLanguageIndex()], G2_GetOBJCharPtr());
-    tmp = LoadFile(0x8415);
-    GX_LoadOBJPltt(tmp, 0, 0x140);
-    Deallocate(tmp);
+    pltt = LoadFile(0x8415);
+    GX_LoadOBJPltt(pltt, 0, 0x140);
+    Deallocate(pltt);
 
     G2_SetBG1Priority(2);
     SetBg1Offset(0, 0);
     LoadCompressedFileAt(0x8402, G2S_GetOBJCharPtr());
     LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()],
                          (u8 *)G2S_GetOBJCharPtr() + 0x6000);
-    tmp = LoadFile(0x8403);
-    GXS_LoadOBJPltt(tmp, 0, 0x200);
-    Deallocate(tmp);
+    pltt = LoadFile(0x8403);
+    GXS_LoadOBJPltt(pltt, 0, 0x200);
+    Deallocate(pltt);
 
     TallyRoundWinners();
 
@@ -461,7 +461,7 @@ s32 dScEntry_c::InitResultResources() {
 enum EntryAssetId { ASSET_D_2D_BATTLE_FRAMEWORK_GAMESTART_P_NSC_BIN = 0x025e };
 
 s32 dScEntry_c::InitEntryResources() {
-    void *tmp;
+    void *pltt;
     int mode;
 
     if (param1 != 0 || func_0203d9b4() != 0) {
@@ -474,13 +474,13 @@ s32 dScEntry_c::InitEntryResources() {
     }
     LoadCompressedFileAt(data_ov075_0211c9a4[GetLanguageIndex()], G2_GetOBJCharPtr());
 
-    tmp = LoadFile(0x8412);
-    GX_LoadOBJPltt(tmp, 0, 0xc0);
-    Deallocate(tmp);
+    pltt = LoadFile(0x8412);
+    GX_LoadOBJPltt(pltt, 0, 0xc0);
+    Deallocate(pltt);
 
-    tmp = LoadFile(0x980b);
-    GX_LoadBGPltt(tmp, 0, 0xc0);
-    Deallocate(tmp);
+    pltt = LoadFile(0x980b);
+    GX_LoadBGPltt(pltt, 0, 0xc0);
+    Deallocate(pltt);
 
     mStepDelay = 0;
     mIconCount = 0;

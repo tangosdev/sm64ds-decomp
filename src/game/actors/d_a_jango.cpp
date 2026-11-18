@@ -682,7 +682,7 @@ int daJango_c::UpdateCircleState() {
     int thr;
     s8 stage;
     int *pp;
-    int tmp;
+    int coord;
 
     if (mTimer != 0) {
         if (mWithMeshClsn.IsOnWall() != 0) {
@@ -728,13 +728,13 @@ int daJango_c::UpdateCircleState() {
             player = ClosestPlayer();
             if (player != 0) {
                 pp = &player->mPos.x;
-                tmp = pp[0];
-                ppos.x = tmp;
-                tmp = pp[1];
+                coord = pp[0];
+                ppos.x = coord;
+                coord = pp[1];
                 stage = gCurrentSublevel;
-                ppos.y = tmp;
-                tmp = pp[2];
-                ppos.z = tmp;
+                ppos.y = coord;
+                coord = pp[2];
+                ppos.z = coord;
                 if (stage != 0x10 && (mPos.y + 0x28000 < ppos.y || player->mIsUnderwater != 0)) {
                     UpdateCircleVelocity();
                     return 1;

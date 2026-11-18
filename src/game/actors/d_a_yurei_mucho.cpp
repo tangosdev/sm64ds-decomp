@@ -390,22 +390,22 @@ int daYurei_Mucho_c::UpdateChase() {
         /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
         /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         /* Kept (#821 r77): the snapshot reads through `*(VecFx32 *)&` and goes
-           back to Vec3_Dist as `const Vector3 *`. `Vector3 tmp = p->mPos;`
-           gives 0x150 (ROM 0x154); passing the Vector3 copy b instead of tmp
+           back to Vec3_Dist as `const Vector3 *`. `Vector3 playerPos = p->mPos;`
+           gives 0x150 (ROM 0x154); passing the Vector3 copy b instead of playerPos
            gives 0x14c. */
-        VecFx32 tmp = *(VecFx32 *)&p->mPos;
+        VecFx32 playerPos = *(VecFx32 *)&p->mPos;
         Vector3 v;
         Vector3 a;
-        a.x = tmp.x;
-        a.y = tmp.y;
-        a.z = tmp.z;
+        a.x = playerPos.x;
+        a.y = playerPos.y;
+        a.z = playerPos.z;
         mTargetAngle = Vec3_HorzAngle(&mPos, &a);
         Vector3 b;
-        b.x = tmp.x;
-        b.y = tmp.y;
-        b.z = tmp.z;
+        b.x = playerPos.x;
+        b.y = playerPos.y;
+        b.z = playerPos.z;
         pitch = Vec3_VertAngle(&mPos, &b);
-        if (Vec3_Dist(&mPos, (const Vector3 *)&tmp) >= 0x1f4000) {
+        if (Vec3_Dist(&mPos, (const Vector3 *)&playerPos) >= 0x1f4000) {
             mSpeed.x = 0;
             mSpeed.y = 0;
             mSpeed.z = 0;

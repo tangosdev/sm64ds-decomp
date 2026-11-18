@@ -11,7 +11,7 @@
 
 void func_02049c48(int kind) {
     int current = data_020a4c64.kind;
-    volatile unsigned short tmp;
+    volatile unsigned short fill;
     OSIntrMode savedIRQ;
     if (kind == current)
         return;
@@ -19,8 +19,8 @@ void func_02049c48(int kind) {
         SNDi_SetSurroundDecay(0);
     }
     savedIRQ = OS_DisableInterrupts();
-    tmp = 0;
-    MI_CpuFill16(&data_020a4c70, tmp, sizeof(data_020a4c70));
+    fill = 0;
+    MI_CpuFill16(&data_020a4c70, fill, sizeof(data_020a4c70));
     data_020a4c64.kind = kind;
     OS_RestoreInterrupts(savedIRQ);
     if (kind == 1) {

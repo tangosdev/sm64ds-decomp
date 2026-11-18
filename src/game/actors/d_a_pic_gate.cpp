@@ -343,7 +343,7 @@ s32 daPicGate_c::WavePhase(s32 dist) {
 /* Refresh every cell's planar distance from the wave origin (mWaveOrigin);
  * Vertex::dist feeds RippleHeight. The plain vector is initialized inside
  * the loop: b56 emits the retail block copy for that form.
- * Kept (#821 r77): tmp is a POD VecFx32 (its copy-init is the ROM's ldm/stm
+ * Kept (#821 r77): flat is a POD VecFx32 (its copy-init is the ROM's ldm/stm
  * block move; a Vector3 copy is memberwise), and the game's Vec3_Dist takes
  * the game's Vector3, so the call casts at that boundary. */
 void daPicGate_c::UpdateCellDistances() {
@@ -351,9 +351,9 @@ void daPicGate_c::UpdateCellDistances() {
 
     for (i = 0; i < mNumCells; i++) {
         Vertex *e = &mCells[i];
-        VecFx32 tmp = e->pos;
-        tmp.z = 0;
-        e->dist = Vec3_Dist(&mWaveOrigin, (Vector3 *)&tmp);
+        VecFx32 flat = e->pos;
+        flat.z = 0;
+        e->dist = Vec3_Dist(&mWaveOrigin, (Vector3 *)&flat);
     }
 }
 
@@ -421,14 +421,14 @@ void daPicGate_c::PlaceCornersMirrored() {
  * camera matrix, scaled to 32, then each corner emits TEXCOORD, NORMAL and
  * one VTX_16 pair at >>8. */
 void daPicGate_c::DrawFlat() {
-    Matrix4x3 tmp;
+    Matrix4x3 modelView;
     int i;
     Vertex *p;
 
     G3_PushMtx();
-    MTX_Concat43(&mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&mMtx, &data_0209b3ec, &modelView);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
-    G3_LoadMtx43(&tmp);
+    G3_LoadMtx43(&modelView);
     G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
     G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
     LoadMaterial();
@@ -481,15 +481,15 @@ extern int data_ov080_0212771c[];
  * (GX_TEXGEN_NORMAL) and no repeat or flip, so each vertex sends only
  * NORMAL and its position at >>7. */
 void daPicGate_c::DrawRippleEnvMapped() {
-    Matrix4x3 tmp;
+    Matrix4x3 modelView;
     int i, j;
 
-    MTX_Concat43(&mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&mMtx, &data_0209b3ec, &modelView);
     G3_PushMtx();
     G3_LoadTexMtxEnv(data_ov080_0212771c);
-    G3_MultMtx43(&tmp);
+    G3_MultMtx43(&modelView);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
-    G3_LoadMtx43(&tmp);
+    G3_LoadMtx43(&modelView);
     G3_TexCoord(0x40000, 0x40000);
     G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
     G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
