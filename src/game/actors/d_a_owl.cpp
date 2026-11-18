@@ -415,13 +415,12 @@ int daOwl_c::UpdateDormant() {
         const Vector3 *playerPos = &p->mPos;
         Vector3 pp;
         Vector3 d;
-        const Vector3 *selfpos = &mPos;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
         mPos.y = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub(&d, selfpos, &pp);
+        Vec3_Sub(&d, &mPos, &pp);
         if (VEC_Mag(&d) < 0x28000) {
             d.x = mPos.x;
             d.y = mPos.y;
