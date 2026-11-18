@@ -277,11 +277,8 @@ void daBtfly_c::State3()
     ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &mHomePos), 0x50);
     UpdatePos(0);
 
-    {
-        mPos.y = mPos.y -
-             (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngle.x >> 4)) +
-              FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * (short)20 / 4);
-    }
+    mPos.y -= FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngle.x >> 4)) +
+              FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * (short)20 / 4;
 
     mStateTimer = mStateTimer + 1;
     if (mStateTimer > 100)
