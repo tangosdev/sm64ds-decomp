@@ -26,7 +26,10 @@
  * deslop leftovers:
  * - State7 mFlutterPhase: named += is 0x234 vs 0x258. The phase load is
  *   ldrsh plus a zero-extend shift (ldrh of the field is shorter), and the
- *   adds take the int-cast address, not add #0x300.
+ *   adds step the field through a u16 pun.
+ *   Kept (#821 r81): an inline s16 phase getter in the step or the read ->
+ *   State7 0x244/0x250/0x23c of 0x258; plain += same size, bytes differ;
+ *   `ang = (u16)ang` -> 0x250. The old int-cast address macro was noise.
  * - State7 UpdateContinuous(): WRONG-DEST. ROM calls
  *   dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc).
  * - State7 func_02035638 is mClsnFlags & 0x10. No method; IsOnGround is
@@ -72,10 +75,6 @@ struct BtflyAnimationFilePtr : SharedFilePtr {
     ~BtflyAnimationFilePtr();
 };
 
-/* State7's flutter-phase add. A plain mFlutterPhase += folds to add #0x300;
- * the int cast keeps the pool-offset add the ROM has. */
-#define L(p) ((int)(p))
-
 extern "C" {
 // local extern: CalcLib.h also conflicts with this TU's retained Vec3_Asr and Vec3_HorzLen prototypes.
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -117,9 +116,9 @@ void daBtfly_c::State7()
         v = FX_MUL(FX_CosIdx(idx), 0xa3);
         if (v > 0) {
             v = FX_MUL(v, 0x4800);
-            *(u16 *)L(&mFlutterPhase) += 0x2710;
+            *(u16 *)&mFlutterPhase += 0x2710;
         } else {
-            *(u16 *)L(&mFlutterPhase) += 0xfa0;
+            *(u16 *)&mFlutterPhase += 0xfa0;
         }
         mScale += v;
     }
