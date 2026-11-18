@@ -3458,6 +3458,8 @@ extern "C" void SetPlayerGlobals(void) {
     /* A signed byte here: decl_common.h types it unsigned for its other readers.
        Measured (#821 r68): declared signed char, dScStarSel_c's two stores
        lose the `and #0xff` they share with data_02092128[0]. */
+    /* Kept (#821 r76): no block-copy or type lever (r72-r75) applies to this scalar pin; the r68
+       measurement above stands. */
     *(s8 *)&data_02092114 = -1;
     data_0209f254 = 0;
 }

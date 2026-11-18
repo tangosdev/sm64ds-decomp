@@ -865,7 +865,9 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
                 if (actor != 0) {
                     enum Bool eq = (enum Bool)(actor->actorID == ACTOR_PLAYER);
                     if (eq != FALSE) {
-                        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
+                        /* Kept (#821 r76): `Vector3 pos = actor->mPos;` is three ldr/str
+                           (UpdateLeapToSpawn 0x2b0, 10+ words off); the ROM's ldm/stm needs a POD
+                           source. */
                         VecFx32 pos = *(VecFx32 *)&actor->mPos;
                         if (mPos.y > pos.y) {
                             ((daPly_c *)actor)->Unk_020c6a10(1);

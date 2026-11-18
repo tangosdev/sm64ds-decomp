@@ -806,6 +806,8 @@ Wanwan2ModelFilePtr data_ov100_021486a4(0x9c01);
 Wanwan2AnimFileHandle data_ov100_021486ac(0x9c04);
 Wanwan2AnimFileHandle data_ov100_021486b4(0x9c03);
 ChompState data_ov100_021486f4 = {
+    /* Kept (#821 r76): a real &daWanwan2_c:: constant makes the sinit 0x12c, not 0xf4 (r68); no
+       r72-r75 lever applies. */
     *(ChompPmf *)&data_ov100_02148000,
     *(ChompPmf *)&data_ov100_02147ff8,
 };

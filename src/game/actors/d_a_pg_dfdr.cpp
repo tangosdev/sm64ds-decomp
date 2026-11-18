@@ -144,8 +144,7 @@ s32 daPgDfdr_c::InitResources() {
     UpdateModelMatrix();
 
     file = dBgW_Kc::LoadFile(data_ov027_02113c6c);
-    mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngle.y,
-                          *(CLPS_Block *)&data_ov027_021130e8);
+    mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngle.y, data_ov027_021130e8);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     mVertAccel = 0;

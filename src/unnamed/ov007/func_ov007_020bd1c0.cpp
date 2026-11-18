@@ -36,6 +36,8 @@ extern "C" void func_ov007_020bd1c0(int n) {
 
     func_ov007_020bce70(0, 0);
 
+    /* Kept (#821 r76): the Ov007Texture member calls keep this file C++ (r75: a C probe is
+       identical), and C++ copies a VecFx32 memberwise (here and below). */
     *(Vector3Bits *)&WORK->lights[0]->source = *(Vector3Bits *)&data_ov007_020d7c34[n];
 
     h = func_ov007_020b3f20(0x16);

@@ -333,6 +333,8 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                         if (flags & 0x1000) {
                             if (flags & 0x100) {
                                 args++;
+                                /* Kept (#821 r76): genuine SDK varargs reads, each slot at its
+                                   declared width (here and below). */
                                 v = *(u8 *)&args[-1];
                             } else if (flags & 0x40) {
                                 args++;
@@ -360,6 +362,8 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                         } else {
                             if (flags & 0x100) {
                                 args++;
+                                /* Kept (#821 r76): genuine SDK varargs reads, each slot at its
+                                   declared width (here and below). */
                                 v = *(s8 *)&args[-1];
                             } else if (flags & 0x40) {
                                 args++;

@@ -1390,6 +1390,8 @@ void Message::func_02033390(int sub) {
    decl_common.h spells it plain. The macro expands each use to a deref
    through a cast of its address -- the inner name paints blue and resolves to
    the extern. Measured (#821 r68): without it the function is 0x380 of 0x388. */
+/* Kept (#821 r76): a reload pin; no block-copy or type lever (r72-r75) applies to this scalar pin;
+   r68: 0x380 of 0x388 without it. */
 #define data_0209fc78 (*(u8 *)&data_0209fc78)
 void Message::func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;
