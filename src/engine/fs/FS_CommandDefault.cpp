@@ -536,4 +536,19 @@ int FSi_OpenFileDirectCommand(FSFile *p_file) {
 int FSi_CloseFileCommand(FSFile *p_file) {
     return FS_RESULT_SUCCESS;
 }
+
+/* The default command handlers, indexed by FS_COMMAND. The read and write
+   handlers return nothing in this build, so those two entries are cast to the
+   table's int-returning type; the ROM never reads their results. */
+extern int (*const fsi_default_command[9])(FSFile *p_file) = {
+    (int (*)(FSFile *))FSi_ReadFileCommand,
+    (int (*)(FSFile *))FSi_WriteFileCommand,
+    FSi_SeekDirCommand,
+    FSi_ReadDirCommand,
+    FSi_FindPathCommand,
+    FSi_GetPathCommand,
+    FSi_OpenFileFastCommand,
+    FSi_OpenFileDirectCommand,
+    FSi_CloseFileCommand,
+};
 }

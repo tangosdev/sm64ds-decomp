@@ -25,6 +25,11 @@
       "end": "0x02074dbc"
     },
     {
+      "name": ".rodata",
+      "start": "0x02075258",
+      "end": "0x02075264"
+    },
+    {
       "name": ".ctor",
       "start": "0x02086b6c",
       "end": "0x02086b70"
@@ -755,6 +760,15 @@
       "evidence": "string literal \"/data/sound_data.sdat\" (0x16 bytes with its NUL), the archive path func_020133bc passes to NNS_SndArcInit; its only reader is that function's pool word 0x020134a4 in config/arm9/relocs.txt. mwcc emits it after every size-sorted named object, in its own 1-aligned .data section, which is retail's placement after sPlayerSeqLimits."
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_02075258",
+      "address": "0x02075258",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "The eleven sound-player numbers func_02011c54 stops through NNS_SndPlayerStopSeqByPlayerNo, then the zero terminator that pads the object to a word: {2,3,4,5,6,7,8,9,10,17,15,0}. The loop walks exactly eleven entries; no reader outside this TU in config/**/relocs.txt."
+    }
+  ],
   "bss": [
     {
       "symbol": "sSubVolumeTarget",
@@ -931,9 +945,9 @@
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/arm9-Sound/link (gitignored)",
+      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -965,6 +979,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02075258",
+          "end": "0x02075264",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".ctor",
           "start": "0x02086b6c",
           "end": "0x02086b70",
@@ -987,7 +1008,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 122
+          "LICENSED": 123
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],

@@ -953,7 +953,7 @@ dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
 
 extern unsigned char data_0209f2c0[];
 /* WDW's water level, 0..2 */
-extern int data_02075244[];
+extern const int data_02075244[];
 /* the water height for each level */
 
 /* In area 0 of sublevel 0x15 (WDW), the current water height; anywhere else,
@@ -969,6 +969,13 @@ s32 dActor_c::GetWaterHeightWDW()
     }
     return height;
 }
+
+/* The three water levels in 20.12: 45.0, 1000.0 and 2750.0. */
+extern const int data_02075244[3] = {
+    0x2d000,
+    0x3e8000,
+    0xabe000,
+};
 
 extern SharedFilePtr data_ov002_0210da00;
 /* the blue coin's two model files */

@@ -16502,11 +16502,6 @@
         "return:FSArchive *"
       ]
     },
-    "data_02075358": {
-      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
-        "return:char []"
-      ]
-    },
     "data_02075f14": {
       "include/decl_common.h": [
         "return:char []"
@@ -16523,11 +16518,6 @@
       ],
       "src/minigames/d_s_mg_trampoline.cpp": [
         "return:short"
-      ]
-    },
-    "data_020868d4": {
-      "src/cstd3.cpp": [
-        "return:char"
       ]
     },
     "data_020868fc": {

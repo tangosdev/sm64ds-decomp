@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x0206ccd8",
       "end": "0x0206ce90"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x020868d4",
+      "end": "0x020868fc"
     }
   ],
   "functions": [
@@ -48,6 +53,15 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_020868d4",
+      "address": "0x020868d4",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "The non-fatal cstd assert line, 40 bytes: \"WARING FILE=[%s] LINE=[%d]  EXP=[%s] \\n\" (the misspelling is the cartridge's). cstd::__assert passes it to func_0206ccd8 from its non-stop branch, where the stop branch traps instead."
+    }
+  ],
   "bss": [],
   "compiler_only_output": [],
   "notes": [
@@ -56,7 +70,7 @@
     "Definitions are written in descending address order (func_0206ce20, func_0206cd9c, __assert) so mwccarm reverse-source emission lands the ROM-ascending run.",
     "func_0206cd9c's opt_common_subs-off and optimize_for_size pragmas lead their own extern \"C\" blocks -- mwccarm binds such pragmas only at block lead (or file scope) and ignores them mid-block.",
     "func_0206ccd8 is declared (const char* first, ...): the callee's real definition is varargs, so the shard's 4-fixed-parameter spelling's banked arity disagreement resolves instead of re-keying.",
-    "Text-only. The TU emits no data of its own.",
+    "The TU also emits its non-fatal assert line (data_020868d4, licensed as .rodata above); everything else it emits is text.",
     "absorb/cstd3-grow extends the TU downward to 0x0206ccd8 (func_0206ccd8, the varargs print helper __assert calls; the file stays ROM-descending, so the new definition appends after __assert with the lowest address last). The shard's print-argument struct S would collide with the TU's register-helper struct S, so it goes function-local with identical layout; the shard's file-scope optimize_for_size pragma is scoped push/pop with opt_common_subs restored on, undoing the off state func_0206cd9c leaks."
   ],
   "verification": {
@@ -81,16 +95,16 @@
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "link-verified",
-      "scratch": "build/tu/arm9-cstd3/link (gitignored)",
+      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
       "phases": {
         "delink": true,
         "lcf": true,
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -106,11 +120,18 @@
           "end": "0x0206ce90",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020868d4",
+          "end": "0x020868fc",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 4
+          "LICENSED": 5
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -128,10 +149,11 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
       "linkerOutput": null
     }
-  }
+  },
+  "production_mode": "intact-object"
 }

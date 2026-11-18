@@ -175,6 +175,7 @@ src/runtime/actor/d_actor.cpp:
     .text start:0x0200f658 end:0x02011654
     .init start:0x02074d90 end:0x02074da8
     .ctor start:0x02086b68 end:0x02086b6c
+    .rodata start:0x02075244 end:0x02075250
     .bss start:0x0209b468 end:0x0209b470
 
 src/data/arm9/data_02075250.c:
@@ -186,6 +187,7 @@ src/engine/sound/Sound.cpp:
     .text start:0x02011654 end:0x02013548
     .init start:0x02074da8 end:0x02074dbc
     .ctor start:0x02086b6c end:0x02086b70
+    .rodata start:0x02075258 end:0x02075264
     .data start:0x0208e420 end:0x0208e4b0
     .bss start:0x0209b470 end:0x0209ba84
 
@@ -725,6 +727,7 @@ src/unnamed/arm9/0201/func_0201fec8.cpp:
     .text start:0x0201fec8 end:0x0201ffcc
     .init start:0x02074e44 end:0x02074e80
     .ctor start:0x02086b80 end:0x02086b84
+    .rodata start:0x02075358 end:0x020755a0
     .bss start:0x0209e650 end:0x0209e660
 
 src/unnamed/arm9/0201/func_0201ffcc.c:
@@ -919,6 +922,7 @@ src/engine/view/d_view.cpp:
 src/Quaternion_FromVector3.cpp:
     complete
     .text start:0x0202fd4c end:0x0202fef8
+    .rodata start:0x02075b04 end:0x02075b14
 
 src/Quaternion_SLerp.c:
     complete
@@ -1530,6 +1534,7 @@ src/unnamed/arm9/0204/func_0204921c.c:
 src/unnamed/arm9/0204/func_020494cc.c:
     complete
     .text start:0x020494cc end:0x02049764
+    .rodata start:0x02082200 end:0x02082214
 
 src/unnamed/arm9/0204/func_02049764.c:
     complete
@@ -1853,6 +1858,7 @@ src/data/arm9/data_02086314.c:
 src/engine/gx/GX.cpp:
     complete
     .text start:0x020568cc end:0x02056c1c
+    .rodata start:0x02086324 end:0x02086384
 
 src/GX_SendFifo48B.c:
     complete
@@ -2024,7 +2030,7 @@ src/engine/snd/SND_Work.cpp:
 
 src/data/arm9/data_02086484.c:
     complete
-    .rodata start:0x02086484 end:0x02086758
+    .rodata start:0x02086384 end:0x02086758
 
 src/SND_CalcChannelVolume.c:
     complete
@@ -2046,6 +2052,7 @@ src/engine/pxi/PXI_Fifo.c:
 src/engine/fs/FS_CommandDefault.cpp:
     complete
     .text start:0x0205bbdc end:0x0205c5e4
+    .rodata start:0x02086758 end:0x0208677c
 
 src/engine/fs/FS_Command.cpp:
     complete
@@ -2140,6 +2147,7 @@ src/unnamed/arm9/0206/func_02060364.c:
 src/unnamed/arm9/0206/func_02060398.c:
     complete
     .text start:0x02060398 end:0x020603c8
+    .rodata start:0x020867bc end:0x0208685c
 
 src/CARD_IdentifyBackup.cpp:
     complete
@@ -2516,6 +2524,7 @@ src/engine/ctrdg/CTRDG_Proc.cpp:
 src/unnamed/arm9/0206/func_0206a928.c:
     complete
     .text start:0x0206a928 end:0x0206bc8c
+    .rodata start:0x02086894 end:0x020868a0
 
 src/unnamed/arm9/0206/func_0206bc8c.c:
     complete
@@ -2576,6 +2585,7 @@ src/data/arm9/data_020868a0.c:
 src/cstd3.cpp:
     complete
     .text start:0x0206ccd8 end:0x0206ce90
+    .rodata start:0x020868d4 end:0x020868fc
 
 src/unnamed/arm9/0206/func_0206ce90.c:
     complete
@@ -2620,6 +2630,7 @@ src/cstd4.cpp:
 src/float2str.c:
     complete
     .text start:0x0206ece0 end:0x0206f338
+    .rodata start:0x02086a58 end:0x02086b58
 
 src/round_decimal.c:
     complete
