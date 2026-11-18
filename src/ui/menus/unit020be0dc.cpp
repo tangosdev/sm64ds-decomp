@@ -410,7 +410,7 @@ void func_ov007_020be684(void *system, Ov007SpriteGroup *grp) {
     for (i = 0; i < *grp->layout; i++) {
         item = grp->items[i];
         rec = &SPRITES->tracking[i];
-        item->node->visible = (rec->particle != 0) ? 1 : 0;
+        item->node->visible = rec->particle != 0;
         item->node->x = rec->screenX << 12;
         item->node->y = rec->screenY << 12;
         item->node->priority = rec->priority;

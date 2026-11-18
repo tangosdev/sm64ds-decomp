@@ -157,6 +157,22 @@ struct KuriKingBoneIdx {
 };
 KuriKingBoneIdx data_ov074_02122e24 = {{1, 8, 10}};
 extern char data_ov074_02122f3c[];
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
 extern char data_ov074_02122f38[];
 void UnloadKeyModels(int i);
 void LoadKeyModels(int idx);
@@ -358,7 +374,7 @@ int daKuriKing_c::SpawnVanishCopy() {
     spawnTarget=data_ov074_02122d80[this->mSizeIndex];
     player=this->ClosestPlayer();
     if(this->mSizeIndex==1){ if((int)player->param1!=3) spawnTarget+=1; }
-    return this->mSpawnedCount>=spawnTarget ? 1 : 0;
+    return this->mSpawnedCount >= spawnTarget;
 }
 
 void daKuriKing_c::UpdateDefeat() {
@@ -405,8 +421,7 @@ void daKuriKing_c::UpdateDefeat() {
             dActor_c *actor = dActor_c::FindWithActorID(0xc8, 0);
             if (actor != 0) {
                 while (1) {
-                    s32 flag = (actor->mFlags & 0x40000) ? 1 : 0;
-                    if (flag == 0) {
+                    if (!IsInYoshiMouth(actor)) {
                         Vector3 v2;
                         s32 *src = &actor->mPos.x;
                         v2.x = src[0];
@@ -1055,9 +1070,6 @@ void daKuriKing_c::HandleCylinderHits() {
     int dir2;
     u32 s;
     u32 flags;
-    u16 type;
-    int b;
-    int b2;
 
     DecIfAbove0_Byte(&this->mHurtTimer);
     s = this->mState;
@@ -1088,9 +1100,7 @@ void daKuriKing_c::HandleCylinderHits() {
     if (flags & 0x2000) {
         hit = 1;
     } else {
-        type = player->actorID;
-        b = (int)(type == 0xbf);
-        if (b != 0) {
+        if (IsPlayerActor(player)) {
             daPly_c *pl = (daPly_c *)player;
             if (this->mHurtTimer == 0) {
                 if (!(flags & 0x26fe0) && pl->mIsTakingDamage == 0) {
@@ -1169,8 +1179,7 @@ void daKuriKing_c::HandleCylinderHits() {
                 }
             }
         } else {
-            b2 = (int)(type == 0xc8);
-            if (b2 != 0) {
+            if (IsActorID(player, 0xc8)) {
                 if (flags & 0x22000)
                     hit = 1;
             }
@@ -1709,8 +1718,7 @@ int daKuriKing_c::BehaviorVanish() {
     }
 
     if (DecIfAbove0_Short(&this->mTimer) == 0 || this->mSubState >= 3) {
-        int b = ((this->mFlags & 8) != 0) ? 1 : 0;
-        if (b == 0) {
+        if (!IsOffScreen(this)) {
             this->PoofDust();
         }
         this->MarkForDestruction();
@@ -1718,8 +1726,7 @@ int daKuriKing_c::BehaviorVanish() {
     }
 
     if (this->mWithMeshClsn.JustHitGround()) {
-        int b = ((this->mFlags & 8) != 0) ? 1 : 0;
-        if (b == 0) {
+        if (!IsOffScreen(this)) {
             if (this->mSubState == 0) {
                 func_02012694(0x13a, &this->mCamSpacePos);
             } else {
