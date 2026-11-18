@@ -609,7 +609,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
         SetMaterialFlags(0x8000);
     if (b < 0)
         return 1;
-    SetPolygonID((u32)b & 0xff);
+    SetPolygonID(b & 0xff);
     return 1;
 }
 

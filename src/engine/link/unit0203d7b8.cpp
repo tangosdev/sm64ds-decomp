@@ -447,7 +447,7 @@ void WFSi_LoadTables(void) {
     sl += sizeof(u32);
     i = 0;
     do {
-        sizes[i] = (int)((ptrs[i]->length + 0x1f) & ~0x1f);
+        sizes[i] = (ptrs[i]->length + 0x1f) & ~0x1f;
         sl += sizes[i] + 4;
         i++;
     } while (i < 4);
@@ -467,14 +467,14 @@ void WFSi_LoadTables(void) {
 
         do {
             const CARDRomRegion *p = ptrs[j];
-            int origSize = (int)p->length;
+            int origSize = p->length;
             int data0;
             int end;
 
             roundedSize = sizes[j];
             *(int *)buf = origSize;
             buf += 4;
-            data0 = (int)p->offset;
+            data0 = p->offset;
             end = roundedSize + data0;
             FS_OpenFileDirect(&file, sb, data0, end, -1);
             FS_ReadFile(&file, buf, roundedSize);
@@ -485,7 +485,7 @@ void WFSi_LoadTables(void) {
 
         {
             Entry *entries = (Entry *)((char *)fp + 8);
-            int count = (int)(ptrs[0]->length >> 3);
+            int count = ptrs[0]->length >> 3;
             u32 max = sl;
             int k;
             k = 0;
