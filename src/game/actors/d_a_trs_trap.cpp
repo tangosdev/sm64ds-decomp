@@ -289,8 +289,7 @@ void daTrsTrap_c::UpdateBookshelf() {
 /* Book-switch callback: ORs switch bit m into mBookFlags, then the right or
    wrong chime -- the order is 1, then 1|2, then all three. */
 void daTrsTrap_c::func_ov063_0211cae8(int m) {
-    unsigned char *p = &mBookFlags;
-    *p |= m;
+    mBookFlags |= m;
     unsigned char v = mBookFlags & 7;
     if (v != 1 && v != 3 && v != 7) {
         func_02012790(0xe);
