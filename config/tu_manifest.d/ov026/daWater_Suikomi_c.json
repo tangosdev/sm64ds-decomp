@@ -31,7 +31,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x02113f58",
+      "start": "0x02113f4c",
       "end": "0x02113f80"
     }
   ],
@@ -130,6 +130,13 @@
   ],
   "data": [],
   "bss": [
+    {
+      "symbol": "data_ov026_02113f4c",
+      "address": "0x02113f4c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "InitState copies it into a local Vector3 and hands it to mdCcAcPos_c::Init as the collider offset (0x64000, 0xa4000, 0x800006). Zero-filled storage, so .bss; the 12 bytes run to the next configured datum at 0x02113f58."
+    },
     {
       "symbol": "data_ov026_02113f58",
       "address": "0x02113f58",
@@ -346,7 +353,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x02113f58",
+          "start": "0x02113f4c",
           "end": "0x02113f80",
           "comparison": "NOBITS -- symbol/module gates"
         }

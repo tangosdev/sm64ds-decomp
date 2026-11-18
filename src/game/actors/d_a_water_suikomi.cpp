@@ -154,3 +154,12 @@ SuikomiStateTable data_ov026_02113f58 = {
     {data_ov026_02113dd8, data_ov026_02113dd0},
     {},
 };
+
+/* The collider offset InitState passes to mdCcAcPos_c::Init. Zero-filled, so
+ * it is storage only; the consumer above reads it as a Vector3, which is also
+ * the symbol's 12-byte extent to the next datum.
+ * Parsed as C: a C++ Vector3 declares a destructor, and a global one would add
+ * its __sinit registration to .init, which the cartridge does not have. */
+#pragma cplusplus off
+Vector3 data_ov026_02113f4c;
+#pragma cplusplus on
