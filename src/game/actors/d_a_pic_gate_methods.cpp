@@ -136,7 +136,7 @@ void daPicGate_c::UpdateContinuousRipple() {
     int i;
     for (i = 0; i < this->mNumCells; i++) {
         daPicGate_c::Vertex *v = &this->mCells[i];
-        v->z = this->RippleHeight(v->dist);
+        v->pos.z = this->RippleHeight(v->dist);
     }
     this->BuildNormals();
     this->FlattenFrame();
@@ -152,9 +152,9 @@ void daPicGate_c::InitContinuousRipple() {
     for (row = 0; row < this->mRows; row++) {
         for (col = 0; col < this->mCols; col++) {
             daPicGate_c::Vertex *v = &this->mCells[row * this->mRows + col];
-            v->x = x;
-            v->y = y;
-            v->z = 0;
+            v->pos.x = x;
+            v->pos.y = y;
+            v->pos.z = 0;
             v->normal = kFlatNormal;
             if (col == this->mCols - 2)
                 x = ((u8)(this->param1 & 15) + 1) * kCell;
@@ -206,10 +206,10 @@ void daPicGate_c::DrawRippleImage() {
 
             REG_TEXCOORD = v1->texCoord;
             REG_NORMAL = v1->normal;
-            G3_Vtx(v1->x >> 8, v1->y >> 8, v1->z >> 8);
+            G3_Vtx(v1->pos.x >> 8, v1->pos.y >> 8, v1->pos.z >> 8);
             REG_TEXCOORD = v2->texCoord;
             REG_NORMAL = v2->normal;
-            G3_Vtx(v2->x >> 8, v2->y >> 8, v2->z >> 8);
+            G3_Vtx(v2->pos.x >> 8, v2->pos.y >> 8, v2->pos.z >> 8);
         }
         G3_End();
     }
@@ -226,7 +226,7 @@ void daPicGate_c::UpdateProximityRipple() {
 
     for (i = 0; i < this->mNumCells; i++) {
         v = &this->mCells[i];
-        v->z = this->RippleHeight(v->dist);
+        v->pos.z = this->RippleHeight(v->dist);
     }
 
     this->BuildNormals();
@@ -244,9 +244,9 @@ void daPicGate_c::InitProximityRipple() {
     for (row = 0; row < this->mRows; row++) {
         for (col = 0; col < this->mCols; col++) {
             daPicGate_c::Vertex *v = &this->mCells[row * this->mRows + col];
-            v->x = x;
-            v->y = y;
-            v->z = 0;
+            v->pos.x = x;
+            v->pos.y = y;
+            v->pos.z = 0;
             v->normal = kFlatNormal;
             int du = kTexSpan / (this->mCols - 1);
             int dv = kTexSpan / (this->mRows - 1);
