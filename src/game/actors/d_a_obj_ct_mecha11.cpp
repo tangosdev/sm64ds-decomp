@@ -127,10 +127,7 @@ int daObjCtMecha11_c::Behavior() {
             mRandFrames = mRandTimer;
         } else {
             if (mRandTimer < mRandFrames - 5) {
-                /* The temporary keeps the 0x92 address in its own register
-                 * beside the this+0x300 base the timer already computed. */
-                short *angleStep = &mPrevAngle.x;
-                *angleStep = (*angleStep * mRandDirection);
+                mPrevAngle.x *= mRandDirection;
             } else {
                 mPrevAngle.x = 0;
             }
@@ -138,8 +135,7 @@ int daObjCtMecha11_c::Behavior() {
     }
     mMeshCollider.SetClipRadius(0x180000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    short *angle = &mAngle.x;
-    *angle = (*angle + mPrevAngle.x);
+    mAngle.x += mPrevAngle.x;
     UpdateModel();
     UpdateShadow();
     if (IsClsnInRange(0x180000, 0x1000))
