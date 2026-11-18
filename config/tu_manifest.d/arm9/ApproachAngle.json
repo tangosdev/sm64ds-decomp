@@ -36,7 +36,7 @@
       "legacy_source": "src/_Z15ApproachLinear2Rsss.cpp"
     },
     {
-      "symbol": "_Z15ApproachLinear2Riii",
+      "symbol": "_Z15ApproachLinear2Rhii",
       "address": "0x0203af34",
       "size": "0x5c",
       "ordinal": 3,
