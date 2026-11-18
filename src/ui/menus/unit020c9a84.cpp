@@ -33,8 +33,8 @@
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
 
-extern int func_ov007_020c30ac(VecFx32 *points, int count, VecFx32 *target, int maxDist,
-                               int *outDist);
+extern "C" int func_ov007_020c30ac(VecFx32 *points, int count, VecFx32 *target, int maxDist,
+                                   int *outDist);
 extern "C" void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
 extern "C" void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
 extern "C" void func_ov007_020c7804(Ov007PointList *list);

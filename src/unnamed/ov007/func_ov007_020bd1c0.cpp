@@ -11,6 +11,7 @@
 /* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
    plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
    the same copy compiled as C does (measured on func_ov007_020c5dec). */
+/* Kept (#821 r75): byte-identical as C too, but its 11 Ov007Texture member calls need C++. */
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
 extern "C" VecFx32 data_ov007_020d7c34[];

@@ -1,4 +1,3 @@
-//cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "Ov007MenuState.h"
@@ -10,17 +9,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
-
-/* Vector3 declares a constructor and destructor under C++, which makes its
- * assignment copy word by word. The ROM copies these with C's ldm/stm block
- * move, which C++ keeps for a struct with an array member. */
-/* Kept (#821 r72): no C++ spelling of three named ints (VecFx32, Vector3, a
-   plain or tagged struct, a temporary) copies memory to memory with ldm/stm;
-   the same copy compiled as C does (measured on func_ov007_020c5dec). */
-typedef struct Vec3Words {
-    fx32 w[3];
-} Vec3Words;
 /* recovered: per-frame update of a two-mode screen transition driven by the
  * manager at data_ov007_0210342c. Mode 1 eases a scale toward 0x1000 over
  * 12 frames and flags completion when the slot reaches its end; mode 0 copies
@@ -108,9 +96,9 @@ void func_ov007_020b1718(void) {
             Ov007Tween *dd;
             func_ov007_020b257c();
             d = m->targetTween;
-            *(Vec3Words *)&d->to = *(Vec3Words *)&m->target;
+            d->to = m->target;
             d = m->targetTween;
-            *(Vec3Words *)&d->from = *(Vec3Words *)&d->to;
+            d->from = d->to;
             m->distanceTween->to = m->distance;
             dd = m->distanceTween;
             dd->from = dd->to;
@@ -168,5 +156,4 @@ void func_ov007_020b1718(void) {
         qq2 = ProgressRatio(v, divisor);
         FigureScene_SetScreenBlend(0x1000 - qq2);
     }
-}
 }
