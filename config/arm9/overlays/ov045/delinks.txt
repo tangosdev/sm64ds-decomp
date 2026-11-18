@@ -56,3 +56,259 @@ src/game/actors/d_a_obj_km2_fall_block.cpp:
     .data.km2FallBlockClps start:0x021125f0 end:0x02112610
     .bss start:0x02113248 end:0x02113270
     .data start:0x021130ac end:0x021130b8
+
+src/data/ov045/data_ov045_02111e60.cpp:
+    complete
+    .rodata start:0x02111e60 end:0x02111e64
+
+src/data/ov045/data_ov045_02111e64.cpp:
+    complete
+    .rodata start:0x02111e64 end:0x02111e68
+
+src/data/ov045/data_ov045_02111e68.cpp:
+    complete
+    .rodata start:0x02111e68 end:0x02111e84
+
+src/data/ov045/data_ov045_02111e84.cpp:
+    complete
+    .rodata start:0x02111e84 end:0x02111fc0
+
+src/data/ov045/data_ov045_02111fc0.cpp:
+    complete
+    .rodata start:0x02111fc0 end:0x0211208c
+
+src/data/ov045/data_ov045_0211208c.cpp:
+    complete
+    .rodata start:0x0211208c end:0x021120a4
+
+src/data/ov045/data_ov045_021120a4.cpp:
+    complete
+    .rodata start:0x021120a4 end:0x021120bc
+
+src/data/ov045/data_ov045_021120bc.cpp:
+    complete
+    .rodata start:0x021120bc end:0x021120d8
+
+src/data/ov045/data_ov045_021120d8.cpp:
+    complete
+    .rodata start:0x021120d8 end:0x021120f8
+
+src/data/ov045/data_ov045_021120f8.cpp:
+    complete
+    .rodata start:0x021120f8 end:0x02112104
+
+src/data/ov045/data_ov045_02112104.cpp:
+    complete
+    .rodata start:0x02112104 end:0x02112118
+
+src/data/ov045/data_ov045_02112118.cpp:
+    complete
+    .rodata start:0x02112118 end:0x02112138
+
+src/data/ov045/data_ov045_02112138.cpp:
+    complete
+    .rodata start:0x02112138 end:0x02112158
+
+src/data/ov045/data_ov045_02112158.cpp:
+    complete
+    .rodata start:0x02112158 end:0x02112178
+
+src/data/ov045/data_ov045_02112178.cpp:
+    complete
+    .rodata start:0x02112178 end:0x02112198
+
+src/data/ov045/data_ov045_02112198.cpp:
+    complete
+    .rodata start:0x02112198 end:0x021121a8
+
+src/data/ov045/data_ov045_02112610.cpp:
+    complete
+    .data start:0x02112610 end:0x02112630
+
+src/data/ov045/data_ov045_02112630.cpp:
+    complete
+    .data start:0x02112630 end:0x0211265c
+
+src/data/ov045/data_ov045_0211265c.cpp:
+    complete
+    .data start:0x0211265c end:0x02112694
+
+src/data/ov045/data_ov045_02112694.cpp:
+    complete
+    .data start:0x02112694 end:0x021126d0
+
+src/data/ov045/data_ov045_021126d0.cpp:
+    complete
+    .data start:0x021126d0 end:0x02112720
+
+src/data/ov045/data_ov045_02112720.cpp:
+    complete
+    .data start:0x02112720 end:0x02112780
+
+src/data/ov045/data_ov045_02112780.cpp:
+    complete
+    .data start:0x02112780 end:0x02112940
+
+src/data/ov045/data_ov045_02112940.cpp:
+    complete
+    .data start:0x02112940 end:0x02112968
+
+src/data/ov045/data_ov045_02112968.cpp:
+    complete
+    .data start:0x02112968 end:0x021129b4
+
+src/data/ov045/data_ov045_021129b4.cpp:
+    complete
+    .data start:0x021129b4 end:0x02112a6c
+
+src/data/ov045/data_ov045_02112a6c.cpp:
+    complete
+    .data start:0x02112a6c end:0x02112aa4
+
+src/data/ov045/data_ov045_02112aa4.cpp:
+    complete
+    .data start:0x02112aa4 end:0x02112aa8
+
+src/data/ov045/data_ov045_02112aa8.cpp:
+    complete
+    .data start:0x02112aa8 end:0x02112ac0
+
+src/data/ov045/data_ov045_02112ac0.cpp:
+    complete
+    .data start:0x02112ac0 end:0x02112adc
+
+src/data/ov045/data_ov045_02112adc.cpp:
+    complete
+    .data start:0x02112adc end:0x02112b08
+
+src/data/ov045/data_ov045_02112b08.cpp:
+    complete
+    .data start:0x02112b08 end:0x02112b84
+
+src/data/ov045/data_ov045_02112b84.cpp:
+    complete
+    .data start:0x02112b84 end:0x02112ba8
+
+src/data/ov045/data_ov045_02112ba8.cpp:
+    complete
+    .data start:0x02112ba8 end:0x02112bdc
+
+src/data/ov045/data_ov045_02112bdc.cpp:
+    complete
+    .data start:0x02112bdc end:0x02112bec
+
+src/data/ov045/data_ov045_02112bec.cpp:
+    complete
+    .data start:0x02112bec end:0x02112c08
+
+src/data/ov045/data_ov045_02112c08.cpp:
+    complete
+    .data start:0x02112c08 end:0x02112c18
+
+src/data/ov045/data_ov045_02112c18.cpp:
+    complete
+    .data start:0x02112c18 end:0x02112c44
+
+src/data/ov045/data_ov045_02112c44.cpp:
+    complete
+    .data start:0x02112c44 end:0x02112c4c
+
+src/data/ov045/data_ov045_02112c4c.cpp:
+    complete
+    .data start:0x02112c4c end:0x02112c58
+
+src/data/ov045/data_ov045_02112c58.cpp:
+    complete
+    .data start:0x02112c58 end:0x02112c68
+
+src/data/ov045/data_ov045_02112c68.cpp:
+    complete
+    .data start:0x02112c68 end:0x02112c88
+
+src/data/ov045/data_ov045_02112c88.cpp:
+    complete
+    .data start:0x02112c88 end:0x02112ca8
+
+src/data/ov045/data_ov045_02112ca8.cpp:
+    complete
+    .data start:0x02112ca8 end:0x02112cb0
+
+src/data/ov045/_ZTI16daObjKm2_Agaru_c.cpp:
+    complete
+    .data start:0x02112cb0 end:0x02112cbc
+
+src/data/ov045/_ZTS16daObjKm2_Agaru_c.cpp:
+    complete
+    .data start:0x02112cbc end:0x02112cc8
+
+src/data/ov045/data_ov045_02112cc8.cpp:
+    complete
+    .data start:0x02112cc8 end:0x02112cd0
+
+src/data/ov045/g_profile_KM2_AGARU.cpp:
+    complete
+    .data start:0x02112cd0 end:0x02112cf4
+
+src/data/ov045/data_ov045_02112d48.cpp:
+    complete
+    .data start:0x02112d48 end:0x02112d74
+
+src/data/ov045/_ZTI18daObjKm2_Ami_Bou_c.cpp:
+    complete
+    .data start:0x02112d74 end:0x02112d80
+
+src/data/ov045/_ZTI17daObjKm2_Nobiru_c.cpp:
+    complete
+    .data start:0x02112e3c end:0x02112e48
+
+src/data/ov045/_ZTS17daObjKm2_Nobiru_c.cpp:
+    complete
+    .data start:0x02112e48 end:0x02112e5c
+
+src/data/ov045/g_profile_KM2_NOBIRU.cpp:
+    complete
+    .data start:0x02112e5c end:0x02112e80
+
+src/data/ov045/_ZTI19daObjKm2_Ukishima_c.cpp:
+    complete
+    .data start:0x02112efc end:0x02112f08
+
+src/data/ov045/_ZTS19daObjKm2_Ukishima_c.cpp:
+    complete
+    .data start:0x02112f14 end:0x02112f2c
+
+src/data/ov045/g_profile_KM2_UKISHIMA.cpp:
+    complete
+    .data start:0x02112f2c end:0x02112f50
+
+src/data/ov045/data_ov045_02112f58.cpp:
+    complete
+    .data start:0x02112f58 end:0x02112f7c
+
+src/data/ov045/data_ov045_02112f7c.cpp:
+    complete
+    .data start:0x02112f7c end:0x02112fd0
+
+src/data/ov045/_ZTI15daObjKm2_Gura_c.cpp:
+    complete
+    .data start:0x02112fd0 end:0x02112fdc
+
+src/data/ov045/_ZTI21daObjKm2_Fall_Block_c.cpp:
+    complete
+    .data start:0x021130a0 end:0x021130ac
+
+src/data/ov045/_ZTS21daObjKm2_Fall_Block_c.cpp:
+    complete
+    .data start:0x021130b8 end:0x021130cc
+
+src/data/ov045/data_ov045_021130cc.cpp:
+    complete
+    .data start:0x021130cc end:0x021130d0
+
+src/data/ov045/g_profile_KM2_KUZURE.cpp:
+    complete
+    .data start:0x021130d0 end:0x021130f4
+
+src/data/ov045/data_ov045_02113270.cpp:
+    complete
+    .bss start:0x02113270 end:0x02113280
