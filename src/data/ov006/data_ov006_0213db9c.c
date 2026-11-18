@@ -1,5 +1,5 @@
 /*
- * Minigame-overlay data at 0x0213db9c..0x0213dbbc.
+ * Minigame-overlay data at 0x0213db9c..0x0213dbb4.
  *
  * Sprite templates are OamAttr lists (terminated by 0xffff in
  * attr3); the tables that index them hold OamAttr pointers. A
@@ -9,7 +9,6 @@
  */
 #include "types.h"
 
-extern u8 _ZTI16dScMgPachinko2_c[];
 extern int data_ov006_0212ebf8[];
 extern int data_ov006_0212ec10[];
 extern int data_ov006_0212ec18[];
@@ -17,13 +16,9 @@ extern int data_ov006_0212ec20[];
 extern int data_ov006_0212ec28[];
 extern int data_ov006_0212ec38[];
 
-int *sPachinko2PaddleGatherTargets[8] = {
-    (int *)&data_ov006_0212ec28,
-    (int *)&data_ov006_0212ec20,
-    (int *)&data_ov006_0212ec18,
-    (int *)&data_ov006_0212ebf8,
-    (int *)&data_ov006_0212ec10,
-    (int *)&data_ov006_0212ec38,
-    0,
-    (int *)&_ZTI16dScMgPachinko2_c,
+int *sPachinko2PaddleGatherTargets[6] = {
+    (int *)&data_ov006_0212ec28, (int *)&data_ov006_0212ec20, (int *)&data_ov006_0212ec18,
+    (int *)&data_ov006_0212ebf8, (int *)&data_ov006_0212ec10, (int *)&data_ov006_0212ec38,
 };
+/* _ZTV16dScMgPachinko2_c starts 8 bytes past this table; those bytes are its
+   {offset-to-top, type_info} header. */

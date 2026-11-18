@@ -1,11 +1,10 @@
-/* Pointers, 3 entries. */
+/* Pointers, 1 entry. */
 #include "types.h"
 
-extern u8 _ZTI15dScMgSnowball_c[];
 extern struct OamAttr *sMgTextSpritesItalian[];
 
-void *data_ov006_02140000[3] = {
+void *data_ov006_02140000[1] = {
     (void *)&sMgTextSpritesItalian,
-    0,
-    (void *)&_ZTI15dScMgSnowball_c,
 };
+/* _ZTV15dScMgSnowball_c starts 8 bytes past this table; those bytes are its
+   {offset-to-top, type_info} header. */

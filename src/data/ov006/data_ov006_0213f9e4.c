@@ -1,5 +1,5 @@
 /*
- * Minigame-overlay data at 0x0213f9e4..0x0213fa0c.
+ * Minigame-overlay data at 0x0213f9e4..0x0213fa04.
  *
  * Sprite templates are OamAttr lists (terminated by 0xffff in
  * attr3); the tables that index them hold OamAttr pointers. A
@@ -9,9 +9,8 @@
  */
 #include "types.h"
 
-extern u8 _ZTI13dScMgTeresa_c[];
-
-int sTeresaPaintMask[10] = {
-    0x00111100, 0x01111110, 0x11111111, 0x11111111, 0x11111111,
-    0x11111111, 0x01111110, 0x00111100, 0x00000000, (int)&_ZTI13dScMgTeresa_c,
+int sTeresaPaintMask[8] = {
+    0x00111100, 0x01111110, 0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x01111110, 0x00111100,
 };
+/* _ZTV13dScMgTeresa_c starts 8 bytes past this table; those bytes are its
+   {offset-to-top, type_info} header. */

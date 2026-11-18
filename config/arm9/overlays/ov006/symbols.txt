@@ -3696,7 +3696,7 @@ pmf_dScMgHanachan_c_Phase_Result_2 kind:data(any) addr:0x0213ca6c
 pmf_Wiggler_TurnTowardAim_10 kind:data(any) addr:0x0213ca74
 _ZTI15dScMgHanachan_c kind:data(any) addr:0x0213ca7c
 _ZTS15dScMgHanachan_c kind:data(any) addr:0x0213ca88
-sHanaTextSpritesByLanguage kind:data(any) addr:0x0213ca9c
+sHanaTextSpritesByLanguage kind:data(byte[20]) addr:0x0213ca9c
 data_ov006_0213cab8 kind:data(any) addr:0x0213cab8
 _ZTV15dScMgHanachan_c kind:data(any) addr:0x0213cab8
 sJumpLastPick kind:data(any) addr:0x0213cb48
@@ -3712,7 +3712,7 @@ sJumpRenderScale kind:data(any) addr:0x0213cb8c
 _ZTI11dScMgJump_c kind:data(any) addr:0x0213cb98
 _ZTS11dScMgJump_c kind:data(any) addr:0x0213cba4
 sJumpTextSpritesByLanguage kind:data(any) addr:0x0213cbb4
-sJumpNcgByLanguage kind:data(any) addr:0x0213cbc8
+sJumpNcgByLanguage kind:data(byte[20]) addr:0x0213cbc8
 _ZTV11dScMgJump_c kind:data(any) addr:0x0213cbe4
 pmf_dScMgJump2_c_State_Idle kind:data(any) addr:0x0213cc74
 g_profile_MG_JUMP2 kind:data(any) addr:0x0213cc7c ambiguous
@@ -3724,7 +3724,7 @@ _ZTI12dScMgJump2_c kind:data(any) addr:0x0213cca4
 sJump2RenderScale kind:data(any) addr:0x0213ccb0
 _ZTS12dScMgJump2_c kind:data(any) addr:0x0213ccbc
 sJump2TextSpritesByLanguage kind:data(any) addr:0x0213cccc
-sJump2NcgByLanguage kind:data(any) addr:0x0213cce0
+sJump2NcgByLanguage kind:data(byte[20]) addr:0x0213cce0
 _ZTV12dScMgJump2_c kind:data(any) addr:0x0213ccfc
 @2210 kind:data(any) addr:0x0213cd8c
 @2200 kind:data(any) addr:0x0213cd94
@@ -3758,7 +3758,7 @@ sLuigiBoardFlags kind:data(any) addr:0x0213ce84
 sLuigiBoardModes kind:data(any) addr:0x0213ce98
 sLuigiBoardMovers kind:data(any) addr:0x0213ceac
 sLuigiWantedPicks kind:data(any) addr:0x0213cec0
-sLuigiPlaceLimits kind:data(any) addr:0x0213cee0
+sLuigiPlaceLimits kind:data(byte[40]) addr:0x0213cee0
 data_ov006_0213cf10 kind:data(any) addr:0x0213cf10
 _ZTV12dScMgLuigi_c kind:data(any) addr:0x0213cf10
 sLuigiBg1NcgPath kind:data(any) addr:0x0213cfa0
@@ -3836,7 +3836,7 @@ sMemory2CardNcgByLanguage kind:data(any) addr:0x0213d370
 data_ov006_0213d384 kind:data(any) addr:0x0213d384
 data_ov006_0213d3c4 kind:data(any) addr:0x0213d3c4
 data_ov006_0213d40c kind:data(any) addr:0x0213d40c
-sMemory2CardFrameSprites kind:data(any) addr:0x0213d45c
+sMemory2CardFrameSprites kind:data(byte[112]) addr:0x0213d45c
 _ZTV14dScMgMemory2_c kind:data(any) addr:0x0213d4d4
 sMCarloPickAllowed kind:data(any) addr:0x0213d564
 sMCarloPayout kind:data(any) addr:0x0213d568
@@ -3932,7 +3932,7 @@ _ZTI16dScMgPachinko2_c kind:data(any) addr:0x0213db4c
 _ZTS16dScMgPachinko2_c kind:data(any) addr:0x0213db58
 sPachinko2PaddleDescendLimits kind:data(any) addr:0x0213db6c
 sPachinko2PaddleSweepLimits kind:data(any) addr:0x0213db84
-sPachinko2PaddleGatherTargets kind:data(any) addr:0x0213db9c
+sPachinko2PaddleGatherTargets kind:data(byte[24]) addr:0x0213db9c
 data_ov006_0213dbbc kind:data(any) addr:0x0213dbbc
 _ZTV16dScMgPachinko2_c kind:data(any) addr:0x0213dbbc
 @2236 kind:data(any) addr:0x0213dc4c
@@ -4005,7 +4005,7 @@ data_ov006_0213e10c kind:data(any) addr:0x0213e10c
 data_ov006_0213e140 kind:data(any) addr:0x0213e140
 data_ov006_0213e174 kind:data(any) addr:0x0213e174
 data_ov006_0213e1b4 kind:data(any) addr:0x0213e1b4
-data_ov006_0213e1fc kind:data(any) addr:0x0213e1fc
+data_ov006_0213e1fc kind:data(byte[72]) addr:0x0213e1fc
 data_ov006_0213e24c kind:data(any) addr:0x0213e24c
 _ZTV12dScMgPanel_c kind:data(any) addr:0x0213e24c
 sRouletteResultIndex kind:data(any) addr:0x0213e2dc
@@ -4024,7 +4024,7 @@ data_ov006_0213e370 kind:data(any) addr:0x0213e370
 data_ov006_0213e374 kind:data(any) addr:0x0213e374
 data_ov006_0213e378 kind:data(any) addr:0x0213e378
 _ZTV15dScMgRoulette_c kind:data(any) addr:0x0213e39c
-sSingle3DCommonNcgByLanguage kind:data(any) addr:0x0213e42c
+sSingle3DCommonNcgByLanguage kind:data(byte[20]) addr:0x0213e42c
 _ZTV19dScMgSingle3DBase_c kind:data(any) addr:0x0213e448
 sSlot1Payouts kind:data(any) addr:0x0213e4d8
 pmf_Slot3_StateJudge kind:data(any) addr:0x0213e4e0
@@ -4091,7 +4091,7 @@ sSlot1Sprites kind:data(any) addr:0x0213e96c
 sSlot3FaceSprites kind:data(any) addr:0x0213e9a4
 sSlotReelSymbols kind:data(any) addr:0x0213e9e0
 sSlotReelSymbolsAlt kind:data(any) addr:0x0213ea20
-data_ov006_0213ea60 kind:data(any) addr:0x0213ea60
+data_ov006_0213ea60 kind:data(byte[64]) addr:0x0213ea60
 _ZTV12dScMgSlot3_c kind:data(any) addr:0x0213eaa8
 data_ov006_0213eb40 kind:data(any) addr:0x0213eb40
 _ZTV12dScMgSlot1_c kind:data(any) addr:0x0213eb40
@@ -4116,7 +4116,7 @@ cMgSmartball_ball_c_vtbl kind:data(any) addr:0x0213ec98
 _ZTV20cMgSmartball_dokan_c kind:data(any) addr:0x0213ecac
 cMgSmartball_dokan_c_vtbl kind:data(any) addr:0x0213ecac
 sSmartballTextSpritesByLanguage kind:data(any) addr:0x0213ecb8
-sSmartballOptionNcgByLanguage kind:data(any) addr:0x0213eccc
+sSmartballOptionNcgByLanguage kind:data(byte[20]) addr:0x0213eccc
 _ZTV24cMgSmartball_propeller_c kind:data(any) addr:0x0213ece8
 cMgSmartball_propeller_c_vtbl kind:data(any) addr:0x0213ece8
 _ZTV21cMgSmartball_spring_c kind:data(any) addr:0x0213ecfc
@@ -4149,7 +4149,7 @@ _ZTS21cMgSmartball_object_c kind:data(any) addr:0x0213ee68
 _ZTS21cMgSmartball_kinoko_c kind:data(any) addr:0x0213ee80
 _ZTS24cMgSmartball_propeller_c kind:data(any) addr:0x0213ee98
 _ZTS25cMgSmartball_pushswitch_c kind:data(any) addr:0x0213eeb4
-sSmartballCellStartOrder kind:data(any) addr:0x0213eed0
+sSmartballCellStartOrder kind:data(byte[36]) addr:0x0213eed0
 _ZTV16dScMgSmartball_c kind:data(any) addr:0x0213eefc
 sSmartballLayoutNcgFmtSpanish kind:data(any) addr:0x0213ef8c
 sSmartballLayoutNcgFmtItalian kind:data(any) addr:0x0213efb8
@@ -4290,7 +4290,7 @@ pmf_dScMgTeresa_c_BigBoo_StateRemove kind:data(any) addr:0x0213f9ac
 _ZTI13dScMgTeresa_c kind:data(any) addr:0x0213f9b4
 _ZTS13dScMgTeresa_c kind:data(any) addr:0x0213f9c0
 sTeresaCountdownSprites kind:data(any) addr:0x0213f9d0
-sTeresaPaintMask kind:data(any) addr:0x0213f9e4
+sTeresaPaintMask kind:data(byte[32]) addr:0x0213f9e4
 data_ov006_0213fa0c kind:data(any) addr:0x0213fa0c
 _ZTV13dScMgTeresa_c kind:data(any) addr:0x0213fa0c
 sTrmpTouchBlocked kind:data(any) addr:0x0213fa9c
@@ -4353,7 +4353,7 @@ data_ov006_0213fe48 kind:data(any) addr:0x0213fe48
 data_ov006_0213fe58 kind:data(any) addr:0x0213fe58
 data_ov006_0213fe68 kind:data(any) addr:0x0213fe68
 sBscBigSmallNcgByLanguage kind:data(any) addr:0x0213fe78
-sBscCardSprites kind:data(any) addr:0x0213fe8c
+sBscCardSprites kind:data(byte[52]) addr:0x0213fe8c
 _ZTV10dScMgBSC_c kind:data(any) addr:0x0213fec8
 @2730 kind:data(any) addr:0x0213ff58
 @2728 kind:data(any) addr:0x0213ff60
@@ -4373,7 +4373,7 @@ g_profile_MG_SNOWBALL kind:data(any) addr:0x0213ffb8 ambiguous
 _ZTI15dScMgSnowball_c kind:data(any) addr:0x0213ffd0
 _ZTS15dScMgSnowball_c kind:data(any) addr:0x0213ffdc
 sSnowballTextSpritesByLanguage kind:data(any) addr:0x0213fff0
-data_ov006_02140000 kind:data(any) addr:0x02140000 ambiguous
+data_ov006_02140000 kind:data(byte[4]) addr:0x02140000 ambiguous
 _ZTV15dScMgSnowball_c kind:data(any) addr:0x0214000c
 sSnowballBgNclPath kind:data(any) addr:0x0214009c
 sSnowballNcgPath kind:data(any) addr:0x021400bc

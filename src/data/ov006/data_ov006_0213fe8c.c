@@ -1,5 +1,5 @@
 /*
- * Minigame-overlay data at 0x0213fe8c..0x0213fec8.
+ * Minigame-overlay data at 0x0213fe8c..0x0213fec0.
  *
  * Sprite templates are OamAttr lists (terminated by 0xffff in
  * attr3); the tables that index them hold OamAttr pointers. A
@@ -9,7 +9,6 @@
  */
 #include "types.h"
 
-extern u8 _ZTI10dScMgBSC_c[];
 extern struct OamAttr data_ov006_0213fda8[];
 extern struct OamAttr data_ov006_0213fdb8[];
 extern struct OamAttr data_ov006_0213fdc8[];
@@ -24,13 +23,12 @@ extern struct OamAttr data_ov006_0213fe48[];
 extern struct OamAttr data_ov006_0213fe58[];
 extern struct OamAttr data_ov006_0213fe68[];
 
-void *sBscCardSprites[15] = {
-    (void *)&data_ov006_0213fda8, (void *)&data_ov006_0213fe68,
-    (void *)&data_ov006_0213fdb8, (void *)&data_ov006_0213fdc8,
-    (void *)&data_ov006_0213fdd8, (void *)&data_ov006_0213fe48,
-    (void *)&data_ov006_0213fde8, (void *)&data_ov006_0213fdf8,
-    (void *)&data_ov006_0213fe08, (void *)&data_ov006_0213fe18,
-    (void *)&data_ov006_0213fe28, (void *)&data_ov006_0213fe38,
-    (void *)&data_ov006_0213fe58, 0,
-    (void *)&_ZTI10dScMgBSC_c,
+void *sBscCardSprites[13] = {
+    (void *)&data_ov006_0213fda8, (void *)&data_ov006_0213fe68, (void *)&data_ov006_0213fdb8,
+    (void *)&data_ov006_0213fdc8, (void *)&data_ov006_0213fdd8, (void *)&data_ov006_0213fe48,
+    (void *)&data_ov006_0213fde8, (void *)&data_ov006_0213fdf8, (void *)&data_ov006_0213fe08,
+    (void *)&data_ov006_0213fe18, (void *)&data_ov006_0213fe28, (void *)&data_ov006_0213fe38,
+    (void *)&data_ov006_0213fe58,
 };
+/* _ZTV10dScMgBSC_c starts 8 bytes past this table; those bytes are its
+   {offset-to-top, type_info} header. */

@@ -1,5 +1,5 @@
 /*
- * Minigame-overlay data at 0x0213ca9c..0x0213cab8.
+ * Minigame-overlay data at 0x0213ca9c..0x0213cab0.
  *
  * Sprite templates are OamAttr lists (terminated by 0xffff in
  * attr3); the tables that index them hold OamAttr pointers. A
@@ -9,15 +9,15 @@
  */
 #include "types.h"
 
-extern u8 _ZTI15dScMgHanachan_c[];
 extern struct OamAttr *sMgTextSpritesEnglish[];
 extern struct OamAttr *sMgTextSpritesFrench[];
 extern struct OamAttr *sMgTextSpritesGerman[];
 extern struct OamAttr *sMgTextSpritesItalian[];
 extern struct OamAttr *sMgTextSpritesSpanish[];
 
-void *sHanaTextSpritesByLanguage[7] = {
+void *sHanaTextSpritesByLanguage[5] = {
     (void *)&sMgTextSpritesEnglish, (void *)&sMgTextSpritesSpanish, (void *)&sMgTextSpritesFrench,
-    (void *)&sMgTextSpritesGerman,  (void *)&sMgTextSpritesItalian, 0,
-    (void *)&_ZTI15dScMgHanachan_c,
+    (void *)&sMgTextSpritesGerman,  (void *)&sMgTextSpritesItalian,
 };
+/* _ZTV15dScMgHanachan_c starts 8 bytes past this table; those bytes are its
+   {offset-to-top, type_info} header. */
