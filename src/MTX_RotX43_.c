@@ -4,10 +4,10 @@
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 // MTX_RotX43_ @ 0x02052800 (arm9, Thumb): build 4x3 fx32 X-rotation matrix
 // from (sin, cos): rows {1,0,0},{0,c,s},{0,-s,c},{0,0,0} with 4096 = 1.0.
-struct Matrix4x3;
+union Matrix4x3;
 
 #pragma thumb on
-asm void MTX_RotX43_(struct Matrix4x3 *m, int s, int c) {
+asm void MTX_RotX43_(union Matrix4x3 *m, int s, int c) {
     str r1, [r0, #0x14]
     neg r1, r1
     str r1, [r0, #0x1c]

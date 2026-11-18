@@ -715,24 +715,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@714",
-      "to": "@939",
-      "evidence": "Compiler-local registration node at its original address 0x021149c8, given a unique short label so overlay globals cannot collide. Re-keyed from @787 to @784 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @784 to @715 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @715 to @714 after the enter table became a StateEntry PMF table (measured from the compiled object)."
-    },
-    {
-      "from": "@715",
-      "to": "@940",
-      "evidence": "Compiler-local registration node at its original address 0x021149d4, given a unique short label so overlay globals cannot collide. Re-keyed from @788 to @785 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @785 to @716 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @716 to @715 after the enter table became a StateEntry PMF table (measured from the compiled object)."
-    },
-    {
       "from": "@716",
-      "to": "@943",
-      "evidence": "Compiler-local registration node at its original address 0x021149e0, given a unique short label so overlay globals cannot collide. Re-keyed from @789 to @786 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @786 to @717 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @717 to @716 after the enter table became a StateEntry PMF table (measured from the compiled object)."
+      "to": "@939",
+      "evidence": "Compiler-local registration node at its original address 0x021149c8, given a unique short label so overlay globals cannot collide. Re-keyed from @787 to @784 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @784 to @715 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @715 to @714 after the enter table became a StateEntry PMF table (measured from the compiled object). Re-keyed from @714 to @716 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@717",
+      "to": "@940",
+      "evidence": "Compiler-local registration node at its original address 0x021149d4, given a unique short label so overlay globals cannot collide. Re-keyed from @788 to @785 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @785 to @716 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @716 to @715 after the enter table became a StateEntry PMF table (measured from the compiled object). Re-keyed from @715 to @717 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@718",
+      "to": "@943",
+      "evidence": "Compiler-local registration node at its original address 0x021149e0, given a unique short label so overlay globals cannot collide. Re-keyed from @789 to @786 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @786 to @717 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @717 to @716 after the enter table became a StateEntry PMF table (measured from the compiled object). Re-keyed from @716 to @718 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@719",
       "to": "@963",
-      "evidence": "Compiler-local registration node at its original address 0x021149bc, given a unique short label so overlay globals cannot collide. Re-keyed from @790 to @787 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @787 to @718 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @718 to @717 after the enter table became a StateEntry PMF table (measured from the compiled object)."
+      "evidence": "Compiler-local registration node at its original address 0x021149bc, given a unique short label so overlay globals cannot collide. Re-keyed from @790 to @787 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @787 to @718 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @718 to @717 after the enter table became a StateEntry PMF table (measured from the compiled object). Re-keyed from @717 to @719 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "symbol_binding_rewrites": [

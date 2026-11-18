@@ -9,7 +9,6 @@
  * front); the factory stays first and the inline destructor stays in the
  * header. `return new` emits a homeless _ZN10dBgActor_cD2Ev (compiler-only
  * deadstrip).
- * The shadow and model matrices' translation is m[9], m[10], m[11].
  *
  * What stays, and why:
  * - dBgW_KcMbg::SetFile, dActor_c::DropShadowScaleXYZ and
@@ -23,7 +22,7 @@
  * - UpdateShadow keeps the dead stores. Dropping armOffset.y = 0, the
  *   first pos.y = bobY, or writing armOffset once, sizes it 0x12c->0x128.
  *   Dropping the bobPos zeros sizes it 0x12c->0x120.
- * - UpdateModelMatrix returns the local z. Returning m[11] after the shift
+ * - UpdateModelMatrix returns the local z. Returning t.z after the shift
  *   store sizes it 0x48->0x4c.
  * - Behavior's angle store is the compound mSwingAngle += mSwingSpeed;
  *   mSwingAngle = mSwingAngle + mSwingSpeed sizes Behavior 0x190->0x184.
@@ -165,10 +164,10 @@ int daObjCtMecha03_c::CleanupResources() {
    actor position into its translation row. */
 int daObjCtMecha03_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
     int z = mPos.z >> 3;
-    mModel.mat4x3.m[11] = z;
+    mModel.mat4x3.t.z = z;
     return z;
 }
 
@@ -202,9 +201,9 @@ void daObjCtMecha03_c::UpdateShadow() {
     if (rc.DetectClsn())
         mGroundY = rc.clsnY;
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = bobPos.x >> 3;
-    mShadowMat.m[10] = mGroundY >> 3;
-    mShadowMat.m[11] = bobPos.z >> 3;
+    mShadowMat.t.x = bobPos.x >> 3;
+    mShadowMat.t.y = mGroundY >> 3;
+    mShadowMat.t.z = bobPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x12c000, 0x12c000, 0x78000, 0xf);
 }
 /* No separate body lives here. The inline virtual destructor in the directly

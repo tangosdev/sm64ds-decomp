@@ -132,9 +132,9 @@ void SnowmanBreathParticle::UpdatePosition()
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, 0x50000);
     Vector3 offset;
-    offset.x = data_020a0e68.m[9];
-    offset.y = data_020a0e68.m[10];
-    offset.z = data_020a0e68.m[11];
+    offset.x = data_020a0e68.t.x;
+    offset.y = data_020a0e68.t.y;
+    offset.z = data_020a0e68.t.z;
     VEC_Add(&mPos, &offset, &mPos);
 }
 

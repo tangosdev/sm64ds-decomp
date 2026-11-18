@@ -212,9 +212,9 @@ void daDsnBase_c::UpdateDropShadow() {
     }
     mClipRadius >>= 3;
     mShadowMtx = mModel.mat4x3;
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = (mPos.y - shadowDrop) >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = (mPos.y - shadowDrop) >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMtx, scaleX, heightAboveGround + 0x28000, scaleZ, 0xf);
 }
 
