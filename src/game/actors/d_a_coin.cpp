@@ -156,11 +156,11 @@ void daCoin_c::ProbeFloor() {
             do {
                 u16 type = platform->actorID;
                 if (type == 0x7e || type == 0x81 || type == 0x9c) {
-                    int dy = mPosY - platform->mPosY;
+                    int dy = mPos.y - platform->mPos.y;
                     int radius = platform->mClipRadius;
                     int dist = Vec3_HorzDist(&mPos, &platform->mPos);
                     if (dist < (radius << 3) && dy <= 0x1f4000 && dy >= 0) {
-                        mFloorPosY = platform->mPosY + 0x32000;
+                        mFloorPosY = platform->mPos.y + 0x32000;
                         ((CoinFlagBits *)&mCoinFlags)->floorState = FLOOR_FIXED;
                         return;
                     }
@@ -174,9 +174,9 @@ void daCoin_c::ProbeFloor() {
         dBgCh_Lin ray;
         dBgPi hit;
         Vector3 rayTop, rayBottom;
-        rayBottom.x = mPosX;
-        rayBottom.y = mPosY;
-        rayBottom.z = mPosZ;
+        rayBottom.x = mPos.x;
+        rayBottom.y = mPos.y;
+        rayBottom.z = mPos.z;
         rayTop.x = rayBottom.x;
         rayTop.y = rayBottom.y;
         rayTop.z = rayBottom.z;
@@ -238,19 +238,19 @@ daStarBase_c *daCoin_c::FindStarMarker() {
     return 0;
 }
 
-/* Bounce off a wall: turns the heading (mPrevAngleY) around the wall normal. */
+/* Bounce off a wall: turns the heading (mPrevAngle.y) around the wall normal. */
 void daCoin_c::BounceOffWall() {
     if (mWithMeshClsn.IsOnWall() == 0) return;
     int normal[3];
     dBgPi *wall = mWithMeshClsn.GetWallResult();
     wall->surface.CopyNormalTo(*(Vector3 *)normal);
-    mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
+    mPrevAngle.y = ReflectAngle(normal[0], normal[2], mPrevAngle.y);
 }
 
 /* Shared per-frame tail of the movement handlers. Counts down the no-collision
  * timer and the disappear timer (the coin is killed when the latter reaches 1),
  * moves the coin, and runs the mesh collision -- the continuous variant when
- * the speed vector (mSpeedX, mVertSpeed, mSpeedZ) is longer than the collision
+ * the speed vector (mSpeed) is longer than the collision
  * radius. Landing on a floor with surface flag 0x20 while falling makes a big
  * splash and leaves the coin sinking slowly (gravity -0x800, terminal velocity
  * -0x5000). */
@@ -261,23 +261,24 @@ void daCoin_c::Step() {
         return;
     }
     UpdatePos(&mdCc_c);
-    if (VEC_Mag((const Vector3 *)&mSpeedX) > mWithMeshClsn.mRadius)
+    if (VEC_Mag(&mSpeed) > mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (!mWithMeshClsn.IsOnGround()) return;
     if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0)
         return;
-    if (mVertSpeed > 0) return;
+    if (mSpeed.y > 0)
+        return;
     func_02012694(0xe2, &mCamSpacePos);
-    Particle::System::NewBigSplash(mPosX, mPosY, mPosZ);
+    Particle::System::NewBigSplash(mPos.x, mPos.y, mPos.z);
     mHorzSpeed = 0;
     mVertAccel = -0x800;
     mTerminalVelocity = -0x5000;
     mWithMeshClsn.StopDetectingWater();
 }
 
-/* Refreshes the model matrices (rotation from mAngleY, translation as position
+/* Refreshes the model matrices (rotation from mAngle.y, translation as position
  * >> 3) and the shadow, once per frame. The shadow is skipped while the
  * 0x40000 yoshi-mouth state bit is set, for an inactive coin, and for a red
  * coin sitting in a block.
@@ -289,15 +290,15 @@ void daCoin_c::UpdateModelMatrix() {
     int inYoshiMouth;
     int floorState;
 
-    Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngleY);
-    mCommonModel1.mat4x3.m[9] = mPosX >> 3;
-    mCommonModel1.mat4x3.m[10] = mPosY >> 3;
-    mCommonModel1.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngle.y);
+    mCommonModel1.mat4x3.m[9] = mPos.x >> 3;
+    mCommonModel1.mat4x3.m[10] = mPos.y >> 3;
+    mCommonModel1.mat4x3.m[11] = mPos.z >> 3;
     mCommonModel2.mat4x3 = mCommonModel1.mat4x3;
     mShadowMat = IDENTITY_MATRIX4X3;
-    mShadowMat.m[9] = mPosX >> 3;
-    mShadowMat.m[10] = mPosY >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = mPos.y >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
 
     inYoshiMouth = mFlags & 0x40000;
     inYoshiMouth = inYoshiMouth != 0;
@@ -318,7 +319,7 @@ void daCoin_c::UpdateModelMatrix() {
     if (floorState != FLOOR_FIXED) return;
 
     {
-        int depth = mPosY - mFloorPosY;
+        int depth = mPos.y - mFloorPosY;
         mClipRadius = (depth + 0x50000) >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, depth + 0x28000, 0xf);
     }
@@ -401,12 +402,11 @@ void daCoin_c::CollectYellowCoin(daPly_c *player) {
  * below 0xf and the player's coin total has reached 100, spawns a STAR (0xb2,
  * param 0x20) 300 units above the player, sets the event bit and gives the
  * star a marker. */
-void func_ov002_020b18f0(char* self)
-{
+void func_ov002_020b18f0(char *raw) {
     extern signed char gCurrentSublevel;
     extern short gNumCoins[];
 
-    daPly_c *player = (daPly_c *)self;
+    daPly_c *player = (daPly_c *)raw;
     daStar_c* star;
     struct Vector3 spawnPos;
     struct Vector3* playerPos;
@@ -459,13 +459,13 @@ int daCoin_c::CheckPlayerHit() {
 void daCoin_c::StateFollowTarget() {
     mDisappearTimer += 1;
     {
-        int *targetPos = &mFollowTarget->mPosX;
-        mPosX = targetPos[0];
-        mPosY = targetPos[1];
-        mPosZ = targetPos[2];
+        int *targetPos = &mFollowTarget->mPos.x;
+        mPos.x = targetPos[0];
+        mPos.y = targetPos[1];
+        mPos.z = targetPos[2];
     }
     {
-        int *posY = &mPosY;
+        int *posY = &mPos.y;
         *posY += 0xc8000;
     }
     if (mDisappearTimer < 65)
@@ -499,7 +499,7 @@ void daCoin_c::StateLaunchNearPlayer() {
         if (gCurrentSublevel == 0xb)
             speed <<= 1;
         mHorzSpeed = speed;
-        mVertSpeed = 0x14000;
+        mSpeed.y = 0x14000;
         ((CoinFlagBits *)&mCoinFlags)->bounces++;
         mWithMeshClsn.SetLimMovFlag();
         mDisappearTimer = 450;
@@ -507,7 +507,7 @@ void daCoin_c::StateLaunchNearPlayer() {
     if (mWithMeshClsn.JustHitGround()) {
         if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0) {
             Sound::PlayBank3(0x52, mCamSpacePos);
-            mVertSpeed = 0x19000;
+            mSpeed.y = 0x19000;
         }
     }
     Step();
@@ -532,11 +532,11 @@ void daCoin_c::StateSlideAwayFromMario() {
     } else {
         if (mHorzSpeed > 0x13000) mHorzSpeed = 0x13000;
     }
-    mVertSpeed = 0x23000;
+    mSpeed.y = 0x23000;
     if (DistToCPlayer() < 0x4b0000) {
-        mPrevAngleY = HorzAngleToCPlayer() + 0x8000;
+        mPrevAngle.y = HorzAngleToCPlayer() + 0x8000;
     } else {
-        mPrevAngleY = HorzAngleToFPlayer();
+        mPrevAngle.y = HorzAngleToFPlayer();
     }
 }
 
@@ -567,8 +567,8 @@ void daCoin_c::StateBounce() {
         isFlCoin = flCoin->actorID;
         isFlCoin = isFlCoin == 0x4f;
         if (isFlCoin != 0) {
-            if (mPosY <= flCoin->mPosY) {
-                mPosY = flCoin->mPosY;
+            if (mPos.y <= flCoin->mPos.y) {
+                mPos.y = flCoin->mPos.y;
                 Sound::PlayBank3(0x52, mCamSpacePos);
                 bits = (CoinFlagBits *)&mCoinFlags;
                 bits->bounces++;
@@ -577,11 +577,11 @@ void daCoin_c::StateBounce() {
                     damping = ((3 - bounces) << 12) / 3;
                 else
                     damping = 0x555;
-                mVertSpeed = -mVertSpeed * damping / 0x1000;
+                mSpeed.y = -mSpeed.y * damping / 0x1000;
                 mHorzSpeed >>= 1;
-                if (mVertSpeed >= -mVertAccel)
+                if (mSpeed.y >= -mVertAccel)
                     return;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 mHorzSpeed = 0;
                 mVertAccel = 0;
                 mBehaviorType = BEHAVIOR_RESTING;
@@ -609,22 +609,22 @@ void daCoin_c::StateBounce() {
                 damping = ((3 - bounces) << 12) / 3;
             else
                 damping = 0x555;
-            mVertSpeed = -mVertSpeed * damping / 0x1000;
+            mSpeed.y = -mSpeed.y * damping / 0x1000;
             mHorzSpeed >>= 1;
         }
     }
 
     if (normal.x != 0 || normal.z != 0) {
         int slide = data_ov002_020ff078[floorClass];
-        int *velocity = &mSpeedX;
-        *velocity += normal.x * slide;
-        mSpeedZ += normal.z * slide;
-        mHorzSpeed = Vec3_HorzLen((const Vector3 *)velocity);
+        Vector3 *velocity = &mSpeed;
+        velocity->x += normal.x * slide;
+        mSpeed.z += normal.z * slide;
+        mHorzSpeed = Vec3_HorzLen(velocity);
         if (mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             UpdatePosWithHorzSpeedAndAng();
         }
-        mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
+        mPrevAngle.y = cstd::atan2(mSpeed.x, mSpeed.z);
     }
 
     if (mWithMeshClsn.JustHitGround() != 0)
@@ -633,9 +633,9 @@ void daCoin_c::StateBounce() {
         return;
 
     if (normal.y != 0) {
-        int dotX = FX_MUL(normal.x, mSpeedX);
-        int dotZ = FX_MUL(normal.z, mSpeedZ);
-        mVertSpeed = -(FX_Div(dotX + dotZ, normal.y) + 0x8000);
+        int dotX = FX_MUL(normal.x, mSpeed.x);
+        int dotZ = FX_MUL(normal.z, mSpeed.z);
+        mSpeed.y = -(FX_Div(dotX + dotZ, normal.y) + 0x8000);
     }
 
     if ((unsigned)(floorClass - 1) <= 1) {
@@ -646,7 +646,7 @@ void daCoin_c::StateBounce() {
 
     if (mHorzSpeed >= 0x1000)
         return;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
     mVertAccel = 0;
     mBehaviorType = BEHAVIOR_RESTING;
@@ -689,7 +689,7 @@ void daCoin_c::StateDrop() {
     Step();
     if (mWithMeshClsn.IsOnWall()) mHorzSpeed = 0;
     if (mWithMeshClsn.IsOnGround()) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mVertAccel = 0;
         mBehaviorType = BEHAVIOR_RESTING;
     }
@@ -724,7 +724,7 @@ s32 daCoin_c::CleanupResources()
         }
     }
     if (mDisappearTimer != 0) return 1;
-    Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY + 0x28000, mPosZ);
+    Particle::System::NewSimple(kPtclItemVanish, mPos.x, mPos.y + 0x28000, mPos.z);
     return 1;
 }
 
@@ -769,7 +769,7 @@ int daCoin_c::Behavior()
     }
     if (KillIfCollected() != 0)
         return 1;
-    mAngleY += 0xc00;
+    mAngle.y += 0xc00;
     if (CheckInYoshiMouth() != 0) {
         UpdateModelMatrix();
         mdCc_c.Clear();
@@ -841,20 +841,20 @@ s32 daCoin_c::InitResources()
     }
     behavior = mBehaviorType;
     if (behavior == 8) {
-        mVertSpeed = 0x14000;
+        mSpeed.y = 0x14000;
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x37000;
         *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_NO_SHADOW << 5);
     } else if (behavior != 1 && behavior != 7) {
         if (behavior != 5) {
-            mVertSpeed = 0x24000;
+            mSpeed.y = 0x24000;
             mCoinFlags |= 2;
         } else {
             u32 flags = param1;
             if (flags & 8) {
-                mPrevAngleY = (s16)(((flags & 0x70) << 8) + 0x8000);
+                mPrevAngle.y = (s16)(((flags & 0x70) << 8) + 0x8000);
             } else {
-                mPrevAngleY = (s16)((flags & 0x70) << 8);
+                mPrevAngle.y = (s16)((flags & 0x70) << 8);
             }
         }
         mVertAccel = -0x4000;
@@ -862,7 +862,7 @@ s32 daCoin_c::InitResources()
         mCoinFlags &= ~0xe0;
     } else {
         *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_UNPROBED << 5);
-        mFloorPosY = mPosY - 0x1f4000;
+        mFloorPosY = mPos.y - 0x1f4000;
         if (mBehaviorType == 7) {
             ccRadius = 0x32000;
             ccHeight = 0x28000;
@@ -983,7 +983,7 @@ void daCoin_c::OnTurnIntoEgg(daPly_c &player) {
     int coinType = mCoinType;
 
     if (coinType == COIN_RED) {
-        mPosY += 0x50000;
+        mPos.y += 0x50000;
         CollectRedCoin(&player);
     } else if (coinType == COIN_BLUE) {
         CollectBlueCoin(&player);

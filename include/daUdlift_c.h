@@ -7,16 +7,16 @@
  * to dActor_c. In C++ that is all implied by the base, so the source
  * destructor is empty.
  *
- * InitResources reads the inherited mPrevAngleX and mPrevAngleZ as unsigned
+ * InitResources reads the inherited mPrevAngle.x and mPrevAngle.z as unsigned
  * shaft lengths rather than angles:
- *     mBottomY = mTopY - (mPrevAngleX << 12)
- *     mTopY    = mPosY + (mPrevAngleZ << 12)   (mMode 2 only)
+ *     mBottomY = mTopY - (mPrevAngle.x << 12)
+ *     mTopY    = mPos.y + (mPrevAngle.z << 12)   (mMode 2 only)
  *
  * mMode picks what the lift does at either end:
  *     0  follow the player (UDLIFT_TERESA, UDLIFT)
  *     1  stop at the top; at the bottom stop in state 4 and climb back once
  *        re-armed (RC_RIFT02)
- *     2  raise mTopY by mPrevAngleZ and stop at the bottom in state 3
+ *     2  raise mTopY by mPrevAngle.z and stop at the bottom in state 3
  * InitResources only ever stores 0 or 1, so mode 2 is dead code in the
  * shipped game; it is reproduced because the cartridge has it.
  *

@@ -101,6 +101,8 @@ struct daDossy_c : dActor_c {
     void func_ov065_02118cc4();
     void func_ov065_0211956c(dActor_c *other);
     void func_ov065_02119594(dActor_c *other);
+    static void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
+    static void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 };
 
 #ifndef SM64DS_PLATFORM_PC

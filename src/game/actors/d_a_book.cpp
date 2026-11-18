@@ -84,7 +84,6 @@ enum { kFlightSpeed = 0x32000 };
 extern "C" {
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
 }
-void func_ov063_0211cae8(daTrsTrap_c *c, int m);
 
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
@@ -160,7 +159,7 @@ void daBook_c::SpawnShootBook() {
         {
             struct Vector3 pos;
             struct Vector3_16 rot;
-            int *fp = &partner->mPosX;
+            int *fp = &partner->mPos.x;
             int mul = 0x1f4 * bit;
             int x = fp[0];
             int dx = mul - 0xfa;
@@ -177,7 +176,7 @@ void daBook_c::SpawnShootBook() {
                     pos.y = ny;
                 }
             }
-            pos.z = mTouchedPlayer->mPosZ;
+            pos.z = mTouchedPlayer->mPos.z;
             rot.y = (short)((bit << 15) + 0x4000);
             rot.x = 0;
             rot.z = 0;
@@ -198,7 +197,9 @@ int daBook_c::CheckAttacks() {
     }
     if (r == HIT_METAL_PLAYER) {
         Vector3 v;
-        v.x = mPosX; v.y = mPosY; v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         mTouchedPlayer->Hurt(v, 0, 0xc000, 1, 0, 1);
         Die();
         return 1;
@@ -207,11 +208,15 @@ int daBook_c::CheckAttacks() {
         int eq = (actorID == kKillerBookActorId);
         if (eq) {
             Vector3 v;
-            v.x = mPosX; v.y = mPosY; v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             mTouchedPlayer->Hurt(v, 2, 0xc000, 1, 0, 1);
         } else {
             Vector3 v;
-            v.x = mPosX; v.y = mPosY; v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             mTouchedPlayer->Hurt(v, 1, 0xc000, 1, 0, 1);
         }
         mCoinType = 0;
@@ -228,14 +233,11 @@ int daBook_c::CheckAttacks() {
  * (hitFlags), and returns one of the HIT_ results. Only a player counts, and
  * a vanished player is ignored by SHOOT_BOOK straight away, and by KILLER_BOOK
  * only when nothing else applied. mTouchedPlayer is set as soon as a player is known to be
- * involved. The ROM reserves a 12-byte frame it never touches; two
- * address-taken volatile locals reserve it with no emitted code. */
+ * involved. */
 int daBook_c::GetHitType() {
     u32 id;
     daPly_c *found;
     int t;
-    volatile int t1, t2;
-    (void)&t1; (void)&t2;
 
     id = mdCcAcPos_c.otherOwner;
     if (id == 0)
@@ -265,16 +267,12 @@ int daBook_c::GetHitType() {
         return HIT_ATTACKED;
 
     if (BumpedUnderneathByPlayer(*found) != 0) {
-        /* the bump also cancels the player's vertical speed. A VecFx32, not a
-           Vector3: the copy through a Vector3 local does not match. */
-        VecFx32 *p = (VecFx32 *)&found->mSpeedX;
-        VecFx32 v;
-        v.z = p->z;
-        v.x = p->x;
-        v.y = 0;
-        found->mSpeedX = v.x;
-        found->mVertSpeed = v.y;
-        found->mSpeedZ = v.z;
+        /* the bump also cancels the player's vertical speed. v is a Vector3:
+           its declared destructor gives it the 12-byte stack home the ROM's
+           frame reserves, though the copy itself stays in registers. */
+        Vector3 *p = &found->mSpeed;
+        Vector3 v(p->x, 0, p->z);
+        found->mSpeed = v;
         mTouchedPlayer = found;
         return HIT_ATTACKED;
     }
@@ -325,10 +323,10 @@ void daBook_c::UpdateSwitchBook() {
             mStateTimer -= 1;
             return;
         }
-        mPosZ -= 0x4000;
-        if (mHomePosZ - mPosZ < 0x28000)
+        mPos.z -= 0x4000;
+        if (mHomePosZ - mPos.z < 0x28000)
             return;
-        mPosZ = mHomePosZ - 0x28000;
+        mPos.z = mHomePosZ - 0x28000;
         mState = STATE_SWITCH_READY;
         mdCcAcPos_c.flags &= ~1;
         return;
@@ -348,8 +346,8 @@ void daBook_c::UpdateSwitchBook() {
     {
         /* slides forward 10 units a frame; once home, checks the push order
          * and tells the partner this book was pushed */
-        mPosZ += 0xa000;
-        if (mPosZ < mHomePosZ)
+        mPos.z += 0xa000;
+        if (mPos.z < mHomePosZ)
             return;
         {
             int idx = param1;
@@ -357,8 +355,8 @@ void daBook_c::UpdateSwitchBook() {
                 SpawnShootBook();
         }
         mTouchedPlayer = 0;
-        func_ov063_0211cae8(partner, (1u << param1) & 0xff);
-        mPosZ = mHomePosZ;
+        partner->func_ov063_0211cae8((1u << param1) & 0xff);
+        mPos.z = mHomePosZ;
         mState = STATE_SWITCH_DONE;
         return;
     }
@@ -373,8 +371,8 @@ void daBook_c::UpdateSwitchBook() {
             return;
         }
         if (partner->mState == 2) {
-            mPosX += 0x5000;
-            if (mPosX < -0x5dc000)
+            mPos.x += 0x5000;
+            if (mPos.x < -0x5dc000)
                 return;
             MarkForDestruction();
             return;
@@ -402,9 +400,9 @@ void daBook_c::StateYoshiSkid() {
         else
             mdCcAcPos_c.flags &= ~1;
     }
-    ApproachLinear(mVertSpeed, 0, 0x800);
+    ApproachLinear(mSpeed.y, 0, 0x800);
     ApproachLinear(mHorzSpeed, 0, 0x800);
-    if (mVertSpeed == 0 && mHorzSpeed == 0) {
+    if (mSpeed.y == 0 && mHorzSpeed == 0) {
         mWithMeshClsn.SetRadius(0x32000);
         mState = mSavedState;
         if (mState == STATE_FLY)
@@ -428,14 +426,14 @@ void daBook_c::StateSpawned() {
     UpdatePos(0);
 }
 
-/* STATE_FLY: moves by the velocity in mSpeedX/mVertSpeed/mSpeedZ and is gone
+/* STATE_FLY: moves by the velocity in mSpeed.x/mSpeed.y/mSpeed.z and is gone
  * when it hits the player, the ground, or a wall that faces it (the wall's
  * normal more than a quarter turn from the book's heading). */
 void daBook_c::StateFly() {
     if (mUsesAnmModel != 0) {
         mAnmModel.Advance();
     }
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, &mSpeed, &mPos);
     if (CheckAttacks() != 0)
         return;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -452,7 +450,7 @@ void daBook_c::StateFly() {
         dBgPi *w = mWithMeshClsn.GetWallResult();
         w->surface.CopyNormalTo(normal);
         short angle = cstd::atan2(normal.x, normal.z);
-        if (GetSubtraction(mPrevAngleY, angle) <= 0x4000)
+        if (GetSubtraction(mPrevAngle.y, angle) <= 0x4000)
             return;
     }
     mCoinType = 0;
@@ -482,17 +480,17 @@ void daBook_c::StateWindUp() {
         mHorzSpeed = 0;
         AimAtPlayer();
 
-        mPrevAngleX = -mAimPitch;
-        mAngleX = mPrevAngleX;
-        mPrevAngleY = mAimYaw;
-        mAngleY = mPrevAngleY;
+        mPrevAngle.x = -mAimPitch;
+        mAngle.x = mPrevAngle.x;
+        mPrevAngle.y = mAimYaw;
+        mAngle.y = mPrevAngle.y;
 
         {
             /* velocity = kFlightSpeed along (yaw, pitch) */
-            s32 r = FX_MUL(FX_CosIdx((u16)mAngleX >> 4), 0x32000);
-            mSpeedX = FX_MUL(r, FX_SinIdx((u16)mAngleY >> 4));
-            mVertSpeed = FX_MUL(FX_SinIdx((u16)mAngleX >> 4), -0x32000);
-            mSpeedZ = FX_MUL(r, FX_CosIdx((u16)mAngleY >> 4));
+            s32 r = FX_MUL(FX_CosIdx((u16)mAngle.x >> 4), 0x32000);
+            mSpeed.x = FX_MUL(r, FX_SinIdx((u16)mAngle.y >> 4));
+            mSpeed.y = FX_MUL(FX_SinIdx((u16)mAngle.x >> 4), -0x32000);
+            mSpeed.z = FX_MUL(r, FX_CosIdx((u16)mAngle.y >> 4));
         }
         return;
     }
@@ -502,13 +500,13 @@ void daBook_c::StateWindUp() {
         return;
 
     AimAtPlayer();
-    ApproachLinear(mAngleY, mAimYaw, 0x7d0);
-    ApproachLinear(mAngleX, -mAimPitch, 0x7d0);
+    ApproachLinear(mAngle.y, mAimYaw, 0x7d0);
+    ApproachLinear(mAngle.x, -mAimPitch, 0x7d0);
 
     if (mStateTimer < 9)
         return;
 
-    ApproachLinear(mAngleZ, mAimRoll, 0x7d0);
+    ApproachLinear(mAngle.z, mAimRoll, 0x7d0);
 
     if (mStateTimer < 19)
         return;
@@ -520,9 +518,9 @@ void daBook_c::StateWindUp() {
     mClsnOffset.y = mUniformScale * -0x32;
     {
         s32 v = mUniformScale;
-        mScaleX = v;
-        mScaleY = v;
-        mScaleZ = v;
+        mScale.x = v;
+        mScale.y = v;
+        mScale.z = v;
     }
 }
 
@@ -533,7 +531,7 @@ void daBook_c::StateTiltBack() {
     int r = CheckAttacks();
     if (r)
         return;
-    if (ApproachLinear(mAngleX, -0x2000, 0x200)) {
+    if (ApproachLinear(mAngle.x, -0x2000, 0x200)) {
         int s;
         mHorzSpeed = 0;
         s = mAnmModel.SetFile((BMD_File *)data_ov020_02114aa0.filePtr, 1, -1);
@@ -543,7 +541,7 @@ void daBook_c::StateTiltBack() {
         mAnmModel.SetAnim((BCA_File *)data_ov020_02114aa8.filePtr, 0x40000000, 0x1000, 0);
         mUsesAnmModel = 1;
         mStateTimer = 0;
-        mPosY += 0x32000;
+        mPos.y += 0x32000;
         mClsnOffset.y = -0x19000;
     }
     UpdatePos(0);
@@ -556,7 +554,7 @@ void daBook_c::StateWait() {
     Vector3 v;
     daPly_c *p = ClosestPlayer();
     {
-        int* s = &p->mPosX;
+        int *s = &p->mPos.x;
         v.x = s[0];
         v.y = s[1];
         v.z = s[2];
@@ -565,7 +563,8 @@ void daBook_c::StateWait() {
         return;
     {
         short ang = Vec3_HorzAngle(&mPos, &v);
-        if (GetSubtraction(mPrevAngleY, ang) >= 0x3000) return;
+        if (GetSubtraction(mPrevAngle.y, ang) >= 0x3000)
+            return;
     }
     mState = STATE_TILT_BACK;
     mHorzSpeed = 0x5000;
@@ -619,16 +618,16 @@ void daBook_c::Die() {
  * the home height. */
 void daBook_c::UpdateModelMatrix() {
     Matrix4x3 *m = (mUsesAnmModel != 0) ? &mAnmModel.mat4x3 : &mModel.mat4x3;
-    Matrix4x3_FromRotationZXYExt(m, mAngleX, mAngleY, mAngleZ);
-    m->m[9] = mPosX >> 3;
-    m->m[10] = mPosY >> 3;
-    m->m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationZXYExt(m, mAngle.x, mAngle.y, mAngle.z);
+    m->m[9] = mPos.x >> 3;
+    m->m[10] = mPos.y >> 3;
+    m->m[11] = mPos.z >> 3;
     int b = (actorID == kKillerBookActorId);
     if (b == 0) return;
-    mShadowMat.m[9] = mPosX >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mHomePosY >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
-    DropShadowRadHeight(mShadowModel, mShadowMat, mScaleX * 0x64, 0x12c000, 0xf);
+    mShadowMat.m[11] = mPos.z >> 3;
+    DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0x64, 0x12c000, 0xf);
 }
 
 int daBook_c::CleanupResources()
@@ -675,7 +674,7 @@ int daBook_c::Behavior()
             mSavedState = mState;
             mState = STATE_YOSHI_SKID;
             mEatenByYoshi = 0;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mHorzSpeed = 0x8000;
         }
         UpdateModelMatrix();
@@ -712,7 +711,7 @@ int daBookGen_c::Behavior()
 
             if (Vec3_HorzDist(&mPos, &tmp) < 0x258000) {
                 short angle = Vec3_HorzAngle(&mPos, &tmp);
-                if (GetSubtraction(mAngleY, angle) < 0x2000) {
+                if (GetSubtraction(mAngle.y, angle) < 0x2000) {
                     signed char sc = mAreaId;
                     dActor_c::Spawn(kShootBookActorId, 0, mPos, &mPrevAngle, sc, -1);
                     mSpawnTimer = 0;
@@ -753,19 +752,19 @@ int daBook_c::InitResources()
 
     mLinkedActorID = 0;
     mTouchedPlayer = 0;
-    mScaleX = 0x800;
-    mScaleY = 0x800;
-    mScaleZ = 0x800;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mScale.x = 0x800;
+    mScale.y = 0x800;
+    mScale.z = 0x800;
+    mHomePosX = mPos.x;
+    mHomePosY = mPos.y;
+    mHomePosZ = mPos.z;
 
     if (mModel.SetFile((BMD_File *)data_ov020_02114ab8.filePtr, 1, -1) == 0)
         return 0;
 
     mShadowMat = IDENTITY_MATRIX4X3;
     mUsesAnmModel = 0;
-    mAngleY += 0x8000;
+    mAngle.y += 0x8000;
     mUniformScale = 0x800;
 
     {
@@ -798,9 +797,9 @@ int daBook_c::InitResources()
                     mCoinType = 0;
                     mdCcAcPos_c.flags |= 4;
                     mdCcAcPos_c.vulnFlags |= 0x3c0;
-                    mScaleX = 0x1000;
-                    mScaleY = 0x800;
-                    mScaleZ = 0x800;
+                    mScale.x = 0x1000;
+                    mScale.y = 0x800;
+                    mScale.z = 0x800;
                     break;
                 }
             }

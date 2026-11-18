@@ -57,6 +57,7 @@ struct dThIcon_c {
     void Place(int, s16, s16, s16, s16);
     virtual void Behavior();
     virtual void Render();
+    void func_ov001_020ab3f0();
 };
 
 #ifndef SM64DS_PLATFORM_PC

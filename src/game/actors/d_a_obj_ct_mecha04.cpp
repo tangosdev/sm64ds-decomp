@@ -15,7 +15,7 @@
 // the ROM's own call, not an inlineable assignment.
 // common.h first: UpdateShadow writes mShadowMat.m[9..11] on the flat 12-word
 // spelling. InitResources keeps its two-store animationFiles[2] stack array,
-// the variant reloads, MoveActorOnBelt's &mPosX-derived pointer chain and flat
+// the variant reloads, MoveActorOnBelt's &mPos.x-derived pointer chain and flat
 // sin/cos index, and the int-returning IsOffScreen / IsLargeBelt tests --
 // measured bool-widening / pointer-reuse shapes. `return new`
 // emits a homeless _ZN10dBgActor_cD2Ev (compiler-only deadstrip); the header's
@@ -107,18 +107,18 @@ void daObjCtMecha04_c::AfterClsnCallback(dBgW *collider, dActor_c *owner, dActor
 /* Inferred descriptive name. The collision callback supplies this conveyor as
  * owner and the actor whose X/Z position should advance with the belt. Each
  * axis moves by mBeltSpeed * 4 scaled by one sin/cos pair of FX_SinCosTable_,
- * indexed by (u16)mAngleY >> 4: [2i] for X, [2i + 1] for Z. Direct
- * actor.mPosX/mPosZ stores differ; the PosX-derived pointer chain matches. */
+ * indexed by (u16)mAngle.y >> 4: [2i] for X, [2i + 1] for Z. Direct
+ * actor.mPos.x/mPos.z stores differ; the PosX-derived pointer chain matches. */
 void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor) {
-    u16 angleForX = (u16)mAngleY;
+    u16 angleForX = (u16)mAngle.y;
     int beltStepForX = mBeltSpeed << 2;
     int sinY = FX_SinIdx(angleForX >> 4);
     int deltaX = FX_MUL(beltStepForX, sinY);
-    s32 *actorPosX = &actor.mPosX;
+    s32 *actorPosX = &actor.mPos.x;
     int oldX = *actorPosX;
     *actorPosX = oldX + deltaX;
 
-    u16 angleForZ = (u16)mAngleY;
+    u16 angleForZ = (u16)mAngle.y;
     int beltStepForZ = mBeltSpeed << 2;
     s32 *actorPosZ = actorPosX + 2;
     int cosY = FX_CosIdx(angleForZ >> 4);
@@ -161,7 +161,7 @@ int daObjCtMecha04_c::InitResources() {
 
     variant = mVariant;
     collisionFile = dBgW_Kc::LoadFile(*data_ov065_0211d198[variant][0]);
-    mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngle.y,
                           *data_ov065_0211d19c[variant][0]);
 
     mMeshCollider.SetStoodOnCallback(&daObjCtMecha04_c::AfterClsnCallback);
@@ -170,9 +170,9 @@ int daObjCtMecha04_c::InitResources() {
     mBeltSpeed = mTargetBeltSpeed;
     mTextureTransformer.speed = mBeltSpeed;
 
-    position.x = mPosX;
-    position.y = mPosY;
-    position.z = mPosZ;
+    position.x = mPos.x;
+    position.y = mPos.y;
+    position.z = mPos.z;
     position.y -= 0xa000;
 
     {
@@ -245,15 +245,15 @@ int daObjCtMecha04_c::CleanupResources() {
 
 /* Inferred descriptive name. DropShadowScaleXYZ's three sizes are fx32. */
 void daObjCtMecha04_c::UpdateShadow() {
-    int heightDiff = mPosY - mGroundY;
+    int heightDiff = mPos.y - mGroundY;
     int absHeightDiff = heightDiff < 0 ? -heightDiff : heightDiff;
     if (absHeightDiff > 0x7d0000)
         return;
 
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.m[9] = mPosX >> 3;
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = (mGroundY + 0x1000) >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
 
     if (IsLargeBelt(this)) {
         DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1f4000, 0x32000, 0x3e8000, 0xf);

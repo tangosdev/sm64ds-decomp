@@ -29,22 +29,45 @@ CFG = REPO / "config" / "arm9"
 ARM9_BASE = 0x02004000
 
 
-def _overlay_base(symbols):
-    """An overlay's base = its lowest symbol address, read from the config's symbols.txt.
+_SECTION_START = re.compile(r"start:(0x[0-9a-fA-F]+)")
 
-    dsd relocates each overlay to a unique address in the delinked config space so that
-    (module, addr) is well-defined even though overlays share RAM slots at runtime; that
-    base is the overlay's lowest symbol. We derive it from config (the source of truth)
-    rather than `extracted/dsd/arm9_overlays/overlays.yaml`, whose `base_address` is the
-    raw ROM overlay-TABLE ramAddress -- correct for the ROM image but NOT the config's
-    relocated space, so reading it makes `addr - base` land outside the overlay binary.
-    (The overlay binaries are identity-indexed: overlay_NNNN.bin == config ovNNN.)"""
+
+def _overlay_image_base(overlay_dir):
+    """The configured start of an overlay's image: its lowest delinks `start:`.
+
+    A data-only overlay loads an empty `.ctor` section ahead of its first
+    symbol, up to 0x2c bytes. dsd places that section at the image base; taking
+    the lowest symbol instead shifts every read. The overlay's own
+    `relocs.txt` is the proof: at `data_ov054_021111c0` the lowest-symbol base
+    reads the word `0`, while the delinks base reads `2`, and the
+    `from:0x021111c4 kind:load to:0x02111258` row matches the latter.
+    """
+    delinks = overlay_dir / "delinks.txt"
+    if not delinks.is_file():
+        return None
+    starts = [int(m.group(1), 16)
+              for line in delinks.read_text(errors="ignore").splitlines()
+              if (m := _SECTION_START.search(line))]
+    return min(starts) if starts else None
+
+
+def _overlay_base(symbols):
+    """An overlay's image base, from its config directory.
+
+    Prefer the lowest `delinks.txt` section start, fall back to the lowest
+    symbol when the delinks cannot supply it. Both come from config, the source
+    of truth; `extracted/dsd/arm9_overlays/overlays.yaml` is not read. The
+    overlay binaries are identity-indexed: overlay_NNNN.bin == config ovNNN.
+    """
     lo = None
     for line in symbols.read_text(errors="ignore").splitlines():
         m = re.search(r"addr:0x([0-9a-fA-F]+)", line)
         if m:
             a = int(m.group(1), 16)
             lo = a if lo is None else min(lo, a)
+    base = _overlay_image_base(symbols.parent)
+    if base is not None and (lo is None or base <= lo):
+        return base
     return lo
 
 

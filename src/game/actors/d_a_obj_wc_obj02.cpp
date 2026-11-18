@@ -14,7 +14,7 @@
  * What stays:
  * - dBgW::SetBeforeClsnCallback / dBgW::SetStoodOnCallback: InitResources stores
  *   dBgW::UpdatePosWithTransform and &StoodOnCallback on mMeshCollider.
- * - func_02012694: Behavior plays 0x17b at mCamSpacePosX.
+ * - func_02012694: Behavior plays 0x17b at mCamSpacePos.
  * - data_ov029_02114250 / 02114248 are this TU's BMD/KCL file handles;
  *   data_ov029_0211302c the CLPS block stays unowned overlay data.
  * - S14: g_profile_WC_OBJ02 stays outside the licensed .text.
@@ -96,10 +96,10 @@ int daObjWc_Obj02_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov029_02114248);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov029_0211302c);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov029_0211302c);
     }
     {
-        mPrevAngleY += 0x4000;
+        mPrevAngle.y += 0x4000;
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
@@ -134,7 +134,7 @@ int daObjWc_Obj02_c::Behavior() {
     case 2:
     case 4:
         if (mStateTimer >= 60) {
-            mPrevAngleY += 0x8000;
+            mPrevAngle.y += 0x8000;
             if (mState == 4) {
                 mState = 0;
             } else {

@@ -30,7 +30,7 @@
  *   and +0x0c (0xc0000 / 0xe0000, the profile ranges). Those names belong
  *   to dBgW.
  * - func_02012694 is Sound::Play of bank 3 at a pointer
- *   (src/engine/sound/Sound.cpp). OnHitByMegaChar passes &mCamSpacePosX. It is
+ *   (src/engine/sound/Sound.cpp). OnHitByMegaChar passes &mCamSpacePos. It is
  *   not Sound::PlayBank3 at 0x02012664.
  * - OnAttacked1 and OnHitByMegaChar take coined references. A
  *   reference and a pointer mangle differently and generate the same ARM
@@ -119,7 +119,8 @@ int daObjYajirusi_c::InitResources() {
 
     u32 collisionIndex = mVariant;
     KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov098_0213c380[collisionIndex].clsnFile);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov098_0213c380[collisionIndex].clps);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y,
+                          *data_ov098_0213c380[collisionIndex].clps);
     return 1;
 }
 
@@ -183,9 +184,9 @@ int daObjYajirusi_c::OnAttacked1(dActor_c &other) {
 void daObjYajirusi_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
-    fx32 x = mPosX;
-    fx32 y = mPosY + 0x28000;
-    fx32 z = mPosZ;
+    fx32 x = mPos.x;
+    fx32 y = mPos.y + 0x28000;
+    fx32 z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -199,13 +200,13 @@ void daObjYajirusi_c::Kill() {
 }
 
 // 0x02137c8c (0x40)
-/* Shadow matrix at mShadowMat: rotation from mAngleY, translation
+/* Shadow matrix at mShadowMat: rotation from mAngle.y, translation
  * mPos >> 3 (model matrices are in eighths of a unit). */
 void daObjYajirusi_c::UpdateShadowMatrix() {
-    Matrix4x3_FromRotationY(mShadowMat, mAngleY);
-    ((Matrix4x3 *)mShadowMat)->t.x = mPosX >> 3;
-    ((Matrix4x3 *)mShadowMat)->t.y = mPosY >> 3;
-    ((Matrix4x3 *)mShadowMat)->t.z = mPosZ >> 3;
+    Matrix4x3_FromRotationY(mShadowMat, mAngle.y);
+    ((Matrix4x3 *)mShadowMat)->t.x = mPos.x >> 3;
+    ((Matrix4x3 *)mShadowMat)->t.y = mPos.y >> 3;
+    ((Matrix4x3 *)mShadowMat)->t.z = mPos.z >> 3;
 }
 
 // 0x02137c2c (0x60), 0x02137be0 (0x4c)

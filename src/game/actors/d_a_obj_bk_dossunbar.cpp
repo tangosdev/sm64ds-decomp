@@ -14,7 +14,7 @@
  *   tables and their compiler-generated initializer are owned by this TU.
  *   State order: 0 WaitOut, 1 EaseToMid, 2 WaitMid, 3 EaseHome (small bar)
  *   or 4 CoastHome (big bar), 5 WaitHome, 6 TravelOut.
- * - mSpeedX is dActor_c's X speed (velocity at 0xa4/a8/ac),
+ * - mSpeed.x is dActor_c's X speed (velocity at 0xa4/a8/ac),
  *   not a field of this class.
  * - Resource table is two { model, KCL, CLPS } rows. Init must
  *   keep the three column symbols 02114534/38/3c; a typed
@@ -115,7 +115,7 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     int j = mVariant * 0xc;
     KCL_File *kclFile = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114538 + j));
     (&mMeshCollider)
-        ->dBgW_KcMbg::SetFile((kclFile), *(&mClsnMat), 0x1000, mAngleY,
+        ->dBgW_KcMbg::SetFile((kclFile), *(&mClsnMat), 0x1000, mAngle.y,
                               *(CLPS_Block *)(*(void **)((char *)&data_ov015_0211453c + j)));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
@@ -127,9 +127,9 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     mMeshCollider.SetDepthDir((const Vector3 *)tmp);
     mMeshCollider.SetDepthDirMinDot(0xccd);
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     ChangeState(5);
     return 1;
 }
@@ -182,11 +182,11 @@ void daObjBk_Dossunbar_c::EnterEaseToMid() {
 
 /* State 1 body: ease X towards home minus 0x168000, then wait-mid. */
 void daObjBk_Dossunbar_c::ExecuteEaseToMid() {
-    Math_Function_0203b0fc(&mPosX, mHomePos.x - 0x168000, 0x800, 0x46000);
+    Math_Function_0203b0fc(&mPos.x, mHomePos.x - 0x168000, 0x800, 0x46000);
     mStateTimer -= 1;
     if (mStateTimer > 0)
         return;
-    mPosX = mHomePos.x - 0x168000;
+    mPos.x = mHomePos.x - 0x168000;
     ChangeState(2);
 }
 
@@ -214,27 +214,27 @@ void daObjBk_Dossunbar_c::EnterEaseHome() {
 
 /* State 3 body: ease X back to home, then wait-home. */
 void daObjBk_Dossunbar_c::ExecuteEaseHome() {
-    Math_Function_0203b14c(&mPosX, mHomePos.x, 0x800, 0xb4000, 0x28000);
+    Math_Function_0203b14c(&mPos.x, mHomePos.x, 0x800, 0xb4000, 0x28000);
     mStateTimer -= 1;
     if (mStateTimer > 0)
         return;
-    mPosX = mHomePos.x;
+    mPos.x = mHomePos.x;
     ChangeState(5);
 }
 
-/* State 4 enter: X speed rather than a timer. mSpeedX is dActor_c's
-   velocity X (with mVertSpeed / mSpeedZ). */
+/* State 4 enter: X speed rather than a timer. mSpeed.x is dActor_c's
+   velocity X (with mSpeed.y / mSpeed.z). */
 void daObjBk_Dossunbar_c::EnterCoastHome() {
-    mSpeedX = 0xf000;
+    mSpeed.x = 0xf000;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 
 /* State 4 body: coast until X reaches home, then wait-home. */
 void daObjBk_Dossunbar_c::ExecuteCoastHome() {
     UpdatePosWithOnlySpeed(0);
-    if (mPosX < mHomePos.x)
+    if (mPos.x < mHomePos.x)
         return;
-    mPosX = mHomePos.x;
+    mPos.x = mHomePos.x;
     ChangeState(5);
 }
 
@@ -253,7 +253,7 @@ void daObjBk_Dossunbar_c::ExecuteWaitHome() {
 
 /* State 6 enter: X speed toward the out position. */
 void daObjBk_Dossunbar_c::EnterTravelOut() {
-    mSpeedX = -0x14000;
+    mSpeed.x = -0x14000;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 
@@ -261,9 +261,9 @@ void daObjBk_Dossunbar_c::EnterTravelOut() {
 void daObjBk_Dossunbar_c::ExecuteTravelOut() {
     UpdatePosWithOnlySpeed(0);
     int v = mHomePos.x + 0xffe16000;
-    if (mPosX > v)
+    if (mPos.x > v)
         return;
-    mPosX = v;
+    mPos.x = v;
     ChangeState(0);
 }
 
@@ -275,9 +275,9 @@ void daObjBk_Dossunbar_c::OnHitByMegaChar(daPly_c &player) {
 void daObjBk_Dossunbar_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0xc8000;
     Particle::System::NewSimple(kPtclDossunbarBreak, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;

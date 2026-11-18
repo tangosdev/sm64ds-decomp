@@ -97,7 +97,7 @@ int daObjMcWater_c::InitResources() {
     int b = (gGameMode == 1);
     if (b == 0) {
         if (data_0209caa0.file.flags2 & 0x80000) {
-            mPosY = -0x2bc000;
+            mPos.y = -0x2bc000;
         }
     }
     {
@@ -110,11 +110,11 @@ int daObjMcWater_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(gMcWaterCollisionFile);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112c38);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov009_02112c38);
     }
     mMeshCollider.Enable(this);
     {
-        int v = mPosY - 0x64000;
+        int v = mPos.y - 0x64000;
         if (data_0209f32c > v)
             data_0209f32c = v;
     }
@@ -155,7 +155,7 @@ void daObjMcWater_c::SpawnWaterfalls() {
     int i;
     int b = (gGameMode == 1);
     if (b != 0) {
-        if (mPosX > 0)
+        if (mPos.x > 0)
             return;
         vec = data_ov009_02113de0;
     } else {

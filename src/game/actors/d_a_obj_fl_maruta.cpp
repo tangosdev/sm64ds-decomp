@@ -40,18 +40,18 @@ daObjFlMaruta_c::~daObjFlMaruta_c()
 
 int daObjFlMaruta_c::CleanupResources()
 {
-    return func_ov080_021270dc(this, (void *)data_ov022_02112c9c);
+    return this->func_ov080_021270dc((ResourceDescriptor *)data_ov022_02112c9c);
 }
 
 int daObjFlMaruta_c::Behavior()
 {
     mMeshCollider.SetClipRadius(0x500000);
-    return func_ov080_0212714c(this, (void *)data_ov022_02112c98) & 0xff;
+    return this->func_ov080_0212714c((int *)data_ov022_02112c98) & 0xff;
 }
 
 int daObjFlMaruta_c::InitResources()
 {
-    return func_ov080_021274ac(this, (void *)data_ov022_02112c9c);
+    return this->func_ov080_021274ac((ResourceDescriptor *)data_ov022_02112c9c);
 }
 
 int *daObjFlMaruta_c_classInit(void) {

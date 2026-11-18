@@ -8,10 +8,10 @@
  * lays this file down in ROM order.
  *
  * Notes:
- * - Behavior keeps a volatile read of mPosY and of pos.z. A plain
+ * - Behavior keeps a volatile read of mPos.y and of pos.z. A plain
  *   read is folded into the add and the stores above it.
  * - The follow target's position is read through &mPos. Naming that
- *   actor's mPosX/Y/Z DIFFs.
+ *   actor's mPos.x/.y/.z DIFFs.
  * - SetFollowTarget is daPly_c::IncMegaKillCount's attach helper; that
  *   caller passes a null owner.
  */
@@ -70,7 +70,7 @@ void daObj1UpLogo_c::SetFollowTarget(dActor_c *owner) {
     if (owner == 0)
         return;
     mOwnerUniqueID = owner->uniqueID;
-    mFollowOffsetY = mPosY - owner->mPosY;
+    mFollowOffsetY = mPos.y - owner->mPos.y;
 }
 
 s32 daObj1UpLogo_c::CleanupResources() {
@@ -101,30 +101,30 @@ s32 daObj1UpLogo_c::Behavior() {
     if (mDelay != 0)
         return 1;
 
-    mVertSpeed += mVertAccel;
-    if (mVertSpeed < mTerminalVelocity)
-        mVertSpeed = mTerminalVelocity;
-    mPosY += mVertSpeed;
+    mSpeed.y += mVertAccel;
+    if (mSpeed.y < mTerminalVelocity)
+        mSpeed.y = mTerminalVelocity;
+    mPos.y += mSpeed.y;
 
     switch (mState) {
     case 0:
-        if (mPosY < mStartPos.y) {
-            mPosY = mStartPos.y;
-            mVertSpeed = kBounceSpeed;
+        if (mPos.y < mStartPos.y) {
+            mPos.y = mStartPos.y;
+            mSpeed.y = kBounceSpeed;
             mState++;
         }
         break;
     case 1:
-        if (mPosY < mStartPos.y) {
+        if (mPos.y < mStartPos.y) {
             SpawnPopParticle(mPos);
             MarkForDestruction();
         }
         break;
     }
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     if (mOwnerUniqueID != 0) {
         dActor_c *other = FindWithID(mOwnerUniqueID);
         if (other != 0) {
@@ -134,7 +134,7 @@ s32 daObj1UpLogo_c::Behavior() {
             pos.x = otherPos->x;
             pos.y = otherY = otherPos->y;
             pos.z = otherPos->z;
-            pos.y = otherY + (mFollowOffsetY + (mPosY - mStartPos.y));
+            pos.y = otherY + (mFollowOffsetY + (mPos.y - mStartPos.y));
         }
     }
     Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3, pos.z >> 3);
@@ -151,10 +151,10 @@ s32 daObj1UpLogo_c::InitResources() {
                              *(BTP_File *)data_ov002_02110a9c.filePtr);
     mTextureSequence.SetFile(*(BTP_File *)data_ov002_02110a9c.filePtr, kBtpFlags, 0, frame);
     mState = 0;
-    mStartPos.x = mPosX;
-    mStartPos.y = mPosY;
-    mStartPos.z = mPosZ;
-    mVertSpeed = kRiseSpeed;
+    mStartPos.x = mPos.x;
+    mStartPos.y = mPos.y;
+    mStartPos.z = mPos.z;
+    mSpeed.y = kRiseSpeed;
     mVertAccel = kGravity;
     mTerminalVelocity = kTerminalSpeed;
     mDelay = 0;

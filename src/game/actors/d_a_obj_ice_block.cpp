@@ -85,7 +85,7 @@ s32 daObjIceBlock_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov081_02128fd0);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov002_0210d8d4);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov002_0210d8d4);
     mScale = 0x1000;
     return 1;
 }
@@ -103,9 +103,9 @@ s32 daObjIceBlock_c::Behavior() {
             MarkForDestruction();
         } else {
             Vector3 pos;
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
             pos.y += FX_MUL(mScale, kShardHeight);
 
             mParticleHandle1 =
@@ -172,9 +172,9 @@ void daObjIceBlock_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
     Sound::PlayBank3(0x41, mCamSpacePos);
-    int x = mPosX;
-    int y = mPosY + kShardHeight;
-    int z = mPosZ;
+    int x = mPos.x;
+    int y = mPos.y + kShardHeight;
+    int z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;

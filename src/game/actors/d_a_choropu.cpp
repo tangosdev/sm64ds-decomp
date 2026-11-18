@@ -14,12 +14,12 @@
  * are `return new`.
  */
 // leftovers:
-// - func_ov080_02124418 stays free. Its first argument is a daChoro_Rock_c,
+// - func_ov080_02124418 is daChoro_Rock_c's. Its first argument is the rock,
 //   so it is not a daChoropu_c method.
 // - Throw's spawn id stays `py ? 0x137 : 0x137`.
 // - LAUND() in func_ov080_02124088 keeps the cylinder flags, mFlags and
 //   mTimesHit addresses opaque.
-// - Throw reads mAngleX/Y/Z as unsigned short. Hidden reads mHasTurn as
+// - Throw reads mAngle.x/.y/.z as unsigned short. Hidden reads mHasTurn as
 //   signed char.
 // - The model and animation handles take SharedFilePtr's fileID, numRefs
 //   and filePtr. File ids: mole model
@@ -95,8 +95,6 @@ extern "C" int RandomIntInternal(int *seed);
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 void func_02012694(unsigned int a, const Vector3 *p);
 
-void  func_ov080_02124418(daChoro_Rock_c *t);
-
 extern const int data_ov080_0212767c[18] = {
     90, 78, 62, 116, 176, 228, 252, 264, 288, 288, 288, 248, 208, 128, 32, 0, 0, 0,
 };
@@ -148,8 +146,8 @@ void daChoropu_c::func_ov080_02123860()
         mdCcAc_c.flags |= daChoropu_CC_DISABLED;
         mFlags &= ~daChoropu_FLAG_EMERGED;
         if (idx == 15) {
-            Particle::System::NewSimple(kPtclMontyMoleLeapA, mPosX, mPosY, mPosZ);
-            Particle::System::NewSimple(kPtclMontyMoleLeapB, mPosX, mPosY + 0x1e000, mPosZ);
+            Particle::System::NewSimple(kPtclMontyMoleLeapA, mPos.x, mPos.y, mPos.z);
+            Particle::System::NewSimple(kPtclMontyMoleLeapB, mPos.x, mPos.y + 0x1e000, mPos.z);
         }
     }
     {
@@ -168,7 +166,7 @@ void daChoropu_c::func_ov080_02123860()
  *
  * dExtFrameCtrl_c file 0x2d3 (data_ov080_021283d0). Plays the animation out and then
  * goes to state 5 (Leap); it goes there early when the nearest daPly_c is within a
- * quarter turn (< 0x4000 = 90 degrees) of the way the mole faces (mAngleY) and
+ * quarter turn (< 0x4000 = 90 degrees) of the way the mole faces (mAngle.y) and
  * less than 500 units (0x1f4000) away horizontally. With no daPly_c it just waits for the
  * animation to end. */
 void daChoropu_c::func_ov080_02123924()
@@ -184,11 +182,11 @@ void daChoropu_c::func_ov080_02123924()
         Vector3 v;
         fx32 *q;
         if (p == 0) return;
-        q = (fx32 *)((int)&p->mPosX);
+        q = (fx32 *)((int)&p->mPos.x);
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
-        if ((short)AngleDiff(mAngleY, Vec3_HorzAngle(&mPos, &v)) >= 0x4000)
+        if ((short)AngleDiff(mAngle.y, Vec3_HorzAngle(&mPos, &v)) >= 0x4000)
             return;
         if (Vec3_HorzDist(&mPos, &v) >= 0x1f4000)
             return;
@@ -201,11 +199,11 @@ void daChoropu_c::func_ov080_02123924()
  *
  * dExtFrameCtrl_c file 0x2d5 (data_ov080_021283e0). When the animation steps across
  * frame 10 it spawns a daChoro_Rock_c (actor 0x137, spawn parameter 0 = the big
- * rock) 80 units out from the mole along (mAngleY - 0x4000), a quarter turn off the way it
+ * rock) 80 units out from the mole along (mAngle.y - 0x4000), a quarter turn off the way it
  * faces, looked up in the
  * sine/cosine pair table FX_SinCosTable_ (entries are fx16, indexed by angle >> 4),
- * 10 units (0xa000) above its position, with the angle triple (mAngleX, mAngleY +
- * 0x400, mAngleZ) and the mole's area. The rock is then given horizontal speed
+ * 10 units (0xa000) above its position, with the angle triple (mAngle.x, mAngle.y +
+ * 0x400, mAngle.z) and the mole's area. The rock is then given horizontal speed
  * 30 units/frame (0x1e000) and vertical speed 4 units (0x4000) plus 4% of the
  * distance to the nearest daPly_c (that distance capped at 600 units = 0x258000),
  * and the sound effect 0xd2 plays at the mole.
@@ -224,29 +222,29 @@ void daChoropu_c::func_ov080_02123a34()
         int px, py, pz;
         Vector3_16 *pAng = &v16;
 
-        ax = *(unsigned short *)&mAngleX;
-        ay = *(unsigned short *)&mAngleY;
+        ax = *(unsigned short *)&mAngle.x;
+        ay = *(unsigned short *)&mAngle.y;
         v16.y = (short)ay;
         v16.x = (short)ax;
         {
-            unsigned short z = *(unsigned short *)&mAngleZ;
+            unsigned short z = *(unsigned short *)&mAngle.z;
             pAng->z = z;
             short yv = (short)v16.y;
-            px = mPosX;
+            px = mPos.x;
             pos.x = px;
             yv = (short)(yv + 0x400);
-            py = mPosY;
+            py = mPos.y;
             pos.y = py;
-            pz = mPosZ;
+            pz = mPos.z;
             pAng->y = yv;
             pos.z = pz;
             pos.y = py + 0xa000;
         }
 
-        s = FX_SinIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
+        s = FX_SinIdx((u16)(s16)(mAngle.y - 0x4000) >> 4);
         pos.x = s * (short)80 + px;
 
-        s = FX_CosIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
+        s = FX_CosIdx((u16)(s16)(mAngle.y - 0x4000) >> 4);
         pos.z = s * (short)80 + pz;
 
         a = dActor_c::Spawn(
@@ -255,9 +253,9 @@ void daChoropu_c::func_ov080_02123a34()
         if (d >= 0x258000)
             d = 0x258000;
         a->mHorzSpeed = 0x1e000;
-        a->mSpeedX = 0;
-        a->mVertSpeed = (d << 2) / 100 + 0x4000;
-        a->mSpeedZ = 0;
+        a->mSpeed.x = 0;
+        a->mSpeed.y = (d << 2) / 100 + 0x4000;
+        a->mSpeed.z = 0;
         func_0201267c(0xd2, &mCamSpacePos);
     }
 
@@ -310,8 +308,8 @@ void daChoropu_c::func_ov080_02123c24()
             amt = 0x50000;
         } else {
             amt = data_ov080_021276c4[state - 6] << 12;
-            mEmergeSystemID = Particle::System::New(mEmergeSystemID, kPtclMontyMoleEmerge, mPosX,
-                                                    mPosY, mPosZ, 0, 0);
+            mEmergeSystemID = Particle::System::New(mEmergeSystemID, kPtclMontyMoleEmerge, mPos.x,
+                                                    mPos.y, mPos.z, 0, 0);
         }
     }
 
@@ -351,12 +349,12 @@ void daChoropu_c::func_ov080_02123c24()
             Vector3 pos;
             short horz;
             int diff;
-            int *pb = (int *)((int)&player->mPosX);
+            int *pb = (int *)((int)&player->mPos.x);
             pos.x = pb[0];
             pos.y = pb[1];
             pos.z = pb[2];
             horz = Vec3_HorzAngle(&mPos, &pos);
-            diff = (short)AngleDiff(mAngleY, horz);
+            diff = (short)AngleDiff(mAngle.y, horz);
             if (diff < 0x4000) {
                 mState = daChoropu_ST_THROW_ROCK;
                 mAnmModel.SetAnim((BCA_File *)data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
@@ -374,7 +372,7 @@ void daChoropu_c::func_ov080_02123c24()
  * units (0x5dc000) horizontally (no daPly_c counts as exactly 1500, so no) and this
  * mole holds the turn (mHasTurn == 1). Then:
  *   - daPly_c 250 units (0xfa000) or more away: start emerging -- state 2, animation
- *     file 0x2d4, face the daPly_c (mAngleY and mPrevAngleY), enable the collision
+ *     file 0x2d4, face the daPly_c (mAngle.y and mPrevAngle.y), enable the collision
  *     cylinder, set the mFlags bit, sound effect 0x116 at the mole;
  *   - daPly_c closer than 250 units: stay hidden and pass the turn on (func_ov080_02124360). */
 void daChoropu_c::func_ov080_02123ecc()
@@ -390,11 +388,11 @@ void daChoropu_c::func_ov080_02123ecc()
         mState = daChoropu_ST_EMERGE;
         mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0x40000000, 0x1000, 0);
         daPly_c *p2 = ClosestPlayer();
-        mAngleY = Vec3_HorzAngle(&mPos, &p2->mPos);
+        mAngle.y = Vec3_HorzAngle(&mPos, &p2->mPos);
         {
             u32 *a = (u32 *)((int)&mdCcAc_c.flags);
             u32 *b = (u32 *)((int)&mFlags);
-            mPrevAngleY = mAngleY;
+            mPrevAngle.y = mAngle.y;
             *a = *a & ~daChoropu_CC_DISABLED;
             *b = *b | daChoropu_FLAG_EMERGED;
             func_0201267c(0x116, &mCamSpacePos);
@@ -475,11 +473,11 @@ void daChoropu_c::func_ov080_02124088()
 
     func_0201267c(0xd5, &mCamSpacePos);
 
-    v1.x = mPosX;
+    v1.x = mPos.x;
     {
-        int y1 = mPosY;
+        int y1 = mPos.y;
         v1.y = y1;
-        v1.z = mPosZ;
+        v1.z = mPos.z;
         v1.y = y1 + (mdCcAc_c.height - 0x50000);
     }
     v2.x = v1.x;
@@ -503,11 +501,11 @@ void daChoropu_c::func_ov080_02124088()
         if (acc != 7)
             return;
 
-        v3.x = mPosX;
+        v3.x = mPos.x;
         {
-            int y3 = mPosY;
+            int y3 = mPos.y;
             v3.y = y3;
-            v3.z = mPosZ;
+            v3.z = mPos.z;
             v3.y = y3 + 0x64000;
         }
         dActor_c::Spawn(daChoropu_ACTOR_ONEUPKINOKO, 0, v3, 0, mAreaId, -1);
@@ -580,9 +578,9 @@ void daChoropu_c::func_ov080_02124208()
 
     {
         Vector3 pos;
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         p->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
 }
@@ -613,23 +611,23 @@ void *daChoropu_c::func_ov080_02124360()
     }
 }
 
-/* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngleY,
+/* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngle.y,
  * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set to
  * the actor's position >> 3. */
 void daChoropu_c::func_ov080_021243d8()
 {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
-void func_ov080_02124418(daChoro_Rock_c *t) {
-    Matrix4x3_FromRotationY(&t->mModel.mat4x3, t->mAngleY);
-    t->mModel.mat4x3.m[9] = t->mPosX >> 3;
-    t->mModel.mat4x3.m[10] = t->mPosY >> 3;
-    t->mModel.mat4x3.m[11] = t->mPosZ >> 3;
+void daChoro_Rock_c::func_ov080_02124418() {
+    Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngle.y);
+    this->mModel.mat4x3.m[9] = this->mPos.x >> 3;
+    this->mModel.mat4x3.m[10] = this->mPos.y >> 3;
+    this->mModel.mat4x3.m[11] = this->mPos.z >> 3;
 }
 
 /* Releases the shared model and animation files; never touches `this`: the model file
@@ -664,7 +662,7 @@ s32 daChoropu_c::Render()
     return 1;
 }
 
-/* Draws the rock's model, scaled by (mScaleX, mScaleY, mScaleZ). */
+/* Draws the rock's model, scaled by mScale. */
 s32 daChoro_Rock_c::Render()
 {
     dExtSimpleModel_c *m = &mModel;
@@ -694,7 +692,7 @@ s32 daChoropu_c::Behavior()
  * passes 2 for the first one) when it is Metal, or when it is not Vanish. On the
  * ground (mWithMeshClsn.IsOnGround) a big rock (mIsSmall == 0) first spawns two
  * small rocks (actor 0x137, spawn parameter 1) at its own position, each with a
- * random heading (RandomIntInternal >> 8 as mPrevAngleY), half its horizontal speed
+ * random heading (RandomIntInternal >> 8 as mPrevAngle.y), half its horizontal speed
  * and vertical speed 5 units (0x5000); then, big or small, it is marked for
  * destruction. After that: UpdatePos, UpdateWMClsn, the model matrix
  * (func_ov080_02124418), and the cylinder's Clear and Update. */
@@ -708,15 +706,15 @@ s32 daChoro_Rock_c::Behavior()
         if (player != 0 && (mdCcAc_c.hitFlags & daChoropu_HIT_PLAYER)) {
             if (player->mIsMetal) {
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 player->Hurt(pos, 1, 0xc000, 1, 0, 1);
             } else if (!player->mIsVanish) {
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 player->Hurt(pos, 1, 0xc000, 1, 0, 1);
             }
         }
@@ -730,30 +728,30 @@ s32 daChoro_Rock_c::Behavior()
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
-            s->mPrevAngleX = 0;
-            s->mPrevAngleY = (short)((unsigned int)r >> 8);
-            s->mPrevAngleZ = 0;
+            s->mPrevAngle.x = 0;
+            s->mPrevAngle.y = (short)((unsigned int)r >> 8);
+            s->mPrevAngle.z = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
-            s->mSpeedX = 0;
-            s->mVertSpeed = 0x5000;
-            s->mSpeedZ = 0;
+            s->mSpeed.x = 0;
+            s->mSpeed.y = 0x5000;
+            s->mSpeed.z = 0;
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
-            s->mPrevAngleX = 0;
-            s->mPrevAngleY = (short)((unsigned int)r >> 8);
-            s->mPrevAngleZ = 0;
+            s->mPrevAngle.x = 0;
+            s->mPrevAngle.y = (short)((unsigned int)r >> 8);
+            s->mPrevAngle.z = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
-            s->mSpeedX = 0;
-            s->mVertSpeed = 0x5000;
-            s->mSpeedZ = 0;
+            s->mSpeed.x = 0;
+            s->mSpeed.y = 0x5000;
+            s->mSpeed.z = 0;
         }
         MarkForDestruction();
     }
 
     UpdatePos(0);
     UpdateWMClsn(mWithMeshClsn, 0);
-    func_ov080_02124418(this);
+    this->func_ov080_02124418();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -806,13 +804,13 @@ s32 daChoro_Rock_c::InitResources()
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     if (mIsSmall == 0) {
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScale.x = 0x1000;
+        mScale.y = 0x1000;
+        mScale.z = 0x1000;
     } else {
-        mScaleX = 0x800;
-        mScaleY = 0x800;
-        mScaleZ = 0x800;
+        mScale.x = 0x800;
+        mScale.y = 0x800;
+        mScale.z = 0x800;
     }
     return 1;
 }

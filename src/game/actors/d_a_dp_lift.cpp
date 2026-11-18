@@ -15,7 +15,7 @@
  *
  * Notes (measured spellings that do not match):
  * - Behavior: the marker test flipped to
- *   `mMarkerPositions[mNextMarker].y + 0x14000 >= mPosY` stays 0x210
+ *   `mMarkerPositions[mNextMarker].y + 0x14000 >= mPos.y` stays 0x210
  *   and DIFFs 10 words. Settle `mShakeTimer == 8` instead of `>= 8`
  *   stays 0x210 and DIFFs 3 words.
  * - Render: one Vector3 local then one Matrix4x3_FromTranslation
@@ -92,20 +92,20 @@ s32 daDpLift_c::Behavior() {
     case STATE_SHAKE: {
         s16 ang = mShakeTimer << 12;
         s32 wave = FX_MUL(FX_SinIdx((u16)ang >> 4), 10);
-        mPosY = mBasePos.y + wave;
+        mPos.y = mBasePos.y + wave;
         if (mShakeTimer == 8) {
             mState = STATE_SINK;
-            mVertSpeed = -0xa000;
+            mSpeed.y = -0xa000;
         }
         mShakeTimer++;
         break;
     }
     case STATE_SINK: {
-        if (mPosY <= mMarkerPositions[mNextMarker].y + 0x14000)
+        if (mPos.y <= mMarkerPositions[mNextMarker].y + 0x14000)
             mNextMarker++;
-        mPosY += mVertSpeed;
-        if (mPosY < 0x80000) {
-            mPosY = 0x80000;
+        mPos.y += mSpeed.y;
+        if (mPos.y < 0x80000) {
+            mPos.y = 0x80000;
             mState = STATE_SETTLE;
             mShakeTimer = 0;
         }
@@ -114,10 +114,10 @@ s32 daDpLift_c::Behavior() {
     case STATE_SETTLE: {
         s16 ang = mShakeTimer << 12;
         s32 wave = FX_MUL(FX_SinIdx((u16)ang >> 4), 10);
-        mPosY = wave + 0x80000;
+        mPos.y = wave + 0x80000;
         if (mShakeTimer >= 8) {
-            mVertSpeed = 0;
-            mPosY = 0x80000;
+            mSpeed.y = 0;
+            mPos.y = 0x80000;
         }
         mShakeTimer++;
         break;
@@ -136,13 +136,13 @@ s32 daDpLift_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov025_02113ad8);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov025_02112d08);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov025_02112d08);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
-    mBasePos.x = mPosX;
-    mBasePos.y = mPosY;
-    mBasePos.z = mPosZ;
+    mBasePos.x = mPos.x;
+    mBasePos.y = mPos.y;
+    mBasePos.z = mPos.z;
     mState = 0;
     mHadClsn = 0;
 

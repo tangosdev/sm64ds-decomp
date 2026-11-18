@@ -10,7 +10,7 @@
  * - common.h stays first. Matrix4x3 has two 0x30 spellings; these helpers
  *   whole-assign the flat s32 m[12] form. The class header's .r/.t spelling
  *   inflates UpdateClsnMatrix and UpdateModelMatrix.
- * - Behavior rematerialises &mAngleX/Y/Z. Plain `mAngleX += mAngleXSpeed`
+ * - Behavior rematerialises &mAngle.x/.y/.z. Plain `mAngle.x += mAngleXSpeed`
  *   is 0x54 against the ROM's 0x68.
  * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosAndAngs on the collider.
  * - data_ov046_021115bc is the CLPS block SetFile takes. data_020a0e68 is
@@ -66,21 +66,21 @@ void daKpa2Bg_c::PlayTiltSound() {
 /* Rebuilds the collision matrix from the position and the X and Z angles,
    then moves the moving mesh collider to it with the Y angle. */
 void daKpa2Bg_c::UpdateClsnMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
     mClsnMat = data_020a0e68;
-    mMovingMeshCollider2.Transform(mClsnMat, mAngleY);
+    mMovingMeshCollider2.Transform(mClsnMat, mAngle.y);
 }
 
 /* Rebuilds the model matrix the same way from the position shifted down by 3
    bits. The Y angle is not part of this matrix build. */
 void daKpa2Bg_c::UpdateModelMatrix() {
     int pos[4];
-    Vec3_Asr(&pos, &mPosX, 3);
+    Vec3_Asr(&pos, &mPos.x, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos[0], pos[1], pos[2]);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
     mModel2.mat4x3 = data_020a0e68;
 }
 
@@ -99,18 +99,18 @@ s32 daKpa2Bg_c::Render() {
 }
 
 s32 daKpa2Bg_c::Behavior() {
-    /* mAngleX / mAngleY / mAngleZ, reached through rematerialised pointers.
-       The plain member form (`mAngleX = mAngleX + mAngleXSpeed;`) is five
+    /* mAngle.x / mAngle.y / mAngle.z, reached through rematerialised pointers.
+       The plain member form (`mAngle.x = mAngle.x + mAngleXSpeed;`) is five
        words SHORTER than the ROM here -- measured, 0x54 against 0x68 -- so
        the three stores stay spelled the way the cartridge computes them. */
-    s16 *angX = &mAngleX;
-    s16 *angY = &mAngleY;
+    s16 *angX = &mAngle.x;
+    s16 *angY = &mAngle.y;
 
     *angX = *angX + mAngleXSpeed;
     *angY = *angY + mAngleYSpeed;
 
     {
-        s16 *angZ = &mAngleZ;
+        s16 *angZ = &mAngle.z;
         *angZ = *angZ + mAngleZSpeed;
     }
 
@@ -122,7 +122,7 @@ s32 daKpa2Bg_c::Behavior() {
 int daKpa2Bg_c::InitResources() {
     mModel2.SetFile(dExtSimpleModel_c::LoadFile(daKpa2Bg_c_ModelFile), 1, -1);
     UpdateClsnMatrix();
-    mMovingMeshCollider2.SetFile(dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile), mClsnMat, 0x1000, mAngleY,
+    mMovingMeshCollider2.SetFile(dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile), mClsnMat, 0x1000, mAngle.y,
                                  *(&data_ov046_021115bc));
     mMovingMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMovingMeshCollider2.Enable(this);

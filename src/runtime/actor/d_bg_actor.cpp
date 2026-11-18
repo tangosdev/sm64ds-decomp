@@ -86,7 +86,10 @@ static inline int IsActorID(const dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
+#include "BgChEvt.h"
+
+int BgChEvt::func_ov002_020ef2a4(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (clsn->IsOnGround()) {
         dBgPi *hit = clsn->GetFloorResult();
         if (hit->GetClsnID() != -1) {
@@ -100,7 +103,8 @@ int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
+int BgChEvt::func_ov002_020ef228(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -114,12 +118,11 @@ int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-int func_ov002_020ef070(void *unused, char *moverArg) {
+int BgChEvt::func_ov002_020ef070(dActor_c *mover) {
     Vector3 start, end;
 
     dBgCh_Lin line;
 
-    dActor_c *mover = (dActor_c *)moverArg;
     Vector3 *pos = &mover->mPos;
     int x = pos->x;
     start.x = x;
@@ -135,8 +138,8 @@ int func_ov002_020ef070(void *unused, char *moverArg) {
     int reach = 0x64;
     if (mover->param1 == 2)
         reach = 0x82;
-    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
-    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
+    end.x += reach * FX_SinIdx((u16)mover->mAngle.y >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngle.y >> 4);
 
     line.SetObjAndLine(start, end, mover);
     if (line.DetectClsn()) {
@@ -154,12 +157,11 @@ int func_ov002_020ef070(void *unused, char *moverArg) {
     return 0;
 }
 
-int func_ov002_020eeeb8(void *unused, char *moverArg) {
+int BgChEvt::func_ov002_020eeeb8(dActor_c *mover) {
     Vector3 start, end;
 
     dBgCh_Lin line;
 
-    dActor_c *mover = (dActor_c *)moverArg;
     Vector3 *pos = &mover->mPos;
     int x = pos->x;
     start.x = x;
@@ -176,8 +178,8 @@ int func_ov002_020eeeb8(void *unused, char *moverArg) {
     if (mover->param1 == 2)
         reach = 0x82;
 
-    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
-    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
+    end.x += reach * FX_SinIdx((u16)mover->mAngle.y >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngle.y >> 4);
 
     line.SetObjAndLine(start, end, mover);
 
@@ -198,9 +200,8 @@ int func_ov002_020eeeb8(void *unused, char *moverArg) {
     return 0;
 }
 
-int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
-    dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
-    dActor_c *other = (dActor_c *)otherArg;
+int BgChEvt::func_ov002_020eee3c(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -214,7 +215,8 @@ int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     return 0;
 }
 
-int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
+int BgChEvt::func_ov002_020eedc0(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -228,7 +230,8 @@ int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
+int BgChEvt::func_ov002_020eed24(daPly_c *player) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     dBgPi *hit;
     dActor_c *owner;
     if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
@@ -244,7 +247,8 @@ int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     return 0;
 }
 
-int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
+int BgChEvt::func_ov002_020eeca8(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (func_02035638(clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
@@ -266,7 +270,8 @@ int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
  * Vector3 scoped to its own branch. The scalar Hurt ABI remains a measured
  * reconstruction boundary. */
 
-int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
+int BgChEvt::func_ov002_020eea84(dActor_c *player) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     dActor_c *owner;
 
     if (!IsActorID(player, 0xbf))
@@ -332,9 +337,9 @@ int dBgActor_c::IsClsnInRangeOnScreen(fx32 radius, fx32 yOffset) {
             mMeshCollider.Enable(this);
     } else {
         Vector3 center;
-        center.x = mPosX;
-        center.y = mPosY;
-        center.z = mPosZ;
+        center.x = mPos.x;
+        center.y = mPos.y;
+        center.z = mPos.z;
         if (yOffset == 0)
             center.y += mClipOffsetY;
         else
@@ -357,9 +362,9 @@ int dBgActor_c::IsClsnInRangeOnScreen(fx32 radius, fx32 yOffset) {
  * (mClipRadius, shifted into fx32); zero yOffset to mClipOffsetY. */
 int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
     Vector3 center;
-    center.x = mPosX;
-    center.y = mPosY;
-    center.z = mPosZ;
+    center.x = mPos.x;
+    center.y = mPos.y;
+    center.z = mPos.z;
     if (radius == 0)
         radius = mClipRadius << 3;
     if (yOffset == 0)
@@ -382,10 +387,10 @@ int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
  * translation row at 1/8 scale, the model-space unit. */
 void dBgActor_c::UpdateModelPosAndRotY()
 {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9]  = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* The collider follows the model: copy its matrix, overwrite the translation
@@ -393,10 +398,10 @@ void dBgActor_c::UpdateModelPosAndRotY()
 void dBgActor_c::UpdateClsnPosAndRot()
 {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9]  = mPosX;
-    mClsnMat.m[10] = mPosY;
-    mClsnMat.m[11] = mPosZ;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* One frame of the mega-knockback flight KillByMegaChar starts: probe 200
@@ -418,7 +423,7 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, f
     rayEnd.x = 0;
     rayEnd.y = 0;
     rayEnd.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
     MTX_MultVec43(&probe, &data_020a0e68, &rayEnd);
     Vec3_Add(&sum, &mPos, &rayEnd);
     rayEnd = sum;
@@ -426,10 +431,10 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, f
     dBgCh_Lin ray;
     ray.SetObjAndLine(mPos, rayEnd, this);
     if (ray.DetectClsn())
-        mPrevAngleY += 0x8000;
-    mAngleX += angStepX;
-    mAngleY += angStepY;
-    mAngleZ += angStepZ;
+        mPrevAngle.y += 0x8000;
+    mAngle.x += angStepX;
+    mAngle.y += angStepY;
+    mAngle.z += angStepZ;
     UpdatePos(0);
     if (DecIfAbove0_Byte(&mMegaKnockbackTimer) == 0)
         Kill();
@@ -444,7 +449,7 @@ void dBgActor_c::func_ov002_020ee5d0(int pivotY) {
     Vec3_Asr(&modelPos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, modelPos.x, modelPos.y, modelPos.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, pivotY >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -pivotY >> 3, 0);
     mModel.mat4x3 = data_020a0e68;
 }
@@ -460,9 +465,9 @@ void dBgActor_c::Kill()
 {
     Vector3 pos;
     Vector3 dustPos;
-    fx32 x = mPosX;
-    fx32 y = mPosY + 0x64000;
-    fx32 z = mPosZ;
+    fx32 x = mPos.x;
+    fx32 y = mPos.y + 0x64000;
+    fx32 z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -480,16 +485,16 @@ void dBgActor_c::Kill()
  * take the mesh collider out of the world. */
 void dBgActor_c::KillByMegaChar(daPly_c &player) {
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     Earthquake(v, 0x5dc000);
     mMegaKnockback = 1;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x14000;
-    mVertSpeed = 0x1e000;
-    mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
+    mSpeed.y = 0x1e000;
+    mPrevAngle.y = Vec3_HorzAngle(&player.mPos, &mPos);
     mMegaKnockbackTimer = 30;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

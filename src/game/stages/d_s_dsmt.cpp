@@ -234,7 +234,7 @@ s32 dScDSMT_c::InitResources() {
     data_0208ee44 = 1;
     GX::DisableAllBanks();
     data_ov007_02103260 = -1;
-    func_ov007_020b7138(&data_ov007_02103290, data_0209b340);
+    ((Ov007MenuHooks *)&data_ov007_02103290)->func_ov007_020b7138((Ov007BootArgs *)data_0209b340);
     func_ov007_020b7090(0, 0, 0, 0, 0);
     Sound::LoadInitialGroup(2);
     return 1;

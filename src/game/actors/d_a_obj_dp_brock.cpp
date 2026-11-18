@@ -87,12 +87,12 @@ int daObjDpBrock_c::InitResources() {
     mStepModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov025_02113ab8), 1, -1);
     UpdateStepModelPosAndRotY();
     UpdateStepClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov025_02113ab0), mClsnMat2, 0x1000, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov025_02113ab0), mClsnMat2, 0x1000, mAngle.y,
                           data_ov025_02112ce8);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     int phase = param1 & 3;
-    mVertSpeed = -kVertStep;
+    mSpeed.y = -kVertStep;
     mState = kSinking;
     mStateTimer = 0;
     switch (phase) {
@@ -100,14 +100,14 @@ int daObjDpBrock_c::InitResources() {
         break;
     case 1:
         /* Halfway down, halfway through the sink. */
-        mPosY -= kHalfDrop;
+        mPos.y -= kHalfDrop;
         mStateTimer += kFramesPerState / 2;
         break;
     case 2:
         /* At the bottom, about to rise. */
-        mPosY -= kFullDrop;
+        mPos.y -= kFullDrop;
         mState = kRising;
-        mVertSpeed = kVertStep;
+        mSpeed.y = kVertStep;
         break;
     }
     return 1;
@@ -118,20 +118,20 @@ int daObjDpBrock_c::Behavior() {
     case kSinking:
         if (mStateTimer == kFramesPerState) {
             mState = kRising;
-            mVertSpeed = kVertStep;
+            mSpeed.y = kVertStep;
             mStateTimer = 0;
         }
         break;
     case kRising:
         if (mStateTimer == kFramesPerState) {
             mState = kSinking;
-            mVertSpeed = -kVertStep;
+            mSpeed.y = -kVertStep;
             mStateTimer = 0;
         }
         break;
     }
     mStateTimer++;
-    mPosY += mVertSpeed;
+    mPos.y += mSpeed.y;
     UpdateStepModelPosAndRotY();
     if (IsClsnInRange(0, 0))
         UpdateStepClsnPosAndRot();
@@ -150,25 +150,25 @@ int daObjDpBrock_c::CleanupResources() {
     return 1;
 }
 
-/* Puts the block's own model on the actor: heading from mAngleY, and the
+/* Puts the block's own model on the actor: heading from mAngle.y, and the
  * position scaled down by 8 into model space. dBgActor_c's
  * UpdateModelPosAndRotY does the same for the inherited model. */
 void daObjDpBrock_c::UpdateStepModelPosAndRotY() {
-    Matrix4x3_FromRotationY(&mStepModel.mat4x3, mAngleY);
-    mStepModel.mat4x3.m[9] = mPosX >> 3;
-    mStepModel.mat4x3.m[10] = mPosY >> 3;
-    mStepModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mStepModel.mat4x3, mAngle.y);
+    mStepModel.mat4x3.m[9] = mPos.x >> 3;
+    mStepModel.mat4x3.m[10] = mPos.y >> 3;
+    mStepModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
-/* Moves the collider with the block: rotation from mAngleY, translation
+/* Moves the collider with the block: rotation from mAngle.y, translation
  * from the actor position, then dBgW_KcMbg::Transform. dBgActor_c's
  * UpdateClsnPosAndRot does the same for the inherited collider. */
 void daObjDpBrock_c::UpdateStepClsnPosAndRot() {
-    Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
-    mClsnMat2.m[9] = mPosX;
-    mClsnMat2.m[10] = mPosY;
-    mClsnMat2.m[11] = mPosZ;
-    mMeshCollider.Transform(mClsnMat2, mAngleY);
+    Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
+    mClsnMat2.m[9] = mPos.x;
+    mClsnMat2.m[10] = mPos.y;
+    mClsnMat2.m[11] = mPos.z;
+    mMeshCollider.Transform(mClsnMat2, mAngle.y);
 }
 
 /* D1 (0x02111d40) and D0 (0x02111d8c) have no text here. include/

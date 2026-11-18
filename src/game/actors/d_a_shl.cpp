@@ -82,7 +82,6 @@ int func_ov002_020cc16c(void *player, void *actor);
 void Matrix4x3_FromRotationY(void *m, int angle);
 
 }
-int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
 int SurfaceInfo_TestFlag0x20(int *si);
 
 daShl_c *daShl_c_classInit() {
@@ -111,9 +110,9 @@ s32 daShl_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mdCc_c.Init(this, 0x3c000, 0x46000, 0x100004, 0xa083c0);
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mVertAccel = -0x2000;          /* -2.0 */
     mTerminalVelocity = -0x32000;  /* -50.0 */
     mStateTimer = 20;
@@ -133,12 +132,12 @@ s32 daShl_c::InitResources()
  */
 s32 daShl_c::Behavior()
 {
-    if (func_ov002_020ad660(this, &mMeshClsn, &mModel, 3) != 0)
+    if (this->func_ov002_020ad660(&mMeshClsn, &mModel, 3) != 0)
         return 1;
 
     if (UpdateYoshiEat(mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
-            mSpawnAngleY = mPrevAngleY;
+            mSpawnAngleY = mPrevAngle.y;
             func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
@@ -189,7 +188,7 @@ s32 daShl_c::Behavior()
             if (mMeshClsn.IsOnGround() != 0) {
                 if (mState == &data_ov102_0214ea68) {
                     mVertAccel = 0;
-                    mVertSpeed = 0;
+                    mSpeed.y = 0;
                 }
                 if (mState != &data_ov102_0214ea48 &&
                     mState != &data_ov102_0214ea58)
@@ -274,8 +273,8 @@ int daShl_c::func_ov102_0214d1b0()
    Yoshi spat it along -- slide at 30.0, and arm the second cylinder. */
 int daShl_c::func_ov102_0214d148()
 {
-    mPrevAngleY = mSpawnAngleY;
-    mAngleY = mPrevAngleY;
+    mPrevAngle.y = mSpawnAngleY;
+    mAngle.y = mPrevAngle.y;
     mHorzSpeed = 0x1e000;
     mVertAccel = -0x2000;
     mdCc_c2.Init(this, 0x28000, 0x3c000, 0x102002, 0);
@@ -285,7 +284,7 @@ int daShl_c::func_ov102_0214d148()
 /* Sliding: tick. Spin, and keep the second cylinder live. */
 int daShl_c::func_ov102_0214d114()
 {
-    mAngleY += 0x1000;
+    mAngle.y += 0x1000;
     mdCc_c2.Clear();
     mdCc_c2.Update();
     return 1;
@@ -310,7 +309,7 @@ int daShl_c::func_ov102_0214d044()
         return 0;
     }
     mPos = mCarrier->mPos;
-    mAngleY += 0x1000;
+    mAngle.y += 0x1000;
     return 1;
 }
 
@@ -349,14 +348,14 @@ int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 {
     if (mState == &data_ov102_0214ea78.rec)
         return 0;
-    mSpawnAngleY = kicker->mAngleY;
+    mSpawnAngleY = kicker->mAngle.y;
     func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
     return 1;
 }
 
 /* dExtSimpleModel_c matrix and drop shadow. While carried (flag 0x4000) the model
    follows the carrier's hands; otherwise it sits at mPos turned by
-   mAngleY. Flag 0x40000 (hidden) skips the shadow. */
+   mAngle.y. Flag 0x40000 (hidden) skips the shadow. */
 void daShl_c::func_ov102_0214ce60()
 {
     int carried = (mFlags & 0x4000) != 0;
@@ -367,10 +366,10 @@ void daShl_c::func_ov102_0214ce60()
         offset.z = 0x32000;
         mModel.mat4x3 = *UpdateCarry(*mCarrier, offset);
     } else {
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.m[9] = mPosX >> 3;
-        mModel.mat4x3.m[10] = mPosY >> 3;
-        mModel.mat4x3.m[11] = mPosZ >> 3;
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
+        mModel.mat4x3.m[9] = mPos.x >> 3;
+        mModel.mat4x3.m[10] = mPos.y >> 3;
+        mModel.mat4x3.m[11] = mPos.z >> 3;
     }
     int hidden = (mFlags & 0x40000) != 0;
     if (hidden)
@@ -437,17 +436,17 @@ void daShl_c::func_ov102_0214cbec()
         }
         if (mState != &data_ov102_0214ea78.rec)
             return;
-        v1.x = mPosX;
-        v1.y = mPosY;
-        v1.z = mPosZ;
+        v1.x = mPos.x;
+        v1.y = mPos.y;
+        v1.z = mPos.z;
         player->Hurt(v1, 1, 0xc000, 1, 0, 1);
         return;
     }
 
     if (mState == &data_ov102_0214ea78.rec) {
-        v2.x = mPosX;
-        v2.y = mPosY;
-        v2.z = mPosZ;
+        v2.x = mPos.x;
+        v2.y = mPos.y;
+        v2.z = mPos.z;
         player->Hurt(v2, 1, 0xc000, 1, 0, 1);
         return;
     }
@@ -473,7 +472,7 @@ void daShl_c::func_ov102_0214c84c()
     if (mState == &data_ov102_0214ea48 && mCarrier != 0 && mCarrier->mIsAirborne == 0) {
         dBgCh_Gnd ground;
         ground.StartDetectingWater();
-        Vector3 probe(mPosX, mPosY + 0x32000, mPosZ);
+        Vector3 probe(mPos.x, mPos.y + 0x32000, mPos.z);
         ground.SetObjAndPos(probe, this);
         if (ground.DetectClsn())
         {

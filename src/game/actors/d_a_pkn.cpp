@@ -128,7 +128,7 @@ SpawnInfo<daPkn_c> g_profile_PAKUN = {
  * model returns 0.
  *
  * The tail seeds the sleep-bubble position: 0xe0 along the facing angle
- * (FX_SinIdx / FX_CosIdx), and 0x37800 above mPosY.
+ * (FX_SinIdx / FX_CosIdx), and 0x37800 above mPos.y.
  * UpdatePose rewrites mBubblePos every frame.
  */
 int daPkn_c::InitResources()
@@ -148,11 +148,11 @@ int daPkn_c::InitResources()
     mdCcAc_c2.Init(this, 0x82000, 0x64000, 2, 0x423e0);
     v.x = 0; v.y = 0; v.z = 0;
     mdCcAcPos_c.Init(this, v, 0x46000, 0x64000, 0x200002, 0);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mState = 0;
-    mTargetAngleY = mPrevAngleY;
+    mTargetAngleY = mPrevAngle.y;
     mPlayerDist = 0x7fffffff;
     mClosestPlayer = 0;
     mClsnEnabled = 0;
@@ -161,9 +161,9 @@ int daPkn_c::InitResources()
     mCoinType = 3;
     mPlayerAirborne = 0;
     mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
-    mHeadClsnOffset.x = mPosX;
-    mHeadClsnOffset.y = mPosY;
-    mHeadClsnOffset.z = mPosZ;
+    mHeadClsnOffset.x = mPos.x;
+    mHeadClsnOffset.y = mPos.y;
+    mHeadClsnOffset.z = mPos.z;
     {
         /* Copied through a pointer: `mHomePos = mHeadClsnOffset` emits a
            different copy. */
@@ -171,15 +171,15 @@ int daPkn_c::InitResources()
         mHomePos = *home;
         /* The shift must be LOGICAL so the angle wraps -- on the signed s16 it
            would index the wrong table entry for negative angles. */
-        int ang = (u16)mAngleY >> 4;
+        int ang = (u16)mAngle.y >> 4;
         /* Temporaries in the ROM's load order; folding them reorders it. */
-        int y0 = mPosY;
-        int z0 = mPosZ;
+        int y0 = mPos.y;
+        int z0 = mPos.z;
         int cosv = FX_CosIdx(ang);
         int sinv = FX_SinIdx(ang);
         int z = cosv * 0xe0 + z0;
         int y = y0 + 0x37800;
-        int x = sinv * 0xe0 + mPosX;
+        int x = sinv * 0xe0 + mPos.x;
         mBubblePos.x = x;
         mBubblePos.y = y;
         mBubblePos.z = z;
@@ -202,12 +202,12 @@ int daPkn_c::Behavior()
         if (r == 2) {
             mCoinType = 0;
             mState = 7;
-            mScaleX = 0;
-            mScaleY = 0;
-            mScaleZ = 0;
-            mPosX = mHomePos.x;
-            mPosY = mHomePos.y;
-            mPosZ = mHomePos.z;
+            mScale.x = 0;
+            mScale.y = 0;
+            mScale.z = 0;
+            mPos.x = mHomePos.x;
+            mPos.y = mHomePos.y;
+            mPos.z = mHomePos.z;
         }
         return 1;
     }
@@ -247,7 +247,7 @@ int daPkn_c::Behavior()
  */
 int daPkn_c::Render()
 {
-    if (mScaleX == 0)
+    if (mScale.x == 0)
         return 1;
     mAnmModel.Render(&mScale);
     if (mAnmModel.file == data_ov084_02130df4.filePtr)
@@ -278,9 +278,9 @@ int daPkn_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 void daPkn_c::StateWait()
 {
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mClsnEnabled = 1;
     mFlags |= 0x10000000;
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130df4.filePtr, 0, 0x1000, 0);
@@ -335,8 +335,8 @@ void daPkn_c::StateBite()
         func_0201267c(0xc0, &mCamSpacePos);
     }
 
-    ApproachLinear(mPrevAngleY, mTargetAngleY, 0x800);
-    mAngleY = mPrevAngleY;
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x800);
+    mAngle.y = mPrevAngle.y;
 
     if (mAnmModel.Finished() != 0) {
         int thr;
@@ -370,9 +370,9 @@ void daPkn_c::StateBite()
                     return;
                 }
                 if (((daPly_c *)actor)->mIsVanish == 0) {
-                    pos1.x = mPosX;
-                    pos1.y = mPosY;
-                    pos1.z = mPosZ;
+                    pos1.x = mPos.x;
+                    pos1.y = mPos.y;
+                    pos1.z = mPos.z;
                     ((daPly_c *)actor)->Hurt(pos1, 3, 0xc000, 1, 0, 1);
                     return;
                 }
@@ -441,9 +441,9 @@ void daPkn_c::StateBite()
     }
     if (((daPly_c *)actor)->mIsMetal != 0)
         return;
-    pos2.x = mPosX;
-    pos2.y = mPosY;
-    pos2.z = mPosZ;
+    pos2.x = mPos.x;
+    pos2.y = mPos.y;
+    pos2.z = mPos.z;
     ((daPly_c *)actor)->Hurt(pos2, 3, 0xc000, 1, 0, 1);
 }
 
@@ -486,11 +486,11 @@ void daPkn_c::StateDie()
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
     mClsnEnabled = 0;
     if (mStateTimer < 10) {
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
-        pos.x += data_ov084_0213030c[mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
-        pos.z += data_ov084_0213030c[mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
+        pos.x += data_ov084_0213030c[mStateTimer] * FX_SinIdx((u16)mAngle.y >> 4);
+        pos.z += data_ov084_0213030c[mStateTimer] * FX_CosIdx((u16)mAngle.y >> 4);
         pos.y += data_ov084_02130334[mStateTimer] << 12;
         mParticleHandle = Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
                                                 pos.y, pos.z, 0, 0);
@@ -508,31 +508,31 @@ void daPkn_c::StateShrink()
     int scale;
 
     mClsnEnabled = 0;
-    scale = mScaleX;
+    scale = mScale.x;
     if (mStateTimer == 0) {
         func_02012694(0x11f, &mCamSpacePos);
         scale = 0x1000;
     }
 
-    mParticleHandle = Particle::System::New(mParticleHandle, kPtclPiranhaDeathSmokeA, mPosX,
-                                            mPosY + 0x1e000, mPosZ, 0, 0);
-    mParticleHandle2 = Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPosX,
-                                             mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle = Particle::System::New(mParticleHandle, kPtclPiranhaDeathSmokeA, mPos.x,
+                                            mPos.y + 0x1e000, mPos.z, 0, 0);
+    mParticleHandle2 = Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPos.x,
+                                             mPos.y + 0x1e000, mPos.z, 0, 0);
 
     if (scale > 0) {
         scale = scale - 0xa3;
     } else {
         scale = 0;
         if (mCoinType != 0) {
-            Vector3 v(mPosX, mPosY + 0x78000, mPosZ);
+            Vector3 v(mPos.x, mPos.y + 0x78000, mPos.z);
             dActor_c::Spawn(0x122, 0, v, 0, mAreaId, -1);
             mCoinType = 0;
         }
         mState = 7;
     }
-    mScaleX = scale;
-    mScaleY = scale;
-    mScaleZ = scale;
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -551,7 +551,7 @@ void daPkn_c::StateRegrow()
 {
     int v;
     mClsnEnabled = 0;
-    v = mScaleX;
+    v = mScale.x;
     if (mStateTimer == 0)
         v = 0x4cc;
     if (v < 0x1000) {
@@ -560,9 +560,9 @@ void daPkn_c::StateRegrow()
         mState = 0;
         v = 0x1000;
     }
-    mScaleX = v;
-    mScaleY = v;
-    mScaleZ = v;
+    mScale.x = v;
+    mScale.y = v;
+    mScale.z = v;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -584,7 +584,7 @@ void daPkn_c::TrackClosestPlayer()
         mPlayerAirborne = mClosestPlayer->mIsAirborne;
     } else {
         mPlayerDist = 0x7fffffff;
-        mTargetAngleY = mAngleY;
+        mTargetAngleY = mAngle.y;
     }
 }
 
@@ -594,7 +594,8 @@ int daPkn_c::PlayerMovingFast()
 {
     daPly_c *p = mClosestPlayer;
     if (p == 0) return 0;
-    if (p->mVertSpeed > 0xa000) return 1;
+    if (p->mSpeed.y > 0xa000)
+        return 1;
     return p->mHorzSpeed > 0xa000;
 }
 
@@ -631,9 +632,9 @@ int daPkn_c::CheckHits()
                     Die();
                 } else {
                     Vector3 v;
-                    v.x = mPosX;
-                    v.y = mPosY;
-                    v.z = mPosZ;
+                    v.x = mPos.x;
+                    v.y = mPos.y;
+                    v.z = mPos.z;
                     actor->Hurt(v, 3, 0xc000, 1, 0, 1);
                     mAnmModel.SetAnim((BCA_File *)data_ov084_02130e0c.filePtr, 0, 0x1000, 0);
                     mAnmModel.SetFlags(0x40000000);
@@ -705,7 +706,7 @@ void daPkn_c::UpdatePose()
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     saved = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     mAnmModel.mat4x3 = data_020a0e68;
 
     ang.x = 0;
@@ -749,9 +750,9 @@ void daPkn_c::UpdatePose()
         mBubbleScale.z = scale;
     }
 
-    bubblePos.x += FX_SinIdx((u16)mAngleY >> 4) * 0xe0;
+    bubblePos.x += FX_SinIdx((u16)mAngle.y >> 4) * 0xe0;
     scale = scale - 0xc00;
-    bubblePos.z += FX_CosIdx((u16)mAngleY >> 4) * 0xe0;
+    bubblePos.z += FX_CosIdx((u16)mAngle.y >> 4) * 0xe0;
     bubblePos.y += scale * 0x18 + 0x38000;
 
     mBubblePos = bubblePos;

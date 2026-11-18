@@ -20,7 +20,7 @@
  *
  * MEMBERS: the dBgCh_Actr at 0x320 is named by the class's own D1/D0 calling
  * _ZN10dBgCh_ActrD1Ev at +0x320, a relocation the ROM build checks. The home
- * position at 0x4dc is copied from mPosX/Y/Z by InitResources and restored in
+ * position at 0x4dc is copied from mPos.x/.y/.z by InitResources and restored in
  * Behavior's landing state.
  *
  * SIZE 0x4ec is the literal daObjRc_Tikuwa_c_classInit (historically

@@ -554,7 +554,7 @@ src/unnamed/arm9/0201/func_02019ed0.c:
 src/unnamed/arm9/0201/func_02019f10.cpp:
     complete
     .text start:0x02019f10 end:0x0201a03c
-src/unnamed/arm9/0201/func_0201a03c.c:
+src/unnamed/arm9/0201/func_0201a03c.cpp:
     complete
     .text start:0x0201a03c end:0x0201a054
 
@@ -620,7 +620,7 @@ src/IsMinigameActorID.c:
     complete
     .text start:0x0201a888 end:0x0201a8b4
 
-src/unnamed/arm9/0201/func_0201a8b4.c:
+src/unnamed/arm9/0201/func_0201a8b4.cpp:
     complete
     .text start:0x0201a8b4 end:0x0201a96c
 
@@ -2829,4 +2829,278 @@ src/unnamed/arm9/0207/func_02073534.cpp:
 src/typeinfo.cpp:
     complete
     .text start:0x0207359c end:0x020736f4
+
+src/data/arm9/data_0209b2e4.cpp:
+    complete
+    .bss start:0x0209b2e4 end:0x0209b468
+
+src/data/arm9/data_0209ba84.cpp:
+    complete
+    .bss start:0x0209ba84 end:0x0209d4b8
+
+src/data/arm9/data_0209d4d4.cpp:
+    complete
+    .bss start:0x0209d4d4 end:0x0209d528
+
+src/data/arm9/data_0209d5b8.cpp:
+    complete
+    .bss start:0x0209d5b8 end:0x0209d64c
+
+src/data/arm9/data_0209e64c.cpp:
+    complete
+    .bss start:0x0209e64c end:0x0209e650
+
+src/data/arm9/data_0209e660.cpp:
+    complete
+    .bss start:0x0209e660 end:0x0209f1d8
+
+src/data/arm9/sBootJobDone.cpp:
+    complete
+    .bss start:0x0209f1e8 end:0x0209f1ec
+
+src/data/arm9/gNextSceneParam.cpp:
+    complete
+    .bss start:0x0209f5b8 end:0x0209f5c4
+
+src/data/arm9/data_0209f5f8.cpp:
+    complete
+    .bss start:0x0209f5f8 end:0x0209f610
+
+src/data/arm9/data_0209f648.cpp:
+    complete
+    .bss start:0x0209f648 end:0x020a0c5c
+
+src/data/arm9/data_020a0c78.cpp:
+    complete
+    .bss start:0x020a0c78 end:0x020a0ce0
+
+src/data/arm9/PATH_DEFS.cpp:
+    complete
+    .bss start:0x020a0d84 end:0x020a0db8
+
+src/data/arm9/data_020a0dd8.cpp:
+    complete
+    .bss start:0x020a0dd8 end:0x020a0de8
+
+src/data/arm9/data_020a0df8.cpp:
+    complete
+    .bss start:0x020a0df8 end:0x020a0eb0
+
+src/data/arm9/data_020a0ef0.cpp:
+    complete
+    .bss start:0x020a0ef0 end:0x020a4b6c
+
+src/data/arm9/data_020a4bb8.cpp:
+    complete
+    .bss start:0x020a4bb8 end:0x020a7fc4
+
+src/data/arm9/arc_list.cpp:
+    complete
+    .bss start:0x020a8048 end:0x020a8058
+
+src/data/arm9/fsi_card_lock_id.cpp:
+    complete
+    .bss start:0x020a805c end:0x020a80c8
+
+src/data/arm9/PMi_IsInit.cpp:
+    complete
+    .bss start:0x020a8104 end:0x020a89a8
+
+src/data/arm9/data_020a94c0.cpp:
+    complete
+    .bss start:0x020a94c0 end:0x020aa420
+
+src/data/arm9/data_02075244.c:
+    complete
+    .rodata start:0x02075244 end:0x02075250
+
+
+src/data/arm9/data_02075258.c:
+    complete
+    .rodata start:0x02075258 end:0x02075264
+
+
+src/data/arm9/data_02075358.c:
+    complete
+    .rodata start:0x02075358 end:0x020755a0
+
+
+src/data/arm9/data_020755b8.c:
+    complete
+    .rodata start:0x020755b8 end:0x020755bc
+
+
+src/data/arm9/data_020755bc.c:
+    complete
+    .rodata start:0x020755bc end:0x02075720
+
+
+src/data/arm9/VS_STAR_SPAWN_ORDERS.c:
+    complete
+    .rodata start:0x02075720 end:0x02075768
+
+
+src/data/arm9/data_02075768.c:
+    complete
+    .rodata start:0x02075768 end:0x02075804
+
+
+src/data/arm9/data_02075b04.c:
+    complete
+    .rodata start:0x02075b04 end:0x02075b14
+
+
+src/data/arm9/data_02075f14.c:
+    complete
+    .rodata start:0x02075f14 end:0x02082128
+
+
+src/data/arm9/IDENTITY_MATRIX4X3.c:
+    complete
+    .rodata start:0x02082128 end:0x02082158
+
+
+src/data/arm9/data_02082200.c:
+    complete
+    .rodata start:0x02082200 end:0x02082204
+
+
+src/data/arm9/data_02082204.c:
+    complete
+    .rodata start:0x02082204 end:0x02082208
+
+
+src/data/arm9/data_02082208.c:
+    complete
+    .rodata start:0x02082208 end:0x0208220c
+
+
+src/data/arm9/data_0208220c.c:
+    complete
+    .rodata start:0x0208220c end:0x02082210
+
+
+src/data/arm9/data_02082210.c:
+    complete
+    .rodata start:0x02082210 end:0x02082214
+
+
+src/data/arm9/FX_SinCosTable_.c:
+    complete
+    .rodata start:0x02082214 end:0x02082314
+
+
+src/data/arm9/data_02082314.c:
+    complete
+    .rodata start:0x02082314 end:0x02082414
+
+
+src/data/arm9/data_02082414.c:
+    complete
+    .rodata start:0x02082414 end:0x02082614
+
+
+src/data/arm9/data_02082614.c:
+    complete
+    .rodata start:0x02082614 end:0x02082714
+
+
+src/data/arm9/data_02082714.c:
+    complete
+    .rodata start:0x02082714 end:0x02083620
+
+
+src/data/arm9/data_02083620.c:
+    complete
+    .rodata start:0x02083620 end:0x02086214
+
+
+src/data/arm9/data_02086324.c:
+    complete
+    .rodata start:0x02086324 end:0x02086384
+
+
+src/data/arm9/data_02086384.c:
+    complete
+    .rodata start:0x02086384 end:0x02086484
+
+
+src/data/arm9/fsi_default_command.c:
+    complete
+    .rodata start:0x02086758 end:0x0208677c
+
+
+src/data/arm9/fsi_def_digest_key.c:
+    complete
+    .rodata start:0x0208677c end:0x020867bc
+
+
+src/data/arm9/data_020867bc.c:
+    complete
+    .rodata start:0x020867bc end:0x0208685c
+
+
+src/data/arm9/data_02086894.c:
+    complete
+    .rodata start:0x02086894 end:0x0208689c
+
+
+src/data/arm9/data_0208689c.c:
+    complete
+    .rodata start:0x0208689c end:0x020868a0
+
+
+src/data/arm9/data_020868d4.c:
+    complete
+    .rodata start:0x020868d4 end:0x020868fc
+
+
+src/data/arm9/data_020868fc.c:
+    complete
+    .rodata start:0x020868fc end:0x0208690c
+
+
+src/data/arm9/data_0208690c.c:
+    complete
+    .rodata start:0x0208690c end:0x0208692c
+
+
+src/data/arm9/data_0208692c.c:
+    complete
+    .rodata start:0x0208692c end:0x0208696c
+
+
+src/data/arm9/data_0208696c.c:
+    complete
+    .rodata start:0x0208696c end:0x0208698c
+
+
+src/data/arm9/data_0208698c.c:
+    complete
+    .rodata start:0x0208698c end:0x020869bc
+
+
+src/data/arm9/data_020869dc.c:
+    complete
+    .rodata start:0x020869dc end:0x02086a08
+
+
+src/data/arm9/data_02086a08.c:
+    complete
+    .rodata start:0x02086a08 end:0x02086a30
+
+
+src/data/arm9/data_02086a30.c:
+    complete
+    .rodata start:0x02086a30 end:0x02086a58
+
+
+src/data/arm9/data_02086a58.c:
+    complete
+    .rodata start:0x02086a58 end:0x02086b58
+
+
+src/data/arm9/__ptmf_null.c:
+    complete
+    .rodata start:0x02086b58 end:0x02086b60
 

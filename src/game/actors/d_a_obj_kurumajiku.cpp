@@ -60,10 +60,10 @@ void daObjKurumajiku_c_EmitDestructor(daObjKurumajiku_c *p) {
 /* Build the model transform. dExtSimpleModel_c translation uses 1/8 of the
    world position. The return value is the z word, which no caller reads. */
 int daObjKurumajiku_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    int z = mPosZ >> 3;
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    int z = mPos.z >> 3;
     mModel.mat4x3.m[11] = z;
     return z;
 }
@@ -87,7 +87,7 @@ s32 daObjKurumajiku_c::Behavior() {
     int i;
     Vector3 mid;
     Vector3 res;
-    mAngleZ += 0x100;
+    mAngle.z += 0x100;
     // Widening the comparison to int preserves the retail branch sequence.
     int suppressed = (mFlags & 8) != 0;
     if (suppressed)
@@ -99,12 +99,12 @@ s32 daObjKurumajiku_c::Behavior() {
                 mid.x = 0;
                 mid.y = 0;
                 mid.z = 0;
-                Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+                Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
                 MTX_MultVec43(&data_ov002_0210ddd0[i], &data_020a0e68, &mid);
                 Vec3_Add(&res, &mPos, &mid);
-                rider->mPosX = res.x;
-                rider->mPosY = res.y;
-                rider->mPosZ = res.z;
+                rider->mPos.x = res.x;
+                rider->mPos.y = res.y;
+                rider->mPos.z = res.z;
             }
         }
     }
@@ -127,7 +127,7 @@ int daObjKurumajiku_c::InitResourcesFrom(Resources *resources, unsigned int ride
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     file = dBgW_Kc::LoadFile(*resources->collision);
-    mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY, *resources->clps);
+    mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngle.y, *resources->clps);
     for (i = 0; i < 4; i++) {
         mMountedActorIds[i] = 0;
         dActor_c *rider = dActor_c::Spawn(riderActorID, 0, mPos, 0, mAreaId, -1);

@@ -422,7 +422,7 @@ int daIwante_c::CheckAttacked() {
         if (actor == 0)
             return 0;
 
-        if (AngleDiff(mAngleY, HorzAngleToCPlayer()) >= 0x4000)
+        if (AngleDiff(mAngle.y, HorzAngleToCPlayer()) >= 0x4000)
             return 0;
 
         hit = 0;
@@ -609,11 +609,11 @@ void daIwante_c::SetLoweredPose() {
         mMeshCollider2.Disable();
 
     if (mPartIdx == PART_HAND_1) {
-        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae34.filePtr), mClsnMat2, 0x199, mAngleY,
-                               data_ov025_02112cc8);
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae34.filePtr), mClsnMat2, 0x199,
+                               mAngle.y, data_ov025_02112cc8);
     } else {
-        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae1c.filePtr), mClsnMat2, 0x199, mAngleY,
-                               data_ov025_02112c88);
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae1c.filePtr), mClsnMat2, 0x199,
+                               mAngle.y, data_ov025_02112c88);
     }
 
     mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -686,7 +686,7 @@ int daIwante_c::FollowPhase() {
     return 0;
 }
 
-/* Which depth band the closest player is in, by its mPosZ (no null check on the
+/* Which depth band the closest player is in, by its mPos.z (no null check on the
  * player). Returns -0xc52000 (-3154.0) if Z is below that, else -0xb50000
  * (-2896.0) if Z is below that, else 0 if Z is at or above -0xa68000 (-2664.0),
  * else -0xa68000. The decision state tests for the first two values. */
@@ -705,26 +705,26 @@ int daIwante_c::GetPlayerDepthBand() {
 
 /* Landing effect. Calls dCamera_c::func_0200d8c8 on the camera (gCamera) with the hand's
  * position and `strength` (every caller in this file passes 0x7d0000 = 2000.0). Then, with
- * mPosX/Z temporarily moved by 0x80000 (128.0) (X by -128.0 for hand 1, +128.0
+ * mPos.x/.z temporarily moved by 0x80000 (128.0) (X by -128.0 for hand 1, +128.0
  * otherwise; Z by +128.0), it spawns the huge landing dust at that shifted spot
  * and plays SE_LANDING at the object's own cached camera-space position
- * (mCamSpacePosX, which the shift does not change), and restores the position. */
+ * (mCamSpacePos, which the shift does not change), and restores the position. */
 void daIwante_c::PoundGround(int strength) {
     gCamera->func_0200d8c8(&mPos, strength);
     Vector3 saved = mPos;
     if (mPartIdx == PART_HAND_1)
-        mPosX -= 0x80000;
+        mPos.x -= 0x80000;
     else
-        mPosX += 0x80000;
-    mPosZ += 0x80000;
+        mPos.x += 0x80000;
+    mPos.z += 0x80000;
     HugeLandingDust(true);
     func_02012694(SE_LANDING, &mCamSpacePos);
     mPos = saved;
 }
 
-/* Keep a hand inside the arena. Bounds on mPosX (the values are in units and
+/* Keep a hand inside the arena. Bounds on mPos.x (the values are in units and
  * shifted << 12 here): hand 1 -800..900, hand 2 -900..800, each end widened by
- * 80 unless data_ov066_0211abe0 is HANDS_BOTH (a hand is gone). mPosZ is held
+ * 80 unless data_ov066_0211abe0 is HANDS_BOTH (a hand is gone). mPos.z is held
  * between -0xf01000 (-3841.0) and -0x73a000 (-1850.0), the upper bound raised by
  * 0x8c000 (140.0) when a hand is gone. When a bound is hit the position is
  * clamped, mHorzSpeed is zeroed and 1 is returned; otherwise 0. */
@@ -734,11 +734,11 @@ int daIwante_c::ClampToArena() {
     int ip = mPartIdx;
     if (ip == PART_HAND_2) { b1 = 0x384; lo = -0x384; }
     unsigned char flag = data_ov066_0211abe0;
-    int v = mPosX;
+    int v = mPos.x;
     if (flag != HANDS_BOTH) lo -= 0x50;
     lo = lo << 0xc;
     if (v < lo) {
-        mPosX = lo;
+        mPos.x = lo;
         mHorzSpeed = 0;
         return 1;
     }
@@ -747,21 +747,21 @@ int daIwante_c::ClampToArena() {
     if (flag != HANDS_BOTH) b1 += 0x50;
     b1 = b1 << 0xc;
     if (v > b1) {
-        mPosX = b1;
+        mPos.x = b1;
         mHorzSpeed = 0;
         return 1;
     }
-    int z = mPosZ;
+    int z = mPos.z;
     int n = 0xff0ff000;
     if (z < n) {
-        mPosZ = n;
+        mPos.z = n;
         mHorzSpeed = 0;
         return 1;
     }
     n = 0xff8c6000;
     if (flag != HANDS_BOTH) n += 0x8c000;
     if (z > n) {
-        mPosZ = n;
+        mPos.z = n;
         mHorzSpeed = 0;
         return 1;
     }
@@ -777,13 +777,13 @@ int daIwante_c::HandDefeatExecute() {
         mHorzSpeed = 0;
     }
     if (mBlendAnmModel.Finished() != 0) {
-        Particle::System::NewSimple(kPtclEyerokDefeatA, mPosX, mPosY, mPosZ);
-        Particle::System::NewSimple(kPtclEyerokDefeatB, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(kPtclEyerokDefeatA, mPos.x, mPos.y, mPos.z);
+        Particle::System::NewSimple(kPtclEyerokDefeatB, mPos.x, mPos.y, mPos.z);
         {
             Vector3 v;
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             TriplePoofDustAt(v);
         }
         func_02012694(SE_DEFEAT_POOF, &mCamSpacePos);
@@ -871,7 +871,7 @@ int daIwante_c::HandPattern9Execute() {
             }
 
             ang = Vec3_HorzAngle(&mPos, &mTargetPos);
-            ApproachAngle(&mAngleY, ang, 2, 0x400, 0x200);
+            ApproachAngle(&mAngle.y, ang, 2, 0x400, 0x200);
         }
 
         if (mStateWork1 == 1) {
@@ -896,10 +896,10 @@ int daIwante_c::HandPattern9Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, data_ov025_02112c08);
+                                       mAngle.y, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, data_ov025_02112d48);
+                                       mAngle.y, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -917,14 +917,14 @@ int daIwante_c::HandPattern9Execute() {
 
     case 4:
         SetRestHitVolume();
-        ApproachAngle(&mAngleY, 0, 2, 0x400, 0x200);
+        ApproachAngle(&mAngle.y, 0, 2, 0x400, 0x200);
         Vec3_ApproachHorz(&mPos, &mRestPos, 0x37000);
         if (Vec3_HorzDist(&mPos, &mRestPos) <= 0x37000) {
-            mPosX = mRestPos.x;
-            mPosY = mRestPos.y;
-            mPosZ = mRestPos.z;
+            mPos.x = mRestPos.x;
+            mPos.y = mRestPos.y;
+            mPos.z = mRestPos.z;
             data_ov066_0211ae08 = 2;
-            mAngleY = 0;
+            mAngle.y = 0;
             mSubState = 5;
         }
         break;
@@ -951,7 +951,7 @@ int daIwante_c::HandPattern9Enter() {
  *   0  pick the target: the closest player's position with Z lowered by 0xc8000
  *      (200.0) and held within -3154.0..-1850.0; X is a fixed spot (820.0 when
  *      data_ov066_0211ae0c is 1, otherwise -370.0, and 242.0 further toward -X
- *      for hand 1); mPrevAngleY is set to -0x4000 or 0x4000 (a quarter turn); Y is
+ *      for hand 1); mPrevAngle.y is set to -0x4000 or 0x4000 (a quarter turn); Y is
  *      the rest height + 0x1c2000 (450.0). SE_START_MOVING. -> 1 (needs a player).
  *   1  fly there at 0x28000 (40.0) per frame; on arrival set this hand's bit in
  *      data_ov066_0211ae00 and wait for both bits; then mTimer1 = 10 frames (18
@@ -959,7 +959,7 @@ int daIwante_c::HandPattern9Enter() {
  *      target Y drops to rest height + 0x1a000 (26.0) -> 2.
  *   2  after the timer, close in at 0x32000 (50.0) per frame; on arrival the
  *      landing effect plays (2000.0) and mTimer1 = 15 -> 3.
- *   3  on mTimer1 == 1 the hand jumps (mVertSpeed 0x7c000 = 124.0, mVertAccel
+ *   3  on mTimer1 == 1 the hand jumps (mSpeed.y 0x7c000 = 124.0, mVertAccel
  *      -0x14000 = -20.0, mHorzSpeed 0x1e000 = 30.0, mFlags 0x2000000, a
  *      profile-authored bit whose consumer is not recovered). On each landing the
  *      landing effect plays, mTimer1 = 15 and mStateWork0 counts it; after three
@@ -989,13 +989,13 @@ int daIwante_c::HandPattern8Execute() {
             mTargetPos.z = (int)0xff8c6000;
         }
         if (data_ov066_0211ae0c == PART_HAND_1) {
-            mPrevAngleY = -0x4000;
+            mPrevAngle.y = -0x4000;
             mTargetPos.x = 0x334000;
             if (mPartIdx == PART_HAND_1) {
                 mTargetPos.x -= 0xf2000;
             }
         } else {
-            mPrevAngleY = 0x4000;
+            mPrevAngle.y = 0x4000;
             mTargetPos.x = (int)0xffe8e000;
             if (mPartIdx == PART_HAND_1) {
                 mTargetPos.x -= 0xf2000;
@@ -1010,9 +1010,9 @@ int daIwante_c::HandPattern8Execute() {
         ApproachLinear(mPos, mTargetPos, 0x28000);
         if (Vec3_Dist(&mPos, &mTargetPos) > 0x28000)
             break;
-        mPosX = mTargetPos.x;
-        mPosY = mTargetPos.y;
-        mPosZ = mTargetPos.z;
+        mPos.x = mTargetPos.x;
+        mPos.y = mTargetPos.y;
+        mPos.z = mTargetPos.z;
         data_ov066_0211ae00 |= mPartIdx;
         if (data_ov066_0211ae00 != HANDS_BOTH)
             break;
@@ -1033,9 +1033,9 @@ int daIwante_c::HandPattern8Execute() {
         ApproachLinear(mPos, mTargetPos, 0x32000);
         if (Vec3_Dist(&mPos, &mTargetPos) > 0x32000)
             break;
-        mPosX = mTargetPos.x;
-        mPosY = mTargetPos.y;
-        mPosZ = mTargetPos.z;
+        mPos.x = mTargetPos.x;
+        mPos.y = mTargetPos.y;
+        mPos.z = mTargetPos.z;
         PoundGround(0x7d0000);
         mTimer1 = 0xf;
         mSubState = 3;
@@ -1045,7 +1045,7 @@ int daIwante_c::HandPattern8Execute() {
         if (st != 0) {
             if (st != 1)
                 break;
-            mVertSpeed = 0x7c000;
+            mSpeed.y = 0x7c000;
             mVertAccel = -0x14000;
             mHorzSpeed = 0x1e000;
             mFlags = 0x2000000;
@@ -1053,10 +1053,10 @@ int daIwante_c::HandPattern8Execute() {
         }
         if (mVertAccel == 0)
             break;
-        if (mRestPos.y < mPosY)
+        if (mRestPos.y < mPos.y)
             break;
-        mPosY = mRestPos.y;
-        mVertSpeed = 0;
+        mPos.y = mRestPos.y;
+        mSpeed.y = 0;
         mVertAccel = 0;
         mHorzSpeed = 0;
         PoundGround(0x7d0000);
@@ -1078,9 +1078,9 @@ int daIwante_c::HandPattern8Execute() {
         if (Vec3_HorzDist(&mPos, &mRestPos) > 0x28000)
             break;
         data_ov066_0211ae0c = 0;
-        mPosX = mRestPos.x;
-        mPosY = mRestPos.y;
-        mPosZ = mRestPos.z;
+        mPos.x = mRestPos.x;
+        mPos.y = mRestPos.y;
+        mPos.z = mRestPos.z;
         data_ov066_0211ae08 += 1;
         mSubState = 5;
         break;
@@ -1119,7 +1119,7 @@ int daIwante_c::HandPattern8Enter() {
  *   2  after the timer, come down at 50.0 per frame; on arrival the landing
  *      effect plays, mTimer1 = 10 and the state moves on to 7. If the player is
  *      in no depth band (GetPlayerDepthBand == 0): mTimer1 = 0x24 (36) and, if
- *      the player is less than 0x400000 (1024.0) away horizontally, mPrevAngleY is
+ *      the player is less than 0x400000 (1024.0) away horizontally, mPrevAngle.y is
  *      set to +-0x4000 toward the player's side and the hand starts a sideways
  *      run -> 3.
  *   3  sideways run: mHorzAccelStep grows (by 0x1a while mTimer1 is nonzero, by
@@ -1170,9 +1170,9 @@ int daIwante_c::HandPattern7Execute() {
         if (Vec3_Dist(&mPos, &mTargetPos) <= 0x28000) {
             mTimer1 = 0xa;
             mFlags = 0x2000000;
-            mPosX = mTargetPos.x;
-            mPosY = mTargetPos.y;
-            mPosZ = mTargetPos.z;
+            mPos.x = mTargetPos.x;
+            mPos.y = mTargetPos.y;
+            mPos.z = mTargetPos.z;
             mTargetPos.y = mRestPos.y;
             mSubState = 2;
         }
@@ -1182,9 +1182,9 @@ int daIwante_c::HandPattern7Execute() {
             ApproachLinear(mPos, mTargetPos, 0x32000);
         if (Vec3_Dist(&mPos, &mTargetPos) <= 0x32000) {
             PoundGround(0x7d0000);
-            mPosX = mTargetPos.x;
-            mPosY = mTargetPos.y;
-            mPosZ = mTargetPos.z;
+            mPos.x = mTargetPos.x;
+            mPos.y = mTargetPos.y;
+            mPos.z = mTargetPos.z;
             mTimer1 = 0xa;
             mSubState = 7;
             if (GetPlayerDepthBand() == 0) {
@@ -1196,10 +1196,10 @@ int daIwante_c::HandPattern7Execute() {
                     v.z = pp->z;
                     mTimer1 = 0x24;
                     if (Vec3_HorzDist(&mPos, &v) < 0x400000) {
-                        if (v.x < mPosX)
-                            mPrevAngleY = -0x4000;
+                        if (v.x < mPos.x)
+                            mPrevAngle.y = -0x4000;
                         else
-                            mPrevAngleY = 0x4000;
+                            mPrevAngle.y = 0x4000;
                         mHorzAccelStep = 0;
                         mHorzSpeed = 0;
                         mSubState = 3;
@@ -1218,7 +1218,7 @@ int daIwante_c::HandPattern7Execute() {
         ApproachLinear(mHorzSpeed, 0x258000, mHorzAccelStep);
         if (ClampToArena() == 1) {
             mHorzSpeed = 0;
-            mPrevAngleY = 0;
+            mPrevAngle.y = 0;
             mSubState = 7;
         }
         break;
@@ -1253,10 +1253,10 @@ int daIwante_c::HandPattern7Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, data_ov025_02112c08);
+                                       mAngle.y, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, data_ov025_02112d48);
+                                       mAngle.y, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1270,9 +1270,9 @@ int daIwante_c::HandPattern7Execute() {
             Vec3_ApproachHorz(&mPos, &mRestPos, 0x28000);
             if (Vec3_HorzDist(&mPos, &mRestPos) <= 0x28000) {
                 data_ov066_0211ae0c ^= mPartIdx;
-                mPosX = mRestPos.x;
-                mPosY = mRestPos.y;
-                mPosZ = mRestPos.z;
+                mPos.x = mRestPos.x;
+                mPos.y = mRestPos.y;
+                mPos.z = mRestPos.z;
                 data_ov066_0211ae08 += 1;
                 if (data_ov066_0211abe0 != HANDS_BOTH)
                     data_ov066_0211ae08 += 1;
@@ -1372,10 +1372,10 @@ int daIwante_c::HandPattern6Execute() {
                     v.z = pp->z;
                     mTimer1 = 0x24;
                     if (Vec3_HorzDist(&mPos, &v) < 0x400000) {
-                        if (v.x < mPosX)
-                            mPrevAngleY = -0x4000;
+                        if (v.x < mPos.x)
+                            mPrevAngle.y = -0x4000;
                         else
-                            mPrevAngleY = 0x4000;
+                            mPrevAngle.y = 0x4000;
                         mHorzAccelStep = 0;
                         mHorzSpeed = 0;
                         mSubState = 2;
@@ -1394,7 +1394,7 @@ int daIwante_c::HandPattern6Execute() {
         ApproachLinear(mHorzSpeed, 0x258000, mHorzAccelStep);
         if (ClampToArena() == 1) {
             mHorzSpeed = 0;
-            mPrevAngleY = 0;
+            mPrevAngle.y = 0;
             mSubState = 6;
         }
         break;
@@ -1429,10 +1429,10 @@ int daIwante_c::HandPattern6Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, data_ov025_02112c08);
+                                       mAngle.y, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, data_ov025_02112d48);
+                                       mAngle.y, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1445,9 +1445,9 @@ int daIwante_c::HandPattern6Execute() {
         Vec3_ApproachHorz(&mPos, &mRestPos, 0x28000);
         if (Vec3_HorzDist(&mPos, &mRestPos) <= 0x28000) {
             data_ov066_0211ae0c ^= mPartIdx;
-            mPosX = mRestPos.x;
-            mPosY = mRestPos.y;
-            mPosZ = mRestPos.z;
+            mPos.x = mRestPos.x;
+            mPos.y = mRestPos.y;
+            mPos.z = mRestPos.z;
             data_ov066_0211ae08 += 1;
             if (data_ov066_0211abe0 != HANDS_BOTH)
                 data_ov066_0211ae08 += 1;
@@ -1473,7 +1473,7 @@ int daIwante_c::HandPattern6Enter() {
 
 /* Pattern 5, hand run handler: the selected hand hops once while the other waits,
  * hittable. Sub-states:
- *   0  after mTimer1: the selected hand jumps (mVertSpeed 0x64000 = 100.0,
+ *   0  after mTimer1: the selected hand jumps (mSpeed.y 0x64000 = 100.0,
  *      mVertAccel -0xa000 = -10.0, mFlags 0x2000000) -> 1; the other hand takes
  *      the lowered pose -> 2.
  *   1  on landing: snap to rest, landing effect, data_ov066_0211ae08 += 1 (and
@@ -1494,7 +1494,7 @@ int daIwante_c::HandPattern5Execute() {
             break;
         if (data_ov066_0211ae0c == mPartIdx) {
             mVertAccel = -0xa000;
-            mVertSpeed = 0x64000;
+            mSpeed.y = 0x64000;
             mFlags = 0x2000000;
             mSubState = 1;
         } else {
@@ -1506,10 +1506,10 @@ int daIwante_c::HandPattern5Execute() {
     case 1:
         if (mVertAccel == 0)
             break;
-        if (mRestPos.y < mPosY)
+        if (mRestPos.y < mPos.y)
             break;
-        mPosY = mRestPos.y;
-        mVertSpeed = 0;
+        mPos.y = mRestPos.y;
+        mSpeed.y = 0;
         mVertAccel = 0;
         PoundGround(0x7d0000);
         data_ov066_0211ae08 += 1;
@@ -1567,10 +1567,10 @@ int daIwante_c::HandPattern5Execute() {
 
         if (mPartIdx == PART_HAND_1) {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, data_ov025_02112c08);
+                                   mAngle.y, data_ov025_02112c08);
         } else {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, data_ov025_02112d48);
+                                   mAngle.y, data_ov025_02112d48);
         }
 
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -1611,7 +1611,7 @@ int daIwante_c::HandPattern5Enter() {
  * second then returns 0, so that is the path taken when the phase is
  * PHASE_REST. Otherwise SetPoundHitVolume is applied
  * every frame. Sub-state 0: the hand whose number is in data_ov066_0211ae0c
- * jumps (mVertSpeed 0x64000 = 100.0, mVertAccel -0x14000 = -20.0) -> 1.
+ * jumps (mSpeed.y 0x64000 = 100.0, mVertAccel -0x14000 = -20.0) -> 1.
  * Sub-state 1: on landing, snap to rest, landing effect, clear this hand's bit
  * in data_ov066_0211ae0c -> 0. */
 int daIwante_c::HandPattern4Execute() {
@@ -1626,15 +1626,15 @@ int daIwante_c::HandPattern4Execute() {
         if (data_ov066_0211ae0c == mPartIdx) {
             int *p = &mSubState;
             mVertAccel = -0x14000;
-            mVertSpeed = 0x64000;
+            mSpeed.y = 0x64000;
             *p = *p + 1;
         }
         break;
     case 1:
         if (mVertAccel != 0) {
-            if (mRestPos.y >= mPosY) {
-                mPosY = mRestPos.y;
-                mVertSpeed = 0;
+            if (mRestPos.y >= mPos.y) {
+                mPos.y = mRestPos.y;
+                mSpeed.y = 0;
                 mVertAccel = 0;
                 PoundGround(0x7d0000);
                 if ((data_ov066_0211ae0c & mPartIdx) != 0)
@@ -1684,7 +1684,7 @@ int daIwante_c::HandWaitingEnter() {
 
 /* Rise state, hand run handler (the first state a hand runs). Until the phase is
  * PHASE_RISE it only waits, with the animation held at speed 0. Then: animation
- * speed 0x1000 (1.0), a hop (hand 1: mVertSpeed 0x2d000 = 45.0, mVertAccel
+ * speed 0x1000 (1.0), a hop (hand 1: mSpeed.y 0x2d000 = 45.0, mVertAccel
  * -0x2000 = -2.0; hand 2: 0xa000 = 10.0 and -0x800 = -0.5), SE_START_MOVING. The
  * hand moves toward its rest X/Z at 0x14000 (20.0) per frame; on landing it is
  * snapped to rest height and the landing effect plays. Once it has landed, is
@@ -1696,10 +1696,10 @@ int daIwante_c::HandRiseExecute() {
         if (data_ov066_0211ae04 == PHASE_RISE) {
             mBlendAnmModel.speed = 0x1000;
             if (mPartIdx == PART_HAND_1) {
-                mVertSpeed = 0x2d000;
+                mSpeed.y = 0x2d000;
                 mVertAccel = -0x2000;
             } else {
-                mVertSpeed = 0xa000;
+                mSpeed.y = 0xa000;
                 mVertAccel = -0x800;
             }
             mStateWork0 = 1;
@@ -1711,9 +1711,9 @@ int daIwante_c::HandRiseExecute() {
     Vec3_ApproachHorz(&mPos, &mRestPos, 0x14000);
     if (mVertAccel != 0) {
         int v = mRestPos.y;
-        if (v >= mPosY) {
-            mPosY = v;
-            mVertSpeed = 0;
+        if (v >= mPos.y) {
+            mPos.y = v;
+            mSpeed.y = 0;
             mVertAccel = 0;
             PoundGround(0x7d0000);
         }
@@ -2061,12 +2061,12 @@ int daIwante_c::BodyTalkExecute() {
             mTalkPlayer->SetNoControlState(5, -1, 0);
         mSubState = 1;
     } else {
-        v1.x = mPosX;
-        v1.y = mPosY;
-        v1.z = mPosZ;
-        v2.x = mPosX;
-        v2.y = mPosY;
-        v2.z = mPosZ;
+        v1.x = mPos.x;
+        v1.y = mPos.y;
+        v1.z = mPos.z;
+        v2.x = mPos.x;
+        v2.y = mPos.y;
+        v2.z = mPos.z;
         v1.y += 0x100000;
         v2.x += 0x10000;
         v2.y += 0x100000;
@@ -2089,9 +2089,9 @@ int daIwante_c::BodyTalkExecute() {
             Matrix4x3_FromRotationY(&data_020a0e68, 0);
             MTX_MultVec43(&in, &data_020a0e68, &out);
 
-            out.x += mPosX;
-            out.y += mPosY;
-            out.z += mPosZ;
+            out.x += mPos.x;
+            out.y += mPos.y;
+            out.z += mPos.z;
 
             msgid = MSG_BEFORE_FIGHT;
             if (data_ov066_0211abe0 == 0) {
@@ -2146,19 +2146,19 @@ int daIwante_c::BodyTalkEnter() {
 
 /* Dormant state, run handler (the body's first state). Each frame that the body
  * is on screen (mFlags bit 0x8, "off screen", is clear), the closest player's
- * mPosY (read as playerPos + 4, with playerPos = player + 0x5c = mPosX) is below
- * -0x300000 (-768.0) and its mPosZ (playerPos + 8) is below -0xd70000
+ * mPos.y (read as playerPos + 4, with playerPos = player + 0x5c = mPos.x) is below
+ * -0x300000 (-768.0) and its mPos.z (playerPos + 8) is below -0xd70000
  * (-3440.0), data_ov066_0211ae08 is incremented. When it exceeds 2 it is reset to
  * 0, the phase becomes PHASE_RISE and the body enters the talk state
  * (data_ov066_0211b0ac). */
 struct Vec4 { int a, b, self, d; ~Vec4(){} };
 int daIwante_c::BodyDormantExecute() {
     Vec4 sp;
-    /* Reading p->mPosY and p->mPosZ directly makes this 4 bytes shorter;
+    /* Reading p->mPos.y and p->mPos.z directly makes this 4 bytes shorter;
        the pointer to the position triple is what matches. */
     daPly_c *p = ClosestPlayer();
     if (p != 0) {
-        s32 *playerPos = &p->mPosX;
+        s32 *playerPos = &p->mPos.x;
         int v1 = playerPos[1];
         int v2 = playerPos[2];
         if (v1 < -0x300000) {
@@ -2191,33 +2191,33 @@ int daIwante_c::SetState(void *pv) {
 }
 
 /* Refresh the collision matrix mClsnMat2 from the object (rotation about Y by
- * mAngleY, translation = position) and hand it to dBgW_KcMbg::Transform. */
+ * mAngle.y, translation = position) and hand it to dBgW_KcMbg::Transform. */
 void daIwante_c::UpdateCollisionMatrix() {
-    Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
-    mClsnMat2.t.x = mPosX;
-    mClsnMat2.t.y = mPosY;
-    mClsnMat2.t.z = mPosZ;
-    mMeshCollider2.Transform(mClsnMat2, mAngleY);
+    Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
+    mClsnMat2.t.x = mPos.x;
+    mClsnMat2.t.y = mPos.y;
+    mClsnMat2.t.z = mPos.z;
+    mMeshCollider2.Transform(mClsnMat2, mAngle.y);
 }
 
 /* Refresh the model matrices. The matrix is a translation of mPos >> 3 rotated
- * by mAngleX/Y/Z and is stored in mModel2 (the body) or mBlendAnmModel (a hand).
- * A hand above its rest height also gets a drop shadow: a matrix at mPosX
- * +0x64000 (+100.0; -100.0 for hand 1), mPosY - 0x8000 (8.0 lower), mPosZ +
+ * by mAngle.x/.y/.z and is stored in mModel2 (the body) or mBlendAnmModel (a hand).
+ * A hand above its rest height also gets a drop shadow: a matrix at mPos.x
+ * +0x64000 (+100.0; -100.0 for hand 1), mPos.y - 0x8000 (8.0 lower), mPos.z +
  * 0xa0000 (160.0), each >> 3, passed to dActor_c::DropShadowRadHeight with
  * radius 0x140000 (320.0) and height 0x258000 (600.0). */
 void daIwante_c::UpdateModelMatrices() {
     int v[3];
-    Vec3_Asr(v, &mPosX, 3);
+    Vec3_Asr(v, &mPos.x, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     if (mPartIdx == PART_MAIN)
         *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)&data_020a0e68;
     else
         *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     if (mPartIdx == PART_MAIN)
         return;
-    if (mRestPos.y >= mPosY)
+    if (mRestPos.y >= mPos.y)
         return;
     {
         int d;
@@ -2225,8 +2225,8 @@ void daIwante_c::UpdateModelMatrices() {
             d = 0x64000;
         else
             d = -0x64000;
-        Matrix4x3_FromTranslation(&data_020a0e68, (mPosX + d) >> 3, (mPosY - 0x8000) >> 3,
-                                  (mPosZ + 0xa0000) >> 3);
+        Matrix4x3_FromTranslation(&data_020a0e68, (mPos.x + d) >> 3, (mPos.y - 0x8000) >> 3,
+                                  (mPos.z + 0xa0000) >> 3);
     }
     *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x140000, 0x258000, 0xf);
@@ -2296,7 +2296,7 @@ static inline u32 NewDust(u32 handle, u32 id, const Vector3 &pos) {
  * current state's run handler (the second pointer-to-member of the descriptor
  * mState points at). Then the dust burst: while mDustCounter is nonzero, on each
  * even value a position near the object is written into
- * mDustPos[mDustCounter >> 1] (sideways spread when mAngleY is nonzero, otherwise
+ * mDustPos[mDustCounter >> 1] (sideways spread when mAngle.y is nonzero, otherwise
  * a random X and +25.0 in Z, rising by mDustCounter * 10 + 35 units; in the
  * defeat state a different random spread, Z randomised too, and +150.0 up), and every frame all
  * nonzero slots have particles 0x13a and 0x13b (re)issued. The counter then goes
@@ -2321,9 +2321,9 @@ int daIwante_c::Behavior() {
             int idx = mDustCounter >> 1;
             Vector3 vin;
             Vector3 vout;
-            mDustPos[idx].x = mPosX;
-            mDustPos[idx].y = mPosY;
-            mDustPos[idx].z = mPosZ;
+            mDustPos[idx].x = mPos.x;
+            mDustPos[idx].y = mPos.y;
+            mDustPos[idx].z = mPos.z;
             vin.x = 0;
             vin.y = 0;
             vin.z = 0;
@@ -2331,9 +2331,9 @@ int daIwante_c::Behavior() {
             vout.y = 0;
             vout.z = 0;
             if (mState != &data_ov066_0211b07c) {
-                if (mAngleY != 0) {
+                if (mAngle.y != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
-                    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
+                    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngle.y - 0x4000));
                     MTX_MultVec43(&vin, &data_020a0e68, &vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
@@ -2346,9 +2346,9 @@ int daIwante_c::Behavior() {
                 }
                 mDustPos[idx].y += ((mDustCounter * 0xa) + 0x23) << 12;
             } else {
-                if (mAngleY != 0) {
+                if (mAngle.y != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
-                    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
+                    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngle.y - 0x4000));
                     MTX_MultVec43(&vin, &data_020a0e68, &vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
@@ -2391,9 +2391,9 @@ int daIwante_c::Behavior() {
     {
         mRestPos.y = mSpawnPos.y + 0x8000;
         UpdatePos(0);
-        mdCcAcPos_c.pos.x = mPosX;
-        mdCcAcPos_c.pos.y = mPosY;
-        mdCcAcPos_c.pos.z = mPosZ;
+        mdCcAcPos_c.pos.x = mPos.x;
+        mdCcAcPos_c.pos.y = mPos.y;
+        mdCcAcPos_c.pos.z = mPos.z;
         Vector3 vrel(data_ov066_0211ad18[0], data_ov066_0211ad18[1], data_ov066_0211ad18[2]);
         mdCcAcPos_c.SetPosRelativeToActor(vrel);
         UpdateModelMatrices();
@@ -2414,7 +2414,7 @@ int daIwante_c::Behavior() {
  * cylinder (radius and height 0x64000 = 100.0, flags 0x200002, vulnFlags 0, offset
  * data_ov066_0211ad18). The dust slots are cleared and mTerminalVelocity is
  * -0x64000 (-100.0).
- * Body: mPosZ -= 0x7c000 (124.0) and the result is the rest position; it spawns
+ * Body: mPos.z -= 0x7c000 (124.0) and the result is the rest position; it spawns
  * hand 1 (param1 1) at X + 0x193000 (403.0) and hand 2 (param1 2) at X -
  * 0x18c000 (396.0), keeping their uniqueIDs; resets the shared state
  * (data_ov066_0211ae10 = 0, ae08 = 0, ae0c = 0, abe4 = 1, ae04 = PHASE_DORMANT,
@@ -2500,18 +2500,18 @@ int daIwante_c::InitResources() {
 
     if (mPartIdx == PART_MAIN) {
         dActor_c *r;
-        mPosZ -= 0x7C000;
-        mRestPos.x = mPosX;
-        mRestPos.y = mPosY;
-        mRestPos.z = mPosZ;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        mPos.z -= 0x7C000;
+        mRestPos.x = mPos.x;
+        mRestPos.y = mPos.y;
+        mRestPos.z = mPos.z;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         v.x += 0x193000;
         r = dActor_c::Spawn(ACTOR_IWANTE, 1, v, 0, mAreaId, -1);
         if (r != 0)
             mHandUniqueID1 = r->uniqueID;
-        v.x = mPosX;
+        v.x = mPos.x;
         v.x -= 0x18C000;
         r = dActor_c::Spawn(ACTOR_IWANTE, 2, v, 0, mAreaId, -1);
         if (r != 0)
@@ -2522,27 +2522,27 @@ int daIwante_c::InitResources() {
         data_ov066_0211abe4 = 1;
         data_ov066_0211ae04 = PHASE_DORMANT;
         data_ov066_0211abe0 = HANDS_BOTH;
-        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae24.filePtr), mClsnMat2, 0x199, mAngleY,
-                               data_ov025_02112ca8);
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae24.filePtr), mClsnMat2, 0x199,
+                               mAngle.y, data_ov025_02112ca8);
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
         mMeshCollider2.Enable(this);
         mTimer2 = 0x64;
         SetState(&data_ov066_0211b09c);
     } else {
-        mRestPos.x = mPosX;
-        mRestPos.y = mPosY;
-        mRestPos.z = mPosZ;
-        mSpawnPos.x = mPosX;
-        mSpawnPos.y = mPosY;
-        mSpawnPos.z = mPosZ;
+        mRestPos.x = mPos.x;
+        mRestPos.y = mPos.y;
+        mRestPos.z = mPos.z;
+        mSpawnPos.x = mPos.x;
+        mSpawnPos.y = mPos.y;
+        mSpawnPos.z = mPos.z;
         if (mPartIdx == PART_HAND_1) {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, data_ov025_02112c08);
+                                   mAngle.y, data_ov025_02112c08);
             mRestPos.x -= 0x31F000;
         } else {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, data_ov025_02112d48);
+                                   mAngle.y, data_ov025_02112d48);
             mRestPos.x += 0x31F000;
         }
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);

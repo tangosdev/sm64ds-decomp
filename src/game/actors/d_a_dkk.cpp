@@ -73,11 +73,11 @@ int daDkk_c::InitResources() {
         Vector3 va;
         Vector3 vb;
         /* Far point first, then the near point. */
-        int x = mPosX;
+        int x = mPos.x;
         vb.x = x;
-        int y = mPosY;
+        int y = mPos.y;
         vb.y = y;
-        int z = mPosZ;
+        int z = mPos.z;
         va.x = x;
         vb.z = z;
         va.y = y;
@@ -136,23 +136,23 @@ int daDkk_c::Behavior() {
 void daDkk_c::StateFall() {
     Vector3 v[2];
     UpdatePos(0);
-    if (mVertSpeed >= 0)
+    if (mSpeed.y >= 0)
         mVertAccel = -0x4000;
     else
         mVertAccel = -0x8000;
-    if (mPosY > mGroundY)
+    if (mPos.y > mGroundY)
         return;
-    mPosY = mGroundY;
-    v[1].x = mPosX;
-    v[1].y = mPosY;
-    v[1].z = mPosZ;
+    mPos.y = mGroundY;
+    v[1].x = mPos.x;
+    v[1].y = mPos.y;
+    v[1].z = mPos.z;
     Earthquake(v[1], 0x7d0000);
     mTimer = 60;
     mLandCount++;
     mState = 6;
-    v[0].x = mPosX;
-    v[0].y = mPosY;
-    v[0].z = mPosZ;
+    v[0].x = mPos.x;
+    v[0].y = mPos.y;
+    v[0].z = mPos.z;
     v[0].y = v[0].y + 0x3c000;
     Particle::System::NewSimple(kPtclGrindelLanding, v[0].x, v[0].y, v[0].z);
     func_0201267c(0xc7, &mCamSpacePos);
@@ -167,22 +167,22 @@ void daDkk_c::StateLandPause() {
         return;
     if (mLandCount != 4) {
         mState = 5;
-        mVertSpeed = 0x3c000;
+        mSpeed.y = 0x3c000;
         func_0201267c(0xf4, &mCamSpacePos);
         return;
     }
     mState = 7;
-    mTurnTargetAngle = (mAngleY + 0x8000);
+    mTurnTargetAngle = (mAngle.y + 0x8000);
 }
 
-/* mState 7, the turn. Steps mAngleY toward mTurnTargetAngle; once
- * ApproachLinear reports it has arrived, copies it into mPrevAngleY, clears the
+/* mState 7, the turn. Steps mAngle.y toward mTurnTargetAngle; once
+ * ApproachLinear reports it has arrived, copies it into mPrevAngle.y, clears the
  * landing counter and goes back to state 6. */
 int daDkk_c::StateTurn() {
-    int arrived = ApproachLinear(mAngleY, mTurnTargetAngle, 0x400);
+    int arrived = ApproachLinear(mAngle.y, mTurnTargetAngle, 0x400);
     if (arrived == 0)
         return arrived;
-    mPrevAngleY = mAngleY;
+    mPrevAngle.y = mAngle.y;
     mState = 6;
     mLandCount = 0;
     mTimer = 40;

@@ -52,7 +52,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        translation to the boss's position >> 3, with y taken 0xa000 (10
        units) lower first. */
     Matrix4x3 mShadowMtx;                                  /* 0x3a8 */
-    /* InitResources copies mPosX/mPosY/mPosZ here once, in the same breath as
+    /* InitResources copies mPos.x/mPos.y/mPos.z here once, in the same breath as
        seeding both waypoint arrays with the same position. The part-2 cut-scene
        camera looks at it, the part-1 camera is placed relative to it, the key
        spawns above it, and the ..3390 and leap states turn toward it. Whether
@@ -72,7 +72,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
     Vector3 mWaypointsB[8];                                /* 0x448 */
     /* A copy of mGroundMissPos, taken by the enter handler of the state at
        data_ov073_021233d0; that state's update handler walks the boss
-       horizontally toward a point 120.0 from it along mAngleY + 0x8000.
+       horizontally toward a point 120.0 from it along mAngle.y + 0x8000.
        mGroundMissPos is where the forward ground ray found no floor, so
        this is the arena edge the boss teeters at in that state. */
     Vector3 mEdgePos; /* 0x4a8 */
@@ -110,7 +110,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        (0xff: none). */
     u8 mLandedWaypoint; /* 0x4c5 */
     /* The heading (angle, 0x10000 = a full turn) the chase and
-       return-to-arena states turn mPrevAngleY toward: the angle to the
+       return-to-arena states turn mPrevAngle.y toward: the angle to the
        player, or to mSpawnPos. */
     s16 mTargetAngle;                                      /* 0x4c6 */
     /* Which leg of the state at data_ov073_02123360 (the chase state) is
@@ -145,7 +145,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
     /* Two jobs: the step the chase state's braking legs hand ApproachLinear
        to slow mHorzSpeed to zero (0x1000 or 0x2000), and the amplitude the
        state at data_ov073_021233d0 multiplies its sine by to rock
-       mAngleX (its enter handler stores -0x1000). Named for the state that
+       mAngle.x (its enter handler stores -0x1000). Named for the state that
        sets it, like mStateScratch, since the two jobs share no one role. */
     s32 mStateParam; /* 0x4d0 */
     /* Positions of bones 2 and 3, rebuilt each frame by UpdateModelAndShadow

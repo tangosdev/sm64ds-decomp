@@ -9,6 +9,6 @@ extern struct CamMode data_020874cc;
  * starts where it is; func_02005000 then eases the offset back to 0. */
 int func_02005060(dCamera_c *cam) {
     cam->mMode = &data_020874cc;
-    cam->mBaseAngleOffset = (short)(cam->mTargetPlayer->mAngleY + 0x8000) - cam->mAngleY;
+    cam->mBaseAngleOffset = (short)(cam->mTargetPlayer->mAngle.y + 0x8000) - cam->mAngleY;
     return 1;
 }

@@ -50,7 +50,7 @@ struct daDossyCap_c : dActor_c {
     dCcAc_c mdCcAc_c;     /* 0x140 */
     /* The Dorrie wearing this cap. Behavior bails out when it is null, and
        otherwise copies the cap position out of her mCapPos triple and its two
-       angles out of mHeadRotX and mAngleY. */
+       angles out of mHeadRotX and mAngle.y. */
     daDossy_c *mCarrier; /* 0x174 */
     u8                 pad_178[0xc];
 
@@ -62,6 +62,10 @@ struct daDossyCap_c : dActor_c {
     virtual s32 Behavior();            /* slot 6 */
     virtual s32 Render();              /* slot 9 */
     virtual int OnYoshiTryEat();       /* slot 18 */
+
+    int func_ov065_021180d4();
+    void func_ov065_02118c4c();
+    int func_ov065_02119210();
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -1,20 +1,5 @@
 {
   "known": {
-    "pmf_Dealer_StateDeal_2": {
-      "src/minigames/unit020bfec0.cpp": [
-        "return:Dealer::StateFn"
-      ]
-    },
-    "pmf_Dealer_StateReveal": {
-      "src/minigames/unit020bfec0.cpp": [
-        "return:Dealer::StateFn"
-      ]
-    },
-    "pmf_MascotWalker_StateWalk_2": {
-      "src/minigames/unit020bfec0.cpp": [
-        "return:MascotWalker::StateFn"
-      ]
-    },
     "__global_destructor_chain": {
       "src/__register_global_object.c": [
         "return:DestructorChain *"
@@ -8106,6 +8091,12 @@
       ],
       "src/runtime/actor/ActorBase.cpp": [
         "return:fBaseActorInfo * *"
+      ],
+      "src/runtime/actor/d_actor.cpp": [
+        "return:void *"
+      ],
+      "src/unnamed/arm9/0201/func_0201a054.cpp": [
+        "return:void *"
       ]
     },
     "data_020a4bd4": {
@@ -16515,6 +16506,198 @@
         "param:#2 const VecFx32 *",
         "param:#3 const VecFx32 *",
         "param:#5 MtxFx43 *"
+      ]
+    },
+    "PATH_DEFS": {
+      "src/engine/path/PathPtr.cpp": [
+        "return:PathDef *"
+      ]
+    },
+    "PMi_IsInit": {
+      "src/engine/spi/PM.c": [
+        "return:unsigned short"
+      ]
+    },
+    "arc_list": {
+      "src/engine/fs/FS_Archive.cpp": [
+        "return:FSArchive *"
+      ]
+    },
+    "data_02075358": {
+      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
+        "return:char []"
+      ]
+    },
+    "data_02075f14": {
+      "include/decl_common.h": [
+        "return:char []"
+      ]
+    },
+    "data_02082314": {
+      "include/decl_common.h": [
+        "return:short"
+      ]
+    },
+    "data_02082414": {
+      "include/decl_common.h": [
+        "return:short"
+      ],
+      "src/minigames/d_s_mg_trampoline.cpp": [
+        "return:short"
+      ]
+    },
+    "data_020868d4": {
+      "src/cstd3.cpp": [
+        "return:char"
+      ]
+    },
+    "data_020868fc": {
+      "src/engine/isd/isdoverlay.cpp": [
+        "return:char"
+      ]
+    },
+    "data_0208690c": {
+      "src/engine/isd/isdoverlay.cpp": [
+        "return:char"
+      ]
+    },
+    "data_0208692c": {
+      "src/engine/isd/isdoverlay.cpp": [
+        "return:char"
+      ]
+    },
+    "data_0208696c": {
+      "src/engine/isd/isdoverlay.cpp": [
+        "return:char"
+      ]
+    },
+    "data_0208698c": {
+      "src/engine/isd/isdoverlay.cpp": [
+        "return:char"
+      ]
+    },
+    "data_020869dc": {
+      "src/engine/isd/isdoverlay.cpp": [
+        "return:char"
+      ]
+    },
+    "data_02086a08": {
+      "src/engine/isd/isdoverlay.cpp": [
+        "return:char"
+      ]
+    },
+    "data_02086a30": {
+      "src/engine/isd/isdoverlay.cpp": [
+        "return:char"
+      ]
+    },
+    "data_0209b2e4": {
+      "src/game/stages/d_s_entry.cpp": [
+        "return:unsigned char"
+      ],
+      "src/game/stages/d_s_entry_methods.cpp": [
+        "return:unsigned char"
+      ]
+    },
+    "data_0209d4d4": {
+      "src/unnamed/arm9/0201/func_02019dfc.c": [
+        "return:unsigned char"
+      ]
+    },
+    "data_0209d5b8": {
+      "src/unnamed/arm9/0201/func_0201a1bc.cpp": [
+        "return:OSThread"
+      ],
+      "src/unnamed/arm9/0201/func_0201a244.cpp": [
+        "return:OSThread"
+      ]
+    },
+    "data_0209e64c": {
+      "src/unnamed/arm9/0201/func_020197b8.cpp": [
+        "return:unsigned char"
+      ],
+      "src/unnamed/arm9/0201/func_0201fec8.cpp": [
+        "return:unsigned char"
+      ],
+      "src/unnamed/arm9/0201/func_0201ffcc.c": [
+        "return:unsigned char"
+      ],
+      "src/unnamed/arm9/0203/func_02030790.cpp": [
+        "return:unsigned char"
+      ]
+    },
+    "data_0209e660": {
+      "src/engine/oam/OAM.cpp": [
+        "return:unsigned char"
+      ],
+      "src/minigames/d_s_mg_d3d_base.cpp": [
+        "return:unsigned char"
+      ]
+    },
+    "data_0209f5f8": {
+      "src/minigames/d_s_mg_d3d_base.cpp": [
+        "return:unsigned char"
+      ],
+      "src/minigames/d_s_mini_gm.cpp": [
+        "return:unsigned char"
+      ],
+      "src/runtime/graphics/fader/d_wipe.cpp": [
+        "return:unsigned char"
+      ]
+    },
+    "data_020a0c78": {
+      "src/engine/collision/d_bg_ch_sph_crr_query.cpp": [
+        "return:CLPS"
+      ]
+    },
+    "data_020a0dd8": {
+      "src/unnamed/arm9/0203/func_0203b9bc.c": [
+        "return:TPData"
+      ]
+    },
+    "data_020a0df8": {
+      "src/unnamed/arm9/0203/func_0203b9bc.c": [
+        "return:volatile TPData []"
+      ],
+      "src/unnamed/arm9/0203/func_0203bbc0.c": [
+        "return:volatile TPData []"
+      ]
+    },
+    "data_020a0ef0": {
+      "src/engine/link/unit0203d7b8.cpp": [
+        "return:unsigned char"
+      ]
+    },
+    "data_020a94c0": {
+      "src/WBT_End.cpp": [
+        "return:int"
+      ],
+      "src/WBT_InitChild.cpp": [
+        "return:int"
+      ],
+      "src/WBT_InitParent.cpp": [
+        "return:int"
+      ],
+      "src/unnamed/arm9/0206/func_02065af0.cpp": [
+        "return:int"
+      ]
+    },
+    "fsi_card_lock_id": {
+      "include/private/fs_rom.h": [
+        "return:int"
+      ]
+    },
+    "gNextSceneParam": {
+      "include/decl_common.h": [
+        "return:unsigned int"
+      ],
+      "src/game/stages/d_scene.cpp": [
+        "return:unsigned int"
+      ]
+    },
+    "sBootJobDone": {
+      "src/game/stages/d_s_boot_methods.cpp": [
+        "return:unsigned char"
       ]
     }
   },

@@ -99,17 +99,17 @@ int daObjCtMecha08_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(gCtMechaObj08aModelFile), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj08aCollisionFile), mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj08aCollisionFile), mClsnMat, 0x199, mAngle.y,
                           data_ov035_021121b8);
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mMoveDir = 0;
 
     u8 setting = data_0209f2c0;
     mMoveTimer = data_ov065_0211c0d0[setting][mMoveDir].moveTimer;
-    mVertSpeed = data_ov065_0211c0d0[setting][mMoveDir].vertSpeed;
+    mSpeed.y = data_ov065_0211c0d0[setting][mMoveDir].vertSpeed;
     mTerminalVelocity = -0x3c000;
     return 1;
 }
@@ -122,7 +122,7 @@ int daObjCtMecha08_c::InitResources() {
    materialize its 0/1 before branching on it. */
 int daObjCtMecha08_c::Behavior() {
     if (data_0209f2c0 == CLOCK_SETTING_STOPPED) {
-        mPosY = mHomePos.y + LIFT_TRAVEL;
+        mPos.y = mHomePos.y + LIFT_TRAVEL;
         UpdateModelPosAndRotY();
         if (IsClsnInRange(0, 0) != 0)
             UpdateClsnPosAndRot();
@@ -133,8 +133,8 @@ int daObjCtMecha08_c::Behavior() {
             UpdatePos(0);
             lower = mHomePos.y;
             upper = lower + LIFT_TRAVEL;
-            if (!IsInRange(mPosY, lower, upper)) {
-                mPosY = Clamp(mPosY, lower, upper);
+            if (!IsInRange(mPos.y, lower, upper)) {
+                mPos.y = Clamp(mPos.y, lower, upper);
 
                 mMoveDir ^= 1;
 
@@ -142,7 +142,7 @@ int daObjCtMecha08_c::Behavior() {
                 u8 d = mMoveDir;
                 mMoveTimer = data_ov065_0211c0d0[setting][d].moveTimer;
                 d = mMoveDir;
-                mVertSpeed = data_ov065_0211c0d0[setting][d].vertSpeed;
+                mSpeed.y = data_ov065_0211c0d0[setting][d].vertSpeed;
                 if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
                     u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
                     mMoveTimer = (u16)((rnd % 6) * 20 + 10);

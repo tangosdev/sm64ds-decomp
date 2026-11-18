@@ -128,7 +128,7 @@ struct PicGateFilePtr : SharedFilePtr {
 void daPicGate_c::UpdateContinuousRipple() {
     if ((u8)((this->param1 >> 8) & 0x1f) == kPicSlide && !(data_0209caa0.file.flags2 & kOpened) &&
         IsStarCollectedInLevel(kGateLevel, kGateStar)) {
-        if (ApproachLinear(this->mPosX, this->mClosedPosX + kSlide, kSlideStep))
+        if (ApproachLinear(this->mPos.x, this->mClosedPosX + kSlide, kSlideStep))
             data_0209caa0.file.flags2 |= kOpened;
         this->BuildGateMatrix();
     }
@@ -356,9 +356,9 @@ s32 daPicGate_c::InitResources() {
     }
     if ((unsigned char)((param1 >> 8) & 0x1f) == kPicSlide) {
         if ((unsigned char)((param1 >> 13) & 3) == 1) {
-            mClosedPosX = mPosX;
+            mClosedPosX = mPos.x;
             if (data_0209caa0.file.flags2 & kOpened)
-                mPosX += kSlide;
+                mPos.x += kSlide;
         }
     }
     this->BuildGateMatrix();

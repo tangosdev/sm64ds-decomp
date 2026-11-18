@@ -26,7 +26,7 @@ struct daObjNumber_c : dActor_c {
     /* SpawnNumber's delay: while nonzero Behavior returns immediately and
        Render decrements it, so the popup is not drawn yet. */
     u16 mDelay;                      /* 0x14c */
-    /* Bounce. 0: rise, snap to mStartPos.y, give mVertSpeed 0xf000, go to 1.
+    /* Bounce. 0: rise, snap to mStartPos.y, give mSpeed.y 0xf000, go to 1.
        1: next fall below the floor emits particle 0xd2 and dies. */
     u8  mState;                      /* 0x14e */
 

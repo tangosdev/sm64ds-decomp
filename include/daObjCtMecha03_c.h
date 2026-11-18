@@ -19,7 +19,7 @@ struct daObjCtMecha03_c : dBgActor_c {
      * of the restoring acceleration and flips whenever it agrees in sign with
      * mSwingAngle; mSwingAccel is its magnitude; mSwingSpeed accumulates
      * mSwingAccel * mSwingDir; mSwingAngle accumulates mSwingSpeed and is
-     * copied into dActor_c::mAngleZ. mwccarm reuses dBgActor_c's 0x31e tail
+     * copied into dActor_c::mAngle.z. mwccarm reuses dBgActor_c's 0x31e tail
      * padding for mSwingDir. */
     s16 mSwingDir; /* 0x31e -- 1 at InitResources */
     s16 mSwingAccel; /* 0x320 -- data_ov065_0211c0b0[setting], re-rolled to 0xd/0x2a under setting 2 */
@@ -29,7 +29,7 @@ struct daObjCtMecha03_c : dBgActor_c {
     u16 mPauseTimer;                /* 0x328 -- DecIfAbove0_Short; gates the whole swing update */
     s32 mGroundY;                   /* 0x32c -- probe Y, then dBgCh_Gnd::clsnY on a hit */
     dExtShadowModel_c mShadowModel; /* 0x330 */
-    /* UpdateShadow builds this from mAngleY, then writes X / ground Y / Z
+    /* UpdateShadow builds this from mAngle.y, then writes X / ground Y / Z
      * into its translation before passing it to DropShadowScaleXYZ. */
     Matrix4x3 mShadowMat; /* 0x358 */
 

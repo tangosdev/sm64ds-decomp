@@ -30,9 +30,9 @@
  * FOUR FIELDS, all of them read by this class's own Behavior, ov002 0x020b6494
  * -- now `_ZN14daObjUkiyuka_c8BehaviorEv`:
  *
- *   0x320  the rest height. Behavior compares mPosY against it
+ *   0x320  the rest height. Behavior compares mPos.y against it
  *          and, when the two are equal, restarts the rest timer.
- *   0x324  the bob amplitude, multiplied by sin(phase) and subtracted from mPosY.
+ *   0x324  the bob amplitude, multiplied by sin(phase) and subtracted from mPos.y.
  *   0x328  the bob phase, stepped 0x100 a frame.
  *   0x32a  the rest timer, 0x3c frames. While DecIfAbove0_Short is counting it
  *          down Behavior does nothing but the collider range check.

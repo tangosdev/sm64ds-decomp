@@ -22,7 +22,7 @@ struct daPiano_c : dBgActor_c {
     /* Named by _ZN17dExtShadowModel_cD1Ev at +0x3d4 (D0/D1), a ROM-checked relocation. */
     dExtShadowModel_c mShadowModel3; /* 0x3d4 */
     /* UpdateShadows builds one rotation+position matrix per shadow (from
-     * mPos and mAngleY) and hands them to DropShadowRadHeight/ScaleXYZ
+     * mPos and mAngle.y) and hands them to DropShadowRadHeight/ScaleXYZ
      * alongside mShadowModel1-3. */
     Matrix4x3 mShadowMats[3]; /* 0x3fc */
     /* The factory's array-construction helper and both destructor variants

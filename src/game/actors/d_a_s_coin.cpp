@@ -10,8 +10,8 @@
  * D0 0x020f03f4 size 0x44; no destructor body in this TU.
  *
  * NOTES:
- * - SpawnStar copies the marker's position through an int * at its mPosX:
- *   member reads (marker->mPos.x or marker->mPosX, ...) and a Vector3 copy
+ * - SpawnStar copies the marker's position through an int * at its mPos.x:
+ *   member reads (marker->mPos.x, ...) and a Vector3 copy
  *   (init, ctor or assignment) are 4 bytes short. The ROM materializes
  *   &marker->mPos first; a `const Vector3 &` local to it matches, but that
  *   only moves the pin.
@@ -117,7 +117,7 @@ void daSCoin_c::SpawnStar()
         marker = (daStarBase_c *)dActor_c::FindWithActorID(0xb4, marker);
         if (marker == 0) return;
         if (mStarID == marker->mStarID) {
-            int *base = &marker->mPosX;
+            int *base = &marker->mPos.x;
             Vector3 pos;
             pos.x = base[0];
             pos.y = base[1];

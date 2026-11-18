@@ -66,7 +66,7 @@ int daObjWanwanShutter_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov014_021149b8);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov014_02114558);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov014_02114558);
     }
     return 1;
 }
@@ -101,9 +101,9 @@ void daObjWanwanShutter_c::Break() {
     Vector3 v[2];
     Sound::PlayBank3(0xf, mCamSpacePos);
     {
-        int ty = mPosY;
-        int tz = mPosZ;
-        int tx = mPosX;
+        int ty = mPos.y;
+        int tz = mPos.z;
+        int tx = mPos.x;
         v[0].x = tx;
         v[0].y = ty + 0x12c000;
         v[0].z = tz;

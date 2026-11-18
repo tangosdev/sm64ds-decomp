@@ -120,7 +120,7 @@ s32 daObjKi_Hasira_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *k = dBgW_Kc::LoadFile(RockPillar_ClsnFile);
-    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, data_ov016_02113cac);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y, data_ov016_02113cac);
 
     Spawn(0x3b, 0, mPos, 0, mAreaId, -1);
     return 1;
@@ -159,7 +159,7 @@ s32 daObjKi_Hasira_c::Behavior() {
     case 1: /* turn to face them for ten frames */
         if (mTarget != 0) {
             s16 angle = Vec3_HorzAngle(&mPos, &targetPos);
-            ApproachLinear(mAngleY, angle, 0x400);
+            ApproachLinear(mAngle.y, angle, 0x400);
             if (DecIfAbove0_Byte(&mTurnTimer) == 0)
                 mState++;
         }
@@ -168,13 +168,13 @@ s32 daObjKi_Hasira_c::Behavior() {
     case 2: { /* topple, faster every frame, and crash */
         mFallAccel += 4;
         mFallSpeed += mFallAccel;
-        mAngleX += mFallSpeed;
+        mAngle.x += mFallSpeed;
 
-        if (mAngleX > 0x3900) {
+        if (mAngle.x > 0x3900) {
             /* The crash point: 900 units out along the facing, 150 up. */
             crashPos = mPos;
-            crashPos.x += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x384000);
-            crashPos.z += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x384000);
+            crashPos.x += FX_MUL(FX_SinIdx((u16)mAngle.y >> 4), 0x384000);
+            crashPos.z += FX_MUL(FX_CosIdx((u16)mAngle.y >> 4), 0x384000);
             crashPos.y += 0x96000;
             Particle::System::NewSimple(0x107, crashPos.x, crashPos.y, crashPos.z);
             dustPos = crashPos;
@@ -214,10 +214,10 @@ s32 daObjKi_Hasira_c::CleanupResources() {
  * model matrix from all three angles, then drop the position into its
  * translation row at 1/8 scale, the model-space unit. */
 void daObjKi_Hasira_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Static-init globals (was the handwritten __sinit_ov016_02113978 shard).

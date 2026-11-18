@@ -122,7 +122,6 @@ extern "C" void func_ov007_020bc5fc(Ov007Model *model, void *files, int count);
 extern "C" void func_ov007_020bc658(Ov007Model *model, void *files, int count);
 extern "C" void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
 extern "C" Ov007Model *func_ov007_020bc6d4(void *bmd, int flags);
-extern void func_ov007_020bea44(Ov007Figure *fig);
 extern Ov007Figure *func_ov007_020beaa0(int index, int figureIndex);
 extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 
@@ -245,11 +244,11 @@ void func_ov007_020b283c(void) {
         WORK->model = 0;
     }
     if (WORK->figure != 0) {
-        func_ov007_020bea44(WORK->figure);
+        WORK->figure->func_ov007_020bea44();
         WORK->figure = 0;
     }
     if (WORK->altFigure != 0) {
-        func_ov007_020bea44(WORK->altFigure);
+        WORK->altFigure->func_ov007_020bea44();
         WORK->altFigure = 0;
     }
     for (i = 0; i < 3; i++) {

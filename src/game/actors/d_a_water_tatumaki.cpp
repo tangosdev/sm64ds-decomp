@@ -20,7 +20,7 @@
  *   Vector3 that is never read again (#821). Vector3 is non-POD, so mwccarm
  *   keeps the three stores; a POD triple without volatile was 0x178
  *   against ROM 0x190.
- * - StateDrag, InitStateDrag, StateSpin, UpdateModelMatrix: a TU-local reference to mPosX grows those
+ * - StateDrag, InitStateDrag, StateSpin, UpdateModelMatrix: a TU-local reference to mPos.x grows those
  *   functions by 4 bytes (0x190, 0x98, 0x18c, 0x74 become 0x194, 0x9c,
  *   0x190, 0x78).
  * - InitStateDrag: deleting the stores of 0 to mPullHeight and
@@ -31,7 +31,7 @@
  *   ROM 0x74. This TU sees Matrix4x3 as {Matrix3x3 r; Vector3 t}. The ROM
  *   copies twelve words with one three-pass ldm/stm.
  * - Behavior: the spray position is `Vector3 pos = mPos; pos.y += lift;`
- *   (#821). Passing mPosX, mPosY + 0x384000, mPosZ directly is 0xc8
+ *   (#821). Passing mPos.x, mPos.y + 0x384000, mPos.z directly is 0xc8
  *   against ROM 0xe0.
  * - Without #pragma defer_codegen off the sections come out in reverse
  *   source order (InitResources first, D1 last). The pragma is what puts
@@ -143,14 +143,14 @@ int daWater_Tatumaki_c::StateDrag() {
         target.x += offset.x;
         target.z += offset.z;
         ApproachLinear(this->mPullPos, target, kChaseStep);
-        player->mPosX = this->mPullPos.x;
-        player->mPosY = this->mPullPos.y;
-        player->mPosZ = this->mPullPos.z;
+        player->mPos.x = this->mPullPos.x;
+        player->mPos.y = this->mPullPos.y;
+        player->mPos.z = this->mPullPos.z;
         {
             int ang = this->HorzAngleToCPlayer() + kHalfTurn;
-            player->mAngleX = kLookDown;
-            player->mAngleY = ang;
-            player->mAngleZ = 0;
+            player->mAngle.x = kLookDown;
+            player->mAngle.y = ang;
+            player->mAngle.z = 0;
         }
         {
             const Vector3 &p = player->mPos;
@@ -238,9 +238,9 @@ int daWater_Tatumaki_c::StateSpin() {
                 pull.x += out.x;
                 pull.y += out.y;
                 pull.z += out.z;
-                player->mPosX = pull.x;
-                player->mPosY = pull.y;
-                player->mPosZ = pull.z;
+                player->mPos.x = pull.x;
+                player->mPos.y = pull.y;
+                player->mPos.z = pull.z;
             }
         }
     }
@@ -266,7 +266,7 @@ void daWater_Tatumaki_c::UpdateModelMatrix() {
     Vector3 pos;
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     /* Twelve flat words. A Matrix4x3 assignment copies r and t separately. */
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
@@ -296,9 +296,9 @@ int daWater_Tatumaki_c::Behavior() {
     pos.y += kSprayLift;
     mParticleID = Particle::System::New(mParticleID, kSprayEffect, pos.x, pos.y, pos.z, 0, 0);
 
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
 
     UpdateModelMatrix();
     mTextureTransformer.Advance();
@@ -319,9 +319,9 @@ int daWater_Tatumaki_c::InitResources() {
     mTextureTransformer.speed = kAnimSpeed;
     mAnmModel.speed = kAnimSpeed;
 
-    mCenter.x = mPosX;
-    mCenter.y = mPosY;
-    mCenter.z = mPosZ;
+    mCenter.x = mPos.x;
+    mCenter.y = mPos.y;
+    mCenter.z = mPos.z;
     mCenter.y -= kFunnelDepth;
 
     mAnmModel.SetAnim((BCA_File *)gWaterTatumakiAnimationFile.filePtr, 0, kAnimSpeed, 0);

@@ -790,7 +790,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17BgSnmHedModelFileC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call/load destination at this exact relocation site"
@@ -843,7 +843,7 @@
       "source": "0x02122208",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"

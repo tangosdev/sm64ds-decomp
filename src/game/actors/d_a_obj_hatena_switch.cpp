@@ -119,7 +119,7 @@ void daObjHatenaSwitch_c::HandleClsn(dActor_c &other) {
     if (!IsPlayerActor(&other) && !IsCrateActor(&other))
         return;
 
-    if (other.mPosY > mPosY + 0x64000)
+    if (other.mPos.y > mPos.y + 0x64000)
         mPressedThisFrame = 1;
 }
 
@@ -134,10 +134,10 @@ s32 daObjHatenaSwitch_c::InitResources() {
     UpdateModelTransform();
 
     KCL_File *staticClsn = dBgW_Kc::LoadFile(data_ov002_0210dd58);
-    mStaticMeshCollider.SetFile(staticClsn, mClsnMat, 0x199, mAngleY, data_ov002_0210d8b4);
+    mStaticMeshCollider.SetFile(staticClsn, mClsnMat, 0x199, mAngle.y, data_ov002_0210d8b4);
 
     KCL_File *movingClsn = dBgW_Kc::LoadFile(data_ov002_0210dd50);
-    mMovingMeshCollider.SetFile(movingClsn, mClsnMat, 0x199, mAngleY, data_ov002_0210d774);
+    mMovingMeshCollider.SetFile(movingClsn, mClsnMat, 0x199, mAngle.y, data_ov002_0210d774);
 
     mStaticMeshCollider.SetStoodOnCallback(&daObjHatenaSwitch_c::AfterClsnCallback);
 
@@ -212,7 +212,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
                 mActiveMeshCollider = &mMovingMeshCollider;
                 data_0209caa0.file.flags1 |= 0x80000000;
                 {
-                    Vector3 position(mPosX, mPosY + 0x64000, mPosZ);
+                    Vector3 position(mPos.x, mPos.y + 0x64000, mPos.z);
                     Particle::System::NewSimple(kPtclHatenaSwitchPressA, position.x, position.y,
                                                 position.z);
                     Particle::System::NewSimple(kPtclHatenaSwitchPressB, position.x, position.y,
@@ -220,7 +220,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
                     Particle::System::NewSimple(kPtclHatenaSwitchPressC, position.x, position.y,
                                                 position.z);
                 }
-                Particle::System::NewSimple(kPtclHatenaSwitchPressD, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclHatenaSwitchPressD, mPos.x, mPos.y, mPos.z);
                 mTalking = 1;
             }
         } else if (pressed == 0) {
@@ -268,17 +268,17 @@ void daObjHatenaSwitch_c::UpdateModelTransform() {
     Vector3 shifted;
     Vec3_Asr(&shifted, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted.x, shifted.y, shifted.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&mAnmModel.mat4x3;
 }
 
 void daObjHatenaSwitch_c::UpdateClsnTransform() {
     *(Mtx43 *)&mClsnMat = *(Mtx43 *)&mAnmModel.mat4x3;
-    mClsnMat.t.x = mPosX;
-    mClsnMat.t.y = mPosY;
-    mClsnMat.t.z = mPosZ;
-    mActiveMeshCollider->Transform(mClsnMat, mAngleY);
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y;
+    mClsnMat.t.z = mPos.z;
+    mActiveMeshCollider->Transform(mClsnMat, mAngle.y);
 }
 
 s32 daObjHatenaSwitch_c::UpdateClsnState() {

@@ -656,7 +656,7 @@ extern "C" void MenuText_ScrollRecordBoard(int n) {
 /* Draws the file-select header into plane 0 from the boot arguments: the
  * message for soundModeItem, then messages 0x1f51 and 0x1f52 in colours 0xb
  * and 0xc, swapped when backlightOn is clear. */
-extern "C" void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
+void Ov007BootArgs::func_ov007_020b7eec() {
     int r;
     func_ov007_020c0308(data_ov007_02103998, 0x18, 0xf);
     func_ov007_020c0308(data_ov007_02104598, 0x18, 0xf);
@@ -667,12 +667,12 @@ extern "C" void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
     data_ov007_02102dd8 = 0xb;
     data_ov007_02103464 = 0xac;
     data_ov007_02103468 = 4;
-    r = MenuText_MessageIDToIndex(data_ov007_020d7a50[bootArgs->soundModeItem]);
+    r = MenuText_MessageIDToIndex(data_ov007_020d7a50[this->soundModeItem]);
     r = func_ov007_020c94a0(0, r);
     MenuText_DrawString(0, (u8 *)r, 0);
     data_ov007_02103464 = 0x8c;
     data_ov007_02103468 = 0xa;
-    if (bootArgs->backlightOn != 0) {
+    if (this->backlightOn != 0) {
         data_ov007_02102dd8 = 0xb;
     } else {
         data_ov007_02102dd8 = 0xc;

@@ -5,7 +5,7 @@
  *
  * SEESAW, BOMB_SEESAW, KM1_SEESAW, KM2_YOKOSEESAW, KM3_SEESAW,
  * KM3_YOKOSEESAW and RC_SEESAW share this body. A ground pound
- * pitches mAngleX toward the side that was hit; Behavior springs it
+ * pitches mAngle.x toward the side that was hit; Behavior springs it
  * back to level. mVariant, from actorID, selects the SeesawAssets row
  * (model, collision and CLPS).
  *
@@ -138,18 +138,18 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
 
     mPoundedThisFrame = 1;
     weight = GetActorWeight(b);
-    diff = AngleDiff(angle, mAngleY);
+    diff = AngleDiff(angle, mAngle.y);
     /* The kick is weighted by the cosine of the hitter's bearing off the
      * seesaw's heading. */
-    mAngleX += (s16)(FX_MUL(FX_MUL(dist, weight), FX_CosIdx((u16)diff >> 4)) / 0x1000);
-    if (mAngleX > kMaxPitch)
-        mAngleX = kMaxPitch;
-    if (mAngleX < -kMaxPitch)
-        mAngleX = -kMaxPitch;
+    mAngle.x += (s16)(FX_MUL(FX_MUL(dist, weight), FX_CosIdx((u16)diff >> 4)) / 0x1000);
+    if (mAngle.x > kMaxPitch)
+        mAngle.x = kMaxPitch;
+    if (mAngle.x < -kMaxPitch)
+        mAngle.x = -kMaxPitch;
 }
 
 /* Spring *angle toward target by *speed. Behavior calls this with
- * &mAngleX, &mAngleXSpeed, target 0, thresh 6, accel 3, mult 3. It reads
+ * &mAngle.x, &mAngleXSpeed, target 0, thresh 6, accel 3, mult 3. It reads
  * nothing from the seesaw itself. Returns 1 once the angle has settled.
  * accel is a short: the ROM sign-extends it after the negation and
  * multiplies it with smulbb. */
@@ -174,10 +174,10 @@ int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thr
 /* Model matrix from the actor angles, translation = position >> 3
  * (world fix12 to the model's units). */
 void daObjSeesaw_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 int daObjSeesaw_c::CleanupResources() {
@@ -203,7 +203,7 @@ int daObjSeesaw_c::Behavior() {
         return 1;
     }
     if (mPoundedThisFrame == 0) {
-        SpringAngle(&mAngleX, &mAngleXSpeed, 0, 6, 3, 3);
+        SpringAngle(&mAngle.x, &mAngleXSpeed, 0, 6, 3, 3);
     }
     {
         int s = mAngleXSpeed;
@@ -213,10 +213,10 @@ int daObjSeesaw_c::Behavior() {
             mTiltSound = Sound::PlayLong(mTiltSound, 3, kTiltSound, mCamSpacePos, 0);
         }
     }
-    if (mAngleX > kMaxPitch)
-        mAngleX = kMaxPitch;
-    if (mAngleX < -kMaxPitch)
-        mAngleX = -kMaxPitch;
+    if (mAngle.x > kMaxPitch)
+        mAngle.x = kMaxPitch;
+    if (mAngle.x < -kMaxPitch)
+        mAngle.x = -kMaxPitch;
     UpdateModelMatrix();
     if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
@@ -256,7 +256,7 @@ int daObjSeesaw_c::InitResources() {
     {
         int i = mVariant;
         f = dBgW_Kc::LoadFile(*data_ov095_021374a0[i].clsnFile);
-        mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
+        mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngle.y,
                               *data_ov095_021374a0[i].clps);
     }
     /* dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback). dBgW::SetStoodOnCallback
@@ -269,7 +269,7 @@ int daObjSeesaw_c::InitResources() {
 }
 
 /* Stood-on tilt. The mesh collider calls this while another actor rests
- * on the seesaw: mAngleX keeps integrating mAngleXSpeed, and the stander's
+ * on the seesaw: mAngle.x keeps integrating mAngleXSpeed, and the stander's
  * weight (GetActorWeight) and off-centre distance drive mAngleXSpeed
  * toward a clamp. Unlike OnGroundPounded it does not kick the pitch
  * directly; it accelerates the tilt speed, hard when pushing into the
@@ -281,9 +281,9 @@ void daObjSeesaw_c::OnStoodOn(dActor_c *other) {
     mPoundedThisFrame = 1;
     int r = GetActorWeight(other);
 
-    mAngleX += mAngleXSpeed;
+    mAngle.x += mAngleXSpeed;
     int x = FX_MUL(dist, r);
-    s16 d = (s16)AngleDiff(ang, mAngleY);
+    s16 d = (s16)AngleDiff(ang, mAngle.y);
     int y = FX_MUL(x, FX_CosIdx((u16)d >> 4));
 
     int acc;

@@ -56,7 +56,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
        destructor would change D1/D0. */
     Mtx43 mShadowMatrix;                                /* 0x38c */
     State                       *mCurrentState;         /* 0x3bc */
-    /* InitResources copies mPosX/Y/Z here. Wander/chase compare Vec3_Dist
+    /* InitResources copies mPos.x/.y/.z here. Wander/chase compare Vec3_Dist
        against this triple; several states rewrite it from the live position
        and add a Y lift (0xc8000 / 0x12c000). Keep both component names and
        the Vector3 view over the same 0x3c0-0x3cc storage. 0211fd98 only reads
@@ -129,6 +129,17 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     int func_ov070_0211f62c();
     int func_ov070_0211f6e0();
     void func_ov070_02120070();
+    int func_ov070_0211ffa8();
+    int func_ov070_0211fd98();
+    int func_ov070_0211fd60();
+    int func_ov070_0211fae4();
+    int func_ov070_0211fa80();
+    int func_ov070_0211f694();
+    int func_ov070_0211f5f0();
+    short func_ov070_0211f450();
+    int func_ov070_0211f368();
+    void func_ov070_0211f100();
+    int func_ov070_0211f0a4();
 };
 
 /* Inline destructor is not the key function; OnYoshiTryEat is the first

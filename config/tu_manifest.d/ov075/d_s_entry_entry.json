@@ -249,19 +249,26 @@
       "symbol": "_ZN7dBase_cD2Ev",
       "disposition": "deadstrip",
       "reason": "compiler-emitted base-object destructor helper from return new dScEntry_c. No configured ROM symbol and no inbound relocation. Same deadstrip as dScDSMT_c."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's trivial destructor, emitted because EntryMesh::TouchAt's locals are Vector3 (the CalcLib Vec3_Sub / Vec3_Asr type). The canonical cartridge copy is arm9:0x020072c0; isolation discards this one."
     }
   ],
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16EntryMeshTextureC1Ej",
-      "canonical_symbol": "_Z13func_020178ccPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_020178ccEj",
       "canonical_module": "arm9",
       "canonical_address": "0x020178cc",
       "evidence": "retail bl at 0x0211c528 constructs the mesh texture handle through func_020178cc."
     },
     {
       "symbol": "_ZN16EntryMeshTextureD1Ev",
-      "canonical_symbol": "_Z13func_020178b4i",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_020178b4Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x020178b4",
       "evidence": "retail pool word at 0x0211c58c registers func_020178b4 as the handle destructor."
@@ -269,24 +276,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@896",
-      "to": "@962",
-      "evidence": "registration node. @714 is already ov060's bss temp; @962 is unused and the same length. Re-keyed from @714 to @725 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between. Re-keyed from @725 to @718 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @718 to @834 when the TU took NitroSDK's immediate-mode G3 commands (nitro/gx/g3imm_cmd.h) and G3_LightVector/G3_LightColor (nitro/gx/g3imm_light.h) in EntryMesh::DrawGrid, and InitGrid lost its m2c block-scope temps (measured from the compiled object). Re-keyed from @834 to @842 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @842 to @895 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @895 to @907 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @907 to @913 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @913 to @912 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @912 to @896 after the grid vectors became the SDK's VecFx32 (measured from the compiled object)."
-    },
-    {
-      "from": "@898",
-      "to": "@984",
-      "evidence": "InitGrid PMF descriptor. @716 is already ov060's data temp; @984 is unused and the same length. Re-keyed from @716 to @727 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between. Re-keyed from @727 to @720 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @720 to @836 when the TU took NitroSDK's immediate-mode G3 commands (nitro/gx/g3imm_cmd.h) and G3_LightVector/G3_LightColor (nitro/gx/g3imm_light.h) in EntryMesh::DrawGrid, and InitGrid lost its m2c block-scope temps (measured from the compiled object). Re-keyed from @836 to @844 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @844 to @897 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @897 to @909 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @909 to @915 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @915 to @914 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @914 to @898 after the grid vectors became the SDK's VecFx32 (measured from the compiled object)."
-    },
-    {
       "from": "@900",
-      "to": "@849",
-      "evidence": "UpdateRipple PMF descriptor. @718 is already ov060's data temp; @849 is unused and the same length. Re-keyed from @718 to @729 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between. Re-keyed from @729 to @722 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @722 to @838 when the TU took NitroSDK's immediate-mode G3 commands (nitro/gx/g3imm_cmd.h) and G3_LightVector/G3_LightColor (nitro/gx/g3imm_light.h) in EntryMesh::DrawGrid, and InitGrid lost its m2c block-scope temps (measured from the compiled object). Re-keyed from @838 to @846 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @846 to @899 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @899 to @911 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @911 to @917 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @917 to @916 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @916 to @900 after the grid vectors became the SDK's VecFx32 (measured from the compiled object)."
+      "to": "@962",
+      "evidence": "registration node. @714 is already ov060's bss temp; @962 is unused and the same length. Re-keyed from @714 to @725 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between. Re-keyed from @725 to @718 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @718 to @834 when the TU took NitroSDK's immediate-mode G3 commands (nitro/gx/g3imm_cmd.h) and G3_LightVector/G3_LightColor (nitro/gx/g3imm_light.h) in EntryMesh::DrawGrid, and InitGrid lost its m2c block-scope temps (measured from the compiled object). Re-keyed from @834 to @842 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @842 to @895 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @895 to @907 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @907 to @913 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @913 to @912 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @912 to @896 after the grid vectors became the SDK's VecFx32 (measured from the compiled object). Re-keyed from @901 to @900 after TouchAt's locals became Vector3 and the EntryMeshVecCopy twin went (measured from the compiled object)."
     },
     {
       "from": "@902",
+      "to": "@984",
+      "evidence": "InitGrid PMF descriptor. @716 is already ov060's data temp; @984 is unused and the same length. Re-keyed from @716 to @727 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between. Re-keyed from @727 to @720 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @720 to @836 when the TU took NitroSDK's immediate-mode G3 commands (nitro/gx/g3imm_cmd.h) and G3_LightVector/G3_LightColor (nitro/gx/g3imm_light.h) in EntryMesh::DrawGrid, and InitGrid lost its m2c block-scope temps (measured from the compiled object). Re-keyed from @836 to @844 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @844 to @897 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @897 to @909 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @909 to @915 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @915 to @914 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @914 to @898 after the grid vectors became the SDK's VecFx32 (measured from the compiled object). Re-keyed from @903 to @902 after TouchAt's locals became Vector3 and the EntryMeshVecCopy twin went (measured from the compiled object)."
+    },
+    {
+      "from": "@904",
+      "to": "@849",
+      "evidence": "UpdateRipple PMF descriptor. @718 is already ov060's data temp; @849 is unused and the same length. Re-keyed from @718 to @729 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between. Re-keyed from @729 to @722 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @722 to @838 when the TU took NitroSDK's immediate-mode G3 commands (nitro/gx/g3imm_cmd.h) and G3_LightVector/G3_LightColor (nitro/gx/g3imm_light.h) in EntryMesh::DrawGrid, and InitGrid lost its m2c block-scope temps (measured from the compiled object). Re-keyed from @838 to @846 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @846 to @899 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @899 to @911 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @911 to @917 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @917 to @916 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @916 to @900 after the grid vectors became the SDK's VecFx32 (measured from the compiled object). Re-keyed from @905 to @904 after TouchAt's locals became Vector3 and the EntryMeshVecCopy twin went (measured from the compiled object)."
+    },
+    {
+      "from": "@906",
       "to": "@851",
-      "evidence": "DrawGrid PMF descriptor. @720 is already ov060's data temp; @851 is unused and the same length. Re-keyed from @720 to @731 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between. Re-keyed from @731 to @724 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @724 to @840 when the TU took NitroSDK's immediate-mode G3 commands (nitro/gx/g3imm_cmd.h) and G3_LightVector/G3_LightColor (nitro/gx/g3imm_light.h) in EntryMesh::DrawGrid, and InitGrid lost its m2c block-scope temps (measured from the compiled object). Re-keyed from @840 to @848 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @848 to @901 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @901 to @913 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @913 to @919 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @919 to @918 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @918 to @902 after the grid vectors became the SDK's VecFx32 (measured from the compiled object)."
+      "evidence": "DrawGrid PMF descriptor. @720 is already ov060's data temp; @851 is unused and the same length. Re-keyed from @720 to @731 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between. Re-keyed from @731 to @724 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @724 to @840 when the TU took NitroSDK's immediate-mode G3 commands (nitro/gx/g3imm_cmd.h) and G3_LightVector/G3_LightColor (nitro/gx/g3imm_light.h) in EntryMesh::DrawGrid, and InitGrid lost its m2c block-scope temps (measured from the compiled object). Re-keyed from @840 to @848 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @848 to @901 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @901 to @913 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @913 to @919 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @919 to @918 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @918 to @902 after the grid vectors became the SDK's VecFx32 (measured from the compiled object). Re-keyed from @907 to @906 after TouchAt's locals became Vector3 and the EntryMeshVecCopy twin went (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -333,7 +340,7 @@
       "source": "0x0211c528",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_020178ccPvj",
+      "symbol": "_ZN13SharedFilePtr13func_020178ccEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -363,7 +370,7 @@
       "source": "0x0211c58c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_020178b4i",
+      "symbol": "_ZN13SharedFilePtr13func_020178b4Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020178b4"
@@ -652,5 +659,6 @@
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
-  }
+  },
+  "rodata": null
 }
