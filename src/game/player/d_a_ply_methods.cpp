@@ -986,7 +986,6 @@ extern dFdColor_c gSceneColorFader;
  * can lower memberwise instead of as a block move, and there a twin can still
  * be load-bearing.
  * ------------------------------------------------------------------------- */
-struct V3Quad { Vector3 a; Vector3 d; Vector3 e; Vector3 b; };
 namespace Sound { void PlayBank0(unsigned int, const Vector3 &); }
 /* Only ever an opaque pointer: the camera's extern, and func_ov002_020ceb7c's
  * parameter, which is a daPly_c (it reads mPos.y, mPlayerNo and mStateWork). */
@@ -4272,15 +4271,15 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
 }
 
 void daPly_c::JumboStarCutsceneFlying() {
-    V3Quad s;
+    Vector3 startOffset, splinePos, delta, particleOffset;
     int hlen;
     int ang;
     unsigned char *p;
 
-    s.a.x = 0; s.a.y = 0; s.a.z = 0x60000;
-    s.b.x = 0; s.b.y = 0; s.b.z = 0x60000;
-    func_ov002_020c37a4((char *)&s.b);
-    s.d.x = 0; s.d.y = 0; s.d.z = 0;
+    startOffset.x = 0; startOffset.y = 0; startOffset.z = 0x60000;
+    particleOffset.x = 0; particleOffset.y = 0; particleOffset.z = 0x60000;
+    func_ov002_020c37a4((char *)&particleOffset);
+    splinePos.x = 0; splinePos.y = 0; splinePos.z = 0;
     switch (mStateWork) {
     case 0:
         this->SetAnim(0xc1, 0, 0x1000, 0);
@@ -4291,25 +4290,25 @@ void daPly_c::JumboStarCutsceneFlying() {
         *p = *p + 1;
         /* fallthrough */
     case 1:
-        if (AnimSplinePoll((int *)&s.d) != 0) {
+        if (AnimSplinePoll((int *)&splinePos) != 0) {
             p = &this->mStateWork;
             *p = *p + 1;
             return;
         }
-        s.e.x = s.d.x - this->mPos.x;
-        s.e.y = s.d.y - this->mPos.y;
-        s.e.z = s.d.z - this->mPos.z;
-        hlen = Vec3_HorzLen(&s.e);
-        ang = cstd::atan2(s.e.x, s.e.z);
-        this->mPos.x = s.d.x;
-        this->mPos.y = s.d.y;
-        this->mPos.z = s.d.z;
-        if ((s.e.x | s.e.z) == 0) {
+        delta.x = splinePos.x - this->mPos.x;
+        delta.y = splinePos.y - this->mPos.y;
+        delta.z = splinePos.z - this->mPos.z;
+        hlen = Vec3_HorzLen(&delta);
+        ang = cstd::atan2(delta.x, delta.z);
+        this->mPos.x = splinePos.x;
+        this->mPos.y = splinePos.y;
+        this->mPos.z = splinePos.z;
+        if ((delta.x | delta.z) == 0) {
             this->mAngle.x = 0;
             this->mAngle.y = 0x7fff;
             return;
         }
-        this->mAngle.x = -cstd::atan2(s.e.y, hlen);
+        this->mAngle.x = -cstd::atan2(delta.y, hlen);
         ApproachLinear2(this->mAngle.z, 0x2000, 0x10);
         this->mAngle.y = ang;
         break;
