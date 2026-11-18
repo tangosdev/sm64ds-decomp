@@ -2589,7 +2589,7 @@ int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
 {
     mFile = fp;
     BMD_File *f = dExtSimpleModel_c::LoadFile(*mFile);
-    return ((dExtModel_c *)this)->SetFile(f, 1, n) != 0 ? 1 : 0;
+    return ((dExtModel_c *)this)->SetFile(f, 1, n) != 0;
 }
 
 /* D0, the deleting destructor. Same class shape as the D1 file beside this one;
