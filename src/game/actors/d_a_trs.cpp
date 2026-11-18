@@ -3017,7 +3017,6 @@ int daTBasket_c::Behavior()
     return 1;
 }
 
-
 /* InitResources drops param1's cap nibble with a read through this
    accessor. A plain `param1 &= 0xfff` lets mwccarm CSE the field address
    (addlt r2,r4,#8 + [r2], 0x9a4 of 0x9a0); the cartridge stores to
