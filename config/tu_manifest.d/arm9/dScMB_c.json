@@ -625,14 +625,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sPrevHeap$388",
+      "from": "sPrevHeap$390",
       "to": "sPrevHeap$390",
-      "evidence": "Re-keyed from sPrevHeap$387 when graphCallback_c::func_02034b1c became a method (measured: same .bss slot). configured name kept; the TU emits sPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged)."
+      "evidence": "Re-keyed from sPrevHeap$387 when graphCallback_c::func_02034b1c became a method (measured: same .bss slot). configured name kept; the TU emits sPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged). Re-keyed from sPrevHeap$388 to sPrevHeap$390 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "_ZGVsPrevHeap$388",
+      "from": "_ZGVsPrevHeap$390",
       "to": "_ZGVsPrevHeap$390",
-      "evidence": "Re-keyed from _ZGVsPrevHeap$387 when graphCallback_c::func_02034b1c became a method (measured: same .bss slot). configured name kept; the TU emits _ZGVsPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged)."
+      "evidence": "Re-keyed from _ZGVsPrevHeap$387 when graphCallback_c::func_02034b1c became a method (measured: same .bss slot). configured name kept; the TU emits _ZGVsPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged). Re-keyed from _ZGVsPrevHeap$388 to _ZGVsPrevHeap$390 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

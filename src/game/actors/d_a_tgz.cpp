@@ -327,9 +327,9 @@ void daTgz_c::func_ov077_02125290() {
     else
         m = &this->mAnmModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, this->mAngle.x, this->mAngle.y, this->mAngle.z);
-    m->m[9] = this->mPos.x >> 3;
-    m->m[10] = this->mPos.y >> 3;
-    m->m[11] = this->mPos.z >> 3;
+    m->t.x = this->mPos.x >> 3;
+    m->t.y = this->mPos.y >> 3;
+    m->t.z = this->mPos.z >> 3;
 }
 
 void daTgz_c::func_ov077_02125304() {
@@ -340,9 +340,9 @@ void daTgz_c::func_ov077_02125304() {
         this->func_ov077_021251d0();
     else
         this->func_ov077_02125290();
-    this->mShadowMatrix.m[9] = this->mPos.x >> 3;
-    this->mShadowMatrix.m[10] = this->mPos.y >> 3;
-    this->mShadowMatrix.m[11] = this->mPos.z >> 3;
+    this->mShadowMatrix.t.x = this->mPos.x >> 3;
+    this->mShadowMatrix.t.y = this->mPos.y >> 3;
+    this->mShadowMatrix.t.z = this->mPos.z >> 3;
     this->DropShadowRadHeight(this->mShadowModel, this->mShadowMatrix, 0x50000, 0x320000, 0xf);
 }
 

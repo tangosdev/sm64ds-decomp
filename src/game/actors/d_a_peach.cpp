@@ -188,9 +188,9 @@ int daPeach_c::IsTouchingPlayer() {
  * the two look angles through the scratch matrix at data_020a0e68. */
 void daPeach_c::UpdateModel() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     data_020a0e68 = mAnmModel.data.transforms[18];
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookHorzAngle);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mLookVertAngle);

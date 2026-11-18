@@ -723,9 +723,9 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.z = 0;
     data_020a0e68 = saved;
     MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    mHeadClsnOffset.x = data_020a0e68.m[9];
-    mHeadClsnOffset.y = data_020a0e68.m[10];
-    mHeadClsnOffset.z = data_020a0e68.m[11];
+    mHeadClsnOffset.x = data_020a0e68.t.x;
+    mHeadClsnOffset.y = data_020a0e68.t.y;
+    mHeadClsnOffset.z = data_020a0e68.t.z;
     Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
     VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 

@@ -215,9 +215,9 @@ s32 daObjKi_Hasira_c::CleanupResources() {
  * translation row at 1/8 scale, the model-space unit. */
 void daObjKi_Hasira_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Static-init globals (was the handwritten __sinit_ov016_02113978 shard).

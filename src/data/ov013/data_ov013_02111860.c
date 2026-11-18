@@ -1,0 +1,7 @@
+/* ov013 cartridge data at 0x02111860, 48 bytes. */
+#include "types.h"
+
+u32 data_ov013_02111860[12] = {
+    0xff100000, 0x0010ffff, 0x7fa5ff02, 0xff020012, 0x001480fe, 0xffffff0f,
+    0xff070023, 0x002affff, 0xffffff0b, 0xff0d0035, 0x0042ffff, 0xffffff0a,
+};

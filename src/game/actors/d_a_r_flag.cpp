@@ -52,9 +52,9 @@ daRFlag_c::~daRFlag_c() {}
  * translation is in 1/8 world units, so the position is shifted down by 3. */
 void daRFlag_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = (mPos.y + 0x3c000) >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + 0x3c000) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daRFlag_c::CleanupResources() {

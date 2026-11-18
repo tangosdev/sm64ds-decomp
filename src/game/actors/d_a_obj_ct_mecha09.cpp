@@ -77,9 +77,9 @@ void daObjCtMecha09_c::UpdateShadow() {
     if (d > 0x7d0000)
         return;
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = (mGroundY + 0x1000) >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = (mGroundY + 0x1000) >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1e0000, 0x32000, 0xfa000, 15);
 }
 
