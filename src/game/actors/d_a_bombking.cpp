@@ -437,6 +437,10 @@ int daBombking_c::EnterGetUp() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* -------------------------------------------------------------------------- */
 int daBombking_c::TickKnockback() {
     short msg;
@@ -501,8 +505,7 @@ int daBombking_c::TickKnockback() {
             if (id != 0) {
                 daPly_c *a = static_cast<daPly_c *>(dActor_c::FindWithID(id));
                 if (a != 0) {
-                    int b = (a->actorID == 0xbf);
-                    if (b != 0) {
+                    if (IsPlayerActor(a)) {
                         VecFx32 v = *(const VecFx32 *)&a->mPos;
                         if (mPos.y > v.y)
                             a->Unk_020c6a10(1);
