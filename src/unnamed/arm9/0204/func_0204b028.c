@@ -26,7 +26,8 @@ void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
     u32 id;
     u32 v;
 
-    /* polygonIDs.current, read through the whole word: the field read does not match */
+    /* Kept (#821 r76): `id = sys->polygonIDs.current` swaps r0/r2 at the load (measured on
+       SPLDraw_DirectionalBillboard); only a copy through v matches, a register pin. */
     v = *(u32 *)&sys->polygonIDs << 14;
     id = v >> 26;
     v = mgr->mPolygonAttr | 0xc0;
