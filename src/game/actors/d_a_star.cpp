@@ -1478,14 +1478,12 @@ void daStar_c::StateWaitMarker() {
     mdCc_c.flags &= ~1;
 
     {
-        int r0 = (gGameMode == 1) ? 1 : 0;
-        daPly_c *r3 = static_cast<daPly_c *>(actor->mHitActor);
-        if (r0 == 0) return;
-        if (r3 == 0) return;
+        daPly_c *player = static_cast<daPly_c *>(actor->mHitActor);
+        if (!IsVsMode() || player == 0) return;
 
         mBits.noPickup = 1;
         mHorzSpeed = 0xc000;
-        mPrevAngle.y = GetAngleToCamera(r3->mPlayerNo) + 0x8000;
+        mPrevAngle.y = GetAngleToCamera(player->mPlayerNo) + 0x8000;
     }
 }
 
@@ -2505,9 +2503,9 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
     dist = Vec3_Dist(&vec[0], &mCamPos);
 
     unsigned short mode = mCamSeq;
-    flag = (((mode == 100 && (dist > 0x3e8000 || dist < 0x1f4000)) ||
-             (mode != 100 && dist > 0x3e8000)) &&
-            IsAreaShowing(mSavedAreaId)) ? 1 : 0;
+    flag = ((mode == 100 && (dist > 0x3e8000 || dist < 0x1f4000)) ||
+            (mode != 100 && dist > 0x3e8000)) &&
+           IsAreaShowing(mSavedAreaId);
 
     while (1) {
         if (r6 >= 0x10)
