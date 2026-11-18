@@ -219,6 +219,8 @@ int daObjDlPyramid_c::InitResources() {
     UpdateModelMatrix();
     UpdateClsnMatrix();
     KCL_File *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
+    /* Kept (#821 r76): genuine; this TU defines the CLPS block as its bytes and CLPS_Block is
+       opaque (CLPS.h). */
     mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngle.y, *(CLPS_Block *)&data_ov024_021129f0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
