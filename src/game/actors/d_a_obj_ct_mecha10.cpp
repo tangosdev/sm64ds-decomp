@@ -35,8 +35,8 @@
  * func_ov035_0211168c (CT_MECHA12L).
  */
 
-// Notes (each measured): the widened int idMatch / isMecha12L stay (folding
-// the actorID tests into the ifs reorders the body). dBgW_Kc::SetEdgeToleranceShift and
+// Notes (each measured): the actorID tests go through IsActorID (testing
+// actorID directly in the ifs reorders the body). dBgW_Kc::SetEdgeToleranceShift and
 // dBgW::SetBeforeClsnCallback are the out-of-line stores into the collider's
 // edgeToleranceShift and beforeClsnCallback; d_bg_w.cpp defines them.
 // Both data_ov035_02111ef0 stores stay (one local
@@ -117,16 +117,16 @@ daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA12S() {
     return new daObjCtMecha10_c();
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* The cog that carries Mario (CT_MECHA10, actor 0x77) is the only one with a
    collision mesh; the other two profiles are scenery and load a model alone.
    Either way the dwell and the step magnitude come out of the same two tables,
    indexed by the state this function just chose. */
 int daObjCtMecha10_c::InitResources() {
-    /* Both ID tests are widened into one int and branched on. Folding them
-       into the ifs reorders the body (see the file banner). */
-    int idMatch;
-    idMatch = (actorID == ACTOR_CT_MECHA10);
-    if (idMatch) {
+    if (IsActorID(this, ACTOR_CT_MECHA10)) {
         mModel.SetFile(dExtSimpleModel_c::LoadFile(gCtMechaObj10ModelFile), 1, -1);
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
@@ -136,8 +136,7 @@ int daObjCtMecha10_c::InitResources() {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
         mRotationState = 0;
     } else {
-        idMatch = (actorID == ACTOR_CT_MECHA12L);
-        if (idMatch)
+        if (IsActorID(this, ACTOR_CT_MECHA12L))
             mModel.SetFile(dExtSimpleModel_c::LoadFile(gCtMechaObj12lModelFile), 1, -1);
         else
             mModel.SetFile(dExtSimpleModel_c::LoadFile(gCtMechaObj12sModelFile), 1, -1);
@@ -205,8 +204,7 @@ int daObjCtMecha10_c::CleanupResources() {
         gCtMechaObj10ModelFile.Release();
         gCtMechaObj10CollisionFile.Release();
     } else {
-        int isMecha12L = (actorID == ACTOR_CT_MECHA12L);
-        if (isMecha12L)
+        if (IsActorID(this, ACTOR_CT_MECHA12L))
             gCtMechaObj12lModelFile.Release();
         else
             gCtMechaObj12sModelFile.Release();

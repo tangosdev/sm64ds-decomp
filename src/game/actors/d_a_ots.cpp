@@ -58,8 +58,8 @@
  * - BehaviorCommon: the mStateTimer increment stays unsigned short (ldrh).
  * - 02115f98 keeps integer-array scratch vectors; its vector helpers receive
  *   explicit Vector3 pointer views so these locals stay POD.
- * - bool-widening `int isD8 = (int)(actorID == kBigBullyActorId)` / `isBf` in
- *   CheckMarioCollision / ActKnockback: the temporary is load-bearing.
+ * - CheckMarioCollision / ActKnockback test the actor IDs through IsActorID /
+ *   IsPlayerActor. Testing actorID directly in the if changes the code.
  * - CleanupResources and InitResourcesCommon read the config block through
  *   mFileTable every time; caching it in a local size-DIFFs.
  * - ActBackUp: `mPrevAngle.y += 0x8000` is the match form (a separate read
@@ -184,6 +184,10 @@ extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* -------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method
  *
@@ -213,8 +217,7 @@ int daOts_c::InitResourcesCommon()
     mdCcAc_c.Init(this, mFileTable->cylinderRadius, mFileTable->cylinderHeight, 0x200000,
                   kHitAttackMask | kHitEgg);
     {
-        int isD9 = (int)(actorID == kChillBullyActorId);
-        if (isD9) {
+        if (IsActorID(this, kChillBullyActorId)) {
             mdCcAc_c.vulnFlags |= kHitBit40000;
         }
     }
@@ -381,6 +384,10 @@ void daOts_c::func_ov064_02116bac(){
     DropShadowRadHeight(this->mShadowModel, tail().mShadowMtx, h, d + 0x28000, 0xf);
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == kPlayerActorId;
+}
+
 /* -------------------------------------------------------------------------- */
 /* The hit reaction: what the actor does when its collider is touched. Does
  * nothing in STATE_KNOCKED_BACK, or unless the other collider's owner is the
@@ -424,8 +431,7 @@ void daOts_c::CheckMarioCollision() {
         return;
 
     {
-        int isBf = (int)(hitPlayer->actorID == kPlayerActorId);
-        if (!isBf)
+        if (!IsPlayerActor(hitPlayer))
             return;
     }
 
@@ -458,8 +464,7 @@ void daOts_c::CheckMarioCollision() {
     }
 
     {
-        int isD8 = (int)(this->actorID == kBigBullyActorId);
-        if (!isD8 && (hitFlags & kHitMegaChar)) {
+        if (!IsActorID(this, kBigBullyActorId) && (hitFlags & kHitMegaChar)) {
             Vector3_16 v;
             v.x = 0x2000;
             v.y = 0;
@@ -530,8 +535,7 @@ void daOts_c::CheckMarioCollision() {
 
     this->mPrevAngle.y = (s16)(this->mAngle.y + 0x8000);
     {
-        int isD8 = (int)(this->actorID == kBigBullyActorId);
-        if (!isD8)
+        if (!IsActorID(this, kBigBullyActorId))
             this->mHorzSpeed = kHurtRecoilSpeed;
         else
             this->mHorzSpeed = kHurtRecoilSpeedBigBully;
@@ -638,8 +642,7 @@ void daOts_c::ActChaseMario() {
  * hops. */
 void daOts_c::ActKnockback() {
     if (ApproachLinear(this->mHorzSpeed, 0, tail().mHorzDecel) != 0) {
-        int b = (this->actorID == kBigBullyActorId);
-        int lim = b ? 0x14 : 0xa;
+        int lim = IsActorID(this, kBigBullyActorId) ? 0x14 : 0xa;
         if (tail().mHopCount < 2) {
             if (this->mWithMeshClsn.IsOnGround()) {
                 unsigned char *p = &tail().mHopCount;

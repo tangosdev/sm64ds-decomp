@@ -295,6 +295,10 @@ void daWanwan2_c::func_ov100_0214344c() {
     }
 }
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 /* -------------------------------------------------------------------------- */
 /* The actor kept at the chain's last link (mLinkPos[5]). While
    mChainEndActorID is 0 it is spawned (once Spawn succeeds): SILVER_STAR (0xb3) normally, or
@@ -308,8 +312,7 @@ void daWanwan2_c::func_ov100_021435e8() {
     if (this->mChainEndDone != 0)
         return;
 
-    int flag = (gGameMode == 1);
-    if (!flag) {
+    if (!IsVsMode()) {
         if (this->mChainEndActorID == 0) {
             dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_SILVER_STAR, 0, this->mLinkPos[5], 0,
                                           this->mAreaId, -1);
@@ -609,8 +612,7 @@ int daWanwan2_c::Behavior()
         HugeLandingDust(true);
     }
 
-    int flag = (gGameMode == 1);
-    if (flag != 0 && mCoinTimer == 0) {
+    if (IsVsMode() && mCoinTimer == 0) {
         int q16 = 0x10000 / mPathNodeIndex;
         short spd = (short)q16;
         ClosestPlayer();

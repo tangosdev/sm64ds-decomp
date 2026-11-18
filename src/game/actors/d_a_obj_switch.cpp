@@ -397,9 +397,8 @@ void daObjSwitch_c::StateUnpressedMain() {
 }
 
 void daObjSwitch_c::StateExpiredMain() {
-    unsigned short v = actorID;
-    int b = (v == 0xc);
-    if (!b) Event::ClearBit(mEventBit);
+    if (!IsStarSwitch(this))
+        Event::ClearBit(mEventBit);
     SetState(3);
 }
 

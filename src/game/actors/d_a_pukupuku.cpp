@@ -147,9 +147,12 @@ int daPukupuku_c::Behavior() {
     return 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 int daPukupuku_c::Render() {
-    int b = ((mFlags & 0x40000) != 0);
-    if (b)
+    if (IsInYoshiMouth(this))
         return 1;
     mAnmModel.Render(0);
     return 1;
@@ -222,6 +225,10 @@ int daPukupuku_c::StatePause() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* Move the hit cylinder to its body offset, then hurt the player touching
  * it unless the player is vanished. */
 void daPukupuku_c::CheckPlayerHit() {
@@ -236,8 +243,7 @@ void daPukupuku_c::CheckPlayerHit() {
             return;
         {
             daPly_c *a = (daPly_c *)dActor_c::FindWithID(id);
-            int b = (a->actorID == 0xbf);
-            if (b == 0)
+            if (!IsPlayerActor(a))
                 return;
             if (a->mIsVanish != 0)
                 return;

@@ -85,6 +85,10 @@ s32 daObjCloset_c::CleanupResources() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == kPlayerActor;
+}
+
 s32 daObjCloset_c::Behavior() {
     Vector3 selfPos, frontPos, playerPos;
     Vector3 actorPos;
@@ -155,8 +159,7 @@ s32 daObjCloset_c::Behavior() {
             dActor_c *actor = dActor_c::FindWithID(id);
             if (actor == 0)
                 continue;
-            int isMatch = (actor->actorID == kPlayerActor);
-            if (isMatch == 0)
+            if (!IsPlayerActor(actor))
                 continue;
             short angleToActor;
             int diff;

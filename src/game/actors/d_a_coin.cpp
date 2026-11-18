@@ -709,6 +709,10 @@ void daCoin_c::StateDrop() {
     }
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 s32 daCoin_c::CleanupResources()
 {
     /* Vtable slot 3. Releases the files this coin's own type loaded, gives up its
@@ -720,8 +724,7 @@ s32 daCoin_c::CleanupResources()
     extern SharedFilePtr *const data_ov002_020ff060[];
 
     dActor_c *manager;
-    int isRed = (actorID == 0x121);
-    if (isRed != 0)
+    if (IsActorID(this, 0x121))
         data_ov002_0210d9a8.Release();
     if (mCoinType == COIN_BLUE) {
         data_ov002_020ff06c[mCoinType]->Release();
@@ -730,8 +733,7 @@ s32 daCoin_c::CleanupResources()
     UntrackStar(mTrackStarID);
     manager = dActor_c::FindWithID(mPuzzleManagerID);
     if (manager != 0) {
-        int isFlCoin = (manager->actorID == 0x4f);
-        if (isFlCoin != 0) {
+        if (IsActorID(manager, 0x4f)) {
             if (((daObjFl_Coin_c *)manager)->mLiveCoinCount != 0) {
                 ((daObjFl_Coin_c *)manager)->mLiveCoinCount--;
             }

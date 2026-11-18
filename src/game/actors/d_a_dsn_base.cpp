@@ -131,6 +131,10 @@ void daDsnBase_c::StateRest() {
     mTimer = (rollHigh % 10 + 20);
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* State 2, the slam. Integrates the fall at 0x4000 a frame; on reaching the
  * stored ground (0x394) snaps to it, stops, moves to state 3 and lands:
  * the Thwomp (DOSUN) raises its landing dust, Grindel spawns particle 0x2e,
@@ -146,8 +150,7 @@ void daDsnBase_c::StateSlam() {
     mSpeed.y = 0;
     mState = 3;
     mTimer = 10;
-    int isDosun = (actorID == kDosunActorID);
-    if (isDosun != 0) {
+    if (IsActorID(this, kDosunActorID)) {
         HugeLandingDust(true);
     } else {
         dustPos.x = mPos.x;

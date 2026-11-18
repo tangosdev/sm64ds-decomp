@@ -682,6 +682,18 @@ void daObjBlockS_c::SpawnBreakCoins() {
     mCoinsPaid = 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* Reacts to what touched the crate, from the first cylinder's hit state.
  * Does nothing while mBreakTimer runs. A set mFlags 0x20000 or 0x40000 (the
  * yoshi-mouth bits) enters STATE_IN_MOUTH. Otherwise, if the cylinder has an
@@ -705,17 +717,10 @@ void daObjBlockS_c::HandleHits() {
 
     if (mBreakTimer != 0) return;
 
-    fl = mFlags;
-    {
-        int b1 = ((fl & ACTOR_FLAG_YOSHI_MOUTH_A) != 0);
-        if (b1 != 0) {
-            SetState(STATE_IN_MOUTH);
-        } else {
-            int b2 = ((fl & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
-            if (b2 != 0) {
-                SetState(STATE_IN_MOUTH);
-            }
-        }
+    if (IsBeingEaten(this)) {
+        SetState(STATE_IN_MOUTH);
+    } else if (IsInYoshiMouth(this)) {
+        SetState(STATE_IN_MOUTH);
     }
 
     if (mdCcAcPos_c1.otherOwner == 0) return;
@@ -732,8 +737,8 @@ void daObjBlockS_c::HandleHits() {
     a = static_cast<daPly_c *>(dActor_c::FindWithID(mdCcAcPos_c1.otherOwner));
     if (a == 0) return;
     {
-        int bf = (int)(((dActor_c *)a)->actorID == ACTOR_PLAYER);
-        if (bf == 0) return;
+        if (!IsPlayerActor(a))
+            return;
     }
 
     fl = mdCcAcPos_c1.hitFlags;
@@ -793,6 +798,10 @@ void daObjBlockS_c::Kill()
     SetState(STATE_BROKEN);
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* Wall test. Returns early while mWallCooldown, decremented by one per call,
  * is still nonzero after the decrement (set to 3, the next two calls return
  * early). If the dBgCh_Actr reports a wall hit: a wall owned by
@@ -810,8 +819,7 @@ void daObjBlockS_c::HandleWallHit() {
         if (wr->GetClsnID() != -1) {
             dActor_c *a = dActor_c::FindWithID((u32)wr->GetClsnID());
             if (a != 0) {
-                int isF = (a->actorID == ACTOR_BLOCK_L);
-                if (isF == 0) {
+                if (!IsActorID(a, ACTOR_BLOCK_L)) {
                     Kill();
                     return;
                 }
@@ -1111,8 +1119,7 @@ int daObjBlockS_c::Render()
     if (mState == STATE_BROKEN)
         return 1;
     {
-        int b = ((mFlags & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
-        if (b)
+        if (IsInYoshiMouth(this))
             return 1;
     }
     mModel.Render(0);

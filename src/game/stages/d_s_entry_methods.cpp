@@ -975,6 +975,10 @@ static inline int IsEntryScene(const dScEntry_c *scene) {
     return scene->actorID == 6;
 }
 
+static inline int IsResultScene(const dScEntry_c *scene) {
+    return scene->actorID == 7;
+}
+
 void dScEntry_c::EnterQuitConfirm() {
     void *fh;
 
@@ -2006,8 +2010,7 @@ s32 dScEntry_c::Behavior() {
         return 1;
 
     if (data_0209fc68 != 0) {
-        int t = (data_0209fc68 == 6);
-        if (t != 0)
+        if (HasConnectionError())
             HandlePlayerDisconnect(reinterpret_cast<const StepSet *>(&data_ov075_0211d930));
     }
 
@@ -2035,8 +2038,7 @@ s32 dScEntry_c::InitResources() {
     func_0200f2cc();
 
     {
-        int isResult = (actorID == 7);
-        if (isResult || param1 != 0 || func_0203d9b4() != 0) {
+        if (IsResultScene(this) || param1 != 0 || func_0203d9b4() != 0) {
             LoadTextNarcs();
             LoadArchive(0);
             LoadArchive(1);
@@ -2083,8 +2085,7 @@ s32 dScEntry_c::InitResources() {
     LoadFont3D();
 
     {
-        int isEntry = (actorID == 6);
-        if (isEntry) {
+        if (IsEntryScene(this)) {
             InitEntryResources();
             if (param1 == 0) {
                 if (func_0203da3c() == 0) {
@@ -2107,8 +2108,7 @@ s32 dScEntry_c::InitResources() {
     Sound::LoadInitialGroup(0x2b);
 
     {
-        int isEntry = (actorID == 6);
-        if (isEntry) {
+        if (IsEntryScene(this)) {
             if (param1 < 2) {
                 Sound::LoadAndSetMusic_Layer1(0x4c);
             }

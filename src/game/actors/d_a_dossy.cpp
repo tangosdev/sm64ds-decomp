@@ -569,12 +569,15 @@ void daDossy_c::func_ov065_021182e4()
     }
 }
 
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 int daDossy_c::func_ov065_02118248()
 {
     int i;
 
-    int hidden = (int)((mFlags & 8) != 0);
-    if (hidden != 0) {
+    if (IsOffScreen(this)) {
         for (i = 0; i < 7; i++) {
             if (mPlatforms[i].mClsn.IsEnabled())
                 mPlatforms[i].mClsn.Disable();
@@ -588,6 +591,10 @@ int daDossy_c::func_ov065_02118248()
     return 0;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 int daDossyCap_c::func_ov065_021180d4() {
     daPly_c *player;
     u32 id;
@@ -598,9 +605,7 @@ int daDossyCap_c::func_ov065_021180d4() {
     if (id != 0 && (this->mdCcAc_c.hitFlags & 0x400000)) {
         player = (daPly_c *)dActor_c::FindWithID(id);
         if (player != 0) {
-            int isPlayer = (int)(player->actorID == 0xbf);
-            if (isPlayer != 0 && player->mIsAirborne == 0
-                && player->Unk_020c9e5c(5) == 0) {
+            if (IsPlayerActor(player) && player->mIsAirborne == 0 && player->Unk_020c9e5c(5) == 0) {
                 Vector3 *playerPos = &player->mPos;
                 Vector3 pos = *playerPos;
                 int idx = (u16)player->mAngle.y >> 4;

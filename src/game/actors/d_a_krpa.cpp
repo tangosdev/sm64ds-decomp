@@ -317,6 +317,14 @@ void daKrpa_c::TrackClosestPlayer() {
     this->mPlayer = player;
     ApproachLinear(this->mAngle.y, Vec3_HorzAngle(&this->mPos, &player->mPos), 0x800);
 }
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 void daKrpa_c::HandlePlayerHit() {
     u32 id = this->mdCcAcPos_c.otherOwner;
     if (id == 0)
@@ -324,12 +332,10 @@ void daKrpa_c::HandlePlayerHit() {
     dActor_c *found = dActor_c::FindWithID(id);
     if (found == 0)
         return;
-    int isPlayer = (found->actorID == 0xbf);
-    if (isPlayer == 0)
+    if (!IsPlayerActor(found))
         return;
     daPly_c *player = (daPly_c *)found;
-    int beingEaten = ((this->mFlags & 0x20000) != 0);
-    if (beingEaten != 0) {
+    if (IsBeingEaten(this)) {
         this->ChangeState(2);
         return;
     }

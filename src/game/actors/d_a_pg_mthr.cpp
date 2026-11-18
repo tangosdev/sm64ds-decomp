@@ -380,6 +380,10 @@ void daPgMthr_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     }
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 void daPgMthr_c::CheckFollow() {
     daPly_c *p = ClosestPlayer();
     dActor_c *held;
@@ -396,8 +400,7 @@ void daPgMthr_c::CheckFollow() {
         return;
     /* (int) of the compare is the longer body. A plain != is 0xa8, ROM is 0xb4. */
     {
-        int baby = (int)(held->actorID == ACTOR_BABY_PENGUIN);
-        if (baby == 0)
+        if (!IsActorID(held, ACTOR_BABY_PENGUIN))
             return;
     }
     if (held->param1 != BABY_OWN)

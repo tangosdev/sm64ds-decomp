@@ -319,6 +319,10 @@ void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
     }
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* Both model matrices are edited through the shared scratch matrix
    data_020a0e68: copied out whole, transformed in place, copied back.  The
    slot-29 calls are this class's own OnAimedAtWithEgg, dispatched virtually
@@ -328,8 +332,7 @@ void daGmch_c::UpdateDrawMatrices()
     extern Matrix4x3 data_020a0e68;
     extern Vector3 data_ov081_02128ef8;
 
-    int inMouth = (int)((mFlags & MFLAG_YOSHI_MOUTH_B) != 0);
-    if (inMouth)
+    if (IsInYoshiMouth(this))
         return;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);

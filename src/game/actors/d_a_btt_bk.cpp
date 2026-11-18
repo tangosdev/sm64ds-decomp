@@ -64,6 +64,14 @@ s32 daBttBk_c::OnYoshiTryEat() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
 /* Collision reaction, run from state 0's update: a carrier found by
  * func_02010304 is stored in mCarrier and enters state 1; otherwise, against
  * actor id 0xbf, mFlags bit 17 enters state 2 and a hitFlags bit 4 contact
@@ -80,11 +88,9 @@ void daBttBk_c::HandleCollision() {
     dActor_c *other = dActor_c::FindWithID(mdCcAc_c.otherOwner);
     if (other == 0)
         return;
-    int isId0xbf = (int)(other->actorID == 0xbf);
-    if (isId0xbf == 0)
+    if (!IsPlayerActor(other))
         return;
-    int inYoshiMouthA = (int)((mFlags & 0x20000) != 0);
-    if (inYoshiMouthA) {
+    if (IsBeingEaten(this)) {
         SetState(2);
         return;
     }
@@ -175,10 +181,6 @@ void daBttBk_c::UpdateModelTransform() {
     }
 }
 
-static inline int IsBeingEaten(dActor_c *actor) {
-    return (actor->mFlags & 0x20000) != 0;
-}
-
 static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
 }
@@ -201,6 +203,10 @@ int daBttBk_c::StateYoshiMouthInit() {
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 /* State 1 update: copies the carrier's angles; breaks the crate unless
  * mFlags bit 8 is set and bit 13 clear. */
 int daBttBk_c::StateCarriedMain() {
@@ -209,12 +215,9 @@ int daBttBk_c::StateCarriedMain() {
     mPrevAngle.x = mAngle.x;
     mPrevAngle.y = mAngle.y;
     {
-        int flags = mFlags;
-        int hasBit8 = (int)((flags & 0x100) != 0);
         do {
-            if (hasBit8 != 0) {
-                int hasBit13 = (int)((flags & 0x2000) != 0);
-                if (hasBit13 == 0)
+            if (IsFlagSet(this, 0x100)) {
+                if (!IsFlagSet(this, 0x2000))
                     break;
             }
             {

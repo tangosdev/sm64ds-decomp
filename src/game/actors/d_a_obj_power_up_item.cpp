@@ -27,8 +27,6 @@
  *  - StateOpening still writes mWobbleAngle through a `short*` pun:
  *    `mWobbleAngle += 0x2000` loads it zero-extended (u16) where the ROM
  *    sign-extends (s16) -- one word different.
- *  - Several bodies keep `(long long)` intermediate spellings and the
- *    `(int)((x & flag) != 0)` bool-widening idiom from byte matching.
  */
 
 #pragma defer_codegen off
@@ -99,6 +97,14 @@ daObjPowerUpItem_c::~daObjPowerUpItem_c()
 {
 }
 
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* Update for a resting flower. Unless its param1 is FLOWER_PARAM_PERSISTENT it
  * counts mLifeTimer down and, once that reaches zero, marks itself for
  * destruction (not while the 0x20000 / 0x40000 yoshi-mouth bits are set).
@@ -106,15 +112,15 @@ daObjPowerUpItem_c::~daObjPowerUpItem_c()
  * flower. */
 void daObjPowerUpItem_c::StateResting()
 {
-    int flags;
     VecFx32 pos;
 
     do {
         if (param1 == FLOWER_PARAM_PERSISTENT) break;
         if (DecIfAbove0_Byte(&mLifeTimer) != 0) break;
-        flags = mFlags;
-        if ((int)((flags & 0x40000) != 0) != 0) break;
-        if ((int)((flags & 0x20000) != 0) != 0) break;
+        if (IsInYoshiMouth(this))
+            break;
+        if (IsBeingEaten(this))
+            break;
         MarkForDestruction();
     } while (0);
 
@@ -284,6 +290,18 @@ void daObjPowerUpItem_c::UpdateState() {
   (this->*data_ov002_021097bc[j].pmf[1])();
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
+static inline int IsHoldingObject(daPly_c *player) {
+    return player->mHeldObj != 0;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
 /* Pickup. Looks up the actor whose id sits in the flower's collider
  * (mdCcAc_c.otherOwner) and, if it is a daPly_c that is not collecting a cap,
  * not holding a MONKEY_THIEF and (as Yoshi) not holding a MONKEY_STAR in its
@@ -300,29 +318,19 @@ void daObjPowerUpItem_c::CheckPickup() {
     player = (daPly_c *)dActor_c::FindWithID(id);
     if (player == 0) return;
 
-    {
-        int b = (int)(player->actorID == ACTOR_PLAYER);
-        if (b == 0) return;
-    }
+    if (!IsPlayerActor(player))
+        return;
 
     if (player->IsCollectingCap() != 0) return;
 
-    {
-        dActor_c *held = player->mHeldObj;
-        int t = (int)(held != 0);
-        if (t != 0) {
-            int b = (int)(held->actorID == ACTOR_MONKEY_THIEF);
-            if (b != 0) return;
-        }
+    if (IsHoldingObject(player)) {
+        if (IsActorID(player->mHeldObj, ACTOR_MONKEY_THIEF))
+            return;
     }
 
-    {
-        u32 flags = mFlags;
-        int t = (int)((flags & 0x20000) != 0);
-        if (t != 0) {
-            mLifeTimer = 100;
-            return;
-        }
+    if (IsBeingEaten(this)) {
+        mLifeTimer = 100;
+        return;
     }
 
     switch (player->param1) {
@@ -360,8 +368,7 @@ void daObjPowerUpItem_c::CheckPickup() {
  * bit is set. */
 void daObjPowerUpItem_c::DropShadow() {
     int r3;
-    int b = (int)((mFlags & 0x40000) != 0);
-    if (b != 0)
+    if (IsInYoshiMouth(this))
         return;
     mShadowMat = mOpenModel.mat4x3;
     mShadowMat.t.y = mGroundY >> 3;
@@ -394,30 +401,30 @@ s32 daObjPowerUpItem_c::CleanupResources()
 
 int daObjPowerUpItem_c::Render()
 {
-  int f = (int)((mFlags & 0x40000) != 0);
-  if (f != 0) return 1;
-  /* blinks while mLifeTimer is below 0x2d */
-  unsigned char st = mLifeTimer;
-  if (st < 45 && (st & 1))
-      return 1;
-  switch (mState) {
-  case FLOWER_STATE_LAUNCHED:
-      mCloseModel.Render(&mScale);
-      break;
-  case FLOWER_STATE_OPENING:
-      mOpenModel.Render(&mScale);
-      break;
-  case FLOWER_STATE_RESTING:
-      mOpenModel.Render(&mScale);
-      break;
-  }
-  return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
+    /* blinks while mLifeTimer is below 0x2d */
+    unsigned char st = mLifeTimer;
+    if (st < 45 && (st & 1))
+        return 1;
+    switch (mState) {
+    case FLOWER_STATE_LAUNCHED:
+        mCloseModel.Render(&mScale);
+        break;
+    case FLOWER_STATE_OPENING:
+        mOpenModel.Render(&mScale);
+        break;
+    case FLOWER_STATE_RESTING:
+        mOpenModel.Render(&mScale);
+        break;
+    }
+    return 1;
 }
 
 int daObjPowerUpItem_c::Behavior()
 {
-    int b = (int)((mFlags & 0x40000) != 0);
-    if (b != 0) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
     mScale.x = 0xfa0;
     mScale.y = 0xfa0;
     mScale.z = 0xfa0;

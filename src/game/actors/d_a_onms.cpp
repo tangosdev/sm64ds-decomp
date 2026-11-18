@@ -471,6 +471,10 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     mdCcAcPos_c.radius = 0x1a9000;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 void daOnms_c::CheckPlayerHit()
 {
     unsigned int id = mdCcAcPos_c.otherOwner;
@@ -479,8 +483,8 @@ void daOnms_c::CheckPlayerHit()
     if (o == 0) return;
     /* PLAYER is actor 0xbf. A flag, not `if (o->actorID != 0xbf)`: the
        direct test differs. */
-    int b = (o->actorID == 0xbf);
-    if (b == 0) return;
+    if (!IsPlayerActor(o))
+        return;
     int f = mdCcAcPos_c.hitFlags;
     daPly_c *player = (daPly_c *)o;
     if (f & 0x40) {

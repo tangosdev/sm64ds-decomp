@@ -263,6 +263,10 @@ s32 dScMgRoulette_c::InitResources() {
     return 1;
 }
 
+static inline int IsSpinStopped(const RouletteBoard &board) {
+    return board.mSpinSpeed == 0;
+}
+
 /* One frame of the round, by mPhase: 1 deals the racers out one at a time,
    2 runs the countdown and scores the board, 3 pays out per landed tile and
    4 announces the result. The racer update loops run every frame. */
@@ -363,8 +367,7 @@ s32 dScMgRoulette_c::Behavior() {
         break;
     }
     case 3: {
-        int stopped = mBoard.mSpinSpeed == 0;
-        if (stopped != 0) {
+        if (IsSpinStopped(mBoard)) {
             mPromptEnabled = 0;
             short wait = mPhaseTimer;
             mPhaseTimer -= 1;
@@ -445,8 +448,7 @@ s32 dScMgRoulette_c::Render() {
     Roulette_DrawResultsThunk(this);
 
     {
-        int idle = (int)(mBoard.mSpinSpeed == 0);
-        if (idle != 0) {
+        if (IsSpinStopped(mBoard)) {
             if (mPhase < 8) {
                 if (data_020a0db0 & 8) {
                     s16 idx = mBoard.mStopTile;

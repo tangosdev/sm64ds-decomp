@@ -480,8 +480,7 @@ int daObjHatenaBlock_c::Render()
         if (mState == STATE_POPPED)
             break;
         if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
-            int b = (actorID == ACTOR_HATENA_BLOCK);
-            if (b != 0) {
+            if (IsActorID(this, ACTOR_HATENA_BLOCK)) {
                 mAnmModel.Render(0);
                 break;
             }
@@ -585,8 +584,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
     mModel.mat4x3.t.z = mPos.z >> 3;
     if (data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)
         return;
-    int b = (int)(actorID == ACTOR_HATENA_BLOCK);
-    if (b == 0)
+    if (!IsActorID(this, ACTOR_HATENA_BLOCK))
         return;
     mAnmModel.mat4x3 = mModel.mat4x3;
 }
@@ -671,8 +669,7 @@ void daObjHatenaBlock_c::EnterIdle() {
 void daObjHatenaBlock_c::UpdateIdle() {
     daPly_c *player;
     if (!(data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)) {
-        int b = (int)(actorID == ACTOR_HATENA_BLOCK);
-        if (b)
+        if (IsActorID(this, ACTOR_HATENA_BLOCK))
             return;
     }
     player = ClosestPlayer();

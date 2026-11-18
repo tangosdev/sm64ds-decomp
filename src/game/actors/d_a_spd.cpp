@@ -440,29 +440,26 @@ int daSpd_c::func_ov071_0211fb0c() {
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
 int daSpd_c::func_ov071_0211fa54() {
-    int b0 = (int)((mFlags & 0x40000) != 0);
-    if (b0 != 0) {
+    if (IsInYoshiMouth(this)) {
         int *src = &mEatingPlayer->mPos.x;
         mPos.x = src[0];
         mPos.y = src[1];
         mPos.z = src[2];
     }
-    {
-        int v = mFlags;
-        int b1 = (int)((v & 0x80000) != 0);
-        if (b1 != 0) {
-            SetState(7);
-        } else {
-            int b2 = (int)((v & 0x20000) != 0);
-            if (b2 == 0) {
-                int b3 = (int)((v & 0x40000) != 0);
-                if (b3 == 0) {
-                    mEatingPlayer = 0;
-                    SetState(2);
-                }
-            }
-        }
+    if (IsFlagSet(this, 0x80000)) {
+        SetState(7);
+    } else if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
+        mEatingPlayer = 0;
+        SetState(2);
     }
     mdCcAc_c.Clear();
     return 1;
@@ -539,8 +536,7 @@ int daSpd_c::func_ov071_0211f694() {
 }
 
 void daSpd_c::func_ov071_0211f524() {
-    int b = (int)((mFlags & 0x40000) != 0);
-    if (b) {
+    if (IsInYoshiMouth(this)) {
         if (mState == 0)
             return;
     }

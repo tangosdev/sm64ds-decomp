@@ -189,11 +189,14 @@ int daObjSeesaw_c::Render() {
     return 1;
 }
 
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 int daObjSeesaw_c::Behavior() {
     /* The 0/1 temporary is the ROM's movne/moveq/cmp. A direct test
      * of the bit is three instructions shorter. */
-    int offScreen = ((mFlags & kFlagOffScreen) != 0);
-    if (offScreen != 0) {
+    if (IsOffScreen(this)) {
         if (mMeshCollider.IsEnabled())
             mMeshCollider.Disable();
         return 1;

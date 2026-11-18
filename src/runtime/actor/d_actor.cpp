@@ -87,6 +87,10 @@ struct ActorList {
 };
 ActorList data_0209b468;
 
+static inline int IsGameMode(int mode) {
+    return gGameMode == mode;
+}
+
 /* Constructor first in source: reverse emission puts C1/C2 above the
    destructor. Both variants are this one body. */
 dActor_c::dActor_c() : mActorListNode(this) {
@@ -120,10 +124,9 @@ dActor_c::dActor_c() : mActorListNode(this) {
         SpawnInfo<void> *info = (SpawnInfo<void> *)table[actorID];
         mFlags = info->actorFlags;
         {
-            int isMode2 = (gGameMode == 2);
             int clipDistance;
             int farDistance = info->farDistance;
-            if (isMode2)
+            if (IsGameMode(2))
                 clipDistance = info->clipDistance + 0x7d0000;
             else
                 clipDistance = info->clipDistance;

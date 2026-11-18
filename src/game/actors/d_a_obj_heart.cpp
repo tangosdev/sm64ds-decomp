@@ -67,6 +67,10 @@ s32 daObjHeart_c::Render() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 s32 daObjHeart_c::Behavior() {
     s32 spin = 0x1000;
     DecIfAbove0_Byte(&mHealTimer);
@@ -79,8 +83,7 @@ s32 daObjHeart_c::Behavior() {
         if (mHealTimer == 0) {
             dActor_c *other = dActor_c::FindWithID(mdCcAc_c.otherOwner);
             if (other != 0) {
-                int isPlayer = (int)(other->actorID == 0xbf);
-                if (isPlayer != 0) {
+                if (IsPlayerActor(other)) {
                     s32 scaled = other->mHorzSpeed / 0x1000;
                     s32 amount = 0x100;
                     if (scaled >= 8) {

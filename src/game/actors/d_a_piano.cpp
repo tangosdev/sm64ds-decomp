@@ -241,6 +241,10 @@ void daPiano_c::InitStateAttack() {
     this->mAttackTimer = 30;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* State-1 body, run every frame: lunge at the target and bite any player
  * caught by the cylinders. Gives up (back to state 0) when the target is
  * gone or farther than 939.0 at a frame boundary. */
@@ -266,8 +270,7 @@ void daPiano_c::StateAttack() {
             victim = static_cast<daPly_c *>(dActor_c::FindWithID((unsigned int)id));
             if (victim != 0) {
                 /* The actor profile is PLAYER before the daPly_c-specific call. */
-                int isPlayer = (victim->actorID == 0xbf);
-                if (isPlayer) {
+                if (IsPlayerActor(victim)) {
                     hurtPos = this->mPos;
                     victim->Hurt(hurtPos, 3, 0xc000, 1, 0, 1);
                 }

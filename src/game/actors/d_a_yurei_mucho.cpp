@@ -223,12 +223,16 @@ int daYurei_Mucho_c::Behavior()
     return 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* -------------------------------------------------------------------------- */
 /* dActor_c vtable slot 9. */
 int daYurei_Mucho_c::Render()
 {
-    int b = ((mFlags & 0x40000) != 0);
-    if (b) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
     mAnmModel.Render(0);
     return 1;
 }
@@ -521,6 +525,10 @@ int daYurei_Mucho_c::UpdateBumped() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* -------------------------------------------------------------------------- */
 /* The collision response, called once from Behavior. */
 void daYurei_Mucho_c::HandleCollision() {
@@ -580,8 +588,8 @@ void daYurei_Mucho_c::HandleCollision() {
         return;
     }
     {
-        int b = (p->actorID == 0xbf);
-        if (b == 0) return;
+        if (!IsPlayerActor(p))
+            return;
     }
     if (p->mIsMetal == 1 || p->IsOnShell() == 1) {
         KillWithCoins();

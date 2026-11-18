@@ -13,8 +13,8 @@
  *   does not bind to Vector3 &.
  * - dActor_c::func_0200f760 clears cylinder +0x18 bit 2 unless the closest
  *   player's byte at +0x6fb is set. No recovered name.
- * - UpdateCircling `if (actorID == kBigMrI)` is 0x154->0x148. The (int)
- *   flag stays. CheckAttacks' egg test and its player test are each
+ * - UpdateCircling `if (actorID == kBigMrI)` is 0x154->0x148, so it goes
+ *   through IsActorID. CheckAttacks' egg test and its player test are each
  *   0x17c->0x170; both at once 0x17c->0x164.
  * - St_Wait_Main `mAngle.y += mHorzSpeed` is 0x44->0x48.
  * - St_Attack_Main `(u16)mAngle.x/.y/.z` is 44 words off at 0x314. The
@@ -143,6 +143,9 @@ daEykn_c::~daEykn_c()
 {
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
 
 /* Accumulates the yaw the eye turns while following a player around it in one
  * direction. Turning the other way, or too slowly, for 0x2e frames starts the
@@ -150,12 +153,10 @@ daEykn_c::~daEykn_c()
 int daEykn_c::UpdateCircling()
 {
     int delta;
-    int isBig;
     int limit;
 
     delta = (short)(mAngle.y - mTurnRefAngleY);
-    isBig = (actorID == kBigMrI);
-    if (isBig != 0)
+    if (IsActorID(this, kBigMrI))
         limit = kBigTurnLimit;
     else
         limit = kSmallTurnLimit;
@@ -284,6 +285,9 @@ void daEykn_c::LookForPlayer()
     SetState(1);
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == kPlayer;
+}
 
 /* An egg (actor 9) or an explosion kills the eye. A player (actor 0xbf)
  * touching it is hurt, unless hit flag 0x40000 is set, which kills the eye
@@ -304,8 +308,8 @@ void daEykn_c::CheckAttacks()
     daPly_c *f = static_cast<daPly_c *>(FindWithID(mdCcAcPos_c.otherOwner));
     if (f == 0) return;
 
-    int isPlayer = (int)(f->actorID == kPlayer);
-    if (!isPlayer) return;
+    if (!IsPlayerActor(f))
+        return;
 
     if (mdCcAcPos_c.hitFlags & kKillHit) {
         mParticleID0 =
@@ -388,8 +392,6 @@ int daEykn_c::St_Die_Main()
         break;
     case 2: {
         int scale;
-        unsigned short kind;
-        int isSmall;
         if (ApproachLinear(mScale, 0xa4, 0xa4) != 0) {
             mSubState++;
         }
@@ -397,22 +399,17 @@ int daEykn_c::St_Die_Main()
         dActor_c::mScale.x = scale;
         dActor_c::mScale.y = scale;
         dActor_c::mScale.z = scale;
-        kind = actorID;
-        isSmall = (kind == kSmallMrI);
-        if (isSmall != 0) {
+        if (IsActorID(this, kSmallMrI)) {
             mdCcAcPos_c.radius = mScale * 0x55;
         } else {
-            int isBig = (kind == kBigMrI);
-            if (isBig != 0) {
+            if (IsActorID(this, kBigMrI)) {
                 mdCcAcPos_c.radius = mScale * 0x55;
             }
         }
         break;
     }
     case 3: {
-        unsigned short kind = actorID;
-        int isSmall = (kind == kSmallMrI);
-        if (isSmall != 0) {
+        if (IsActorID(this, kSmallMrI)) {
             /* Plain field copies are 13 words off. */
             int yadj, zcopy, y, z, x;
             Vector3 pos;
@@ -428,8 +425,7 @@ int daEykn_c::St_Die_Main()
             Spawn(kBlueCoin, 2, pos, 0, mAreaId, -1);
             PoofDust();
         } else {
-            int isBig = (kind == kBigMrI);
-            if (isBig != 0) {
+            if (IsActorID(this, kBigMrI)) {
                 unsigned char star = (param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, mPos, 4);
                 Particle::System::NewSimple(kPtclTriplePoofA, mPos.x, mPos.y, mPos.z);
@@ -535,7 +531,6 @@ int daEykn_c::St_Attack_Main()
             s32 scale;
             s32 round;
             s16 s;
-            int isBig;
             int param;
 
             px = mPos.x;
@@ -564,8 +559,7 @@ int daEykn_c::St_Attack_Main()
 
             rot.x = Vec3_VertAngle(&pos, &target2);
 
-            isBig = (actorID == kBigMrI);
-            if (isBig != 0)
+            if (IsActorID(this, kBigMrI))
                 param = 1;
             else
                 param = 0;
@@ -728,9 +722,7 @@ s32 daEykn_c::InitResources()
     if (!mShadowModel.InitCylinder())
         return 0;
 
-    unsigned short kind = actorID;
-    int isSmall = (kind == kSmallMrI);
-    if (isSmall) {
+    if (IsActorID(this, kSmallMrI)) {
         Vector3 v;
         v.x = 0;
         v.y = -0x4b000;
@@ -741,8 +733,7 @@ s32 daEykn_c::InitResources()
         dActor_c::mScale.z = 0x1000;
         mScale = 0x1000;
     } else {
-        int isBig = (kind == kBigMrI);
-        if (isBig) {
+        if (IsActorID(this, kBigMrI)) {
             Vector3 v;
             v.x = 0;
             v.y = -0x96000;

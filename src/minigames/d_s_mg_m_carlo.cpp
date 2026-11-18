@@ -250,6 +250,10 @@ int dScMgMCarlo_c::CanEndState(int mode) {
     return 0;
 }
 
+static inline int HasSelectedPair() {
+    return sMCarloFirstPick != 0 && sMCarloSecondPick != 0;
+}
+
 /* Slot 6: the round, on the s16 state at mRoundState. Case 1 arms the prompt
  * blink and falls through into case 2 on purpose. gMgScene is
  * the active scene (dScMgBase_c.h declares it void *), so it is cast at
@@ -289,8 +293,7 @@ s32 dScMgMCarlo_c::Behavior() {
             } else {
                 int revealLimit = mRoundProgress + 18;
                 if (visibleCards >= revealLimit) {
-                    int hasSelectedPair = (sMCarloFirstPick != 0 && sMCarloSecondPick != 0);
-                    if (hasSelectedPair == 0)
+                    if (!HasSelectedPair())
                         sMCarloDealProgress = revealLimit << 12;
                 }
             }

@@ -523,8 +523,7 @@ int daKrb_c::func_ov084_021298d0() {
             if (id != 0) {
                 dActor_c *r = dActor_c::FindWithID(id);
                 if (r != 0) {
-                    int b = (r->actorID == ACTOR_KURIKING);
-                    if (b != 0) {
+                    if (IsActorID(r, ACTOR_KURIKING)) {
                         SpawnCoin();
                         func_ov084_02129498();
                     }
@@ -717,13 +716,17 @@ void daKrb_c::func_ov084_02129cf4(fx32 distThresh) {
     mInitAngleY = Vec3_HorzAngle(&mPos, &ppos);
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
 /* Collision reaction: something touched this Goomba, decide what it did.
  *
  * `flags` is hitFlags (the collision word at 0x1a0) and `other` the actor found
  * through otherOwner (0x1a4). Type ids are the debug-table profile numbers this
  * class is registered under -- 200 KURIBO, 201 KURIBO_S, 202 KURIBO_L, and 191
- * for a daPly_c -- so `myType` is which of the three Goomba sizes WE are, not
- * what hit us. mDeathState is set to the DEATH_* value for the hit, and
+ * for a daPly_c -- so the IsActorID(this, ...) tests ask which of the three
+ * Goomba sizes WE are, not what hit us. mDeathState is set to the DEATH_* value for the hit, and
  * Behavior's mDeathState != 0 path plays it out. Hit-bit names are dCc_c.h's
  * best-effort table (HIT_*). In the order tested:
  *   HIT_MEGA (not KURIBO_S): cap released, then KillByInvincibleChar with
@@ -754,10 +757,10 @@ void daKrb_c::func_ov084_02129cf4(fx32 distThresh) {
  * slide kick adds the attacker's horizontal speed to its own; one hit by a
  * dive adds 0x20.
  *
- * `variantMatch` and `typeMatch` are scratch booleans, and materializing them
- * instead of testing inline is deliberate: mwccarm emits the comparison into a
- * register and then re-tests it, which is the shape the cartridge has. Folding
- * either back into its `if` collapses the pair. See notes/matching-style.md 3. */
+ * The actor-ID tests go through IsActorID and IsPlayerActor: the
+ * int-returning predicates leave the compare materialized and re-tested, which
+ * is the shape the cartridge has. Testing actorID directly in the `if`
+ * collapses the pair. */
 void daKrb_c::func_ov084_02129ed4() {
     Vector3_16 killDirNormal;
     Vector3_16 killDirVariant;
@@ -774,9 +777,6 @@ void daKrb_c::func_ov084_02129ed4() {
     u32 flags;
     s32 turnAround;
     s32 hurtKnockback;
-    u16 myType;
-    s32 variantMatch;
-    s32 typeMatch;
     u32 id;
 
     id = mdCcAc_c.otherOwner;
@@ -789,19 +789,15 @@ void daKrb_c::func_ov084_02129ed4() {
     flags = mdCcAc_c.hitFlags;
     hurtKnockback = 0xc000; /* 12.0 */
     mLastHitFlags = flags;
-    myType = actorID;
     turnAround = 0;
     if (mGoombaType == daKrb_c::GOOMBA_KING_MINION)
         hurtKnockback = 0x5000; /* 5.0 */
-    variantMatch = (myType == ACTOR_KURIBO_S);
-
-    if (variantMatch == 0 && (flags & HIT_MEGA)) {
+    if (!IsActorID(this, ACTOR_KURIBO_S) && (flags & HIT_MEGA)) {
         capReleaseOnHit.x = 0;
         capReleaseOnHit.y = 0x6c000;
         capReleaseOnHit.z = 0; /* 108.0 */
         ReleaseCap(capReleaseOnHit);
-        typeMatch = (actorID == ACTOR_KURIBO);
-        if (typeMatch != 0) {
+        if (IsActorID(this, ACTOR_KURIBO)) {
             killDirNormal.x = -0x2000;
             killDirNormal.y = 0;
             killDirNormal.z = 0;
@@ -828,8 +824,7 @@ void daKrb_c::func_ov084_02129ed4() {
         mAnmModel.SetAnim((BCA_File *)data_ov084_02130cd0.filePtr, 0x40000000, 0x1000, 0);
         mDeathState = daKrb_c::DEATH_FIRE;
     } else {
-        variantMatch = (myType == ACTOR_KURIBO_L);
-        if (variantMatch == 0) {
+        if (!IsActorID(this, ACTOR_KURIBO_L)) {
             if (flags & HIT_UNLISTED_20000) {
                 mDeathState = daKrb_c::DEATH_HIT_20000;
                 mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
@@ -849,8 +844,7 @@ void daKrb_c::func_ov084_02129ed4() {
                 mDeathState = daKrb_c::DEATH_PUNCHED;
                 turnAround = 1;
             } else if (!(flags & HIT_YOSHI_TONGUE)) {
-                typeMatch = ((other)->actorID == ACTOR_PLAYER);
-                if (typeMatch != 0) {
+                if (IsPlayerActor(other)) {
                     if (other->mIsMetal != 0) {
                         capReleaseOnKill.x = 0;
                         capReleaseOnKill.y = 0x6c000;
@@ -902,8 +896,7 @@ void daKrb_c::func_ov084_02129ed4() {
                 }
             }
         } else {
-            typeMatch = ((other)->actorID == ACTOR_PLAYER);
-            if (typeMatch != 0) {
+            if (IsPlayerActor(other)) {
                 {
                     const Vector3 &p = other->mPos;
                     playerPosJump = p;
@@ -1740,13 +1733,10 @@ int daKrb_c::InitResources() {
     mCoinType = COIN_PLAIN;
 
     {
-        int id = actorID;
-        int cond = (id == ACTOR_KURIBO_S);
-        if (cond != false) {
+        if (IsActorID(this, ACTOR_KURIBO_S)) {
             mGoombaType = GOOMBA_SMALL;
         } else {
-            cond = (id == ACTOR_KURIBO);
-            if (cond != false) {
+            if (IsActorID(this, ACTOR_KURIBO)) {
                 if (param1 == 0xeeee || param1 == 0xeeef) {
                     mGoombaType = GOOMBA_KING_MINION;
                     mFlags &= ~2;
