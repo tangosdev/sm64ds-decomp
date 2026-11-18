@@ -48,10 +48,6 @@ enum daMip_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 
-namespace Sound {
-bool PlaySub(u32, u32, u32, int, bool);
-}
-
 /* ground probe / collision */
 int SurfaceInfo_TestFlag0x20(int *);
 

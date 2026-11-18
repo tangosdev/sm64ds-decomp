@@ -34,6 +34,7 @@
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
+#include "Sound.h"
 
 struct BCA_File;
 struct BMD_File;
@@ -69,9 +70,6 @@ KinopioModelFile gKinopioModelFile(ASSET_KINOPIO_BMD);
 KinopioAnimFile gKinopioIdleAnimFile(ASSET_KINOPIO_WAIT1_BCA);
 KinopioAnimFile gKinopioTalkAnimFile(ASSET_KINOPIO_WAIT2_BCA);
 
-namespace Sound {
-bool PlaySub(u32, u32, u32, int, bool);
-}
 
 extern "C" {
 

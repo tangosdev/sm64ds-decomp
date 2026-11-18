@@ -550,7 +550,7 @@
       "ordinal": 71
     },
     {
-      "symbol": "_ZN5Sound7PlaySubEjjjib",
+      "symbol": "_ZN5Sound7PlaySubEjjjii",
       "address": "0x02012be0",
       "legacy_source": "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp",
       "size": "0x0000014c",
