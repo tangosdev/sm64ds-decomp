@@ -1260,7 +1260,7 @@ s32 dScMgSlot1_c::Behavior() {
         }
         break;
     case 6: {
-        int done = (BET_ICON(&mBetIcon)->mPayoutTicks == 0) ? 1 : 0;
+        int done = BET_ICON(&mBetIcon)->mPayoutTicks == 0;
         if (done != 0) {
             Mg_SubmitScore(mCredits);
             if (DecIfAbove0_Byte(&mStateTimer) == 0) {
