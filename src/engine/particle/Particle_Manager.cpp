@@ -69,21 +69,6 @@ struct DefinitionFlags {
     unsigned : 2;
 };
 
-/* Particle::System::callbackFlags as the update and draw walks test it. */
-struct SystemState {
-    u32 stop : 1;
-    u32 : 1;
-    u32 skipUpdate : 1;
-    u32 skipDraw : 1;
-    u32 : 28;
-};
-
-static inline SystemState &StateOf(Particle::System *system) {
-    /* Kept (#821 r76): not measured; System::callbackFlags takes u32 mask writes in four files, and
-       SystemState is not a type the SDK or pret names. */
-    return *(SystemState *)&system->callbackFlags;
-}
-
 extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles,
                                int minPolygonID, unsigned short maxPolygonID) {
     int i;
@@ -276,12 +261,12 @@ extern "C" void func_02049f58(Particle::Manager *manager) {
     do {
         Particle::SystemDefinition::Data *data = system->mDefinition->data;
         next = system->next;
-        if (StateOf(system).skipUpdate == 0) {
+        if (system->skipUpdate == 0) {
             func_0204a730(manager, system);
         }
         if (((data->flags << 17) >> 31 != 0 && data->callbackValue != 0 &&
              system->age > data->callbackValue) ||
-            StateOf(system).stop != 0) {
+            system->terminate != 0) {
             if (system->particles.count == 0 && system->particles2.count == 0) {
                 func_0204d9a0(&manager->mFreeSystems,
                               func_0204d8e8(&manager->mActiveSystems, system));
@@ -300,7 +285,7 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
         return;
     do {
         manager->mCurrentSystem = system;
-        if (StateOf(system).skipDraw == 0) {
+        if (system->skipDraw == 0) {
             func_0204a5c8(manager);
         }
         system = system->next;

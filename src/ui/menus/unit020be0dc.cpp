@@ -222,10 +222,10 @@ void Ov007Figure::func_ov007_020beb80() {
             }
             sys->emitInterval = (((frames << 2) >> 12) + 1);
             sys->callbackVelocity = vel;
-            sys->callbackFlags &= ~2;
+            sys->stopGenerate = 0;
             *(Vec3Words *)&sys->position = *(Vec3Words *)pos;
         } else {
-            sys->callbackFlags |= 2;
+            sys->stopGenerate = 1;
         }
     }
 }

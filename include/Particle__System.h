@@ -53,11 +53,25 @@ struct System {
     ParticleList particles;      /* 0x08 */
     ParticleList particles2;     /* 0x10 */
     SystemDefinition *mDefinition; /* 0x18 */
-    /* Bit 0 retires the system once both particle lists are empty, bit 2
-       skips its update (func_0204a730) and bit 3 its draw (func_0204a5c8).
-       Callback virtuals toggle bit 1 while spawning or suppressing
-       particles. */
-    u32 callbackFlags;             /* 0x1c */
+    /* The update walk retires a system with `terminate` set once both
+       particle lists are empty, and skips its update (func_0204a730) or draw
+       (func_0204a5c8) on `skipUpdate` or `skipDraw`. func_0204a730 emits
+       only while `terminate` and `stopGenerate` are both clear, and the
+       callback virtuals toggle `stopGenerate` while spawning or suppressing
+       particles. The spawn (func_0204ae2c) clears the whole word. The
+       layout is pret's SPLEmitterState union
+       (pokeplatinum/lib/spl/include/spl_emitter.h); the bit names are the
+       ones func_0204a730's view and the update and draw walks already used. */
+    union {
+        u32 callbackFlags;         /* 0x1c */
+        struct {
+            u32 terminate : 1;
+            u32 stopGenerate : 1;
+            u32 skipUpdate : 1;
+            u32 skipDraw : 1;
+            u32 : 28;
+        };
+    };
     Vector3 position;              /* 0x20 */
     /* Added to every particle's offset each frame (func_0204a730); the
        spawn (func_0204ae2c) clears it. */
