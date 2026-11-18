@@ -544,8 +544,7 @@ int daMenbo_c::func_ov090_02131c48()
         ApproachAngle(&mPrevAngle.y, mTargetAngleY, 1, 0x1000, 0x1000);
     } else {
         if (mAnmModel.Finished()) {
-            s32 *q = &mAnimLoops;
-            *q = *q + 1;
+            mAnimLoops++;
             if (mAnimLoops > 0x14)
                 this->func_ov090_02131e00(data_ov090_02134504);
         }
