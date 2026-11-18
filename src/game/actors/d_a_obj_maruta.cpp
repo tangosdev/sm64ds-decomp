@@ -107,6 +107,10 @@ s32 daObjMaruta_c::Render() {
     return 1;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
@@ -199,8 +203,7 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
     }
     UpdateModelTransform();
     {
-        int is66 = (actorID == 0x66);
-        if (is66 != 0) {
+        if (IsActorID(this, 0x66)) {
             if (IsClsnInRangeOnScreen(0, 0) != 0)
                 UpdateClsnPosAndRot();
         } else {
@@ -233,19 +236,20 @@ int daObjMaruta_c::func_ov080_021274ac(ResourceDescriptor *arg) {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- 0x0212758c, size 0xcc */
 /* -------------------------------------------------------------------------- */
 /* If the other actor's actorID is PLAYER (0xbf), copy its mPos into mHitPos,
    arm mHitByPlayer / mHitTimer, and shove that actor along mAngle.y by half
-   of mHorzSpeed. The ID test is held in a local, as the cartridge keeps
-   it in a register (testing it in the if is 12 bytes short). */
+   of mHorzSpeed. */
 void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
-    int isPlayer;
     int half;
 
-    isPlayer = (other->actorID == 0xbf);
-    if (isPlayer != 0) {
+    if (IsPlayerActor(other)) {
         Vector3 *position = &other->mPos;
         mHitPos = *position;
         mHitByPlayer = 1;
