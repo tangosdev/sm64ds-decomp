@@ -39,7 +39,7 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
     int dxdy;
     int *curr;
     int *nxt;
-    int *new_var;
+    int *curr1;
     int *nxt1;
 
     w1 = w + 1;
@@ -62,7 +62,7 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
             i = 0;
             if (w > 0) {
                 do {
-                    int *curr1 = new_var = curr + 3;
+                    curr1 = curr + 3;
                     nxt1 = nxt + 3;
                     if (flip == 1) {
                         int ze = curr1[2];
