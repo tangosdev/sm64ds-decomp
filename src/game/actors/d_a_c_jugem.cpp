@@ -95,6 +95,8 @@ struct JugemVec3 {
     }
     JugemVec3(int a, int b, long c)
     {
+        /* Kept (#821 r79): a member initialiser list, the stores in reverse order and a plain
+           int pointer are 6, 8 and 6 words off in the __sinit. */
         volatile int *p = &x;
         p[0] = a;
         p[1] = b;
