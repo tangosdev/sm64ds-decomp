@@ -211,7 +211,7 @@ void TrmpItem::GrowScale() {
     ApproachLinear(mScale.x, 0x1200, 0x80);
     ApproachLinear(mScale.z, 0x1200, 0x80);
     ApproachLinear(mScale.y, 0x20000, 0x400);
-    if (ApproachLinear2(*(int *)&mAlpha, 0, 1) == 0)
+    if (ApproachLinear2(mAlpha, 0, 1) == 0)
         return;
     mActive = 0;
     ApproachLinear(sTrmpItemsActive, 0, 1);
@@ -1037,7 +1037,7 @@ void TrmpLine::Update() {
 }
 
 void TrmpLine::StateFade() {
-    if (ApproachLinear2(*(int *)&mAlpha, 0, 1) != 0) {
+    if (ApproachLinear2(mAlpha, 0, 1) != 0) {
         mStatus = 0;
         return;
     }
@@ -1061,7 +1061,7 @@ void TrmpLine::StateSettle() {
     int *restPosition, *position, *amplitude;
 
     if ((data_020a0db0 & 1) != 0) {
-        if (ApproachLinear2(*(int *)&mAlpha, 0, 1) != 0) {
+        if (ApproachLinear2(mAlpha, 0, 1) != 0) {
             mStatus = 0;
         }
     }

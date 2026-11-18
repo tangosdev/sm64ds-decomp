@@ -172,7 +172,7 @@ extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;
-extern SharedFilePtr data_ov084_0213089c;
+extern BMA_File data_ov084_0213089c;
 extern KrbAnimationFileHandle data_ov084_02130cc8;
 extern KuriKingModelFilePtr gKurikingModelModelFile;
 extern KuriKingTexSeqFilePtr gKurikingAngerTextureSequenceFile;
@@ -1787,10 +1787,9 @@ int daKuriKing_c::InitVanishResources() {
     if (this->mShadowModels[0].InitCylinder() == 0)
         return 0;
 
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr,
-                               *(BMA_File *)&data_ov084_0213089c);
+    dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr, data_ov084_0213089c);
 
-    this->mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
+    this->mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
     this->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc8.filePtr, 0, 0x1000, 0);
 

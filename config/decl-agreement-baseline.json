@@ -2680,18 +2680,6 @@
         "return:int"
       ]
     },
-    "_Z15ApproachLinear2Riii": {
-      "src/game/actors/d_a_gmch.cpp": [
-        "param:#1 int *"
-      ],
-      "src/game/actors/d_a_kinopio.cpp": [
-        "param:#1 int *",
-        "return:void"
-      ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 int *"
-      ]
-    },
     "_Z15ApproachLinear2Rsss": {
       "src/_ZN7daPly_c14St_Thrown_MainEv.cpp": [
         "param:#1 short *",

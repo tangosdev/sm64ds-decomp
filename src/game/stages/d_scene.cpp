@@ -28,15 +28,6 @@
 
 #include "Matrix2x2.h"
 
-/* ResetHardwareRegisters copies the identity matrix with one four-word block
-   move. A struct copy of Matrix2x2's four named fields scalarizes into
-   separate loads and stores and grows the function by 20 bytes, so the copy
-   goes through this words view -- the same reason UpdateMinimap keeps its
-   MinimapDesc cast in d_s_stage_methods.cpp. */
-struct Matrix2x2Words {
-    int w[4];
-};
-
 namespace GX { void DisableAllBanks(); }
 
 extern "C" {
@@ -91,9 +82,7 @@ dFdBrightness_c gSoftResetBrightnessFader;
 
 void dScene_c::ResetHardwareRegisters()
 {
-    Matrix2x2 m;
-
-    *(Matrix2x2Words *)&m = *(Matrix2x2Words *)&data_02092668;
+    Matrix2x2 m = data_02092668;
 
     GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     GX_SetPower(GX_POWER_ALL);

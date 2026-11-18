@@ -1108,7 +1108,7 @@ void daYegg_c::func_ov002_020edca4() {
     pos.y = sy;
     pos.z = zv;
     if (HasStarPayout() != 0) {
-        UntrackStar(*(s8 *)&mStarSlot);
+        UntrackStar(mStarSlot);
 
         spawned = (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, pos, 0, mPlayer->mAreaId, -1);
         if (spawned != 0) {

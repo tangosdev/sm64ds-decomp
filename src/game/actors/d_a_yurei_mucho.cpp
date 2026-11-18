@@ -398,6 +398,7 @@ int daYurei_Mucho_c::UpdateChase() {
     daPly_c *p = ClosestNonVanishPlayer();
     if (p != 0) {
         /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
+        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 tmp = *(VecFx32 *)&p->mPos;
         Vector3 v;
         Vector3 a;

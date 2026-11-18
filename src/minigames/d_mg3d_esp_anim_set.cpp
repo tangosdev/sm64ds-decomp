@@ -131,7 +131,7 @@ void DecompressLZ16(void *src, void *dst);
 
 extern BMA_File sEsp3DMaterialAnim;
 
-extern void *sEsp3DTextureAnim;
+extern BTA_File sEsp3DTextureAnim;
 
 extern unsigned char gMainScreenLayers;
 
@@ -1274,9 +1274,8 @@ s32 dScMg3DEsp_c::InitResources()
     if (gEspIrieModelFile.func_020179b4(&mModel1, 1) == 0)
         return 0;
 
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gEspIrieModelFile.filePtr,
-                             *(BTA_File *)&sEsp3DTextureAnim);
-    mTextureTransformer.SetFile(*(BTA_File *)&sEsp3DTextureAnim, 0, 0x1000, 0);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gEspIrieModelFile.filePtr, sEsp3DTextureAnim);
+    mTextureTransformer.SetFile(sEsp3DTextureAnim, 0, 0x1000, 0);
 
     if (mEspModel.InitResources() == 0)
         return 0;

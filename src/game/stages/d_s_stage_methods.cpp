@@ -3455,7 +3455,9 @@ extern "C" void SetPlayerGlobals(void) {
         InitControllerMode(i, mode);
         i++;
     } while (i < 4);
-    /* A signed byte here: decl_common.h types it unsigned for its other readers. */
+    /* A signed byte here: decl_common.h types it unsigned for its other readers.
+       Measured (#821 r68): declared signed char, dScStarSel_c's two stores
+       lose the `and #0xff` they share with data_02092128[0]. */
     *(s8 *)&data_02092114 = -1;
     data_0209f254 = 0;
 }

@@ -642,6 +642,7 @@ int daC_Jugem_c::StateHiddenMain()
 {
     daPly_c *p = ClosestPlayer();
     if (p != 0) {
+        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 v = *(VecFx32 *)&p->mPos;
         if ((data_0209caa0.file.flags2 & 0x10000) != 0 && v.z > -0x28000 &&
             p->SetNoControlState(0x12, -1, 0) != 0) {

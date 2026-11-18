@@ -373,6 +373,7 @@ int daOwl_c::UpdateTalk() {
         ChangeState(OWL_STATE_HOVER);
         return 1;
     }
+    /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
     VecFx32 v = *(VecFx32 *)&mTalkTarget->mPos;
     Vector3 w;
     w.x = v.x;
