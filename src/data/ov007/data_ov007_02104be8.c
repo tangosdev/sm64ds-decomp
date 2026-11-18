@@ -1,4 +1,4 @@
-/* 0x02104be8: s32 menu value. */
+/* 0x02104be8: next free palette slot. */
 #include "types.h"
 
-int data_ov007_02104be8;
+u32 data_ov007_02104be8;

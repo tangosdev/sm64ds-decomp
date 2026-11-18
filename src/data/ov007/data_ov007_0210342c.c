@@ -1,4 +1,5 @@
-/* 0x0210342c: the work block (Ov007Work *). */
+/* 0x0210342c: the work block. */
 #include "types.h"
+#include "Ov007Work.h"
 
-void * data_ov007_0210342c;
+Ov007Work * data_ov007_0210342c;

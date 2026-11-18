@@ -1,4 +1,4 @@
-/* 0x02104c18: s32 menu value. */
+/* 0x02104c18: INF1 entries. */
 #include "types.h"
 
-int data_ov007_02104c18;
+char * data_ov007_02104c18;

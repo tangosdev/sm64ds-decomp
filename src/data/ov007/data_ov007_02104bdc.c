@@ -1,4 +1,4 @@
-/* 0x02104bdc: s32 menu value. */
+/* 0x02104bdc: next free texture slot. */
 #include "types.h"
 
-int data_ov007_02104bdc;
+u32 data_ov007_02104bdc;

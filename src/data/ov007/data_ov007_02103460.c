@@ -1,4 +1,5 @@
-/* 0x02103460: an Ov007Sprite * slot. */
+/* 0x02103460: the window frame. */
 #include "types.h"
+#include "Ov007Sprite.h"
 
-void * data_ov007_02103460;
+Ov007Sprite * data_ov007_02103460;

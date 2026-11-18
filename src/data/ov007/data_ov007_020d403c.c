@@ -1,10 +1,10 @@
 /* 0x020d403c: BTA translation keys of data_ov007_020cda2c.
- * u32[3410], exact cartridge bytes. */
+ * int[3410], exact cartridge bytes. */
 #include "types.h"
 
 #pragma define_section sec_020d403c ".rodata.menu" ".rodata.menu" ".rodata.menu" far_data
 #pragma section sec_020d403c begin
-u32 data_ov007_020d403c[3410] = {
+int data_ov007_020d403c[3410] = {
     0xfffffccd, 0x00000000, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a,
     0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a,
     0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a, 0x0000045a,

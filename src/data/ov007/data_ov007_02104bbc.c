@@ -1,4 +1,5 @@
-/* 0x02104bbc: an NNSSndHandle * slot. */
+/* 0x02104bbc: the menu's sound handle. */
 #include "types.h"
+#include "nnsys/snd/player.h"
 
-void * data_ov007_02104bbc;
+NNSSndHandle * data_ov007_02104bbc;

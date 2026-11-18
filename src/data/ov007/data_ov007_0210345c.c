@@ -1,4 +1,4 @@
-/* 0x0210345c: a u32 * buffer pointer. */
+/* 0x0210345c: the glyph sheet, 4bpp tiles. */
 #include "types.h"
 
-void * data_ov007_0210345c;
+u32 * data_ov007_0210345c;

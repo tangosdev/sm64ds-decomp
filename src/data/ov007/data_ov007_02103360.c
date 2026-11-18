@@ -1,4 +1,4 @@
-/* 0x02103360: the cursor record (Ov007Cursor *). */
+/* 0x02103360: the cursor record (Ov007Cursor * in unit020b2cdc.cpp). */
 #include "types.h"
 
 void * data_ov007_02103360;

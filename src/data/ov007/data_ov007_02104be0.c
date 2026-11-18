@@ -1,4 +1,4 @@
-/* 0x02104be0: s32 menu value. */
+/* 0x02104be0: end of the palette region. */
 #include "types.h"
 
-int data_ov007_02104be0;
+u32 data_ov007_02104be0;

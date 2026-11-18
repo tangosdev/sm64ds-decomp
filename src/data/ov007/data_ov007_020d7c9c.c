@@ -1,11 +1,16 @@
 /* 0x020d7c9c: menu rectangle record (0x1f4, 0x4fffb, 0xffffff58, ...).
- * u8[20], exact cartridge bytes. */
+ * Ov007MeshWaveParams scalar, exact cartridge words. */
 #include "types.h"
+#include "Ov007Mesh.h"
 
 #pragma define_section sec_020d7c9c ".rodata.menu" ".rodata.menu" ".rodata.menu" far_data
 #pragma section sec_020d7c9c begin
-u8 data_ov007_020d7c9c[20] = {
-    0xf4, 0x01, 0x00, 0x00, 0xfb, 0xff, 0x04, 0x00, 0x58, 0xff, 0xff, 0xff,
-    0x58, 0x02, 0x20, 0x03, 0x64, 0x00, 0x00, 0x00,
+Ov007MeshWaveParams data_ov007_020d7c9c = {
+    .speed = 0x000001f4,
+    .spread = 0x0004fffb,
+    .amplitude = 0xffffff58,
+    .minIdle = 0x0258,
+    .keepChance = 0x0320,
+    .idleChance = 0x0064,
 };
 #pragma section sec_020d7c9c end
