@@ -697,7 +697,9 @@ void daKpaTail_c::func_ov060_02115c1c(){
      * reaches it from two tests. `if (!IsHoldingObject(held) || (no turn &&
      * countdown runs out)) drop; else if (turning) refill;` is 0x140 against
      * 0x134 (the turn is tested again); refill-first if/else-if is 0x12c; nested
-     * ifs with early returns are 0x168 (the drop is emitted twice). */
+     * ifs with early returns are 0x168 (the drop is emitted twice). r95: the
+     * same `||` form with the turn read once into an `s16 turn` local is 0x138
+     * (the refill becomes a re-tested conditional store after the drop). */
     held = this->mHeldPlayer;
     if (held == 0) goto tail;
 
