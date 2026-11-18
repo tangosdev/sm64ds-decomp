@@ -175,6 +175,7 @@ int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 extern BMA_File data_ov084_0213088c;
+extern BMA_File data_ov084_0213089c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
 extern int data_ov084_02130228[];
@@ -1022,8 +1023,8 @@ void daKrb_c::ActTumble() {
             mdCcAc_c.flags &= ~0x20000;
         }
         dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
-                                   *(BMA_File *)&data_ov084_0213089c);
-        mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
+                                   data_ov084_0213089c);
+        mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
         mMaterialChanger.currFrame = 0;
         return;
     }
@@ -1728,8 +1729,8 @@ int daKrb_c::InitResources() {
         return 0;
 
     dExtAnmMaterial_c::Prepare(*(BMD_File *)data_ov084_02130cf8.filePtr,
-                               *(BMA_File *)&data_ov084_0213089c);
-    mMaterialChanger.SetFile(*(BMA_File *)&data_ov084_0213089c, 0x40000000, 0x1000, 0);
+                               data_ov084_0213089c);
+    mMaterialChanger.SetFile(data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
     mCoinType = COIN_PLAIN;
 
