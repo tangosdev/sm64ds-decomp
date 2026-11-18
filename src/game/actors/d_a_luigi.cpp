@@ -200,7 +200,7 @@ int daLuigi_c::Render() {
 
     mat = &mAnmModel.mat4x3;
     *(Mtx43 *)mat = *(Mtx43 *)&body->mat4x3;
-    mat->t.x = -mat->t.x;
+    mat->m[9] = -mat->m[9];
     func_0203c178(&data_020a0e68, kMirrorSx, kFxOne, kFxOne);
     MTX_Concat33((const int *)mat, (const int *)&data_020a0e68, (int *)mat);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)mat;

@@ -72,9 +72,9 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 a
     MTX_Inverse43(&self->invMat, &self->invMat);
     self->angY = angY;
     self->angVelY = 0;
-    self->pos.x = mtx.t.x;
-    self->pos.y = mtx.t.y;
-    self->pos.z = mtx.t.z;
+    self->pos.x = mtx.m[9];
+    self->pos.y = mtx.m[10];
+    self->pos.z = mtx.m[11];
     self->velocity.x = self->velocity.y = self->velocity.z = 0;
     scratch.rotation = *(Mtx43 *)&self->mat;
     scratch.rotation.r[3].x = 0;
@@ -110,12 +110,12 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     angVelY = angle - oldAngle;
     angY = angle;
 
-    velocity.x = mtx.t.x - pos.x;
-    velocity.y = mtx.t.y - pos.y;
-    velocity.z = mtx.t.z - pos.z;
-    pos.x = mtx.t.x;
-    pos.y = mtx.t.y;
-    pos.z = mtx.t.z;
+    velocity.x = mtx.m[9] - pos.x;
+    velocity.y = mtx.m[10] - pos.y;
+    velocity.z = mtx.m[11] - pos.z;
+    pos.x = mtx.m[9];
+    pos.y = mtx.m[10];
+    pos.z = mtx.m[11];
 
     Mtx43 rotation = *(Mtx43 *)&mat;
     rotation.r[3].x = 0;
@@ -199,9 +199,9 @@ void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result
 void dBgW_KcMbg::LocalToWorldDirection(const Vector3 &direction, Vector3 &result) {
     Matrix4x3 rotation;
     *(Mtx43 *)&rotation = *(Mtx43 *)&mat;
-    rotation.t.x = 0;
-    rotation.t.y = 0;
-    rotation.t.z = 0;
+    rotation.m[9] = 0;
+    rotation.m[10] = 0;
+    rotation.m[11] = 0;
     MTX_MultVec43(&direction, &rotation, &result);
 }
 

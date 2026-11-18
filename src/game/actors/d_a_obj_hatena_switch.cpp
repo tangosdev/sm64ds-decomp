@@ -275,9 +275,9 @@ void daObjHatenaSwitch_c::UpdateModelTransform() {
 
 void daObjHatenaSwitch_c::UpdateClsnTransform() {
     *(Mtx43 *)&mClsnMat = *(Mtx43 *)&mAnmModel.mat4x3;
-    mClsnMat.t.x = mPos.x;
-    mClsnMat.t.y = mPos.y;
-    mClsnMat.t.z = mPos.z;
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
     mActiveMeshCollider->Transform(mClsnMat, mAngle.y);
 }
 

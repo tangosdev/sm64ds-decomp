@@ -1351,9 +1351,9 @@ void daBtn_c::func_ov079_02124188()
 
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
 
-    mAnmModel.mat4x3.t.x = mPos.x >> 3;
-    mAnmModel.mat4x3.t.y = (mPos.y + mTipLift) >> 3;
-    mAnmModel.mat4x3.t.z = mPos.z >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = (mPos.y + mTipLift) >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 
     bone = mAnmModel.data.bones;
     pos.x = mPos.x;
@@ -1426,9 +1426,9 @@ void daBtn_c::func_ov079_02124008()
     }
     Matrix4x3_ApplyInPlaceToScale(&mMeshMatrix, 0x1000, s, 0x1000);
 
-    mMeshMatrix.t.x = mPos.x;
-    mMeshMatrix.t.y = mPos.y + mTipLift - off;
-    mMeshMatrix.t.z = mPos.z;
+    mMeshMatrix.m[9] = mPos.x;
+    mMeshMatrix.m[10] = mPos.y + mTipLift - off;
+    mMeshMatrix.m[11] = mPos.z;
 
     mMovingMeshCollider.Transform(mMeshMatrix, mBodyYaw);
 }

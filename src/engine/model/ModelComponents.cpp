@@ -208,7 +208,7 @@ extern "C" void func_0204531c(char *self, int arg) {
     mc->transforms = save;
 
     for (i = 0; i < mc->modelFile->numBones; i++)
-        func_02047910(&mc->transforms[i].r.m[0], &blend[i].r.m[0], &mc->transforms[i].r.m[0], arg);
+        func_02047910(&mc->transforms[i].m[0], &blend[i].m[0], &mc->transforms[i].m[0], arg);
 }
 
 void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {

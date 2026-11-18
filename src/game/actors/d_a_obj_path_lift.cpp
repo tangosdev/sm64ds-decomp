@@ -140,10 +140,10 @@ int daObjPathLift_c::CleanupResources() {
 
 int daObjPathLift_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, 0);
-    mModel.mat4x3.t.x = mPos.x >> 3;
-    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
     int z = mPos.z >> 3;
-    mModel.mat4x3.t.z = z;
+    mModel.mat4x3.m[11] = z;
     return z;
 }
 

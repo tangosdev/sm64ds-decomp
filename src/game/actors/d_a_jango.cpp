@@ -473,9 +473,9 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPos.y = 0;
             mHeldPos.z = 0;
             MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
-            mHeldPos.x = data_020a0e68.t.x;
-            mHeldPos.y = data_020a0e68.t.y;
-            mHeldPos.z = data_020a0e68.t.z;
+            mHeldPos.x = data_020a0e68.m[9];
+            mHeldPos.y = data_020a0e68.m[10];
+            mHeldPos.z = data_020a0e68.m[11];
             mHeldPos.x <<= 3;
             mHeldPos.y <<= 3;
             mHeldPos.z <<= 3;

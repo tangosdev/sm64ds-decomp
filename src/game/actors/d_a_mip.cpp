@@ -1056,7 +1056,7 @@ void daMip_c::RenderMirrorImage()
 
     Mtx43 tmp;
     tmp = *(Mtx43 *)&mAnmModel.mat4x3;
-    mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
+    mAnmModel.mat4x3.m[9] = 0x421800 - mAnmModel.mat4x3.m[9];
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
     MTX_Concat33(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
     mAnmModel.ClearMaterialFlags(0x80);

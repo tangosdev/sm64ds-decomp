@@ -113,6 +113,6 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             }
         }
 
-        *(Vec3Words *)&mat->t = *(Vec3Words *)&out;
+        *(Vec3Words *)&mat->m[9] = *(Vec3Words *)&out;
     }
 }

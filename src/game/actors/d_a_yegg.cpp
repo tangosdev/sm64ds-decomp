@@ -989,9 +989,9 @@ void daYegg_c::UpdateModelMatrix() {
         *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)mPlayer->mCarryMatrix;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
-        v.x = data_020a0e68.t.x;
-        v.y = data_020a0e68.t.y;
-        v.z = data_020a0e68.t.z;
+        v.x = data_020a0e68.m[9];
+        v.y = data_020a0e68.m[10];
+        v.z = data_020a0e68.m[11];
         mPos.x = v.x << 3;
         mPos.y = v.y << 3;
         mPos.z = v.z << 3;
