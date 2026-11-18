@@ -234,7 +234,7 @@ extern "C" int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32
     for (i = 0; i < manager->mNumTextures; i++) {
         TextureEntry *texture = &manager->mTextures[i];
         TextureEntry::Resource *record = texture->resource;
-        u32 isTexel4x4 = (record->params.format == 5) ? 1 : 0;
+        u32 isTexel4x4 = record->params.format == 5;
         u32 address = allocTexVram(record->texelSize, isTexel4x4);
         /* The texels follow the 0x20-byte record header. */
         GX_LoadTex(texture->resource + 1, address, record->texelSize);
@@ -256,7 +256,7 @@ extern "C" int func_0204a028(Particle::Manager *manager,
         unsigned int address = 0;
 
         if (record->paletteSize != 0) {
-            unsigned int fromLowAddress = record->params.format == 2 ? 1 : 0;
+            unsigned int fromLowAddress = record->params.format == 2;
             address = allocPalVram(record->paletteSize, fromLowAddress);
             GX_LoadTexPltt((char *)texture->resource + record->paletteOffset, address,
                            record->paletteSize);

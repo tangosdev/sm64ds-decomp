@@ -2503,6 +2503,10 @@ void daTrs_c::SpawnCourtyardBooTriplet() {
     this->MarkForDestruction();
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 int daTrs_c::ShouldBeActive() {
 
     int r4;
@@ -2530,7 +2534,7 @@ int daTrs_c::ShouldBeStopped() {
 
     unsigned char v = this->mVariant;
     if (v == 0xd || v == 1) {
-        return func_ov063_021163d0() == 0 ? 1 : 0;
+        return func_ov063_021163d0() == 0;
     }
     return 0;
 }
@@ -2655,7 +2659,6 @@ int daTrs_c::Behavior()
     s32 z;
     s32 x;
     int d1;
-    int v;
 
     func_0200f760(&mdCcAcPos_c);
     if (mSpawnedActorID != 0) {
@@ -2756,8 +2759,7 @@ int daTrs_c::Behavior()
                 goto block_39;
             }
         }
-        v = (((mFlags) & 0x40000) ? 1 : 0);
-        if (v != 0) {
+        if (IsInYoshiMouth(this)) {
             u8 st = mTalkStep;
             daPly_c *pl = mEatingPlayer;
             switch (st) {

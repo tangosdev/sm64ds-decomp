@@ -1037,7 +1037,7 @@ int PickerScene_FadeToEdit(void) {
 
     SCENE->tweenOut[1] = FX_DivS32(*addr4, 0x1f);
 
-    return (*addr4 == 0) ? 1 : 0;
+    return *addr4 == 0;
 }
 
 /* Commits a stroke still being drawn, settles the picker, clears the

@@ -502,6 +502,14 @@ int daPgBby_c::func_ov072_021212c0()
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* Place the model: in the carrier's hands (one of four carry offsets) or at
    the actor, then size the drop shadow by the height above the ground. */
 void daPgBby_c::UpdateModelAndShadow() {
@@ -511,7 +519,7 @@ void daPgBby_c::UpdateModelAndShadow() {
     int shadowHeight;
     int shadowRadius;
 
-    if (mCarrier && ((mFlags & 0x4000) ? 1 : 0) && mCarrier->mCarryMatrix) {
+    if (mCarrier && IsFlagSet(this, 0x4000) && mCarrier->mCarryMatrix) {
         idx = 0;
         if (mCarrier->IsFrontSliding() || mCarrier->LostGrabbedObject()) {
             idx = 1;
@@ -528,13 +536,13 @@ void daPgBby_c::UpdateModelAndShadow() {
         mAnmModel.mat4x3.t.z = mPos.z >> 3;
     }
 
-    if ((mFlags & 0x40000) ? 1 : 0) {
+    if (IsInYoshiMouth(this)) {
         return;
     }
 
     shadowHeight = 0xb4000;
     shadowRadius = 0x5a000;
-    if (mCarrier && ((mFlags & 0x4000) ? 1 : 0)) {
+    if (mCarrier && IsFlagSet(this, 0x4000)) {
         v.x = mPos.x;
         v.y = mPos.y;
         v.z = mPos.z;

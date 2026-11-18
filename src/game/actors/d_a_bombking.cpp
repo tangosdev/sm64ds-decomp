@@ -1414,14 +1414,16 @@ void daBombking_c::OnPendingDestroy()
 {
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 /* -------------------------------------------------------------------------- */
 int daBombking_c::Render()
 {
     void *held = mHeldActor;
     if (held != 0) {
-        int flags = mFlags;
-        int flag = (flags & 0x4000) ? 1 : 0;
-        if (flag != 0) {
+        if (IsFlagSet(this, 0x4000)) {
             if (((dActor_c *)held)->mCarryMatrix != 0) {
                 AttachHeldPlayer();
             }

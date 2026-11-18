@@ -140,12 +140,16 @@ extern void *sRouletteRacerSprites;
 /* Bet tiles: 0..0xb are single numbers, 0xc..0x1c pairs of numbers and
  * 0x1d..0x22 groups of four (RouletteRacer_GetPayout checks 1, 2 and 4
  * table entries for them and pays 12, 6 and 3). */
+static inline int Roulette_IsSingleTile(int tile) {
+    return tile <= 0xb;
+}
+
 static inline int Roulette_IsPairTile(int tile) {
-    return (tile >= 0xc && tile <= 0x1c) ? 1 : 0;
+    return tile >= 0xc && tile <= 0x1c;
 }
 
 static inline int Roulette_IsQuadTile(int tile) {
-    return (tile >= 0x1d && tile <= 0x22) ? 1 : 0;
+    return tile >= 0x1d && tile <= 0x22;
 }
 
 extern ShortTbl12 sRouletteSlowStops;
@@ -359,7 +363,7 @@ s32 dScMgRoulette_c::Behavior() {
         break;
     }
     case 3: {
-        int stopped = (mBoard.mSpinSpeed == 0) ? 1 : 0;
+        int stopped = mBoard.mSpinSpeed == 0;
         if (stopped != 0) {
             mPromptEnabled = 0;
             short wait = mPhaseTimer;
@@ -655,14 +659,8 @@ void RouletteRacer_MoveToTile(RouletteRacer *racer, int tile) {
         RouletteRacer_SetVelocityToward(racer, &goal.x, 0x100);
         return;
     }
-    /* Spelled as a 0/1 flag: the ROM materialises it (movle #1 / movgt #0,
-       cmp #0); `if (racer->tile > 0xb) return;` and a bool local both
-       build 0x10 bytes short. */
-    {
-        int early = (racer->tile <= 0xb) ? 1 : 0;
-        if (early == 0)
-            return;
-    }
+    if (!Roulette_IsSingleTile(racer->tile))
+        return;
     Vector2 centre = sRouletteTiles[tile];
     int lo = centre.x - 0x10000;
     int hi = centre.x + 0x10000;
@@ -866,36 +864,27 @@ void RouletteRacer_Draw(char *racer) {
     t->priority = 1;
 }
 
-/* The three range tests are kept as 0 or 1 values held in a local and
-   tested; the ROM materialises them. The 0x23 case tests `tile < 6`, the
-   opposite of the case beside it, and the two share one `payout = 2`. */
+/* The 0x23 case tests `tile < 6`, the opposite of the case beside it, and
+   the two share one `payout = 2`. */
 int RouletteRacer_GetPayout(RouletteRacer *racer, int tile) {
     int landed = racer->tile;
     int payout = 0;
-    int inRange;
 
-    inRange = (landed <= 0xb) ? 1 : 0;
-    if (inRange != 0) {
+    if (Roulette_IsSingleTile(landed)) {
         if (landed == tile)
             payout = 0xc;
-    } else {
-        inRange = Roulette_IsPairTile(landed);
-        if (inRange != 0) {
-            if (tile == sRoulettePairNumbers[landed - 0xc][0] ||
-                tile == sRoulettePairNumbers[landed - 0xc][1])
-                payout = 6;
-        } else {
-            inRange = Roulette_IsQuadTile(landed);
-            if (inRange != 0) {
-                if (tile == sRouletteQuadNumbers[landed - 0x1d][0] ||
-                    tile == sRouletteQuadNumbers[landed - 0x1d][1] ||
-                    tile == sRouletteQuadNumbers[landed - 0x1d][2] ||
-                    tile == sRouletteQuadNumbers[landed - 0x1d][3])
-                    payout = 3;
-            } else if ((landed == 0x23 && tile < 6) || (landed == 0x24 && tile >= 6)) {
-                payout = 2;
-            }
-        }
+    } else if (Roulette_IsPairTile(landed)) {
+        if (tile == sRoulettePairNumbers[landed - 0xc][0] ||
+            tile == sRoulettePairNumbers[landed - 0xc][1])
+            payout = 6;
+    } else if (Roulette_IsQuadTile(landed)) {
+        if (tile == sRouletteQuadNumbers[landed - 0x1d][0] ||
+            tile == sRouletteQuadNumbers[landed - 0x1d][1] ||
+            tile == sRouletteQuadNumbers[landed - 0x1d][2] ||
+            tile == sRouletteQuadNumbers[landed - 0x1d][3])
+            payout = 3;
+    } else if ((landed == 0x23 && tile < 6) || (landed == 0x24 && tile >= 6)) {
+        payout = 2;
     }
     racer->payout = payout;
     return payout;
@@ -1297,7 +1286,7 @@ int RouletteResults_Tick(void) {
             func_02012790(0x26);
         }
     }
-    return (sRouletteResultIndex >= 4) ? 1 : 0;
+    return sRouletteResultIndex >= 4;
 }
 
 void RouletteResults_Draw(void) {

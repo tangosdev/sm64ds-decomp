@@ -146,6 +146,10 @@ daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c()
 }
 
 // 0x02130fac (0xc4)
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 /* Put a killed lift back on its spawn node. The watcher calls this. */
 void daObjRotateUpdownLift_c::func_ov091_02130fac()
 {
@@ -327,11 +331,9 @@ int daObjRotateUpdownLift_c::Behavior()
             if (platform0 != 0) {
                 platform1 = mPlatform1;
                 if (platform1 != 0) {
-                    int offScreen;
                     if (platform0->mIsDead != 0 && platform1->mIsDead != 0)
                         keepSound = 0;
-                    offScreen = (mFlags & 8) ? 1 : 0;
-                    if (offScreen != 0) {
+                    if (IsOffScreen(this)) {
                         if (DistToCPlayer() > 0x7d0000) {
                             platform0 = mPlatform0;
                             if (platform0->mIsDead != 0)

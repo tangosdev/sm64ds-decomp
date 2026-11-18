@@ -204,9 +204,12 @@ int daSpd_c::Behavior() {
     return 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 int daSpd_c::Render() {
-    int flag = (mFlags & 0x40000) ? 1 : 0;
-    if (flag || !mState)
+    if (IsInYoshiMouth(this) || !mState)
         return 1;
     /* dExtAnmModel_c slot 5. The call stays virtual. */
     mAnmModel.Render(0);

@@ -334,23 +334,31 @@ s32 daJgm_c::EnterYoshiMouthState()
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 s32 daJgm_c::UpdateYoshiMouthState()
 {
-    if (((mFlags & 0x40000) ? 1 : 0) != 0) {
+    if (IsInYoshiMouth(this)) {
         dActor_c *carrier = mEatingPlayer;
         s32 *carrierPos = &carrier->mPos.x;
         mPos.x = carrierPos[0];
         mPos.y = carrierPos[1];
         mPos.z = carrierPos[2];
     }
-    {
-        int flags = mFlags;
-        if (((flags & 0x80000) ? 1 : 0) != 0)
-            SetState(3);
-        else if (((flags & 0x20000) ? 1 : 0) == 0
-                 && ((flags & 0x40000) ? 1 : 0) == 0)
-            SetState(0);
-    }
+    if (IsFlagSet(this, 0x80000))
+        SetState(3);
+    else if (!IsBeingEaten(this) && !IsInYoshiMouth(this))
+        SetState(0);
     return 1;
 }
 

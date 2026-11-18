@@ -511,6 +511,16 @@ static inline int IsCastleFallCutsceneRunning() {
 static inline int IsKuppaScriptRunning() {
     return gRunningKuppaScript != 0;
 }
+
+static inline int IsLevelEntryDone(daPly_c *player) {
+    return player->mLevelEntryDone != 0;
+}
+
+/* The stylus is down this frame and was not last frame. */
+static inline int IsTouchJustBegun(int slot) {
+    return gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0;
+}
+
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
@@ -1045,7 +1055,7 @@ void dScStage_c::CheckCameraInput() {
                         if ((state == 0 && ((gTouchInfo[i].x <= 88 && gTouchInfo[i].y >= 138) ||
                                             (gTouchInfo[i].x >= 167 && gTouchInfo[i].y >= 138))) ||
                             (state == 2 && gTouchInfo[i].x >= 167 && gTouchInfo[i].y >= 154)) {
-                            if (((gTouchInfo[i].held && gTouchInfo[i].edge) ? 1 : 0) || *st == 1) {
+                            if (IsTouchJustBegun(i) || *st == 1) {
                                 u16 mask;
                                 if ((state == 0 && gTouchInfo[i].x < 43) ||
                                     (gTouchInfo[i].x >= 167 && gTouchInfo[i].x < 209))
@@ -1059,7 +1069,7 @@ void dScStage_c::CheckCameraInput() {
                                     if (mask == 0)
                                         mask = 0x200;
                                 }
-                                if ((gTouchInfo[i].held && gTouchInfo[i].edge) ? 1 : 0)
+                                if (IsTouchJustBegun(i))
                                     cam->pressed |= mask;
                                 else
                                     cam->pressed |= mask & (mask ^ data_0209f368[i]);
@@ -1080,7 +1090,7 @@ void dScStage_c::CheckCameraInput() {
                 {
                     u8 state2 = data_0209f498[i].mode;
                     if (state2 != 0) {
-                        if (((gTouchInfo[i].held && gTouchInfo[i].edge) ? 1 : 0) &&
+                        if (IsTouchJustBegun(i) &&
                             ((state2 == 1 && gTouchInfo[i].x >= 215 && gTouchInfo[i].y >= 141) ||
                              (state2 == 2 && gTouchInfo[i].x >= 215 && gTouchInfo[i].y >= 115 &&
                               gTouchInfo[i].y < 151))) {
@@ -3085,8 +3095,7 @@ void dScStage_c::RenderVsModeCountdown() {
     int i;
     for (i = 0; i < 4; i++) {
         if (gPlayers[i]) {
-            int t = (gPlayers[i]->mLevelEntryDone != 0);
-            if (t == 1)
+            if (IsLevelEntryDone(gPlayers[i]) == 1)
                 count++;
         }
     }
@@ -4040,8 +4049,7 @@ int dScStage_c::Behavior() {
                 for (i = 0; i < 4; i++) {
                     daPly_c *p = gPlayers[i];
                     if (p != 0) {
-                        int t = (p->mLevelEntryDone != 0) ? 1 : 0;
-                        if (t == 1)
+                        if (IsLevelEntryDone(p) == 1)
                             cnt++;
                     }
                 }

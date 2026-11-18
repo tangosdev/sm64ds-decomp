@@ -161,14 +161,17 @@ int daKpFr_c::func_ov070_02121ef8()
     return 1;
 }
 
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 int daKpFr_c::func_ov070_02121eb0() {
-    int flags = mFlags;
-    int isSet = (flags & 0x20000) ? 1 : 0;
-    if (isSet == 0) {
-        isSet = (flags & 0x40000) ? 1 : 0;
-        if (isSet == 0)
-            func_ov070_02121c8c();
-    }
+    if (!IsBeingEaten(this) && !IsInYoshiMouth(this))
+        func_ov070_02121c8c();
     return 1;
 }
 

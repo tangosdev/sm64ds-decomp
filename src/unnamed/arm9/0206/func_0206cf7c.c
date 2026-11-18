@@ -7,5 +7,5 @@
 int func_0206cf7c(int mask)
 {
     struct DebuggerBlock *sh = (struct DebuggerBlock *)HW_ISD_RESERVED;
-    return (mask & sh->flags) ? 1 : 0;
+    return (mask & sh->flags) != 0;
 }

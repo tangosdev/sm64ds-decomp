@@ -144,13 +144,15 @@ dActor_c::~dActor_c() {
     func_0203b27c(&data_0209b468, &mActorListNode);
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 /* Kills an actor born dead: unless its profile sets 0x08000000 ("spawn even if
    the death table says already killed"), a death-table hit destroys it. */
 bool dActor_c::BeforeInitResources()
 {
-    int spawnEvenIfKilledBefore = (mFlags & 0x8000000) ? 1 : 0;
-
-    if (spawnEvenIfKilledBefore == 0 && GetBitInDeathTable() != 0) {
+    if (!IsFlagSet(this, 0x8000000) && GetBitInDeathTable() != 0) {
         MarkForDestruction();
         return true;
     }

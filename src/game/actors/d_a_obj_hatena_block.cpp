@@ -195,6 +195,10 @@ static inline int IsVsMode(void) {
     return gGameMode == 1;
 }
 
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 static inline int IsActorID(dActor_c *actor, int id) {
     return actor->actorID == id;
 }
@@ -604,10 +608,8 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
  * opacity 0xf. */
 void daObjHatenaBlock_c::UpdateDropShadow() {
     int shadowScale, height, paddedHeight;
-    int b0, b1;
 
-    b0 = (mFlags & 8) ? 1 : 0;
-    if (b0 == 0 || ((b1 = (gGameMode == 1) ? 1 : 0) != 0))
+    if (!IsOffScreen(this) || IsVsMode())
         mFloorY = GetFloorY();
     height = mPos.y - mFloorY;
     if (height <= 0x1000) height = 0x1000;

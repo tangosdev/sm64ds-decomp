@@ -488,9 +488,21 @@ int daTgz_c::func_ov077_021256b4() {
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* Held update: stick to the carrier, or on release enter state 4 / the walk. */
 int daTgz_c::func_ov077_02125830() {
-    if (((mFlags & 0x40000) ? 1 : 0) != 0) {
+    if (IsInYoshiMouth(this)) {
         dActor_c *carrier = mEatingPlayer;
         /* Address of the triple, then [0]/[4]/[8]. Three field loads fold the
            0x5c into the ldr and drop the add the ROM kept. */
@@ -499,14 +511,11 @@ int daTgz_c::func_ov077_02125830() {
         mPos.y = src[1];
         mPos.z = src[2];
     }
-    {
-        int flags = mFlags;
-        if (((flags & 0x80000) ? 1 : 0) != 0)
-            this->func_ov077_02125e94(4);
-        else if (((flags & 0x20000) ? 1 : 0) == 0 && ((flags & 0x40000) ? 1 : 0) == 0) {
-            mEatingPlayer = 0;
-            this->func_ov077_02125e94(1);
-        }
+    if (IsFlagSet(this, 0x80000))
+        this->func_ov077_02125e94(4);
+    else if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
+        mEatingPlayer = 0;
+        this->func_ov077_02125e94(1);
     }
     return 1;
 }
@@ -705,7 +714,7 @@ void daTgz_c::OnPendingDestroy()
 
 int daTgz_c::Render()
 {
-    if ((mFlags & 0x40000) ? 1 : 0)
+    if (IsInYoshiMouth(this))
         return 1;
     int s = mState;
     if (s == 0 || s == 4)

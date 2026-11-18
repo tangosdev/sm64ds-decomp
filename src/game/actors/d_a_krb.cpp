@@ -189,8 +189,18 @@ extern int data_ov084_02130208[];
 extern int data_ov084_02130238[];
 extern int data_ov084_02130218[];
 
-daKrb_c::~daKrb_c()
-{
+daKrb_c::~daKrb_c() {}
+
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
 }
 
 /* Per-frame upkeep of mChaseRadius (how close the player must be to be
@@ -960,8 +970,7 @@ void daKrb_c::func_ov084_0212a580() {
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
     rotation = mAngle;
-    int inYoshiMouth = (mFlags & 0x40000) ? 1 : 0;
-    if (!inYoshiMouth) {
+    if (!IsInYoshiMouth(this)) {
         if (mWithMeshClsn.IsOnGround())
             DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScale.x * 0x50, 0x1e000, 0xf);
         else
@@ -1389,11 +1398,9 @@ void daKrb_c::ActWalk() {
  * 20.0 for KURIBO_S. */
 int daKrb_c::OnAimedAtWithEgg()
 {
-    int normal = (actorID == ACTOR_KURIBO) ? 1 : 0;
-    if (normal)
+    if (IsActorID(this, ACTOR_KURIBO))
         return 0x41000;
-    int large = (actorID == ACTOR_KURIBO_L) ? 1 : 0;
-    if (large)
+    if (IsActorID(this, ACTOR_KURIBO_L))
         return 0x96000;
     return 0x14000;
 }
@@ -1647,8 +1654,7 @@ int daKrb_c::Behavior() {
 
     do {
         if (mState == STATE_WALK) {
-            int b = (mFlags & 8) ? 1 : 0;
-            if (b == 0) {
+            if (!IsOffScreen(this)) {
                 if (Vec3_Dist(&mPos, &mStuckCheckPos) < 0xa000) { /* moved less than 10.0 */
                     mStuckTimer += 1;
                     if (mCapId < 6 && mStuckTimer == 30) {
@@ -1803,11 +1809,9 @@ int daKrb_c::InitResources() {
  * compares against 6 and 4. */
 int daKrb_c::OnYoshiTryEat()
 {
-    int normal = (actorID == ACTOR_KURIBO) ? 1 : 0;
-    if (normal)
+    if (IsActorID(this, ACTOR_KURIBO))
         return 0x6;
-    int small = (actorID == ACTOR_KURIBO_S) ? 1 : 0;
-    if (small)
+    if (IsActorID(this, ACTOR_KURIBO_S))
         return 0x4;
     return 0;
 }
