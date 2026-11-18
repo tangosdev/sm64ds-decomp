@@ -389,8 +389,7 @@ int daBombking_c::EnterCarryPlayer() {
 
 /* -------------------------------------------------------------------------- */
 int daBombking_c::TickGrabPlayer() {
-    if (CheckKnockbackHit() == 1 ||
-        (this->mHeldActor != 0 && this->mHeldActor->GetHealth() == 0)) {
+    if (CheckKnockbackHit() == 1 || (this->mHeldActor != 0 && this->mHeldActor->GetHealth() == 0)) {
         DetonateSpawnedBombs();
         if (this->mHeldActor != 0) {
             func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
