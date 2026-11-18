@@ -27,6 +27,11 @@
 #include "nitro/os/interrupt.h"
 #include "WmWork.h"
 
+/* NitroSDK's FS_IsBusy (fs_file.h). */
+static inline int FS_IsBusy(const FSFile *p_file) {
+    return (p_file->stat & FS_FILE_STATUS_BUSY) != 0;
+}
+
 /* The link module and the wireless layer under it: the input record each
    console samples every frame (data_020a1040), the four players' copies of
    it (data_020a1154), the link's status and error bits (data_020a0f1c) and
@@ -959,13 +964,11 @@ void WFSi_SetMPData(void) {
             r = WBT_MpParentSendHook(sub, a);
         else
             r = WBT_MpChildSendHook(sub, a);
-        work->is_running = (WM_SetMPDataToPort(WFSi_OnSetMPDataDone, (u16 *)sub, r, 0xffff,
-                                               work->port, WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING)
-                               ? 1
-                               : 0;
+        work->is_running = WM_SetMPDataToPort(WFSi_OnSetMPDataDone, (u16 *)sub, r, 0xffff,
+                                              work->port, WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING;
     }
     /* re-read through the symbol: `work->is_running` changes the .text bytes */
-    work->send_idle = (data_020a1fc0.is_running == 0) ? 1 : 0;
+    work->send_idle = data_020a1fc0.is_running == 0;
 }
 
 /* The send callback WFSi_SetMPData hands the port send: unless the file
@@ -1181,9 +1184,8 @@ void WFSi_OnParentSystemCallback(void *arg) {
         unk18v = n->block_seq_no;
 
         if (p->busy_page != 3) {
-            /* FS_IsBusy: the page read is still in flight */
-            int t = (p->file.stat & FS_FILE_STATUS_BUSY) ? 1 : 0;
-            if (t == 0)
+            /* the page read is no longer in flight */
+            if (!FS_IsBusy(&p->file))
                 p->busy_page = 3;
         }
 
@@ -2923,7 +2925,7 @@ void func_0203e20c(void) {
                     }
                     j = (u8)(j + 1);
                 } while ((u32)j <= 15);
-                result = (cnt != 0) ? 1 : 0;
+                result = cnt != 0;
             }
             data_020a0f50 += 1;
         }
@@ -2963,7 +2965,7 @@ void func_0203e20c(void) {
                     }
                     m = (u8)(m + 1);
                 } while ((u32)m <= 15);
-                result = (cnt != 0) ? 1 : 0;
+                result = cnt != 0;
             } while (result == 0);
         }
         data_020a0f50 += 1;
