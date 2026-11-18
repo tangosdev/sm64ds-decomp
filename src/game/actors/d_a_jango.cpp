@@ -135,12 +135,6 @@ struct BCA_File;
 /* The matrix copies go through Mtx43: assigning this TU's nested
    Matrix4x3 instead grows .text by 0x38 bytes. */
 
-/* Array-backed position snapshot: mwccarm 2004/b56 copies these three
-   words with the retail ldm/stm sequence in C++. A three-scalar-member
-   assignment selects separate loads/stores here (notes/mwccarm-codegen.md
-   6ay, the struct-copy lever). */
-struct SwoopPositionWords { int w[3]; };
-
 extern signed char gCurrentSublevel;
 void func_02012694(unsigned int, const Vector3 *);
 s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
@@ -855,9 +849,6 @@ int daJango_c::EnterSwoopState() {
    has run out or the wall collider reports a wall. */
 int daJango_c::UpdateSwoopState() {
     Vector3 v;
-    SwoopPositionWords t;
-    Vector3 hv;
-    Vector3 vv;
     s16 pitch;
     daPly_c *player;
     int tx, ty, tz;
@@ -874,17 +865,20 @@ int daJango_c::UpdateSwoopState() {
             return 1;
         }
 
-        t = *(SwoopPositionWords *)&player->mPos.x;
-        tx = t.w[0];
+        /* A POD copy-init is the ROM's ldm/stm; any Vector3 copy is memberwise. */
+        VecFx32 t = *(VecFx32 *)&player->mPos;
+        tx = t.x;
         {
             int y = player->mGroundY;
-            t.w[1] = y;
-            t.w[1] = y + 0x28000;
+            t.y = y;
+            t.y = y + 0x28000;
         }
-        tz = t.w[2];
-        ty = t.w[1];
+        tz = t.z;
+        ty = t.y;
+        Vector3 hv;
         hv.x = tx; hv.y = ty; hv.z = tz;
         mTargetAngleY = Vec3_HorzAngle(&mPos, &hv);
+        Vector3 vv;
         vv.x = tx; vv.y = ty; vv.z = tz;
         pitch = Vec3_VertAngle(&mPos, &vv);
     }

@@ -54,12 +54,9 @@ s16 atan2(s32, s32);
  * generated preamble redefined all of them. The shapes below are surviving
  * views from the legacy shards, not evidence of original local classes. */
 
-/* Whole-struct 3-word copies go through an array member: mwccarm block-moves
- * (ldm/stm) a POD struct copy under -lang c99 but scalarises the same copy
- * under -lang c++, and an array member forces the block move back. Two sites
- * still need it; the snapshots in TickKnockback and TickChase
- * initialize the POD VecFx32 directly instead. */
-struct M3 { int w[3]; };
+/* A snapshot of a player's mPos is copy-initialized into a POD VecFx32: that
+ * copy is a block move (ldm/stm), while any copy of the non-POD Vector3 is
+ * memberwise. */
 struct BCA_File;
 typedef daBombking_c::StateFunction PMF;
 
@@ -647,8 +644,6 @@ int daBombking_c::TickReturnHome() {
     Vector3 vA;
     Vector3 vB;
     Vector3 vC;
-    Vector3 D;
-    Vector3 E;
 
     if (this->mActionStep != 2) {
         horz = Vec3_HorzAngle(&this->mPos, &this->mArenaPos);
@@ -693,8 +688,9 @@ int daBombking_c::TickReturnHome() {
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
-            *(struct M3 *)&D = *(struct M3 *)&pl->mPos.x;
-            if (Vec3_Dist(&this->mArenaPos, &D) > 0x640000 || this->mArenaPos.y - 0x64000 > D.y) {
+            VecFx32 D = *(VecFx32 *)&pl->mPos;
+            if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&D) > 0x640000 ||
+                this->mArenaPos.y - 0x64000 > D.y) {
                 this->mSpeed.x = 0;
                 this->mSpeed.y = 0;
                 this->mSpeed.z = 0;
@@ -720,10 +716,8 @@ int daBombking_c::TickReturnHome() {
 
         if ((&this->mBlendAnmModel)->Finished() != 0) {
             daPly_c *pl2 = this->mTalkingPlayer;
+            Vector3 E = this->mPos;
             unsigned short m;
-            E.x = this->mPos.x;
-            E.y = this->mPos.y;
-            E.z = this->mPos.z;
             E.y += 0xc8000;
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
@@ -1224,8 +1218,6 @@ int daBombking_c::EnterIntroTalk() {
 
 int daBombking_c::TickInactive() {
     int dist;
-    struct Vector3 ppos;
-    struct Vector3 v;
     daPly_c *player;
     unsigned int b;
 
@@ -1252,15 +1244,13 @@ int daBombking_c::TickInactive() {
 
     player = this->ClosestPlayer();
     if (player != 0) {
-        *(struct M3 *)&ppos = *(struct M3 *)&player->mPos.x;
+        VecFx32 ppos = *(VecFx32 *)&player->mPos;
 
         if (this->mIntroTalked == 0) {
-            dist = Vec3_Dist(&this->mPos, &ppos);
+            dist = Vec3_Dist(&this->mPos, (const Vector3 *)&ppos);
             if (dist < 0x12c000) {
                 this->mTalkingPlayer = player;
-                v.x = this->mPos.x;
-                v.y = this->mPos.y;
-                v.z = this->mPos.z;
+                Vector3 v = this->mPos;
                 v.y = v.y + 0xc8000;
 
                 if (this->mTalkingPlayer->StartTalk(*this, 1)) {
@@ -1274,7 +1264,7 @@ int daBombking_c::TickInactive() {
                 }
             }
         } else {
-            dist = Vec3_Dist(&this->mPos, &ppos);
+            dist = Vec3_Dist(&this->mPos, (const Vector3 *)&ppos);
             if (dist < 0x258000) {
                 if (this->mArenaPos.y - 0xa000 < ppos.y) {
                     KingBobOmb_SetState(&data_ov078_0212701c);

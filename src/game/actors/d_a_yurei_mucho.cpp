@@ -16,8 +16,9 @@
  * - mStateTimer comparisons read it through a (u16) cast, because the ROM
  *   loads it with ldrh.
  * - The Mtx43 overlays on mAnmModel.mat4x3 and the scratch matrix, the
- *   Matrix4x3 view of mShadowMat, and the V3A copies of a player's
- *   position. Plain Matrix4x3 / Vector3 assignment scalarizes.
+ *   Matrix4x3 view of mShadowMat, and the V3A copy of a player's
+ *   position in UpdateShoot. Plain Matrix4x3 / Vector3 assignment
+ *   scalarizes; UpdateChase's snapshot is a POD VecFx32 copy-init.
  * - dExtAnmModel_c::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init,
  *   DropShadowRadHeight, KillByInvincibleChar, SpawnCoins, daPly_c::Hurt
  *   and daPly_c::Bounce retain scalar ABI declarations. Native fixed-point
@@ -44,6 +45,8 @@
    the measured alternatives in the handoff. */
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+/* Kept for UpdateShoot's L.pp (measured r57): any Vector3 copy is memberwise, and
+ * the block-moving VecFx32 copy-init cannot initialize a V3Quint member. */
 struct V3A { int w[3]; };
 
 /* UpdateShoot builds a five-Vector3 aggregate on the stack. Leaving it
@@ -399,8 +402,7 @@ int daYurei_Mucho_c::UpdateChase() {
     short pitch = 0;
     daPly_c *p = ClosestNonVanishPlayer();
     if (p != 0) {
-        Vector3 tmp;
-        *(V3A *)&tmp = *(V3A *)&p->mPos.x;
+        VecFx32 tmp = *(VecFx32 *)&p->mPos;
         Vector3 v;
         Vector3 a;
         a.x = tmp.x;
@@ -412,7 +414,7 @@ int daYurei_Mucho_c::UpdateChase() {
         b.y = tmp.y;
         b.z = tmp.z;
         pitch = Vec3_VertAngle(&mPos, &b);
-        if (Vec3_Dist(&mPos, &tmp) >= 0x1f4000) {
+        if (Vec3_Dist(&mPos, (const Vector3 *)&tmp) >= 0x1f4000) {
             mSpeed.x = 0;
             mSpeed.y = 0;
             mSpeed.z = 0;

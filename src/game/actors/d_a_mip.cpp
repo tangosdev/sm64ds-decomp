@@ -9,8 +9,7 @@
  *   state records, the carry offsets and the rabbit-count int are
  *   the folded sinit objects at the end of this file.
  * - Matrix copies go through Mtx43. Matrix4x3 embeds
- *   Vector3, and a typed copy emits ~Vector3. StateFleeMain copies
- *   the player position through V3Blk for the same reason.
+ *   Vector3, and a typed copy emits ~Vector3.
  *   TestWaterBelow's ground probe stays a stack buffer; clsnY is
  *   detect[12].
  * - Render writes mMaterialColor into each material's texImageParam.
@@ -646,25 +645,9 @@ int daMip_c::StateRestInit()
 /* Runs the path away from the player. Dust or splash at a node, steps
    mPathDir, and falls back to Rest past 0x4b0000. */
 int daMip_c::StateFleeMain() {
-    /* V3Blk's array member is what makes the player-position copy a block
-       move (ldm/stm into the lowest frame slot); a three-scalar struct
-       scalarises. Measured: `Vector3 plPos; plPos = pl->mPos;` and the same
-       with a VecFx32 are memberwise (+8 bytes); a block-scoped
-       `VecFx32 plPos = *(const VecFx32 *)&pl->mPos` gives the block move but
-       lands at the top of the frame, shifting every other slot by 0xc
-       (20/170 words off). */
-    struct V3Blk {
-        s32 w[3];
-    };
     extern MipStatePair data_ov085_0213069c;
 
     daPly_c *pl;
-    struct V3Blk v;
-    Vector3 pos;
-    Vector3 node;
-    Vector3 node2;
-    Vector3 delta;
-    Vector3 scaled;
     s32 len;
     s32 lim;
     s16 ang;
@@ -672,7 +655,8 @@ int daMip_c::StateFleeMain() {
     int ysave;
     pl = ClosestPlayer();
     if (pl != 0) {
-        v = *((struct V3Blk *)&pl->mPos.x);
+        /* A POD copy-init is the ROM's ldm/stm; any Vector3 copy is memberwise. */
+        VecFx32 v = *(VecFx32 *)&pl->mPos;
         if (Vec3_Dist(&mPos, (const Vector3 *)&v) > 0x4b0000) {
             SetState(&data_ov085_0213069c);
             return 1;
@@ -691,10 +675,7 @@ int daMip_c::StateFleeMain() {
     }
 
     if (TestWaterBelow() == 1) {
-        /* pos is the outer Vector3 so it lives in the frame (pos.x and pos.y
-           are read back from it for the call); a VecFx32 there is kept in
-           registers, and a block-scope Vector3 lands above node/node2/delta/
-           scaled in the frame. */
+        Vector3 pos;
         s32 z = mPos.z;
         s32 y = mFloorY + 0x3000;
         s32 x = mPos.x;
@@ -706,6 +687,10 @@ int daMip_c::StateFleeMain() {
     }
 
     PathPtr pathptr;
+    Vector3 node;
+    Vector3 node2;
+    Vector3 delta;
+    Vector3 scaled;
     pathptr.FromID(mPathId);
     pathptr.GetNode(node, mPathNodeIndex);
     ang = Vec3_HorzAngle(&mPos, &node);
