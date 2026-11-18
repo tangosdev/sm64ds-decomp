@@ -312,7 +312,7 @@ void dScMgSlot3_c::StateJudge() {
         // Plain members (mResultSymbols[0][column], mReelPos[reelIndex], ...) with
         // for, do-while or an inlined index hoist this+0x5031 into a stack slot:
         // 0x1c0 against 0x1b8 (2026-11-16).
-        self = (char *)((unsigned)self | (unsigned)(column - column));
+        self = (char *)((unsigned)self | (column - column));
     }
 
     mWinColumn = -1;
@@ -815,7 +815,7 @@ s32 dScMgSlot3_c::InitResources() {
     mMascot.Load();
     Camera_InitSlotsView(&mCamera);
 
-    mReelDifficulty = (int)mLevel;
+    mReelDifficulty = mLevel;
 
     StartRound(3);
 

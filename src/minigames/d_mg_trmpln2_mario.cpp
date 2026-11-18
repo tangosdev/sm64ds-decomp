@@ -92,9 +92,9 @@ struct TrmpGoal {
     }
     TrmpGoal(int px, int py, int pz) {
         unsigned int *p = (unsigned int *)this;
-        p[0] = (unsigned int)px;
-        p[1] = (unsigned int)py;
-        p[2] = (unsigned int)pz;
+        p[0] = px;
+        p[1] = py;
+        p[2] = pz;
     }
     ~TrmpGoal();
 };

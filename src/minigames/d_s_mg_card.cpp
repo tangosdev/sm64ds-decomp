@@ -1285,8 +1285,8 @@ void dMgCardObj_c::Update()
             if (mLift != 0x4000)
                 return;
             {
-                int touchDeltaX = (int)gTouchInfo[touchIndex].x - (mPos.x >> 12);
-                int touchDeltaY = (int)gTouchInfo[touchIndex].y - (mPos.y >> 12);
+                int touchDeltaX = gTouchInfo[touchIndex].x - (mPos.x >> 12);
+                int touchDeltaY = gTouchInfo[touchIndex].y - (mPos.y >> 12);
                 if (touchDeltaX <= 7)
                     return;
                 if (touchDeltaX >= 0x29)

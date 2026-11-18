@@ -342,15 +342,15 @@ void FlowerFace::PlayPetalPulled() {
             b.vel.z = 0xa00;
             /* Each component gets 0..0x3ff of jitter from a fresh random. */
             b.vel.x +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
                       19) >>
                 2;
             b.vel.y +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
                       19) >>
                 2;
             b.vel.z +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
                       19) >>
                 2;
             b.pos2.x = b.pos.x;
@@ -1640,7 +1640,7 @@ void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *scre
     int height = FX_MUL(tanFov, -view.z);
     int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
-    screenY[0] = -((pixelY + (int)0xfffa0800) >> 0xc);
+    screenY[0] = -((pixelY - 0x5f800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
     int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
@@ -1656,7 +1656,7 @@ void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
     int height = FX_MUL(tanFov, -view.z);
     int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
-    screen[1] = -((pixelY + (int)0xfffa0800) >> 0xc);
+    screen[1] = -((pixelY - 0x5f800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
     int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);

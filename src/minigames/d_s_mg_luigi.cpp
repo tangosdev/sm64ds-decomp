@@ -647,7 +647,7 @@ void dScMgLuigi_c::TickTimer() {
         Sound::PlayBank2_2D(0xa7);
         return;
     }
-    Sound::PlayBank2_2D((unsigned int)((mWanted << 3) + 0xc0));
+    Sound::PlayBank2_2D((mWanted << 3) + 0xc0);
     func_02012790(0xe);
     BeginCatch(0);
 }

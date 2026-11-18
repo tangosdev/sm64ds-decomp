@@ -1198,7 +1198,7 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         pVx = velXBase;
         distSq += (s64)b * b;
         pVy = velYBase;
-        dist = (int)cstd::sqrt((u64)distSq);
+        dist = cstd::sqrt((u64)distSq);
     }
     factor = dist * 9 / 10;
     idx = PACHINKO_RAND(4);
@@ -1216,7 +1216,7 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         int entX = *xBase;
         angBase = (char *)&mBall[0].angle;
         angle = cstd::atan2((targetY - yval) >> 12, (targetX - entX) >> 12);
-        *(u16 *)(angBase + n) = (u16)angle;
+        *(u16 *)(angBase + n) = angle;
         u16 angU = *(u16 *)(angBase + n);
         {
             fx16 cosv = FX_CosIdx(angU >> 4);

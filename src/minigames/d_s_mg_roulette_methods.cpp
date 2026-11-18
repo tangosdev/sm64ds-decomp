@@ -1060,7 +1060,7 @@ void RouletteBoard::StateSpin() {
         ApproachLinear(mSpinSpeed, 0, 0x10);
     }
 
-    u16 angle = (u16)mOrbitAngle;
+    u16 angle = mOrbitAngle;
     int dist = mBallRadius;
     int idx = angle >> 4;
     s16 val1 = FX_CosIdx(idx);

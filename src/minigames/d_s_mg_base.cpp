@@ -1179,7 +1179,7 @@ void MgFx::DrawSparkle() {
         sMgSparkleSpritesGuard |= 1;
     }
     {
-        int idx = ((int)mTimer) & 0xf;
+        int idx = mTimer & 0xf;
         int x = mPos[0] >> 0xc;
         int y = mPos[1] >> 0xc;
         s20adcc8::Mg_RenderSpriteOnNoMtx(sMgSparkleSprites[idx], x, y, -1, -1);

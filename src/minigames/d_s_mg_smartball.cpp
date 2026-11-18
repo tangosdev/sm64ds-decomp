@@ -2780,7 +2780,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                 ((((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0x10) >> 15)
                  << 12);
             responseScale += FIX_MUL_SU(responseScale, randomScale >> 6);
-            randomAngle = (u32)RandomIntInternal(&data_0209d4b8.value);
+            randomAngle = RandomIntInternal(&data_0209d4b8.value);
             func_0203d388((Vector2 *)&response,
                           (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
         } else if (hitKinoko == 1) {
@@ -2793,7 +2793,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                 ((((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0x10) >> 15)
                  << 12);
             responseScale += FIX_MUL_US(randomScale >> 5, -0x2000);
-            randomAngle = (u32)RandomIntInternal(&data_0209d4b8.value);
+            randomAngle = RandomIntInternal(&data_0209d4b8.value);
             func_0203d388((Vector2 *)&response,
                           (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
         } else if (hitExit == 1) {
@@ -3320,7 +3320,7 @@ void dScMgSmartball_c::EmitSparks(int *pair, int a3) {
         r = RandomIntInternal(&data_0209d4b8.value);
         mSparks[i].mPos[0] = 0;
         mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0x10000) >> 15;
-        func_0203d388((Vector2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
+        func_0203d388((Vector2 *)mSparks[i].mPos, (u16)(SPARK_RAND * 2));
         mSparks[i].mPos[1] *= 2;
         mSparks[i].mPos[0] += mSparks[i].mOrigin[0];
         mSparks[i].mPos[1] += mSparks[i].mOrigin[1];
@@ -3342,7 +3342,7 @@ void dScMgSmartball_c::EmitSparks(int *pair, int a3) {
         r = RandomIntInternal(&data_0209d4b8.value);
         mSparks[i].mPos[0] = 0;
         mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0xc000) >> 15;
-        func_0203d388((Vector2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
+        func_0203d388((Vector2 *)mSparks[i].mPos, (u16)(SPARK_RAND * 2));
         mSparks[i].mPos[1] *= 2;
         mSparks[i].mPos[0] += mSparks[i].mOrigin[0];
         mSparks[i].mPos[1] += mSparks[i].mOrigin[1];
@@ -3400,7 +3400,7 @@ void dScMgSmartball_c::UpdateSparks() {
                     r = RandomIntInternal(&data_0209d4b8.value);
                     mSparks[i].mPos[0] = 0;
                     mSparks[i].mPos[1] = (((r >> 16) & 0x7fff) * 0x10000) >> 15;
-                    func_0203d388((Vector2 *)mSparks[i].mPos, (s16)(u16)(SPARK_RAND * 2));
+                    func_0203d388((Vector2 *)mSparks[i].mPos, (u16)(SPARK_RAND * 2));
                     mSparks[i].mPos[1] *= 2;
                     mSparks[i].mPos[0] += mSparks[i].mOrigin[0];
                     mSparks[i].mPos[1] += mSparks[i].mOrigin[1];
@@ -3856,17 +3856,17 @@ void dScMgSmartball_c::SpawnObjects() {
     Mg_SetTopScreenYOffset(0x30);
 
     if (GetOwnerLanguage() == 5) {
-        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtSpanish, (int)mLevel & 1);
+        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtSpanish, mLevel & 1);
     } else if (GetOwnerLanguage() == 4) {
-        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtItalian, (int)mLevel & 1);
+        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtItalian, mLevel & 1);
     } else if (GetOwnerLanguage() == 3) {
-        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtGerman, (int)mLevel & 1);
+        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtGerman, mLevel & 1);
     } else if (GetOwnerLanguage() == 2) {
-        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtFrench, (int)mLevel & 1);
+        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtFrench, mLevel & 1);
     } else if ((param1 & 0xff) == 0) {
-        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtE, (int)mLevel & 1);
+        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmtE, mLevel & 1);
     } else {
-        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmt, (int)mLevel & 1);
+        OS_SPrintf(sSmartballPathBuf, sSmartballLayoutNcgFmt, mLevel & 1);
     }
     {
         void *d = Ov004_LoadFileByPath(sSmartballPathBuf);
@@ -3874,13 +3874,13 @@ void dScMgSmartball_c::SpawnObjects() {
         DecompressLZ16(d, G2S_GetOBJCharPtr());
         Ov004_Deallocate(d);
     }
-    OS_SPrintf(sSmartballPathBuf, sSmartballBg1NscFmt, (int)mLevel & 1);
+    OS_SPrintf(sSmartballPathBuf, sSmartballBg1NscFmt, mLevel & 1);
     {
         void *d = Ov004_LoadFileByPath(sSmartballPathBuf);
         DecompressLZ16(d, mBg1Map);
         Ov004_Deallocate(d);
     }
-    OS_SPrintf(sSmartballPathBuf, sSmartballBg2NscFmt, (int)mLevel & 1);
+    OS_SPrintf(sSmartballPathBuf, sSmartballBg2NscFmt, mLevel & 1);
     {
         void *d = Ov004_LoadFileByPath(sSmartballPathBuf);
         DecompressLZ16(d, mBg2Map);
@@ -4583,7 +4583,7 @@ s32 dScMgSmartball_c::Render() {
                     Mg_RenderSpriteBoth(sSmartballTextSpritesByLanguage[i][21],
                                         (*px >> 12) + nd * 8 - 8, *py >> 12, -1, -1);
                     nd = 0;
-                    u = (unsigned int)*pcnt;
+                    u = *pcnt;
                     if (u != 0) {
                         do {
                             u /= 10;

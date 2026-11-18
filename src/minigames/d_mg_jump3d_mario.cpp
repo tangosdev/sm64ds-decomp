@@ -534,7 +534,7 @@ void dMgJump3DMario_c::StateMove()
             s16 y = mScreenY;
             int ax = gTouchInfo[idx].x;
             int az = gTouchInfo[idx].y;
-            int dx = (int)mScreenX - ax;
+            int dx = mScreenX - ax;
             int ym = (int)y - 0x20;
             int t = dx < 0 ? -dx : dx;
 

@@ -155,7 +155,7 @@ void dScMgJump_c::StartRound(int arg)
     } else {
         do {
             idx = RAND_FX_SCALE(10);
-        } while (idx == (u32)sJumpLastPick);
+        } while (idx == sJumpLastPick);
         sJumpLastPick = idx;
     }
 
