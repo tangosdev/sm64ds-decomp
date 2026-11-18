@@ -1,0 +1,9 @@
+//cpp
+/* .data data at 0x02113228; bytes from the cartridge. */
+#include "types.h"
+
+unsigned int data_ov018_02113228[18] = {
+    0x01cbfb82, 0x0320f510, 0xf47a0089, 0xfe420e10, 0x1068f574, 0xf380ff87,
+    0xfe230e42, 0x02eef1f0, 0xf128fbe6, 0xfb60f448, 0xefcaf128, 0xf5d8faff,
+    0xfadeed0e, 0xeffcffce, 0x06fefb3c, 0xfa1e026f, 0xfb6913c1, 0x11a5f9c9
+};

@@ -30,3 +30,395 @@ src/game/actors/d_a_obj_ice_board.cpp:
     .init start:0x02112e00 end:0x02112e6c
     .ctor start:0x02112e74 end:0x02112e78
     .bss start:0x02113c7c end:0x02113ca4
+
+src/data/ov018/data_ov018_02112a74.cpp:
+    complete
+    .rodata start:0x02112a74 end:0x02112a78
+
+src/data/ov018/data_ov018_02112a78.cpp:
+    complete
+    .rodata start:0x02112a78 end:0x02112a7c
+
+src/data/ov018/data_ov018_02112a7c.cpp:
+    complete
+    .rodata start:0x02112a7c end:0x02112a98
+
+src/data/ov018/data_ov018_02112a98.cpp:
+    complete
+    .rodata start:0x02112a98 end:0x02112aa4
+
+src/data/ov018/data_ov018_02112aa4.cpp:
+    complete
+    .rodata start:0x02112aa4 end:0x02112aa8
+
+src/data/ov018/data_ov018_02112aa8.cpp:
+    complete
+    .rodata start:0x02112aa8 end:0x02112ac0
+
+src/data/ov018/data_ov018_02112ac0.cpp:
+    complete
+    .rodata start:0x02112ac0 end:0x02112adc
+
+src/data/ov018/data_ov018_02112adc.cpp:
+    complete
+    .rodata start:0x02112adc end:0x02112b08
+
+src/data/ov018/data_ov018_02112b08.cpp:
+    complete
+    .rodata start:0x02112b08 end:0x02112b84
+
+src/data/ov018/data_ov018_02112b84.cpp:
+    complete
+    .rodata start:0x02112b84 end:0x02112ba8
+
+src/data/ov018/data_ov018_02112ba8.cpp:
+    complete
+    .rodata start:0x02112ba8 end:0x02112bdc
+
+src/data/ov018/data_ov018_02112bdc.cpp:
+    complete
+    .rodata start:0x02112bdc end:0x02112bec
+
+src/data/ov018/data_ov018_02112bec.cpp:
+    complete
+    .rodata start:0x02112bec end:0x02112c04
+
+src/data/ov018/data_ov018_02112c04.cpp:
+    complete
+    .rodata start:0x02112c04 end:0x02112c08
+
+src/data/ov018/data_ov018_02112c08.cpp:
+    complete
+    .rodata start:0x02112c08 end:0x02112c0c
+
+src/data/ov018/data_ov018_02112c0c.cpp:
+    complete
+    .rodata start:0x02112c0c end:0x02112c14
+
+src/data/ov018/data_ov018_02112e80.cpp:
+    complete
+    .data start:0x02112e80 end:0x02112e84
+
+src/data/ov018/data_ov018_02112e84.cpp:
+    complete
+    .data start:0x02112e84 end:0x02112e88
+
+src/data/ov018/data_ov018_02112e88.cpp:
+    complete
+    .data start:0x02112e88 end:0x02112e90
+
+src/data/ov018/data_ov018_02112e90.cpp:
+    complete
+    .data start:0x02112e90 end:0x02112e98
+
+src/data/ov018/data_ov018_02112e98.cpp:
+    complete
+    .data start:0x02112e98 end:0x02112ea0
+
+src/data/ov018/data_ov018_02112ea0.cpp:
+    complete
+    .data start:0x02112ea0 end:0x02112ea8
+
+src/data/ov018/data_ov018_02112ea8.cpp:
+    complete
+    .data start:0x02112ea8 end:0x02112eb4
+
+src/data/ov018/data_ov018_02112eb4.cpp:
+    complete
+    .data start:0x02112eb4 end:0x02112ec0
+
+src/data/ov018/data_ov018_02112ec0.cpp:
+    complete
+    .data start:0x02112ec0 end:0x02112ecc
+
+src/data/ov018/data_ov018_02112ecc.cpp:
+    complete
+    .data start:0x02112ecc end:0x02112edc
+
+src/data/ov018/data_ov018_02112edc.cpp:
+    complete
+    .data start:0x02112edc end:0x02112eec
+
+src/data/ov018/data_ov018_02112eec.cpp:
+    complete
+    .data start:0x02112eec end:0x02112efc
+
+src/data/ov018/data_ov018_02112efc.cpp:
+    complete
+    .data start:0x02112efc end:0x02112f14
+
+src/data/ov018/data_ov018_02112f14.cpp:
+    complete
+    .data start:0x02112f14 end:0x02112f2c
+
+src/data/ov018/data_ov018_02112f2c.cpp:
+    complete
+    .data start:0x02112f2c end:0x02112f48
+
+src/data/ov018/data_ov018_02112f68.cpp:
+    complete
+    .data start:0x02112f68 end:0x02112f7c
+
+src/data/ov018/data_ov018_02112f7c.cpp:
+    complete
+    .data start:0x02112f7c end:0x02112f88
+
+src/data/ov018/data_ov018_02112f88.cpp:
+    complete
+    .data start:0x02112f88 end:0x02112fa8
+
+src/data/ov018/data_ov018_02112fa8.cpp:
+    complete
+    .data start:0x02112fa8 end:0x02112fc8
+
+src/data/ov018/data_ov018_02112fc8.cpp:
+    complete
+    .data start:0x02112fc8 end:0x02112fd0
+
+src/data/ov018/data_ov018_02112fd0.cpp:
+    complete
+    .data start:0x02112fd0 end:0x02112ff8
+
+src/data/ov018/data_ov018_02112ff8.cpp:
+    complete
+    .data start:0x02112ff8 end:0x02112ffc
+
+src/data/ov018/data_ov018_02112ffc.cpp:
+    complete
+    .data start:0x02112ffc end:0x02113028
+
+src/data/ov018/data_ov018_02113028.cpp:
+    complete
+    .data start:0x02113028 end:0x02113058
+
+src/data/ov018/data_ov018_02113058.cpp:
+    complete
+    .data start:0x02113058 end:0x02113090
+
+src/data/ov018/data_ov018_02113090.cpp:
+    complete
+    .data start:0x02113090 end:0x021130cc
+
+src/data/ov018/data_ov018_021130cc.cpp:
+    complete
+    .data start:0x021130cc end:0x021130d0
+
+src/data/ov018/data_ov018_021130d0.cpp:
+    complete
+    .data start:0x021130d0 end:0x02113120
+
+src/data/ov018/data_ov018_02113120.cpp:
+    complete
+    .data start:0x02113120 end:0x02113170
+
+src/data/ov018/data_ov018_02113170.cpp:
+    complete
+    .data start:0x02113170 end:0x021131c8
+
+src/data/ov018/data_ov018_021131c8.cpp:
+    complete
+    .data start:0x021131c8 end:0x02113228
+
+src/data/ov018/data_ov018_02113228.cpp:
+    complete
+    .data start:0x02113228 end:0x02113270
+
+src/data/ov018/data_ov018_02113270.cpp:
+    complete
+    .data start:0x02113270 end:0x021132ec
+
+src/data/ov018/data_ov018_021132ec.cpp:
+    complete
+    .data start:0x021132ec end:0x02113344
+
+src/data/ov018/data_ov018_02113344.cpp:
+    complete
+    .data start:0x02113344 end:0x02113390
+
+src/data/ov018/data_ov018_02113390.cpp:
+    complete
+    .data start:0x02113390 end:0x021133a8
+
+src/data/ov018/data_ov018_021133a8.cpp:
+    complete
+    .data start:0x021133a8 end:0x02113434
+
+src/data/ov018/data_ov018_02113434.cpp:
+    complete
+    .data start:0x02113434 end:0x02113518
+
+src/data/ov018/data_ov018_02113518.cpp:
+    complete
+    .data start:0x02113518 end:0x02113534
+
+src/data/ov018/data_ov018_02113534.cpp:
+    complete
+    .data start:0x02113534 end:0x02113554
+
+src/data/ov018/data_ov018_02113554.cpp:
+    complete
+    .data start:0x02113554 end:0x02113588
+
+src/data/ov018/data_ov018_02113588.cpp:
+    complete
+    .data start:0x02113588 end:0x021135d4
+
+src/data/ov018/data_ov018_021135d4.cpp:
+    complete
+    .data start:0x021135d4 end:0x021135f4
+
+src/data/ov018/data_ov018_021135f4.cpp:
+    complete
+    .data start:0x021135f4 end:0x021136d4
+
+src/data/ov018/data_ov018_021136d4.cpp:
+    complete
+    .data start:0x021136d4 end:0x021136f4
+
+src/data/ov018/data_ov018_021136f4.cpp:
+    complete
+    .data start:0x021136f4 end:0x0211373c
+
+src/data/ov018/data_ov018_0211373c.cpp:
+    complete
+    .data start:0x0211373c end:0x021137e4
+
+src/data/ov018/data_ov018_021137e4.cpp:
+    complete
+    .data start:0x021137e4 end:0x021137f8
+
+src/data/ov018/data_ov018_021137f8.cpp:
+    complete
+    .data start:0x021137f8 end:0x02113800
+
+src/data/ov018/data_ov018_02113804.cpp:
+    complete
+    .data start:0x02113804 end:0x02113820
+
+src/data/ov018/data_ov018_02113820.cpp:
+    complete
+    .data start:0x02113820 end:0x0211382c
+
+src/data/ov018/data_ov018_0211382c.cpp:
+    complete
+    .data start:0x0211382c end:0x02113888
+
+src/data/ov018/_ZTI14daObjSm_Lift_c.cpp:
+    complete
+    .data start:0x02113888 end:0x02113894
+
+src/data/ov018/_ZTS14daObjSm_Lift_c.cpp:
+    complete
+    .data start:0x02113894 end:0x021138a8
+
+src/data/ov018/g_profile_SM_LIFT.cpp:
+    complete
+    .data start:0x021138a8 end:0x021138bc
+
+src/data/ov018/data_ov018_021138bc.cpp:
+    complete
+    .data start:0x021138bc end:0x021138c4
+
+src/data/ov018/data_ov018_021138c4.cpp:
+    complete
+    .data start:0x021138c4 end:0x021138cc
+
+src/data/ov018/data_ov018_021138d8.cpp:
+    complete
+    .data start:0x021138d8 end:0x021138f0
+
+src/data/ov018/data_ov018_021138f0.cpp:
+    complete
+    .data start:0x021138f0 end:0x021138fc
+
+src/data/ov018/data_ov018_021138fc.cpp:
+    complete
+    .data start:0x021138fc end:0x02113934
+
+src/data/ov018/data_ov018_02113934.cpp:
+    complete
+    .data start:0x02113934 end:0x0211394c
+
+src/data/ov018/_ZTI10daPgMthr_c.cpp:
+    complete
+    .data start:0x0211397c end:0x02113980
+
+src/data/ov018/data_ov018_02113980.cpp:
+    complete
+    .data start:0x02113980 end:0x02113988
+
+src/data/ov018/_ZTS10daPgMthr_c.cpp:
+    complete
+    .data start:0x02113988 end:0x02113998
+
+src/data/ov018/g_profile_PENGUIN_MOTHER.cpp:
+    complete
+    .data start:0x02113998 end:0x021139b0
+
+src/data/ov018/data_ov018_021139b0.cpp:
+    complete
+    .data start:0x021139b0 end:0x021139bc
+
+src/data/ov018/data_ov018_021139f4.cpp:
+    complete
+    .data start:0x021139f4 end:0x02113a00
+
+src/data/ov018/BridgePenguin_SpawnInfo.cpp:
+    complete
+    .data start:0x02113a00 end:0x02113a38
+
+src/data/ov018/_ZTS8daSCre_c.cpp:
+    complete
+    .data start:0x02113a38 end:0x02113a44
+
+src/data/ov018/_ZTI8daSCre_c.cpp:
+    complete
+    .data start:0x02113a44 end:0x02113a50
+
+src/data/ov018/g_profile_STAR_CREATE.cpp:
+    complete
+    .data start:0x02113a50 end:0x02113a74
+
+src/data/ov018/data_ov018_02113aa0.cpp:
+    complete
+    .data start:0x02113aa0 end:0x02113abc
+
+src/data/ov018/data_ov018_02113abc.cpp:
+    complete
+    .data start:0x02113abc end:0x02113af0
+
+src/data/ov018/_ZTI15daObjIceBoard_c.cpp:
+    complete
+    .data start:0x02113af0 end:0x02113afc
+
+src/data/ov018/_ZTS15daObjIceBoard_c.cpp:
+    complete
+    .data start:0x02113afc end:0x02113b10
+
+src/data/ov018/g_profile_ICE_BOARD.cpp:
+    complete
+    .data start:0x02113b10 end:0x02113b2c
+
+src/data/ov018/data_ov018_02113b2c.cpp:
+    complete
+    .data start:0x02113b2c end:0x02113b34
+
+src/data/ov018/data_ov018_02113b50.cpp:
+    complete
+    .data start:0x02113b50 end:0x02113b7c
+
+src/data/ov018/data_ov018_02113b7c.cpp:
+    complete
+    .data start:0x02113b7c end:0x02113b80
+
+src/data/ov018/data_ov018_02113b80.cpp:
+    complete
+    .data start:0x02113b80 end:0x02113b90
+
+src/data/ov018/data_ov018_02113b90.cpp:
+    complete
+    .data start:0x02113b90 end:0x02113bc0
+
+src/data/ov018/data_ov018_02113ca4.cpp:
+    complete
+    .bss start:0x02113ca4 end:0x02113cc0
