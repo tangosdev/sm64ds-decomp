@@ -54,7 +54,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "_Z13func_02044e50P15ModelComponentsiiPi",
+      "symbol": "_Z13func_02044e50P15ModelComponentsiiP9Matrix4x3",
       "address": "0x02044e50",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0204/func_02044e50.c",
@@ -89,7 +89,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "_Z13func_02045178Piiiiiii",
+      "symbol": "_Z13func_02045178P9Matrix4x3iiiiii",
       "address": "0x02045178",
       "size": "0x000001a4",
       "legacy_source": "src/func_02045178.c",
