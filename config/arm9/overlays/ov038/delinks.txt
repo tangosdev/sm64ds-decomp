@@ -104,4 +104,3 @@ src/data/ov038/data_ov038_021113d0.c:
 src/data/ov038/data_ov038_02111438.c:
     complete
     .data start:0x02111438 end:0x02111500
-

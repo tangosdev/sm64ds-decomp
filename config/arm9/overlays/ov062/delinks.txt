@@ -111,4 +111,3 @@ src/data/ov062/g_profile_JANGO.c:
 src/data/ov062/ov062_vt_0211dd5c.c:
     complete
     .data start:0x0211dd5c end:0x0211dde0
-

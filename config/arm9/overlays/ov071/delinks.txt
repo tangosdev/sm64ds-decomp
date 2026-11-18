@@ -185,4 +185,3 @@ src/data/ov071/ov071_vt_02122efc.c:
 src/data/ov071/data_ov071_021230f8.c:
     complete
     .bss start:0x021230f8 end:0x02123100
-

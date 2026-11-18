@@ -296,4 +296,3 @@ src/data/ov004/sMgCoinsDeltaShown.c:
 src/data/ov004/data_ov004_020bfeb8.c:
     complete
     .bss start:0x020bfeb8 end:0x020bfec0
-

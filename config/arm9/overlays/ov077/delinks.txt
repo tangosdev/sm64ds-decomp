@@ -109,4 +109,3 @@ src/data/ov077/g_profile_POPOI.c:
 src/data/ov077/ov077_vt_02127a98.c:
     complete
     .data start:0x02127a98 end:0x02127b20
-

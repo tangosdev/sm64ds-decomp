@@ -117,4 +117,3 @@ src/data/ov073/data_ov073_02123420.c:
 src/data/ov073/data_ov073_02123424.c:
     complete
     .bss start:0x02123424 end:0x02123428
-

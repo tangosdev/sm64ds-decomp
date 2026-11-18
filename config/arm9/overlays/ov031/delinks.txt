@@ -198,4 +198,3 @@ src/data/ov031/data_ov031_02111a50.c:
 src/data/ov031/data_ov031_02111a58.c:
     complete
     .bss start:0x02111a58 end:0x02111a60
-

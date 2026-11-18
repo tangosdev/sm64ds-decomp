@@ -132,4 +132,3 @@ src/data/ov042/data_ov042_0211159c.c:
 src/data/ov042/data_ov042_021115bc.c:
     complete
     .data start:0x021115bc end:0x021115e0
-

@@ -158,4 +158,3 @@ src/data/ov095/g_profile_OBJ_FLAMETHROWER.c:
 src/data/ov095/ov095_vt_021376f0.c:
     complete
     .data start:0x021376f0 end:0x02137780
-

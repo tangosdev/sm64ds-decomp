@@ -213,4 +213,3 @@ src/data/ov011/data_ov011_02111720.c:
 src/data/ov011/data_ov011_02111740.c:
     complete
     .data start:0x02111740 end:0x02111760
-

@@ -212,4 +212,3 @@ src/data/ov066/data_ov066_0211ae10.c:
 src/data/ov066/data_ov066_0211b0fc.c:
     complete
     .bss start:0x0211b0fc end:0x0211b100
-

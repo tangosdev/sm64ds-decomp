@@ -23,4 +23,3 @@ src/data/ov005/_ZTI11dScMiniGm_c.c:
 src/data/ov005/_ZTS11dScMiniGm_c.c:
     complete
     .data.early start:0x020c2454 end:0x020c2464
-

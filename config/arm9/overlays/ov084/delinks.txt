@@ -148,4 +148,3 @@ src/data/ov084/ov084_vt_02130b28.c:
 src/data/ov084/data_ov084_02130ec8.c:
     complete
     .bss start:0x02130ec8 end:0x02130ee0
-

@@ -190,4 +190,3 @@ src/data/ov023/data_ov023_021120a8.c:
 src/data/ov023/data_ov023_021120bc.c:
     complete
     .bss start:0x021120bc end:0x021120c0
-

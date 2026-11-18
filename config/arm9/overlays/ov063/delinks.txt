@@ -178,4 +178,3 @@ src/data/ov063/ov063_vt_0211ed34.c:
 src/data/ov063/data_ov063_0211efdc.c:
     complete
     .bss start:0x0211efdc end:0x0211efe0
-

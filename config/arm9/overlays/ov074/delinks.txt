@@ -46,4 +46,3 @@ src/data/ov074/data_ov074_02122f38.c:
 src/data/ov074/data_ov074_02122f3c.c:
     complete
     .data.kuriTail start:0x02122f3c end:0x02122fe0
-

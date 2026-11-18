@@ -196,4 +196,3 @@ src/data/ov037/data_ov037_02111760.c:
 src/data/ov037/data_ov037_02111768.c:
     complete
     .data start:0x02111768 end:0x02111780
-

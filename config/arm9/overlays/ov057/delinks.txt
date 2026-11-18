@@ -193,4 +193,3 @@ src/data/ov057/data_ov057_021116e0.c:
 src/data/ov057/data_ov057_02111700.c:
     complete
     .data start:0x02111700 end:0x02111720
-

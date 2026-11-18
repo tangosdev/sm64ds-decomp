@@ -219,4 +219,3 @@ src/data/ov098/data_ov098_0213c78c.c:
 src/data/ov098/data_ov098_0213c948.c:
     complete
     .bss start:0x0213c948 end:0x0213c960
-

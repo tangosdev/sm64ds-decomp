@@ -143,4 +143,3 @@ src/data/ov080/data_ov080_0212869c.c:
 src/data/ov080/data_ov080_02128858.c:
     complete
     .bss start:0x02128858 end:0x02128860
-

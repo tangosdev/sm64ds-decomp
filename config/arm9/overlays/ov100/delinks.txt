@@ -211,4 +211,3 @@ src/data/ov100/data_ov100_02148708.c:
 src/data/ov100/data_ov100_02148a7c.c:
     complete
     .bss start:0x02148a7c end:0x02148a80
-

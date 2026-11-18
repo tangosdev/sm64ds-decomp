@@ -144,4 +144,3 @@ src/data/ov055/data_ov055_02111b68.c:
 src/data/ov055/data_ov055_02111b6c.c:
     complete
     .bss start:0x02111b6c end:0x02111b70
-

@@ -47,4 +47,3 @@ src/data/ov092/g_profile_ONIMASU.c:
 src/data/ov092/data_ov092_021325b0.c:
     complete
     .bss start:0x021325b0 end:0x021325c0
-

@@ -234,4 +234,3 @@ src/data/ov019/data_ov019_021135e4.c:
 src/data/ov019/data_ov019_021135f4.c:
     complete
     .bss start:0x021135f4 end:0x02113600
-

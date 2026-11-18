@@ -285,4 +285,3 @@ src/data/ov085/ov085_vt_02130400.c:
 src/data/ov085/data_ov085_0213086c.c:
     complete
     .bss start:0x0213086c end:0x02130880
-

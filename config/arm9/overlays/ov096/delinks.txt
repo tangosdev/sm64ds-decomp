@@ -36,4 +36,3 @@ src/data/ov096/ov096_vt_02137a90.c:
 src/data/ov096/data_ov096_02137bd0.c:
     complete
     .bss start:0x02137bd0 end:0x02137be0
-

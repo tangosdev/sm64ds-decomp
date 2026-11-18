@@ -283,4 +283,3 @@ src/data/ov047/data_ov047_02112570.c:
 src/data/ov047/data_ov047_02112590.c:
     complete
     .data start:0x02112590 end:0x021125cc
-

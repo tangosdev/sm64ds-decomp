@@ -164,4 +164,3 @@ src/data/ov058/data_ov058_02111abc.c:
 src/data/ov058/data_ov058_02111ad4.c:
     complete
     .data start:0x02111ad4 end:0x02111af4
-

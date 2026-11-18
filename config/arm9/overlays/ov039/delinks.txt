@@ -172,4 +172,3 @@ src/data/ov039/data_ov039_02111844.c:
 src/data/ov039/ov039_vt_02111858.c:
     complete
     .data start:0x02111858 end:0x021118e0
-

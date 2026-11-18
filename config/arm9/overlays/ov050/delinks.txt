@@ -208,4 +208,3 @@ src/data/ov050/data_ov050_02111834.c:
 src/data/ov050/data_ov050_02111844.c:
     complete
     .data start:0x02111844 end:0x02111860
-
