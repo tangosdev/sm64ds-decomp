@@ -1280,7 +1280,8 @@ void Dealer::StateReveal() {
         Sound::PlayBank2_2D(0x142);
         *mDealCounter += 1;
     } else {
-        if (mModel.file == (BCA_File *)mDealEndAnim.filePtr || mModel.file == mDealEnd2Anim.filePtr) {
+        if (mModel.file == (BCA_File *)mDealEndAnim.filePtr ||
+            mModel.file == mDealEnd2Anim.filePtr) {
             if (mModel.Finished())
                 PlayIdle();
         }
