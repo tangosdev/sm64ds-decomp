@@ -98,6 +98,24 @@ extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 }
 
+extern unsigned char gGameMode;
+
+/* gGameMode is 1 in VS mode: PrepareVsMode stores it. Actor ID 0x122 is the
+   blue coin. dActor_c::mFlags bit 0x08 is written by the framework while the
+   actor is off screen. These int-returning predicates are what make the ROM
+   materialize 0/1 before testing it. */
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
+static inline int IsBlueCoin(dActor_c *actor) {
+    return actor->actorID == 0x122;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 daCoin_c::~daCoin_c()
 {
 }
@@ -753,13 +771,12 @@ int daCoin_c::Behavior()
      * selected by mBehaviorType and refreshes the collider. */
     typedef void (daCoin_c::*Handler)();
     extern Handler data_ov002_0210dc70[];
-    extern unsigned char gGameMode;
 
     if ((unsigned int)(mCoinFlags << 0x1e) >> 0x1f) {
         mCoinFlags &= ~2;
         Sound::PlayBank3(0x30, mCamSpacePos);
     }
-    if ((int)(actorID == 0x122) != 0) {
+    if (IsBlueCoin(this)) {
         if ((unsigned int)(mCoinFlags << 0x1f) >> 0x1f)
             mAreaId = -1;
     }
@@ -776,7 +793,7 @@ int daCoin_c::Behavior()
     if (CheckPlayerHit() != 0)
         return 1;
     (this->*data_ov002_0210dc70[mBehaviorType])();
-    if ((int)(gGameMode == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
+    if (!IsVsMode() && IsOffScreen(this)) {
         mdCc_c.Clear();
         if (mNoClsnTimer == 0 && VEC_Mag(&mCamSpacePos) < 0x64000) {
             if (mCoinType != COIN_RED || mInBrickBlock == 0)
