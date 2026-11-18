@@ -3580,7 +3580,10 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
  * u8 0x120, short or char 0x124. */
 void dScMgSmartball_c::UpdateScores() {
     /* Kept (#821 r72): `&mPopupScore[i]` indexing is 0x128, `mPopupScore + i`
-       with a `Vector2 *popup = mPopupPos + i` is 0x11c, against 0x118. */
+       with a `Vector2 *popup = mPopupPos + i` is 0x11c, against 0x118.
+       r96: indexed under a block-scoped `for (int i ...)` is 0x11c with
+       or without the pragma; references declared inside the loop are
+       0x128 with it, 0x12c without. */
     char *o = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
