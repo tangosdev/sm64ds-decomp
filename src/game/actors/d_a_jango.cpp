@@ -861,8 +861,8 @@ int daJango_c::UpdateSwoopState() {
             return 1;
         }
 
-        /* A POD copy-init is the ROM's ldm/stm; any Vector3 copy is memberwise. */
-        /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
+        /* Kept (#821 r76): `Vector3 t = player->mPos;` is three ldr/str (UpdateSwoopState 0x1d0,
+           10+ words off); the ROM's ldm/stm needs a POD source. */
         VecFx32 t = *(VecFx32 *)&player->mPos;
         tx = t.x;
         {
