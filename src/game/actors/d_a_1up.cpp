@@ -1007,6 +1007,10 @@ void da1up_c::OnPendingDestroy()
 {
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Vtable slot 9. Draws mModel unless mShown or mBlinkOn is 0 or mFlags bit
    0x40000 -- one of the yoshi-mouth states named in dActor_c.h -- is set.
@@ -1015,11 +1019,8 @@ int da1up_c::Render()
 {
     if (mShown == 0 || mBlinkOn == 0)
         return 1;
-    {
-        int b = (mFlags & 0x40000) ? 1 : 0;
-        if (b)
-            return 1;
-    }
+    if (IsInYoshiMouth(this))
+        return 1;
     mModel.Render(0);
     return 1;
 }
