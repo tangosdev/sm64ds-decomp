@@ -163,7 +163,7 @@ int daObjFlamethrower_c::Behavior() {
         }
         break;
     case 1:
-        if ((int)mActiveFlames < (count - 1)) {
+        if (mActiveFlames < (count - 1)) {
             active = &mActiveFlames;
             *active = (*active + 1);
         }
@@ -190,7 +190,7 @@ int daObjFlamethrower_c::Behavior() {
 
     if (mActiveFlames != 0) {
         for (i = 0; i < count; i++) {
-            if (i == (int)mActiveFlames)
+            if (i == mActiveFlames)
                 break;
             if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt)) {
                 im1 = i - 1;
@@ -245,7 +245,7 @@ int daObjFlamethrower_c::Behavior() {
 
     for (j = 0; j < count; j++) {
         mColliders[j].Clear();
-        if (j < (int)mActiveFlames)
+        if (j < mActiveFlames)
             mColliders[j].dCc_c::Update();
     }
     return 1;

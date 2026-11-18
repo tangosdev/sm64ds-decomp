@@ -126,8 +126,8 @@ void daObjPowerUpItem_c::StateResting()
         ((int*)&pos)[1] = y;
         ((int*)&pos)[2] = z;
         mEffectHandle =
-            (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerResting, ((int *)&pos)[0],
-                                       ((int *)&pos)[1], ((int *)&pos)[2], 0, 0);
+            Particle::System::New(mEffectHandle, kPtclPowerFlowerResting, ((int *)&pos)[0],
+                                  ((int *)&pos)[1], ((int *)&pos)[2], 0, 0);
     }
 }
 
@@ -145,7 +145,7 @@ void daObjPowerUpItem_c::BeginResting()
 void daObjPowerUpItem_c::StateOpening()
 {
     if (DecIfAbove0_Byte(&mWobbleTimer)) {
-        int a = (int)mWobbleTimer << 12;
+        int a = mWobbleTimer << 12;
         int fdivResult = FX_Div(a, 0x1c000);
         unsigned short hw = mWobbleAngle;
         signed short odd = FX_CosIdx(hw >> 4);
@@ -207,8 +207,8 @@ void daObjPowerUpItem_c::StateLaunched()
     int gy;
     int diff;
 
-    mEffectHandle = (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPos.x,
-                                               mPos.y, mPos.z, 0, 0);
+    mEffectHandle = Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPos.x, mPos.y,
+                                          mPos.z, 0, 0);
 
     a = mSpeed.y;
     mag = (a < 0) ? -a : a;

@@ -455,7 +455,7 @@ void dScMgTrampoline2_c::StatePlay() {
         }
     } else {
         if (ApproachLinear(mWaveStep, 4, 1)) {
-            unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
+            unsigned int rnd = RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
             const Trampoline2WaveDef *d = &sTrmp2SpawnDefs[(int)((rnd >> 19) * 6) >> 12];
             int i;
             VecFx32 vecB;

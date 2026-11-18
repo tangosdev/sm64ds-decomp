@@ -577,7 +577,7 @@ void dScMgPachinko2_c::ChooseLaneConfig() {
     unsigned int nextConfig, configOffset;
     if (mLevel != 0) {
         nextConfig = PACHINKO_RAND(6);
-        if ((unsigned int)mLaneConfig == nextConfig) {
+        if (mLaneConfig == nextConfig) {
             configOffset = PACHINKO_RAND(5) + 1;
             nextConfig = nextConfig + configOffset;
             if ((int)nextConfig >= 6)
@@ -890,11 +890,11 @@ void dScMgPachinko2_c::Paddle_StateGather(int i) {
         mPaddles[i].angle = cstd::atan2(targetY - (currentY >> 12), deltaX);
 
         {
-            fx16 c = FX_CosIdx((u16)mPaddles[i].angle >> 4);
+            fx16 c = FX_CosIdx(mPaddles[i].angle >> 4);
             mPaddles[i].x += FX_MUL(c, mPaddles[i].speed);
         }
         {
-            fx16 s = FX_SinIdx((u16)mPaddles[i].angle >> 4);
+            fx16 s = FX_SinIdx(mPaddles[i].angle >> 4);
             mPaddles[i].y += FX_MUL(s, mPaddles[i].speed);
         }
 
@@ -1218,8 +1218,8 @@ void dScMgPachinko2_c::Paddle_StateWeave(int i) {
 }
 
 void dScMgPachinko2_c::Paddle_StateOrbit(int i) {
-    mPaddles[i].x = FX_MUL(FX_CosIdx((u16)mPaddles[i].angle >> 4), 0x50000) + 0x80000;
-    mPaddles[i].y = FX_MUL(FX_SinIdx((u16)mPaddles[i].angle >> 4), 0x50000) - 0x80000;
+    mPaddles[i].x = FX_MUL(FX_CosIdx(mPaddles[i].angle >> 4), 0x50000) + 0x80000;
+    mPaddles[i].y = FX_MUL(FX_SinIdx(mPaddles[i].angle >> 4), 0x50000) - 0x80000;
 
     if (mPaddles[i].step != 0) {
         mPaddles[i].angle -= 0x40;
@@ -1761,8 +1761,8 @@ void dScMgPachinko2_c::Ball_HitAt(int x, int z, int d) {
                 mBalls[i].angle = 0xb000;
             mBalls[i].x = x << 12;
             mBalls[i].y = (z - 0x12) << 12;
-            mBalls[i].vx = FX_MUL(FX_CosIdx((u16)mBalls[i].angle >> 4), 0x2000);
-            mBalls[i].vy = FX_MUL(FX_SinIdx((u16)mBalls[i].angle >> 4), 0x2000);
+            mBalls[i].vx = FX_MUL(FX_CosIdx(mBalls[i].angle >> 4), 0x2000);
+            mBalls[i].vy = FX_MUL(FX_SinIdx(mBalls[i].angle >> 4), 0x2000);
             mBalls[i].gravity = 0;
             Sound::PlayBank2_2D(0x199);
             return;
@@ -1940,11 +1940,11 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
                 this->mNextBallDelay = 1;
             }
             {
-                fx16 c = FX_CosIdx((u16)this->mBalls[i].angle >> 4);
+                fx16 c = FX_CosIdx(this->mBalls[i].angle >> 4);
                 this->mBalls[i].vx = FX_MUL(c, this->mBalls[i].speed);
             }
             {
-                fx16 s = FX_SinIdx((u16)this->mBalls[i].angle >> 4);
+                fx16 s = FX_SinIdx(this->mBalls[i].angle >> 4);
                 this->mBalls[i].vy = FX_MUL(s, this->mBalls[i].speed);
             }
             this->mBalls[i].timer = 0;
@@ -1972,7 +1972,7 @@ void dScMgPachinko2_c::Ball_StateFlying(int i) {
             mBalls[i].x += FX_MUL(c, mBalls[i].speed);
         }
         {
-            fx16 s = FX_SinIdx((u16)mBalls[i].angle >> 4);
+            fx16 s = FX_SinIdx(mBalls[i].angle >> 4);
             mBalls[i].y += FX_MUL(s, mBalls[i].speed);
         }
 

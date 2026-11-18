@@ -798,7 +798,7 @@ void daObjBlockS_c::HandleWallHit() {
     if (mWithMeshClsn.IsOnWall() != 0) {
         dBgPi *wr = mWithMeshClsn.GetWallResult();
         if (wr->GetClsnID() != -1) {
-            dActor_c *a = dActor_c::FindWithID((u32)wr->GetClsnID());
+            dActor_c *a = dActor_c::FindWithID(wr->GetClsnID());
             if (a != 0) {
                 if (!IsActorID(a, ACTOR_BLOCK_L)) {
                     Kill();
@@ -1036,7 +1036,7 @@ void daObjBlockS_c::UpdateModelMatrix() {
     int b;
 
     if (obj != 0) {
-        b = (int)((mFlags & 0x4000) != 0);
+        b = ((mFlags & 0x4000) != 0);
         if (b != 0 && obj->mCarryMatrix != 0) {
             dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(obj);
             int r5 = 0;
@@ -1131,12 +1131,12 @@ int daObjBlockS_c::Behavior()
     int b1, b2;
     int x, y, z;
 
-    b1 = (int)((mFlags & 0x4000000) != 0);
+    b1 = ((mFlags & 0x4000000) != 0);
     if (b1 != 0 && (gNextActorUpdateMask & 0x4000000) && mHoldingPlayer) {
         mHoldingPlayer->DropActor();
     }
 
-    b2 = (int)((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
+    b2 = ((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
     if (b2 != 0 && Vec3_HorzDist(&mPos, &mHomePos) && DistToCPlayer() > 0x7d0000) {
         SetState(STATE_BROKEN);
         return 1;
@@ -1151,7 +1151,7 @@ int daObjBlockS_c::Behavior()
         v.z = z;
         if (DecIfAbove0_Byte(&mBreakTimer)) {
             mParticleHandle1 =
-                (u32)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
+                Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
             mParticleHandle2 =
                 Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
         } else {

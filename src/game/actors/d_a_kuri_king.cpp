@@ -373,7 +373,10 @@ int daKuriKing_c::SpawnVanishCopy() {
     }
     spawnTarget=data_ov074_02122d80[this->mSizeIndex];
     player=this->ClosestPlayer();
-    if(this->mSizeIndex==1){ if((int)player->param1!=3) spawnTarget+=1; }
+    if (this->mSizeIndex == 1) {
+        if (player->param1 != 3)
+            spawnTarget += 1;
+    }
     return this->mSpawnedCount >= spawnTarget;
 }
 
@@ -512,7 +515,7 @@ void daKuriKing_c::EnterDefeat() {
     this->mScale.y = v;
     this->mScale.z = v;
     this->mTextureSequence.currFrame = 0x2000;
-    this->mMaterialChanger.currFrame = ((int)data_ov074_02122e04[1]) << 0xc;
+    this->mMaterialChanger.currFrame = data_ov074_02122e04[1] << 0xc;
     this->mSubState = 0;
     PlayAnim(3);
     this->mScaleSteps = 3;
@@ -625,7 +628,8 @@ void daKuriKing_c::UpdateSummonGoombas() {
 
     int spawnTarget = data_ov074_02122d80[this->mSizeIndex];
     daPly_c *pl = this->ClosestPlayer();
-    if (this->mSizeIndex == 1 && (int)pl->param1 != 3) spawnTarget = spawnTarget + 1;
+    if (this->mSizeIndex == 1 && pl->param1 != 3)
+        spawnTarget = spawnTarget + 1;
 
     if (this->mAnmModel.Finished() == 0)
         return;
@@ -639,7 +643,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
     this->DisappearPoofDustAt(pp);
 
     u32 sid = 0xeeee;
-    if ((int)pl->param1 != 3) {
+    if (pl->param1 != 3) {
         if (this->mSpawnedCount % 2 == 0) sid = 0xeeef;
     }
 
@@ -659,7 +663,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
 
     daPly_c *pl2 = this->ClosestPlayer();
     int dv = 3;
-    if ((int)pl2->param1 != 3) {
+    if (pl2->param1 != 3) {
         if (this->mSizeIndex == 1) dv = 5;
     }
     if (this->mSpawnedCount % dv == 0)
@@ -924,7 +928,7 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
     out[1] = mPos.y;
     out[2] = mPos.z;
 
-    if ((int)ClosestPlayer()->param1 == 3) {
+    if (ClosestPlayer()->param1 == 3) {
         int rem;
         int quo;
         int scale;
@@ -1153,7 +1157,7 @@ void daKuriKing_c::HandleCylinderHits() {
                                 ChangeState(2);
                             else
                                 ChangeState(4);
-                            if ((int)pl->param1 == 0) {
+                            if (pl->param1 == 0) {
                                 v0.x = this->mPos.x;
                                 v0.y = this->mPos.y;
                                 v0.z = this->mPos.z;
@@ -1607,7 +1611,7 @@ int daKuriKing_c::InitResources()
     mTextureTransformer.SetFile(data_ov010_021124ac, 0, 0x1000, 0);
 
     mTextureSequence.speed = 0;
-    mMaterialChanger.currFrame = (s32)(data_ov074_02122e04[mSizeIndex] << 0xc);
+    mMaterialChanger.currFrame = data_ov074_02122e04[mSizeIndex] << 0xc;
 
     mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);
 

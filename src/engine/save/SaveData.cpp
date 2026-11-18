@@ -293,11 +293,11 @@ extern "C" u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
     u8 total;
     s32 course;
     if (courseID <= 0xe)
-        return SaveData::CountStarsCollectedInLevel((u32)courseID);
+        return SaveData::CountStarsCollectedInLevel(courseID);
     total = 0;
     course = 0xf;
     do {
-        total = (total + SaveData::CountStarsCollectedInLevel((u32)course)) & 0xff;
+        total = (total + SaveData::CountStarsCollectedInLevel(course)) & 0xff;
         course++;
     } while (course <= 0x1d);
     return total;

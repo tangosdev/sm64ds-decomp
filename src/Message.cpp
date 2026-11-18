@@ -933,7 +933,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
                     ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
     func_0201b6f8(0);
 
-    data_0209d65c = (256 - (int)data_0209d6b0) / 2;
+    data_0209d65c = (256 - data_0209d6b0) / 2;
     data_0209d6a8 = 0x20;
 
     p = (int)G2_GetBG3CharPtr() + 0x5000;
@@ -1391,7 +1391,7 @@ void Message::func_0201f32c(int msgID) {
     }
 
     divisor = data_0209d6a8;
-    for (i = 0; i < (s32)(divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2); i++) {
+    for (i = 0; i < (divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2); i++) {
         s32 rem = i % divisor;
         map[rem] = tile;
         if (divisor - 1 == rem)

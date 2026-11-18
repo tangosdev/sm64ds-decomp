@@ -105,7 +105,7 @@ int daObjKanban_c::Behavior() {
                     mMessageID = 0;
                     if (param1 != 0xffff)
                         mMessageID = param1;
-                    tgt->ShowMessage2(*this, (unsigned int)mMessageID, &mine, 0, 1);
+                    tgt->ShowMessage2(*this, mMessageID, &mine, 0, 1);
                     mState = 0;
                 }
                 break;

@@ -67,7 +67,7 @@ extern "C" int func_02049018(const Vector3 *v) {
     int ty = (v->y >> 12) * 2;
     int tz = v->z >> 12;
     int sum = tx * tx + ty * ty + tz * tz;
-    CP_SetSqrt32((u32)sum);
+    CP_SetSqrt32(sum);
     CP_WaitSqrt();
     return CP_GetSqrtResult32();
 }
@@ -282,7 +282,7 @@ extern "C" int func_02048a1c(const Vector3 *pos, int kind, int id) {
             }
         }
     }
-    dist = (u32)func_02049018(pos);
+    dist = func_02049018(pos);
     if (lim < dist) {
         return 0;
     }
@@ -391,7 +391,7 @@ extern "C" SoundSlot *func_02048720(const Vector3 *v, int kind, int id) {
         return 0;
     }
 
-    dist = (u32)func_02049018(v);
+    dist = func_02049018(v);
 
     if (id >= 0x4b && id <= 0x4c) {
         lim = 900;
@@ -411,10 +411,10 @@ extern "C" SoundSlot *func_02048720(const Vector3 *v, int kind, int id) {
             if (best_pri > p) {
                 best_pri = p;
                 best_idx = i;
-                best_dist = (u32)table[i].dist;
+                best_dist = table[i].dist;
             } else if (best_pri == p) {
                 if (best_dist < (u32)table[i].dist) {
-                    best_dist = (u32)table[i].dist;
+                    best_dist = table[i].dist;
                     best_idx = i;
                 }
             }
@@ -433,7 +433,7 @@ extern "C" SoundSlot *func_02048720(const Vector3 *v, int kind, int id) {
     if (pick >= 0 && pick < count) {
         NNS_SndPlayerStopSeq(&table[pick].handle, 1);
         NNS_SndHandleReleaseSeq(&table[pick].handle);
-        table[pick].dist = (int)dist;
+        table[pick].dist = dist;
         return &table[pick];
     }
     return 0;

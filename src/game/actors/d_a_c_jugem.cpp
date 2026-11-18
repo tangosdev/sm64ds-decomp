@@ -100,7 +100,7 @@ struct JugemVec3 {
         volatile int *p = &x;
         p[0] = a;
         p[1] = b;
-        p[2] = (int)c;
+        p[2] = c;
     }
     ~JugemVec3();
 };

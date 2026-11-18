@@ -599,11 +599,11 @@ void daSpd_c::func_ov071_0211f29c() {
     if (hitPlayer == 0)
         return;
 
-    b = (int)(hitPlayer->actorID == 0xbf);
+    b = (hitPlayer->actorID == 0xbf);
     if (b == 0)
         return;
 
-    b = (int)((mFlags & 0x20000) != 0);
+    b = ((mFlags & 0x20000) != 0);
     if (b != 0) {
         SetState(6);
         return;

@@ -344,7 +344,7 @@ int func_02013078(void) {
             data_0209b48c = Sound_PlayIfNotActive(data_0209b48c, 3, 0x18d, 0);
         result = (gCurrentAreaId == 0) ? 4 : 3;
     } else if (state == 0xd) {
-        result = (player->mPos.y < (int)0xffe3e000) ? 5 : 6;
+        result = (player->mPos.y < -0x1c2000) ? 5 : 6;
     } else if (state == 0x15) {
         result = (player->mPos.y < 0) ? 5 : 6;
     }
@@ -431,7 +431,7 @@ void func_02012dbc(int a) {
 }
 
 void func_02012d64(void) {
-    ApproachLinear(gMusicVolume, (s32)sMusicVolumeTarget << 12, sVolumeRampStep);
+    ApproachLinear(gMusicVolume, sMusicVolumeTarget << 12, sVolumeRampStep);
     func_02013524(&sMusicHandle, gMusicVolume >> 12, 0);
 }
 
@@ -450,14 +450,14 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, int e) {
         /* e is a word-sized flag: retail tests it with a full-word ldr, never ldrb. */
         if (!e) {
             x = gSubSoundID;
-            if ((x >= 0 && x != (int)a) ||
-                (gSubVolume == 0 && sMusicVolumeTarget == (int)b && gMusicVolume == (int)(b << 12)))
+            if ((x >= 0 && x != a) ||
+                (gSubVolume == 0 && sMusicVolumeTarget == b && gMusicVolume == (b << 12)))
                 return true;
         }
     } else {
         x = gSubSoundID;
         if (x < 0 || e) {
-            if (x != (int)a) {
+            if (x != a) {
                 gSubSoundID = a;
                 if (a != 0x35 && a != 0x36) {
                     if (a != 0x2e)
@@ -465,14 +465,14 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, int e) {
                 }
                 func_02011dcc(&sSubHandle, a);
             }
-        } else if (x != (int)a) {
+        } else if (x != a) {
             return false;
         }
     }
     sMusicVolumeTarget = (signed char)b;
     sSubVolumeTarget = (signed char)c;
     sVolumeRampStep = d;
-    return gMusicVolume == (int)(b << 12) && gSubVolume == (int)(c << 12);
+    return gMusicVolume == (b << 12) && gSubVolume == (c << 12);
 }
 }
 

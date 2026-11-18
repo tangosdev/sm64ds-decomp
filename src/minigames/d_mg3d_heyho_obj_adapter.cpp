@@ -1054,7 +1054,7 @@ void Heyho::Settle() {
                                                         mPos.z << 3);
     b = (Particle::System *)Particle::System::NewSimple(kPtclPoofDustB, mPos.x << 3, mPos.y << 3,
                                                         mPos.z << 3);
-    t = (int)(mSize << 0x1c) >> 0x10;
+    t = (mSize << 0x1c) >> 0x10;
     /* Both stores go through a; the cartridge never sets b's scale. */
     if (a)
         a->callbackScale = t;

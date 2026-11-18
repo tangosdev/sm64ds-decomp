@@ -486,9 +486,9 @@ void dScMgSound_c::DealNotes() {
     selectedPattern = mLevel;
     mPrevPattern = mPattern;
     if (selectedPattern >= 5) {
-        selectedPattern = (u32)(RND * 5) >> 15;
+        selectedPattern = (RND * 5) >> 15;
         if (selectedPattern == mPrevPattern) {
-            selectedPattern += ((u32)(RND << 2) >> 15) + 1;
+            selectedPattern += ((RND << 2) >> 15) + 1;
             if (selectedPattern >= 5)
                 selectedPattern -= 5;
         }
@@ -498,8 +498,8 @@ void dScMgSound_c::DealNotes() {
     noteCount = sSoundDealCounts[pattern];
     pitchCount = sSoundPitchCounts[pattern];
     if (pattern == 3) {
-        int pitchGroup = (u32)(RND << 2) >> 15;
-        int firstPitch = (u32)(RND * 3) >> 15;
+        int pitchGroup = (RND << 2) >> 15;
+        int firstPitch = (RND * 3) >> 15;
         mPairNotes[0] = firstPitch;
         mPairNotes[1] = mPairNotes[0] + 1;
         if (mPairNotes[1] >= 3)
@@ -513,7 +513,7 @@ void dScMgSound_c::DealNotes() {
     } else {
         pairCount = noteCount >> 1;
         for (pairIndex = 0; pairIndex < pairCount; pairIndex++) {
-            int pitch = (u32)(RND * pitchCount) >> 15;
+            int pitch = (RND * pitchCount) >> 15;
             mPairNotes[pairIndex] = pitch;
             if (pairIndex != 0) {
                 int duplicate;
@@ -529,14 +529,14 @@ void dScMgSound_c::DealNotes() {
                     }
                     if (duplicate == 0)
                         break;
-                    mPairNotes[pairIndex] = (u32)(RND * pitchCount) >> 15;
+                    mPairNotes[pairIndex] = (RND * pitchCount) >> 15;
                 }
             }
         }
     }
     pattern = mPattern;
     if (pattern == 1 || pattern == 4) {
-        mBank = sSoundBankByLevel[((u32)mLevel >> 2) & 3];
+        mBank = sSoundBankByLevel[(mLevel >> 2) & 3];
     }
     pairCount = noteCount >> 1;
     for (pairIndex = 0; pairIndex < pairCount; pairIndex++) {
@@ -553,7 +553,7 @@ void dScMgSound_c::DealNotes() {
         mNotes[noteIndex].frame = 0;
         mNotes[noteIndex].checked = 0;
         do {
-            pair = (u32)(RND * pairCount) >> 15;
+            pair = (RND * pairCount) >> 15;
         } while (mPairUses[pair] >= 2);
         mNotes[noteIndex].note = mPairNotes[pair];
         mPairUses[pair]++;

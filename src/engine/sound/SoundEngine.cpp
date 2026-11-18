@@ -1186,7 +1186,7 @@ extern "C" s32 NNS_SndHeapSaveState(struct SndHeap *heap) {
         return ~0;
     }
     if (NewSection(heap)) {
-        return (s32)((u32)heap->levels.numObjects - 1);
+        return (u32)heap->levels.numObjects - 1;
     }
     NNS_FndFreeByStateToFrmHeap(heap->frmHeap, 0);
     return ~0;
@@ -1781,7 +1781,7 @@ extern "C" void func_0204fe5c(struct C *c, int volume) {
 }
 
 extern "C" void func_0204fde8(struct C *obj) {
-    if ((int)(obj->fc << 0x1e) >> 0x1f) {
+    if ((obj->fc << 0x1e) >> 0x1f) {
         u32 p;
         int *flags = &obj->fc;
         SND_StopTimer(obj->f2c, 0, 1 << obj->f28, 0);

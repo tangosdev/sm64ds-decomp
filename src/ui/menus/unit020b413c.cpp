@@ -624,8 +624,8 @@ void Ov007ItemView::ItemView_HandleTouch(void *touch) {
         int min_y = elem->item->hitBox->minY + pos_y;
         int max_x = elem->item->hitBox->maxX + pos_x;
         int min_x = elem->item->hitBox->minX + pos_x;
-        if (touching != 0 && (s32)tp->cur.x >= min_x && (s32)tp->cur.x <= max_x &&
-            (s32)tp->cur.y >= min_y && (s32)tp->cur.y <= max_y) {
+        if (touching != 0 && tp->cur.x >= min_x && tp->cur.x <= max_x && tp->cur.y >= min_y &&
+            tp->cur.y <= max_y) {
             func_ov007_020b63e4((Ov007ItemView *)self);
         } else {
             u16 t = elem->item->id;
@@ -664,8 +664,8 @@ void Ov007ItemView::ItemView_HandleTouch(void *touch) {
                 int min_y = elem->item->hitBox->minY + pos_y;
                 int max_x = elem->item->hitBox->maxX + pos_x;
                 int min_x = elem->item->hitBox->minX + pos_x;
-                if (tp->cur.touch != 0 && (s32)tp->cur.x >= min_x && (s32)tp->cur.x <= max_x &&
-                    (s32)tp->cur.y >= min_y && (s32)tp->cur.y <= max_y) {
+                if (tp->cur.touch != 0 && tp->cur.x >= min_x && tp->cur.x <= max_x &&
+                    tp->cur.y >= min_y && tp->cur.y <= max_y) {
                     Ov007MenuState *state = elem->item->state;
                     held = 1;
                     state->stateWork += 1;

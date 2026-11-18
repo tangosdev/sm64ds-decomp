@@ -77,7 +77,7 @@ daTor_c::~daTor_c()
 
 void daTor_c::UpdateSpin(s32 scale)
 {
-    u16 idx = (u16)mSpinPhase;
+    u16 idx = mSpinPhase;
     s16 wave = FX_CosIdx(idx >> 4);
     s32 radiusScale = (wave + 0x1000) >> 1;
     s32 frameScale = FX_MUL(scale, 0x666);
@@ -85,7 +85,7 @@ void daTor_c::UpdateSpin(s32 scale)
     radius += 0x1000;
     mScale.x = FX_MUL(radius, frameScale);
 
-    u16 idx2 = (u16)mSpinPhase;
+    u16 idx2 = mSpinPhase;
     s16 wave2 = FX_CosIdx(idx2 >> 4);
     s32 heightScale = ((0x1000 - wave2) >> 2) + 0x800;
     mScale.y = FX_MUL(heightScale, frameScale);

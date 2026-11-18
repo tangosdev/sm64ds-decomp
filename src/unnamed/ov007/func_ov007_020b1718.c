@@ -59,7 +59,7 @@ void func_ov007_020b1718(void) {
         Ov007AnimPlayer *F18b;
 
         divisor = 30;
-        r7val = (int)F18->frame - ((int)F18->frameCount - 0x12);
+        r7val = F18->frame - (F18->frameCount - 0x12);
 
         if (v < 12) {
             q = ProgressRatio(v, 12);
@@ -79,7 +79,7 @@ void func_ov007_020b1718(void) {
 
         F18b = F->boneAnim;
         if (F18b->anim != -1) {
-            if ((int)F18b->frame == (int)F18b->frameCount - 2) {
+            if (F18b->frame == F18b->frameCount - 2) {
                 if (F18b->state == 0)
                     F18b->state = 1;
                 flag = 1;
@@ -117,7 +117,7 @@ void func_ov007_020b1718(void) {
         r7val = v - 2;
         divisor = 40;
         {
-            int uu = (int)(unsigned int)u;
+            int uu = (unsigned int)u;
             m->target.x = (int)(((s64)(0x1000 - u) * m->targetTween->from.x +
                                  (s64)uu * m->targetTween->to.x) >>
                                 12);

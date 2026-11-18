@@ -103,8 +103,7 @@ int daSetSE_c::Behavior()
             return 1;
     }
 
-    mSoundHandle =
-        Sound::PlayLong(mSoundHandle, 3, (u32)data_ov002_0210b498[param1], mCamSpacePos, 0);
+    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, data_ov002_0210b498[param1], mCamSpacePos, 0);
     return 1;
 }
 

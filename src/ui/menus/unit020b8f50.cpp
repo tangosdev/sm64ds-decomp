@@ -302,7 +302,7 @@ void PickerScene_HandleEditKeys(void) {
                 v3 = RangeRatio(t1, 160, 200);
                 v3sq = (int)(((s64)v3 * v3) >> 0xc);
                 tbl = FX_SinIdx((u16)((mc * 0xffff) >> 12) >> 4);
-                extra = FX_MUL(v3sq, (tbl * (s16)0xa));
+                extra = FX_MUL(v3sq, (tbl * 0xa));
             }
             if (dir > 0) {
                 a -= ease;
@@ -1505,7 +1505,7 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
     if (scale <= other) {
         scale = other;
     }
-    p_c->screenX = p5->item->posX + (((int)(p_c->width * scale)) / 2);
+    p_c->screenX = p5->item->posX + ((p_c->width * scale) / 2);
     p_c->screenY = p5->item->posY;
     p_c->scaleX = 0x1000 - scale;
     p_10->screenX = p5->item->posX;

@@ -1124,7 +1124,7 @@ void TrmpLine::StateFlex() {
 
     angleIndex = mWobblePhase >> 4;
     sine = FX_SinIdx(angleIndex);
-    negativeSine = -(int)sine;
+    negativeSine = -sine;
 
     restPosition = (Vec3 *)mRestVerts;
     position = (Vec3 *)mVerts;
@@ -1426,15 +1426,15 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     }
 
     {
-        s32 ax = ((s32)startPoint[0]) << 12;
-        s32 ay = ((s32)startPoint[1]) << 12;
+        s32 ax = startPoint[0] << 12;
+        s32 ay = startPoint[1] << 12;
         startPosition.x = ax;
         startPosition.y = ay;
         startPosition.z = 0;
     }
     {
-        s32 bx = ((s32)endPoint[0]) << 12;
-        s32 by = ((s32)endPoint[1]) << 12;
+        s32 bx = endPoint[0] << 12;
+        s32 by = endPoint[1] << 12;
         endPosition.x = bx;
         endPosition.y = by;
         endPosition.z = 0;

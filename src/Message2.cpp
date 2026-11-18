@@ -348,7 +348,7 @@ void Message::func_0201b100(int mode) {
             int hi2 = opcode & 0xf0;
             int w;
             MI_CpuCopy32((void *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (void *)r4addr, size);
-            w = ((int)data_0209d6b0 + 7) / 8;
+            w = (data_0209d6b0 + 7) / 8;
             MI_CpuCopy32((void *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
                          (void *)(r4addr + (w << 5)), size);
         } else {
@@ -371,7 +371,7 @@ void Message::func_0201b100(int mode) {
             sh = acc & 7;
             val = (short)(int)data_0208f174[opcode];
             row = startRow;
-            w8 = (((int)data_0209d6b0 + 7) / 8) << 3;
+            w8 = ((data_0209d6b0 + 7) / 8) << 3;
             r7addr = r8addr + 0x20;
             lshift = sh << 2;
             inv = 8 - sh;

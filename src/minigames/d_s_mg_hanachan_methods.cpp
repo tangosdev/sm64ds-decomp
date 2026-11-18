@@ -1808,7 +1808,7 @@ void dScMgHanachan_c::Phase_WaitIntro() {
 
 void dScMgHanachan_c::Phase_SetupRound() {
     if ((s32)mLevel < 0xa) {
-        int bc = (s32)mLevel;
+        int bc = mLevel;
         sHanaRoundPattern = sHanaRoundPatterns[bc];
         sHanaFieldWigglerCount = sHanaFieldWigglerCounts[bc];
     } else {
@@ -1832,7 +1832,7 @@ void dScMgHanachan_c::Phase_SetupRound() {
         if (sHanaFieldWigglerCount > 0) {
             Wiggler *p = mWiggler;
             do {
-                p->Spawn(i, (s32)mLevel);
+                p->Spawn(i, mLevel);
                 i++;
                 p++;
             } while (i < sHanaFieldWigglerCount);

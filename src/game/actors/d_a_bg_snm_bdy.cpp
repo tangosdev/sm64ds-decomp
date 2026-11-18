@@ -401,7 +401,7 @@ int daBgSnmBdy_c::State3() {
             mPos.y = gBgSnmBdyLandingPoint.y;
             mPos.z = gBgSnmBdyLandingPoint.z;
             mAngle.x = 0;
-            mAngle.y = (short)-0x4000;
+            mAngle.y = -0x4000;
             mHorzSpeed = 0;
             mSubstate++;
         }
@@ -434,7 +434,7 @@ int daBgSnmBdy_c::State4()
     UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     HurtPlayer();
-    if (mPos.y < (int)0xfe363c80)
+    if (mPos.y < -0x1c9c380)
         SetState(5);
     return 1;
 }

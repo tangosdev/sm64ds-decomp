@@ -435,7 +435,7 @@ void daOts_c::CheckMarioCollision() {
             return;
     }
 
-    hitFlags = (s32)this->mdCcAc_c.hitFlags;
+    hitFlags = this->mdCcAc_c.hitFlags;
     if ((hitFlags & kHitAttackMask) || hitPlayer->mIsMetal != 0) {
         this->mPrevAngle.y = hitPlayer->mAngle.y;
         if (hitPlayer->param1 == 2)
@@ -789,11 +789,11 @@ int daOts_c::func_ov064_0211616c() {
     }
     this->mPos.y = this->mPos.y - 0x5000;
     this->mParticle0 =
-        (u32)Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePos.x,
-                                   tail().mHomePos.y, tail().mHomePos.z, 0, 0);
+        Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePos.x,
+                              tail().mHomePos.y, tail().mHomePos.z, 0, 0);
     this->mParticle1 =
-        (u32)Particle::System::New(this->mParticle1, mFileTable->particleId + 1, tail().mHomePos.x,
-                                   tail().mHomePos.y, tail().mHomePos.z, 0, 0);
+        Particle::System::New(this->mParticle1, mFileTable->particleId + 1, tail().mHomePos.x,
+                              tail().mHomePos.y, tail().mHomePos.z, 0, 0);
     return 0;
 }
 
@@ -862,8 +862,8 @@ void daOts_c::func_ov064_02115f98(char* a1)
         angV = cstd::atan2(scratch[1], hl);
     }
 
-    idxV = (int)((u16)angV >> 4);
-    idxH = (int)((u16)angH >> 4);
+    idxV = (u16)angV >> 4;
+    idxH = (u16)angH >> 4;
 
     cosV = FX_CosIdx(idxV);
     sinV = FX_SinIdx(idxV);

@@ -642,8 +642,7 @@ int daJango_c::EnterCircleState() {
     }
     mLeaveDelay = 0;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
-    if (mSilverStarFlag == 2 ||
-        (unsigned char)(signed char)((signed char)gCurrentSublevel - 0x18) <= 1) {
+    if (mSilverStarFlag == 2 || (unsigned char)(signed char)(gCurrentSublevel - 0x18) <= 1) {
         mLeaveDelay = 2;
         mStateTimer = 0;
     }
@@ -759,7 +758,7 @@ int daJango_c::UpdateCircleState() {
     if (angD < 0x300) {
         if (mStateParam == 1) {
             mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
-            if (mSilverStarFlag == 2 || (unsigned)(u8)(s8)((s8)gCurrentSublevel - 0x18) <= 1u) {
+            if (mSilverStarFlag == 2 || (unsigned)(u8)(s8)(gCurrentSublevel - 0x18) <= 1u) {
                 mLeaveDelay--;
                 if (mLeaveDelay <= 0) {
                     mLeaveDelay = 0;
@@ -1016,7 +1015,7 @@ int daJango_c::HandleCylinderHit() {
 
     id = mdCcAc_c1.otherOwner;
     if (id != 0) {
-        pl = (daPly_c *)dActor_c::FindWithID((unsigned int)id);
+        pl = (daPly_c *)dActor_c::FindWithID(id);
         if (pl == 0)
             return (int)pl;
         fl = mdCcAc_c1.hitFlags;
@@ -1036,7 +1035,7 @@ int daJango_c::HandleCylinderHit() {
     id = mdCcAc_c2.otherOwner;
     if (id == 0)
         return id;
-    pl = (daPly_c *)dActor_c::FindWithID((unsigned int)id);
+    pl = (daPly_c *)dActor_c::FindWithID(id);
     if (pl == 0)
         return (int)pl;
     isPlayer = (enum Bool)(pl->actorID == ACTOR_PLAYER);
@@ -1054,13 +1053,9 @@ int daJango_c::HandleCylinderHit() {
 
     st = mSilverStarFlag;
     hc = pl->mCharacter;
-    if (st != 2 &&
-        pl->mHasWings == 0 &&
-        pl->mIsBalloon == 0 &&
-        pl->mIsVanish == 0 &&
-        pl->mIsMetal == 0 &&
-        (int)pl->param1 != 3) {
-        newchar = (int)pl->param1;
+    if (st != 2 && pl->mHasWings == 0 && pl->mIsBalloon == 0 && pl->mIsVanish == 0 &&
+        pl->mIsMetal == 0 && pl->param1 != 3) {
+        newchar = pl->param1;
         if (hc != newchar) {
             pl->SetNewHatCharacter(hc, 0, 0);
         } else {
@@ -1085,7 +1080,7 @@ int daJango_c::HandleCylinderHit() {
 
     mHitPlayer = 1;
     flag = 0;
-    if (mSilverStarFlag == 2 || (int)pl->param1 == 3)
+    if (mSilverStarFlag == 2 || pl->param1 == 3)
         flag = 1;
 
     pos.x = mPos.x;
@@ -1136,7 +1131,7 @@ int daJango_c::ChangeTarget() {
         bestDist = 0x10000000;
         ppos.z = pp[2];
         while (i < 4) {
-            path.GetNode(node, (u32)i);
+            path.GetNode(node, i);
             if (bestDist > Vec3_HorzDist(&node, &ppos)) {
                 bestIdx = i;
                 bestDist = Vec3_HorzDist(&node, &ppos);

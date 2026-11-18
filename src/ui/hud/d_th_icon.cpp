@@ -90,8 +90,7 @@ int TouchArea_Update(void *c, int player) {
     if (inside != 0) {
         kind = icon->mTouchKind;
         /* The unsigned index is load-bearing; a signed one DIFFs. */
-        if ((kind == 1 && gTouchInfo[(unsigned int)player].edge != 0) ||
-            (kind == 2 && icon->mPenInside == 0))
+        if ((kind == 1 && gTouchInfo[player].edge != 0) || (kind == 2 && icon->mPenInside == 0))
             fired = 1;
     }
     icon->mPenInside = inside;

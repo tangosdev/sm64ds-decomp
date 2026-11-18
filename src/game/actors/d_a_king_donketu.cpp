@@ -419,7 +419,7 @@ s32 daKing_Donketu_c::HandleHit() {
     }
 
     {
-        int isBf = (int)(target->actorID == ACTOR_PLAYER);
+        int isBf = (target->actorID == ACTOR_PLAYER);
         if (isBf == 1) {
             daPly_c *player = (daPly_c *)target;
             if (player->mIsMega != 0) {
@@ -586,7 +586,7 @@ int daKing_Donketu_c::UpdateDefeat() {
             rot.x = b ? a : a;
             rot.y = b;
             rot.z = *(unsigned short *)&mAngle.z;
-            rot.y = (unsigned short)HorzAngleToCPlayer();
+            rot.y = HorzAngleToCPlayer();
         }
 
         spawned = dActor_c::Spawn(ACTOR_OBJ_KEY, 4, pos, 0, mAreaId, -1);

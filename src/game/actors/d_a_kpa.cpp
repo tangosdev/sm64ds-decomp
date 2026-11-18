@@ -822,7 +822,7 @@ void daKpa_c::UpdateModelMatrix() {
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, this->mAngle.z);
     this->mAnmModel.mat4x3 = data_020a0e68;
-    this->mAnmModel.ApplyOpacity((unsigned char)((int)this->mOpacity >> 3), 1);
+    this->mAnmModel.ApplyOpacity((unsigned char)(this->mOpacity >> 3), 1);
     saved = data_020a0e68;
     this->mFootPosB.x = 0;
     this->mFootPosB.y = 0;
@@ -1806,8 +1806,8 @@ void daKpa_c::ActChargeMario() {
         this->mStepCounter = 0;
         InitAnimation(0x1a, 0x40000000);
         this->mParticleHandle =
-            (unsigned int)Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPos.x,
-                                                this->mPos.y + 0x32000, this->mPos.z, 0, 0);
+            Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPos.x,
+                                  this->mPos.y + 0x32000, this->mPos.z, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;
@@ -1949,8 +1949,8 @@ void daKpa_c::SetGoalInvisible() {
         zero.y = 0;
         zero.z = 0;
         a = (unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
-        this->mPos.x = (short)FX_SinIdx(a) * (short)0xed8;
-        this->mPos.z = (short)FX_CosIdx(a) * (short)0xed8;
+        this->mPos.x = FX_SinIdx(a) * 0xed8;
+        this->mPos.z = FX_CosIdx(a) * 0xed8;
     }
 }
 
@@ -1995,7 +1995,7 @@ void daKpa_c::ActJumpOntoStage() {
         if (rc.DetectClsn()) {
             ground = rc.clsnY;
             /* GetClsnID reads the hit record, dBgCh_Gnd's dBgPi base at +0x10. */
-            if ((int)rc.GetClsnID() != -1)
+            if (rc.GetClsnID() != -1)
                 hit = 1;
         }
     }

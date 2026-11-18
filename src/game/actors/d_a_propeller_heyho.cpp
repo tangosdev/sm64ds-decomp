@@ -920,7 +920,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     if (!hitPlayer)
         return;
 
-    hitFlags = (s32)this->mdCcAc_c.hitFlags;
+    hitFlags = this->mdCcAc_c.hitFlags;
     if (hitFlags & kHitFire) {
         this->mStateStep = 1;
         FlyGuy_ChangeState(this, &data_ov070_021235bc);

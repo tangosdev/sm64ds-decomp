@@ -681,7 +681,7 @@ void daSanbo_c::UpdateWanderYaw() {
     }
     dist = Vec3_HorzDist(&mPos, target);
     ang = Vec3_HorzAngle(&mPos, target);
-    ApproachLinear(mAngle.y, ang, (short)0x320);
+    ApproachLinear(mAngle.y, ang, 0x320);
     turn = CalcShyAwayAngle(dist);
     mPrevAngle.y = (mAngle.y + turn);
 }

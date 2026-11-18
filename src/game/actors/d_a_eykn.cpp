@@ -311,7 +311,7 @@ void daEykn_c::CheckAttacks()
 
     if (mdCcAcPos_c.hitFlags & kKillHit) {
         mParticleID0 =
-            (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPos.x, mPos.y, mPos.z, 0, 0);
+            Particle::System::New(mParticleID0, kDeathPtcl0, mPos.x, mPos.y, mPos.z, 0, 0);
         mParticleID1 = Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y,
                                                           mPos.z, 0);
         SetState(2);
@@ -373,7 +373,7 @@ int daEykn_c::St_Die_Main()
 
     switch (mSubState) {
     case 0: {
-        s16 sinv = FX_SinIdx((int)mWobblePhase >> 4);
+        s16 sinv = FX_SinIdx(mWobblePhase >> 4);
         mAngle.x = (FX_MUL(mWobbleAmp, sinv));
         mWobblePhase = ((s16)mWobblePhase + 0xe000);
         ApproachLinear(mWobbleAmp, 0, 0x1b);

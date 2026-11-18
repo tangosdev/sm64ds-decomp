@@ -765,6 +765,6 @@ u32 OAM::EnableSubOAM(OamTmp *tmp) {
      * slot; this body does not read it. The u32 return is a fiction
      * the ROM does not honour: the function falls off its end without
      * setting r0. The `(long) 0` cast is preserved verbatim. */
-    data_0209e660 = (long)0;
+    data_0209e660 = 0;
 }
 

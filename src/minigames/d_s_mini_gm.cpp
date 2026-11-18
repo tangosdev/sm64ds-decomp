@@ -741,22 +741,22 @@ void dScMiniGm_c::DrawRecords() {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
                     val = GetRecord(gMgGroupBase + i * 4, 0);
-                    u = (unsigned int)val;
+                    u = val;
                     major = u / 60u;
-                    DrawNumber(x - 0x10, y, (int)major);
+                    DrawNumber(x - 0x10, y, major);
                     OAM::RenderSub(sMiniGmRecordLabels[4], x, y - 8, -1, 0);
 
                     val = GetRecord(gMgGroupBase + i * 4, 0);
-                    u = (unsigned int)val;
+                    u = val;
                     rem = u % 60u;
                     pct = rem * 100u;
-                    DrawNumber(x + 8, y, (int)(pct / 600u));
+                    DrawNumber(x + 8, y, pct / 600u);
 
                     val = GetRecord(gMgGroupBase + i * 4, 0);
-                    u = (unsigned int)val;
+                    u = val;
                     rem = u % 60u;
                     pct = rem * 100u / 60u;
-                    DrawNumber(x + 0x10, y, (int)(pct % 10u));
+                    DrawNumber(x + 0x10, y, pct % 10u);
                 }
             }
         }

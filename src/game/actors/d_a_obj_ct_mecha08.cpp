@@ -144,7 +144,7 @@ int daObjCtMecha08_c::Behavior() {
                 d = mMoveDir;
                 mSpeed.y = data_ov065_0211c0d0[setting][d].vertSpeed;
                 if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
-                    u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
+                    u32 rnd = RandomIntInternal(&data_0209e650.value);
                     mMoveTimer = (u16)((rnd % 6) * 20 + 10);
                 }
             }

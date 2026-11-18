@@ -277,7 +277,7 @@ bool dBgCh_Lin::DetectClsn()
 
     dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
-    reach = (int)sphere.radius;
+    reach = sphere.radius;
     for (i = 1; i < 24; i++) {
         o = data_020a0c80[i];
         if (o == 0) continue;

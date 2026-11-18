@@ -203,15 +203,14 @@ int daHolhei_c::Behavior()
             int atEdge = 0;
             signed char t = gCurrentSublevel;
             if (t == 0x16) {
-                if (mPos.x > (int)0xff95c000)
+                if (mPos.x > -0x6a4000)
                     atEdge = 1;
             } else if (t == 0x15) {
-                if (mPos.z < (int)0xff2f4000)
+                if (mPos.z < -0xd0c000)
                     atEdge = 1;
             }
-            if (atEdge != 0
-                || (mHorzSpeed != 0
-                    && IsGoingOffCliff(mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, 0x32000))) {
+            if (atEdge != 0 ||
+                (mHorzSpeed != 0 && IsGoingOffCliff(mMeshClsn, 0x3c000, 0x2888, 0, 1, 0x32000))) {
                 mHorzSpeed = 0;
                 mEdgeStop = 1;
                 mPos.x = mPrevPosX;

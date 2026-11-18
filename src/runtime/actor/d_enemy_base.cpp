@@ -231,7 +231,7 @@ void dEnemyBase_c::func_ov002_020ae968(dActor_c *arg) {
     mSpeed.y = 0x14000;
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
-        mHorzSpeed = ((int)t << 0xf) / 50;
+        mHorzSpeed = (t << 0xf) / 50;
     } else {
         mHorzSpeed = 0x14000;
     }

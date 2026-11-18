@@ -263,7 +263,7 @@ void daPiano_c::StateAttack() {
     for (i = 0; i < 2; i++) {
         int id = this->mCylinderClsn[i].otherOwner;
         if (id != 0) {
-            victim = static_cast<daPly_c *>(dActor_c::FindWithID((unsigned int)id));
+            victim = static_cast<daPly_c *>(dActor_c::FindWithID(id));
             if (victim != 0) {
                 /* The actor profile is PLAYER before the daPly_c-specific call. */
                 if (IsPlayerActor(victim)) {

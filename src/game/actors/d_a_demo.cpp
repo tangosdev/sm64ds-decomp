@@ -452,7 +452,7 @@ void daDemo_c::func_ov002_020f2210()
             mScroll->spriteDelay[i] -= 1;
             if (mScroll->spriteDelay[i] == 0) {
                 if (mScroll->spriteActive[i] == 0) {
-                    unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650);
+                    unsigned int r = RandomIntInternal(&data_0209e650);
                     if (r & 1) {
                         mScroll->spriteX[i] = -0x40;
                         mScroll->spriteVelX[i] = 1;
@@ -2448,14 +2448,14 @@ int daDemo_c::func_ov002_020f63d4()
 int daDemo_c::func_ov002_020f63f8(unsigned char *src)
 {
     this->mCue = *src;
-    this->mStaffRoll->func_ov002_020f5dd8((int)this->mCue);
+    this->mStaffRoll->func_ov002_020f5dd8(this->mCue);
     return 1;
 }
 
 
 int daDemo_c::func_ov002_020f6424()
 {
-    this->mStaffRoll->func_ov002_020f5f0c((int)this->mCue);
+    this->mStaffRoll->func_ov002_020f5f0c(this->mCue);
     return 1;
 }
 

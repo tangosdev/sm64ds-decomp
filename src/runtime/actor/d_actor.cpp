@@ -594,11 +594,11 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, fx32 spread, s16 angle)
                 ang = (s32)(((u32)RandomIntInternal(&data_0209e650.value) >> 16) << 27) >> 16;
             } while (ang == prev);
 
-            r = (u32)RandomIntInternal(&data_0209e650.value);
+            r = RandomIntInternal(&data_0209e650.value);
             r >>= 16;
 
             actor->mPrevAngle.x = 0;
-            spread = (u32)((u32)spread * ((r % 50) + 100)) / 100;
+            spread = ((u32)spread * ((r % 50) + 100)) / 100;
             prev = ang;
             actor->mPrevAngle.y = (s16)(ang0 + ang);
             actor->mPrevAngle.z = 0;

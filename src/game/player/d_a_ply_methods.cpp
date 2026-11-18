@@ -1581,7 +1581,7 @@ int daPly_c::func_ov002_020bd3a0(unsigned char *params, int beginFrame, int endF
     extern ControllerInput data_0209f498[];
 
     u16 val = ReadUnalignedUshort(params);
-    if ((unsigned int)beginFrame == gKuppaScriptFrame) {
+    if (beginFrame == gKuppaScriptFrame) {
         data_0209f498[this->mPlayerNo].pressed = val | data_0209f498[gActivePlayerSlot].pressed;
     }
     val |= data_0209f498[gActivePlayerSlot].held;
@@ -2423,8 +2423,8 @@ void daPly_c::func_ov002_020bf13c() {
     v.x = this->mPos.x;
     v.y = this->mPos.y;
     v.z = this->mPos.z;
-    v.x = s * (short)0x78 + v.x;
-    v.z = cs * (short)0x78 + v.z;
+    v.x = s * 0x78 + v.x;
+    v.z = cs * 0x78 + v.z;
     r6 = vel >> 5;
     if (r6 > 0x1000) r6 = 0x1000;
     if (r6 < 0) r6 = 0;
@@ -3060,8 +3060,8 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     {
         int j = ((u16)mPrevAngle.y >> 4) * 2;
         spd = this->mHorzSpeed;
-        r5v = FX_MUL(spd, (int)FX_SinCosTable_[j]);
-        r4v = FX_MUL(spd, (int)FX_SinCosTable_[j + 1]);
+        r5v = FX_MUL(spd, FX_SinCosTable_[j]);
+        r4v = FX_MUL(spd, FX_SinCosTable_[j + 1]);
     }
 
     if (this->mSlideType != 0) {
@@ -3086,8 +3086,8 @@ int daPly_c::func_ov002_020c06fc(int arg) {
         mAngleYSpeed = (int)((((long long)b << 8) + 0x800) >> 12);
     }
 
-    slide.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
-    slide.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
+    slide.x = FX_MUL(v, FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
+    slide.z = FX_MUL(v, FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
     {
         int len = Vec3_HorzLen(&mFloorNormal);
         slide.x = FX_MUL(slide.x, len);
@@ -3519,8 +3519,8 @@ void daPly_c::func_ov002_020c18b0(int p1) {
         v.x = nx;
         v.y = sinv;
         v.z = nz;
-        mAngle.x = (short)func_02010844(&v, mAngle.y);
-        mAngle.z = (short)func_02010844(&v, (short)(mAngle.y - 0x4000));
+        mAngle.x = func_02010844(&v, mAngle.y);
+        mAngle.z = func_02010844(&v, (short)(mAngle.y - 0x4000));
     }
     if (p1 == 0) return;
     {
@@ -4265,8 +4265,8 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
     Vec3_MulScalar(&s, &v, 0x8000);
     v = s;
     Vec3_RotateYAndTranslate(&v, &v, this->mAngle.y, (const Vector3 *)arg);
-    mParticle1 = (s32)Particle::System::New(mParticle1, kPtclJumboStarFlyA, v.x, v.y, v.z, 0, 0);
-    mParticle2 = (s32)Particle::System::New(mParticle2, kPtclJumboStarFlyB, v.x, v.y, v.z, 0, 0);
+    mParticle1 = Particle::System::New(mParticle1, kPtclJumboStarFlyA, v.x, v.y, v.z, 0, 0);
+    mParticle2 = Particle::System::New(mParticle2, kPtclJumboStarFlyB, v.x, v.y, v.z, 0, 0);
 }
 
 void daPly_c::JumboStarCutsceneFlying() {
@@ -5067,7 +5067,7 @@ int daPly_c::StartTalk(fBase_c &actor_, bool b_) {
         return 0;
 
     if (b_ == 0) {
-        if (((data_0209f498[(u8)gActivePlayerSlot].pressed) & 3) &&
+        if (((data_0209f498[gActivePlayerSlot].pressed) & 3) &&
             ((IsState(data_ov002_0211013c) && mHorzSpeed < 0x8000) ||
              IsState(data_ov002_0211043c) || IsState(daPly_c::ST_WAIT))) {
             mStateStep = 0;
@@ -5473,7 +5473,7 @@ void daPly_c::func_ov002_020c5d60() {
         if (this->mStateStep == 1)
             return;
     }
-    if (this->mPos.y >= (int)0xf8ad0000)
+    if (this->mPos.y >= -0x7530000)
         return;
     if (this->IsState(data_ov002_02110064))
         return;
@@ -5584,7 +5584,7 @@ int daPly_c::func_ov002_020c607c(int p1, int p2, int *outptr) {
         Vector3 pos = rc.GetClsnPos();
         *outptr = pos.y;
         if (rc.GetClsnID() != -1) {
-            dActor_c *found = dActor_c::FindWithID((u32)rc.GetClsnID());
+            dActor_c *found = dActor_c::FindWithID(rc.GetClsnID());
             mLineClsnActor = found;
             if (found != 0) {
                 if (IsFlagSet(found, 0x1000000)) {
@@ -6388,7 +6388,7 @@ int daPly_c::St_LevelEnter_Init() {
         s16 cosv, sinv;
         if (func_ov002_020c7cbc() != 0) mStateStep = 0x12;
         mPos.y += 0x64000;
-        idx = ((s32)(u16)(s16)(mAngle.y + 0x8000) >> 4) * 2;
+        idx = ((u16)(s16)(mAngle.y + 0x8000) >> 4) * 2;
         cosv = FX_SinCosTable_[idx];
         sinv = FX_SinCosTable_[idx + 1];
         mPos.x += FX_MUL(0xa0000, cosv);
@@ -7543,7 +7543,7 @@ int daPly_c::Unk_020ca150(unsigned char a) {
 
 int daPly_c::SetNoControlState(unsigned char a_, int b, unsigned char c_) {
 
-    int a = (int)a_;
+    int a = a_;
     u8 c = c_;
 
     u8 flag;
@@ -7759,7 +7759,7 @@ void daPly_c::func_ov002_020ca940() {
     if (!IsVsMode() && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
         return;
 
-    if (data_0209f498[(u8)gActivePlayerSlot].pressed & 0x8000) {
+    if (data_0209f498[gActivePlayerSlot].pressed & 0x8000) {
         old = mUseFarCamera;
         h = gCamera;
         (mUseFarCamera)++;
@@ -7912,17 +7912,16 @@ int daPly_c::St_CameraZoom_Main() {
 
 void daPly_c::func_ov002_020cae10() {
     extern void *gCamera;
-    int r4 = 0x4000;
+    s16 r4 = 0x4000;
     int ang;
     int r8;
     if (mPlayerNo == gLocalPlayerId) {
         r4 -= ((dCamera_c *)gCamera)->mAngleX;
-        r4 = (short)r4;
     }
     ang = (short)((mAngle.y - GetAngleToCamera(mPlayerNo)) + 0x8000);
     r8 = ang;
-    if (r8 < (int)0xffffd556)
-        r8 = (int)0xffffd556;
+    if (r8 < -0x2aaa)
+        r8 = -0x2aaa;
     if (r8 > 0x2aaa)
         r8 = 0x2aaa;
     mHeadRot[1] = (short)FX_MUL(r8, 0xc00);
@@ -8093,7 +8092,7 @@ void daPly_c::func_ov002_020cb474() {
         id = 0xb9;
         break;
     }
-    mParticle1 = (s32)Particle::System::New(mParticle1, id, v.x, v.y, v.z, 0, 0);
+    mParticle1 = Particle::System::New(mParticle1, id, v.x, v.y, v.z, 0, 0);
 }
 
 int daPly_c::St_Climb_Cleanup() {
@@ -8188,7 +8187,7 @@ int daPly_c::St_Climb_Main() {
                 ApproachLinear(this->mAngle.y, GetAngleToCamera(mPlayerNo), 0x200);
                 if (mClimbClsn->height <= mAttachOffsetY) {
                     if ((mClimbClsn->flags & 0x2000000) && mSpeed.y == 0 &&
-                        (s32)(data_0209f498[gActivePlayerSlot].ny) < -0xc00 && mStateWork == 1) {
+                        data_0209f498[gActivePlayerSlot].ny < -0xc00 && mStateWork == 1) {
                         this->ChangeState(data_ov002_021106f4);
                     }
                     mAttachOffsetY = mClimbClsn->height;
@@ -9614,8 +9613,7 @@ int daPly_c::UpdateSwimHealth() {
         drainPeriod = 80;
 
     if (GetHealth() <= 2) {
-        mSurfaceSoundHandle =
-            Sound::PlayLong((unsigned int)mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
+        mSurfaceSoundHandle = Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
     }
 
     {
@@ -11062,8 +11060,8 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
     }
 
     if (mIsInShallowWater != 0) {
-        u32 newId = Particle::System::NewCheckWaterRipple((u32)mParticle1, kPtclShallowWaterLand,
-                                                          mPos.x, data_0209f32c, mPos.z, 0);
+        u32 newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand, mPos.x,
+                                                          data_0209f32c, mPos.z, 0);
         mParticle1 = newId;
         return;
     }
@@ -11430,7 +11428,7 @@ int daPly_c::func_ov002_020d2da0() {
 
     unsigned char idx = gActivePlayerSlot;
     char *p = gCamera;
-    int cond = (int)(data_0209f4a0[idx].v >= 0x200);
+    int cond = (data_0209f4a0[idx].v >= 0x200);
     if (cond | (((unsigned short)data_0209f49e[idx].v) & 0xc03)) {
         ((dCamera_c *)p)->mFlags &= ~0x2000;
         Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
@@ -12046,7 +12044,7 @@ int daPly_c::St_Walk_Init() {
             mAngle.y = mPrevAngle.y;
         }
         if (mDashBoostTimer != 0) {
-            unsigned int rnd = (unsigned int)RandomIntInternal(data_ov002_0210e160);
+            unsigned int rnd = RandomIntInternal(data_ov002_0210e160);
             int idx = (rnd >> 6) & 3;
             int voiceId = data_ov002_020ff1b0[idx];
             Sound::PlayCharVoice(mCharacter, voiceId, mCamSpacePos);
@@ -13976,7 +13974,7 @@ int daPly_c::func_ov002_020d869c() {
 
     flags = mdCcAcPos_c.hitFlags & 0x27fe0;
     if (flags != 0) {
-        if (func_ov002_020d85fc(this, other, (int)flags) == 1)
+        if (func_ov002_020d85fc(this, other, flags) == 1)
             return 0;
         f2 = flags & ~0x1000u;
         if (f2 != 0)
@@ -14141,7 +14139,7 @@ void daPly_c::func_ov002_020d8a50(int which) {
     Sound::PlayBank0(0xb5, mCamSpacePos);
 
     {
-        u16 ang = (u16)mAngle.y;
+        u16 ang = mAngle.y;
         dBgCh_Lin ray;
         Vector3 v1;
         Vector3 v2;
@@ -14572,8 +14570,7 @@ void daPly_c::func_ov002_020d98b4() {
         MTX_MultVec43((Vector3 *)&bone->t, &mModels.mBodyModels[id2]->mat4x3, &v);
         Vec3_MulScalar(&s, &v, 0x8000);
         s.y += 0x50000;
-        mParticle1 =
-            (s32)Particle::System::New((u32)mParticle1, kPtclDizzyStars, s.x, s.y, s.z, 0, 0);
+        mParticle1 = (s32)Particle::System::New(mParticle1, kPtclDizzyStars, s.x, s.y, s.z, 0, 0);
     }
     mFlags |= 0x80;
 }
@@ -14768,7 +14765,7 @@ int daPly_c::func_ov002_020d9dcc() {
         }
     }
 
-    s8 v = (s8)mStateWork;
+    s8 v = mStateWork;
     if (v < 0)
         v = -v;
     if (v < 5)
@@ -14848,9 +14845,9 @@ int daPly_c::St_SwingPlayer_Main() {
                 v.y = this->mPos.y + 0x3c000;
                 if (this->mAngleYSpeed > 0)
                     id = 0x133;
-                mParticle1 = Particle::System::New((u32)mParticle1, id, *&v.x, *&v.y, *&v.z, 0, 0);
+                mParticle1 = Particle::System::New(mParticle1, id, *&v.x, *&v.y, *&v.z, 0, 0);
                 mLoopingSoundHandle =
-                    Sound::PlayLong((u32)mLoopingSoundHandle, 0, 0x1c, mCamSpacePos, 0);
+                    Sound::PlayLong(mLoopingSoundHandle, 0, 0x1c, mCamSpacePos, 0);
             }
             if (this->mAngleYSpeed != 0)
                 this->mStateTimer = 10;
@@ -15895,7 +15892,7 @@ int daPly_c::St_SlideKick_Main() {
 int daPly_c::St_SlideKick_Init() {
     extern int data_ov002_0210e160;
     Sound::PlayBank0(0x11, mCamSpacePos);
-    unsigned int r = (unsigned int)RandomIntInternal(&data_ov002_0210e160);
+    unsigned int r = RandomIntInternal(&data_ov002_0210e160);
     Sound::PlayCharVoice(mCharacter, data_ov002_020ff130[(r >> 4) & 1], mCamSpacePos);
     this->SetAnim(0x67, 0x40000000, 0x1000, 0);
     int *yv = &mHorzSpeed;
@@ -16277,7 +16274,7 @@ int daPly_c::St_StomachSlide_Init() {
 int daPly_c::St_Dive_Init() {
     extern int data_ov002_0210e160;
     Sound::PlayBank0(0x11, mCamSpacePos);
-    unsigned int r = (unsigned int)RandomIntInternal(&data_ov002_0210e160);
+    unsigned int r = RandomIntInternal(&data_ov002_0210e160);
     Sound::PlayCharVoice(mCharacter, data_ov002_020ff100[(r >> 4) & 1], mCamSpacePos);
     this->SetAnim(0x40, 0x40000000, 0x1000, 0);
     mStateStep = 0;
@@ -16531,7 +16528,7 @@ int daPly_c::St_GroundPound_Main() {
     void func_ov002_020ef2a4(dBgCh_Actr * c, dActor_c * arg);
     extern dCamera_c *gCamera;
     extern char data_0209f4a0[];
-    s8 timer = (s8)mStateStep;
+    s8 timer = mStateStep;
     if (timer > 0) {
         mSpeed.y = 0;
         if (mStateStep == 2)
@@ -16672,7 +16669,7 @@ int daPly_c::BeginAttack() {
         ChangeState(data_ov002_02110034);
         return 1;
     }
-    if (!(data_0209f498[(u8)gActivePlayerSlot].held & 2) && mIsMega == 0 &&
+    if (!(data_0209f498[gActivePlayerSlot].held & 2) && mIsMega == 0 &&
         (mHorzSpeed >= ScaleByCharFactor(0x20000) || IsState(data_ov002_021101e4) ||
          (IsState(data_ov002_0211019c) && mJumpComboStage == 2))) {
         if (mHorzSpeed < ScaleByCharFactor(0x24000))
@@ -16863,7 +16860,7 @@ s32 daPly_c::St_Balloon_Main() {
     if (mClsnFlags & 2) {
         s16 ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
         s16 diff = AngleDiff(ang, mPrevAngle.y);
-        if ((s32)diff > 0x4000) {
+        if (diff > 0x4000) {
             this->func_ov002_020de428();
             mPrevAngle.y = (s16)((ang * 2 + 0x8000) - mPrevAngle.y);
             mHorzSpeed = FX_MUL(mHorzSpeed, 0x1400);
@@ -16871,7 +16868,7 @@ s32 daPly_c::St_Balloon_Main() {
                 mHorzSpeed = 0x14000;
             if (mHorzSpeed < 0x4000)
                 mHorzSpeed = 0x4000;
-            s32 idx = ((s32)(u16)diff >> 4) * 2;
+            s32 idx = ((u16)diff >> 4) * 2;
             s16 t0 = FX_SinCosTable_[idx + 1];
             s32 v1 = FX_MUL(mHorzSpeed, t0);
             s32 v = FX_MUL(v1, 0xa0);
@@ -16990,7 +16987,7 @@ int daPly_c::St_WindCarry_Main() {
     UpdateAirMovement(0x1800, 0x800);
     {
         int val = mPos.y + 0x514000;
-        if (mSurfaceType == 0x13 && val > (int)0xfdecc000 && val < 0x898000) {
+        if (mSurfaceType == 0x13 && val > -0x2134000 && val < 0x898000) {
             int speed;
             if (val < 0)
                 speed = 0x32000;
@@ -17029,7 +17026,8 @@ int daPly_c::St_WindCarry_Init() {
 
 int daPly_c::func_ov002_020dec70() {
     int t = mPos.y + 0x514000;
-    if (t < (int)0xfdecc000) return 0;
+    if (t < -0x2134000)
+        return 0;
     {
         Vector3_16f v;
         v.z = 0;
@@ -17037,7 +17035,7 @@ int daPly_c::func_ov002_020dec70() {
         v.x = v.z;
         func_ov002_020bf800(v);
     }
-    mSurfaceSoundHandle = Sound::PlayLong((u32)mSurfaceSoundHandle, 3, 0x90, mCamSpacePos, 0);
+    mSurfaceSoundHandle = Sound::PlayLong(mSurfaceSoundHandle, 3, 0x90, mCamSpacePos, 0);
     if (IsState(data_ov002_02110274) || IsState(data_ov002_021102d4) || IsState(daPly_c::ST_OWL) ||
         mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
         return 0;
@@ -17473,8 +17471,8 @@ void func_ov002_020df8f0(daPly_c *player) {
     player->mPrevAngle.x += player->mAngleXSpeed;
     if (player->mPrevAngle.x > 0x2aaa)
         player->mPrevAngle.x = 0x2aaa;
-    if (player->mPrevAngle.x < (s16)0xd556)
-        player->mPrevAngle.x = (s16)0xd556;
+    if (player->mPrevAngle.x < -0x2aaa)
+        player->mPrevAngle.x = -0x2aaa;
 
     player->mSpeed.y =
         FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngle.x >> 4) * 2]);
@@ -19266,7 +19264,7 @@ int daPly_c::Render() {
                 mModels.mAnmModel2.ApplyOpacity(mOpacity, 0);
                 if (mBodyModelId == 3) {
                     Matrix4x3_FromTranslation((Matrix4x3 *)&data_020a0e68, -0x1b33, -0x666, 0);
-                    Matrix4x3_ApplyInPlaceToRotationZ((Matrix4x3 *)&data_020a0e68, (short)0x4000);
+                    Matrix4x3_ApplyInPlaceToRotationZ((Matrix4x3 *)&data_020a0e68, 0x4000);
                     MTX_Concat43((const Matrix4x3 *)&data_020a0e68, &bodyMdl->data.transforms[8],
                                  (Matrix4x3 *)&data_020a0e68);
                     ((VObj *)((char *)&mModels.mAnmModel2))->m18(&data_020a0e68, &mScale);
@@ -20210,7 +20208,7 @@ void daPly_c::func_ov002_020e5948() {
         func_ov002_020bec2c();
     }
 
-    dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[(s32)mCharFileBase]);
+    dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[mCharFileBase]);
 
     i = 0;
     do {
@@ -20511,7 +20509,7 @@ int Color_Interp(int unused, int from, int to, int t) {
     r = Color_Lerp(to & 0x1f, t, r);
     g = Color_Lerp(to & 0x3e0, t, g);
     b = Color_Lerp(to & 0x7c00, t, b);
-    out = ((unsigned int)((r | g) | b)) << 4;
+    out = ((r | g) | b) << 4;
     return out >> 0x10;
 }
 }

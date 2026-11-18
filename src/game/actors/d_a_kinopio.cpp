@@ -188,7 +188,7 @@ void daKinopio_c::St_Talk_Main()
             messagePos.y = y;
             messagePos.z = z;
         }
-        player->ShowMessage(*this, (u32)(s16)messageID, &messagePos, 0, 0);
+        player->ShowMessage(*this, (s16)messageID, &messagePos, 0, 0);
         return;
     }
     case 1:
@@ -452,7 +452,7 @@ int daKinopio_c::Behavior()
 
     mAnmModel.speed = 0x1000;
 
-    mAnmModel.ApplyOpacity((u32)(u8)(mOpacity >> 3), 1);
+    mAnmModel.ApplyOpacity((u8)(mOpacity >> 3), 1);
 
     mCollider.Clear();
     mCollider.Update();

@@ -279,7 +279,7 @@ void dScMgCup_c::UpdateAnim(int cupIndex) {
 }
 
 void dScMgCup_c::SetupSwap() {
-    u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
+    u32 rnd = RandomIntInternal(&data_0209e650.value);
     u32 bits = rnd >> 0x10;
     int speedIndex;
     int swapPair;
@@ -608,7 +608,7 @@ void dScMgCup_c::StateSetup() {
     if (score < 0xa) {
         mRoundRow = (unsigned char)score;
     } else {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+        rnd = RandomIntInternal(&data_0209e650.value);
         randomUpper = rnd >> 16;
         roundRow = (randomUpper % 5) + 5;
         mRoundRow = (unsigned char)roundRow;
@@ -617,7 +617,7 @@ void dScMgCup_c::StateSetup() {
     mSwapsRemaining = sCupRoundTable[mRoundRow].swaps;
 
     if (score > 3) {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+        rnd = RandomIntInternal(&data_0209e650.value);
         if (rnd & 1) {
             mTargetContent = 1;
         } else {
@@ -635,7 +635,7 @@ void dScMgCup_c::StateSetup() {
     mShuffleSound = 0;
     FreeGfxSlotsById(0x1d);
 
-    rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+    rnd = RandomIntInternal(&data_0209e650.value);
     fakeOutSwap = (rnd % 10) + 1;
     mFakeOutAt = (unsigned char)fakeOutSwap;
 

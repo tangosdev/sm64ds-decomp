@@ -240,7 +240,7 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
     if (IsInFrontOfPlayer(player)) {
         entry = &data_ov100_02148390[param1];
         isSpecial = entry->numStars == 0x50;
-        notEnoughStars = (int)NumStars() < entry->numStars;
+        notEnoughStars = NumStars() < entry->numStars;
         isMario = data_0209caa0.file.mCharacter == 0;
 
         /* A door already unlocked in the save just opens. So does the 80-star
