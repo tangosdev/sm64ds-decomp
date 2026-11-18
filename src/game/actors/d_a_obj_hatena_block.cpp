@@ -467,7 +467,8 @@ int daObjHatenaBlock_c::Behavior()
 int daObjHatenaBlock_c::Render()
 {
     if (mState != STATE_POPPED) {
-        if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 && IsActorID(this, ACTOR_HATENA_BLOCK))
+        if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
+            IsActorID(this, ACTOR_HATENA_BLOCK))
             mAnmModel.Render(0);
         else
             mModel.Render(&mScale);
