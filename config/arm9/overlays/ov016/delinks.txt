@@ -12,6 +12,143 @@
     .data.morayBend start:0x02114908 end:0x02114950 kind:data align:4
     .data.morayTail start:0x02114950 end:0x02114d20 kind:data align:4
     .bss        start:0x02114d20 end:0x02114ea0 kind:bss align:32
+
+src/data/ov016/data_ov016_02113550.c:
+    complete
+    .rodata start:0x02113550 end:0x02113554
+
+src/data/ov016/data_ov016_02113554.c:
+    complete
+    .rodata start:0x02113554 end:0x02113570
+
+src/data/ov016/data_ov016_02113570.c:
+    complete
+    .rodata start:0x02113570 end:0x021135d4
+
+src/data/ov016/data_ov016_021135d4.c:
+    complete
+    .rodata start:0x021135d4 end:0x021135f4
+
+src/data/ov016/data_ov016_021135f4.c:
+    complete
+    .rodata start:0x021135f4 end:0x021136d4
+
+src/data/ov016/data_ov016_021136d4.c:
+    complete
+    .rodata start:0x021136d4 end:0x021136dc
+
+src/data/ov016/data_ov016_02113ae0.c:
+    complete
+    .data.slideBox start:0x02113ae0 end:0x02113ae4
+
+src/data/ov016/data_ov016_02113ae4.c:
+    complete
+    .data.slideBox start:0x02113ae4 end:0x02113ae8
+
+src/data/ov016/data_ov016_02113ae8.c:
+    complete
+    .data.slideBox start:0x02113ae8 end:0x02113af0
+
+src/data/ov016/data_ov016_02113af0.c:
+    complete
+    .data.slideBox start:0x02113af0 end:0x02113af8
+
+src/data/ov016/data_ov016_02113af8.c:
+    complete
+    .data.slideBox start:0x02113af8 end:0x02113b00
+
+src/data/ov016/data_ov016_02113b00.c:
+    complete
+    .data.slideBox start:0x02113b00 end:0x02113b0c
+
+src/data/ov016/data_ov016_02113b0c.c:
+    complete
+    .data.slideBox start:0x02113b0c end:0x02113b10
+
+src/data/ov016/data_ov016_02113b10.c:
+    complete
+    .data.slideBox start:0x02113b10 end:0x02113b18
+
+src/data/ov016/data_ov016_02113b18.c:
+    complete
+    .data.slideBox start:0x02113b18 end:0x02113b28
+
+src/data/ov016/data_ov016_02113b28.c:
+    complete
+    .data.slideBox start:0x02113b28 end:0x02113b2c
+
+src/data/ov016/data_ov016_02113b2c.c:
+    complete
+    .data.slideBox start:0x02113b2c end:0x02113b38
+
+src/data/ov016/data_ov016_02113b38.c:
+    complete
+    .data.slideBox start:0x02113b38 end:0x02113b48
+
+src/data/ov016/data_ov016_02113b48.c:
+    complete
+    .data.slideBox start:0x02113b48 end:0x02113b50
+
+src/data/ov016/data_ov016_02113b50.c:
+    complete
+    .data.slideBox start:0x02113b50 end:0x02113b58
+
+src/data/ov016/data_ov016_02113b58.c:
+    complete
+    .data.slideBox start:0x02113b58 end:0x02113b68
+
+src/data/ov016/data_ov016_02113b68.c:
+    complete
+    .data.slideBox start:0x02113b68 end:0x02113b78
+
+src/data/ov016/data_ov016_02113b78.c:
+    complete
+    .data.slideBox start:0x02113b78 end:0x02113b7c
+
+src/data/ov016/data_ov016_02113b7c.c:
+    complete
+    .data.slideBox start:0x02113b7c end:0x02113b80
+
+src/data/ov016/data_ov016_02113b80.c:
+    complete
+    .data.slideBox start:0x02113b80 end:0x02113b90
+
+src/data/ov016/data_ov016_02113b90.c:
+    complete
+    .data.slideBox start:0x02113b90 end:0x02113bac
+
+src/data/ov016/data_ov016_02113bcc.c:
+    complete
+    .data.hasira_head start:0x02113bcc end:0x02113bec
+
+src/data/ov016/data_ov016_02113c0c.c:
+    complete
+    .data.hasira_mid start:0x02113c0c end:0x02113c14
+
+src/data/ov016/data_ov016_02113c14.c:
+    complete
+    .data.hasira_mid start:0x02113c14 end:0x02113c20
+
+src/data/ov016/data_ov016_02113c20.c:
+    complete
+    .data.hasira_mid start:0x02113c20 end:0x02113c28
+
+src/data/ov016/data_ov016_02113c28.c:
+    complete
+    .data.hasira_mid start:0x02113c28 end:0x02113c2c
+
+src/data/ov016/data_ov016_02113c2c.c:
+    complete
+    .data.hasira_mid start:0x02113c2c end:0x02113c48
+
+src/data/ov016/data_ov016_02113c48.c:
+    complete
+    .data.hasira_mid start:0x02113c48 end:0x02113c4c
+
+src/data/ov016/data_ov016_02113c8c.c:
+    complete
+    .data.hasira start:0x02113c8c end:0x02113cac
+
 src/game/actors/d_a_moray.cpp:
     complete
     .text start:0x021111a0 end:0x0211260c
@@ -20,6 +157,22 @@ src/game/actors/d_a_moray.cpp:
     .data start:0x02114878 end:0x021148c8
     .data.morayBend start:0x02114908 end:0x02114950
     .bss start:0x02114d20 end:0x02114dcc
+
+src/data/ov016/_ZTS9daMoray_c.c:
+    complete
+    .data start:0x021148c8 end:0x021148d4
+
+src/data/ov016/_ZTI9daMoray_c.c:
+    complete
+    .data start:0x021148d4 end:0x021148e0
+
+src/data/ov016/g_profile_MORAY.c:
+    complete
+    .data start:0x021148e0 end:0x021148f0
+
+src/data/ov016/data_ov016_021148f0.c:
+    complete
+    .data start:0x021148f0 end:0x02114908
 
 src/game/actors/d_a_obj_ki_fune.cpp:
     complete
@@ -31,6 +184,42 @@ src/game/actors/d_a_obj_ki_fune.cpp:
     .data.morayTail start:0x021149d4 end:0x021149dc
     .bss start:0x02114dcc end:0x02114e1c
 
+src/data/ov016/_ZTI14daObjKi_Fune_c.c:
+    complete
+    .data.morayTail start:0x021149dc end:0x021149e8
+
+src/data/ov016/_ZTS14daObjKi_Fune_c.c:
+    complete
+    .data.morayTail start:0x021149e8 end:0x021149f0
+
+src/data/ov016/data_ov016_021149f0.c:
+    complete
+    .data.morayTail start:0x021149f0 end:0x021149fc
+
+src/data/ov016/g_profile_KI_FUNE.c:
+    complete
+    .data.morayTail start:0x021149fc end:0x02114a18
+
+src/data/ov016/g_profile_KI_FUNE_UP.c:
+    complete
+    .data.morayTail start:0x02114a18 end:0x02114a3c
+
+src/data/ov016/_ZTI16daObjKi_Hasira_c.c:
+    complete
+    .data.morayTail start:0x02114abc end:0x02114ac8
+
+src/data/ov016/_ZTS16daObjKi_Hasira_c.c:
+    complete
+    .data.morayTail start:0x02114ac8 end:0x02114adc
+
+src/data/ov016/g_profile_KI_HASIRA.c:
+    complete
+    .data.morayTail start:0x02114adc end:0x02114b00
+
+src/data/ov016/_ZTI13daObjKi_Ita_c.c:
+    complete
+    .data.morayTail start:0x02114b80 end:0x02114b8c
+
 src/game/actors/d_a_obj_ki_hasira.cpp:
     complete
     .text start:0x02112a00 end:0x02112ef4
@@ -38,6 +227,202 @@ src/game/actors/d_a_obj_ki_hasira.cpp:
     .ctor start:0x02113ac4 end:0x02113ac8
     .data.hasira start:0x02113cac end:0x02113ccc
     .bss start:0x02114e1c end:0x02114e44
+
+src/data/ov016/data_ov016_02113ccc.c:
+    complete
+    .data.hasira start:0x02113ccc end:0x02113cd4
+
+src/data/ov016/data_ov016_02113cd4.c:
+    complete
+    .data.hasira start:0x02113cd4 end:0x02113cec
+
+src/data/ov016/data_ov016_02113cec.c:
+    complete
+    .data.hasira start:0x02113cec end:0x02113cf4
+
+src/data/ov016/data_ov016_02113cf4.c:
+    complete
+    .data.hasira start:0x02113cf4 end:0x02113d0c
+
+src/data/ov016/data_ov016_02113d0c.c:
+    complete
+    .data.hasira start:0x02113d0c end:0x02113d30
+
+src/data/ov016/data_ov016_02113d30.c:
+    complete
+    .data.hasira start:0x02113d30 end:0x02113d4c
+
+src/data/ov016/data_ov016_02113d4c.c:
+    complete
+    .data.hasira start:0x02113d4c end:0x02113d8c
+
+src/data/ov016/data_ov016_02113d8c.c:
+    complete
+    .data.hasira start:0x02113d8c end:0x02113d90
+
+src/data/ov016/data_ov016_02113d90.c:
+    complete
+    .data.hasira start:0x02113d90 end:0x02113da8
+
+src/data/ov016/data_ov016_02113da8.c:
+    complete
+    .data.hasira start:0x02113da8 end:0x02113dc4
+
+src/data/ov016/data_ov016_02113dc4.c:
+    complete
+    .data.hasira start:0x02113dc4 end:0x02113dd4
+
+src/data/ov016/data_ov016_02113dd4.c:
+    complete
+    .data.hasira start:0x02113dd4 end:0x02113e00
+
+src/data/ov016/data_ov016_02113e00.c:
+    complete
+    .data.hasira start:0x02113e00 end:0x02113e50
+
+src/data/ov016/data_ov016_02113e50.c:
+    complete
+    .data.hasira start:0x02113e50 end:0x02113e54
+
+src/data/ov016/data_ov016_02113e54.c:
+    complete
+    .data.hasira start:0x02113e54 end:0x02113e6c
+
+src/data/ov016/data_ov016_02113e6c.c:
+    complete
+    .data.hasira start:0x02113e6c end:0x02113e88
+
+src/data/ov016/data_ov016_02113e88.c:
+    complete
+    .data.hasira start:0x02113e88 end:0x02113ed8
+
+src/data/ov016/data_ov016_02113ed8.c:
+    complete
+    .data.hasira start:0x02113ed8 end:0x02113f20
+
+src/data/ov016/data_ov016_02113f20.c:
+    complete
+    .data.hasira start:0x02113f20 end:0x02113f4c
+
+src/data/ov016/data_ov016_02113f4c.c:
+    complete
+    .data.hasira start:0x02113f4c end:0x02113f78
+
+src/data/ov016/data_ov016_02113f78.c:
+    complete
+    .data.hasira start:0x02113f78 end:0x02113ff4
+
+src/data/ov016/data_ov016_02113ff4.c:
+    complete
+    .data.hasira start:0x02113ff4 end:0x02114010
+
+src/data/ov016/data_ov016_02114010.c:
+    complete
+    .data.hasira start:0x02114010 end:0x021140b8
+
+src/data/ov016/data_ov016_021140b8.c:
+    complete
+    .data.hasira start:0x021140b8 end:0x021140ec
+
+src/data/ov016/data_ov016_021140ec.c:
+    complete
+    .data.hasira start:0x021140ec end:0x021140f8
+
+src/data/ov016/data_ov016_021140f8.c:
+    complete
+    .data.hasira start:0x021140f8 end:0x02114108
+
+src/data/ov016/data_ov016_02114108.c:
+    complete
+    .data.hasira start:0x02114108 end:0x0211417c
+
+src/data/ov016/data_ov016_0211417c.c:
+    complete
+    .data.hasira start:0x0211417c end:0x021141b8
+
+src/data/ov016/data_ov016_021141b8.c:
+    complete
+    .data.hasira start:0x021141b8 end:0x021141cc
+
+src/data/ov016/data_ov016_021141cc.c:
+    complete
+    .data.hasira start:0x021141cc end:0x021142a0
+
+src/data/ov016/data_ov016_021142a0.c:
+    complete
+    .data.hasira start:0x021142a0 end:0x0211433c
+
+src/data/ov016/data_ov016_0211433c.c:
+    complete
+    .data.hasira start:0x0211433c end:0x02114350
+
+src/data/ov016/data_ov016_02114350.c:
+    complete
+    .data.hasira start:0x02114350 end:0x02114380
+
+src/data/ov016/data_ov016_02114380.c:
+    complete
+    .data.hasira start:0x02114380 end:0x021143fc
+
+src/data/ov016/data_ov016_021143fc.c:
+    complete
+    .data.hasira start:0x021143fc end:0x02114458
+
+src/data/ov016/data_ov016_02114458.c:
+    complete
+    .data.hasira start:0x02114458 end:0x02114498
+
+src/data/ov016/data_ov016_02114498.c:
+    complete
+    .data.hasira start:0x02114498 end:0x0211454c
+
+src/data/ov016/data_ov016_0211454c.c:
+    complete
+    .data.hasira start:0x0211454c end:0x02114568
+
+src/data/ov016/data_ov016_02114568.c:
+    complete
+    .data.hasira start:0x02114568 end:0x02114598
+
+src/data/ov016/data_ov016_02114598.c:
+    complete
+    .data.hasira start:0x02114598 end:0x021145e4
+
+src/data/ov016/data_ov016_021145e4.c:
+    complete
+    .data.hasira start:0x021145e4 end:0x0211462c
+
+src/data/ov016/data_ov016_0211462c.c:
+    complete
+    .data.hasira start:0x0211462c end:0x021146f0
+
+src/data/ov016/data_ov016_021146f0.c:
+    complete
+    .data.hasira start:0x021146f0 end:0x02114750
+
+src/data/ov016/data_ov016_02114750.c:
+    complete
+    .data.hasira start:0x02114750 end:0x02114768
+
+src/data/ov016/data_ov016_02114768.c:
+    complete
+    .data.hasira start:0x02114768 end:0x021147c4
+
+src/data/ov016/data_ov016_021147c4.c:
+    complete
+    .data.hasira start:0x021147c4 end:0x02114824
+
+src/data/ov016/data_ov016_02114824.c:
+    complete
+    .data.hasira start:0x02114824 end:0x02114860
+
+src/data/ov016/data_ov016_02114860.c:
+    complete
+    .data.hasira start:0x02114860 end:0x02114874
+
+src/data/ov016/data_ov016_02114874.c:
+    complete
+    .data.hasira start:0x02114874 end:0x02114878
 
 src/game/actors/d_a_obj_ki_ita.cpp:
     complete
@@ -48,6 +433,26 @@ src/game/actors/d_a_obj_ki_ita.cpp:
     .data.morayTail start:0x02114b8c end:0x02114b98
     .bss start:0x02114e44 end:0x02114e6c
 
+src/data/ov016/_ZTS13daObjKi_Ita_c.c:
+    complete
+    .data.morayTail start:0x02114b98 end:0x02114ba8
+
+src/data/ov016/g_profile_KI_ITA.c:
+    complete
+    .data.morayTail start:0x02114ba8 end:0x02114bcc
+
+src/data/ov016/_ZTI13daSlide_Box_c.c:
+    complete
+    .data.morayTail start:0x02114c4c end:0x02114c58
+
+src/data/ov016/_ZTS13daSlide_Box_c.c:
+    complete
+    .data.morayTail start:0x02114c58 end:0x02114c68
+
+src/data/ov016/g_profile_SLIDE_BOX.c:
+    complete
+    .data.morayTail start:0x02114c68 end:0x02114c8c
+
 src/game/actors/d_a_slide_box.cpp:
     complete
     .text start:0x02112ff8 end:0x0211354c
@@ -55,3 +460,6 @@ src/game/actors/d_a_slide_box.cpp:
     .ctor start:0x02113acc end:0x02113ad0
     .data.slideBox start:0x02113bac end:0x02113bcc
     .bss start:0x02114e6c end:0x02114e94
+src/data/ov016/data_ov016_02114e94.c:
+    complete
+    .bss start:0x02114e94 end:0x02114ea0
