@@ -342,9 +342,11 @@ s32 dScMgTrampoline_c::InitResources() {
 }
 void TrmpLine_ClearAll(u32);
 
-/* Kept volatile, measured (#821 r49): as plain s16 StartRound folds the second
-   pair of reads into the first and is 0x1ec of 0x1f4. */
-extern volatile s16 data_020a0dbc[];
+/* The stylus origin (0, 0) a round starts from. StartRound copies the whole
+   pair into mTouchStart and mTouch, and the two struct copies are what keep
+   retail's second pair of reads (field-by-field halfword copies would be
+   folded into one). */
+extern Vec2s data_020a0dbc;
 
 void dScMgTrampoline_c::StartRound(int /* arg */) {
     volatile unsigned short fill;
@@ -352,10 +354,8 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
 
     G2_SetBlendAlpha(1, 0x3e, 0x10, 0x10);
 
-    mTouchStart.x = data_020a0dbc[0];
-    mTouchStart.y = data_020a0dbc[1];
-    mTouch.x = data_020a0dbc[0];
-    mTouch.y = data_020a0dbc[1];
+    mTouchStart = data_020a0dbc;
+    mTouch = data_020a0dbc;
 
     sTrmpAnyOnLedge = 0;
     mLevel = 0;

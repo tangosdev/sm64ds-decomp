@@ -966,7 +966,9 @@ void TrmpLine::Draw() {
         int polygonId = mSlotIndex;
         unsigned short *diffuse = sTrmpLineDiffuse;
         /* Load-bearing launder: a plain mAlpha read reorders the
-           POLYGON_ATTR loads (28 words differ). */
+           POLYGON_ATTR loads (28 words differ). r63: a const pointer to
+           mAlpha, an int or u8 local, and the attribute bits in SDK
+           order all leave 30 words different. */
         volatile unsigned char *alpha = &mAlpha;
         int polygonAlpha = *alpha;
         REG_POLYGON_ATTR = (((polygonId + 1) << 24) | 0x82) | (polygonAlpha << 16);

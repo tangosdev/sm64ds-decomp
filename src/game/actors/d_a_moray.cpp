@@ -413,7 +413,14 @@ int daMoray_c::StateSwimOutInit() {
    The double store to local.z is the ROM's (dropping the first one is 0x1bc).
    Re-tried after the respellings below, not inherited. Re-measured (#821 r17):
    without the bracket still 0x1bc, and `thrVert = thrHorz + 0x418000` (the
-   threshold built from the horizontal one) is 0x1b4. */
+   threshold built from the horizontal one) is 0x1b4.
+   Round 64: without the bracket the only loss of substance is thrAng folded
+   into `cmp r0, #0x3300` (the ROM holds it in r4). Setting thrAng = 0x3300
+   again in the entrance-1 arm keeps it a variable and gives 0x1c0, but 9
+   words still differ (the player-position copy and entrance take r2/r1/r0
+   for the ROM's r3/r2/r1), and that second store would be a matching device
+   anyway; `playerPos = player->mPos` is 0x1bc; the pragma file-wide breaks
+   UpdatePose, InitResources, UpdateHitCylinders and Render. */
 #pragma push
 #pragma opt_propagation off
 int daMoray_c::StateDenWaitMain() {

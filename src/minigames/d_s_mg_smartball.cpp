@@ -2469,8 +2469,9 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     int pass = 0;
     int depth;
     V2xz work;
-    /* volatile: the ROM keeps the entry velocity on the stack and reloads it. */
-    volatile V2xz savedVel;
+    /* The entry velocity, for the hit sounds at the end. A Vector2 gets the
+       stack home the ROM stores it to and reloads it from. */
+    Vector2 savedVel;
     V2xz dist;
     V2xz delta;
     V2xz otherPos;
@@ -2523,7 +2524,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     s64 square;
 
     savedVel.x = mVel0;
-    savedVel.z = mVel1;
+    savedVel.y = mVel1;
     targetIndex = -1;
     i = 0;
     do {
@@ -2903,19 +2904,19 @@ outer_loop:
 
     if (hitSlope == 1) {
         event0.x = savedVel.x;
-        event0.z = savedVel.z;
+        event0.z = savedVel.y;
         PlayHitSound(0x171, &event0.x);
     } else if (hitPropeller == 1) {
         event1.x = savedVel.x;
-        event1.z = savedVel.z;
+        event1.z = savedVel.y;
         PlayHitSound(0x172, &event1.x);
     } else if (hitExit == 1) {
         event2.x = savedVel.x;
-        event2.z = savedVel.z;
+        event2.z = savedVel.y;
         PlayHitSound(0x16f, &event2.x);
     } else if (hitWing == 1) {
         event3.x = savedVel.x;
-        event3.z = savedVel.z;
+        event3.z = savedVel.y;
         PlayHitSound(0x1a3, &event3.x);
     }
 
@@ -4980,7 +4981,9 @@ s32 dScMgSmartball_c::InitResources() {
     DecompressLZ16(f, G2S_GetBG0CharPtr());
     Ov004_Deallocate(f);
     {
-        /* volatile: same stack round trip of the fill value as PaintCell. */
+        /* volatile: same stack round trip of the fill value as PaintCell.
+           r63: a plain 0, MI_CpuClear16, a u16 local and the SDK's static
+           inline MI_CpuFill16 (u16 data parameter) all give 0x8d4 of 0x8dc. */
         volatile u16 v;
         MI_CpuFill16(G2S_GetBG0ScrPtr(), (u16)(v = 0), 0x1000);
     }

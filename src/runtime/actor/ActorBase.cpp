@@ -142,7 +142,9 @@ struct N {
        insert loop and reads node->c before n->c in the first test. A plain
        field, the real fLiNdBaPr_c with currentPriority, and four loop shapes
        (for over next, for (;;) with a break, `node->next` twice, while with
-       an inner break) all hoist the n->c load: 0x88 or 0x94 against 0x8c. */
+       an inner break) all hoist the n->c load: 0x88 or 0x94 against 0x8c.
+       r63: `n->c >= next->c`, a `&n->c` local and for(;;) give 0x88; a
+       separate walk pointer (for over next, or prev/node) gives 0x90. */
     volatile unsigned short c;
 };
 struct L {
