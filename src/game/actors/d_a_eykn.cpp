@@ -19,6 +19,8 @@
  * - St_Wait_Main `mAngle.y += mHorzSpeed` is 0x44->0x48.
  * - St_Attack_Main `(u16)mAngle.x/.y/.z` is 44 words off at 0x314. The
  *   unsigned-short pun is what loads them with ldrh.
+ *   Kept (#821 r82): `rot = mAngle;`, plain field copies in either order and
+ *   a Vector3_16 copy-init -> ldrsh, 44 words off (copy-init 0x32c).
  * - CheckAttacks as one || is 6 words off at 0x17c. The gotos stay.
  * - St_Die_Main's blue-coin position as plain field copies is 13 words
  *   off at 0x3dc.
