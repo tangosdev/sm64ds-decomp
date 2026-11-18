@@ -1808,6 +1808,12 @@ extern void func_0203b958(short* o, short* a, short* b);
 }
 extern void func_02012dd0(void *a);
 
+static inline short Abs(short v) {
+    if (v < 0)
+        v = -v;
+    return v;
+}
+
 /* The overlay menu's frame while it is open: slides the items in and, on
    a new touch with nothing highlighted, highlights the touched item in
    mMenuCursor (within 0x60 x 0x18 of item 0, 0x40 x 0x13 of the others, by
@@ -1824,7 +1830,6 @@ void dScMgBase_c::UpdateMenu() {
     short d0[2];
     short d1[2];
     short d2[2];
-    short a, b;
 
     if ((flags & 0x40) || (flags & 0x80) || (flags & 0x20) || (flags & 0x10)) {
         func_02012790(0xe);
@@ -1841,59 +1846,27 @@ void dScMgBase_c::UpdateMenu() {
     if (gTouchInfo[idx].held != 0) {
         unlocked = (gTouchInfo[idx].edge != 0);
     }
-    do {
-        if (unlocked == 0)
-            break;
-        if (mMenuCursor >= 0)
-            break;
+    if (unlocked != 0 && mMenuCursor < 0) {
         tmp[0] = gTouchInfo[idx].x;
         tmp[1] = gTouchInfo[idx].y;
         func_0203b958(d0, tmp, &mMenuItem0X);
         func_0203b958(d1, tmp, &mMenuItem1X);
         func_0203b958(d2, tmp, &mMenuItem2X);
-        a = d0[0];
-        if (a < 0)
-            a = -a;
-        if (a < 0x60) {
-            b = d0[1];
-            if (b < 0)
-                b = -b;
-            if (b < 0x18) {
-                func_02012790(0x62);
-                mMenuCursor = 0;
-                /* 0x10 for item 0 and 0 for the others */
-                mMenuPickDelay = 16;
-                break;
-            }
+        if (Abs(d0[0]) < 0x60 && Abs(d0[1]) < 0x18) {
+            func_02012790(0x62);
+            mMenuCursor = 0;
+            /* 0x10 for item 0 and 0 for the others */
+            mMenuPickDelay = 16;
+        } else if (Abs(d1[0]) < 0x40 && Abs(d1[1]) < 0x13) {
+            func_02012790(0x63);
+            mMenuCursor = 1;
+            mMenuPickDelay = 0;
+        } else if (Abs(d2[0]) < 0x40 && Abs(d2[1]) < 0x13) {
+            func_02012790(0x62);
+            mMenuCursor = 2;
+            mMenuPickDelay = 0;
         }
-        a = d1[0];
-        if (a < 0)
-            a = -a;
-        if (a < 0x40) {
-            b = d1[1];
-            if (b < 0)
-                b = -b;
-            if (b < 0x13) {
-                func_02012790(0x63);
-                mMenuCursor = 1;
-                mMenuPickDelay = 0;
-                break;
-            }
-        }
-        a = d2[0];
-        if (a < 0)
-            a = -a;
-        if (a < 0x40) {
-            b = d2[1];
-            if (b < 0)
-                b = -b;
-            if (b < 0x13) {
-                func_02012790(0x62);
-                mMenuCursor = 2;
-                mMenuPickDelay = 0;
-            }
-        }
-    } while (0);
+    }
 
     if (mMenuCursor < 0)
         return;
