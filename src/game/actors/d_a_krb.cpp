@@ -25,8 +25,8 @@
  *   A named temporary DIFFs, and spelling mUnstickTimer on both
  *   sides of the decrement folds the halfword.
  * - OnTurnIntoEgg, the reward helper and InitResources mask param1
- *   in place as `param1 = (int)param1 & mask`. Without the cast the
- *   read-modify-write CSEs the +8 address and DIFFs.
+ *   in place through GetParam1(). A plain `param1 &= mask` CSEs the
+ *   +8 address across the read-modify-write and DIFFs.
  * - mInitAngleY is the spawn heading, but func_ov084_02129cf4
  *   overwrites it with the chase heading. mWanderRerollTimer is s16
  *   in the header and this TU loads it unsigned.
@@ -426,6 +426,14 @@ void daKrb_c::func_ov084_021296b0(void *b) {
     goomba->mHomePos.z = pos[2];
 }
 
+/* The reward helper, OnTurnIntoEgg and InitResources mask param1 in place
+   with a read through this accessor. A plain `param1 &= mask` lets mwccarm
+   CSE the field address across the read-modify-write; the cartridge
+   re-issues [rN,#8]. */
+inline u32 daKrb_c::GetParam1() const {
+    return param1;
+}
+
 /* Pay out the reward the Goomba carries (mRewardType), then clear bits 4..7
  * and the upper halfword of param1 (mask 0xff0f), presumably so a respawned
  * copy does not read the reward again.
@@ -450,9 +458,7 @@ void daKrb_c::func_ov084_021296cc() {
             ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker((daStar_c *)silverStar);
             SpawnSoundObj(1);
         }
-        /* The (int) cast on the load is load-bearing: a plain
-           `param1 & 0xff0f` CSEs the +8 address and builds one word longer. */
-        param1 = (int)param1 & 0xff0f;
+        param1 = GetParam1() & 0xff0f;
         return;
     }
     if (mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
@@ -463,7 +469,7 @@ void daKrb_c::func_ov084_021296cc() {
     dActor_c::Spawn(ACTOR_STARBASE, mStarID | 0x30, mPos, 0, mAreaId, -1);
     dActor_c::Spawn(ACTOR_SILVER_STAR, mStarID | 0x30, mPos, 0, mAreaId, -1);
     mRewardType = daKrb_c::REWARD_SPENT;
-    param1 = (int)param1 & 0xff0f;
+    param1 = GetParam1() & 0xff0f;
     SpawnSoundObj(1);
 }
 
@@ -1425,9 +1431,7 @@ void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
                 UntrackStar(mStarTracked);
                 b4 = 1;
                 dActor_c::Spawn(ACTOR_STARBASE, 0x50, mHomePos, 0, mAreaId, -1);
-                /* The (int) cast keeps [rN,#8] on the load: a plain
-                   `param1 & 0xff0f` lets mwccarm CSE the field address. */
-                param1 = (int)param1 & 0xff0f;
+                param1 = GetParam1() & 0xff0f;
             } else if (mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
                 if (mStarID == data_0209f344[data_0209f208[0]]) {
                     UntrackStar(mStarTracked);
@@ -1713,10 +1717,7 @@ int daKrb_c::InitResources() {
     AddCap((unsigned char)(param1 & 0xf));
 
     if ((mCapId & 0xf) < 6)
-        /* The (int) cast is load-bearing: a plain `param1 & 0xf0ff` lets mwcc
-           CSE the field address across the RMW, and the ROM re-issues it. See
-           notes/mwccarm-codegen.md. */
-        param1 = (int)param1 & 0xf0ff;
+        param1 = GetParam1() & 0xf0ff;
 
     if (DestroyIfCapNotNeeded() == 0)
         return 0;
