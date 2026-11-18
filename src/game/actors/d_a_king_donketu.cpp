@@ -563,53 +563,52 @@ int daKing_Donketu_c::UpdateDefeat() {
     mScale.z = mScale.x;
     mScale.y = mScale.z;
     RenewLoopedParticles();
-    if (mScale.x >= 0x100)
-        goto end;
-    pos.x = mSpawnPos.x;
-    pos.y = mSpawnPos.y;
-    pos.z = mSpawnPos.z;
-    Message::EndTalk();
-    Sound::StopLoadedMusic_Layer3();
-    func_02011cfc();
-    Sound::ChangeMusicVolume(0x7f, 0x15666);
-    pos.y = pos.y + 0x190000;
-    func_0200fa8c(1);
+    if (mScale.x < 0x100) {
+        pos.x = mSpawnPos.x;
+        pos.y = mSpawnPos.y;
+        pos.z = mSpawnPos.z;
+        Message::EndTalk();
+        Sound::StopLoadedMusic_Layer3();
+        func_02011cfc();
+        Sound::ChangeMusicVolume(0x7f, 0x15666);
+        pos.y = pos.y + 0x190000;
+        func_0200fa8c(1);
 
-    /* Kept (#821 r20, measured against ov073 0x0211fa74, 0x178). rot is
-       built and never read; the ROM still stores all four halfwords.
-         non-volatile rot with plain field stores: 0x15c (the stores are
-           dropped).
-         volatile rot, `rot.x = mAngle.x; rot.y = mAngle.y; ...`: 5 of 94
-           words differ.
-         volatile rot with the reads below but `rot.x = a`: 4 differ.
-       Vector3_16 has no destructor, so the non-POD lever that keeps a
-       dead Vector3 copy does not apply. */
-    {
-        unsigned short a = *(unsigned short *)&mAngle.x;
-        unsigned short b = *(unsigned short *)&mAngle.y;
-        rot.x = b ? a : a;
-        rot.y = b;
-        rot.z = *(unsigned short *)&mAngle.z;
-        rot.y = (unsigned short)HorzAngleToCPlayer();
-    }
+        /* Kept (#821 r20, measured against ov073 0x0211fa74, 0x178). rot is
+           built and never read; the ROM still stores all four halfwords.
+             non-volatile rot with plain field stores: 0x15c (the stores are
+               dropped).
+             volatile rot, `rot.x = mAngle.x; rot.y = mAngle.y; ...`: 5 of 94
+               words differ.
+             volatile rot with the reads below but `rot.x = a`: 4 differ.
+           Vector3_16 has no destructor, so the non-POD lever that keeps a
+           dead Vector3 copy does not apply. */
+        {
+            unsigned short a = *(unsigned short *)&mAngle.x;
+            unsigned short b = *(unsigned short *)&mAngle.y;
+            rot.x = b ? a : a;
+            rot.y = b;
+            rot.z = *(unsigned short *)&mAngle.z;
+            rot.y = (unsigned short)HorzAngleToCPlayer();
+        }
 
-    spawned = dActor_c::Spawn(ACTOR_OBJ_KEY, 4, pos, 0, mAreaId, -1);
-    found = dActor_c::FindWithActorID(ACTOR_OBJ_BLUE_FIRE, 0);
-    func_02012694(SND_POOF, &mCamSpacePos);
-    if (found != 0) {
-        struct Vector3 fp;
-        const s32 *pv = &found->mPos.x;
-        fp.x = pv[0];
-        fp.y = pv[1];
-        fp.z = pv[2];
-        PoofDustAt(fp);
-        found->MarkForDestruction();
+        spawned = dActor_c::Spawn(ACTOR_OBJ_KEY, 4, pos, 0, mAreaId, -1);
+        found = dActor_c::FindWithActorID(ACTOR_OBJ_BLUE_FIRE, 0);
+        func_02012694(SND_POOF, &mCamSpacePos);
+        if (found != 0) {
+            struct Vector3 fp;
+            const s32 *pv = &found->mPos.x;
+            fp.x = pv[0];
+            fp.y = pv[1];
+            fp.z = pv[2];
+            PoofDustAt(fp);
+            found->MarkForDestruction();
+        }
+        if (spawned != 0) {
+            cam->mFlags &= ~8;
+            MarkForDestruction();
+        }
     }
-    if (spawned != 0) {
-        cam->mFlags &= ~8;
-        MarkForDestruction();
-    }
-end:
     return 1;
 }
 
