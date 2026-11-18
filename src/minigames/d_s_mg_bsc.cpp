@@ -177,7 +177,6 @@ void dScMgBSC_c::StartRound(int mode) {
    meter. */
 s32 dScMgBSC_c::CanEndState(int mode) {
     int state;
-    short coinStatus;
     if (mState == STATE_WAIT_RESULT) {
         if (mDealer.IsIdle() != 0) {
             if (mode == 4) {
@@ -192,9 +191,9 @@ s32 dScMgBSC_c::CanEndState(int mode) {
         }
     }
     state = mState;
-    if (state < STATE_WAIT_COINS || (coinStatus = gMgCoinsStatus, coinStatus != 1))
+    if (state < STATE_WAIT_COINS || gMgCoinsStatus != 1)
         return 0;
-    if (state == STATE_WAIT_COINS && coinStatus == 1)
+    if (state == STATE_WAIT_COINS && gMgCoinsStatus == 1)
         Mg_SaveRecordPair(mCredits, mHudScore);
     return 1;
 }

@@ -15,11 +15,14 @@
  *   optimization pragmas are brackets.
  * - data_0209fc78 is a volatile macro in func_02033464 only. decl_common.h
  *   spells that byte plain, and the other functions in this file read it plain.
- * - LayoutLineVS keeps the char-cast handler call: data_02092830[idx - 1]()
- *   subtracts first, a 6-word DIFF.
+ * - LayoutLineVS calls the handler as (data_02092830 + idx)[-1](), the
+ *   spelling of its single-player twin; data_02092830[idx - 1]() subtracts
+ *   first, a 6-word DIFF.
  * - func_020319fc writes the spill-over store as (&dst[wordIdx])[8] and keeps
  *   the char-cast data_0209fd5c read: dst[wordIdx + 8] grows the function by
  *   4 bytes, and indexing data_0209fd5c shrinks it by 8.
+ *   Kept (#821 r82): data_0209fd5c[i + j * 16], *(data_0209fd5c + ...) and
+ *   (data_0209fd5c + j * 16)[i] -> 0x180 or 55 words off of 0x188.
  * - SetTextGlobalsVS keeps the r2/r3 temps. One expression reorders the load
  *   of *(r2 + 4) against the store of r3.
  * - Address-named helpers stay address-named.
@@ -889,7 +892,7 @@ void Message::LayoutLineVS() {
         case 0xfe: {
             u8 idx = p[2];
             data_0209fd18 = idx;
-            (*(void (**)(void))((char *)data_02092830 + (idx << 2) - 4))();
+            (data_02092830 + idx)[-1]();
             p = data_0209fd0c;
             data_0209fd0c = p + p[1];
             break;

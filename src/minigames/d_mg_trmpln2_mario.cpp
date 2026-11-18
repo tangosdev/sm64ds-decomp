@@ -1236,8 +1236,7 @@ void dMgTrmpln3DMario_c::EnterLand() {
     mAnmModel.SetAnim(sTrmpAnimHangUp, 0x40000000, 0x800, 0);
     Sound_PlayBank1Panned(0, 0x17, mPos.x);
     mState = &dMgTrmpln3DMario_c::StateLand;
-    int *p20 = &mPos.y;
-    *p20 = *p20 + 0x20000;
+    mPos.y += 0x20000;
     StateLand();
 }
 

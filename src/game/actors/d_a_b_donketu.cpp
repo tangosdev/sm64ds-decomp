@@ -186,11 +186,10 @@ int daBDonketu_c::UpdateRunState() {
         return (int)timer;
     }
     mHorzSpeed = 0x14000;
-    u16 *timer = &mStateTimer;
-    u32 value = *timer;
+    u32 value = mStateTimer;
     if (value > 0x23) {
         value = 0;
-        *timer = 0;
+        mStateTimer = 0;
     }
     return value;
 }

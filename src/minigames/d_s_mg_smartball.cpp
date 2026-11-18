@@ -1204,7 +1204,9 @@ void cMgSmartball_slot_c::UpdateSpin() {
 }
 
 /* Slot 1: draws the reel window and the three reels.
- * Leftover: the empty `if (1)`, the x mask and the goto loop are required. */
+ * Leftover: inline_fn, the x mask and the goto loop are required.
+ * Kept (#821 r82): the empty `if (1) {}` in the first loop was inert and is
+ * gone; plain additions for inline_fn -> same size, reel-loop bytes differ. */
 inline int inline_fn(int arg0, int arg1) {
     return arg0 + arg1;
 }
@@ -1214,8 +1216,6 @@ void cMgSmartball_slot_c::Update() {
     int x;
     int xo;
     for (i = 0, x = 0; i < 3; i++, x += 0x18) {
-        if (1) {
-        }
         Mg_RenderSpriteBoth(sSmartballSlotFrameSprite, inline_fn(mCurrent0 >> 12, x - 24),
                             mCurrent1 >> 12, -1, 2);
     }
@@ -4811,8 +4811,7 @@ s32 dScMgSmartball_c::Behavior() {
             if (mRestFrames >= 60) {
                 mPhase = 1;
             } else {
-                int *p = &mRestFrames;
-                (*p)++;
+                mRestFrames++;
             }
         } else {
             int cur;
@@ -4830,10 +4829,7 @@ s32 dScMgSmartball_c::Behavior() {
 
         if (mDraining != 0) {
             int t;
-            {
-                int *p = &mDrainTimer;
-                (*p)++;
-            }
+            mDrainTimer++;
             if (mDrainTimer == 180) {
                 Mg_RestoreMusic();
                 FreeGfxSlotsById(0x1d);
@@ -4868,14 +4864,12 @@ s32 dScMgSmartball_c::Behavior() {
             gSubScreenLayers[0] |= 1;
         }
         if (mResultSlideX > 0) {
-            int *p = &mResultSlideX;
-            *p -= 4;
+            mResultSlideX -= 4;
         } else {
             int flag = 0;
             mResultSlideX = 0;
             if (mResultTimer < 300) {
-                int *p = &mResultTimer;
-                (*p)++;
+                mResultTimer++;
             } else {
                 int idx = gActivePlayerSlot;
                 if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0) {
@@ -4899,12 +4893,10 @@ s32 dScMgSmartball_c::Behavior() {
     }
 
     if (mGateLampTimer[0] > 0) {
-        int *p = &mGateLampTimer[0];
-        (*p)--;
+        mGateLampTimer[0]--;
     }
     if (mGateLampTimer[1] > 0) {
-        int *p = &mGateLampTimer[1];
-        (*p)--;
+        mGateLampTimer[1]--;
     }
 
     UpdateSparks();

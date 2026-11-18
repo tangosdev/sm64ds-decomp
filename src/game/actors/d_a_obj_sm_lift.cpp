@@ -175,8 +175,7 @@ int daObjSm_Lift_c::Behavior() {
         }
 
         if (reached) {
-            int *pIdx = &mNodeIndex;
-            *pIdx = *pIdx + mNodeStep;
+            mNodeIndex += mNodeStep;
             if (mNodeIndex < 0) {
                 if (path.Loops() != 0) {
                     mNodeIndex = mNodeCount - 1;
@@ -184,8 +183,7 @@ int daObjSm_Lift_c::Behavior() {
                     mPauseTimer = 60;
                     mMoving = 0;
                     mNodeStep = 1;
-                    int *pIdx2 = &mNodeIndex;
-                    *pIdx2 = *pIdx2 + (mNodeStep * 2);
+                    mNodeIndex += mNodeStep * 2;
                 }
             }
             if (mNodeIndex >= mNodeCount) {
@@ -195,8 +193,7 @@ int daObjSm_Lift_c::Behavior() {
                     mPauseTimer = 60;
                     mMoving = 0;
                     mNodeStep = -1;
-                    int *pIdx3 = &mNodeIndex;
-                    *pIdx3 = *pIdx3 + (mNodeStep * 2);
+                    mNodeIndex += mNodeStep * 2;
                 }
             }
         }

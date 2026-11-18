@@ -256,7 +256,6 @@ void daIbl_c::UpdateModelMatrix() {
  *    match the ROM (A holds C8, B holds C7, C8 holds C6, ...).
  *  - Sign result s8/s6 names are swapped vs the values they hold so free-reg
  *    dest colors land on r1/r3 like the ROM; mul uses those names accordingly.
- *  - u64-launder materializes pidx between the first path-node load and store.
  */
 int daIbl_c::AdvancePath() {
     int px = mNextNodePos.x;
@@ -339,13 +338,12 @@ int daIbl_c::AdvancePath() {
     dot = s6 * sA + s7 * ssl + s8 * sB;
     if (dot <= 0) {
         int v = mNextNodePos.x;
-        int *pidx = &mPathNodeIndex;
         mPrevNodePos.x = v;
         v = mNextNodePos.y;
         mPrevNodePos.y = v;
         v = mNextNodePos.z;
         mPrevNodePos.z = v;
-        *pidx = *pidx + 1;
+        mPathNodeIndex++;
         if (mPathNodeIndex >= mNumPathNodes) {
             mPathNodeIndex = 0;
         }

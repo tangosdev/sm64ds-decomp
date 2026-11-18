@@ -103,7 +103,8 @@ int daEyBm_c::Behavior() {
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
         MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
 
-        /* Retail retains a typed whole-vector writeback after the transform. */
+        /* Retail retains a typed whole-vector writeback after the transform.
+           Kept (#821 r82): dropping it -> Behavior 0x11c of 0x134. */
         mSpeed = mSpeed;
 
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);

@@ -883,7 +883,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
  * and hitAngle reference are
  * described in notes/mwccarm-codegen.md 6cz. The two relative-angle pairs
  * index FX_SinCosTable_ by hand: through FX_CosIdx/FX_SinIdx, with or
- * without the shared index local, the function grows to 0x580. */
+ * without the shared index local, the function grows to 0x580.
+ * Kept (#821 r82): FX_MUL for all four wide products -> 30 words off (the sine
+ * sign word schedules early); FX_MUL for the cosine product alone -> 4 words
+ * (r4/fp swap); FX_MUL(normal, sin) operand order -> 0x52c of 0x560. */
 void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
     long long wideContactSin;
     long long wideContactCos;

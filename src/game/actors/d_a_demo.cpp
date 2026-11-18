@@ -3158,10 +3158,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
 
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
-        {
-            int *p60 = &this->mPos.y;
-            *p60 = *p60 + FX_MUL(t, 0x96000);
-        }
+        this->mPos.y += FX_MUL(t, 0x96000);
 
         {
             short *pfc = &this->mPhase;
@@ -3169,10 +3166,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         }
         ApproachAngle(&this->mPhaseStep, 0x200, 0x14, 0x4000, 0);
 
-        {
-            int *p5c = &this->mPos.x;
-            *p5c = *p5c + this->mRate;
-        }
+        this->mPos.x += this->mRate;
         Math_Function_0203b0fc(&this->mRate, 0, 0xcc, 0x7fffffff);
     }
     return 1;
