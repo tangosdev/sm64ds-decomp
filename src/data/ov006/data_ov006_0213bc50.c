@@ -11,7 +11,7 @@
 
 extern void * _Z21dScMgCard_c_classInitv();
 
-#pragma define_section obj ".data" ".data" ".data" far_data
+#pragma define_section obj ".data.w13b814" ".data.w13b814" ".data.w13b814" far_data
 #pragma section obj begin
 u32 g_profile_MG_CARD[2] = {
     (u32)&_Z21dScMgCard_c_classInitv,

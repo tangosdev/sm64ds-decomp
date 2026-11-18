@@ -35,7 +35,7 @@ extern char data_ov006_02133df0[];
 extern char data_ov006_02133df8[];
 extern char data_ov006_02133e00[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
+#pragma define_section obj ".data.w13b814" ".data.w13b814" ".data.w13b814" far_data
 #pragma section obj begin
 void * sBomroomBombsSprites[26] = {
     (void *)&data_ov006_02133dd0,

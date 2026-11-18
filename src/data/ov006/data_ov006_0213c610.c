@@ -11,7 +11,7 @@
 
 extern u8 _ZTI14dScMgD3DBase_c[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
+#pragma define_section obj ".data.w13b814" ".data.w13b814" ".data.w13b814" far_data
 #pragma section obj begin
 unsigned int sD3DOptionNcgByLanguage[7] = {
     0x000000de,

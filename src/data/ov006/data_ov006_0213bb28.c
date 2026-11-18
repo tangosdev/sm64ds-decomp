@@ -6,7 +6,7 @@ extern u32 data_ov006_0213b9b8;
 extern u32 data_ov006_0213b9d0;
 extern u32 data_ov006_0213b9e4[];
 
-#pragma define_section obj ".data" ".data" ".data" far_data
+#pragma define_section obj ".data.w13b814" ".data.w13b814" ".data.w13b814" far_data
 #pragma section obj begin
 unsigned char * sBomroomBombLitSprites[4] = {
     (unsigned char *)&data_ov006_0213b9b0,

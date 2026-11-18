@@ -1,21 +1,18 @@
 /*
- * One object for data_ov006_0213c75c, pmf_dMg3DEspModel_c_Intro,
- * pmf_dMg3DEspModel_c_Wait, pmf_dMg3DEspModel_c_Idle_3,
- * pmf_dScMg3DEsp_c_CardTouch, pmf_dScMg3DEsp_c_FlashQuick (48 bytes): the
- * linker starts every input section on a 4-byte boundary, so these tables
- * cannot be separate.
+ * Minigame-overlay data at 0x0213c75c..0x0213c764.
+ *
+ * Sprite templates are OamAttr lists (terminated by 0xffff in
+ * attr3); the tables that index them hold OamAttr pointers. A
+ * word the module relocates is written as its target symbol so
+ * the link re-creates the relocation; the rest are the
+ * cartridge words.
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
+#pragma define_section obj ".data.gap52" ".data.gap52" ".data.gap52" far_data
 #pragma section obj begin
-extern void _ZN15dMg3DEspModel_c5IntroEv(void *);
-extern void _ZN15dMg3DEspModel_c4WaitEv(void *);
-extern void _ZN15dMg3DEspModel_c4IdleEv(void *);
-extern void _ZN12dScMg3DEsp_c9CardTouchEi(void *, int);
-extern void _ZN12dScMg3DEsp_c10FlashQuickEv(void *);
-u32 data_ov006_0213c75c[12] = {
-    0x6d5f696b, 0x00757a69, (u32)&_ZN15dMg3DEspModel_c5IntroEv, 0x00000000, (u32)&_ZN15dMg3DEspModel_c4WaitEv, 0x00000000, (u32)&_ZN15dMg3DEspModel_c4IdleEv, 0x00000000,
-    (u32)&_ZN12dScMg3DEsp_c9CardTouchEi, 0x00000000, (u32)&_ZN12dScMg3DEsp_c10FlashQuickEv, 0x00000000,
+u32 data_ov006_0213c75c[2] = {
+    0x6d5f696b,
+    0x00757a69,
 };
 #pragma section obj end

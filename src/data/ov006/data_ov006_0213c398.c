@@ -5,7 +5,7 @@
  */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
+#pragma define_section obj ".data.w13b814" ".data.w13b814" ".data.w13b814" far_data
 #pragma section obj begin
 u32 data_ov006_0213c398[15] = {
     0x64325f64, 0x5f676d5f, 0x635f6762, 0x696c7275, 0x5f31676e, 0x2e67636e, 0x006e6962, 0x2f474d2f,

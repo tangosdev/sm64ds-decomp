@@ -1,7 +1,7 @@
 /* Word table, 3 entries. */
 #include "types.h"
 
-#pragma define_section obj ".data" ".data" ".data" far_data
+#pragma define_section obj ".data.w13b814" ".data.w13b814" ".data.w13b814" far_data
 #pragma section obj begin
 u32 data_ov006_0213c5bc[3] = {
     0x67636e5f,
