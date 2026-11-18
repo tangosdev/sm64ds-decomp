@@ -941,7 +941,7 @@ void daTrs_c::func_ov063_02117b0c() {
         Sound::ChangeMusicVolume(0x14, 0x15666);
         break;
     case 1:
-    this->mSubState++;
+        this->mSubState++;
         break;
     case 2:
         if (this->mTalkPlayer->GetTalkState() != 0)
