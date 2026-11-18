@@ -41,8 +41,8 @@ struct daObjWc_Obj05_c : dBgActor_c {
      * on every frame states 1 and 2 play the lift loop (sound 0x8d). */
     s32 mSoundHandle; /* 0x324 */
     /* Zeroed on entering state 2 (and by InitResources); state 2 counts
-     * it up as u16 and starts the ascent once it reaches 0x6e. */
-    s16 mDwellTimer; /* 0x328 */
+     * it up and starts the ascent once it reaches 0x6e. */
+    u16 mDwellTimer; /* 0x328 */
     /* OnStoodOn, called through the mesh collider's stood-on callback, sets
      * it to 1 when the touching actor's actorID is PLAYER (0xbf); Behavior
      * reads it and clears it at the end of every frame. */
