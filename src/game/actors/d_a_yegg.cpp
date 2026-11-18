@@ -157,9 +157,7 @@ extern int func_ov002_020cf700(void *g);
  * scalars. D0 is the same destruction followed by the inherited actor-heap
  * operator delete. Being the first out-of-line virtual, it makes this file the
  * key function's home, so the vtable and RTTI are emitted here too. */
-daYegg_c::~daYegg_c()
-{
-}
+daYegg_c::~daYegg_c() {}
 
 static inline int IsFlagSet(dActor_c *actor, u32 bit) {
     return (actor->mFlags & bit) != 0;
@@ -1230,10 +1228,13 @@ int daYegg_c::CleanupResources()
    is below 1. */
 int daYegg_c::Render()
 {
-    if (IsInYoshiMouth(this)) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
 
-    if (mPlayer->IsInsideOfCannon()) return 1;
-    if (mPlayer->mOpacity < 1) return 1;
+    if (mPlayer->IsInsideOfCannon())
+        return 1;
+    if (mPlayer->mOpacity < 1)
+        return 1;
     mAnmModel.Render(0);
     return 1;
 }
