@@ -66,7 +66,7 @@ int daObjTbox_c::InitResources() {
     mCylinder.Init(this, 0x96000, 0x96000, 0x200004, 0);
     UpdateModelTransform();
     mOrder = param1;
-    mStarID = (u32)param1 >> 8;
+    mStarID = param1 >> 8;
     if (mStarID != 0xff) {
         mTrackedStarID = TrackStar(mStarID, 2);
     }
