@@ -9,7 +9,7 @@ extern void MTX_Scale43_(union Matrix4x3 *mF, fx32 x, fx32 y, fx32 z)
     __attribute__((long_call, target("thumb")));
 
 void Matrix4x3_ApplyInPlaceToScale(union Matrix4x3 *mF, fx32 x, fx32 y, fx32 z) {
-    union Matrix4x3 tmp;
-    MTX_Scale43_(&tmp, x, y, z);
-    MTX_Concat43(&tmp, mF, mF);
+    union Matrix4x3 scale;
+    MTX_Scale43_(&scale, x, y, z);
+    MTX_Concat43(&scale, mF, mF);
 }
