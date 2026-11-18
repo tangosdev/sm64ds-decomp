@@ -232,14 +232,11 @@ int daBook_c::CheckAttacks() {
  * (hitFlags), and returns one of the HIT_ results. Only a player counts, and
  * a vanished player is ignored by SHOOT_BOOK straight away, and by KILLER_BOOK
  * only when nothing else applied. mTouchedPlayer is set as soon as a player is known to be
- * involved. The ROM reserves a 12-byte frame it never touches; two
- * address-taken volatile locals reserve it with no emitted code. */
+ * involved. */
 int daBook_c::GetHitType() {
     u32 id;
     daPly_c *found;
     int t;
-    volatile int t1, t2;
-    (void)&t1; (void)&t2;
 
     id = mdCcAcPos_c.otherOwner;
     if (id == 0)
@@ -269,17 +266,12 @@ int daBook_c::GetHitType() {
         return HIT_ATTACKED;
 
     if (BumpedUnderneathByPlayer(*found) != 0) {
-        /* the bump also cancels the player's vertical speed. The local is a
-           VecFx32, not a Vector3: the copy through a Vector3 local does not
-           match. */
+        /* the bump also cancels the player's vertical speed. v is a Vector3:
+           its declared destructor gives it the 12-byte stack home the ROM's
+           frame reserves, though the copy itself stays in registers. */
         Vector3 *p = &found->mSpeed;
-        VecFx32 v;
-        v.z = p->z;
-        v.x = p->x;
-        v.y = 0;
-        found->mSpeed.x = v.x;
-        found->mSpeed.y = v.y;
-        found->mSpeed.z = v.z;
+        Vector3 v(p->x, 0, p->z);
+        found->mSpeed = v;
         mTouchedPlayer = found;
         return HIT_ATTACKED;
     }
