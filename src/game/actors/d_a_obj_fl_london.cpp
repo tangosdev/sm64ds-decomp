@@ -86,16 +86,14 @@ s32 daObjFl_London_c::Behavior() {
         if (mFlag == 0) {
             /* MATCH: mPrevAngle.z = mPrevAngle.z - 0x100 size-DIFFs (member
              * addressing CSEs the field). */
-            short *p = &mPrevAngle.z;
-            *p = *p - 0x100;
+            mPrevAngle.z -= 0x100;
             if (mPrevAngle.z <= -0x2000) {
                 mPrevAngle.z = -0x2000;
                 mCooldown = 15;
                 mFlag = 1;
             }
         } else {
-            short *p = &mPrevAngle.z;
-            *p = *p + 0x100;
+            mPrevAngle.z += 0x100;
             if (mPrevAngle.z >= 0) {
                 mPrevAngle.z = 0;
                 mCooldown = 15;
