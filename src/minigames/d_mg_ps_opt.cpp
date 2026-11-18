@@ -342,6 +342,8 @@ void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, shor
    set or clear the palette bits over the icon's rectangle. The captions
    (styles 4 and 5) draw nothing of their own. */
 void dMgPsOpt_c::TouchIcon_c::Render() {
+    /* Kept (#821 r79): a local anonymous { s16 x, y; } and a brace-initialised s16 xy[2] are
+       0x198 against 0x1a8. */
     volatile s16 xy[2];
     void *sprites;
     u16 *scr;
