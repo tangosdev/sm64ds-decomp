@@ -379,15 +379,14 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
     this->mIsSpawner = 0;
     this->mSpawnerID = spawnerID;
     if (this->mVariant != 0) {
-        s16 *angle = &this->mPrevAngle.y;
-        *angle = *angle & 0x8000;
+        this->mPrevAngle.y &= 0x8000;
         unsigned char v = this->mVariant;
         if (v == 3) {
-            *angle = *angle + 0x2000;
+            this->mPrevAngle.y += 0x2000;
         } else if (v == 2) {
-            *angle = *angle + 0x6000;
+            this->mPrevAngle.y += 0x6000;
         } else {
-            *angle = *angle | 0x4000;
+            this->mPrevAngle.y |= 0x4000;
         }
         this->mHorzSpeed =
             (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
