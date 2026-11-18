@@ -365,7 +365,8 @@ int daHolhei_c::func_ov062_02116b80() {
 /* Walk. A wall or the edge bails out; a player near home pulls Chuckya off
    the path once the chase cooldown has run out. */
 int daHolhei_c::func_ov062_02116a08() {
-    /* Zeroed and never read again; the three stores are in the ROM. */
+    /* Zeroed and never read again; the three stores are in the ROM.
+       Kept (#821 r84): deleted -> 0x10 shorter; plPos(0, 0, 0) in its place -> frame 8 smaller. */
     Vector3 unused(0, 0, 0);
     Vector3 plPos;
     int r;
