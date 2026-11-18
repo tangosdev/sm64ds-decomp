@@ -91,6 +91,8 @@ int daPiano_c::InitResources() {
     }
     f = dBgW_Kc::LoadFile(gPianoCollisionFile);
     mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x199, mAngle.y,
+                          /* Kept (#821 r76): genuine; this TU defines the CLPS block as its words
+                             and CLPS_Block is opaque (CLPS.h). */
                           *(CLPS_Block *)&data_ov063_0211ecb8);
     UpdateModelMatrix();
     UpdateClsnMatrix();

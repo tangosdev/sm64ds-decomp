@@ -79,6 +79,8 @@ s32 daObjTtFuta_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *k = dBgW_Kc::LoadFile(data_ov033_021124c0);
+    /* Kept (#821 r76): genuine; this TU defines the CLPS block as its bytes and CLPS_Block is
+       opaque (CLPS.h). */
     mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y, *(CLPS_Block *)&data_ov033_02111bfc);
     return Event::GetBit(0xe) == 0;
 }

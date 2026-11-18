@@ -532,6 +532,8 @@ void PickerScene_HandleDrawingKeys(void) {
            local from the top of the function all reuse it: 0x410, -1 word.
            Retyping data_ov007_02104ba0 as an Ov007PickerScene * changes
            nothing either way. */
+        /* Kept (#821 r76): a reload pin; no block-copy or type lever (r72-r75) applies to this
+           scalar pin. */
         Ov007PickerScene *b = *(Ov007PickerScene **)&data_ov007_02104ba0;
         int n = r5->groupCount;
         if (n >= b->strokeCount)
@@ -713,6 +715,8 @@ void PickerScene_UpdateMoveAnim(void) {
     }
     case 5:
         if (counter == 0) {
+            /* Kept (#821 r76): the file calls Ov007Picker members, so it stays C++, where no copy
+               of a VecFx32 is one ldm/stm (r72); C struct assignment would be. */
             *(Vec3Words *)&a->pos = *(Vec3Words *)&a->restPos;
             a->posOffset.y = 0;
             a->posOffset.x = a->posOffset.y;

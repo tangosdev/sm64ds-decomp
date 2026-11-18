@@ -23327,7 +23327,7 @@
     },
     "ov006:0x020eb768": {
       "author": "tangosdev",
-      "name": "_ZN15dScMgHanachan_c7Wiggler7HitTestEPKNS_5PointE"
+      "name": "_ZN15dScMgHanachan_c7Wiggler7HitTestEPK7Vector2"
     },
     "ov006:0x020eb7b0": {
       "author": "tangosdev",

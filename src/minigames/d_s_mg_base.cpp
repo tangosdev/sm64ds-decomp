@@ -4042,6 +4042,8 @@ dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {
 
     mSceneKind = sMgSceneKindByGame[(param1 >> 16) & 0xff];
     /* Measured (#821 r68): plain `param1 = param1 & 0xffff` or `&=`, the constructor is 0x180 of 0x17c. */
+    /* Kept (#821 r76): no block-copy or type lever (r72-r75) applies to this scalar pin; the r68
+       measurement above stands. */
     *(s32 *)&param1 = param1 & 0xffff;
     mTallyShown = 0;
     mTallyAnimTimer = 0;

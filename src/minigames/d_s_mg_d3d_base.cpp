@@ -140,6 +140,7 @@ void D3D_DrawSpriteTable(void) {
     sprite = 0;
     for (entry = 0; entry < 128; entry++) {
         sD3DOamShadow[entry].attr01 = 0;
+        /* Kept (#821 r76): genuine; the ROM clears attr2 and attr3 with one word store. */
         *(u32 *)&sD3DOamShadow[(((long long)entry))].attr2 = 0;
     }
 

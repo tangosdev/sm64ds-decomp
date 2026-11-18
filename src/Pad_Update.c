@@ -41,6 +41,8 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
                inputLock with the same reload-through-a-cast shape. The cast is
                what forces the reload; a `volatile` qualifier on it changes
                nothing. */
+            /* Kept (#821 r76): the cast forces the reload; no block-copy or type lever (r72-r75)
+               applies to this scalar pin (r20: 0x1ec/0x1f0). */
             u32 w = *(u32 *)&pad->inputLock;
             pad->inputLock = w & ~1u;
         } else {

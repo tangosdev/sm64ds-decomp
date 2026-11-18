@@ -26,14 +26,10 @@ void func_0204b244(ManagerView *mgr, ParticleElement *ptcl) {
     Matrix4x3 out;
     Matrix4x3 rot;
     Matrix4x3 scl;
-    u32 id;
     u32 v;
 
-    /* polygonIDs.current, read through the whole word: the field read does not match */
-    v = *(u32 *)&sys->polygonIDs << 14;
-    id = v >> 26;
-    v = mgr->mPolygonAttr | 0xc0;
-    v |= id << 24;
+    v = sys->polygonIDs.current << 24;
+    v |= mgr->mPolygonAttr | 0xc0;
     v |= alpha << 16;
     REG_POLYGON_ATTR = v;
     REG_POLYGON_ATTR;

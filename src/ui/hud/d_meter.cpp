@@ -299,6 +299,8 @@ int dMeter_c::InitResources() {
                build. Nothing in this ROM says what they were. The `u16 *` pun is
                what keeps the stores apart; a `volatile` qualifier on it
                changes nothing. */
+            /* Kept (#821 r76): no block-copy or type lever (r72-r75) applies to this scalar pin;
+               the measurements above stand. */
             *(u16 *)&mVsTimer = 30;
         else
             mVsTimer = 30;

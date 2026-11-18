@@ -1658,6 +1658,9 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
                `!=` chain are all 0x280. The pointer cast is what
                matters, not a qualifier: a `volatile s32 *` cast builds the
                same object. */
+            /* Kept (#821 r76): mState and mResumeState are both s32; the cast is a reload pin, and
+               no block-copy or type lever (r72-r75) applies to this scalar pin (r20: plain is
+               0x280). */
             mResumeState = *(s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
@@ -1681,6 +1684,8 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
+            /* Kept (#821 r76): the same reload pin as above; no block-copy or type lever (r72-r75)
+               applies to this scalar pin. */
             mResumeState = *(s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
