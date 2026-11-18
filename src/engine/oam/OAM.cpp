@@ -11,8 +11,8 @@
  * Source order is ROM-ascending under `#pragma defer_codegen off` -- the
  * deferred default would read optimization pragmas last-wins at end of file
  * and this member needs a positional bracket: the 10-arg Render keeps its
- * opt_propagation/opt_loop_invariants offs, and the bracket
- * restores `on` so the rest of the file gets defaults.
+ * opt_propagation off, and the bracket restores `on` so the rest of the
+ * file gets the default. opt_loop_invariants is off for the whole file.
  *
  * The bodies read and write OAM records as NitroSDK's GXOamAttr: the
  * attribute bitfields for the fields they extract, attr01 and attr2 for the
@@ -28,6 +28,9 @@
  */
 
 #pragma defer_codegen off
+/* Render needs loop-invariant motion off (see there); every other member
+ * compiles the same either way, so it is a file-wide setting. */
+#pragma opt_loop_invariants off
 
 #include "types.h"
 #include "OAM.h"
@@ -156,16 +159,16 @@ u8 OAM::GetObjWidth(int shape, int sizeBits)
  * orders, identical), mtxIdx before / after sinIdx (0x68c / identical),
  * s16 or u16 mtxIdx (0x694), `&FX_SinCosTable_[mtxIdx]` + [1] (0x684),
  * sin read before cos (218 off), Matrix2x2 scoped in the branch and
- * `for (;;)` (identical), `while (*pCount < 128)` (0x6a8). Not a TU-wide
- * build flag: both offs file-wide break LoadAffineParams, the 8-parameter
- * Render and Reset; optimization_level 2 file-wide breaks three functions,
+ * `for (;;)` (identical), `while (*pCount < 128)` (0x6a8). Propagation off
+ * is not a TU-wide build flag: file-wide it breaks LoadAffineParams, the
+ * 8-parameter Render and Reset (re-measured #821 r105 with loop invariants
+ * off file-wide); optimization_level 2 file-wide breaks three functions,
  * level 3 leaves this one at 0x688. */
 #pragma opt_propagation off
 /* Kept (#821 r79): with loop invariants on, mtxIdx declared in the matrix block is 0x690 but 16
    words off (the sin/cos/mtx spill slots trade places with halfW/halfH); four declaration
    orders and scoped halfW/halfH stay there, all three indices scoped is 0x688, mtxIdx at the
    loop top or inline 0x698. */
-#pragma opt_loop_invariants off
 
 void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palette, int priority,
                  int scaleX, int scaleY, int rotation, int mode) {
@@ -394,7 +397,6 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
 }
 #pragma cplusplus on
 #pragma opt_propagation on
-#pragma opt_loop_invariants on
 
 /* -------------------------------------------------------------------------- */
 /* 0x02021024  size 0x480. One object, one scale, one rotation.
