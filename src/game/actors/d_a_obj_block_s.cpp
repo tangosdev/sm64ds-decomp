@@ -605,8 +605,8 @@ int daObjBlockS_c::func_ov098_02138bfc()
         return 0;
     a = dActor_c::FindWithID(r->GetClsnID());
     if (!a) return 0;
-    if (!(IsActorID(a, ACTOR_ONIMASU) || IsActorID(a, ACTOR_DONKAKU) || IsActorID(a, ACTOR_DONGURU) ||
-          IsActorID(a, ACTOR_DOSUN) || IsActorID(a, ACTOR_BATAN)))
+    if (!(IsActorID(a, ACTOR_ONIMASU) || IsActorID(a, ACTOR_DONKAKU) ||
+          IsActorID(a, ACTOR_DONGURU) || IsActorID(a, ACTOR_DOSUN) || IsActorID(a, ACTOR_BATAN)))
         return 0;
     return 1;
 }
