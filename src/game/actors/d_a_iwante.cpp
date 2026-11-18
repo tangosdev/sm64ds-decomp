@@ -1620,10 +1620,9 @@ int daIwante_c::HandPattern4Execute() {
     switch (mSubState) {
     case 0:
         if (data_ov066_0211ae0c == mPartIdx) {
-            int *p = &mSubState;
             mVertAccel = -0x14000;
             mSpeed.y = 0x64000;
-            *p = *p + 1;
+            mSubState++;
         }
         break;
     case 1:
