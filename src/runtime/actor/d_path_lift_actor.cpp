@@ -361,18 +361,14 @@ void dPathLiftActor_c::RenderPathModels()
 {
     if (Param12ModeIs1() == 0) return;
     if (mState == 2) return;
-    int i = 0;
-    dExtSimpleModel_c *model = mModels;
-    do {
+    for (int i = 0; i < 3; i++) {
         /* Kept (#821 r77): the ROM copy-initializes the scale with one
            ldm/stm block move, which only a POD VecFx32 gives (and keeps the
            global's literal in .data); Render takes the game's Vector3, so it
            casts there. */
         VecFx32 local = data_ov002_0210af00;
-        model->Render((Vector3 *)&local);
-        i++;
-        model++;
-    } while (i < 3);
+        mModels[i].Render((Vector3 *)&local);
+    }
 }
 
 // 0x020efcf4 (0x174)
