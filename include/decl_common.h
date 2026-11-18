@@ -903,7 +903,6 @@ extern void *sSnowballObstacleSprite;
 extern void *sSnowballCourseMeterSprites[2];
 extern void *sSlotLamp1Sprite;
 extern void *sSlotLamp2Sprite;
-extern void *sEsp3DTextureAnim;
 extern void *sHanaTextSpritesByLanguage[];
 extern void *sLuigiBg1NcgPath;
 extern void *sSlot1Sprites[];
