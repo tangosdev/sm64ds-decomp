@@ -294,7 +294,7 @@ void daChoropu_c::func_ov080_02123c24()
     mAnmModel.Advance();
     raw = mAnmModel.currFrame;
     amt = 0;
-    state = (raw << 4) >> 16;   /* whole frame number */
+    state = (raw << 4) >> 16; /* whole frame number */
 
     if (state == 6) {
         u32 *p150 = (u32 *)((int)&mdCcAc_c.flags);

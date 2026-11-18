@@ -561,7 +561,8 @@ void daBmb_c::func_ov102_0214bc20() {
     u32 idx = 0;
     if (p != 0) {
         idx = p->param1;
-        if (idx > 4) idx = 4;
+        if (idx > 4)
+            idx = 4;
     }
     mHorzSpeed = a1.v[idx];
     mSpeed.y = a2.v[idx];

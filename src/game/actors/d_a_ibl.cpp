@@ -611,7 +611,8 @@ void daIbl_c::SpawnerBehavior() {
         r1 = 3;
     else
         r1 = 6;
-    if (mLiveBalls >= r1) return;
+    if (mLiveBalls >= r1)
+        return;
 
     pl = ClosestPlayer();
     if (pl == 0) return;
