@@ -718,6 +718,7 @@ int daTgz_c::Render()
 int daTgz_c::Behavior()
 {
     int s = mState;
+    /* Kept (#821 r83): return 1 for the break -> 0xf8 of 0xf0; one return 1 after the timer test -> same size, bytes differ. */
     do {
         if (s != 1 || mWithMeshClsn.IsOnGround()) {
             s = mState;
