@@ -683,6 +683,7 @@ int daBombking_c::TickReturnHome() {
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
+            /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
             VecFx32 D = *(VecFx32 *)&pl->mPos;
             if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&D) > 0x640000 ||
                 this->mArenaPos.y - 0x64000 > D.y) {
@@ -1239,6 +1240,7 @@ int daBombking_c::TickInactive() {
 
     player = this->ClosestPlayer();
     if (player != 0) {
+        /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
         VecFx32 ppos = *(VecFx32 *)&player->mPos;
 
         if (this->mIntroTalked == 0) {

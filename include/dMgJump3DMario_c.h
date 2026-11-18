@@ -22,14 +22,11 @@
  * address-derived (RTTI proves ownership and slot order, not spelling).
  */
 
-/* mAnchor, mPos and mVel are NitroSDK VecFx32s, not the game's Vector3, and
- * the reason is measured rather than assumed --
- * notes/experiments/jump3d-2711-members-vector3.md. types.h's Vector3
- * declares an (empty) destructor; swapping these members to it leaves D1, C1
- * and EnterHold byte-identical, but makes this TU define _ZN7Vector3D1Ev.
- * StateMove's Vector3 local now emits it anyway, and
- * config/tu_manifest.d/ov006/dMgJump3DMario_c.json licenses it as a
- * deadstrip-duplicate, so the member swap is open work, not a wall. */
+/* mAnchor, mPos and mVel are the game's Vector3. The one cost the swap from
+ * VecFx32 was held back for (notes/experiments/jump3d-2711-members-vector3.md)
+ * is this TU defining _ZN7Vector3D1Ev, which StateMove's Vector3 local already
+ * does; config/tu_manifest.d/ov006/dMgJump3DMario_c.json licenses it as a
+ * deadstrip-duplicate. */
 
 struct dMgJump3DMario_c;
 /* The state handler at +0x3c. Formed over the INCOMPLETE class on purpose:
@@ -47,11 +44,11 @@ struct dMg3DHeyhoObjAdapter_c {
     virtual int IsLaunched() = 0;    /* slot 2 -- 0 in StateIdle or StateWindUp, 1 once launched */
 
     /* The point EnterHold measures mPos against; written by the owning scene, never in this TU. */
-    VecFx32 mAnchor;        /* 0x04 */
+    Vector3 mAnchor;        /* 0x04 */
     u16 mCommand;           /* 0x10 -- the scene's command: 1 = hit, 2 = hold; consumed (cleared) by the State* handlers. The one field the base ctor touches */
     u8 pad_012[2];          /* 0x12 */
-    VecFx32 mPos;           /* 0x14 -- position (20.12); advanced by mVel every update */
-    VecFx32 mVel;           /* 0x20 -- velocity (20.12) */
+    Vector3 mPos;           /* 0x14 -- position (20.12); advanced by mVel every update */
+    Vector3 mVel;           /* 0x20 -- velocity (20.12) */
     u8 pad_02c[2];          /* 0x2c */
     s16 mAngleY;            /* 0x2e -- facing angle; eased toward the direction of travel */
     u8 pad_030[2];          /* 0x30 */
