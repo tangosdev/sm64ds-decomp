@@ -276,8 +276,8 @@ void daPicGate_c::BuildNormals() {
 void daPicGate_c::FlattenFrame() {
     for (int i = 0; i < mNumCells; i++) {
         Vertex *e = mCells + i;
-        if (e->pos.x == 0 || e->pos.x == ((unsigned char)(param1 & 15) + 1) * 0x64000 || e->pos.y == 0 ||
-            e->pos.y == ((unsigned char)((param1 >> 4) & 15) + 1) * 0x64000) {
+        if (e->pos.x == 0 || e->pos.x == ((unsigned char)(param1 & 15) + 1) * 0x64000 ||
+            e->pos.y == 0 || e->pos.y == ((unsigned char)((param1 >> 4) & 15) + 1) * 0x64000) {
             e->pos.z = 0;
             mCells[i].normal = 0x1ff00000;
         }
