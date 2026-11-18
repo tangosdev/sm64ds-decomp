@@ -23,3 +23,139 @@ src/game/actors/d_a_udlift.cpp:
 src/game/actors/d_a_obj_flamethrower.cpp:
     complete
     .text start:0x0213682c end:0x02136f58
+src/data/ov095/data_ov095_02136f80.c:
+    complete
+    .rodata start:0x02136f80 end:0x02136f98
+
+src/data/ov095/data_ov095_02136f98.c:
+    complete
+    .rodata start:0x02136f98 end:0x02136fb0
+
+src/data/ov095/data_ov095_02136fb0.c:
+    complete
+    .rodata start:0x02136fb0 end:0x02136fe0
+
+src/data/ov095/_ZTI13daObjSeesaw_c.c:
+    complete
+    .data start:0x021373c0 end:0x021373cc
+
+src/data/ov095/_ZTS13daObjSeesaw_c.c:
+    complete
+    .data start:0x021373cc end:0x021373dc
+
+src/data/ov095/g_profile_SEESAW.c:
+    complete
+    .data start:0x021373dc end:0x021373f8
+
+src/data/ov095/g_profile_KM1_SEESAW.c:
+    complete
+    .data start:0x021373f8 end:0x021373fc
+
+src/data/ov095/data_ov095_021373fc.c:
+    complete
+    .data start:0x021373fc end:0x02137414
+
+src/data/ov095/g_profile_KM2_YOKOSEESAW.c:
+    complete
+    .data start:0x02137414 end:0x02137430
+
+src/data/ov095/g_profile_KM3_SEESAW.c:
+    complete
+    .data start:0x02137430 end:0x0213744c
+
+src/data/ov095/g_profile_KM3_YOKOSEESAW.c:
+    complete
+    .data start:0x0213744c end:0x02137454
+
+src/data/ov095/data_ov095_02137454.c:
+    complete
+    .data start:0x02137454 end:0x02137468
+
+src/data/ov095/g_profile_RC_SEESAW.c:
+    complete
+    .data start:0x02137468 end:0x02137484
+
+src/data/ov095/g_profile_BOMB_SEESAW.c:
+    complete
+    .data start:0x02137484 end:0x021374a0
+
+src/data/ov095/data_ov095_021374a0.c:
+    complete
+    .data start:0x021374a0 end:0x021374a4
+
+src/data/ov095/data_ov095_021374a4.c:
+    complete
+    .data start:0x021374a4 end:0x021374a8
+
+src/data/ov095/data_ov095_021374a8.c:
+    complete
+    .data start:0x021374a8 end:0x021374fc
+
+src/data/ov095/ov095_vt_021374fc.c:
+    complete
+    .data start:0x021374fc end:0x0213757c
+
+src/data/ov095/data_ov095_0213757c.c:
+    complete
+    .data start:0x0213757c end:0x02137584
+
+src/data/ov095/data_ov095_02137584.c:
+    complete
+    .data start:0x02137584 end:0x0213758c
+
+src/data/ov095/data_ov095_0213758c.c:
+    complete
+    .data start:0x0213758c end:0x02137594
+
+src/data/ov095/data_ov095_02137594.c:
+    complete
+    .data start:0x02137594 end:0x0213759c
+
+src/data/ov095/data_ov095_0213759c.c:
+    complete
+    .data start:0x0213759c end:0x021375a4
+
+src/data/ov095/data_ov095_021375a4.c:
+    complete
+    .data start:0x021375a4 end:0x021375b0
+
+src/data/ov095/_ZTI10daUdlift_c.c:
+    complete
+    .data start:0x021375b0 end:0x021375bc
+
+src/data/ov095/_ZTS10daUdlift_c.c:
+    complete
+    .data start:0x021375bc end:0x021375cc
+
+src/data/ov095/g_profile_UDLIFT_TERESA.c:
+    complete
+    .data start:0x021375cc end:0x021375e8
+
+src/data/ov095/g_profile_UDLIFT.c:
+    complete
+    .data start:0x021375e8 end:0x02137604
+
+src/data/ov095/g_profile_RC_RIFT02.c:
+    complete
+    .data start:0x02137604 end:0x02137628
+
+src/data/ov095/ov095_vt_02137628.c:
+    complete
+    .data start:0x02137628 end:0x021376a8
+
+src/data/ov095/_ZTI19daObjFlamethrower_c.c:
+    complete
+    .data start:0x021376a8 end:0x021376b4
+
+src/data/ov095/_ZTS19daObjFlamethrower_c.c:
+    complete
+    .data start:0x021376b4 end:0x021376cc
+
+src/data/ov095/g_profile_OBJ_FLAMETHROWER.c:
+    complete
+    .data start:0x021376cc end:0x021376f0
+
+src/data/ov095/ov095_vt_021376f0.c:
+    complete
+    .data start:0x021376f0 end:0x02137780
+
