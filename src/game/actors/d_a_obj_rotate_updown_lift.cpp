@@ -189,13 +189,15 @@ void daObjRotateUpdownLift_c::Kill()
         mMeshCollider.Disable();
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 // 0x021310fc (0x64)
 /* HS_UPDOWN_LIFT ignores the hit. The others count it, play 0x1e, and
    snap yaw back to the previous angle. */
 void daObjRotateUpdownLift_c::OnHitByMegaChar(daPly_c &player) {
-    unsigned short id = actorID;
-    int isHs = (id == 0x1e);
-    if (isHs)
+    if (IsActorID(this, 0x1e))
         return;
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePos);
@@ -451,8 +453,7 @@ int daObjRotateUpdownLift_c::InitResources()
 
     mVariant = 0;
     {
-        int isHs = (actorID == 0x1e);
-        if (isHs)
+        if (IsActorID(this, 0x1e))
             mVariant = 2;
         else if (gCurrentSublevel == 7)
             mVariant = 1;
