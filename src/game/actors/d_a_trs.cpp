@@ -2222,36 +2222,31 @@ int daTrs_c::GetAttackStatus() {
                     }
                 }
 
-                /* Kept (#821 r83): if (hit && kind) { ... } else { hurt } is byte-identical but re-indents the round-83a s16 *ap local; left for after 83a. */
-                do {
-                    if ((this->mdCcAcPos_c.hitFlags & 0x10) != 0) {
-                        u8 kind = this->mVariant;
-                        if (kind < 2 || kind >= 6 || kind <= 9) {
-                            daPly_c *found2;
-                            Vector3_16 spin;
+                if ((this->mdCcAcPos_c.hitFlags & 0x10) != 0 &&
+                    (this->mVariant < 2 || this->mVariant >= 6 || this->mVariant <= 9)) {
+                    daPly_c *found2;
+                    Vector3_16 spin;
 
-                            this->mdCcAcPos_c.flags |= 1;
-                            found2 = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
-                            if (found2) {
-                                this->mTalkPlayer =
-                                    (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+                    this->mdCcAcPos_c.flags |= 1;
+                    found2 = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+                    if (found2) {
+                        this->mTalkPlayer =
+                            (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
 
-                                spin.x = -0x2000;
-                                spin.y = 0;
-                                spin.z = 0;
-                                KillByInvincibleChar(spin, *found2, 0);
+                        spin.x = -0x2000;
+                        spin.y = 0;
+                        spin.z = 0;
+                        KillByInvincibleChar(spin, *found2, 0);
 
-                                this->mAngle.y += 0x8000;
-                                return 1;
-                            }
-                            break;
-                        }
+                        this->mAngle.y += 0x8000;
+                        return 1;
                     }
+                } else {
                     v2 = this->mPos;
                     player->Hurt(v2, this->mHurtDamage, 0xc000, 1, 0, 1);
                     func_0201267c(0x149, &this->mCamSpacePos);
                     return -1;
-                } while (0);
+                }
             }
         }
     }
