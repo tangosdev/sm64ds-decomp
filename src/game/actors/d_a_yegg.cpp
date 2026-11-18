@@ -1026,6 +1026,8 @@ int daYegg_c::FindTarget(int a1, int best) {
        = actor->mPos;` in the loop or `= mPos;` at the top, keeps its stores:
        0x180. */
     struct P { int a, b, c, d; };
+    /* Kept (#821 r79): a const Vector3 & to actor->mPos, a Vector3 temporary argument, and a
+       VecFx32 copy are 0x15c, 0x184 and 0x178 against 0x168. */
     volatile struct P _p;
     struct P *_q = const_cast<struct P *>(&_p);
 
