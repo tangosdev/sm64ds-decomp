@@ -130,6 +130,10 @@ s32 daIbl_c::OnAimedAtWithEgg()
     return 532480;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == daIbl_ACTOR_PLAYER;
+}
+
 /* Contact check, shared by every handler. mdCcAc_c.otherOwner is the uniqueID
    of the actor that touched the ball; when that is a daPly_c (actor 191) who is
    not vanished (mIsVanish), mdCcAc_c.hitFlags decides what happens:
@@ -153,8 +157,8 @@ void daIbl_c::CheckContact() {
     dActor_c *actor = dActor_c::FindWithID(id);
     if (actor == 0) return;
     {
-        int b = (actor->actorID == daIbl_ACTOR_PLAYER);
-        if (b == 0) return;
+        if (!IsPlayerActor(actor))
+            return;
     }
     a = static_cast<daPly_c *>(actor);
     if (a->mIsVanish != 0) return;
