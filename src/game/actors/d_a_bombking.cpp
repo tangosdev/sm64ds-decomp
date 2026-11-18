@@ -389,19 +389,15 @@ int daBombking_c::EnterCarryPlayer() {
 
 /* -------------------------------------------------------------------------- */
 int daBombking_c::TickGrabPlayer() {
-    if (CheckKnockbackHit() != 1) {
-        if (this->mHeldActor == 0) goto L6c;
-        if (this->mHeldActor->GetHealth() != 0)
-            goto L6c;
+    if (CheckKnockbackHit() == 1 || (this->mHeldActor != 0 && this->mHeldActor->GetHealth() == 0)) {
+        DetonateSpawnedBombs();
+        if (this->mHeldActor != 0) {
+            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
+            this->mTalkingPlayer = this->mHeldActor;
+            this->mHeldActor = 0;
+        }
+        return 1;
     }
-    DetonateSpawnedBombs();
-    if (this->mHeldActor != 0) {
-        func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
-        this->mTalkingPlayer = this->mHeldActor;
-        this->mHeldActor = 0;
-    }
-    return 1;
-L6c:
     if ((&this->mBlendAnmModel)->Finished()) {
         KingBobOmb_SetState(data_ov078_0212709c);
     }
@@ -435,6 +431,10 @@ int daBombking_c::EnterGetUp() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingGetupAnimationFile.filePtr, 0, 0x40000000,
                                  0x1000, 0);
     return 1;
+}
+
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
 }
 
 static inline int IsPlayerActor(dActor_c *actor) {
@@ -798,44 +798,42 @@ int daBombking_c::EnterBounceOffHill() {
 
 /* -------------------------------------------------------------------------- */
 int daBombking_c::TickThrown() {
-    if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
-    this->mHorzSpeed = 0;
-    if ((this->mArenaPos.y - 0x28000) > this->mPos.y) {
-        func_02012694(0x128, &this->mCamSpacePos);
-        KingBobOmb_SetState(&data_ov078_021270ac);
-        goto done;
-    }
-    if (this->mActionStep == 0) {
-        func_02012694(0x128, &this->mCamSpacePos);
-        func_02012694(0x12b, &this->mCamSpacePos);
-        ShakeScreen(0x7d0000);
-        func_0200fa8c(1);
-        this->mActionStep = 1;
-        this->mHealth -= 1;
-    }
-    if (this->mHealth > 0) {
-        KingBobOmb_SetState(&data_ov078_021270ec);
-        goto done;
-    }
-    daPly_c *other = this->mTalkingPlayer;
-    if (other == 0) goto done;
-    if ((unsigned short)(other->mStateFlags & 0x800) != 0) goto done;
-    if (other->StartTalk(*this, 1) == 0)
-        goto done;
+    if (this->mWithMeshClsn.IsOnGround() != 0) {
+        this->mHorzSpeed = 0;
+        if ((this->mArenaPos.y - 0x28000) > this->mPos.y) {
+            func_02012694(0x128, &this->mCamSpacePos);
+            KingBobOmb_SetState(&data_ov078_021270ac);
+        } else {
+            if (this->mActionStep == 0) {
+                func_02012694(0x128, &this->mCamSpacePos);
+                func_02012694(0x12b, &this->mCamSpacePos);
+                ShakeScreen(0x7d0000);
+                func_0200fa8c(1);
+                this->mActionStep = 1;
+                this->mHealth -= 1;
+            }
+            if (this->mHealth > 0) {
+                KingBobOmb_SetState(&data_ov078_021270ec);
+            } else {
+                daPly_c *other = this->mTalkingPlayer;
+                if (other != 0 && (unsigned short)(other->mStateFlags & 0x800) == 0 &&
+                    other->StartTalk(*this, 1) != 0) {
+                    short msg = 0;
+                    Sound::ChangeMusicVolume(0x14, 0x15666);
+                    if (gCurrentStarId == 1) {
+                        msg += (short)(other->param1 + 0x9a);
+                    } else {
+                        msg = 0x95;
+                    }
 
-    short msg = 0;
-    Sound::ChangeMusicVolume(0x14, 0x15666);
-    if (gCurrentStarId == 1) {
-        msg += (short)(other->param1 + 0x9a);
-    } else {
-        msg = 0x95;
+                    if (other->ShowMessage(*this, msg, &this->mPos, 0, 0) != 0) {
+                        func_02012694(0x12a, &this->mCamSpacePos);
+                        KingBobOmb_SetState(&data_ov078_0212705c);
+                    }
+                }
+            }
+        }
     }
-
-    if (other->ShowMessage(*this, msg, &this->mPos, 0, 0) == 0)
-        goto done;
-    func_02012694(0x12a, &this->mCamSpacePos);
-    KingBobOmb_SetState(&data_ov078_0212705c);
-done:
     return 1;
 }
 
@@ -858,74 +856,43 @@ int daBombking_c::EnterThrown() {
 /* -------------------------------------------------------------------------- */
 
 int daBombking_c::TickHeldByPlayer() {
-    if (this->mActionStep == 0) {
-        int b = (this->mFlags & 0x4000) != 0;
-        if (b != 0) {
-            this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingStruggleAnimationFile.filePtr, 0, 0,
-                                         0x1000, 0);
-            this->mActionStep = 1;
-        }
+    if (this->mActionStep == 0 && IsFlagSet(this, 0x4000)) {
+        this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingStruggleAnimationFile.filePtr, 0, 0,
+                                     0x1000, 0);
+        this->mActionStep = 1;
     }
 
-    {
-        daPly_c *obj = this->mHeldActor;
-        if (obj == 0) {
-            KingBobOmb_SetState(&data_ov078_0212708c);
-            return 1;
-        }
-        {
-            /* A Vector3 copy of obj->mPos is memberwise: 0x1a8 -> 0x1b0. */
-            /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
-            VecFx32 copy = *(VecFx32 *)&obj->mPos;
-            if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&copy) > 0x640000)
-                goto drop;
-            if (this->mArenaPos.y - 0xa000 <= copy.y)
-                goto flags;
-        }
+    daPly_c *obj = this->mHeldActor;
+    if (obj == 0) {
+        KingBobOmb_SetState(&data_ov078_0212708c);
+        return 1;
+    }
+    /* A Vector3 copy of obj->mPos is memberwise: 0x1a8 -> 0x1b0. */
+    /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
+    VecFx32 copy = *(VecFx32 *)&obj->mPos;
+    if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&copy) > 0x640000 ||
+        this->mArenaPos.y - 0xa000 > copy.y) {
+        this->mHeldActor->DropActor();
+        this->mHeldActor = 0;
+        KingBobOmb_SetState(&data_ov078_0212708c);
+        return 1;
     }
 
-drop:
-    this->mHeldActor->DropActor();
-    this->mHeldActor = 0;
-    KingBobOmb_SetState(&data_ov078_0212708c);
-    return 1;
-
-flags:
-    {
-        int flags = this->mFlags;
-        int b0 = (flags & 0x400) != 0;
-        if (b0 == 0) {
-            int b1 = (flags & 0x2000) != 0;
-            if (b1 == 0) {
-                int b2 = (flags & 0x100) != 0;
-                if (b2 != 0)
-                    goto done;
-            }
-        }
-        if (b0 != 0) {
+    if (IsFlagSet(this, 0x400) || IsFlagSet(this, 0x2000) || !IsFlagSet(this, 0x100)) {
+        if (IsFlagSet(this, 0x400))
             this->mPrevAngle.y = this->mHeldActor->mAngle.y;
-        }
-        {
-            short t = this->mPrevAngle.y;
-            this->mAngle.y = t;
-        }
+        this->mAngle.y = this->mPrevAngle.y;
         this->mdCcAcPos_c.flags &= ~2;
         KingBobOmb_SetState(&data_ov078_0212708c);
-        {
-            daPly_c *p = this->mHeldActor;
-            if (p != 0) {
-                if (p->param1 == 2) {
-                    this->mSpeed.y = 0x32000;
-                    this->mHorzSpeed = 0x1e000;
-                }
-            }
+        daPly_c *p = this->mHeldActor;
+        if (p != 0 && p->param1 == 2) {
+            this->mSpeed.y = 0x32000;
+            this->mHorzSpeed = 0x1e000;
         }
         this->mHeldActor = 0;
     }
-done:
     return 1;
 }
-
 /* -------------------------------------------------------------------------- */
 
 int daBombking_c::EnterHeldByPlayer() {
@@ -1417,10 +1384,6 @@ void daBombking_c::OnPendingDestroy()
 {
 }
 
-static inline int IsFlagSet(dActor_c *actor, u32 bit) {
-    return (actor->mFlags & bit) != 0;
-}
-
 /* -------------------------------------------------------------------------- */
 int daBombking_c::Render()
 {
@@ -1454,16 +1417,9 @@ int daBombking_c::Behavior()
     mBlendAnmModel.Advance();
 
     if (mState == data_ov078_0212707c) {
-        void *held = mHeldActor;
-        int flag;
-        if (held != 0) {
-            flag = (mFlags & 0x4000) != 0;
-            if (flag != 0 && ((dActor_c *)held)->mCarryMatrix != 0) {
-                goto skip_de0;
-            }
-        }
-        UpdateHandMatrix();
-    skip_de0:
+        daPly_c *held = mHeldActor;
+        if (held == 0 || !IsFlagSet(this, 0x4000) || held->mCarryMatrix == 0)
+            UpdateHandMatrix();
         UpdateShadow();
         return 1;
     }
