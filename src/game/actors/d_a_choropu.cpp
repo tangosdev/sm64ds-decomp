@@ -247,8 +247,8 @@ void daChoropu_c::func_ov080_02123a34()
         s = FX_CosIdx((u16)(s16)(mAngle.y - 0x4000) >> 4);
         pos.z = s * 80 + pz;
 
-        a = dActor_c::Spawn(
-            py ? daChoro_Rock_ACTOR_ID : daChoro_Rock_ACTOR_ID, 0, pos, pAng, mAreaId, -1);
+        a = dActor_c::Spawn(py ? daChoro_Rock_ACTOR_ID : daChoro_Rock_ACTOR_ID, 0, pos, pAng,
+                            mAreaId, -1);
         d = DistToCPlayer();
         if (d >= 0x258000)
             d = 0x258000;

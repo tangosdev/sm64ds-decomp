@@ -127,7 +127,7 @@ void daObjPowerUpItem_c::StateResting()
         ((int*)&pos)[2] = z;
         mEffectHandle =
             Particle::System::New(mEffectHandle, kPtclPowerFlowerResting, ((int *)&pos)[0],
-                                       ((int *)&pos)[1], ((int *)&pos)[2], 0, 0);
+                                  ((int *)&pos)[1], ((int *)&pos)[2], 0, 0);
     }
 }
 
@@ -207,8 +207,8 @@ void daObjPowerUpItem_c::StateLaunched()
     int gy;
     int diff;
 
-    mEffectHandle = Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPos.x,
-                                               mPos.y, mPos.z, 0, 0);
+    mEffectHandle = Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPos.x, mPos.y,
+                                          mPos.z, 0, 0);
 
     a = mSpeed.y;
     mag = (a < 0) ? -a : a;

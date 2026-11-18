@@ -642,8 +642,7 @@ int daJango_c::EnterCircleState() {
     }
     mLeaveDelay = 0;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
-    if (mSilverStarFlag == 2 ||
-        (unsigned char)(signed char)(gCurrentSublevel - 0x18) <= 1) {
+    if (mSilverStarFlag == 2 || (unsigned char)(signed char)(gCurrentSublevel - 0x18) <= 1) {
         mLeaveDelay = 2;
         mStateTimer = 0;
     }
@@ -1054,12 +1053,8 @@ int daJango_c::HandleCylinderHit() {
 
     st = mSilverStarFlag;
     hc = pl->mCharacter;
-    if (st != 2 &&
-        pl->mHasWings == 0 &&
-        pl->mIsBalloon == 0 &&
-        pl->mIsVanish == 0 &&
-        pl->mIsMetal == 0 &&
-        pl->param1 != 3) {
+    if (st != 2 && pl->mHasWings == 0 && pl->mIsBalloon == 0 && pl->mIsVanish == 0 &&
+        pl->mIsMetal == 0 && pl->param1 != 3) {
         newchar = pl->param1;
         if (hc != newchar) {
             pl->SetNewHatCharacter(hc, 0, 0);

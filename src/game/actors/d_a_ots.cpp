@@ -790,10 +790,10 @@ int daOts_c::func_ov064_0211616c() {
     this->mPos.y = this->mPos.y - 0x5000;
     this->mParticle0 =
         Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePos.x,
-                                   tail().mHomePos.y, tail().mHomePos.z, 0, 0);
+                              tail().mHomePos.y, tail().mHomePos.z, 0, 0);
     this->mParticle1 =
         Particle::System::New(this->mParticle1, mFileTable->particleId + 1, tail().mHomePos.x,
-                                   tail().mHomePos.y, tail().mHomePos.z, 0, 0);
+                              tail().mHomePos.y, tail().mHomePos.z, 0, 0);
     return 0;
 }
 

@@ -373,7 +373,10 @@ int daKuriKing_c::SpawnVanishCopy() {
     }
     spawnTarget=data_ov074_02122d80[this->mSizeIndex];
     player=this->ClosestPlayer();
-    if(this->mSizeIndex==1){ if(player->param1!=3) spawnTarget+=1; }
+    if (this->mSizeIndex == 1) {
+        if (player->param1 != 3)
+            spawnTarget += 1;
+    }
     return this->mSpawnedCount >= spawnTarget;
 }
 
@@ -625,7 +628,8 @@ void daKuriKing_c::UpdateSummonGoombas() {
 
     int spawnTarget = data_ov074_02122d80[this->mSizeIndex];
     daPly_c *pl = this->ClosestPlayer();
-    if (this->mSizeIndex == 1 && pl->param1 != 3) spawnTarget = spawnTarget + 1;
+    if (this->mSizeIndex == 1 && pl->param1 != 3)
+        spawnTarget = spawnTarget + 1;
 
     if (this->mAnmModel.Finished() == 0)
         return;

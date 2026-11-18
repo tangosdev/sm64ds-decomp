@@ -1528,8 +1528,7 @@ void daStar_c::StateSpinAndEnd() {
             GiveVsStars(mPlayer->mPlayerNo, 1);
             Vector3 center = this->func_ov002_020e8244();
             p = (char *)mPlayer;
-            SpawnNumber(center, gNumStageStars[mPlayer->mPlayerNo], 1, 0,
-                        (dActor_c *)p);
+            SpawnNumber(center, gNumStageStars[mPlayer->mPlayerNo], 1, 0, (dActor_c *)p);
             UntrackStar(mMarkerSlot);
         }
         mBits.visible = 0;
@@ -2319,10 +2318,8 @@ void daStar_c::SpawnCollectEffects() {
     vc.y = FX_MUL(vc.y, mScale.y);
     vc.z = FX_MUL(vc.z, mScale.z);
     VEC_Add(&vc, &mPos, &vc);
-    mParticle[0] =
-        Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
-    mParticle[1] =
-        Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
+    mParticle[0] = Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
+    mParticle[1] = Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2339,8 +2336,7 @@ void daStar_c::SpawnPoseEffects() {
     if (!mAnmModel1.Finished() && (((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
         root->scaleX != 0) {
         struct Vector3 v1 = this->func_ov002_020e8244();
-        mParticle[0] =
-            Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
+        mParticle[0] = Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
         return;
     }
 
@@ -2363,8 +2359,7 @@ void daStar_c::UpdateSparkleEffect() {
         mParticle[2] = 0;
     Vector3 pos = mPos;
     pos.y += 0xd000;
-    mParticle[2] =
-        Particle::System::New(mParticle[2], kPtclStarSparkle, pos.x, pos.y, pos.z, 0, 0);
+    mParticle[2] = Particle::System::New(mParticle[2], kPtclStarSparkle, pos.x, pos.y, pos.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2375,8 +2370,7 @@ void daStar_c::UpdateSilverTrailEffect() {
     if (!IsActorID(this, ACTOR_SILVER_STAR))
         return;
     Vector3 v = this->func_ov002_020e8244();
-    mParticle[3] =
-        Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
+    mParticle[3] = Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */

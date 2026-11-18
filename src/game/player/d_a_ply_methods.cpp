@@ -9613,8 +9613,7 @@ int daPly_c::UpdateSwimHealth() {
         drainPeriod = 80;
 
     if (GetHealth() <= 2) {
-        mSurfaceSoundHandle =
-            Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
+        mSurfaceSoundHandle = Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
     }
 
     {
@@ -11061,8 +11060,8 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
     }
 
     if (mIsInShallowWater != 0) {
-        u32 newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand,
-                                                          mPos.x, data_0209f32c, mPos.z, 0);
+        u32 newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand, mPos.x,
+                                                          data_0209f32c, mPos.z, 0);
         mParticle1 = newId;
         return;
     }
@@ -14571,8 +14570,7 @@ void daPly_c::func_ov002_020d98b4() {
         MTX_MultVec43((Vector3 *)&bone->t, &mModels.mBodyModels[id2]->mat4x3, &v);
         Vec3_MulScalar(&s, &v, 0x8000);
         s.y += 0x50000;
-        mParticle1 =
-            (s32)Particle::System::New(mParticle1, kPtclDizzyStars, s.x, s.y, s.z, 0, 0);
+        mParticle1 = (s32)Particle::System::New(mParticle1, kPtclDizzyStars, s.x, s.y, s.z, 0, 0);
     }
     mFlags |= 0x80;
 }
@@ -17028,7 +17026,8 @@ int daPly_c::St_WindCarry_Init() {
 
 int daPly_c::func_ov002_020dec70() {
     int t = mPos.y + 0x514000;
-    if (t < -0x2134000) return 0;
+    if (t < -0x2134000)
+        return 0;
     {
         Vector3_16f v;
         v.z = 0;

@@ -341,18 +341,9 @@ void FlowerFace::PlayPetalPulled() {
             b.vel.y = 0xa00;
             b.vel.z = 0xa00;
             /* Each component gets 0..0x3ff of jitter from a fresh random. */
-            b.vel.x +=
-                (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
-                      19) >>
-                2;
-            b.vel.y +=
-                (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
-                      19) >>
-                2;
-            b.vel.z +=
-                (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
-                      19) >>
-                2;
+            b.vel.x += (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) >> 2;
+            b.vel.y += (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) >> 2;
+            b.vel.z += (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) >> 2;
             b.pos2.x = b.pos.x;
             b.pos2.y = b.pos.y;
             b.pos2.z = b.pos.z;

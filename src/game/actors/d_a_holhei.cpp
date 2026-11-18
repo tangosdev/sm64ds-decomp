@@ -209,9 +209,8 @@ int daHolhei_c::Behavior()
                 if (mPos.z < -0xd0c000)
                     atEdge = 1;
             }
-            if (atEdge != 0
-                || (mHorzSpeed != 0
-                    && IsGoingOffCliff(mMeshClsn, 0x3c000, 0x2888, 0, 1, 0x32000))) {
+            if (atEdge != 0 ||
+                (mHorzSpeed != 0 && IsGoingOffCliff(mMeshClsn, 0x3c000, 0x2888, 0, 1, 0x32000))) {
                 mHorzSpeed = 0;
                 mEdgeStop = 1;
                 mPos.x = mPrevPosX;

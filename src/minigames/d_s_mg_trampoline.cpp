@@ -554,8 +554,7 @@ void dScMgTrampoline_c::StatePlay() {
             }
             Sound::PlayBank2_2D(0x1b6);
             {
-                unsigned int rnd =
-                    RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
+                unsigned int rnd = RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
                 int scaled = (rnd >> 19) * 0x2d0;
                 mDoorSwitchTimer = (s16)((scaled >> 12) + 0x2d0);
                 mDoorBlinkTimer = 0;

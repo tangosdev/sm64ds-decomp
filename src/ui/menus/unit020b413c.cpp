@@ -624,8 +624,8 @@ void Ov007ItemView::ItemView_HandleTouch(void *arg1) {
         int min_y = elem->item->hitBox->minY + pos_y;
         int max_x = elem->item->hitBox->maxX + pos_x;
         int min_x = elem->item->hitBox->minX + pos_x;
-        if (touching != 0 && tp->cur.x >= min_x && tp->cur.x <= max_x &&
-            tp->cur.y >= min_y && tp->cur.y <= max_y) {
+        if (touching != 0 && tp->cur.x >= min_x && tp->cur.x <= max_x && tp->cur.y >= min_y &&
+            tp->cur.y <= max_y) {
             func_ov007_020b63e4((Ov007ItemView *)arg0);
         } else {
             u16 t = elem->item->id;

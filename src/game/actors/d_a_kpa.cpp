@@ -1807,7 +1807,7 @@ void daKpa_c::ActChargeMario() {
         InitAnimation(0x1a, 0x40000000);
         this->mParticleHandle =
             Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPos.x,
-                                                this->mPos.y + 0x32000, this->mPos.z, 0, 0);
+                                  this->mPos.y + 0x32000, this->mPos.z, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;

@@ -82,8 +82,7 @@ int daObjAbuku_c::Behavior() {
     if (DecIfAbove0_Short((unsigned short *)(&mLifeTimer)) == 0 || IsNearWaterSurface()) {
         Pop();
     }
-    mParticle =
-        Particle::System::New(mParticle, kPtclAbukuBubble, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticle = Particle::System::New(mParticle, kPtclAbukuBubble, mPos.x, mPos.y, mPos.z, 0, 0);
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;

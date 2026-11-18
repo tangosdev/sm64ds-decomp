@@ -639,7 +639,8 @@ void daIbl_c::SpawnerBehavior() {
     }
 
     if (gCurrentSublevel == 0x16) {
-        if (pos.y < -0x9c4000) return;
+        if (pos.y < -0x9c4000)
+            return;
         mStateTimer = 63;
     } else {
         mStateTimer = 127;
