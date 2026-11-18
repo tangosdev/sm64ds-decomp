@@ -33,7 +33,7 @@ typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2
 
 /* Foreign callees. */
 extern "C" int func_02051f1c(void *a, u32 b, int c);
-extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int e, int f);
+extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, int e, int f);
 extern "C" u32 NNS_SndHeapGetFreeSize(struct SndHeap *heap);
 extern "C" void NNS_SndHeapLoadState(struct SndHeap *heap, int level);
 extern "C" void *NNS_SndHeapAlloc(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
