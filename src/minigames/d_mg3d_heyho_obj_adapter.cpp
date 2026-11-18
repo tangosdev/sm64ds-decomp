@@ -129,6 +129,13 @@ int Heyho::LoadResources() {
     return 1;
 }
 
+/* The x of a path's goal. Read through this accessor, the fly-in and
+   regroup tests load goal.x again from the copied record the way the
+   cartridge does, instead of reusing the register the copy left it in. */
+static inline int GoalX(const HeyhoPath *path) {
+    return path->goal.x;
+}
+
 /* ---- Heyho::StartMotionFlyIn ---- */
 void Heyho::StartMotionFlyIn(const HeyhoPath *path) {
     /* First call builds the ±256 offsets. mwcc emits each guard, the three
@@ -138,17 +145,7 @@ void Heyho::StartMotionFlyIn(const HeyhoPath *path) {
 
     mPath = *path;
 
-    /* The ROM re-loads goal.x from the record after the copy instead of
-       reusing the copied register; only a volatile read reproduces it.
-       Measured (#821, 2026-11-16): a plain mPath.goal.x test is 0x1a0
-       against 0x1a8 (the tested value is stored to mPos.x in both
-       branches); testing path->goal.x is one word off (the load is from the
-       source, not mPath); the copy hoisted above one if around VEC_Add, or
-       testing mPos.x after it, 0x190. r63: a const VecFx32 & or pointer to
-       goal, `0 < x`, or the inverted test, 0x1a0; HeyhoPath::goal as Vector3
-       with `mPos = mPath.goal` gives retail's branches exactly, but the
-       mPath copy then moves goal memberwise instead of ldm/stm (0x1b0). */
-    if (*(volatile int *)&mPath.goal.x > 0) {
+    if (GoalX(&mPath) > 0) {
         mPos.x = mPath.goal.x;
         mPos.y = mPath.goal.y;
         mPos.z = mPath.goal.z;
@@ -238,8 +235,7 @@ void Heyho::StartMotionRegroup(const HeyhoPath *path) {
 
     mPath = *path;
 
-    /* goal.x re-read: see StartMotionFlyIn. */
-    if (*(volatile int *)&mPath.goal.x > 0) {
+    if (GoalX(&mPath) > 0) {
         mPos.x = mPath.goal.x;
         mPos.y = mPath.goal.y;
         mPos.z = mPath.goal.z;
