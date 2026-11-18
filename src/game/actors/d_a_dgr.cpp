@@ -17,9 +17,10 @@
  *   the ROM's update is `mAngle.x += mAngleXSpeed`.
  * - Behavior: `speedDivisor = -speedDivisor` and `bob = -bob` size-DIFF
  *   0x3ec->0x3e4. The ROM multiplies, `x *= -1`.
- * - Behavior: deleting the `loc[0..2] = mPos*` seed size-DIFF 0x3ec->0x3d4.
- *   Two Vec3 locals instead of `s32 loc[6]` size-DIFF 0x3ec->0x3ac
- *   (a Vector3 local emits ~Vector3). The six words stay.
+ * - Behavior: deleting the `dustPos = mPos` seed size-DIFF 0x3ec->0x3d4.
+ *   dustPos and quakePos are two Vector3 locals, declared in that order
+ *   (#821 r77: byte-identical to the old `s32 loc[6]`; the reverse order
+ *   moves the frame slots).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -108,7 +109,8 @@ s32 daDgr_c::InitResources() {
 }
 
 s32 daDgr_c::Behavior() {
-    s32 loc[6];
+    Vector3 dustPos;
+    Vector3 quakePos;
     s32 speedDivisor;
     s32 rollFrames;
 
@@ -174,37 +176,33 @@ s32 daDgr_c::Behavior() {
         }
 
         if (mPhaseTimer == rollFrames - 1) {
-            loc[3] = mPos.x;
-            loc[4] = mPos.y;
-            loc[5] = mPos.z;
-            Earthquake(*(const Vector3 *)&loc[3], kQuakeMagnitude);
+            quakePos = mPos;
+            Earthquake(quakePos, kQuakeMagnitude);
         }
 
-        loc[0] = mPos.x;
-        loc[1] = mPos.y;
-        loc[2] = mPos.z;
+        dustPos = mPos;
         {
             s32 along;
             s32 across;
             across = FX_CosIdx((u16)mAngle.y >> 4);
-            loc[0] = across * kDustReach + mPos.x;
-            loc[1] = mBasePosY - kDustDrop;
+            dustPos.x = across * kDustReach + mPos.x;
+            dustPos.y = mBasePosY - kDustDrop;
             along = FX_SinIdx((u16)mAngle.y >> 4);
-            loc[2] = along * kDustReach + mPos.z;
-            mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, loc[0], loc[1],
-                                                   loc[2], (const Vector3_16f *)((void *)0),
-                                                   (dPa_c::level_c::callback_c *)((void *)0));
+            dustPos.z = along * kDustReach + mPos.z;
+            mDustParticle1 = Particle::System::New(
+                mDustParticle1, kDustEffect, dustPos.x, dustPos.y, dustPos.z,
+                (const Vector3_16f *)((void *)0), (dPa_c::level_c::callback_c *)((void *)0));
         }
         {
             s32 along;
             s32 across;
             across = FX_CosIdx((u16)mAngle.y >> 4);
-            loc[0] = mPos.x - across * kDustReach;
+            dustPos.x = mPos.x - across * kDustReach;
             along = FX_SinIdx((u16)mAngle.y >> 4);
-            loc[2] = mPos.z - along * kDustReach;
-            mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, loc[0], loc[1],
-                                                   loc[2], (const Vector3_16f *)((void *)0),
-                                                   (dPa_c::level_c::callback_c *)((void *)0));
+            dustPos.z = mPos.z - along * kDustReach;
+            mDustParticle2 = Particle::System::New(
+                mDustParticle2, kDustEffect, dustPos.x, dustPos.y, dustPos.z,
+                (const Vector3_16f *)((void *)0), (dPa_c::level_c::callback_c *)((void *)0));
         }
     }
 

@@ -223,7 +223,13 @@ int daC_Jugem_c::StateIntroInit()
 }
 
 /* Fly toward the fixed vantage point, camera tracking, until close enough
-   to start the intro sweep. */
+   to start the intro sweep.
+   Kept (#821 r77): the approach target data_ov085_0213084c is the coined
+   JugemVec3 (see the note above struct JugemVec3: a plain Vector3 global
+   moves its zero x store and __sinit stops matching), so the four uses below
+   reach the game's Vector3 helpers through casts. Re-measured on this base:
+   the plain `Vector3 data_ov085_0213084c(0, 0x4d8000, -0x104000)` still
+   hoists `mov r2, #0` above the address load (__sinit 0x370 -> 0x374). */
 int daC_Jugem_c::StateApproachMain()
 {
     Vector3 v[3];

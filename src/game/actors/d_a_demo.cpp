@@ -325,7 +325,7 @@ extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
-extern int data_ov002_0210b958[3];
+extern VecFx32 data_ov002_0210b958;
 }
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -2750,6 +2750,10 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
+      /* Kept (#821 r77): data_ov002_0210b958 is a statically initialized
+         .data VecFx32 (a Vector3, which declares constructors, would be
+         built by __sinit instead), and MtxStack.h's MTX_MultVec43 overload
+         takes the game's Vector3. */
       MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
       Vec3_LslInPlace((int *)&v, 3);
       func_ov002_020f6f48(&v, 8);
@@ -3615,7 +3619,7 @@ const int data_ov002_02100200[20] = {
 const int data_ov002_02100250[20] = {
     -12, 40, 1, 0, 11, 40, 1, 2, 23, 32, 2, 4, -24, 32, 2, 6, 0, 32, 2, 8,
 };
-int data_ov002_0210b958[3] = {-0x29dc00, 0x0, -0x650c00};
+VecFx32 data_ov002_0210b958 = {-0x29dc00, 0x0, -0x650c00};
 int data_ov002_0210b964[3] = {-0x468000, 0x230000, 0x1a08000};
 int data_ov002_0210b970[3] = {-0x64000, 0x64000, -0x12c000};
 int *data_ov002_0210b97c[3] = {

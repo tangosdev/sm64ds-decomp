@@ -387,6 +387,10 @@ int daYurei_Mucho_c::UpdateChase() {
     if (p != 0) {
         /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
         /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
+        /* Kept (#821 r77): the snapshot reads through `*(VecFx32 *)&` and goes
+           back to Vec3_Dist as `const Vector3 *`. `Vector3 tmp = p->mPos;`
+           gives 0x150 (ROM 0x154); passing the Vector3 copy b instead of tmp
+           gives 0x14c. */
         VecFx32 tmp = *(VecFx32 *)&p->mPos;
         Vector3 v;
         Vector3 a;

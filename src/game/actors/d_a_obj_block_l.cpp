@@ -305,6 +305,10 @@ int daObjBlockL_c::Render() {
         }
     }
     if (IsActorID(this, 0x10)) {
+        /* Kept (#821 r77): the ROM copy-initializes the scale with one
+           ldm/stm block move, which only a POD VecFx32 gives; Render takes
+           the game's Vector3, so it casts there. A Vector3 built from the
+           three fields grows Render 0xf8 -> 0x104. */
         VecFx32 v = data_ov002_021089e0;
         mModel.Render((Vector3 *)&v);
     } else {

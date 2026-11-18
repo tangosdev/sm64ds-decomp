@@ -51,7 +51,13 @@ s16 atan2(s32, s32);
 
 /* A snapshot of a player's mPos is copy-initialized into a POD VecFx32: that
  * copy is a block move (ldm/stm), while any copy of the non-POD Vector3 is
- * memberwise. */
+ * memberwise.
+ * Kept (#821 r77): the six snapshots read through `*(VecFx32 *)&...->mPos`
+ * (the source is a Vector3 lvalue, so no plain spelling copies it as a
+ * block), and the five passed to the game's Vec3_Dist cast back to
+ * `const Vector3 *` at the call. Re-measured: `Vector3 v = p->mPos;` at all
+ * six grows five Tick functions by 8 bytes and changes TickKnockback's code
+ * at the same size. */
 struct BCA_File;
 typedef daBombking_c::StateFunction PMF;
 
