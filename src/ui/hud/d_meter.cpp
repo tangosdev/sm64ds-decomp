@@ -651,8 +651,8 @@ void dMeter_c::RenderHealthMeter() {
         return;
 
     if (GetOwnerLanguage() == 5) {
-        OAM::Render(0, OAM::HEALTH_METERS_ES[gMeterShownHealth], 0x80, mHealthMeterY, -1, 1,
-                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::HEALTH_METERS_ES[gMeterShownHealth], 0x80, mHealthMeterY, -1, 1, 0x1000,
+                    0x1000, 0, -1);
         OAM::Render(0, &OAM::HEALTH_METER_BG_ES, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else if (GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
         OAM::Render(0, OAM::HEALTH_METERS_FR_IT[gMeterShownHealth], 0x80, mHealthMeterY, -1, 1,
