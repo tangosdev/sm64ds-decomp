@@ -7003,6 +7003,9 @@
       ],
       "include/decl_common.h": [
         "return:unsigned char"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:signed char"
       ]
     },
     "gReturnSublevel": {

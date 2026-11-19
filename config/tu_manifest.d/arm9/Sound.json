@@ -46,7 +46,7 @@
     {
       "name": ".bss",
       "start": "0x0209b470",
-      "end": "0x0209ba84"
+      "end": "0x0209d4b8"
     }
   ],
   "functions": [
@@ -760,15 +760,6 @@
       "evidence": "string literal \"/data/sound_data.sdat\" (0x16 bytes with its NUL), the archive path func_020133bc passes to NNS_SndArcInit; its only reader is that function's pool word 0x020134a4 in config/arm9/relocs.txt. mwcc emits it after every size-sorted named object, in its own 1-aligned .data section, which is retail's placement after sPlayerSeqLimits."
     }
   ],
-  "rodata": [
-    {
-      "symbol": "data_02075258",
-      "address": "0x02075258",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "The eleven sound-player numbers func_02011c54 stops through NNS_SndPlayerStopSeqByPlayerNo, then the zero terminator that pads the object to a word: {2,3,4,5,6,7,8,9,10,17,15,0}. The loop walks exactly eleven entries; no reader outside this TU in config/**/relocs.txt."
-    }
-  ],
   "bss": [
     {
       "symbol": "sSubVolumeTarget",
@@ -902,6 +893,13 @@
       "size": "0x548",
       "evidence": "the sound-object registry (SndRegTable, sizeof 0x548: counter/cursor header, 0x40 0x14-byte entries at +0x8, 16 bucket heads at +0x508); retail __sinit_02074da8 tail-calls this TU's func_02011a5c on it, which clears the entries, header and buckets. Its readers are this TU's registry find/alloc/link/unlink/sweep helpers and Play wrappers, plus dScene_c::BeforeCleanupResources.",
       "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_0209ba84",
+      "address": "0x0209ba84",
+      "size": "0x1a34",
+      "binding": "STB_GLOBAL",
+      "evidence": "sound driver mixer state, SaveBlock and the save-file tables before Timer's state"
     }
   ],
   "compiler_only_output": [],
@@ -945,9 +943,9 @@
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
-      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+      "scratch": "build/tu/arm9-Sound/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -1002,13 +1000,13 @@
         {
           "section": ".bss",
           "start": "0x0209b470",
-          "end": "0x0209ba84",
+          "end": "0x0209d4b8",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 123
+          "LICENSED": 124
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1019,50 +1017,59 @@
           {
             "section": ".init",
             "original": [
-              212
+              214
             ],
             "desired": [
-              212
+              214
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              32
+            ],
+            "desired": [
+              32
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              210
+              212
             ],
             "desired": [
-              210
+              212
             ]
           },
           {
             "section": ".data",
             "original": [
-              7,
+              9,
+              10,
               11,
-              12,
               13,
               16,
-              22,
-              25,
               26,
               28,
               29,
-              32,
-              201
+              30,
+              31,
+              33,
+              203
             ],
             "desired": [
               13,
+              9,
               11,
-              12,
-              7,
+              10,
+              31,
+              30,
               29,
               28,
               16,
               26,
-              25,
-              22,
-              32,
-              201
+              33,
+              203
             ]
           },
           {
@@ -1070,9 +1077,9 @@
             "original": [
               5,
               6,
+              7,
               8,
-              9,
-              10,
+              12,
               14,
               15,
               17,
@@ -1080,34 +1087,36 @@
               19,
               20,
               21,
+              22,
               23,
               24,
+              25,
               27,
-              30,
-              31,
-              33,
-              34
+              34,
+              35,
+              36
             ],
             "desired": [
+              12,
+              7,
               6,
               8,
               5,
-              10,
-              9,
+              24,
+              25,
               18,
               17,
               15,
               19,
               21,
+              22,
               23,
               27,
-              30,
               14,
               20,
-              24,
-              31,
-              33,
-              34
+              34,
+              35,
+              36
             ]
           }
         ],
@@ -1116,46 +1125,46 @@
             {
               "section": ".data",
               "original": [
-                7,
+                9,
+                10,
                 11,
-                12,
                 13,
                 16,
-                22,
-                25,
                 26,
                 28,
                 29,
-                32,
-                201
+                30,
+                31,
+                33,
+                203
               ],
               "desired": [
                 13,
+                9,
                 11,
-                12,
-                7,
+                10,
+                31,
+                30,
                 29,
                 28,
                 16,
                 26,
-                25,
-                22,
-                32,
-                201
+                33,
+                203
               ],
               "slots": [
-                7,
+                9,
+                10,
                 11,
-                12,
                 13,
                 16,
-                22,
-                25,
                 26,
                 28,
                 29,
-                32,
-                201
+                30,
+                31,
+                33,
+                203
               ]
             },
             {
@@ -1163,9 +1172,9 @@
               "original": [
                 5,
                 6,
+                7,
                 8,
-                9,
-                10,
+                12,
                 14,
                 15,
                 17,
@@ -1173,41 +1182,43 @@
                 19,
                 20,
                 21,
+                22,
                 23,
                 24,
+                25,
                 27,
-                30,
-                31,
-                33,
-                34
+                34,
+                35,
+                36
               ],
               "desired": [
+                12,
+                7,
                 6,
                 8,
                 5,
-                10,
-                9,
+                24,
+                25,
                 18,
                 17,
                 15,
                 19,
                 21,
+                22,
                 23,
                 27,
-                30,
                 14,
                 20,
-                24,
-                31,
-                33,
-                34
+                34,
+                35,
+                36
               ],
               "slots": [
                 5,
                 6,
+                7,
                 8,
-                9,
-                10,
+                12,
                 14,
                 15,
                 17,
@@ -1215,17 +1226,18 @@
                 19,
                 20,
                 21,
+                22,
                 23,
                 24,
+                25,
                 27,
-                30,
-                31,
-                33,
-                34
+                34,
+                35,
+                36
               ]
             }
           ],
-          "symbolIndices": 31,
+          "symbolIndices": 32,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -1446,6 +1458,15 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02074da8"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_02075258",
+      "address": "0x02075258",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "the sound-player numbers func_02011c54 stops; the last byte pads to 12"
     }
   ]
 }

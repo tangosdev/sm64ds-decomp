@@ -36,7 +36,7 @@ extern "C" {
 
 #define ALIGN_BYTE(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
 
-extern FSArchive *arc_list;
+extern u8 arc_list[];
 extern FSDirPos current_dir_pos;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
@@ -152,7 +152,7 @@ int FSi_ReadMemoryCore(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
 FSArchive *FS_FindArchive(const char *name, int name_len) {
     u32 pack = FSi_GetPackedName(name, name_len);
     OSIntrMode bak_psr = OS_DisableInterrupts();
-    FSArchive *p_arc = arc_list;
+    FSArchive *p_arc = *(FSArchive **)arc_list;
     while (p_arc != 0 && p_arc->name.pack != pack) {
         p_arc = p_arc->next;
     }
@@ -336,9 +336,9 @@ int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len) {
     int ret = 0;
     OSIntrMode bak_psr = OS_DisableInterrupts();
     if (!FS_FindArchive(name, name_len)) {
-        FSArchive *p_tail = arc_list;
+        FSArchive *p_tail = *(FSArchive **)arc_list;
         if (!p_tail) {
-            arc_list = p_arc;
+            *(FSArchive **)arc_list = p_arc;
             current_dir_pos.arc = p_arc;
             current_dir_pos.pos = 0;
             current_dir_pos.index = 0;
@@ -371,7 +371,7 @@ void FS_ReleaseArchiveName(FSArchive *p_arc) {
         p_arc->next = p_arc->prev = 0;
         p_arc->flag &= ~FS_ARCHIVE_FLAG_REGISTER;
         if (current_dir_pos.arc == p_arc) {
-            current_dir_pos.arc = arc_list;
+            current_dir_pos.arc = *(FSArchive **)arc_list;
             current_dir_pos.pos = 0;
             current_dir_pos.index = 0;
             current_dir_pos.own_id = 0;
@@ -527,3 +527,8 @@ void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags) {
     p_arc->proc_flag = flags;
 }
 }
+
+/* The registered-archive list head and the current directory position
+   FSi_FindPath starts from. One object; current_dir_pos is an interior
+   label. */
+u8 arc_list[0x10];

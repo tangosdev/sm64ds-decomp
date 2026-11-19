@@ -6,8 +6,8 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "One function, .text 0x0202fd4c..0x0202fef8, gapless in config/arm9/delinks.txt between d_view.cpp (func_0202fd2c at 0x0202fd2c..0x0202fd4c) and Quaternion_SLerp.c (Quaternion_SLerp at 0x0202fef8..0x0202ffec), and the decoder's own kind:function(arm,size=0x1ac) record.",
-    "The TU owns its constant: .rodata 0x02075b04..0x02075b14 is one 16-byte Quat, and the only relocation to it is the TU's own load at 0x0202fef4. mwcc emits one .rodata section per const object and this object emits exactly that one, so the claim is a single section with a single anchor."
+    "One function, 0x0202fd4c..0x0202fef8, gapless in config/arm9/delinks.txt.",
+    "The .rodata word at 0x02075b04 is the identity quaternion the function returns when the cross product is degenerate."
   ],
   "sections": [
     {
@@ -37,7 +37,7 @@
       "address": "0x02075b04",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "The identity rotation {0, 0, 0, 0x1000}: Quaternion_FromVector3 returns it when the cross product of the two input vectors has no axis. The only reference is the TU's own load at 0x0202fef4 (config/arm9/relocs.txt), so no other module reads it."
+      "evidence": "the identity quaternion (0, 0, 0, 1.0) returned when the cross product is degenerate"
     }
   ],
   "bss": [],
@@ -47,19 +47,16 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "The function builds Vector3 temporaries, so mwcc re-emits Vector3's trivial vague-linkage destructor beside the licensed text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source owns it; the duplicate is deadstripped after being compared against those bytes."
+      "reason": "vague-linkage copy of Vector3 trivial destructor emitted beside the stack Vector3 locals; the cartridge homes the destructor once, in its canonical TU"
     }
   ],
-  "notes": [
-    "Hand-built manifest entry: the arm9 main module is unsegmentable, so tools/tubuild.py create has no candidate id for this range.",
-    "intact-object because the TU now owns the .rodata its own function reads; tu_production.prepare_intact_object re-verifies every licensed section against the cartridge before the link."
-  ],
+  "notes": [],
   "production_mode": "intact-object",
   "verification": {
     "linkcheck": {
-      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+      "scratch": "build/tu/arm9-Quaternion_FromVector3/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -99,6 +96,22 @@
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [],
       "symbolCheckBaselineErrors": [],

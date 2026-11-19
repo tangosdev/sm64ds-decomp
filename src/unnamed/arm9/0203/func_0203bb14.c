@@ -16,3 +16,7 @@ void func_0203bb14(void) {
         p++;
     } while (i < func_0203daac());
 }
+
+/* The calibrated touch point and the user calibration record the TP setup
+   writes. One object; data_020a0de0 is an interior label. */
+u8 data_020a0dd8[0x10];

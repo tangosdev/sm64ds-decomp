@@ -12,7 +12,7 @@ typedef struct {
 
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);
-extern const Quat data_02075b04;
+extern const Quat data_02075b04 = {0, 0, 0, 0x1000};
 
 void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     Vector3 vb, va, vb2, vcross;
@@ -53,8 +53,4 @@ void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     out->z = data_02075b04.z;
     out->w = data_02075b04.w;
 }
-
-/* The identity rotation: the cross product of two parallel vectors has no
-   axis, so both fallbacks return w = 1.0 with no rotation. */
-extern const Quat data_02075b04 = {0, 0, 0, 0x1000};
 }

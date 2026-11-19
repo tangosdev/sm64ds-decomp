@@ -55,50 +55,6 @@
     }
   ],
   "data": [],
-  "rodata": [
-    {
-      "symbol": "data_02075358",
-      "address": "0x02075358",
-      "size": "0x40",
-      "binding": "STB_GLOBAL",
-      "evidence": "The WMParentParam func_0201fec8 hands to the link start (func_0203db64), which copies sizeof(WMParentParam) = 0x40 bytes into data_020a1064 for WM_SetParentParameter: channel 1, entryFlag 1, maxEntry 3, ggid 0x00800000, beaconPeriod 200, parentMaxSize 0x200, childMaxSize 0x20. Field offsets are include/nitro/wm/wm.h's this-revision layout; every field word matches the cartridge."
-    },
-    {
-      "symbol": "data_02075398",
-      "address": "0x02075398",
-      "size": "0x60",
-      "binding": "STB_GLOBAL",
-      "evidence": "Italian multiboot introduction, 48 UTF-16 code units: \"Afferra le Stelle!\\nI campelli ti sono d'aiuto.\" The data_020752cc MBGameRegistry stores it as gameIntroductionp; func_0201fec8 passes that registry to func_0203db64."
-    },
-    {
-      "symbol": "data_020753f8",
-      "address": "0x020753f8",
-      "size": "0x64",
-      "binding": "STB_GLOBAL",
-      "evidence": "Spanish multiboot introduction, 50 UTF-16 code units: \"\\u00a1Hazte con las Estrellas!\\nLas garras te ayudar\\u00e1n.\" gameIntroductionp of the data_020752e8 MBGameRegistry."
-    },
-    {
-      "symbol": "data_0207545c",
-      "address": "0x0207545c",
-      "size": "0x68",
-      "binding": "STB_GLOBAL",
-      "evidence": "German multiboot introduction, 52 UTF-16 code units: \"Greif nach den Sternen!\\nDie M\\u00fctze hilft dir dabei!\" gameIntroductionp of the data_0207533c MBGameRegistry."
-    },
-    {
-      "symbol": "data_020754c4",
-      "address": "0x020754c4",
-      "size": "0x6c",
-      "binding": "STB_GLOBAL",
-      "evidence": "French multiboot introduction, 54 UTF-16 code units: \"Bats-toi pour les \\u00e9toiles!\\nLes casquettes t'aideront!\" gameIntroductionp of the data_02075320 MBGameRegistry."
-    },
-    {
-      "symbol": "data_02075530",
-      "address": "0x02075530",
-      "size": "0x70",
-      "binding": "STB_GLOBAL",
-      "evidence": "English multiboot introduction, 56 UTF-16 code units: \"Scramble to get the Stars!\\nThe caps will help you out.\" gameIntroductionp of the data_02075304 MBGameRegistry."
-    }
-  ],
   "bss": [
     {
       "symbol": "data_0209e650",
@@ -171,9 +127,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@50",
+      "from": "@49",
       "to": "@18",
-      "evidence": "mwcc numbers the registration node @50 (@27 until private/watchdog_alarm.h, @49 before this TU included nitro/wm/wm.h for the WMParentParam type it now defines). @18 is unused in every config symbols.txt and is the same length."
+      "evidence": "mwcc numbers the registration node @49 (@27 until private/watchdog_alarm.h, which brings in types.h, replaced the file's own watchdog externs). @18 is unused in every config symbols.txt and is the same length."
     }
   ],
   "relocations": [
@@ -260,9 +216,9 @@
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
-      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+      "scratch": "build/tu/arm9-func_0201fec8/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -316,7 +272,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 11
+          "LICENSED": 6
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -327,19 +283,28 @@
           {
             "section": ".init",
             "original": [
-              11
+              12
             ],
             "desired": [
-              11
+              12
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              7
+            ],
+            "desired": [
+              7
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              9
+              10
             ],
             "desired": [
-              9
+              10
             ]
           },
           {
@@ -369,5 +334,14 @@
       },
       "linkerOutput": null
     }
-  }
+  },
+  "rodata": [
+    {
+      "symbol": "data_02075358",
+      "address": "0x02075358",
+      "size": "0x248",
+      "binding": "STB_GLOBAL",
+      "evidence": "boot message block: 64-byte header then the Italian and Spanish title messages"
+    }
+  ]
 }
