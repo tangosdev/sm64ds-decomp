@@ -127,7 +127,7 @@ extern char*data_ov002_021000a0[];
 extern char*data_ov002_02108ab8[];
 extern char*data_ov007_02104ba0;
 extern char*func_02023178(int);
-extern char*SPLManager_New(char*(*alloc)(int), int, int, int, unsigned short);
+extern char *SPLManager_New(char *(*alloc)(int), int, int, int, unsigned short);
 extern int AddSpikeBomb(void*);
 extern int AngleDiff(int, int);
 extern int G;
@@ -397,7 +397,7 @@ extern int func_02045cf0(void);
 extern int func_02045d10(void);
 extern int func_02049018(const struct Vector3 *);
 extern void SPLManager_Update(void *);
-extern int SPLManager_UploadPalettesEx(void*, unsigned int (*cb)(unsigned int, unsigned int));
+extern int SPLManager_UploadPalettesEx(void *, unsigned int (*cb)(unsigned int, unsigned int));
 extern int SPLManager_UploadTexturesEx(void *, u32 (*cb)(u32, u32));
 extern int GX_HBlankIntr(int);
 extern int gMgCoinsShowDelta;
@@ -740,7 +740,7 @@ extern void func_0203dafc(int);
    include/fListNode.h and let the destructor be a destructor. The same holds
    for 0x02044104, which is _ZN9fLiNdBa_cD1Ev in the same file. */
 extern void func_02045e44(void*, unsigned int, int);
-extern void SPLManager_LoadResources(void*, void*);
+extern void SPLManager_LoadResources(void *, void *);
 extern void SPLEmitter_Init(void *, void *, void *);
 extern void SPLList_PushFront(void *, void *);
 extern void MTX_Copy33To44_(void *, void *);
