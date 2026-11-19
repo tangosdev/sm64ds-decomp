@@ -482,9 +482,6 @@ dActor_c *STAR_MARKERS[12];
    touch screen each frame and ResetInput clears them; the player, camera,
    meter and map read them. */
 ControllerInput data_0209f498[4];
-/* The mode byte of record 0 (+0x16); SetControllerMode, InitControllerMode
-   and PS_Update index it by player * 0x18. */
-extern u8 data_0209f4ae[];
 /* The actor death table: a 16-word bit row per level part, indexed by an
    actor's deathTableID. InitResources clears it only when the course
    changes, so it survives a reload of the same course. */
@@ -1979,7 +1976,7 @@ void dScStage_c::PS_Update() {
         sNumMenuButtons = 3;
         sNextPauseState = 8;
         {
-            u8 cur = data_0209f4ae[gActivePlayerSlot * 0x18];
+            u8 cur = data_0209f498[gActivePlayerSlot].mode;
             sSelectedControllerMode = cur;
             sSelectedMenuButton = cur;
         }
@@ -3280,17 +3277,16 @@ extern "C" void func_0202a850(int a, int b) {
     data_0209212c += 0x64000;
 }
 
-/* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
-   is their +0x16, data_0209f4ae. The save file keeps the active player's
-   copy at data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
+/* The save file keeps the active player's controller mode at
+   data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
 void InitControllerMode(int idx, u8 val) {
-    data_0209f4ae[idx * 0x18] = val;
+    data_0209f498[idx].mode = val;
     if (idx == gActivePlayerSlot)
         data_0209caa0.file.controllerMode = val;
 }
 
 void SetControllerMode(unsigned char mode) {
-    data_0209f4ae[gActivePlayerSlot * 0x18] = mode;
+    data_0209f498[gActivePlayerSlot].mode = mode;
     data_0209caa0.file.controllerMode = mode;
 }
 

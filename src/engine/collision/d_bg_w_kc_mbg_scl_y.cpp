@@ -23,10 +23,8 @@
 #include "math/CalcLib.h"
 
 extern "C" {
-/* local extern: no header in include/ declares these three. */
+/* local extern: no header in include/ declares it. */
 extern dBgCh_Lin data_020a0d0c; /* the scratch line, in collider space */
-extern Vector3 data_020a0d60;   /* == data_020a0d0c.lineEnd  (+0x54) */
-extern dBgPi data_020a0d1c;     /* == data_020a0d0c's dBgPi   (+0x10) */
 }
 
 dBgW_KcMbgSclY::dBgW_KcMbgSclY() {}
@@ -194,11 +192,10 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray) {
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
         fx32 dist = data_020a0d0c.clsnDist;
-        ToWorldSpace(&data_020a0d60, &worldPos);
+        ToWorldSpace(&data_020a0d0c.lineEnd, &worldPos);
         ray.SetClsnPos(worldPos);
         ray.clsnDist = dist;
-        /* the dBgPi base sub-object, at +0x10 */
-        (dBgPi &)ray = data_020a0d1c;
+        (dBgPi &)ray = data_020a0d0c;
         ray.hasClsn = 1;
     }
     return hit;
