@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "Contiguous .text 0x02049d60..0x0204a5bc. Nine functions tile the span with no hole and no tail: func_02049d60, func_02049d78, Particle::Manager::AddSystem, func_02049ee8, func_02049f58, func_0204a028, func_0204a0dc, func_0204a17c, func_0204a4c8.",
     "TOP EDGE: func_02049cd8 (0x02049cd8..0x02049d60) is the sound-context switch Sound.cpp calls (data_020a4c64 / data_020a4c70). It is not a Particle::Manager method.",
-    "BOTTOM EDGE: SPLEmitter_Emit (0x0204a5bc..0x0204a5c8) is a 12-byte tail veneer to SPLEmitter_EmitParticles. Its arguments are (system, list), not the manager, and the system draw/update helpers continue from func_0204a5c8.",
+    "BOTTOM EDGE: SPLEmitter_Emit (0x0204a5bc..0x0204a5c8) is a 12-byte tail veneer to SPLEmitter_EmitParticles. Its arguments are (system, list), not the manager, and the system draw/update helpers continue from SPLManager_DoDraw.",
     "Every function in the span takes the 0x3c manager (or returns one). Initialise calls func_0204a4c8 then func_0204a17c, func_0204a0dc and func_0204a028; SysTracker::Update calls func_02049f58; RenderAll calls func_02049ee8; dPa_c callbacks call func_02049d60; ov007 calls func_02049d78 to retire a system. AddSystem is the named spawn in the middle of that run.",
     "The callees AddSystem names are outside the span: SPLEmitter_Init at 0x0204ae2c, SPLList_PopFront at 0x0204d958, SPLList_PushFront at 0x0204d9a0. Particle.cpp is 0x020226d4..0x020233d4 and Particle_Behavior.cpp is 0x0204d4d0..0x0204d8e8, so this run is its own TU."
   ],
