@@ -244,7 +244,7 @@ extern void SetSubBg1Offset(int a, int b);
    disagree); 23f0 casts at the one use. */
 extern void *gSceneFader;
 extern u8 data_ov002_02111144;
-extern u32 data_020a0db0;
+extern int data_020a0db0;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
 extern const int data_ov002_02100140[];

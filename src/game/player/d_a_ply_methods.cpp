@@ -1007,7 +1007,7 @@ extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_ApplyInPlaceToTranslation(union Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-extern u8 gReturnSublevel;
+extern s8 gReturnSublevel;
 }
 
 extern void func_02011f7c(void *a);
@@ -7115,7 +7115,7 @@ int daPly_c::func_ov002_020c92fc() {
 }
 
 int daPly_c::func_ov002_020c94a4() {
-    extern u8 gReturnSublevel;
+    extern s8 gReturnSublevel;
     unsigned short st;
 
     this->mSpeed.y = 0;
