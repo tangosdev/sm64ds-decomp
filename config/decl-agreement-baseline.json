@@ -176,12 +176,6 @@
   "data_ov060_0211b208": {
    "src/game/actors/d_a_f_ring.cpp": ["return:FRingModelFilePtr"]
   },
-  "data_ov075_0211d72c": {
-   "src/game/stages/d_s_entry_methods.cpp": ["return:short []"]
-  },
-  "data_ov075_0211d740": {
-   "src/game/stages/d_s_entry_methods.cpp": ["return:short []"]
-  },
   "data_ov081_02128d90": {
    "src/game/actors/d_a_snowball.cpp": ["return:SharedFilePtr"]
   },
