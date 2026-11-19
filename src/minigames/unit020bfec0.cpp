@@ -80,8 +80,6 @@ extern "C" void func_02016a14(dExtSimpleModel_c *, int);
 int func_02017ab4(int);
 unsigned int func_02012174(unsigned int, unsigned int);
 extern "C" {
-void func_0203ccd4(void *, short);
-void func_0203cd80(void *, short);
 void func_0203cebc(void *, void *, void *, void *);
 }
 
@@ -635,28 +633,28 @@ void Presenter::Update() {
 }
 
 void Presenter::Draw() {
-    int keyLight[3];
-    int fillLight[3];
+    Vector3 keyLight;
+    Vector3 fillLight;
     int *materials;
     ModelComponents *components;
 
-    keyLight[0] = 0;
-    keyLight[1] = 0;
-    keyLight[2] = -0xff8;
-    fillLight[0] = 0;
-    fillLight[1] = 0;
-    fillLight[2] = -0xff8;
+    keyLight.x = 0;
+    keyLight.y = 0;
+    keyLight.z = -0xff8;
+    fillLight.x = 0;
+    fillLight.y = 0;
+    fillLight.z = -0xff8;
     func_02016a04(&mFace, 0x3d6d);
-    func_0203cd80(keyLight, -0x2000);
-    func_0203ccd4(keyLight, 0x2000);
-    func_0203cd80(fillLight, 0x4200);
-    func_0203ccd4(fillLight, 0x7000);
+    func_0203cd80(&keyLight, -0x2000);
+    func_0203ccd4(&keyLight, 0x2000);
+    func_0203cd80(&fillLight, 0x4200);
+    func_0203ccd4(&fillLight, 0x7000);
 
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
-    G3_LightVector(GX_LIGHTID_0, keyLight[0], keyLight[1], keyLight[2]);
+    G3_LightVector(GX_LIGHTID_0, keyLight.x, keyLight.y, keyLight.z);
     components = &mFace.data;
     G3_LightColor(GX_LIGHTID_1, GX_RGB(11, 10, 10));
-    G3_LightVector(GX_LIGHTID_1, fillLight[0], fillLight[1], fillLight[2]);
+    G3_LightVector(GX_LIGHTID_1, fillLight.x, fillLight.y, fillLight.z);
 
     /* Materials 5 and 6, texture offsets at +0x14 and +0x18. */
     materials = (int *)components->materials;

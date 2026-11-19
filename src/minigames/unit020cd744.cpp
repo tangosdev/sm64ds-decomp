@@ -231,7 +231,7 @@ void TrmpItem::MotionSpinHover() {
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -255,7 +255,7 @@ void TrmpItem::MotionSpinDrift() {
 
     struct Vector3 normalCopy, tangent, tangentCopy;
 
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -278,7 +278,7 @@ void TrmpItem::MotionSpinSway() {
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -338,7 +338,7 @@ void TrmpItem::MotionSpin() {
 
     struct Vector3 normalCopy, tangent, tangentCopy;
 
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -714,23 +714,23 @@ void TrmpItem::Update() {
     mPrevSide.z = mSide.z;
 }
 
-void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) {
+void TrmpItem::Init(const VecFx32 *pos, const Vector3 *normal, int itemType, short motion) {
     /* The axis the starting rotation is built about, built on first use. */
     static Vector3 sUnitY(0, 0x1000, 0);
 
-    mPos.x = position[0];
-    mPos.y = position[1];
-    mPos.z = position[2];
-    mForward.x = normal[0];
-    mForward.y = normal[1];
-    mForward.z = normal[2];
+    mPos.x = pos->x;
+    mPos.y = pos->y;
+    mPos.z = pos->z;
+    mForward.x = normal->x;
+    mForward.y = normal->y;
+    mForward.z = normal->z;
     {
         Vector3 *normalComponents = &mForward;
         mSide.x = normalComponents->x;
         mSide.y = normalComponents->y;
         mSide.z = normalComponents->z;
     }
-    func_0203cc28((int *)&mSide, -0x4000);
+    func_0203cc28(&mSide, -0x4000);
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
     mPrevPos.z = mPos.z;
@@ -752,7 +752,7 @@ void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) 
     mRotation[3] = data_02092768.w;
     Quaternion_FromVector3(mRotation, &sUnitY, &mForward);
     mSizeIdx = itemType;
-    mMotionKind = motionType;
+    mMotionKind = motion;
     mActive = 1;
     switch (mSizeIdx) {
     case 0:
@@ -834,7 +834,7 @@ void TrmpItem::LoadAll(char *items, int count) {
         ((TrmpItem *)(sTrmpItems + itemIndex * 0x1d0))->Load();
 }
 
-TrmpItem *TrmpItem::Spawn(int position, int *normal, int itemType, short motionType) {
+TrmpItem *TrmpItem::Spawn(const VecFx32 *pos, const Vector3 *normal, int itemType, short motion) {
     int itemIndex = 0;
     char *base;
     int itemOffset;
@@ -843,8 +843,7 @@ TrmpItem *TrmpItem::Spawn(int position, int *normal, int itemType, short motionT
         do {
             if (((TrmpItem *)base)->mActive == 0) {
                 itemOffset = itemIndex * 0x1d0;
-                ((TrmpItem *)(sTrmpItems + itemOffset))
-                    ->Init((int *)position, normal, itemType, motionType);
+                ((TrmpItem *)(sTrmpItems + itemOffset))->Init(pos, normal, itemType, motion);
                 return (TrmpItem *)(sTrmpItems + itemOffset);
             }
             itemIndex++;
@@ -1634,14 +1633,14 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
 }
 
 void TrmpLine::DrawAll() {
-    int light[3];
+    Vector3 light;
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&data_0209b3ec);
-    light[0] = 0;
-    light[1] = 0;
-    light[2] = -0xff8;
-    func_0203cd80(light, -0x2000);
-    G3_LightVector(GX_LIGHTID_1, light[0], light[1], light[2]);
+    light.x = 0;
+    light.y = 0;
+    light.z = -0xff8;
+    func_0203cd80(&light, -0x2000);
+    G3_LightVector(GX_LIGHTID_1, light.x, light.y, light.z);
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     int i;
     for (i = 0; i < 4; i++) {

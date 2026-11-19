@@ -87,7 +87,6 @@ struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-void func_0203cd80(int *m, short angle);
 void FreeGfxSlotsById(int arg);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -427,23 +426,23 @@ s32 dScMgJump_c::Render()
     }
 
     {
-        int m[3];
-        m[0] = 0;
-        m[1] = 0;
-        m[2] = -0xff8;
-        func_0203cd80(m, -0x2000);
-        G3_LightVector(GX_LIGHTID_0, m[0], m[1], m[2]);
+        Vector3 m;
+        m.x = 0;
+        m.y = 0;
+        m.z = -0xff8;
+        func_0203cd80(&m, -0x2000);
+        G3_LightVector(GX_LIGHTID_0, m.x, m.y, m.z);
         G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
         G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
         Matrix4x3_FromTranslation(&data_020a0e68, 0, -0xef000, 0);
     }
     {
-        int m[3];
-        m[0] = 0;
-        m[1] = 0;
-        m[2] = -0xff8;
-        func_0203cd80(m, -0x2000);
-        G3_LightVector(GX_LIGHTID_1, m[0], m[1], m[2]);
+        Vector3 m;
+        m.x = 0;
+        m.y = 0;
+        m.z = -0xff8;
+        func_0203cd80(&m, -0x2000);
+        G3_LightVector(GX_LIGHTID_1, m.x, m.y, m.z);
     }
 
     mModel.mat4x3 = data_020a0e68;

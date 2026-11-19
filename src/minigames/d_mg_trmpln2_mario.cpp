@@ -889,19 +889,19 @@ void Trmp2Mario_PlaceAtStart(void) {
 }
 
 void Trmp2Mario_DrawAll(void) {
-    int v[3];
-    VecFx32 w;
+    Vector3 v;
+    Vector3 w;
     int i, n, off;
-    v[0] = 0;
-    v[1] = 0;
-    v[2] = -0xff8;
-    func_0203cd80(v, -0x2000);
-    func_0203ccd4(v, -0x3000);
-    G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
+    v.x = 0;
+    v.y = 0;
+    v.z = -0xff8;
+    func_0203cd80(&v, -0x2000);
+    func_0203ccd4(&v, -0x3000);
+    G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
     w.x = 0;
     w.y = 0;
     w.z = -0xff8;
-    func_0203cd80((int *)&w, -0x2000);
+    func_0203cd80(&w, -0x2000);
     G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
@@ -1937,21 +1937,21 @@ void Trmp3DMario_StartAll(void) {
 }
 
 void Trmp3DMario_DrawAll(void) {
-    int v[3];
-    int w[3];
+    Vector3 v;
+    Vector3 w;
 
-    v[0] = 0;
-    v[1] = 0;
-    v[2] = -0xff8;
-    func_0203cd80((int *)v, 0x2000);
-    func_0203ccd4(v, 0);
-    G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
+    v.x = 0;
+    v.y = 0;
+    v.z = -0xff8;
+    func_0203cd80(&v, 0x2000);
+    func_0203ccd4(&v, 0);
+    G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
 
-    w[0] = 0;
-    w[1] = 0;
-    w[2] = -0xff8;
-    func_0203cd80((int *)w, -0x2000);
-    G3_LightVector(GX_LIGHTID_1, w[0], w[1], w[2]);
+    w.x = 0;
+    w.y = 0;
+    w.z = -0xff8;
+    func_0203cd80(&w, -0x2000);
+    G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
 
     {
         int i;

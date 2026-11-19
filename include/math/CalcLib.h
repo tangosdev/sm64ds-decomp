@@ -68,6 +68,12 @@ int Vec3_Dist(const Vector3 *, const Vector3 *);
 int Vec3_Equal(const Vector3 *, const Vector3 *);
 int Vec3_HorzDist(const Vector3 *, const Vector3 *);
 
+/* Rotate v in place about the X, Y and Z axes by angle, with the table sine
+   and cosine at angle >> 4; the axis component is kept. */
+void func_0203cd80(Vector3 *, short);
+void func_0203ccd4(Vector3 *, short);
+void func_0203cc28(Vector3 *, int);
+
 /* The in-place normalizer: 0 when the vector was too short. */
 int NormalizeVec3IfNonZero(Vector3 *);
 

@@ -124,10 +124,8 @@ extern int sTrmp2BrushWord[];
 extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;
-void func_0203cd80(int *m, short angle);
 void Jump2Popup_UpdateAll(void);
 extern const VecFx32 sTrmp2RandomSpawnPositions[];
-extern void func_0203cc28(int *vector, int angle);
 extern int sTrmpItemsHit;
 extern int sTrmp2Lives;
 extern int sTrmp2Score;
@@ -440,14 +438,13 @@ void dScMgTrampoline2_c::StatePlay() {
     if (mScriptDone == 0) {
         const Trampoline2WaveDef *d = &sTrmp2SpawnDefs[mPattern];
         int i;
-        VecFx32 vecA;
+        Vector3 vecA;
         for (i = 0; i < d->count; i++) {
             vecA.x = 0;
             vecA.y = 0x1000;
             vecA.z = 0;
-            func_0203cc28((int *)&vecA, d->angles[i]);
-            TrmpItem::Spawn((int)&d->positions[i], (int *)&vecA, d->itemTypes[i],
-                            d->motionTypes[i]);
+            func_0203cc28(&vecA, d->angles[i]);
+            TrmpItem::Spawn(&d->positions[i], &vecA, d->itemTypes[i], d->motionTypes[i]);
         }
         if (ApproachLinear(mPattern, 6, 1)) {
             mScriptDone = 1;
@@ -458,14 +455,13 @@ void dScMgTrampoline2_c::StatePlay() {
             unsigned int rnd = RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
             const Trampoline2WaveDef *d = &sTrmp2SpawnDefs[(int)((rnd >> 19) * 6) >> 12];
             int i;
-            VecFx32 vecB;
+            Vector3 vecB;
             for (i = 0; i < d->count; i++) {
                 vecB.x = 0;
                 vecB.y = 0x1000;
                 vecB.z = 0;
-                func_0203cc28((int *)&vecB, d->angles[i]);
-                TrmpItem::Spawn((int)&d->positions[i], (int *)&vecB, d->itemTypes[i],
-                                d->motionTypes[i]);
+                func_0203cc28(&vecB, d->angles[i]);
+                TrmpItem::Spawn(&d->positions[i], &vecB, d->itemTypes[i], d->motionTypes[i]);
             }
             mWaveStep = 0;
         } else {
@@ -644,7 +640,7 @@ void dScMgTrampoline2_c::SpawnWave() {
     int kind;
     int kinds[7];
     short faces[7];
-    VecFx32 up;
+    Vector3 up;
     int i;
     int j;
     int variant;
@@ -721,13 +717,13 @@ void dScMgTrampoline2_c::SpawnWave() {
         up.y = 0x1000;
         up.z = 0;
         if (kind >= 5 || ((kind & 1) != 0 && (faces[i] == 8 || faces[i] == 5))) {
-            func_0203cc28((int *)&up, 0x4000);
+            func_0203cc28(&up, 0x4000);
         }
 
         variant = 1;
         if (faces[i] == 6)
             variant = 2;
-        TrmpItem::Spawn((int)&sTrmp2RandomSpawnPositions[kinds[i]], (int *)&up, variant, faces[i]);
+        TrmpItem::Spawn(&sTrmp2RandomSpawnPositions[kinds[i]], &up, variant, faces[i]);
     }
 }
 
@@ -757,17 +753,17 @@ s32 dScMgTrampoline2_c::Behavior() {
 /* Vtable slot 9. Light 0 points down -z tilted -0x4000 about x; lights 0 and
  * 1 are white. */
 s32 dScMgTrampoline2_c::Render() {
-    int m[3];
+    Vector3 m;
     int count;
     int a1v;
     int i;
 
-    m[0] = 0;
-    m[1] = 0;
-    m[2] = -0xff8;
-    func_0203cd80(m, -0x4000);
+    m.x = 0;
+    m.y = 0;
+    m.z = -0xff8;
+    func_0203cd80(&m, -0x4000);
 
-    G3_LightVector(GX_LIGHTID_0, m[0], m[1], m[2]);
+    G3_LightVector(GX_LIGHTID_0, m.x, m.y, m.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
 
