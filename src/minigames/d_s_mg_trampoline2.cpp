@@ -252,7 +252,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     G3X_AlphaBlend(true);
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
-    fov = FX_Div(0xc0000, data_02082414);
+    fov = FX_Div(0xc0000, data_02082414[0]);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
     this->mCameras[0].mLookAt.z = 0;

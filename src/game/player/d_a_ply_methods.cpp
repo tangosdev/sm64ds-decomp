@@ -19602,10 +19602,10 @@ void daPly_c::func_ov002_020e4768() {
 }
 
 extern "C" {
-int func_ov002_020e496c(daPly_c *c) {
+dExtAnm2Model_c *func_ov002_020e496c(daPly_c *c) {
     daPly_c *player = c;
     int id = (c)->GetBodyModelID(player->mBodyModelId, 1);
-    return (int)player->mModels.mBodyModels[id];
+    return player->mModels.mBodyModels[id];
 }
 }
 

@@ -130,6 +130,7 @@ enum daDemo_c_AssetId {
 #include "SaveData.h"
 #include "dExtAnmTexPat_c.h"
 #include "dCamera_c.h"
+#include "LevelRng.h"
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
@@ -235,14 +236,11 @@ struct DemoTexSeqFile : SharedFilePtr {
 extern "C" {
 
 extern unsigned char gSubScreenLayers;
-extern int data_0209e650;
 extern OamAttr data_ov002_0210bddc;
 extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
-/* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
-   as the void * this file has always declared (the tree's declarations
-   disagree); 23f0 casts at the one use. */
-extern void *gSceneFader;
+/* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. */
+extern dFdBrightness_c *gSceneFader;
 extern u8 data_ov002_02111144;
 extern int data_020a0db0;
 extern struct OamAttr *data_ov002_0210b6a8[];
@@ -335,7 +333,7 @@ extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
 extern unsigned char gLocalPlayerId;
-extern void *gPlayers[];
+extern daPly_c *gPlayers[];
 /* void *: every caller passes &mPos.x and POD int[3] scratch; retyping that
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
@@ -409,7 +407,7 @@ void daDemo_c::func_ov002_020f20f4() {
         if (mScroll->spriteActive[i] != 0) {
             if ((data_020a0db0 & 1) == 0) {
                 mScroll->spriteX[i] += mScroll->spriteVelX[i];
-                RandomIntInternal(&data_0209e650);
+                RandomIntInternal(&data_0209e650.value);
                 if (mScroll->spriteVelX[i] >= 0) {
                     if (mScroll->spriteX[i] >= 0x140) {
                         mScroll->spriteActive[i] = 0;
@@ -445,7 +443,7 @@ void daDemo_c::func_ov002_020f2210()
             mScroll->spriteDelay[i] -= 1;
             if (mScroll->spriteDelay[i] == 0) {
                 if (mScroll->spriteActive[i] == 0) {
-                    unsigned int r = RandomIntInternal(&data_0209e650);
+                    unsigned int r = RandomIntInternal(&data_0209e650.value);
                     if (r & 1) {
                         mScroll->spriteX[i] = -0x40;
                         mScroll->spriteVelX[i] = 1;
@@ -511,7 +509,7 @@ int daDemo_c::func_ov002_020f23f0()
 {
     switch (mScroll->state) {
     case 0:
-        if (((dFdBrightness_c *)gSceneFader)->IsAtStart() != 0) {
+        if (gSceneFader->IsAtStart() != 0) {
             mScroll->centerSpriteY[0]++;
             mScroll->centerSpriteY[1]--;
             if (mScroll->centerSpriteY[0] == 8) {
@@ -2713,7 +2711,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
     Vector3 v;
     if (first == gKuppaScriptFrame) {
         if ((*flag) != 0) {
-            int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
+            int r = (inline_fn(RandomIntInternal(&data_0209e650.value)) >> 20) & 0xfff;
             int m = FX_MUL(r, 0xa000);
             this->mMagnitude = m + 0x19000;
         }
@@ -2784,7 +2782,7 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     this->mScale.y = 0xb33;
     this->mScale.z = 0xb33;
     rv = mAnmModel->numFramesAndFlags;
-    u32 rnd = RandomIntInternal(&data_0209e650);
+    u32 rnd = RandomIntInternal(&data_0209e650.value);
     mAnmModel->currFrame = ((unsigned short)(FX_MUL((int)((rnd >> 20) & 0xfff), rv) >> 12)) << 12;
     return 1;
 }
