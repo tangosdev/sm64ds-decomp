@@ -7741,7 +7741,7 @@ matched: yes</title></rect><rect x="5.00" y="624.78" width="22.37" height="7.32"
 module: arm9
 addr: 0x0204a4c8
 size: 244 bytes
-matched: yes</title></rect><rect x="27.37" y="624.78" width="1.10" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204a5bc
+matched: yes</title></rect><rect x="27.37" y="624.78" width="1.10" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_Emit
 module: arm9
 addr: 0x0204a5bc
 size: 12 bytes
@@ -7749,23 +7749,23 @@ matched: yes</title></rect><rect x="28.47" y="624.78" width="33.00" height="7.32
 module: arm9
 addr: 0x0204a5c8
 size: 360 bytes
-matched: yes</title></rect><rect x="61.46" y="624.78" width="163.89" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204a730
+matched: yes</title></rect><rect x="61.46" y="624.78" width="163.89" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_Update
 module: arm9
 addr: 0x0204a730
 size: 1788 bytes
-matched: yes</title></rect><rect x="225.36" y="624.78" width="24.57" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204ae2c
+matched: yes</title></rect><rect x="225.36" y="624.78" width="24.57" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_Init
 module: arm9
 addr: 0x0204ae2c
 size: 268 bytes
-matched: yes</title></rect><rect x="250.29" y="624.78" width="21.63" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204af3c
+matched: yes</title></rect><rect x="250.29" y="624.78" width="21.63" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_SetTexture
 module: arm9
 addr: 0x0204af3c
 size: 236 bytes
-matched: yes</title></rect><rect x="271.92" y="624.78" width="49.50" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204b028
+matched: yes</title></rect><rect x="271.92" y="624.78" width="49.50" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Child_Polygon
 module: arm9
 addr: 0x0204b028
 size: 540 bytes
-matched: yes</title></rect><rect x="5.00" y="632.09" width="34.67" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204b244
+matched: yes</title></rect><rect x="5.00" y="632.09" width="34.67" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Polygon
 module: arm9
 addr: 0x0204b244
 size: 540 bytes
@@ -7777,35 +7777,35 @@ matched: yes</title></rect><rect x="101.06" y="632.09" width="61.38" height="10.
 module: arm9
 addr: 0x0204b81c
 size: 956 bytes
-matched: yes</title></rect><rect x="162.44" y="632.09" width="39.55" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204bbd8
+matched: yes</title></rect><rect x="162.44" y="632.09" width="39.55" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Child_Billboard
 module: arm9
 addr: 0x0204bbd8
 size: 616 bytes
-matched: yes</title></rect><rect x="201.99" y="632.09" width="39.55" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204be40
+matched: yes</title></rect><rect x="201.99" y="632.09" width="39.55" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Billboard
 module: arm9
 addr: 0x0204be40
 size: 616 bytes
-matched: yes</title></rect><rect x="241.54" y="632.09" width="4.11" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c0a8
+matched: yes</title></rect><rect x="241.54" y="632.09" width="4.11" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_RotateY
 module: arm9
 addr: 0x0204c0a8
 size: 64 bytes
-matched: yes</title></rect><rect x="245.65" y="632.09" width="11.04" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c0e8
+matched: yes</title></rect><rect x="245.65" y="632.09" width="11.04" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_RotateXYZ
 module: arm9
 addr: 0x0204c0e8
 size: 172 bytes
-matched: yes</title></rect><rect x="256.70" y="632.09" width="11.81" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c194
+matched: yes</title></rect><rect x="256.70" y="632.09" width="11.81" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_DrawXZPlane
 module: arm9
 addr: 0x0204c194
 size: 184 bytes
-matched: yes</title></rect><rect x="268.51" y="632.09" width="11.81" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c24c
+matched: yes</title></rect><rect x="268.51" y="632.09" width="11.81" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_DrawXYPlane
 module: arm9
 addr: 0x0204c24c
 size: 184 bytes
-matched: yes</title></rect><rect x="280.33" y="632.09" width="41.09" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c304
+matched: yes</title></rect><rect x="280.33" y="632.09" width="41.09" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_EmitChildren
 module: arm9
 addr: 0x0204c304
 size: 640 bytes
-matched: yes</title></rect><rect x="5.00" y="642.54" width="105.75" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c584
+matched: yes</title></rect><rect x="5.00" y="642.54" width="105.75" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_EmitParticles
 module: arm9
 addr: 0x0204c584
 size: 2008 bytes
@@ -7865,15 +7865,15 @@ matched: yes</title></rect><rect x="263.49" y="642.54" width="2.95" height="12.7
 module: arm9
 addr: 0x0204d8b0
 size: 56 bytes
-matched: yes</title></rect><rect x="266.44" y="642.54" width="5.90" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d8e8
+matched: yes</title></rect><rect x="266.44" y="642.54" width="5.90" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLList_Erase
 module: arm9
 addr: 0x0204d8e8
 size: 112 bytes
-matched: yes</title></rect><rect x="272.33" y="642.54" width="3.79" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d958
+matched: yes</title></rect><rect x="272.33" y="642.54" width="3.79" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLList_PopFront
 module: arm9
 addr: 0x0204d958
 size: 72 bytes
-matched: yes</title></rect><rect x="276.13" y="642.54" width="4.21" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d9a0
+matched: yes</title></rect><rect x="276.13" y="642.54" width="4.21" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLList_PushFront
 module: arm9
 addr: 0x0204d9a0
 size: 80 bytes
