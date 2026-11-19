@@ -1345,7 +1345,8 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
 
     {
         SlotCharNos charNo = sMgBannerGfxSlotCharNo;
-        e->mOamCount = Mg_CopySpriteList(sMgBannerSprites[e->mFileIndex], e->mOam, charNo.v[e->mGfxSlot]);
+        e->mOamCount =
+            Mg_CopySpriteList(sMgBannerSprites[e->mFileIndex], e->mOam, charNo.v[e->mGfxSlot]);
     }
 
     if (sBannerSetupTable[e->mStyle])
