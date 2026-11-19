@@ -52,7 +52,7 @@
  *     0x020bc8bc..0x020bca44.
  *   - The scene is gMgScene, a dScMgBase_c; the states call its StartRound,
  *     CanEndState and OnNewRecord (slots 18-20) and read its mCredits.
- *     W2 preserves the two-word storage view of data_02086b58.
+ *     W2 preserves the two-word storage view of __ptmf_null.
  *   - mState doubles as the id passed to the scene's CanEndState and,
  *     through CallStartRound, to its StartRound.
  *
@@ -133,7 +133,7 @@ extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void func_02012dd0(void *c);
 extern void Mg_SetNextBanner(int);
 
-extern void (dMgState_c::*data_02086b58)(); /* __ptmf_null's address: the null member pointer */
+extern void (dMgState_c::*__ptmf_null)(); /* the null member pointer */
 extern dFdBrightness_c *gSceneFader;
 extern dWipe_c data_0209f61c;
 extern int sMgTopScreenYOffset;
@@ -779,7 +779,7 @@ void dMgState_c::Results_Update() {
         return;
     func_02012790(0x62);
     FreeGfxSlotsById(7);
-    mRender = data_02086b58;
+    mRender = __ptmf_null;
     RetryPromptWide_Enter();
 }
 
@@ -809,7 +809,7 @@ void dMgState_c::ResultsNewRecord_Update() {
         if (flag != 0) {
             FreeGfxSlotsById(7);
             func_02012790(0x62);
-            mRender = data_02086b58;
+            mRender = __ptmf_null;
             RetryPromptWide_Enter();
         }
     }
@@ -858,7 +858,7 @@ void dMgState_c::GameOver_Update() {
     }
     if (g->CanEndState(mState) == 0)
         return;
-    mRender = data_02086b58;
+    mRender = __ptmf_null;
     FreeGfxSlotsById(0x1d);
     if (Mg_IsNewRecord() != 0) {
         ResultsNewRecord_Enter();
@@ -895,7 +895,7 @@ void dMgState_c::Finished_Update() {
     }
     if (g->CanEndState(mState) == 0)
         return;
-    mRender = data_02086b58;
+    mRender = __ptmf_null;
     FreeGfxSlotsById(0x1d);
     if (Mg_IsNewRecord() != 0) {
         ResultsNewRecord_Enter();

@@ -52,8 +52,8 @@
  * methods, and the handlers and the three per-style tables name them as
  * &MgBanner::handler. mwccarm emits each such use as its own {function, 0}
  * .data constant, which is the run of 37 pmf_Banner_* records at
- * 0x020bc154..0x020bc27c just below this unit's .data; data_02086b58 is
- * __ptmf_null, the null member pointer the tables copy.
+ * 0x020bc154..0x020bc27c just below this unit's .data; __ptmf_null is
+ * the null member pointer the tables copy.
  *
  * Retired one-function sources (ROM address order):
  *   0x020b2c84  Mg_FreeBannerFiles
@@ -1909,7 +1909,7 @@ MgBanner::MgBanner() {
    sBannerUpdateTable, render sBannerDrawTable), and the words the
    29-entry file-id table copies. */
 extern "C" {
-extern ElemFn data_02086b58; /* __ptmf_null's address: the null member pointer */
+extern ElemFn __ptmf_null; /* the null member pointer */
 }
 
 namespace s20b955c {
@@ -1935,7 +1935,7 @@ OamAttr *sMgBannerSprites[MG_BANNER_FILE_NUM] = {
     sMgMsgTwoPairSpritesEnglish,   sMgMsgThreeCardSpritesEnglish,
     sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
     sMgMsgFiveCardSpritesEnglish};
-ElemFn sBannerSetupTable[13] = {data_02086b58,
+ElemFn sBannerSetupTable[13] = {__ptmf_null,
                                 &MgBanner::SetupSlideFromTop,
                                 &MgBanner::SetupSlideFromBottom,
                                 &MgBanner::SetupSlideFromLeft,
@@ -1948,7 +1948,7 @@ ElemFn sBannerSetupTable[13] = {data_02086b58,
                                 &MgBanner::SetupFall,
                                 &MgBanner::SetupDrop,
                                 &MgBanner::SetupNone};
-ElemFn sBannerUpdateTable[13] = {data_02086b58,
+ElemFn sBannerUpdateTable[13] = {__ptmf_null,
                                  &MgBanner::UpdateSlideFromTop,
                                  &MgBanner::UpdateSlideFromBottom,
                                  &MgBanner::UpdateSlideFromLeft,
@@ -1960,19 +1960,19 @@ ElemFn sBannerUpdateTable[13] = {data_02086b58,
                                  &MgBanner::UpdatePopSpin,
                                  &MgBanner::UpdateFall,
                                  &MgBanner::UpdateDrop,
-                                 data_02086b58};
-ElemFn sBannerDrawTable[13] = {data_02086b58,
-                               data_02086b58,
-                               data_02086b58,
-                               data_02086b58,
-                               data_02086b58,
+                                 __ptmf_null};
+ElemFn sBannerDrawTable[13] = {__ptmf_null,
+                               __ptmf_null,
+                               __ptmf_null,
+                               __ptmf_null,
+                               __ptmf_null,
                                &MgBanner::DrawZoomB,
                                &MgBanner::DrawPopSpinB,
                                &MgBanner::DrawZoomB,
                                &MgBanner::DrawZoomA,
                                &MgBanner::DrawPopSpinA,
                                &MgBanner::DrawSqueeze,
-                               data_02086b58,
+                               __ptmf_null,
                                &MgBanner::DrawLevelNumber};
 void *sMgBannerFiles[MG_BANNER_FILE_NUM];
 }
