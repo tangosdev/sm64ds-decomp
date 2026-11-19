@@ -81,7 +81,7 @@ s32 daObjBk_Rotebar_c::InitResources() {
 }
 
 s32 daObjBk_Rotebar_c::Behavior() {
-    if (DecIfAbove0_Byte((unsigned char *)&mPauseTimer) == 0) {
+    if (DecIfAbove0_Byte(&mPauseTimer) == 0) {
         mPrevAngle.y += 0x100;
         mAngle.y = mPrevAngle.y;
         mTurnSound = Sound::PlayLong(mTurnSound, 3, 0x88, mCamSpacePos, 0);
