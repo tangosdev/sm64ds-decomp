@@ -38,7 +38,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
        mExpireTimer countdown, Freeze the pin at mFrozenPos, PutInPlay the
        respawn, Burst the score pop. The Hit* sweep set walks one manager
        table each and returns the first solid contact. */
-    void PlayHitSound(int a1, int *vel);
+    void PlayHitSound(int a1, Vector2 *vel);
     void Freeze();                 /* pin at mFrozenPos, raise mIsFrozen and state3b */
     int HasHit();                  /* anyHit */
     int  IsOut();                  /* off-field flag */
@@ -143,11 +143,10 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                              Raised by Freeze (which also sets
                              state3b); only RestoreInitial ever clears it. */
     u8  pad_111[0x3]; /* 0x111-0x113 -- alignment */
-    s32 mLastPos0;       /* 0x114 -- the last position at which the ball counted
-                             as moving. SaveSnapshot refreshes the pair from
+    Vector2 mLastPos; /* 0x114 -- the last position at which the ball counted
+                             as moving. SaveSnapshot refreshes it from
                              mCurrent whenever the ball is in bounds and has
                              travelled 0x8000 or more from it. */
-    s32 mLastPos1;       /* 0x118 -- the z half. */
     s32 mStuckFrames;    /* 0x11c -- frames since that refresh: incremented when
                              the ball is out of bounds or has not moved 0x8000,
                              reset to 0 on a refresh, zeroed by RestoreInitial.

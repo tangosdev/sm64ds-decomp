@@ -25,7 +25,7 @@
  *
  * mReelOffset/mReelVel ARE ARRAYS OF Vector2, not flat scalars: the
  * constructor's vec_ctor names the element type, and Update indexes them with
- * a stride-8 loop, adding `[i].x` to mCurrent0 and `[i].y` to mCurrent1 to
+ * a stride-8 loop, adding `[i].x` to mCurrent.x and `[i].y` to mCurrent.y to
  * place each sprite.
  *
  * WHAT THE CLASS IS: a three-reel slot machine, and every name below comes
@@ -77,7 +77,7 @@ struct cMgSmartball_slot_c : cMgSmartball_object_c {
     void UpdateSpin();
 
     /* 0x034 -- per-reel render offset from mCurrent. Update adds .x/.y to
-       mCurrent0/mCurrent1; .y is the reel's scroll position, wrapped at
+       mCurrent.x/.y; .y is the reel's scroll position, wrapped at
        0x30000 by UpdateSpin. .x is zeroed by RestoreInitial and never
        written anywhere else. */
     Vector2 mReelOffset[3];

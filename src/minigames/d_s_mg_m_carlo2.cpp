@@ -355,7 +355,7 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
     mTarget.y = ((slot / 5) * 0x30) << 12;
     mSlot = slot;
 
-    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
+    Vec2_Sub(&delta, &mTarget, &mPos);
 
     mStep = delta;
     func_0203d630(&mStep, 0x124);

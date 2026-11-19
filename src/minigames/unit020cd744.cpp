@@ -624,9 +624,9 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
     }
 
     // The projections must straddle the line without lying on it together.
-    Vec2_Sub((int *)&testDirection, (int *)&lineEnd, (int *)&lineStart);
-    Vec2_Sub((int *)&firstOffset, (int *)&currentProjection, (int *)&lineStart);
-    Vec2_Sub((int *)&secondOffset, (int *)&previousProjection, (int *)&lineStart);
+    Vec2_Sub(&testDirection, &lineEnd, &lineStart);
+    Vec2_Sub(&firstOffset, &currentProjection, &lineStart);
+    Vec2_Sub(&secondOffset, &previousProjection, &lineStart);
     currentSide = func_0203d524(&testDirection, &firstOffset);
     previousSide = func_0203d524(&testDirection, &secondOffset);
     if (currentSide < -1)
@@ -640,11 +640,11 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
     if (currentSide * previousSide <= 0 && (currentSide != 0 || previousSide != 0)) {
 
         // Require an intersection strictly between the two line endpoints.
-        Vec2_Sub((int *)&movementDirection, (int *)&currentProjection, (int *)&previousProjection);
+        Vec2_Sub(&movementDirection, &currentProjection, &previousProjection);
         testDirection = movementDirection;
-        Vec2_Sub((int *)&toEnd, (int *)&lineEnd, (int *)&currentProjection);
+        Vec2_Sub(&toEnd, &lineEnd, &currentProjection);
         firstOffset = toEnd;
-        Vec2_Sub((int *)&toStart, (int *)&lineStart, (int *)&currentProjection);
+        Vec2_Sub(&toStart, &lineStart, &currentProjection);
         secondOffset = toStart;
         endSide = func_0203d524(&testDirection, &firstOffset);
         startSide = func_0203d524(&testDirection, &secondOffset);
@@ -1245,9 +1245,9 @@ int TrmpLine::PushJumper() {
         lineEnd.x = mHalfWidth;
         lineEnd.y = 0;
 
-        Vec2_Sub((int *)&edgeDirection, (int *)&lineStart, (int *)&lineEnd);
-        Vec2_Sub((int *)&firstOffset, (int *)&lineStart, (int *)&previousProjection);
-        Vec2_Sub((int *)&secondOffset, (int *)&lineStart, (int *)&currentProjection);
+        Vec2_Sub(&edgeDirection, &lineStart, &lineEnd);
+        Vec2_Sub(&firstOffset, &lineStart, &previousProjection);
+        Vec2_Sub(&secondOffset, &lineStart, &currentProjection);
 
         crossedLine = 0;
         previousSide = func_0203d524(&edgeDirection, &firstOffset);
@@ -1258,11 +1258,11 @@ int TrmpLine::PushJumper() {
         if (previousSide * currentSide <= 0 && previousSide > currentSide) {
             Vector2 edge, e1, e2;
             int startSide, endSide;
-            Vec2_Sub((int *)&edge, (int *)&previousProjection, (int *)&currentProjection);
+            Vec2_Sub(&edge, &previousProjection, &currentProjection);
             edgeDirection = edge;
-            Vec2_Sub((int *)&e1, (int *)&previousProjection, (int *)&lineStart);
+            Vec2_Sub(&e1, &previousProjection, &lineStart);
             firstOffset = e1;
-            Vec2_Sub((int *)&e2, (int *)&previousProjection, (int *)&lineEnd);
+            Vec2_Sub(&e2, &previousProjection, &lineEnd);
             secondOffset = e2;
 
             startSide = func_0203d524(&edgeDirection, &firstOffset);
@@ -1719,12 +1719,12 @@ void TrmpLine::CreateStartLineT1() {
 
 int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
     s16 deltaPixels[2];
-    int delta[2];
+    Vector2 delta;
     Vector2 direction;
-    int midpoint[2];
-    int scaledDirection[2];
-    int adjustedStart[2];
-    int adjustedEnd[2];
+    Vector2 midpoint;
+    Vector2 scaledDirection;
+    Vector2 adjustedStart;
+    Vector2 adjustedEnd;
     s16 testDirection[2];
     s16 firstOffset[2];
     s16 secondOffset[2];
@@ -1759,8 +1759,8 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
         return 0;
 
     deltaY = deltaPixels[1];
-    delta[0] = deltaX << 12;
-    delta[1] = deltaY << 12;
+    delta.x = deltaX << 12;
+    delta.y = deltaY << 12;
     direction.x = (deltaX >> 1) << 12;
     direction.y = (deltaY >> 1) << 12;
 
@@ -1773,8 +1773,8 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
         int x = (ax + bx) >> 1;
         int x12 = x << 12;
         int y12 = y << 12;
-        midpoint[0] = x12;
-        midpoint[1] = y12;
+        midpoint.x = x12;
+        midpoint.y = y12;
     }
 
     if (func_0203d434(&direction) == 0)
@@ -1788,22 +1788,22 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
             return 0;
     }
 
-    if (Vec2_Len((const Vector2 *)delta) < 0x30000) {
+    if (Vec2_Len(&delta) < 0x30000) {
         weightedYProduct = (long long)direction.y * 0xc00 + 0x800;
         weightedY = (int)(weightedYProduct >> 12);
-        scaledDirection[0] = direction.x;
-        scaledDirection[1] = direction.y;
-        scaledDirection[1] = weightedY;
-        scaledDirectionLength = Vec2_Len((const Vector2 *)scaledDirection);
+        scaledDirection.x = direction.x;
+        scaledDirection.y = direction.y;
+        scaledDirection.y = weightedY;
+        scaledDirectionLength = Vec2_Len(&scaledDirection);
         func_0203d630(&direction, FX_Div(0x18000, scaledDirectionLength));
 
-        func_0203d704(adjustedStart, midpoint, &direction.x);
-        Vec2_Sub(adjustedEnd, midpoint, &direction.x);
+        func_0203d704(&adjustedStart, &midpoint, &direction);
+        Vec2_Sub(&adjustedEnd, &midpoint, &direction);
 
-        startPoint[0] = (s16)(adjustedStart[0] >> 12);
-        startPoint[1] = (s16)(adjustedStart[1] >> 12);
-        endPoint[0] = (s16)(adjustedEnd[0] >> 12);
-        endPoint[1] = (s16)(adjustedEnd[1] >> 12);
+        startPoint[0] = (s16)(adjustedStart.x >> 12);
+        startPoint[1] = (s16)(adjustedStart.y >> 12);
+        endPoint[0] = (s16)(adjustedEnd.x >> 12);
+        endPoint[1] = (s16)(adjustedEnd.y >> 12);
     }
 
     candidateSlot = (char *)sTrmpLines;

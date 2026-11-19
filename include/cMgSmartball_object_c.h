@@ -55,12 +55,7 @@ struct cMgSmartball_object_c {
        child's HitTest calls on `this` (the receiver is never read). SetVel is
        the writer half of the mVelocity pair accessors -- the reader halves
        take (out, obj) order, so they stay free functions in the TU. */
-    int  PointInTriangle(int *p, int *q0, int *q1, int *q2);
-    /* Callers that keep a corner in a Vector2 pass its address; the layout
-       is the same pair of ints, so forward to the array body. */
-    int PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2) {
-        return PointInTriangle((int *)p, (int *)q0, (int *)q1, (int *)q2);
-    }
+    int PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2);
     void SetVel(int *v); /* mVel = v[0]/v[1] */
 
     /* The C spelling of this class gets no explicit vtable member because
@@ -74,17 +69,14 @@ struct cMgSmartball_object_c {
                                     mgr+0x4670/0x46bc the kinoko count and
                                     table, mgr+0x595c/0x595d two pause
                                     flags). */
-    s32 mCurrent0;    /* 0x008 -- restored from mInitial by RestoreInitial */
-    s32 mCurrent1;    /* 0x00c */
-    s32 mSnapshot0;   /* 0x010 -- written from mCurrent by SaveSnapshot */
-    s32 mSnapshot1;   /* 0x014 */
-    s32 mInitial0;    /* 0x018 -- constructor writes the same pair here and
-                          at mCurrent */
-    s32 mInitial1;    /* 0x01c */
+    Vector2 mCurrent;            /* 0x008 -- restored from mInitial by RestoreInitial */
+    Vector2 mSnapshot;           /* 0x010 -- written from mCurrent by SaveSnapshot */
+    Vector2 mInitial;            /* 0x018 -- constructor writes the same pair here and
+                                    at mCurrent */
     Vector2 mVel;     /* 0x020 -- constructor zeroes it. Velocity:
                           cMgSmartball_ball_c::SaveSnapshot does
-                          `mCurrent0 += mVel.x; mCurrent1 += mVel.y;`, and
-                          cMgSmartball_spring_c eases mCurrent1 back to rest
+                          `mCurrent.x += mVel.x; mCurrent.y += mVel.y;`, and
+                          cMgSmartball_spring_c eases mCurrent.y back to rest
                           with mVel.y. */
     s32 mRadius;      /* 0x028 -- constructor zeroes it and each child's own
                           constructor then writes its own constant (0x8000

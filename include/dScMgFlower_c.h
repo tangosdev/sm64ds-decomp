@@ -146,12 +146,10 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     Petal mPetals[PETAL_NUM]; /* 0x4f38, 0x20-byte records */
     FlowerFace mFace;   /* 0x51f8 -- Yoshi and the falling petals; the
                               FlowerFace_* helpers take its address */
-    u8 pad_5fa4[0x14];  /* 0x5fa4 -- untouched up to mCursorX */
-    s32 mCursorX;       /* 0x5fb8 -- fx32 stylus position, from the touch
+    u8 pad_5fa4[0x14];  /* 0x5fa4 -- untouched up to mCursor */
+    Vector2 mCursor;    /* 0x5fb8 -- fx32 stylus position, from the touch
                               sample gTouchInfo x/y << 12 */
-    s32 mCursorY;       /* 0x5fbc */
-    s32 mPrevCursorX;   /* 0x5fc0 -- last tick's mCursor; the drag delta */
-    s32 mPrevCursorY;   /* 0x5fc4 */
+    Vector2 mPrevCursor; /* 0x5fc0 -- last tick's mCursor; the drag delta */
     s32 mHeldPetal;     /* 0x5fc8 -- mPetals index being dragged, -1 for none */
     u8 mPetalToggle;    /* 0x5fcc -- flips on every petal pulled; picks the
                               "loves me" or "loves me not" banner and sound */

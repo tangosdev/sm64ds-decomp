@@ -460,7 +460,7 @@
       "ordinal": 62
     },
     {
-      "symbol": "_ZN19cMgSmartball_ball_c12PlayHitSoundEiPi",
+      "symbol": "_ZN19cMgSmartball_ball_c12PlayHitSoundEiP7Vector2",
       "address": "0x02111b90",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_02111b90.c",
@@ -635,7 +635,7 @@
       "ordinal": 87
     },
     {
-      "symbol": "_ZN21cMgSmartball_object_c15PointInTriangleEPiS0_S0_S0_",
+      "symbol": "_ZN21cMgSmartball_object_c15PointInTriangleEP7Vector2S1_S1_S1_",
       "address": "0x02114590",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov006_02114590.c",
@@ -663,7 +663,7 @@
       "ordinal": 91
     },
     {
-      "symbol": "_Z14GetObjectDeltaPvP21cMgSmartball_object_c",
+      "symbol": "_Z14GetObjectDeltaP7Vector2P21cMgSmartball_object_c",
       "address": "0x021146f4",
       "size": "0x00000018",
       "legacy_source": "src/func_ov006_021146f4.c",

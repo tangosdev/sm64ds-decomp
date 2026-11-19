@@ -1156,7 +1156,7 @@ void dMgCardObj_c::DealIn(const s32 *src)
     }
     mPos.y = GetOffscreenY();
     mPos.x = 0x80000;
-    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
+    Vec2_Sub(&delta, &mTarget, &mPos);
     func_0203d680(&step, &delta, 0x100);
     mStep = step;
     if (mStep.x < 0)
@@ -1178,7 +1178,7 @@ void dMgCardObj_c::Redeal()
     mPos = mTarget;
     mPos.y = GetOffscreenY();
     mPos.x = 0x80000;
-    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
+    Vec2_Sub(&delta, &mTarget, &mPos);
     func_0203d680(&step, &delta, 0x100);
     mStep = step;
     if (mStep.x < 0)

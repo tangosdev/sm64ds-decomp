@@ -16,7 +16,7 @@
  * RestoreInitial zeroes 0x36, sets 0x34 to 0x40 (the default target speed),
  * and (through the base call) zeroes mCurrent. Update never touches 0x34+
  * at all -- it only reads mAngle and the position
- * (mCurrent0/mCurrent1) to look up a rotation matrix and draw two sprites.
+ * (mCurrent) to look up a rotation matrix and draw two sprites.
  *
  * Update reads mAngle unsigned: it indexes a sine table with `>> 4` (lsr,
  * not asr).
@@ -24,7 +24,7 @@
  * THE TAIL FROM 0x38 TO 0x77 IS mVertices[8], eight (x, y) pairs. Both
  * readers are in d_s_mg_smartball.cpp: RebuildVerts (called from SaveSnapshot
  * and RestoreInitial) seeds the eight blade-tip offsets, rotates each by
- * mAngle and adds mCurrent0/mCurrent1; HitTest reads them back
+ * mAngle and adds mCurrent; HitTest reads them back
  * as the corners of four triangles -- {0,1,2}, {3,1,2}, {4,5,6}, {7,5,6} --
  * for its PointInTriangle tests. The wing models its own vertex ring the
  * same way (cMgSmartball_wing_c::mVertices).

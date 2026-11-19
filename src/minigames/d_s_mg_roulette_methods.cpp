@@ -334,7 +334,7 @@ s32 dScMgRoulette_c::Behavior() {
                 short tileType;
                 for (int i = 0; i < mRacerCount; i++) {
                     mRacers[i].tile =
-                        Roulette_TileAt(mRacers[i].targetX >> 12, mRacers[i].targetY >> 12);
+                        Roulette_TileAt(mRacers[i].target.x >> 12, mRacers[i].target.y >> 12);
                     tileType = mRacers[i].tile;
                     if (Roulette_IsPairTile(tileType) || Roulette_IsQuadTile(tileType)) {
                         RouletteRacer_SetVelocityToward(&mRacers[i], &sRouletteTiles[tileType].x,
@@ -608,9 +608,9 @@ void RouletteRacer_AimAt(RouletteRacer *racer, int *target) {
 void RouletteRacer_SetVelocityToward(RouletteRacer *racer, int *target, int scale) {
     Vector2 delta;
     Vector2 step;
-    racer->targetX = target[0];
-    racer->targetY = target[1];
-    Vec2_Sub(&delta.x, &racer->targetX, &racer->x);
+    racer->target.x = target[0];
+    racer->target.y = target[1];
+    Vec2_Sub(&delta, &racer->target, &racer->pos);
     func_0203d680(&step, &delta, scale);
     racer->step.x = step.x;
     racer->step.y = step.y;
@@ -622,9 +622,9 @@ void RouletteRacer_SetVelocityToward(RouletteRacer *racer, int *target, int scal
 
 void RouletteRacer_SetTarget(RouletteRacer *racer, int *target) {
     Vector2 delta;
-    racer->targetX = target[0];
-    racer->targetY = target[1];
-    Vec2_Sub(&delta.x, &racer->targetX, &racer->x);
+    racer->target.x = target[0];
+    racer->target.y = target[1];
+    Vec2_Sub(&delta, &racer->target, &racer->pos);
     racer->step.x = delta.x;
     racer->step.y = delta.y;
     if (func_0203d434(&racer->step)) {
@@ -641,8 +641,8 @@ void RouletteRacer_SetTarget(RouletteRacer *racer, int *target) {
    one centred on them; any other tile leaves the racer alone. */
 void RouletteRacer_MoveToTile(RouletteRacer *racer, int tile) {
     Vector2 goal;
-    goal.x = racer->targetX;
-    goal.y = racer->targetY;
+    goal.x = racer->target.x;
+    goal.y = racer->target.y;
     if ((unsigned short)(short)(tile - 0x23) <= 1) {
         Vector2 centre = sRouletteTiles[tile];
         int lo = centre.x + 0x8000;
@@ -695,10 +695,10 @@ void RouletteRacer_Init(RouletteRacer *racer) {
 
 void RouletteRacer_PlaceAtStart(int *racer) {
     RouletteRacer *t = (RouletteRacer *)racer;
-    t->x = 0xc000;
-    t->y = 0xc000;
-    t->targetX = t->x;
-    t->targetY = t->y;
+    t->pos.x = 0xc000;
+    t->pos.y = 0xc000;
+    t->target.x = t->pos.x;
+    t->target.y = t->pos.y;
     t->step.x = 0;
     t->step.y = 0;
     t->state = 6;
@@ -719,34 +719,34 @@ void RouletteRacer_Update(RouletteRacer *racer) {
 
     state = racer->state;
     if (state == 0 || state == 3) {
-        ApproachLinear(racer->x, racer->targetX, racer->step.x);
-        ApproachLinear(racer->y, racer->targetY, racer->step.y);
+        ApproachLinear(racer->pos.x, racer->target.x, racer->step.x);
+        ApproachLinear(racer->pos.y, racer->target.y, racer->step.y);
     }
 
     state = racer->state;
     if (state == 1) {
         RouletteRacer_CheckLandingA(racer);
-        ApproachLinear(racer->x, racer->targetX, racer->step.x);
-        ApproachLinear(racer->y, racer->targetY, racer->step.y);
+        ApproachLinear(racer->pos.x, racer->target.x, racer->step.x);
+        ApproachLinear(racer->pos.y, racer->target.y, racer->step.y);
     } else if (state == 7) {
-        s32 out[2];
-        ApproachLinear(racer->x, racer->targetX, racer->step.x);
-        ApproachLinear(racer->y, racer->targetY, racer->step.y);
-        Vec2_Sub(out, &racer->targetX, &racer->x);
-        if (out[0] != 0)
+        Vector2 out;
+        ApproachLinear(racer->pos.x, racer->target.x, racer->step.x);
+        ApproachLinear(racer->pos.y, racer->target.y, racer->step.y);
+        Vec2_Sub(&out, &racer->target, &racer->pos);
+        if (out.x != 0)
             return;
-        if (out[1] != 0)
+        if (out.y != 0)
             return;
         racer->state = 6;
         Mg_GainCredits(1);
     } else if (state == 4) {
-        s32 out[2];
-        ApproachLinear(racer->x, racer->targetX, racer->step.x);
-        ApproachLinear(racer->y, racer->targetY, racer->step.y);
-        Vec2_Sub(out, &racer->targetX, &racer->x);
-        if (out[0] != 0)
+        Vector2 out;
+        ApproachLinear(racer->pos.x, racer->target.x, racer->step.x);
+        ApproachLinear(racer->pos.y, racer->target.y, racer->step.y);
+        Vec2_Sub(&out, &racer->target, &racer->pos);
+        if (out.x != 0)
             return;
-        if (out[1] == 0) {
+        if (out.y == 0) {
             racer->hop = 0x14;
             racer->state = 5;
         }
@@ -755,7 +755,7 @@ void RouletteRacer_Update(RouletteRacer *racer) {
         s32 q;
         d = sMgCoinRiseFrames;
         q = -((racer->hop - (d >> 1)) << 12) / d - 0x600;
-        racer->y += (s32)((((s64)q << 14) + 0x800) >> 12);
+        racer->pos.y += (s32)((((s64)q << 14) + 0x800) >> 12);
         racer->hop -= 1;
         if (racer->hop == 0)
             racer->state = 6;
@@ -767,7 +767,7 @@ void RouletteRacer_Update(RouletteRacer *racer) {
             vec[1] = gTouchInfo[idx].y << 12;
             RouletteRacer_SetTarget(racer, vec);
         } else {
-            type = Roulette_TileAt(racer->targetX >> 12, racer->targetY >> 12);
+            type = Roulette_TileAt(racer->target.x >> 12, racer->target.y >> 12);
             racer->tile = type;
             if (type != 0x25) {
                 type = racer->tile;
@@ -783,8 +783,8 @@ void RouletteRacer_Update(RouletteRacer *racer) {
             sRouletteLandedRacer = 0;
             racer->state = 1;
         }
-        ApproachLinear(racer->x, racer->targetX, racer->step.x);
-        ApproachLinear(racer->y, racer->targetY, racer->step.y);
+        ApproachLinear(racer->pos.x, racer->target.x, racer->step.x);
+        ApproachLinear(racer->pos.y, racer->target.y, racer->step.y);
     }
 }
 
@@ -807,8 +807,8 @@ int RouletteRacer_CheckLandingA(RouletteRacer *racer) {
         return 0;
     }
     idx = gActivePlayerSlot;
-    dx = (racer->x >> 0xc) - gTouchInfo[idx].x;
-    dy = (racer->y >> 0xc) - gTouchInfo[idx].y;
+    dx = (racer->pos.x >> 0xc) - gTouchInfo[idx].x;
+    dy = (racer->pos.y >> 0xc) - gTouchInfo[idx].y;
     if ((((dx >= (-8)) && (dx < 8)) && (dy >= (-8))) && (dy < 8)) {
         Sound::PlayBank2_2D(0x15d);
         sRouletteLandedRacer = (void *)racer;
@@ -841,8 +841,8 @@ void RouletteRacer_CheckLandingB(RouletteRacer *racer) {
     if (racer->state != 1)
         return;
     idx = gActivePlayerSlot;
-    px = racer->x;
-    py = racer->y;
+    px = racer->pos.x;
+    py = racer->pos.y;
     touchX = gTouchInfo[idx].x;
     tile = racer->tile;
     px >>= 12;
@@ -864,7 +864,7 @@ void RouletteRacer_CheckLandingB(RouletteRacer *racer) {
 void RouletteRacer_Draw(RouletteRacer *racer) {
     if (racer->state == 6)
         return;
-    RenderOamBothScreens(sRouletteRacerSprites, racer->x >> 0xc, racer->y >> 0xc, -1,
+    RenderOamBothScreens(sRouletteRacerSprites, racer->pos.x >> 0xc, racer->pos.y >> 0xc, -1,
                          racer->priority, 0);
     racer->priority = 1;
 }

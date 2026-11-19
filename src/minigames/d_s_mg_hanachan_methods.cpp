@@ -739,7 +739,7 @@ void dScMgHanachan_c::Wiggler::StateMoveA() {
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
     func_0203d388(&va, ang[0]);
-    func_0203d704((int *)&vb, (int *)&seg[1], (int *)&va);
+    func_0203d704(&vb, &seg[1], &va);
     seg[0].x = vb.x;
     seg[0].y = vb.y;
     {
@@ -806,7 +806,7 @@ void dScMgHanachan_c::Wiggler::StateMoveB() {
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
     func_0203d388(&va, ang[0]);
-    func_0203d704((int *)&vb, (int *)&seg[1], (int *)&va);
+    func_0203d704(&vb, &seg[1], &va);
     seg[0].x = vb.x;
     seg[0].y = vb.y;
     cnt = timer;
@@ -1110,7 +1110,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsA() {
     for (; segmentIndex < 5; segmentIndex++) {
         previousIndex = segmentIndex - 1;
         previousSegment = &seg[previousIndex];
-        Vec2_Sub((int *)&segmentOffset, (int *)(&seg[segmentIndex]), (int *)previousSegment);
+        Vec2_Sub(&segmentOffset, &seg[segmentIndex], previousSegment);
         if (func_0203d434(&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, angleDifference;
             func_0203d630(&segmentOffset, stretch[segmentIndex] + segmentIndex * 0x2000);
@@ -1131,7 +1131,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsA() {
             angleCorrection = targetAngle - angleCorrection;
             func_0203d388(&segmentOffset, (s16)(bendExcess - angleCorrection));
         }
-        func_0203d704((int *)&segmentPosition, (int *)previousSegment, (int *)&segmentOffset);
+        func_0203d704(&segmentPosition, previousSegment, &segmentOffset);
         seg[segmentIndex].x = segmentPosition.x;
         seg[segmentIndex].y = segmentPosition.y;
     }
@@ -1144,7 +1144,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsA() {
     }
     func_0203d388(&headOffset, ang[0]);
     segments = seg;
-    func_0203d704((int *)&headPosition, (int *)(segments + 1), (int *)&headOffset);
+    func_0203d704(&headPosition, segments + 1, &headOffset);
     seg[0].x = headPosition.x;
     seg[0].y = headPosition.y;
 }
@@ -1161,7 +1161,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
 
     for (; segmentIndex >= 1; segmentIndex--) {
         previousIndex = segmentIndex - 1;
-        Vec2_Sub((int *)&segmentOffset, (int *)segment, (int *)(&seg[previousIndex]));
+        Vec2_Sub(&segmentOffset, segment, &seg[previousIndex]);
         if (func_0203d434(&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, targetAngle, bendExcess, angleDifference, currentAngle;
             {
@@ -1183,7 +1183,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
             currentAngle = ang[segmentIndex];
             func_0203d388(&segmentOffset, (s16)(bendExcess - (targetAngle - currentAngle)));
         }
-        Vec2_Sub((int *)&segmentPosition, (int *)segment, (int *)&segmentOffset);
+        Vec2_Sub(&segmentPosition, segment, &segmentOffset);
         seg[previousIndex].x = segmentPosition.x;
         seg[previousIndex].y = segmentPosition.y;
         segment--;
@@ -1192,7 +1192,10 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
     headOffset.x = 0;
     headOffset.y = -0x10000;
     func_0203d388(&headOffset, ang[0]);
-    func_0203d704((int *)&headPosition, (int *)((Vector2 *)(seg) + 1), (int *)&headOffset);
+    /* The (Vector2 *) spelling of the array decay is load-bearing: `&seg[1]`
+       and `seg + 1` both fold the head address differently (-1 instruction,
+       12 words moved, measured). */
+    func_0203d704(&headPosition, (Vector2 *)(seg) + 1, &headOffset);
     seg[0].x = headPosition.x;
     seg[0].y = headPosition.y;
 }
@@ -1208,7 +1211,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsC() {
 
     for (; segmentIndex < 5; segmentIndex++) {
         previousIndex = segmentIndex - 1;
-        Vec2_Sub((int *)&segmentOffset, (int *)segment, (int *)(&seg[previousIndex]));
+        Vec2_Sub(&segmentOffset, segment, &seg[previousIndex]);
         if (func_0203d434(&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, targetAngle, bendExcess, angleDifference, currentAngle;
             func_0203d630(&segmentOffset, (segmentIndex * 2 + 0x10) << 12);
@@ -1228,7 +1231,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsC() {
             currentAngle = ang[segmentIndex];
             func_0203d388(&segmentOffset, (s16)(bendExcess - (targetAngle - currentAngle)));
         }
-        func_0203d704((int *)&segmentPosition, (int *)(&seg[previousIndex]), (int *)&segmentOffset);
+        func_0203d704(&segmentPosition, &seg[previousIndex], &segmentOffset);
         seg[segmentIndex].x = segmentPosition.x;
         seg[segmentIndex].y = segmentPosition.y;
         segment++;
@@ -1237,7 +1240,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsC() {
     headOffset.y = -0x10000;
     ang[0] = (s16)(ang[1] + (((ang[1] - ang[2]) << 14) >> 16));
     func_0203d388(&headOffset, ang[0]);
-    func_0203d704((int *)&headPosition, (int *)((Vector2 *)(seg) + 1), (int *)&headOffset);
+    func_0203d704(&headPosition, (Vector2 *)(seg) + 1, &headOffset);
     seg[0].x = headPosition.x;
     seg[0].y = headPosition.y;
 }
@@ -1492,7 +1495,7 @@ void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
         segmentOffset.y = (segmentIndex * 2 + 0x10) << 12;
         func_0203d388(&segmentOffset, (s16)(ang[previousIndex] + 0x2000));
         ang[segmentIndex] = ang[previousIndex] + 0x2000;
-        func_0203d704((int *)&segmentPosition, (int *)(&seg[previousIndex]), (int *)&segmentOffset);
+        func_0203d704(&segmentPosition, &seg[previousIndex], &segmentOffset);
         seg[segmentIndex].x = segmentPosition.x;
         seg[segmentIndex].y = segmentPosition.y;
     }
@@ -1503,7 +1506,7 @@ void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
     headOffset.y = -0x10000;
     ang[0] = aim - 0x2000;
     func_0203d388(&headOffset, ang[0]);
-    func_0203d704((int *)&headPosition, (int *)(&seg[1]), (int *)&headOffset);
+    func_0203d704(&headPosition, &seg[1], &headOffset);
     seg[0].x = headPosition.x;
     seg[0].y = headPosition.y;
 

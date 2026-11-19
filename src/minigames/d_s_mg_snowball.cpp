@@ -1391,7 +1391,7 @@ s32 dScMgSnowball_c::Behavior() {
     int slot, held, touched;
     s16 heading;
     Vector2 steer;
-    int moved[2];
+    Vector2 moved;
     Vector3 part;
     int v, q, t;
     unsigned short m;
@@ -1495,8 +1495,8 @@ s32 dScMgSnowball_c::Behavior() {
 
         if (mBallSize >= 0x37000)
             mBallSize = 0x37000;
-        Vec2_Sub(moved, &mPos.x, &mSoundPos.x);
-        gate = Vec2_Len((const Vector2 *)moved) >= 0x30000;
+        Vec2_Sub(&moved, &mPos, &mSoundPos);
+        gate = Vec2_Len(&moved) >= 0x30000;
         if (gate != 0) {
             mSoundPos = mPos;
             if (mBallSize < 0x10000)

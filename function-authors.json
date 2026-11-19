@@ -26035,7 +26035,7 @@
     },
     "ov006:0x02111b90": {
       "author": "tangosdev",
-      "name": "_ZN19cMgSmartball_ball_c12PlayHitSoundEiPi"
+      "name": "_ZN19cMgSmartball_ball_c12PlayHitSoundEiP7Vector2"
     },
     "ov006:0x02111d4c": {
       "author": "tangosdev",
@@ -26135,7 +26135,7 @@
     },
     "ov006:0x02114590": {
       "author": "andrewboudreau",
-      "name": "_ZN21cMgSmartball_object_c15PointInTriangleEPiS0_S0_S0_"
+      "name": "_ZN21cMgSmartball_object_c15PointInTriangleEP7Vector2S1_S1_S1_"
     },
     "ov006:0x021146ac": {
       "author": "tangosdev",
@@ -26151,7 +26151,7 @@
     },
     "ov006:0x021146f4": {
       "author": "ruspecial",
-      "name": "_Z14GetObjectDeltaPvP21cMgSmartball_object_c"
+      "name": "_Z14GetObjectDeltaP7Vector2P21cMgSmartball_object_c"
     },
     "ov006:0x0211470c": {
       "author": "tangosdev",

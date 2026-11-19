@@ -197,7 +197,7 @@ extern void Mg_RestoreMusic(void);
 extern void Mg_SetSharedState(int);
 }
 
-void GetObjectDelta(void *a, cMgSmartball_object_c *b);
+void GetObjectDelta(Vector2 *a, cMgSmartball_object_c *b);
 
 #define LP(e) ((int *)(e))
 
@@ -281,111 +281,112 @@ void cMgSmartball_wing_c::RebuildVerts() {
     func_0203d388((Vector2 *)&mVertices[6], mAngle);
     func_0203d388((Vector2 *)&mVertices[7], mAngle);
 
-    mVertices[0].x += mCurrent0 - 0x10000;
-    mVertices[0].y += mCurrent1 + 0x28000;
-    mVertices[1].x += mCurrent0 - 0x10000;
-    mVertices[1].y += mCurrent1 + 0x28000;
-    mVertices[2].x += mCurrent0 - 0x10000;
-    mVertices[2].y += mCurrent1 + 0x28000;
-    mVertices[3].x += mCurrent0 - 0x10000;
-    mVertices[3].y += mCurrent1 + 0x28000;
-    mVertices[4].x += mCurrent0 + 0x10000;
-    mVertices[4].y += mCurrent1 + 0x28000;
-    mVertices[5].x += mCurrent0 + 0x10000;
-    mVertices[5].y += mCurrent1 + 0x28000;
-    mVertices[6].x += mCurrent0 + 0x10000;
-    mVertices[6].y += mCurrent1 + 0x28000;
-    mVertices[7].x += mCurrent0 + 0x10000;
-    mVertices[7].y += mCurrent1 + 0x28000;
+    mVertices[0].x += mCurrent.x - 0x10000;
+    mVertices[0].y += mCurrent.y + 0x28000;
+    mVertices[1].x += mCurrent.x - 0x10000;
+    mVertices[1].y += mCurrent.y + 0x28000;
+    mVertices[2].x += mCurrent.x - 0x10000;
+    mVertices[2].y += mCurrent.y + 0x28000;
+    mVertices[3].x += mCurrent.x - 0x10000;
+    mVertices[3].y += mCurrent.y + 0x28000;
+    mVertices[4].x += mCurrent.x + 0x10000;
+    mVertices[4].y += mCurrent.y + 0x28000;
+    mVertices[5].x += mCurrent.x + 0x10000;
+    mVertices[5].y += mCurrent.y + 0x28000;
+    mVertices[6].x += mCurrent.x + 0x10000;
+    mVertices[6].y += mCurrent.y + 0x28000;
+    mVertices[7].x += mCurrent.x + 0x10000;
+    mVertices[7].y += mCurrent.y + 0x28000;
 }
 
 int cMgSmartball_wing_c::HitTest(int *point) {
     int bodyOffset[2];
-    int triangle0Point[2], triangle0A[2], triangle0B[2], triangle0C[2];
-    int triangle1Point[2], triangle1A[2], triangle1B[2], triangle1C[2];
-    int triangle2Point[2], triangle2A[2], triangle2B[2], triangle2C[2];
-    int triangle3Point[2], triangle3A[2], triangle3B[2], triangle3C[2];
+    Vector2 triangle0Point, triangle0A, triangle0B, triangle0C;
+    Vector2 triangle1Point, triangle1A, triangle1B, triangle1C;
+    Vector2 triangle2Point, triangle2A, triangle2B, triangle2C;
+    Vector2 triangle3Point, triangle3A, triangle3B, triangle3C;
 
-    if (mTriggerCount <= 1 && point[1] < mCurrent1 + 0x8000) {
+    if (mTriggerCount <= 1 && point[1] < mCurrent.y + 0x8000) {
         bodyOffset[0] = point[0];
         bodyOffset[1] = point[1];
-        bodyOffset[0] -= mCurrent0;
-        bodyOffset[1] -= mCurrent1;
+        bodyOffset[0] -= mCurrent.x;
+        bodyOffset[1] -= mCurrent.y;
         bodyOffset[1] -= 0x8000;
         if (func_0203d5bc(bodyOffset) < 0x100000)
             return 1;
     }
 
-    triangle0Point[0] = point[0];
-    triangle0Point[1] = point[1];
-    triangle0A[0] = mVertices[0].x;
-    triangle0A[1] = mVertices[0].y;
-    triangle0B[0] = mVertices[1].x;
-    triangle0B[1] = mVertices[1].y;
-    triangle0C[0] = mVertices[2].x;
-    triangle0C[1] = mVertices[2].y;
-    if (PointInTriangle(triangle0Point, triangle0A, triangle0B, triangle0C))
+    triangle0Point.x = point[0];
+    triangle0Point.y = point[1];
+    triangle0A.x = mVertices[0].x;
+    triangle0A.y = mVertices[0].y;
+    triangle0B.x = mVertices[1].x;
+    triangle0B.y = mVertices[1].y;
+    triangle0C.x = mVertices[2].x;
+    triangle0C.y = mVertices[2].y;
+    if (PointInTriangle(&triangle0Point, &triangle0A, &triangle0B, &triangle0C))
         return 1;
 
-    triangle1Point[0] = point[0];
-    triangle1Point[1] = point[1];
-    triangle1A[0] = mVertices[1].x;
-    triangle1A[1] = mVertices[1].y;
-    triangle1B[0] = mVertices[2].x;
-    triangle1B[1] = mVertices[2].y;
-    triangle1C[0] = mVertices[3].x;
-    triangle1C[1] = mVertices[3].y;
-    if (PointInTriangle(triangle1Point, triangle1A, triangle1B, triangle1C))
+    triangle1Point.x = point[0];
+    triangle1Point.y = point[1];
+    triangle1A.x = mVertices[1].x;
+    triangle1A.y = mVertices[1].y;
+    triangle1B.x = mVertices[2].x;
+    triangle1B.y = mVertices[2].y;
+    triangle1C.x = mVertices[3].x;
+    triangle1C.y = mVertices[3].y;
+    if (PointInTriangle(&triangle1Point, &triangle1A, &triangle1B, &triangle1C))
         return 1;
 
-    triangle2Point[0] = point[0];
-    triangle2Point[1] = point[1];
-    triangle2A[0] = mVertices[4].x;
-    triangle2A[1] = mVertices[4].y;
-    triangle2B[0] = mVertices[5].x;
-    triangle2B[1] = mVertices[5].y;
-    triangle2C[0] = mVertices[6].x;
-    triangle2C[1] = mVertices[6].y;
-    if (PointInTriangle(triangle2Point, triangle2A, triangle2B, triangle2C))
+    triangle2Point.x = point[0];
+    triangle2Point.y = point[1];
+    triangle2A.x = mVertices[4].x;
+    triangle2A.y = mVertices[4].y;
+    triangle2B.x = mVertices[5].x;
+    triangle2B.y = mVertices[5].y;
+    triangle2C.x = mVertices[6].x;
+    triangle2C.y = mVertices[6].y;
+    if (PointInTriangle(&triangle2Point, &triangle2A, &triangle2B, &triangle2C))
         return 1;
 
-    triangle3Point[0] = point[0];
-    triangle3Point[1] = point[1];
-    triangle3A[0] = mVertices[5].x;
-    triangle3A[1] = mVertices[5].y;
-    triangle3B[0] = mVertices[6].x;
-    triangle3B[1] = mVertices[6].y;
-    triangle3C[0] = mVertices[7].x;
-    triangle3C[1] = mVertices[7].y;
-    return PointInTriangle(triangle3Point, triangle3A, triangle3B, triangle3C);
+    triangle3Point.x = point[0];
+    triangle3Point.y = point[1];
+    triangle3A.x = mVertices[5].x;
+    triangle3A.y = mVertices[5].y;
+    triangle3B.x = mVertices[6].x;
+    triangle3B.y = mVertices[6].y;
+    triangle3C.x = mVertices[7].x;
+    triangle3C.y = mVertices[7].y;
+    return PointInTriangle(&triangle3Point, &triangle3A, &triangle3B, &triangle3C);
 }
 
 /* Slot 1: draws the wing's base sprites and its two mirrored blades. */
 void cMgSmartball_wing_c::Update() {
     if (mTriggerCount <= 1) {
-        Mg_RenderSpriteBoth(sSmartballWingBodySprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
-        Mg_RenderSpriteBoth(sSmartballWingBodySprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
+        Mg_RenderSpriteBoth(sSmartballWingBodySprites[0], mCurrent.x >> 12, mCurrent.y >> 12, -1,
+                            1);
+        Mg_RenderSpriteBoth(sSmartballWingBodySprites[1], mCurrent.x >> 12, (mCurrent.y >> 12) + 5,
                             -1, 2);
     }
-    OAM::Render(0, (OamAttr *)sSmartballWingSprites[0], (mCurrent0 >> 12) - 16,
-                (mCurrent1 >> 12) + 0x118, -1, 1, 0x1000, 0x1000,
+    OAM::Render(0, (OamAttr *)sSmartballWingSprites[0], (mCurrent.x >> 12) - 16,
+                (mCurrent.y >> 12) + 0x118, -1, 1, 0x1000, 0x1000,
                 (unsigned short)(short)(-0x4000 - mAngle), -1);
-    OAM::Render(0, (OamAttr *)sSmartballWingSprites[0], (mCurrent0 >> 12) + 16,
-                (mCurrent1 >> 12) + 0x118, -1, 1, 0x1000, 0x1000,
+    OAM::Render(0, (OamAttr *)sSmartballWingSprites[0], (mCurrent.x >> 12) + 16,
+                (mCurrent.y >> 12) + 0x118, -1, 1, 0x1000, 0x1000,
                 (unsigned short)(short)(mAngle - 0x4000), -1);
-    OAM::Render(0, (OamAttr *)sSmartballWingSprites[1], (mCurrent0 >> 12) - 16,
-                (mCurrent1 >> 12) + 0x11d, -1, 2, 0x1000, 0x1000,
+    OAM::Render(0, (OamAttr *)sSmartballWingSprites[1], (mCurrent.x >> 12) - 16,
+                (mCurrent.y >> 12) + 0x11d, -1, 2, 0x1000, 0x1000,
                 (unsigned short)(short)(-0x4000 - mAngle), -1);
-    OAM::Render(0, (OamAttr *)sSmartballWingSprites[1], (mCurrent0 >> 12) + 16,
-                (mCurrent1 >> 12) + 0x11d, -1, 2, 0x1000, 0x1000,
+    OAM::Render(0, (OamAttr *)sSmartballWingSprites[1], (mCurrent.x >> 12) + 16,
+                (mCurrent.y >> 12) + 0x11d, -1, 2, 0x1000, 0x1000,
                 (unsigned short)(short)(mAngle - 0x4000), -1);
 }
 
 /* Slot 0: eases the flap angle toward its 0x3000 stop and rebuilds the
  * collision vertices. */
 void cMgSmartball_wing_c::SaveSnapshot() {
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     if (mAngleSettled != 1 && mTriggerCount > 0) {
         if (mAngle < 0x3000) {
             mAngle += 0x200;
@@ -427,8 +428,8 @@ int cMgSmartball_pushswitch_c::BallsClear() {
             int *o2 = (i >= 13) ? 0 : (int *)mpManager->mpBalls[i];
             CopyObjectPos(&pos, o2);
             delta = pos;
-            delta.x -= mCurrent0;
-            delta.y -= mCurrent1;
+            delta.x -= mCurrent.x;
+            delta.y -= mCurrent.y;
             if (Vec2_Len(&delta) < 0x12000)
                 return 0;
         }
@@ -440,22 +441,22 @@ int cMgSmartball_pushswitch_c::CheckBall(int *p) {
     int d[2];
     d[0] = p[0];
     d[1] = p[1];
-    d[0] -= mCurrent0;
-    d[1] -= mCurrent1;
+    d[0] -= mCurrent.x;
+    d[1] -= mCurrent.y;
     if (mTriggered) {
-        if (p[1] >= mCurrent1 + 0x8000)
+        if (p[1] >= mCurrent.y + 0x8000)
             return 0;
         d[1] -= 0x8000;
         return func_0203d5bc(d) < 0x40000;
     }
-    if (p[1] > mCurrent1) {
-        if (p[0] >= mCurrent0 - 0x8000 && p[0] < mCurrent0 + 0x8000 && p[1] < mCurrent1 + 0xa000)
+    if (p[1] > mCurrent.y) {
+        if (p[0] >= mCurrent.x - 0x8000 && p[0] < mCurrent.x + 0x8000 && p[1] < mCurrent.y + 0xa000)
             return 1;
         return 0;
     }
     if (func_0203d5bc(d) >= 0x40000)
         return 0;
-    if (p[0] >= mCurrent0 - 0x4000 && p[0] < mCurrent0 + 0x4000) {
+    if (p[0] >= mCurrent.x - 0x4000 && p[0] < mCurrent.x + 0x4000) {
         mpManager->mpSlot->StartSpin();
         mTriggered = 1;
         mReleaseDelay = 10;
@@ -466,16 +467,16 @@ int cMgSmartball_pushswitch_c::CheckBall(int *p) {
 
 /* Slot 1: draws the switch and the plate under it. */
 void cMgSmartball_pushswitch_c::Update() {
-    RenderOamBothScreens(sSmartballPushSwitchSprites[mTriggered], mCurrent0 >> 12, mCurrent1 >> 12,
-                         -1, 1, 0);
-    RenderOamBothScreens(sSmartballPushSwitchSprites[2], mCurrent0 >> 12, (mCurrent1 >> 12) + 5, -1,
-                         2, 0);
+    RenderOamBothScreens(sSmartballPushSwitchSprites[mTriggered], mCurrent.x >> 12,
+                         mCurrent.y >> 12, -1, 1, 0);
+    RenderOamBothScreens(sSmartballPushSwitchSprites[2], mCurrent.x >> 12, (mCurrent.y >> 12) + 5,
+                         -1, 2, 0);
 }
 
 /* Slot 0: counts down and releases the switch once no ball is on it. */
 void cMgSmartball_pushswitch_c::SaveSnapshot() {
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     if (mReleaseDelay > 0) {
         mReleaseDelay -= 1;
     }
@@ -527,19 +528,24 @@ void cMgSmartball_board_c::Update() {
             case 2:
                 if (GetOwnerLanguage() == 5)
                     Mg_RenderSpriteBoth(sSmartballLineSpritesSpanish[0],
-                                        (i - 1) * 0x18 + (mCurrent0 >> 12), mCurrent1 >> 12, -1, 1);
+                                        (i - 1) * 0x18 + (mCurrent.x >> 12), mCurrent.y >> 12, -1,
+                                        1);
                 else if (GetOwnerLanguage() == 4)
                     Mg_RenderSpriteBoth(sSmartballLineSpritesItalian[0],
-                                        (i - 1) * 0x18 + (mCurrent0 >> 12), mCurrent1 >> 12, -1, 1);
+                                        (i - 1) * 0x18 + (mCurrent.x >> 12), mCurrent.y >> 12, -1,
+                                        1);
                 else if (GetOwnerLanguage() == 3)
                     Mg_RenderSpriteBoth(sSmartballLineSpritesGerman[0],
-                                        (i - 1) * 0x18 + (mCurrent0 >> 12), mCurrent1 >> 12, -1, 1);
+                                        (i - 1) * 0x18 + (mCurrent.x >> 12), mCurrent.y >> 12, -1,
+                                        1);
                 else if (GetOwnerLanguage() == 2)
                     Mg_RenderSpriteBoth(sSmartballLineSpritesFrench[0],
-                                        (i - 1) * 0x18 + (mCurrent0 >> 12), mCurrent1 >> 12, -1, 1);
+                                        (i - 1) * 0x18 + (mCurrent.x >> 12), mCurrent.y >> 12, -1,
+                                        1);
                 else
                     Mg_RenderSpriteBoth(sSmartballLineSprites[0],
-                                        (i - 1) * 0x18 + (mCurrent0 >> 12), mCurrent1 >> 12, -1, 1);
+                                        (i - 1) * 0x18 + (mCurrent.x >> 12), mCurrent.y >> 12, -1,
+                                        1);
                 mCellHighlight[i] = 1;
                 mCellHighlight[i + 3] = 1;
                 mCellHighlight[i + 6] = 1;
@@ -548,60 +554,60 @@ void cMgSmartball_board_c::Update() {
             case 4:
             case 5:
                 if (GetOwnerLanguage() == 5)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesSpanish[1], mCurrent0 >> 12,
-                                        (i - 4) * 0x18 + (mCurrent1 >> 12), -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesSpanish[1], mCurrent.x >> 12,
+                                        (i - 4) * 0x18 + (mCurrent.y >> 12), -1, 1);
                 else if (GetOwnerLanguage() == 4)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesItalian[1], mCurrent0 >> 12,
-                                        (i - 4) * 0x18 + (mCurrent1 >> 12), -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesItalian[1], mCurrent.x >> 12,
+                                        (i - 4) * 0x18 + (mCurrent.y >> 12), -1, 1);
                 else if (GetOwnerLanguage() == 3)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesGerman[1], mCurrent0 >> 12,
-                                        (i - 4) * 0x18 + (mCurrent1 >> 12), -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesGerman[1], mCurrent.x >> 12,
+                                        (i - 4) * 0x18 + (mCurrent.y >> 12), -1, 1);
                 else if (GetOwnerLanguage() == 2)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesFrench[1], mCurrent0 >> 12,
-                                        (i - 4) * 0x18 + (mCurrent1 >> 12), -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesFrench[1], mCurrent.x >> 12,
+                                        (i - 4) * 0x18 + (mCurrent.y >> 12), -1, 1);
                 else
-                    Mg_RenderSpriteBoth(sSmartballLineSprites[1], mCurrent0 >> 12,
-                                        (i - 4) * 0x18 + (mCurrent1 >> 12), -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSprites[1], mCurrent.x >> 12,
+                                        (i - 4) * 0x18 + (mCurrent.y >> 12), -1, 1);
                 mCellHighlight[(i - 3) * 3] = 1;
                 mCellHighlight[(i - 3) * 3 + 1] = 1;
                 mCellHighlight[(i - 3) * 3 + 2] = 1;
                 break;
             case 6:
                 if (GetOwnerLanguage() == 5)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesSpanish[2], mCurrent0 >> 12,
-                                        mCurrent1 >> 12, -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesSpanish[2], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 else if (GetOwnerLanguage() == 4)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesItalian[2], mCurrent0 >> 12,
-                                        mCurrent1 >> 12, -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesItalian[2], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 else if (GetOwnerLanguage() == 3)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesGerman[2], mCurrent0 >> 12,
-                                        mCurrent1 >> 12, -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesGerman[2], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 else if (GetOwnerLanguage() == 2)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesFrench[2], mCurrent0 >> 12,
-                                        mCurrent1 >> 12, -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesFrench[2], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 else
-                    Mg_RenderSpriteBoth(sSmartballLineSprites[2], mCurrent0 >> 12, mCurrent1 >> 12,
-                                        -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSprites[2], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 mCellHighlight[0] = 1;
                 mCellHighlight[4] = 1;
                 mCellHighlight[8] = 1;
                 break;
             case 7:
                 if (GetOwnerLanguage() == 5)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesSpanish[3], mCurrent0 >> 12,
-                                        mCurrent1 >> 12, -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesSpanish[3], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 else if (GetOwnerLanguage() == 4)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesItalian[3], mCurrent0 >> 12,
-                                        mCurrent1 >> 12, -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesItalian[3], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 else if (GetOwnerLanguage() == 3)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesGerman[3], mCurrent0 >> 12,
-                                        mCurrent1 >> 12, -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesGerman[3], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 else if (GetOwnerLanguage() == 2)
-                    Mg_RenderSpriteBoth(sSmartballLineSpritesFrench[3], mCurrent0 >> 12,
-                                        mCurrent1 >> 12, -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSpritesFrench[3], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 else
-                    Mg_RenderSpriteBoth(sSmartballLineSprites[3], mCurrent0 >> 12, mCurrent1 >> 12,
-                                        -1, 1);
+                    Mg_RenderSpriteBoth(sSmartballLineSprites[3], mCurrent.x >> 12,
+                                        mCurrent.y >> 12, -1, 1);
                 mCellHighlight[2] = 1;
                 mCellHighlight[4] = 1;
                 mCellHighlight[6] = 1;
@@ -622,11 +628,11 @@ void cMgSmartball_board_c::Update() {
             idx = j + 2;
 
         if (ang == 0 || ang == 0x8000) {
-            Mg_RenderSpriteBoth(sSmartballCellSprites[idx], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1);
+            Mg_RenderSpriteBoth(sSmartballCellSprites[idx], (j % 3 - 1) * 24 + (mCurrent.x >> 12),
+                                (j / 3 - 1) * 0x18 + (mCurrent.y >> 12), -1, 1);
         } else if ((ang >= 0x3c00 && ang <= 0x4400) || (ang >= -0x3c00 && ang <= -0x4400)) {
-            Mg_RenderSpriteBoth(sSmartballCellSprites[1], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1);
+            Mg_RenderSpriteBoth(sSmartballCellSprites[1], (j % 3 - 1) * 24 + (mCurrent.x >> 12),
+                                (j / 3 - 1) * 0x18 + (mCurrent.y >> 12), -1, 1);
         } else {
             Matrix2x2 mtx;
 
@@ -637,10 +643,10 @@ void cMgSmartball_board_c::Update() {
             mtx.m01 = 0;
             mtx.m10 = 0;
             mtx.m11 = 0x1000;
-            RenderOamBothScreens(sSmartballCellSprites[idx], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, &mtx);
-            RenderOamBothScreens(sSmartballCellSprites[0], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, &mtx);
+            RenderOamBothScreens(sSmartballCellSprites[idx], (j % 3 - 1) * 24 + (mCurrent.x >> 12),
+                                 (j / 3 - 1) * 0x18 + (mCurrent.y >> 12), -1, 1, &mtx);
+            RenderOamBothScreens(sSmartballCellSprites[0], (j % 3 - 1) * 24 + (mCurrent.x >> 12),
+                                 (j / 3 - 1) * 0x18 + (mCurrent.y >> 12), -1, 1, &mtx);
         }
     }
 
@@ -888,8 +894,8 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     if (count > 0) {
         score = sSmartballCellScores[0];
         do {
-            d[0] = mCurrent0;
-            d[1] = mCurrent1;
+            d[0] = mCurrent.x;
+            d[1] = mCurrent.y;
             mpManager->EmitScore(d, score, 0, 1);
             mpManager->CountLine(1);
             m++;
@@ -897,8 +903,8 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     }
     if (bingo != 1)
         return;
-    e[0] = mCurrent0;
-    e[1] = mCurrent1;
+    e[0] = mCurrent.x;
+    e[1] = mCurrent.y;
     mpManager->EmitScore(e, 0x2710, 0x3c, 1);
     mpManager->CountBingo();
     mpManager->EndRound();
@@ -930,8 +936,8 @@ void cMgSmartball_board_c::SaveSnapshot() {
     Vector2 b;
     Vector2 d;
 
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     if (mFanfareTimer > 0) {
         mFanfareTimer--;
         if (mFanfareTimer > 0 && mFanfareTimer % 60 == 0) {
@@ -973,8 +979,8 @@ void cMgSmartball_board_c::SaveSnapshot() {
             if (v.x >= lo && v.x < hi) {
                 if (GetObjBoard(mpManager, n)->ArmExpire(0x14)) {
                     if (mCells[slot] == 0) {
-                        SetV2(&a, mCurrent0 + ((sSmartballCellOrder[j] % 3 - 1) * 0x18 << 12),
-                              mCurrent1 + ((sSmartballCellOrder[j] / 3 - 1) * 0x18 << 12));
+                        SetV2(&a, mCurrent.x + ((sSmartballCellOrder[j] % 3 - 1) * 0x18 << 12),
+                              mCurrent.y + ((sSmartballCellOrder[j] / 3 - 1) * 0x18 << 12));
                         mpManager->EmitSparks(&a.x, 0);
                         SetV2(&b, (j * 0x18 + 0x10) << 12, 0x78000);
                         mpManager->EmitSparks(&b.x, 0);
@@ -1158,8 +1164,8 @@ void cMgSmartball_slot_c::UpdateSpin() {
             switch (first) {
             case 0: {
                 Vector2 a;
-                a.x = mCurrent0;
-                a.y = mCurrent1;
+                a.x = mCurrent.x;
+                a.y = mCurrent.y;
                 mpManager->EmitScore(&a.x, 0x1388, 0, 1);
 
                 mpManager->CountAward(0);
@@ -1168,8 +1174,8 @@ void cMgSmartball_slot_c::UpdateSpin() {
             }
             case 0x10000: {
                 Vector2 b;
-                b.x = mCurrent0;
-                b.y = mCurrent1;
+                b.x = mCurrent.x;
+                b.y = mCurrent.y;
                 mpManager->EmitScore(&b.x, 0x1f40, 0, 1);
 
                 mpManager->CountAward(1);
@@ -1178,8 +1184,8 @@ void cMgSmartball_slot_c::UpdateSpin() {
             }
             case 0x20000: {
                 Vector2 d;
-                d.x = mCurrent0;
-                d.y = mCurrent1;
+                d.x = mCurrent.x;
+                d.y = mCurrent.y;
                 mpManager->EmitScore(&d.x, 0x2710, 0, 1);
 
                 mpManager->CountAward(2);
@@ -1207,8 +1213,8 @@ void cMgSmartball_slot_c::Update() {
     int x;
     int xo;
     for (i = 0, x = 0; i < 3; i++, x += 0x18) {
-        Mg_RenderSpriteBoth(sSmartballSlotFrameSprite, inline_fn(mCurrent0 >> 12, x - 24),
-                            mCurrent1 >> 12, -1, 2);
+        Mg_RenderSpriteBoth(sSmartballSlotFrameSprite, inline_fn(mCurrent.x >> 12, x - 24),
+                            mCurrent.y >> 12, -1, 2);
     }
 
     i = 0;
@@ -1216,17 +1222,17 @@ void cMgSmartball_slot_c::Update() {
     do {
         xo = (x - 0x18) & 0xFFFFFFFFFFFFFFFF;
         Mg_RenderSpriteBoth(sSmartballSlotReelEndSprite,
-                            inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
-                            inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12), -1, 3);
+                            inline_fn(inline_fn(mCurrent.x >> 12, mReelOffset[i].x >> 12), xo),
+                            inline_fn(mCurrent.y >> 12, mReelOffset[i].y >> 12), -1, 3);
         Mg_RenderSpriteBoth(sSmartballSlotReelLowerSprite,
-                            inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
-                            inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x10, -1, 3);
+                            inline_fn(inline_fn(mCurrent.x >> 12, mReelOffset[i].x >> 12), xo),
+                            inline_fn(mCurrent.y >> 12, mReelOffset[i].y >> 12) - 0x10, -1, 3);
         Mg_RenderSpriteBoth(sSmartballSlotReelUpperSprite,
-                            inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
-                            inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x20, -1, 3);
+                            inline_fn(inline_fn(mCurrent.x >> 12, mReelOffset[i].x >> 12), xo),
+                            inline_fn(mCurrent.y >> 12, mReelOffset[i].y >> 12) - 0x20, -1, 3);
         Mg_RenderSpriteBoth(sSmartballSlotReelEndSprite,
-                            inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo),
-                            inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x30, -1, 3);
+                            inline_fn(inline_fn(mCurrent.x >> 12, mReelOffset[i].x >> 12), xo),
+                            inline_fn(mCurrent.y >> 12, mReelOffset[i].y >> 12) - 0x30, -1, 3);
         x += 0x18;
         i++;
     } while (i < 3);
@@ -1235,8 +1241,8 @@ void cMgSmartball_slot_c::Update() {
 /* Slot 0: runs the spin cooldown, the queued spins and the stop timer, then
  * steps the reels. */
 void cMgSmartball_slot_c::SaveSnapshot() {
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     if (mSpinCooldown > 0) {
         mSpinCooldown -= 1;
     }
@@ -1294,29 +1300,29 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
     t = v->x;
     d.x = t;
     d.y = v->y;
-    d.x -= mCurrent0;
-    d.y -= mCurrent1;
+    d.x -= mCurrent.x;
+    d.y -= mCurrent.y;
     if (mActionTimer <= 0) {
-        t = mCurrent1;
+        t = mCurrent.y;
         if (v->y >= t) {
             if (func_0203d5bc(&d.x) >= 0x190000)
                 return 0;
             return func_0203d5bc(&d.x) >= 0xc4000;
         }
-        if (v->x >= mCurrent0 - 0x14000 && v->x < mCurrent0 + 0x14000 && v->y >= t - 0xc000) {
-            if (v->x >= mCurrent0 - 0x14000 && v->x < mCurrent0 - 0xa000) {
+        if (v->x >= mCurrent.x - 0x14000 && v->x < mCurrent.x + 0x14000 && v->y >= t - 0xc000) {
+            if (v->x >= mCurrent.x - 0x14000 && v->x < mCurrent.x - 0xa000) {
                 p.x = v->x;
                 p.y = v->y;
-                yv = mCurrent1 - 0xc000;
-                xv = mCurrent0 - 0x14000;
+                yv = mCurrent.y - 0xc000;
+                xv = mCurrent.x - 0x14000;
                 t1.x = xv;
                 t1.y = yv;
-                yv = mCurrent1 - 0xc000;
-                xv = mCurrent0 - 0xa000;
+                yv = mCurrent.y - 0xc000;
+                xv = mCurrent.x - 0xa000;
                 t2.x = xv;
                 t2.y = yv;
-                yv = mCurrent1 - 0x1000;
-                xv = mCurrent0 - 0xa000;
+                yv = mCurrent.y - 0x1000;
+                xv = mCurrent.x - 0xa000;
                 t3.x = xv;
                 t3.y = yv;
                 r = PointInTriangle(&p, &t1, &t2, &t3);
@@ -1324,19 +1330,19 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
                     return 0;
                 return 1;
             }
-            if (v->x >= mCurrent0 + 0xa000 && v->x < mCurrent0 + 0x16000) {
+            if (v->x >= mCurrent.x + 0xa000 && v->x < mCurrent.x + 0x16000) {
                 p2.x = v->x;
                 p2.y = v->y;
-                yv2 = mCurrent1 - 0xc000;
-                xv2 = mCurrent0 + 0x14000;
+                yv2 = mCurrent.y - 0xc000;
+                xv2 = mCurrent.x + 0x14000;
                 t4.x = xv2;
                 t4.y = yv2;
-                yv2 = mCurrent1 - 0xc000;
-                xv2 = mCurrent0 + 0xa000;
+                yv2 = mCurrent.y - 0xc000;
+                xv2 = mCurrent.x + 0xa000;
                 t5.x = xv2;
                 t5.y = yv2;
-                yv2 = mCurrent1 - 0x1000;
-                xv2 = mCurrent0 + 0xa000;
+                yv2 = mCurrent.y - 0x1000;
+                xv2 = mCurrent.x + 0xa000;
                 t6.x = xv2;
                 t6.y = yv2;
                 r = PointInTriangle(&p2, &t4, &t5, &t6);
@@ -1377,21 +1383,21 @@ void cMgSmartball_pakkun_c::Update() {
             mtx.m01 = a;
             mtx.m10 = -a;
             mtx.m11 = b;
-            RenderOamBothScreens(sSmartballPakkunSprites[idx], mCurrent0 >> 12, mCurrent1 >> 12, -1,
-                                 0, &mtx);
-            RenderOamBothScreens(sSmartballPakkunSprites[2], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
-                                 -1, 2, &mtx);
+            RenderOamBothScreens(sSmartballPakkunSprites[idx], mCurrent.x >> 12, mCurrent.y >> 12,
+                                 -1, 0, &mtx);
+            RenderOamBothScreens(sSmartballPakkunSprites[2], mCurrent.x >> 12,
+                                 (mCurrent.y >> 12) + 5, -1, 2, &mtx);
         } else {
             if (mTriggered != 0) {
-                Mg_RenderSpriteBoth(sSmartballPakkunSprites[0], mCurrent0 >> 12, mCurrent1 >> 12,
+                Mg_RenderSpriteBoth(sSmartballPakkunSprites[0], mCurrent.x >> 12, mCurrent.y >> 12,
                                     -1, 0);
-                Mg_RenderSpriteBoth(sSmartballPakkunSprites[2], mCurrent0 >> 12,
-                                    (mCurrent1 >> 12) + 5, -1, 2);
+                Mg_RenderSpriteBoth(sSmartballPakkunSprites[2], mCurrent.x >> 12,
+                                    (mCurrent.y >> 12) + 5, -1, 2);
             } else {
-                Mg_RenderSpriteBoth(sSmartballPakkunSprites[1], mCurrent0 >> 12, mCurrent1 >> 12,
+                Mg_RenderSpriteBoth(sSmartballPakkunSprites[1], mCurrent.x >> 12, mCurrent.y >> 12,
                                     -1, 0);
-                Mg_RenderSpriteBoth(sSmartballPakkunSprites[2], mCurrent0 >> 12,
-                                    (mCurrent1 >> 12) + 5, -1, 2);
+                Mg_RenderSpriteBoth(sSmartballPakkunSprites[2], mCurrent.x >> 12,
+                                    (mCurrent.y >> 12) + 5, -1, 2);
             }
         }
     }
@@ -1404,14 +1410,15 @@ inline cMgSmartball_ball_c *GetObjPakkun(dScMgSmartball_c *g, int i) {
 }
 
 void cMgSmartball_pakkun_c::SaveSnapshot() {
-    int s[5];
+    Vector2 ballPos;
+    Vector2 toBall;
     int i;
     int b;
 
     if (mIsActive == 0)
         return;
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     if (mActionTimer > 0) {
         mActionTimer -= 1;
         if (mActionTimer == 0)
@@ -1419,15 +1426,15 @@ void cMgSmartball_pakkun_c::SaveSnapshot() {
         return;
     }
     for (i = 0; i < mpManager->mBallCount; i++) {
-        CopyObjectPos(&s[0], GetObjPakkun(mpManager, i));
-        Vec2_Sub(&s[2], &mCurrent0, &s[0]);
-        b = Vec2_Len((const Vector2 *)&s[2]) < 0x4000;
+        CopyObjectPos(&ballPos, GetObjPakkun(mpManager, i));
+        Vec2_Sub(&toBall, &mCurrent, &ballPos);
+        b = Vec2_Len(&toBall) < 0x4000;
         if (b) {
             mActionTimer = 97;
             mTriggered = 0;
             mpManager->mpWing->Trigger();
             GetObjPakkun(mpManager, i)->mIsActive = 0;
-            func_02012718(0x1a0, mCurrent0);
+            func_02012718(0x1a0, mCurrent.x);
             return;
         }
     }
@@ -1455,10 +1462,10 @@ cMgSmartball_pakkun_c::cMgSmartball_pakkun_c(dScMgSmartball_c *manager, int inde
 }
 
 int cMgSmartball_dokan_c::CheckBall(int *b) {
-    int ax = mCurrent0;
+    int ax = mCurrent.x;
     int bx = b[0];
     if (bx >= ax - 0xe000 && bx < ax + 0xe000) {
-        int ay = mCurrent1;
+        int ay = mCurrent.y;
         int by = b[1];
         if (by >= ay - 0x48000 && by < ay + 0x28000) {
             if (bx < ax - 0xa000)
@@ -1474,14 +1481,14 @@ void cMgSmartball_dokan_c::Update() {
     int flag = 0;
     if (mpManager->mPhase)
         flag = 1;
-    Mg_RenderSpriteBoth(sSmartballDokanSprites[0], mCurrent0 >> 12, (mCurrent1 >> 12) - 64, -1,
+    Mg_RenderSpriteBoth(sSmartballDokanSprites[0], mCurrent.x >> 12, (mCurrent.y >> 12) - 64, -1,
                         flag);
-    Mg_RenderSpriteBoth(sSmartballDokanSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) - 48, -1,
+    Mg_RenderSpriteBoth(sSmartballDokanSprites[1], mCurrent.x >> 12, (mCurrent.y >> 12) - 48, -1,
                         flag);
-    Mg_RenderSpriteBoth(sSmartballDokanSprites[1], mCurrent0 >> 12, mCurrent1 >> 12, -1, flag);
-    Mg_RenderSpriteBoth(sSmartballDokanSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 16, -1,
+    Mg_RenderSpriteBoth(sSmartballDokanSprites[1], mCurrent.x >> 12, mCurrent.y >> 12, -1, flag);
+    Mg_RenderSpriteBoth(sSmartballDokanSprites[1], mCurrent.x >> 12, (mCurrent.y >> 12) + 16, -1,
                         flag);
-    Mg_RenderSpriteBoth(sSmartballDokanSprites[2], mCurrent0 >> 12, (mCurrent1 >> 12) + 32, -1,
+    Mg_RenderSpriteBoth(sSmartballDokanSprites[2], mCurrent.x >> 12, (mCurrent.y >> 12) + 32, -1,
                         flag);
 }
 
@@ -1494,8 +1501,8 @@ void cMgSmartball_dokan_c::SaveSnapshot() {
     int i;
     Vector2 delta, ballPos, scorePos;
 
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     for (i = 0; i < mpManager->mBallCount; i++) {
         if (GetObjDokan(mpManager, i)->mIsActive == 0)
             continue;
@@ -1503,8 +1510,8 @@ void cMgSmartball_dokan_c::SaveSnapshot() {
             continue;
         CopyObjectPos(&ballPos, GetObjDokan(mpManager, i));
         delta = ballPos;
-        delta.x = delta.x - mCurrent0;
-        delta.y = delta.y - mCurrent1;
+        delta.x = delta.x - mCurrent.x;
+        delta.y = delta.y - mCurrent.y;
         if (delta.x < -0x8000)
             continue;
         if (delta.x >= 0x8000)
@@ -1513,7 +1520,7 @@ void cMgSmartball_dokan_c::SaveSnapshot() {
             continue;
         if (delta.y >= -0x38000)
             continue;
-        scorePos.x = mCurrent0;
+        scorePos.x = mCurrent.x;
         scorePos.y = -0x40000;
         mpManager->EmitScore(&scorePos.x, 0xbb8, 0, 1);
         mpManager->CountDokan();
@@ -1542,8 +1549,8 @@ int cMgSmartball_propeller_c::HitTest(int *pos) {
 
     d.x = p->x;
     d.y = p->y;
-    d.x -= mCurrent0;
-    d.y -= mCurrent1;
+    d.x -= mCurrent.x;
+    d.y -= mCurrent.y;
     if (func_0203d5bc(&d.x) >= 0x400000)
         return 0;
 
@@ -1618,22 +1625,22 @@ void cMgSmartball_propeller_c::RebuildVerts() {
     func_0203d388((Vector2 *)&mVertices[6], mAngle);
     func_0203d388((Vector2 *)&mVertices[7], mAngle);
 
-    mVertices[0].x += mCurrent0;
-    mVertices[0].y += mCurrent1;
-    mVertices[1].x += mCurrent0;
-    mVertices[1].y += mCurrent1;
-    mVertices[2].x += mCurrent0;
-    mVertices[2].y += mCurrent1;
-    mVertices[3].x += mCurrent0;
-    mVertices[3].y += mCurrent1;
-    mVertices[4].x += mCurrent0;
-    mVertices[4].y += mCurrent1;
-    mVertices[5].x += mCurrent0;
-    mVertices[5].y += mCurrent1;
-    mVertices[6].x += mCurrent0;
-    mVertices[6].y += mCurrent1;
-    mVertices[7].x += mCurrent0;
-    mVertices[7].y += mCurrent1;
+    mVertices[0].x += mCurrent.x;
+    mVertices[0].y += mCurrent.y;
+    mVertices[1].x += mCurrent.x;
+    mVertices[1].y += mCurrent.y;
+    mVertices[2].x += mCurrent.x;
+    mVertices[2].y += mCurrent.y;
+    mVertices[3].x += mCurrent.x;
+    mVertices[3].y += mCurrent.y;
+    mVertices[4].x += mCurrent.x;
+    mVertices[4].y += mCurrent.y;
+    mVertices[5].x += mCurrent.x;
+    mVertices[5].y += mCurrent.y;
+    mVertices[6].x += mCurrent.x;
+    mVertices[6].y += mCurrent.y;
+    mVertices[7].x += mCurrent.x;
+    mVertices[7].y += mCurrent.y;
 }
 
 /* Slot 1: draws the two propeller caps rotated by the base angle. */
@@ -1651,10 +1658,10 @@ void cMgSmartball_propeller_c::Update() {
     mtx.m01 = a;
     mtx.m10 = -a;
 
-    RenderOamBothScreens(sSmartballPropellerSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1,
+    RenderOamBothScreens(sSmartballPropellerSprites[0], mCurrent.x >> 12, mCurrent.y >> 12, -1, 1,
                          &mtx);
-    RenderOamBothScreens(sSmartballPropellerSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5, -1,
-                         2, &mtx);
+    RenderOamBothScreens(sSmartballPropellerSprites[1], mCurrent.x >> 12, (mCurrent.y >> 12) + 5,
+                         -1, 2, &mtx);
 }
 
 /* Slot 0: steps the spin speed toward its target, advances the angle and
@@ -1662,8 +1669,8 @@ void cMgSmartball_propeller_c::Update() {
  * Leftover: the step writes through a short pointer; a plain assignment
  * produces a shorter body. */
 void cMgSmartball_propeller_c::SaveSnapshot() {
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     if (mpManager->mRoundEnded != 0)
         return;
     if (mSpinSpeed < mSpinSpeedTarget) {
@@ -1697,12 +1704,13 @@ cMgSmartball_propeller_c::cMgSmartball_propeller_c(dScMgSmartball_c *manager, in
 /* Slot 1: draws the spring pair for the current level mode. */
 void cMgSmartball_spring_c::Update() {
     if ((mpManager->param1 & 0xff) == 0) {
-        Mg_RenderSpriteBoth(sSmartballSpringSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
-        Mg_RenderSpriteBoth(sSmartballSpringSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5, -1,
-                            2);
+        Mg_RenderSpriteBoth(sSmartballSpringSprites[0], mCurrent.x >> 12, mCurrent.y >> 12, -1, 1);
+        Mg_RenderSpriteBoth(sSmartballSpringSprites[1], mCurrent.x >> 12, (mCurrent.y >> 12) + 5,
+                            -1, 2);
     } else {
-        Mg_RenderSpriteBoth(sSmartballSpringSpritesAlt[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
-        Mg_RenderSpriteBoth(sSmartballSpringSpritesAlt[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
+        Mg_RenderSpriteBoth(sSmartballSpringSpritesAlt[0], mCurrent.x >> 12, mCurrent.y >> 12, -1,
+                            1);
+        Mg_RenderSpriteBoth(sSmartballSpringSpritesAlt[1], mCurrent.x >> 12, (mCurrent.y >> 12) + 5,
                             -1, 2);
     }
 }
@@ -1714,8 +1722,8 @@ void cMgSmartball_spring_c::SaveSnapshot() {
     int flag;
     int d;
 
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     if (mpManager->mRoundEnded != 0)
         return;
 
@@ -1733,9 +1741,9 @@ void cMgSmartball_spring_c::SaveSnapshot() {
         mGrabXSaved = mGrabX;
         mDriveNow = gTouchInfo[gActivePlayerSlot].y << 12;
         mDriveBase = mDriveNow;
-        if (mCurrent1 <= 0xa0000)
+        if (mCurrent.y <= 0xa0000)
             return;
-        mDriveBase -= (mCurrent1 - 0xa0000);
+        mDriveBase -= (mCurrent.y - 0xa0000);
         return;
     }
 
@@ -1746,8 +1754,8 @@ void cMgSmartball_spring_c::SaveSnapshot() {
             mDriveNow = mDriveBase + 0x38000;
         else if (mDriveNow < mDriveBase)
             mDriveNow = mDriveBase;
-        mCurrent1 = mDriveNow - mDriveBase + 0xa0000;
-        if (mSnapshot1 == mCurrent1)
+        mCurrent.y = mDriveNow - mDriveBase + 0xa0000;
+        if (mSnapshot.y == mCurrent.y)
             return;
         mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x16c, 0);
         return;
@@ -1767,10 +1775,10 @@ void cMgSmartball_spring_c::SaveSnapshot() {
         }
     }
 
-    mVel.y -= (mCurrent1 - 0xa0000) / 16;
-    mCurrent1 += mVel.y;
-    if (mCurrent1 < 0xa0000) {
-        mCurrent1 = 0xa0000;
+    mVel.y -= (mCurrent.y - 0xa0000) / 16;
+    mCurrent.y += mVel.y;
+    if (mCurrent.y < 0xa0000) {
+        mCurrent.y = 0xa0000;
         mVel.y = 0;
     }
 }
@@ -1795,14 +1803,14 @@ void cMgSmartball_ana_c::Swallow() {
     int scorePos[2];
     mRespawnTimer = 60;
     mHasBall = 1;
-    sparkPos[0] = mCurrent0;
-    sparkPos[1] = mCurrent1;
+    sparkPos[0] = mCurrent.x;
+    sparkPos[1] = mCurrent.y;
     mpManager->EmitSparks(sparkPos, 0);
-    scorePos[0] = mCurrent0;
-    scorePos[1] = mCurrent1;
+    scorePos[0] = mCurrent.x;
+    scorePos[1] = mCurrent.y;
     mpManager->EmitScore(scorePos, 0x7d0, 0, 1);
     mpManager->CountAna();
-    func_02012718(0xe0, mCurrent0);
+    func_02012718(0xe0, mCurrent.x);
 }
 
 /* Slot 1: draws the hole, with a warning sprite while it holds a ball. */
@@ -1817,17 +1825,17 @@ void cMgSmartball_ana_c::Update() {
         else
             idx = 0;
         if (idx >= 1) {
-            Mg_RenderSpriteBoth(sSmartballAnaSprites[idx], mCurrent0 >> 0xc, mCurrent1 >> 0xc, -1,
+            Mg_RenderSpriteBoth(sSmartballAnaSprites[idx], mCurrent.x >> 0xc, mCurrent.y >> 0xc, -1,
                                 2);
         }
     }
-    Mg_RenderSpriteBoth(sSmartballAnaSprites[0], mCurrent0 >> 0xc, mCurrent1 >> 0xc, -1, 3);
+    Mg_RenderSpriteBoth(sSmartballAnaSprites[0], mCurrent.x >> 0xc, mCurrent.y >> 0xc, -1, 3);
 }
 
 /* Slot 0: counts down a swallowed ball, then serves the next one. */
 void cMgSmartball_ana_c::SaveSnapshot() {
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
     if (mRespawnTimer <= 0)
         return;
     mRespawnTimer = mRespawnTimer - 1;
@@ -1854,9 +1862,9 @@ cMgSmartball_ana_c::cMgSmartball_ana_c(dScMgSmartball_c *manager, int index, Vec
 void cMgSmartball_kinoko_c::Update() {
     switch (mVariant) {
     case 0:
-        Mg_RenderSpriteBoth(sSmartballKinokoSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
-        Mg_RenderSpriteBoth(sSmartballKinokoSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5, -1,
-                            2);
+        Mg_RenderSpriteBoth(sSmartballKinokoSprites[0], mCurrent.x >> 12, mCurrent.y >> 12, -1, 1);
+        Mg_RenderSpriteBoth(sSmartballKinokoSprites[1], mCurrent.x >> 12, (mCurrent.y >> 12) + 5,
+                            -1, 2);
         break;
     case 1: {
         int d;
@@ -1871,10 +1879,10 @@ void cMgSmartball_kinoko_c::Update() {
         mtx.m01 = a;
         mtx.m10 = -a;
         mtx.m11 = b;
-        RenderOamBothScreens(sSmartballKinokoTurnSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1,
+        RenderOamBothScreens(sSmartballKinokoTurnSprites[0], mCurrent.x >> 12, mCurrent.y >> 12, -1,
                              1, &mtx);
-        RenderOamBothScreens(sSmartballKinokoTurnSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
-                             -1, 2, &mtx);
+        RenderOamBothScreens(sSmartballKinokoTurnSprites[1], mCurrent.x >> 12,
+                             (mCurrent.y >> 12) + 5, -1, 2, &mtx);
     } break;
     }
 }
@@ -1887,16 +1895,16 @@ void cMgSmartball_kinoko_c::SaveSnapshot() {
     dScMgSmartball_c *obj;
     int i;
 
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
 
     if (mWasHit == 1) {
         if (mHitTimer == 0) {
-            pair.x = mCurrent0;
-            pair.y = mCurrent1;
+            pair.x = mCurrent.x;
+            pair.y = mCurrent.y;
             mpManager->EmitScore(&pair.x, 0x12c, 0, 1);
             mpManager->CountKinoko();
-            func_02012718(0x19f, mCurrent0);
+            func_02012718(0x19f, mCurrent.x);
         }
         mWasHit = 0;
         if (mVariant == 1)
@@ -1915,7 +1923,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot() {
                         cMgSmartball_ball_c *m = (i >= 0xd) ? 0 : obj->mpBalls[i];
                         int hit;
                         CopyObjectPos(&bufA, m);
-                        Vec2_Sub(&bufB.x, &mCurrent0, &bufA.x);
+                        Vec2_Sub(&bufB, &mCurrent, &bufA);
                         hit = Vec2_Len(&bufB) < 0x11000;
                         if (hit != 0) {
                             mHitTimer = 4;
@@ -1955,7 +1963,7 @@ cMgSmartball_kinoko_c::cMgSmartball_kinoko_c(dScMgSmartball_c *manager, int inde
     mVariant = 2;
 }
 
-void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
+void cMgSmartball_ball_c::PlayHitSound(int a1, Vector2 *vel) {
     int spd;
 
     if (soundTimer > 0) {
@@ -1963,9 +1971,9 @@ void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
         return;
     }
     {
-        int v[2];
-        Vec2_Sub(v, &mVel.x, vel);
-        spd = Vec2_Len((const Vector2 *)v);
+        Vector2 v;
+        Vec2_Sub(&v, &mVel, vel);
+        spd = Vec2_Len(&v);
     }
     if (spd < 0x1000)
         return;
@@ -1974,11 +1982,11 @@ void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
         int vol = (spd << 4) >> 12;
         if (vol > 0x7f)
             vol = 0x7f;
-        func_020126ac(a1, 5, vol, 0, func_020126e8(mCurrent0));
+        func_020126ac(a1, 5, vol, 0, func_020126e8(mCurrent.x));
         {
             int pos[2];
-            pos[0] = mCurrent0;
-            pos[1] = mCurrent1;
+            pos[0] = mCurrent.x;
+            pos[1] = mCurrent.y;
             mpManager->SpawnDust(pos);
         }
         break;
@@ -1987,21 +1995,21 @@ void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
         int vol = (((spd - 0x800) << 2) >> 12) + 0x32;
         if (vol > 0x7f)
             vol = 0x7f;
-        func_020126ac(a1, 5, vol, 0, func_020126e8(mCurrent0));
+        func_020126ac(a1, 5, vol, 0, func_020126e8(mCurrent.x));
         break;
     }
     case 0x172: {
         int vol = (((spd - 0x800) << 2) >> 12) + 0x32;
         if (vol > 0x7f)
             vol = 0x7f;
-        func_020126ac(a1, 5, vol, 0, func_020126e8(mCurrent0));
+        func_020126ac(a1, 5, vol, 0, func_020126e8(mCurrent.x));
         break;
     }
     case 0x1a3: {
         int vol = (((spd - 0x800) << 2) >> 12) + 0x32;
         if (vol > 0x7f)
             vol = 0x7f;
-        func_020126ac(a1, 5, vol, 0, func_020126e8(mCurrent0));
+        func_020126ac(a1, 5, vol, 0, func_020126e8(mCurrent.x));
         break;
     }
     }
@@ -2009,8 +2017,8 @@ void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
 }
 
 void cMgSmartball_ball_c::Freeze() {
-    mFrozenPos0 = mCurrent0;
-    mFrozenPos1 = mCurrent1;
+    mFrozenPos0 = mCurrent.x;
+    mFrozenPos1 = mCurrent.y;
     mIsFrozen = 1;
     state3b = 1;
 }
@@ -2024,11 +2032,11 @@ int cMgSmartball_ball_c::IsOut() {
         return 1;
     if (state3a == 1)
         return 1;
-    int v = mCurrent1;
+    int v = mCurrent.y;
     if (v < -0xa0000)
         return 1;
     if (v < 0) {
-        if (mCurrent0 < 0xd0000)
+        if (mCurrent.x < 0xd0000)
             return 1;
     }
     return 0;
@@ -2044,8 +2052,8 @@ int cMgSmartball_ball_c::ArmExpire(int val) {
 }
 
 int cMgSmartball_ball_c::IsFinished() {
-    if ((mpManager->param1 & 0xff) != 0 && mCurrent0 < 0xe0000 && mCurrent1 >= 0x50000 &&
-        mCurrent1 < 0x88000) {
+    if ((mpManager->param1 & 0xff) != 0 && mCurrent.x < 0xe0000 && mCurrent.y >= 0x50000 &&
+        mCurrent.y < 0x88000) {
         if (mStuckFrames >= 120)
             return 1;
     }
@@ -2056,8 +2064,8 @@ int cMgSmartball_ball_c::IsFinished() {
 
 void cMgSmartball_ball_c::Burst() {
     int v[2];
-    v[0] = mCurrent0;
-    v[1] = mCurrent1;
+    v[0] = mCurrent.x;
+    v[1] = mCurrent.y;
     mpManager->EmitSparks(v, 0);
 }
 
@@ -2375,15 +2383,15 @@ void cMgSmartball_ball_c::QueueBehind() {
         p = GetObjBoard(mgr, cur);
         CopyObjectPos(local1, p);
         newpos = local1[0] - 0x10000;
-        pos = mCurrent0;
+        pos = mCurrent.x;
         if (pos < newpos && pos < 0xc8000)
-            mCurrent0 = newpos;
+            mCurrent.x = newpos;
         else
-            mCurrent0 = mSnapshot0;
+            mCurrent.x = mSnapshot.x;
         mVel.x = 0;
         mVel.y = 0;
 
-        mCurrent1 = FX_Div(FX_MUL(mCurrent0, 0xa000), 0xd8000) + 0x90000;
+        mCurrent.y = FX_Div(FX_MUL(mCurrent.x, 0xa000), 0xd8000) + 0x90000;
 
         if (mIndex > mpManager->mServeIndex) {
             mQueueGap = (mIndex - mpManager->mServeIndex) * 0xf;
@@ -2393,11 +2401,11 @@ void cMgSmartball_ball_c::QueueBehind() {
 
     p = GetObjBoard(mgr, vm1);
     CopyObjectPos(local2, p);
-    mCurrent0 = local2[0] - 0x10000;
+    mCurrent.x = local2[0] - 0x10000;
     mVel.x = 0;
     mVel.y = 0;
 
-    mCurrent1 = FX_Div(FX_MUL(mCurrent0, 0xa000), 0xd8000) + 0x90000;
+    mCurrent.y = FX_Div(FX_MUL(mCurrent.x, 0xa000), 0xd8000) + 0x90000;
 
     if (mIndex > mpManager->mServeIndex) {
         mQueueGap = (mIndex - mpManager->mServeIndex) * 0xf;
@@ -2486,7 +2494,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     specialHit = 0;
     nearKinoko = 0;
 
-    if (mCurrent1 >= 0x77000) {
+    if (mCurrent.y >= 0x77000) {
         int clearIndex = 0;
         do {
             nearby[clearIndex] = 0;
@@ -2497,8 +2505,8 @@ void cMgSmartball_ball_c::UpdatePhysics() {
         do {
             nearby[probeIndex] = 0;
             if (probeIndex < mpManager->mKinokoCount) {
-                dist.x = mCurrent0;
-                dist.y = mCurrent1;
+                dist.x = mCurrent.x;
+                dist.y = mCurrent.y;
                 mgr = mpManager;
                 CopyObjectPos(&kinokoPos,
                               probeIndex >= mgr->mKinokoCount ? 0 : mgr->mpKinokos[probeIndex]);
@@ -2525,10 +2533,10 @@ void cMgSmartball_ball_c::UpdatePhysics() {
             work.y = 0;
             work.y += mRadius;
             func_0203d388(&work, angle);
-            dot = func_0203d570((Vector2 *)&work, &mVel);
+            dot = func_0203d570(&work, &mVel);
             if (dot >= 0) {
-                work.x += mCurrent0;
-                work.y += mCurrent1;
+                work.x += mCurrent.x;
+                work.y += mCurrent.y;
                 if ((u8)mpManager->param1 == 0) {
                     respawnProbe = work;
                     if (NeedsRespawn(&respawnProbe.x) != 0) {
@@ -2625,8 +2633,8 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                     }
                 }
             } else {
-                work.x += mCurrent0;
-                work.y += mCurrent1;
+                work.x += mCurrent.x;
+                work.y += mCurrent.y;
             }
 
         final_checks:
@@ -2665,7 +2673,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                             if (((cMgSmartball_object_c *)other)->mIsActive != 0) {
                                 other = GetObjBoard(mpManager, entityLoopIndex);
                                 CopyObjectPos(&entityPos, other);
-                                Vec2_Sub(&entityDelta.x, &mCurrent0, &entityPos.x);
+                                Vec2_Sub(&entityDelta, &mCurrent, &entityPos);
                                 delta = entityDelta;
                                 if (func_0203d5bc(&delta.x) <= 0x100000LL) {
                                     angle = 0;
@@ -2673,15 +2681,15 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                                     other = GetObjBoard(mgr, entityLoopIndex);
                                     CopyObjectPos(&entityPos2, other);
                                     otherPos = entityPos2;
-                                    if (mCurrent1 < 0x90000 || mCurrent0 <= otherPos.x) {
+                                    if (mCurrent.y < 0x90000 || mCurrent.x <= otherPos.x) {
                                         i = 0;
                                         do {
                                             work.y = mRadius;
                                             work.x = 0;
                                             func_0203d388(&work, angle);
-                                            work.x += mCurrent0;
-                                            work.y += mCurrent1;
-                                            Vec2_Sub(&radialDelta.x, &work.x, &otherPos.x);
+                                            work.x += mCurrent.x;
+                                            work.y += mCurrent.y;
+                                            Vec2_Sub(&radialDelta, &work, &otherPos);
                                             delta = radialDelta;
                                             if (func_0203d5bc(&delta.x) < 0x40000LL) {
                                                 targetIndex = entityLoopIndex;
@@ -2721,11 +2729,11 @@ void cMgSmartball_ball_c::UpdatePhysics() {
         func_0203d434(&normal);
         func_0203d630(&normal, 0x800);
         {
-            mCurrent0 -= normal.x;
-            mCurrent1 -= normal.y;
-            Vec2_Sub(&moveDelta.x, &mCurrent0, &mSnapshot0);
+            mCurrent.x -= normal.x;
+            mCurrent.y -= normal.y;
+            Vec2_Sub(&moveDelta, &mCurrent, &mSnapshot);
         }
-        dot = Vec2_Len((const Vector2 *)&moveDelta);
+        dot = Vec2_Len(&moveDelta);
         depth += 0x80;
         pass++;
     } while (blocked == 1 && pass < 0x21 && depth <= dot);
@@ -2791,7 +2799,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                 ((((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0x10) >> 15)
                  << 12);
             responseScale += FIX_MUL_SU(responseScale, randomScale >> 6);
-            if (mCurrent0 < 0x18000 && response.y > 0) {
+            if (mCurrent.x < 0x18000 && response.y > 0) {
                 response.x = 0;
                 response.y = 0x1000;
             }
@@ -2803,16 +2811,16 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     }
 
     if (onSpring == 1) {
-        if (mCurrent0 < 0xd0000)
+        if (mCurrent.x < 0xd0000)
             return;
-        if (mCurrent0 < 0xd8000) {
-            mCurrent0 = 0xd8000;
+        if (mCurrent.x < 0xd8000) {
+            mCurrent.x = 0xd8000;
             return;
         }
-        if (mCurrent0 < 0xe8000)
-            mCurrent0 = 0xe8000;
+        if (mCurrent.x < 0xe8000)
+            mCurrent.x = 0xe8000;
         CopyObjectPos(&specialPos, mpManager->mpSpring);
-        mCurrent1 = specialPos.y - 0x20001 - mRadius;
+        mCurrent.y = specialPos.y - 0x20001 - mRadius;
         GetObjectDelta(&specialDelta0, mpManager->mpSpring);
         if (specialDelta0.y >= -0x1000)
             return;
@@ -2827,24 +2835,24 @@ void cMgSmartball_ball_c::UpdatePhysics() {
 
         if (soundTimer == 0) {
             if (mVel.y < -0x6000) {
-                func_02012718(0x16d, mCurrent0);
-                func_02012718(0x16e, mCurrent0);
+                func_02012718(0x16d, mCurrent.x);
+                func_02012718(0x16e, mCurrent.x);
             } else {
                 volume = (-mVel.y << 7) / 0x6000;
                 if (volume > 0x7f)
                     volume = 0x7f;
                 if (volume < 0)
                     volume = 0;
-                func_020126ac(0x16d, 5, volume, 0, func_020126e8(mCurrent0));
+                func_020126ac(0x16d, 5, volume, 0, func_020126e8(mCurrent.x));
                 if (volume >= 0x40)
-                    func_020126ac(0x16e, 5, volume, 0, func_020126e8(mCurrent0));
+                    func_020126ac(0x16e, 5, volume, 0, func_020126e8(mCurrent.x));
             }
             soundTimer = 5;
         }
         if (soundPlayed != 0)
             return;
         if (mVel.y < -0x6000)
-            func_02012718(0x16e, mCurrent0);
+            func_02012718(0x16e, mCurrent.x);
         soundPlayed = 1;
         return;
     }
@@ -2852,19 +2860,19 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     if (hitSlope == 1) {
         event0.x = savedVel.x;
         event0.y = savedVel.y;
-        PlayHitSound(0x171, &event0.x);
+        PlayHitSound(0x171, &event0);
     } else if (hitPropeller == 1) {
         event1.x = savedVel.x;
         event1.y = savedVel.y;
-        PlayHitSound(0x172, &event1.x);
+        PlayHitSound(0x172, &event1);
     } else if (hitExit == 1) {
         event2.x = savedVel.x;
         event2.y = savedVel.y;
-        PlayHitSound(0x16f, &event2.x);
+        PlayHitSound(0x16f, &event2);
     } else if (hitWing == 1) {
         event3.x = savedVel.x;
         event3.y = savedVel.y;
-        PlayHitSound(0x1a3, &event3.x);
+        PlayHitSound(0x1a3, &event3);
     }
 
     dot = mRadius + 0x10000;
@@ -2875,15 +2883,15 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     do {
         other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
         if (((cMgSmartball_ana_c *)other)->HasBall() == 0) {
-            hazardDelta.x = mCurrent0;
-            hazardDelta.y = mCurrent1;
+            hazardDelta.x = mCurrent.x;
+            hazardDelta.y = mCurrent.y;
             other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
             CopyObjectPos(&hazardPos, other);
             hazardDelta.x -= hazardPos.x;
             hazardDelta.y -= hazardPos.y;
             hazardDelta.y *= 2;
             if (func_0203d5bc(&hazardDelta.x) < square) {
-                dot = mRadius + 0x10000 - Vec2_Len((const Vector2 *)&hazardDelta);
+                dot = mRadius + 0x10000 - Vec2_Len(&hazardDelta);
                 if (mRadius < dot) {
                     other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
                     CopyObjectPos(&hazardPos2, other);
@@ -2925,9 +2933,9 @@ void cMgSmartball_ball_c::DrawMarker() {
         return;
 
     if ((mpManager->param1 & 0xff) != 0) {
-        int x = mCurrent0;
+        int x = mCurrent.x;
         if (x >= 0x40000 && x < 0xa0000) {
-            int y = mCurrent1;
+            int y = mCurrent.y;
             if (y >= -0xb5000 && y < -0x85000)
                 return;
         }
@@ -2937,8 +2945,8 @@ void cMgSmartball_ball_c::DrawMarker() {
             if (((cMgSmartball_ana_c *)((
                      unsigned char *)((i >= mpManager->mAnaCount) ? 0 : mpManager->mpAnas[i])))
                     ->HasBall() == 0) {
-                s[0] = mCurrent0;
-                s[1] = mCurrent1;
+                s[0] = mCurrent.x;
+                s[1] = mCurrent.y;
                 s[1] += 0x5000;
                 CopyObjectPos(&s[4], (i >= mpManager->mAnaCount) ? 0 : mpManager->mpAnas[i]);
                 s[0] = s[0] - s[4];
@@ -2951,11 +2959,11 @@ void cMgSmartball_ball_c::DrawMarker() {
     }
 
     if ((mpManager->param1 & 0xff) == 0)
-        RenderOamBothScreens(sSmartballBallSprites[1], (mCurrent0 + 0x800) >> 12,
-                             ((mCurrent1 + 0x800) >> 12) + 5, -1, 2, 0);
+        RenderOamBothScreens(sSmartballBallSprites[1], (mCurrent.x + 0x800) >> 12,
+                             ((mCurrent.y + 0x800) >> 12) + 5, -1, 2, 0);
     else
-        RenderOamBothScreens(sSmartballBallSpritesAlt[1], (mCurrent0 + 0x800) >> 12,
-                             ((mCurrent1 + 0x800) >> 12) + 5, -1, 2, 0);
+        RenderOamBothScreens(sSmartballBallSpritesAlt[1], (mCurrent.x + 0x800) >> 12,
+                             ((mCurrent.y + 0x800) >> 12) + 5, -1, 2, 0);
 }
 
 /* Slot 1: draws the ball sprite for the current level mode. */
@@ -2969,12 +2977,12 @@ void cMgSmartball_ball_c::Update() {
     if (state3a == 1)
         r2 = 3;
     if ((mpManager->param1 & 0xff) == 0) {
-        int x = mCurrent0;
-        int y = mCurrent1;
+        int x = mCurrent.x;
+        int y = mCurrent.y;
         Mg_RenderSpriteBoth(sSmartballBallSprites[0], (x + 0x800) >> 12, (y + 0x800) >> 12, -1, r2);
     } else {
-        int x = mCurrent0;
-        int y = mCurrent1;
+        int x = mCurrent.x;
+        int y = mCurrent.y;
         Mg_RenderSpriteBoth(sSmartballBallSpritesAlt[0], (x + 0x800) >> 12, (y + 0x800) >> 12, -1,
                             r2);
     }
@@ -2982,8 +2990,8 @@ void cMgSmartball_ball_c::Update() {
 
 /* Leaves `pos - last` in *delta; true when the ball has moved less than
  * 0x8000 since the last check. */
-static inline int HasBarelyMoved(Vector2 *delta, int *pos, int *last) {
-    Vec2_Sub(&delta->x, pos, last);
+static inline int HasBarelyMoved(Vector2 *delta, Vector2 *pos, Vector2 *last) {
+    Vec2_Sub(delta, pos, last);
     return Vec2_Len(delta) < 0x8000;
 }
 
@@ -3018,13 +3026,14 @@ void cMgSmartball_ball_c::SaveSnapshot() {
         }
     }
     if (mIsFrozen == 1) {
-        mCurrent0 = mFrozenPos0;
-        mCurrent1 = mFrozenPos1;
+        mCurrent.x = mFrozenPos0;
+        mCurrent.y = mFrozenPos1;
         mVel.x = 0;
         mVel.y = 0;
         return;
     }
-    if (mCurrent0 >= 0x8000 && mCurrent0 < 0xd8000 && mCurrent1 >= 0x74000 && mCurrent1 < 0x7c000) {
+    if (mCurrent.x >= 0x8000 && mCurrent.x < 0xd8000 && mCurrent.y >= 0x74000 &&
+        mCurrent.y < 0x7c000) {
         if (mZoneDwell < 0x1e) {
             mZoneDwell += 1;
         } else if (mZoneDwell < 0x12c) {
@@ -3044,17 +3053,18 @@ void cMgSmartball_ball_c::SaveSnapshot() {
         if (mInPlay != 0)
             mIsWaiting = 0;
     }
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
-    if (mCurrent0 < 0 || mCurrent0 >= 0x100000 || mCurrent1 < -0xf0000 || mCurrent1 >= 0xc0000) {
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
+    if (mCurrent.x < 0 || mCurrent.x >= 0x100000 || mCurrent.y < -0xf0000 ||
+        mCurrent.y >= 0xc0000) {
         mStuckFrames += 1;
     } else {
-        if ((mpManager->param1 & 0xff) != 0 && HasBarelyMoved(&d1, &mCurrent0, &mLastPos0)) {
+        if ((mpManager->param1 & 0xff) != 0 && HasBarelyMoved(&d1, &mCurrent, &mLastPos)) {
             mStuckFrames += 1;
         } else {
             mStuckFrames = 0;
-            mLastPos0 = mCurrent0;
-            mLastPos1 = mCurrent1;
+            mLastPos.x = mCurrent.x;
+            mLastPos.y = mCurrent.y;
         }
     }
     if (mCollisionCooldown > 0)
@@ -3063,8 +3073,8 @@ void cMgSmartball_ball_c::SaveSnapshot() {
         mZoneCooldown -= 1;
     if (state3a != 1) {
         if (mUpperWallSolid == 0) {
-            if (mCurrent0 >= 0xe8000 && mCurrent0 < 0xf0000 && mCurrent1 >= 0x78000 &&
-                mCurrent1 < 0xa8000) {
+            if (mCurrent.x >= 0xe8000 && mCurrent.x < 0xf0000 && mCurrent.y >= 0x78000 &&
+                mCurrent.y < 0xa8000) {
                 if (mZoneCooldown <= 0) {
                     mUpperWallSolid = 1;
                     unk_039 = 0;
@@ -3074,8 +3084,8 @@ void cMgSmartball_ball_c::SaveSnapshot() {
         }
     }
     if (state3a == 0) {
-        pa.x = mCurrent0;
-        pa.y = mCurrent1;
+        pa.x = mCurrent.x;
+        pa.y = mCurrent.y;
         pb.x = 0x8000;
         pb.y = 0x8c000;
         pc.x = 0x8000;
@@ -3088,8 +3098,8 @@ void cMgSmartball_ball_c::SaveSnapshot() {
          * frame when it returns the call unnormalised. */
         if (PointInTriangle(&pa, &pb, &pc, &pd) != 0)
             goto bounce;
-        pe.x = mCurrent0;
-        pe.y = mCurrent1;
+        pe.x = mCurrent.x;
+        pe.y = mCurrent.y;
         pf.x = 0x8000;
         pf.y = 0x92000;
         pg.x = 0xe0000;
@@ -3113,8 +3123,8 @@ void cMgSmartball_ball_c::SaveSnapshot() {
         if (func_0203d434(&mVel) != 0)
             func_0203d630(&mVel, spd);
     }
-    mCurrent0 += mVel.x;
-    mCurrent1 += mVel.y;
+    mCurrent.x += mVel.x;
+    mCurrent.y += mVel.y;
     if (mIsWaiting == 1) {
         QueueBehind();
     } else {
@@ -3124,18 +3134,18 @@ void cMgSmartball_ball_c::SaveSnapshot() {
             vc.y = -0x8000;
             func_0203d480(&v5c, &vc);
             {
-                int dz = mCurrent1 + 0x80000;
-                int dx = mCurrent0 - 0xd8000;
+                int dz = mCurrent.y + 0x80000;
+                int dx = mCurrent.x - 0xd8000;
                 vd.x = dx;
                 vd.y = dz;
             }
-            if (func_0203d524((Vector2 *)&vc, &vd) < -mRadius)
+            if (func_0203d524(&vc, &vd) < -mRadius)
                 mExitGateOpen = 1;
         }
     }
     mag = Vec2_Len(&mVel);
-    Vec2_Sub(&d2.x, &mCurrent0, &mSnapshot0);
-    dist = Vec2_Len((const Vector2 *)&d2);
+    Vec2_Sub(&d2, &mCurrent, &mSnapshot);
+    dist = Vec2_Len(&d2);
     if (specialHit != 0)
         return;
     if (mag < dist)
@@ -3152,8 +3162,8 @@ void cMgSmartball_ball_c::RestoreInitial() {
     int i;
 
     cMgSmartball_object_c::RestoreInitial();
-    mLastPos0 = mCurrent0;
-    mLastPos1 = mCurrent1;
+    mLastPos.x = mCurrent.x;
+    mLastPos.y = mCurrent.y;
     mVel.x = 0;
     mVel.y = 0;
     for (i = 0; i < 32; i++) {
@@ -3196,19 +3206,19 @@ cMgSmartball_ball_c::cMgSmartball_ball_c(dScMgSmartball_c *manager, int index, V
     mRadius = 0x8000;
 }
 
-int cMgSmartball_object_c::PointInTriangle(int *p, int *q0, int *q1, int *q2) {
+int cMgSmartball_object_c::PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2) {
     int v0[2], v1[2], v2[2];
-    int t0[2], t1[2], t2[2];
+    Vector2 t0, t1, t2;
     long long d0, d1, d2;
-    Vec2_Sub(t0, p, q0);
-    v0[0] = t0[0];
-    v0[1] = t0[1];
-    Vec2_Sub(t1, p, q1);
-    v1[0] = t1[0];
-    v1[1] = t1[1];
-    Vec2_Sub(t2, p, q2);
-    v2[0] = t2[0];
-    v2[1] = t2[1];
+    Vec2_Sub(&t0, p, q0);
+    v0[0] = t0.x;
+    v0[1] = t0.y;
+    Vec2_Sub(&t1, p, q1);
+    v1[0] = t1.x;
+    v1[1] = t1.y;
+    Vec2_Sub(&t2, p, q2);
+    v2[0] = t2.x;
+    v2[1] = t2.y;
     d0 = func_0203d4d0(p, v0, v1);
     d1 = func_0203d4d0(p, v1, v2);
     d2 = func_0203d4d0(p, v2, v0);
@@ -3231,15 +3241,15 @@ void CopyObjectVel(void *a, void *b) {
     out[1] = object->mVel.y;
 }
 
-void GetObjectDelta(void *a, cMgSmartball_object_c *b) {
-    Vec2_Sub((int *)a, &b->mCurrent0, &b->mSnapshot0);
+void GetObjectDelta(Vector2 *a, cMgSmartball_object_c *b) {
+    Vec2_Sub(a, &b->mCurrent, &b->mSnapshot);
 }
 
 void CopyObjectPos(void *a, void *b) {
     int *out = (int *)a;
     cMgSmartball_object_c *object = (cMgSmartball_object_c *)b;
-    out[0] = object->mCurrent0;
-    out[1] = object->mCurrent1;
+    out[0] = object->mCurrent.x;
+    out[1] = object->mCurrent.y;
 }
 
 /* Slot 1: empty here; every child overrides it. */
@@ -3247,17 +3257,17 @@ void cMgSmartball_object_c::Update() {}
 
 /* Slot 0: stores the current position as the previous one. */
 void cMgSmartball_object_c::SaveSnapshot() {
-    mSnapshot0 = mCurrent0;
-    mSnapshot1 = mCurrent1;
+    mSnapshot.x = mCurrent.x;
+    mSnapshot.y = mCurrent.y;
 }
 
 /* Restores the starting position.
    Leftover: both loads happen before both stores. */
 void cMgSmartball_object_c::RestoreInitial() {
-    s32 hi = mInitial1;
-    s32 lo = mInitial0;
-    mCurrent0 = lo;
-    mCurrent1 = hi;
+    s32 hi = mInitial.y;
+    s32 lo = mInitial.x;
+    mCurrent.x = lo;
+    mCurrent.y = hi;
 }
 
 cMgSmartball_object_c::cMgSmartball_object_c(dScMgSmartball_c *manager, int index, Vector2 pos) {
@@ -3266,12 +3276,12 @@ cMgSmartball_object_c::cMgSmartball_object_c(dScMgSmartball_c *manager, int inde
     mIndex = index;
     hi = pos.y;
     lo = pos.x;
-    mInitial0 = lo;
-    mInitial1 = hi;
+    mInitial.x = lo;
+    mInitial.y = hi;
     hi = pos.y;
     lo = pos.x;
-    mCurrent0 = lo;
-    mCurrent1 = hi;
+    mCurrent.x = lo;
+    mCurrent.y = hi;
     mRadius = 0;
     mVel.x = 0;
     mVel.y = 0;
@@ -3733,7 +3743,7 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
     ((cMgSmartball_ball_c *)secondObject)->mCollisionCooldown = 3;
     CopyObjectPos(&firstPos.x, firstObject);
     CopyObjectPos(&secondPos.x, secondObject);
-    Vec2_Sub(&positionDelta.x, &firstPos.x, &secondPos.x);
+    Vec2_Sub(&positionDelta, &firstPos, &secondPos);
     delta.x = positionDelta.x;
     delta.y = positionDelta.y;
     collisionAngle = cstd::atan2(delta.y, delta.x);

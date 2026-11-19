@@ -115,10 +115,10 @@ void dScMgFlower_c::DealPetals() {
     int clearIndex;
     int baseAngle;
 
-    mCursorX = 0;
-    mCursorY = 0;
-    mPrevCursorX = mCursorX;
-    mPrevCursorY = mCursorY;
+    mCursor.x = 0;
+    mCursor.y = 0;
+    mPrevCursor.x = mCursor.x;
+    mPrevCursor.y = mCursor.y;
     Mg_SetTopScreenYOffset(0x20);
     for (clearIndex = 0; clearIndex < PETAL_NUM; clearIndex++) {
         mPetals[clearIndex].active = 0;
@@ -258,14 +258,14 @@ s32 dScMgFlower_c::Behavior() {
     }
     switch (mState) {
     case 0:
-        mPrevCursorX = mCursorX;
-        mPrevCursorY = mCursorY;
+        mPrevCursor.x = mCursor.x;
+        mPrevCursor.y = mCursor.y;
         playerSlot = gActivePlayerSlot;
         if (gTouchInfo[playerSlot].held != 0) {
             int touchY = gTouchInfo[playerSlot].y;
             int touchX = gTouchInfo[playerSlot].x;
-            mCursorX = touchX << 12;
-            mCursorY = touchY << 12;
+            mCursor.x = touchX << 12;
+            mCursor.y = touchY << 12;
         }
         if (mHoldTimer > 20) {
             if (mPetalsLeft > 0) {
@@ -290,7 +290,7 @@ s32 dScMgFlower_c::Behavior() {
                     if (mPetals[attachedIndex].active != 0 && mPetals[attachedIndex].held != 1 &&
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
-                        Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].pos.x, &mCursorX);
+                        Vec2_Sub(&toCursor, &mPetals[attachedIndex].pos, &mCursor);
                         withinGrabRadius = Vec2_Len(&toCursor) < 0x18000;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
@@ -298,8 +298,8 @@ s32 dScMgFlower_c::Behavior() {
                             mPetals[attachedIndex].driftX = 0;
                             mPetals[attachedIndex].fallSpeed = 0;
                             mHeldPetal = attachedIndex;
-                            mPetals[attachedIndex].touchStartX = mCursorX;
-                            mPetals[attachedIndex].touchStartY = mCursorY;
+                            mPetals[attachedIndex].touchStartX = mCursor.x;
+                            mPetals[attachedIndex].touchStartY = mCursor.y;
                             FreeGfxSlotsById(0x1d);
                             mFaceSprite = 2;
                             break;
@@ -311,15 +311,15 @@ s32 dScMgFlower_c::Behavior() {
                     for (freeIndex = 0; freeIndex < PETAL_NUM; freeIndex++) {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
-                            Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].pos.x, &mCursorX);
+                            Vec2_Sub(&toCursor2, &mPetals[freeIndex].pos, &mCursor);
                             withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
                                 mPetals[freeIndex].driftX = 0;
                                 mPetals[freeIndex].fallSpeed = 0;
                                 mHeldPetal = freeIndex;
-                                mPetals[freeIndex].touchStartX = mCursorX;
-                                mPetals[freeIndex].touchStartY = mCursorY;
+                                mPetals[freeIndex].touchStartX = mCursor.x;
+                                mPetals[freeIndex].touchStartY = mCursor.y;
                                 break;
                             }
                         }
@@ -329,7 +329,7 @@ s32 dScMgFlower_c::Behavior() {
         } else {
             newlyCounted = 0;
             if (gTouchInfo[playerSlot].held != 0) {
-                Vec2_Sub(&drag.x, &mCursorX, &mPrevCursorX);
+                Vec2_Sub(&drag, &mCursor, &mPrevCursor);
                 Vector2 *pos = &mPetals[mHeldPetal].pos;
                 pos->x += drag.x;
                 pos->y += drag.y;
