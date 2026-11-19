@@ -70,7 +70,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN10daObjKey_c19func_ov089_02130fb4EP7Vector3i",
+      "symbol": "_ZN10daObjKey_c8AimArcToEP7Vector3i",
       "address": "0x02130fb4",
       "size": "0x00000118",
       "legacy_source": "src/func_ov089_02130fb4.c",

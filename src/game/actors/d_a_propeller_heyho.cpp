@@ -250,13 +250,13 @@ int daPropeller_Heyho_c::Behavior()
                 mdCcAc_c.Update();
             }
         }
-        func_ov070_02120070();
+        UpdateModelAndShadow();
         return 1;
     }
 
     if (mDeathState != 0) {
         UpdateDeath(mWithMeshClsn);
-        func_ov070_02120070();
+        UpdateModelAndShadow();
         return 1;
     }
 
@@ -293,7 +293,7 @@ int daPropeller_Heyho_c::Behavior()
         mAngle.z = mPrevAngle.z;
     }
 
-    func_ov070_02120070();
+    UpdateModelAndShadow();
 
     if (mCurrentState != &data_ov070_021235bc) {
         this->func_ov070_0211f100();
@@ -356,7 +356,7 @@ int daPropeller_Heyho_c::CleanupResources()
  * and the three angles, copied into mAnmModel.mat4x3; the shadow matrix from the
  * position with Y lowered by 10.0 units, then DropShadowRadHeight(radius 118.0,
  * depth 800.0, opacity 15). Behavior calls it on every exit path. */
-void daPropeller_Heyho_c::func_ov070_02120070() {
+void daPropeller_Heyho_c::UpdateModelAndShadow() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);

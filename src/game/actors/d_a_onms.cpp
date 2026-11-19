@@ -290,7 +290,7 @@ void daOnms_c::StateKnocked()
 }
 
 /* Path mode: step to the next path node and pick the roll that heads for it. */
-void daOnms_c::func_ov092_021313b0() {
+void daOnms_c::NextPathNode() {
     Vector3 old;
 
     old = mPathNode;
@@ -316,7 +316,7 @@ void daOnms_c::func_ov092_021313b0() {
 void daOnms_c::NextMove()
 {
     if (mMoveKind == kMoveAlongPath) {
-        func_ov092_021313b0();
+        NextPathNode();
     } else {
         mMoveSeqIndex++;
         s32 *seq = mMoveSeq;
@@ -591,7 +591,7 @@ int daOnms_c::InitResources()
         mPathNodeCount = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
         mPathPtr.GetNode(mPathNode, mPathNodeIndex);
-        func_ov092_021313b0();
+        NextPathNode();
     }
 
     mPos.y += 0xfa000;

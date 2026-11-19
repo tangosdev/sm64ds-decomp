@@ -79,7 +79,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN7daShl_c19func_ov102_0214ce60Ev",
+      "symbol": "_ZN7daShl_c20UpdateModelAndShadowEv",
       "address": "0x0214ce60",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov102_0214ce60.cpp",

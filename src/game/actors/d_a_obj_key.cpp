@@ -26,9 +26,8 @@
  *   cast stays.
  *
  * leftovers:
- * - func_ov089_02130fb4, func_ov089_0213115c, func_ov089_02131dcc and
- *   func_ov089_02131df4 are members under those addresses; the cartridge
- *   records no names for them.
+ * - func_ov089_0213115c, func_ov089_02131dcc and func_ov089_02131df4 are
+ *   members under those addresses; the cartridge records no names for them.
  * - LoadKeyModels and UnloadKeyModels stay C. The first parameter is the
  *   kind, and daDoor_c, daPly_c and the bosses call them by name.
  * - func_ov002_020c3dbc stays a call into ov002.
@@ -217,8 +216,7 @@ daObjKey_c::~daObjKey_c()
 
 /* Aim a jump at target so it lands in 30 frames with its peak `height` above
  * the higher end. Sets gravity, the launch speed and the heading. */
-void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
-{
+void daObjKey_c::AimArcTo(Vector3 *target, int height) {
     /* One register each: dy becomes the frames to the peak, height the frames after it. */
     int dy = target->y - mPos.y;
     if (dy < 0)
@@ -483,7 +481,7 @@ void daObjKey_c::StateStarJump()
             target.x = mJumpTarget.x;
             target.y = mJumpTarget.y;
             target.z = mJumpTarget.z;
-            func_ov089_02130fb4(&target, JUMP_HEIGHT);
+            AimArcTo(&target, JUMP_HEIGHT);
             mStep++;
             return;
         }

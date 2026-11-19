@@ -67,7 +67,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02124c28Ev",
+      "symbol": "_ZN7daTgz_c19GetHeightAboveWaterEv",
       "address": "0x02124c28",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov077_02124c28.cpp",

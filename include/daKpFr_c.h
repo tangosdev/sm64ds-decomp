@@ -49,7 +49,7 @@ struct daKpFr_c : dActor_c {
     dCcAc_c mdCcAc_c;    /* 0x0fc */
     dBgCh_Actr       mWithMeshClsn;          /* 0x130 */
     /* InitResources assigns IDENTITY_MATRIX4X3 into this slot.
-       func_ov070_02121e14, called from Behavior, fills the translation and
+       UpdateShadow, called from Behavior, fills the translation and
        passes it to DropShadowRadHeight. Render does not drop the shadow. */
     Matrix4x3          mMatrix;                /* 0x2ec */
     daKpFrState       *mStateMethods;          /* 0x31c */
@@ -78,7 +78,7 @@ struct daKpFr_c : dActor_c {
     void func_ov070_02121c8c();
     void func_ov070_02121cbc();
     void func_ov070_02121d50(void *vclsn);
-    void func_ov070_02121e14();
+    void UpdateShadow();
     int func_ov070_02121eb0();
     int func_ov070_02121ef8();
     int func_ov070_02121f18();

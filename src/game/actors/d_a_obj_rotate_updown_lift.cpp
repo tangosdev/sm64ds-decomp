@@ -14,7 +14,7 @@
  * (data_ov091_02134d1c). Behavior of that watcher finds the two nearby
  * UPDOWN_LIFT actors, holds sound 0x8d until both are dead, and once the
  * player is far (mFlags bit 0x8 and DistToCPlayer > 0x7d0000) puts them
- * back on their spawn node through func_ov091_02130fac.
+ * back on their spawn node through ResetToHome.
  *
  * Nodes 4..7 set mPitchStep to 0x2000; every other node clears it. The
  * shadow bobs with sin(mAngle.x) and scales with the height above mGroundY.
@@ -150,8 +150,7 @@ static inline int IsOffScreen(dActor_c *actor) {
 }
 
 /* Put a killed lift back on its spawn node. The watcher calls this. */
-void daObjRotateUpdownLift_c::func_ov091_02130fac()
-{
+void daObjRotateUpdownLift_c::ResetToHome() {
     Vector3 offset;
     Vector3 pos;
 
@@ -338,10 +337,10 @@ int daObjRotateUpdownLift_c::Behavior()
                         if (DistToCPlayer() > 0x7d0000) {
                             platform0 = mPlatform0;
                             if (platform0->mIsDead != 0)
-                                platform0->func_ov091_02130fac();
+                                platform0->ResetToHome();
                             platform1 = mPlatform1;
                             if (platform1->mIsDead != 0)
-                                platform1->func_ov091_02130fac();
+                                platform1->ResetToHome();
                         }
                     }
                 }

@@ -384,7 +384,7 @@ int daBtn_c::Behavior()
         }
     }
 
-    func_ov079_02123f34();
+    TrackNearestPlayers();
     UpdatePos(0);
 
     if (mHorzSpeed != 0) {
@@ -1435,8 +1435,7 @@ void daBtn_c::func_ov079_02124008()
 
 /* Survey the watched players: the nearest one (index, distance, bearing into
    mTargetAngle) and the nearest one ahead, within 0x2000 of the heading. */
-void daBtn_c::func_ov079_02123f34()
-{
+void daBtn_c::TrackNearestPlayers() {
     s16 minAngle;
     int minDist, minDist2;
     int dist;

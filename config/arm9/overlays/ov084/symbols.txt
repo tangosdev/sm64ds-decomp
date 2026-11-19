@@ -1,6 +1,6 @@
 _ZN7daKrb_cD1Ev kind:function(arm,size=0x50) addr:0x02129020
 _ZN7daKrb_cD0Ev kind:function(arm,size=0x64) addr:0x02129070
-_ZN7daKrb_c19func_ov084_021290d4Ev kind:function(arm,size=0x94) addr:0x021290d4
+_ZN7daKrb_c17UpdateChaseRadiusEv kind:function(arm,size=0x94) addr:0x021290d4
 _ZN7daKrb_c19func_ov084_02129168EP8dActor_c kind:function(arm,size=0xd0) addr:0x02129168
 _ZN7daKrb_c19func_ov084_02129238Ev kind:function(arm,size=0x114) addr:0x02129238
 _ZN7daKrb_c19func_ov084_0212934cEv kind:function(arm,size=0x14c) addr:0x0212934c

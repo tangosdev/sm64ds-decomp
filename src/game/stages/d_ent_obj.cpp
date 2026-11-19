@@ -603,7 +603,7 @@ int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
 
 /* Send every present player's figure toward its exit, and pick the one the
  * camera follows: player 2, else 1, else 3, else 0. */
-void dEntObj_c::func_ov075_02114fa8() {
+void dEntObj_c::SendPlayersToExits() {
     int i;
     unsigned char *present = data_0209fc5c;
     UnknownVsPlayer *player = mPlayers;

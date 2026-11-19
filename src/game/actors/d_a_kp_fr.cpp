@@ -73,7 +73,7 @@ int daKpFr_c::InitResources()
 int daKpFr_c::Behavior()
 {
     CallStateBehavior();
-    func_ov070_02121e14();
+    UpdateShadow();
     return 1;
 }
 
@@ -175,18 +175,18 @@ int daKpFr_c::func_ov070_02121eb0() {
     return 1;
 }
 
-void daKpFr_c::func_ov070_02121e14() {
-  int shadowDepth;
-  mMatrix.t.x = mPos.x >> 3;
-  mMatrix.t.y = mPos.y >> 3;
-  mMatrix.t.z = mPos.z >> 3;
-  dBgCh_Gnd ground;
-  ground.SetObjAndPos(mPos, this);
-  if (ground.DetectClsn() != 0)
-      shadowDepth = (mPos.y - ground.clsnY) + 0x1e000;
-  else
-    shadowDepth = 0x12c000;
-  DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 15);
+void daKpFr_c::UpdateShadow() {
+    int shadowDepth;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = mPos.y >> 3;
+    mMatrix.t.z = mPos.z >> 3;
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(mPos, this);
+    if (ground.DetectClsn() != 0)
+        shadowDepth = (mPos.y - ground.clsnY) + 0x1e000;
+    else
+        shadowDepth = 0x12c000;
+    DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 15);
 }
 
 /* GetFloorResult is not declared in the shared header yet; keep only that

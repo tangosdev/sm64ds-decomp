@@ -142,7 +142,7 @@ s32 daShl_c::Behavior()
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
         }
-        func_ov102_0214ce60();
+        UpdateModelAndShadow();
         mdCc_c.Clear();
         return 1;
     }
@@ -199,7 +199,7 @@ s32 daShl_c::Behavior()
 
     if (mModelIndex == 0)
         func_ov102_0214c84c();
-    func_ov102_0214ce60();
+    UpdateModelAndShadow();
     mdCc_c.Clear();
     if (mState != &data_ov102_0214ea48)
         mdCc_c.Update();
@@ -356,8 +356,7 @@ int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 /* dExtSimpleModel_c matrix and drop shadow. While carried (flag 0x4000) the model
    follows the carrier's hands; otherwise it sits at mPos turned by
    mAngle.y. Flag 0x40000 (hidden) skips the shadow. */
-void daShl_c::func_ov102_0214ce60()
-{
+void daShl_c::UpdateModelAndShadow() {
     int carried = (mFlags & 0x4000) != 0;
     if (carried) {
         Vector3 offset;

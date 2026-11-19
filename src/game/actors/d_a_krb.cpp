@@ -21,7 +21,7 @@
  * - dBgCh_Actr::GetFloorResult has no header member.
  * - dExtFrameCtrl_c::Advance is called on the subobject at +0x3c0.
  *   mAnmModel.Advance() this-adjusts.
- * - func_ov084_021290d4 recomputes the chase radius at each store.
+ * - UpdateChaseRadius recomputes the chase radius at each store.
  *   A named temporary DIFFs, and spelling mUnstickTimer on both
  *   sides of the decrement folds the halfword.
  * - OnTurnIntoEgg, the reward helper and InitResources mask param1
@@ -220,7 +220,7 @@ inline s32 *chaseRadius(daKrb_c *goomba)
     return &goomba->mChaseRadius;
 }
 
-void daKrb_c::func_ov084_021290d4() {
+void daKrb_c::UpdateChaseRadius() {
     daKrb_c *self2;
     int state;
     if (mUnstickTimer != 0) {
@@ -1506,7 +1506,7 @@ int daKrb_c::Render()
 
 /* Per-frame update; always returns 1.
  *
- * In order: func_ov084_02129864 (claim the star slot) and func_ov084_021290d4
+ * In order: func_ov084_02129864 (claim the star slot) and UpdateChaseRadius
  * (chase radius and unstick timer). GetCapState 0 ends the frame; 1 sets
  * mFlags bit 0x10000000 and poofs. A Goomba that is not a king minion,
  * tumbling, held by Yoshi or dying, and more than 1500.0 from the player, is
@@ -1534,7 +1534,7 @@ int daKrb_c::Behavior() {
     int st;
 
     func_ov084_02129864();
-    func_ov084_021290d4();
+    UpdateChaseRadius();
     r = GetCapState();
     if (r == 0)
         return 1;
@@ -1776,7 +1776,7 @@ int daKrb_c::InitResources() {
     mStuckCheckPos.y = mPos.y;
     mStuckCheckPos.z = mPos.z;
     mUnstickTimer = 0;
-    func_ov084_021290d4();
+    UpdateChaseRadius();
 
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;

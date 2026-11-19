@@ -43,7 +43,7 @@ enum Scuttlebug_AssetId {
  * Local value shapes carried from the legacy one-function files.
  * ------------------------------------------------------------------------ */
 
-/* Flat 0x30-byte matrix block, as func_ov071_0211f524 and the scratch matrix
+/* Flat 0x30-byte matrix block, as UpdateModelAndShadow and the scratch matrix
  * at arm9:0x020a0e68 are used: whole-block assignment, never by field. */
 
 typedef void (daSpd_c::*PMF)();
@@ -180,7 +180,7 @@ int daSpd_c::InitResources() {
     mEatingPlayer = 0;
     mTimer = 60;
     mShadowMtx = IDENTITY_MATRIX4X3;
-    func_ov071_0211f524();
+    UpdateModelAndShadow();
     return 1;
 }
 
@@ -192,7 +192,7 @@ int daSpd_c::Behavior() {
         mWithMeshClsn.TouchesWater()) {
         func_ov071_0211f498();
     }
-    func_ov071_0211f524();
+    UpdateModelAndShadow();
     return 1;
 }
 
@@ -527,7 +527,7 @@ int daSpd_c::func_ov071_0211f694() {
     return 1;
 }
 
-void daSpd_c::func_ov071_0211f524() {
+void daSpd_c::UpdateModelAndShadow() {
     if (IsInYoshiMouth(this)) {
         if (mState == 0)
             return;

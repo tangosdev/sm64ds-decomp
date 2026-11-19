@@ -1352,7 +1352,7 @@ void dScEntry_c::LoadCourseResources(int course) {
 }
 
 void dScEntry_c::EnterMatchLoading() {
-    mEntObj->func_ov075_02114fa8();
+    mEntObj->SendPlayersToExits();
     mStepDelay = 240;
     mStepPhase = MATCH_LOAD_RESOURCES;
     mSawLoadSignal = 0;

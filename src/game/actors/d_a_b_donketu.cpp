@@ -7,9 +7,9 @@
  */
 /* Notes: UpdateRunState returns a pointer cast to int on the timer path;
  * that shape is what matches. TurnTowardPlayer, func_ov064_0211616c and
- * func_ov064_02116bac are daOts_c members (d_a_ots.cpp) still named by
- * address. InitResources leaves spawnPos.y unset when DetectClsn misses, as
- * the ROM does.
+ * UpdateModelAndShadow are daOts_c members (d_a_ots.cpp); 0211616c is
+ * still named by address. InitResources leaves spawnPos.y unset when
+ * DetectClsn misses, as the ROM does.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -145,7 +145,7 @@ int daBDonketu_c::Behavior() {
             /* Kept as the ROM-matching spelling: a pointer increment. */
             mNumBulliesKilled++;
         }
-        func_ov064_02116bac();
+        UpdateModelAndShadow();
     }
     return 1;
 }

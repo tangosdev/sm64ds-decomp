@@ -80,7 +80,7 @@ struct daTgz_c : dActor_c {
     void func_ov077_02125b1c();
     int func_ov077_02125bb4();
     int func_ov077_02125dd4();
-    int func_ov077_02124c28();
+    int GetHeightAboveWater();
     int func_ov077_02124ce4();
     void func_ov077_02124d08(dBgCh_Actr *clsn);
     void func_ov077_02124eb0();

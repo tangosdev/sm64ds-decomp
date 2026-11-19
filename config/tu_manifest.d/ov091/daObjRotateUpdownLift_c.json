@@ -60,7 +60,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN23daObjRotateUpdownLift_c19func_ov091_02130facEv",
+      "symbol": "_ZN23daObjRotateUpdownLift_c11ResetToHomeEv",
       "address": "0x02130fac",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov091_02130fac.cpp",

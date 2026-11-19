@@ -121,7 +121,7 @@ int daTgz_c::OnAimedAtWithEgg()
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height in mWaterY. Returns how far above it the Spiny is (0 while
  * nothing has been found). */
-int daTgz_c::func_ov077_02124c28() {
+int daTgz_c::GetHeightAboveWater() {
     if (this->mWaterY == 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
@@ -734,7 +734,7 @@ int daTgz_c::Behavior()
             return 1;
         }
     } else {
-        this->func_ov077_02124c28();
+        this->GetHeightAboveWater();
         this->CallStateUpdate();
         MakeVanishLuigiWork(mdCcAc_c);
         this->func_ov077_02125304();

@@ -115,7 +115,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_02123f34Ev",
+      "symbol": "_ZN7daBtn_c19TrackNearestPlayersEv",
       "address": "0x02123f34",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov079_02123f34.c",

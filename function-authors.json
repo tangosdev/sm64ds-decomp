@@ -35087,7 +35087,7 @@
     },
     "ov060:0x02116740": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_02116740Ev"
+      "name": "_ZN11daKpaFire_c10BurnPlayerEv"
     },
     "ov060:0x021167c8": {
       "author": "andrewboudreau",
@@ -35159,7 +35159,7 @@
     },
     "ov060:0x02117624": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_02117624Ev"
+      "name": "_ZN11daKpaFire_c12UpdateShadowEv"
     },
     "ov060:0x021176c4": {
       "author": "tangosdev",
@@ -35735,7 +35735,7 @@
     },
     "ov062:0x0211aac0": {
       "author": "tangosdev",
-      "name": "_ZN7daRNk_c19func_ov062_0211aac0Ev"
+      "name": "_ZN7daRNk_c20UpdateModelAndShadowEv"
     },
     "ov062:0x0211ab50": {
       "author": "tangosdev",
@@ -36499,7 +36499,7 @@
     },
     "ov064:0x02115f98": {
       "author": "lunavyqo",
-      "name": "_ZN7daOts_c19func_ov064_02115f98EPc"
+      "name": "_ZN7daOts_c17SpawnHitParticlesEPc"
     },
     "ov064:0x02116110": {
       "author": "tangosdev",
@@ -36563,7 +36563,7 @@
     },
     "ov064:0x02116bac": {
       "author": "tangosdev",
-      "name": "_ZN7daOts_c19func_ov064_02116bacEv"
+      "name": "_ZN7daOts_c20UpdateModelAndShadowEv"
     },
     "ov064:0x02116ca0": {
       "author": "andrewboudreau",
@@ -38091,7 +38091,7 @@
     },
     "ov070:0x02120070": {
       "author": "andrewboudreau",
-      "name": "_ZN19daPropeller_Heyho_c19func_ov070_02120070Ev"
+      "name": "_ZN19daPropeller_Heyho_c20UpdateModelAndShadowEv"
     },
     "ov070:0x02120150": {
       "author": "andrewboudreau",
@@ -38335,7 +38335,7 @@
     },
     "ov070:0x02121e14": {
       "author": "tangosdev",
-      "name": "_ZN8daKpFr_c19func_ov070_02121e14Ev"
+      "name": "_ZN8daKpFr_c12UpdateShadowEv"
     },
     "ov070:0x02121eb0": {
       "author": "tangosdev",
@@ -39775,7 +39775,7 @@
     },
     "ov075:0x02114fa8": {
       "author": "tangosdev",
-      "name": "_ZN9dEntObj_c19func_ov075_02114fa8Ev"
+      "name": "_ZN9dEntObj_c18SendPlayersToExitsEv"
     },
     "ov075:0x0211505c": {
       "author": "tangosdev",
@@ -40859,7 +40859,7 @@
     },
     "ov079:0x02123f34": {
       "author": "ruspecial",
-      "name": "_ZN7daBtn_c19func_ov079_02123f34Ev"
+      "name": "_ZN7daBtn_c19TrackNearestPlayersEv"
     },
     "ov079:0x02124008": {
       "author": "andrewboudreau",
@@ -41919,7 +41919,7 @@
     },
     "ov084:0x021290d4": {
       "author": "tangosdev",
-      "name": "_ZN7daKrb_c19func_ov084_021290d4Ev"
+      "name": "_ZN7daKrb_c17UpdateChaseRadiusEv"
     },
     "ov084:0x02129168": {
       "author": "tangosdev",
@@ -43239,7 +43239,7 @@
     },
     "ov091:0x02130fac": {
       "author": "tangosdev",
-      "name": "_ZN23daObjRotateUpdownLift_c19func_ov091_02130facEv"
+      "name": "_ZN23daObjRotateUpdownLift_c11ResetToHomeEv"
     },
     "ov091:0x02131070": {
       "author": "tangosdev",
@@ -43639,7 +43639,7 @@
     },
     "ov092:0x021313b0": {
       "author": "tangosdev",
-      "name": "_ZN8daOnms_c19func_ov092_021313b0Ev"
+      "name": "_ZN8daOnms_c12NextPathNodeEv"
     },
     "ov092:0x021314d0": {
       "author": "tangosdev",
@@ -44491,7 +44491,7 @@
     },
     "ov098:0x0213b584": {
       "author": "tangosdev",
-      "name": "_ZN7daWbm_c19func_ov098_0213b584Ev"
+      "name": "_ZN7daWbm_c20UpdateModelAndShadowEv"
     },
     "ov098:0x0213b63c": {
       "author": "tangosdev",
@@ -45463,7 +45463,7 @@
     },
     "ov102:0x0214ce60": {
       "author": "tangosdev",
-      "name": "_ZN7daShl_c19func_ov102_0214ce60Ev"
+      "name": "_ZN7daShl_c20UpdateModelAndShadowEv"
     },
     "ov102:0x0214cf4c": {
       "author": "tangosdev",

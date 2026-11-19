@@ -40,7 +40,7 @@ daObjFlMaruta_c::~daObjFlMaruta_c()
 
 int daObjFlMaruta_c::CleanupResources()
 {
-    return this->func_ov080_021270dc((ResourceDescriptor *)data_ov022_02112c9c);
+    return this->CleanupResourcesFrom((ResourceDescriptor *)data_ov022_02112c9c);
 }
 
 int daObjFlMaruta_c::Behavior()
@@ -51,7 +51,7 @@ int daObjFlMaruta_c::Behavior()
 
 int daObjFlMaruta_c::InitResources()
 {
-    return this->func_ov080_021274ac((ResourceDescriptor *)data_ov022_02112c9c);
+    return this->InitResourcesFrom((ResourceDescriptor *)data_ov022_02112c9c);
 }
 
 int *daObjFlMaruta_c_classInit(void) {

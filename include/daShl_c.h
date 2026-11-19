@@ -84,7 +84,7 @@ struct daShl_c : dEnemyBase_c {
     void func_ov102_0214c7fc();                        /* splash-floor check */
     void func_ov102_0214c84c();                        /* ridden trail/sound */
     void func_ov102_0214cbec();                        /* touch resolution */
-    void func_ov102_0214ce60();                        /* model mtx + shadow */
+    void UpdateModelAndShadow();                       /* model mtx + shadow */
     int  func_ov102_0214cf4c(dActor_c *kicker);        /* kicked -> sliding */
     int  func_ov102_0214cf98(dActor_c *player);        /* jumped on -> ridden */
     int  func_ov102_0214cfe4();                        /* state: held tick */

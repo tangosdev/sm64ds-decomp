@@ -181,7 +181,7 @@ int daWbm_c::InitResources()
 int daWbm_c::Behavior()
 {
     if (func_ov098_0213b6e0()) {
-        func_ov098_0213b584();
+        UpdateModelAndShadow();
         mdCcAc_c.Clear();
         return 1;
     }
@@ -198,7 +198,7 @@ int daWbm_c::Behavior()
                 MarkForDestruction();
             return 0;
         }
-        func_ov098_0213b584();
+        UpdateModelAndShadow();
         mdCcAc_c.Clear();
         mdCcAc_c.Update();
     } else {
@@ -416,8 +416,7 @@ void daWbm_c::Burst()
 }
 
 /* Place the model and the drop shadow at the bomb's position. */
-void daWbm_c::func_ov098_0213b584()
-{
+void daWbm_c::UpdateModelAndShadow() {
     Vector3 shadowPos;
     Vec3_Asr(&shadowPos, &mPos, 3);
     Matrix4x3_FromTranslation(&gScratchMtx, shadowPos.x, shadowPos.y, shadowPos.z);
