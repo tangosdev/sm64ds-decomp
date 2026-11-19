@@ -53,6 +53,7 @@
   "Two functions, .text 0x02019dfc..0x02019ebc; the .bss run is 0x0209d4d4..0x0209d528."
  ],
  "verification": {
+  "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
   "linkcheck": {
    "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
    "result": "scratch-data-verified",

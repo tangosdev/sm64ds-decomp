@@ -46,6 +46,7 @@
   "One function, .text 0x02065170..0x02065234; the .bss run is 0x020a94c0..0x020aa420."
  ],
  "verification": {
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
   "linkcheck": {
    "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
    "result": "scratch-data-verified",
