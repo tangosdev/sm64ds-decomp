@@ -108,7 +108,7 @@ void Jump3D_StopGravity(void);
 void Jump3D_StartRoundLayout(void);
 int Jump3D_AllIdle(void);
 int Heyho_AllIdle(void);
-int Heyho_InitPool(void *ptr, int n);
+int Heyho_InitPool(Heyho *ptr, int n);
 void Jump3D_EnableInput(void);
 
 

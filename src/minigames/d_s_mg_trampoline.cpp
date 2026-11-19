@@ -119,7 +119,7 @@ extern "C" void InitialiseVramGlobals(void);
 
 extern const s16 data_02082414[];
 extern "C" int Trmp3DMario_InitPool(unsigned char *a0, int a1);
-void TrmpFx_InitPool(void *records, int count);
+void TrmpFx_InitPool(TrmpScorePopup *records, int count);
 void TrmpLine_LoadTextures(void);
 extern "C" void Trmp3DMario_ResetAll(unsigned int n, int spawnHeight);
 void TrmpFx_ClearAll(void);
@@ -928,8 +928,8 @@ void dScMgTrampoline_c::PaintSquare(int cx, int cy, int colour, int size) {
 }
 
 /* .c-derived member: C linkage for the whole block */
-void TrmpFx_InitPool(void *records, int count) {
-    sTrmpFxPool = (TrmpScorePopup *)records;
+void TrmpFx_InitPool(TrmpScorePopup *records, int count) {
+    sTrmpFxPool = records;
     sTrmpFxCount = count;
 }
 

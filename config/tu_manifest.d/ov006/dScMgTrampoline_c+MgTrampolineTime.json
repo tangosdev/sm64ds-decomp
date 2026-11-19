@@ -307,7 +307,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "_Z15TrmpFx_InitPoolPvi",
+      "symbol": "_Z15TrmpFx_InitPoolP14TrmpScorePopupi",
       "address": "0x02120d8c",
       "size": "0x0000001c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",

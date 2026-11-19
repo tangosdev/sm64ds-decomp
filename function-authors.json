@@ -12623,7 +12623,7 @@
     },
     "ov002:0x020ad660": {
       "author": "ruspecial",
-      "name": "_Z19func_ov002_020ad660PvS_S_i"
+      "name": "_ZN12dEnemyBase_c19func_ov002_020ad660EP10dBgCh_ActrP17dExtSimpleModel_ci"
     },
     "ov002:0x020ad838": {
       "author": "ruspecial",
@@ -20547,7 +20547,7 @@
     },
     "ov006:0x020c4684": {
       "author": "tangosdev",
-      "name": "_Z14Heyho_InitPoolPvi"
+      "name": "_Z14Heyho_InitPoolP5Heyhoi"
     },
     "ov006:0x020c4710": {
       "author": "ruspecial",
@@ -27035,7 +27035,7 @@
     },
     "ov006:0x02120d8c": {
       "author": "github-actions[bot]",
-      "name": "_Z15TrmpFx_InitPoolPvi"
+      "name": "_Z15TrmpFx_InitPoolP14TrmpScorePopupi"
     },
     "ov006:0x02120da8": {
       "author": "github-actions[bot]",

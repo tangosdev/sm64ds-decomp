@@ -961,7 +961,7 @@ extern void Trmp2Spinner_UpdateMatricesAll(void);
 extern void Trmp2Spinner_UpdateMatrix(char *);
 extern void TrmpFx_ClearAll(void);
 extern void TrmpFx_DrawAll(void);
-extern void TrmpFx_InitPool(void *, int);
+extern void TrmpFx_InitPool(struct TrmpScorePopup *, int);
 extern void TrmpFx_UpdateAll(void);
 extern void UnloadKeyModels(int);
 extern void UnloadSilverStarAndNumber(void);
