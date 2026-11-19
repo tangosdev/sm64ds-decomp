@@ -238,9 +238,6 @@
   "gNextSceneParam": {
    "src/game/stages/d_scene.cpp": ["return:unsigned int"]
   },
-  "gPlayers": {
-   "src/game/player/d_a_ply_methods.cpp": ["return:char * []"]
-  },
   "gRunningKuppaScript": {
    "src/KuppaScript.cpp": ["return:unsigned char *"]
   },
