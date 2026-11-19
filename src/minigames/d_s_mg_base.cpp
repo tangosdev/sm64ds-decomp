@@ -198,7 +198,7 @@ extern const char sMgBrushPalette[0x20] = {
 };
 extern int sMgBannerButtonsArmed;
 extern void Banner_Init(struct MgBanner *e, int c, int a1, int a2, int a3, int s1, short s2);
-extern char sMgBannerGfxSlotUsed[];
+extern unsigned char sMgBannerGfxSlotUsed[];
 extern void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val);
 extern const int sMgCounterMaxByDigits[] = {0, 9, 99, 999, 9999, 99999, 999999};
 /* The five sub-screen OBJ images SaveScreenForMenu decompresses over
@@ -2930,7 +2930,7 @@ void Mg_ResetOverlays(void) {
         i++;
     } while (i < 64);
     int j = 0;
-    char* p = sMgBannerGfxSlotUsed;
+    unsigned char *p = sMgBannerGfxSlotUsed;
     do {
         j++;
         *p++ = 0;

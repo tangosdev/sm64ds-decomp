@@ -116,7 +116,7 @@ extern int sTrmpNcgByLanguage[];
 
 extern "C" void InitialiseVramGlobals(void);
 
-extern s16 data_02082414;
+extern const s16 data_02082414[];
 extern "C" int Trmp3DMario_InitPool(unsigned char *a0, int a1);
 void TrmpFx_InitPool(void *records, int count);
 void TrmpLine_LoadTextures(void);
@@ -315,7 +315,7 @@ s32 dScMgTrampoline_c::InitResources() {
     REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 8;
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
-    fov = FX_Div(0xc0000, data_02082414);
+    fov = FX_Div(0xc0000, data_02082414[0]);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
     this->mCameras[0].mLookAt.z = 0;
