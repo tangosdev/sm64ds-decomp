@@ -9,16 +9,16 @@
     "launder_or_forced": 18,
     "launder_sites": 30,
     "pragma_by_name": {
-      "opt_common_subs": 15,
+      "opt_common_subs": 12,
       "opt_lifetimes": 1,
-      "opt_loop_invariants": 10,
+      "opt_loop_invariants": 9,
       "opt_prelinearize": 1,
       "opt_propagation": 9,
       "opt_strength_reduction": 12,
       "optimize_for_size": 12
     },
-    "pragma_files": 37,
-    "pragma_overrides": 60,
+    "pragma_files": 35,
+    "pragma_overrides": 56,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
