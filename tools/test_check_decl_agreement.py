@@ -2416,6 +2416,112 @@ class NativeFreeOverloadTests(unittest.TestCase):
         self.assertEqual([f["kind"] for f in findings], ["param"])
 
 
+class CFunctionWithCxxOverloadTests(unittest.TestCase):
+    """A C function and a C++ inline overload of its name are two entities.
+
+    The tree's shape: NitroSDK's `VEC_Add` is C, defined in src/VEC_Add.c and
+    declared `extern "C"` in nitro/fx/fx_vec.h; math/CalcLib.h adds an inline
+    `VEC_Add(Vector3 *, ...)` that forwards to it, after the C++ guard closes the
+    extern "C" block. Measuring either one against the other's body is comparing
+    two different functions.
+    """
+
+    SDK_H = ('typedef struct { int x, y, z; } VecFx32;\n'
+             '#ifdef __cplusplus\n'
+             'extern "C" {\n'
+             '#endif\n'
+             'void VEC_Add(const VecFx32 *, const VecFx32 *, VecFx32 *);\n'
+             '#ifdef __cplusplus\n'
+             '}\n'
+             '#endif\n')
+    OVERLOAD_H = ('#include "fx_vec.h"\n'
+                  '#ifdef __cplusplus\n'
+                  'inline void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *ab) {\n'
+                  '    VEC_Add((const VecFx32 *)a, (const VecFx32 *)b, (VecFx32 *)ab);\n'
+                  '}\n'
+                  '#endif\n')
+
+    def fixture(self, user_rel=None, user=None, reverse=False, extra=()):
+        def tree(t):
+            t.write("include/fx_vec.h", self.SDK_H)
+            t.write("include/CalcLib.h", self.OVERLOAD_H)
+            t.write("src/VEC_Add.c",
+                    '#include "fx_vec.h"\n'
+                    "void VEC_Add(const VecFx32 *a, const VecFx32 *b, VecFx32 *ab)\n"
+                    "{\n    ab->x = a->x + b->x;\n}\n")
+            for rel, text in extra:
+                t.write(rel, text)
+            if user_rel:
+                t.write(user_rel, user)
+            t.symbols(["VEC_Add"])
+        findings, decls, defs, files = build(tree)
+        if reverse:
+            findings = CDA.disagreements(decls, list(reversed(defs)), {"VEC_Add"})
+        return findings
+
+    def test_the_sdk_declaration_is_not_billed_for_the_overload(self):
+        for reverse in (False, True):
+            self.assertEqual(self.fixture(reverse=reverse), [])
+
+    def test_a_declaration_of_the_overload_is_not_billed_for_the_c_body(self):
+        for reverse in (False, True):
+            self.assertEqual(self.fixture(
+                "include/user.h", "void VEC_Add(Vector3 *, Vector3 *, Vector3 *);\n",
+                reverse=reverse), [])
+
+    def test_a_wrong_return_on_the_SAME_overload_is_still_reported(self):
+        for reverse in (False, True):
+            findings = self.fixture(
+                "include/user.h", "int VEC_Add(Vector3 *, Vector3 *, Vector3 *);\n",
+                reverse=reverse)
+            self.assertEqual([(f["kind"], f["got"], f["want"], f["ref_file"])
+                              for f in findings],
+                             [("return", "int", "void", "include/CalcLib.h")])
+
+    def test_a_wrong_return_on_the_C_function_is_still_reported(self):
+        for reverse in (False, True):
+            findings = self.fixture(
+                "src/user.cpp",
+                'extern "C" int VEC_Add(const VecFx32 *, const VecFx32 *, VecFx32 *);\n',
+                reverse=reverse)
+            self.assertEqual([(f["kind"], f["got"], f["want"], f["ref_file"])
+                              for f in findings],
+                             [("return", "int", "void", "src/VEC_Add.c")])
+
+    def test_a_c_declaration_matching_NO_entity_is_still_reported(self):
+        for reverse in (False, True):
+            findings = self.fixture(
+                "src/user.c",
+                "typedef struct { int x, y, z; } VecFx32;\n"
+                "extern void VEC_Add(const VecFx32 *, const VecFx32 *, int *);\n",
+                reverse=reverse)
+            self.assertIn(("param", "#3 int *"),
+                          [(f["kind"], f["got"]) for f in findings])
+
+    def test_two_C_definitions_are_a_contradiction_not_an_overload_set(self):
+        """C cannot overload. A second C-linkage body with another list is a
+        defect, not a second entity, so a declaration spelling the stale list
+        is not excused by it: it still answers to the established reference."""
+        findings = self.fixture(
+            "src/user.c", "extern void VEC_Add(int *, int *, int *);\n",
+            extra=(("src/VEC_Add_stale.c",
+                    "void VEC_Add(int *a, int *b, int *ab) { }\n"),))
+        mine = [f for f in findings if f["file"] == "src/user.c"]
+        self.assertEqual([(f["kind"], f["got"]) for f in mine],
+                         [("param", "#%d int *" % i) for i in (1, 2, 3)])
+        self.assertNotIn("src/VEC_Add_stale.c", {f["ref_file"] for f in mine})
+
+    def test_an_ordinary_c_symbol_is_untouched(self):
+        """One parameter list means one entity: every mismatch is real."""
+        def tree(t):
+            t.write("src/f.c", "void f(int *p) { }\n")
+            t.write("src/user.c", "extern void f(short *p);\n")
+            t.symbols(["f"])
+        findings, _, _, _ = build(tree)
+        self.assertEqual([(f["kind"], f["got"]) for f in findings],
+                         [("param", "#1 short *")])
+
+
 class MarkedOverloadTests(unittest.TestCase):
     """One file defining an overload set under `@symbol` lines, declared from a header.
 
