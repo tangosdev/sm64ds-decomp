@@ -125,7 +125,7 @@
   ],
   "data": [
     {
-      "symbol": "data_ov065_0211cfa4",
+      "symbol": "sTTCRotatingSolidInitialDelays",
       "address": "0x0211cfa4",
       "size": "0x4",
       "binding": "STB_GLOBAL",
