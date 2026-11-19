@@ -138,7 +138,7 @@ void daBtfly_c::State7()
     }
     /* mClsnFlags & 0x10 is func_02035638. No accessor; IsOnGround is mFlags & 0x10. */
     if (hasContact || mWithMeshClsn.IsOnWall() || mWithMeshClsn.IsOnGround() ||
-        func_02035638((u8 *)&mWithMeshClsn) || mStateTimer > 157) {
+        func_02035638(&mWithMeshClsn) || mStateTimer > 157) {
         if (hasContact != 0) {
             dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
             if (hit != 0) {

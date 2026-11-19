@@ -61,7 +61,7 @@ extern "C" {
 void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 
-int func_0202043c(void *thiz);
+int func_0202043c(OamAnimation *anim);
 }
 
 /* -------------------------------------------------------------------------- */

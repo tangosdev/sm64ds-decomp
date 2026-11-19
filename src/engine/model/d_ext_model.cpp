@@ -96,7 +96,7 @@ u32 TrimModelFile(void *ptr);
 extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
 /* local extern: blends verts toward the old pose in Virtual10/UpdateVerts
    while blendWeight is still below 1.0. Definition takes char *. */
-extern "C" void func_0204531c(char *data, int weight);
+extern "C" void func_0204531c(ModelComponents *data, int weight);
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
    file. Spelled (int *) the way func_020462bc.c defines it */
 extern "C" u32 func_020462bc(int *file);
@@ -353,20 +353,20 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
     mats[ids[listIdx]].flags &= 0x7fffffff;
 }
 
-extern "C" void func_02016a14(char *self, int color) {
-    ((dExtSimpleModel_c *)self)->data.SetDiffuse(color);
+extern "C" void func_02016a14(dExtSimpleModel_c *self, int color) {
+    self->data.SetDiffuse(color);
 }
 
-extern "C" void func_02016a04(char *self, int color) {
-    ((dExtSimpleModel_c *)self)->data.SetAmbient(color);
+extern "C" void func_02016a04(dExtSimpleModel_c *self, int color) {
+    self->data.SetAmbient(color);
 }
 
 void func_020169f4(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetEmission(color);
 }
 
-extern "C" void func_020169d8(char *self, int index, unsigned int value) {
-    ((dExtSimpleModel_c *)self)->data.SetMaterialEmission(value, index);
+extern "C" void func_020169d8(dExtSimpleModel_c *self, int index, unsigned int value) {
+    self->data.SetMaterialEmission(value, index);
 }
 
 /* ---------------------------------------------------------------------------
@@ -478,7 +478,7 @@ void dExtBlendAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c((char *)&data, blendWeight);
+        func_0204531c(&data, blendWeight);
     } else {
         data.UpdateVertsUsingBones();
     }
@@ -488,7 +488,7 @@ void dExtBlendAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c((char *)&data, blendWeight);
+        func_0204531c(&data, blendWeight);
     } else {
         dExtSimpleModel_c::Virtual10(mat);
     }

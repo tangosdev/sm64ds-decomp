@@ -123,7 +123,7 @@ extern const s16 data_ov002_021000a8[];
    clash with these. */
 extern Matrix4x3 data_020a0e68;
 
-extern int func_02035638(u8 *p);
+extern int func_02035638(dBgCh_Actr *clsn);
 extern char *data_ov002_021000a0[];
 extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 /* Was spelled `func_02123804`, a name no symbols.txt defines. ov002's relocs
@@ -472,7 +472,7 @@ void daYegg_c::SeekStraight() {
                 if (HandleCylinderHit() != 0)
                     return;
                 onwall = mWithMeshClsn.IsOnWall();
-                if ((onwall | func_02035638((u8 *)&mWithMeshClsn)) != 0) {
+                if ((onwall | func_02035638(&mWithMeshClsn)) != 0) {
                     this->func_ov002_020edca4();
                     return;
                 }

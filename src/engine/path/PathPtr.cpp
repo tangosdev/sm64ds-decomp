@@ -20,9 +20,10 @@
  *   Administrator") into data_020a0d90, at most 0x1f chars plus a forced
  *   NUL, via func_02018434. Both globals keep their linker names. */
 #include "PathPtr.h"
+#include "common.h"
 
 extern PathDef *PATH_DEFS;  /* the level's PathDef table */
-extern char *PATH_NODES;    /* flat node records, six bytes each */
+extern Vector3_16 *PATH_NODES; /* flat node positions, three s16 each */
 extern int NUM_PATHS;       /* entries in PATH_DEFS */
 
 extern "C" {
@@ -65,22 +66,18 @@ unsigned int PathPtr::Loops() const
 
 void PathPtr::GetNode(Vector3 &node, unsigned int idx) const
 {
-    char *base = GetNodeTable();
-    u16 first = def->firstNode;
-    char *row = base + first * 6;
-    int off = idx * 6;
-    node.x = (*(s16 *)(row + off)) << 12;
-    node.y = (*(s16 *)(row + off + 2)) << 12;
-    node.z = (*(s16 *)(row + off + 4)) << 12;
+    Vector3_16 *path = GetNodeTable() + def->firstNode;
+    node.x = path[idx].x << 12;
+    node.y = path[idx].y << 12;
+    node.z = path[idx].z << 12;
 }
 
 void PathPtr::SetNodeTable(void *nodes)
 {
-    PATH_NODES = (char *)nodes;
+    PATH_NODES = (Vector3_16 *)nodes;
 }
 
-char *PathPtr::GetNodeTable()
-{
+Vector3_16 *PathPtr::GetNodeTable() {
     return PATH_NODES;
 }
 
