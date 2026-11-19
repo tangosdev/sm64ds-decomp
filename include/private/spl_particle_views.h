@@ -5,7 +5,7 @@
 #include "nitro/fx/fx.h"
 
 /* C views of the particle code's records, shared by the particle draw routines
- * (func_0204b028 .. func_0204be40), the child spawn (func_0204c304) and the
+ * (SPLDraw_Child_Polygon .. SPLDraw_Billboard), the child spawn (func_0204c304) and the
  * particle animation callbacks (SPLAnim_ChildScale .. SPLAnim_Scale). Each view
  * names the fields those files read. Unread bytes stay padding.
  *
@@ -34,8 +34,8 @@ typedef struct PtclData {
     u32 randomInitAngle : 1; /* 13 */
     u32 : 2;
     u32 hasChildResource : 1;      /* bit 16 -- also draw the child particles */
-    u32 polygonRotAxis : 2;        /* bits 17-18 -- data_02099fbc index */
-    u32 polygonReferencePlane : 1; /* bit 19 -- data_02099fb4 index */
+    u32 polygonRotAxis : 2;        /* bits 17-18 -- sRotationFunctions index */
+    u32 polygonReferencePlane : 1; /* bit 19 -- sPlaneDrawingFunctions index */
     u32 : 12;
     int rate;             /* 0x04 */
     int emitRadius;       /* 0x08 -- System::emitRadius */
@@ -74,8 +74,8 @@ typedef struct PtclChildFlags {
     u16 : 1;
     u16 useChildColor : 1;         /* bit 6 */
     u16 drawType : 2;              /* bits 7-8 -- picks the child draw routine */
-    u16 polygonRotAxis : 2;        /* bits 9-10 -- data_02099fbc index */
-    u16 polygonReferencePlane : 1; /* bit 11 -- data_02099fb4 index */
+    u16 polygonRotAxis : 2;        /* bits 9-10 -- sRotationFunctions index */
+    u16 polygonReferencePlane : 1; /* bit 11 -- sPlaneDrawingFunctions index */
     u16 : 4;
 } PtclChildFlags;
 

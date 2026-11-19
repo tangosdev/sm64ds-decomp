@@ -1583,11 +1583,11 @@ src/unnamed/arm9/0204/func_0204af3c.c:
     complete
     .text start:0x0204af3c end:0x0204b028
 
-src/unnamed/arm9/0204/func_0204b028.c:
+src/SPLDraw_Child_Polygon.c:
     complete
     .text start:0x0204b028 end:0x0204b244
 
-src/unnamed/arm9/0204/func_0204b244.c:
+src/SPLDraw_Polygon.c:
     complete
     .text start:0x0204b244 end:0x0204b460
 
@@ -1599,27 +1599,27 @@ src/SPLDraw_DirectionalBillboard.c:
     complete
     .text start:0x0204b81c end:0x0204bbd8
 
-src/unnamed/arm9/0204/func_0204bbd8.c:
+src/SPLDraw_Child_Billboard.c:
     complete
     .text start:0x0204bbd8 end:0x0204be40
 
-src/unnamed/arm9/0204/func_0204be40.c:
+src/SPLDraw_Billboard.c:
     complete
     .text start:0x0204be40 end:0x0204c0a8
 
-src/unnamed/arm9/0204/func_0204c0a8.c:
+src/SPLUtil_RotateY.c:
     complete
     .text start:0x0204c0a8 end:0x0204c0e8
 
-src/unnamed/arm9/0204/func_0204c0e8.c:
+src/SPLUtil_RotateXYZ.c:
     complete
     .text start:0x0204c0e8 end:0x0204c194
 
-src/unnamed/arm9/0204/func_0204c194.c:
+src/SPLUtil_DrawXZPlane.c:
     complete
     .text start:0x0204c194 end:0x0204c24c
 
-src/unnamed/arm9/0204/func_0204c24c.c:
+src/SPLUtil_DrawXYPlane.c:
     complete
     .text start:0x0204c24c end:0x0204c304
 

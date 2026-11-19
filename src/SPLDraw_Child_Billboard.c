@@ -6,12 +6,12 @@
 #include "nitro/fx/fx_mtx43.h"
 
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
-extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
+extern void SPLUtil_DrawXYPlane(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one child particle as a camera-facing quad (child draw type 0,
- * func_0204a5c8): func_0204be40 with the child record's tile counts. pret's
- * SPL calls this SPLDraw_Child_Billboard. */
-void func_0204bbd8(ManagerView *mgr, ParticleElement *ptcl) {
+ * func_0204a5c8): SPLDraw_Billboard with the child record's tile counts. The
+ * name is pret's SPL's. */
+void SPLDraw_Child_Billboard(ManagerView *mgr, ParticleElement *ptcl) {
     ParticleSystem *sys = mgr->mCurrentSystem;
     s16 aspectRatio = sys->mDefinition->data->aspectRatio;
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
@@ -74,6 +74,6 @@ void func_0204bbd8(ManagerView *mgr, ParticleElement *ptcl) {
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
         /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
-        func_0204c24c((u8)child->textureTileCountS, (u8)child->textureTileCountT);
+        SPLUtil_DrawXYPlane((u8)child->textureTileCountS, (u8)child->textureTileCountT);
     }
 }

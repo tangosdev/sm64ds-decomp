@@ -9,7 +9,7 @@
 
 /* No header declares these. */
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
-extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
+extern void SPLUtil_DrawXYPlane(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one child particle as a quad stretched along its flight (child draw
  * type 1, func_0204a5c8): SPLDraw_DirectionalBillboard, still with the parent
@@ -102,6 +102,6 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
         /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
-        func_0204c24c((u8)child->textureTileCountS, (u8)child->textureTileCountT);
+        SPLUtil_DrawXYPlane((u8)child->textureTileCountS, (u8)child->textureTileCountT);
     }
 }

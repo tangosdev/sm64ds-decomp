@@ -2,11 +2,11 @@
 #include "private/spl_particle_views.h"
 extern void func_0204af3c(void *p);
 extern void SPLUtil_SetTexture_Stub(void *p);
-extern void func_0204b244(void *self, void *node);
-extern void func_0204be40(void *self, void *node);
+extern void SPLDraw_Polygon(void *self, void *node);
+extern void SPLDraw_Billboard(void *self, void *node);
 extern void SPLDraw_DirectionalBillboard(void *self, void *node);
-extern void func_0204b028(void *self, void *node);
-extern void func_0204bbd8(void *self, void *node);
+extern void SPLDraw_Child_Polygon(void *self, void *node);
+extern void SPLDraw_Child_Billboard(void *self, void *node);
 extern void SPLDraw_Child_DirectionalBillboard(void *self, void *node);
 
 /* Draw the current system's particles, then its child particles: bind the
@@ -28,13 +28,13 @@ void func_0204a5c8(char *self) {
 
     switch (data->drawType) {
     case 0:
-        draw = func_0204be40;
+        draw = SPLDraw_Billboard;
         break;
     case 1:
         draw = SPLDraw_DirectionalBillboard;
         break;
     case 2:
-        draw = func_0204b244;
+        draw = SPLDraw_Polygon;
         break;
     }
 
@@ -56,13 +56,13 @@ void func_0204a5c8(char *self) {
 
     switch (def->child->flags.drawType) {
     case 0:
-        draw = func_0204bbd8;
+        draw = SPLDraw_Child_Billboard;
         break;
     case 1:
         draw = SPLDraw_Child_DirectionalBillboard;
         break;
     case 2:
-        draw = func_0204b028;
+        draw = SPLDraw_Child_Polygon;
         break;
     }
 

@@ -6,16 +6,16 @@
 #include "nitro/fx/fx_mtx43.h"
 
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
-extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
+extern void SPLUtil_DrawXYPlane(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one particle as a camera-facing quad (draw type 0, func_0204a5c8):
  * alpha and the next polygon ID into POLYGON_ATTR (nothing more when the
  * alpha is 0), move basePosition + offset into view space, then load a matrix
  * that rotates by the particle's angle about the view axis, scales by
  * scale * animScale (x by aspectRatio too) and translates there, set its
- * color and emit the XY-plane quad. pret's SPL calls this SPLDraw_Billboard;
- * func_0204bbd8 is the child-particle twin. */
-void func_0204be40(ManagerView *mgr, ParticleElement *ptcl) {
+ * color and emit the XY-plane quad. The name is pret's SPL's;
+ * SPLDraw_Child_Billboard is the child-particle twin. */
+void SPLDraw_Billboard(ManagerView *mgr, ParticleElement *ptcl) {
     ParticleSystem *sys = mgr->mCurrentSystem;
     s16 aspectRatio = sys->mDefinition->data->aspectRatio;
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
@@ -78,6 +78,6 @@ void func_0204be40(ManagerView *mgr, ParticleElement *ptcl) {
     {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
         /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
-        func_0204c24c((u8)data->textureTileCountS, (u8)data->textureTileCountT);
+        SPLUtil_DrawXYPlane((u8)data->textureTileCountS, (u8)data->textureTileCountT);
     }
 }

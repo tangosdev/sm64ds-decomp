@@ -301,7 +301,7 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
  *
  * leftovers: `(flags << 17) >> 31` stays the arithmetic-shift bit-14 test
  * -- `& 0x4000` emits a different sequence. The polygon-ID names come from
- * the draw routines (func_0204be40 and its siblings), which put
+ * the draw routines (SPLDraw_Billboard and its siblings), which put
  * polygonIDs.current into POLYGON_ATTR bits 24-29 and wrap it from max to
  * min; dPa_c::Initialise passes 0x1a and 0x3e, both 6-bit IDs.
  */

@@ -5,9 +5,8 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "math/MtxStack.h"
 
-
-extern void (*data_02099fbc[])(int, int, void *); /* func_0204c0a8, func_0204c0e8 */
-extern void (*data_02099fb4[])(u8, u8);           /* func_0204c24c, func_0204c194 */
+extern void (*sRotationFunctions[])(int, int, void *); /* SPLUtil_RotateY, SPLUtil_RotateXYZ */
+extern void (*sPlaneDrawingFunctions[])(u8, u8); /* SPLUtil_DrawXYPlane, SPLUtil_DrawXZPlane */
 
 extern void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz); /* scale matrix */
 extern void G3_LoadMtx43(void *m);                        /* load the 4x3 matrix */
@@ -18,9 +17,9 @@ extern void G3_MultMtx43(void *m);                        /* multiply by the 4x3
  * 0), rotate by its angle about
  * the definition's axis, scale by scale * animScale (x by aspectRatio too),
  * translate to basePosition + offset, set its color and emit the quad in the
- * definition's plane. pret's SPL calls this SPLDraw_Polygon; func_0204b028
+ * definition's plane. The name is pret's SPL's; SPLDraw_Child_Polygon
  * is the child-particle twin. */
-void func_0204b244(ManagerView *mgr, ParticleElement *ptcl) {
+void SPLDraw_Polygon(ManagerView *mgr, ParticleElement *ptcl) {
     ParticleSystem *sys = mgr->mCurrentSystem;
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
     Matrix4x3 out;
@@ -46,7 +45,7 @@ void func_0204b244(ManagerView *mgr, ParticleElement *ptcl) {
     {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
         int idx = ptcl->angle >> 4;
-        data_02099fbc[data->polygonRotAxis](FX_SinIdx(idx), FX_CosIdx(idx), &rot);
+        sRotationFunctions[data->polygonRotAxis](FX_SinIdx(idx), FX_CosIdx(idx), &rot);
     }
 
     {
@@ -68,7 +67,7 @@ void func_0204b244(ManagerView *mgr, ParticleElement *ptcl) {
     G3_Color(ptcl->color);
     {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
-        data_02099fb4[data->polygonReferencePlane](data->textureTileCountS,
-                                                   data->textureTileCountT);
+        sPlaneDrawingFunctions[data->polygonReferencePlane](data->textureTileCountS,
+                                                            data->textureTileCountT);
     }
 }

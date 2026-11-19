@@ -7839,11 +7839,11 @@
     },
     "arm9:0x0204b028": {
       "author": "tangosdev",
-      "name": "func_0204b028"
+      "name": "SPLDraw_Child_Polygon"
     },
     "arm9:0x0204b244": {
       "author": "lunavyqo",
-      "name": "func_0204b244"
+      "name": "SPLDraw_Polygon"
     },
     "arm9:0x0204b460": {
       "author": "andrewboudreau",
@@ -7855,27 +7855,27 @@
     },
     "arm9:0x0204bbd8": {
       "author": "tangosdev",
-      "name": "func_0204bbd8"
+      "name": "SPLDraw_Child_Billboard"
     },
     "arm9:0x0204be40": {
       "author": "tangosdev",
-      "name": "func_0204be40"
+      "name": "SPLDraw_Billboard"
     },
     "arm9:0x0204c0a8": {
       "author": "tangosdev",
-      "name": "func_0204c0a8"
+      "name": "SPLUtil_RotateY"
     },
     "arm9:0x0204c0e8": {
       "author": "tangosdev",
-      "name": "func_0204c0e8"
+      "name": "SPLUtil_RotateXYZ"
     },
     "arm9:0x0204c194": {
       "author": "tangosdev",
-      "name": "func_0204c194"
+      "name": "SPLUtil_DrawXZPlane"
     },
     "arm9:0x0204c24c": {
       "author": "tangosdev",
-      "name": "func_0204c24c"
+      "name": "SPLUtil_DrawXYPlane"
     },
     "arm9:0x0204c304": {
       "author": "tangosdev",
