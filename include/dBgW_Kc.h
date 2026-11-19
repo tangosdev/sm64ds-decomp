@@ -92,6 +92,8 @@ struct dBgW_Kc : dBgW {
     bool shallowOnly; /* 0x34 */
     bool depthByDir;  /* 0x35 */
     u8 pad_36[2];
+    /* The SDK's VecFx32: DetectClsn dots it against its VecFx32 face normal
+       through the SDK's VEC_DotProduct. */
     VecFx32 depthDir;    /* 0x38 - init the unit X vector */
     fx32 depthDirMinDot; /* 0x44 - init -0x1000 */
     /* The edge-contact policy of the same query
