@@ -196,7 +196,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "_Z16StarPopup_UpdatePc",
+      "symbol": "_Z16StarPopup_UpdatePi",
       "address": "0x020ea3d0",
       "size": "0x00000220",
       "legacy_source": "src/func_ov006_020ea3d0.c",

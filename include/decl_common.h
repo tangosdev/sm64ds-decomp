@@ -1005,7 +1005,7 @@ extern void RouletteStrip_ResetAll(void);
 extern void SmartballObj_ElemDtor(void);
 unsigned char StarPopup_Clear(void);
 extern void StarPopup_Draw(void);
-extern void StarPopup_Update(char *);
+extern void StarPopup_Update(int *);
 extern void Trmp2Spinner_HideAll(void);
 extern void Trmp2Spinner_InitAll(int);
 extern void Trmp2Spinner_LoadAll(int, int);
