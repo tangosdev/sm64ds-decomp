@@ -615,7 +615,7 @@ void dScMgSnowball_c::UpdateSnowball() {
 }
 
 void dScMgSnowball_c::UpdateCamera() {
-    int t = FX_Div(0xc0000, data_02082314);
+    int t = FX_Div(0xc0000, data_02082314[0]);
     Vector3 v;
     int x, y;
     if (mScreensSwapped == 0) {

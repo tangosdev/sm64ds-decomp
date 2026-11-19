@@ -141,7 +141,7 @@ extern SharedFilePtr data_ov002_0210d9b8;
  * these bodies were matched against. */
 extern "C" {
 int func_020092c4(void *cam, void *out, void *target);
-u16 func_0201277c(unsigned int a);
+unsigned int func_0201277c(unsigned int a);
 extern dCamera_c *gCamera;
 extern void func_02011cfc(void);
 extern const s16 data_ov063_0211e1c8[4] = {223, 224, 225, 226};

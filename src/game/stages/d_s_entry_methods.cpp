@@ -115,11 +115,6 @@ extern "C" int func_0203d890(void);
 extern "C" u32 LoadCompressedFileAt(int, void *);
 int Sound_PlayIfNotActive(int, int, int, short);
 
-/* The entry scene's one global graph callback, ov075 .bss 0x0211d71c. The
-   generated decl_common.h catch-all declares that storage `void *`, so its real
-   type is spelled once here instead of at each of the eighteen call sites. */
-#define ENTRY_GRAPH_CALLBACK ((dScEntry_c::graphCallback_c *)&sEntryGraphCallback)
-
 void func_020338b0(int, int, short, int);
 void func_02033464(int, int, int);
 extern "C" void func_02030a38(void);
@@ -594,7 +589,7 @@ void dScEntry_c::UpdateSettingsSync() {
 void dScEntry_c::EnterSettingsSync() {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     gSubScreenLayers &= ~1;
-    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
+    sEntryGraphCallback.SetBg2ScreenBase(6);
     Message::func_020338b0(0x145, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
     mIconCount = 0;
@@ -717,7 +712,7 @@ void dScEntry_c::UpdateSoundSettings() {
 #define SH(base, i) (base[(i) * 2])
 
 void dScEntry_c::EnterSoundSettings() {
-    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(data_ov075_0211ca08[GetLanguageIndex()]));
+    sEntryGraphCallback.QueueBg2Screen(LoadFile(data_ov075_0211ca08[GetLanguageIndex()]));
 
     Message::DisplayOptionsMenuTextVS((GetSoundMode() + 9));
 
@@ -876,7 +871,7 @@ void dScEntry_c::EnterControlSettings() {
     gSubScreenLayers &= ~5;
 
     r = GetLanguageIndex();
-    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(data_ov075_0211c9b8[r]));
+    sEntryGraphCallback.QueueBg2Screen(LoadFile(data_ov075_0211c9b8[r]));
 
     if (mSelectedIcon == 0)
         SetBg2Offset(0, 0);
@@ -898,7 +893,7 @@ void dScEntry_c::EnterQuitMessage() {
     gMainScreenLayers =
         gMainScreenLayers & ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     gSubScreenLayers = gSubScreenLayers & (~1);
-    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
+    sEntryGraphCallback.SetBg2ScreenBase(6);
     Message::func_020338b0(0x145, 0xb0, 0x17, -1);
     gSubScreenLayers = gSubScreenLayers | 5;
     mIconCount = 0;
@@ -940,7 +935,7 @@ void dScEntry_c::UpdateQuitConfirm() {
             ChangeStepsAfterDelay(&data_ov075_0211d8e8, 20);
         } else {
             func_02030a78();
-            ChangeStepsAfterDelay(reinterpret_cast<const StepSet *>(&data_ov075_0211d930), 20);
+            ChangeStepsAfterDelay(&data_ov075_0211d930, 20);
         }
         func_02012790(0x63);
         return;
@@ -985,7 +980,7 @@ void dScEntry_c::EnterQuitConfirm() {
     } else {
         gSubScreenLayers = gSubScreenLayers & ~4;
         fh = LoadFile(0x9802);
-        ENTRY_GRAPH_CALLBACK->QueueBg2Screen(fh);
+        sEntryGraphCallback.QueueBg2Screen(fh);
         Message::DisplayDontSaveTextVS(0x16);
         gSubScreenLayers = gSubScreenLayers | 4;
         mRenderStep = data_ov075_0211d810.render;
@@ -1024,7 +1019,7 @@ void dScEntry_c::UpdateRematchSync() {
 
 void dScEntry_c::EnterRematchSync() {
     gSubScreenLayers &= ~1;
-    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
+    sEntryGraphCallback.SetBg2ScreenBase(6);
     Message::func_020338b0(0x145, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
     mIconCount = 0;
@@ -1128,8 +1123,8 @@ void dScEntry_c::UpdateRematchPrompt() {
  * ~mDisconnectHideMask, and UpdateRematchSync clears both on its own. */
 void dScEntry_c::EnterRematchPrompt() {
     gSubScreenLayers &= ~5;
-    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
-    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(0x9801));
+    sEntryGraphCallback.SetBg2ScreenBase(1);
+    sEntryGraphCallback.QueueBg2Screen(LoadFile(0x9801));
     LoadCompressedFileAt(0x8407, G2S_GetBG3ScrPtr());
     Message::DisplayVsExitText(0x1f);
 
@@ -1449,8 +1444,8 @@ void dScEntry_c::EnterCourseSelect() {
 
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     gSubScreenLayers &= ~5;
-    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
-    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(0x8409));
+    sEntryGraphCallback.SetBg2ScreenBase(1);
+    sEntryGraphCallback.QueueBg2Screen(LoadFile(0x8409));
     LoadCompressedFileAt(0x8407, G2S_GetBG3ScrPtr());
 
     if (func_0203d9b4() != 0)
@@ -1597,7 +1592,7 @@ void dScEntry_c::EnterPlayerSync() {
     if (func_0203d974()) {
         gSubScreenLayers &= ~5;
         void *screen = LoadFile(0x8409);
-        ENTRY_GRAPH_CALLBACK->QueueBg2Screen(screen);
+        sEntryGraphCallback.QueueBg2Screen(screen);
         Message::func_020338b0(0x225, 0xb0, 0x1d, -1);
         gSubScreenLayers |= 5;
         mIconCount = 0;
@@ -1674,7 +1669,7 @@ void dScEntry_c::UpdateSessionStart() {
 void dScEntry_c::EnterSessionStart() {
     mEntObj->func_ov075_02115134();
     gSubScreenLayers &= ~5;
-    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(data_0209b2e8);
+    sEntryGraphCallback.QueueBg2Screen(data_0209b2e8);
     data_0209b2e8 = 0;
     Message::func_020338b0(0x225, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
@@ -1736,7 +1731,7 @@ void dScEntry_c::UpdateSoloConfirm() {
    and the recruiting link step is asked to wind down (func_02030a38). */
 void dScEntry_c::EnterSoloConfirm() {
     gSubScreenLayers = gSubScreenLayers & ~1;
-    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(2);
+    sEntryGraphCallback.SetBg2ScreenBase(2);
     Message::DisplayDontSaveTextVS(0x11);
 
     gSubScreenLayers = gSubScreenLayers | 5;
@@ -1827,7 +1822,7 @@ void dScEntry_c::UpdateRecruit() {
 /* Enter step of the recruit steps. */
 void dScEntry_c::EnterRecruit() {
     gSubScreenLayers &= ~1;
-    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
+    sEntryGraphCallback.SetBg2ScreenBase(1);
     Message::func_020337ec();
     gSubScreenLayers |= 5;
     mIcons[0].Place(0xa, 0, 128, 168);
@@ -1885,7 +1880,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
     }
     disconnectFlags = data_0209fc58;
     if (HasConnectionError()) {
-        ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(5);
+        sEntryGraphCallback.SetBg2ScreenBase(5);
         func_02030a78();
         {
             if ((disconnectFlags & 0x30) != 0 || mBehaviorStep == data_ov075_0211d920) {
@@ -1907,7 +1902,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         func_02012790(0x123);
         mEntObj->mSuspended = 1;
     } else {
-        ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
+        sEntryGraphCallback.SetBg2ScreenBase(6);
         if ((func_0203d974() && data_0209fc5c[0] == 0) ||
             (func_0203d9b4() && activePeerMask == 0)) {
             if (func_0203d974())
@@ -1915,7 +1910,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
             else
                 Message::func_020338b0(0x125, 0xb0, 0x1a, -1);
             func_02030a78();
-            ChangeStepsAfterDelay(reinterpret_cast<const StepSet *>(&data_ov075_0211d930), 180);
+            ChangeStepsAfterDelay(&data_ov075_0211d930, 180);
             gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
             if (mDisconnectHideMask)
                 mRenderStep = 0;
@@ -2008,7 +2003,7 @@ s32 dScEntry_c::Behavior() {
 
     if (data_0209fc68 != 0) {
         if (HasConnectionError())
-            HandlePlayerDisconnect(reinterpret_cast<const StepSet *>(&data_ov075_0211d930));
+            HandlePlayerDisconnect(&data_ov075_0211d930);
     }
 
     if (mBehaviorStep != 0)
@@ -2100,8 +2095,8 @@ s32 dScEntry_c::InitResources() {
         }
     }
 
-    ENTRY_GRAPH_CALLBACK->Init(this, 1);
-    gGraphCallback = ENTRY_GRAPH_CALLBACK;
+    sEntryGraphCallback.Init(this, 1);
+    gGraphCallback = &sEntryGraphCallback;
     Sound::LoadInitialGroup(0x2b);
 
     {

@@ -490,9 +490,9 @@ So **CLPS surface-type values 6-9 are the four quicksand types.** Corroborated o
 |---------|-------------|
 | [`0x02037e58`](../../src/unnamed/arm9/0203/func_02037e58.c) | `CLPS::GetSlipperiness` |
 | [`0x02037e38`](../../src/engine/collision/d_bg_ch_sph_crr_query.cpp) | `CLPS::GetSurfaceType` |
-| [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `GetSlideAccelForClass` |
-| [`0x020f030c`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `GetSlideLossFactorForClass` |
-| [`0x020f035c`](../../src/unnamed/ov002/func_ov002_020effb8.cpp) | `FloorIsSlope` |
+| [ov002](../../config/arm9/overlays/ov002/symbols.txt):[`0x020f02c8`](../../src/EvaluateCubicSpline.cpp) | `GetSlideAccelForClass` |
+| [`0x020f030c`](../../src/EvaluateCubicSpline.cpp) | `GetSlideLossFactorForClass` |
+| [`0x020f035c`](../../src/EvaluateCubicSpline.cpp) | `FloorIsSlope` |
 | [`0x020c031c`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 55) | `daPly_c::GetFloorClass` |
 | [`0x020c04e0`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 59; currently [`_ZN7daPly_c19func_ov002_020c04e0Ev`](../../config/tu_manifest.d/ov002/daPly_c.json)) | `daPly_c::ApplySlopeAccel` |
 | [`0x020c06fc`](../../src/game/player/d_a_ply_methods.cpp) (ROM ordinal 61) | `daPly_c::UpdateSliding` |

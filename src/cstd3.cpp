@@ -27,7 +27,7 @@
 
 extern "C" {
 extern const char data_020868a0[52];
-extern char data_020868d4;
+extern const char data_020868d4[40];
 int func_0206cf7c(int mask);
 /* local extern: no header declares it; func_0206ccd8 formats through it */
 void func_0206a928(void *a, int b, void *c, void *d);
@@ -90,7 +90,7 @@ void __assert(const char *file, int line, const char *exp, int stop) {
         for (;;) {
         }
     } else {
-        func_0206ccd8((int)&data_020868d4, file, line, exp);
+        func_0206ccd8((int)data_020868d4, file, line, exp);
     }
 }
 }
