@@ -203,26 +203,15 @@ void LoadViewObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 /* One teleport-source actor (id 0x15b) per entry. Simpler than its exit-loader
  * sibling in two ways visible in the record: the parameter is a plain u16 rather
  * than a big-endian byte quartet, and there is no rotation at all -- the spawn
- * call passes NULL for it. The record is 8 bytes against the exit record's 0xe.
- *
- * The loop is bottom-tested with a guard rather than top-tested, and that shape
- * is load-bearing: it is what the ROM emits, and a plain `for` reorders the
- * compare. */
+ * call passes NULL for it. The record is 8 bytes against the exit record's 0xe. */
 void LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::TeleportSourceEntry *entry = (LVL_Overlay::TeleportSourceEntry *)table.entries;
 
-    s32 objectIndex = 0;
-    if ((int)table.count <= 0) /* signed ble; without the cast it is 3 words off */
-        return;
-
-    do {
+    for (s32 objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
         Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
         dActor_c::Spawn(0x15b, entry->param, pos, 0, 0, -1);
-
-        objectIndex++;
-        entry++;
-    } while (objectIndex < table.count);
+    }
 }
 
 void LoadTeleportDestObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {

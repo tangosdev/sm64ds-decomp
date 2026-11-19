@@ -11,8 +11,6 @@
  * What stays: Vec3_ApproachHorz / AngleDiff have no shared header.
  * What stays: daPly_c::func_ov002_020bec9c, the player's SetAnim wrapper,
  *   is still named by address. Naming belongs to the daPly_c TU.
- * What stays: the (s16)param1 cast on the message ID is load-bearing
- *   (it sign-extends the halfword).
  * What stays: Behavior copies the player's position through a scoped
  *   `const Vector3 &`. The ROM holds that base pointer, and a plain
  *   `tpos = tgt->mPos` is a word short.
@@ -106,8 +104,8 @@ int daObjKanban_c::Behavior() {
                 if (ApproachLinear(tgt->mAngle.y, (s16)(mAngle.y + 0x8000), 0x800)) {
                     mMessageID = 0;
                     if (param1 != 0xffff)
-                        mMessageID = (s16)param1;
-                    tgt->ShowMessage2(*this, (unsigned int)mMessageID, &mine, 0, 1);
+                        mMessageID = param1;
+                    tgt->ShowMessage2(*this, mMessageID, &mine, 0, 1);
                     mState = 0;
                 }
                 break;

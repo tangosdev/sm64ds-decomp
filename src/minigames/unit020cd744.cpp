@@ -969,6 +969,8 @@ void TrmpLine::Draw() {
            POLYGON_ATTR loads (28 words differ). r63: a const pointer to
            mAlpha, an int or u8 local, and the attribute bits in SDK
            order all leave 30 words different. */
+        /* Kept (#821 r79): an inline LineAlpha(this) returning int or unsigned char, held in
+           polygonAlpha or written into the attribute, is 30 words off. */
         volatile unsigned char *alpha = &mAlpha;
         int polygonAlpha = *alpha;
         REG_POLYGON_ATTR = (((polygonId + 1) << 24) | 0x82) | (polygonAlpha << 16);
@@ -1122,7 +1124,7 @@ void TrmpLine::StateFlex() {
 
     angleIndex = mWobblePhase >> 4;
     sine = FX_SinIdx(angleIndex);
-    negativeSine = -(int)sine;
+    negativeSine = -sine;
 
     restPosition = (Vec3 *)mRestVerts;
     position = (Vec3 *)mVerts;
@@ -1363,6 +1365,8 @@ int TrmpLine::PushJumper() {
  *   notes/mwccarm-codegen.md 6bk). The ROM re-reads both halfwords from memory
  *   after writing them, and the cast is its own CSE class, so the stores above
  *   do not forward into it.
+ *   Kept (#821 r82): plain startPoint[0] > endPoint[0], and the whole swap as
+ *   an inline helper, both forward the stores -> 0x7f8 of 0x800.
  *
  * `colWeight += 0x555` sits at the tail of the inner loop with the other two
  * induction steps. Placed between the two `cell->x` statements instead, which is
@@ -1405,10 +1409,10 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     mEnd[0] = endPoint[0];
     mEnd[1] = endPoint[1];
 
-    startPoint[0] = (startPoint[0] - 0x80);
-    startPoint[1] = (s16)(0 - startPoint[1]);
-    endPoint[0] = (endPoint[0] - 0x80);
-    endPoint[1] = (s16)(0 - endPoint[1]);
+    startPoint[0] = startPoint[0] - 0x80;
+    startPoint[1] = -startPoint[1];
+    endPoint[0] = endPoint[0] - 0x80;
+    endPoint[1] = -endPoint[1];
 
     const s16 *startCmp = startPoint;
     const s16 *endCmp = endPoint;
@@ -1422,15 +1426,15 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     }
 
     {
-        s32 ax = ((s32)startPoint[0]) << 12;
-        s32 ay = ((s32)startPoint[1]) << 12;
+        s32 ax = startPoint[0] << 12;
+        s32 ay = startPoint[1] << 12;
         startPosition.x = ax;
         startPosition.y = ay;
         startPosition.z = 0;
     }
     {
-        s32 bx = ((s32)endPoint[0]) << 12;
-        s32 by = ((s32)endPoint[1]) << 12;
+        s32 bx = endPoint[0] << 12;
+        s32 by = endPoint[1] << 12;
         endPosition.x = bx;
         endPosition.y = by;
         endPosition.z = 0;
@@ -1755,10 +1759,10 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
         return 0;
 
     deltaY = deltaPixels[1];
-    delta[0] = (int)deltaX << 12;
-    delta[1] = (int)deltaY << 12;
-    direction[0] = ((int)deltaX >> 1) << 12;
-    direction[1] = ((int)deltaY >> 1) << 12;
+    delta[0] = deltaX << 12;
+    delta[1] = deltaY << 12;
+    direction[0] = (deltaX >> 1) << 12;
+    direction[1] = (deltaY >> 1) << 12;
 
     {
         int ay = startPoint[1];

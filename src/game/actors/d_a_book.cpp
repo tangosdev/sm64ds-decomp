@@ -133,12 +133,12 @@ void daBook_c::AimAtPlayer() {
     if (!player)
         return;
     Vector3 *playerPos = &player->mPos;
-    Vector3 tmp;
-    tmp.x = playerPos->x;
-    tmp.y = playerPos->y;
-    tmp.z = playerPos->z;
+    Vector3 target;
+    target.x = playerPos->x;
+    target.y = playerPos->y;
+    target.z = playerPos->z;
     Vector3 toPlayer;
-    Vec3_Sub(&toPlayer, &tmp, &mPos);
+    Vec3_Sub(&toPlayer, &target, &mPos);
     mAimYaw = cstd::atan2(toPlayer.x, toPlayer.z);
     mAimPitch = cstd::atan2(toPlayer.y, Vec3_HorzLen(&toPlayer));
     mAimRoll = 0x4000;
@@ -184,6 +184,10 @@ void daBook_c::SpawnShootBook() {
     }
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* What a flying book does about whatever GetHitType found. Returns 1
  * when the book is gone. The first count handed to daPly_c::Hurt is 0 for a
  * metal player, 2 for KILLER_BOOK and 1 otherwise; touching the player also
@@ -204,8 +208,7 @@ int daBook_c::CheckAttacks() {
         return 1;
     }
     if (r == HIT_TOUCHED_PLAYER) {
-        int eq = (actorID == kKillerBookActorId);
-        if (eq) {
+        if (IsActorID(this, kKillerBookActorId)) {
             Vector3 v;
             v.x = mPos.x;
             v.y = mPos.y;
@@ -618,14 +621,14 @@ void daBook_c::Die() {
 void daBook_c::UpdateModelMatrix() {
     Matrix4x3 *m = (mUsesAnmModel != 0) ? &mAnmModel.mat4x3 : &mModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, mAngle.x, mAngle.y, mAngle.z);
-    m->m[9] = mPos.x >> 3;
-    m->m[10] = mPos.y >> 3;
-    m->m[11] = mPos.z >> 3;
-    int b = (actorID == kKillerBookActorId);
-    if (b == 0) return;
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = mHomePosY >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    m->t.x = mPos.x >> 3;
+    m->t.y = mPos.y >> 3;
+    m->t.z = mPos.z >> 3;
+    if (!IsActorID(this, kKillerBookActorId))
+        return;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = mHomePosY >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0x64, 0x12c000, 0xf);
 }
 
@@ -704,12 +707,12 @@ int daBookGen_c::Behavior()
         daPly_c *player = ClosestPlayer();
         if (player != 0) {
 
-            Vector3 tmp;
+            Vector3 target;
             Vector3 *ps = &player->mPos;
-            tmp = *ps;
+            target = *ps;
 
-            if (Vec3_HorzDist(&mPos, &tmp) < 0x258000) {
-                short angle = Vec3_HorzAngle(&mPos, &tmp);
+            if (Vec3_HorzDist(&mPos, &target) < 0x258000) {
+                short angle = Vec3_HorzAngle(&mPos, &target);
                 if (GetSubtraction(mAngle.y, angle) < 0x2000) {
                     signed char sc = mAreaId;
                     dActor_c::Spawn(kShootBookActorId, 0, mPos, &mPrevAngle, sc, -1);
@@ -766,44 +769,27 @@ int daBook_c::InitResources()
     mAngle.y += 0x8000;
     mUniformScale = 0x800;
 
-    {
-        unsigned short id = actorID;
-        unsigned int match1 = (id == kShootBookActorId);
-
-        do {
-            if (match1) {
-                mKind = KIND_FLYING_BOOK;
-                mState = STATE_SPAWNED;
-                mCoinType = 0;
-                mdCcAcPos_c.vulnFlags |= 0x26fe0;
-                break;
-            }
-            {
-                unsigned int match2 = (id == kKillerBookActorId);
-                if (match2) {
-                    mKind = KIND_FLYING_BOOK;
-                    mState = STATE_WAIT;
-                    mCoinType = 3;
-                    mdCcAcPos_c.vulnFlags |= 0x2efe0;
-                    break;
-                }
-            }
-            {
-                unsigned int match3 = (id == kBookSwitchActorId);
-                if (match3) {
-                    mKind = KIND_SWITCH_BOOK;
-                    mState = STATE_SWITCH_WAIT;
-                    mCoinType = 0;
-                    mdCcAcPos_c.flags |= 4;
-                    mdCcAcPos_c.vulnFlags |= 0x3c0;
-                    mScale.x = 0x1000;
-                    mScale.y = 0x800;
-                    mScale.z = 0x800;
-                    break;
-                }
-            }
-            return 0;
-        } while (0);
+    if (IsActorID(this, kShootBookActorId)) {
+        mKind = KIND_FLYING_BOOK;
+        mState = STATE_SPAWNED;
+        mCoinType = 0;
+        mdCcAcPos_c.vulnFlags |= 0x26fe0;
+    } else if (IsActorID(this, kKillerBookActorId)) {
+        mKind = KIND_FLYING_BOOK;
+        mState = STATE_WAIT;
+        mCoinType = 3;
+        mdCcAcPos_c.vulnFlags |= 0x2efe0;
+    } else if (IsActorID(this, kBookSwitchActorId)) {
+        mKind = KIND_SWITCH_BOOK;
+        mState = STATE_SWITCH_WAIT;
+        mCoinType = 0;
+        mdCcAcPos_c.flags |= 4;
+        mdCcAcPos_c.vulnFlags |= 0x3c0;
+        mScale.x = 0x1000;
+        mScale.y = 0x800;
+        mScale.z = 0x800;
+    } else {
+        return 0;
     }
     return 1;
 }
@@ -820,15 +806,15 @@ int daBookGen_c::InitResources()
 /* KILLER_BOOK cannot be aimed at with an egg; the others report 0x19000. */
 s32 daBook_c::OnAimedAtWithEgg()
 {
-    int eq = (actorID == kKillerBookActorId);
-    if(eq) return 0;
+    if (IsActorID(this, kKillerBookActorId))
+        return 0;
     return 0x19000;
 }
 
 /* KILLER_BOOK answers 2, the others 0. */
 s32 daBook_c::OnYoshiTryEat()
 {
-    unsigned int b = actorID==kKillerBookActorId; return b ? 2 : 0;
+    return IsActorID(this, kKillerBookActorId) ? 2 : 0;
 }
 
 daBook_c *daBook_c_classInit_BOOK_SWITCH() {

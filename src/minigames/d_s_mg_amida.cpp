@@ -235,13 +235,13 @@ int dScMgAmida_c::InitSubScreenBg() {
 /* Refills and shuffles mLaneResult. When IsVariant2() holds, the entries
    come from the pattern index, are copied to mLaneWants, and the table is
    reshuffled until it differs somewhere from that copy as seen through
-   mLanePerm; otherwise the first arg1 entries (at most 4) are 1 and
+   mLanePerm; otherwise the first count entries (at most 4) are 1 and
    the rest 0, shuffled once. */
-void dScMgAmida_c::ShuffleGoals(int arg1) {
+void dScMgAmida_c::ShuffleGoals(int count) {
     int i;
     int k;
     int j;
-    int t;
+    u32 t;
     int u;
 
     if (IsVariant2()) {
@@ -267,33 +267,33 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         }
         for (i = 0; i < 4; i++)
             mLaneWants[i] = mLaneResult[i];
-        arg1 = 1;
+        count = 1;
         do {
             for (i = 0; i < 4; i++) {
                 t = RandomIntInternal(&data_0209d4b8.value);
                 u = mLaneResult[i];
-                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+                j = (((t >> 16) & 0x7fff) * 4) >> 15;
                 mLaneResult[i] = mLaneResult[j];
                 mLaneResult[j] = u;
             }
             for (k = 0; k < 4; k++) {
                 if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
-                    arg1 = 0;
+                    count = 0;
                     break;
                 }
             }
-        } while (arg1 == 1);
+        } while (count == 1);
     } else {
-        if (arg1 > 4)
-            arg1 = 4;
-        for (k = 0; k < arg1; k++)
+        if (count > 4)
+            count = 4;
+        for (k = 0; k < count; k++)
             mLaneResult[k] = 1;
-        for (; arg1 < 4; arg1++)
-            mLaneResult[arg1] = 0;
+        for (; count < 4; count++)
+            mLaneResult[count] = 0;
         for (i = 0; i < 4; i++) {
             t = RandomIntInternal(&data_0209d4b8.value);
             u = mLaneResult[i];
-            j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+            j = (((t >> 16) & 0x7fff) * 4) >> 15;
             mLaneResult[i] = mLaneResult[j];
             mLaneResult[j] = u;
         }
@@ -520,6 +520,10 @@ void dScMgAmida_c::CheckEdgeBoost() {
     }
 }
 
+static inline int Abs(int v) {
+    return v < 0 ? -v : v;
+}
+
 /* The pen handler: follows the stylus while it is down, and on release
    turns the stroke into a rung between two neighbouring lanes, probed with
    ProbeRung before it is painted. Point's special members are
@@ -581,17 +585,8 @@ void dScMgAmida_c::HandlePen() {
         if (released != 0) {
             if (this->mPenStart.x != -1 && this->mPenStart.y != -1 && oldX != -1 && oldY != -1) {
                 if (this->mLineStartSet == 0) {
-                    int d1 = oldX - this->mPenStart.x;
-                    if (d1 < 0)
-                        d1 = -d1;
-                    do {
-                        if (d1 < 0x10) {
-                            int d2 = oldY - this->mPenStart.y;
-                            if (d2 < 0)
-                                d2 = -d2;
-                            if (d2 < 0x10)
-                                break;
-                        }
+                    if (Abs(oldX - this->mPenStart.x) >= 0x10 ||
+                        Abs(oldY - this->mPenStart.y) >= 0x10) {
                         if (oldX >= 0x21 && oldX <= 0x3f) {
                             if (this->mPenStart.x >= 0x41 && this->mPenStart.x <= 0x5f) {
                                 this->mLineStart.x = 0x60;
@@ -641,7 +636,7 @@ void dScMgAmida_c::HandlePen() {
                                 this->mLineEndSet = 1;
                             }
                         }
-                    } while (0);
+                    }
                 } else if (this->mLineEndSet == 0) {
                     int dx, dsx, adx, adsx;
                     dx = oldX - this->mLineStart.x;
@@ -892,6 +887,8 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
    every slot pointer typed 0xe4c (s8 * for the two byte arrays the same). */
 #pragma push
 #pragma opt_strength_reduction off
+/* Kept (#821 r79): walker x pointers taken off ent, and the delay loop indexed as
+   mWalkerDelay[delayIndex]--, are 0xe44 and 0xe54 against 0xe48. */
 #pragma opt_common_subs off
 void dScMgAmida_c::StepWalkers() {
     /* Kept (#821 r73): every slot pointer as &mWalkerX[walker] is 0xe4c of
@@ -1285,7 +1282,7 @@ void dScMgAmida_c::InitWalkers() {
     int j;
     int k;
     int pick;
-    int tmp;
+    int lane;
     u32 rand;
     int again;
     u8 seenNow[4];
@@ -1301,9 +1298,9 @@ void dScMgAmida_c::InitWalkers() {
             for (k = 0; k < 4; k++) {
                 rand = (u32)RandomIntInternal(&data_0209d4b8.value) >> 16;
                 pick = ((rand & 0x7fff) * 4) >> 15;
-                tmp = this->mLanePerm[k];
+                lane = this->mLanePerm[k];
                 this->mLanePerm[k] = this->mLanePerm[pick];
-                this->mLanePerm[pick] = tmp;
+                this->mLanePerm[pick] = lane;
             }
             if (this->mRoundCount == 0) {
                 again = 0;
@@ -1349,14 +1346,14 @@ void dScMgAmida_c::InitWalkers() {
     } else if (this->mWalkerCount == 1) {
         if (this->mRoundCount == 0) {
             pick = MG_RAND(4);
-            tmp = this->mLanePerm[0];
+            lane = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
-            this->mLanePerm[pick] = tmp;
+            this->mLanePerm[pick] = lane;
         } else {
             pick = MG_RAND(3) + 1;
-            tmp = this->mLanePerm[0];
+            lane = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
-            this->mLanePerm[pick] = tmp;
+            this->mLanePerm[pick] = lane;
         }
     } else {
         again = 1;
@@ -1376,9 +1373,9 @@ void dScMgAmida_c::InitWalkers() {
             for (k = 0; k < 4; k++) {
                 rand = (u32)RandomIntInternal(&data_0209d4b8.value) >> 16;
                 pick = ((rand & 0x7fff) * 4) >> 15;
-                tmp = this->mLanePerm[k];
+                lane = this->mLanePerm[k];
                 this->mLanePerm[k] = this->mLanePerm[pick];
-                this->mLanePerm[pick] = tmp;
+                this->mLanePerm[pick] = lane;
             }
             for (j = 0; j < this->mWalkerCount; j++) {
                 seenNow[this->mLanePerm[j]] = 1;
@@ -1826,7 +1823,7 @@ s32 dScMgAmida_c::Behavior() {
     int lane;
     int j;
     int slot;
-    int randA, randB;
+    u32 randA, randB;
     u32 randBits15, randAngle15;
     s16 cosA;
     int idxA;
@@ -1966,8 +1963,8 @@ s32 dScMgAmida_c::Behavior() {
                     if (mPieces[slot].active != 1) {
                         randA = RandomIntInternal(&data_0209d4b8.value);
                         randB = RandomIntInternal(&data_0209d4b8.value);
-                        randBits15 = ((u32)randB >> 16) & 0x7fff;
-                        randAngle15 = ((u32)randA >> 16) & 0x7fff;
+                        randBits15 = (randB >> 16) & 0x7fff;
+                        randAngle15 = (randA >> 16) & 0x7fff;
                         cosB = FX_CosIdx((int)((randBits15 << 15) >> 16) >> 4);
                         idxA = (int)((randAngle15 << 17) >> 16) >> 4;
                         cosA = FX_CosIdx(idxA);
@@ -1978,7 +1975,10 @@ s32 dScMgAmida_c::Behavior() {
                             mPieces[slot].posX += mLanePos[j].x;
                             mPieces[slot].posY += mLanePos[j].y;
                             /* (int)cosA: without the cast, or with cosA
-                               declared int, Behavior differs by 13 words. */
+                               declared int, Behavior differs by 13 words.
+                               Kept (#821 r81): re-measured, the plain cosA
+                               still differs; cosA is a local, so no accessor
+                               or block-copy lever applies. */
                             mPieces[slot].velX = FX_MUL(cosB, FX_MUL(0x1000, (int)cosA));
                             mPieces[slot].velY = FX_MUL(cosB, FX_MUL(0x1000, sinA));
                         }

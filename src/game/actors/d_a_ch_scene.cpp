@@ -75,7 +75,7 @@ s32 daChScene_c::InitResources() {
         mScale.x = 0x3e80000;
         mScale.y = 0x3e80000;
     } else {
-        mScale.x = (unsigned int)(((param1 & 15) + 1) * 0x64000) >> 1;
+        mScale.x = (((param1 & 15) + 1) * 0x64000) >> 1;
         mScale.y = (((param1 >> 4) & 15) + 1) * 0x64000;
     }
 

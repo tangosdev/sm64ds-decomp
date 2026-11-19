@@ -91,6 +91,10 @@ int daObjC1Hikari_c::InitResources() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 int daObjC1Hikari_c::Behavior() {
     int vIn[3], vMid[3];
     Vector3 vRes;
@@ -132,8 +136,7 @@ int daObjC1Hikari_c::Behavior() {
         if (mCylinder.hitFlags & 0x8000000) {
             dActor_c *o = dActor_c::FindWithID(mCylinder.otherOwner);
             if (o) {
-                int b = (o->actorID == 0xbf);
-                if (b) {
+                if (IsPlayerActor(o)) {
                     Vector3 *op = &o->mPos;
                     hv = *op;
                     if (AngleDiff(Vec3_HorzAngle(&mPos, &hv), mAngle.y) < 0x4000) {
@@ -180,9 +183,9 @@ int daObjC1Hikari_c::CleanupResources() {
 
 void daObjC1Hikari_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* The initializer constructs the model handle with file ID 1453 and

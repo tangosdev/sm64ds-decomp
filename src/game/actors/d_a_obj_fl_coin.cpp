@@ -212,8 +212,7 @@ int daObjFl_Puzzle_c::Behavior() {
         mgr = (daObjFl_Coin_c *)dActor_c::FindWithID(id);
     /* The step timer only runs while the manager is gone or has no live coins. */
     if (mgr == 0 || mgr->mLiveCoinCount == 0) {
-        u16 *ctr = &mStepTimer;
-        *ctr = *ctr + 1;
+        mStepTimer++;
     }
     UpdateModelMatrix();
     if (IsClsnInRange(0, 0) != 0)

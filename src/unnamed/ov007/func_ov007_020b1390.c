@@ -17,13 +17,13 @@ void func_ov007_020b1390(int mode) {
     /* Recolours rows 4-5, 10-11 and 14-15 of the 32-tile-wide source map from
      * column 3: the selected mode's rows get palette data_ov007_020ccc44[1], the
      * others data_ov007_020ccc44[0]. */
-    v = data_ov007_020ccc44[(mode == 0) ? (1) : (0)];
+    v = data_ov007_020ccc44[mode == 0];
     func_ov007_020c0288((u16 *)p6->source + 4 * 32 + 3, 32, v);
     func_ov007_020c0288((u16 *)p6->source + 5 * 32 + 3, 32, v);
-    v = data_ov007_020ccc44[(mode == 1) ? (1) : (0)];
+    v = data_ov007_020ccc44[mode == 1];
     func_ov007_020c0288((u16 *)p6->source + 10 * 32 + 3, 32, v);
     func_ov007_020c0288((u16 *)p6->source + 11 * 32 + 3, 32, v);
-    v = data_ov007_020ccc44[(mode == 2) ? (1) : (0)];
+    v = data_ov007_020ccc44[mode == 2];
     func_ov007_020c0288((u16 *)p6->source + 14 * 32 + 3, 32, v);
     func_ov007_020c0288((u16 *)p6->source + 15 * 32 + 3, 32, v);
     func_ov007_020c0638(p6, 0, 0, 0);

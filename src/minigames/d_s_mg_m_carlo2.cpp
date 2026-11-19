@@ -189,6 +189,10 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     return 0;
 }
 
+static inline int HasSelectedPair() {
+    return sMCarlo2FirstPick != 0 && sMCarlo2SecondPick != 0;
+}
+
 /* Slot 6. sMCarlo2DealProgress is the dealt-card count, shifted left 12. */
 s32 dScMgMCarlo2_c::Behavior()
 {
@@ -225,8 +229,7 @@ s32 dScMgMCarlo2_c::Behavior()
             } else {
                 int lim = mDealCount + 0x12;
                 if (dealt >= lim) {
-                    int flag = (sMCarlo2FirstPick != 0 && sMCarlo2SecondPick != 0);
-                    if (flag == 0)
+                    if (!HasSelectedPair())
                         sMCarlo2DealProgress = lim << 12;
                 }
             }
@@ -418,11 +421,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
 {
     switch (mState) {
     case 0:
-        {
-            short *p = &mDealDelay;
-            short v = *p;
-            *p = (v - 1);
-        }
+        mDealDelay--;
         if (mDealDelay != 0)
             return;
         sMCarlo2DeckSize--;

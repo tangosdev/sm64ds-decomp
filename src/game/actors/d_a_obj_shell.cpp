@@ -134,14 +134,9 @@ int daObjShell_c::InitResources() {
  * `this + 0x124` are member calls on `this + 0xd4`: the compiler applies
  * the same adjustment the hand-spelt offsets did.
  *
- * The `(int)` cast on the actor-ID comparison is load-bearing, and it is C++
- * that makes it so. In C, `actorID == 0xbf` is already an `int`; compiled as
- * C++ the comparison is a `bool`, and widening THAT instead moves the sixth
- * argument of the Hurt call into a different register -- 17 words out of 155.
- * It was the only one of six candidate spellings that matched. The function's
- * four other round-trips -- the two on the collision word, the counter
- * decrement and the timer increment -- were not load-bearing and are gone;
- * one compile settles each, and the idiom is per-site.
+ * The actor-ID test is held in an int before the branch. Testing
+ * `touched->actorID == ACTOR_PLAYER` directly in the `if` shrinks Behavior
+ * 0x26c -> 0x260 (measured #821 r81); the int needs no cast.
  */
 int daObjShell_c::Behavior() {
     switch (mState) {
@@ -188,7 +183,7 @@ int daObjShell_c::Behavior() {
     if (mdCcAc_c.otherOwner != 0) {
         daPly_c *touched = static_cast<daPly_c *>(dActor_c::FindWithID(mdCcAc_c.otherOwner));
         if (touched != 0) {
-            int isPlayer = (int)(touched->actorID == ACTOR_PLAYER);
+            int isPlayer = touched->actorID == ACTOR_PLAYER;
             if (isPlayer != 0) {
                 Vector3 hurtFrom = mPos;
                 touched->Hurt(hurtFrom, 2, 0xc000, 1, 0, 1);
@@ -226,9 +221,9 @@ int daObjShell_c::CleanupResources() {
  * daObjTbox_c::UpdateModelTransform, its twin two TUs earlier in this overlay. */
 void daObjShell_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* The destructors (D0 0x0211a968, D1 0x0211a930) are not written here on

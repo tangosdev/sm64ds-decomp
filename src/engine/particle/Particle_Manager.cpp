@@ -69,21 +69,6 @@ struct DefinitionFlags {
     unsigned : 2;
 };
 
-/* Particle::System::callbackFlags as the update and draw walks test it. */
-struct SystemState {
-    u32 stop : 1;
-    u32 : 1;
-    u32 skipUpdate : 1;
-    u32 skipDraw : 1;
-    u32 : 28;
-};
-
-static inline SystemState &StateOf(Particle::System *system) {
-    /* Kept (#821 r76): not measured; System::callbackFlags takes u32 mask writes in four files, and
-       SystemState is not a type the SDK or pret names. */
-    return *(SystemState *)&system->callbackFlags;
-}
-
 extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles,
                                int minPolygonID, unsigned short maxPolygonID) {
     int i;
@@ -234,7 +219,7 @@ extern "C" int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32
     for (i = 0; i < manager->mNumTextures; i++) {
         TextureEntry *texture = &manager->mTextures[i];
         TextureEntry::Resource *record = texture->resource;
-        u32 isTexel4x4 = (record->params.format == 5) ? 1 : 0;
+        u32 isTexel4x4 = record->params.format == 5;
         u32 address = allocTexVram(record->texelSize, isTexel4x4);
         /* The texels follow the 0x20-byte record header. */
         GX_LoadTex(texture->resource + 1, address, record->texelSize);
@@ -256,7 +241,7 @@ extern "C" int func_0204a028(Particle::Manager *manager,
         unsigned int address = 0;
 
         if (record->paletteSize != 0) {
-            unsigned int fromLowAddress = record->params.format == 2 ? 1 : 0;
+            unsigned int fromLowAddress = record->params.format == 2;
             address = allocPalVram(record->paletteSize, fromLowAddress);
             GX_LoadTexPltt((char *)texture->resource + record->paletteOffset, address,
                            record->paletteSize);
@@ -276,12 +261,12 @@ extern "C" void func_02049f58(Particle::Manager *manager) {
     do {
         Particle::SystemDefinition::Data *data = system->mDefinition->data;
         next = system->next;
-        if (StateOf(system).skipUpdate == 0) {
+        if (system->skipUpdate == 0) {
             func_0204a730(manager, system);
         }
         if (((data->flags << 17) >> 31 != 0 && data->callbackValue != 0 &&
              system->age > data->callbackValue) ||
-            StateOf(system).stop != 0) {
+            system->terminate != 0) {
             if (system->particles.count == 0 && system->particles2.count == 0) {
                 func_0204d9a0(&manager->mFreeSystems,
                               func_0204d8e8(&manager->mActiveSystems, system));
@@ -300,7 +285,7 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
         return;
     do {
         manager->mCurrentSystem = system;
-        if (StateOf(system).skipDraw == 0) {
+        if (system->skipDraw == 0) {
             func_0204a5c8(manager);
         }
         system = system->next;

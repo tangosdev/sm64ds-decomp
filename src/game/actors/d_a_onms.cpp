@@ -146,7 +146,7 @@ s32 *data_ov092_02132294[3] = {
     data_ov092_02132350,
     data_ov092_021323dc,
 };
-extern struct Matrix4x3 data_020a0e68;
+extern union Matrix4x3 data_020a0e68;
 
 /* D1 tears down dCcAcPos_c, dBgCh_Actr and the inline dBgActor_c base.
    D0 is that teardown plus the actor-heap free. */
@@ -165,7 +165,7 @@ void daOnms_c::StateSink()
 /* State 7: tumble until the box lands, then shake the ground. */
 int daOnms_c::StateBounce()
 {
-    Vector3 tmp;
+    Vector3 dustPos;
     Vector3 eq;
     Vector3 dust;
 
@@ -205,12 +205,12 @@ int daOnms_c::StateBounce()
     Earthquake(eq, 0x5dc000);
     func_02012694(0x46, CamPos(this));
 
-    /* tmp is a dead copy the ROM keeps; building dust directly differs. */
-    tmp.x = mPos.x;
-    tmp.y = mPos.y;
-    tmp.z = mPos.z;
-    tmp.y -= 0x78000;
-    dust = tmp;
+    /* dustPos is a dead copy the ROM keeps; building dust directly differs. */
+    dustPos.x = mPos.x;
+    dustPos.y = mPos.y;
+    dustPos.z = mPos.z;
+    dustPos.y -= 0x78000;
+    dust = dustPos;
     LandingDustAt(dust, 1);
 
     mVertAccel = 0;
@@ -471,6 +471,10 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     mdCcAcPos_c.radius = 0x1a9000;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 void daOnms_c::CheckPlayerHit()
 {
     unsigned int id = mdCcAcPos_c.otherOwner;
@@ -479,8 +483,8 @@ void daOnms_c::CheckPlayerHit()
     if (o == 0) return;
     /* PLAYER is actor 0xbf. A flag, not `if (o->actorID != 0xbf)`: the
        direct test differs. */
-    int b = (o->actorID == 0xbf);
-    if (b == 0) return;
+    if (!IsPlayerActor(o))
+        return;
     int f = mdCcAcPos_c.hitFlags;
     daPly_c *player = (daPly_c *)o;
     if (f & 0x40) {
@@ -498,9 +502,9 @@ void daOnms_c::CheckPlayerHit()
    the translation row (words 9..11), then Transform. */
 void daOnms_c::func_ov092_02131a88() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
@@ -512,9 +516,9 @@ void daOnms_c::UpdateModelMtx()
         Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         mModel.mat4x3 = data_020a0e68;
-        mModel.mat4x3.m[9] = mPos.x >> 3;
-        mModel.mat4x3.m[10] = mPos.y >> 3;
-        mModel.mat4x3.m[11] = mPos.z >> 3;
+        mModel.mat4x3.t.x = mPos.x >> 3;
+        mModel.mat4x3.t.y = mPos.y >> 3;
+        mModel.mat4x3.t.z = mPos.z >> 3;
     } else {
         mModel.mat4x3 = mBaseMtx;
     }
@@ -572,7 +576,7 @@ int daOnms_c::Behavior()
 int daOnms_c::InitResources()
 {
     void *f;
-    Vector3 tmp;
+    Vector3 scaledPos;
 
     f = dExtSimpleModel_c::LoadFile(gOnimasuModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
@@ -597,9 +601,9 @@ int daOnms_c::InitResources()
     mRestPos.x = mPos.x;
     mRestPos.y = mPos.y;
     mRestPos.z = mPos.z;
-    Vec3_Asr(&tmp, ActorPos(this), 3);
+    Vec3_Asr(&scaledPos, ActorPos(this), 3);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, scaledPos.x, scaledPos.y, scaledPos.z);
     mModel.mat4x3 = data_020a0e68;
     mBaseMtx = mModel.mat4x3;
 

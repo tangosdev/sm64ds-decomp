@@ -23,10 +23,9 @@
  * include too; this file defines them without a linkage wrapper.
  * Trmp3DMario_EnterWalkIn and Trmp3DMario_IsOffstage are the scene's entry
  * points for one Mario and take a dMgTrmpln3DMario_c *.
- * The bounce states still walk the line in gotos and raw offsets -- that is
- * the matched state machine, not decoration. Helper prototypes with no owning
- * header (Puff_*, Sound_PlayBank1Panned, TrmpFx_Spawn, Vec3_MulScalar) stay
- * TU-local until include/ owns them; TrmpItem::UpdateWithJumper and
+ * Helper prototypes with no owning header (Puff_*, Sound_PlayBank1Panned,
+ * TrmpFx_Spawn, Vec3_MulScalar) stay TU-local until include/ owns them;
+ * TrmpItem::UpdateWithJumper and
  * func_0203cd80 come from their headers, and VEC_Add/Subtract/DotProduct from
  * math/CalcLib.h.
  */
@@ -93,9 +92,9 @@ struct TrmpGoal {
     }
     TrmpGoal(int px, int py, int pz) {
         unsigned int *p = (unsigned int *)this;
-        p[0] = (unsigned int)px;
-        p[1] = (unsigned int)py;
-        p[2] = (unsigned int)pz;
+        p[0] = px;
+        p[1] = py;
+        p[2] = pz;
     }
     ~TrmpGoal();
 };
@@ -187,8 +186,7 @@ Vector3 *dMgTrmpln2Mario_c::GetPos() {
 void dMgTrmpln2Mario_c::Render() {
     if (mVisible == 0)
         return;
-    dExtAnmModel_c *model = &mAnmModel;
-    model->Render(&sTrmp2MarioScale);
+    mAnmModel.Render(&sTrmp2MarioScale);
 }
 
 void dMgTrmpln2Mario_c::UpdateMatrix() {
@@ -261,106 +259,84 @@ void dMgTrmpln2Mario_c::StateBounce() {
 
     v24 = mPos.x;
 
-    if (v24 >= -0x68000)
-        goto L5c;
-    if (mVel.x < 0)
-        goto L70;
+    if ((v24 < -0x68000 && mVel.x < 0) || (v24 > 0x68000 && mVel.x > 0)) {
+        int v = v24;
+        if (v < -0x90000)
+            v = -0x90000;
+        else if (v > 0x90000)
+            v = 0x90000;
+        mPos.x = v;
 
-L5c:
-    if (v24 <= 0x68000)
-        goto L230;
-    if (mVel.x <= 0)
-        goto L230;
+        if (mItemPushCount == 0 && ApproachLinear(mWallBumpTimer, 5, 1) == 0) {
+            int t;
 
-L70: {
-    int v = v24;
-    if (v < -0x90000)
-        v = -0x90000;
-    else if (v > 0x90000)
-        v = 0x90000;
-    mPos.x = v;
-}
+            mAnim = 2;
+            mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
 
-    if (mItemPushCount != 0)
-        goto L1a4;
-    if (ApproachLinear(mWallBumpTimer, 5, 1) != 0)
-        goto L1a4;
-    {
-        int t;
+            mAnmModel.currFrame = 0;
+            Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-        mAnim = 2;
-        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
+            t = FX_MUL(-mVel.x, 0x1200);
+            if (t < -0x1400)
+                t = -0x1400;
+            else if (t > 0x1400)
+                t = 0x1400;
+            mVel.x = t;
 
-        mAnmModel.currFrame = 0;
-        Sound_PlayBank1Panned(0, mAnim, mPos.x);
+            mVel.y += FX_MUL(sTrmpSpeedScale, 0x400);
 
-        t = FX_MUL(-mVel.x, 0x1200);
-        if (t < -0x1400)
-            t = -0x1400;
-        else if (t > 0x1400)
-            t = 0x1400;
-        mVel.x = t;
+            {
+                int v40 = sTrmp2RiseSpeedMax;
+                if (mVel.y <= v40)
+                    v40 = mVel.y;
+                mVel.y = v40;
+            }
+        } else {
+            int t = FX_MUL(-mVel.x, 0xf00);
+            int v40;
+            int hi;
+            int lo;
 
-        mVel.y += FX_MUL(sTrmpSpeedScale, 0x400);
+            mVel.x = t;
 
-        {
-            int v40 = sTrmp2RiseSpeedMax;
-            if (mVel.y <= v40)
-                v40 = mVel.y;
+            t = mPos.x;
+            if (t < -0x68000)
+                t = -0x68000;
+            else if (t > 0x68000)
+                t = 0x68000;
+            mPos.x = t;
+
+            hi = sTrmp2RiseSpeedMax;
+            lo = sTrmp2FallSpeed;
+            v40 = mVel.y;
+            if (v40 < lo) {
+                v40 = lo;
+            } else {
+                if (v40 <= hi)
+                    hi = v40;
+                v40 = hi;
+            }
             mVel.y = v40;
         }
-    }
-    goto L260;
-
-L1a4: {
-    int t = FX_MUL(-mVel.x, 0xf00);
-    int v40;
-    int hi;
-    int lo;
-
-    mVel.x = t;
-
-    t = mPos.x;
-    if (t < -0x68000)
-        t = -0x68000;
-    else if (t > 0x68000)
-        t = 0x68000;
-    mPos.x = t;
-
-    hi = sTrmp2RiseSpeedMax;
-    lo = sTrmp2FallSpeed;
-    v40 = mVel.y;
-    if (v40 < lo) {
-        v40 = lo;
-    } else {
-        if (v40 <= hi)
-            hi = v40;
-        v40 = hi;
-    }
-    mVel.y = v40;
-}
-    goto L260;
-
-L230:
-    if (mContact == 3) {
+    } else if (mContact == 3) {
         Clear();
         mVel.x *= -1;
     }
 
-L260: {
-    int v = mVel.x;
-    if (v > 0x2000) {
-        ApproachLinear(mRotY, 0x2000, 0xc00);
-    } else if (v < -0x2000) {
-        ApproachLinear(mRotY, -0x2000, 0xc00);
-    } else {
-        ApproachLinear(mRotY, (short)v, 0xc00);
+    {
+        int v = mVel.x;
+        if (v > 0x2000) {
+            ApproachLinear(mRotY, 0x2000, 0xc00);
+        } else if (v < -0x2000) {
+            ApproachLinear(mRotY, -0x2000, 0xc00);
+        } else {
+            ApproachLinear(mRotY, (short)v, 0xc00);
+        }
     }
-}
 }
 
 void dMgTrmpln2Mario_c::BounceOffLineA() {
-    Vector3 tmp, tmp2, tmp3;
+    Vector3 normal, intoNormal, bounce;
     int alongLine, lineHalfLength, dot, scale, fdivr, v, fx, cur;
 
     alongLine = mContactOffset;
@@ -368,21 +344,23 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
+        /* Kept (#821 r83): normal = mContactNormal and the three member copies
+           move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
-        tmp.x = src->x;
-        tmp.y = src->y;
-        tmp.z = src->z;
+        normal.x = src->x;
+        normal.y = src->y;
+        normal.z = src->z;
     }
 
-    dot = VEC_DotProduct(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &normal);
     scale = FX_MUL(dot, 0x1400);
-    Vec3_MulScalar(&tmp2, &tmp, scale);
-    VEC_Subtract(&mVel, &tmp2, &mVel);
+    Vec3_MulScalar(&intoNormal, &normal, scale);
+    VEC_Subtract(&mVel, &intoNormal, &mVel);
 
     fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmp2RiseSpeedMax, fdivr);
-    Vec3_MulScalar(&tmp3, &tmp, scale);
-    VEC_Add(&mVel, &tmp3, &mVel);
+    Vec3_MulScalar(&bounce, &normal, scale);
+    VEC_Add(&mVel, &bounce, &mVel);
 
     v = mVel.x;
     if (v < -0x3000)
@@ -401,9 +379,9 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
 
     {
         Vector3_16 vec16;
-        int y = tmp.y;
-        int z = tmp.z;
-        int x = tmp.x;
+        int y = normal.y;
+        int z = normal.z;
+        int x = normal.x;
         vec16.x = (s16)x;
         vec16.y = (s16)y;
         vec16.z = (s16)z;
@@ -443,107 +421,85 @@ void dMgTrmpln2Mario_c::StateWallBounce() {
 
     v24 = mPos.x;
 
-    if (v24 >= -0x68000)
-        goto L5c;
-    if (mVel.x < 0)
-        goto L70;
+    if ((v24 < -0x68000 && mVel.x < 0) || (v24 > 0x68000 && mVel.x > 0)) {
+        int v = v24;
+        if (v < -0x90000)
+            v = -0x90000;
+        else if (v > 0x90000)
+            v = 0x90000;
+        mPos.x = v;
 
-L5c:
-    if (v24 <= 0x68000)
-        goto L230;
-    if (mVel.x <= 0)
-        goto L230;
+        if (mItemPushCount == 0 && ApproachLinear(mWallBumpTimer, 5, 1) == 0) {
+            int t = FX_MUL(-mVel.x, 0x1200);
+            int v40;
 
-L70: {
-    int v = v24;
-    if (v < -0x90000)
-        v = -0x90000;
-    else if (v > 0x90000)
-        v = 0x90000;
-    mPos.x = v;
-}
+            if (t < -0x1400)
+                t = -0x1400;
+            else if (t > 0x1400)
+                t = 0x1400;
+            mVel.x = t;
 
-    if (mItemPushCount != 0)
-        goto L1a4;
-    if (ApproachLinear(mWallBumpTimer, 5, 1) != 0)
-        goto L1a4;
-    {
-        int t = FX_MUL(-mVel.x, 0x1200);
-        int v40;
+            mVel.y += FX_MUL(sTrmpSpeedScale, 0x400);
 
-        if (t < -0x1400)
-            t = -0x1400;
-        else if (t > 0x1400)
-            t = 0x1400;
-        mVel.x = t;
+            v40 = sTrmp2RiseSpeedMax;
+            if (mVel.y <= v40)
+                v40 = mVel.y;
+            mVel.y = v40;
 
-        mVel.y += FX_MUL(sTrmpSpeedScale, 0x400);
+            mAnim = 2;
+            mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
 
-        v40 = sTrmp2RiseSpeedMax;
-        if (mVel.y <= v40)
+            mAnmModel.currFrame = 0;
+            Sound_PlayBank1Panned(0, mAnim, mPos.x);
+        } else {
+            int t = FX_MUL(-mVel.x, 0xf00);
+            int pos;
+            int hi;
+            int lo;
+            int v40;
+
+            mVel.x = t;
+
+            pos = mPos.x;
+            if (pos < -0x68000)
+                pos = -0x68000;
+            else if (pos > 0x68000)
+                pos = 0x68000;
+            mPos.x = pos;
+
+            hi = sTrmp2RiseSpeedMax;
+            lo = sTrmp2FallSpeed;
             v40 = mVel.y;
-        mVel.y = v40;
-
-        mAnim = 2;
-        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
-
-        mAnmModel.currFrame = 0;
-        Sound_PlayBank1Panned(0, mAnim, mPos.x);
-    }
-    goto L260;
-
-L1a4: {
-    int t = FX_MUL(-mVel.x, 0xf00);
-    int pos;
-    int hi;
-    int lo;
-    int v40;
-
-    mVel.x = t;
-
-    pos = mPos.x;
-    if (pos < -0x68000)
-        pos = -0x68000;
-    else if (pos > 0x68000)
-        pos = 0x68000;
-    mPos.x = pos;
-
-    hi = sTrmp2RiseSpeedMax;
-    lo = sTrmp2FallSpeed;
-    v40 = mVel.y;
-    if (v40 < lo) {
-        v40 = lo;
-    } else {
-        if (v40 <= hi)
-            hi = v40;
-        v40 = hi;
-    }
-    mVel.y = v40;
-}
-    goto L260;
-
-L230:
-    if (mContact == 3) {
+            if (v40 < lo) {
+                v40 = lo;
+            } else {
+                if (v40 <= hi)
+                    hi = v40;
+                v40 = hi;
+            }
+            mVel.y = v40;
+        }
+    } else if (mContact == 3) {
         Clear();
         mVel.x *= -1;
     }
 
-L260: {
-    int v = mVel.x;
-    if (v > 0x2000) {
-        ApproachLinear(mRotY, 0x2000, 0xc00);
-    } else if (v < -0x2000) {
-        ApproachLinear(mRotY, -0x2000, 0xc00);
-    } else {
-        ApproachLinear(mRotY, (short)v, 0xc00);
+    {
+        int v = mVel.x;
+        if (v > 0x2000) {
+            ApproachLinear(mRotY, 0x2000, 0xc00);
+        } else if (v < -0x2000) {
+            ApproachLinear(mRotY, -0x2000, 0xc00);
+        } else {
+            ApproachLinear(mRotY, (short)v, 0xc00);
+        }
     }
-}
 }
 
 void dMgTrmpln2Mario_c::BounceOffLineB() {
-    Vector3 tmp;
-    Vector3 tmp2;
-    Vector3 tmp3;
+    Vector3 normal;
+    Vector3 intoNormal;
+    Vector3 bounce;
     int alongLine;
     int lineHalfLength;
     int dot;
@@ -556,21 +512,23 @@ void dMgTrmpln2Mario_c::BounceOffLineB() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
+        /* Kept (#821 r83): normal = mContactNormal and the three member copies
+           move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
-        tmp.x = src->x;
-        tmp.y = src->y;
-        tmp.z = src->z;
+        normal.x = src->x;
+        normal.y = src->y;
+        normal.z = src->z;
     }
 
-    dot = VEC_DotProduct(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &normal);
     scale = FX_MUL(dot, 0x1200);
-    Vec3_MulScalar(&tmp2, &tmp, scale);
-    VEC_Subtract(&mVel, &tmp2, &mVel);
+    Vec3_MulScalar(&intoNormal, &normal, scale);
+    VEC_Subtract(&mVel, &intoNormal, &mVel);
 
     fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmpSpeedScale, fdivr);
-    Vec3_MulScalar(&tmp3, &tmp, scale);
-    VEC_Add(&mVel, &tmp3, &mVel);
+    Vec3_MulScalar(&bounce, &normal, scale);
+    VEC_Add(&mVel, &bounce, &mVel);
 
     vx = mVel.x;
     if (vx < -0x2800)
@@ -706,77 +664,56 @@ void dMgTrmpln2Mario_c::StateFall() {
 
     v24 = mPos.x;
 
-    if (v24 >= -0x68000)
-        goto L5c;
-    if (mVel.x < 0)
-        goto L70;
+    if ((v24 < -0x68000 && mVel.x < 0) || (v24 > 0x68000 && mVel.x > 0)) {
+        int v = v24;
+        if (v < -0x90000)
+            v = -0x90000;
+        else if (v > 0x90000)
+            v = 0x90000;
+        mPos.x = v;
 
-L5c:
-    if (v24 <= 0x68000)
-        goto L230;
-    if (mVel.x <= 0)
-        goto L230;
+        mVel.x *= -1;
 
-L70: {
-    int v = v24;
-    if (v < -0x90000)
-        v = -0x90000;
-    else if (v > 0x90000)
-        v = 0x90000;
-    mPos.x = v;
-}
+        if (mVel.y > -0x800) {
+            if (mItemPushCount == 0 && ApproachLinear(mWallBumpTimer, 5, 1) == 0) {
+                mVel.y = 0x800;
+                mAnim = 2;
+                mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
 
-    mVel.x *= -1;
-    if (mVel.y <= -0x800)
-        goto L260;
+                mAnmModel.currFrame = 0;
+                Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-    if (mItemPushCount != 0)
-        goto L1a4;
-    if (ApproachLinear(mWallBumpTimer, 5, 1) != 0)
-        goto L1a4;
-    {
-        mVel.y = 0x800;
-        mAnim = 2;
-        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
+                mState = &dMgTrmpln2Mario_c::StateWallBounce;
+                return;
+            } else {
+                int t = FX_MUL(-mVel.x, 0xf00);
+                int pos;
 
-        mAnmModel.currFrame = 0;
-        Sound_PlayBank1Panned(0, mAnim, mPos.x);
+                mVel.x = t;
 
-        mState = &dMgTrmpln2Mario_c::StateWallBounce;
-    }
-    return;
-
-L1a4: {
-    int t = FX_MUL(-mVel.x, 0xf00);
-    int pos;
-
-    mVel.x = t;
-
-    pos = mPos.x;
-    if (pos < -0x68000)
-        pos = -0x68000;
-    else if (pos > 0x68000)
-        pos = 0x68000;
-    mPos.x = pos;
-}
-    goto L260;
-
-L230:
-    if (mContact == 3) {
+                pos = mPos.x;
+                if (pos < -0x68000)
+                    pos = -0x68000;
+                else if (pos > 0x68000)
+                    pos = 0x68000;
+                mPos.x = pos;
+            }
+        }
+    } else if (mContact == 3) {
         Clear();
         mVel.x *= -1;
     }
 
-L260: {
-    int v = mVel.x;
-    if (v > 0x2000) {
-        ApproachLinear(mRotY, 0x2000, 0xc00);
-    } else if (v < -0x2000) {
-        ApproachLinear(mRotY, -0x2000, 0xc00);
-    } else {
-        ApproachLinear(mRotY, (short)v, 0xc00);
+    {
+        int v = mVel.x;
+        if (v > 0x2000) {
+            ApproachLinear(mRotY, 0x2000, 0xc00);
+        } else if (v < -0x2000) {
+            ApproachLinear(mRotY, -0x2000, 0xc00);
+        } else {
+            ApproachLinear(mRotY, (short)v, 0xc00);
+        }
     }
-}
 
     if (mPos.y >= -0xc8000)
         return;
@@ -1078,8 +1015,7 @@ Vector3 *dMgTrmpln3DMario_c::GetPos() {
 }
 
 void dMgTrmpln3DMario_c::Render() {
-    dExtAnmModel_c *model = &mAnmModel;
-    model->Render(&sTrmp3DMarioScale);
+    mAnmModel.Render(&sTrmp3DMarioScale);
 }
 
 void dMgTrmpln3DMario_c::UpdateMatrix() {
@@ -1236,8 +1172,7 @@ void dMgTrmpln3DMario_c::EnterLand() {
     mAnmModel.SetAnim(sTrmpAnimHangUp, 0x40000000, 0x800, 0);
     Sound_PlayBank1Panned(0, 0x17, mPos.x);
     mState = &dMgTrmpln3DMario_c::StateLand;
-    int *p20 = &mPos.y;
-    *p20 = *p20 + 0x20000;
+    mPos.y += 0x20000;
     StateLand();
 }
 
@@ -1304,96 +1239,73 @@ void dMgTrmpln3DMario_c::StateHardBounce() {
 
     v = mPos.x;
 
-    if (v >= -0x5c000)
-        goto L5c;
-    if (mVel.x < 0)
-        goto L70;
+    if ((v < -0x5c000 && mVel.x < 0) || (v > 0x5c000 && mVel.x > 0)) {
+        int f0 = sTrmpRowHeights[0];
+        int p = mPos.y;
 
-L5c:
-    if (v <= 0x5c000)
-        goto L1ac;
-    if (mVel.x <= 0)
-        goto L1ac;
+        if (p > f0) {
+            mHeightRow = 0;
+            EnterFallToLedge();
+            return;
+        }
 
-L70: {
-    int f0 = sTrmpRowHeights[0];
-    int p = mPos.y;
+        f0 -= 0x20000;
+        if (p > f0) {
+            if (v > 0) {
+                mHeightRow = 0;
+                EnterLand();
+                return;
+            }
+        } else if (v > 0) {
+            int f1 = sTrmpRowHeights[1];
 
-    if (p > f0) {
-        mHeightRow = 0;
-        EnterFallToLedge();
-        return;
-    }
+            if (p < f1 + 0x30000) {
+                if (p > f1) {
+                    mHeightRow = 1;
+                    EnterFallToLedge();
+                    return;
+                }
 
-    f0 -= 0x20000;
-    if (p <= f0)
-        goto Ld0;
-    if (v <= 0)
-        goto L134;
-    mHeightRow = 0;
-    EnterLand();
-    return;
+                f1 -= 0x20000;
+                if (p > f1) {
+                    mHeightRow = 1;
+                    EnterLand();
+                    return;
+                }
+            }
+        }
 
-Ld0:
-    if (v <= 0)
-        goto L134;
-    {
-        int f1 = sTrmpRowHeights[1];
-        int hi1 = f1 + 0x30000;
+        if (mVel.y > 0) {
+            mAnim = 2;
+            mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
 
-        if (p >= hi1)
-            goto L134;
-        if (p <= f1)
-            goto L10c;
-        mHeightRow = 1;
-        EnterFallToLedge();
-        return;
+            mAnmModel.currFrame = 0;
+            Sound_PlayBank1Panned(0, mAnim, mPos.x);
+        }
 
-    L10c:
-        f1 -= 0x20000;
-        if (p <= f1)
-            goto L134;
-        mHeightRow = 1;
-        EnterLand();
-        return;
-    }
-}
-
-L134:
-    if (mVel.y > 0) {
-        mAnim = 2;
-        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
-
-        mAnmModel.currFrame = 0;
-        Sound_PlayBank1Panned(0, mAnim, mPos.x);
-    }
-
-    func_02012718(0x1b3, mPos.x + 0x80000);
-    mVel.x *= -1;
-    goto L1dc;
-
-L1ac:
-    if (mContact == 3) {
+        func_02012718(0x1b3, mPos.x + 0x80000);
+        mVel.x *= -1;
+    } else if (mContact == 3) {
         Clear();
         mVel.x *= -1;
     }
 
-L1dc: {
-    int r = mVel.x;
-    if (r > 0x4000) {
-        ApproachLinear(mRotY, 0x6000, 0xc00);
-    } else if (r < -0x4000) {
-        ApproachLinear(mRotY, -0x6000, 0xc00);
-    } else {
-        ApproachLinear(mRotY, (short)r, 0xc00);
+    {
+        int r = mVel.x;
+        if (r > 0x4000) {
+            ApproachLinear(mRotY, 0x6000, 0xc00);
+        } else if (r < -0x4000) {
+            ApproachLinear(mRotY, -0x6000, 0xc00);
+        } else {
+            ApproachLinear(mRotY, (short)r, 0xc00);
+        }
     }
-}
 }
 
 void dMgTrmpln3DMario_c::BounceOffLineA() {
-    Vector3 tmp;
-    Vector3 tmp2;
-    Vector3 tmp4;
+    Vector3 normal;
+    Vector3 intoNormal;
+    Vector3 bounce;
     int alongLine;
     int lineHalfLength;
     int dot;
@@ -1405,16 +1317,18 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
     if (alongLine < 0)
         alongLine = -alongLine;
     {
+        /* Kept (#821 r83): normal = mContactNormal and the three member copies
+           move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
-        tmp.x = src->x;
-        tmp.y = src->y;
-        tmp.z = src->z;
+        normal.x = src->x;
+        normal.y = src->y;
+        normal.z = src->z;
     }
 
-    dot = VEC_DotProduct(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &normal);
     scale = FX_MUL(dot, 0x1400);
-    Vec3_MulScalar(&tmp2, &tmp, scale);
-    VEC_Subtract(&mVel, &tmp2, &mVel);
+    Vec3_MulScalar(&intoNormal, &normal, scale);
+    VEC_Subtract(&mVel, &intoNormal, &mVel);
 
     fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
 
@@ -1422,9 +1336,9 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
 
     {
         Vector3_16 v;
-        v.x = (s16)tmp.x;
-        v.y = (s16)tmp.y;
-        v.z = (s16)tmp.z;
+        v.x = (s16)normal.x;
+        v.y = (s16)normal.y;
+        v.z = (s16)normal.z;
 
         Particle::System::New(0, kPtclMgTrampolineBounceA, mPos.x << 3, mPos.y << 3, mPos.z << 3,
                               (const Vector3_16f *)(&v), 0);
@@ -1436,8 +1350,8 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
                                         mPos.y << 3, mPos.z << 3, 0, 0);
 
     scale = FX_MUL(sTrmp3DHardBounceScale, fdivr);
-    Vec3_MulScalar(&tmp4, &tmp, scale);
-    VEC_Add(&mVel, &tmp4, &mVel);
+    Vec3_MulScalar(&bounce, &normal, scale);
+    VEC_Add(&mVel, &bounce, &mVel);
 
     {
         int v = mVel.x;
@@ -1489,96 +1403,73 @@ void dMgTrmpln3DMario_c::StateBounce() {
 
     v = mPos.x;
 
-    if (v >= -0x5c000)
-        goto L5c;
-    if (mVel.x < 0)
-        goto L70;
+    if ((v < -0x5c000 && mVel.x < 0) || (v > 0x5c000 && mVel.x > 0)) {
+        int f0 = sTrmpRowHeights[0];
+        int p = mPos.y;
 
-L5c:
-    if (v <= 0x5c000)
-        goto L1ac;
-    if (mVel.x <= 0)
-        goto L1ac;
+        if (p > f0) {
+            mHeightRow = 0;
+            EnterFallToLedge();
+            return;
+        }
 
-L70: {
-    int f0 = sTrmpRowHeights[0];
-    int p = mPos.y;
+        f0 -= 0x20000;
+        if (p > f0) {
+            if (v > 0) {
+                mHeightRow = 0;
+                EnterLand();
+                return;
+            }
+        } else if (v > 0) {
+            int f1 = sTrmpRowHeights[1];
 
-    if (p > f0) {
-        mHeightRow = 0;
-        EnterFallToLedge();
-        return;
-    }
+            if (p < f1 + 0x30000) {
+                if (p > f1) {
+                    mHeightRow = 1;
+                    EnterFallToLedge();
+                    return;
+                }
 
-    f0 -= 0x20000;
-    if (p <= f0)
-        goto Ld0;
-    if (v <= 0)
-        goto L134;
-    mHeightRow = 0;
-    EnterLand();
-    return;
+                f1 -= 0x20000;
+                if (p > f1) {
+                    mHeightRow = 1;
+                    EnterLand();
+                    return;
+                }
+            }
+        }
 
-Ld0:
-    if (v <= 0)
-        goto L134;
-    {
-        int f1 = sTrmpRowHeights[1];
-        int hi1 = f1 + 0x30000;
+        if (mVel.y > 0) {
+            mAnim = 2;
+            mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
 
-        if (p >= hi1)
-            goto L134;
-        if (p <= f1)
-            goto L10c;
-        mHeightRow = 1;
-        EnterFallToLedge();
-        return;
+            mAnmModel.currFrame = 0;
+            Sound_PlayBank1Panned(0, mAnim, mPos.x);
+        }
 
-    L10c:
-        f1 -= 0x20000;
-        if (p <= f1)
-            goto L134;
-        mHeightRow = 1;
-        EnterLand();
-        return;
-    }
-}
-
-L134:
-    if (mVel.y > 0) {
-        mAnim = 2;
-        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
-
-        mAnmModel.currFrame = 0;
-        Sound_PlayBank1Panned(0, mAnim, mPos.x);
-    }
-
-    func_02012718(0x1b3, mPos.x + 0x80000);
-    mVel.x *= -1;
-    goto L1dc;
-
-L1ac:
-    if (mContact == 3) {
+        func_02012718(0x1b3, mPos.x + 0x80000);
+        mVel.x *= -1;
+    } else if (mContact == 3) {
         Clear();
         mVel.x *= -1;
     }
 
-L1dc: {
-    int r = mVel.x;
-    if (r > 0x4000) {
-        ApproachLinear(mRotY, 0x4000, 0xc00);
-    } else if (r < -0x4000) {
-        ApproachLinear(mRotY, -0x4000, 0xc00);
-    } else {
-        ApproachLinear(mRotY, (short)r, 0xc00);
+    {
+        int r = mVel.x;
+        if (r > 0x4000) {
+            ApproachLinear(mRotY, 0x4000, 0xc00);
+        } else if (r < -0x4000) {
+            ApproachLinear(mRotY, -0x4000, 0xc00);
+        } else {
+            ApproachLinear(mRotY, (short)r, 0xc00);
+        }
     }
-}
 }
 
 void dMgTrmpln3DMario_c::BounceOffLineB() {
-    Vector3 tmp;
-    Vector3 tmp2;
-    Vector3 tmp3;
+    Vector3 normal;
+    Vector3 intoNormal;
+    Vector3 bounce;
     int alongLine;
     int lineHalfLength;
     int dot;
@@ -1592,23 +1483,25 @@ void dMgTrmpln3DMario_c::BounceOffLineB() {
         alongLine = -alongLine;
 
     {
+        /* Kept (#821 r83): normal = mContactNormal and the three member copies
+           move this body or a sibling BounceOffLine body. */
         Vector3 *src = &mContactNormal;
-        tmp.x = src->x;
-        tmp.y = src->y;
-        tmp.z = src->z;
+        normal.x = src->x;
+        normal.y = src->y;
+        normal.z = src->z;
     }
 
-    dot = VEC_DotProduct(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &normal);
     scale = FX_MUL(dot, 0x1200);
-    Vec3_MulScalar(&tmp2, &tmp, scale);
-    VEC_Subtract(&mVel, &tmp2, &mVel);
+    Vec3_MulScalar(&intoNormal, &normal, scale);
+    VEC_Subtract(&mVel, &intoNormal, &mVel);
 
     fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     mGravityStep = sTrmp3DGravityStep;
 
     scale = FX_MUL(sTrmp3DBounceScale, fdivr);
-    Vec3_MulScalar(&tmp3, &tmp, scale);
-    VEC_Add(&mVel, &tmp3, &mVel);
+    Vec3_MulScalar(&bounce, &normal, scale);
+    VEC_Add(&mVel, &bounce, &mVel);
 
     vx = mVel.x;
     if (vx < -0x1000)
@@ -1672,8 +1565,7 @@ void dMgTrmpln3DMario_c::JumpOff() {
 }
 
 void dMgTrmpln3DMario_c::StateMissed() {
-    s16 *p = &mTimer;
-    *p = *p - 1;
+    mTimer--;
     if (mTimer == 0) {
         Puff_Spawn(mScreenPos[0], 0xc0);
         sTrmpMariosInPlay -= 1;
@@ -1721,82 +1613,59 @@ void dMgTrmpln3DMario_c::StateFall() {
 
     v = mPos.x;
 
-    if (v >= -0x5c000)
-        goto L5c;
-    if (mVel.x < 0)
-        goto L70;
+    if ((v < -0x5c000 && mVel.x < 0) || (v > 0x5c000 && mVel.x > 0)) {
+        int f0 = sTrmpRowHeights[0];
+        int p = mPos.y;
 
-L5c:
-    if (v <= 0x5c000)
-        goto L150;
-    if (mVel.x <= 0)
-        goto L150;
+        if (p > f0) {
+            mHeightRow = 0;
+            EnterFallToLedge();
+            return;
+        }
 
-L70: {
-    int f0 = sTrmpRowHeights[0];
-    int p = mPos.y;
+        f0 -= 0x20000;
+        if (p > f0) {
+            if (v > 0) {
+                mHeightRow = 0;
+                EnterLand();
+                return;
+            }
+        } else if (v > 0) {
+            int f1 = sTrmpRowHeights[1];
 
-    if (p > f0) {
-        mHeightRow = 0;
-        EnterFallToLedge();
-        return;
-    }
+            if (p < f1 + 0x30000) {
+                if (p > f1) {
+                    mHeightRow = 1;
+                    EnterFallToLedge();
+                    return;
+                }
 
-    f0 -= 0x20000;
-    if (p <= f0)
-        goto Ld0;
-    if (v <= 0)
-        goto L130;
-    mHeightRow = 0;
-    EnterLand();
-    return;
+                f1 -= 0x20000;
+                if (p > f1) {
+                    mHeightRow = 1;
+                    EnterLand();
+                    return;
+                }
+            }
+        }
 
-Ld0:
-    if (v <= 0)
-        goto L130;
-    {
-        int f1 = sTrmpRowHeights[1];
-        int hi1 = f1 + 0x30000;
-
-        if (p >= hi1)
-            goto L130;
-        if (p <= f1)
-            goto L10c;
-        mHeightRow = 1;
-        EnterFallToLedge();
-        return;
-
-    L10c:
-        f1 -= 0x20000;
-        if (p <= f1)
-            goto L130;
-        mHeightRow = 1;
-        EnterLand();
-        return;
-    }
-}
-
-L130:
-    D3D_PlaySeAtX(0x1b3, v);
-    mVel.x *= -1;
-    goto L180;
-
-L150:
-    if (mContact == 3) {
+        D3D_PlaySeAtX(0x1b3, v);
+        mVel.x *= -1;
+    } else if (mContact == 3) {
         Clear();
         mVel.x *= -1;
     }
 
-L180: {
-    int r = mVel.x;
-    if (r > 0x4000) {
-        ApproachLinear(mRotY, 0x4000, 0xc00);
-    } else if (r < -0x8000) {
-        ApproachLinear(mRotY, -0x4000, 0xc00);
-    } else {
-        ApproachLinear(mRotY, (short)r, 0xc00);
+    {
+        int r = mVel.x;
+        if (r > 0x4000) {
+            ApproachLinear(mRotY, 0x4000, 0xc00);
+        } else if (r < -0x8000) {
+            ApproachLinear(mRotY, -0x4000, 0xc00);
+        } else {
+            ApproachLinear(mRotY, (short)r, 0xc00);
+        }
     }
-}
 
     if (mPos.y >= -0xc8000)
         return;
@@ -2105,10 +1974,10 @@ void Trmp3DMario_UpdateAll(void) {
     Puff_UpdateAll();
 }
 
-void Trmp3DMario_ResetAll(unsigned int n, int arg1) {
+void Trmp3DMario_ResetAll(unsigned int n, int spawnHeight) {
     int i;
     Trmp3DMario_SetTuning((n % 5 + n / 5) * 0x150 + 0x1000);
-    Trmp3DMario_SetSpawnHeight(arg1);
+    Trmp3DMario_SetSpawnHeight(spawnHeight);
     sTrmp3DLives = 3;
     sTrmpComboCount = 0;
     sTrmpMariosInPlay = 0;

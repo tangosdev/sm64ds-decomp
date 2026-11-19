@@ -13,10 +13,8 @@
  * leftovers:
  * - emitter_c::entry copies mEmitter into a local before writing the
  *   direction. Writing through the member directly DIFFs entry.
- * - emitter_c::cleanup clears callbackFlags bit 0 and then sets it. A
- *   single |= on the field DIFFs cleanup.
- * - execute widens mStatus == 1 to an int before testing it. A plain
- *   if on emitter->mStatus DIFFs execute.
+ * - execute tests mStatus through IsRequested, an int-returning inline
+ *   predicate. A plain if on emitter->mStatus == 1 DIFFs execute.
  * - gParticleControl is the global dPa_c. This TU does not own it.
  */
 #include "Particle__System.h"
@@ -54,14 +52,8 @@ bool dPa_c::level_c::emitter_c::entry(u32 id, u32 nameId, Vector3 &position,
 void dPa_c::level_c::emitter_c::cleanup() {
     Particle::SystemDefinition::Data &data =
         *gParticleControl->mManager->mDefinitions[mNameId].data;
-    u32 *flagsAddress;
-    u32 flags;
     data.callbackValue = mSavedCallbackValue;
-    flagsAddress = &mEmitter->callbackFlags;
-    flags = *flagsAddress;
-    flags &= ~1;
-    flags |= 1;
-    *flagsAddress = flags;
+    mEmitter->terminate = 1;
     mId = 0;
 }
 
@@ -78,6 +70,11 @@ dPa_c::level_c::level_c() {
         mTable[i] = 0;
 }
 
+/* mStatus is 1 while the emitter was requested this frame. */
+static inline int IsRequested(const dPa_c::level_c::emitter_c *emitter) {
+    return emitter->mStatus == 1;
+}
+
 void dPa_c::level_c::execute() {
     emitter_c *emitter = mEmitter;
     int i;
@@ -89,12 +86,9 @@ void dPa_c::level_c::execute() {
             if (emitter->mCallback->OnUpdate(*emitter->mEmitter, callbackActive))
                 emitter->mStatus = 1;
         }
-        {
-            int isActive = (int)(emitter->mStatus == 1);
-            if (isActive != 0) {
-                emitter->mStatus = 0;
-                continue;
-            }
+        if (IsRequested(emitter)) {
+            emitter->mStatus = 0;
+            continue;
         }
         cutTable(emitter);
         mFreeNo = i;

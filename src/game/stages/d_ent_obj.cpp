@@ -246,11 +246,10 @@ void UnknownVsPlayer::MovePoseParticles() {
     if (mPosition.x >= 0x1c2000)
         return;
     Vector3 pos;
-    /* The bone matrix as its four rows of three; row 3 is the translation.
-     * Indexing m[9] instead folds the bone and row offsets into one add,
-     * where the ROM adds 0x2d0 and then 0x24. */
-    const Vector3 *rows = (const Vector3 *)&mModel.data.transforms[15];
-    MTX_MultVec43(&rows[3], &mModel.mat4x3, &pos);
+    Matrix4x3 *bone = &mModel.data.transforms[15];
+    /* t is the SDK's VecFx32; the game-type MTX_MultVec43 overload
+       (math/MtxStack.h) takes const Vector3 *, so the row is cast here. */
+    MTX_MultVec43((const Vector3 *)&bone->t, &mModel.mat4x3, &pos);
     Vec3_MulScalarInPlace(&pos, 0x8000);
     pos.y += 0x28000;
     mParticleHandle =
@@ -296,7 +295,7 @@ void UnknownVsPlayer::MoveChoosePose() {
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov075_0211d3c4.filePtr, *textureFile);
     mTextureSequence.SetFile(*textureFile, 0, 0x1000, 0);
     {
-        unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650.value);
+        unsigned int randomValue = RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
         mTextureSequence.currFrame = (u16)((randomValue >> 16) % frameCount) << 12;
     }
@@ -586,7 +585,7 @@ int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
     mTextureSequence.SetFile(*textureFile, 0, 0x1000, 0);
 
     {
-        unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650.value);
+        unsigned randomValue = RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
         mTextureSequence.currFrame = (((randomValue >> 16) % (unsigned)frameCount) << 16) >> 4;
     }
@@ -720,9 +719,9 @@ int dEntObj_c::GetExitX(int playerNo) {
 /* The standing x for player slot playerNo, laid out the same way as the
  * exit table above. Here the signed column-map value -1 selects column 3. */
 int dEntObj_c::GetStandingX(int playerNo) {
-    int count = data_0209fc50;
+    u32 count = data_0209fc50;
     int row;
-    if ((unsigned int)count <= 1) {
+    if (count <= 1) {
         row = 0;
     } else {
         row = count - 1;

@@ -48,10 +48,6 @@ enum daMip_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 
-namespace Sound {
-bool PlaySub(u32, u32, u32, int, bool);
-}
-
 /* ground probe / collision */
 int SurfaceInfo_TestFlag0x20(int *);
 
@@ -448,8 +444,8 @@ int daMip_c::StateCaughtMain()
             soundId = 0;
 
             if (mRabbitId != 7) {
-                if (func_02013890(mRabbitId, (s32)pl->param1) == 0) {
-                    if ((s32)pl->param1 != 3) {
+                if (func_02013890(mRabbitId, pl->param1) == 0) {
+                    if (pl->param1 != 3) {
                         Message::PrepareTalk();
                         Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, false);
                         if (mRabbitId != 6) {
@@ -466,7 +462,7 @@ int daMip_c::StateCaughtMain()
                             msg = 0x12c;
                     }
                 } else {
-                    if ((s32)pl->param1 != 3) {
+                    if (pl->param1 != 3) {
                         Message::PrepareTalk();
                         if (mIsGlowing == 0) {
                             Sound::PlaySub(0x26, 0x12, 0x7f, 0x15ccc, false);
@@ -506,7 +502,7 @@ int daMip_c::StateCaughtMain()
             }
 
             pos.y += 0x64000;
-            if (pl->ShowMessage(*this, (u32)msg, &pos, 0, 0) == 1) {
+            if (pl->ShowMessage(*this, msg, &pos, 0, 0) == 1) {
                 mActionStep = 1;
                 if (soundId != 0)
                     func_02012694(soundId, &mCamSpacePos);
@@ -520,7 +516,7 @@ int daMip_c::StateCaughtMain()
 
     if (pl->GetTalkState() != -1) {
         if (data_0209d660 != 0 && data_0209d6bc == 9 &&
-            (mRabbitId == 7 || func_02013890(mRabbitId, (s32)pl->param1) == 0 || mIsGlowing != 0)) {
+            (mRabbitId == 7 || func_02013890(mRabbitId, pl->param1) == 0 || mIsGlowing != 0)) {
             Sound::PlaySub(0x27, 0x12, 0, 0x8777, false);
         }
         return 1;
@@ -545,7 +541,7 @@ int daMip_c::StateCaughtMain()
         return 1;
     }
 
-    if (func_02013890(mRabbitId, (s32)pl->param1) == 0 ||
+    if (func_02013890(mRabbitId, pl->param1) == 0 ||
         (mIsGlowing != 0 && SaveData::NumGlowingRabbitsFound() == 7)) {
         posR = mPos;
         {
@@ -640,8 +636,8 @@ int daMip_c::StateFleeMain() {
         }
     }
     {
-        s32 t = mAnmModel.currFrame >> 12;
-        if (((u16)t) == 0) {
+        u16 t = mAnmModel.currFrame >> 12;
+        if (t == 0) {
             if (TestWaterBelow() == 1) {
                 func_02012694(0x124, &mCamSpacePos);
                 Particle::System::NewSplash(mPos.x, mFloorY + 0x3000, mPos.z);
@@ -679,7 +675,7 @@ int daMip_c::StateFleeMain() {
     if (idx >= mNumPathNodes) {
         idx = 0;
     }
-    pathptr.GetNode(node2, (u32)idx);
+    pathptr.GetNode(node2, idx);
     lim = 0x26000;
     if (mRabbitId == 7) {
         lim = lim >> 1;
@@ -692,10 +688,7 @@ int daMip_c::StateFleeMain() {
     }
     if ((len == 0) || (len <= lim)) {
         mPos = node;
-        {
-            s32 *p = &mPathNodeIndex;
-            *p = (*p) + mPathDir;
-        }
+        mPathNodeIndex += mPathDir;
         if (mPathNodeIndex >= mNumPathNodes) {
             mPathNodeIndex = 0;
         }
@@ -895,13 +888,13 @@ void daMip_c::UpdateMatrixAndShadow()
 {
     extern Matrix4x3 data_020a0e68;
 
-    char tmp[0x30];
+    char result[0x30];
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
-    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
+    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, result);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
     mShadowMtx = data_020a0e68;
     DropShadowRadHeight(mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
@@ -922,7 +915,7 @@ void daMip_c::UpdateCarriedMatrix()
     if (mTalkingPlayer->IsFrontSliding() || mTalkingPlayer->LostGrabbedObject()) {
         idx = 1;
     }
-    if ((int)mTalkingPlayer->param1 == 2) {
+    if (mTalkingPlayer->param1 == 2) {
         idx = (idx + 2) & 0xff;
     }
     res = UpdateCarry(*mTalkingPlayer, data_ov085_021306ec[idx]);
@@ -1022,16 +1015,16 @@ int daMip_c::Render()
     return 1;
 }
 
-/* Mirrored second copy. mat4x3.m[9] is the X translation. 0x421800 is
+/* Mirrored second copy. 0x421800 is
    (0x1086000 >> 3) << 1, so the subtract reflects X across
    UpdateMirrorShadow's plane. */
 void daMip_c::RenderMirrorImage()
 {
     extern int data_020a0e68;
 
-    Matrix4x3 tmp;
-    tmp = mAnmModel.mat4x3;
-    mAnmModel.mat4x3.m[9] = 0x421800 - mAnmModel.mat4x3.m[9];
+    Matrix4x3 saved;
+    saved = mAnmModel.mat4x3;
+    mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
     MTX_Concat33(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
     mAnmModel.ClearMaterialFlags(0x80);
@@ -1040,7 +1033,7 @@ void daMip_c::RenderMirrorImage()
     mAnmModel.ApplyOpacity(0xff, 0);
     mAnmModel.SetMaterialFlags(0x80);
     mAnmModel.ClearMaterialFlags(0x40);
-    mAnmModel.mat4x3 = tmp;
+    mAnmModel.mat4x3 = saved;
 }
 
 /* The glowing-rabbit chase, and it is mostly a conversation.
@@ -1117,7 +1110,7 @@ int daMip_c::Behavior()
                         Message::PrepareTalk();
                         t = mRabbitId;
                         if (t != 7) {
-                            if (func_02013890(t, (s32)talker->param1) == 0) {
+                            if (func_02013890(t, talker->param1) == 0) {
                                 Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, 0);
                                 if (mRabbitId != 6) { soundId = 0x162; messageId = 0x11e; }
                                 else { soundId = 0x160; messageId = 0x126; }
@@ -1318,13 +1311,13 @@ int daMip_c::InitResources()
         closest = ClosestPlayer();
         if (closest != 0) {
             int v;
-            v = (s32)((daPly_c *)closest)->param1;
+            v = ((daPly_c *)closest)->param1;
             if (gCurrentSublevel == 0x32)
                 v = 1;
             if (func_02013890(mRabbitId, v) != 0 && data_ov085_021305ac < 8) {
                 u32 rnd = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
                 if (NumStars() >= 0x51) {
-                    if ((s32)((daPly_c *)closest)->param1 == 3) {
+                    if (((daPly_c *)closest)->param1 == 3) {
                         if ((rnd & 0xf) == 0)
                             mColorVariant = 5;
                     } else {
@@ -1332,7 +1325,7 @@ int daMip_c::InitResources()
                             mColorVariant = 5;
                     }
                 } else if (NumStars() >= 0x28) {
-                    if ((s32)((daPly_c *)closest)->param1 == 3) {
+                    if (((daPly_c *)closest)->param1 == 3) {
                         if ((rnd & 0x1f) == 0)
                             mColorVariant = 5;
                     } else {

@@ -163,7 +163,7 @@ void daSBird_c::StateLaunchFlock() {
             copy.z = diff.z;
             if (Vec3_HorzLen(&copy) > 0x7d0000)
                 return;
-            int n = (int)param1 & 0xf;
+            int n = param1 & 0xf;
             if (n > 1) {
                 for (int i = 0; i < n - 1; i++) {
                     daSBird_c *follower =
@@ -224,7 +224,7 @@ void daSBird_c::StateWaitForPlayer() {
    and aims the flock at the fixed target; every bird then waits in state 1. */
 void daSBird_c::StateSpawnFlock() {
     if (mIsLeader) {
-        int n = (int)param1 & 0xf;
+        int n = param1 & 0xf;
         if (n > 1) {
             Vector3_16 rot = mPrevAngle;
             for (int i = 0; i < n - 1; i++) {
@@ -260,9 +260,9 @@ s32 daSBird_c::Render() {
 
 s32 daSBird_c::Behavior() {
     (this->*data_ov009_02113c48.slots[mState])();
-    Vector3 tmp;
-    Vec3_Asr(&tmp, &mPos, 3);
-    MtxStack::transS(tmp.x, tmp.y, tmp.z);
+    Vector3 scaledPos;
+    Vec3_Asr(&scaledPos, &mPos, 3);
+    MtxStack::transS(scaledPos.x, scaledPos.y, scaledPos.z);
     mAngle.y = mPrevAngle.y;
     Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngle.z);
     MtxStack::YrotM(mAngle.y);

@@ -478,8 +478,7 @@ void Cursor_UpdateState(void) {
                 if (s2->stateTicks <= 1) {
                     {
                         Ov007Pad *o = WORK->pad;
-                        /* the const re-read is codegen: `|= 1` is 4 bytes longer */
-                        o->inputLock = *(const int *)&o->inputLock | 1;
+                        o->inputLock = Pad_GetInputLock(o) | 1;
                     }
                     func_ov007_020c2090(WORK->pad);
                 }
@@ -720,7 +719,7 @@ void func_ov007_020b2e64(TPData *sample) {
         if (CURSOR->confirm == 0) {
             return;
         }
-        data_ov007_02103364 = (data_ov007_02103364 == 0) ? 1 : 0;
+        data_ov007_02103364 = data_ov007_02103364 == 0;
         Cursor_TouchItem(sample);
         return;
     }

@@ -157,8 +157,18 @@ extern int func_ov002_020cf700(void *g);
  * scalars. D0 is the same destruction followed by the inherited actor-heap
  * operator delete. Being the first out-of-line virtual, it makes this file the
  * key function's home, so the vtable and RTTI are emitted here too. */
-daYegg_c::~daYegg_c()
-{
+daYegg_c::~daYegg_c() {}
+
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -202,6 +212,10 @@ int daYegg_c::func_ov002_020ec654() {
     return (((mParamHigh & 3) - 1) & 1) != 0;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- HandleWallHit, 0x020ec670, size 0xb8 */
 /* -------------------------------------------------------------------------- */
@@ -214,7 +228,6 @@ int daYegg_c::func_ov002_020ec654() {
 void daYegg_c::HandleWallHit(int arg) {
     struct dBgPi* cr;
     struct dActor_c* actor;
-    u16 type;
 
     cr = ((dBgCh_Actr *)arg)->GetSphereResult();
     if (cr->GetClsnID() == -1)
@@ -223,22 +236,12 @@ void daYegg_c::HandleWallHit(int arg) {
     actor = dActor_c::FindWithID(cr->GetClsnID());
     if (actor == 0) return;
 
-    type = actor->actorID;
-    {
-        int t = (int)(type == ACTOR_DOSUN);
-        if (t != 0) {
-            ((daDsn_c *)actor)->mTriggered = 1;
-            return;
-        }
+    if (IsActorID(actor, ACTOR_DOSUN)) {
+        ((daDsn_c *)actor)->mTriggered = 1;
+        return;
     }
-    {
-        int t = (int)(type == ACTOR_BATAN);
-        if (t == 0) {
-            t = (int)(type == ACTOR_BATANKING);
-            if (t == 0)
-                return;
-        }
-    }
+    if (!IsActorID(actor, ACTOR_BATAN) && !IsActorID(actor, ACTOR_BATANKING))
+        return;
     ((daBtn_c *)actor)->func_ov079_02123804(this);
 }
 
@@ -290,7 +293,7 @@ void daYegg_c::PayOut() {
 /* -------------------------------------------------------------------------- */
 /* Spawns `count` blue coins (actor BLUE_COIN, param1 2) at *b in the egg's
  * area. When more than one is asked for, the speed `sl` is raised to at least
- * 0x4000 (4 units). Each coin gets a heading of `arg5` plus a random multiple
+ * 0x4000 (4 units). Each coin is headed at `heading` plus a random multiple
  * of 0x800 (a 32nd of a turn) that differs from the previous coin's, and a
  * speed of `sl` scaled by a random 100 to 149 percent. The scaling compounds,
  * because the product is stored back into `sl`. The four fields written at
@@ -298,7 +301,7 @@ void daYegg_c::PayOut() {
  * word) are dActor_c's
  * mPrevAngle.x/.y/.z and mHorzSpeed; whether the coin reads them as spawn
  * arguments is not shown here. */
-void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
+void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short heading) {
     unsigned int r;
     int zero;
     dActor_c *coin;
@@ -326,7 +329,7 @@ void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
             coin->mPrevAngle.x = zero;
             sl = sl * ((r % 50) + 100) / 100;
             prev = rv;
-            coin->mPrevAngle.y = arg5 + rv;
+            coin->mPrevAngle.y = heading + rv;
             coin->mPrevAngle.z = zero;
             coin->mHorzSpeed = sl;
         }
@@ -540,8 +543,8 @@ void daYegg_c::SeekHoming() {
                     return;
                 }
                 if (o != 0) {
-                    Vector3 tmp = o->OnAimedAtWithEggReturnVec();
-                    if (ApproachLinear(mPos, tmp, mHorzSpeed) != 0) {
+                    Vector3 aimPos = o->OnAimedAtWithEggReturnVec();
+                    if (ApproachLinear(mPos, aimPos, mHorzSpeed) != 0) {
                         switch (o->actorID) {
                         case ACTOR_BOMBKING:
                         case ACTOR_HOLHEI:
@@ -557,7 +560,7 @@ void daYegg_c::SeekHoming() {
                             return;
                         }
                     }
-                    mAngle.y = Vec3_HorzAngle(&mPos, &tmp);
+                    mAngle.y = Vec3_HorzAngle(&mPos, &aimPos);
                 }
                 Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
                 flag = 1;
@@ -934,7 +937,6 @@ void daYegg_c::UpdateShadow() {
     Vector3 v;
     int r5;
     int r4;
-    int b;
 
     if (mPlayer->mOpacity < 1)
         return;
@@ -953,11 +955,10 @@ void daYegg_c::UpdateShadow() {
     r4 = 0x50000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
     Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = mPos.y >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
-    b = (mFlags & 0x40000) ? 1 : 0;
-    if (b == 0 && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = mPos.y >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
+    if (!IsInYoshiMouth(this) && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
         !mPlayer->func_ov002_020d0d2c()) {
         if (func_ov002_020ec654() == 0) {
             DropShadowRadHeight(mShadowModel, mShadowMtx, r4, r5 + 0x28000, 0xf);
@@ -987,9 +988,9 @@ void daYegg_c::UpdateModelMatrix() {
         data_020a0e68 = *mPlayer->mCarryMatrix;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
-        v.x = data_020a0e68.m[9];
-        v.y = data_020a0e68.m[10];
-        v.z = data_020a0e68.m[11];
+        v.x = data_020a0e68.t.x;
+        v.y = data_020a0e68.t.y;
+        v.z = data_020a0e68.t.z;
         mPos.x = v.x << 3;
         mPos.y = v.y << 3;
         mPos.z = v.z << 3;
@@ -1018,7 +1019,6 @@ int daYegg_c::FindTarget(int a1, int best) {
     dActor_c *found;
     dActor_c *actor;
     int matched;
-    int b;
     /* Kept (#821 r21). The ROM reserves 0x10 bytes of frame it never
        touches; without this the function is 0x15c against 0x168. An unused
        `Vector3 pos;` reproduces it exactly, but a dead local only sizes the
@@ -1026,6 +1026,8 @@ int daYegg_c::FindTarget(int a1, int best) {
        = actor->mPos;` in the loop or `= mPos;` at the top, keeps its stores:
        0x180. */
     struct P { int a, b, c, d; };
+    /* Kept (#821 r79): a const Vector3 & to actor->mPos, a Vector3 temporary argument, and a
+       VecFx32 copy are 0x15c, 0x184 and 0x178 against 0x168. */
     volatile struct P _p;
     struct P *_q = const_cast<struct P *>(&_p);
 
@@ -1042,11 +1044,9 @@ int daYegg_c::FindTarget(int a1, int best) {
             continue;
         if (actor == (dActor_c *)mPlayer)
             continue;
-        b = (actor->mFlags & 0x10000000) != 0;
-        if (!b)
+        if (!IsFlagSet(actor, 0x10000000))
             continue;
-        b = (actor->mFlags & 8) != 0;
-        if (b)
+        if (IsOffScreen(actor))
             continue;
         matched = 0;
         for (int i = 0; i < 5; i++) {
@@ -1126,6 +1126,10 @@ void daYegg_c::func_ov002_020edca4() {
     mBurstDone = 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- HandleCylinderHit, 0x020eddc4, size 0x190 */
 /* -------------------------------------------------------------------------- */
@@ -1159,8 +1163,7 @@ int daYegg_c::HandleCylinderHit() {
         actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor != 0 && actor != (struct dActor_c *)mPlayer) {
             {
-                int t = (int)(actor->actorID == ACTOR_PLAYER);
-                if (t != 0) {
+                if (IsPlayerActor(actor)) {
                     flags = mdCcAc_c.hitFlags;
                     if (flags & 0x8000) {
                         this->func_ov002_020ed63c(daYegg_STATE_DROP);
@@ -1221,15 +1224,13 @@ int daYegg_c::CleanupResources()
    is below 1. */
 int daYegg_c::Render()
 {
-    /* The temporary is load-bearing and must not be folded into the `if`, the
-       same way it is in daBakubaku_c::Render: `if (mFlags & 0x40000)` tests the
-       masked word directly, while the ROM materialises the 0/1 first. Folding it
-       changes the function's SIZE, which is what a `999 word(s) differ` says. */
-    int b = ((mFlags & 0x40000) != 0);
-    if (b) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
 
-    if (mPlayer->IsInsideOfCannon()) return 1;
-    if (mPlayer->mOpacity < 1) return 1;
+    if (mPlayer->IsInsideOfCannon())
+        return 1;
+    if (mPlayer->mOpacity < 1)
+        return 1;
     mAnmModel.Render(0);
     return 1;
 }

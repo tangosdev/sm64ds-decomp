@@ -19,11 +19,10 @@
  * Notes:
  * - dBgW::SetBeforeClsnCallback is the store of dBgW::beforeClsnCallback (+0x18).
  *   This InitResources calls it with &dBgW::UpdatePosAndAngs.
- * - The sign flip and the yaw add go through a pointer. Writing
- *   mPrevAngle.x = mPrevAngle.x * -1 comes out 0x12c, and
+ * - The sign flip and the yaw add are the compound forms (`*= -1`, `+=`).
+ *   Writing mPrevAngle.x = mPrevAngle.x * -1 comes out 0x12c, and
  *   mPrevAngle.y = mPrevAngle.y + mPrevAngle.z comes out 0x134, against
- *   Behavior's 0x138. The pointer is what keeps the halfword multiply
- *   and the reload into mAngle.y.
+ *   Behavior's 0x138.
  * - data_ov065_0211d334 (the 200/400 speeds) and data_ov065_0211d35c
  *   (the two resource rows) are not this TU's data. Neither are
  *   g_profile_CT_MECHA06 / CT_MECHA07.
@@ -158,8 +157,7 @@ int daObjCtKaitendai_c::Behavior() {
 
             mPrevAngle.x = ((roll % 7) * 0xc8);
             if (roll >= 0x7fff) {
-                s16 *target = &mPrevAngle.x;
-                *target *= -1;
+                mPrevAngle.x *= -1;
             }
         }
         break;
@@ -169,10 +167,7 @@ int daObjCtKaitendai_c::Behavior() {
         break;
     }
 
-    {
-        s16 *yaw = &mPrevAngle.y;
-        *yaw = (*yaw + mPrevAngle.z);
-    }
+    mPrevAngle.y += mPrevAngle.z;
     mAngle.y = mPrevAngle.y;
 
     UpdateModelPosAndRotY();
@@ -198,10 +193,10 @@ int daObjCtKaitendai_c::CleanupResources() {
 }
 
 /* Copy the model matrix, plant its translation Y on the floor probe,
- * and drop the shadow. m[10] is that Y. */
+ * and drop the shadow. */
 void daObjCtKaitendai_c::UpdateShadow() {
     mShadowMat = mModel.mat4x3;
-    mShadowMat.m[10] = (mGroundY + 0x32000) >> 3;
+    mShadowMat.t.y = (mGroundY + 0x32000) >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x258000, 0xc8000, 15);
 }
 

@@ -58,6 +58,10 @@ int daObjAbuku_c::InitResources() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjAbuku_c::Behavior() {
@@ -69,8 +73,7 @@ int daObjAbuku_c::Behavior() {
     if (id) {
         dActor_c *found = dActor_c::FindWithID(id);
         if (found) {
-            int b = (found->actorID == 0xbf);
-            if (b) {
+            if (IsPlayerActor(found)) {
                 ((daPly_c *)found)->Heal(0x300);
                 Pop();
             }
@@ -79,8 +82,7 @@ int daObjAbuku_c::Behavior() {
     if (DecIfAbove0_Short((unsigned short *)(&mLifeTimer)) == 0 || IsNearWaterSurface()) {
         Pop();
     }
-    mParticle =
-        (int)Particle::System::New(mParticle, kPtclAbukuBubble, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticle = Particle::System::New(mParticle, kPtclAbukuBubble, mPos.x, mPos.y, mPos.z, 0, 0);
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;

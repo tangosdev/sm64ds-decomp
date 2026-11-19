@@ -25,8 +25,8 @@
  *   A named temporary DIFFs, and spelling mUnstickTimer on both
  *   sides of the decrement folds the halfword.
  * - OnTurnIntoEgg, the reward helper and InitResources mask param1
- *   in place as `param1 = (int)param1 & mask`. Without the cast the
- *   read-modify-write CSEs the +8 address and DIFFs.
+ *   in place through GetParam1(). A plain `param1 &= mask` CSEs the
+ *   +8 address across the read-modify-write and DIFFs.
  * - mInitAngleY is the spawn heading, but func_ov084_02129cf4
  *   overwrites it with the chase heading. mWanderRerollTimer is s16
  *   in the header and this TU loads it unsigned.
@@ -189,8 +189,18 @@ extern int data_ov084_02130208[];
 extern int data_ov084_02130238[];
 extern int data_ov084_02130218[];
 
-daKrb_c::~daKrb_c()
-{
+daKrb_c::~daKrb_c() {}
+
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
 }
 
 /* Per-frame upkeep of mChaseRadius (how close the player must be to be
@@ -426,6 +436,14 @@ void daKrb_c::func_ov084_021296b0(void *b) {
     goomba->mHomePos.z = pos[2];
 }
 
+/* The reward helper, OnTurnIntoEgg and InitResources mask param1 in place
+   with a read through this accessor. A plain `param1 &= mask` lets mwccarm
+   CSE the field address across the read-modify-write; the cartridge
+   re-issues [rN,#8]. */
+inline u32 daKrb_c::GetParam1() const {
+    return param1;
+}
+
 /* Pay out the reward the Goomba carries (mRewardType), then clear bits 4..7
  * and the upper halfword of param1 (mask 0xff0f), presumably so a respawned
  * copy does not read the reward again.
@@ -450,9 +468,7 @@ void daKrb_c::func_ov084_021296cc() {
             ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker((daStar_c *)silverStar);
             SpawnSoundObj(1);
         }
-        /* The (int) cast on the load is load-bearing: a plain
-           `param1 & 0xff0f` CSEs the +8 address and builds one word longer. */
-        param1 = (int)param1 & 0xff0f;
+        param1 = GetParam1() & 0xff0f;
         return;
     }
     if (mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
@@ -463,7 +479,7 @@ void daKrb_c::func_ov084_021296cc() {
     dActor_c::Spawn(ACTOR_STARBASE, mStarID | 0x30, mPos, 0, mAreaId, -1);
     dActor_c::Spawn(ACTOR_SILVER_STAR, mStarID | 0x30, mPos, 0, mAreaId, -1);
     mRewardType = daKrb_c::REWARD_SPENT;
-    param1 = (int)param1 & 0xff0f;
+    param1 = GetParam1() & 0xff0f;
     SpawnSoundObj(1);
 }
 
@@ -507,8 +523,7 @@ int daKrb_c::func_ov084_021298d0() {
             if (id != 0) {
                 dActor_c *r = dActor_c::FindWithID(id);
                 if (r != 0) {
-                    int b = (r->actorID == ACTOR_KURIKING);
-                    if (b != 0) {
+                    if (IsActorID(r, ACTOR_KURIKING)) {
                         SpawnCoin();
                         func_ov084_02129498();
                     }
@@ -701,13 +716,17 @@ void daKrb_c::func_ov084_02129cf4(fx32 distThresh) {
     mInitAngleY = Vec3_HorzAngle(&mPos, &ppos);
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
 /* Collision reaction: something touched this Goomba, decide what it did.
  *
  * `flags` is hitFlags (the collision word at 0x1a0) and `other` the actor found
  * through otherOwner (0x1a4). Type ids are the debug-table profile numbers this
  * class is registered under -- 200 KURIBO, 201 KURIBO_S, 202 KURIBO_L, and 191
- * for a daPly_c -- so `myType` is which of the three Goomba sizes WE are, not
- * what hit us. mDeathState is set to the DEATH_* value for the hit, and
+ * for a daPly_c -- so the IsActorID(this, ...) tests ask which of the three
+ * Goomba sizes WE are, not what hit us. mDeathState is set to the DEATH_* value for the hit, and
  * Behavior's mDeathState != 0 path plays it out. Hit-bit names are dCc_c.h's
  * best-effort table (HIT_*). In the order tested:
  *   HIT_MEGA (not KURIBO_S): cap released, then KillByInvincibleChar with
@@ -738,10 +757,10 @@ void daKrb_c::func_ov084_02129cf4(fx32 distThresh) {
  * slide kick adds the attacker's horizontal speed to its own; one hit by a
  * dive adds 0x20.
  *
- * `variantMatch` and `typeMatch` are scratch booleans, and materializing them
- * instead of testing inline is deliberate: mwccarm emits the comparison into a
- * register and then re-tests it, which is the shape the cartridge has. Folding
- * either back into its `if` collapses the pair. See notes/matching-style.md 3. */
+ * The actor-ID tests go through IsActorID and IsPlayerActor: the
+ * int-returning predicates leave the compare materialized and re-tested, which
+ * is the shape the cartridge has. Testing actorID directly in the `if`
+ * collapses the pair. */
 void daKrb_c::func_ov084_02129ed4() {
     Vector3_16 killDirNormal;
     Vector3_16 killDirVariant;
@@ -758,9 +777,6 @@ void daKrb_c::func_ov084_02129ed4() {
     u32 flags;
     s32 turnAround;
     s32 hurtKnockback;
-    u16 myType;
-    s32 variantMatch;
-    s32 typeMatch;
     u32 id;
 
     id = mdCcAc_c.otherOwner;
@@ -773,19 +789,15 @@ void daKrb_c::func_ov084_02129ed4() {
     flags = mdCcAc_c.hitFlags;
     hurtKnockback = 0xc000; /* 12.0 */
     mLastHitFlags = flags;
-    myType = actorID;
     turnAround = 0;
     if (mGoombaType == daKrb_c::GOOMBA_KING_MINION)
         hurtKnockback = 0x5000; /* 5.0 */
-    variantMatch = (myType == ACTOR_KURIBO_S);
-
-    if (variantMatch == 0 && (flags & HIT_MEGA)) {
+    if (!IsActorID(this, ACTOR_KURIBO_S) && (flags & HIT_MEGA)) {
         capReleaseOnHit.x = 0;
         capReleaseOnHit.y = 0x6c000;
         capReleaseOnHit.z = 0; /* 108.0 */
         ReleaseCap(capReleaseOnHit);
-        typeMatch = (actorID == ACTOR_KURIBO);
-        if (typeMatch != 0) {
+        if (IsActorID(this, ACTOR_KURIBO)) {
             killDirNormal.x = -0x2000;
             killDirNormal.y = 0;
             killDirNormal.z = 0;
@@ -812,8 +824,7 @@ void daKrb_c::func_ov084_02129ed4() {
         mAnmModel.SetAnim((BCA_File *)data_ov084_02130cd0.filePtr, 0x40000000, 0x1000, 0);
         mDeathState = daKrb_c::DEATH_FIRE;
     } else {
-        variantMatch = (myType == ACTOR_KURIBO_L);
-        if (variantMatch == 0) {
+        if (!IsActorID(this, ACTOR_KURIBO_L)) {
             if (flags & HIT_UNLISTED_20000) {
                 mDeathState = daKrb_c::DEATH_HIT_20000;
                 mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
@@ -833,8 +844,7 @@ void daKrb_c::func_ov084_02129ed4() {
                 mDeathState = daKrb_c::DEATH_PUNCHED;
                 turnAround = 1;
             } else if (!(flags & HIT_YOSHI_TONGUE)) {
-                typeMatch = ((other)->actorID == ACTOR_PLAYER);
-                if (typeMatch != 0) {
+                if (IsPlayerActor(other)) {
                     if (other->mIsMetal != 0) {
                         capReleaseOnKill.x = 0;
                         capReleaseOnKill.y = 0x6c000;
@@ -886,8 +896,7 @@ void daKrb_c::func_ov084_02129ed4() {
                 }
             }
         } else {
-            typeMatch = ((other)->actorID == ACTOR_PLAYER);
-            if (typeMatch != 0) {
+            if (IsPlayerActor(other)) {
                 {
                     const Vector3 &p = other->mPos;
                     playerPosJump = p;
@@ -950,12 +959,11 @@ void daKrb_c::func_ov084_0212a580() {
     Vector3 pos;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     rotation = mAngle;
-    int inYoshiMouth = (mFlags & 0x40000) ? 1 : 0;
-    if (!inYoshiMouth) {
+    if (!IsInYoshiMouth(this)) {
         if (mWithMeshClsn.IsOnGround())
             DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScale.x * 0x50, 0x1e000, 0xf);
         else
@@ -1383,11 +1391,9 @@ void daKrb_c::ActWalk() {
  * 20.0 for KURIBO_S. */
 int daKrb_c::OnAimedAtWithEgg()
 {
-    int normal = (actorID == ACTOR_KURIBO) ? 1 : 0;
-    if (normal)
+    if (IsActorID(this, ACTOR_KURIBO))
         return 0x41000;
-    int large = (actorID == ACTOR_KURIBO_L) ? 1 : 0;
-    if (large)
+    if (IsActorID(this, ACTOR_KURIBO_L))
         return 0x96000;
     return 0x14000;
 }
@@ -1425,9 +1431,7 @@ void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
                 UntrackStar(mStarTracked);
                 b4 = 1;
                 dActor_c::Spawn(ACTOR_STARBASE, 0x50, mHomePos, 0, mAreaId, -1);
-                /* The (int) cast keeps [rN,#8] on the load: a plain
-                   `param1 & 0xff0f` lets mwccarm CSE the field address. */
-                param1 = (int)param1 & 0xff0f;
+                param1 = GetParam1() & 0xff0f;
             } else if (mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
                 if (mStarID == data_0209f344[data_0209f208[0]]) {
                     UntrackStar(mStarTracked);
@@ -1641,42 +1645,36 @@ int daKrb_c::Behavior() {
     func_ov084_0212a580();
     func_ov084_02129238();
 
-    do {
-        if (mState == STATE_WALK) {
-            int b = (mFlags & 8) ? 1 : 0;
-            if (b == 0) {
-                if (Vec3_Dist(&mPos, &mStuckCheckPos) < 0xa000) { /* moved less than 10.0 */
-                    mStuckTimer += 1;
-                    if (mCapId < 6 && mStuckTimer == 30) {
-                        BeginJump();
-                        mUnstickTimer = 90;
-                    }
-                    if (mStuckTimer >= 300 && mUnstickTimer == 0) {
-                        func_ov084_021296cc();
-                        SpawnCoin();
-                        func_ov084_02129498();
-                        v2.x = 0;
-                        v2.y = 0x6c000; /* 108.0 */
-                        v2.z = 0;
-                        ReleaseCap(v2);
-                        mPos.x = mHomePos.x;
-                        mPos.y = mHomePos.y;
-                        mPos.z = mHomePos.z;
-                        RespawnIfHasCap();
-                        return 1;
-                    }
-                } else {
-                    mStuckTimer = 0;
-                    mStuckCheckPos.x = mPos.x;
-                    mStuckCheckPos.y = mPos.y;
-                    mStuckCheckPos.z = mPos.z;
-                }
-                break;
+    if (mState == STATE_WALK && !IsOffScreen(this)) {
+        if (Vec3_Dist(&mPos, &mStuckCheckPos) < 0xa000) { /* moved less than 10.0 */
+            mStuckTimer += 1;
+            if (mCapId < 6 && mStuckTimer == 30) {
+                BeginJump();
+                mUnstickTimer = 90;
             }
-        }
-        if (mUnstickTimer == 0)
+            if (mStuckTimer >= 300 && mUnstickTimer == 0) {
+                func_ov084_021296cc();
+                SpawnCoin();
+                func_ov084_02129498();
+                v2.x = 0;
+                v2.y = 0x6c000; /* 108.0 */
+                v2.z = 0;
+                ReleaseCap(v2);
+                mPos.x = mHomePos.x;
+                mPos.y = mHomePos.y;
+                mPos.z = mHomePos.z;
+                RespawnIfHasCap();
+                return 1;
+            }
+        } else {
             mStuckTimer = 0;
-    } while (0);
+            mStuckCheckPos.x = mPos.x;
+            mStuckCheckPos.y = mPos.y;
+            mStuckCheckPos.z = mPos.z;
+        }
+    } else if (mUnstickTimer == 0) {
+        mStuckTimer = 0;
+    }
     return 1;
 }
 
@@ -1713,10 +1711,7 @@ int daKrb_c::InitResources() {
     AddCap((unsigned char)(param1 & 0xf));
 
     if ((mCapId & 0xf) < 6)
-        /* The (int) cast is load-bearing: a plain `param1 & 0xf0ff` lets mwcc
-           CSE the field address across the RMW, and the ROM re-issues it. See
-           notes/mwccarm-codegen.md. */
-        param1 = (int)param1 & 0xf0ff;
+        param1 = GetParam1() & 0xf0ff;
 
     if (DestroyIfCapNotNeeded() == 0)
         return 0;
@@ -1733,13 +1728,10 @@ int daKrb_c::InitResources() {
     mCoinType = COIN_PLAIN;
 
     {
-        int id = actorID;
-        int cond = (id == ACTOR_KURIBO_S);
-        if (cond != false) {
+        if (IsActorID(this, ACTOR_KURIBO_S)) {
             mGoombaType = GOOMBA_SMALL;
         } else {
-            cond = (id == ACTOR_KURIBO);
-            if (cond != false) {
+            if (IsActorID(this, ACTOR_KURIBO)) {
                 if (param1 == 0xeeee || param1 == 0xeeef) {
                     mGoombaType = GOOMBA_KING_MINION;
                     mFlags &= ~2;
@@ -1802,11 +1794,9 @@ int daKrb_c::InitResources() {
  * compares against 6 and 4. */
 int daKrb_c::OnYoshiTryEat()
 {
-    int normal = (actorID == ACTOR_KURIBO) ? 1 : 0;
-    if (normal)
+    if (IsActorID(this, ACTOR_KURIBO))
         return 0x6;
-    int small = (actorID == ACTOR_KURIBO_S) ? 1 : 0;
-    if (small)
+    if (IsActorID(this, ACTOR_KURIBO_S))
         return 0x4;
     return 0;
 }

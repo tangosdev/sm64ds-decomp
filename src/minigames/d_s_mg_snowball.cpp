@@ -83,7 +83,7 @@ extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
-extern struct Matrix4x3 data_020a0e68;
+extern union Matrix4x3 data_020a0e68;
 extern u16 sSnowballCourseTiles[][4];
 extern unsigned char data_ov006_0212f3b0[];
 extern unsigned char data_ov006_0212f3ac[];
@@ -299,6 +299,8 @@ int dScMgSnowball_c::HitsBreakable(int *point) {
 // re-reading point[] 0x288. Re-measured (#821 r43), all 0x288: x and courseY
 // shifted in place after the lookup (`x >>= 12`), the lookup reading point[0],
 // x re-read from point[0] after the lookup, and x/courseY declared long.
+/* Kept (#821 r79): localX/localY taken before the tile lookup, the bit-8 tests on localX, and a
+   column pointer for the lookup are 0x230, 0x288 (not identical) and 0x270 against 0x28c. */
 #pragma opt_common_subs off
 int dScMgSnowball_c::HitsWall(int *point) {
     int courseY = point[1];
@@ -1168,7 +1170,7 @@ void dScMgSnowball_c::BuildCourse() {
 }
 
 void dScMgSnowball_c::ResetScene() {
-    Vector3 tmp;
+    Vector3 axis;
     int i;
     int y;
     Vector2 *saved;
@@ -1228,7 +1230,7 @@ void dScMgSnowball_c::ResetScene() {
     static Vector3 sUnitY(0, 0x1000, 0);
 
     mSpinAxis = sUnitY;
-    func_0203ce80(&tmp, &mSpinAxis);
+    func_0203ce80(&axis, &mSpinAxis);
 
     mSpinQuat[0] = data_02092768[0];
     mSpinQuat[1] = data_02092768[1];
@@ -1330,7 +1332,7 @@ s32 dScMgSnowball_c::Render() {
                     break;
                 case 3: {
                     int x = mArray2[i].x;
-                    Mg_RenderSpriteBoth(sSnowballObstacleSideSprites[(x < 0x80000) ? 1 : 0],
+                    Mg_RenderSpriteBoth(sSnowballObstacleSideSprites[x < 0x80000],
                                         (x - mScroll.x) >> 0xc,
                                         ((mArray2[i].y - mScroll.y) >> 0xc) - 0x110, -1, 1);
                     break;
@@ -1501,7 +1503,7 @@ s32 dScMgSnowball_c::Behavior() {
         if (mBallSize >= 0x37000)
             mBallSize = 0x37000;
         Vec2_Sub(moved, &mPos.x, &mSoundPos.x);
-        gate = (Vec2_Len((const Vector2 *)moved) >= 0x30000) ? 1 : 0;
+        gate = Vec2_Len((const Vector2 *)moved) >= 0x30000;
         if (gate != 0) {
             mSoundPos = mPos;
             if (mBallSize < 0x10000)

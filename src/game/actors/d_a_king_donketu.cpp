@@ -221,7 +221,7 @@ extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern dCamera_c *gCamera;
-extern struct Matrix4x3 data_020a0e68;
+extern union Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
@@ -234,11 +234,11 @@ extern int RandomIntInternal(int *seed);
 int ChiefChilly_ChangeState(C *c, PMF *p);
 extern void func_02012694(unsigned int a, const Vector3 *b);
 extern "C" {
-extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
+extern void Matrix4x3_ApplyInPlaceToRotationX(union Matrix4x3 *m, short angX);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. This TU's
    locals are the POD VecFx32, so the call casts. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
+extern void Matrix4x3_FromTranslation(union Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 }
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
@@ -306,9 +306,9 @@ void daKing_Donketu_c::SpawnLandingEffects(int strength) {
     data_020a0e68 = mBlendAnmModel.mat4x3;
     MTX_Concat43(&mBlendAnmModel.data.transforms[mStepBoneIdx], &data_020a0e68, &data_020a0e68);
     mStepBoneIdx ^= 1;
-    bonePos.x = data_020a0e68.m[9];
-    bonePos.y = data_020a0e68.m[10];
-    bonePos.z = data_020a0e68.m[11];
+    bonePos.x = data_020a0e68.t.x;
+    bonePos.y = data_020a0e68.t.y;
+    bonePos.z = data_020a0e68.t.z;
     Vec3_Lsl(&shifted, &bonePos, 3);
     bonePos = shifted;
     if (mState == &data_ov073_02123360) {
@@ -419,7 +419,7 @@ s32 daKing_Donketu_c::HandleHit() {
     }
 
     {
-        int isBf = (int)(target->actorID == ACTOR_PLAYER);
+        int isBf = (target->actorID == ACTOR_PLAYER);
         if (isBf == 1) {
             daPly_c *player = (daPly_c *)target;
             if (player->mIsMega != 0) {
@@ -513,35 +513,27 @@ s32 daKing_Donketu_c::HandleHit() {
         return 1;
     }
 
-    {
-        Vector3 v2;
-        v2.x = mPos.x;
-        v2.y = mPos.y;
-        v2.z = mPos.z;
-        if (((daPly_c *)target)->Hurt(v2, 0, 0x14000, 1, 0, 1) == 0)
-            goto done0;
-    }
-    {
+    Vector3 v2;
+    v2.x = mPos.x;
+    v2.y = mPos.y;
+    v2.z = mPos.z;
+    if (((daPly_c *)target)->Hurt(v2, 0, 0x14000, 1, 0, 1) != 0) {
         s32 *pv = &target->mPos.x;
         Particle::System::NewSimple(kPtclChiefChillyHitPlayer, pv[0], pv[1], pv[2]);
+        if (mState == &data_ov073_021233d0) {
+            func_02012694(SND_HIT_REGISTERED, &mCamSpacePos);
+            return 1;
+        }
+        mPrevAngle.y += 0x8000;
+        func_02012694(SND_REVERSE_AFTER_HURT, &mCamSpacePos);
+        ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123360);
+        mBlendAnmModel.SetAnim(*(BCA_File *)((BCA_File *)gKingIceDonketuHitAnimationFile.filePtr),
+                               4, 0x40000000, 0x1000, 0);
+        mBlendAnmModel.speed = 0x1000;
+        mPhase = 2;
+        mStateParam = 0x2000;
+        mStateTimer = 30;
     }
-    if (mState == &data_ov073_021233d0) {
-        func_02012694(SND_HIT_REGISTERED, &mCamSpacePos);
-        return 1;
-    }
-    {
-        s16 *py = &mPrevAngle.y;
-        *py = (*py + 0x8000);
-    }
-    func_02012694(SND_REVERSE_AFTER_HURT, &mCamSpacePos);
-    ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123360);
-    mBlendAnmModel.SetAnim(*(BCA_File *)((BCA_File *)gKingIceDonketuHitAnimationFile.filePtr), 4,
-                           0x40000000, 0x1000, 0);
-    mBlendAnmModel.speed = 0x1000;
-    mPhase = 2;
-    mStateParam = 0x2000;
-    mStateTimer = 30;
-done0:
     return 0;
 }
 
@@ -558,6 +550,8 @@ int daKing_Donketu_c::UpdateDefeat() {
     dActor_c* found;
     /* Kept (#821 r60): Vector3s keeps the stores but loads ldrsh, not
        ldrh (5 words); a plain Vector3_16 drops them (0x15c). */
+    /* Kept (#821 r79): Vector3_16 rot copy-initialised or assigned from mAngle, directly or
+       through a pointer, is 0x15c; the stores are dropped. */
     volatile struct Vector3_16 rot;
     struct Vector3 pos;
     cam = gCamera;
@@ -566,53 +560,52 @@ int daKing_Donketu_c::UpdateDefeat() {
     mScale.z = mScale.x;
     mScale.y = mScale.z;
     RenewLoopedParticles();
-    if (mScale.x >= 0x100)
-        goto end;
-    pos.x = mSpawnPos.x;
-    pos.y = mSpawnPos.y;
-    pos.z = mSpawnPos.z;
-    Message::EndTalk();
-    Sound::StopLoadedMusic_Layer3();
-    func_02011cfc();
-    Sound::ChangeMusicVolume(0x7f, 0x15666);
-    pos.y = pos.y + 0x190000;
-    func_0200fa8c(1);
+    if (mScale.x < 0x100) {
+        pos.x = mSpawnPos.x;
+        pos.y = mSpawnPos.y;
+        pos.z = mSpawnPos.z;
+        Message::EndTalk();
+        Sound::StopLoadedMusic_Layer3();
+        func_02011cfc();
+        Sound::ChangeMusicVolume(0x7f, 0x15666);
+        pos.y = pos.y + 0x190000;
+        func_0200fa8c(1);
 
-    /* Kept (#821 r20, measured against ov073 0x0211fa74, 0x178). rot is
-       built and never read; the ROM still stores all four halfwords.
-         non-volatile rot with plain field stores: 0x15c (the stores are
-           dropped).
-         volatile rot, `rot.x = mAngle.x; rot.y = mAngle.y; ...`: 5 of 94
-           words differ.
-         volatile rot with the reads below but `rot.x = a`: 4 differ.
-       Vector3_16 has no destructor, so the non-POD lever that keeps a
-       dead Vector3 copy does not apply. */
-    {
-        unsigned short a = *(unsigned short *)&mAngle.x;
-        unsigned short b = *(unsigned short *)&mAngle.y;
-        rot.x = b ? a : a;
-        rot.y = b;
-        rot.z = *(unsigned short *)&mAngle.z;
-        rot.y = (unsigned short)HorzAngleToCPlayer();
-    }
+        /* Kept (#821 r20, measured against ov073 0x0211fa74, 0x178). rot is
+           built and never read; the ROM still stores all four halfwords.
+             non-volatile rot with plain field stores: 0x15c (the stores are
+               dropped).
+             volatile rot, `rot.x = mAngle.x; rot.y = mAngle.y; ...`: 5 of 94
+               words differ.
+             volatile rot with the reads below but `rot.x = a`: 4 differ.
+           Vector3_16 has no destructor, so the non-POD lever that keeps a
+           dead Vector3 copy does not apply. */
+        {
+            unsigned short a = *(unsigned short *)&mAngle.x;
+            unsigned short b = *(unsigned short *)&mAngle.y;
+            rot.x = b ? a : a;
+            rot.y = b;
+            rot.z = *(unsigned short *)&mAngle.z;
+            rot.y = HorzAngleToCPlayer();
+        }
 
-    spawned = dActor_c::Spawn(ACTOR_OBJ_KEY, 4, pos, 0, mAreaId, -1);
-    found = dActor_c::FindWithActorID(ACTOR_OBJ_BLUE_FIRE, 0);
-    func_02012694(SND_POOF, &mCamSpacePos);
-    if (found != 0) {
-        struct Vector3 fp;
-        const s32 *pv = &found->mPos.x;
-        fp.x = pv[0];
-        fp.y = pv[1];
-        fp.z = pv[2];
-        PoofDustAt(fp);
-        found->MarkForDestruction();
+        spawned = dActor_c::Spawn(ACTOR_OBJ_KEY, 4, pos, 0, mAreaId, -1);
+        found = dActor_c::FindWithActorID(ACTOR_OBJ_BLUE_FIRE, 0);
+        func_02012694(SND_POOF, &mCamSpacePos);
+        if (found != 0) {
+            struct Vector3 fp;
+            const s32 *pv = &found->mPos.x;
+            fp.x = pv[0];
+            fp.y = pv[1];
+            fp.z = pv[2];
+            PoofDustAt(fp);
+            found->MarkForDestruction();
+        }
+        if (spawned != 0) {
+            cam->mFlags &= ~8;
+            MarkForDestruction();
+        }
     }
-    if (spawned != 0) {
-        cam->mFlags &= ~8;
-        MarkForDestruction();
-    }
-end:
     return 1;
 }
 
@@ -998,18 +991,17 @@ int daKing_Donketu_c::EnterWaypointHop() {
 int daKing_Donketu_c::func_ov073_02120610() {
     Vector3 v;
 
-    if (mStateTimer == 0)
-        goto mainblock;
-
-    if (mStateTimer == 1) {
-        mSpeed.y = 0x5a000;
-        mBlendAnmModel.SetAnim(
-            *(BCA_File *)((BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr), 4, 0, 0x1000, 0);
-        mBlendAnmModel.speed = 0x2000;
+    if (mStateTimer != 0) {
+        if (mStateTimer == 1) {
+            mSpeed.y = 0x5a000;
+            mBlendAnmModel.SetAnim(
+                *(BCA_File *)((BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr), 4, 0, 0x1000,
+                0);
+            mBlendAnmModel.speed = 0x2000;
+        }
+        return 1;
     }
-    return 1;
 
-mainblock:
     ApproachLinear(mAngle.x, 0, 0x2000);
     if (mHitsRemaining == 2) {
         v = mWaypointsB[mWaypointCursor];
@@ -1254,10 +1246,8 @@ int daKing_Donketu_c::EnterHitReaction() {
                            0x40000000, fix, t);
     mBlendAnmModel.speed = fix;
     ang = HorzAngleToCPlayer();
-    short *py = &mPrevAngle.y;
     mPrevAngle.y = ang;
-    *py =
-        (short)((int)*py + 0x8000);
+    mPrevAngle.y += 0x8000;
     return 1;
 }
 
@@ -1287,6 +1277,10 @@ int daKing_Donketu_c::EnterTurnToSpawn() {
     mStateScratch = 0;
     mPrevAngle.y = mAngle.y;
     return 1;
+}
+
+static inline int IsNoControl(daPly_c *player) {
+    return player->mIsNoControl != 0;
 }
 
 /* ..3360 update, the chase, in legs selected by mPhase. mNoGroundAhead being
@@ -1387,18 +1381,10 @@ int daKing_Donketu_c::UpdateChase() {
         if (mPhase == 2) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                int t;
-                if (p->GetHurtState() == 4)
-                    goto hz;
-                if (p->GetHurtState() == 5)
-                    goto hz;
-                t = p->mIsNoControl ? 1 : 0;
-                if (t == 1) {
-                hz:
+                if (p->GetHurtState() == 4 || p->GetHurtState() == 5 || IsNoControl(p) == 1)
                     mTargetAngle = Vec3_HorzAngle(&mPos, &mSpawnPos);
-                } else {
+                else
                     mTargetAngle = HorzAngleToCPlayer();
-                }
             }
         }
         mHorzSpeed = 0;
@@ -1595,9 +1581,9 @@ void daKing_Donketu_c::UpdateModelAndShadow() {
     for (; i < 2; i++) {
         data_020a0e68 = *saved;
         MTX_Concat43(&mBlendAnmModel.data.transforms[i + 2], &data_020a0e68, &data_020a0e68);
-        p->x = data_020a0e68.m[9];
-        p->y = data_020a0e68.m[10];
-        p->z = data_020a0e68.m[11];
+        p->x = data_020a0e68.t.x;
+        p->y = data_020a0e68.t.y;
+        p->z = data_020a0e68.t.z;
         Vec3_Lsl(&out, p, sh);
         mFootPos[i].x = out.x;
         mFootPos[i].y = out.y;
@@ -1757,9 +1743,9 @@ int daKing_Donketu_c::Behavior()
         mBlendAnmModel.WillHitFrame(7) != 0) {
         data_020a0e68 = mBlendAnmModel.mat4x3;
         MTX_Concat43(&mBlendAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        bonePos.x = data_020a0e68.m[9];
-        bonePos.y = data_020a0e68.m[10];
-        bonePos.z = data_020a0e68.m[11];
+        bonePos.x = data_020a0e68.t.x;
+        bonePos.y = data_020a0e68.t.y;
+        bonePos.z = data_020a0e68.t.z;
         Vec3_Lsl(&shifted, &bonePos, 3);
         bonePos = shifted;
         func_02012694(SND_ANIM_FRAME_STOMP, &mCamSpacePos);

@@ -185,10 +185,13 @@ s32 daJgm_c::Behavior()
     return 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 s32 daJgm_c::Render()
 {
-    int b = (int)((mFlags & 0x40000) != 0);
-    if (b != 0)
+    if (IsInYoshiMouth(this))
         return 1;
     mTextureSequence.Update(mAnmModel.data);
     mAnmModel.Render(0);
@@ -334,23 +337,27 @@ s32 daJgm_c::EnterYoshiMouthState()
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
 s32 daJgm_c::UpdateYoshiMouthState()
 {
-    if (((mFlags & 0x40000) ? 1 : 0) != 0) {
+    if (IsInYoshiMouth(this)) {
         dActor_c *carrier = mEatingPlayer;
         s32 *carrierPos = &carrier->mPos.x;
         mPos.x = carrierPos[0];
         mPos.y = carrierPos[1];
         mPos.z = carrierPos[2];
     }
-    {
-        int flags = mFlags;
-        if (((flags & 0x80000) ? 1 : 0) != 0)
-            SetState(3);
-        else if (((flags & 0x20000) ? 1 : 0) == 0
-                 && ((flags & 0x40000) ? 1 : 0) == 0)
-            SetState(0);
-    }
+    if (IsFlagSet(this, 0x80000))
+        SetState(3);
+    else if (!IsBeingEaten(this) && !IsInYoshiMouth(this))
+        SetState(0);
     return 1;
 }
 
@@ -419,14 +426,13 @@ s32 daJgm_c::UpdateFallState()
 
 void daJgm_c::UpdateModels()
 {
-    int b = (int)((mFlags & 0x40000) != 0);
-    if (b)
+    if (IsInYoshiMouth(this))
         return;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = (mPos.y + mBobOffsetY) >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + mBobOffsetY) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     if (mState == 4) {
         data_020a0e68 = mAnmModel.mat4x3;
@@ -438,9 +444,9 @@ void daJgm_c::UpdateModels()
         mAnmModel.mat4x3 = data_020a0e68;
     }
 
-    mMatrix.m[9] = mPos.x >> 3;
-    mMatrix.m[10] = mPos.y >> 3;
-    mMatrix.m[11] = mPos.z >> 3;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = mPos.y >> 3;
+    mMatrix.t.z = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, mMatrix, 0x5a000, 0x320000, 0xf);
 
@@ -459,9 +465,9 @@ void daJgm_c::UpdateModels()
     data_020a0e68 = mAnmModel.mat4x3;
     MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
 
-    mThrowPos.x = data_020a0e68.m[9];
-    mThrowPos.y = data_020a0e68.m[10];
-    mThrowPos.z = data_020a0e68.m[11];
+    mThrowPos.x = data_020a0e68.t.x;
+    mThrowPos.y = data_020a0e68.t.y;
+    mThrowPos.z = data_020a0e68.t.z;
 
     Vec3_LslInPlace(&mThrowPos, 3);
     Vec3_Asr(&pos, &mThrowPos, 3);
@@ -520,11 +526,11 @@ void daJgm_c::HandlePlayerCollision()
     if (other == 0)
         return;
 
-    b = (int)(other->actorID == 0xbf);
+    b = (other->actorID == 0xbf);
     if (b == 0)
         return;
 
-    b = (int)((mFlags & 0x20000) != 0);
+    b = ((mFlags & 0x20000) != 0);
     if (b != 0) {
         SetState(2);
         return;
@@ -631,7 +637,7 @@ int daJgm_c::CountSpinies()
 
 void daJgm_c::UpdateHoverBob()
 {
-    unsigned short v = (unsigned short)mBobAngle;
+    unsigned short v = mBobAngle;
     short s = FX_SinIdx(v >> 4);
     long long prod = (long long)s * 0x27000;
     mBobOffsetY = (int)((prod + 0x800) >> 12);

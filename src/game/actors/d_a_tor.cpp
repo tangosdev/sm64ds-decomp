@@ -77,7 +77,7 @@ daTor_c::~daTor_c()
 
 void daTor_c::UpdateSpin(s32 scale)
 {
-    u16 idx = (u16)mSpinPhase;
+    u16 idx = mSpinPhase;
     s16 wave = FX_CosIdx(idx >> 4);
     s32 radiusScale = (wave + 0x1000) >> 1;
     s32 frameScale = FX_MUL(scale, 0x666);
@@ -85,7 +85,7 @@ void daTor_c::UpdateSpin(s32 scale)
     radius += 0x1000;
     mScale.x = FX_MUL(radius, frameScale);
 
-    u16 idx2 = (u16)mSpinPhase;
+    u16 idx2 = mSpinPhase;
     s16 wave2 = FX_CosIdx(idx2 >> 4);
     s32 heightScale = ((0x1000 - wave2) >> 2) + 0x800;
     mScale.y = FX_MUL(heightScale, frameScale);
@@ -136,36 +136,33 @@ void daTor_c::State1()
     mHorzSpeed = 0x14000;
 
     daPly_c *player = ClosestPlayer();
-    if (player == 0)
-        goto null_player;
+    if (player != 0) {
+        /* One pointer, not three named loads: those change codegen; see file header. */
+        {
+            s32 *pos = &((dActor_c *)player)->mPos.x;
+            playerPos.x = pos[0];
+            playerPos.y = pos[1];
+            playerPos.z = pos[2];
+        }
 
-    /* One pointer, not three named loads: those change codegen; see file header. */
-    {
-        s32 *pos = &((dActor_c *)player)->mPos.x;
-        playerPos.x = pos[0];
-        playerPos.y = pos[1];
-        playerPos.z = pos[2];
-    }
-
-    if (Vec3_HorzDist(&mHomePos, &playerPos) < mChaseRange && mTriggerCount == 0 &&
-        mChaseTimer < 900) {
-        angle = Vec3_HorzAngle(&mPos, &playerPos);
-        mAngleToPlayer = angle;
-        ApproachLinear(mPrevAngle.y, mAngleToPlayer, 0x200);
-        /* ov002 helper wraps daPly_c::IsState(tornado): still being carried. */
-        if (mCaughtActor != 0 && func_ov002_020de328(mCaughtActor) != 0)
-            ++mTriggerCount;
+        if (Vec3_HorzDist(&mHomePos, &playerPos) < mChaseRange && mTriggerCount == 0 &&
+            mChaseTimer < 900) {
+            angle = Vec3_HorzAngle(&mPos, &playerPos);
+            mAngleToPlayer = angle;
+            ApproachLinear(mPrevAngle.y, mAngleToPlayer, 0x200);
+            /* ov002 helper wraps daPly_c::IsState(tornado): still being carried. */
+            if (mCaughtActor != 0 && func_ov002_020de328(mCaughtActor) != 0)
+                ++mTriggerCount;
+        } else {
+            ApproachLinear(mPrevAngle.y, mAngleToHome, 0x200);
+            if (Vec3_HorzDist(&mHomePos, &mPos) < 0xc8000)
+                mState = 2;
+        }
     } else {
-        ApproachLinear(mPrevAngle.y, mAngleToHome, 0x200);
-        if (Vec3_HorzDist(&mHomePos, &mPos) < 0xc8000)
-            mState = 2;
+        mState = 2;
+        return;
     }
 
-    goto cont;
-null_player:
-    mState = 2;
-    return;
-cont:
     if (Vec3_Dist(&mPos, &playerPos) > 0xbb8000 || mChaseTimer >= 900)
         mState = 2;
 

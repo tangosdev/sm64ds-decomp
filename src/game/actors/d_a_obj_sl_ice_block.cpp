@@ -83,9 +83,12 @@ int daObjSlIceBlock_c::Render() {
     return 1;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 int daObjSlIceBlock_c::Behavior() {
-    int isType = (actorID == 0x5d);
-    if (isType) {
+    if (IsActorID(this, 0x5d)) {
         if (DecIfAbove0_Short(&mDelayTimer) == 0) {
             ApproachLinear(mHorzSpeed, 0, 0x3000);
             if (ApproachLinear(mPos.y, mMinPosY, 0xa000) != 0) {
@@ -119,8 +122,7 @@ int daObjSlIceBlock_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov027_02113be8);
     dBgW_Kc::LoadFile(data_ov027_02113be0);
 
-    int on = (actorID == 0x5d);
-    if (on) {
+    if (IsActorID(this, 0x5d)) {
         if (mModel.SetFile((BMD_File *)data_ov027_02113be8.filePtr, 1, -1) == 0)
             return 0;
         UpdateModelPosAndRotY();
@@ -135,7 +137,7 @@ int daObjSlIceBlock_c::InitResources() {
         mPrevAngle.y = -0x4000;
         mMinPosY = mPos.y - 0xc8000;
     } else {
-        mDelayTimer = (u8)mNumToBigIce * 20;
+        mDelayTimer = mNumToBigIce * 20;
         mNumToBigIce = 5;
     }
     return 1;

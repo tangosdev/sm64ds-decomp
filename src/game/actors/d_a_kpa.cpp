@@ -616,10 +616,10 @@ at 0x96 (150 frames). */
 void daKpaTail_c::func_ov060_02115d68(){
     daKpa_c *bowser = (daKpa_c *)dActor_c::FindWithID(this->mBowserUniqueID);
     this->mdCcAc_c.flags &= ~BOWSER_CC_DISABLED;
-    if (bowser->mState != BOWSER_STATE_ARENA_TILT) goto skip_13;
-    bowser->SetTangible(1);
-    return;
-skip_13:
+    if (bowser->mState == BOWSER_STATE_ARENA_TILT) {
+        bowser->SetTangible(1);
+        return;
+    }
     if (bowser->mState == BOWSER_STATE_DEFEATED) return;
     bowser->SetTangible(1);
     if (this->mdCcAc_c.otherOwner == 0) return;
@@ -655,6 +655,14 @@ void daKpaTail_c::func_ov060_02115d50(){
         this->mState = BOWSER_TAIL_FREE;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsHoldingObject(daPly_c *player) {
+    return player->mHeldObj != 0;
+}
+
 /*
 Tail state BOWSER_TAIL_HOLDING (2), per frame. If Bowser is in
 BOWSER_STATE_ARENA_TILT, switch his body collider on and go to BOWSER_TAIL_FREE
@@ -670,7 +678,6 @@ the tail's collider off. */
 void daKpaTail_c::func_ov060_02115c1c(){
     daKpa_c *bowser;
     daPly_c *held;
-    int cond;
 
     bowser = (daKpa_c *)dActor_c::FindWithID(this->mBowserUniqueID);
     if (bowser->mState == BOWSER_STATE_ARENA_TILT) {
@@ -678,8 +685,7 @@ void daKpaTail_c::func_ov060_02115c1c(){
         this->mState = BOWSER_TAIL_FREE;
     }
 
-    cond = ((this->mFlags & BOWSER_TAIL_RELEASED) != 0);
-    if (cond != 0) {
+    if (IsFlagSet(this, BOWSER_TAIL_RELEASED)) {
         this->mState = BOWSER_TAIL_COOLDOWN;
         this->mHeldPlayer = 0;
         bowser->OnTailReleased();
@@ -687,11 +693,18 @@ void daKpaTail_c::func_ov060_02115c1c(){
         return;
     }
 
+    /* Kept (#821 r94): the ROM lays the drop out before the countdown refill and
+     * reaches it from two tests. `if (!IsHoldingObject(held) || (no turn &&
+     * countdown runs out)) drop; else if (turning) refill;` is 0x140 against
+     * 0x134 (the turn is tested again); refill-first if/else-if is 0x12c; nested
+     * ifs with early returns are 0x168 (the drop is emitted twice). r95: the
+     * same `||` form with the turn read once into an `s16 turn` local is 0x138
+     * (the refill becomes a re-tested conditional store after the drop). */
     held = this->mHeldPlayer;
     if (held == 0) goto tail;
 
-    cond = (held->mHeldObj != 0);
-    if (cond == 0) goto do_drop;
+    if (!IsHoldingObject(held))
+        goto do_drop;
 
     if (held->mAngleYSpeed != 0)
         goto set_default;
@@ -787,41 +800,37 @@ normal and mAngle.y - 0x4000 (a quarter turn), both through func_02010844.
 then rotations about Y, X and Z; copy it into the model and apply opacity
 mOpacity >> 3 (0..31). 3) For skeleton nodes 3 and 6 (mAnmModel.data.transforms
 [3] and [6]) multiply the node matrix by the model matrix (the product lands
-back in data_020a0e68), read its translation (m[9..11]) and shift it left 3 to
+back in data_020a0e68), read its translation and shift it left 3 to
 full scale: node 3 gives mFootPosB, node 6 gives mFootPosA, each with Y replaced
 by his own Y. 4) Unless mDropsShadow is 0, probe the floor with a dBgCh_Gnd from
 0x32000 (50 units) above him (floor height clsnY, or his own Y if there is
 none), build the shadow matrix there and call DropShadowRadHeight with radius
 0x140000 (320) and height 0x64000 (100). */
 void daKpa_c::UpdateModelMatrix() {
-    char pad[8];
     Matrix4x3 saved;
     Vector3 pos;
     Vector3 v;
     Vector3 v2;
 
-    if (this->mWithMeshClsn.IsOnGround() == 0)
-        goto skip_angles;
-    if (this->mHoldState != BOWSER_HOLD_NONE)
-        goto skip_angles;
-    this->mAngle.x = func_02010844(&this->mGroundNormal, this->mAngle.y);
-    this->mAngle.z = func_02010844(&this->mGroundNormal, (s16)(this->mAngle.y - 0x4000));
-skip_angles:
+    if (this->mWithMeshClsn.IsOnGround() != 0 && this->mHoldState == BOWSER_HOLD_NONE) {
+        this->mAngle.x = func_02010844(&this->mGroundNormal, this->mAngle.y);
+        this->mAngle.z = func_02010844(&this->mGroundNormal, (s16)(this->mAngle.y - 0x4000));
+    }
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, this->mAngle.z);
     this->mAnmModel.mat4x3 = data_020a0e68;
-    this->mAnmModel.ApplyOpacity((unsigned char)((int)this->mOpacity >> 3), 1);
+    this->mAnmModel.ApplyOpacity((unsigned char)(this->mOpacity >> 3), 1);
     saved = data_020a0e68;
     this->mFootPosB.x = 0;
     this->mFootPosB.y = 0;
     this->mFootPosB.z = 0;
     MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    this->mFootPosB.x = data_020a0e68.m[9];
-    this->mFootPosB.y = data_020a0e68.m[10];
-    this->mFootPosB.z = data_020a0e68.m[11];
+    this->mFootPosB.x = data_020a0e68.t.x;
+    this->mFootPosB.y = data_020a0e68.t.y;
+    this->mFootPosB.z = data_020a0e68.t.z;
     Vec3_LslInPlace(&this->mFootPosB, 3);
     this->mFootPosB.y = this->mPos.y;
     this->mFootPosA.x = 0;
@@ -829,9 +838,9 @@ skip_angles:
     this->mFootPosA.z = 0;
     data_020a0e68 = saved;
     MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    this->mFootPosA.x = data_020a0e68.m[9];
-    this->mFootPosA.y = data_020a0e68.m[10];
-    this->mFootPosA.z = data_020a0e68.m[11];
+    this->mFootPosA.x = data_020a0e68.t.x;
+    this->mFootPosA.y = data_020a0e68.t.y;
+    this->mFootPosA.z = data_020a0e68.t.z;
     Vec3_LslInPlace(&this->mFootPosA, 3);
     this->mFootPosA.y = this->mPos.y;
     if (this->mDropsShadow == 0)
@@ -1073,44 +1082,36 @@ the toggle. */
 void daKpa_c::BitfsActions() {
     unsigned int m;
 
-    if (this->mPickToggle != 0)
-        goto clear_toggle;
-
-    if ((this->mCondFlags & BOWSER_COND_FACING_TARGET) == 0)
-        goto turn;
-
-    if (this->DistToCPlayer() < 0x514000) {
-        m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
-        if (m < this->mVanishChance) {
-            this->mState = BOWSER_STATE_VANISH_DASH;
-            if (this->mVanishChance > 3)
-                this->mVanishChance = 3;
-            else
-                this->mVanishChance = 1;
+    if (this->mPickToggle == 0) {
+        if ((this->mCondFlags & BOWSER_COND_FACING_TARGET) != 0) {
+            if (this->DistToCPlayer() < 0x514000) {
+                m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
+                if (m < this->mVanishChance) {
+                    this->mState = BOWSER_STATE_VANISH_DASH;
+                    if (this->mVanishChance > 3)
+                        this->mVanishChance = 3;
+                    else
+                        this->mVanishChance = 1;
+                } else {
+                    this->mState = BOWSER_STATE_FIREBALLS;
+                    this->mVanishChance = 5;
+                }
+            } else {
+                this->mState = BOWSER_STATE_CHARGE;
+                if (this->mDistToCenter > 0x1f4000 && this->mDistToCenter < 0x5dc000) {
+                    m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
+                    if (m < 5)
+                        this->mState = BOWSER_STATE_JUMP;
+                }
+            }
         } else {
-            this->mState = BOWSER_STATE_FIREBALLS;
-            this->mVanishChance = 5;
+            this->mState = BOWSER_STATE_TURN_TO_TARGET;
         }
-        goto set_toggle;
+        this->mPickToggle++;
+    } else {
+        this->mPickToggle = 0;
+        this->mState = BOWSER_STATE_TURN_TO_TARGET;
     }
-
-    this->mState = BOWSER_STATE_CHARGE;
-    if (this->mDistToCenter > 0x1f4000 && this->mDistToCenter < 0x5dc000) {
-        m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
-        if (m < 5)
-            this->mState = BOWSER_STATE_JUMP;
-    }
-    goto set_toggle;
-
-turn:
-    this->mState = BOWSER_STATE_TURN_TO_TARGET;
-set_toggle:
-    this->mPickToggle++;
-    return;
-
-clear_toggle:
-    this->mPickToggle = 0;
-    this->mState = BOWSER_STATE_TURN_TO_TARGET;
 }
 
 /*
@@ -1686,8 +1687,8 @@ void daKpa_c::ActSpitFireOntoFloor() {
     if (this->mTimer == 0) {
         daPly_c *player = this->mTargetPlayer;
         if (player == 0 || player->GetHealth() > 4) {
-            s32 rnd = RandomIntInternal(&data_0209e650.value);
-            u32 hi = ((u32)rnd) >> 16;
+            u32 rnd = RandomIntInternal(&data_0209e650.value);
+            u32 hi = rnd >> 16;
             u32 m = hi % 10u;
             this->mFireballShots = (char)((m % 3u) + 1);
         } else {
@@ -1805,8 +1806,8 @@ void daKpa_c::ActChargeMario() {
         this->mStepCounter = 0;
         InitAnimation(0x1a, 0x40000000);
         this->mParticleHandle =
-            (unsigned int)Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPos.x,
-                                                this->mPos.y + 0x32000, this->mPos.z, 0, 0);
+            Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPos.x,
+                                  this->mPos.y + 0x32000, this->mPos.z, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;
@@ -1948,8 +1949,8 @@ void daKpa_c::SetGoalInvisible() {
         zero.y = 0;
         zero.z = 0;
         a = (unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
-        this->mPos.x = (short)FX_SinIdx(a) * (short)0xed8;
-        this->mPos.z = (short)FX_CosIdx(a) * (short)0xed8;
+        this->mPos.x = FX_SinIdx(a) * 0xed8;
+        this->mPos.z = FX_CosIdx(a) * 0xed8;
     }
 }
 
@@ -1994,7 +1995,7 @@ void daKpa_c::ActJumpOntoStage() {
         if (rc.DetectClsn()) {
             ground = rc.clsnY;
             /* GetClsnID reads the hit record, dBgCh_Gnd's dBgPi base at +0x10. */
-            if ((int)rc.GetClsnID() != -1)
+            if (rc.GetClsnID() != -1)
                 hit = 1;
         }
     }
@@ -2499,6 +2500,10 @@ int daKpa_c::CheckFallenOffStage() {
     return 0;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == BOWSER_ACTOR_PLAYER;
+}
+
 /*
 Hold state BOWSER_HOLD_NONE (0), the normal per-frame handler, called through the
 hold table by BowserLoop. Clears mHoldStep. Unless he is defeated, if the
@@ -2524,8 +2529,7 @@ void daKpa_c::FreeUpdate() {
     if (this->mState != BOWSER_STATE_DEFEATED && (id = this->mdCcAcPos_c.otherOwner) != 0) {
         daPly_c *f = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (f != 0) {
-            int b = (((dActor_c *)f)->actorID == BOWSER_ACTOR_PLAYER);
-            if (b) {
+            if (IsPlayerActor(f)) {
                 Vector3 v;
                 v.x = this->mPos.x;
                 v.y = this->mPos.y;
@@ -2966,7 +2970,7 @@ void daKpa_c::UpdateFootfalls() {
        (mAnmModel.currFrame at 0x12c into r0, then mFootfallLatch at 0x446 into r1)
        + lsl#4/lsr#16 extract. */
     int n = (unsigned short)((unsigned)this->mAnmModel.currFrame >> 12);
-    int wasInWindow = (this->mFootfallLatch != 0) ? 1 : 0;
+    int wasInWindow = this->mFootfallLatch != 0;
     int anim = (int)this->mAnmModel.file;
     int foot = 0;
     this->mFootfallLatch = 0;

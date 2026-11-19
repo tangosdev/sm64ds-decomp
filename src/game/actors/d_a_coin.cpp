@@ -98,6 +98,24 @@ extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 }
 
+extern unsigned char gGameMode;
+
+/* gGameMode is 1 in VS mode: PrepareVsMode stores it. Actor ID 0x122 is the
+   blue coin. dActor_c::mFlags bit 0x08 is written by the framework while the
+   actor is off screen. These int-returning predicates are what make the ROM
+   materialize 0/1 before testing it. */
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
+static inline int IsBlueCoin(dActor_c *actor) {
+    return actor->actorID == 0x122;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 daCoin_c::~daCoin_c()
 {
 }
@@ -291,14 +309,14 @@ void daCoin_c::UpdateModelMatrix() {
     int floorState;
 
     Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngle.y);
-    mCommonModel1.mat4x3.m[9] = mPos.x >> 3;
-    mCommonModel1.mat4x3.m[10] = mPos.y >> 3;
-    mCommonModel1.mat4x3.m[11] = mPos.z >> 3;
+    mCommonModel1.mat4x3.t.x = mPos.x >> 3;
+    mCommonModel1.mat4x3.t.y = mPos.y >> 3;
+    mCommonModel1.mat4x3.t.z = mPos.z >> 3;
     mCommonModel2.mat4x3 = mCommonModel1.mat4x3;
     mShadowMat = IDENTITY_MATRIX4X3;
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = mPos.y >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = mPos.y >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
 
     inYoshiMouth = mFlags & 0x40000;
     inYoshiMouth = inYoshiMouth != 0;
@@ -464,10 +482,7 @@ void daCoin_c::StateFollowTarget() {
         mPos.y = targetPos[1];
         mPos.z = targetPos[2];
     }
-    {
-        int *posY = &mPos.y;
-        *posY += 0xc8000;
-    }
+    mPos.y += 0xc8000;
     if (mDisappearTimer < 65)
         return;
     MarkForDestruction();
@@ -616,10 +631,9 @@ void daCoin_c::StateBounce() {
 
     if (normal.x != 0 || normal.z != 0) {
         int slide = data_ov002_020ff078[floorClass];
-        Vector3 *velocity = &mSpeed;
-        velocity->x += normal.x * slide;
+        mSpeed.x += normal.x * slide;
         mSpeed.z += normal.z * slide;
-        mHorzSpeed = Vec3_HorzLen(velocity);
+        mHorzSpeed = Vec3_HorzLen(&mSpeed);
         if (mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             UpdatePosWithHorzSpeedAndAng();
@@ -695,6 +709,10 @@ void daCoin_c::StateDrop() {
     }
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 s32 daCoin_c::CleanupResources()
 {
     /* Vtable slot 3. Releases the files this coin's own type loaded, gives up its
@@ -706,8 +724,7 @@ s32 daCoin_c::CleanupResources()
     extern SharedFilePtr *const data_ov002_020ff060[];
 
     dActor_c *manager;
-    int isRed = (actorID == 0x121);
-    if (isRed != 0)
+    if (IsActorID(this, 0x121))
         data_ov002_0210d9a8.Release();
     if (mCoinType == COIN_BLUE) {
         data_ov002_020ff06c[mCoinType]->Release();
@@ -716,8 +733,7 @@ s32 daCoin_c::CleanupResources()
     UntrackStar(mTrackStarID);
     manager = dActor_c::FindWithID(mPuzzleManagerID);
     if (manager != 0) {
-        int isFlCoin = (manager->actorID == 0x4f);
-        if (isFlCoin != 0) {
+        if (IsActorID(manager, 0x4f)) {
             if (((daObjFl_Coin_c *)manager)->mLiveCoinCount != 0) {
                 ((daObjFl_Coin_c *)manager)->mLiveCoinCount--;
             }
@@ -757,13 +773,12 @@ int daCoin_c::Behavior()
      * selected by mBehaviorType and refreshes the collider. */
     typedef void (daCoin_c::*Handler)();
     extern Handler data_ov002_0210dc70[];
-    extern unsigned char gGameMode;
 
     if ((unsigned int)(mCoinFlags << 0x1e) >> 0x1f) {
         mCoinFlags &= ~2;
         Sound::PlayBank3(0x30, mCamSpacePos);
     }
-    if ((int)(actorID == 0x122) != 0) {
+    if (IsBlueCoin(this)) {
         if ((unsigned int)(mCoinFlags << 0x1f) >> 0x1f)
             mAreaId = -1;
     }
@@ -780,7 +795,7 @@ int daCoin_c::Behavior()
     if (CheckPlayerHit() != 0)
         return 1;
     (this->*data_ov002_0210dc70[mBehaviorType])();
-    if ((int)(gGameMode == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
+    if (!IsVsMode() && IsOffScreen(this)) {
         mdCc_c.Clear();
         if (mNoClsnTimer == 0 && VEC_Mag(&mCamSpacePos) < 0x64000) {
             if (mCoinType != COIN_RED || mInBrickBlock == 0)
@@ -831,7 +846,7 @@ s32 daCoin_c::InitResources()
 
     mCoinFlags = 0;
     ccRadius = 0x64000;
-    behavior = (s32)param1 & 0xf;
+    behavior = param1 & 0xf;
     mBehaviorType = behavior;
     ccHeight = 0x40000;
     behavior = mBehaviorType;
@@ -937,24 +952,15 @@ s32 daCoin_c::InitResources()
     mWithMeshClsn.StartDetectingWater();
 
     behavior = mBehaviorType;
-    do {
-        if (behavior == 8) {
-            mDisappearTimer = 45;
-            mdCc_c.flags |= 1;
-            break;
-        }
-        if (behavior == 6) {
-            int inMode1;
-            inMode1 = gGameMode;
-            inMode1 = (inMode1 == 1);
-            if (inMode1 == 0) {
-                mDisappearTimer = 0xffffu;
-                mdCc_c.flags |= 1;
-                break;
-            }
-        }
+    if (behavior == 8) {
+        mDisappearTimer = 45;
+        mdCc_c.flags |= 1;
+    } else if (behavior == 6 && !IsVsMode()) {
+        mDisappearTimer = 0xffffu;
+        mdCc_c.flags |= 1;
+    } else {
         mDisappearTimer = 210;
-    } while (0);
+    }
 
     *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~1) | 1;
 

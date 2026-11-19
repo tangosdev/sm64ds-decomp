@@ -272,8 +272,8 @@ s32 dScMiniGm_c::InitResources()
     int flag;
     int j2, j3;
     const MgEntry *tbl2;
-    volatile u16 sp0;
-    volatile u16 sp2;
+    volatile u16 charFill;
+    volatile u16 scrFill;
     char *dst;
     void *f;
 
@@ -426,11 +426,11 @@ s32 dScMiniGm_c::InitResources()
     SetSubBg0Offset(mSubBgScrollX, 0);
 
     dst = (char *)G2S_GetBG0CharPtr();
-    sp0 = 0;
-    MI_CpuFill16(dst, sp0, 0x8000);
+    charFill = 0;
+    MI_CpuFill16(dst, charFill, 0x8000);
     dst = (char *)G2S_GetBG0ScrPtr();
-    sp2 = 0x1f;
-    MI_CpuFill16(dst, sp2, 0x1000);
+    scrFill = 0x1f;
+    MI_CpuFill16(dst, scrFill, 0x1000);
 
     LoadGroupIcons();
 
@@ -615,8 +615,7 @@ void dScMiniGm_c::LoadGroupIcons() {
             } while (rowB < 9);
 
             {
-                int *slot = &mGfxSlot;
-                *slot = *slot + 1;
+                mGfxSlot++;
                 if (mGfxSlot >= 10)
                     mGfxSlot = resetVal;
             }
@@ -742,22 +741,22 @@ void dScMiniGm_c::DrawRecords() {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
                     val = GetRecord(gMgGroupBase + i * 4, 0);
-                    u = (unsigned int)val;
+                    u = val;
                     major = u / 60u;
-                    DrawNumber(x - 0x10, y, (int)major);
+                    DrawNumber(x - 0x10, y, major);
                     OAM::RenderSub(sMiniGmRecordLabels[4], x, y - 8, -1, 0);
 
                     val = GetRecord(gMgGroupBase + i * 4, 0);
-                    u = (unsigned int)val;
+                    u = val;
                     rem = u % 60u;
                     pct = rem * 100u;
-                    DrawNumber(x + 8, y, (int)(pct / 600u));
+                    DrawNumber(x + 8, y, pct / 600u);
 
                     val = GetRecord(gMgGroupBase + i * 4, 0);
-                    u = (unsigned int)val;
+                    u = val;
                     rem = u % 60u;
                     pct = rem * 100u / 60u;
-                    DrawNumber(x + 0x10, y, (int)(pct % 10u));
+                    DrawNumber(x + 0x10, y, pct % 10u);
                 }
             }
         }
@@ -789,7 +788,7 @@ void dScMiniGm_c::DrawNumber(int x, int y, int val) {
 }
 
 void dScMiniGm_c::DrawNewBadges() {
-    int g = (mIconBlinkPhase >= 0x20) ? 1 : 0;
+    int g = mIconBlinkPhase >= 0x20;
     int start, end;
     if (gMgMenuPage == 1) {
         start = 6;
@@ -912,8 +911,7 @@ void dScMiniGm_c::UpdateGroupTabs() {
         return;
 
     if (mScrollDelay > 0) {
-        int *pa0 = &mScrollDelay;
-        *pa0 = *pa0 - 1;
+        mScrollDelay--;
         if (mScrollDelay == 0) {
             int f58 = mGroupBase;
             if (f58 != gMgGroupBase) {

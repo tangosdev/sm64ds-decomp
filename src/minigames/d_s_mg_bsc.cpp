@@ -177,7 +177,6 @@ void dScMgBSC_c::StartRound(int mode) {
    meter. */
 s32 dScMgBSC_c::CanEndState(int mode) {
     int state;
-    short coinStatus;
     if (mState == STATE_WAIT_RESULT) {
         if (mDealer.IsIdle() != 0) {
             if (mode == 4) {
@@ -192,9 +191,9 @@ s32 dScMgBSC_c::CanEndState(int mode) {
         }
     }
     state = mState;
-    if (state < STATE_WAIT_COINS || (coinStatus = gMgCoinsStatus, coinStatus != 1))
+    if (state < STATE_WAIT_COINS || gMgCoinsStatus != 1)
         return 0;
-    if (state == STATE_WAIT_COINS && coinStatus == 1)
+    if (state == STATE_WAIT_COINS && gMgCoinsStatus == 1)
         Mg_SaveRecordPair(mCredits, mHudScore);
     return 1;
 }
@@ -203,8 +202,8 @@ s32 dScMgBSC_c::CanEndState(int mode) {
    capped at tier 3. */
 void dScMgBSC_c::OnDealDone() {
     int score = mHudScore;
-    int tier = score / 5;
-    if ((unsigned int)tier > 3) {
+    u32 tier = score / 5;
+    if (tier > 3) {
         tier = 3;
     }
     MgCoins_RaiseBet(tier + 1);
@@ -293,8 +292,8 @@ void dScMgBSC_c::StateChooseCard() {
     if (touchPressed == 0)
         return;
     for (lane = 0; lane < 2; lane++) {
-        int dx = (int)gTouchInfo[gActivePlayerSlot].x - (sBscLaneX[lane] >> 12);
-        int dy = (int)gTouchInfo[gActivePlayerSlot].y - 0x60;
+        int dx = gTouchInfo[gActivePlayerSlot].x - (sBscLaneX[lane] >> 12);
+        int dy = gTouchInfo[gActivePlayerSlot].y - 0x60;
         if (dx < -0x10)
             continue;
         if (dx > 0x10)

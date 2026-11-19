@@ -269,13 +269,13 @@ void ModelComponents::UpdateVertsUsingBones()
 void func_02044f74(void *g, struct Node *n)
 {
     int m[12];
-    int a = n->f0;
+    s16 a = n->f0;
     func_02048234(m, n->f10, n->f14, n->f18, (u16)((unsigned)n->f1c << 4),
                   (u16)((unsigned)n->f1e << 4), (u16)((unsigned)n->f20 << 4), n->f24, n->f28,
                   n->f2c);
     {
         Matrix4x3 *t = ((struct Sub *)((BMD_File *)g)->skin)->blk;
-        MTX_Concat43((Matrix4x3 *)m, &t[a + n->f8], &t[(s16)a]);
+        MTX_Concat43((Matrix4x3 *)m, &t[a + n->f8], &t[a]);
     }
     if (n->fa != 0)
         func_02044f74(g, n + n->fa);
@@ -355,6 +355,8 @@ void ModelComponents::func_02044b30(int idx) {
            Re-measured (#821 r17): the id loaded into the dead texImageParam,
            a pointer `textures + textureId`, or the rotation index in its own
            local ahead of tex are each 3 words off; tex after sin/cos is 7. */
+        /* Kept (#821 r79): a static TextureIdOf(mat) accessor in the subscript, textures +
+           textureId, and a BMD_Texture pointer are each 3 words off. */
         u32 textureId = *(volatile const u32 *)&mat.textureId;
         const BMD_Texture &tex = modelFile->textures[textureId];
         s16 sin = FX_SinIdx((u16)(mat.texRotation << 4) >> 4);

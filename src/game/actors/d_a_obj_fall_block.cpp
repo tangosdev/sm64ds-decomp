@@ -21,9 +21,7 @@
 //   veneer (size 0x14); a near branch to RequestShake is 0xc.
 // - RequestShake keeps the unused second parameter. The veneer forwards
 //   it, and a 1-arg callee drops `mov r1, r2`.
-// - Behavior case 2 keeps the masked address of mAngle.x (this+0x8c) and
-//   mAngle.z (this+0x90). Named stores change the size. Case 1 keeps
-//   `(long long)sinv * 0x19000`.
+// - Behavior case 1 keeps `(long long)sinv * 0x19000` (FX_MUL).
 // - Kill materialises `(actorID == KM2_KUZURE)` into an int before the
 //   branch. Folding the test changes the compare.
 
@@ -76,6 +74,14 @@ void daObjFallBlock_c_EmitDestructor(daObjFallBlock_c *p) {
     p->~daObjFallBlock_c();
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 /* Once (mGroupLinked). Same-id neighbours closer than 0x96000 become
    mNextInGroup when they sit within a quarter-turn of mAngle.y, and
    mPrevInGroup otherwise. Vec3_HorzAngle / Vec3_Dist / AngleDiff. */
@@ -104,7 +110,7 @@ void daObjFallBlock_c::LinkGroup() {
    Slot 4 is StateIdle. Reaching it clears mSuppressed so
    this FL_KUZURE block renders and runs. A missing star destroys it. */
 void daObjFallBlock_c::PollLinkedStar() {
-    dActor_c *a = dActor_c::FindWithID((unsigned int)mLinkedStarID);
+    dActor_c *a = dActor_c::FindWithID(mLinkedStarID);
     if (a == 0) {
         MarkForDestruction();
         return;
@@ -120,7 +126,7 @@ void daObjFallBlock_c::FindLinkedStar() {
     star = dActor_c::FindWithActorID(ACTOR_STAR, 0);
     while (star) {
         if (static_cast<daStar_c *>(star)->unk_49d == (param1 & 0xf)) {
-            mLinkedStarID = (s32)star->uniqueID;
+            mLinkedStarID = star->uniqueID;
         }
         star = dActor_c::FindWithActorID(ACTOR_STAR, star);
     }
@@ -159,13 +165,7 @@ void daObjFallBlock_c::Kill() {
     pos.z = mPos.z;
     pos.y += 0x32000;
     u32 id = 0x48;
-    /* THE INTERMEDIATE IS LOAD-BEARING. `if (actorID == 0x8b)` folds the test
-       into the conditional move -- `cmp r1,#0x8b; moveq r0,#0x49`, two
-       instructions. The ROM materialises the comparison into a register first
-       and then tests THAT: cmp/moveq #1/movne #0/cmp #0/movne, five. Writing
-       the int is what asks for the second shape. */
-    int isFallBlockBfs = (actorID == ACTOR_KM2_KUZURE);
-    if (isFallBlockBfs) {
+    if (IsActorID(this, ACTOR_KM2_KUZURE)) {
         id = 0x49;
     }
     Particle::System::NewSimple(id, pos.x, pos.y, pos.z);
@@ -185,9 +185,9 @@ void daObjFallBlock_c::Kill() {
    same row UpdateModelPosAndRotY writes for yaw alone. */
 void daObjFallBlock_c::ApplyModelXyz() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* `player` is never read, matching the ROM body, which only ever takes the
@@ -228,17 +228,13 @@ s32 daObjFallBlock_c::Behavior() {
     int all;
     daObjFallBlock_c *p;
     daObjFallBlock_c *q;
-    int is53;
     s16 yaw;
     int dist;
     int thresh;
-    int flag;
     s16 sinv;
-    u8 *st;
     void *pl;
 
-    is53 = (int)(actorID == ACTOR_FL_KUZURE);
-    if (is53 != 0) {
+    if (IsActorID(this, ACTOR_FL_KUZURE)) {
         if (mSuppressed != 0) {
             if (mLinkedStarID == 0)
                 FindLinkedStar();
@@ -257,8 +253,7 @@ s32 daObjFallBlock_c::Behavior() {
         return 1;
     }
 
-    is53 = (int)(actorID == ACTOR_FL_KUZURE);
-    if (is53 == 0) {
+    if (!IsActorID(this, ACTOR_FL_KUZURE)) {
         if (mPrevInGroup == 0) {
             p = this;
             all = 1;
@@ -288,15 +283,13 @@ s32 daObjFallBlock_c::Behavior() {
         if (mShakeRequested != 0) {
             mReady = 0;
             mStateTimer = 4;
-            st = &mState;
-            *st = (u8)(*st + 1);
+            mState++;
         }
         break;
 
     case 1:
         if (DecIfAbove0_Short(&mStateTimer) == 0) {
-            st = &mState;
-            *st = (u8)(*st + 1);
+            mState++;
             Sound::PlayBank3(0x2d, mCamSpacePos);
             mStateTimer = 90;
         } else {
@@ -304,17 +297,13 @@ s32 daObjFallBlock_c::Behavior() {
             /* (long long) is load-bearing: a plain int mul changes the code
                size. */
             mPos.y = mRestPos.y + FX_MUL(sinv, 0x19000);
-            {
-                s16 *bobPhase = &mBobPhase;
-                *bobPhase = (s16)(*bobPhase + 0x3000);
-            }
+            mBobPhase += 0x3000;
         }
         break;
 
     case 2:
         if (mAngle.x < 0x400) {
-            s16 *shakeX = &mShakeX;
-            *shakeX = (s16)(*shakeX + 0x80);
+            mShakeX += 0x80;
         } else {
             if (mMeshCollider.IsEnabled() != 0)
                 mMeshCollider.Disable();
@@ -322,34 +311,24 @@ s32 daObjFallBlock_c::Behavior() {
         yaw = mAngle.z;
         if (yaw > -0x400) {
             if (yaw < 0x400) {
-                s16 *tiltVelZ = &mTiltVelZ;
-                *tiltVelZ = (s16)(*tiltVelZ + 0x40);
+                mTiltVelZ += 0x40;
             }
         }
-        {
-            /* Integer-cast address form: plain mAngle.x / mAngle.z
-               read-modify-writes shrink Behavior by 8 bytes. */
-            s16 t = *(s16 *)((int)&mAngle.x);
-            t = (s16)(t + mShakeX);
-            *(s16 *)((int)&mAngle.x) = t;
-            t = (s16)(*(s16 *)((int)&mAngle.z) + mTiltVelZ);
-            *(s16 *)((int)&mAngle.z) = t;
-            UpdatePos(0);
-        }
+        mAngle.x += mShakeX;
+        mAngle.z += mTiltVelZ;
+        UpdatePos(0);
         if (DecIfAbove0_Short(&mStateTimer) == 0) {
             mPos.x = mRestPos.x;
             mPos.y = mRestPos.y;
             mPos.z = mRestPos.z;
-            st = &mState;
-            *st = (u8)(*st + 1);
+            mState++;
         } else {
             if (mPos.y < mKillY) {
                 Kill();
                 mPos.x = mRestPos.x;
                 mPos.y = mRestPos.y;
                 mPos.z = mRestPos.z;
-                st = &mState;
-                *st = (u8)(*st + 1);
+                mState++;
             }
         }
         break;
@@ -358,15 +337,13 @@ s32 daObjFallBlock_c::Behavior() {
         mPos.x = mRestPos.x;
         mPos.y = mRestPos.y;
         mPos.z = mRestPos.z;
-        is53 = (int)(actorID == ACTOR_FL_KUZURE);
-        if (is53 == 0) {
+        if (!IsActorID(this, ACTOR_FL_KUZURE)) {
             pl = ClosestPlayer();
             dist = Vec3_HorzDist(&mRestPos, &((dActor_c *)pl)->mPos);
             thresh = 0x28a000;
             if (gCurrentSublevel == 0x2e)
                 thresh = 0xa000;
-            flag = (mFlags & 8) ? 1 : 0;
-            if (flag != 0 && dist > thresh)
+            if (IsOffScreen(this) && dist > thresh)
                 mReady = 1;
             else
                 mReady = 0;

@@ -58,8 +58,8 @@
  * - BehaviorCommon: the mStateTimer increment stays unsigned short (ldrh).
  * - 02115f98 keeps integer-array scratch vectors; its vector helpers receive
  *   explicit Vector3 pointer views so these locals stay POD.
- * - bool-widening `int isD8 = (int)(actorID == kBigBullyActorId)` / `isBf` in
- *   CheckMarioCollision / ActKnockback: the temporary is load-bearing.
+ * - CheckMarioCollision / ActKnockback test the actor IDs through IsActorID /
+ *   IsPlayerActor. Testing actorID directly in the if changes the code.
  * - CleanupResources and InitResourcesCommon read the config block through
  *   mFileTable every time; caching it in a local size-DIFFs.
  * - ActBackUp: `mPrevAngle.y += 0x8000` is the match form (a separate read
@@ -184,6 +184,10 @@ extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* -------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method
  *
@@ -213,8 +217,7 @@ int daOts_c::InitResourcesCommon()
     mdCcAc_c.Init(this, mFileTable->cylinderRadius, mFileTable->cylinderHeight, 0x200000,
                   kHitAttackMask | kHitEgg);
     {
-        int isD9 = (int)(actorID == kChillBullyActorId);
-        if (isD9) {
+        if (IsActorID(this, kChillBullyActorId)) {
             mdCcAc_c.vulnFlags |= kHitBit40000;
         }
     }
@@ -304,10 +307,9 @@ int daOts_c::BehaviorCommon()
     }
 
     mAnmModel.Advance();
-    unsigned short *p100 = &mStateTimer;
-    *p100 = *p100 + 1;
+    mStateTimer++;
     if (four != tail().mState)
-        *p100 = 0;
+        mStateTimer = 0;
     func_ov064_02116bac();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -365,9 +367,9 @@ int daOts_c::CleanupResources()
  * below 10 units, and its depth is that height plus 40 units. Opacity is 0xf. */
 void daOts_c::func_ov064_02116bac(){
     Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
-    this->mAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
-    this->mAnmModel.mat4x3.m[10] = (this->mPos.y + tail().mModelYOffset) >> 3;
-    this->mAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = (this->mPos.y + tail().mModelYOffset) >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
     int d = this->mPos.y - tail().mFloorY; /* height above the floor, at least 1 unit */
     if (d <= 0x1000)
         d = 0x1000;
@@ -376,10 +378,14 @@ void daOts_c::func_ov064_02116bac(){
     if (h < 0xa000)
         h = 0xa000; /* shadow radius, at least 10 units */
     Matrix4x3_FromRotationY(&tail().mShadowMtx, this->mAngle.y);
-    tail().mShadowMtx.m[9] = this->mPos.x >> 3;
-    tail().mShadowMtx.m[10] = this->mPos.y >> 3;
-    tail().mShadowMtx.m[11] = this->mPos.z >> 3;
+    tail().mShadowMtx.t.x = this->mPos.x >> 3;
+    tail().mShadowMtx.t.y = this->mPos.y >> 3;
+    tail().mShadowMtx.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, tail().mShadowMtx, h, d + 0x28000, 0xf);
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == kPlayerActorId;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -425,12 +431,11 @@ void daOts_c::CheckMarioCollision() {
         return;
 
     {
-        int isBf = (int)(hitPlayer->actorID == kPlayerActorId);
-        if (!isBf)
+        if (!IsPlayerActor(hitPlayer))
             return;
     }
 
-    hitFlags = (s32)this->mdCcAc_c.hitFlags;
+    hitFlags = this->mdCcAc_c.hitFlags;
     if ((hitFlags & kHitAttackMask) || hitPlayer->mIsMetal != 0) {
         this->mPrevAngle.y = hitPlayer->mAngle.y;
         if (hitPlayer->param1 == 2)
@@ -459,8 +464,7 @@ void daOts_c::CheckMarioCollision() {
     }
 
     {
-        int isD8 = (int)(this->actorID == kBigBullyActorId);
-        if (!isD8 && (hitFlags & kHitMegaChar)) {
+        if (!IsActorID(this, kBigBullyActorId) && (hitFlags & kHitMegaChar)) {
             Vector3_16 v;
             v.x = 0x2000;
             v.y = 0;
@@ -531,8 +535,7 @@ void daOts_c::CheckMarioCollision() {
 
     this->mPrevAngle.y = (s16)(this->mAngle.y + 0x8000);
     {
-        int isD8 = (int)(this->actorID == kBigBullyActorId);
-        if (!isD8)
+        if (!IsActorID(this, kBigBullyActorId))
             this->mHorzSpeed = kHurtRecoilSpeed;
         else
             this->mHorzSpeed = kHurtRecoilSpeedBigBully;
@@ -639,8 +642,7 @@ void daOts_c::ActChaseMario() {
  * hops. */
 void daOts_c::ActKnockback() {
     if (ApproachLinear(this->mHorzSpeed, 0, tail().mHorzDecel) != 0) {
-        int b = (this->actorID == kBigBullyActorId);
-        int lim = b ? 0x14 : 0xa;
+        u32 lim = IsActorID(this, kBigBullyActorId) ? 0x14 : 0xa;
         if (tail().mHopCount < 2) {
             if (this->mWithMeshClsn.IsOnGround()) {
                 unsigned char *p = &tail().mHopCount;
@@ -650,7 +652,7 @@ void daOts_c::ActKnockback() {
             mStateTimer = 0;
             return;
         }
-        if (mStateTimer < (unsigned int)lim)
+        if (mStateTimer < lim)
             return;
         tail().mState = STATE_CHASE;
         this->mPrevAngle.y = this->mAngle.y;
@@ -787,11 +789,11 @@ int daOts_c::func_ov064_0211616c() {
     }
     this->mPos.y = this->mPos.y - 0x5000;
     this->mParticle0 =
-        (u32)Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePos.x,
-                                   tail().mHomePos.y, tail().mHomePos.z, 0, 0);
+        Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePos.x,
+                              tail().mHomePos.y, tail().mHomePos.z, 0, 0);
     this->mParticle1 =
-        (u32)Particle::System::New(this->mParticle1, mFileTable->particleId + 1, tail().mHomePos.x,
-                                   tail().mHomePos.y, tail().mHomePos.z, 0, 0);
+        Particle::System::New(this->mParticle1, mFileTable->particleId + 1, tail().mHomePos.x,
+                              tail().mHomePos.y, tail().mHomePos.z, 0, 0);
     return 0;
 }
 
@@ -860,8 +862,8 @@ void daOts_c::func_ov064_02115f98(char* a1)
         angV = cstd::atan2(scratch[1], hl);
     }
 
-    idxV = (int)((u16)angV >> 4);
-    idxH = (int)((u16)angH >> 4);
+    idxV = (u16)angV >> 4;
+    idxH = (u16)angH >> 4;
 
     cosV = FX_CosIdx(idxV);
     sinV = FX_SinIdx(idxV);

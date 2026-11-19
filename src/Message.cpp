@@ -23,7 +23,8 @@
  *   to the stack and loads it back before the call; plain locals fold it,
  *   and by-value, const-reference and the SDK's two-level inline wrappers
  *   do not reproduce the spill either (#821, measured on func_0201cd08:
- *   0xf0 / 0xfc against 0x108).
+ *   0xf0 / 0xfc against 0x108). Kept (#821 r80): getter tried -> a fill-value
+ *   accessor taking the local by reference or pointer is 0xf0 too.
  * - IsStarCollected and Message::DisplayText stay local externs. The header
  *   spellings take s8 / u16 and those parameters emit a narrow the ROM does
  *   not have. DisplayText must see this untruncated.
@@ -277,8 +278,8 @@ void Message::DisplayLevelClearText(u16 msgID, u8 course) {
     func_0201e220(1);
 }
 
-void Message::func_0201cfb8(int arg0) {
-    data_0209d6d4 = arg0;
+void Message::func_0201cfb8(int msgID) {
+    data_0209d6d4 = msgID;
     data_0209d660 = 0;
     func_0201eaac();
     data_0209d668 = 1;
@@ -307,14 +308,10 @@ void Message::DisplayOptionsMenuText(s16 n) {
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
-/* opt_common_subs stays off: each of the three rows recomputes (n + 7) / 8 for its
- * loop bound the way the cartridge does, and CSE shares the divide instead
- * (0x1e0 against 0x20c). Reading the count back from data_0209d6b0 for the second
- * copy forces the reload but not the same schedule (0x210). */
-#pragma push
-#pragma opt_common_subs off
+/* n holds the line's character count, a u8 like data_0209d6b0 it is read from. */
 void LoadControllerModeText(int param0) {
-    int n, m, i;
+    u8 n;
+    int m, i;
     short *scr;
 
     data_0209d6d4 = param0;
@@ -389,7 +386,6 @@ void LoadControllerModeText(int param0) {
         } while (i < mm);
     }
 }
-#pragma pop
 
 void Message::DisplayControllerModeText(unsigned short n)
 {
@@ -930,7 +926,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
                     ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
     func_0201b6f8(0);
 
-    data_0209d65c = (256 - (int)data_0209d6b0) / 2;
+    data_0209d65c = (256 - data_0209d6b0) / 2;
     data_0209d6a8 = 0x20;
 
     p = (int)G2_GetBG3CharPtr() + 0x5000;
@@ -1262,13 +1258,13 @@ static inline int IsGameMode(int mode) {
     return gGameMode == mode;
 }
 
-/* Opens message arg0. Places the box one of three ways: against the left edge in
+/* Opens message msgID. Places the box one of three ways: against the left edge in
    game mode 0 before the intro is done (unless a Kuppa script runs), low on
    the screen in game mode 2, and centred otherwise. Then clears the target
    screen's text tiles and map, lays the box's tiles out row by row from tile
    0x200 (0x2200 on the sub screen), and pumps Message::Update until the
    open state reaches 4. */
-void Message::func_0201f32c(int arg0) {
+void Message::func_0201f32c(int msgID) {
     MessageEntry *entry;
     u8 disp2;
     u8 t;
@@ -1284,10 +1280,10 @@ void Message::func_0201f32c(int arg0) {
     volatile s32 subZero;
     volatile s32 bg3Zero;
 
-    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)arg0)
+    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)msgID)
         return;
 
-    data_0209d6d4 = arg0;
+    data_0209d6d4 = msgID;
     func_0201eaac();
 
     data_0209d660 = 1;
@@ -1388,7 +1384,7 @@ void Message::func_0201f32c(int arg0) {
     }
 
     divisor = data_0209d6a8;
-    for (i = 0; i < (s32)(divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2); i++) {
+    for (i = 0; i < (divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2); i++) {
         s32 rem = i % divisor;
         map[rem] = tile;
         if (divisor - 1 == rem)

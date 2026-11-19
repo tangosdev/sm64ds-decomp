@@ -357,7 +357,6 @@ changes again. Use explicit `--files` checks for local iteration.
 For every rename or move:
 
 ```powershell
-python tools/port_refcheck.py
 python tools/check_dead_references.py
 ```
 

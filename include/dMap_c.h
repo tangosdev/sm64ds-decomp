@@ -74,7 +74,7 @@ struct dMap_c : dBase_c {
     s32 mArrowScale;                      /* 0x210 */
     s32 mTargetInvScale;                      /* 0x214 */
     s32 mInvScale;                      /* 0x218 */
-    u16 mAngle;                      /* 0x21c */
+    s16 mAngle;                         /* 0x21c -- map rotation, an s16 angle */
     s8 mPlayerMapIDs[4];                    /* 0x21e */
     s8 mStarMapIDs[12];                   /* 0x222 */
     /* Per-star animation cursor. Render advances entry i by data_0208ee44,

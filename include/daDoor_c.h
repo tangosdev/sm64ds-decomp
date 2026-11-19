@@ -44,8 +44,8 @@ class daPly_c;
  * `daDoor_c::` definitions in src/game/actors/d_a_door.cpp, byte-exact under the
  * pinned 2004/b56 and built from that one translation unit. InitResources
  * was the last to convert: it was a C free function taking the object
- * explicitly, and its param1 shift keeps the redundant cast that reaches the
- * ROM's folded read-modify-write (described at that line).
+ * explicitly, and its param1 shift reads through GetParam1() to reach the
+ * ROM's folded read-modify-write (described at the accessor).
  *
  * The flat C placeholder that once restated dActor_c's fields inline
  * (pad_000[0x5c] + unk_05c/unk_060/...) is gone; every member names its
@@ -146,6 +146,9 @@ struct daDoor_c : dActor_c {
     virtual s32 Render();                 /* slot 9 */
     virtual void OnPendingDestroy();      /* slot 12 */
 
+    /* param1, the spawn word; defined inline in d_a_door.cpp. */
+    u32 GetParam1() const;
+
     /* The helpers the state tables' pointer-to-member pairs name, and the
        ones those call: each takes the door as its implicit this exactly
        where the old C sources took it explicitly. The state record's
@@ -156,7 +159,7 @@ struct daDoor_c : dActor_c {
     int func_ov100_021444e8(int a1);        /* state 02148924 execute */
     int func_ov100_02144528(daPly_c *pl);   /* state 02148904 execute */
     void func_ov100_021446f8(daPly_c *r1);  /* state 02148904 enter */
-    int func_ov100_02144730(daPly_c *arg1); /* states 021488f4/02148914 execute */
+    int func_ov100_02144730(daPly_c *player); /* states 021488f4/02148914 execute */
     int func_ov100_0214491c();              /* state 02148914 enter */
     int func_ov100_02144950(daPly_c *pl, int unused); /* state 021488f4 enter */
     int func_ov100_021449c8(daPly_c *a2);             /* state 021488e4 execute */
@@ -170,7 +173,7 @@ struct daDoor_c : dActor_c {
     static int func_ov100_02144fcc();
     static int func_ov100_02145014();
     static void func_ov100_02145070(int v);
-    int func_ov100_02145080(daPly_c *arg1); /* the exit timing */
+    int func_ov100_02145080(daPly_c *player);                      /* the exit timing */
     void func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b); /* place the player */
     int func_ov100_021451c4(void *r5, daPly_c *r4);                /* send the player through */
     int func_ov100_021452e4(daPly_c *r1);     /* player inside the door's box */

@@ -131,7 +131,7 @@ void func_ov007_020b7708(int idx, void *pos) {
         Particle::System *system;
         data_ov007_02103450[idx] = data_ov007_0210344c->AddSystem(0, *static_cast<Vector3 *>(pos));
         system = data_ov007_02103450[idx];
-        system->callbackFlags |= 2;
+        system->stopGenerate = 1;
     }
 }
 

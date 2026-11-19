@@ -16,7 +16,7 @@ void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, VecFx32 *out) {
     v.x = a - 0x80000;
     v.y = -(b - 0x60000);
     v.z = c;
-    ang = (int)cam->fovy >> 4;
+    ang = cam->fovy >> 4;
     cosv = FX_CosIdx(ang);
     sinv = FX_SinIdx(ang);
     ac = c < 0 ? -c : c;

@@ -148,17 +148,16 @@ void dScMgMemory2_c::UpdateCursor() {
     if (mCursor.visible == 0)
         return;
     {
-        unsigned short *timer = (unsigned short *)&mCursor.blinkTimer;
+        /* Kept (#821 r83): blinkTimer++, += 1 and `++blinkTimer < 20` on the
+           member all lose the ROM's register-held timer address. */
+        unsigned short *timer = &mCursor.blinkTimer;
         *timer = *timer + 1;
         if (*timer < 20)
             return;
         *timer = 0;
     }
-    {
-        unsigned char *frame = &mCursor.frame;
-        *frame = *frame + 1;
-        *frame = *frame & 1;
-    }
+    mCursor.frame++;
+    mCursor.frame &= 1;
 }
 
 void dScMgMemory2_c::ShowCursor() {
@@ -846,13 +845,13 @@ void dScMgMemory2_c::ShuffleCards() {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 16; cardIndex++) {
             u32 cardValue = 1 + MG_RAND(8);
-        check0:
-            if (mValueCounts[cardValue] < 2) {
-                mCards[cardIndex].value = cardValue;
-                mValueCounts[cardValue]++;
-            } else {
+            for (;;) {
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
+                    break;
+                }
                 cardValue = 1 + MG_RAND(8);
-                goto check0;
             }
         }
         int positionIndex;
@@ -869,13 +868,13 @@ void dScMgMemory2_c::ShuffleCards() {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 18; cardIndex++) {
             u32 cardValue = 1 + MG_RAND(9);
-        check1:
-            if (mValueCounts[cardValue] < 2) {
-                mCards[cardIndex].value = cardValue;
-                mValueCounts[cardValue]++;
-            } else {
+            for (;;) {
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
+                    break;
+                }
                 cardValue = 1 + MG_RAND(9);
-                goto check1;
             }
         }
         int positionIndex;
@@ -892,13 +891,13 @@ void dScMgMemory2_c::ShuffleCards() {
         int cardIndex;
         for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
             u32 cardValue = 1 + MG_RAND(10);
-        check2:
-            if (mValueCounts[cardValue] < 2) {
-                mCards[cardIndex].value = cardValue;
-                mValueCounts[cardValue]++;
-            } else {
+            for (;;) {
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
+                    break;
+                }
                 cardValue = 1 + MG_RAND(10);
-                goto check2;
             }
         }
         int positionIndex;

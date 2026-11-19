@@ -469,9 +469,9 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPos.y = 0;
             mHeldPos.z = 0;
             MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
-            mHeldPos.x = data_020a0e68.m[9];
-            mHeldPos.y = data_020a0e68.m[10];
-            mHeldPos.z = data_020a0e68.m[11];
+            mHeldPos.x = data_020a0e68.t.x;
+            mHeldPos.y = data_020a0e68.t.y;
+            mHeldPos.z = data_020a0e68.t.z;
             mHeldPos.x <<= 3;
             mHeldPos.y <<= 3;
             mHeldPos.z <<= 3;
@@ -561,7 +561,7 @@ int daJango_c::UpdateFlyPathState() {
     Vector3 diff;
     Vector3 scaled;
     int len;
-    u32 idx;
+    s32 idx;
 
     path.FromID(mPathId);
     zero[0] = 0; zero[1] = 0; zero[2] = 0; zero[3] = 0; zero[4] = 0; zero[5] = 0;
@@ -570,7 +570,7 @@ int daJango_c::UpdateFlyPathState() {
     ApproachAngle(&mPrevAngle.z, 0, 0xa, 0x100, 0x50);
 
     idx = mPathNodeIndex - 1;
-    if ((int)idx < 0)
+    if (idx < 0)
         idx = mPathNodeCount - 1;
     path.GetNode(node2, idx);
     Vec3_Sub(&diff, &mPos, &node);
@@ -588,9 +588,8 @@ int daJango_c::UpdateFlyPathState() {
             if (mPathNodeIndex != r) {
                 mPathNodeIndex = r;
             } else {
-                int *p = &mPathNodeIndex;
-                (*p)++;
-                *p &= 3;
+                mPathNodeIndex++;
+                mPathNodeIndex &= 3;
             }
         }
         mPos.x = node.x;
@@ -643,8 +642,7 @@ int daJango_c::EnterCircleState() {
     }
     mLeaveDelay = 0;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
-    if (mSilverStarFlag == 2 ||
-        (unsigned char)(signed char)((signed char)gCurrentSublevel - 0x18) <= 1) {
+    if (mSilverStarFlag == 2 || (unsigned char)(signed char)(gCurrentSublevel - 0x18) <= 1) {
         mLeaveDelay = 2;
         mStateTimer = 0;
     }
@@ -674,11 +672,7 @@ int daJango_c::EnterCircleState() {
    5. If the node picked by ChangeTarget differs (and the actor is not the
       silver-star variant or in level 0x18 / 0x19) the timer is cancelled; once
       mStateTimer and mLeaveDelay are both 0, it carries or holds something and mAngle.y is within 0x2000 (45 degrees) of the
-      path node's direction, it enters FLY_PATH.
-
-   mStateTimer is declared s16, but the ROM tests it with ldrh in this function
-   and in c2f4; the declared type compiles those tests to ldrsh, so they read it
-   through a u16 cast (measured: both functions stop matching without it). */
+      path node's direction, it enters FLY_PATH. */
 int daJango_c::UpdateCircleState() {
     s16 angV;
     s16 angD;
@@ -687,10 +681,8 @@ int daJango_c::UpdateCircleState() {
     Vector3 node;
     int thr;
     s8 stage;
-    int *p43c;
-    s16 *p94;
     int *pp;
-    int tmp;
+    int coord;
 
     if (mTimer != 0) {
         if (mWithMeshClsn.IsOnWall() != 0) {
@@ -726,11 +718,9 @@ int daJango_c::UpdateCircleState() {
     ApproachAngle(&mPrevAngle.z, angD, 0xa, 0x200, 0x100);
 
     if (gCurrentSublevel == 0x10 || mSilverStarFlag == 2) {
-        p94 = &mPrevAngle.y;
-        *p94 = (s16)(*p94 - 0x200);
+        mPrevAngle.y -= 0x200;
     } else {
-        p94 = &mPrevAngle.y;
-        *p94 = (s16)(*p94 - 0x400);
+        mPrevAngle.y -= 0x400;
     }
 
     if (mHeldActorID == 0 && mCarriedItem == CARRIES_NO_STAR) {
@@ -738,13 +728,13 @@ int daJango_c::UpdateCircleState() {
             player = ClosestPlayer();
             if (player != 0) {
                 pp = &player->mPos.x;
-                tmp = pp[0];
-                ppos.x = tmp;
-                tmp = pp[1];
+                coord = pp[0];
+                ppos.x = coord;
+                coord = pp[1];
                 stage = gCurrentSublevel;
-                ppos.y = tmp;
-                tmp = pp[2];
-                ppos.z = tmp;
+                ppos.y = coord;
+                coord = pp[2];
+                ppos.z = coord;
                 if (stage != 0x10 && (mPos.y + 0x28000 < ppos.y || player->mIsUnderwater != 0)) {
                     UpdateCircleVelocity();
                     return 1;
@@ -768,9 +758,8 @@ int daJango_c::UpdateCircleState() {
     if (angD < 0x300) {
         if (mStateParam == 1) {
             mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
-            if (mSilverStarFlag == 2 || (unsigned)(u8)(s8)((s8)gCurrentSublevel - 0x18) <= 1u) {
-                p43c = &mLeaveDelay;
-                *p43c = *p43c - 1;
+            if (mSilverStarFlag == 2 || (unsigned)(u8)(s8)(gCurrentSublevel - 0x18) <= 1u) {
+                mLeaveDelay--;
                 if (mLeaveDelay <= 0) {
                     mLeaveDelay = 0;
                 }
@@ -779,13 +768,11 @@ int daJango_c::UpdateCircleState() {
         }
     } else if (mStateParam == 0) {
         mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
-        p43c = &mStateParam;
-        *p43c = *p43c + 1;
+        mStateParam++;
     }
 
     if (mStateParam >= 2) {
-        p43c = &mStateParam;
-        *p43c = *p43c + 1;
+        mStateParam++;
         if (mStateParam > 0x18) {
             mStateParam = 0;
         }
@@ -1028,7 +1015,7 @@ int daJango_c::HandleCylinderHit() {
 
     id = mdCcAc_c1.otherOwner;
     if (id != 0) {
-        pl = (daPly_c *)dActor_c::FindWithID((unsigned int)id);
+        pl = (daPly_c *)dActor_c::FindWithID(id);
         if (pl == 0)
             return (int)pl;
         fl = mdCcAc_c1.hitFlags;
@@ -1048,7 +1035,7 @@ int daJango_c::HandleCylinderHit() {
     id = mdCcAc_c2.otherOwner;
     if (id == 0)
         return id;
-    pl = (daPly_c *)dActor_c::FindWithID((unsigned int)id);
+    pl = (daPly_c *)dActor_c::FindWithID(id);
     if (pl == 0)
         return (int)pl;
     isPlayer = (enum Bool)(pl->actorID == ACTOR_PLAYER);
@@ -1066,13 +1053,9 @@ int daJango_c::HandleCylinderHit() {
 
     st = mSilverStarFlag;
     hc = pl->mCharacter;
-    if (st != 2 &&
-        pl->mHasWings == 0 &&
-        pl->mIsBalloon == 0 &&
-        pl->mIsVanish == 0 &&
-        pl->mIsMetal == 0 &&
-        (int)pl->param1 != 3) {
-        newchar = (int)pl->param1;
+    if (st != 2 && pl->mHasWings == 0 && pl->mIsBalloon == 0 && pl->mIsVanish == 0 &&
+        pl->mIsMetal == 0 && pl->param1 != 3) {
+        newchar = pl->param1;
         if (hc != newchar) {
             pl->SetNewHatCharacter(hc, 0, 0);
         } else {
@@ -1097,7 +1080,7 @@ int daJango_c::HandleCylinderHit() {
 
     mHitPlayer = 1;
     flag = 0;
-    if (mSilverStarFlag == 2 || (int)pl->param1 == 3)
+    if (mSilverStarFlag == 2 || pl->param1 == 3)
         flag = 1;
 
     pos.x = mPos.x;
@@ -1127,11 +1110,8 @@ int daJango_c::ChangeTarget() {
     int bestIdx;
     int bestDist;
 
-    {
-        int *ctr = &mPathPickTick;
-        *ctr = *ctr + 1;
-        *ctr = *ctr & 7;
-    }
+    mPathPickTick++;
+    mPathPickTick &= 7;
     if (mPathPickTick != 0)
         return 0;
 
@@ -1151,7 +1131,7 @@ int daJango_c::ChangeTarget() {
         bestDist = 0x10000000;
         ppos.z = pp[2];
         while (i < 4) {
-            path.GetNode(node, (u32)i);
+            path.GetNode(node, i);
             if (bestDist > Vec3_HorzDist(&node, &ppos)) {
                 bestIdx = i;
                 bestDist = Vec3_HorzDist(&node, &ppos);
@@ -1191,8 +1171,7 @@ void daJango_c::UpdateCircleVelocity() {
     v[0].z = 0x14000;
     if (mCarriedItem == CARRIES_NO_STAR && mHeldActorID == 0) {
         if (mTimer == 0) {
-            short *a = &mPrevAngle.y;
-            *a = *a - 0x100;
+            mPrevAngle.y -= 0x100;
         }
         v[0].z = 0x28000;
     }

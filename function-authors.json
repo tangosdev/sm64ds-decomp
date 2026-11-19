@@ -8487,7 +8487,7 @@
     },
     "arm9:0x02050bb0": {
       "author": "tangosdev",
-      "name": "_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj"
+      "name": "_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEi"
     },
     "arm9:0x02050c14": {
       "author": "tangosdev",
@@ -8495,7 +8495,7 @@
     },
     "arm9:0x02050c78": {
       "author": "tangosdev",
-      "name": "_ZN5Sound17InfoSequenceEntry9GetWithIDEj"
+      "name": "_ZN5Sound17InfoSequenceEntry9GetWithIDEi"
     },
     "arm9:0x02050cdc": {
       "author": "tangosdev",

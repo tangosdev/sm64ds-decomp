@@ -29,7 +29,7 @@ void func_ov007_020aefb4(void) {
             p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
         }
-        int r7 = (WORK->states[0]->previousState == 3) ? 1 : 0;
+        int r7 = WORK->states[0]->previousState == 3;
         if (PickerScene_IsIdle() != 0 && quo >= r7) {
             int a = -1, b = -1;
             func_ov007_020af260(quo, rem, &a, &b);

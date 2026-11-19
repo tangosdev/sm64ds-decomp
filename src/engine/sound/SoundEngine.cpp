@@ -260,10 +260,6 @@ struct E
   int field0;
   int field4;
 };
-struct LL {
-  int lo;
-  int hi;
-};
 /* The 16 sequence players at sSeqPlayer: nnsys/snd/player.h's
    NNSSndSeqPlayer (fader at 0x1c, status at 0x2c, playerNo at 0x3c). The
    free list sFreeList and the priority list sPrioList link them
@@ -452,10 +448,10 @@ extern void NNS_SndArcSetFileAddress(u32 fileId, void *address);
 extern void *NNS_SndArcGetFileAddress(u32 fileId);
 extern int NNS_SndArcReadFile(u32 fileId, void *buffer, u32 size, u32 offset);
 extern int NNS_SndArcGetFileSize(unsigned int i);
-extern struct List *NNS_SndArcGetGroupInfo(unsigned int id);
-extern struct SndPlayerInfo *NNS_SndArcGetPlayerInfo(unsigned int id);
-extern struct SndArchiveInfo *NNS_SndArcGetWaveArcInfo(unsigned int id);
-extern struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(unsigned int id);
+extern struct List *NNS_SndArcGetGroupInfo(int id);
+extern struct SndPlayerInfo *NNS_SndArcGetPlayerInfo(int id);
+extern struct SndArchiveInfo *NNS_SndArcGetWaveArcInfo(int id);
+extern struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(int id);
 extern void *NNS_SndArcGetSeqArcParam(int a, int idx);
 extern int NNS_SndArcGetCurrent(void);
 extern int NNS_SndArcSetCurrent(int v);
@@ -497,7 +493,7 @@ extern int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int bankNo
                          struct Elem *seq, struct ElemTable *arc, int seqArcNo, int index);
 extern int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo, int playerPrio,
                          Sound::InfoSequenceEntry *info, int seqNo);
-extern int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int arg5, int arg6);
+extern int func_02051e60(NNSSndHandle *handle, int b, int c, int d, int arg5, int arg6);
 extern int func_02051f1c(void *a0, u32 a1, int a2);
 extern int func_02051fb4(void *thiz, unsigned int id);
 extern int func_02052008(struct SndHeap *heap);
@@ -725,7 +721,7 @@ extern "C" int func_02051f1c(void *handle, u32 seqArcNo, int index) {
 }
 
 extern "C" int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int playerPrio,
-                             unsigned int seqArcNo, int index) {
+                             int seqArcNo, int index) {
     struct SndArchiveInfo *info;
     struct Elem *seq;
     struct ElemTable *arc;
@@ -1190,7 +1186,7 @@ extern "C" s32 NNS_SndHeapSaveState(struct SndHeap *heap) {
         return ~0;
     }
     if (NewSection(heap)) {
-        return (s32)((u32)heap->levels.numObjects - 1);
+        return (u32)heap->levels.numObjects - 1;
     }
     NNS_FndFreeByStateToFrmHeap(heap->frmHeap, 0);
     return ~0;
@@ -1339,14 +1335,14 @@ extern "C" void *NNS_SndArcGetSeqArcParam(int a, int idx) {
     return &e->bankId;
 }
 
-Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
-{
+Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(int id) {
     char *root = sCurrent;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->seqTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if ((int)id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1355,13 +1351,14 @@ Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
     return (v == 0) ? 0 : (InfoSequenceEntry *)(base + v);
 }
 
-extern "C" struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(unsigned int id) {
+extern "C" struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(int id) {
     char *root = sCurrent;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->seqArcTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if ((int)id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1370,14 +1367,14 @@ extern "C" struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(unsigned int id) {
     return (v == 0) ? 0 : (struct SndArchiveInfo *)(base + v);
 }
 
-Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(u32 id)
-{
+Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(int id) {
     char *root = sCurrent;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->bankTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if ((int)id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1386,13 +1383,14 @@ Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(u32 id
     return (v == 0) ? 0 : (InfoInstrumentBankEntry *)(base + v);
 }
 
-extern "C" struct SndArchiveInfo *NNS_SndArcGetWaveArcInfo(unsigned int id) {
+extern "C" struct SndArchiveInfo *NNS_SndArcGetWaveArcInfo(int id) {
     char *root = sCurrent;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->waveArcTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if ((int)id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1401,13 +1399,14 @@ extern "C" struct SndArchiveInfo *NNS_SndArcGetWaveArcInfo(unsigned int id) {
     return (v == 0) ? 0 : (struct SndArchiveInfo *)(base + v);
 }
 
-extern "C" struct SndPlayerInfo *NNS_SndArcGetPlayerInfo(unsigned int id) {
+extern "C" struct SndPlayerInfo *NNS_SndArcGetPlayerInfo(int id) {
     char *root = sCurrent;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->playerTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if ((int)id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1416,13 +1415,14 @@ extern "C" struct SndPlayerInfo *NNS_SndArcGetPlayerInfo(unsigned int id) {
     return (v == 0) ? 0 : (struct SndPlayerInfo *)(base + v);
 }
 
-extern "C" struct List *NNS_SndArcGetGroupInfo(unsigned int id) {
+extern "C" struct List *NNS_SndArcGetGroupInfo(int id) {
     char *root = sCurrent;
     char *sub = (char *)((data_020a5bb8_t *)root)->info;
     int off = ((struct SndInfoBlock *)sub)->groupTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
-    if ((int)id < 0) return 0;
+    if (id < 0)
+        return 0;
     SoundOffsetTable *table = (SoundOffsetTable *)tbl;
     if (id >= table->count)
         return 0;
@@ -1566,7 +1566,7 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
     g = &data_020a5634;
     DC_FlushRange((void *)b, dd);
     DC_FlushRange((void *)c, dd);
-    stereo = (p5 == 1) ? 1 : 0;
+    stereo = p5 == 1;
     align = 0xffb0ff / p9;
     if (p14 != 0) {
         q = dd;
@@ -1771,14 +1771,12 @@ extern "C" void func_0204fed0(struct C *c) {
 }
 
 extern "C" void func_0204fe5c(struct C *c, int volume) {
-    unsigned char new_var;
+    unsigned char idx;
     int i = 0;
     c->volume = volume;
     if (c->chanCount > 0) {
-        if (1) {
-        }
         do {
-            unsigned char idx = new_var = c->chans[i];
+            idx = c->chans[i];
             int r = SND_CalcChannelVolume(c->volume + data_020a5578[idx].field4);
             SND_SetChannelVolume(1 << idx, r & 0xff, r >> 8);
             i++;
@@ -1787,7 +1785,7 @@ extern "C" void func_0204fe5c(struct C *c, int volume) {
 }
 
 extern "C" void func_0204fde8(struct C *obj) {
-    if ((int)(obj->fc << 0x1e) >> 0x1f) {
+    if ((obj->fc << 0x1e) >> 0x1f) {
         u32 p;
         int *flags = &obj->fc;
         SND_StopTimer(obj->f2c, 0, 1 << obj->f28, 0);
@@ -1800,28 +1798,24 @@ extern "C" void func_0204fde8(struct C *obj) {
 }
 
 extern "C" void func_0204fda4(struct C *c) {
-    int* p;
     func_0204f0b8(c->f28);
     NNS_FndRemoveListObject(&data_020a552c, c);
-    p = &c->fc;
-    *p &= ~1;
-    *p &= ~2;
+    c->fc &= ~1;
+    c->fc &= ~2;
 }
 
 void C::func_0204fce8(void *arg) {
-    int new_var;
+    /* Kept (#821 r84): bufferAddr added inline (either order) -> bytes differ. */
     int i;
-    int *pcount;
     int q = (u32)this->bufSize / (u32)this->blockCount;
     int scaled = q * this->f20;
     for (i = 0; i < this->chanCount; i++) {
-        new_var = ((LL *)data_020a5578)[this->chans[i]].lo;
-        data_020a5538[i] = new_var + scaled;
+        int bufferAddr = data_020a5578[this->chans[i]].field0;
+        data_020a5538[i] = bufferAddr + scaled;
     }
 
     this->callback(arg, this->chanCount, data_020a5538, q, this->unk8, this->unk1c);
-    pcount = &this->f20;
-    (*pcount)++;
+    this->f20++;
     if (this->f20 >= this->blockCount) {
         this->f20 = 0;
     }
@@ -1918,13 +1912,13 @@ extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *handle, int fade) {
     NNSi_SndPlayerStopSeq(handle->player, fade);
 }
 
-extern "C" void NNS_SndPlayerStopSeqByPlayerNo(int idx, int arg1) {
+extern "C" void NNS_SndPlayerStopSeqByPlayerNo(int idx, int fade) {
     int i;
     NNSSndSeqPlayer *p = sSeqPlayer;
     SoundPlayerRecord *player = &sPlayer[idx];
     for (i = 0; i < 16; i++, p++) {
         if (p->status != 0 && p->player == player) {
-            NNSi_SndPlayerStopSeq(p, arg1);
+            NNSi_SndPlayerStopSeq(p, fade);
         }
     }
 }

@@ -64,6 +64,14 @@ s32 daBttBk_c::OnYoshiTryEat() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
 /* Collision reaction, run from state 0's update: a carrier found by
  * func_02010304 is stored in mCarrier and enters state 1; otherwise, against
  * actor id 0xbf, mFlags bit 17 enters state 2 and a hitFlags bit 4 contact
@@ -80,11 +88,9 @@ void daBttBk_c::HandleCollision() {
     dActor_c *other = dActor_c::FindWithID(mdCcAc_c.otherOwner);
     if (other == 0)
         return;
-    int isId0xbf = (int)(other->actorID == 0xbf);
-    if (isId0xbf == 0)
+    if (!IsPlayerActor(other))
         return;
-    int inYoshiMouthA = (int)((mFlags & 0x20000) != 0);
-    if (inYoshiMouthA) {
+    if (IsBeingEaten(this)) {
         SetState(2);
         return;
     }
@@ -140,17 +146,17 @@ void daBttBk_c::UpdateModelTransform() {
                 data_020a0e68 = *carrier->mCarryMatrix;
                 Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, t.x, t.y, t.z);
 
-                mPos.x = data_020a0e68.m[9];
-                mPos.y = data_020a0e68.m[10];
-                mPos.z = data_020a0e68.m[11];
+                mPos.x = data_020a0e68.t.x;
+                mPos.y = data_020a0e68.t.y;
+                mPos.z = data_020a0e68.t.z;
                 Vec3_LslInPlace(&mPos, 3);
             }
         }
     }
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     pos.x = mPos.x;
     pos.y = mPos.y;
     pos.z = mPos.z;
@@ -162,9 +168,9 @@ void daBttBk_c::UpdateModelTransform() {
         groundY = rg.clsnY;
     }
     Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = groundY >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = groundY >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
     {
         s16 a = mAngle.x;
         int sv = FX_SinIdx((unsigned short)(short)(a << 1) >> 4);
@@ -175,17 +181,16 @@ void daBttBk_c::UpdateModelTransform() {
     }
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* State 2 update: once neither flag bit 17 nor 18 is set, forget the eating
  * player and go back to state 0. */
 int daBttBk_c::StateYoshiMouthMain() {
-    int flags = mFlags;
-    int inYoshiMouthA = (flags & 0x20000) ? 1 : 0;
-    if (inYoshiMouthA == 0) {
-        int inYoshiMouthB = (flags & 0x40000) ? 1 : 0;
-        if (inYoshiMouthB == 0) {
-            mEatingPlayer = 0;
-            SetState(0);
-        }
+    if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
+        mEatingPlayer = 0;
+        SetState(0);
     }
     return 1;
 }
@@ -198,6 +203,10 @@ int daBttBk_c::StateYoshiMouthInit() {
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 /* State 1 update: copies the carrier's angles; breaks the crate unless
  * mFlags bit 8 is set and bit 13 clear. */
 int daBttBk_c::StateCarriedMain() {
@@ -205,47 +214,36 @@ int daBttBk_c::StateCarriedMain() {
     mAngle.y = mCarrier->mAngle.y;
     mPrevAngle.x = mAngle.x;
     mPrevAngle.y = mAngle.y;
-    {
-        int flags = mFlags;
-        int hasBit8 = (int)((flags & 0x100) != 0);
-        do {
-            if (hasBit8 != 0) {
-                int hasBit13 = (int)((flags & 0x2000) != 0);
-                if (hasBit13 == 0)
-                    break;
-            }
-            {
-                Vector3 vec;
-                Vector3 vec2;
-                int x = mPos.x;
-                int z = mPos.z;
-                int y = mPos.y + 0xb4000;
-                vec.x = x;
-                vec.y = y;
-                vec.z = z;
-                vec2.x = vec.x;
-                vec2.y = vec.y;
-                vec2.z = vec.z;
-                PoofDustAt(vec2);
-                Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
+    if (!IsFlagSet(this, 0x100) || IsFlagSet(this, 0x2000)) {
+        Vector3 vec;
+        Vector3 vec2;
+        int x = mPos.x;
+        int z = mPos.z;
+        int y = mPos.y + 0xb4000;
+        vec.x = x;
+        vec.y = y;
+        vec.z = z;
+        vec2.x = vec.x;
+        vec2.y = vec.y;
+        vec2.z = vec.z;
+        PoofDustAt(vec2);
+        Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
 
-                {
-                    int ybase = mPos.y;
-                    int xx = vec.x;
-                    int y2 = ybase + 0x64000;
-                    int zz = vec.z;
-                    Vector3 v3;
-                    v3.x = xx;
-                    v3.z = zz;
-                    vec.y = y2;
-                    v3.y = y2;
-                    SpawnCoins(v3, 5, 0xf000, 0);
-                }
+        {
+            int ybase = mPos.y;
+            int xx = vec.x;
+            int y2 = ybase + 0x64000;
+            int zz = vec.z;
+            Vector3 v3;
+            v3.x = xx;
+            v3.z = zz;
+            vec.y = y2;
+            v3.y = y2;
+            SpawnCoins(v3, 5, 0xf000, 0);
+        }
 
-                Sound::PlayBank3(0x41, mCamSpacePos);
-                MarkForDestruction();
-            }
-        } while (0);
+        Sound::PlayBank3(0x41, mCamSpacePos);
+        MarkForDestruction();
     }
     mdCcAc_c.Clear();
     return 1;
@@ -310,10 +308,7 @@ s32 daBttBk_c::CleanupResources() {
 void daBttBk_c::OnPendingDestroy() {}
 
 int daBttBk_c::Render() {
-    int flags = mFlags;
-    flags = flags & 0x40000;
-    flags = flags ? 1 : 0;
-    if (flags)
+    if (IsInYoshiMouth(this))
         return 1;
     mModel.Render(0);
     return 1;

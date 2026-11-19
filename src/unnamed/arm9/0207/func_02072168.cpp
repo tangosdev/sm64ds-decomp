@@ -353,6 +353,8 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             int v0;
             int v1;
             int v2;
+            /* Kept (#821 r79): unsigned long k, k read after v2 from a saved byte pointer, and
+               k in an int[2] are 151, 154 and 151 words off. */
             volatile int k;
             int fl;
             unsigned char *q;

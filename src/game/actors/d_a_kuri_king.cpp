@@ -50,7 +50,6 @@
  * - func_ov074_0212087c and func_ov074_02121270 take the object as arg1 (out
  *   param in arg0), and func_ov074_0212007c/021201ec/021203e0 are (void)
  *   stubs whose data records don't carry `this`. Those five stay free.
- * - mShadowMatrices is still s32 words reached through Matrix4x3 casts.
  * - State dispatch stays a pointer-to-member on a non-virtual stand-in:
  *   daKuriKing_c has virtuals, so its own member pointers are wider than the
  *   8-byte records the sinit copies in.
@@ -151,13 +150,29 @@ extern float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
-extern struct Matrix4x3 data_020a0e68;
-extern struct Matrix4x3 IDENTITY_MATRIX4X3;
+extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 IDENTITY_MATRIX4X3;
 struct KuriKingBoneIdx {
     int v[3];
 };
 KuriKingBoneIdx data_ov074_02122e24 = {{1, 8, 10}};
 extern char data_ov074_02122f3c[];
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
 extern char data_ov074_02122f38[];
 void UnloadKeyModels(int i);
 void LoadKeyModels(int idx);
@@ -358,8 +373,11 @@ int daKuriKing_c::SpawnVanishCopy() {
     }
     spawnTarget=data_ov074_02122d80[this->mSizeIndex];
     player=this->ClosestPlayer();
-    if(this->mSizeIndex==1){ if((int)player->param1!=3) spawnTarget+=1; }
-    return this->mSpawnedCount>=spawnTarget ? 1 : 0;
+    if (this->mSizeIndex == 1) {
+        if (player->param1 != 3)
+            spawnTarget += 1;
+    }
+    return this->mSpawnedCount >= spawnTarget;
 }
 
 void daKuriKing_c::UpdateDefeat() {
@@ -406,8 +424,7 @@ void daKuriKing_c::UpdateDefeat() {
             dActor_c *actor = dActor_c::FindWithActorID(0xc8, 0);
             if (actor != 0) {
                 while (1) {
-                    s32 flag = (actor->mFlags & 0x40000) ? 1 : 0;
-                    if (flag == 0) {
+                    if (!IsInYoshiMouth(actor)) {
                         Vector3 v2;
                         s32 *src = &actor->mPos.x;
                         v2.x = src[0];
@@ -498,7 +515,7 @@ void daKuriKing_c::EnterDefeat() {
     this->mScale.y = v;
     this->mScale.z = v;
     this->mTextureSequence.currFrame = 0x2000;
-    this->mMaterialChanger.currFrame = ((int)data_ov074_02122e04[1]) << 0xc;
+    this->mMaterialChanger.currFrame = data_ov074_02122e04[1] << 0xc;
     this->mSubState = 0;
     PlayAnim(3);
     this->mScaleSteps = 3;
@@ -611,7 +628,8 @@ void daKuriKing_c::UpdateSummonGoombas() {
 
     int spawnTarget = data_ov074_02122d80[this->mSizeIndex];
     daPly_c *pl = this->ClosestPlayer();
-    if (this->mSizeIndex == 1 && (int)pl->param1 != 3) spawnTarget = spawnTarget + 1;
+    if (this->mSizeIndex == 1 && pl->param1 != 3)
+        spawnTarget = spawnTarget + 1;
 
     if (this->mAnmModel.Finished() == 0)
         return;
@@ -625,19 +643,19 @@ void daKuriKing_c::UpdateSummonGoombas() {
     this->DisappearPoofDustAt(pp);
 
     u32 sid = 0xeeee;
-    if ((int)pl->param1 != 3) {
+    if (pl->param1 != 3) {
         if (this->mSpawnedCount % 2 == 0) sid = 0xeeef;
     }
 
-    daKrb_c *sp2 = (daKrb_c *)dActor_c::Spawn(0xc8, sid, pos, &this->mAngle, this->mAreaId, -1);
-    sp2->mTargetUniqueID = this->uniqueID;
+    daKrb_c *minion = (daKrb_c *)dActor_c::Spawn(0xc8, sid, pos, &this->mAngle, this->mAreaId, -1);
+    minion->mTargetUniqueID = this->uniqueID;
     Vector3 v2;
     v2.x = this->mSpawnPosX;
     v2.y = this->mSpawnPosY;
     v2.z = this->mSpawnPosZ;
-    sp2->func_ov084_021296b0(&v2);
+    minion->func_ov084_021296b0(&v2);
 
-    sp2->mMinionIndex = this->mSpawnedCount;
+    minion->mMinionIndex = this->mSpawnedCount;
     /* Same pool-address increment as mSubState: 0x602 is not an ARM immediate. */
     u8* spawnedCount = (u8*)(((int)&this->mSpawnedCount));
     *spawnedCount = (u8)(*spawnedCount + 1);
@@ -645,7 +663,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
 
     daPly_c *pl2 = this->ClosestPlayer();
     int dv = 3;
-    if ((int)pl2->param1 != 3) {
+    if (pl2->param1 != 3) {
         if (this->mSizeIndex == 1) dv = 5;
     }
     if (this->mSpawnedCount % dv == 0)
@@ -806,7 +824,7 @@ int daKuriKing_c::AdvanceMaterialChanger() {
     unsigned short tbl = data_ov074_02122e04[idx];
     unsigned int v = (val << 4) >> 0x10;
     if (v >= tbl) {
-        this->mMaterialChanger.currFrame = (unsigned int)tbl << 0xc;
+        this->mMaterialChanger.currFrame = tbl << 0xc;
         return 1;
     }
     return 0;
@@ -910,7 +928,7 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
     out[1] = mPos.y;
     out[2] = mPos.z;
 
-    if ((int)ClosestPlayer()->param1 == 3) {
+    if (ClosestPlayer()->param1 == 3) {
         int rem;
         int quo;
         int scale;
@@ -1056,9 +1074,6 @@ void daKuriKing_c::HandleCylinderHits() {
     int dir2;
     u32 s;
     u32 flags;
-    u16 type;
-    int b;
-    int b2;
 
     DecIfAbove0_Byte(&this->mHurtTimer);
     s = this->mState;
@@ -1089,9 +1104,7 @@ void daKuriKing_c::HandleCylinderHits() {
     if (flags & 0x2000) {
         hit = 1;
     } else {
-        type = player->actorID;
-        b = (int)(type == 0xbf);
-        if (b != 0) {
+        if (IsPlayerActor(player)) {
             daPly_c *pl = (daPly_c *)player;
             if (this->mHurtTimer == 0) {
                 if (!(flags & 0x26fe0) && pl->mIsTakingDamage == 0) {
@@ -1144,7 +1157,7 @@ void daKuriKing_c::HandleCylinderHits() {
                                 ChangeState(2);
                             else
                                 ChangeState(4);
-                            if ((int)pl->param1 == 0) {
+                            if (pl->param1 == 0) {
                                 v0.x = this->mPos.x;
                                 v0.y = this->mPos.y;
                                 v0.z = this->mPos.z;
@@ -1170,8 +1183,7 @@ void daKuriKing_c::HandleCylinderHits() {
                 }
             }
         } else {
-            b2 = (int)(type == 0xc8);
-            if (b2 != 0) {
+            if (IsActorID(player, 0xc8)) {
                 if (flags & 0x22000)
                     hit = 1;
             }
@@ -1207,13 +1219,13 @@ void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) {
     data_020a0e68 = self->mBodyMatrix;
     boneMat = self->mAnmModel.data.transforms + bone;
     MTX_Concat43(boneMat, &data_020a0e68, &data_020a0e68);
-    v->x = data_020a0e68.m[9];
-    v->y = data_020a0e68.m[10];
-    v->z = data_020a0e68.m[11];
+    v->x = data_020a0e68.t.x;
+    v->y = data_020a0e68.t.y;
+    v->z = data_020a0e68.t.z;
     Vec3_LslInPlace(v, 3);
 }
 
-extern "C" struct Matrix4x3 data_020a0e68;
+extern "C" union Matrix4x3 data_020a0e68;
 void daKuriKing_c::UpdateBodyMatrix() {
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
@@ -1327,50 +1339,25 @@ int daKuriKing_c::WalkAlongRing() {
 
 void daKuriKing_c::UpdateShadows() {
     Matrix4x3 mtx;
-    int i, height, rad, posY, radius;
-    char *self, *src, *m;
-    dExtShadowModel_c *shadow;
+    int i, height, rad;
 
-    if (this->mNoShadow != 0)
+    if (mNoShadow != 0)
         return;
 
-    /* self and src are this shifted by i shadow matrices (0x30) and i
-     * mCylClsnPos entries (0xc), read back through the class so each load
-     * keeps the member offset. Words 9..11 are a matrix's translation row.
-     * Measured (2004/b56): mShadowMatrices[i] / mCylClsnPos[i] /
-     * mShadowModels[i] at every use is 8/87 words off (the matrix copy and
-     * the DropShadowRadHeight argument share one this + 0x2ec induction
-     * register, where the ROM copies through the this-based one); keeping m
-     * as a Matrix4x3 * walk with the rest indexed grows it by 0x10 bytes. */
     mtx = IDENTITY_MATRIX4X3;
-    /* Kept (#821 r73): src as mCylClsnPos[i] is 10 words off (its induction
-       register ranks last), as a Vector3 * walk 3 (no 0x3ac displacement);
-       self as mShadowMatrices[i] grows the body to 0x16c. */
-    self = (char *)this;
-    src = (char *)this;
-    m = (char *)mShadowMatrices;
-    shadow = mShadowModels;
     for (i = 0; i < 3; i++) {
-        height = this->mPos.y - this->mSpawnPosY;
+        height = mPos.y - mSpawnPosY;
         if (height <= 0x1000)
             height = 0x1000;
-        rad = (this->mdCc_cs[i + 1].radius << 1) - FX_MUL(height, 0x180);
+        rad = (mdCc_cs[i + 1].radius << 1) - FX_MUL(height, 0x180);
         if (rad < 0xa000)
             rad = 0xa000;
-        radius = rad;
-        *(Matrix4x3 *)((daKuriKing_c *)self)->mShadowMatrices[0] = mtx;
-        ((daKuriKing_c *)self)->mShadowMatrices[0][9] =
-            ((daKuriKing_c *)src)->mCylClsnPos[0].x >> 3;
-        posY = this->mPos.y;
-        ((daKuriKing_c *)self)->mShadowMatrices[0][10] = posY >> 3;
+        mShadowMatrices[i] = mtx;
+        mShadowMatrices[i].t.x = mCylClsnPos[i].x >> 3;
+        mShadowMatrices[i].t.y = mPos.y >> 3;
         height += 0x28000;
-        ((daKuriKing_c *)self)->mShadowMatrices[0][11] =
-            ((daKuriKing_c *)src)->mCylClsnPos[0].z >> 3;
-        DropShadowRadHeight(*shadow, *(Matrix4x3 *)m, radius, height, 0xf);
-        self += 0x30;
-        src += 0xc;
-        m += 0x30;
-        shadow++;
+        mShadowMatrices[i].t.z = mCylClsnPos[i].z >> 3;
+        DropShadowRadHeight(mShadowModels[i], mShadowMatrices[i], rad, height, 0xf);
     }
 }
 
@@ -1378,9 +1365,9 @@ void daKuriKing_c::UpdateShadows() {
  * world >> 3). */
 void daKuriKing_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 void daKuriKing_c::UpdateAnimation() {
@@ -1420,8 +1407,8 @@ int daKuriKing_c::IsAnimPlaying(int idx) {
 void daKuriKing_c::PlayAnim(int idx) {
     void *file1 = data_ov074_02122f34[idx].anim->filePtr;
     int off = idx * 0xc;
-    int arg2 = *(int*)(data_ov074_02122f3c + off);
-    this->mAnmModel.SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
+    int flags = *(int *)(data_ov074_02122f3c + off);
+    this->mAnmModel.SetAnim((BCA_File *)file1, flags, 0x1000, 0);
     this->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
 }
 
@@ -1624,7 +1611,7 @@ int daKuriKing_c::InitResources()
     mTextureTransformer.SetFile(data_ov010_021124ac, 0, 0x1000, 0);
 
     mTextureSequence.speed = 0;
-    mMaterialChanger.currFrame = (s32)(data_ov074_02122e04[mSizeIndex] << 0xc);
+    mMaterialChanger.currFrame = data_ov074_02122e04[mSizeIndex] << 0xc;
 
     mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);
 
@@ -1709,8 +1696,7 @@ int daKuriKing_c::BehaviorVanish() {
     }
 
     if (DecIfAbove0_Short(&this->mTimer) == 0 || this->mSubState >= 3) {
-        int b = ((this->mFlags & 8) != 0) ? 1 : 0;
-        if (b == 0) {
+        if (!IsOffScreen(this)) {
             this->PoofDust();
         }
         this->MarkForDestruction();
@@ -1718,8 +1704,7 @@ int daKuriKing_c::BehaviorVanish() {
     }
 
     if (this->mWithMeshClsn.JustHitGround()) {
-        int b = ((this->mFlags & 8) != 0) ? 1 : 0;
-        if (b == 0) {
+        if (!IsOffScreen(this)) {
             if (this->mSubState == 0) {
                 func_02012694(0x13a, &this->mCamSpacePos);
             } else {
@@ -1762,14 +1747,13 @@ int daKuriKing_c::BehaviorVanish() {
     }
 
     /* One drop shadow, through the first shadow matrix. */
-    *(Matrix4x3 *)mShadowMatrices[0] = IDENTITY_MATRIX4X3;
+    mShadowMatrices[0] = IDENTITY_MATRIX4X3;
 
-    mShadowMatrices[0][9] = this->mPos.x >> 3;
-    mShadowMatrices[0][10] = this->mPos.y >> 3;
-    mShadowMatrices[0][11] = this->mPos.z >> 3;
+    mShadowMatrices[0].t.x = this->mPos.x >> 3;
+    mShadowMatrices[0].t.y = this->mPos.y >> 3;
+    mShadowMatrices[0].t.z = this->mPos.z >> 3;
 
-    DropShadowRadHeight(this->mShadowModels[0], *(Matrix4x3 *)mShadowMatrices[0], 0x8c000, 0x3e8000,
-                        0xf);
+    DropShadowRadHeight(this->mShadowModels[0], mShadowMatrices[0], 0x8c000, 0x3e8000, 0xf);
 
     return 1;
 }

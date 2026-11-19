@@ -3700,169 +3700,169 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@2420",
-      "to": "pmf_dScMgBomroom_c_TopDoor_StateOpen",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateOpen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x35c loads 0x0213b9ec in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateOpen at 0x020d5f28)."
-    },
-    {
-      "from": "@2402",
-      "to": "pmf_dScMgBomroom_c_HatchPanel_StateAnimate",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateAnimate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x338 loads 0x0213b9f4 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateAnimate at 0x020d64c8)."
-    },
-    {
       "from": "@2422",
-      "to": "pmf_dScMgBomroom_c_TopDoor_StateClosing",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateClosing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x360 loads 0x0213b9fc in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateClosing at 0x020d5eb8)."
-    },
-    {
-      "from": "@2396",
-      "to": "pmf_dScMgBomroom_c_BombMarch_ToLine",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_ToLine, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x320 loads 0x0213ba04 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_ToLine at 0x020d777c)."
-    },
-    {
-      "from": "@2358",
-      "to": "pmf_dScMgBomroom_c_Round_StateSetup",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateSetup, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2c8 loads 0x0213ba0c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateSetup at 0x020d904c)."
-    },
-    {
-      "from": "@2376",
-      "to": "pmf_dScMgBomroom_c_Bomb_StateWaiting",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateWaiting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2fc loads 0x0213ba14 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateWaiting at 0x020d8324)."
-    },
-    {
-      "from": "@2380",
-      "to": "pmf_dScMgBomroom_c_Bomb_StateHeld",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateHeld, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x31c loads 0x0213ba1c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateHeld at 0x020d7f5c)."
-    },
-    {
-      "from": "@2372",
-      "to": "pmf_dScMgBomroom_c_RoundEnd_Tally",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_Tally, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f0 loads 0x0213ba24 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_Tally at 0x020d8af8)."
-    },
-    {
-      "from": "@2368",
-      "to": "pmf_dScMgBomroom_c_RoundEnd_StartMarch",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_StartMarch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2e0 loads 0x0213ba2c in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_StartMarch at 0x020d8d84)."
+      "to": "pmf_dScMgBomroom_c_TopDoor_StateOpen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateOpen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x35c loads 0x0213b9ec in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateOpen at 0x020d5f28). Re-keyed from @2420 to @2422 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2404",
-      "to": "pmf_dScMgBomroom_c_HatchPanel_StateHeld",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateHeld, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x33c loads 0x0213ba34 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateHeld at 0x020d64c4)."
+      "to": "pmf_dScMgBomroom_c_HatchPanel_StateAnimate",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateAnimate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x338 loads 0x0213b9f4 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateAnimate at 0x020d64c8). Re-keyed from @2402 to @2404 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@2362",
-      "to": "pmf_dScMgBomroom_c_Round_StatePlay",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2d4 loads 0x0213ba3c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StatePlay at 0x020d8ff4)."
-    },
-    {
-      "from": "@2400",
-      "to": "pmf_dScMgBomroom_c_HatchPanel_StateIdle",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x32c loads 0x0213ba44 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateIdle at 0x020d65b4)."
-    },
-    {
-      "from": "@2408",
-      "to": "pmf_dScMgBomroom_c_PenGate_StateShut",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateShut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x340 loads 0x0213ba4c in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateShut at 0x020d6264)."
-    },
-    {
-      "from": "@2410",
-      "to": "pmf_dScMgBomroom_c_PenGate_StateOpening",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateOpening, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x344 loads 0x0213ba54 in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateOpening at 0x020d61dc)."
-    },
-    {
-      "from": "@2388",
-      "to": "pmf_dScMgBomroom_c_Bomb_StateMarch",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateMarch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x304 loads 0x0213ba5c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateMarch at 0x020d7c00)."
-    },
-    {
-      "from": "@2412",
-      "to": "pmf_dScMgBomroom_c_PenGate_StateHold",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateHold, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x348 loads 0x0213ba64 in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateHold at 0x020d6170)."
-    },
-    {
-      "from": "@2360",
-      "to": "pmf_dScMgBomroom_c_Round_StateStart",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2cc loads 0x0213ba6c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateStart at 0x020d9020)."
-    },
-    {
-      "from": "@2390",
-      "to": "pmf_dScMgBomroom_c_BombMarch_ToGate",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_ToGate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x308 loads 0x0213ba74 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_ToGate at 0x020d7a84)."
-    },
-    {
-      "from": "@2414",
-      "to": "pmf_dScMgBomroom_c_PenGate_StateClosing",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateClosing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x350 loads 0x0213ba7c in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateClosing at 0x020d6100)."
-    },
-    {
-      "from": "@2392",
-      "to": "pmf_dScMgBomroom_c_BombMarch_Exit",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_Exit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x310 loads 0x0213ba84 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_Exit at 0x020d795c)."
-    },
-    {
-      "from": "@2394",
-      "to": "pmf_dScMgBomroom_c_BombMarch_Offscreen",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_Offscreen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x318 loads 0x0213ba8c in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_Offscreen at 0x020d7958)."
-    },
-    {
-      "from": "@2386",
-      "to": "pmf_dScMgBomroom_c_Bomb_StateInPen",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateInPen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f8 loads 0x0213ba94 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateInPen at 0x020d7c4c)."
-    },
-    {
-      "from": "@2384",
-      "to": "pmf_dScMgBomroom_c_Bomb_StateExploding",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateExploding, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2e8 loads 0x0213ba9c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateExploding at 0x020d7e7c)."
-    },
-    {
-      "from": "@2382",
-      "to": "pmf_dScMgBomroom_c_Bomb_StateChainDelay",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateChainDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x328 loads 0x0213baa4 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateChainDelay at 0x020d7edc)."
-    },
-    {
-      "from": "@2378",
-      "to": "pmf_dScMgBomroom_c_Bomb_StateWalk",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x314 loads 0x0213baac in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateWalk at 0x020d816c)."
-    },
-    {
-      "from": "@2416",
-      "to": "pmf_dScMgBomroom_c_TopDoor_StateShut",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateShut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x34c loads 0x0213bab4 in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateShut at 0x020d5fd8)."
+      "from": "@2424",
+      "to": "pmf_dScMgBomroom_c_TopDoor_StateClosing",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateClosing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x360 loads 0x0213b9fc in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateClosing at 0x020d5eb8). Re-keyed from @2422 to @2424 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2398",
-      "to": "pmf_dScMgBomroom_c_BombMarch_LinedUp",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_LinedUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x324 loads 0x0213babc in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_LinedUp at 0x020d7778)."
+      "to": "pmf_dScMgBomroom_c_BombMarch_ToLine",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_ToLine, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x320 loads 0x0213ba04 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_ToLine at 0x020d777c). Re-keyed from @2396 to @2398 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2360",
+      "to": "pmf_dScMgBomroom_c_Round_StateSetup",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateSetup, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2c8 loads 0x0213ba0c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateSetup at 0x020d904c). Re-keyed from @2358 to @2360 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2378",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateWaiting",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateWaiting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2fc loads 0x0213ba14 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateWaiting at 0x020d8324). Re-keyed from @2376 to @2378 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2382",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateHeld",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateHeld, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x31c loads 0x0213ba1c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateHeld at 0x020d7f5c). Re-keyed from @2380 to @2382 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2374",
-      "to": "pmf_dScMgBomroom_c_RoundEnd_Finish",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f4 loads 0x0213bac4 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_Finish at 0x020d89c4)."
-    },
-    {
-      "from": "@2418",
-      "to": "pmf_dScMgBomroom_c_TopDoor_StateOpening",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateOpening, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x354 loads 0x0213bacc in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateOpening at 0x020d5f2c)."
+      "to": "pmf_dScMgBomroom_c_RoundEnd_Tally",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_Tally, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f0 loads 0x0213ba24 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_Tally at 0x020d8af8). Re-keyed from @2372 to @2374 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2370",
-      "to": "pmf_dScMgBomroom_c_RoundEnd_WaitLinedUp",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_WaitLinedUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2ec loads 0x0213bad4 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_WaitLinedUp at 0x020d8cc4)."
+      "to": "pmf_dScMgBomroom_c_RoundEnd_StartMarch",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_StartMarch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2e0 loads 0x0213ba2c in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_StartMarch at 0x020d8d84). Re-keyed from @2368 to @2370 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2406",
-      "to": "pmf_dScMgBomroom_c_HatchPanel_StateRevert",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateRevert, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x330 loads 0x0213bae4 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateRevert at 0x020d6454)."
-    },
-    {
-      "from": "@2366",
-      "to": "pmf_dScMgBomroom_c_Round_StateGameOver",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateGameOver, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2dc loads 0x0213baec in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateGameOver at 0x020d8f34)."
+      "to": "pmf_dScMgBomroom_c_HatchPanel_StateHeld",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateHeld, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x33c loads 0x0213ba34 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateHeld at 0x020d64c4). Re-keyed from @2404 to @2406 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@2364",
+      "to": "pmf_dScMgBomroom_c_Round_StatePlay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2d4 loads 0x0213ba3c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StatePlay at 0x020d8ff4). Re-keyed from @2362 to @2364 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2402",
+      "to": "pmf_dScMgBomroom_c_HatchPanel_StateIdle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x32c loads 0x0213ba44 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateIdle at 0x020d65b4). Re-keyed from @2400 to @2402 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2410",
+      "to": "pmf_dScMgBomroom_c_PenGate_StateShut",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateShut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x340 loads 0x0213ba4c in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateShut at 0x020d6264). Re-keyed from @2408 to @2410 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2412",
+      "to": "pmf_dScMgBomroom_c_PenGate_StateOpening",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateOpening, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x344 loads 0x0213ba54 in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateOpening at 0x020d61dc). Re-keyed from @2410 to @2412 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2390",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateMarch",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateMarch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x304 loads 0x0213ba5c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateMarch at 0x020d7c00). Re-keyed from @2388 to @2390 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2414",
+      "to": "pmf_dScMgBomroom_c_PenGate_StateHold",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateHold, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x348 loads 0x0213ba64 in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateHold at 0x020d6170). Re-keyed from @2412 to @2414 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2362",
+      "to": "pmf_dScMgBomroom_c_Round_StateStart",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2cc loads 0x0213ba6c in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateStart at 0x020d9020). Re-keyed from @2360 to @2362 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2392",
+      "to": "pmf_dScMgBomroom_c_BombMarch_ToGate",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_ToGate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x308 loads 0x0213ba74 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_ToGate at 0x020d7a84). Re-keyed from @2390 to @2392 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2416",
+      "to": "pmf_dScMgBomroom_c_PenGate_StateClosing",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::PenGate_StateClosing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x350 loads 0x0213ba7c in the ROM) and by its own relocation target (dScMgBomroom_c::PenGate_StateClosing at 0x020d6100). Re-keyed from @2414 to @2416 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2394",
+      "to": "pmf_dScMgBomroom_c_BombMarch_Exit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_Exit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x310 loads 0x0213ba84 in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_Exit at 0x020d795c). Re-keyed from @2392 to @2394 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2396",
+      "to": "pmf_dScMgBomroom_c_BombMarch_Offscreen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_Offscreen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x318 loads 0x0213ba8c in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_Offscreen at 0x020d7958). Re-keyed from @2394 to @2396 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2388",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateInPen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateInPen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f8 loads 0x0213ba94 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateInPen at 0x020d7c4c). Re-keyed from @2386 to @2388 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2386",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateExploding",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateExploding, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2e8 loads 0x0213ba9c in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateExploding at 0x020d7e7c). Re-keyed from @2384 to @2386 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2384",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateChainDelay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateChainDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x328 loads 0x0213baa4 in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateChainDelay at 0x020d7edc). Re-keyed from @2382 to @2384 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2380",
+      "to": "pmf_dScMgBomroom_c_Bomb_StateWalk",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Bomb_StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x314 loads 0x0213baac in the ROM) and by its own relocation target (dScMgBomroom_c::Bomb_StateWalk at 0x020d816c). Re-keyed from @2378 to @2380 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2418",
+      "to": "pmf_dScMgBomroom_c_TopDoor_StateShut",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateShut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x34c loads 0x0213bab4 in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateShut at 0x020d5fd8). Re-keyed from @2416 to @2418 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2400",
+      "to": "pmf_dScMgBomroom_c_BombMarch_LinedUp",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::BombMarch_LinedUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x324 loads 0x0213babc in the ROM) and by its own relocation target (dScMgBomroom_c::BombMarch_LinedUp at 0x020d7778). Re-keyed from @2398 to @2400 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2376",
+      "to": "pmf_dScMgBomroom_c_RoundEnd_Finish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_Finish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2f4 loads 0x0213bac4 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_Finish at 0x020d89c4). Re-keyed from @2374 to @2376 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2420",
+      "to": "pmf_dScMgBomroom_c_TopDoor_StateOpening",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::TopDoor_StateOpening, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x354 loads 0x0213bacc in the ROM) and by its own relocation target (dScMgBomroom_c::TopDoor_StateOpening at 0x020d5f2c). Re-keyed from @2418 to @2420 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2372",
+      "to": "pmf_dScMgBomroom_c_RoundEnd_WaitLinedUp",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::RoundEnd_WaitLinedUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2ec loads 0x0213bad4 in the ROM) and by its own relocation target (dScMgBomroom_c::RoundEnd_WaitLinedUp at 0x020d8cc4). Re-keyed from @2370 to @2372 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2408",
+      "to": "pmf_dScMgBomroom_c_HatchPanel_StateRevert",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::HatchPanel_StateRevert, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x330 loads 0x0213bae4 in the ROM) and by its own relocation target (dScMgBomroom_c::HatchPanel_StateRevert at 0x020d6454). Re-keyed from @2406 to @2408 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2368",
+      "to": "pmf_dScMgBomroom_c_Round_StateGameOver",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateGameOver, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2dc loads 0x0213baec in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateGameOver at 0x020d8f34). Re-keyed from @2366 to @2368 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@2366",
       "to": "pmf_dScMgBomroom_c_Round_StateEnd",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateEnd, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2d8 loads 0x0213baf4 in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateEnd at 0x020d8f98)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bomroom.cpp assigns &dScMgBomroom_c::Round_StateEnd, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bomroom.cpp+0x2d8 loads 0x0213baf4 in the ROM) and by its own relocation target (dScMgBomroom_c::Round_StateEnd at 0x020d8f98). Re-keyed from @2364 to @2366 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

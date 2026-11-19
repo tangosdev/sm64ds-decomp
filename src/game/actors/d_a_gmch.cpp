@@ -249,11 +249,11 @@ void daGmch_c::CheckPlayerContact()
     if (player == 0)
         return;
 
-    cmp = (int)(player->actorID == ACTOR_PLAYER);
+    cmp = (player->actorID == ACTOR_PLAYER);
     if (cmp == 0)
         return;
 
-    cmp = (int)((mFlags & MFLAG_YOSHI_MOUTH_A) != 0);
+    cmp = ((mFlags & MFLAG_YOSHI_MOUTH_A) != 0);
     if (cmp != 0) {
         SetState(6);
         return;
@@ -319,6 +319,10 @@ void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
     }
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* Both model matrices are edited through the shared scratch matrix
    data_020a0e68: copied out whole, transformed in place, copied back.  The
    slot-29 calls are this class's own OnAimedAtWithEgg, dispatched virtually
@@ -328,14 +332,13 @@ void daGmch_c::UpdateDrawMatrices()
     extern Matrix4x3 data_020a0e68;
     extern Vector3 data_ov081_02128ef8;
 
-    int inMouth = (int)((mFlags & MFLAG_YOSHI_MOUTH_B) != 0);
-    if (inMouth)
+    if (IsInYoshiMouth(this))
         return;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     mAnmModel.ApplyOpacity(mState, 0);
 
@@ -356,9 +359,9 @@ void daGmch_c::UpdateDrawMatrices()
 
     mModel.ApplyOpacity((0x20 - mState) & 0xff, 0);
 
-    mMatrix.m[9] = mPos.x >> 3;
-    mMatrix.m[10] = mPos.y >> 3;
-    mMatrix.m[11] = mPos.z >> 3;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = mPos.y >> 3;
+    mMatrix.t.z = mPos.z >> 3;
 
     int dh = (mStateIndex == 8) ? 0x258000 : 0x12c000;
     DropShadowRadHeight(mShadowModel, mMatrix, 0x78000, dh, 0xf);

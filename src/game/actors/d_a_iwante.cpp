@@ -619,7 +619,7 @@ void daIwante_c::SetLoweredPose() {
 
     {
         int n = mBlendAnmModel.GetFrameCount();
-        mBlendAnmModel.currFrame = (int)(((unsigned int)((n - 1) << 0x10)) >> 4);
+        mBlendAnmModel.currFrame = ((unsigned int)((n - 1) << 0x10)) >> 4;
         mBlendAnmModel.speed = -0x1000;
     }
 }
@@ -769,7 +769,7 @@ int daIwante_c::ClampToArena() {
  * 0x7c and 0x7d at the hand, a triple poof of dust, plays SE_DEFEAT_POOF and
  * marks the actor for destruction. */
 int daIwante_c::HandDefeatExecute() {
-    if ((unsigned int)((unsigned int)(mBlendAnmModel.currFrame << 4) >> 0x10) > 0xc) {
+    if (((unsigned int)(mBlendAnmModel.currFrame << 4) >> 0x10) > 0xc) {
         mHorzSpeed = 0;
     }
     if (mBlendAnmModel.Finished() != 0) {
@@ -979,10 +979,10 @@ int daIwante_c::HandPattern8Execute() {
             mTargetPos.z = pp->z;
         }
         mTargetPos.z -= 0xc8000;
-        if (mTargetPos.z < (int)0xff3ae000) {
-            mTargetPos.z = (int)0xff3ae000;
-        } else if (mTargetPos.z > (int)0xff8c6000) {
-            mTargetPos.z = (int)0xff8c6000;
+        if (mTargetPos.z < -0xc52000) {
+            mTargetPos.z = -0xc52000;
+        } else if (mTargetPos.z > -0x73a000) {
+            mTargetPos.z = -0x73a000;
         }
         if (data_ov066_0211ae0c == PART_HAND_1) {
             mPrevAngle.y = -0x4000;
@@ -992,7 +992,7 @@ int daIwante_c::HandPattern8Execute() {
             }
         } else {
             mPrevAngle.y = 0x4000;
-            mTargetPos.x = (int)0xffe8e000;
+            mTargetPos.x = -0x172000;
             if (mPartIdx == PART_HAND_1) {
                 mTargetPos.x -= 0xf2000;
             }
@@ -1620,10 +1620,9 @@ int daIwante_c::HandPattern4Execute() {
     switch (mSubState) {
     case 0:
         if (data_ov066_0211ae0c == mPartIdx) {
-            int *p = &mSubState;
             mVertAccel = -0x14000;
             mSpeed.y = 0x64000;
-            *p = *p + 1;
+            mSubState++;
         }
         break;
     case 1:
@@ -1912,7 +1911,7 @@ int daIwante_c::BodyPattern4Execute() {
     if (WaitForHandsReady() == 0)
         return 1;
     if (mTimer1 == 0) {
-        if (GetPlayerDepthBand() != (int)0xff3ae000) {
+        if (GetPlayerDepthBand() != -0xc52000) {
             if (data_ov066_0211ae0c == 0) {
                 data_ov066_0211ae04 = PHASE_REST;
                 mTimer2 = 0x1e;
@@ -1978,13 +1977,13 @@ int daIwante_c::BodyDecisionExecute() {
     data_ov066_0211ae08 = 0;
     data_ov066_0211ae0c = 0;
     v = GetPlayerDepthBand();
-    if (v == (int)0xff3ae000) {
+    if (v == -0xc52000) {
         data_ov066_0211ae04 = PATTERN_4;
         SetState(&data_ov066_0211b0dc);
         return 1;
     }
 
-    if ((int)mPickCount > data_ov066_0211abe4 + 3) {
+    if (mPickCount > data_ov066_0211abe4 + 3) {
         if (data_ov066_0211abe0 == HANDS_BOTH) {
             data_ov066_0211abe4++;
             data_ov066_0211abe4 &= 1;
@@ -2116,8 +2115,8 @@ int daIwante_c::BodyTalkExecute() {
                     Sound::StopLoadedMusic_Layer3();
                     func_02011cfc();
                     star.x = 0;
-                    star.y = (int)0xffa24000;
-                    star.z = (int)0xff1b4000;
+                    star.y = -0x5dc000;
+                    star.z = -0xe4c000;
                     UntrackAndSpawnStar(mStarTracked, mStarId, star, 4);
                     MarkForDestruction();
                 }
@@ -2187,9 +2186,9 @@ int daIwante_c::SetState(void *pv) {
  * mAngle.y, translation = position) and hand it to dBgW_KcMbg::Transform. */
 void daIwante_c::UpdateCollisionMatrix() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
-    mClsnMat2.m[9] = mPos.x;
-    mClsnMat2.m[10] = mPos.y;
-    mClsnMat2.m[11] = mPos.z;
+    mClsnMat2.t.x = mPos.x;
+    mClsnMat2.t.y = mPos.y;
+    mClsnMat2.t.z = mPos.z;
     mMeshCollider2.Transform(mClsnMat2, mAngle.y);
 }
 
@@ -2422,7 +2421,7 @@ int daIwante_c::InitResources() {
     Vector3 v;
     Vector3 w;
 
-    mPartIdx = (s32)param1 & 0xFF;
+    mPartIdx = param1 & 0xFF;
     if (mPartIdx == 0xFF)
         mPartIdx = 0;
     mStarId = (param1 >> 0xC) & 0xF;

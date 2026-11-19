@@ -290,8 +290,13 @@ struct daTrs_c : dCapEnemy_c {
     u8  mAttackRepeats;        /* 0x5d2 */
     u8  unk_5d3;               /* 0x5d3 -- zeroed, no reader recovered */
     /* Typed (not a u8 placeholder) so member access compiles to the ROM's
-       add+ldrh instead of a literal-pool address load. */
-    BooFlags16 mBooFlags;      /* 0x5d4 */
+       add+ldrh instead of a literal-pool address load. The code tests and
+       sets single bits through mBooFlags, and clears the halfword or changes
+       it by the TrsFlag masks (d_a_trs.cpp) through mTrsFlags. */
+    union {
+        BooFlags16 mBooFlags; /* 0x5d4 */
+        u16 mTrsFlags;
+    };
     u8  pad_5d6[0x2];
     /* Recycled effect handles (0x95/0x96/0x97/0x98), like daBmb_c's. */
     u32 mParticle0;            /* 0x5d8 */
@@ -302,6 +307,9 @@ struct daTrs_c : dCapEnemy_c {
     /* --- vtable, own overrides --- */
     virtual int  OnYoshiTryEat();      /* slot 18 */
     virtual int  OnAimedAtWithEgg();   /* slot 29 */
+
+    /* param1, the spawn word; defined inline in d_a_trs.cpp. */
+    u32 GetParam1() const;
 
     int  Behavior();           /* slot 6, fBase_c */
     int  CleanupResources();
@@ -372,7 +380,7 @@ struct daTrs_c : dCapEnemy_c {
     int func_ov063_0211a0a8(int a1, int a2, int a3, int a4);
     int GetAttackStatus();
     int UpdateDuringDeath();
-    int UpdateDuringNonlethalHit(int arg1);
+    int UpdateDuringNonlethalHit(int speed);
     int UpdateAfterBouncedOn(int arg);
     void ResetAfterHit();
     void ShakeAfterHit();
@@ -380,7 +388,7 @@ struct daTrs_c : dCapEnemy_c {
     void SetMoveYawForDuringHit(int cond);
     int VanishOrAppear();
     void          func_ov063_0211a960();
-    void Oscillate(int arg1);
+    void Oscillate(int force);
     void ApproachTargetOpacityAndUpdateScale();
     void SpawnCourtyardBooTriplet();
     int ShouldBeActive();

@@ -787,14 +787,14 @@ void dCamera_c::func_0200d508(unsigned char playerID) {
     ChangeState(&data_0209b0a8);
 }
 
-void dCamera_c::StartDanceCutscene(unsigned int playerID, int arg2) {
+void dCamera_c::StartDanceCutscene(unsigned int playerID, int setting) {
     unsigned char localID = gLocalPlayerId;
     if (playerID == localID) {
         struct dActor_c *player;
         mOrbitTargetYaw = mAngleY;
         player = mTargetPlayer;
         player->mFlags |= 0x20000000;
-        KuppaScript::StartDanceCutscene(arg2);
+        KuppaScript::StartDanceCutscene(setting);
     }
 }
 
@@ -928,6 +928,8 @@ void dCamera_c::func_0200d064(unsigned char playerID) {
    that asked gives it back by clearing the bit. */
 void dCamera_c::SetFlag_3()
 {
+    /* Kept (#821 r83): `mFlags |= ...` and the value-local forms drop the
+       ROM's separate `add r1,r0,#0x154` for the flags' address. */
     u32 *p = &mFlags;
     u32 v = *p | CAM_FLAG_SCRIPT_HOLD;
     *p = v;
@@ -1653,7 +1655,7 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
    centre) to lookAt, pushed a step to the side the target player faces away
    from. With byte 0 and byte 1 both clear, a wall between lookAt and the
    object can take over the yaw (except in three levels). */
-void dCamera_c::UpdateRadialCamera(CamViewObj *obj, int arg2) {
+void dCamera_c::UpdateRadialCamera(CamViewObj *obj, int speed) {
     Vector3 v;
     s16 angle;
     u8 b0, b1;
@@ -1707,7 +1709,7 @@ void dCamera_c::UpdateRadialCamera(CamViewObj *obj, int arg2) {
     }
 
     {
-        int fixmul = FX_MUL(arg2, rate);
+        int fixmul = FX_MUL(speed, rate);
         ApproachLinear(mAngleY, angle, fixmul);
     }
 }
@@ -1717,7 +1719,7 @@ void dCamera_c::UpdateRadialCamera(CamViewObj *obj, int arg2) {
    point (sFixedModeBasePosition there) to the target, at the fraction and
    distance limits of row p1 of data_02086f58, raised by 0x220000 less the
    distance when closer than that (the N64's 300 - distCamToFocus). */
-void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
+void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int floorY) {
     Vector3 viewPos;
     Vector3 v1;
     Vector3 v2;
@@ -1744,7 +1746,7 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
         viewPos.y -= ray.clsnY;
     }
 
-    sum = arg2 + viewPos.y;
+    sum = floorY + viewPos.y;
     {
         int sz = mTargetPos.z;
         int sx = mTargetPos.x;
@@ -1794,7 +1796,7 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
    (the staircase centre) to the target, held within 0x4000 (90 degrees) of
    the yaw from the object to pos, probe the floor 0.7 (0xb33) of the way out
    from lookAt, and lift the result 125 (0x7d000) above the floor below it. */
-void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int arg2) {
+void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int floorY) {
     Vector3 v0;
     Vector3 rotated;
     short angle1;
@@ -1823,13 +1825,13 @@ void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int arg2) {
 
     base = data_02086e84;
     Vec3_RotateYAndTranslate(&rotated, &v0, newAngle, &base);
-    rotated.y = arg2;
+    rotated.y = floorY;
 
     selfZ = lookAt.z;
     dz = rotated.z - selfZ;
     selfX = lookAt.x;
     dx = rotated.x - selfX;
-    pos.y = arg2 + 0x100000;
+    pos.y = floorY + 0x100000;
 
     pos.x = selfX + FX_MUL(dx, 0xb33);
     pos.z = selfZ + FX_MUL(dz, 0xb33);
@@ -1840,8 +1842,8 @@ void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int arg2) {
     if (rg.DetectClsn()) {
         hitY = rg.clsnY;
         rotated.y = hitY;
-        if (hitY < arg2)
-            rotated.y = arg2;
+        if (hitY < floorY)
+            rotated.y = floorY;
     }
     rotated.y = rotated.y + 0x7d000;
     dist = Vec3_HorzDist(&this->pos, &mTargetPos);
@@ -2513,8 +2515,6 @@ int dCamera_c::func_02009e50() {
 }
 
 int func_02009e30(dCamera_c *cam) {
-    int dummy = 0;
-    &dummy;
     cam->SetMode(0);
     return 1;
 }
@@ -2904,7 +2904,7 @@ int func_020092c4(void *cam, Vector3 *out, const Vector3 *target) {
         Vec3_Add(&res, target, &offset);
         *out = res;
     }
-    return arrived == 0 ? 1 : 0;
+    return arrived == 0;
 }
 
 /* Recompute mAngleY and mAngleX from the lookAt -> pos line. */
@@ -2941,7 +2941,7 @@ int dCamera_c::ApproachDist(int dist) {
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     MTX_MultVec43(&v, &data_020a0e68, &pos);
-    return (r == 0) ? 1 : 0;
+    return r == 0;
 }
 
 /* Keep pos out of walls: probe from above the target (flags 0x40200) and

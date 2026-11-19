@@ -9,6 +9,8 @@ extern int func_0206cf7c(int arg0);
    until it reads back. The byte is dropped when the ring is full.
    func_0206cbc0 picks it when flag 1 is set. */
 void func_0206cb0c(void *obj, int val) {
+    /* Kept (#821 r79): not probed as a launder: the head is rewritten until it reads back,
+       which needs a volatile access to mean anything. */
     volatile u16 *self = obj;
     u16 idx = self[0];
     u16 next = (idx + 1) & 0x7fff;

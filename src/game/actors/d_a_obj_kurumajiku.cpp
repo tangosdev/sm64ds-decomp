@@ -61,10 +61,10 @@ void daObjKurumajiku_c_EmitDestructor(daObjKurumajiku_c *p) {
    world position. The return value is the z word, which no caller reads. */
 int daObjKurumajiku_c::UpdateModelTransform() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
     int z = mPos.z >> 3;
-    mModel.mat4x3.m[11] = z;
+    mModel.mat4x3.t.z = z;
     return z;
 }
 

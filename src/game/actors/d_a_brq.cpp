@@ -314,20 +314,20 @@ void daBrq_c::UpdateModelTransform() {
 
     if (mState == 2) {
         Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-        mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-        mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-        mAnmModel.mat4x3.m[11] = mPos.z >> 3;
-        mMat4x3.m[9] = mPos.x >> 3;
-        mMat4x3.m[10] = mPos.y >> 3;
-        mMat4x3.m[11] = mPos.z >> 3;
+        mAnmModel.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel.mat4x3.t.y = mPos.y >> 3;
+        mAnmModel.mat4x3.t.z = mPos.z >> 3;
+        mMat4x3.t.x = mPos.x >> 3;
+        mMat4x3.t.y = mPos.y >> 3;
+        mMat4x3.t.z = mPos.z >> 3;
     } else {
-        mAnmModel.mat4x3.m[9] = mOrbitCenter.x >> 3;
-        mAnmModel.mat4x3.m[10] = mOrbitCenter.y >> 3;
-        mAnmModel.mat4x3.m[11] = mOrbitCenter.z >> 3;
+        mAnmModel.mat4x3.t.x = mOrbitCenter.x >> 3;
+        mAnmModel.mat4x3.t.y = mOrbitCenter.y >> 3;
+        mAnmModel.mat4x3.t.z = mOrbitCenter.z >> 3;
         mModel.mat4x3 = mAnmModel.mat4x3;
-        mMat4x3.m[9] = mOrbitCenter.x >> 3;
-        mMat4x3.m[10] = mOrbitCenter.y >> 3;
-        mMat4x3.m[11] = mOrbitCenter.z >> 3;
+        mMat4x3.t.x = mOrbitCenter.x >> 3;
+        mMat4x3.t.y = mOrbitCenter.y >> 3;
+        mMat4x3.t.z = mOrbitCenter.z >> 3;
     }
 
     shadowDepth = 0x1f4000;

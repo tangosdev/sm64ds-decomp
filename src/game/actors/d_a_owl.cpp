@@ -52,8 +52,9 @@
  * Leftover: the rider matrix pointer at +0xc8, and the model matrix at +0x328
  *   and bone-matrix pointer at +0x320, stay raw offsets from the actor.
  *   Writing them as mAnmModel members hoists the base.
- * Leftover: state-timer reads use a u16 cast. mStateTimer is s16; the ROM
- *   loads it unsigned.
+ * Note: UpdateHover holds `player->mStateFlags & 0x800` in a u16 local; the
+ *   ROM masks, then shifts the result through 16 bits. The plain mask test
+ *   is 0x234 of 0x23c (ands, no shift; #821 r82).
  * Leftover: RandomIntInternal returns int (math/CalcLib.h); UpdateHover and
  *   EnterHover shift it as u32, the ROM's logical shift. Behavior tests the
  *   carry state twice; the else is what the ROM emits.
@@ -171,11 +172,11 @@ daOwl_c::~daOwl_c()
  * state; if the attach is refused the rider is dropped again. */
 void daOwl_c::TryPickUpRider() {
     Vector3 st;
-    Vector3 tmp;
-    tmp.x = data_ov094_02136a1c[0];
-    tmp.y = data_ov094_02136a1c[1];
-    tmp.z = data_ov094_02136a1c[2];
-    mdCcAcPos_c.SetPosRelativeToActor(tmp);
+    Vector3 offset;
+    offset.x = data_ov094_02136a1c[0];
+    offset.y = data_ov094_02136a1c[1];
+    offset.z = data_ov094_02136a1c[2];
+    mdCcAcPos_c.SetPosRelativeToActor(offset);
     if (mdCcAcPos_c.otherOwner == 0)
         return;
     dActor_c *other = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
@@ -317,7 +318,8 @@ int daOwl_c::UpdateHover() {
         if (ClosestPlayer() != 0) {
             daPly_c *player = mTalkTarget;
             if (player != 0) {
-                if ((u16)(player->mStateFlags & 0x800) == 0) {
+                u16 busy = player->mStateFlags & 0x800;
+                if (busy == 0) {
                     if (player->StartTalk(*this, 1) != 0) {
                         if (mTalkTarget->ShowMessage(*this, 0xa2, &mPos, 0, 0) == 1) {
                             func_02012694(0x176, &mCamSpacePos);
@@ -336,14 +338,15 @@ int daOwl_c::UpdateHover() {
         mWanderAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
     } else if (OWL_TIMER(this) == 0) {
         mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
-        mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50);
+        mStateTimer = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50;
     }
 
     ApproachAngle(&mPrevAngle.y, mWanderAngleY, 0xa, 0x200, 0x100);
     ApproachAngle(&mPrevAngle.x, 0, 0xa, 0x200, 0x100);
 
     /* The forward step rotated into the speed, and a zero vector nothing
-       reads. Without it the function is 0x230 of 0x23c (#821 r49). */
+       reads. Without it the function is 0x230 of 0x23c (#821 r49).
+       Kept (#821 r84): as a `speed` local the transform writes, copied to mSpeed -> 0x254. */
     Vector3 step(0, 0, 0x5000);
     Vector3 unused(0, 0, 0);
 
@@ -360,7 +363,7 @@ int daOwl_c::UpdateHover() {
 int daOwl_c::EnterHover() {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
     mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
-    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50);
+    mStateTimer = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50;
     mAnimSpeed = 0x1000;
     return 1;
 }
@@ -383,7 +386,7 @@ int daOwl_c::UpdateTalk() {
     ApproachAngle(&mPrevAngle.y, Vec3_HorzAngle(&mPos, &w), 0xa, 0x200, 0x100);
     Vector3 u;
     v.y += 0xc8000;
-    u.x = v.x - 0;
+    u.x = v.x;
     u.y = v.y;
     u.z = v.z;
     ApproachAngle(&mPrevAngle.x, Vec3_VertAngle(&mPos, &u), 0xa, 0x200, 0x100);
@@ -414,13 +417,12 @@ int daOwl_c::UpdateDormant() {
         const Vector3 *playerPos = &p->mPos;
         Vector3 pp;
         Vector3 d;
-        const Vector3 *selfpos = &mPos;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
         mPos.y = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub(&d, selfpos, &pp);
+        Vec3_Sub(&d, &mPos, &pp);
         if (VEC_Mag(&d) < 0x28000) {
             d.x = mPos.x;
             d.y = mPos.y;
@@ -431,12 +433,9 @@ int daOwl_c::UpdateDormant() {
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
             MTX_MultVec43(&d, &data_020a0e68, &mAnchor);
             {
-                int *px = &mAnchor.x;
-                int *py = &mAnchor.y;
-                int *pz = &mAnchor.z;
-                *px = *px + mPos.x;
-                *py = *py + mPos.y;
-                *pz = *pz + mPos.z;
+                mAnchor.x += mPos.x;
+                mAnchor.y += mPos.y;
+                mAnchor.z += mPos.z;
             }
             mPrevAngle.y = Vec3_HorzAngle(&mPos, &mAnchor);
             mAngle.y = mPrevAngle.y;
@@ -489,9 +488,9 @@ void daOwl_c::FollowRiderMatrix() {
     data_020a0e68 = *m->mCarryMatrix;
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3000, 0, 0);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x6000, 0x1000, 0x4000);
-    v.x = data_020a0e68.m[9];
-    v.y = data_020a0e68.m[10];
-    v.z = data_020a0e68.m[11];
+    v.x = data_020a0e68.t.x;
+    v.y = data_020a0e68.t.y;
+    v.z = data_020a0e68.t.z;
     mPos.x = v.x << 3;
     mPos.y = v.y << 3;
     mPos.z = v.z << 3;

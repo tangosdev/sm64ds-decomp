@@ -295,6 +295,10 @@ void daWanwan2_c::func_ov100_0214344c() {
     }
 }
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 /* -------------------------------------------------------------------------- */
 /* The actor kept at the chain's last link (mLinkPos[5]). While
    mChainEndActorID is 0 it is spawned (once Spawn succeeds): SILVER_STAR (0xb3) normally, or
@@ -308,8 +312,7 @@ void daWanwan2_c::func_ov100_021435e8() {
     if (this->mChainEndDone != 0)
         return;
 
-    int flag = (gGameMode == 1);
-    if (!flag) {
+    if (!IsVsMode()) {
         if (this->mChainEndActorID == 0) {
             dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_SILVER_STAR, 0, this->mLinkPos[5], 0,
                                           this->mAreaId, -1);
@@ -498,22 +501,22 @@ int daWanwan2_c::func_ov100_02143b18(ChompState *p) {
    link's position (mLinkPos >> 3) and a smaller drop shadow (radius 120
    units, depth 500 units). */
 void daWanwan2_c::func_ov100_02143b68() {
-    Matrix4x3 tmp;
+    Matrix4x3 identity;
     int i;
     dExtSimpleModel_c *mdst;
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
-    tmp = IDENTITY_MATRIX4X3;
+    identity = IDENTITY_MATRIX4X3;
     i = 0;
     mdst = mModels;
     for (; i < daWanwan2_NUM_LINKS; i++) {
-        mdst->mat4x3 = tmp;
-        mModels[i].mat4x3.m[9] = mLinkPos[i].x >> 3;
-        mModels[i].mat4x3.m[10] = mLinkPos[i].y >> 3;
-        mModels[i].mat4x3.m[11] = mLinkPos[i].z >> 3;
+        mdst->mat4x3 = identity;
+        mModels[i].mat4x3.t.x = mLinkPos[i].x >> 3;
+        mModels[i].mat4x3.t.y = mLinkPos[i].y >> 3;
+        mModels[i].mat4x3.t.z = mLinkPos[i].z >> 3;
         DropShadowRadHeight(mShadowModels[i], mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
         mdst++;
     }
@@ -609,8 +612,7 @@ int daWanwan2_c::Behavior()
         HugeLandingDust(true);
     }
 
-    int flag = (gGameMode == 1);
-    if (flag != 0 && mCoinTimer == 0) {
+    if (IsVsMode() && mCoinTimer == 0) {
         int q16 = 0x10000 / mPathNodeIndex;
         short spd = (short)q16;
         ClosestPlayer();
@@ -688,27 +690,13 @@ int daWanwan2_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov100_021486b4);
     LoadSilverStarAndNumber();
 
-    {
-        int i = 0;
-        dExtSimpleModel_c *model = mModels;
-        do {
-            model->SetFile((BMD_File *)data_ov100_021486a4.filePtr, 1, -1);
-            i++;
-            model++;
-        } while (i < daWanwan2_NUM_LINKS);
-    }
+    for (int i = 0; i < daWanwan2_NUM_LINKS; i++)
+        mModels[i].SetFile((BMD_File *)data_ov100_021486a4.filePtr, 1, -1);
 
     /* The body's drop shadow, then one per link. */
     mShadowModel.InitCylinder();
-    {
-        int i = 0;
-        dExtShadowModel_c *shadow = mShadowModels;
-        do {
-            shadow->InitCylinder();
-            i++;
-            shadow++;
-        } while (i < daWanwan2_NUM_LINKS);
-    }
+    for (int i = 0; i < daWanwan2_NUM_LINKS; i++)
+        mShadowModels[i].InitCylinder();
 
     mPathID = param1 & 0xff;
     mSpawnParam = (param1 >> 8) & 0xf;

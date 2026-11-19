@@ -252,13 +252,12 @@ void StarPopup_Draw(void) {
     int x;
     int y;
     s32 r;
-    int *new_var;
-    new_var = (int *)sHanaStarPopup;
-    if (((HanaStarPopup *)sHanaStarPopup)->visible != 1) {
+    HanaStarPopup *popup = (HanaStarPopup *)sHanaStarPopup;
+    if (popup->visible != 1) {
         return;
     }
-    x = ((HanaStarPopup *)sHanaStarPopup)->x >> 12;
-    y = ((HanaStarPopup *)new_var)->y >> 12;
+    x = popup->x >> 12;
+    y = popup->y >> 12;
     r = GetGameLanguage();
     Mg_RenderSubSpriteMtx(((void **)sHanaTextSpritesByLanguage[r])[13], x - 8, y, 0);
     Mg_RenderSubSpriteMtx(sMgDigitSprites[25], x + 8, y, 0);
@@ -950,42 +949,27 @@ void dScMgHanachan_c::Wiggler::Retarget(int v) {
 /* Second parameter unused by the body -- DrawField passes an index
    this callee ignores; declaring it keeps the caller's argument setup. */
 int dScMgHanachan_c::Wiggler::GetFrame(int) {
-    int r2 = 0;
+    int frame = 0;
     if (busy != 0) {
-        int r1 = flash;
-        if (r1 > 0x20) {
-            r2 = 1;
-            goto end;
-        }
-        if (r1 > 0x10) {
+        if (flash > 0x20) {
+            frame = 1;
+        } else if (flash > 0x10) {
             face = 3;
-            r2 = 5;
-            goto end;
+            frame = 5;
+        } else if (flash > 0) {
+            frame = 4;
         }
-        if (r1 > 0)
-            r2 = 4;
-        goto end;
+    } else if (state == &Wiggler::StateWait || state == &Wiggler::StateHold) {
+        if (hold < 0x10)
+            frame = 5;
+        else if (hold < 0x20)
+            frame = 4;
+        else
+            frame = 0;
+    } else {
+        frame = 0;
     }
-    if (state == &Wiggler::StateWait)
-        goto C;
-    if (state != &Wiggler::StateHold)
-        goto end0;
-C: {
-    int v = hold;
-    if (v < 0x10) {
-        r2 = 5;
-        goto end;
-    }
-    if (v < 0x20)
-        r2 = 4;
-    else
-        r2 = 0;
-    goto end;
-}
-end0:
-    r2 = 0;
-end:
-    return r2;
+    return frame;
 }
 
 int dScMgHanachan_c::Wiggler::GetFlag(int n) {
@@ -1524,40 +1508,40 @@ void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
     saved = state;
 }
 
-void dScMgHanachan_c::Wiggler::Spawn(int arg1, int arg2) {
+void dScMgHanachan_c::Wiggler::Spawn(int slot, int roundNo) {
     int i;
 
     voice = 0;
     voiceId = 0;
     decoy = 1;
-    index = arg1;
+    index = slot;
     tries = 0;
     bob = (short)(RandomIntInternal(&data_0209e650.value) & 0xfff0);
     bobRate = 0x600;
     busy = 0;
     bloom = 0;
     face = 2;
-    round = arg2;
+    round = roundNo;
     alive = 1;
 
     for (i = 0; i < 5; i++)
         stretch[i] = 0x10000;
 
-    color = (short)Hana_PickUnused(arg1, 0xff);
+    color = (short)Hana_PickUnused(slot, 0xff);
 
     switch (sHanaRoundPattern) {
     case 0:
-        StartPathC(arg1);
+        StartPathC(slot);
         return;
     case 1:
-        StartPathB(arg1);
+        StartPathB(slot);
         return;
     case 2:
-        StartBounce(arg1);
+        StartBounce(slot);
         return;
     case 3:
     default:
-        StartPathA(arg1);
+        StartPathA(slot);
         return;
     }
 }
@@ -1568,79 +1552,33 @@ s32 dScMgHanachan_c::CleanupResources() {
 }
 
 s32 dScMgHanachan_c::Render() {
-    int i;
-    Wiggler *arr;
-
     DrawScoreTally(0xe0, 0x14, 1);
     HanaPopup_DrawAll();
     StarPopup_Draw();
 
-    {
-        {
-            if (mPhase == &dScMgHanachan_c::Phase_Play) {
-                i = 0;
-                if (sHanaFieldWigglerCount > 0) {
-                    arr = mWiggler;
-                    do {
-                        arr->DrawField();
-                        i++;
-                        arr++;
-                    } while (i < sHanaFieldWigglerCount);
-                }
-                goto tail;
-            }
-        }
-    }
-
-    {
-        {
-            if (mPhase == &dScMgHanachan_c::Phase_Result) {
-                int flag = mHit;
-                if (flag != 0) {
-                    if (mPhaseTimer < 90)
-                        goto do_eac;
-                }
-                if (flag != 0)
-                    goto count_loop;
-                if (mPhaseTimer < 138)
-                    goto do_eac;
-                goto count_loop;
-            do_eac:
-                mTarget->DrawField();
-                goto tail;
-            count_loop:
-                i = 0;
-                if (sHanaFieldWigglerCount > 0) {
-                    arr = mWiggler;
-                    do {
-                        arr->DrawField();
-                        i++;
-                        arr++;
-                    } while (i < sHanaFieldWigglerCount);
-                }
-                goto tail;
-            }
-        }
-    }
-
-    {
-        if (mPhase == &dScMgHanachan_c::Phase_NoneB ||
-            mPhase == &dScMgHanachan_c::Phase_WaitTouch) {
+    if (mPhase == &dScMgHanachan_c::Phase_Play) {
+        for (int i = 0; i < sHanaFieldWigglerCount; i++)
+            mWiggler[i].DrawField();
+    } else if (mPhase == &dScMgHanachan_c::Phase_Result) {
+        if ((mHit != 0 && mPhaseTimer < 90) || (mHit == 0 && mPhaseTimer < 138)) {
             mTarget->DrawField();
+        } else {
+            for (int i = 0; i < sHanaFieldWigglerCount; i++)
+                mWiggler[i].DrawField();
         }
+    } else if (mPhase == &dScMgHanachan_c::Phase_NoneB ||
+               mPhase == &dScMgHanachan_c::Phase_WaitTouch) {
+        mTarget->DrawField();
     }
 
-tail:
     mTarget->DrawTarget();
 
-    {
-        if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
-            int idx = GetGameLanguage();
-            void *e = sHanaTextSpritesByLanguage[idx];
-            OamAttr *f = ((OamAttr **)e)[3];
-            DrawOamSprite(f, 128, 16, 0);
-            Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
-        }
+    if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
+        int idx = GetGameLanguage();
+        void *e = sHanaTextSpritesByLanguage[idx];
+        OamAttr *f = ((OamAttr **)e)[3];
+        DrawOamSprite(f, 128, 16, 0);
+        Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
     }
 
     return 1;
@@ -1749,8 +1687,8 @@ void dScMgHanachan_c::Phase_Play() {
     if (b != 0) {
         Wiggler *p;
         Vector2 *src;
-        a.x = gTouchInfo[(unsigned int)idx].x << 12;
-        a.y = gTouchInfo[(unsigned int)idx].y << 12;
+        a.x = gTouchInfo[idx].x << 12;
+        a.y = gTouchInfo[idx].y << 12;
         p = mTarget;
         src = p->seg;
         vec[0] = src->x;
@@ -1870,7 +1808,7 @@ void dScMgHanachan_c::Phase_WaitIntro() {
 
 void dScMgHanachan_c::Phase_SetupRound() {
     if ((s32)mLevel < 0xa) {
-        int bc = (s32)mLevel;
+        int bc = mLevel;
         sHanaRoundPattern = sHanaRoundPatterns[bc];
         sHanaFieldWigglerCount = sHanaFieldWigglerCounts[bc];
     } else {
@@ -1894,7 +1832,7 @@ void dScMgHanachan_c::Phase_SetupRound() {
         if (sHanaFieldWigglerCount > 0) {
             Wiggler *p = mWiggler;
             do {
-                p->Spawn(i, (s32)mLevel);
+                p->Spawn(i, mLevel);
                 i++;
                 p++;
             } while (i < sHanaFieldWigglerCount);
@@ -1914,12 +1852,17 @@ void dScMgHanachan_c::Phase_SetupRound() {
     }
 }
 
+/* StartRound steps the level with a read through this accessor, and the
+   cartridge re-issues ldr r1,[r4,#0xbc] for it. A plain `mLevel + 1` lets
+   mwccarm keep the +0xbc field address in its own register (add r2,r4,#0xbc /
+   ldr [r2] / str [r2]), a word longer. */
+inline u32 dScMgBase_c::GetLevel() const {
+    return mLevel;
+}
+
 void dScMgHanachan_c::StartRound(int state) {
     if (state == 1) {
-        /* `const` on the read is load-bearing: without it mwcc CSEs the +0xbc field
-           address into its own register (add r2,r4,#0xbc / ldr [r2] / str [r2]) and the
-           function grows a word; the cartridge re-issues ldr r1,[r4,#0xbc]. */
-        mLevel = *(const u32 *)&mLevel + 1;
+        mLevel = GetLevel() + 1;
         if (mLevel > 0x270e)
             mLevel = 0x270e;
     } else if (state == 0x12) {

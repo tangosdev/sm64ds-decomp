@@ -133,10 +133,10 @@ daSlide_Box_c::~daSlide_Box_c()
 void daSlide_Box_c::UpdateModel()
 {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    /* Flat Matrix4x3 (common.h): words 9..11 are the translation, at 1/8. */
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    /* The translation is at 1/8. */
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daSlide_Box_c::CleanupResources()

@@ -173,12 +173,14 @@ but the gate for the check is the full `rombuild -j16`, not per-file verify.
 (`Matrix4x3 { Matrix3x3 r; Vector3 t; }`) the copy splits into a subobject
 copy of `r` plus field-by-field stores of `t`: **+28 bytes over the ROM**.
 The flat spelling (`Matrix4x3 { s32 m[12]; }`) reproduces the ROM's three
-`ldm/stm` quads exactly.
+`ldm/stm` quads exactly, and so does a union that overlays the named rows on
+the twelve words: mwccarm copies a union as one block.
 
 This is the array-member-struct lesson from `mwccarm-codegen.md` applied in
-reverse: the ROM's original sources used the flat spelling here. Since #821
-it is the only definition (`math/Matrix.h`, `fx32 m[12]`); the
-`MATRIX4X3_DEFINED` guard that let both spellings coexist is gone.
+reverse. Since #821 there is one definition (`math/Matrix.h`), a union of
+`fx32 m[12]` and `{ Matrix3x3 r; VecFx32 t; }` in the manner of the SDK's
+`MtxFx43`; the `MATRIX4X3_DEFINED` guard that let two spellings coexist is
+gone.
 
 ## 4. The base-object variant label: check which C the callers mean
 

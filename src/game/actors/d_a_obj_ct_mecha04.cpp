@@ -109,7 +109,7 @@ void daObjCtMecha04_c::AfterClsnCallback(dBgW *collider, dActor_c *owner, dActor
  * indexed by (u16)mAngle.y >> 4: [2i] for X, [2i + 1] for Z. Direct
  * actor.mPos.x/mPos.z stores differ; the PosX-derived pointer chain matches. */
 void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor) {
-    u16 angleForX = (u16)mAngle.y;
+    u16 angleForX = mAngle.y;
     int beltStepForX = mBeltSpeed << 2;
     int sinY = FX_SinIdx(angleForX >> 4);
     int deltaX = FX_MUL(beltStepForX, sinY);
@@ -117,7 +117,7 @@ void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor) {
     int oldX = *actorPosX;
     *actorPosX = oldX + deltaX;
 
-    u16 angleForZ = (u16)mAngle.y;
+    u16 angleForZ = mAngle.y;
     int beltStepForZ = mBeltSpeed << 2;
     s32 *actorPosZ = actorPosX + 2;
     int cosY = FX_CosIdx(angleForZ >> 4);
@@ -250,9 +250,9 @@ void daObjCtMecha04_c::UpdateShadow() {
         return;
 
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = (mGroundY + 0x1000) >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = (mGroundY + 0x1000) >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
 
     if (IsLargeBelt(this)) {
         DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1f4000, 0x32000, 0x3e8000, 0xf);

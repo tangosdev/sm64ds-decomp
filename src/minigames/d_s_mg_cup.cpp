@@ -86,7 +86,7 @@ struct CupShuffleOffset {
 };
 extern CupShuffleOffset sCupShuffleOffsets[];
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Mg_DrawStockCounter(int arg0, int arg1);
+void Mg_DrawStockCounter(int count, int asIcons);
 void Mg_DrawScoreTally(void *a, int b, int c, int d);
 char data_ov006_02139df4[24] = {(char)0xe8, 0,          (char)0xe5, 65, (char)0xb6, 53,
                                 0,          0,          (char)0xf8, 64, (char)0xdd, 65,
@@ -279,7 +279,7 @@ void dScMgCup_c::UpdateAnim(int cupIndex) {
 }
 
 void dScMgCup_c::SetupSwap() {
-    u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
+    u32 rnd = RandomIntInternal(&data_0209e650.value);
     u32 bits = rnd >> 0x10;
     int speedIndex;
     int swapPair;
@@ -305,29 +305,11 @@ void dScMgCup_c::SetupSwap() {
     mHalfX = mMid.x - sCupHomePositions[mSwapSlotA].x;
     mShuffleAngle = 0;
 
-    {
-        u8 roundRow = mRoundRow;
-        if (roundRow == 7) {
-            if (mSwapsRemaining == mFakeOutAt) {
-                goto set1;
-            }
-        }
-        if (roundRow < 7) {
-            goto set0;
-        }
-        {
-            u32 fakeOutRoll = (u32)RandomIntInternal(&data_0209e650.value);
-            if (((fakeOutRoll >> 0x10) & 7) != 0) {
-                goto set0;
-            }
-        }
-    set1:
+    if ((mRoundRow == 7 && mSwapsRemaining == mFakeOutAt) ||
+        (mRoundRow >= 7 && (((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) & 7) == 0))
         mFakeOut = 1;
-        return;
-    set0:
+    else
         mFakeOut = 0;
-        return;
-    }
 }
 
 void dScMgCup_c::StateIdle() {}
@@ -626,7 +608,7 @@ void dScMgCup_c::StateSetup() {
     if (score < 0xa) {
         mRoundRow = (unsigned char)score;
     } else {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+        rnd = RandomIntInternal(&data_0209e650.value);
         randomUpper = rnd >> 16;
         roundRow = (randomUpper % 5) + 5;
         mRoundRow = (unsigned char)roundRow;
@@ -635,7 +617,7 @@ void dScMgCup_c::StateSetup() {
     mSwapsRemaining = sCupRoundTable[mRoundRow].swaps;
 
     if (score > 3) {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+        rnd = RandomIntInternal(&data_0209e650.value);
         if (rnd & 1) {
             mTargetContent = 1;
         } else {
@@ -653,7 +635,7 @@ void dScMgCup_c::StateSetup() {
     mShuffleSound = 0;
     FreeGfxSlotsById(0x1d);
 
-    rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
+    rnd = RandomIntInternal(&data_0209e650.value);
     fakeOutSwap = (rnd % 10) + 1;
     mFakeOutAt = (unsigned char)fakeOutSwap;
 

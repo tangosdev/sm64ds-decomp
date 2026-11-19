@@ -237,7 +237,7 @@ void daTrsTrap_c::UpdateBookshelf() {
         pp.y = q[1];
         pp.z = q[2];
     }
-    if (pp.x >= (int)0xffa24000)
+    if (pp.x >= -0x5dc000)
         mVisible = 0;
     else
         mVisible = 1;
@@ -289,8 +289,7 @@ void daTrsTrap_c::UpdateBookshelf() {
 /* Book-switch callback: ORs switch bit m into mBookFlags, then the right or
    wrong chime -- the order is 1, then 1|2, then all three. */
 void daTrsTrap_c::func_ov063_0211cae8(int m) {
-    unsigned char *p = &mBookFlags;
-    *p |= m;
+    mBookFlags |= m;
     unsigned char v = mBookFlags & 7;
     if (v != 1 && v != 3 && v != 7) {
         func_02012790(0xe);
@@ -442,7 +441,7 @@ int daTrsTrap_c::Behavior()
 int daTrsTrap_c::InitResources()
 {
     u16 actorType;
-    s32 param;
+    u32 param;
     s32 dx;
     int i;
     int bit;
@@ -450,7 +449,7 @@ int daTrsTrap_c::InitResources()
     void *sp;
 
     param = param1;
-    mStepIndex = ((u32)param >> 8) & 3;
+    mStepIndex = (param >> 8) & 3;
     mParentUniqueID = 0;
     mVisible = 1;
     actorType = actorID;

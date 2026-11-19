@@ -254,9 +254,9 @@ int daSnowball_c::Behavior() {
     int hi = mTerminalVelocity;
     if (v >= hi)
         hi = v;
-    int tmp = mSpeed.z;
+    int speedZ = mSpeed.z;
     mSpeed.y = hi;
-    mSpeed.z = tmp;
+    mSpeed.z = speedZ;
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     mAngle.y = mPrevAngle.y;

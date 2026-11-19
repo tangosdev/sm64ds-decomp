@@ -32,6 +32,12 @@ extern CLPS data_020a0c78;
 }
 int dBgS_ChkPolySafe(dBgPi *hit);
 
+/* The scans test the owner's profile bit 0x02 (clip-tested actor) through
+   an int-returning predicate: the ROM materialises its 0/1 before branching. */
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
    clip-volume fields, as the sphere scans do below. PFN retains its pending
    stored-callback reconstruction. Position reads go through a
@@ -54,7 +60,7 @@ int dBgCh_Gnd::DetectClsn()
         dActor_c *owner = obj->GetActor();
         if (IsOwnedBy(owner))
             continue;
-        if (owner != 0 && ((owner->mFlags & 2) ? 1 : 0)) {
+        if (owner != 0 && IsFlagSet(owner, 2)) {
             const Vector3 *position = &owner->mPos;
             ownerPos.x = position->x;
             ownerPos.y = position->y;
@@ -137,8 +143,7 @@ int dBgCh_SphCrr::DetectClsn()
         if (IsOwnedBy(owner))
             continue;
         if (owner != 0) {
-            int active = (owner->mFlags & 2) ? 1 : 0;
-            if (active != 0) {
+            if (IsFlagSet(owner, 2)) {
                 Vector3 ownerPos;
                 Vector3 *src = &owner->mPos;
                 ownerPos.x = src->x;
@@ -211,7 +216,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
         dActor_c *owner = o->GetActor();
         if (IsOwnedBy(owner))
             continue;
-        if (owner != 0 && ((owner->mFlags & 2) ? 1 : 0)) {
+        if (owner != 0 && IsFlagSet(owner, 2)) {
             /* The address local must stay declared int -- a pointer local
                diffs. Its value is the dM3dGSph base's centre. */
             int pos = (int)&((dM3dGSph &)*this).centre;
@@ -272,7 +277,7 @@ bool dBgCh_Lin::DetectClsn()
 
     dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
-    reach = (int)sphere.radius;
+    reach = sphere.radius;
     for (i = 1; i < 24; i++) {
         o = data_020a0c80[i];
         if (o == 0) continue;
@@ -280,8 +285,7 @@ bool dBgCh_Lin::DetectClsn()
         if (IsOwnedBy(owner))
             continue;
         if (owner != 0) {
-            int active = (owner->mFlags & 2) ? 1 : 0;
-            if (active != 0) {
+            if (IsFlagSet(owner, 2)) {
                 Vector3 ownerPos;
                 const Vector3 *position = &owner->mPos;
                 ownerPos.x = position->x;
@@ -351,8 +355,7 @@ int dBgCh_Lin::DetectClsnExceptSlot0() {
         if (IsOwnedBy(owner))
             continue;
         if (owner != 0) {
-            int active = (owner->mFlags & 2) ? 1 : 0;
-            if (active != 0) {
+            if (IsFlagSet(owner, 2)) {
                 Vector3 ownerPos;
                 const Vector3 *position = &owner->mPos;
                 ownerPos.x = position->x;

@@ -69,9 +69,9 @@ void PathPtr::GetNode(Vector3 &node, unsigned int idx) const
     u16 first = def->firstNode;
     char *row = base + first * 6;
     int off = idx * 6;
-    node.x = ((int)*(s16 *)(row + off)) << 12;
-    node.y = ((int)*(s16 *)(row + off + 2)) << 12;
-    node.z = ((int)*(s16 *)(row + off + 4)) << 12;
+    node.x = (*(s16 *)(row + off)) << 12;
+    node.y = (*(s16 *)(row + off + 2)) << 12;
+    node.z = (*(s16 *)(row + off + 4)) << 12;
 }
 
 void PathPtr::SetNodeTable(void *nodes)

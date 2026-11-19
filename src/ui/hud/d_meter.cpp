@@ -95,6 +95,9 @@ extern "C" {
    Quick race (daRNk_c). InitResources clears it. */
 extern unsigned char gShowRaceTimer;
 extern Timer gRaceTimer;
+/* Kept (#821 r79): with the table plain (here and in decl_common.h), an inline DigitPlace(i)
+   returning int or unsigned short, for both reads or the modulo only, and `value %=`, are 0x94
+   against 0x8c. */
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char gLocalPlayerId;
 extern unsigned char gMeterCounterSlideState;
@@ -300,7 +303,9 @@ int dMeter_c::InitResources() {
                what keeps the stores apart; a `volatile` qualifier on it
                changes nothing. */
             /* Kept (#821 r76): no block-copy or type lever (r72-r75) applies to this scalar pin;
-               the measurements above stand. */
+               the measurements above stand.
+               Kept (#821 r80): getter tried -> a setter on this arm, the else arm or all
+               three lets the stores merge, 0x740 of 0x750. */
             *(u16 *)&mVsTimer = 30;
         else
             mVsTimer = 30;
@@ -854,7 +859,7 @@ void dMeter_c::RenderStarCount() {
     int i;
 
     if (IsVsMode()) {
-        CalculateDigits((unsigned short)gNumStageStars[gLocalPlayerId]);
+        CalculateDigits(gNumStageStars[gLocalPlayerId]);
         for (i = 2; i >= 0; i--) {
             if (mDigits[i] >= 0) {
                 OAM::Render(false, OAM::NUMBERS[mDigits[i]], x, 2, -1, 1, 0);
@@ -911,7 +916,7 @@ void dMeter_c::RenderStarCount() {
  */
 void dMeter_c::RenderSilverStars() {
     int sl = 0;
-    unsigned short n = (unsigned short)(short)gNumStageStars[gLocalPlayerId];
+    unsigned short n = (short)gNumStageStars[gLocalPlayerId];
     int sb;
     if (sl < n) {
         sb = 0x10;
@@ -999,7 +1004,7 @@ void dMeter_c::RenderLifeCount() {
         OAM::Render(0, OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1, 0x1000, 0x1000,
                     0, -1);
         OAM::Render(false, &OAM::TIMES, mLifeCountX + 0x10, 0xa, -1, 1, 0);
-        CalculateDigits((unsigned short)gNumLives);
+        CalculateDigits(gNumLives);
         int x = mLifeCountX + 0x18;
         for (int i = 0; i < 3; i++) {
             signed char d = mDigits[i];
@@ -1011,7 +1016,7 @@ void dMeter_c::RenderLifeCount() {
     } else {
         OAM::RenderSub(OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1);
         OAM::Render(true, &OAM::TIMES, mLifeCountX + 0x10, 0xa, -1, 1, 0);
-        CalculateDigits((unsigned short)gNumLives);
+        CalculateDigits(gNumLives);
         int i;
         int x = mLifeCountX + 0x18;
         for (i = 0; i < 3; i++) {

@@ -82,7 +82,7 @@ struct daIbl_c : dEnemyBase_c {
     dExtSimpleModel_c mModel; /* 0x2cc -- mModel.mat4x3 is the model matrix */
     dExtShadowModel_c                  mShadowModel;          /* 0x31c */
     /* The shadow's matrix. UpdateModelMatrix copies the model matrix into it
-       and then overwrites the Y translation (m[10]). */
+       and then overwrites the Y translation. */
     Matrix4x3 mShadowMtx;         /* 0x344 */
     dCcAc_c           mdCcAc_c;   /* 0x374 -- hitFlags/otherOwner at 0x394/0x398 name what touched the ball */
     /* On a ball made by a spawner (kind 0): the spawner. The spawner stores
@@ -158,6 +158,9 @@ struct daIbl_c : dEnemyBase_c {
     void RollOffBehavior();
     void FreeRollBehavior();
     void SpawnerBehavior();
+
+    /* param1, the spawn word; defined inline in d_a_ibl.cpp. */
+    u32 GetParam1() const;
 };
 
 #ifndef SM64DS_PLATFORM_PC

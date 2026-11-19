@@ -367,14 +367,18 @@ void daShl_c::func_ov102_0214ce60()
         mModel.mat4x3 = *UpdateCarry(*mCarrier, offset);
     } else {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-        mModel.mat4x3.m[9] = mPos.x >> 3;
-        mModel.mat4x3.m[10] = mPos.y >> 3;
-        mModel.mat4x3.m[11] = mPos.z >> 3;
+        mModel.mat4x3.t.x = mPos.x >> 3;
+        mModel.mat4x3.t.y = mPos.y >> 3;
+        mModel.mat4x3.t.z = mPos.z >> 3;
     }
     int hidden = (mFlags & 0x40000) != 0;
     if (hidden)
         return;
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x50000, 0x50000, 15);
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
 }
 
 /* What touching the player does, read off the body cylinder's last hit.
@@ -398,8 +402,7 @@ void daShl_c::func_ov102_0214cbec()
         return;
 
     {
-        int isPlayer = (int)(player->actorID == 0xbf);
-        if (!isPlayer)
+        if (!IsPlayerActor(player))
             return;
     }
     if (mStateTimer != 0)

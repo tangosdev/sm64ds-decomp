@@ -269,8 +269,8 @@ void Jump3D_StartRoundLayout(void) {
     do {
         Jump3DLayoutSlot *e =
             (Jump3DLayoutSlot *)(sJump3DRoundLayouts + sJump3DLayout * 0x24 + eoff);
-        int word = e->windUpTimer;
-        ((dMgJump3DMario_c *)(sJump3DMarioPool + ooff))->StartWindUp((short)word);
+        s16 windUp = e->windUpTimer;
+        ((dMgJump3DMario_c *)(sJump3DMarioPool + ooff))->StartWindUp(windUp);
         ((dMgJump3DMario_c *)(sJump3DMarioPool + ooff))->mPos.x = e->x;
         {
             int s = sJump3DStartVx;
@@ -534,7 +534,7 @@ void dMgJump3DMario_c::StateMove()
             s16 y = mScreenY;
             int ax = gTouchInfo[idx].x;
             int az = gTouchInfo[idx].y;
-            int dx = (int)mScreenX - ax;
+            int dx = mScreenX - ax;
             int ym = (int)y - 0x20;
             int t = dx < 0 ? -dx : dx;
 

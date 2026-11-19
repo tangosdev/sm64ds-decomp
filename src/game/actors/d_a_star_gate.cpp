@@ -111,20 +111,29 @@ daStarGate_c *daStarGate_c_classInit() {
     return new daStarGate_c();
 }
 
+/* InitResources keeps only param1's high halfword, the gate's index into
+   data_ov100_02148390, with a read through this accessor. A plain
+   `param1 = param1 >> 16` lets 2004/b56 value-number both sides and
+   materialise the +8 address once (0xac, one word longer than the
+   cartridge's folded ldr/lsr/str). Same lever as daDoor_c::GetParam1. */
+inline u32 daStarGate_c::GetParam1() const {
+    return param1;
+}
+
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daStarGate_c::InitResources()
 {
-    param1 = (u32)param1 >> 16;
+    param1 = GetParam1() >> 16;
 
     BMD_File *file = dExtSimpleModel_c::LoadFile(gObjStargateModelFile);
     if (!mModel.SetFile(file, 1, 1))
         return 0;
 
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     ChangeState(&ST_WAIT, gPlayers[gLocalPlayerId]);
     return 1;
 }
@@ -145,15 +154,15 @@ int daStarGate_c::Render()
 {
     if (IsAreaShowing((s8)mAngle.x) != 0 || IsAreaShowing((s8)mAngle.z) != 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-        mModel.mat4x3.m[9] = (mPos.x + mSpeed.x) >> 3;
-        mModel.mat4x3.m[10] = (mPos.y + mSpeed.y) >> 3;
-        mModel.mat4x3.m[11] = (mPos.z + mSpeed.z) >> 3;
+        mModel.mat4x3.t.x = (mPos.x + mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPos.y + mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPos.z + mSpeed.z) >> 3;
         mModel.Render(0);
 
         Matrix4x3_FromRotationY(&mModel.mat4x3, (s16)(mAngle.y + 0x8000));
-        mModel.mat4x3.m[9] = (mPos.x - mSpeed.x) >> 3;
-        mModel.mat4x3.m[10] = (mPos.y - mSpeed.y) >> 3;
-        mModel.mat4x3.m[11] = (mPos.z - mSpeed.z) >> 3;
+        mModel.mat4x3.t.x = (mPos.x - mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPos.y - mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPos.z - mSpeed.z) >> 3;
         mModel.Render(0);
     }
 
@@ -186,10 +195,10 @@ bool daStarGate_c::ChangeState(State *nextState, daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
-    Vector3 tmp;
+    Vector3 toPlayer;
     daPly_c *player = gPlayers[gLocalPlayerId];
-    Vec3_Sub(&tmp, &player->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngle.y, &tmp);
+    Vec3_Sub(&toPlayer, &player->mPos, &mPos);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngle.y, &toPlayer);
     return player;
 }
 
@@ -231,7 +240,7 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
     if (IsInFrontOfPlayer(player)) {
         entry = &data_ov100_02148390[param1];
         isSpecial = entry->numStars == 0x50;
-        notEnoughStars = (int)NumStars() < entry->numStars;
+        notEnoughStars = NumStars() < entry->numStars;
         isMario = data_0209caa0.file.mCharacter == 0;
 
         /* A door already unlocked in the save just opens. So does the 80-star

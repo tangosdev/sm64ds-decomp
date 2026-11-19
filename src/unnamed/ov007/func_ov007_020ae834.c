@@ -64,7 +64,7 @@ void func_ov007_020ae834(Ov007Item *item) {
     case 3:
     case 4:
     case 7:
-        flag = (st == 3) ? 1 : 0;
+        flag = st == 3;
         if (ticks == 0)
             item->visible = 1;
         item->slideOut = func_ov007_020aeaec(item, flag, 0, 15);
@@ -85,7 +85,7 @@ void func_ov007_020ae834(Ov007Item *item) {
         break;
     case 5:
     case 6:
-        flag = (st == 5) ? 1 : 0;
+        flag = st == 5;
         if (ticks == 0)
             item->visible = 1;
         if (item->fade == 0)
@@ -94,7 +94,7 @@ void func_ov007_020ae834(Ov007Item *item) {
             item->state->requestedState = 0;
             break;
         }
-        item->fade = func_ov007_020aeaec(item, (flag == 0) ? 1 : 0, 0, 20);
+        item->fade = func_ov007_020aeaec(item, flag == 0, 0, 20);
         break;
     }
 

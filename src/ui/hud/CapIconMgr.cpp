@@ -101,7 +101,7 @@ void func_ov001_020aaf40(void)
                     if (frames == 0) {
                         CapIconMgr_SetMapIconShown(node, 1);
                     } else if (frames % 10 == 0) {
-                        CapIconMgr_SetMapIconShown(node, ((frames / 10) & 1) == 0 ? 1 : 0);
+                        CapIconMgr_SetMapIconShown(node, ((frames / 10) & 1) == 0);
                     }
                 }
                 node = node->mNext;

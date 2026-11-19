@@ -15,10 +15,9 @@
  * its D0 and D1 out here, in the cartridge's order.
  *
  * Notes (measured spellings that do not match):
- * - UpdateDropShadow keeps the early `s32 *clipRadius` and the braced
- *   mClipRadius clamp. An if-clamp in that spot is a 64-word DIFF.
- *   Dropping the pointer and shifting mClipRadius directly is a 1-word
- *   DIFF.
+ * - UpdateDropShadow keeps the braced mClipRadius clamp. An if-clamp in
+ *   that spot is a 64-word DIFF. (#821 r82: the early `s32 *clipRadius`
+ *   pointer is gone; `mClipRadius >>= 3` is byte-identical.)
  * - StateSlam keeps `int isDosun` and `if (isDosun != 0)`.
  *   Comparing actorID in the if size-DIFFs 0xf0 -> 0xe4. Combining
  *   dustPos.y into `mPos.y + 0x3c000` size-DIFFs 0xf0 -> 0xec.
@@ -132,6 +131,10 @@ void daDsnBase_c::StateRest() {
     mTimer = (rollHigh % 10 + 20);
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* State 2, the slam. Integrates the fall at 0x4000 a frame; on reaching the
  * stored ground (0x394) snaps to it, stops, moves to state 3 and lands:
  * the Thwomp (DOSUN) raises its landing dust, Grindel spawns particle 0x2e,
@@ -147,8 +150,7 @@ void daDsnBase_c::StateSlam() {
     mSpeed.y = 0;
     mState = 3;
     mTimer = 10;
-    int isDosun = (actorID == kDosunActorID);
-    if (isDosun != 0) {
+    if (IsActorID(this, kDosunActorID)) {
         HugeLandingDust(true);
     } else {
         dustPos.x = mPos.x;
@@ -188,8 +190,7 @@ void daDsnBase_c::StateRise() {
  * Scales the drop shadow with the height above groundY, grows mClipRadius
  * with that height, and copies the model matrix into shadowMtx with the
  * translation shifted. mClipRadius is also WakeNearYoshiEgg's trigger
- * radius. The clipRadius pointer and the braced clamp are load-bearing;
- * see the file comment. */
+ * radius. The braced clamp is load-bearing; see the file comment. */
 void daDsnBase_c::UpdateDropShadow() {
     int shadowDrop = 0x20000;
     int heightAboveGround = mPos.y - mGroundY;
@@ -198,7 +199,6 @@ void daDsnBase_c::UpdateDropShadow() {
         shadowDrop = 0;
     }
     int radius = FX_MUL(heightAboveGround, 0x60);
-    s32 *clipRadius = &mClipRadius;
     DsnBaseFileTable *files = mFileTable;
     int scaleX = files->shadowExtentX - radius;
     if (scaleX < 0xa000)
@@ -213,11 +213,11 @@ void daDsnBase_c::UpdateDropShadow() {
             clamped = 0x200000;
         mClipRadius = clamped;
     }
-    *clipRadius = *clipRadius >> 3;
+    mClipRadius >>= 3;
     mShadowMtx = mModel.mat4x3;
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = (mPos.y - shadowDrop) >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = (mPos.y - shadowDrop) >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMtx, scaleX, heightAboveGround + 0x28000, scaleZ, 0xf);
 }
 

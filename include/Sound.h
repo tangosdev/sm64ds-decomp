@@ -66,7 +66,7 @@ struct InfoSequenceEntry {
     u8 playerPriority;
     u8 playerNumber;
 
-    static InfoSequenceEntry *GetWithID(u32 id);
+    static InfoSequenceEntry *GetWithID(int id);
 };
 
 /* Instrument-bank archive metadata. Every recovered consumer treats the first
@@ -76,7 +76,7 @@ struct InfoInstrumentBankEntry {
     u32 fileId;
     u16 waveArchiveIds[4];
 
-    static InfoInstrumentBankEntry *GetWithID(u32 id);
+    static InfoInstrumentBankEntry *GetWithID(int id);
 };
 
 struct Player {
@@ -113,7 +113,7 @@ u32  PlayBank2_2D(u32);
 u32 PlayBank3_2D(u32);
 u32  PlayCharVoice(u32, u32, const Vector3 &v);
 int  PlayLong(u32 handle, u32, u32, const Vector3 &pos, s16);
-bool PlaySub(u32, u32, u32, fx32, bool);
+bool PlaySub(u32, u32, u32, fx32, int);
 /* A named parameter here numbers @NNN in every includer. */
 int ChangeMusicVolume(u32, fx32);
 int  PlaySecretSound(dActor_c *actor, u16 *counter);

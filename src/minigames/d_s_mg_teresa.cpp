@@ -933,8 +933,8 @@ void dScMgTeresa_c::BigBoo_StateHover(int i) {
     {
         /* The draw lands in its own int: through MG_RAND the pick colours
            differently (5 words). */
-        int rnd = RandomIntInternal(&data_0209d4b8.value);
-        mBigBoo[i].state = sTeresaBigBooHoverPicks[((((u32)rnd >> 16) & 0x7fff) * 2) >> 15];
+        u32 rnd = RandomIntInternal(&data_0209d4b8.value);
+        mBigBoo[i].state = sTeresaBigBooHoverPicks[(((rnd >> 16) & 0x7fff) * 2) >> 15];
     }
     mBigBoo[i].frameTimer = 0;
     mBigBoo[i].frame = 0;
@@ -2148,6 +2148,8 @@ void dScMgTeresa_c::Scene_StateInit() {
  * (y / 8) * 32 and (y & 7) * 4, hoisted out of the inner loop; a block-scope
  * `yy = y` copy inside the inner loop is copy-propagated away (0x170), and
  * the setting file-wide breaks TouchTestBoo and CountRubbedTiles. */
+/* Kept (#821 r79): y recomputed from the row counter, the inner loop as a do-while and a tile
+   local are 0x164, 0x168 and 0x170 against 0x15c. */
 #pragma opt_loop_invariants off
 /* dScMgTeresa_c::PaintSquare - slot 34, a STIPPLED brush.
 

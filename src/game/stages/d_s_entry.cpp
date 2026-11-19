@@ -116,6 +116,8 @@ void dScEntry_c::icon_c::Render() {
        matches exactly, as any non-POD aggregate would, but nothing in the
        ROM names such a type, so it would only trade one launder for
        another. dMgPsOpt_c's twin Render has the same pair. */
+    /* Kept (#821 r79): a local anonymous { s16 x, y; } and a brace-initialised s16 xy[2] are
+       0x248. */
     volatile s16 xy[2];
     u16 *screenMap;
     int paletteBits;
@@ -398,8 +400,8 @@ extern s16 gNumCoins[];
 extern char data_0209ee90[];
 }
 
-static inline int EntryPlayerIndex(int arg0) {
-    return func_02030958(arg0);
+static inline int EntryPlayerIndex(int slot) {
+    return func_02030958(slot);
 }
 
 void dScEntry_c::RenderPlayerScores() {

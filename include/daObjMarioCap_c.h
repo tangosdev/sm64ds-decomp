@@ -150,6 +150,9 @@ struct daObjMarioCap_c : dEnemyBase_c {
     void OnPendingDestroy();
     void OnTurnIntoEgg(daPly_c &player); /* slot 19, ov002 0x020b81e0 */
 
+    /* param1, the spawn word; defined inline in d_a_obj_mario_cap.cpp. */
+    u32 GetParam1() const;
+
     /* Once-a-frame render-matrix update and drop-shadow placement. */
     void UpdateMatrix();
     /* The state dispatcher: stores a {enter, per-frame} record in mStateEntry

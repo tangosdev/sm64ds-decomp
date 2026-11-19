@@ -10,9 +10,9 @@ void func_ov007_020c8c88(Ov007Transition *tr, int t) {
     unsigned char to = tr->fx.mosaic.to;
     int loFrom = from & 15;
     unsigned int flags = tr->planes;
-    int hiFrom = (int)(from & 0xf0) >> 4;
+    int hiFrom = (from & 0xf0) >> 4;
     int loTo = to & 15;
-    int hiTo = (int)(to & 0xf0) >> 4;
+    int hiTo = (to & 0xf0) >> 4;
     int lo, hi;
 
     if (t >= 0x1000) {

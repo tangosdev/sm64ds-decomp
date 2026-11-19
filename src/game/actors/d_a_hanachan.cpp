@@ -127,15 +127,11 @@ daHanachan_c::~daHanachan_c()
 void daHanachan_c::StateDamageStartMain()
 {
     int i;
-    int k;
-    dExtAnmModel_c *anim;
 
-    anim = &mAnmModels[0];
-    anim = anim + 2;
-    for (i = 2, k = 6; i < 5; i++, k += 3, anim++) {
-        if (mStateTimer == k - 3)
-            (anim)->SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[i])->filePtr),
-                            0x40000000, 0x1000, 0);
+    for (i = 2; i < 5; i++) {
+        if (mStateTimer == (i - 1) * 3)
+            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[i])->filePtr),
+                                  0x40000000, 0x1000, 0);
     }
     {
         int idx;
@@ -190,17 +186,13 @@ void daHanachan_c::StateDamageWaitInit()
 void daHanachan_c::StateDamageStopMain()
 {
     int i;
-    int k;
-    dExtAnmModel_c *anim;
 
     ApproachLinear(mHorzSpeed, 0, 0x1000);
 
-    anim = &mAnmModels[0];
-    anim = anim + 2;
-    for (i = 2, k = 6; i < 5; i++, k += 3, anim++) {
-        if (mStateTimer == k - 3)
-            (anim)->SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[i])->filePtr),
-                            0x40000000, 0x1000, 0);
+    for (i = 2; i < 5; i++) {
+        if (mStateTimer == (i - 1) * 3)
+            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[i])->filePtr),
+                                  0x40000000, 0x1000, 0);
     }
 
     if (mAnmModels[4].Finished()) {
@@ -365,14 +357,11 @@ void daHanachan_c::StateDamageMain()
 /* DAMAGE entry: hurt animation, flag 4 on the first cylinder set, one health lost. */
 void daHanachan_c::StateDamageInit()
 {
-    int i;
-    dExtAnmModel_c *anim = &mAnmModels[0];
     mParticle = 0;
-    for (i = 0; i < 5; i++) {
-        (anim)->SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_021138b0[i])->filePtr),
-                        0x40000000, 0x1000, 0);
+    for (int i = 0; i < 5; i++) {
+        mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_021138b0[i])->filePtr),
+                              0x40000000, 0x1000, 0);
         mdCc_cs1[i].flags |= 4;
-        anim++;
     }
     if (mHealth > 1)
         mHealth--;
@@ -455,17 +444,13 @@ void daHanachan_c::StateMoveInit()
 void daHanachan_c::StateMoveStartMain()
 {
     int i;
-    int k;
-    dExtAnmModel_c *anim;
     unsigned health;
     daPly_c *player;
 
-    anim = &mAnmModels[0];
-    anim = anim + 2;
-    for (i = 2, k = 6; i < 5; i++, k += 3, anim++) {
-        if (mStateTimer == k - 3)
-            (anim)->SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[i])->filePtr),
-                            0x40000000, 0x1000, 0);
+    for (i = 2; i < 5; i++) {
+        if (mStateTimer == (i - 1) * 3)
+            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[i])->filePtr),
+                                  0x40000000, 0x1000, 0);
     }
 
     {
@@ -524,8 +509,7 @@ void daHanachan_c::StateMoveStartInit()
 /* MOVE_STOP: when the intro talk ends, start the music and enter MOVE_START. */
 void daHanachan_c::StateMoveStopMain()
 {
-    int i, k;
-    dExtAnmModel_c *anim;
+    int i;
     daPly_c *player;
 
     ApproachLinear(mHorzSpeed, 0, 0x1000);
@@ -537,12 +521,10 @@ void daHanachan_c::StateMoveStopMain()
                               0x40000000, 0x1000, 0);
     }
 
-    anim = &mAnmModels[0];
-    anim = anim + 2;
-    for (i = 2, k = 6; i < 5; i++, k += 3, anim++) {
-        if (mStateTimer == k - 3)
-            (anim)->SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[i])->filePtr),
-                            0x40000000, 0x1000, 0);
+    for (i = 2; i < 5; i++) {
+        if (mStateTimer == (i - 1) * 3)
+            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[i])->filePtr),
+                                  0x40000000, 0x1000, 0);
     }
 
     if (mAnmModels[4].Finished()) {
@@ -810,9 +792,9 @@ void daHanachan_c::UpdateSegmentModels()
     for (i = 0; i < 5; i++) {
         dExtAnmModel_c *model = &mAnmModels[i];
         Matrix4x3_FromRotationY(&model->mat4x3, mSegmentRot[i].y);
-        mAnmModels[i].mat4x3.m[9] = mSegmentPos[i].x >> 3;
-        mAnmModels[i].mat4x3.m[10] = mSegmentPos[i].y >> 3;
-        mAnmModels[i].mat4x3.m[11] = mSegmentPos[i].z >> 3;
+        mAnmModels[i].mat4x3.t.x = mSegmentPos[i].x >> 3;
+        mAnmModels[i].mat4x3.t.y = mSegmentPos[i].y >> 3;
+        mAnmModels[i].mat4x3.t.z = mSegmentPos[i].z >> 3;
     }
 }
 
@@ -835,16 +817,10 @@ int daHanachan_c::CleanupResources()
 /* Animates each segment's texture and draws the segment at its scale. */
 int daHanachan_c::Render()
 {
-    int i = 0;
-    dExtAnmModel_c *model = &mAnmModels[0];
-    dExtAnmTexPat_c *tex = &mTextureSequences[0];
-    Vector3 *scale = &mSegmentScale[0];
-    for (; i < 5; i++) {
-        tex->Update(model->data);
-        model->Render(scale);
-        model++;
-        tex++;
-        scale++;
+    for (int i = 0; i < 5; i++) {
+        dExtAnmModel_c &model = mAnmModels[i];
+        mTextureSequences[i].Update(model.data);
+        model.Render(&mSegmentScale[i]);
     }
     return 1;
 }
@@ -1003,7 +979,11 @@ int daHanachan_c::InitResources()
 {
     /* Kept (#821 r73): every row as mSegmentPos[i] / mSegmentRot[i] /
        mSegmentScale[i] / mTextureSequences[i] / mSegmentRot[prev] is 0x468
-       but 42 words off: the strength-reduced rows rank below segPos. */
+       but 42 words off: the strength-reduced rows rank below segPos.
+       r96: every row indexed under a block-scoped `for (s32 i ...)`, with
+       the file pointers, prev and radius declared where they are set, is
+       0x468 but 26 words off: those locals still take the first frame
+       slots, ahead of the spilled rows. */
     char *c = (char *)this;
     s32 i;
     dExtAnmModel_c *animRow;
@@ -1031,7 +1011,6 @@ int daHanachan_c::InitResources()
     Vector3 vb;
     Vector3 out;
     s32 j;
-    dExtAnmModel_c *anim;
 
     mStarID = param1;
     if (mStarID == 0xFF) {
@@ -1126,15 +1105,10 @@ int daHanachan_c::InitResources()
     mTerminalVelocity = -0x64000;
     mAnmModels[0].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113874[0])->filePtr), 0,
                           0x1000, 0xc);
-    anim = &mAnmModels[0];
-    anim = anim + 1;
-    j = 1;
-    do {
-        (anim)->SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113874[j])->filePtr), 0, 0x1000,
-                        (s16)((5 - j) * 3));
-        j += 1;
-        anim++;
-    } while (j < 5);
+    for (j = 1; j < 5; j++) {
+        mAnmModels[j].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113874[j])->filePtr), 0,
+                              0x1000, (s16)((5 - j) * 3));
+    }
 
     SetState(0);
     mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);
