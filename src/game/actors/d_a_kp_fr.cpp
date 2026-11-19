@@ -241,7 +241,7 @@ void daKpFr_c::func_ov070_02121c8c()
 
 void daKpFr_c::func_ov070_02121be4()
 {
-    fx32 pos[3];
+    Vector3 pos;
 
     if (!mWithMeshClsn.IsOnGround()) return;
 
@@ -250,11 +250,11 @@ void daKpFr_c::func_ov070_02121be4()
         fx32 z = mPos.z;
         fx32 y = mPos.y + 0x1e000;
         fx32 x = mPos.x;
-        pos[0] = x;
-        pos[1] = y;
-        pos[2] = z;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
     }
-    ground.SetObjAndPos(*(Vector3*)pos, this);
+    ground.SetObjAndPos(pos, this);
     if (ground.DetectClsn() == 0 || ground.clsnY < mPos.y - 0x32000) {
         mPos.x = mPrevPos.x;
         mPos.y = mPrevPos.y;

@@ -725,19 +725,19 @@ int daSnowman_c::SetState(State *state) {
 /* Poses the model, then carries the cap on bone 5 and the snowball on
    bone 3, and drops the shadow while standing on the path. */
 void daSnowman_c::UpdateModelMatrices() {
-    int src[3], dst[3];
+    Vector3 src, dst;
     int t;
     dActor_c *actor;
 
     this->mAnmModel.UpdateVerts();
 
-    src[0] = this->mPos.x;
+    src.x = this->mPos.x;
     t = this->mPos.y;
-    src[1] = t;
-    src[2] = this->mPos.z;
-    src[1] = t + this->mSinkOffsetY;
-    Vec3_Asr((Vector3 *)dst, (Vector3 *)src, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
+    src.y = t;
+    src.z = this->mPos.z;
+    src.y = t + this->mSinkOffsetY;
+    Vec3_Asr(&dst, &src, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, dst.x, dst.y, dst.z);
 
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
                                            this->mAngle.z);

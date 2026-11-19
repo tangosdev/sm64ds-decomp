@@ -4,7 +4,7 @@
  * The point at `pos` is transformed by the camera's viewMatrix into a local
  * camera-space triple. The camera's 16-bit fovy, reduced by >> 4, indexes the
  * arm9 SINE_TABLE (FX_SinCosTable_) in PAIRS: the even half multiplies the absolute depth
- * out[2] to give the denominator, and FX_Div divides the odd half by it. Everything
+ * out.z to give the denominator, and FX_Div divides the odd half by it. Everything
  * is 1.12 fixed point, so each product is rounded with + 0x800 and shifted down by 12.
  * The resulting factor scales the x and y components, and the last two lines land them
  * on the screen: x times 0x60 about the 0x80 centre column, y negated about the 0x60
@@ -30,9 +30,9 @@
 #include "math/MtxStack.h"
 
 void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
-    int out[3];
-    MTX_MultVec43((Vector3 *)pos, &cam->viewMatrix, (Vector3 *)out);
-    int z = out[2];
+    Vector3 out;
+    MTX_MultVec43((Vector3 *)pos, &cam->viewMatrix, &out);
+    int z = out.z;
     if (z < 0)
         z = -z;
     int ang = cam->fovy >> 4;
@@ -40,8 +40,8 @@ void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     int cosv = FX_CosIdx(ang);
     int r = FX_MUL(sinv, z);
     int f = FX_Div(cosv, r);
-    int a = FX_MUL(f, out[1]);
-    int b = FX_MUL(f, out[0]);
+    int a = FX_MUL(f, out.y);
+    int b = FX_MUL(f, out.x);
     outX[0] = ((b * 96) >> 0xc) + 128;
     outY[0] = ((-a * 96) >> 0xc) + 96;
 }

@@ -413,15 +413,15 @@ extern daPropeller_Heyho_c::State data_ov070_021235ac;
  * and the actor within 1500 units of home, a non-vanished player within 1000 units
  * starts the chase. */
 int daPropeller_Heyho_c::func_ov070_0211fd98() {
-    int in[3];
-    int out[3];
+    Vector3 in;
+    Vector3 out;
     Vector3 t;
     daPly_c *p;
 
-    in[0] = 0; in[1] = 0; in[2] = 0;
-    out[0] = 0;
-    out[1] = 0;
-    out[2] = 0;
+    in.x = 0; in.y = 0; in.z = 0;
+    out.x = 0;
+    out.y = 0;
+    out.z = 0;
 
     if (Vec3_Dist(&this->mPos, &this->mHomePos) > kWanderTurnBackDist ||
         this->mWithMeshClsn.IsOnWall()) {
@@ -436,14 +436,14 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
     ApproachAngle(&this->mPrevAngle.z, (this->mPrevAngle.y - this->mTargetAngY) / 2, 0xa, 0x100,
                   0x50);
 
-    in[2] = 0xa000;
+    in.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngle.x);
-    MTX_MultVec43((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
 
-    ApproachLinear(this->mSpeed.x, out[0], 0x1000);
-    ApproachLinear(this->mSpeed.y, out[1], 0x800);
-    ApproachLinear(this->mSpeed.z, out[2], 0x1000);
+    ApproachLinear(this->mSpeed.x, out.x, 0x1000);
+    ApproachLinear(this->mSpeed.y, out.y, 0x800);
+    ApproachLinear(this->mSpeed.z, out.z, 0x1000);
 
     if (this->mStateTimer == 0) {
         FlyGuy_ChangeState(this, &data_ov070_0212359c);
