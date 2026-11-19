@@ -2422,6 +2422,53 @@ def _overload_reference(decl, definitions, unmangled, fallback):
     return matches[0], "definition"
 
 
+def _entity_reference(decl, definitions, unmangled, fallback):
+    """Select the definition of the ENTITY `decl` names when one name has several.
+
+    An overload set is not one symbol. NitroSDK's `VEC_Add(const VecFx32 *, ...)`
+    is a C function; `math/CalcLib.h`'s inline `VEC_Add(Vector3 *, ...)` is a C++
+    overload that forwards to it. They share a spelling and nothing else: their
+    linkage, their mangled names and their parameter lists all differ. Measuring a
+    declaration of one against the body of the other reports a contradiction
+    between two functions, not between a declaration and its definition.
+
+    An entity is a parameter list. C cannot overload, so a name's definitions
+    holding two or more distinct lists are distinct functions, and a declaration
+    spelling exactly one of those lists declares that one. Only the RETURN type is
+    then left to compare -- and it is still compared, against that entity's own
+    definition. Linkage gates the match: a C-linkage declaration cannot name a
+    definition that is provably C++, i.e. recorded with C++ linkage under a name
+    `symbols.txt` does not hold plain. (A `.cpp` definition of a name the link
+    resolves plain took C linkage from an `extern "C"` declaration it includes.)
+
+    Everything else keeps `fallback`: a single parameter list (an ordinary symbol,
+    where every mismatch is a real one), a declaration matching no list (it
+    contradicts every entity, so it is reported whichever is chosen), conflicting
+    C-linkage definitions (C has one list per name, so two are a contradiction,
+    not an overload set), and conflicting returns within one list.
+    """
+    if (not decl.is_function or decl.is_member or decl.this_unknown
+            or decl.symbol.startswith("_Z") or decl.params is UNSPECIFIED):
+        return fallback
+    free = [d for d in definitions
+            if d.is_function and not d.is_member and not d.this_unknown
+            and d.params is not UNSPECIFIED]
+    entities = {}
+    for d in free:
+        entities.setdefault(tuple(d.params), []).append(d)
+    if len(entities) < 2:
+        return fallback
+    if len({tuple(d.params) for d in free if d.linkage == "C"}) > 1:
+        return fallback
+    same = entities.get(tuple(decl.params), [])
+    if decl.linkage == "C":
+        same = [d for d in same
+                if not (d.linkage == "C++" and d.symbol not in unmangled)]
+    if not same or len({d.ret for d in same}) != 1:
+        return fallback
+    return same[0], "definition"
+
+
 def _declines_to_answer(a, b):
     """True when one spelling is `void *` and the other is any other object pointer.
 
@@ -2478,8 +2525,9 @@ def disagreements(decls, defs, unmangled, root=REPO):
         default_reference = _reference(symbol, group, own)
         want_arity = demangled_arity(symbol, root)
         for d in group:
-            ref, basis = _overload_reference(d, own or defs_by_bare.get(symbol, []),
-                                             unmangled, default_reference)
+            ref, basis = _overload_reference(
+                d, own or defs_by_bare.get(symbol, []), unmangled,
+                _entity_reference(d, own, unmangled, default_reference))
             if d is not ref and d.is_function != ref.is_function:
                 out.append(_finding(symbol, "kind", d, ref, basis,
                                     "function" if d.is_function else "data",
