@@ -59,8 +59,8 @@ extern "C" {
 
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void func_02012718(int a, int b);
-void func_02016a14(void *self, int a);
-void func_02016a04(void *self, int a);
+void func_02016a14(dExtSimpleModel_c *self, int color);
+void func_02016a04(dExtSimpleModel_c *self, int color);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 

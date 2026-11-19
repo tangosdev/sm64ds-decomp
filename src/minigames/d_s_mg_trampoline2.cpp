@@ -1109,8 +1109,8 @@ void Trmp2Spinner_Init(void *r0, int value) {
     spinner->mPos.x += (RAND_FX() - 0x800) * 0x40;
     spinner->mVel.x -= RAND_FX() >> 1;
     spinner->mVel.y -= RAND_FX() >> 1;
-    func_02016a14((char *)spinner, 0);
-    func_02016a04((char *)spinner, 0);
+    func_02016a14(&spinner->mModel, 0);
+    func_02016a04(&spinner->mModel, 0);
 }
 
 void Trmp2Spinner_Update(char *raw) {

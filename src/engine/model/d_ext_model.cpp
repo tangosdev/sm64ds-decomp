@@ -353,20 +353,20 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
     mats[ids[listIdx]].flags &= 0x7fffffff;
 }
 
-extern "C" void func_02016a14(char *self, int color) {
-    ((dExtSimpleModel_c *)self)->data.SetDiffuse(color);
+extern "C" void func_02016a14(dExtSimpleModel_c *self, int color) {
+    self->data.SetDiffuse(color);
 }
 
-extern "C" void func_02016a04(char *self, int color) {
-    ((dExtSimpleModel_c *)self)->data.SetAmbient(color);
+extern "C" void func_02016a04(dExtSimpleModel_c *self, int color) {
+    self->data.SetAmbient(color);
 }
 
 void func_020169f4(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetEmission(color);
 }
 
-extern "C" void func_020169d8(char *self, int index, unsigned int value) {
-    ((dExtSimpleModel_c *)self)->data.SetMaterialEmission(value, index);
+extern "C" void func_020169d8(dExtSimpleModel_c *self, int index, unsigned int value) {
+    self->data.SetMaterialEmission(value, index);
 }
 
 /* ---------------------------------------------------------------------------
