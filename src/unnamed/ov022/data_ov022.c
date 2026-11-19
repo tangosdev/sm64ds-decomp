@@ -33,8 +33,11 @@ extern u32 data_ov022_02113360[];
 extern u32 data_ov022_021133a8[];
 extern u32 data_ov022_021136f8[];
 extern u32 data_ov064_0211bbac[];
-extern u32 gFlRingCollisionFile[];
-extern u32 gFlRingModelFile[];
+/* The resource table only needs the addresses of these two file handles. */
+struct RingCollisionFilePtr;
+struct RingModelFilePtr;
+extern struct RingCollisionFilePtr gFlRingCollisionFile;
+extern struct RingModelFilePtr gFlRingModelFile;
 
 /* 0x02112950..0x02112c98 (840 bytes, 210 words) */
 const u32 data_ov022_02112950[] = {
@@ -833,7 +836,7 @@ u32 data_ov022_02113140[] = {
     0xf06001f4,
     0x00000000,
     0x00470000,
-    (u32)gFlRingModelFile,
-    (u32)gFlRingCollisionFile,
+    (u32)&gFlRingModelFile,
+    (u32)&gFlRingCollisionFile,
     (u32)data_ov064_0211bbac,
 };
