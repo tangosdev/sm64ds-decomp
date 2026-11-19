@@ -3,20 +3,17 @@
 
 extern "C" void func_020147bc(unsigned short *p, int c);
 
-/* opt_common_subs stays off: the cartridge keeps the lower-case, upper-case and
-   default arms of the digit test as three separate `out = c` tails, and CSE
-   merges them (0xe0 against the ROM's 0xec). Round 66 (#821): `int c` restores
-   the ROM's second `c - 0x2f` but the arms still merge (0xe0) unless one is
-   respelled `(int)(c)`, a no-op cast; str[len] in an arm, a merged letter
-   test, `(char)c` and a char `out` are 0xe0/0xe4/0xf0/0x100. */
-/* Kept (#821 r79): /=, a radix temporary, '0' + 1 character literals and static inline
-   digit/shift helpers are 0xe0 or 0xdc against 0xec; the division and modulo still share one
-   _s32_div_f. */
-#pragma opt_common_subs off
+/* The cartridge keeps the lower-case, upper-case and default arms of the digit
+   test as three separate `out = c` tails, and computes the modulo and the
+   division with two calls. `c` is an int, the usual type for a character read
+   out of a string, and the default arm's `(int)(c)` keeps that arm apart: with
+   `out = c` there the three tails merge (0xe0 against 0xec). Kept (#821 r105):
+   the cast was already load-bearing next to opt_common_subs off; with `int c`
+   the pragma is not needed and the cast is the one lever left. */
 
 void nds_printt(unsigned short *dest, const char *str, int value) {
     int len = strlen(str);
-    char c;
+    int c;
     unsigned short *p = dest + len;
     while (value != 0 && len != 0) {
         int out;

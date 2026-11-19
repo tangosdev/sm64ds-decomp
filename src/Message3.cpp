@@ -1631,18 +1631,12 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
     Message_DrawCenteredLineVS(0x280, 0x20);
 }
 
-/* opt_common_subs stays off: CSE recompute. The ROM re-reads and recomputes
- * what CSE would share (0x298 bytes; 0x278 with CSE on). Re-measured (#821
- * r17): still 0x278 without the bracket, and 0x2a8 with the second and third
- * rows re-reading data_0209fc88 for their tile count. */
-#pragma push
-/* Kept (#821 r79): a for loop with (n + 7) / 8 recomputed in the bound and seeds, and a static
-   inline TextCells(n) helper, are 0x288 and 0x278 against 0x298. */
-#pragma opt_common_subs off
+/* n holds the line's character count, a u8 like data_0209fc88 it is read from. */
 void Message::func_02033bb8(int param0) {
     volatile int li;
     volatile unsigned short sv;
-    int n, m, i;
+    u8 n;
+    int m, i;
     short *scr;
 
     data_0209fce8 = param0;
@@ -1727,7 +1721,6 @@ void Message::func_02033bb8(int param0) {
     data_0209fce8++;
     Message_DrawCenteredLineVS(0x280, 0x20);
 }
-#pragma pop
 
 void Message::func_02033e50(int p0, int p1) {
     int i;

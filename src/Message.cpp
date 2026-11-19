@@ -308,16 +308,10 @@ void Message::DisplayOptionsMenuText(s16 n) {
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
-/* opt_common_subs stays off: each of the three rows recomputes (n + 7) / 8 for its
- * loop bound the way the cartridge does, and CSE shares the divide instead
- * (0x1e0 against 0x20c). Reading the count back from data_0209d6b0 for the second
- * copy forces the reload but not the same schedule (0x210). */
-#pragma push
-/* Kept (#821 r79): a for loop with (n + 7) / 8 recomputed in the bound and both seeds, and a
-   static inline TextCells(n) helper, are 0x1f4 and 0x1e0 against 0x20c. */
-#pragma opt_common_subs off
+/* n holds the line's character count, a u8 like data_0209d6b0 it is read from. */
 void LoadControllerModeText(int param0) {
-    int n, m, i;
+    u8 n;
+    int m, i;
     short *scr;
 
     data_0209d6d4 = param0;
@@ -392,7 +386,6 @@ void LoadControllerModeText(int param0) {
         } while (i < mm);
     }
 }
-#pragma pop
 
 void Message::DisplayControllerModeText(unsigned short n)
 {
