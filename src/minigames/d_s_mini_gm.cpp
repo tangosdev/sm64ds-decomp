@@ -81,7 +81,6 @@ extern short gSubBg3HOffset;
 extern short gSubBg0HOffset;
 extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
-extern dWipe_c data_0209f61c;
 extern int gFrameStep;
 extern unsigned short data_020a0e5a[];
 
@@ -472,7 +471,7 @@ s32 dScMiniGm_c::InitResources()
     }
     gFrameStep = 1;
     if (data_0209b2fc != 0) {
-        dScene_c::SetFaders(&data_0209f61c);
+        dScene_c::SetFaders(&gSceneWipe);
     }
 
     data_0209b2fc = 0;
@@ -1087,8 +1086,8 @@ void dScMiniGm_c::UpdateGameSelect()
     }
     LoadIconPalette(sel);
     func_02012790(0x1e);
-    dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.SetType(0);
+    dScene_c::SetFaders(&gSceneWipe);
+    gSceneWipe.SetType(0);
     gMgMenuRow.level = mStartLevel;
     dScene_c::StartSceneFade(sMiniGmRows[gMgLastSelected[0]].id,
                              sMiniGmRows[gMgLastSelected[0]].sceneParam, 0);

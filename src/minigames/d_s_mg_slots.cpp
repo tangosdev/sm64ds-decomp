@@ -115,7 +115,6 @@ extern int sSlotReelScrollSpeeds[];
 extern u8 sSlot1Payouts[];
 extern s16 sSlotMatchBlinkX[][2];
 extern s16 sSlotMatchBlinkY[][2];
-extern dWipe_c data_0209f61c;
 
 extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
@@ -1318,8 +1317,8 @@ s32 dScMgSlot1_c::Behavior() {
         break;
     case 8:
         if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-            dScene_c::SetFaders(&data_0209f61c);
-            data_0209f61c.SetType(2);
+            dScene_c::SetFaders(&gSceneWipe);
+            gSceneWipe.SetType(2);
             dScene_c::StartSceneFade(5, 0, 0);
         }
         break;

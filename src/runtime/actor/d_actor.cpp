@@ -17,7 +17,7 @@
  * reconciled to the headers that own each type (fBase_c, dBase_c, dCc_c,
  * daPly_c, dBgCh_Gnd/Lin, SpawnInfo, SharedFilePtr, Sound) and spelled with
  * those headers' field names -- dCc_c's hitFlags/otherOwner/pushback, fBase_c's
- * MarkForDestruction, SharedFilePtr's Release. data_0209b468, the global actor
+ * MarkForDestruction, SharedFilePtr's Release. sActorList, the global actor
  * list, is defined here as ActorList (a coined name); the list helpers
  * func_0203b244 and func_0203b27c take its address and stay free C functions.
  *
@@ -85,7 +85,7 @@ struct ActorList {
     fLiNdBa_c *func_02043f98(unsigned int key);
     fLiNdBa_c *func_02043f4c(unsigned int key, fLiNdBa_c *after);
 };
-ActorList data_0209b468;
+ActorList sActorList;
 
 static inline int IsGameMode(int mode) {
     return gGameMode == mode;
@@ -94,7 +94,7 @@ static inline int IsGameMode(int mode) {
 /* Constructor first in source: reverse emission puts C1/C2 above the
    destructor. Both variants are this one body. */
 dActor_c::dActor_c() : mActorListNode(this) {
-    func_0203b244(&data_0209b468, &mActorListNode);
+    func_0203b244(&sActorList, &mActorListNode);
     {
         int *spawnPos = (int *)data_0209b460;
         if (spawnPos) {
@@ -144,7 +144,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
 }
 
 dActor_c::~dActor_c() {
-    func_0203b27c(&data_0209b468, &mActorListNode);
+    func_0203b27c(&sActorList, &mActorListNode);
 }
 
 static inline int IsFlagSet(dActor_c *actor, u32 bit) {
@@ -282,7 +282,7 @@ void dActor_c::AfterRender(u32 vfSuccess)
 
 dActor_c *dActor_c::FindWithID(u32 id)
 {
-    fLiNdBa_c *node = data_0209b468.func_02043f98(id);
+    fLiNdBa_c *node = sActorList.func_02043f98(id);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -291,9 +291,9 @@ dActor_c *dActor_c::FindWithID(u32 id)
 dActor_c *dActor_c::FindWithActorID(u32 actorID, dActor_c *after) {
     fLiNdBa_c *node;
     if (after)
-        node = data_0209b468.func_02043f4c(actorID, &after->mActorListNode);
+        node = sActorList.func_02043f4c(actorID, &after->mActorListNode);
     else
-        node = data_0209b468.func_02043f4c(actorID, 0);
+        node = sActorList.func_02043f4c(actorID, 0);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -305,7 +305,7 @@ dActor_c *dActor_c::Next(const dActor_c *after)
     if (after)
         node = after->mActorListNode.next;
     else
-        node = data_0209b468.first;
+        node = sActorList.first;
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;

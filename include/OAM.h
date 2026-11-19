@@ -32,6 +32,8 @@ struct Matrix2x2; /* fwd only -- a pointer parameter needs no more, and the two
                      files that pass one keep their own 4 x s32 definition */
 struct OamTmp;    /* fwd only -- EnableSubOAM's caller passes one and the body
                      does not read it */
+union GXOamAttr;  /* fwd only -- the staging buffers below; NitroSDK's
+                     include/nitro/gx/gxcommon.h defines it */
 
 struct OAM {
     u8  pad_000[0xa8];
@@ -64,6 +66,17 @@ struct OAM {
     static OamAttr *Render(bool, OamAttr *, int, int, int, int, int, int);
     static void RenderSub(OamAttr* data, s32 x, s32 y);
     static void RenderSub(OamAttr* data, s32 x, s32 y, s32 palette, s32 priority);
+
+    /* The staging state Render fills and Load sends to the hardware, all bss
+       with no definition in src/: the two 128-entry OAM buffers, the count of
+       entries used in each, and the affine slots used in each (LoadAffineParams
+       advances one by 4 per matrix). Reset clears them. */
+    static int objCountMain;
+    static int curAffineSetMain;
+    static int curAffineSetSub;
+    static int objCountSub;
+    static GXOamAttr bufferMain[];
+    static GXOamAttr bufferSub[];
 
     /* The sprite tables. These are ROM data with no definition in src/; each
        name is its symbols.txt row (_ZN3OAM<name>E). A single sprite

@@ -166,7 +166,7 @@ void func_020199a4(void) {
     int sl = 0xb4;
     if (data_0209d4ec == 7)
         data_0209d4ec = 0;
-    func_0201a9ec(&data_0209d574);
+    func_0201a9ec(&gWatchdog);
     for (;;) {
         int b = !(gGameMode == 1);
         if (b == 0)

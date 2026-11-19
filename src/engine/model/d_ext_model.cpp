@@ -104,7 +104,7 @@ extern "C" u32 func_020462bc(int *file);
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
 void func_020462b4(int *data, int buf);
 /* local extern: dExtShadowModel_c's live list head and freeze flag */
-extern dExtShadowModel_c *data_0209cef4;
+extern dExtShadowModel_c *sShadowModelList;
 extern u8 data_0209ceec;
 /* The two shadow model files live in the shared overlay-0/1 region: arm9's own
  * symbols.txt rows for 0x020ad524/0x020ad560 sit past .bss and name nothing
@@ -640,7 +640,7 @@ void dExtCommonModel_c::SetPolygonID(u32 id) {
    dExtShadowModel_c, 0x02015d38..0x0201609c: the dExtModel_c sibling that
    draws an actor's ground shadow from a shared cylinder or cuboid BMD_File.
    Every live instance sits on a global intrusive doubly-linked list (head
-   data_0209cef4, freeze flag data_0209ceec): InitModel links in, the
+   sShadowModelList, freeze flag data_0209ceec): InitModel links in, the
    destructor unlinks, RenderAll walks the list and CleanAll empties it.
    --------------------------------------------------------------------------- */
 
@@ -658,8 +658,8 @@ dExtShadowModel_c::dExtShadowModel_c() : mat(0), prev(0), next(0) {}
 dExtShadowModel_c::~dExtShadowModel_c() {
     if (prev)
         prev->next = next;
-    else if (data_0209cef4 == this)
-        data_0209cef4 = next;
+    else if (sShadowModelList == this)
+        sShadowModelList = next;
 
     if (next)
         next->prev = prev;
@@ -706,23 +706,23 @@ void dExtShadowModel_c::InitModel(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz, u8 op
     this->opacity = opacity;
     if (data_0209ceec)
         return;
-    next = data_0209cef4;
-    if (data_0209cef4)
-        data_0209cef4->prev = this;
-    data_0209cef4 = this;
+    next = sShadowModelList;
+    if (sShadowModelList)
+        sShadowModelList->prev = this;
+    sShadowModelList = this;
 }
 
 void dExtShadowModel_c::CleanAll() {
-    if (data_0209cef4) {
+    if (sShadowModelList) {
         do {
-            dExtShadowModel_c *nx = data_0209cef4->next;
+            dExtShadowModel_c *nx = sShadowModelList->next;
             if (nx)
                 nx->prev = 0;
             /* the ROM re-reads the head for this store instead of keeping
                it in a register */
-            data_0209cef4->next = 0;
-            data_0209cef4 = nx;
-        } while (data_0209cef4);
+            sShadowModelList->next = 0;
+            sShadowModelList = nx;
+        } while (sShadowModelList);
     }
     data_0209ceec = 0;
 }
@@ -730,7 +730,7 @@ void dExtShadowModel_c::CleanAll() {
 /* The scratch matrix's translation y is lifted two units so the shadow sits
    above the ground. */
 void dExtShadowModel_c::RenderAll() {
-    dExtShadowModel_c *node = data_0209cef4;
+    dExtShadowModel_c *node = sShadowModelList;
     if (node) {
         do {
             ModelComponents *model = node->data;

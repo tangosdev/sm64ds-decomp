@@ -234,9 +234,9 @@ extern SharedFilePtr *data_020756f0[12];
 extern unsigned char data_02075768[];
 extern u8 data_02075769[];
 extern s8 data_0207576a[];
-extern const OvTbl data_02075804[];
-extern const int data_020758c8[];
-extern const unsigned char data_02075998[][7];
+extern const OvTbl sActorBankOverlayIds[];
+extern const int sLevelOverlayIds[];
+extern const unsigned char sLevelActorBanks[][7];
 extern u8 data_0208a0e0;
 /* Where the stage goes next. Each destination is a sublevel, an entrance
    and a star; the crash screen prints the current three as "StageNo",
@@ -254,7 +254,7 @@ extern s8 gCheckpointSublevel;
 extern s8 gReturnSublevel;
 extern s8 gCurrentAreaId;
 extern u8 data_02092128[];
-extern int data_02092130;
+extern int sLoadedLevelOverlay;
 extern unsigned int data_02092134;
 extern int gLevelMinY;
 extern u16 *data_0209214c[];
@@ -332,7 +332,7 @@ static u8 sNextEntranceId;
 static u8 sReturnState;
 static u8 sCheckpointStarId;
 u8 data_0209f274;
-static u8 data_0209f278;
+static u8 sLevelOverlaysPreloaded;
 static u8 data_0209f27c;
 static u8 data_0209f280;
 /* Non-zero while a talk or event is pointing the player at the Touch Screen:
@@ -5008,29 +5008,29 @@ int GetSoundGroupID(int group, int sub) {
 extern "C" void UnloadOverlay(int ovID);
 
 void UnloadLevelOverlays(int levelID) {
-    if (data_02092130 != -1) {
-        UnloadOverlay(data_02092130);
-        data_02092130 = -1;
+    if (sLoadedLevelOverlay != -1) {
+        UnloadOverlay(sLoadedLevelOverlay);
+        sLoadedLevelOverlay = -1;
     }
     LoadOrUnloadObjectOverlays(UnloadOverlay, levelID);
 }
 
 void func_0202deac(int levelID) {
     LoadLevelOverlays(levelID);
-    data_0209f278 = 1;
+    sLevelOverlaysPreloaded = 1;
 }
 
 void LoadLevelOverlays(int level) {
-    if (data_0209f278) {
-        if (data_02092130 != data_020758c8[level])
+    if (sLevelOverlaysPreloaded) {
+        if (sLoadedLevelOverlay != sLevelOverlayIds[level])
             OS_Terminate();
-        data_0209f278 = 0;
+        sLevelOverlaysPreloaded = 0;
         return;
     }
-    int ov = data_020758c8[level];
+    int ov = sLevelOverlayIds[level];
     if (ov != -1) {
         LoadOverlay(ov);
-        data_02092130 = ov;
+        sLoadedLevelOverlay = ov;
     }
     LoadOrUnloadObjectOverlays(LoadOverlay, level);
 }
@@ -5041,9 +5041,9 @@ void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
         return;
     for (i = 0; i < 7; i++) {
         if (!IsVsMode() || i == 6) {
-            unsigned char v = data_02075998[idx][i];
+            unsigned char v = sLevelActorBanks[idx][i];
             if (v != 0) {
-                fn(data_02075804[i].t[v]);
+                fn(sActorBankOverlayIds[i].t[v]);
             }
         }
     }
@@ -5069,17 +5069,17 @@ dScStage_c *dScStage_c_classInit() {
 }
 
 extern "C" {
-extern const OvTbl data_02075804[7] = {
+extern const OvTbl sActorBankOverlayIds[7] = {
     {{0, 62, 63, 64, 65, 66, 67}}, {{0, 69, 70, 71, 72, 73, 74}}, {{0, 77, 78, 79, 80, 81, 82}},
     {{0, 84, 85, 86, 87, 0, 0}},   {{0, 89, 90, 91, 92, 0, 0}},   {{0, 94, 95, 96, 97, 0, 0}},
     {{0, 100, 101, 0, 0, 0, 0}},
 };
-extern const int data_020758c8[52] = {
+extern const int sLevelOverlayIds[52] = {
     8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
     26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
     44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
 };
-extern const unsigned char data_02075998[52][7] = {
+extern const unsigned char sLevelActorBanks[52][7] = {
     {0, 0, 5, 1, 4, 0, 0}, {1, 1, 0, 2, 1, 1, 1}, {2, 0, 4, 2, 1, 1, 1}, {2, 0, 0, 2, 1, 0, 1},
     {0, 0, 4, 2, 1, 0, 1}, {0, 0, 4, 2, 1, 0, 1}, {1, 1, 2, 1, 3, 2, 1}, {1, 0, 3, 1, 3, 1, 1},
     {3, 0, 0, 1, 0, 1, 1}, {3, 0, 0, 0, 0, 0, 0}, {0, 4, 5, 1, 1, 1, 1}, {0, 0, 0, 0, 1, 0, 1},

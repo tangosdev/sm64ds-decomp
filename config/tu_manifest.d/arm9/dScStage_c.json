@@ -911,21 +911,21 @@
   "data": [],
   "rodata": [
     {
-      "symbol": "data_02075804",
+      "symbol": "sActorBankOverlayIds",
       "address": "0x02075804",
       "size": "0xc4",
       "binding": "STB_GLOBAL",
       "evidence": "seven-by-seven overlay table the stage indexes"
     },
     {
-      "symbol": "data_020758c8",
+      "symbol": "sLevelOverlayIds",
       "address": "0x020758c8",
       "size": "0xd0",
       "binding": "STB_GLOBAL",
       "evidence": "per-level words indexed by the stage"
     },
     {
-      "symbol": "data_02075998",
+      "symbol": "sLevelActorBanks",
       "address": "0x02075998",
       "size": "0x16c",
       "binding": "STB_GLOBAL",
@@ -1179,7 +1179,7 @@
       "evidence": "u8. Read here by FUN_02029a68, FUN_02029ab0 and dScStage_c::InitResources. Read outside this TU by dActor_c::BeforeBehavior (arm9), so global."
     },
     {
-      "symbol": "data_0209f278",
+      "symbol": "sLevelOverlaysPreloaded",
       "address": "0x0209f278",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -2753,7 +2753,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f270"
     },
     {
-      "symbol": "data_0209f278",
+      "symbol": "sLevelOverlaysPreloaded",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f278"

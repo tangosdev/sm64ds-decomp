@@ -135,7 +135,6 @@ extern void Mg_SetNextBanner(int);
 
 extern void (dMgState_c::*__ptmf_null)(); /* the null member pointer */
 extern dFdBrightness_c *gSceneFader;
-extern dWipe_c data_0209f61c;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
 extern int gMgCoinsShowDelta;
@@ -385,8 +384,8 @@ void dMgState_c ::RetryPrompt_Update() {
         fader = gSceneFader;
         if (fader->IsBetweenStartAndEnd())
             return;
-        dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.SetType(2);
+        dScene_c::SetFaders(&gSceneWipe);
+        gSceneWipe.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -507,8 +506,8 @@ void dMgState_c::UpdateGameOverToMenu() {
     fader = gSceneFader;
     if (fader->IsBetweenStartAndEnd() != 0)
         return;
-    dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.SetType(2);
+    dScene_c::SetFaders(&gSceneWipe);
+    gSceneWipe.SetType(2);
     dScene_c::StartSceneFade(5, 0, 0);
     func_02012dd0((void *)0x3c);
 }
@@ -639,8 +638,8 @@ void dMgState_c ::RetryPromptB_Update() {
         fader = gSceneFader;
         if (fader->IsBetweenStartAndEnd())
             return;
-        dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.SetType(2);
+        dScene_c::SetFaders(&gSceneWipe);
+        gSceneWipe.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -704,8 +703,8 @@ void dMgState_c::UpdateRetryPrompt() {
         }
         if (gSceneFader->IsBetweenStartAndEnd() != 0)
             return;
-        dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.SetType(2);
+        dScene_c::SetFaders(&gSceneWipe);
+        gSceneWipe.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;

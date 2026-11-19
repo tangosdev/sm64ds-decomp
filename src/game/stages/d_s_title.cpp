@@ -74,7 +74,6 @@ extern "C" {
  * Behavior's `% 0x36` is an unsigned reduction; the array spelling was only
  * ever read at [0]. */
 extern u32 gTitleCursor;
-extern GXOamAttr data_0209e674[];
 extern dFdBrightness_c *gSceneFader;
 extern PadData data_020a0e58[];
 extern u8 gGameMode;
@@ -308,9 +307,9 @@ s32 dScTitle_c::Render() {
     OamTmp tmp;
     OAM::EnableSubOAM(&tmp);
     {
-        int idx = data_0209e664;
+        int idx = OAM::objCountMain;
         unsigned int v = ((gTitleCursor - gTitleListTop + 2) << 3) & 0xff;
-        GXOamAttr *p = &data_0209e674[idx];
+        GXOamAttr *p = &OAM::bufferMain[idx];
         p->attr01 = v | 0x80000;
         p->attr2 = 0;
     }

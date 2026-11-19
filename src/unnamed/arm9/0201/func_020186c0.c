@@ -12,7 +12,7 @@ int func_020186c0(unsigned int val) {
     ArchiveTableEntry *e;
     if (val < 0x8000)
         return 0;
-    e = data_0208ecf4;
+    e = gArchiveTable;
     for (i = 0; i < ARCHIVE_TABLE_COUNT; i++) {
         if (e->firstFileId <= val && val < e->endFileId) {
             if (e->archive == 0) {

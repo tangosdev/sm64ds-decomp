@@ -25,7 +25,7 @@ void func_0201fec8(void)
     unsigned char buf[0x50];
     unsigned char saved;
     if (data_0209e64c != 0) return;
-    saved = func_0201a9ec(&data_0209d574);
+    saved = func_0201a9ec(&gWatchdog);
     OS_GetOwnerInfo(buf);
     switch (buf[0]) {
     case 2:
@@ -45,8 +45,8 @@ void func_0201fec8(void)
         break;
     }
     data_0208f274 = func_0203daac();
-    func_0201a9fc(&data_0209d574);
-    func_0201a96c(&data_0209d574, saved);
+    func_0201a9fc(&gWatchdog);
+    func_0201a96c(&gWatchdog, saved);
     data_0209e64c = 1;
 }
 

@@ -109,7 +109,6 @@ extern void FreeGfxSlotsById(int arg);
 void Mg_InitMusic();
 extern void Enable3dEngines(void);
 extern MgEntry gMgMenuRow;
-extern dWipe_c data_0209f61c;
 extern unsigned char data_0209d460;
 extern unsigned char data_0209d458;
 
@@ -1879,8 +1878,8 @@ void dScMgBase_c::UpdateMenu() {
         CloseMenu();
         return;
     case 1:
-        dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.SetType(1);
+        dScene_c::SetFaders(&gSceneWipe);
+        gSceneWipe.SetType(1);
         dScene_c::StartSceneFade(5, 0, 0);
         if (mQuitFadeStarted != 0)
             return;
@@ -2754,8 +2753,8 @@ bool dScMgBase_c::BeforeInitResources()
     Mg_ResetBannerLayout();
     InitEngines();
     Mg_LoadBannerFiles();
-    dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.SetType(0);
+    dScene_c::SetFaders(&gSceneWipe);
+    gSceneWipe.SetType(0);
     data_0209d460 = 0;
     data_0209d458 = 0;
     InitSubScreenBg();
