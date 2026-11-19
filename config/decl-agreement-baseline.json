@@ -234,9 +234,6 @@
   "func_ov079_02123d4c": {
    "src/game/actors/d_a_btn.cpp": ["arity:1", "return:Vector3"]
   },
-  "gCamera": {
-   "src/game/actors/d_a_demo.cpp": ["return:char *"]
-  },
   "gMessageBankBase": {
    "src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp": ["return:int"]
   },

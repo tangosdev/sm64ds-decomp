@@ -320,7 +320,7 @@ extern "C" {
 extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
-extern char *gCamera;
+extern dCamera_c *gCamera;
 extern VecFx32 data_ov002_0210b958;
 }
 
@@ -2715,7 +2715,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
             int m = FX_MUL(r, 0xa000);
             this->mMagnitude = m + 0x19000;
         }
-        VEC_Add(&this->mPos, &((dCamera_c *)gCamera)->pos, &this->mPos);
+        VEC_Add(&this->mPos, &gCamera->pos, &this->mPos);
         if (first > 0x2bc) {
             this->mPos.y -= 0x96000;
         }
@@ -3014,7 +3014,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *src, int first) {
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {
-    dCamera_c *cam = (dCamera_c *)gCamera;
+    dCamera_c *cam = gCamera;
 
     if (mode == gKuppaScriptFrame) {
         if (mode == 0) {
@@ -3165,7 +3165,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     }
 
     this->mOpacity = 0x1f;
-    cam = (dCamera_c *)gCamera;
+    cam = gCamera;
 
     VEC_Add(&v0, &cam->pos, &v0);
     dist = Vec3_Dist(&v0, &cam->pos);
