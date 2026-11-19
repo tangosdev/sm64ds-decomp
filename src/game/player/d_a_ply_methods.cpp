@@ -6130,7 +6130,8 @@ void daPly_c::func_ov002_020c7194() {
 void daPly_c::func_ov002_020c71e0() {
     extern unsigned char gPrevReturnState[];
     mLevelEntryDone = 1;
-    if (data_0209f2bc != 0) return;
+    if (data_0209f2bc != 0)
+        return;
     if (mStateWaitTimer == 0) {
         this->mPrevAngle.y = this->mAngle.y;
         if (mStateStep == 1) {
