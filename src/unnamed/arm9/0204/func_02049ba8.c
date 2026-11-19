@@ -1,8 +1,8 @@
 #include "CaptureEffect.h"
 
 /* The sound-capture effect callback. func_02049cd8 passes it to
-   func_020507e0 (StartEffect-shaped: buffer, size, format, 32000 Hz,
-   interval 2, callback, arg) with &data_020a4c64 as ctx. It gets the
+   NNS_SndCaptureStartEffect (buffer, size, format, 32000 Hz, interval 2,
+   callback, arg) with &data_020a4c64 as ctx. It gets the
    captured left and right buffers, the length in bytes and the format. The
    optional user callback runs first, then the built-in effect for ctx->kind:
    0 none, 1 func_020499bc, 2 func_020497a0. func_02049c48 switches the kind,
