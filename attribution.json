@@ -9329,7 +9329,7 @@
     "src/engine/sound/SoundEngine.cpp#func_02051e60": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#NNS_SndArcPlayerStartSeqArc": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#NNS_SndArcPlayerStartSeq": "tangosdev",
-    "src/engine/sound/SoundEngine.cpp#func_02052008": "tangosdev",
+    "src/engine/sound/SoundEngine.cpp#NNS_SndArcPlayerSetup": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#FreeCommandBuffer": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#func_020520dc": "lplaat",
     "src/engine/sound/SoundEngine.cpp#func_0205212c": "andrewboudreau",

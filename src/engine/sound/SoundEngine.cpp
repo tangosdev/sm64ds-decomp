@@ -181,7 +181,7 @@ struct SndInfoBlock {
     int seqArcTable;  /* 0x0c: NNS_SndArcGetSeqArcInfo */
     int bankTable;    /* 0x10: Sound::InfoInstrumentBankEntry::GetWithID */
     int waveArcTable; /* 0x14: NNS_SndArcGetWaveArcInfo; a bank's four ids index it */
-    int playerTable;  /* 0x18: NNS_SndArcGetPlayerInfo; func_02052008 reads each record's
+    int playerTable;  /* 0x18: NNS_SndArcGetPlayerInfo; NNS_SndArcPlayerSetup reads each record's
                          playable-seq count from its first byte */
     int groupTable;   /* 0x1c: NNS_SndArcGetGroupInfo */
 };
@@ -506,7 +506,7 @@ extern int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo
 extern int func_02051e60(NNSSndHandle *handle, int b, int c, int d, int arg5, int arg6);
 extern int NNS_SndArcPlayerStartSeqArc(void *a0, u32 a1, int a2);
 extern int NNS_SndArcPlayerStartSeq(void *thiz, unsigned int id);
-extern int func_02052008(struct SndHeap *heap);
+extern int NNS_SndArcPlayerSetup(struct SndHeap *heap);
 extern void FreeCommandBuffer(void *node);
 extern void func_020520dc(Obj_205212c *self);
 extern void func_0205212c(Obj_205212c *self);
@@ -682,7 +682,7 @@ extern "C" void FreeCommandBuffer(void *node) {
     OS_RestoreInterrupts(state);
 }
 
-extern "C" int func_02052008(struct SndHeap *heap) {
+extern "C" int NNS_SndArcPlayerSetup(struct SndHeap *heap) {
     int i;
     NNS_SndArcGetCurrent();
     for (i = 0; i < 32; i++) {

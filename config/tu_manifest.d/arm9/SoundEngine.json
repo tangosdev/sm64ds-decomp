@@ -886,7 +886,7 @@
       "ordinal": 123
     },
     {
-      "symbol": "func_02052008",
+      "symbol": "NNS_SndArcPlayerSetup",
       "address": "0x02052008",
       "legacy_source": "src/func_02052008.c",
       "size": "0x0000009c",

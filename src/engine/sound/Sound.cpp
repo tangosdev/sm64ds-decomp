@@ -50,7 +50,7 @@ extern "C" void NNS_SndInit(void);
 extern "C" struct SndHeap *NNS_SndHeapCreate(u32 addr, u32 size);
 extern "C" void NNS_SndArcInit(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
                                int loadSymbols);
-extern "C" int func_02052008(struct SndHeap *heap);
+extern "C" int NNS_SndArcPlayerSetup(struct SndHeap *heap);
 extern "C" void func_020506fc(int arg);
 extern "C" {
 
@@ -254,7 +254,7 @@ void func_020133bc(void) {
     func_0201a9fc(&data_0209d574);
     NNS_SndArcInit((data_020a5bb8_t *)&sSndArc, path, sSndHeap, 0);
     func_0201a9fc(&data_0209d574);
-    func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
+    NNS_SndArcPlayerSetup(func_0203d974() == 0 ? sSndHeap : 0);
     if (func_0203d974() == 0) {
         func_0201a9fc(&data_0209d574);
         func_020134d8((void *)1, sSndHeap);
