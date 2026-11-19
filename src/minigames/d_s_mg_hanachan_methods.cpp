@@ -31,8 +31,8 @@
  * - the sixteen popups at sHanaPopups are read through
  *   four record spellings (HanaPopup_DrawAll, HanaPopup_UpdateAll,
  *   HanaPopup_Spawn, HanaPopup_ClearAll).
- * - the popup at sHanaStarPopup is read through the file-local
- *   HanaStarPopup view, and StarPopup_Update reaches its timer byte
+ * - the popup at sHanaStarPopup is declared as the file-local
+ *   HanaStarPopup record, and StarPopup_Update reaches its timer byte
  *   through a separate symbol, sHanaStarPopups.
  * - Wiggler::DrawTarget repeats Wiggler::DrawField's segment
  *   walk with Vector2 points, whose declared destructor is part of
@@ -211,7 +211,6 @@ struct S_ea81c {
    HanaPopup_Spawn's layout, which it needs to match; the other
    functions keep the spelling their own match used, through a cast. */
 extern "C" {
-extern char sHanaStarPopup[];
 extern struct S_ea81c sHanaPopups[];
 extern OamAttr *sMgDigitSprites[];
 }
@@ -241,6 +240,7 @@ struct HanaStarPopup {
     u8 pad[3];
 };
 typedef char HanaStarPopup_size_must_be_0x14[sizeof(HanaStarPopup) == 0x14 ? 1 : -1];
+extern "C" HanaStarPopup sHanaStarPopup[];
 
 /* Draws the single popup while its visible flag is 1: a sprite from the
    language's table 8 pixels left of it and one from sMgDigitSprites
@@ -249,7 +249,7 @@ void StarPopup_Draw(void) {
     int x;
     int y;
     s32 r;
-    HanaStarPopup *popup = (HanaStarPopup *)sHanaStarPopup;
+    HanaStarPopup *popup = sHanaStarPopup;
     if (popup->visible != 1) {
         return;
     }
@@ -275,18 +275,18 @@ extern "C" Timer20 sHanaStarPopups[];
 
 void StarPopup_Update(int *timeLeft) {
     int i;
-    char *f = sHanaStarPopup;
-    for (i = 0; i < 1; i++, f += 0x14) {
+    HanaStarPopup *f = sHanaStarPopup;
+    for (i = 0; i < 1; i++, f++) {
         u8 ph;
-        if (((HanaStarPopup *)f)->active != 1)
+        if (f->active != 1)
             continue;
-        if (((HanaStarPopup *)f)->y < 0x8000)
-            ((HanaStarPopup *)f)->y = 0x8000;
-        ph = ((HanaStarPopup *)f)->phase;
+        if (f->y < 0x8000)
+            f->y = 0x8000;
+        ph = f->phase;
         if (ph == 0) {
-            ((HanaStarPopup *)(int)f)->y += ((HanaStarPopup *)f)->vy;
-            ((HanaStarPopup *)(int)f)->vy -= 0x100;
-            if (((HanaStarPopup *)f)->timer != 0) {
+            f->y += f->vy;
+            f->vy -= 0x100;
+            if (f->timer != 0) {
                 int v;
                 sHanaStarPopups[i].t--;
                 v = sHanaStarPopups[i].t;
@@ -294,10 +294,10 @@ void StarPopup_Update(int *timeLeft) {
                     sHanaStarPopups[i].t = 0;
                 return;
             }
-            ((HanaStarPopup *)f)->timer = 64;
-            ((HanaStarPopup *)f)->phase += 1;
+            f->timer = 64;
+            f->phase += 1;
         } else if (ph == 1) {
-            if (((HanaStarPopup *)f)->timer != 0) {
+            if (f->timer != 0) {
                 int v;
                 sHanaStarPopups[i].t--;
                 v = sHanaStarPopups[i].t;
@@ -305,8 +305,8 @@ void StarPopup_Update(int *timeLeft) {
                     sHanaStarPopups[i].t = 0;
                 return;
             }
-            ((HanaStarPopup *)f)->visible = 0;
-            ((HanaStarPopup *)f)->phase += 1;
+            f->visible = 0;
+            f->phase += 1;
             {
                 dScMgBase_c *g = gMgScene;
                 if (g != 0) {
@@ -318,16 +318,16 @@ void StarPopup_Update(int *timeLeft) {
             }
             Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
         } else {
-            if (((HanaStarPopup *)f)->ticks != 0) {
-                ((HanaStarPopup *)(int)f)->timer += 1;
-                if (((HanaStarPopup *)f)->timer >= 8) {
-                    ((HanaStarPopup *)f)->timer = 0;
-                    ((HanaStarPopup *)(int)f)->ticks -= 1;
+            if (f->ticks != 0) {
+                f->timer += 1;
+                if (f->timer >= 8) {
+                    f->timer = 0;
+                    f->ticks -= 1;
                     if (timeLeft != 0)
                         ApproachLinear(*timeLeft, 0x32, 1);
                 }
             } else {
-                ((HanaStarPopup *)f)->active = 0;
+                f->active = 0;
             }
         }
     }
@@ -336,27 +336,27 @@ void StarPopup_Update(int *timeLeft) {
 /* Starts the single popup at (x, y), x kept between 0x10000 and 0xf4000,
    unless it is already active. */
 void StarPopup_Start(int x, int y) {
-    char *g = sHanaStarPopup;
-    if (((HanaStarPopup *)g)->active != 0)
+    HanaStarPopup *g = sHanaStarPopup;
+    if (g->active != 0)
         return;
-    ((HanaStarPopup *)g)->active = 1;
+    g->active = 1;
     if (x < 0x10000)
         x = 0x10000;
     else if (x > 0xf4000)
         x = 0xf4000;
-    ((HanaStarPopup *)g)->x = x;
-    ((HanaStarPopup *)g)->y = y;
-    ((HanaStarPopup *)g)->timer = 24;
-    ((HanaStarPopup *)g)->phase = 0;
-    ((HanaStarPopup *)g)->visible = 1;
-    ((HanaStarPopup *)g)->ticks = 5;
-    ((HanaStarPopup *)g)->vy = -0x800;
+    g->x = x;
+    g->y = y;
+    g->timer = 24;
+    g->phase = 0;
+    g->visible = 1;
+    g->ticks = 5;
+    g->vy = -0x800;
 }
 
 /* Clears the single popup's active and draw flags. */
 unsigned char StarPopup_Clear(void) {
-    ((HanaStarPopup *)sHanaStarPopup)->active = 0;
-    ((HanaStarPopup *)sHanaStarPopup)->visible = 0;
+    sHanaStarPopup->active = 0;
+    sHanaStarPopup->visible = 0;
     return 0;
 }
 

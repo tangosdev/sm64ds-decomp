@@ -111,27 +111,13 @@ extern int GetGameLanguage(void);
 /* --- data --- */
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern int sAmidaPatternSpeedUp[];
 extern s32 data_0208ee44;
-extern char sAmidaPatterns[];
-extern char sAmidaPatternGoalShuffle[];
-extern char sAmidaPatternSpeeds[];
-extern char sAmidaPatternRungSkip[];
-extern char sAmidaPatternExtraRungs[];
 
-/* File-local view of one 0x1c-byte pattern record, indexed by
-   mPatternIndex. Each field but walkerStagger has its own symbol above
-   (sAmidaPatterns is the record's first word, the walker count), and the
-   readers keep those symbols. walkerStagger (+0x14) has none: the round
-   setup multiplies it by 0x3c and the walker index into mWalkerDelay, so
-   it is the seconds between walkers. */
-/* First word of one 0x1c-stride pattern table (speeds, shuffle, rung skip, extra rungs). */
-struct AmidaTableWord {
-    s32 word;
-    char tail[0x18];
-};
-typedef char AmidaTableWord_size_must_be_0x1c[sizeof(AmidaTableWord) == 0x1c ? 1 : -1];
-
+/* One 0x1c-byte pattern record, indexed by mPatternIndex. Every field but
+   walkerStagger also carries a linker label of its own (noted beside it);
+   the readers reach them all through sAmidaPatterns. walkerStagger (+0x14)
+   has none: the round setup multiplies it by 0x3c and the walker index into
+   mWalkerDelay, so it is the seconds between walkers. */
 struct AmidaPattern {
     s32 walkerCount;   /* 0x00 sAmidaPatterns */
     s32 goalShuffle;   /* 0x04 sAmidaPatternGoalShuffle */
@@ -142,6 +128,7 @@ struct AmidaPattern {
     s32 speedUp;       /* 0x18 sAmidaPatternSpeedUp */
 };
 typedef char AmidaPattern_size_must_be_0x1c[sizeof(AmidaPattern) == 0x1c ? 1 : -1];
+extern AmidaPattern sAmidaPatterns[];
 extern OamAttr *sAmidaWalkerSprite;
 extern OamAttr *sAmidaSideSprite;
 extern OamAttr *sAmidaHurryButtonSprite;
@@ -1055,8 +1042,7 @@ void dScMgAmida_c::StepWalkers() {
                             if (mScore > 0x270f) {
                                 mScore = 0x270f;
                             }
-                            speedMode = sAmidaPatternSpeedUp[mPatternIndex *
-                                                             (sizeof(AmidaPattern) / sizeof(s32))];
+                            speedMode = sAmidaPatterns[mPatternIndex].speedUp;
                             switch (speedMode) {
                             case 0:
                                 break;
@@ -1397,8 +1383,7 @@ void dScMgAmida_c::InitWalkers() {
         if (this->IsVariant2() != 0) {
             this->mWalkerDelay[i] = 0;
         } else {
-            this->mWalkerDelay[i] =
-                i * ((AmidaPattern *)sAmidaPatterns)[this->mPatternIndex].walkerStagger * 0x3c;
+            this->mWalkerDelay[i] = i * sAmidaPatterns[this->mPatternIndex].walkerStagger * 0x3c;
         }
         this->mWalkerCell[i].x = (this->mLanePerm[i] << 6) + 0x20;
         if (this->IsVariant2() != 0) {
@@ -1446,10 +1431,10 @@ void dScMgAmida_c::SetupRound() {
     if (IsVariant2() != 0) {
         mWalkerCount = 4;
     } else {
-        mWalkerCount = ((AmidaPattern *)sAmidaPatterns)[mPatternIndex].walkerCount;
+        mWalkerCount = sAmidaPatterns[mPatternIndex].walkerCount;
     }
 
-    mScrollSpeed = ((((AmidaTableWord *)sAmidaPatternSpeeds)[mPatternIndex].word - 1) * 5) + 0xb;
+    mScrollSpeed = ((sAmidaPatterns[mPatternIndex].speed - 1) * 5) + 0xb;
 
     {
         u32 stage = mLevel;
@@ -1497,7 +1482,7 @@ void dScMgAmida_c::SetupRound() {
 
     mRoundCount = 0;
     InitWalkers();
-    ShuffleGoals(((AmidaTableWord *)sAmidaPatternGoalShuffle)[mPatternIndex].word);
+    ShuffleGoals(sAmidaPatterns[mPatternIndex].goalShuffle);
     Mg_SetTopScreenYOffset(0x20);
 
     mSetupInk = 1;
@@ -1547,7 +1532,7 @@ void dScMgAmida_c::SetupRound() {
                 }
             } while (remaining > 0);
         } else {
-            int sel = ((AmidaTableWord *)sAmidaPatternRungSkip)[mPatternIndex].word;
+            int sel = sAmidaPatterns[mPatternIndex].rungSkip;
             switch (sel) {
             case 0:
                 break;
@@ -1589,7 +1574,7 @@ void dScMgAmida_c::SetupRound() {
                 break;
             }
         } else {
-            sel2 = ((AmidaTableWord *)sAmidaPatternRungSkip)[mPatternIndex].word;
+            sel2 = sAmidaPatterns[mPatternIndex].rungSkip;
         }
 
         switch (sel2) {
@@ -1625,7 +1610,7 @@ void dScMgAmida_c::SetupRound() {
 
     mLineCount++;
     if (IsVariant2() == 0) {
-        int v = ((AmidaTableWord *)sAmidaPatternExtraRungs)[mPatternIndex].word;
+        int v = sAmidaPatterns[mPatternIndex].extraRungs;
         if (v != 0 && v == 1) {
             Mg_DrawLine(0x60, 0x2d, 0xa0, 0x2d, mLineColor, 1);
             Mg_DrawLine(0x20, 0x5a, 0x60, 0x5a, mLineColor, 1);
