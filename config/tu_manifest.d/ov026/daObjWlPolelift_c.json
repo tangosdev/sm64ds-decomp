@@ -29,6 +29,11 @@
       "end": "0x02112da8"
     },
     {
+      "name": ".data",
+      "start": "0x02113a9c",
+      "end": "0x02113aa8"
+    },
+    {
       "name": ".bss",
       "start": "0x02113ea0",
       "end": "0x02113eb4"
@@ -99,7 +104,15 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov026_02113a9c",
+      "address": "0x02113a9c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "InitResources and Behavior read it as the cylinder offset. ROM words are 0, 0x28000, 0; the next datum is _ZTS17daObjWlPolelift_c at 0x02113aa8. The ambiguous label data_ov026_02113aa0 is the y word, not a separate object."
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov026_02113ea0",

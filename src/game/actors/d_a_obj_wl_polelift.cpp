@@ -38,9 +38,20 @@ struct PoleliftModelFile : SharedFilePtr {
 };
 
 extern "C" {
-extern Vector3 data_ov026_02113a9c;
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
+
 extern PoleliftModelFile data_ov026_02113ea0;
 }
+
+/* Collider offset (0, 0x28000, 0). A C++ Vector3 definition would register
+ * ~Vector3 in .init, and this TU's sinit does not, so the words are a POD. */
+#pragma cplusplus off
+#define POLELIFT_OFFSET_DATA \
+    typedef struct PodVec { fx32 x, y, z; } PodVec; \
+    PodVec data_ov026_02113a9c = {0, 0x28000, 0}
+POLELIFT_OFFSET_DATA;
+#pragma cplusplus on
 
 daObjWlPolelift_c *daObjWlPolelift_c_classInit() {
     return new daObjWlPolelift_c();
@@ -148,7 +159,9 @@ s32 daObjWlPolelift_c::Behavior()
         if (ray.DetectClsn())
             groundY = ray.clsnY;
 
-        clsnOffset = data_ov026_02113a9c;
+        clsnOffset.x = data_ov026_02113a9c.x;
+        clsnOffset.y = data_ov026_02113a9c.y;
+        clsnOffset.z = data_ov026_02113a9c.z;
         clsn.SetPosRelativeToActor(clsnOffset);
         clsn.Update();
         UpdateModelTransform();
