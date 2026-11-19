@@ -87,7 +87,6 @@ extern int sMgCardSprites[];
 extern int sMCarloCardSprites[];
 extern int sMgCoinsBetPlaced;
 
-extern int func_0203d5dc(const int *a, const int *b);
 extern "C" {
 void MgCoins_Draw(void);
 }
@@ -594,7 +593,7 @@ void dMgMCarloCardObj_c::Update(int slot) {
         ApproachLinear(mPos.x, mTarget.x, mStep.x);
         ApproachLinear(mPos.y, mTarget.y, mStep.y);
         ApproachLinear(mLift, 0x4000, 0x300);
-        if (func_0203d5dc(&mPos.x, &mTarget.x) != 0)
+        if (func_0203d5dc(&mPos, &mTarget) != 0)
             return;
         if (mLift != 0x4000)
             return;

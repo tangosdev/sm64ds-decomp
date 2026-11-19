@@ -80,7 +80,6 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
 
-int func_0203d5dc(const int *a, const int *b);
 void LoadCard2SubBg3(void *);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdle(Dealer *dealer);
@@ -466,7 +465,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         ApproachLinear(mPos.x, mTarget.x, mStep.x);
         ApproachLinear(mPos.y, mTarget.y, mStep.y);
         ApproachLinear(mLift, 0x4000, 0x300);
-        if (func_0203d5dc(&mPos.x, &mTarget.x) != 0)
+        if (func_0203d5dc(&mPos, &mTarget) != 0)
             return;
         if (mLift != 0x4000)
             return;

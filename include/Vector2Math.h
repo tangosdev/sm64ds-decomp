@@ -16,8 +16,11 @@ void func_0203d630(Vector2 *, fx32);
 int func_0203d524(const Vector2 *, const Vector2 *);
 void func_0203d704(Vector2 *, Vector2 *, Vector2 *);
 void Vec2_Sub(Vector2 *, Vector2 *, Vector2 *);
+long long func_0203d5bc(Vector2 *);
 #ifdef __cplusplus
 }
+
+fx32 func_0203d5dc(const Vector2 *, const Vector2 *);
 #endif
 
 #endif

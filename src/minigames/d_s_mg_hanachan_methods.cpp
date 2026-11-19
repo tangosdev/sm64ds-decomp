@@ -196,7 +196,6 @@ extern void Hana_LoadBackground(void);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
-extern int func_0203d5dc(const int *a, const int *b);
 
 struct S_ea81c {
     int x;                 /* +0x0 */
@@ -868,7 +867,7 @@ void dScMgHanachan_c::Wiggler::Move() {
 int dScMgHanachan_c::Wiggler::HitTest(const Vector2 *touchPoint) {
     int segmentIndex;
     for (segmentIndex = 0; segmentIndex < 5; segmentIndex++) {
-        if (func_0203d5dc((const int *)(&seg[segmentIndex]), (const int *)touchPoint) < 0x14000)
+        if (func_0203d5dc(&seg[segmentIndex], touchPoint) < 0x14000)
             return 1;
     }
     return 0;
@@ -1683,7 +1682,8 @@ void dScMgHanachan_c::BeginResult() {
 
 void dScMgHanachan_c::Phase_Play() {
     Vector2 a;
-    int vec[4];
+    Vector2 vec;
+    Vector2 popup;
     int b = 0;
     int idx = gActivePlayerSlot;
 
@@ -1697,8 +1697,8 @@ void dScMgHanachan_c::Phase_Play() {
         a.y = gTouchInfo[idx].y << 12;
         p = mTarget;
         src = p->seg;
-        vec[0] = src->x;
-        vec[1] = src->y;
+        vec.x = src->x;
+        vec.y = src->y;
 
         if (mTarget->IsStarVisible() != 0 && mTarget->HitTest(&a) != 0) {
             mHit = 1;
@@ -1710,8 +1710,8 @@ void dScMgHanachan_c::Phase_Play() {
                 else
                     Sound::PlayBank2_2D(0x1ee);
                 if (sHanaRoundPattern == 0)
-                    vec[0] -= 0x28000;
-                StarPopup_Start(vec[0], vec[1]);
+                    vec.x -= 0x28000;
+                StarPopup_Start(vec.x, vec.y);
                 BeginResult();
                 return;
             }
@@ -1751,9 +1751,9 @@ void dScMgHanachan_c::Phase_Play() {
                         ptr2 = mWiggler;
                         do {
                             Vector2 *s2 = ptr2->seg;
-                            vec[0] = s2->x;
-                            vec[1] = s2->y;
-                            ptr2->Retarget(func_0203d5dc((const int *)vec, (const int *)&a));
+                            vec.x = s2->x;
+                            vec.y = s2->y;
+                            ptr2->Retarget(func_0203d5dc(&vec, &a));
                             j++;
                             ptr2++;
                         } while (j < sHanaFieldWigglerCount);
@@ -1763,12 +1763,12 @@ void dScMgHanachan_c::Phase_Play() {
                 func_02012790(0xe);
                 {
                     Vector2 *s3 = sel->seg;
-                    vec[2] = s3->x;
-                    vec[3] = s3->y;
+                    popup.x = s3->x;
+                    popup.y = s3->y;
                 }
                 if (sHanaRoundPattern == 0)
-                    vec[2] -= 0x28000;
-                HanaPopup_Spawn(vec[2], vec[3]);
+                    popup.x -= 0x28000;
+                HanaPopup_Spawn(popup.x, popup.y);
 
                 {
                     int t = mTimeLeft - 10;

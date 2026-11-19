@@ -71,7 +71,6 @@ struct W9 {
 typedef void (*VFunc)(void *);
 
 extern "C" {
-extern long long func_0203d5bc(int *p);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern struct OamAttr *sSmartballWingSprites[];
 extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
@@ -300,19 +299,19 @@ void cMgSmartball_wing_c::RebuildVerts() {
 }
 
 int cMgSmartball_wing_c::HitTest(int *point) {
-    int bodyOffset[2];
+    Vector2 bodyOffset;
     Vector2 triangle0Point, triangle0A, triangle0B, triangle0C;
     Vector2 triangle1Point, triangle1A, triangle1B, triangle1C;
     Vector2 triangle2Point, triangle2A, triangle2B, triangle2C;
     Vector2 triangle3Point, triangle3A, triangle3B, triangle3C;
 
     if (mTriggerCount <= 1 && point[1] < mCurrent.y + 0x8000) {
-        bodyOffset[0] = point[0];
-        bodyOffset[1] = point[1];
-        bodyOffset[0] -= mCurrent.x;
-        bodyOffset[1] -= mCurrent.y;
-        bodyOffset[1] -= 0x8000;
-        if (func_0203d5bc(bodyOffset) < 0x100000)
+        bodyOffset.x = point[0];
+        bodyOffset.y = point[1];
+        bodyOffset.x -= mCurrent.x;
+        bodyOffset.y -= mCurrent.y;
+        bodyOffset.y -= 0x8000;
+        if (func_0203d5bc(&bodyOffset) < 0x100000)
             return 1;
     }
 
@@ -438,23 +437,23 @@ int cMgSmartball_pushswitch_c::BallsClear() {
 }
 
 int cMgSmartball_pushswitch_c::CheckBall(int *p) {
-    int d[2];
-    d[0] = p[0];
-    d[1] = p[1];
-    d[0] -= mCurrent.x;
-    d[1] -= mCurrent.y;
+    Vector2 d;
+    d.x = p[0];
+    d.y = p[1];
+    d.x -= mCurrent.x;
+    d.y -= mCurrent.y;
     if (mTriggered) {
         if (p[1] >= mCurrent.y + 0x8000)
             return 0;
-        d[1] -= 0x8000;
-        return func_0203d5bc(d) < 0x40000;
+        d.y -= 0x8000;
+        return func_0203d5bc(&d) < 0x40000;
     }
     if (p[1] > mCurrent.y) {
         if (p[0] >= mCurrent.x - 0x8000 && p[0] < mCurrent.x + 0x8000 && p[1] < mCurrent.y + 0xa000)
             return 1;
         return 0;
     }
-    if (func_0203d5bc(d) >= 0x40000)
+    if (func_0203d5bc(&d) >= 0x40000)
         return 0;
     if (p[0] >= mCurrent.x - 0x4000 && p[0] < mCurrent.x + 0x4000) {
         mpManager->mpSlot->StartSpin();
@@ -1305,9 +1304,9 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
     if (mActionTimer <= 0) {
         t = mCurrent.y;
         if (v->y >= t) {
-            if (func_0203d5bc(&d.x) >= 0x190000)
+            if (func_0203d5bc(&d) >= 0x190000)
                 return 0;
-            return func_0203d5bc(&d.x) >= 0xc4000;
+            return func_0203d5bc(&d) >= 0xc4000;
         }
         if (v->x >= mCurrent.x - 0x14000 && v->x < mCurrent.x + 0x14000 && v->y >= t - 0xc000) {
             if (v->x >= mCurrent.x - 0x14000 && v->x < mCurrent.x - 0xa000) {
@@ -1354,9 +1353,9 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
         }
         return 0;
     }
-    if (func_0203d5bc(&d.x) < 0x100000)
+    if (func_0203d5bc(&d) < 0x100000)
         return 0;
-    return func_0203d5bc(&d.x) < 0x190000;
+    return func_0203d5bc(&d) < 0x190000;
 }
 
 /* Slot 1: draws the chewing frames while biting, otherwise the idle pair. */
@@ -1551,7 +1550,7 @@ int cMgSmartball_propeller_c::HitTest(int *pos) {
     d.y = p->y;
     d.x -= mCurrent.x;
     d.y -= mCurrent.y;
-    if (func_0203d5bc(&d.x) >= 0x400000)
+    if (func_0203d5bc(&d) >= 0x400000)
         return 0;
 
     s0.x = p->x;
@@ -2168,7 +2167,7 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
     dScMgSmartball_c *base;
     int n;
     int r7;
-    int delta[2];
+    Vector2 delta;
     int out[2];
     if (pos[1] >= 0x90000)
         return 0;
@@ -2180,12 +2179,12 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
             if (nearby[i]) {
                 r7 = (i >= n ? 0 : base->mpKinokos[i])->HitRadiusSq();
                 if (r7 > 0) {
-                    delta[0] = pos[0];
-                    delta[1] = pos[1];
+                    delta.x = pos[0];
+                    delta.y = pos[1];
                     CopyObjectPos(out, i >= mpManager->mKinokoCount ? 0 : mpManager->mpKinokos[i]);
-                    delta[0] = delta[0] - out[0];
-                    delta[1] = delta[1] - out[1];
-                    if (func_0203d5bc(delta) < r7) {
+                    delta.x = delta.x - out[0];
+                    delta.y = delta.y - out[1];
+                    if (func_0203d5bc(&delta) < r7) {
                         void *e = i >= mpManager->mKinokoCount ? 0 : mpManager->mpKinokos[i];
                         ((cMgSmartball_kinoko_c *)e)->mWasHit = 1;
                         return 1;
@@ -2512,7 +2511,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                               probeIndex >= mgr->mKinokoCount ? 0 : mgr->mpKinokos[probeIndex]);
                 dist.x -= kinokoPos.x;
                 dist.y -= kinokoPos.y;
-                if (func_0203d5bc(&dist.x) <= 0x900000LL) {
+                if (func_0203d5bc(&dist) <= 0x900000LL) {
                     nearby[probeIndex] = 1;
                     nearKinoko = 1;
                 }
@@ -2675,7 +2674,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                                 CopyObjectPos(&entityPos, other);
                                 Vec2_Sub(&entityDelta, &mCurrent, &entityPos);
                                 delta = entityDelta;
-                                if (func_0203d5bc(&delta.x) <= 0x100000LL) {
+                                if (func_0203d5bc(&delta) <= 0x100000LL) {
                                     angle = 0;
                                     mgr = mpManager;
                                     other = GetObjBoard(mgr, entityLoopIndex);
@@ -2691,7 +2690,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                                             work.y += mCurrent.y;
                                             Vec2_Sub(&radialDelta, &work, &otherPos);
                                             delta = radialDelta;
-                                            if (func_0203d5bc(&delta.x) < 0x40000LL) {
+                                            if (func_0203d5bc(&delta) < 0x40000LL) {
                                                 targetIndex = entityLoopIndex;
                                                 hit[i] = 1;
                                                 hitA[i] = 1;
@@ -2890,7 +2889,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
             hazardDelta.x -= hazardPos.x;
             hazardDelta.y -= hazardPos.y;
             hazardDelta.y *= 2;
-            if (func_0203d5bc(&hazardDelta.x) < square) {
+            if (func_0203d5bc(&hazardDelta) < square) {
                 dot = mRadius + 0x10000 - Vec2_Len(&hazardDelta);
                 if (mRadius < dot) {
                     other = i >= mpManager->mAnaCount ? 0 : mpManager->mpAnas[i];
@@ -2923,7 +2922,10 @@ void cMgSmartball_ball_c::DrawMarker() {
     long long sq;
     int v;
     int i;
-    int s[6];
+    /* s[0] is the offset to the hole, s[2] the hole; s[1] is never read but
+       keeps the ROM's 0x24 frame (two named Vector2 locals give 0x1c and
+       move 11 words, measured). */
+    Vector2 s[3];
 
     if (mIsActive == 0)
         return;
@@ -2945,13 +2947,13 @@ void cMgSmartball_ball_c::DrawMarker() {
             if (((cMgSmartball_ana_c *)((
                      unsigned char *)((i >= mpManager->mAnaCount) ? 0 : mpManager->mpAnas[i])))
                     ->HasBall() == 0) {
-                s[0] = mCurrent.x;
-                s[1] = mCurrent.y;
-                s[1] += 0x5000;
-                CopyObjectPos(&s[4], (i >= mpManager->mAnaCount) ? 0 : mpManager->mpAnas[i]);
-                s[0] = s[0] - s[4];
-                s[1] = s[1] - s[5];
-                s[1] = s[1] * 2;
+                s[0].x = mCurrent.x;
+                s[0].y = mCurrent.y;
+                s[0].y += 0x5000;
+                CopyObjectPos(&s[2], (i >= mpManager->mAnaCount) ? 0 : mpManager->mpAnas[i]);
+                s[0].x = s[0].x - s[2].x;
+                s[0].y = s[0].y - s[2].y;
+                s[0].y = s[0].y * 2;
                 if (func_0203d5bc(&s[0]) < sq)
                     return;
             }

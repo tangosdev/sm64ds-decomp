@@ -435,7 +435,6 @@ extern struct OamAttr **sTrmpTextSpritesByLanguage[];
 extern struct OamAttr **sTrmp2TextSpritesByLanguage[];
 extern int*data_ov056_021124d4[];
 extern struct fLiNdBa_c *func_02043f4c(struct fLiNdBa_c **, unsigned int, struct fLiNdBa_c *);
-extern long long func_0203d5bc(int *);
 extern const s16 data_02082414[];
 extern s16 data_0209f4a4[];
 extern s16 data_0209f4a6;
