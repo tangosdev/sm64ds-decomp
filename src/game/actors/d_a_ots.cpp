@@ -816,10 +816,10 @@ int daOts_c::func_ov064_02116110(short step){
  * y offset. */
 void daOts_c::func_ov064_02115f98(char* a1)
 {
-    int scratch[3];
-    int pos0[3];
-    int pos1[3];
-    int diff[3];
+    Vector3 scratch;
+    Vector3 pos0;
+    Vector3 pos1;
+    Vector3 diff;
     int scale;
     int angH;
     int angV;
@@ -831,29 +831,29 @@ void daOts_c::func_ov064_02115f98(char* a1)
     int tmpy;
 
     p1 = &((dActor_c *)a1)->mPos.x;
-    pos0[0] = this->mPos.x;
+    pos0.x = this->mPos.x;
     y0 = this->mPos.y;
-    pos0[1] = y0;
-    pos0[2] = this->mPos.z;
-    pos1[0] = *p1;
+    pos0.y = y0;
+    pos0.z = this->mPos.z;
+    pos1.x = *p1;
     tmpy = p1[1];
-    pos1[1] = tmpy;
-    pos1[2] = p1[2];
+    pos1.y = tmpy;
+    pos1.z = p1[2];
     tmpy = tmpy + 0x46000;
 
     scale = mFileTable->cylinderRadius;
-    pos0[1] = y0 + tail().mModelYOffset;
-    pos1[1] = tmpy;
+    pos0.y = y0 + tail().mModelYOffset;
+    pos1.y = tmpy;
 
-    Vec3_Sub((Vector3 *)diff, (const Vector3 *)pos1, (const Vector3 *)pos0);
+    Vec3_Sub(&diff, &pos1, &pos0);
 
-    scratch[0] = diff[0];
-    scratch[1] = diff[1];
-    scratch[2] = diff[2];
-    angH = cstd::atan2(scratch[0], scratch[2]);
+    scratch.x = diff.x;
+    scratch.y = diff.y;
+    scratch.z = diff.z;
+    angH = cstd::atan2(scratch.x, scratch.z);
     {
-        int hl = Vec3_HorzLen((const Vector3 *)scratch);
-        angV = cstd::atan2(scratch[1], hl);
+        int hl = Vec3_HorzLen(&scratch);
+        angV = cstd::atan2(scratch.y, hl);
     }
 
     idxV = (u16)angV >> 4;
@@ -869,11 +869,11 @@ void daOts_c::func_ov064_02115f98(char* a1)
     t0 = FX_MUL(lenfix, sinH);
     t1 = FX_MUL(lenfix, cosH);
 
-    pos0[0] = pos0[0] + t0;
-    pos0[1] = pos0[1] + ycomp;
-    pos0[2] = pos0[2] + t1;
+    pos0.x = pos0.x + t0;
+    pos0.y = pos0.y + ycomp;
+    pos0.z = pos0.z + t1;
 
-    Particle::System::NewSimple(kParticleHit, pos0[0], pos0[1], pos0[2]);
+    Particle::System::NewSimple(kParticleHit, pos0.x, pos0.y, pos0.z);
 }
 
 /* -------------------------------------------------------------------------- */

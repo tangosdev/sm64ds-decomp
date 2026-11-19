@@ -884,18 +884,10 @@ void daStar_c::StateRise() {
             v.y = yv;
             v.z = pp->z;
             v.y = yv + 0xc8000;
-            /* By-value staging: the ROM caller copies v to its outgoing area
-             * and passes the copy's address (r1 = sp+0xc at the bl). The TU
-             * cannot spell the shard's by-value declaration (it collides with
-             * the pointer form the other callers need), and copying the real
-             * Vector3 would emit its declared-destructor cleanup, so the copy
-             * is staged word-wise into plain ints -- proven byte-identical
-             * in isolation. */
-            int w[3];
-            w[0] = v.x;
-            w[1] = v.y;
-            w[2] = v.z;
-            AimArcTo((Vector3 *)w, 0x190000);
+            /* The ROM copies v word by word into a second vector and passes
+             * that one's address (r1 = sp+0xc at the bl). */
+            Vector3 w = v;
+            AimArcTo(&w, 0x190000);
             mState = STATE_FLY_TO_MARKER;
         }
     }

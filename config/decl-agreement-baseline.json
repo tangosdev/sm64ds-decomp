@@ -7,20 +7,7 @@
   "Banner_Init": {
    "src/minigames/d_s_mg_base.cpp": ["param:#3 int", "param:#4 int"]
   },
-  "G3i_LookAt_": {
-   "include/nitro/gx/g3_util.h": ["param:#1 const VecFx32 *", "param:#2 const VecFx32 *", "param:#3 const VecFx32 *", "param:#5 MtxFx43 *"]
-  },
-  "Jump3D_Arrange": {
-   "include/decl_common.h": ["param:#1 int", "param:#2 int"]
-  },
-  "MTX_Inverse43": {
-   "include/nitro/fx/fx_mtx43.h": ["param:#1 const MtxFx43 *", "param:#2 MtxFx43 *"]
-  },
-  "MTX_MultVec33": {
-   "include/nitro/fx/fx_mtx33.h": ["param:#1 const VecFx32 *", "param:#2 const MtxFx33 *", "param:#3 VecFx32 *"]
-  },
   "MTX_MultVec43": {
-   "include/nitro/fx/fx_mtx43.h": ["param:#1 const VecFx32 *", "param:#2 const MtxFx43 *", "param:#3 VecFx32 *"],
    "src/engine/view/d_camera.cpp": ["param:#2 Matrix4x3 *"],
    "src/game/actors/d_a_king_donketu.cpp": ["param:#1 Vector3 *", "param:#2 Matrix4x3 *"],
    "src/game/actors/d_a_mip.cpp": ["param:#1 Vector3 *", "param:#2 Matrix4x3 *"],
@@ -38,10 +25,6 @@
   "Mg_InitFx": {
    "src/minigames/d_s_mg_base.cpp": ["param:#2 char *", "param:#4 short"]
   },
-  "Mg_RenderMainSpriteScaled": {
-   "include/decl_common.h": ["param:#1 void *"],
-   "src/minigames/d_s_mg_luigi.cpp": ["return:char *"]
-  },
   "Mg_SpawnFx": {
    "src/minigames/d_s_mg_coin.cpp": ["arity:5"],
    "src/minigames/unit020b2c84.cpp": ["arity:5"]
@@ -52,36 +35,18 @@
   "PMi_IsInit": {
    "src/engine/spi/PM.c": ["return:unsigned short"]
   },
-  "VEC_Add": {
-   "include/nitro/fx/fx_vec.h": ["param:#1 const VecFx32 *", "param:#2 const VecFx32 *", "param:#3 VecFx32 *"]
+  "SPLEmitter_Init": {
+   "src/engine/particle/Particle_Manager.cpp": ["param:#1 Particle::System *"]
   },
-  "VEC_CrossProduct": {
-   "include/nitro/fx/fx_vec.h": ["param:#1 const VecFx32 *", "param:#2 const VecFx32 *", "param:#3 VecFx32 *"]
+  "SPLList_Erase": {
+   "src/SPLEmitter_Update.c": ["return:void *"],
+   "src/engine/particle/Particle_Manager.cpp": ["return:void *"]
   },
-  "VEC_Distance": {
-   "include/nitro/fx/fx_vec.h": ["param:#1 const VecFx32 *", "param:#2 const VecFx32 *"]
-  },
-  "VEC_DotProduct": {
-   "include/nitro/fx/fx_vec.h": ["param:#1 const VecFx32 *", "param:#2 const VecFx32 *"]
-  },
-  "VEC_Fx16Mag": {
-   "src/ui/menus/unit020be0dc.cpp": ["param:#1 short *"]
-  },
-  "VEC_Fx16Normalize": {
-   "src/ui/menus/unit020be0dc.cpp": ["param:#1 short *", "param:#2 short *"]
-  },
-  "VEC_Mag": {
-   "include/nitro/fx/fx_vec.h": ["param:#1 const VecFx32 *"]
+  "SPLList_PopFront": {
+   "src/engine/particle/Particle_Manager.cpp": ["return:void *"]
   },
   "VEC_MultAdd": {
-   "include/decl_common.h": ["param:#2 int *", "param:#3 int *", "param:#4 int *"],
    "src/unnamed/ov007/func_ov007_020c8de0.c": ["param:#2 int *", "param:#3 int *", "param:#4 int *"]
-  },
-  "VEC_Normalize": {
-   "include/nitro/fx/fx_vec.h": ["param:#1 const VecFx32 *", "param:#2 VecFx32 *"]
-  },
-  "VEC_Subtract": {
-   "include/nitro/fx/fx_vec.h": ["param:#1 const VecFx32 *", "param:#2 const VecFx32 *", "param:#3 VecFx32 *"]
   },
   "Vec3_Add": {
    "src/engine/view/d_camera.cpp": ["param:#2 const void *", "param:#3 const void *"]
@@ -117,40 +82,6 @@
   "data_02075f14": {
    "include/decl_common.h": ["return:char []"]
   },
-  "data_02082314": {
-   "include/decl_common.h": ["return:short"]
-  },
-  "data_02082414": {
-   "include/decl_common.h": ["return:short"],
-   "src/minigames/d_s_mg_trampoline.cpp": ["return:short"]
-  },
-  "data_020868d4": {
-   "src/cstd3.cpp": ["return:char"]
-  },
-  "data_020868fc": {
-   "src/engine/isd/isdoverlay.cpp": ["return:char"]
-  },
-  "data_0208690c": {
-   "src/engine/isd/isdoverlay.cpp": ["return:char"]
-  },
-  "data_0208692c": {
-   "src/engine/isd/isdoverlay.cpp": ["return:char"]
-  },
-  "data_0208696c": {
-   "src/engine/isd/isdoverlay.cpp": ["return:char"]
-  },
-  "data_0208698c": {
-   "src/engine/isd/isdoverlay.cpp": ["return:char"]
-  },
-  "data_020869dc": {
-   "src/engine/isd/isdoverlay.cpp": ["return:char"]
-  },
-  "data_02086a08": {
-   "src/engine/isd/isdoverlay.cpp": ["return:char"]
-  },
-  "data_02086a30": {
-   "src/engine/isd/isdoverlay.cpp": ["return:char"]
-  },
   "data_02086b58": {
    "src/minigames/unit020b2c84.cpp": ["return:ElemFn"]
   },
@@ -171,9 +102,6 @@
    "src/unnamed/arm9/0201/func_0201a1bc.cpp": ["return:OSThread"],
    "src/unnamed/arm9/0201/func_0201a244.cpp": ["return:OSThread"]
   },
-  "data_0209d6d4": {
-   "src/game/actors/d_a_red_bombhei.cpp": ["return:unsigned short"]
-  },
   "data_0209d6f4": {
    "src/Message2.cpp": ["return:unsigned char *"]
   },
@@ -183,9 +111,6 @@
    "src/unnamed/arm9/0201/func_0201ffcc.c": ["return:unsigned char"],
    "src/unnamed/arm9/0203/func_02030790.cpp": ["return:unsigned char"]
   },
-  "data_0209e650": {
-   "src/game/actors/d_a_demo.cpp": ["return:int"]
-  },
   "data_0209e660": {
    "src/engine/oam/OAM.cpp": ["return:unsigned char"],
    "src/minigames/d_s_mg_d3d_base.cpp": ["return:unsigned char"]
@@ -194,17 +119,8 @@
    "src/engine/view/d_camera.cpp": ["return:int []"],
    "src/unnamed/arm9/0201/func_020197b8.cpp": ["return:unsigned char []"]
   },
-  "data_0209f208": {
-   "src/game/actors/d_a_krb.cpp": ["return:unsigned char []"]
-  },
   "data_0209f224": {
    "src/KuppaScript.cpp": ["return:signed char"]
-  },
-  "data_0209f2bc": {
-   "src/game/player/d_a_ply_methods.cpp": ["return:unsigned char []"]
-  },
-  "data_0209f2c0": {
-   "src/runtime/actor/d_actor.cpp": ["return:unsigned char []"]
   },
   "data_0209f5f8": {
    "src/minigames/d_s_mg_d3d_base.cpp": ["return:unsigned char"],
@@ -213,18 +129,6 @@
   },
   "data_020a0c78": {
    "src/engine/collision/d_bg_ch_sph_crr_query.cpp": ["return:CLPS"]
-  },
-  "data_020a0d0c": {
-   "include/decl_common.h": ["return:char []"]
-  },
-  "data_020a0d1c": {
-   "include/decl_common.h": ["return:char []"]
-  },
-  "data_020a0d60": {
-   "include/decl_common.h": ["return:char []"]
-  },
-  "data_020a0db0": {
-   "src/game/actors/d_a_demo.cpp": ["return:unsigned int"]
   },
   "data_020a0dd8": {
    "src/unnamed/arm9/0203/func_0203b9bc.c": ["return:TPData"]
@@ -240,19 +144,10 @@
   "data_020a0ef0": {
    "src/engine/link/unit0203d7b8.cpp": ["return:unsigned char"]
   },
-  "data_020a4b6c": {
-   "src/runtime/actor/ActorBase.cpp": ["return:int []"]
-  },
   "data_020a4bb8": {
    "src/runtime/actor/ActorBase.cpp": ["return:fBaseActorInfo * *"],
    "src/runtime/actor/d_actor.cpp": ["return:void *"],
    "src/unnamed/arm9/0201/func_0201a054.cpp": ["return:void *"]
-  },
-  "data_020a4bd4": {
-   "src/engine/model/ModelComponents.cpp": ["return:unsigned int"]
-  },
-  "data_020a4bdc": {
-   "src/engine/model/Model4.cpp": ["return:unsigned int"]
   },
   "data_020a94c0": {
    "src/WBT_End.cpp": ["return:int"],
@@ -260,16 +155,10 @@
    "src/WBT_InitParent.cpp": ["return:int"],
    "src/unnamed/arm9/0206/func_02065af0.cpp": ["return:int"]
   },
-  "data_ov002_0210c080": {
-   "src/game/actors/d_a_sound_obj.cpp": ["return:SoundObjRow []"]
-  },
   "data_ov002_0210da28": {
    "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"]
   },
   "data_ov002_0211092c": {
-   "src/game/actors/d_a_star.cpp": ["return:StarModelFilePtr"]
-  },
-  "data_ov002_0211093c": {
    "src/game/actors/d_a_star.cpp": ["return:StarModelFilePtr"]
   },
   "data_ov002_0211094c": {
@@ -281,114 +170,23 @@
   "data_ov002_02110aa4": {
    "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"]
   },
-  "data_ov009_02113c20": {
-   "src/game/actors/d_a_s_bird.cpp": ["return:SBirdModelFilePtr"]
-  },
-  "data_ov009_02113c28": {
-   "src/game/actors/d_a_s_bird.cpp": ["return:SBirdAnimationFilePtr"]
-  },
-  "data_ov010_021122f8": {
-   "src/game/actors/d_a_obj_c1_trap.cpp": ["return:CLPS_Block"]
-  },
   "data_ov026_02113f4c": {
    "src/game/actors/d_a_water_suikomi.cpp": ["return:Vector3"]
-  },
-  "data_ov034_02113838": {
-   "src/game/actors/d_a_hanachan.cpp": ["return:SharedFilePtr * []"]
-  },
-  "data_ov034_0211384c": {
-   "src/game/actors/d_a_hanachan.cpp": ["return:SharedFilePtr * []"]
-  },
-  "data_ov034_02113860": {
-   "src/game/actors/d_a_hanachan.cpp": ["return:void * * []"]
-  },
-  "data_ov034_02113874": {
-   "src/game/actors/d_a_hanachan.cpp": ["return:void * * []"]
-  },
-  "data_ov034_02113888": {
-   "src/game/actors/d_a_hanachan.cpp": ["return:void * * []"]
-  },
-  "data_ov034_0211389c": {
-   "src/game/actors/d_a_hanachan.cpp": ["return:void * * []"]
-  },
-  "data_ov034_021138b0": {
-   "src/game/actors/d_a_hanachan.cpp": ["return:void * * []"]
   },
   "data_ov060_0211b208": {
    "src/game/actors/d_a_f_ring.cpp": ["return:FRingModelFilePtr"]
   },
-  "data_ov063_0211ecb8": {
-   "include/decl_common.h": ["return:char"]
-  },
-  "data_ov064_0211ba6c": {
-   "src/game/actors/d_a_obj_fl_uki_ki.cpp": ["return:CLPS_Block"]
-  },
-  "data_ov065_0211d35c": {
-   "src/game/actors/d_a_obj_ct_kaitendai.cpp": ["return:KaitendaiResources []"]
-  },
-  "data_ov065_0211d748": {
-   "src/game/actors/d_a_dossy.cpp": ["return:DossyAnimationFileHandle"]
-  },
-  "data_ov065_0211d768": {
-   "src/game/actors/d_a_dossy.cpp": ["return:DossyAnimationFileHandle"]
-  },
-  "data_ov065_0211d770": {
-   "src/game/actors/d_a_dossy.cpp": ["return:DossyAnimationFileHandle"]
-  },
-  "data_ov074_02123030": {
-   "src/game/actors/d_a_kuri_king.cpp": ["return:KuriKingAnimationFilePtr"]
-  },
-  "data_ov075_0211d72c": {
-   "src/game/stages/d_s_entry_methods.cpp": ["return:short []"]
-  },
-  "data_ov075_0211d740": {
-   "src/game/stages/d_s_entry_methods.cpp": ["return:short []"]
-  },
-  "data_ov075_0211d930": {
-   "include/decl_common.h": ["return:int"]
-  },
   "data_ov081_02128d90": {
    "src/game/actors/d_a_snowball.cpp": ["return:SharedFilePtr"]
-  },
-  "data_ov081_02128da8": {
-   "src/game/actors/d_a_snowman.cpp": ["return:daSnowmanAnimationFilePtr"]
-  },
-  "data_ov081_02128db0": {
-   "src/game/actors/d_a_snowman.cpp": ["return:daSnowmanModelFilePtr"]
-  },
-  "data_ov081_02128db8": {
-   "src/game/actors/d_a_snowman.cpp": ["return:daSnowmanAnimationFilePtr"]
   },
   "data_ov084_02130cf8": {
    "src/game/actors/d_a_kuri_king.cpp": ["return:SharedFilePtr"]
   },
-  "data_ov085_02130830": {
-   "include/decl_common.h": ["return:int []"]
-  },
   "data_ov089_02132c50": {
    "src/game/actors/d_a_obj_key.cpp": ["return:ObjKeyModelFile"]
   },
-  "data_ov100_02148704": {
-   "src/game/actors/d_a_door.cpp": ["return:unsigned char"]
-  },
-  "data_ov100_02148948": {
-   "include/decl_common.h": ["return:Vector3"]
-  },
-  "data_ov102_0214ea48": {
-   "include/decl_common.h": ["return:char"]
-  },
-  "data_ov102_0214ea58": {
-   "include/decl_common.h": ["return:char"]
-  },
-  "data_ov102_0214ea78": {
-   "include/decl_common.h": ["return:char"]
-  },
   "fsi_card_lock_id": {
    "include/private/fs_rom.h": ["return:int"]
-  },
-  "func_0201277c": {
-   "include/decl_common.h": ["param:#1 int"],
-   "src/game/actors/d_a_trs.cpp": ["return:unsigned short"]
   },
   "func_02018568": {
    "src/unnamed/arm9/0201/func_0201834c.cpp": ["param:#1 void *"]
@@ -405,9 +203,6 @@
   "func_0203d630": {
    "src/minigames/d_s_mg_smartball.cpp": ["param:#1 Vector2 *"]
   },
-  "func_0203dad4": {
-   "src/game/stages/d_s_stage_methods.cpp": ["return:unsigned int"]
-  },
   "func_02045e2c": {
    "src/engine/model/d_ext_model.cpp": ["param:#4 int"]
   },
@@ -418,100 +213,33 @@
   "func_02046e28": {
    "src/engine/model/d_ext_model.cpp": ["param:#1 ModelComponents *", "param:#2 BMA_File *"]
   },
-  "SPLEmitter_Init": {
-   "src/engine/particle/Particle_Manager.cpp": ["param:#1 Particle::System *"]
-  },
-  "SPLList_Erase": {
-   "src/engine/particle/Particle_Manager.cpp": ["return:void *"],
-   "src/SPLEmitter_Update.c": ["return:void *"]
-  },
-  "SPLList_PopFront": {
-   "src/engine/particle/Particle_Manager.cpp": ["return:void *"]
-  },
   "func_0206a928": {
    "src/cstd3.cpp": ["arity:4"]
   },
   "func_0206ca44": {
    "src/unnamed/arm9/0206/func_0206a928.c": ["param:#1 const char *"]
   },
-  "func_ov002_020c56f0": {
-   "include/decl_common.h": ["param:#2 int"]
-  },
-  "func_ov002_020e496c": {
-   "src/game/actors/d_a_obj_tatefuda.cpp": ["return:char *"],
-   "src/runtime/actor/d_actor.cpp": ["return:void *"]
-  },
-  "func_ov007_020b7040": {
-   "include/decl_common.h": ["arity:1"]
-  },
-  "func_ov007_020c7694": {
-   "include/decl_common.h": ["param:#1 Vector3 *", "param:#2 Vector3 *"]
-  },
-  "func_ov007_020c775c": {
-   "include/decl_common.h": ["param:#1 Vector3 *"]
-  },
   "func_ov079_02123d4c": {
    "src/game/actors/d_a_btn.cpp": ["arity:1", "return:Vector3"]
   },
-  "gCamera": {
-   "src/game/actors/d_a_demo.cpp": ["return:char *"]
-  },
-  "gCurrentStarId": {
-   "src/runtime/actor/d_actor.cpp": ["return:unsigned char []"]
-  },
-  "gCurrentSublevel": {
-   "src/runtime/actor/d_actor.cpp": ["return:signed char []"]
-  },
   "gMessageBankBase": {
    "src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp": ["return:int"]
-  },
-  "gMeterShownHealth": {
-   "src/game/player/d_a_ply_methods.cpp": ["return:unsigned char"]
-  },
-  "gMgBanners": {
-   "include/decl_common.h": ["return:char []"]
   },
   "gMgCoinsStatus": {
    "src/minigames/d_s_mg_m_carlo.cpp": ["return:unsigned short"],
    "src/minigames/d_s_mg_roulette_methods.cpp": ["return:unsigned short"]
   },
   "gNextSceneParam": {
-   "include/decl_common.h": ["return:unsigned int"],
    "src/game/stages/d_scene.cpp": ["return:unsigned int"]
-  },
-  "gPlayers": {
-   "src/game/actors/d_a_demo.cpp": ["return:void * []"],
-   "src/game/player/d_a_ply_methods.cpp": ["return:char * []"]
-  },
-  "gReturnSublevel": {
-   "src/game/stages/d_s_stage_methods.cpp": ["return:signed char"]
   },
   "gRunningKuppaScript": {
    "src/KuppaScript.cpp": ["return:unsigned char *"]
-  },
-  "gSceneFader": {
-   "src/game/actors/d_a_demo.cpp": ["return:void *"]
-  },
-  "gShowRaceTimer": {
-   "src/game/player/d_a_ply_methods.cpp": ["return:unsigned char []"]
-  },
-  "gSubScreenLayers": {
-   "src/minigames/d_s_mg_smartball.cpp": ["return:unsigned char []"]
   },
   "nds_print": {
    "src/ShowCrashScreen.cpp": ["param:#2 const void *"]
   },
   "sBootJobDone": {
    "src/game/stages/d_s_boot_methods.cpp": ["return:unsigned char"]
-  },
-  "sEntryGraphCallback": {
-   "include/decl_common.h": ["return:void *"]
-  },
-  "sMgBannerGfxSlotUsed": {
-   "src/minigames/unit020b2c84.cpp": ["return:unsigned char []"]
-  },
-  "sMgCurCamera": {
-   "src/minigames/d_mg_jump3d_mario.cpp": ["return:void *"]
   },
   "sMgWorkBuffer": {
    "src/minigames/d_s_mg_base.cpp": ["return:int []"]

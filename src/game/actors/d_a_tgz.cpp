@@ -207,11 +207,11 @@ void daTgz_c::func_ov077_02124eb0() {
     int b;
 
     if (this->FindEgg(this->mdCcAc_c) != 0) {
-        int v[3];
-        v[0] = this->mPos.x;
-        v[1] = this->mPos.y;
-        v[2] = this->mPos.z;
-        this->SpawnCoins(*(const Vector3 *)v, 1, 0x2000, 0);
+        Vector3 v;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
+        this->SpawnCoins(v, 1, 0x2000, 0);
         this->PoofDust();
         func_02012694(0xc4, &this->mCamSpacePos);
         this->MarkForDestruction();
@@ -258,11 +258,11 @@ void daTgz_c::func_ov077_02124eb0() {
         return;
 
     {
-        int v[3];
-        v[0] = this->mPos.x;
-        v[1] = this->mPos.y;
-        v[2] = this->mPos.z;
-        player->Hurt(*(const Vector3 *)v, 2, 0xc000, 1, 0, 1);
+        Vector3 v;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
+        player->Hurt(v, 2, 0xc000, 1, 0, 1);
     }
 }
 

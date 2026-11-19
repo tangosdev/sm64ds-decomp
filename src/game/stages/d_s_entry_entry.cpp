@@ -240,7 +240,8 @@ short EntryMesh::RipplePhase(int dist) {
    Kept (#821 r77): both VecFx32s reach the game's Vec3_Dist through
    `(Vector3 *)` casts. A Vector3 flat built from v->pos grows this function
    0x78 -> 0x88, and mRippleCenter stays VecFx32 for the reason the header
-   gives (no ~Vector3 in this unit or in EntryMesh). */
+   gives (re-measured #821 r111: a Vector3 mRippleCenter makes dEntObj_c's
+   object emit an EntryMesh destructor the ROM does not have). */
 void EntryMesh::CalcDistances() {
     int i;
     for (i = 0; i < mNumVertices; i++) {

@@ -198,7 +198,7 @@ extern const char sMgBrushPalette[0x20] = {
 };
 extern int sMgBannerButtonsArmed;
 extern void Banner_Init(struct MgBanner *e, int c, int a1, int a2, int a3, int s1, short s2);
-extern char sMgBannerGfxSlotUsed[];
+extern unsigned char sMgBannerGfxSlotUsed[];
 extern void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val);
 extern const int sMgCounterMaxByDigits[] = {0, 9, 99, 999, 9999, 99999, 999999};
 /* The five sub-screen OBJ images SaveScreenForMenu decompresses over
@@ -2351,7 +2351,7 @@ extern "C" {
 struct OamAttr;
 }
 
-extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
+extern "C" int Mg_RenderMainSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                          unsigned short a6) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2595,7 +2595,7 @@ int dScMgBase_c::BeforeRender()
     }
 
     if (mStateController.mSuspended == 0) {
-        p = (MgBanner *)gMgBanners;
+        p = gMgBanners;
         for (i = 0; i < 3; i++, p++) {
             if (p->mFileIndex == 0x1d)
                 continue;
@@ -2603,7 +2603,7 @@ int dScMgBase_c::BeforeRender()
                 continue;
             Banner_Draw(p);
         }
-        p2 = (MgBanner *)gMgBanners;
+        p2 = gMgBanners;
         for (i2 = 0; i2 < 3; i2++, p2++) {
             if (p2->mFileIndex == 0x1d)
                 continue;
@@ -2667,7 +2667,7 @@ int dScMgBase_c::BeforeBehavior()
         int i;
         MgBanner *g;
         mStateController.Behavior();
-        g = (MgBanner *)gMgBanners;
+        g = gMgBanners;
         for (i = 0; i < 3; i++) {
             if (g->mFileIndex != 0x1d)
                 Banner_Update(g);
@@ -2930,7 +2930,7 @@ void Mg_ResetOverlays(void) {
         i++;
     } while (i < 64);
     int j = 0;
-    char* p = sMgBannerGfxSlotUsed;
+    unsigned char *p = sMgBannerGfxSlotUsed;
     do {
         j++;
         *p++ = 0;

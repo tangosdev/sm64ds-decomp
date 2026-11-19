@@ -88,8 +88,8 @@ unsigned int func_0201277c(unsigned int soundID);
 
 /* Depth from mModelOffsetY, mPos.y, mSinkDepth and mGroundY; radius from that,
  * mIsBalloon, mIsMega and mScale.y. The definition takes char *. */
-/* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)] as int. */
-int func_ov002_020e496c(daPly_c *player);
+/* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)]. */
+dExtAnm2Model_c *func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
 void MTX_Concat33(const int *a, const int *b, int *dst);

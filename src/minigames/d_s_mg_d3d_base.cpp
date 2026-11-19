@@ -37,7 +37,7 @@ extern "C" {
 /* ov006's own data. These six objects are this file's .bss
  * (0x02141a40..0x02141e54). The OAM shadow is a C++ array, so mwcc emits
  * __sinit_d_s_mg_d3d_base.cpp as a bare bx lr and one .ctor word. */
-int sMgCurCamera;
+MgCamera *sMgCurCamera;
 void *sD3DSubObjPalette;
 MgCamera *sMgSubCamera;
 MgCamera *sMgMainCamera;
@@ -236,7 +236,7 @@ void dScMgD3DBase_c::InitEngines()
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     GXS_SetGraphicsMode(GX_BGMODE_5);
     REG_DISPCNT &= 0xffcfffefu;
-    sMgCurCamera = (int)&mCameras[0];
+    sMgCurCamera = &mCameras[0];
     sMgMainCamera = &mCameras[0];
     sMgSubCamera = &mCameras[1];
     sMgGraphCallback.mScene = this;
@@ -323,7 +323,7 @@ int dScMgD3DBase_c::OnGraphCallback2()
         else
             mDrawSubScreen = 0;
         MgCamera *camera = &mCameras[mDrawSubScreen];
-        sMgCurCamera = (int)camera;
+        sMgCurCamera = camera;
         Camera_UpdateMatrices(camera);
         if (mDrawSubScreen == 1) {
             D3D_CaptureToSub();

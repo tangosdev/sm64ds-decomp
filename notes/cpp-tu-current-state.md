@@ -90,7 +90,7 @@ All surfaces ready: **YES**.
 This is a behavior-backed result from a disposable source containing two C++
 methods, not a checklist copied from prose. Run
 `python tools/cpp_tu_compat.py` for the per-surface
-evidence. Current ready surfaces: `srcpath`, `enroll`, `eligible`, `rombuild`, `validate_merge`, `tiers`, `langmode_audit`, `attribution`, `port_refcheck`.
+evidence. Current ready surfaces: `srcpath`, `enroll`, `eligible`, `rombuild`, `validate_merge`, `tiers`, `langmode_audit`, `attribution`.
 Current hard production blockers: none.
 Current policy/metric gaps: none.
 
@@ -103,7 +103,6 @@ Current policy/metric gaps: none.
 | What TU evidence has been recovered? | `config/tu_manifest.d` |
 | Can one production source safely own two functions? | `python tools/cpp_tu_compat.py` |
 | Is C++ source semantically migrated? | `langmode_audit.audit()`; inspect with `python tools/langmode_audit.py` |
-| Did a move/merge strand the PC port? | `python tools/port_refcheck.py` |
 
 Long-form plans and pilot reports explain design and history; they are not current-count
 authorities. If a prose number disagrees with this generated page, regenerate this page
