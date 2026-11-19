@@ -507,7 +507,7 @@
       "ordinal": 63
     },
     {
-      "symbol": "_ZN7daKpa_c13BounceEffectsEPc",
+      "symbol": "_ZN7daKpa_c13BounceEffectsEPt",
       "address": "0x02115a84",
       "size": "0x00000088",
       "legacy_source": "src/func_ov060_02115a84.cpp",
