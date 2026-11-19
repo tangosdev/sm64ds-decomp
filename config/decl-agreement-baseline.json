@@ -45,16 +45,6 @@
   "Vec3_ApproachHorz": {
    "src/game/actors/d_a_c_jugem.cpp": ["param:#2 const void *"]
   },
-  "Vec3_AsrInPlace": {
-   "src/game/actors/d_a_kpa3_bg.cpp": ["param:#1 VecFx32 *"],
-   "src/game/actors/d_a_tree.cpp": ["param:#1 Vector3 *"]
-  },
-  "Vec3_LslInPlace": {
-   "src/game/actors/d_a_btt_bk.cpp": ["param:#1 Vector3 *"],
-   "src/game/actors/d_a_dossy.cpp": ["param:#1 Vector3 *"],
-   "src/game/actors/d_a_huwa.cpp": ["param:#1 Vector3 *"],
-   "src/game/actors/d_a_snm_bth.cpp": ["param:#1 Vector3 *"]
-  },
   "Vec3_RotateYAndTranslate": {
    "src/engine/view/d_camera.cpp": ["param:#2 const void *", "param:#4 const void *"]
   },
