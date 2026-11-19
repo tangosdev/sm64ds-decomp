@@ -256,7 +256,7 @@ void StarPopup_Draw(void) {
     x = popup->x >> 12;
     y = popup->y >> 12;
     r = GetGameLanguage();
-    Mg_RenderSubSpriteMtx(((void **)sHanaTextSpritesByLanguage[r])[13], x - 8, y, 0);
+    Mg_RenderSubSpriteMtx(sHanaTextSpritesByLanguage[r][13], x - 8, y, 0);
     Mg_RenderSubSpriteMtx(sMgDigitSprites[25], x + 8, y, 0);
 }
 
@@ -379,8 +379,8 @@ void HanaPopup_DrawAll(void) {
             int sb = e->x >> 12;
             int r8 = e->y >> 12;
             int idx = GetGameLanguage();
-            void *obj = sHanaTextSpritesByLanguage[idx];
-            Mg_RenderSubSpriteMtx(((void **)obj)[14], sb - 0x10, r8, a);
+            OamAttr **obj = sHanaTextSpritesByLanguage[idx];
+            Mg_RenderSubSpriteMtx(obj[14], sb - 0x10, r8, a);
             Mg_RenderSubSpriteMtx(sMgDigitSprites[41], sb, r8, b);
             Mg_RenderSubSpriteMtx(sMgDigitSprites[40], sb + 0x10, r8, c);
         }
@@ -1576,8 +1576,8 @@ s32 dScMgHanachan_c::Render() {
 
     if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
         int idx = GetGameLanguage();
-        void *e = sHanaTextSpritesByLanguage[idx];
-        OamAttr *f = ((OamAttr **)e)[3];
+        OamAttr **e = sHanaTextSpritesByLanguage[idx];
+        OamAttr *f = e[3];
         DrawOamSprite(f, 128, 16, 0);
         Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
     }

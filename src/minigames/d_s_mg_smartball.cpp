@@ -71,7 +71,7 @@ struct W9 {
 typedef void (*VFunc)(void *);
 
 extern "C" {
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern struct OamAttr *sSmartballWingSprites[];
 extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                          s32 priority, fx32 scaleX, fx32 scaleY, s32 rotation,
@@ -89,10 +89,10 @@ extern OamAttr *sSmartballCellRowSprites[];
 
 extern void func_02012718(int a, int b);
 extern struct W9 sSmartballCellStartOrder;
-extern void *sSmartballSlotFrameSprite;
-extern void *sSmartballSlotReelEndSprite;
-extern void *sSmartballSlotReelLowerSprite;
-extern void *sSmartballSlotReelUpperSprite;
+extern OamAttr *sSmartballSlotFrameSprite;
+extern OamAttr *sSmartballSlotReelEndSprite;
+extern OamAttr *sSmartballSlotReelLowerSprite;
+extern OamAttr *sSmartballSlotReelUpperSprite;
 extern OamAttr *sSmartballDokanSprites[];
 extern OamAttr *sSmartballAnaSprites[];
 extern int func_0203d570(const Vector2 *a, const Vector2 *b);

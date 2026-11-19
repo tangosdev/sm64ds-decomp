@@ -99,7 +99,7 @@ enum dScMgAmida_c_AssetId {
 
 extern "C" {
 /* --- shared ov004 and main helpers --- */
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -142,14 +142,14 @@ struct AmidaPattern {
     s32 speedUp;       /* 0x18 sAmidaPatternSpeedUp */
 };
 typedef char AmidaPattern_size_must_be_0x1c[sizeof(AmidaPattern) == 0x1c ? 1 : -1];
-extern void *sAmidaWalkerSprite;
-extern void *sAmidaSideSprite;
-extern void *sAmidaHurryButtonSprite;
-extern void *sAmidaBoardAnimSprites[];
-extern void *sAmidaLaneAnimSprites[];
-extern void *sAmidaPieceSprites[];
-extern int sAmidaLaneResultSprites[];
-extern int sAmidaLaneWantSprites[];
+extern OamAttr *sAmidaWalkerSprite;
+extern OamAttr *sAmidaSideSprite;
+extern OamAttr *sAmidaHurryButtonSprite;
+extern OamAttr *sAmidaBoardAnimSprites[];
+extern OamAttr *sAmidaLaneAnimSprites[];
+extern OamAttr *sAmidaPieceSprites[];
+extern OamAttr *sAmidaLaneResultSprites[];
+extern OamAttr *sAmidaLaneWantSprites[];
 struct AmidaBoardFrames {
     int a[13];
 };
@@ -1752,13 +1752,13 @@ void dScMgAmida_c::RenderBoardAlt() {
         Mg_RenderSpriteBoth(sAmidaHurryButtonSprite, 128, 176, -1, 0);
     }
     for (i = 0; i < 4; i++) {
-        Mg_RenderSpriteBoth((void *)sAmidaLaneWantSprites[mLaneWants[i]], mWalkerCell[i].x,
+        Mg_RenderSpriteBoth(sAmidaLaneWantSprites[mLaneWants[i]], mWalkerCell[i].x,
                             mWalkerCell[i].y, -1, 0);
     }
     j = 0;
     x = 0x20;
     for (; j < 4; x += 0x40, j++) {
-        Mg_RenderSpriteBoth((void *)sAmidaLaneResultSprites[mLaneResult[j]], x, 120, -1, 0);
+        Mg_RenderSpriteBoth(sAmidaLaneResultSprites[mLaneResult[j]], x, 120, -1, 0);
     }
 }
 s32 dScMgAmida_c::Render() {

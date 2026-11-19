@@ -44,7 +44,7 @@ struct Puff {
 extern "C" {
 /* local extern: arm9 C helpers with no shared header. */
 int GetGameLanguage(void);
-void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
 }
 
 /* sPuffSprites[language] holds one sprite list per puff slot; each of the
@@ -76,7 +76,7 @@ OamAttr **sPuffSprites[5] = {
 };
 
 int sPuffNextIndex;
-void **sPuffXTable;
+OamAttr **sPuffXTable;
 Puff sPuffs[3];
 
 void Puff_Spawn(int x, int y) {
@@ -133,7 +133,7 @@ void Puff::Update() {
 }
 
 void Puff::Draw() {
-    void *sprite;
+    OamAttr *sprite;
     int sine;
     int offsetX;
     int drawX;
@@ -157,7 +157,7 @@ void Puff_ClearAll(int a0, int a1) {
         sPuffs[i].Clear();
     }
     sPuffNextIndex = a0;
-    sPuffXTable = (void **)a1;
+    sPuffXTable = (OamAttr **)a1;
 }
 
 void Puff_UpdateAll(void) {

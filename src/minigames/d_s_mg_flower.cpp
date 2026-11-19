@@ -48,7 +48,7 @@ struct SpriteAttr {
 
 extern "C" {
 extern void Mg_SetTopScreenYOffset(int n);
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
