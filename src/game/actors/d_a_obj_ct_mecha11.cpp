@@ -67,7 +67,12 @@ CLPS_Block data_ov035_02112238 = {
     0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01001fc0, 0x000000ff, 0xffffffff, 0xffffffff,
 };
 
-short sTTCSpinnerSpeeds[2] = {0x00c8, 0x0258};
+short sTTCSpinnerSpeeds[4] = {
+    200,
+    600,
+    200,
+    0,
+};
 
 daObjCtMecha11_c::~daObjCtMecha11_c() {}
 
