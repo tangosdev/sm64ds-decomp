@@ -1656,10 +1656,12 @@ extern "C" void NNSi_SndCaptureStop(void) {
         while (OS_ReceiveMessage(&data_020a5600, 0, 0) != 0) {
         }
     }
-    if (d->f24 != 0) NNS_SndUnlockCapture(d->f24);
+    if (d->f24 != 0)
+        NNS_SndUnlockCapture(d->f24);
     if (d->f1c != 0)
         NNS_SndUnlockChannel(d->f1c);
-    if (has) NNS_SndFreeAlarm(d->f28);
+    if (has)
+        NNS_SndFreeAlarm(d->f28);
     if (d->f4 == 1)
         SND_SetOutputSelector(0, 0, 0, 0);
     d->f0 = 0;
@@ -2266,7 +2268,8 @@ extern "C" void NNSi_SndInitResourceMgr(void) {
 
 extern "C" int NNS_SndLockChannel(unsigned int a) {
     if (a == 0) return 1;
-    if (a & sChannelLock) return 0;
+    if (a & sChannelLock)
+        return 0;
     SND_LockChannel(a, 0);
     sChannelLock |= a;
     return 1;
