@@ -793,7 +793,7 @@ extern "C" {
 extern void func_02020388(int playerNo);
 }
 
-extern "C" int func_02035638(unsigned char *);
+extern "C" int func_02035638(dBgCh_Actr *);
 extern "C" void *func_0203564c(void *);
 extern void func_02035798(dBgCh_Actr *, int);
 extern "C" int func_02037e20(int *);
@@ -3858,7 +3858,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     if (mMeshClsn.IsOnWall())
         mClsnFlags |= 2;
 
-    if (func_02035638((unsigned char *)&mMeshClsn))
+    if (func_02035638(&mMeshClsn))
         mClsnFlags |= 4;
 
     if (mIsUnderwater == 0)
@@ -3890,7 +3890,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
             mPeakY = mPos.y;
         mIsAirborne = 1;
         mLandSoundPlayed = 0;
-        if (func_02035638((unsigned char *)&mMeshClsn) && mSpeed.y > 0)
+        if (func_02035638(&mMeshClsn) && mSpeed.y > 0)
             mSpeed.y = -0x1000;
         func_ov002_020cef84();
     }
@@ -8491,7 +8491,7 @@ int daPly_c::St_Shell_Main() {
     int flag = 0;
     dBgPi *res;
 
-    if (func_02035638((unsigned char *)&mMeshClsn)) {
+    if (func_02035638(&mMeshClsn)) {
         flag = 1;
         res = (dBgPi *)func_0203564c(&mMeshClsn);
         if (res->GetClsnID() != -1) {

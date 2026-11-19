@@ -1007,8 +1007,8 @@ void func_02035644(int *p, int v) {
     p[67] = v; /* mSphereClsn's wall-rejection half extent (its +0xec) */
 }
 
-extern "C" int func_02035638(unsigned char *p) {
-    return p[144] & 0x10; /* mSphereClsn.flags & 0x10 -- the ceiling bit */
+extern "C" int func_02035638(dBgCh_Actr *clsn) {
+    return clsn->mSphereClsn.flags & 0x10; /* the ceiling bit */
 }
 
 /* Returns 0 or 8, the mask itself -- no normalisation. */

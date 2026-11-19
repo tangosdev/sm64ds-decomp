@@ -276,7 +276,7 @@ int daOwl_c::UpdateCarrying() {
 
     ApproachAngle(&mPrevAngle.x, 0, 0xa, 0x200, 0x100);
 
-    if (mWithMeshClsn.IsOnWall() != 0 || func_02035638((u8 *)&mWithMeshClsn) != 0) {
+    if (mWithMeshClsn.IsOnWall() != 0 || func_02035638(&mWithMeshClsn) != 0) {
         rider = mRider;
         if (rider != 0 && rider->func_ov002_020df7ac() != 0) {
             mWithMeshClsn.Unk_0203589c();

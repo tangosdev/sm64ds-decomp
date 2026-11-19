@@ -75,7 +75,7 @@ extern "C" int RandomIntInternal(int *seed);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
 int SurfaceInfo_TestFlag0x20(int *p);
-extern "C" int func_02035638(u8 *p);
+extern "C" int func_02035638(dBgCh_Actr *clsn);
 
 extern int           data_02092138;
 extern unsigned char gGameMode;
@@ -668,7 +668,7 @@ int daMenbo_c::Behavior()
         func_ov090_02131378();
         if (gCurrentSublevel == 0x15 && mAreaId == 1) {
             UpdateWMClsn(mWithMeshClsn, 2);
-            if (func_02035638((u8 *)(&mWithMeshClsn))) {
+            if (func_02035638(&mWithMeshClsn)) {
                 mVertAccel = 0;
                 mSpeed.x = 0;
                 mSpeed.y = 0;
@@ -691,7 +691,7 @@ int daMenbo_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mPos.y <= mSurfaceY)
         mPos.y = mSurfaceY;
-    if (gCurrentSublevel == 0x15 && mAreaId == 1 && func_02035638((u8 *)(&mWithMeshClsn))) {
+    if (gCurrentSublevel == 0x15 && mAreaId == 1 && func_02035638(&mWithMeshClsn)) {
         mVertAccel = 0;
         mSpeed.x = 0;
         mSpeed.y = 0;
