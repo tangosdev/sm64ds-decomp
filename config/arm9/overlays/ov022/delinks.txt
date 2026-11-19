@@ -16,6 +16,7 @@ src/game/actors/d_a_obj_fl_koma_d.cpp:
     .text start:0x021115a8 end:0x021116c4
     .init start:0x02112d14 end:0x02112d80
     .ctor start:0x021130fc end:0x02113100
+    .data start:0x02113da4 end:0x02113db0
     .bss start:0x02114528 end:0x02114550
 
 src/game/actors/d_a_obj_fl_block.cpp:
