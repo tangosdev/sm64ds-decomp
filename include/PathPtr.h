@@ -3,6 +3,7 @@
 #include "types.h"
 
 struct Vector3;
+struct Vector3_16;
 
 /* One entry of the level's path table: a 6-byte header naming the run of nodes
    that makes up a single path. The node positions live in a second flat table
@@ -38,7 +39,7 @@ struct PathPtr {
     void SetDef(PathDef *def);
     static void SetPathTable(PathDef *defs, int numPaths);
     static void SetNodeTable(void *nodes);
-    static char *GetNodeTable();
+    static Vector3_16 *GetNodeTable();
 #endif
 };
 
