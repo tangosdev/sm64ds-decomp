@@ -27,7 +27,7 @@ data_ov035_02111c20 kind:data(any) addr:0x02111c20 ambiguous
 data_ov035_02111c54 kind:data(any) addr:0x02111c54 ambiguous
 data_ov035_02111cc8 kind:data(any) addr:0x02111cc8 ambiguous
 data_ov035_02111d84 kind:data(any) addr:0x02111d84
-data_ov035_02111ef0 kind:data(any) addr:0x02111ef0
+sTTC2DRotatorSpeeds kind:data(any) addr:0x02111ef0
 data_ov035_02111ef4 kind:data(any) addr:0x02111ef4
 __sinit_d_a_obj_ct_mecha10.cpp kind:function(arm,size=0xbc) addr:0x02111f04
 __sinit_d_a_obj_ct_mecha11.cpp kind:function(arm,size=0x68) addr:0x02111fc0

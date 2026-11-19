@@ -52,7 +52,7 @@ struct Mecha09ClsnFilePtr : SharedFilePtr {
 extern Mecha09ClsnFilePtr data_ov065_0211d9cc;
 extern Mecha09ModelFilePtr data_ov065_0211d9d4;
 extern u8 data_0209f2c0;
-s32 data_ov065_0211d520[4] = {
+s32 sTTCElevatorSpeeds[4] = {
     0x6000,
     0xa000,
     0x6000,
@@ -92,12 +92,12 @@ int daObjCtMecha09_c::Render() {
     return 1;
 }
 
-/* Clock setting data_0209f2c0 picks a vertical speed from data_ov065_0211d520.
+/* Clock setting data_0209f2c0 picks a vertical speed from sTTCElevatorSpeeds.
  * Setting 2 rerolls direction and a countdown; the last five frames of a leg
  * hold the beam still. Travel is clamped to [mStartPosY, mEndPosY]. */
 int daObjCtMecha09_c::Behavior() {
     u8 setting = data_0209f2c0;
-    mSpeed.y = mDirection * data_ov065_0211d520[setting];
+    mSpeed.y = mDirection * sTTCElevatorSpeeds[setting];
 
     if (setting == 2) {
         if (DecIfAbove0_Short(&mLegTimer) == 0) {
