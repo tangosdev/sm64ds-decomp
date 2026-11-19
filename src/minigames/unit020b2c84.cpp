@@ -142,7 +142,7 @@ void Deallocate(void *ptr);
 int GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-int Mg_CopySpriteList(int a, void *b, int c, int d);
+int Mg_CopySpriteList(void *src, void *dst, int add);
 void func_0203d388(int *p, s16 angle);
 void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
@@ -1345,8 +1345,7 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
 
     {
         SlotCharNos charNo = sMgBannerGfxSlotCharNo;
-        e->mOamCount = Mg_CopySpriteList((int)sMgBannerSprites[e->mFileIndex], e->mOam,
-                                         charNo.v[e->mGfxSlot], e->mFileIndex);
+        e->mOamCount = Mg_CopySpriteList(sMgBannerSprites[e->mFileIndex], e->mOam, charNo.v[e->mGfxSlot]);
     }
 
     if (sBannerSetupTable[e->mStyle])
