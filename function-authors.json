@@ -2359,7 +2359,7 @@
     },
     "arm9:0x020169f4": {
       "author": "ruspecial",
-      "name": "_Z13func_020169f4Pci"
+      "name": "_Z13func_020169f4P17dExtSimpleModel_ci"
     },
     "arm9:0x02016a04": {
       "author": "ruspecial",

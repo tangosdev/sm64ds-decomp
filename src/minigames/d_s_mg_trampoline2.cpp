@@ -1074,7 +1074,7 @@ extern "C" {
 extern struct Tbl sTrmp2SpinnerSpeeds;
 extern const u16 sTrmp2SpinnerColors[];
 }
-void func_020169f4(char *self, int kind);
+void func_020169f4(dExtSimpleModel_c *model, int color);
 
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
@@ -1090,7 +1090,7 @@ void Trmp2Spinner_Init(void *r0, int value) {
     } else {
         idx = 3;
     }
-    func_020169f4((char *)spinner, sTrmp2SpinnerColors[idx]);
+    func_020169f4(&spinner->mModel, sTrmp2SpinnerColors[idx]);
     int scale = value * 0xA00;
     spinner->mLifeTimer = 240;
     if (scale > 0x4000) {

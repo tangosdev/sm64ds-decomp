@@ -885,7 +885,7 @@
       "ordinal": 77
     },
     {
-      "symbol": "_Z13func_020169f4Pci",
+      "symbol": "_Z13func_020169f4P17dExtSimpleModel_ci",
       "address": "0x020169f4",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
