@@ -118,15 +118,15 @@ struct SavedIntState {
 };
 
 extern struct OverlayTable *data_020a9ec0[2];
-extern const char data_020868fc; /* "isdoverlay.c" */
-extern const char data_0208690c;
-extern const char data_0208692c;
-extern const char data_0208696c;
-extern const char data_0208698c;
+extern const char data_020868fc[16]; /* "isdoverlay.c" */
+extern const char data_0208690c[32];
+extern const char data_0208692c[64];
+extern const char data_0208696c[32];
+extern const char data_0208698c[48];
 extern const char data_020869bc[32];
-extern const char data_020869dc;
-extern const char data_02086a08;
-extern const char data_02086a30;
+extern const char data_020869dc[44];
+extern const char data_02086a08[40];
+extern const char data_02086a30[40];
 
 extern int func_0206da18(void); /* IRQ::SetIRQState(false) entry */
 extern int func_0206d9cc(void); /* IRQ::SetFIQState(false) entry */
@@ -137,7 +137,7 @@ void OverlayTable::func_0206d940(u32 nIndex) {
     unsigned int n;
     int i;
     if (nIndex > this->m_header.m_nInfoCount) {
-        cstd::__assert(&data_020868fc, 66, &data_02086a30, 1);
+        cstd::__assert(data_020868fc, 66, data_02086a30, 1);
     }
     n = this->m_header.m_nInfoCount;
     if (n - nIndex != 0) {
@@ -151,7 +151,7 @@ void OverlayTable::func_0206d940(u32 nIndex) {
 void OverlayTable::func_0206d8c4(u32 nIndex) {
     unsigned int n;
     if (nIndex >= this->m_header.m_nInfoCount) {
-        cstd::__assert(&data_020868fc, 85, &data_02086a08, 1);
+        cstd::__assert(data_020868fc, 85, data_02086a08, 1);
     }
     this->m_header.m_nInfoCount--;
     for (n = this->m_header.m_nInfoCount; nIndex < n; nIndex++)
@@ -234,16 +234,16 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                     if (nWrapSize <= 0)
                         break;
                     if (!(pInfo->m_info[j].m_SIZE > (u32)nWrapSize)) {
-                        cstd::__assert(&data_020868fc, 289, &data_0208698c, 1);
+                        cstd::__assert(data_020868fc, 289, data_0208698c, 1);
                     }
                     EB(pInfo, j)->m_info[0].m_VMA += (u32)nWrapSize;
                     EB(pInfo, j)->m_info[0].romOffset += (u32)nWrapSize;
                     EB(pInfo, j)->m_info[0].m_SIZE -= (u32)nWrapSize;
                     if (!(pInfo->m_info[j].m_SIZE != 0)) {
-                        cstd::__assert(&data_020868fc, 295, data_020869bc, 1);
+                        cstd::__assert(data_020868fc, 295, data_020869bc, 1);
                     }
                     if (!(pInfo->m_info[j].m_SIZE < 0xf0000000)) {
-                        cstd::__assert(&data_020868fc, 296, &data_020869dc, 1);
+                        cstd::__assert(data_020868fc, 296, data_020869dc, 1);
                     }
                     break;
                 }
@@ -251,11 +251,11 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
         } else if (ea <= nVMA) {
             if (vma64 < (unsigned long long)(u32)ea + pInfo->m_info[i].m_SIZE) {
                 if (!(ea <= nVMA)) {
-                    cstd::__assert(&data_020868fc, 302, &data_0208690c, 1);
+                    cstd::__assert(data_020868fc, 302, data_0208690c, 1);
                 }
                 if (!((unsigned long long)(u32)pInfo->m_info[i].m_VMA + pInfo->m_info[i].m_SIZE >
                       vma64)) {
-                    cstd::__assert(&data_020868fc, 303, &data_0208692c, 1);
+                    cstd::__assert(data_020868fc, 303, data_0208692c, 1);
                 }
                 if (nVMA != pInfo->m_info[i].m_VMA) {
                     u32 ni;
@@ -273,7 +273,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                     srcb->m_info[0].m_SIZE -= dstb->m_info[0].m_SIZE;
                 }
                 if (!(nVMA == pInfo->m_info[i].m_VMA)) {
-                    cstd::__assert(&data_020868fc, 316, &data_0208696c, 1);
+                    cstd::__assert(data_020868fc, 316, data_0208696c, 1);
                 }
                 if (pInfo->m_info[i].m_SIZE <= size) {
                     found = 1;
@@ -292,7 +292,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                             if (nWrapSize <= 0)
                                 break;
                             if (!(wc > (u32)nWrapSize)) {
-                                cstd::__assert(&data_020868fc, 337, &data_0208698c, 1);
+                                cstd::__assert(data_020868fc, 337, data_0208698c, 1);
                             }
                             EB(pInfo, k)->m_info[0].m_VMA += (u32)nWrapSize;
                             EB(pInfo, k)->m_info[0].romOffset += (u32)nWrapSize;
@@ -377,10 +377,10 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
             continue;
 
         if (!(ea <= nVMA)) {
-            cstd::__assert(&data_020868fc, 425, &data_0208690c, 1);
+            cstd::__assert(data_020868fc, 425, data_0208690c, 1);
         }
         if (!((unsigned long long)(u32)pInfo->m_info[i].m_VMA + pInfo->m_info[i].m_SIZE > nVMA)) {
-            cstd::__assert(&data_020868fc, 426, &data_0208692c, 1);
+            cstd::__assert(data_020868fc, 426, data_0208692c, 1);
         }
 
         if (nVMA != pInfo->m_info[i].m_VMA) {
@@ -400,7 +400,7 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
         }
 
         if (!(nVMA == pInfo->m_info[i].m_VMA)) {
-            cstd::__assert(&data_020868fc, 439, &data_0208696c, 1);
+            cstd::__assert(data_020868fc, 439, data_0208696c, 1);
         }
 
         if (pInfo->m_info[i].m_SIZE <= size) {
@@ -417,7 +417,7 @@ int _ISDbgLib_UnregistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 size) {
                     if (nWrapSize <= 0)
                         break;
                     if (!(wc > (u32)nWrapSize)) {
-                        cstd::__assert(&data_020868fc, 458, &data_0208698c, 1);
+                        cstd::__assert(data_020868fc, 458, data_0208698c, 1);
                     }
                     EB(pInfo, i)->m_info[0].m_VMA += (u32)nWrapSize;
                     EB(pInfo, i)->m_info[0].romOffset += (u32)nWrapSize;
