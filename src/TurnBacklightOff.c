@@ -1,8 +1,8 @@
 #include "nitro/spi/pm.h"
 
-extern unsigned char data_0208ee3c;
+extern unsigned char gBacklightEnabled;
 void TurnBacklightOff(void) {
     if (PM_SetBackLight(PM_LCD_ALL, PM_BACKLIGHT_OFF) == PM_SUCCESS) {
-        data_0208ee3c = 0;
+        gBacklightEnabled = 0;
     }
 }

@@ -10965,3 +10965,22 @@ arm9	0x0209d574	data_0209d574	gWatchdog	coined: the one WatchdogAlarm (include/p
 arm9	0x020a4c64	data_020a4c64	gCaptureEffect	coined: the one CaptureEffect (include/CaptureEffect.h); func_02049cd8 passes it as the capture callback's argument
 arm9	0x0209cef4	data_0209cef4	sShadowModelList	coined: head of dExtShadowModel_c's live list; InitModel links in, the frame walk follows ->next; d_ext_model.cpp only
 arm9	0x0209d3c4	data_0209d3c4	gLoadedOverlays	coined: struct OverlaySlot[12] of loaded overlays; LoadOverlay fills a slot, UnloadOverlay frees it, func_02017e60/94 query it
+arm9	0x02099e70	data_02099e70	_ZN7fBase_c14m_rootUniqueIDE	NSMBW (fBase_c::m_rootUniqueID, f_base.hpp; community NEXT_UNIQUE_ACTOR_ID agrees): the fBase_c ctor copies it into uniqueID and post-increments it
+arm9	0x020a4b60	data_020a4b60	_ZN7fBase_c12m_tmpCtParamE	NSMBW (fBase_c::m_tmpCtParam; community ACTOR_PARAM1): setTmpCtData stores the param, the ctor reads it into param1
+arm9	0x020a4b54	data_020a4b54	_ZN7fBase_c15m_tmpCtProfNameE	NSMBW (fBase_c::m_tmpCtProfName; community ACTOR_ACTOR_ID): setTmpCtData stores the profile, the ctor reads it into actorID
+arm9	0x020a4b48	data_020a4b48	_ZN7fBase_c16m_tmpCtGroupTypeE	NSMBW (fBase_c::m_tmpCtGroupType): setTmpCtData stores the group type, the ctor reads it into mGroupType
+arm9	0x020a4b64	data_020a4b64	_ZN7fBase_c20m_tmpCtConnectParentE	NSMBW (fBase_c::m_tmpCtConnectParent): setTmpCtData stores the parent scene node, the ctor links the new process's node under it
+arm9	0x020a4b50	data_020a4b50	gCurrentSpawnID	community (CURRENT_OBJECT_SPAWN_ID): fBase_make holds the profile being created here, 0xffff when idle; the crash screen prints it
+arm9	0x020a4b4c	data_020a4b4c	gBaseCreationState	community (BASE_CREATION_STATE): fBase_make's progress step 2..5, 0 when idle; the crash screen prints it
+arm9	0x020a0e98	data_020a0e98	_ZN6Memory11heapDamagedE	community (Memory::heapDamaged, the symbols/verified.tsv import spelling): Heap_t::Intact latches it to 1 on the first failed heap check
+arm9	0x0209cef8	data_0209cef8	sNumCommonModelData	community (numCommonModelData): count of sCommonModelDataArr entries; AddToCommonModelDataArr bumps it, CleanCommonModelDataArr zeroes it
+arm9	0x0209cefc	data_0209cefc	sCommonModelDataArr	community (commonModelDataArr): the CommonModelData pool AddToCommonModelDataArr/GetCommonModelComponents fill and CleanCommonModelDataArr frees
+arm9	0x0209ceec	data_0209ceec	sShadowModelsRendered	coined: dExtShadowModel_c::RenderAll sets it after drawing the list, CleanAll clears it, InitModel skips linking while it is set
+arm9	0x0209d3bc	data_0209d3bc	gLastUsedFileID	community (LAST_USED_FILE_ID): every SharedFilePtr entry point stores its fileID here first; the crash screen prints it
+arm9	0x0209cddc	data_0209cddc	gSavedRegisterValues	community (SAVED_REGISTER_VALUES): the exception handler func_0201a03c keeps the context pointer here; the crash screen prints the registers
+arm9	0x0208ee3c	data_0208ee3c	gBacklightEnabled	community (BACKLIGHT_ENABLED): TurnBacklightOn/Off set it after PM_SetBackLight succeeds; the options pages and boot args read it
+arm9	0x02092134	data_02092134	gStarCameraSettings	community (STAR_CAMERA_SETTINGS): packed per-star nibbles LoadStarCameraObjects publishes and GetStarCameraSetting reads
+arm9	0x0209f27c	data_0209f27c	sBuzzerSoundJustPlayed	community (BUZZER_SOUND_JUST_PLAYED): IsButtonInputValid plays sound 0xe once per invalid press and clears the flag on release
+arm9	0x0209f280	data_0209f280	sStopMusicDuringFade	community (STOP_MUSIC_DURING_FADE): set when a level-clear jingle starts or a pause-menu exit starts a scene fade; unpause then fades the music out instead of resuming it
+arm9	0x0202deac	_Z13func_0202deaci	_Z20PreloadLevelOverlaysi	coined: the entry scene's early LoadLevelOverlays; sets sLevelOverlaysPreloaded so the stage's own load only checks and clears it
+arm9	0x02020820	_ZN12OamAnimation13func_02020820EPiiihh	_ZN12OamAnimation4InitEPiiihh	coined (OamAnimation::Init): points the player at a {frames, count} pair, restarts it and resets the drawing state; the entry scene arms its animations with it

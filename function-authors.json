@@ -4363,7 +4363,7 @@
     },
     "arm9:0x0202deac": {
       "author": "tangosdev",
-      "name": "_Z13func_0202deaci"
+      "name": "_Z20PreloadLevelOverlaysi"
     },
     "arm9:0x0202ded4": {
       "author": "tangosdev",

@@ -79,9 +79,6 @@ int func_020469e0(void *ptr);
 extern "C" void Deallocate(void *ptr);
 /* local extern: game heap pointer TrimModelFile reads */
 extern void *data_020a0ea0;
-/* decl_common.h's int[] spelling. The records are 0xc-byte CommonModelData. */
-extern int data_0209cef8[];
-extern int data_0209cefc[];
 /* local extern: no header declares it; CleanCommonModelDataArr clears it.
    int, not void *: the other readers declare int, and the store of 0 is
    the same word. */
@@ -103,9 +100,10 @@ extern "C" u32 func_020462bc(int *file);
 /* local extern: no header declares it; initializes ModelComponents' side of
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
 void func_020462b4(int *data, int buf);
-/* local extern: dExtShadowModel_c's live list head and freeze flag */
+/* local extern: dExtShadowModel_c's live list head, and the flag RenderAll
+   sets once it has drawn the list (InitModel stops linking until CleanAll) */
 extern dExtShadowModel_c *sShadowModelList;
-extern u8 data_0209ceec;
+extern u8 sShadowModelsRendered;
 /* The two shadow model files live in the shared overlay-0/1 region: arm9's own
  * symbols.txt rows for 0x020ad524/0x020ad560 sit past .bss and name nothing
  * the link defines. In overlay 0 both addresses fall inside asset path
@@ -126,14 +124,18 @@ void func_020470e8(BMD_File *model, BMA_File *file);
 void func_02046e28(ModelComponents *model, BMA_File *file, unsigned short frame);
 }
 
-/* 0xc-byte records in the common model data array at data_0209cefc, counted
-   by data_0209cef8. GetCommonModelComponents fills the two owned slots; the destructors
-   and CleanCommonModelDataArr free them. */
+/* 0xc-byte records in the common model data array sCommonModelDataArr,
+   counted by sNumCommonModelData. GetCommonModelComponents fills the two
+   owned slots; the destructors and CleanCommonModelDataArr free them. */
 struct CommonModelData {
     BMD_File *file;              /* 0x00 */
     ModelComponents *components; /* 0x04 */
     void *buffer;                /* 0x08 */
 };
+
+/* The pool and its count; no other file reads them. */
+extern int sNumCommonModelData;
+extern CommonModelData sCommonModelDataArr[];
 
 /* ---------------------------------------------------------------------------
    dExtModel_c and dExtSimpleModel_c, 0x020169d8..0x02017168: the
@@ -191,9 +193,9 @@ void dExtSimpleModel_c::LoadAndSetFile(u16 ov0ID, int a, int b) {
 }
 
 void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {
-    CommonModelData *p = (CommonModelData *)data_0209cefc;
+    CommonModelData *p = sCommonModelDataArr;
     int i = 0;
-    int n = data_0209cef8[0];
+    int n = sNumCommonModelData;
     while (i < n) {
         if (&file == p->file)
             return p;
@@ -203,7 +205,7 @@ void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {
     p->file = &file;
     p->components = 0;
     p->buffer = 0;
-    data_0209cef8[0] = data_0209cef8[0] + 1;
+    sNumCommonModelData = sNumCommonModelData + 1;
     if (data_0208e738 == 0)
         return p;
     LoadTexAndPal(file);
@@ -234,10 +236,10 @@ ModelComponents *GetCommonModelComponents(BMD_File *file) {
 }
 
 extern "C" void CleanCommonModelDataArr(void) {
-    CommonModelData *e = (CommonModelData *)data_0209cefc;
+    CommonModelData *e = sCommonModelDataArr;
     int i = 0;
 
-    if (data_0209cef8[0] > 0) {
+    if (sNumCommonModelData > 0) {
         do {
             if (e->buffer)
                 ::operator delete[](e->buffer);
@@ -245,10 +247,10 @@ extern "C" void CleanCommonModelDataArr(void) {
                 ::operator delete(e->components);
             i++;
             e++;
-        } while (i < data_0209cef8[0]);
+        } while (i < sNumCommonModelData);
     }
 
-    data_0209cef8[0] = 0;
+    sNumCommonModelData = 0;
     data_0209cef0 = 0;
 }
 
@@ -640,8 +642,9 @@ void dExtCommonModel_c::SetPolygonID(u32 id) {
    dExtShadowModel_c, 0x02015d38..0x0201609c: the dExtModel_c sibling that
    draws an actor's ground shadow from a shared cylinder or cuboid BMD_File.
    Every live instance sits on a global intrusive doubly-linked list (head
-   sShadowModelList, freeze flag data_0209ceec): InitModel links in, the
-   destructor unlinks, RenderAll walks the list and CleanAll empties it.
+   sShadowModelList): InitModel links in, the destructor unlinks, RenderAll
+   walks the list and sets sShadowModelsRendered, and CleanAll empties it and
+   clears the flag. InitModel does not link while the flag is set.
    --------------------------------------------------------------------------- */
 
 /* An empty body; the three null stores after the vptr are exactly the member
@@ -704,7 +707,7 @@ void dExtShadowModel_c::InitModel(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz, u8 op
     scale.y = sy;
     scale.z = sz;
     this->opacity = opacity;
-    if (data_0209ceec)
+    if (sShadowModelsRendered)
         return;
     next = sShadowModelList;
     if (sShadowModelList)
@@ -724,7 +727,7 @@ void dExtShadowModel_c::CleanAll() {
             sShadowModelList = nx;
         } while (sShadowModelList);
     }
-    data_0209ceec = 0;
+    sShadowModelsRendered = 0;
 }
 
 /* The scratch matrix's translation y is lifted two units so the shadow sits
@@ -745,7 +748,7 @@ void dExtShadowModel_c::RenderAll() {
             node = node->next;
         } while (node);
     }
-    data_0209ceec = 1;
+    sShadowModelsRendered = 1;
 }
 
 /* ---------------------------------------------------------------------------

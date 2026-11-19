@@ -31,14 +31,17 @@ struct OamAnimation {
     u8  pad_027;                 /* 0x27 */
     /* 0x28 -- which engine draws it: func_0202048c renders on the main
        screen for 0, the sub screen for 1, and both for 2 (the main copy
-       0xc0 lower). func_02020820 stores its third argument here. Was
+       0xc0 lower). Init stores its second argument here. Was
        unk_028. */
     s32 screen;
 
 #ifdef __cplusplus
     OamAnimation();
     ~OamAnimation();
-    void func_02020820(int *src, int screen, int loops, u8 enabled, u8 affine);
+    /* Point the player at src's {frames, count} pair, restart it, and
+       reset the drawing state: palette and priority to -1, unit scale, no
+       rotation. Coined name. */
+    void Init(int *src, int screen, int loops, u8 enabled, u8 affine);
 #endif
 };
 

@@ -87,7 +87,7 @@ void TurnBacklightOff(void);
 /* Sub BG enable bits. dScMgBase_c saves them in mSavedSubBgBits. */
 extern unsigned char gSubScreenLayers;
 /* 1 while the backlight is on. TurnBacklightOn / Off write it. */
-extern unsigned char data_0208ee3c;
+extern unsigned char gBacklightEnabled;
 }
 int TouchArea_Update(void *icon, int touch);
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
@@ -153,7 +153,7 @@ dMgPsOpt_c::TouchIcon_c::~TouchIcon_c() {}
 void dMgPsOpt_c::Open() {
 
     mIcons[kIconSoundMode].mOn = 1;
-    if (data_0208ee3c != 0) {
+    if (gBacklightEnabled != 0) {
         mIcons[kIconLightOn].mOn = 1;
         mIcons[kIconLightOff].mOn = 0;
     } else {
