@@ -130,6 +130,7 @@ enum daDemo_c_AssetId {
 #include "SaveData.h"
 #include "dExtAnmTexPat_c.h"
 #include "dCamera_c.h"
+#include "daSBird_c.h"
 #include "LevelRng.h"
 #include "cstd.h"
 #include "math/Approach.h"
@@ -320,7 +321,7 @@ extern "C" {
 extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
-extern char *gCamera;
+extern dCamera_c *gCamera;
 extern VecFx32 data_ov002_0210b958;
 }
 
@@ -2715,7 +2716,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
             int m = FX_MUL(r, 0xa000);
             this->mMagnitude = m + 0x19000;
         }
-        VEC_Add(&this->mPos, &((dCamera_c *)gCamera)->pos, &this->mPos);
+        VEC_Add(&this->mPos, &gCamera->pos, &this->mPos);
         if (first > 0x2bc) {
             this->mPos.y -= 0x96000;
         }
@@ -3014,7 +3015,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *src, int first) {
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {
-    dCamera_c *cam = (dCamera_c *)gCamera;
+    dCamera_c *cam = gCamera;
 
     if (mode == gKuppaScriptFrame) {
         if (mode == 0) {
@@ -3165,7 +3166,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     }
 
     this->mOpacity = 0x1f;
-    cam = (dCamera_c *)gCamera;
+    cam = gCamera;
 
     VEC_Add(&v0, &cam->pos, &v0);
     dist = Vec3_Dist(&v0, &cam->pos);
@@ -3409,8 +3410,8 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618((SharedFilePtr *)data_ov009_02113c20, 1, data_ov002_0210b604,
-                                      0, 0, 0, -1) == 0)
+                ->func_ov002_020f6618(&data_ov009_02113c20, 1, data_ov002_0210b604, 0, 0, 0, -1) ==
+            0)
             return 0;
     }
     mScale.x = 0x1000;
@@ -3490,7 +3491,7 @@ DemoModelFile data_ov002_02110b78(0x475);
    the BCA list and the BTP list for param1 0x12 (0x0210b60c, 0x0210b608) and
    0x13 (0x0210b610, 0x0210b600), and the BCA list for 0x1a..0x2d. */
 SharedFilePtr *data_ov002_0210b600[1] = {&data_ov002_02110b10};
-SharedFilePtr *data_ov002_0210b604[1] = {(SharedFilePtr *)data_ov009_02113c28};
+SharedFilePtr *data_ov002_0210b604[1] = {&data_ov009_02113c28};
 SharedFilePtr *data_ov002_0210b608[1] = {&data_ov085_0213073c};
 SharedFilePtr *data_ov002_0210b60c[1] = {&data_ov085_02130744};
 SharedFilePtr *data_ov002_0210b610[1] = {&data_ov002_02110bf8};

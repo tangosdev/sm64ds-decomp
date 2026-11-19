@@ -48,19 +48,6 @@
 #include "cstd.h"
 #include "LevelRng.h"
 
-/* Resource handles this TU's static initializer constructs. The wrapper
- * spellings are reconstructed; constructor and destructor addresses, file
- * IDs, widths, and BSS order are the ROM's. */
-struct SBirdModelFilePtr : SharedFilePtr {
-    SBirdModelFilePtr(u32 fileID);
-    ~SBirdModelFilePtr();
-};
-
-struct SBirdAnimationFilePtr : SharedFilePtr {
-    SBirdAnimationFilePtr(u32 fileID);
-    ~SBirdAnimationFilePtr();
-};
-
 typedef void (daSBird_c::*BirdState)();
 
 struct SBirdStateTable {
@@ -74,8 +61,6 @@ struct SBirdStateTable {
     }
 };
 
-extern SBirdModelFilePtr data_ov009_02113c20;
-extern SBirdAnimationFilePtr data_ov009_02113c28;
 extern SBirdStateTable data_ov009_02113c48;
 
 /* The flock's random draws are unsigned: a signed % or >> changes codegen. */

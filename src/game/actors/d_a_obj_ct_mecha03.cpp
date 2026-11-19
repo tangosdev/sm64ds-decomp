@@ -63,7 +63,7 @@ struct Mecha03ClsnFilePtr : SharedFilePtr {
 };
 
 extern u8 data_0209f2c0;
-extern const s16 data_ov065_0211c0b0[4] = {
+extern const s16 sTTCPendulumInitialAccels[4] = {
     13,
     22,
     13,
@@ -86,7 +86,7 @@ int daObjCtMecha03_c::InitResources() {
     mShadowModel.InitCuboid();
 
     mSwingDir = 1;
-    mSwingAccel = data_ov065_0211c0b0[data_0209f2c0];
+    mSwingAccel = sTTCPendulumInitialAccels[data_0209f2c0];
     mSwingAngle = 0x1964;
     mAngle.z = mSwingAngle;
 

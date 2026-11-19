@@ -4,6 +4,7 @@
 #include "dExtAnmModel_c.h"
 #include "dExtShadowModel_c.h"
 #include "dActor_c.h"
+#include "SharedFilePtr.h"
 
 /* Castle grounds birds (SBIRD 343) -- ov009/daSBird_c.
  *
@@ -60,6 +61,24 @@ struct daSBird_c : dActor_c {
     void StateFly();           /* 0x02111234, state 3 -- fly/steer */
     void AttachToLeader(int);  /* 0x02111224, follower attach */
 };
+
+/* The bird's resource handles, which ov009's static initializer constructs
+ * (src/game/actors/d_a_s_bird.cpp): the model, file 1080, and the
+ * animation, file 1081. d_a_demo.cpp's cutscene birds load through the same
+ * two. The wrapper spellings are reconstructed; constructor and destructor
+ * addresses, file IDs, widths and BSS order are the ROM's. */
+struct SBirdModelFilePtr : SharedFilePtr {
+    SBirdModelFilePtr(u32 fileID);
+    ~SBirdModelFilePtr();
+};
+
+struct SBirdAnimationFilePtr : SharedFilePtr {
+    SBirdAnimationFilePtr(u32 fileID);
+    ~SBirdAnimationFilePtr();
+};
+
+extern SBirdModelFilePtr data_ov009_02113c20;
+extern SBirdAnimationFilePtr data_ov009_02113c28;
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

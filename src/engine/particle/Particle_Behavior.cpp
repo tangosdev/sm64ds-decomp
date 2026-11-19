@@ -1,7 +1,7 @@
 //cpp
 /* arm9/Particle_Behavior -- the six particle behaviours of the NitroSystem
  * particle library (SPL), folded from six legacy shards at .text
- * 0x0204d4d0..0x0204d8e8. func_0204a17c (Particle_Manager.cpp) pairs each
+ * 0x0204d4d0..0x0204d8e8. SPLManager_LoadResources (Particle_Manager.cpp) pairs each
  * apply function with its record in the particle resource in a definition's
  * SPLBehavior table, and the particle update calls each entry once per
  * particle per frame. Gravity, random and magnet add into the particle's

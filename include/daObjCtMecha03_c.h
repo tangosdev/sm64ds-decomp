@@ -22,7 +22,7 @@ struct daObjCtMecha03_c : dBgActor_c {
      * copied into dActor_c::mAngle.z. mwccarm reuses dBgActor_c's 0x31e tail
      * padding for mSwingDir. */
     s16 mSwingDir; /* 0x31e -- 1 at InitResources */
-    s16 mSwingAccel; /* 0x320 -- data_ov065_0211c0b0[setting], re-rolled to 0xd/0x2a under setting 2 */
+    s16 mSwingAccel; /* 0x320 -- sTTCPendulumInitialAccels[setting], re-rolled to 0xd/0x2a under setting 2 */
     s16 mSwingAngle; /* 0x322 -- 0x1964 at InitResources */
     s16 mSwingSpeed; /* 0x324 */
     u16 mSoundTimer; /* 0x326 -- DecIfAbove0_Short; at 0 plays bank-3 sound 0x38, reloaded as mPauseTimer + 0xf */
