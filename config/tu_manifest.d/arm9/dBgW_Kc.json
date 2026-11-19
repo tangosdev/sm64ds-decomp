@@ -148,6 +148,13 @@
   ],
   "compiler_only_output": [
     {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's empty destructor: dBgW_Kc's upAxis member is the game's Vector3, so the constructor and destructor variants defined here odr-use Vector3's inline lifecycle and mwccarm re-emits its D1. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4); rombuild compares this body against those bytes before discarding the duplicate."
+    },
+    {
       "symbol": "_ZTV7dBgW_Kc",
       "disposition": "deadstrip-data",
       "reason": "Key function is the out-of-line destructor, so this TU emits the vtable. symbols.txt names the address point arm9:0x020993dc; the emitted copy is licensed deadstrip-data against that canonical home."

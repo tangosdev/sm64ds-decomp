@@ -783,7 +783,7 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, fx3
 
 extern "C" {
 /* local extern: daPly_c has no accessor for the current body model. */
-void *func_ov002_020e496c(daPly_c *p);
+dExtAnm2Model_c *func_ov002_020e496c(daPly_c *p);
 }
 /* the player's current mBodyModels entry */
 
@@ -904,9 +904,9 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
     return number->SetOwner(owner);
 }
 
-extern u8 gCurrentStarId[];
+extern u8 gCurrentStarId;
 /* the star index this mission was entered for */
-extern s8 gCurrentSublevel[];
+extern s8 gCurrentSublevel;
 /* the current sublevel id */
 extern dActor_c *STAR_MARKERS[12];
 /* 0x0209f40c */
@@ -918,8 +918,8 @@ s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
     s32 type = markerType;
 
     if (markerType == 2) {
-        if (starIdx != gCurrentStarId[0]) {
-            if (SublevelToLevel(gCurrentSublevel[0]) <= 0xe)
+        if (starIdx != gCurrentStarId) {
+            if (SublevelToLevel(gCurrentSublevel) <= 0xe)
                 return -1;
         }
         if (IsStarCollectedInCurLevel(starIdx))
@@ -956,7 +956,7 @@ dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                  mAreaId, -1);
 }
 
-extern unsigned char data_0209f2c0[];
+extern unsigned char data_0209f2c0;
 /* WDW's water level, 0..2 */
 extern int data_02075244[];
 /* the water height for each level */
@@ -966,8 +966,8 @@ extern int data_02075244[];
 s32 dActor_c::GetWaterHeightWDW()
 {
     s32 height = mPos.y;
-    if (gCurrentSublevel[0] == 0x15 && mAreaId == 0) {
-        unsigned int level = data_0209f2c0[0];
+    if (gCurrentSublevel == 0x15 && mAreaId == 0) {
+        unsigned int level = data_0209f2c0;
         if (level >= 3)
             level = 2;
         height = data_02075244[level];

@@ -9,8 +9,6 @@ with this invariant::
 
 The result deliberately distinguishes support from detection.  A tool that notices a
 shared source but rewrites it into per-function entries is still a production blocker.
-Likewise, a guard that rejects a stale port reference is useful, but the corresponding
-port resolver is not TU-compatible until it can resolve a symbol inside a shared file.
 
 The default command reports the current contract and exits zero even while blockers
 remain, so it can be used as a living status report.  ``--require-ready`` turns the
@@ -21,7 +19,6 @@ from __future__ import annotations
 import argparse
 import contextlib
 import io
-import importlib.util
 import json
 import pathlib
 import sys
@@ -34,7 +31,6 @@ sys.path.insert(0, str(TOOLS))
 import eligible as EL  # noqa: E402
 import enroll as EN  # noqa: E402
 import langmode_audit as LM  # noqa: E402
-import port_refcheck as PR  # noqa: E402
 import rombuild as RB  # noqa: E402
 import srcpath as SP  # noqa: E402
 import validate_merge as VM  # noqa: E402
@@ -81,8 +77,7 @@ class _Fixture:
         self.repo = pathlib.Path(self._tmp.name)
 
     def __enter__(self):
-        for directory in ("src/runtime/actor", "legacy-src", "include", "config/arm9",
-                          "port/hal"):
+        for directory in ("src/runtime/actor", "legacy-src", "include", "config/arm9"):
             (self.repo / directory).mkdir(parents=True, exist_ok=True)
         (self.repo / SOURCE).write_text(SOURCE_TEXT, encoding="utf-8")
         # The physical-file metric's before shape.  These files are deliberately
@@ -95,15 +90,6 @@ class _Fixture:
         (self.repo / "config/arm9/symbols.txt").write_text(
             SYMBOL_TEXT, encoding="utf-8")
         self.reset_delinks()
-
-        # One valid path manifest plus the empty siblings port_refcheck requires.
-        for suffix in PR.SLICE_GATE_SUFFIXES:
-            text = SOURCE + "\n" if suffix == PR.SLICE_GATE_SUFFIXES[0] else ""
-            (self.repo / "port" / f"slice_gate{suffix}.txt").write_text(
-                text, encoding="utf-8")
-        (self.repo / "port/CMakeLists.txt").write_text(
-            "set(GATE1_SYMS\n  " + "\n  ".join(SYMBOLS) + "\n)\n",
-            encoding="utf-8")
         return self
 
     def __exit__(self, *_exc):
@@ -129,8 +115,6 @@ def _redirect_modules(repo):
                 RB: {"REPO": repo, "CONFIG_ROOT": repo / "config"},
                 VM: {"REPO": repo},
                 LM: {"REPO": repo},
-                PR: {"REPO": repo, "PORT": repo / "port",
-                     "SRC_DIRS": [repo / "src", repo / "include"]},
             }
             for module, attrs in values.items():
                 for name, value in attrs.items():
@@ -350,36 +334,6 @@ def _probe_attribution(repo):
         "The author file did not keep a separate author for each address.")
 
 
-def _probe_port_refs(fixture):
-    report = PR.build_report()
-    cmake = report["checks"]["cmake-symbols"]
-    manifests = report["checks"]["manifests"]
-    hostgen_path = TOOLS.parent / "port" / "tools" / "hostgen.py"
-    spec = importlib.util.spec_from_file_location("cpp_tu_compat_hostgen", hostgen_path)
-    hostgen = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(hostgen)
-    out_root = fixture.repo / "host-out"
-    with mock.patch.object(sys, "argv", [
-            "hostgen.py", "--decomp", str(fixture.repo), "--out", str(out_root),
-            SYMBOLS[1]]), contextlib.redirect_stdout(io.StringIO()):
-        hostgen.main()
-    generated = out_root / pathlib.PurePosixPath(SOURCE).with_suffix(".cpp")
-    generated_text = generated.read_text(encoding="utf-8") if generated.is_file() else ""
-    definitions = sum(name in generated_text for name in ("Pair::First", "Pair::Second"))
-    ok = (not cmake["failures"] and not manifests["failures"]
-          and generated.is_file() and definitions == 2)
-    return _row(
-        "port_refcheck", "ready" if ok else "blocked",
-        {"manifestFailures": len(manifests["failures"]),
-         "cmakeSymbolFailures": len(cmake["failures"]),
-         "hostgenOutput": generated.relative_to(fixture.repo).as_posix(),
-         "hostgenDefinitions": definitions,
-         "messages": [f["message"] for f in cmake["failures"]]},
-        "Literal manifests can move to the TU path, but CMake hostgen still resolves each "
-        "symbol only as src/<symbol>.c|.cpp." if not ok else
-        "Both literal paths and symbol lists resolve through the shared source.")
-
-
 def audit():
     """Return the deterministic compatibility report as JSON-serializable data."""
     with _Fixture() as fixture, _redirect_modules(fixture.repo):
@@ -391,7 +345,6 @@ def audit():
             _probe_validate_merge(fixture.repo),
             _probe_langmode(),
             _probe_attribution(fixture.repo),
-            _probe_port_refs(fixture),
         ]
     blockers = [row["surface"] for row in rows if row["status"] == "blocked"]
     gaps = [row["surface"] for row in rows if row["status"] == "gap"]

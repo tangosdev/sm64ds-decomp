@@ -2289,7 +2289,7 @@ matched: yes</title></rect><rect x="258.60" y="171.33" width="3.23" height="5.81
 module: arm9
 addr: 0x020169d8
 size: 28 bytes
-matched: yes</title></rect><rect x="261.83" y="171.33" width="1.85" height="5.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_020169f4Pci
+matched: yes</title></rect><rect x="261.83" y="171.33" width="1.85" height="5.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_020169f4P17dExtSimpleModel_ci
 module: arm9
 addr: 0x020169f4
 size: 16 bytes
@@ -7333,7 +7333,7 @@ matched: yes</title></rect><rect x="133.35" y="572.90" width="8.20" height="11.4
 module: arm9
 addr: 0x02044dc4
 size: 140 bytes
-matched: yes</title></rect><rect x="141.55" y="572.90" width="10.07" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02044e50P15ModelComponentsiiPi
+matched: yes</title></rect><rect x="141.55" y="572.90" width="10.07" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02044e50P15ModelComponentsiiP9Matrix4x3
 module: arm9
 addr: 0x02044e50
 size: 172 bytes
@@ -7353,7 +7353,7 @@ matched: yes</title></rect><rect x="173.63" y="572.90" width="15.22" height="11.
 module: arm9
 addr: 0x02045074
 size: 260 bytes
-matched: yes</title></rect><rect x="188.86" y="572.90" width="24.59" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02045178Piiiiiii
+matched: yes</title></rect><rect x="188.86" y="572.90" width="24.59" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02045178P9Matrix4x3iiiiii
 module: arm9
 addr: 0x02045178
 size: 420 bytes
@@ -7741,7 +7741,7 @@ matched: yes</title></rect><rect x="5.00" y="624.78" width="22.37" height="7.32"
 module: arm9
 addr: 0x0204a4c8
 size: 244 bytes
-matched: yes</title></rect><rect x="27.37" y="624.78" width="1.10" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204a5bc
+matched: yes</title></rect><rect x="27.37" y="624.78" width="1.10" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_Emit
 module: arm9
 addr: 0x0204a5bc
 size: 12 bytes
@@ -7749,23 +7749,23 @@ matched: yes</title></rect><rect x="28.47" y="624.78" width="33.00" height="7.32
 module: arm9
 addr: 0x0204a5c8
 size: 360 bytes
-matched: yes</title></rect><rect x="61.46" y="624.78" width="163.89" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204a730
+matched: yes</title></rect><rect x="61.46" y="624.78" width="163.89" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_Update
 module: arm9
 addr: 0x0204a730
 size: 1788 bytes
-matched: yes</title></rect><rect x="225.36" y="624.78" width="24.57" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204ae2c
+matched: yes</title></rect><rect x="225.36" y="624.78" width="24.57" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_Init
 module: arm9
 addr: 0x0204ae2c
 size: 268 bytes
-matched: yes</title></rect><rect x="250.29" y="624.78" width="21.63" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204af3c
+matched: yes</title></rect><rect x="250.29" y="624.78" width="21.63" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_SetTexture
 module: arm9
 addr: 0x0204af3c
 size: 236 bytes
-matched: yes</title></rect><rect x="271.92" y="624.78" width="49.50" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204b028
+matched: yes</title></rect><rect x="271.92" y="624.78" width="49.50" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Child_Polygon
 module: arm9
 addr: 0x0204b028
 size: 540 bytes
-matched: yes</title></rect><rect x="5.00" y="632.09" width="34.67" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204b244
+matched: yes</title></rect><rect x="5.00" y="632.09" width="34.67" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Polygon
 module: arm9
 addr: 0x0204b244
 size: 540 bytes
@@ -7777,43 +7777,43 @@ matched: yes</title></rect><rect x="101.06" y="632.09" width="61.38" height="10.
 module: arm9
 addr: 0x0204b81c
 size: 956 bytes
-matched: yes</title></rect><rect x="162.44" y="632.09" width="39.55" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204bbd8
+matched: yes</title></rect><rect x="162.44" y="632.09" width="39.55" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Child_Billboard
 module: arm9
 addr: 0x0204bbd8
 size: 616 bytes
-matched: yes</title></rect><rect x="201.99" y="632.09" width="39.55" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204be40
+matched: yes</title></rect><rect x="201.99" y="632.09" width="39.55" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Billboard
 module: arm9
 addr: 0x0204be40
 size: 616 bytes
-matched: yes</title></rect><rect x="241.54" y="632.09" width="4.11" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c0a8
+matched: yes</title></rect><rect x="241.54" y="632.09" width="4.11" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_RotateY
 module: arm9
 addr: 0x0204c0a8
 size: 64 bytes
-matched: yes</title></rect><rect x="245.65" y="632.09" width="11.04" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c0e8
+matched: yes</title></rect><rect x="245.65" y="632.09" width="11.04" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_RotateXYZ
 module: arm9
 addr: 0x0204c0e8
 size: 172 bytes
-matched: yes</title></rect><rect x="256.70" y="632.09" width="11.81" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c194
+matched: yes</title></rect><rect x="256.70" y="632.09" width="11.81" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_DrawXZPlane
 module: arm9
 addr: 0x0204c194
 size: 184 bytes
-matched: yes</title></rect><rect x="268.51" y="632.09" width="11.81" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c24c
+matched: yes</title></rect><rect x="268.51" y="632.09" width="11.81" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_DrawXYPlane
 module: arm9
 addr: 0x0204c24c
 size: 184 bytes
-matched: yes</title></rect><rect x="280.33" y="632.09" width="41.09" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c304
+matched: yes</title></rect><rect x="280.33" y="632.09" width="41.09" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_EmitChildren
 module: arm9
 addr: 0x0204c304
 size: 640 bytes
-matched: yes</title></rect><rect x="5.00" y="642.54" width="105.75" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204c584
+matched: yes</title></rect><rect x="5.00" y="642.54" width="105.75" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_EmitParticles
 module: arm9
 addr: 0x0204c584
 size: 2008 bytes
-matched: yes</title></rect><rect x="110.75" y="642.54" width="18.54" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204cd5c
+matched: yes</title></rect><rect x="110.75" y="642.54" width="18.54" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLUtil_TiltCoordinates
 module: arm9
 addr: 0x0204cd5c
 size: 352 bytes
-matched: yes</title></rect><rect x="129.29" y="642.54" width="26.75" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204cebc
+matched: yes</title></rect><rect x="129.29" y="642.54" width="26.75" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLEmitter_ComputeOrthogonalAxes
 module: arm9
 addr: 0x0204cebc
 size: 508 bytes
@@ -7865,15 +7865,15 @@ matched: yes</title></rect><rect x="263.49" y="642.54" width="2.95" height="12.7
 module: arm9
 addr: 0x0204d8b0
 size: 56 bytes
-matched: yes</title></rect><rect x="266.44" y="642.54" width="5.90" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d8e8
+matched: yes</title></rect><rect x="266.44" y="642.54" width="5.90" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLList_Erase
 module: arm9
 addr: 0x0204d8e8
 size: 112 bytes
-matched: yes</title></rect><rect x="272.33" y="642.54" width="3.79" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d958
+matched: yes</title></rect><rect x="272.33" y="642.54" width="3.79" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLList_PopFront
 module: arm9
 addr: 0x0204d958
 size: 72 bytes
-matched: yes</title></rect><rect x="276.13" y="642.54" width="4.21" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d9a0
+matched: yes</title></rect><rect x="276.13" y="642.54" width="4.21" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLList_PushFront
 module: arm9
 addr: 0x0204d9a0
 size: 80 bytes
@@ -8117,31 +8117,31 @@ matched: yes</title></rect><rect x="62.76" y="664.65" width="7.43" height="6.50"
 module: arm9
 addr: 0x0204f070
 size: 72 bytes
-matched: yes</title></rect><rect x="70.18" y="664.65" width="3.30" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f0b8
+matched: yes</title></rect><rect x="70.18" y="664.65" width="3.30" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndFreeAlarm
 module: arm9
 addr: 0x0204f0b8
 size: 32 bytes
-matched: yes</title></rect><rect x="73.48" y="664.65" width="7.01" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f0d8
+matched: yes</title></rect><rect x="73.48" y="664.65" width="7.01" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndAllocAlarm
 module: arm9
 addr: 0x0204f0d8
 size: 68 bytes
-matched: yes</title></rect><rect x="80.50" y="664.65" width="2.89" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f11c
+matched: yes</title></rect><rect x="80.50" y="664.65" width="2.89" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndUnlockCapture
 module: arm9
 addr: 0x0204f11c
 size: 28 bytes
-matched: yes</title></rect><rect x="83.38" y="664.65" width="3.71" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f138
+matched: yes</title></rect><rect x="83.38" y="664.65" width="3.71" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndLockCapture
 module: arm9
 addr: 0x0204f138
 size: 36 bytes
-matched: yes</title></rect><rect x="87.10" y="664.65" width="5.78" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f15c
+matched: yes</title></rect><rect x="87.10" y="664.65" width="5.78" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndUnlockChannel
 module: arm9
 addr: 0x0204f15c
 size: 56 bytes
-matched: yes</title></rect><rect x="92.87" y="664.65" width="8.66" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f194
+matched: yes</title></rect><rect x="92.87" y="664.65" width="8.66" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndLockChannel
 module: arm9
 addr: 0x0204f194
 size: 84 bytes
-matched: yes</title></rect><rect x="101.53" y="664.65" width="4.54" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f1e8
+matched: yes</title></rect><rect x="101.53" y="664.65" width="4.54" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndInitResourceMgr
 module: arm9
 addr: 0x0204f1e8
 size: 44 bytes
@@ -8333,19 +8333,19 @@ matched: yes</title></rect><rect x="220.50" y="671.15" width="36.27" height="5.1
 module: arm9
 addr: 0x020500a4
 size: 276 bytes
-matched: yes</title></rect><rect x="256.77" y="671.15" width="21.02" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020501b8
+matched: yes</title></rect><rect x="256.77" y="671.15" width="21.02" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndCaptureEndSleep
 module: arm9
 addr: 0x020501b8
 size: 160 bytes
-matched: yes</title></rect><rect x="277.79" y="671.15" width="12.61" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050258
+matched: yes</title></rect><rect x="277.79" y="671.15" width="12.61" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndCaptureBeginSleep
 module: arm9
 addr: 0x02050258
 size: 96 bytes
-matched: yes</title></rect><rect x="290.41" y="671.15" width="31.01" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020502b8
+matched: yes</title></rect><rect x="290.41" y="671.15" width="31.01" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndCaptureStop
 module: arm9
 addr: 0x020502b8
 size: 236 bytes
-matched: yes</title></rect><rect x="5.00" y="676.26" width="69.17" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020503a4
+matched: yes</title></rect><rect x="5.00" y="676.26" width="69.17" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndCaptureStart
 module: arm9
 addr: 0x020503a4
 size: 856 bytes
@@ -8353,19 +8353,19 @@ matched: yes</title></rect><rect x="74.17" y="676.26" width="12.61" height="8.30
 module: arm9
 addr: 0x020506fc
 size: 156 bytes
-matched: yes</title></rect><rect x="86.77" y="676.26" width="5.82" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050798
+matched: yes</title></rect><rect x="86.77" y="676.26" width="5.82" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndCaptureStopEffect
 module: arm9
 addr: 0x02050798
 size: 72 bytes
-matched: yes</title></rect><rect x="92.59" y="676.26" width="15.51" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020507e0
+matched: yes</title></rect><rect x="92.59" y="676.26" width="15.51" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndCaptureStartEffect
 module: arm9
 addr: 0x020507e0
 size: 192 bytes
-matched: yes</title></rect><rect x="108.10" y="676.26" width="14.22" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020508a0
+matched: yes</title></rect><rect x="108.10" y="676.26" width="14.22" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndCaptureMain
 module: arm9
 addr: 0x020508a0
 size: 176 bytes
-matched: yes</title></rect><rect x="122.32" y="676.26" width="2.59" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050950
+matched: yes</title></rect><rect x="122.32" y="676.26" width="2.59" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndCaptureInit
 module: arm9
 addr: 0x02050950
 size: 32 bytes
@@ -8409,7 +8409,7 @@ matched: yes</title></rect><rect x="163.37" y="676.26" width="8.08" height="8.30
 module: arm9
 addr: 0x02050b4c
 size: 100 bytes
-matched: yes</title></rect><rect x="171.45" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj
+matched: yes</title></rect><rect x="171.45" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEi
 module: arm9
 addr: 0x02050bb0
 size: 100 bytes
@@ -8417,7 +8417,7 @@ matched: yes</title></rect><rect x="179.53" y="676.26" width="8.08" height="8.30
 module: arm9
 addr: 0x02050c14
 size: 100 bytes
-matched: yes</title></rect><rect x="187.61" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound17InfoSequenceEntry9GetWithIDEj
+matched: yes</title></rect><rect x="187.61" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Sound17InfoSequenceEntry9GetWithIDEi
 module: arm9
 addr: 0x02050c78
 size: 100 bytes
@@ -8485,15 +8485,15 @@ matched: yes</title></rect><rect x="5.00" y="688.38" width="4.91" height="21.32"
 module: arm9
 addr: 0x0205130c
 size: 156 bytes
-matched: yes</title></rect><rect x="5.00" y="709.70" width="4.91" height="8.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020513a8
+matched: yes</title></rect><rect x="5.00" y="709.70" width="4.91" height="8.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WaveArcDisposeCallback
 module: arm9
 addr: 0x020513a8
 size: 60 bytes
-matched: yes</title></rect><rect x="5.00" y="717.90" width="4.91" height="8.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020513e4
+matched: yes</title></rect><rect x="5.00" y="717.90" width="4.91" height="8.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>BankDisposeCallback
 module: arm9
 addr: 0x020513e4
 size: 60 bytes
-matched: yes</title></rect><rect x="5.00" y="726.10" width="4.91" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051420
+matched: yes</title></rect><rect x="5.00" y="726.10" width="4.91" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SeqDisposeCallback
 module: arm9
 addr: 0x02051420
 size: 52 bytes
@@ -8569,11 +8569,11 @@ matched: yes</title></rect><rect x="9.91" y="744.67" width="7.32" height="17.23"
 module: arm9
 addr: 0x02051e60
 size: 188 bytes
-matched: yes</title></rect><rect x="9.91" y="761.89" width="7.32" height="13.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051f1c
+matched: yes</title></rect><rect x="9.91" y="761.89" width="7.32" height="13.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcPlayerStartSeqArc
 module: arm9
 addr: 0x02051f1c
 size: 152 bytes
-matched: yes</title></rect><rect x="9.91" y="775.82" width="7.32" height="7.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051fb4
+matched: yes</title></rect><rect x="9.91" y="775.82" width="7.32" height="7.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcPlayerStartSeq
 module: arm9
 addr: 0x02051fb4
 size: 84 bytes
@@ -8581,7 +8581,7 @@ matched: yes</title></rect><rect x="9.91" y="783.52" width="7.32" height="14.29"
 module: arm9
 addr: 0x02052008
 size: 156 bytes
-matched: yes</title></rect><rect x="9.91" y="797.81" width="7.32" height="5.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020520a4
+matched: yes</title></rect><rect x="9.91" y="797.81" width="7.32" height="5.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FreeCommandBuffer
 module: arm9
 addr: 0x020520a4
 size: 56 bytes
@@ -8609,27 +8609,27 @@ matched: yes</title></rect><rect x="9.91" y="847.66" width="7.32" height="26.02"
 module: arm9
 addr: 0x020522c4
 size: 284 bytes
-matched: yes</title></rect><rect x="9.91" y="873.68" width="7.32" height="5.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020523e0
+matched: yes</title></rect><rect x="9.91" y="873.68" width="7.32" height="5.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndSeqArcGetSeqInfo
 module: arm9
 addr: 0x020523e0
 size: 64 bytes
-matched: yes</title></rect><rect x="9.91" y="879.55" width="7.32" height="2.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052420
+matched: yes</title></rect><rect x="9.91" y="879.55" width="7.32" height="2.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndFaderIsFinished
 module: arm9
 addr: 0x02052420
 size: 24 bytes
-matched: yes</title></rect><rect x="9.91" y="881.75" width="7.32" height="2.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052438
+matched: yes</title></rect><rect x="9.91" y="881.75" width="7.32" height="2.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndFaderUpdate
 module: arm9
 addr: 0x02052438
 size: 32 bytes
-matched: yes</title></rect><rect x="9.91" y="884.68" width="7.32" height="5.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052458
+matched: yes</title></rect><rect x="9.91" y="884.68" width="7.32" height="5.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndFaderGet
 module: arm9
 addr: 0x02052458
 size: 60 bytes
-matched: yes</title></rect><rect x="9.91" y="890.18" width="7.32" height="4.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052494
+matched: yes</title></rect><rect x="9.91" y="890.18" width="7.32" height="4.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndFaderSet
 module: arm9
 addr: 0x02052494
 size: 48 bytes
-matched: yes</title></rect><rect x="9.91" y="894.57" width="7.32" height="2.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020524c4
+matched: yes</title></rect><rect x="9.91" y="894.57" width="7.32" height="2.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndFaderInit
 module: arm9
 addr: 0x020524c4
 size: 32 bytes
@@ -10493,23 +10493,23 @@ matched: yes</title></rect><rect x="88.57" y="743.34" width="28.08" height="9.46
 module: arm9
 addr: 0x0205e0f4
 size: 396 bytes
-matched: yes</title></rect><rect x="116.65" y="743.34" width="24.11" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e280
+matched: yes</title></rect><rect x="116.65" y="743.34" width="24.11" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1PadMessage
 module: arm9
 addr: 0x0205e280
 size: 340 bytes
-matched: yes</title></rect><rect x="140.76" y="743.34" width="55.59" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e3d4
+matched: yes</title></rect><rect x="140.76" y="743.34" width="55.59" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1ProcessMessageBlock
 module: arm9
 addr: 0x0205e3d4
 size: 784 bytes
-matched: yes</title></rect><rect x="196.35" y="743.34" width="17.87" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e6e4
+matched: yes</title></rect><rect x="196.35" y="743.34" width="17.87" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1Input
 module: arm9
 addr: 0x0205e6e4
 size: 252 bytes
-matched: yes</title></rect><rect x="214.21" y="743.34" width="13.33" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e7e0
+matched: yes</title></rect><rect x="214.21" y="743.34" width="13.33" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1Result
 module: arm9
 addr: 0x0205e7e0
 size: 188 bytes
-matched: yes</title></rect><rect x="227.54" y="743.34" width="7.37" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e89c
+matched: yes</title></rect><rect x="227.54" y="743.34" width="7.37" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1Reset
 module: arm9
 addr: 0x0205e89c
 size: 104 bytes
@@ -14629,7 +14629,7 @@ matched: yes</title></rect><rect x="376.13" y="261.05" width="94.89" height="11.
 module: ov002
 addr: 0x020c3160
 size: 1604 bytes
-matched: yes</title></rect><rect x="471.02" y="261.05" width="14.91" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020c37a4EPc
+matched: yes</title></rect><rect x="471.02" y="261.05" width="14.91" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020c37a4EPK7Vector3
 module: ov002
 addr: 0x020c37a4
 size: 252 bytes
@@ -17377,7 +17377,7 @@ matched: yes</title></rect><rect x="550.77" y="740.67" width="2.66" height="9.99
 module: ov002
 addr: 0x020eff90
 size: 40 bytes
-matched: yes</title></rect><rect x="553.44" y="740.67" width="52.23" height="9.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19func_ov002_020effb8P7Vector3iS0_S0_S0_S0_
+matched: yes</title></rect><rect x="553.44" y="740.67" width="52.23" height="9.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19EvaluateCubicSplineP7Vector3iS0_S0_S0_S0_
 module: ov002
 addr: 0x020effb8
 size: 784 bytes
@@ -23089,7 +23089,7 @@ matched: yes</title></rect><rect x="998.67" y="340.94" width="9.46" height="9.04
 module: ov006
 addr: 0x020ea350
 size: 128 bytes
-matched: yes</title></rect><rect x="1008.13" y="340.94" width="40.22" height="9.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16StarPopup_UpdatePc
+matched: yes</title></rect><rect x="1008.13" y="340.94" width="40.22" height="9.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16StarPopup_UpdatePi
 module: ov006
 addr: 0x020ea3d0
 size: 544 bytes
@@ -25277,7 +25277,7 @@ matched: yes</title></rect><rect x="929.82" y="452.80" width="3.42" height="7.83
 module: ov006
 addr: 0x02107d58
 size: 40 bytes
-matched: yes</title></rect><rect x="933.23" y="452.80" width="4.78" height="7.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z18RouletteBoard_DrawPc
+matched: yes</title></rect><rect x="933.23" y="452.80" width="4.78" height="7.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z18RouletteBoard_DrawP13RouletteBoard
 module: ov006
 addr: 0x02107d80
 size: 56 bytes
@@ -25301,7 +25301,7 @@ matched: yes</title></rect><rect x="718.70" y="495.22" width="11.21" height="1.6
 module: ov006
 addr: 0x02108508
 size: 28 bytes
-matched: yes</title></rect><rect x="718.70" y="496.89" width="11.21" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z23RouletteBoard_StartSpinPc
+matched: yes</title></rect><rect x="718.70" y="496.89" width="11.21" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z23RouletteBoard_StartSpinP13RouletteBoard
 module: ov006
 addr: 0x02108524
 size: 104 bytes
@@ -25309,7 +25309,7 @@ matched: yes</title></rect><rect x="718.70" y="503.09" width="11.21" height="3.1
 module: ov006
 addr: 0x0210858c
 size: 52 bytes
-matched: yes</title></rect><rect x="718.70" y="506.19" width="11.21" height="8.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z24RouletteBoard_LoadModelsPc
+matched: yes</title></rect><rect x="718.70" y="506.19" width="11.21" height="8.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z24RouletteBoard_LoadModelsP13RouletteBoard
 module: ov006
 addr: 0x021085c0
 size: 144 bytes
@@ -25321,7 +25321,7 @@ matched: yes</title></rect><rect x="718.70" y="594.93" width="11.21" height="18.
 module: ov006
 addr: 0x02108b90
 size: 304 bytes
-matched: yes</title></rect><rect x="718.70" y="613.06" width="11.21" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z18RouletteRacer_DrawPc
+matched: yes</title></rect><rect x="718.70" y="613.06" width="11.21" height="6.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z18RouletteRacer_DrawP13RouletteRacer
 module: ov006
 addr: 0x02108cc0
 size: 104 bytes
@@ -34753,7 +34753,7 @@ matched: yes</title></rect><rect x="1137.51" y="374.50" width="9.24" height="4.6
 module: ov060
 addr: 0x02115a30
 size: 84 bytes
-matched: yes</title></rect><rect x="1137.51" y="379.16" width="9.24" height="7.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKpa_c13BounceEffectsEPc
+matched: yes</title></rect><rect x="1137.51" y="379.16" width="9.24" height="7.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKpa_c13BounceEffectsEPt
 module: ov060
 addr: 0x02115a84
 size: 136 bytes

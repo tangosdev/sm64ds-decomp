@@ -25,7 +25,7 @@ WHAT IT CHECKS
 Prose surfaces only:
   - `tools/**/*.py`   module/function/class docstrings, `#` comments, and the strings
                       passed to argparse as help/epilog/description/usage
-  - `notes/**/*.md`, top-level `*.md`, `docs/**/*.md`, `port/docs/*.md`
+  - `notes/**/*.md`, top-level `*.md`, `docs/**/*.md`
   - `.github/workflows/*.yml`  comments and `name:` / `run:` lines
   - `.claude/skills/**/*.md`
   - comments in repository `.c`, `.cc`, `.cpp`, `.h`, and `.hpp` files
@@ -196,7 +196,7 @@ def _prose_targets(root=None):
                 out.append(rel)
             elif rel.startswith("notes/") and rel.endswith(".md"):
                 out.append(rel)
-            elif rel.startswith(("docs/", "port/docs/")) and rel.endswith(".md"):
+            elif rel.startswith("docs/") and rel.endswith(".md"):
                 out.append(rel)
             elif rel.startswith(".claude/skills/") and rel.endswith(".md"):
                 out.append(rel)

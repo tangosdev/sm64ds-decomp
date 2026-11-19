@@ -168,11 +168,11 @@ def linked(authors_path=None, config_root=None):
 
 # ------------------------------------------------------------------- PORTED
 #
-# PORTED cannot be computed here and must not pretend otherwise. port/tools/
-# linkage.py reads build/port/walk_window.map, which only exists after an MSVC
-# build of the port, and the port branches are not merged to main. So the number
-# is STAMPED: measured by hand, recorded with the branch and commit it came from,
-# and refreshed when someone runs a port build.
+# PORTED cannot be computed here and must not pretend otherwise. The PC port lives
+# in its own repository (https://github.com/tangosdev/sm64ds-pc-port), and its
+# linkage tool reads the walk_window map that only an MSVC build of the port
+# writes. So the number is STAMPED: measured by hand, recorded with the branch and
+# commit it came from, and refreshed when someone runs a port build.
 #
 # A stamp with no provenance is worse than no number, so a stamp missing its
 # branch/commit/date is treated as absent.

@@ -300,7 +300,7 @@ s32 dScDSMT_c::Behavior() {
 
 /* Render: forward to the overlay's draw routine. */
 s32 dScDSMT_c::Render() {
-    func_ov007_020b7040(this);
+    func_ov007_020b7040();
     return 1;
 }
 

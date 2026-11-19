@@ -113,11 +113,11 @@ int daWanwan_c::InitResources() {
     mTerminalVelocity = -0x3c000;
 
     {
-        int v[3];
-        v[0] = data_ov014_02114700[0];
-        v[1] = data_ov014_02114700[1];
-        v[2] = data_ov014_02114700[2];
-        mdCcAcPos_c.Init(this, *((Vector3 *)v), 0x96000, 0x12c000, 0x200004, 0x26ff0);
+        Vector3 v;
+        v.x = data_ov014_02114700[0];
+        v.y = data_ov014_02114700[1];
+        v.z = data_ov014_02114700[2];
+        mdCcAcPos_c.Init(this, v, 0x96000, 0x12c000, 0x200004, 0x26ff0);
     }
 
     SetState(1);
@@ -185,11 +185,11 @@ int daWanwan_c::Behavior() {
     }
     UpdateModelTransform();
     {
-        int v[3];
-        v[0] = data_ov014_02114700[0];
-        v[1] = data_ov014_02114700[1];
-        v[2] = data_ov014_02114700[2];
-        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)v);
+        Vector3 v;
+        v.x = data_ov014_02114700[0];
+        v.y = data_ov014_02114700[1];
+        v.z = data_ov014_02114700[2];
+        mdCcAcPos_c.SetPosRelativeToActor(v);
     }
     mdCcAcPos_c.Clear();
     if (ClosestPlayer()->mIsVanish == 0)
