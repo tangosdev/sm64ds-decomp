@@ -13149,8 +13149,7 @@ int daPly_c::func_ov002_020d6998() {
                             rotSrc.y = 0x32000;
                             rotSrc.z = 0x32000;
 
-                            Vec3_RotateYAndTranslate(&out, &other->mPos, angle,
-                                                     &rotSrc);
+                            Vec3_RotateYAndTranslate(&out, &other->mPos, angle, &rotSrc);
 
                             Particle::System::New(0, kPtclTongueHitA, out.x, out.y, out.z,
                                                   (const Vector3_16f *)(&pos16), 0);

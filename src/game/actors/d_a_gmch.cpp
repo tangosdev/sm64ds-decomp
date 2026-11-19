@@ -292,8 +292,7 @@ void daGmch_c::CheckPlayerContact()
 }
 
 /* Adjust vertical speed from the floor normal; callers need no result. */
-void daGmch_c::ApplySlopeToVertSpeed(dBgCh_Actr *clsn)
-{
+void daGmch_c::ApplySlopeToVertSpeed(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
     func_02038414(clsn);

@@ -40,7 +40,6 @@
 struct daPly_c;
 struct dCamera_c;
 
-
 struct daStar_c : dEnemyBase_c {
     /* ---- state, indexing data_ov002_021109d8 (the 14-entry pointer-to-member
        table built by __sinit_ov002_02106e40; Behavior calls entry mState) ----
