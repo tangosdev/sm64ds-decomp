@@ -117,7 +117,7 @@ extern char *sJumpAdapters[];
 u8 data_ov006_02140400;
 u16 sJump3DSpinAngle;
 extern struct MgCamera *sMgMainCamera;
-extern void *sMgCurCamera;
+extern MgCamera *sMgCurCamera;
 extern "C" OamAttr data_ov006_02134d20[1];
 OamAttr *data_ov006_02134d1c = data_ov006_02134d20;
 extern Vector3 sJump3DMarioScale;
@@ -356,7 +356,7 @@ void dMgJump3DMario_c::Draw()
         return;
 
     if (data_ov006_02140400 != 0) {
-        Camera_ProjectToScreen16((MgCamera *)sMgCurCamera, &mPos, screen);
+        Camera_ProjectToScreen16(sMgCurCamera, &mPos, screen);
 
         wave = FX_SinIdx(sJump3DSpinAngle >> 4);
         screen[1] = screen[1] - (((wave << 2) + 0x30000) >> 12);

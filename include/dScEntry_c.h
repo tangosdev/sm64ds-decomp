@@ -164,6 +164,7 @@ extern dScEntry_c::StepSet EntryCourseSelectSteps;
 extern dScEntry_c::StepSet EntryMatchLoadingSteps;
 extern dScEntry_c::StepSet EntryDelaySteps;
 extern dScEntry_c::StepSet EntryFadeOutSteps;
+extern dScEntry_c::StepSet data_ov075_0211d930;
 
 struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
     void *compressedBg2Screen; /* 0x04 */
@@ -178,6 +179,9 @@ struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
     void SetBg2ScreenBase(int);
     void QueueBg2Screen(void *);
 };
+
+/* The entry scene's one graph callback (ov075 .bss 0x0211d71c). */
+extern dScEntry_c::graphCallback_c sEntryGraphCallback;
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
