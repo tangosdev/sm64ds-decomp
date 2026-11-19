@@ -89,8 +89,8 @@ extern "C" {
    not mangle, so the data_* declarations stay next to their users. */
 extern s32 GetGameLanguage(void);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
-extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
-                                       unsigned short a6);
+extern int Mg_RenderMainSpriteScaled(void *attr, int a1, int a2, int a3, int a4, int a5,
+                                     unsigned short a6);
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
@@ -396,7 +396,7 @@ void dScMgLuigi_c::DrawCurtains() {
             OamAttr *entry = sLuigiCurtainSprite;
             for (;;) {
                 GXOamAttr *oam =
-                    (GXOamAttr *)Mg_RenderMainSpriteScaled((int)entry, x, y, -1, 1, 0x1000, 0);
+                    (GXOamAttr *)Mg_RenderMainSpriteScaled(entry, x, y, -1, 1, 0x1000, 0);
                 if (oam != 0) {
                     G2_SetOBJMode(oam, GX_OAM_MODE_OBJWND, oam->cParam);
                 }
