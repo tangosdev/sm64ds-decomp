@@ -7887,11 +7887,11 @@
     },
     "arm9:0x0204cd5c": {
       "author": "tangosdev",
-      "name": "func_0204cd5c"
+      "name": "SPLUtil_TiltCoordinates"
     },
     "arm9:0x0204cebc": {
       "author": "andrewboudreau",
-      "name": "func_0204cebc"
+      "name": "SPLEmitter_ComputeOrthogonalAxes"
     },
     "arm9:0x0204d0b8": {
       "author": "ruspecial",
@@ -8195,31 +8195,31 @@
     },
     "arm9:0x0204f0b8": {
       "author": "tangosdev",
-      "name": "func_0204f0b8"
+      "name": "NNS_SndFreeAlarm"
     },
     "arm9:0x0204f0d8": {
       "author": "tangosdev",
-      "name": "func_0204f0d8"
+      "name": "NNS_SndAllocAlarm"
     },
     "arm9:0x0204f11c": {
       "author": "tangosdev",
-      "name": "func_0204f11c"
+      "name": "NNS_SndUnlockCapture"
     },
     "arm9:0x0204f138": {
       "author": "tangosdev",
-      "name": "func_0204f138"
+      "name": "NNS_SndLockCapture"
     },
     "arm9:0x0204f15c": {
       "author": "tangosdev",
-      "name": "func_0204f15c"
+      "name": "NNS_SndUnlockChannel"
     },
     "arm9:0x0204f194": {
       "author": "tangosdev",
-      "name": "func_0204f194"
+      "name": "NNS_SndLockChannel"
     },
     "arm9:0x0204f1e8": {
       "author": "tangosdev",
-      "name": "func_0204f1e8"
+      "name": "NNSi_SndInitResourceMgr"
     },
     "arm9:0x0204f214": {
       "author": "tangosdev",
@@ -8411,19 +8411,19 @@
     },
     "arm9:0x020501b8": {
       "author": "tangosdev",
-      "name": "func_020501b8"
+      "name": "NNSi_SndCaptureEndSleep"
     },
     "arm9:0x02050258": {
       "author": "tangosdev",
-      "name": "func_02050258"
+      "name": "NNSi_SndCaptureBeginSleep"
     },
     "arm9:0x020502b8": {
       "author": "tangosdev",
-      "name": "func_020502b8"
+      "name": "NNSi_SndCaptureStop"
     },
     "arm9:0x020503a4": {
       "author": "tangosdev",
-      "name": "func_020503a4"
+      "name": "NNSi_SndCaptureStart"
     },
     "arm9:0x020506fc": {
       "author": "tangosdev",
@@ -8431,19 +8431,19 @@
     },
     "arm9:0x02050798": {
       "author": "tangosdev",
-      "name": "func_02050798"
+      "name": "NNS_SndCaptureStopEffect"
     },
     "arm9:0x020507e0": {
       "author": "andrewboudreau",
-      "name": "func_020507e0"
+      "name": "NNS_SndCaptureStartEffect"
     },
     "arm9:0x020508a0": {
       "author": "tangosdev",
-      "name": "func_020508a0"
+      "name": "NNSi_SndCaptureMain"
     },
     "arm9:0x02050950": {
       "author": "tangosdev",
-      "name": "func_02050950"
+      "name": "NNSi_SndCaptureInit"
     },
     "arm9:0x02050970": {
       "author": "tangosdev",
@@ -8687,27 +8687,27 @@
     },
     "arm9:0x020523e0": {
       "author": "tangosdev",
-      "name": "func_020523e0"
+      "name": "NNSi_SndSeqArcGetSeqInfo"
     },
     "arm9:0x02052420": {
       "author": "tangosdev",
-      "name": "func_02052420"
+      "name": "NNSi_SndFaderIsFinished"
     },
     "arm9:0x02052438": {
       "author": "lplaat",
-      "name": "func_02052438"
+      "name": "NNSi_SndFaderUpdate"
     },
     "arm9:0x02052458": {
       "author": "tangosdev",
-      "name": "func_02052458"
+      "name": "NNSi_SndFaderGet"
     },
     "arm9:0x02052494": {
       "author": "tangosdev",
-      "name": "func_02052494"
+      "name": "NNSi_SndFaderSet"
     },
     "arm9:0x020524c4": {
       "author": "tangosdev",
-      "name": "func_020524c4"
+      "name": "NNSi_SndFaderInit"
     },
     "arm9:0x020524e4": {
       "author": "ruspecial",

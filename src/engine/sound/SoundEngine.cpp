@@ -7,12 +7,20 @@
  * sCurrent) and snd_heap.c (0x02050fb0..0x020513a8). Each named body
  * matches pret/pokediamond's NNS_SND_player.s, NNS_SND_sndarc.s and
  * NNS_SND_heap.s and the Sonic Rush Adventure decomp's sources by field
- * offsets and callees; the bodies run in reverse source order. The public
- * Sound:: calls in the earlier sound TU land in this range. No RTTI names
- * a class for these workers.
+ * offsets and callees; the bodies run in reverse source order. The
+ * resource manager (0x0204f0b8..0x0204f214), the capture functions
+ * (0x020501b8..0x02050970), NNSi_SndSeqArcGetSeqInfo (0x020523e0) and
+ * the fader (0x02052420..0x020524e4) carry pret's names from
+ * NNS_SND_resource_mgr.s, NNS_SND_capture.s, NNS_SND_seqdata.s and
+ * NNS_SND_fader.s, matched body for body. NNSi_SndInitResourceMgr comes
+ * last of its file here where pret's comes first, and the capture file
+ * has a thread procedure and starter (func_02050038, func_020506fc) that
+ * pret's revision does not. The public Sound:: calls in
+ * the earlier sound TU land in this range. No RTTI names a class for
+ * these workers.
  *
  * leftovers:
- * - The workers outside those four files stay func_0204* and func_0205*.
+ * - The workers outside those files stay func_0204* and func_0205*.
  *   There is no class to hang them on.
  * - func_02050d54 sits where snd_arc.c's NNS_SndArcSetup does, but this
  *   2004 build reads the header in NNS_SndArcInit and tests the heap in
@@ -119,7 +127,7 @@ struct P5 {
     int baseOffset;               /* 0x18 */
 };
 /* A loaded sequence archive: a sequence file whose DATA block goes on with
-   the count of its sequences and their table (func_020523e0). */
+   the count of its sequences and their table (NNSi_SndSeqArcGetSeqInfo). */
 struct ElemTable {
     NitroFileHeader fileHeader;   /* 0x00 */
     NitroBlockHeader blockHeader; /* 0x10 */
@@ -207,8 +215,8 @@ enum Fmt {
     FMT_A = 0,
     FMT_B = 1
 };
-/* The capture stream at data_020a5634, started by func_020503a4 and
-   stopped by func_020502b8. Its alarm, func_020500a4, hands each finished
+/* The capture stream at data_020a5634, started by NNSi_SndCaptureStart and
+   stopped by NNSi_SndCaptureStop. Its alarm, func_020500a4, hands each finished
    block to f30 (directly, or through the sound thread func_02050038). */
 struct T {
     /* 0x00 */ int f0; /* nonzero while running */
@@ -218,14 +226,14 @@ struct T {
     /* 0x10 */ int f10;
     /* 0x14 */ int f14;
     /* 0x18 */ int f18; /* current block, wraps at f2c */
-    /* 0x1c */ int f1c; /* channels locked by func_0204f194 */
+    /* 0x1c */ int f1c; /* channels locked by NNS_SndLockChannel */
     /* 0x20 */ int f20; /* SND_StartTimer / SND_StopTimer channel mask */
     /* 0x24 */ int f24; /* capture mask */
-    /* 0x28 */ int f28; /* alarm number from func_0204f0d8, or -1 */
+    /* 0x28 */ int f28; /* alarm number from NNS_SndAllocAlarm, or -1 */
     /* 0x2c */ int f2c; /* block count */
     /* 0x30 */ void (*f30)(int, int, int, int, int);
     /* 0x34 */ int f34;          /* passed through to f30 */
-    /* 0x38 */ NNSSndFader fade; /* channel volume ramp, func_020508a0 */
+    /* 0x38 */ NNSSndFader fade; /* channel volume ramp, NNSi_SndCaptureMain */
     /* 0x48 */ int f48;          /* stop once fade finishes */
     /* 0x4c */ int f4c;          /* last volume sent with SND_SetChannelVolume */
 };
@@ -246,7 +254,7 @@ struct C {
     /* 0x1c */ int unk1c;   /* passed through to callback */
     /* 0x20 */ int f20;     /* current block, wraps at blockCount */
     /* 0x24 */ int volume;  /* func_0204fe5c: plus each channel's data_020a5578 entry */
-    /* 0x28 */ int f28;     /* alarm number from func_0204f0d8 */
+    /* 0x28 */ int f28;     /* alarm number from NNS_SndAllocAlarm */
     /* 0x2c */ int f2c;     /* the channels' mask: SND_StartTimer / SND_StopTimer,
                                unlocked by func_02050008 */
     /* 0x30 */ int chanCount;
@@ -318,9 +326,9 @@ extern "C" {
 extern int __aeabi_idiv(int a, int b);
 extern s16 data_02086384[];
 extern int data_020a4d44;
-extern unsigned int data_020a4d48;
-extern unsigned int data_020a4d4c;
-extern unsigned int data_020a4d50;
+extern unsigned int sCaptureLock;
+extern unsigned int sAlarmLock;
+extern unsigned int sChannelLock;
 extern NNSFndList sFreeList;
 extern NNSFndList sPrioList;
 extern SoundPlayerRecord sPlayer[];
@@ -390,13 +398,13 @@ extern void func_0204efe0(void);
 extern void func_0204effc(void);
 extern void NNS_SndMain(void);
 extern void NNS_SndInit(void);
-extern int func_0204f0b8(unsigned int bit);
-extern int func_0204f0d8(void);
-extern void func_0204f11c(int mask);
-extern int func_0204f138(unsigned int mask);
-extern void func_0204f15c(unsigned int mask);
-extern int func_0204f194(unsigned int a);
-extern void func_0204f1e8(void);
+extern int NNS_SndFreeAlarm(unsigned int bit);
+extern int NNS_SndAllocAlarm(void);
+extern void NNS_SndUnlockCapture(int mask);
+extern int NNS_SndLockCapture(unsigned int mask);
+extern void NNS_SndUnlockChannel(unsigned int mask);
+extern int NNS_SndLockChannel(unsigned int a);
+extern void NNSi_SndInitResourceMgr(void);
 extern void SetPlayerPriority(NNSSndSeqPlayer *player, int prio);
 extern void PlayerHeapDisposeCallback(void *mem, u32 size, u32 data1, u32 data2);
 extern void ShutdownPlayer(NNSSndSeqPlayer *obj);
@@ -432,15 +440,17 @@ extern void func_0204ffcc(struct C *c);
 extern void func_02050008(struct C *o);
 extern void func_02050038(void *arg);
 extern void func_020500a4(void *arg);
-extern void func_020501b8(void);
-extern void func_02050258(void);
-extern void func_020502b8(void);
-extern int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7, int p8, int p9, int p10, int p11, int p12, int p13, int p14, int p15);
+extern void NNSi_SndCaptureEndSleep(void);
+extern void NNSi_SndCaptureBeginSleep(void);
+extern void NNSi_SndCaptureStop(void);
+extern int NNSi_SndCaptureStart(int a, int b, int c, int d, int p5, int p6, int p7, int p8, int p9,
+                                int p10, int p11, int p12, int p13, int p14, int p15);
 extern void func_020506fc(int arg);
-extern void func_02050798(void);
-extern int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, void *a5, void *a6);
-extern void func_020508a0(void);
-extern void func_02050950(void);
+extern void NNS_SndCaptureStopEffect(void);
+extern int NNS_SndCaptureStartEffect(void *a0, unsigned int a1, int a2, int a3, int a4, void *a5,
+                                     void *a6);
+extern void NNSi_SndCaptureMain(void);
+extern void NNSi_SndCaptureInit(void);
 extern void SymbolDisposeCallback(void *mem, u32 size, u32 arc, u32 data2);
 extern void FatDisposeCallback(void *mem, u32 size, u32 arc, u32 data2);
 extern void InfoDisposeCallback(void *mem, u32 size, u32 arc, u32 data2);
@@ -504,29 +514,29 @@ extern void func_02052208(Obj_205212c *stream);
 extern void func_02052234(void);
 extern void func_0205227c(void);
 extern void func_020522c4(void);
-extern struct Elem *func_020523e0(struct ElemTable *obj, int idx);
-extern int func_02052420(NNSSndFader *fader);
-extern void func_02052438(NNSSndFader *fader);
-extern int func_02052458(NNSSndFader *fader);
-extern void func_02052494(NNSSndFader *o, int a, int b);
-extern void func_020524c4(NNSSndFader *fader);
+extern struct Elem *NNSi_SndSeqArcGetSeqInfo(struct ElemTable *obj, int idx);
+extern int NNSi_SndFaderIsFinished(NNSSndFader *fader);
+extern void NNSi_SndFaderUpdate(NNSSndFader *fader);
+extern int NNSi_SndFaderGet(NNSSndFader *fader);
+extern void NNSi_SndFaderSet(NNSSndFader *o, int a, int b);
+extern void NNSi_SndFaderInit(NNSSndFader *fader);
 }
 
-extern "C" void func_020524c4(NNSSndFader *fader) {
+extern "C" void NNSi_SndFaderInit(NNSSndFader *fader) {
     fader->target = 0;
     fader->origin = fader->target;
     fader->frame = 0;
     fader->counter = fader->frame;
 }
 
-extern "C" void func_02052494(NNSSndFader *o, int a, int b) {
-    o->origin = func_02052458(o);
+extern "C" void NNSi_SndFaderSet(NNSSndFader *o, int a, int b) {
+    o->origin = NNSi_SndFaderGet(o);
     o->target = a;
     o->frame = b;
     o->counter = 0;
 }
 
-extern "C" int func_02052458(NNSSndFader *fader) {
+extern "C" int NNSi_SndFaderGet(NNSSndFader *fader) {
     int den = fader->frame;
     int num = fader->counter;
     if (num >= den)
@@ -538,17 +548,17 @@ extern "C" int func_02052458(NNSSndFader *fader) {
     }
 }
 
-extern "C" void func_02052438(NNSSndFader *fader) {
+extern "C" void NNSi_SndFaderUpdate(NNSSndFader *fader) {
     if (fader->counter < fader->frame) {
         fader->counter += 1;
     }
 }
 
-extern "C" int func_02052420(NNSSndFader *fader) {
+extern "C" int NNSi_SndFaderIsFinished(NNSSndFader *fader) {
     return fader->counter >= fader->frame;
 }
 
-extern "C" struct Elem *func_020523e0(struct ElemTable *obj, int idx) {
+extern "C" struct Elem *NNSi_SndSeqArcGetSeqInfo(struct ElemTable *obj, int idx) {
     struct Elem* e;
     if (idx < 0) return 0;
     if ((u32)idx >= (u32)obj->count) return 0;
@@ -579,16 +589,16 @@ extern "C" void func_020522c4(void) {
                 }
                 if (((int)stream->uf0 << 30) >> 31) {
                     unsigned long t2;
-                    func_02052438(&stream->fade);
+                    NNSi_SndFaderUpdate(&stream->fade);
                     t1 = data_02086384[stream->volumeIndex];
-                    t2 = data_02086384[func_02052458(&stream->fade) >> 8];
+                    t2 = data_02086384[NNSi_SndFaderGet(&stream->fade) >> 8];
                     t1 = t2 + t1;
                     if (t1 != stream->lastVolume) {
                         func_0204fe5c(stream, t1);
                         stream->lastVolume = t1;
                     }
                     if (((int)stream->uf0 << 28) >> 31) {
-                        if (func_02052420(&stream->fade)) {
+                        if (NNSi_SndFaderIsFinished(&stream->fade)) {
                             func_02052208(stream);
                         }
                     }
@@ -713,7 +723,7 @@ extern "C" int func_02051f1c(void *handle, u32 seqArcNo, int index) {
     arc = (struct ElemTable *)NNS_SndArcGetFileAddress(info->fileId);
     if (arc == 0)
         return 0;
-    seq = func_020523e0(arc, index);
+    seq = NNSi_SndSeqArcGetSeqInfo(arc, index);
     if (seq == 0)
         return 0;
     return func_02051a98((NNSSndHandle *)handle, seq->playerNumber, seq->bankId,
@@ -731,7 +741,7 @@ extern "C" int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int
     arc = (struct ElemTable *)NNS_SndArcGetFileAddress(info->fileId);
     if (arc == 0)
         return 0;
-    seq = func_020523e0(arc, index);
+    seq = NNSi_SndSeqArcGetSeqInfo(arc, index);
     if (seq == 0)
         return 0;
     if (playerPrio < 0)
@@ -1329,7 +1339,7 @@ extern "C" void *NNS_SndArcGetSeqArcParam(int a, int idx) {
     o = (struct ElemTable *)NNS_SndArcGetFileAddress(info->fileId);
     if (o == 0)
         return 0;
-    e = func_020523e0(o, idx);
+    e = NNSi_SndSeqArcGetSeqInfo(o, idx);
     if (e == 0)
         return 0;
     return &e->bankId;
@@ -1480,12 +1490,12 @@ extern "C" void SymbolDisposeCallback(void *mem, u32 size, u32 arc, u32 data2) {
     ((data_020a5bb8_t *)arc)->symbols = 0;
 }
 
-extern "C" void func_02050950(void) {
+extern "C" void NNSi_SndCaptureInit(void) {
     data_020a55fc = 0;
     data_020a5634.f0 = (0);
 }
 
-extern "C" void func_020508a0(void) {
+extern "C" void NNSi_SndCaptureMain(void) {
     T *g = &data_020a5634;
     NNSSndFader *sub;
     int v;
@@ -1494,39 +1504,39 @@ extern "C" void func_020508a0(void) {
     if (g->f4 != 0)
         return;
     sub = &g->fade;
-    func_02052438(sub);
+    NNSi_SndFaderUpdate(sub);
     if (g->f48 != 0) {
-        if (func_02052420(sub) != 0) {
-            func_020502b8();
+        if (NNSi_SndFaderIsFinished(sub) != 0) {
+            NNSi_SndCaptureStop();
             return;
         }
     }
-    v = func_02052458(sub) >> 8;
+    v = NNSi_SndFaderGet(sub) >> 8;
     if (v == g->f4c)
         return;
     SND_SetChannelVolume(g->f20, v, 0);
     g->f4c = v;
 }
 
-extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, void *a5,
-                             void *a6) {
+extern "C" int NNS_SndCaptureStartEffect(void *a0, unsigned int a1, int a2, int a3, int a4,
+                                         void *a5, void *a6) {
     volatile int z;
-    func_02050798();
+    NNS_SndCaptureStopEffect();
     if (data_020a5634.f0 != 0)
         return 0;
     z = 0;
     MI_CpuFill32(a0, z, a1);
     DC_FlushRange(a0, a1);
-    return func_020503a4(1, (int)a0, (int)a0 + (a1 >> 1), a1 >> 1, a2, 0, 0, 1, a3, 0x7f, 0, 0x7f,
-                         a4, (int)a5, (int)a6);
+    return NNSi_SndCaptureStart(1, (int)a0, (int)a0 + (a1 >> 1), a1 >> 1, a2, 0, 0, 1, a3, 0x7f, 0,
+                                0x7f, a4, (int)a5, (int)a6);
 }
 
-extern "C" void func_02050798(void) {
+extern "C" void NNS_SndCaptureStopEffect(void) {
     if (data_020a5634.f0 == 0)
         return;
     if (data_020a5634.f4 != 1)
         return;
-    func_020502b8();
+    NNSi_SndCaptureStop();
 }
 
 extern "C" void func_020506fc(int arg) {
@@ -1539,8 +1549,8 @@ extern "C" void func_020506fc(int arg) {
     OS_WakeupThreadDirect(&data_020a5684);
 }
 
-extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7, int p8, int p9,
-                             int p10, int p11, int p12, int p13, int p14, int p15) {
+extern "C" int NNSi_SndCaptureStart(int a, int b, int c, int d, int p5, int p6, int p7, int p8,
+                                    int p9, int p10, int p11, int p12, int p13, int p14, int p15) {
     int mode = 0;
     int align;
     int total;
@@ -1584,18 +1594,18 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
         fmt2 = stereo != 0 ? FMT_B : FMT_A;
         if (a != 2) mode = 0xa;
         if (p14 != 0) {
-            handle = func_0204f0d8();
+            handle = NNS_SndAllocAlarm();
             if (handle < 0) return 0;
         }
-        if (func_0204f138(3) == 0) {
+        if (NNS_SndLockCapture(3) == 0) {
             if (handle >= 0)
-                func_0204f0b8(handle);
+                NNS_SndFreeAlarm(handle);
             return 0;
         }
-        if (func_0204f194(0xa) == 0) {
+        if (NNS_SndLockChannel(0xa) == 0) {
             if (handle >= 0)
-                func_0204f0b8(handle);
-            func_0204f11c(3);
+                NNS_SndFreeAlarm(handle);
+            NNS_SndUnlockCapture(3);
             return 0;
         }
         qlen = (u32)dd >> 2;
@@ -1626,14 +1636,14 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
         g->f30 = (void (*)(int, int, int, int, int))p14;
         g->f34 = p15;
         g->f4c = pp10;
-        func_020524c4(&g->fade);
-        func_02052494(&g->fade, pp10 << 8, 1);
+        NNSi_SndFaderInit(&g->fade);
+        NNSi_SndFaderSet(&g->fade, pp10 << 8, 1);
         g->f48 = 0;
         return 1;
     }
 }
 
-extern "C" void func_020502b8(void) {
+extern "C" void NNSi_SndCaptureStop(void) {
     struct T *d = &data_020a5634;
     int has = (d->f28 >= 0);
     int mask = has ? (1 << d->f28) : 0;
@@ -1646,16 +1656,18 @@ extern "C" void func_020502b8(void) {
         while (OS_ReceiveMessage(&data_020a5600, 0, 0) != 0) {
         }
     }
-    if (d->f24 != 0) func_0204f11c(d->f24);
+    if (d->f24 != 0)
+        NNS_SndUnlockCapture(d->f24);
     if (d->f1c != 0)
-        func_0204f15c(d->f1c);
-    if (has) func_0204f0b8(d->f28);
+        NNS_SndUnlockChannel(d->f1c);
+    if (has)
+        NNS_SndFreeAlarm(d->f28);
     if (d->f4 == 1)
         SND_SetOutputSelector(0, 0, 0, 0);
     d->f0 = 0;
 }
 
-extern "C" void func_02050258(void) {
+extern "C" void NNSi_SndCaptureBeginSleep(void) {
     struct T *G = &data_020a5634;
     int sh;
     int mask;
@@ -1673,7 +1685,7 @@ extern "C" void func_02050258(void) {
     SND_WaitForCommandProc(p);
 }
 
-extern "C" void func_020501b8(void) {
+extern "C" void NNSi_SndCaptureEndSleep(void) {
     T *g = &data_020a5634;
     volatile int a;
     volatile int b;
@@ -1735,7 +1747,7 @@ extern "C" void func_02050008(struct C *o) {
     if (o->f2c == 0) {
         return;
     }
-    func_0204f15c(o->f2c);
+    NNS_SndUnlockChannel(o->f2c);
     o->f2c = 0;
     o->chanCount = 0;
 }
@@ -1798,7 +1810,7 @@ extern "C" void func_0204fde8(struct C *obj) {
 }
 
 extern "C" void func_0204fda4(struct C *c) {
-    func_0204f0b8(c->f28);
+    NNS_SndFreeAlarm(c->f28);
     NNS_FndRemoveListObject(&data_020a552c, c);
     c->fc &= ~1;
     c->fc &= ~2;
@@ -1859,10 +1871,10 @@ extern "C" void NNSi_SndPlayerMain(void) {
             ShutdownPlayer(node);
         } else {
             int t1, t2, t3;
-            func_02052438(&node->fader);
+            NNSi_SndFaderUpdate(&node->fader);
             t1 = data_02086384[node->extVolume];
             t2 = data_02086384[node->initVolume];
-            t3 = data_02086384[func_02052458(&node->fader) >> 8];
+            t3 = data_02086384[NNSi_SndFaderGet(&node->fader) >> 8];
             v = t3 + (t2 + t1);
             if (v < -0x2d3) {
                 v = -0x2d3;
@@ -1874,7 +1886,7 @@ extern "C" void NNSi_SndPlayerMain(void) {
                 node->volume = v;
             }
             if (node->status == 2) {
-                if (func_02052420(&node->fader)) {
+                if (NNSi_SndFaderIsFinished(&node->fader)) {
                     ForceStopSeq(node);
                 }
             }
@@ -1968,14 +1980,14 @@ extern "C" void NNS_SndPlayerSetInitialVolume(NNSSndHandle *handle, int volume) 
 
 /* NitroSystem's NNS_SndPlayerMoveVolume: unless the player is fading out
    (status 2), fade its volume to targetVolume over `frames` frames
-   (func_02052494, NNSi_SndFaderSet by shape, works in 8.8 fixed point). */
+   (NNSi_SndFaderSet, which works in 8.8 fixed point). */
 extern "C" void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, int frames) {
     NNSSndSeqPlayer *player = handle->player;
     if (player == 0)
         return;
     if (player->status == 2)
         return;
-    func_02052494(&player->fader, targetVolume << 8, frames);
+    NNSi_SndFaderSet(&player->fader, targetVolume << 8, frames);
 }
 
 /* NitroSystem's NNS_SndPlayerSetChannelPriority: SND_SetPlayerChannelPriority
@@ -2113,7 +2125,7 @@ extern "C" void NNSi_SndPlayerStopSeq(NNSSndSeqPlayer *player, int fadeFrames) {
         ForceStopSeq(player);
         return;
     }
-    func_02052494(&player->fader, 0, fadeFrames);
+    NNSi_SndFaderSet(&player->fader, 0, fadeFrames);
     SetPlayerPriority(player, 0);
     player->status = 2;
 }
@@ -2145,8 +2157,8 @@ extern "C" void InitPlayer(NNSSndSeqPlayer *player) {
     player->volume = 0;
     player->initVolume = 0x7f;
     player->extVolume = 0x7f;
-    func_020524c4(&player->fader);
-    func_02052494(&player->fader, 0x7f00, 1);
+    NNSi_SndFaderInit(&player->fader);
+    NNSi_SndFaderSet(&player->fader, 0x7f00, 1);
 }
 
 extern "C" void InsertPlayerList(NNSFndList *list, NNSSndSeqPlayer *player) {
@@ -2248,47 +2260,48 @@ extern "C" void SetPlayerPriority(NNSSndSeqPlayer *player, int prio) {
     InsertPrioList(player);
 }
 
-extern "C" void func_0204f1e8(void) {
-    data_020a4d50 = 0;
-    data_020a4d48 = 0;
-    data_020a4d4c = 0;
+extern "C" void NNSi_SndInitResourceMgr(void) {
+    sChannelLock = 0;
+    sCaptureLock = 0;
+    sAlarmLock = 0;
 }
 
-extern "C" int func_0204f194(unsigned int a) {
+extern "C" int NNS_SndLockChannel(unsigned int a) {
     if (a == 0) return 1;
-    if (a & data_020a4d50) return 0;
+    if (a & sChannelLock)
+        return 0;
     SND_LockChannel(a, 0);
-    data_020a4d50 |= a;
+    sChannelLock |= a;
     return 1;
 }
 
-extern "C" void func_0204f15c(unsigned int mask) {
+extern "C" void NNS_SndUnlockChannel(unsigned int mask) {
     if (mask == 0)
         return;
     SND_UnlockChannel(mask, 0);
-    data_020a4d50 &= ~mask;
+    sChannelLock &= ~mask;
 }
 
-extern "C" int func_0204f138(unsigned int mask) {
-    if (mask & data_020a4d48)
+extern "C" int NNS_SndLockCapture(unsigned int mask) {
+    if (mask & sCaptureLock)
         return 0;
-    data_020a4d48 = data_020a4d48 | mask;
+    sCaptureLock = sCaptureLock | mask;
     return 1;
 }
 
-extern "C" void func_0204f11c(int mask) {
-    data_020a4d48 &= ~mask;
+extern "C" void NNS_SndUnlockCapture(int mask) {
+    sCaptureLock &= ~mask;
 }
 
-extern "C" int func_0204f0d8(void) {
+extern "C" int NNS_SndAllocAlarm(void) {
     int i;
     int mask = 1;
-    unsigned int v = data_020a4d4c;
+    unsigned int v = sAlarmLock;
     for (i = 0; i < 8; i++)
     {
         if ((v & mask) == 0)
         {
-            data_020a4d4c |= mask;
+            sAlarmLock |= mask;
             return i;
         }
         mask <<= 1;
@@ -2296,8 +2309,8 @@ extern "C" int func_0204f0d8(void) {
     return -1;
 }
 
-extern "C" int func_0204f0b8(unsigned int bit) {
-    return data_020a4d4c &= ~(1 << bit);
+extern "C" int NNS_SndFreeAlarm(unsigned int bit) {
+    return sAlarmLock &= ~(1 << bit);
 }
 
 extern "C" void NNS_SndInit(void) {
@@ -2305,8 +2318,8 @@ extern "C" void NNS_SndInit(void) {
         return;
     data_020a4d44 = 1;
     SND_Init();
-    func_0204f1e8();
-    func_02050950();
+    NNSi_SndInitResourceMgr();
+    NNSi_SndCaptureInit();
     NNSi_SndPlayerInit();
 }
 
@@ -2314,7 +2327,7 @@ extern "C" void NNS_SndMain(void) {
     while (SND_RecvCommandReply(0) != 0)
         ;
     NNSi_SndPlayerMain();
-    func_020508a0();
+    NNSi_SndCaptureMain();
     func_020522c4();
     SND_FlushCommand(0);
 }
@@ -2322,7 +2335,7 @@ extern "C" void NNS_SndMain(void) {
 extern "C" void func_0204effc(void) {
     u32 p;
     func_0205227c();
-    func_02050258();
+    NNSi_SndCaptureBeginSleep();
     SND_StopTimer(0, 0, 0, 0);
     p = SND_GetCurrentCommandTag();
     SND_FlushCommand(1);
@@ -2330,7 +2343,7 @@ extern "C" void func_0204effc(void) {
 }
 
 extern "C" void func_0204efe0(void) {
-    func_020501b8();
+    NNSi_SndCaptureEndSleep();
     func_02052234();
 }
 
