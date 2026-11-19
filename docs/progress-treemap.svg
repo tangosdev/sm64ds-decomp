@@ -12265,7 +12265,7 @@ matched: yes</title></rect><rect x="331.42" y="5.00" width="12.70" height="44.69
 module: itcm
 addr: 0x01ff8000
 size: 1436 bytes
-matched: yes</title></rect><rect x="331.42" y="49.69" width="12.70" height="11.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ff859c
+matched: yes</title></rect><rect x="331.42" y="49.69" width="12.70" height="11.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ll_ufrom_d
 module: itcm
 addr: 0x01ff859c
 size: 364 bytes
@@ -12293,7 +12293,7 @@ matched: yes</title></rect><rect x="331.42" y="291.43" width="12.70" height="28.
 module: itcm
 addr: 0x01ff99a4
 size: 924 bytes
-matched: yes</title></rect><rect x="331.42" y="320.18" width="12.70" height="7.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ff9d40
+matched: yes</title></rect><rect x="331.42" y="320.18" width="12.70" height="7.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_deq
 module: itcm
 addr: 0x01ff9d40
 size: 236 bytes
@@ -12305,7 +12305,7 @@ matched: yes</title></rect><rect x="331.42" y="368.11" width="12.70" height="7.8
 module: itcm
 addr: 0x01ffa344
 size: 252 bytes
-matched: yes</title></rect><rect x="331.42" y="375.95" width="4.63" height="10.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffa440
+matched: yes</title></rect><rect x="331.42" y="375.95" width="4.63" height="10.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ffltu
 module: itcm
 addr: 0x01ffa440
 size: 124 bytes
