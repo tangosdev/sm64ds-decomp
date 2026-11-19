@@ -2771,8 +2771,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                  << 12);
             responseScale += FIX_MUL_SU(responseScale, randomScale >> 6);
             randomAngle = RandomIntInternal(&data_0209d4b8.value);
-            func_0203d388(&response,
-                          (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
+            func_0203d388(&response, (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
         } else if (hitKinoko == 1) {
             u32 randomScale;
             u32 randomAngle;
@@ -2784,8 +2783,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                  << 12);
             responseScale += FIX_MUL_US(randomScale >> 5, -0x2000);
             randomAngle = RandomIntInternal(&data_0209d4b8.value);
-            func_0203d388(&response,
-                          (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
+            func_0203d388(&response, (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
         } else if (hitExit == 1) {
             u32 randomScale;
             responseScale = FX_MUL(dot, 0x1a00);

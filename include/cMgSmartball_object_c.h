@@ -61,7 +61,7 @@ struct cMgSmartball_object_c {
     int PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2) {
         return PointInTriangle((int *)p, (int *)q0, (int *)q1, (int *)q2);
     }
-    void SetVel(int *v);           /* mVel = v[0]/v[1] */
+    void SetVel(int *v); /* mVel = v[0]/v[1] */
 
     /* The C spelling of this class gets no explicit vtable member because
        no .c file declares it; every reader reaches these fields by raw
