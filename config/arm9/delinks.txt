@@ -2080,23 +2080,23 @@ src/DGT_Hash2CalcHmac.c:
     complete
     .text start:0x0205e0f4 end:0x0205e280
 
-src/unnamed/arm9/0205/func_0205e280.c:
+src/SHA1PadMessage.c:
     complete
     .text start:0x0205e280 end:0x0205e3d4
 
-src/unnamed/arm9/0205/func_0205e3d4.c:
+src/SHA1ProcessMessageBlock.c:
     complete
     .text start:0x0205e3d4 end:0x0205e6e4
 
-src/unnamed/arm9/0205/func_0205e6e4.c:
+src/SHA1Input.c:
     complete
     .text start:0x0205e6e4 end:0x0205e7e0
 
-src/unnamed/arm9/0205/func_0205e7e0.c:
+src/SHA1Result.c:
     complete
     .text start:0x0205e7e0 end:0x0205e89c
 
-src/unnamed/arm9/0205/func_0205e89c.c:
+src/SHA1Reset.c:
     complete
     .text start:0x0205e89c end:0x0205e904
 

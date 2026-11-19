@@ -10575,23 +10575,23 @@
     },
     "arm9:0x0205e280": {
       "author": "ruspecial",
-      "name": "func_0205e280"
+      "name": "SHA1PadMessage"
     },
     "arm9:0x0205e3d4": {
       "author": "tangosdev",
-      "name": "func_0205e3d4"
+      "name": "SHA1ProcessMessageBlock"
     },
     "arm9:0x0205e6e4": {
       "author": "andrewboudreau",
-      "name": "func_0205e6e4"
+      "name": "SHA1Input"
     },
     "arm9:0x0205e7e0": {
       "author": "tangosdev",
-      "name": "func_0205e7e0"
+      "name": "SHA1Result"
     },
     "arm9:0x0205e89c": {
       "author": "tangosdev",
-      "name": "func_0205e89c"
+      "name": "SHA1Reset"
     },
     "arm9:0x0205e904": {
       "author": "tangosdev",

@@ -4,10 +4,9 @@
 #include "types.h"
 
 /* RFC 3174 SHA1Context, with the block index widened to a signed 32-bit int
- * (func_0205e280, SHA1PadMessage, compares it signed). The RFC's routines are
- * func_0205e89c (SHA1Reset), func_0205e6e4 (SHA1Input), func_0205e3d4
- * (SHA1ProcessMessageBlock) and func_0205e280; DGT_Hash2CalcHmac (the HMAC)
- * holds one in 0x68 bytes. */
+ * (SHA1PadMessage compares it signed). The RFC's routines are SHA1Reset,
+ * SHA1Input, SHA1Result, SHA1ProcessMessageBlock and SHA1PadMessage;
+ * DGT_Hash2CalcHmac (the HMAC) holds one in 0x68 bytes. */
 typedef struct SHA1Context {
     u32 Intermediate_Hash[5]; /* 0x00 */
     u32 Length_Low;           /* 0x14 */
