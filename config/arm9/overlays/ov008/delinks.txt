@@ -1,13 +1,7 @@
     .ctor       start:0x021111a0 end:0x021111a0 kind:rodata align:4
-    .data.data_ov008_021111c0 start:0x021111c0 end:0x021115e0 kind:data align:32
-    .data.gap0 start:0x021115e0 end:0x021115e4 kind:data align:4
-    .data.data_ov008_021115e4 start:0x021115e4 end:0x02111b6c kind:data align:4
-    .data.gap1 start:0x02111b6c end:0x02111b74 kind:data align:4
-    .data.data_ov008_02111b74 start:0x02111b74 end:0x02111c20 kind:data align:4
+    .data       start:0x021111c0 end:0x02111c20 kind:data align:32
     .bss        start:0x02111c20 end:0x02111c20 kind:bss align:32
 
 src/unnamed/ov008/data_ov008.c:
     complete
-    .data.data_ov008_021111c0 start:0x021111c0 end:0x021115e0
-    .data.data_ov008_021115e4 start:0x021115e4 end:0x02111b6c
-    .data.data_ov008_02111b74 start:0x02111b74 end:0x02111c20
+    .data start:0x021111c0 end:0x02111c20

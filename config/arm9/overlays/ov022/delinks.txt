@@ -77,3 +77,8 @@ src/game/actors/d_a_obj_volcano_cannon.cpp:
     .init start:0x021130bc end:0x021130f8
     .ctor start:0x0211311c end:0x02113120
     .bss start:0x02114690 end:0x021146a0
+
+src/unnamed/ov022/data_ov022.c:
+    complete
+    .rodata start:0x02112950 end:0x02112c98
+    .data start:0x02113140 end:0x02113cd4

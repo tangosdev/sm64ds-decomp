@@ -41,3 +41,16 @@ src/game/actors/d_a_water_suikomi.cpp:
     .init start:0x02112d68 end:0x02112da4
     .ctor start:0x02112db4 end:0x02112db8
     .bss start:0x02113f4c end:0x02113f80
+
+src/unnamed/ov026/data_ov026.c:
+    complete
+    .rodata start:0x02112490 end:0x02112b7c
+    .data start:0x02112dc0 end:0x02112f74
+
+src/unnamed/ov026/data_ov026_02112f7c.c:
+    complete
+    .data start:0x02112f7c end:0x02112fd4
+
+src/unnamed/ov026/data_ov026_02112ffc.c:
+    complete
+    .data start:0x02112ffc end:0x02113a90
