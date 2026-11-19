@@ -1,9 +1,9 @@
 #include "SHA1Context.h"
 
 /* RFC 3174 SHA1Reset, SHA1Input and SHA1Result. */
-extern int func_0205e89c(SHA1Context *context);
-extern int func_0205e6e4(SHA1Context *context, const unsigned char *data, int len);
-extern int func_0205e7e0(SHA1Context *context, unsigned char *out);
+extern int SHA1Reset(SHA1Context *context);
+extern int SHA1Input(SHA1Context *context, const unsigned char *data, int len);
+extern int SHA1Result(SHA1Context *context, unsigned char *out);
 
 void DGT_Hash2CalcHmac(unsigned char *out, unsigned char *msg, int msglen, unsigned char *key,
                        int keylen) {
@@ -21,9 +21,9 @@ void DGT_Hash2CalcHmac(unsigned char *out, unsigned char *msg, int msglen, unsig
     if (keylen == 0) return;
 
     if (keylen > 64) {
-        func_0205e89c(&ctx);
-        func_0205e6e4(&ctx, key, keylen);
-        func_0205e7e0(&ctx, dg);
+        SHA1Reset(&ctx);
+        SHA1Input(&ctx, key, keylen);
+        SHA1Result(&ctx, dg);
         key = dg;
         keylen = 20;
     }
@@ -38,13 +38,13 @@ void DGT_Hash2CalcHmac(unsigned char *out, unsigned char *msg, int msglen, unsig
         opad[i] = 0x5c;
     }
 
-    func_0205e89c(&ctx);
-    func_0205e6e4(&ctx, ipad, 64);
-    func_0205e6e4(&ctx, msg, msglen);
-    func_0205e7e0(&ctx, dg);
+    SHA1Reset(&ctx);
+    SHA1Input(&ctx, ipad, 64);
+    SHA1Input(&ctx, msg, msglen);
+    SHA1Result(&ctx, dg);
 
-    func_0205e89c(&ctx);
-    func_0205e6e4(&ctx, opad, 64);
-    func_0205e6e4(&ctx, dg, 20);
-    func_0205e7e0(&ctx, out);
+    SHA1Reset(&ctx);
+    SHA1Input(&ctx, opad, 64);
+    SHA1Input(&ctx, dg, 20);
+    SHA1Result(&ctx, out);
 }

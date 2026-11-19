@@ -725,21 +725,21 @@
       "ordinal": 100
     },
     {
-      "symbol": "func_020513a8",
+      "symbol": "WaveArcDisposeCallback",
       "address": "0x020513a8",
       "legacy_source": "src/func_020513a8.c",
       "size": "0x0000003c",
       "ordinal": 101
     },
     {
-      "symbol": "func_020513e4",
+      "symbol": "BankDisposeCallback",
       "address": "0x020513e4",
       "legacy_source": "src/func_020513e4.c",
       "size": "0x0000003c",
       "ordinal": 102
     },
     {
-      "symbol": "func_02051420",
+      "symbol": "SeqDisposeCallback",
       "address": "0x02051420",
       "legacy_source": "src/func_02051420.c",
       "size": "0x00000034",
@@ -872,14 +872,14 @@
       "ordinal": 121
     },
     {
-      "symbol": "func_02051f1c",
+      "symbol": "NNS_SndArcPlayerStartSeqArc",
       "address": "0x02051f1c",
       "legacy_source": "src/func_02051f1c.c",
       "size": "0x00000098",
       "ordinal": 122
     },
     {
-      "symbol": "func_02051fb4",
+      "symbol": "NNS_SndArcPlayerStartSeq",
       "address": "0x02051fb4",
       "legacy_source": "src/func_02051fb4.cpp",
       "size": "0x00000054",
@@ -893,7 +893,7 @@
       "ordinal": 124
     },
     {
-      "symbol": "func_020520a4",
+      "symbol": "FreeCommandBuffer",
       "address": "0x020520a4",
       "legacy_source": "src/func_020520a4.c",
       "size": "0x00000038",

@@ -5,7 +5,7 @@
  * length and block index, load the initial hash H0..H4, clear Computed and
  * Corrupted and return 0 (shaSuccess). The context is RFC 3174's
  * SHA1Context (SHA1Context.h). */
-int func_0205e89c(SHA1Context *context) {
+int SHA1Reset(SHA1Context *context) {
     if (context == 0)
         return 1;
     context->Length_Low = 0;

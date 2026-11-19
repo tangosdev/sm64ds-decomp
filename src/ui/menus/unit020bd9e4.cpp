@@ -46,7 +46,7 @@
 extern "C" void NNS_SndHandleReleaseSeq(NNSSndHandle *);
 extern "C" void NNS_SndHandleInit(NNSSndHandle *);
 extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *, int);
-extern "C" int func_02051f1c(void *, unsigned int, int);
+extern "C" int NNS_SndArcPlayerStartSeqArc(void *, unsigned int, int);
 
 extern int data_ov007_02103134[];
 extern char data_ov007_02103218[]; /* "sound" */
@@ -61,7 +61,7 @@ extern NNSSndHandle *data_ov007_02104bbc;
 
 int func_ov007_020be098(int idx) {
     NNS_SndHandleInit(&data_ov007_02104bbc[idx]);
-    return func_02051f1c(&data_ov007_02104bbc[idx], 2, data_ov007_02103134[idx]);
+    return NNS_SndArcPlayerStartSeqArc(&data_ov007_02104bbc[idx], 2, data_ov007_02103134[idx]);
 }
 
 void MenuSound_Create(void) {

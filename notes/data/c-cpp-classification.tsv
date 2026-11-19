@@ -2455,11 +2455,11 @@ src/FSi_LoadOverlayInfoCore.c	PURE-C	arm9				1		None		-
 src/FS_GetOverlayFileID.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_0205e0b0.c	WEAK-refs-only	arm9				1		None		-
 src/DGT_Hash2CalcHmac.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_0205e280.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_0205e3d4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_0205e6e4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_0205e7e0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_0205e89c.c	PURE-C	arm9				1		None		-
+src/SHA1PadMessage.c	PURE-C	arm9				1		None		-
+src/SHA1ProcessMessageBlock.c	PURE-C	arm9				1		None		-
+src/SHA1Input.c	PURE-C	arm9				1		None		-
+src/SHA1Result.c	PURE-C	arm9				1		None		-
+src/SHA1Reset.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_0205e904.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_0205eb58.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_0205f040.c	WEAK-refs-only	arm9				1		None		-

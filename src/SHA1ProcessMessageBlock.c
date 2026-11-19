@@ -28,8 +28,7 @@ extern T4 data_0209a054;
 
 #define SHA1CircularShift(bits, word) (((word) << (bits)) | ((word) >> (32 - (bits))))
 
-void func_0205e3d4(void *ctx)
-{
+void SHA1ProcessMessageBlock(void *ctx) {
     SHA1Context *context = (SHA1Context *)ctx;
     T4 K;
     int t;
