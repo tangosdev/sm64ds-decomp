@@ -475,10 +475,10 @@ int daYurei_Mucho_c::UpdateShoot() {
 
     if (mAnmModel.Finished() != 0) {
         if (pl != 0) {
-            s32 *dsrc = (s32 *)(&pl->mPos.x);
-            shotPos.x = dsrc[0];
-            shotPos.y = dsrc[1];
-            shotPos.z = dsrc[2];
+            Vector3 *dsrc = &pl->mPos;
+            shotPos.x = dsrc->x;
+            shotPos.y = dsrc->y;
+            shotPos.z = dsrc->z;
             if (Vec3_Dist(&mPos, &shotPos) > 0x3e8000) {
                 mStateTimer = 0;
                 ChangeState(&data_ov065_0211d670);

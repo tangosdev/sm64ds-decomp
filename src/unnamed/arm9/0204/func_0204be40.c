@@ -21,7 +21,7 @@ void func_0204be40(ManagerView *mgr, ParticleElement *ptcl) {
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
     const MtxFx43 *view = mgr->mDrawMatrix;
     VecFx32 trans;
-    int mat[12];
+    MtxFx43 mat;
     u32 v;
     int sx;
     int sy;
@@ -58,20 +58,20 @@ void func_0204be40(ManagerView *mgr, ParticleElement *ptcl) {
 
         /* the 4x3 rows: (cos, sin, 0) * sx, (-sin, cos, 0) * sy, (0, 0, 1),
          * then the view-space position */
-        mat[0] = FX_MUL(cos, sx);
-        mat[3] = FX_MUL(-sin, sy);
-        mat[1] = FX_MUL(sin, sx);
-        mat[9] = trans.x;
-        mat[10] = trans.y;
-        mat[8] = 0x1000;
-        mat[11] = trans.z;
-        mat[6] = 0;
-        mat[4] = FX_MUL(cos, sy);
-        mat[7] = 0;
-        mat[2] = 0;
-        mat[5] = 0;
+        mat.m[0][0] = FX_MUL(cos, sx);
+        mat.m[1][0] = FX_MUL(-sin, sy);
+        mat.m[0][1] = FX_MUL(sin, sx);
+        mat.m[3][0] = trans.x;
+        mat.m[3][1] = trans.y;
+        mat.m[2][2] = 0x1000;
+        mat.m[3][2] = trans.z;
+        mat.m[2][0] = 0;
+        mat.m[1][1] = FX_MUL(cos, sy);
+        mat.m[2][1] = 0;
+        mat.m[0][2] = 0;
+        mat.m[1][2] = 0;
         G3_Identity();
-        G3_MultMtx43(mat);
+        G3_MultMtx43(&mat.m[0][0]);
     }
 
     G3_Color(ptcl->color);

@@ -2798,7 +2798,7 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
 
 /* Turn mAngle.x/mAngle.y toward v by 1/amt of the remaining difference per
  * call (step capped at 0x4000, 90 degrees), then set mSpeed.x, mSpeed.y and
- * mSpeed.z to mMagnitude times rotation elements 6..8 of the animated model's
+ * mSpeed.z to mMagnitude times the Z axis row of the animated model's
  * matrix. */
 
 void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
@@ -2807,9 +2807,9 @@ void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
     ApproachAngle(&this->mAngle.x, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
     ApproachAngle(&this->mAngle.y, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
     m = &this->mAnmModel->mat4x3;
-    this->mSpeed.x = FX_MUL(this->mMagnitude, m->m[6]);
-    this->mSpeed.y = FX_MUL(this->mMagnitude, m->m[7]);
-    this->mSpeed.z = FX_MUL(this->mMagnitude, m->m[8]);
+    this->mSpeed.x = FX_MUL(this->mMagnitude, m->r.m[2][0]);
+    this->mSpeed.y = FX_MUL(this->mMagnitude, m->r.m[2][1]);
+    this->mSpeed.z = FX_MUL(this->mMagnitude, m->r.m[2][2]);
 }
 
 /* Script handler 9: clear mFlags bit 0x2. */

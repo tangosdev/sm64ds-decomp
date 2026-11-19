@@ -919,14 +919,14 @@ void daKuriKing_c::TurnIfPlayerBehind() {
 
 Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
     Vector3 result;
-    int *out = (int *)&result;
+    Vector3 *out = &result;
     int n;
 
     n = n_;
 
-    out[0] = mPos.x;
-    out[1] = mPos.y;
-    out[2] = mPos.z;
+    out->x = mPos.x;
+    out->y = mPos.y;
+    out->z = mPos.z;
 
     if (ClosestPlayer()->param1 == 3) {
         int rem;
@@ -953,9 +953,9 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
         sum = (s16)(q * 0x350 + 0x500) + (s16)(rem * 0x600);
         prod = mDirection * sum;
         diff = (mWalkAngle + mMaxWalkSpeed) - prod;
-        out[0] = FX_MUL(scale, FX_SinIdx((u16)(s16)diff >> 4));
-        out[1] += 0x32000;
-        out[2] = FX_MUL(scale, FX_CosIdx((u16)(s16)diff >> 4));
+        out->x = FX_MUL(scale, FX_SinIdx((u16)(s16)diff >> 4));
+        out->y += 0x32000;
+        out->z = FX_MUL(scale, FX_CosIdx((u16)(s16)diff >> 4));
     } else {
         int lim;
         int one;
@@ -989,9 +989,9 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
         prod2 = mDirection * sum2;
         prod3 = sign * prod2;
         diff2 = (mWalkAngle + mWalkSpeed) - prod3;
-        out[0] = FX_MUL(scale2, FX_SinIdx((u16)(s16)diff2 >> 4));
-        out[1] += 0x32000;
-        out[2] = FX_MUL(scale2, FX_CosIdx((u16)(s16)diff2 >> 4));
+        out->x = FX_MUL(scale2, FX_SinIdx((u16)(s16)diff2 >> 4));
+        out->y += 0x32000;
+        out->z = FX_MUL(scale2, FX_CosIdx((u16)(s16)diff2 >> 4));
     }
     return result;
 }

@@ -118,7 +118,7 @@ void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
                 s16 halfd = (s16)(ang - prevAng) / 2;
                 int idx = (unsigned short)((s16)prevAng + halfd) >> 4;
                 MTX_RotZ33_(&mtx, FX_SinIdx(idx), FX_CosIdx(idx));
-                G3_MultTransMtx33(mtx.m, (int *)pos);
+                G3_MultTransMtx33(&mtx.m[0][0], (int *)pos);
             }
             prev++;
             i++;

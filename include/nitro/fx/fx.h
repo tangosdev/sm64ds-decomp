@@ -53,6 +53,12 @@ typedef struct MtxFx33 {
     fx32 m[3][3];
 } MtxFx33;
 
+/* NitroSDK's MtxFx44: a 4x4 fixed-point matrix, row by row, the shape of
+ * the projection and texture matrices the geometry engine loads. */
+typedef struct MtxFx44 {
+    fx32 m[4][4];
+} MtxFx44;
+
 #define FX32_SHIFT 12
 #define FX32_ONE   ((fx32)0x00001000L)
 #define FX32_CAST(x) ((fx32)(x))
