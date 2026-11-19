@@ -116,7 +116,7 @@ void func_02044efc(struct BMD_File *bmd);
 extern "C" void func_ov007_020b3edc(int idx);
 extern "C" void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);
-extern "C" void func_ov007_020bbf98(void *model, unsigned int lights);
+extern "C" void func_ov007_020bbf98(Ov007Model *model, unsigned int lights);
 extern void func_ov007_020bc53c(Ov007Model *model);
 extern "C" void func_ov007_020bc5fc(Ov007Model *model, void *files, int count);
 extern "C" void func_ov007_020bc658(Ov007Model *model, void *files, int count);
