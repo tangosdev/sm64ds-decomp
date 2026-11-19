@@ -72,6 +72,8 @@ enum daHanachan_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "LVL_Overlay.h"
+#include "CLPS.h"
 
 /* The file-scope resource handles. The model five use the plain SharedFilePtr
  * pair (func_02017acc / func_02017ab4), the animation twenty-five use
@@ -1209,6 +1211,225 @@ void *const data_ov034_021138b0[5] = {
 };
 const int data_ov034_021138c4[5] = {0, 0x00057b2b, 0x000858c9, 0x0007afaf, 0x00081a98};
 const s32 data_ov034_021138d8[5] = {0x0004399a, 0x0003e666, 0x0004b666, 0x0003e666, 0x0004b666};
+
+/* Sublevel 26's level overlay, the record data_02092208[26] publishes as
+ * data_0209f340. dScStage_c reads the CLPS block, the level object table,
+ * the model/kcl/minimap file ids, the area table and the skybox word.
+ * A symbol boundary falls inside a few rows because a later word of that
+ * row is its own label; the pieces are still one table in address order. */
+struct HanachanObj {
+    u16 raw;
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    u16 param;
+};
+struct HanachanFog {
+    u8 enabled;
+    u8 colorR;
+    u8 colorG;
+    u8 colorB;
+    u16 nearDist;
+    u16 farDist;
+};
+struct HanachanViewHead {
+    u8 type;
+    u8 param;
+    s16 x;
+    s16 y;
+    s16 z;
+};
+struct HanachanViewTail {
+    u8 pad[2];
+    s16 angleY;
+    u16 unk_c;
+    u16 pad_e;
+};
+struct HanachanExit {
+    LVL_Overlay::ExitEntry entry;
+    u16 pad;
+};
+struct HanachanAreaObjsHead {
+    LVL_Overlay::ObjSubTable standard;
+    u8 simpleCategory;
+    u8 simpleCount;
+    u8 pad[2];
+};
+struct HanachanSimpleHead {
+    LVL_Overlay::SimpleEntry objs[4];
+    u16 fifthRaw;
+    s16 fifthX;
+};
+struct HanachanAreaObjsTail {
+    HanachanSimpleHead *simpleEntries;
+    u8 starCategory;
+    u8 starCount;
+    u8 pad[2];
+    HanachanObj *starEntries;
+};
+struct HanachanLevelHead {
+    CLPS_Block *clps;
+    LVL_Overlay::ObjTable *objTable;
+    u16 modelFileId;
+    u16 kclFileId;
+    u16 minimapTilesFile;
+    u16 minimapPaletteFile;
+};
+struct HanachanLevelTail {
+    LVL_Overlay::Area *areas;
+    u8 areaCount;
+    u8 cameraFlags;
+    s16 minimapScale;
+    u32 skyboxWord;
+};
+struct HanachanSimpleTail {
+    s16 fifthY;
+    s16 fifthZ;
+    LVL_Overlay::SimpleEntry objs[19];
+};
+struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    CLPS entries[15];
+};
+
+extern u16 data_ov034_02114080[2];
+extern u32 data_ov034_02114084;
+extern s16 data_ov034_02114088[2];
+extern LVL_Overlay::ObjTable data_ov034_0211408c;
+extern LVL_Overlay::ObjTable data_ov034_02114094;
+extern HanachanFog data_ov034_0211409c;
+extern LVL_Overlay::Area data_ov034_021140a4;
+extern HanachanViewHead data_ov034_021140b0;
+extern HanachanViewTail data_ov034_021140b8;
+extern HanachanExit data_ov034_021140c0;
+extern HanachanObj data_ov034_021140d0;
+extern HanachanAreaObjsHead data_ov034_021140e0;
+extern HanachanAreaObjsTail data_ov034_021140ec;
+extern HanachanLevelHead data_ov034_021140f8;
+extern HanachanLevelTail data_ov034_02114108;
+extern LVL_Overlay::ObjSubTable data_ov034_02114114[7];
+extern HanachanObj data_ov034_0211414c[3];
+extern HanachanObj data_ov034_0211417c[2];
+extern HanachanObj data_ov034_0211419c[3];
+extern HanachanObj data_ov034_021141cc[3];
+extern CLPS_Block data_ov034_021141fc;
+extern HanachanSimpleHead data_ov034_0211427c;
+extern HanachanSimpleTail data_ov034_021142a0;
+
+/* Minimap tile file ids, the star-camera nibble word, minimap scales. */
+u16 data_ov034_02114080[2] = {0x07e2, 0x07e3};
+u32 data_ov034_02114084 = 0x03033334;
+s16 data_ov034_02114088[2] = {0x0ce4, 0x0ce4};
+
+/* Area object table (3 sub-tables) and the level-wide object table (7). */
+LVL_Overlay::ObjTable data_ov034_0211408c = {3, {0, 0}, &data_ov034_021140e0};
+LVL_Overlay::ObjTable data_ov034_02114094 = {7, {0, 0}, &data_ov034_02114114};
+HanachanFog data_ov034_0211409c = {1, 0, 0, 0, 0x36b0, 0x7e2c};
+LVL_Overlay::Area data_ov034_021140a4 = {&data_ov034_0211408c, 0, 1, {0x01, 0x48, 0x0d}};
+
+/* One 0xe-byte view (type 2) plus the two zero bytes before the next row. */
+HanachanViewHead data_ov034_021140b0 = {2, 0xff, 0x03e8, 0x0496, 0x06a4};
+HanachanViewTail data_ov034_021140b8 = {{0, 0}, (s16)0xc000, 0, 0};
+HanachanExit data_ov034_021140c0 = {
+    {0x01f4, 0x03e8, 0x0884, 0, (s16)0x8000, {0x18, 0x04, 0xff, 0x11}}, 0};
+/* Star-filtered standard object (category byte 0xa0, count 1). */
+HanachanObj data_ov034_021140d0 = {0x0014, 0x02ee, 0x03e8, 0x053c, 3, (s16)0xc000, 0, 0xffff};
+
+/* Area sub-tables: 6 standard objects, 24 simple objects, then the star row. */
+HanachanAreaObjsHead data_ov034_021140e0 = {
+    {0, 6, {0, 0}, &data_ov034_0211419c}, 5, 24, {0, 0}};
+HanachanAreaObjsTail data_ov034_021140ec = {&data_ov034_0211427c, 0xa0, 1, {0, 0}, &data_ov034_021140d0};
+
+HanachanLevelHead data_ov034_021140f8 = {
+    &data_ov034_021141fc, &data_ov034_02114094, 0x07e5, 0x07e1, 0x07e6, 0x07e7};
+/* areaCount 1, StartWithFarCamera, minimap scale, skybox word (id in bits 4..8). */
+HanachanLevelTail data_ov034_02114108 = {&data_ov034_021140a4, 1, 0x1, 0x01f4, 0x0000000f};
+
+LVL_Overlay::ObjSubTable data_ov034_02114114[7] = {
+    {4, 1, {0, 0}, &data_ov034_021140b0},  /* views */
+    {11, 2, {0, 0}, &data_ov034_02114080}, /* minimap tiles */
+    {1, 5, {0, 0}, &data_ov034_0211414c},  /* entrances */
+    {8, 1, {0, 0}, &data_ov034_0211409c},  /* fog */
+    {12, 2, {0, 0}, &data_ov034_02114088}, /* minimap scales */
+    {14, 1, {0, 0}, &data_ov034_02114084}, /* star camera */
+    {10, 1, {0, 0}, &data_ov034_021140c0}, /* exits */
+};
+
+HanachanObj data_ov034_0211414c[3] = {
+    {0, 0x01f4, 0x03e8, 0x076c, 0, (s16)0x8000, 0, 0},
+    {0, 0x01f4, 0x03e8, 0x06a4, 0, (s16)0x8000, 0, 0},
+    {0, 0x01f4, 0x03e8, 0x05dc, 0, (s16)0x8000, 0, 0},
+};
+HanachanObj data_ov034_0211417c[2] = {
+    {0, 0x01f4, 0x03e8, 0x0514, 0, (s16)0x8000, 0, 0},
+    {0, 0, 0x0b86, 0, 0, 0, 0, 0x0278},
+};
+HanachanObj data_ov034_0211419c[3] = {
+    {0x0031, (s16)0xf934, 0x076c, (s16)0xfe70, 0, 0, 0, 0x00f3},
+    {0x0118, 0x018c, 0x0708, 0, 0, 0, 0, 0xff06},
+    {0x0131, (s16)0xfbb4, 0x0514, 0x0546, 0, 0, 0, 0xff00},
+};
+HanachanObj data_ov034_021141cc[3] = {
+    {0x00a1, (s16)0xfe70, 0x0578, 0x0352, 0, 0, 0, 0xffff},
+    {0x001e, (s16)0xf8f8, 0x060e, 0x0708, 0, 0, 0, 0xff06},
+    {0x002c, (s16)0xf9f2, 0x0514, 0x0708, 0, 0, 0, 0x3c07},
+};
+
+CLPS_Block data_ov034_021141fc = {
+    0x53504c43,
+    8,
+    15,
+    {{0x00030fc4, 0x000000ff},
+     {0x00240fc0, 0x000000ff},
+     {0x001c0fcc, 0x000000ff},
+     {0x01000fc4, 0x000000ff},
+     {0x00000fc0, 0x000000ff},
+     {0x01030fc4, 0x000000ff},
+     {0x01002fc4, 0x000000ff},
+     {0x00040fc4, 0x000000ff},
+     {0x00030fc2, 0x000000ff},
+     {0x00030fcc, 0x000000ff},
+     {0x00032fc2, 0x000000ff},
+     {0x01042fcc, 0x000000ff},
+     {0x01040fcc, 0x000000ff},
+     {0x00052fc2, 0x000000ff},
+     {0x01052fc4, 0x000000ff}}};
+
+/* 24 simple objects. The fifth entry is split across the two labels. */
+HanachanSimpleHead data_ov034_0211427c = {
+    {{0xa226, 0x0384, 0x03e8, 0x03e8},
+     {0xa226, 0x05e3, 0x03e8, 0x00b0},
+     {0xa226, 0x0334, 0x03e8, (s16)0xfc8e},
+     {0xa226, (s16)0xfdef, 0x02ee, (s16)0xfdef}},
+    0xa226,
+    (s16)0xff30};
+HanachanSimpleTail data_ov034_021142a0 = {
+    0x03e8,
+    (s16)0xfabd,
+    {{0xa226, (s16)0xf8d0, 0x05dc, (s16)0xfbb4},
+     {0xa226, (s16)0xf90c, 0x03e8, 0x0110},
+     {0xa226, (s16)0xfe84, 0x0514, 0x044c},
+     {0x4c3f, 0, 0x073a, 0},
+     {0xe225, (s16)0xfc7c, 0x074f, (s16)0xfc7c},
+     {0xe225, (s16)0xfc18, 0x0766, (s16)0xfc18},
+     {0xe225, (s16)0xfbb4, 0x077d, (s16)0xfbb4},
+     {0xe225, (s16)0xfb50, 0x0794, (s16)0xfb50},
+     {0xe225, (s16)0xfaec, 0x07ab, (s16)0xfaec},
+     {0xe225, 0x0384, 0x074f, 0x0384},
+     {0xe225, 0x03e8, 0x0766, 0x03e8},
+     {0xe225, 0x044c, 0x077d, 0x044c},
+     {0xe225, 0x04b0, 0x0794, 0x04b0},
+     {0xe225, 0x0514, 0x07ab, 0x0514},
+     {0x0a3f, (s16)0xf8f8, 0x0226, (s16)0xfa56},
+     {0xe1ff, 0, 0x06f2, 0},
+     {0x0227, (s16)0xfcae, 0x0514, 0x04ce},
+     {0x0227, (s16)0xfcae, 0x0514, 0x05fa},
+     {0xce3f, (s16)0xf8b7, 0x062c, (s16)0xf8d0}}};
 
 /* Per-health state timer and the state-name strings the state table's name
  * pointers reference. */

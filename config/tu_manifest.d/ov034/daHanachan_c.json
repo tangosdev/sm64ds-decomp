@@ -35,6 +35,12 @@
       "end": "0x0211407c"
     },
     {
+      "name": ".data.hanachanLevel",
+      "input_section": ".data",
+      "start": "0x02114080",
+      "end": "0x0211433c"
+    },
+    {
       "name": ".data.hanachanTimer",
       "input_section": ".data",
       "start": "0x0211433c",
@@ -317,6 +323,167 @@
     }
   ],
   "data": [
+    {
+      "symbol": "data_ov034_02114080",
+      "address": "0x02114080",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "two minimap-tile file ids, sublevel 26 object category 11"
+    },
+    {
+      "symbol": "data_ov034_02114084",
+      "address": "0x02114084",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "star-camera nibble word, object category 14"
+    },
+    {
+      "symbol": "data_ov034_02114088",
+      "address": "0x02114088",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "two minimap scales, object category 12"
+    },
+    {
+      "symbol": "data_ov034_0211408c",
+      "address": "0x0211408c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "area object table, count 3, entries at data_ov034_021140e0"
+    },
+    {
+      "symbol": "data_ov034_02114094",
+      "address": "0x02114094",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "level-wide object table, count 7, entries at data_ov034_02114114"
+    },
+    {
+      "symbol": "data_ov034_0211409c",
+      "address": "0x0211409c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one fog record, object category 8"
+    },
+    {
+      "symbol": "data_ov034_021140a4",
+      "address": "0x021140a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "the level's one area: object table, null texture animation, minimap id 1"
+    },
+    {
+      "symbol": "data_ov034_021140b0",
+      "address": "0x021140b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "first 8 bytes of the single type-2 view record"
+    },
+    {
+      "symbol": "data_ov034_021140b8",
+      "address": "0x021140b8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "view angleY 0xc000 and the zero tail through the next row"
+    },
+    {
+      "symbol": "data_ov034_021140c0",
+      "address": "0x021140c0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "one exit record (0xe) plus two zero pad bytes"
+    },
+    {
+      "symbol": "data_ov034_021140d0",
+      "address": "0x021140d0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "star-filtered standard object, category byte 0xa0"
+    },
+    {
+      "symbol": "data_ov034_021140e0",
+      "address": "0x021140e0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "area sub-table 0 (6 standard objects) and the head of sub-table 1"
+    },
+    {
+      "symbol": "data_ov034_021140ec",
+      "address": "0x021140ec",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "simple-object pointer, then the star-filtered sub-table head and pointer"
+    },
+    {
+      "symbol": "data_ov034_021140f8",
+      "address": "0x021140f8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "level record head: CLPS, object table, model 0x7e5, kcl 0x7e1, minimap files"
+    },
+    {
+      "symbol": "data_ov034_02114108",
+      "address": "0x02114108",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "area pointer, area count 1, far-camera flag, minimap scale, skybox word 0xf"
+    },
+    {
+      "symbol": "data_ov034_02114114",
+      "address": "0x02114114",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven level-wide object sub-tables"
+    },
+    {
+      "symbol": "data_ov034_0211414c",
+      "address": "0x0211414c",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "first three of the five entrance records"
+    },
+    {
+      "symbol": "data_ov034_0211417c",
+      "address": "0x0211417c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "last two of the five entrance records"
+    },
+    {
+      "symbol": "data_ov034_0211419c",
+      "address": "0x0211419c",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "first three of the six standard objects"
+    },
+    {
+      "symbol": "data_ov034_021141cc",
+      "address": "0x021141cc",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "last three of the six standard objects"
+    },
+    {
+      "symbol": "data_ov034_021141fc",
+      "address": "0x021141fc",
+      "size": "0x80",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block, stride 8, 15 entries"
+    },
+    {
+      "symbol": "data_ov034_0211427c",
+      "address": "0x0211427c",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "first four simple objects and the fifth entry's raw and x"
+    },
+    {
+      "symbol": "data_ov034_021142a0",
+      "address": "0x021142a0",
+      "size": "0x9c",
+      "binding": "STB_GLOBAL",
+      "evidence": "rest of the 24 simple objects, starting at the fifth entry's y and z"
+    },
     {
       "symbol": "data_ov034_02114538",
       "address": "0x02114538",
