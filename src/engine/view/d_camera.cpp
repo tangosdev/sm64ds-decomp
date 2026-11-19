@@ -140,8 +140,8 @@ extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern "C" int Vec3_HorzLen(const Vector3 *v);
 extern "C" {
 extern int VEC_Mag(void *v);
-extern void Vec3_Add(void *out, const void *a, const void *b);
-extern void Vec3_Sub(void *out, const void *a, const void *b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void VEC_Add(void *a, void *b, void *c);
 extern void VEC_Subtract(void *a, void *b, void *c);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
