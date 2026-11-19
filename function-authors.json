@@ -17475,7 +17475,7 @@
     },
     "ov002:0x020effb8": {
       "author": "ruspecial",
-      "name": "_Z19func_ov002_020effb8P7Vector3iS0_S0_S0_S0_"
+      "name": "_Z19EvaluateCubicSplineP7Vector3iS0_S0_S0_S0_"
     },
     "ov002:0x020f02c8": {
       "author": "tangosdev",

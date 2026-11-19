@@ -1480,7 +1480,7 @@ extern fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 extern long long func_0203cf94(int *a, int *b);
 }
 
-extern void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2,
+extern void EvaluateCubicSpline(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2,
                                 Vector3 *p3);
 
 extern void FUN_02029ab0(void);
@@ -3095,7 +3095,7 @@ int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpli
         SetVec(v[i], elem[i].x << 12, elem[i].y << 12, elem[i].z << 12);
     }
 
-    func_ov002_020effb8(pos, *progPtr, &v[0], &v[1], &v[2], &v[3]);
+    EvaluateCubicSpline(pos, *progPtr, &v[0], &v[1], &v[2], &v[3]);
 
     lo = 0;
     hi = 0;
