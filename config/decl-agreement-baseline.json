@@ -892,10 +892,6 @@
       "src/game/actors/d_a_wanwan2.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Matrix4x3 *"
-      ],
-      "src/game/actors/d_a_yegg.cpp": [
-        "param:#1 Vector3 *",
-        "param:#2 Matrix4x3 *"
       ]
     },
     "MIi_CpuCopy32": {
