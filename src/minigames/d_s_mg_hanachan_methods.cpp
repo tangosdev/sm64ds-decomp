@@ -78,6 +78,7 @@ enum dScMgHanachan_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
+#include "Vector2Math.h"
 
 extern int data_ov006_0213c954;
 extern int sHanaFieldWigglerCount;
@@ -174,8 +175,6 @@ extern u8 gSubScreenLayers;
 
 /* These helpers read or write two scalar words. Cast the Vector2 points
    at the C ABI boundary rather than giving the externs new types. */
-extern void func_0203d704(int *o, int *a, int *b);
-extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 /* sHanaPickedLow is only read where it is unsigned and only written as a
    halfword, so the unsigned spelling costs the writer nothing. */

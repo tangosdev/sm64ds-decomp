@@ -23,6 +23,7 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
+#include "Vector2Math.h"
 extern "C" void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
 extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
 extern "C" void Mg_CommitRecords(void);
@@ -77,8 +78,6 @@ extern "C" {
 void *LoadFile(int handle);
 
 void DecompressLZ16(void *src, void *dst);
-
-extern "C" void Vec2_Sub(int *out, int *a, int *b);
 }
 
 int func_0203d5dc(const int *a, const int *b);

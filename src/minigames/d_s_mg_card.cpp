@@ -26,6 +26,7 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
+#include "Vector2Math.h"
 
 /* By-value five-card ordering table. */
 typedef struct 
@@ -58,7 +59,6 @@ void *sCardHudSprites[] = {data_ov006_02134074, data_ov006_02134124};
 extern int sCardSelectLocked;
 extern int sCardSwapRequested;
 extern int data_ov006_02141770;
-extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
 extern int sCardFaceWeights[6];

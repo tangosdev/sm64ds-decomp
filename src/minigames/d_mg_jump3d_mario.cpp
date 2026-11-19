@@ -48,6 +48,7 @@
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 static const int kWallX = 0x6c000;   /* mPos.x clamp: the arena walls */
 static const int kScreenYMax = 0xbc; /* past this mScreenY the Mario damps out */
@@ -57,12 +58,9 @@ static const int kAnimSpeed = 0x800; /* SetAnim speed every install uses */
  * above the first function. */
 extern "C" {
 
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void func_02012718(int a, int b);
 void func_02016a14(dExtSimpleModel_c *self, int color);
 void func_02016a04(dExtSimpleModel_c *self, int color);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 
 /* Tuning words, read as plain ints. */
 int sJump3DBounceVy = 0x5000;
@@ -125,7 +123,6 @@ OamAttr *data_ov006_02134d1c = data_ov006_02134d20;
 extern Vector3 sJump3DMarioScale;
 extern char sJump3DRoundLayouts[];
 
-extern Matrix4x3 data_020a0e68;
 extern fBase_c *gCurrentScene;
 
 } /* extern "C" */

@@ -50,6 +50,7 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
 #include "SpawnInfo.h"
+#include "Vector2Math.h"
 
 /* The scene's profile. Its factory follows this unit's .text in the ROM and
    is kept in d_s_mg_roulette.cpp, but the profile itself sits in this unit's
@@ -102,7 +103,6 @@ extern "C" {
 int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
-void Vec2_Sub(int *out, int *a, int *b);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
