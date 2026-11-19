@@ -199,6 +199,7 @@ void RouletteRacer_Update(RouletteRacer *racer);
 void RouletteRacer_Release(RouletteRacer *racer);
 void RouletteRacer_Draw(RouletteRacer *);
 void RouletteRacer_Init(RouletteRacer *racer);
+void RouletteRacer_PlaceAtStart(RouletteRacer *racer);
 void RouletteRacer_MoveToTile(RouletteRacer *racer, int tile);
 void RouletteRacer_SetTarget(RouletteRacer *racer, Vector2 *target);
 void RouletteRacer_SetVelocityToward(RouletteRacer *racer, Vector2 *target, int scale);
@@ -569,7 +570,7 @@ void dScMgRoulette_c::StartRound(int /* arg */) {
 
     racer = mRacers;
     for (i = 0; i < 5; i++) {
-        RouletteRacer_PlaceAtStart((int *)racer);
+        RouletteRacer_PlaceAtStart(racer);
         racer++;
     }
 
@@ -693,18 +694,17 @@ void RouletteRacer_Init(RouletteRacer *racer) {
     racer->state = 7;
 }
 
-void RouletteRacer_PlaceAtStart(int *racer) {
-    RouletteRacer *t = (RouletteRacer *)racer;
-    t->pos.x = 0xc000;
-    t->pos.y = 0xc000;
-    t->target.x = t->pos.x;
-    t->target.y = t->pos.y;
-    t->step.x = 0;
-    t->step.y = 0;
-    t->state = 6;
-    t->tile = 0x25;
-    t->payout = 0;
-    t->priority = 1;
+void RouletteRacer_PlaceAtStart(RouletteRacer *racer) {
+    racer->pos.x = 0xc000;
+    racer->pos.y = 0xc000;
+    racer->target.x = racer->pos.x;
+    racer->target.y = racer->pos.y;
+    racer->step.x = 0;
+    racer->step.y = 0;
+    racer->state = 6;
+    racer->tile = 0x25;
+    racer->payout = 0;
+    racer->priority = 1;
 }
 
 void RouletteRacer_Release(RouletteRacer *racer) {

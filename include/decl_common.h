@@ -947,7 +947,6 @@ void Mg_ResetRecordBannerPos(void);
 void Mg_SetNextBanner(int);
 void Mg_SetPerfectBanner(void);
 extern void Puff_ClearAll(int, int);
-extern void RouletteRacer_PlaceAtStart(int *);
 int RouletteResults_Tick(void);
 extern void RouletteStrip_LinkAll(char *);
 extern void RouletteStrip_ResetAll(void);
