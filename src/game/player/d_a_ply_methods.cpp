@@ -4330,14 +4330,14 @@ int daPly_c::JumboStarCutsceneTakingOff() {
             mStateWork += 1;
         }
     } else {
-        int buf[6];
-        buf[0] = 0;
-        buf[1] = 0;
-        buf[2] = 0;
-        buf[3] = 0;
-        buf[4] = 0;
-        buf[5] = 0;
-        func_ov002_020c37a4((const Vector3 *)(buf + 3));
+        Vector3 startOffset, particleOffset;
+        startOffset.x = 0;
+        startOffset.y = 0;
+        startOffset.z = 0;
+        particleOffset.x = 0;
+        particleOffset.y = 0;
+        particleOffset.z = 0;
+        func_ov002_020c37a4(&particleOffset);
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
         r5 = (unsigned int)(anim.currFrame << 4) >> 0x10;
         if (r5 == 0x6d || r5 == 0x8d) {
