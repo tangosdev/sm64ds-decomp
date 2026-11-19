@@ -100,12 +100,7 @@ extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern int data_ov034_021138c4[];
 extern short data_ov034_02113820[];
 extern void **data_ov034_021138b0[];
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int data_ov034_02114488[];
-// local extern: no shared header declares Vec3_Add.
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int NormalizeVec3IfNonZero(Vector3 *v);
-extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern SharedFilePtr *data_ov034_02113838[];
 extern SharedFilePtr *data_ov034_0211384c[];
 extern void **data_ov034_02113874[];

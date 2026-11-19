@@ -103,7 +103,6 @@ extern const int data_ov063_0211e22c[16] = {
 extern const int data_ov063_0211e1ec[16] = {
     2, 2, 2, 0, 0, 3, 2, 0, 2, 2, 2, 0, 3, 3, 3, 3,
 };
-extern Matrix4x3 data_020a0e68;
 }
 void LoadKeyModels(int n);
 void UnloadKeyModels(int n);
@@ -158,7 +157,6 @@ extern const int data_ov063_0211e1d0[3] = {0x1000, 0xfa0, 0xee0};
 extern int gMusicVolume;
 extern u8 data_0209d660;
 extern short data_ov063_0211e7e0[];
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 void func_02012694(unsigned int a, const Vector3 *p);
 extern void func_020167a4(dExtAnmModel_c *model);

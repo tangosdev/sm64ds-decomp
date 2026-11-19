@@ -59,7 +59,6 @@ int SurfaceInfo_TestFlag0x20(int *);
 
 
 /* maths and the still-unnamed helpers */
-extern "C" void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 extern "C" int AngleDiff(int, int);
 extern "C" void Matrix4x3_FromTranslation(void *, int, int, int);
 extern "C" void Matrix4x3_FromRotationY(void *, int);

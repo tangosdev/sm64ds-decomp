@@ -119,6 +119,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -178,9 +179,6 @@ extern SharedFilePtr gPFlowerOpenModelFile;
 extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
 
-extern int RandomIntInternal(int *seed);
-extern u16 DecIfAbove0_Short(u16 *p);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
                                       void *clps);
 

@@ -331,7 +331,6 @@ extern CLPS_Block data_ov025_02112d48;
 
 /* ---- arm9 data ---- */
 extern dCamera_c *gCamera;
-extern Matrix4x3 data_020a0e68;
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
 extern "C" int AngleDiff(int a, int b);

@@ -104,6 +104,7 @@ enum d_a_obj_bc_switch_AssetId {
 #include "decl_common.h"
 #include "Event.h"
 #include "Sound.h"
+#include "math/CalcLib.h"
 
 /* File 1084 / 1085 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
@@ -124,7 +125,6 @@ extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
 
 /* arm9 / ov002 C helpers with no shared header. */
 extern "C" {
-extern u16 DecIfAbove0_Short(u16 *p);
 extern int func_ov002_020dd8b8(void *c);
 }
 extern u8 IsAreaShowing(s32 idx);

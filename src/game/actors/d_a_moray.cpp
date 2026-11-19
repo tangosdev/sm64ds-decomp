@@ -100,14 +100,10 @@ int SublevelToLevel(int sub);
    0x8c -> 0x9c. */
 /* Blend the posed bones by blendWeight. No named method. */
 void func_0204531c(ModelComponents *data, s32 weight);
-
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 }
 int IsStarCollected(int level, int star);
 void func_02012694(unsigned int id, const Vector3 *pos);
 void func_020167a4(dExtAnmModel_c *model);
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* Render's per-segment bend table, one 0xc record per body bone.
  * The six ROM records are {0, 0, scale} with scales 1,1,1,1,-1,0.

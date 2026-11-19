@@ -61,8 +61,6 @@ extern "C" {
 extern int func_ov002_020e10a8(void *);
 
 int *Vec3_LslInPlace(Vector3 *v, int shift);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 }
 
 /* dCc_c hitFlags bits this actor tests. 0x10 / 0x2000 / 0x4000 / 0x40000 /

@@ -37,10 +37,6 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-/* local extern: Vec3_Asr's definition takes a plain triple; no shared header
-   declares it yet. */
-extern "C" void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
-
 extern SharedFilePtr data_ov002_0210da58;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;

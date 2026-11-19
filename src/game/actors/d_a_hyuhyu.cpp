@@ -71,11 +71,6 @@ extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
 /* C helpers with no shared header. */
 
 void func_02012694(u32 id, const Vector3 *pos);
-extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
-extern "C" int RandomIntInternal(int *seed);
-s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern "C" int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
-extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the BMD, SharedFilePtr::

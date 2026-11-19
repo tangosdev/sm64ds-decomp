@@ -65,7 +65,6 @@ extern SwitchClsnFileHandle data_ov002_0210dfbc;
 extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
                                 s16 angle, void *clps);
 int func_02012310(int handle, int sound, short arg);
-unsigned char DecIfAbove0_Byte(unsigned char *value);
 }
 unsigned char IsAreaShowing(int area);
 void LoadSilverStarAndNumber();

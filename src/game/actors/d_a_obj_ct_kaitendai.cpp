@@ -49,6 +49,7 @@ enum daObjCtKaitendai_c_AssetId {
 #include "dBgW.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 
 struct CLPS_Block;
 
@@ -90,12 +91,6 @@ s16 data_ov065_0211d334[2] = {
     400,
 };
 extern KaitendaiResources data_ov065_0211d35c[];
-
-/* local extern: RandomIntInternal has no shared header, and its named parameter preserves
- * this TU's @NNN static-initializer aliases. */
-extern "C" {
-extern int RandomIntInternal(int *seed);
-}
 
 daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA06() {
     return new daObjCtKaitendai_c();

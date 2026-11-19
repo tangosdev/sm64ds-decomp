@@ -53,6 +53,7 @@ enum daObjBk_Lift_c_AssetId { ASSET_BK_LIFT01_BMD = 0x0599, ASSET_BK_LIFT01_KCL 
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* The constructors and destructors are the ROM resource-family veneers,
  * aliased in the manifest. */
@@ -84,10 +85,6 @@ extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
-extern "C" {
-u8 DecIfAbove0_Byte(u8 *p);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-}
 int IsStarCollectedInCurLevel(int starID);
 
 /* BK_LIFT01's registry factory. 0x394 is this class's size, and the calls the

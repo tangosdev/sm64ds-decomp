@@ -126,9 +126,6 @@ void OpenCannonInCurLevel(void);
 int ObjectMessageIDToActualMessageID(s16);
 int SublevelToLevel(int sublevel);
 
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalarInPlace(Vector3 *v, int s);
 int Math_Function_0203b14c(int *value, int target, int a, int b, int c);
 }
 int  IsStarCollected(int level, int star);

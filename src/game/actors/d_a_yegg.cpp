@@ -86,6 +86,9 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
+#include "math/CalcLib.h"
+#include "nitro/fx/fx_mtx43.h"
 
 struct dBgPi;
 
@@ -121,31 +124,16 @@ extern SharedFilePtr data_ov002_0210eb78;
 extern const s16 data_ov002_021000a8[];
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
    clash with these. */
-extern Matrix4x3 data_020a0e68;
 
 extern int func_02035638(dBgCh_Actr *clsn);
 extern char *data_ov002_021000a0[];
-extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 /* Was spelled `func_02123804`, a name no symbols.txt defines. ov002's relocs
    record the call at 0x020ec718 as `overlays(77,78,79,80)`: four same-base
    overlays each put a function at 0x02123804. The call is gated on actor
    types 0xa4 and 0xa5, BATAN and BATANKING, both daBtn_c in ov079, and
    ov079's function there is daBtn_c's hit reaction, which takes the body and
    the actor that hit it -- the call's (actor, egg). */
-extern int RandomIntInternal(int *seed);
-extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int Math_Function_0203b14c(void *ptr, int target, int rate, int limit, int step);
-extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 extern int func_ov002_020cf700(void *g);
 }
 

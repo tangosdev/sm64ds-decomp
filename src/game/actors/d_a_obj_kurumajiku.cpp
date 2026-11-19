@@ -17,6 +17,7 @@
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 typedef char AxleResources_size_must_be_0x0c[sizeof(daObjKurumajiku_c::Resources) == 0x0c ? 1 : -1];
 
@@ -28,11 +29,6 @@ Vector3 data_ov002_0210ddd0[4] = {
     Vector3(0x190000, 0, 0x12c000),
     Vector3(-0x190000, 0, 0x12c000),
 };
-
-/* local extern: no shared header declares this. */
-extern "C" {
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
 
 /* ROM ordinals 0 and 1 -- ov002 0x020b69e4 (D0, 0x58) and 0x020b6a3c (D1,
  * 0x44). No source here: both destructor variants come from the ONE

@@ -60,19 +60,11 @@
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 /* Real C++ names. Declared here, not via decl_common.h: that header's
  * other spellings of these symbols collide with this TU. */
 
-/* Shared ABI seams. Each is the most complete of the spellings the retired
- * one-function shards carried. */
-extern "C" {
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
-unsigned short DecIfAbove0_Short(unsigned short *timer);
-}
 extern "C" {
 
 /* arm9 statics this TU reads but does not own. */

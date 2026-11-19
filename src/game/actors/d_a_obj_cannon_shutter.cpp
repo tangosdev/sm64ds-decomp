@@ -37,11 +37,6 @@ enum d_a_obj_cannon_shutter_AssetId {
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
-extern "C" {
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-}
-
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 
