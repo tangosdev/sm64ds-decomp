@@ -2146,6 +2146,7 @@ src/SHA1Reset.c:
 src/DGT_SetOverlayTableMode.c:
     complete
     .text start:0x0205e904 end:0x0205e91c
+    .bss start:0x020a80c4 end:0x020a80c8
 
 src/CPi_RestoreContext.c:
     complete
