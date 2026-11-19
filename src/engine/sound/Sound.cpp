@@ -32,7 +32,7 @@ struct SndHeap;
 typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2);
 
 /* Foreign callees. */
-extern "C" int func_02051f1c(void *a, u32 b, int c);
+extern "C" int NNS_SndArcPlayerStartSeqArc(void *a, u32 b, int c);
 extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, int e, int f);
 extern "C" u32 NNS_SndHeapGetFreeSize(struct SndHeap *heap);
 extern "C" void NNS_SndHeapLoadState(struct SndHeap *heap, int level);
@@ -58,7 +58,7 @@ extern void func_02049cd8(void *a, int b, int mode);
 }
 
 extern "C" int func_02051918(unsigned int id, struct SndHeap *heap);
-extern "C" int func_02051fb4(void *g, unsigned int x);
+extern "C" int NNS_SndArcPlayerStartSeq(void *g, unsigned int x);
 extern "C" {
 
 extern void func_02049764(void);
@@ -873,12 +873,12 @@ int Player_PlaySoundEffect(NNSSndHandle *handle, int seqArcNo, int index) {
     if (gSoundInitialized == 0)
         return 1;
     if (seqArcNo != 3)
-        return func_02051f1c(handle, seqArcNo, index);
+        return NNS_SndArcPlayerStartSeqArc(handle, seqArcNo, index);
     return func_02051e60(handle, -1, sCurrentBank, -1, seqArcNo, index);
 }
 
 int func_02011dcc(NNSSndHandle *handle, int x) {
-    int r4 = func_02051fb4(handle, x);
+    int r4 = NNS_SndArcPlayerStartSeq(handle, x);
     if (r4 != 0 && handle == &sMusicHandle) {
         func_02049764();
         func_02013078();

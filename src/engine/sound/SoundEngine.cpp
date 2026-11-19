@@ -344,7 +344,7 @@ extern struct T data_020a5634;
 extern OSThread data_020a5684;
 extern struct Q data_020a5718[];
 extern char *sCurrent;
-extern NNSFndList data_020a5bbc;
+extern NNSFndList sFreeCommandList;
 extern NNSFndList data_020a5bc8;
 extern struct Obj_205212c data_020a5bd4[];
 extern void SND_Init(void);
@@ -480,9 +480,9 @@ extern void *NNS_SndHeapAlloc(struct SndHeap *heap, u32 size, SndHeapDisposeCall
 extern void NNS_SndHeapClear(struct SndHeap *heap);
 extern void NNS_SndHeapDestroy(struct SndHeap *heap);
 extern struct SndHeap *NNS_SndHeapCreate(u32 addr, u32 size);
-extern void func_020513a8(void *mem, u32 size, u32 arc, u32 fileId);
-extern void func_020513e4(void *mem, u32 size, u32 arc, u32 fileId);
-extern void func_02051420(void *mem, u32 size, u32 arc, u32 fileId);
+extern void WaveArcDisposeCallback(void *mem, u32 size, u32 arc, u32 fileId);
+extern void BankDisposeCallback(void *mem, u32 size, u32 arc, u32 fileId);
+extern void SeqDisposeCallback(void *mem, u32 size, u32 arc, u32 fileId);
 extern void func_02051454(void *mem, int arc, u32 fileId);
 extern void *func_020514b4(u32 fileId, struct SndHeap *heap);
 extern void *func_02051514(u32 fileId, struct SndHeap *heap);
@@ -504,10 +504,10 @@ extern int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int bankNo
 extern int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo, int playerPrio,
                          Sound::InfoSequenceEntry *info, int seqNo);
 extern int func_02051e60(NNSSndHandle *handle, int b, int c, int d, int arg5, int arg6);
-extern int func_02051f1c(void *a0, u32 a1, int a2);
-extern int func_02051fb4(void *thiz, unsigned int id);
+extern int NNS_SndArcPlayerStartSeqArc(void *a0, u32 a1, int a2);
+extern int NNS_SndArcPlayerStartSeq(void *thiz, unsigned int id);
 extern int func_02052008(struct SndHeap *heap);
-extern void func_020520a4(void *node);
+extern void FreeCommandBuffer(void *node);
 extern void func_020520dc(Obj_205212c *self);
 extern void func_0205212c(Obj_205212c *self);
 extern void func_02052208(Obj_205212c *stream);
@@ -651,7 +651,7 @@ extern "C" void func_0205212c(Obj_205212c *self) {
             (HeapAllocator_205212c *)NNS_FndGetNextListObject(&data_020a5bc8, node);
         if (node->owner_8 == self) {
             NNS_FndRemoveListObject(&data_020a5bc8, node);
-            func_020520a4(node);
+            FreeCommandBuffer(node);
         }
         node = next;
     }
@@ -674,11 +674,11 @@ extern "C" void func_020520dc(Obj_205212c *self) {
     func_02050008(self);
 }
 
-extern "C" void func_020520a4(void *node) {
+extern "C" void FreeCommandBuffer(void *node) {
     OSIntrMode state;
 
     state = OS_DisableInterrupts();
-    NNS_FndAppendListObject(&data_020a5bbc, node);
+    NNS_FndAppendListObject(&sFreeCommandList, node);
     OS_RestoreInterrupts(state);
 }
 
@@ -705,7 +705,7 @@ extern "C" int func_02052008(struct SndHeap *heap) {
     return 1;
 }
 
-extern "C" int func_02051fb4(void *handle, unsigned int seqNo) {
+extern "C" int NNS_SndArcPlayerStartSeq(void *handle, unsigned int seqNo) {
     Sound::InfoSequenceEntry *info = Sound::InfoSequenceEntry::GetWithID(seqNo);
     if (!info)
         return 0;
@@ -713,7 +713,7 @@ extern "C" int func_02051fb4(void *handle, unsigned int seqNo) {
                          info->playerPriority, info, seqNo);
 }
 
-extern "C" int func_02051f1c(void *handle, u32 seqArcNo, int index) {
+extern "C" int NNS_SndArcPlayerStartSeqArc(void *handle, u32 seqArcNo, int index) {
     struct SndArchiveInfo *info;
     struct ElemTable *arc;
     struct Elem *seq;
@@ -1053,7 +1053,7 @@ extern "C" void *func_02051634(u32 fileId, SndHeapDisposeCallback callback, u32 
 extern "C" void *func_020515d4(u32 fileId, struct SndHeap *heap) {
     void *data = NNS_SndArcGetFileAddress(fileId);
     if (data == 0) {
-        data = func_02051634(fileId, func_02051420, NNS_SndArcGetCurrent(), fileId, heap);
+        data = func_02051634(fileId, SeqDisposeCallback, NNS_SndArcGetCurrent(), fileId, heap);
         if (data != 0) {
             NNS_SndArcSetFileAddress(fileId, data);
         }
@@ -1064,7 +1064,7 @@ extern "C" void *func_020515d4(u32 fileId, struct SndHeap *heap) {
 extern "C" void *func_02051574(u32 fileId, struct SndHeap *heap) {
     void *data = NNS_SndArcGetFileAddress(fileId);
     if (data == 0) {
-        data = func_02051634(fileId, func_02051420, NNS_SndArcGetCurrent(), fileId, heap);
+        data = func_02051634(fileId, SeqDisposeCallback, NNS_SndArcGetCurrent(), fileId, heap);
         if (data != 0) {
             NNS_SndArcSetFileAddress(fileId, data);
         }
@@ -1075,7 +1075,7 @@ extern "C" void *func_02051574(u32 fileId, struct SndHeap *heap) {
 extern "C" void *func_02051514(u32 fileId, struct SndHeap *heap) {
     void *data = NNS_SndArcGetFileAddress(fileId);
     if (data == 0) {
-        data = func_02051634(fileId, func_020513e4, NNS_SndArcGetCurrent(), fileId, heap);
+        data = func_02051634(fileId, BankDisposeCallback, NNS_SndArcGetCurrent(), fileId, heap);
         if (data != 0) {
             NNS_SndArcSetFileAddress(fileId, data);
         }
@@ -1086,7 +1086,7 @@ extern "C" void *func_02051514(u32 fileId, struct SndHeap *heap) {
 extern "C" void *func_020514b4(u32 fileId, struct SndHeap *heap) {
     void *data = NNS_SndArcGetFileAddress(fileId);
     if (data == 0) {
-        data = func_02051634(fileId, func_020513a8, NNS_SndArcGetCurrent(), fileId, heap);
+        data = func_02051634(fileId, WaveArcDisposeCallback, NNS_SndArcGetCurrent(), fileId, heap);
         if (data != 0) {
             NNS_SndArcSetFileAddress(fileId, data);
         }
@@ -1106,18 +1106,18 @@ extern "C" void func_02051454(void *mem, int arc, u32 fileId) {
     OS_RestoreInterrupts(irq);
 }
 
-extern "C" void func_02051420(void *mem, u32 size, u32 arc, u32 fileId) {
+extern "C" void SeqDisposeCallback(void *mem, u32 size, u32 arc, u32 fileId) {
     func_02051454(mem, arc, fileId);
     SND_InvalidateSeqData(mem, (u8 *)mem + size);
 }
 
-extern "C" void func_020513e4(void *mem, u32 size, u32 arc, u32 fileId) {
+extern "C" void BankDisposeCallback(void *mem, u32 size, u32 arc, u32 fileId) {
     func_02051454(mem, arc, fileId);
     SND_InvalidateBankData(mem, (u8 *)mem + size);
     SND_DestroyBank((struct SNDBankData *)mem);
 }
 
-extern "C" void func_020513a8(void *mem, u32 size, u32 arc, u32 fileId) {
+extern "C" void WaveArcDisposeCallback(void *mem, u32 size, u32 arc, u32 fileId) {
     func_02051454(mem, arc, fileId);
     SND_InvalidateWaveData(mem, (u8 *)mem + size);
     SND_DestroyWaveArc((struct SNDWaveArc *)mem);

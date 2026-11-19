@@ -8,7 +8,7 @@ extern u16 data_020a4c48[];
    (data_020a4c5c, 0..0x7f000) of two track masks (data_020a4c48) for `mode`,
    and send each through NNS_SndPlayerSetTrackVolume; a track set to 0 also gets
    NNS_SndPlayerSetTrackMute(a, mask, 1). func_02011dcc calls it with sMusicTrackMode after
-   func_02051fb4 succeeds on the handle at sMusicHandle. func_020494cc sets
+   NNS_SndArcPlayerStartSeq succeeds on the handle at sMusicHandle. func_020494cc sets
    the matching targets and steps (data_020a4c54, data_020a4c4c). */
 void func_0204921c(NNSSndHandle *a, int mode) {
     int i;

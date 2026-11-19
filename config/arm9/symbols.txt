@@ -2139,9 +2139,9 @@ NNS_SndHeapAlloc kind:function(arm,size=0x70) addr:0x020511d4
 NNS_SndHeapClear kind:function(arm,size=0xac) addr:0x02051244
 NNS_SndHeapDestroy kind:function(arm,size=0x1c) addr:0x020512f0
 NNS_SndHeapCreate kind:function(arm,size=0x9c) addr:0x0205130c
-func_020513a8 kind:function(arm,size=0x3c) addr:0x020513a8
-func_020513e4 kind:function(arm,size=0x3c) addr:0x020513e4
-func_02051420 kind:function(arm,size=0x34) addr:0x02051420
+WaveArcDisposeCallback kind:function(arm,size=0x3c) addr:0x020513a8
+BankDisposeCallback kind:function(arm,size=0x3c) addr:0x020513e4
+SeqDisposeCallback kind:function(arm,size=0x34) addr:0x02051420
 func_02051454 kind:function(arm,size=0x60) addr:0x02051454
 func_020514b4 kind:function(arm,size=0x60) addr:0x020514b4
 func_02051514 kind:function(arm,size=0x60) addr:0x02051514
@@ -2160,10 +2160,10 @@ func_02051a88 kind:function(arm,size=0x10) addr:0x02051a88
 func_02051a98 kind:function(arm,size=0x138) addr:0x02051a98
 func_02051bd0 kind:function(arm,size=0x290) addr:0x02051bd0
 func_02051e60 kind:function(arm,size=0xbc) addr:0x02051e60
-func_02051f1c kind:function(arm,size=0x98) addr:0x02051f1c
-func_02051fb4 kind:function(arm,size=0x54) addr:0x02051fb4
+NNS_SndArcPlayerStartSeqArc kind:function(arm,size=0x98) addr:0x02051f1c
+NNS_SndArcPlayerStartSeq kind:function(arm,size=0x54) addr:0x02051fb4
 func_02052008 kind:function(arm,size=0x9c) addr:0x02052008
-func_020520a4 kind:function(arm,size=0x38) addr:0x020520a4
+FreeCommandBuffer kind:function(arm,size=0x38) addr:0x020520a4
 func_020520dc kind:function(arm,size=0x50) addr:0x020520dc
 func_0205212c kind:function(arm,size=0xdc) addr:0x0205212c
 func_02052208 kind:function(arm,size=0x2c) addr:0x02052208
@@ -5128,7 +5128,7 @@ data_020a5634 kind:bss addr:0x020a5634
 data_020a5684 kind:bss addr:0x020a5684
 data_020a5718 kind:bss addr:0x020a5718
 sCurrent kind:bss addr:0x020a5bb8
-data_020a5bbc kind:bss addr:0x020a5bbc
+sFreeCommandList kind:bss addr:0x020a5bbc
 data_020a5bc8 kind:bss addr:0x020a5bc8
 data_020a5bd4 kind:bss addr:0x020a5bd4
 sDispMode kind:bss addr:0x020a6084
