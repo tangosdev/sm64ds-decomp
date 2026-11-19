@@ -452,7 +452,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "func_020500a4",
+      "symbol": "AlarmCallback",
       "address": "0x020500a4",
       "legacy_source": "src/func_020500a4.c",
       "size": "0x00000114",

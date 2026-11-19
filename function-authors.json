@@ -8407,7 +8407,7 @@
     },
     "arm9:0x020500a4": {
       "author": "andrewboudreau",
-      "name": "func_020500a4"
+      "name": "AlarmCallback"
     },
     "arm9:0x020501b8": {
       "author": "tangosdev",

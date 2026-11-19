@@ -216,7 +216,7 @@ enum Fmt {
     FMT_B = 1
 };
 /* The capture stream at data_020a5634, started by NNSi_SndCaptureStart and
-   stopped by NNSi_SndCaptureStop. Its alarm, func_020500a4, hands each finished
+   stopped by NNSi_SndCaptureStop. Its alarm, AlarmCallback, hands each finished
    block to f30 (directly, or through the sound thread func_02050038). */
 struct T {
     /* 0x00 */ int f0; /* nonzero while running */
@@ -439,7 +439,7 @@ extern void func_0204ff9c(struct C *o);
 extern void func_0204ffcc(struct C *c);
 extern void func_02050008(struct C *o);
 extern void func_02050038(void *arg);
-extern void func_020500a4(void *arg);
+extern void AlarmCallback(void *arg);
 extern void NNSi_SndCaptureEndSleep(void);
 extern void NNSi_SndCaptureBeginSleep(void);
 extern void NNSi_SndCaptureStop(void);
@@ -1614,7 +1614,7 @@ extern "C" int NNSi_SndCaptureStart(int a, int b, int c, int d, int p5, int p6, 
         SND_SetupChannelPcm(3, fmt1, (void *)c, pp8 != 0 ? 1 : 2, 0, qlen, pp10, 0, align, p12);
         SND_SetupCapture(1, fmt2, (void *)c, qlen, pp8, p6, p7);
         if (handle >= 0) {
-            SND_SetupAlarm(handle, total + chunk, total, func_020500a4, g);
+            SND_SetupAlarm(handle, total + chunk, total, AlarmCallback, g);
         }
         if (a == 1) {
             SND_SetOutputSelector(3, 3, 1, 1);
@@ -1704,7 +1704,7 @@ extern "C" void NNSi_SndCaptureEndSleep(void) {
     }
 }
 
-extern "C" void func_020500a4(void *arg) {
+extern "C" void AlarmCallback(void *arg) {
     struct T *strm = (struct T *)arg;
     int quot = strm->f14 / strm->f2c;
     int prod = quot * strm->f18;

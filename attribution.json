@@ -9267,7 +9267,7 @@
     "src/engine/sound/SoundEngine.cpp#func_0204ffcc": "lplaat",
     "src/engine/sound/SoundEngine.cpp#func_02050008": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#func_02050038": "tangosdev",
-    "src/engine/sound/SoundEngine.cpp#func_020500a4": "andrewboudreau",
+    "src/engine/sound/SoundEngine.cpp#AlarmCallback": "andrewboudreau",
     "src/engine/sound/SoundEngine.cpp#NNSi_SndCaptureEndSleep": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#NNSi_SndCaptureBeginSleep": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#NNSi_SndCaptureStop": "tangosdev",
