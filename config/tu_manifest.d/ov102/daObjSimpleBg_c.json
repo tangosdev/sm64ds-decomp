@@ -29,6 +29,12 @@
       "end": "0x0214e0a4"
     },
     {
+      "name": ".data.simplebg",
+      "input_section": ".data",
+      "start": "0x0214e188",
+      "end": "0x0214e1d0"
+    },
+    {
       "name": ".bss",
       "start": "0x0214e6e0",
       "end": "0x0214e7d0"
@@ -120,7 +126,15 @@
       "ordinal": 11
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov102_0214e188",
+      "address": "0x0214e188",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "Six SimpleBgAssets rows in registry order: model, collision, CLPS."
+    }
+  ],
   "bss": [
     {
       "symbol": "gBkTowerCollisionFile",
@@ -499,6 +513,13 @@
           "section": ".ctor",
           "start": "0x0214e0a0",
           "end": "0x0214e0a4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.simplebg",
+          "start": "0x0214e188",
+          "end": "0x0214e1d0",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1403,6 +1424,186 @@
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214d714"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov019_02112c58",
+      "addend": 0,
+      "target_module": "overlays(9,10,19,22,24,25,27,35,36,45,56)",
+      "target_address": "0x02112c58"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMcHazadCollisionFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e728"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMcHazadModelFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e720"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov019_02112c18",
+      "addend": 0,
+      "target_module": "overlays(9,10,19,22,24,25,27,35,36,45,56)",
+      "target_address": "0x02112c18"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMcDodaiCollisionFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e708"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMcDodaiModelFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e730"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d814",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d814"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjDokanCollisionFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e6f8"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gdaObjSimpleBgObjDokanModelFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e718"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_021136f4",
+      "addend": 0,
+      "target_module": "overlays(9,14,15,18,22,24,25,26,27,29,32,36)",
+      "target_address": "0x021136f4"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkTowerCollisionFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e6e0"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e1a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkTowerModelFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e700"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e19c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113cec",
+      "addend": 0,
+      "target_module": "overlays(9,14,15,16,20,21,22,26,27,29,36)",
+      "target_address": "0x02113cec"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e198",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKiHasiraDaiCollisionFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e6f0"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e194",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKiHasiraDaiModelFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e6e8"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e190",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113ccc",
+      "addend": 0,
+      "target_module": "overlays(9,14,15,16,20,21,22,26,27,29,36)",
+      "target_address": "0x02113ccc"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e18c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKiIwaCollisionFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e738"
+    },
+    {
+      "section": ".data.simplebg",
+      "source": "0x0214e188",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKiIwaModelFile",
+      "addend": 0,
+      "target_module": "ov102",
+      "target_address": "0x0214e710"
     }
   ]
 }

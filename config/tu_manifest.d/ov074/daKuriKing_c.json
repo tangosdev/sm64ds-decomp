@@ -81,10 +81,28 @@
       }
     },
     {
+      "name": ".data.kuriScales",
+      "input_section": ".data",
+      "start": "0x02122e4c",
+      "end": "0x02122e5c"
+    },
+    {
+      "name": ".data.kuriTex",
+      "input_section": ".data",
+      "start": "0x02122e5c",
+      "end": "0x02122e78"
+    },
+    {
       "name": ".data.kuriMeta1",
       "input_section": ".data",
       "start": "0x02122e78",
       "end": "0x02122f34"
+    },
+    {
+      "name": ".data.kuriAnim",
+      "input_section": ".data",
+      "start": "0x02122f34",
+      "end": "0x02122fdc"
     }
   ],
   "functions": [
@@ -662,6 +680,20 @@
       "evidence": "Complete compiler-native object. Class spelling is RTTI-backed; typed profile fields follow framework consumers. Original identifiers and TU boundaries remain uncertain."
     },
     {
+      "symbol": "data_ov074_02122e4c",
+      "address": "0x02122e4c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Body scale table: four 20.12 scales walked largest-first during the defeat sequence."
+    },
+    {
+      "symbol": "data_ov074_02122e5c",
+      "address": "0x02122e5c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Seven BTA handles, one per body size, indexed by the texture-SRT pass."
+    },
+    {
       "symbol": "g_profile_KURIKING",
       "address": "0x02122e78",
       "size": "0x1c",
@@ -683,6 +715,13 @@
       "evidence": "Complete compiler-native object. Class spelling is RTTI-backed; typed profile fields follow framework consumers. Original identifiers and TU boundaries remain uncertain.",
       "emitted_storage_address": "0x02122eb0",
       "address_point_bias": 8
+    },
+    {
+      "symbol": "data_ov074_02122f34",
+      "address": "0x02122f34",
+      "size": "0xa8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Fourteen KuriKingAnimEntry records; the last is the null terminator."
     }
   ],
   "bss": [
@@ -2755,6 +2794,336 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.kuriTex",
+      "source": "0x02122e74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124ac",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124ac"
+    },
+    {
+      "section": ".data.kuriTex",
+      "source": "0x02122e70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02112434",
+      "addend": 0,
+      "target_module": "overlays(9,10,12,22,24,33,35,43,45,47,52,53,56,60)",
+      "target_address": "0x02112434"
+    },
+    {
+      "section": ".data.kuriTex",
+      "source": "0x02122e6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_02112464",
+      "addend": 0,
+      "target_module": "overlays(10,12,15,24,33,35,43,45,47,52,53,56)",
+      "target_address": "0x02112464"
+    },
+    {
+      "section": ".data.kuriTex",
+      "source": "0x02122e68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124c4",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124c4"
+    },
+    {
+      "section": ".data.kuriTex",
+      "source": "0x02122e64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_02112494",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x02112494"
+    },
+    {
+      "section": ".data.kuriTex",
+      "source": "0x02122e60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_0211244c",
+      "addend": 0,
+      "target_module": "overlays(9,10,12,24,32,33,35,36,43,47,52,53,56)",
+      "target_address": "0x0211244c"
+    },
+    {
+      "section": ".data.kuriTex",
+      "source": "0x02122e5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02112404",
+      "addend": 0,
+      "target_module": "overlays(9,10,12,24,33,35,43,47,52,53,56)",
+      "target_address": "0x02112404"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122fc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124ac",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124ac"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122fc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov074_02123030",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123030"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122fbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02112404",
+      "addend": 0,
+      "target_module": "overlays(9,10,12,24,33,35,43,47,52,53,56)",
+      "target_address": "0x02112404"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122fb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingSpawnAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123010"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122fb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124ac",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124ac"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122fac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122fe8"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122fa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124ac",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124ac"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122fa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122fe0"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124ac",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124ac"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123020"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124ac",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124ac"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov074_02123030",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123030"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124ac",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124ac"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingTurnAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123028"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02112434",
+      "addend": 0,
+      "target_module": "overlays(9,10,12,22,24,33,35,43,45,47,52,53,56,60)",
+      "target_address": "0x02112434"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingSerchWaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122ff8"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_021124c4",
+      "addend": 0,
+      "target_module": "overlays(10,12,24,26,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021124c4"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDownAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123048"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_02112464",
+      "addend": 0,
+      "target_module": "overlays(10,12,15,24,33,35,43,45,47,52,53,56)",
+      "target_address": "0x02112464"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDownStartAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02122ff0"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_0211244c",
+      "addend": 0,
+      "target_module": "overlays(9,10,12,24,32,33,35,36,43,47,52,53,56)",
+      "target_address": "0x0211244c"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDamageFAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123018"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_0211244c",
+      "addend": 0,
+      "target_module": "overlays(9,10,12,24,32,33,35,36,43,47,52,53,56)",
+      "target_address": "0x0211244c"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingDamageBAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123008"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02112404",
+      "addend": 0,
+      "target_module": "overlays(9,10,12,24,33,35,43,47,52,53,56)",
+      "target_address": "0x02112404"
+    },
+    {
+      "section": ".data.kuriAnim",
+      "source": "0x02122f34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKurikingAngerAnimationFile",
+      "addend": 0,
+      "target_module": "ov074",
+      "target_address": "0x02123038"
     }
   ],
   "undefined_symbol_aliases": [
@@ -2980,6 +3349,13 @@
       },
       "tuRanges": [
         {
+          "section": ".text",
+          "start": "0x0211f000",
+          "end": "0x0212290c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".rodata.kuriQ",
           "start": "0x0212290c",
           "end": "0x0212291c",
@@ -2990,27 +3366,6 @@
           "section": ".rodata.kuriD",
           "start": "0x0212291c",
           "end": "0x0212292c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.kuriId",
-          "start": "0x02122d80",
-          "end": "0x02122d84",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.kuriBone",
-          "start": "0x02122e24",
-          "end": "0x02122e30",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".text",
-          "start": "0x0211f000",
-          "end": "0x0212290c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -3036,6 +3391,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.kuriId",
+          "start": "0x02122d80",
+          "end": "0x02122d84",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data",
           "start": "0x02122d84",
           "end": "0x02122e24",
@@ -3043,10 +3405,11 @@
           "firstDiff": null
         },
         {
-          "section": ".bss",
-          "start": "0x02122fe0",
-          "end": "0x021231a0",
-          "comparison": "NOBITS -- symbol/module gates"
+          "section": ".data.kuriBone",
+          "start": "0x02122e24",
+          "end": "0x02122e30",
+          "differingBytes": 0,
+          "firstDiff": null
         },
         {
           "section": ".data.kuriMeta0",
@@ -3056,11 +3419,38 @@
           "firstDiff": null
         },
         {
+          "section": ".data.kuriScales",
+          "start": "0x02122e4c",
+          "end": "0x02122e5c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.kuriTex",
+          "start": "0x02122e5c",
+          "end": "0x02122e78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.kuriMeta1",
           "start": "0x02122e78",
           "end": "0x02122f34",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".data.kuriAnim",
+          "start": "0x02122f34",
+          "end": "0x02122fdc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02122fe0",
+          "end": "0x021231a0",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {

@@ -8,9 +8,11 @@
     .data          start:0x02122d84 end:0x02122e24 kind:data align:4
     .data.kuriBone start:0x02122e24 end:0x02122e30 kind:data align:4
     .data.kuriMeta0 start:0x02122e30 end:0x02122e4c kind:data align:4
-    .data.kuriMiddle start:0x02122e4c end:0x02122e78 kind:data align:4
+    .data.kuriScales start:0x02122e4c end:0x02122e5c kind:data align:4
+    .data.kuriTex start:0x02122e5c end:0x02122e78 kind:data align:4
     .data.kuriMeta1 start:0x02122e78 end:0x02122f34 kind:data align:4
-    .data.kuriTail start:0x02122f34 end:0x02122fe0 kind:data align:4
+    .data.kuriAnim start:0x02122f34 end:0x02122fdc kind:data align:4
+    .data.kuriTail start:0x02122fdc end:0x02122fe0 kind:data align:4
     .bss        start:0x02122fe0 end:0x021231a0 kind:bss align:32
 src/game/actors/d_a_kuri_king.cpp:
     complete
@@ -24,6 +26,9 @@ src/game/actors/d_a_kuri_king.cpp:
     .data start:0x02122d84 end:0x02122e24
     .data.kuriBone start:0x02122e24 end:0x02122e30
     .data.kuriMeta0 start:0x02122e30 end:0x02122e4c
+    .data.kuriScales start:0x02122e4c end:0x02122e5c
+    .data.kuriTex start:0x02122e5c end:0x02122e78
     .data.kuriMeta1 start:0x02122e78 end:0x02122f34
+    .data.kuriAnim start:0x02122f34 end:0x02122fdc
     .bss start:0x02122fe0 end:0x021231a0
 

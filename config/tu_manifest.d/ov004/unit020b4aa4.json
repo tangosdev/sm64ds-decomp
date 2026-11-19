@@ -48,7 +48,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x020bfa28",
+      "start": "0x020bf9e4",
       "end": "0x020bfd04"
     }
   ],
@@ -466,6 +466,125 @@
   ],
   "bss": [
     {
+      "symbol": "gMgCoinsStatus",
+      "address": "0x020bf9e4",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "coin sequence status"
+    },
+    {
+      "symbol": "sMgCoinsDelta",
+      "address": "0x020bf9e8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "count MgCoins_DrawDelta shows"
+    },
+    {
+      "symbol": "sMgCoinsBetPlaced",
+      "address": "0x020bf9ec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "set once by MgCoins_PlaceBet"
+    },
+    {
+      "symbol": "sMgCoinsSoundPending",
+      "address": "0x020bf9f0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "sequence sound still to play"
+    },
+    {
+      "symbol": "sMgCoinsLastLostAlt",
+      "address": "0x020bf9f4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "last alternate lost sprite"
+    },
+    {
+      "symbol": "sMgCoinsPayoutLeft",
+      "address": "0x020bf9f8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "payout sprites left to lay out"
+    },
+    {
+      "symbol": "sMgCoinsToStep",
+      "address": "0x020bf9fc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "sprites still to step"
+    },
+    {
+      "symbol": "sMgCoinsIndex",
+      "address": "0x020bfa00",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "sprite being stepped"
+    },
+    {
+      "symbol": "sMgCoinsWait",
+      "address": "0x020bfa04",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "frames until the next step"
+    },
+    {
+      "symbol": "sMgCoinsLastReturned",
+      "address": "0x020bfa08",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "last refunded sprite"
+    },
+    {
+      "symbol": "sMgCoinsLastSpent",
+      "address": "0x020bfa0c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "last spent sprite"
+    },
+    {
+      "symbol": "sMgCoinsLaunchPending",
+      "address": "0x020bfa10",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "quick-launch run pending"
+    },
+    {
+      "symbol": "sMgCoinsLastLost",
+      "address": "0x020bfa14",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "last lost sprite"
+    },
+    {
+      "symbol": "gMgCoinsInPlay",
+      "address": "0x020bfa18",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "sprites in play"
+    },
+    {
+      "symbol": "sMgCoinsSlowLaunches",
+      "address": "0x020bfa1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "slow quick-launch count"
+    },
+    {
+      "symbol": "sMgCoinsStep",
+      "address": "0x020bfa20",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "current step function, null when idle"
+    },
+    {
+      "symbol": "sMgCoinsDeltaShown",
+      "address": "0x020bfa24",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "nonzero while the delta is shown"
+    },
+    {
       "symbol": "data_ov004_020bfa28",
       "address": "0x020bfa28",
       "size": "0xc",
@@ -572,7 +691,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x020bfa28",
+          "start": "0x020bf9e4",
           "end": "0x020bfd04",
           "comparison": "NOBITS -- symbol/module gates"
         }

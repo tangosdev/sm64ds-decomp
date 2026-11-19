@@ -2,10 +2,13 @@
     .rodata     start:0x0214d70c end:0x0214d714 kind:rodata align:4
     .init       start:0x0214d714 end:0x0214e0a0 kind:code align:4
     .ctor       start:0x0214e0a0 end:0x0214e0b0 kind:rodata align:4
-    .data       start:0x0214e0c0 end:0x0214e6e0 kind:data align:32
+    .data.meta  start:0x0214e0c0 end:0x0214e188 kind:data align:32
+    .data.simplebg start:0x0214e188 end:0x0214e1d0 kind:data align:4
+    .data       start:0x0214e1d0 end:0x0214e6e0 kind:data align:4
     .bss        start:0x0214e6e0 end:0x0214eaa0 kind:bss align:32
 src/game/actors/d_a_obj_simple_bg.cpp:
     complete
+    .data.simplebg start:0x0214e188 end:0x0214e1d0
     .text start:0x02148a80 end:0x02148fbc
     .init start:0x0214d714 end:0x0214d908
     .ctor start:0x0214e0a0 end:0x0214e0a4
