@@ -364,7 +364,6 @@ extern void *func_0203564c(void *);
 extern void func_02035800();
 extern int func_02037e20(int*);
 extern int func_0203d024(struct Vector3 *, struct Vector3 *);
-extern int func_0203d434(int *);
 extern int func_0203d7b8(void);
 extern int func_0203d8fc(void);
 extern int func_0203da3c(void);
@@ -706,8 +705,6 @@ extern void func_0203ccd4(int *, short);
 extern void func_0203ce80(struct Vector3 *, struct Vector3 *);
 extern void func_0203cebc(struct Vector3 *, struct Vector3 *, struct Vector3 *, struct Vector3 *);
 extern void func_0203cf00(struct Vector3 *, struct Vector3 *, struct Vector3 *);
-extern void func_0203d388(int *, s16);
-extern void func_0203d630(int *, int);
 extern void func_0203d930(void);
 extern void func_0203dafc(int);
 /* 0x020440e8 is NOT `func_020440e8`. config/arm9/symbols.txt:1842 exports it as

@@ -55,6 +55,7 @@
 #include "nitro/mi/memory.h"
 #include "dScMgD3DBase_c.h"
 #include "Vector2.h"
+#include "Vector2Math.h"
 
 #pragma defer_codegen off
 
@@ -70,9 +71,9 @@
    bytes of sMgSparkleSprites, and every function and the link are
    unchanged. */
 struct MgFx {
-    s32 mPos[2];  /* 0x00 */
-    s32 mVecA[2]; /* 0x08 */
-    s32 mVecB[2]; /* 0x10 */
+    Vector2 mPos;  /* 0x00 */
+    Vector2 mVecA; /* 0x08 */
+    Vector2 mVecB; /* 0x10 */
     u8 pad_18[2];
     s16 mTimer;    /* 0x1a -- counts down to 0; 0 = free */
     s16 mDuration; /* 0x1c -- mTimer's starting value */
@@ -1145,7 +1146,7 @@ extern void Mg_RenderSpriteOnNoMtx(OamAttr *, int, int, int, int);
 void MgFx::DrawFlyTo() {
     int idx = s20adc80::GetGameLanguage();
     OamAttr **t = sMgSpriteTables[idx];
-    s20adc80::Mg_RenderSpriteOnNoMtx(t[2], mPos[0] >> 0xc, mPos[1] >> 0xc, -1, -1);
+    s20adc80::Mg_RenderSpriteOnNoMtx(t[2], mPos.x >> 0xc, mPos.y >> 0xc, -1, -1);
 }
 
 namespace s20adcc8 {
@@ -1181,8 +1182,8 @@ void MgFx::DrawSparkle() {
     }
     {
         int idx = mTimer & 0xf;
-        int x = mPos[0] >> 0xc;
-        int y = mPos[1] >> 0xc;
+        int x = mPos.x >> 0xc;
+        int y = mPos.y >> 0xc;
         s20adcc8::Mg_RenderSpriteOnNoMtx(sMgSparkleSprites[idx], x, y, -1, -1);
     }
 }
@@ -1220,14 +1221,14 @@ void MgFx::UpdateFlyTo() {
         int c3 = mDuration;
         int c2 = mTimer;
         int t = FX_Div((c3 - c2) << 0xc, c3 << 0xc);
-        int v8 = mVecA[0];
-        int v10 = mVecB[0];
+        int v8 = mVecA.x;
+        int v10 = mVecB.x;
         long long m1 = inline_fn(v8) * inline_fn(s);
         long long m2 = inline_fn(v10) * inline_fn(t);
         long long m3 = inline_fn(s) * inline_fn(s);
-        long long m4 = inline_fn((int)((m3 + 0x800) >> 0xc)) * inline_fn(mVecA[1] - mVecB[1]);
-        mPos[0] = ((int)((m1 + 0x800) >> 0xc)) + ((int)((m2 + 0x800) >> 0xc));
-        mPos[1] = mVecB[1] + ((int)((m4 + 0x800) >> 0xc));
+        long long m4 = inline_fn((int)((m3 + 0x800) >> 0xc)) * inline_fn(mVecA.y - mVecB.y);
+        mPos.x = ((int)((m1 + 0x800) >> 0xc)) + ((int)((m2 + 0x800) >> 0xc));
+        mPos.y = mVecB.y + ((int)((m4 + 0x800) >> 0xc));
     }
 }
 
@@ -1235,11 +1236,11 @@ void MgFx::UpdateFlyTo() {
    0xff8, then adds mVecB into mVecA and mVecA into mPos. */
 void MgFx::UpdateDrift() {
     ApproachLinear2(mTimer, 0, 1);
-    func_0203d630(mVecA, 0xff8);
-    mVecA[0] += mVecB[0];
-    mVecA[1] += mVecB[1];
-    mPos[0] += mVecA[0];
-    mPos[1] += mVecA[1];
+    func_0203d630(&mVecA, 0xff8);
+    mVecA.x += mVecB.x;
+    mVecA.y += mVecB.y;
+    mPos.x += mVecA.x;
+    mPos.y += mVecA.y;
 }
 
 namespace s20adf2c {
@@ -1259,15 +1260,15 @@ void Mg_InitFx(MgFx *e, short state, short timer, Vector2 *pos, Vector2 *vecA, V
     e->mState = state;
     e->mTimer = timer;
     e->mDuration = e->mTimer;
-    e->mPos[0] = pos->x;
-    e->mPos[1] = pos->y;
+    e->mPos.x = pos->x;
+    e->mPos.y = pos->y;
     if (vecA) {
-        e->mVecA[0] = vecA->x;
-        e->mVecA[1] = vecA->y;
+        e->mVecA.x = vecA->x;
+        e->mVecA.y = vecA->y;
     }
     if (vecB) {
-        e->mVecB[0] = vecB->x;
-        e->mVecB[1] = vecB->y;
+        e->mVecB.x = vecB->x;
+        e->mVecB.y = vecB->y;
     }
 }
 }

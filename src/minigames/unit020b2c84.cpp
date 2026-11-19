@@ -143,7 +143,6 @@ int GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(void *src, void *dst, int add);
-void func_0203d388(int *p, s16 angle);
 void Mg_SpawnFx(short state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
@@ -1496,8 +1495,8 @@ void MgBanner::StartWaveBurst() {
 
     for (i = 0; i < 32; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
-        func_0203d388((int *)&burstVel, 0x800);
-        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d388(&burstVel, 0x800);
+        func_0203d388(&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
         Mg_SpawnFx(0, RAND_FX_SCALE(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxGravity);
@@ -1858,8 +1857,8 @@ void MgBanner::SetupZoomBurst() {
 
     for (i = 0; i < 32; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
-        func_0203d388((int *)&burstVel, 0x800);
-        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d388(&burstVel, 0x800);
+        func_0203d388(&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
         Mg_SpawnFx(0, RAND_FX_SCALE(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxGravity);

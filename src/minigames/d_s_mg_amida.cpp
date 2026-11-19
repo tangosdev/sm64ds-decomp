@@ -1795,7 +1795,7 @@ s32 dScMgAmida_c::Render() {
             for (piece = 0; piece < 128; piece++) {
                 if (mPieces[piece].active != 0) {
                     Mg_RenderSpriteBoth(sAmidaPieceSprites[mPieces[piece].timer / 4],
-                                        mPieces[piece].posX >> 12, mPieces[piece].posY >> 12, -1,
+                                        mPieces[piece].pos.x >> 12, mPieces[piece].pos.y >> 12, -1,
                                         0);
                 }
             }
@@ -1944,12 +1944,16 @@ s32 dScMgAmida_c::Behavior() {
 
         for (piece = 0; piece < 128; piece++) {
             if (mPieces[piece].active != 0) {
-                mPieces[piece].posX += mPieces[piece].velX;
-                mPieces[piece].posY += mPieces[piece].velY;
-                speed = Vec2_Len((const Vector2 *)&mPieces[piece].velX);
+                mPieces[piece].pos.x += mPieces[piece].vel.x;
+                mPieces[piece].pos.y += mPieces[piece].vel.y;
+                /* The explicit const conversion is load-bearing: left
+                   implicit, mwcc strength-reduces &mPieces[piece].vel into a
+                   second induction register for this call and Behavior
+                   grows from 0x774 to 0x77c (measured 2026-11-19). */
+                speed = Vec2_Len((const Vector2 *)&mPieces[piece].vel);
                 speed = speed * 7 / 8;
-                if (func_0203d434(&mPieces[piece].velX) != 0)
-                    func_0203d630(&mPieces[piece].velX, speed);
+                if (func_0203d434(&mPieces[piece].vel) != 0)
+                    func_0203d630(&mPieces[piece].vel, speed);
                 mPieces[piece].timer += 1;
                 if (mPieces[piece].timer >= 16)
                     mPieces[piece].active = 0;
@@ -1969,20 +1973,20 @@ s32 dScMgAmida_c::Behavior() {
                         idxA = (int)((randAngle15 << 17) >> 16) >> 4;
                         cosA = FX_CosIdx(idxA);
                         {
-                            mPieces[slot].posX = FX_MUL(cosB, FX_MUL(0x8000, cosA));
+                            mPieces[slot].pos.x = FX_MUL(cosB, FX_MUL(0x8000, cosA));
                             sinA = FX_SinIdx(idxA);
-                            mPieces[slot].posY = FX_MUL(cosB, FX_MUL(0x8000, sinA));
-                            mPieces[slot].posX += mLanePos[j].x;
-                            mPieces[slot].posY += mLanePos[j].y;
+                            mPieces[slot].pos.y = FX_MUL(cosB, FX_MUL(0x8000, sinA));
+                            mPieces[slot].pos.x += mLanePos[j].x;
+                            mPieces[slot].pos.y += mLanePos[j].y;
                             /* (int)cosA: without the cast, or with cosA
                                declared int, Behavior differs by 13 words.
                                Kept (#821 r81): re-measured, the plain cosA
                                still differs; cosA is a local, so no accessor
                                or block-copy lever applies. */
-                            mPieces[slot].velX = FX_MUL(cosB, FX_MUL(0x1000, (int)cosA));
-                            mPieces[slot].velY = FX_MUL(cosB, FX_MUL(0x1000, sinA));
+                            mPieces[slot].vel.x = FX_MUL(cosB, FX_MUL(0x1000, (int)cosA));
+                            mPieces[slot].vel.y = FX_MUL(cosB, FX_MUL(0x1000, sinA));
                         }
-                        mPieces[slot].velY -= 0x400;
+                        mPieces[slot].vel.y -= 0x400;
                         mPieces[slot].active = 1;
                         mPieces[slot].timer = 0;
                         break;

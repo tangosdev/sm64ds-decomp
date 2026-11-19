@@ -1712,7 +1712,7 @@ void TrmpLine::CreateStartLineT1() {
  * address (0 when none is free).
  *
  * Shape notes: the midpoint pair needs named x<<12 / y<<12 temps so the
- * y shift lands in place; the re-scale block reads direction[1] inline
+ * y shift lands in place; the re-scale block reads direction.y inline
  * at both the multiply and the two-word copy into scaledDirection
  * (a named copy of it takes r4 ahead of the umull low word).
  */
@@ -1720,7 +1720,7 @@ void TrmpLine::CreateStartLineT1() {
 int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
     s16 deltaPixels[2];
     int delta[2];
-    int direction[2];
+    Vector2 direction;
     int midpoint[2];
     int scaledDirection[2];
     int adjustedStart[2];
@@ -1761,8 +1761,8 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
     deltaY = deltaPixels[1];
     delta[0] = deltaX << 12;
     delta[1] = deltaY << 12;
-    direction[0] = (deltaX >> 1) << 12;
-    direction[1] = (deltaY >> 1) << 12;
+    direction.x = (deltaX >> 1) << 12;
+    direction.y = (deltaY >> 1) << 12;
 
     {
         int ay = startPoint[1];
@@ -1777,11 +1777,11 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
         midpoint[1] = y12;
     }
 
-    if (func_0203d434(direction) == 0)
+    if (func_0203d434(&direction) == 0)
         return 0;
 
     {
-        int absoluteDirectionX = direction[0];
+        int absoluteDirectionX = direction.x;
         if (absoluteDirectionX < 0)
             absoluteDirectionX = -absoluteDirectionX;
         if (absoluteDirectionX < 1401)
@@ -1789,16 +1789,16 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
     }
 
     if (Vec2_Len((const Vector2 *)delta) < 0x30000) {
-        weightedYProduct = (long long)direction[1] * 0xc00 + 0x800;
+        weightedYProduct = (long long)direction.y * 0xc00 + 0x800;
         weightedY = (int)(weightedYProduct >> 12);
-        scaledDirection[0] = direction[0];
-        scaledDirection[1] = direction[1];
+        scaledDirection[0] = direction.x;
+        scaledDirection[1] = direction.y;
         scaledDirection[1] = weightedY;
         scaledDirectionLength = Vec2_Len((const Vector2 *)scaledDirection);
-        func_0203d630(direction, FX_Div(0x18000, scaledDirectionLength));
+        func_0203d630(&direction, FX_Div(0x18000, scaledDirectionLength));
 
-        func_0203d704(adjustedStart, midpoint, direction);
-        Vec2_Sub(adjustedEnd, midpoint, direction);
+        func_0203d704(adjustedStart, midpoint, &direction.x);
+        Vec2_Sub(adjustedEnd, midpoint, &direction.x);
 
         startPoint[0] = (s16)(adjustedStart[0] >> 12);
         startPoint[1] = (s16)(adjustedStart[1] >> 12);
