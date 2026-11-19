@@ -700,7 +700,7 @@ extern void func_0203cd80(int *, short);
 extern void func_0203ccd4(int *, short);
 extern void func_0203ce80(struct Vector3 *, struct Vector3 *);
 extern void func_0203cebc(struct Vector3 *, struct Vector3 *, struct Vector3 *, struct Vector3 *);
-extern void func_0203cf00(struct Vector3 *, struct Vector3 *, struct Vector3 *);
+extern void Vec3_Cross(struct Vector3 *, struct Vector3 *, struct Vector3 *);
 extern void func_0203d388(int *, s16);
 extern void func_0203d630(int *, int);
 extern void func_0203d930(void);

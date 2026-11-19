@@ -233,7 +233,7 @@ void TrmpItem::MotionSpinHover() {
     struct Vector3 tangentCopy;
     func_0203cc28((int *)&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
-    func_0203cf00(&tangent, &mForward, &sUnitZ);
+    Vec3_Cross(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
     mSide.y = tangent.y;
     mSide.z = tangent.z;
@@ -257,7 +257,7 @@ void TrmpItem::MotionSpinDrift() {
 
     func_0203cc28((int *)&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
-    func_0203cf00(&tangent, &mForward, &sUnitZ);
+    Vec3_Cross(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
     mSide.y = tangent.y;
     mSide.z = tangent.z;
@@ -280,7 +280,7 @@ void TrmpItem::MotionSpinSway() {
     struct Vector3 tangentCopy;
     func_0203cc28((int *)&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
-    func_0203cf00(&tangent, &mForward, &sUnitZ);
+    Vec3_Cross(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
     mSide.y = tangent.y;
     mSide.z = tangent.z;
@@ -340,7 +340,7 @@ void TrmpItem::MotionSpin() {
 
     func_0203cc28((int *)&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
-    func_0203cf00(&tangent, &mForward, &sUnitZ);
+    Vec3_Cross(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
     mSide.y = tangent.y;
     mSide.z = tangent.z;
@@ -1456,7 +1456,7 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     zAxis.x = 0;
     zAxis.y = 0;
     zAxis.z = 0x1000;
-    func_0203cf00(&lineNormal, &mAxis, &zAxis);
+    Vec3_Cross(&lineNormal, &mAxis, &zAxis);
     mNormal.x = lineNormal.x;
     mNormal.y = lineNormal.y;
     mNormal.z = lineNormal.z;

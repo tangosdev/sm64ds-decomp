@@ -1919,8 +1919,8 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
 
     Vec3_Sub(&toPos, &lookAt, &node0);
     Vec3_Sub(&toTarget, &pos, &node0);
-    func_0203cf00(&cross1, &toPos, &dir);
-    func_0203cf00(&side, &dir, &cross1);
+    Vec3_Cross(&cross1, &toPos, &dir);
+    Vec3_Cross(&side, &dir, &cross1);
     NormalizeVec3IfNonZero(&side);
 
     projSide = VEC_DotProduct(&toPos, &side);

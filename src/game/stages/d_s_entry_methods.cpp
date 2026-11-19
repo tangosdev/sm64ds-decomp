@@ -148,7 +148,7 @@ extern unsigned char EntryCourseLoadStarted;
 void func_0202deac(int level);
 extern "C" void func_0203d918();
 extern u8 data_0208a0e0;
-extern "C" u8 func_020202dc(void);
+extern "C" u8 GetParentCourseIndex(void);
 extern "C" u8 func_020200b8(void);
 extern "C" void func_02020078(u32 flags);
 extern "C" void func_0202029c(u32 idx);
@@ -224,8 +224,8 @@ void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
 extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 starID, u32 loadMode);
 extern u8 data_02092778;
-extern "C" u8 func_02020364(int player);
-extern "C" u8 func_020201f0(int);
+extern "C" u8 IsPlayerReady(int player);
+extern "C" u8 IsPlayerReadyForRematch(int);
 
 extern dScEntry_c::StepSet data_ov075_0211d7e0;
 extern dScEntry_c::StepSet data_ov075_0211d810;
@@ -521,7 +521,7 @@ int dScEntry_c::ArePlayersReadyForRematch() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209fc5c[i]) {
-            int r = func_020201f0(i);
+            int r = IsPlayerReadyForRematch(i);
             if (!r)
                 return 0;
         }
@@ -534,7 +534,7 @@ int dScEntry_c::ArePlayersReady() {
     u8 *active = data_0209fc5c;
     for (;;) {
         if (*active != 0) {
-            int ready = func_02020364(player);
+            int ready = IsPlayerReady(player);
             if (ready == 0)
                 return 0;
         }
@@ -1370,8 +1370,8 @@ void dScEntry_c::RenderCourseSelectTitle() {
 }
 
 void dScEntry_c::UpdateCourseSelect() {
-    if (func_0203d974() && func_020202dc() != data_0209b2e4) {
-        data_0209b2e4 = func_020202dc();
+    if (func_0203d974() && GetParentCourseIndex() != data_0209b2e4) {
+        data_0209b2e4 = GetParentCourseIndex();
     }
     if (func_02020168()) {
         u8 action;

@@ -3475,7 +3475,7 @@
     },
     "arm9:0x020201f0": {
       "author": "tangosdev",
-      "name": "func_020201f0"
+      "name": "IsPlayerReadyForRematch"
     },
     "arm9:0x02020214": {
       "author": "tangosdev",
@@ -3495,7 +3495,7 @@
     },
     "arm9:0x020202dc": {
       "author": "tangosdev",
-      "name": "func_020202dc"
+      "name": "GetParentCourseIndex"
     },
     "arm9:0x02020304": {
       "author": "tangosdev",
@@ -3507,7 +3507,7 @@
     },
     "arm9:0x02020364": {
       "author": "tangosdev",
-      "name": "func_02020364"
+      "name": "IsPlayerReady"
     },
     "arm9:0x02020388": {
       "author": "tangosdev",
@@ -6555,7 +6555,7 @@
     },
     "arm9:0x0203cf00": {
       "author": "tangosdev",
-      "name": "func_0203cf00"
+      "name": "Vec3_Cross"
     },
     "arm9:0x0203cf40": {
       "author": "tangosdev",
