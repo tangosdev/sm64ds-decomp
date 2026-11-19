@@ -4,7 +4,8 @@
     .ctor       start:0x0211e6fc end:0x0211e70c kind:rodata align:4
     .data       start:0x0211e720 end:0x0211e9e8 kind:data align:32
     .data.trap  start:0x0211e9e8 end:0x0211ea10 kind:data align:4
-    .data.tail  start:0x0211ea10 end:0x0211ebf8 kind:data align:4
+    .data.tail  start:0x0211ea10 end:0x0211ebd8 kind:data align:4
+    .data.thclps2 start:0x0211ebd8 end:0x0211ebf8 kind:data align:4
     .data.clps0 start:0x0211ebf8 end:0x0211ec18 kind:data align:4
     .data.clps1 start:0x0211ec18 end:0x0211ec38 kind:data align:4
     .data.mid   start:0x0211ec38 end:0x0211ec58 kind:data align:4
@@ -15,6 +16,7 @@
     .bss        start:0x0211edc0 end:0x0211efe0 kind:bss align:32
 src/game/actors/d_a_trs.cpp:
     complete
+    .data start:0x0211e7e0 end:0x0211e828
     .text start:0x02115ee0 end:0x0211c600
     .init start:0x0211e29c end:0x0211e3cc
     .ctor start:0x0211e6fc end:0x0211e700
@@ -29,6 +31,7 @@ src/game/actors/d_a_trs_trap.cpp:
     .ctor start:0x0211e700 end:0x0211e704
     .data start:0x0211e9ac end:0x0211e9cc
     .data.trap start:0x0211e9e8 end:0x0211ea10
+    .data.mid start:0x0211ec38 end:0x0211ec58
     .data.clps0 start:0x0211ebf8 end:0x0211ec18
     .data.clps1 start:0x0211ec18 end:0x0211ec38
     .data.clps2 start:0x0211ec58 end:0x0211ec78
@@ -42,6 +45,7 @@ src/game/actors/d_a_trs_trap_classinits.cpp:
 src/game/actors/d_a_obj_th_fall_block.cpp:
     complete
     .data.tail start:0x0211eb10 end:0x0211eb1c
+    .data.thclps2 start:0x0211ebd8 end:0x0211ebf8
     .data.thclps start:0x0211ec98 end:0x0211ecb8
     .text start:0x0211d3a0 end:0x0211d4b8
     .init start:0x0211e590 end:0x0211e5fc
@@ -54,4 +58,4 @@ src/game/actors/d_a_piano.cpp:
     .init start:0x0211e5fc end:0x0211e6fc
     .ctor start:0x0211e708 end:0x0211e70c
     .data.piano start:0x0211ecb8 end:0x0211ecf8
-    .bss start:0x0211ef80 end:0x0211efdc
+    .bss start:0x0211ef80 end:0x0211efe0

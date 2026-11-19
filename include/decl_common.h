@@ -919,7 +919,6 @@ extern void*data_ov065_0211cfd8[];
 extern void*data_ov065_0211d768[];
 extern void*data_ov065_0211d770[];
 extern float data_ov074_02122e4c[];
-extern void*data_ov074_02122e5c[];
 extern void*data_ov074_02123030;
 extern void *sEntryGraphCallback;
 extern void*data_ov079_02127600[];

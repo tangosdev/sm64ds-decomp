@@ -60,7 +60,8 @@
     .data.menutbl start:0x020bbf94 end:0x020bc034 kind:data align:4
     .data.gap24 start:0x020bc034 end:0x020bc070 kind:data align:4
     .data.scenekind start:0x020bc070 end:0x020bc0b8 kind:data align:4
-    .data.gap25 start:0x020bc0b8 end:0x020bc154 kind:data align:4
+    .data.gap25 start:0x020bc0b8 end:0x020bc150 kind:data align:4
+    .data.bannerArmed start:0x020bc150 end:0x020bc154 kind:data align:4
     .data start:0x020bc154 end:0x020bc828 kind:data align:4
     .data.coinspr start:0x020bc828 end:0x020bc850 kind:data align:4
     .data.layout start:0x020bc850 end:0x020bc8bc kind:data align:4
@@ -92,7 +93,8 @@ src/minigames/d_s_mg_base.cpp:
     .data.menuScreenGerman start:0x020be34c end:0x020be9ec
     .data.sparkleSprites start:0x020be9ec end:0x020bea14
     .data.menuplt start:0x020bea14 end:0x020beb48
-    .bss start:0x020beb74 end:0x020bf3e8
+    .data.bannerArmed start:0x020bc150 end:0x020bc154
+    .bss start:0x020beb60 end:0x020bf3ec
 
 src/minigames/unit020b2c84.cpp:
     complete
@@ -163,7 +165,7 @@ src/minigames/unit020b4aa4.cpp:
     .ctor start:0x020b9dec end:0x020b9df0
     .data start:0x020bc7d0 end:0x020bc828
     .data.coinspr start:0x020bc828 end:0x020bc850
-    .bss start:0x020bfa28 end:0x020bfd04
+    .bss start:0x020bf9e4 end:0x020bfd04
 
 src/minigames/d_mg_state.cpp:
     complete

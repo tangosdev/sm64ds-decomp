@@ -127,9 +127,9 @@ g_profile_BK_TOWER kind:data(any) addr:0x0214e118
 g_profile_DOKAN kind:data(any) addr:0x0214e134
 g_profile_MC_DODAI kind:data(any) addr:0x0214e150
 g_profile_MC_HAZAD kind:data(any) addr:0x0214e16c
-data_ov102_0214e188 kind:data(any) addr:0x0214e188
-data_ov102_0214e18c kind:data(any) addr:0x0214e18c
-data_ov102_0214e190 kind:data(any) addr:0x0214e190
+data_ov102_0214e188 kind:data(byte[72]) addr:0x0214e188
+data_ov102_0214e18c kind:data(byte[0]) addr:0x0214e18c
+data_ov102_0214e190 kind:data(byte[0]) addr:0x0214e190
 _ZTV15daObjSimpleBg_c kind:data(any) addr:0x0214e1d8
 data_ov102_0214e258 kind:data(any) addr:0x0214e258 local
 data_ov102_0214e260 kind:data(any) addr:0x0214e260 local

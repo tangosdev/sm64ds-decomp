@@ -1,7 +1,11 @@
     .text       start:0x02123740 end:0x0212766c kind:code align:32
     .rodata      start:0x0212766c end:0x02127714 kind:rodata align:4
-    .rodata.rows start:0x02127714 end:0x02127834 kind:rodata align:4
-    .rodata.pic start:0x02127834 end:0x021278c0 kind:rodata align:4
+    .rodata.rows start:0x02127714 end:0x0212771c kind:rodata align:4
+    .rodata.gateMtx start:0x0212771c end:0x0212775c kind:rodata align:4
+    .rodata.gateFiles start:0x0212775c end:0x021277a8 kind:rodata align:4
+    .rodata.gateWaves start:0x021277a8 end:0x02127834 kind:rodata align:4
+    .rodata.pic start:0x02127834 end:0x02127848 kind:rodata align:4
+    .rodata.picWaves start:0x02127848 end:0x021278c0 kind:rodata align:4
     .init       start:0x021278c0 end:0x02127f60 kind:code align:4
     .ctor       start:0x02127f60 end:0x02127f6c kind:rodata align:4
     .data       start:0x02127f80 end:0x021283c0 kind:data align:32
@@ -31,11 +35,15 @@ src/game/actors/d_a_pic_gate_methods.cpp:
     complete
     .text start:0x021264ec end:0x02126fbc
     .rodata.rows start:0x02127714 end:0x0212771c
+    .rodata.gateMtx start:0x0212771c end:0x0212775c
+    .rodata.gateFiles start:0x0212775c end:0x021277a8
+    .rodata.gateWaves start:0x021277a8 end:0x02127834
     .rodata.pic start:0x02127834 end:0x02127848
+    .rodata.picWaves start:0x02127848 end:0x021278c0
     .init start:0x02127b2c end:0x02127f60
     .ctor start:0x02127f68 end:0x02127f6c
     .data start:0x02128214 end:0x02128274
-    .bss start:0x021284ac end:0x02128688
+    .bss start:0x021284ac end:0x02128860
 
 src/game/actors/d_a_obj_maruta.cpp:
     complete
