@@ -599,7 +599,8 @@ int daObjBlockS_c::func_ov098_02138bfc()
 {
     dBgPi *r;
     dActor_c *a;
-    if (!func_02035638(&mWithMeshClsn)) return 0;
+    if (!func_02035638(&mWithMeshClsn))
+        return 0;
     r = mWithMeshClsn.GetSphereResult();
     if (r->GetClsnID() == -1)
         return 0;

@@ -9,8 +9,7 @@ extern int data_0208ee44;
  * frameDuration, step to the next frame (func_0202044c); past the last one,
  * restart (func_0202043c) -- forever with loops 0, otherwise until loops
  * counts down to 1, where it stops. */
-void func_02020768(struct OamAnimation *anim)
-{
+void func_02020768(struct OamAnimation *anim) {
     if (anim->enabled == 0)
         return;
 

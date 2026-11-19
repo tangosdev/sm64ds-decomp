@@ -77,8 +77,7 @@ void PathPtr::SetNodeTable(void *nodes)
     PATH_NODES = (Vector3_16 *)nodes;
 }
 
-Vector3_16 *PathPtr::GetNodeTable()
-{
+Vector3_16 *PathPtr::GetNodeTable() {
     return PATH_NODES;
 }
 
