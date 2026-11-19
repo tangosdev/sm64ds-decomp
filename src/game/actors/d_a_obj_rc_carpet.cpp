@@ -76,6 +76,14 @@ CLPS_Block data_ov036_02112b28 = {
     {0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
 
+/* Same single-entry floor block at 0x02112ba8. No ov036 instruction
+   relocates to it; the symbol is the retail label. */
+CLPS_Block data_ov036_02112ba8 = {
+    0x53504c43,
+    0x00010008,
+    {0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+
 /* Retail resource-pointer table at ov036:0x02113f58. */
 FlyingCarpetResources data_ov036_02113f58 = {&gRcCarpetModelFile, &gRcCarpetCollisionFile,
                                              &data_ov036_02112b28};

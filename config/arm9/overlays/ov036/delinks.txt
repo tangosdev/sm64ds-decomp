@@ -3,14 +3,14 @@
     .ctor       start:0x021129dc end:0x021129f8 kind:rodata align:4
     .data.gap0 start:0x02112a00 end:0x02112a88 kind:data align:32
     .data.data_ov036_02112a88 start:0x02112a88 end:0x02112aa8 kind:data align:4
-    .data.gap1 start:0x02112aa8 end:0x02112ae8 kind:data align:4
+    .data.data_ov036_02112aa8 start:0x02112aa8 end:0x02112ae8 kind:data align:4
     .data.data_ov036_02112ae8 start:0x02112ae8 end:0x02112b08 kind:data align:4
     .data.gap2 start:0x02112b08 end:0x02112b28 kind:data align:4
     .data.data_ov036_02112b28 start:0x02112b28 end:0x02112b48 kind:data align:4
     .data.data_ov036_02112b48 start:0x02112b48 end:0x02112b68 kind:data align:4
     .data.data_ov036_02112b68 start:0x02112b68 end:0x02112b88 kind:data align:4
     .data.data_ov036_02112b88 start:0x02112b88 end:0x02112ba8 kind:data align:4
-    .data.gap3 start:0x02112ba8 end:0x02112bc8 kind:data align:4
+    .data.data_ov036_02112ba8 start:0x02112ba8 end:0x02112bc8 kind:data align:4
     .data.data_ov036_02112bc8 start:0x02112bc8 end:0x02112be8 kind:data align:4
     .data.data_ov036_02112be8 start:0x02112be8 end:0x02112c08 kind:data align:4
     .data.data_ov036_02112c08 start:0x02112c08 end:0x02112c28 kind:data align:4
@@ -66,6 +66,7 @@ src/game/actors/d_a_obj_rc_guruguru.cpp:
     .ctor start:0x021129ec end:0x021129f0
     .bss start:0x021140ac end:0x021140d4
     .data.data_ov036_02113d78 start:0x02113d78 end:0x02113d84
+    .data.data_ov036_02112aa8 start:0x02112aa8 end:0x02112ae8
 
 src/game/actors/d_a_obj_rc_dorifu.cpp:
     complete
@@ -88,6 +89,7 @@ src/game/actors/d_a_obj_rc_carpet.cpp:
     .data.data_ov036_02113f4c start:0x02113f4c end:0x02114020
     .bss start:0x0211419c end:0x021141d8
     .data.data_ov036_02112b28 start:0x02112b28 end:0x02112b48
+    .data.data_ov036_02112ba8 start:0x02112ba8 end:0x02112bc8
 
 src/unnamed/ov036/data_ov036_bss.c:
     complete

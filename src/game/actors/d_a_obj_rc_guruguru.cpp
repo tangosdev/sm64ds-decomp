@@ -17,8 +17,8 @@
  * Notes:
  * - data_ov036_02113d78 is a three-word overlay table (BMD 0x021140ac,
  *   KCL 0x021140b4, CLPS 0x02112ac8). Naming the three targets directly
- *   builds a different literal pool and moves every call site. This TU
- *   claims .text only.
+ *   builds a different literal pool and moves every call site. The CLPS
+ *   words at 0x02112aa8..0x02112ae8 are defined in this TU.
  * - g_profile_RC_GURUGURU lives outside this TU.
  */
 
@@ -149,13 +149,27 @@ struct RcGuruguruCollisionFilePtr : SharedFilePtr {
 RcGuruguruModelFilePtr gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);         /* model */
 RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* collision */
 
-/* The resource-pointer table InitResources and CleanupResources read. The
-   CLPS block it names stays a ROM placeholder (nothing in this TU spells
-   its contents). */
-extern CLPS_Block data_ov036_02112ac8;
+/* 0x02112aa8 is a single-entry floor block. 0x02112ac8 is the two-entry
+   block SetFile receives. 0x02112ac0 and 0x02112adc keep the symbols.txt
+   names of the tails. */
+u32 data_ov036_02112aa8[6] = {
+    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+};
+u32 data_ov036_02112ac0[2] = {
+    0xffffffff,
+    0xffffffff,
+};
+u32 data_ov036_02112ac8[5] = {
+    0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01000fc4,
+};
+u32 data_ov036_02112adc[3] = {
+    0x000000ff,
+    0xffffffff,
+    0xffffffff,
+};
 
 RcGuruguruAssets data_ov036_02113d78 = {
     &gRcGuruguruModelFile,
     &gRcGuruguruCollisionFile,
-    &data_ov036_02112ac8,
+    reinterpret_cast<CLPS_Block *>(data_ov036_02112ac8),
 };
