@@ -418,7 +418,9 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
     Vector3 t;
     daPly_c *p;
 
-    in.x = 0; in.y = 0; in.z = 0;
+    in.x = 0;
+    in.y = 0;
+    in.z = 0;
     out.x = 0;
     out.y = 0;
     out.z = 0;
