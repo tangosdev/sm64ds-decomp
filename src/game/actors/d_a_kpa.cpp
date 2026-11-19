@@ -1530,7 +1530,7 @@ speeds, call func_0200fa04 with his position, play animation 0xc once, play soun
 1. Otherwise return 0. */
 int daKpa_c::BowserLand() {
     struct Vector3 v;
-    int b;
+    bool b;
     if(this->mWithMeshClsn.IsOnGround()){
         this->mHorzSpeed = 0;
         this->mSpeed.y = 0;
