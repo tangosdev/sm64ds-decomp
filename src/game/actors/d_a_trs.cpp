@@ -156,7 +156,7 @@ extern const s16 data_ov063_0211e1c0[4] = {0x380, 0x240, 0x180, 0x0};
 extern const int data_ov063_0211e1d0[3] = {0x1000, 0xfa0, 0xee0};
 extern int gMusicVolume;
 extern u8 data_0209d660;
-extern short data_ov063_0211e7e0[];
+extern short sBooHitRotations[];
 }
 void func_02012694(unsigned int a, const Vector3 *p);
 extern void func_020167a4(dExtAnmModel_c *model);
@@ -2272,7 +2272,7 @@ int daTrs_c::UpdateDuringNonlethalHit(int speed) {
         SetMoveYawForDuringHit(1);
     t = mStateTimer;
     if (t < 0x20) {
-        MoveDuringHit(1, ((speed * data_ov063_0211e7e0[t]) << 12) / 5000);
+        MoveDuringHit(1, ((speed * sBooHitRotations[t]) << 12) / 5000);
     } else if (t < 0x30) {
         ShakeAfterHit();
     } else {
@@ -2292,7 +2292,7 @@ int daTrs_c::UpdateAfterBouncedOn(int arg) {
         SetMoveYawForDuringHit(0);
     t = mStateTimer;
     if (t < 0x20) {
-        MoveDuringHit(0, ((arg * data_ov063_0211e7e0[t]) << 12) / 5000);
+        MoveDuringHit(0, ((arg * sBooHitRotations[t]) << 12) / 5000);
     } else {
         mdCcAcPos_c.flags &= ~1;
         ResetAfterHit();
@@ -2321,8 +2321,8 @@ void daTrs_c::MoveDuringHit(int cond, int val) {
     if (cond == 0)
         return;
 
-    mAngle.y += data_ov063_0211e7e0[mStateTimer];
-    mAngle.z += data_ov063_0211e7e0[mStateTimer];
+    mAngle.y += sBooHitRotations[mStateTimer];
+    mAngle.z += sBooHitRotations[mStateTimer];
 }
 
 void daTrs_c::SetMoveYawForDuringHit(int cond) {

@@ -28,7 +28,7 @@
  *  - Measured spellings: the mOpacity += / -= 0x14 form; the angle-copy
  *    pointer in func_ov060_02115d68; the overwritten first pos[] stores in
  *    RunIntroTalk; the gotos in func_ov060_02115c1c; the
- *    data_ov060_02119294/6/8 + offset reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
+ *    sBowsertiltPlatformData[i][0..2] reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
  *  - Address-named callees with a known body but no header: func_020092c4 eases
  *    a camera vector toward a target (d_camera.cpp); func_0200fa04 spawns the
  *    boss landing dust (d_actor.cpp); func_02038408 is the
@@ -327,7 +327,7 @@ extern KpaAnimationFileHandle data_ov060_0211ac90;
  * own pool address (0x02119294 / 0x02119296 / 0x02119298). It stays a ROM
  * copy: the linker aligns every input section to 4, so a section cannot start
  * at 0x02119296. */
-extern short data_ov060_02119294[][3];
+extern short sBowsertiltPlatformData[][3];
 }
 extern void func_02012694(unsigned int id, const Vector3 *v);
 void func_02038408(dBgCh_Actr *self);
@@ -2429,7 +2429,7 @@ void daKpa_c::TiltPlatform(int tiltSpeed) {
 /*
 State BOWSER_STATE_ARENA_TILT (0x13): the arena rocks for 186 frames. mSpeed.y
 is held at mTerminalVelocity. If the KOOPA2BG actor is gone, back to
-BOWSER_STATE_IDLE. Otherwise the table at data_ov060_02119294 (rows of three
+BOWSER_STATE_IDLE. Otherwise the table at sBowsertiltPlatformData (rows of three
 halfwords: sign, scale, end frame; a row with end frame 0 ends it) is walked for
 the first row whose end frame is above mTimer; the tilt speed v is scale times a
 linear ramp in mTimer (counting down to the row's end for a positive sign, up
@@ -2449,20 +2449,20 @@ void daKpa_c::ActTiltLavaPlatform() {
     this->mSpeed.y = this->mTerminalVelocity;
     found = (daKpa2Bg_c*)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (found == 0) { this->mState = BOWSER_STATE_IDLE; return; }
-    p = data_ov060_02119294[0];
+    p = sBowsertiltPlatformData[0];
     i = 0;
     flag = 1;
     while (p[2] != 0) {
         int timer = this->mTimer;
         if (timer < p[2]) {
-            short a = data_ov060_02119294[i][0];
-            short b = data_ov060_02119294[i][1];
+            short a = sBowsertiltPlatformData[i][0];
+            short b = sBowsertiltPlatformData[i][1];
             int v;
             if (a > 0) {
-                v = (short)(b * (data_ov060_02119294[i][2] - 1 - timer));
+                v = (short)(b * (sBowsertiltPlatformData[i][2] - 1 - timer));
             } else {
                 i -= 1;
-                v = (short)(b * (timer - data_ov060_02119294[i][2]));
+                v = (short)(b * (timer - sBowsertiltPlatformData[i][2]));
             }
             TiltPlatform(v);
             if (v != 0 && (this->mTimer & 1)) {

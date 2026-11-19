@@ -1,10 +1,10 @@
 //cpp
-/* Four free C helpers between dPathLiftActor_c (0x020ef320..0x020effb8)
+/* Four free helpers between dPathLiftActor_c (0x020ef320..0x020effb8)
  * and daSCoin_c (0x020f03c4..):
  *
- * - func_ov002_020effb8: a uniform cubic B-spline through four Vector3
- *   control points. Its one caller is arm9 MovePointAlongSpline, the path
- *   interpolator.
+ * - EvaluateCubicSpline: a uniform cubic B-spline through four Vector3
+ *   control points, SM64's evaluate_cubic_spline (camera.c). Its one caller
+ *   is arm9 MovePointAlongSpline, the path interpolator.
  * - func_ov002_020f02c8, func_ov002_020f030c and func_ov002_020f035c: the
  *   per-surface slope tables daPly_c.h describes (slide acceleration, slide
  *   loss factor, slope threshold). daPly_c, daObjBlockS_c and
@@ -12,7 +12,7 @@
  *
  * Not folded: neither neighbour calls or is called by any of the four, so
  * neither dPathLiftActor_c nor daSCoin_c is evidence of an owner. All four
- * keep C linkage because those other TUs call them by their C names. */
+ * are C++ free functions; the other TUs call them by their mangled names. */
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
@@ -83,7 +83,7 @@ int func_ov002_020f02c8(int sel) {
  * p1..p2, with p0 and p3 as the outer control points. The weights are
  * u^3/6, (3t^3 - 6t^2 + 4)/6, (-3t^3 + 3t^2 + 3t + 1)/6 and t^3/6 with
  * u = 1 - t, computed in fx16. Four equal points return p0 as is. */
-void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2, Vector3 *p3) {
+void EvaluateCubicSpline(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2, Vector3 *p3) {
     s32 halfT3, rest;
     s32 t16, u, u16;
     s32 tSq, tCube, uSq, uCube;

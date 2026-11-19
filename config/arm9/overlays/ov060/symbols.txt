@@ -154,7 +154,7 @@ _Z19daFRing_c_classInitv kind:function(arm,size=0x70) addr:0x021191f4
 data_ov060_02119264 kind:data(any) addr:0x02119264
 data_ov060_02119268 kind:data(any) addr:0x02119268
 data_ov060_0211927c kind:data(any) addr:0x0211927c
-data_ov060_02119294 kind:data(any) addr:0x02119294
+sBowsertiltPlatformData kind:data(any) addr:0x02119294
 data_ov060_02119296 kind:data(any) addr:0x02119296
 data_ov060_02119298 kind:data(any) addr:0x02119298
 data_ov060_021192dc kind:data(any) addr:0x021192dc
