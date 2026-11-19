@@ -259,10 +259,10 @@ daStarBase_c *daCoin_c::FindStarMarker() {
 /* Bounce off a wall: turns the heading (mPrevAngle.y) around the wall normal. */
 void daCoin_c::BounceOffWall() {
     if (mWithMeshClsn.IsOnWall() == 0) return;
-    int normal[3];
+    Vector3 normal;
     dBgPi *wall = mWithMeshClsn.GetWallResult();
-    wall->surface.CopyNormalTo(*(Vector3 *)normal);
-    mPrevAngle.y = ReflectAngle(normal[0], normal[2], mPrevAngle.y);
+    wall->surface.CopyNormalTo(normal);
+    mPrevAngle.y = ReflectAngle(normal.x, normal.z, mPrevAngle.y);
 }
 
 /* Shared per-frame tail of the movement handlers. Counts down the no-collision

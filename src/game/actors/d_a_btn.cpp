@@ -294,11 +294,11 @@ int daBtn_c::InitResources()
     mMovingMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     {
-        s32 sp[3];
-        sp[0] = 0;
-        sp[1] = 0;
-        sp[2] = 0x1000;
-        mMovingMeshCollider.SetDepthDir((const Vector3 *)sp);
+        Vector3 depthDir;
+        depthDir.x = 0;
+        depthDir.y = 0;
+        depthDir.z = 0x1000;
+        mMovingMeshCollider.SetDepthDir(&depthDir);
     }
 
     mMovingMeshCollider.SetDepthDirMinDot(0xb50);
