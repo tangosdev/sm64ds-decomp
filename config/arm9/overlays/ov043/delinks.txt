@@ -54,3 +54,11 @@ src/game/actors/d_a_obj_km1_dorifu.cpp:
     .init start:0x02111940 end:0x02111ae8
     .ctor start:0x02111af4 end:0x02111af8
     .bss start:0x02112658 end:0x02112720
+
+src/unnamed/ov043/data_ov043_02112358.c:
+    complete
+    .data start:0x02112358 end:0x02112368
+
+src/unnamed/ov043/data_ov043_02111ca0.c:
+    complete
+    .data start:0x02111ca0 end:0x02112270

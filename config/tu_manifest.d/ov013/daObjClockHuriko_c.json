@@ -31,6 +31,18 @@
       "name": ".bss",
       "start": "0x02112280",
       "end": "0x02112294"
+    },
+    {
+      "name": ".data.hurikoPre0",
+      "input_section": ".data",
+      "start": "0x02111780",
+      "end": "0x02111928"
+    },
+    {
+      "name": ".data.hurikoPre1",
+      "input_section": ".data",
+      "start": "0x0211192c",
+      "end": "0x021120e0"
     }
   ],
   "functions": [
@@ -91,7 +103,22 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov013_02111780",
+      "address": "0x02111780",
+      "size": "0x1a8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pendulum animation tables preceding the class RTTI; exact bytes, one object"
+    },
+    {
+      "symbol": "data_ov013_0211192c",
+      "address": "0x0211192c",
+      "size": "0x7b4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pendulum animation payload preceding the class RTTI; exact bytes, one object"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov013_02112280",
@@ -179,7 +206,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -215,11 +242,25 @@
           "start": "0x02112280",
           "end": "0x02112294",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.hurikoPre0",
+          "start": "0x02111780",
+          "end": "0x02111928",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.hurikoPre1",
+          "start": "0x0211192c",
+          "end": "0x021120e0",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 14
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -230,30 +271,48 @@
           {
             "section": ".init",
             "original": [
-              38
+              42
             ],
             "desired": [
-              38
+              42
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              36
+              40
             ],
             "desired": [
-              36
+              40
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              17
+              7,
+              13
             ],
             "desired": [
-              5,
-              17
+              7,
+              13
+            ]
+          },
+          {
+            "section": ".data.hurikoPre0",
+            "original": [
+              21
+            ],
+            "desired": [
+              21
+            ]
+          },
+          {
+            "section": ".data.hurikoPre1",
+            "original": [
+              23
+            ],
+            "desired": [
+              23
             ]
           }
         ],
@@ -437,6 +496,336 @@
       "addend": 0,
       "target_module": "ov013",
       "target_address": "0x02112288"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111788",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111804",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111804"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111790",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111890",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111890"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111798",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111824",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111824"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021117a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117c4",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117c4"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021117a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021118d0",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021118d0"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021117b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117ac",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117ac"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021117c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_0211178c",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x0211178c"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021117d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117e4",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117e4"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021117d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_0211179c",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x0211179c"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021117e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117b4",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117b4"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021117e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111e18",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111e18"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111808",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111ae4",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111ae4"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111810",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111834",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111834"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111828",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021119cc",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021119cc"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111830",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111814",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111814"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111b94",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111b94"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117a4",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117a4"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111918",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111918"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021118d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111f18",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111f18"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021118dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111860",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111860"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021118e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111c54",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111c54"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021118ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117ec",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117ec"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021118f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111d28",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111d28"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x021118fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_0211196c",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x0211196c"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111904",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117f8",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117f8"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x0211190c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111780",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111780"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111914",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111a3c",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111a3c"
+    },
+    {
+      "section": ".data.hurikoPre0",
+      "source": "0x02111924",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111784",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111784"
+    },
+    {
+      "section": ".data.hurikoPre1",
+      "source": "0x02111930",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117bc",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117bc"
+    },
+    {
+      "section": ".data.hurikoPre1",
+      "source": "0x0211193c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117cc",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117cc"
+    },
+    {
+      "section": ".data.hurikoPre1",
+      "source": "0x02111948",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_02111794",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x02111794"
+    },
+    {
+      "section": ".data.hurikoPre1",
+      "source": "0x02111954",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117d4",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117d4"
+    },
+    {
+      "section": ".data.hurikoPre1",
+      "source": "0x02111960",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov013_021117dc",
+      "addend": 0,
+      "target_module": "ov013",
+      "target_address": "0x021117dc"
     }
   ],
   "undefined_symbol_aliases": [

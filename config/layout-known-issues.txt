@@ -26,3 +26,37 @@ L2 _ZN10dScStage_c7PS_InitEv
 L2 func_ov065_02116364
 L2 func_ov084_021298d0
 L2 func_ov084_0212d564
+
+# --- L3: module data TUs in an overlay address bucket -----------------------------
+# srcpath's address-stem pattern is ^(?:func|FUN|__sinit)_..., so a data_<module>
+# stem answers "not an address name" whichever bucket holds it. These TUs hold the
+# code-free #5594 groups that had no source consumer: each is one module data TU
+# whose plain arrays the module's delinks.txt claims at the cartridge addresses.
+# Naming a file after one interior row would split a run across TUs, and src/data/
+# is the retracted one-symbol campaign's shape. Teaching _UNNAMED_RE about data_ is
+# a tools change; this waiver is the non-tools route until then.
+L3 src/unnamed/ov013/data_ov013_bss.c
+L3 src/unnamed/ov056/data_ov056.c
+
+# ov009/029/034/036/043: the remaining code-free #5594 groups, one array
+# per contiguous free run; the delinks map claims each run at its cartridge
+# addresses.
+L3 src/unnamed/ov009/data_ov009_bss.c
+L3 src/unnamed/ov009/data_ov009.c
+L3 src/unnamed/ov009/data_ov009_02112bdc.c
+L3 src/unnamed/ov009/data_ov009_02112c18.c
+L3 src/unnamed/ov009/data_ov009_02112c58.c
+L3 src/unnamed/ov009/data_ov009_rodata.c
+L3 src/unnamed/ov029/data_ov029_bss.c
+L3 src/unnamed/ov029/data_ov029_clps.c
+L3 src/unnamed/ov029/data_ov029.c
+L3 src/unnamed/ov029/data_ov029_rodata.c
+L3 src/unnamed/ov034/data_ov034_bss.c
+L3 src/unnamed/ov034/data_ov034.c
+L3 src/unnamed/ov036/data_ov036_bss.c
+L3 src/unnamed/ov036/data_ov036.c
+L3 src/unnamed/ov036/data_ov036_02112aa8.c
+L3 src/unnamed/ov036/data_ov036_02112b08.c
+L3 src/unnamed/ov036/data_ov036_02112ba8.c
+L3 src/unnamed/ov036/data_ov036_02112c28.c
+L3 src/unnamed/ov043/data_ov043_02112358.c

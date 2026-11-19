@@ -45,5 +45,13 @@ src/game/actors/d_a_obj_td_water.cpp:
     .data.tdWaterName start:0x02112edc end:0x02112ee8
     .data.tdBta start:0x02112f64 end:0x02112f7c
     .data.tdClps start:0x02112fb8 end:0x02112fd0
+    .data start:0x02112fd0 end:0x0211377c
     .bss start:0x02113af4 end:0x02113b1c
 
+src/unnamed/ov032/data_ov032_021138c4.c:
+    complete
+    .data start:0x021138c4 end:0x021138d8
+
+src/unnamed/ov032/data_ov032_02113b1c.c:
+    complete
+    .bss start:0x02113b1c end:0x02113b20

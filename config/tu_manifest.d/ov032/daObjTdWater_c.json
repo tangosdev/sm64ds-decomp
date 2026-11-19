@@ -72,6 +72,12 @@
       "input_section": ".data",
       "start": "0x02112edc",
       "end": "0x02112ee8"
+    },
+    {
+      "name": ".data.tdWaterBundle",
+      "input_section": ".data",
+      "start": "0x02112fd0",
+      "end": "0x0211377c"
     }
   ],
   "functions": [
@@ -146,6 +152,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "the BMD material name the animation record resolves: water_mat"
+    },
+    {
+      "symbol": "data_ov032_02112fd0",
+      "address": "0x02112fd0",
+      "size": "0x7ac",
+      "binding": "STB_GLOBAL",
+      "evidence": "water texture and collision payload; exact bytes, one object"
     }
   ],
   "bss": [
@@ -266,7 +279,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -351,11 +364,18 @@
           "end": "0x02112ee8",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".data.tdWaterBundle",
+          "start": "0x02112fd0",
+          "end": "0x0211377c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 21
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -364,36 +384,108 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".data.tdBta",
             "original": [
-              44
+              27
             ],
             "desired": [
-              44
+              27
+            ]
+          },
+          {
+            "section": ".data.tdClps",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              55
+            ],
+            "desired": [
+              55
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              42
+              53
             ],
             "desired": [
-              42
+              53
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
+              7,
               8,
-              14,
-              21
+              23,
+              24
             ],
             "desired": [
-              5,
+              7,
               8,
-              14,
-              21
+              23,
+              24
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              6
+            ],
+            "desired": [
+              6
+            ]
+          },
+          {
+            "section": ".rodata.tdWaterScale",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".rodata.tdWaterMat",
+            "original": [
+              30
+            ],
+            "desired": [
+              30
+            ]
+          },
+          {
+            "section": ".rodata.tdWaterTrans",
+            "original": [
+              34
+            ],
+            "desired": [
+              34
+            ]
+          },
+          {
+            "section": ".data.tdWaterName",
+            "original": [
+              16
+            ],
+            "desired": [
+              16
+            ]
+          },
+          {
+            "section": ".data.tdWaterBundle",
+            "original": [
+              35
+            ],
+            "desired": [
+              35
             ]
           }
         ],
@@ -675,6 +767,156 @@
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x02112edc"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x0211300c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_0211346c",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x0211346c"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x02113014",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_0211336c",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x0211336c"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x0211301c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112fd8",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112fd8"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x02113024",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112ef4",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112ef4"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x0211302c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112f04",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112f04"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x02113034",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112f14",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112f14"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x0211303c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112f24",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112f24"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x02113044",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_021131c8",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x021131c8"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x0211304c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112f4c",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112f4c"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x02113054",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_021130c8",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x021130c8"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x0211305c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112ec4",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112ec4"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x02113064",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02113148",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02113148"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x0211306c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112ec0",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112ec0"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x02113074",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02112ec8",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112ec8"
+    },
+    {
+      "section": ".data.tdWaterBundle",
+      "source": "0x0211307c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov032_02113080",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02113080"
     }
   ],
   "undefined_symbol_aliases": [
