@@ -8575,27 +8575,27 @@
     },
     "arm9:0x02051454": {
       "author": "andrewboudreau",
-      "name": "func_02051454"
+      "name": "DisposeCallback"
     },
     "arm9:0x020514b4": {
       "author": "tangosdev",
-      "name": "func_020514b4"
+      "name": "LoadWaveArc"
     },
     "arm9:0x02051514": {
       "author": "tangosdev",
-      "name": "func_02051514"
+      "name": "LoadBank"
     },
     "arm9:0x02051574": {
       "author": "tangosdev",
-      "name": "func_02051574"
+      "name": "LoadSeqArc"
     },
     "arm9:0x020515d4": {
       "author": "tangosdev",
-      "name": "func_020515d4"
+      "name": "LoadSeq"
     },
     "arm9:0x02051634": {
       "author": "tangosdev",
-      "name": "func_02051634"
+      "name": "NNSi_SndArcLoadFile"
     },
     "arm9:0x020516d4": {
       "author": "andrewboudreau",

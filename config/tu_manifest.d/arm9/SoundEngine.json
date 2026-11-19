@@ -746,42 +746,42 @@
       "ordinal": 103
     },
     {
-      "symbol": "func_02051454",
+      "symbol": "DisposeCallback",
       "address": "0x02051454",
       "legacy_source": "src/func_02051454.c",
       "size": "0x00000060",
       "ordinal": 104
     },
     {
-      "symbol": "func_020514b4",
+      "symbol": "LoadWaveArc",
       "address": "0x020514b4",
       "legacy_source": "src/func_020514b4.c",
       "size": "0x00000060",
       "ordinal": 105
     },
     {
-      "symbol": "func_02051514",
+      "symbol": "LoadBank",
       "address": "0x02051514",
       "legacy_source": "src/func_02051514.c",
       "size": "0x00000060",
       "ordinal": 106
     },
     {
-      "symbol": "func_02051574",
+      "symbol": "LoadSeqArc",
       "address": "0x02051574",
       "legacy_source": "src/func_02051574.c",
       "size": "0x00000060",
       "ordinal": 107
     },
     {
-      "symbol": "func_020515d4",
+      "symbol": "LoadSeq",
       "address": "0x020515d4",
       "legacy_source": "src/func_020515d4.c",
       "size": "0x00000060",
       "ordinal": 108
     },
     {
-      "symbol": "func_02051634",
+      "symbol": "NNSi_SndArcLoadFile",
       "address": "0x02051634",
       "legacy_source": "src/func_02051634.c",
       "size": "0x000000a0",
