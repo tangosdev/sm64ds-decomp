@@ -104,8 +104,8 @@ struct System {
     u8 baseAlpha; /* 0x59 */
     u8 pad_05a[0x02];
     /* Two axes spanning the plane perpendicular to `direction`, rebuilt by
-       func_0204cebc as cross products: basisU = direction x reference,
-       basisV = direction x basisU. func_0204cd5c maps a 2D emitter offset
+       SPLEmitter_ComputeOrthogonalAxes as cross products: basisU = direction x reference,
+       basisV = direction x basisU. SPLUtil_TiltCoordinates maps a 2D emitter offset
        onto that plane through them. */
     Vector3_16f basisU; /* 0x5c */
     Vector3_16f basisV; /* 0x62 */

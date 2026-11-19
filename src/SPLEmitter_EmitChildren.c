@@ -18,7 +18,7 @@ typedef struct SystemListView {
     PtclDef *mDefinition; /* 0x18 */
 } SystemListView;
 
-extern u32 data_020a4d30;
+extern u32 gSPLRandomState;
 
 extern Node *SPLList_PopFront(List *list);
 extern void SPLList_PushFront(List *list, Node *node);
@@ -61,17 +61,17 @@ void SPLEmitter_EmitChildren(ParticleElement *self, SystemListView *sys, List *f
 
         ratio = def->velocityRatio + 1;
 
-        data_020a4d30 = data_020a4d30 * rngA + rngC;
+        gSPLRandomState = gSPLRandomState * rngA + rngC;
         p->velocity.x = ((self->velocity.x * ratio) >> 8) +
-                        ((def->spread * (int)(data_020a4d30 >> 0x17) - (def->spread << 8)) >> 8);
+                        ((def->spread * (int)(gSPLRandomState >> 0x17) - (def->spread << 8)) >> 8);
 
-        data_020a4d30 = data_020a4d30 * rngA + rngC;
+        gSPLRandomState = gSPLRandomState * rngA + rngC;
         p->velocity.y = ((self->velocity.y * ratio) >> 8) +
-                        ((def->spread * (int)(data_020a4d30 >> 0x17) - (def->spread << 8)) >> 8);
+                        ((def->spread * (int)(gSPLRandomState >> 0x17) - (def->spread << 8)) >> 8);
 
-        data_020a4d30 = data_020a4d30 * rngA + rngC;
+        gSPLRandomState = gSPLRandomState * rngA + rngC;
         p->velocity.z = ((self->velocity.z * ratio) >> 8) +
-                        ((def->spread * (int)(data_020a4d30 >> 0x17) - (def->spread << 8)) >> 8);
+                        ((def->spread * (int)(gSPLRandomState >> 0x17) - (def->spread << 8)) >> 8);
 
         p->basePosition = self->basePosition;
 

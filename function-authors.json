@@ -7887,11 +7887,11 @@
     },
     "arm9:0x0204cd5c": {
       "author": "tangosdev",
-      "name": "func_0204cd5c"
+      "name": "SPLUtil_TiltCoordinates"
     },
     "arm9:0x0204cebc": {
       "author": "andrewboudreau",
-      "name": "func_0204cebc"
+      "name": "SPLEmitter_ComputeOrthogonalAxes"
     },
     "arm9:0x0204d0b8": {
       "author": "ruspecial",

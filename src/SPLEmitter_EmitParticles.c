@@ -32,16 +32,16 @@ typedef struct TexAnim {
     u32 prest : 15;
 } TexAnim;
 
-extern VecFx16 data_02099fc4;
+extern VecFx16 sUpVector;
 extern Node *SPLList_PopFront(List *list);
 extern void SPLList_PushFront(List *list, Node *node);
 extern void SPLRandom_VecFx32(VecFx32 *out);
 extern void SPLRandom_VecFx32_XY(VecFx32 *out);
-extern u32 data_020a4d30;
+extern u32 gSPLRandomState;
 
 static inline u32 RandVal(void) {
-    u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-    data_020a4d30 = s;
+    u32 s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+    gSPLRandomState = s;
     return s;
 }
 
@@ -53,11 +53,11 @@ static inline int FMul(int a, int b) {
     return FX_MUL(a, b);
 }
 
-void func_0204cebc(ParticleSystem *sys) {
+void SPLEmitter_ComputeOrthogonalAxes(ParticleSystem *sys) {
     VecFx16 vecA;
     VecFx16 vecB;
 
-    vecA = data_02099fc4;
+    vecA = sUpVector;
     VEC_Fx16Normalize(&sys->direction, &vecB);
 
     if (vecA.x == vecB.x && vecA.y == vecB.y && vecA.z == vecB.z) {
@@ -75,7 +75,7 @@ void func_0204cebc(ParticleSystem *sys) {
     sys->basisV.z = (s16)(FX_MUL(vecB.x, sys->basisU.y) - FX_MUL(vecB.y, sys->basisU.x));
 }
 
-void func_0204cd5c(VecFx32 *out, VecFx32 *in, int sel, ParticleSystem *sys) {
+void SPLUtil_TiltCoordinates(VecFx32 *out, VecFx32 *in, int sel, ParticleSystem *sys) {
     switch (sel) {
     case 2:
         out->x = 0;
@@ -124,7 +124,7 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
     {
         u32 t = def->emissionType;
         if ((t == 2 || t == 3 || t == 5) && def->circleAxis == 3)
-            func_0204cebc(sys);
+            SPLEmitter_ComputeOrthogonalAxes(sys);
     }
     i = 0;
     if (count <= 0)
@@ -149,7 +149,7 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
             SPLRandom_VecFx32_XY(&vecB);
             vecB.x = FX_MUL(vecB.x, sys->emitRadius);
             vecB.y = FX_MUL(vecB.y, sys->emitRadius);
-            func_0204cd5c(&p->offset, &vecB, def->circleAxis, sys);
+            SPLUtil_TiltCoordinates(&p->offset, &vecB, def->circleAxis, sys);
             break;
         case 3: {
             int q = ringAngle / count;
@@ -160,7 +160,7 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
             vecC.x = FMul(s, sys->emitRadius);
             vecC.y = FMul(c, sys->emitRadius);
             vecC.z = 0;
-            func_0204cd5c(&p->offset, &vecC, def->circleAxis, sys);
+            SPLUtil_TiltCoordinates(&p->offset, &vecC, def->circleAxis, sys);
             break;
         }
         case 4:
@@ -173,18 +173,18 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
             SPLRandom_VecFx32_XY(&vecE);
             vecE.x = FMul(FMul(vecE.x, sys->emitRadius), RandScale());
             vecE.y = FMul(FMul(vecE.y, sys->emitRadius), RandScale());
-            func_0204cd5c(&p->offset, &vecE, def->circleAxis, sys);
+            SPLUtil_TiltCoordinates(&p->offset, &vecE, def->circleAxis, sys);
             break;
         }
         {
             u32 s;
             int b;
-            s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-            data_020a4d30 = s;
+            s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+            gSPLRandomState = s;
             b = def->velocityRandom;
             mag1 = (sys->callbackParam * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
-            s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-            data_020a4d30 = s;
+            s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+            gSPLRandomState = s;
             b = def->velocityRandom;
             mag2 = (sys->callbackVelocity * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
         }
@@ -199,8 +199,8 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
         {
             u32 s;
             int b;
-            s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-            data_020a4d30 = s;
+            s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+            gSPLRandomState = s;
             b = def->scaleRandom;
             p->scale = (sys->callbackScale * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
         }
@@ -208,8 +208,8 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
         if (def->hasColorAnim && emitter->colorAnim->randomStartColor) {
             u32 s;
             ColorRamp *anim;
-            s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-            data_020a4d30 = s;
+            s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+            gSPLRandomState = s;
             anim = emitter->colorAnim;
             arr[0] = anim->startColor;
             arr[1] = def->color;
@@ -224,8 +224,8 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
             *q = (u16)((*q & ~0x3e0) | 0x3e0);
         }
         if (def->randomInitAngle) {
-            u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-            data_020a4d30 = s;
+            u32 s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+            gSPLRandomState = s;
             p->angle = (u16)s;
         } else {
             p->angle = 0;
@@ -239,8 +239,8 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
             p->angularSpeed = 0;
         }
         {
-            u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-            data_020a4d30 = s;
+            u32 s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+            gSPLRandomState = s;
             p->lifetime = (u16)(((sys->particleLifetime *
                                   (0xff - ((def->lifetimeRandom * (int)(s >> 0x18)) >> 8))) >>
                                  8) +
@@ -252,8 +252,8 @@ void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
             if (hasTexAnim != 0 && emitter->texAnim->randomizeInit) {
                 u32 s;
                 TexAnim *anim;
-                s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-                data_020a4d30 = s;
+                s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+                gSPLRandomState = s;
                 anim = emitter->texAnim;
                 p->texture = anim->textures[(s >> 0x14) % anim->frameCount];
             } else if (hasTexAnim != 0 && !emitter->texAnim->randomizeInit) {

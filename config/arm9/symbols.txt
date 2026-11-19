@@ -1970,8 +1970,8 @@ SPLUtil_DrawXZPlane kind:function(arm,size=0xb8) addr:0x0204c194
 SPLUtil_DrawXYPlane kind:function(arm,size=0xb8) addr:0x0204c24c
 SPLEmitter_EmitChildren kind:function(arm,size=0x280) addr:0x0204c304
 SPLEmitter_EmitParticles kind:function(arm,size=0x7d8) addr:0x0204c584
-func_0204cd5c kind:function(arm,size=0x160) addr:0x0204cd5c
-func_0204cebc kind:function(arm,size=0x1fc) addr:0x0204cebc
+SPLUtil_TiltCoordinates kind:function(arm,size=0x160) addr:0x0204cd5c
+SPLEmitter_ComputeOrthogonalAxes kind:function(arm,size=0x1fc) addr:0x0204cebc
 SPLAnim_ChildAlpha kind:function(arm,size=0x4c) addr:0x0204d0b8
 SPLAnim_ChildScale kind:function(arm,size=0x4c) addr:0x0204d104
 SPLAnim_Texture kind:function(arm,size=0x64) addr:0x0204d150
@@ -4401,7 +4401,7 @@ data_02099fac kind:data(any) addr:0x02099fac
 data_02099fb0 kind:data(any) addr:0x02099fb0
 sPlaneDrawingFunctions kind:data(any) addr:0x02099fb4
 sRotationFunctions kind:data(any) addr:0x02099fbc
-data_02099fc4 kind:data(any) addr:0x02099fc4
+sUpVector kind:data(any) addr:0x02099fc4
 sIsDispOn kind:data(any) addr:0x02099fcc
 GXi_DmaId kind:data(any) addr:0x02099fd0
 OSi_IrqCallbackInfoIndex kind:data(any) addr:0x02099fd4
@@ -5104,7 +5104,7 @@ data_020a4c54 kind:bss addr:0x020a4c54
 data_020a4c5c kind:bss addr:0x020a4c5c
 data_020a4c64 kind:bss addr:0x020a4c64
 data_020a4c70 kind:bss addr:0x020a4c70
-data_020a4d30 kind:bss addr:0x020a4d30
+gSPLRandomState kind:bss addr:0x020a4d30
 PARTICLE_RNG_STATE kind:bss addr:0x020a4d30
 sRootListInitialized kind:bss addr:0x020a4d34
 sRootList kind:bss addr:0x020a4d38

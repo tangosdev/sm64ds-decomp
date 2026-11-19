@@ -530,7 +530,7 @@ extern u32 data_0208733c;
 extern u32 data_02099fac;
 extern u32 data_020a4bcc;
 extern u32 data_020a4bd8;
-extern u32 data_020a4d30;
+extern u32 gSPLRandomState;
 extern u32 data_ov002_0210a07c[];
 extern u32 data_ov002_0210a578[];
 extern u32 data_ov002_0210a584[];
