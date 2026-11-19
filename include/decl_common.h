@@ -326,7 +326,6 @@ extern int data_ov084_02130258[];
 /* data_ov084_02130cc0, data_ov084_02130cc8 and data_ov084_02130d74 are defined
    by d_a_krb.cpp as typed handles and its pointer-to-member state table; the
    TU's own declarations carry the real types. */
-extern int data_ov085_0212f280[];
 extern void *data_ov089_02132894[];
 extern int data_ov091_021344e8[];
 extern int data_ov094_02136a1c[];
