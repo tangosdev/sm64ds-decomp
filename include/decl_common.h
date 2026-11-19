@@ -337,7 +337,7 @@ extern int data_ov060_0211ab20[];
 extern int data_ov063_0211e1ec[];
 extern int data_ov063_0211e22c[];
 extern int data_ov063_0211edc0;
-extern int data_ov064_0211c198[];
+extern const s8 *data_ov064_0211c198[];
 extern int data_ov066_0211ad18[];
 extern int data_ov070_0212360c[];
 extern int data_ov074_0212290c[];
