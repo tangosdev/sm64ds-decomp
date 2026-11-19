@@ -1,7 +1,7 @@
 #include "types.h"
 
 /* The particle's 0x40 halfword (SPL's visibility): the base alpha in bits 0-4
- * (func_0204c584 seeds it), the animated alpha in bits 5-9. This
+ * (SPLEmitter_EmitParticles seeds it), the animated alpha in bits 5-9. This
  * callback rewrites the halfword whole, so it keeps this view rather than
  * spl_particle_views.h's ParticleElement, which spells it as bitfields. */
 struct ParticleAlphaView {

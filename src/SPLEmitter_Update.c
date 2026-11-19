@@ -1,6 +1,6 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
-/* func_0204a730 @ 0x0204a730 (arm9, size 0x6fc)   [mwccarm 2004/b56]
+/* SPLEmitter_Update @ 0x0204a730 (arm9, size 0x6fc)   [mwccarm 2004/b56]
  * Particle system update: emit, run the per-particle animation and behavior
  * tables, integrate, spawn children and retire expired particles, then the
  * same for the child particles. The child loop's time byte is staged in an int
@@ -8,10 +8,10 @@
  * the ROM keeps it in a register across it.
  */
 
-extern void func_0204c584(void *self, void *arg);
-extern void func_0204c304(void *node, void *self, void *arg);
-extern void *func_0204d8e8(void *listHead, void *node);
-extern void func_0204d9a0(void *list, void *node);
+extern void SPLEmitter_EmitParticles(void *self, void *arg);
+extern void SPLEmitter_EmitChildren(void *node, void *self, void *arg);
+extern void *SPLList_Erase(void *listHead, void *node);
+extern void SPLList_PushFront(void *list, void *node);
 
 typedef void (*Cb1)(void *, void *, int);
 typedef void (*Cb2)(u32, void *, void *);
@@ -171,7 +171,7 @@ extern void SPLAnim_Texture(void *, void *, int);
 extern void SPLAnim_ChildScale(void *, void *, int);
 extern void SPLAnim_ChildAlpha(void *, void *, int);
 
-void func_0204a730(void *manager, void *self) {
+void SPLEmitter_Update(void *manager, void *self) {
     UpdateDef *sb;
     PtclNode *next;
     UpdateChild *cfg;
@@ -207,7 +207,7 @@ void func_0204a730(void *manager, void *self) {
     if (emitterLifeTime == 0 || sys->age < emitterLifeTime) {
         if (sys->age % sys->emitInterval == 0) {
             if (!sys->terminate && !sys->stopGenerate) {
-                func_0204c584(self, &mgr->freeParticles);
+                SPLEmitter_EmitParticles(self, &mgr->freeParticles);
             }
         }
     }
@@ -293,13 +293,13 @@ void func_0204a730(void *manager, void *self) {
                 s32 r1 = FX_MUL(a, b);
                 s32 r0 = (life << 12) - (r1 >> 8);
                 if (life != 0 && r0 >= 0 && ((r0 >> 12) % cfg->emissionInterval) == 0) {
-                    func_0204c304(node, self, &mgr->freeParticles);
+                    SPLEmitter_EmitChildren(node, self, &mgr->freeParticles);
                 }
             }
 
             node->age++;
             if (node->age > node->lifetime) {
-                func_0204d9a0(&mgr->freeParticles, func_0204d8e8(&sys->particles, node));
+                SPLList_PushFront(&mgr->freeParticles, SPLList_Erase(&sys->particles, node));
             }
 
             node = next;
@@ -375,7 +375,7 @@ void func_0204a730(void *manager, void *self) {
                 child->age++;
 
                 if (child->age > child->lifetime) {
-                    func_0204d9a0(&mgr->freeParticles, func_0204d8e8(&sys->particles2, child));
+                    SPLList_PushFront(&mgr->freeParticles, SPLList_Erase(&sys->particles2, child));
                 }
 
                 child = childNext;

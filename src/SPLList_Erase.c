@@ -1,5 +1,5 @@
-/* The particle engine's two-word intrusive list (func_0204d958 pops,
-   func_0204d9a0 pushes): each element starts with next/prev links, whatever
+/* The particle engine's two-word intrusive list (SPLList_PopFront pops,
+   SPLList_PushFront pushes): each element starts with next/prev links, whatever
    its type (Particle::System, ParticleNode, a free-pool node). */
 typedef struct Node {
     struct Node *next; /* 0x0 */
@@ -12,7 +12,7 @@ typedef struct List {
 } List;
 
 /* Unlink n from l and return it. */
-Node *func_0204d8e8(List *l, Node *n) {
+Node *SPLList_Erase(List *l, Node *n) {
     if (n->next == 0) {
         if (l->head == n)
             l->head = 0;

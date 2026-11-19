@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/spl_particle_views.h"
-extern void func_0204af3c(void *p);
+extern void SPLUtil_SetTexture(void *p);
 extern void SPLUtil_SetTexture_Stub(void *p);
 extern void SPLDraw_Polygon(void *self, void *node);
 extern void SPLDraw_Billboard(void *self, void *node);
@@ -24,7 +24,7 @@ void func_0204a5c8(char *self) {
     void (*draw)(void *, void *) = 0;
     void (*setTexture)(void *);
 
-    func_0204af3c(&mgr->mTextures[data->texture]);
+    SPLUtil_SetTexture(&mgr->mTextures[data->texture]);
 
     switch (data->drawType) {
     case 0:
@@ -38,7 +38,7 @@ void func_0204a5c8(char *self) {
         break;
     }
 
-    setTexture = data->hasTexAnim ? func_0204af3c : SPLUtil_SetTexture_Stub;
+    setTexture = data->hasTexAnim ? SPLUtil_SetTexture : SPLUtil_SetTexture_Stub;
 
     n = system->particles.head;
     if (n != 0) {
@@ -52,7 +52,7 @@ void func_0204a5c8(char *self) {
     if (!data->hasChildResource)
         return;
 
-    func_0204af3c(&mgr->mTextures[def->child->texture]);
+    SPLUtil_SetTexture(&mgr->mTextures[def->child->texture]);
 
     switch (def->child->flags.drawType) {
     case 0:

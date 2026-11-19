@@ -15,7 +15,7 @@ struct H2 {
  * The views are include/private/spl_particle_views.h's; the definition
  * header's fields are named for the System field this function seeds from
  * them. */
-void func_0204ae2c(ParticleSystem *o, void *p18, struct Vector3 *src3) {
+void SPLEmitter_Init(ParticleSystem *o, void *p18, struct Vector3 *src3) {
     o->mDefinition = p18;
     o->callbackFlags = 0;
     o->position = *src3;

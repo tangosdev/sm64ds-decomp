@@ -27,8 +27,7 @@ struct Tex
    coordinates from the texcoord command, texGen 1), then load a texture
    matrix that scales by its width and height. func_0204a5c8 binds the system's
    texture with it, and each particle's own when the texture animates. */
-void func_0204af3c(struct Tex *self)
-{
+void SPLUtil_SetTexture(struct Tex *self) {
     struct TexParam p = self->param;
     G3_TexImageParam(p.fmt, GX_TEXGEN_TEXCOORD, p.sizeS, p.sizeT, p.repeat, p.flip, p.color0,
                      self->texAddr);

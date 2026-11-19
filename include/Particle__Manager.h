@@ -35,7 +35,7 @@ struct SystemDefinition {
 
 struct Manager {
     /* The three manager lists are the same two-word intrusive-list heads used
-       by func_0204d958/func_0204d9a0. Element types differ. AddSystem names
+       by SPLList_PopFront/SPLList_PushFront. Element types differ. AddSystem names
        the system lists; the third list is the free-particle pool. */
     struct SystemList {
         System *head; /* 0x00 */

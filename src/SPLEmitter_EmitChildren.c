@@ -20,16 +20,16 @@ typedef struct SystemListView {
 
 extern u32 data_020a4d30;
 
-extern Node *func_0204d958(List *list);
-extern void func_0204d9a0(List *list, Node *node);
+extern Node *SPLList_PopFront(List *list);
+extern void SPLList_PushFront(List *list, Node *node);
 
 /* Spawn child->count particles from the parent particle self into sys's
-   child list. func_0204a730 calls it for a live particle at the emission
+   child list. SPLEmitter_Update calls it for a live particle at the emission
    interval (SPL's child emission). Each child takes the parent's position
    and offset, the parent velocity scaled by velocityRatio plus a random
    spread, and the parent's animated scale times scaleRatio. The other fields
    come from the child record or the parent. */
-void func_0204c304(ParticleElement *self, SystemListView *sys, List *freelist) {
+void SPLEmitter_EmitChildren(ParticleElement *self, SystemListView *sys, List *freelist) {
     ParticleElement *p;
     PtclChild *def;
     int i;
@@ -51,11 +51,11 @@ void func_0204c304(ParticleElement *self, SystemListView *sys, List *freelist) {
     do {
         int ratio;
 
-        p = (ParticleElement *)func_0204d958(freelist);
+        p = (ParticleElement *)SPLList_PopFront(freelist);
         if (p == 0)
             return;
 
-        func_0204d9a0(&sys->children, (Node *)p);
+        SPLList_PushFront(&sys->children, (Node *)p);
 
         p->offset = self->offset;
 
