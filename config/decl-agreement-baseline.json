@@ -13,9 +13,6 @@
   "Matrix4x3_ApplyInPlaceToRotationX": {
    "src/game/actors/d_a_wanwan2.cpp": ["param:#2 int"]
   },
-  "Mg_CopySpriteList": {
-   "src/minigames/unit020b2c84.cpp": ["arity:4"]
-  },
   "Mg_InitFx": {
    "src/minigames/d_s_mg_base.cpp": ["param:#2 char *", "param:#4 short"]
   },
@@ -62,9 +59,6 @@
   },
   "data_02092114": {
    "include/decl_common.h": ["return:unsigned char"]
-  },
-  "data_02092768": {
-   "src/minigames/unit020bfec0.cpp": ["return:Quaternion"]
   },
   "data_0209b2e4": {
    "src/game/stages/d_s_entry.cpp": ["return:unsigned char"],
@@ -181,10 +175,6 @@
   "func_02045e2c": {
    "src/engine/model/d_ext_model.cpp": ["param:#4 int"]
   },
-  "func_020462bc": {
-   "src/engine/model/d_ext_model.cpp": ["return:unsigned int"],
-   "src/unnamed/ov007/func_ov007_020bc6d4.c": ["return:int"]
-  },
   "func_02046e28": {
    "src/engine/model/d_ext_model.cpp": ["param:#1 ModelComponents *", "param:#2 BMA_File *"]
   },
@@ -209,9 +199,6 @@
   },
   "sBootJobDone": {
    "src/game/stages/d_s_boot_methods.cpp": ["return:unsigned char"]
-  },
-  "sMgWorkBuffer": {
-   "src/minigames/d_s_mg_base.cpp": ["return:int []"]
   }
  }
 }
