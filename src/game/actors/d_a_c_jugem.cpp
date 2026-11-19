@@ -108,7 +108,6 @@ struct JugemVec3 {
 extern "C" {
 
 /* Helpers not declared by the included headers. */
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int AngleDiff(int a, int b);
 

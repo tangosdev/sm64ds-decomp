@@ -61,9 +61,6 @@ extern "C" {
    lookup and the SurfaceInfo write, which takes the entry by value into 0x0
    and the normal into 0x8.
    local extern: no header in include/ declares them. */
-
-/* local extern: no header in include/ declares it. */
-fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
 s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
 void func_020381cc(void *block, int idx, void **out);

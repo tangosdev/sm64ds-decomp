@@ -65,6 +65,7 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 #include "nitro/mi/memory.h"
+#include "math/MtxStack.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -79,10 +80,6 @@ extern OamAttr *sSnowballBitSprites[];
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
 extern void func_02012718(int a, int b);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern union Matrix4x3 data_020a0e68;
 extern u16 sSnowballCourseTiles[][4];
 extern unsigned char data_ov006_0212f3b0[];
@@ -99,14 +96,12 @@ extern void SetBg2Offset(int, int);
 extern void SetBg3Offset(int, int);
 extern void SetSubBg2Offset(int, int);
 extern void SetSubBg3Offset(int, int);
-extern void Quaternion_Normalize(s32 *);
 extern s32 data_02092768[4];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
 void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 s32 GetGameLanguage(void);
 void FreeGfxSlotsById(int arg);
-void Vec2_Sub(int *o, int *a, int *b);
 extern void Ov004_Deallocate(void *p);
 u32 LoadCompressedFileAt(int fileID, void *target);
 void *Ov004_LoadFileByPath(void *p);

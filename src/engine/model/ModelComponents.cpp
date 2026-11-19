@@ -131,10 +131,6 @@ struct MaterialState {
 };
 
 extern "C" {
-void MTX_Identity43_(Matrix4x3 *mat);
-}
-
-extern "C" {
 void func_02048234(Matrix4x3 *out, int sa, int sb, int sc, u16 ax, u16 ay, u16 az, int tx, int ty,
                    int tz);
 void func_02047218(const Matrix4x3 *m0, const Matrix4x3 *m1, Matrix4x3 *dst, fx32 t);

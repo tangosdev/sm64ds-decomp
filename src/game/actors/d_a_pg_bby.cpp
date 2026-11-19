@@ -22,6 +22,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* Descriptive local types and object names, not recovered source spellings.
  * dExtSimpleModel_c and animation handles use different veneers. */
@@ -39,8 +40,6 @@ typedef char PgBbyModelFile_size_must_be_0x08[sizeof(PgBbyModelFile) == 0x08 ? 1
 typedef char PgBbyAnimationFile_size_must_be_0x08[sizeof(PgBbyAnimationFile) == 0x08 ? 1 : -1];
 
 extern "C" {
-
-void Matrix4x3_FromRotationY(void *m, int angle);
 
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;

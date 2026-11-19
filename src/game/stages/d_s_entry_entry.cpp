@@ -33,7 +33,6 @@ extern "C" {
    They take Vector3. TouchAt's locals are Vector3; the grid data is the
    SDK's POD VecFx32 (private/ov075_entry_mesh.h), so CalcDistances hands
    it over through pointer views. */
-void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 /* local extern: the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which

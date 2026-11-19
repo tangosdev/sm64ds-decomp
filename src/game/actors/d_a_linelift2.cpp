@@ -81,11 +81,6 @@ CLPS_Block *gLinelift2ClpsBlocks[2] = {
 };
 extern StateFunc gLinelift2StateFuncs[];          /* by mState */
 
-/* arm9 C helpers with no shared header. */
-extern "C" {
-void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
-}
-
 enum {
     kPlayerActorID = 0xbf,
     kWaitFrames = 20,

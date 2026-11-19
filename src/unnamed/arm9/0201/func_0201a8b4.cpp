@@ -1,13 +1,13 @@
 //cpp
 #include "private/watchdog_alarm.h"
 #include "FatalSpin.h"
+#include "nitro/os/tick.h"
 
 /* The watchdog alarm's handler. While the time since base is under limit it
  * re-arms itself for the rest, provided the rest is at least a millisecond
  * (ticks * 64 / (HW_SYSTEM_CLOCK / 1000), as in func_020427c4). Once the
  * limit is used up it enters the fatal-error spin (func_02013f28), unless
  * input bit 0x2000 is held. */
-extern "C" long long OS_GetTick(void);
 extern "C" unsigned short func_0203da80(unsigned short x);
 
 extern "C" void func_0201a8b4(void *arg) {

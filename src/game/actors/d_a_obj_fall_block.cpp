@@ -45,7 +45,6 @@ enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 #include "nitro/fx/fx_trig.h"
 
 extern "C" {
-s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int AngleDiff(int a, int b);
 }
 

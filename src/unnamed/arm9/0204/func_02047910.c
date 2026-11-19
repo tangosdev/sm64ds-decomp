@@ -2,8 +2,6 @@
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 
-extern void VEC_Normalize(const Vector3 *src, Vector3 *dst);
-
 /* Blend the 4x3 matrix m0 toward m1 by t into dst. The Y and X rows lerp
    in direction and in length separately and are renormalized; the Z row
    is rebuilt as (y x z) x y, perpendicular to Y, at its lerped length;

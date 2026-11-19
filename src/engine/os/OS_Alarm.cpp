@@ -21,6 +21,7 @@
 #include "nitro/os/interrupt.h"
 #include "nitro/os/interrupt_check.h"
 #include "nitro/os/alarm.h"
+#include "nitro/os/tick.h"
 
 #define REG_TM1CNT_L (*(volatile u16 *)0x04000104)
 #define REG_TM1CNT_H (*(volatile u16 *)0x04000106)
@@ -34,7 +35,6 @@ typedef struct OSiAlarmQueue {
     OSAlarm *tail;
 } OSiAlarmQueue;
 
-extern long long OS_GetTick(void);
 extern void OSi_SetTimerReserved(int timerNum);
 
 extern u16 OSi_UseAlarm;

@@ -120,6 +120,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
 #include "Matrix2x2.h"
+#include "Vector2Math.h"
 
 struct SlotCharNos {
     int v[3];
@@ -142,7 +143,6 @@ int GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(int a, void *b, int c, int d);
-void func_0203d704(int *o, int *a, int *b);
 void func_0203d388(int *p, s16 angle);
 void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);

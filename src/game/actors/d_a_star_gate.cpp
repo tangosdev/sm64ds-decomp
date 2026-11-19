@@ -41,6 +41,7 @@ enum d_a_star_gate_AssetId {
 #include "nitro/fx/fx.h"
 #include "SaveBlock.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 void func_02012694(unsigned int soundID, const Vector3 *position);
 extern "C" void ChangeArea(int areaID);
@@ -51,8 +52,6 @@ u8 IsAreaShowing(int areaID);
 extern "C" {
 void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, const Vector3 *in);
 int AngleDiff(int a, int b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }
 extern u8 gLocalPlayerId;
 extern dCamera_c *gCamera;

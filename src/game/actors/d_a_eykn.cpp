@@ -70,6 +70,7 @@
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* Inferred local resource-family ABI views; these type names are not ROM
  * names. The manifest binds each constructor/destructor to its existing
@@ -106,9 +107,6 @@ daEykn_c::State gEyknStates[3] = {
 
 extern "C" {
 int AngleDiff(int a, int b);
-u8 DecIfAbove0_Byte(u8 *counter);
-s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s8 gCurrentSublevel; /* current sublevel id */
@@ -118,7 +116,6 @@ extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSe
                                                             &gEyknOpenTextureSequenceFile};
 extern SharedFilePtr *const gEyknDeathAnimationFilePtr = &gEyknDeathAnimationFile;
 }
-s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* Debug-table actor ids, and the thresholds this file compares against. */
 enum {

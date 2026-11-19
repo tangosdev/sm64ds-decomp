@@ -69,7 +69,6 @@ extern int data_0208ee44;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 
 /* arm9 / ov004 helpers with no project header. */
-void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 void *Ov004_LoadFile(int id);
 void Mg_ResetOverlays(void);
 void Mg_ResetBgOffsets(void);

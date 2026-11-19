@@ -59,6 +59,7 @@ enum daObjCtMecha10_c_AssetId {
 #include "dBgW.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 
 /* Actor ids are the registry profile ids. Clock settings are the byte at
  * data_0209f2c0: 2 re-rolls the dwell, 3 holds the cog still. */
@@ -99,11 +100,6 @@ extern const s16 data_ov035_02111ef4[2][4] = {
     {20, 5, 5, 0},
 };
 extern u8 data_0209f2c0;             /* arm9 clock setting */
-
-extern "C" {
-u16 DecIfAbove0_Short(u16 *p);
-int RandomIntInternal(int *state);
-}
 
 daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA10() {
     return new daObjCtMecha10_c();

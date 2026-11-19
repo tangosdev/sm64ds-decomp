@@ -44,6 +44,7 @@
 #include "Matrix2x2.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/mi/memory.h"
+#include "nitro/gx/gx_load.h"
 
 extern u8  data_0209e660;    /* sub-OAM suppress flag / single-buffer select */
 extern int data_0209e664;    /* main-buffer fill counter */
@@ -58,9 +59,6 @@ extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
 extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 
 extern "C" {
-void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count);
-void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
-
 int func_0202043c(OamAnimation *anim);
 }
 

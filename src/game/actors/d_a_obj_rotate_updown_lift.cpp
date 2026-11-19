@@ -128,7 +128,6 @@ extern UpdownClpsSlot data_ov091_02134c38[];
 extern s8 gCurrentSublevel;
 
 extern "C" {
-void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);

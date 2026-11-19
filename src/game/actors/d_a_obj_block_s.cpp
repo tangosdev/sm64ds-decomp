@@ -126,7 +126,6 @@ enum {
 extern u32 gNextActorUpdateMask;
 extern CLPS_Block data_ov002_0210d934;
 extern ResourceDescriptor data_ov098_0213c4c8;
-extern "C" u8 DecIfAbove0_Byte(u8 *p);
 namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
 }
@@ -135,8 +134,6 @@ int SurfaceInfo_TestFlag0x20(int *p);
 int func_ov002_020f030c(int x);
 extern "C" int func_ov002_020e496c(daPly_c *c);
 
-extern "C" void Vec3_MulScalarInPlace(Vector3 *v, int s);
-extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 
 

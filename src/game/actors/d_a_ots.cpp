@@ -178,12 +178,6 @@ enum {
     kHopSpeed = 0xf000              /* 15 units a frame upward */
 };
 
-/* ROM symbols with no header of their own. `extern` on every data declaration:
- * without it the block form defines rather than declares. */
-extern "C" {
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
 static inline int IsActorID(dActor_c *actor, int id) {
     return actor->actorID == id;
 }

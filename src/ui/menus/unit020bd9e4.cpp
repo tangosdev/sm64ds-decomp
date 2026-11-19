@@ -41,13 +41,12 @@
 #include "nnsys/snd/player.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
+#include "Ov007MenuMem.h"
 
 extern "C" void NNS_SndHandleReleaseSeq(NNSSndHandle *);
 extern "C" void NNS_SndHandleInit(NNSSndHandle *);
 extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *, int);
 extern "C" int func_02051f1c(void *, unsigned int, int);
-extern "C" void *func_ov007_020c3df4(const char *name, int size);
-extern "C" void func_ov007_020c3d1c(void *);
 
 extern int data_ov007_02103134[];
 extern char data_ov007_02103218[]; /* "sound" */

@@ -27,6 +27,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "Vector2Math.h"
 extern "C" void FreeGfxSlotsById(int);
 extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
 extern "C" s32 GetGameLanguage(void);
@@ -85,8 +86,6 @@ extern int sMgCardSprites[];
 
 extern int sMCarloCardSprites[];
 extern "C" {
-extern "C" void Vec2_Sub(int *o, int *a, int *b);
-
 extern void func_0203d630(int *p, int m);
 }
 

@@ -57,7 +57,6 @@ extern C1HikariModelFilePtr gC1HikariModelFile;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 }
 extern unsigned char NumStars(void);

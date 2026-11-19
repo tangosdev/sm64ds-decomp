@@ -58,18 +58,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
-/* The callees of this TU's members, spelled by their mangled or ROM names.
- * They cannot be declared inside a method body: a block-scope extern in a
- * daMky_c member gets C++ linkage, the reference mangles a second time, and
- * the module no longer links. Each is declared once, here, because C++
- * rejects two extern "C" declarations of one name that disagree, so one
- * spelling has to serve every call site. Data objects stay in the bodies:
- * a variable's name does not mangle. */
-extern "C" {
-
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-}
-
 /* The model handle constructs through func_02017acc and the animation
  * handles through SharedFilePtr::Construct. Declared here, ahead of the
  * members that read them; defined at the bottom in retail __sinit order. */

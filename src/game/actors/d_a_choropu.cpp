@@ -60,6 +60,7 @@ enum daChoropu_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -91,8 +92,6 @@ extern ChoropuStateRow data_ov080_02128438[6];
 
 #define LAUND(p) ((void*)(p))
 
-extern "C" int RandomIntInternal(int *seed);
-extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 void func_02012694(unsigned int a, const Vector3 *p);
 
 extern const int data_ov080_0212767c[18] = {

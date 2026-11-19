@@ -48,6 +48,7 @@
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "Sound.h"
+#include "math/MtxStack.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -79,7 +80,6 @@ extern SharedFilePtr *const data_ov102_0214d70c[2] = {
 
 /* -- other modules -- */
 int func_ov002_020cc16c(void *player, void *actor);
-void Matrix4x3_FromRotationY(void *m, int angle);
 
 }
 int SurfaceInfo_TestFlag0x20(int *si);

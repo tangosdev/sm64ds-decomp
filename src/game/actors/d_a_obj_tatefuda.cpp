@@ -76,6 +76,7 @@ enum daObjTatefuda_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
@@ -126,20 +127,15 @@ enum {
 };
 
 extern "C" {
-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern char *func_ov002_020e496c(daPly_c *p);
-extern void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 extern short data_ov002_020ff0d0[];
 extern const VecFx32 data_ov002_020ff0d4[];
 
-extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern u8 data_0209d660;
 extern u8 data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
-extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern unsigned int gNextActorUpdateMask;
-extern u8 DecIfAbove0_Byte(u8 *p);
 extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
                                   CLPS_Block &b);
 extern CLPS_Block data_ov002_0210d714;

@@ -50,6 +50,7 @@ enum daOnms_c_AssetId {
 #include "Sound.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/MtxStack.h"
 
 /* mMoveDir indexes the member-pointer table this file defines below. The
    compiler copies the nine pointer-to-member descriptors into it at
@@ -115,10 +116,6 @@ extern "C" int func_ov002_020de328(void *player);
 /* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
 void func_02012694(unsigned int id, const Vector3 *v);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
-extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 extern "C" void hold_d_a_onms(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
                               short angY, void *clps);
 /* Stores beforeClsnCallback: p[6] = value, the word at dBgW + 0x18. */

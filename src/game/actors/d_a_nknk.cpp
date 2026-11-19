@@ -73,7 +73,6 @@ struct NknkAnimationFileHandle : SharedFilePtr {
 
 extern NknkAnimationFileHandle *const data_ov062_0211cee8[9];
 extern const int data_ov062_0211cf0c[9];
-extern "C" int RandomIntInternal(int *seed);
 
 extern SharedFilePtr *const data_ov062_0211ced8[2];
 extern SharedFilePtr *const data_ov062_0211cee0[2];

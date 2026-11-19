@@ -78,7 +78,6 @@ enum ChairSfxId {
 /* local extern: arm9 C helpers with no shared header yet. Vec3_Sub takes the
    shared Vector3 interface; this TU keeps NitroSDK VecFx32 views. */
 extern "C" {
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
 }
 

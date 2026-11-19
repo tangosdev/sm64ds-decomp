@@ -58,7 +58,6 @@ struct Event {
 #define ICON_Y_VISIBLE(y) ((u16)((y) + 0x10) < 0xe0)
 
 extern "C" {
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern u8 gCurrentStarId;
 }
@@ -116,7 +115,6 @@ struct MinimapDesc;
 extern void UpdateMinimap(MinimapDesc *a, u32 b, u32 c, u32 d, u32 e);
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s);
 extern "C" {
-void Vec3_MulScalarInPlace(Vector3 *v, int s);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
 }
 

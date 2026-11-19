@@ -53,6 +53,7 @@ enum daBtfly_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "math/MtxStack.h"
 
 /* Lays .text down in source order (see the note at the top). */
 #pragma defer_codegen off
@@ -79,10 +80,7 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_Asr (void *) */
 int Vec3_HorzLen(const Vector3 *v);
 void Vec3_Asr(void *d, void *s, int sh);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 int RandomIntInternal(int *seed);
-extern Matrix4x3 data_020a0e68; /* scratch matrix */
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
 extern SharedFilePtr data_ov002_0210d9d8;

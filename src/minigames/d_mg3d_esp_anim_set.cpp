@@ -53,6 +53,7 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 extern "C" void Mg_ShowBanner(int, int, int, int, int, short);
 extern "C" void Mg_SetSharedState(s32);
 extern "C" void FreeGfxSlotsById(int);
@@ -107,11 +108,6 @@ extern EspAnimSetAnimationFileHandle gEspCardOpenAnimFile;
 extern EspAnimSetModelFilePtr gEspHamonModelFile;
 
 extern EspAnimSetModelFilePtr gEspIrieModelFile;
-
-extern Matrix4x3 data_020a0e68;
-extern "C" {
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-}
 
 void func_02046208(void *a, unsigned int b, int c);
 

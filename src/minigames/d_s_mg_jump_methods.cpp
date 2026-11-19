@@ -43,6 +43,7 @@ BaseSpawnInfo<dScMgJump_c> g_profile_MG_JUMP = {
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "math/MtxStack.h"
 
 /* The 0x30-byte runtime material ModelComponents::materials points at
    (ModelComponents.cpp's MaterialState; dExtModel_c.h types the pointer as
@@ -87,14 +88,12 @@ struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void FreeGfxSlotsById(int arg);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 
 int Jump3D_InitPool(void *base, int count);
 
-extern Matrix4x3 data_020a0e68;
 extern int sJumpLastPick;
 extern u8 gMainScreenLayers;
 extern s16 data_02082614[];

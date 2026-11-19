@@ -33,6 +33,7 @@
 #include "dCamera_c.h"
 #include "daPly_c.h"
 #include "daDoor_c.h"
+#include "math/CalcLib.h"
 
 extern signed char data_ov002_02110af0;
 extern signed char gCurrentAreaId;
@@ -44,7 +45,6 @@ extern dCamera_c *gCamera;
 
 /* arm9 / ov100 C helpers with no shared header. */
 extern "C" {
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short angle, const Vector3 *v);
 }
 u8 NumStars(void);

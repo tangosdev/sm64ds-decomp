@@ -46,6 +46,7 @@ enum daGmch_c_AssetId {
 #include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/MtxStack.h"
 
 /* Actor ids are from symbols/actor_debug_names.tsv. */
 enum {
@@ -144,11 +145,6 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * earns its registered destructor instead of constant initialization. */
 extern "C" {
 extern void func_02038414(void *clsn);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 }
 
