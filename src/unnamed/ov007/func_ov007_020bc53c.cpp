@@ -1,8 +1,8 @@
 //cpp
 #include "Ov007Model.h"
+#include "Ov007MenuMem.h"
 
 extern "C" void func_ov007_020c92a0(void *p);
-extern "C" void func_ov007_020c3d1c(void *p);
 
 /* Frees a model record: the four animation players go back through
    func_ov007_020c92a0, the buffers and the record through

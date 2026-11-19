@@ -5,7 +5,6 @@
  * Matrix4x3 viewMatrix (#5207). */
 
 extern void func_ov007_020c90c0(void *self);
-extern void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern void VEC_MultAdd(int s, int *a, int *b, int *out);
 
 /* from at t <= 0, to at t >= 0x1000, between them the Q12 blend */

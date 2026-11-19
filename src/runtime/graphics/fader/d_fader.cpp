@@ -34,10 +34,6 @@
 #include "nitro/os/cache.h"
 int ApproachLinear(fx32 &value, fx32 target, fx32 step);
 
-extern "C" {
-void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, fx32 x, fx32 y, fx32 z);
-}
-
 #ifndef _MSC_VER
 dFader_c::~dFader_c()
 {
