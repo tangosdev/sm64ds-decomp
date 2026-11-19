@@ -22,6 +22,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* Descriptive local types and object names, not recovered source spellings.
  * dExtSimpleModel_c and animation handles use different veneers. */
@@ -39,8 +40,6 @@ typedef char PgBbyModelFile_size_must_be_0x08[sizeof(PgBbyModelFile) == 0x08 ? 1
 typedef char PgBbyAnimationFile_size_must_be_0x08[sizeof(PgBbyAnimationFile) == 0x08 ? 1 : -1];
 
 extern "C" {
-
-void Matrix4x3_FromRotationY(void *m, int angle);
 
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
@@ -104,11 +103,14 @@ s32 daPgBby_c::Behavior()
     return 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 s32 daPgBby_c::Render()
 {
-    unsigned int f = mFlags;
-    int b = ((f & 0x40000) != 0);
-    if (b) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
     mAnmModel.Render(&mScale);
     return 1;
 }
@@ -275,19 +277,16 @@ int daPgBby_c::StateHeldEnter() {
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 /* State 2, update: face where the carrier faces; once no longer held, drop
    to the ground under the carrier and return to state 0. */
 int daPgBby_c::StateHeldUpdate() {
     mAngle.y = mCarrier->mAngle.y;
     mPrevAngle.y = mAngle.y;
-    u32 flags = mFlags;
-    int held = (flags & 0x100) != 0;
-    if (held) {
-        int thrown = (flags & 0x2000) != 0;
-        if (!thrown)
-            goto animate;
-    }
-    {
+    if (!IsFlagSet(this, 0x100) || IsFlagSet(this, 0x2000)) {
         daPly_c *carrier = mCarrier;
         Vector3 from;
         int y = carrier->mPos.y;
@@ -301,7 +300,6 @@ int daPgBby_c::StateHeldUpdate() {
         mCarrier = 0;
         ChangeState(0);
     }
-animate:
     mAnmModel.Advance();
     mCylClsn.Clear();
     if (param1 == 0) {
@@ -511,7 +509,7 @@ void daPgBby_c::UpdateModelAndShadow() {
     int shadowHeight;
     int shadowRadius;
 
-    if (mCarrier && ((mFlags & 0x4000) ? 1 : 0) && mCarrier->mCarryMatrix) {
+    if (mCarrier && IsFlagSet(this, 0x4000) && mCarrier->mCarryMatrix) {
         idx = 0;
         if (mCarrier->IsFrontSliding() || mCarrier->LostGrabbedObject()) {
             idx = 1;
@@ -523,18 +521,18 @@ void daPgBby_c::UpdateModelAndShadow() {
         mAnmModel.mat4x3 = *carry;
     } else {
         Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-        mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-        mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-        mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+        mAnmModel.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel.mat4x3.t.y = mPos.y >> 3;
+        mAnmModel.mat4x3.t.z = mPos.z >> 3;
     }
 
-    if ((mFlags & 0x40000) ? 1 : 0) {
+    if (IsInYoshiMouth(this)) {
         return;
     }
 
     shadowHeight = 0xb4000;
     shadowRadius = 0x5a000;
-    if (mCarrier && ((mFlags & 0x4000) ? 1 : 0)) {
+    if (mCarrier && IsFlagSet(this, 0x4000)) {
         v.x = mPos.x;
         v.y = mPos.y;
         v.z = mPos.z;
@@ -558,8 +556,8 @@ void daPgBby_c::UpdateModelAndShadow() {
 void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
-    int b = ((mFlags & 0x4000) != 0);
-    if (b != 0) return;
+    if (IsFlagSet(this, 0x4000))
+        return;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
@@ -572,6 +570,10 @@ void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     if (clsn->IsOnWall()) {
         clsn->GetWallResult()->surface.CopyNormalTo(wallNormal);
     }
+}
+
+static inline int Abs(int v) {
+    return v < 0 ? -v : v;
 }
 
 /* Refuse a step onto ground more than 0x1.9 away from the current height:
@@ -590,18 +592,12 @@ int daPgBby_c::GuardStepHeight() {
             v.z = z;
         }
         ground.SetObjAndPos(v, this);
-        if (ground.DetectClsn() != 0) {
-            int d = ground.clsnY - mPos.y;
-            if (d < 0) d = -d;
-            if (d <= 0x1900)
-                goto bail;
+        if (ground.DetectClsn() == 0 || Abs(ground.clsnY - mPos.y) > 0x1900) {
+            mPos.x = mPrevPos.x;
+            mPos.y = mPrevPos.y;
+            mPos.z = mPrevPos.z;
+            return 1;
         }
-        mPos.x = mPrevPos.x;
-        mPos.y = mPrevPos.y;
-        mPos.z = mPrevPos.z;
-        return 1;
-    bail:
-        ;
     }
     return 0;
 }
@@ -648,15 +644,15 @@ void daPgBby_c::CheckNearMother() {
    run out, and off screen -- go back to the spawn position. */
 void daPgBby_c::CheckRespawn() {
     Vector3 out;
-    Vector3 tmp;
+    Vector3 scaledPos;
     if (mStateId == 3) return;
     if ((unsigned)mPos.y > (unsigned)(-0x1800000)) {
         if (Vec3_Dist(&mSpawnPos, &mPos) < 0x190000)
             return;
         if (DecIfAbove0_Short(&mRespawnTimer) != 0) return;
     }
-    Vec3_Asr(&tmp, &mSpawnPos, 3);
-    if (data_0209f43c.TransformAndClip(data_0209b3ec, tmp, 0x1f400, out) <= 0xc350000)
+    Vec3_Asr(&scaledPos, &mSpawnPos, 3);
+    if (data_0209f43c.TransformAndClip(data_0209b3ec, scaledPos, 0x1f400, out) <= 0xc350000)
         return;
     mPos.x = mSpawnPos.x;
     mPos.y = mSpawnPos.y;

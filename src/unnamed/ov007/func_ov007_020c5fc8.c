@@ -56,5 +56,5 @@ void func_ov007_020c5fc8(Ov007Picker *self, int idx, int t) {
         prev = cur;
 
         i++;
-    } while (i < (int)self->groups[idx]->pointCount);
+    } while (i < self->groups[idx]->pointCount);
 }

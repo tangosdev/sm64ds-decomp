@@ -57,7 +57,6 @@ extern C1HikariModelFilePtr gC1HikariModelFile;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 }
 extern unsigned char NumStars(void);
@@ -91,11 +90,15 @@ int daObjC1Hikari_c::InitResources() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 int daObjC1Hikari_c::Behavior() {
-    int vIn[3], vMid[3];
+    Vector3 vIn, vMid;
     Vector3 vRes;
     Vector3 hv;
-    int vIn2[3], vMid2[3];
+    Vector3 vIn2, vMid2;
     Vector3 vRes2;
 
     if (mTalkPlayer != 0) {
@@ -104,15 +107,15 @@ int daObjC1Hikari_c::Behavior() {
             return 1;
         p = mTalkPlayer;
 
-        vIn[0] = -0x3b0000;
-        vIn[1] = 0x200000;
-        vIn[2] = 0x120000;
-        vMid[0] = 0;
-        vMid[1] = 0;
-        vMid[2] = 0;
+        vIn.x = -0x3b0000;
+        vIn.y = 0x200000;
+        vIn.z = 0x120000;
+        vMid.x = 0;
+        vMid.y = 0;
+        vMid.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43((Vector3 *)vIn, &data_020a0e68, (Vector3 *)vMid);
-        Vec3_Add(&vRes, &mPos, (const Vector3 *)vMid);
+        MTX_MultVec43(&vIn, &data_020a0e68, &vMid);
+        Vec3_Add(&vRes, &mPos, &vMid);
 
         switch (p->GetTalkState()) {
         case 0:
@@ -132,8 +135,7 @@ int daObjC1Hikari_c::Behavior() {
         if (mCylinder.hitFlags & 0x8000000) {
             dActor_c *o = dActor_c::FindWithID(mCylinder.otherOwner);
             if (o) {
-                int b = (o->actorID == 0xbf);
-                if (b) {
+                if (IsPlayerActor(o)) {
                     Vector3 *op = &o->mPos;
                     hv = *op;
                     if (AngleDiff(Vec3_HorzAngle(&mPos, &hv), mAngle.y) < 0x4000) {
@@ -150,15 +152,15 @@ int daObjC1Hikari_c::Behavior() {
         }
     }
 
-    vIn2[0] = -0x3b0000;
-    vIn2[1] = 0;
-    vIn2[2] = 0x320000;
-    vMid2[0] = 0;
-    vMid2[1] = 0;
-    vMid2[2] = 0;
+    vIn2.x = -0x3b0000;
+    vIn2.y = 0;
+    vIn2.z = 0x320000;
+    vMid2.x = 0;
+    vMid2.y = 0;
+    vMid2.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43((Vector3 *)vIn2, &data_020a0e68, (Vector3 *)vMid2);
-    Vec3_Add(&vRes2, &mPos, (const Vector3 *)vMid2);
+    MTX_MultVec43(&vIn2, &data_020a0e68, &vMid2);
+    Vec3_Add(&vRes2, &mPos, &vMid2);
     mCylinder.pos.x = vRes2.x;
     mCylinder.pos.y = vRes2.y;
     mCylinder.pos.z = vRes2.z;
@@ -180,9 +182,9 @@ int daObjC1Hikari_c::CleanupResources() {
 
 void daObjC1Hikari_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* The initializer constructs the model handle with file ID 1453 and

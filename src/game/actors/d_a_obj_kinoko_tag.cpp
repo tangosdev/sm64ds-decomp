@@ -61,10 +61,13 @@ s32 daObjKinokoTag_c::InitResources() {
     return 1;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 s32 daObjKinokoTag_c::Behavior() {
     dActor_c *other;
-    s32 isKinokoTag = (actorID == 0x140);
-    if (isKinokoTag) {
+    if (IsActorID(this, 0x140)) {
         if (!mSearchedForPile) {
             other = FindWithActorID(0x1b, 0);
             while (other != 0) {
@@ -91,8 +94,7 @@ s32 daObjKinokoTag_c::Behavior() {
             MarkForDestruction();
     }
 
-    isKinokoTag = (actorID == 0x140);
-    if (isKinokoTag) {
+    if (IsActorID(this, 0x140)) {
         if (mHasLinkedPile == 1) {
             if (mLinkedPileGone)
                 SpawnMegaMushroom();

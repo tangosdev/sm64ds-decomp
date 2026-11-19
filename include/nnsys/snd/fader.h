@@ -4,8 +4,8 @@
 /*
  * NitroSystem's sound fader, as the Sonic Rush Adventure decomp spells it:
  * values are 8.8 fixed point (NNS_SndPlayerMoveVolume shifts its target
- * left by 8). func_02052494 has NNSi_SndFaderSet's shape: origin from the
- * current value, then target, frame and a zero counter.
+ * left by 8). NNSi_SndFaderSet takes its origin from the current value,
+ * then target, frame and a zero counter.
  */
 
 #ifdef __cplusplus

@@ -102,7 +102,7 @@ extern "C" int func_02046590(const void *tbl, const char *name) {
         while (1)
         {
             if (strcmp(entry->name, name) == 0)
-                return (int)i;
+                return i;
             i++;
             entry++;
             if (i >= t->numMaterials)

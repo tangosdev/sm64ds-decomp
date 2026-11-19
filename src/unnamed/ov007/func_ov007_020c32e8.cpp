@@ -8,7 +8,7 @@
  * colours; every ov007 caller passes 0. */
 void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip) {
     unsigned int offset = row << 5;
-    unsigned int size = (unsigned int)((pal->colorCount - skip) << 1);
+    unsigned int size = (pal->colorCount - skip) << 1;
     switch (target) {
     case 0:
         GX_LoadOBJPltt((const char *)pal->colors + skip, offset, size);

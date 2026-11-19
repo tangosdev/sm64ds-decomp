@@ -50,7 +50,6 @@ extern "C" {
 extern void Mg_SetTopScreenYOffset(int n);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
-void Vec2_Sub(int *out, int *a, int *b);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
 void DecompressLZ16(void *src, void *dst);
@@ -292,7 +291,7 @@ s32 dScMgFlower_c::Behavior() {
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
                         Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].pos.x, &mCursorX);
-                        withinGrabRadius = Vec2_Len(&toCursor) < 0x18000 ? 1 : 0;
+                        withinGrabRadius = Vec2_Len(&toCursor) < 0x18000;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
                             mPetals[attachedIndex].held = 1;
@@ -313,7 +312,7 @@ s32 dScMgFlower_c::Behavior() {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
                             Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].pos.x, &mCursorX);
-                            withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000 ? 1 : 0;
+                            withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
                                 mPetals[freeIndex].driftX = 0;

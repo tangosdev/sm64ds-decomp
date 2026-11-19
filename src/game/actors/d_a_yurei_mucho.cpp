@@ -13,8 +13,6 @@
  * State records at the end of this file name.
  *
  * Remaining reconstruction under issue #2478:
- * - mStateTimer comparisons read it through a (u16) cast, because the ROM
- *   loads it with ldrh.
  * - The V3A copy of a player's position in UpdateShoot: Vector3
  *   assignment scalarizes; UpdateChase's snapshot is a POD VecFx32
  *   copy-init.
@@ -49,7 +47,6 @@ struct V3A { int w[3]; };
 /* Scalar ABI declarations retained by this TU. */
 
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
-extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void func_02012694(unsigned int id, const Vector3 *v);
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
@@ -225,12 +222,16 @@ int daYurei_Mucho_c::Behavior()
     return 1;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* -------------------------------------------------------------------------- */
 /* dActor_c vtable slot 9. */
 int daYurei_Mucho_c::Render()
 {
-    int b = ((mFlags & 0x40000) != 0);
-    if (b) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
     mAnmModel.Render(0);
     return 1;
 }
@@ -273,9 +274,9 @@ void daYurei_Mucho_c::UpdateModelTransform() {
 
     MTX_Concat43(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
 
-    mShotPos.x = data_020a0e68.m[9];
-    mShotPos.y = data_020a0e68.m[10];
-    mShotPos.z = data_020a0e68.m[11];
+    mShotPos.x = data_020a0e68.t.x;
+    mShotPos.y = data_020a0e68.t.y;
+    mShotPos.z = data_020a0e68.t.z;
     mShotPos.x <<= 3;
     mShotPos.y <<= 3;
     mShotPos.y -= 0xa000;
@@ -334,7 +335,7 @@ int daYurei_Mucho_c::UpdateIdle() {
 
     if (Vec3_Dist(&mPos, &mHomePos) > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
         mTargetAngle = Vec3_HorzAngle(&mPos, &mHomePos);
-        if ((u16)mStateTimer < 20)
+        if (mStateTimer < 20)
             mStateTimer = 20;
     }
 
@@ -345,7 +346,7 @@ int daYurei_Mucho_c::UpdateIdle() {
     Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &mSpeed);
 
-    if ((u16)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         ChangeState(&data_ov065_0211d670);
         return 1;
     }
@@ -388,22 +389,22 @@ int daYurei_Mucho_c::UpdateChase() {
         /* POD: the ROM copy-inits with ldm/stm; a Vector3 copy is memberwise. */
         /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         /* Kept (#821 r77): the snapshot reads through `*(VecFx32 *)&` and goes
-           back to Vec3_Dist as `const Vector3 *`. `Vector3 tmp = p->mPos;`
-           gives 0x150 (ROM 0x154); passing the Vector3 copy b instead of tmp
+           back to Vec3_Dist as `const Vector3 *`. `Vector3 playerPos = p->mPos;`
+           gives 0x150 (ROM 0x154); passing the Vector3 copy b instead of playerPos
            gives 0x14c. */
-        VecFx32 tmp = *(VecFx32 *)&p->mPos;
+        VecFx32 playerPos = *(VecFx32 *)&p->mPos;
         Vector3 v;
         Vector3 a;
-        a.x = tmp.x;
-        a.y = tmp.y;
-        a.z = tmp.z;
+        a.x = playerPos.x;
+        a.y = playerPos.y;
+        a.z = playerPos.z;
         mTargetAngle = Vec3_HorzAngle(&mPos, &a);
         Vector3 b;
-        b.x = tmp.x;
-        b.y = tmp.y;
-        b.z = tmp.z;
+        b.x = playerPos.x;
+        b.y = playerPos.y;
+        b.z = playerPos.z;
         pitch = Vec3_VertAngle(&mPos, &b);
-        if (Vec3_Dist(&mPos, (const Vector3 *)&tmp) >= 0x1f4000) {
+        if (Vec3_Dist(&mPos, (const Vector3 *)&playerPos) >= 0x1f4000) {
             mSpeed.x = 0;
             mSpeed.y = 0;
             mSpeed.z = 0;
@@ -420,7 +421,7 @@ int daYurei_Mucho_c::UpdateChase() {
     }
     ApproachAngle(&mPrevAngle.y, mTargetAngle, 1, 0x500, 0x500);
     ApproachAngle(&mPrevAngle.x, pitch, 1, 0x500, 0x500);
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         ChangeState(&data_ov065_0211d650);
     return 1;
 }
@@ -448,8 +449,7 @@ int daYurei_Mucho_c::UpdateShoot() {
         mTargetAngle = Vec3_HorzAngle(&mPos, &target);
         ApproachAngle(&mPrevAngle.y, mTargetAngle, 1, 0x500, 0x500);
 
-        if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && (u16)mStateTimer == 0 &&
-            mShotCount < 3) {
+        if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && mStateTimer == 0 && mShotCount < 3) {
             void *spawned = dActor_c::Spawn(0xe9, 1, mShotPos, 0, mAreaId, -1);
             if (spawned != 0) {
                 dActor_c *shot = (dActor_c *)spawned;
@@ -474,10 +474,10 @@ int daYurei_Mucho_c::UpdateShoot() {
 
     if (mAnmModel.Finished() != 0) {
         if (pl != 0) {
-            s32 *dsrc = (s32 *)(&pl->mPos.x);
-            shotPos.x = dsrc[0];
-            shotPos.y = dsrc[1];
-            shotPos.z = dsrc[2];
+            Vector3 *dsrc = &pl->mPos;
+            shotPos.x = dsrc->x;
+            shotPos.y = dsrc->y;
+            shotPos.z = dsrc->z;
             if (Vec3_Dist(&mPos, &shotPos) > 0x3e8000) {
                 mStateTimer = 0;
                 ChangeState(&data_ov065_0211d670);
@@ -519,9 +519,13 @@ int daYurei_Mucho_c::EnterBumped() {
 int daYurei_Mucho_c::UpdateBumped() {
     ApproachAngle(&mAngle.x, -0x4000, 0xa, 0x200, 0x100);
     ApproachLinear(mAngle.x, -0x4000, 0x200);
-    if ((u16)mStateTimer == 0)
+    if (mStateTimer == 0)
         KillWithCoins();
     return 1;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -583,8 +587,8 @@ void daYurei_Mucho_c::HandleCollision() {
         return;
     }
     {
-        int b = (p->actorID == 0xbf);
-        if (b == 0) return;
+        if (!IsPlayerActor(p))
+            return;
     }
     if (p->mIsMetal == 1 || p->IsOnShell() == 1) {
         KillWithCoins();

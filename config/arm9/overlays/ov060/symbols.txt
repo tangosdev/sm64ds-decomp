@@ -62,7 +62,7 @@ _ZN7daKpa_c15SetAnimSlowGaitEv kind:function(arm,size=0x2c) addr:0x02115718
 _ZN7daKpa_c20SetAnimLookUpAndWalkEv kind:function(arm,size=0x38) addr:0x02115744
 _ZN7daKpa_c17UpdateModelMatrixEv kind:function(arm,size=0x2b4) addr:0x0211577c
 _ZN7daKpa_c24Bowser_IsAnimAtLastFrameEv kind:function(arm,size=0x54) addr:0x02115a30
-_ZN7daKpa_c13BounceEffectsEPc kind:function(arm,size=0x88) addr:0x02115a84
+_ZN7daKpa_c13BounceEffectsEPt kind:function(arm,size=0x88) addr:0x02115a84
 _ZN7daKpa_c14SpawnShockwaveEv kind:function(arm,size=0x78) addr:0x02115b0c
 _ZN11daKpaTail_c19func_ov060_02115b84Ev kind:function(arm,size=0x98) addr:0x02115b84
 _ZN11daKpaTail_c19func_ov060_02115c1cEv kind:function(arm,size=0x134) addr:0x02115c1c
@@ -154,7 +154,7 @@ _Z19daFRing_c_classInitv kind:function(arm,size=0x70) addr:0x021191f4
 data_ov060_02119264 kind:data(any) addr:0x02119264
 data_ov060_02119268 kind:data(any) addr:0x02119268
 data_ov060_0211927c kind:data(any) addr:0x0211927c
-data_ov060_02119294 kind:data(any) addr:0x02119294
+sBowsertiltPlatformData kind:data(any) addr:0x02119294
 data_ov060_02119296 kind:data(any) addr:0x02119296
 data_ov060_02119298 kind:data(any) addr:0x02119298
 data_ov060_021192dc kind:data(any) addr:0x021192dc

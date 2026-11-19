@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/spl_particle_views.h"
-extern u32 data_020a4d30;
+extern u32 gSPLRandomState;
 
 /* The particle's 0x40 halfword (SPL's visibility): the base alpha in bits 0-4,
  * the animated alpha in bits 5-9. This
@@ -31,8 +31,8 @@ struct AlphaAnim {
 };
 
 /* The alpha animation callback. The name is pret's SPL coinage, not a ROM
- * or SDK symbol. data_020a4d30 is the particle code's random seed (the same
- * LCG as func_0204c584). */
+ * or SDK symbol. gSPLRandomState is the particle code's random seed (the same
+ * LCG as SPLEmitter_EmitParticles). */
 void SPLAnim_Alpha(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
     struct AlphaAnim *anim = def->alphaAnim;
     int in = anim->in;
@@ -54,8 +54,8 @@ void SPLAnim_Alpha(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
         value = step + end;
     }
     u16 *visibility = &ptcl->visibility;
-    u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-    data_020a4d30 = s;
+    u32 s = gSPLRandomState * 0x5eedf715u + 0x1b0cb173u;
+    gSPLRandomState = s;
     int range = anim->randomRange;
     u16 old = *visibility;
     *visibility =

@@ -27,6 +27,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "Vector2Math.h"
 extern "C" void FreeGfxSlotsById(int);
 extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
 extern "C" s32 GetGameLanguage(void);
@@ -85,8 +86,6 @@ extern int sMgCardSprites[];
 
 extern int sMCarloCardSprites[];
 extern "C" {
-extern "C" void Vec2_Sub(int *o, int *a, int *b);
-
 extern void func_0203d630(int *p, int m);
 }
 
@@ -250,6 +249,10 @@ int dScMgMCarlo_c::CanEndState(int mode) {
     return 0;
 }
 
+static inline int HasSelectedPair() {
+    return sMCarloFirstPick != 0 && sMCarloSecondPick != 0;
+}
+
 /* Slot 6: the round, on the s16 state at mRoundState. Case 1 arms the prompt
  * blink and falls through into case 2 on purpose. gMgScene is
  * the active scene (dScMgBase_c.h declares it void *), so it is cast at
@@ -289,8 +292,7 @@ s32 dScMgMCarlo_c::Behavior() {
             } else {
                 int revealLimit = mRoundProgress + 18;
                 if (visibleCards >= revealLimit) {
-                    int hasSelectedPair = (sMCarloFirstPick != 0 && sMCarloSecondPick != 0);
-                    if (hasSelectedPair == 0)
+                    if (!HasSelectedPair())
                         sMCarloDealProgress = revealLimit << 12;
                 }
             }

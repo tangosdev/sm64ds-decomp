@@ -33,7 +33,6 @@ extern "C" {
    They take Vector3. TouchAt's locals are Vector3; the grid data is the
    SDK's POD VecFx32 (private/ov075_entry_mesh.h), so CalcDistances hands
    it over through pointer views. */
-void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 /* local extern: the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which
@@ -235,20 +234,21 @@ short EntryMesh::RipplePhase(int dist) {
     return (v - mRipplePhase);
 }
 
-/* Store each vertex's flat (z = 0) distance from mRippleCenter. tmp is
+/* Store each vertex's flat (z = 0) distance from mRippleCenter. flat is
    copy-initialized from the POD VecFx32, which mwcc block-moves (ldm/stm);
    assigning it after the declaration copies the three words one by one.
    Kept (#821 r77): both VecFx32s reach the game's Vec3_Dist through
-   `(Vector3 *)` casts. A Vector3 tmp built from v->pos grows this function
+   `(Vector3 *)` casts. A Vector3 flat built from v->pos grows this function
    0x78 -> 0x88, and mRippleCenter stays VecFx32 for the reason the header
-   gives (no ~Vector3 in this unit or in EntryMesh). */
+   gives (re-measured #821 r111: a Vector3 mRippleCenter makes dEntObj_c's
+   object emit an EntryMesh destructor the ROM does not have). */
 void EntryMesh::CalcDistances() {
     int i;
     for (i = 0; i < mNumVertices; i++) {
         EntryMeshVertex *v = &mVertices[i];
-        VecFx32 tmp = v->pos;
-        tmp.z = 0;
-        v->dist = Vec3_Dist((Vector3 *)&mRippleCenter, (Vector3 *)&tmp);
+        VecFx32 flat = v->pos;
+        flat.z = 0;
+        v->dist = Vec3_Dist((Vector3 *)&mRippleCenter, (Vector3 *)&flat);
     }
 }
 
@@ -268,15 +268,15 @@ void EntryMesh::StartRipple(int x, int y) {
  * each inner iteration emits vertex (i, j) and vertex (i + 1, j), its 1.19.12
  * position at >>7. The same draw as daPicGate_c::DrawRippleImage. */
 void EntryMesh::DrawGrid() {
-    Matrix4x3 tmp;
+    Matrix4x3 mtx;
     int i, j;
 
     G3_PushMtx();
-    MTX_Concat43(&mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&mMtx, &data_0209b3ec, &mtx);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
-    G3_LoadMtx43(&tmp);
+    G3_LoadMtx43(&mtx);
     G3_MtxMode(GX_MTXMODE_POSITION);
-    G3_LoadMtx43(&tmp);
+    G3_LoadMtx43(&mtx);
     G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
     G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
     SendMaterial();

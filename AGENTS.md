@@ -149,19 +149,10 @@ mentions.
 - Don't add a type to a shared header speculatively. A name in `include/` is a claim
   every consumer agrees on it; a wrong shared type is far more expensive than a local one.
 
-## `port/` references (renames, `.c`→`.cpp`, file moves)
+## The PC port
 
-`port/` builds its own MSVC host executable that points into `src/` by literal path
-and symbol name. None of that is compiled by the normal decomp toolchain, so a
-rename, a `.c`→`.cpp` migration, or a file move can silently strand a reference.
-Before pushing anything that renames or moves a `src/`/`include/` file:
-
-```sh
-python tools/port_refcheck.py
-```
-
-Checks references only (no compiler, no ROM — about a second) and is also wired
-into `tools/hooks/pre-push`.
+The PC port lives in its own repo, [sm64ds-pc-port](https://github.com/tangosdev/sm64ds-pc-port).
+It pins this decomp and absorbs renames at its own bump.
 
 ## Declaration agreement (an `extern` vs the definition it names)
 
@@ -182,8 +173,9 @@ tag or macro, followed transitively down the typedef chain) — and both sides o
 rename, because Git reports one `R` row and a definition can move and change signature
 in the same commit. `--symbol <name>` prints one symbol's whole declaration
 population; `--inventory` prints the headline and the worst offenders. It is a
-**ratchet**: the 23,151 disagreements the tree already carries are banked in
-`config/decl-agreement-baseline.json` and only a new one fails.
+**ratchet**: the disagreements the tree already carries are banked in
+`config/decl-agreement-baseline.json` and only a new one fails (`--inventory` gives the live count; prune
+banked rows that are gone with `--update`, which never adds rows on a clean tree).
 Do not treat a banked entry as a text edit — changing a declaration can change
 instruction selection at the call site, so fixing one is matching work that needs a
 rebuild and byte proof (`tools/match.py`), and the `declaration agreement` CI job will
@@ -203,7 +195,7 @@ it or on the line above.
   matched.
 - **Body:** what you did and why, with enough proof that a reviewer doesn't have to
   re-derive it — cite the ROM RTTI/vtable evidence for a class-identity claim, the
-  gate results for a promotion (`rombuild.py`, `port_refcheck.py`, `linkcheck`,
+  gate results for a promotion (`rombuild.py`, `linkcheck`,
   `romdata_check` as relevant). The `validate` bot's per-file table is part of the
   review, not all of it.
 - **Contents:** one coherent change. Keep tooling/CI changes in a separate PR from

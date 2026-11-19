@@ -61,9 +61,6 @@ extern "C" {
    lookup and the SurfaceInfo write, which takes the entry by value into 0x0
    and the normal into 0x8.
    local extern: no header in include/ declares them. */
-
-/* local extern: no header in include/ declares it. */
-fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
 s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
 void func_020381cc(void *block, int idx, void **out);
@@ -153,10 +150,8 @@ extern dBgPc data_020a0cec;
    (cls 0) that fails it gets the expensive path -- a real hypotenuse through
    the hardware sqrt, then the contact angle through FX_Div, compared
    against upAxis. IsNearZeroDivisor guards the divisor: |x| <= 8 means near-zero,
-   so bail.
-   Kept (#821 r77): sn is the game's Vector3 (SurfaceInfo::CopyNormalTo fills
-   it) and upAxis is dBgW_Kc's POD VecFx32 member (dBgW_Kc.h), so the SDK
-   dot product of the two casts one side whichever overload is called. */
+   so bail. sn (SurfaceInfo::CopyNormalTo fills it) and dBgW_Kc's upAxis are
+   both the game's Vector3, so the dot product takes CalcLib.h's overload. */
 #define EDGE_FILTER(d, hypv)                                                       \
     if (!(sphere.flags & 2)) {                                                     \
         if (cls == 1) {                                                            \
@@ -180,7 +175,7 @@ extern dBgPc data_020a0cec;
                 continue;                                                          \
             dh = (d) >> 4;                                                         \
             fh = faceDot >> 4;                                                     \
-            axisDot = VEC_DotProduct(&sn, (const Vector3 *)&upAxis);                       \
+            axisDot = VEC_DotProduct(&sn, &upAxis);                                         \
             CP_SetSqrt64((s64)fh * fh + (s64)dh * dh);                         \
             CP_WaitSqrt();                                                     \
             hypv = SQRT_RESULT;                                                    \
@@ -515,7 +510,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     }
 
     rsc = sphere.radius << 4;
-    /* Demotes rsc into the temp pool at sp+0x104. An inline spelling recomputes it. */
+    /* Demotes rsc into the temp pool at sp+0x104. An inline spelling recomputes it.
+       Kept (#821 r81): re-measured; without the self-assignment DetectClsn keeps
+       0x1bc8 but the bytes differ. rsc is a local, so no accessor lever applies. */
     rsc = (s32)rsc;
 
     hiPX = loPX = 0;

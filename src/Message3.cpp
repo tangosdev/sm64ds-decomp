@@ -15,11 +15,14 @@
  *   optimization pragmas are brackets.
  * - data_0209fc78 is a volatile macro in func_02033464 only. decl_common.h
  *   spells that byte plain, and the other functions in this file read it plain.
- * - LayoutLineVS keeps the char-cast handler call: data_02092830[idx - 1]()
- *   subtracts first, a 6-word DIFF.
+ * - LayoutLineVS calls the handler as (data_02092830 + idx)[-1](), the
+ *   spelling of its single-player twin; data_02092830[idx - 1]() subtracts
+ *   first, a 6-word DIFF.
  * - func_020319fc writes the spill-over store as (&dst[wordIdx])[8] and keeps
  *   the char-cast data_0209fd5c read: dst[wordIdx + 8] grows the function by
  *   4 bytes, and indexing data_0209fd5c shrinks it by 8.
+ *   Kept (#821 r82): data_0209fd5c[i + j * 16], *(data_0209fd5c + ...) and
+ *   (data_0209fd5c + j * 16)[i] -> 0x180 or 55 words off of 0x188.
  * - SetTextGlobalsVS keeps the r2/r3 temps. One expression reorders the load
  *   of *(r2 + 4) against the store of r3.
  * - Address-named helpers stay address-named.
@@ -493,6 +496,8 @@ void Message::AddCharPairVS() {
  * Re-measured (#821 r17): without the bracket it is 0x23c against 0x2b0, the
  * same with the row indices assigned inside the subscripts. */
 #pragma push
+/* Kept (#821 r79): rolled k loops over the four words and a u32 *src row pointer are 0x1ec and
+   0x22c against 0x2b0. */
 #pragma opt_common_subs off
 void Message::func_02031428(void) {
     int cnt;
@@ -887,7 +892,7 @@ void Message::LayoutLineVS() {
         case 0xfe: {
             u8 idx = p[2];
             data_0209fd18 = idx;
-            (*(void (**)(void))((char *)data_02092830 + (idx << 2) - 4))();
+            (data_02092830 + idx)[-1]();
             p = data_0209fd0c;
             data_0209fd0c = p + p[1];
             break;
@@ -1391,7 +1396,8 @@ void Message::func_02033390(int sub) {
    through a cast of its address -- the inner name paints blue and resolves to
    the extern. Measured (#821 r68): without it the function is 0x380 of 0x388. */
 /* Kept (#821 r76): a reload pin; no block-copy or type lever (r72-r75) applies to this scalar pin;
-   r68: 0x380 of 0x388 without it. */
+   r68: 0x380 of 0x388 without it.
+   Kept (#821 r80): getter tried -> a u8 or int accessor on the three reads is 0x380, as plain. */
 #define data_0209fc78 (*(u8 *)&data_0209fc78)
 void Message::func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;
@@ -1593,8 +1599,8 @@ void Message::DisplayVsExitText(unsigned short n) {
     Message_DrawCenteredLineVS(0x1c0, 0x20);
 }
 
-void Message::func_02033a80(int arg0) {
-    data_0209fce8 = arg0;
+void Message::func_02033a80(int msgID) {
+    data_0209fce8 = msgID;
     data_0209fc9c = 0;
     func_02034504();
     data_0209fc94 = 1;
@@ -1625,16 +1631,12 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
     Message_DrawCenteredLineVS(0x280, 0x20);
 }
 
-/* opt_common_subs stays off: CSE recompute. The ROM re-reads and recomputes
- * what CSE would share (0x298 bytes; 0x278 with CSE on). Re-measured (#821
- * r17): still 0x278 without the bracket, and 0x2a8 with the second and third
- * rows re-reading data_0209fc88 for their tile count. */
-#pragma push
-#pragma opt_common_subs off
+/* n holds the line's character count, a u8 like data_0209fc88 it is read from. */
 void Message::func_02033bb8(int param0) {
     volatile int li;
     volatile unsigned short sv;
-    int n, m, i;
+    u8 n;
+    int m, i;
     short *scr;
 
     data_0209fce8 = param0;
@@ -1719,7 +1721,6 @@ void Message::func_02033bb8(int param0) {
     data_0209fce8++;
     Message_DrawCenteredLineVS(0x280, 0x20);
 }
-#pragma pop
 
 void Message::func_02033e50(int p0, int p1) {
     int i;
@@ -1822,7 +1823,7 @@ void Message_DrawLineBG2VS(void) {
     data_0209fcdc = data_0209fcdc + (u8)(((data_0209fc88 + 7) / 8) << 1);
 }
 
-extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
+extern "C" void Message_DrawCenteredLineVS(int mapPos, int width) {
     volatile int li;
     int n, i, oldc;
     short *scr;
@@ -1835,7 +1836,7 @@ extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
                ((MessageEntry *)(base + idx * 8))->textOffset);
     Message::func_02031cd4((void *)1);
     oldc = data_0209fc88;
-    data_0209fc7c = (((a1 << 3) - oldc) & 0xf) >> 1;
+    data_0209fc7c = (((width << 3) - oldc) & 0xf) >> 1;
     data_0209fc88 = oldc + data_0209fc7c;
     n = ((data_0209fc88 + 7) / 8) << 6;
     {
@@ -1844,8 +1845,8 @@ extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
         MI_CpuFill32((void *)p, li, n);
     }
     {
-        int sp0 = (u32)G2S_GetBG0ScrPtr() + a0 * 2;
-        scr = (short *)(sp0 + ((unsigned short)((a1 - ((oldc + 7) / 8)) >> 1)) * 2);
+        int mapAddr = (u32)G2S_GetBG0ScrPtr() + mapPos * 2;
+        scr = (short *)(mapAddr + ((unsigned short)((width - ((oldc + 7) / 8)) >> 1)) * 2);
     }
     for (i = 0; i < (data_0209fc88 + 7) / 8; i++) {
         scr[i] = data_0209fc78 + 0x200 + i;
@@ -1915,7 +1916,7 @@ void Message::func_02034504(void) {
     data_0209fc7c = 0;
 }
 
-void Message::func_020345b0(int arg0) {
+void Message::func_020345b0(int msgID) {
     u16 *scr;
     s32 i;
     s32 cols;
@@ -1924,11 +1925,11 @@ void Message::func_020345b0(int arg0) {
     volatile s32 li;
     volatile u16 ls;
 
-    if (((MessageInfoSection *)data_0209fcf8)->messageCount <= (u16)arg0) {
+    if (((MessageInfoSection *)data_0209fcf8)->messageCount <= (u16)msgID) {
         return;
     }
 
-    data_0209fce8 = arg0;
+    data_0209fce8 = msgID;
     func_02034504();
 
     data_0209fc9c = 1;

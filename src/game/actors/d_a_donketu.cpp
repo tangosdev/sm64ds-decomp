@@ -35,9 +35,7 @@ enum daDonketu_c_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "LevelRng.h"
-
-/* The arm9 RNG step has no shared header; data_0209e650 is its state. */
-extern "C" int RandomIntInternal(int *seed);
+#include "math/CalcLib.h"
 
 /* The Bully's resource block (daOts_c.h); overlay .data owns the bytes. */
 extern BullyResourceConfig data_ov064_0211b834;
@@ -77,8 +75,8 @@ int daDonketu_c::Behavior() {
     if (outcome != 0) {
         if (outcome == 2) {
             Vector3 pos(mPos.x, mPos.y + 0x136000, mPos.z);
-            int roll = RandomIntInternal(&data_0209e650.value);
-            int yrot = mPrevAngle.y + 0x8000 + (((u32)roll >> 8) & 0x3ff);
+            u32 roll = RandomIntInternal(&data_0209e650.value);
+            int yrot = mPrevAngle.y + 0x8000 + ((roll >> 8) & 0x3ff);
             Vector3_16 rot;
             rot.x = 0;
             rot.z = 0;
@@ -114,9 +112,9 @@ void daDonketu_c::UpdateDeathState() {
     pos.x = px;
     pos.y = py;
     pos.z = pz;
-    int roll = RandomIntInternal(&data_0209e650.value);
+    u32 roll = RandomIntInternal(&data_0209e650.value);
     Vector3_16 rot;
-    s16 ang = (mPrevAngle.y + 0x8000 + (((u32)roll >> 8) & 0x3ff));
+    s16 ang = (mPrevAngle.y + 0x8000 + ((roll >> 8) & 0x3ff));
     rot.x = 0;
     rot.z = 0;
     rot.y = ang;

@@ -49,8 +49,6 @@ enum daShark_c_AssetId { ASSET_HOJIRO_BMD = 0x0325, ASSET_HOJIRO_SWIM_BCA = 0x03
 /* local extern: no shared header declares these. */
 
 void func_02012694(unsigned int, const Vector3 *);
-extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 typedef daShark_c::StateFn SharkFn;
 
@@ -101,6 +99,10 @@ extern SharkStateTable data_ov090_021345cc;
 
 daShark_c::~daShark_c() {}
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* Step the hurt cylinder through its three offsets, then hurt the player
  * touching it unless the player is vanished. */
 void daShark_c::CheckPlayerHit() {
@@ -123,8 +125,8 @@ void daShark_c::CheckPlayerHit() {
         return;
     dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
     {
-        int isPlayer = (hit->actorID == 0xbf); /* PLAYER */
-        if (isPlayer == 0)
+        /* PLAYER */
+        if (!IsPlayerActor(hit))
             return;
     }
     if (((daPly_c *)hit)->mIsVanish)
@@ -138,11 +140,7 @@ void daShark_c::CheckPlayerHit() {
 /* Swim per-frame: the swim sound at the clip's first frame, the clip, then
  * the hit check. */
 int daShark_c::StateSwim(daShark_c *self) {
-    int frame = self->mAnmModel.currFrame;
-
-    frame = (frame >> 12) << 16;
-    frame = (unsigned int)frame >> 16;
-    if (frame == 0)
+    if ((u16)(self->mAnmModel.currFrame >> 12) == 0)
         func_02012694(9, &self->mCamSpacePos);
     self->mAnmModel.speed = 0x1000;
     self->mAnmModel.Advance();

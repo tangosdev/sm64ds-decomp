@@ -49,9 +49,6 @@ extern "C" {
 
 extern MIiGXDmaParams MIi_GXDmaParams;
 
-/* in ITCM */
-extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
-
 void MIi_FIFOCallback(void);
 void MIi_DMACallback(void *arg);
 

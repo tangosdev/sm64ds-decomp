@@ -81,49 +81,49 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_0204f0b8",
+      "symbol": "NNS_SndFreeAlarm",
       "address": "0x0204f0b8",
       "legacy_source": "src/func_0204f0b8.c",
       "size": "0x00000020",
       "ordinal": 9
     },
     {
-      "symbol": "func_0204f0d8",
+      "symbol": "NNS_SndAllocAlarm",
       "address": "0x0204f0d8",
       "legacy_source": "src/func_0204f0d8.c",
       "size": "0x00000044",
       "ordinal": 10
     },
     {
-      "symbol": "func_0204f11c",
+      "symbol": "NNS_SndUnlockCapture",
       "address": "0x0204f11c",
       "legacy_source": "src/func_0204f11c.c",
       "size": "0x0000001c",
       "ordinal": 11
     },
     {
-      "symbol": "func_0204f138",
+      "symbol": "NNS_SndLockCapture",
       "address": "0x0204f138",
       "legacy_source": "src/func_0204f138.c",
       "size": "0x00000024",
       "ordinal": 12
     },
     {
-      "symbol": "func_0204f15c",
+      "symbol": "NNS_SndUnlockChannel",
       "address": "0x0204f15c",
       "legacy_source": "src/func_0204f15c.c",
       "size": "0x00000038",
       "ordinal": 13
     },
     {
-      "symbol": "func_0204f194",
+      "symbol": "NNS_SndLockChannel",
       "address": "0x0204f194",
       "legacy_source": "src/func_0204f194.c",
       "size": "0x00000054",
       "ordinal": 14
     },
     {
-      "symbol": "func_0204f1e8",
+      "symbol": "NNSi_SndInitResourceMgr",
       "address": "0x0204f1e8",
       "legacy_source": "src/func_0204f1e8.c",
       "size": "0x0000002c",
@@ -459,28 +459,28 @@
       "ordinal": 62
     },
     {
-      "symbol": "func_020501b8",
+      "symbol": "NNSi_SndCaptureEndSleep",
       "address": "0x020501b8",
       "legacy_source": "src/func_020501b8.c",
       "size": "0x000000a0",
       "ordinal": 63
     },
     {
-      "symbol": "func_02050258",
+      "symbol": "NNSi_SndCaptureBeginSleep",
       "address": "0x02050258",
       "legacy_source": "src/func_02050258.c",
       "size": "0x00000060",
       "ordinal": 64
     },
     {
-      "symbol": "func_020502b8",
+      "symbol": "NNSi_SndCaptureStop",
       "address": "0x020502b8",
       "legacy_source": "src/func_020502b8.c",
       "size": "0x000000ec",
       "ordinal": 65
     },
     {
-      "symbol": "func_020503a4",
+      "symbol": "NNSi_SndCaptureStart",
       "address": "0x020503a4",
       "legacy_source": "src/func_020503a4.c",
       "size": "0x00000358",
@@ -494,28 +494,28 @@
       "ordinal": 67
     },
     {
-      "symbol": "func_02050798",
+      "symbol": "NNS_SndCaptureStopEffect",
       "address": "0x02050798",
       "legacy_source": "src/func_02050798.c",
       "size": "0x00000048",
       "ordinal": 68
     },
     {
-      "symbol": "func_020507e0",
+      "symbol": "NNS_SndCaptureStartEffect",
       "address": "0x020507e0",
       "legacy_source": "src/func_020507e0.c",
       "size": "0x000000c0",
       "ordinal": 69
     },
     {
-      "symbol": "func_020508a0",
+      "symbol": "NNSi_SndCaptureMain",
       "address": "0x020508a0",
       "legacy_source": "src/func_020508a0.c",
       "size": "0x000000b0",
       "ordinal": 70
     },
     {
-      "symbol": "func_02050950",
+      "symbol": "NNSi_SndCaptureInit",
       "address": "0x02050950",
       "legacy_source": "src/func_02050950.c",
       "size": "0x00000020",
@@ -592,7 +592,7 @@
       "ordinal": 81
     },
     {
-      "symbol": "_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj",
+      "symbol": "_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEi",
       "address": "0x02050bb0",
       "legacy_source": "src/_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj.cpp",
       "size": "0x00000064",
@@ -606,7 +606,7 @@
       "ordinal": 83
     },
     {
-      "symbol": "_ZN5Sound17InfoSequenceEntry9GetWithIDEj",
+      "symbol": "_ZN5Sound17InfoSequenceEntry9GetWithIDEi",
       "address": "0x02050c78",
       "legacy_source": "src/_ZN5Sound17InfoSequenceEntry9GetWithIDEj.cpp",
       "size": "0x00000064",
@@ -725,21 +725,21 @@
       "ordinal": 100
     },
     {
-      "symbol": "func_020513a8",
+      "symbol": "WaveArcDisposeCallback",
       "address": "0x020513a8",
       "legacy_source": "src/func_020513a8.c",
       "size": "0x0000003c",
       "ordinal": 101
     },
     {
-      "symbol": "func_020513e4",
+      "symbol": "BankDisposeCallback",
       "address": "0x020513e4",
       "legacy_source": "src/func_020513e4.c",
       "size": "0x0000003c",
       "ordinal": 102
     },
     {
-      "symbol": "func_02051420",
+      "symbol": "SeqDisposeCallback",
       "address": "0x02051420",
       "legacy_source": "src/func_02051420.c",
       "size": "0x00000034",
@@ -872,14 +872,14 @@
       "ordinal": 121
     },
     {
-      "symbol": "func_02051f1c",
+      "symbol": "NNS_SndArcPlayerStartSeqArc",
       "address": "0x02051f1c",
       "legacy_source": "src/func_02051f1c.c",
       "size": "0x00000098",
       "ordinal": 122
     },
     {
-      "symbol": "func_02051fb4",
+      "symbol": "NNS_SndArcPlayerStartSeq",
       "address": "0x02051fb4",
       "legacy_source": "src/func_02051fb4.cpp",
       "size": "0x00000054",
@@ -893,7 +893,7 @@
       "ordinal": 124
     },
     {
-      "symbol": "func_020520a4",
+      "symbol": "FreeCommandBuffer",
       "address": "0x020520a4",
       "legacy_source": "src/func_020520a4.c",
       "size": "0x00000038",
@@ -942,42 +942,42 @@
       "ordinal": 131
     },
     {
-      "symbol": "func_020523e0",
+      "symbol": "NNSi_SndSeqArcGetSeqInfo",
       "address": "0x020523e0",
       "legacy_source": "src/func_020523e0.c",
       "size": "0x00000040",
       "ordinal": 132
     },
     {
-      "symbol": "func_02052420",
+      "symbol": "NNSi_SndFaderIsFinished",
       "address": "0x02052420",
       "legacy_source": "src/func_02052420.c",
       "size": "0x00000018",
       "ordinal": 133
     },
     {
-      "symbol": "func_02052438",
+      "symbol": "NNSi_SndFaderUpdate",
       "address": "0x02052438",
       "legacy_source": "src/func_02052438.c",
       "size": "0x00000020",
       "ordinal": 134
     },
     {
-      "symbol": "func_02052458",
+      "symbol": "NNSi_SndFaderGet",
       "address": "0x02052458",
       "legacy_source": "src/func_02052458.c",
       "size": "0x0000003c",
       "ordinal": 135
     },
     {
-      "symbol": "func_02052494",
+      "symbol": "NNSi_SndFaderSet",
       "address": "0x02052494",
       "legacy_source": "src/func_02052494.c",
       "size": "0x00000030",
       "ordinal": 136
     },
     {
-      "symbol": "func_020524c4",
+      "symbol": "NNSi_SndFaderInit",
       "address": "0x020524c4",
       "legacy_source": "src/func_020524c4.c",
       "size": "0x00000020",
@@ -989,7 +989,7 @@
   "bss": [],
   "compiler_only_output": [],
   "notes": [
-    "Text-only. The module state (data_020a4d48..data_020a5bd4 sound-player records, iterators and heap pointers) is all .bss: no initialized bytes exist for this TU to own, and the .rodata it reads (SDAT info tables reached through pointers) is produced by other TUs."
+    "Text-only. The module state (0x020a4d48..0x020a5bd4: the resource locks, sound-player records, iterators and heap pointers) is all .bss: no initialized bytes exist for this TU to own, and the .rodata it reads (SDAT info tables reached through pointers) is produced by other TUs."
   ],
   "production_mode": "text-only",
   "verification": {

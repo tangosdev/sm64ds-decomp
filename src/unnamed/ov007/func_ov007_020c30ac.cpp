@@ -4,7 +4,8 @@
 #include "math/CalcLib.h"
 
 /* recovered: shared common types */
-extern "C" int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int arg4, int *out) {
+extern "C" int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int maxDist,
+                                   int *out) {
     VecFx32 diff;
     long long d2;
     int i;
@@ -19,7 +20,7 @@ extern "C" int func_ov007_020c30ac(VecFx32 *arr, int count, VecFx32 *target, int
             best = d2;
         }
     }
-    if (arg4 < 0 || (long long)arg4 * arg4 >= best) {
+    if (maxDist < 0 || (long long)maxDist * maxDist >= best) {
         CP_SetSqrt64((u64)best << 2);
         if (out != 0) {
             *out = ((s32)CP_GetSqrtResult32() + 1) >> 1;

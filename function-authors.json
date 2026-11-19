@@ -2359,7 +2359,7 @@
     },
     "arm9:0x020169f4": {
       "author": "ruspecial",
-      "name": "_Z13func_020169f4Pci"
+      "name": "_Z13func_020169f4P17dExtSimpleModel_ci"
     },
     "arm9:0x02016a04": {
       "author": "ruspecial",
@@ -7407,7 +7407,7 @@
     },
     "arm9:0x02044e50": {
       "author": "tangosdev",
-      "name": "_Z13func_02044e50P15ModelComponentsiiPi"
+      "name": "_Z13func_02044e50P15ModelComponentsiiP9Matrix4x3"
     },
     "arm9:0x02044efc": {
       "author": "tangosdev",
@@ -7427,7 +7427,7 @@
     },
     "arm9:0x02045178": {
       "author": "tangosdev",
-      "name": "_Z13func_02045178Piiiiiii"
+      "name": "_Z13func_02045178P9Matrix4x3iiiiii"
     },
     "arm9:0x0204531c": {
       "author": "tangosdev",
@@ -7815,7 +7815,7 @@
     },
     "arm9:0x0204a5bc": {
       "author": "ruspecial",
-      "name": "func_0204a5bc"
+      "name": "SPLEmitter_Emit"
     },
     "arm9:0x0204a5c8": {
       "author": "tangosdev",
@@ -7823,11 +7823,11 @@
     },
     "arm9:0x0204a730": {
       "author": "tangosdev",
-      "name": "func_0204a730"
+      "name": "SPLEmitter_Update"
     },
     "arm9:0x0204ae2c": {
       "author": "tangosdev",
-      "name": "func_0204ae2c"
+      "name": "SPLEmitter_Init"
     },
     "arm9:0x0204af38": {
       "author": "tangosdev",
@@ -7835,15 +7835,15 @@
     },
     "arm9:0x0204af3c": {
       "author": "tangosdev",
-      "name": "func_0204af3c"
+      "name": "SPLUtil_SetTexture"
     },
     "arm9:0x0204b028": {
       "author": "tangosdev",
-      "name": "func_0204b028"
+      "name": "SPLDraw_Child_Polygon"
     },
     "arm9:0x0204b244": {
       "author": "lunavyqo",
-      "name": "func_0204b244"
+      "name": "SPLDraw_Polygon"
     },
     "arm9:0x0204b460": {
       "author": "andrewboudreau",
@@ -7855,43 +7855,43 @@
     },
     "arm9:0x0204bbd8": {
       "author": "tangosdev",
-      "name": "func_0204bbd8"
+      "name": "SPLDraw_Child_Billboard"
     },
     "arm9:0x0204be40": {
       "author": "tangosdev",
-      "name": "func_0204be40"
+      "name": "SPLDraw_Billboard"
     },
     "arm9:0x0204c0a8": {
       "author": "tangosdev",
-      "name": "func_0204c0a8"
+      "name": "SPLUtil_RotateY"
     },
     "arm9:0x0204c0e8": {
       "author": "tangosdev",
-      "name": "func_0204c0e8"
+      "name": "SPLUtil_RotateXYZ"
     },
     "arm9:0x0204c194": {
       "author": "tangosdev",
-      "name": "func_0204c194"
+      "name": "SPLUtil_DrawXZPlane"
     },
     "arm9:0x0204c24c": {
       "author": "tangosdev",
-      "name": "func_0204c24c"
+      "name": "SPLUtil_DrawXYPlane"
     },
     "arm9:0x0204c304": {
       "author": "tangosdev",
-      "name": "func_0204c304"
+      "name": "SPLEmitter_EmitChildren"
     },
     "arm9:0x0204c584": {
       "author": "andrewboudreau",
-      "name": "func_0204c584"
+      "name": "SPLEmitter_EmitParticles"
     },
     "arm9:0x0204cd5c": {
       "author": "tangosdev",
-      "name": "func_0204cd5c"
+      "name": "SPLUtil_TiltCoordinates"
     },
     "arm9:0x0204cebc": {
       "author": "andrewboudreau",
-      "name": "func_0204cebc"
+      "name": "SPLEmitter_ComputeOrthogonalAxes"
     },
     "arm9:0x0204d0b8": {
       "author": "ruspecial",
@@ -7943,15 +7943,15 @@
     },
     "arm9:0x0204d8e8": {
       "author": "tangosdev",
-      "name": "func_0204d8e8"
+      "name": "SPLList_Erase"
     },
     "arm9:0x0204d958": {
       "author": "tangosdev",
-      "name": "func_0204d958"
+      "name": "SPLList_PopFront"
     },
     "arm9:0x0204d9a0": {
       "author": "tangosdev",
-      "name": "func_0204d9a0"
+      "name": "SPLList_PushFront"
     },
     "arm9:0x0204d9f0": {
       "author": "tangosdev",
@@ -8195,31 +8195,31 @@
     },
     "arm9:0x0204f0b8": {
       "author": "tangosdev",
-      "name": "func_0204f0b8"
+      "name": "NNS_SndFreeAlarm"
     },
     "arm9:0x0204f0d8": {
       "author": "tangosdev",
-      "name": "func_0204f0d8"
+      "name": "NNS_SndAllocAlarm"
     },
     "arm9:0x0204f11c": {
       "author": "tangosdev",
-      "name": "func_0204f11c"
+      "name": "NNS_SndUnlockCapture"
     },
     "arm9:0x0204f138": {
       "author": "tangosdev",
-      "name": "func_0204f138"
+      "name": "NNS_SndLockCapture"
     },
     "arm9:0x0204f15c": {
       "author": "tangosdev",
-      "name": "func_0204f15c"
+      "name": "NNS_SndUnlockChannel"
     },
     "arm9:0x0204f194": {
       "author": "tangosdev",
-      "name": "func_0204f194"
+      "name": "NNS_SndLockChannel"
     },
     "arm9:0x0204f1e8": {
       "author": "tangosdev",
-      "name": "func_0204f1e8"
+      "name": "NNSi_SndInitResourceMgr"
     },
     "arm9:0x0204f214": {
       "author": "tangosdev",
@@ -8411,19 +8411,19 @@
     },
     "arm9:0x020501b8": {
       "author": "tangosdev",
-      "name": "func_020501b8"
+      "name": "NNSi_SndCaptureEndSleep"
     },
     "arm9:0x02050258": {
       "author": "tangosdev",
-      "name": "func_02050258"
+      "name": "NNSi_SndCaptureBeginSleep"
     },
     "arm9:0x020502b8": {
       "author": "tangosdev",
-      "name": "func_020502b8"
+      "name": "NNSi_SndCaptureStop"
     },
     "arm9:0x020503a4": {
       "author": "tangosdev",
-      "name": "func_020503a4"
+      "name": "NNSi_SndCaptureStart"
     },
     "arm9:0x020506fc": {
       "author": "tangosdev",
@@ -8431,19 +8431,19 @@
     },
     "arm9:0x02050798": {
       "author": "tangosdev",
-      "name": "func_02050798"
+      "name": "NNS_SndCaptureStopEffect"
     },
     "arm9:0x020507e0": {
       "author": "andrewboudreau",
-      "name": "func_020507e0"
+      "name": "NNS_SndCaptureStartEffect"
     },
     "arm9:0x020508a0": {
       "author": "tangosdev",
-      "name": "func_020508a0"
+      "name": "NNSi_SndCaptureMain"
     },
     "arm9:0x02050950": {
       "author": "tangosdev",
-      "name": "func_02050950"
+      "name": "NNSi_SndCaptureInit"
     },
     "arm9:0x02050970": {
       "author": "tangosdev",
@@ -8487,7 +8487,7 @@
     },
     "arm9:0x02050bb0": {
       "author": "tangosdev",
-      "name": "_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj"
+      "name": "_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEi"
     },
     "arm9:0x02050c14": {
       "author": "tangosdev",
@@ -8495,7 +8495,7 @@
     },
     "arm9:0x02050c78": {
       "author": "tangosdev",
-      "name": "_ZN5Sound17InfoSequenceEntry9GetWithIDEj"
+      "name": "_ZN5Sound17InfoSequenceEntry9GetWithIDEi"
     },
     "arm9:0x02050cdc": {
       "author": "tangosdev",
@@ -8563,15 +8563,15 @@
     },
     "arm9:0x020513a8": {
       "author": "tangosdev",
-      "name": "func_020513a8"
+      "name": "WaveArcDisposeCallback"
     },
     "arm9:0x020513e4": {
       "author": "tangosdev",
-      "name": "func_020513e4"
+      "name": "BankDisposeCallback"
     },
     "arm9:0x02051420": {
       "author": "tangosdev",
-      "name": "func_02051420"
+      "name": "SeqDisposeCallback"
     },
     "arm9:0x02051454": {
       "author": "andrewboudreau",
@@ -8647,11 +8647,11 @@
     },
     "arm9:0x02051f1c": {
       "author": "tangosdev",
-      "name": "func_02051f1c"
+      "name": "NNS_SndArcPlayerStartSeqArc"
     },
     "arm9:0x02051fb4": {
       "author": "tangosdev",
-      "name": "func_02051fb4"
+      "name": "NNS_SndArcPlayerStartSeq"
     },
     "arm9:0x02052008": {
       "author": "tangosdev",
@@ -8659,7 +8659,7 @@
     },
     "arm9:0x020520a4": {
       "author": "tangosdev",
-      "name": "func_020520a4"
+      "name": "FreeCommandBuffer"
     },
     "arm9:0x020520dc": {
       "author": "lplaat",
@@ -8687,27 +8687,27 @@
     },
     "arm9:0x020523e0": {
       "author": "tangosdev",
-      "name": "func_020523e0"
+      "name": "NNSi_SndSeqArcGetSeqInfo"
     },
     "arm9:0x02052420": {
       "author": "tangosdev",
-      "name": "func_02052420"
+      "name": "NNSi_SndFaderIsFinished"
     },
     "arm9:0x02052438": {
       "author": "lplaat",
-      "name": "func_02052438"
+      "name": "NNSi_SndFaderUpdate"
     },
     "arm9:0x02052458": {
       "author": "tangosdev",
-      "name": "func_02052458"
+      "name": "NNSi_SndFaderGet"
     },
     "arm9:0x02052494": {
       "author": "tangosdev",
-      "name": "func_02052494"
+      "name": "NNSi_SndFaderSet"
     },
     "arm9:0x020524c4": {
       "author": "tangosdev",
-      "name": "func_020524c4"
+      "name": "NNSi_SndFaderInit"
     },
     "arm9:0x020524e4": {
       "author": "ruspecial",
@@ -10575,23 +10575,23 @@
     },
     "arm9:0x0205e280": {
       "author": "ruspecial",
-      "name": "func_0205e280"
+      "name": "SHA1PadMessage"
     },
     "arm9:0x0205e3d4": {
       "author": "tangosdev",
-      "name": "func_0205e3d4"
+      "name": "SHA1ProcessMessageBlock"
     },
     "arm9:0x0205e6e4": {
       "author": "andrewboudreau",
-      "name": "func_0205e6e4"
+      "name": "SHA1Input"
     },
     "arm9:0x0205e7e0": {
       "author": "tangosdev",
-      "name": "func_0205e7e0"
+      "name": "SHA1Result"
     },
     "arm9:0x0205e89c": {
       "author": "tangosdev",
-      "name": "func_0205e89c"
+      "name": "SHA1Reset"
     },
     "arm9:0x0205e904": {
       "author": "tangosdev",
@@ -17475,7 +17475,7 @@
     },
     "ov002:0x020effb8": {
       "author": "ruspecial",
-      "name": "_Z19func_ov002_020effb8P7Vector3iS0_S0_S0_S0_"
+      "name": "_Z19EvaluateCubicSplineP7Vector3iS0_S0_S0_S0_"
     },
     "ov002:0x020f02c8": {
       "author": "tangosdev",
@@ -23263,7 +23263,7 @@
     },
     "ov006:0x020ea3d0": {
       "author": "tangosdev",
-      "name": "_Z16StarPopup_UpdatePc"
+      "name": "_Z16StarPopup_UpdatePi"
     },
     "ov006:0x020ea5f0": {
       "author": "tangosdev",
@@ -25455,7 +25455,7 @@
     },
     "ov006:0x02107d80": {
       "author": "tangosdev",
-      "name": "_Z18RouletteBoard_DrawPc"
+      "name": "_Z18RouletteBoard_DrawP13RouletteBoard"
     },
     "ov006:0x02107db8": {
       "author": "tangosdev",
@@ -25479,7 +25479,7 @@
     },
     "ov006:0x02108524": {
       "author": "tangosdev",
-      "name": "_Z23RouletteBoard_StartSpinPc"
+      "name": "_Z23RouletteBoard_StartSpinP13RouletteBoard"
     },
     "ov006:0x0210858c": {
       "author": "tangosdev",
@@ -25487,7 +25487,7 @@
     },
     "ov006:0x021085c0": {
       "author": "tangosdev",
-      "name": "_Z24RouletteBoard_LoadModelsPc"
+      "name": "_Z24RouletteBoard_LoadModelsP13RouletteBoard"
     },
     "ov006:0x02108650": {
       "author": "andrewboudreau",
@@ -25499,7 +25499,7 @@
     },
     "ov006:0x02108cc0": {
       "author": "tangosdev",
-      "name": "_Z18RouletteRacer_DrawPc"
+      "name": "_Z18RouletteRacer_DrawP13RouletteRacer"
     },
     "ov006:0x02108d28": {
       "author": "lunavyqo",

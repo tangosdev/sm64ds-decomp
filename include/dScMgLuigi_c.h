@@ -189,8 +189,8 @@ struct dScMgLuigi_c : dScMgBase_c {
     u16 mBlink[PICTURE_NUM];     /* 0x506c -- miss flash; (t >> 2) & 1 hides */
     u16 mLevelPhase[4];  /* 0x515c -- one random angle per speed */
     u16 mIconOn;         /* 0x5164 -- draw the caught picture while set */
-    s16 mIconX;          /* 0x5166 */
-    s16 mIconY;          /* 0x5168 */
+    u16 mIconX;          /* 0x5166 */
+    u16 mIconY;          /* 0x5168 */
     u16 mCatchWait;      /* 0x516a -- frames to hold the catch; the stop test reads it signed */
     s16 unk_516c;        /* 0x516c -- set to 10 as play starts; no read here */
     s16 unk_516e;        /* 0x516e -- cleared as play starts; no read here */

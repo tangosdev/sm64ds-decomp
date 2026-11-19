@@ -198,10 +198,8 @@ PY
   copy, then re-run `python tools/eligible.py && python tools/enroll.py
   --complete-list build/eligible-names.txt`. Never hand-merge.
 - The pre-push hook (installed via `core.hooksPath` -> `tools/hooks/`, not copied
-  into `.git/hooks/`) runs `port_refcheck.py` and the reference ratchet on every
-  push, plus link-verification and attribution when the target is `main`.
-  A rename in `src/` can strand a
-  hand-written bridge in `port/`, which nothing else catches.
+  into `.git/hooks/`) runs the reference ratchet on every push, plus
+  link-verification and attribution when the target is `main`.
 
 ## 8. Definition of done
 

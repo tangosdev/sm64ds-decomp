@@ -113,7 +113,7 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
     char prefixbuf[2];
     char numbuf[26];
     printfStr str;
-    register int cnt;
+    int cnt;
     int nprefix;
     int flags;
     s64 v;

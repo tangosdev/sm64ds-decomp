@@ -71,11 +71,6 @@ extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
 /* C helpers with no shared header. */
 
 void func_02012694(u32 id, const Vector3 *pos);
-extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
-extern "C" int RandomIntInternal(int *seed);
-s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern "C" int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
-extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the BMD, SharedFilePtr::
@@ -197,9 +192,9 @@ int daHyuhyu_c::Behavior() {
         int limit = mTerminalVelocity;
         if (speed >= limit)
             limit = speed;
-        int tmp = mSpeed.z;
+        int speedZ = mSpeed.z;
         mSpeed.y = limit;
-        mSpeed.z = tmp;
+        mSpeed.z = speedZ;
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     HandleCylinderHit();
@@ -280,7 +275,7 @@ int daHyuhyu_c::StateWaitMain() {
         }
         angle = Vec3_HorzAngle(&mPos, &target);
         ApproachAngle(&mPrevAngle.y, angle, 0xa, 0x200, 0x100);
-        if ((u16)mStateTimer == 0 && Vec3_Dist(&mPos, &target) < 0x3e8000 && angle < 0x1000)
+        if (mStateTimer == 0 && Vec3_Dist(&mPos, &target) < 0x3e8000 && angle < 0x1000)
             SetState(&data_ov091_021356b0);
     }
     return 1;
@@ -375,7 +370,7 @@ int daHyuhyu_c::StateGustFlyMain() {
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
     MTX_MultVec43(&fwd, &data_020a0e68, &mSpeed);
-    if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
+    if (mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
         (mFlags & 8))
         MarkForDestruction();
     return 1;

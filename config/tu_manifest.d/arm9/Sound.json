@@ -555,7 +555,7 @@
       "ordinal": 71
     },
     {
-      "symbol": "_ZN5Sound7PlaySubEjjjib",
+      "symbol": "_ZN5Sound7PlaySubEjjjii",
       "address": "0x02012be0",
       "legacy_source": "src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp",
       "size": "0x0000014c",
@@ -905,9 +905,9 @@
   "compiler_only_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@2048",
+      "from": "@2050",
       "to": "data_0208e498",
-      "evidence": "compiler string literal: the one literal in this TU (func_020133bc's archive path), numbered @2050 by mwcc, keeps its configured address name Re-keyed from @2050 to @2048 after SndRegTable's two this-alias locals were removed (measured from the compiled object)."
+      "evidence": "compiler string literal: the one literal in this TU (func_020133bc's archive path), numbered @2050 by mwcc, keeps its configured address name Re-keyed from @2050 to @2048 after SndRegTable's two this-alias locals were removed (measured from the compiled object). Re-keyed from @2048 to @2050 when the Matrix4x3 union (#821 r69) composed with the r71-r78 stack (#821 r79a) (measured from the compiled object)."
     }
   ],
   "notes": [

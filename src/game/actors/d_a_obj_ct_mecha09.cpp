@@ -35,6 +35,7 @@ enum daObjCtMecha09_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
@@ -47,11 +48,6 @@ struct Mecha09ClsnFilePtr : SharedFilePtr {
     Mecha09ClsnFilePtr(u32 fileID);
     ~Mecha09ClsnFilePtr();
 };
-
-extern "C" {
-extern u16 DecIfAbove0_Short(u16 *p);
-extern int RandomIntInternal(int *seed);
-}
 
 extern Mecha09ClsnFilePtr data_ov065_0211d9cc;
 extern Mecha09ModelFilePtr data_ov065_0211d9d4;
@@ -77,9 +73,9 @@ void daObjCtMecha09_c::UpdateShadow() {
     if (d > 0x7d0000)
         return;
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = (mGroundY + 0x1000) >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = (mGroundY + 0x1000) >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1e0000, 0x32000, 0xfa000, 15);
 }
 

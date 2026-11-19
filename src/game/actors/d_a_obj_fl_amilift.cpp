@@ -73,7 +73,6 @@ CLPS_Block data_ov064_0211bb6c = {
 };
 
 extern "C" {
-extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
 }
 

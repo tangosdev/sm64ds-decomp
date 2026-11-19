@@ -26,6 +26,7 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
+#include "Vector2Math.h"
 
 /* By-value five-card ordering table. */
 typedef struct 
@@ -58,7 +59,6 @@ void *sCardHudSprites[] = {data_ov006_02134074, data_ov006_02134124};
 extern int sCardSelectLocked;
 extern int sCardSwapRequested;
 extern int data_ov006_02141770;
-extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
 extern int sCardFaceWeights[6];
@@ -1051,9 +1051,9 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand) {
                         break;
                     }
                     if (nextFace == c) {
-                        s32 tmp = nextFace;
+                        s32 face = nextFace;
                         nextFace = bestFace;
-                        bestFace = tmp;
+                        bestFace = face;
                         break;
                     }
                     p++;
@@ -1285,8 +1285,8 @@ void dMgCardObj_c::Update()
             if (mLift != 0x4000)
                 return;
             {
-                int touchDeltaX = (int)gTouchInfo[touchIndex].x - (mPos.x >> 12);
-                int touchDeltaY = (int)gTouchInfo[touchIndex].y - (mPos.y >> 12);
+                int touchDeltaX = gTouchInfo[touchIndex].x - (mPos.x >> 12);
+                int touchDeltaY = gTouchInfo[touchIndex].y - (mPos.y >> 12);
                 if (touchDeltaX <= 7)
                     return;
                 if (touchDeltaX >= 0x29)
@@ -1387,8 +1387,8 @@ void dMgCardObj_c::FlyOff() {
     mHome.x = -0x28000;
     mHome.y = mPos.y;
     int t = mPos.x;
-    unsigned ip = 0x80000 - t;
-    mFlyDelay = ((int)ip / 0x10000);
+    s32 ip = 0x80000 - t;
+    mFlyDelay = ip / 0x10000;
     mStep.x = 0x10000;
     mStep.y = 0;
     mState = 0xa;
@@ -1506,6 +1506,9 @@ dMgDilarCardObj_c::~dMgDilarCardObj_c() {}
  * factory and the dealer card's constructor and still leaves that D1 calling
  * this one (0x24); at 32 StartRound, ArrangeHand and UpdateState change too. */
 #pragma push
+/* Kept (#821 r79): the base destructor defined plainly before the dealer's is a 0x24 D1 that
+   calls D2; an inline definition there or at the end of the file puts D1 between the scene's D1
+   and D0, and D0 is not emitted. */
 #pragma auto_inline on
 dMgCardObj_c::~dMgCardObj_c() {}
 #pragma pop

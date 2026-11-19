@@ -145,10 +145,13 @@ int SaveData::SaveCurrentFile() {
     return SaveData::SaveMinigames(&data_0209caa0.mg);
 }
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 int SaveData::CanPlayerHaveCap() {
     if (data_0209caa0.file.mCharacter != 3) {
-        int b = (int)(gGameMode == 1);
-        if (b == 0)
+        if (!IsVsMode())
             return 1;
     }
     return 0;
@@ -207,9 +210,9 @@ int SaveData::NumGlowingRabbitsFound() {
 
 /* Sets flags2 bit (0x100000 << rabbit count). At 7 rabbits, also sets flags1 bit 0x80. */
 void func_02013944(void) {
-    u32 count = SaveData::NumGlowingRabbitsFound();
+    int count = SaveData::NumGlowingRabbitsFound();
     data_0209caa0.file.flags2 |= (0x100000u << count);
-    if ((s32)count >= 7)
+    if (count >= 7)
         data_0209caa0.file.flags1 |= 0x80u;
 }
 
@@ -290,11 +293,11 @@ extern "C" u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
     u8 total;
     s32 course;
     if (courseID <= 0xe)
-        return SaveData::CountStarsCollectedInLevel((u32)courseID);
+        return SaveData::CountStarsCollectedInLevel(courseID);
     total = 0;
     course = 0xf;
     do {
-        total = (total + SaveData::CountStarsCollectedInLevel((u32)course)) & 0xff;
+        total = (total + SaveData::CountStarsCollectedInLevel(course)) & 0xff;
         course++;
     } while (course <= 0x1d);
     return total;
@@ -348,9 +351,9 @@ void UnlockMinigame(int minigame) {
 int func_020135d0(int minigame) {
     int res;
     if (minigame < 28) {
-        res = (data_0209caa0.mg.seenLo & (1 << minigame)) ? 0 : 1;
+        res = !(data_0209caa0.mg.seenLo & (1 << minigame));
     } else {
-        res = (data_0209caa0.mg.seenHi & (1 << (minigame - 28))) ? 0 : 1;
+        res = !(data_0209caa0.mg.seenHi & (1 << (minigame - 28)));
     }
     return res;
 }

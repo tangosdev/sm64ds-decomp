@@ -92,7 +92,6 @@ int AngleDiff(int, int);
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
 int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
-void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
 /* Real definition: func_0201267c (arm9). The methods call through it so the
    name stays unmangled. */
@@ -380,6 +379,10 @@ void daBmb_c::func_ov102_0214c0b8() {
  * Vector3 views; no owning Vector3 temporaries are introduced.
  * ======================================================================== */
 
+static inline int IsGrabbed(daPly_c *player) {
+    return player->mGrabbedByActor != 0;
+}
+
 void daBmb_c::State0() {
     DecIfAbove0_Short(&mTurnTimer);
     if (mVariant != 1) {
@@ -407,8 +410,7 @@ void daBmb_c::State0() {
             s16 target = Vec3_HorzAngle(&mPos, &mChasePlayer->mPos);
             if (mVariant == 3) {
                 /* daPly_c::mGrabbedByActor: stop turning toward a held player. */
-                int b = (mChasePlayer->mGrabbedByActor != 0);
-                if (b)
+                if (IsGrabbed(mChasePlayer))
                     target = mPrevAngle.y;
             }
             ApproachLinear(mPrevAngle.y, target, 0x800);
@@ -513,31 +515,23 @@ void daBmb_c::func_ov102_0214bd20() {
  * to func_ov102_0214c0b8.  Always advances the animation.
  * ======================================================================== */
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 void daBmb_c::State3()
 {
-    /* Nothing names these two mFlags bits yet, so they keep neutral names rather
-     * than a guessed meaning. Both booleans are materialized on purpose: the
-     * cartridge tests the flag word into a register and then re-tests that, and
-     * folding either into its `if` collapses the pair.
+    /* Nothing names these two mFlags bits yet, so they are tested through
+     * IsFlagSet rather than a guessed meaning. The int-returning predicate is
+     * what leaves the cartridge's materialized 0/1 behind each test.
      *
      * The empty 0x100 arm is real -- on that bit this state does nothing at all,
      * and the else-branch is what carries the work. */
-    int flags = mFlags;
-    int flag0x400 = (int) ((flags & 0x400) != 0);
-    if (flag0x400)
-    {
+    if (IsFlagSet(this, 0x400)) {
         func_ov102_0214b3b8();
-    }
-    else
-    {
-        int flag0x100 = (int) ((flags & 0x100) != 0);
-        if (flag0x100)
-        {
-        }
-        else
-        {
-            func_ov102_0214c0b8();
-        }
+    } else if (IsFlagSet(this, 0x100)) {
+    } else {
+        func_ov102_0214c0b8();
     }
     mAnmModel.dExtFrameCtrl_c::Advance();
 }
@@ -563,10 +557,11 @@ void daBmb_c::func_ov102_0214bc20() {
     Quad a1 = data_ov102_0214e514;
     Quad a2 = data_ov102_0214e524;
     daPly_c *p = mCarrier;
-    int idx = 0;
+    u32 idx = 0;
     if (p != 0) {
         idx = p->param1;
-        if ((unsigned)idx > 4) idx = 4;
+        if (idx > 4)
+            idx = 4;
     }
     mHorzSpeed = a1.v[idx];
     mSpeed.y = a2.v[idx];
@@ -652,13 +647,16 @@ void daBmb_c::func_ov102_0214baa0() {
  * 0x10000001 and turns rendering back on.
  * ======================================================================== */
 
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
 void daBmb_c::State5()
 {
     if (DistToCPlayer() < 0x7d0000)
         return;
     if ((mFlags & 8) == 0) {
-        int b = (gGameMode == 1);
-        if (b == 0)
+        if (!IsVsMode())
             return;
     }
     func_ov102_0214c0b8();
@@ -699,6 +697,10 @@ void daBmb_c::func_ov102_0214b988() {
  * dropped; the plain `&&` MATCHES.
  * ======================================================================== */
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 void daBmb_c::func_ov102_0214b53c() {
     extern Matrix4x3 data_020a0e68;
 
@@ -711,16 +713,16 @@ void daBmb_c::func_ov102_0214b53c() {
     if ((mVariant == 2) && ((src = mCarryMatrix) != 0)) {
         mAnmModel.mat4x3 = *src;
     } else {
-        int haveMtx = (int)((mFlags & 0x4000) != 0);
         daPly_c *player0;
-        if (((haveMtx != 0) && ((player0 = mCarrier) != 0)) && (player0->mCarryMatrix != 0)) {
+        if ((IsFlagSet(this, 0x4000) && ((player0 = mCarrier) != 0)) &&
+            (player0->mCarryMatrix != 0)) {
             dExtAnmModel_c *ret = (dExtAnmModel_c *)func_ov002_020e496c(player0);
             u8 idx = 0;
             if (mCarrier->IsFrontSliding() != 0) {
                 idx = 1;
             }
             if ((mCarrier->LostGrabbedObject() != 0) &&
-                (((u32)(((u32)(ret->currFrame << 4)) >> 0x10)) < 0xe)) {
+                ((((u32)(ret->currFrame << 4)) >> 0x10) < 0xe)) {
                 idx = 1;
             }
             if (mCarrier->param1 == 2) {
@@ -736,37 +738,34 @@ void daBmb_c::func_ov102_0214b53c() {
             mCarryOff[1] = 0;
             mCarryOff[2] = 0;
             Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-            mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-            mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-            mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+            mAnmModel.mat4x3.t.x = mPos.x >> 3;
+            mAnmModel.mat4x3.t.y = mPos.y >> 3;
+            mAnmModel.mat4x3.t.z = mPos.z >> 3;
         }
     }
-    int haveMtx2 = (int)((mFlags & 0x4000) != 0);
-    if ((haveMtx2 != 0) || (mFuse != 0)) {
+    if (IsFlagSet(this, 0x4000) || (mFuse != 0)) {
         p.x = 0;
         p.y = 0;
         p.z = 0;
         data_020a0e68 = mAnmModel.mat4x3;
         MTX_Concat43(&mAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        p.x = data_020a0e68.m[9];
-        p.y = data_020a0e68.m[10];
-        p.z = data_020a0e68.m[11];
+        p.x = data_020a0e68.t.x;
+        p.y = data_020a0e68.t.y;
+        p.z = data_020a0e68.t.z;
         Vec3_Lsl(&d, &p, 3);
         p = d;
-        int haveMtx3 = (int)((mFlags & 0x4000) != 0);
-        if (haveMtx3 != 0) {
+        if (IsFlagSet(this, 0x4000)) {
             mCarryParticle =
                 Particle::System::New(mCarryParticle, kPtclBobOmbCarried, p.x, p.y, p.z, 0, 0);
         }
         if (mFuse != 0) {
-            int haveShadow = (int)((mFlags & 0x40000) != 0);
-            if (haveShadow != 0) {
+            if (IsInYoshiMouth(this)) {
                 if (mEatingPlayer != 0) {
                     eaterPos = mEatingPlayer->mPos;
                     data_020a0e68 = mEatingPlayer->mHeadMatrix;
-                    p.x = data_020a0e68.m[9];
-                    p.y = data_020a0e68.m[10];
-                    p.z = data_020a0e68.m[11];
+                    p.x = data_020a0e68.t.x;
+                    p.y = data_020a0e68.t.y;
+                    p.z = data_020a0e68.t.z;
                     Vec3_LslInPlace((int *)&p, 3);
                     daPly_c *eater = mEatingPlayer;
                     Vector3_16 rot = eater->mAngle;
@@ -813,9 +812,9 @@ void daBmb_c::UpdateShadow() {
         }
     }
 
-    mMatrix.m[9] = mPos.x >> 3;
-    mMatrix.m[10] = v >> 3;
-    mMatrix.m[11] = mPos.z >> 3;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = v >> 3;
+    mMatrix.t.z = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
 }
@@ -826,14 +825,12 @@ void daBmb_c::UpdateShadow() {
 extern "C" {
 
 void daBmb_c::func_ov102_0214b3f0(int a1) {
-    unsigned int v = mState - 3;
-    if (v <= 1u) return;
-    unsigned short h = mFuse;
-    if (h > 4u) goto do_call;
-    if (h != 0u) return;
-do_call:
-    mCarrier = (daPly_c *)a1;
-    func_ov102_0214bd20();
+    if (mState == 3 || mState == 4)
+        return;
+    if (mFuse > 4 || mFuse == 0) {
+        mCarrier = (daPly_c *)a1;
+        func_ov102_0214bd20();
+    }
 }
 }
 
@@ -1088,79 +1085,63 @@ int daBmb_c::func_ov102_0214ab1c() {
     daPly_c *player;
 
     int eatState = UpdateYoshiEat(mWithMeshClsn);
-    if (eatState == 0) {
-        goto ret0;
-    }
+    if (eatState != 0) {
+        mFlags &= ~0x10000000u;
 
-    mFlags &= ~0x10000000u;
+        player = mEatingPlayer;
+        if (player != 0) {
+            if (player->IsInsideOfCannon() == 0 && player->IsBeingShotOutOfCannon() == 0) {
+                if (UpdateFuse() == 0) {
+                    mFlags &= ~0xe0000u;
+                    mEatenByYoshi = 0;
+                    return 1;
+                }
+            } else {
+                func_ov102_0214b384(3);
+            }
+        }
 
-    player = mEatingPlayer;
-    if (player != 0) {
-        if (player->IsInsideOfCannon() != 0) {
-            goto shocked;
+        if (mVariant == 2) {
+            mVariant = 3;
+            mState = 0;
+            mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
+            mTurnTimer = 512;
+            mVertAccel = -0x2000;
+            mdCc_c.flags &= ~2u;
         }
-        if (player->IsBeingShotOutOfCannon() != 0) {
-            goto shocked;
+
+        if (eatState == 2) {
+            func_ov102_0214b384(0x50);
         }
-        if (UpdateFuse() == 0) {
-            mFlags &= ~0xe0000u;
+
+        if (eatState == 3) {
+            if (mWithMeshClsn.IsOnGround() != 0) {
+                unk_3f4 = 3;
+            }
+        }
+
+        if (mEatenByYoshi != 0) {
+            if (mSpitOutTimer == 5) {
+                mdCc_c.flags &= ~0x8000u;
+            }
+        }
+
+        if (SpawnParticlesIfHitOtherObj(mdCc_c) != 0 ||
+            (eatState == 3 && mWithMeshClsn.IsOnGround() != 0)) {
+            func_ov102_0214b384(4);
             mEatenByYoshi = 0;
             return 1;
         }
-        goto after_cannon;
-    shocked:
-        func_ov102_0214b384(3);
-    }
-after_cannon:
 
-    if (mVariant == 2) {
-        mVariant = 3;
-        mState = 0;
-        mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
-        mTurnTimer = 512;
-        mVertAccel = -0x2000;
-        mdCc_c.flags &= ~2u;
-    }
-
-    if (eatState == 2) {
-        func_ov102_0214b384(0x50);
-    }
-
-    if (eatState == 3) {
-        if (mWithMeshClsn.IsOnGround() != 0) {
-            unk_3f4 = 3;
+        mdCc_c.Clear();
+        if (mEatenByYoshi != 0) {
+            if (mSpitOutTimer == 0) {
+                mdCc_c.dCc_c::Update();
+            }
         }
+        func_ov102_0214b53c();
+        return 1;
     }
-
-    if (mEatenByYoshi != 0) {
-        if (mSpitOutTimer == 5) {
-            mdCc_c.flags &= ~0x8000u;
-        }
-    }
-
-    if (SpawnParticlesIfHitOtherObj(mdCc_c) != 0) {
-        goto hit;
-    }
-    if (eatState != 3 || mWithMeshClsn.IsOnGround() == 0) {
-        goto skip_hit;
-    }
-
-hit:
-    func_ov102_0214b384(4);
-    mEatenByYoshi = 0;
-    return 1;
-
-skip_hit:
-    mdCc_c.Clear();
-    if (mEatenByYoshi != 0) {
-        if (mSpitOutTimer == 0) {
-            mdCc_c.dCc_c::Update();
-        }
-    }
-    func_ov102_0214b53c();
-    return 1;
-
-ret0:
     return 0;
 }
 

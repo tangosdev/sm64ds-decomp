@@ -60,6 +60,7 @@ enum daChoropu_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -91,8 +92,6 @@ extern ChoropuStateRow data_ov080_02128438[6];
 
 #define LAUND(p) ((void*)(p))
 
-extern "C" int RandomIntInternal(int *seed);
-extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 void func_02012694(unsigned int a, const Vector3 *p);
 
 extern const int data_ov080_0212767c[18] = {
@@ -224,12 +223,12 @@ void daChoropu_c::func_ov080_02123a34()
 
         ax = *(unsigned short *)&mAngle.x;
         ay = *(unsigned short *)&mAngle.y;
-        v16.y = (short)ay;
-        v16.x = (short)ax;
+        v16.y = ay;
+        v16.x = ax;
         {
             unsigned short z = *(unsigned short *)&mAngle.z;
             pAng->z = z;
-            short yv = (short)v16.y;
+            short yv = v16.y;
             px = mPos.x;
             pos.x = px;
             yv = (short)(yv + 0x400);
@@ -242,13 +241,13 @@ void daChoropu_c::func_ov080_02123a34()
         }
 
         s = FX_SinIdx((u16)(s16)(mAngle.y - 0x4000) >> 4);
-        pos.x = s * (short)80 + px;
+        pos.x = s * 80 + px;
 
         s = FX_CosIdx((u16)(s16)(mAngle.y - 0x4000) >> 4);
-        pos.z = s * (short)80 + pz;
+        pos.z = s * 80 + pz;
 
-        a = dActor_c::Spawn(
-            py ? (unsigned)daChoro_Rock_ACTOR_ID : (unsigned)daChoro_Rock_ACTOR_ID, 0, pos, pAng, mAreaId, -1);
+        a = dActor_c::Spawn(py ? daChoro_Rock_ACTOR_ID : daChoro_Rock_ACTOR_ID, 0, pos, pAng,
+                            mAreaId, -1);
         d = DistToCPlayer();
         if (d >= 0x258000)
             d = 0x258000;
@@ -289,12 +288,12 @@ void daChoropu_c::func_ov080_02123c24()
 {
     int amt;
     unsigned int state;
-    int raw;
+    u32 raw;
 
     mAnmModel.Advance();
     raw = mAnmModel.currFrame;
     amt = 0;
-    state = ((unsigned int)raw << 4) >> 16;   /* whole frame number */
+    state = (raw << 4) >> 16; /* whole frame number */
 
     if (state == 6) {
         u32 *p150 = (u32 *)((int)&mdCcAc_c.flags);
@@ -349,10 +348,10 @@ void daChoropu_c::func_ov080_02123c24()
             Vector3 pos;
             short horz;
             int diff;
-            int *pb = (int *)((int)&player->mPos.x);
-            pos.x = pb[0];
-            pos.y = pb[1];
-            pos.z = pb[2];
+            Vector3 *pb = &player->mPos;
+            pos.x = pb->x;
+            pos.y = pb->y;
+            pos.z = pb->z;
             horz = Vec3_HorzAngle(&mPos, &pos);
             diff = (short)AngleDiff(mAngle.y, horz);
             if (diff < 0x4000) {
@@ -617,17 +616,17 @@ void *daChoropu_c::func_ov080_02124360()
 void daChoropu_c::func_ov080_021243d8()
 {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
 void daChoro_Rock_c::func_ov080_02124418() {
     Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngle.y);
-    this->mModel.mat4x3.m[9] = this->mPos.x >> 3;
-    this->mModel.mat4x3.m[10] = this->mPos.y >> 3;
-    this->mModel.mat4x3.m[11] = this->mPos.z >> 3;
+    this->mModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mModel.mat4x3.t.y = this->mPos.y >> 3;
+    this->mModel.mat4x3.t.z = this->mPos.z >> 3;
 }
 
 /* Releases the shared model and animation files; never touches `this`: the model file
@@ -657,16 +656,14 @@ s32 daChoro_Rock_c::CleanupResources()
 /* Draws the mole's model (mAnmModel) with no scale argument. */
 s32 daChoropu_c::Render()
 {
-    dExtSimpleModel_c *m = &mAnmModel;
-    m->Render(0);
+    mAnmModel.Render(0);
     return 1;
 }
 
 /* Draws the rock's model, scaled by mScale. */
 s32 daChoro_Rock_c::Render()
 {
-    dExtSimpleModel_c *m = &mModel;
-    m->Render(&mScale);
+    mModel.Render(&mScale);
     return 1;
 }
 
@@ -724,12 +721,12 @@ s32 daChoro_Rock_c::Behavior()
         if (!mIsSmall) {
             /* A big rock breaks into two small ones on landing. */
             dActor_c *s;
-            int r;
+            u32 r;
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
             s->mPrevAngle.x = 0;
-            s->mPrevAngle.y = (short)((unsigned int)r >> 8);
+            s->mPrevAngle.y = (short)(r >> 8);
             s->mPrevAngle.z = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
             s->mSpeed.x = 0;
@@ -739,7 +736,7 @@ s32 daChoro_Rock_c::Behavior()
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
             s->mPrevAngle.x = 0;
-            s->mPrevAngle.y = (short)((unsigned int)r >> 8);
+            s->mPrevAngle.y = (short)(r >> 8);
             s->mPrevAngle.z = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
             s->mSpeed.x = 0;

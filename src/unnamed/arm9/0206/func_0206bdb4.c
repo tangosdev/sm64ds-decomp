@@ -61,7 +61,7 @@ u64 func_0206bdb4(u64 d, int mode)
         m |= READ8(p);
     }
 
-    exp2 = (unsigned)(exp - 0x3fd);
+    exp2 = exp - 0x3fd;
     if (exp >= 3)
         exp -= 3;
     else

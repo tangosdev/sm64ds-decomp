@@ -117,17 +117,16 @@ void dScMgMemory_c::UpdateCursor() {
         return;
 
     {
+        /* Kept (#821 r83): blinkTimer++, += 1 and `++blinkTimer < 20` on the
+           member all lose the ROM's register-held timer address. */
         unsigned short *timer = &mCursor.blinkTimer;
         *timer = *timer + 1;
         if (*timer < 20)
             return;
         *timer = 0;
     }
-    {
-        unsigned char *frame = &mCursor.frame;
-        *frame = *frame + 1;
-        *frame = *frame & 1;
-    }
+    mCursor.frame++;
+    mCursor.frame &= 1;
 }
 
 void dScMgMemory_c::ShowCursor() {
@@ -297,7 +296,10 @@ void dScMgMemory_c::JudgePair() {
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     /* Kept (#821 r73): mCards[cardIndex] at every use is 0xac of 0xa8 (40
-       words off) with the pragma, 0xa8 but 27 off without it. */
+       words off) with the pragma, 0xa8 but 27 off without it.
+       r96: the same with a block-scoped `for (int cardIndex ...)` and
+       spriteIndex/dimmed declared at first use: unchanged (0xbc of 0xa8
+       with the pragma, 27 words off without). */
     char *raw = (char *)this;
     int cardIndex;
     int spriteIndex, dimmed;

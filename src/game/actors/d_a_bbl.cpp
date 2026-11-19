@@ -80,6 +80,10 @@ int daBbl_c::InitResources() {
     return 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* Two early outs come first, on the two dEnemyBase_c flags that mean the
  * enemy is being held or is already dying: 0x20000 still runs the state hook
  * but skips everything else, 0x40000 skips the frame outright.
@@ -120,8 +124,7 @@ int daBbl_c::Behavior() {
             if ((mdCcAc_c.hitFlags & 0x8000) == 0) {
                 daPly_c *other = static_cast<daPly_c *>(dActor_c::FindWithID(otherID));
                 if (other != 0) {
-                    int isPlayer = (other->actorID == 0xbf);
-                    if (isPlayer)
+                    if (IsPlayerActor(other))
                         other->Burn();
                 }
             } else {

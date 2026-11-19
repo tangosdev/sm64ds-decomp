@@ -37,8 +37,8 @@ struct daStarBase_c : dActor_c {
     dCcAcPos_c mdCcAcPos_c;            /* 0x0d4 */
     /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0x114 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
-       short of the object, so the member also takes over unk_154 (+0x40 = mat4x3.m[9]),
-       unk_158 (+0x44 = mat4x3.m[10]), unk_15c (+0x48 = mat4x3.m[11]), which the header
+       short of the object, so the member also takes over unk_154 (+0x40 = mat4x3.t.x),
+       unk_158 (+0x44 = mat4x3.t.y), unk_15c (+0x48 = mat4x3.t.z), which the header
        declared separately inside it. */
     dExtSimpleModel_c mModel; /* 0x114 */
     /* dExtShadowModel_c member, named by the class's own destructor calling

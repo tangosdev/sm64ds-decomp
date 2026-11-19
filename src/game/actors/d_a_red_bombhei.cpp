@@ -117,7 +117,7 @@ extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
-extern u16 data_0209d6d4;               /* message on screen */
+extern s16 data_0209d6d4;               /* message on screen */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* -- other modules -- */
@@ -126,9 +126,6 @@ void OpenCannonInCurLevel(void);
 int ObjectMessageIDToActualMessageID(s16);
 int SublevelToLevel(int sublevel);
 
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalarInPlace(Vector3 *v, int s);
 int Math_Function_0203b14c(int *value, int target, int a, int b, int c);
 }
 int  IsStarCollected(int level, int star);
@@ -238,13 +235,13 @@ s32 daRedBombhei_c::CleanupResources()
 /* Places the model and drops the shadow under the body. */
 void daRedBombhei_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
-    this->mAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
-    this->mAnmModel.mat4x3.m[10] = (this->mPos.y + 0x4000) >> 3;
-    this->mAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = (this->mPos.y + 0x4000) >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
     this->mShadowMat = IDENTITY_MATRIX4X3;
-    this->mShadowMat.m[9] = this->mPos.x >> 3;
-    this->mShadowMat.m[10] = (this->mPos.y - 0x8000) >> 3;
-    this->mShadowMat.m[11] = this->mPos.z >> 3;
+    this->mShadowMat.t.x = this->mPos.x >> 3;
+    this->mShadowMat.t.y = (this->mPos.y - 0x8000) >> 3;
+    this->mShadowMat.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMat, 0x64000, 0x32000, 15);
 }
 
@@ -453,12 +450,12 @@ void daRedBombhei_c::UpdateTalk() {
     if (param != 0xffff)
         msgID = (u16)param;
     {
-        int *p = (int *)(unsigned)&player->mPos.x;
-        int a = p[0];
+        Vector3 *p = &player->mPos;
+        int a = p->x;
         playerPos.x = a;
-        int b = p[1];
+        int b = p->y;
         playerPos.y = b;
-        int c = p[2];
+        int c = p->z;
         playerPos.z = c;
     }
     angle = Vec3_HorzAngle(&this->mPos, &playerPos);
@@ -606,14 +603,14 @@ void daRedBombhei_c::UpdateCannonOpening() {
             return;
         }
         case 2: {
-            int *lookAt = (int *)&cam->lookAt;
-            int *pos = (int *)&cam->pos;
-            this->mSavedCamLookAt.x = lookAt[0];
-            this->mSavedCamLookAt.y = lookAt[1];
-            this->mSavedCamLookAt.z = lookAt[2];
-            this->mSavedCamPos.x = pos[0];
-            this->mSavedCamPos.y = pos[1];
-            this->mSavedCamPos.z = pos[2];
+            Vector3 *lookAt = &cam->lookAt;
+            Vector3 *pos = &cam->pos;
+            this->mSavedCamLookAt.x = lookAt->x;
+            this->mSavedCamLookAt.y = lookAt->y;
+            this->mSavedCamLookAt.z = lookAt->z;
+            this->mSavedCamPos.x = pos->x;
+            this->mSavedCamPos.y = pos->y;
+            this->mSavedCamPos.z = pos->z;
             cam->SetFlag_3();
             this->mFlags &= ~1;
             this->mCutsceneStep += 1;

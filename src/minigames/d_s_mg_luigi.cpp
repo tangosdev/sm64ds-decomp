@@ -87,7 +87,6 @@ struct IrisScanline {
 extern "C" {
 /* Functions the members call need C linkage at file scope. Data names do
    not mangle, so the data_* declarations stay next to their users. */
-extern int RandomIntInternal(int *seed);
 extern s32 GetGameLanguage(void);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
@@ -106,6 +105,7 @@ extern void Luigi_PushScanlineRecord(void);
 extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
 #include "nitro/os/cache.h"
 #include "nitro/mi/memory.h"
+#include "math/CalcLib.h"
 
 namespace cstd {
 int sqrt(unsigned long long x);
@@ -652,7 +652,7 @@ void dScMgLuigi_c::TickTimer() {
         Sound::PlayBank2_2D(0xa7);
         return;
     }
-    Sound::PlayBank2_2D((unsigned int)((mWanted << 3) + 0xc0));
+    Sound::PlayBank2_2D((mWanted << 3) + 0xc0);
     func_02012790(0xe);
     BeginCatch(0);
 }
@@ -753,8 +753,7 @@ void dScMgLuigi_c::AddPenalty(int pictureIndex) {
 void dScMgLuigi_c::DrawWantedIcon() {
     if (mIconOn == 0)
         return;
-    Mg_RenderSubSpriteMtx(sLuigiPictureSprites[mWanted], (unsigned short)mIconX,
-                          (unsigned short)mIconY, 0);
+    Mg_RenderSubSpriteMtx(sLuigiPictureSprites[mWanted], mIconX, mIconY, 0);
 }
 
 void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
@@ -1002,8 +1001,8 @@ void dScMgLuigi_c::UpdatePictures() {
 
 void dScMgLuigi_c::BeginCatch(int found) {
     int roundInSet;
-    mIconX = (short)(mPosX[mTarget - 1] >> 0xc);
-    mIconY = (short)(mPosY[mTarget - 1] >> 0xc);
+    mIconX = mPosX[mTarget - 1] >> 0xc;
+    mIconY = mPosY[mTarget - 1] >> 0xc;
     mIconOn = 0x60;
     mState = STATE_CATCH;
     mCatchWait = 0xc8;
@@ -1093,7 +1092,7 @@ void dScMgLuigi_c::CheckTouch() {
 void dScMgLuigi_c::PlaceBoardLayout() {
     extern u8 sLuigiBoardModes[];
     int layout;
-    int randomValue;
+    u32 randomValue;
     int i;
 
     layout = sLuigiBoardModes[mBoard];
@@ -1104,9 +1103,9 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int firstCharacter;
         pictureIndex = 0;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        firstCharacter = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+        firstCharacter = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        mTarget = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+        mTarget = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
         for (i = 0; i < 2; i++) {
             for (column = 0; column < 2; column++) {
                 mPosX[pictureIndex] = (0x70 + column * 0x20) << 12;
@@ -1125,7 +1124,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int column;
         pictureIndex = 0;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 16 >> 15) + 1;
+        mTarget = (((randomValue >> 16) & 0x7fff) * 16 >> 15) + 1;
         for (i = 0; i < 4; i++) {
             for (column = 0; column < 4; column++) {
                 u8 characterOffset;
@@ -1134,10 +1133,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
                 mActive[pictureIndex] = 1;
                 mKind[pictureIndex] = PICTURE_RESTART;
                 randomValue = RandomIntInternal(&data_0209d4b8.value);
-                mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+                mCharacter[pictureIndex] = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
                 if (mWanted == mCharacter[pictureIndex]) {
                     randomValue = RandomIntInternal(&data_0209d4b8.value);
-                    characterOffset = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
+                    characterOffset = ((randomValue >> 16) & 0x7fff) * 3 >> 15;
                     mCharacter[pictureIndex] += characterOffset + 1;
                     mCharacter[pictureIndex] &= 3;
                 }
@@ -1152,7 +1151,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int column;
         pictureIndex = 0;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 0x30 >> 15) + 1;
+        mTarget = (((randomValue >> 16) & 0x7fff) * 0x30 >> 15) + 1;
         for (i = 0; i < 6; i++) {
             for (column = 0; column < 8; column++) {
                 u8 characterOffset;
@@ -1161,10 +1160,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
                 mActive[pictureIndex] = 1;
                 mKind[pictureIndex] = PICTURE_RESTART;
                 randomValue = RandomIntInternal(&data_0209d4b8.value);
-                mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+                mCharacter[pictureIndex] = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
                 if (mWanted == mCharacter[pictureIndex]) {
                     randomValue = RandomIntInternal(&data_0209d4b8.value);
-                    characterOffset = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
+                    characterOffset = ((randomValue >> 16) & 0x7fff) * 3 >> 15;
                     mCharacter[pictureIndex] += characterOffset + 1;
                     mCharacter[pictureIndex] &= 3;
                 }
@@ -1178,7 +1177,7 @@ void dScMgLuigi_c::PlaceBoardLayout() {
         int i;
         pictureIndex = 0;
         randomValue = RandomIntInternal(&data_0209d4b8.value);
-        mTarget = ((((u32)randomValue >> 16) & 0x7fff) * 8 >> 15) + 1;
+        mTarget = (((randomValue >> 16) & 0x7fff) * 8 >> 15) + 1;
         for (i = 0; i < 8; i++) {
             u8 characterOffset;
             mPosX[pictureIndex] = (0x10 + i * 0x20) << 12;
@@ -1186,10 +1185,10 @@ void dScMgLuigi_c::PlaceBoardLayout() {
             mActive[pictureIndex] = 1;
             mKind[pictureIndex] = PICTURE_RESTART;
             randomValue = RandomIntInternal(&data_0209d4b8.value);
-            mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 3 >> 15;
+            mCharacter[pictureIndex] = ((randomValue >> 16) & 0x7fff) * 3 >> 15;
             if (mWanted == mCharacter[pictureIndex]) {
                 randomValue = RandomIntInternal(&data_0209d4b8.value);
-                characterOffset = ((((u32)randomValue >> 16) & 0x7fff) * 2 >> 15) + 1;
+                characterOffset = (((randomValue >> 16) & 0x7fff) * 2 >> 15) + 1;
                 mCharacter[pictureIndex] += characterOffset;
                 if (mCharacter[pictureIndex] >= 3)
                     mCharacter[pictureIndex] = 0;
@@ -1218,7 +1217,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
     int col;
     int row;
     int attempts;
-    int randomValue; /* LUIGI_RAND(4) for the first roll: PlaceNextPicture 49 words off */
+    u32 randomValue; /* LUIGI_RAND(4) for the first roll: PlaceNextPicture 49 words off */
 
     if (mFilled != 0)
         return;
@@ -1233,7 +1232,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
     pictureIndex = mTarget;
 
     randomValue = RandomIntInternal(&data_0209d4b8.value);
-    mCharacter[pictureIndex] = (((u32)randomValue >> 16) & 0x7fff) * 4 >> 15;
+    mCharacter[pictureIndex] = ((randomValue >> 16) & 0x7fff) * 4 >> 15;
     {
         u8 *character = &mCharacter[pictureIndex];
         if (mWanted == mCharacter[pictureIndex]) {
@@ -1542,13 +1541,12 @@ extern unsigned char gSubScreenLayers;
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
 /* dScMgLuigi_c::InitResources */
-extern void *sLuigiBg1NcgPath;
+extern const char sLuigiBg1NcgPath[];
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Ov004_Deallocate(void *ptr);
 extern void GX_LoadBG3Scr(void *, u32, u32);
-extern void GXS_LoadBG2Scr(const void *, u32, u32);
 extern void Deallocate(void *);
 extern void Mg_SetTopScreenYOffset(int);
 extern int sMgResultsBannerX;
@@ -1614,7 +1612,7 @@ s32 dScMgLuigi_c::InitResources() {
     void *fileData;
     void *objectTiles;
 
-    arc = Ov004_LoadFileByPath((const char *)&sLuigiBg1NcgPath);
+    arc = Ov004_LoadFileByPath(sLuigiBg1NcgPath);
     if (arc == 0)
         return 0;
 

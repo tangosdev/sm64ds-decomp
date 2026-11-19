@@ -35,6 +35,7 @@
  */
 #include "Particle__Manager.h"
 #include "Particle__System.h"
+#include "Ov007MenuMem.h"
 
 extern "C" void func_02049f58(Particle::Manager *);
 void func_02049ee8(Particle::Manager *, Matrix4x3 *);
@@ -48,8 +49,6 @@ extern "C" int func_02045ce0(void);
 
 extern int func_ov007_020c1804(void);
 extern int func_ov007_020c17f4(void);
-extern "C" void *func_ov007_020c3df4(const char *name, int size);
-extern "C" void func_ov007_020c3d1c(void *);
 extern "C" void func_ov007_020b3edc(int);
 extern "C" void *func_ov007_020b3f20(int);
 
@@ -131,7 +130,7 @@ void func_ov007_020b7708(int idx, void *pos) {
         Particle::System *system;
         data_ov007_02103450[idx] = data_ov007_0210344c->AddSystem(0, *static_cast<Vector3 *>(pos));
         system = data_ov007_02103450[idx];
-        system->callbackFlags |= 2;
+        system->stopGenerate = 1;
     }
 }
 

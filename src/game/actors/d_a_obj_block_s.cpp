@@ -126,7 +126,6 @@ enum {
 extern u32 gNextActorUpdateMask;
 extern CLPS_Block data_ov002_0210d934;
 extern ResourceDescriptor data_ov098_0213c4c8;
-extern "C" u8 DecIfAbove0_Byte(u8 *p);
 namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
 }
@@ -135,8 +134,6 @@ int SurfaceInfo_TestFlag0x20(int *p);
 int func_ov002_020f030c(int x);
 extern "C" int func_ov002_020e496c(daPly_c *c);
 
-extern "C" void Vec3_MulScalarInPlace(Vector3 *v, int s);
-extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 
 
@@ -587,6 +584,10 @@ int daObjBlockS_c::IsOnWaterFloor() {
     return 0;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* Returns 1 when func_02035638 (a hit test on the crate's dBgCh_Actr, a
  * sibling of IsOnWall) holds and the actor owning the collision it reports is
  * a DOSUN, DONKAKU, DONGURU, BATAN or ONIMASU; STATE_IDLE kills the crate
@@ -594,36 +595,18 @@ int daObjBlockS_c::IsOnWaterFloor() {
 int daObjBlockS_c::func_ov098_02138bfc()
 {
     dBgPi *r;
-    void *a;
-    unsigned short type;
-    if (!func_02035638((unsigned char *)&mWithMeshClsn)) return 0;
+    dActor_c *a;
+    if (!func_02035638(&mWithMeshClsn))
+        return 0;
     r = mWithMeshClsn.GetSphereResult();
     if (r->GetClsnID() == -1)
         return 0;
     a = dActor_c::FindWithID(r->GetClsnID());
     if (!a) return 0;
-    type = ((dActor_c *)a)->actorID;
-    {
-        int b;
-        do {
-            b = (int)(type == ACTOR_ONIMASU);
-            if (b)
-                break;
-            b = (int)(type == ACTOR_DONKAKU);
-            if (b)
-                break;
-            b = (int)(type == ACTOR_DONGURU);
-            if (b)
-                break;
-            b = (int)(type == ACTOR_DOSUN);
-            if (b)
-                break;
-            b = (int)(type == ACTOR_BATAN);
-            if (!b)
-                return 0;
-        } while (0);
-        return 1;
-    }
+    if (!(IsActorID(a, ACTOR_ONIMASU) || IsActorID(a, ACTOR_DONKAKU) ||
+          IsActorID(a, ACTOR_DONGURU) || IsActorID(a, ACTOR_DOSUN) || IsActorID(a, ACTOR_BATAN)))
+        return 0;
+    return 1;
 }
 
 /* Puts the crate back in its starting condition: zeroes the sink offset,
@@ -682,6 +665,18 @@ void daObjBlockS_c::SpawnBreakCoins() {
     mCoinsPaid = 1;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 /* Reacts to what touched the crate, from the first cylinder's hit state.
  * Does nothing while mBreakTimer runs. A set mFlags 0x20000 or 0x40000 (the
  * yoshi-mouth bits) enters STATE_IN_MOUTH. Otherwise, if the cylinder has an
@@ -705,17 +700,10 @@ void daObjBlockS_c::HandleHits() {
 
     if (mBreakTimer != 0) return;
 
-    fl = mFlags;
-    {
-        int b1 = ((fl & ACTOR_FLAG_YOSHI_MOUTH_A) != 0);
-        if (b1 != 0) {
-            SetState(STATE_IN_MOUTH);
-        } else {
-            int b2 = ((fl & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
-            if (b2 != 0) {
-                SetState(STATE_IN_MOUTH);
-            }
-        }
+    if (IsBeingEaten(this)) {
+        SetState(STATE_IN_MOUTH);
+    } else if (IsInYoshiMouth(this)) {
+        SetState(STATE_IN_MOUTH);
     }
 
     if (mdCcAcPos_c1.otherOwner == 0) return;
@@ -732,8 +720,8 @@ void daObjBlockS_c::HandleHits() {
     a = static_cast<daPly_c *>(dActor_c::FindWithID(mdCcAcPos_c1.otherOwner));
     if (a == 0) return;
     {
-        int bf = (int)(((dActor_c *)a)->actorID == ACTOR_PLAYER);
-        if (bf == 0) return;
+        if (!IsPlayerActor(a))
+            return;
     }
 
     fl = mdCcAcPos_c1.hitFlags;
@@ -808,10 +796,9 @@ void daObjBlockS_c::HandleWallHit() {
     if (mWithMeshClsn.IsOnWall() != 0) {
         dBgPi *wr = mWithMeshClsn.GetWallResult();
         if (wr->GetClsnID() != -1) {
-            dActor_c *a = dActor_c::FindWithID((u32)wr->GetClsnID());
+            dActor_c *a = dActor_c::FindWithID(wr->GetClsnID());
             if (a != 0) {
-                int isF = (a->actorID == ACTOR_BLOCK_L);
-                if (isF == 0) {
+                if (!IsActorID(a, ACTOR_BLOCK_L)) {
                     Kill();
                     return;
                 }
@@ -1008,9 +995,9 @@ void daObjBlockS_c::UpdateDropShadow() {
     r4 = 0x64000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
     Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = (mPos.y - 0x14000) >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = (mPos.y - 0x14000) >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
 }
 
@@ -1022,9 +1009,9 @@ void daObjBlockS_c::UpdateMeshCollider() {
     Vector3 pos = mPos;
     pos.y -= mClsnYOffset;
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = pos.x;
-    mClsnMat.m[10] = pos.y;
-    mClsnMat.m[11] = pos.z;
+    mClsnMat.t.x = pos.x;
+    mClsnMat.t.y = pos.y;
+    mClsnMat.t.z = pos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
@@ -1047,7 +1034,7 @@ void daObjBlockS_c::UpdateModelMatrix() {
     int b;
 
     if (obj != 0) {
-        b = (int)((mFlags & 0x4000) != 0);
+        b = ((mFlags & 0x4000) != 0);
         if (b != 0 && obj->mCarryMatrix != 0) {
             dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(obj);
             int r5 = 0;
@@ -1075,9 +1062,9 @@ void daObjBlockS_c::UpdateModelMatrix() {
         Vector3 pos = mPos;
         pos.y -= mClsnYOffset;
         Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-        mModel.mat4x3.m[9] = pos.x >> 3;
-        mModel.mat4x3.m[10] = pos.y >> 3;
-        mModel.mat4x3.m[11] = pos.z >> 3;
+        mModel.mat4x3.t.x = pos.x >> 3;
+        mModel.mat4x3.t.y = pos.y >> 3;
+        mModel.mat4x3.t.z = pos.z >> 3;
         mCarryOffset.x = 0;
         mCarryOffset.y = 0;
         mCarryOffset.z = 0;
@@ -1111,8 +1098,7 @@ int daObjBlockS_c::Render()
     if (mState == STATE_BROKEN)
         return 1;
     {
-        int b = ((mFlags & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
-        if (b)
+        if (IsInYoshiMouth(this))
             return 1;
     }
     mModel.Render(0);
@@ -1143,12 +1129,12 @@ int daObjBlockS_c::Behavior()
     int b1, b2;
     int x, y, z;
 
-    b1 = (int)((mFlags & 0x4000000) != 0);
+    b1 = ((mFlags & 0x4000000) != 0);
     if (b1 != 0 && (gNextActorUpdateMask & 0x4000000) && mHoldingPlayer) {
         mHoldingPlayer->DropActor();
     }
 
-    b2 = (int)((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
+    b2 = ((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
     if (b2 != 0 && Vec3_HorzDist(&mPos, &mHomePos) && DistToCPlayer() > 0x7d0000) {
         SetState(STATE_BROKEN);
         return 1;
@@ -1163,7 +1149,7 @@ int daObjBlockS_c::Behavior()
         v.z = z;
         if (DecIfAbove0_Byte(&mBreakTimer)) {
             mParticleHandle1 =
-                (u32)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
+                Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
             mParticleHandle2 =
                 Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
         } else {

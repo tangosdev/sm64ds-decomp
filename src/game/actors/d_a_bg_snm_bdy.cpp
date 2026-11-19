@@ -60,19 +60,11 @@
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 /* Real C++ names. Declared here, not via decl_common.h: that header's
  * other spellings of these symbols collide with this TU. */
 
-/* Shared ABI seams. Each is the most complete of the spellings the retired
- * one-function shards carried. */
-extern "C" {
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
-unsigned short DecIfAbove0_Short(unsigned short *timer);
-}
 extern "C" {
 
 /* arm9 statics this TU reads but does not own. */
@@ -401,7 +393,7 @@ int daBgSnmBdy_c::State3() {
             mPos.y = gBgSnmBdyLandingPoint.y;
             mPos.z = gBgSnmBdyLandingPoint.z;
             mAngle.x = 0;
-            mAngle.y = (short)-0x4000;
+            mAngle.y = -0x4000;
             mHorzSpeed = 0;
             mSubstate++;
         }
@@ -434,7 +426,7 @@ int daBgSnmBdy_c::State4()
     UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     HurtPlayer();
-    if (mPos.y < (int)0xfe363c80)
+    if (mPos.y < -0x1c9c380)
         SetState(5);
     return 1;
 }
@@ -472,12 +464,12 @@ int daBgSnmBdy_c::State5()
 void daBgSnmBdy_c::UpdateModel()
 {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = (mPos.y + mRadius) >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = (mPos.y + mRadius) >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = (mPos.y + mRadius) >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = (mPos.y + mRadius) >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, mRadius << 1, mRadius << 1, 0xf);
 }
 
@@ -530,9 +522,9 @@ int daBgSnmBdy_c::AdvancePath()
     mPrevAngle.y = mAngle.y;
     if (dist < mRadius) {
         numNodes = mPath.NumNodes();
-        /* Signed compare. mPathNode is u32; comparing it as u32 is unsigned. */
         mPathNode = mPathNode + 1;
-        if ((int)mPathNode >= numNodes - 1) return 1;
+        if (mPathNode >= numNodes - 1)
+            return 1;
     }
     return 0;
 }

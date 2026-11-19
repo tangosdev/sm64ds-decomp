@@ -86,9 +86,7 @@ struct SnowmanCylinderOffset {
 extern SnowmanCylinderOffset data_ov081_02128998;
 extern unsigned char gNumPlayers;
 extern daPly_c *gPlayers[];
-extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-extern struct Matrix4x3 data_020a0e68;
+extern union Matrix4x3 data_020a0e68;
 
 /* File handles the static initializer constructs. The two models use
  * func_02017acc; the five animations use SharedFilePtr::Construct.
@@ -271,7 +269,7 @@ void daSnowman_c::CheckAttacks() {
             func_02012694(0x1d, &this->mCamSpacePos);
             hit = 1;
         }
-        if ((flags & 0x40) && (s32)found->param1 == 2) {
+        if ((flags & 0x40) && found->param1 == 2) {
             this->mDeathState = 2;
             func_ov002_020aea30(found, 0);
             this->mDeathSound = 2;
@@ -328,7 +326,7 @@ int daSnowman_c::StateMeltExecute() {
         ApproachLinear(this->mSinkOffsetY, -0x4000, 0x199);
         /* Every read of mStateTimer here is ldrh: it is counted down
            through DecIfAbove0_Short, which takes it unsigned. */
-        if ((u16)this->mStateTimer == 0)
+        if (this->mStateTimer == 0)
             this->mStateTimer = 20;
         if (this->mScale.y < 0x50) {
             if (this->mCapPhase == 0) {
@@ -524,7 +522,7 @@ int daSnowman_c::StateSpawnSnowballExecute() {
         ball->mPos.z = this->mHandPos.z;
     }
 
-    if ((u16)this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         SetState(&data_ov081_02128e44);
         return 1;
     }
@@ -548,7 +546,7 @@ int daSnowman_c::StateSpawnSnowballEnter() {
 /* State "face the player", execute. */
 int daSnowman_c::StateRotateExecute() {
     RotateTowardPlayer(0);
-    if ((u16)this->mStateTimer == 0)
+    if (this->mStateTimer == 0)
         SetState(&data_ov081_02128e34);
     if (FindClosestPlayerDist() > 0x320000)
         SetState(&data_ov081_02128e64);
@@ -658,7 +656,7 @@ int daSnowman_c::StateHopEnter() {
 int daSnowman_c::StateWalkExecute() {
     struct Vector3 node;
 
-    if ((u16)this->mStateTimer == 0) {
+    if (this->mStateTimer == 0) {
         if (this->mStep == 1) {
             this->mSpeed.y = 0x14000;
             this->mVertAccel = -0x4000;
@@ -732,19 +730,19 @@ int daSnowman_c::SetState(State *state) {
 /* Poses the model, then carries the cap on bone 5 and the snowball on
    bone 3, and drops the shadow while standing on the path. */
 void daSnowman_c::UpdateModelMatrices() {
-    int src[3], dst[3];
+    Vector3 src, dst;
     int t;
     dActor_c *actor;
 
     this->mAnmModel.UpdateVerts();
 
-    src[0] = this->mPos.x;
+    src.x = this->mPos.x;
     t = this->mPos.y;
-    src[1] = t;
-    src[2] = this->mPos.z;
-    src[1] = t + this->mSinkOffsetY;
-    Vec3_Asr((Vector3 *)dst, (Vector3 *)src, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
+    src.y = t;
+    src.z = this->mPos.z;
+    src.y = t + this->mSinkOffsetY;
+    Vec3_Asr(&dst, &src, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, dst.x, dst.y, dst.z);
 
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
                                            this->mAngle.z);
@@ -759,9 +757,9 @@ void daSnowman_c::UpdateModelMatrices() {
             MTX_Concat43(&this->mAnmModel.data.transforms[5], &this->mAnmModel.mat4x3,
                          &this->mCapMatrix);
 
-            this->mCapPos.x = data_020a0e68.m[9];
-            this->mCapPos.y = data_020a0e68.m[10];
-            this->mCapPos.z = data_020a0e68.m[11];
+            this->mCapPos.x = data_020a0e68.t.x;
+            this->mCapPos.y = data_020a0e68.t.y;
+            this->mCapPos.z = data_020a0e68.t.z;
             this->mCapPos.x <<= 3;
             this->mCapPos.y <<= 3;
             this->mCapPos.z <<= 3;
@@ -783,9 +781,9 @@ void daSnowman_c::UpdateModelMatrices() {
     MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xc000, -0x1000, 0);
 
-    this->mHandPos.x = data_020a0e68.m[9];
-    this->mHandPos.y = data_020a0e68.m[10];
-    this->mHandPos.z = data_020a0e68.m[11];
+    this->mHandPos.x = data_020a0e68.t.x;
+    this->mHandPos.y = data_020a0e68.t.y;
+    this->mHandPos.z = data_020a0e68.t.z;
     this->mHandPos.x <<= 3;
     this->mHandPos.y <<= 3;
     this->mHandPos.z <<= 3;
@@ -919,7 +917,7 @@ int daSnowman_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gSnowmanJumpStAnimationFile);
     dExtFrameCtrl_c::LoadFile(gSnowmanJumpEdAnimationFile);
 
-    mPathId = (s32)param1 & 0xff;
+    mPathId = param1 & 0xff;
     mType = ((s32)param1 & 0xff00) >> 8;
     if (mPathId == 0xff)
         mPathId = 0;

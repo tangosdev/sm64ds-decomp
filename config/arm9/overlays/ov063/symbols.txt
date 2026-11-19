@@ -168,7 +168,7 @@ g_profile_TERESA kind:data(any) addr:0x0211e770
 g_profile_BOSS_TERESA kind:data(any) addr:0x0211e78c
 g_profile_T_BASKET kind:data(any) addr:0x0211e7a8
 g_profile_ICON_TERESA kind:data(any) addr:0x0211e7c4
-data_ov063_0211e7e0 kind:data(any) addr:0x0211e7e0
+sBooHitRotations kind:data(any) addr:0x0211e7e0
 _ZTV7daTrs_c kind:data(any) addr:0x0211e828
 _ZTV10BigBooIcon kind:data(any) addr:0x0211e8ac
 _ZTV11daTrsIcon_c kind:data(any) addr:0x0211e8ac

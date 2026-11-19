@@ -76,6 +76,7 @@ enum daObjTatefuda_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
@@ -89,7 +90,11 @@ enum Bool { FALSE, TRUE };
 
 
 /* shadow struct 'BMD_File' */
-struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
+struct BMD_File;
+struct KCL_File;
+struct dActor_c;
+struct Vector3;
+union Matrix4x3;
 
 /* shadow struct 'CLPS_Block' */
 struct CLPS_Block; struct Vector3_16;
@@ -122,20 +127,15 @@ enum {
 };
 
 extern "C" {
-extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern char *func_ov002_020e496c(daPly_c *p);
-extern void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 extern short data_ov002_020ff0d0[];
 extern const VecFx32 data_ov002_020ff0d4[];
 
-extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern u8 data_0209d660;
 extern u8 data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
-extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern unsigned int gNextActorUpdateMask;
-extern u8 DecIfAbove0_Byte(u8 *p);
 extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
                                   CLPS_Block &b);
 extern CLPS_Block data_ov002_0210d714;
@@ -469,10 +469,7 @@ void daObjTatefuda_c::Thrown()
     daPly_c *found;
     unsigned id;
 
-    {
-        s16 *pa = &mAngle.x;
-        *pa = *pa + 0x2000;
-    }
+    mAngle.x += 0x2000;
     UpdatePos(0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
@@ -738,6 +735,10 @@ void daObjTatefuda_c::Talk()
     mFlagSeen = gShowTouchScreenArrows;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 /* IDLE, update, first half: has a player started talking to the sign? Needs,
@@ -756,28 +757,17 @@ int daObjTatefuda_c::TryStartTalk() {
         return 0;
     if (mPoundsLeft == 0)
         return 0;
-    {
-        daPly_c *other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
-        if (other == 0)
-            goto fail;
-        {
-            int b = (other->actorID == ACTOR_PLAYER);
-            if (b != false)
-                goto success;
-        }
-    fail:
+    daPly_c *other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
+    if (other == 0 || !IsPlayerActor(other))
         return 0;
-    success: {
-        int ang = Vec3_HorzAngle(&mPos, &other->mPos);
-        if (AngleDiff(ang, mAngle.y) > 0x4000)
-            return 0;
-        mTalkingPlayer = other;
-        if (other->StartTalk(*this, false) == 0)
-            return 0;
-        SetState(STATE_TALK);
-        return 1;
-    }
-    }
+    int ang = Vec3_HorzAngle(&mPos, &other->mPos);
+    if (AngleDiff(ang, mAngle.y) > 0x4000)
+        return 0;
+    mTalkingPlayer = other;
+    if (other->StartTalk(*this, false) == 0)
+        return 0;
+    SetState(STATE_TALK);
+    return 1;
 }
 
 /* recovered: shared common types, declarations from a shared header */
@@ -800,8 +790,7 @@ void daObjTatefuda_c::CheckGrabOrBreak() {
     if (other == 0)
         return;
     {
-        int b = (other->actorID == ACTOR_PLAYER);
-        if (b == 0)
+        if (!IsPlayerActor(other))
             return;
     }
     if ((mdCcAc_c.hitFlags & 0x40000) != 0) {
@@ -920,6 +909,10 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
     }
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* daObjTatefuda_c::OnAttacked1 -- vtable slot 22, ov002 0x020bb23c.
  * reloc: _ZTV15daObjTatefuda_c+0x58 -> 0x020bb23c, _ZTV10dBgActor_c+0x58 ->
  * 0x02010144 (different, real override).
@@ -933,8 +926,7 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
  * unqualified `Kill()` here is that same virtual dispatch. */
 int daObjTatefuda_c::OnAttacked1(dActor_c &other)
 {
-    int isCode = (other.actorID == ACTOR_BOMBHEI);
-    if (isCode) {
+    if (IsActorID(&other, ACTOR_BOMBHEI)) {
         Kill();
     }
 }
@@ -977,9 +969,9 @@ void daObjTatefuda_c::AttachToHolder() {
     v.z = 0;
     data_020a0e68 = body->mat4x3;
     MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
-    v.x = data_020a0e68.m[9];
-    v.y = data_020a0e68.m[10];
-    v.z = data_020a0e68.m[11];
+    v.x = data_020a0e68.t.x;
+    v.y = data_020a0e68.t.y;
+    v.z = data_020a0e68.t.z;
 
     mPrevAngle.y = mHoldingPlayer->mAngle.y;
     mAngle.y = mPrevAngle.y;
@@ -991,9 +983,9 @@ void daObjTatefuda_c::AttachToHolder() {
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x,
                                         data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
 
-    mPos.x = data_020a0e68.m[9];
-    mPos.y = data_020a0e68.m[10];
-    mPos.z = data_020a0e68.m[11];
+    mPos.x = data_020a0e68.t.x;
+    mPos.y = data_020a0e68.t.y;
+    mPos.z = data_020a0e68.t.z;
     Vec3_Lsl(&lo, &mPos, 3);
     mPos.x = lo.x;
     mPos.y = lo.y;
@@ -1026,9 +1018,9 @@ void daObjTatefuda_c::RebuildModelMatrix() {
 void daObjTatefuda_c::UpdateShadowMatrix()
 {
     Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
-    mShadowMat.m[9] = mPos.x >> 3;
-    mShadowMat.m[10] = mPos.y >> 3;
-    mShadowMat.m[11] = mPos.z >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = mPos.y >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
 }
 
 /* The reset: the sign goes back where it was spawned and hides. Sets mHidden

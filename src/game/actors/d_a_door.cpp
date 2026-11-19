@@ -197,7 +197,6 @@ extern "C" {
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
                               const Vector3 *v);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
 }
 
@@ -456,26 +455,26 @@ void daDoor_c::func_ov100_021446f8(daPly_c *r1) {
    from the end, it sends the camera behind the player (dCamera_c::GoBehindPlayer
    with the current player id) and, when the next-level id is not negative,
    zeroes the animation's speed. */
-int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
+int daDoor_c::func_ov100_02144730(daPly_c *player) {
     mModel.Advance();
     if (data_ov100_02148704 != 0) {
         int f = mModel.currFrame;
         if ((unsigned)(f << 4) >> 16 > (u16)(mModel.GetFrameCount() - 0x28))
-            func_ov100_02145080(arg1);
+            func_ov100_02145080(player);
     }
 
     if (mModel.Finished() != 0) {
         int t;
         if (data_ov100_02148704 != 0)
-            func_ov100_021453d8(&data_ov100_021488a4, (int)arg1);
+            func_ov100_021453d8(&data_ov100_021488a4, (int)player);
         else
-            func_ov100_021453d8(&data_ov100_021488b4, (int)arg1);
+            func_ov100_021453d8(&data_ov100_021488b4, (int)player);
         if (mScale.z < 0)
             t = mAngle.x;
         else
             t = mAngle.z;
         t = (s8)t;
-        arg1->mAreaId = t;
+        player->mAreaId = t;
         ChangeArea(t);
         {
             gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
@@ -487,7 +486,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
             } else if (data_ov100_02148704 == 0) {
-                arg1->PlayMammaMiaSound();
+                player->PlayMammaMiaSound();
             }
         }
     } else {
@@ -739,14 +738,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
    0x7f000 (127.0 as fx32) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
 int daDoor_c::func_ov100_02144f84() {
-    if (*data_ov100_02148708 != 0)
-        goto fail;
-    if (gMusicVolume != 0x7f000)
-        goto fail;
-    if (gSubVolume == 0)
-        return 1;
-fail:
-    return 0;
+    return *data_ov100_02148708 == 0 && gMusicVolume == 0x7f000 && gSubVolume == 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -774,7 +766,7 @@ int daDoor_c::func_ov100_02145014() {
     if (r) {
         Sound::PlaySub(0x24, 0x14, 0x7f, 0x15666, 0);
     }
-    return data_ov100_02148708[0] == 0 ? 1 : 0;
+    return data_ov100_02148708[0] == 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -796,10 +788,10 @@ void daDoor_c::func_ov100_02145070(int v) {
    and bumps mTimer to 1 on the frame the player is let out. Returns 0 on that
    frame (and, for variant 0xd, while mTimer is nonzero); 1 otherwise. Was a C
    source. */
-int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
+int daDoor_c::func_ov100_02145080(daPly_c *player) {
     if (param1 != DOOR_LAST_KEY_MODEL) {
         if (mTimer == 0) {
-            if (func_ov002_020ca78c(arg1) != 0) {
+            if (func_ov002_020ca78c(player) != 0) {
                 Sound::PlaySub(0x2b, 0, 0x7f, 0x15666, 0);
                 mTimer = 120;
             }
@@ -809,7 +801,7 @@ int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
             return 0;
         }
     } else if (mTimer == 0) {
-        mTimer = arg1->TryExitWhiteDoorWithStar();
+        mTimer = player->TryExitWhiteDoorWithStar();
     } else {
         return 0;
     }
@@ -860,6 +852,10 @@ int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
     return 1;
 }
 
+static inline int Abs(int v) {
+    return v < 0 ? -v : v;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov100_021452e4, 0x021452e4, size 0x8c */
 /* -------------------------------------------------------------------------- */
@@ -869,27 +865,15 @@ int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
    degrees) -- the door's mAngle.y when mScale.z is negative, half a turn from
    it otherwise. Was a C source. */
 int daDoor_c::func_ov100_021452e4(daPly_c *r1) {
-    int v, z, a;
-    v = mScale.x;
-    if (v < 0)
-        v = -v;
-    if (v <= 0x4b000) {
-        v = mScale.y;
-        if (v < 0)
-            v = -v;
-        if (v <= 0x32000) {
-            z = mScale.z;
-            v = (z < 0) ? -z : z;
-            if (v <= 0x6e000) {
-                if (z < 0)
-                    a = mAngle.y;
-                else
-                    a = mAngle.y + 0x8000;
-                a = (short)a;
-                if (AngleDiff(a, r1->mAngle.y) < 0x2000)
-                    return 1;
-            }
-        }
+    int a;
+    if (Abs(mScale.x) <= 0x4b000 && Abs(mScale.y) <= 0x32000 && Abs(mScale.z) <= 0x6e000) {
+        if (mScale.z < 0)
+            a = mAngle.y;
+        else
+            a = mAngle.y + 0x8000;
+        a = (short)a;
+        if (AngleDiff(a, r1->mAngle.y) < 0x2000)
+            return 1;
     }
     return 0;
 }
@@ -966,12 +950,8 @@ void daDoor_c::OnPendingDestroy() {}
  * 5 Render(const Vector3*), exactly what the ROM dispatches. */
 s32 daDoor_c::Render() {
     if (IsAreaShowing((char)mAngle.x) != 0 || IsAreaShowing((char)mAngle.z) != 0) {
-        /* &mModel is taken HERE and not at the top of the function: hoisting
-           it costs a callee-saved register and a stack adjust the ROM does
-           not have. The ROM computes it lazily, so this does too. */
-        dExtAnmModel_c *body = &mModel;
         dExtSimpleModel_c *key;
-        body->Render(0);
+        mModel.Render(0);
         key = mKeyModel;
         if (key != 0) {
             key->Virtual10(*mModel.data.transforms);
@@ -996,6 +976,15 @@ s32 daDoor_c::Behavior() {
         (this->*(node->execute))(res);
     }
     return 1;
+}
+
+/* InitResources shifts param1 down in place with a read through this
+   accessor. Spelt plainly (`param1 = param1 >> 0x10;`), 2004/b56
+   value-numbers both sides together and materialises the address once --
+   one instruction longer than the ROM, which keeps the offset folded into
+   both accesses. */
+inline u32 daDoor_c::GetParam1() const {
+    return param1;
 }
 
 /* vtable slot 0. Was a C source taking the object explicitly.
@@ -1025,22 +1014,16 @@ s32 daDoor_c::InitResources() {
     DoorEntry *e;
     void *f;
     void *an;
-    Vector3 tmp;
+    Vector3 scaledPos;
     int r4;
-    int v;
     int b;
     int x;
     int y;
     int z;
 
     /* The spawn word arrives packed: this door's variant index is param1's
-       high halfword, and every later read of param1 is that index. Spelt
-       plainly (`param1 = param1 >> 0x10;`), 2004/b56 value-numbers both
-       sides together and materialises the address once -- one instruction
-       longer than the ROM, which keeps the offset folded into both
-       accesses. The redundant cast on the read side reaches the folded
-       form. */
-    param1 = (u32)param1 >> 0x10;
+       high halfword, and every later read of param1 is that index. */
+    param1 = GetParam1() >> 0x10;
 
     /* 75 units along the door's facing. */
     static Vector3 sDoorOff(0x4b000, 0, 0);
@@ -1080,8 +1063,8 @@ s32 daDoor_c::InitResources() {
     mModel.SetAnim((BCA_File *)an, 0x40000000, 0x1000, 0);
 
     /* The model matrix takes the position >> 3. */
-    Vec3_Asr(&tmp, &mPos, 3);
-    MtxStack::transS(tmp.x, tmp.y, tmp.z);
+    Vec3_Asr(&scaledPos, &mPos, 3);
+    MtxStack::transS(scaledPos.x, scaledPos.y, scaledPos.z);
     MtxStack::YrotM(mAngle.y);
     mModel.mat4x3 = data_020a0e68;
 
@@ -1108,25 +1091,10 @@ s32 daDoor_c::InitResources() {
     }
     func_ov100_02145370();
 
-    v = mScale.x;
-    if (v < 0)
-        v = -v;
-    if (v <= 0x4b000) { /* 75 units */
-        v = mScale.y;
-        if (v < 0)
-            v = -v;
-        if (v <= 0x32000) { /* 50 */
-            v = mScale.z;
-            if (v < 0)
-                v = -v;
-            if (v <= 0x1f4000) { /* 500 */
-                func_ov100_021453d8(&data_ov100_02148914, r4);
-                goto done;
-            }
-        }
-    }
-    func_ov100_021453d8(&data_ov100_021488b4, r4);
-done:
+    if (Abs(mScale.x) <= 0x4b000 && Abs(mScale.y) <= 0x32000 && Abs(mScale.z) <= 0x1f4000)
+        func_ov100_021453d8(&data_ov100_02148914, r4);
+    else
+        func_ov100_021453d8(&data_ov100_021488b4, r4);
     return 1;
 }
 

@@ -20,9 +20,9 @@
  * Known limits:
  * - IsUnk42cSet keeps its symbol-bound name; the field it reads is
  *   mRespawnAfterFall (see include/PathLift.h).
- * - StateFall keeps two views of mFallAngle: a signed read and an
- *   (int)-laundered unsigned read-modify-write. Collapsing both into
- *   mFallAngle makes mwcc reuse the signed load and drops 12 bytes.
+ * - StateFall reads the u16 mFallAngle into the s16 raw before taking its
+ *   sine: the ROM loads it signed there and unsigned for the += 0x3000. An
+ *   s32 raw loads it unsigned (one word off).
  */
 
 #pragma defer_codegen off
@@ -58,15 +58,12 @@ extern SharedFilePtr data_ov002_0210d9f0;
 
 /* ROM symbols with no header of their own. */
 extern "C" {
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
 }
-extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 
@@ -119,7 +116,7 @@ void dPathLiftActor_c::StateWaitInit()
 // 0x020ef408 (0x174)
 void dPathLiftActor_c::StateFall()
 {
-    s32 raw;
+    s16 raw;
     s16 v;
 
     if (Param08ModeIs2() != 0) {
@@ -135,12 +132,10 @@ void dPathLiftActor_c::StateFall()
     if (DecIfAbove0_Byte(&mFallDelay) != 0)
         return;
     if (DecIfAbove0_Byte(&mFallBounceTimer) != 0) {
-        /* Retain the mixed signed/unsigned access tree: collapsing both views
-           into mFallAngle makes mwcc reuse the signed load and drops 12 bytes. */
         raw = mFallAngle;
-        v = FX_SinIdx((u16)(int)(long long)raw >> 4);
+        v = FX_SinIdx((u16)raw >> 4);
         mPos.y = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
-        *(u16 *)((int)&mFallAngle) = (u16)(*(u16 *)((int)&mFallAngle) + 0x3000);
+        mFallAngle += 0x3000;
         return;
     }
     UpdatePos(0);
@@ -361,18 +356,14 @@ void dPathLiftActor_c::RenderPathModels()
 {
     if (Param12ModeIs1() == 0) return;
     if (mState == 2) return;
-    int i = 0;
-    dExtSimpleModel_c *model = mModels;
-    do {
+    for (int i = 0; i < 3; i++) {
         /* Kept (#821 r77): the ROM copy-initializes the scale with one
            ldm/stm block move, which only a POD VecFx32 gives (and keeps the
            global's literal in .data); Render takes the game's Vector3, so it
            casts there. */
         VecFx32 local = data_ov002_0210af00;
-        model->Render((Vector3 *)&local);
-        i++;
-        model++;
-    } while (i < 3);
+        mModels[i].Render((Vector3 *)&local);
+    }
 }
 
 // 0x020efcf4 (0x174)
@@ -425,9 +416,9 @@ void dPathLiftActor_c::UpdatePathModels()
         }
         if (modelNode < (int)mPath.NumNodes() && modelNode >= 0) {
             mPath.GetNode(node, modelNode);
-            mModels[i].mat4x3.m[9] = node.x >> 3;
-            mModels[i].mat4x3.m[10] = node.y >> 3;
-            mModels[i].mat4x3.m[11] = node.z >> 3;
+            mModels[i].mat4x3.t.x = node.x >> 3;
+            mModels[i].mat4x3.t.y = node.y >> 3;
+            mModels[i].mat4x3.t.z = node.z >> 3;
         }
     }
 }

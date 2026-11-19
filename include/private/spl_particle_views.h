@@ -5,7 +5,7 @@
 #include "nitro/fx/fx.h"
 
 /* C views of the particle code's records, shared by the particle draw routines
- * (func_0204b028 .. func_0204be40), the child spawn (func_0204c304) and the
+ * (SPLDraw_Child_Polygon .. SPLDraw_Billboard), the child spawn (SPLEmitter_EmitChildren) and the
  * particle animation callbacks (SPLAnim_ChildScale .. SPLAnim_Scale). Each view
  * names the fields those files read. Unread bytes stay padding.
  *
@@ -20,7 +20,7 @@ struct ColorRamp; /* SPLAnim_Color */
 struct AlphaAnim; /* SPLAnim_Alpha */
 struct TexAnim;   /* SPLAnim_Texture */
 
-/* The particle definition's header (func_0204a730's PtclData; SPL's
+/* The particle definition's header (SPLEmitter_Update's PtclData; SPL's
  * SPLResourceHeader). */
 typedef struct PtclData {
     u32 emissionType : 4;    /* bits 0-3 -- the emitter shape */
@@ -34,8 +34,8 @@ typedef struct PtclData {
     u32 randomInitAngle : 1; /* 13 */
     u32 : 2;
     u32 hasChildResource : 1;      /* bit 16 -- also draw the child particles */
-    u32 polygonRotAxis : 2;        /* bits 17-18 -- data_02099fbc index */
-    u32 polygonReferencePlane : 1; /* bit 19 -- data_02099fb4 index */
+    u32 polygonRotAxis : 2;        /* bits 17-18 -- sRotationFunctions index */
+    u32 polygonReferencePlane : 1; /* bit 19 -- sPlaneDrawingFunctions index */
     u32 : 12;
     int rate;             /* 0x04 */
     int emitRadius;       /* 0x08 -- System::emitRadius */
@@ -74,12 +74,12 @@ typedef struct PtclChildFlags {
     u16 : 1;
     u16 useChildColor : 1;         /* bit 6 */
     u16 drawType : 2;              /* bits 7-8 -- picks the child draw routine */
-    u16 polygonRotAxis : 2;        /* bits 9-10 -- data_02099fbc index */
-    u16 polygonReferencePlane : 1; /* bit 11 -- data_02099fb4 index */
+    u16 polygonRotAxis : 2;        /* bits 9-10 -- sRotationFunctions index */
+    u16 polygonReferencePlane : 1; /* bit 11 -- sPlaneDrawingFunctions index */
     u16 : 4;
 } PtclChildFlags;
 
-/* The child record (func_0204a730's PtclChild; SPL's SPLChildResource): the
+/* The child record (SPLEmitter_Update's PtclChild; SPL's SPLChildResource): the
  * particles a particle emits. */
 typedef struct PtclChild {
     PtclChildFlags flags; /* 0x00 */
@@ -90,14 +90,14 @@ typedef struct PtclChild {
     u8 scaleRatio;        /* 0x09 -- and (scaleRatio + 1) / 64 of the scale */
     u16 color;            /* 0x0a */
     u8 count;             /* 0x0c */
-    u8 pad_0d[2];         /* 0x0d -- func_0204a730's emission delay and interval */
+    u8 pad_0d[2];         /* 0x0d -- SPLEmitter_Update's emission delay and interval */
     u8 texture;           /* 0x0f */
     u32 textureTileCountS : 2; /* 0x10 bits 0-1 */
     u32 textureTileCountT : 2; /* bits 2-3 */
     u32 : 28;
 } PtclChild;
 
-/* The particle definition (func_0204a730's PtclDef; SPL's SPLResource). */
+/* The particle definition (SPLEmitter_Update's PtclDef; SPL's SPLResource). */
 typedef struct PtclDef {
     PtclData *data;              /* 0x00 */
     struct ScaleAnim *scaleAnim; /* 0x04 */
@@ -130,7 +130,7 @@ typedef struct ParticleSystem {
     PtclDef *mDefinition;    /* 0x18 */
     int callbackFlags;       /* 0x1c */
     /* Still Vector3, like ParticleElement.basePosition, which is copied from
-       it: func_0204ae2c fills it from Particle::Manager::AddSystem's
+       it: SPLEmitter_Init fills it from Particle::Manager::AddSystem's
        Vector3 &, so a VecFx32 here needs a cast in Particle_Manager.cpp. */
     Vector3 position;        /* 0x20 */
     VecFx32 velocity;        /* 0x2c */
@@ -163,7 +163,7 @@ typedef struct Visibility {
 } Visibility;
 
 /* Particle::Element (include/Particle__Element.h) and the fields past its
- * 0x30 bytes, named as in func_0204c584.c. */
+ * 0x30 bytes, named as in SPLEmitter_EmitParticles.c. */
 typedef struct ParticleElement {
     struct ParticleElement *next;     /* 0x00 */
     struct ParticleElement *previous; /* 0x04 */
@@ -183,7 +183,7 @@ typedef struct ParticleElement {
     u8 texture;                       /* 0x42 -- the index of the particle's current texture */
 } ParticleElement;
 
-/* One 0x14-byte texture record: what func_0204af3c (texture, palette, size)
+/* One 0x14-byte texture record: what SPLUtil_SetTexture (texture, palette, size)
  * binds. */
 typedef struct TextureView {
     u32 pad[5];

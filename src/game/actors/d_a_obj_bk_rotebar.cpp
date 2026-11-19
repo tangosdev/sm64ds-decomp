@@ -26,6 +26,7 @@ enum d_a_obj_bk_rotebar_AssetId { ASSET_BK_ROTEBAR_BMD = 0x059b, ASSET_BK_ROTEBA
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Sound.h"
+#include "math/CalcLib.h"
 
 struct KCL_File;
 struct CLPS_Block;
@@ -57,11 +58,6 @@ struct CLPS_Block {
 CLPS_Block data_ov015_02113654 = {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff,
                                   0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 
-/* arm9 C helpers with no shared header. */
-extern "C" {
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-}
-
 daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
     return new daObjBk_Rotebar_c();
 }
@@ -81,7 +77,7 @@ s32 daObjBk_Rotebar_c::InitResources() {
 }
 
 s32 daObjBk_Rotebar_c::Behavior() {
-    if (DecIfAbove0_Byte((unsigned char *)&mPauseTimer) == 0) {
+    if (DecIfAbove0_Byte(&mPauseTimer) == 0) {
         mPrevAngle.y += 0x100;
         mAngle.y = mPrevAngle.y;
         mTurnSound = Sound::PlayLong(mTurnSound, 3, 0x88, mCamSpacePos, 0);

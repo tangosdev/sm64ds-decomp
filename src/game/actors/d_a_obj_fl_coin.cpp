@@ -103,7 +103,7 @@ struct CLPS_Block {
 };
 extern CLPS_Block data_ov064_0211baac;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
-extern int data_ov064_0211c198[];
+extern const s8 *data_ov064_0211c198[];
 
 /* Reconstructed source-style name: SM64DS proves daObjFl_Puzzle_c through RTTI,
  * allocation size, vtable identity, and the FL_PUZZLE registry profile; later
@@ -212,8 +212,7 @@ int daObjFl_Puzzle_c::Behavior() {
         mgr = (daObjFl_Coin_c *)dActor_c::FindWithID(id);
     /* The step timer only runs while the manager is gone or has no live coins. */
     if (mgr == 0 || mgr->mLiveCoinCount == 0) {
-        u16 *ctr = &mStepTimer;
-        *ctr = *ctr + 1;
+        mStepTimer++;
     }
     UpdateModelMatrix();
     if (IsClsnInRange(0, 0) != 0)
@@ -272,9 +271,9 @@ void daObjFl_Puzzle_c::AdvanceStepScript() {
     }
     if (mStepActive)
         return;
-    mState = ((s8 *)mStepScript)[mStepIndex];
+    mState = mStepScript[mStepIndex];
     mStepIndex++;
-    if (((s8 *)mStepScript)[mStepIndex] == -1) {
+    if (mStepScript[mStepIndex] == -1) {
         mStepIndex = 0;
         if (mCoinMgrId) {
             a = (daObjFl_Coin_c *)dActor_c::FindWithID(mCoinMgrId);

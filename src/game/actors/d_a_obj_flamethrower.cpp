@@ -70,10 +70,11 @@ extern "C" {
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
-/* Per-segment tables. The scale is 0x1000 + i * 0x745: collision radius and
- * height are that times 0x14 and 0x28, and the particle call takes it too.
- * The second parameter is 0xe61 + i * 0x689. The local-Z placement is
- * 0x28000 + i * 0x122c8, rotated by mTransform and added to the previous
+/* data_ov095_02136f80 is the per-segment scale, 0x1000 + i * 0x745:
+ * collision radius and height are that times 0x14 and 0x28, and the
+ * particle call takes it too. data_ov095_02136fb0 is the local-Z
+ * placement, fx12, 0x28000 + i * 0x122c8, rotated by mTransform and
+ * added to the previous
  * segment. */
 extern const s16 data_ov095_02136f80[12] = {
     0x1000, 0x1745, 0x1e8a, 0x25cf, 0x2d14, 0x3459, 0x3b9e, 0x42e3, 0x4a28, 0x516d, 0x58b2, 0x5ff7,
@@ -172,7 +173,7 @@ int daObjFlamethrower_c::Behavior() {
         }
         break;
     case 1:
-        if ((int)mActiveFlames < (count - 1)) {
+        if (mActiveFlames < (count - 1)) {
             active = &mActiveFlames;
             *active = (*active + 1);
         }
@@ -199,7 +200,7 @@ int daObjFlamethrower_c::Behavior() {
 
     if (mActiveFlames != 0) {
         for (i = 0; i < count; i++) {
-            if (i == (int)mActiveFlames)
+            if (i == mActiveFlames)
                 break;
             if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt)) {
                 im1 = i - 1;
@@ -254,7 +255,7 @@ int daObjFlamethrower_c::Behavior() {
 
     for (j = 0; j < count; j++) {
         mColliders[j].Clear();
-        if (j < (int)mActiveFlames)
+        if (j < mActiveFlames)
             mColliders[j].dCc_c::Update();
     }
     return 1;

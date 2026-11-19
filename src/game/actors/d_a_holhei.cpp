@@ -203,15 +203,14 @@ int daHolhei_c::Behavior()
             int atEdge = 0;
             signed char t = gCurrentSublevel;
             if (t == 0x16) {
-                if (mPos.x > (int)0xff95c000)
+                if (mPos.x > -0x6a4000)
                     atEdge = 1;
             } else if (t == 0x15) {
-                if (mPos.z < (int)0xff2f4000)
+                if (mPos.z < -0xd0c000)
                     atEdge = 1;
             }
-            if (atEdge != 0
-                || (mHorzSpeed != 0
-                    && IsGoingOffCliff(mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, 0x32000))) {
+            if (atEdge != 0 ||
+                (mHorzSpeed != 0 && IsGoingOffCliff(mMeshClsn, 0x3c000, 0x2888, 0, 1, 0x32000))) {
                 mHorzSpeed = 0;
                 mEdgeStop = 1;
                 mPos.x = mPrevPosX;
@@ -292,9 +291,9 @@ void daHolhei_c::HomeCarryOffset() {
 /* Bone 3's transform times the model's yaw, stored where a holder looks. */
 void daHolhei_c::BuildHoldMatrix() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     MTX_Concat43(&mModel.data.transforms[3], &mModel.mat4x3, &mHoldMtx);
     mCarryMatrix = &mHoldMtx;
 }
@@ -302,9 +301,9 @@ void daHolhei_c::BuildHoldMatrix() {
 /* Shadow under this actor. Off the ground the radius grows. */
 void daHolhei_c::UpdateShadow() {
     mShadowMtx = IDENTITY_MATRIX4X3;
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = mPos.y >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = mPos.y >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
     if (mMeshClsn.IsOnGround() != 0) {
         DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x32000, 0xf);
     } else {
@@ -315,9 +314,9 @@ void daHolhei_c::UpdateShadow() {
 /* Shadow under the held actor. mHeld is reloaded before each word. */
 void daHolhei_c::UpdateHeldShadow() {
     mShadowMtx = IDENTITY_MATRIX4X3;
-    mShadowMtx.m[9] = mHeld->mPos.x >> 3;
-    mShadowMtx.m[10] = mHeld->mPos.y >> 3;
-    mShadowMtx.m[11] = mHeld->mPos.z >> 3;
+    mShadowMtx.t.x = mHeld->mPos.x >> 3;
+    mShadowMtx.t.y = mHeld->mPos.y >> 3;
+    mShadowMtx.t.z = mHeld->mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x32000, 0xf);
 }
 
@@ -365,7 +364,8 @@ int daHolhei_c::func_ov062_02116b80() {
 /* Walk. A wall or the edge bails out; a player near home pulls Chuckya off
    the path once the chase cooldown has run out. */
 int daHolhei_c::func_ov062_02116a08() {
-    /* Zeroed and never read again; the three stores are in the ROM. */
+    /* Zeroed and never read again; the three stores are in the ROM.
+       Kept (#821 r84): deleted -> 0x10 shorter; plPos(0, 0, 0) in its place -> frame 8 smaller. */
     Vector3 unused(0, 0, 0);
     Vector3 plPos;
     int r;

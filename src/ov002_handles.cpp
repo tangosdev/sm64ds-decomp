@@ -59,7 +59,7 @@ Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
 int dEnemyBase_c::func_ov002_020ad660(void *clsnArg, void *modelArg, int flags) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
     dExtSimpleModel_c *model = (dExtSimpleModel_c *)modelArg;
-    int v[3];
+    Vector3 v;
 
     if (mDeathState != 8)
         return 0;
@@ -82,8 +82,8 @@ int dEnemyBase_c::func_ov002_020ad660(void *clsnArg, void *modelArg, int flags) 
         mAngle.x += mSpinRateX;
         mAngle.y += mSpinRateY;
         mAngle.z += mSpinRateZ;
-        Vec3_Asr((Vector3 *)v, &mPos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+        Vec3_Asr(&v, &mPos, 3);
+        Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);

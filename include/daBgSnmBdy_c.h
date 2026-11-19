@@ -56,7 +56,7 @@ struct daBgSnmBdy_c : dActor_c {
     u8 mPad34e[0x2];                    /* 0x34e */
     Matrix4x3 mShadowMat;               /* 0x350 */
     PathPtr mPath;                      /* 0x380 */
-    u32 mPathNode;                      /* 0x388 */
+    s32 mPathNode;                      /* 0x388 */
 
     typedef int (daBgSnmBdy_c::*StateFunc)();
     /* One row of the sinit-built table: the 8-byte init PMF, then the

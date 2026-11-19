@@ -86,16 +86,14 @@ s32 daObjFl_London_c::Behavior() {
         if (mFlag == 0) {
             /* MATCH: mPrevAngle.z = mPrevAngle.z - 0x100 size-DIFFs (member
              * addressing CSEs the field). */
-            short *p = &mPrevAngle.z;
-            *p = *p - 0x100;
+            mPrevAngle.z -= 0x100;
             if (mPrevAngle.z <= -0x2000) {
                 mPrevAngle.z = -0x2000;
                 mCooldown = 15;
                 mFlag = 1;
             }
         } else {
-            short *p = &mPrevAngle.z;
-            *p = *p + 0x100;
+            mPrevAngle.z += 0x100;
             if (mPrevAngle.z >= 0) {
                 mPrevAngle.z = 0;
                 mCooldown = 15;
@@ -136,9 +134,9 @@ s32 daObjFl_London_c::CleanupResources() {
  * this TU. */
 void daObjFl_London_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Both destructors are emitted from the INLINE `~daObjFl_London_c() {}` in

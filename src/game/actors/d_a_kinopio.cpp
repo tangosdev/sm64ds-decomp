@@ -34,6 +34,8 @@
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
+#include "Sound.h"
+#include "math/CalcLib.h"
 
 struct BCA_File;
 struct BMD_File;
@@ -69,9 +71,6 @@ KinopioModelFile gKinopioModelFile(ASSET_KINOPIO_BMD);
 KinopioAnimFile gKinopioIdleAnimFile(ASSET_KINOPIO_WAIT1_BCA);
 KinopioAnimFile gKinopioTalkAnimFile(ASSET_KINOPIO_WAIT2_BCA);
 
-namespace Sound {
-bool PlaySub(u32, u32, u32, int, bool);
-}
 
 extern "C" {
 
@@ -90,15 +89,12 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
    it arrived, and that is load-bearing: St_Talk_Main tests the result to decide
    whether the turn has finished.) */
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s32 AngleDiff(s32 a, s32 b);
 
 /* game state */
 int func_02013a44(void);
 int ObjectMessageIDToActualMessageID(s16 id);
 }
-s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int func_020138dc(void);
 int IsStarCollectedInCurLevel(int starID);
 u8 NumStars(void);
@@ -190,7 +186,7 @@ void daKinopio_c::St_Talk_Main()
             messagePos.y = y;
             messagePos.z = z;
         }
-        player->ShowMessage(*this, (u32)(s16)messageID, &messagePos, 0, 0);
+        player->ShowMessage(*this, (s16)messageID, &messagePos, 0, 0);
         return;
     }
     case 1:
@@ -288,9 +284,9 @@ void daKinopio_c::UpdateModelPose()
     Vector3 capPos;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = (mPos.y + 0x4000) >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + 0x4000) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     data_020a0e68 = mAnmModel.data.transforms[5];
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mHeadYaw);
@@ -314,9 +310,9 @@ void daKinopio_c::UpdateModelPose()
                 &data_020a0e68, -0x1000, 0, 0);
             mCapTransform = data_020a0e68;
 
-            capPos.x = data_020a0e68.m[9];
-            capPos.y = data_020a0e68.m[10];
-            capPos.z = data_020a0e68.m[11];
+            capPos.x = data_020a0e68.t.x;
+            capPos.y = data_020a0e68.t.y;
+            capPos.z = data_020a0e68.t.z;
             capPos.y <<= 3;
             capPos.x <<= 3;
             capPos.z <<= 3;
@@ -328,9 +324,9 @@ void daKinopio_c::UpdateModelPose()
     }
 
     mShadowTransform = IDENTITY_MATRIX4X3;
-    mShadowTransform.m[9] = mPos.x >> 3;
-    mShadowTransform.m[10] = (mPos.y - 0x8000) >> 3;
-    mShadowTransform.m[11] = mPos.z >> 3;
+    mShadowTransform.t.x = mPos.x >> 3;
+    mShadowTransform.t.y = (mPos.y - 0x8000) >> 3;
+    mShadowTransform.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 15);
 }
 
@@ -454,7 +450,7 @@ int daKinopio_c::Behavior()
 
     mAnmModel.speed = 0x1000;
 
-    mAnmModel.ApplyOpacity((u32)(u8)(mOpacity >> 3), 1);
+    mAnmModel.ApplyOpacity((u8)(mOpacity >> 3), 1);
 
     mCollider.Clear();
     mCollider.Update();

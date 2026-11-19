@@ -1,23 +1,21 @@
 #include "types.h"
 /* recovered: shared common types */
 #include "common.h"
-
-extern void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *result);
-extern void VEC_Normalize(const struct Vector3 *src, struct Vector3 *dst);
+#include "math/CalcLib.h"
 
 void func_0203cf00(Vector3 *out, Vector3 *a, Vector3 *b) {
-    Vector3 tmp;
-    VEC_CrossProduct(a, b, &tmp);
-    out->x = tmp.x;
-    out->y = tmp.y;
-    out->z = tmp.z;
+    Vector3 cross;
+    VEC_CrossProduct(a, b, &cross);
+    out->x = cross.x;
+    out->y = cross.y;
+    out->z = cross.z;
 }
 
-void func_0203cebc(Vector3 *out, Vector3 *tmp, Vector3 *a, Vector3 *b) {
-    VEC_CrossProduct(a, b, tmp);
-    out->x = tmp->x;
-    out->y = tmp->y;
-    out->z = tmp->z;
+void func_0203cebc(Vector3 *out, Vector3 *cross, Vector3 *a, Vector3 *b) {
+    VEC_CrossProduct(a, b, cross);
+    out->x = cross->x;
+    out->y = cross->y;
+    out->z = cross->z;
 }
 
 /* func_0203ce80 at 0x0203ce80, size=0x3c

@@ -52,6 +52,7 @@ enum daSlide_Box_c_AssetId {
 #include "dBgCh_Actr.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
 
 /* File 1605 / 1606 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
@@ -74,7 +75,6 @@ extern "C" {
 int data_ov016_02113bac[8] = {
     0x53504c43, 0x00010008, 0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
-extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
 
 extern void hold_d_a_slide_box(void *thiz, void *kcl, void *mtx, int scale, short angleY,
                                void *clps);
@@ -133,10 +133,10 @@ daSlide_Box_c::~daSlide_Box_c()
 void daSlide_Box_c::UpdateModel()
 {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    /* Flat Matrix4x3 (common.h): words 9..11 are the translation, at 1/8. */
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    /* The translation is at 1/8. */
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daSlide_Box_c::CleanupResources()

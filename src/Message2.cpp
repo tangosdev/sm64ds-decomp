@@ -281,7 +281,7 @@ void Message::func_0201adfc(void) {
         k = 0;
         if (cnt > 0) {
             int base = data_0209d6a0;
-            u8 *sp2 = data_0209d710;
+            u8 *widths = data_0209d710;
 
             do {
                 u8 bit = pos & 7;
@@ -303,9 +303,9 @@ void Message::func_0201adfc(void) {
                     q[11] = ((u32 *)data_0209d74c)[base + 3] & *omask;
                 }
 
-                pos = (u8)(pos + *sp2);
+                pos = (u8)(pos + *widths);
                 base += 0x10;
-                sp2++;
+                widths++;
                 k++;
             } while (k < cnt);
         }
@@ -348,7 +348,7 @@ void Message::func_0201b100(int mode) {
             int hi2 = opcode & 0xf0;
             int w;
             MI_CpuCopy32((void *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (void *)r4addr, size);
-            w = ((int)data_0209d6b0 + 7) / 8;
+            w = (data_0209d6b0 + 7) / 8;
             MI_CpuCopy32((void *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
                          (void *)(r4addr + (w << 5)), size);
         } else {
@@ -371,7 +371,7 @@ void Message::func_0201b100(int mode) {
             sh = acc & 7;
             val = (short)(int)data_0208f174[opcode];
             row = startRow;
-            w8 = (((int)data_0209d6b0 + 7) / 8) << 3;
+            w8 = ((data_0209d6b0 + 7) / 8) << 3;
             r7addr = r8addr + 0x20;
             lshift = sh << 2;
             inv = 8 - sh;
@@ -405,6 +405,8 @@ void Message::func_0201b100(int mode) {
 /* opt_common_subs stays off: the inner loop reads data_0209d74c[j + i * 16] once
  * per store the way the cartridge does, and CSE shares the two loads
  * (0x218 against 0x220). */
+/* Kept (#821 r79): a glyph-word pointer local, the commuted index i * 16 + j, mask pointer
+   locals, and inline GlyphWord/LeftMask/RightMask accessors are 0x218 to 0x224 against 0x220. */
 #pragma opt_common_subs off
 void Message::func_0201b388(int a0) {
     int start;

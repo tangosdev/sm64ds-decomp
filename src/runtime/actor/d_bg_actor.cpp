@@ -33,12 +33,6 @@
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
 
-/* ROM symbols with no header of their own, spelled to agree with their
- * definitions. */
-extern "C" {
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
 /* --- Collision events, 0x020eea84..0x020ef320. ------------------------------
  *
  * The character side of a hit on a level object: given the mover's dBgCh_Actr
@@ -72,7 +66,7 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" {
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
    declared in dBgCh_Actr.h. */
-int func_02035638(void *clsn);   /* mSphereClsn.flags & 0x10: the ceiling bit */
+int func_02035638(dBgCh_Actr *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
 void *func_0203564c(void *clsn); /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(daPly_c *player);
@@ -386,19 +380,19 @@ int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
 void dBgActor_c::UpdateModelPosAndRotY()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* The collider follows the model: copy its matrix, overwrite the translation
- * row (m[9..11]) with the actor position, and hand it to the collider. */
+ * with the actor position, and hand it to the collider. */
 void dBgActor_c::UpdateClsnPosAndRot()
 {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPos.x;
-    mClsnMat.m[10] = mPos.y;
-    mClsnMat.m[11] = mPos.z;
+    mClsnMat.t.x = mPos.x;
+    mClsnMat.t.y = mPos.y;
+    mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 

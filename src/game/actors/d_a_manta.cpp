@@ -79,13 +79,6 @@ extern SharedFilePtr data_ov002_0210d9a8;
 extern MantaAnimationFilePtr data_ov090_0213452c;
 extern unsigned char gGameMode;
 
-/* local extern: arm9 vector helpers with no shared header yet. */
-extern "C" {
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-
 extern MantaState data_ov090_0213454c;
 
 /* Cylinder offset (0, -0x3c000, 0x50000): a POD twin, since a Vector3
@@ -99,6 +92,10 @@ extern MantaCylinderOffset data_ov090_02134200;
  * members above; D0 adds dEnemyBase_c's inline operator delete. */
 daManta_c::~daManta_c() {}
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == MANTA_PLAYER;
+}
+
 /* Cylinder follows data_ov090_02134200. A PLAYER inside it is hurt
  * from this actor's position. */
 void daManta_c::HurtTouchingPlayer() {
@@ -111,8 +108,7 @@ void daManta_c::HurtTouchingPlayer() {
     if (id == 0)
         return;
     dActor_c *actor = dActor_c::FindWithID(id);
-    int isPlayer = (int)(actor->actorID == MANTA_PLAYER);
-    if (isPlayer == 0)
+    if (!IsPlayerActor(actor))
         return;
     {
         Vector3 hit;
@@ -235,9 +231,9 @@ void daManta_c::UpdateModelAndRingPos() {
     mRingPos.z = 0;
     data_020a0e68 = mAnmModel.mat4x3;
     MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    mRingPos.x = data_020a0e68.m[9];
-    mRingPos.y = data_020a0e68.m[10];
-    mRingPos.z = data_020a0e68.m[11];
+    mRingPos.x = data_020a0e68.t.x;
+    mRingPos.y = data_020a0e68.t.y;
+    mRingPos.z = data_020a0e68.t.z;
     mRingPos.x <<= 3;
     mRingPos.y <<= 3;
     mRingPos.z <<= 3;
@@ -308,6 +304,10 @@ int daManta_c::Behavior() {
     return 1;
 }
 
+static inline int IsGameMode(int mode) {
+    return gGameMode == mode;
+}
+
 int daManta_c::InitResources() {
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov090_02134524), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
@@ -345,14 +345,13 @@ int daManta_c::InitResources() {
     {
         /* ContinueKuppaScriptIfNecessary stores 2 here. That visit snaps
          * the manta onto node 3 at a fixed pose and clears mFlags. */
-        int kuppa = (int)(gGameMode == 2);
-        if (kuppa != 0) {
+        if (IsGameMode(2)) {
             mPathNode = 3;
-            mPrevAngle.x = (short)0xf303;
+            mPrevAngle.x = -0xcfd;
             mPrevAngle.y = 0xb50;
             mPrevAngle.z = 0;
-            mPos.x = (int)0xfdfb8000;
-            mPos.y = (int)0xff8f8000;
+            mPos.x = -0x2048000;
+            mPos.y = -0x708000;
             mPos.z = 0x29a000;
             mFlags = 0;
         }

@@ -90,7 +90,6 @@ extern VecFx32 data_ov032_021137cc; /* body cylinder */
 extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
 extern "C" int AngleDiff(int a, int b);
-s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
 extern "C" int func_ov002_020c5cd8(daPly_c *a, dActor_c *self);
@@ -287,7 +286,7 @@ int daBakubaku_c::ExecuteWander() {
         return 1;
     }
     if (mStateTimer == 0) {
-        unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
+        unsigned int r = RandomIntInternal(&data_0209e650.value);
         if (((r >> 8) & 3) == 0) {
             SetState(&data_ov032_02113a9c);
         } else {
@@ -338,12 +337,12 @@ int daBakubaku_c::ExecuteChase() {
     }
 
     mAngTarget = Vec3_HorzAngle(&mPos, &mTargetPos);
-    unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
+    unsigned int r = RandomIntInternal(&data_0209e650.value);
     int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
     ApproachLinear(mPrevAngle.y, mAngTarget, 0x200);
     if (Vec3_HorzDist(&mPos, &mTargetPos) < 0x258000) {
         int d = AngleDiff(mAngle.y, mAngTarget);
-        if (d < (int)(short)(s5 + 0x200)) {
+        if (d < (short)(s5 + 0x200)) {
             mAngTarget = Vec3_VertAngle(&mPos, &mTargetPos);
             mFlags = 0;
             mAnmModel.speed = 0x1000;

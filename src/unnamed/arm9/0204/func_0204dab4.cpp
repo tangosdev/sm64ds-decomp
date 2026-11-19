@@ -74,7 +74,7 @@ void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
         if (slot != 0) {
             int scale;
 
-            scale = 0x1000 - FX_DivS32((int)walk->age << 12, walk->lifetime);
+            scale = 0x1000 - FX_DivS32(walk->age << 12, walk->lifetime);
 
             sp[1] = walk->offset.x + walk->basePosition.x;
             sp[2] = walk->offset.y + walk->basePosition.y;

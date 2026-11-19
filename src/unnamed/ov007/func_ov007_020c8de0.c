@@ -5,7 +5,6 @@
  * Matrix4x3 viewMatrix (#5207). */
 
 extern void func_ov007_020c90c0(void *self);
-extern void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern void VEC_MultAdd(int s, int *a, int *b, int *out);
 
 /* from at t <= 0, to at t >= 0x1000, between them the Q12 blend */
@@ -23,7 +22,7 @@ static inline int TweenLerp(int t, int from, int to) {
  * (then steps t, func_ov007_020c90c0), mode 1 moves *out toward `to` by
  * at most step. Returns 1 once it has arrived (state 3). */
 int func_ov007_020c8de0(Ov007VecTween *o) {
-    Vector3 tmp;
+    Vector3 diff;
     if (o->state == 2) {
         o->state = 3;
     }
@@ -40,13 +39,13 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
             Vector3 *dst = o->out;
             int step = o->step;
             int ok; /* stays a flag: setting state inside the arm shrinks it (0x170) */
-            VEC_Subtract(&o->to, dst, &tmp);
-            if (VEC_Mag(&tmp) <= step) {
+            VEC_Subtract(&o->to, dst, &diff);
+            if (VEC_Mag(&diff) <= step) {
                 *dst = o->to;
                 ok = 1;
             } else {
-                VEC_Normalize(&tmp, &tmp);
-                VEC_MultAdd(step, (int *)&tmp, (int *)dst, (int *)dst);
+                VEC_Normalize(&diff, &diff);
+                VEC_MultAdd(step, (int *)&diff, (int *)dst, (int *)dst);
                 ok = 0;
             }
             if (ok) {
@@ -57,5 +56,5 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
         }
     }
 
-    return (o->state == 3) ? (1) : (0);
+    return o->state == 3;
 }

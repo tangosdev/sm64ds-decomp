@@ -53,6 +53,7 @@ enum daObjBk_Lift_c_AssetId { ASSET_BK_LIFT01_BMD = 0x0599, ASSET_BK_LIFT01_KCL 
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* The constructors and destructors are the ROM resource-family veneers,
  * aliased in the manifest. */
@@ -84,10 +85,6 @@ extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
-extern "C" {
-u8 DecIfAbove0_Byte(u8 *p);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-}
 int IsStarCollectedInCurLevel(int starID);
 
 /* BK_LIFT01's registry factory. 0x394 is this class's size, and the calls the
@@ -243,9 +240,9 @@ int daObjBk_Lift_c::CleanupResources() {
    biased by mShadowOffsetX / mShadowOffsetY and flattened onto mFloorPosY. */
 void daObjBk_Lift_c::UpdateShadow() {
     mShadowMat = mModel.mat4x3;
-    mShadowMat.m[9] = (mPos.x - mShadowOffsetX) >> 3;
-    mShadowMat.m[10] = mFloorPosY >> 3;
-    mShadowMat.m[11] = (mPos.z - mShadowOffsetY) >> 3;
+    mShadowMat.t.x = (mPos.x - mShadowOffsetX) >> 3;
+    mShadowMat.t.y = mFloorPosY >> 3;
+    mShadowMat.t.z = (mPos.z - mShadowOffsetY) >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x190000, 0x28000, 0x258000, 0xf);
 }
 

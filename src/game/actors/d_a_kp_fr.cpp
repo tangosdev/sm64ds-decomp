@@ -161,22 +161,25 @@ int daKpFr_c::func_ov070_02121ef8()
     return 1;
 }
 
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 int daKpFr_c::func_ov070_02121eb0() {
-    int flags = mFlags;
-    int isSet = (flags & 0x20000) ? 1 : 0;
-    if (isSet == 0) {
-        isSet = (flags & 0x40000) ? 1 : 0;
-        if (isSet == 0)
-            func_ov070_02121c8c();
-    }
+    if (!IsBeingEaten(this) && !IsInYoshiMouth(this))
+        func_ov070_02121c8c();
     return 1;
 }
 
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;
-  mMatrix.m[9] = mPos.x >> 3;
-  mMatrix.m[10] = mPos.y >> 3;
-  mMatrix.m[11] = mPos.z >> 3;
+  mMatrix.t.x = mPos.x >> 3;
+  mMatrix.t.y = mPos.y >> 3;
+  mMatrix.t.z = mPos.z >> 3;
   dBgCh_Gnd ground;
   ground.SetObjAndPos(mPos, this);
   if (ground.DetectClsn() != 0)
@@ -216,10 +219,10 @@ void daKpFr_c::func_ov070_02121cbc(){
   if (id == 0) return;
   found = dActor_c::FindWithID(id);
   if (found == 0) return;
-  b = (int)(found->actorID == 0xbf);
+  b = (found->actorID == 0xbf);
   if (b == 0) return;
   player = (daPly_c *)found;
-  b = (int)((mFlags & 0x20000) != 0);
+  b = ((mFlags & 0x20000) != 0);
   if (b != 0) {
     func_ov070_02122044(1);
     return;
@@ -238,7 +241,7 @@ void daKpFr_c::func_ov070_02121c8c()
 
 void daKpFr_c::func_ov070_02121be4()
 {
-    fx32 pos[3];
+    Vector3 pos;
 
     if (!mWithMeshClsn.IsOnGround()) return;
 
@@ -247,11 +250,11 @@ void daKpFr_c::func_ov070_02121be4()
         fx32 z = mPos.z;
         fx32 y = mPos.y + 0x1e000;
         fx32 x = mPos.x;
-        pos[0] = x;
-        pos[1] = y;
-        pos[2] = z;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
     }
-    ground.SetObjAndPos(*(Vector3*)pos, this);
+    ground.SetObjAndPos(pos, this);
     if (ground.DetectClsn() == 0 || ground.clsnY < mPos.y - 0x32000) {
         mPos.x = mPrevPos.x;
         mPos.y = mPrevPos.y;

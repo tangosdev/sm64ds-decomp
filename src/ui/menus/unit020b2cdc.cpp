@@ -49,6 +49,7 @@
 #include "Ov007Touch.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
+#include "Ov007MenuMem.h"
 
 /* data_ov007_02103360: the 0x1c-byte cursor func_ov007_020b30b0 allocates. */
 typedef struct Ov007Cursor {
@@ -91,8 +92,6 @@ extern "C" int func_ov007_020b79e4(void);
 extern "C" int func_ov007_020bdeb0(int a);
 extern int func_ov007_020c1da0(int i);
 extern "C" void func_ov007_020c2090(Ov007Pad *pad);
-extern "C" void func_ov007_020c3d1c(void *self);
-extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
 extern "C" void func_ov007_020c937c(void *state);
 extern "C" void *func_ov007_020c9388(int initialState);
@@ -478,8 +477,7 @@ void Cursor_UpdateState(void) {
                 if (s2->stateTicks <= 1) {
                     {
                         Ov007Pad *o = WORK->pad;
-                        /* the const re-read is codegen: `|= 1` is 4 bytes longer */
-                        o->inputLock = *(const int *)&o->inputLock | 1;
+                        o->inputLock = Pad_GetInputLock(o) | 1;
                     }
                     func_ov007_020c2090(WORK->pad);
                 }
@@ -720,7 +718,7 @@ void func_ov007_020b2e64(TPData *sample) {
         if (CURSOR->confirm == 0) {
             return;
         }
-        data_ov007_02103364 = (data_ov007_02103364 == 0) ? 1 : 0;
+        data_ov007_02103364 = data_ov007_02103364 == 0;
         Cursor_TouchItem(sample);
         return;
     }

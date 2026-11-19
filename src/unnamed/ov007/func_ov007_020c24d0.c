@@ -25,7 +25,9 @@ void func_ov007_020c24d0(Ov007StrokePath *path, int idx) {
     /* The cast is load-bearing: it gives i its own register apart from idx,
      * which the plain copy `i = idx;` and a for loop do not (two words each).
      * It does NOT need the trip through long long the shard used -- (int) on
-     * its own, on an int, reproduces the cartridge. */
+     * its own, on an int, reproduces the cartridge.
+ * Kept (#821 r81): `int i = idx;` at the declaration and
+ * `for (i = idx; ...)` both stay 0x12c with different bytes. */
     i = (int)idx;
     while (i < path->pointCount) {
         switch (path->representation) {

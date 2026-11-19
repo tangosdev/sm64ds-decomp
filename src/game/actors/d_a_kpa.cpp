@@ -28,7 +28,7 @@
  *  - Measured spellings: the mOpacity += / -= 0x14 form; the angle-copy
  *    pointer in func_ov060_02115d68; the overwritten first pos[] stores in
  *    RunIntroTalk; the gotos in func_ov060_02115c1c; the
- *    data_ov060_02119294/6/8 + offset reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
+ *    sBowsertiltPlatformData[i][0..2] reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
  *  - Address-named callees with a known body but no header: func_020092c4 eases
  *    a camera vector toward a target (d_camera.cpp); func_0200fa04 spawns the
  *    boss landing dust (d_actor.cpp); func_02038408 is the
@@ -282,7 +282,6 @@ extern PmfEnt data_ov060_0211aeb4[];
 extern PmfEnt data_ov060_0211aed4[];
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
-extern int RandomIntInternal(int *seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
 extern KpaAnimationFileHandle data_ov060_0211acd8;
 extern KpaAnimationFileHandle data_ov060_0211acf0;
@@ -324,9 +323,10 @@ extern KpaAnimationFileHandle data_ov060_0211aca0;
 extern KpaAnimationFileHandle data_ov060_0211abf8;
 extern KpaAnimationFileHandle data_ov060_0211ac90;
 /* The arena-tilt table walked by ActTiltLavaPlatform. Rows of three halfwords
- * (sign, scale, end frame). The whole block is one object; the two column
- * names below address the same rows from +2 and +4. */
-extern const short data_ov060_02119294[];
+ * (sign, scale, end frame). One object; the +2 and +4 column labels are
+ * symbols inside it. The linker aligns a section to 4, so those labels are
+ * not their own objects. */
+extern const short sBowsertiltPlatformData[][3];
 extern const short data_ov060_02119296[];
 extern const short data_ov060_02119298[];
 /* Defined at the bottom of this file; read by the per-state ground check. */
@@ -616,10 +616,10 @@ at 0x96 (150 frames). */
 void daKpaTail_c::func_ov060_02115d68(){
     daKpa_c *bowser = (daKpa_c *)dActor_c::FindWithID(this->mBowserUniqueID);
     this->mdCcAc_c.flags &= ~BOWSER_CC_DISABLED;
-    if (bowser->mState != BOWSER_STATE_ARENA_TILT) goto skip_13;
-    bowser->SetTangible(1);
-    return;
-skip_13:
+    if (bowser->mState == BOWSER_STATE_ARENA_TILT) {
+        bowser->SetTangible(1);
+        return;
+    }
     if (bowser->mState == BOWSER_STATE_DEFEATED) return;
     bowser->SetTangible(1);
     if (this->mdCcAc_c.otherOwner == 0) return;
@@ -655,6 +655,14 @@ void daKpaTail_c::func_ov060_02115d50(){
         this->mState = BOWSER_TAIL_FREE;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
+static inline int IsHoldingObject(daPly_c *player) {
+    return player->mHeldObj != 0;
+}
+
 /*
 Tail state BOWSER_TAIL_HOLDING (2), per frame. If Bowser is in
 BOWSER_STATE_ARENA_TILT, switch his body collider on and go to BOWSER_TAIL_FREE
@@ -670,7 +678,6 @@ the tail's collider off. */
 void daKpaTail_c::func_ov060_02115c1c(){
     daKpa_c *bowser;
     daPly_c *held;
-    int cond;
 
     bowser = (daKpa_c *)dActor_c::FindWithID(this->mBowserUniqueID);
     if (bowser->mState == BOWSER_STATE_ARENA_TILT) {
@@ -678,8 +685,7 @@ void daKpaTail_c::func_ov060_02115c1c(){
         this->mState = BOWSER_TAIL_FREE;
     }
 
-    cond = ((this->mFlags & BOWSER_TAIL_RELEASED) != 0);
-    if (cond != 0) {
+    if (IsFlagSet(this, BOWSER_TAIL_RELEASED)) {
         this->mState = BOWSER_TAIL_COOLDOWN;
         this->mHeldPlayer = 0;
         bowser->OnTailReleased();
@@ -687,11 +693,18 @@ void daKpaTail_c::func_ov060_02115c1c(){
         return;
     }
 
+    /* Kept (#821 r94): the ROM lays the drop out before the countdown refill and
+     * reaches it from two tests. `if (!IsHoldingObject(held) || (no turn &&
+     * countdown runs out)) drop; else if (turning) refill;` is 0x140 against
+     * 0x134 (the turn is tested again); refill-first if/else-if is 0x12c; nested
+     * ifs with early returns are 0x168 (the drop is emitted twice). r95: the
+     * same `||` form with the turn read once into an `s16 turn` local is 0x138
+     * (the refill becomes a re-tested conditional store after the drop). */
     held = this->mHeldPlayer;
     if (held == 0) goto tail;
 
-    cond = (held->mHeldObj != 0);
-    if (cond == 0) goto do_drop;
+    if (!IsHoldingObject(held))
+        goto do_drop;
 
     if (held->mAngleYSpeed != 0)
         goto set_default;
@@ -758,10 +771,12 @@ hit (dBgCh_Actr::JustHitGround), add one to the u16 counter passed in (every
 caller passes the address of mStepCounter) and, while that counter is still
 below 4, spawn landing dust at his position and play sound 0xbd at his
 camera-space position. */
-void daKpa_c::BounceEffects(char *counter) {
-    if (this->mWithMeshClsn.JustHitGround() == 0) return;
-    *(unsigned short*)counter = *(unsigned short*)counter + 1;
-    if (*(unsigned short*)counter >= 4) return;
+void daKpa_c::BounceEffects(u16 *counter) {
+    if (this->mWithMeshClsn.JustHitGround() == 0)
+        return;
+    *counter = *counter + 1;
+    if (*counter >= 4)
+        return;
     struct Vector3 v;
     v.x = this->mPos.x;
     v.y = this->mPos.y;
@@ -787,41 +802,37 @@ normal and mAngle.y - 0x4000 (a quarter turn), both through func_02010844.
 then rotations about Y, X and Z; copy it into the model and apply opacity
 mOpacity >> 3 (0..31). 3) For skeleton nodes 3 and 6 (mAnmModel.data.transforms
 [3] and [6]) multiply the node matrix by the model matrix (the product lands
-back in data_020a0e68), read its translation (m[9..11]) and shift it left 3 to
+back in data_020a0e68), read its translation and shift it left 3 to
 full scale: node 3 gives mFootPosB, node 6 gives mFootPosA, each with Y replaced
 by his own Y. 4) Unless mDropsShadow is 0, probe the floor with a dBgCh_Gnd from
 0x32000 (50 units) above him (floor height clsnY, or his own Y if there is
 none), build the shadow matrix there and call DropShadowRadHeight with radius
 0x140000 (320) and height 0x64000 (100). */
 void daKpa_c::UpdateModelMatrix() {
-    char pad[8];
     Matrix4x3 saved;
     Vector3 pos;
     Vector3 v;
     Vector3 v2;
 
-    if (this->mWithMeshClsn.IsOnGround() == 0)
-        goto skip_angles;
-    if (this->mHoldState != BOWSER_HOLD_NONE)
-        goto skip_angles;
-    this->mAngle.x = func_02010844(&this->mGroundNormal, this->mAngle.y);
-    this->mAngle.z = func_02010844(&this->mGroundNormal, (s16)(this->mAngle.y - 0x4000));
-skip_angles:
+    if (this->mWithMeshClsn.IsOnGround() != 0 && this->mHoldState == BOWSER_HOLD_NONE) {
+        this->mAngle.x = func_02010844(&this->mGroundNormal, this->mAngle.y);
+        this->mAngle.z = func_02010844(&this->mGroundNormal, (s16)(this->mAngle.y - 0x4000));
+    }
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, this->mAngle.z);
     this->mAnmModel.mat4x3 = data_020a0e68;
-    this->mAnmModel.ApplyOpacity((unsigned char)((int)this->mOpacity >> 3), 1);
+    this->mAnmModel.ApplyOpacity((unsigned char)(this->mOpacity >> 3), 1);
     saved = data_020a0e68;
     this->mFootPosB.x = 0;
     this->mFootPosB.y = 0;
     this->mFootPosB.z = 0;
     MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    this->mFootPosB.x = data_020a0e68.m[9];
-    this->mFootPosB.y = data_020a0e68.m[10];
-    this->mFootPosB.z = data_020a0e68.m[11];
+    this->mFootPosB.x = data_020a0e68.t.x;
+    this->mFootPosB.y = data_020a0e68.t.y;
+    this->mFootPosB.z = data_020a0e68.t.z;
     Vec3_LslInPlace(&this->mFootPosB, 3);
     this->mFootPosB.y = this->mPos.y;
     this->mFootPosA.x = 0;
@@ -829,9 +840,9 @@ skip_angles:
     this->mFootPosA.z = 0;
     data_020a0e68 = saved;
     MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    this->mFootPosA.x = data_020a0e68.m[9];
-    this->mFootPosA.y = data_020a0e68.m[10];
-    this->mFootPosA.z = data_020a0e68.m[11];
+    this->mFootPosA.x = data_020a0e68.t.x;
+    this->mFootPosA.y = data_020a0e68.t.y;
+    this->mFootPosA.z = data_020a0e68.t.z;
     Vec3_LslInPlace(&this->mFootPosA, 3);
     this->mFootPosA.y = this->mPos.y;
     if (this->mDropsShadow == 0)
@@ -1073,44 +1084,36 @@ the toggle. */
 void daKpa_c::BitfsActions() {
     unsigned int m;
 
-    if (this->mPickToggle != 0)
-        goto clear_toggle;
-
-    if ((this->mCondFlags & BOWSER_COND_FACING_TARGET) == 0)
-        goto turn;
-
-    if (this->DistToCPlayer() < 0x514000) {
-        m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
-        if (m < this->mVanishChance) {
-            this->mState = BOWSER_STATE_VANISH_DASH;
-            if (this->mVanishChance > 3)
-                this->mVanishChance = 3;
-            else
-                this->mVanishChance = 1;
+    if (this->mPickToggle == 0) {
+        if ((this->mCondFlags & BOWSER_COND_FACING_TARGET) != 0) {
+            if (this->DistToCPlayer() < 0x514000) {
+                m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
+                if (m < this->mVanishChance) {
+                    this->mState = BOWSER_STATE_VANISH_DASH;
+                    if (this->mVanishChance > 3)
+                        this->mVanishChance = 3;
+                    else
+                        this->mVanishChance = 1;
+                } else {
+                    this->mState = BOWSER_STATE_FIREBALLS;
+                    this->mVanishChance = 5;
+                }
+            } else {
+                this->mState = BOWSER_STATE_CHARGE;
+                if (this->mDistToCenter > 0x1f4000 && this->mDistToCenter < 0x5dc000) {
+                    m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
+                    if (m < 5)
+                        this->mState = BOWSER_STATE_JUMP;
+                }
+            }
         } else {
-            this->mState = BOWSER_STATE_FIREBALLS;
-            this->mVanishChance = 5;
+            this->mState = BOWSER_STATE_TURN_TO_TARGET;
         }
-        goto set_toggle;
+        this->mPickToggle++;
+    } else {
+        this->mPickToggle = 0;
+        this->mState = BOWSER_STATE_TURN_TO_TARGET;
     }
-
-    this->mState = BOWSER_STATE_CHARGE;
-    if (this->mDistToCenter > 0x1f4000 && this->mDistToCenter < 0x5dc000) {
-        m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
-        if (m < 5)
-            this->mState = BOWSER_STATE_JUMP;
-    }
-    goto set_toggle;
-
-turn:
-    this->mState = BOWSER_STATE_TURN_TO_TARGET;
-set_toggle:
-    this->mPickToggle++;
-    return;
-
-clear_toggle:
-    this->mPickToggle = 0;
-    this->mState = BOWSER_STATE_TURN_TO_TARGET;
 }
 
 /*
@@ -1494,7 +1497,7 @@ void daKpa_c::ActHitMine() {
             return;
         }
         if (st == 1) {
-            BounceEffects((char *)&this->mStepCounter);
+            BounceEffects(&this->mStepCounter);
             if (this->mStepCounter == 1)
                 InitAnimation(2, 0x40000000);
             if (this->mStepCounter < 3) return;
@@ -1686,8 +1689,8 @@ void daKpa_c::ActSpitFireOntoFloor() {
     if (this->mTimer == 0) {
         daPly_c *player = this->mTargetPlayer;
         if (player == 0 || player->GetHealth() > 4) {
-            s32 rnd = RandomIntInternal(&data_0209e650.value);
-            u32 hi = ((u32)rnd) >> 16;
+            u32 rnd = RandomIntInternal(&data_0209e650.value);
+            u32 hi = rnd >> 16;
             u32 m = hi % 10u;
             this->mFireballShots = (char)((m % 3u) + 1);
         } else {
@@ -1805,8 +1808,8 @@ void daKpa_c::ActChargeMario() {
         this->mStepCounter = 0;
         InitAnimation(0x1a, 0x40000000);
         this->mParticleHandle =
-            (unsigned int)Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPos.x,
-                                                this->mPos.y + 0x32000, this->mPos.z, 0, 0);
+            Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPos.x,
+                                  this->mPos.y + 0x32000, this->mPos.z, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;
@@ -1901,7 +1904,7 @@ void daKpa_c::ActThrown() {
             }
         }
 
-        BounceEffects((char *)&this->mStepCounter);
+        BounceEffects(&this->mStepCounter);
 
         if (this->mWithMeshClsn.IsOnGround() != 0) {
             if (this->mWithMeshClsn.JustHitGround() == 0) {
@@ -1948,8 +1951,8 @@ void daKpa_c::SetGoalInvisible() {
         zero.y = 0;
         zero.z = 0;
         a = (unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
-        this->mPos.x = (short)FX_SinIdx(a) * (short)0xed8;
-        this->mPos.z = (short)FX_CosIdx(a) * (short)0xed8;
+        this->mPos.x = FX_SinIdx(a) * 0xed8;
+        this->mPos.z = FX_CosIdx(a) * 0xed8;
     }
 }
 
@@ -1994,7 +1997,7 @@ void daKpa_c::ActJumpOntoStage() {
         if (rc.DetectClsn()) {
             ground = rc.clsnY;
             /* GetClsnID reads the hit record, dBgCh_Gnd's dBgPi base at +0x10. */
-            if ((int)rc.GetClsnID() != -1)
+            if (rc.GetClsnID() != -1)
                 hit = 1;
         }
     }
@@ -2145,7 +2148,7 @@ animation table) and halves mHorzSpeed; once on the ground without a fresh hit
 it zeroes the speed and advances. LoopLayDownAnimation runs every call. */
 void daKpa_c::DeadBounce() {
     this->unk_422 = 1;
-    BounceEffects((char *)&this->mStepCounter);
+    BounceEffects(&this->mStepCounter);
     if (this->mWithMeshClsn.JustHitGround()) {
         if ((int)this->mAnmModel.file == (int)data_ov060_0211ac88.filePtr) {
             InitAnimation(5, 0x40000000);
@@ -2429,7 +2432,7 @@ void daKpa_c::TiltPlatform(int tiltSpeed) {
 /*
 State BOWSER_STATE_ARENA_TILT (0x13): the arena rocks for 186 frames. mSpeed.y
 is held at mTerminalVelocity. If the KOOPA2BG actor is gone, back to
-BOWSER_STATE_IDLE. Otherwise the table at data_ov060_02119294 (rows of three
+BOWSER_STATE_IDLE. Otherwise the table at sBowsertiltPlatformData (rows of three
 halfwords: sign, scale, end frame; a row with end frame 0 ends it) is walked for
 the first row whose end frame is above mTimer; the tilt speed v is scale times a
 linear ramp in mTimer (counting down to the row's end for a positive sign, up
@@ -2449,21 +2452,20 @@ void daKpa_c::ActTiltLavaPlatform() {
     this->mSpeed.y = this->mTerminalVelocity;
     found = (daKpa2Bg_c*)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (found == 0) { this->mState = BOWSER_STATE_IDLE; return; }
-    p = data_ov060_02119294;
+    p = sBowsertiltPlatformData[0];
     i = 0;
     flag = 1;
     while (p[2] != 0) {
         int timer = this->mTimer;
         if (timer < p[2]) {
-            int off = i * 6;
-            short a = *(short*)((char*)data_ov060_02119294 + off);
-            short b = *(short*)((char*)data_ov060_02119296 + off);
+            short a = sBowsertiltPlatformData[i][0];
+            short b = sBowsertiltPlatformData[i][1];
             int v;
             if (a > 0) {
-                v = (short)(b * (*(short *)((char *)data_ov060_02119298 + off) - 1 - timer));
+                v = (short)(b * (sBowsertiltPlatformData[i][2] - 1 - timer));
             } else {
-                i -= 1; off = i * 6;
-                v = (short)(b * (timer - *(short *)((char *)data_ov060_02119298 + off)));
+                i -= 1;
+                v = (short)(b * (timer - sBowsertiltPlatformData[i][2]));
             }
             TiltPlatform(v);
             if (v != 0 && (this->mTimer & 1)) {
@@ -2499,6 +2501,10 @@ int daKpa_c::CheckFallenOffStage() {
     return 0;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == BOWSER_ACTOR_PLAYER;
+}
+
 /*
 Hold state BOWSER_HOLD_NONE (0), the normal per-frame handler, called through the
 hold table by BowserLoop. Clears mHoldStep. Unless he is defeated, if the
@@ -2524,8 +2530,7 @@ void daKpa_c::FreeUpdate() {
     if (this->mState != BOWSER_STATE_DEFEATED && (id = this->mdCcAcPos_c.otherOwner) != 0) {
         daPly_c *f = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (f != 0) {
-            int b = (((dActor_c *)f)->actorID == BOWSER_ACTOR_PLAYER);
-            if (b) {
+            if (IsPlayerActor(f)) {
                 Vector3 v;
                 v.x = this->mPos.x;
                 v.y = this->mPos.y;
@@ -2966,7 +2971,7 @@ void daKpa_c::UpdateFootfalls() {
        (mAnmModel.currFrame at 0x12c into r0, then mFootfallLatch at 0x446 into r1)
        + lsl#4/lsr#16 extract. */
     int n = (unsigned short)((unsigned)this->mAnmModel.currFrame >> 12);
-    int wasInWindow = (this->mFootfallLatch != 0) ? 1 : 0;
+    int wasInWindow = this->mFootfallLatch != 0;
     int anim = (int)this->mAnmModel.file;
     int foot = 0;
     this->mFootfallLatch = 0;
@@ -3076,9 +3081,11 @@ extern SharedFilePtr *const data_ov060_0211927c[] = {&data_ov060_0211ac40, &data
                                                      &data_ov060_0211ac28, &data_ov060_0211ac30};
 /* Arena-tilt rows: sign, scale and end frame; the final row's zero end frame
  * terminates the walk. */
-extern const short data_ov060_02119294[36] = {1,  10, 40,  0, 0,   74,  -1, -10,  114, 1, -20, 134,
-                                              -1, 20, 154, 1, 40,  164, -1, -40,  174, 1, -80, 179,
-                                              -1, 80, 184, 1, 160, 186, -1, -160, 186, 1, 0,   0};
+extern const short sBowsertiltPlatformData[][3] = {
+    {1, 10, 40},     {0, 0, 74},      {-1, -10, 114}, {1, -20, 134},
+    {-1, 20, 154},   {1, 40, 164},    {-1, -40, 174}, {1, -80, 179},
+    {-1, 80, 184},   {1, 160, 186},   {-1, -160, 186}, {1, 0, 0},
+};
 extern SharedFilePtr *const data_ov060_021192dc[] = {
     &data_ov060_0211ac88, &data_ov060_0211ac50, &data_ov060_0211ac58, &data_ov060_0211ac60,
     &data_ov060_0211ac18, &data_ov060_0211acd0, &data_ov060_0211ac68, &data_ov060_0211ac70,

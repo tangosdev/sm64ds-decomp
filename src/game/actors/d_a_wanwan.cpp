@@ -41,6 +41,12 @@ enum {
     kChainMax = 0x64000    /* fully extended lunge */
 };
 
+/* This int-returning predicate is what makes the ROM materialize 0/1
+   before testing it. */
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; animation handles construct through SharedFilePtr::Construct
  * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
@@ -70,9 +76,6 @@ extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern dCamera_c *gCamera;  /* CAMERA */
 
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 int AngleDiff(int a, int b);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 /* local extern: no header this file includes declares it, and it must keep C
@@ -80,7 +83,6 @@ int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
  * the position has reached the target. */
 s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 }
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -111,11 +113,11 @@ int daWanwan_c::InitResources() {
     mTerminalVelocity = -0x3c000;
 
     {
-        int v[3];
-        v[0] = data_ov014_02114700[0];
-        v[1] = data_ov014_02114700[1];
-        v[2] = data_ov014_02114700[2];
-        mdCcAcPos_c.Init(this, *((Vector3 *)v), 0x96000, 0x12c000, 0x200004, 0x26ff0);
+        Vector3 v;
+        v.x = data_ov014_02114700[0];
+        v.y = data_ov014_02114700[1];
+        v.z = data_ov014_02114700[2];
+        mdCcAcPos_c.Init(this, v, 0x96000, 0x12c000, 0x200004, 0x26ff0);
     }
 
     SetState(1);
@@ -183,11 +185,11 @@ int daWanwan_c::Behavior() {
     }
     UpdateModelTransform();
     {
-        int v[3];
-        v[0] = data_ov014_02114700[0];
-        v[1] = data_ov014_02114700[1];
-        v[2] = data_ov014_02114700[2];
-        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)v);
+        Vector3 v;
+        v.x = data_ov014_02114700[0];
+        v.y = data_ov014_02114700[1];
+        v.z = data_ov014_02114700[2];
+        mdCcAcPos_c.SetPosRelativeToActor(v);
     }
     mdCcAcPos_c.Clear();
     if (ClosestPlayer()->mIsVanish == 0)
@@ -220,13 +222,13 @@ int daWanwan_c::CleanupResources() {
 
 /* Place the head and each link, then drop a cylinder shadow under them. */
 void daWanwan_c::UpdateModelTransform() {
-    /* Translation is m[9..11] of each matrix: position >> 3.
+    /* Each matrix's translation is position >> 3.
        m and sm walk mLinkModels and mLinkShadows. e and o are the actor
        address advanced by one Vector3 and one dExtSimpleModel_c per link, so
        e->mLinkPos[0] is link i's position and o->mLinkModels[0] is the model
        m points at. Storing the translation through m, or walking mLinkPos
        with a Vector3 pointer, changes the emitted loop. */
-    Matrix4x3 tmp;
+    Matrix4x3 identity;
     int i;
     int t;
     dExtSimpleModel_c *m;
@@ -234,25 +236,25 @@ void daWanwan_c::UpdateModelTransform() {
     daWanwan_c *o;
     dExtShadowModel_c *sm;
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     t = mPos.y - mSpawnPos.y;
     if (t <= 0x1000)
         t = 0x1000;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180), t + 0x28000,
                         0xf);
-    tmp = IDENTITY_MATRIX4X3;
+    identity = IDENTITY_MATRIX4X3;
     sm = mLinkShadows;
     i = 0;
     m = mLinkModels;
     e = this;
     o = this;
     for (; i < 7; i++) {
-        m->mat4x3 = tmp;
-        o->mLinkModels[0].mat4x3.m[9] = e->mLinkPos[0].x >> 3;
-        o->mLinkModels[0].mat4x3.m[10] = e->mLinkPos[0].y >> 3;
-        o->mLinkModels[0].mat4x3.m[11] = e->mLinkPos[0].z >> 3;
+        m->mat4x3 = identity;
+        o->mLinkModels[0].mat4x3.t.x = e->mLinkPos[0].x >> 3;
+        o->mLinkModels[0].mat4x3.t.y = e->mLinkPos[0].y >> 3;
+        o->mLinkModels[0].mat4x3.t.z = e->mLinkPos[0].z >> 3;
         t = e->mLinkPos[0].y - mSpawnPos.y;
         if (t <= 0x1000)
             t = 0x1000;
@@ -271,7 +273,7 @@ void daWanwan_c::UpdateChainSegments() {
     Vector3 head;
     Vector3 rotated;
     Vector3 saved;
-    Vector3 tmp;
+    Vector3 linkPos;
     Vector3 sum;
     Vector3 diff;
     Vector3 mul;
@@ -311,11 +313,11 @@ void daWanwan_c::UpdateChainSegments() {
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     MTX_MultVec43(&head, &data_020a0e68, &rotated);
-    Vec3_Add(&tmp, &mPos, &rotated);
-    saved.x = tmp.x;
-    saved.y = tmp.y;
-    saved.z = tmp.z;
-    mLinkPos[0].x = tmp.x;
+    Vec3_Add(&linkPos, &mPos, &rotated);
+    saved.x = linkPos.x;
+    saved.y = linkPos.y;
+    saved.z = linkPos.z;
+    mLinkPos[0].x = linkPos.x;
     mLinkPos[0].y = saved.y;
     mLinkPos[0].z = saved.z;
 
@@ -373,7 +375,7 @@ void daWanwan_c::UpdateChainSegments() {
  * pulled to mChainExtension from the one behind it, link 6 from a point
  * 0x1e000 above the stump. */
 void daWanwan_c::CapChainToPivot() {
-    Vector3 tmp;
+    Vector3 dir;
     Vector3 head;
     Vector3 rotated;
     Vector3 sum;
@@ -422,11 +424,11 @@ void daWanwan_c::CapChainToPivot() {
         cur = (Vector3 *)cursor;
         target = (i == 6) ? &prevpos : cur + 1;
         Vec3_Sub(&diff, cur, target);
-        tmp.x = diff.x;
-        tmp.y = diff.y;
-        tmp.z = diff.z;
-        angY = cstd::atan2(tmp.x, tmp.z);
-        angX = (short)(-cstd::atan2(tmp.y, Vec3_HorzLen(&tmp)));
+        dir.x = diff.x;
+        dir.y = diff.y;
+        dir.z = diff.z;
+        angY = cstd::atan2(dir.x, dir.z);
+        angX = (short)(-cstd::atan2(dir.y, Vec3_HorzLen(&dir)));
         Matrix4x3_FromRotationY(&data_020a0e68, angY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
         MTX_MultVec43(&head, &data_020a0e68, &rotated);
@@ -483,10 +485,7 @@ void daWanwan_c::HandleCylinderHit() {
     if (other == 0)
         return;
 
-    /* Each actor-ID test turns the comparison into 0/1 and tests that
-       against 0 (moveq/movne/cmp). A plain `==` drops those three
-       instructions, 12 bytes shorter per test. */
-    if ((int)(other->actorID == kYoshiEggId) != 0) {
+    if (IsActorID(other, kYoshiEggId)) {
         if (mdCcAcPos_c.hitFlags & 0x2000) {
             mScale.x = 0x2000;
             mScale.y = mScale.x;
@@ -504,7 +503,7 @@ void daWanwan_c::HandleCylinderHit() {
         return;
     }
 
-    if ((int)(other->actorID == kPlayerActorId) != 0) {
+    if (IsActorID(other, kPlayerActorId)) {
         ang = Vec3_HorzAngle(&mPos, &other->mPos);
         if (mdCcAcPos_c.hitFlags & 0x10) {
             SetState(5);
@@ -521,7 +520,7 @@ void daWanwan_c::HandleCylinderHit() {
 
     if (mState == 4)
         return;
-    if ((int)(other->actorID == kBobOmbActorId) != 0) {
+    if (IsActorID(other, kBobOmbActorId)) {
         ((daBmb_c *)other)->func_ov102_0214ae1c();
         SetState(4);
     }
@@ -563,7 +562,7 @@ void daWanwan_c::PlayLandingEffects() {
 /* Start the release cutscene when the stump's mStepsLeft is 0 and the player
  * accepts the no-control lock. */
 int daWanwan_c::TryStartReleaseCutscene() {
-    daObjPile_c *stump = (daObjPile_c *)dActor_c::FindWithID((unsigned)mStumpUniqueID);
+    daObjPile_c *stump = (daObjPile_c *)dActor_c::FindWithID(mStumpUniqueID);
     if (stump->mStepsLeft == 0 && ClosestPlayer()->SetNoControlState(4, -1, 0) != 0) {
         SetState(3);
         mChainBroken = 1;
@@ -748,7 +747,7 @@ void daWanwan_c::StateEscapeDemoMain() {
     dCamera_c *camera;
 
     Sound::PlaySecretSound(this, &mSecretSound);
-    fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)mFenceUniqueID);
+    fence = (daObjWanwanShutter_c *)dActor_c::FindWithID(mFenceUniqueID);
     {
         s32 *src = &fence->mPos.x;
         partnerPos.x = src[0];

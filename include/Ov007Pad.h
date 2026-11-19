@@ -33,6 +33,17 @@ typedef struct Ov007Pad {
     char pad_6e[2];
 } Ov007Pad;
 
+/* The pad's inputLock word. Pad_Update clears bit 0, and the ov007 menu
+ * (unit020b2cdc.cpp) sets it, by reading the word again through this
+ * accessor: the cartridge reloads it after the earlier test has read it.
+ * Measured in Pad_Update (#821 r20): `&= ~1` and its spellings are a word
+ * longer, an (int) cast or int local on a plain read folds the reload into
+ * the outer test, and a u32 field or 1-bit bitfield is 0x1ec/0x1f0, not
+ * 0x1e8. In the menu `|= 1` is 4 bytes longer. */
+static inline int Pad_GetInputLock(const Ov007Pad *pad) {
+    return pad->inputLock;
+}
+
 #ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Pad_size_must_be_0x70[sizeof(Ov007Pad) == 0x70 ? 1 : -1];
 #endif

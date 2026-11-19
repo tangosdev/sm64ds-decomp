@@ -71,9 +71,9 @@ daBgSnmHed_c::~daBgSnmHed_c() {}
 
 void daBgSnmHed_c::UpdateModel() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = (mPos.y + 0x96000) >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = (mPos.y + 0x96000) >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daBgSnmHed_c::State3() {
@@ -97,17 +97,15 @@ int daBgSnmHed_c::State3() {
         break;
     case 2:
         if (mTalkPlayer->GetTalkState() == -1) {
-            unsigned int param = ((int)param1) & 0xf;
-            param = param & 0xff;
-            param |= 0x40;
-            Spawn(0xb2, param, mPos, 0, mAreaId, -1);
+            u8 starID = param1 & 0xf;
+            Spawn(0xb2, starID | 0x40, mPos, 0, mAreaId, -1);
             mSubstate++;
         }
         break;
     }
     mTextureSequence.Advance();
     ApproachLinear(mAngle.y, -0x4000, 0x514);
-    mPos.y = (int)0xffc427c0;
+    mPos.y = -0x3bd840;
     return 1;
 }
 
@@ -126,7 +124,7 @@ int daBgSnmHed_c::State2() {
     switch (mSubstate) {
     case 0:
         UpdatePos(&mCylinder);
-        if (mSpeed.y < 0 && mPos.y < (int)0xffc427c0) {
+        if (mSpeed.y < 0 && mPos.y < -0x3bd840) {
             pos.x = mPos.x;
             pos.y = mPos.y;
             pos.z = mPos.z;

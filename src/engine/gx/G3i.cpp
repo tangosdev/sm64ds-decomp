@@ -51,7 +51,7 @@ static inline void FX_InvAsyncImm(fx32 denom) {
    is the SDK's MtxFx44, sixteen words. */
 void G3i_PerspectiveW_(fx32 fovySin, fx32 fovyCos, fx32 aspect, fx32 n, fx32 f, fx32 scaleW,
                        int draw, Matrix4x3 *mtxp) {
-    int *mtx = (int *)mtxp;
+    MtxFx44 *mtx = (MtxFx44 *)mtxp;
     fx32 fovyCot;
     volatile s32 *port;
     fx32 xScale;
@@ -70,18 +70,18 @@ void G3i_PerspectiveW_(fx32 fovySin, fx32 fovyCos, fx32 aspect, fx32 n, fx32 f, 
         port = &reg_G3_MTX_LOAD_4x4;
     }
     if (mtx) {
-        mtx[1] = 0;
-        mtx[2] = 0;
-        mtx[3] = 0;
-        mtx[4] = 0;
-        mtx[6] = 0;
-        mtx[7] = 0;
-        mtx[8] = 0;
-        mtx[9] = 0;
-        mtx[11] = -scaleW;
-        mtx[12] = 0;
-        mtx[13] = 0;
-        mtx[15] = 0;
+        mtx->m[0][1] = 0;
+        mtx->m[0][2] = 0;
+        mtx->m[0][3] = 0;
+        mtx->m[1][0] = 0;
+        mtx->m[1][2] = 0;
+        mtx->m[1][3] = 0;
+        mtx->m[2][0] = 0;
+        mtx->m[2][1] = 0;
+        mtx->m[2][3] = -scaleW;
+        mtx->m[3][0] = 0;
+        mtx->m[3][1] = 0;
+        mtx->m[3][3] = 0;
     }
     xScale = FX_GetDivResult();
     FX_InvAsyncImm(n - f);
@@ -98,8 +98,8 @@ void G3i_PerspectiveW_(fx32 fovySin, fx32 fovyCos, fx32 aspect, fx32 n, fx32 f, 
         *port = 0;
     }
     if (mtx) {
-        mtx[0] = xScale;
-        mtx[5] = fovyCot;
+        mtx->m[0][0] = xScale;
+        mtx->m[1][1] = fovyCot;
     }
     invNearMinusFar = FX_GetDivResultFx64c();
     if (scaleW != FX32_ONE)
@@ -116,8 +116,8 @@ void G3i_PerspectiveW_(fx32 fovySin, fx32 fovyCos, fx32 aspect, fx32 n, fx32 f, 
         *port = 0;
     }
     if (mtx) {
-        mtx[10] = zScale;
-        mtx[14] = wScale;
+        mtx->m[2][2] = zScale;
+        mtx->m[3][2] = wScale;
     }
 }
 

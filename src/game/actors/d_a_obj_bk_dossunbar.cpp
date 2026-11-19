@@ -119,12 +119,12 @@ s32 daObjBk_Dossunbar_c::InitResources() {
                               *(CLPS_Block *)(*(void **)((char *)&data_ov015_0211453c + j)));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
-    int tmp[3];
-    tmp[0] = 0x1000;
-    tmp[1] = 0;
-    tmp[2] = 0;
+    Vector3 depthDir;
+    depthDir.x = 0x1000;
+    depthDir.y = 0;
+    depthDir.z = 0;
     mMeshCollider.SetDepthByDir();
-    mMeshCollider.SetDepthDir((const Vector3 *)tmp);
+    mMeshCollider.SetDepthDir(&depthDir);
     mMeshCollider.SetDepthDirMinDot(0xccd);
 
     mHomePos.x = mPos.x;

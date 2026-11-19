@@ -1,15 +1,13 @@
-void func_ov007_020bbf98(int** o, unsigned int mask){
-  int i = 0;
-  int* base = *o;
-  int n = ((int*)base[0])[9];
-  int off;
-  int* fld;
-  if (n <= 0) return;
-  off = i;
-  do {
-    fld = (int*)(((int)((char*)base[1] + off) + 0x24));
-    i++;
-    fld[0] = (fld[0] & ~15) | mask;
-    off += 0x30;
-  } while (i < n);
+#include "Ov007Model.h"
+#include "dExtModel_c.h"
+#include "BMD_File.h"
+
+void func_ov007_020bbf98(Ov007Model *self, unsigned int lights) {
+    int i;
+    struct ModelComponents *m = self->model;
+    int n = m->modelFile->numMaterials;
+    for (i = 0; i < n; i++) {
+        u32 *flags = &m->materials[i].flags;
+        *flags = (*flags & ~15) | lights;
+    }
 }

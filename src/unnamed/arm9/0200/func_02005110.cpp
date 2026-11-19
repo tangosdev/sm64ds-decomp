@@ -7,13 +7,8 @@
 
 extern "C" {
 
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int *Vec3_AsrInPlace(int *v, int sh);
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 }
-
-extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 
 /* Camera state main for following the player. The eye target is the
  * player's position raised by 0x64000. With no mLookTarget the camera looks

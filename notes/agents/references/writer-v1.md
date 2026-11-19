@@ -296,8 +296,7 @@ steps the dry-run does not print:
    literal token — `check_dead_references.py` reads bare `src/` tokens, not just
    links, so rewriting the sentence around the name is not enough. Rewording
    `notes/cpp-conversion-enemies.md` was needed for `daOts_c`.
-7. Fix the `port/` slice manifests that referenced a deleted shard.
-8. **`config/arm9/overlays/*/delinks.txt` is CRLF.** A naive line rewrite
+7. **`config/arm9/overlays/*/delinks.txt` is CRLF.** A naive line rewrite
    normalizes the whole file and buries your one-line change in a thousand-line
    diff. Preserve the line endings.
 

@@ -96,7 +96,7 @@ u32 TrimModelFile(void *ptr);
 extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
 /* local extern: blends verts toward the old pose in Virtual10/UpdateVerts
    while blendWeight is still below 1.0. Definition takes char *. */
-extern "C" void func_0204531c(char *data, int weight);
+extern "C" void func_0204531c(ModelComponents *data, int weight);
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
    file. Spelled (int *) the way func_020462bc.c defines it */
 extern "C" u32 func_020462bc(int *file);
@@ -296,9 +296,9 @@ void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
 }
 
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
-    Matrix4x3 temp;
-    MTX_Concat43(&mat4x3, &data_0209b3ec, &temp);
-    data.Render(&temp, (Vector3 *)scale);
+    Matrix4x3 modelView;
+    MTX_Concat43(&mat4x3, &data_0209b3ec, &modelView);
+    data.Render(&modelView, (Vector3 *)scale);
 }
 
 void dExtSimpleModel_c::SetMaterialFlags(u32 mask) {
@@ -353,20 +353,20 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
     mats[ids[listIdx]].flags &= 0x7fffffff;
 }
 
-extern "C" void func_02016a14(char *self, int color) {
-    ((dExtSimpleModel_c *)self)->data.SetDiffuse(color);
+extern "C" void func_02016a14(dExtSimpleModel_c *self, int color) {
+    self->data.SetDiffuse(color);
 }
 
-extern "C" void func_02016a04(char *self, int color) {
-    ((dExtSimpleModel_c *)self)->data.SetAmbient(color);
+extern "C" void func_02016a04(dExtSimpleModel_c *self, int color) {
+    self->data.SetAmbient(color);
 }
 
-void func_020169f4(char *self, int color) {
-    ((dExtSimpleModel_c *)self)->data.SetEmission(color);
+void func_020169f4(dExtSimpleModel_c *self, int color) {
+    self->data.SetEmission(color);
 }
 
-extern "C" void func_020169d8(char *self, int index, unsigned int value) {
-    ((dExtSimpleModel_c *)self)->data.SetMaterialEmission(value, index);
+extern "C" void func_020169d8(dExtSimpleModel_c *self, int index, unsigned int value) {
+    self->data.SetMaterialEmission(value, index);
 }
 
 /* ---------------------------------------------------------------------------
@@ -478,7 +478,7 @@ void dExtBlendAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c((char *)&data, blendWeight);
+        func_0204531c(&data, blendWeight);
     } else {
         data.UpdateVertsUsingBones();
     }
@@ -488,7 +488,7 @@ void dExtBlendAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c((char *)&data, blendWeight);
+        func_0204531c(&data, blendWeight);
     } else {
         dExtSimpleModel_c::Virtual10(mat);
     }
@@ -609,14 +609,14 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
         SetMaterialFlags(0x8000);
     if (b < 0)
         return 1;
-    SetPolygonID((u32)b & 0xff);
+    SetPolygonID(b & 0xff);
     return 1;
 }
 
 void dExtCommonModel_c::Render(const Vector3 *scale) {
-    Matrix4x3 temp;
-    MTX_Concat43(&mat4x3, &data_0209b3ec, &temp);
-    data->Render(&temp, (Vector3 *)scale);
+    Matrix4x3 modelView;
+    MTX_Concat43(&mat4x3, &data_0209b3ec, &modelView);
+    data->Render(&modelView, (Vector3 *)scale);
 }
 
 /* ORs flags into every material. */
@@ -727,8 +727,8 @@ void dExtShadowModel_c::CleanAll() {
     data_0209ceec = 0;
 }
 
-/* The scratch matrix is flat in this TU (common.h): m[10] is the
-   translation's y, lifted two units so the shadow sits above the ground. */
+/* The scratch matrix's translation y is lifted two units so the shadow sits
+   above the ground. */
 void dExtShadowModel_c::RenderAll() {
     dExtShadowModel_c *node = data_0209cef4;
     if (node) {
@@ -736,7 +736,7 @@ void dExtShadowModel_c::RenderAll() {
             ModelComponents *model = node->data;
             func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
             MTX_Concat43(&data_020a0e68, node->mat, &data_020a0e68);
-            data_020a0e68.m[10] += 0x2000;
+            data_020a0e68.t.y += 0x2000;
             MTX_Concat43(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
             model->SetShadowMask(node->opacity);
             model->Render(&data_020a0e68, 0);
@@ -772,15 +772,15 @@ dExtFrameCtrl_c::~dExtFrameCtrl_c() {}
 
 void dExtFrameCtrl_c::Advance() {
     u32 f = numFramesAndFlags;
-    u32 len = f & ~0xc0000000;
+    s32 len = f & ~0xc0000000;
     if ((f & 0xc0000000) == 0) {
-        currFrame = (currFrame + speed + (int)len) % (int)len;
+        currFrame = (currFrame + speed + len) % len;
     } else {
         currFrame += speed;
         if (currFrame < 0) {
             currFrame = 0;
-        } else if (currFrame >= (int)len) {
-            currFrame = (int)len - 1;
+        } else if (currFrame >= len) {
+            currFrame = len - 1;
         }
     }
 }

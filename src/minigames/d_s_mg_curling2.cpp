@@ -883,7 +883,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
  * and hitAngle reference are
  * described in notes/mwccarm-codegen.md 6cz. The two relative-angle pairs
  * index FX_SinCosTable_ by hand: through FX_CosIdx/FX_SinIdx, with or
- * without the shared index local, the function grows to 0x580. */
+ * without the shared index local, the function grows to 0x580.
+ * Kept (#821 r82): FX_MUL for all four wide products -> 30 words off (the sine
+ * sign word schedules early); FX_MUL for the cosine product alone -> 4 words
+ * (r4/fp swap); FX_MUL(normal, sin) operand order -> 0x52c of 0x560. */
 void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
     long long wideContactSin;
     long long wideContactCos;
@@ -1466,8 +1469,8 @@ s32 dScMgCurling2_c::InitResources() {
     void *f;
     void *c7;
     void *c8;
-    volatile u16 sp4;
-    volatile u16 sp6;
+    volatile u16 bg2Fill;
+    volatile u16 bg0Fill;
 
     if (r6 == 0)
         return 0;
@@ -1494,8 +1497,8 @@ s32 dScMgCurling2_c::InitResources() {
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_MATO_NSC_BIN);
     {
         char *b = (char *)G2_GetBG2ScrPtr();
-        sp4 = 0x4300;
-        MI_CpuFill16(b, sp4, 0x1000);
+        bg2Fill = 0x4300;
+        MI_CpuFill16(b, bg2Fill, 0x1000);
     }
     GX_LoadBG2Scr(f, 0, 0x800);
 
@@ -1504,8 +1507,8 @@ s32 dScMgCurling2_c::InitResources() {
                      GX_BG_CHARBASE_0x20000, GX_BG_EXTPLTT_01);
     {
         char *b = (char *)G2_GetBG0ScrPtr();
-        sp6 = 0x4300;
-        MI_CpuFill16(b, sp6, 0x1000);
+        bg0Fill = 0x4300;
+        MI_CpuFill16(b, bg0Fill, 0x1000);
     }
     GX_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);

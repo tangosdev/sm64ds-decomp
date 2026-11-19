@@ -53,6 +53,7 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 extern "C" void Mg_ShowBanner(int, int, int, int, int, short);
 extern "C" void Mg_SetSharedState(s32);
 extern "C" void FreeGfxSlotsById(int);
@@ -108,11 +109,6 @@ extern EspAnimSetModelFilePtr gEspHamonModelFile;
 
 extern EspAnimSetModelFilePtr gEspIrieModelFile;
 
-extern Matrix4x3 data_020a0e68;
-extern "C" {
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-}
-
 void func_02046208(void *a, unsigned int b, int c);
 
 int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);
@@ -144,10 +140,9 @@ extern int sMgClearBannerY;
 Matrix4x3 data_ov006_0213c85c = {0x1000, 0x0, 0x0,    0x0,     0x1000,  0x0,
                                  0x0,    0x0, 0x1000, 0x8c000, 0x8c000, 0x40000};
 
-/* Both models' starting matrix. Declaring it non-volatile adds 32 bytes to
-   dScMg3DEsp_c::InitResources, and copying it without the stack temporary
-   removes 32. */
-extern volatile Matrix4x3 sEsp3DIdentityMtx;
+/* Both models' starting matrix. InitResources copies it through a stack
+   temporary; copying it without the temporary removes 32 bytes. */
+extern Matrix4x3 sEsp3DIdentityMtx;
 
 /* ---- dScMg3DEsp_c: the destructor (key function) ---------------------- */
 
@@ -919,6 +914,8 @@ extern const unsigned char sEsp3DCardsPerDifficulty[4] = {2, 3, 4, 5};
 /* Kept volatile (r63): the ROM reloads the layout pointer for mY after the
    mX store. Typed as a plain int table or as a `[const] unsigned short
    *[const]` pointer table, it is hoisted out of the deal loop (0x1b4 of 0x1bc). */
+/* Kept (#821 r79): an inline CardLayout(n) at both reads or the mY read only, and an inline
+   CardLayoutWord(n, k), are 0x1b4. */
 extern int volatile data_ov006_0213c818[];
 
 void dScMg3DEsp_c::DealCards() {
@@ -1248,7 +1245,7 @@ s32 dScMg3DEsp_c::Behavior()
    StartRound(-1). */
 s32 dScMg3DEsp_c::InitResources()
 {
-    Matrix4x3 tmp;
+    Matrix4x3 identity;
     void *f;
     void *r5v;
     void *r4v;
@@ -1283,9 +1280,9 @@ s32 dScMg3DEsp_c::InitResources()
     if (gIrieBackModelFile.func_020179b4(&mModel2, 1) == 0)
         return 0;
 
-    tmp = (Matrix4x3 &)sEsp3DIdentityMtx;
-    mModel1.mat4x3 = (Matrix4x3 &)sEsp3DIdentityMtx;
-    mModel2.mat4x3 = tmp;
+    identity = sEsp3DIdentityMtx;
+    mModel1.mat4x3 = sEsp3DIdentityMtx;
+    mModel2.mat4x3 = identity;
 
     gSubScreenLayers |= 4;
     /* sub BG2CNT, then the sub BG2 scroll offsets */

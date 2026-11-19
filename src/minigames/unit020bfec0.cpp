@@ -14,8 +14,7 @@
  * - The record and method names are coined: the ROM carries no symbol table
  *   for this run.
  * - Measured shapes kept for the bytes they produce: FallingPetal::Draw
- *   stores its scale z, y, x, and Dealer::StateReveal keeps its `goto other`
- *   (the structured rewrite moves 92 words).
+ *   stores its scale z, y, x.
  * - Presenter::Draw's material table stays an int* view: the scrolled words
  *   are fields of the runtime material record (MaterialState, still local to
  *   src/engine/model/ModelComponents.cpp), not of BMD_Material. Dealer::Draw fills its lamp array through a
@@ -75,9 +74,9 @@ struct WalkPath {
 };
 
 /* local extern: address-named arm9 routines, no owning header. */
-extern "C" void func_020169d8(char *, int, unsigned int);
-extern "C" void func_02016a04(char *, int);
-extern "C" void func_02016a14(char *, int);
+extern "C" void func_020169d8(dExtSimpleModel_c *, int, unsigned int);
+extern "C" void func_02016a04(dExtSimpleModel_c *, int);
+extern "C" void func_02016a14(dExtSimpleModel_c *, int);
 int func_02017ab4(int);
 unsigned int func_02012174(unsigned int, unsigned int);
 extern "C" {
@@ -274,8 +273,8 @@ void FlowerFace::Draw() {
 
     G3_LightVector(GX_LIGHTID_0, light.x, light.y, light.z);
 
-    func_02016a14((char *)&mModel, 0x2bff);
-    func_02016a04((char *)&mModel, 0x1211);
+    func_02016a14(&mModel, 0x2bff);
+    func_02016a04(&mModel, 0x1211);
 
     mModel.mat4x3 = data_ov006_0213aee8;
 
@@ -342,18 +341,9 @@ void FlowerFace::PlayPetalPulled() {
             b.vel.y = 0xa00;
             b.vel.z = 0xa00;
             /* Each component gets 0..0x3ff of jitter from a fresh random. */
-            b.vel.x +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
-                      19) >>
-                2;
-            b.vel.y +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
-                      19) >>
-                2;
-            b.vel.z +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
-                      19) >>
-                2;
+            b.vel.x += (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) >> 2;
+            b.vel.y += (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) >> 2;
+            b.vel.z += (int)((RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) >> 2;
             b.pos2.x = b.pos.x;
             b.pos2.y = b.pos.y;
             b.pos2.z = b.pos.z;
@@ -473,7 +463,7 @@ void FallingPetal::Draw() {
 void FallingPetal::UpdateMatrix() {
     Matrix4x3 rot;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRot), &rot);
-    MTX_MultVec33(&sPetalUpAxis, (const Matrix3x3 *)&rot, &mAxis);
+    MTX_MultVec33(&sPetalUpAxis, &rot.r, &mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     MTX_Concat43(&rot, &data_020a0e68, &data_020a0e68);
     mModel.mat4x3 = data_020a0e68;
@@ -656,7 +646,7 @@ void Presenter::Draw() {
     fillLight[0] = 0;
     fillLight[1] = 0;
     fillLight[2] = -0xff8;
-    func_02016a04((char *)&mFace, 0x3d6d);
+    func_02016a04(&mFace, 0x3d6d);
     func_0203cd80(keyLight, -0x2000);
     func_0203ccd4(keyLight, 0x2000);
     func_0203cd80(fillLight, 0x4200);
@@ -1070,8 +1060,8 @@ void Dealer::Draw() {
     G3_LightVector(GX_LIGHTID_0, keyLight.x, keyLight.y, keyLight.z);
     G3_LightVector(GX_LIGHTID_1, spinLight.x, spinLight.y, spinLight.z);
 
-    func_02016a14((char *)&mModel, 0x7fff);
-    func_02016a04((char *)&mModel, 0x4210);
+    func_02016a14(&mModel, 0x7fff);
+    func_02016a04(&mModel, 0x4210);
 
     {
         short pattern = mLampPattern;
@@ -1087,9 +1077,9 @@ void Dealer::Draw() {
         }
     }
 
-    func_020169d8((char *)&mTable, 0, (unsigned short)(lamp[0] | (lamp[1] << 5) | (lamp[2] << 10)));
-    func_020169d8((char *)&mTable, 4, 0x6318);
-    func_020169d8((char *)&mTable, 5, (unsigned short)(lamp[1] | (lamp[2] << 5) | (lamp[0] << 10)));
+    func_020169d8(&mTable, 0, (unsigned short)(lamp[0] | (lamp[1] << 5) | (lamp[2] << 10)));
+    func_020169d8(&mTable, 4, 0x6318);
+    func_020169d8(&mTable, 5, (unsigned short)(lamp[1] | (lamp[2] << 5) | (lamp[0] << 10)));
 
     mModel.Render(0);
     mWalker.Draw();
@@ -1247,44 +1237,40 @@ void Dealer::StartReveal(int count, s16 *counter) {
 }
 
 void Dealer::StateReveal() {
-    if (mModel.file != mDealAnim.filePtr)
-        goto other;
-
-    if (mModel.WillHitFrame(0)) {
-        if (mDealLeft-- <= 0) {
-            int hand;
-            mDealCounter = 0;
-            hand = mHand;
-            if (hand == 0) {
-                mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000, 0x800, 0);
-                if (mDealSoundPlayed != 0)
+    if (mModel.file == mDealAnim.filePtr) {
+        if (mModel.WillHitFrame(0)) {
+            if (mDealLeft-- <= 0) {
+                int hand;
+                mDealCounter = 0;
+                hand = mHand;
+                if (hand == 0) {
+                    mModel.SetAnim(*(BCA_File *)mDealEndAnim.filePtr, 0, 0x40000000, 0x800, 0);
+                    if (mDealSoundPlayed != 0)
+                        return;
+                    Sound::PlayBank2_2D(0x13a);
+                    mDealSoundPlayed = 1;
                     return;
-                Sound::PlayBank2_2D(0x13a);
-                mDealSoundPlayed = 1;
-                return;
-            } else if (hand == 2) {
-                mModel.SetAnim(*(BCA_File *)mDealEnd2Anim.filePtr, 0, 0x40000000, 0x800, 0);
-                if (mDealSoundPlayed != 0)
+                } else if (hand == 2) {
+                    mModel.SetAnim(*(BCA_File *)mDealEnd2Anim.filePtr, 0, 0x40000000, 0x800, 0);
+                    if (mDealSoundPlayed != 0)
+                        return;
+                    Sound::PlayBank2_2D(0x13a);
+                    mDealSoundPlayed = 1;
                     return;
-                Sound::PlayBank2_2D(0x13a);
-                mDealSoundPlayed = 1;
-                return;
-            } else {
-                PlayIdle();
-                return;
+                } else {
+                    PlayIdle();
+                    return;
+                }
             }
         }
+
+        if (mDealCounter != 0 && mModel.WillHitFrame(5)) {
+            Sound::PlayBank2_2D(0x142);
+            *mDealCounter += 1;
+        }
+        return;
     }
 
-    if (mDealCounter == 0)
-        return;
-    if (!mModel.WillHitFrame(5))
-        return;
-    Sound::PlayBank2_2D(0x142);
-    *mDealCounter += 1;
-    return;
-
-other:
     if (mModel.file == (BCA_File *)mDealEndAnim.filePtr || mModel.file == mDealEnd2Anim.filePtr) {
         if (mModel.Finished())
             PlayIdle();
@@ -1645,7 +1631,7 @@ void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *scre
     int height = FX_MUL(tanFov, -view.z);
     int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
-    screenY[0] = -((pixelY + (int)0xfffa0800) >> 0xc);
+    screenY[0] = -((pixelY - 0x5f800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
     int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
@@ -1661,7 +1647,7 @@ void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
     int height = FX_MUL(tanFov, -view.z);
     int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
-    screen[1] = -((pixelY + (int)0xfffa0800) >> 0xc);
+    screen[1] = -((pixelY - 0x5f800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
     int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);

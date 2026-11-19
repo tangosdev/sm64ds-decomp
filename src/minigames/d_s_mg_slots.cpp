@@ -292,7 +292,8 @@ void dScMgSlot3_c::StateJudge() {
         return;
 
     /* Kept (#821 r73): plain members without self and its barrier are
-       0x1c0 of 0x1b8 (104 words off). */
+       0x1c0 of 0x1b8 (104 words off). r96: the same with block-scoped
+       loop indices, as for or do-while. */
     self = (char *)this;
     for (column = 0; column < 3; column++) {
         int reelIndex;
@@ -311,7 +312,7 @@ void dScMgSlot3_c::StateJudge() {
         // Plain members (mResultSymbols[0][column], mReelPos[reelIndex], ...) with
         // for, do-while or an inlined index hoist this+0x5031 into a stack slot:
         // 0x1c0 against 0x1b8 (2026-11-16).
-        self = (char *)((unsigned)self | (unsigned)(column - column));
+        self = (char *)((unsigned)self | (column - column));
     }
 
     mWinColumn = -1;
@@ -583,7 +584,9 @@ void dScMgSlot3_c::StartRound(int mode) {
  * and the plain members take their real spellings. */
 s32 dScMgSlot3_c::Render() {
     /* Kept (#821 r73): mReelPos[i2] / mReelWinPos[i2] for the two
-       c-based reads is 0x65c of 0x668. */
+       c-based reads is 0x65c of 0x668. Re-measured (#821 r109): mReelPos[i2]
+       alone 19 words off, mReelWinPos[i2] alone 309, both 310; the same through
+       ((dScMgSlot3_c *)c)->. */
     char *c = (char *)this;
     int i;
 
@@ -814,7 +817,7 @@ s32 dScMgSlot3_c::InitResources() {
     mMascot.Load();
     Camera_InitSlotsView(&mCamera);
 
-    mReelDifficulty = (int)mLevel;
+    mReelDifficulty = mLevel;
 
     StartRound(3);
 
@@ -822,9 +825,9 @@ s32 dScMgSlot3_c::InitResources() {
     mReelDrawY = 0;
 
     for (int i = 0; i < 3; i++) {
-        int rnd = RandomIntInternal(&data_0209e650.value);
+        u32 rnd = RandomIntInternal(&data_0209e650.value);
         u32 divisor = mStripLength;
-        u32 val = ((u32)rnd >> 16) % divisor;
+        u32 val = (rnd >> 16) % divisor;
         mReelPos[i] = val * 0x50000;
     }
 
@@ -1264,7 +1267,7 @@ s32 dScMgSlot1_c::Behavior() {
         }
         break;
     case 6: {
-        int done = (BET_ICON(&mBetIcon)->mPayoutTicks == 0) ? 1 : 0;
+        int done = BET_ICON(&mBetIcon)->mPayoutTicks == 0;
         if (done != 0) {
             Mg_SubmitScore(mCredits);
             if (DecIfAbove0_Byte(&mStateTimer) == 0) {
@@ -1420,7 +1423,7 @@ s32 dScMgSlot1_c::InitResources() {
     sMgMainBannerX = 0x80;
     sMgMainBannerY = 0x40;
 
-    if ((int)param1 & 0xff) {
+    if (param1 & 0xff) {
         unsigned char *tbl = sSlotReelSymbolsAlt;
         for (j = 0; j < 3; j++) {
             for (i = 0; i < 21; i++) {

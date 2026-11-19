@@ -24,7 +24,7 @@ void func_02072dac(int pc, ActionIterator *info) {
     info->mAction = 0;
     if (!func_02071844(info, pc))
         return;
-    e = func_02072ed0(info->indexBegin, info->indexEnd - info->indexBegin, (unsigned int)pc);
+    e = func_02072ed0(info->indexBegin, info->indexEnd - info->indexBegin, pc);
     if (!e)
         return;
     if (e->sizeFlags & 1)
@@ -32,7 +32,7 @@ void func_02072dac(int pc, ActionIterator *info) {
     else
         info->mActionTable = (unsigned char *)e->table;
     info->mFuncStart = e->start;
-    end = (unsigned int)(pc - e->start);
+    end = pc - e->start;
     p = func_0207180c(info->mActionTable);
     acc = 0;
     do {

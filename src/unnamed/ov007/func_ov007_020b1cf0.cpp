@@ -79,7 +79,7 @@ extern "C" void func_ov007_020b1cf0(void) {
         Ov007AnimPlayer *anim = model->boneAnim;
         if (anim->anim == -1)
             return;
-        if ((int)anim->frame != (int)anim->frameCount - 0x22)
+        if (anim->frame != anim->frameCount - 0x22)
             return;
         func_ov007_020aec94(8);
     }

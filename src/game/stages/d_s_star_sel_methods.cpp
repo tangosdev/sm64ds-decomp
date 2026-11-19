@@ -107,7 +107,7 @@ int dScStarSel_c::GetCharacterSlot(unsigned int chr) {
         int other;
         for (other = 0; other < 3; other++) {
             if (SaveData::IsCharacterUnlocked(other) != 0) {
-                if ((unsigned int)other == chr) {
+                if (other == chr) {
                     return slot;
                 }
                 slot++;
@@ -404,14 +404,14 @@ s32 dScStarSel_c::Render() {
         CopyToViewMat(&mtx);
 
         /* The plates are 0x18000 apart, centred on x = 0, and sit at y = 0x28000. */
-        x = -(((s32)mPlateCount - 1) * 0x18000 / 2);
+        x = -((mPlateCount - 1) * 0x18000 / 2);
         for (i = 1; i <= mPlateCount; i++) {
             Matrix4x3_FromTranslation(&data_020a0e68, x, 0x28000, 0);
             if (i - 1 == mSelectedPlate) {
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (data_020a0db0 * 0x300));
                 Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, 0x1400, 0x1400, 0x1400);
             }
-            idx = (IsStarCollectedInLevel(gNextSublevel, i) == 0) ? 1 : 0;
+            idx = IsStarCollectedInLevel(gNextSublevel, i) == 0;
             plate = &models[idx];
             plate->mat4x3 = data_020a0e68;
             plate->Render(0);
@@ -1114,8 +1114,8 @@ s32 dScStarSel_c::InitResources() {
             plateX = 128;
         else
             plateX = 146;
-        plateX -= ((s32)count >> 1) * 35;
-        for (i = 0; i < (s32)mPlateCount; i++) {
+        plateX -= (count >> 1) * 35;
+        for (i = 0; i < mPlateCount; i++) {
             mPlateX[i] = plateX;
             plateX += 35;
         }
@@ -1172,7 +1172,7 @@ s32 dScStarSel_c::InitResources() {
                         stepIdx += 1;
                     }
                     nextChr += 1;
-                } while (placed < (s32)(mStripMode - 1));
+                } while (placed < (mStripMode - 1));
             }
         }
     }

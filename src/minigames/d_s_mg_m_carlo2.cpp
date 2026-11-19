@@ -23,6 +23,7 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
+#include "Vector2Math.h"
 extern "C" void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
 extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
 extern "C" void Mg_CommitRecords(void);
@@ -77,8 +78,6 @@ extern "C" {
 void *LoadFile(int handle);
 
 void DecompressLZ16(void *src, void *dst);
-
-extern "C" void Vec2_Sub(int *out, int *a, int *b);
 }
 
 int func_0203d5dc(const int *a, const int *b);
@@ -189,6 +188,10 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     return 0;
 }
 
+static inline int HasSelectedPair() {
+    return sMCarlo2FirstPick != 0 && sMCarlo2SecondPick != 0;
+}
+
 /* Slot 6. sMCarlo2DealProgress is the dealt-card count, shifted left 12. */
 s32 dScMgMCarlo2_c::Behavior()
 {
@@ -225,8 +228,7 @@ s32 dScMgMCarlo2_c::Behavior()
             } else {
                 int lim = mDealCount + 0x12;
                 if (dealt >= lim) {
-                    int flag = (sMCarlo2FirstPick != 0 && sMCarlo2SecondPick != 0);
-                    if (flag == 0)
+                    if (!HasSelectedPair())
                         sMCarlo2DealProgress = lim << 12;
                 }
             }
@@ -418,11 +420,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
 {
     switch (mState) {
     case 0:
-        {
-            short *p = &mDealDelay;
-            short v = *p;
-            *p = (v - 1);
-        }
+        mDealDelay--;
         if (mDealDelay != 0)
             return;
         sMCarlo2DeckSize--;

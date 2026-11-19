@@ -68,7 +68,7 @@ dPa_c::level_c::simpleCallback_c::simpleCallback_c()
 void dPa_c::level_c::simpleCallback_c::SpawnParticles(
     Particle::System& system)
 {
-    system.callbackFlags |= 2;
+    system.stopGenerate = 1;
     system.callbackValue = value;
     func_02049d60(gParticleControl->mManager, &system);
 }
@@ -238,9 +238,9 @@ int dPa_c::level_c::checkWaterCallback_c::OnUpdate(
     Particle::ParticleNode *particle = system.particles.head;
 
     if (active) {
-        system.callbackFlags &= ~2;
+        system.stopGenerate = 0;
     } else {
-        system.callbackFlags |= 2;
+        system.stopGenerate = 1;
         if (particle == 0)
             return 0;
     }
@@ -261,9 +261,9 @@ int dPa_c::level_c::checkWaterRippleCallback_c::OnUpdate(
     Particle::ParticleNode *particle = system.particles.head;
 
     if (active) {
-        system.callbackFlags &= ~2;
+        system.stopGenerate = 0;
     } else {
-        system.callbackFlags |= 2;
+        system.stopGenerate = 1;
         if (particle == 0)
             return 0;
     }
@@ -288,9 +288,9 @@ int dPa_c::level_c::fitWaterCallback_c::OnUpdate(
     Particle::ParticleNode *particle = system.particles.head;
 
     if (active) {
-        system.callbackFlags &= ~2;
+        system.stopGenerate = 0;
     } else {
-        system.callbackFlags |= 2;
+        system.stopGenerate = 1;
         if (particle == 0)
             return 0;
     }
@@ -313,7 +313,7 @@ int dPa_c::level_c::clipCallback_c::OnUpdate(
     int result;
 
     if (enabled == 0) {
-        system.callbackFlags |= 2;
+        system.stopGenerate = 1;
         particle = system.particles.head;
         while (particle != 0) {
             particle->age = particle->lifetime;
@@ -322,7 +322,7 @@ int dPa_c::level_c::clipCallback_c::OnUpdate(
         return 1;
     }
 
-    system.callbackFlags &= ~2;
+    system.stopGenerate = 0;
     particle = system.particles.head;
     while (particle != 0) {
         worldPos.x = particle->offsetAsr3.x + particle->positionAsr3.x;

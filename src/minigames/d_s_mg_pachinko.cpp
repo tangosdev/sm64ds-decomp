@@ -706,6 +706,8 @@ void dScMgPachinko_c::ClearAimLine() {
 }
 
 #pragma push
+/* Kept (#821 r79): py, line, tileY and lineOfs recomputed in the inner loop, do-while loops and
+   a py counter are 10, 10 and 34 words off of 32. */
 #pragma opt_loop_invariants off
 /* Sets the 2x2 block of pixels centred on (x, y) in the sub BG2 character
    data, 4bpp tiles laid out 32 to a row: y picks the tile row and the
@@ -1004,8 +1006,8 @@ void dScMgPachinko_c::Pipe_StateRise(int i) {
 /* Rolls a random kind for pipe n from sPachinkoPipeKinds and resets it to
    rise (or, for kind 2, sink). */
 void dScMgPachinko_c::Pipe_StatePick(int n) {
-    int rnd = RandomIntInternal(&data_0209d4b8.value);
-    int kind = sPachinkoPipeKinds[((((unsigned)rnd >> 16) & 0x7fff) * 2) >> 15];
+    u32 rnd = RandomIntInternal(&data_0209d4b8.value);
+    int kind = sPachinkoPipeKinds[(((rnd >> 16) & 0x7fff) * 2) >> 15];
     mPipe[n].state = kind;
     mPipe[n].phase = 0;
     if (mPipe[n].state == 2) {
@@ -1049,6 +1051,9 @@ void dScMgPachinko_c::Pipe_ResetAll() {
 }
 
 #pragma push
+/* Kept (#821 r79): FX_Mul's operands swapped, FX_Mul(scale, trig) at the call, a one-expression
+   or s64-parameter FX_Mul, trig locals first, the sine product first and scale re-read per call
+   are 6 to 44 words off of 60; 6 is the floor (scale lands in sl, not ip). */
 #pragma opt_prelinearize off
 static inline int FX_Mul(int v1, int v2)
 {
@@ -1137,6 +1142,8 @@ void dScMgPachinko_c::Ball_CheckPipes(int idx) {
 }
 
 #pragma push
+/* Kept (#821 r79): the angle read as ball->angle with the trig inline in FX_MUL, and a u16 & to
+   the angle slot, are 0x234 and 0x23c against 0x240. */
 #pragma opt_common_subs off
 /* Re-aims ball `i` at a randomly chosen active target. Bails out if no
  * mTarget slot is active, or if the ball has sunk below y=0. Takes the length
@@ -1191,7 +1198,7 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         pVx = velXBase;
         distSq += (s64)b * b;
         pVy = velYBase;
-        dist = (int)cstd::sqrt((u64)distSq);
+        dist = cstd::sqrt((u64)distSq);
     }
     factor = dist * 9 / 10;
     idx = PACHINKO_RAND(4);
@@ -1209,7 +1216,7 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         int entX = *xBase;
         angBase = (char *)&mBall[0].angle;
         angle = cstd::atan2((targetY - yval) >> 12, (targetX - entX) >> 12);
-        *(u16 *)(angBase + n) = (u16)angle;
+        *(u16 *)(angBase + n) = angle;
         u16 angU = *(u16 *)(angBase + n);
         {
             fx16 cosv = FX_CosIdx(angU >> 4);
@@ -1565,15 +1572,15 @@ void dScMgPachinko_c::SpawnWave() {
     }
     mWaveTimer = 80;
     for (i = 0; i < BALL_NUM; i++) {
-        int ra;
-        int rb;
+        u32 ra;
+        u32 rb;
         if (mBall[i].active != 0)
             continue;
         mBall[i].active = 1;
         ra = RandomIntInternal(&data_0209d4b8.value);
         rb = RandomIntInternal(&data_0209d4b8.value);
-        mBall[i].x = (sPachinkoWaveColumnX[(((u32)rb >> 16) & 0x7fff) * 5 >> 15] +
-                      ((((u32)ra >> 16) & 0x7fff) * 4 >> 15) * 8)
+        mBall[i].x = (sPachinkoWaveColumnX[((rb >> 16) & 0x7fff) * 5 >> 15] +
+                      (((ra >> 16) & 0x7fff) * 4 >> 15) * 8)
                      << 12;
         mBall[i].y = -0x100000;
         mBall[i].velX = 0;
@@ -1581,7 +1588,7 @@ void dScMgPachinko_c::SpawnWave() {
         mBall[i].state = 0;
         mBall[i].started = 0;
         ra = RandomIntInternal(&data_0209d4b8.value);
-        mBall[i].timer = ((((u32)ra >> 16) & 0x7fff) * 8 >> 15) << 4;
+        mBall[i].timer = (((ra >> 16) & 0x7fff) * 8 >> 15) << 4;
         mBall[i].rotation = 0;
         mBall[i].sound = 0;
         mBall[i].level = mWaveLevel;

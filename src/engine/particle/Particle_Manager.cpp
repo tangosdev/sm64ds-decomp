@@ -4,10 +4,10 @@
  *
  * Contiguous manager run, one function per legacy file until this fold.
  * Above it, func_02049cd8 (0x02049cd8..0x02049d60) is the sound-context
- * switch Sound.cpp calls, not a Manager method. Below it, func_0204a5bc
- * (0x0204a5bc) is a tail veneer into func_0204c584, and the system update
- * and draw helpers continue from there. func_0204d958 / func_0204d9a0 /
- * func_0204ae2c, the list and init callees AddSystem names, sit later
+ * switch Sound.cpp calls, not a Manager method. Below it, SPLEmitter_Emit
+ * (0x0204a5bc) is a tail veneer into SPLEmitter_EmitParticles, and the system update
+ * and draw helpers continue from there. SPLList_PopFront / SPLList_PushFront /
+ * SPLEmitter_Init, the list and init callees AddSystem names, sit later
  * (0x0204ae2c, 0x0204d958, 0x0204d9a0) and are not part of this span.
  * Particle_Behavior.cpp owns 0x0204d4d0..0x0204d8e8, so this run cannot
  * move into Particle.cpp (0x020226d4..0x020233d4) either.
@@ -35,16 +35,16 @@
 
 extern "C" {
 
-/* local extern: decl_common.h, a C catch-all, declares func_0204d958,
- * func_0204d9a0 and func_0204ae2c; no real header declares any of these. */
-void *func_0204d958(void *list);
-void func_0204d9a0(void *list, void *node);
-void *func_0204d8e8(void *list, void *node);
-void func_0204ae2c(Particle::System *system, Particle::SystemDefinition *definition,
-                   Vector3 *position);
-void func_0204a5bc(void *system, void *list);
+/* local extern: decl_common.h, a C catch-all, declares SPLList_PopFront,
+ * SPLList_PushFront and SPLEmitter_Init; no real header declares any of these. */
+void *SPLList_PopFront(void *list);
+void SPLList_PushFront(void *list, void *node);
+void *SPLList_Erase(void *list, void *node);
+void SPLEmitter_Init(Particle::System *system, Particle::SystemDefinition *definition,
+                     Vector3 *position);
+void SPLEmitter_Emit(void *system, void *list);
 void func_0204a5c8(void *manager);
-void func_0204a730(void *manager, void *system);
+void SPLEmitter_Update(void *manager, void *system);
 }
 
 typedef Particle::Manager::TextureEntry TextureEntry;
@@ -69,21 +69,6 @@ struct DefinitionFlags {
     unsigned : 2;
 };
 
-/* Particle::System::callbackFlags as the update and draw walks test it. */
-struct SystemState {
-    u32 stop : 1;
-    u32 : 1;
-    u32 skipUpdate : 1;
-    u32 skipDraw : 1;
-    u32 : 28;
-};
-
-static inline SystemState &StateOf(Particle::System *system) {
-    /* Kept (#821 r76): not measured; System::callbackFlags takes u32 mask writes in four files, and
-       SystemState is not a type the SDK or pret names. */
-    return *(SystemState *)&system->callbackFlags;
-}
-
 extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles,
                                int minPolygonID, unsigned short maxPolygonID) {
     int i;
@@ -105,12 +90,12 @@ extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParti
     manager->mPolygonAttr = 0;
     system = alloc(numSystems * sizeof(Particle::System));
     for (i = 0; i < numSystems; i++) {
-        func_0204d9a0(&manager->mFreeSystems, system);
+        SPLList_PushFront(&manager->mFreeSystems, system);
         system += sizeof(Particle::System);
     }
     particle = alloc(numParticles * 0x44);
     for (i = 0; i < numParticles; i++) {
-        func_0204d9a0(&manager->mFreeParticles, particle);
+        SPLList_PushFront(&manager->mFreeParticles, particle);
         particle += 0x44;
     }
     manager->mDefinitions = 0;
@@ -234,7 +219,7 @@ extern "C" int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32
     for (i = 0; i < manager->mNumTextures; i++) {
         TextureEntry *texture = &manager->mTextures[i];
         TextureEntry::Resource *record = texture->resource;
-        u32 isTexel4x4 = (record->params.format == 5) ? 1 : 0;
+        u32 isTexel4x4 = record->params.format == 5;
         u32 address = allocTexVram(record->texelSize, isTexel4x4);
         /* The texels follow the 0x20-byte record header. */
         GX_LoadTex(texture->resource + 1, address, record->texelSize);
@@ -256,7 +241,7 @@ extern "C" int func_0204a028(Particle::Manager *manager,
         unsigned int address = 0;
 
         if (record->paletteSize != 0) {
-            unsigned int fromLowAddress = record->params.format == 2 ? 1 : 0;
+            unsigned int fromLowAddress = record->params.format == 2;
             address = allocPalVram(record->paletteSize, fromLowAddress);
             GX_LoadTexPltt((char *)texture->resource + record->paletteOffset, address,
                            record->paletteSize);
@@ -276,15 +261,15 @@ extern "C" void func_02049f58(Particle::Manager *manager) {
     do {
         Particle::SystemDefinition::Data *data = system->mDefinition->data;
         next = system->next;
-        if (StateOf(system).skipUpdate == 0) {
-            func_0204a730(manager, system);
+        if (system->skipUpdate == 0) {
+            SPLEmitter_Update(manager, system);
         }
         if (((data->flags << 17) >> 31 != 0 && data->callbackValue != 0 &&
              system->age > data->callbackValue) ||
-            StateOf(system).stop != 0) {
+            system->terminate != 0) {
             if (system->particles.count == 0 && system->particles2.count == 0) {
-                func_0204d9a0(&manager->mFreeSystems,
-                              func_0204d8e8(&manager->mActiveSystems, system));
+                SPLList_PushFront(&manager->mFreeSystems,
+                                  SPLList_Erase(&manager->mActiveSystems, system));
             }
         }
         system = next;
@@ -300,7 +285,7 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
         return;
     do {
         manager->mCurrentSystem = system;
-        if (StateOf(system).skipDraw == 0) {
+        if (system->skipDraw == 0) {
             func_0204a5c8(manager);
         }
         system = system->next;
@@ -308,15 +293,15 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
 }
 
 /* Particle::Manager::AddSystem -- spawn a System, arm9
- * 0x02049e0c..0x02049ee8. func_0204d958 pops one off mFreeSystems,
- * func_0204ae2c initializes it from the indexed SystemDefinition, the
- * manager's polygon-ID range seeds the system's, func_0204d9a0 pushes
+ * 0x02049e0c..0x02049ee8. SPLList_PopFront pops one off mFreeSystems,
+ * SPLEmitter_Init initializes it from the indexed SystemDefinition, the
+ * manager's polygon-ID range seeds the system's, SPLList_PushFront pushes
  * it onto mActiveSystems, and a definition whose flags carry the
  * self-destruct bit fails the spawn.
  *
  * leftovers: `(flags << 17) >> 31` stays the arithmetic-shift bit-14 test
  * -- `& 0x4000` emits a different sequence. The polygon-ID names come from
- * the draw routines (func_0204be40 and its siblings), which put
+ * the draw routines (SPLDraw_Billboard and its siblings), which put
  * polygonIDs.current into POLYGON_ATTR bits 24-29 and wrap it from max to
  * min; dPa_c::Initialise passes 0x1a and 0x3e, both 6-bit IDs.
  */
@@ -328,16 +313,16 @@ System *Manager::AddSystem(int definitionID, Vector3 &position) {
 
     result = 0;
     if (mFreeSystems.head != 0) {
-        system = (System *)func_0204d958(&mFreeSystems);
+        system = (System *)SPLList_PopFront(&mFreeSystems);
         result = system;
-        func_0204ae2c(system, &mDefinitions[definitionID], &position);
+        SPLEmitter_Init(system, &mDefinitions[definitionID], &position);
 
         system->polygonIDs.min = mMinPolygonID;
         system->polygonIDs.max = mMaxPolygonID;
         system->polygonIDs.current = system->polygonIDs.min;
         system->polygonIDs.unused = 0;
 
-        func_0204d9a0(&mActiveSystems, system);
+        SPLList_PushFront(&mActiveSystems, system);
         if ((system->mDefinition->data->flags << 17) >> 31)
             result = 0;
     }
@@ -349,20 +334,20 @@ System *Manager::AddSystem(int definitionID, Vector3 &position) {
 
 void func_02049d78(Particle::Manager *manager, Particle::System *system) {
     void *particle;
-    particle = func_0204d958(&system->particles);
+    particle = SPLList_PopFront(&system->particles);
     while (particle != 0) {
-        func_0204d9a0(&manager->mFreeParticles, particle);
-        particle = func_0204d958(&system->particles);
+        SPLList_PushFront(&manager->mFreeParticles, particle);
+        particle = SPLList_PopFront(&system->particles);
     }
-    particle = func_0204d958(&system->particles2);
+    particle = SPLList_PopFront(&system->particles2);
     while (particle != 0) {
-        func_0204d9a0(&manager->mFreeParticles, particle);
-        particle = func_0204d958(&system->particles2);
+        SPLList_PushFront(&manager->mFreeParticles, particle);
+        particle = SPLList_PopFront(&system->particles2);
     }
-    func_0204d8e8(&manager->mActiveSystems, system);
-    func_0204d9a0(&manager->mFreeSystems, system);
+    SPLList_Erase(&manager->mActiveSystems, system);
+    SPLList_PushFront(&manager->mFreeSystems, system);
 }
 
 void func_02049d60(Particle::Manager *manager, Particle::System *system) {
-    func_0204a5bc(system, &manager->mFreeParticles);
+    SPLEmitter_Emit(system, &manager->mFreeParticles);
 }

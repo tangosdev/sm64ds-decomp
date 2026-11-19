@@ -224,10 +224,10 @@ extern "C" void func_02020190(void);
 extern "C" void func_02030994(void);
 extern "C" void func_020201c0(void);
 void func_0202048c(OamAnimation *dst, int a, int b);
-extern "C" void func_02020768(char *thiz);
+extern "C" void func_02020768(OamAnimation *anim);
 void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
-extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 mode, u32 arg3);
+extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 starID, u32 loadMode);
 extern u8 data_02092778;
 extern "C" u8 func_02020364(int player);
 extern "C" u8 func_020201f0(int);
@@ -360,7 +360,7 @@ void dScEntry_c::TallyRoundWinners() {
 
 s32 dScEntry_c::InitResultResources() {
     int k;
-    void *tmp;
+    void *pltt;
     int id0;
     int id1;
     int i;
@@ -377,9 +377,9 @@ s32 dScEntry_c::InitResultResources() {
     G2_BG1Mosaic(0);
 
     LoadCompressedFileAt(0x8413, G2_GetBG2CharPtr());
-    tmp = LoadFile(0x8414);
-    GX_LoadBGPltt(tmp, 0, 0x1c0);
-    Deallocate(tmp);
+    pltt = LoadFile(0x8414);
+    GX_LoadBGPltt(pltt, 0, 0x1c0);
+    Deallocate(pltt);
 
     n = data_0209fc50;
     if (n == 2) {
@@ -405,18 +405,18 @@ s32 dScEntry_c::InitResultResources() {
     }
 
     LoadCompressedFileAt(data_ov075_0211c990[GetLanguageIndex()], G2_GetOBJCharPtr());
-    tmp = LoadFile(0x8415);
-    GX_LoadOBJPltt(tmp, 0, 0x140);
-    Deallocate(tmp);
+    pltt = LoadFile(0x8415);
+    GX_LoadOBJPltt(pltt, 0, 0x140);
+    Deallocate(pltt);
 
     G2_SetBG1Priority(2);
     SetBg1Offset(0, 0);
     LoadCompressedFileAt(0x8402, G2S_GetOBJCharPtr());
     LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()],
                          (u8 *)G2S_GetOBJCharPtr() + 0x6000);
-    tmp = LoadFile(0x8403);
-    GXS_LoadOBJPltt(tmp, 0, 0x200);
-    Deallocate(tmp);
+    pltt = LoadFile(0x8403);
+    GXS_LoadOBJPltt(pltt, 0, 0x200);
+    Deallocate(pltt);
 
     TallyRoundWinners();
 
@@ -461,7 +461,7 @@ s32 dScEntry_c::InitResultResources() {
 enum EntryAssetId { ASSET_D_2D_BATTLE_FRAMEWORK_GAMESTART_P_NSC_BIN = 0x025e };
 
 s32 dScEntry_c::InitEntryResources() {
-    void *tmp;
+    void *pltt;
     int mode;
 
     if (param1 != 0 || func_0203d9b4() != 0) {
@@ -474,13 +474,13 @@ s32 dScEntry_c::InitEntryResources() {
     }
     LoadCompressedFileAt(data_ov075_0211c9a4[GetLanguageIndex()], G2_GetOBJCharPtr());
 
-    tmp = LoadFile(0x8412);
-    GX_LoadOBJPltt(tmp, 0, 0xc0);
-    Deallocate(tmp);
+    pltt = LoadFile(0x8412);
+    GX_LoadOBJPltt(pltt, 0, 0xc0);
+    Deallocate(pltt);
 
-    tmp = LoadFile(0x980b);
-    GX_LoadBGPltt(tmp, 0, 0xc0);
-    Deallocate(tmp);
+    pltt = LoadFile(0x980b);
+    GX_LoadBGPltt(pltt, 0, 0xc0);
+    Deallocate(pltt);
 
     mStepDelay = 0;
     mIconCount = 0;
@@ -628,8 +628,7 @@ void dScEntry_c::UpdateSoundSettings() {
     int dir;
     u16 flags;
 
-    if (TouchArea_Update((char *)&mIcons[5], -1) != 0 ||
-        TouchArea_Update((char *)&mIcons[8], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[5], -1) != 0 || TouchArea_Update(&mIcons[8], -1) != 0 ||
         ((flags = data_020a0e58[w].pressed) & 8) != 0 || (flags & 4) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 2)) {
         mIcons[5].Select();
@@ -639,12 +638,11 @@ void dScEntry_c::UpdateSoundSettings() {
     } else {
         dir = 0;
         if (mIcons[2].mReady != 0) {
-            if (TouchArea_Update((char *)&mIcons[2], -1) != 0 ||
-                TouchArea_Update((char *)&mIcons[1], -1) != 0 ||
-                TouchArea_Update((char *)&mIcons[6], -1) != 0) {
+            if (TouchArea_Update(&mIcons[2], -1) != 0 || TouchArea_Update(&mIcons[1], -1) != 0 ||
+                TouchArea_Update(&mIcons[6], -1) != 0) {
                 mSelectedIcon = 0;
                 dir = 1;
-            } else if (TouchArea_Update((char *)&mIcons[0], -1) != 0) {
+            } else if (TouchArea_Update(&mIcons[0], -1) != 0) {
                 mSelectedIcon = dir;
                 dir = -1;
             } else if (CheckMenuConfirm(-1) != 0) {
@@ -677,20 +675,19 @@ void dScEntry_c::UpdateSoundSettings() {
         }
         if (mIcons[3].mReady != 0 && mIcons[4].mReady != 0) {
             if ((CheckMenuConfirm(-1) != 0 && mSelectedIcon == 1) ||
-                TouchArea_Update((char *)&mIcons[7], -1) != 0) {
+                TouchArea_Update(&mIcons[7], -1) != 0) {
                 dir = 1;
                 mSelectedIcon = 1;
                 if (mIcons[3].mOn == 0)
                     dir = -1;
             }
-            if (TouchArea_Update((char *)&mIcons[3], -1) != 0 || (dir < 0 && mSelectedIcon == 1)) {
+            if (TouchArea_Update(&mIcons[3], -1) != 0 || (dir < 0 && mSelectedIcon == 1)) {
                 TurnBacklightOn();
                 mIcons[3].Select();
                 mIcons[4].mOn = 0;
                 mSelectedIcon = 1;
                 func_02012790(0x66);
-            } else if (TouchArea_Update((char *)&mIcons[4], -1) != 0 ||
-                       (dir > 0 && mSelectedIcon == 1)) {
+            } else if (TouchArea_Update(&mIcons[4], -1) != 0 || (dir > 0 && mSelectedIcon == 1)) {
                 TurnBacklightOff();
                 mIcons[3].mOn = 0;
                 mIcons[4].Select();
@@ -776,9 +773,9 @@ void dScEntry_c::RenderControlSettings() {
 void dScEntry_c::UpdateControlSettings() {
     int w = func_0203da9c();
 
-    if (TouchArea_Update((char *)&mIcons[3], -1) != 0 ||
-        TouchArea_Update((char *)&mIcons[4], -1) != 0 || (data_020a0e58[w].pressed & 8) != 0 ||
-        (data_020a0e58[w].pressed & 4) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 3)) {
+    if (TouchArea_Update(&mIcons[3], -1) != 0 || TouchArea_Update(&mIcons[4], -1) != 0 ||
+        (data_020a0e58[w].pressed & 8) != 0 || (data_020a0e58[w].pressed & 4) != 0 ||
+        (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 3)) {
         int i;
         for (i = 0; i <= 2; i++) {
             if (mIcons[i].mOn != 0) {
@@ -793,7 +790,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (TouchArea_Update((char *)&mIcons[0], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[0], -1) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
         mSelectedIcon = 0;
         if (mIcons[0].mOn != 0) {
@@ -812,7 +809,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (TouchArea_Update((char *)&mIcons[1], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[1], -1) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 1)) {
         mSelectedIcon = 1;
         if (mIcons[1].mOn != 0) {
@@ -831,7 +828,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (TouchArea_Update((char *)&mIcons[2], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[2], -1) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 2)) {
         mSelectedIcon = 2;
         if (mIcons[2].mOn != 0) {
@@ -935,7 +932,7 @@ void dScEntry_c::UpdateQuitConfirm() {
     int id;
 
     id = func_0203da9c();
-    if (TouchArea_Update((char *)&mIcons[0], id) != 0 ||
+    if (TouchArea_Update(&mIcons[0], id) != 0 ||
         (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
@@ -948,7 +945,7 @@ void dScEntry_c::UpdateQuitConfirm() {
         func_02012790(0x63);
         return;
     }
-    if (TouchArea_Update((char *)&mIcons[1], id) == 0) {
+    if (TouchArea_Update(&mIcons[1], id) == 0) {
         if (CheckMenuConfirm(id) == 0)
             return;
         if (mSelectedIcon != 1)
@@ -973,6 +970,10 @@ void dScEntry_c::UpdateQuitConfirm() {
  * read-modify-write. */
 static inline int IsEntryScene(const dScEntry_c *scene) {
     return scene->actorID == 6;
+}
+
+static inline int IsResultScene(const dScEntry_c *scene) {
+    return scene->actorID == 7;
 }
 
 void dScEntry_c::EnterQuitConfirm() {
@@ -1102,7 +1103,7 @@ void dScEntry_c::UpdateRematchPrompt() {
         return;
     }
     id = func_0203da9c();
-    if (TouchArea_Update((char *)&mIcons[0], id) != 0 ||
+    if (TouchArea_Update(&mIcons[0], id) != 0 ||
         (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
@@ -1110,7 +1111,7 @@ void dScEntry_c::UpdateRematchPrompt() {
         func_02012790(0x126);
         return;
     }
-    if (TouchArea_Update((char *)&mIcons[1], id) == 0) {
+    if (TouchArea_Update(&mIcons[1], id) == 0) {
         if (CheckMenuConfirm(id) == 0)
             return;
         if (mSelectedIcon != 1)
@@ -1238,12 +1239,12 @@ void dScEntry_c::UpdateResults() {
             func_02012790(0xe);
     }
 
-    func_02020768((char *)&mOamAnimations[0]);
-    func_02020768((char *)&mOamAnimations[1]);
-    func_02020768((char *)&mOamAnimations[2]);
+    func_02020768(&mOamAnimations[0]);
+    func_02020768(&mOamAnimations[1]);
+    func_02020768(&mOamAnimations[2]);
     p = data_0209b2f0 + id;
     if (*p == 0)
-        func_02020768((char *)&mOamAnimations[3]);
+        func_02020768(&mOamAnimations[3]);
     if (mOamAnimations[0].enabled == 0) {
         if (mOamAnimations[1].enabled == 0) {
             mOamAnimations[0].affine = 0;
@@ -1709,7 +1710,7 @@ void dScEntry_c::UpdateSoloConfirm() {
         mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c()) != 0;
     if (mStepPhase == 0)
         return;
-    if (TouchArea_Update((char *)&mIcons[0], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[0], -1) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
@@ -1718,7 +1719,7 @@ void dScEntry_c::UpdateSoloConfirm() {
         func_02012790(0x118);
         return;
     }
-    if (TouchArea_Update((char *)&mIcons[1], -1) == 0) {
+    if (TouchArea_Update(&mIcons[1], -1) == 0) {
         if (CheckMenuConfirm(-1) == 0)
             return;
         if (mSelectedIcon != 1)
@@ -1808,7 +1809,7 @@ void dScEntry_c::UpdateRecruit() {
     if (data_0209fc5c[localPlayer] == 0)
         return;
     if (playerCount < 4) {
-        if (TouchArea_Update((char *)&mIcons[0], 0) == 0) {
+        if (TouchArea_Update(&mIcons[0], 0) == 0) {
             if (CheckMenuConfirm(0) == 0)
                 return;
         }
@@ -2006,8 +2007,7 @@ s32 dScEntry_c::Behavior() {
         return 1;
 
     if (data_0209fc68 != 0) {
-        int t = (data_0209fc68 == 6);
-        if (t != 0)
+        if (HasConnectionError())
             HandlePlayerDisconnect(reinterpret_cast<const StepSet *>(&data_ov075_0211d930));
     }
 
@@ -2035,8 +2035,7 @@ s32 dScEntry_c::InitResources() {
     func_0200f2cc();
 
     {
-        int isResult = (actorID == 7);
-        if (isResult || param1 != 0 || func_0203d9b4() != 0) {
+        if (IsResultScene(this) || param1 != 0 || func_0203d9b4() != 0) {
             LoadTextNarcs();
             LoadArchive(0);
             LoadArchive(1);
@@ -2083,8 +2082,7 @@ s32 dScEntry_c::InitResources() {
     LoadFont3D();
 
     {
-        int isEntry = (actorID == 6);
-        if (isEntry) {
+        if (IsEntryScene(this)) {
             InitEntryResources();
             if (param1 == 0) {
                 if (func_0203da3c() == 0) {
@@ -2107,8 +2105,7 @@ s32 dScEntry_c::InitResources() {
     Sound::LoadInitialGroup(0x2b);
 
     {
-        int isEntry = (actorID == 6);
-        if (isEntry) {
+        if (IsEntryScene(this)) {
             if (param1 < 2) {
                 Sound::LoadAndSetMusic_Layer1(0x4c);
             }

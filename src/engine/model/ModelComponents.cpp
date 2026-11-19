@@ -131,14 +131,10 @@ struct MaterialState {
 };
 
 extern "C" {
-void MTX_Identity43_(Matrix4x3 *mat);
-}
-
-extern "C" {
-void func_02048234(int *out, int sa, int sb, int sc, u16 ax, u16 ay, u16 az, int tx, int ty,
+void func_02048234(Matrix4x3 *out, int sa, int sb, int sc, u16 ax, u16 ay, u16 az, int tx, int ty,
                    int tz);
-void func_02047218(void *a, void *b, void *out, fx32 c);
-void func_02047910(int *m0, int *m1, int *dst, int t);
+void func_02047218(const Matrix4x3 *m0, const Matrix4x3 *m1, Matrix4x3 *dst, fx32 t);
+void func_02047910(const Matrix4x3 *m0, const Matrix4x3 *m1, Matrix4x3 *dst, int t);
 }
 
 struct Ctx;
@@ -152,7 +148,7 @@ void G3_MultMtx33(void *m);
 }
 
 extern VecFx32 data_02099f88;
-extern u32 data_020a4bd4;
+extern int data_020a4bd4;
 /* Identity, used when Render is given no matrix. */
 extern const int data_02082190[12];
 extern void *data_020a4bd0;
@@ -197,8 +193,7 @@ void ModelComponents::UpdateBones(BCA_File *file, int frame)
     func_020453c0(modelFile->bones, file, frame);
 }
 
-extern "C" void func_0204531c(char *self, int arg) {
-    ModelComponents *mc = (ModelComponents *)self;
+extern "C" void func_0204531c(ModelComponents *mc, int arg) {
     unsigned int i;
     Matrix4x3 *save = mc->transforms;
     Matrix4x3 *blend = mc->blendTransforms;
@@ -208,10 +203,10 @@ extern "C" void func_0204531c(char *self, int arg) {
     mc->transforms = save;
 
     for (i = 0; i < mc->modelFile->numBones; i++)
-        func_02047910(&mc->transforms[i].m[0], &blend[i].m[0], &mc->transforms[i].m[0], arg);
+        func_02047910(&mc->transforms[i], &blend[i], &mc->transforms[i], arg);
 }
 
-void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
+void func_02045178(Matrix4x3 *out, int ax, int ay, int az, int tx, int ty, int tz) {
     int a0 = FX_SinIdx(ax >> 4);
     int a1 = FX_CosIdx(ax >> 4);
     int b0 = FX_SinIdx(ay >> 4);
@@ -223,33 +218,33 @@ void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
     int p01 = (int)(((s64)a0 * c1) >> 12);
     int p10 = (int)(((s64)a1 * c0) >> 12);
 
-    out[0] = (int)(((s64)b1 * c1) >> 12);
-    out[1] = (int)(((s64)b1 * c0) >> 12);
-    out[2] = -b0;
-    out[3] = FX_MUL(b0, p01) - p10;
-    out[4] = p11 + FX_MUL(b0, p00);
-    out[5] = (int)(((s64)b1 * a0) >> 12);
-    out[6] = p00 + FX_MUL(b0, p11);
-    out[7] = FX_MUL(b0, p10) - p01;
-    out[8] = (int)(((s64)b1 * a1) >> 12);
-    out[9] = tx;
-    out[10] = ty;
-    out[11] = tz;
+    out->r.m[0][0] = (int)(((s64)b1 * c1) >> 12);
+    out->r.m[0][1] = (int)(((s64)b1 * c0) >> 12);
+    out->r.m[0][2] = -b0;
+    out->r.m[1][0] = FX_MUL(b0, p01) - p10;
+    out->r.m[1][1] = p11 + FX_MUL(b0, p00);
+    out->r.m[1][2] = (int)(((s64)b1 * a0) >> 12);
+    out->r.m[2][0] = p00 + FX_MUL(b0, p11);
+    out->r.m[2][1] = FX_MUL(b0, p10) - p01;
+    out->r.m[2][2] = (int)(((s64)b1 * a1) >> 12);
+    out->t.x = tx;
+    out->t.y = ty;
+    out->t.z = tz;
 }
 
 void ModelComponents::func_02045074(BMD_Bone *fileBone) {
     struct Node *n = (struct Node *)fileBone;
-    int m[12];
+    Matrix4x3 m;
     int a = n->f0;
     ModelBone *bone = &bones[a];
     if (bone->scaled == 0) {
-        func_02045178(m, bone->rotX, bone->rotY, bone->rotZ, bone->transX, bone->transY,
+        func_02045178(&m, bone->rotX, bone->rotY, bone->rotZ, bone->transX, bone->transY,
                       bone->transZ);
     } else {
-        func_02048234(m, bone->scaleX, bone->scaleY, bone->scaleZ, bone->rotX, bone->rotY,
+        func_02048234(&m, bone->scaleX, bone->scaleY, bone->scaleZ, bone->rotX, bone->rotY,
                       bone->rotZ, bone->transX, bone->transY, bone->transZ);
     }
-    MTX_Concat43((Matrix4x3 *)m, &transforms[a + n->f8], &transforms[a]);
+    MTX_Concat43(&m, &transforms[a + n->f8], &transforms[a]);
     if (n->fa != 0)
         func_02045074((BMD_Bone *)(n + n->fa));
     if (n->fc != 0)
@@ -268,14 +263,14 @@ void ModelComponents::UpdateVertsUsingBones()
 
 void func_02044f74(void *g, struct Node *n)
 {
-    int m[12];
-    int a = n->f0;
-    func_02048234(m, n->f10, n->f14, n->f18, (u16)((unsigned)n->f1c << 4),
+    Matrix4x3 m;
+    s16 a = n->f0;
+    func_02048234(&m, n->f10, n->f14, n->f18, (u16)((unsigned)n->f1c << 4),
                   (u16)((unsigned)n->f1e << 4), (u16)((unsigned)n->f20 << 4), n->f24, n->f28,
                   n->f2c);
     {
         Matrix4x3 *t = ((struct Sub *)((BMD_File *)g)->skin)->blk;
-        MTX_Concat43((Matrix4x3 *)m, &t[a + n->f8], &t[(s16)a]);
+        MTX_Concat43(&m, &t[a + n->f8], &t[a]);
     }
     if (n->fa != 0)
         func_02044f74(g, n + n->fa);
@@ -296,12 +291,21 @@ void func_02044efc(BMD_File *self) {
     DC_StoreAll();
 }
 
-void func_02044e50(ModelComponents *self, int count, int base, int *out) {
+void func_02044e50(ModelComponents *self, int count, int base, Matrix4x3 *out) {
     int i;
     BMD_File *in = self->modelFile;
-    out[0] = 0; out[1] = 0; out[2] = 0; out[3] = 0;
-    out[4] = 0; out[5] = 0; out[6] = 0; out[7] = 0;
-    out[8] = 0; out[9] = 0; out[10] = 0; out[11] = 0;
+    out->r.m[0][0] = 0;
+    out->r.m[0][1] = 0;
+    out->r.m[0][2] = 0;
+    out->r.m[1][0] = 0;
+    out->r.m[1][1] = 0;
+    out->r.m[1][2] = 0;
+    out->r.m[2][0] = 0;
+    out->r.m[2][1] = 0;
+    out->r.m[2][2] = 0;
+    out->t.x = 0;
+    out->t.y = 0;
+    out->t.z = 0;
     for (i = 0; i < count; i++) {
         struct Sub *sub = (struct Sub *)in->skin;
         int idx = base + i;
@@ -319,7 +323,7 @@ void func_02044dc4(ModelComponents *self) {
     dst = &self->transforms[tbl->numBones];
     for (i = 0; i < tbl->numWeightedMatrices; i++) {
         unsigned short *arr = ((struct Sub *)tbl->skin)->ranges;
-        func_02044e50(self, arr[2 * i], arr[2 * i + 1], (int *)dst);
+        func_02044e50(self, arr[2 * i], arr[2 * i + 1], dst);
         dst++;
     }
 }
@@ -355,6 +359,8 @@ void ModelComponents::func_02044b30(int idx) {
            Re-measured (#821 r17): the id loaded into the dead texImageParam,
            a pointer `textures + textureId`, or the rotation index in its own
            local ahead of tex are each 3 words off; tex after sin/cos is 7. */
+        /* Kept (#821 r79): a static TextureIdOf(mat) accessor in the subscript, textures +
+           textureId, and a BMD_Texture pointer are each 3 words off. */
         u32 textureId = *(volatile const u32 *)&mat.textureId;
         const BMD_Texture &tex = modelFile->textures[textureId];
         s16 sin = FX_SinIdx((u16)(mat.texRotation << 4) >> 4);
@@ -415,8 +421,8 @@ struct Entry {
 };
 
 void ModelComponents::func_0204488c(int index, Vector3 *scale) {
-    int M[9];
-    int N[16];
+    Matrix3x3 M;
+    MtxFx44 N;
     int i;
     struct Part* part;
     struct Entry* e;
@@ -446,9 +452,9 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
 
             check = bones[fp_index].scaled;
             if (check) {
-                func_020458a8(partMtx, (struct Matrix3x3_Vecs *)M);
-                G3_MultMtx33(M);
-                lastMat = M;
+                func_020458a8(partMtx, (struct Matrix3x3_Vecs *)&M);
+                G3_MultMtx33(&M);
+                lastMat = &M;
             } else {
                 G3_MultMtx33(partMtx);
                 lastMat = partMtx;
@@ -466,17 +472,17 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
         if (data_020a4bbc == 2) {
             int sx;
             int sy;
-            MTX_Concat33(lastMat, data_020a4bd0, M);
-            MTX_Copy33To44_(M, N);
+            MTX_Concat33(lastMat, data_020a4bd0, &M);
+            MTX_Copy33To44_(&M, &N);
             sx = data_020a4bc0;
-            N[0] = M[0] * sx;
-            N[4] = M[3] * sx;
-            N[8] = M[6] * sx;
+            N.m[0][0] = M.m[0][0] * sx;
+            N.m[1][0] = M.m[1][0] * sx;
+            N.m[2][0] = M.m[2][0] * sx;
             sy = data_020a4bc4;
-            N[1] = M[1] * sy;
-            N[5] = M[4] * sy;
-            N[9] = M[7] * sy;
-            G3_LoadTexMtxEnv(N);
+            N.m[0][1] = M.m[0][1] * sy;
+            N.m[1][1] = M.m[1][1] * sy;
+            N.m[2][1] = M.m[2][1] * sy;
+            G3_LoadTexMtxEnv(&N.m[0][0]);
             G3_StoreMtx(0);
         }
 

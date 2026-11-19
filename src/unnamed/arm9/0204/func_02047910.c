@@ -2,15 +2,12 @@
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 
-extern void VEC_Normalize(const Vector3 *src, Vector3 *dst);
-
 /* Blend the 4x3 matrix m0 toward m1 by t into dst. The Y and X rows lerp
    in direction and in length separately and are renormalized; the Z row
    is rebuilt as (y x z) x y, perpendicular to Y, at its lerped length;
    the translation lerps. A degenerate row returns early, with dst only
    partly written. func_0204531c blends each bone matrix with it in place. */
-void func_02047910(int *m0, int *m1, int *dst, int t)
-{
+void func_02047910(const Matrix4x3 *m0, const Matrix4x3 *m1, Matrix4x3 *dst, int t) {
     Vector3 va;
     Vector3 vb;
     Vector3 vx;
@@ -20,12 +17,12 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
     int lb;
     int len;
 
-    va.x = m0[3];
-    va.y = m0[4];
-    va.z = m0[5];
-    vb.x = m1[3];
-    vb.y = m1[4];
-    vb.z = m1[5];
+    va.x = m0->r.m[1][0];
+    va.y = m0->r.m[1][1];
+    va.z = m0->r.m[1][2];
+    vb.x = m1->r.m[1][0];
+    vb.y = m1->r.m[1][1];
+    vb.z = m1->r.m[1][2];
     la = VEC_Mag(&va);
     lb = VEC_Mag(&vb);
     len = la + FX_MUL(t, (lb - la));
@@ -35,16 +32,16 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
     if (FX_MUL(vy.x, vy.x) + FX_MUL(vy.y, vy.y) + FX_MUL(vy.z, vy.z) == 0)
         return;
     VEC_Normalize(&vy, &vy);
-    dst[3] = FX_MUL(vy.x, len);
-    dst[4] = FX_MUL(vy.y, len);
-    dst[5] = FX_MUL(vy.z, len);
+    dst->r.m[1][0] = FX_MUL(vy.x, len);
+    dst->r.m[1][1] = FX_MUL(vy.y, len);
+    dst->r.m[1][2] = FX_MUL(vy.z, len);
 
-    va.x = m0[0];
-    va.y = m0[1];
-    va.z = m0[2];
-    vb.x = m1[0];
-    vb.y = m1[1];
-    vb.z = m1[2];
+    va.x = m0->r.m[0][0];
+    va.y = m0->r.m[0][1];
+    va.z = m0->r.m[0][2];
+    vb.x = m1->r.m[0][0];
+    vb.y = m1->r.m[0][1];
+    vb.z = m1->r.m[0][2];
     la = VEC_Mag(&va);
     lb = VEC_Mag(&vb);
     len = la + FX_MUL(t, (lb - la));
@@ -54,16 +51,16 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
     if (FX_MUL(vx.x, vx.x) + FX_MUL(vx.y, vx.y) + FX_MUL(vx.z, vx.z) == 0)
         return;
     VEC_Normalize(&vx, &vx);
-    dst[0] = FX_MUL(vx.x, len);
-    dst[1] = FX_MUL(vx.y, len);
-    dst[2] = FX_MUL(vx.z, len);
+    dst->r.m[0][0] = FX_MUL(vx.x, len);
+    dst->r.m[0][1] = FX_MUL(vx.y, len);
+    dst->r.m[0][2] = FX_MUL(vx.z, len);
 
-    va.x = m0[6];
-    va.y = m0[7];
-    va.z = m0[8];
-    vb.x = m1[6];
-    vb.y = m1[7];
-    vb.z = m1[8];
+    va.x = m0->r.m[2][0];
+    va.y = m0->r.m[2][1];
+    va.z = m0->r.m[2][2];
+    vb.x = m1->r.m[2][0];
+    vb.y = m1->r.m[2][1];
+    vb.z = m1->r.m[2][2];
     la = VEC_Mag(&va);
     lb = VEC_Mag(&vb);
     len = la + FX_MUL(t, (lb - la));
@@ -85,11 +82,11 @@ void func_02047910(int *m0, int *m1, int *dst, int t)
         return;
 
     VEC_Normalize(&vz, &vz);
-    dst[6] = FX_MUL(vz.x, len);
-    dst[7] = FX_MUL(vz.y, len);
-    dst[8] = FX_MUL(vz.z, len);
+    dst->r.m[2][0] = FX_MUL(vz.x, len);
+    dst->r.m[2][1] = FX_MUL(vz.y, len);
+    dst->r.m[2][2] = FX_MUL(vz.z, len);
 
-    dst[9] = m0[9] + FX_MUL(t, (m1[9] - m0[9]));
-    dst[10] = m0[10] + FX_MUL(t, (m1[10] - m0[10]));
-    dst[11] = m0[11] + FX_MUL(t, (m1[11] - m0[11]));
+    dst->t.x = m0->t.x + FX_MUL(t, (m1->t.x - m0->t.x));
+    dst->t.y = m0->t.y + FX_MUL(t, (m1->t.y - m0->t.y));
+    dst->t.z = m0->t.z + FX_MUL(t, (m1->t.z - m0->t.z));
 }

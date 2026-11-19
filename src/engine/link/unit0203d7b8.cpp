@@ -27,6 +27,11 @@
 #include "nitro/os/interrupt.h"
 #include "WmWork.h"
 
+/* NitroSDK's FS_IsBusy (fs_file.h). */
+static inline int FS_IsBusy(const FSFile *p_file) {
+    return (p_file->stat & FS_FILE_STATUS_BUSY) != 0;
+}
+
 /* The link module and the wireless layer under it: the input record each
    console samples every frame (data_020a1040), the four players' copies of
    it (data_020a1154), the link's status and error bits (data_020a0f1c) and
@@ -442,7 +447,7 @@ void WFSi_LoadTables(void) {
     sl += sizeof(u32);
     i = 0;
     do {
-        sizes[i] = (int)((ptrs[i]->length + 0x1f) & ~0x1f);
+        sizes[i] = (ptrs[i]->length + 0x1f) & ~0x1f;
         sl += sizes[i] + 4;
         i++;
     } while (i < 4);
@@ -462,14 +467,14 @@ void WFSi_LoadTables(void) {
 
         do {
             const CARDRomRegion *p = ptrs[j];
-            int origSize = (int)p->length;
+            int origSize = p->length;
             int data0;
             int end;
 
             roundedSize = sizes[j];
             *(int *)buf = origSize;
             buf += 4;
-            data0 = (int)p->offset;
+            data0 = p->offset;
             end = roundedSize + data0;
             FS_OpenFileDirect(&file, sb, data0, end, -1);
             FS_ReadFile(&file, buf, roundedSize);
@@ -480,7 +485,7 @@ void WFSi_LoadTables(void) {
 
         {
             Entry *entries = (Entry *)((char *)fp + 8);
-            int count = (int)(ptrs[0]->length >> 3);
+            int count = ptrs[0]->length >> 3;
             u32 max = sl;
             int k;
             k = 0;
@@ -959,13 +964,11 @@ void WFSi_SetMPData(void) {
             r = WBT_MpParentSendHook(sub, a);
         else
             r = WBT_MpChildSendHook(sub, a);
-        work->is_running = (WM_SetMPDataToPort(WFSi_OnSetMPDataDone, (u16 *)sub, r, 0xffff,
-                                               work->port, WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING)
-                               ? 1
-                               : 0;
+        work->is_running = WM_SetMPDataToPort(WFSi_OnSetMPDataDone, (u16 *)sub, r, 0xffff,
+                                              work->port, WM_PRIORITY_LOW) == WM_ERRCODE_OPERATING;
     }
     /* re-read through the symbol: `work->is_running` changes the .text bytes */
-    work->send_idle = (data_020a1fc0.is_running == 0) ? 1 : 0;
+    work->send_idle = data_020a1fc0.is_running == 0;
 }
 
 /* The send callback WFSi_SetMPData hands the port send: unless the file
@@ -1181,9 +1184,8 @@ void WFSi_OnParentSystemCallback(void *arg) {
         unk18v = n->block_seq_no;
 
         if (p->busy_page != 3) {
-            /* FS_IsBusy: the page read is still in flight */
-            int t = (p->file.stat & FS_FILE_STATUS_BUSY) ? 1 : 0;
-            if (t == 0)
+            /* the page read is no longer in flight */
+            if (!FS_IsBusy(&p->file))
                 p->busy_page = 3;
         }
 
@@ -2923,7 +2925,7 @@ void func_0203e20c(void) {
                     }
                     j = (u8)(j + 1);
                 } while ((u32)j <= 15);
-                result = (cnt != 0) ? 1 : 0;
+                result = cnt != 0;
             }
             data_020a0f50 += 1;
         }
@@ -2963,7 +2965,7 @@ void func_0203e20c(void) {
                     }
                     m = (u8)(m + 1);
                 } while ((u32)m <= 15);
-                result = (cnt != 0) ? 1 : 0;
+                result = cnt != 0;
             } while (result == 0);
         }
         data_020a0f50 += 1;
@@ -3139,12 +3141,12 @@ typedef struct {
    frames for the first and 0x258 for the rest; a wait that runs out flags
    data_020a0f1c bit 0, shuts the link down and parks the thread. Otherwise
    this console fills in its own profile from the owner settings. */
-void func_0203db64(void *arg0, void *arg1) {
+void func_0203db64(void *parentParam, void *gameRegistry) {
     OwnerInfo buf;
 
     data_020a0ef0 = 0;
-    MI_CpuCopy8(arg0, &data_020a1064, sizeof(WMParentParam));
-    MI_CpuCopy8(arg1, &data_020a0fec, sizeof(MBGameRegistry));
+    MI_CpuCopy8(parentParam, &data_020a1064, sizeof(WMParentParam));
+    MI_CpuCopy8(gameRegistry, &data_020a0fec, sizeof(MBGameRegistry));
     MI_CpuClear8(&data_020a1040, 0x24);
     MI_CpuClear8(data_020a0fb8, 0x18);
     MI_CpuClear8(data_020a0fa0, 0x18);

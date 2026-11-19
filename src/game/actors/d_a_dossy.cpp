@@ -248,8 +248,8 @@ int daDossy_c::InitResources()
 }
 
 int daDossyCap_c::func_ov065_02119210() {
-    int flags = this->mCapIcon.mFlags << 30;
-    return ((unsigned)flags >> 31) != 0;
+    u32 flags = this->mCapIcon.mFlags << 30;
+    return (flags >> 31) != 0;
 }
 
 int daDossyCap_c::Behavior()
@@ -376,9 +376,9 @@ int daDossy_c::CleanupResources()
 void daDossy_c::func_ov065_02118cc4()
 {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 void daDossyCap_c::func_ov065_02118c4c() {
@@ -421,9 +421,9 @@ void daDossy_c::func_ov065_02118838() {
         data_020a0e68 = base;
         MTX_Concat43(&mAnmModel.data.transforms[data_ov065_0211c078[i]], &data_020a0e68,
                      &data_020a0e68);
-        v.x = data_020a0e68.m[9];
-        v.y = data_020a0e68.m[10];
-        v.z = data_020a0e68.m[11];
+        v.x = data_020a0e68.t.x;
+        v.y = data_020a0e68.t.y;
+        v.z = data_020a0e68.t.z;
         VEC_Subtract(&v, &mPos, &v);
         Vec3_LslInPlace(&v, 3);
         VEC_Add(&v, &mPos, &v);
@@ -575,12 +575,15 @@ void daDossy_c::func_ov065_021182e4()
     }
 }
 
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
 int daDossy_c::func_ov065_02118248()
 {
     int i;
 
-    int hidden = (int)((mFlags & 8) != 0);
-    if (hidden != 0) {
+    if (IsOffScreen(this)) {
         for (i = 0; i < 7; i++) {
             if (mPlatforms[i].mClsn.IsEnabled())
                 mPlatforms[i].mClsn.Disable();
@@ -594,6 +597,10 @@ int daDossy_c::func_ov065_02118248()
     return 0;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 int daDossyCap_c::func_ov065_021180d4() {
     daPly_c *player;
     u32 id;
@@ -604,9 +611,7 @@ int daDossyCap_c::func_ov065_021180d4() {
     if (id != 0 && (this->mdCcAc_c.hitFlags & 0x400000)) {
         player = (daPly_c *)dActor_c::FindWithID(id);
         if (player != 0) {
-            int isPlayer = (int)(player->actorID == 0xbf);
-            if (isPlayer != 0 && player->mIsAirborne == 0
-                && player->Unk_020c9e5c(5) == 0) {
+            if (IsPlayerActor(player) && player->mIsAirborne == 0 && player->Unk_020c9e5c(5) == 0) {
                 Vector3 *playerPos = &player->mPos;
                 Vector3 pos = *playerPos;
                 int idx = (u16)player->mAngle.y >> 4;

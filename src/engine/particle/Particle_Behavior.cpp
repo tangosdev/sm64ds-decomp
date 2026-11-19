@@ -7,7 +7,7 @@
  * particle per frame. Gravity, random and magnet add into the particle's
  * acceleration; spin, collision plane and convergence act on the particle
  * itself. The span is bounded on both sides by C free functions:
- * SPLAnim_Scale below and func_0204d8e8 above. mwccarm emits .text in
+ * SPLAnim_Scale below and SPLList_Erase above. mwccarm emits .text in
  * reverse source order, so the definitions below run ROM-descending.
  *
  * Each body is the function pret's pokeplatinum decomp of SPL
@@ -35,10 +35,10 @@ void MTX_RotZ33_(Matrix3x3 *matrix, int sin, int cos);
 }
 
 /* SPL's random draw (pret's pokeplatinum/lib/spl/include/spl_random.h);
- * data_020a4d30 is its state, read by the SPLAnim callbacks too. */
+ * gSPLRandomState is its state, read by the SPLAnim callbacks too. */
 static inline u32 SPLRandom_Next(void) {
-    data_020a4d30 = data_020a4d30 * 0x5eedf715 + 0x1b0cb173;
-    return data_020a4d30;
+    gSPLRandomState = gSPLRandomState * 0x5eedf715 + 0x1b0cb173;
+    return gSPLRandomState;
 }
 
 static inline u32 SPLRandom_U32(u32 bits) {

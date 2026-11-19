@@ -322,19 +322,22 @@ void daPkn_c::StateSleep()
     CheckHits();
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* -------------------------------------------------------------------------- */
 void daPkn_c::StateBite()
 {
     dActor_c *actor;
-    u16 type;
-    int isPlayer;
-    int isNine;
     u32 flags;
     Vector3 pos1;
     Vector3 pos2;
 
-    /* isPlayer and isNine hold the compares as ints: testing
-       `type == 0xbf` directly changes the code. */
     mClsnEnabled = 1;
 
     if (mAnmModel.WillHitFrame(0x10) || mAnmModel.WillHitFrame(0x20) ||
@@ -362,9 +365,7 @@ void daPkn_c::StateBite()
     if (mdCcAc_c1.otherOwner != 0) {
         actor = dActor_c::FindWithID(mdCcAc_c1.otherOwner);
         if (actor != 0) {
-            type = actor->actorID;
-            isPlayer = (type == 0xbf);
-            if (isPlayer != 0) {
+            if (IsPlayerActor(actor)) {
                 flags = mdCcAc_c1.hitFlags;
                 if (flags & 0x10) {
                     ((daPly_c *)actor)->IncMegaKillCount();
@@ -389,8 +390,7 @@ void daPkn_c::StateBite()
                 return;
             }
             if ((mdCcAc_c1.hitFlags & 0x2000) != 0) {
-                isNine = (type == 9);
-                if (isNine != 0) {
+                if (IsActorID(actor, 9)) {
                     Die();
                     return;
                 }
@@ -402,9 +402,7 @@ void daPkn_c::StateBite()
     if (mdCcAc_c2.otherOwner != 0) {
         actor = dActor_c::FindWithID(mdCcAc_c2.otherOwner);
         if (actor != 0) {
-            type = actor->actorID;
-            isPlayer = (type == 0xbf);
-            if (isPlayer != 0) {
+            if (IsPlayerActor(actor)) {
                 if ((mdCcAc_c1.hitFlags & 0x10) != 0) {
                     ((daPly_c *)actor)->IncMegaKillCount();
                     func_02012694(0x1d, &mCamSpacePos);
@@ -421,8 +419,7 @@ void daPkn_c::StateBite()
                 return;
             }
             if ((mdCcAc_c2.hitFlags & 0x2000) != 0) {
-                isNine = (type == 9);
-                if (isNine != 0) {
+                if (IsActorID(actor, 9)) {
                     Die();
                     return;
                 }
@@ -436,9 +433,7 @@ void daPkn_c::StateBite()
     actor = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
     if (actor == 0)
         return;
-    type = actor->actorID;
-    isPlayer = (type == 0xbf);
-    if (isPlayer == 0)
+    if (!IsPlayerActor(actor))
         return;
     if ((mdCcAcPos_c.hitFlags & 0x10) != 0) {
         ((daPly_c *)actor)->IncMegaKillCount();
@@ -608,22 +603,18 @@ int daPkn_c::PlayerMovingFast()
 
 /* -------------------------------------------------------------------------- */
 /* The collision check the idle states share: returns 1 when a hit killed
-   the plant. t and u hold the actor-type compares as ints; testing
-   `type == 0xbf` directly changes the code. */
+   the plant. */
 int daPkn_c::CheckHits()
 {
     daPly_c *actor;
     u32 flags;
-    u16 type;
     u32 id;
 
     id = mdCcAc_c1.otherOwner;
     if (id != 0) {
         actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor != 0) {
-            type = actor->actorID;
-            int t = (type == 0xbf);
-            if (t != 0) {
+            if (IsPlayerActor(actor)) {
                 flags = mdCcAc_c1.hitFlags & 0x26ff0;
                 if (flags != 0) {
                     if (flags & 0x10) {
@@ -651,8 +642,7 @@ int daPkn_c::CheckHits()
                 }
                 return 1;
             } else if (mdCcAc_c1.hitFlags & 0x2000) {
-                int u = (type == 9);
-                if (u != 0) {
+                if (IsActorID(actor, 9)) {
                     Die();
                     return 1;
                 }
@@ -664,9 +654,7 @@ int daPkn_c::CheckHits()
     if (id != 0) {
         actor = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (actor != 0) {
-            type = actor->actorID;
-            int t = (type == 0xbf);
-            if (t != 0) {
+            if (IsPlayerActor(actor)) {
                 flags = mdCcAc_c2.hitFlags & 0x26ff0;
                 if (flags != 0) {
                     if (flags & 0x10) {
@@ -687,8 +675,7 @@ int daPkn_c::CheckHits()
                     return 1;
                 }
             } else if (mdCcAc_c2.hitFlags & 0x2000) {
-                int u = (type == 9);
-                if (u != 0) {
+                if (IsActorID(actor, 9)) {
                     Die();
                     return 1;
                 }
@@ -730,9 +717,9 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.z = 0;
     data_020a0e68 = saved;
     MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    mHeadClsnOffset.x = data_020a0e68.m[9];
-    mHeadClsnOffset.y = data_020a0e68.m[10];
-    mHeadClsnOffset.z = data_020a0e68.m[11];
+    mHeadClsnOffset.x = data_020a0e68.t.x;
+    mHeadClsnOffset.y = data_020a0e68.t.y;
+    mHeadClsnOffset.z = data_020a0e68.t.z;
     Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
     VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 

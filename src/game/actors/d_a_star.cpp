@@ -135,6 +135,16 @@ extern "C" {
 extern unsigned char gGameMode;
 }
 
+/* gGameMode is 1 in VS mode: PrepareVsMode stores it. These int-returning
+   predicates are what make the ROM materialize 0/1 before testing it. */
+static inline int IsVsMode(void) {
+    return gGameMode == 1;
+}
+
+static inline int IsSilverStar(dActor_c *actor) {
+    return actor->actorID == ACTOR_SILVER_STAR;
+}
+
 extern void func_02035860(dBgCh_Actr *o, const Vector3 *src);
 extern "C" {
 extern dCamera_c *gCamera;
@@ -273,7 +283,7 @@ s32 daStar_c::InitResources()
     mStarFlags = 0;
     mSoundObjMode = 0;
     mCamSeq = 0xffff;
-    mSavedAreaId = (u8)mAreaId;
+    mSavedAreaId = mAreaId;
     mMarkerSlot = -1;
     mScale.x = FX32_ONE;
     mScale.y = FX32_ONE;
@@ -294,7 +304,7 @@ s32 daStar_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov002_02110964);
     dExtFrameCtrl_c::LoadFile(data_ov002_02110934);
 
-    b = (s32)(actorID == ACTOR_STAR);
+    b = (actorID == ACTOR_STAR);
     if (b != 0) {
         if (mAnmModel1.SetFile((BMD_File *)data_ov002_0211094c.filePtr, 1, 1) == 0 ||
             mAnmModel2.SetFile((BMD_File *)data_ov002_0211095c.filePtr, 1, 0x18) == 0)
@@ -316,9 +326,9 @@ s32 daStar_c::InitResources()
         InitKind9();
         return ret;
     }
-    mKind = (s32)((p >> 4) & 0xf);
+    mKind = (p >> 4) & 0xf;
 
-    b = (s32)(actorID == ACTOR_STAR);
+    b = (actorID == ACTOR_STAR);
     if (b != 0) {
         if (gCurrentStarId == (param1 & 0xf) || SublevelToLevel(gCurrentSublevel) > 0xe)
             mMarkerType = 2;
@@ -351,7 +361,7 @@ s32 daStar_c::InitResources()
     if (kind == KIND_0 || (u32)(kind - KIND_5) <= 2) {
         mState = STATE_IDLE;
         if (mKind != KIND_6) {
-            b = (s32)(actorID == ACTOR_SILVER_STAR);
+            b = (actorID == ACTOR_SILVER_STAR);
             if (b != 0) {
                 mVertAccel = -0x2000;
                 mTerminalVelocity = -0x28000;
@@ -405,7 +415,7 @@ s32 daStar_c::InitResources()
     if (!mBits.visible)
         mdCc_c.flags |= 1;
 
-    if (mStarID < 8 && mKind != KIND_5 && mKind != KIND_3 && (s32)(gGameMode == 1) == 0 &&
+    if (mStarID < 8 && mKind != KIND_5 && mKind != KIND_3 && !IsVsMode() &&
         IsStarCollectedInCurLevel(mStarID) != 0) {
         if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             MarkForDestruction();
@@ -421,7 +431,7 @@ s32 daStar_c::InitResources()
         Event::ClearBit(0x1e);
         Event::ClearBit(EVENT_COLLECTING_STAR);
         if (mKind != KIND_3) {
-            if ((s32)(gGameMode == 1) != 0 || (s32)(actorID == ACTOR_SILVER_STAR) != 0) {
+            if (IsVsMode() || IsSilverStar(this)) {
                 sp = (char *)dActor_c::Spawn(ACTOR_STAR_MARKER, 0x50, mPos, 0, mSavedAreaId, -1);
                 if (sp != 0) {
                     mMarkerID = ((dActor_c *)sp)->uniqueID;
@@ -562,7 +572,7 @@ int daStarBase_c::InitResources()
 
     if (gGameMode == 1)
         r3 = 1;
-    if (r3 == 0 && SublevelToLevel((s8)gCurrentSublevel) == 0x1d &&
+    if (r3 == 0 && SublevelToLevel(gCurrentSublevel) == 0x1d &&
         IsStarCollectedInCurLevel(mStarID) != 0) {
         MarkForDestruction();
         return 0;
@@ -666,15 +676,15 @@ int daStarBase_c::Behavior()
     } else {
         mAngle.y += 0x400;
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
-        mModel.mat4x3.m[9] = mPos.x >> 3;
-        mModel.mat4x3.m[10] = mPos.y >> 3;
-        mModel.mat4x3.m[11] = mPos.z >> 3;
+        mModel.mat4x3.t.x = mPos.x >> 3;
+        mModel.mat4x3.t.y = mPos.y >> 3;
+        mModel.mat4x3.t.z = mPos.z >> 3;
     }
     if (mBits.visible) {
         mShadowMtx = IDENTITY_MATRIX4X3;
-        mShadowMtx.m[9] = mPos.x >> 3;
-        mShadowMtx.m[10] = mPos.y >> 3;
-        mShadowMtx.m[11] = mPos.z >> 3;
+        mShadowMtx.t.x = mPos.x >> 3;
+        mShadowMtx.t.y = mPos.y >> 3;
+        mShadowMtx.t.z = mPos.z >> 3;
         {
             int d = mPos.y - mGroundY;
             int rad = 0xa0000;
@@ -729,13 +739,16 @@ int daStarBase_c::Render()
     return 1;
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* Gives up the map marker slot (kind 8 never had one), unloads the silver star
  * and number models when InitResources loaded them (silver star, or kind 6),
  * and releases the four animation files it loaded. */
 int daStar_c::CleanupResources()
 {
-    int b = (actorID == ACTOR_STAR);
-    if (b) {
+    if (IsActorID(this, ACTOR_STAR)) {
         int v = mKind;
         if (v != 8) {
             if (v == 6)
@@ -871,18 +884,10 @@ void daStar_c::StateRise() {
             v.y = yv;
             v.z = pp->z;
             v.y = yv + 0xc8000;
-            /* By-value staging: the ROM caller copies v to its outgoing area
-             * and passes the copy's address (r1 = sp+0xc at the bl). The TU
-             * cannot spell the shard's by-value declaration (it collides with
-             * the pointer form the other callers need), and copying the real
-             * Vector3 would emit its declared-destructor cleanup, so the copy
-             * is staged word-wise into plain ints -- proven byte-identical
-             * in isolation. */
-            int w[3];
-            w[0] = v.x;
-            w[1] = v.y;
-            w[2] = v.z;
-            AimArcTo((Vector3 *)w, 0x190000);
+            /* The ROM copies v word by word into a second vector and passes
+             * that one's address (r1 = sp+0xc at the bl). */
+            Vector3 w = v;
+            AimArcTo(&w, 0x190000);
             mState = STATE_FLY_TO_MARKER;
         }
     }
@@ -903,11 +908,10 @@ void daStar_c::StateFlyToMarker() {
     if (o == 0) { MarkForDestruction(); return; }
     if (Vec3_HorzDist(&mPos, &o->mPos) < mHorzSpeed) {
         int *src = &o->mPos.x;
-        int *yp = &mPos.y;
         mPos.x = src[0];
         mPos.y = src[1];
         mPos.z = src[2];
-        *yp += 0xc8000;
+        mPos.y += 0xc8000;
         mHorzSpeed = 0;
         mSpeed.y = 0x18000;
         if (gCurrentSublevel == 0xb && mStarID == 3)
@@ -1082,13 +1086,12 @@ void daStar_c::StateTouched() {
  * returns it: for the silver star gNumStageStars[player number] + 0x19, in a VS
  * match 0x4f, otherwise 0x22. */
 int daStar_c::PickCollectSoundID() {
-    int b = (actorID == ACTOR_SILVER_STAR);
-    if (b != 0) {
+    if (IsActorID(this, ACTOR_SILVER_STAR)) {
         unsigned char idx = mPlayer->mPlayerNo;
         mSoundObjSoundID = gNumStageStars[idx] + 0x19;
     } else {
-        int b2 = (gGameMode == 1);
-        if (b2 != 0) mSoundObjSoundID = 0x4f;
+        if (IsVsMode())
+            mSoundObjSoundID = 0x4f;
         else mSoundObjSoundID = 0x22;
     }
     return mSoundObjSoundID;
@@ -1128,8 +1131,6 @@ void daStar_c::StateCollectBegin() {
             mSoundObjMode = 2;
         }
 
-        int *posY = &mPos.y;
-
         mState = STATE_COLLECT_HOLD;
         mBits.collectedModel = 0;
         mBits.visible = 1;
@@ -1137,6 +1138,8 @@ void daStar_c::StateCollectBegin() {
 
         {
             Vector3 *src = &mPlayer->mPos;
+            /* Kept (#821 r83): mPos = mHomePos, or storing through cache, moves
+               the bytes. */
             Vector3 *cache = &mHomePos;
             mHomePos.x = src->x;
             mHomePos.y = src->y;
@@ -1144,7 +1147,7 @@ void daStar_c::StateCollectBegin() {
             mPos.x = cache->x;
             mPos.y = cache->y;
             mPos.z = cache->z;
-            *posY += 0x1e000;
+            mPos.y += 0x1e000;
         }
 
         mPrevAngle.y = mPlayer->mAngle.y;
@@ -1178,15 +1181,13 @@ void daStar_c::StateCollectBegin() {
         }
     } else {
         if (func_ov002_020ca0f4(common) != 0) {
-            int *posY2 = &mPos.y;
             int *s = &mPlayer->mPos.x;
             mPos.x = s[0];
             mPos.y = s[1];
             mPos.z = s[2];
-            *posY2 += 0xc8000;
+            mPos.y += 0xc8000;
         } else {
-            int ok = (gGameMode == 1);
-            if (ok) {
+            if (IsVsMode()) {
                 unsigned char idx = common->mPlayerNo;
                 if (gNumStageStars[idx] != 0) {
                     GiveVsStars(idx, -1);
@@ -1269,11 +1270,11 @@ void daStar_c::StateCollectTalk() {
     }
     r2v = gGameMode == 1;
     if (r2v != false || (b2 = (actorID == ACTOR_SILVER_STAR)) != 0) {
-        u32 tmp;
+        u32 isSilver;
         u16 mode;
-        tmp = actorID;
-        tmp = tmp == ACTOR_SILVER_STAR;
-        if (tmp != false)
+        isSilver = actorID;
+        isSilver = isSilver == ACTOR_SILVER_STAR;
+        if (isSilver != false)
             st = 1;
         else
             st = 0;
@@ -1297,6 +1298,11 @@ void daStar_c::StateCollectTalk() {
             }
         }
     } else {
+        /* Kept (#821 r94): the ROM places the save prompt once, after the kind-9
+         * test, and the star-id test jumps back into it. `else if (kind 9 ||
+         * id 0 || func_ov002_020e9630())` passing `mKind == KIND_9 ? 0x11 : 1`
+         * is 0x340 against 0x354; the prompt as an inline helper called from
+         * two early-return ifs is 0x42c (mwcc does not merge the copies). */
         if (mKind == KIND_9) {
             st2 = 0x11;
 LA:
@@ -1470,14 +1476,13 @@ void daStar_c::StateWaitMarker() {
     mdCc_c.flags &= ~1;
 
     {
-        int r0 = (gGameMode == 1) ? 1 : 0;
-        daPly_c *r3 = static_cast<daPly_c *>(actor->mHitActor);
-        if (r0 == 0) return;
-        if (r3 == 0) return;
+        daPly_c *player = static_cast<daPly_c *>(actor->mHitActor);
+        if (!IsVsMode() || player == 0)
+            return;
 
         mBits.noPickup = 1;
         mHorzSpeed = 0xc000;
-        mPrevAngle.y = GetAngleToCamera(r3->mPlayerNo) + 0x8000;
+        mPrevAngle.y = GetAngleToCamera(player->mPlayerNo) + 0x8000;
     }
 }
 
@@ -1515,15 +1520,14 @@ void daStar_c::StateSpinAndEnd() {
             GiveVsStars(mPlayer->mPlayerNo, 1);
             Vector3 center = this->func_ov002_020e8244();
             p = (char *)mPlayer;
-            SpawnNumber(center, (unsigned int)gNumStageStars[mPlayer->mPlayerNo], 1, 0,
-                        (dActor_c *)p);
+            SpawnNumber(center, gNumStageStars[mPlayer->mPlayerNo], 1, 0, (dActor_c *)p);
             UntrackStar(mMarkerSlot);
         }
         mBits.visible = 0;
         if (mSeqTimer < 100)
             return;
         StopCollectSoundObj();
-        if ((int)(gGameMode == 1) != 0) {
+        if (IsVsMode()) {
             MarkForDestruction();
         } else {
             KillAndTrackInDeathTable();
@@ -1588,7 +1592,7 @@ void daStar_c::FindMarker() {
  * frames (mHorzSpeed), sets the terminal speed to -50.0 and turns the star
  * toward p. */
 void daStar_c::AimArcTo(Vector3 *p, int n) {
-    int dy = ((int *)p)[1] - mPos.y;
+    int dy = p->y - mPos.y;
     if (dy < 0)
         dy = -dy;
     {
@@ -1603,7 +1607,7 @@ void daStar_c::AimArcTo(Vector3 *p, int n) {
         n = 0x32 - dy;
         mVertAccel = left / den;
     }
-    if (((int *)p)[1] >= mPos.y) {
+    if (p->y >= mPos.y) {
         int v = mVertAccel;
         if (v < 0)
             v = -v;
@@ -1711,8 +1715,7 @@ int daStar_c::Collect(void *p) {
     mPlayer = (daPly_c *)p;
 
     if (((daPly_c *)p)->IsOnShell() != 0) {
-        int b = (actorID == ACTOR_SILVER_STAR);
-        if (b) {
+        if (IsActorID(this, ACTOR_SILVER_STAR)) {
             mState = STATE_SPIN_AND_END;
             mBits.collectedModel = 0;
             mSeqTimer = 0;
@@ -1752,8 +1755,7 @@ int daStar_c::Collect(void *p) {
 
     if (sb != 0) {
         {
-            int b1 = (gGameMode == 1);
-            if (!b1) {
+            if (!IsVsMode()) {
                 Event::SetBit(0x1e);
             } else {
                 GiveVsStars(((daPly_c *)p)->mPlayerNo, 1);
@@ -1764,9 +1766,8 @@ int daStar_c::Collect(void *p) {
         }
 
         {
-            int b2 = (gGameMode == 1);
             int b3;
-            if (!b2 && !(b3 = (actorID == ACTOR_SILVER_STAR)) && mStarID < 8 &&
+            if (!IsVsMode() && !(b3 = (actorID == ACTOR_SILVER_STAR)) && mStarID < 8 &&
                 mHomeState != STATE_WAIT_MARKER) {
                 gCollectedStarId = mStarID;
                 if (IsStarCollectedInCurLevel(mStarID) != 0) {
@@ -1780,7 +1781,7 @@ int daStar_c::Collect(void *p) {
                     if (mBits.coinReward != 0 && found != 0) {
                         ((dActor_c *)found)->TrackInDeathTable();
                     }
-                    lvl = SublevelToLevel((signed char)gCurrentSublevel);
+                    lvl = SublevelToLevel(gCurrentSublevel);
                     if (lvl <= 0xe) {
                         int rec = SaveData::GetCoinRecord(lvl);
                         if (rec < NumCoins()) {
@@ -1799,8 +1800,7 @@ int daStar_c::Collect(void *p) {
         mState = STATE_COLLECT_BEGIN;
         mPlayer = (daPly_c *)p;
         {
-            int b4 = (gGameMode == 1);
-            if (!b4) {
+            if (!IsVsMode()) {
                 mPlayer->mFlags |= CUTSCENE_FLAG;
                 mFlags |= CUTSCENE_FLAG;
                 gNextActorUpdateMask |= CUTSCENE_FLAG;
@@ -1809,8 +1809,7 @@ int daStar_c::Collect(void *p) {
         mdCc_c.flags |= 1;
         mdCc_c.Clear();
         {
-            int b5 = (actorID == ACTOR_STAR);
-            if (b5 && r4 != 0) {
+            if (IsActorID(this, ACTOR_STAR) && r4 != 0) {
                 ((daPly_c *)p)->Heal(0x880);
             }
         }
@@ -1894,14 +1893,14 @@ void daStar_c::AddStarMarker()
     s8 i;
     if (mMarkerSlot >= 0) return;
     for (i = 0; i < 12; i++) {
-        if (STAR_MARKERS[(int)i] != 0)
+        if (STAR_MARKERS[i] != 0)
             continue;
 
         if (mMarkerType == 0) {
             if (mBits.collectedModel) {
-                SetStarMarker((int)i, this, 3);
+                SetStarMarker(i, this, 3);
             } else {
-                SetStarMarker((int)i, this, 2);
+                SetStarMarker(i, this, 2);
             }
         } else {
             if (mMarkerType == 2) {
@@ -1910,7 +1909,7 @@ void daStar_c::AddStarMarker()
                     (((f43c = mKind) == 5 || f43c == 7) && IsStarCollectedInCurLevel(mStarID) != 0))
                     mMarkerType = 3;
             }
-            SetStarMarker((int)i, this, mMarkerType);
+            SetStarMarker(i, this, mMarkerType);
         }
 
         mMarkerSlot = i;
@@ -2060,10 +2059,7 @@ void daStar_c::OnBounceLand() {
             if (mWithMeshClsn.GetFloorResult()->surface.clps.GetFloorClass() != 5)
                 return;
         }
-        {
-            short *a = &mPrevAngle.y;
-            *a = *a + 0x8000;
-        }
+        mPrevAngle.y += 0x8000;
     } else {
         dActor_c *q = FarthestPlayer();
         if (q != 0) {
@@ -2141,7 +2137,7 @@ void daStar_c::FinishCollection() {
     StopCollectSoundObj();
     mBits.visible = 0;
     UntrackStar(mMarkerSlot);
-    if ((int)(gGameMode == 1) != 0) {
+    if (IsVsMode()) {
         MarkForDestruction();
     } else {
         KillAndTrackInDeathTable();
@@ -2176,14 +2172,14 @@ void daStar_c::UpdateModelMatrix() {
         t = *ang + 0xc00;
         *ang = t;
         Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mAngle.y);
-        mAnmModel1.mat4x3.m[9] = mPos.x >> 3;
-        mAnmModel1.mat4x3.m[10] = mPos.y >> 3;
-        mAnmModel1.mat4x3.m[11] = mPos.z >> 3;
+        mAnmModel1.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel1.mat4x3.t.y = mPos.y >> 3;
+        mAnmModel1.mat4x3.t.z = mPos.z >> 3;
     } else {
         Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mPrevAngle.y);
-        mAnmModel1.mat4x3.m[9] = mPos.x >> 3;
-        mAnmModel1.mat4x3.m[10] = (mPos.y + 0x32000) >> 3;
-        mAnmModel1.mat4x3.m[11] = mPos.z >> 3;
+        mAnmModel1.mat4x3.t.x = mPos.x >> 3;
+        mAnmModel1.mat4x3.t.y = (mPos.y + 0x32000) >> 3;
+        mAnmModel1.mat4x3.t.z = mPos.z >> 3;
     }
 
     mAnmModel2.mat4x3 = mAnmModel1.mat4x3;
@@ -2229,9 +2225,9 @@ void daStar_c::DrawShadow() {
 
     mShadowMtx = IDENTITY_MATRIX4X3;
 
-    mShadowMtx.m[9] = mPos.x >> 3;
-    mShadowMtx.m[10] = mPos.y >> 3;
-    mShadowMtx.m[11] = mPos.z >> 3;
+    mShadowMtx.t.x = mPos.x >> 3;
+    mShadowMtx.t.y = mPos.y >> 3;
+    mShadowMtx.t.z = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, mShadowMtx, r8, t, 0xf);
 }
@@ -2246,7 +2242,7 @@ void daStar_c::DrawShadow() {
 
 Vector3 daStar_c::func_ov002_020e8244() {
     Vector3 result;
-    void *out = &result;
+    Vector3 *out = &result;
     daStar_c *b = this;
     Matrix4x3 local;
     Vector3 zero;
@@ -2254,18 +2250,18 @@ Vector3 daStar_c::func_ov002_020e8244() {
     zero.y = 0;
     zero.z = 0;
     if (func_0203d024(&b->mCenter, &zero) != 0) {
-        ((int *)out)[0] = b->mCenter.x;
-        ((int *)out)[1] = b->mCenter.y;
-        ((int *)out)[2] = b->mCenter.z;
+        out->x = b->mCenter.x;
+        out->y = b->mCenter.y;
+        out->z = b->mCenter.z;
         return result;
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPos.x, b->mPos.y, b->mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngle.y);
     local = *b->mAnmModel1.data.transforms;
     MTX_Concat43(&local, &data_020a0e68, &data_020a0e68);
-    b->mCenter.x = data_020a0e68.m[9];
-    b->mCenter.y = data_020a0e68.m[10];
-    b->mCenter.z = data_020a0e68.m[11];
+    b->mCenter.x = data_020a0e68.t.x;
+    b->mCenter.y = data_020a0e68.t.y;
+    b->mCenter.z = data_020a0e68.t.z;
     VEC_Subtract(&b->mCenter, &b->mPos, &b->mCenter);
     Vec3_LslInPlace(&b->mCenter, 3);
     VEC_Add(&b->mCenter, &b->mPos, &b->mCenter);
@@ -2273,9 +2269,9 @@ Vector3 daStar_c::func_ov002_020e8244() {
         int *p = &b->mCenter.y;
         *p = b->mAnmModel1.data.bones->scaleX * 0xd + *p;
     }
-    ((int *)out)[0] = b->mCenter.x;
-    ((int *)out)[1] = b->mCenter.y;
-    ((int *)out)[2] = b->mCenter.z;
+    out->x = b->mCenter.x;
+    out->y = b->mCenter.y;
+    out->z = b->mCenter.z;
     return result;
 }
 
@@ -2314,10 +2310,8 @@ void daStar_c::SpawnCollectEffects() {
     vc.y = FX_MUL(vc.y, mScale.y);
     vc.z = FX_MUL(vc.z, mScale.z);
     VEC_Add(&vc, &mPos, &vc);
-    mParticle[0] =
-        (u32)Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
-    mParticle[1] =
-        (u32)Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
+    mParticle[0] = Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
+    mParticle[1] = Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2331,11 +2325,10 @@ void daStar_c::SpawnPoseEffects() {
 
     root = mAnmModel1.data.bones;
 
-    if (!mAnmModel1.Finished() && (u32)(((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
+    if (!mAnmModel1.Finished() && (((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
         root->scaleX != 0) {
         struct Vector3 v1 = this->func_ov002_020e8244();
-        mParticle[0] =
-            (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
+        mParticle[0] = Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
         return;
     }
 
@@ -2358,8 +2351,7 @@ void daStar_c::UpdateSparkleEffect() {
         mParticle[2] = 0;
     Vector3 pos = mPos;
     pos.y += 0xd000;
-    mParticle[2] =
-        (u32)Particle::System::New(mParticle[2], kPtclStarSparkle, pos.x, pos.y, pos.z, 0, 0);
+    mParticle[2] = Particle::System::New(mParticle[2], kPtclStarSparkle, pos.x, pos.y, pos.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2367,11 +2359,10 @@ void daStar_c::UpdateSparkleEffect() {
 /* -------------------------------------------------------------------------- */
 /* Silver star only: keeps trail effect 0x10e (mParticle[3]) at the centre. */
 void daStar_c::UpdateSilverTrailEffect() {
-    int b = (actorID == ACTOR_SILVER_STAR);
-    if (b == 0) return;
+    if (!IsActorID(this, ACTOR_SILVER_STAR))
+        return;
     Vector3 v = this->func_ov002_020e8244();
-    mParticle[3] =
-        (int)Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
+    mParticle[3] = Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2500,9 +2491,9 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
     dist = Vec3_Dist(&vec[0], &mCamPos);
 
     unsigned short mode = mCamSeq;
-    flag = (((mode == 100 && (dist > 0x3e8000 || dist < 0x1f4000)) ||
-             (mode != 100 && dist > 0x3e8000)) &&
-            IsAreaShowing(mSavedAreaId)) ? 1 : 0;
+    flag = ((mode == 100 && (dist > 0x3e8000 || dist < 0x1f4000)) ||
+            (mode != 100 && dist > 0x3e8000)) &&
+           IsAreaShowing(mSavedAreaId);
 
     while (1) {
         if (r6 >= 0x10)

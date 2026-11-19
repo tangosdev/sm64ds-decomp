@@ -46,56 +46,70 @@ struct System {
         u32 unused : 14;
     };
 
-    /* The manager's free/active list link: func_0204d958/func_0204d9a0
+    /* The manager's free/active list link: SPLList_PopFront/SPLList_PushFront
        maintain it and the update and draw walks follow it. */
     System *next;                /* 0x00 */
     System *previous;            /* 0x04 */
     ParticleList particles;      /* 0x08 */
     ParticleList particles2;     /* 0x10 */
     SystemDefinition *mDefinition; /* 0x18 */
-    /* Bit 0 retires the system once both particle lists are empty, bit 2
-       skips its update (func_0204a730) and bit 3 its draw (func_0204a5c8).
-       Callback virtuals toggle bit 1 while spawning or suppressing
-       particles. */
-    u32 callbackFlags;             /* 0x1c */
+    /* The update walk retires a system with `terminate` set once both
+       particle lists are empty, and skips its update (SPLEmitter_Update) or draw
+       (func_0204a5c8) on `skipUpdate` or `skipDraw`. SPLEmitter_Update emits
+       only while `terminate` and `stopGenerate` are both clear, and the
+       callback virtuals toggle `stopGenerate` while spawning or suppressing
+       particles. The spawn (SPLEmitter_Init) clears the whole word. The
+       layout is pret's SPLEmitterState union
+       (pokeplatinum/lib/spl/include/spl_emitter.h); the bit names are the
+       ones SPLEmitter_Update's view and the update and draw walks already used. */
+    union {
+        u32 callbackFlags; /* 0x1c */
+        struct {
+            u32 terminate : 1;
+            u32 stopGenerate : 1;
+            u32 skipUpdate : 1;
+            u32 skipDraw : 1;
+            u32 : 28;
+        };
+    };
     Vector3 position;              /* 0x20 */
-    /* Added to every particle's offset each frame (func_0204a730); the
-       spawn (func_0204ae2c) clears it. */
+    /* Added to every particle's offset each frame (SPLEmitter_Update); the
+       spawn (SPLEmitter_Init) clears it. */
     Vector3 velocity; /* 0x2c */
-    /* func_0204a730 advances it; the update walk retires the system once it
+    /* SPLEmitter_Update advances it; the update walk retires the system once it
        passes the definition's callbackValue. */
     u16 age; /* 0x38 */
     /* simpleCallback_c copies this value in both directions. */
     s16 callbackValue;             /* 0x3a */
     Vector3_16f direction;         /* 0x3c */
     u8 pad_042[0x02];
-    /* func_0204ae2c copies it from the definition and func_0204c584 scales
+    /* SPLEmitter_Init copies it from the definition and SPLEmitter_EmitParticles scales
        the spawn offset of every emitter shape by it. */
     s32 emitRadius; /* 0x44 */
     /* Descriptive names for callback-owned, body-proven fields. */
     s32 callbackParam;             /* 0x48 */
     s32 callbackVelocity;          /* 0x4c */
     s32 callbackScale;             /* 0x50 */
-    /* func_0204ae2c copies it from the definition; func_0204c584 seeds each
+    /* SPLEmitter_Init copies it from the definition; SPLEmitter_EmitParticles seeds each
        particle's lifetime from it. */
     u16 particleLifetime; /* 0x54 */
     u8 pad_056[0x02];
-    /* func_0204ae2c copies it from the definition and func_0204a730 spawns
+    /* SPLEmitter_Init copies it from the definition and SPLEmitter_Update spawns
        when age % emitInterval == 0. Callers overwrite it: ov007's figure
        trail stores 1..5, fewer the faster the figure moves, and the
        trampoline minigame ramps it. */
     u8 emitInterval; /* 0x58 */
-    /* func_0204ae2c copies it from the definition; func_0204c584 stores it
+    /* SPLEmitter_Init copies it from the definition; SPLEmitter_EmitParticles stores it
        in each new particle's visibility. */
     u8 baseAlpha; /* 0x59 */
     u8 pad_05a[0x02];
     /* Two axes spanning the plane perpendicular to `direction`, rebuilt by
-       func_0204cebc as cross products: basisU = direction x reference,
-       basisV = direction x basisU. func_0204cd5c maps a 2D emitter offset
+       SPLEmitter_ComputeOrthogonalAxes as cross products: basisU = direction x reference,
+       basisV = direction x basisU. SPLUtil_TiltCoordinates maps a 2D emitter offset
        onto that plane through them. */
     Vector3_16f basisU; /* 0x5c */
     Vector3_16f basisV; /* 0x62 */
-    /* func_0204a730 calls it each update when set; func_0204ae2c clears it. */
+    /* SPLEmitter_Update calls it each update when set; SPLEmitter_Init clears it. */
     void (*callback)(void *); /* 0x68 */
     u8 pad_06c[0x08];
     PolygonIDs polygonIDs; /* 0x74 */

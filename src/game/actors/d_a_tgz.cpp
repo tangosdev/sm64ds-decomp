@@ -207,11 +207,11 @@ void daTgz_c::func_ov077_02124eb0() {
     int b;
 
     if (this->FindEgg(this->mdCcAc_c) != 0) {
-        int v[3];
-        v[0] = this->mPos.x;
-        v[1] = this->mPos.y;
-        v[2] = this->mPos.z;
-        this->SpawnCoins(*(const Vector3 *)v, 1, 0x2000, 0);
+        Vector3 v;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
+        this->SpawnCoins(v, 1, 0x2000, 0);
         this->PoofDust();
         func_02012694(0xc4, &this->mCamSpacePos);
         this->MarkForDestruction();
@@ -258,12 +258,20 @@ void daTgz_c::func_ov077_02124eb0() {
         return;
 
     {
-        int v[3];
-        v[0] = this->mPos.x;
-        v[1] = this->mPos.y;
-        v[2] = this->mPos.z;
-        player->Hurt(*(const Vector3 *)v, 2, 0xc000, 1, 0, 1);
+        Vector3 v;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
+        player->Hurt(v, 2, 0xc000, 1, 0, 1);
     }
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsBeingEaten(dActor_c *actor) {
+    return (actor->mFlags & 0x20000) != 0;
 }
 
 /* Hit response during the thrown spin. Mega turns it to face away and
@@ -275,11 +283,9 @@ void daTgz_c::func_ov077_021250a8() {
     daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
     if (player == 0)
         return;
-    int b1 = (player->actorID == 0xbf);
-    if (b1 == 0)
+    if (!IsPlayerActor(player))
         return;
-    int b2 = ((this->mFlags & 0x20000) != 0);
-    if (b2 != 0) {
+    if (IsBeingEaten(this)) {
         this->func_ov077_02125e94(3);
         return;
     }
@@ -327,22 +333,25 @@ void daTgz_c::func_ov077_02125290() {
     else
         m = &this->mAnmModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, this->mAngle.x, this->mAngle.y, this->mAngle.z);
-    m->m[9] = this->mPos.x >> 3;
-    m->m[10] = this->mPos.y >> 3;
-    m->m[11] = this->mPos.z >> 3;
+    m->t.x = this->mPos.x >> 3;
+    m->t.y = this->mPos.y >> 3;
+    m->t.z = this->mPos.z >> 3;
+}
+
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
 }
 
 void daTgz_c::func_ov077_02125304() {
-    int b = ((this->mFlags & 0x40000) != 0);
-    if (b != 0)
+    if (IsInYoshiMouth(this))
         return;
     if (this->mState == 5)
         this->func_ov077_021251d0();
     else
         this->func_ov077_02125290();
-    this->mShadowMatrix.m[9] = this->mPos.x >> 3;
-    this->mShadowMatrix.m[10] = this->mPos.y >> 3;
-    this->mShadowMatrix.m[11] = this->mPos.z >> 3;
+    this->mShadowMatrix.t.x = this->mPos.x >> 3;
+    this->mShadowMatrix.t.y = this->mPos.y >> 3;
+    this->mShadowMatrix.t.z = this->mPos.z >> 3;
     this->DropShadowRadHeight(this->mShadowModel, this->mShadowMatrix, 0x50000, 0x320000, 0xf);
 }
 
@@ -488,9 +497,13 @@ int daTgz_c::func_ov077_021256b4() {
     return 1;
 }
 
+static inline int IsFlagSet(dActor_c *actor, u32 bit) {
+    return (actor->mFlags & bit) != 0;
+}
+
 /* Held update: stick to the carrier, or on release enter state 4 / the walk. */
 int daTgz_c::func_ov077_02125830() {
-    if (((mFlags & 0x40000) ? 1 : 0) != 0) {
+    if (IsInYoshiMouth(this)) {
         dActor_c *carrier = mEatingPlayer;
         /* Address of the triple, then [0]/[4]/[8]. Three field loads fold the
            0x5c into the ldr and drop the add the ROM kept. */
@@ -499,14 +512,11 @@ int daTgz_c::func_ov077_02125830() {
         mPos.y = src[1];
         mPos.z = src[2];
     }
-    {
-        int flags = mFlags;
-        if (((flags & 0x80000) ? 1 : 0) != 0)
-            this->func_ov077_02125e94(4);
-        else if (((flags & 0x20000) ? 1 : 0) == 0 && ((flags & 0x40000) ? 1 : 0) == 0) {
-            mEatingPlayer = 0;
-            this->func_ov077_02125e94(1);
-        }
+    if (IsFlagSet(this, 0x80000))
+        this->func_ov077_02125e94(4);
+    else if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
+        mEatingPlayer = 0;
+        this->func_ov077_02125e94(1);
     }
     return 1;
 }
@@ -705,7 +715,7 @@ void daTgz_c::OnPendingDestroy()
 
 int daTgz_c::Render()
 {
-    if ((mFlags & 0x40000) ? 1 : 0)
+    if (IsInYoshiMouth(this))
         return 1;
     int s = mState;
     if (s == 0 || s == 4)
@@ -717,18 +727,13 @@ int daTgz_c::Render()
 
 int daTgz_c::Behavior()
 {
-    int s = mState;
-    do {
-        if (s != 1 || mWithMeshClsn.IsOnGround()) {
-            s = mState;
-            if (s != 4 && s != 5 && IsTooFarAwayFromPlayer(0x5dc000)) {
-                if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
-                    MarkForDestruction();
-                    return 1;
-                }
-                break;
-            }
+    if ((mState != 1 || mWithMeshClsn.IsOnGround()) && mState != 4 && mState != 5 &&
+        IsTooFarAwayFromPlayer(0x5dc000)) {
+        if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
+            MarkForDestruction();
+            return 1;
         }
+    } else {
         this->func_ov077_02124c28();
         this->func_ov077_02125e20();
         MakeVanishLuigiWork(mdCcAc_c);
@@ -738,7 +743,7 @@ int daTgz_c::Behavior()
             func_02012694(0xc4, &mCamSpacePos);
             MarkForDestruction();
         }
-    } while (0);
+    }
     return 1;
 }
 

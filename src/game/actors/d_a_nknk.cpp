@@ -73,7 +73,6 @@ struct NknkAnimationFileHandle : SharedFilePtr {
 
 extern NknkAnimationFileHandle *const data_ov062_0211cee8[9];
 extern const int data_ov062_0211cf0c[9];
-extern "C" int RandomIntInternal(int *seed);
 
 extern SharedFilePtr *const data_ov062_0211ced8[2];
 extern SharedFilePtr *const data_ov062_0211cee0[2];
@@ -253,10 +252,7 @@ int daNknk_c::Behavior()
         {
             int ang = mPrevAngle.y;
             mAngle.y = (s16)ang;
-            {
-                u16 *p100 = &mStateTimer;
-                *p100 = (*p100 + 1);
-            }
+            mStateTimer++;
         }
         if (state != mState || kind != mKoopaVariant) {
             mStateTimer = 0;
@@ -350,8 +346,7 @@ void daNknk_c::func_ov062_02118de8()
         return;
     }
     if (mAnmModel.WillHitFrame((unsigned short)(mAnmModel.GetFrameCount() - 1)) != 0) {
-        u16 *hp = &mWalkState;
-        *hp = (*hp + 1);
+        mWalkState++;
     } else {
         func_ov062_02118058();
         return;
@@ -404,7 +399,7 @@ void daNknk_c::func_ov062_02118b4c() {
         SpawnFootstepDust(2, 5, 8, 0xb);
 
     if (mModelIndex != 0) {
-        if ((u16)mStateTimer > 30 && DistToClosestPlayer() > 0x320000) {
+        if (mStateTimer > 30 && DistToClosestPlayer() > 0x320000) {
             if (ApproachLinear(mHorzSpeed, 0, 0x1000) == 0)
                 return;
             mState = 1;
@@ -417,11 +412,10 @@ void daNknk_c::func_ov062_02118b4c() {
     }
 
     if (mPlayerDist >= 0x61a8000) {
-        s16 *aim = &mAimAngle;
-        *aim = (*aim + 0x8000);
+        mAimAngle += 0x8000;
         mPlayerDist = 0;
     }
-    if ((u16)mStateTimer > 30 && mPlayerDist > 0x320000) {
+    if (mStateTimer > 30 && mPlayerDist > 0x320000) {
         if (ApproachLinear(mHorzSpeed, 0, 0x1000) == 0)
             return;
         mState = 1;
@@ -432,8 +426,6 @@ void daNknk_c::func_ov062_02118b4c() {
     ApproachLinear(mHorzSpeed, 0x11000, 0x1000);
 }
 
-/* The state helpers decrement mTimer and mTurnTimer through a pointer
- * (&mTimer / &mTurnTimer). */
 void daNknk_c::func_ov062_02118a50()
 {
     if (mHorzSpeed != 0) {
@@ -448,8 +440,7 @@ void daNknk_c::func_ov062_02118a50()
 
     {
         if (mTimer != 0) {
-            u16 *p = &mTimer;
-            *p = (*p - 1);
+            mTimer--;
             if (mTimer != 0)
                 return;
             SetAnimByIndex(8);
@@ -501,8 +492,7 @@ void daNknk_c::func_ov062_02118718()
                 AngleAwayFromWallOrCliff(mWithMeshClsn, mTargetAngle);
             if (!mTurning) {
                 if (mTurnTimer != 0) {
-                    u16 *turn = &mTurnTimer;
-                    *turn = (*turn - 1);
+                    mTurnTimer--;
                 } else {
                     if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000)
                         mTargetAngle -=
@@ -570,8 +560,7 @@ void daNknk_c::func_ov062_02118588()
 
     {
         if (mTimer != 0) {
-            u16 *q = &mTimer;
-            *q = (*q - 1);
+            mTimer--;
             if (mTimer != 0)
                 return;
             SetAnimByIndex(8);
@@ -638,7 +627,6 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
     Vec3_Asr(&v, &mPos, 3);
     MtxStack::transS(v.x, v.y, v.z);
     MtxStack::YrotM(mAngle.y);
-    /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
     mAnmModel.mat4x3 = data_020a0e68;
     /* No drop shadow while in Yoshi's mouth. */
     int inMouth = (mFlags & 0x40000) != 0;
@@ -676,26 +664,19 @@ void daNknk_c::UpdateWalkStart() {
     }
     if (mAnmModel.Finished() == 0)
         return;
-    {
-        u16 *p = &mWalkState;
-        *p = (*p + 1);
-    }
+    mWalkState++;
     mTimer = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 70 + 30);
     SetAnimByIndex(1);
 }
 
 void daNknk_c::UpdateWalk() {
     if (mTimer != 0) {
-        u16 *p = &mTimer;
-        *p = (*p - 1);
+        mTimer--;
         return;
     }
     if (mAnmModel.WillHitFrame((unsigned short)(mAnmModel.GetFrameCount() - 1)) == 0)
         return;
-    {
-        u16 *q = &mWalkState;
-        *q = (*q + 1);
-    }
+    mWalkState++;
     SetAnimByIndex(2);
 }
 
@@ -753,7 +734,7 @@ void daNknk_c::func_ov062_02117c98()
 
     if (flags & 0x10) {
         Vector3_16 v;
-        v.x = (s16)-0x2000;
+        v.x = -0x2000;
         v.y = turnAround;
         v.z = turnAround;
         KillByInvincibleChar(v, *(daPly_c *)found, 0x46000);
@@ -801,63 +782,55 @@ void daNknk_c::func_ov062_02117c98()
         Vector3 hurtFrom;
         int isPlayer;
         isPlayer = (player->actorID == 0xbf /* PLAYER */) ? 1 : turnAround;
-        if (isPlayer == 0)
-            goto tail;
-        if (player->mIsMetal != 0) {
-            if (mKoopaVariant == 0) {
-                DropShell();
-                goto tail;
-            }
-            mDeathState = 6;
-            func_ov002_020aea30(found, 0);
-            return;
-        }
-        {
-            Vector3 *s = &player->mPos;
-            plPos = *s;
-        }
-        if (player->IsOnShell()) {
-            mDeathState = 5;
-            turnAround = 1;
-            goto tail;
-        }
-        if (JumpedOnByPlayer(mdCc_c, *player)) {
-            if (mKoopaVariant == 0) {
-                DropShell();
+        if (isPlayer != 0) {
+            if (player->mIsMetal != 0) {
+                if (mKoopaVariant == 0) {
+                    DropShell();
+                } else {
+                    mDeathState = 6;
+                    func_ov002_020aea30(found, 0);
+                    return;
+                }
             } else {
-                mDeathState = 1;
-                func_ov002_020aea30(found, 0);
-                mScale.x = 0x1000;
-                mScale.y = 0x1000;
-                mScale.z = 0x1000;
-                func_0201267c(0x113, &mCamSpacePos);
-            }
-            ((daPly_c *)found)->Bounce(0x28000);
-            return;
-        }
-        if (player->mIsVanish != 0)
-            goto tail;
-        if ((mdCc_c.hitFlags & 0x400000) == 0)
-            goto tail;
-        if (mState == 0)
-            goto tail;
-        {
-            s32 pw;
-            hurtFrom = mPos;
-            pw = mHorzSpeed;
-            if (pw < 0xf000)
-                pw = 0xf000;
-            player->Hurt(hurtFrom, 0, pw, 1, 0, 1);
-            BounceOffHurtPlayer();
-            if (mKoopaVariant == 2) {
-                PoofDust();
-                SpawnBlueCoin();
-                KillAndTrackInDeathTable();
+                {
+                    Vector3 *s = &player->mPos;
+                    plPos = *s;
+                }
+                if (player->IsOnShell()) {
+                    mDeathState = 5;
+                    turnAround = 1;
+                } else if (JumpedOnByPlayer(mdCc_c, *player)) {
+                    if (mKoopaVariant == 0) {
+                        DropShell();
+                    } else {
+                        mDeathState = 1;
+                        func_ov002_020aea30(found, 0);
+                        mScale.x = 0x1000;
+                        mScale.y = 0x1000;
+                        mScale.z = 0x1000;
+                        func_0201267c(0x113, &mCamSpacePos);
+                    }
+                    ((daPly_c *)found)->Bounce(0x28000);
+                    return;
+                } else if (player->mIsVanish == 0 && (mdCc_c.hitFlags & 0x400000) != 0 &&
+                           mState != 0) {
+                    s32 pw;
+                    hurtFrom = mPos;
+                    pw = mHorzSpeed;
+                    if (pw < 0xf000)
+                        pw = 0xf000;
+                    player->Hurt(hurtFrom, 0, pw, 1, 0, 1);
+                    BounceOffHurtPlayer();
+                    if (mKoopaVariant == 2) {
+                        PoofDust();
+                        SpawnBlueCoin();
+                        KillAndTrackInDeathTable();
+                    }
+                }
             }
         }
     }
 
-tail:
     func_ov002_020aea30(found, &mWithMeshClsn);
     if (turnAround)
         mAngle.y = (u16)(mPrevAngle.y + 0x8000);

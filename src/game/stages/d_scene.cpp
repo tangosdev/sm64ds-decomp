@@ -265,14 +265,17 @@ void dScene_c::AfterCleanupResources(u32 vfSuccess)
     fBase_c::AfterCleanupResources(vfSuccess);
 }
 
+static inline int IsActorID(fBase_c *base, int id) {
+    return base->actorID == id;
+}
+
 int dScene_c::BeforeBehavior()
 {
     if (!fBase_c::BeforeBehavior())
         return 0;
 
     if (gSoftResetPending != 0) {
-        int noActor = (gCurrentScene->actorID == 0);
-        if (noActor != 0) {
+        if (IsActorID(gCurrentScene, 0)) {
             func_02023544();
         } else {
             if (gSoftResetFader == 0) {

@@ -27,7 +27,7 @@
  *   speeds and kill heights chosen from them.
  * - func_020383f0 and func_02038414 are the two probes picked by that
  *   level id. func_02012694 plays a bank-3 sound at a position.
- * - InitResources' param1 shift keeps the spelling the bytes need.
+ * - InitResources shifts param1 through GetParam1(); see the accessor.
  */
 
 #pragma defer_codegen off
@@ -130,6 +130,10 @@ s32 daIbl_c::OnAimedAtWithEgg()
     return 532480;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == daIbl_ACTOR_PLAYER;
+}
+
 /* Contact check, shared by every handler. mdCcAc_c.otherOwner is the uniqueID
    of the actor that touched the ball; when that is a daPly_c (actor 191) who is
    not vanished (mIsVanish), mdCcAc_c.hitFlags decides what happens:
@@ -153,8 +157,8 @@ void daIbl_c::CheckContact() {
     dActor_c *actor = dActor_c::FindWithID(id);
     if (actor == 0) return;
     {
-        int b = (actor->actorID == daIbl_ACTOR_PLAYER);
-        if (b == 0) return;
+        if (!IsPlayerActor(actor))
+            return;
     }
     a = static_cast<daPly_c *>(actor);
     if (a->mIsVanish != 0) return;
@@ -231,12 +235,12 @@ void daIbl_c::UpdateWallAndFloor() {
    being 1.0. */
 void daIbl_c::UpdateModelMatrix() {
     mModel.mat4x3 = IDENTITY_MATRIX4X3;
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     mShadowMtx = mModel.mat4x3;
     int k = 0x32;
-    mShadowMtx.m[10] = (mDrawScale.x * k + mPos.y) >> 3;
+    mShadowMtx.t.y = (mDrawScale.x * k + mPos.y) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
         k += 0x28;
     else
@@ -256,7 +260,6 @@ void daIbl_c::UpdateModelMatrix() {
  *    match the ROM (A holds C8, B holds C7, C8 holds C6, ...).
  *  - Sign result s8/s6 names are swapped vs the values they hold so free-reg
  *    dest colors land on r1/r3 like the ROM; mul uses those names accordingly.
- *  - u64-launder materializes pidx between the first path-node load and store.
  */
 int daIbl_c::AdvancePath() {
     int px = mNextNodePos.x;
@@ -339,13 +342,12 @@ int daIbl_c::AdvancePath() {
     dot = s6 * sA + s7 * ssl + s8 * sB;
     if (dot <= 0) {
         int v = mNextNodePos.x;
-        int *pidx = &mPathNodeIndex;
         mPrevNodePos.x = v;
         v = mNextNodePos.y;
         mPrevNodePos.y = v;
         v = mNextNodePos.z;
         mPrevNodePos.z = v;
-        *pidx = *pidx + 1;
+        mPathNodeIndex++;
         if (mPathNodeIndex >= mNumPathNodes) {
             mPathNodeIndex = 0;
         }
@@ -597,12 +599,11 @@ void daIbl_c::FreeRollBehavior() {
    mDispenser, and mLiveBalls counts it. */
 void daIbl_c::SpawnerBehavior() {
     Vector3 pos;
-    u16 *timer = &mStateTimer;
     daPly_c *pl;
-    int r1;
+    u32 r1;
 
-    if (*timer != 0) {
-        *timer = *timer - 1;
+    if (mStateTimer != 0) {
+        mStateTimer--;
         return;
     }
 
@@ -610,7 +611,8 @@ void daIbl_c::SpawnerBehavior() {
         r1 = 3;
     else
         r1 = 6;
-    if (mLiveBalls >= (u32)r1) return;
+    if (mLiveBalls >= r1)
+        return;
 
     pl = ClosestPlayer();
     if (pl == 0) return;
@@ -638,7 +640,8 @@ void daIbl_c::SpawnerBehavior() {
     }
 
     if (gCurrentSublevel == 0x16) {
-        if (pos.y < (int)0xff63c000) return;
+        if (pos.y < -0x9c4000)
+            return;
         mStateTimer = 63;
     } else {
         mStateTimer = 127;
@@ -650,8 +653,7 @@ void daIbl_c::SpawnerBehavior() {
         a = (daIbl_c *)dActor_c::Spawn(daIbl_ACTOR_IRONBALL, param1, mPos, &mPrevAngle, cc, -1);
         if (a == 0) return;
         {
-            u8 *cnt = &mLiveBalls;
-            *cnt = *cnt + 1;
+            mLiveBalls++;
         }
         a->mDispenser = this;
     }
@@ -691,6 +693,15 @@ int daIbl_c::Behavior()
     return 1;
 }
 
+/* InitResources shifts param1 down in place with a read through this
+   accessor. A plain `param1 = param1 >> 4` value-numbers both sides together
+   and emits an extra `add r1, r4, #8` at +0x60 (0x390, 186/228 words
+   differ); the cartridge keeps the folded `ldr/lsr/str` (0x38c). Same lever
+   as daDoor_c::GetParam1. */
+inline u32 daIbl_c::GetParam1() const {
+    return param1;
+}
+
 /* Loads the model and shadow, sets gravity (-4 units/frame^2, mVertAccel
    -0x4000) and terminal velocity (-70 units/frame, -0x46000), picks the kind
    from param1's low nibble and sets up that kind. Distances and speeds below
@@ -709,12 +720,8 @@ int daIbl_c::InitResources()
     mTerminalVelocity = -0x46000;
     mVariant = param1 & 0xf;
     /* The spawn word is packed: low nibble was the variant (read above), the
-     * rest shifts down in place here. The redundant cast is load-bearing:
-     * plain `param1 = param1 >> 4` value-numbers both sides together and
-     * emits an extra `add r1, r4, #8` at +0x60 (0x390, 186/228 words
-     * differ); the cast keeps the ROM's folded `ldr/lsr/str` (0x38c, 0
-     * differ). Same lever as daDoor_c::InitResources. */
-    param1 = (u32)param1 >> 4;
+     * rest shifts down in place here. */
+    param1 = GetParam1() >> 4;
     kind = mVariant;
 
     /* Kinds 2 and 4: the path followers. The path ID is the next nibble of

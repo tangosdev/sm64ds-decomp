@@ -13,7 +13,7 @@
  * `daObjBk_Rotebar_c` is the RTTI name. Direct base is dBgActor_c.
  */
 struct daObjBk_Rotebar_c : dBgActor_c {
-    s8 mPauseTimer; /* 0x31e -- 0x3c; DecIfAbove0_Byte gates the turn */
+    u8 mPauseTimer; /* 0x31e -- 0x3c; DecIfAbove0_Byte gates the turn */
     s32 mTurnSound; /* 0x320 -- recycled Sound::PlayLong handle */
 
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */

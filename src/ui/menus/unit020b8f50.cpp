@@ -61,6 +61,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 #include "Matrix2x2.h"
+#include "Ov007MenuMem.h"
 
 /* data_ov007_02104b9c: the 0x14-byte sprite record. */
 typedef struct Ov007PickerSprites {
@@ -104,8 +105,6 @@ extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, VecFx
 extern int func_ov007_020c1da0(int i);
 extern "C" int func_ov007_020c3ba8(int);
 extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
-extern "C" void func_ov007_020c3d1c(void *);
-extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
 extern "C" void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4,
                                     unsigned short a5, int a6);
@@ -302,7 +301,7 @@ void PickerScene_HandleEditKeys(void) {
                 v3 = RangeRatio(t1, 160, 200);
                 v3sq = (int)(((s64)v3 * v3) >> 0xc);
                 tbl = FX_SinIdx((u16)((mc * 0xffff) >> 12) >> 4);
-                extra = FX_MUL(v3sq, (tbl * (s16)0xa));
+                extra = FX_MUL(v3sq, (tbl * 0xa));
             }
             if (dir > 0) {
                 a -= ease;
@@ -533,7 +532,9 @@ void PickerScene_HandleDrawingKeys(void) {
            Retyping data_ov007_02104ba0 as an Ov007PickerScene * changes
            nothing either way. */
         /* Kept (#821 r76): a reload pin; no block-copy or type lever (r72-r75) applies to this
-           scalar pin. */
+           scalar pin.
+           Kept (#821 r80): getter tried -> a scene accessor, as this local or in the test, is
+           0x410 of 0x414, as plain. */
         Ov007PickerScene *b = *(Ov007PickerScene **)&data_ov007_02104ba0;
         int n = r5->groupCount;
         if (n >= b->strokeCount)
@@ -1035,7 +1036,7 @@ int PickerScene_FadeToEdit(void) {
 
     SCENE->tweenOut[1] = FX_DivS32(*addr4, 0x1f);
 
-    return (*addr4 == 0) ? 1 : 0;
+    return *addr4 == 0;
 }
 
 /* Commits a stroke still being drawn, settles the picker, clears the
@@ -1322,103 +1323,100 @@ void func_ov007_020b91b4(void) {
     st = SCENE->states[1]->currentState;
     switch (st) {
     case 0:
-
-        do {
-        case 1:
-            if ((SCENE->states[1]->stateTicks) == 0) {
-                Ov007Picker *a0 = SCENE->picker;
-                a0->limitGroup = 0;
-                a0->limitIndex = 0;
-                SCENE->strokeTime = 0;
-                SCENE->totalStrokeTime = func_ov007_020c5d5c(SCENE->picker);
-                SPRITES->slideProgress = 0;
+    case 1:
+        if ((SCENE->states[1]->stateTicks) == 0) {
+            Ov007Picker *a0 = SCENE->picker;
+            a0->limitGroup = 0;
+            a0->limitIndex = 0;
+            SCENE->strokeTime = 0;
+            SCENE->totalStrokeTime = func_ov007_020c5d5c(SCENE->picker);
+            SPRITES->slideProgress = 0;
+        }
+        {
+            int b = PickerScene_UpdateReplay(
+                (int)(((SCENE->states[1]->currentState) == 0) ? ((char *)0) : ((char *)1)));
+            func_ov007_020c4dfc(r6, r7, r5, 0x1f);
+            if (b == 0) {
+                return;
             }
-            {
-                int b = PickerScene_UpdateReplay(
-                    (int)(((SCENE->states[1]->currentState) == 0) ? ((char *)0) : ((char *)1)));
-                func_ov007_020c4dfc(r6, r7, r5, 0x1f);
-                if (b == 0) {
-                    return;
-                }
+        }
+        SCENE->awaitingTap = 0;
+        SCENE->states[1]->requestedState = 8;
+        return;
+    case 2:
+        if (r4 == 0) {
+            SPRITES->sprites[0]->alpha = 0;
+            SPRITES->sprites[1]->alpha = 0;
+            SPRITES->slideProgress = 0x1000;
+        }
+        {
+            int q;
+            q = ProgressRatio(r4, 40);
+            SPRITES->sprites[1]->alpha = q * 0xc;
+            if (q < 0x1000) {
+                return;
             }
-            SCENE->awaitingTap = 0;
-            SCENE->states[1]->requestedState = 8;
-            return;
-        case 2:
+        }
+        SCENE->states[1]->requestedState = 5;
+        return;
+    case 3:
+    case 4:
+    case 5: {
+        int *p = &SPRITES->sprites[1]->alpha;
+        if (st == 4) {
+            *p += 0x1000;
+            if ((*p) >= 0x1f000) {
+                *p = 0x1f000;
+                SPRITES->sprites[0]->alpha = 0x1f000;
+                SCENE->states[1]->requestedState = 5;
+            }
+        } else if (st == 3) {
             if (r4 == 0) {
                 SPRITES->sprites[0]->alpha = 0;
-                SPRITES->sprites[1]->alpha = 0;
-                SPRITES->slideProgress = 0x1000;
             }
-            {
-                int q;
-                q = ProgressRatio(r4, 40);
-                SPRITES->sprites[1]->alpha = q * 0xc;
-                if (q < 0x1000) {
-                    return;
-                }
-            }
-            SCENE->states[1]->requestedState = 5;
-            return;
-        case 3:
-        case 4:
-        case 5: {
-            int *p = &SPRITES->sprites[1]->alpha;
-            if (st == 4) {
-                *p += 0x1000;
-                if ((*p) >= 0x1f000) {
-                    *p = 0x1f000;
-                    SPRITES->sprites[0]->alpha = 0x1f000;
-                    SCENE->states[1]->requestedState = 5;
-                }
-            } else if (st == 3) {
-                if (r4 == 0) {
-                    SPRITES->sprites[0]->alpha = 0;
-                }
-                *p -= 0x1000;
-                if ((*p) <= 0xc000) {
-                    *p = 0xc000;
-                    SCENE->states[1]->requestedState = 5;
-                }
+            *p -= 0x1000;
+            if ((*p) <= 0xc000) {
+                *p = 0xc000;
+                SCENE->states[1]->requestedState = 5;
             }
         }
-            if ((SCENE->awaitingTap) != 0) {
-                return;
-            }
-            func_ov007_020c4f50(r6, r7, r5, 0x1f, 1);
+        if ((SCENE->awaitingTap) != 0) {
             return;
-        case 6:
-        case 7: {
-            int r8v;
-            int sb;
-            int q;
-            if (st == 6) {
-                r8v = r6->groupCount;
-            } else {
-                r8v = (r6->groupCount) - 1;
-            }
-            q = ProgressRatio(r4, 15);
-            if ((SCENE->states[1]->currentState) == 6) {
-                q = 0x1000 - q;
-            }
-            sb = (q * 0x1f) >> 0xc;
-            if (sb <= 0) {
-                sb = 1;
-            }
-            func_ov007_020c4e98(r6, r7, r5, 0x1f, r8v, func_ov007_020c3be0(q, 0x18df, r5), sb);
-            if (r4 < 15) {
-                return;
-            }
         }
-            SCENE->states[1]->requestedState = 5;
-            {
-                Ov007Touch *o = WORK->touch;
-                /* the read through a const view is load-bearing: `o->flags |= 1`
-                 * builds 4 bytes longer */
-                o->flags = ((const Ov007Touch *)o)->flags | 1;
-            }
+        func_ov007_020c4f50(r6, r7, r5, 0x1f, 1);
+        return;
+    }
+    case 6:
+    case 7: {
+        int r8v;
+        int sb;
+        int q;
+        if (st == 6) {
+            r8v = r6->groupCount;
+        } else {
+            r8v = (r6->groupCount) - 1;
+        }
+        q = ProgressRatio(r4, 15);
+        if ((SCENE->states[1]->currentState) == 6) {
+            q = 0x1000 - q;
+        }
+        sb = (q * 0x1f) >> 0xc;
+        if (sb <= 0) {
+            sb = 1;
+        }
+        func_ov007_020c4e98(r6, r7, r5, 0x1f, r8v, func_ov007_020c3be0(q, 0x18df, r5), sb);
+        if (r4 < 15) {
             return;
-        } while (0);
+        }
+        SCENE->states[1]->requestedState = 5;
+        {
+            Ov007Touch *o = WORK->touch;
+            /* the read through a const view is load-bearing: `o->flags |= 1`
+             * builds 4 bytes longer */
+            o->flags = ((const Ov007Touch *)o)->flags | 1;
+        }
+        return;
+    }
     case 8:
         if ((SCENE->awaitingTap) != 0) {
             SCENE->states[1]->requestedState = 1;
@@ -1478,6 +1476,8 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
            direct SCENE->/WORK->/SPRITES-> spellings with or without scene and
            sprite locals, and the sprite reads first all schedule the work
            chain ahead of the scene: 16 to 20 of 120 words wrong. */
+        /* Kept (#821 r79): inline GetScene()/GetWork() accessors, for both reads, either one,
+           or as initialisers, are 16 to 20 words off. */
         c = *((Ov007PickerScene *volatile *)&data_ov007_02104ba0);
         g = *((Ov007Work *volatile *)&data_ov007_0210342c);
         flag = c->awaitingTap;
@@ -1504,7 +1504,7 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
     if (scale <= other) {
         scale = other;
     }
-    p_c->screenX = p5->item->posX + (((int)(p_c->width * scale)) / 2);
+    p_c->screenX = p5->item->posX + ((p_c->width * scale) / 2);
     p_c->screenY = p5->item->posY;
     p_c->scaleX = 0x1000 - scale;
     p_10->screenX = p5->item->posX;

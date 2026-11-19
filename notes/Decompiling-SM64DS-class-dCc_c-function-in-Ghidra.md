@@ -31,7 +31,7 @@ Default Decompiler view for `func_02014aa8` (`dCc_c::Process`) in Ghidra:
 
 You might think that the decompiled code is not very readable initially (within reason, that's a fine mess!), but you can improve it by renaming variables and functions, adding comments, and using Ghidra's features to enhance the decompilation output. This will help you better understand the function's logic and how it fits into the overall program. 
 
-Let's take a look at setting up the preparation for function matching and renaming in Ghidra. Reviwing the decompiled source:
+Let's take a look at setting up the preparation for function matching and renaming in Ghidra. Reviewing the decompiled source:
 ```cpp
 void dCc_c::Process()
 ```
@@ -43,7 +43,7 @@ To create the `dCc_c` class in Ghidra, follow these steps:
 
 - In the Ghidra Code Browser, navigate to the "Symbol Tree" window. You can open it by going to "Window" > "Symbol Tree" in the menu bar.
 - Right-click on the "Classes" node in the Symbol Tree and select "Create Class" from the context menu.
-- 
+
 ![Creating our dCc_c class](images/Ghidra-Creating-New-Class.png)
 
 A option will appear to enter the new class name with the default being `NewClass`. Type `dCc_c` and ENTER to create it. It should look like this in the Symbol Tree:
@@ -98,7 +98,7 @@ For another variable case, also rename `VStack_30` to `separation`. Lucky for us
 VStack_30.y = piVar7[1] - piVar3[1];
 ```
 
-Is directly analagous to the human reconstucted source at `VS Code IDE`:
+Is directly analogous to the human reconstructed source at `VS Code IDE`:
 
 ```cpp
 separation.y = otherPosition.y - position->y;
@@ -108,13 +108,13 @@ But we're not done yet! We can turn our attention to the `Listing` window and se
 
 ![Ghidra_seeing_separation_var_on_Listing_view](images/Ghidra_seeing_separation_var_on_Listing_view.png)
 
-We can change it to `Vector3` which is a universal project struct representing a 3D vector in the game. Right-click on the variable and select "Data" > "Change Data Type..." from the context menu. In the "Change Data Type" dialog, type `Vector3` and click "OK" or select it in the dropdown.
+We can change it to `Vector3` which is a universal project struct representing a 3D vector in the game. Right-click on the variable and select "Set Data Type" > "Choose Data Type..." from the context menu. In the "Choose Data Type" dialog, type `Vector3` and click "OK" or select it in the dropdown.
 
 ![Ghidra_Change_Listing_Data_Type](images/Ghidra_Change_Listing_Data_Type.png)
 
 ## Exposing hidden local functions variables in Listing and Decompiler windows
 
-The `other` variable, in Ghidra being `pdVar12`, which also servers as an example to show a important implicit, not directly stated feature, that being gradual exposing of decompiled local function variables.
+The `other` variable, in Ghidra being `pdVar12`, which also serves as an example to show an important implicit, not directly stated feature, that being gradual exposing of decompiled local function variables.
 
 ![Ghidra_pdVar12_is_var-other_in_source](images/Ghidra_pdVar12_is_var-other_in_source.png)
 
@@ -132,7 +132,7 @@ We see, `other` is a pointer to `dCc_c` class, being declared at the function st
 
 We see another pointer, `nextCollider`, which is also a pointer to `dCc_c` class! In the IDE source, it's declared at the end, however in Ghidra's decompiler, it's exposed in the variable list at the function top, which presents *all* of the global used variables for that func only.
 
-Problem is, it's hidden in the decompiled code! Scroling to the end of the function, we see instead `other` incorrectly being used as `nextCollider`, this is how it would look as source code in the IDE:
+Problem is, it's hidden in the decompiled code! Scrolling to the end of the function, we see instead `other` incorrectly being used as `nextCollider`, this is how it would look as source code in the IDE:
 
 **INCORRECT**;
 ```cpp

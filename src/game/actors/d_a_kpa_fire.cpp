@@ -107,8 +107,6 @@ extern "C" {
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
-extern int RandomIntInternal(int *seed);
-
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose
  * rows variant 0 reads (02119364); see the handlers below. */
 extern const int data_ov060_0211934c[] = {-0x8000, -0x6000, -0x6000};
@@ -540,8 +538,8 @@ void daKpaFire_c::func_ov060_02116d78() {
 
     func_ov060_02116518(PARTICLE_SCALED_9A, 1, mFireScale * 0xc);
     if (mWithMeshClsn.IsOnGround() != 0) {
-        int rnd = RandomIntInternal(&data_0209e650.value);
-        unsigned int roll = (unsigned int)rnd >> 16;
+        u32 rnd = RandomIntInternal(&data_0209e650.value);
+        unsigned int roll = rnd >> 16;
         if (roll % 17 != 0)
             dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), mPos, 0, mAreaId, -1);
         MarkForDestruction();
@@ -738,6 +736,10 @@ void daKpaFire_c::func_ov060_021167c8() {
     this->mShadowRadiusMul = 0x10;
 }
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == ACTOR_PLAYER;
+}
+
 /* Burn the player the fire's cylinder touched. Reads mdCcAc_c.otherOwner (the
  * dCc_c field Clear zeroes; here it is used as an actor uniqueID, 0 for none)
  * and looks that actor up; if it is the daPly_c (actor id 0xbf = ACTOR_PLAYER)
@@ -751,8 +753,8 @@ void daKpaFire_c::func_ov060_02116740() {
     if (player == 0) return;
     /* Measured: folding this temp into `if (player->actorID != ACTOR_PLAYER)`
        makes the function 12 bytes shorter than the ROM size, 0x88. */
-    int isPlayer = (int)(player->actorID == ACTOR_PLAYER);
-    if (isPlayer == 0) return;
+    if (!IsPlayerActor(player))
+        return;
     if (player->mIsMetal != 0) return;
     if (player->mIsVanish != 0) return;
     player->Burn();

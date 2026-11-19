@@ -84,6 +84,7 @@ enum d_a_trs_trap_AssetId {
 #include "dBgW.h"
 #include "Sound.h"
 #include "daBook_c.h"
+#include "math/MtxStack.h"
 
 /* CLPS.h forward-declares the block; these two tables are the plain 8-word
    layout every overlay uses. */
@@ -140,15 +141,12 @@ extern "C" {
 /* dBgW callback-word stores (see above). */
 extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
 
-extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
 /* Staircase settle offsets, one signed byte per frame 0..3. */
 extern const signed char data_ov063_0211e26c[4] = {-8, 8, -4, 4};
 /* Staircase rise limits, indexed by mStepIndex. */
 extern const int data_ov063_0211e270[3] = {200, 400, 600};
 
 void Vec3_Asr(void *dst, void *src, int n);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 }
@@ -245,7 +243,7 @@ void daTrsTrap_c::UpdateBookshelf() {
         pp.y = q[1];
         pp.z = q[2];
     }
-    if (pp.x >= (int)0xffa24000)
+    if (pp.x >= -0x5dc000)
         mVisible = 0;
     else
         mVisible = 1;
@@ -297,8 +295,7 @@ void daTrsTrap_c::UpdateBookshelf() {
 /* Book-switch callback: ORs switch bit m into mBookFlags, then the right or
    wrong chime -- the order is 1, then 1|2, then all three. */
 void daTrsTrap_c::func_ov063_0211cae8(int m) {
-    unsigned char *p = &mBookFlags;
-    *p |= m;
+    mBookFlags |= m;
     unsigned char v = mBookFlags & 7;
     if (v != 1 && v != 3 && v != 7) {
         func_02012790(0xe);
@@ -450,7 +447,7 @@ int daTrsTrap_c::Behavior()
 int daTrsTrap_c::InitResources()
 {
     u16 actorType;
-    s32 param;
+    u32 param;
     s32 dx;
     int i;
     int bit;
@@ -458,7 +455,7 @@ int daTrsTrap_c::InitResources()
     void *sp;
 
     param = param1;
-    mStepIndex = ((u32)param >> 8) & 3;
+    mStepIndex = (param >> 8) & 3;
     mParentUniqueID = 0;
     mVisible = 1;
     actorType = actorID;

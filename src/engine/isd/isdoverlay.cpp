@@ -124,9 +124,9 @@ extern const char data_0208692c;
 extern const char data_0208696c;
 extern const char data_0208698c;
 extern const char data_020869bc[32];
-extern const char data_020869dc;
-extern const char data_02086a08;
-extern const char data_02086a30;
+extern const char data_020869dc[44];
+extern const char data_02086a08[40];
+extern const char data_02086a30[40];
 
 extern int func_0206da18(void); /* IRQ::SetIRQState(false) entry */
 extern int func_0206d9cc(void); /* IRQ::SetFIQState(false) entry */

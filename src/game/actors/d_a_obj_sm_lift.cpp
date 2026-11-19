@@ -44,8 +44,6 @@ int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
 extern "C" {
 int AngleDiff(int, int);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int scalar);
 }
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
@@ -175,8 +173,7 @@ int daObjSm_Lift_c::Behavior() {
         }
 
         if (reached) {
-            int *pIdx = &mNodeIndex;
-            *pIdx = *pIdx + mNodeStep;
+            mNodeIndex += mNodeStep;
             if (mNodeIndex < 0) {
                 if (path.Loops() != 0) {
                     mNodeIndex = mNodeCount - 1;
@@ -184,8 +181,7 @@ int daObjSm_Lift_c::Behavior() {
                     mPauseTimer = 60;
                     mMoving = 0;
                     mNodeStep = 1;
-                    int *pIdx2 = &mNodeIndex;
-                    *pIdx2 = *pIdx2 + (mNodeStep * 2);
+                    mNodeIndex += mNodeStep * 2;
                 }
             }
             if (mNodeIndex >= mNodeCount) {
@@ -195,8 +191,7 @@ int daObjSm_Lift_c::Behavior() {
                     mPauseTimer = 60;
                     mMoving = 0;
                     mNodeStep = -1;
-                    int *pIdx3 = &mNodeIndex;
-                    *pIdx3 = *pIdx3 + (mNodeStep * 2);
+                    mNodeIndex += mNodeStep * 2;
                 }
             }
         }

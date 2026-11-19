@@ -123,7 +123,7 @@ unsigned short func_020456a0(int a0, int a1, int shift, int a3, short *tbl) {
     srange = (short)(buf.b[shift] - sfrac);
 
     if (sfrac == 0)
-        return (unsigned short)lo;
+        return lo;
 
     if (abs(lo - hi) >= 0x800) {
         if (lo > hi)

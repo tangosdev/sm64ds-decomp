@@ -50,7 +50,7 @@ void func_ov007_020ae2d0(Ov007ItemNode *self) {
         Ov007Item *q;
         n = ProgressRatio(n, 50);
         m = (-n) * 0xffff;
-        m = (int)(((unsigned)(m << 4)) >> 0x10);
+        m = ((unsigned)(m << 4)) >> 0x10;
         sine = FX_SinIdx(m >> 4);
         q = self->item;
         base = q->layout->homeY;

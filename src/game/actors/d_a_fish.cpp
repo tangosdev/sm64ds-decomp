@@ -98,8 +98,6 @@ extern int data_0209f32c;
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
 void func_0203b9b4(s32 *value, s32 initial);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 }
 
 enum {
@@ -220,24 +218,24 @@ void daFish_c::StateWaitForPlayer() {
     }
 
     for (i = 0; i < n; i++) {
-        int r;
+        u32 r;
         if (this->mVariant != 0) {
             r = RandomIntInternal(&data_0209e650.value);
-            pos.x = this->mPos.x + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.x = this->mPos.x + ((r % 0x140) - 0xa0) * 0x1000;
             r = RandomIntInternal(&data_0209e650.value);
-            pos.z = this->mPos.z + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.z = this->mPos.z + ((r % 0x140) - 0xa0) * 0x1000;
         } else {
             r = RandomIntInternal(&data_0209e650.value);
-            pos.x = this->mPos.x + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.x = this->mPos.x + ((r % 0x2bc) - 0x15e) * 0x1000;
             r = RandomIntInternal(&data_0209e650.value);
-            pos.z = this->mPos.z + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.z = this->mPos.z + ((r % 0x2bc) - 0x15e) * 0x1000;
         }
 
         r = RandomIntInternal(&data_0209e650.value);
-        pos.y = (this->mSurfaceY - 0x64000) - (((unsigned)r >> 11 & 0xfff) * 0xc8);
+        pos.y = (this->mSurfaceY - 0x64000) - ((r >> 11 & 0xfff) * 0xc8);
 
         r = RandomIntInternal(&data_0209e650.value);
-        rot.y = rot.y + (s16)((unsigned)r >> 16);
+        rot.y = rot.y + (s16)(r >> 16);
 
         {
             dActor_c *fish = dActor_c::Spawn(kFishActorID, kind, pos, &rot, this->mAreaId, -1);
@@ -379,15 +377,14 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
     this->mIsSpawner = 0;
     this->mSpawnerID = spawnerID;
     if (this->mVariant != 0) {
-        s16 *angle = &this->mPrevAngle.y;
-        *angle = *angle & 0x8000;
+        this->mPrevAngle.y &= 0x8000;
         unsigned char v = this->mVariant;
         if (v == 3) {
-            *angle = *angle + 0x2000;
+            this->mPrevAngle.y += 0x2000;
         } else if (v == 2) {
-            *angle = *angle + 0x6000;
+            this->mPrevAngle.y += 0x6000;
         } else {
-            *angle = *angle | 0x4000;
+            this->mPrevAngle.y |= 0x4000;
         }
         this->mHorzSpeed =
             (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;

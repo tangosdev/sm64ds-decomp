@@ -20,6 +20,8 @@ static inline int subz(int a, int b) {
  * own stack slot, shifting six spills by 4), and the rows indexed as
  * `pts + rowIndex * 3` are 0x2e0. */
 #pragma opt_strength_reduction off
+/* Kept (#821 r79): with only loop invariants dropped, an inline RowPoints(pts, index) for both
+   row pointers is 0x288 and nxt = curr + w1 * 3 is 0x294, against 0x2b8. */
 #pragma opt_loop_invariants off
 
 void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6) {
@@ -37,7 +39,7 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
     int dxdy;
     int *curr;
     int *nxt;
-    int *new_var;
+    int *curr1;
     int *nxt1;
 
     w1 = w + 1;
@@ -60,7 +62,7 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
             i = 0;
             if (w > 0) {
                 do {
-                    int *curr1 = new_var = curr + 3;
+                    curr1 = curr + 3;
                     nxt1 = nxt + 3;
                     if (flip == 1) {
                         int ze = curr1[2];

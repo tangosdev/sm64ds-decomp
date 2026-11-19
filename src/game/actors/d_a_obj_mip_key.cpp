@@ -22,7 +22,6 @@
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
 
-s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
 

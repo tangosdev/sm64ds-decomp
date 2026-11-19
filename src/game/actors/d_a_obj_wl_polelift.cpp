@@ -38,9 +38,6 @@ struct PoleliftModelFile : SharedFilePtr {
 };
 
 extern "C" {
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
-
 extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
@@ -178,16 +175,16 @@ s32 daObjWlPolelift_c::CleanupResources()
 /* Rebuild the model matrix from the actor's Y rotation and position. */
 void daObjWlPolelift_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&model.mat4x3, mAngle.y);
-    model.mat4x3.m[9] = mPos.x >> 3;
-    model.mat4x3.m[10] = mPos.y >> 3;
-    model.mat4x3.m[11] = mPos.z >> 3;
+    model.mat4x3.t.x = mPos.x >> 3;
+    model.mat4x3.t.y = mPos.y >> 3;
+    model.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Copy the model matrix into the drop-shadow matrix, drop it to the ground
  * and hand the owned dExtShadowModel_c to dActor_c::DropShadowScaleXYZ. */
 void daObjWlPolelift_c::UpdateShadow() {
     dropShadowMtx = model.mat4x3;
-    dropShadowMtx.m[10] = groundY >> 3;
+    dropShadowMtx.t.y = groundY >> 3;
     DropShadowScaleXYZ(shadow, dropShadowMtx, 0x64000, 0xc8000, 0x64000, 0xf);
 }
 

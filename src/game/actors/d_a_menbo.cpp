@@ -75,7 +75,7 @@ extern "C" int RandomIntInternal(int *seed);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
 int SurfaceInfo_TestFlag0x20(int *p);
-extern "C" int func_02035638(u8 *p);
+extern "C" int func_02035638(dBgCh_Actr *clsn);
 
 extern int           data_02092138;
 extern unsigned char gGameMode;
@@ -112,6 +112,10 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
+static inline int IsInYoshiMouth(dActor_c *actor) {
+    return (actor->mFlags & 0x40000) != 0;
+}
+
 static inline int IsGameMode(int mode) {
     return gGameMode == mode;
 }
@@ -144,9 +148,9 @@ void daMenbo_c::func_ov090_02130f94() {
         data_020a0e68 = *src;
         MTX_Concat43((const Matrix4x3 *)mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
                      &data_020a0e68);
-        v.x = data_020a0e68.m[9];
-        v.y = data_020a0e68.m[10];
-        v.z = data_020a0e68.m[11];
+        v.x = data_020a0e68.t.x;
+        v.y = data_020a0e68.t.y;
+        v.z = data_020a0e68.t.z;
         Vec3_Lsl(&r, &v, sh);
         v.x = r.x;
         v.y = r.y;
@@ -164,8 +168,6 @@ void daMenbo_c::func_ov090_021310b4() {
     Vector3 sv;
     Vector3 cv;
     Vector3 hurt;
-    int flags;
-    dActor_c *p;
     sv.x = data_ov090_0213412c.x;
     sv.y = data_ov090_0213412c.y;
     sv.z = data_ov090_0213412c.z;
@@ -173,13 +175,12 @@ void daMenbo_c::func_ov090_021310b4() {
 
     if (mdCcAcPos_c.otherOwner == 0)
         return;
-    if ((p = dActor_c::FindWithID(mdCcAcPos_c.otherOwner)) == 0)
+    /* Measured (#821 r96): p or flags declared at the top of the function
+       swaps r4/r5 (26 words); declared where they are first set, both match. */
+    dActor_c *p = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+    if (p == 0)
         return;
-    /* Measured (#821 r68): a plain `flags = mdCcAcPos_c.hitFlags` (int or u32
-       local, either declaration order) swaps r4/r5 through the function. */
-    /* Kept (#821 r76): a register-order pin; no block-copy or type lever (r72-r75) applies to this
-       scalar pin. */
-    flags = (int)((long long)*(int *)&mdCcAcPos_c.hitFlags);
+    int flags = mdCcAcPos_c.hitFlags;
 
     if (flags & 0x2400) {
         mDeathState = 2;
@@ -286,16 +287,16 @@ int daMenbo_c::func_ov090_021314a0() {
     daPly_c *p = this->ClosestNonVanishPlayer();
     if (p != 0 && AngleDiff(this->mPrevAngle.y, this->HorzAngleToCPlayer()) < 0x2000) {
         int *sv = &p->mPos.x;
-        int v[3];
-        v[0] = sv[0];
-        v[1] = sv[1];
-        v[2] = sv[2];
-        if (Vec3_Dist(&this->mPos, (const Vector3 *)v) < 0x3ac000) {
-            int w[3];
-            w[0] = v[0];
-            w[1] = v[1];
-            w[2] = v[2];
-            this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, (const Vector3 *)w);
+        Vector3 v;
+        v.x = sv[0];
+        v.y = sv[1];
+        v.z = sv[2];
+        if (Vec3_Dist(&this->mPos, &v) < 0x3ac000) {
+            Vector3 w;
+            w.x = v.x;
+            w.y = v.y;
+            w.z = v.z;
+            this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &w);
             this->mChaseLatch = 1;
             return 1;
         }
@@ -460,7 +461,7 @@ int daMenbo_c::func_ov090_02131648() {
         }
     }
 
-    if (((u32)(((u32)mAnmModel.currFrame) << 4) >> 0x10) >= 0x10) {
+    if (((u32)(mAnmModel.currFrame << 4) >> 0x10) >= 0x10) {
         p390 = &mAnimLoops;
         *p390 = *p390 + 1;
     }
@@ -514,13 +515,13 @@ int daMenbo_c::func_ov090_02131b94()
 {
     unsigned int r;
     short *s;
-    r = (unsigned)RandomIntInternal(&data_0209e650.value);
+    r = RandomIntInternal(&data_0209e650.value);
     s = &mTargetAngleY;
     *s = (*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
-    r = (unsigned)RandomIntInternal(&data_0209e650.value);
+    r = RandomIntInternal(&data_0209e650.value);
     s = &mTargetAngleY;
     *s = (*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
-    r = (unsigned)RandomIntInternal(&data_0209e650.value);
+    r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = (short)(((r >> 8) & 0x1f) + 150);
     mAnimSpeed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)data_ov090_02134490.filePtr, 0, 0x1000, 0);
@@ -540,8 +541,7 @@ int daMenbo_c::func_ov090_02131c48()
 
     if (mTurnTimer == 0 && mWithMeshClsn.IsOnWall() &&
         AngleDiff(mPrevAngle.y, mTargetAngleY) < 0x200) {
-        s16 *p = &mTargetAngleY;
-        *p = *p + 0x4000;
+        mTargetAngleY += 0x4000;
         mTurnTimer = 8;
     }
 
@@ -549,8 +549,7 @@ int daMenbo_c::func_ov090_02131c48()
         ApproachAngle(&mPrevAngle.y, mTargetAngleY, 1, 0x1000, 0x1000);
     } else {
         if (mAnmModel.Finished()) {
-            s32 *q = &mAnimLoops;
-            *q = *q + 1;
+            mAnimLoops++;
             if (mAnimLoops > 0x14)
                 this->func_ov090_02131e00(data_ov090_02134504);
         }
@@ -617,9 +616,8 @@ void daMenbo_c::OnPendingDestroy()
 /* Skip the frame while the Yoshi-mouth flag is set. */
 int daMenbo_c::Render()
 {
-    unsigned int f = mFlags;
-    int b = ((f & 0x40000) != 0);
-    if (b) return 1;
+    if (IsInYoshiMouth(this))
+        return 1;
     mAnmModel.Render(&mScale);
     return 1;
 }
@@ -677,7 +675,7 @@ int daMenbo_c::Behavior()
         func_ov090_02131378();
         if (gCurrentSublevel == 0x15 && mAreaId == 1) {
             UpdateWMClsn(mWithMeshClsn, 2);
-            if (func_02035638((u8 *)(&mWithMeshClsn))) {
+            if (func_02035638(&mWithMeshClsn)) {
                 mVertAccel = 0;
                 mSpeed.x = 0;
                 mSpeed.y = 0;
@@ -700,7 +698,7 @@ int daMenbo_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mPos.y <= mSurfaceY)
         mPos.y = mSurfaceY;
-    if (gCurrentSublevel == 0x15 && mAreaId == 1 && func_02035638((u8 *)(&mWithMeshClsn))) {
+    if (gCurrentSublevel == 0x15 && mAreaId == 1 && func_02035638(&mWithMeshClsn)) {
         mVertAccel = 0;
         mSpeed.x = 0;
         mSpeed.y = 0;
@@ -734,7 +732,7 @@ int daMenbo_c::Behavior()
 int daMenbo_c::InitResources()
 {
     BMD_File *f;
-    int r;
+    u32 r;
     Vector3 pos;
     Vector3 v;
 
@@ -810,7 +808,7 @@ int daMenbo_c::InitResources()
 
         {
             r = RandomIntInternal(&data_0209e650.value);
-            short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
+            short ang = (short)(((r >> 8) & 0xf) << 12);
             mTargetAngleY = ang;
             mPrevAngle.y = mTargetAngleY;
             mAngle.y = mPrevAngle.y;

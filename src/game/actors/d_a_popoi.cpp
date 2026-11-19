@@ -25,9 +25,6 @@
  * deslop leftovers:
  *   - TurnAway (data_ov077_02127d18) is its own record, so ChangeState
  *     still takes that object's address as daPopoi_StateRecord *.
- *   - UpdateTurnAwayState calls AngleDiff through an (int(*)(short,short))
- *     pointer cast: decl_common declares (int,int), and the short call-site
- *     typing is byte-load-bearing.
  *   - Render calls dExtAnmModel_c::Render through a dExtAnmModel_c pointer, so it
  *     dispatches through vtable slot 5 as the ROM does.
  *   - unk_41c is only ever zeroed here, and nothing reads it in this file.
@@ -114,7 +111,6 @@ extern daPopoi_StateRecord data_ov077_02127cd8;
 extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
-extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
 extern int func_ov002_020db674(daPly_c *player, int a1, int a2, int a3);
@@ -259,10 +255,7 @@ int daPopoi_c::Render()
     /* Nothing below the water surface is drawn. */
     if (mPos.y < data_0209f32c)
         return 1;
-    /* Through a pointer, so the call dispatches through vtable slot 5 as the
-       ROM does instead of binding dExtAnmModel_c::Render directly. */
-    dExtAnmModel_c *model = &mAnmModel;
-    model->Render(0);
+    mAnmModel.Render(0);
     return 1;
 }
 
@@ -296,9 +289,9 @@ int daPopoi_c::CleanupResources()
  * to the actor's position >> 3. Called from Behavior after the position writeback. */
 void daPopoi_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Install a state and run its entry action on the same frame.
@@ -440,11 +433,8 @@ int daPopoi_c::EnterTurnAwayState() {
  * 0x100 (1.4 degrees), set mCooldown to 30 frames and go back to Wander
  * (data_ov077_02127ce8). Returns 1. */
 int daPopoi_c::UpdateTurnAwayState() {
-    /* (short,short) view of AngleDiff (decl_common says int,int); the cast keeps
-       C linkage and the short call-site typing, which is byte-load-bearing. */
-    short tgt = mTargetAngleY;
-    ApproachLinear(mPrevAngle.y, tgt, 0x500);
-    int diff = (AngleDiff)(mPrevAngle.y, mTargetAngleY);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x500);
+    int diff = AngleDiff(mPrevAngle.y, mTargetAngleY);
     if (diff < 0x100) {
         mCooldown = 30;
         ChangeState(&data_ov077_02127ce8); /* Wander */

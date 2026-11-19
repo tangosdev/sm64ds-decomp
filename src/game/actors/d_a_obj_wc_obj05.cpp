@@ -120,7 +120,7 @@ s32 daObjWc_Obj05_c::Behavior() {
         mPos.y -= 0x14000;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
         {
-            int v = mRestPosY + (int)0xff5d8000;
+            int v = mRestPosY - 0xa28000;
             if (mPos.y <= v) {
                 mPos.y = v;
                 mState++;
@@ -130,7 +130,7 @@ s32 daObjWc_Obj05_c::Behavior() {
         break;
     }
     case 2: {
-        if ((u16)mDwellTimer >= 110) {
+        if (mDwellTimer >= 110) {
             int snd = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
             mSoundHandle = snd;
             mPos.y += 0xa000;
@@ -140,8 +140,7 @@ s32 daObjWc_Obj05_c::Behavior() {
                 mDwellTimer = 0;
             }
         } else {
-            u16 *p = (u16 *)&mDwellTimer;
-            *p = *p + 1;
+            mDwellTimer++;
         }
         break;
     }

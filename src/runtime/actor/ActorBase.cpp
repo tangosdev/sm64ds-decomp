@@ -138,14 +138,14 @@ struct N {
     struct N *prev;
     struct N *next;
     int pad8;
-    /* Kept volatile (#821 r21): the ROM reloads n->c on every pass of the
-       insert loop and reads node->c before n->c in the first test. A plain
-       field, the real fLiNdBaPr_c with currentPriority, and four loop shapes
-       (for over next, for (;;) with a break, `node->next` twice, while with
-       an inner break) all hoist the n->c load: 0x88 or 0x94 against 0x8c.
-       r63: `n->c >= next->c`, a `&n->c` local and for(;;) give 0x88; a
-       separate walk pointer (for over next, or prev/node) gives 0x90. */
-    volatile unsigned short c;
+    unsigned short c;
+
+    /* Read through this getter, the insert loop loads n's priority again
+       on every pass, as the cartridge does (#821 r79; it replaced a
+       volatile c). */
+    unsigned short GetPriority() const {
+        return c;
+    }
 };
 struct L {
     struct N *head;
@@ -165,9 +165,9 @@ int Absorb0204405c::L::func_0204405c(void *nodep) {
         return 0;
     if (node == 0)
         return func_0203b244(l, n);
-    if (node->c > n->c)
+    if (node->GetPriority() > n->GetPriority())
         return func_0203b2ec(l, n, 0);
-    while ((next = node->next) != 0 && next->c <= n->c)
+    while ((next = node->next) != 0 && next->GetPriority() <= n->GetPriority())
         node = next;
     return func_0203b2ec(l, n, node);
 }
@@ -511,10 +511,10 @@ int fBase_c::Virtual34(u32 a, u32 b)
             int res = OnHeapCreated();
             u32 okA;
             if (flagA != 0) {
-                okA = (u32)res;
+                okA = res;
             } else {
                 void *allocRes = Memory::Allocate(0x10, 4, 0);
-                okA = (allocRes != 0) ? (u32)res : 0;
+                okA = (allocRes != 0) ? res : 0;
             }
             Heap::RestoreFromTemporary();
             if (okA == 0) {
@@ -538,7 +538,7 @@ int fBase_c::Virtual34(u32 a, u32 b)
         u32 flagB = (u32)((Heap *)h)->heapStart & 0x10;
         if (flagB != 0)
             Memory::Allocate(0x10, 4, 0);
-        a = (u32)OnHeapCreated();
+        a = OnHeapCreated();
         if (flagB == 0) {
             void *allocRes2 = Memory::Allocate(0x10, 4, 0);
             if (allocRes2 == 0)
@@ -568,7 +568,7 @@ int fBase_c::Virtual34(u32 a, u32 b)
                 ((Heap *)h)->_Destroy();
                 h = 0;
                 int res3 = OnHeapCreated();
-                u32 okC = (u32)res3;
+                u32 okC = res3;
                 Heap::RestoreFromTemporary();
                 if (okC == 0) {
                     ((Heap *)h2)->_Destroy();

@@ -51,7 +51,7 @@ struct dMgMemory2Player_c {
 struct dMgMemory2Cursor_c {
     s32 x;
     s32 y;
-    s16 blinkTimer;
+    u16 blinkTimer; /* toggles the cursor frame every 20 ticks */
     u8 pad_0a[2];
     u8 visible;
     u8 frame;

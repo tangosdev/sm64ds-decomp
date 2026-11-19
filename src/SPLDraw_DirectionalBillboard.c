@@ -9,7 +9,7 @@
 
 /* No header declares these. */
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
-extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
+extern void SPLUtil_DrawXYPlane(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one particle as a quad stretched along its flight (draw type 1,
  * func_0204a5c8): alpha and the next polygon ID into POLYGON_ATTR (nothing
@@ -31,7 +31,7 @@ void SPLDraw_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl) {
     VecFx32 dir;
     VecFx32 look;
     MtxFx33 rot;
-    int mat[12];
+    MtxFx43 mat;
     u32 v;
     int sx;
     s64 sy; /* s64, not int: int does not match */
@@ -88,26 +88,26 @@ void SPLDraw_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl) {
         stretch = FX_MUL(side, (int)mgr->mCurrentSystem->mDefinition->data->dbbScale);
         sy2 = FX_MUL(sy, (stretch + 0x1000));
 
-        mat[0] = FX_MUL(dir.x, sx);
-        mat[8] = 0x1000;
-        mat[9] = trans.x;
-        mat[10] = trans.y;
-        mat[11] = trans.z;
-        mat[3] = FX_MUL(-dir.y, sy2);
-        mat[1] = FX_MUL(dir.y, sx);
-        mat[6] = 0;
-        mat[4] = FX_MUL(dir.x, sy2);
-        mat[7] = 0;
-        mat[2] = 0;
-        mat[5] = 0;
+        mat.m[0][0] = FX_MUL(dir.x, sx);
+        mat.m[2][2] = 0x1000;
+        mat.m[3][0] = trans.x;
+        mat.m[3][1] = trans.y;
+        mat.m[3][2] = trans.z;
+        mat.m[1][0] = FX_MUL(-dir.y, sy2);
+        mat.m[0][1] = FX_MUL(dir.y, sx);
+        mat.m[2][0] = 0;
+        mat.m[1][1] = FX_MUL(dir.x, sy2);
+        mat.m[2][1] = 0;
+        mat.m[0][2] = 0;
+        mat.m[1][2] = 0;
         G3_Identity();
-        G3_MultMtx43(mat);
+        G3_MultMtx43(&mat.m[0][0]);
     }
 
     G3_Color(ptcl->color);
     {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
         /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
-        func_0204c24c((u8)data->textureTileCountS, (u8)data->textureTileCountT);
+        SPLUtil_DrawXYPlane((u8)data->textureTileCountS, (u8)data->textureTileCountT);
     }
 }

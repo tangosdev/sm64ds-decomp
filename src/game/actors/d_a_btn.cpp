@@ -218,22 +218,23 @@ daBtn_c *daBtn_c_classInit_BATANKING() {
     return new daBtn_c();
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 /* Load the class's model, animations (and the king's face texture), set up
    the shadow, the collision mesh and the wall probe, record the spawn pose,
    and start waiting (state 0) on the walk animation. The king claims its
    star marker, and does not come back once that star is collected. */
 int daBtn_c::InitResources()
 {
-    u16 id;
     int animIdx;
     u8 idx;
     void *bmd;
     void *anim;
     int i;
 
-    id = actorID;
-    int b = (id == 0xa5);
-    if (b) {
+    if (IsActorID(this, 0xa5)) {
         mIsKing = 1;
         bmd = dExtSimpleModel_c::LoadFile(data_ov079_02128168);
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
@@ -293,11 +294,11 @@ int daBtn_c::InitResources()
     mMovingMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     {
-        s32 sp[3];
-        sp[0] = 0;
-        sp[1] = 0;
-        sp[2] = 0x1000;
-        mMovingMeshCollider.SetDepthDir((const Vector3 *)sp);
+        Vector3 depthDir;
+        depthDir.x = 0;
+        depthDir.y = 0;
+        depthDir.z = 0x1000;
+        mMovingMeshCollider.SetDepthDir(&depthDir);
     }
 
     mMovingMeshCollider.SetDepthDirMinDot(0xb50);
@@ -888,6 +889,10 @@ void daBtn_c::func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *oth
 }
 #pragma long_calls off
 
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 /* Contact from the lying body's back. Only players count. A contact that
    func_ov002_020dd8b8 accepts is a hit: it arms mPounded and remembers the
    player (the king ignores it while a resumed state 0 is pending). Any
@@ -900,8 +905,8 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
        SpawnCoins. All four are stored, as in the ROM. */
     Vector3 v1, v2;
     Vector3 w1, w2;
-    int eq = (other->actorID == 0xbf);
-    if (!eq) return;
+    if (!IsPlayerActor(other))
+        return;
     mTouched = 1;
     if (func_ov002_020dd8b8(other) != 0) {
         if (mResumePending != 0 && mIsKing != 0) {
@@ -1347,9 +1352,9 @@ void daBtn_c::func_ov079_02124188()
 
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
 
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = (mPos.y + mTipLift) >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + mTipLift) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     bone = mAnmModel.data.bones;
     pos.x = mPos.x;
@@ -1422,9 +1427,9 @@ void daBtn_c::func_ov079_02124008()
     }
     Matrix4x3_ApplyInPlaceToScale(&mMeshMatrix, 0x1000, s, 0x1000);
 
-    mMeshMatrix.m[9] = mPos.x;
-    mMeshMatrix.m[10] = mPos.y + mTipLift - off;
-    mMeshMatrix.m[11] = mPos.z;
+    mMeshMatrix.t.x = mPos.x;
+    mMeshMatrix.t.y = mPos.y + mTipLift - off;
+    mMeshMatrix.t.z = mPos.z;
 
     mMovingMeshCollider.Transform(mMeshMatrix, mBodyYaw);
 }
@@ -1607,6 +1612,15 @@ int daBtn_c::func_ov079_02123a8c()
     return 0;
 }
 
+/* The saves below read mState through this accessor, so it is loaded again
+   after the state test, as on the cartridge. Measured: a plain read at either
+   save is 0x284 of 0x288 and at both 0x280 (r20: reordered saves, casts,
+   `this->` and the negated test chain are all 0x280; r17: the three saves
+   as an inline helper 0x280, the state test as a predicate 0x298/0x2d0). */
+inline s32 daBtn_c::GetState() const {
+    return mState;
+}
+
 /* A hit from `other`, judged by where it stood a frame ago (pulled back
    0x50 along its heading) against the body's facing. From the front (within
    0x3c00) the body wobbles (state 10); from behind (beyond 0x4400) it drops
@@ -1645,23 +1659,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
-            /* Both reads are measured. A plain mState read here or at the
-               second site below shrinks the function 0x288 -> 0x284; plain
-               reads at both sites give 0x280. Re-measured (#821 r17): the
-               three saves as an inline helper (pointer or reference) are
-               still 0x280; the state test as an inline predicate is 0x298
-               (if chain) or 0x2d0 (switch). Re-measured (#821 r20), plain
-               reads at both sites: storing mResumeState after the other two
-               saves keeps the reload but leaves 16 of 162 words wrong; the
-               outer test on the r1 local, a (u32) or (s32)(u32) cast,
-               `this->` spelling, an empty `== 0xa` arm and the negated
-               `!=` chain are all 0x280. The pointer cast is what
-               matters, not a qualifier: a `volatile s32 *` cast builds the
-               same object. */
-            /* Kept (#821 r76): mState and mResumeState are both s32; the cast is a reload pin, and
-               no block-copy or type lever (r72-r75) applies to this scalar pin (r20: plain is
-               0x280). */
-            mResumeState = *(s32 *)&mState;
+            mResumeState = GetState();
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
@@ -1684,9 +1682,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
-            /* Kept (#821 r76): the same reload pin as above; no block-copy or type lever (r72-r75)
-               applies to this scalar pin. */
-            mResumeState = *(s32 *)&mState;
+            mResumeState = GetState();
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }

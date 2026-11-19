@@ -177,7 +177,7 @@ void daPicGate_c::InitContinuousRipple() {
 
 /* State 0 render. A dead wave draws the flat quad; otherwise a strip per column. */
 void daPicGate_c::DrawRippleImage() {
-    Matrix4x3 tmp;
+    Matrix4x3 modelView;
     int i, j;
 
     if (this->mWaveTimer == 0) {
@@ -186,11 +186,11 @@ void daPicGate_c::DrawRippleImage() {
     }
 
     G3_PushMtx();
-    MTX_Concat43(&this->mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&this->mMtx, &data_0209b3ec, &modelView);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
-    LoadMtx43(&tmp);
+    LoadMtx43(&modelView);
     G3_MtxMode(GX_MTXMODE_POSITION);
-    LoadMtx43(&tmp);
+    LoadMtx43(&modelView);
 
     G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
     G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
@@ -340,14 +340,14 @@ s32 daPicGate_c::InitResources() {
     }
 
     mCells = (Vertex *)::operator new[]((unsigned)mNumCells * 0x18u);
-    mTexRecord = (s32)this->LoadTexture((int)((unsigned char)((param1 >> 8) & 0x1f)));
+    mTexRecord = (s32)this->LoadTexture((unsigned char)((param1 >> 8) & 0x1f));
     mWaveParams = (const daPicGate_c::WaveParams *)&kDefaultWave;
     mState = &kStates[(unsigned char)((param1 >> 13) & 3)];
     (this->*mState->init)();
 
     {
-        int width = (int)((unsigned char)(param1 & 15) + 1) * kCell;
-        int height = (int)((unsigned char)((param1 >> 4) & 15) + 1) * kCell;
+        int width = ((unsigned char)(param1 & 15) + 1) * kCell;
+        int height = ((unsigned char)((param1 >> 4) & 15) + 1) * kCell;
         SetRanges(height / 2, width / 2 + kRangePad, kFar, kFar);
     }
     if ((unsigned char)((param1 >> 8) & 0x1f) == kPicUnclipped) {

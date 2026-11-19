@@ -95,10 +95,12 @@ struct JugemVec3 {
     }
     JugemVec3(int a, int b, long c)
     {
+        /* Kept (#821 r79): a member initialiser list, the stores in reverse order and a plain
+           int pointer are 6, 8 and 6 words off in the __sinit. */
         volatile int *p = &x;
         p[0] = a;
         p[1] = b;
-        p[2] = (int)c;
+        p[2] = c;
     }
     ~JugemVec3();
 };
@@ -106,7 +108,6 @@ struct JugemVec3 {
 extern "C" {
 
 /* Helpers not declared by the included headers. */
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int AngleDiff(int a, int b);
 

@@ -26,13 +26,13 @@
 #include "SpawnInfo.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 
 extern unsigned char data_0209d684;                /* talk-script choice */
 
 extern void func_02038414(void *clsn);
-extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 
 }
 extern unsigned char NumStars(void);
@@ -579,9 +579,9 @@ int daPgRcer_c::StateShowFinalText() {
 
 void daPgRcer_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
 }
 

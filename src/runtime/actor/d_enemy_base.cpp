@@ -166,10 +166,10 @@ void dEnemyBase_c::SpawnCoin()
             dActor_c *coin =
                 dActor_c::Spawn(data_ov002_020ff014[mCoinType - 1], 0xf2, v, 0, mAreaId, -1);
             if (coin != 0) {
-                int rnd1 = RandomIntInternal(&data_0209e650.value);
-                int rnd2 = RandomIntInternal(&data_0209e650.value);
-                int a = (int)((u32)rnd1 >> 16 << 27) >> 16;
-                u32 b = (u32)rnd2 >> 16;
+                u32 rnd1 = RandomIntInternal(&data_0209e650.value);
+                u32 rnd2 = RandomIntInternal(&data_0209e650.value);
+                int a = (int)(rnd1 >> 16 << 27) >> 16;
+                u32 b = rnd2 >> 16;
                 coin->mPrevAngle.x = 0;
                 coin->mPrevAngle.y = (s16)(a * i);
                 coin->mPrevAngle.z = 0;
@@ -231,7 +231,7 @@ void dEnemyBase_c::func_ov002_020ae968(dActor_c *arg) {
     mSpeed.y = 0x14000;
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
-        mHorzSpeed = ((int)t << 0xf) / 50;
+        mHorzSpeed = (t << 0xf) / 50;
     } else {
         mHorzSpeed = 0x14000;
     }
@@ -597,7 +597,6 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c &clsn) {
 }
 
 extern "C" {
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
 }
 

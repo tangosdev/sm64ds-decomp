@@ -15,7 +15,7 @@ int func_020471ac(const BMD_File *tbl, const char *name) {
         BMD_Texture *entry = tbl->textures;
         do {
             if (strcmp(entry->name, name) == 0)
-                return (int)i;
+                return i;
             i++;
             entry++;
         } while (i < tbl->numTextures);

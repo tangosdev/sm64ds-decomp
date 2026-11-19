@@ -38,6 +38,7 @@ enum d_a_pg_mthr_AssetId {
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 enum {
     ACTOR_PLAYER = 0xbf,
@@ -95,20 +96,11 @@ struct PgMthrState {
     int (daPgMthr_c::*update)();
 };
 extern "C" {
-extern fx32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 /* 0x0201267c plays Sound::Play(3, id, pos). Sound::PlayBank3 is the
    previous function (0x02012664); this TU's bl is not that one. */
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *mf, short angY);
-extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *mf, short angX);
-extern Matrix4x3 data_020a0e68;
 extern PgMthrAnimFileResHandle gPenguinWalkAnimationFile;
 extern PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile;
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile;
 extern PgMthrAnimFileResHandle gPenguinWait1AnimationFile;
 extern PgMthrState data_ov018_02113c4c[3];
@@ -116,7 +108,6 @@ typedef void (daPgMthr_c::*PMF)();
 extern PgMthrModelFileHandle data_ov018_02113c00;
 extern SharedFilePtr *data_ov018_02112c04[2];
 }
-extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 
 daPgMthr_c *daPgMthr_c_classInit() {
     return new daPgMthr_c();
@@ -263,8 +254,7 @@ int daPgMthr_c::StateTalkUpdate() {
     case 0:
         if (mdCcAc_c.hitFlags & HIT_TOUCH) {
             if (mPlayer->StartTalk(*this, 1)) {
-                u8 *p = &mTalkStep;
-                *p = *p + 1;
+                mTalkStep++;
             }
         } else {
             ChangeState(0);
@@ -277,15 +267,12 @@ int daPgMthr_c::StateTalkUpdate() {
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
             {
                 Vector3 mouth;
-                mouth.x = data_020a0e68.m[9];
-                mouth.y = data_020a0e68.m[10];
-                mouth.z = data_020a0e68.m[11];
+                mouth.x = data_020a0e68.t.x;
+                mouth.y = data_020a0e68.t.y;
+                mouth.z = data_020a0e68.t.z;
                 if (mPlayer->ShowMessage(*this, mMessageId, &mouth, 0, 0)) {
                     func_0201267c(0xdf, &mCamSpacePos);
-                    {
-                        u8 *p = &mTalkStep;
-                        *p = *p + 1;
-                    }
+                    mTalkStep++;
                 }
             }
         }
@@ -297,14 +284,11 @@ int daPgMthr_c::StateTalkUpdate() {
                 unsigned char slot;
                 mGaveStar = 1;
                 slot = (unsigned char)(param1 & 0xf);
-                starParam = (unsigned)slot | 0x40;
+                starParam = slot | 0x40;
                 dActor_c::Spawn(ACTOR_POWER_STAR, starParam, mPos, 0, mAreaId, -1);
             }
             mPlayer->DropActor();
-            {
-                u8 *p = &mTalkStep;
-                *p = *p + 1;
-            }
+            mTalkStep++;
         }
         break;
     case 3:
@@ -355,10 +339,9 @@ int daPgMthr_c::StateFollowUpdate() {
 
 void daPgMthr_c::UpdateModelAndShadow() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
-    /* m[9..11] are mat4x3's translation (pos >> 3). */
-    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
-    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
-    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
     if (mLookAngX != 0 || mLookAngY != 0) {
         Matrix4x3 *bone = &mAnmModel.data.transforms[LOOK_BONE];
@@ -388,6 +371,10 @@ void daPgMthr_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     }
 }
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 void daPgMthr_c::CheckFollow() {
     daPly_c *p = ClosestPlayer();
     dActor_c *held;
@@ -404,8 +391,7 @@ void daPgMthr_c::CheckFollow() {
         return;
     /* (int) of the compare is the longer body. A plain != is 0xa8, ROM is 0xb4. */
     {
-        int baby = (int)(held->actorID == ACTOR_BABY_PENGUIN);
-        if (baby == 0)
+        if (!IsActorID(held, ACTOR_BABY_PENGUIN))
             return;
     }
     if (held->param1 != BABY_OWN)
@@ -439,9 +425,9 @@ void daPgMthr_c::TurnHeadToward(char *b) {
         lookTarget.z = tz;
         lookTarget.y = ty;
         bone = &mAnmModel.data.transforms[LOOK_BONE];
-        nodePos.x = bone->m[9];
-        nodePos.y = bone->m[10];
-        nodePos.z = bone->m[11];
+        nodePos.x = bone->t.x;
+        nodePos.y = bone->t.y;
+        nodePos.z = bone->t.z;
         vert = Vec3_VertAngle(&nodePos, &lookTarget);
         delta = horzAngle - mAngle.y;
     } else {
@@ -457,33 +443,22 @@ void daPgMthr_c::BeginTalk(void *found, char *heldRaw) {
     dActor_c *held = (dActor_c *)heldRaw;
     daPly_c *who = (daPly_c *)found;
 
-    if (held) {
-        int baby = held->actorID == ACTOR_BABY_PENGUIN;
-        if (baby != 0) {
-            if (held->param1 == BABY_OTHER) {
-                mPlayer = who;
-                mMessageId = MSG_OTHER_BABY;
-                mHoldingBaby = 1;
-                ChangeState(1);
-                return;
-            }
-        }
+    if (held && IsActorID(held, ACTOR_BABY_PENGUIN) && held->param1 == BABY_OTHER) {
+        mPlayer = who;
+        mMessageId = MSG_OTHER_BABY;
+        mHoldingBaby = 1;
+        ChangeState(1);
+        return;
     }
     if (mGaveStar)
         return;
-    if (held) {
-        int baby = held->actorID == ACTOR_BABY_PENGUIN;
-        if (baby != 0) {
-            if (held->param1 == BABY_OWN) {
-                mMessageId = MSG_OWN_BABY;
-                goto talk;
-            }
-        }
+    if (held && IsActorID(held, ACTOR_BABY_PENGUIN) && held->param1 == BABY_OWN) {
+        mMessageId = MSG_OWN_BABY;
+    } else {
+        if (mHoldingBaby)
+            return;
+        mMessageId = MSG_NO_BABY;
     }
-    if (mHoldingBaby)
-        return;
-    mMessageId = MSG_NO_BABY;
-talk:
     mPlayer = who;
     ChangeState(1);
 }
@@ -493,8 +468,7 @@ daPly_c *daPgMthr_c::FindNewToucher() {
     if (mdCcAc_c.hitFlags & HIT_TOUCH) {
         struct dActor_c *a = dActor_c::FindWithID(mdCcAc_c.otherOwner);
         if (a) {
-            int ok = (a->actorID == ACTOR_PLAYER) ? 1 : (int)newToucher;
-            if (ok) {
+            if (IsActorID(a, ACTOR_PLAYER)) {
                 if (a != mLastPlayer)
                     newToucher = static_cast<daPly_c *>(a);
                 mLastPlayer = a;

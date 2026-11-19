@@ -48,6 +48,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
+#include "Ov007MenuMem.h"
 
 /* The 0x14-byte screen-fade record sScreenFade points at. */
 typedef struct Ov007Fade {
@@ -73,8 +74,6 @@ extern "C" void func_ov007_020bc47c(Ov007Model *thiz);
 extern void func_ov007_020bc53c(Ov007Model *p);
 extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
 extern "C" int func_ov007_020bdeb0(int a);
-extern "C" void func_ov007_020c3d1c(void *self);
-extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void Transition_Update(Ov007Transition *tr);
 extern "C" void Transition_StartBackward(Ov007Transition *tr, int v);
 extern "C" void Transition_StartForward(Ov007Transition *tr, int v);

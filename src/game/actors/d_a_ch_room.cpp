@@ -21,10 +21,10 @@
 #include "daChRoom_c.h"
 #include "daPly_c.h"
 #include "SpawnInfo.h"
+#include "math/CalcLib.h"
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_RotateYAndTranslate(Vector3 *out, void *m, s16 ang, const Vector3 *in);
 void ChangeArea(int);
 }
@@ -66,9 +66,9 @@ int daChRoom_c::Behavior() {
                 int z = local.z;
                 int distZ = (z < 0) ? -z : z;
                 if (distZ > 0x64000 && distZ < 0x190000) {
-                    int area = (z < 0) ? mAngle.x : mAngle.z;
-                    player->mAreaId = (char)area;
-                    ChangeArea((char)area);
+                    s8 area = (z < 0) ? mAngle.x : mAngle.z;
+                    player->mAreaId = area;
+                    ChangeArea(area);
                 }
             }
         }

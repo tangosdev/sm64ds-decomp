@@ -30,7 +30,7 @@ void func_ov007_020c5490(char *obj, struct Matrix2x2 *m) {
                 e->x = (FX_MUL(m->m00, dx) + FX_MUL(m->m01, dy)) + restX;
                 j++;
                 e->y = (FX_MUL(m->m10, dx) + FX_MUL(m->m11, dy)) + self->restPos.y;
-            } while (j < (int)self->groups[i]->pointCount);
+            } while (j < self->groups[i]->pointCount);
         }
         i++;
     } while (i < self->groupCount);

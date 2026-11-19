@@ -87,7 +87,6 @@ extern u8 gCurrentStarId;
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
 int AngleDiff(int a, int b);
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 int IsStarCollectedInCurLevel(int starID);
 
@@ -183,16 +182,16 @@ void daObjBk_Botaosi_c::UpdateShadow() {
     {
         int front = mFrontPos.x;
         int cosine = FX_CosIdx((u16)(s16)(mAngle.y + yaw) >> 4);
-        mShadowMat.m[9] = (front + FX_MUL(cosine, (lean >> 1))) >> 3;
+        mShadowMat.t.x = (front + FX_MUL(cosine, (lean >> 1))) >> 3;
     }
-    mShadowMat.m[10] = mFrontPos.y >> 3;
+    mShadowMat.t.y = mFrontPos.y >> 3;
     {
         int front = mFrontPos.z;
         int sine2 = FX_SinIdx((u16)(s16)(mAngle.y + yaw) >> 4);
-        mShadowMat.m[11] = (front + FX_MUL(sine2, (lean >> 1))) >> 3;
+        mShadowMat.t.z = (front + FX_MUL(sine2, (lean >> 1))) >> 3;
     }
     if (mState >= 2)
-        mShadowMat.m[10] = mFrontFloorY >> 3;
+        mShadowMat.t.y = mFrontFloorY >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0xc8000, 0x12c000, lean, 0xf);
 }
 
@@ -201,9 +200,9 @@ void daObjBk_Botaosi_c::UpdateShadow() {
    row. */
 void daObjBk_Botaosi_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3.m[9] = mPos.x >> 3;
-    mModel.mat4x3.m[10] = mPos.y >> 3;
-    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */

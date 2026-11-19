@@ -19,10 +19,6 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
-/* Shared math worker.
-   local extern: no header in include/ declares it. */
-void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
-
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
    below), and the scratch scaled matrix.
    local extern: no header in include/ declares them. */
@@ -46,9 +42,11 @@ dBgW_KcMbg::~dBgW_KcMbg() {}
  * SetFile is 0x260 of 0x240.
  * The scale and angY parameters shadow the members of the same name, so
  * those stores and the scale reload are spelled through this->.
- * A Vector3 `up` member gives Scratch a destructor the ROM does not have, and
- * a separate Vector3 local makes SetFile 0x290. So `up`, like the VecFx32
- * upAxis, is cast at WorldToLocalDirection's Vector3 parameters.
+ * Kept (#821 r111): `up` stays the SDK's VecFx32 and is cast at
+ * WorldToLocalDirection's Vector3 parameter. A Vector3 `up` member matches
+ * SetFile byte for byte but gives Scratch its own destructor
+ * (Scratch$329...D1Ev), a body the ROM does not have; a separate Vector3
+ * local does not match SetFile.
  */
 void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 angY,
                          CLPS_Block &clps) {
@@ -65,9 +63,9 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 a
     MTX_Inverse43(&invMat, &invMat);
     this->angY = angY;
     angVelY = 0;
-    pos.x = mtx.m[9];
-    pos.y = mtx.m[10];
-    pos.z = mtx.m[11];
+    pos.x = mtx.t.x;
+    pos.y = mtx.t.y;
+    pos.z = mtx.t.z;
     velocity.x = velocity.y = velocity.z = 0;
     scratch.rotation = *(Mtx43 *)&mat;
     scratch.rotation.r[3].x = 0;
@@ -87,7 +85,7 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 a
     scratch.up.x = 0;
     scratch.up.y = 0x1000;
     scratch.up.z = 0;
-    WorldToLocalDirection(*(Vector3 *)&scratch.up, *(Vector3 *)&upAxis);
+    WorldToLocalDirection(*(Vector3 *)&scratch.up, upAxis);
     filterByMoveDir = false;
 }
 
@@ -103,17 +101,17 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     angVelY = angle - oldAngle;
     angY = angle;
 
-    velocity.x = mtx.m[9] - pos.x;
-    velocity.y = mtx.m[10] - pos.y;
-    velocity.z = mtx.m[11] - pos.z;
-    pos.x = mtx.m[9];
-    pos.y = mtx.m[10];
-    pos.z = mtx.m[11];
+    velocity.x = mtx.t.x - pos.x;
+    velocity.y = mtx.t.y - pos.y;
+    velocity.z = mtx.t.z - pos.z;
+    pos.x = mtx.t.x;
+    pos.y = mtx.t.y;
+    pos.z = mtx.t.z;
 
     Matrix4x3 rotation = mat;
-    rotation.m[9] = 0;
-    rotation.m[10] = 0;
-    rotation.m[11] = 0;
+    rotation.t.x = 0;
+    rotation.t.y = 0;
+    rotation.t.z = 0;
     invRotMat = rotation;
     MTX_Inverse43(&invRotMat, &invRotMat);
 
@@ -130,7 +128,7 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     up.x = 0;
     up.y = 0x1000;
     up.z = 0;
-    WorldToLocalDirection(up, *(Vector3 *)&upAxis);
+    WorldToLocalDirection(up, upAxis);
 
     if (!filterByMoveDir)
         return;
@@ -192,9 +190,9 @@ void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result
 void dBgW_KcMbg::LocalToWorldDirection(const Vector3 &direction, Vector3 &result) {
     Matrix4x3 rotation;
     rotation = mat;
-    rotation.m[9] = 0;
-    rotation.m[10] = 0;
-    rotation.m[11] = 0;
+    rotation.t.x = 0;
+    rotation.t.y = 0;
+    rotation.t.z = 0;
     MTX_MultVec43(&direction, &rotation, &result);
 }
 

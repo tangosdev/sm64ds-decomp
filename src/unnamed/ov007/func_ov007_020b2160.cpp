@@ -13,7 +13,7 @@ void func_ov007_020b2160(int mode) {
 
     switch (mode) {
     case 1:
-        a = (int)WORK->cameras[1]->fovy >> 4;
+        a = WORK->cameras[1]->fovy >> 4;
         G3i_PerspectiveW_(FX_SinIdx(a), FX_CosIdx(a), (WORK->cameras[1]->aspect >> 20),
                           WORK->cameras[1]->nearZ, WORK->cameras[1]->farZ, WORK->cameras[1]->scaleW,
                           1, (Matrix4x3 *)WORK->cameras[1]->projMatrix);
@@ -21,7 +21,7 @@ void func_ov007_020b2160(int mode) {
                     &WORK->cameras[1]->viewMatrix);
         break;
     case 0:
-        a = (int)WORK->cameras[0]->fovy >> 4;
+        a = WORK->cameras[0]->fovy >> 4;
         G3i_PerspectiveW_(FX_SinIdx(a), FX_CosIdx(a), (WORK->cameras[0]->aspect >> 20),
                           WORK->cameras[0]->nearZ, WORK->cameras[0]->farZ, 0x1000, 1,
                           (Matrix4x3 *)0);

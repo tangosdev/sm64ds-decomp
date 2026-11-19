@@ -14,8 +14,9 @@
  *   leaves in r0.
  * - ChangeMusicVolume is Sound::ChangeMusicVolume(unsigned int, int). The
  *   second value is a 0x1000-scaled volume, spelled fx32 in the header.
- * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
- *   unknown load-bearing status.
+ * - `int dd = (int)(((long long)d))' in func_02012468 is load-bearing
+ *   (#821 r97): `int dd = d;`, passing d itself, and x and p declared at
+ *   their first set are each 5 words off.
  */
 #include "types.h"
 #include "Sound.h"
@@ -31,8 +32,8 @@ struct SndHeap;
 typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2);
 
 /* Foreign callees. */
-extern "C" int func_02051f1c(void *a, u32 b, int c);
-extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int e, int f);
+extern "C" int NNS_SndArcPlayerStartSeqArc(void *a, u32 b, int c);
+extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, int e, int f);
 extern "C" u32 NNS_SndHeapGetFreeSize(struct SndHeap *heap);
 extern "C" void NNS_SndHeapLoadState(struct SndHeap *heap, int level);
 extern "C" void *NNS_SndHeapAlloc(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
@@ -57,7 +58,7 @@ extern void func_02049cd8(void *a, int b, int mode);
 }
 
 extern "C" int func_02051918(unsigned int id, struct SndHeap *heap);
-extern "C" int func_02051fb4(void *g, unsigned int x);
+extern "C" int NNS_SndArcPlayerStartSeq(void *g, unsigned int x);
 extern "C" {
 
 extern void func_02049764(void);
@@ -97,7 +98,7 @@ extern void *func_02011934(SndRegTable *table, int id);
 extern int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1);
 extern void func_02011698(SndRegTable *table, SndRegEntry *n);
 extern int func_02011654(char *table, char *n);
-extern int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2);
+extern int Player_PlaySoundEffect(NNSSndHandle *handle, int seqArcNo, int index);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 
 /* Module state. Volumes are 0..0x7f; the current ones are 20.12 fixed point
@@ -347,7 +348,7 @@ int func_02013078(void) {
             data_0209b48c = Sound_PlayIfNotActive(data_0209b48c, 3, 0x18d, 0);
         result = (gCurrentAreaId == 0) ? 4 : 3;
     } else if (state == 0xd) {
-        result = (player->mPos.y < (int)0xffe3e000) ? 5 : 6;
+        result = (player->mPos.y < -0x1c2000) ? 5 : 6;
     } else if (state == 0x15) {
         result = (player->mPos.y < 0) ? 5 : 6;
     }
@@ -434,7 +435,7 @@ void func_02012dbc(int a) {
 }
 
 void func_02012d64(void) {
-    ApproachLinear(gMusicVolume, (s32)sMusicVolumeTarget << 12, sVolumeRampStep);
+    ApproachLinear(gMusicVolume, sMusicVolumeTarget << 12, sVolumeRampStep);
     func_02013524(&sMusicHandle, gMusicVolume >> 12, 0);
 }
 
@@ -447,23 +448,20 @@ int ChangeMusicVolume(unsigned int a, int b) {
 }
 
 namespace Sound {
-bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
+bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, int e) {
     int x;
     if (c == 0) {
-        /* e is bool. A plain test compiles to ldrb; retail loads the whole word. */
-        /* Kept (#821 r76): the ROM reads e as a word. `int e` with plain tests is byte-identical
-           here, but it renames _ZN5Sound7PlaySubEjjjib for every caller, two of them owned
-           elsewhere. */
-        if (!*(int *)&e) {
+        /* e is a word-sized flag: retail tests it with a full-word ldr, never ldrb. */
+        if (!e) {
             x = gSubSoundID;
-            if ((x >= 0 && x != (int)a) ||
-                (gSubVolume == 0 && sMusicVolumeTarget == (int)b && gMusicVolume == (int)(b << 12)))
+            if ((x >= 0 && x != a) ||
+                (gSubVolume == 0 && sMusicVolumeTarget == b && gMusicVolume == (b << 12)))
                 return true;
         }
     } else {
         x = gSubSoundID;
-        if (x < 0 || *(int *)&e) { /* same full-word load as above */
-            if (x != (int)a) {
+        if (x < 0 || e) {
+            if (x != a) {
                 gSubSoundID = a;
                 if (a != 0x35 && a != 0x36) {
                     if (a != 0x2e)
@@ -471,14 +469,14 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
                 }
                 func_02011dcc(&sSubHandle, a);
             }
-        } else if (x != (int)a) {
+        } else if (x != a) {
             return false;
         }
     }
     sMusicVolumeTarget = (signed char)b;
     sSubVolumeTarget = (signed char)c;
     sVolumeRampStep = d;
-    return gMusicVolume == (int)(b << 12) && gSubVolume == (int)(c << 12);
+    return gMusicVolume == (b << 12) && gSubVolume == (c << 12);
 }
 }
 
@@ -875,16 +873,16 @@ void *func_02011e94(int *out) {
     return block;
 }
 
-int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2) {
+int Player_PlaySoundEffect(NNSSndHandle *handle, int seqArcNo, int index) {
     if (gSoundInitialized == 0)
         return 1;
-    if (arg1 != 3)
-        return func_02051f1c(handle, arg1, arg2);
-    return func_02051e60(handle, -1, sCurrentBank, -1, arg1, arg2);
+    if (seqArcNo != 3)
+        return NNS_SndArcPlayerStartSeqArc(handle, seqArcNo, index);
+    return func_02051e60(handle, -1, sCurrentBank, -1, seqArcNo, index);
 }
 
 int func_02011dcc(NNSSndHandle *handle, int x) {
-    int r4 = func_02051fb4(handle, x);
+    int r4 = NNS_SndArcPlayerStartSeq(handle, x);
     if (r4 != 0 && handle == &sMusicHandle) {
         func_02049764();
         func_02013078();

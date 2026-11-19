@@ -573,13 +573,14 @@ void dScMgPachinko2_c::Cup_HideAll() {
 }
 
 void dScMgPachinko2_c::ChooseLaneConfig() {
-    unsigned int nextConfig, configOffset;
+    s32 nextConfig;
+    unsigned int configOffset;
     if (mLevel != 0) {
         nextConfig = PACHINKO_RAND(6);
-        if ((unsigned int)mLaneConfig == nextConfig) {
+        if (mLaneConfig == nextConfig) {
             configOffset = PACHINKO_RAND(5) + 1;
             nextConfig = nextConfig + configOffset;
-            if ((int)nextConfig >= 6)
+            if (nextConfig >= 6)
                 nextConfig -= 6;
         }
         mLaneConfig = nextConfig;
@@ -882,16 +883,18 @@ void dScMgPachinko2_c::Paddle_StateGather(int i) {
 
         /* Kept: the self-select orders the rsb for deltaX before the y
            subtract. Six plain spellings (no temporaries, deltaY first or
-           last, x/y temporaries) all swap those two words. */
+           last, x/y temporaries) all swap those two words. Kept (#821 r97):
+           eight declaration orders (targetY last, currentY first, a y >> 12
+           or deltaY local, none) are 2 words off as well. */
         currentY = deltaX ? currentY : currentY;
         mPaddles[i].angle = cstd::atan2(targetY - (currentY >> 12), deltaX);
 
         {
-            fx16 c = FX_CosIdx((u16)mPaddles[i].angle >> 4);
+            fx16 c = FX_CosIdx(mPaddles[i].angle >> 4);
             mPaddles[i].x += FX_MUL(c, mPaddles[i].speed);
         }
         {
-            fx16 s = FX_SinIdx((u16)mPaddles[i].angle >> 4);
+            fx16 s = FX_SinIdx(mPaddles[i].angle >> 4);
             mPaddles[i].y += FX_MUL(s, mPaddles[i].speed);
         }
 
@@ -1215,8 +1218,8 @@ void dScMgPachinko2_c::Paddle_StateWeave(int i) {
 }
 
 void dScMgPachinko2_c::Paddle_StateOrbit(int i) {
-    mPaddles[i].x = FX_MUL(FX_CosIdx((u16)mPaddles[i].angle >> 4), 0x50000) + 0x80000;
-    mPaddles[i].y = FX_MUL(FX_SinIdx((u16)mPaddles[i].angle >> 4), 0x50000) - 0x80000;
+    mPaddles[i].x = FX_MUL(FX_CosIdx(mPaddles[i].angle >> 4), 0x50000) + 0x80000;
+    mPaddles[i].y = FX_MUL(FX_SinIdx(mPaddles[i].angle >> 4), 0x50000) - 0x80000;
 
     if (mPaddles[i].step != 0) {
         mPaddles[i].angle -= 0x40;
@@ -1555,7 +1558,7 @@ void dScMgPachinko2_c::UpdateCountdown() {
 void dScMgPachinko2_c::ClearAimLine() {
     /* volatile: the ROM spills the fill value to the stack and reloads it;
        a literal 0 or a plain local is 8 bytes shorter (known unsolved). */
-    volatile unsigned short tmp;
+    volatile unsigned short fill;
     int n = mHeldBall;
     int dx, dy;
 
@@ -1579,8 +1582,8 @@ void dScMgPachinko2_c::ClearAimLine() {
     mHeldBall = 0;
     {
         char *dst = (char *)G2S_GetBG2CharPtr();
-        tmp = 0;
-        MI_CpuFill16(dst, tmp, 0x6000);
+        fill = 0;
+        MI_CpuFill16(dst, fill, 0x6000);
     }
 }
 
@@ -1589,6 +1592,8 @@ void dScMgPachinko2_c::ClearAimLine() {
  * order and the row and column take other registers (10 of 32 words).
  * Plain (x - 1 + j, y - 1 + i) bodies with it on are 31 words: the ROM
  * spills the shared 0 for j to the stack (measured #821). */
+/* Kept (#821 r79): x, lo, hi and col recomputed in the inner loop, do-while loops and an x
+   counter are 10, 10 and 34 words off of 32. */
 #pragma opt_loop_invariants off
 void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
     int i, j, x, lo, hi, col, row, yb, s;
@@ -1618,7 +1623,7 @@ void dScMgPachinko2_c::DrawAimLine() {
     int tx;
     int ty;
     int idx;
-    volatile unsigned short tmp; /* fill value; see StartRoundEnd */
+    volatile unsigned short fill; /* fill value; see StartRoundEnd */
     int cx;
     int cy;
     int dx;
@@ -1631,8 +1636,8 @@ void dScMgPachinko2_c::DrawAimLine() {
     idx = mHeldBall - 1;
     if (mBalls[idx].x != mBalls[idx].prevX || mBalls[idx].y != mBalls[idx].prevY) {
         char *dst = (char *)G2S_GetBG2CharPtr();
-        tmp = 0;
-        MI_CpuFill16(dst, tmp, 0x6000);
+        fill = 0;
+        MI_CpuFill16(dst, fill, 0x6000);
 
         for (k = 0; k < 2; k++) {
             if (k == 0) {
@@ -1756,8 +1761,8 @@ void dScMgPachinko2_c::Ball_HitAt(int x, int z, int d) {
                 mBalls[i].angle = 0xb000;
             mBalls[i].x = x << 12;
             mBalls[i].y = (z - 0x12) << 12;
-            mBalls[i].vx = FX_MUL(FX_CosIdx((u16)mBalls[i].angle >> 4), 0x2000);
-            mBalls[i].vy = FX_MUL(FX_SinIdx((u16)mBalls[i].angle >> 4), 0x2000);
+            mBalls[i].vx = FX_MUL(FX_CosIdx(mBalls[i].angle >> 4), 0x2000);
+            mBalls[i].vy = FX_MUL(FX_SinIdx(mBalls[i].angle >> 4), 0x2000);
             mBalls[i].gravity = 0;
             Sound::PlayBank2_2D(0x199);
             return;
@@ -1845,18 +1850,19 @@ void dScMgPachinko2_c::Ball_StateWaitGrab(int i) {
 /* dScMgPachinko2_c ball i under a live pen record: while the pen is down the
    ball follows the pen (x/y = pen + held offset, clamped to the field, offset
    re-derived); on release it aims the ball at (0x80, 0x20) and launches it.
-   Touch record reads: the pen x is a volatile byte read and the pen y a
-   plain byte read, both as a flat byte view of gTouchInfo strided by 4. This
-   is a launder, kept because nothing natural reaches the ROM: plain
-   gTouchInfo[idx].x/.y at both sites is 16 words off (r3/r6 colouring at the
-   first site, the literal hoisting at the second), a volatile TouchInfo at
-   both 165, a volatile &gTouchInfo[idx].x 14; the flat view at only one site
-   leaves 11 (first) or 5 (second). Measured under 2004/b56 against the
-   lane-symbol form this replaced, which compiled the same bytes.
-   Re-measured (#821, 2026-11-16): typed gTouchInfo[idx].x/.y at the first
-   site alone is 5 words off (r3/r6 swapped) with y read first, y declared
-   first, the shift operands swapped or u8 locals; read inline 9; through a
-   TouchInfo reference 0x374. Typed at the second site alone is 11. */
+   Touch record reads: the pen y is gTouchInfo[idx].y at both sites, but the
+   pen x is still a volatile byte read through a flat byte view of gTouchInfo
+   strided by 4. That is a launder, kept because nothing natural reaches the
+   ROM: plain gTouchInfo[idx].x/.y at both sites is 16 words off (r3/r6
+   colouring at the first site, the literal hoisting at the second), a
+   volatile TouchInfo at both 165, a volatile &gTouchInfo[idx].x 14.
+   Re-measured (#821, 2026-11-16): typed gTouchInfo[idx].x at the first site
+   alone is 5 words off (r3/r6 swapped) with y read first, y declared first,
+   the shift operands swapped or u8 locals; read inline 9; through a
+   TouchInfo reference 0x374. Typed at the second site alone is 11.
+   (#821 r109: with y typed, x typed at the first site is 5 words off, at
+   the second 11, at both 16; the second site's y must index by idx --
+   gTouchInfo[gActivePlayerSlot].y there is 200 words off.) */
 void dScMgPachinko2_c::Ball_StateAim(int i) {
     int idx = gActivePlayerSlot;
 
@@ -1868,8 +1874,10 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
         int dist;
         int sq;
         int prev;
+        /* Kept (#821 r79): inline TouchX/TouchY(slot) accessors returning int or u8, at both
+           sites or either alone, are 16 words off. */
         int tx = ((volatile u8 *)&gTouchInfo->x)[idx * 4];
-        int ty = ((u8 *)&gTouchInfo->y)[idx * 4];
+        int ty = gTouchInfo[idx].y;
 
         this->mBalls[i].x = this->mBalls[i].px + (tx << 12);
         this->mBalls[i].y = this->mBalls[i].py + (ty << 12);
@@ -1890,7 +1898,7 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
         {
             int nx =
                 (this->mBalls[i].x >> 12) - ((volatile u8 *)&gTouchInfo->x)[gActivePlayerSlot * 4];
-            int ny = (this->mBalls[i].y >> 12) - ((u8 *)&gTouchInfo->y)[gActivePlayerSlot * 4];
+            int ny = (this->mBalls[i].y >> 12) - gTouchInfo[idx].y;
             this->mBalls[i].px = nx << 12;
             this->mBalls[i].py = ny << 12;
         }
@@ -1933,11 +1941,11 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
                 this->mNextBallDelay = 1;
             }
             {
-                fx16 c = FX_CosIdx((u16)this->mBalls[i].angle >> 4);
+                fx16 c = FX_CosIdx(this->mBalls[i].angle >> 4);
                 this->mBalls[i].vx = FX_MUL(c, this->mBalls[i].speed);
             }
             {
-                fx16 s = FX_SinIdx((u16)this->mBalls[i].angle >> 4);
+                fx16 s = FX_SinIdx(this->mBalls[i].angle >> 4);
                 this->mBalls[i].vy = FX_MUL(s, this->mBalls[i].speed);
             }
             this->mBalls[i].timer = 0;
@@ -1965,7 +1973,7 @@ void dScMgPachinko2_c::Ball_StateFlying(int i) {
             mBalls[i].x += FX_MUL(c, mBalls[i].speed);
         }
         {
-            fx16 s = FX_SinIdx((u16)mBalls[i].angle >> 4);
+            fx16 s = FX_SinIdx(mBalls[i].angle >> 4);
             mBalls[i].y += FX_MUL(s, mBalls[i].speed);
         }
 
@@ -2302,8 +2310,8 @@ s32 dScMgPachinko2_c::InitResources() {
     char *b;
     char *dst;
     /* volatile: the ROM stores each fill value to the stack and reloads it */
-    volatile u16 spC;
-    volatile u16 spE;
+    volatile u16 fill;
+    volatile u16 tile;
     void *objChar;
     void *objPltt;
     void *f;
@@ -2343,15 +2351,15 @@ s32 dScMgPachinko2_c::InitResources() {
                           GX_BG_CHARBASE_0x18000);
 
     b = (char *)G2S_GetBG2CharPtr();
-    spC = 0;
-    MI_CpuFill16(b, spC, 0x6000);
+    fill = 0;
+    MI_CpuFill16(b, fill, 0x6000);
 
     n = 0;
     for (y = 0; y < 24; y++) {
         for (x = 0; x < 32; x++) {
             dst = (char *)((u16 *)G2S_GetBG2ScrPtr() + x + y * 0x20);
-            spE = n;
-            MI_CpuFill16(dst, spE, 2);
+            tile = n;
+            MI_CpuFill16(dst, tile, 2);
             n++;
         }
     }

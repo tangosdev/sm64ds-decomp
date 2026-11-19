@@ -102,11 +102,14 @@ enum {
 
 daObjBk_Kabe_c::~daObjBk_Kabe_c() {}
 
+static inline int IsActorID(dActor_c *actor, int id) {
+    return actor->actorID == id;
+}
+
 void daObjBk_Kabe_c::Kill() {
     Sound::PlayBank3(kBreakSound, mCamSpacePos);
     Particle::System::NewSimple(kBreakParticle, mPos.x, mPos.y, mPos.z);
-    int isBreakable = (actorID == kBreakableActor);
-    if (isBreakable) {
+    if (IsActorID(this, kBreakableActor)) {
         mBroken = 1;
         return;
     }
@@ -133,8 +136,7 @@ int daObjBk_Kabe_c::Render() {
 }
 
 int daObjBk_Kabe_c::Behavior() {
-    int isBreakable = (actorID == kBreakableActor);
-    if (isBreakable && mBroken) {
+    if (IsActorID(this, kBreakableActor) && mBroken) {
         if (mMeshCollider.IsEnabled())
             mMeshCollider.Disable();
         if (Sound::PlaySecretSound(this, &mBreakSoundState)) {
