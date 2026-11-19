@@ -1004,6 +1004,11 @@ struct daPly_c : dActor_c {
     void Bounce(const fx32);
     void SpinBounce(const fx32);
     void EnterWhirlpool();
+    int EnterTornado(dActor_c *);
+    int EatenByBubba(dActor_c *);
+    int EatenByYoshi(daPly_c *);
+    int IsGroundPounding();
+    dExtAnm2Model_c *GetBodyModel();
     void IncMegaKillCount();
     void InitBalloonMario();
     void InitFireYoshi();

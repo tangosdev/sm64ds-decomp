@@ -100,6 +100,7 @@ enum d_a_obj_bc_switch_AssetId {
 };
 
 #include "daObjBC_Switch_c.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "decl_common.h"
 #include "Event.h"
@@ -123,10 +124,6 @@ struct BcSwitchCollisionFilePtr : SharedFilePtr {
 extern BcSwitchCollisionFilePtr daObjBC_Switch_c_ClsnFile;
 extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
 
-/* arm9 / ov002 C helpers with no shared header. */
-extern "C" {
-extern int func_ov002_020dd8b8(void *c);
-}
 extern u8 IsAreaShowing(s32 idx);
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
@@ -160,12 +157,12 @@ void daObjBC_Switch_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c 
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-/* A player standing on the switch presses it once func_ov002_020dd8b8
+/* A player standing on the switch presses it once daPly_c::IsGroundPounding
    accepts the contact. */
 void daObjBC_Switch_c::OnStoodOn(dActor_c *other) {
     if (!IsPlayerActor(other))
         return;
-    if (func_ov002_020dd8b8(other) != 0)
+    if (((daPly_c *)other)->IsGroundPounding() != 0)
         mPressed = 1;
 }
 

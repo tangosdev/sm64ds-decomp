@@ -3272,7 +3272,7 @@
     "src/game/player/Player.cpp#func_ov002_020c9718": "tangosdev",
     "src/game/player/Player.cpp#_ZN7daPly_c19func_ov002_020cbea8Ev": "ruspecial",
     "src/game/player/Player.cpp#_ZN6Player15St_Swim_CleanupEv": "tangosdev",
-    "src/game/player/Player.cpp#func_ov002_020c5cd8": "tangosdev",
+    "src/game/player/Player.cpp#_ZN7daPly_c12EatenByBubbaEP8dActor_c": "tangosdev",
     "src/game/player/Player.cpp#func_ov002_020bf90c": "tangosdev",
     "src/game/player/Player.cpp#_ZN6Player19func_ov002_020bf90cEv": "tangosdev",
     "src/game/player/Player.cpp#func_ov002_020becf4": "tangosdev",

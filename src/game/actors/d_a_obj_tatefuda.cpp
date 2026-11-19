@@ -127,7 +127,6 @@ enum {
 };
 
 extern "C" {
-extern dExtAnm2Model_c *func_ov002_020e496c(daPly_c *p);
 extern short data_ov002_020ff0d0[];
 extern const VecFx32 data_ov002_020ff0d4[];
 
@@ -936,7 +935,7 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
 /* -------------------------------------------------------------------------- */
 /* Put the sign on its holder (Behavior's step 2 and Render both call this).
  * `body` is the holder's current body dExtAnmModel_c, from the shared helper
- * func_ov002_020e496c; its mat4x3 is copied out and the matrix of bone 14
+ * daPly_c::GetBodyModel; its mat4x3 is copied out and the matrix of bone 14
  * (data.transforms[14]) is multiplied in. r4 picks a pose, 0 or 1: 1 when
  * the holder is front-sliding, or has lost its grabbed object while the body
  * animation's currFrame satisfies (frame << 4) >> 16 < 0xe. The X angle
@@ -951,7 +950,7 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
 void daObjTatefuda_c::AttachToHolder() {
     Vector3 v;
     Vector3 lo;
-    dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(mHoldingPlayer);
+    dExtAnmModel_c *body = (dExtAnmModel_c *)mHoldingPlayer->GetBodyModel();
     Matrix4x3 *bones = body->data.transforms;
     int r4 = 0;
 

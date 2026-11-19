@@ -14883,7 +14883,7 @@
     },
     "ov002:0x020c5cd8": {
       "author": "tangosdev",
-      "name": "func_ov002_020c5cd8"
+      "name": "_ZN7daPly_c12EatenByBubbaEP8dActor_c"
     },
     "ov002:0x020c5d0c": {
       "author": "tangosdev",
@@ -15835,7 +15835,7 @@
     },
     "ov002:0x020d5f34": {
       "author": "tangosdev",
-      "name": "func_ov002_020d5f34"
+      "name": "_ZN7daPly_c12EatenByYoshiEPS_"
     },
     "ov002:0x020d5f98": {
       "author": "tangosdev",
@@ -16299,7 +16299,7 @@
     },
     "ov002:0x020dd8b8": {
       "author": "tangosdev",
-      "name": "func_ov002_020dd8b8"
+      "name": "_ZN7daPly_c16IsGroundPoundingEv"
     },
     "ov002:0x020dd8f4": {
       "author": "ruspecial",
@@ -16339,7 +16339,7 @@
     },
     "ov002:0x020de33c": {
       "author": "tangosdev",
-      "name": "func_ov002_020de33c"
+      "name": "_ZN7daPly_c12EnterTornadoEP8dActor_c"
     },
     "ov002:0x020de3b4": {
       "author": "tangosdev",
@@ -16695,7 +16695,7 @@
     },
     "ov002:0x020e496c": {
       "author": "tangosdev",
-      "name": "func_ov002_020e496c"
+      "name": "_ZN7daPly_c12GetBodyModelEv"
     },
     "ov002:0x020e4990": {
       "author": "andrewboudreau",

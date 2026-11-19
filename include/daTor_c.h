@@ -61,7 +61,7 @@ struct daTor_c : dActor_c {
        checks. Was a u8 marker. */
     dExtAnmTexSRT_c mTextureTransformer; /* 0x328 */
     /* The actor that hit this tornado. Set from mdCcAc_c.otherOwner once
-       func_ov002_020de33c approves it; daTor_c::State2 clears it as
+       daPly_c::EnterTornado approves it; daTor_c::State2 clears it as
        the tornado winds down. */
     dActor_c *mCaughtActor;       /* 0x33c */
     /* Where the tornado belongs. InitResources copies mPos here; state 0 snaps

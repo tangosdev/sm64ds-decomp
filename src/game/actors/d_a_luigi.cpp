@@ -21,7 +21,7 @@
  *   0x1b0). The u64 destination round trip stays.
  * - Render: inlining mBodyModels[GetBodyModelID(mBodyModelId, 1)] differs
  *   (size stays 0x1b0, 2 relocation destinations wrong). The ROM calls
- *   func_ov002_020e496c.
+ *   daPly_c::GetBodyModel.
  * - ExecuteMirror: direct mPos.x, mPos.z, mPos.y reads differ (size stays
  *   0x034). One pointer, x then z then y, stays.
  * - func_ov055_02111264: Sound::Play2D(3, 0x179) differs (size stays 0x024,
@@ -88,8 +88,6 @@ unsigned int func_0201277c(unsigned int soundID);
 
 /* Depth from mModelOffsetY, mPos.y, mSinkDepth and mGroundY; radius from that,
  * mIsBalloon, mIsMega and mScale.y. The definition takes char *. */
-/* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)]. */
-dExtAnm2Model_c *func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
 void MTX_Concat33(const int *a, const int *b, int *dst);
@@ -177,7 +175,7 @@ int daLuigi_c::Render() {
         return 1;
 
     player = CurrentPlayer();
-    body = (dExtSimpleModel_c *)func_ov002_020e496c(player);
+    body = (dExtSimpleModel_c *)player->GetBodyModel();
 
     comps = &mAnmModel.data;
     file = comps->modelFile;

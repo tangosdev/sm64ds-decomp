@@ -781,12 +781,6 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, fx3
     return ball;
 }
 
-extern "C" {
-/* local extern: daPly_c has no accessor for the current body model. */
-dExtAnm2Model_c *func_ov002_020e496c(daPly_c *p);
-}
-/* the player's current mBodyModels entry */
-
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
     t.x = 0;
@@ -794,7 +788,7 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     t.z = 0;
     /* Bone 14 of the body model, carried into world space by the model's
        own matrix; only its translation survives. */
-    dExtSimpleModel_c *body = (dExtSimpleModel_c *)func_ov002_020e496c(&player);
+    dExtSimpleModel_c *body = (dExtSimpleModel_c *)player.GetBodyModel();
     Matrix4x3 *bones = body->data.transforms;
     data_020a0e68 = body->mat4x3;
     MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);

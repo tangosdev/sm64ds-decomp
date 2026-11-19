@@ -97,7 +97,6 @@ void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" {
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
-int func_ov002_020dd8b8(void *c);
 }
 
 extern "C" {
@@ -894,7 +893,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 }
 
 /* Contact from the lying body's back. Only players count. A contact that
-   func_ov002_020dd8b8 accepts is a hit: it arms mPounded and remembers the
+   daPly_c::IsGroundPounding accepts is a hit: it arms mPounded and remembers the
    player (the king ignores it while a resumed state 0 is pending). Any
    other touch pays out one coin per contact while mCoinsLeft lasts -- for
    the king only when the player stands at least 0x2bc000 above it in
@@ -908,7 +907,7 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
     if (!IsPlayerActor(other))
         return;
     mTouched = 1;
-    if (func_ov002_020dd8b8(other) != 0) {
+    if (((daPly_c *)other)->IsGroundPounding() != 0) {
         if (mResumePending != 0 && mIsKing != 0) {
             if (mResumeState == 0) return;
         }

@@ -54,7 +54,7 @@ struct daBtn_c : dEnemyBase_c {
        measures each one's distance and bearing. */
     daPly_c *mPlayers[4]; /* 0x39c */
     /* The player whose touch counted as a hit this frame: func_ov079_02125058
-       records it when func_ov002_020dd8b8 accepts the contact. The king's
+       records it when daPly_c::IsGroundPounding accepts the contact. The king's
        lying-down handler bursts a particle at it, and the defeat talk
        (state 8) is addressed to it. */
     daPly_c *mPounder; /* 0x3ac */

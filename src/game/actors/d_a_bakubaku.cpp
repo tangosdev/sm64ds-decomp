@@ -91,8 +91,6 @@ extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
 extern "C" int AngleDiff(int a, int b);
 
-/* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
-extern "C" int func_ov002_020c5cd8(daPly_c *a, dActor_c *self);
 /* Sound::Play with bank 3. */
 void func_02012694(unsigned int a, const Vector3 *p);
 
@@ -558,7 +556,7 @@ void daBakubaku_c::HandleCylinderHit() {
                 return;
             }
             if (mMouthOpen != 0) {
-                if (func_ov002_020c5cd8(f, this) == 1) {
+                if (f->EatenByBubba(this) == 1) {
                     func_02012694(0xf6, &mCamSpacePos);
                     return;
                 }

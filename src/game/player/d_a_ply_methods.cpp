@@ -5538,14 +5538,13 @@ void daPly_c::EnterWhirlpool() {
     ((this))->Die(9);
 }
 
-extern "C" {
-int func_ov002_020c5cd8(daPly_c *player, dActor_c *actor) {
-    if (player->Die(6)) {
-        player->mAttachedActor = actor;
+/* Swallowed by Bubba: death kind 6, with Bubba kept as the attached actor. */
+int daPly_c::EatenByBubba(dActor_c *bubba) {
+    if (Die(6)) {
+        mAttachedActor = bubba;
         return 1;
     }
     return 0;
-}
 }
 
 int daPly_c::func_ov002_020c5d0c() {
@@ -5588,7 +5587,7 @@ extern daPly_c::State data_ov002_02110124;
  *   3  sank into quicksand
  *   4  electrocuted
  *   5  suffocated in toxic gas (mToxicSurfaceY)
- *   6  eaten by Bubba (func_ov002_020c5cd8, from d_a_bakubaku.cpp)
+ *   6  eaten by Bubba (EatenByBubba, from d_a_bakubaku.cpp)
  *   7  ran out of air
  *   8  out of health under water
  *   9  caught in a whirlpool
@@ -12869,17 +12868,16 @@ int daPly_c::func_ov002_020d5ed0() {
     return 1;
 }
 
-extern "C" {
-int func_ov002_020d5f34(daPly_c *c, void *st) {
-    daPly_c *player = c;
-    if (player->mEatingPlayer != 0)
+/* Swallowed by a Yoshi player: unless one already holds this player, remember
+ * the Yoshi and enter the in-Yoshi's-mouth state. */
+int daPly_c::EatenByYoshi(daPly_c *yoshi) {
+    if (mEatingPlayer != 0)
         return 0;
-    player->mEatingPlayer = (daPly_c *)st;
-    (c)->SetAnim(0x3f, 0, 0x3000, 0);
-    player->mStateStep = 0;
-    (c)->ChangeState(data_ov002_02110064);
+    mEatingPlayer = yoshi;
+    SetAnim(0x3f, 0, 0x3000, 0);
+    mStateStep = 0;
+    ChangeState(data_ov002_02110064);
     return 1;
-}
 }
 
 int daPly_c::func_ov002_020d5f98(unsigned char *a, unsigned char *b) {
@@ -13314,7 +13312,7 @@ int daPly_c::func_ov002_020d6c60(daPly_c *other) {
             DisableInteraction();
             return 1;
         }
-    } else if (func_ov002_020d5f34(other, this) != 0) {
+    } else if (other->EatenByYoshi(this) != 0) {
         mObjInMouth = other;
         other->mFlags = other->mFlags | 0x20000;
         func_ov002_020d71ec(1);
@@ -16567,14 +16565,14 @@ int daPly_c::func_ov002_020dd824() {
     return 0;
 }
 
-extern "C" {
-int func_ov002_020dd8b8(daPly_c *player) {
-    if (!player->IsState(data_ov002_021105a4))
+/* In the ground pound's falling and impact phase (St_GroundPound_Main's
+ * mStateStep 0), not the spin-up or the recovery. */
+int daPly_c::IsGroundPounding() {
+    if (!IsState(data_ov002_021105a4))
         return 0;
-    if (player->mStateStep == 0)
+    if (mStateStep == 0)
         return 1;
     return 0;
-}
 }
 
 void daPly_c::func_ov002_020dd8f4() {
@@ -16801,7 +16799,7 @@ int daPly_c::St_TornadoSpin_Main() {
     mAttachOffsetY += mSpeed.y;
     if (mAttachOffsetY < 0)
         mAttachOffsetY = 0;
-    /* The attached actor is the tornado: func_ov002_020de33c, the only way
+    /* The attached actor is the tornado: EnterTornado, the only way
        into this state, is called only by daTor_c with itself. */
     if (mAttachOffsetY > ((daTor_c *)mAttachedActor)->mdCcAc_c.height || (mClsnFlags & 4) != 0) {
         mStatePhase = 0;
@@ -16863,16 +16861,14 @@ int func_ov002_020de328(daPly_c *player) {
 }
 }
 
-extern "C" {
-int func_ov002_020de33c(daPly_c *c, void *actor) {
-    daPly_c *player = c;
-    if (player->mIsNoControl != 0 || (c)->IsState(data_ov002_021102bc) ||
-        (c)->IsState(data_ov002_02110484))
+/* Caught by a tornado: unless under no-control, already spinning in one or in
+ * the crazed-crate state, attach to it and enter St_TornadoSpin. */
+int daPly_c::EnterTornado(dActor_c *tornado) {
+    if (mIsNoControl != 0 || IsState(data_ov002_021102bc) || IsState(data_ov002_02110484))
         return 0;
-    player->mAttachedActor = (dActor_c *)actor;
-    (c)->ChangeState(data_ov002_021102bc);
+    mAttachedActor = tornado;
+    ChangeState(data_ov002_021102bc);
     return 1;
-}
 }
 
 int daPly_c::St_Balloon_Cleanup() {
@@ -19709,12 +19705,9 @@ void daPly_c::func_ov002_020e4768() {
     mHeadMatrix = data_020a0e68;
 }
 
-extern "C" {
-dExtAnm2Model_c *func_ov002_020e496c(daPly_c *c) {
-    daPly_c *player = c;
-    int id = (c)->GetBodyModelID(player->mBodyModelId, 1);
-    return player->mModels.mBodyModels[id];
-}
+dExtAnm2Model_c *daPly_c::GetBodyModel() {
+    int id = GetBodyModelID(mBodyModelId, 1);
+    return mModels.mBodyModels[id];
 }
 
 int daPly_c::func_ov002_020e4990() {
