@@ -770,9 +770,11 @@ caller passes the address of mStepCounter) and, while that counter is still
 below 4, spawn landing dust at his position and play sound 0xbd at his
 camera-space position. */
 void daKpa_c::BounceEffects(u16 *counter) {
-    if (this->mWithMeshClsn.JustHitGround() == 0) return;
+    if (this->mWithMeshClsn.JustHitGround() == 0)
+        return;
     *counter = *counter + 1;
-    if (*counter >= 4) return;
+    if (*counter >= 4)
+        return;
     struct Vector3 v;
     v.x = this->mPos.x;
     v.y = this->mPos.y;

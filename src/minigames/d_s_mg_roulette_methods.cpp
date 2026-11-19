@@ -864,7 +864,8 @@ void RouletteRacer_CheckLandingB(RouletteRacer *racer) {
 void RouletteRacer_Draw(RouletteRacer *racer) {
     if (racer->state == 6)
         return;
-    RenderOamBothScreens(sRouletteRacerSprites, racer->x >> 0xc, racer->y >> 0xc, -1, racer->priority, 0);
+    RenderOamBothScreens(sRouletteRacerSprites, racer->x >> 0xc, racer->y >> 0xc, -1,
+                         racer->priority, 0);
     racer->priority = 1;
 }
 
