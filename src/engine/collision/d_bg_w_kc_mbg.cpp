@@ -46,9 +46,11 @@ dBgW_KcMbg::~dBgW_KcMbg() {}
  * SetFile is 0x260 of 0x240.
  * The scale and angY parameters shadow the members of the same name, so
  * those stores and the scale reload are spelled through this->.
- * A Vector3 `up` member gives Scratch a destructor the ROM does not have, and
- * a separate Vector3 local makes SetFile 0x290. So `up`, like the VecFx32
- * upAxis, is cast at WorldToLocalDirection's Vector3 parameters.
+ * Kept (#821 r111): `up` stays the SDK's VecFx32 and is cast at
+ * WorldToLocalDirection's Vector3 parameter. A Vector3 `up` member matches
+ * SetFile byte for byte but gives Scratch its own destructor
+ * (Scratch$329...D1Ev), a body the ROM does not have; a separate Vector3
+ * local does not match SetFile.
  */
 void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 angY,
                          CLPS_Block &clps) {
@@ -87,7 +89,7 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 a
     scratch.up.x = 0;
     scratch.up.y = 0x1000;
     scratch.up.z = 0;
-    WorldToLocalDirection(*(Vector3 *)&scratch.up, *(Vector3 *)&upAxis);
+    WorldToLocalDirection(*(Vector3 *)&scratch.up, upAxis);
     filterByMoveDir = false;
 }
 
@@ -130,7 +132,7 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     up.x = 0;
     up.y = 0x1000;
     up.z = 0;
-    WorldToLocalDirection(up, *(Vector3 *)&upAxis);
+    WorldToLocalDirection(up, upAxis);
 
     if (!filterByMoveDir)
         return;

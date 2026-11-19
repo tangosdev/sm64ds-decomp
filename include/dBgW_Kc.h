@@ -79,11 +79,8 @@ struct dBgW_Kc : dBgW {
        and Transform rotate (0, 0x1000, 0) through invRotMat into it, and
        SetFile here seeds that same vector unrotated. DetectClsn(dBgCh_SphCrr&)
        dots surface normals against it in the floor edge test and measures the
-       wall-reject slab along it (notes/collision-query-classes.md).
-       It and depthDir are the SDK's POD VecFx32, not Vector3: a Vector3
-       member makes d_bg_w_kc.cpp emit an unreferenced ~Vector3() copy, which
-       the ROM's object does not have. */
-    VecFx32 upAxis; /* 0x28 */
+       wall-reject slab along it (notes/collision-query-classes.md). */
+    Vector3 upAxis; /* 0x28 */
     /* The penetration-depth policy of DetectClsn(dBgCh_SphCrr&): how far behind a
        face the sphere centre may sit and still be pushed out. By default it is
        the file's prismThickness. shallowOnly caps every face at 5.0 (0x50000
