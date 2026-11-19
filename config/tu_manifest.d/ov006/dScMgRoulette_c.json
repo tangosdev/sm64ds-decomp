@@ -127,7 +127,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "_Z18RouletteBoard_DrawPc",
+      "symbol": "_Z18RouletteBoard_DrawP13RouletteBoard",
       "address": "0x02107d80",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_02107d80.cpp",
@@ -169,7 +169,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "_Z23RouletteBoard_StartSpinPc",
+      "symbol": "_Z23RouletteBoard_StartSpinP13RouletteBoard",
       "address": "0x02108524",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_02108524.c",
@@ -183,7 +183,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "_Z24RouletteBoard_LoadModelsPc",
+      "symbol": "_Z24RouletteBoard_LoadModelsP13RouletteBoard",
       "address": "0x021085c0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_021085c0.c",
@@ -204,7 +204,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "_Z18RouletteRacer_DrawPc",
+      "symbol": "_Z18RouletteRacer_DrawP13RouletteRacer",
       "address": "0x02108cc0",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_02108cc0.c",
@@ -1580,14 +1580,14 @@
       "evidence": "mwcc emitted @385, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @389 at the same symtab index 116, with every non-strtab section identical. Re-keyed from @389 to @397 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @397 to @396 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @396 to @399 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @399 to @390 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @396 to @394 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @396 to @374 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @366 to @369 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @369 to @445 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @445 to @451 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @451 to @488 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @488 to @500 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @500 to @505 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @505 to @507 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@1299",
+      "from": "@1296",
       "to": "pmf_RouletteBoard_StateSpin",
-      "evidence": "Compiler PMF literal: _Z26RouletteBoard_SetStateSpinP13RouletteBoard assigns &RouletteBoard::StateSpin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (_Z26RouletteBoard_SetStateSpinP13RouletteBoard+0x18 loads 0x0213e2e8 in the ROM) and by its own relocation target (RouletteBoard::StateSpin at 0x021082fc). Re-keyed from @1293 to @1295 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1297 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @1299 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: _Z26RouletteBoard_SetStateSpinP13RouletteBoard assigns &RouletteBoard::StateSpin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (_Z26RouletteBoard_SetStateSpinP13RouletteBoard+0x18 loads 0x0213e2e8 in the ROM) and by its own relocation target (RouletteBoard::StateSpin at 0x021082fc). Re-keyed from @1293 to @1295 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1297 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @1299 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1299 to @1296 after #821 r109 (RouletteBoard_LoadModels/StartSpin/Draw and RouletteRacer_Draw took RouletteBoard * / RouletteRacer * instead of char *; their cast locals went) (measured from the compiled object). (measured from the compiled object)."
     },
     {
-      "from": "@1330",
+      "from": "@1327",
       "to": "pmf_RouletteBoard_StateSlow",
-      "evidence": "Compiler PMF literal: _Z27RouletteBoard_StartSlowdownP13RouletteBoard assigns &RouletteBoard::StateSlow, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (_Z27RouletteBoard_StartSlowdownP13RouletteBoard+0x34 loads 0x0213e2f8 in the ROM) and by its own relocation target (RouletteBoard::StateSlow at 0x02107ea8). Re-keyed from @1324 to @1326 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1328 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @1330 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: _Z27RouletteBoard_StartSlowdownP13RouletteBoard assigns &RouletteBoard::StateSlow, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (_Z27RouletteBoard_StartSlowdownP13RouletteBoard+0x34 loads 0x0213e2f8 in the ROM) and by its own relocation target (RouletteBoard::StateSlow at 0x02107ea8). Re-keyed from @1324 to @1326 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1328 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @1330 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1330 to @1327 after #821 r109 (RouletteBoard_LoadModels/StartSpin/Draw and RouletteRacer_Draw took RouletteBoard * / RouletteRacer * instead of char *; their cast locals went) (measured from the compiled object). (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

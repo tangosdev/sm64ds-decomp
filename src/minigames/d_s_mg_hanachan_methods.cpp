@@ -267,16 +267,16 @@ void StarPopup_Draw(void) {
    velocity until its timer runs out, phase 1 holds for 0x40 frames and then
    adds one to the scene's mHudScore (capped at 9999, raising
    mBestHudScore to match), and phase 2 counts ticks down every eighth
-   frame, stepping the int behind arg toward 0x32 each time. The
-   compound assignments view the record through (int)f; the plain spelling
-   reuses the field address and changes the object. */
+   frame, stepping the int behind timeLeft (the scene's mTimeLeft) toward
+   0x32 each time. The compound assignments view the record through (int)f;
+   the plain spelling reuses the field address and changes the object. */
 typedef struct {
     u8 t;
     u8 pad[0x13];
 } Timer20;
 extern "C" Timer20 sHanaStarPopups[];
 
-void StarPopup_Update(char *arg) {
+void StarPopup_Update(int *timeLeft) {
     int i;
     char *f = sHanaStarPopup;
     for (i = 0; i < 1; i++, f += 0x14) {
@@ -326,8 +326,8 @@ void StarPopup_Update(char *arg) {
                 if (((HanaStarPopup *)f)->timer >= 8) {
                     ((HanaStarPopup *)f)->timer = 0;
                     ((HanaStarPopup *)(int)f)->ticks -= 1;
-                    if (arg != 0)
-                        ApproachLinear(*(int *)arg, 0x32, 1);
+                    if (timeLeft != 0)
+                        ApproachLinear(*timeLeft, 0x32, 1);
                 }
             } else {
                 ((HanaStarPopup *)f)->active = 0;
@@ -1603,7 +1603,7 @@ s32 dScMgHanachan_c::Behavior() {
         } while (j < sHanaFieldWigglerCount);
     }
     HanaPopup_UpdateAll();
-    StarPopup_Update((char *)&mTimeLeft);
+    StarPopup_Update(&mTimeLeft);
     return 1;
 }
 

@@ -2359,7 +2359,7 @@
     },
     "arm9:0x020169f4": {
       "author": "ruspecial",
-      "name": "_Z13func_020169f4Pci"
+      "name": "_Z13func_020169f4P17dExtSimpleModel_ci"
     },
     "arm9:0x02016a04": {
       "author": "ruspecial",
@@ -23263,7 +23263,7 @@
     },
     "ov006:0x020ea3d0": {
       "author": "tangosdev",
-      "name": "_Z16StarPopup_UpdatePc"
+      "name": "_Z16StarPopup_UpdatePi"
     },
     "ov006:0x020ea5f0": {
       "author": "tangosdev",
@@ -25455,7 +25455,7 @@
     },
     "ov006:0x02107d80": {
       "author": "tangosdev",
-      "name": "_Z18RouletteBoard_DrawPc"
+      "name": "_Z18RouletteBoard_DrawP13RouletteBoard"
     },
     "ov006:0x02107db8": {
       "author": "tangosdev",
@@ -25479,7 +25479,7 @@
     },
     "ov006:0x02108524": {
       "author": "tangosdev",
-      "name": "_Z23RouletteBoard_StartSpinPc"
+      "name": "_Z23RouletteBoard_StartSpinP13RouletteBoard"
     },
     "ov006:0x0210858c": {
       "author": "tangosdev",
@@ -25487,7 +25487,7 @@
     },
     "ov006:0x021085c0": {
       "author": "tangosdev",
-      "name": "_Z24RouletteBoard_LoadModelsPc"
+      "name": "_Z24RouletteBoard_LoadModelsP13RouletteBoard"
     },
     "ov006:0x02108650": {
       "author": "andrewboudreau",
@@ -25499,7 +25499,7 @@
     },
     "ov006:0x02108cc0": {
       "author": "tangosdev",
-      "name": "_Z18RouletteRacer_DrawPc"
+      "name": "_Z18RouletteRacer_DrawP13RouletteRacer"
     },
     "ov006:0x02108d28": {
       "author": "lunavyqo",

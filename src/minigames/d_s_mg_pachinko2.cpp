@@ -1851,18 +1851,19 @@ void dScMgPachinko2_c::Ball_StateWaitGrab(int i) {
 /* dScMgPachinko2_c ball i under a live pen record: while the pen is down the
    ball follows the pen (x/y = pen + held offset, clamped to the field, offset
    re-derived); on release it aims the ball at (0x80, 0x20) and launches it.
-   Touch record reads: the pen x is a volatile byte read and the pen y a
-   plain byte read, both as a flat byte view of gTouchInfo strided by 4. This
-   is a launder, kept because nothing natural reaches the ROM: plain
-   gTouchInfo[idx].x/.y at both sites is 16 words off (r3/r6 colouring at the
-   first site, the literal hoisting at the second), a volatile TouchInfo at
-   both 165, a volatile &gTouchInfo[idx].x 14; the flat view at only one site
-   leaves 11 (first) or 5 (second). Measured under 2004/b56 against the
-   lane-symbol form this replaced, which compiled the same bytes.
-   Re-measured (#821, 2026-11-16): typed gTouchInfo[idx].x/.y at the first
-   site alone is 5 words off (r3/r6 swapped) with y read first, y declared
-   first, the shift operands swapped or u8 locals; read inline 9; through a
-   TouchInfo reference 0x374. Typed at the second site alone is 11. */
+   Touch record reads: the pen y is gTouchInfo[idx].y at both sites, but the
+   pen x is still a volatile byte read through a flat byte view of gTouchInfo
+   strided by 4. That is a launder, kept because nothing natural reaches the
+   ROM: plain gTouchInfo[idx].x/.y at both sites is 16 words off (r3/r6
+   colouring at the first site, the literal hoisting at the second), a
+   volatile TouchInfo at both 165, a volatile &gTouchInfo[idx].x 14.
+   Re-measured (#821, 2026-11-16): typed gTouchInfo[idx].x at the first site
+   alone is 5 words off (r3/r6 swapped) with y read first, y declared first,
+   the shift operands swapped or u8 locals; read inline 9; through a
+   TouchInfo reference 0x374. Typed at the second site alone is 11.
+   (#821 r109: with y typed, x typed at the first site is 5 words off, at
+   the second 11, at both 16; the second site's y must index by idx --
+   gTouchInfo[gActivePlayerSlot].y there is 200 words off.) */
 void dScMgPachinko2_c::Ball_StateAim(int i) {
     int idx = gActivePlayerSlot;
 
@@ -1877,7 +1878,7 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
         /* Kept (#821 r79): inline TouchX/TouchY(slot) accessors returning int or u8, at both
            sites or either alone, are 16 words off. */
         int tx = ((volatile u8 *)&gTouchInfo->x)[idx * 4];
-        int ty = ((u8 *)&gTouchInfo->y)[idx * 4];
+        int ty = gTouchInfo[idx].y;
 
         this->mBalls[i].x = this->mBalls[i].px + (tx << 12);
         this->mBalls[i].y = this->mBalls[i].py + (ty << 12);
@@ -1898,7 +1899,7 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
         {
             int nx =
                 (this->mBalls[i].x >> 12) - ((volatile u8 *)&gTouchInfo->x)[gActivePlayerSlot * 4];
-            int ny = (this->mBalls[i].y >> 12) - ((u8 *)&gTouchInfo->y)[gActivePlayerSlot * 4];
+            int ny = (this->mBalls[i].y >> 12) - gTouchInfo[idx].y;
             this->mBalls[i].px = nx << 12;
             this->mBalls[i].py = ny << 12;
         }

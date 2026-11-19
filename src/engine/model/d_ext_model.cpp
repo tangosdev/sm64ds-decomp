@@ -361,8 +361,8 @@ extern "C" void func_02016a04(dExtSimpleModel_c *self, int color) {
     self->data.SetAmbient(color);
 }
 
-void func_020169f4(char *self, int color) {
-    ((dExtSimpleModel_c *)self)->data.SetEmission(color);
+void func_020169f4(dExtSimpleModel_c *self, int color) {
+    self->data.SetEmission(color);
 }
 
 extern "C" void func_020169d8(dExtSimpleModel_c *self, int index, unsigned int value) {

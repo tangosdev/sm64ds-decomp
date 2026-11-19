@@ -43,7 +43,7 @@ struct dPathLiftActor_c : dBgActor_c {
     s32 mFallStartY;                      /* 0x444 */
     u8  mFallDelay;                       /* 0x448 */
     u8  mFallBounceTimer;                 /* 0x449 */
-    s16 mFallAngle;                       /* 0x44a */
+    u16 mFallAngle;                       /* 0x44a -- StateFall's bounce phase; +0x3000 a tick */
     s32 mState;                           /* 0x44c */
 
     /* DEFINED INLINE, and that is the point. The ROM's daObjPathLift_c

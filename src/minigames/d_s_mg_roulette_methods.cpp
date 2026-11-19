@@ -14,9 +14,8 @@
 // leftovers:
 // - Apart from RouletteBoard's two states (StateSpin, StateSlow), the
 //   RouletteBoard_, RouletteRacer_ and RouletteStrip_ helpers are still free
-//   functions over their record. The ones decl_common.h declares
-//   (RouletteBoard_LoadModels, _StartSpin, _Draw, RouletteRacer_Draw,
-//   RouletteStrip_LinkAll) keep its char* parameter. mMeter stays bytes in
+//   functions over their record. RouletteStrip_LinkAll, which decl_common.h
+//   declares, keeps its char* parameter. mMeter stays bytes in
 //   the header, reached through the local RouletteStrip view. Most func_
 //   and data_ helpers are unnamed in symbols.txt.
 // - unk_53e0..unk_53f4 are only written in this unit (StartRound and phase 3), so
@@ -186,6 +185,9 @@ void RouletteResults_Draw(void);
 void RouletteStrip_AddRacer(RouletteStrip *strip, RouletteRacer *racer);
 void RouletteStrip_Reset(RouletteStrip *strip);
 void RouletteBoard_Update(RouletteBoard *board);
+int RouletteBoard_LoadModels(RouletteBoard *);
+void RouletteBoard_StartSpin(RouletteBoard *);
+void RouletteBoard_Draw(RouletteBoard *);
 void RouletteBoard_StartSlowdown(RouletteBoard *board);
 void RouletteBoard_SetStateSpin(RouletteBoard *board);
 int RouletteBoard_FreeModels(RouletteBoard *board);
@@ -195,6 +197,7 @@ void RouletteRacer_CheckLandingB(RouletteRacer *racer);
 int RouletteRacer_CheckLandingA(RouletteRacer *racer);
 void RouletteRacer_Update(RouletteRacer *racer);
 void RouletteRacer_Release(RouletteRacer *racer);
+void RouletteRacer_Draw(RouletteRacer *);
 void RouletteRacer_Init(RouletteRacer *racer);
 void RouletteRacer_MoveToTile(RouletteRacer *racer, int tile);
 void RouletteRacer_SetTarget(RouletteRacer *racer, int *target);
@@ -252,7 +255,7 @@ s32 dScMgRoulette_c::InitResources() {
     Camera_InitDealerView(&mCamera);
     if (mDealer.Load() == 0)
         return 0;
-    if (RouletteBoard_LoadModels((char *)&mBoard) == 0)
+    if (RouletteBoard_LoadModels(&mBoard) == 0)
         return 0;
 
     mCredits = Mg_GetSavedRecord0();
@@ -442,7 +445,7 @@ s32 dScMgRoulette_c::Render() {
     {
         int i = mRacerCount - 1;
         for (; i >= 0; i--)
-            RouletteRacer_Draw((char *)&mRacers[i]);
+            RouletteRacer_Draw(&mRacers[i]);
     }
 
     Roulette_DrawResultsThunk(this);
@@ -499,7 +502,7 @@ s32 dScMgRoulette_c::Render() {
             Camera_InitDealerView(&mCamera);
         }
         if (preset != 0)
-            RouletteBoard_Draw((char *)&mBoard);
+            RouletteBoard_Draw(&mBoard);
         else
             mDealer.Draw();
     }
@@ -579,7 +582,7 @@ void dScMgRoulette_c::StartRound(int /* arg */) {
         count = 5;
     mRacerCount = count;
 
-    RouletteBoard_StartSpin((char *)&mBoard);
+    RouletteBoard_StartSpin(&mBoard);
 
     sRouletteLandedRacer = 0;
     mCameraPreset = 0;
@@ -858,12 +861,12 @@ void RouletteRacer_CheckLandingB(RouletteRacer *racer) {
     racer->grabY = dy << 12;
 }
 
-void RouletteRacer_Draw(char *racer) {
-    RouletteRacer *t = (RouletteRacer *)racer;
-    if (t->state == 6)
+void RouletteRacer_Draw(RouletteRacer *racer) {
+    if (racer->state == 6)
         return;
-    RenderOamBothScreens(sRouletteRacerSprites, t->x >> 0xc, t->y >> 0xc, -1, t->priority, 0);
-    t->priority = 1;
+    RenderOamBothScreens(sRouletteRacerSprites, racer->x >> 0xc, racer->y >> 0xc, -1,
+                         racer->priority, 0);
+    racer->priority = 1;
 }
 
 /* The 0x23 case tests `tile < 6`, the opposite of the case beside it, and
@@ -985,8 +988,7 @@ short Roulette_TileAt(int x, int y) {
     return tile;
 }
 
-int RouletteBoard_LoadModels(char *slider) {
-    RouletteBoard *board = (RouletteBoard *)slider;
+int RouletteBoard_LoadModels(RouletteBoard *board) {
     board->mWheelFile = (BMD_File *)Ov004_LoadFile(0x21d);
     board->mBallFile = (BMD_File *)Ov004_LoadFile(0x21e);
     dExtSimpleModel_c::UpdateFileOffsets(*board->mWheelFile);
@@ -1008,8 +1010,7 @@ int RouletteBoard_FreeModels(RouletteBoard *res) {
     return 1;
 }
 
-void RouletteBoard_StartSpin(char *slider) {
-    RouletteBoard *board = (RouletteBoard *)slider;
+void RouletteBoard_StartSpin(RouletteBoard *board) {
     board->mBallRadius = 0x4200;
     board->mBallRadiusVel = 0;
     board->mOrbitAngle = 0;
@@ -1192,8 +1193,7 @@ void RouletteBoard_Update(RouletteBoard *c) {
     }
 }
 
-void RouletteBoard_Draw(char *slider) {
-    RouletteBoard *board = (RouletteBoard *)slider;
+void RouletteBoard_Draw(RouletteBoard *board) {
     board->mWheel.Render(0);
     board->mBall.Render(0);
 }

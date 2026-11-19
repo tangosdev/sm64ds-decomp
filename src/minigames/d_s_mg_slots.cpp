@@ -584,7 +584,9 @@ void dScMgSlot3_c::StartRound(int mode) {
  * and the plain members take their real spellings. */
 s32 dScMgSlot3_c::Render() {
     /* Kept (#821 r73): mReelPos[i2] / mReelWinPos[i2] for the two
-       c-based reads is 0x65c of 0x668. */
+       c-based reads is 0x65c of 0x668. Re-measured (#821 r109): mReelPos[i2]
+       alone 19 words off, mReelWinPos[i2] alone 309, both 310; the same through
+       ((dScMgSlot3_c *)c)->. */
     char *c = (char *)this;
     int i;
 

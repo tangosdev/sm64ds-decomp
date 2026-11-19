@@ -769,10 +769,12 @@ hit (dBgCh_Actr::JustHitGround), add one to the u16 counter passed in (every
 caller passes the address of mStepCounter) and, while that counter is still
 below 4, spawn landing dust at his position and play sound 0xbd at his
 camera-space position. */
-void daKpa_c::BounceEffects(char *counter) {
-    if (this->mWithMeshClsn.JustHitGround() == 0) return;
-    *(unsigned short*)counter = *(unsigned short*)counter + 1;
-    if (*(unsigned short*)counter >= 4) return;
+void daKpa_c::BounceEffects(u16 *counter) {
+    if (this->mWithMeshClsn.JustHitGround() == 0)
+        return;
+    *counter = *counter + 1;
+    if (*counter >= 4)
+        return;
     struct Vector3 v;
     v.x = this->mPos.x;
     v.y = this->mPos.y;
@@ -1493,7 +1495,7 @@ void daKpa_c::ActHitMine() {
             return;
         }
         if (st == 1) {
-            BounceEffects((char *)&this->mStepCounter);
+            BounceEffects(&this->mStepCounter);
             if (this->mStepCounter == 1)
                 InitAnimation(2, 0x40000000);
             if (this->mStepCounter < 3) return;
@@ -1900,7 +1902,7 @@ void daKpa_c::ActThrown() {
             }
         }
 
-        BounceEffects((char *)&this->mStepCounter);
+        BounceEffects(&this->mStepCounter);
 
         if (this->mWithMeshClsn.IsOnGround() != 0) {
             if (this->mWithMeshClsn.JustHitGround() == 0) {
@@ -2144,7 +2146,7 @@ animation table) and halves mHorzSpeed; once on the ground without a fresh hit
 it zeroes the speed and advances. LoopLayDownAnimation runs every call. */
 void daKpa_c::DeadBounce() {
     this->unk_422 = 1;
-    BounceEffects((char *)&this->mStepCounter);
+    BounceEffects(&this->mStepCounter);
     if (this->mWithMeshClsn.JustHitGround()) {
         if ((int)this->mAnmModel.file == (int)data_ov060_0211ac88.filePtr) {
             InitAnimation(5, 0x40000000);

@@ -196,7 +196,7 @@ struct daKpa_c : dActor_c {
     int SetAnimLookUpAndWalk();
     void UpdateModelMatrix();
     bool Bowser_IsAnimAtLastFrame();
-    void BounceEffects(char *counter);
+    void BounceEffects(u16 *counter);
     void SpawnShockwave();
 };
 
