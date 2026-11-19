@@ -342,128 +342,128 @@ extern SharedFilePtr data_ov002_0210e930;
 extern SharedFilePtr data_ov002_0210eab8;
 extern SharedFilePtr data_ov002_0210e6c8;
 extern SharedFilePtr data_ov002_0210ed28;
-extern SharedFilePtr data_ov002_0210e398;
-extern SharedFilePtr data_ov002_0210ea80;
-extern SharedFilePtr data_ov002_0210e5e0;
-extern SharedFilePtr data_ov002_0210e5e8;
-extern SharedFilePtr data_ov002_0210ea60;
+extern SharedFilePtr gShootToFlyAnimationFile;
+extern SharedFilePtr gShootAnimationFile;
+extern SharedFilePtr gSdropLegAnimationFile;
+extern SharedFilePtr gSdropLegWaitAnimationFile;
+extern SharedFilePtr gSdropLegEndAnimationFile;
 extern SharedFilePtr gSdropHipEndAnimationFile;
-extern SharedFilePtr data_ov002_0210e5d8;
-extern SharedFilePtr data_ov002_0210ea58;
-extern SharedFilePtr data_ov002_0210ea40;
-extern SharedFilePtr data_ov002_0210ea48;
-extern SharedFilePtr data_ov002_0210e380;
-extern SharedFilePtr data_ov002_0210ea68;
-extern SharedFilePtr data_ov002_0210e388;
+extern SharedFilePtr gSdropHipAnimationFile;
+extern SharedFilePtr gSdropHipWaitAnimationFile;
+extern SharedFilePtr gSdropHeadEndAnimationFile;
+extern SharedFilePtr gSdropHeadWaitAnimationFile;
+extern SharedFilePtr gSdropHeadAnimationFile;
+extern SharedFilePtr gSdropWaitAnimationFile;
+extern SharedFilePtr gSdropWalkAnimationFile;
 extern SharedFilePtr gPKoopaThrowAnimationFile;
-extern SharedFilePtr data_ov002_0210e9b0;
-extern SharedFilePtr data_ov002_0210e598;
-extern SharedFilePtr data_ov002_0210e508;
-extern SharedFilePtr data_ov002_0210ec90;
-extern SharedFilePtr data_ov002_0210e808;
-extern SharedFilePtr data_ov002_0210e5b8;
+extern SharedFilePtr gPKoopaHWaitAnimationFile;
+extern SharedFilePtr gPKoopaHoldAnimationFile;
+extern SharedFilePtr gFallSandAnimationFile;
+extern SharedFilePtr gSwimDieAnimationFile;
+extern SharedFilePtr gDrownDieAnimationFile;
+extern SharedFilePtr gReturnStarAnimationFile;
 extern SharedFilePtr gNCarryStartAnimationFile;
 extern SharedFilePtr gNCarryWaitAnimationFile;
 extern SharedFilePtr gNCarryWalkAnimationFile;
-extern SharedFilePtr data_ov002_0210e588;
-extern SharedFilePtr data_ov002_0210e988;
-extern SharedFilePtr data_ov002_0210e980;
-extern SharedFilePtr data_ov002_0210e4a0;
-extern SharedFilePtr data_ov002_0210e498;
+extern SharedFilePtr gNCarryPoseAnimationFile;
+extern SharedFilePtr gNCarryPutAnimationFile;
+extern SharedFilePtr gNCarryLostAnimationFile;
+extern SharedFilePtr gDoorPushAnimationFile;
+extern SharedFilePtr gDoorPullAnimationFile;
 extern SharedFilePtr gHCarryStartAnimationFile;
-extern SharedFilePtr data_ov002_0210e8c0;
+extern SharedFilePtr gHCarryWalkAnimationFile;
 extern SharedFilePtr gHCarryWaitAnimationFile;
-extern SharedFilePtr data_ov002_0210e8a8;
-extern SharedFilePtr data_ov002_0210ed30;
-extern SharedFilePtr data_ov002_0210e938;
-extern SharedFilePtr data_ov002_0210e568;
-extern SharedFilePtr data_ov002_0210eae0;
+extern SharedFilePtr gHCarryThrowAnimationFile;
+extern SharedFilePtr gStarOpenAnimationFile;
+extern SharedFilePtr gKeyOpenAnimationFile;
+extern SharedFilePtr gKeyGetAnimationFile;
+extern SharedFilePtr gWKeyGetAnimationFile;
 extern SharedFilePtr gColdWaitStartAnimationFile;
-extern SharedFilePtr data_ov002_0210e468;
-extern SharedFilePtr data_ov002_0210e470;
+extern SharedFilePtr gColdWaitAnimationFile;
+extern SharedFilePtr gColdWaitEndAnimationFile;
 extern SharedFilePtr gPutonTCapAnimationFile;
-extern SharedFilePtr data_ov002_0210e890;
-extern SharedFilePtr data_ov002_0210e8d8;
-extern SharedFilePtr data_ov002_0210e520;
+extern SharedFilePtr gFirstChangeAnimationFile;
+extern SharedFilePtr gLFirstChangeAnimationFile;
+extern SharedFilePtr gWFirstChangeAnimationFile;
 extern SharedFilePtr gScaleUpAnimationFile;
-extern SharedFilePtr data_ov002_0210ecf8;
-extern SharedFilePtr data_ov002_0210ed08;
-extern SharedFilePtr data_ov002_0210ecd8;
-extern SharedFilePtr data_ov002_0210ece0;
-extern SharedFilePtr data_ov002_0210ecd0;
-extern SharedFilePtr data_ov002_0210ece8;
-extern SharedFilePtr data_ov002_0210ed18;
-extern SharedFilePtr data_ov002_0210ed20;
-extern SharedFilePtr data_ov002_0210ed10;
-extern SharedFilePtr data_ov002_0210ecf0;
+extern SharedFilePtr gSuJumpEndAnimationFile;
+extern SharedFilePtr gSuJumpAnimationFile;
+extern SharedFilePtr gSuWalkEndAnimationFile;
+extern SharedFilePtr gSuWalkAnimationFile;
+extern SharedFilePtr gSuWalkStartAnimationFile;
+extern SharedFilePtr gSuWaitAnimationFile;
+extern SharedFilePtr gSuHipedAnimationFile;
+extern SharedFilePtr gSuHipatAnimationFile;
+extern SharedFilePtr gSuHipsrAnimationFile;
+extern SharedFilePtr gSuRunAnimationFile;
 extern SharedFilePtr gReturnNocapAnimationFile;
-extern SharedFilePtr data_ov002_0210ecc8;
-extern SharedFilePtr data_ov002_0210ec88;
-extern SharedFilePtr data_ov002_0210ec70;
-extern SharedFilePtr data_ov002_0210e5a0;
-extern SharedFilePtr data_ov002_0210e9c8;
-extern SharedFilePtr data_ov002_0210e5a8;
-extern SharedFilePtr data_ov002_0210ec80;
-extern SharedFilePtr data_ov002_0210eca0;
-extern SharedFilePtr data_ov002_0210ecc0;
-extern SharedFilePtr data_ov002_0210e768;
+extern SharedFilePtr gSwimAnimationFile;
+extern SharedFilePtr gSwimInAnimationFile;
+extern SharedFilePtr gSwimWaitAnimationFile;
+extern SharedFilePtr gPaddle1AnimationFile;
+extern SharedFilePtr gPaddle2AnimationFile;
+extern SharedFilePtr gPaddleEndAnimationFile;
+extern SharedFilePtr gSwimStarGetAnimationFile;
+extern SharedFilePtr gSwimDamageAnimationFile;
+extern SharedFilePtr gSwimAttackAnimationFile;
+extern SharedFilePtr gSwimCarryAnimationFile;
 extern SharedFilePtr gPaddleCarryAnimationFile;
-extern SharedFilePtr data_ov002_0210ec78;
-extern SharedFilePtr data_ov002_0210e590;
-extern SharedFilePtr data_ov002_0210e530;
-extern SharedFilePtr data_ov002_0210e9b8;
-extern SharedFilePtr data_ov002_0210ebb0;
-extern SharedFilePtr data_ov002_0210e9a8;
-extern SharedFilePtr data_ov002_0210e3f0;
-extern SharedFilePtr data_ov002_0210e6d8;
-extern SharedFilePtr data_ov002_0210e528;
-extern SharedFilePtr data_ov002_0210eb08;
-extern SharedFilePtr data_ov002_0210ebc0;
-extern SharedFilePtr data_ov002_0210e548;
-extern SharedFilePtr data_ov002_0210eaf8;
-extern SharedFilePtr data_ov002_0210ecb0;
-extern SharedFilePtr data_ov002_0210e948;
-extern SharedFilePtr data_ov002_0210e8b0;
-extern SharedFilePtr data_ov002_0210e5b0;
-extern SharedFilePtr data_ov002_0210e618;
-extern SharedFilePtr data_ov002_0210e840;
+extern SharedFilePtr gSwimThrowAnimationFile;
+extern SharedFilePtr gOpGoAnimationFile;
+extern SharedFilePtr gLOpNodAnimationFile;
+extern SharedFilePtr gWOpNodAnimationFile;
+extern SharedFilePtr gYOpLieToSitAnimationFile;
+extern SharedFilePtr gOpWaitAnimationFile;
+extern SharedFilePtr gYOpSitToStandAnimationFile;
+extern SharedFilePtr gYOpSitWaitAnimationFile;
+extern SharedFilePtr gLOpTurnAnimationFile;
+extern SharedFilePtr gWOpTurnAnimationFile;
+extern SharedFilePtr gYOpStandWaitAnimationFile;
+extern SharedFilePtr gLOpLookWarioAnimationFile;
+extern SharedFilePtr gWOpLookLuigiAnimationFile;
+extern SharedFilePtr gWOpPointAnimationFile;
+extern SharedFilePtr gEdWaitAnimationFile;
+extern SharedFilePtr gLEdWaitAnimationFile;
+extern SharedFilePtr gWEdWaitAnimationFile;
+extern SharedFilePtr gYEdWaitAnimationFile;
+extern SharedFilePtr gEdKissWaitAnimationFile;
 extern SharedFilePtr gEdKissToPoseAnimationFile;
 extern SharedFilePtr gLEdAmazedAnimationFile;
-extern SharedFilePtr data_ov002_0210e970;
-extern SharedFilePtr data_ov002_0210eb68;
+extern SharedFilePtr gWEdAmazedWairAnimationFile;
+extern SharedFilePtr gYEdShyWaitAnimationFile;
 extern SharedFilePtr gEDownAnimationFile;
-extern SharedFilePtr data_ov002_0210e390;
-extern SharedFilePtr data_ov002_0210e378;
-extern SharedFilePtr data_ov002_0210e8a0;
+extern SharedFilePtr gShfDieAnimationFile;
+extern SharedFilePtr gSDieAnimationFile;
+extern SharedFilePtr gGasWaitAnimationFile;
 extern SharedFilePtr gGasDieAnimationFile;
-extern SharedFilePtr data_ov002_0210e880;
+extern SharedFilePtr gFallDieAnimationFile;
 extern SharedFilePtr gLieEndAnimationFile;
-extern SharedFilePtr data_ov002_0210e8f0;
-extern SharedFilePtr data_ov002_0210ea08;
-extern SharedFilePtr data_ov002_0210eba0;
-extern SharedFilePtr data_ov002_0210e950;
-extern SharedFilePtr data_ov002_0210e900;
-extern SharedFilePtr data_ov002_0210e990;
-extern SharedFilePtr data_ov002_0210e6d0;
-extern SharedFilePtr data_ov002_0210eaa8;
-extern SharedFilePtr data_ov002_0210e5c0;
-extern SharedFilePtr data_ov002_0210e658;
-extern SharedFilePtr data_ov002_0210e6f0;
-extern SharedFilePtr data_ov002_0210ea98;
-extern SharedFilePtr data_ov002_0210e550;
-extern SharedFilePtr data_ov002_0210e650;
-extern SharedFilePtr data_ov002_0210e6e8;
-extern SharedFilePtr data_ov002_0210eab0;
-extern SharedFilePtr data_ov002_0210e998;
-extern SharedFilePtr data_ov002_0210e678;
-extern SharedFilePtr data_ov002_0210e3c0;
-extern SharedFilePtr data_ov002_0210e608;
-extern SharedFilePtr data_ov002_0210e748;
-extern SharedFilePtr data_ov002_0210eb18;
-extern SharedFilePtr data_ov002_0210ebd0;
-extern SharedFilePtr data_ov002_0210e488;
+extern SharedFilePtr gLLieEndAnimationFile;
+extern SharedFilePtr gWLieEndAnimationFile;
+extern SharedFilePtr gYLieEndAnimationFile;
+extern SharedFilePtr gLieWaitAnimationFile;
+extern SharedFilePtr gLLieWaitAnimationFile;
+extern SharedFilePtr gWLieWaitAnimationFile;
+extern SharedFilePtr gYLieWaitAnimationFile;
+extern SharedFilePtr gSleepToLieAnimationFile;
+extern SharedFilePtr gLSleepToLieAnimationFile;
+extern SharedFilePtr gWSleepToLieAnimationFile;
+extern SharedFilePtr gYSleepToLieAnimationFile;
+extern SharedFilePtr gSleepEndAnimationFile;
+extern SharedFilePtr gLSleepEndAnimationFile;
+extern SharedFilePtr gWSleepEndAnimationFile;
+extern SharedFilePtr gYSleepEndAnimationFile;
+extern SharedFilePtr gSleepWaitAnimationFile;
+extern SharedFilePtr gLSleepWaitAnimationFile;
+extern SharedFilePtr gWSleepWaitAnimationFile;
+extern SharedFilePtr gYSleepWaitAnimationFile;
+extern SharedFilePtr gSleepStartAnimationFile;
+extern SharedFilePtr gLSleepStartAnimationFile;
+extern SharedFilePtr gWSleepStartAnimationFile;
+extern SharedFilePtr gYSleepStartAnimationFile;
+extern SharedFilePtr gDamageStartAnimationFile;
 extern SharedFilePtr gDamageWaitAnimationFile;
-extern SharedFilePtr data_ov002_0210e9f8;
+extern SharedFilePtr gReturnDownAnimationFile;
 extern SharedFilePtr data_ov002_0210e810;
 extern SharedFilePtr data_ov002_0210ea38;
 extern SharedFilePtr data_ov002_0210e258;
@@ -656,146 +656,146 @@ extern void *const data_ov002_020ff790[540] = {
     (void *)&data_ov002_0210e6c8,         (void *)&data_ov002_0210e6c8,
     (void *)&data_ov002_0210ed28,         (void *)&data_ov002_0210ed28,
     (void *)&data_ov002_0210ed28,         (void *)&data_ov002_0210ed28,
-    (void *)&data_ov002_0210e398,         (void *)&data_ov002_0210e398,
-    (void *)&data_ov002_0210e398,         (void *)&data_ov002_0210e398,
-    (void *)&data_ov002_0210ea80,         (void *)&data_ov002_0210ea80,
-    (void *)&data_ov002_0210ea80,         (void *)&data_ov002_0210ea80,
-    (void *)&data_ov002_0210e5e0,         (void *)&data_ov002_0210e5e0,
-    (void *)&data_ov002_0210e5e0,         (void *)&data_ov002_0210e5e0,
-    (void *)&data_ov002_0210e5e8,         (void *)&data_ov002_0210e5e8,
-    (void *)&data_ov002_0210e5e8,         (void *)&data_ov002_0210e5e8,
-    (void *)&data_ov002_0210ea60,         (void *)&data_ov002_0210ea60,
-    (void *)&data_ov002_0210ea60,         (void *)&data_ov002_0210ea60,
+    (void *)&gShootToFlyAnimationFile,    (void *)&gShootToFlyAnimationFile,
+    (void *)&gShootToFlyAnimationFile,    (void *)&gShootToFlyAnimationFile,
+    (void *)&gShootAnimationFile,         (void *)&gShootAnimationFile,
+    (void *)&gShootAnimationFile,         (void *)&gShootAnimationFile,
+    (void *)&gSdropLegAnimationFile,      (void *)&gSdropLegAnimationFile,
+    (void *)&gSdropLegAnimationFile,      (void *)&gSdropLegAnimationFile,
+    (void *)&gSdropLegWaitAnimationFile,  (void *)&gSdropLegWaitAnimationFile,
+    (void *)&gSdropLegWaitAnimationFile,  (void *)&gSdropLegWaitAnimationFile,
+    (void *)&gSdropLegEndAnimationFile,   (void *)&gSdropLegEndAnimationFile,
+    (void *)&gSdropLegEndAnimationFile,   (void *)&gSdropLegEndAnimationFile,
     (void *)&gSdropHipEndAnimationFile,   (void *)&gSdropHipEndAnimationFile,
     (void *)&gSdropHipEndAnimationFile,   (void *)&gSdropHipEndAnimationFile,
-    (void *)&data_ov002_0210e5d8,         (void *)&data_ov002_0210e5d8,
-    (void *)&data_ov002_0210e5d8,         (void *)&data_ov002_0210e5d8,
-    (void *)&data_ov002_0210ea58,         (void *)&data_ov002_0210ea58,
-    (void *)&data_ov002_0210ea58,         (void *)&data_ov002_0210ea58,
-    (void *)&data_ov002_0210ea40,         (void *)&data_ov002_0210ea40,
-    (void *)&data_ov002_0210ea40,         (void *)&data_ov002_0210ea40,
-    (void *)&data_ov002_0210ea48,         (void *)&data_ov002_0210ea48,
-    (void *)&data_ov002_0210ea48,         (void *)&data_ov002_0210ea48,
-    (void *)&data_ov002_0210e380,         (void *)&data_ov002_0210e380,
-    (void *)&data_ov002_0210e380,         (void *)&data_ov002_0210e380,
-    (void *)&data_ov002_0210ea68,         (void *)&data_ov002_0210ea68,
-    (void *)&data_ov002_0210ea68,         (void *)&data_ov002_0210ea68,
-    (void *)&data_ov002_0210e388,         (void *)&data_ov002_0210e388,
-    (void *)&data_ov002_0210e388,         (void *)&data_ov002_0210e388,
+    (void *)&gSdropHipAnimationFile,      (void *)&gSdropHipAnimationFile,
+    (void *)&gSdropHipAnimationFile,      (void *)&gSdropHipAnimationFile,
+    (void *)&gSdropHipWaitAnimationFile,  (void *)&gSdropHipWaitAnimationFile,
+    (void *)&gSdropHipWaitAnimationFile,  (void *)&gSdropHipWaitAnimationFile,
+    (void *)&gSdropHeadEndAnimationFile,  (void *)&gSdropHeadEndAnimationFile,
+    (void *)&gSdropHeadEndAnimationFile,  (void *)&gSdropHeadEndAnimationFile,
+    (void *)&gSdropHeadWaitAnimationFile, (void *)&gSdropHeadWaitAnimationFile,
+    (void *)&gSdropHeadWaitAnimationFile, (void *)&gSdropHeadWaitAnimationFile,
+    (void *)&gSdropHeadAnimationFile,     (void *)&gSdropHeadAnimationFile,
+    (void *)&gSdropHeadAnimationFile,     (void *)&gSdropHeadAnimationFile,
+    (void *)&gSdropWaitAnimationFile,     (void *)&gSdropWaitAnimationFile,
+    (void *)&gSdropWaitAnimationFile,     (void *)&gSdropWaitAnimationFile,
+    (void *)&gSdropWalkAnimationFile,     (void *)&gSdropWalkAnimationFile,
+    (void *)&gSdropWalkAnimationFile,     (void *)&gSdropWalkAnimationFile,
     (void *)&gPKoopaThrowAnimationFile,   (void *)&gPKoopaThrowAnimationFile,
     (void *)&gPKoopaThrowAnimationFile,   (void *)&gPKoopaThrowAnimationFile,
-    (void *)&data_ov002_0210e9b0,         (void *)&data_ov002_0210e9b0,
-    (void *)&data_ov002_0210e9b0,         (void *)&data_ov002_0210e9b0,
-    (void *)&data_ov002_0210e598,         (void *)&data_ov002_0210e598,
-    (void *)&data_ov002_0210e598,         (void *)&data_ov002_0210e598,
-    (void *)&data_ov002_0210e508,         (void *)&data_ov002_0210e508,
-    (void *)&data_ov002_0210e508,         (void *)&data_ov002_0210e508,
-    (void *)&data_ov002_0210ec90,         (void *)&data_ov002_0210ec90,
-    (void *)&data_ov002_0210ec90,         (void *)&data_ov002_0210ec90,
-    (void *)&data_ov002_0210e808,         (void *)&data_ov002_0210e808,
-    (void *)&data_ov002_0210e808,         (void *)&data_ov002_0210e808,
-    (void *)&data_ov002_0210e5b8,         (void *)&data_ov002_0210e5b8,
-    (void *)&data_ov002_0210e5b8,         (void *)&data_ov002_0210e5b8,
+    (void *)&gPKoopaHWaitAnimationFile,   (void *)&gPKoopaHWaitAnimationFile,
+    (void *)&gPKoopaHWaitAnimationFile,   (void *)&gPKoopaHWaitAnimationFile,
+    (void *)&gPKoopaHoldAnimationFile,    (void *)&gPKoopaHoldAnimationFile,
+    (void *)&gPKoopaHoldAnimationFile,    (void *)&gPKoopaHoldAnimationFile,
+    (void *)&gFallSandAnimationFile,      (void *)&gFallSandAnimationFile,
+    (void *)&gFallSandAnimationFile,      (void *)&gFallSandAnimationFile,
+    (void *)&gSwimDieAnimationFile,       (void *)&gSwimDieAnimationFile,
+    (void *)&gSwimDieAnimationFile,       (void *)&gSwimDieAnimationFile,
+    (void *)&gDrownDieAnimationFile,      (void *)&gDrownDieAnimationFile,
+    (void *)&gDrownDieAnimationFile,      (void *)&gDrownDieAnimationFile,
+    (void *)&gReturnStarAnimationFile,    (void *)&gReturnStarAnimationFile,
+    (void *)&gReturnStarAnimationFile,    (void *)&gReturnStarAnimationFile,
     (void *)&gNCarryStartAnimationFile,   (void *)&gNCarryStartAnimationFile,
     (void *)&gNCarryStartAnimationFile,   (void *)&gNCarryStartAnimationFile,
     (void *)&gNCarryWaitAnimationFile,    (void *)&gNCarryWaitAnimationFile,
     (void *)&gNCarryWaitAnimationFile,    (void *)&gNCarryWaitAnimationFile,
     (void *)&gNCarryWalkAnimationFile,    (void *)&gNCarryWalkAnimationFile,
     (void *)&gNCarryWalkAnimationFile,    (void *)&gNCarryWalkAnimationFile,
-    (void *)&data_ov002_0210e588,         (void *)&data_ov002_0210e588,
-    (void *)&data_ov002_0210e588,         (void *)&data_ov002_0210e588,
-    (void *)&data_ov002_0210e988,         (void *)&data_ov002_0210e988,
-    (void *)&data_ov002_0210e988,         (void *)&data_ov002_0210e988,
-    (void *)&data_ov002_0210e980,         (void *)&data_ov002_0210e980,
-    (void *)&data_ov002_0210e980,         (void *)&data_ov002_0210e980,
-    (void *)&data_ov002_0210e4a0,         (void *)&data_ov002_0210e4a0,
-    (void *)&data_ov002_0210e4a0,         (void *)&data_ov002_0210e4a0,
-    (void *)&data_ov002_0210e498,         (void *)&data_ov002_0210e498,
-    (void *)&data_ov002_0210e498,         (void *)&data_ov002_0210e498,
+    (void *)&gNCarryPoseAnimationFile,    (void *)&gNCarryPoseAnimationFile,
+    (void *)&gNCarryPoseAnimationFile,    (void *)&gNCarryPoseAnimationFile,
+    (void *)&gNCarryPutAnimationFile,     (void *)&gNCarryPutAnimationFile,
+    (void *)&gNCarryPutAnimationFile,     (void *)&gNCarryPutAnimationFile,
+    (void *)&gNCarryLostAnimationFile,    (void *)&gNCarryLostAnimationFile,
+    (void *)&gNCarryLostAnimationFile,    (void *)&gNCarryLostAnimationFile,
+    (void *)&gDoorPushAnimationFile,      (void *)&gDoorPushAnimationFile,
+    (void *)&gDoorPushAnimationFile,      (void *)&gDoorPushAnimationFile,
+    (void *)&gDoorPullAnimationFile,      (void *)&gDoorPullAnimationFile,
+    (void *)&gDoorPullAnimationFile,      (void *)&gDoorPullAnimationFile,
     (void *)&gHCarryStartAnimationFile,   (void *)&gHCarryStartAnimationFile,
     (void *)&gHCarryStartAnimationFile,   (void *)&gHCarryStartAnimationFile,
-    (void *)&data_ov002_0210e8c0,         (void *)&data_ov002_0210e8c0,
-    (void *)&data_ov002_0210e8c0,         (void *)&data_ov002_0210e8c0,
+    (void *)&gHCarryWalkAnimationFile,    (void *)&gHCarryWalkAnimationFile,
+    (void *)&gHCarryWalkAnimationFile,    (void *)&gHCarryWalkAnimationFile,
     (void *)&gHCarryWaitAnimationFile,    (void *)&gHCarryWaitAnimationFile,
     (void *)&gHCarryWaitAnimationFile,    (void *)&gHCarryWaitAnimationFile,
-    (void *)&data_ov002_0210e8a8,         (void *)&data_ov002_0210e8a8,
-    (void *)&data_ov002_0210e8a8,         (void *)&data_ov002_0210e8a8,
-    (void *)&data_ov002_0210ed30,         (void *)&data_ov002_0210ed30,
-    (void *)&data_ov002_0210ed30,         (void *)&data_ov002_0210ed30,
-    (void *)&data_ov002_0210e938,         (void *)&data_ov002_0210e938,
-    (void *)&data_ov002_0210e938,         (void *)&data_ov002_0210e938,
-    (void *)&data_ov002_0210e568,         (void *)&data_ov002_0210e568,
-    (void *)&data_ov002_0210e568,         (void *)&data_ov002_0210eae0,
+    (void *)&gHCarryThrowAnimationFile,   (void *)&gHCarryThrowAnimationFile,
+    (void *)&gHCarryThrowAnimationFile,   (void *)&gHCarryThrowAnimationFile,
+    (void *)&gStarOpenAnimationFile,      (void *)&gStarOpenAnimationFile,
+    (void *)&gStarOpenAnimationFile,      (void *)&gStarOpenAnimationFile,
+    (void *)&gKeyOpenAnimationFile,       (void *)&gKeyOpenAnimationFile,
+    (void *)&gKeyOpenAnimationFile,       (void *)&gKeyOpenAnimationFile,
+    (void *)&gKeyGetAnimationFile,        (void *)&gKeyGetAnimationFile,
+    (void *)&gKeyGetAnimationFile,        (void *)&gWKeyGetAnimationFile,
     (void *)&gColdWaitStartAnimationFile, (void *)&gColdWaitStartAnimationFile,
     (void *)&gColdWaitStartAnimationFile, (void *)&gColdWaitStartAnimationFile,
-    (void *)&data_ov002_0210e468,         (void *)&data_ov002_0210e468,
-    (void *)&data_ov002_0210e468,         (void *)&data_ov002_0210e468,
-    (void *)&data_ov002_0210e470,         (void *)&data_ov002_0210e470,
-    (void *)&data_ov002_0210e470,         (void *)&data_ov002_0210e470,
+    (void *)&gColdWaitAnimationFile,      (void *)&gColdWaitAnimationFile,
+    (void *)&gColdWaitAnimationFile,      (void *)&gColdWaitAnimationFile,
+    (void *)&gColdWaitEndAnimationFile,   (void *)&gColdWaitEndAnimationFile,
+    (void *)&gColdWaitEndAnimationFile,   (void *)&gColdWaitEndAnimationFile,
     (void *)&gPutonTCapAnimationFile,     (void *)&gPutonTCapAnimationFile,
     (void *)&gPutonTCapAnimationFile,     (void *)&gPutonTCapAnimationFile,
-    (void *)&data_ov002_0210e890,         (void *)&data_ov002_0210e8d8,
-    (void *)&data_ov002_0210e520,         (void *)&data_ov002_0210e890,
+    (void *)&gFirstChangeAnimationFile,   (void *)&gLFirstChangeAnimationFile,
+    (void *)&gWFirstChangeAnimationFile,  (void *)&gFirstChangeAnimationFile,
     (void *)&gScaleUpAnimationFile,       (void *)&gScaleUpAnimationFile,
     (void *)&gScaleUpAnimationFile,       (void *)&gScaleUpAnimationFile,
-    (void *)&data_ov002_0210ecf8,         (void *)&data_ov002_0210ecf8,
-    (void *)&data_ov002_0210ecf8,         (void *)&data_ov002_0210ecf8,
-    (void *)&data_ov002_0210ed08,         (void *)&data_ov002_0210ed08,
-    (void *)&data_ov002_0210ed08,         (void *)&data_ov002_0210ed08,
-    (void *)&data_ov002_0210ecd8,         (void *)&data_ov002_0210ecd8,
-    (void *)&data_ov002_0210ecd8,         (void *)&data_ov002_0210ecd8,
-    (void *)&data_ov002_0210ece0,         (void *)&data_ov002_0210ece0,
-    (void *)&data_ov002_0210ece0,         (void *)&data_ov002_0210ece0,
-    (void *)&data_ov002_0210ecd0,         (void *)&data_ov002_0210ecd0,
-    (void *)&data_ov002_0210ecd0,         (void *)&data_ov002_0210ecd0,
-    (void *)&data_ov002_0210ece8,         (void *)&data_ov002_0210ece8,
-    (void *)&data_ov002_0210ece8,         (void *)&data_ov002_0210ece8,
-    (void *)&data_ov002_0210ed18,         (void *)&data_ov002_0210ed18,
-    (void *)&data_ov002_0210ed18,         (void *)&data_ov002_0210ed18,
-    (void *)&data_ov002_0210ed20,         (void *)&data_ov002_0210ed20,
-    (void *)&data_ov002_0210ed20,         (void *)&data_ov002_0210ed20,
-    (void *)&data_ov002_0210ed10,         (void *)&data_ov002_0210ed10,
-    (void *)&data_ov002_0210ed10,         (void *)&data_ov002_0210ed10,
-    (void *)&data_ov002_0210ecf0,         (void *)&data_ov002_0210ecf0,
-    (void *)&data_ov002_0210ecf0,         (void *)&data_ov002_0210ecf0,
+    (void *)&gSuJumpEndAnimationFile,     (void *)&gSuJumpEndAnimationFile,
+    (void *)&gSuJumpEndAnimationFile,     (void *)&gSuJumpEndAnimationFile,
+    (void *)&gSuJumpAnimationFile,        (void *)&gSuJumpAnimationFile,
+    (void *)&gSuJumpAnimationFile,        (void *)&gSuJumpAnimationFile,
+    (void *)&gSuWalkEndAnimationFile,     (void *)&gSuWalkEndAnimationFile,
+    (void *)&gSuWalkEndAnimationFile,     (void *)&gSuWalkEndAnimationFile,
+    (void *)&gSuWalkAnimationFile,        (void *)&gSuWalkAnimationFile,
+    (void *)&gSuWalkAnimationFile,        (void *)&gSuWalkAnimationFile,
+    (void *)&gSuWalkStartAnimationFile,   (void *)&gSuWalkStartAnimationFile,
+    (void *)&gSuWalkStartAnimationFile,   (void *)&gSuWalkStartAnimationFile,
+    (void *)&gSuWaitAnimationFile,        (void *)&gSuWaitAnimationFile,
+    (void *)&gSuWaitAnimationFile,        (void *)&gSuWaitAnimationFile,
+    (void *)&gSuHipedAnimationFile,       (void *)&gSuHipedAnimationFile,
+    (void *)&gSuHipedAnimationFile,       (void *)&gSuHipedAnimationFile,
+    (void *)&gSuHipatAnimationFile,       (void *)&gSuHipatAnimationFile,
+    (void *)&gSuHipatAnimationFile,       (void *)&gSuHipatAnimationFile,
+    (void *)&gSuHipsrAnimationFile,       (void *)&gSuHipsrAnimationFile,
+    (void *)&gSuHipsrAnimationFile,       (void *)&gSuHipsrAnimationFile,
+    (void *)&gSuRunAnimationFile,         (void *)&gSuRunAnimationFile,
+    (void *)&gSuRunAnimationFile,         (void *)&gSuRunAnimationFile,
     (void *)&gReturnNocapAnimationFile,   (void *)&gReturnNocapAnimationFile,
     (void *)&gReturnNocapAnimationFile,   (void *)&gReturnNocapAnimationFile,
-    (void *)&data_ov002_0210ecc8,         (void *)&data_ov002_0210ecc8,
-    (void *)&data_ov002_0210ecc8,         (void *)&data_ov002_0210ecc8,
-    (void *)&data_ov002_0210ec88,         (void *)&data_ov002_0210ec88,
-    (void *)&data_ov002_0210ec88,         (void *)&data_ov002_0210ec88,
-    (void *)&data_ov002_0210ec70,         (void *)&data_ov002_0210ec70,
-    (void *)&data_ov002_0210ec70,         (void *)&data_ov002_0210ec70,
-    (void *)&data_ov002_0210e5a0,         (void *)&data_ov002_0210e5a0,
-    (void *)&data_ov002_0210e5a0,         (void *)&data_ov002_0210e5a0,
-    (void *)&data_ov002_0210e9c8,         (void *)&data_ov002_0210e9c8,
-    (void *)&data_ov002_0210e9c8,         (void *)&data_ov002_0210e9c8,
-    (void *)&data_ov002_0210e5a8,         (void *)&data_ov002_0210e5a8,
-    (void *)&data_ov002_0210e5a8,         (void *)&data_ov002_0210e5a8,
-    (void *)&data_ov002_0210ec80,         (void *)&data_ov002_0210ec80,
-    (void *)&data_ov002_0210ec80,         (void *)&data_ov002_0210ec80,
-    (void *)&data_ov002_0210eca0,         (void *)&data_ov002_0210eca0,
-    (void *)&data_ov002_0210eca0,         (void *)&data_ov002_0210eca0,
-    (void *)&data_ov002_0210ecc0,         (void *)&data_ov002_0210ecc0,
-    (void *)&data_ov002_0210ecc0,         (void *)&data_ov002_0210ecc0,
-    (void *)&data_ov002_0210e768,         (void *)&data_ov002_0210e768,
-    (void *)&data_ov002_0210e768,         (void *)&data_ov002_0210e768,
+    (void *)&gSwimAnimationFile,          (void *)&gSwimAnimationFile,
+    (void *)&gSwimAnimationFile,          (void *)&gSwimAnimationFile,
+    (void *)&gSwimInAnimationFile,        (void *)&gSwimInAnimationFile,
+    (void *)&gSwimInAnimationFile,        (void *)&gSwimInAnimationFile,
+    (void *)&gSwimWaitAnimationFile,      (void *)&gSwimWaitAnimationFile,
+    (void *)&gSwimWaitAnimationFile,      (void *)&gSwimWaitAnimationFile,
+    (void *)&gPaddle1AnimationFile,       (void *)&gPaddle1AnimationFile,
+    (void *)&gPaddle1AnimationFile,       (void *)&gPaddle1AnimationFile,
+    (void *)&gPaddle2AnimationFile,       (void *)&gPaddle2AnimationFile,
+    (void *)&gPaddle2AnimationFile,       (void *)&gPaddle2AnimationFile,
+    (void *)&gPaddleEndAnimationFile,     (void *)&gPaddleEndAnimationFile,
+    (void *)&gPaddleEndAnimationFile,     (void *)&gPaddleEndAnimationFile,
+    (void *)&gSwimStarGetAnimationFile,   (void *)&gSwimStarGetAnimationFile,
+    (void *)&gSwimStarGetAnimationFile,   (void *)&gSwimStarGetAnimationFile,
+    (void *)&gSwimDamageAnimationFile,    (void *)&gSwimDamageAnimationFile,
+    (void *)&gSwimDamageAnimationFile,    (void *)&gSwimDamageAnimationFile,
+    (void *)&gSwimAttackAnimationFile,    (void *)&gSwimAttackAnimationFile,
+    (void *)&gSwimAttackAnimationFile,    (void *)&gSwimAttackAnimationFile,
+    (void *)&gSwimCarryAnimationFile,     (void *)&gSwimCarryAnimationFile,
+    (void *)&gSwimCarryAnimationFile,     (void *)&gSwimCarryAnimationFile,
     (void *)&gPaddleCarryAnimationFile,   (void *)&gPaddleCarryAnimationFile,
     (void *)&gPaddleCarryAnimationFile,   (void *)&gPaddleCarryAnimationFile,
-    (void *)&data_ov002_0210ec78,         (void *)&data_ov002_0210ec78,
-    (void *)&data_ov002_0210ec78,         (void *)&data_ov002_0210ec78,
-    (void *)&data_ov002_0210e590,         (void *)&data_ov002_0210e530,
-    (void *)&data_ov002_0210e9b8,         (void *)&data_ov002_0210ebb0,
-    (void *)&data_ov002_0210e9a8,         (void *)&data_ov002_0210e9a8,
-    (void *)&data_ov002_0210e9a8,         (void *)&data_ov002_0210e3f0,
-    (void *)&data_ov002_0210e6d8,         (void *)&data_ov002_0210e528,
-    (void *)&data_ov002_0210eb08,         (void *)&data_ov002_0210e6d8,
-    (void *)&data_ov002_0210ebc0,         (void *)&data_ov002_0210e548,
-    (void *)&data_ov002_0210eaf8,         (void *)&data_ov002_0210ebc0,
-    (void *)&data_ov002_0210ecb0,         (void *)&data_ov002_0210ecb0,
-    (void *)&data_ov002_0210ecb0,         (void *)&data_ov002_0210ecb0,
-    (void *)&data_ov002_0210e948,         (void *)&data_ov002_0210e8b0,
-    (void *)&data_ov002_0210e5b0,         (void *)&data_ov002_0210e618};
+    (void *)&gSwimThrowAnimationFile,     (void *)&gSwimThrowAnimationFile,
+    (void *)&gSwimThrowAnimationFile,     (void *)&gSwimThrowAnimationFile,
+    (void *)&gOpGoAnimationFile,          (void *)&gLOpNodAnimationFile,
+    (void *)&gWOpNodAnimationFile,        (void *)&gYOpLieToSitAnimationFile,
+    (void *)&gOpWaitAnimationFile,        (void *)&gOpWaitAnimationFile,
+    (void *)&gOpWaitAnimationFile,        (void *)&gYOpSitToStandAnimationFile,
+    (void *)&gYOpSitWaitAnimationFile,    (void *)&gLOpTurnAnimationFile,
+    (void *)&gWOpTurnAnimationFile,       (void *)&gYOpSitWaitAnimationFile,
+    (void *)&gYOpStandWaitAnimationFile,  (void *)&gLOpLookWarioAnimationFile,
+    (void *)&gWOpLookLuigiAnimationFile,  (void *)&gYOpStandWaitAnimationFile,
+    (void *)&gWOpPointAnimationFile,      (void *)&gWOpPointAnimationFile,
+    (void *)&gWOpPointAnimationFile,      (void *)&gWOpPointAnimationFile,
+    (void *)&gEdWaitAnimationFile,        (void *)&gLEdWaitAnimationFile,
+    (void *)&gWEdWaitAnimationFile,       (void *)&gYEdWaitAnimationFile};
 /* Frame windows ahead of the handler PMF band. */
 u8 data_ov002_02109db8[] = {46, 20, 0, 0};
 u16 data_ov002_02109dbc[] = {6, 9, 15, 0};
@@ -917,71 +917,71 @@ extern "C" {
 extern signed char gCurrentSublevel;
 extern const unsigned int data_ov002_020ff220[4] = {71, 72, 45, 100};
 extern SharedFilePtr *const data_ov002_020ff480[196] = {
-    &data_ov002_0210e840,      &data_ov002_0210e840,        &data_ov002_0210e840,
-    &data_ov002_0210e840,      &gEdKissToPoseAnimationFile, &gLEdAmazedAnimationFile,
-    &data_ov002_0210e970,      &data_ov002_0210eb68,        &gEDownAnimationFile,
-    &gEDownAnimationFile,      &gEDownAnimationFile,        &gEDownAnimationFile,
-    &data_ov002_0210e390,      &data_ov002_0210e390,        &data_ov002_0210e390,
-    &data_ov002_0210e390,      &data_ov002_0210e378,        &data_ov002_0210e378,
-    &data_ov002_0210e378,      &data_ov002_0210e378,        &data_ov002_0210e8a0,
-    &data_ov002_0210e8a0,      &data_ov002_0210e8a0,        &data_ov002_0210e8a0,
-    &gGasDieAnimationFile,     &gGasDieAnimationFile,       &gGasDieAnimationFile,
-    &gGasDieAnimationFile,     &data_ov002_0210e880,        &data_ov002_0210e880,
-    &data_ov002_0210e880,      &data_ov002_0210e880,        &gLieEndAnimationFile,
-    &data_ov002_0210e8f0,      &data_ov002_0210ea08,        &data_ov002_0210eba0,
-    &data_ov002_0210e950,      &data_ov002_0210e900,        &data_ov002_0210e990,
-    &data_ov002_0210e6d0,      &data_ov002_0210eaa8,        &data_ov002_0210e5c0,
-    &data_ov002_0210e658,      &data_ov002_0210e6f0,        &data_ov002_0210ea98,
-    &data_ov002_0210e550,      &data_ov002_0210e650,        &data_ov002_0210e6e8,
-    &data_ov002_0210eab0,      &data_ov002_0210e998,        &data_ov002_0210e678,
-    &data_ov002_0210e3c0,      &data_ov002_0210e608,        &data_ov002_0210e748,
-    &data_ov002_0210eb18,      &data_ov002_0210ebd0,        &data_ov002_0210e488,
-    &data_ov002_0210e488,      &data_ov002_0210e488,        &data_ov002_0210e488,
-    &gDamageWaitAnimationFile, &gDamageWaitAnimationFile,   &gDamageWaitAnimationFile,
-    &gDamageWaitAnimationFile, &data_ov002_0210e9f8,        &data_ov002_0210e9f8,
-    &data_ov002_0210e9f8,      &data_ov002_0210e9f8,        &data_ov002_0210e810,
-    &data_ov002_0210e810,      &data_ov002_0210e810,        &data_ov002_0210e810,
-    &data_ov002_0210ea38,      &data_ov002_0210ea38,        &data_ov002_0210ea38,
-    &data_ov002_0210ea38,      &data_ov002_0210e258,        &data_ov002_0210e258,
-    &data_ov002_0210e258,      &data_ov002_0210e258,        &data_ov002_0210e5f8,
-    &data_ov002_0210e5f8,      &data_ov002_0210e5f8,        &data_ov002_0210e5f8,
-    &data_ov002_0210e918,      &data_ov002_0210e918,        &data_ov002_0210e918,
-    &data_ov002_0210e918,      &data_ov002_0210e2e0,        &data_ov002_0210e2e0,
-    &data_ov002_0210e2e0,      &data_ov002_0210e2e0,        &data_ov002_0210e2e8,
-    &data_ov002_0210e2e8,      &data_ov002_0210e2e8,        &data_ov002_0210e2e8,
-    &data_ov002_0210e448,      &data_ov002_0210e448,        &data_ov002_0210ebe0,
-    &data_ov002_0210e448,      &data_ov002_0210ed38,        &data_ov002_0210ed38,
-    &data_ov002_0210ed38,      &data_ov002_0210ed38,        &data_ov002_0210e9e0,
-    &data_ov002_0210e9e0,      &data_ov002_0210e9e0,        &data_ov002_0210e9e0,
-    &data_ov002_0210e240,      &data_ov002_0210e240,        &data_ov002_0210e240,
-    &data_ov002_0210e240,      &data_ov002_0210e1a8,        &data_ov002_0210e1a8,
-    &data_ov002_0210e1a8,      &data_ov002_0210e1a8,        &data_ov002_0210e8e0,
-    &data_ov002_0210e8e0,      &data_ov002_0210e8e0,        &data_ov002_0210e8e0,
-    &data_ov002_0210e310,      &data_ov002_0210e310,        &data_ov002_0210e310,
-    &data_ov002_0210e310,      &data_ov002_0210e308,        &data_ov002_0210e308,
-    &data_ov002_0210e308,      &data_ov002_0210e308,        &data_ov002_0210e318,
-    &data_ov002_0210e318,      &data_ov002_0210e318,        &data_ov002_0210e318,
-    &data_ov002_0210e908,      &data_ov002_0210e908,        &data_ov002_0210e908,
-    &data_ov002_0210e908,      &data_ov002_0210e8f8,        &data_ov002_0210e8f8,
-    &data_ov002_0210e8f8,      &data_ov002_0210e8f8,        &data_ov002_0210e320,
-    &data_ov002_0210e320,      &data_ov002_0210e320,        &data_ov002_0210e320,
-    &data_ov002_0210e920,      &data_ov002_0210e920,        &data_ov002_0210e920,
-    &data_ov002_0210e920,      &data_ov002_0210e7c8,        &data_ov002_0210e7c8,
-    &data_ov002_0210e7c8,      &data_ov002_0210e7c8,        &data_ov002_0210eb48,
-    &data_ov002_0210eb48,      &data_ov002_0210eb48,        &data_ov002_0210eb48,
-    &data_ov002_0210ead8,      &data_ov002_0210ead8,        &data_ov002_0210ead8,
-    &data_ov002_0210ead8,      &data_ov002_0210e878,        &data_ov002_0210e878,
-    &data_ov002_0210e878,      &data_ov002_0210e878,        &data_ov002_0210e830,
-    &data_ov002_0210e830,      &data_ov002_0210e830,        &data_ov002_0210e830,
-    &data_ov002_0210e760,      &data_ov002_0210e760,        &data_ov002_0210e760,
-    &data_ov002_0210e760,      &data_ov002_0210e428,        &data_ov002_0210e428,
-    &data_ov002_0210e428,      &data_ov002_0210e428,        &data_ov002_0210ed40,
-    &data_ov002_0210ed40,      &data_ov002_0210ed40,        &data_ov002_0210ed40,
-    &data_ov002_0210ed48,      &data_ov002_0210ed48,        &data_ov002_0210ed48,
-    &data_ov002_0210ed48,      &data_ov002_0210ed50,        &data_ov002_0210ed50,
-    &data_ov002_0210ed50,      &data_ov002_0210ed50,        &data_ov002_0210e7a0,
-    &data_ov002_0210e7a0,      &data_ov002_0210e4c8,        &data_ov002_0210e7a0,
-    &data_ov002_0210e278,      &data_ov002_0210e278,        &data_ov002_0210eb30,
+    &gEdKissWaitAnimationFile,    &gEdKissWaitAnimationFile,   &gEdKissWaitAnimationFile,
+    &gEdKissWaitAnimationFile,    &gEdKissToPoseAnimationFile, &gLEdAmazedAnimationFile,
+    &gWEdAmazedWairAnimationFile, &gYEdShyWaitAnimationFile,   &gEDownAnimationFile,
+    &gEDownAnimationFile,         &gEDownAnimationFile,        &gEDownAnimationFile,
+    &gShfDieAnimationFile,        &gShfDieAnimationFile,       &gShfDieAnimationFile,
+    &gShfDieAnimationFile,        &gSDieAnimationFile,         &gSDieAnimationFile,
+    &gSDieAnimationFile,          &gSDieAnimationFile,         &gGasWaitAnimationFile,
+    &gGasWaitAnimationFile,       &gGasWaitAnimationFile,      &gGasWaitAnimationFile,
+    &gGasDieAnimationFile,        &gGasDieAnimationFile,       &gGasDieAnimationFile,
+    &gGasDieAnimationFile,        &gFallDieAnimationFile,      &gFallDieAnimationFile,
+    &gFallDieAnimationFile,       &gFallDieAnimationFile,      &gLieEndAnimationFile,
+    &gLLieEndAnimationFile,       &gWLieEndAnimationFile,      &gYLieEndAnimationFile,
+    &gLieWaitAnimationFile,       &gLLieWaitAnimationFile,     &gWLieWaitAnimationFile,
+    &gYLieWaitAnimationFile,      &gSleepToLieAnimationFile,   &gLSleepToLieAnimationFile,
+    &gWSleepToLieAnimationFile,   &gYSleepToLieAnimationFile,  &gSleepEndAnimationFile,
+    &gLSleepEndAnimationFile,     &gWSleepEndAnimationFile,    &gYSleepEndAnimationFile,
+    &gSleepWaitAnimationFile,     &gLSleepWaitAnimationFile,   &gWSleepWaitAnimationFile,
+    &gYSleepWaitAnimationFile,    &gSleepStartAnimationFile,   &gLSleepStartAnimationFile,
+    &gWSleepStartAnimationFile,   &gYSleepStartAnimationFile,  &gDamageStartAnimationFile,
+    &gDamageStartAnimationFile,   &gDamageStartAnimationFile,  &gDamageStartAnimationFile,
+    &gDamageWaitAnimationFile,    &gDamageWaitAnimationFile,   &gDamageWaitAnimationFile,
+    &gDamageWaitAnimationFile,    &gReturnDownAnimationFile,   &gReturnDownAnimationFile,
+    &gReturnDownAnimationFile,    &gReturnDownAnimationFile,   &data_ov002_0210e810,
+    &data_ov002_0210e810,         &data_ov002_0210e810,        &data_ov002_0210e810,
+    &data_ov002_0210ea38,         &data_ov002_0210ea38,        &data_ov002_0210ea38,
+    &data_ov002_0210ea38,         &data_ov002_0210e258,        &data_ov002_0210e258,
+    &data_ov002_0210e258,         &data_ov002_0210e258,        &data_ov002_0210e5f8,
+    &data_ov002_0210e5f8,         &data_ov002_0210e5f8,        &data_ov002_0210e5f8,
+    &data_ov002_0210e918,         &data_ov002_0210e918,        &data_ov002_0210e918,
+    &data_ov002_0210e918,         &data_ov002_0210e2e0,        &data_ov002_0210e2e0,
+    &data_ov002_0210e2e0,         &data_ov002_0210e2e0,        &data_ov002_0210e2e8,
+    &data_ov002_0210e2e8,         &data_ov002_0210e2e8,        &data_ov002_0210e2e8,
+    &data_ov002_0210e448,         &data_ov002_0210e448,        &data_ov002_0210ebe0,
+    &data_ov002_0210e448,         &data_ov002_0210ed38,        &data_ov002_0210ed38,
+    &data_ov002_0210ed38,         &data_ov002_0210ed38,        &data_ov002_0210e9e0,
+    &data_ov002_0210e9e0,         &data_ov002_0210e9e0,        &data_ov002_0210e9e0,
+    &data_ov002_0210e240,         &data_ov002_0210e240,        &data_ov002_0210e240,
+    &data_ov002_0210e240,         &data_ov002_0210e1a8,        &data_ov002_0210e1a8,
+    &data_ov002_0210e1a8,         &data_ov002_0210e1a8,        &data_ov002_0210e8e0,
+    &data_ov002_0210e8e0,         &data_ov002_0210e8e0,        &data_ov002_0210e8e0,
+    &data_ov002_0210e310,         &data_ov002_0210e310,        &data_ov002_0210e310,
+    &data_ov002_0210e310,         &data_ov002_0210e308,        &data_ov002_0210e308,
+    &data_ov002_0210e308,         &data_ov002_0210e308,        &data_ov002_0210e318,
+    &data_ov002_0210e318,         &data_ov002_0210e318,        &data_ov002_0210e318,
+    &data_ov002_0210e908,         &data_ov002_0210e908,        &data_ov002_0210e908,
+    &data_ov002_0210e908,         &data_ov002_0210e8f8,        &data_ov002_0210e8f8,
+    &data_ov002_0210e8f8,         &data_ov002_0210e8f8,        &data_ov002_0210e320,
+    &data_ov002_0210e320,         &data_ov002_0210e320,        &data_ov002_0210e320,
+    &data_ov002_0210e920,         &data_ov002_0210e920,        &data_ov002_0210e920,
+    &data_ov002_0210e920,         &data_ov002_0210e7c8,        &data_ov002_0210e7c8,
+    &data_ov002_0210e7c8,         &data_ov002_0210e7c8,        &data_ov002_0210eb48,
+    &data_ov002_0210eb48,         &data_ov002_0210eb48,        &data_ov002_0210eb48,
+    &data_ov002_0210ead8,         &data_ov002_0210ead8,        &data_ov002_0210ead8,
+    &data_ov002_0210ead8,         &data_ov002_0210e878,        &data_ov002_0210e878,
+    &data_ov002_0210e878,         &data_ov002_0210e878,        &data_ov002_0210e830,
+    &data_ov002_0210e830,         &data_ov002_0210e830,        &data_ov002_0210e830,
+    &data_ov002_0210e760,         &data_ov002_0210e760,        &data_ov002_0210e760,
+    &data_ov002_0210e760,         &data_ov002_0210e428,        &data_ov002_0210e428,
+    &data_ov002_0210e428,         &data_ov002_0210e428,        &data_ov002_0210ed40,
+    &data_ov002_0210ed40,         &data_ov002_0210ed40,        &data_ov002_0210ed40,
+    &data_ov002_0210ed48,         &data_ov002_0210ed48,        &data_ov002_0210ed48,
+    &data_ov002_0210ed48,         &data_ov002_0210ed50,        &data_ov002_0210ed50,
+    &data_ov002_0210ed50,         &data_ov002_0210ed50,        &data_ov002_0210e7a0,
+    &data_ov002_0210e7a0,         &data_ov002_0210e4c8,        &data_ov002_0210e7a0,
+    &data_ov002_0210e278,         &data_ov002_0210e278,        &data_ov002_0210eb30,
     &data_ov002_0210e278};
 extern unsigned int data_ov002_0210e158;
 extern SharedFilePtr data_ov002_0210e1c8;
@@ -1013,7 +1013,7 @@ extern SharedFilePtr data_ov002_0210e4f0;
 extern SharedFilePtr data_ov002_0210e500;
 extern SharedFilePtr data_ov002_0210e538;
 extern SharedFilePtr data_ov002_0210e540;
-extern SharedFilePtr data_ov002_0210e588;
+extern SharedFilePtr gNCarryPoseAnimationFile;
 extern SharedFilePtr data_ov002_0210e600;
 extern SharedFilePtr data_ov002_0210e620;
 extern SharedFilePtr data_ov002_0210e640;
@@ -17007,7 +17007,7 @@ s32 daPly_c::St_Balloon_Main() {
 
 int daPly_c::St_Balloon_Init() {
     extern int gCamera[];
-    extern int data_ov002_0210e750[];
+    extern int gBMarioStartAnimationFile[];
     ReleaseHeldActor();
     mIsInAirState = 1;
     mIsFallScreaming = 0;
@@ -17021,7 +17021,8 @@ int daPly_c::St_Balloon_Init() {
     mAngleYSpeed = 0x100;
     mAngleXSpeed = 0x100;
     mPrevVertSpeed = mSpeed.y;
-    mModels.mAnmModel1.SetAnim((BCA_File *)((void *)data_ov002_0210e750[1]), 0x40000000, 0x1000, 0);
+    mModels.mAnmModel1.SetAnim((BCA_File *)((void *)gBMarioStartAnimationFile[1]), 0x40000000,
+                               0x1000, 0);
     mModels.mAnmModel1.currFrame = 0;
     return 1;
 }
@@ -19115,7 +19116,7 @@ int daPly_c::CleanupResources() {
     void UnloadSilverStarAndNumber(void);
     void UnloadKeyModels(int n);
     extern SharedFilePtr data_ov002_0210e3d8;
-    extern SharedFilePtr data_ov002_0210e750;
+    extern SharedFilePtr gBMarioStartAnimationFile;
     extern SharedFilePtr data_ov002_0210eb88;
     int i;
 
@@ -19225,8 +19226,8 @@ int daPly_c::CleanupResources() {
         data_ov002_0210d9a8.Release();
         data_ov002_02110aa4.Release();
         data_ov002_0210da38.Release();
-        data_ov002_0210e750.Release();
-        data_ov002_0210e588.Release();
+        gBMarioStartAnimationFile.Release();
+        gNCarryPoseAnimationFile.Release();
         data_ov002_0210e7e8.Release();
         data_ov002_0210e450.Release();
         data_ov002_0210e788.Release();
@@ -20171,7 +20172,7 @@ void daPly_c::func_ov002_020e5948() {
     extern s8 gNumStageStars[];
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210eb88;
-    extern SharedFilePtr data_ov002_0210e750;
+    extern SharedFilePtr gBMarioStartAnimationFile;
     s32 i;
     s32 j;
     s32 bodyId;
@@ -20245,10 +20246,10 @@ void daPly_c::func_ov002_020e5948() {
     dExtAnmTexPat_c::LoadFile(data_ov002_0210ebd8);
 
     if (!IsVsMode()) {
-        dExtFrameCtrl_c::LoadFile(data_ov002_0210e750);
+        dExtFrameCtrl_c::LoadFile(gBMarioStartAnimationFile);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
         dExtSimpleModel_c::LoadFile(data_ov002_02110aa4);
-        dExtFrameCtrl_c::LoadFile(data_ov002_0210e588);
+        dExtFrameCtrl_c::LoadFile(gNCarryPoseAnimationFile);
         dExtAnmTexPat_c::LoadFile(data_ov002_0210e7e8);
         dExtAnmTexPat_c::LoadFile(data_ov002_0210e450);
         dExtAnmTexPat_c::LoadFile(data_ov002_0210e788);
@@ -20358,7 +20359,7 @@ void daPly_c::func_ov002_020e5948() {
             mModels.mBodyModels[4]->Func_020162C4((BCA_File *)data_ov002_020ff480[0xC6]->filePtr, 0,
                                                   0x1000, 0);
             mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8), 1, 1);
-            mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0, 0x1000, 0);
+            mModels.mAnmModel1.SetAnim((BCA_File *)gBMarioStartAnimationFile.filePtr, 0, 0x1000, 0);
             mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
             mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000, 0);
         }
@@ -20781,22 +20782,22 @@ SharedFilePtr data_ov002_0210e358;
 SharedFilePtr gReturnNocapAnimationFile;
 SharedFilePtr data_ov002_0210e368;
 SharedFilePtr data_ov002_0210e370;
-SharedFilePtr data_ov002_0210e378;
-SharedFilePtr data_ov002_0210e380;
-SharedFilePtr data_ov002_0210e388;
-SharedFilePtr data_ov002_0210e390;
-SharedFilePtr data_ov002_0210e398;
+SharedFilePtr gSDieAnimationFile;
+SharedFilePtr gSdropHeadAnimationFile;
+SharedFilePtr gSdropWalkAnimationFile;
+SharedFilePtr gShfDieAnimationFile;
+SharedFilePtr gShootToFlyAnimationFile;
 SharedFilePtr data_ov002_0210e3a0;
 SharedFilePtr data_ov002_0210e3a8;
 SharedFilePtr data_ov002_0210e3b0;
 SharedFilePtr data_ov002_0210e3b8;
-SharedFilePtr data_ov002_0210e3c0;
+SharedFilePtr gYSleepWaitAnimationFile;
 SharedFilePtr data_ov002_0210e3c8;
 SharedFilePtr data_ov002_0210e3d0;
 SharedFilePtr data_ov002_0210e3d8;
 SharedFilePtr data_ov002_0210e3e0;
 SharedFilePtr data_ov002_0210e3e8;
-SharedFilePtr data_ov002_0210e3f0;
+SharedFilePtr gYOpSitToStandAnimationFile;
 SharedFilePtr data_ov002_0210e3f8;
 SharedFilePtr data_ov002_0210e400;
 SharedFilePtr data_ov002_0210e408;
@@ -20811,14 +20812,14 @@ SharedFilePtr data_ov002_0210e448;
 SharedFilePtr data_ov002_0210e450;
 SharedFilePtr data_ov002_0210e458;
 SharedFilePtr data_ov002_0210e460;
-SharedFilePtr data_ov002_0210e468;
-SharedFilePtr data_ov002_0210e470;
+SharedFilePtr gColdWaitAnimationFile;
+SharedFilePtr gColdWaitEndAnimationFile;
 SharedFilePtr data_ov002_0210e478;
 SharedFilePtr data_ov002_0210e480;
-SharedFilePtr data_ov002_0210e488;
+SharedFilePtr gDamageStartAnimationFile;
 SharedFilePtr data_ov002_0210e490;
-SharedFilePtr data_ov002_0210e498;
-SharedFilePtr data_ov002_0210e4a0;
+SharedFilePtr gDoorPullAnimationFile;
+SharedFilePtr gDoorPushAnimationFile;
 SharedFilePtr data_ov002_0210e4a8;
 SharedFilePtr data_ov002_0210e4b0;
 SharedFilePtr data_ov002_0210e4b8;
@@ -20826,73 +20827,73 @@ SharedFilePtr data_ov002_0210e4c0;
 SharedFilePtr data_ov002_0210e4c8;
 SharedFilePtr data_ov002_0210e4d0;
 SharedFilePtr data_ov002_0210e4d8;
-SharedFilePtr data_ov002_0210e4e0;
+SharedFilePtr gEdLookLeftWaitAnimationFile;
 SharedFilePtr data_ov002_0210e4e8;
 SharedFilePtr data_ov002_0210e4f0;
-SharedFilePtr data_ov002_0210e4f8;
+SharedFilePtr gLEdCapOffWaitAnimationFile;
 SharedFilePtr data_ov002_0210e500;
-SharedFilePtr data_ov002_0210e508;
+SharedFilePtr gFallSandAnimationFile;
 SharedFilePtr data_ov002_0210e510;
-SharedFilePtr data_ov002_0210e518;
-SharedFilePtr data_ov002_0210e520;
-SharedFilePtr data_ov002_0210e528;
-SharedFilePtr data_ov002_0210e530;
+SharedFilePtr gLEntryWaitEndAnimationFile;
+SharedFilePtr gWFirstChangeAnimationFile;
+SharedFilePtr gLOpTurnAnimationFile;
+SharedFilePtr gLOpNodAnimationFile;
 SharedFilePtr data_ov002_0210e538;
 SharedFilePtr data_ov002_0210e540;
-SharedFilePtr data_ov002_0210e548;
-SharedFilePtr data_ov002_0210e550;
-SharedFilePtr data_ov002_0210e558;
+SharedFilePtr gLOpLookWarioAnimationFile;
+SharedFilePtr gLSleepEndAnimationFile;
+SharedFilePtr gWEdCapOffAnimationFile;
 SharedFilePtr data_ov002_0210e560;
-SharedFilePtr data_ov002_0210e568;
+SharedFilePtr gKeyGetAnimationFile;
 SharedFilePtr data_ov002_0210e570;
 SharedFilePtr data_ov002_0210e578;
 SharedFilePtr data_ov002_0210e580;
-SharedFilePtr data_ov002_0210e588;
-SharedFilePtr data_ov002_0210e590;
-SharedFilePtr data_ov002_0210e598;
-SharedFilePtr data_ov002_0210e5a0;
-SharedFilePtr data_ov002_0210e5a8;
-SharedFilePtr data_ov002_0210e5b0;
-SharedFilePtr data_ov002_0210e5b8;
-SharedFilePtr data_ov002_0210e5c0;
+SharedFilePtr gNCarryPoseAnimationFile;
+SharedFilePtr gOpGoAnimationFile;
+SharedFilePtr gPKoopaHoldAnimationFile;
+SharedFilePtr gPaddle1AnimationFile;
+SharedFilePtr gPaddleEndAnimationFile;
+SharedFilePtr gWEdWaitAnimationFile;
+SharedFilePtr gReturnStarAnimationFile;
+SharedFilePtr gLSleepToLieAnimationFile;
 SharedFilePtr data_ov002_0210e5c8;
-SharedFilePtr data_ov002_0210e5d0;
-SharedFilePtr data_ov002_0210e5d8;
-SharedFilePtr data_ov002_0210e5e0;
-SharedFilePtr data_ov002_0210e5e8;
-SharedFilePtr data_ov002_0210e5f0;
+SharedFilePtr gWEdWaveAnimationFile;
+SharedFilePtr gSdropHipAnimationFile;
+SharedFilePtr gSdropLegAnimationFile;
+SharedFilePtr gSdropLegWaitAnimationFile;
+SharedFilePtr gWEntryWaitAnimationFile;
 SharedFilePtr data_ov002_0210e5f8;
 SharedFilePtr data_ov002_0210e600;
-SharedFilePtr data_ov002_0210e608;
+SharedFilePtr gSleepStartAnimationFile;
 SharedFilePtr data_ov002_0210e610;
-SharedFilePtr data_ov002_0210e618;
+SharedFilePtr gYEdWaitAnimationFile;
 SharedFilePtr data_ov002_0210e620;
 SharedFilePtr data_ov002_0210e628;
 SharedFilePtr data_ov002_0210e630;
 SharedFilePtr data_ov002_0210e638;
 SharedFilePtr data_ov002_0210e640;
 SharedFilePtr data_ov002_0210e648;
-SharedFilePtr data_ov002_0210e650;
-SharedFilePtr data_ov002_0210e658;
+SharedFilePtr gWSleepEndAnimationFile;
+SharedFilePtr gWSleepToLieAnimationFile;
 SharedFilePtr data_ov002_0210e660;
 SharedFilePtr data_ov002_0210e668;
 SharedFilePtr data_ov002_0210e670;
-SharedFilePtr data_ov002_0210e678;
+SharedFilePtr gWSleepWaitAnimationFile;
 SharedFilePtr data_ov002_0210e680;
 SharedFilePtr data_ov002_0210e688;
 SharedFilePtr data_ov002_0210e690;
-SharedFilePtr data_ov002_0210e698;
+SharedFilePtr gYEdLookupWaitAnimationFile;
 SharedFilePtr data_ov002_0210e6a0;
-SharedFilePtr data_ov002_0210e6a8;
-SharedFilePtr data_ov002_0210e6b0;
+SharedFilePtr gYEdTurnAnimationFile;
+SharedFilePtr gYEggRunAnimationFile;
 SharedFilePtr data_ov002_0210e6b8;
 SharedFilePtr data_ov002_0210e6c0;
 SharedFilePtr data_ov002_0210e6c8;
-SharedFilePtr data_ov002_0210e6d0;
-SharedFilePtr data_ov002_0210e6d8;
+SharedFilePtr gYLieWaitAnimationFile;
+SharedFilePtr gYOpSitWaitAnimationFile;
 SharedFilePtr data_ov002_0210e6e0;
-SharedFilePtr data_ov002_0210e6e8;
-SharedFilePtr data_ov002_0210e6f0;
+SharedFilePtr gYSleepEndAnimationFile;
+SharedFilePtr gYSleepToLieAnimationFile;
 SharedFilePtr data_ov002_0210e6f8;
 SharedFilePtr data_ov002_0210e700;
 SharedFilePtr data_ov002_0210e708;
@@ -20903,13 +20904,13 @@ SharedFilePtr data_ov002_0210e728;
 SharedFilePtr data_ov002_0210e730;
 SharedFilePtr data_ov002_0210e738;
 SharedFilePtr data_ov002_0210e740;
-SharedFilePtr data_ov002_0210e748;
-SharedFilePtr data_ov002_0210e750;
+SharedFilePtr gLSleepStartAnimationFile;
+SharedFilePtr gBMarioStartAnimationFile;
 SharedFilePtr data_ov002_0210e758;
 SharedFilePtr data_ov002_0210e760;
-SharedFilePtr data_ov002_0210e768;
+SharedFilePtr gSwimCarryAnimationFile;
 SharedFilePtr data_ov002_0210e770;
-SharedFilePtr data_ov002_0210e778;
+SharedFilePtr gMEntryWaitEndAnimationFile;
 SharedFilePtr data_ov002_0210e780;
 SharedFilePtr data_ov002_0210e788;
 SharedFilePtr data_ov002_0210e790;
@@ -20917,7 +20918,7 @@ SharedFilePtr data_ov002_0210e798;
 SharedFilePtr data_ov002_0210e7a0;
 SharedFilePtr data_ov002_0210e7a8;
 SharedFilePtr data_ov002_0210e7b0;
-SharedFilePtr data_ov002_0210e7c0;
+SharedFilePtr gLEdLookupWaitAnimationFile;
 SharedFilePtr data_ov002_0210e7c8;
 SharedFilePtr data_ov002_0210e7d0;
 SharedFilePtr data_ov002_0210e7d8;
@@ -20926,128 +20927,128 @@ SharedFilePtr data_ov002_0210e7e8;
 SharedFilePtr data_ov002_0210e7f0;
 SharedFilePtr data_ov002_0210e7f8;
 SharedFilePtr data_ov002_0210e800;
-SharedFilePtr data_ov002_0210e808;
+SharedFilePtr gDrownDieAnimationFile;
 SharedFilePtr data_ov002_0210e810;
 SharedFilePtr data_ov002_0210e818;
-SharedFilePtr data_ov002_0210e820;
+SharedFilePtr gEdCapOffWaitAnimationFile;
 SharedFilePtr data_ov002_0210e828;
 SharedFilePtr data_ov002_0210e830;
 SharedFilePtr data_ov002_0210e838;
-SharedFilePtr data_ov002_0210e840;
+SharedFilePtr gEdKissWaitAnimationFile;
 SharedFilePtr data_ov002_0210e848;
-SharedFilePtr data_ov002_0210e850;
-SharedFilePtr data_ov002_0210e858;
-SharedFilePtr data_ov002_0210e860;
-SharedFilePtr data_ov002_0210e868;
+SharedFilePtr gEdLookLeftEndAnimationFile;
+SharedFilePtr gEdNodAnimationFile;
+SharedFilePtr gLEdCapOffAnimationFile;
+SharedFilePtr gLEdLookMarioAnimationFile;
 SharedFilePtr data_ov002_0210e870;
 SharedFilePtr data_ov002_0210e878;
-SharedFilePtr data_ov002_0210e880;
-SharedFilePtr data_ov002_0210e888;
-SharedFilePtr data_ov002_0210e890;
+SharedFilePtr gFallDieAnimationFile;
+SharedFilePtr gLEdLookMWaitAnimationFile;
+SharedFilePtr gFirstChangeAnimationFile;
 SharedFilePtr data_ov002_0210e898;
-SharedFilePtr data_ov002_0210e8a0;
-SharedFilePtr data_ov002_0210e8a8;
-SharedFilePtr data_ov002_0210e8b0;
-SharedFilePtr data_ov002_0210e8b8;
-SharedFilePtr data_ov002_0210e8c0;
-SharedFilePtr data_ov002_0210e8c8;
+SharedFilePtr gGasWaitAnimationFile;
+SharedFilePtr gHCarryThrowAnimationFile;
+SharedFilePtr gLEdWaitAnimationFile;
+SharedFilePtr gLEntryWaitAnimationFile;
+SharedFilePtr gHCarryWalkAnimationFile;
+SharedFilePtr gMEntryWaitAnimationFile;
 SharedFilePtr data_ov002_0210e8d0;
-SharedFilePtr data_ov002_0210e8d8;
+SharedFilePtr gLFirstChangeAnimationFile;
 SharedFilePtr data_ov002_0210e8e0;
 SharedFilePtr data_ov002_0210e8e8;
-SharedFilePtr data_ov002_0210e8f0;
+SharedFilePtr gLLieEndAnimationFile;
 SharedFilePtr data_ov002_0210e8f8;
-SharedFilePtr data_ov002_0210e900;
+SharedFilePtr gLLieWaitAnimationFile;
 SharedFilePtr data_ov002_0210e908;
 SharedFilePtr data_ov002_0210e910;
 SharedFilePtr data_ov002_0210e918;
 SharedFilePtr data_ov002_0210e920;
 SharedFilePtr data_ov002_0210e928;
 SharedFilePtr data_ov002_0210e930;
-SharedFilePtr data_ov002_0210e938;
+SharedFilePtr gKeyOpenAnimationFile;
 SharedFilePtr data_ov002_0210e940;
-SharedFilePtr data_ov002_0210e948;
-SharedFilePtr data_ov002_0210e950;
+SharedFilePtr gEdWaitAnimationFile;
+SharedFilePtr gLieWaitAnimationFile;
 SharedFilePtr data_ov002_0210e958;
 SharedFilePtr data_ov002_0210e960;
 SharedFilePtr data_ov002_0210e968;
-SharedFilePtr data_ov002_0210e970;
+SharedFilePtr gWEdAmazedWairAnimationFile;
 SharedFilePtr data_ov002_0210e978;
-SharedFilePtr data_ov002_0210e980;
-SharedFilePtr data_ov002_0210e988;
-SharedFilePtr data_ov002_0210e990;
-SharedFilePtr data_ov002_0210e998;
-SharedFilePtr data_ov002_0210e9a0;
-SharedFilePtr data_ov002_0210e9a8;
-SharedFilePtr data_ov002_0210e9b0;
-SharedFilePtr data_ov002_0210e9b8;
-SharedFilePtr data_ov002_0210e9c0;
-SharedFilePtr data_ov002_0210e9c8;
+SharedFilePtr gNCarryLostAnimationFile;
+SharedFilePtr gNCarryPutAnimationFile;
+SharedFilePtr gWLieWaitAnimationFile;
+SharedFilePtr gLSleepWaitAnimationFile;
+SharedFilePtr gWEntryWaitEndAnimationFile;
+SharedFilePtr gOpWaitAnimationFile;
+SharedFilePtr gPKoopaHWaitAnimationFile;
+SharedFilePtr gWOpNodAnimationFile;
+SharedFilePtr gWEdCapOffWaitAnimationFile;
+SharedFilePtr gPaddle2AnimationFile;
 SharedFilePtr data_ov002_0210e9d0;
 SharedFilePtr data_ov002_0210e9d8;
 SharedFilePtr data_ov002_0210e9e0;
 SharedFilePtr data_ov002_0210e9e8;
 SharedFilePtr data_ov002_0210e9f0;
-SharedFilePtr data_ov002_0210e9f8;
+SharedFilePtr gReturnDownAnimationFile;
 SharedFilePtr data_ov002_0210ea00;
-SharedFilePtr data_ov002_0210ea08;
+SharedFilePtr gWLieEndAnimationFile;
 SharedFilePtr data_ov002_0210ea10;
 SharedFilePtr data_ov002_0210ea18;
-SharedFilePtr data_ov002_0210ea20;
+SharedFilePtr gWEdLookupWaitAnimationFile;
 SharedFilePtr data_ov002_0210ea28;
 SharedFilePtr data_ov002_0210ea30;
 SharedFilePtr data_ov002_0210ea38;
-SharedFilePtr data_ov002_0210ea40;
-SharedFilePtr data_ov002_0210ea48;
+SharedFilePtr gSdropHeadEndAnimationFile;
+SharedFilePtr gSdropHeadWaitAnimationFile;
 SharedFilePtr data_ov002_0210ea50;
-SharedFilePtr data_ov002_0210ea58;
-SharedFilePtr data_ov002_0210ea60;
-SharedFilePtr data_ov002_0210ea68;
+SharedFilePtr gSdropHipWaitAnimationFile;
+SharedFilePtr gSdropLegEndAnimationFile;
+SharedFilePtr gSdropWaitAnimationFile;
 SharedFilePtr data_ov002_0210ea70;
 SharedFilePtr data_ov002_0210ea78;
-SharedFilePtr data_ov002_0210ea80;
+SharedFilePtr gShootAnimationFile;
 SharedFilePtr data_ov002_0210ea88;
 SharedFilePtr data_ov002_0210ea90;
-SharedFilePtr data_ov002_0210ea98;
+SharedFilePtr gSleepEndAnimationFile;
 SharedFilePtr data_ov002_0210eaa0;
-SharedFilePtr data_ov002_0210eaa8;
-SharedFilePtr data_ov002_0210eab0;
+SharedFilePtr gSleepToLieAnimationFile;
+SharedFilePtr gSleepWaitAnimationFile;
 SharedFilePtr data_ov002_0210eab8;
 SharedFilePtr data_ov002_0210eac0;
 SharedFilePtr data_ov002_0210eac8;
 SharedFilePtr data_ov002_0210ead0;
 SharedFilePtr data_ov002_0210ead8;
-SharedFilePtr data_ov002_0210eae0;
+SharedFilePtr gWKeyGetAnimationFile;
 SharedFilePtr data_ov002_0210eae8;
 SharedFilePtr data_ov002_0210eaf0;
-SharedFilePtr data_ov002_0210eaf8;
+SharedFilePtr gWOpLookLuigiAnimationFile;
 SharedFilePtr data_ov002_0210eb00;
-SharedFilePtr data_ov002_0210eb08;
+SharedFilePtr gWOpTurnAnimationFile;
 SharedFilePtr data_ov002_0210eb10;
-SharedFilePtr data_ov002_0210eb18;
+SharedFilePtr gWSleepStartAnimationFile;
 SharedFilePtr data_ov002_0210eb20;
 SharedFilePtr data_ov002_0210eb28;
 SharedFilePtr data_ov002_0210eb30;
 SharedFilePtr data_ov002_0210eb38;
 SharedFilePtr data_ov002_0210eb40;
 SharedFilePtr data_ov002_0210eb48;
-SharedFilePtr data_ov002_0210eb50;
+SharedFilePtr gYEdLookCamAnimationFile;
 SharedFilePtr data_ov002_0210eb58;
-SharedFilePtr data_ov002_0210eb60;
-SharedFilePtr data_ov002_0210eb68;
+SharedFilePtr gYEdShyToWaitAnimationFile;
+SharedFilePtr gYEdShyWaitAnimationFile;
 SharedFilePtr data_ov002_0210eb70;
-SharedFilePtr data_ov002_0210eb78;
+SharedFilePtr gYEggWaitAnimationFile;
 SharedFilePtr data_ov002_0210eb80;
 SharedFilePtr data_ov002_0210eb88;
 SharedFilePtr data_ov002_0210eb90;
 SharedFilePtr data_ov002_0210eb98;
-SharedFilePtr data_ov002_0210eba0;
+SharedFilePtr gYLieEndAnimationFile;
 SharedFilePtr data_ov002_0210eba8;
-SharedFilePtr data_ov002_0210ebb0;
+SharedFilePtr gYOpLieToSitAnimationFile;
 SharedFilePtr data_ov002_0210ebb8;
-SharedFilePtr data_ov002_0210ebc0;
+SharedFilePtr gYOpStandWaitAnimationFile;
 SharedFilePtr data_ov002_0210ebc8;
-SharedFilePtr data_ov002_0210ebd0;
+SharedFilePtr gYSleepStartAnimationFile;
 SharedFilePtr data_ov002_0210ebd8;
 SharedFilePtr data_ov002_0210ebe0;
 SharedFilePtr data_ov002_0210ebe8;
@@ -21067,31 +21068,31 @@ SharedFilePtr data_ov002_0210ec50;
 SharedFilePtr data_ov002_0210ec58;
 SharedFilePtr data_ov002_0210ec60;
 SharedFilePtr data_ov002_0210ec68;
-SharedFilePtr data_ov002_0210ec70;
-SharedFilePtr data_ov002_0210ec78;
-SharedFilePtr data_ov002_0210ec80;
-SharedFilePtr data_ov002_0210ec88;
-SharedFilePtr data_ov002_0210ec90;
+SharedFilePtr gSwimWaitAnimationFile;
+SharedFilePtr gSwimThrowAnimationFile;
+SharedFilePtr gSwimStarGetAnimationFile;
+SharedFilePtr gSwimInAnimationFile;
+SharedFilePtr gSwimDieAnimationFile;
 SharedFilePtr data_ov002_0210ec98;
-SharedFilePtr data_ov002_0210eca0;
+SharedFilePtr gSwimDamageAnimationFile;
 SharedFilePtr data_ov002_0210eca8;
-SharedFilePtr data_ov002_0210ecb0;
+SharedFilePtr gWOpPointAnimationFile;
 SharedFilePtr data_ov002_0210ecb8;
-SharedFilePtr data_ov002_0210ecc0;
-SharedFilePtr data_ov002_0210ecc8;
-SharedFilePtr data_ov002_0210ecd0;
-SharedFilePtr data_ov002_0210ecd8;
-SharedFilePtr data_ov002_0210ece0;
-SharedFilePtr data_ov002_0210ece8;
-SharedFilePtr data_ov002_0210ecf0;
-SharedFilePtr data_ov002_0210ecf8;
+SharedFilePtr gSwimAttackAnimationFile;
+SharedFilePtr gSwimAnimationFile;
+SharedFilePtr gSuWalkStartAnimationFile;
+SharedFilePtr gSuWalkEndAnimationFile;
+SharedFilePtr gSuWalkAnimationFile;
+SharedFilePtr gSuWaitAnimationFile;
+SharedFilePtr gSuRunAnimationFile;
+SharedFilePtr gSuJumpEndAnimationFile;
 SharedFilePtr data_ov002_0210ed00;
-SharedFilePtr data_ov002_0210ed08;
-SharedFilePtr data_ov002_0210ed10;
-SharedFilePtr data_ov002_0210ed18;
-SharedFilePtr data_ov002_0210ed20;
+SharedFilePtr gSuJumpAnimationFile;
+SharedFilePtr gSuHipsrAnimationFile;
+SharedFilePtr gSuHipedAnimationFile;
+SharedFilePtr gSuHipatAnimationFile;
 SharedFilePtr data_ov002_0210ed28;
-SharedFilePtr data_ov002_0210ed30;
+SharedFilePtr gStarOpenAnimationFile;
 SharedFilePtr data_ov002_0210ed38;
 SharedFilePtr data_ov002_0210ed40;
 SharedFilePtr data_ov002_0210ed48;
@@ -22460,62 +22461,62 @@ void __sinit_ov002_021019d0(void) {
     gLEdAmazedAnimationFile.Construct(ASSET_L_ED_AMAZED_BCA);
     __register_global_object(&gLEdAmazedAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fb54);
-    data_ov002_0210e860.Construct(ASSET_L_ED_CAP_OFF_BCA);
-    __register_global_object(&data_ov002_0210e860, (void *)SharedFilePtr_Destruct_Anim,
+    gLEdCapOffAnimationFile.Construct(ASSET_L_ED_CAP_OFF_BCA);
+    __register_global_object(&gLEdCapOffAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fb6c);
-    data_ov002_0210e4f8.Construct(ASSET_L_ED_CAP_OFF_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e4f8, (void *)SharedFilePtr_Destruct_Anim,
+    gLEdCapOffWaitAnimationFile.Construct(ASSET_L_ED_CAP_OFF_WAIT_BCA);
+    __register_global_object(&gLEdCapOffWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fb78);
-    data_ov002_0210e888.Construct(ASSET_L_ED_LOOK_M_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e888, (void *)SharedFilePtr_Destruct_Anim,
+    gLEdLookMWaitAnimationFile.Construct(ASSET_L_ED_LOOK_M_WAIT_BCA);
+    __register_global_object(&gLEdLookMWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fb90);
-    data_ov002_0210e868.Construct(ASSET_L_ED_LOOK_MARIO_BCA);
-    __register_global_object(&data_ov002_0210e868, (void *)SharedFilePtr_Destruct_Anim,
+    gLEdLookMarioAnimationFile.Construct(ASSET_L_ED_LOOK_MARIO_BCA);
+    __register_global_object(&gLEdLookMarioAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fb9c);
-    data_ov002_0210e7c0.Construct(ASSET_L_ED_LOOKUP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e7c0, (void *)SharedFilePtr_Destruct_Anim,
+    gLEdLookupWaitAnimationFile.Construct(ASSET_L_ED_LOOKUP_WAIT_BCA);
+    __register_global_object(&gLEdLookupWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fbb4);
-    data_ov002_0210e8b0.Construct(ASSET_L_ED_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e8b0, (void *)SharedFilePtr_Destruct_Anim,
+    gLEdWaitAnimationFile.Construct(ASSET_L_ED_WAIT_BCA);
+    __register_global_object(&gLEdWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fbc0);
-    data_ov002_0210e8b8.Construct(ASSET_L_ENTRY_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e8b8, (void *)SharedFilePtr_Destruct_Anim,
+    gLEntryWaitAnimationFile.Construct(ASSET_L_ENTRY_WAIT_BCA);
+    __register_global_object(&gLEntryWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fbe4);
-    data_ov002_0210e518.Construct(ASSET_L_ENTRY_WAIT_END_BCA);
-    __register_global_object(&data_ov002_0210e518, (void *)SharedFilePtr_Destruct_Anim,
+    gLEntryWaitEndAnimationFile.Construct(ASSET_L_ENTRY_WAIT_END_BCA);
+    __register_global_object(&gLEntryWaitEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fbf0);
-    data_ov002_0210e8d8.Construct(ASSET_L_FIRST_CHANGE_BCA);
-    __register_global_object(&data_ov002_0210e8d8, (void *)SharedFilePtr_Destruct_Anim,
+    gLFirstChangeAnimationFile.Construct(ASSET_L_FIRST_CHANGE_BCA);
+    __register_global_object(&gLFirstChangeAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc08);
-    data_ov002_0210e8f0.Construct(ASSET_L_LIE_END_BCA);
-    __register_global_object(&data_ov002_0210e8f0, (void *)SharedFilePtr_Destruct_Anim,
+    gLLieEndAnimationFile.Construct(ASSET_L_LIE_END_BCA);
+    __register_global_object(&gLLieEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc14);
-    data_ov002_0210e900.Construct(ASSET_L_LIE_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e900, (void *)SharedFilePtr_Destruct_Anim,
+    gLLieWaitAnimationFile.Construct(ASSET_L_LIE_WAIT_BCA);
+    __register_global_object(&gLLieWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc2c);
-    data_ov002_0210e548.Construct(ASSET_L_OP_LOOK_WARIO_BCA);
-    __register_global_object(&data_ov002_0210e548, (void *)SharedFilePtr_Destruct_Anim,
+    gLOpLookWarioAnimationFile.Construct(ASSET_L_OP_LOOK_WARIO_BCA);
+    __register_global_object(&gLOpLookWarioAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc38);
-    data_ov002_0210e530.Construct(ASSET_L_OP_NOD_BCA);
-    __register_global_object(&data_ov002_0210e530, (void *)SharedFilePtr_Destruct_Anim,
+    gLOpNodAnimationFile.Construct(ASSET_L_OP_NOD_BCA);
+    __register_global_object(&gLOpNodAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc50);
-    data_ov002_0210e528.Construct(ASSET_L_OP_TURN_BCA);
-    __register_global_object(&data_ov002_0210e528, (void *)SharedFilePtr_Destruct_Anim,
+    gLOpTurnAnimationFile.Construct(ASSET_L_OP_TURN_BCA);
+    __register_global_object(&gLOpTurnAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f380);
     data_ov002_0210e4b0.Construct(0x8020);
     __register_global_object(&data_ov002_0210e4b0, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc68);
-    data_ov002_0210e550.Construct(ASSET_L_SLEEP_END_BCA);
-    __register_global_object(&data_ov002_0210e550, (void *)SharedFilePtr_Destruct_Anim,
+    gLSleepEndAnimationFile.Construct(ASSET_L_SLEEP_END_BCA);
+    __register_global_object(&gLSleepEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc74);
-    data_ov002_0210e748.Construct(ASSET_L_SLEEP_START_BCA);
-    __register_global_object(&data_ov002_0210e748, (void *)SharedFilePtr_Destruct_Anim,
+    gLSleepStartAnimationFile.Construct(ASSET_L_SLEEP_START_BCA);
+    __register_global_object(&gLSleepStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc8c);
-    data_ov002_0210e5c0.Construct(ASSET_L_SLEEP_TO_LIE_BCA);
-    __register_global_object(&data_ov002_0210e5c0, (void *)SharedFilePtr_Destruct_Anim,
+    gLSleepToLieAnimationFile.Construct(ASSET_L_SLEEP_TO_LIE_BCA);
+    __register_global_object(&gLSleepToLieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fc98);
-    data_ov002_0210e998.Construct(ASSET_L_SLEEP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e998, (void *)SharedFilePtr_Destruct_Anim,
+    gLSleepWaitAnimationFile.Construct(ASSET_L_SLEEP_WAIT_BCA);
+    __register_global_object(&gLSleepWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fcb0);
     data_ov002_0210eaa0.Construct(0x8029);
     __register_global_object(&data_ov002_0210eaa0, (void *)SharedFilePtr_Destruct_Anim,
@@ -22523,11 +22524,11 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210ea50.Construct(0x802a);
     __register_global_object(&data_ov002_0210ea50, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fcd4);
-    data_ov002_0210e8c8.Construct(ASSET_M_ENTRY_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e8c8, (void *)SharedFilePtr_Destruct_Anim,
+    gMEntryWaitAnimationFile.Construct(ASSET_M_ENTRY_WAIT_BCA);
+    __register_global_object(&gMEntryWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fce0);
-    data_ov002_0210e778.Construct(ASSET_M_ENTRY_WAIT_END_BCA);
-    __register_global_object(&data_ov002_0210e778, (void *)SharedFilePtr_Destruct_Anim,
+    gMEntryWaitEndAnimationFile.Construct(ASSET_M_ENTRY_WAIT_END_BCA);
+    __register_global_object(&gMEntryWaitEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fcf8);
     data_ov002_0210ebe0.Construct(0x802b);
     __register_global_object(&data_ov002_0210ebe0, (void *)SharedFilePtr_Destruct_Anim,
@@ -22544,32 +22545,32 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e510.Construct(0x802f);
     __register_global_object(&data_ov002_0210e510, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fd4c);
-    data_ov002_0210e970.Construct(ASSET_W_ED_AMAZED_WAIR_BCA);
-    __register_global_object(&data_ov002_0210e970, (void *)SharedFilePtr_Destruct_Anim,
+    gWEdAmazedWairAnimationFile.Construct(ASSET_W_ED_AMAZED_WAIR_BCA);
+    __register_global_object(&gWEdAmazedWairAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fd64);
-    data_ov002_0210e558.Construct(ASSET_W_ED_CAP_OFF_BCA);
-    __register_global_object(&data_ov002_0210e558, (void *)SharedFilePtr_Destruct_Anim,
+    gWEdCapOffAnimationFile.Construct(ASSET_W_ED_CAP_OFF_BCA);
+    __register_global_object(&gWEdCapOffAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fd70);
-    data_ov002_0210e9c0.Construct(ASSET_W_ED_CAP_OFF_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e9c0, (void *)SharedFilePtr_Destruct_Anim,
+    gWEdCapOffWaitAnimationFile.Construct(ASSET_W_ED_CAP_OFF_WAIT_BCA);
+    __register_global_object(&gWEdCapOffWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fd88);
-    data_ov002_0210ea20.Construct(ASSET_W_ED_LOOKUP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210ea20, (void *)SharedFilePtr_Destruct_Anim,
+    gWEdLookupWaitAnimationFile.Construct(ASSET_W_ED_LOOKUP_WAIT_BCA);
+    __register_global_object(&gWEdLookupWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fd94);
-    data_ov002_0210e5b0.Construct(ASSET_W_ED_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e5b0, (void *)SharedFilePtr_Destruct_Anim,
+    gWEdWaitAnimationFile.Construct(ASSET_W_ED_WAIT_BCA);
+    __register_global_object(&gWEdWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fdac);
-    data_ov002_0210e5d0.Construct(ASSET_W_ED_WAVE_BCA);
-    __register_global_object(&data_ov002_0210e5d0, (void *)SharedFilePtr_Destruct_Anim,
+    gWEdWaveAnimationFile.Construct(ASSET_W_ED_WAVE_BCA);
+    __register_global_object(&gWEdWaveAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fdb8);
-    data_ov002_0210e5f0.Construct(ASSET_W_ENTRY_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e5f0, (void *)SharedFilePtr_Destruct_Anim,
+    gWEntryWaitAnimationFile.Construct(ASSET_W_ENTRY_WAIT_BCA);
+    __register_global_object(&gWEntryWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fdd0);
-    data_ov002_0210e9a0.Construct(ASSET_W_ENTRY_WAIT_END_BCA);
-    __register_global_object(&data_ov002_0210e9a0, (void *)SharedFilePtr_Destruct_Anim,
+    gWEntryWaitEndAnimationFile.Construct(ASSET_W_ENTRY_WAIT_END_BCA);
+    __register_global_object(&gWEntryWaitEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fddc);
-    data_ov002_0210e520.Construct(ASSET_W_FIRST_CHANGE_BCA);
-    __register_global_object(&data_ov002_0210e520, (void *)SharedFilePtr_Destruct_Anim,
+    gWFirstChangeAnimationFile.Construct(ASSET_W_FIRST_CHANGE_BCA);
+    __register_global_object(&gWFirstChangeAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fdf4);
     data_ov002_0210eab8.Construct(0x8030);
     __register_global_object(&data_ov002_0210eab8, (void *)SharedFilePtr_Destruct_Anim,
@@ -22583,41 +22584,41 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e9f0.Construct(0x8033);
     __register_global_object(&data_ov002_0210e9f0, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fe3c);
-    data_ov002_0210eae0.Construct(ASSET_W_KEY_GET_BCA);
-    __register_global_object(&data_ov002_0210eae0, (void *)SharedFilePtr_Destruct_Anim,
+    gWKeyGetAnimationFile.Construct(ASSET_W_KEY_GET_BCA);
+    __register_global_object(&gWKeyGetAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fe48);
-    data_ov002_0210ea08.Construct(ASSET_W_LIE_END_BCA);
-    __register_global_object(&data_ov002_0210ea08, (void *)SharedFilePtr_Destruct_Anim,
+    gWLieEndAnimationFile.Construct(ASSET_W_LIE_END_BCA);
+    __register_global_object(&gWLieEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fe60);
-    data_ov002_0210e990.Construct(ASSET_W_LIE_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e990, (void *)SharedFilePtr_Destruct_Anim,
+    gWLieWaitAnimationFile.Construct(ASSET_W_LIE_WAIT_BCA);
+    __register_global_object(&gWLieWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fe6c);
-    data_ov002_0210eaf8.Construct(ASSET_W_OP_LOOK_LUIGI_BCA);
-    __register_global_object(&data_ov002_0210eaf8, (void *)SharedFilePtr_Destruct_Anim,
+    gWOpLookLuigiAnimationFile.Construct(ASSET_W_OP_LOOK_LUIGI_BCA);
+    __register_global_object(&gWOpLookLuigiAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fe84);
-    data_ov002_0210e9b8.Construct(ASSET_W_OP_NOD_BCA);
-    __register_global_object(&data_ov002_0210e9b8, (void *)SharedFilePtr_Destruct_Anim,
+    gWOpNodAnimationFile.Construct(ASSET_W_OP_NOD_BCA);
+    __register_global_object(&gWOpNodAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fe90);
-    data_ov002_0210ecb0.Construct(ASSET_W_OP_POINT_BCA);
-    __register_global_object(&data_ov002_0210ecb0, (void *)SharedFilePtr_Destruct_Anim,
+    gWOpPointAnimationFile.Construct(ASSET_W_OP_POINT_BCA);
+    __register_global_object(&gWOpPointAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fea8);
-    data_ov002_0210eb08.Construct(ASSET_W_OP_TURN_BCA);
-    __register_global_object(&data_ov002_0210eb08, (void *)SharedFilePtr_Destruct_Anim,
+    gWOpTurnAnimationFile.Construct(ASSET_W_OP_TURN_BCA);
+    __register_global_object(&gWOpTurnAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210feb4);
     data_ov002_0210e668.Construct(0x8034);
     __register_global_object(&data_ov002_0210e668, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fecc);
-    data_ov002_0210e650.Construct(ASSET_W_SLEEP_END_BCA);
-    __register_global_object(&data_ov002_0210e650, (void *)SharedFilePtr_Destruct_Anim,
+    gWSleepEndAnimationFile.Construct(ASSET_W_SLEEP_END_BCA);
+    __register_global_object(&gWSleepEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fed8);
-    data_ov002_0210eb18.Construct(ASSET_W_SLEEP_START_BCA);
-    __register_global_object(&data_ov002_0210eb18, (void *)SharedFilePtr_Destruct_Anim,
+    gWSleepStartAnimationFile.Construct(ASSET_W_SLEEP_START_BCA);
+    __register_global_object(&gWSleepStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fef0);
-    data_ov002_0210e658.Construct(ASSET_W_SLEEP_TO_LIE_BCA);
-    __register_global_object(&data_ov002_0210e658, (void *)SharedFilePtr_Destruct_Anim,
+    gWSleepToLieAnimationFile.Construct(ASSET_W_SLEEP_TO_LIE_BCA);
+    __register_global_object(&gWSleepToLieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fefc);
-    data_ov002_0210e678.Construct(ASSET_W_SLEEP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e678, (void *)SharedFilePtr_Destruct_Anim,
+    gWSleepWaitAnimationFile.Construct(ASSET_W_SLEEP_WAIT_BCA);
+    __register_global_object(&gWSleepWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ff14);
     data_ov002_0210eb28.Construct(0x803b);
     __register_global_object(&data_ov002_0210eb28, (void *)SharedFilePtr_Destruct_Anim,
@@ -22637,29 +22638,29 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e930.Construct(0x8040);
     __register_global_object(&data_ov002_0210e930, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ff80);
-    data_ov002_0210eb50.Construct(ASSET_Y_ED_LOOK_CAM_BCA);
-    __register_global_object(&data_ov002_0210eb50, (void *)SharedFilePtr_Destruct_Anim,
+    gYEdLookCamAnimationFile.Construct(ASSET_Y_ED_LOOK_CAM_BCA);
+    __register_global_object(&gYEdLookCamAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ff8c);
-    data_ov002_0210e698.Construct(ASSET_Y_ED_LOOKUP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e698, (void *)SharedFilePtr_Destruct_Anim,
+    gYEdLookupWaitAnimationFile.Construct(ASSET_Y_ED_LOOKUP_WAIT_BCA);
+    __register_global_object(&gYEdLookupWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ffa4);
-    data_ov002_0210eb60.Construct(ASSET_Y_ED_SHY_TO_WAIT_BCA);
-    __register_global_object(&data_ov002_0210eb60, (void *)SharedFilePtr_Destruct_Anim,
+    gYEdShyToWaitAnimationFile.Construct(ASSET_Y_ED_SHY_TO_WAIT_BCA);
+    __register_global_object(&gYEdShyToWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ffb0);
-    data_ov002_0210eb68.Construct(ASSET_Y_ED_SHY_WAIT_BCA);
-    __register_global_object(&data_ov002_0210eb68, (void *)SharedFilePtr_Destruct_Anim,
+    gYEdShyWaitAnimationFile.Construct(ASSET_Y_ED_SHY_WAIT_BCA);
+    __register_global_object(&gYEdShyWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ffc8);
-    data_ov002_0210e6a8.Construct(ASSET_Y_ED_TURN_BCA);
-    __register_global_object(&data_ov002_0210e6a8, (void *)SharedFilePtr_Destruct_Anim,
+    gYEdTurnAnimationFile.Construct(ASSET_Y_ED_TURN_BCA);
+    __register_global_object(&gYEdTurnAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ffd4);
-    data_ov002_0210e618.Construct(ASSET_Y_ED_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e618, (void *)SharedFilePtr_Destruct_Anim,
+    gYEdWaitAnimationFile.Construct(ASSET_Y_ED_WAIT_BCA);
+    __register_global_object(&gYEdWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ed68);
-    data_ov002_0210e6b0.Construct(ASSET_Y_EGG_RUN_BCA);
-    __register_global_object(&data_ov002_0210e6b0, (void *)SharedFilePtr_Destruct_Anim,
+    gYEggRunAnimationFile.Construct(ASSET_Y_EGG_RUN_BCA);
+    __register_global_object(&gYEggRunAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ed74);
-    data_ov002_0210eb78.Construct(ASSET_Y_EGG_WAIT_BCA);
-    __register_global_object(&data_ov002_0210eb78, (void *)SharedFilePtr_Destruct_Anim,
+    gYEggWaitAnimationFile.Construct(ASSET_Y_EGG_WAIT_BCA);
+    __register_global_object(&gYEggWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ed8c);
     data_ov002_0210e3d0.Construct(0x8041);
     __register_global_object(&data_ov002_0210e3d0, (void *)SharedFilePtr_Destruct_Anim,
@@ -22682,38 +22683,38 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e6c8.Construct(0x8047);
     __register_global_object(&data_ov002_0210e6c8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee04);
-    data_ov002_0210eba0.Construct(ASSET_Y_LIE_END_BCA);
-    __register_global_object(&data_ov002_0210eba0, (void *)SharedFilePtr_Destruct_Anim,
+    gYLieEndAnimationFile.Construct(ASSET_Y_LIE_END_BCA);
+    __register_global_object(&gYLieEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee1c);
-    data_ov002_0210e6d0.Construct(ASSET_Y_LIE_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e6d0, (void *)SharedFilePtr_Destruct_Anim,
+    gYLieWaitAnimationFile.Construct(ASSET_Y_LIE_WAIT_BCA);
+    __register_global_object(&gYLieWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee28);
-    data_ov002_0210ebb0.Construct(ASSET_Y_OP_LIE_TO_SIT_BCA);
-    __register_global_object(&data_ov002_0210ebb0, (void *)SharedFilePtr_Destruct_Anim,
+    gYOpLieToSitAnimationFile.Construct(ASSET_Y_OP_LIE_TO_SIT_BCA);
+    __register_global_object(&gYOpLieToSitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee40);
-    data_ov002_0210e3f0.Construct(ASSET_Y_OP_SIT_TO_STAND_BCA);
-    __register_global_object(&data_ov002_0210e3f0, (void *)SharedFilePtr_Destruct_Anim,
+    gYOpSitToStandAnimationFile.Construct(ASSET_Y_OP_SIT_TO_STAND_BCA);
+    __register_global_object(&gYOpSitToStandAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee4c);
-    data_ov002_0210e6d8.Construct(ASSET_Y_OP_SIT_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e6d8, (void *)SharedFilePtr_Destruct_Anim,
+    gYOpSitWaitAnimationFile.Construct(ASSET_Y_OP_SIT_WAIT_BCA);
+    __register_global_object(&gYOpSitWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee64);
-    data_ov002_0210ebc0.Construct(ASSET_Y_OP_STAND_WAIT_BCA);
-    __register_global_object(&data_ov002_0210ebc0, (void *)SharedFilePtr_Destruct_Anim,
+    gYOpStandWaitAnimationFile.Construct(ASSET_Y_OP_STAND_WAIT_BCA);
+    __register_global_object(&gYOpStandWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee70);
     data_ov002_0210e3f8.Construct(0x8048);
     __register_global_object(&data_ov002_0210e3f8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee88);
-    data_ov002_0210e6e8.Construct(ASSET_Y_SLEEP_END_BCA);
-    __register_global_object(&data_ov002_0210e6e8, (void *)SharedFilePtr_Destruct_Anim,
+    gYSleepEndAnimationFile.Construct(ASSET_Y_SLEEP_END_BCA);
+    __register_global_object(&gYSleepEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210ee94);
-    data_ov002_0210ebd0.Construct(ASSET_Y_SLEEP_START_BCA);
-    __register_global_object(&data_ov002_0210ebd0, (void *)SharedFilePtr_Destruct_Anim,
+    gYSleepStartAnimationFile.Construct(ASSET_Y_SLEEP_START_BCA);
+    __register_global_object(&gYSleepStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210eeac);
-    data_ov002_0210e6f0.Construct(ASSET_Y_SLEEP_TO_LIE_BCA);
-    __register_global_object(&data_ov002_0210e6f0, (void *)SharedFilePtr_Destruct_Anim,
+    gYSleepToLieAnimationFile.Construct(ASSET_Y_SLEEP_TO_LIE_BCA);
+    __register_global_object(&gYSleepToLieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fbcc);
-    data_ov002_0210e3c0.Construct(ASSET_Y_SLEEP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e3c0, (void *)SharedFilePtr_Destruct_Anim,
+    gYSleepWaitAnimationFile.Construct(ASSET_Y_SLEEP_WAIT_BCA);
+    __register_global_object(&gYSleepWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210eec4);
     data_ov002_0210e628.Construct(0x8419);
     __register_global_object(&data_ov002_0210e628, (void *)SharedFilePtr_Destruct_Anim,
@@ -22772,8 +22773,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e420.Construct(0x8054);
     __register_global_object(&data_ov002_0210e420, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f008);
-    data_ov002_0210e750.Construct(ASSET_B_MARIO_START_BCA);
-    __register_global_object(&data_ov002_0210e750, (void *)SharedFilePtr_Destruct_Anim,
+    gBMarioStartAnimationFile.Construct(ASSET_B_MARIO_START_BCA);
+    __register_global_object(&gBMarioStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f020);
     data_ov002_0210e760.Construct(0x8055);
     __register_global_object(&data_ov002_0210e760, (void *)SharedFilePtr_Destruct_Anim,
@@ -22814,11 +22815,11 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e248.Construct(0x8061);
     __register_global_object(&data_ov002_0210e248, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f104);
-    data_ov002_0210e468.Construct(ASSET_COLD_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e468, (void *)SharedFilePtr_Destruct_Anim,
+    gColdWaitAnimationFile.Construct(ASSET_COLD_WAIT_BCA);
+    __register_global_object(&gColdWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f11c);
-    data_ov002_0210e470.Construct(ASSET_COLD_WAIT_END_BCA);
-    __register_global_object(&data_ov002_0210e470, (void *)SharedFilePtr_Destruct_Anim,
+    gColdWaitEndAnimationFile.Construct(ASSET_COLD_WAIT_END_BCA);
+    __register_global_object(&gColdWaitEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f128);
     gColdWaitStartAnimationFile.Construct(ASSET_COLD_WAIT_START_BCA);
     __register_global_object(&gColdWaitStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
@@ -22832,20 +22833,20 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e480.Construct(0x8064);
     __register_global_object(&data_ov002_0210e480, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f170);
-    data_ov002_0210e488.Construct(ASSET_DAMAGE_START_BCA);
-    __register_global_object(&data_ov002_0210e488, (void *)SharedFilePtr_Destruct_Anim,
+    gDamageStartAnimationFile.Construct(ASSET_DAMAGE_START_BCA);
+    __register_global_object(&gDamageStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f188);
     gDamageWaitAnimationFile.Construct(ASSET_DAMAGE_WAIT_BCA);
     __register_global_object(&gDamageWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f194);
-    data_ov002_0210e498.Construct(ASSET_DOOR_PULL_BCA);
-    __register_global_object(&data_ov002_0210e498, (void *)SharedFilePtr_Destruct_Anim,
+    gDoorPullAnimationFile.Construct(ASSET_DOOR_PULL_BCA);
+    __register_global_object(&gDoorPullAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f1b8);
-    data_ov002_0210e4a0.Construct(ASSET_DOOR_PUSH_BCA);
-    __register_global_object(&data_ov002_0210e4a0, (void *)SharedFilePtr_Destruct_Anim,
+    gDoorPushAnimationFile.Construct(ASSET_DOOR_PUSH_BCA);
+    __register_global_object(&gDoorPushAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f1c4);
-    data_ov002_0210e808.Construct(ASSET_DROWN_DIE_BCA);
-    __register_global_object(&data_ov002_0210e808, (void *)SharedFilePtr_Destruct_Anim,
+    gDrownDieAnimationFile.Construct(ASSET_DROWN_DIE_BCA);
+    __register_global_object(&gDrownDieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f1dc);
     gEDownAnimationFile.Construct(ASSET_E_DOWN_BCA);
     __register_global_object(&gEDownAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
@@ -22856,8 +22857,8 @@ void __sinit_ov002_021019d0(void) {
     gEdCapOffAnimationFile.Construct(ASSET_ED_CAP_OFF_BCA);
     __register_global_object(&gEdCapOffAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f20c);
-    data_ov002_0210e820.Construct(ASSET_ED_CAP_OFF_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e820, (void *)SharedFilePtr_Destruct_Anim,
+    gEdCapOffWaitAnimationFile.Construct(ASSET_ED_CAP_OFF_WAIT_BCA);
+    __register_global_object(&gEdCapOffWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f230);
     gEdFlyAnimationFile.Construct(ASSET_ED_FLY_BCA);
     __register_global_object(&gEdFlyAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
@@ -22868,26 +22869,26 @@ void __sinit_ov002_021019d0(void) {
     gEdKissToPoseAnimationFile.Construct(ASSET_ED_KISS_TO_POSE_BCA);
     __register_global_object(&gEdKissToPoseAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f260);
-    data_ov002_0210e840.Construct(ASSET_ED_KISS_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e840, (void *)SharedFilePtr_Destruct_Anim,
+    gEdKissWaitAnimationFile.Construct(ASSET_ED_KISS_WAIT_BCA);
+    __register_global_object(&gEdKissWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f278);
     gEdLookLeftAnimationFile.Construct(ASSET_ED_LOOK_LEFT_BCA);
     __register_global_object(&gEdLookLeftAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f284);
-    data_ov002_0210e850.Construct(ASSET_ED_LOOK_LEFT_END_BCA);
-    __register_global_object(&data_ov002_0210e850, (void *)SharedFilePtr_Destruct_Anim,
+    gEdLookLeftEndAnimationFile.Construct(ASSET_ED_LOOK_LEFT_END_BCA);
+    __register_global_object(&gEdLookLeftEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f29c);
-    data_ov002_0210e4e0.Construct(ASSET_ED_LOOK_LEFT_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e4e0, (void *)SharedFilePtr_Destruct_Anim,
+    gEdLookLeftWaitAnimationFile.Construct(ASSET_ED_LOOK_LEFT_WAIT_BCA);
+    __register_global_object(&gEdLookLeftWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f2a8);
-    data_ov002_0210e858.Construct(ASSET_ED_NOD_BCA);
-    __register_global_object(&data_ov002_0210e858, (void *)SharedFilePtr_Destruct_Anim,
+    gEdNodAnimationFile.Construct(ASSET_ED_NOD_BCA);
+    __register_global_object(&gEdNodAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f2c0);
     gEdPutupWaitAnimationFile.Construct(ASSET_ED_PUTUP_WAIT_BCA);
     __register_global_object(&gEdPutupWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f2cc);
-    data_ov002_0210e948.Construct(ASSET_ED_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e948, (void *)SharedFilePtr_Destruct_Anim,
+    gEdWaitAnimationFile.Construct(ASSET_ED_WAIT_BCA);
+    __register_global_object(&gEdWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f2e4);
     gEdWaveAnimationFile.Construct(ASSET_ED_WAVE_BCA);
     __register_global_object(&gEdWaveAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
@@ -22898,17 +22899,17 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e2d8.Construct(0x8067);
     __register_global_object(&data_ov002_0210e2d8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f320);
-    data_ov002_0210e880.Construct(ASSET_FALL_DIE_BCA);
-    __register_global_object(&data_ov002_0210e880, (void *)SharedFilePtr_Destruct_Anim,
+    gFallDieAnimationFile.Construct(ASSET_FALL_DIE_BCA);
+    __register_global_object(&gFallDieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f32c);
-    data_ov002_0210e508.Construct(ASSET_FALL_SAND_BCA);
-    __register_global_object(&data_ov002_0210e508, (void *)SharedFilePtr_Destruct_Anim,
+    gFallSandAnimationFile.Construct(ASSET_FALL_SAND_BCA);
+    __register_global_object(&gFallSandAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f338);
     data_ov002_0210e2e0.Construct(0x8068);
     __register_global_object(&data_ov002_0210e2e0, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5e4);
-    data_ov002_0210e890.Construct(ASSET_FIRST_CHANGE_BCA);
-    __register_global_object(&data_ov002_0210e890, (void *)SharedFilePtr_Destruct_Anim,
+    gFirstChangeAnimationFile.Construct(ASSET_FIRST_CHANGE_BCA);
+    __register_global_object(&gFirstChangeAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f35c);
     data_ov002_0210e2e8.Construct(0x8069);
     __register_global_object(&data_ov002_0210e2e8, (void *)SharedFilePtr_Destruct_Anim,
@@ -22919,20 +22920,20 @@ void __sinit_ov002_021019d0(void) {
     gGasDieAnimationFile.Construct(ASSET_GAS_DIE_BCA);
     __register_global_object(&gGasDieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f38c);
-    data_ov002_0210e8a0.Construct(ASSET_GAS_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e8a0, (void *)SharedFilePtr_Destruct_Anim,
+    gGasWaitAnimationFile.Construct(ASSET_GAS_WAIT_BCA);
+    __register_global_object(&gGasWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f398);
     gHCarryStartAnimationFile.Construct(ASSET_H_CARRY_START_BCA);
     __register_global_object(&gHCarryStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f3a4);
-    data_ov002_0210e8a8.Construct(ASSET_H_CARRY_THROW_BCA);
-    __register_global_object(&data_ov002_0210e8a8, (void *)SharedFilePtr_Destruct_Anim,
+    gHCarryThrowAnimationFile.Construct(ASSET_H_CARRY_THROW_BCA);
+    __register_global_object(&gHCarryThrowAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f3bc);
     gHCarryWaitAnimationFile.Construct(ASSET_H_CARRY_WAIT_BCA);
     __register_global_object(&gHCarryWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f3c8);
-    data_ov002_0210e8c0.Construct(ASSET_H_CARRY_WALK_BCA);
-    __register_global_object(&data_ov002_0210e8c0, (void *)SharedFilePtr_Destruct_Anim,
+    gHCarryWalkAnimationFile.Construct(ASSET_H_CARRY_WALK_BCA);
+    __register_global_object(&gHCarryWalkAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f3d4);
     data_ov002_0210e308.Construct(0x806b);
     __register_global_object(&data_ov002_0210e308, (void *)SharedFilePtr_Destruct_Anim,
@@ -22979,11 +22980,11 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e928.Construct(0x8079);
     __register_global_object(&data_ov002_0210e928, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f488);
-    data_ov002_0210e568.Construct(ASSET_KEY_GET_BCA);
-    __register_global_object(&data_ov002_0210e568, (void *)SharedFilePtr_Destruct_Anim,
+    gKeyGetAnimationFile.Construct(ASSET_KEY_GET_BCA);
+    __register_global_object(&gKeyGetAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f494);
-    data_ov002_0210e938.Construct(ASSET_KEY_OPEN_BCA);
-    __register_global_object(&data_ov002_0210e938, (void *)SharedFilePtr_Destruct_Anim,
+    gKeyOpenAnimationFile.Construct(ASSET_KEY_OPEN_BCA);
+    __register_global_object(&gKeyOpenAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f4a0);
     data_ov002_0210e940.Construct(0x807a);
     __register_global_object(&data_ov002_0210e940, (void *)SharedFilePtr_Destruct_Anim,
@@ -22994,8 +22995,8 @@ void __sinit_ov002_021019d0(void) {
     gLieEndAnimationFile.Construct(ASSET_LIE_END_BCA);
     __register_global_object(&gLieEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f4c4);
-    data_ov002_0210e950.Construct(ASSET_LIE_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e950, (void *)SharedFilePtr_Destruct_Anim,
+    gLieWaitAnimationFile.Construct(ASSET_LIE_WAIT_BCA);
+    __register_global_object(&gLieWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f4d0);
     data_ov002_0210e570.Construct(0x807c);
     __register_global_object(&data_ov002_0210e570, (void *)SharedFilePtr_Destruct_Anim,
@@ -23018,14 +23019,14 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e580.Construct(0x8088);
     __register_global_object(&data_ov002_0210e580, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f524);
-    data_ov002_0210e980.Construct(ASSET_N_CARRY_LOST_BCA);
-    __register_global_object(&data_ov002_0210e980, (void *)SharedFilePtr_Destruct_Anim,
+    gNCarryLostAnimationFile.Construct(ASSET_N_CARRY_LOST_BCA);
+    __register_global_object(&gNCarryLostAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f530);
-    data_ov002_0210e588.Construct(ASSET_N_CARRY_POSE_BCA);
-    __register_global_object(&data_ov002_0210e588, (void *)SharedFilePtr_Destruct_Anim,
+    gNCarryPoseAnimationFile.Construct(ASSET_N_CARRY_POSE_BCA);
+    __register_global_object(&gNCarryPoseAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f53c);
-    data_ov002_0210e988.Construct(ASSET_N_CARRY_PUT_BCA);
-    __register_global_object(&data_ov002_0210e988, (void *)SharedFilePtr_Destruct_Anim,
+    gNCarryPutAnimationFile.Construct(ASSET_N_CARRY_PUT_BCA);
+    __register_global_object(&gNCarryPutAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f548);
     gNCarryStartAnimationFile.Construct(ASSET_N_CARRY_START_BCA);
     __register_global_object(&gNCarryStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
@@ -23036,32 +23037,32 @@ void __sinit_ov002_021019d0(void) {
     gNCarryWalkAnimationFile.Construct(ASSET_N_CARRY_WALK_BCA);
     __register_global_object(&gNCarryWalkAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f56c);
-    data_ov002_0210e590.Construct(ASSET_OP_GO_BCA);
-    __register_global_object(&data_ov002_0210e590, (void *)SharedFilePtr_Destruct_Anim,
+    gOpGoAnimationFile.Construct(ASSET_OP_GO_BCA);
+    __register_global_object(&gOpGoAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f578);
-    data_ov002_0210e9a8.Construct(ASSET_OP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e9a8, (void *)SharedFilePtr_Destruct_Anim,
+    gOpWaitAnimationFile.Construct(ASSET_OP_WAIT_BCA);
+    __register_global_object(&gOpWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f584);
-    data_ov002_0210e9b0.Construct(ASSET_P_KOOPA_H_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e9b0, (void *)SharedFilePtr_Destruct_Anim,
+    gPKoopaHWaitAnimationFile.Construct(ASSET_P_KOOPA_H_WAIT_BCA);
+    __register_global_object(&gPKoopaHWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f590);
-    data_ov002_0210e598.Construct(ASSET_P_KOOPA_HOLD_BCA);
-    __register_global_object(&data_ov002_0210e598, (void *)SharedFilePtr_Destruct_Anim,
+    gPKoopaHoldAnimationFile.Construct(ASSET_P_KOOPA_HOLD_BCA);
+    __register_global_object(&gPKoopaHoldAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f59c);
     gPKoopaThrowAnimationFile.Construct(ASSET_P_KOOPA_THROW_BCA);
     __register_global_object(&gPKoopaThrowAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5a8);
-    data_ov002_0210e5a0.Construct(ASSET_PADDLE_1_BCA);
-    __register_global_object(&data_ov002_0210e5a0, (void *)SharedFilePtr_Destruct_Anim,
+    gPaddle1AnimationFile.Construct(ASSET_PADDLE_1_BCA);
+    __register_global_object(&gPaddle1AnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5b4);
-    data_ov002_0210e9c8.Construct(ASSET_PADDLE_2_BCA);
-    __register_global_object(&data_ov002_0210e9c8, (void *)SharedFilePtr_Destruct_Anim,
+    gPaddle2AnimationFile.Construct(ASSET_PADDLE_2_BCA);
+    __register_global_object(&gPaddle2AnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5c0);
     gPaddleCarryAnimationFile.Construct(ASSET_PADDLE_CARRY_BCA);
     __register_global_object(&gPaddleCarryAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5cc);
-    data_ov002_0210e5a8.Construct(ASSET_PADDLE_END_BCA);
-    __register_global_object(&data_ov002_0210e5a8, (void *)SharedFilePtr_Destruct_Anim,
+    gPaddleEndAnimationFile.Construct(ASSET_PADDLE_END_BCA);
+    __register_global_object(&gPaddleEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5d8);
     data_ov002_0210e9d8.Construct(0x8089);
     __register_global_object(&data_ov002_0210e9d8, (void *)SharedFilePtr_Destruct_Anim,
@@ -23072,14 +23073,14 @@ void __sinit_ov002_021019d0(void) {
     gPutonTCapAnimationFile.Construct(ASSET_PUTON_T_CAP_BCA);
     __register_global_object(&gPutonTCapAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f608);
-    data_ov002_0210e9f8.Construct(ASSET_RETURN_DOWN_BCA);
-    __register_global_object(&data_ov002_0210e9f8, (void *)SharedFilePtr_Destruct_Anim,
+    gReturnDownAnimationFile.Construct(ASSET_RETURN_DOWN_BCA);
+    __register_global_object(&gReturnDownAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f614);
     gReturnNocapAnimationFile.Construct(ASSET_RETURN_NOCAP_BCA);
     __register_global_object(&gReturnNocapAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f620);
-    data_ov002_0210e5b8.Construct(ASSET_RETURN_STAR_BCA);
-    __register_global_object(&data_ov002_0210e5b8, (void *)SharedFilePtr_Destruct_Anim,
+    gReturnStarAnimationFile.Construct(ASSET_RETURN_STAR_BCA);
+    __register_global_object(&gReturnStarAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f62c);
     data_ov002_0210ea00.Construct(0x808b);
     __register_global_object(&data_ov002_0210ea00, (void *)SharedFilePtr_Destruct_Anim,
@@ -23102,8 +23103,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210ea28.Construct(0x8091);
     __register_global_object(&data_ov002_0210ea28, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f680);
-    data_ov002_0210e378.Construct(ASSET_S_DIE_BCA);
-    __register_global_object(&data_ov002_0210e378, (void *)SharedFilePtr_Destruct_Anim,
+    gSDieAnimationFile.Construct(ASSET_S_DIE_BCA);
+    __register_global_object(&gSDieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f68c);
     gScaleUpAnimationFile.Construct(ASSET_SCALE_UP_BCA);
     __register_global_object(&gScaleUpAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
@@ -23111,38 +23112,38 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210ea38.Construct(0x8092);
     __register_global_object(&data_ov002_0210ea38, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6a4);
-    data_ov002_0210e380.Construct(ASSET_SDROP_HEAD_BCA);
-    __register_global_object(&data_ov002_0210e380, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropHeadAnimationFile.Construct(ASSET_SDROP_HEAD_BCA);
+    __register_global_object(&gSdropHeadAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6b0);
-    data_ov002_0210ea40.Construct(ASSET_SDROP_HEAD_END_BCA);
-    __register_global_object(&data_ov002_0210ea40, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropHeadEndAnimationFile.Construct(ASSET_SDROP_HEAD_END_BCA);
+    __register_global_object(&gSdropHeadEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6bc);
-    data_ov002_0210ea48.Construct(ASSET_SDROP_HEAD_WAIT_BCA);
-    __register_global_object(&data_ov002_0210ea48, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropHeadWaitAnimationFile.Construct(ASSET_SDROP_HEAD_WAIT_BCA);
+    __register_global_object(&gSdropHeadWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6c8);
-    data_ov002_0210e5d8.Construct(ASSET_SDROP_HIP_BCA);
-    __register_global_object(&data_ov002_0210e5d8, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropHipAnimationFile.Construct(ASSET_SDROP_HIP_BCA);
+    __register_global_object(&gSdropHipAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6d4);
     gSdropHipEndAnimationFile.Construct(ASSET_SDROP_HIP_END_BCA);
     __register_global_object(&gSdropHipEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6e0);
-    data_ov002_0210ea58.Construct(ASSET_SDROP_HIP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210ea58, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropHipWaitAnimationFile.Construct(ASSET_SDROP_HIP_WAIT_BCA);
+    __register_global_object(&gSdropHipWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6ec);
-    data_ov002_0210e5e0.Construct(ASSET_SDROP_LEG_BCA);
-    __register_global_object(&data_ov002_0210e5e0, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropLegAnimationFile.Construct(ASSET_SDROP_LEG_BCA);
+    __register_global_object(&gSdropLegAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6f8);
-    data_ov002_0210ea60.Construct(ASSET_SDROP_LEG_END_BCA);
-    __register_global_object(&data_ov002_0210ea60, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropLegEndAnimationFile.Construct(ASSET_SDROP_LEG_END_BCA);
+    __register_global_object(&gSdropLegEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f704);
-    data_ov002_0210e5e8.Construct(ASSET_SDROP_LEG_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e5e8, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropLegWaitAnimationFile.Construct(ASSET_SDROP_LEG_WAIT_BCA);
+    __register_global_object(&gSdropLegWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f710);
-    data_ov002_0210ea68.Construct(ASSET_SDROP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210ea68, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropWaitAnimationFile.Construct(ASSET_SDROP_WAIT_BCA);
+    __register_global_object(&gSdropWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f71c);
-    data_ov002_0210e388.Construct(ASSET_SDROP_WALK_BCA);
-    __register_global_object(&data_ov002_0210e388, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropWalkAnimationFile.Construct(ASSET_SDROP_WALK_BCA);
+    __register_global_object(&gSdropWalkAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f728);
     data_ov002_0210e198.Construct(0x8093);
     __register_global_object(&data_ov002_0210e198, (void *)SharedFilePtr_Destruct_Anim,
@@ -23150,32 +23151,32 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210ea78.Construct(0x8094);
     __register_global_object(&data_ov002_0210ea78, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f740);
-    data_ov002_0210e390.Construct(ASSET_SHF_DIE_BCA);
-    __register_global_object(&data_ov002_0210e390, (void *)SharedFilePtr_Destruct_Anim,
+    gShfDieAnimationFile.Construct(ASSET_SHF_DIE_BCA);
+    __register_global_object(&gShfDieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f74c);
     data_ov002_0210e5f8.Construct(0x8095);
     __register_global_object(&data_ov002_0210e5f8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f758);
-    data_ov002_0210ea80.Construct(ASSET_SHOOT_BCA);
-    __register_global_object(&data_ov002_0210ea80, (void *)SharedFilePtr_Destruct_Anim,
+    gShootAnimationFile.Construct(ASSET_SHOOT_BCA);
+    __register_global_object(&gShootAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f764);
-    data_ov002_0210e398.Construct(ASSET_SHOOT_TO_FLY_BCA);
-    __register_global_object(&data_ov002_0210e398, (void *)SharedFilePtr_Destruct_Anim,
+    gShootToFlyAnimationFile.Construct(ASSET_SHOOT_TO_FLY_BCA);
+    __register_global_object(&gShootToFlyAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f770);
     data_ov002_0210ea90.Construct(0x8096);
     __register_global_object(&data_ov002_0210ea90, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f77c);
-    data_ov002_0210ea98.Construct(ASSET_SLEEP_END_BCA);
-    __register_global_object(&data_ov002_0210ea98, (void *)SharedFilePtr_Destruct_Anim,
+    gSleepEndAnimationFile.Construct(ASSET_SLEEP_END_BCA);
+    __register_global_object(&gSleepEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f788);
-    data_ov002_0210e608.Construct(ASSET_SLEEP_START_BCA);
-    __register_global_object(&data_ov002_0210e608, (void *)SharedFilePtr_Destruct_Anim,
+    gSleepStartAnimationFile.Construct(ASSET_SLEEP_START_BCA);
+    __register_global_object(&gSleepStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f794);
-    data_ov002_0210eaa8.Construct(ASSET_SLEEP_TO_LIE_BCA);
-    __register_global_object(&data_ov002_0210eaa8, (void *)SharedFilePtr_Destruct_Anim,
+    gSleepToLieAnimationFile.Construct(ASSET_SLEEP_TO_LIE_BCA);
+    __register_global_object(&gSleepToLieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f7a0);
-    data_ov002_0210eab0.Construct(ASSET_SLEEP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210eab0, (void *)SharedFilePtr_Destruct_Anim,
+    gSleepWaitAnimationFile.Construct(ASSET_SLEEP_WAIT_BCA);
+    __register_global_object(&gSleepWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f7ac);
     data_ov002_0210e610.Construct(0x8097);
     __register_global_object(&data_ov002_0210e610, (void *)SharedFilePtr_Destruct_Anim,
@@ -23216,68 +23217,68 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210ed38.Construct(0x80a3);
     __register_global_object(&data_ov002_0210ed38, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f860);
-    data_ov002_0210ed30.Construct(ASSET_STAR_OPEN_BCA);
-    __register_global_object(&data_ov002_0210ed30, (void *)SharedFilePtr_Destruct_Anim,
+    gStarOpenAnimationFile.Construct(ASSET_STAR_OPEN_BCA);
+    __register_global_object(&gStarOpenAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f86c);
     data_ov002_0210ed28.Construct(0x80a4);
     __register_global_object(&data_ov002_0210ed28, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f878);
-    data_ov002_0210ed20.Construct(ASSET_SU_HIPAT_BCA);
-    __register_global_object(&data_ov002_0210ed20, (void *)SharedFilePtr_Destruct_Anim,
+    gSuHipatAnimationFile.Construct(ASSET_SU_HIPAT_BCA);
+    __register_global_object(&gSuHipatAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f884);
-    data_ov002_0210ed18.Construct(ASSET_SU_HIPED_BCA);
-    __register_global_object(&data_ov002_0210ed18, (void *)SharedFilePtr_Destruct_Anim,
+    gSuHipedAnimationFile.Construct(ASSET_SU_HIPED_BCA);
+    __register_global_object(&gSuHipedAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f890);
-    data_ov002_0210ed10.Construct(ASSET_SU_HIPSR_BCA);
-    __register_global_object(&data_ov002_0210ed10, (void *)SharedFilePtr_Destruct_Anim,
+    gSuHipsrAnimationFile.Construct(ASSET_SU_HIPSR_BCA);
+    __register_global_object(&gSuHipsrAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f8a8);
-    data_ov002_0210ed08.Construct(ASSET_SU_JUMP_BCA);
-    __register_global_object(&data_ov002_0210ed08, (void *)SharedFilePtr_Destruct_Anim,
+    gSuJumpAnimationFile.Construct(ASSET_SU_JUMP_BCA);
+    __register_global_object(&gSuJumpAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f8b4);
-    data_ov002_0210ecf8.Construct(ASSET_SU_JUMP_END_BCA);
-    __register_global_object(&data_ov002_0210ecf8, (void *)SharedFilePtr_Destruct_Anim,
+    gSuJumpEndAnimationFile.Construct(ASSET_SU_JUMP_END_BCA);
+    __register_global_object(&gSuJumpEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f8c0);
-    data_ov002_0210ecf0.Construct(ASSET_SU_RUN_BCA);
-    __register_global_object(&data_ov002_0210ecf0, (void *)SharedFilePtr_Destruct_Anim,
+    gSuRunAnimationFile.Construct(ASSET_SU_RUN_BCA);
+    __register_global_object(&gSuRunAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f8d8);
-    data_ov002_0210ece8.Construct(ASSET_SU_WAIT_BCA);
-    __register_global_object(&data_ov002_0210ece8, (void *)SharedFilePtr_Destruct_Anim,
+    gSuWaitAnimationFile.Construct(ASSET_SU_WAIT_BCA);
+    __register_global_object(&gSuWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f8e4);
-    data_ov002_0210ece0.Construct(ASSET_SU_WALK_BCA);
-    __register_global_object(&data_ov002_0210ece0, (void *)SharedFilePtr_Destruct_Anim,
+    gSuWalkAnimationFile.Construct(ASSET_SU_WALK_BCA);
+    __register_global_object(&gSuWalkAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f8f0);
-    data_ov002_0210ecd8.Construct(ASSET_SU_WALK_END_BCA);
-    __register_global_object(&data_ov002_0210ecd8, (void *)SharedFilePtr_Destruct_Anim,
+    gSuWalkEndAnimationFile.Construct(ASSET_SU_WALK_END_BCA);
+    __register_global_object(&gSuWalkEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f8fc);
-    data_ov002_0210ecd0.Construct(ASSET_SU_WALK_START_BCA);
-    __register_global_object(&data_ov002_0210ecd0, (void *)SharedFilePtr_Destruct_Anim,
+    gSuWalkStartAnimationFile.Construct(ASSET_SU_WALK_START_BCA);
+    __register_global_object(&gSuWalkStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f908);
-    data_ov002_0210ecc8.Construct(ASSET_SWIM_BCA);
-    __register_global_object(&data_ov002_0210ecc8, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimAnimationFile.Construct(ASSET_SWIM_BCA);
+    __register_global_object(&gSwimAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f914);
-    data_ov002_0210ecc0.Construct(ASSET_SWIM_ATTACK_BCA);
-    __register_global_object(&data_ov002_0210ecc0, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimAttackAnimationFile.Construct(ASSET_SWIM_ATTACK_BCA);
+    __register_global_object(&gSwimAttackAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f920);
-    data_ov002_0210e768.Construct(ASSET_SWIM_CARRY_BCA);
-    __register_global_object(&data_ov002_0210e768, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimCarryAnimationFile.Construct(ASSET_SWIM_CARRY_BCA);
+    __register_global_object(&gSwimCarryAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f938);
-    data_ov002_0210eca0.Construct(ASSET_SWIM_DAMAGE_BCA);
-    __register_global_object(&data_ov002_0210eca0, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimDamageAnimationFile.Construct(ASSET_SWIM_DAMAGE_BCA);
+    __register_global_object(&gSwimDamageAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f944);
-    data_ov002_0210ec90.Construct(ASSET_SWIM_DIE_BCA);
-    __register_global_object(&data_ov002_0210ec90, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimDieAnimationFile.Construct(ASSET_SWIM_DIE_BCA);
+    __register_global_object(&gSwimDieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f950);
-    data_ov002_0210ec88.Construct(ASSET_SWIM_IN_BCA);
-    __register_global_object(&data_ov002_0210ec88, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimInAnimationFile.Construct(ASSET_SWIM_IN_BCA);
+    __register_global_object(&gSwimInAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f95c);
-    data_ov002_0210ec80.Construct(ASSET_SWIM_STAR_GET_BCA);
-    __register_global_object(&data_ov002_0210ec80, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimStarGetAnimationFile.Construct(ASSET_SWIM_STAR_GET_BCA);
+    __register_global_object(&gSwimStarGetAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f968);
-    data_ov002_0210ec78.Construct(ASSET_SWIM_THROW_BCA);
-    __register_global_object(&data_ov002_0210ec78, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimThrowAnimationFile.Construct(ASSET_SWIM_THROW_BCA);
+    __register_global_object(&gSwimThrowAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f974);
-    data_ov002_0210ec70.Construct(ASSET_SWIM_WAIT_BCA);
-    __register_global_object(&data_ov002_0210ec70, (void *)SharedFilePtr_Destruct_Anim,
+    gSwimWaitAnimationFile.Construct(ASSET_SWIM_WAIT_BCA);
+    __register_global_object(&gSwimWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f980);
     data_ov002_0210ec68.Construct(0x80a5);
     __register_global_object(&data_ov002_0210ec68, (void *)SharedFilePtr_Destruct_Anim,
