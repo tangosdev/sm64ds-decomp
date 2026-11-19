@@ -8183,7 +8183,7 @@
     },
     "arm9:0x0204effc": {
       "author": "tangosdev",
-      "name": "func_0204effc"
+      "name": "BeginSleep"
     },
     "arm9:0x0204f03c": {
       "author": "tangosdev",

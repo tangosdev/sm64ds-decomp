@@ -9211,7 +9211,7 @@
     "src/engine/sound/SoundEngine.cpp#func_0204ee40": "andrewboudreau",
     "src/engine/sound/SoundEngine.cpp#func_0204ef9c": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#func_0204efe0": "tangosdev",
-    "src/engine/sound/SoundEngine.cpp#func_0204effc": "tangosdev",
+    "src/engine/sound/SoundEngine.cpp#BeginSleep": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#NNS_SndMain": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#NNS_SndInit": "tangosdev",
     "src/engine/sound/SoundEngine.cpp#NNS_SndFreeAlarm": "tangosdev",

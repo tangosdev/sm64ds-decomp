@@ -395,7 +395,7 @@ extern int func_0204ee10(struct S82 *self);
 extern int func_0204ee40(struct S82 *self, char *name, char *p);
 extern int func_0204ef9c(void* p);
 extern void func_0204efe0(void);
-extern void func_0204effc(void);
+extern void BeginSleep(void);
 extern void NNS_SndMain(void);
 extern void NNS_SndInit(void);
 extern int NNS_SndFreeAlarm(unsigned int bit);
@@ -2336,7 +2336,7 @@ extern "C" void NNS_SndMain(void) {
     SND_FlushCommand(0);
 }
 
-extern "C" void func_0204effc(void) {
+extern "C" void BeginSleep(void) {
     u32 p;
     func_0205227c();
     NNSi_SndCaptureBeginSleep();

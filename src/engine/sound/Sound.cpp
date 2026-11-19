@@ -71,7 +71,7 @@ extern "C" void NNS_SndMain(void);
 extern "C" void *NNS_SndArcGetSeqArcParam(int a, int idx);
 extern void func_02049c48(int self);
 extern "C" void func_0204efe0(void);
-extern "C" void func_0204effc(void);
+extern "C" void BeginSleep(void);
 
 /* In-TU functions, declared once so callers ahead of their definitions link. */
 extern void func_02013524(NNSSndHandle *handle, int vol, int mode);
@@ -890,7 +890,7 @@ int func_02011dcc(NNSSndHandle *handle, int x) {
 }
 
 extern "C" void func_02011dc0(void) {
-    func_0204effc();
+    BeginSleep();
 }
 
 extern "C" void func_02011db4(void) {

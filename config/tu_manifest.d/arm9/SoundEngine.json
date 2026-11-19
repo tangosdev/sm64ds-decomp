@@ -60,7 +60,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_0204effc",
+      "symbol": "BeginSleep",
       "address": "0x0204effc",
       "legacy_source": "src/func_0204effc.c",
       "size": "0x00000040",
