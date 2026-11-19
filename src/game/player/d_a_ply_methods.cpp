@@ -2486,7 +2486,7 @@ void daPly_c::func_ov002_020bf340(int *p, int delta, int limit) {
     }
 }
 
-void daPly_c::func_ov002_020bf36c(void *arg) {
+void daPly_c::func_ov002_020bf36c(dCc_c *clsn) {
     fx32 saved;
     unsigned char f = this->mIsNoControl;
     if (f == 0)
@@ -2498,7 +2498,7 @@ void daPly_c::func_ov002_020bf36c(void *arg) {
     saved = this->mHorzSpeed;
     if (this->mClsnFlags & 1)
         this->mHorzSpeed = FX_MUL(saved, this->mFloorNormal.y);
-    UpdatePos((dCc_c *)arg);
+    UpdatePos(clsn);
     this->mHorzSpeed = saved;
     func_ov002_020ce798();
 }
@@ -3624,8 +3624,7 @@ int daPly_c::func_ov002_020c1c84(int arg) {
 }
 
 extern "C" {
-int func_ov002_020c1e44(void* a, int x) {
-    daPly_c *p = (daPly_c *)a;
+int func_ov002_020c1e44(daPly_c *p, int x) {
     p->mPrevAngle.y = (short)((x << 1) - p->mPrevAngle.y + 0x8000);
     p->mHorzSpeed = FX_MUL(p->mHorzSpeed, 0xe00);
     if (p->mHorzSpeed < 0x4000)
@@ -3711,9 +3710,9 @@ if (this->func_ov002_020c1c84(ang)) return 1;
 return this->func_ov002_020c1ad8(ang);
 }
 
-int daPly_c::func_ov002_020c2270(void *p1, void *p2) {
+int daPly_c::func_ov002_020c2270(Vector3 *p1, Vector3 *p2) {
     dBgCh_Lin line;
-    line.SetObjAndLine(*(Vector3 *)p1, *(Vector3 *)p2, this);
+    line.SetObjAndLine(*p1, *p2, this);
     if (line.DetectClsn()) {
         if (line.surface.clps.GetFloorClass() == 1) {
             ::Vector3 clsnPos = line.GetClsnPos();
@@ -8445,7 +8444,7 @@ int daPly_c::IsOnShell() {
 }
 
 extern "C" {
-int func_ov002_020cc16c(daPly_c *player, void *state) {
+int func_ov002_020cc16c(daPly_c *player, daShl_c *shell) {
     if (player->mRidingShell != 0)
         return 0;
     if (player->mIsMetal != 0 || player->mIsVanish != 0) {
@@ -8454,7 +8453,7 @@ int func_ov002_020cc16c(daPly_c *player, void *state) {
     }
     if (player->mIsFire != 0)
         player->func_ov002_020d80d0();
-    player->mRidingShell = (daShl_c *)state;
+    player->mRidingShell = shell;
     player->ChangeState(data_ov002_02110304);
     return 1;
 }
@@ -10031,10 +10030,10 @@ int daPly_c::func_ov002_020cfbdc() {
     return 0;
 }
 
-int daPly_c::func_ov002_020cfd84(void *a, void *b) {
+int daPly_c::func_ov002_020cfd84(Vector3 *a, Vector3 *b) {
     dBgCh_Lin line;
     dBgPi result;
-    line.SetObjAndLine(*(Vector3 *)a, *(Vector3 *)b, this);
+    line.SetObjAndLine(*a, *b, this);
     if (line.DetectClsn()) {
         result.surface = line.surface;
         result.triangleID = line.triangleID;
@@ -12761,11 +12760,11 @@ int daPly_c::func_ov002_020d5ed0() {
 }
 
 extern "C" {
-int func_ov002_020d5f34(daPly_c *c, void *st) {
+int func_ov002_020d5f34(daPly_c *c, daPly_c *eater) {
     daPly_c *player = c;
     if (player->mEatingPlayer != 0)
         return 0;
-    player->mEatingPlayer = (daPly_c *)st;
+    player->mEatingPlayer = eater;
     (c)->SetAnim(0x3f, 0, 0x3000, 0);
     player->mStateStep = 0;
     (c)->ChangeState(data_ov002_02110064);
@@ -16754,12 +16753,12 @@ int func_ov002_020de328(daPly_c *player) {
 }
 
 extern "C" {
-int func_ov002_020de33c(daPly_c *c, void *actor) {
+int func_ov002_020de33c(daPly_c *c, dActor_c *actor) {
     daPly_c *player = c;
     if (player->mIsNoControl != 0 || (c)->IsState(data_ov002_021102bc) ||
         (c)->IsState(data_ov002_02110484))
         return 0;
-    player->mAttachedActor = (dActor_c *)actor;
+    player->mAttachedActor = actor;
     (c)->ChangeState(data_ov002_021102bc);
     return 1;
 }
@@ -17327,7 +17326,7 @@ int func_ov002_020df7f4(daPly_c *player) {
 }
 }
 
-int daPly_c::func_ov002_020df840(void *obj, Vector3 *pos) {
+int daPly_c::func_ov002_020df840(dActor_c *obj, Vector3 *pos) {
     extern u16 data_0209f49c[];
     if (this->mIsMega != 0 || this->mIsBalloon != 0)
         return 0;
@@ -17336,7 +17335,7 @@ int daPly_c::func_ov002_020df840(void *obj, Vector3 *pos) {
     if (this->mHeldObj != 0)
         return 0;
     this->ChangeState(daPly_c::ST_OWL);
-    this->mHeldObj = (dActor_c *)obj;
+    this->mHeldObj = obj;
     this->mAttachOffsetY = pos->y;
     this->mAngleYSpeed = Vec3_HorzAngle(&this->mPos, pos);
     return 1;
@@ -17864,10 +17863,10 @@ int daPly_c::St_SlopeJump_Init() {
     return 1;
 }
 
-int daPly_c::func_ov002_020e0ccc(void *st) {
-    if (st == 0)
+int daPly_c::func_ov002_020e0ccc(dActor_c *held) {
+    if (held == 0)
         return 0;
-    if (!IsActorID((dActor_c *)st, 0xc1))
+    if (!IsActorID(held, 0xc1))
         return 0;
     ChangeState(data_ov002_02110484);
     return 1;

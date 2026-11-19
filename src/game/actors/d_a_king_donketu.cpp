@@ -344,8 +344,7 @@ void daKing_Donketu_c::SpawnLandingEffects(int strength) {
    the boss itself. The ROM copies the difference vector once more before
    reading it (`dir = diff`) and holds &b->mPos across the copy of mPos
    (`target`); both are needed for the bytes. */
-void daKing_Donketu_c::SpawnHitParticles(void *pb) {
-    dActor_c *b = (dActor_c *)pb;
+void daKing_Donketu_c::SpawnHitParticles(dActor_c *b) {
     Vector3 dir, pos, aim, diff;
     s16 yaw, pitch;
     fx32 radius, horz;

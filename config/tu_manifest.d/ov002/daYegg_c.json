@@ -101,7 +101,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN8daYegg_c14SpawnBlueCoinsEPviis",
+      "symbol": "_ZN8daYegg_c14SpawnBlueCoinsEPK7Vector3iis",
       "address": "0x020ec80c",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov002_020ec80c.c",

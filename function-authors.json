@@ -5287,7 +5287,7 @@
     },
     "arm9:0x0203798c": {
       "author": "ruspecial",
-      "name": "_ZN12dBgCh_SphCrr14RecordUnderHitEiPv"
+      "name": "_ZN12dBgCh_SphCrr14RecordUnderHitEiP11SurfaceInfo"
     },
     "arm9:0x0203799c": {
       "author": "tangosdev",
@@ -5295,7 +5295,7 @@
     },
     "arm9:0x020379c0": {
       "author": "ruspecial",
-      "name": "_ZN12dBgCh_SphCrr13RecordWallHitEiPv"
+      "name": "_ZN12dBgCh_SphCrr13RecordWallHitEiP11SurfaceInfo"
     },
     "arm9:0x020379d0": {
       "author": "tangosdev",
@@ -5303,7 +5303,7 @@
     },
     "arm9:0x020379f4": {
       "author": "ruspecial",
-      "name": "_ZN12dBgCh_SphCrr14RecordFloorHitEiPv"
+      "name": "_ZN12dBgCh_SphCrr14RecordFloorHitEiP11SurfaceInfo"
     },
     "arm9:0x02037a04": {
       "author": "tangosdev",
@@ -14527,7 +14527,7 @@
     },
     "ov002:0x020bf36c": {
       "author": "lunavyqo",
-      "name": "func_ov002_020bf36c"
+      "name": "_ZN7daPly_c19func_ov002_020bf36cEP5dCc_c"
     },
     "ov002:0x020bf40c": {
       "author": "tangosdev",
@@ -14671,7 +14671,7 @@
     },
     "ov002:0x020c2270": {
       "author": "andrewboudreau",
-      "name": "_ZN7daPly_c19func_ov002_020c2270EPvS0_"
+      "name": "_ZN7daPly_c19func_ov002_020c2270EP7Vector3S1_"
     },
     "ov002:0x020c231c": {
       "author": "ruspecial",
@@ -15559,7 +15559,7 @@
     },
     "ov002:0x020cfd84": {
       "author": "andrewboudreau",
-      "name": "_ZN7daPly_c19func_ov002_020cfd84EPvS0_"
+      "name": "_ZN7daPly_c19func_ov002_020cfd84EP7Vector3S1_"
     },
     "ov002:0x020cfea4": {
       "author": "tangosdev",
@@ -16439,7 +16439,7 @@
     },
     "ov002:0x020df840": {
       "author": "tangosdev",
-      "name": "_ZN6Player19func_ov002_020df840EPvP7Vector3"
+      "name": "_ZN7daPly_c19func_ov002_020df840EP8dActor_cP7Vector3"
     },
     "ov002:0x020df8f0": {
       "author": "lunavyqo",
@@ -16499,7 +16499,7 @@
     },
     "ov002:0x020e0ccc": {
       "author": "tangosdev",
-      "name": "_ZN7daPly_c19func_ov002_020e0cccEPv"
+      "name": "_ZN7daPly_c19func_ov002_020e0cccEP8dActor_c"
     },
     "ov002:0x020e0d28": {
       "author": "tangosdev",
@@ -17207,7 +17207,7 @@
     },
     "ov002:0x020ec80c": {
       "author": "andrewboudreau",
-      "name": "_ZN8daYegg_c14SpawnBlueCoinsEPviis"
+      "name": "_ZN8daYegg_c14SpawnBlueCoinsEPK7Vector3iis"
     },
     "ov002:0x020ec938": {
       "author": "tangosdev",
@@ -31187,7 +31187,7 @@
     },
     "ov018:0x02111968": {
       "author": "github-actions[bot]",
-      "name": "_ZN10daPgMthr_c9BeginTalkEPvPc"
+      "name": "_ZN10daPgMthr_c9BeginTalkEP7daPly_cP8dActor_c"
     },
     "ov018:0x02111a48": {
       "author": "github-actions[bot]",
@@ -38331,7 +38331,7 @@
     },
     "ov070:0x02121d50": {
       "author": "tangosdev",
-      "name": "_ZN8daKpFr_c19func_ov070_02121d50EPv"
+      "name": "_ZN8daKpFr_c19func_ov070_02121d50EP10dBgCh_Actr"
     },
     "ov070:0x02121e14": {
       "author": "tangosdev",
@@ -39171,7 +39171,7 @@
     },
     "ov073:0x0211f494": {
       "author": "lunavyqo",
-      "name": "_ZN16daKing_Donketu_c19func_ov073_0211f494EPv"
+      "name": "_ZN16daKing_Donketu_c17SpawnHitParticlesEP8dActor_c"
     },
     "ov073:0x0211f61c": {
       "author": "ruspecial",
@@ -41943,7 +41943,7 @@
     },
     "ov084:0x021296b0": {
       "author": "tangosdev",
-      "name": "_Z19func_ov084_021296b0PvS_"
+      "name": "_ZN7daKrb_c19func_ov084_021296b0EP7Vector3"
     },
     "ov084:0x021296cc": {
       "author": "tangosdev",

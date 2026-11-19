@@ -193,8 +193,7 @@ void daKpFr_c::func_ov070_02121e14() {
  * proven typed ABI seam. ROM calls the UpdateContinuous veneer, not the
  * method. FX_MUL's 64-bit product is the smull the ROM uses. */
 
-void daKpFr_c::func_ov070_02121d50(void* vclsn) {
-    dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
+void daKpFr_c::func_ov070_02121d50(dBgCh_Actr *clsn) {
     Vector3 normal;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {

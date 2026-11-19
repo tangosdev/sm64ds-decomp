@@ -226,7 +226,7 @@ int daPgMthr_c::StateStandUpdate() {
         /* Yoshi's baby is in his mouth; this path does not count it. */
         if (toucher->param1 != CHAR_YOSHI)
             held = toucher->mHeldObj;
-        BeginTalk(toucher, (char *)held);
+        BeginTalk(toucher, held);
     }
     near = ClosestPlayer();
     TurnHeadToward((char *)near);
@@ -439,9 +439,7 @@ void daPgMthr_c::TurnHeadToward(char *b) {
     ApproachLinear(mLookAngX, vert, 0x250);
 }
 
-void daPgMthr_c::BeginTalk(void *found, char *heldRaw) {
-    dActor_c *held = (dActor_c *)heldRaw;
-    daPly_c *who = (daPly_c *)found;
+void daPgMthr_c::BeginTalk(daPly_c *who, dActor_c *held) {
 
     if (held && IsActorID(held, ACTOR_BABY_PENGUIN) && held->param1 == BABY_OTHER) {
         mPlayer = who;
