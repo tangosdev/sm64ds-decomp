@@ -280,16 +280,16 @@ int daMenbo_c::func_ov090_021314a0() {
     daPly_c *p = this->ClosestNonVanishPlayer();
     if (p != 0 && AngleDiff(this->mPrevAngle.y, this->HorzAngleToCPlayer()) < 0x2000) {
         int *sv = &p->mPos.x;
-        int v[3];
-        v[0] = sv[0];
-        v[1] = sv[1];
-        v[2] = sv[2];
-        if (Vec3_Dist(&this->mPos, (const Vector3 *)v) < 0x3ac000) {
-            int w[3];
-            w[0] = v[0];
-            w[1] = v[1];
-            w[2] = v[2];
-            this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, (const Vector3 *)w);
+        Vector3 v;
+        v.x = sv[0];
+        v.y = sv[1];
+        v.z = sv[2];
+        if (Vec3_Dist(&this->mPos, &v) < 0x3ac000) {
+            Vector3 w;
+            w.x = v.x;
+            w.y = v.y;
+            w.z = v.z;
+            this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &w);
             this->mChaseLatch = 1;
             return 1;
         }
