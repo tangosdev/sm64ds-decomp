@@ -42,6 +42,7 @@ enum daMip_c_AssetId {
 #include "daObj_Mip_Key_c.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
@@ -60,12 +61,7 @@ int SurfaceInfo_TestFlag0x20(int *);
 
 /* maths and the still-unnamed helpers */
 extern "C" int AngleDiff(int, int);
-extern "C" void Matrix4x3_FromTranslation(void *, int, int, int);
-extern "C" void Matrix4x3_FromRotationY(void *, int);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
-extern "C" void MTX_Concat43(void *, void *, void *);
 extern "C" void MTX_Concat33(void *, void *, void *);
-extern "C" void MTX_MultVec43(const Vector3 *, const Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
 extern "C" int func_02013890(int, int);
 void func_02013944(void);
@@ -885,15 +881,13 @@ int daMip_c::SetState(void *record)
 
 void daMip_c::UpdateMatrixAndShadow()
 {
-    extern Matrix4x3 data_020a0e68;
-
-    char result[0x30];
+    Matrix4x3 result;
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
-    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, result);
+    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, &result);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
     mShadowMtx = data_020a0e68;
     DropShadowRadHeight(mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
@@ -903,8 +897,6 @@ void daMip_c::UpdateMatrixAndShadow()
    offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot. */
 void daMip_c::UpdateCarriedMatrix()
 {
-    extern Matrix4x3 data_020a0e68;
-
     int idx;
     Matrix4x3 *res;
     if (!mTalkingPlayer) return;
@@ -927,8 +919,6 @@ void daMip_c::UpdateCarriedMatrix()
 /* Second shadow, on the far side of the mirror plane at x = 0x1086000. */
 void daMip_c::UpdateMirrorShadow()
 {
-    extern Matrix4x3 data_020a0e68;
-
     Vector3 v;
     Vector3 res;
     Vector3 vd;
@@ -1019,8 +1009,6 @@ int daMip_c::Render()
    UpdateMirrorShadow's plane. */
 void daMip_c::RenderMirrorImage()
 {
-    extern int data_020a0e68;
-
     Matrix4x3 saved;
     saved = mAnmModel.mat4x3;
     mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
