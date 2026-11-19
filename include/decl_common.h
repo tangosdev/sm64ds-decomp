@@ -350,6 +350,7 @@ extern int data_ov085_02130830[];
 extern void *data_ov089_02132894[];
 extern int data_ov091_021344e8[];
 extern int data_ov094_02136a1c[];
+extern Vector3 data_ov098_0213bf60[];
 extern int data_ov100_02148008[3];
 extern int data_ov100_02148710;
 extern int data_ov100_02148718;
