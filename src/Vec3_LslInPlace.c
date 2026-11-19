@@ -2,8 +2,7 @@
    left per axis, in place. */
 #include "types.h"
 
-int *Vec3_LslInPlace(Vector3 *v, int sh)
-{
+int *Vec3_LslInPlace(Vector3 *v, int sh) {
     v->x <<= sh;
     v->y <<= sh;
     v->z <<= sh;
