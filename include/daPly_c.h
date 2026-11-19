@@ -1147,7 +1147,7 @@ struct daPly_c : dActor_c {
     void PlayLandingSoundOnce();
     int AnimSplinePoll(int *);
     void AnimSplineInit();
-    void func_ov002_020c37a4(char *);
+    void func_ov002_020c37a4(const Vector3 *);
     void JumboStarCutsceneFlying();
     int JumboStarCutsceneTakingOff();
     void JumboStarCutsceneFalling();

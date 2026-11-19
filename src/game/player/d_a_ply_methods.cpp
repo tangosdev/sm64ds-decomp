@@ -4248,7 +4248,7 @@ void daPly_c::SplineGetWeights(fx32 *out) {
     }
 }
 
-void daPly_c::func_ov002_020c37a4(char *arg) {
+void daPly_c::func_ov002_020c37a4(const Vector3 *offset) {
     unsigned int id = this->GetBodyModelID(param1 & 0xff, 0);
     Matrix4x3 *bone = &mModels.mBodyModels[id]->data.transforms[8];
     unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
@@ -4257,7 +4257,7 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
     MTX_MultVec43((Vector3 *)&bone->t, &mModels.mBodyModels[id2]->mat4x3, &v);
     Vec3_MulScalar(&s, &v, 0x8000);
     v = s;
-    Vec3_RotateYAndTranslate(&v, &v, this->mAngle.y, (const Vector3 *)arg);
+    Vec3_RotateYAndTranslate(&v, &v, this->mAngle.y, offset);
     mParticle1 = Particle::System::New(mParticle1, kPtclJumboStarFlyA, v.x, v.y, v.z, 0, 0);
     mParticle2 = Particle::System::New(mParticle2, kPtclJumboStarFlyB, v.x, v.y, v.z, 0, 0);
 }
@@ -4274,7 +4274,7 @@ void daPly_c::JumboStarCutsceneFlying() {
     particleOffset.x = 0;
     particleOffset.y = 0;
     particleOffset.z = 0x60000;
-    func_ov002_020c37a4((char *)&particleOffset);
+    func_ov002_020c37a4(&particleOffset);
     splinePos.x = 0;
     splinePos.y = 0;
     splinePos.z = 0;
@@ -4337,7 +4337,7 @@ int daPly_c::JumboStarCutsceneTakingOff() {
         buf[3] = 0;
         buf[4] = 0;
         buf[5] = 0;
-        func_ov002_020c37a4((char *)(buf + 3));
+        func_ov002_020c37a4((const Vector3 *)(buf + 3));
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
         r5 = (unsigned int)(anim.currFrame << 4) >> 0x10;
         if (r5 == 0x6d || r5 == 0x8d) {

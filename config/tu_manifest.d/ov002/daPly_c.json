@@ -808,7 +808,7 @@
       "ordinal": 107
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c37a4EPc",
+      "symbol": "_ZN7daPly_c19func_ov002_020c37a4EPK7Vector3",
       "address": "0x020c37a4",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov002_020c37a4.cpp",
