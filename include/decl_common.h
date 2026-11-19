@@ -412,7 +412,6 @@ extern int func_ov007_020c3ba8(int);
    consumers, and the intact-TU stage refused ten or more actor TUs
    ("rename source @555 has 0 symbols"). */
 extern void *func_ov007_020c3df4(const char *, int);
-extern int func_ov010_02111984[];
 /* Returns nothing: ov018 0x02111d18..0x02111d24 pops straight to bx lr with no
    r0 set. Definition in src/game/actors/d_a_pg_mthr.cpp. */
 extern int func_ov025_0211123c(char *);
@@ -684,7 +683,6 @@ extern void func_0202ae74(void);
 extern void func_0203083c(void);
 extern void func_02030aa4(int);
 extern void Message_DrawCenteredLineVS(int, int);
-extern void func_02034b1c(void *, void *);
 extern void func_02035550(void *);
 extern void func_02038414(void*);
 extern void func_02039db8(void *, struct Vector3 *, struct Vector3 *);
@@ -830,7 +828,6 @@ extern void func_ov065_0211696c(char *);
 
 extern void func_ov070_02121c8c(void*);
 extern void func_ov070_02121e14(char*);
-extern void func_ov070_02121fd0(char*);
 extern void func_ov070_02122044(void*, int);
 extern void func_ov096_0213585c(void *);
 extern void func_ov096_02135efc(void *);

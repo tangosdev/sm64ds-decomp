@@ -184,7 +184,7 @@ u8 dMgPsOpt_c::Update() {
     case kPanelOpen:
         if (TouchArea_Update(&mIcons[kIconBack], -1)) {
             /* Back: pulse the button, then let state 2 run the delay down. */
-            mIcons[kIconBack].func_ov001_020ab3f0();
+            mIcons[kIconBack].Press();
             mCloseTimer = 20;
             mActive = kPanelClosing;
             func_02012790(kSndBack);
@@ -203,7 +203,7 @@ u8 dMgPsOpt_c::Update() {
                     else
                         mode = (mode + 1) & 0xff;
                     mIcons[kIconSoundNext].mOn = 0;
-                    mIcons[kIconSoundNext].func_ov001_020ab3f0();
+                    mIcons[kIconSoundNext].Press();
                     changed = 1;
                 } else if (TouchArea_Update(&mIcons[kIconSoundPrev], -1)) {
                     if (mode == 0)
@@ -211,7 +211,7 @@ u8 dMgPsOpt_c::Update() {
                     else
                         mode = (mode - 1) & 0xff;
                     mIcons[kIconSoundPrev].mOn = 0;
-                    mIcons[kIconSoundPrev].func_ov001_020ab3f0();
+                    mIcons[kIconSoundPrev].Press();
                     changed = 1;
                 }
 

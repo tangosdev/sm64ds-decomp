@@ -241,7 +241,7 @@ struct dActor_c : dBase_c {
        0x1000 and the player then grabbed this actor; otherwise null. */
     daPly_c *func_02010304(dCc_c *clsn);
     /* Clamps each axis of mPos to the world bounds, +-32000.0. */
-    void func_02010da4();
+    void ClampPosToWorldBounds();
 
     /* The dust group: an `...At` worker taking a position, and a no-argument
        wrapper that copies this actor's own position into a stack Vector3 and

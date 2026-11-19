@@ -207,7 +207,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125e20Ev",
+      "symbol": "_ZN7daTgz_c15CallStateUpdateEv",
       "address": "0x02125e20",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov077_02125e20.cpp",

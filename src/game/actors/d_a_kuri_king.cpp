@@ -644,7 +644,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
     v2.x = this->mSpawnPosX;
     v2.y = this->mSpawnPosY;
     v2.z = this->mSpawnPosZ;
-    minion->func_ov084_021296b0(&v2);
+    minion->SetHomePos(&v2);
 
     minion->mMinionIndex = this->mSpawnedCount;
     /* Same pool-address increment as mSubState: 0x602 is not an ARM immediate. */

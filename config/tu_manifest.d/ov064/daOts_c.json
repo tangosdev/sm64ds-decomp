@@ -47,7 +47,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN7daOts_c19func_ov064_02116110Es",
+      "symbol": "_ZN7daOts_c16TurnTowardPlayerEs",
       "address": "0x02116110",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov064_02116110.cpp",

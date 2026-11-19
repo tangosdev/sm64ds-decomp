@@ -227,14 +227,14 @@
       "ordinal": 26
     },
     {
-      "symbol": "_ZN7daSpd_c19func_ov071_02120278Ev",
+      "symbol": "_ZN7daSpd_c8RunStateEv",
       "address": "0x02120278",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov071_02120278.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN7daSpd_c19func_ov071_021202b4Ev",
+      "symbol": "_ZN7daSpd_c14CallStateEnterEv",
       "address": "0x021202b4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov071_021202b4.cpp",

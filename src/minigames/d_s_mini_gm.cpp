@@ -16,7 +16,7 @@
  *   and Render call them. Naming belongs with recovered members, not
  *   coined here.
  * Leftover: func_02013568 / func_02013580 / func_02013598 /
- *   func_020135d0 / func_02013638 are arm9 save-table helpers. This
+ *   func_020135d0 / IsMinigameUnlocked are arm9 save-table helpers. This
  *   TU's InitResources, IsUnlocked, IsNew,
  *   ClearNew, GetRecord, SetRecord
  *   call them; GetSaveTable reads the table's save-slot byte
@@ -256,7 +256,7 @@ void func_02013568(int a, int b, int v);
 int  func_02013580(int a, int b);
 void func_02013598(int x);
 int  func_020135d0(int r0);
-int  func_02013638(int n);
+int IsMinigameUnlocked(int n);
 extern "C" void *LoadFile(int id);
 extern "C" void DecompressLZ16(void *src, void *dst);
 
@@ -1174,7 +1174,7 @@ int dScMiniGm_c::IsUnlocked(int n) {
     if (n < 8) {
         return 1;
     }
-    return func_02013638(n - 8);
+    return IsMinigameUnlocked(n - 8);
 }
 
 int dScMiniGm_c::IsNew(int n) {

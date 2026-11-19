@@ -119,7 +119,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daKpFr_c19func_ov070_02121fd0Ev",
+      "symbol": "_ZN8daKpFr_c17CallStateBehaviorEv",
       "address": "0x02121fd0",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov070_02121fd0.cpp",

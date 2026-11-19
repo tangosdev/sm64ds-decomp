@@ -106,7 +106,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN7daKrb_c19func_ov084_021296b0EPv",
+      "symbol": "_ZN7daKrb_c10SetHomePosEPv",
       "address": "0x021296b0",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov084_021296b0.c",

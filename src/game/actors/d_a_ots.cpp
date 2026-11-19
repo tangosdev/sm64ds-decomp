@@ -795,7 +795,7 @@ int daOts_c::func_ov064_0211616c() {
 /* Turns mPrevAngle.y toward the closest player by up to `step` a call. Returns 1
  * once it has reached that angle, else 0 (also 0 when there is no player). The
  * children's UpdateRunState use it to face the player. */
-int daOts_c::func_ov064_02116110(short step){
+int daOts_c::TurnTowardPlayer(short step) {
     dActor_c *p = (dActor_c *)this->ClosestPlayer();
     if(p != 0){
         short ang = Vec3_HorzAngle(&this->mPos, &p->mPos);

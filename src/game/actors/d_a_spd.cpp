@@ -186,7 +186,7 @@ int daSpd_c::InitResources() {
 
 int daSpd_c::Behavior() {
     DecIfAbove0_Short(&mTimer);
-    func_ov071_02120278();
+    RunState();
     MakeVanishLuigiWork(mdCcAc_c);
     if (mWithMeshClsn.GetResultFlag1() &&
         mWithMeshClsn.TouchesWater()) {
@@ -224,17 +224,17 @@ int daSpd_c::CleanupResources() {
 
 void daSpd_c::SetState(int idx) {
     mStateRow = (ScuttlebugStateRow *)data_ov071_02122fa8 + idx;
-    func_ov071_021202b4();
+    CallStateEnter();
 }
 
-void daSpd_c::func_ov071_021202b4() {
+void daSpd_c::CallStateEnter() {
     PMF *p = (PMF *)mStateRow;
     (this->**p)();
 }
 
 /* Call the state's per-frame handler, one slot further into the row. */
 
-void daSpd_c::func_ov071_02120278() {
+void daSpd_c::RunState() {
     PMF *p = (PMF *)mStateRow + 1;
     (this->**p)();
 }

@@ -208,9 +208,9 @@ struct LevelInfo {
     char pad[8];
     u16 modelFile; /* 0x08 -- LoadModel passes it to LoadAndSetFile */
     char pad_0a[2];
-    /* func_0202a980; dMap_c decompresses it into the minimap BG3 characters. */
+    /* GetMinimapTilesFile; dMap_c decompresses it into the minimap BG3 characters. */
     u16 minimapTilesFile; /* 0x0c */
-    /* func_0202a96c; dMap_c loads it as the minimap BG extended palette. */
+    /* GetMinimapPaletteFile; dMap_c loads it as the minimap BG extended palette. */
     u16 minimapPaletteFile; /* 0x0e */
     LevelTexAnim *entries;  /* 0x10 */
     unsigned char count;    /* 0x14 */
@@ -571,8 +571,8 @@ void GiveCoins(int idx, int amount);
 void InitControllerMode(int idx, u8 val);
 int func_0202a8e0(int a, unsigned char b);
 int func_0202a958(void);
-int func_0202a96c(void);
-int func_0202a980(void);
+int GetMinimapPaletteFile(void);
+int GetMinimapTilesFile(void);
 void HideArea(int idx);
 void ShowArea(int idx);
 unsigned char IsAreaShowing(int idx);
@@ -582,13 +582,13 @@ void PrepareVsMode(void);
 int StartWithFarCamera(void);
 unsigned char GetStarCameraSetting(int idx);
 int GetMinimapScale(int idx);
-void func_0202af80(short *table, int count);
+void SetMinimapScaleObjs(short *table, int count);
 int GetMinimapID(dActor_c *actor, int arg);
-void func_0202b044(u16 *table, int count);
-void func_0202b060(char *table, int count);
+void SetMinimapTileObjs(u16 *table, int count);
+void SetFogObjs(char *table, int count);
 struct ObjTeleport *GetTeleportDestObj(int i);
-void func_0202b090(void *table, int count);
-void func_0202b0c4(void *table, int count);
+void SetTeleportDestObjs(void *table, int count);
+void SetViewObjs(void *table, int count);
 void SetTouchScreenDelay(void);
 void ResetInput(void);
 int IsLevelTinyHugeIslandOutside(int level);
@@ -3319,11 +3319,11 @@ int func_0202a958(void) {
     return ((LevelInfo *)data_0209f340)->minimapScale;
 }
 
-int func_0202a96c(void) {
+int GetMinimapPaletteFile(void) {
     return ((LevelInfo *)data_0209f340)->minimapPaletteFile;
 }
 
-int func_0202a980(void) {
+int GetMinimapTilesFile(void) {
     return ((LevelInfo *)data_0209f340)->minimapTilesFile;
 }
 
@@ -3547,7 +3547,7 @@ int GetMinimapScale(int idx) {
    LoadTeleportDestObjects, LoadViewObjects and LoadEntranceObjects.
    InitResources zeroes every count but the entrances' before the level's
    objects load. */
-void func_0202af80(short *table, int count) {
+void SetMinimapScaleObjs(short *table, int count) {
     sMinimapScaleObjs = table;
     sNumMinimapScaleObjs = count;
 }
@@ -3582,12 +3582,12 @@ int GetMinimapID(dActor_c *actor, int arg) {
     return ((LevelInfo *)data_0209f340)->entries[idx].minimapId;
 }
 
-void func_0202b044(u16 *table, int count) {
+void SetMinimapTileObjs(u16 *table, int count) {
     gMinimapTileObjs = table;
     gNumMinimapTileObjs = count;
 }
 
-void func_0202b060(char *table, int count) {
+void SetFogObjs(char *table, int count) {
     sFogObjs = table;
     sNumFogObjs = count;
 }
@@ -3601,7 +3601,7 @@ struct ObjTeleport *GetTeleportDestObj(int i) {
     return (ObjTeleport *)sTeleportDestObjs + i;
 }
 
-void func_0202b090(void *table, int count) {
+void SetTeleportDestObjs(void *table, int count) {
     sTeleportDestObjs = table;
     sNumTeleportDestObjs = count;
 }
@@ -3614,12 +3614,12 @@ struct ViewObj *GetViewObj(int idx) {
     return &((ViewObj *)sViewObjs)[idx];
 }
 
-void func_0202b0c4(void *table, int count) {
+void SetViewObjs(void *table, int count) {
     sViewObjs = table;
     gNumViewObjs = count;
 }
 
-void LVL_Overlay::StandardEntry::func_0202b0e0(int count) {
+void LVL_Overlay::StandardEntry::SetEntranceObjs(int count) {
     sEntranceObjs = this;
     sNumEntranceObjs = count;
 }

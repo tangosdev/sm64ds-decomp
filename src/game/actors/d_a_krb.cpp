@@ -428,7 +428,7 @@ void daKrb_c::func_ov084_021294d0() {
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
  * calls this on each minion it spawns, after the Spawn. */
 
-void daKrb_c::func_ov084_021296b0(void *b) {
+void daKrb_c::SetHomePos(void *b) {
     daKrb_c *goomba = (daKrb_c *)this;
     Vector3 *pos = (Vector3 *)b;
     goomba->mHomePos.x = pos->x;

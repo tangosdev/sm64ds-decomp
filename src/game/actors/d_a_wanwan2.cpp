@@ -10,7 +10,7 @@
  * mHaltTimer and double the chomp's scale, a player it touches gets hurt) and
  * func_ov100_021435e8 keeps the actor it spawned at the chain's last link
  * in step. func_ov100_02143370 is the floor probe. Behavior runs a state
- * through the pointer-to-member pair mStatePair (+0x668): func_ov100_02143b18
+ * through the pointer-to-member pair mStatePair (+0x668): SetState
  * enters a state and calls its first member, Behavior calls the second each
  * frame.
  *
@@ -43,7 +43,7 @@
  * leftovers:
  * - The eight helpers keep their C-ABI cartridge names (their original
  *   method names are not recovered). Five take the chomp as a
- *   daWanwan2_c * and func_ov100_02143b18 takes the ChompPmfSelf stand-in;
+ *   daWanwan2_c * and SetState takes the ChompPmfSelf stand-in;
  *   func_ov100_02143370 and func_ov100_02143b68 stay `char *` because
  *   include/decl_common.h declares them that way and check_decl_agreement
  *   compares the two. func_ov100_02143aa4 and func_ov100_02143ae0 are the
@@ -128,7 +128,7 @@ enum {
 struct ChompPmfSelf;
 typedef int (ChompPmfSelf::*ChompPmf)();
 struct ChompState {
-    ChompPmf enter;     /* func_ov100_02143b18 calls it on entry */
+    ChompPmf enter;     /* SetState calls it on entry */
     ChompPmf execute;   /* Behavior calls it every frame */
 };
 struct ChompPmfSelf {
@@ -481,7 +481,7 @@ int func_ov100_02143ae0(daWanwan2_c *c) {
 /* -------------------------------------------------------------------------- */
 /* Enter a state: store the pair in mStatePair (+0x668) and call its enter
    member, if it has one. */
-int daWanwan2_c::func_ov100_02143b18(ChompState *p) {
+int daWanwan2_c::SetState(ChompState *p) {
     ChompPmfSelf *c = (ChompPmfSelf *)this;
     c->state = p;
     ChompState *q = c->state;
@@ -754,7 +754,7 @@ int daWanwan2_c::InitResources()
     mScale.z = 0x1000;
 
     /* Start in the walking state. */
-    this->func_ov100_02143b18(&data_ov100_021486f4);
+    this->SetState(&data_ov100_021486f4);
     return 1;
 }
 

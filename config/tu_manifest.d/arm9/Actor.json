@@ -571,7 +571,7 @@
       "ordinal": 75
     },
     {
-      "symbol": "_ZN8dActor_c13func_02010da4Ev",
+      "symbol": "_ZN8dActor_c21ClampPosToWorldBoundsEv",
       "address": "0x02010da4",
       "size": "0x00000064",
       "legacy_source": "src/func_02010da4.c",

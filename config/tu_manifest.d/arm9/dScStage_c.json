@@ -516,14 +516,14 @@
       "ordinal": 66
     },
     {
-      "symbol": "_Z13func_0202a96cv",
+      "symbol": "_Z21GetMinimapPaletteFilev",
       "address": "0x0202a96c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0202/func_0202a96c.c",
       "ordinal": 67
     },
     {
-      "symbol": "_Z13func_0202a980v",
+      "symbol": "_Z19GetMinimapTilesFilev",
       "address": "0x0202a980",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0202/func_0202a980.c",
@@ -649,7 +649,7 @@
       "ordinal": 85
     },
     {
-      "symbol": "_Z13func_0202af80Psi",
+      "symbol": "_Z19SetMinimapScaleObjsPsi",
       "address": "0x0202af80",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202af80.c",
@@ -663,14 +663,14 @@
       "ordinal": 87
     },
     {
-      "symbol": "_Z13func_0202b044Pti",
+      "symbol": "_Z18SetMinimapTileObjsPti",
       "address": "0x0202b044",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b044.c",
       "ordinal": 88
     },
     {
-      "symbol": "_Z13func_0202b060Pci",
+      "symbol": "_Z10SetFogObjsPci",
       "address": "0x0202b060",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b060.c",
@@ -684,7 +684,7 @@
       "ordinal": 90
     },
     {
-      "symbol": "_Z13func_0202b090Pvi",
+      "symbol": "_Z19SetTeleportDestObjsPvi",
       "address": "0x0202b090",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b090.c",
@@ -698,14 +698,14 @@
       "ordinal": 92
     },
     {
-      "symbol": "_Z13func_0202b0c4Pvi",
+      "symbol": "_Z11SetViewObjsPvi",
       "address": "0x0202b0c4",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b0c4.c",
       "ordinal": 93
     },
     {
-      "symbol": "_ZN11LVL_Overlay13StandardEntry13func_0202b0e0Ei",
+      "symbol": "_ZN11LVL_Overlay13StandardEntry15SetEntranceObjsEi",
       "address": "0x0202b0e0",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b0e0.c",

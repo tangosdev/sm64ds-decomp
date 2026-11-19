@@ -72,7 +72,7 @@ int daKpFr_c::InitResources()
 
 int daKpFr_c::Behavior()
 {
-    func_ov070_02121fd0();
+    CallStateBehavior();
     func_ov070_02121e14();
     return 1;
 }
@@ -121,7 +121,7 @@ void daKpFr_c::func_ov070_0212200c() {
     (this->**method)();
 }
 
-void daKpFr_c::func_ov070_02121fd0() {
+void daKpFr_c::CallStateBehavior() {
     daKpFrStateMethod *method = &mStateMethods->behavior;
     (this->**method)();
 }

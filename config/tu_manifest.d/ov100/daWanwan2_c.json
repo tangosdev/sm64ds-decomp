@@ -97,7 +97,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN11daWanwan2_c19func_ov100_02143b18EP10ChompState",
+      "symbol": "_ZN11daWanwan2_c8SetStateEP10ChompState",
       "address": "0x02143b18",
       "size": "0x00000050",
       "legacy_source": "src/func_ov100_02143b18.cpp",

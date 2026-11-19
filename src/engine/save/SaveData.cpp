@@ -23,7 +23,7 @@
  * d_a_obj_mario_cap.cpp) clears it with the lost-cap bit. mwccarm emits .text in reverse source order, so the
  * definitions below run ROM-descending; the roster reads ROM-ascending.
  *
- *   func_02013568..func_02013638 -- minigame record tables, seen and unlock bits.
+ *   func_02013568..IsMinigameUnlocked -- minigame record tables, seen and unlock bits.
  *   SetCoinRecordIfHigher..func_02013944 -- coin and star records, cannons,
  *     minigame keys, character intros, the rabbit-count bit.
  *   NumGlowingRabbitsFound -- rabbit bits 20..27 of the flags word.
@@ -340,7 +340,7 @@ void SaveData::SetCoinRecordIfHigher(int courseID, u8 coins) {
  * one). The record tables at block + 0x54, five words each, are what
  * src/minigames/d_s_mg_base.cpp reads and writes. */
 
-int func_02013638(int minigame) {
+int IsMinigameUnlocked(int minigame) {
     return data_0209caa0.mg.unlocked & (1 << minigame);
 }
 

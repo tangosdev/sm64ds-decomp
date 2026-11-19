@@ -345,7 +345,7 @@ void dActor_c::SetRanges(fx32 clipOffsetY, fx32 clipRadius, fx32 clipDistance, f
 }
 
 /* Clamps each axis of mPos to +-32000.0, the edge of the world. */
-void dActor_c::func_02010da4() {
+void dActor_c::ClampPosToWorldBounds() {
     s32 v;
     v = mPos.x;
     if (v < -0x7d00000)
@@ -372,7 +372,7 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
         mPos.x += clsn->pushback.x;
         mPos.z += clsn->pushback.z;
     }
-    func_02010da4();
+    ClampPosToWorldBounds();
 }
 
 /* Splits mHorzSpeed along mPrevAngle.y (the heading the velocity follows) into

@@ -83,7 +83,7 @@ struct daKpFr_c : dActor_c {
     int func_ov070_02121ef8();
     int func_ov070_02121f18();
     int func_ov070_02121fb0();
-    void func_ov070_02121fd0();
+    void CallStateBehavior();
     void func_ov070_0212200c();
     void func_ov070_02122044(int idx);
 };

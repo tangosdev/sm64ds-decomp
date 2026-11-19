@@ -15,9 +15,9 @@
  * makes emission ROM-ascending, so this file is written in ROM order.
  */
 
-// leftovers: func_02034b1c initialises the global graph callback, retaining
-// the raw store to its unmodelled byte at +0x0f; it keeps its placeholder name
-// and its untyped parameters because include/decl_common.h declares it.
+// leftovers: graphCallback_c::Init initialises the global graph callback,
+// retaining the raw store to its unmodelled byte at +0x0f; its untyped
+// parameter is measured (see the note on it below).
 // LoadMultiBootResources stays free (no receiver).
 #include "dScMB_c.h"
 #include "nitro/hw/registers.h"
@@ -112,7 +112,7 @@ dScMB_c::~dScMB_c() {}
 /* The untyped parameter pair is measured, not sloppy: spelling `c` as
    dScMB_c::graphCallback_c * (or `owner` as dScMB_c *, with `this` at the one
    call site) moves this function's bytes. The casts stay. */
-void dScMB_c::graphCallback_c::func_02034b1c(void *owner) {
+void dScMB_c::graphCallback_c::Init(void *owner) {
     dScMB_c::graphCallback_c *callback = (dScMB_c::graphCallback_c *)this;
     callback->mOwner = owner;
     callback->mSpinAngle = 0;
@@ -321,7 +321,7 @@ s32 dScMB_c::InitResources() {
     GX_DispOn();
 
     GXS_DispOn();
-    sMBGraphCallback.func_02034b1c(this);
+    sMBGraphCallback.Init(this);
 
     gGraphCallback = &sMBGraphCallback;
     mStep = 0;

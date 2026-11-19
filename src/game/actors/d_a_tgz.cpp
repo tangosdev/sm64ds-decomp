@@ -70,7 +70,7 @@ struct TgzAnimFile : SharedFilePtr {
 TgzAnimFile gTgzWalkAnimFile(ASSET_TOGEZO_WALK_BCA);
 
 /* One {enter, update} record per state; func_ov077_02125e94 selects one and
- * func_ov077_02125e5c / 02125e20 call through it. State 1's entry returns
+ * func_ov077_02125e5c and CallStateUpdate call through it. State 1's entry returns
  * nothing, so its pointer is cast to the shared record type. */
 typedef int (daTgz_c::*TgzState)();
 
@@ -686,7 +686,7 @@ int daTgz_c::func_ov077_02125dd4() {
     return 1;
 }
 
-void daTgz_c::func_ov077_02125e20() {
+void daTgz_c::CallStateUpdate() {
     TgzState *p = (TgzState *)this->mStateDesc + 1;
     (this->**p)();
 }
@@ -735,7 +735,7 @@ int daTgz_c::Behavior()
         }
     } else {
         this->func_ov077_02124c28();
-        this->func_ov077_02125e20();
+        this->CallStateUpdate();
         MakeVanishLuigiWork(mdCcAc_c);
         this->func_ov077_02125304();
         if (gCurrentSublevel == 0x1c && mPos.y <= -0x1600000) {

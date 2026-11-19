@@ -68,8 +68,8 @@ struct daSpd_c : dActor_c {
     /* State machine. mStateRow points at a {enter, run} pointer-to-member
        pair; the two trampolines call through it. */
     void SetState(int idx);
-    void func_ov071_021202b4();
-    void func_ov071_02120278();
+    void CallStateEnter();
+    void RunState();
     int  func_ov071_02120200();
     int  func_ov071_021201b4();
     int  func_ov071_02120130();

@@ -653,14 +653,14 @@ void dScEntry_c::UpdateSoundSettings() {
                     else
                         newmode = (mode + 1) & 0xff;
                     mIcons[1].mOn = 0;
-                    mIcons[1].func_ov001_020ab3f0();
+                    mIcons[1].Press();
                 } else {
                     if (mode == 0)
                         newmode = 2;
                     else
                         newmode = (mode - 1) & 0xff;
                     mIcons[0].mOn = 0;
-                    mIcons[0].func_ov001_020ab3f0();
+                    mIcons[0].Press();
                 }
                 SetSoundMode(newmode);
                 Message::DisplayOptionsMenuTextVS((GetSoundMode() + 9));
@@ -1380,7 +1380,7 @@ void dScEntry_c::UpdateCourseSelect() {
         action = func_020200b8();
         if (action == 0) {
             int index;
-            mIcons[data_0209b2e4].func_ov001_020ab3f0();
+            mIcons[data_0209b2e4].Press();
             mIcons[data_0209b2e4].mReady = 0;
             index = 0;
             for (; index < 4; index++) {
@@ -1809,7 +1809,7 @@ void dScEntry_c::UpdateRecruit() {
                 return;
         }
     }
-    mIcons[0].func_ov001_020ab3f0();
+    mIcons[0].Press();
     if (playerCount <= 1) {
         ChangeStepsAfterDelay(&data_ov075_0211d8a0, 20);
     } else {

@@ -228,7 +228,7 @@ struct daOts_c : dEnemyBase_c {
     int InitResourcesCommon();
     int BehaviorCommon();
     void func_ov064_02115f98(char* a1);
-    int func_ov064_02116110(short step);
+    int TurnTowardPlayer(short step);
     int func_ov064_0211616c();
     void func_ov064_02116bac();
 

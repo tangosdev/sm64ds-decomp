@@ -810,14 +810,14 @@ s32 dMap_c::Behavior()
 
 /* What InitResources loads the map graphics with. */
 
-int func_0202a980(void);
+int GetMinimapTilesFile(void);
 extern "C" {
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
 
 extern "C" void Deallocate(void *ptr);
-int func_0202a96c(void);
+int GetMinimapPaletteFile(void);
 
 int func_0202a958(void);
 extern "C" {
@@ -841,7 +841,7 @@ int dMap_c::InitResources()
     G2S_BG3Mosaic(0);
 
     {
-        int id1 = func_0202a980();
+        int id1 = GetMinimapTilesFile();
         if (id1 != 0) {
             void *f1 = LoadFile(id1);
             DecompressLZ16(f1, G2S_GetBG3CharPtr());
@@ -850,7 +850,7 @@ int dMap_c::InitResources()
     }
 
     {
-        int id2 = func_0202a96c();
+        int id2 = GetMinimapPaletteFile();
         if (id2 != 0) {
             void *f2 = LoadFile(id2);
             GXS_BeginLoadBGExtPltt();

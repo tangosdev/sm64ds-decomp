@@ -1207,7 +1207,7 @@
     },
     "arm9:0x02010da4": {
       "author": "tangosdev",
-      "name": "_ZN8dActor_c13func_02010da4Ev"
+      "name": "_ZN8dActor_c21ClampPosToWorldBoundsEv"
     },
     "arm9:0x02010e08": {
       "author": "andrewboudreau",
@@ -1675,7 +1675,7 @@
     },
     "arm9:0x02013638": {
       "author": "tangosdev",
-      "name": "_Z13func_02013638i"
+      "name": "_Z18IsMinigameUnlockedi"
     },
     "arm9:0x02013650": {
       "author": "tangosdev",
@@ -4155,11 +4155,11 @@
     },
     "arm9:0x0202a96c": {
       "author": "tangosdev",
-      "name": "_Z13func_0202a96cv"
+      "name": "_Z21GetMinimapPaletteFilev"
     },
     "arm9:0x0202a980": {
       "author": "tangosdev",
-      "name": "_Z13func_0202a980v"
+      "name": "_Z19GetMinimapTilesFilev"
     },
     "arm9:0x0202a994": {
       "author": "tangosdev",
@@ -4231,7 +4231,7 @@
     },
     "arm9:0x0202af80": {
       "author": "tangosdev",
-      "name": "_Z13func_0202af80Psi"
+      "name": "_Z19SetMinimapScaleObjsPsi"
     },
     "arm9:0x0202af9c": {
       "author": "tangosdev",
@@ -4239,11 +4239,11 @@
     },
     "arm9:0x0202b044": {
       "author": "tangosdev",
-      "name": "_Z13func_0202b044Pti"
+      "name": "_Z18SetMinimapTileObjsPti"
     },
     "arm9:0x0202b060": {
       "author": "tangosdev",
-      "name": "_Z13func_0202b060Pci"
+      "name": "_Z10SetFogObjsPci"
     },
     "arm9:0x0202b07c": {
       "author": "tangosdev",
@@ -4251,7 +4251,7 @@
     },
     "arm9:0x0202b090": {
       "author": "tangosdev",
-      "name": "_Z13func_0202b090Pvi"
+      "name": "_Z19SetTeleportDestObjsPvi"
     },
     "arm9:0x0202b0ac": {
       "author": "tangosdev",
@@ -4259,7 +4259,7 @@
     },
     "arm9:0x0202b0c4": {
       "author": "tangosdev",
-      "name": "_Z13func_0202b0c4Pvi"
+      "name": "_Z11SetViewObjsPvi"
     },
     "arm9:0x0202b0e0": {
       "author": "tangosdev",
@@ -36503,7 +36503,7 @@
     },
     "ov064:0x02116110": {
       "author": "tangosdev",
-      "name": "_ZN7daOts_c19func_ov064_02116110Es"
+      "name": "_ZN7daOts_c16TurnTowardPlayerEs"
     },
     "ov064:0x0211616c": {
       "author": "tangosdev",
@@ -38355,7 +38355,7 @@
     },
     "ov070:0x02121fd0": {
       "author": "tangosdev",
-      "name": "_ZN8daKpFr_c19func_ov070_02121fd0Ev"
+      "name": "_ZN8daKpFr_c17CallStateBehaviorEv"
     },
     "ov070:0x0212200c": {
       "author": "tangosdev",
