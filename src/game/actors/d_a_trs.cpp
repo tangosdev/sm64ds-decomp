@@ -2424,7 +2424,7 @@ void daTrs_c::SpawnCourtyardBooTriplet() {
     Vector3_16 rot;
     int i;
 
-    static Vector3 sSpawnOff[3] = {
+    static Vector3 sCourtyardBooTripletPositions[3] = {
         Vector3(0, 0x32000, 0),
         Vector3(0xd2000, 0x6e000, 0xd2000),
         Vector3(-0xd2000, 0x46000, -0xd2000),
@@ -2436,7 +2436,7 @@ void daTrs_c::SpawnCourtyardBooTriplet() {
     }
 
     for (i = 0; i < 3; i++) {
-        Vec3_Add(&spawnPos, &this->mPos, &sSpawnOff[i]);
+        Vec3_Add(&spawnPos, &this->mPos, &sCourtyardBooTripletPositions[i]);
         pos = spawnPos;
         rot.x = this->mPrevAngle.x;
         rot.y = this->mPrevAngle.y;
