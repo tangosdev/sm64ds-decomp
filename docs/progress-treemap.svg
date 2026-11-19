@@ -7333,7 +7333,7 @@ matched: yes</title></rect><rect x="133.35" y="572.90" width="8.20" height="11.4
 module: arm9
 addr: 0x02044dc4
 size: 140 bytes
-matched: yes</title></rect><rect x="141.55" y="572.90" width="10.07" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02044e50P15ModelComponentsiiPi
+matched: yes</title></rect><rect x="141.55" y="572.90" width="10.07" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02044e50P15ModelComponentsiiP9Matrix4x3
 module: arm9
 addr: 0x02044e50
 size: 172 bytes
@@ -7353,7 +7353,7 @@ matched: yes</title></rect><rect x="173.63" y="572.90" width="15.22" height="11.
 module: arm9
 addr: 0x02045074
 size: 260 bytes
-matched: yes</title></rect><rect x="188.86" y="572.90" width="24.59" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02045178Piiiiiii
+matched: yes</title></rect><rect x="188.86" y="572.90" width="24.59" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02045178P9Matrix4x3iiiiii
 module: arm9
 addr: 0x02045178
 size: 420 bytes
