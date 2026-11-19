@@ -6433,18 +6433,18 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e170",
+      "symbol": "gPutonTCapAnimationFile",
       "address": "0x0210e170",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22965 calls Construct(ASSET_PUTON_T_CAP_BCA) = runtime handle 0x0511 = asset path data/player/puton_t_cap.bca"
     },
     {
-      "symbol": "data_ov002_0210e178",
+      "symbol": "gNCarryWaitAnimationFile",
       "address": "0x0210e178",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22926 calls Construct(ASSET_N_CARRY_WAIT_BCA) = runtime handle 0x0509 = asset path data/player/n_carry_wait.bca"
     },
     {
       "symbol": "data_ov002_0210e180",
@@ -6454,18 +6454,18 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e188",
+      "symbol": "gPKoopaThrowAnimationFile",
       "address": "0x0210e188",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22944 calls Construct(ASSET_P_KOOPA_THROW_BCA) = runtime handle 0x0514 = asset path data/player/p_koopa_throw.bca"
     },
     {
-      "symbol": "data_ov002_0210e190",
+      "symbol": "gScaleUpAnimationFile",
       "address": "0x0210e190",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:23001 calls Construct(ASSET_SCALE_UP_BCA) = runtime handle 0x0518 = asset path data/player/scale_up.bca"
     },
     {
       "symbol": "data_ov002_0210e198",
@@ -6496,11 +6496,11 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e1b8",
+      "symbol": "gGasDieAnimationFile",
       "address": "0x0210e1b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22812 calls Construct(ASSET_GAS_DIE_BCA) = runtime handle 0x04db = asset path data/player/gas_die.bca"
     },
     {
       "symbol": "data_ov002_0210e1c0",
@@ -6524,11 +6524,11 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e1d8",
+      "symbol": "gEdFlyStartAnimationFile",
       "address": "0x0210e1d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22758 calls Construct(ASSET_ED_FLY_START_BCA) = runtime handle 0x04cd = asset path data/player/ed_fly_start.bca"
     },
     {
       "symbol": "data_ov002_0210e1e0",
@@ -6552,18 +6552,18 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e1f8",
+      "symbol": "gLieEndAnimationFile",
       "address": "0x0210e1f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22887 calls Construct(ASSET_LIE_END_BCA) = runtime handle 0x04e3 = asset path data/player/lie_end.bca"
     },
     {
-      "symbol": "data_ov002_0210e200",
+      "symbol": "gNCarryWalkAnimationFile",
       "address": "0x0210e200",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22929 calls Construct(ASSET_N_CARRY_WALK_BCA) = runtime handle 0x050a = asset path data/player/n_carry_walk.bca"
     },
     {
       "symbol": "data_ov002_0210e208",
@@ -6580,11 +6580,11 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e218",
+      "symbol": "gSdropHipEndAnimationFile",
       "address": "0x0210e218",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:23019 calls Construct(ASSET_SDROP_HIP_END_BCA) = runtime handle 0x051d = asset path data/player/sdrop_hip_end.bca"
     },
     {
       "symbol": "data_ov002_0210e220",
@@ -6594,11 +6594,11 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e228",
+      "symbol": "gDamageWaitAnimationFile",
       "address": "0x0210e228",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22731 calls Construct(ASSET_DAMAGE_WAIT_BCA) = runtime handle 0x04c6 = asset path data/player/damage_wait.bca"
     },
     {
       "symbol": "data_ov002_0210e230",
@@ -6671,11 +6671,11 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e280",
+      "symbol": "gColdWaitStartAnimationFile",
       "address": "0x0210e280",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22716 calls Construct(ASSET_COLD_WAIT_START_BCA) = runtime handle 0x04c4 = asset path data/player/cold_wait_start.bca"
     },
     {
       "symbol": "data_ov002_0210e288",
@@ -6692,60 +6692,60 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e298",
+      "symbol": "gEDownAnimationFile",
       "address": "0x0210e298",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22743 calls Construct(ASSET_E_DOWN_BCA) = runtime handle 0x04d7 = asset path data/player/e_down.bca"
     },
     {
-      "symbol": "data_ov002_0210e2a0",
+      "symbol": "gEdCapOffAnimationFile",
       "address": "0x0210e2a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22749 calls Construct(ASSET_ED_CAP_OFF_BCA) = runtime handle 0x04ca = asset path data/player/ed_cap_off.bca"
     },
     {
-      "symbol": "data_ov002_0210e2a8",
+      "symbol": "gEdFlyAnimationFile",
       "address": "0x0210e2a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22755 calls Construct(ASSET_ED_FLY_BCA) = runtime handle 0x04cc = asset path data/player/ed_fly.bca"
     },
     {
-      "symbol": "data_ov002_0210e2b0",
+      "symbol": "gEdKissToPoseAnimationFile",
       "address": "0x0210e2b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22761 calls Construct(ASSET_ED_KISS_TO_POSE_BCA) = runtime handle 0x04ce = asset path data/player/ed_kiss_to_pose.bca"
     },
     {
-      "symbol": "data_ov002_0210e2b8",
+      "symbol": "gEdLookLeftAnimationFile",
       "address": "0x0210e2b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22767 calls Construct(ASSET_ED_LOOK_LEFT_BCA) = runtime handle 0x04d0 = asset path data/player/ed_look_left.bca"
     },
     {
-      "symbol": "data_ov002_0210e2c0",
+      "symbol": "gLEdAmazedAnimationFile",
       "address": "0x0210e2c0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22353 calls Construct(ASSET_L_ED_AMAZED_BCA) = runtime handle 0x04e5 = asset path data/player/L_ed_amazed.bca"
     },
     {
-      "symbol": "data_ov002_0210e2c8",
+      "symbol": "gEdPutupWaitAnimationFile",
       "address": "0x0210e2c8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22779 calls Construct(ASSET_ED_PUTUP_WAIT_BCA) = runtime handle 0x04d4 = asset path data/player/ed_putup_wait.bca"
     },
     {
-      "symbol": "data_ov002_0210e2d0",
+      "symbol": "gEdWaveAnimationFile",
       "address": "0x0210e2d0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22785 calls Construct(ASSET_ED_WAVE_BCA) = runtime handle 0x04d6 = asset path data/player/ed_wave.bca"
     },
     {
       "symbol": "data_ov002_0210e2d8",
@@ -6776,18 +6776,18 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e2f8",
+      "symbol": "gHCarryStartAnimationFile",
       "address": "0x0210e2f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22818 calls Construct(ASSET_H_CARRY_START_BCA) = runtime handle 0x04dd = asset path data/player/h_carry_start.bca"
     },
     {
-      "symbol": "data_ov002_0210e300",
+      "symbol": "gHCarryWaitAnimationFile",
       "address": "0x0210e300",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22824 calls Construct(ASSET_H_CARRY_WAIT_BCA) = runtime handle 0x04df = asset path data/player/h_carry_wait.bca"
     },
     {
       "symbol": "data_ov002_0210e308",
@@ -6846,18 +6846,18 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e348",
+      "symbol": "gNCarryStartAnimationFile",
       "address": "0x0210e348",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22923 calls Construct(ASSET_N_CARRY_START_BCA) = runtime handle 0x0508 = asset path data/player/n_carry_start.bca"
     },
     {
-      "symbol": "data_ov002_0210e350",
+      "symbol": "gPaddleCarryAnimationFile",
       "address": "0x0210e350",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22953 calls Construct(ASSET_PADDLE_CARRY_BCA) = runtime handle 0x050f = asset path data/player/paddle_carry.bca"
     },
     {
       "symbol": "data_ov002_0210e358",
@@ -6867,11 +6867,11 @@
       "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
     },
     {
-      "symbol": "data_ov002_0210e360",
+      "symbol": "gReturnNocapAnimationFile",
       "address": "0x0210e360",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor"
+      "evidence": "zero-initialized storage in this TU's .bss claim; no constructor; name coined (repo convention g<Stem><Kind>File, tools/asset_catalog.py suggested_owner_name; not a Nintendo identifier): the __sinit at src/game/player/d_a_ply_methods.cpp:22971 calls Construct(ASSET_RETURN_NOCAP_BCA) = runtime handle 0x0516 = asset path data/player/return_nocap.bca"
     },
     {
       "symbol": "data_ov002_0210e368",
@@ -24579,7 +24579,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2c0",
+      "symbol": "gLEdAmazedAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2c0"
     },
@@ -26999,7 +26999,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e280",
+      "symbol": "gColdWaitStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e280"
     },
@@ -30019,7 +30019,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e228",
+      "symbol": "gDamageWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e228"
     },
@@ -30099,7 +30099,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e298",
+      "symbol": "gEDownAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e298"
     },
@@ -30139,7 +30139,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2a0",
+      "symbol": "gEdCapOffAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2a0"
     },
@@ -30179,7 +30179,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2a8",
+      "symbol": "gEdFlyAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2a8"
     },
@@ -30199,7 +30199,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e1d8",
+      "symbol": "gEdFlyStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e1d8"
     },
@@ -30219,7 +30219,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2b0",
+      "symbol": "gEdKissToPoseAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2b0"
     },
@@ -30259,7 +30259,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2b8",
+      "symbol": "gEdLookLeftAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2b8"
     },
@@ -30339,7 +30339,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2c8",
+      "symbol": "gEdPutupWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2c8"
     },
@@ -30379,7 +30379,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2d0",
+      "symbol": "gEdWaveAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2d0"
     },
@@ -30559,7 +30559,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e1b8",
+      "symbol": "gGasDieAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e1b8"
     },
@@ -30599,7 +30599,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2f8",
+      "symbol": "gHCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2f8"
     },
@@ -30639,7 +30639,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e300",
+      "symbol": "gHCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e300"
     },
@@ -31059,7 +31059,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e1f8",
+      "symbol": "gLieEndAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e1f8"
     },
@@ -31309,7 +31309,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e348",
+      "symbol": "gNCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e348"
     },
@@ -31329,7 +31329,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e178",
+      "symbol": "gNCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e178"
     },
@@ -31349,7 +31349,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e200",
+      "symbol": "gNCarryWalkAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e200"
     },
@@ -31449,7 +31449,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e188",
+      "symbol": "gPKoopaThrowAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e188"
     },
@@ -31509,7 +31509,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e350",
+      "symbol": "gPaddleCarryAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e350"
     },
@@ -31589,7 +31589,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e170",
+      "symbol": "gPutonTCapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e170"
     },
@@ -31629,7 +31629,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e360",
+      "symbol": "gReturnNocapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e360"
     },
@@ -31829,7 +31829,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e190",
+      "symbol": "gScaleUpAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e190"
     },
@@ -31949,7 +31949,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e218",
+      "symbol": "gSdropHipEndAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e218"
     },
@@ -43609,7 +43609,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2b0",
+      "symbol": "gEdKissToPoseAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2b0"
     },
@@ -43619,7 +43619,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2c0",
+      "symbol": "gLEdAmazedAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2c0"
     },
@@ -43649,7 +43649,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e298",
+      "symbol": "gEDownAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e298"
     },
@@ -43659,7 +43659,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e298",
+      "symbol": "gEDownAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e298"
     },
@@ -43669,7 +43669,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e298",
+      "symbol": "gEDownAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e298"
     },
@@ -43679,7 +43679,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e298",
+      "symbol": "gEDownAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e298"
     },
@@ -43809,7 +43809,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e1b8",
+      "symbol": "gGasDieAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e1b8"
     },
@@ -43819,7 +43819,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e1b8",
+      "symbol": "gGasDieAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e1b8"
     },
@@ -43829,7 +43829,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e1b8",
+      "symbol": "gGasDieAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e1b8"
     },
@@ -43839,7 +43839,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e1b8",
+      "symbol": "gGasDieAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e1b8"
     },
@@ -43889,7 +43889,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e1f8",
+      "symbol": "gLieEndAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e1f8"
     },
@@ -44169,7 +44169,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e228",
+      "symbol": "gDamageWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e228"
     },
@@ -44179,7 +44179,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e228",
+      "symbol": "gDamageWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e228"
     },
@@ -44189,7 +44189,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e228",
+      "symbol": "gDamageWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e228"
     },
@@ -44199,7 +44199,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e228",
+      "symbol": "gDamageWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e228"
     },
@@ -48329,7 +48329,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e218",
+      "symbol": "gSdropHipEndAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e218"
     },
@@ -48339,7 +48339,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e218",
+      "symbol": "gSdropHipEndAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e218"
     },
@@ -48349,7 +48349,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e218",
+      "symbol": "gSdropHipEndAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e218"
     },
@@ -48359,7 +48359,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e218",
+      "symbol": "gSdropHipEndAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e218"
     },
@@ -48649,7 +48649,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e188",
+      "symbol": "gPKoopaThrowAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e188"
     },
@@ -48659,7 +48659,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e188",
+      "symbol": "gPKoopaThrowAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e188"
     },
@@ -48669,7 +48669,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e188",
+      "symbol": "gPKoopaThrowAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e188"
     },
@@ -48679,7 +48679,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e188",
+      "symbol": "gPKoopaThrowAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e188"
     },
@@ -48929,7 +48929,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e348",
+      "symbol": "gNCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e348"
     },
@@ -48939,7 +48939,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e348",
+      "symbol": "gNCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e348"
     },
@@ -48949,7 +48949,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e348",
+      "symbol": "gNCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e348"
     },
@@ -48959,7 +48959,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e348",
+      "symbol": "gNCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e348"
     },
@@ -48969,7 +48969,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e178",
+      "symbol": "gNCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e178"
     },
@@ -48979,7 +48979,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e178",
+      "symbol": "gNCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e178"
     },
@@ -48989,7 +48989,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e178",
+      "symbol": "gNCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e178"
     },
@@ -48999,7 +48999,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e178",
+      "symbol": "gNCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e178"
     },
@@ -49009,7 +49009,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e200",
+      "symbol": "gNCarryWalkAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e200"
     },
@@ -49019,7 +49019,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e200",
+      "symbol": "gNCarryWalkAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e200"
     },
@@ -49029,7 +49029,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e200",
+      "symbol": "gNCarryWalkAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e200"
     },
@@ -49039,7 +49039,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e200",
+      "symbol": "gNCarryWalkAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e200"
     },
@@ -49249,7 +49249,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2f8",
+      "symbol": "gHCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2f8"
     },
@@ -49259,7 +49259,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2f8",
+      "symbol": "gHCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2f8"
     },
@@ -49269,7 +49269,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2f8",
+      "symbol": "gHCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2f8"
     },
@@ -49279,7 +49279,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e2f8",
+      "symbol": "gHCarryStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e2f8"
     },
@@ -49329,7 +49329,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e300",
+      "symbol": "gHCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e300"
     },
@@ -49339,7 +49339,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e300",
+      "symbol": "gHCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e300"
     },
@@ -49349,7 +49349,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e300",
+      "symbol": "gHCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e300"
     },
@@ -49359,7 +49359,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e300",
+      "symbol": "gHCarryWaitAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e300"
     },
@@ -49529,7 +49529,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e280",
+      "symbol": "gColdWaitStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e280"
     },
@@ -49539,7 +49539,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e280",
+      "symbol": "gColdWaitStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e280"
     },
@@ -49549,7 +49549,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e280",
+      "symbol": "gColdWaitStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e280"
     },
@@ -49559,7 +49559,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e280",
+      "symbol": "gColdWaitStartAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e280"
     },
@@ -49649,7 +49649,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e170",
+      "symbol": "gPutonTCapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e170"
     },
@@ -49659,7 +49659,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e170",
+      "symbol": "gPutonTCapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e170"
     },
@@ -49669,7 +49669,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e170",
+      "symbol": "gPutonTCapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e170"
     },
@@ -49679,7 +49679,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e170",
+      "symbol": "gPutonTCapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e170"
     },
@@ -49729,7 +49729,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e190",
+      "symbol": "gScaleUpAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e190"
     },
@@ -49739,7 +49739,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e190",
+      "symbol": "gScaleUpAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e190"
     },
@@ -49749,7 +49749,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e190",
+      "symbol": "gScaleUpAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e190"
     },
@@ -49759,7 +49759,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e190",
+      "symbol": "gScaleUpAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e190"
     },
@@ -50169,7 +50169,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e360",
+      "symbol": "gReturnNocapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e360"
     },
@@ -50179,7 +50179,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e360",
+      "symbol": "gReturnNocapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e360"
     },
@@ -50189,7 +50189,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e360",
+      "symbol": "gReturnNocapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e360"
     },
@@ -50199,7 +50199,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e360",
+      "symbol": "gReturnNocapAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e360"
     },
@@ -50609,7 +50609,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e350",
+      "symbol": "gPaddleCarryAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e350"
     },
@@ -50619,7 +50619,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e350",
+      "symbol": "gPaddleCarryAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e350"
     },
@@ -50629,7 +50629,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e350",
+      "symbol": "gPaddleCarryAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e350"
     },
@@ -50639,7 +50639,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "data_ov002_0210e350",
+      "symbol": "gPaddleCarryAnimationFile",
       "target_module": "ov002",
       "target_address": "0x0210e350"
     },

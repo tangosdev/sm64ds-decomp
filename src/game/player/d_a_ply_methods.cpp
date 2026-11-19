@@ -347,7 +347,7 @@ extern SharedFilePtr data_ov002_0210ea80;
 extern SharedFilePtr data_ov002_0210e5e0;
 extern SharedFilePtr data_ov002_0210e5e8;
 extern SharedFilePtr data_ov002_0210ea60;
-extern SharedFilePtr data_ov002_0210e218;
+extern SharedFilePtr gSdropHipEndAnimationFile;
 extern SharedFilePtr data_ov002_0210e5d8;
 extern SharedFilePtr data_ov002_0210ea58;
 extern SharedFilePtr data_ov002_0210ea40;
@@ -355,37 +355,37 @@ extern SharedFilePtr data_ov002_0210ea48;
 extern SharedFilePtr data_ov002_0210e380;
 extern SharedFilePtr data_ov002_0210ea68;
 extern SharedFilePtr data_ov002_0210e388;
-extern SharedFilePtr data_ov002_0210e188;
+extern SharedFilePtr gPKoopaThrowAnimationFile;
 extern SharedFilePtr data_ov002_0210e9b0;
 extern SharedFilePtr data_ov002_0210e598;
 extern SharedFilePtr data_ov002_0210e508;
 extern SharedFilePtr data_ov002_0210ec90;
 extern SharedFilePtr data_ov002_0210e808;
 extern SharedFilePtr data_ov002_0210e5b8;
-extern SharedFilePtr data_ov002_0210e348;
-extern SharedFilePtr data_ov002_0210e178;
-extern SharedFilePtr data_ov002_0210e200;
+extern SharedFilePtr gNCarryStartAnimationFile;
+extern SharedFilePtr gNCarryWaitAnimationFile;
+extern SharedFilePtr gNCarryWalkAnimationFile;
 extern SharedFilePtr data_ov002_0210e588;
 extern SharedFilePtr data_ov002_0210e988;
 extern SharedFilePtr data_ov002_0210e980;
 extern SharedFilePtr data_ov002_0210e4a0;
 extern SharedFilePtr data_ov002_0210e498;
-extern SharedFilePtr data_ov002_0210e2f8;
+extern SharedFilePtr gHCarryStartAnimationFile;
 extern SharedFilePtr data_ov002_0210e8c0;
-extern SharedFilePtr data_ov002_0210e300;
+extern SharedFilePtr gHCarryWaitAnimationFile;
 extern SharedFilePtr data_ov002_0210e8a8;
 extern SharedFilePtr data_ov002_0210ed30;
 extern SharedFilePtr data_ov002_0210e938;
 extern SharedFilePtr data_ov002_0210e568;
 extern SharedFilePtr data_ov002_0210eae0;
-extern SharedFilePtr data_ov002_0210e280;
+extern SharedFilePtr gColdWaitStartAnimationFile;
 extern SharedFilePtr data_ov002_0210e468;
 extern SharedFilePtr data_ov002_0210e470;
-extern SharedFilePtr data_ov002_0210e170;
+extern SharedFilePtr gPutonTCapAnimationFile;
 extern SharedFilePtr data_ov002_0210e890;
 extern SharedFilePtr data_ov002_0210e8d8;
 extern SharedFilePtr data_ov002_0210e520;
-extern SharedFilePtr data_ov002_0210e190;
+extern SharedFilePtr gScaleUpAnimationFile;
 extern SharedFilePtr data_ov002_0210ecf8;
 extern SharedFilePtr data_ov002_0210ed08;
 extern SharedFilePtr data_ov002_0210ecd8;
@@ -396,7 +396,7 @@ extern SharedFilePtr data_ov002_0210ed18;
 extern SharedFilePtr data_ov002_0210ed20;
 extern SharedFilePtr data_ov002_0210ed10;
 extern SharedFilePtr data_ov002_0210ecf0;
-extern SharedFilePtr data_ov002_0210e360;
+extern SharedFilePtr gReturnNocapAnimationFile;
 extern SharedFilePtr data_ov002_0210ecc8;
 extern SharedFilePtr data_ov002_0210ec88;
 extern SharedFilePtr data_ov002_0210ec70;
@@ -407,7 +407,7 @@ extern SharedFilePtr data_ov002_0210ec80;
 extern SharedFilePtr data_ov002_0210eca0;
 extern SharedFilePtr data_ov002_0210ecc0;
 extern SharedFilePtr data_ov002_0210e768;
-extern SharedFilePtr data_ov002_0210e350;
+extern SharedFilePtr gPaddleCarryAnimationFile;
 extern SharedFilePtr data_ov002_0210ec78;
 extern SharedFilePtr data_ov002_0210e590;
 extern SharedFilePtr data_ov002_0210e530;
@@ -427,17 +427,17 @@ extern SharedFilePtr data_ov002_0210e8b0;
 extern SharedFilePtr data_ov002_0210e5b0;
 extern SharedFilePtr data_ov002_0210e618;
 extern SharedFilePtr data_ov002_0210e840;
-extern SharedFilePtr data_ov002_0210e2b0;
-extern SharedFilePtr data_ov002_0210e2c0;
+extern SharedFilePtr gEdKissToPoseAnimationFile;
+extern SharedFilePtr gLEdAmazedAnimationFile;
 extern SharedFilePtr data_ov002_0210e970;
 extern SharedFilePtr data_ov002_0210eb68;
-extern SharedFilePtr data_ov002_0210e298;
+extern SharedFilePtr gEDownAnimationFile;
 extern SharedFilePtr data_ov002_0210e390;
 extern SharedFilePtr data_ov002_0210e378;
 extern SharedFilePtr data_ov002_0210e8a0;
-extern SharedFilePtr data_ov002_0210e1b8;
+extern SharedFilePtr gGasDieAnimationFile;
 extern SharedFilePtr data_ov002_0210e880;
-extern SharedFilePtr data_ov002_0210e1f8;
+extern SharedFilePtr gLieEndAnimationFile;
 extern SharedFilePtr data_ov002_0210e8f0;
 extern SharedFilePtr data_ov002_0210ea08;
 extern SharedFilePtr data_ov002_0210eba0;
@@ -462,7 +462,7 @@ extern SharedFilePtr data_ov002_0210e748;
 extern SharedFilePtr data_ov002_0210eb18;
 extern SharedFilePtr data_ov002_0210ebd0;
 extern SharedFilePtr data_ov002_0210e488;
-extern SharedFilePtr data_ov002_0210e228;
+extern SharedFilePtr gDamageWaitAnimationFile;
 extern SharedFilePtr data_ov002_0210e9f8;
 extern SharedFilePtr data_ov002_0210e810;
 extern SharedFilePtr data_ov002_0210ea38;
@@ -526,186 +526,276 @@ extern SharedFilePtr *const data_ov002_020ff2f0[100] = {
     &data_ov002_0210e478, &data_ov002_0210e9e8, &data_ov002_0210e680, &data_ov002_0210ecb8,
     &data_ov002_0210e500, &data_ov002_0210e9d0, &data_ov002_0210eba8, &data_ov002_0210e438};
 extern void *const data_ov002_020ff790[540] = {
-    (void *)&data_ov002_0210e798, (void *)&data_ov002_0210e798, (void *)&data_ov002_0210e4f0,
-    (void *)&data_ov002_0210e798, (void *)&data_ov002_0210e248, (void *)&data_ov002_0210e248,
-    (void *)&data_ov002_0210e248, (void *)&data_ov002_0210e248, (void *)&data_ov002_0210e238,
-    (void *)&data_ov002_0210e238, (void *)&data_ov002_0210e510, (void *)&data_ov002_0210e238,
-    (void *)&data_ov002_0210ea00, (void *)&data_ov002_0210ea00, (void *)&data_ov002_0210ea00,
-    (void *)&data_ov002_0210ea00, (void *)&data_ov002_0210e368, (void *)&data_ov002_0210e368,
-    (void *)&data_ov002_0210e368, (void *)&data_ov002_0210e368, (void *)&data_ov002_0210e268,
-    (void *)&data_ov002_0210e268, (void *)&data_ov002_0210e268, (void *)&data_ov002_0210e268,
-    (void *)&data_ov002_0210e440, (void *)&data_ov002_0210e440, (void *)&data_ov002_0210e440,
-    (void *)&data_ov002_0210e440, (void *)&data_ov002_0210e740, (void *)&data_ov002_0210e740,
-    (void *)&data_ov002_0210e740, (void *)&data_ov002_0210e740, (void *)&data_ov002_0210ec48,
-    (void *)&data_ov002_0210ec48, (void *)&data_ov002_0210ec48, (void *)&data_ov002_0210ec48,
-    (void *)&data_ov002_0210e420, (void *)&data_ov002_0210e420, (void *)&data_ov002_0210e420,
-    (void *)&data_ov002_0210e420, (void *)&data_ov002_0210e330, (void *)&data_ov002_0210e330,
-    (void *)&data_ov002_0210e330, (void *)&data_ov002_0210e330, (void *)&data_ov002_0210e328,
-    (void *)&data_ov002_0210e328, (void *)&data_ov002_0210e328, (void *)&data_ov002_0210e328,
-    (void *)&data_ov002_0210e1a0, (void *)&data_ov002_0210e1a0, (void *)&data_ov002_0210e1a0,
-    (void *)&data_ov002_0210e1a0, (void *)&data_ov002_0210e960, (void *)&data_ov002_0210e960,
-    (void *)&data_ov002_0210e960, (void *)&data_ov002_0210e960, (void *)&data_ov002_0210ea28,
-    (void *)&data_ov002_0210e4b0, (void *)&data_ov002_0210e668, (void *)&data_ov002_0210e3f8,
-    (void *)&data_ov002_0210ea90, (void *)&data_ov002_0210ea90, (void *)&data_ov002_0210ea90,
-    (void *)&data_ov002_0210ea90, (void *)&data_ov002_0210e168, (void *)&data_ov002_0210e168,
-    (void *)&data_ov002_0210e168, (void *)&data_ov002_0210e168, (void *)&data_ov002_0210e180,
-    (void *)&data_ov002_0210e180, (void *)&data_ov002_0210e180, (void *)&data_ov002_0210e180,
-    (void *)&data_ov002_0210e3b8, (void *)&data_ov002_0210e3b8, (void *)&data_ov002_0210e3b8,
-    (void *)&data_ov002_0210e3b8, (void *)&data_ov002_0210e1b0, (void *)&data_ov002_0210e1b0,
-    (void *)&data_ov002_0210e1b0, (void *)&data_ov002_0210e1b0, (void *)&data_ov002_0210ec18,
-    (void *)&data_ov002_0210ec18, (void *)&data_ov002_0210ec18, (void *)&data_ov002_0210ec18,
-    (void *)&data_ov002_0210ec58, (void *)&data_ov002_0210ec58, (void *)&data_ov002_0210ec58,
-    (void *)&data_ov002_0210ec58, (void *)&data_ov002_0210ed00, (void *)&data_ov002_0210eaa0,
-    (void *)&data_ov002_0210eb28, (void *)&data_ov002_0210ec30, (void *)&data_ov002_0210ec28,
-    (void *)&data_ov002_0210ea50, (void *)&data_ov002_0210e638, (void *)&data_ov002_0210e418,
-    (void *)&data_ov002_0210e1f0, (void *)&data_ov002_0210e1f0, (void *)&data_ov002_0210e1f0,
-    (void *)&data_ov002_0210e1f0, (void *)&data_ov002_0210e928, (void *)&data_ov002_0210e928,
-    (void *)&data_ov002_0210e928, (void *)&data_ov002_0210e928, (void *)&data_ov002_0210ea18,
-    (void *)&data_ov002_0210ea18, (void *)&data_ov002_0210ea18, (void *)&data_ov002_0210ea18,
-    (void *)&data_ov002_0210e210, (void *)&data_ov002_0210e210, (void *)&data_ov002_0210e210,
-    (void *)&data_ov002_0210e210, (void *)&data_ov002_0210ec68, (void *)&data_ov002_0210ec68,
-    (void *)&data_ov002_0210ec68, (void *)&data_ov002_0210ec68, (void *)&data_ov002_0210e4d8,
-    (void *)&data_ov002_0210e4d8, (void *)&data_ov002_0210e4d8, (void *)&data_ov002_0210e4d8,
-    (void *)&data_ov002_0210e490, (void *)&data_ov002_0210e490, (void *)&data_ov002_0210e490,
-    (void *)&data_ov002_0210e490, (void *)&data_ov002_0210e838, (void *)&data_ov002_0210e838,
-    (void *)&data_ov002_0210e838, (void *)&data_ov002_0210e838, (void *)&data_ov002_0210e848,
-    (void *)&data_ov002_0210e848, (void *)&data_ov002_0210e848, (void *)&data_ov002_0210e848,
-    (void *)&data_ov002_0210e560, (void *)&data_ov002_0210e560, (void *)&data_ov002_0210e560,
-    (void *)&data_ov002_0210e560, (void *)&data_ov002_0210e338, (void *)&data_ov002_0210e338,
-    (void *)&data_ov002_0210e338, (void *)&data_ov002_0210e338, (void *)&data_ov002_0210e340,
-    (void *)&data_ov002_0210e340, (void *)&data_ov002_0210e340, (void *)&data_ov002_0210e340,
-    (void *)&data_ov002_0210e940, (void *)&data_ov002_0210e940, (void *)&data_ov002_0210e940,
-    (void *)&data_ov002_0210e940, (void *)&data_ov002_0210e370, (void *)&data_ov002_0210e370,
-    (void *)&data_ov002_0210e370, (void *)&data_ov002_0210e370, (void *)&data_ov002_0210e978,
-    (void *)&data_ov002_0210e978, (void *)&data_ov002_0210e978, (void *)&data_ov002_0210e978,
-    (void *)&data_ov002_0210e580, (void *)&data_ov002_0210e580, (void *)&data_ov002_0210e580,
-    (void *)&data_ov002_0210e580, (void *)&data_ov002_0210e968, (void *)&data_ov002_0210e968,
-    (void *)&data_ov002_0210e968, (void *)&data_ov002_0210e968, (void *)&data_ov002_0210e578,
-    (void *)&data_ov002_0210e578, (void *)&data_ov002_0210e578, (void *)&data_ov002_0210e578,
-    (void *)&data_ov002_0210e208, (void *)&data_ov002_0210e208, (void *)&data_ov002_0210e208,
-    (void *)&data_ov002_0210e208, (void *)&data_ov002_0210e7f8, (void *)&data_ov002_0210e7f8,
-    (void *)&data_ov002_0210e7f8, (void *)&data_ov002_0210e7f8, (void *)&data_ov002_0210e4a8,
-    (void *)&data_ov002_0210e4a8, (void *)&data_ov002_0210e4a8, (void *)&data_ov002_0210e4a8,
-    (void *)&data_ov002_0210e7e0, (void *)&data_ov002_0210e7e0, (void *)&data_ov002_0210e7e0,
-    (void *)&data_ov002_0210e7e0, (void *)&data_ov002_0210ed58, (void *)&data_ov002_0210ed58,
-    (void *)&data_ov002_0210ed58, (void *)&data_ov002_0210ed58, (void *)&data_ov002_0210ed60,
-    (void *)&data_ov002_0210ed60, (void *)&data_ov002_0210ed60, (void *)&data_ov002_0210ed60,
-    (void *)&data_ov002_0210e1c0, (void *)&data_ov002_0210e1c0, (void *)&data_ov002_0210e1c0,
-    (void *)&data_ov002_0210e1c0, (void *)&data_ov002_0210e290, (void *)&data_ov002_0210e290,
-    (void *)&data_ov002_0210e290, (void *)&data_ov002_0210e290, (void *)&data_ov002_0210e7d0,
-    (void *)&data_ov002_0210e7d0, (void *)&data_ov002_0210e7d0, (void *)&data_ov002_0210e7d0,
-    (void *)&data_ov002_0210e480, (void *)&data_ov002_0210e480, (void *)&data_ov002_0210e480,
-    (void *)&data_ov002_0210e480, (void *)&data_ov002_0210e9d8, (void *)&data_ov002_0210e9d8,
-    (void *)&data_ov002_0210e9d8, (void *)&data_ov002_0210e9d8, (void *)&data_ov002_0210e220,
-    (void *)&data_ov002_0210e220, (void *)&data_ov002_0210e220, (void *)&data_ov002_0210e220,
-    (void *)&data_ov002_0210e610, (void *)&data_ov002_0210e610, (void *)&data_ov002_0210e610,
-    (void *)&data_ov002_0210e610, (void *)&data_ov002_0210e5c8, (void *)&data_ov002_0210e5c8,
-    (void *)&data_ov002_0210e5c8, (void *)&data_ov002_0210e5c8, (void *)&data_ov002_0210e198,
-    (void *)&data_ov002_0210e198, (void *)&data_ov002_0210e198, (void *)&data_ov002_0210e198,
-    (void *)&data_ov002_0210ea78, (void *)&data_ov002_0210ea78, (void *)&data_ov002_0210ea78,
-    (void *)&data_ov002_0210ea78, (void *)&data_ov002_0210e358, (void *)&data_ov002_0210e358,
-    (void *)&data_ov002_0210e358, (void *)&data_ov002_0210e358, (void *)&data_ov002_0210e688,
-    (void *)&data_ov002_0210e688, (void *)&data_ov002_0210eac0, (void *)&data_ov002_0210e688,
-    (void *)&data_ov002_0210e630, (void *)&data_ov002_0210e630, (void *)&data_ov002_0210ead0,
-    (void *)&data_ov002_0210e630, (void *)&data_ov002_0210eb40, (void *)&data_ov002_0210eb40,
-    (void *)&data_ov002_0210e9f0, (void *)&data_ov002_0210eb40, (void *)&data_ov002_0210e930,
-    (void *)&data_ov002_0210e930, (void *)&data_ov002_0210eab8, (void *)&data_ov002_0210e930,
-    (void *)&data_ov002_0210e6c8, (void *)&data_ov002_0210e6c8, (void *)&data_ov002_0210e6c8,
-    (void *)&data_ov002_0210e6c8, (void *)&data_ov002_0210ed28, (void *)&data_ov002_0210ed28,
-    (void *)&data_ov002_0210ed28, (void *)&data_ov002_0210ed28, (void *)&data_ov002_0210e398,
-    (void *)&data_ov002_0210e398, (void *)&data_ov002_0210e398, (void *)&data_ov002_0210e398,
-    (void *)&data_ov002_0210ea80, (void *)&data_ov002_0210ea80, (void *)&data_ov002_0210ea80,
-    (void *)&data_ov002_0210ea80, (void *)&data_ov002_0210e5e0, (void *)&data_ov002_0210e5e0,
-    (void *)&data_ov002_0210e5e0, (void *)&data_ov002_0210e5e0, (void *)&data_ov002_0210e5e8,
-    (void *)&data_ov002_0210e5e8, (void *)&data_ov002_0210e5e8, (void *)&data_ov002_0210e5e8,
-    (void *)&data_ov002_0210ea60, (void *)&data_ov002_0210ea60, (void *)&data_ov002_0210ea60,
-    (void *)&data_ov002_0210ea60, (void *)&data_ov002_0210e218, (void *)&data_ov002_0210e218,
-    (void *)&data_ov002_0210e218, (void *)&data_ov002_0210e218, (void *)&data_ov002_0210e5d8,
-    (void *)&data_ov002_0210e5d8, (void *)&data_ov002_0210e5d8, (void *)&data_ov002_0210e5d8,
-    (void *)&data_ov002_0210ea58, (void *)&data_ov002_0210ea58, (void *)&data_ov002_0210ea58,
-    (void *)&data_ov002_0210ea58, (void *)&data_ov002_0210ea40, (void *)&data_ov002_0210ea40,
-    (void *)&data_ov002_0210ea40, (void *)&data_ov002_0210ea40, (void *)&data_ov002_0210ea48,
-    (void *)&data_ov002_0210ea48, (void *)&data_ov002_0210ea48, (void *)&data_ov002_0210ea48,
-    (void *)&data_ov002_0210e380, (void *)&data_ov002_0210e380, (void *)&data_ov002_0210e380,
-    (void *)&data_ov002_0210e380, (void *)&data_ov002_0210ea68, (void *)&data_ov002_0210ea68,
-    (void *)&data_ov002_0210ea68, (void *)&data_ov002_0210ea68, (void *)&data_ov002_0210e388,
-    (void *)&data_ov002_0210e388, (void *)&data_ov002_0210e388, (void *)&data_ov002_0210e388,
-    (void *)&data_ov002_0210e188, (void *)&data_ov002_0210e188, (void *)&data_ov002_0210e188,
-    (void *)&data_ov002_0210e188, (void *)&data_ov002_0210e9b0, (void *)&data_ov002_0210e9b0,
-    (void *)&data_ov002_0210e9b0, (void *)&data_ov002_0210e9b0, (void *)&data_ov002_0210e598,
-    (void *)&data_ov002_0210e598, (void *)&data_ov002_0210e598, (void *)&data_ov002_0210e598,
-    (void *)&data_ov002_0210e508, (void *)&data_ov002_0210e508, (void *)&data_ov002_0210e508,
-    (void *)&data_ov002_0210e508, (void *)&data_ov002_0210ec90, (void *)&data_ov002_0210ec90,
-    (void *)&data_ov002_0210ec90, (void *)&data_ov002_0210ec90, (void *)&data_ov002_0210e808,
-    (void *)&data_ov002_0210e808, (void *)&data_ov002_0210e808, (void *)&data_ov002_0210e808,
-    (void *)&data_ov002_0210e5b8, (void *)&data_ov002_0210e5b8, (void *)&data_ov002_0210e5b8,
-    (void *)&data_ov002_0210e5b8, (void *)&data_ov002_0210e348, (void *)&data_ov002_0210e348,
-    (void *)&data_ov002_0210e348, (void *)&data_ov002_0210e348, (void *)&data_ov002_0210e178,
-    (void *)&data_ov002_0210e178, (void *)&data_ov002_0210e178, (void *)&data_ov002_0210e178,
-    (void *)&data_ov002_0210e200, (void *)&data_ov002_0210e200, (void *)&data_ov002_0210e200,
-    (void *)&data_ov002_0210e200, (void *)&data_ov002_0210e588, (void *)&data_ov002_0210e588,
-    (void *)&data_ov002_0210e588, (void *)&data_ov002_0210e588, (void *)&data_ov002_0210e988,
-    (void *)&data_ov002_0210e988, (void *)&data_ov002_0210e988, (void *)&data_ov002_0210e988,
-    (void *)&data_ov002_0210e980, (void *)&data_ov002_0210e980, (void *)&data_ov002_0210e980,
-    (void *)&data_ov002_0210e980, (void *)&data_ov002_0210e4a0, (void *)&data_ov002_0210e4a0,
-    (void *)&data_ov002_0210e4a0, (void *)&data_ov002_0210e4a0, (void *)&data_ov002_0210e498,
-    (void *)&data_ov002_0210e498, (void *)&data_ov002_0210e498, (void *)&data_ov002_0210e498,
-    (void *)&data_ov002_0210e2f8, (void *)&data_ov002_0210e2f8, (void *)&data_ov002_0210e2f8,
-    (void *)&data_ov002_0210e2f8, (void *)&data_ov002_0210e8c0, (void *)&data_ov002_0210e8c0,
-    (void *)&data_ov002_0210e8c0, (void *)&data_ov002_0210e8c0, (void *)&data_ov002_0210e300,
-    (void *)&data_ov002_0210e300, (void *)&data_ov002_0210e300, (void *)&data_ov002_0210e300,
-    (void *)&data_ov002_0210e8a8, (void *)&data_ov002_0210e8a8, (void *)&data_ov002_0210e8a8,
-    (void *)&data_ov002_0210e8a8, (void *)&data_ov002_0210ed30, (void *)&data_ov002_0210ed30,
-    (void *)&data_ov002_0210ed30, (void *)&data_ov002_0210ed30, (void *)&data_ov002_0210e938,
-    (void *)&data_ov002_0210e938, (void *)&data_ov002_0210e938, (void *)&data_ov002_0210e938,
-    (void *)&data_ov002_0210e568, (void *)&data_ov002_0210e568, (void *)&data_ov002_0210e568,
-    (void *)&data_ov002_0210eae0, (void *)&data_ov002_0210e280, (void *)&data_ov002_0210e280,
-    (void *)&data_ov002_0210e280, (void *)&data_ov002_0210e280, (void *)&data_ov002_0210e468,
-    (void *)&data_ov002_0210e468, (void *)&data_ov002_0210e468, (void *)&data_ov002_0210e468,
-    (void *)&data_ov002_0210e470, (void *)&data_ov002_0210e470, (void *)&data_ov002_0210e470,
-    (void *)&data_ov002_0210e470, (void *)&data_ov002_0210e170, (void *)&data_ov002_0210e170,
-    (void *)&data_ov002_0210e170, (void *)&data_ov002_0210e170, (void *)&data_ov002_0210e890,
-    (void *)&data_ov002_0210e8d8, (void *)&data_ov002_0210e520, (void *)&data_ov002_0210e890,
-    (void *)&data_ov002_0210e190, (void *)&data_ov002_0210e190, (void *)&data_ov002_0210e190,
-    (void *)&data_ov002_0210e190, (void *)&data_ov002_0210ecf8, (void *)&data_ov002_0210ecf8,
-    (void *)&data_ov002_0210ecf8, (void *)&data_ov002_0210ecf8, (void *)&data_ov002_0210ed08,
-    (void *)&data_ov002_0210ed08, (void *)&data_ov002_0210ed08, (void *)&data_ov002_0210ed08,
-    (void *)&data_ov002_0210ecd8, (void *)&data_ov002_0210ecd8, (void *)&data_ov002_0210ecd8,
-    (void *)&data_ov002_0210ecd8, (void *)&data_ov002_0210ece0, (void *)&data_ov002_0210ece0,
-    (void *)&data_ov002_0210ece0, (void *)&data_ov002_0210ece0, (void *)&data_ov002_0210ecd0,
-    (void *)&data_ov002_0210ecd0, (void *)&data_ov002_0210ecd0, (void *)&data_ov002_0210ecd0,
-    (void *)&data_ov002_0210ece8, (void *)&data_ov002_0210ece8, (void *)&data_ov002_0210ece8,
-    (void *)&data_ov002_0210ece8, (void *)&data_ov002_0210ed18, (void *)&data_ov002_0210ed18,
-    (void *)&data_ov002_0210ed18, (void *)&data_ov002_0210ed18, (void *)&data_ov002_0210ed20,
-    (void *)&data_ov002_0210ed20, (void *)&data_ov002_0210ed20, (void *)&data_ov002_0210ed20,
-    (void *)&data_ov002_0210ed10, (void *)&data_ov002_0210ed10, (void *)&data_ov002_0210ed10,
-    (void *)&data_ov002_0210ed10, (void *)&data_ov002_0210ecf0, (void *)&data_ov002_0210ecf0,
-    (void *)&data_ov002_0210ecf0, (void *)&data_ov002_0210ecf0, (void *)&data_ov002_0210e360,
-    (void *)&data_ov002_0210e360, (void *)&data_ov002_0210e360, (void *)&data_ov002_0210e360,
-    (void *)&data_ov002_0210ecc8, (void *)&data_ov002_0210ecc8, (void *)&data_ov002_0210ecc8,
-    (void *)&data_ov002_0210ecc8, (void *)&data_ov002_0210ec88, (void *)&data_ov002_0210ec88,
-    (void *)&data_ov002_0210ec88, (void *)&data_ov002_0210ec88, (void *)&data_ov002_0210ec70,
-    (void *)&data_ov002_0210ec70, (void *)&data_ov002_0210ec70, (void *)&data_ov002_0210ec70,
-    (void *)&data_ov002_0210e5a0, (void *)&data_ov002_0210e5a0, (void *)&data_ov002_0210e5a0,
-    (void *)&data_ov002_0210e5a0, (void *)&data_ov002_0210e9c8, (void *)&data_ov002_0210e9c8,
-    (void *)&data_ov002_0210e9c8, (void *)&data_ov002_0210e9c8, (void *)&data_ov002_0210e5a8,
-    (void *)&data_ov002_0210e5a8, (void *)&data_ov002_0210e5a8, (void *)&data_ov002_0210e5a8,
-    (void *)&data_ov002_0210ec80, (void *)&data_ov002_0210ec80, (void *)&data_ov002_0210ec80,
-    (void *)&data_ov002_0210ec80, (void *)&data_ov002_0210eca0, (void *)&data_ov002_0210eca0,
-    (void *)&data_ov002_0210eca0, (void *)&data_ov002_0210eca0, (void *)&data_ov002_0210ecc0,
-    (void *)&data_ov002_0210ecc0, (void *)&data_ov002_0210ecc0, (void *)&data_ov002_0210ecc0,
-    (void *)&data_ov002_0210e768, (void *)&data_ov002_0210e768, (void *)&data_ov002_0210e768,
-    (void *)&data_ov002_0210e768, (void *)&data_ov002_0210e350, (void *)&data_ov002_0210e350,
-    (void *)&data_ov002_0210e350, (void *)&data_ov002_0210e350, (void *)&data_ov002_0210ec78,
-    (void *)&data_ov002_0210ec78, (void *)&data_ov002_0210ec78, (void *)&data_ov002_0210ec78,
-    (void *)&data_ov002_0210e590, (void *)&data_ov002_0210e530, (void *)&data_ov002_0210e9b8,
-    (void *)&data_ov002_0210ebb0, (void *)&data_ov002_0210e9a8, (void *)&data_ov002_0210e9a8,
-    (void *)&data_ov002_0210e9a8, (void *)&data_ov002_0210e3f0, (void *)&data_ov002_0210e6d8,
-    (void *)&data_ov002_0210e528, (void *)&data_ov002_0210eb08, (void *)&data_ov002_0210e6d8,
-    (void *)&data_ov002_0210ebc0, (void *)&data_ov002_0210e548, (void *)&data_ov002_0210eaf8,
-    (void *)&data_ov002_0210ebc0, (void *)&data_ov002_0210ecb0, (void *)&data_ov002_0210ecb0,
-    (void *)&data_ov002_0210ecb0, (void *)&data_ov002_0210ecb0, (void *)&data_ov002_0210e948,
-    (void *)&data_ov002_0210e8b0, (void *)&data_ov002_0210e5b0, (void *)&data_ov002_0210e618};
+    (void *)&data_ov002_0210e798,         (void *)&data_ov002_0210e798,
+    (void *)&data_ov002_0210e4f0,         (void *)&data_ov002_0210e798,
+    (void *)&data_ov002_0210e248,         (void *)&data_ov002_0210e248,
+    (void *)&data_ov002_0210e248,         (void *)&data_ov002_0210e248,
+    (void *)&data_ov002_0210e238,         (void *)&data_ov002_0210e238,
+    (void *)&data_ov002_0210e510,         (void *)&data_ov002_0210e238,
+    (void *)&data_ov002_0210ea00,         (void *)&data_ov002_0210ea00,
+    (void *)&data_ov002_0210ea00,         (void *)&data_ov002_0210ea00,
+    (void *)&data_ov002_0210e368,         (void *)&data_ov002_0210e368,
+    (void *)&data_ov002_0210e368,         (void *)&data_ov002_0210e368,
+    (void *)&data_ov002_0210e268,         (void *)&data_ov002_0210e268,
+    (void *)&data_ov002_0210e268,         (void *)&data_ov002_0210e268,
+    (void *)&data_ov002_0210e440,         (void *)&data_ov002_0210e440,
+    (void *)&data_ov002_0210e440,         (void *)&data_ov002_0210e440,
+    (void *)&data_ov002_0210e740,         (void *)&data_ov002_0210e740,
+    (void *)&data_ov002_0210e740,         (void *)&data_ov002_0210e740,
+    (void *)&data_ov002_0210ec48,         (void *)&data_ov002_0210ec48,
+    (void *)&data_ov002_0210ec48,         (void *)&data_ov002_0210ec48,
+    (void *)&data_ov002_0210e420,         (void *)&data_ov002_0210e420,
+    (void *)&data_ov002_0210e420,         (void *)&data_ov002_0210e420,
+    (void *)&data_ov002_0210e330,         (void *)&data_ov002_0210e330,
+    (void *)&data_ov002_0210e330,         (void *)&data_ov002_0210e330,
+    (void *)&data_ov002_0210e328,         (void *)&data_ov002_0210e328,
+    (void *)&data_ov002_0210e328,         (void *)&data_ov002_0210e328,
+    (void *)&data_ov002_0210e1a0,         (void *)&data_ov002_0210e1a0,
+    (void *)&data_ov002_0210e1a0,         (void *)&data_ov002_0210e1a0,
+    (void *)&data_ov002_0210e960,         (void *)&data_ov002_0210e960,
+    (void *)&data_ov002_0210e960,         (void *)&data_ov002_0210e960,
+    (void *)&data_ov002_0210ea28,         (void *)&data_ov002_0210e4b0,
+    (void *)&data_ov002_0210e668,         (void *)&data_ov002_0210e3f8,
+    (void *)&data_ov002_0210ea90,         (void *)&data_ov002_0210ea90,
+    (void *)&data_ov002_0210ea90,         (void *)&data_ov002_0210ea90,
+    (void *)&data_ov002_0210e168,         (void *)&data_ov002_0210e168,
+    (void *)&data_ov002_0210e168,         (void *)&data_ov002_0210e168,
+    (void *)&data_ov002_0210e180,         (void *)&data_ov002_0210e180,
+    (void *)&data_ov002_0210e180,         (void *)&data_ov002_0210e180,
+    (void *)&data_ov002_0210e3b8,         (void *)&data_ov002_0210e3b8,
+    (void *)&data_ov002_0210e3b8,         (void *)&data_ov002_0210e3b8,
+    (void *)&data_ov002_0210e1b0,         (void *)&data_ov002_0210e1b0,
+    (void *)&data_ov002_0210e1b0,         (void *)&data_ov002_0210e1b0,
+    (void *)&data_ov002_0210ec18,         (void *)&data_ov002_0210ec18,
+    (void *)&data_ov002_0210ec18,         (void *)&data_ov002_0210ec18,
+    (void *)&data_ov002_0210ec58,         (void *)&data_ov002_0210ec58,
+    (void *)&data_ov002_0210ec58,         (void *)&data_ov002_0210ec58,
+    (void *)&data_ov002_0210ed00,         (void *)&data_ov002_0210eaa0,
+    (void *)&data_ov002_0210eb28,         (void *)&data_ov002_0210ec30,
+    (void *)&data_ov002_0210ec28,         (void *)&data_ov002_0210ea50,
+    (void *)&data_ov002_0210e638,         (void *)&data_ov002_0210e418,
+    (void *)&data_ov002_0210e1f0,         (void *)&data_ov002_0210e1f0,
+    (void *)&data_ov002_0210e1f0,         (void *)&data_ov002_0210e1f0,
+    (void *)&data_ov002_0210e928,         (void *)&data_ov002_0210e928,
+    (void *)&data_ov002_0210e928,         (void *)&data_ov002_0210e928,
+    (void *)&data_ov002_0210ea18,         (void *)&data_ov002_0210ea18,
+    (void *)&data_ov002_0210ea18,         (void *)&data_ov002_0210ea18,
+    (void *)&data_ov002_0210e210,         (void *)&data_ov002_0210e210,
+    (void *)&data_ov002_0210e210,         (void *)&data_ov002_0210e210,
+    (void *)&data_ov002_0210ec68,         (void *)&data_ov002_0210ec68,
+    (void *)&data_ov002_0210ec68,         (void *)&data_ov002_0210ec68,
+    (void *)&data_ov002_0210e4d8,         (void *)&data_ov002_0210e4d8,
+    (void *)&data_ov002_0210e4d8,         (void *)&data_ov002_0210e4d8,
+    (void *)&data_ov002_0210e490,         (void *)&data_ov002_0210e490,
+    (void *)&data_ov002_0210e490,         (void *)&data_ov002_0210e490,
+    (void *)&data_ov002_0210e838,         (void *)&data_ov002_0210e838,
+    (void *)&data_ov002_0210e838,         (void *)&data_ov002_0210e838,
+    (void *)&data_ov002_0210e848,         (void *)&data_ov002_0210e848,
+    (void *)&data_ov002_0210e848,         (void *)&data_ov002_0210e848,
+    (void *)&data_ov002_0210e560,         (void *)&data_ov002_0210e560,
+    (void *)&data_ov002_0210e560,         (void *)&data_ov002_0210e560,
+    (void *)&data_ov002_0210e338,         (void *)&data_ov002_0210e338,
+    (void *)&data_ov002_0210e338,         (void *)&data_ov002_0210e338,
+    (void *)&data_ov002_0210e340,         (void *)&data_ov002_0210e340,
+    (void *)&data_ov002_0210e340,         (void *)&data_ov002_0210e340,
+    (void *)&data_ov002_0210e940,         (void *)&data_ov002_0210e940,
+    (void *)&data_ov002_0210e940,         (void *)&data_ov002_0210e940,
+    (void *)&data_ov002_0210e370,         (void *)&data_ov002_0210e370,
+    (void *)&data_ov002_0210e370,         (void *)&data_ov002_0210e370,
+    (void *)&data_ov002_0210e978,         (void *)&data_ov002_0210e978,
+    (void *)&data_ov002_0210e978,         (void *)&data_ov002_0210e978,
+    (void *)&data_ov002_0210e580,         (void *)&data_ov002_0210e580,
+    (void *)&data_ov002_0210e580,         (void *)&data_ov002_0210e580,
+    (void *)&data_ov002_0210e968,         (void *)&data_ov002_0210e968,
+    (void *)&data_ov002_0210e968,         (void *)&data_ov002_0210e968,
+    (void *)&data_ov002_0210e578,         (void *)&data_ov002_0210e578,
+    (void *)&data_ov002_0210e578,         (void *)&data_ov002_0210e578,
+    (void *)&data_ov002_0210e208,         (void *)&data_ov002_0210e208,
+    (void *)&data_ov002_0210e208,         (void *)&data_ov002_0210e208,
+    (void *)&data_ov002_0210e7f8,         (void *)&data_ov002_0210e7f8,
+    (void *)&data_ov002_0210e7f8,         (void *)&data_ov002_0210e7f8,
+    (void *)&data_ov002_0210e4a8,         (void *)&data_ov002_0210e4a8,
+    (void *)&data_ov002_0210e4a8,         (void *)&data_ov002_0210e4a8,
+    (void *)&data_ov002_0210e7e0,         (void *)&data_ov002_0210e7e0,
+    (void *)&data_ov002_0210e7e0,         (void *)&data_ov002_0210e7e0,
+    (void *)&data_ov002_0210ed58,         (void *)&data_ov002_0210ed58,
+    (void *)&data_ov002_0210ed58,         (void *)&data_ov002_0210ed58,
+    (void *)&data_ov002_0210ed60,         (void *)&data_ov002_0210ed60,
+    (void *)&data_ov002_0210ed60,         (void *)&data_ov002_0210ed60,
+    (void *)&data_ov002_0210e1c0,         (void *)&data_ov002_0210e1c0,
+    (void *)&data_ov002_0210e1c0,         (void *)&data_ov002_0210e1c0,
+    (void *)&data_ov002_0210e290,         (void *)&data_ov002_0210e290,
+    (void *)&data_ov002_0210e290,         (void *)&data_ov002_0210e290,
+    (void *)&data_ov002_0210e7d0,         (void *)&data_ov002_0210e7d0,
+    (void *)&data_ov002_0210e7d0,         (void *)&data_ov002_0210e7d0,
+    (void *)&data_ov002_0210e480,         (void *)&data_ov002_0210e480,
+    (void *)&data_ov002_0210e480,         (void *)&data_ov002_0210e480,
+    (void *)&data_ov002_0210e9d8,         (void *)&data_ov002_0210e9d8,
+    (void *)&data_ov002_0210e9d8,         (void *)&data_ov002_0210e9d8,
+    (void *)&data_ov002_0210e220,         (void *)&data_ov002_0210e220,
+    (void *)&data_ov002_0210e220,         (void *)&data_ov002_0210e220,
+    (void *)&data_ov002_0210e610,         (void *)&data_ov002_0210e610,
+    (void *)&data_ov002_0210e610,         (void *)&data_ov002_0210e610,
+    (void *)&data_ov002_0210e5c8,         (void *)&data_ov002_0210e5c8,
+    (void *)&data_ov002_0210e5c8,         (void *)&data_ov002_0210e5c8,
+    (void *)&data_ov002_0210e198,         (void *)&data_ov002_0210e198,
+    (void *)&data_ov002_0210e198,         (void *)&data_ov002_0210e198,
+    (void *)&data_ov002_0210ea78,         (void *)&data_ov002_0210ea78,
+    (void *)&data_ov002_0210ea78,         (void *)&data_ov002_0210ea78,
+    (void *)&data_ov002_0210e358,         (void *)&data_ov002_0210e358,
+    (void *)&data_ov002_0210e358,         (void *)&data_ov002_0210e358,
+    (void *)&data_ov002_0210e688,         (void *)&data_ov002_0210e688,
+    (void *)&data_ov002_0210eac0,         (void *)&data_ov002_0210e688,
+    (void *)&data_ov002_0210e630,         (void *)&data_ov002_0210e630,
+    (void *)&data_ov002_0210ead0,         (void *)&data_ov002_0210e630,
+    (void *)&data_ov002_0210eb40,         (void *)&data_ov002_0210eb40,
+    (void *)&data_ov002_0210e9f0,         (void *)&data_ov002_0210eb40,
+    (void *)&data_ov002_0210e930,         (void *)&data_ov002_0210e930,
+    (void *)&data_ov002_0210eab8,         (void *)&data_ov002_0210e930,
+    (void *)&data_ov002_0210e6c8,         (void *)&data_ov002_0210e6c8,
+    (void *)&data_ov002_0210e6c8,         (void *)&data_ov002_0210e6c8,
+    (void *)&data_ov002_0210ed28,         (void *)&data_ov002_0210ed28,
+    (void *)&data_ov002_0210ed28,         (void *)&data_ov002_0210ed28,
+    (void *)&data_ov002_0210e398,         (void *)&data_ov002_0210e398,
+    (void *)&data_ov002_0210e398,         (void *)&data_ov002_0210e398,
+    (void *)&data_ov002_0210ea80,         (void *)&data_ov002_0210ea80,
+    (void *)&data_ov002_0210ea80,         (void *)&data_ov002_0210ea80,
+    (void *)&data_ov002_0210e5e0,         (void *)&data_ov002_0210e5e0,
+    (void *)&data_ov002_0210e5e0,         (void *)&data_ov002_0210e5e0,
+    (void *)&data_ov002_0210e5e8,         (void *)&data_ov002_0210e5e8,
+    (void *)&data_ov002_0210e5e8,         (void *)&data_ov002_0210e5e8,
+    (void *)&data_ov002_0210ea60,         (void *)&data_ov002_0210ea60,
+    (void *)&data_ov002_0210ea60,         (void *)&data_ov002_0210ea60,
+    (void *)&gSdropHipEndAnimationFile,   (void *)&gSdropHipEndAnimationFile,
+    (void *)&gSdropHipEndAnimationFile,   (void *)&gSdropHipEndAnimationFile,
+    (void *)&data_ov002_0210e5d8,         (void *)&data_ov002_0210e5d8,
+    (void *)&data_ov002_0210e5d8,         (void *)&data_ov002_0210e5d8,
+    (void *)&data_ov002_0210ea58,         (void *)&data_ov002_0210ea58,
+    (void *)&data_ov002_0210ea58,         (void *)&data_ov002_0210ea58,
+    (void *)&data_ov002_0210ea40,         (void *)&data_ov002_0210ea40,
+    (void *)&data_ov002_0210ea40,         (void *)&data_ov002_0210ea40,
+    (void *)&data_ov002_0210ea48,         (void *)&data_ov002_0210ea48,
+    (void *)&data_ov002_0210ea48,         (void *)&data_ov002_0210ea48,
+    (void *)&data_ov002_0210e380,         (void *)&data_ov002_0210e380,
+    (void *)&data_ov002_0210e380,         (void *)&data_ov002_0210e380,
+    (void *)&data_ov002_0210ea68,         (void *)&data_ov002_0210ea68,
+    (void *)&data_ov002_0210ea68,         (void *)&data_ov002_0210ea68,
+    (void *)&data_ov002_0210e388,         (void *)&data_ov002_0210e388,
+    (void *)&data_ov002_0210e388,         (void *)&data_ov002_0210e388,
+    (void *)&gPKoopaThrowAnimationFile,   (void *)&gPKoopaThrowAnimationFile,
+    (void *)&gPKoopaThrowAnimationFile,   (void *)&gPKoopaThrowAnimationFile,
+    (void *)&data_ov002_0210e9b0,         (void *)&data_ov002_0210e9b0,
+    (void *)&data_ov002_0210e9b0,         (void *)&data_ov002_0210e9b0,
+    (void *)&data_ov002_0210e598,         (void *)&data_ov002_0210e598,
+    (void *)&data_ov002_0210e598,         (void *)&data_ov002_0210e598,
+    (void *)&data_ov002_0210e508,         (void *)&data_ov002_0210e508,
+    (void *)&data_ov002_0210e508,         (void *)&data_ov002_0210e508,
+    (void *)&data_ov002_0210ec90,         (void *)&data_ov002_0210ec90,
+    (void *)&data_ov002_0210ec90,         (void *)&data_ov002_0210ec90,
+    (void *)&data_ov002_0210e808,         (void *)&data_ov002_0210e808,
+    (void *)&data_ov002_0210e808,         (void *)&data_ov002_0210e808,
+    (void *)&data_ov002_0210e5b8,         (void *)&data_ov002_0210e5b8,
+    (void *)&data_ov002_0210e5b8,         (void *)&data_ov002_0210e5b8,
+    (void *)&gNCarryStartAnimationFile,   (void *)&gNCarryStartAnimationFile,
+    (void *)&gNCarryStartAnimationFile,   (void *)&gNCarryStartAnimationFile,
+    (void *)&gNCarryWaitAnimationFile,    (void *)&gNCarryWaitAnimationFile,
+    (void *)&gNCarryWaitAnimationFile,    (void *)&gNCarryWaitAnimationFile,
+    (void *)&gNCarryWalkAnimationFile,    (void *)&gNCarryWalkAnimationFile,
+    (void *)&gNCarryWalkAnimationFile,    (void *)&gNCarryWalkAnimationFile,
+    (void *)&data_ov002_0210e588,         (void *)&data_ov002_0210e588,
+    (void *)&data_ov002_0210e588,         (void *)&data_ov002_0210e588,
+    (void *)&data_ov002_0210e988,         (void *)&data_ov002_0210e988,
+    (void *)&data_ov002_0210e988,         (void *)&data_ov002_0210e988,
+    (void *)&data_ov002_0210e980,         (void *)&data_ov002_0210e980,
+    (void *)&data_ov002_0210e980,         (void *)&data_ov002_0210e980,
+    (void *)&data_ov002_0210e4a0,         (void *)&data_ov002_0210e4a0,
+    (void *)&data_ov002_0210e4a0,         (void *)&data_ov002_0210e4a0,
+    (void *)&data_ov002_0210e498,         (void *)&data_ov002_0210e498,
+    (void *)&data_ov002_0210e498,         (void *)&data_ov002_0210e498,
+    (void *)&gHCarryStartAnimationFile,   (void *)&gHCarryStartAnimationFile,
+    (void *)&gHCarryStartAnimationFile,   (void *)&gHCarryStartAnimationFile,
+    (void *)&data_ov002_0210e8c0,         (void *)&data_ov002_0210e8c0,
+    (void *)&data_ov002_0210e8c0,         (void *)&data_ov002_0210e8c0,
+    (void *)&gHCarryWaitAnimationFile,    (void *)&gHCarryWaitAnimationFile,
+    (void *)&gHCarryWaitAnimationFile,    (void *)&gHCarryWaitAnimationFile,
+    (void *)&data_ov002_0210e8a8,         (void *)&data_ov002_0210e8a8,
+    (void *)&data_ov002_0210e8a8,         (void *)&data_ov002_0210e8a8,
+    (void *)&data_ov002_0210ed30,         (void *)&data_ov002_0210ed30,
+    (void *)&data_ov002_0210ed30,         (void *)&data_ov002_0210ed30,
+    (void *)&data_ov002_0210e938,         (void *)&data_ov002_0210e938,
+    (void *)&data_ov002_0210e938,         (void *)&data_ov002_0210e938,
+    (void *)&data_ov002_0210e568,         (void *)&data_ov002_0210e568,
+    (void *)&data_ov002_0210e568,         (void *)&data_ov002_0210eae0,
+    (void *)&gColdWaitStartAnimationFile, (void *)&gColdWaitStartAnimationFile,
+    (void *)&gColdWaitStartAnimationFile, (void *)&gColdWaitStartAnimationFile,
+    (void *)&data_ov002_0210e468,         (void *)&data_ov002_0210e468,
+    (void *)&data_ov002_0210e468,         (void *)&data_ov002_0210e468,
+    (void *)&data_ov002_0210e470,         (void *)&data_ov002_0210e470,
+    (void *)&data_ov002_0210e470,         (void *)&data_ov002_0210e470,
+    (void *)&gPutonTCapAnimationFile,     (void *)&gPutonTCapAnimationFile,
+    (void *)&gPutonTCapAnimationFile,     (void *)&gPutonTCapAnimationFile,
+    (void *)&data_ov002_0210e890,         (void *)&data_ov002_0210e8d8,
+    (void *)&data_ov002_0210e520,         (void *)&data_ov002_0210e890,
+    (void *)&gScaleUpAnimationFile,       (void *)&gScaleUpAnimationFile,
+    (void *)&gScaleUpAnimationFile,       (void *)&gScaleUpAnimationFile,
+    (void *)&data_ov002_0210ecf8,         (void *)&data_ov002_0210ecf8,
+    (void *)&data_ov002_0210ecf8,         (void *)&data_ov002_0210ecf8,
+    (void *)&data_ov002_0210ed08,         (void *)&data_ov002_0210ed08,
+    (void *)&data_ov002_0210ed08,         (void *)&data_ov002_0210ed08,
+    (void *)&data_ov002_0210ecd8,         (void *)&data_ov002_0210ecd8,
+    (void *)&data_ov002_0210ecd8,         (void *)&data_ov002_0210ecd8,
+    (void *)&data_ov002_0210ece0,         (void *)&data_ov002_0210ece0,
+    (void *)&data_ov002_0210ece0,         (void *)&data_ov002_0210ece0,
+    (void *)&data_ov002_0210ecd0,         (void *)&data_ov002_0210ecd0,
+    (void *)&data_ov002_0210ecd0,         (void *)&data_ov002_0210ecd0,
+    (void *)&data_ov002_0210ece8,         (void *)&data_ov002_0210ece8,
+    (void *)&data_ov002_0210ece8,         (void *)&data_ov002_0210ece8,
+    (void *)&data_ov002_0210ed18,         (void *)&data_ov002_0210ed18,
+    (void *)&data_ov002_0210ed18,         (void *)&data_ov002_0210ed18,
+    (void *)&data_ov002_0210ed20,         (void *)&data_ov002_0210ed20,
+    (void *)&data_ov002_0210ed20,         (void *)&data_ov002_0210ed20,
+    (void *)&data_ov002_0210ed10,         (void *)&data_ov002_0210ed10,
+    (void *)&data_ov002_0210ed10,         (void *)&data_ov002_0210ed10,
+    (void *)&data_ov002_0210ecf0,         (void *)&data_ov002_0210ecf0,
+    (void *)&data_ov002_0210ecf0,         (void *)&data_ov002_0210ecf0,
+    (void *)&gReturnNocapAnimationFile,   (void *)&gReturnNocapAnimationFile,
+    (void *)&gReturnNocapAnimationFile,   (void *)&gReturnNocapAnimationFile,
+    (void *)&data_ov002_0210ecc8,         (void *)&data_ov002_0210ecc8,
+    (void *)&data_ov002_0210ecc8,         (void *)&data_ov002_0210ecc8,
+    (void *)&data_ov002_0210ec88,         (void *)&data_ov002_0210ec88,
+    (void *)&data_ov002_0210ec88,         (void *)&data_ov002_0210ec88,
+    (void *)&data_ov002_0210ec70,         (void *)&data_ov002_0210ec70,
+    (void *)&data_ov002_0210ec70,         (void *)&data_ov002_0210ec70,
+    (void *)&data_ov002_0210e5a0,         (void *)&data_ov002_0210e5a0,
+    (void *)&data_ov002_0210e5a0,         (void *)&data_ov002_0210e5a0,
+    (void *)&data_ov002_0210e9c8,         (void *)&data_ov002_0210e9c8,
+    (void *)&data_ov002_0210e9c8,         (void *)&data_ov002_0210e9c8,
+    (void *)&data_ov002_0210e5a8,         (void *)&data_ov002_0210e5a8,
+    (void *)&data_ov002_0210e5a8,         (void *)&data_ov002_0210e5a8,
+    (void *)&data_ov002_0210ec80,         (void *)&data_ov002_0210ec80,
+    (void *)&data_ov002_0210ec80,         (void *)&data_ov002_0210ec80,
+    (void *)&data_ov002_0210eca0,         (void *)&data_ov002_0210eca0,
+    (void *)&data_ov002_0210eca0,         (void *)&data_ov002_0210eca0,
+    (void *)&data_ov002_0210ecc0,         (void *)&data_ov002_0210ecc0,
+    (void *)&data_ov002_0210ecc0,         (void *)&data_ov002_0210ecc0,
+    (void *)&data_ov002_0210e768,         (void *)&data_ov002_0210e768,
+    (void *)&data_ov002_0210e768,         (void *)&data_ov002_0210e768,
+    (void *)&gPaddleCarryAnimationFile,   (void *)&gPaddleCarryAnimationFile,
+    (void *)&gPaddleCarryAnimationFile,   (void *)&gPaddleCarryAnimationFile,
+    (void *)&data_ov002_0210ec78,         (void *)&data_ov002_0210ec78,
+    (void *)&data_ov002_0210ec78,         (void *)&data_ov002_0210ec78,
+    (void *)&data_ov002_0210e590,         (void *)&data_ov002_0210e530,
+    (void *)&data_ov002_0210e9b8,         (void *)&data_ov002_0210ebb0,
+    (void *)&data_ov002_0210e9a8,         (void *)&data_ov002_0210e9a8,
+    (void *)&data_ov002_0210e9a8,         (void *)&data_ov002_0210e3f0,
+    (void *)&data_ov002_0210e6d8,         (void *)&data_ov002_0210e528,
+    (void *)&data_ov002_0210eb08,         (void *)&data_ov002_0210e6d8,
+    (void *)&data_ov002_0210ebc0,         (void *)&data_ov002_0210e548,
+    (void *)&data_ov002_0210eaf8,         (void *)&data_ov002_0210ebc0,
+    (void *)&data_ov002_0210ecb0,         (void *)&data_ov002_0210ecb0,
+    (void *)&data_ov002_0210ecb0,         (void *)&data_ov002_0210ecb0,
+    (void *)&data_ov002_0210e948,         (void *)&data_ov002_0210e8b0,
+    (void *)&data_ov002_0210e5b0,         (void *)&data_ov002_0210e618};
 /* Frame windows ahead of the handler PMF band. */
 u8 data_ov002_02109db8[] = {46, 20, 0, 0};
 u16 data_ov002_02109dbc[] = {6, 9, 15, 0};
@@ -827,55 +917,72 @@ extern "C" {
 extern signed char gCurrentSublevel;
 extern const unsigned int data_ov002_020ff220[4] = {71, 72, 45, 100};
 extern SharedFilePtr *const data_ov002_020ff480[196] = {
-    &data_ov002_0210e840, &data_ov002_0210e840, &data_ov002_0210e840, &data_ov002_0210e840,
-    &data_ov002_0210e2b0, &data_ov002_0210e2c0, &data_ov002_0210e970, &data_ov002_0210eb68,
-    &data_ov002_0210e298, &data_ov002_0210e298, &data_ov002_0210e298, &data_ov002_0210e298,
-    &data_ov002_0210e390, &data_ov002_0210e390, &data_ov002_0210e390, &data_ov002_0210e390,
-    &data_ov002_0210e378, &data_ov002_0210e378, &data_ov002_0210e378, &data_ov002_0210e378,
-    &data_ov002_0210e8a0, &data_ov002_0210e8a0, &data_ov002_0210e8a0, &data_ov002_0210e8a0,
-    &data_ov002_0210e1b8, &data_ov002_0210e1b8, &data_ov002_0210e1b8, &data_ov002_0210e1b8,
-    &data_ov002_0210e880, &data_ov002_0210e880, &data_ov002_0210e880, &data_ov002_0210e880,
-    &data_ov002_0210e1f8, &data_ov002_0210e8f0, &data_ov002_0210ea08, &data_ov002_0210eba0,
-    &data_ov002_0210e950, &data_ov002_0210e900, &data_ov002_0210e990, &data_ov002_0210e6d0,
-    &data_ov002_0210eaa8, &data_ov002_0210e5c0, &data_ov002_0210e658, &data_ov002_0210e6f0,
-    &data_ov002_0210ea98, &data_ov002_0210e550, &data_ov002_0210e650, &data_ov002_0210e6e8,
-    &data_ov002_0210eab0, &data_ov002_0210e998, &data_ov002_0210e678, &data_ov002_0210e3c0,
-    &data_ov002_0210e608, &data_ov002_0210e748, &data_ov002_0210eb18, &data_ov002_0210ebd0,
-    &data_ov002_0210e488, &data_ov002_0210e488, &data_ov002_0210e488, &data_ov002_0210e488,
-    &data_ov002_0210e228, &data_ov002_0210e228, &data_ov002_0210e228, &data_ov002_0210e228,
-    &data_ov002_0210e9f8, &data_ov002_0210e9f8, &data_ov002_0210e9f8, &data_ov002_0210e9f8,
-    &data_ov002_0210e810, &data_ov002_0210e810, &data_ov002_0210e810, &data_ov002_0210e810,
-    &data_ov002_0210ea38, &data_ov002_0210ea38, &data_ov002_0210ea38, &data_ov002_0210ea38,
-    &data_ov002_0210e258, &data_ov002_0210e258, &data_ov002_0210e258, &data_ov002_0210e258,
-    &data_ov002_0210e5f8, &data_ov002_0210e5f8, &data_ov002_0210e5f8, &data_ov002_0210e5f8,
-    &data_ov002_0210e918, &data_ov002_0210e918, &data_ov002_0210e918, &data_ov002_0210e918,
-    &data_ov002_0210e2e0, &data_ov002_0210e2e0, &data_ov002_0210e2e0, &data_ov002_0210e2e0,
-    &data_ov002_0210e2e8, &data_ov002_0210e2e8, &data_ov002_0210e2e8, &data_ov002_0210e2e8,
-    &data_ov002_0210e448, &data_ov002_0210e448, &data_ov002_0210ebe0, &data_ov002_0210e448,
-    &data_ov002_0210ed38, &data_ov002_0210ed38, &data_ov002_0210ed38, &data_ov002_0210ed38,
-    &data_ov002_0210e9e0, &data_ov002_0210e9e0, &data_ov002_0210e9e0, &data_ov002_0210e9e0,
-    &data_ov002_0210e240, &data_ov002_0210e240, &data_ov002_0210e240, &data_ov002_0210e240,
-    &data_ov002_0210e1a8, &data_ov002_0210e1a8, &data_ov002_0210e1a8, &data_ov002_0210e1a8,
-    &data_ov002_0210e8e0, &data_ov002_0210e8e0, &data_ov002_0210e8e0, &data_ov002_0210e8e0,
-    &data_ov002_0210e310, &data_ov002_0210e310, &data_ov002_0210e310, &data_ov002_0210e310,
-    &data_ov002_0210e308, &data_ov002_0210e308, &data_ov002_0210e308, &data_ov002_0210e308,
-    &data_ov002_0210e318, &data_ov002_0210e318, &data_ov002_0210e318, &data_ov002_0210e318,
-    &data_ov002_0210e908, &data_ov002_0210e908, &data_ov002_0210e908, &data_ov002_0210e908,
-    &data_ov002_0210e8f8, &data_ov002_0210e8f8, &data_ov002_0210e8f8, &data_ov002_0210e8f8,
-    &data_ov002_0210e320, &data_ov002_0210e320, &data_ov002_0210e320, &data_ov002_0210e320,
-    &data_ov002_0210e920, &data_ov002_0210e920, &data_ov002_0210e920, &data_ov002_0210e920,
-    &data_ov002_0210e7c8, &data_ov002_0210e7c8, &data_ov002_0210e7c8, &data_ov002_0210e7c8,
-    &data_ov002_0210eb48, &data_ov002_0210eb48, &data_ov002_0210eb48, &data_ov002_0210eb48,
-    &data_ov002_0210ead8, &data_ov002_0210ead8, &data_ov002_0210ead8, &data_ov002_0210ead8,
-    &data_ov002_0210e878, &data_ov002_0210e878, &data_ov002_0210e878, &data_ov002_0210e878,
-    &data_ov002_0210e830, &data_ov002_0210e830, &data_ov002_0210e830, &data_ov002_0210e830,
-    &data_ov002_0210e760, &data_ov002_0210e760, &data_ov002_0210e760, &data_ov002_0210e760,
-    &data_ov002_0210e428, &data_ov002_0210e428, &data_ov002_0210e428, &data_ov002_0210e428,
-    &data_ov002_0210ed40, &data_ov002_0210ed40, &data_ov002_0210ed40, &data_ov002_0210ed40,
-    &data_ov002_0210ed48, &data_ov002_0210ed48, &data_ov002_0210ed48, &data_ov002_0210ed48,
-    &data_ov002_0210ed50, &data_ov002_0210ed50, &data_ov002_0210ed50, &data_ov002_0210ed50,
-    &data_ov002_0210e7a0, &data_ov002_0210e7a0, &data_ov002_0210e4c8, &data_ov002_0210e7a0,
-    &data_ov002_0210e278, &data_ov002_0210e278, &data_ov002_0210eb30, &data_ov002_0210e278};
+    &data_ov002_0210e840,      &data_ov002_0210e840,        &data_ov002_0210e840,
+    &data_ov002_0210e840,      &gEdKissToPoseAnimationFile, &gLEdAmazedAnimationFile,
+    &data_ov002_0210e970,      &data_ov002_0210eb68,        &gEDownAnimationFile,
+    &gEDownAnimationFile,      &gEDownAnimationFile,        &gEDownAnimationFile,
+    &data_ov002_0210e390,      &data_ov002_0210e390,        &data_ov002_0210e390,
+    &data_ov002_0210e390,      &data_ov002_0210e378,        &data_ov002_0210e378,
+    &data_ov002_0210e378,      &data_ov002_0210e378,        &data_ov002_0210e8a0,
+    &data_ov002_0210e8a0,      &data_ov002_0210e8a0,        &data_ov002_0210e8a0,
+    &gGasDieAnimationFile,     &gGasDieAnimationFile,       &gGasDieAnimationFile,
+    &gGasDieAnimationFile,     &data_ov002_0210e880,        &data_ov002_0210e880,
+    &data_ov002_0210e880,      &data_ov002_0210e880,        &gLieEndAnimationFile,
+    &data_ov002_0210e8f0,      &data_ov002_0210ea08,        &data_ov002_0210eba0,
+    &data_ov002_0210e950,      &data_ov002_0210e900,        &data_ov002_0210e990,
+    &data_ov002_0210e6d0,      &data_ov002_0210eaa8,        &data_ov002_0210e5c0,
+    &data_ov002_0210e658,      &data_ov002_0210e6f0,        &data_ov002_0210ea98,
+    &data_ov002_0210e550,      &data_ov002_0210e650,        &data_ov002_0210e6e8,
+    &data_ov002_0210eab0,      &data_ov002_0210e998,        &data_ov002_0210e678,
+    &data_ov002_0210e3c0,      &data_ov002_0210e608,        &data_ov002_0210e748,
+    &data_ov002_0210eb18,      &data_ov002_0210ebd0,        &data_ov002_0210e488,
+    &data_ov002_0210e488,      &data_ov002_0210e488,        &data_ov002_0210e488,
+    &gDamageWaitAnimationFile, &gDamageWaitAnimationFile,   &gDamageWaitAnimationFile,
+    &gDamageWaitAnimationFile, &data_ov002_0210e9f8,        &data_ov002_0210e9f8,
+    &data_ov002_0210e9f8,      &data_ov002_0210e9f8,        &data_ov002_0210e810,
+    &data_ov002_0210e810,      &data_ov002_0210e810,        &data_ov002_0210e810,
+    &data_ov002_0210ea38,      &data_ov002_0210ea38,        &data_ov002_0210ea38,
+    &data_ov002_0210ea38,      &data_ov002_0210e258,        &data_ov002_0210e258,
+    &data_ov002_0210e258,      &data_ov002_0210e258,        &data_ov002_0210e5f8,
+    &data_ov002_0210e5f8,      &data_ov002_0210e5f8,        &data_ov002_0210e5f8,
+    &data_ov002_0210e918,      &data_ov002_0210e918,        &data_ov002_0210e918,
+    &data_ov002_0210e918,      &data_ov002_0210e2e0,        &data_ov002_0210e2e0,
+    &data_ov002_0210e2e0,      &data_ov002_0210e2e0,        &data_ov002_0210e2e8,
+    &data_ov002_0210e2e8,      &data_ov002_0210e2e8,        &data_ov002_0210e2e8,
+    &data_ov002_0210e448,      &data_ov002_0210e448,        &data_ov002_0210ebe0,
+    &data_ov002_0210e448,      &data_ov002_0210ed38,        &data_ov002_0210ed38,
+    &data_ov002_0210ed38,      &data_ov002_0210ed38,        &data_ov002_0210e9e0,
+    &data_ov002_0210e9e0,      &data_ov002_0210e9e0,        &data_ov002_0210e9e0,
+    &data_ov002_0210e240,      &data_ov002_0210e240,        &data_ov002_0210e240,
+    &data_ov002_0210e240,      &data_ov002_0210e1a8,        &data_ov002_0210e1a8,
+    &data_ov002_0210e1a8,      &data_ov002_0210e1a8,        &data_ov002_0210e8e0,
+    &data_ov002_0210e8e0,      &data_ov002_0210e8e0,        &data_ov002_0210e8e0,
+    &data_ov002_0210e310,      &data_ov002_0210e310,        &data_ov002_0210e310,
+    &data_ov002_0210e310,      &data_ov002_0210e308,        &data_ov002_0210e308,
+    &data_ov002_0210e308,      &data_ov002_0210e308,        &data_ov002_0210e318,
+    &data_ov002_0210e318,      &data_ov002_0210e318,        &data_ov002_0210e318,
+    &data_ov002_0210e908,      &data_ov002_0210e908,        &data_ov002_0210e908,
+    &data_ov002_0210e908,      &data_ov002_0210e8f8,        &data_ov002_0210e8f8,
+    &data_ov002_0210e8f8,      &data_ov002_0210e8f8,        &data_ov002_0210e320,
+    &data_ov002_0210e320,      &data_ov002_0210e320,        &data_ov002_0210e320,
+    &data_ov002_0210e920,      &data_ov002_0210e920,        &data_ov002_0210e920,
+    &data_ov002_0210e920,      &data_ov002_0210e7c8,        &data_ov002_0210e7c8,
+    &data_ov002_0210e7c8,      &data_ov002_0210e7c8,        &data_ov002_0210eb48,
+    &data_ov002_0210eb48,      &data_ov002_0210eb48,        &data_ov002_0210eb48,
+    &data_ov002_0210ead8,      &data_ov002_0210ead8,        &data_ov002_0210ead8,
+    &data_ov002_0210ead8,      &data_ov002_0210e878,        &data_ov002_0210e878,
+    &data_ov002_0210e878,      &data_ov002_0210e878,        &data_ov002_0210e830,
+    &data_ov002_0210e830,      &data_ov002_0210e830,        &data_ov002_0210e830,
+    &data_ov002_0210e760,      &data_ov002_0210e760,        &data_ov002_0210e760,
+    &data_ov002_0210e760,      &data_ov002_0210e428,        &data_ov002_0210e428,
+    &data_ov002_0210e428,      &data_ov002_0210e428,        &data_ov002_0210ed40,
+    &data_ov002_0210ed40,      &data_ov002_0210ed40,        &data_ov002_0210ed40,
+    &data_ov002_0210ed48,      &data_ov002_0210ed48,        &data_ov002_0210ed48,
+    &data_ov002_0210ed48,      &data_ov002_0210ed50,        &data_ov002_0210ed50,
+    &data_ov002_0210ed50,      &data_ov002_0210ed50,        &data_ov002_0210e7a0,
+    &data_ov002_0210e7a0,      &data_ov002_0210e4c8,        &data_ov002_0210e7a0,
+    &data_ov002_0210e278,      &data_ov002_0210e278,        &data_ov002_0210eb30,
+    &data_ov002_0210e278};
 extern unsigned int data_ov002_0210e158;
 extern SharedFilePtr data_ov002_0210e1c8;
 extern SharedFilePtr data_ov002_0210e1d0;
@@ -20609,30 +20716,30 @@ int *func_ov002_020e6bb0(void *model) {
 extern "C" {
 int data_ov002_0210e160;
 SharedFilePtr data_ov002_0210e168;
-SharedFilePtr data_ov002_0210e170;
-SharedFilePtr data_ov002_0210e178;
+SharedFilePtr gPutonTCapAnimationFile;
+SharedFilePtr gNCarryWaitAnimationFile;
 SharedFilePtr data_ov002_0210e180;
-SharedFilePtr data_ov002_0210e188;
-SharedFilePtr data_ov002_0210e190;
+SharedFilePtr gPKoopaThrowAnimationFile;
+SharedFilePtr gScaleUpAnimationFile;
 SharedFilePtr data_ov002_0210e198;
 SharedFilePtr data_ov002_0210e1a0;
 SharedFilePtr data_ov002_0210e1a8;
 SharedFilePtr data_ov002_0210e1b0;
-SharedFilePtr data_ov002_0210e1b8;
+SharedFilePtr gGasDieAnimationFile;
 SharedFilePtr data_ov002_0210e1c0;
 SharedFilePtr data_ov002_0210e1c8;
 SharedFilePtr data_ov002_0210e1d0;
-SharedFilePtr data_ov002_0210e1d8;
+SharedFilePtr gEdFlyStartAnimationFile;
 SharedFilePtr data_ov002_0210e1e0;
 SharedFilePtr data_ov002_0210e1e8;
 SharedFilePtr data_ov002_0210e1f0;
-SharedFilePtr data_ov002_0210e1f8;
-SharedFilePtr data_ov002_0210e200;
+SharedFilePtr gLieEndAnimationFile;
+SharedFilePtr gNCarryWalkAnimationFile;
 SharedFilePtr data_ov002_0210e208;
 SharedFilePtr data_ov002_0210e210;
-SharedFilePtr data_ov002_0210e218;
+SharedFilePtr gSdropHipEndAnimationFile;
 SharedFilePtr data_ov002_0210e220;
-SharedFilePtr data_ov002_0210e228;
+SharedFilePtr gDamageWaitAnimationFile;
 SharedFilePtr data_ov002_0210e230;
 SharedFilePtr data_ov002_0210e238;
 SharedFilePtr data_ov002_0210e240;
@@ -20643,23 +20750,23 @@ SharedFilePtr data_ov002_0210e260;
 SharedFilePtr data_ov002_0210e268;
 SharedFilePtr data_ov002_0210e270;
 SharedFilePtr data_ov002_0210e278;
-SharedFilePtr data_ov002_0210e280;
+SharedFilePtr gColdWaitStartAnimationFile;
 SharedFilePtr data_ov002_0210e288;
 SharedFilePtr data_ov002_0210e290;
-SharedFilePtr data_ov002_0210e298;
-SharedFilePtr data_ov002_0210e2a0;
-SharedFilePtr data_ov002_0210e2a8;
-SharedFilePtr data_ov002_0210e2b0;
-SharedFilePtr data_ov002_0210e2b8;
-SharedFilePtr data_ov002_0210e2c0;
-SharedFilePtr data_ov002_0210e2c8;
-SharedFilePtr data_ov002_0210e2d0;
+SharedFilePtr gEDownAnimationFile;
+SharedFilePtr gEdCapOffAnimationFile;
+SharedFilePtr gEdFlyAnimationFile;
+SharedFilePtr gEdKissToPoseAnimationFile;
+SharedFilePtr gEdLookLeftAnimationFile;
+SharedFilePtr gLEdAmazedAnimationFile;
+SharedFilePtr gEdPutupWaitAnimationFile;
+SharedFilePtr gEdWaveAnimationFile;
 SharedFilePtr data_ov002_0210e2d8;
 SharedFilePtr data_ov002_0210e2e0;
 SharedFilePtr data_ov002_0210e2e8;
 SharedFilePtr data_ov002_0210e2f0;
-SharedFilePtr data_ov002_0210e2f8;
-SharedFilePtr data_ov002_0210e300;
+SharedFilePtr gHCarryStartAnimationFile;
+SharedFilePtr gHCarryWaitAnimationFile;
 SharedFilePtr data_ov002_0210e308;
 SharedFilePtr data_ov002_0210e310;
 SharedFilePtr data_ov002_0210e318;
@@ -20668,10 +20775,10 @@ SharedFilePtr data_ov002_0210e328;
 SharedFilePtr data_ov002_0210e330;
 SharedFilePtr data_ov002_0210e338;
 SharedFilePtr data_ov002_0210e340;
-SharedFilePtr data_ov002_0210e348;
-SharedFilePtr data_ov002_0210e350;
+SharedFilePtr gNCarryStartAnimationFile;
+SharedFilePtr gPaddleCarryAnimationFile;
 SharedFilePtr data_ov002_0210e358;
-SharedFilePtr data_ov002_0210e360;
+SharedFilePtr gReturnNocapAnimationFile;
 SharedFilePtr data_ov002_0210e368;
 SharedFilePtr data_ov002_0210e370;
 SharedFilePtr data_ov002_0210e378;
@@ -22350,8 +22457,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e848.Construct(0x801f);
     __register_global_object(&data_ov002_0210e848, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fb48);
-    data_ov002_0210e2c0.Construct(ASSET_L_ED_AMAZED_BCA);
-    __register_global_object(&data_ov002_0210e2c0, (void *)SharedFilePtr_Destruct_Anim,
+    gLEdAmazedAnimationFile.Construct(ASSET_L_ED_AMAZED_BCA);
+    __register_global_object(&gLEdAmazedAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fb54);
     data_ov002_0210e860.Construct(ASSET_L_ED_CAP_OFF_BCA);
     __register_global_object(&data_ov002_0210e860, (void *)SharedFilePtr_Destruct_Anim,
@@ -22713,8 +22820,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e470.Construct(ASSET_COLD_WAIT_END_BCA);
     __register_global_object(&data_ov002_0210e470, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f128);
-    data_ov002_0210e280.Construct(ASSET_COLD_WAIT_START_BCA);
-    __register_global_object(&data_ov002_0210e280, (void *)SharedFilePtr_Destruct_Anim,
+    gColdWaitStartAnimationFile.Construct(ASSET_COLD_WAIT_START_BCA);
+    __register_global_object(&gColdWaitStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f140);
     data_ov002_0210e7d0.Construct(0x8062);
     __register_global_object(&data_ov002_0210e7d0, (void *)SharedFilePtr_Destruct_Anim,
@@ -22728,8 +22835,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e488.Construct(ASSET_DAMAGE_START_BCA);
     __register_global_object(&data_ov002_0210e488, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f188);
-    data_ov002_0210e228.Construct(ASSET_DAMAGE_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e228, (void *)SharedFilePtr_Destruct_Anim,
+    gDamageWaitAnimationFile.Construct(ASSET_DAMAGE_WAIT_BCA);
+    __register_global_object(&gDamageWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f194);
     data_ov002_0210e498.Construct(ASSET_DOOR_PULL_BCA);
     __register_global_object(&data_ov002_0210e498, (void *)SharedFilePtr_Destruct_Anim,
@@ -22740,32 +22847,32 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e808.Construct(ASSET_DROWN_DIE_BCA);
     __register_global_object(&data_ov002_0210e808, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f1dc);
-    data_ov002_0210e298.Construct(ASSET_E_DOWN_BCA);
-    __register_global_object(&data_ov002_0210e298, (void *)SharedFilePtr_Destruct_Anim,
+    gEDownAnimationFile.Construct(ASSET_E_DOWN_BCA);
+    __register_global_object(&gEDownAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f1e8);
     data_ov002_0210e810.Construct(0x8065);
     __register_global_object(&data_ov002_0210e810, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f200);
-    data_ov002_0210e2a0.Construct(ASSET_ED_CAP_OFF_BCA);
-    __register_global_object(&data_ov002_0210e2a0, (void *)SharedFilePtr_Destruct_Anim,
+    gEdCapOffAnimationFile.Construct(ASSET_ED_CAP_OFF_BCA);
+    __register_global_object(&gEdCapOffAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f20c);
     data_ov002_0210e820.Construct(ASSET_ED_CAP_OFF_WAIT_BCA);
     __register_global_object(&data_ov002_0210e820, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f230);
-    data_ov002_0210e2a8.Construct(ASSET_ED_FLY_BCA);
-    __register_global_object(&data_ov002_0210e2a8, (void *)SharedFilePtr_Destruct_Anim,
+    gEdFlyAnimationFile.Construct(ASSET_ED_FLY_BCA);
+    __register_global_object(&gEdFlyAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f23c);
-    data_ov002_0210e1d8.Construct(ASSET_ED_FLY_START_BCA);
-    __register_global_object(&data_ov002_0210e1d8, (void *)SharedFilePtr_Destruct_Anim,
+    gEdFlyStartAnimationFile.Construct(ASSET_ED_FLY_START_BCA);
+    __register_global_object(&gEdFlyStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f254);
-    data_ov002_0210e2b0.Construct(ASSET_ED_KISS_TO_POSE_BCA);
-    __register_global_object(&data_ov002_0210e2b0, (void *)SharedFilePtr_Destruct_Anim,
+    gEdKissToPoseAnimationFile.Construct(ASSET_ED_KISS_TO_POSE_BCA);
+    __register_global_object(&gEdKissToPoseAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f260);
     data_ov002_0210e840.Construct(ASSET_ED_KISS_WAIT_BCA);
     __register_global_object(&data_ov002_0210e840, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f278);
-    data_ov002_0210e2b8.Construct(ASSET_ED_LOOK_LEFT_BCA);
-    __register_global_object(&data_ov002_0210e2b8, (void *)SharedFilePtr_Destruct_Anim,
+    gEdLookLeftAnimationFile.Construct(ASSET_ED_LOOK_LEFT_BCA);
+    __register_global_object(&gEdLookLeftAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f284);
     data_ov002_0210e850.Construct(ASSET_ED_LOOK_LEFT_END_BCA);
     __register_global_object(&data_ov002_0210e850, (void *)SharedFilePtr_Destruct_Anim,
@@ -22776,14 +22883,14 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e858.Construct(ASSET_ED_NOD_BCA);
     __register_global_object(&data_ov002_0210e858, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f2c0);
-    data_ov002_0210e2c8.Construct(ASSET_ED_PUTUP_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e2c8, (void *)SharedFilePtr_Destruct_Anim,
+    gEdPutupWaitAnimationFile.Construct(ASSET_ED_PUTUP_WAIT_BCA);
+    __register_global_object(&gEdPutupWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f2cc);
     data_ov002_0210e948.Construct(ASSET_ED_WAIT_BCA);
     __register_global_object(&data_ov002_0210e948, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f2e4);
-    data_ov002_0210e2d0.Construct(ASSET_ED_WAVE_BCA);
-    __register_global_object(&data_ov002_0210e2d0, (void *)SharedFilePtr_Destruct_Anim,
+    gEdWaveAnimationFile.Construct(ASSET_ED_WAVE_BCA);
+    __register_global_object(&gEdWaveAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f2f0);
     data_ov002_0210e870.Construct(0x8066);
     __register_global_object(&data_ov002_0210e870, (void *)SharedFilePtr_Destruct_Anim,
@@ -22809,20 +22916,20 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e1f0.Construct(0x806a);
     __register_global_object(&data_ov002_0210e1f0, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f374);
-    data_ov002_0210e1b8.Construct(ASSET_GAS_DIE_BCA);
-    __register_global_object(&data_ov002_0210e1b8, (void *)SharedFilePtr_Destruct_Anim,
+    gGasDieAnimationFile.Construct(ASSET_GAS_DIE_BCA);
+    __register_global_object(&gGasDieAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f38c);
     data_ov002_0210e8a0.Construct(ASSET_GAS_WAIT_BCA);
     __register_global_object(&data_ov002_0210e8a0, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f398);
-    data_ov002_0210e2f8.Construct(ASSET_H_CARRY_START_BCA);
-    __register_global_object(&data_ov002_0210e2f8, (void *)SharedFilePtr_Destruct_Anim,
+    gHCarryStartAnimationFile.Construct(ASSET_H_CARRY_START_BCA);
+    __register_global_object(&gHCarryStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f3a4);
     data_ov002_0210e8a8.Construct(ASSET_H_CARRY_THROW_BCA);
     __register_global_object(&data_ov002_0210e8a8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f3bc);
-    data_ov002_0210e300.Construct(ASSET_H_CARRY_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e300, (void *)SharedFilePtr_Destruct_Anim,
+    gHCarryWaitAnimationFile.Construct(ASSET_H_CARRY_WAIT_BCA);
+    __register_global_object(&gHCarryWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f3c8);
     data_ov002_0210e8c0.Construct(ASSET_H_CARRY_WALK_BCA);
     __register_global_object(&data_ov002_0210e8c0, (void *)SharedFilePtr_Destruct_Anim,
@@ -22884,8 +22991,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e340.Construct(0x807b);
     __register_global_object(&data_ov002_0210e340, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f4b8);
-    data_ov002_0210e1f8.Construct(ASSET_LIE_END_BCA);
-    __register_global_object(&data_ov002_0210e1f8, (void *)SharedFilePtr_Destruct_Anim,
+    gLieEndAnimationFile.Construct(ASSET_LIE_END_BCA);
+    __register_global_object(&gLieEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f4c4);
     data_ov002_0210e950.Construct(ASSET_LIE_WAIT_BCA);
     __register_global_object(&data_ov002_0210e950, (void *)SharedFilePtr_Destruct_Anim,
@@ -22920,14 +23027,14 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e988.Construct(ASSET_N_CARRY_PUT_BCA);
     __register_global_object(&data_ov002_0210e988, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f548);
-    data_ov002_0210e348.Construct(ASSET_N_CARRY_START_BCA);
-    __register_global_object(&data_ov002_0210e348, (void *)SharedFilePtr_Destruct_Anim,
+    gNCarryStartAnimationFile.Construct(ASSET_N_CARRY_START_BCA);
+    __register_global_object(&gNCarryStartAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f554);
-    data_ov002_0210e178.Construct(ASSET_N_CARRY_WAIT_BCA);
-    __register_global_object(&data_ov002_0210e178, (void *)SharedFilePtr_Destruct_Anim,
+    gNCarryWaitAnimationFile.Construct(ASSET_N_CARRY_WAIT_BCA);
+    __register_global_object(&gNCarryWaitAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f560);
-    data_ov002_0210e200.Construct(ASSET_N_CARRY_WALK_BCA);
-    __register_global_object(&data_ov002_0210e200, (void *)SharedFilePtr_Destruct_Anim,
+    gNCarryWalkAnimationFile.Construct(ASSET_N_CARRY_WALK_BCA);
+    __register_global_object(&gNCarryWalkAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f56c);
     data_ov002_0210e590.Construct(ASSET_OP_GO_BCA);
     __register_global_object(&data_ov002_0210e590, (void *)SharedFilePtr_Destruct_Anim,
@@ -22941,8 +23048,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e598.Construct(ASSET_P_KOOPA_HOLD_BCA);
     __register_global_object(&data_ov002_0210e598, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f59c);
-    data_ov002_0210e188.Construct(ASSET_P_KOOPA_THROW_BCA);
-    __register_global_object(&data_ov002_0210e188, (void *)SharedFilePtr_Destruct_Anim,
+    gPKoopaThrowAnimationFile.Construct(ASSET_P_KOOPA_THROW_BCA);
+    __register_global_object(&gPKoopaThrowAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5a8);
     data_ov002_0210e5a0.Construct(ASSET_PADDLE_1_BCA);
     __register_global_object(&data_ov002_0210e5a0, (void *)SharedFilePtr_Destruct_Anim,
@@ -22950,8 +23057,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e9c8.Construct(ASSET_PADDLE_2_BCA);
     __register_global_object(&data_ov002_0210e9c8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5c0);
-    data_ov002_0210e350.Construct(ASSET_PADDLE_CARRY_BCA);
-    __register_global_object(&data_ov002_0210e350, (void *)SharedFilePtr_Destruct_Anim,
+    gPaddleCarryAnimationFile.Construct(ASSET_PADDLE_CARRY_BCA);
+    __register_global_object(&gPaddleCarryAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5cc);
     data_ov002_0210e5a8.Construct(ASSET_PADDLE_END_BCA);
     __register_global_object(&data_ov002_0210e5a8, (void *)SharedFilePtr_Destruct_Anim,
@@ -22962,14 +23069,14 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e358.Construct(0x808a);
     __register_global_object(&data_ov002_0210e358, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f5fc);
-    data_ov002_0210e170.Construct(ASSET_PUTON_T_CAP_BCA);
-    __register_global_object(&data_ov002_0210e170, (void *)SharedFilePtr_Destruct_Anim,
+    gPutonTCapAnimationFile.Construct(ASSET_PUTON_T_CAP_BCA);
+    __register_global_object(&gPutonTCapAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f608);
     data_ov002_0210e9f8.Construct(ASSET_RETURN_DOWN_BCA);
     __register_global_object(&data_ov002_0210e9f8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f614);
-    data_ov002_0210e360.Construct(ASSET_RETURN_NOCAP_BCA);
-    __register_global_object(&data_ov002_0210e360, (void *)SharedFilePtr_Destruct_Anim,
+    gReturnNocapAnimationFile.Construct(ASSET_RETURN_NOCAP_BCA);
+    __register_global_object(&gReturnNocapAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f620);
     data_ov002_0210e5b8.Construct(ASSET_RETURN_STAR_BCA);
     __register_global_object(&data_ov002_0210e5b8, (void *)SharedFilePtr_Destruct_Anim,
@@ -22998,8 +23105,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e378.Construct(ASSET_S_DIE_BCA);
     __register_global_object(&data_ov002_0210e378, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f68c);
-    data_ov002_0210e190.Construct(ASSET_SCALE_UP_BCA);
-    __register_global_object(&data_ov002_0210e190, (void *)SharedFilePtr_Destruct_Anim,
+    gScaleUpAnimationFile.Construct(ASSET_SCALE_UP_BCA);
+    __register_global_object(&gScaleUpAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f698);
     data_ov002_0210ea38.Construct(0x8092);
     __register_global_object(&data_ov002_0210ea38, (void *)SharedFilePtr_Destruct_Anim,
@@ -23016,8 +23123,8 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e5d8.Construct(ASSET_SDROP_HIP_BCA);
     __register_global_object(&data_ov002_0210e5d8, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6d4);
-    data_ov002_0210e218.Construct(ASSET_SDROP_HIP_END_BCA);
-    __register_global_object(&data_ov002_0210e218, (void *)SharedFilePtr_Destruct_Anim,
+    gSdropHipEndAnimationFile.Construct(ASSET_SDROP_HIP_END_BCA);
+    __register_global_object(&gSdropHipEndAnimationFile, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210f6e0);
     data_ov002_0210ea58.Construct(ASSET_SDROP_HIP_WAIT_BCA);
     __register_global_object(&data_ov002_0210ea58, (void *)SharedFilePtr_Destruct_Anim,
