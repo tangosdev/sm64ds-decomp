@@ -130,6 +130,8 @@ enum daDemo_c_AssetId {
 #include "SaveData.h"
 #include "dExtAnmTexPat_c.h"
 #include "dCamera_c.h"
+#include "daSBird_c.h"
+#include "LevelRng.h"
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
@@ -235,14 +237,11 @@ struct DemoTexSeqFile : SharedFilePtr {
 extern "C" {
 
 extern unsigned char gSubScreenLayers;
-extern int data_0209e650;
 extern OamAttr data_ov002_0210bddc;
 extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
-/* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
-   as the void * this file has always declared (the tree's declarations
-   disagree); 23f0 casts at the one use. */
-extern void *gSceneFader;
+/* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. */
+extern dFdBrightness_c *gSceneFader;
 extern u8 data_ov002_02111144;
 extern int data_020a0db0;
 extern struct OamAttr *data_ov002_0210b6a8[];
@@ -322,7 +321,7 @@ extern "C" {
 extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
-extern char *gCamera;
+extern dCamera_c *gCamera;
 extern VecFx32 data_ov002_0210b958;
 }
 
@@ -335,7 +334,7 @@ extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
 extern unsigned char gLocalPlayerId;
-extern void *gPlayers[];
+extern daPly_c *gPlayers[];
 /* void *: every caller passes &mPos.x and POD int[3] scratch; retyping that
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
@@ -409,7 +408,7 @@ void daDemo_c::func_ov002_020f20f4() {
         if (mScroll->spriteActive[i] != 0) {
             if ((data_020a0db0 & 1) == 0) {
                 mScroll->spriteX[i] += mScroll->spriteVelX[i];
-                RandomIntInternal(&data_0209e650);
+                RandomIntInternal(&data_0209e650.value);
                 if (mScroll->spriteVelX[i] >= 0) {
                     if (mScroll->spriteX[i] >= 0x140) {
                         mScroll->spriteActive[i] = 0;
@@ -445,7 +444,7 @@ void daDemo_c::func_ov002_020f2210()
             mScroll->spriteDelay[i] -= 1;
             if (mScroll->spriteDelay[i] == 0) {
                 if (mScroll->spriteActive[i] == 0) {
-                    unsigned int r = RandomIntInternal(&data_0209e650);
+                    unsigned int r = RandomIntInternal(&data_0209e650.value);
                     if (r & 1) {
                         mScroll->spriteX[i] = -0x40;
                         mScroll->spriteVelX[i] = 1;
@@ -511,7 +510,7 @@ int daDemo_c::func_ov002_020f23f0()
 {
     switch (mScroll->state) {
     case 0:
-        if (((dFdBrightness_c *)gSceneFader)->IsAtStart() != 0) {
+        if (gSceneFader->IsAtStart() != 0) {
             mScroll->centerSpriteY[0]++;
             mScroll->centerSpriteY[1]--;
             if (mScroll->centerSpriteY[0] == 8) {
@@ -2713,11 +2712,11 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
     Vector3 v;
     if (first == gKuppaScriptFrame) {
         if ((*flag) != 0) {
-            int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
+            int r = (inline_fn(RandomIntInternal(&data_0209e650.value)) >> 20) & 0xfff;
             int m = FX_MUL(r, 0xa000);
             this->mMagnitude = m + 0x19000;
         }
-        VEC_Add(&this->mPos, &((dCamera_c *)gCamera)->pos, &this->mPos);
+        VEC_Add(&this->mPos, &gCamera->pos, &this->mPos);
         if (first > 0x2bc) {
             this->mPos.y -= 0x96000;
         }
@@ -2784,7 +2783,7 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     this->mScale.y = 0xb33;
     this->mScale.z = 0xb33;
     rv = mAnmModel->numFramesAndFlags;
-    u32 rnd = RandomIntInternal(&data_0209e650);
+    u32 rnd = RandomIntInternal(&data_0209e650.value);
     mAnmModel->currFrame = ((unsigned short)(FX_MUL((int)((rnd >> 20) & 0xfff), rv) >> 12)) << 12;
     return 1;
 }
@@ -3016,7 +3015,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *src, int first) {
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {
-    dCamera_c *cam = (dCamera_c *)gCamera;
+    dCamera_c *cam = gCamera;
 
     if (mode == gKuppaScriptFrame) {
         if (mode == 0) {
@@ -3167,7 +3166,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     }
 
     this->mOpacity = 0x1f;
-    cam = (dCamera_c *)gCamera;
+    cam = gCamera;
 
     VEC_Add(&v0, &cam->pos, &v0);
     dist = Vec3_Dist(&v0, &cam->pos);
@@ -3411,8 +3410,8 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618((SharedFilePtr *)data_ov009_02113c20, 1, data_ov002_0210b604,
-                                      0, 0, 0, -1) == 0)
+                ->func_ov002_020f6618(&data_ov009_02113c20, 1, data_ov002_0210b604, 0, 0, 0, -1) ==
+            0)
             return 0;
     }
     mScale.x = 0x1000;
@@ -3492,7 +3491,7 @@ DemoModelFile data_ov002_02110b78(0x475);
    the BCA list and the BTP list for param1 0x12 (0x0210b60c, 0x0210b608) and
    0x13 (0x0210b610, 0x0210b600), and the BCA list for 0x1a..0x2d. */
 SharedFilePtr *data_ov002_0210b600[1] = {&data_ov002_02110b10};
-SharedFilePtr *data_ov002_0210b604[1] = {(SharedFilePtr *)data_ov009_02113c28};
+SharedFilePtr *data_ov002_0210b604[1] = {&data_ov009_02113c28};
 SharedFilePtr *data_ov002_0210b608[1] = {&data_ov085_0213073c};
 SharedFilePtr *data_ov002_0210b60c[1] = {&data_ov085_02130744};
 SharedFilePtr *data_ov002_0210b610[1] = {&data_ov002_02110bf8};

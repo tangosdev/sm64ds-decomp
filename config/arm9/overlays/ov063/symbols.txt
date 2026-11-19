@@ -207,7 +207,7 @@ _ZTS9daPiano_c kind:data(any) addr:0x0211ecf8
 _ZTI9daPiano_c kind:data(any) addr:0x0211ed04
 g_profile_PIANO kind:data(any) addr:0x0211ed10
 _ZTV9daPiano_c kind:data(any) addr:0x0211ed34
-_ZGVsSpawnOff$2361 kind:bss addr:0x0211edc0
+_ZGVsCourtyardBooTripletPositions$2361 kind:bss addr:0x0211edc0
 data_ov063_0211edc4 kind:bss addr:0x0211edc4
 data_ov063_0211edcc kind:bss addr:0x0211edcc
 data_ov063_0211edd4 kind:bss addr:0x0211edd4
@@ -225,7 +225,7 @@ data_ov063_0211edf4 kind:bss addr:0x0211edf4
 @3091 kind:bss addr:0x0211ee50
 @3092 kind:bss addr:0x0211ee5c
 @3093 kind:bss addr:0x0211ee68
-sSpawnOff$2361 kind:bss addr:0x0211ee74
+sCourtyardBooTripletPositions$2361 kind:bss addr:0x0211ee74
 data_ov063_0211ee80 kind:bss addr:0x0211ee80
 data_ov063_0211ee8c kind:bss addr:0x0211ee8c
 gThMeryGoModelFile kind:bss addr:0x0211ee98

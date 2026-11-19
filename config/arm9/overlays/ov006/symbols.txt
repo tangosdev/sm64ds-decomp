@@ -3452,7 +3452,6 @@ sBomroomBombSprites kind:data(any) addr:0x0213bb18
 sBomroomBombLitSprites kind:data(any) addr:0x0213bb28
 _ZTS14dScMgBomroom_c kind:data(any) addr:0x0213bb38
 sBomroomBombsSprites kind:data(any) addr:0x0213bb4c
-data_ov006_0213bbb4 kind:data(any) addr:0x0213bbb4
 _ZTV14dScMgBomroom_c kind:data(any) addr:0x0213bbb4
 sCardDrawsLeft kind:data(any) addr:0x0213bc44
 _ZTI12dMgCardObj_c kind:data(any) addr:0x0213bc48
@@ -3502,7 +3501,6 @@ sCoinBlocksSprites kind:data(any) addr:0x0213bf0c
 _ZTI11dScMgCoin_c kind:data(any) addr:0x0213bf18
 _ZTS11dScMgCoin_c kind:data(any) addr:0x0213bf24
 sCoinScorePlayerSprites kind:data(word[5]) addr:0x0213bf34
-data_ov006_0213bf50 kind:data(any) addr:0x0213bf50
 _ZTV11dScMgCoin_c kind:data(any) addr:0x0213bf50
 sCupFxTemplate3 kind:data(any) addr:0x0213bfe0
 pmf_dScMgCup_c_StateIdle kind:data(any) addr:0x0213bfe8
@@ -3563,7 +3561,6 @@ pmf_dScMgCurling_c_Aim_Swing kind:data(any) addr:0x0213c2bc
 _ZTI14dScMgCurling_c kind:data(any) addr:0x0213c2c4
 _ZTS14dScMgCurling_c kind:data(any) addr:0x0213c2d0
 sCurlingAimMarkerSprites kind:data(any) addr:0x0213c2e4
-data_ov006_0213c304 kind:data(any) addr:0x0213c304
 _ZTV14dScMgCurling_c kind:data(any) addr:0x0213c304
 sCurlingMgDirPath kind:data(any) addr:0x0213c394
 data_ov006_0213c398 kind:data(any) addr:0x0213c398 ambiguous
@@ -3601,7 +3598,6 @@ _ZTI15dScMgCurling2_c kind:data(any) addr:0x0213c4bc
 _ZTS15dScMgCurling2_c kind:data(any) addr:0x0213c4c8
 sCurling2CounterSprites kind:data(any) addr:0x0213c4dc
 sCurling2CursorSprites kind:data(any) addr:0x0213c4f0
-data_ov006_0213c510 kind:data(any) addr:0x0213c510
 _ZTV15dScMgCurling2_c kind:data(any) addr:0x0213c510
 sCurling2BgJokyuNcgPath kind:data(any) addr:0x0213c5a0
 data_ov006_0213c5bc kind:data(any) addr:0x0213c5bc ambiguous
@@ -3697,7 +3693,6 @@ pmf_Wiggler_TurnTowardAim_10 kind:data(any) addr:0x0213ca74
 _ZTI15dScMgHanachan_c kind:data(any) addr:0x0213ca7c
 _ZTS15dScMgHanachan_c kind:data(any) addr:0x0213ca88
 sHanaTextSpritesByLanguage kind:data(byte[0x14]) addr:0x0213ca9c
-data_ov006_0213cab8 kind:data(any) addr:0x0213cab8
 _ZTV15dScMgHanachan_c kind:data(any) addr:0x0213cab8
 sJumpLastPick kind:data(any) addr:0x0213cb48
 pmf_dScMgJump_c_State_Result kind:data(any) addr:0x0213cb4c
@@ -3759,7 +3754,6 @@ sLuigiBoardModes kind:data(any) addr:0x0213ce98
 sLuigiBoardMovers kind:data(any) addr:0x0213ceac
 sLuigiWantedPicks kind:data(any) addr:0x0213cec0
 sLuigiPlaceLimits kind:data(byte[0x28]) addr:0x0213cee0
-data_ov006_0213cf10 kind:data(any) addr:0x0213cf10
 _ZTV12dScMgLuigi_c kind:data(any) addr:0x0213cf10
 sLuigiBg1NcgPath kind:data(any) addr:0x0213cfa0
 pmf_dScMgMemory_c_StatePlay kind:data(any) addr:0x0213cfc0 local
@@ -3896,7 +3890,6 @@ _ZTI15dScMgPachinko_c kind:data(any) addr:0x0213d948
 sPachinkoPopScores kind:data(any) addr:0x0213d954
 _ZTS15dScMgPachinko_c kind:data(any) addr:0x0213d960
 sPachinkoWaveSlots kind:data(any) addr:0x0213d974
-data_ov006_0213d9cc kind:data(any) addr:0x0213d9cc
 _ZTV15dScMgPachinko_c kind:data(any) addr:0x0213d9cc
 pmf_dScMgPachinko2_c_Paddle_StateOrbit kind:data(any) addr:0x0213da5c
 g_profile_MG_TAMAIRE kind:data(any) addr:0x0213da64 ambiguous
@@ -3933,7 +3926,6 @@ _ZTS16dScMgPachinko2_c kind:data(any) addr:0x0213db58
 sPachinko2PaddleDescendLimits kind:data(any) addr:0x0213db6c
 sPachinko2PaddleSweepLimits kind:data(any) addr:0x0213db84
 sPachinko2PaddleGatherTargets kind:data(byte[0x18]) addr:0x0213db9c
-data_ov006_0213dbbc kind:data(any) addr:0x0213dbbc
 _ZTV16dScMgPachinko2_c kind:data(any) addr:0x0213dbbc
 @2236 kind:data(any) addr:0x0213dc4c
 @2240 kind:data(any) addr:0x0213dc54
@@ -4006,7 +3998,6 @@ data_ov006_0213e140 kind:data(any) addr:0x0213e140
 data_ov006_0213e174 kind:data(any) addr:0x0213e174
 data_ov006_0213e1b4 kind:data(any) addr:0x0213e1b4
 data_ov006_0213e1fc kind:data(byte[0x48]) addr:0x0213e1fc
-data_ov006_0213e24c kind:data(any) addr:0x0213e24c
 _ZTV12dScMgPanel_c kind:data(any) addr:0x0213e24c
 sRouletteResultIndex kind:data(any) addr:0x0213e2dc
 data_ov006_0213e2e0 kind:data(any) addr:0x0213e2e0
@@ -4093,7 +4084,6 @@ sSlotReelSymbols kind:data(any) addr:0x0213e9e0
 sSlotReelSymbolsAlt kind:data(any) addr:0x0213ea20
 data_ov006_0213ea60 kind:data(any) addr:0x0213ea60
 _ZTV12dScMgSlot3_c kind:data(any) addr:0x0213eaa8
-data_ov006_0213eb40 kind:data(any) addr:0x0213eb40
 _ZTV12dScMgSlot1_c kind:data(any) addr:0x0213eb40
 g_profile_MG_SMARTBALL kind:data(any) addr:0x0213ebd0 ambiguous
 _ZTI21cMgSmartball_object_c kind:data(any) addr:0x0213ebd8
@@ -4249,14 +4239,10 @@ sSoundPopsSprites kind:data(any) addr:0x0213f6f0
 sSoundNotePositions kind:data(any) addr:0x0213f6fc
 _ZTS12dScMgSound_c kind:data(any) addr:0x0213f708
 sSoundNotePositions6 kind:data(any) addr:0x0213f718
-data_ov006_0213f718 kind:data(any) addr:0x0213f718
 sSoundNotesSprites kind:data(any) addr:0x0213f730
 sSoundNotePositions8 kind:data(any) addr:0x0213f74c
-data_ov006_0213f74c kind:data(any) addr:0x0213f74c
 sSoundNotePositions10 kind:data(any) addr:0x0213f76c
-data_ov006_0213f76c kind:data(any) addr:0x0213f76c
 sSoundNotePlaybackKinds kind:data(any) addr:0x0213f794
-data_ov006_0213f794 kind:data(any) addr:0x0213f794
 sSoundNoteSfx kind:data(any) addr:0x0213f7e8
 _ZTV12dScMgSound_c kind:data(any) addr:0x0213f844
 pmf_dScMgTeresa_c_Boo_StateFound kind:data(any) addr:0x0213f8d4
@@ -4291,7 +4277,6 @@ _ZTI13dScMgTeresa_c kind:data(any) addr:0x0213f9b4
 _ZTS13dScMgTeresa_c kind:data(any) addr:0x0213f9c0
 sTeresaCountdownSprites kind:data(any) addr:0x0213f9d0
 sTeresaPaintMask kind:data(byte[0x20]) addr:0x0213f9e4
-data_ov006_0213fa0c kind:data(any) addr:0x0213fa0c
 _ZTV13dScMgTeresa_c kind:data(any) addr:0x0213fa0c
 sTrmpTouchBlocked kind:data(any) addr:0x0213fa9c
 pmf_dScMgTrampoline_c_StateWaitExit kind:data(any) addr:0x0213faa0

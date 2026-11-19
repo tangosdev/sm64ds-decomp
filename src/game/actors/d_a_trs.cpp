@@ -152,7 +152,7 @@ extern SharedFilePtr data_ov002_0210d9b8;
  * these bodies were matched against. */
 extern "C" {
 int func_020092c4(void *cam, void *out, void *target);
-u16 func_0201277c(unsigned int a);
+unsigned int func_0201277c(unsigned int a);
 extern dCamera_c *gCamera;
 extern void func_02011cfc(void);
 extern const s16 data_ov063_0211e1c8[4] = {223, 224, 225, 226};
@@ -2435,7 +2435,7 @@ void daTrs_c::SpawnCourtyardBooTriplet() {
     Vector3_16 rot;
     int i;
 
-    static Vector3 sSpawnOff[3] = {
+    static Vector3 sCourtyardBooTripletPositions[3] = {
         Vector3(0, 0x32000, 0),
         Vector3(0xd2000, 0x6e000, 0xd2000),
         Vector3(-0xd2000, 0x46000, -0xd2000),
@@ -2447,7 +2447,7 @@ void daTrs_c::SpawnCourtyardBooTriplet() {
     }
 
     for (i = 0; i < 3; i++) {
-        Vec3_Add(&spawnPos, &this->mPos, &sSpawnOff[i]);
+        Vec3_Add(&spawnPos, &this->mPos, &sCourtyardBooTripletPositions[i]);
         pos = spawnPos;
         rot.x = this->mPrevAngle.x;
         rot.y = this->mPrevAngle.y;

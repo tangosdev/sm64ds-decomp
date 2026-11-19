@@ -13,7 +13,7 @@ extern void G3_LoadMtx43(void *m);                        /* load the 4x3 matrix
 extern void G3_MultMtx43(void *m);                        /* multiply by the 4x3 matrix */
 
 /* Draw one child particle as a textured quad (child draw type 2,
- * func_0204a5c8): SPLDraw_Polygon with the child record's rotation axis, plane
+ * SPLManager_DoDraw): SPLDraw_Polygon with the child record's rotation axis, plane
  * and tile counts, and the rotation applied before the scale. The name is
  * pret's SPL's. */
 void SPLDraw_Child_Polygon(ManagerView *mgr, ParticleElement *ptcl) {

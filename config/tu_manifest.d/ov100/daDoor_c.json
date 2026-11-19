@@ -2247,7 +2247,7 @@
       "source": "0x02147a0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02086b58",
+      "symbol": "__ptmf_null",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02086b58"

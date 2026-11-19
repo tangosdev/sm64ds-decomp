@@ -84,16 +84,6 @@ extern short data_ov075_0211d756[];
 extern short data_ov075_0211d94a[];
 }
 
-struct EntryPair {
-    short w;
-    short h;
-    EntryPair(int pw, int ph) : w((short)pw), h((short)ph) {}
-    ~EntryPair();
-};
-extern "C" EntryPair data_ov075_0211d948[];
-extern "C" EntryPair data_ov075_0211d72c[];
-extern "C" EntryPair data_ov075_0211d740[];
-extern "C" EntryPair data_ov075_0211d754[];
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
  * body is empty: tearing down the four OamAnimations and the nine icon_c

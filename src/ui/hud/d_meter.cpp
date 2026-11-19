@@ -132,7 +132,7 @@ extern int GetOwnerLanguage(void);
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
 extern unsigned char gSubScreenLayers;
-extern unsigned char gMeterShownHealth[];
+extern unsigned char gMeterShownHealth;
 extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);
@@ -315,8 +315,8 @@ int dMeter_c::InitResources() {
 
     data_ov002_02111188 = 180;
     gShowRaceTimer = 0;
-    gMeterShownHealth[0] = gPlayers[gLocalPlayerId]->GetHealth();
-    if (gMeterShownHealth[0] == 8) {
+    gMeterShownHealth = gPlayers[gLocalPlayerId]->GetHealth();
+    if (gMeterShownHealth == 8) {
         mHealthMeterY = -0x18;
         unk72 = 0;
         mHealthMeterState = 0;
@@ -548,10 +548,10 @@ void dMeter_c::UpdateHealthMeter() {
             mHealthMeterState = 1;
             return;
         }
-        if (gMeterShownHealth[0] <= health)
+        if (gMeterShownHealth <= health)
             return;
         mHealthMeterY = 0x39;
-        gMeterShownHealth[0]--;
+        gMeterShownHealth--;
         mHealthTickTimer = 30;
         mHealthMeterHoldTimer = 90;
         mHealthMeterState = 1;
@@ -567,15 +567,15 @@ void dMeter_c::UpdateHealthMeter() {
         if (mHealthTickTimer != 0)
             return;
         {
-            unsigned char cur = gMeterShownHealth[0];
+            unsigned char cur = gMeterShownHealth;
             if (cur < health) {
                 if ((int)(health - cur) > 1) {
-                    gMeterShownHealth[0] = cur + 1;
+                    gMeterShownHealth = cur + 1;
                     func_02012790(0xd);
                     mHealthTickTimer = 16;
                     return;
                 }
-                gMeterShownHealth[0] = health;
+                gMeterShownHealth = health;
                 func_02012790(0xd);
                 if (player->mIsUnderwater != 0)
                     return;
@@ -591,7 +591,7 @@ void dMeter_c::UpdateHealthMeter() {
                 return;
             }
             if (cur > health) {
-                gMeterShownHealth[0] = cur - 1;
+                gMeterShownHealth = cur - 1;
                 mHealthTickTimer = 30;
                 return;
             }
@@ -651,21 +651,21 @@ void dMeter_c::RenderHealthMeter() {
         return;
 
     if (GetOwnerLanguage() == 5) {
-        OAM::Render(0, OAM::HEALTH_METERS_ES[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
-                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::HEALTH_METERS_ES[gMeterShownHealth], 0x80, mHealthMeterY, -1, 1, 0x1000,
+                    0x1000, 0, -1);
         OAM::Render(0, &OAM::HEALTH_METER_BG_ES, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else if (GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-        OAM::Render(0, OAM::HEALTH_METERS_FR_IT[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, OAM::HEALTH_METERS_FR_IT[gMeterShownHealth], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
         OAM::Render(0, &OAM::HEALTH_METER_BG_FR_IT, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0,
                     -1);
     } else {
-        OAM::Render(0, OAM::HEALTH_METERS[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1, 0x1000,
+        OAM::Render(0, OAM::HEALTH_METERS[gMeterShownHealth], 0x80, mHealthMeterY, -1, 1, 0x1000,
                     0x1000, 0, -1);
         OAM::Render(0, &OAM::HEALTH_METER_BG, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 
-    GX_LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
+    GX_LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth]], 0x60, 0x20);
 }
 
 /* ROM ordinal 11 -- dMeter_c::UpdateVsTimer(), 0x020fce9c, size 0x150 */

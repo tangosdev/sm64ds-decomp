@@ -210,7 +210,7 @@ extern unsigned char data_ov100_02148704;
 extern unsigned short data_ov100_02148708[];
 /* The null member the initializer copies for the states that have no enter
    member. */
-extern daDoor_StatePmf data_02086b58;
+extern daDoor_StatePmf __ptmf_null;
 
 /* Indexed by mKeyModelIdx - 1: the character func_ov100_02144528 switches the
    player to. */
@@ -297,11 +297,11 @@ DoorEntry data_ov100_02148204[19] = {
 /* -------------------------------------------------------------------------- */
 /* The nine door states, in static-initializer order. Each is a 16-byte
    {enter, execute} pair; the enterless states copy the null record arm9
-   keeps at data_02086b58. mwcc writes the member images this initializer
+   keeps at __ptmf_null. mwcc writes the member images this initializer
    reads as the .data constants at 0x021480d4..0x02148144, as the
    cartridge has them. */
 /* -------------------------------------------------------------------------- */
-daDoor_StateRecord data_ov100_021488b4 = {data_02086b58,
+daDoor_StateRecord data_ov100_021488b4 = {__ptmf_null,
                                           (daDoor_StatePmf)&daDoor_c::func_ov100_02144cf8};
 daDoor_StateRecord data_ov100_021488c4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144ccc,
                                           (daDoor_StatePmf)&daDoor_c::func_ov100_02144c6c};
@@ -315,9 +315,9 @@ daDoor_StateRecord data_ov100_02148904 = {(daDoor_StatePmf)&daDoor_c::func_ov100
                                           (daDoor_StatePmf)&daDoor_c::func_ov100_02144528};
 daDoor_StateRecord data_ov100_02148914 = {(daDoor_StatePmf)&daDoor_c::func_ov100_0214491c,
                                           (daDoor_StatePmf)&daDoor_c::func_ov100_02144730};
-daDoor_StateRecord data_ov100_02148924 = {data_02086b58,
+daDoor_StateRecord data_ov100_02148924 = {__ptmf_null,
                                           (daDoor_StatePmf)&daDoor_c::func_ov100_021444e8};
-daDoor_StateRecord data_ov100_021488a4 = {data_02086b58,
+daDoor_StateRecord data_ov100_021488a4 = {__ptmf_null,
                                           (daDoor_StatePmf)&daDoor_c::func_ov100_02144468};
 
 /* recovered: real C++ destructor -- the compiler emits the whole body.

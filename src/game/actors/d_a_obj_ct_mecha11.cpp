@@ -67,7 +67,12 @@ CLPS_Block data_ov035_02112238 = {
     0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01001fc0, 0x000000ff, 0xffffffff, 0xffffffff,
 };
 
-short data_ov035_02112b80[2] = {0x00c8, 0x0258};
+short sTTCSpinnerSpeeds[4] = {
+    200,
+    600,
+    200,
+    0,
+};
 
 daObjCtMecha11_c::~daObjCtMecha11_c() {}
 
@@ -115,7 +120,7 @@ int daObjCtMecha11_c::Render() {
 
 int daObjCtMecha11_c::Behavior() {
     unsigned char idx = data_0209f2c0;
-    mPrevAngle.x = data_ov035_02112b80[idx];
+    mPrevAngle.x = sTTCSpinnerSpeeds[idx];
     if (idx == 2) {
         if (DecIfAbove0_Short(&mRandTimer) == 0) {
             int r = (unsigned short)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);

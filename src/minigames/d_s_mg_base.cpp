@@ -2359,7 +2359,7 @@ extern "C" {
 struct OamAttr;
 }
 
-extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
+extern "C" int Mg_RenderMainSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                          unsigned short a6) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2603,7 +2603,7 @@ int dScMgBase_c::BeforeRender()
     }
 
     if (mStateController.mSuspended == 0) {
-        p = (MgBanner *)gMgBanners;
+        p = gMgBanners;
         for (i = 0; i < 3; i++, p++) {
             if (p->mFileIndex == 0x1d)
                 continue;
@@ -2611,7 +2611,7 @@ int dScMgBase_c::BeforeRender()
                 continue;
             Banner_Draw(p);
         }
-        p2 = (MgBanner *)gMgBanners;
+        p2 = gMgBanners;
         for (i2 = 0; i2 < 3; i2++, p2++) {
             if (p2->mFileIndex == 0x1d)
                 continue;
@@ -2675,7 +2675,7 @@ int dScMgBase_c::BeforeBehavior()
         int i;
         MgBanner *g;
         mStateController.Behavior();
-        g = (MgBanner *)gMgBanners;
+        g = gMgBanners;
         for (i = 0; i < 3; i++) {
             if (g->mFileIndex != 0x1d)
                 Banner_Update(g);

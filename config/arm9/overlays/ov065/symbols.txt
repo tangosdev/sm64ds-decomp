@@ -141,9 +141,9 @@ data_ov065_0211c078 kind:data(any) addr:0x0211c078
 data_ov065_0211c080 kind:data(any) addr:0x0211c080
 data_ov065_0211c08c kind:data(any) addr:0x0211c08c
 data_ov065_0211c0a8 kind:data(any) addr:0x0211c0a8
-data_ov065_0211c0b0 kind:data(any) addr:0x0211c0b0
+sTTCPendulumInitialAccels kind:data(any) addr:0x0211c0b0
 data_ov065_0211c0b8 kind:data(any) addr:0x0211c0b8
-data_ov065_0211c0c8 kind:data(any) addr:0x0211c0c8
+sTTCMovingBarDelays kind:data(any) addr:0x0211c0c8
 data_ov065_0211c0d0 kind:data(any) addr:0x0211c0d0
 data_ov065_0211c0d4 kind:data(any) addr:0x0211c0d4
 __sinit_d_a_yurei_mucho.cpp kind:function(arm,size=0x198) addr:0x0211c110
@@ -209,7 +209,7 @@ data_ov065_0211cf24 kind:data(any) addr:0x0211cf24
 data_ov065_0211cf44 kind:data(any) addr:0x0211cf44
 data_ov065_0211cf64 kind:data(any) addr:0x0211cf64
 data_ov065_0211cf84 kind:data(any) addr:0x0211cf84
-data_ov065_0211cfa4 kind:data(any) addr:0x0211cfa4
+sTTCRotatingSolidInitialDelays kind:data(any) addr:0x0211cfa4
 data_ov065_0211cfa8 kind:data(any) addr:0x0211cfa8
 _ZTI20daObjCtRotateBlock_c kind:data(any) addr:0x0211cfac
 _ZTS20daObjCtRotateBlock_c kind:data(any) addr:0x0211cfb8
@@ -232,12 +232,12 @@ data_ov065_0211d19c kind:data(any) addr:0x0211d19c
 g_profile_CT_MECHA04S kind:data(any) addr:0x0211d1ac ambiguous
 g_profile_CT_MECHA04L kind:data(any) addr:0x0211d1c8 ambiguous
 _ZTV16daObjCtMecha04_c kind:data(any) addr:0x0211d1ec
-data_ov065_0211d26c kind:data(any) addr:0x0211d26c
+sTTCMovingBarRandomDelays kind:data(any) addr:0x0211d26c
 _ZTI16daObjCtMecha05_c kind:data(any) addr:0x0211d270
 _ZTS16daObjCtMecha05_c kind:data(any) addr:0x0211d27c
 g_profile_CT_MECHA05 kind:data(any) addr:0x0211d290 ambiguous
 _ZTV16daObjCtMecha05_c kind:data(any) addr:0x0211d2b4
-data_ov065_0211d334 kind:data(any) addr:0x0211d334
+sTTCCogNormalSpeeds kind:data(any) addr:0x0211d334
 _ZTI18daObjCtKaitendai_c kind:data(any) addr:0x0211d338
 _ZTS18daObjCtKaitendai_c kind:data(any) addr:0x0211d344
 data_ov065_0211d35c kind:data(any) addr:0x0211d35c
@@ -252,7 +252,7 @@ g_profile_CT_MECHA08A kind:data(any) addr:0x0211d454 ambiguous
 g_profile_CT_MECHA08B kind:data(any) addr:0x0211d470 ambiguous
 _ZTV16daObjCtMecha08_c kind:data(any) addr:0x0211d494
 _ZTI16daObjCtMecha09_c kind:data(any) addr:0x0211d514
-data_ov065_0211d520 kind:data(any) addr:0x0211d520
+sTTCElevatorSpeeds kind:data(any) addr:0x0211d520
 _ZTS16daObjCtMecha09_c kind:data(any) addr:0x0211d530
 g_profile_CT_MECHA09 kind:data(any) addr:0x0211d544 ambiguous
 _ZTV16daObjCtMecha09_c kind:data(any) addr:0x0211d568

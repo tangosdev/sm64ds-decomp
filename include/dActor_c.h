@@ -48,9 +48,9 @@ struct dCc_c;
 union Matrix4x3;
 struct dExtShadowModel_c;
 
-/* data_020a0eac is the heap every actor is allocated from. operator delete
+/* GAME_HEAP_PTR is the heap every actor is allocated from. operator delete
    passes it to Memory::Deallocate, declared in Memory.h via fBase_c.h. */
-extern "C" mHeap::Heap_t *data_020a0eac;
+extern "C" mHeap::Heap_t *GAME_HEAP_PTR;
 
 struct dActor_c : dBase_c {
     /* The global actor list (data_0209b468) threads through every actor: the
@@ -338,7 +338,7 @@ struct dActor_c : dBase_c {
        base. Without this every dActor_c-derived D0 calls the global operator
        delete, which frees to the default heap instead of the actor heap. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, data_020a0eac);
+        Memory::Deallocate(ptr, GAME_HEAP_PTR);
     }
 };
 

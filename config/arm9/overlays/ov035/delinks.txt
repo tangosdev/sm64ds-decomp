@@ -7,8 +7,8 @@
     .data.m35Mid  start:0x021121dc end:0x02112238 kind:data align:4
     .data.m11Clps start:0x02112238 end:0x02112258 kind:data align:4
     .data.m35Mid2 start:0x02112258 end:0x02112b80 kind:data align:4
-    .data.m11Ang  start:0x02112b80 end:0x02112b84 kind:data align:4
-    .data.m35Rest start:0x02112b84 end:0x02112c60 kind:data align:4
+    .data.m11Ang  start:0x02112b80 end:0x02112b88 kind:data align:4
+    .data.m35Rest start:0x02112b88 end:0x02112c60 kind:data align:4
     .bss        start:0x02112c60 end:0x02112ce0 kind:bss align:32
 src/game/actors/d_a_obj_ct_mecha10.cpp:
     complete
@@ -25,5 +25,5 @@ src/game/actors/d_a_obj_ct_mecha11.cpp:
     .init start:0x02111fc0 end:0x02112028
     .ctor start:0x0211202c end:0x02112030
     .data.m11Clps start:0x02112238 end:0x02112258
-    .data.m11Ang start:0x02112b80 end:0x02112b84
+    .data.m11Ang start:0x02112b80 end:0x02112b88
     .bss start:0x02112cb0 end:0x02112cd8

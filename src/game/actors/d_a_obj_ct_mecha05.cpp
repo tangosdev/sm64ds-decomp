@@ -4,7 +4,7 @@
  * What stays, and why:
  * - dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
  *   stores +0x0c; dBgW::SetClipOffsetY stores +0x10
- * - data_ov065_0211c0c8 / data_ov065_0211d26c; TTC_MovingBar_ModelFile /
+ * - sTTCMovingBarDelays / sTTCMovingBarRandomDelays; TTC_MovingBar_ModelFile /
  *   TTC_MovingBar_ClsnFile are symbols.txt BSS labels shared with the
  *   neighbouring class
  * - return new emits homeless _ZN10dBgActor_cD2Ev; compiler-only policy
@@ -60,13 +60,13 @@ extern Mecha05ModelFile TTC_MovingBar_ModelFile;
 extern Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile;
 
 extern u8 data_0209f2c0;
-extern const s16 data_ov065_0211c0c8[4] = {
+extern const s16 sTTCMovingBarDelays[4] = {
     55,
     30,
     55,
     0,
 };
-s8 data_ov065_0211d26c[4] = {
+s8 sTTCMovingBarRandomDelays[4] = {
     1,
     12,
     55,
@@ -103,7 +103,7 @@ int daObjCtMecha05_c::InitResources() {
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
-    mStateTimer = data_ov065_0211c0c8[data_0209f2c0];
+    mStateTimer = sTTCMovingBarDelays[data_0209f2c0];
 
     Vector3 position;
     position.x = mPos.x;
@@ -223,12 +223,12 @@ void daObjCtMecha05_c::ResetToHome() {
     mPos.z = mHomePos.z;
 
     u8 setting = data_0209f2c0;
-    mStateTimer = data_ov065_0211c0c8[setting];
+    mStateTimer = sTTCMovingBarDelays[setting];
     if (setting != 2)
         return;
 
     mStateTimer =
-        data_ov065_0211d26c[(u16)((u32)RandomIntInternal(&data_0209e650.value) >> 16) & 3];
+        sTTCMovingBarRandomDelays[(u16)((u32)RandomIntInternal(&data_0209e650.value) >> 16) & 3];
 }
 
 /* -------------------------------------------------------------------------- */

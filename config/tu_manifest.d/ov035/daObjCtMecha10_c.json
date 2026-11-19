@@ -121,7 +121,7 @@
   ],
   "rodata": [
     {
-      "symbol": "data_ov035_02111ef0",
+      "symbol": "sTTC2DRotatorSpeeds",
       "address": "0x02111ef0",
       "size": "0x4",
       "binding": "STB_GLOBAL",

@@ -8,7 +8,7 @@
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
 extern void SPLUtil_DrawXYPlane(int tileS, int tileT); /* the XY-plane quad */
 
-/* Draw one particle as a camera-facing quad (draw type 0, func_0204a5c8):
+/* Draw one particle as a camera-facing quad (draw type 0, SPLManager_DoDraw):
  * alpha and the next polygon ID into POLYGON_ATTR (nothing more when the
  * alpha is 0), move basePosition + offset into view space, then load a matrix
  * that rotates by the particle's angle about the view axis, scales by

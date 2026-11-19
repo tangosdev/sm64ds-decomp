@@ -132,7 +132,7 @@ void RunningSlidingDustAt(s32, s32, s32);
 int SurfaceInfo_TestFlag0x20(int *p);
 #include "BgChEvt.h"
 int func_ov002_020f030c(int x);
-extern "C" int func_ov002_020e496c(daPly_c *c);
+extern "C" dExtAnm2Model_c *func_ov002_020e496c(daPly_c *c);
 
 extern "C" int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 

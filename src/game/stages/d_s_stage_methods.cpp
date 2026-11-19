@@ -4604,7 +4604,7 @@ int dScStage_c::InitResources() {
         LoadTextNarcs();
         LoadArchive(0);
         if (gCurrentSublevel == 1) {
-            mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
+            mHeap::Heap_t *previousHeap = GAME_HEAP_PTR->SetDefault();
             LoadArchive(7);
             previousHeap->SetDefault();
         }

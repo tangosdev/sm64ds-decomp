@@ -55,7 +55,7 @@ struct System {
     SystemDefinition *mDefinition; /* 0x18 */
     /* The update walk retires a system with `terminate` set once both
        particle lists are empty, and skips its update (SPLEmitter_Update) or draw
-       (func_0204a5c8) on `skipUpdate` or `skipDraw`. SPLEmitter_Update emits
+       (SPLManager_DoDraw) on `skipUpdate` or `skipDraw`. SPLEmitter_Update emits
        only while `terminate` and `stopGenerate` are both clear, and the
        callback virtuals toggle `stopGenerate` while spawning or suppressing
        particles. The spawn (SPLEmitter_Init) clears the whole word. The

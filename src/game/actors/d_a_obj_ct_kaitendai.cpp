@@ -23,7 +23,7 @@
  *   Writing mPrevAngle.x = mPrevAngle.x * -1 comes out 0x12c, and
  *   mPrevAngle.y = mPrevAngle.y + mPrevAngle.z comes out 0x134, against
  *   Behavior's 0x138.
- * - data_ov065_0211d334 (the 200/400 speeds) and data_ov065_0211d35c
+ * - sTTCCogNormalSpeeds (the 200/400 speeds) and data_ov065_0211d35c
  *   (the two resource rows) are not this TU's data. Neither are
  *   g_profile_CT_MECHA06 / CT_MECHA07.
  * - The actor-id nest stays `!= 0x72` then `== 0x73`, and the floor
@@ -86,7 +86,7 @@ typedef char
     KaitendaiCollisionFilePtr_size_must_be_0x08[sizeof(KaitendaiCollisionFilePtr) == 0x08 ? 1 : -1];
 
 extern u8 data_0209f2c0; /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
-s16 data_ov065_0211d334[2] = {
+s16 sTTCCogNormalSpeeds[2] = {
     200,
     400,
 };
@@ -143,7 +143,7 @@ int daObjCtKaitendai_c::Behavior() {
     switch (data_0209f2c0) {
     case 0: /* slow hand */
     case 1: /* fast hand */
-        mPrevAngle.z = data_ov065_0211d334[data_0209f2c0];
+        mPrevAngle.z = sTTCCogNormalSpeeds[data_0209f2c0];
         break;
 
     case 2: /* random hand */
