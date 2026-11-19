@@ -1,142 +1,208 @@
 {
-  "id": "arm9/OAM",
-  "module": "arm9",
-  "source": "src/engine/oam/OAM.cpp",
-  "promoted_source": "src/engine/oam/OAM.cpp",
-  "status": "promoted",
-  "boundary_confidence": "high",
-  "boundary_evidence": [
-    "CONTIGUOUS AND EXHAUSTIVE: 0x02020820..0x02021a04 is covered by this single src/engine/oam/OAM.cpp complete entry with no gap and no overlap; bounded below by src/unnamed/arm9/0202/func_02020768.c (ends 0x02020820) and above by dPa_c::level_c::cutTable (starts 0x02021a04).",
-    "SINGLE CLASS: every function in the range is an OAM member (include/OAM.h). OAM is not polymorphic -- no RTTI/vtable/ctor/dtor -- so no key-function partition applies."
-  ],
-  "sections": [
-    {
-      "name": ".text",
-      "start": "0x02020820",
-      "end": "0x02021a04"
-    }
-  ],
-  "functions": [
-    {
-      "symbol": "_ZN12OamAnimation13func_02020820EPiiihh",
-      "address": "0x02020820",
-      "size": "0x00000064",
-      "legacy_source": "src/unnamed/arm9/0202/func_02020820.c",
-      "ordinal": 0
-    },
-    {
-      "symbol": "_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2",
-      "address": "0x02020884",
-      "size": "0x000000e8",
-      "legacy_source": "src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.cpp",
-      "ordinal": 1
-    },
-    {
-      "symbol": "_ZN3OAM12GetObjHeightEii",
-      "address": "0x0202096c",
-      "size": "0x00000014",
-      "legacy_source": "src/_ZN3OAM12GetObjHeightEii.cpp",
-      "ordinal": 2
-    },
-    {
-      "symbol": "_ZN3OAM11GetObjWidthEii",
-      "address": "0x02020980",
-      "size": "0x00000014",
-      "legacy_source": "src/_ZN3OAM11GetObjWidthEii.cpp",
-      "ordinal": 3
-    },
-    {
-      "symbol": "_ZN3OAM6RenderEbP7OamAttriiiiiiii",
-      "address": "0x02020994",
-      "size": "0x00000690",
-      "legacy_source": "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.c",
-      "ordinal": 4
-    },
-    {
-      "symbol": "_ZN3OAM6RenderEbP7OamAttriiiiii",
-      "address": "0x02021024",
-      "size": "0x00000480",
-      "legacy_source": "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c",
-      "ordinal": 5
-    },
-    {
-      "symbol": "_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2",
-      "address": "0x020214a4",
-      "size": "0x000002e4",
-      "legacy_source": "src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp",
-      "ordinal": 6
-    },
-    {
-      "symbol": "_ZN3OAM5ResetEv",
-      "address": "0x02021788",
-      "size": "0x000000dc",
-      "legacy_source": "src/_ZN3OAM5ResetEv.cpp",
-      "ordinal": 7
-    },
-    {
-      "symbol": "_ZN3OAM5FlushEv",
-      "address": "0x02021864",
-      "size": "0x00000034",
-      "legacy_source": "src/_ZN3OAM5FlushEv.cpp",
-      "ordinal": 8
-    },
-    {
-      "symbol": "_ZN3OAM4LoadEv",
-      "address": "0x02021898",
-      "size": "0x000000b4",
-      "legacy_source": "src/_ZN3OAM4LoadEv.cpp",
-      "ordinal": 9
-    },
-    {
-      "symbol": "_ZN3OAM9RenderSubEP7OamAttrii",
-      "address": "0x0202194c",
-      "size": "0x00000050",
-      "legacy_source": "src/_ZN3OAM9RenderSubEP7OamAttrii.cpp",
-      "ordinal": 10
-    },
-    {
-      "symbol": "_ZN3OAM9RenderSubEP7OamAttriiii",
-      "address": "0x0202199c",
-      "size": "0x00000054",
-      "legacy_source": "src/_ZN3OAM9RenderSubEP7OamAttriiii.cpp",
-      "ordinal": 11
-    },
-    {
-      "symbol": "_ZN3OAM12EnableSubOAMEP6OamTmp",
-      "address": "0x020219f0",
-      "size": "0x00000014",
-      "legacy_source": "src/_ZN3OAM12EnableSubOAMEv.cpp",
-      "ordinal": 12
-    }
-  ],
-  "data": [],
-  "bss": [],
-  "notes": [
-    "HAND-ASSEMBLED. The two Fix12-by-value Render overloads cannot be member definitions (the by-value-class wall, documented in include/OAM.h): the 7-arg one stays an extern \"C\" def and the 10-arg one is compiled under `#pragma cplusplus off` inside the TU -- its shard was a `.c` file and only the C front end reproduces the frame (+8 bytes of locals under C++).",
-    "`#pragma defer_codegen off` is load-bearing and the file lists members ROM-ascending: deferred codegen reads optimization pragmas last-wins at end of file, which leaked LoadAffineParams' trailing offs backward onto the 10-arg Render (0x688 vs 0x690). With parse-time codegen each pragma bracket applies where written and emission order is source order.",
-    "Four local decompositions of the 8-byte attribute entry survive under unique names: OamAttrEntry (Render's hardware-entry bitfields), OamAttrTpl (the 7-arg Render's template bitfields), OamAttrRaw/OamEntryRaw (the 10-arg Render's a01/a2/a3 word view), OAMEntry (Reset's a/b pair). Shared OamAttr stays the parameter type on every member signature; each body binds its view in one cast.",
-    "include/OAM.h gained `static void Reset();` -- the only member the header lacked (the shard had dodged it with `namespace OAM`, which cannot coexist with `struct OAM` in one TU)."
-  ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-OAM/OAM.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 13,
-    "functions_declared": 13,
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    },
-    "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
-    }
+ "id": "arm9/OAM",
+ "module": "arm9",
+ "source": "src/engine/oam/OAM.cpp",
+ "promoted_source": "src/engine/oam/OAM.cpp",
+ "status": "promoted",
+ "boundary_confidence": "high",
+ "boundary_evidence": [
+  "CONTIGUOUS AND EXHAUSTIVE: 0x02020820..0x02021a04 is covered by this single src/engine/oam/OAM.cpp complete entry with no gap and no overlap; bounded below by src/unnamed/arm9/0202/func_02020768.c (ends 0x02020820) and above by dPa_c::level_c::cutTable (starts 0x02021a04).",
+  "SINGLE CLASS: every function in the range is an OAM member (include/OAM.h). OAM is not polymorphic -- no RTTI/vtable/ctor/dtor -- so no key-function partition applies."
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x02020820",
+   "end": "0x02021a04"
+  },
+  {
+   "name": ".bss",
+   "start": "0x0209e660",
+   "end": "0x0209f1d8"
   }
+ ],
+ "functions": [
+  {
+   "symbol": "_ZN12OamAnimation13func_02020820EPiiihh",
+   "address": "0x02020820",
+   "size": "0x00000064",
+   "legacy_source": "src/unnamed/arm9/0202/func_02020820.c",
+   "ordinal": 0
+  },
+  {
+   "symbol": "_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2",
+   "address": "0x02020884",
+   "size": "0x000000e8",
+   "legacy_source": "src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.cpp",
+   "ordinal": 1
+  },
+  {
+   "symbol": "_ZN3OAM12GetObjHeightEii",
+   "address": "0x0202096c",
+   "size": "0x00000014",
+   "legacy_source": "src/_ZN3OAM12GetObjHeightEii.cpp",
+   "ordinal": 2
+  },
+  {
+   "symbol": "_ZN3OAM11GetObjWidthEii",
+   "address": "0x02020980",
+   "size": "0x00000014",
+   "legacy_source": "src/_ZN3OAM11GetObjWidthEii.cpp",
+   "ordinal": 3
+  },
+  {
+   "symbol": "_ZN3OAM6RenderEbP7OamAttriiiiiiii",
+   "address": "0x02020994",
+   "size": "0x00000690",
+   "legacy_source": "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.c",
+   "ordinal": 4
+  },
+  {
+   "symbol": "_ZN3OAM6RenderEbP7OamAttriiiiii",
+   "address": "0x02021024",
+   "size": "0x00000480",
+   "legacy_source": "src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c",
+   "ordinal": 5
+  },
+  {
+   "symbol": "_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2",
+   "address": "0x020214a4",
+   "size": "0x000002e4",
+   "legacy_source": "src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp",
+   "ordinal": 6
+  },
+  {
+   "symbol": "_ZN3OAM5ResetEv",
+   "address": "0x02021788",
+   "size": "0x000000dc",
+   "legacy_source": "src/_ZN3OAM5ResetEv.cpp",
+   "ordinal": 7
+  },
+  {
+   "symbol": "_ZN3OAM5FlushEv",
+   "address": "0x02021864",
+   "size": "0x00000034",
+   "legacy_source": "src/_ZN3OAM5FlushEv.cpp",
+   "ordinal": 8
+  },
+  {
+   "symbol": "_ZN3OAM4LoadEv",
+   "address": "0x02021898",
+   "size": "0x000000b4",
+   "legacy_source": "src/_ZN3OAM4LoadEv.cpp",
+   "ordinal": 9
+  },
+  {
+   "symbol": "_ZN3OAM9RenderSubEP7OamAttrii",
+   "address": "0x0202194c",
+   "size": "0x00000050",
+   "legacy_source": "src/_ZN3OAM9RenderSubEP7OamAttrii.cpp",
+   "ordinal": 10
+  },
+  {
+   "symbol": "_ZN3OAM9RenderSubEP7OamAttriiii",
+   "address": "0x0202199c",
+   "size": "0x00000054",
+   "legacy_source": "src/_ZN3OAM9RenderSubEP7OamAttriiii.cpp",
+   "ordinal": 11
+  },
+  {
+   "symbol": "_ZN3OAM12EnableSubOAMEP6OamTmp",
+   "address": "0x020219f0",
+   "size": "0x00000014",
+   "legacy_source": "src/_ZN3OAM12EnableSubOAMEv.cpp",
+   "ordinal": 12
+  }
+ ],
+ "data": [],
+ "bss": [
+  {
+   "symbol": "data_0209e660",
+   "address": "0x0209e660",
+   "size": "0xb78",
+   "binding": "STB_GLOBAL",
+   "evidence": "The OAM state: the sub-OAM suppress flag, the fill/affine counters and the main/sub staging buffers the render path writes."
+  }
+ ],
+ "notes": [
+  "HAND-ASSEMBLED. The two Fix12-by-value Render overloads cannot be member definitions (the by-value-class wall, documented in include/OAM.h): the 7-arg one stays an extern \"C\" def and the 10-arg one is compiled under `#pragma cplusplus off` inside the TU -- its shard was a `.c` file and only the C front end reproduces the frame (+8 bytes of locals under C++).",
+  "`#pragma defer_codegen off` is load-bearing and the file lists members ROM-ascending: deferred codegen reads optimization pragmas last-wins at end of file, which leaked LoadAffineParams' trailing offs backward onto the 10-arg Render (0x688 vs 0x690). With parse-time codegen each pragma bracket applies where written and emission order is source order.",
+  "Four local decompositions of the 8-byte attribute entry survive under unique names: OamAttrEntry (Render's hardware-entry bitfields), OamAttrTpl (the 7-arg Render's template bitfields), OamAttrRaw/OamEntryRaw (the 10-arg Render's a01/a2/a3 word view), OAMEntry (Reset's a/b pair). Shared OamAttr stays the parameter type on every member signature; each body binds its view in one cast.",
+  "include/OAM.h gained `static void Reset();` -- the only member the header lacked (the shard had dodged it with `namespace OAM`, which cannot coexist with `struct OAM` in one TU)."
+ ],
+ "verification": {
+  "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+  "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object": "build/tu/arm9-OAM/OAM.o (gitignored)",
+  "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+  "functions_matched": 13,
+  "functions_declared": 13,
+  "criteria": {
+   "every_declared_function_defined": "PASS",
+   "every_declared_function_bytes_match": "PASS",
+   "declared_function_set_equals_defined_function_set": "PASS",
+   "functions_occur_in_expected_order": "PASS",
+   "relocation_destinations_verified": "PASS"
+  },
+  "compilerOnlyOutput": {
+   "requested": [],
+   "deadstripped": [],
+   "data": [],
+   "dataExternalized": []
+  },
+  "linkcheck": {
+   "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": true,
+    "rom": true
+   },
+   "tuRange": {
+    "start": "0x02020820",
+    "end": "0x02021a04",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
+    {
+     "section": ".text",
+     "start": "0x02020820",
+     "end": "0x02021a04",
+     "differingBytes": 0,
+     "firstDiff": null
+    },
+    {
+     "section": ".bss",
+     "start": "0x0209e660",
+     "end": "0x0209f1d8",
+     "comparison": "NOBITS -- symbol/module gates"
+    }
+   ],
+   "objectAudit": {
+    "counts": {
+     "LICENSED": 14
+    },
+    "emittedTextOrderIsRomAscending": true,
+    "nonLicensedSymbols": [],
+    "unlicensedSections": []
+   },
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   }
+  }
+ },
+ "production_mode": "intact-object"
 }

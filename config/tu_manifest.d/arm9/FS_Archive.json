@@ -1,195 +1,261 @@
 {
-  "id": "arm9/FS_Archive",
-  "module": "arm9",
-  "source": "src/engine/fs/FS_Archive.cpp",
-  "promoted_source": "src/engine/fs/FS_Archive.cpp",
-  "status": "promoted",
-  "boundary_confidence": "high",
-  "boundary_evidence": [
-    "One contiguous run of the Nitro SDK's FS_archive.c, 0x0205c7c4..0x0205d368: 20 functions, gapless in config/arm9/delinks.txt. pret's pokediamond FS_archive.c defines exactly twenty functions, and all twenty are here, each identified by body: the archive flags each one tests and sets (LOADED 2, TABLE_LOAD 4, SUSPEND 8, RUNNING 0x10, CANCELING 0x20, SUSPENDING 0x40, UNLOADING 0x80, IS_ASYNC 0x100, IS_SYNC 0x200), the FSArchive fields it reads and writes, and the calls between them.",
-    "Order: mwccarm emits the bodies in reverse, so the ROM runs from FS_SetArchiveProc (lowest) to FSi_GetPackedName (highest), pret's source order reversed with two differences from this older SDK: FS_FindArchive sits between FSi_ReadMemoryCore and FSi_NextCommand (pret has it after FS_InitArchive), and FS_NotifyArchiveAsyncEnd sits between FSi_SendCommand and FS_InitArchive (pret has it last).",
-    "Older SDK: FSi_SendCommand has no suspend test and no OPERATING bit, FSi_NextCommand does not test SUSPENDING before it starts a command, FS_RegisterArchiveName sets no FS_ARCHIVE_FLAG_REGISTER, FS_LoadArchiveTables does not check its reads, FS_UnloadArchive does not resume the archive it suspended, and the thread queues are 16-bit masks of thread ids.",
-    "BOTTOM EDGE: FSi_TranslateCommand and FSi_ReleaseCommand, pret's FS_command.c (arm9/FS_Command), end at 0x0205c7c4.",
-    "TOP EDGE: FS_SeekFile (0x0205d368) starts FS_file.c: whence 0/1/2 add the file's top, pos or bottom, the result is clamped to [top, bottom] and stored as pos, as in pret's pokediamond FS_SeekFile. The rest of FS_file.c follows it in reverse source order, FS_ReadFile through FS_Init."
-  ],
-  "sections": [
-    {
-      "name": ".text",
-      "start": "0x0205c7c4",
-      "end": "0x0205d368"
-    }
-  ],
-  "functions": [
-    {
-      "symbol": "FS_SetArchiveProc",
-      "address": "0x0205c7c4",
-      "size": "0x00000020",
-      "legacy_source": "src/FS_SetArchiveProc.c",
-      "ordinal": 0
-    },
-    {
-      "symbol": "FS_ResumeArchive",
-      "address": "0x0205c7e4",
-      "size": "0x00000080",
-      "legacy_source": "src/FS_ResumeArchive.cpp",
-      "ordinal": 1
-    },
-    {
-      "symbol": "FS_SuspendArchive",
-      "address": "0x0205c864",
-      "size": "0x000000b8",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205c864.cpp",
-      "ordinal": 2
-    },
-    {
-      "symbol": "FS_UnloadArchiveTables",
-      "address": "0x0205c91c",
-      "size": "0x0000009c",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205c91c.c",
-      "ordinal": 3
-    },
-    {
-      "symbol": "FS_LoadArchiveTables",
-      "address": "0x0205c9b8",
-      "size": "0x000000f0",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205c9b8.c",
-      "ordinal": 4
-    },
-    {
-      "symbol": "FS_UnloadArchive",
-      "address": "0x0205caa8",
-      "size": "0x000000c0",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205caa8.cpp",
-      "ordinal": 5
-    },
-    {
-      "symbol": "FS_LoadArchive",
-      "address": "0x0205cb68",
-      "size": "0x0000007c",
-      "legacy_source": "src/FS_LoadArchive.c",
-      "ordinal": 6
-    },
-    {
-      "symbol": "FS_ReleaseArchiveName",
-      "address": "0x0205cbe4",
-      "size": "0x0000009c",
-      "legacy_source": "src/FS_ReleaseArchiveName.cpp",
-      "ordinal": 7
-    },
-    {
-      "symbol": "FS_RegisterArchiveName",
-      "address": "0x0205cc80",
-      "size": "0x000000b4",
-      "legacy_source": "src/FS_RegisterArchiveName.cpp",
-      "ordinal": 8
-    },
-    {
-      "symbol": "FS_InitArchive",
-      "address": "0x0205cd34",
-      "size": "0x00000028",
-      "legacy_source": "src/FS_InitArchive.c",
-      "ordinal": 9
-    },
-    {
-      "symbol": "FS_NotifyArchiveAsyncEnd",
-      "address": "0x0205cd5c",
-      "size": "0x00000098",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205cd5c.cpp",
-      "ordinal": 10
-    },
-    {
-      "symbol": "FSi_SendCommand",
-      "address": "0x0205cdf4",
-      "size": "0x00000168",
-      "legacy_source": "src/FSi_SendCommand.cpp",
-      "ordinal": 11
-    },
-    {
-      "symbol": "FSi_ExecuteSyncCommand",
-      "address": "0x0205cf5c",
-      "size": "0x00000048",
-      "legacy_source": "src/FSi_ExecuteSyncCommand.c",
-      "ordinal": 12
-    },
-    {
-      "symbol": "FSi_ExecuteAsyncCommand",
-      "address": "0x0205cfa4",
-      "size": "0x000000a0",
-      "legacy_source": "src/FSi_ExecuteAsyncCommand.cpp",
-      "ordinal": 13
-    },
-    {
-      "symbol": "FSi_NextCommand",
-      "address": "0x0205d044",
-      "size": "0x000001f8",
-      "legacy_source": "src/FSi_NextCommand.cpp",
-      "ordinal": 14
-    },
-    {
-      "symbol": "FS_FindArchive",
-      "address": "0x0205d23c",
-      "size": "0x00000050",
-      "legacy_source": "src/FS_FindArchive.cpp",
-      "ordinal": 15
-    },
-    {
-      "symbol": "FSi_ReadMemoryCore",
-      "address": "0x0205d28c",
-      "size": "0x00000024",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205d28c.c",
-      "ordinal": 16
-    },
-    {
-      "symbol": "FSi_WriteMemCallback",
-      "address": "0x0205d2b0",
-      "size": "0x0000002c",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205d2b0.c",
-      "ordinal": 17
-    },
-    {
-      "symbol": "FSi_ReadMemCallback",
-      "address": "0x0205d2dc",
-      "size": "0x00000028",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205d2dc.c",
-      "ordinal": 18
-    },
-    {
-      "symbol": "FSi_GetPackedName",
-      "address": "0x0205d304",
-      "size": "0x00000064",
-      "legacy_source": "src/FSi_GetPackedName.c",
-      "ordinal": 19
-    }
-  ],
-  "data": [],
-  "bss": [],
-  "relocations": [],
-  "compiler_only_output": [],
-  "notes": [
-    "Hand-assembled, following arm9/FS_Command: tu_map cannot segment arm9/main.",
-    "FS_SuspendArchive, FS_UnloadArchiveTables, FS_LoadArchiveTables, FS_UnloadArchive, FS_NotifyArchiveAsyncEnd, FSi_ReadMemoryCore, FSi_WriteMemCallback and FSi_ReadMemCallback were renamed from their func_ names in this change (symbols/actor_renames.tsv records the evidence). The other twelve kept their names.",
-    "Text-only. The archive list (arc_list) and the current directory (current_dir_pos) are .bss this TU would own; they stay ROM-provided until its .bss is enrolled. FSFile and FSArchive are this SDK's layouts and stay local to the file."
-  ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-FS_Archive/FS_Archive.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 20,
-    "functions_declared": 20,
-    "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    }
+ "id": "arm9/FS_Archive",
+ "module": "arm9",
+ "source": "src/engine/fs/FS_Archive.cpp",
+ "promoted_source": "src/engine/fs/FS_Archive.cpp",
+ "status": "promoted",
+ "boundary_confidence": "high",
+ "boundary_evidence": [
+  "One contiguous run of the Nitro SDK's FS_archive.c, 0x0205c7c4..0x0205d368: 20 functions, gapless in config/arm9/delinks.txt. pret's pokediamond FS_archive.c defines exactly twenty functions, and all twenty are here, each identified by body: the archive flags each one tests and sets (LOADED 2, TABLE_LOAD 4, SUSPEND 8, RUNNING 0x10, CANCELING 0x20, SUSPENDING 0x40, UNLOADING 0x80, IS_ASYNC 0x100, IS_SYNC 0x200), the FSArchive fields it reads and writes, and the calls between them.",
+  "Order: mwccarm emits the bodies in reverse, so the ROM runs from FS_SetArchiveProc (lowest) to FSi_GetPackedName (highest), pret's source order reversed with two differences from this older SDK: FS_FindArchive sits between FSi_ReadMemoryCore and FSi_NextCommand (pret has it after FS_InitArchive), and FS_NotifyArchiveAsyncEnd sits between FSi_SendCommand and FS_InitArchive (pret has it last).",
+  "Older SDK: FSi_SendCommand has no suspend test and no OPERATING bit, FSi_NextCommand does not test SUSPENDING before it starts a command, FS_RegisterArchiveName sets no FS_ARCHIVE_FLAG_REGISTER, FS_LoadArchiveTables does not check its reads, FS_UnloadArchive does not resume the archive it suspended, and the thread queues are 16-bit masks of thread ids.",
+  "BOTTOM EDGE: FSi_TranslateCommand and FSi_ReleaseCommand, pret's FS_command.c (arm9/FS_Command), end at 0x0205c7c4.",
+  "TOP EDGE: FS_SeekFile (0x0205d368) starts FS_file.c: whence 0/1/2 add the file's top, pos or bottom, the result is clamped to [top, bottom] and stored as pos, as in pret's pokediamond FS_SeekFile. The rest of FS_file.c follows it in reverse source order, FS_ReadFile through FS_Init."
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x0205c7c4",
+   "end": "0x0205d368"
+  },
+  {
+   "name": ".bss",
+   "start": "0x020a8048",
+   "end": "0x020a8058"
   }
+ ],
+ "functions": [
+  {
+   "symbol": "FS_SetArchiveProc",
+   "address": "0x0205c7c4",
+   "size": "0x00000020",
+   "legacy_source": "src/FS_SetArchiveProc.c",
+   "ordinal": 0
+  },
+  {
+   "symbol": "FS_ResumeArchive",
+   "address": "0x0205c7e4",
+   "size": "0x00000080",
+   "legacy_source": "src/FS_ResumeArchive.cpp",
+   "ordinal": 1
+  },
+  {
+   "symbol": "FS_SuspendArchive",
+   "address": "0x0205c864",
+   "size": "0x000000b8",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205c864.cpp",
+   "ordinal": 2
+  },
+  {
+   "symbol": "FS_UnloadArchiveTables",
+   "address": "0x0205c91c",
+   "size": "0x0000009c",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205c91c.c",
+   "ordinal": 3
+  },
+  {
+   "symbol": "FS_LoadArchiveTables",
+   "address": "0x0205c9b8",
+   "size": "0x000000f0",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205c9b8.c",
+   "ordinal": 4
+  },
+  {
+   "symbol": "FS_UnloadArchive",
+   "address": "0x0205caa8",
+   "size": "0x000000c0",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205caa8.cpp",
+   "ordinal": 5
+  },
+  {
+   "symbol": "FS_LoadArchive",
+   "address": "0x0205cb68",
+   "size": "0x0000007c",
+   "legacy_source": "src/FS_LoadArchive.c",
+   "ordinal": 6
+  },
+  {
+   "symbol": "FS_ReleaseArchiveName",
+   "address": "0x0205cbe4",
+   "size": "0x0000009c",
+   "legacy_source": "src/FS_ReleaseArchiveName.cpp",
+   "ordinal": 7
+  },
+  {
+   "symbol": "FS_RegisterArchiveName",
+   "address": "0x0205cc80",
+   "size": "0x000000b4",
+   "legacy_source": "src/FS_RegisterArchiveName.cpp",
+   "ordinal": 8
+  },
+  {
+   "symbol": "FS_InitArchive",
+   "address": "0x0205cd34",
+   "size": "0x00000028",
+   "legacy_source": "src/FS_InitArchive.c",
+   "ordinal": 9
+  },
+  {
+   "symbol": "FS_NotifyArchiveAsyncEnd",
+   "address": "0x0205cd5c",
+   "size": "0x00000098",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205cd5c.cpp",
+   "ordinal": 10
+  },
+  {
+   "symbol": "FSi_SendCommand",
+   "address": "0x0205cdf4",
+   "size": "0x00000168",
+   "legacy_source": "src/FSi_SendCommand.cpp",
+   "ordinal": 11
+  },
+  {
+   "symbol": "FSi_ExecuteSyncCommand",
+   "address": "0x0205cf5c",
+   "size": "0x00000048",
+   "legacy_source": "src/FSi_ExecuteSyncCommand.c",
+   "ordinal": 12
+  },
+  {
+   "symbol": "FSi_ExecuteAsyncCommand",
+   "address": "0x0205cfa4",
+   "size": "0x000000a0",
+   "legacy_source": "src/FSi_ExecuteAsyncCommand.cpp",
+   "ordinal": 13
+  },
+  {
+   "symbol": "FSi_NextCommand",
+   "address": "0x0205d044",
+   "size": "0x000001f8",
+   "legacy_source": "src/FSi_NextCommand.cpp",
+   "ordinal": 14
+  },
+  {
+   "symbol": "FS_FindArchive",
+   "address": "0x0205d23c",
+   "size": "0x00000050",
+   "legacy_source": "src/FS_FindArchive.cpp",
+   "ordinal": 15
+  },
+  {
+   "symbol": "FSi_ReadMemoryCore",
+   "address": "0x0205d28c",
+   "size": "0x00000024",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205d28c.c",
+   "ordinal": 16
+  },
+  {
+   "symbol": "FSi_WriteMemCallback",
+   "address": "0x0205d2b0",
+   "size": "0x0000002c",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205d2b0.c",
+   "ordinal": 17
+  },
+  {
+   "symbol": "FSi_ReadMemCallback",
+   "address": "0x0205d2dc",
+   "size": "0x00000028",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205d2dc.c",
+   "ordinal": 18
+  },
+  {
+   "symbol": "FSi_GetPackedName",
+   "address": "0x0205d304",
+   "size": "0x00000064",
+   "legacy_source": "src/FSi_GetPackedName.c",
+   "ordinal": 19
+  }
+ ],
+ "data": [],
+ "bss": [
+  {
+   "symbol": "arc_list",
+   "address": "0x020a8048",
+   "size": "0x10",
+   "binding": "STB_GLOBAL",
+   "evidence": "The registered-archive list head; the current directory position FSi_FindPath starts from follows as an interior label."
+  }
+ ],
+ "relocations": [],
+ "compiler_only_output": [],
+ "notes": [
+  "Hand-assembled, following arm9/FS_Command: tu_map cannot segment arm9/main.",
+  "FS_SuspendArchive, FS_UnloadArchiveTables, FS_LoadArchiveTables, FS_UnloadArchive, FS_NotifyArchiveAsyncEnd, FSi_ReadMemoryCore, FSi_WriteMemCallback and FSi_ReadMemCallback were renamed from their func_ names in this change (symbols/actor_renames.tsv records the evidence). The other twelve kept their names.",
+  "Text-only. The archive list (arc_list) and the current directory (current_dir_pos) are .bss this TU would own; they stay ROM-provided until its .bss is enrolled. FSFile and FSArchive are this SDK's layouts and stay local to the file."
+ ],
+ "verification": {
+  "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+  "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object": "build/tu/arm9-FS_Archive/FS_Archive.o (gitignored)",
+  "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+  "functions_matched": 20,
+  "functions_declared": 20,
+  "compilerOnlyOutput": {
+   "requested": [],
+   "deadstripped": [],
+   "data": [],
+   "dataExternalized": []
+  },
+  "criteria": {
+   "every_declared_function_defined": "PASS",
+   "every_declared_function_bytes_match": "PASS",
+   "declared_function_set_equals_defined_function_set": "PASS",
+   "functions_occur_in_expected_order": "PASS",
+   "relocation_destinations_verified": "PASS"
+  },
+  "linkcheck": {
+   "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": true,
+    "rom": true
+   },
+   "tuRange": {
+    "start": "0x0205c7c4",
+    "end": "0x0205d368",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
+    {
+     "section": ".text",
+     "start": "0x0205c7c4",
+     "end": "0x0205d368",
+     "differingBytes": 0,
+     "firstDiff": null
+    },
+    {
+     "section": ".bss",
+     "start": "0x020a8048",
+     "end": "0x020a8058",
+     "comparison": "NOBITS -- symbol/module gates"
+    }
+   ],
+   "objectAudit": {
+    "counts": {
+     "LICENSED": 21
+    },
+    "emittedTextOrderIsRomAscending": true,
+    "nonLicensedSymbols": [],
+    "unlicensedSections": []
+   },
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   }
+  }
+ },
+ "production_mode": "intact-object"
 }

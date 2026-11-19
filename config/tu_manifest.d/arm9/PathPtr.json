@@ -1,149 +1,215 @@
 {
-  "id": "arm9/PathPtr",
-  "module": "arm9",
-  "source": "src/engine/path/PathPtr.cpp",
-  "promoted_source": "src/engine/path/PathPtr.cpp",
-  "status": "promoted",
-  "boundary_confidence": "high",
-  "boundary_evidence": [
-    "Eleven consecutive delinked functions at 0x0203ac80..0x0203ad84, all complete: the five named PathPtr members (FromID, GetNode, Loops, NumNodes, C1) plus six anonymous func_ shards that resolve to the class's accessors (func_0203ad44 -> flags&0x7f, func_0203ad54 -> unk_004, func_0203ad6c -> def store called only by FromID) and its three path-table helpers (func_0203aca0/0203acbc/0203accc on data_020a0d84/88/8c, the PathDef/node tables LoadPathObjects hands it).",
-    "func_0203ad84 at 0x0203ad84 closes the run: a string-copy helper on unrelated globals (data_020994d4, data_020a0d90) with no PathPtr receiver, folded in under its func_ name the same way dBgPi kept its neighbouring shards.",
-    "Preceded by the dM3dGSph member run ending at C2 0x0203ac70..0x0203ac80; followed by DecIfAbove0_Short's math family. The span is the whole class.",
-    "PathPtr is non-polymorphic: no _ZTS/_ZTI/_ZTV for it exists in the ROM, so this is a text-only fold with no data or bss claim."
-  ],
-  "sections": [
-    {
-      "name": ".text",
-      "start": "0x0203ac80",
-      "end": "0x0203adbc"
-    }
-  ],
-  "functions": [
-    {
-      "symbol": "_ZN7PathPtr6FromIDEj",
-      "address": "0x0203ac80",
-      "size": "0x00000020",
-      "legacy_source": "src/_ZN7PathPtr6FromIDEj.cpp",
-      "ordinal": 0
-    },
-    {
-      "symbol": "_ZN7PathPtr12SetPathTableEP7PathDefi",
-      "address": "0x0203aca0",
-      "size": "0x0000001c",
-      "legacy_source": "src/func_0203aca0.c",
-      "ordinal": 1
-    },
-    {
-      "symbol": "_ZN7PathPtr12GetNodeTableEv",
-      "address": "0x0203acbc",
-      "size": "0x00000010",
-      "legacy_source": "src/func_0203acbc.c",
-      "ordinal": 2
-    },
-    {
-      "symbol": "_ZN7PathPtr12SetNodeTableEPv",
-      "address": "0x0203accc",
-      "size": "0x00000010",
-      "legacy_source": "src/func_0203accc.c",
-      "ordinal": 3
-    },
-    {
-      "symbol": "_ZNK7PathPtr7GetNodeER7Vector3j",
-      "address": "0x0203acdc",
-      "size": "0x00000058",
-      "legacy_source": "src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp",
-      "ordinal": 4
-    },
-    {
-      "symbol": "_ZNK7PathPtr5LoopsEv",
-      "address": "0x0203ad34",
-      "size": "0x00000010",
-      "legacy_source": "src/_ZNK7PathPtr5LoopsEv.cpp",
-      "ordinal": 5
-    },
-    {
-      "symbol": "_ZNK7PathPtr13GetPullFactorEv",
-      "address": "0x0203ad44",
-      "size": "0x00000010",
-      "legacy_source": "src/func_0203ad44.c",
-      "ordinal": 6
-    },
-    {
-      "symbol": "_ZNK7PathPtr9GetUnk004Ev",
-      "address": "0x0203ad54",
-      "size": "0x0000000c",
-      "legacy_source": "src/func_0203ad54.c",
-      "ordinal": 7
-    },
-    {
-      "symbol": "_ZNK7PathPtr8NumNodesEv",
-      "address": "0x0203ad60",
-      "size": "0x0000000c",
-      "legacy_source": "src/_ZNK7PathPtr8NumNodesEv.cpp",
-      "ordinal": 8
-    },
-    {
-      "symbol": "_ZN7PathPtr6SetDefEP7PathDef",
-      "address": "0x0203ad6c",
-      "size": "0x00000008",
-      "legacy_source": "src/func_0203ad6c.c",
-      "ordinal": 9
-    },
-    {
-      "symbol": "_ZN7PathPtrC1Ev",
-      "address": "0x0203ad74",
-      "size": "0x00000010",
-      "legacy_source": "src/_ZN7PathPtrC1Ev.cpp",
-      "ordinal": 10
-    },
-    {
-      "symbol": "_Z13func_0203ad84v",
-      "address": "0x0203ad84",
-      "size": "0x00000038",
-      "legacy_source": "src/unnamed/arm9/0203/func_0203ad84.c",
-      "ordinal": 11
-    }
-  ],
-  "data": [],
-  "bss": [],
-  "notes": [
-    "Six members arrived as anonymous func_ shards; symbols.txt names them by their member spellings. GetPullFactor reads def->flags & 0x7f -- the low seven bits under Loops' 0x80 closed-path bit -- which path-follow code scales a lateral offset by. GetUnk004 reads the remaining opaque PathDef byte. SetDef is the def-pointer store FromID goes through. SetPathTable/GetNodeTable/SetNodeTable manage the level's PATH_DEFS/PATH_NODES/NUM_PATHS globals (data_020a0d84/88/8c, bss gap-served, no claim) that LoadPathObjects and LoadPathNodeObjects load; they are statics on the class because GetNode calls GetNodeTable as its own plumbing.",
-    "mwccarm emits .text in reverse source order, so the file lists C1 first and FromID last; the manifest ordinals run ROM-ascending."
-  ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-PathPtr/PathPtr.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 12,
-    "functions_declared": 12,
-    "compilerOnlyOutput": {
-      "requested": [
-        "_ZN7PathPtrC2Ev"
-      ],
-      "deadstripped": [
-        "_ZN7PathPtrC2Ev"
-      ],
-      "droppedSections": [
-        21
-      ],
-      "data": [],
-      "dataExternalized": []
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    }
+ "id": "arm9/PathPtr",
+ "module": "arm9",
+ "source": "src/engine/path/PathPtr.cpp",
+ "promoted_source": "src/engine/path/PathPtr.cpp",
+ "status": "promoted",
+ "boundary_confidence": "high",
+ "boundary_evidence": [
+  "Eleven consecutive delinked functions at 0x0203ac80..0x0203ad84, all complete: the five named PathPtr members (FromID, GetNode, Loops, NumNodes, C1) plus six anonymous func_ shards that resolve to the class's accessors (func_0203ad44 -> flags&0x7f, func_0203ad54 -> unk_004, func_0203ad6c -> def store called only by FromID) and its three path-table helpers (func_0203aca0/0203acbc/0203accc on data_020a0d84/88/8c, the PathDef/node tables LoadPathObjects hands it).",
+  "func_0203ad84 at 0x0203ad84 closes the run: a string-copy helper on unrelated globals (data_020994d4, data_020a0d90) with no PathPtr receiver, folded in under its func_ name the same way dBgPi kept its neighbouring shards.",
+  "Preceded by the dM3dGSph member run ending at C2 0x0203ac70..0x0203ac80; followed by DecIfAbove0_Short's math family. The span is the whole class.",
+  "PathPtr is non-polymorphic: no _ZTS/_ZTI/_ZTV for it exists in the ROM, so this is a text-only fold with no data or bss claim."
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x0203ac80",
+   "end": "0x0203adbc"
   },
-  "compiler_only_output": [
+  {
+   "name": ".bss",
+   "start": "0x020a0d84",
+   "end": "0x020a0db8"
+  }
+ ],
+ "functions": [
+  {
+   "symbol": "_ZN7PathPtr6FromIDEj",
+   "address": "0x0203ac80",
+   "size": "0x00000020",
+   "legacy_source": "src/_ZN7PathPtr6FromIDEj.cpp",
+   "ordinal": 0
+  },
+  {
+   "symbol": "_ZN7PathPtr12SetPathTableEP7PathDefi",
+   "address": "0x0203aca0",
+   "size": "0x0000001c",
+   "legacy_source": "src/func_0203aca0.c",
+   "ordinal": 1
+  },
+  {
+   "symbol": "_ZN7PathPtr12GetNodeTableEv",
+   "address": "0x0203acbc",
+   "size": "0x00000010",
+   "legacy_source": "src/func_0203acbc.c",
+   "ordinal": 2
+  },
+  {
+   "symbol": "_ZN7PathPtr12SetNodeTableEPv",
+   "address": "0x0203accc",
+   "size": "0x00000010",
+   "legacy_source": "src/func_0203accc.c",
+   "ordinal": 3
+  },
+  {
+   "symbol": "_ZNK7PathPtr7GetNodeER7Vector3j",
+   "address": "0x0203acdc",
+   "size": "0x00000058",
+   "legacy_source": "src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp",
+   "ordinal": 4
+  },
+  {
+   "symbol": "_ZNK7PathPtr5LoopsEv",
+   "address": "0x0203ad34",
+   "size": "0x00000010",
+   "legacy_source": "src/_ZNK7PathPtr5LoopsEv.cpp",
+   "ordinal": 5
+  },
+  {
+   "symbol": "_ZNK7PathPtr13GetPullFactorEv",
+   "address": "0x0203ad44",
+   "size": "0x00000010",
+   "legacy_source": "src/func_0203ad44.c",
+   "ordinal": 6
+  },
+  {
+   "symbol": "_ZNK7PathPtr9GetUnk004Ev",
+   "address": "0x0203ad54",
+   "size": "0x0000000c",
+   "legacy_source": "src/func_0203ad54.c",
+   "ordinal": 7
+  },
+  {
+   "symbol": "_ZNK7PathPtr8NumNodesEv",
+   "address": "0x0203ad60",
+   "size": "0x0000000c",
+   "legacy_source": "src/_ZNK7PathPtr8NumNodesEv.cpp",
+   "ordinal": 8
+  },
+  {
+   "symbol": "_ZN7PathPtr6SetDefEP7PathDef",
+   "address": "0x0203ad6c",
+   "size": "0x00000008",
+   "legacy_source": "src/func_0203ad6c.c",
+   "ordinal": 9
+  },
+  {
+   "symbol": "_ZN7PathPtrC1Ev",
+   "address": "0x0203ad74",
+   "size": "0x00000010",
+   "legacy_source": "src/_ZN7PathPtrC1Ev.cpp",
+   "ordinal": 10
+  },
+  {
+   "symbol": "_Z13func_0203ad84v",
+   "address": "0x0203ad84",
+   "size": "0x00000038",
+   "legacy_source": "src/unnamed/arm9/0203/func_0203ad84.c",
+   "ordinal": 11
+  }
+ ],
+ "data": [],
+ "bss": [
+  {
+   "symbol": "PATH_DEFS",
+   "address": "0x020a0d84",
+   "size": "0x34",
+   "binding": "STB_GLOBAL",
+   "evidence": "The level's PathDef table, node table and path count, then the 0x20-byte administrator name buffer func_0203ad84 fills."
+  }
+ ],
+ "notes": [
+  "Six members arrived as anonymous func_ shards; symbols.txt names them by their member spellings. GetPullFactor reads def->flags & 0x7f -- the low seven bits under Loops' 0x80 closed-path bit -- which path-follow code scales a lateral offset by. GetUnk004 reads the remaining opaque PathDef byte. SetDef is the def-pointer store FromID goes through. SetPathTable/GetNodeTable/SetNodeTable manage the level's PATH_DEFS/PATH_NODES/NUM_PATHS globals (data_020a0d84/88/8c, bss gap-served, no claim) that LoadPathObjects and LoadPathNodeObjects load; they are statics on the class because GetNode calls GetNodeTable as its own plumbing.",
+  "mwccarm emits .text in reverse source order, so the file lists C1 first and FromID last; the manifest ordinals run ROM-ascending."
+ ],
+ "verification": {
+  "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+  "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object": "build/tu/arm9-PathPtr/PathPtr.o (gitignored)",
+  "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+  "functions_matched": 12,
+  "functions_declared": 12,
+  "compilerOnlyOutput": {
+   "requested": [
+    "_ZN7PathPtrC2Ev"
+   ],
+   "deadstripped": [
+    "_ZN7PathPtrC2Ev"
+   ],
+   "droppedSections": [
+    21
+   ],
+   "data": [],
+   "dataExternalized": []
+  },
+  "criteria": {
+   "every_declared_function_defined": "PASS",
+   "every_declared_function_bytes_match": "PASS",
+   "declared_function_set_equals_defined_function_set": "PASS",
+   "functions_occur_in_expected_order": "PASS",
+   "relocation_destinations_verified": "PASS"
+  },
+  "linkcheck": {
+   "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": true,
+    "rom": true
+   },
+   "tuRange": {
+    "start": "0x0203ac80",
+    "end": "0x0203adbc",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
     {
-      "symbol": "_ZN7PathPtrC2Ev",
-      "disposition": "deadstrip",
-      "reason": "Vague-linkage base-subobject constructor emitted alongside C1; PathPtr is never a base class, so the cartridge retains only C1 and isolation discards the copy."
+     "section": ".text",
+     "start": "0x0203ac80",
+     "end": "0x0203adbc",
+     "differingBytes": 0,
+     "firstDiff": null
+    },
+    {
+     "section": ".bss",
+     "start": "0x020a0d84",
+     "end": "0x020a0db8",
+     "comparison": "NOBITS -- symbol/module gates"
     }
-  ]
+   ],
+   "objectAudit": {
+    "counts": {
+     "LICENSED": 13
+    },
+    "emittedTextOrderIsRomAscending": true,
+    "nonLicensedSymbols": [],
+    "unlicensedSections": []
+   },
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   }
+  }
+ },
+ "compiler_only_output": [
+  {
+   "symbol": "_ZN7PathPtrC2Ev",
+   "disposition": "deadstrip",
+   "reason": "Vague-linkage base-subobject constructor emitted alongside C1; PathPtr is never a base class, so the cartridge retains only C1 and isolation discards the copy."
+  }
+ ],
+ "production_mode": "intact-object"
 }

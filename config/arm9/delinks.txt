@@ -545,6 +545,7 @@ src/unnamed/arm9/0201/func_020199a4.c:
 src/unnamed/arm9/0201/func_02019dfc.c:
     complete
     .text start:0x02019dfc end:0x02019ebc
+    .bss start:0x0209d4d4 end:0x0209d528
 src/unnamed/arm9/0201/func_02019ebc.c:
     complete
     .text start:0x02019ebc end:0x02019ed0
@@ -631,7 +632,7 @@ src/unnamed/arm9/0201/func_0201a96c.cpp:
     .text start:0x0201a96c end:0x0201a9ec
     .init start:0x02074e0c end:0x02074e44
     .ctor start:0x02086b7c end:0x02086b80
-    .bss start:0x0209d528 end:0x0209d5b8
+    .bss start:0x0209d528 end:0x0209d64c
 
 src/unnamed/arm9/0201/func_0201a9ec.c:
     complete
@@ -847,6 +848,7 @@ src/data/arm9/data_020755ac.c:
 src/engine/oam/OAM.cpp:
     complete
     .text start:0x02020820 end:0x02021a04
+    .bss start:0x0209e660 end:0x0209f1d8
 
 src/engine/particle/Particle_SysTracker_Contents.cpp:
     complete
@@ -882,6 +884,7 @@ src/unnamed/arm9/0202/func_0202345c.cpp:
 src/game/stages/d_s_boot.cpp:
     complete
     .text start:0x02023598 end:0x02023688
+    .bss start:0x0209f1e8 end:0x0209f1ec
 
 src/game/stages/d_s_stage_methods.cpp:
     complete
@@ -1025,6 +1028,30 @@ src/data/arm9/data_02075d14.c:
     complete
     .rodata start:0x02075d14 end:0x02075f14
 
+src/data/arm9/data_02075f14.c:
+    complete
+    .rodata start:0x02075f14 end:0x02082158
+
+src/data/arm9/data_0209e64c.c:
+    complete
+    .bss start:0x0209e64c end:0x0209e650
+
+src/data/arm9/gNextSceneParam.c:
+    complete
+    .bss start:0x0209f5b8 end:0x0209f5c4
+
+src/data/arm9/data_0209f5f8.c:
+    complete
+    .bss start:0x0209f5f8 end:0x0209f610
+
+src/data/arm9/data_0209f648.c:
+    complete
+    .bss start:0x0209f648 end:0x020a0c5c
+
+src/data/arm9/data_020a0ef0.c:
+    complete
+    .bss start:0x020a0ef0 end:0x020a4b6c
+
 src/data/arm9/data_0209289c.c:
     complete
     .data start:0x0209289c end:0x02092d3c
@@ -1075,7 +1102,7 @@ src/engine/collision/d_bg_w.cpp:
     complete
     .text start:0x02039140 end:0x020396d8
     .data start:0x02099370 end:0x020993bc
-    .bss start:0x020a0c80 end:0x020a0ce0
+    .bss start:0x020a0c78 end:0x020a0ce0
 
 src/engine/collision/d_bg_w_kc.cpp:
     complete
@@ -1102,6 +1129,7 @@ src/engine/collision/d_m3d_g_sph.cpp:
 src/engine/path/PathPtr.cpp:
     complete
     .text start:0x0203ac80 end:0x0203adbc
+    .bss start:0x020a0d84 end:0x020a0db8
 
 src/DecIfAbove0_Short.c:
     complete
@@ -1197,6 +1225,7 @@ src/unnamed/arm9/0203/func_0203b9bc.c:
 src/unnamed/arm9/0203/func_0203bb14.c:
     complete
     .text start:0x0203bb14 end:0x0203bb5c
+    .bss start:0x020a0dd8 end:0x020a0de8
 
 src/unnamed/arm9/0203/func_0203bb5c.cpp:
     complete
@@ -1212,6 +1241,7 @@ src/unnamed/arm9/0203/func_0203bb60.c:
 src/unnamed/arm9/0203/func_0203bbc0.c:
     complete
     .text start:0x0203bbc0 end:0x0203bc50
+    .bss start:0x020a0df8 end:0x020a0eb0
 
 src/unnamed/arm9/0203/func_0203bc50.c:
     complete
@@ -1449,6 +1479,7 @@ src/data/arm9/data_02082190.c:
 src/engine/model/ModelComponents.cpp:
     complete
     .text start:0x020443c8 end:0x0204547c
+    .bss start:0x020a4bb8 end:0x020a7fc4
 
 src/func_0204547c.cpp:
     complete
@@ -1536,7 +1567,7 @@ src/unnamed/arm9/0204/func_0204921c.c:
 src/unnamed/arm9/0204/func_020494cc.c:
     complete
     .text start:0x020494cc end:0x02049764
-    .rodata start:0x02082200 end:0x02082214
+    .rodata start:0x02082200 end:0x02086214
 
 src/unnamed/arm9/0204/func_02049764.c:
     complete
@@ -2063,6 +2094,7 @@ src/engine/fs/FS_Command.cpp:
 src/engine/fs/FS_Archive.cpp:
     complete
     .text start:0x0205c7c4 end:0x0205d368
+    .bss start:0x020a8048 end:0x020a8058
 
 src/engine/fs/FS_File.c:
     complete
@@ -2085,6 +2117,7 @@ src/engine/fs/FS_Rom.cpp:
 src/engine/fs/FS_Overlay.c:
     complete
     .text start:0x0205db88 end:0x0205e0f4
+    .rodata start:0x0208677c end:0x020867bc
 
 src/DGT_Hash2CalcHmac.c:
     complete
@@ -2130,6 +2163,7 @@ src/engine/spi/TP.c:
 src/engine/spi/PM.c:
     complete
     .text start:0x0205f5c0 end:0x0205ff70
+    .bss start:0x020a8104 end:0x020a8780
 
 src/engine/card/CARD_Common.cpp:
     complete
@@ -2200,6 +2234,7 @@ src/CARDi_Request.cpp:
 src/engine/card/CARD_PullOut.cpp:
     complete
     .text start:0x020610ac end:0x0206116c
+    .bss start:0x020a89a0 end:0x020a89a8
 
 src/engine/wm/WM_System.c:
     complete
@@ -2359,6 +2394,7 @@ src/WBT_MpParentSendHook.c:
 src/WBT_End.cpp:
     complete
     .text start:0x02065170 end:0x02065234
+    .bss start:0x020a94c0 end:0x020aa420
 
 src/WBT_InitChild.cpp:
     complete
@@ -2610,13 +2646,10 @@ src/unnamed/arm9/0206/func_0206cf7c.c:
     complete
     .text start:0x0206cf7c end:0x0206cf98
 
-src/data/arm9/data_020869bc.c:
-    complete
-    .rodata start:0x020869bc end:0x020869dc
-
 src/engine/isd/isdoverlay.cpp:
     complete
     .text start:0x0206cf98 end:0x0206d9cc
+    .rodata start:0x020868fc end:0x02086a58
 
 src/unnamed/arm9/0206/func_0206d9cc.cpp:
     complete
@@ -2637,7 +2670,7 @@ src/cstd4.cpp:
 src/float2str.c:
     complete
     .text start:0x0206ece0 end:0x0206f338
-    .rodata start:0x02086a58 end:0x02086b58
+    .rodata start:0x02086a58 end:0x02086b60
 
 src/round_decimal.c:
     complete

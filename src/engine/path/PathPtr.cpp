@@ -21,7 +21,7 @@
  *   NUL, via func_02018434. Both globals keep their linker names. */
 #include "PathPtr.h"
 
-extern PathDef *PATH_DEFS;  /* the level's PathDef table */
+extern u8 PATH_DEFS[];      /* the level's PathDef table and name buffer */
 extern char *PATH_NODES;    /* flat node records, six bytes each */
 extern int NUM_PATHS;       /* entries in PATH_DEFS */
 
@@ -86,11 +86,16 @@ char *PathPtr::GetNodeTable()
 
 void PathPtr::SetPathTable(PathDef *defs, int numPaths)
 {
-    PATH_DEFS = defs;
+    *(PathDef **)PATH_DEFS = defs;
     NUM_PATHS = numPaths;
 }
 
 void PathPtr::FromID(unsigned int id)
 {
-    SetDef(PATH_DEFS + id);
+    SetDef(*(PathDef **)PATH_DEFS + id);
 }
+
+/* PATH_DEFS, PATH_NODES and NUM_PATHS, then the 0x20-byte administrator name
+   buffer func_0203ad84 fills. One object so the interior labels keep their
+   symbols.txt addresses. */
+u8 PATH_DEFS[0x34];

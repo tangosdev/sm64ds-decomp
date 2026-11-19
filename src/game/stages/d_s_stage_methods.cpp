@@ -5085,6 +5085,8 @@ dScStage_c *dScStage_c_classInit() {
     return new dScStage_c();
 }
 
+struct StarModelFilePtr;
+
 extern "C" {
 /* The decimal divisors RenderNumber uses, the stage OAM/camera tables and the
    twelve-overlay pointer record, the six VS star spawn orders, and the stage
@@ -5118,31 +5120,25 @@ extern const u8 data_020755bc[308] = {
     0xa4, 0x01, 0xb3, 0x01,
 };
 /* The twelve overlay model files every stage loads and releases. */
-extern u8 data_ov002_0210da48;
-extern u8 data_ov002_0210d9b8;
-extern u8 data_ov002_0210da50;
-extern u8 data_ov002_0210d9f8;
-extern u8 data_ov002_0210da40;
-extern u8 data_ov002_0210d9a0;
-extern u8 data_ov002_0210d9c0;
-extern u8 data_ov002_0210e7d8;
-extern u8 data_ov002_0210e3a0;
-extern u8 data_ov002_0211094c;
-extern u8 data_ov002_0211095c;
-extern u8 data_ov002_0210d9a8;
+extern char data_ov002_0210da48;
+extern SharedFilePtr data_ov002_0210d9b8;
+extern char data_ov002_0210da50;
+extern SharedFilePtr data_ov002_0210d9f8;
+extern SharedFilePtr data_ov002_0210da40;
+extern SharedFilePtr data_ov002_0210d9a0;
+extern SharedFilePtr data_ov002_0210d9c0;
+extern SharedFilePtr data_ov002_0210e7d8;
+extern SharedFilePtr data_ov002_0210e3a0;
+extern char data_ov002_0211094c;
+extern StarModelFilePtr data_ov002_0211095c;
+extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr *const data_020756f0[12] = {
-    (SharedFilePtr *)&data_ov002_0210da48,
-    (SharedFilePtr *)&data_ov002_0210d9b8,
-    (SharedFilePtr *)&data_ov002_0210da50,
-    (SharedFilePtr *)&data_ov002_0210d9f8,
-    (SharedFilePtr *)&data_ov002_0210da40,
-    (SharedFilePtr *)&data_ov002_0210d9a0,
-    (SharedFilePtr *)&data_ov002_0210d9c0,
-    (SharedFilePtr *)&data_ov002_0210e7d8,
-    (SharedFilePtr *)&data_ov002_0210e3a0,
-    (SharedFilePtr *)&data_ov002_0211094c,
-    (SharedFilePtr *)&data_ov002_0211095c,
-    (SharedFilePtr *)&data_ov002_0210d9a8,
+    (SharedFilePtr *)&data_ov002_0210da48, (SharedFilePtr *)&data_ov002_0210d9b8,
+    (SharedFilePtr *)&data_ov002_0210da50, (SharedFilePtr *)&data_ov002_0210d9f8,
+    (SharedFilePtr *)&data_ov002_0210da40, (SharedFilePtr *)&data_ov002_0210d9a0,
+    (SharedFilePtr *)&data_ov002_0210d9c0, (SharedFilePtr *)&data_ov002_0210e7d8,
+    (SharedFilePtr *)&data_ov002_0210e3a0, (SharedFilePtr *)&data_ov002_0211094c,
+    (SharedFilePtr *)&data_ov002_0211095c, (SharedFilePtr *)&data_ov002_0210d9a8,
 };
 extern const char VS_STAR_SPAWN_ORDERS[6][12] = {
     {0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0}, {0, 1, 3, 2, 4, 0, 0, 0, 0, 0, 0, 0},

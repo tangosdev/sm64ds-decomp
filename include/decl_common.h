@@ -42,7 +42,7 @@ extern Vector3 data_ov073_02123040;
 extern Vector3 data_ov090_02134200;
 extern Vector3 data_ov100_02148948;
 extern char CAM_SPACE_CAM_POS_ASR_3;
-extern char data_02075f14[];
+extern const u32 data_02075f14[];
 extern char data_02082714[];
 extern char data_020914e0;
 extern char data_02091570;

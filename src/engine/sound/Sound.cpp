@@ -1166,7 +1166,6 @@ int func_02011654(char *table, char *n) {
     return func_02011aa0(n);
 }
 
-
 /* re-hosted arm9 data */
 /* The sound driver's mixer state, SaveBlock and the save-file tables up to
    Timer's state; interior labels keep their symbols.txt addresses. */

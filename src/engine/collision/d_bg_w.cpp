@@ -18,8 +18,10 @@ extern "C" {
    documents it); d_bg_ch_sph_crr_query.cpp defines it with this
    signature. */
 
-/* The enabled colliders, one slot per dBgW instance (dBgW.h). */
-dBgW *data_020a0c80[0x18];
+/* The default CLPS entry (data_020a0c78, 8 bytes) precedes the enabled
+   colliders, one slot per dBgW instance (dBgW.h). The linker defines
+   data_020a0c80 at 0x020a0c80, inside this object's .bss run. */
+u8 data_020a0c78[0x68];
 }
 extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 
