@@ -3410,8 +3410,8 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618(&data_ov009_02113c20, 1, data_ov002_0210b604,
-                                      0, 0, 0, -1) == 0)
+                ->func_ov002_020f6618(&data_ov009_02113c20, 1, data_ov002_0210b604, 0, 0, 0, -1) ==
+            0)
             return 0;
     }
     mScale.x = 0x1000;
