@@ -1537,7 +1537,7 @@ extern unsigned char gSubScreenLayers;
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
 /* dScMgLuigi_c::InitResources */
-extern void *sLuigiBg1NcgPath;
+extern const char sLuigiBg1NcgPath[];
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
@@ -1609,7 +1609,7 @@ s32 dScMgLuigi_c::InitResources() {
     void *fileData;
     void *objectTiles;
 
-    arc = Ov004_LoadFileByPath((const char *)&sLuigiBg1NcgPath);
+    arc = Ov004_LoadFileByPath(sLuigiBg1NcgPath);
     if (arc == 0)
         return 0;
 

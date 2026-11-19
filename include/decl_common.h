@@ -904,7 +904,7 @@ extern void *sSnowballCourseMeterSprites[2];
 extern void *sSlotLamp1Sprite;
 extern void *sSlotLamp2Sprite;
 extern void *sHanaTextSpritesByLanguage[];
-extern void *sLuigiBg1NcgPath;
+extern const char sLuigiBg1NcgPath[];
 extern void *sSlot1Sprites[];
 extern void *sSlot3FaceSprites[];
 extern void*data_ov006_0213eb40;
