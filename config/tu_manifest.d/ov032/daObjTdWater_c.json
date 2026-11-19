@@ -266,7 +266,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -355,7 +355,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 20
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -364,36 +364,99 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".data.tdBta",
             "original": [
-              44
+              27
             ],
             "desired": [
-              44
+              27
+            ]
+          },
+          {
+            "section": ".data.tdClps",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              53
+            ],
+            "desired": [
+              53
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              42
+              51
             ],
             "desired": [
-              42
+              51
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              8,
-              14,
-              21
+              9,
+              10,
+              21,
+              24
             ],
             "desired": [
-              5,
-              8,
-              14,
-              21
+              9,
+              10,
+              21,
+              24
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".rodata.tdWaterScale",
+            "original": [
+              6
+            ],
+            "desired": [
+              6
+            ]
+          },
+          {
+            "section": ".rodata.tdWaterMat",
+            "original": [
+              30
+            ],
+            "desired": [
+              30
+            ]
+          },
+          {
+            "section": ".rodata.tdWaterTrans",
+            "original": [
+              34
+            ],
+            "desired": [
+              34
+            ]
+          },
+          {
+            "section": ".data.tdWaterName",
+            "original": [
+              16
+            ],
+            "desired": [
+              16
             ]
           }
         ],
@@ -735,14 +798,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@363",
+      "from": "@365",
       "to": "@395",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @409 now; licensed under the existing pin @395 Re-keyed from @390 to @363 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @409 now; licensed under the existing pin @395 Re-keyed from @390 to @363 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @363 to @365 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@362",
+      "from": "@364",
       "to": "@394",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @408 now; licensed under the existing pin @394 Re-keyed from @389 to @362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @408 now; licensed under the existing pin @394 Re-keyed from @389 to @362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @362 to @364 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
   "rodata": [

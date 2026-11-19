@@ -26,3 +26,7 @@ src/game/actors/d_a_hanachan.cpp:
     .data.hanachanSpeeds start:0x02114488 end:0x02114498
     .data start:0x02114538 end:0x02114614
     .bss start:0x02114620 end:0x021148dc
+
+src/unnamed/ov034/data_ov034_bss.c:
+    complete
+    .bss start:0x021148dc end:0x021148e0

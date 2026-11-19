@@ -59,3 +59,39 @@ L3 src/unnamed/ov075/data_ov075.c
 # non-tools route until then. Splitting the TU per run would defeat the one-TU
 # shape the job requires.
 L3 src/unnamed/ov053/data_ov053_021111a0.c
+# --- L3: module data TUs in an overlay address bucket -----------------------------
+# srcpath's address-stem pattern is ^(?:func|FUN|__sinit)_..., so a data_<module>
+# stem answers "not an address name" whichever bucket holds it. These TUs hold the
+# code-free #5594 groups that had no source consumer: each is one module data TU
+# whose plain arrays the module's delinks.txt claims at the cartridge addresses.
+# Naming a file after one interior row would split a run across TUs, and src/data/
+# is the retracted one-symbol campaign's shape. Teaching _UNNAMED_RE about data_ is
+# a tools change; this waiver is the non-tools route until then.
+L3 src/unnamed/ov013/data_ov013_bss.c
+L3 src/unnamed/ov056/data_ov056.c
+
+# ov009/029/034/036/043: the remaining code-free #5594 groups, one array
+# per contiguous free run; the delinks map claims each run at its cartridge
+# addresses.
+L3 src/unnamed/ov009/data_ov009_bss.c
+L3 src/unnamed/ov009/data_ov009_02112c58.c
+L3 src/unnamed/ov009/data_ov009_rodata.c
+L3 src/unnamed/ov029/data_ov029_bss.c
+L3 src/unnamed/ov029/data_ov029_clps.c
+L3 src/unnamed/ov029/data_ov029.c
+L3 src/unnamed/ov029/data_ov029_rodata.c
+L3 src/unnamed/ov034/data_ov034_bss.c
+L3 src/unnamed/ov036/data_ov036_bss.c
+L3 src/unnamed/ov036/data_ov036_02112c28.c
+L3 src/unnamed/ov043/data_ov043_02112358.c
+L3 src/unnamed/ov009/data_ov009_02113b80.c
+L3 src/unnamed/ov013/data_ov013_021120f8.c
+L3 src/unnamed/ov016/data_ov016_02113550.c
+L3 src/unnamed/ov016/data_ov016_021148f0.c
+L3 src/unnamed/ov016/data_ov016_02114e94.c
+L3 src/unnamed/ov029/data_ov029_02113cd4.c
+L3 src/unnamed/ov032/data_ov032_02112fd0.c
+L3 src/unnamed/ov032/data_ov032_021138c4.c
+L3 src/unnamed/ov032/data_ov032_02113b1c.c
+L3 src/unnamed/ov043/data_ov043_02111ca0.c
+L3 src/unnamed/ov056/data_ov056_02112bc0.c

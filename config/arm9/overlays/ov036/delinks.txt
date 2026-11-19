@@ -14,7 +14,7 @@
     .data.data_ov036_02112bc8 start:0x02112bc8 end:0x02112be8 kind:data align:4
     .data.data_ov036_02112be8 start:0x02112be8 end:0x02112c08 kind:data align:4
     .data.data_ov036_02112c08 start:0x02112c08 end:0x02112c28 kind:data align:4
-    .data.gap4 start:0x02112c28 end:0x02113b18 kind:data align:4
+    .data      start:0x02112c28 end:0x02113b18 kind:data align:4
     .data.data_ov036_02113b18 start:0x02113b18 end:0x02113b1c kind:data align:4
     .data.data_ov036_02113b1c start:0x02113b1c end:0x02113b20 kind:data align:4
     .data.gap5 start:0x02113b20 end:0x02113b2c kind:data align:4
@@ -88,3 +88,11 @@ src/game/actors/d_a_obj_rc_carpet.cpp:
     .data.data_ov036_02113f4c start:0x02113f4c end:0x02114020
     .bss start:0x0211419c end:0x021141d8
     .data.data_ov036_02112b28 start:0x02112b28 end:0x02112b48
+
+src/unnamed/ov036/data_ov036_bss.c:
+    complete
+    .bss start:0x021141d8 end:0x021141e0
+
+src/unnamed/ov036/data_ov036_02112c28.c:
+    complete
+    .data start:0x02112c28 end:0x02113a54

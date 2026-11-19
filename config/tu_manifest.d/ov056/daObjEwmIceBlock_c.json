@@ -14,14 +14,14 @@
   ],
   "sections": [
     {
-      "name": ".data",
-      "start": "0x02113314",
-      "end": "0x02113320"
-    },
-    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021115cc"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021115cc",
+      "end": "0x02112b48"
     },
     {
       "name": ".init",
@@ -32,6 +32,11 @@
       "name": ".ctor",
       "start": "0x02112bb4",
       "end": "0x02112bb8"
+    },
+    {
+      "name": ".data",
+      "start": "0x02113314",
+      "end": "0x02113320"
     },
     {
       "name": ".bss",
@@ -321,7 +326,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -332,16 +337,16 @@
       },
       "tuRanges": [
         {
-          "section": ".data",
-          "start": "0x02113314",
-          "end": "0x02113320",
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x021115cc",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
-          "section": ".text",
-          "start": "0x021111a0",
-          "end": "0x021115cc",
+          "section": ".rodata",
+          "start": "0x021115cc",
+          "end": "0x02112b48",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -360,6 +365,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02113314",
+          "end": "0x02113320",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02113400",
           "end": "0x02113428",
@@ -368,7 +380,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -377,21 +389,39 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              46
+              29
             ],
             "desired": [
-              46
+              29
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              50
+            ],
+            "desired": [
+              50
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              48
             ],
             "desired": [
-              44
+              48
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              27
+            ],
+            "desired": [
+              27
             ]
           },
           {
@@ -668,18 +698,57 @@
       "addend": 0,
       "target_module": "ov056",
       "target_address": "0x02112b48"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021115d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112be0",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02112be0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021115f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bec",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02112bec"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211160c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112c24",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02112c24"
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "@513",
+      "from": "@515",
       "to": "@60",
-      "evidence": "mwcc numbers this registration node @491 per TU and ov100 already defines a global @491, so the scratch link would multiply-define it Re-keyed from @500 to @498 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @500 to @478 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @476 to @472 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @472 to @513 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "mwcc numbers this registration node @491 per TU and ov100 already defines a global @491, so the scratch link would multiply-define it Re-keyed from @500 to @498 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @500 to @478 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @476 to @472 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @472 to @513 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @513 to @515 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@512",
+      "from": "@514",
       "to": "@490",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @509 now; licensed under the existing pin @490 Re-keyed from @499 to @497 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @499 to @477 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @475 to @471 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @471 to @512 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @509 now; licensed under the existing pin @490 Re-keyed from @499 to @497 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @499 to @477 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @475 to @471 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @471 to @512 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @512 to @514 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov056_021115cc",
+      "address": "0x021115cc",
+      "size": "0x157c",
+      "binding": "STB_GLOBAL",
+      "evidence": "the ice block's BTA and four BCA animations as one run, interior alignment gaps included"
     }
   ]
 }
