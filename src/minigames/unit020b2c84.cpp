@@ -144,7 +144,7 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(void *src, void *dst, int add);
 void func_0203d388(int *p, s16 angle);
-void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
+void Mg_SpawnFx(short state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
