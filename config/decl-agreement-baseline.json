@@ -229,9 +229,6 @@
   "gRunningKuppaScript": {
    "src/KuppaScript.cpp": ["return:unsigned char *"]
   },
-  "nds_print": {
-   "src/ShowCrashScreen.cpp": ["param:#2 const void *"]
-  },
   "sBootJobDone": {
    "src/game/stages/d_s_boot_methods.cpp": ["return:unsigned char"]
   },
