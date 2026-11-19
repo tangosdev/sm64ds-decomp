@@ -155,7 +155,7 @@ void FreeGfxSlotsById(int a);
 
 extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 
-extern unsigned char gSubScreenLayers[];
+extern unsigned char gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern s32 data_0208ee44;
 
@@ -4836,7 +4836,7 @@ s32 dScMgSmartball_c::Behavior() {
         UpdateScores();
         mPromptEnabled = 0;
         if (mResultTimer == 0) {
-            gSubScreenLayers[0] |= 1;
+            gSubScreenLayers |= 1;
         }
         if (mResultSlideX > 0) {
             mResultSlideX -= 4;
@@ -4898,7 +4898,7 @@ int dScMgSmartball_c::InitSubScreenBg() {
     G2S_BG1Mosaic(0);
     G2S_SetBG1Priority(0);
     SetSubBg1Offset(0, 0);
-    gSubScreenLayers[0] &= ~2;
+    gSubScreenLayers &= ~2;
     f = GetGameLanguage();
     LoadCompressedFileAt(sSmartballOptionNcgByLanguage[f], (void *)G2S_GetBG1CharPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S_GetBG1ScrPtr());
@@ -5024,7 +5024,7 @@ s32 dScMgSmartball_c::InitResources() {
     }
     gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
     gMainScreenLayers |= DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
-    gSubScreenLayers[0] |= 0xd;
+    gSubScreenLayers |= 0xd;
     f = Ov004_LoadFileByPath(&sSmartballNclPath);
     DC_FlushRange(f, 0x100);
     GX_LoadOBJPltt(f, 0, 0x100);

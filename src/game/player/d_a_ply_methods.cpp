@@ -985,14 +985,14 @@ extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
 extern signed char data_02092114;
-extern unsigned char data_0209f2bc[];
+extern unsigned char data_0209f2bc;
 extern int data_0209f32c;
 }
 
 extern void func_02035860(dBgCh_Actr *, const Vector3 *);
 extern "C" {
 extern u8 gMeterShownHealth;
-extern unsigned char gShowRaceTimer[];
+extern unsigned char gShowRaceTimer;
 extern struct P2 data_ov002_0210a084;
 extern struct P2 data_ov002_0210a34c;
 extern char *gPlayers[];
@@ -1007,7 +1007,7 @@ extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_ApplyInPlaceToTranslation(union Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-extern u8 gReturnSublevel;
+extern s8 gReturnSublevel;
 }
 
 extern void func_02011f7c(void *a);
@@ -3254,11 +3254,11 @@ int daPly_c::func_ov002_020c0fb4() {
         break;
 
     case 15:
-        if (gShowRaceTimer[0] != 0) {
+        if (gShowRaceTimer != 0) {
             break;
         }
         gRaceTimer.ResetTimer();
-        gShowRaceTimer[0] = 1;
+        gShowRaceTimer = 1;
         gRaceTimer.StartTimer();
         break;
 
@@ -6130,7 +6130,8 @@ void daPly_c::func_ov002_020c7194() {
 void daPly_c::func_ov002_020c71e0() {
     extern unsigned char gPrevReturnState[];
     mLevelEntryDone = 1;
-    if (data_0209f2bc[0] != 0) return;
+    if (data_0209f2bc != 0)
+        return;
     if (mStateWaitTimer == 0) {
         this->mPrevAngle.y = this->mAngle.y;
         if (mStateStep == 1) {
@@ -7115,7 +7116,7 @@ int daPly_c::func_ov002_020c92fc() {
 }
 
 int daPly_c::func_ov002_020c94a4() {
-    extern u8 gReturnSublevel;
+    extern s8 gReturnSublevel;
     unsigned short st;
 
     this->mSpeed.y = 0;
