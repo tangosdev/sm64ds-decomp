@@ -28,3 +28,10 @@ src/game/actors/d_a_obj_c1_peach.cpp:
     .ctor start:0x021121a4 end:0x021121a8
     .bss start:0x02112d64 end:0x02112d78
 
+src/unnamed/ov010/data_ov010.c:
+    complete
+    .data start:0x02112318 end:0x02112a78
+
+src/unnamed/ov010/data_ov010_02112d78.c:
+    complete
+    .bss start:0x02112d78 end:0x02112d80

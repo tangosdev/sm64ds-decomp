@@ -1,11 +1,9 @@
     .rodata     start:0x021111a0 end:0x02111870 kind:rodata align:4
     .ctor       start:0x02111870 end:0x02111870 kind:rodata align:4
-    .data.data_ov041_02111880 start:0x02111880 end:0x021118f8 kind:data align:32
-    .data.data_ov041_021118f8 start:0x021118f8 end:0x02111d40 kind:data align:4
+    .data       start:0x02111880 end:0x02111d40 kind:data align:32
     .bss        start:0x02111d40 end:0x02111d40 kind:bss align:32
 
 src/unnamed/ov041/data_ov041.c:
     complete
     .rodata start:0x021111a0 end:0x02111870
-    .data.data_ov041_02111880 start:0x02111880 end:0x021118f8
-    .data.data_ov041_021118f8 start:0x021118f8 end:0x02111d40
+    .data start:0x02111880 end:0x02111d40
