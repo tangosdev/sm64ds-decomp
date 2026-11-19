@@ -20,9 +20,9 @@
  * Known limits:
  * - IsUnk42cSet keeps its symbol-bound name; the field it reads is
  *   mRespawnAfterFall (see include/PathLift.h).
- * - StateFall keeps two views of mFallAngle: a signed read and an
- *   (int)-laundered unsigned read-modify-write. Collapsing both into
- *   mFallAngle makes mwcc reuse the signed load and drops 12 bytes.
+ * - StateFall reads the u16 mFallAngle into the s16 raw before taking its
+ *   sine: the ROM loads it signed there and unsigned for the += 0x3000. An
+ *   s32 raw loads it unsigned (one word off).
  */
 
 #pragma defer_codegen off
@@ -119,7 +119,7 @@ void dPathLiftActor_c::StateWaitInit()
 // 0x020ef408 (0x174)
 void dPathLiftActor_c::StateFall()
 {
-    s32 raw;
+    s16 raw;
     s16 v;
 
     if (Param08ModeIs2() != 0) {
@@ -135,12 +135,10 @@ void dPathLiftActor_c::StateFall()
     if (DecIfAbove0_Byte(&mFallDelay) != 0)
         return;
     if (DecIfAbove0_Byte(&mFallBounceTimer) != 0) {
-        /* Retain the mixed signed/unsigned access tree: collapsing both views
-           into mFallAngle makes mwcc reuse the signed load and drops 12 bytes. */
         raw = mFallAngle;
-        v = FX_SinIdx((u16)(int)(long long)raw >> 4);
+        v = FX_SinIdx((u16)raw >> 4);
         mPos.y = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
-        *(u16 *)((int)&mFallAngle) = (u16)(*(u16 *)((int)&mFallAngle) + 0x3000);
+        mFallAngle += 0x3000;
         return;
     }
     UpdatePos(0);
