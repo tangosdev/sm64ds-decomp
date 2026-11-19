@@ -8485,15 +8485,15 @@ matched: yes</title></rect><rect x="5.00" y="688.38" width="4.91" height="21.32"
 module: arm9
 addr: 0x0205130c
 size: 156 bytes
-matched: yes</title></rect><rect x="5.00" y="709.70" width="4.91" height="8.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020513a8
+matched: yes</title></rect><rect x="5.00" y="709.70" width="4.91" height="8.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WaveArcDisposeCallback
 module: arm9
 addr: 0x020513a8
 size: 60 bytes
-matched: yes</title></rect><rect x="5.00" y="717.90" width="4.91" height="8.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020513e4
+matched: yes</title></rect><rect x="5.00" y="717.90" width="4.91" height="8.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>BankDisposeCallback
 module: arm9
 addr: 0x020513e4
 size: 60 bytes
-matched: yes</title></rect><rect x="5.00" y="726.10" width="4.91" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051420
+matched: yes</title></rect><rect x="5.00" y="726.10" width="4.91" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SeqDisposeCallback
 module: arm9
 addr: 0x02051420
 size: 52 bytes
@@ -8569,11 +8569,11 @@ matched: yes</title></rect><rect x="9.91" y="744.67" width="7.32" height="17.23"
 module: arm9
 addr: 0x02051e60
 size: 188 bytes
-matched: yes</title></rect><rect x="9.91" y="761.89" width="7.32" height="13.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051f1c
+matched: yes</title></rect><rect x="9.91" y="761.89" width="7.32" height="13.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcPlayerStartSeqArc
 module: arm9
 addr: 0x02051f1c
 size: 152 bytes
-matched: yes</title></rect><rect x="9.91" y="775.82" width="7.32" height="7.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051fb4
+matched: yes</title></rect><rect x="9.91" y="775.82" width="7.32" height="7.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcPlayerStartSeq
 module: arm9
 addr: 0x02051fb4
 size: 84 bytes
@@ -8581,7 +8581,7 @@ matched: yes</title></rect><rect x="9.91" y="783.52" width="7.32" height="14.29"
 module: arm9
 addr: 0x02052008
 size: 156 bytes
-matched: yes</title></rect><rect x="9.91" y="797.81" width="7.32" height="5.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020520a4
+matched: yes</title></rect><rect x="9.91" y="797.81" width="7.32" height="5.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FreeCommandBuffer
 module: arm9
 addr: 0x020520a4
 size: 56 bytes
@@ -10493,23 +10493,23 @@ matched: yes</title></rect><rect x="88.57" y="743.34" width="28.08" height="9.46
 module: arm9
 addr: 0x0205e0f4
 size: 396 bytes
-matched: yes</title></rect><rect x="116.65" y="743.34" width="24.11" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e280
+matched: yes</title></rect><rect x="116.65" y="743.34" width="24.11" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1PadMessage
 module: arm9
 addr: 0x0205e280
 size: 340 bytes
-matched: yes</title></rect><rect x="140.76" y="743.34" width="55.59" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e3d4
+matched: yes</title></rect><rect x="140.76" y="743.34" width="55.59" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1ProcessMessageBlock
 module: arm9
 addr: 0x0205e3d4
 size: 784 bytes
-matched: yes</title></rect><rect x="196.35" y="743.34" width="17.87" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e6e4
+matched: yes</title></rect><rect x="196.35" y="743.34" width="17.87" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1Input
 module: arm9
 addr: 0x0205e6e4
 size: 252 bytes
-matched: yes</title></rect><rect x="214.21" y="743.34" width="13.33" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e7e0
+matched: yes</title></rect><rect x="214.21" y="743.34" width="13.33" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1Result
 module: arm9
 addr: 0x0205e7e0
 size: 188 bytes
-matched: yes</title></rect><rect x="227.54" y="743.34" width="7.37" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205e89c
+matched: yes</title></rect><rect x="227.54" y="743.34" width="7.37" height="9.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SHA1Reset
 module: arm9
 addr: 0x0205e89c
 size: 104 bytes
