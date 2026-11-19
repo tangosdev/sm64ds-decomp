@@ -127,7 +127,7 @@ enum {
 };
 
 extern "C" {
-extern char *func_ov002_020e496c(daPly_c *p);
+extern dExtAnm2Model_c *func_ov002_020e496c(daPly_c *p);
 extern short data_ov002_020ff0d0[];
 extern const VecFx32 data_ov002_020ff0d4[];
 

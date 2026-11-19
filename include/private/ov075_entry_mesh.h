@@ -14,10 +14,12 @@ struct BMD_File;
  * 0x0211a948..0x0211b524, in src/game/stages/d_s_entry_entry.cpp. */
 
 /* The grid's vectors are the SDK's POD VecFx32, not types.h Vector3: Vector3
- * declares a destructor, so a Vector3 member makes this unit emit an
- * unreferenced ~Vector3() copy and gives EntryMesh a destructor dEntObj_c's
- * object would emit; the ROM has neither (the same reason as dBgW_Kc's
- * upAxis and depthDir). */
+ * declares a destructor, so a Vector3 member gives EntryMesh a destructor of
+ * its own. dEntObj_c's object then emits _ZN9EntryMeshD1Ev (measured #821
+ * r111 with mRippleCenter alone retyped), and the ROM has no EntryMesh
+ * destructor anywhere. Contrast dBgW_Kc's upAxis, a Vector3: dBgW_Kc already
+ * has its own destructor, so the member only costs the shared
+ * ~Vector3() copy every Vector3 user re-emits. */
 
 /* One grid vertex. InitGrid lays the grid out, CalcNormals packs the
  * normals and DrawGrid sends each vertex to the geometry engine. */

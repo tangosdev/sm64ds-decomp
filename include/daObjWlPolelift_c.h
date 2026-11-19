@@ -12,7 +12,7 @@
  *
  * BASE. dActor_c, confirmed by the RTTI edge (daObjWlPolelift_c
  * ov026:0x02113a90 -> dActor_c arm9:0x0208e390) and independently by the
- * vtable: data_ov026_02113ae0 (31 slots, matching dActor_c's own 31)
+ * vtable: _ZTV17daObjWlPolelift_c (31 slots, matching dActor_c's own 31)
  * overrides exactly six -- 0, 3, 6, 9, 16, 17 -- and every other slot is
  * still whatever dActor_c's own table holds there.
  *

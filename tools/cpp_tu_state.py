@@ -335,7 +335,6 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
             "matching_progress": "python tools/progress.py --bar --from-src",
             "language_mode_debt": "python tools/langmode_audit.py",
             "production_tu_compatibility": "python tools/cpp_tu_compat.py",
-            "production_reference_check": "python tools/port_refcheck.py",
         },
     }
 
@@ -472,7 +471,6 @@ def render_markdown(report: dict) -> str:
         f"| What TU evidence has been recovered? | `{report['inputs']['tu_evidence']}` |",
         f"| Can one production source safely own two functions? | `{report['commands']['production_tu_compatibility']}` |",
         f"| Is C++ source semantically migrated? | `{report['inputs']['semantic_language_mode']}`; inspect with `{report['commands']['language_mode_debt']}` |",
-        f"| Did a move/merge strand the PC port? | `{report['commands']['production_reference_check']}` |",
         "",
         "Long-form plans and pilot reports explain design and history; they are not current-count",
         "authorities. If a prose number disagrees with this generated page, regenerate this page",

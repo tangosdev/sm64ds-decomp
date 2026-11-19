@@ -1,6 +1,6 @@
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 //
-// _ll_ufrom_d at 0x01ff859c (ITCM), also known as func_01ff859c -- double to unsigned
+// _ll_ufrom_d at 0x01ff859c (ITCM), formerly catalogued as func_01ff859c -- double to unsigned
 // 64-bit integer conversion. Toolchain runtime, shipped as assembly; there is no C source
 // for it in the game. The name is the one mwccarm 2004/b56 itself emits a `bl` to for
 // `(unsigned long long)d` (checked by compiling that expression). The unsigned reading is

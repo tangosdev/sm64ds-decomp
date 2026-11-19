@@ -5,7 +5,7 @@
 [discord]: https://discord.gg/YpReERF4e3
 [discord-badge]: https://img.shields.io/discord/1520811338568569112?color=7289DA&logo=discord&logoColor=ffffff
 
-> **Looking for the PC port?** [Download it here.](https://tangos.dev/downloads)
+> **Looking for the PC port?** [Download it here.](https://tangos.dev/downloads) Its source lives in [sm64ds-pc-port](https://github.com/tangosdev/sm64ds-pc-port).
 
 A decompilation of Super Mario 64 DS
 

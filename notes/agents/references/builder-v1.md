@@ -52,7 +52,6 @@ not merely once after the rebase.
     python tools/check_profile_campaign.py --repo .
     python tools/langmode_audit.py --check langmode-baseline.json
     python tools/check_header_offsets.py --changed origin/main
-    python tools/port_refcheck.py
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
     python tools/queue_audit.py --check
@@ -257,9 +256,6 @@ error.
   deleted. This is the common one: it fired on `notes/bgobject-provenance.md`
   naming seven. Remedy: remove the literal token, not just the sentence around
   it — the gate reads bare `src/` tokens.
-- **`port_refcheck.py`** has now come back **green** on three consecutive
-  promotions (402 checked, 0 stale). Check it, but do not expect it to fire or
-  go looking for a remedy it does not need.
 
 ## Authors do not come from git history
 

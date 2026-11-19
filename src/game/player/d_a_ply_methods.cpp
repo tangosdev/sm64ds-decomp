@@ -985,17 +985,17 @@ extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
 extern signed char data_02092114;
-extern unsigned char data_0209f2bc[];
+extern unsigned char data_0209f2bc;
 extern int data_0209f32c;
 }
 
 extern void func_02035860(dBgCh_Actr *, const Vector3 *);
 extern "C" {
 extern u8 gMeterShownHealth;
-extern unsigned char gShowRaceTimer[];
+extern unsigned char gShowRaceTimer;
 extern struct P2 data_ov002_0210a084;
 extern struct P2 data_ov002_0210a34c;
-extern char *gPlayers[];
+extern daPly_c *gPlayers[];
 }
 
 extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
@@ -1007,7 +1007,7 @@ extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_ApplyInPlaceToTranslation(union Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-extern u8 gReturnSublevel;
+extern s8 gReturnSublevel;
 }
 
 extern void func_02011f7c(void *a);
@@ -3254,11 +3254,11 @@ int daPly_c::func_ov002_020c0fb4() {
         break;
 
     case 15:
-        if (gShowRaceTimer[0] != 0) {
+        if (gShowRaceTimer != 0) {
             break;
         }
         gRaceTimer.ResetTimer();
-        gShowRaceTimer[0] = 1;
+        gShowRaceTimer = 1;
         gRaceTimer.StartTimer();
         break;
 
@@ -4326,14 +4326,14 @@ int daPly_c::JumboStarCutsceneTakingOff() {
             mStateWork += 1;
         }
     } else {
-        int buf[6];
-        buf[0] = 0;
-        buf[1] = 0;
-        buf[2] = 0;
-        buf[3] = 0;
-        buf[4] = 0;
-        buf[5] = 0;
-        func_ov002_020c37a4((const Vector3 *)(buf + 3));
+        Vector3 startOffset, particleOffset;
+        startOffset.x = 0;
+        startOffset.y = 0;
+        startOffset.z = 0;
+        particleOffset.x = 0;
+        particleOffset.y = 0;
+        particleOffset.z = 0;
+        func_ov002_020c37a4(&particleOffset);
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
         r5 = (unsigned int)(anim.currFrame << 4) >> 0x10;
         if (r5 == 0x6d || r5 == 0x8d) {
@@ -6130,7 +6130,8 @@ void daPly_c::func_ov002_020c7194() {
 void daPly_c::func_ov002_020c71e0() {
     extern unsigned char gPrevReturnState[];
     mLevelEntryDone = 1;
-    if (data_0209f2bc[0] != 0) return;
+    if (data_0209f2bc != 0)
+        return;
     if (mStateWaitTimer == 0) {
         this->mPrevAngle.y = this->mAngle.y;
         if (mStateStep == 1) {
@@ -7115,7 +7116,7 @@ int daPly_c::func_ov002_020c92fc() {
 }
 
 int daPly_c::func_ov002_020c94a4() {
-    extern u8 gReturnSublevel;
+    extern s8 gReturnSublevel;
     unsigned short st;
 
     this->mSpeed.y = 0;
@@ -16479,10 +16480,9 @@ void daPly_c::func_ov002_020dd908() {
     if (!IsVsMode())
         return;
     for (i = 0; i < gNumPlayers; i++) {
-        char *o = gPlayers[i];
-        daPly_c *player = (daPly_c *)o;
+        daPly_c *player = gPlayers[i];
         int *p;
-        if (o == 0)
+        if (player == 0)
             continue;
         if (player->mClimbClsn == 0)
             continue;
@@ -19601,10 +19601,10 @@ void daPly_c::func_ov002_020e4768() {
 }
 
 extern "C" {
-int func_ov002_020e496c(daPly_c *c) {
+dExtAnm2Model_c *func_ov002_020e496c(daPly_c *c) {
     daPly_c *player = c;
     int id = (c)->GetBodyModelID(player->mBodyModelId, 1);
-    return (int)player->mModels.mBodyModels[id];
+    return player->mModels.mBodyModels[id];
 }
 }
 
