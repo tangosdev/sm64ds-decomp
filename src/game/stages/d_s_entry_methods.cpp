@@ -184,8 +184,6 @@ extern int data_ov075_0211c9b8[];
 extern int *data_ov075_0211c9cc[];
 extern OamAttr *data_ov075_0211c9e0[];
 extern OamAttr *data_ov075_0211c9f4[];
-extern short data_ov075_0211d72c[];
-extern short data_ov075_0211d740[];
 extern char data_ov075_0211c790[];
 extern char data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211cb84;
@@ -709,8 +707,6 @@ void dScEntry_c::UpdateSoundSettings() {
     }
 }
 
-#define SH(base, i) (base[(i) * 2])
-
 void dScEntry_c::EnterSoundSettings() {
     sEntryGraphCallback.QueueBg2Screen(LoadFile(data_ov075_0211ca08[GetLanguageIndex()]));
 
@@ -721,8 +717,8 @@ void dScEntry_c::EnterSoundSettings() {
 
     mSelectedIcon = 0;
 
-    mIcons[6].Place(5, 0, (SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 56);
-    mIcons[7].Place(6, 0, (SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 104);
+    mIcons[6].Place(5, 0, data_ov075_0211d72c[GetLanguageIndex()].w + 8, 56);
+    mIcons[7].Place(6, 0, data_ov075_0211d740[GetLanguageIndex()].w + 8, 104);
     mIcons[8].Place(0xc, 0, 86, 168);
     mIcons[2].Place(1, 0, 172, 56);
     mIcons[0].Place(3, 0, 100, 56);

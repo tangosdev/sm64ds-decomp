@@ -106,7 +106,7 @@
   "data": [],
   "rodata": [
     {
-      "symbol": "data_ov065_0211c0b0",
+      "symbol": "sTTCPendulumInitialAccels",
       "address": "0x0211c0b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
