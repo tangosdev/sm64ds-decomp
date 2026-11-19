@@ -628,8 +628,7 @@ void dScEntry_c::UpdateSoundSettings() {
     int dir;
     u16 flags;
 
-    if (TouchArea_Update(&mIcons[5], -1) != 0 ||
-        TouchArea_Update(&mIcons[8], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[5], -1) != 0 || TouchArea_Update(&mIcons[8], -1) != 0 ||
         ((flags = data_020a0e58[w].pressed) & 8) != 0 || (flags & 4) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 2)) {
         mIcons[5].Select();
@@ -639,8 +638,7 @@ void dScEntry_c::UpdateSoundSettings() {
     } else {
         dir = 0;
         if (mIcons[2].mReady != 0) {
-            if (TouchArea_Update(&mIcons[2], -1) != 0 ||
-                TouchArea_Update(&mIcons[1], -1) != 0 ||
+            if (TouchArea_Update(&mIcons[2], -1) != 0 || TouchArea_Update(&mIcons[1], -1) != 0 ||
                 TouchArea_Update(&mIcons[6], -1) != 0) {
                 mSelectedIcon = 0;
                 dir = 1;
@@ -689,8 +687,7 @@ void dScEntry_c::UpdateSoundSettings() {
                 mIcons[4].mOn = 0;
                 mSelectedIcon = 1;
                 func_02012790(0x66);
-            } else if (TouchArea_Update(&mIcons[4], -1) != 0 ||
-                       (dir > 0 && mSelectedIcon == 1)) {
+            } else if (TouchArea_Update(&mIcons[4], -1) != 0 || (dir > 0 && mSelectedIcon == 1)) {
                 TurnBacklightOff();
                 mIcons[3].mOn = 0;
                 mIcons[4].Select();
@@ -776,9 +773,9 @@ void dScEntry_c::RenderControlSettings() {
 void dScEntry_c::UpdateControlSettings() {
     int w = func_0203da9c();
 
-    if (TouchArea_Update(&mIcons[3], -1) != 0 ||
-        TouchArea_Update(&mIcons[4], -1) != 0 || (data_020a0e58[w].pressed & 8) != 0 ||
-        (data_020a0e58[w].pressed & 4) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 3)) {
+    if (TouchArea_Update(&mIcons[3], -1) != 0 || TouchArea_Update(&mIcons[4], -1) != 0 ||
+        (data_020a0e58[w].pressed & 8) != 0 || (data_020a0e58[w].pressed & 4) != 0 ||
+        (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 3)) {
         int i;
         for (i = 0; i <= 2; i++) {
             if (mIcons[i].mOn != 0) {
