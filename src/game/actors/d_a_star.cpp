@@ -174,7 +174,7 @@ extern void SetStarMarker(int i, dActor_c *actor, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
 extern "C" {
 extern dActor_c *STAR_MARKERS[12];
-extern u8 data_0209f208;
+extern u8 gNumVsStarsCollected;
 extern unsigned char gCurrentEntranceId;
 }
 
@@ -191,7 +191,7 @@ extern u8 data_0209d684;
 
 extern "C" s16 GetAngleToCamera(int i);
 extern "C" {
-extern u8 *data_0209f344;
+extern u8 *gVsStarSpawnOrder;
 }
 
 extern "C" {
@@ -639,7 +639,7 @@ int daStar_c::Behavior()
 }
 
 /* Per-frame update of the marker. mAppearTimer counts down while this marker's
- * star id is the next one in data_0209f344[data_0209f208], and the marker
+ * star id is the next one in gVsStarSpawnOrder[gNumVsStarsCollected], and the marker
  * shows itself at 0 unless hold is set. It builds the model and shadow
  * matrices (the model position is mPos >> 3), and when something with hit bits
  * 0x408000 touches a visible marker that is not in state 2, it records the
@@ -647,7 +647,7 @@ int daStar_c::Behavior()
 int daStarBase_c::Behavior()
 {
     if (mBits.refresh) {
-        if (mStarID == data_0209f344[data_0209f208]) {
+        if (mStarID == gVsStarSpawnOrder[gNumVsStarsCollected]) {
             mAppearTimer = 0;
             if (!mBits.hold) {
                 mBits.visible = 1;
@@ -661,7 +661,7 @@ int daStarBase_c::Behavior()
     if (mState != 0) {
         if (mAppearTimer != 0) {
             if (!mBits.visible) {
-                if (mStarID == data_0209f344[data_0209f208]) {
+                if (mStarID == gVsStarSpawnOrder[gNumVsStarsCollected]) {
                     mAppearTimer -= 1;
                     if (mAppearTimer == 0) {
                         if (!mBits.hold) {
@@ -1441,7 +1441,7 @@ void daStar_c::StateBounce() {
 /* -------------------------------------------------------------------------- */
 /* STATE_WAIT_MARKER: the star sits hidden until its marker says so. With no
  * marker it looks for one. Once it is this star's turn
- * (data_0209f344[data_0209f208] == mStarID) and the marker's mAppearTimer has
+ * (gVsStarSpawnOrder[gNumVsStarsCollected] == mStarID) and the marker's mAppearTimer has
  * run out it appears (sound 3/0x54, map marker). When the marker is on hold
  * the star pops out (32.0 up) into STATE_BOUNCE; in a VS match with a toucher
  * recorded it also leaves at 12.0, facing away from that player's camera. */
@@ -1456,7 +1456,8 @@ void daStar_c::StateWaitMarker() {
     if (actor == 0) return;
 
     if (!mBits.visible) {
-        if (mStarID != data_0209f344[data_0209f208]) return;
+        if (mStarID != gVsStarSpawnOrder[gNumVsStarsCollected])
+            return;
         if (actor->mAppearTimer != 0) return;
 
         mBits.visible = 1;
@@ -1794,7 +1795,7 @@ int daStar_c::Collect(void *p) {
         }
 
         if (mHomeState == STATE_WAIT_MARKER) {
-            data_0209f208++;
+            gNumVsStarsCollected++;
         }
         func_02012790(0x2d);
         mState = STATE_COLLECT_BEGIN;
@@ -1886,7 +1887,7 @@ int daStar_c::MaybeAddStarMarker() {
 /* Claims a free slot of the map-marker table (STAR_MARKERS, 12 entries) for
  * this star. The marker type is 1 for the silver star, 2 for the Power Star
  * and 3 once collected; type 0 uses 3 or 2 from the collected-model flag. A
- * star waiting for its marker does not show it until data_0209f208 is non-
+ * star waiting for its marker does not show it until gNumVsStarsCollected is non-
  * zero. */
 void daStar_c::AddStarMarker()
 {
@@ -1914,7 +1915,8 @@ void daStar_c::AddStarMarker()
 
         mMarkerSlot = i;
         if (mState == STATE_WAIT_MARKER) {
-            if (data_0209f208 == 0) return;
+            if (gNumVsStarsCollected == 0)
+                return;
         }
         FUN_0202a130();
         return;

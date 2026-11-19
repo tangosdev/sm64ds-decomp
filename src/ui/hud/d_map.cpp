@@ -88,7 +88,7 @@ extern s32 gGlobalTimer;
 extern dFdBrightness_c *gSceneFader;
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
-extern u8   data_0209f350[];
+extern u8 gCameraPressState[];
 extern s8 gNextSublevel;
 extern u8   data_0209f204;
 extern u8   data_ov002_02111150;
@@ -98,7 +98,7 @@ extern u8 gMapIntroRotating;
 extern u8   data_ov002_02111144;
 extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
-extern void *data_0209f3a4[];
+extern void *gSpikeBombs[];
 extern void SetSubBg2Offset(s32 a, s32 b);
 }
 
@@ -554,7 +554,8 @@ s32 dMap_c::Behavior()
     focus = 0;
 
     if (gSceneFader->IsAtStart() != 0 && !(gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING) &&
-        data_0209d4b0 == 0 && data_0209f350[gLocalPlayerId] == 0 && player->Unk_020ca8f8() != 1) {
+        data_0209d4b0 == 0 && gCameraPressState[gLocalPlayerId] == 0 &&
+        player->Unk_020ca8f8() != 1) {
         u8 touching;
 
         if (this->mTouchCircleTimer != 0) {
@@ -755,7 +756,7 @@ s32 dMap_c::Behavior()
 
         /* The star key: Render blinks it under the same two flag tests. */
         if (!(gSaveBlock.file.flags1 & 0x40) && (gSaveBlock.file.flags2 & 0x20000)) {
-            dActor_c *o = (dActor_c *)data_0209f33c;
+            dActor_c *o = (dActor_c *)gCastleKeyRabbit;
             if (o == 0) {
                 this->mStarKeyMapID = -1;
             } else {
@@ -768,7 +769,7 @@ s32 dMap_c::Behavior()
         }
 
         for (i = 0; i < 8; i++) {
-            dActor_c *o = (dActor_c *)data_0209f3a4[i];
+            dActor_c *o = (dActor_c *)gSpikeBombs[i];
             if (o != 0) {
                 GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
                                 &miniPos);

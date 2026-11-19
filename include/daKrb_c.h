@@ -196,7 +196,7 @@ struct daKrb_c : dCapEnemy_c {
     /* mRewardType, from bits 4..7 of the spawn parameter. Types 1 and 2 both
        load the silver-star model and spawn a SILVER_STAR (179) plus a STARBASE
        (180) when the Goomba dies; type 2 only does so when mStarID equals
-       data_0209f344[data_0209f208[0]], and becomes 3 once it has. */
+       gVsStarSpawnOrder[gNumVsStarsCollected], and becomes 3 once it has. */
     enum RewardType {
         REWARD_NONE = 0,
         REWARD_SILVER_STAR = 1,

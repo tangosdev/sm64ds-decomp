@@ -172,8 +172,8 @@ extern StateHandler data_ov084_02130d74[];
 extern "C" int func_02037e20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
-extern u8 data_0209f208;
-extern u8 *data_0209f344;
+extern u8 gNumVsStarsCollected;
+extern u8 *gVsStarSpawnOrder;
 extern BMA_File data_ov084_0213088c;
 extern BMA_File data_ov084_0213089c;
 extern int data_ov084_02130248[];
@@ -453,7 +453,7 @@ inline u32 daKrb_c::GetParam1() const {
  * own position with parameter 0x10, give the silver star the marker's
  * uniqueID, link the two and play sound object 1.
  * REWARD_SILVER_STAR_IF_CURRENT: only when mStarID equals
- * data_0209f344[data_0209f208]; spawns both actors with parameter
+ * gVsStarSpawnOrder[gNumVsStarsCollected]; spawns both actors with parameter
  * mStarID | 0x30 at the Goomba's position, marks the reward spent, and
  * plays sound object 1. */
 void daKrb_c::func_ov084_021296cc() {
@@ -473,7 +473,7 @@ void daKrb_c::func_ov084_021296cc() {
     }
     if (mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
         return;
-    if (mStarID != data_0209f344[data_0209f208])
+    if (mStarID != gVsStarSpawnOrder[gNumVsStarsCollected])
         return;
     UntrackStar(mStarTracked);
     dActor_c::Spawn(ACTOR_STARBASE, mStarID | 0x30, mPos, 0, mAreaId, -1);
@@ -484,14 +484,14 @@ void daKrb_c::func_ov084_021296cc() {
 }
 
 /* For REWARD_SILVER_STAR_IF_CURRENT: while no star slot is tracked yet
- * (mStarTracked negative) and mStarID matches data_0209f344[data_0209f208],
+ * (mStarTracked negative) and mStarID matches gVsStarSpawnOrder[gNumVsStarsCollected],
  * claim a slot (TrackStar(mStarID, 1)). */
 void daKrb_c::func_ov084_02129864() {
     if (mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
         return;
     if (mStarTracked >= 0)
         return;
-    unsigned int current = data_0209f344[data_0209f208];
+    unsigned int current = gVsStarSpawnOrder[gNumVsStarsCollected];
     if (mStarID != current)
         return;
     mStarTracked = TrackStar(mStarID, 1);
@@ -1433,7 +1433,7 @@ void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
                 dActor_c::Spawn(ACTOR_STARBASE, 0x50, mHomePos, 0, mAreaId, -1);
                 param1 = GetParam1() & 0xff0f;
             } else if (mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
-                if (mStarID == data_0209f344[data_0209f208]) {
+                if (mStarID == gVsStarSpawnOrder[gNumVsStarsCollected]) {
                     UntrackStar(mStarTracked);
                     mRewardType = REWARD_SPENT;
                     b4 = 1;

@@ -832,7 +832,7 @@ extern void*data_0209b458;
 extern void *sParticleHeapCursor;
 extern void *sParticleHeapEnd;
 extern void *sParticleHeapBase;
-extern void*data_0209f33c;
+extern void *gCastleKeyRabbit;
 extern void*data_020a4bd0;
 extern void*data_ov002_020ff0ac[];
 extern void*data_ov002_020ff790[];

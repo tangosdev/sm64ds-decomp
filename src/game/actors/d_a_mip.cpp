@@ -1060,7 +1060,7 @@ int daMip_c::Behavior()
 {
     extern s8 gCurrentSublevel;
     extern s8 gCurrentAreaId;
-    extern void* data_0209f33c;
+    extern void *gCastleKeyRabbit;
     extern DaMipAnimationFilePtr data_ov085_021305c0;
     extern MipStatePair data_ov085_0213068c;
     extern MipStatePair data_ov085_021306ac;
@@ -1087,7 +1087,7 @@ int daMip_c::Behavior()
     }
 
     if (mRabbitId == 7 && !(gSaveBlock.file.flags1 & 0x40))
-        data_0209f33c = this;
+        gCastleKeyRabbit = this;
 
     if (mIsGlowing != 0) {
         Vector3 pv = mPos;

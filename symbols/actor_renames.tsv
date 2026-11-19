@@ -10984,3 +10984,20 @@ arm9	0x0209f27c	data_0209f27c	sBuzzerSoundJustPlayed	community (BUZZER_SOUND_JUS
 arm9	0x0209f280	data_0209f280	sStopMusicDuringFade	community (STOP_MUSIC_DURING_FADE): set when a level-clear jingle starts or a pause-menu exit starts a scene fade; unpause then fades the music out instead of resuming it
 arm9	0x0202deac	_Z13func_0202deaci	_Z20PreloadLevelOverlaysi	coined: the entry scene's early LoadLevelOverlays; sets sLevelOverlaysPreloaded so the stage's own load only checks and clears it
 arm9	0x02020820	_ZN12OamAnimation13func_02020820EPiiihh	_ZN12OamAnimation4InitEPiiihh	coined (OamAnimation::Init): points the player at a {frames, count} pair, restarts it and resets the drawing state; the entry scene arms its animations with it
+arm9	0x0209f1f4	data_0209f1f4	sVsNewStarSoundPlayed	community (VS_NEW_STAR_SOUND_PLAYED): RenderVsModeNewStar plays sound 0x2c once per blink of the new-star banner and latches it; the off phase and FUN_0202a130 clear it
+arm9	0x0209f308	data_0209f308	sVsNewStarTimer	community (VS_NEW_STAR_TIMER): FUN_0202a130 sets 180, RenderVsModeNewStar counts it down and blinks the VS new-star banner, InitResources zeroes it
+arm9	0x0209f304	data_0209f304	sVsCountdownTimer	community (VS_MODE_COUNTDOWN_TIMER): 40 frames per VS start-countdown number; Behavior counts it down and steps data_0209f2bc, RenderVsModeCountdown draws while it runs
+arm9	0x0209f234	data_0209f234	sSelectedSoundMode	community (SOUND_OPTION): the options page seeds it from GetSoundMode, the arrows step it 0..2 through SetSoundMode, OK applies it
+arm9	0x0209f290	data_0209f290	sVsExitScreenStep	community (VS_MODE_EXIT_STATE): the VS exit screen's step; VE_Init zeroes it, a choice sets 1, the scene fade sets 2
+arm9	0x0209f298	data_0209f298	sReturnToRecRoom	community (RETURN_TO_REC_ROOM): StartMinigameMenu stores its returnToRecRoom argument, ExitMinigameMenu reads it
+arm9	0x0209f2a0	data_0209f2a0	sPausedDuringTimer	community (PAUSED_DURING_TIMER): set when opening the pause stopped a running gRaceTimer; PS_Cleanup restarts the timer and clears it
+arm9	0x0209f2b8	data_0209f2b8	sSaveMenuTimer	community (SAVE_MENU_TIMER): the pause and level-clear save screens set 120, save at 120, show the saved text at 60 and move on at 0
+arm9	0x0209f320	data_0209f320	sLevelModelData	community (LEVEL_MODEL_DATA): LoadModel keeps the level model's components here, CopyTexPalFromLevelModel reads it, CleanupResources clears it
+arm9	0x0209f368	data_0209f368	sCameraTouchMasks	coined (community CAMERA_INPUT_ARR): per player, the camera-button mask the pen held last frame; CheckCameraInput reports a press only when it changes
+arm9	0x0209f350	data_0209f350	gCameraPressState	community (CAMERA_PRESS_STATE): per player, 1 while the pen is on a camera button; CheckCameraInput sets it, touch control and dMap_c ignore the pen while it is set
+arm9	0x0209f3a4	data_0209f3a4	gSpikeBombs	community (BOWSER_SPIKE_BOMBS): the eight spike-bomb slots AddSpikeBomb fills and ClearSpikeBomb empties; dMap_c draws an icon for each
+arm9	0x0209f33c	data_0209f33c	gCastleKeyRabbit	community (CASTLE_KEY_RABBIT): daMip_c rabbit 7 registers itself while flags1 bit 0x40 is clear; dMap_c blinks the star-key icon at its position
+arm9	0x0209f344	data_0209f344	gVsStarSpawnOrder	community (VS_STAR_SPAWN_ORDER): InitResources points it at row func_0203dad4() % 6 of VS_STAR_SPAWN_ORDERS; daStar_c and daKrb_c index it
+arm9	0x0209f208	data_0209f208	gNumVsStarsCollected	community (NUM_VS_STARS_COLLECTED): InitResources zeroes it, daStar_c bumps it when a marker-waiting star is collected; the index into gVsStarSpawnOrder
+arm9	0x0209f240	data_0209f240	sOkBackRowPressed	coined (community BACK_BUTTON_PRESSED_2): set when the OK/Back row is pressed, so PS_Update repaints that row instead of the big buttons when sMenuHighlightDelay ends
+arm9	0x0209f2a4	data_0209f2a4	sLastSmallButton	coined (community SELECTED_BUTTON_SMALL): the small touch button (1..5) last pressed on the controls/options pages; pressing it again needs a new pen-down edge
