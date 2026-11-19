@@ -272,7 +272,7 @@ extern int sTrmp2GravityStep;
 extern int sTrmp2FallSpeed;
 extern int sTrmp2MarioCount;
 extern int sTrmp2Score;
-extern int sMgCurCamera;
+extern struct MgCamera *sMgCurCamera;
 extern int data_ov006_021421b4;
 /* sMCarloFirstPick / _02142500 / _02142504 / _02142508 are the four
    globals of one intrusive doubly-linked Node list (two cursors, head,
