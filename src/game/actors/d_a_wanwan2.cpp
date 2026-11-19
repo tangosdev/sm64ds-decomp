@@ -166,7 +166,7 @@ void Matrix4x3_FromRotationY(void *m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 /* local extern: math/MtxStack.h declares it, but clashes with the void *
    Matrix4x3_* spellings above. */
-void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(const Vector3 *in, const Matrix4x3 *m, Vector3 *out);
 }
 
 extern SharedFilePtr data_ov002_0211092c;

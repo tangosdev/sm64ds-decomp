@@ -148,7 +148,7 @@ extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
-extern void MTX_MultVec43(void *dst, Matrix4x3 *src, void *out);
+extern void MTX_MultVec43(void *dst, const Matrix4x3 *src, void *out);
 }
 
 /* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */

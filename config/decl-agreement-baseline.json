@@ -7,12 +7,6 @@
   "Banner_Init": {
    "src/minigames/d_s_mg_base.cpp": ["param:#3 int", "param:#4 int"]
   },
-  "MTX_MultVec43": {
-   "src/engine/view/d_camera.cpp": ["param:#2 Matrix4x3 *"],
-   "src/game/actors/d_a_king_donketu.cpp": ["param:#1 Vector3 *", "param:#2 Matrix4x3 *"],
-   "src/game/actors/d_a_mip.cpp": ["param:#1 Vector3 *", "param:#2 Matrix4x3 *"],
-   "src/game/actors/d_a_wanwan2.cpp": ["param:#1 Vector3 *", "param:#2 Matrix4x3 *"]
-  },
   "MTX_Scale43_": {
    "src/engine/model/ModelComponents.cpp": ["param:#1 Mtx43 *"]
   },
