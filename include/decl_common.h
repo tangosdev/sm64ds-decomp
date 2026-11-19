@@ -741,8 +741,8 @@ extern void func_0203dafc(int);
    for 0x02044104, which is _ZN9fLiNdBa_cD1Ev in the same file. */
 extern void func_02045e44(void*, unsigned int, int);
 extern void func_0204a17c(void*, void*);
-extern void func_0204ae2c(void *, void *, void *);
-extern void func_0204d9a0(void *, void *);
+extern void SPLEmitter_Init(void *, void *, void *);
+extern void SPLList_PushFront(void *, void *);
 extern void MTX_Copy33To44_(void *, void *);
 extern void MTX_RotX43_(union Matrix4x3 *, int, int);
 extern void MTX_RotY43_(union Matrix4x3 *, int, int);

@@ -32,7 +32,7 @@ struct AlphaAnim {
 
 /* The alpha animation callback. The name is pret's SPL coinage, not a ROM
  * or SDK symbol. data_020a4d30 is the particle code's random seed (the same
- * LCG as func_0204c584). */
+ * LCG as SPLEmitter_EmitParticles). */
 void SPLAnim_Alpha(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
     struct AlphaAnim *anim = def->alphaAnim;
     int in = anim->in;

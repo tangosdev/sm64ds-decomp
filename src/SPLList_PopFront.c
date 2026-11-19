@@ -1,4 +1,4 @@
-/* The particle engine's intrusive list; see func_0204d8e8. */
+/* The particle engine's intrusive list; see SPLList_Erase. */
 typedef struct Node {
     struct Node *next; /* 0x0 */
     struct Node *prev; /* 0x4 */
@@ -10,7 +10,7 @@ typedef struct List {
 } List;
 
 /* Pop the head of list, or 0 when it is empty. */
-Node *func_0204d958(List *list) {
+Node *SPLList_PopFront(List *list) {
     Node *popped = 0;
     Node *head = list->head;
     if (head != 0) {

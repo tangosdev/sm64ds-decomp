@@ -7,7 +7,7 @@
  * particle per frame. Gravity, random and magnet add into the particle's
  * acceleration; spin, collision plane and convergence act on the particle
  * itself. The span is bounded on both sides by C free functions:
- * SPLAnim_Scale below and func_0204d8e8 above. mwccarm emits .text in
+ * SPLAnim_Scale below and SPLList_Erase above. mwccarm emits .text in
  * reverse source order, so the definitions below run ROM-descending.
  *
  * Each body is the function pret's pokeplatinum decomp of SPL

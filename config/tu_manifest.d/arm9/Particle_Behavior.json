@@ -5,7 +5,7 @@
   "promoted_source": "src/engine/particle/Particle_Behavior.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x0204d4d0..0x0204d8e8: six functions tile the span exactly with no hole and no tail (recomputed from config/arm9/symbols.txt). They are the six particle behaviours of the NitroSystem particle library (SPL), SPLBehavior_ApplyConvergence .. SPLBehavior_ApplyGravity, whose bodies are, body for body and in reverse emission order, pret pokeplatinum's lib/spl/src/spl_behavior.c (Gravity, Random, Magnet, Spin, CollisionPlane, Convergence). SPLAnim_Scale (spl_anim.c) ends at 0x0204d4d0 below and func_0204d8e8 begins at 0x0204d8e8 above, so the boundary is a file change on both edges -- the linker places one object's .text contiguously, so the behaviour run is its own TU.",
+  "boundary_evidence": "Contiguous .text span 0x0204d4d0..0x0204d8e8: six functions tile the span exactly with no hole and no tail (recomputed from config/arm9/symbols.txt). They are the six particle behaviours of the NitroSystem particle library (SPL), SPLBehavior_ApplyConvergence .. SPLBehavior_ApplyGravity, whose bodies are, body for body and in reverse emission order, pret pokeplatinum's lib/spl/src/spl_behavior.c (Gravity, Random, Magnet, Spin, CollisionPlane, Convergence). SPLAnim_Scale (spl_anim.c) ends at 0x0204d4d0 below and SPLList_Erase begins at 0x0204d8e8 above, so the boundary is a file change on both edges -- the linker places one object's .text contiguously, so the behaviour run is its own TU.",
   "sections": [
     {
       "name": ".text",

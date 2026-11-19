@@ -33,8 +33,8 @@ typedef struct TexAnim {
 } TexAnim;
 
 extern VecFx16 data_02099fc4;
-extern Node *func_0204d958(List *list);
-extern void func_0204d9a0(List *list, Node *node);
+extern Node *SPLList_PopFront(List *list);
+extern void SPLList_PushFront(List *list, Node *node);
 extern void SPLRandom_VecFx32(VecFx32 *out);
 extern void SPLRandom_VecFx32_XY(VecFx32 *out);
 extern u32 data_020a4d30;
@@ -100,7 +100,7 @@ void func_0204cd5c(VecFx32 *out, VecFx32 *in, int sel, ParticleSystem *sys) {
     }
 }
 
-void func_0204c584(ParticleSystem *sys, List *list) {
+void SPLEmitter_EmitParticles(ParticleSystem *sys, List *list) {
     int i;
     int count;
     int mag1;
@@ -131,10 +131,10 @@ void func_0204c584(ParticleSystem *sys, List *list) {
         return;
     ringAngle = 0;
     do {
-        p = (ParticleElement *)func_0204d958(list);
+        p = (ParticleElement *)SPLList_PopFront(list);
         if (p == 0)
             return;
-        func_0204d9a0((List *)&sys->particles, (Node *)p);
+        SPLList_PushFront((List *)&sys->particles, (Node *)p);
         switch (def->emissionType) {
         case 0:
             p->offset.x = p->offset.y = p->offset.z = 0;

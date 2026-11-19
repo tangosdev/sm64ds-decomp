@@ -9,7 +9,7 @@
 
 /* No header declares these. */
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
-extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
+extern void SPLUtil_DrawXYPlane(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one particle as a quad stretched along its flight (draw type 1,
  * func_0204a5c8): alpha and the next polygon ID into POLYGON_ATTR (nothing
@@ -108,6 +108,6 @@ void SPLDraw_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl) {
     {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
         /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
-        func_0204c24c((u8)data->textureTileCountS, (u8)data->textureTileCountT);
+        SPLUtil_DrawXYPlane((u8)data->textureTileCountS, (u8)data->textureTileCountT);
     }
 }

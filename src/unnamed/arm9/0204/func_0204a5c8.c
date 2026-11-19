@@ -1,12 +1,12 @@
 #include "types.h"
 #include "private/spl_particle_views.h"
-extern void func_0204af3c(void *p);
+extern void SPLUtil_SetTexture(void *p);
 extern void SPLUtil_SetTexture_Stub(void *p);
-extern void func_0204b244(void *self, void *node);
-extern void func_0204be40(void *self, void *node);
+extern void SPLDraw_Polygon(void *self, void *node);
+extern void SPLDraw_Billboard(void *self, void *node);
 extern void SPLDraw_DirectionalBillboard(void *self, void *node);
-extern void func_0204b028(void *self, void *node);
-extern void func_0204bbd8(void *self, void *node);
+extern void SPLDraw_Child_Polygon(void *self, void *node);
+extern void SPLDraw_Child_Billboard(void *self, void *node);
 extern void SPLDraw_Child_DirectionalBillboard(void *self, void *node);
 
 /* Draw the current system's particles, then its child particles: bind the
@@ -24,21 +24,21 @@ void func_0204a5c8(char *self) {
     void (*draw)(void *, void *) = 0;
     void (*setTexture)(void *);
 
-    func_0204af3c(&mgr->mTextures[data->texture]);
+    SPLUtil_SetTexture(&mgr->mTextures[data->texture]);
 
     switch (data->drawType) {
     case 0:
-        draw = func_0204be40;
+        draw = SPLDraw_Billboard;
         break;
     case 1:
         draw = SPLDraw_DirectionalBillboard;
         break;
     case 2:
-        draw = func_0204b244;
+        draw = SPLDraw_Polygon;
         break;
     }
 
-    setTexture = data->hasTexAnim ? func_0204af3c : SPLUtil_SetTexture_Stub;
+    setTexture = data->hasTexAnim ? SPLUtil_SetTexture : SPLUtil_SetTexture_Stub;
 
     n = system->particles.head;
     if (n != 0) {
@@ -52,17 +52,17 @@ void func_0204a5c8(char *self) {
     if (!data->hasChildResource)
         return;
 
-    func_0204af3c(&mgr->mTextures[def->child->texture]);
+    SPLUtil_SetTexture(&mgr->mTextures[def->child->texture]);
 
     switch (def->child->flags.drawType) {
     case 0:
-        draw = func_0204bbd8;
+        draw = SPLDraw_Child_Billboard;
         break;
     case 1:
         draw = SPLDraw_Child_DirectionalBillboard;
         break;
     case 2:
-        draw = func_0204b028;
+        draw = SPLDraw_Child_Polygon;
         break;
     }
 

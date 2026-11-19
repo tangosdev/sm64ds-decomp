@@ -418,14 +418,14 @@
   "func_02046e28": {
    "src/engine/model/d_ext_model.cpp": ["param:#1 ModelComponents *", "param:#2 BMA_File *"]
   },
-  "func_0204ae2c": {
+  "SPLEmitter_Init": {
    "src/engine/particle/Particle_Manager.cpp": ["param:#1 Particle::System *"]
   },
-  "func_0204d8e8": {
+  "SPLList_Erase": {
    "src/engine/particle/Particle_Manager.cpp": ["return:void *"],
-   "src/unnamed/arm9/0204/func_0204a730.c": ["return:void *"]
+   "src/SPLEmitter_Update.c": ["return:void *"]
   },
-  "func_0204d958": {
+  "SPLList_PopFront": {
    "src/engine/particle/Particle_Manager.cpp": ["return:void *"]
   },
   "func_0206a928": {

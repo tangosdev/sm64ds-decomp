@@ -1,4 +1,4 @@
-/* The particle engine's intrusive list; see func_0204d8e8. */
+/* The particle engine's intrusive list; see SPLList_Erase. */
 typedef struct Node {
     struct Node *next; /* 0x0 */
     struct Node *prev; /* 0x4 */
@@ -10,7 +10,7 @@ typedef struct List {
 } List;
 
 /* Push node onto the front of list. */
-void func_0204d9a0(List *list, Node *node) {
+void SPLList_PushFront(List *list, Node *node) {
     Node *old = list->head;
     if (old == 0) {
         list->head = node;

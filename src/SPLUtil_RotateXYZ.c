@@ -2,8 +2,8 @@
 
 /* Build a rotation about the (1, 1, 1) diagonal from its sine and cosine:
  * 0x555 is 1/3 and 0x93d is sqrt(1/3) in 20.12. The particle draws pick it or
- * func_0204c0a8 out of data_02099fbc; pret's SPL names it SPLUtil_RotateXYZ. */
-void func_0204c0e8(int sin, int cos, MtxFx43 *mat) {
+ * SPLUtil_RotateY out of sRotationFunctions. The name is pret's SPL's. */
+void SPLUtil_RotateXYZ(int sin, int cos, MtxFx43 *mat) {
     int c = FX_MUL((0x1000 - cos), 0x555);
     int s = FX_MUL(sin, 0x93d);
     int diag;

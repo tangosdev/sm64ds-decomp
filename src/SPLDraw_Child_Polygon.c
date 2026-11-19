@@ -5,19 +5,18 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "math/MtxStack.h"
 
-
-extern void (*data_02099fbc[])(int, int, void *); /* func_0204c0a8, func_0204c0e8 */
-extern void (*data_02099fb4[])(u8, u8);           /* func_0204c24c, func_0204c194 */
+extern void (*sRotationFunctions[])(int, int, void *); /* SPLUtil_RotateY, SPLUtil_RotateXYZ */
+extern void (*sPlaneDrawingFunctions[])(u8, u8); /* SPLUtil_DrawXYPlane, SPLUtil_DrawXZPlane */
 
 extern void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz); /* scale matrix */
 extern void G3_LoadMtx43(void *m);                        /* load the 4x3 matrix */
 extern void G3_MultMtx43(void *m);                        /* multiply by the 4x3 matrix */
 
 /* Draw one child particle as a textured quad (child draw type 2,
- * func_0204a5c8): func_0204b244 with the child record's rotation axis, plane
- * and tile counts, and the rotation applied before the scale. pret's SPL calls
- * this SPLDraw_Child_Polygon. */
-void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
+ * func_0204a5c8): SPLDraw_Polygon with the child record's rotation axis, plane
+ * and tile counts, and the rotation applied before the scale. The name is
+ * pret's SPL's. */
+void SPLDraw_Child_Polygon(ManagerView *mgr, ParticleElement *ptcl) {
     ParticleSystem *sys = mgr->mCurrentSystem;
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
     Matrix4x3 out;
@@ -43,7 +42,7 @@ void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
         int idx = ptcl->angle >> 4;
-        data_02099fbc[child->flags.polygonRotAxis](FX_SinIdx(idx), FX_CosIdx(idx), &rot);
+        sRotationFunctions[child->flags.polygonRotAxis](FX_SinIdx(idx), FX_CosIdx(idx), &rot);
     }
 
     {
@@ -66,7 +65,7 @@ void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
     G3_Color(ptcl->color);
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
-        data_02099fb4[child->flags.polygonReferencePlane](child->textureTileCountS,
-                                                          child->textureTileCountT);
+        sPlaneDrawingFunctions[child->flags.polygonReferencePlane](child->textureTileCountS,
+                                                                   child->textureTileCountT);
     }
 }

@@ -1559,7 +1559,7 @@ src/engine/particle/Particle_Manager.cpp:
     complete
     .text start:0x02049d60 end:0x0204a5bc
 
-src/unnamed/arm9/0204/func_0204a5bc.c:
+src/SPLEmitter_Emit.c:
     complete
     .text start:0x0204a5bc end:0x0204a5c8
 
@@ -1567,11 +1567,11 @@ src/unnamed/arm9/0204/func_0204a5c8.c:
     complete
     .text start:0x0204a5c8 end:0x0204a730
 
-src/unnamed/arm9/0204/func_0204a730.c:
+src/SPLEmitter_Update.c:
     complete
     .text start:0x0204a730 end:0x0204ae2c
 
-src/unnamed/arm9/0204/func_0204ae2c.c:
+src/SPLEmitter_Init.c:
     complete
     .text start:0x0204ae2c end:0x0204af38
 
@@ -1579,15 +1579,15 @@ src/SPLUtil_SetTexture_Stub.c:
     complete
     .text start:0x0204af38 end:0x0204af3c
 
-src/unnamed/arm9/0204/func_0204af3c.c:
+src/SPLUtil_SetTexture.c:
     complete
     .text start:0x0204af3c end:0x0204b028
 
-src/unnamed/arm9/0204/func_0204b028.c:
+src/SPLDraw_Child_Polygon.c:
     complete
     .text start:0x0204b028 end:0x0204b244
 
-src/unnamed/arm9/0204/func_0204b244.c:
+src/SPLDraw_Polygon.c:
     complete
     .text start:0x0204b244 end:0x0204b460
 
@@ -1599,35 +1599,35 @@ src/SPLDraw_DirectionalBillboard.c:
     complete
     .text start:0x0204b81c end:0x0204bbd8
 
-src/unnamed/arm9/0204/func_0204bbd8.c:
+src/SPLDraw_Child_Billboard.c:
     complete
     .text start:0x0204bbd8 end:0x0204be40
 
-src/unnamed/arm9/0204/func_0204be40.c:
+src/SPLDraw_Billboard.c:
     complete
     .text start:0x0204be40 end:0x0204c0a8
 
-src/unnamed/arm9/0204/func_0204c0a8.c:
+src/SPLUtil_RotateY.c:
     complete
     .text start:0x0204c0a8 end:0x0204c0e8
 
-src/unnamed/arm9/0204/func_0204c0e8.c:
+src/SPLUtil_RotateXYZ.c:
     complete
     .text start:0x0204c0e8 end:0x0204c194
 
-src/unnamed/arm9/0204/func_0204c194.c:
+src/SPLUtil_DrawXZPlane.c:
     complete
     .text start:0x0204c194 end:0x0204c24c
 
-src/unnamed/arm9/0204/func_0204c24c.c:
+src/SPLUtil_DrawXYPlane.c:
     complete
     .text start:0x0204c24c end:0x0204c304
 
-src/unnamed/arm9/0204/func_0204c304.c:
+src/SPLEmitter_EmitChildren.c:
     complete
     .text start:0x0204c304 end:0x0204c584
 
-src/unnamed/arm9/0204/func_0204c584.c:
+src/SPLEmitter_EmitParticles.c:
     complete
     .text start:0x0204c584 end:0x0204d0b8
 src/SPLAnim_ChildAlpha.c:
@@ -1658,15 +1658,15 @@ src/engine/particle/Particle_Behavior.cpp:
     complete
     .text start:0x0204d4d0 end:0x0204d8e8
 
-src/unnamed/arm9/0204/func_0204d8e8.c:
+src/SPLList_Erase.c:
     complete
     .text start:0x0204d8e8 end:0x0204d958
 
-src/unnamed/arm9/0204/func_0204d958.c:
+src/SPLList_PopFront.c:
     complete
     .text start:0x0204d958 end:0x0204d9a0
 
-src/unnamed/arm9/0204/func_0204d9a0.c:
+src/SPLList_PushFront.c:
     complete
     .text start:0x0204d9a0 end:0x0204d9f0
 
