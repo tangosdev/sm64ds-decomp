@@ -324,13 +324,11 @@ extern KpaAnimationFileHandle data_ov060_0211aca0;
 extern KpaAnimationFileHandle data_ov060_0211abf8;
 extern KpaAnimationFileHandle data_ov060_0211ac90;
 /* The arena-tilt table walked by ActTiltLavaPlatform. Rows of three halfwords
- * (sign, scale, end frame), each column addressed through its own symbol.
- * It stays a ROM copy: the linker aligns every input section to 4, so a
- * section cannot start at 0x02119296, and one array lets the compiler fold
- * the three bases. */
-extern short data_ov060_02119294[];
-extern short data_ov060_02119296[];
-extern short data_ov060_02119298[];
+ * (sign, scale, end frame); the compiler folds each column's offset into its
+ * own pool address (0x02119294 / 0x02119296 / 0x02119298). It stays a ROM
+ * copy: the linker aligns every input section to 4, so a section cannot start
+ * at 0x02119296. */
+extern short data_ov060_02119294[][3];
 }
 extern void func_02012694(unsigned int id, const Vector3 *v);
 void func_02038408(dBgCh_Actr *self);
@@ -2450,21 +2448,20 @@ void daKpa_c::ActTiltLavaPlatform() {
     this->mSpeed.y = this->mTerminalVelocity;
     found = (daKpa2Bg_c*)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (found == 0) { this->mState = BOWSER_STATE_IDLE; return; }
-    p = data_ov060_02119294;
+    p = data_ov060_02119294[0];
     i = 0;
     flag = 1;
     while (p[2] != 0) {
         int timer = this->mTimer;
         if (timer < p[2]) {
-            int off = i * 6;
-            short a = *(short*)((char*)data_ov060_02119294 + off);
-            short b = *(short*)((char*)data_ov060_02119296 + off);
+            short a = data_ov060_02119294[i][0];
+            short b = data_ov060_02119294[i][1];
             int v;
             if (a > 0) {
-                v = (short)(b * (*(short *)((char *)data_ov060_02119298 + off) - 1 - timer));
+                v = (short)(b * (data_ov060_02119294[i][2] - 1 - timer));
             } else {
-                i -= 1; off = i * 6;
-                v = (short)(b * (timer - *(short *)((char *)data_ov060_02119298 + off)));
+                i -= 1;
+                v = (short)(b * (timer - data_ov060_02119294[i][2]));
             }
             TiltPlatform(v);
             if (v != 0 && (this->mTimer & 1)) {

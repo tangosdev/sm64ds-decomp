@@ -156,7 +156,6 @@ struct KuriKingBoneIdx {
     int v[3];
 };
 KuriKingBoneIdx data_ov074_02122e24 = {{1, 8, 10}};
-extern char data_ov074_02122f3c[];
 
 static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
@@ -173,7 +172,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
 static inline int IsActorID(dActor_c *actor, int id) {
     return actor->actorID == id;
 }
-extern char data_ov074_02122f38[];
 void UnloadKeyModels(int i);
 void LoadKeyModels(int idx);
 extern void *data_ov074_02122e5c[];
@@ -1406,10 +1404,9 @@ int daKuriKing_c::IsAnimPlaying(int idx) {
  * transformer. */
 void daKuriKing_c::PlayAnim(int idx) {
     void *file1 = data_ov074_02122f34[idx].anim->filePtr;
-    int off = idx * 0xc;
-    int flags = *(int *)(data_ov074_02122f3c + off);
+    int flags = data_ov074_02122f34[idx].animArg;
     this->mAnmModel.SetAnim((BCA_File *)file1, flags, 0x1000, 0);
-    this->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
+    this->mTextureTransformer.SetFile(*data_ov074_02122f34[idx].btaFile, 0, 0x1000, 0);
 }
 
 int daKuriKing_c::CleanupResources()

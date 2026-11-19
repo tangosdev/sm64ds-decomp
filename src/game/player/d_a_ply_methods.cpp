@@ -19612,14 +19612,14 @@ extern "C" {
 int func_ov002_020e496c(daPly_c *c) {
     daPly_c *player = c;
     int id = (c)->GetBodyModelID(player->mBodyModelId, 1);
-    return ((int *)player->mModels.mBodyModels)[id];
+    return (int)player->mModels.mBodyModels[id];
 }
 }
 
 int daPly_c::func_ov002_020e4990() {
     int id;
     id = GetBodyModelID(param1 & 0xff, 0);
-    func_0201628c(((int *)mModels.mBodyModels)[id], 8);
+    func_0201628c((int)mModels.mBodyModels[id], 8);
     if (!IsHoldingObject(this))
         return 0;
     if (IsAnim(0x30) || IsAnim(0x2f) || IsAnim(0x33) || IsAnim(0x18) || IsAnim(0x8a) ||
@@ -19629,7 +19629,7 @@ int daPly_c::func_ov002_020e4990() {
         IsAnim(0xb0))
         return 0;
     id = GetBodyModelID(param1 & 0xff, 0);
-    func_020162a4(((int *)mModels.mBodyModels)[id], 8);
+    func_020162a4((int)mModels.mBodyModels[id], 8);
     return 1;
 }
 

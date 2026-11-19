@@ -4737,7 +4737,7 @@ int dScStage_c::InitResources() {
                         if (gCurrentSublevel != 2 || (data_0209caa0.file.flags2 & 0x200)) {
                             Sound::LoadAndSetMusic_Layer1(data_0207576a[gCurrentSublevel * 3]);
                             u8 localPlayer = gLocalPlayerId;
-                            if (((u8 *)gPlayers[localPlayer])[0x6ff] != 0) {
+                            if (gPlayers[localPlayer]->mHasWings != 0) {
                                 Sound::SetMusic(localPlayer, 0x33);
                             }
                         }

@@ -150,7 +150,7 @@ int daObjCtMecha04_c::InitResources() {
     mShadowModel.InitCuboid();
 
     variant = mVariant;
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)((void **)data_ov065_0211d194[variant][0])[1],
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov065_0211d194[variant][0]->filePtr,
                              *animationFiles[variant]);
 
     mTextureTransformer.SetFile(*animationFiles[mVariant], 0, 0x1000, 0);

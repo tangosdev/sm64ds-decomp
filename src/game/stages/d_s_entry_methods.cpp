@@ -628,8 +628,7 @@ void dScEntry_c::UpdateSoundSettings() {
     int dir;
     u16 flags;
 
-    if (TouchArea_Update((char *)&mIcons[5], -1) != 0 ||
-        TouchArea_Update((char *)&mIcons[8], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[5], -1) != 0 || TouchArea_Update(&mIcons[8], -1) != 0 ||
         ((flags = data_020a0e58[w].pressed) & 8) != 0 || (flags & 4) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 2)) {
         mIcons[5].Select();
@@ -639,12 +638,11 @@ void dScEntry_c::UpdateSoundSettings() {
     } else {
         dir = 0;
         if (mIcons[2].mReady != 0) {
-            if (TouchArea_Update((char *)&mIcons[2], -1) != 0 ||
-                TouchArea_Update((char *)&mIcons[1], -1) != 0 ||
-                TouchArea_Update((char *)&mIcons[6], -1) != 0) {
+            if (TouchArea_Update(&mIcons[2], -1) != 0 || TouchArea_Update(&mIcons[1], -1) != 0 ||
+                TouchArea_Update(&mIcons[6], -1) != 0) {
                 mSelectedIcon = 0;
                 dir = 1;
-            } else if (TouchArea_Update((char *)&mIcons[0], -1) != 0) {
+            } else if (TouchArea_Update(&mIcons[0], -1) != 0) {
                 mSelectedIcon = dir;
                 dir = -1;
             } else if (CheckMenuConfirm(-1) != 0) {
@@ -677,20 +675,19 @@ void dScEntry_c::UpdateSoundSettings() {
         }
         if (mIcons[3].mReady != 0 && mIcons[4].mReady != 0) {
             if ((CheckMenuConfirm(-1) != 0 && mSelectedIcon == 1) ||
-                TouchArea_Update((char *)&mIcons[7], -1) != 0) {
+                TouchArea_Update(&mIcons[7], -1) != 0) {
                 dir = 1;
                 mSelectedIcon = 1;
                 if (mIcons[3].mOn == 0)
                     dir = -1;
             }
-            if (TouchArea_Update((char *)&mIcons[3], -1) != 0 || (dir < 0 && mSelectedIcon == 1)) {
+            if (TouchArea_Update(&mIcons[3], -1) != 0 || (dir < 0 && mSelectedIcon == 1)) {
                 TurnBacklightOn();
                 mIcons[3].Select();
                 mIcons[4].mOn = 0;
                 mSelectedIcon = 1;
                 func_02012790(0x66);
-            } else if (TouchArea_Update((char *)&mIcons[4], -1) != 0 ||
-                       (dir > 0 && mSelectedIcon == 1)) {
+            } else if (TouchArea_Update(&mIcons[4], -1) != 0 || (dir > 0 && mSelectedIcon == 1)) {
                 TurnBacklightOff();
                 mIcons[3].mOn = 0;
                 mIcons[4].Select();
@@ -776,9 +773,9 @@ void dScEntry_c::RenderControlSettings() {
 void dScEntry_c::UpdateControlSettings() {
     int w = func_0203da9c();
 
-    if (TouchArea_Update((char *)&mIcons[3], -1) != 0 ||
-        TouchArea_Update((char *)&mIcons[4], -1) != 0 || (data_020a0e58[w].pressed & 8) != 0 ||
-        (data_020a0e58[w].pressed & 4) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 3)) {
+    if (TouchArea_Update(&mIcons[3], -1) != 0 || TouchArea_Update(&mIcons[4], -1) != 0 ||
+        (data_020a0e58[w].pressed & 8) != 0 || (data_020a0e58[w].pressed & 4) != 0 ||
+        (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 3)) {
         int i;
         for (i = 0; i <= 2; i++) {
             if (mIcons[i].mOn != 0) {
@@ -793,7 +790,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (TouchArea_Update((char *)&mIcons[0], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[0], -1) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
         mSelectedIcon = 0;
         if (mIcons[0].mOn != 0) {
@@ -812,7 +809,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (TouchArea_Update((char *)&mIcons[1], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[1], -1) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 1)) {
         mSelectedIcon = 1;
         if (mIcons[1].mOn != 0) {
@@ -831,7 +828,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (TouchArea_Update((char *)&mIcons[2], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[2], -1) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 2)) {
         mSelectedIcon = 2;
         if (mIcons[2].mOn != 0) {
@@ -935,7 +932,7 @@ void dScEntry_c::UpdateQuitConfirm() {
     int id;
 
     id = func_0203da9c();
-    if (TouchArea_Update((char *)&mIcons[0], id) != 0 ||
+    if (TouchArea_Update(&mIcons[0], id) != 0 ||
         (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
@@ -948,7 +945,7 @@ void dScEntry_c::UpdateQuitConfirm() {
         func_02012790(0x63);
         return;
     }
-    if (TouchArea_Update((char *)&mIcons[1], id) == 0) {
+    if (TouchArea_Update(&mIcons[1], id) == 0) {
         if (CheckMenuConfirm(id) == 0)
             return;
         if (mSelectedIcon != 1)
@@ -1106,7 +1103,7 @@ void dScEntry_c::UpdateRematchPrompt() {
         return;
     }
     id = func_0203da9c();
-    if (TouchArea_Update((char *)&mIcons[0], id) != 0 ||
+    if (TouchArea_Update(&mIcons[0], id) != 0 ||
         (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
@@ -1114,7 +1111,7 @@ void dScEntry_c::UpdateRematchPrompt() {
         func_02012790(0x126);
         return;
     }
-    if (TouchArea_Update((char *)&mIcons[1], id) == 0) {
+    if (TouchArea_Update(&mIcons[1], id) == 0) {
         if (CheckMenuConfirm(id) == 0)
             return;
         if (mSelectedIcon != 1)
@@ -1713,7 +1710,7 @@ void dScEntry_c::UpdateSoloConfirm() {
         mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c()) != 0;
     if (mStepPhase == 0)
         return;
-    if (TouchArea_Update((char *)&mIcons[0], -1) != 0 ||
+    if (TouchArea_Update(&mIcons[0], -1) != 0 ||
         (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
@@ -1722,7 +1719,7 @@ void dScEntry_c::UpdateSoloConfirm() {
         func_02012790(0x118);
         return;
     }
-    if (TouchArea_Update((char *)&mIcons[1], -1) == 0) {
+    if (TouchArea_Update(&mIcons[1], -1) == 0) {
         if (CheckMenuConfirm(-1) == 0)
             return;
         if (mSelectedIcon != 1)
@@ -1812,7 +1809,7 @@ void dScEntry_c::UpdateRecruit() {
     if (data_0209fc5c[localPlayer] == 0)
         return;
     if (playerCount < 4) {
-        if (TouchArea_Update((char *)&mIcons[0], 0) == 0) {
+        if (TouchArea_Update(&mIcons[0], 0) == 0) {
             if (CheckMenuConfirm(0) == 0)
                 return;
         }
