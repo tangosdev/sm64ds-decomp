@@ -56,7 +56,7 @@ struct cMgSmartball_object_c {
        the writer half of the mVelocity pair accessors -- the reader halves
        take (out, obj) order, so they stay free functions in the TU. */
     int PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2);
-    void SetVel(int *v); /* mVel = v[0]/v[1] */
+    void SetVel(Vector2 *v); /* mVel = *v */
 
     /* The C spelling of this class gets no explicit vtable member because
        no .c file declares it; every reader reaches these fields by raw

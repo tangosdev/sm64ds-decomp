@@ -666,7 +666,7 @@
       "ordinal": 123
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200bec4EPiiPci",
+      "symbol": "_ZN9dCamera_c13func_0200bec4EP7Vector3iPci",
       "address": "0x0200bec4",
       "size": "0x000004d0",
       "legacy_source": "src/func_0200bec4.c",

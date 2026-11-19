@@ -260,21 +260,21 @@
       "ordinal": 29
     },
     {
-      "symbol": "_Z23RouletteRacer_SetTargetP13RouletteRacerPi",
+      "symbol": "_Z23RouletteRacer_SetTargetP13RouletteRacerP7Vector2",
       "address": "0x021094ac",
       "size": "0x00000084",
       "legacy_source": "src/func_ov006_021094ac.c",
       "ordinal": 30
     },
     {
-      "symbol": "_Z31RouletteRacer_SetVelocityTowardP13RouletteRacerPii",
+      "symbol": "_Z31RouletteRacer_SetVelocityTowardP13RouletteRacerP7Vector2i",
       "address": "0x02109530",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_02109530.c",
       "ordinal": 31
     },
     {
-      "symbol": "_Z19RouletteRacer_AimAtP13RouletteRacerPi",
+      "symbol": "_Z19RouletteRacer_AimAtP13RouletteRacerP7Vector2",
       "address": "0x021095ac",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_021095ac.c",

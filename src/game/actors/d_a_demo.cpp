@@ -334,9 +334,8 @@ extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];
-/* void *: every caller passes &mPos.x and POD int[3] scratch; retyping that
-   scratch as Vector3 renumbers this TU's @NNN literals. */
-extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
+extern void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short angle,
+                                     const Vector3 *src);
 extern int data_ov002_0210b964[3];
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
@@ -3023,17 +3022,17 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
         }
 
         {
-            int v[3];
+            Vector3 v;
             unsigned char idx;
-            v[0] = data_ov002_0210b970[0];
-            v[1] = data_ov002_0210b970[1];
-            v[2] = data_ov002_0210b970[2];
+            v.x = data_ov002_0210b970[0];
+            v.y = data_ov002_0210b970[1];
+            v.z = data_ov002_0210b970[2];
 
             idx = gLocalPlayerId;
             {
                 short ang = ((dActor_c *)gPlayers[idx])->mAngle.y;
 
-                Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, (ang + 0x8000), v);
+                Vec3_RotateYAndTranslate(&this->mPos, &cam->pos, (ang + 0x8000), &v);
             }
         }
 
@@ -3103,8 +3102,8 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         this->mPrevAngle.x = 0x800;
         this->mOpacity = 0x1f;
     } else {
-        int v[3];
-        int w[3];
+        Vector3 v;
+        Vector3 w;
         int h;
         int t;
 
@@ -3116,13 +3115,13 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         ApproachAngle(&this->mAngle.y, (short)(this->mPrevAngle.y + 0x8000), 4, 0x4000, 0);
 
         data_ov002_02110ddc[2] = this->mMagnitude;
-        v[0] = data_ov002_0210b964[0];
-        v[1] = data_ov002_0210b964[1];
-        v[2] = data_ov002_0210b964[2];
-        w[0] = data_ov002_02110ddc[0];
-        w[1] = data_ov002_02110ddc[1];
-        w[2] = data_ov002_02110ddc[2];
-        Vec3_RotateYAndTranslate(&this->mPos.x, v, this->mPrevAngle.y, w);
+        v.x = data_ov002_0210b964[0];
+        v.y = data_ov002_0210b964[1];
+        v.z = data_ov002_0210b964[2];
+        w.x = data_ov002_02110ddc[0];
+        w.y = data_ov002_02110ddc[1];
+        w.z = data_ov002_02110ddc[2];
+        Vec3_RotateYAndTranslate(&this->mPos, &v, this->mPrevAngle.y, &w);
 
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
@@ -3141,7 +3140,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
 int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 {
     Vector3 v0, v1;
-    int src[3];
+    Vector3 src;
     fx32 dist;
     s16 vertAngle, heading;
     dCamera_c *cam;
@@ -3181,11 +3180,11 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
         heading += t2;
     }
 
-    src[0] = 0;
-    src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
-    src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
+    src.x = 0;
+    src.y = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
+    src.z = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
-    Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, heading, src);
+    Vec3_RotateYAndTranslate(&this->mPos, &cam->pos, heading, &src);
 
     this->mAngle.x = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
     this->mAngle.y = cstd::atan2(v1.x, v1.z);

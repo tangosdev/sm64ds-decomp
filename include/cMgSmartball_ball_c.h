@@ -46,16 +46,16 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     int  IsFinished();             /* end state reached */
     void Burst();                  /* score pop on the manager */
     void PutInPlay();              /* respawn this ball */
-    int  HitWing(int *src);
-    int  HitSwitches(int *arg);
-    int  HitPakkuns(int *arg);
-    int  HitDokans(int *arg);
-    int  HitPropellers(int *pos);
-    int  HitKinokos(int *pos);
-    int  CheckExits(int *pos);     /* dokan/ana drop-out test */
-    int  AtSpring(int *pos);
-    int  OnSlope(int *pos);        /* board incline under this ball */
-    int  NeedsRespawn(int *pos);   /* fell off the table */
+    int HitWing(Vector2 *src);
+    int HitSwitches(Vector2 *arg);
+    int HitPakkuns(Vector2 *arg);
+    int HitDokans(Vector2 *arg);
+    int HitPropellers(Vector2 *pos);
+    int HitKinokos(Vector2 *pos);
+    int CheckExits(Vector2 *pos); /* dokan/ana drop-out test */
+    int AtSpring(Vector2 *pos);
+    int OnSlope(Vector2 *pos);      /* board incline under this ball */
+    int NeedsRespawn(Vector2 *pos); /* fell off the table */
     void QueueBehind();
     void UpdatePhysics();
     void DrawMarker();

@@ -44,8 +44,7 @@ struct RouletteRacer {
     s32 grabY;    /* 0x0c */
     Vector2 step; /* 0x10 */
     Vector2 target; /* 0x18 */
-    s32 homeX;    /* 0x20, the deal spot AimAt sends it to; Release returns it there */
-    s32 homeY;    /* 0x24 */
+    Vector2 home;   /* 0x20, the deal spot AimAt sends it to; Release returns it there */
     s32 priority; /* 0x28, OAM priority for RenderOamBothScreens; Draw resets it
                      to 1, RouletteStrip_DrawRacers lifts it to 0 */
     s16 tile;     /* 0x2c, Roulette_TileAt's tile; 0x25 is off the board */

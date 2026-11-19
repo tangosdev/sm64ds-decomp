@@ -56,7 +56,7 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
     /* Recovered helpers: HitTest runs the ball-vs-blade fan collision (the
        0x38..0x77 tip ring); RebuildVerts rewrites that ring from mAngle and
        the mCurrent position. */
-    int  HitTest(int *pos);
+    int HitTest(Vector2 *pos);
     void RebuildVerts();
 
     s16 mAngle;           /* 0x032 -- blade angle; SaveSnapshot adds mSpinSpeed

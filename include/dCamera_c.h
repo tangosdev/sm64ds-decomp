@@ -85,7 +85,7 @@ struct dCamera_c : dView_c {
     dActor_c *mFocusActor; /* 0x118 */
     /* LookAtExit points this at the actor's position and copies that
        position into mLookTargetPos. */
-    s32 *mLookTarget;       /* 0x11c */
+    Vector3 *mLookTarget;   /* 0x11c */
     Vector3 mLookTargetPos; /* 0x120 */
     /* The camera distance used while framing mLookTargetPos: half the
        player-to-mFramedActor distance (func_0200c394, clamped), or 0xdfe60
@@ -293,7 +293,7 @@ struct dCamera_c : dView_c {
     void UpdateFixedCamera(CamViewObj *, int);
     void UpdateRadialCamera(CamViewObj *, int);
     void Mode8DirectionsCamera(CamViewObj *);
-    int func_0200bec4(int *, int, char *, int);
+    int func_0200bec4(Vector3 *, int, char *, int);
     int func_0200c394(int, void *, void *, void **, int *);
     int func_0200c66c(void *, int *, int *, int *);
     void func_0200c9e0(s32 *, s32 *);

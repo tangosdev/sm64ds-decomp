@@ -148,7 +148,8 @@ extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(Vector3 *v, int sh);
 extern int *Vec3_AsrInPlace(Vector3 *, int);
-extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
+extern void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short angle,
+                                     const Vector3 *src);
 extern void MTX_MultVec43(void *dst, const Matrix4x3 *src, void *out);
 }
 
@@ -815,7 +816,7 @@ void dCamera_c::func_0200d3f8(unsigned char playerID, void *ptr) {
     unsigned char localID = gLocalPlayerId;
     if (playerID != localID)
         return;
-    mLookTarget = (s32 *)ptr;
+    mLookTarget = (Vector3 *)ptr;
     ChangeState(&data_0209b0d8);
 }
 
@@ -884,8 +885,8 @@ void dCamera_c::func_0200d1e4() {
 
 void dCamera_c::LookAtExit(dActor_c &actor)
 {
-    mLookTarget = &actor.mPos.x;
-    mLookTargetPos = *(Vector3 *)mLookTarget;
+    mLookTarget = &actor.mPos;
+    mLookTargetPos = *mLookTarget;
     mTargetAngleY = -actor.mAngle.y;
     ChangeState(&data_0209b0f8);
     mFlags |= CAM_FLAG_STATE_LOCKED;
@@ -1339,7 +1340,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
  * target player, pulled in by walls and ceilings and lifted onto the ground,
  * eases mLookAtOffset toward it at speed, then moves lookAt.y within the
  * mode's followRise. Returns the ground height under that point. */
-int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
+int dCamera_c::func_0200bec4(Vector3 *target, int baseY, char *modeArg, int speed) {
     Vector3 goal;
     Vector3 to;
     Vector3 from;
@@ -1358,7 +1359,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     Vec3_RotateYAndTranslate(&goal, target, mTargetPlayer->mAngle.y, &offset);
     dBgCh_Lin line;
     SetVec(to, goal.x, goal.y + 0x32000, goal.z);
-    SetVec(from, target[0], target[1] + 0x32000, target[2]);
+    SetVec(from, target->x, target->y + 0x32000, target->z);
     PrepareBgCh(line);
     line.SetObjAndLine(from, to, 0);
     if (line.DetectClsn() != 0) {
@@ -1422,15 +1423,15 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
             return groundY;
         }
     }
-    lookAt.x = target[0] + mLookAtOffset.x;
-    lookAt.z = target[2] + mLookAtOffset.z;
+    lookAt.x = target->x + mLookAtOffset.x;
+    lookAt.z = target->z + mLookAtOffset.z;
     {
-        int goalY = target[1] + mLookAtOffset.y;
+        int goalY = target->y + mLookAtOffset.y;
         int climb = goalY - lookAt.y;
         if (climb < (int)ScaleHeightByFov(mode->followRise)) {
             ApproachLinear(lookAt.y, goalY, 0x64000);
         } else {
-            int drop = baseY - target[1];
+            int drop = baseY - target->y;
             if (drop >= 0) {
                 drop = 0;
             } else {
@@ -1637,7 +1638,7 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
         vsrc.z = cstd::sqrt((s64)radius * radius - (s64)height * height);
     }
     SetVec(vin, mTargetPos.x, lookAt.y, mTargetPos.z);
-    Vec3_RotateYAndTranslate(&vout.x, &vin.x, mEasedAngleY, &vsrc.x);
+    Vec3_RotateYAndTranslate(&vout, &vin, mEasedAngleY, &vsrc);
     if (mFlags & CAM_FLAG_SNAP_POS) {
         pos = vout;
     }
@@ -2221,7 +2222,7 @@ s32 dCamera_c::func_02009e70() {
                 r5 = -r5;
             r4 = ScaleDistByFov(r5);
         }
-        lookAtGroundY = func_0200bec4(&mTargetPos.x, r6, (char *)mode, r7);
+        lookAtGroundY = func_0200bec4(&mTargetPos, r6, (char *)mode, r7);
         turnInput =
             data_0209f498[gActivePlayerSlot].pressed & (CAM_BUTTON_BEHIND | CAM_BUTTON_TURN);
         if (mFocusActor != 0) {
