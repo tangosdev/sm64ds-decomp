@@ -43,7 +43,7 @@ void *SPLList_Erase(void *list, void *node);
 void SPLEmitter_Init(Particle::System *system, Particle::SystemDefinition *definition,
                      Vector3 *position);
 void SPLEmitter_Emit(void *system, void *list);
-void func_0204a5c8(void *manager);
+void SPLManager_DoDraw(void *manager);
 void SPLEmitter_Update(void *manager, void *system);
 }
 
@@ -286,7 +286,7 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
     do {
         manager->mCurrentSystem = system;
         if (system->skipDraw == 0) {
-            func_0204a5c8(manager);
+            SPLManager_DoDraw(manager);
         }
         system = system->next;
     } while (system != 0);
