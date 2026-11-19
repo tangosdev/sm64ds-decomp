@@ -18,6 +18,7 @@
  */
 
 #include "daObjBlockL_c.h"
+#include "daCoin_c.h"
 #include "daPly_c.h"
 #include "dActor_c.h"
 #include "Sound.h"
@@ -86,8 +87,8 @@ static inline int IsActorID(dActor_c *actor, int id) {
  * first at 0x020b35a0 and D0 at 0x020b35e4.
  */
 daObjBlockL_c::~daObjBlockL_c() {}
-/* Called from Kill. Follows mLinkedActor: clears a byte on the mega
-   character (actor 0x121), or arms mActionPending on the item tag
+/* Called from Kill. Follows mLinkedActor: clears mInBrickBlock on the red
+   coin (actor 0x121, RED_COIN), or arms mActionPending on the item tag
    (actors 0x141..0x144) so the tag dispatches its stored action. */
 void daObjBlockL_c::NotifyLinkedActor() {
     dActor_c *linkedActor = mLinkedActor;
@@ -98,7 +99,7 @@ void daObjBlockL_c::NotifyLinkedActor() {
     actorID = linkedActor->actorID;
     if (actorID <= 0x121) {
         if (actorID == 0x121)
-            ((u8 *)linkedActor)[0x3b0] = 0;
+            ((daCoin_c *)linkedActor)->mInBrickBlock = 0;
         return;
     }
 
