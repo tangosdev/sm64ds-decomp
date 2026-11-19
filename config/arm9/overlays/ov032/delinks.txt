@@ -32,6 +32,7 @@ src/game/actors/d_a_obj_td_futa.cpp:
     .ctor start:0x02112e98 end:0x02112e9c
     .data.tdFuta start:0x02112f98 end:0x02112fb8
     .bss start:0x02113acc end:0x02113af4
+    .data start:0x021138a0 end:0x02113960
 
 src/game/actors/d_a_obj_td_water.cpp:
     complete
@@ -45,24 +46,10 @@ src/game/actors/d_a_obj_td_water.cpp:
     .data.tdWaterName start:0x02112edc end:0x02112ee8
     .data.tdBta start:0x02112f64 end:0x02112f7c
     .data.tdClps start:0x02112fb8 end:0x02112fd0
-    .bss start:0x02113af4 end:0x02113b1c
+    .bss start:0x02113af4 end:0x02113b20
+    .data start:0x02113960 end:0x02113a40
 
 src/unnamed/ov032/data_ov032_02112fd0.c:
     complete
     .data start:0x02112fd0 end:0x0211377c
 
-src/unnamed/ov032/data_ov032_021138c4.c:
-    complete
-    .data start:0x021138c4 end:0x021138e0
-
-src/unnamed/ov032/data_ov032_02113b1c.c:
-    complete
-    .bss start:0x02113b1c end:0x02113b20
-
-src/unnamed/ov032/data_ov032_021138a8.c:
-    complete
-    .data start:0x021138a8 end:0x021138ac
-
-src/unnamed/ov032/data_ov032_02113998.c:
-    complete
-    .data start:0x02113998 end:0x021139a4

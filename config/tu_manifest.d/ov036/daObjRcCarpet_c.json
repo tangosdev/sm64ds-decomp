@@ -49,7 +49,7 @@
     {
       "name": ".bss",
       "start": "0x0211419c",
-      "end": "0x021141d8"
+      "end": "0x021141e0"
     }
   ],
   "functions": [
@@ -242,6 +242,14 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated animation resource destructor-registration node"
+    }
+  ,
+    {
+      "symbol": "data_ov036_021141d8",
+      "address": "0x021141d8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "undefined_symbol_aliases": [
@@ -990,7 +998,7 @@
         {
           "section": ".bss",
           "start": "0x0211419c",
-          "end": "0x021141d8",
+          "end": "0x021141e0",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

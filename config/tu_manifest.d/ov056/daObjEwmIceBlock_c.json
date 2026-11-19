@@ -41,7 +41,7 @@
     {
       "name": ".bss",
       "start": "0x02113400",
-      "end": "0x02113428"
+      "end": "0x02113440"
     }
   ],
   "functions": [
@@ -132,6 +132,14 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x5ee collision handle"
+    }
+  ,
+    {
+      "symbol": "data_ov056_02113428",
+      "address": "0x02113428",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "compiler_only_output": [
@@ -374,7 +382,7 @@
         {
           "section": ".bss",
           "start": "0x02113400",
-          "end": "0x02113428",
+          "end": "0x02113440",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

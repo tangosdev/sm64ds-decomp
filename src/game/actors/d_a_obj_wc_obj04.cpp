@@ -195,3 +195,7 @@ void daObjWc_Obj04_c::UpdateClsnMatrix() {
    from these: one ctor veneer plus destructor registration per handle. */
 WcObj04ModelFilePtr data_ov029_0211432c(ASSET_WC_OBJ04_BMD);
 WcObj04CollisionFilePtr data_ov029_02114324(ASSET_WC_OBJ04_KCL);
+
+extern "C" {
+u32 data_ov029_0211434c[5];
+}

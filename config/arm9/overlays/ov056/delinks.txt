@@ -11,11 +11,7 @@ src/game/actors/d_a_obj_ewm_ice_block.cpp:
     .init start:0x02112b48 end:0x02112bb4
     .ctor start:0x02112bb4 end:0x02112bb8
     .data start:0x02113314 end:0x02113320
-    .bss start:0x02113400 end:0x02113428
-
-src/unnamed/ov056/data_ov056.c:
-    complete
-    .bss start:0x02113428 end:0x02113440
+    .bss start:0x02113400 end:0x02113440
 
 src/unnamed/ov056/data_ov056_02112bc0.c:
     complete

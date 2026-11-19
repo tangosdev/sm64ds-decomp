@@ -146,7 +146,8 @@ def _source_storage_interior_rows(config_root, objects_txt, definitions, bss=Fal
                     or not supported_section(section.name)
                     or not size or value + size > section["sh_size"]):
                 continue
-            objects.setdefault(symbol.name, []).append((path, section.name, size))
+            objects.setdefault(symbol.name, []).append(
+                (path, section.name, size, value))
 
     owners = []
     for name, rows in objects.items():
@@ -154,18 +155,25 @@ def _source_storage_interior_rows(config_root, objects_txt, definitions, bss=Fal
         if (name not in definitions or len(rows) != 1 or len(locations) != 1
                 or definition_counts.get(name) != 1):
             continue
-        path, section, size = rows[0]
+        path, section, size, value = rows[0]
         module, address, is_data, declared_size = locations[0]
         if not is_data or (((bss and declared_size is not None) or declared_size)
                            and declared_size != size):
             continue
+        # Rebased _ZTV symbols.txt rows name the public slot array. The section
+        # still holds the eight-byte preamble in front of that address, and a
+        # configured label on either preamble word has to be defined from it.
+        owner_address, owner_size = address, size
+        if name.startswith("_ZTV") and value == 8 and address >= 8:
+            owner_address = address - 8
+            owner_size = size + 8
         matching = [(source, start, end) for mod, source, sec, start, end in claims
                     if mod == module and sec == section
-                    and start <= address and address + size <= end
+                    and start <= owner_address and owner_address + owner_size <= end
                     and path.resolve().as_posix().endswith("/" + str(
                         pathlib.PurePosixPath(source).with_suffix(".o")))]
         if len(matching) == 1:
-            owners.append((name, module, address, size))
+            owners.append((name, module, owner_address, owner_size))
     out = []
     for name, locations in sorted(homes.items()):
         if name in definitions or len(locations) != 1:
@@ -660,6 +668,10 @@ def patch(lcf_path, objects_txt, config_root, *, initialized_prefixes=()):
     aliases = bss_interior_rows(config_root, defined, imported, bss)
     aliases += initialized_interior_rows(config_root, objects_txt, defined)
     aliases += source_bss_interior_rows(config_root, objects_txt, defined)
+    # A prefix alias already names the storage word. The rebased-vtable range
+    # above now encloses that same address, so keep the prefix row only.
+    prefix_names = {row["alias"] for row in initialized_prefixes}
+    aliases = [row for row in aliases if row[0] not in prefix_names]
     # Only the shared initialized-boundary link planner supplies these records,
     # after re-verifying the actual prepared objects and complete source claims.
     # They are zero-storage LCF identities, not additional compiler OBJECTs.

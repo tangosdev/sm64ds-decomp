@@ -395,3 +395,7 @@ extern "C" EntryMeshHandler EntryMeshHandlers[3] = {
     &EntryMesh::UpdateRipple,
     &EntryMesh::DrawGrid,
 };
+
+extern "C" {
+u32 data_ov075_0211d9ac[5];
+}

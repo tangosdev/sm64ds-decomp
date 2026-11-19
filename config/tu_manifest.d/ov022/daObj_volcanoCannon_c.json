@@ -30,7 +30,7 @@
     {
       "name": ".data",
       "start": "0x02114434",
-      "end": "0x021144f8"
+      "end": "0x02114500"
     },
     {
       "name": ".bss",
@@ -136,6 +136,14 @@
       "evidence": "compiler emission of the class key function",
       "emitted_storage_address": "0x02114474",
       "address_point_bias": "0x8"
+    }
+  ,
+    {
+      "symbol": "data_ov022_021144f8",
+      "address": "0x021144f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "bss": [
@@ -743,7 +751,7 @@
         {
           "section": ".data",
           "start": "0x02114434",
-          "end": "0x021144f8",
+          "end": "0x02114500",
           "differingBytes": 0,
           "firstDiff": null
         }

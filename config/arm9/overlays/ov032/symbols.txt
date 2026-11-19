@@ -142,6 +142,7 @@ _ZTV14daObjTdWater_c kind:data(any) addr:0x021139a4
 data_ov032_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 data_ov032_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov032_02113a00 kind:data(any) addr:0x02113a00 ambiguous
+data_ov032_02113a24 kind:data(any) addr:0x02113a24
 gBakubakuModelFile kind:bss addr:0x02113a40
 data_ov032_02113a48 kind:bss addr:0x02113a48
 data_ov032_02113a50 kind:bss addr:0x02113a50

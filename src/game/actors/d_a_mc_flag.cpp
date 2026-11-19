@@ -17,6 +17,7 @@ enum d_a_mc_flag_AssetId { ASSET_MC_FLAG_BMD = 0x068d, ASSET_MC_FLAG_WAIT_BCA = 
 #include "daMcFlag_c.h"
 #include "SharedFilePtr.h"
 #include "math/MtxStack.h"
+#include "SpawnInfo.h"
 
 /* The model handle constructs through func_02017acc and registers
    func_02017ab4; the animation handle constructs through
@@ -78,3 +79,14 @@ s32 daMcFlag_c::CleanupResources() {
 
 McFlagModelFileHandle data_ov009_02113eb8(ASSET_MC_FLAG_BMD);
 McFlagAnimResFileHandle data_ov009_02113eb0(ASSET_MC_FLAG_WAIT_BCA);
+
+extern "C" {
+u32 data_ov009_02113ed8[2];
+}
+
+extern "C" SpawnInfo<daMcFlag_c> g_profile_MC_FLAG = {
+    daMcFlag_c_classInit, 342, 342, 0x20000003, 0x000c8000, 0x000c8000, 0x03000000, 0x00000000};
+
+#pragma explicit_zero_data on
+extern "C" u32 data_ov009_02113c1c[1] = {0};
+#pragma explicit_zero_data off

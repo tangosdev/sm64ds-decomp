@@ -31,12 +31,12 @@
     {
       "name": ".data",
       "start": "0x021149e4",
-      "end": "0x02114a90"
+      "end": "0x02114aa0"
     },
     {
       "name": ".bss",
       "start": "0x02114af0",
-      "end": "0x02114b04"
+      "end": "0x02114b20"
     }
   ],
   "functions": [
@@ -178,6 +178,14 @@
       "emitted_storage_address": "0x02114a0c",
       "address_point_bias": "0x8"
     }
+  ,
+    {
+      "symbol": "data_ov020_02114a90",
+      "address": "0x02114a90",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
+    }
   ],
   "bss": [
     {
@@ -193,6 +201,14 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated model destructor-registration node"
+    }
+  ,
+    {
+      "symbol": "data_ov020_02114b04",
+      "address": "0x02114b04",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "undefined_symbol_aliases": [
@@ -781,13 +797,13 @@
         {
           "section": ".bss",
           "start": "0x02114af0",
-          "end": "0x02114b04",
+          "end": "0x02114b20",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
           "section": ".data",
           "start": "0x021149e4",
-          "end": "0x02114a90",
+          "end": "0x02114aa0",
           "differingBytes": 0,
           "firstDiff": null
         }

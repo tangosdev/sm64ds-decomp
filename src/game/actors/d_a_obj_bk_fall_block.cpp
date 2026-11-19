@@ -76,3 +76,7 @@ ResourceDescriptor data_ov015_02114880 = {
     &gBkDownBCollisionFile,
     &data_ov015_021136b4,
 };
+
+extern "C" {
+u32 data_ov015_02114afc[1];
+}

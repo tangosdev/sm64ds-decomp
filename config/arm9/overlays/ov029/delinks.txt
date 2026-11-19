@@ -31,6 +31,7 @@ src/game/actors/d_a_obj_wc_obj02.cpp:
     .ctor start:0x02112e6c end:0x02112e70
     .bss start:0x02114248 end:0x02114270
     .data.w12ea0 start:0x0211302c end:0x0211304c
+    .data start:0x02113cac end:0x02113d70
 
 src/game/actors/d_a_obj_wc_obj03.cpp:
     complete
@@ -38,13 +39,14 @@ src/game/actors/d_a_obj_wc_obj03.cpp:
     .init start:0x02112c10 end:0x02112c4c
     .ctor start:0x02112e70 end:0x02112e74
     .bss start:0x02114270 end:0x02114284
+    .data start:0x02113d70 end:0x02113e30
 
 src/game/actors/d_a_obj_wc_obj04.cpp:
     complete
     .text start:0x02112630 end:0x0211299c
     .init start:0x02112dfc end:0x02112e68
     .ctor start:0x02112e84 end:0x02112e88
-    .bss start:0x02114324 end:0x0211434c
+    .bss start:0x02114324 end:0x02114360
     .data.data_ov029_0211304c start:0x0211304c end:0x0211306c
 src/game/actors/d_a_obj_wc_obj05.cpp:
     complete
@@ -53,6 +55,7 @@ src/game/actors/d_a_obj_wc_obj05.cpp:
     .ctor start:0x02112e74 end:0x02112e78
     .bss start:0x02114284 end:0x021142ac
     .data.w12ea0b start:0x0211306c end:0x0211308c
+    .data start:0x02113e30 end:0x02113ef4
 
 src/game/actors/d_a_obj_wc_obj06.cpp:
     complete
@@ -84,10 +87,6 @@ src/game/actors/d_a_obj_wc_mizu.cpp:
     .bss start:0x021142fc end:0x02114324
     .rodata start:0x02112b2c end:0x02112b38
 
-src/unnamed/ov029/data_ov029_bss.c:
-    complete
-    .bss start:0x0211434c end:0x02114360
-
 src/unnamed/ov029/data_ov029_clps.c:
     complete
     .data start:0x021130ac end:0x021130cc
@@ -100,10 +99,6 @@ src/unnamed/ov029/data_ov029_rodata.c:
     complete
     .rodata start:0x021129a0 end:0x02112b2c
 
-src/unnamed/ov029/data_ov029_02113cd4.c:
-    complete
-    .data start:0x02113cd4 end:0x02113cf0
-
 src/unnamed/ov029/data_ov029_02113c14.c:
     complete
     .data start:0x02113c14 end:0x02113c20
@@ -112,10 +107,3 @@ src/unnamed/ov029/data_ov029_02113c28.c:
     complete
     .data start:0x02113c28 end:0x02113c2c
 
-src/unnamed/ov029/data_ov029_02113da8.c:
-    complete
-    .data start:0x02113da8 end:0x02113db4
-
-src/unnamed/ov029/data_ov029_02113e6c.c:
-    complete
-    .data start:0x02113e6c end:0x02113e74

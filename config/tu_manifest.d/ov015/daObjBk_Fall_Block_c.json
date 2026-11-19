@@ -42,7 +42,7 @@
     {
       "name": ".bss",
       "start": "0x02114ad4",
-      "end": "0x02114afc"
+      "end": "0x02114b00"
     }
   ],
   "functions": [
@@ -126,6 +126,14 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
+    }
+  ,
+    {
+      "symbol": "data_ov015_02114afc",
+      "address": "0x02114afc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "notes": [
@@ -278,7 +286,7 @@
         {
           "section": ".bss",
           "start": "0x02114ad4",
-          "end": "0x02114afc",
+          "end": "0x02114b00",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

@@ -38,7 +38,7 @@
  *   declares it.
  * - UpdateModelTransform is the same model-matrix rebuild as the sibling
  *   daObjClock_c::UpdateModelTransform (ov013 0x02111430).
- * - g_profile_CLOCK_HURIKO is overlay .data, not licensed to this TU.
+ * - g_profile_CLOCK_HURIKO is this file's profile, next to the class typeinfo.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -46,6 +46,7 @@ enum d_a_obj_clock_huriko_AssetId { ASSET_C2_HURIKO_BMD = 0x05b3 };
 
 #include "daObjClockHuriko_c.h"
 #include "SharedFilePtr.h"
+#include "SpawnInfo.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
 
@@ -798,3 +799,12 @@ u32 data_ov013_02111780[600] = {
     0x0e74f768,
     0xf574055f,
 };
+
+extern "C" SpawnInfo<daObjClockHuriko_c> g_profile_CLOCK_HURIKO = {daObjClockHuriko_c_classInit,
+                                                                   294,
+                                                                   164,
+                                                                   0x00000006,
+                                                                   0x00064000,
+                                                                   0x000fa000,
+                                                                   0x00c80000,
+                                                                   0x00640000};

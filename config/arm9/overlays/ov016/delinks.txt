@@ -54,7 +54,7 @@ src/game/actors/d_a_slide_box.cpp:
     .init start:0x02113a50 end:0x02113abc
     .ctor start:0x02113acc end:0x02113ad0
     .data.slideBox start:0x02113bac end:0x02113bcc
-    .bss start:0x02114e6c end:0x02114e94
+    .bss start:0x02114e6c end:0x02114ea0
 
 src/unnamed/ov016/data_ov016_02113550.c:
     complete
@@ -64,6 +64,3 @@ src/unnamed/ov016/data_ov016_021148f0.c:
     complete
     .data start:0x021148f0 end:0x02114908
 
-src/unnamed/ov016/data_ov016_02114e94.c:
-    complete
-    .bss start:0x02114e94 end:0x02114ea0

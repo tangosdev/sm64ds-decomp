@@ -26,6 +26,7 @@
 #include "dBgW.h"
 #include "SaveBlock.h"
 #include "private/BTA_File.h"
+#include "SpawnInfo.h"
 
 struct BMD_File;
 struct KCL_File;
@@ -207,3 +208,6 @@ void daObjMcWater_c::SpawnWaterfalls() {
    body out of line here instead flips them to D0-before-D1 and the isolation
    step rejects the object.
  */
+
+extern "C" SpawnInfo<daObjMcWater_c> g_profile_MC_WATER = {
+    daObjMcWater_c_classInit, 338, 338, 0x00000000, 0x00000000, 0x00320000, 0x01f40000, 0x00050000};

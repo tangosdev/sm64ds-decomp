@@ -154,3 +154,7 @@ extern "C" SpawnInfo<daObj_volcanoCannon_c> g_profile_OBJ_VOLCANO_CANNON = {
     0x00060000,
     0x04000000,
     0x00000000};
+
+#pragma explicit_zero_data on
+extern "C" u32 data_ov022_021144f8[2] = {0, 0};
+#pragma explicit_zero_data off

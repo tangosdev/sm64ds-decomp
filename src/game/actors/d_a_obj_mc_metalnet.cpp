@@ -19,6 +19,7 @@ enum d_a_obj_mc_metalnet_AssetId { ASSET_MC_METALNET_BMD = 0x0691, ASSET_MC_META
 #include "daObjMc_Metalnet_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
+#include "SpawnInfo.h"
 
 struct McMetalnetModelFilePtr : SharedFilePtr {
     McMetalnetModelFilePtr(u32 fileID);
@@ -149,3 +150,12 @@ s32 daObjMc_Metalnet_c::CleanupResources() {
 
 McMetalnetModelFilePtr data_ov009_02113e90(ASSET_MC_METALNET_BMD);
 McMetalnetClsnFileHandle data_ov009_02113e88(ASSET_MC_METALNET_KCL);
+
+extern "C" SpawnInfo<daObjMc_Metalnet_c> g_profile_MC_METALNET = {daObjMc_Metalnet_c_classInit,
+                                                                  339,
+                                                                  339,
+                                                                  0x00000002,
+                                                                  0x00000000,
+                                                                  0x00500000,
+                                                                  0x01000000,
+                                                                  0x00000000};

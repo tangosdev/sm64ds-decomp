@@ -1560,3 +1560,7 @@ extern const u32 data_ov056_021115cc[1375] = {
     0x00023eef,
     0x00024000,
 };
+
+extern "C" {
+u32 data_ov056_02113428[6];
+}

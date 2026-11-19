@@ -259,3 +259,7 @@ daSlide_Box_c *daSlide_Box_c_classInit() {
  * handle, then the collision handle. */
 SlideBoxModelFilePtr gKiSlideBoxModelFile(ASSET_KI_SLIDE_BOX_BMD);
 SlideBoxClsnFilePtr gKiSlideBoxCollisionFile(ASSET_KI_SLIDE_BOX_KCL);
+
+extern "C" {
+u32 data_ov016_02114e94[3];
+}

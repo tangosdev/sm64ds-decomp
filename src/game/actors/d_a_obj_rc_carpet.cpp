@@ -171,3 +171,7 @@ void daObjRcCarpet_c::UpdateClsnTransform() {
 CarpetModelFilePtr gRcCarpetModelFile(ASSET_RC_CARPET_BMD);
 CarpetAnimationFilePtr gRcCarpetWaitAnimationFile(ASSET_RC_CARPET_WAIT_BCA);
 CarpetCollisionFilePtr gRcCarpetCollisionFile(ASSET_RC_CARPET_KCL);
+
+extern "C" {
+u32 data_ov036_021141d8[2];
+}

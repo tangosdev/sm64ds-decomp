@@ -12,7 +12,6 @@ src/game/actors/d_a_obj_fl_ring.cpp:
     .bss start:0x02114500 end:0x02114528
     .data start:0x02113cd4 end:0x02113d98
 
-
 src/game/actors/d_a_obj_fl_koma_d.cpp:
     complete
     .text start:0x021115a8 end:0x021116c4
@@ -29,7 +28,6 @@ src/game/actors/d_a_obj_fl_block.cpp:
     .bss start:0x02114550 end:0x02114578
     .data start:0x02113e68 end:0x02113f2c
 
-
 src/game/actors/d_a_obj_fl_london.cpp:
     complete
     .text start:0x02111980 end:0x02111cac
@@ -44,6 +42,7 @@ src/game/actors/d_a_obj_fl_seesaw.cpp:
     .init start:0x02112e58 end:0x02112ec0
     .ctor start:0x02113108 end:0x0211310c
     .bss start:0x021145a0 end:0x021145c8
+    .data start:0x02113ff0 end:0x021140b4
 
 src/game/actors/d_a_obj_fl_ukiyuka.cpp:
     complete
@@ -77,28 +76,18 @@ src/game/actors/d_a_obj_fl_maruta.cpp:
     .bss start:0x02114668 end:0x02114690
     .data start:0x02114344 end:0x02114424
 
-
 src/game/actors/d_a_obj_volcano_cannon.cpp:
     complete
     .text start:0x021125e0 end:0x02112950
     .init start:0x021130bc end:0x021130f8
     .ctor start:0x0211311c end:0x02113120
     .bss start:0x02114690 end:0x021146a0
-    .data start:0x02114434 end:0x021144f8
-
-src/unnamed/ov022/data_ov022_021144f8.c:
-    complete
-    .data start:0x021144f8 end:0x02114500
-
+    .data start:0x02114434 end:0x02114500
 
 src/unnamed/ov022/data_ov022.c:
     complete
     .rodata start:0x02112950 end:0x02112c98
     .data start:0x02113140 end:0x02113cd4
-
-src/unnamed/ov022/data_ov022_02113ff4.c:
-    complete
-    .data start:0x02113ff4 end:0x02113ffc
 
 src/unnamed/ov022/data_ov022_021140b8.c:
     complete

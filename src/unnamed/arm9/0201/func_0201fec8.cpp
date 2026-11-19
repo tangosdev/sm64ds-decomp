@@ -5,7 +5,9 @@
    data_0209e650 is the next bss word, so the seed lives here. Actors only
    read it. */
 
-extern unsigned char data_0209e64c;
+extern "C" {
+unsigned char data_0209e64c;
+}
 extern unsigned char data_0208f274;
 /* The boot message block copied into the message tables: a 64-byte header,
    then the Italian and Spanish title messages as UTF-16. */

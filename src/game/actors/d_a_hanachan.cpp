@@ -1482,3 +1482,7 @@ daHanachan_c::State data_ov034_02114538[11] = {
     { data_ov034_02114358, data_ov034_021143d0, data_ov034_02114450 },   /* DAMAGE_WAIT */
     { data_ov034_021143a0, data_ov034_02114398, data_ov034_02114468 },   /* DAMAGE_START */
 };
+
+extern "C" {
+u32 data_ov034_021148dc[1];
+}

@@ -70,7 +70,6 @@ src/unnamed/arm9/0200/func_02005110.cpp:
     complete
     .text start:0x02005110 end:0x02005324
 
-
 src/game/stages/d_s_boot_methods.cpp:
     complete
     .text start:0x02005324 end:0x02005d94
@@ -215,7 +214,6 @@ src/engine/save/SaveData.cpp:
 src/runtime/actor/ActorDerived.cpp:
     complete
     .text start:0x02013e80 end:0x02013f4c
-
 
 src/func_02013f4c.cpp:
     complete
@@ -728,7 +726,7 @@ src/unnamed/arm9/0201/func_0201fec8.cpp:
     .text start:0x0201fec8 end:0x0201ffcc
     .init start:0x02074e44 end:0x02074e80
     .ctor start:0x02086b80 end:0x02086b84
-    .bss start:0x0209e650 end:0x0209e660
+    .bss start:0x0209e64c end:0x0209e660
     .rodata start:0x02075358 end:0x020755a0
 
 src/unnamed/arm9/0201/func_0201ffcc.c:
@@ -908,7 +906,7 @@ src/game/stages/d_scene.cpp:
     .text start:0x0202e140 end:0x0202ec9c
     .init start:0x02074edc end:0x02074f80
     .ctor start:0x02086b8c end:0x02086b90
-    .bss start:0x0209f5c4 end:0x0209f5f8
+    .bss start:0x0209f5b8 end:0x0209f5f8
 
 src/runtime/graphics/fader/d_wipe.cpp:
     complete
@@ -916,12 +914,11 @@ src/runtime/graphics/fader/d_wipe.cpp:
     .init start:0x02074f80 end:0x02074fb8
     .ctor start:0x02086b90 end:0x02086b94
     .data start:0x020926d0 end:0x02092718
-    .bss start:0x0209f610 end:0x0209f648
+    .bss start:0x0209f5f8 end:0x0209f648
 
 src/engine/view/d_view.cpp:
     complete
     .text start:0x0202fc98 end:0x0202fd4c
-
 
 src/Quaternion_FromVector3.cpp:
     complete
@@ -1032,18 +1029,6 @@ src/data/arm9/data_02075f14.c:
     complete
     .rodata start:0x02075f14 end:0x02082158
 
-src/data/arm9/data_0209e64c.c:
-    complete
-    .bss start:0x0209e64c end:0x0209e650
-
-src/data/arm9/gNextSceneParam.c:
-    complete
-    .bss start:0x0209f5b8 end:0x0209f5c4
-
-src/data/arm9/data_0209f5f8.c:
-    complete
-    .bss start:0x0209f5f8 end:0x0209f610
-
 src/data/arm9/data_0209f648.c:
     complete
     .bss start:0x0209f648 end:0x020a0c5c
@@ -1077,7 +1062,6 @@ src/engine/collision/d_bg_ch.cpp:
 src/engine/collision/d_bg_ch_actr.cpp:
     complete
     .text start:0x0203553c end:0x02037464
-
 
 src/engine/collision/d_bg_ch_gnd.cpp:
     complete
@@ -1800,7 +1784,6 @@ src/cstd.cpp:
     complete
     .text start:0x02052ef4 end:0x02053320
 
-
 src/VEC_MultAdd.c:
     complete
     .text start:0x02053320 end:0x020534ec
@@ -2112,7 +2095,7 @@ src/FSi_CutFromList.c:
 src/engine/fs/FS_Rom.cpp:
     complete
     .text start:0x0205d94c end:0x0205db88
-    .bss start:0x020a805c end:0x020a80c4
+    .bss start:0x020a805c end:0x020a80c8
 
 src/engine/fs/FS_Overlay.c:
     complete
@@ -2142,10 +2125,6 @@ src/SHA1Result.c:
 src/SHA1Reset.c:
     complete
     .text start:0x0205e89c end:0x0205e904
-
-src/data/arm9/data_020a80c4.c:
-    complete
-    .bss start:0x020a80c4 end:0x020a80c8
 
 src/DGT_SetOverlayTableMode.c:
     complete
