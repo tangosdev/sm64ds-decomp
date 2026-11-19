@@ -144,7 +144,6 @@ extern const int data_ov074_0212290c[4] = {0, 0x320000, 0x258000, 0x190000};
 extern const int data_ov074_0212291c[4] = {0, 0, 0x70000, 0};
 extern float data_ov074_02122e4c[];
 extern union Matrix4x3 data_020a0e68;
-extern union Matrix4x3 IDENTITY_MATRIX4X3;
 struct KuriKingBoneIdx {
     int v[3];
 };

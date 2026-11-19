@@ -154,10 +154,6 @@ extern dCamera_c *gCamera;
 extern unsigned char IsAreaShowing(int idx);
 extern void func_02012694(unsigned int a, const Vector3 *p);
 
-extern "C" {
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-}
-
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" {
 extern int data_0209f32c;

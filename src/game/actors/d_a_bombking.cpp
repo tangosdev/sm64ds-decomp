@@ -153,7 +153,6 @@ extern dCamera_c *gCamera;
 extern int data_02092138;
 }
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02011cfc(void);
 

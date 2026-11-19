@@ -114,7 +114,6 @@ extern DaJgmStateHandler data_ov077_021277f0;
 extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 
 }

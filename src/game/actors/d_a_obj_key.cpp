@@ -181,7 +181,6 @@ extern "C" {
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern void func_ov002_020c3dbc(void *player);
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *const data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
 extern ObjKeyAnimationFilePtr data_ov089_02132c60;

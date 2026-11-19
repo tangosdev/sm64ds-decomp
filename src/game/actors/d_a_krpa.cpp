@@ -48,7 +48,6 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern int data_0209f32c;
 
 /* `return new daKrpa_c()` emits 0x50, calling the inherited
