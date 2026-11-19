@@ -776,7 +776,7 @@ void dScMgCurling2_c::DrawStones() {
     int i;
 
     for (i = 0; i < STONE_NUM; i++) {
-        void *tex;
+        OamAttr *tex;
         if (mStone[i].active == 0)
             continue;
         if (mStone[i].visible == 0)
