@@ -78,7 +78,7 @@ extern int data_0209f32c;
 
 /* The texture animation's keys and its one material record live in overlay
    .rodata; this TU only points at them. */
-extern fx32 data_ov029_021129a0[];
+extern const u32 data_ov029_021129a0[];
 extern u16 data_ov029_0211299c[];
 extern fx32 data_ov029_021129c0[];
 extern BTAMaterialRecord data_ov029_021129a4[];
@@ -86,7 +86,7 @@ extern BTAMaterialRecord data_ov029_021129a4[];
 /* The WDW water's texture animation: 0x5b frames, constant scale and
    translation, one material. */
 BTA_File data_ov029_02112fb8 = {
-    0x5b, 0, data_ov029_021129a0, data_ov029_0211299c, data_ov029_021129c0,
+    0x5b, 0, (fx32 *)data_ov029_021129a0, data_ov029_0211299c, data_ov029_021129c0,
     1,    0, data_ov029_021129a4,
 };
 

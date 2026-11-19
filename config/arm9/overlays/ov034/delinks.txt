@@ -30,7 +30,3 @@ src/game/actors/d_a_hanachan.cpp:
 src/unnamed/ov034/data_ov034_bss.c:
     complete
     .bss start:0x021148dc end:0x021148e0
-
-src/unnamed/ov034/data_ov034.c:
-    complete
-    .data.gap0 start:0x02114080 end:0x0211433c

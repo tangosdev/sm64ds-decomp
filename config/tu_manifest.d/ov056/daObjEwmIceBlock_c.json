@@ -14,14 +14,14 @@
   ],
   "sections": [
     {
-      "name": ".data",
-      "start": "0x02113314",
-      "end": "0x02113320"
-    },
-    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021115cc"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021115cc",
+      "end": "0x02112b48"
     },
     {
       "name": ".init",
@@ -34,57 +34,14 @@
       "end": "0x02112bb8"
     },
     {
+      "name": ".data",
+      "start": "0x02113314",
+      "end": "0x02113320"
+    },
+    {
       "name": ".bss",
       "start": "0x02113400",
       "end": "0x02113428"
-    },
-    {
-      "name": ".rodata.ewmIceBlockBta",
-      "input_section": ".rodata",
-      "start": "0x021115cc",
-      "end": "0x02111a60"
-    },
-    {
-      "name": ".rodata.ewmIceBlockAnim0",
-      "input_section": ".rodata",
-      "start": "0x02111a78",
-      "end": "0x0211208c"
-    },
-    {
-      "name": ".rodata.ewmIceBlockAnim1",
-      "input_section": ".rodata",
-      "start": "0x021120bc",
-      "end": "0x02112158"
-    },
-    {
-      "name": ".rodata.ewmIceBlockAnim2",
-      "input_section": ".rodata",
-      "start": "0x02112178",
-      "end": "0x021124d4"
-    },
-    {
-      "name": ".rodata.ewmIceBlockAnim3",
-      "input_section": ".rodata",
-      "start": "0x021124ec",
-      "end": "0x02112610"
-    },
-    {
-      "name": ".rodata.ewmIceBlockAnim4",
-      "input_section": ".rodata",
-      "start": "0x02112968",
-      "end": "0x02112b48"
-    },
-    {
-      "name": ".data.ewmIceBlockFiles",
-      "input_section": ".data",
-      "start": "0x02112bc0",
-      "end": "0x021130cc"
-    },
-    {
-      "name": ".data.ewmIceBlockBundle",
-      "input_section": ".data",
-      "start": "0x021130d0",
-      "end": "0x02113314"
     }
   ],
   "functions": [
@@ -145,20 +102,6 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "Model, collision and CLPS pointers for the ice block."
-    },
-    {
-      "symbol": "data_ov056_02112bc0",
-      "address": "0x02112bc0",
-      "size": "0x50c",
-      "binding": "STB_GLOBAL",
-      "evidence": "ice block file table and animation handles; exact bytes, one object"
-    },
-    {
-      "symbol": "data_ov056_021130d0",
-      "address": "0x021130d0",
-      "size": "0x244",
-      "binding": "STB_GLOBAL",
-      "evidence": "ice block file payload; exact bytes, one object"
     }
   ],
   "bss": [
@@ -383,7 +326,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -394,16 +337,16 @@
       },
       "tuRanges": [
         {
-          "section": ".data",
-          "start": "0x02113314",
-          "end": "0x02113320",
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x021115cc",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
-          "section": ".text",
-          "start": "0x021111a0",
-          "end": "0x021115cc",
+          "section": ".rodata",
+          "start": "0x021115cc",
+          "end": "0x02112b48",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -422,6 +365,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02113314",
+          "end": "0x02113320",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02113400",
           "end": "0x02113428",
@@ -430,7 +380,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 13
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -439,21 +389,39 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              46
+              29
             ],
             "desired": [
-              46
+              29
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              50
+            ],
+            "desired": [
+              50
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              48
             ],
             "desired": [
-              44
+              48
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              27
+            ],
+            "desired": [
+              27
             ]
           },
           {
@@ -732,7 +700,7 @@
       "target_address": "0x02112b48"
     },
     {
-      "section": ".rodata.ewmIceBlockBta",
+      "section": ".rodata",
       "source": "0x021115d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -742,7 +710,7 @@
       "target_address": "0x02112be0"
     },
     {
-      "section": ".rodata.ewmIceBlockBta",
+      "section": ".rodata",
       "source": "0x021115f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -752,7 +720,7 @@
       "target_address": "0x02112bec"
     },
     {
-      "section": ".rodata.ewmIceBlockBta",
+      "section": ".rodata",
       "source": "0x0211160c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -760,216 +728,6 @@
       "addend": 0,
       "target_module": "ov056",
       "target_address": "0x02112c24"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112bcc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112cb4",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112cb4"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112bd4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112c14",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112c14"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112bf8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bd0",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112bd0"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112bfc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112c34",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112c34"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c18",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02113054",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02113054"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c20",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112e84",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112e84"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c38",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_021115cc",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x021115cc"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c3c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02111624",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02111624"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c40",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02111a60",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02111a60"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c48",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_021115d0",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x021115d0"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c4c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112d44",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112d44"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c50",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc8",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112bc8"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112c5c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bf8",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112bf8"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112cb8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112dc4",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112dc4"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112cc0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112cf4",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112cf4"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112cc8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112c88",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112c88"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112cd0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112bc0"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112cd8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112c68",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112c68"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112ce0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bd8",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112bd8"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112ce8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc4",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112bc4"
-    },
-    {
-      "section": ".data.ewmIceBlockFiles",
-      "source": "0x02112cf0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112c04",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112c04"
     }
   ],
   "defined_symbol_renames": [
@@ -988,44 +746,9 @@
     {
       "symbol": "data_ov056_021115cc",
       "address": "0x021115cc",
-      "size": "0x494",
+      "size": "0x157c",
       "binding": "STB_GLOBAL",
-      "evidence": "ice block BTA key arrays and material records; exact bytes, one object"
-    },
-    {
-      "symbol": "data_ov056_02111a78",
-      "address": "0x02111a78",
-      "size": "0x614",
-      "binding": "STB_GLOBAL",
-      "evidence": "ice block animation payload; exact bytes, one object"
-    },
-    {
-      "symbol": "data_ov056_021120bc",
-      "address": "0x021120bc",
-      "size": "0x9c",
-      "binding": "STB_GLOBAL",
-      "evidence": "ice block animation payload; exact bytes, one object"
-    },
-    {
-      "symbol": "data_ov056_02112178",
-      "address": "0x02112178",
-      "size": "0x35c",
-      "binding": "STB_GLOBAL",
-      "evidence": "ice block animation payload; exact bytes, one object"
-    },
-    {
-      "symbol": "data_ov056_021124ec",
-      "address": "0x021124ec",
-      "size": "0x124",
-      "binding": "STB_GLOBAL",
-      "evidence": "ice block animation payload; exact bytes, one object"
-    },
-    {
-      "symbol": "data_ov056_02112968",
-      "address": "0x02112968",
-      "size": "0x1e0",
-      "binding": "STB_GLOBAL",
-      "evidence": "ice block animation payload; exact bytes, one object"
+      "evidence": "the ice block's BTA and four BCA animations as one run, interior alignment gaps included"
     }
   ]
 }

@@ -1,9 +1,9 @@
 /* ov029 .rodata with no class source: 396 bytes at 0x021129a0. */
 #include "types.h"
 
-extern u32 data_ov029_02112ec0[];
+extern u32 data_ov029_02112ec0;
 
-const fx32 data_ov029_021129a0[99] = {
+const u32 data_ov029_021129a0[99] = {
     0x00001000, 0x0000ffff, (u32)&data_ov029_02112ec0,
     0x00000001, 0x00000001, 0x00000001,
     0x0000005b, 0x0000005b, 0x00000000,
