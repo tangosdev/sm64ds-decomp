@@ -11,29 +11,20 @@ src/game/actors/d_a_ots.cpp:
     complete
     .text start:0x02115ee0 end:0x02117070
 
-    .data.daOtsZTV start:0x0211b760 end:0x0211b7fc
 src/game/actors/d_a_donketu.cpp:
     complete
     .text start:0x02117070 end:0x021174a0
     .init start:0x0211ae00 end:0x0211aee0
     .ctor start:0x0211b72c end:0x0211b730
-    .data.coinClps start:0x0211b834 end:0x0211b868
     .bss start:0x0211c660 end:0x0211c6c4
 
-    .data.daDonketuZTI start:0x0211b7fc end:0x0211b808
-    .data.daDonketuZTS start:0x0211b808 end:0x0211b816
-    .data.daDonketuZTV start:0x0211b868 end:0x0211b904
 src/game/actors/d_a_b_donketu.cpp:
     complete
     .text start:0x021174a0 end:0x02117978
     .init start:0x0211aee0 end:0x0211afc0
     .ctor start:0x0211b730 end:0x0211b734
-    .data.coinClps start:0x0211b93c end:0x0211b970
     .bss start:0x0211c6c4 end:0x0211c728
 
-    .data.daBDonketuZTI start:0x0211b904 end:0x0211b910
-    .data.daBDonketuZTS start:0x0211b910 end:0x0211b91f
-    .data.daBDonketuZTV start:0x0211b970 end:0x0211ba0c
 src/game/actors/d_a_obj_fl_amilift.cpp:
     complete
     .text start:0x02117978 end:0x02118020
@@ -43,9 +34,6 @@ src/game/actors/d_a_obj_fl_amilift.cpp:
     .data start:0x0211bc0c end:0x0211bc24
     .bss start:0x0211c728 end:0x0211c768
 
-    .data.daObjFlAmiliftZTI start:0x0211bc24 end:0x0211bc30
-    .data.daObjFlAmiliftZTS start:0x0211bc30 end:0x0211bc44
-    .data.daObjFlAmiliftZTV start:0x0211bc60 end:0x0211bce8
 src/game/actors/d_a_obj_fl_gura.cpp:
     complete
     .text start:0x02118020 end:0x02118138
@@ -55,9 +43,6 @@ src/game/actors/d_a_obj_fl_gura.cpp:
     .data.guraClps start:0x0211bb8c end:0x0211bbac
     .bss start:0x0211c768 end:0x0211c790
 
-    .data.daObjFlGuraZTI start:0x0211bce8 end:0x0211bcf4
-    .data.daObjFlGuraZTS start:0x0211bcf4 end:0x0211bd05
-    .data.daObjFlGuraZTV start:0x0211bd24 end:0x0211bdac
 src/game/actors/d_a_obj_fl_koma_u.cpp:
     complete
     .text start:0x02118138 end:0x021185c0
@@ -67,9 +52,6 @@ src/game/actors/d_a_obj_fl_koma_u.cpp:
     .data start:0x0211bdac end:0x0211bdcc
     .bss start:0x0211c790 end:0x0211c7b8
 
-    .data.daObjFlKomaUZTI start:0x0211bdcc end:0x0211bdd8
-    .data.daObjFlKomaUZTS start:0x0211bdd8 end:0x0211bdea
-    .data.daObjFlKomaUZTV start:0x0211be08 end:0x0211be90
 src/game/actors/d_a_bbl.cpp:
     complete
     .text start:0x021185c0 end:0x02118b50
@@ -77,9 +59,6 @@ src/game/actors/d_a_bbl.cpp:
     .ctor start:0x0211b740 end:0x0211b744
     .bss start:0x0211c7b8 end:0x0211c7d8
 
-    .data.daBblZTI start:0x0211bebc end:0x0211bec8
-    .data.daBblZTS start:0x0211beb0 end:0x0211beb9
-    .data.daBblZTV start:0x0211bee4 end:0x0211bf68
 src/game/actors/d_a_obj_fl_coin.cpp:
     complete
     .text start:0x02118b50 end:0x02119330
@@ -87,15 +66,9 @@ src/game/actors/d_a_obj_fl_coin.cpp:
     .init start:0x0211b1d4 end:0x0211b4dc
     .ctor start:0x0211b744 end:0x0211b748
     .data.coinClps start:0x0211baac end:0x0211bacc
-    .data start:0x0211bfd8 end:0x0211c1d0
+    .data start:0x0211bfd8 end:0x0211c198
     .bss start:0x0211c7d8 end:0x0211c934
 
-    .data.daObjFlCoinZTI start:0x0211bf98 end:0x0211bfa4
-    .data.daObjFlCoinZTS start:0x0211bfb0 end:0x0211bfc1
-    .data.daObjFlCoinZTV start:0x0211c1d0 end:0x0211c254
-    .data.daObjFlPuzzleZTI start:0x0211bfa4 end:0x0211bfb0
-    .data.daObjFlPuzzleZTS start:0x0211bfc4 end:0x0211bfd7
-    .data.daObjFlPuzzleZTV start:0x0211c254 end:0x0211c2dc
 src/game/actors/d_a_water_hakidasi.cpp:
     complete
     .text start:0x02119330 end:0x02119a58
@@ -103,9 +76,6 @@ src/game/actors/d_a_water_hakidasi.cpp:
     .ctor start:0x0211b748 end:0x0211b74c
     .bss start:0x0211c934 end:0x0211c944
 
-    .data.daWaterHakidasiZTI start:0x0211c2ec end:0x0211c2f8
-    .data.daWaterHakidasiZTS start:0x0211c2f8 end:0x0211c30d
-    .data.daWaterHakidasiZTV start:0x0211c32c end:0x0211c3b0
 src/game/actors/d_a_water_ring.cpp:
     complete
     .text start:0x02119a58 end:0x0211a200
@@ -113,9 +83,6 @@ src/game/actors/d_a_water_ring.cpp:
     .ctor start:0x0211b74c end:0x0211b750
     .bss start:0x0211c944 end:0x0211c964
 
-    .data.daWaterRingZTI start:0x0211c3dc end:0x0211c3e8
-    .data.daWaterRingZTS start:0x0211c3e8 end:0x0211c3f9
-    .data.daWaterRingZTV start:0x0211c418 end:0x0211c49c
 src/game/actors/d_a_obj_tbox.cpp:
     complete
     .text start:0x0211a200 end:0x0211a930
@@ -124,15 +91,9 @@ src/game/actors/d_a_obj_tbox.cpp:
     .data start:0x0211c49c end:0x0211c4cc
     .bss start:0x0211c964 end:0x0211c9bc
 
-    .data.daObjTboxZTI start:0x0211c4cc end:0x0211c4d8
-    .data.daObjTboxZTS start:0x0211c4d8 end:0x0211c4e6
-    .data.daObjTboxZTV start:0x0211c504 end:0x0211c588
 src/game/actors/d_a_obj_shell.cpp:
     complete
     .text start:0x0211a930 end:0x0211adb0
     .init start:0x0211b698 end:0x0211b72c
     .ctor start:0x0211b754 end:0x0211b758
     .bss start:0x0211c9bc end:0x0211c9f8
-    .data.daObjShellZTI start:0x0211c588 end:0x0211c594
-    .data.daObjShellZTS start:0x0211c594 end:0x0211c5a3
-    .data.daObjShellZTV start:0x0211c5c0 end:0x0211c644

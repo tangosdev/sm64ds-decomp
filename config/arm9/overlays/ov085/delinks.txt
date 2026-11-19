@@ -29,9 +29,6 @@ src/game/actors/d_a_mip.cpp:
     .ctor start:0x0212fdf8 end:0x0212fdfc
     .bss start:0x021305ac end:0x0213071c
 
-    .data.daMipZTI start:0x021300c8 end:0x021300d4
-    .data.daMipZTS start:0x021300bc end:0x021300c5
-    .data.daMipZTV start:0x021300f0 end:0x02130174
 src/game/actors/d_a_obj_mip_key.cpp:
     complete
     .text start:0x0212cc88 end:0x0212d528
@@ -39,9 +36,6 @@ src/game/actors/d_a_obj_mip_key.cpp:
     .ctor start:0x0212fdfc end:0x0212fe00
     .bss start:0x0213071c end:0x0213073c
 
-    .data.daObjMipKeyZTI start:0x02130194 end:0x021301a0
-    .data.daObjMipKeyZTS start:0x021301a0 end:0x021301b2
-    .data.daObjMipKeyZTV start:0x021301d0 end:0x02130254
 src/game/actors/d_a_c_jugem.cpp:
     complete
     .text start:0x0212d528 end:0x0212edac
@@ -49,17 +43,10 @@ src/game/actors/d_a_c_jugem.cpp:
     .ctor start:0x0212fe00 end:0x0212fe04
     .bss start:0x0213073c end:0x02130858
 
-    .data.daCJugemZTI start:0x02130304 end:0x02130310
-    .data.daCJugemZTS start:0x02130310 end:0x0213031e
-    .data.daCJugemZTV start:0x0213033c end:0x021303c0
 src/game/actors/d_a_obj_kanban.cpp:
     complete
     .text start:0x0212edac end:0x0212f27c
-    .rodata start:0x0212f29c end:0x0212f2a8
     .init start:0x0212fdb0 end:0x0212fdf0
     .ctor start:0x0212fe04 end:0x0212fe08
     .bss start:0x02130858 end:0x0213086c
 
-    .data.daObjKanbanZTI start:0x021303c0 end:0x021303cc
-    .data.daObjKanbanZTS start:0x021303cc end:0x021303dc
-    .data.daObjKanbanZTV start:0x021303f8 end:0x02130480

@@ -188,18 +188,3 @@ DonketuAnimationFileHandle gDonketuDeadAnimationFile(ASSET_DONKETU_DEAD_BCA);
 DonketuAnimationFileHandle gDonketuHitAnimationFile(ASSET_DONKETU_HIT_BCA);
 DonketuAnimationFileHandle gDonketuTurnAnimationFile(ASSET_DONKETU_TURN_BCA);
 DonketuAnimationFileHandle gDonketuWalkAnimationFile(ASSET_DONKETU_WALK_BCA);
-
-/* The small Bully's resource block: the five handles above plus the tuning
- * InitResourcesCommon, OnAimedAtWithEgg and the shared steps read. */
-BullyResourceConfig data_ov064_0211b834 = {
-    {&gDonketuModelFile, &gDonketuDeadAnimationFile, &gDonketuHitAnimationFile,
-     &gDonketuTurnAnimationFile, &gDonketuWalkAnimationFile},
-    0x3c000,
-    0x78000,
-    0x1c00,
-    0,
-    0x3c000,
-    0x64000,
-    0x3c000,
-    0xf7,
-};

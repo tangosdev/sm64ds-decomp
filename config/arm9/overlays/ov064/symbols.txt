@@ -187,12 +187,12 @@ _ZTV7daOts_c kind:data(any) addr:0x0211b768
 _ZTI11daDonketu_c kind:data(any) addr:0x0211b7fc
 _ZTS11daDonketu_c kind:data(any) addr:0x0211b808
 g_profile_DONKETU kind:data(any) addr:0x0211b818
-data_ov064_0211b834 kind:data(byte[52]) addr:0x0211b834
+data_ov064_0211b834 kind:data(any) addr:0x0211b834
 _ZTV11daDonketu_c kind:data(any) addr:0x0211b870
 _ZTI12daBDonketu_c kind:data(any) addr:0x0211b904
 _ZTS12daBDonketu_c kind:data(any) addr:0x0211b910
 g_profile_BOSS_DONKETU kind:data(any) addr:0x0211b920
-data_ov064_0211b93c kind:data(byte[52]) addr:0x0211b93c
+data_ov064_0211b93c kind:data(any) addr:0x0211b93c
 _ZTV12daBDonketu_c kind:data(any) addr:0x0211b978
 data_ov064_0211ba0c kind:data(any) addr:0x0211ba0c
 data_ov064_0211ba2c kind:data(any) addr:0x0211ba2c
@@ -260,7 +260,7 @@ data_ov064_0211c128 kind:data(any) addr:0x0211c128
 data_ov064_0211c144 kind:data(any) addr:0x0211c144
 g_profile_FL_PUZZLE kind:data(any) addr:0x0211c160
 g_profile_FL_COIN kind:data(any) addr:0x0211c17c
-data_ov064_0211c198 kind:data(byte[56]) addr:0x0211c198
+data_ov064_0211c198 kind:data(any) addr:0x0211c198
 _ZTV14daObjFl_Coin_c kind:data(any) addr:0x0211c1d8
 _ZTV16daObjFl_Puzzle_c kind:data(any) addr:0x0211c25c
 data_ov064_0211c2dc kind:data(any) addr:0x0211c2dc

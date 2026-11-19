@@ -27,32 +27,9 @@
       "end": "0x0211abc4"
     },
     {
-      "name": ".data",
-      "start": "0x0211abe0",
-      "end": "0x0211abe8"
-    },
-    {
       "name": ".bss",
-      "start": "0x0211ae00",
+      "start": "0x0211ae14",
       "end": "0x0211b0fc"
-    },
-    {
-      "name": ".data.daIwanteZTI",
-      "input_section": ".data",
-      "start": "0x0211ad24",
-      "end": "0x0211ad30"
-    },
-    {
-      "name": ".data.daIwanteZTS",
-      "input_section": ".data",
-      "start": "0x0211ad30",
-      "end": "0x0211ad3d"
-    },
-    {
-      "name": ".data.daIwanteZTV",
-      "input_section": ".data",
-      "start": "0x0211ad5c",
-      "end": "0x0211ade4"
     }
   ],
   "functions": [
@@ -505,78 +482,8 @@
       "ordinal": 63
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov066_0211abe0",
-      "address": "0x0211abe0",
-      "size": "0x1",
-      "binding": "STB_GLOBAL",
-      "evidence": "hands-still-alive mask (HANDS_BOTH = 3 at power-on); a defeated hand XORs its bit out"
-    },
-    {
-      "symbol": "data_ov066_0211abe4",
-      "address": "0x0211abe4",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "special-pattern threshold, starts at 1; a hand defeat writes -3 to force the decision state"
-    },
-    {
-      "symbol": "_ZTI10daIwante_c",
-      "address": "0x0211ad24",
-      "size": "0xc",
-      "evidence": "ROM typeinfo record, exact compiler emission"
-    },
-    {
-      "symbol": "_ZTS10daIwante_c",
-      "address": "0x0211ad30",
-      "size": "0xd",
-      "evidence": "ROM typeinfo record, exact compiler emission"
-    },
-    {
-      "symbol": "_ZTV10daIwante_c",
-      "address": "0x0211ad64",
-      "emitted_storage_address": "0x0211ad5c",
-      "address_point_bias": "0x8",
-      "size": "0x88",
-      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
-    }
-  ],
+  "data": [],
   "bss": [
-    {
-      "symbol": "data_ov066_0211ae00",
-      "address": "0x0211ae00",
-      "size": "0x1",
-      "binding": "STB_GLOBAL",
-      "evidence": "pattern-8 hand-arrival bits, one per hand; each byte sits in its own four-byte slot"
-    },
-    {
-      "symbol": "data_ov066_0211ae04",
-      "address": "0x0211ae04",
-      "size": "0x1",
-      "binding": "STB_GLOBAL",
-      "evidence": "current fight phase (PHASE_*/PATTERN_*), read by every hand each frame"
-    },
-    {
-      "symbol": "data_ov066_0211ae08",
-      "address": "0x0211ae08",
-      "size": "0x1",
-      "binding": "STB_GLOBAL",
-      "evidence": "completion count: trigger frames before the fight, hands finished with a pattern once it starts"
-    },
-    {
-      "symbol": "data_ov066_0211ae0c",
-      "address": "0x0211ae0c",
-      "size": "0x1",
-      "binding": "STB_GLOBAL",
-      "evidence": "per-hand handshake bits while a picked hand plays its turn"
-    },
-    {
-      "symbol": "data_ov066_0211ae10",
-      "address": "0x0211ae10",
-      "size": "0x1",
-      "binding": "STB_GLOBAL",
-      "evidence": "alternates the picked hand between the turns of patterns 5..7"
-    },
     {
       "symbol": "data_ov066_0211ae14",
       "address": "0x0211ae14",
@@ -1227,15 +1134,8 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
-          "start": "0x0211abe0",
-          "end": "0x0211abe8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".bss",
-          "start": "0x0211ae00",
+          "start": "0x0211ae14",
           "end": "0x0211b0fc",
           "comparison": "NOBITS -- symbol/module gates"
         }
@@ -1635,6 +1535,27 @@
       "symbol": "_ZN10daIwante_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Out-of-line ~daIwante_c under #pragma defer_codegen off emits D1, D0, then D2. The cartridge has D1 at 0x02115ee0 and D0 at 0x02115f84 and no daIwante_c D2."
+    },
+    {
+      "symbol": "_ZTV10daIwante_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov066",
+      "canonical_address": "0x0211ad64",
+      "reason": "The out-of-line destructor is the key function, so this TU emits daIwante_c's vtable. The cartridge owns the record at ov066:0x0211ad64 (32 slots, typeinfo word 0x0211ad24); it is compared word-for-word and stripped. Licensed spans remain .text/.init/.ctor/.bss."
+    },
+    {
+      "symbol": "_ZTI10daIwante_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov066",
+      "canonical_address": "0x0211ad24",
+      "reason": "Emitted with the vtable now that the class carries its cartridge name; the ROM owns the typeinfo at ov066:0x0211ad24, it is compared word-for-word and stripped."
+    },
+    {
+      "symbol": "_ZTS10daIwante_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov066",
+      "canonical_address": "0x0211ad30",
+      "reason": "Emitted with the vtable now that the class carries its cartridge name; the ROM owns the type-name string at ov066:0x0211ad30, it is compared and stripped."
     },
     {
       "symbol": "_ZTI10dBgActor_c",
@@ -3429,366 +3350,6 @@
       "addend": 0,
       "target_module": "ov066",
       "target_address": "0x0211a418"
-    },
-    {
-      "section": ".data.daIwanteZTI",
-      "source": "0x0211ad28",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTS10daIwante_c",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x0211ad30"
-    },
-    {
-      "section": ".data.daIwanteZTI",
-      "source": "0x0211ad2c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI10dBgActor_c",
-      "addend": 0,
-      "target_module": "overlay(2)",
-      "target_address": "0x021089ec"
-    },
-    {
-      "section": ".data.daIwanteZTI",
-      "source": "0x0211ad24",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTVN3abi20__si_class_type_infoE",
-      "addend": 8,
-      "target_module": "main",
-      "target_address": "0x0209a764"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad60",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI10daIwante_c",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x0211ad24"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ada0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02043494"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad9c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual38Ejj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0204349c"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad98",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual34Ejj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0204357c"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211addc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x020100dc"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211add4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201012c"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211add0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010130"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adcc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010134"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adc8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnPushedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010138"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adc4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnKickedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201013c"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adc0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010140"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adbc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010144"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adb8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010148"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adb4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c9Virtual50Ev",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201014c"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adb0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010154"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211adac",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010160"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad90",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11AfterRenderEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010f6c"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad8c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c12BeforeRenderEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010f78"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad84",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010fc8"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad80",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010fd4"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad78",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011214"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad74",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011220"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad6c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011244"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad68",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011268"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ade0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10dBgActor_c4KillEv",
-      "addend": 0,
-      "target_module": "overlays(2,7)",
-      "target_address": "0x020ee55c"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ada8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daIwante_cD0Ev",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x02115f84"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211add8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daIwante_c16OnAimedAtWithEggEv",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x0211a2dc"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad88",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daIwante_c6RenderEv",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x021197a4"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad94",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daIwante_c16OnPendingDestroyEv",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x021197a0"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad64",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daIwante_c13InitResourcesEv",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x02119ce8"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad70",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daIwante_c16CleanupResourcesEv",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x02119654"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ad7c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daIwante_c8BehaviorEv",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x02119838"
-    },
-    {
-      "section": ".data.daIwanteZTV",
-      "source": "0x0211ada4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daIwante_cD1Ev",
-      "addend": 0,
-      "target_module": "overlay(66)",
-      "target_address": "0x02115ee0"
     }
   ],
   "defined_symbol_renames": [

@@ -30,24 +30,6 @@
       "name": ".bss",
       "start": "0x0213073c",
       "end": "0x02130858"
-    },
-    {
-      "name": ".data.daCJugemZTI",
-      "input_section": ".data",
-      "start": "0x02130304",
-      "end": "0x02130310"
-    },
-    {
-      "name": ".data.daCJugemZTS",
-      "input_section": ".data",
-      "start": "0x02130310",
-      "end": "0x0213031e"
-    },
-    {
-      "name": ".data.daCJugemZTV",
-      "input_section": ".data",
-      "start": "0x0213033c",
-      "end": "0x021303c0"
     }
   ],
   "functions": [
@@ -301,28 +283,7 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other five .ctor words belong to the remaining shards"
     }
   ],
-  "data": [
-    {
-      "symbol": "_ZTI11daC_Jugem_c",
-      "address": "0x02130304",
-      "size": "0xc",
-      "evidence": "ROM typeinfo record, exact compiler emission"
-    },
-    {
-      "symbol": "_ZTS11daC_Jugem_c",
-      "address": "0x02130310",
-      "size": "0xe",
-      "evidence": "ROM typeinfo record, exact compiler emission"
-    },
-    {
-      "symbol": "_ZTV11daC_Jugem_c",
-      "address": "0x02130344",
-      "emitted_storage_address": "0x0213033c",
-      "address_point_bias": "0x8",
-      "size": "0x84",
-      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "data_ov085_0213073c",
@@ -1154,356 +1115,6 @@
       "addend": 0,
       "target_module": "ov085",
       "target_address": "0x02130760"
-    },
-    {
-      "section": ".data.daCJugemZTI",
-      "source": "0x02130308",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTS11daC_Jugem_c",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x02130310"
-    },
-    {
-      "section": ".data.daCJugemZTI",
-      "source": "0x0213030c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI12dEnemyBase_c",
-      "addend": 0,
-      "target_module": "overlay(2)",
-      "target_address": "0x021081c0"
-    },
-    {
-      "section": ".data.daCJugemZTI",
-      "source": "0x02130304",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTVN3abi20__si_class_type_infoE",
-      "addend": 8,
-      "target_module": "main",
-      "target_address": "0x0209a764"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130340",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI11daC_Jugem_c",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x02130304"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130380",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02043494"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x0213037c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual38Ejj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0204349c"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130378",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual34Ejj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0204357c"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x021303bc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x020100dc"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x021303b8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010124"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x021303b4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201012c"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x021303b0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010130"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x021303ac",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010134"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x021303a8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnPushedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010138"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x021303a4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnKickedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201013c"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x021303a0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010140"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x0213039c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010144"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130398",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010148"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130394",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c9Virtual50Ev",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201014c"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130390",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010154"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x0213038c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010160"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130370",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11AfterRenderEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010f6c"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x0213036c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c12BeforeRenderEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010f78"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130364",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010fc8"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130360",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010fd4"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130358",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011214"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130354",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011220"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x0213034c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011244"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130348",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011268"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130388",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN11daC_Jugem_cD0Ev",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212d578"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130368",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN11daC_Jugem_c6RenderEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212ead0"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130374",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN11daC_Jugem_c16OnPendingDestroyEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212eacc"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130344",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN11daC_Jugem_c13InitResourcesEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212ebec"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130350",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN11daC_Jugem_c16CleanupResourcesEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212ea90"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x0213035c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN11daC_Jugem_c8BehaviorEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212eb18"
-    },
-    {
-      "section": ".data.daCJugemZTV",
-      "source": "0x02130384",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN11daC_Jugem_cD1Ev",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212d528"
     }
   ],
   "notes": [
@@ -1853,6 +1464,27 @@
       "symbol": "_ZN11daC_Jugem_cD2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-object destructor beside the licensed D1/D0 pair. The cartridge has no D2 for this class -- ov085 runs D1 at 0x0212d528 straight into D0 at 0x0212d578 and then into func_ov085_0212d5dc, with no third variant in the overlay's delinks partition and no symbol of that name configured in any module -- so there is no configured home and no surviving relocation references it."
+    },
+    {
+      "symbol": "_ZTV11daC_Jugem_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130344",
+      "reason": "This TU owns daC_Jugem_c's key function -- ~daC_Jugem_c is the only virtual the class declares and its body is out of line here -- so mwcc emits the complete 0x84-byte class vtable storage with its ABI preamble. The cartridge's storage begins at ov085:0x0213033c, where offset-to-top is 0 and the next word points at _ZTI11daC_Jugem_c (0x02130304); the public address point recorded in symbols.txt is 0x02130344, eight bytes above the start of storage and outside this text-only entry's licensed range, so dsd supplies that ROM data independently. romdata_check applies the measured eight-byte address-point bias and proves every emitted slot and relocation against the cartridge before production isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTI11daC_Jugem_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130304",
+      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned. The twelve bytes at ov085:0x02130304 are a __si_class_type_info: its type-info vtable pointer, then _ZTS11daC_Jugem_c at 0x02130310, then _ZTI12dEnemyBase_c at 0x021081c0 as the single base -- which is the cartridge's own statement of this class's parent."
+    },
+    {
+      "symbol": "_ZTS11daC_Jugem_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130310",
+      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned. These fourteen bytes are why the class is spelled daC_Jugem_c and why no part of the name is coined: they read 31 31 64 61 43 5f 4a 75 67 65 6d 5f 63 00, the length-prefixed mangled string \"11daC_Jugem_c\"."
     },
     {
       "symbol": "_ZTI12dEnemyBase_c",

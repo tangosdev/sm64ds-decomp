@@ -32,24 +32,6 @@
       "name": ".bss",
       "start": "0x0213071c",
       "end": "0x0213073c"
-    },
-    {
-      "name": ".data.daObjMipKeyZTI",
-      "input_section": ".data",
-      "start": "0x02130194",
-      "end": "0x021301a0"
-    },
-    {
-      "name": ".data.daObjMipKeyZTS",
-      "input_section": ".data",
-      "start": "0x021301a0",
-      "end": "0x021301b2"
-    },
-    {
-      "name": ".data.daObjMipKeyZTV",
-      "input_section": ".data",
-      "start": "0x021301d0",
-      "end": "0x02130254"
     }
   ],
   "functions": [
@@ -177,28 +159,7 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [
-    {
-      "symbol": "_ZTI15daObj_Mip_Key_c",
-      "address": "0x02130194",
-      "size": "0xc",
-      "evidence": "ROM typeinfo record, exact compiler emission"
-    },
-    {
-      "symbol": "_ZTS15daObj_Mip_Key_c",
-      "address": "0x021301a0",
-      "size": "0x12",
-      "evidence": "ROM typeinfo record, exact compiler emission"
-    },
-    {
-      "symbol": "_ZTV15daObj_Mip_Key_c",
-      "address": "0x021301d8",
-      "emitted_storage_address": "0x021301d0",
-      "address_point_bias": "0x8",
-      "size": "0x84",
-      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "data_ov085_0213071c",
@@ -299,356 +260,6 @@
       "addend": 0,
       "target_module": "ov085",
       "target_address": "0x0212f9bc"
-    },
-    {
-      "section": ".data.daObjMipKeyZTI",
-      "source": "0x02130198",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTS15daObj_Mip_Key_c",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x021301a0"
-    },
-    {
-      "section": ".data.daObjMipKeyZTI",
-      "source": "0x0213019c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI12dEnemyBase_c",
-      "addend": 0,
-      "target_module": "overlay(2)",
-      "target_address": "0x021081c0"
-    },
-    {
-      "section": ".data.daObjMipKeyZTI",
-      "source": "0x02130194",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTVN3abi20__si_class_type_infoE",
-      "addend": 8,
-      "target_module": "main",
-      "target_address": "0x0209a764"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301d4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI15daObj_Mip_Key_c",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x02130194"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130214",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02043494"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130210",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual38Ejj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0204349c"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x0213020c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual34Ejj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0204357c"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130250",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x020100dc"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x0213024c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010124"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130248",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201012c"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130244",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010130"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130240",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010134"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x0213023c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnPushedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010138"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130238",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnKickedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201013c"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130234",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010140"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130230",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010144"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x0213022c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010148"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130228",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c9Virtual50Ev",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201014c"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130224",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010154"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130220",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010160"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130204",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11AfterRenderEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010f6c"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130200",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c12BeforeRenderEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010f78"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301f8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010fc8"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301f4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010fd4"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301ec",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011214"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301e8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011220"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301e0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011244"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301dc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011268"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x0213021c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN15daObj_Mip_Key_cD0Ev",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212ccc0"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301fc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN15daObj_Mip_Key_c6RenderEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212d39c"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130208",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN15daObj_Mip_Key_c16OnPendingDestroyEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212d398"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301d8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN15daObj_Mip_Key_c13InitResourcesEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212d46c"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301e4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN15daObj_Mip_Key_c16CleanupResourcesEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212d374"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x021301f0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN15daObj_Mip_Key_c8BehaviorEv",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212d3ec"
-    },
-    {
-      "section": ".data.daObjMipKeyZTV",
-      "source": "0x02130218",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN15daObj_Mip_Key_cD1Ev",
-      "addend": 0,
-      "target_module": "overlay(85)",
-      "target_address": "0x0212cc88"
     }
   ],
   "notes": [
@@ -849,6 +460,27 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "func_ov085_0212d2b8 declares a Vector3 local, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0, and src/_ZN7Vector3D1Ev.cpp already owns it as a complete .text 0x020072c0..0x020072c4 range; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTV15daObj_Mip_Key_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021301d8",
+      "reason": "This TU owns daObj_Mip_Key_c's key function -- ~daObj_Mip_Key_c is the first declared non-inline virtual and its body is out of line here; inherited virtual overrides remain virtual without repeating the keyword -- so mwcc emits the complete 0x84-byte class vtable storage with its ABI preamble. The cartridge's storage begins at ov085:0x021301d0, where offset-to-top is 0 and the next word points at _ZTI15daObj_Mip_Key_c (0x02130194); the public address point recorded in symbols.txt is 0x021301d8, eight bytes above the start of storage and outside this text-only entry's licensed range, so dsd supplies that ROM data independently. Storage runs 0x021301d0..0x02130254, which is exactly 0x84 and closes on the next configured datum."
+    },
+    {
+      "symbol": "_ZTI15daObj_Mip_Key_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x02130194",
+      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned. The twelve bytes at ov085:0x02130194 are a __si_class_type_info: its type-info vtable pointer (0x0209a764), then _ZTS15daObj_Mip_Key_c at 0x021301a0, then _ZTI12dEnemyBase_c at 0x021081c0 as the single base -- which is the cartridge's own statement of this class's parent."
+    },
+    {
+      "symbol": "_ZTS15daObj_Mip_Key_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021301a0",
+      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned. These eighteen bytes are why the class is spelled daObj_Mip_Key_c and why no part of the name is coined: they read 31 35 64 61 4f 62 6a 5f 4d 69 70 5f 4b 65 79 5f 63 00, the length-prefixed mangled string \"15daObj_Mip_Key_c\"."
     },
     {
       "symbol": "_ZTI12dEnemyBase_c",

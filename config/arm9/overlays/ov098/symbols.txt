@@ -89,9 +89,9 @@ _ZN7daWbm_c6RenderEv kind:function(arm,size=0x3c) addr:0x0213bbe4
 _ZN7daWbm_c8BehaviorEv kind:function(arm,size=0xf4) addr:0x0213bc20
 _ZN7daWbm_c13InitResourcesEv kind:function(arm,size=0x1fc) addr:0x0213bd14
 _Z17daWbm_c_classInitv kind:function(arm,size=0x50) addr:0x0213bf10
-data_ov098_0213bf60 kind:data(byte[48]) addr:0x0213bf60
-data_ov098_0213bf64 kind:data(byte[0]) addr:0x0213bf64
-data_ov098_0213bf68 kind:data(byte[0]) addr:0x0213bf68
+data_ov098_0213bf60 kind:data(any) addr:0x0213bf60
+data_ov098_0213bf64 kind:data(any) addr:0x0213bf64
+data_ov098_0213bf68 kind:data(any) addr:0x0213bf68
 data_ov098_0213bf90 kind:data(any) addr:0x0213bf90
 __sinit_d_a_obj_yajirusi.cpp kind:function(arm,size=0xbc) addr:0x0213bf9c
 __sinit_d_a_obj_block_s.cpp kind:function(arm,size=0x1bc) addr:0x0213c058
@@ -132,7 +132,7 @@ _ZTS13daObjBlockS_c kind:data(any) addr:0x0213c500
 g_profile_BLOCK_S kind:data(any) addr:0x0213c510 ambiguous
 _ZTV13daObjBlockS_c kind:data(any) addr:0x0213c534
 _ZTV16daObjFallBlock_c kind:data(any) addr:0x0213c5bc
-data_ov098_0213c63c kind:data(byte[6]) addr:0x0213c63c
+data_ov098_0213c63c kind:data(any) addr:0x0213c63c
 data_ov098_0213c644 kind:data(any) addr:0x0213c644
 data_ov098_0213c64c kind:data(any) addr:0x0213c64c
 data_ov098_0213c654 kind:data(any) addr:0x0213c654

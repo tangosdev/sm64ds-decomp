@@ -32,24 +32,6 @@
       "name": ".bss",
       "start": "0x0211c944",
       "end": "0x0211c964"
-    },
-    {
-      "name": ".data.daWaterRingZTI",
-      "input_section": ".data",
-      "start": "0x0211c3dc",
-      "end": "0x0211c3e8"
-    },
-    {
-      "name": ".data.daWaterRingZTS",
-      "input_section": ".data",
-      "start": "0x0211c3e8",
-      "end": "0x0211c3f9"
-    },
-    {
-      "name": ".data.daWaterRingZTV",
-      "input_section": ".data",
-      "start": "0x0211c418",
-      "end": "0x0211c49c"
     }
   ],
   "functions": [
@@ -159,28 +141,7 @@
       "ordinal": 14
     }
   ],
-  "data": [
-    {
-      "symbol": "_ZTI14daWater_Ring_c",
-      "address": "0x0211c3dc",
-      "size": "0xc",
-      "evidence": "ROM typeinfo record, exact compiler emission"
-    },
-    {
-      "symbol": "_ZTS14daWater_Ring_c",
-      "address": "0x0211c3e8",
-      "size": "0x11",
-      "evidence": "ROM typeinfo record, exact compiler emission"
-    },
-    {
-      "symbol": "_ZTV14daWater_Ring_c",
-      "address": "0x0211c420",
-      "emitted_storage_address": "0x0211c418",
-      "address_point_bias": "0x8",
-      "size": "0x84",
-      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains the configured _ZTV address"
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "data_ov064_0211c944",
@@ -275,6 +236,27 @@
       "canonical_module": "ov002",
       "canonical_address": "0x021081cc",
       "reason": "inherited vague-linkage RTTI name; compared against the ov002 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTV14daWater_Ring_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov064",
+      "canonical_address": "0x0211c420",
+      "reason": "compiler-emitted vtable; compared at the public address point before text isolation"
+    },
+    {
+      "symbol": "_ZTI14daWater_Ring_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov064",
+      "canonical_address": "0x0211c3dc",
+      "reason": "leaf RTTI record; compared against the ov064 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS14daWater_Ring_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov064",
+      "canonical_address": "0x0211c3e8",
+      "reason": "leaf RTTI name string; compared against the ov064 copy before text isolation"
     }
   ],
   "verification": {
@@ -578,356 +560,6 @@
       "addend": 0,
       "target_module": "ov064",
       "target_address": "0x0211c944"
-    },
-    {
-      "section": ".data.daWaterRingZTI",
-      "source": "0x0211c3e0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTS14daWater_Ring_c",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x0211c3e8"
-    },
-    {
-      "section": ".data.daWaterRingZTI",
-      "source": "0x0211c3e4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI12dEnemyBase_c",
-      "addend": 0,
-      "target_module": "overlay(2)",
-      "target_address": "0x021081c0"
-    },
-    {
-      "section": ".data.daWaterRingZTI",
-      "source": "0x0211c3dc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTVN3abi20__si_class_type_infoE",
-      "addend": 8,
-      "target_module": "main",
-      "target_address": "0x0209a764"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c41c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI14daWater_Ring_c",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x0211c3dc"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c45c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02043494"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c458",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual38Ejj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0204349c"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c454",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual34Ejj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0204357c"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c498",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x020100dc"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c494",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010124"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c490",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201012c"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c48c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010130"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c488",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010134"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c484",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnPushedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010138"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c480",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnKickedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201013c"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c47c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010140"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c478",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010144"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c474",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010148"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c470",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c9Virtual50Ev",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x0201014c"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c46c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010154"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c468",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010160"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c44c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11AfterRenderEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010f6c"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c448",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c12BeforeRenderEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010f78"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c440",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010fc8"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c43c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02010fd4"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c434",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011214"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c430",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011220"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c428",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011244"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c424",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
-      "addend": 0,
-      "target_module": "main",
-      "target_address": "0x02011268"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c464",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN14daWater_Ring_cD0Ev",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x02119aa0"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c444",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN14daWater_Ring_c6RenderEv",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x02119fc8"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c450",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN14daWater_Ring_c16OnPendingDestroyEv",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x02119fc4"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c420",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN14daWater_Ring_c13InitResourcesEv",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x0211a090"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c42c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN14daWater_Ring_c16CleanupResourcesEv",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x02119fa0"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c438",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN14daWater_Ring_c8BehaviorEv",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x02119ffc"
-    },
-    {
-      "section": ".data.daWaterRingZTV",
-      "source": "0x0211c460",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN14daWater_Ring_cD1Ev",
-      "addend": 0,
-      "target_module": "overlay(64)",
-      "target_address": "0x02119a58"
     }
   ]
 }

@@ -174,20 +174,6 @@ struct BlockSW4 { u32 w[4]; };
 BlockSW4 data_ov098_0213c4e0 = {{0x28000, 0x28000, 0x50000, 0x1e000}};
 BlockSW4 data_ov098_0213c4f0 = {{0x14000, 0x14000, 0x14000, 0xf000}};
 
-/* Where a held crate sits on each character's hands, indexed by the row
-   UpdateModelMatrix picks. A POD twin of Vector3: types.h gives Vector3 a
-   constructor, so a const Vector3 table would be built at static-init time,
-   while the cartridge keeps this table in .rodata. */
-struct BlockSCarryOffset {
-    fx32 x, y, z;
-};
-extern const BlockSCarryOffset data_ov098_0213bf60[4] = {
-    {0x28000, 0, 0x2d000},
-    {0x28000, 0, 0x46000},
-    {0x30000, 0x10000, 0},
-    {0x30000, 0, 0x3c000},
-};
-
 #pragma defer_codegen off
 
 /* Destroys dCcAcPos_c x2, dExtShadowModel_c and dBgCh_Actr in reverse declaration
