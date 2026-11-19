@@ -97,7 +97,7 @@
   ],
   "data": [
     {
-      "symbol": "data_ov065_0211d520",
+      "symbol": "sTTCElevatorSpeeds",
       "address": "0x0211d520",
       "size": "0x10",
       "binding": "STB_GLOBAL",

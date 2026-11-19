@@ -111,7 +111,7 @@
   ],
   "data": [
     {
-      "symbol": "data_ov065_0211d26c",
+      "symbol": "sTTCMovingBarRandomDelays",
       "address": "0x0211d26c",
       "size": "0x4",
       "binding": "STB_GLOBAL",

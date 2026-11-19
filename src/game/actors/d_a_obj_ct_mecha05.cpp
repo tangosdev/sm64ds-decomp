@@ -4,7 +4,7 @@
  * What stays, and why:
  * - dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
  *   stores +0x0c; dBgW::SetClipOffsetY stores +0x10
- * - data_ov065_0211c0c8 / data_ov065_0211d26c; TTC_MovingBar_ModelFile /
+ * - data_ov065_0211c0c8 / sTTCMovingBarRandomDelays; TTC_MovingBar_ModelFile /
  *   TTC_MovingBar_ClsnFile are symbols.txt BSS labels shared with the
  *   neighbouring class
  * - return new emits homeless _ZN10dBgActor_cD2Ev; compiler-only policy
@@ -66,7 +66,7 @@ extern const s16 data_ov065_0211c0c8[4] = {
     55,
     0,
 };
-s8 data_ov065_0211d26c[4] = {
+s8 sTTCMovingBarRandomDelays[4] = {
     1,
     12,
     55,
@@ -228,7 +228,7 @@ void daObjCtMecha05_c::ResetToHome() {
         return;
 
     mStateTimer =
-        data_ov065_0211d26c[(u16)((u32)RandomIntInternal(&data_0209e650.value) >> 16) & 3];
+        sTTCMovingBarRandomDelays[(u16)((u32)RandomIntInternal(&data_0209e650.value) >> 16) & 3];
 }
 
 /* -------------------------------------------------------------------------- */
