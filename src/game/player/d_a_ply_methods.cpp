@@ -828,7 +828,6 @@ extern int SurfaceInfo_TestFlag0x20(int *);
 extern "C" {
 extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f4ae[];
 extern const unsigned int data_ov002_020ff220[4] = {71, 72, 45, 100};
 extern SharedFilePtr *const data_ov002_020ff480[196] = {
     &data_ov002_0210e840, &data_ov002_0210e840, &data_ov002_0210e840, &data_ov002_0210e840,
@@ -11157,7 +11156,6 @@ int daPly_c::St_Wait_Main() {
 
     extern void *gCamera;
     extern unsigned char data_0209f49c[];
-    extern char data_0209f4a0[];
     extern unsigned char data_0209f49e[];
     if ((unsigned short)(mStateFlags & 1)) {
         BeginSliding(3);
@@ -11194,17 +11192,16 @@ int daPly_c::St_Wait_Main() {
             else if (func_ov002_020d2fdc() != 0)
                 break;
             {
-                int idx0 = gActivePlayerSlot * 0x18;
-                short lvl0 = *(short *)(data_0209f4a0 + idx0);
+                short lvl0 = data_0209f498[gActivePlayerSlot].mag;
                 if (lvl0 != 0) {
-                    int thr0 = (*(data_0209f4ae + idx0) != 2) ? 0x471 : 0x555;
+                    int thr0 = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x471 : 0x555;
                     if (lvl0 < thr0) {
                         mPrevAngle.y = mDesiredAngleY;
                         mAngle.y = mPrevAngle.y;
                     }
                 }
                 {
-                    int thr0b = (*(data_0209f4ae + idx0) != 2) ? 0x471 : 0x555;
+                    int thr0b = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x471 : 0x555;
                     func_ov002_020d22ec(thr0b);
                 }
             }
@@ -11218,17 +11215,16 @@ int daPly_c::St_Wait_Main() {
                 mStateTimer = 900;
             }
             {
-                int idx10 = gActivePlayerSlot * 0x18;
-                short lvl10 = *(short *)(data_0209f4a0 + idx10);
+                short lvl10 = data_0209f498[gActivePlayerSlot].mag;
                 if (lvl10 != 0) {
-                    int thr10 = (*(data_0209f4ae + idx10) != 2) ? 0x471 : 0x555;
+                    int thr10 = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x471 : 0x555;
                     if (lvl10 < thr10) {
                         mPrevAngle.y = mDesiredAngleY;
                         mAngle.y = mPrevAngle.y;
                     }
                 }
                 {
-                    int thr10b = (*(data_0209f4ae + idx10) != 2) ? 0x471 : 0x555;
+                    int thr10b = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x471 : 0x555;
                     func_ov002_020d22ec(thr10b);
                 }
             }
