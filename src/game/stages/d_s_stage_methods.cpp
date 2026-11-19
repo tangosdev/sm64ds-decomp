@@ -168,10 +168,10 @@ extern OamAttr data_ov002_0210ced0;
 extern OamAttr data_ov002_0210cf08;
 extern OamAttr data_ov002_0210cfa0;
 extern OamAttr data_ov002_0210caf4;
-extern void *data_ov001_020abd98[];
-extern void *data_ov001_020ac218[];
-extern void *data_ov001_020ac64c[];
-extern void *data_ov001_020acb68[];
+extern OamAttr *data_ov001_020abd98[];
+extern OamAttr *data_ov001_020ac218[];
+extern OamAttr *data_ov001_020ac64c[];
+extern OamAttr *data_ov001_020acb68[];
 }
 
 /* The level-state globals the stage's free functions below read and write: the
@@ -521,14 +521,14 @@ static inline int IsTouchJustBegun(int slot) {
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
-extern void *data_ov002_0210ca0c[];
-extern int data_ov002_0210cfd0[];
+extern OamAttr *data_ov002_0210ca0c[];
+extern OamAttr data_ov002_0210cfd0[];
 extern OamAttr data_ov002_0210d008;
-extern int data_ov002_0210d050[];
+extern OamAttr data_ov002_0210d050[];
 extern OamAttr data_ov002_0210d098;
-extern int data_ov002_0210d0e8[];
+extern OamAttr data_ov002_0210d0e8[];
 extern OamAttr data_ov002_0210d130;
-extern int data_ov002_0210d188[];
+extern OamAttr data_ov002_0210d188[];
 extern OamAttr data_ov002_0210d1c8;
 extern OamAttr data_ov002_0210d210;
 extern OamAttr data_ov002_0210d378;
@@ -1254,23 +1254,23 @@ void dScStage_c::PS_Render() {
             OAM::Render(true, &OAM::TINY_STAR, 38, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1, 0);
         }
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
@@ -3057,13 +3057,13 @@ void dScStage_c::RenderVsModeNewStar() {
     data_0209f308 = timer - data_0208ee44;
     if (data_0209f308 % 60 >= 10) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         if (data_0209f1f4 != 0)
@@ -3106,8 +3106,8 @@ void dScStage_c::RenderVsModeCountdown() {
             OAM::Render(0, &data_ov002_0210d1c8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &data_ov002_0210d210, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000,
-                    0x1000, 0, -1);
+        OAM::Render(0, data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000, 0x1000, 0,
+                    -1);
         return;
     }
     if (data_0209f304 == 0)

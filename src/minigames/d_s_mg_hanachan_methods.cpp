@@ -154,14 +154,15 @@ s16 atan2(s32, s32);
 extern "C" {
 /* This TU's own functions. */
 
-extern void *sWigglerSprites[];
+extern OamAttr *sWigglerSprites[];
 OamAttr data_ov006_021375b8[1] = {{0x00f0, 0x81f0, 0x3104, 0xffff}};
 OamAttr data_ov006_021375b0[1] = {{0x00f8, 0x41f8, 0x305e, 0xffff}};
 OamAttr data_ov006_021375a8[1] = {{0x00f8, 0x41f8, 0x301e, 0xffff}};
-void *sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0, data_ov006_021375a8};
+OamAttr *sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0,
+                                        data_ov006_021375a8};
 OamAttr data_ov006_02137598[1] = {{0x40f8, 0x81f0, 0x314a, 0xffff}};
 OamAttr data_ov006_02137590[1] = {{0x40f8, 0x81f0, 0x310a, 0xffff}};
-void *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
+OamAttr *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
 
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
@@ -533,7 +534,7 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
         px = pos.y >> 12;
         py = pos.x >> 12;
         a2i = GetFlag(i);
-        OAM::Render(0, (OamAttr *)sWigglerSprites[a2i], py, px, res, -1, 0x1000, (u16)rot);
+        OAM::Render(0, sWigglerSprites[a2i], py, px, res, -1, 0x1000, (u16)rot);
         if (i == 0) {
             if (bloom != 0) {
                 if (IsStarVisible() != 0) {
@@ -542,8 +543,8 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
                     func_0203d388(&vb, rot);
                     vb.x = vb.x + pos.x;
                     vb.y = vb.y + pos.y;
-                    OAM::Render(0, (OamAttr *)sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12,
-                                -1, -1, FX_Inv((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
+                    OAM::Render(0, sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12, -1, -1,
+                                FX_Inv((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
                 }
             }
         }
@@ -612,9 +613,8 @@ void dScMgHanachan_c::Wiggler::DrawField() {
         t.res = GetFrame(i);
         px = s.pos.y >> 12;
         py = s.pos.x >> 12;
-        OAM::Render(
-            1, (OamAttr *)sWigglerSprites[(a2i = GetFlag(i), (t.urot = (unsigned short)rot), a2i)],
-            py, px, t.res, -1, 0x1000, t.urot);
+        OAM::Render(1, sWigglerSprites[(a2i = GetFlag(i), (t.urot = (unsigned short)rot), a2i)], py,
+                    px, t.res, -1, 0x1000, t.urot);
 
         if (i == 0) {
             if (bloom != 0 && flower > 0) {
@@ -630,8 +630,8 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                     scale = 0x1000;
                 else
                     scale = FX_Inv((FX_SinIdx((unsigned short)sway >> 4) >> 2) + 0xc00);
-                OAM::Render(1, (OamAttr *)sHanaWigglerTargetSprites[fp2], s.vb.x >> 12,
-                            s.vb.y >> 12, -1, -1, scale, t.urot);
+                OAM::Render(1, sHanaWigglerTargetSprites[fp2], s.vb.x >> 12, s.vb.y >> 12, -1, -1,
+                            scale, t.urot);
             } else if (state == &Wiggler::StateWait) {
                 if (hold > 0x1a && hold < 0x30) {
                     int idx = s3.vc0.x;
@@ -644,9 +644,8 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                     func_0203d388(&s.vc, rot);
                     s.vc.x += s.pos.x;
                     s.vc.y += s.pos.y;
-                    OAM::Render(1, (OamAttr *)sHanaWigglerFieldSprites[idx], s.vc.x >> 12,
-                                s.vc.y >> 12, -1, -1, 0x1000,
-                                (unsigned short)(short)(rot & 0xf800));
+                    OAM::Render(1, sHanaWigglerFieldSprites[idx], s.vc.x >> 12, s.vc.y >> 12, -1,
+                                -1, 0x1000, (unsigned short)(short)(rot & 0xf800));
                 }
             }
         }
@@ -1954,19 +1953,19 @@ void Hana_LoadBackground(void) {
  * vu32* ring sHanaBackgroundParts. Non-constant initializers, so the
  * compiler emits __sinit_d_s_mg_hanachan_methods.cpp to copy them at load. */
 OamAttr data_ov006_021374bc[1] = {{0x80e0, 0xc1f0, 0x0018, 0xffff}};
-void *data_ov006_021374b8 = data_ov006_021374bc;
+OamAttr *data_ov006_021374b8 = data_ov006_021374bc;
 OamAttr data_ov006_021374c8[1] = {{0x80e0, 0xc1f0, 0x0100, 0xffff}};
-void *data_ov006_021374c4 = data_ov006_021374c8;
+OamAttr *data_ov006_021374c4 = data_ov006_021374c8;
 OamAttr data_ov006_021374b0[1] = {{0x80e0, 0xc1f0, 0x0000, 0xffff}};
-void *data_ov006_021374ac = data_ov006_021374b0;
-extern void *data_ov006_021374e8;
+OamAttr *data_ov006_021374ac = data_ov006_021374b0;
+extern OamAttr *data_ov006_021374e8;
 OamAttr data_ov006_021374f8[1] = {{0x80e0, 0xc1f0, 0x1006, 0xffff}};
-void *data_ov006_021374f4 = data_ov006_021374f8;
+OamAttr *data_ov006_021374f4 = data_ov006_021374f8;
 OamAttr data_ov006_021375d4[1] = {{0x80e8, 0xc1f0, 0x010e, 0xffff}};
 OamAttr data_ov006_021375cc[1] = {{0x80e8, 0xc1f0, 0x1112, 0xffff}};
-void *sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
+OamAttr *sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
 
-void *sWigglerSprites[11] = {
+OamAttr *sWigglerSprites[11] = {
     data_ov006_021374b8,
     data_ov006_021374c4,
     data_ov006_021374ac,
@@ -1974,9 +1973,9 @@ void *sWigglerSprites[11] = {
     data_ov006_021374f4,
     sHanaBackgroundPartsB[0],
     sHanaBackgroundPartsB[1],
-    (void *)sHanaBackgroundParts[0],
-    (void *)sHanaBackgroundParts[3],
-    (void *)sHanaBackgroundParts[6],
-    (void *)sHanaBackgroundParts[9],
+    (OamAttr *)sHanaBackgroundParts[0],
+    (OamAttr *)sHanaBackgroundParts[3],
+    (OamAttr *)sHanaBackgroundParts[6],
+    (OamAttr *)sHanaBackgroundParts[9],
 };
 }
