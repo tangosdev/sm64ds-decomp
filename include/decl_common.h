@@ -90,8 +90,6 @@ extern char sSnowballNcgPath;
 extern char sSnowballNclPath;
 extern char data_ov006_021400fc;
 extern char sRouletteTilePos[];
-extern char data_ov009_02113c20[];
-extern char data_ov009_02113c28[];
 extern struct daObjFloatBoard_c_Resources data_ov016_02114b8c;
 extern char data_ov024_02112d00[];
 extern struct CLPS_Block data_ov027_021130e8;
