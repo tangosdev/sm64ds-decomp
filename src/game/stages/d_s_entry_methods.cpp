@@ -224,7 +224,7 @@ extern "C" void func_02020190(void);
 extern "C" void func_02030994(void);
 extern "C" void func_020201c0(void);
 void func_0202048c(OamAnimation *dst, int a, int b);
-extern "C" void func_02020768(char *thiz);
+extern "C" void func_02020768(OamAnimation *anim);
 void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
 extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 starID, u32 loadMode);
@@ -1239,12 +1239,12 @@ void dScEntry_c::UpdateResults() {
             func_02012790(0xe);
     }
 
-    func_02020768((char *)&mOamAnimations[0]);
-    func_02020768((char *)&mOamAnimations[1]);
-    func_02020768((char *)&mOamAnimations[2]);
+    func_02020768(&mOamAnimations[0]);
+    func_02020768(&mOamAnimations[1]);
+    func_02020768(&mOamAnimations[2]);
     p = data_0209b2f0 + id;
     if (*p == 0)
-        func_02020768((char *)&mOamAnimations[3]);
+        func_02020768(&mOamAnimations[3]);
     if (mOamAnimations[0].enabled == 0) {
         if (mOamAnimations[1].enabled == 0) {
             mOamAnimations[0].affine = 0;

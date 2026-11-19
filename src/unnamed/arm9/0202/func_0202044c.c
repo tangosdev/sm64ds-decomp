@@ -2,9 +2,7 @@
 
 /* Show frame idx: load its attribute list and duration and restart its
  * tick count. Returns 0 (and changes nothing) past the last frame. */
-int func_0202044c(char *this, int idx) {
-    struct OamAnimation *anim = (struct OamAnimation *)this;
-
+int func_0202044c(struct OamAnimation *anim, int idx) {
     if (idx >= anim->frameCount)
         return 0;
     anim->frame = idx;
