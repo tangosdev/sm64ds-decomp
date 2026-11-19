@@ -2,7 +2,10 @@
     .rodata     start:0x021473a4 end:0x021473bc kind:rodata align:4
     .init       start:0x021473bc end:0x02147de8 kind:code align:4
     .ctor       start:0x02147de8 end:0x02147e04 kind:rodata align:4
-    .data       start:0x02147e20 end:0x02148600 kind:data align:32
+    .data start:0x02147e20 end:0x021480d0 kind:data align:32
+    .data.doorKeyModels start:0x021480d0 end:0x021480d4 kind:data align:4
+    .data.doorStates start:0x021480d4 end:0x0214814c kind:data align:4
+    .data.afterDoorPmf start:0x0214814c end:0x02148600 kind:data align:4
     .bss        start:0x02148600 end:0x02148a80 kind:bss align:32
 src/game/actors/d_a_btfly.cpp:
     complete
@@ -31,7 +34,9 @@ src/game/actors/d_a_wanwan2.cpp:
 src/game/actors/d_a_door.cpp:
     complete
     .text start:0x021443f4 end:0x021458d4
-    .data start:0x02148204 end:0x02148334
+    .data.doorKeyModels start:0x021480d0 end:0x021480d4
+    .data.doorStates start:0x021480d4 end:0x0214814c
+    .data.afterDoorPmf start:0x02148204 end:0x02148334
     .init start:0x02147698 end:0x02147a70
     .ctor start:0x02147df4 end:0x02147df8
     .bss start:0x0214870c end:0x02148934
@@ -41,7 +46,7 @@ src/game/actors/d_a_star_gate.cpp:
     .text start:0x021458d4 end:0x0214620c
     .init start:0x02147a70 end:0x02147bc0
     .ctor start:0x02147df8 end:0x02147dfc
-    .data start:0x02148334 end:0x02148448
+    .data.afterDoorPmf start:0x02148334 end:0x02148448
     .bss start:0x02148934 end:0x021489a4
 
 src/game/actors/d_a_fish.cpp:
@@ -50,7 +55,7 @@ src/game/actors/d_a_fish.cpp:
     .init start:0x02147bc0 end:0x02147d7c
     .ctor start:0x02147dfc end:0x02147e00
     .rodata start:0x021473a4 end:0x021473bc
-    .data start:0x02148448 end:0x02148480
+    .data.afterDoorPmf start:0x02148448 end:0x02148480
     .bss start:0x021489a4 end:0x02148a54
 
 src/game/actors/d_a_obj_path_lift.cpp:

@@ -76,9 +76,8 @@
  * - the six door offsets are function-local static Vector3s: the player's
  *   front and back, the key spawn, the two enter offsets, and the spawn nudge.
  * - the state tables and the helpers that take one are declared
- *   daDoor_StateRecord; mState stays void * because the nine tables are
- *   external data include/decl_common.h already declares as int for another
- *   TU (data_ov100_021488b4) and only their addresses are used.
+ *   daDoor_StateRecord; mState stays void * because func_ov100_021453d8
+ *   installs the record by address.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -203,9 +202,6 @@ int AngleDiff(int a, int b);
 }
 
 extern DoorEntry data_ov100_02148204[19];
-/* Indexed by mKeyModelIdx - 1: the character func_ov100_02144528 switches the
-   player to (the first four bytes are 00 01 02 00). */
-extern unsigned char data_ov100_021480d0[];
 /* Latch: set (func_ov100_02144a38) when the door being opened has a nonzero
    mKeyModelIdx, cleared by func_ov100_02144468; the swing and exit states
    branch on it. */
@@ -213,25 +209,13 @@ extern unsigned char data_ov100_02148704;
 /* The shared countdown: ticked by func_ov100_02145014, started by
    func_ov100_02145070. */
 extern unsigned short data_ov100_02148708[];
-/* The pointer-to-member records the nine states are built from
-   (0x021480d4..0x02148144 in .data), and the null member the initializer
-   copies for the states that have no enter member. */
+/* The null member the initializer copies for the states that have no enter
+   member. */
 extern daDoor_StatePmf data_02086b58;
-extern daDoor_StatePmf data_ov100_021480d4;
-extern daDoor_StatePmf data_ov100_021480dc;
-extern daDoor_StatePmf data_ov100_021480e4;
-extern daDoor_StatePmf data_ov100_021480ec;
-extern daDoor_StatePmf data_ov100_021480f4;
-extern daDoor_StatePmf data_ov100_021480fc;
-extern daDoor_StatePmf data_ov100_02148104;
-extern daDoor_StatePmf data_ov100_0214810c;
-extern daDoor_StatePmf data_ov100_02148114;
-extern daDoor_StatePmf data_ov100_0214811c;
-extern daDoor_StatePmf data_ov100_02148124;
-extern daDoor_StatePmf data_ov100_0214812c;
-extern daDoor_StatePmf data_ov100_02148134;
-extern daDoor_StatePmf data_ov100_0214813c;
-extern daDoor_StatePmf data_ov100_02148144;
+
+/* Indexed by mKeyModelIdx - 1: the character func_ov100_02144528 switches the
+   player to. */
+unsigned char data_ov100_021480d0[4] = {0x00, 0x01, 0x02, 0x00};
 
 /* The camera, and the player array indexed by the current player id. */
 extern dCamera_c *gCamera;
@@ -312,20 +296,30 @@ DoorEntry data_ov100_02148204[19] = {
 };
 
 /* -------------------------------------------------------------------------- */
-/* The nine door states, in static-initializer order. Each is a
-   16-byte {enter, execute} pointer-to-member pair; the enterless states
-   copy the null record arm9 keeps at data_02086b58. The .data records
-   above carry the individual members. */
+/* The nine door states, in static-initializer order. Each is a 16-byte
+   {enter, execute} pair; the enterless states copy the null record arm9
+   keeps at data_02086b58. mwcc writes the member images this initializer
+   reads as the .data constants at 0x021480d4..0x02148144, as the
+   cartridge has them. */
 /* -------------------------------------------------------------------------- */
-daDoor_StateRecord data_ov100_021488b4 = {data_02086b58, data_ov100_0214813c};
-daDoor_StateRecord data_ov100_021488c4 = {data_ov100_021480dc, data_ov100_021480e4};
-daDoor_StateRecord data_ov100_021488d4 = {data_ov100_021480f4, data_ov100_021480ec};
-daDoor_StateRecord data_ov100_021488e4 = {data_ov100_0214810c, data_ov100_021480fc};
-daDoor_StateRecord data_ov100_021488f4 = {data_ov100_0214811c, data_ov100_02148104};
-daDoor_StateRecord data_ov100_02148904 = {data_ov100_02148124, data_ov100_0214812c};
-daDoor_StateRecord data_ov100_02148914 = {data_ov100_02148144, data_ov100_021480d4};
-daDoor_StateRecord data_ov100_02148924 = {data_02086b58, data_ov100_02148134};
-daDoor_StateRecord data_ov100_021488a4 = {data_02086b58, data_ov100_02148114};
+daDoor_StateRecord data_ov100_021488b4 = {data_02086b58,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144cf8};
+daDoor_StateRecord data_ov100_021488c4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144ccc,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144c6c};
+daDoor_StateRecord data_ov100_021488d4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144c64,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144bf4};
+daDoor_StateRecord data_ov100_021488e4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144a38,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_021449c8};
+daDoor_StateRecord data_ov100_021488f4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144950,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144730};
+daDoor_StateRecord data_ov100_02148904 = {(daDoor_StatePmf)&daDoor_c::func_ov100_021446f8,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144528};
+daDoor_StateRecord data_ov100_02148914 = {(daDoor_StatePmf)&daDoor_c::func_ov100_0214491c,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144730};
+daDoor_StateRecord data_ov100_02148924 = {data_02086b58,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_021444e8};
+daDoor_StateRecord data_ov100_021488a4 = {data_02086b58,
+                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144468};
 
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  *

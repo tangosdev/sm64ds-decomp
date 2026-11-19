@@ -38,9 +38,10 @@
       "end": "0x0211c0c8"
     },
     {
-      "name": ".data",
+      "name": ".data.afterDossy",
       "start": "0x0211d16c",
-      "end": "0x0211d174"
+      "end": "0x0211d174",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -499,7 +500,7 @@
       "target_address": "0x0211c7d8"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDossy",
       "source": "0x0211d16c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -509,7 +510,7 @@
       "target_address": "0x0211208c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDossy",
       "source": "0x0211d170",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -613,7 +614,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -658,7 +659,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.afterDossy",
           "start": "0x0211d16c",
           "end": "0x0211d174",
           "differingBytes": 0,
@@ -667,7 +668,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 21
+          "LICENSED": 23
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -678,19 +679,19 @@
           {
             "section": ".init",
             "original": [
-              57
+              60
             ],
             "desired": [
-              57
+              60
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              55
+              58
             ],
             "desired": [
-              55
+              58
             ]
           },
           {
@@ -699,21 +700,39 @@
               7,
               8,
               9,
-              10,
-              16,
+              12,
+              18,
               23,
-              24,
-              25
+              26,
+              27
             ],
             "desired": [
-              7,
-              9,
-              10,
               8,
-              25,
-              24,
+              7,
+              12,
+              9,
+              27,
+              26,
               23,
-              16
+              18
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
+            ]
+          },
+          {
+            "section": ".data.afterDossy",
+            "original": [
+              10
+            ],
+            "desired": [
+              10
             ]
           }
         ],
@@ -725,31 +744,31 @@
                 7,
                 8,
                 9,
-                10,
-                16,
+                12,
+                18,
                 23,
-                24,
-                25
+                26,
+                27
               ],
               "desired": [
-                7,
-                9,
-                10,
                 8,
-                25,
-                24,
+                7,
+                12,
+                9,
+                27,
+                26,
                 23,
-                16
+                18
               ],
               "slots": [
                 7,
                 8,
                 9,
-                10,
-                16,
+                12,
+                18,
                 23,
-                24,
-                25
+                26,
+                27
               ]
             }
           ],

@@ -38,9 +38,10 @@
       "end": "0x021473bc"
     },
     {
-      "name": ".data",
+      "name": ".data.afterDoorPmf",
       "start": "0x02148448",
-      "end": "0x02148480"
+      "end": "0x02148480",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -392,7 +393,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -437,7 +438,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.afterDoorPmf",
           "start": "0x02148448",
           "end": "0x02148480",
           "differingBytes": 0,
@@ -446,7 +447,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 33
+          "LICENSED": 42
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -457,52 +458,84 @@
           {
             "section": ".init",
             "original": [
-              66
+              84
             ],
             "desired": [
-              66
+              84
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              64
+              82
             ],
             "desired": [
-              64
+              82
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              9,
-              10,
-              11,
+              7,
               12,
               17,
               20,
-              23,
-              24,
-              27,
-              28,
-              29
+              21,
+              26,
+              33,
+              36,
+              37,
+              40,
+              41,
+              44,
+              47
             ],
             "desired": [
-              5,
-              9,
-              12,
-              6,
-              11,
-              10,
-              23,
-              24,
-              27,
-              28,
-              17,
               20,
-              29
+              7,
+              21,
+              17,
+              26,
+              12,
+              33,
+              36,
+              37,
+              40,
+              41,
+              44,
+              47
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              31,
+              45
+            ],
+            "desired": [
+              45,
+              31
+            ]
+          },
+          {
+            "section": ".data.afterDoorPmf",
+            "original": [
+              5,
+              8,
+              10,
+              15,
+              18,
+              22,
+              24
+            ],
+            "desired": [
+              15,
+              8,
+              10,
+              5,
+              18,
+              22,
+              24
             ]
           }
         ],
@@ -511,55 +544,100 @@
             {
               "section": ".bss",
               "original": [
-                5,
-                6,
-                9,
-                10,
-                11,
+                7,
                 12,
                 17,
                 20,
-                23,
-                24,
-                27,
-                28,
-                29
+                21,
+                26,
+                33,
+                36,
+                37,
+                40,
+                41,
+                44,
+                47
               ],
               "desired": [
-                5,
-                9,
+                20,
+                7,
+                21,
+                17,
+                26,
                 12,
-                6,
-                11,
-                10,
-                23,
-                24,
-                27,
-                28,
+                33,
+                36,
+                37,
+                40,
+                41,
+                44,
+                47
+              ],
+              "slots": [
+                7,
+                12,
                 17,
                 20,
-                29
+                21,
+                26,
+                33,
+                36,
+                37,
+                40,
+                41,
+                44,
+                47
+              ]
+            },
+            {
+              "section": ".rodata",
+              "original": [
+                31,
+                45
+              ],
+              "desired": [
+                45,
+                31
+              ],
+              "slots": [
+                31,
+                45
+              ]
+            },
+            {
+              "section": ".data.afterDoorPmf",
+              "original": [
+                5,
+                8,
+                10,
+                15,
+                18,
+                22,
+                24
+              ],
+              "desired": [
+                15,
+                8,
+                10,
+                5,
+                18,
+                22,
+                24
               ],
               "slots": [
                 5,
-                6,
-                9,
+                8,
                 10,
-                11,
-                12,
-                17,
-                20,
-                23,
-                24,
-                27,
-                28,
-                29
+                15,
+                18,
+                22,
+                24
               ]
             }
           ],
-          "symbolIndices": 13,
+          "symbolIndices": 22,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 9,
           "error": null
         },
         "errors": null
@@ -1268,7 +1346,7 @@
       "target_address": "0x021489ac"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148448",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1278,7 +1356,7 @@
       "target_address": "0x021467d4"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148450",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1288,7 +1366,7 @@
       "target_address": "0x02146828"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148458",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1298,7 +1376,7 @@
       "target_address": "0x021464f4"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148460",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1308,7 +1386,7 @@
       "target_address": "0x021467e8"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148468",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1318,7 +1396,7 @@
       "target_address": "0x02146640"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148470",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1328,7 +1406,7 @@
       "target_address": "0x02146468"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148478",
       "type": "R_ARM_ABS32",
       "kind": "load",

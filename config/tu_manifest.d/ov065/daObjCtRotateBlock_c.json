@@ -39,9 +39,10 @@
       "end": "0x0211c0b0"
     },
     {
-      "name": ".data",
+      "name": ".data.afterDossy",
       "start": "0x0211cfa4",
-      "end": "0x0211cfac"
+      "end": "0x0211cfac",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -427,7 +428,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -472,7 +473,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.afterDossy",
           "start": "0x0211cfa4",
           "end": "0x0211cfac",
           "differingBytes": 0,
@@ -481,7 +482,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 25
+          "LICENSED": 28
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -492,26 +493,24 @@
           {
             "section": ".init",
             "original": [
-              62
+              66
             ],
             "desired": [
-              62
+              66
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              60
+              64
             ],
             "desired": [
-              60
+              64
             ]
           },
           {
             "section": ".bss",
             "original": [
-              31,
-              32,
               33,
               34,
               35,
@@ -521,21 +520,43 @@
               39,
               40,
               41,
-              42
+              42,
+              43,
+              44
             ],
             "desired": [
-              32,
-              38,
               34,
-              42,
               40,
               36,
-              31,
+              44,
+              42,
+              38,
               33,
-              37,
-              39,
               35,
-              41
+              39,
+              41,
+              37,
+              43
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              45
+            ],
+            "desired": [
+              45
+            ]
+          },
+          {
+            "section": ".data.afterDossy",
+            "original": [
+              5,
+              6
+            ],
+            "desired": [
+              5,
+              6
             ]
           }
         ],
@@ -544,8 +565,6 @@
             {
               "section": ".bss",
               "original": [
-                31,
-                32,
                 33,
                 34,
                 35,
@@ -555,25 +574,25 @@
                 39,
                 40,
                 41,
-                42
+                42,
+                43,
+                44
               ],
               "desired": [
-                32,
-                38,
                 34,
-                42,
                 40,
                 36,
-                31,
+                44,
+                42,
+                38,
                 33,
-                37,
-                39,
                 35,
-                41
+                39,
+                41,
+                37,
+                43
               ],
               "slots": [
-                31,
-                32,
                 33,
                 34,
                 35,
@@ -583,7 +602,9 @@
                 39,
                 40,
                 41,
-                42
+                42,
+                43,
+                44
               ]
             }
           ],

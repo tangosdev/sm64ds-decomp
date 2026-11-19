@@ -39,9 +39,10 @@
       "end": "0x0211c0d0"
     },
     {
-      "name": ".data",
+      "name": ".data.afterDossy",
       "start": "0x0211d26c",
-      "end": "0x0211d270"
+      "end": "0x0211d270",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -351,7 +352,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -396,7 +397,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.afterDossy",
           "start": "0x0211d26c",
           "end": "0x0211d270",
           "differingBytes": 0,
@@ -405,7 +406,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 17
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -416,34 +417,52 @@
           {
             "section": ".init",
             "original": [
-              50
+              52
             ],
             "desired": [
-              50
+              52
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              48
+              50
             ],
             "desired": [
-              48
+              50
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              8,
-              14,
-              21
+              6,
+              10,
+              16,
+              23
             ],
             "desired": [
-              8,
-              5,
-              21,
-              14
+              6,
+              10,
+              23,
+              16
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              9
+            ],
+            "desired": [
+              9
+            ]
+          },
+          {
+            "section": ".data.afterDossy",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
             ]
           }
         ],
@@ -452,22 +471,22 @@
             {
               "section": ".bss",
               "original": [
-                5,
-                8,
-                14,
-                21
+                6,
+                10,
+                16,
+                23
               ],
               "desired": [
-                8,
-                5,
-                21,
-                14
+                6,
+                10,
+                23,
+                16
               ],
               "slots": [
-                5,
-                8,
-                14,
-                21
+                6,
+                10,
+                16,
+                23
               ]
             }
           ],

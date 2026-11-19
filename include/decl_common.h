@@ -486,7 +486,7 @@ extern signed char SUBLEVEL_LEVEL_TABLE[];
 extern signed char data_0209b44c;
 extern signed char data_ov002_02110af0;
 extern signed char data_ov002_02111148;
-extern union Matrix4x3 data_ov006_0213c85c;
+extern struct Matrix4x3 data_ov006_0213c85c;
 extern struct VecFx32 data_ov002_0210a590;
 extern struct Vector3 data_ov002_0210f3b0;
 extern struct Vector3 sPetalUpAxis;
@@ -732,9 +732,9 @@ extern void func_0204a17c(void*, void*);
 extern void func_0204ae2c(void *, void *, void *);
 extern void func_0204d9a0(void *, void *);
 extern void MTX_Copy33To44_(void *, void *);
-extern void MTX_RotX43_(union Matrix4x3 *, int, int);
-extern void MTX_RotY43_(union Matrix4x3 *, int, int);
-extern void MTX_RotZ43_(union Matrix4x3 *, int, int);
+extern void MTX_RotX43_(struct Matrix4x3 *, int, int);
+extern void MTX_RotY43_(struct Matrix4x3 *, int, int);
+extern void MTX_RotZ43_(struct Matrix4x3 *, int, int);
 #ifndef __cplusplus
 /* The ov007 spring code's C spelling, over the int words of its vectors.
    C++ sees the SDK's own declaration, from nitro/fx/fx_vec.h. */
@@ -906,7 +906,6 @@ extern void*data_ov016_021136e4[];
 extern void*data_ov016_021149d4[];
 extern void*data_ov023_02112088;
 /* data_ov026_02113f3c is defined by d_a_water_tatumaki.cpp. */
-extern void*data_ov027_02112ca4[3];
 extern void*data_ov034_02113838[];
 extern void*data_ov034_0211384c[];
 extern void*data_ov034_02113860[];
@@ -916,7 +915,6 @@ extern void*data_ov034_0211389c[];
 extern void*data_ov034_021138b0[];
 extern void*data_ov051_021116b0[];
 extern void*data_ov065_0211c0a8[];
-extern void*data_ov065_0211cd68[];
 extern void*data_ov065_0211cfd8[];
 extern void*data_ov065_0211d768[];
 extern void*data_ov065_0211d770[];

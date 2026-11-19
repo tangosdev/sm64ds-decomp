@@ -30,9 +30,10 @@
       "end": "0x02147dfc"
     },
     {
-      "name": ".data",
+      "name": ".data.afterDoorPmf",
       "start": "0x02148334",
-      "end": "0x02148448"
+      "end": "0x02148448",
+      "input_section": ".data"
     },
     {
       "name": ".bss",
@@ -439,7 +440,7 @@
   ],
   "relocations": [
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148334",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -449,7 +450,7 @@
       "target_address": "0x02145948"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214833c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -459,7 +460,7 @@
       "target_address": "0x02145988"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148344",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -469,7 +470,7 @@
       "target_address": "0x02145b9c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214834c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -479,7 +480,7 @@
       "target_address": "0x02145b7c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148354",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -489,7 +490,7 @@
       "target_address": "0x02145ab4"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214835c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -499,7 +500,7 @@
       "target_address": "0x02145b10"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148364",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -509,7 +510,7 @@
       "target_address": "0x02145c2c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214836c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -519,7 +520,7 @@
       "target_address": "0x02145c58"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148374",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -529,7 +530,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148378",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -539,7 +540,7 @@
       "target_address": "0x02148380"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214837c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -549,7 +550,7 @@
       "target_address": "0x0208e390"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -559,7 +560,7 @@
       "target_address": "0x021461d4"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -569,7 +570,7 @@
       "target_address": "0x02148374"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -579,7 +580,7 @@
       "target_address": "0x0214612c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -589,7 +590,7 @@
       "target_address": "0x02011268"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -599,7 +600,7 @@
       "target_address": "0x02011244"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -609,7 +610,7 @@
       "target_address": "0x02145fbc"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -619,7 +620,7 @@
       "target_address": "0x02011220"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -629,7 +630,7 @@
       "target_address": "0x02011214"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -639,7 +640,7 @@
       "target_address": "0x021460dc"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -649,7 +650,7 @@
       "target_address": "0x02010fd4"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -659,7 +660,7 @@
       "target_address": "0x02010fc8"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -669,7 +670,7 @@
       "target_address": "0x02145fe4"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -679,7 +680,7 @@
       "target_address": "0x02010f78"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -689,7 +690,7 @@
       "target_address": "0x02010f6c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x021483fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -699,7 +700,7 @@
       "target_address": "0x02145fe0"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148400",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -709,7 +710,7 @@
       "target_address": "0x0204357c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148404",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -719,7 +720,7 @@
       "target_address": "0x0204349c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148408",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -729,7 +730,7 @@
       "target_address": "0x02043494"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214840c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -739,7 +740,7 @@
       "target_address": "0x021458d4"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148410",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -749,7 +750,7 @@
       "target_address": "0x02145904"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148414",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -759,7 +760,7 @@
       "target_address": "0x02010160"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148418",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -769,7 +770,7 @@
       "target_address": "0x02010154"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214841c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -779,7 +780,7 @@
       "target_address": "0x0201014c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148420",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -789,7 +790,7 @@
       "target_address": "0x02010148"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148424",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -799,7 +800,7 @@
       "target_address": "0x02010144"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148428",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -809,7 +810,7 @@
       "target_address": "0x02010140"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214842c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -819,7 +820,7 @@
       "target_address": "0x0201013c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148430",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -829,7 +830,7 @@
       "target_address": "0x02010138"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148434",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -839,7 +840,7 @@
       "target_address": "0x02010134"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148438",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -849,7 +850,7 @@
       "target_address": "0x02010130"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x0214843c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -859,7 +860,7 @@
       "target_address": "0x0201012c"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148440",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -869,7 +870,7 @@
       "target_address": "0x02010124"
     },
     {
-      "section": ".data",
+      "section": ".data.afterDoorPmf",
       "source": "0x02148444",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1271,7 +1272,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -1303,7 +1304,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.afterDoorPmf",
           "start": "0x02148334",
           "end": "0x02148448",
           "differingBytes": 0,
@@ -1329,23 +1330,23 @@
           {
             "section": ".init",
             "original": [
-              86
+              87
             ],
             "desired": [
-              86
+              87
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              84
+              85
             ],
             "desired": [
-              84
+              85
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.afterDoorPmf",
             "original": [
               5,
               7,
@@ -1404,7 +1405,7 @@
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.afterDoorPmf",
               "original": [
                 5,
                 7,

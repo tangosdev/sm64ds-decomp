@@ -26,7 +26,13 @@ enum daObjSlIceBlock_c_AssetId { ASSET_SL_ICE_BROCK_BMD = 0x06b1, ASSET_SL_ICE_B
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 
-extern CLPS_Block data_ov027_02113108;
+/* The sliding ice block's collision-property block handed to dBgW_KcMbg::SetFile. */
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov027_02113108 = {0x53504c43, 0x00020008, 0x00004fc7, 0x000000ff,
+                                  0x04004fc7, 0x000000ff, 0xffffffff, 0xffffffff};
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and destroy

@@ -1,14 +1,23 @@
     .text       start:0x021111a0 end:0x02112b14 kind:code align:32
-    .rodata     start:0x02112b14 end:0x02112cb0 kind:rodata align:4
+    .rodata start:0x02112b14 end:0x02112ca4 kind:rodata align:4
+    .rodata.dfdrTable start:0x02112ca4 end:0x02112cb0 kind:rodata align:4
     .init       start:0x02112cb0 end:0x02112fc4 kind:code align:4
     .ctor       start:0x02112fc4 end:0x02112fd4 kind:rodata align:4
-    .data       start:0x02112fe0 end:0x02113be0 kind:data align:32
+    .data.pre start:0x02112fe0 end:0x021130e8 kind:data align:32
+    .data.pgDfdrClps start:0x021130e8 end:0x02113108 kind:data align:4
+    .data.iceBlockClps start:0x02113108 end:0x02113128 kind:data align:4
+    .data.gap0 start:0x02113128 end:0x021138f4 kind:data align:4
+    .data.donketu start:0x021138f4 end:0x02113928 kind:data align:4
+    .data.gap1 start:0x02113928 end:0x021139c4 kind:data align:4
+    .data.dfdrDesc start:0x021139c4 end:0x021139e4 kind:data align:4
+    .data start:0x021139e4 end:0x02113be0 kind:data align:4
     .bss        start:0x02113be0 end:0x02113d20 kind:bss align:32
 src/game/actors/d_a_obj_sl_ice_block.cpp:
     complete
     .text start:0x021111a0 end:0x021115c4
     .init start:0x02112cb0 end:0x02112d1c
     .ctor start:0x02112fc4 end:0x02112fc8
+    .data.iceBlockClps start:0x02113108 end:0x02113128
     .bss start:0x02113be0 end:0x02113c08
 
 src/game/actors/d_a_i_donketu.cpp:
@@ -16,6 +25,7 @@ src/game/actors/d_a_i_donketu.cpp:
     .text start:0x021115c4 end:0x021118c8
     .init start:0x02112d1c end:0x02112df8
     .ctor start:0x02112fc8 end:0x02112fcc
+    .data.donketu start:0x021138f4 end:0x02113928
     .bss start:0x02113c08 end:0x02113c6c
 
 src/game/actors/d_a_pg_dfdr.cpp:
@@ -23,6 +33,9 @@ src/game/actors/d_a_pg_dfdr.cpp:
     .text start:0x021118c8 end:0x021120c4
     .init start:0x02112df8 end:0x02112f70
     .ctor start:0x02112fcc end:0x02112fd0
+    .rodata.dfdrTable start:0x02112ca4 end:0x02112cb0
+    .data.pgDfdrClps start:0x021130e8 end:0x02113108
+    .data.dfdrDesc start:0x021139c4 end:0x021139e4
     .bss start:0x02113c6c end:0x02113d04
 
 src/game/actors/d_a_snm_bth.cpp:
