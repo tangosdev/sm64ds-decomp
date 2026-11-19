@@ -1,11 +1,11 @@
 //cpp
 #include "Ov007Mesh.h"
+#include "Ov007MenuMem.h"
 
 /* func_ov007_020c8098 is a long-branch veneer to func_ov007_020c3d1c, the
  * free hook. */
 extern "C" void func_ov007_020c8098(void *p);
 extern "C" void func_ov007_020c7368(Ov007Grid *grid);
-extern "C" void func_ov007_020c3d1c(void *self);
 
 /* Frees the mesh func_ov007_020cbbb0 builds: its buffers, every cell link,
  * the link table, the grid (func_ov007_020c7368) and the mesh itself. */

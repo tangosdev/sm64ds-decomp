@@ -53,6 +53,7 @@ enum daObjEwbIce_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 struct CLPS_Block;
 
@@ -137,7 +138,6 @@ enum {
 };
 
 extern "C" {
-unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: d_bg_w.cpp defines these; no header declares them. */
 }
 void func_02012694(unsigned int id, const Vector3 *pos);

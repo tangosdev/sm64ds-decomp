@@ -35,9 +35,7 @@ enum daDonketu_c_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "LevelRng.h"
-
-/* The arm9 RNG step has no shared header; data_0209e650 is its state. */
-extern "C" int RandomIntInternal(int *seed);
+#include "math/CalcLib.h"
 
 /* The Bully's resource block (daOts_c.h); overlay .data owns the bytes. */
 extern BullyResourceConfig data_ov064_0211b834;

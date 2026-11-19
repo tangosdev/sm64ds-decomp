@@ -124,9 +124,6 @@ union KuriKingFreeState {
 };
 
 extern dCamera_c *gCamera;
-extern "C" int RandomIntInternal(int *seed);
-extern "C" u16 DecIfAbove0_Short(u16* p);
-s16 Vec3_VertAngle(const struct Vector3 *v1, const struct Vector3 *v0);
 void func_02012694(u32 a, const Vector3 *b);
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. */
@@ -139,7 +136,6 @@ namespace Sound {
 void ChangeMusicVolume(u32 a, int f);
 }
 extern unsigned short data_ov074_02122e04[];
-extern "C" int ApproachAngle(short *, short, int, int, int);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
 extern "C" int Math_Function_0203b14c(int* p, int a, int b, int d, int e);
@@ -147,8 +143,6 @@ extern unsigned short data_ov074_02122dfc[];
 extern const int data_ov074_0212290c[4] = {0, 0x320000, 0x258000, 0x190000};
 extern const int data_ov074_0212291c[4] = {0, 0, 0x70000, 0};
 extern float data_ov074_02122e4c[];
-extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern union Matrix4x3 data_020a0e68;
 extern union Matrix4x3 IDENTITY_MATRIX4X3;
@@ -179,7 +173,6 @@ extern void *data_ov074_02122e5c[];
    overlay; ov074's image has no copy, so these bind cross-module. */
 extern BMA_File data_ov010_021123f4;
 extern BTA_File data_ov010_021124ac;
-extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};

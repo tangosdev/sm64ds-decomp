@@ -29,7 +29,6 @@ struct Vector3_16;
 extern "C" {
 int AngleDiff(int, int);
 }
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* ov085 statics. This file does not include decl_common.h.
  * data_ov085_0212f280 is the seven animation files, defined below. */

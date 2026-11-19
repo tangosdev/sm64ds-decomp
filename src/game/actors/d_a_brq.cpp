@@ -42,10 +42,6 @@
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
-/* arm9 C helpers with no shared header. */
-extern "C" {
-unsigned char DecIfAbove0_Byte(unsigned char *p);
-}
 extern signed char gCurrentSublevel;
 
 /* Inferred eight-byte resource-family ABI views, not recovered original

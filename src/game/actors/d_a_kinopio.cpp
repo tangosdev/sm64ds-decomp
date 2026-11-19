@@ -35,6 +35,7 @@
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
 #include "Sound.h"
+#include "math/CalcLib.h"
 
 struct BCA_File;
 struct BMD_File;
@@ -88,15 +89,12 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
    it arrived, and that is load-bearing: St_Talk_Main tests the result to decide
    whether the turn has finished.) */
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s32 AngleDiff(s32 a, s32 b);
 
 /* game state */
 int func_02013a44(void);
 int ObjectMessageIDToActualMessageID(s16 id);
 }
-s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int func_020138dc(void);
 int IsStarCollectedInCurLevel(int starID);
 u8 NumStars(void);

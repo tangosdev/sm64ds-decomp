@@ -87,7 +87,6 @@ struct IrisScanline {
 extern "C" {
 /* Functions the members call need C linkage at file scope. Data names do
    not mangle, so the data_* declarations stay next to their users. */
-extern int RandomIntInternal(int *seed);
 extern s32 GetGameLanguage(void);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
@@ -106,6 +105,7 @@ extern void Luigi_PushScanlineRecord(void);
 extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
 #include "nitro/os/cache.h"
 #include "nitro/mi/memory.h"
+#include "math/CalcLib.h"
 
 namespace cstd {
 int sqrt(unsigned long long x);
@@ -1543,7 +1543,6 @@ extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Ov004_Deallocate(void *ptr);
 extern void GX_LoadBG3Scr(void *, u32, u32);
-extern void GXS_LoadBG2Scr(const void *, u32, u32);
 extern void Deallocate(void *);
 extern void Mg_SetTopScreenYOffset(int);
 extern int sMgResultsBannerX;

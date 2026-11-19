@@ -47,6 +47,7 @@
 #include "math/CalcLib.h"
 #include "daObjBC_Switch_c.h"
 #include "daObjFl_Coin_c.h"
+#include "math/MtxStack.h"
 
 namespace Event { s32 GetBit(u32 bit); void SetBit(u32 bit); }
 
@@ -83,20 +84,12 @@ struct CoinFlagBits {
  * does not mangle them a second time. */
 
 extern "C" int SublevelToLevel(int i);
-extern "C" {
-extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern unsigned short DecIfAbove0_Short(unsigned short* p);
-}
 
 extern void GiveCoins(int idx, int amount);
 extern int GiveRedCoins(int i, int amt);
 extern s8 NumRedCoins(void);
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern int SurfaceInfo_TestFlag0x20(int *p);
-
-extern "C" {
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-}
 
 extern unsigned char gGameMode;
 

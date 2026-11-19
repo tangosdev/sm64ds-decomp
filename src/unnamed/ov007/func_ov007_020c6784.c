@@ -1,7 +1,7 @@
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
+#include "Ov007MenuMem.h"
 
-extern int MenuMem_GetMaxAllocSize(void);
 extern int func_ov007_020c5db0(void *c);
 
 /* Loads a whole drawing into the picker as count committed strokes: resets

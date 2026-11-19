@@ -62,12 +62,6 @@ extern fBase_c *gCurrentScene;
 typedef void (Heyho::*HeyhoMotion)();
 
 extern "C" {
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
-extern int NormalizeVec3IfNonZero(Vector3 *v);
-
 
 extern int sHeyhoUnsettledCount;
 extern int sJumpComboCount;

@@ -111,7 +111,6 @@ extern daPopoi_StateRecord data_ov077_02127cd8;
 extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
-extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
 extern int func_ov002_020db674(daPly_c *player, int a1, int a2, int a3);

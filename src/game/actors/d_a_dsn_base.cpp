@@ -54,15 +54,6 @@ enum {
                                the particle path in StateSlam */
 };
 
-/* arm9 C helpers with no shared header.
- * DecIfAbove0_Byte is spelled from its definition at src/DecIfAbove0_Byte.c:
- * unsigned char in, unsigned char out. RandomIntInternal's sites pass the RNG
- * state. */
-extern "C" {
-extern u8 DecIfAbove0_Byte(u8 *);
-extern int RandomIntInternal(int *);
-}
-
 /* ROM ordinals 0 and 1 -- ov091 0x02132d04 (D0, 0x68) and 0x02132d6c (D1,
  * 0x54). No source here: both destructor variants come from the ONE
  * inline body in include/daDsnBase_c.h, which the class's descendants need

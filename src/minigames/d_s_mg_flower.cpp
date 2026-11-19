@@ -50,7 +50,6 @@ extern "C" {
 extern void Mg_SetTopScreenYOffset(int n);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
-void Vec2_Sub(int *out, int *a, int *b);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
 void DecompressLZ16(void *src, void *dst);

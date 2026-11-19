@@ -351,8 +351,6 @@ int daPropeller_Heyho_c::CleanupResources()
 #include "common.h"
 #include "math/MtxStack.h"
 
-extern Matrix4x3 data_020a0e68;
-
 
 /* Refreshes the draw matrices: the model matrix from position >> 3 (Vec3_Asr by 3)
  * and the three angles, copied into mAnmModel.mat4x3; the shadow matrix from the
@@ -397,10 +395,8 @@ int daPropeller_Heyho_c::func_ov070_0211ffa8() {
 /* -------------------------------------------------------------------------- */
 
 typedef short s16;
-extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
-extern Matrix4x3 data_020a0e68;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235ac;
 
@@ -479,12 +475,10 @@ int daPropeller_Heyho_c::func_ov070_0211fd60() {
 }
 
 /* -------------------------------------------------------------------------- */
-extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern signed char gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
-extern Matrix4x3 data_020a0e68;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_0212358c;
@@ -611,9 +605,7 @@ extern s8 gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern s32 data_0209f32c;
-extern Matrix4x3 data_020a0e68;
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
-extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation
  * has finished: the first time (mStateStep == 0) it starts the file-02123510
  * animation and sets mStateStep = 1; if mHitDuringAttack == 1 (set by the hit
@@ -785,7 +777,6 @@ int daPropeller_Heyho_c::func_ov070_0211f5f0() {
 }
 
 /* -------------------------------------------------------------------------- */
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int a, const Vector3 *p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;

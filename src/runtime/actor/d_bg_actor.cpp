@@ -33,12 +33,6 @@
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
 
-/* ROM symbols with no header of their own, spelled to agree with their
- * definitions. */
-extern "C" {
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
 /* --- Collision events, 0x020eea84..0x020ef320. ------------------------------
  *
  * The character side of a hit on a level object: given the mover's dBgCh_Actr

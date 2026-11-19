@@ -198,7 +198,6 @@ extern "C" {
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
                               const Vector3 *v);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
 }
 

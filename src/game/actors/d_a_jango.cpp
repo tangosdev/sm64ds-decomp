@@ -133,9 +133,6 @@ struct BCA_File;
 
 extern signed char gCurrentSublevel;
 void func_02012694(unsigned int, const Vector3 *);
-s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;

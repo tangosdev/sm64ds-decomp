@@ -19,10 +19,6 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
-/* Shared math worker.
-   local extern: no header in include/ declares it. */
-void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
-
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
    below), and the scratch scaled matrix.
    local extern: no header in include/ declares them. */

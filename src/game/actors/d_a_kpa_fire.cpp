@@ -107,8 +107,6 @@ extern "C" {
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
-extern int RandomIntInternal(int *seed);
-
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose
  * rows variant 0 reads (02119364); see the handlers below. */
 extern const int data_ov060_0211934c[] = {-0x8000, -0x6000, -0x6000};

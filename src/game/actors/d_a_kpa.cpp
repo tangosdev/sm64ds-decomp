@@ -282,7 +282,6 @@ extern PmfEnt data_ov060_0211aeb4[];
 extern PmfEnt data_ov060_0211aed4[];
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
-extern int RandomIntInternal(int *seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
 extern KpaAnimationFileHandle data_ov060_0211acd8;
 extern KpaAnimationFileHandle data_ov060_0211acf0;

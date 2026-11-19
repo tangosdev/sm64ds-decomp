@@ -68,6 +68,7 @@ enum d_a_jgm_AssetId {
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* File-scope objects at the end of this file construct the seven resource
  * handles (model files 0x34c/0x429/0x42a, animation files 0x34f/0x34d,
@@ -115,14 +116,7 @@ extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
-extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-
 extern int *Vec3_LslInPlace(void *v, int sh);
-extern void Vec3_Asr(void *d, void *s, int sh);
 
 }
 

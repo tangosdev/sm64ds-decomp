@@ -122,6 +122,8 @@
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* Actor IDs, from the profile ids in symbols/actor_debug_names.tsv: 276 and
    277 are this class's two profiles, 331 is the 1UP logo it spawns. */
@@ -169,20 +171,6 @@ enum {
    (0x020af908) calls ordinal 19 (0x020af924). Both spellings are the
    definitions' own, so nothing below has to be adapted to them. */
 
-/* File-scope extern "C" region covering the external functions the member
-   bodies below call. mwccarm 2004/b56 gives a block-scope `extern` declaration
-   inside a member body C++ linkage (and rejects `extern "C"` at block scope
-   outright), so the recovered per-callsite views these shards each declared
-   locally cannot stay where they were; one spelling per symbol is hoisted here.
-   The views differed only in pointer types, so marshalling -- and the emitted
-   bytes -- are unchanged. */
-extern "C" {
-int Vec3_HorzLen(const Vector3*);
-short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
-void Vec3_Asr(Vector3 *, Vector3 *, int);
-void Matrix4x3_FromRotationY(void*, int);
-void Matrix4x3_FromTranslation(void*, int, int, int);
-}
 void GiveCoins(int, int);
 /* ONE definition, both variants. The complete-object destructor (D1) tears the
    four members down in exact reverse of the factories' construction order --

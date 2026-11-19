@@ -36,6 +36,8 @@ enum Scuttlebug_AssetId {
 #include "Particle__System.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* ------------------------------------------------------------------------
  * Local value shapes carried from the legacy one-function files.
@@ -59,15 +61,6 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
  * ------------------------------------------------------------------------ */
 
 extern "C" int AngleDiff(int a, int b);
-extern "C" unsigned short DecIfAbove0_Short(void *p);
-/* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short (void *) */
-extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-/* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short (void *) */
-extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-
-extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
-extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 
 void func_02012694(unsigned int id, const Vector3 *pos);
 
@@ -75,7 +68,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
  * back-references the pointer type). */
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
 
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
  * order, so this file is written ROM-descending and nearly every intra-TU call

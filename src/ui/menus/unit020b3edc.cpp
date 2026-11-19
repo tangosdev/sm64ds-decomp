@@ -34,6 +34,7 @@
 #include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "dExtAnmTexPat_c.h"
+#include "Ov007MenuMem.h"
 
 typedef void *(*Ov007FileLoad)(u16 id);
 typedef void (*Ov007FileRelease)(void *file);
@@ -44,7 +45,6 @@ extern void *data_ov007_02103370[];
 /* the file id each slot loads */
 extern const u16 data_ov007_020d7584[];
 
-extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void DecompressLZ16(void *src, void *dst);
 
 extern "C" void func_ov007_020b3edc(int idx);

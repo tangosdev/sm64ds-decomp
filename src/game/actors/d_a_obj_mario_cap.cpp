@@ -130,6 +130,8 @@ enum daObjMarioCap_c_AssetId {
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* --------------------------------------------------------------------------
  * Local shapes the merged members need.
@@ -214,19 +216,7 @@ extern "C" {
 
 /* -- other modules -- */
 
-unsigned short DecIfAbove0_Short(unsigned short *p);
-
-fx32 Vec3_HorzLen(const Vector3 *v);
-void  Vec3_MulScalarInPlace(void *v, int s);
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *out, Vector3 *v, int shift);
-
-void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void  Matrix4x3_FromRotationY(void *m, int angle);
-
 /* -- data -- */
-extern Matrix4x3      data_020a0e68;
 extern int            data_02092138;
 extern u8 gGameMode;
 

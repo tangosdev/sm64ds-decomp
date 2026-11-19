@@ -100,7 +100,6 @@ extern void *sSmartballSlotFrameSprite;
 extern void *sSmartballSlotReelEndSprite;
 extern void *sSmartballSlotReelLowerSprite;
 extern void *sSmartballSlotReelUpperSprite;
-extern void Vec2_Sub(int *o, int *a, int *b);
 extern OamAttr *sSmartballDokanSprites[];
 extern OamAttr *sSmartballAnaSprites[];
 extern int func_0203d570(const Vector2 *a, const Vector2 *b);

@@ -80,10 +80,6 @@ enum {
 /* How fast a launched book travels: 50 units a frame. */
 enum { kFlightSpeed = 0x32000 };
 
-extern "C" {
-void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
-}
-
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
  * is book 0, then book 1, then book 2. */

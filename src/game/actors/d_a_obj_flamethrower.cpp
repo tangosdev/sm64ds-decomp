@@ -68,10 +68,6 @@ extern signed char gCurrentSublevel;
 /* Second particle parameter per segment: 0xe61 + i * 0x689. */
 extern short data_ov095_02136f98[];
 
-extern "C" {
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-}
-
 /* data_ov095_02136f80 (decl_common.h) is the per-segment scale,
  * 0x1000 + i * 0x745: collision radius and height are that times
  * 0x14 and 0x28, and the particle call takes it too.

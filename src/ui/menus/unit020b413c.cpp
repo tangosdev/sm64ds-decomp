@@ -62,6 +62,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/g3imm_cmd.h"
 #include "math/ProgressRatio.h"
+#include "Ov007MenuMem.h"
 
 /* The 0xc-byte item rows at data_ov007_020d77d8, one per item id.
  * symbols.txt also names the columns (data_ov007_020d77dc flags,
@@ -127,8 +128,6 @@ extern "C" void func_ov007_020c1d78(int i);
 extern "C" void func_ov007_020c1d8c(int i);
 extern int func_ov007_020c1da0(int i);
 extern int func_ov007_020c3598(int value, int count, char *digits, int base);
-extern "C" void func_ov007_020c3d1c(void *p);
-extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c9080(void *tween);
 extern "C" struct Ov007Tween *func_ov007_020c908c(s32 *out);
 

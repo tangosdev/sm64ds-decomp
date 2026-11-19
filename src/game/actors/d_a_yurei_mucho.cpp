@@ -47,7 +47,6 @@ struct V3A { int w[3]; };
 /* Scalar ABI declarations retained by this TU. */
 
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
-extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void func_02012694(unsigned int id, const Vector3 *v);
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */

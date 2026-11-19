@@ -144,11 +144,9 @@ enum {
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 void func_02012694(unsigned int a, const Vector3 *pos);
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(int);
 extern "C" {
 int func_ov002_020df7f4(void *c);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the

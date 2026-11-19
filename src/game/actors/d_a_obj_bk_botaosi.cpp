@@ -87,7 +87,6 @@ extern u8 gCurrentStarId;
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
 int AngleDiff(int a, int b);
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 int IsStarCollectedInCurLevel(int starID);
 

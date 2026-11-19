@@ -313,8 +313,6 @@ extern void DecompressLZ16(void *src, void *dst);
 }
 
 extern "C" void Deallocate(void *p);
-extern "C" void GXS_LoadBG1Scr(const void *src, int offset, int count);
-extern "C" void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
 
 extern void func_02012694(unsigned int, const Vector3 *);
 extern "C" {
@@ -329,13 +327,9 @@ extern VecFx32 data_ov002_0210b958;
 }
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
-extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern "C" {
 
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern int data_0208ee44;
@@ -346,7 +340,6 @@ extern void *gPlayers[];
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 extern int data_ov002_0210b964[3];
-extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
 extern char data_ov002_0211094c;

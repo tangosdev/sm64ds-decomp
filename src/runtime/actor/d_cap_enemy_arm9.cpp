@@ -36,8 +36,6 @@ extern SharedFilePtr *data_ov002_020ff028[];
 extern unsigned char gGameMode;
 extern unsigned char data_0208a0e0;
 extern daPly_c *gPlayers[];
-
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
 /* gGameMode is 1 in VS mode: PrepareVsMode stores it. This int-returning

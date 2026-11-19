@@ -76,9 +76,6 @@ extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern dCamera_c *gCamera;  /* CAMERA */
 
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 int AngleDiff(int a, int b);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 /* local extern: no header this file includes declares it, and it must keep C
@@ -86,7 +83,6 @@ int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
  * the position has reached the target. */
 s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 }
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 namespace cstd {
 s16 atan2(s32, s32);

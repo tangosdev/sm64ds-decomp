@@ -49,9 +49,6 @@ struct BasabasaAnimationFileHandle : SharedFilePtr {
  * file-local struct, so no shared spelling agrees with it yet. */
 
 void func_02012694(unsigned int id, const Vector3 *pos);
-extern "C" {
-void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-}
 
 extern BasabasaAnimationFileHandle data_ov065_0211d690; /* flying animation */
 extern BasabasaModelFilePtr data_ov065_0211d698;        /* flying model */

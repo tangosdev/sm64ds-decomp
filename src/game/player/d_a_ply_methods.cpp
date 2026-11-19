@@ -123,8 +123,6 @@ int func_ov002_020d600c(daPly_c *);
 int func_ov002_020d9298(daPly_c *);
 }
 
-extern "C" daPly_c *daPly_c_classInit();
-
 /* Engine and overlay symbols used here that no header declares yet. Each
  * used to be repeated inside every body that needed it; C linkage keeps
  * the names unmangled, as those body-local copies had it. */
@@ -826,7 +824,6 @@ extern int Math_Function_0203b14c(void *, int a, int b, int c, int d);
 extern "C" int SublevelToLevel(int);
 extern int SurfaceInfo_TestFlag0x20(int *);
 extern "C" {
-extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
 extern signed char gCurrentSublevel;
 extern const unsigned int data_ov002_020ff220[4] = {71, 72, 45, 100};
 extern SharedFilePtr *const data_ov002_020ff480[196] = {
@@ -978,7 +975,6 @@ extern u8 gShowTouchScreenArrows;
 extern void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState);
 extern u8 NumStars(void);
 
-extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int func_ov002_020f02c8(int sel);
 extern "C" {
 extern int AngleDiff(int a, int b);
