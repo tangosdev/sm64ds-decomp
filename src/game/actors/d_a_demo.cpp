@@ -130,6 +130,7 @@ enum daDemo_c_AssetId {
 #include "SaveData.h"
 #include "dExtAnmTexPat_c.h"
 #include "dCamera_c.h"
+#include "daSBird_c.h"
 #include "LevelRng.h"
 #include "cstd.h"
 #include "math/Approach.h"
@@ -3409,7 +3410,7 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618((SharedFilePtr *)data_ov009_02113c20, 1, data_ov002_0210b604,
+                ->func_ov002_020f6618(&data_ov009_02113c20, 1, data_ov002_0210b604,
                                       0, 0, 0, -1) == 0)
             return 0;
     }
@@ -3490,7 +3491,7 @@ DemoModelFile data_ov002_02110b78(0x475);
    the BCA list and the BTP list for param1 0x12 (0x0210b60c, 0x0210b608) and
    0x13 (0x0210b610, 0x0210b600), and the BCA list for 0x1a..0x2d. */
 SharedFilePtr *data_ov002_0210b600[1] = {&data_ov002_02110b10};
-SharedFilePtr *data_ov002_0210b604[1] = {(SharedFilePtr *)data_ov009_02113c28};
+SharedFilePtr *data_ov002_0210b604[1] = {&data_ov009_02113c28};
 SharedFilePtr *data_ov002_0210b608[1] = {&data_ov085_0213073c};
 SharedFilePtr *data_ov002_0210b60c[1] = {&data_ov085_02130744};
 SharedFilePtr *data_ov002_0210b610[1] = {&data_ov002_02110bf8};

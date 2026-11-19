@@ -170,12 +170,6 @@
   "data_ov002_02110aa4": {
    "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"]
   },
-  "data_ov009_02113c20": {
-   "src/game/actors/d_a_s_bird.cpp": ["return:SBirdModelFilePtr"]
-  },
-  "data_ov009_02113c28": {
-   "src/game/actors/d_a_s_bird.cpp": ["return:SBirdAnimationFilePtr"]
-  },
   "data_ov026_02113f4c": {
    "src/game/actors/d_a_water_suikomi.cpp": ["return:Vector3"]
   },
