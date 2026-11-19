@@ -34,7 +34,7 @@
  *                                                       OBJ_MARIO_CAP with 0x12 ORed into param1 and
  *                                                       removes itself a frame later. Otherwise:
  *                                                       touch check, and PlayerLoseCap + removal
- *                                                       below the kill height (data_02092138)
+ *                                                       below the kill height (gLevelMinY)
  *   df84    InitTimedWait  TimedWait   1                200-frame timer; removed when it runs out,
  *                                                       on touching the ground, below the kill
  *                                                       height, or off screen (mFlags & 8)
@@ -217,7 +217,7 @@ extern "C" {
 /* -- other modules -- */
 
 /* -- data -- */
-extern int            data_02092138;
+extern int gLevelMinY;
 extern u8 gGameMode;
 
 extern daObjMarioCapFileHandle data_ov002_0210de00, data_ov002_0210de08;
@@ -751,7 +751,7 @@ int daObjMarioCap_c::InitWait()
  * reads 1, the frame after the spawn. Otherwise: if there is no override
  * matrix, widens the clip ranges (clip offset and radius 50 units, clip and
  * far distance 4096 units); runs the touch check; and below the kill height
- * (STAR_CAP_MIN_POS_Y, data_02092138) marks the cap lost for the player
+ * (STAR_CAP_MIN_POS_Y, gLevelMinY) marks the cap lost for the player
  * (SaveData::PlayerLoseCap) and removes it. The spawn arguments pass the
  * cap's own area ID. */
 int daObjMarioCap_c::Wait() {
@@ -770,7 +770,7 @@ int daObjMarioCap_c::Wait() {
         SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
     CheckTouch();
-    if (data_02092138 > mPos.y) {
+    if (gLevelMinY > mPos.y) {
         SaveData::PlayerLoseCap();
         MarkForDestruction();
     }
@@ -789,7 +789,7 @@ int daObjMarioCap_c::InitTimedWait()
  * Returns 1. */
 int daObjMarioCap_c::TimedWait()
 {
-    if (data_02092138 > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+    if (gLevelMinY > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
         (mFlags & 8)) {
         MarkForDestruction();
         return 1;
@@ -823,7 +823,7 @@ int daObjMarioCap_c::InitTimedWait2()
  * TimedWait. Returns 1. */
 int daObjMarioCap_c::TimedWait2()
 {
-    if (data_02092138 > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+    if (gLevelMinY > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
         (mFlags & 8)) {
         MarkForDestruction();
         return 1;
@@ -854,7 +854,7 @@ int daObjMarioCap_c::Fall() {
       SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
   }
-  if (data_02092138 > mPos.y) {
+  if (gLevelMinY > mPos.y) {
       SaveData::PlayerLoseCap();
       MarkForDestruction();
   }

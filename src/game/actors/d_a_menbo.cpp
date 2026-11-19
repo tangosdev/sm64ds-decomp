@@ -77,7 +77,7 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(dBgCh_Actr *clsn);
 
-extern int           data_02092138;
+extern int gLevelMinY;
 extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
 extern int gWaterHeight;
@@ -776,7 +776,7 @@ int daMenbo_c::InitResources()
             pos.z = pz;
         }
         ground.SetObjAndPos(pos, this);
-        mFloorY = data_02092138;
+        mFloorY = gLevelMinY;
         if (ground.DetectClsn() != 0) {
             if (SurfaceInfo_TestFlag0x20((int *)&ground.surface) != 0) {
                 mOnWater = 1;

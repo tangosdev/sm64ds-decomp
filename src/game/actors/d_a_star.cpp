@@ -211,7 +211,7 @@ extern int data_ov002_0210aa0c[3];
 extern StateHandler data_ov002_021109d8[];
 extern u8 gCurrentStarId;
 extern s32 data_0209cef0;
-extern s32 data_02092138;
+extern s32 gLevelMinY;
 extern StarModelFilePtr data_ov002_0211094c;
 extern StarModelFilePtr data_ov002_02110954;
 extern StarModelFilePtr data_ov002_0211095c;
@@ -411,7 +411,7 @@ s32 daStar_c::InitResources()
     mSafePos = mPos;
     q = &mSafePos;
     mHomePos = *q;
-    mMinPosY = data_02092138;
+    mMinPosY = gLevelMinY;
     if (!mBits.visible)
         mdCc_c.flags |= 1;
 

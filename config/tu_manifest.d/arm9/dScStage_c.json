@@ -1480,7 +1480,7 @@
       "evidence": "int. Read here by CopyTexPalFromLevelModel, dScStage_c::CleanupResources and dScStage_c::LoadModel. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f324",
+      "symbol": "sWipes",
       "address": "0x0209f324",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -2909,7 +2909,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f320"
     },
     {
-      "symbol": "data_0209f324",
+      "symbol": "sWipes",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f324"

@@ -94,7 +94,7 @@ struct daMenbo_c : dEnemyBase_c {
        each frame. Was unk_3a4. */
     s32 mAnimSpeed; /* 0x3a4 */
     /* Floor height under the skeeter: the ground probe's clsnY (02131378,
-       InitResources), data_02092138 when InitResources finds none. Was
+       InitResources), gLevelMinY when InitResources finds none. Was
        unk_3a8. */
     s32 mFloorY; /* 0x3a8 */
     /* The height it stands at: the water height gWaterHeight when the

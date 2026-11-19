@@ -50,7 +50,7 @@ struct HolheiState {
 extern void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);
-extern int data_02092138;
+extern int gLevelMinY;
 extern dCamera_c *gCamera;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern "C" int Math_Function_0203b14c(void *, int, int, int, int);
@@ -567,7 +567,7 @@ int daHolhei_c::func_ov062_02116498() {
 /* Below the death plane, or on landing: poof, shake, drop coins, die. */
 int daHolhei_c::func_ov062_021163b0() {
     Vector3 v[2];
-    if (data_02092138 > mPos.y) {
+    if (gLevelMinY > mPos.y) {
         KillAndTrackInDeathTable();
         return 1;
     }

@@ -224,6 +224,13 @@
    "src/game/actors/d_a_btn.cpp": ["arity:1", "return:Vector3"]
   },
   "gMessageBankBase": {
+   "src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp": ["return:int"],
+   "src/ui/messages/_ZN7Message8LoadTextEv.cpp": ["return:void *"]
+  },
+  "gMessageEntries": {
+   "src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp": ["return:int"]
+  },
+  "gMessageInfoSection": {
    "src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp": ["return:int"]
   },
   "gMgCoinsStatus": {

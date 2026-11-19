@@ -150,7 +150,7 @@ extern unsigned char gCurrentStarId;
 
 extern dCamera_c *gCamera;
 
-extern int data_02092138;
+extern int gLevelMinY;
 }
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -758,7 +758,7 @@ int daBombking_c::EnterReturnHome() {
 int daBombking_c::TickBounceOffHill() {
     if (this->mStateTimer != 0)
         return 1;
-    if (*&data_02092138 > this->mPos.y) {
+    if (*&gLevelMinY > this->mPos.y) {
         KingBobOmb_SetState(data_ov078_021270bc);
         return 1;
     }

@@ -135,7 +135,7 @@ extern signed char gNextSublevel;
 extern signed char gCurrentAreaId;
 extern signed char gLastCourseSublevel;
 extern u8 data_02092128[];
-extern int data_0209212c;
+extern int gLevelMaxY;
 extern short gPlayerHealth[];
 extern int gSubVolume;
 extern Timer gRaceTimer;
@@ -6258,7 +6258,7 @@ void func_ov002_020c72a4(daPly_c *player) {
     dBgCh_Gnd rg;
     Vector3 v;
     int z = player->mPos.z;
-    int d = data_0209212c;
+    int d = gLevelMaxY;
     int x = player->mPos.x;
     v.x = x;
     v.y = d;
@@ -9760,7 +9760,7 @@ int daPly_c::func_ov002_020cede0() {
     if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
         return 1;
     }
-    v.y = data_0209212c;
+    v.y = gLevelMaxY;
     rg.StartDetectingWater();
     rg.StopDetectingOrdinary();
     rg.SetObjAndPos(v, this);
@@ -19309,7 +19309,7 @@ int daPly_c::Render() {
         virtual void m14(void* a);
         virtual void m18(void* a, void* b);
     };
-    extern int gScratchMtx;
+    extern Matrix4x3 gScratchMtx;
     if (IsVsMode()) {
         if (data_0209fc5c[mPlayerNo] == 0)
             return 1;
@@ -19352,10 +19352,9 @@ int daPly_c::Render() {
             if (mDrawnHasWings != 0) {
                 mModels.mAnmModel2.ApplyOpacity(mOpacity, 0);
                 if (mBodyModelId == 3) {
-                    Matrix4x3_FromTranslation((Matrix4x3 *)&gScratchMtx, -0x1b33, -0x666, 0);
-                    Matrix4x3_ApplyInPlaceToRotationZ((Matrix4x3 *)&gScratchMtx, 0x4000);
-                    MTX_Concat43((const Matrix4x3 *)&gScratchMtx, &bodyMdl->data.transforms[8],
-                                 (Matrix4x3 *)&gScratchMtx);
+                    Matrix4x3_FromTranslation(&gScratchMtx, -0x1b33, -0x666, 0);
+                    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, 0x4000);
+                    MTX_Concat43(&gScratchMtx, &bodyMdl->data.transforms[8], &gScratchMtx);
                     ((VObj *)((char *)&mModels.mAnmModel2))->m18(&gScratchMtx, &mScale);
                 } else {
                     mModels.mAnmModel2.Virtual18((u32)&bodyMdl->data.transforms[15], &mScale);
@@ -19430,9 +19429,9 @@ int daPly_c::Render() {
        ambiguous at 0x02111b64; every other candidate is ambiguous at both. */
 
 extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsigned int opacity) {
-    extern int gScratchMtx[12];
-    void func_0203c178(int *dst, int a, int b, int c);
-    void MTX_Concat33(int *dst, const int *a, const int *b);
+    extern Matrix4x3 gScratchMtx;
+    void func_0203c178(void *m, int sx, int sy, int sz);
+    void MTX_Concat33(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *ab);
     int ip = (gCurrentSublevel == 0x2f);
 
     if (!ip) {
@@ -19465,8 +19464,8 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     int diff = t - src->t.x;
     src->t.x = diff;
 
-    func_0203c178(gScratchMtx, -0x1000, 0x1000, 0x1000);
-    MTX_Concat33((int *)src, gScratchMtx, (int *)src);
+    func_0203c178(&gScratchMtx, -0x1000, 0x1000, 0x1000);
+    MTX_Concat33(src, &gScratchMtx, src);
 
     obj->ClearMaterialFlags(0x80);
     obj->SetMaterialFlags(0x40);
@@ -20141,7 +20140,7 @@ s32 daPly_c::InitResources() {
     dBgCh_Gnd rc;
     tz = mPos.z;
     tx = mPos.x;
-    td = data_0209212c;
+    td = gLevelMaxY;
     pos.x = tx;
     pos.y = td;
     pos.z = tz;

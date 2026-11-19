@@ -223,7 +223,7 @@ s32 dScDSMT_c::InitResources() {
     if (data_0209d524 != 0)
         func_0201a428();
 
-    sBootArgs.messages = (void *)data_0209d6fc;
+    sBootArgs.messages = (void *)gMessageBankBase;
     GX_SetPower(GX_POWER_ALL);
     GX_DispOn();
     GXS_DispOn();

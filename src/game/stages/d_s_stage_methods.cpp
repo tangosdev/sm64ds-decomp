@@ -256,7 +256,7 @@ extern s8 gCurrentAreaId;
 extern u8 data_02092128[];
 extern int data_02092130;
 extern unsigned int data_02092134;
-extern int data_02092138;
+extern int gLevelMinY;
 extern u16 *data_0209214c[];
 extern LevelInfo *data_02092208[];
 extern s32 data_0209cef0;
@@ -438,7 +438,7 @@ static int data_0209f314;
 dCamera_c *gCamera;
 static char *sFogObjs;
 static int data_0209f320;
-static void *data_0209f324;
+static dFdWipe_c *sWipes;
 static LVL_Overlay::StandardEntry *sEntranceObjs;
 s32 gWaterHeight;
 static void *sTeleportDestObjs;
@@ -2824,12 +2824,12 @@ void UpdateMinimap(MinimapDesc *desc, u32 a, u32 b, u32 c, u32 d) {
     sStageGraphCallback.targetY = d;
 }
 
-/* The fader wipe array. dScStage_c::InitResources fills data_0209f324 with
+/* The fader wipe array. dScStage_c::InitResources fills sWipes with
    __cxa_vec_new(7, 0x60, 8, &dFdWipe_cC1, &dFdWipe_cD1): seven objects of 0x60,
    which is sizeof(dFdWipe_c). dScStage_c::CleanupResources tears the array
    down and zeroes it. */
 void StartEntranceFaderWipe(int index) {
-    dFdWipe_c *f = &((dFdWipe_c *)data_0209f324)[index];
+    dFdWipe_c *f = &sWipes[index];
     dScene_c::SetFaders(f);
     f->SetToEnd();
 }
@@ -2840,7 +2840,7 @@ void StartExitCharacterWipe(void) {
 }
 
 extern "C" void StartExitFaderWipe(int index) {
-    dFdWipe_c *f = &((dFdWipe_c *)data_0209f324)[index];
+    dFdWipe_c *f = &sWipes[index];
     dScene_c::SetFaders(f);
     f->SetToStart();
 }
@@ -2853,7 +2853,7 @@ extern "C" void FUN_02029934(void) {
     }
 }
 
-/* Wipe slot 6 (data_0209f324 + 0x240) seen through its fader vtable: slots
+/* Wipe slot 6 (sWipes[6], 0x240 bytes in) seen through its fader vtable: slots
    3/4 (SetBackwardTime/SetForwardTime) are called here with two arguments,
    slots 8/9 are SetToEnd/SetToStart. */
 struct WipeFader {
@@ -2871,7 +2871,7 @@ struct WipeFader {
 extern "C" void FUN_02029980(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = sWipes + 6;
     WipeFader *o2 = (WipeFader *)wipe;
     data_0209d4b0 = wipe;
     o2->w8();
@@ -2881,7 +2881,7 @@ extern "C" void FUN_02029980(void) {
 void FUN_020299f4(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = sWipes + 6;
     WipeFader *o2 = (WipeFader *)wipe;
     data_0209d4b0 = wipe;
     o2->w9();
@@ -2889,7 +2889,7 @@ void FUN_020299f4(void) {
 }
 
 extern "C" void FUN_02029a68(void) {
-    if (data_0209d4b0 == (dFdWipe_c *)data_0209f324 + 6) {
+    if (data_0209d4b0 == sWipes + 6) {
         data_0209d4b0 = 0;
         G2_BlendNone();
     }
@@ -2906,7 +2906,7 @@ typedef struct WipeEntry {
 void FUN_02029ab0(void) {
     WipeEntry *entry;
     dScene_c::SetAndStopColorFader();
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = sWipes + 6;
     entry = (WipeEntry *)wipe;
     data_0209d4b0 = wipe;
     entry->field4 = 0xc00;
@@ -3272,10 +3272,10 @@ extern "C" int GiveHealth(int idx, int amt) {
 }
 
 extern "C" void func_0202a850(int a, int b) {
-    data_02092138 = a;
-    data_0209212c = b;
-    data_02092138 -= 0x64000;
-    data_0209212c += 0x64000;
+    gLevelMinY = a;
+    gLevelMaxY = b;
+    gLevelMinY -= 0x64000;
+    gLevelMaxY += 0x64000;
 }
 
 /* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
@@ -4416,8 +4416,8 @@ int dScStage_c::CleanupResources() {
     data_0209f314 = 0;
     dScene_c::SetAndStopColorFader();
     data_0209d4b0 = 0;
-    delete[] (dFdWipe_c *)data_0209f324;
-    data_0209f324 = 0;
+    delete[] sWipes;
+    sWipes = 0;
     CleanCommonModelDataArr();
     mMeshCollider.Disable();
     dScStage_c::ResetMeshColliders();
@@ -4708,12 +4708,11 @@ int dScStage_c::InitResources() {
             faderFileIds = data_020755e0;
         }
 
-        data_0209f324 = new dFdWipe_c[7];
+        sWipes = new dFdWipe_c[7];
         int faderIndex = 0;
         int faderOffset = 0;
         do {
-            ((dFdWipe_c *)((char *)data_0209f324 + faderOffset))
-                ->LoadAndSetFile(faderFileIds[faderIndex]);
+            ((dFdWipe_c *)((char *)sWipes + faderOffset))->LoadAndSetFile(faderFileIds[faderIndex]);
             faderIndex += 1;
             faderOffset += 0x60;
         } while (faderIndex < 7);

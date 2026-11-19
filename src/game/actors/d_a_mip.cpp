@@ -1019,7 +1019,7 @@ int daMip_c::Render()
    UpdateMirrorShadow's plane. */
 void daMip_c::RenderMirrorImage()
 {
-    extern int gScratchMtx;
+    extern Matrix4x3 gScratchMtx;
 
     Matrix4x3 saved;
     saved = mAnmModel.mat4x3;
