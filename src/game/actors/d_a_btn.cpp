@@ -1378,10 +1378,10 @@ void daBtn_c::func_ov079_02124188()
     pos.z += FX_MUL(lean, FX_CosIdx((unsigned short)mAngle.y >> 4));
 
     ::Vec3_Asr(&asr, &pos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (mAngle.y + mBodyYaw));
+    Matrix4x3_FromTranslation(&gScratchMtx, asr.x, asr.y, asr.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, (mAngle.y + mBodyYaw));
 
-    mShadowMatrix = data_020a0e68;
+    mShadowMatrix = gScratchMtx;
 
     if (mShouldRender == 0)
         return;

@@ -197,7 +197,7 @@ extern int sMgCoinsDeltaShown;   /* nonzero: MgCoins_Draw shows the count */
 /* The address of sMgCoins[0].mVisible; the ROM indexes the
    array's visible bytes from it. */
 extern unsigned char sMgCoinsVisible[];
-extern int data_020a0db0;
+extern int gGlobalTimer;
 }
 extern void MgCoins_StepPayoutFinish(void);
 extern void MgCoins_StepPayoutNext(void);
@@ -301,7 +301,7 @@ void MgCoins_Draw(void) {
     int i;
     Sprite *p;
     if (sMgCoinsBetPlaced == 0 && gMgCoinsInPlay != 0) {
-        if (data_020a0db0 & 0x10) {
+        if (gGlobalTimer & 0x10) {
             Hud_RenderSprite((void*)sMgCoinsButtonSprites[GetGameLanguage()][0], 0x14, 0x30, -1, -1);
         } else {
             Hud_RenderSprite((void*)sMgCoinsButtonSprites[GetGameLanguage()][1], 0x14, 0x30, -1, -1);

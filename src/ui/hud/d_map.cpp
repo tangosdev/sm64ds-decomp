@@ -75,7 +75,7 @@ extern daPly_c *gPlayers[];
 extern s8 data_ov002_02111148;
 /* Per star-marker slot: the marker type (4 = draw a red-coin icon instead). */
 extern u8 gStarMarkerTypes[];
-extern int data_0208ee44;
+extern int gFrameStep;
 /* Set by the red Bob-omb Buddy's red-coin hint (messages 0x15b..0x15f) until
    that talk ends: type-4 marker slots draw MM_RED_COIN. */
 extern u8 gShowRedCoinMarkers;
@@ -84,7 +84,7 @@ extern u8 gShowRedCoinMarkers;
 extern u8 gMapCapIconShown[];
 extern u8 gMapCapIconCharacters[];
 extern u8 data_0209d660;
-extern s32 data_020a0db0;
+extern s32 gGlobalTimer;
 extern dFdBrightness_c *gSceneFader;
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
@@ -185,7 +185,7 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
 
 /* Per-sublevel touch-ups to the BG3 buffer that GetBG3CharPtr returns. Each
  * case writes rows of consecutive u16 tile numbers, and only when its
- * condition holds (cases 7 and 8 also need gCurrentStarId >= 2): a star collected, an event bit, or a bit in data_0209caa0. */
+ * condition holds (cases 7 and 8 also need gCurrentStarId >= 2): a star collected, an event bit, or a bit in gSaveBlock. */
 void dMap_c::UpdateLevelSpecific()
 {
     int sublevel = gCurrentSublevel;
@@ -232,7 +232,7 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0.file.flags1 & 0x204))
+        if (!(gSaveBlock.file.flags1 & 0x204))
             return;
         p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x748);
         tile = 0x35d;
@@ -249,7 +249,7 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0.file.flags2 & 0x80000))
+        if (!(gSaveBlock.file.flags2 & 0x80000))
             return;
         p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x73a);
         tile = 0x396;
@@ -273,7 +273,7 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0.file.flags2 & 0x80000))
+        if (!(gSaveBlock.file.flags2 & 0x80000))
             return;
         p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x1ca4);
         tile = 0x38e;
@@ -374,7 +374,7 @@ int dMap_c::Render()
     u8 idx = gLocalPlayerId;
 
     if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 ||
-        !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
+        !(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
         (flag20c != 0 && gLevelClearStep < 3)) {
         daPly_c *player = gPlayers[idx];
         if (IsVsMode()) {
@@ -422,7 +422,7 @@ int dMap_c::Render()
                     OAM::RenderSub(OAM::MM_PLAYER_ICONS[icon], this->mPlayerIconX[idx],
                                    this->mPlayerIconY[idx], -1, 2);
                 }
-                if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
+                if (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
                     u8 s = this->mArrowType;
                     if (s != 0) {
                         u16 ang;
@@ -452,7 +452,7 @@ int dMap_c::Render()
                 if (lvl >= 0) {
                     if (*p != 4) {
                         if (data_ov002_02111148 == lvl) {
-                            this->mStarIconAnimFrame[i] += data_0208ee44;
+                            this->mStarIconAnimFrame[i] += gFrameStep;
                             if (this->mStarIconAnimFrame[i] >= 12)
                                 this->mStarIconAnimFrame[i] = 0;
                             {
@@ -507,12 +507,12 @@ int dMap_c::Render()
             }
         }
 
-        if (!(data_0209caa0.file.flags1 & 0x40) && (data_0209caa0.file.flags2 & 0x20000)) {
+        if (!(gSaveBlock.file.flags1 & 0x40) && (gSaveBlock.file.flags2 & 0x20000)) {
             this->mStarKeyBlinkTimer += 1;
             if (this->mStarKeyBlinkTimer >= 5)
                 this->mStarKeyBlinkTimer = 0;
             if (this->mStarKeyMapID >= 0) {
-                if (data_0209d660 == 0 || !(data_020a0db0 & 8)) {
+                if (data_0209d660 == 0 || !(gGlobalTimer & 8)) {
                     int sel = this->mStarKeyBlinkTimer < 2;
                     OAM::Render(true, OAM::MM_STAR_KEYS[sel], this->mStarKeyIconX,
                                 this->mStarKeyIconY, -1, 2, 0);
@@ -558,7 +558,7 @@ s32 dMap_c::Behavior()
         u8 touching;
 
         if (this->mTouchCircleTimer != 0) {
-            this->mTouchCircleTimer -= data_0208ee44;
+            this->mTouchCircleTimer -= gFrameStep;
         }
 
         flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
@@ -580,7 +580,7 @@ s32 dMap_c::Behavior()
                 G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
                                       GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
         } else {
-            if (IsVsMode() || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+            if (IsVsMode() || (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 gSubScreenLayers &= ~4;
                 if (!(u8)flagsOr) {
                     GXS_SetVisiblePlane(gSubScreenLayers);
@@ -590,7 +590,7 @@ s32 dMap_c::Behavior()
             }
         }
     } else {
-        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) || data_0209d4b0 != 0)
+        if ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) || data_0209d4b0 != 0)
             gSubScreenLayers &= ~4;
     }
 
@@ -599,7 +599,7 @@ s32 dMap_c::Behavior()
              gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
             SublevelToLevel(gCurrentSublevel) == 4 ||
             (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
-            (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+            (IsGameMode(0) && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
              this->mInIntroCutscene == 0)) {
             this->mAngle = 0;
         } else if (this->mInIntroCutscene != 0) {
@@ -754,7 +754,7 @@ s32 dMap_c::Behavior()
         }
 
         /* The star key: Render blinks it under the same two flag tests. */
-        if (!(data_0209caa0.file.flags1 & 0x40) && (data_0209caa0.file.flags2 & 0x20000)) {
+        if (!(gSaveBlock.file.flags1 & 0x40) && (gSaveBlock.file.flags2 & 0x20000)) {
             dActor_c *o = (dActor_c *)data_0209f33c;
             if (o == 0) {
                 this->mStarKeyMapID = -1;
@@ -924,7 +924,7 @@ int dMap_c::InitResources()
 
     mTargetInvScale = GetMinimapScale(data_ov002_02111148);
 
-    if (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+    if (IsGameMode(0) && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         !IsKuppaScriptRunning()) {
         mInvScale = mTargetInvScale << 1;
         mAngle = 0;

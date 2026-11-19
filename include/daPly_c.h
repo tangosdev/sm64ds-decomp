@@ -301,7 +301,7 @@ struct daPly_c : dActor_c {
     s32 mParticle3;            /* 0x630 */
     /* Particle handles at the water surface. func_ov002_020ce8bc passes each
        back to Particle::System::NewFitWater at x/z of the player and
-       y = data_0209f32c + 0x3000: the first when its speed argument (mHorzSpeed
+       y = gWaterHeight + 0x3000: the first when its speed argument (mHorzSpeed
        or mPrevVertSpeed) is nonzero, the second when it is zero. Leaving Mega
        (func_ov002_020bdd2c) zeroes both along with mParticle1. */
     s32 mWaterMoveParticle;       /* 0x634 */
@@ -316,7 +316,7 @@ struct daPly_c : dActor_c {
     s32 mProbedGroundY; /* 0x648 */
     /* Height of the water surface above the player: set from a dBgCh_Gnd
        probe that detects water when the hit's CLPS has the water bit (0x20),
-       0x80000000 when there is none, and copied to data_0209f32c. Read by
+       0x80000000 when there is none, and copied to gWaterHeight. Read by
        St_Swim_Main and func_ov002_020c231c (no floor snap over water). */
     s32 mWaterSurfaceY; /* 0x64c */
     /* Height of the toxic-gas surface: func_ov002_020c14b8's water/toxic
@@ -620,7 +620,7 @@ struct daPly_c : dActor_c {
        down one per call while the hazard persists, cleared when it ends. */
     u8 mDamageTickTimer; /* 0x71d */
     /* A one-shot event sequence. func_ov002_020c43c4(id) latches the id
-       (once per save, via a bit in data_0209caa0.file.flags2) and zeroes the step;
+       (once per save, via a bit in gSaveBlock.file.flags2) and zeroes the step;
        func_ov002_020c4188 then walks mEventStep 0..4, holding mEventWait
        ticks before handing data_ov002_020ff26c[mEventId - 1] to
        func_0201f32c. */

@@ -69,7 +69,7 @@ extern int sMCarlo2StartFaceCounts[];
 /* the starting weights                     */
 extern int sMCarlo2BoardRows[][10];
 /* per-difficulty weight top-ups          */
-extern int data_020a0db0;
+extern int gGlobalTimer;
 
 extern unsigned char gSubScreenLayers;
 
@@ -489,7 +489,7 @@ void dMgMCarlo2CardObj_c::Render()
     state = mState;
     if (state == 0) return;
     if (state == 3) {
-        if ((data_020a0db0 & 8) != 0)
+        if ((gGlobalTimer & 8) != 0)
             return;
     }
     {

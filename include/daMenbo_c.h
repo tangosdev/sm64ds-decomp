@@ -97,7 +97,7 @@ struct daMenbo_c : dEnemyBase_c {
        InitResources), data_02092138 when InitResources finds none. Was
        unk_3a8. */
     s32 mFloorY; /* 0x3a8 */
-    /* The height it stands at: the water height data_0209f32c when the
+    /* The height it stands at: the water height gWaterHeight when the
        floor is below it, else mFloorY. Y is clamped up to it, ripples sit
        on it and dying at or below it pays the coins. Was unk_3ac. */
     s32 mSurfaceY; /* 0x3ac */

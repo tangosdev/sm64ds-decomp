@@ -157,7 +157,7 @@ extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 
 extern unsigned char gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern s32 data_0208ee44;
+extern s32 gFrameStep;
 
 extern void *sSmartballResultBgNcgPath;
 extern void *sSmartballResultBgNscPath;
@@ -4933,7 +4933,7 @@ s32 dScMgSmartball_c::InitResources() {
             mLevel = 0x270e;
         }
     }
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                       GX_BG_CHARBASE_0x0c000, GX_BG_EXTPLTT_01);
     G2S_BG0Mosaic(false);

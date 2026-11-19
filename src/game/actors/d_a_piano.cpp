@@ -331,7 +331,7 @@ void daPiano_c::UpdateClsnMatrix() {
 
 /* Pose the three drop shadows: rotate a body-frame offset by the facing,
  * add the actor position, and drop one shadow per dExtShadowModel_c.
- * data_020a0e68 is the shared scratch matrix. */
+ * gScratchMtx is the shared scratch matrix. */
 void daPiano_c::UpdateShadows() {
     Vector3 in, out;
 
@@ -341,8 +341,8 @@ void daPiano_c::UpdateShadows() {
     out.y = 0;
     out.z = 0;
     in.z = -0x10000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[2], mAngle.y);
     mShadowMats[2].t.x = out.x >> 3;
@@ -355,8 +355,8 @@ void daPiano_c::UpdateShadows() {
     in.y = 0;
     in.z = 0;
     in.x = -0x60000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[0], mAngle.y);
     mShadowMats[0].t.x = out.x >> 3;
@@ -369,8 +369,8 @@ void daPiano_c::UpdateShadows() {
     in.x = 0;
     in.y = 0;
     in.z = -0x10000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[1], mAngle.y);
     mShadowMats[1].t.x = out.x >> 3;

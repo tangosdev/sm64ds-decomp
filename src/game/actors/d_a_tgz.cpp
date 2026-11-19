@@ -92,7 +92,7 @@ extern "C" {
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
 
-extern int data_0209f32c;
+extern int gWaterHeight;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern signed char gCurrentSublevel;
 }
@@ -311,14 +311,14 @@ void daTgz_c::func_ov077_021250a8() {
 void daTgz_c::func_ov077_021251d0() {
     int v[3];
     Vec3_Asr(reinterpret_cast<Vector3 *>(v), &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Matrix4x3_FromTranslation(&gScratchMtx, v[0], v[1], v[2]);
     int aimHeight = this->OnAimedAtWithEgg();
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, aimHeight >> 3, 0);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, this->mAngle.x, this->mAngle.y,
                                            this->mAngle.z);
     int aimHeightAgain = this->OnAimedAtWithEgg();
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-aimHeightAgain) >> 3, 0);
-    this->mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, (-aimHeightAgain) >> 3, 0);
+    this->mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* Upright matrix on the still model in states 0 and 4, otherwise on the anim. */
@@ -629,9 +629,9 @@ int daTgz_c::func_ov077_02125bb4() {
     if (underwater) {
         if (mInWater == 0) {
             func_02012694(0xe2, &mCamSpacePos);
-            Particle::System::NewBigSplash(mPos.x, data_0209f32c, mPos.z);
+            Particle::System::NewBigSplash(mPos.x, gWaterHeight, mPos.z);
             mRippleId =
-                Particle::System::New(mRippleId, kPtclRipple, mPos.x, data_0209f32c, mPos.z, 0, 0);
+                Particle::System::New(mRippleId, kPtclRipple, mPos.x, gWaterHeight, mPos.z, 0, 0);
         }
         mVertAccel = -0x400;
         mTerminalVelocity = -0x5000;

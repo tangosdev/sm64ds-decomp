@@ -126,8 +126,8 @@ int daWater_Tatumaki_c::StateDrag() {
     target.z = this->mPullRadius;
     player = this->ClosestPlayer();
     if (player) {
-        Matrix4x3_FromRotationY(&data_020a0e68, this->mPullAngle);
-        MTX_MultVec43(&target, &data_020a0e68, &offset);
+        Matrix4x3_FromRotationY(&gScratchMtx, this->mPullAngle);
+        MTX_MultVec43(&target, &gScratchMtx, &offset);
         target.x = this->mCenter.x;
         target.y = this->mCenter.y;
         target.z = this->mCenter.z;
@@ -222,10 +222,10 @@ int daWater_Tatumaki_c::StateSpin() {
                 out.y = 0;
                 out.z = 0;
 
-                Matrix4x3_FromRotationY(&data_020a0e68,
+                Matrix4x3_FromRotationY(&gScratchMtx,
                                         (short)(this->HorzAngleToCPlayer() + kHalfTurn));
-                Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, kPullTilt);
-                MTX_MultVec43(&pull, &data_020a0e68, &out);
+                Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, kPullTilt);
+                MTX_MultVec43(&pull, &gScratchMtx, &out);
 
                 {
                     const Vector3 *playerPos = &player->mPos;
@@ -261,9 +261,9 @@ int daWater_Tatumaki_c::SetState(const State *state) {
 void daWater_Tatumaki_c::UpdateModelMatrix() {
     Vector3 pos;
     Vec3_Asr(&pos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 int daWater_Tatumaki_c::CleanupResources() {

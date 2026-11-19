@@ -221,7 +221,7 @@ extern void DecompressLZ16(void *src, void *dst);
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern void func_0203b9b4(int *p, int v);
 }
 extern void func_020127a4(int a, int b, int c, int d);
@@ -1441,7 +1441,7 @@ int dScMgCoin_c::InitResources() {
 
     mCredits = 0;
     mCreditsShown = mCredits;
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     this->ResetRound();
     this->LayOutCoins();
     this->Caption_Show();

@@ -258,8 +258,8 @@ int daObjCtRotateBlock_c::InitResources() {
         va.x = 0x64000;
         va.z = 0x64000;
 
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43(&va, &data_020a0e68, &vb);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43(&va, &gScratchMtx, &vb);
         VEC_Add(&vb, &mPos, &vb);
         vb.y -= 0xd2000;
 

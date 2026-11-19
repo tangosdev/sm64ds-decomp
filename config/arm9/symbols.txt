@@ -3673,7 +3673,7 @@ _ZTVN8dGraph_c10callback_cE kind:data(any) addr:0x0208ee14
 _ZTSN8dGraph_c10callback_cE kind:data(any) addr:0x0208ee24
 data_0208ee3c kind:data(any) addr:0x0208ee3c
 data_0208ee40 kind:data(any) addr:0x0208ee40
-data_0208ee44 kind:data(any) addr:0x0208ee44
+gFrameStep kind:data(any) addr:0x0208ee44
 data_0208ee48 kind:data(any) addr:0x0208ee48
 data_0208ee4c kind:data(any) addr:0x0208ee4c
 data_0208ee50 kind:data(any) addr:0x0208ee50
@@ -4527,8 +4527,8 @@ data_0209b340 kind:bss addr:0x0209b340
 data_0209b34b kind:bss addr:0x0209b34b
 data_0209b34e kind:bss addr:0x0209b34e
 data_0209b3d8 kind:bss addr:0x0209b3d8
-data_0209b3ec kind:bss addr:0x0209b3ec
-data_0209b41c kind:bss addr:0x0209b41c
+gViewMtx kind:bss addr:0x0209b3ec
+gInvViewMtx kind:bss addr:0x0209b41c
 data_0209b44c kind:bss addr:0x0209b44c
 data_0209b450 kind:bss addr:0x0209b450
 gNextActorUpdateMask kind:bss addr:0x0209b454
@@ -4558,7 +4558,7 @@ sSndArc kind:bss addr:0x0209b4b4
 data_0209b53c kind:bss addr:0x0209b53c
 data_0209ba84 kind:bss addr:0x0209ba84
 data_0209baa0 kind:bss addr:0x0209baa0
-data_0209caa0 kind:bss addr:0x0209caa0
+gSaveBlock kind:bss addr:0x0209caa0
 data_0209cab4 kind:bss addr:0x0209cab4
 data_0209cad2 kind:bss addr:0x0209cad2
 data_0209cae4 kind:bss addr:0x0209cae4
@@ -4671,7 +4671,7 @@ gMsgBoxStyle kind:bss addr:0x0209d6c4
 gMsgBoxCenterY kind:bss addr:0x0209d6c8
 gMsgBoxTop kind:bss addr:0x0209d6cc
 gMsgBoxCenterX kind:bss addr:0x0209d6d0
-data_0209d6d4 kind:bss addr:0x0209d6d4
+gCurrentMsgId kind:bss addr:0x0209d6d4
 data_0209d6d8 kind:bss addr:0x0209d6d8
 data_0209d6dc kind:bss addr:0x0209d6dc
 data_0209d6e0 kind:bss addr:0x0209d6e0
@@ -4795,12 +4795,12 @@ sFogObjs kind:bss addr:0x0209f31c
 data_0209f320 kind:bss addr:0x0209f320
 data_0209f324 kind:bss addr:0x0209f324
 sEntranceObjs kind:bss addr:0x0209f328
-data_0209f32c kind:bss addr:0x0209f32c
+gWaterHeight kind:bss addr:0x0209f32c
 sTeleportDestObjs kind:bss addr:0x0209f330
 gMinimapTileObjs kind:bss addr:0x0209f334
 gUnusedType13Objs kind:bss addr:0x0209f338
 data_0209f33c kind:bss addr:0x0209f33c
-data_0209f340 kind:bss addr:0x0209f340
+sLevelInfo kind:bss addr:0x0209f340
 data_0209f344 kind:bss addr:0x0209f344
 sMinimapScaleObjs kind:bss addr:0x0209f348
 sEventFlags kind:bss addr:0x0209f34c
@@ -4818,7 +4818,7 @@ sStageGraphCallback kind:bss addr:0x0209f3c4
 data_0209f3c8 kind:bss addr:0x0209f3c8
 data_0209f3e8 kind:bss addr:0x0209f3e8
 STAR_MARKERS kind:bss addr:0x0209f40c
-data_0209f43c kind:bss addr:0x0209f43c
+gClipper kind:bss addr:0x0209f43c
 data_0209f498 kind:bss addr:0x0209f498
 data_0209f49c kind:bss addr:0x0209f49c
 data_0209f49e kind:bss addr:0x0209f49e
@@ -4911,7 +4911,7 @@ _ZGVsPrevHeap$390 kind:bss addr:0x020a0c60
 sMBJobDone kind:bss addr:0x020a0c64
 sMBGraphCallback kind:bss addr:0x020a0c68
 data_020a0c78 kind:bss addr:0x020a0c78
-data_020a0c80 kind:bss addr:0x020a0c80
+gActiveMeshColliders kind:bss addr:0x020a0c80
 data_020a0ce0 kind:bss addr:0x020a0ce0
 data_020a0cec kind:bss addr:0x020a0cec
 @260 kind:bss addr:0x020a0d00
@@ -4922,7 +4922,7 @@ PATH_DEFS kind:bss addr:0x020a0d84
 PATH_NODES kind:bss addr:0x020a0d88
 NUM_PATHS kind:bss addr:0x020a0d8c
 data_020a0d90 kind:bss addr:0x020a0d90
-data_020a0db0 kind:bss addr:0x020a0db0
+gGlobalTimer kind:bss addr:0x020a0db0
 data_020a0db4 kind:bss addr:0x020a0db4
 data_020a0db8 kind:bss addr:0x020a0db8
 data_020a0dbc kind:bss addr:0x020a0dbc
@@ -4941,7 +4941,7 @@ data_020a0e48 kind:bss addr:0x020a0e48
 data_020a0e50 kind:bss addr:0x020a0e50
 data_020a0e58 kind:bss addr:0x020a0e58
 data_020a0e5a kind:bss addr:0x020a0e5a
-data_020a0e68 kind:bss addr:0x020a0e68
+gScratchMtx kind:bss addr:0x020a0e68
 data_020a0e98 kind:bss addr:0x020a0e98
 data_020a0e9c kind:bss addr:0x020a0e9c
 data_020a0ea0 kind:bss addr:0x020a0ea0

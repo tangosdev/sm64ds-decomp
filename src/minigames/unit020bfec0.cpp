@@ -134,7 +134,7 @@ VecFx32 data_ov006_0213ace0[3] = {
     {0x27000, 0, -0x11000},
 };
 extern Quaternion data_02092768; /* identity */
-extern dClipper data_0209f43c;
+extern dClipper gClipper;
 extern dFdBrightness_c *gSceneFader;
 /* The presenter's BTA images: each name starts a file the face plays. */
 extern char sPresenterLoseLoopTexAnim[];
@@ -464,9 +464,9 @@ void FallingPetal::UpdateMatrix() {
     Matrix4x3 rot;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRot), &rot);
     MTX_MultVec33(&sPetalUpAxis, &rot.r, &mAxis);
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    MTX_Concat43(&rot, &data_020a0e68, &data_020a0e68);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    MTX_Concat43(&rot, &gScratchMtx, &gScratchMtx);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* ---- Presenter::Presenter ---- */
@@ -562,8 +562,8 @@ int Presenter::Load() {
     if (!mBack.SetFile(backFile, 1, -1))
         return 0;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-    mBack.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, 0, 0, 0);
+    mBack.mat4x3 = gScratchMtx;
     return 1;
 }
 
@@ -807,8 +807,8 @@ void Presenter::StateSurprisedThenIdle() {
 }
 
 void Presenter::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    mFace.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    mFace.mat4x3 = gScratchMtx;
 }
 
 /* Camera_InitPresenterView at 0x020c225c
@@ -893,15 +893,15 @@ void Mascot::Draw() {
 }
 
 void Mascot::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mRot[1]);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mRot[1]);
+    mModel.mat4x3 = gScratchMtx;
     mModel.UpdateVerts();
     /* bone 6, the head */
-    data_020a0e68 = mModel.data.transforms[6];
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mHeadYaw);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mHeadPitch);
-    mModel.data.transforms[6] = data_020a0e68;
+    gScratchMtx = mModel.data.transforms[6];
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mHeadYaw);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mHeadPitch);
+    mModel.data.transforms[6] = gScratchMtx;
 }
 
 void Mascot::LookAt(int *src) {
@@ -1457,12 +1457,12 @@ void MascotWalker::Draw() {
 void MascotWalker::UpdateMatrix() {
     mModel.UpdateVerts();
     /* Bone 6 takes the head angle. */
-    data_020a0e68 = mModel.data.transforms[6];
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mHeadAngle);
-    mModel.data.transforms[6] = data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    mModel.mat4x3 = data_020a0e68;
+    gScratchMtx = mModel.data.transforms[6];
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mHeadAngle);
+    mModel.data.transforms[6] = gScratchMtx;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 void MascotWalker::StartNextPath() {
@@ -1619,7 +1619,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
 
     CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 
-    data_0209f43c.Func_020156DC(0x1555, camera->mFovAngle, 0x1000, 0x1388000);
+    gClipper.Func_020156DC(0x1555, camera->mFovAngle, 0x1000, 0x1388000);
 }
 
 

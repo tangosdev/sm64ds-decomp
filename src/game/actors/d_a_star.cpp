@@ -159,14 +159,14 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 /* local extern: in this block's void * spelling, like the helpers above. */
 extern void MTX_Concat43(void *a, void *b, void *out);
 extern int *Vec3_LslInPlace(void *v, int sh);
-extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 gScratchMtx;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 }
 
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" {
-extern int data_0209f32c;
+extern int gWaterHeight;
 extern signed char gCurrentSublevel;
 }
 
@@ -2075,7 +2075,7 @@ void daStar_c::OnBounceLand() {
  * it stops the collider watching for water and probes the surface with a
  * dBgCh_Gnd from 160.0 above the star. A surface at least 60.0 above the star
  * puts it in WATER_IN (weak gravity, slow fall). WATER_IN ends once the saved
- * surface (data_0209f32c) is less than 60.0 above the star. */
+ * surface (gWaterHeight) is less than 60.0 above the star. */
 void daStar_c::UpdateWater() {
     struct Vector3 v;
     int tx, ty, tz, ta;
@@ -2105,7 +2105,7 @@ void daStar_c::UpdateWater() {
         if (rc.DetectClsn() != 0) {
             if (SurfaceInfo_TestFlag0x20((int *)&rc.surface) != 0) {
                 mWaterHeight = rc.clsnY;
-                data_0209f32c = mWaterHeight;
+                gWaterHeight = mWaterHeight;
                 if (mWaterHeight >= mPos.y + 0x3c000) {
                     mBits.water = WATER_IN;
                     mVertAccel = -0x700;
@@ -2116,7 +2116,7 @@ void daStar_c::UpdateWater() {
             }
         }
     } else {
-        if (data_0209f32c < mPos.y + 0x3c000) {
+        if (gWaterHeight < mPos.y + 0x3c000) {
             mBits.water = WATER_NONE;
             SetDefaultGravity();
             mWithMeshClsn.StartDetectingWater();
@@ -2255,13 +2255,13 @@ Vector3 daStar_c::func_ov002_020e8244() {
         out->z = b->mCenter.z;
         return result;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, b->mPos.x, b->mPos.y, b->mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngle.y);
+    Matrix4x3_FromTranslation(&gScratchMtx, b->mPos.x, b->mPos.y, b->mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, b->mPrevAngle.y);
     local = *b->mAnmModel1.data.transforms;
-    MTX_Concat43(&local, &data_020a0e68, &data_020a0e68);
-    b->mCenter.x = data_020a0e68.t.x;
-    b->mCenter.y = data_020a0e68.t.y;
-    b->mCenter.z = data_020a0e68.t.z;
+    MTX_Concat43(&local, &gScratchMtx, &gScratchMtx);
+    b->mCenter.x = gScratchMtx.t.x;
+    b->mCenter.y = gScratchMtx.t.y;
+    b->mCenter.z = gScratchMtx.t.z;
     VEC_Subtract(&b->mCenter, &b->mPos, &b->mCenter);
     Vec3_LslInPlace(&b->mCenter, 3);
     VEC_Add(&b->mCenter, &b->mPos, &b->mCenter);

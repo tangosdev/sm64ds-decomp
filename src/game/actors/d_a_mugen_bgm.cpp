@@ -4,7 +4,7 @@
  *
  * param1 == 1 steers gMusicTrackModeOverride from the rotated offset; otherwise it
  * drives Fog depth/color from the rotated offset, star count and
- * data_0209caa0.file.mCharacter, then keeps Sound sub 0x2e playing while
+ * gSaveBlock.file.mCharacter, then keeps Sound sub 0x2e playing while
  * func_ov100_02144f84 gates mHorzSpeed.
  *
  * This TU owns text only: ov002 delinks no .data here, so the _ZTV / _ZTI /
@@ -109,7 +109,7 @@ int daMugenBGM_c::Behavior() {
     color = depth;
     flag = 0;
 
-    if (NumStars() < 80 || data_0209caa0.file.mCharacter != 0) {
+    if (NumStars() < 80 || gSaveBlock.file.mCharacter != 0) {
         int x = rotated.x;
         color = 0xd00;
         if (x < 0)

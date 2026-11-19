@@ -212,11 +212,11 @@ void daFPkn_c::UpdateClsnOffset()
     mClsnOffset.z = 0;
 
     Vec3_Asr(&pos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    mClsnOffset.x = data_020a0e68.t.x;
-    mClsnOffset.y = data_020a0e68.t.y;
-    mClsnOffset.z = data_020a0e68.t.z;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    MTX_Concat43(&mAnmModel.data.transforms[6], &gScratchMtx, &gScratchMtx);
+    mClsnOffset.x = gScratchMtx.t.x;
+    mClsnOffset.y = gScratchMtx.t.y;
+    mClsnOffset.z = gScratchMtx.t.z;
     Vec3_LslInPlace(&mClsnOffset, 3);
     VEC_Subtract(&mClsnOffset, &mPos, &mClsnOffset);
 

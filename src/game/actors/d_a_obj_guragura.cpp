@@ -13,7 +13,7 @@
  *   `b` to TiltToward in this same TU is 0xc.
  * - Quaternion_SLerp / FromVector3 / Normalize stay untyped (mTilt
  *   is s32[4]).
- * - Rest-pose data_02092768 and scratch matrix data_020a0e68 (arm9).
+ * - Rest-pose data_02092768 and scratch matrix gScratchMtx (arm9).
  *   math/MtxStack.h types MTX_Concat43 as const int *, so this file
  *   keeps its own Matrix4x3 * spellings of the matrix helpers.
  * - Toucher position is (Vector3 *)(arg + 0x5c); the callback arg
@@ -71,10 +71,10 @@ void daObjGuragura_c::UpdateModelMatrix() {
     Vector3 v;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mTilt), &q);
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    MTX_Concat43(&q, &data_020a0e68, &data_020a0e68);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    MTX_Concat43(&q, &gScratchMtx, &gScratchMtx);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* ROM ordinal 3 -- 0x020b60fc, size 0x48.
@@ -140,9 +140,9 @@ void daObjGuragura_c::TiltToward(unsigned char *arg) {
     Vector3 v;
     Vector3 axis;
     mBumped = 1;
-    data_020a0e68 = mClsnMat;
-    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
-    MTX_MultVec43((Vector3 *)(arg + 0x5c), &data_020a0e68, &v);
+    gScratchMtx = mClsnMat;
+    MTX_Inverse43(&gScratchMtx, &gScratchMtx);
+    MTX_MultVec43((Vector3 *)(arg + 0x5c), &gScratchMtx, &v);
     v.y = v.y << 1;
     axis.x = 0;
     axis.z = 0;

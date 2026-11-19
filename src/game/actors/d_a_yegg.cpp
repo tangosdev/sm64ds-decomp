@@ -677,8 +677,8 @@ void daYegg_c::ExecuteFollowPlayer() {
         out.x = 0; out.y = 0; out.z = 0;
         in.z = mHoldOffsetZ;
 
-        Matrix4x3_FromRotationZXYExt(&data_020a0e68, mEasedAngleX, mEasedAngleY, mEasedAngleZ);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationZXYExt(&gScratchMtx, mEasedAngleX, mEasedAngleY, mEasedAngleZ);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
 
         if (mPlayer->mClimbClsn != 0 || func_ov002_020cf700(mPlayer) != 0 ||
             mPlayer->func_ov002_020d0d2c() != 0) {
@@ -973,22 +973,22 @@ void daYegg_c::UpdateModelMatrix() {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
     if (on && mPlayer) {
         Vector3 v(0, 0, 0);
-        data_020a0e68 = *mPlayer->mCarryMatrix;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
-        v.x = data_020a0e68.t.x;
-        v.y = data_020a0e68.t.y;
-        v.z = data_020a0e68.t.z;
+        gScratchMtx = *mPlayer->mCarryMatrix;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0x3f, 9, 0xb);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
+        v.x = gScratchMtx.t.x;
+        v.y = gScratchMtx.t.y;
+        v.z = gScratchMtx.t.z;
         mPos.x = v.x << 3;
         mPos.y = v.y << 3;
         mPos.z = v.z << 3;
         return;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, ((((long long)mPos.x << 9) + 0x800) >> 12),
+    Matrix4x3_FromTranslation(&gScratchMtx, ((((long long)mPos.x << 9) + 0x800) >> 12),
                               FX_MUL(mPos.y + 0x14000, 0x200),
                               ((((long long)mPos.z << 9) + 0x800) >> 12));
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1259,8 +1259,8 @@ int daYegg_c::Behavior()
             vmid.y = 0;
             vmid.z = 0;
             ang = &mPlayer->mAngle.x;
-            Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
-            MTX_MultVec43(&vin, &data_020a0e68, &vmid);
+            Matrix4x3_FromRotationZXYExt(&gScratchMtx, ang[0], ang[1], ang[2]);
+            MTX_MultVec43(&vin, &gScratchMtx, &vmid);
             Vec3_Add(&vout, &mPlayer->mPos, &vmid);
             mPos.x = vout.x;
             mPos.y = vout.y;

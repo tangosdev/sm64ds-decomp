@@ -197,9 +197,9 @@ extern int sTrmpLineWeakPitchMid;
 extern int sTrmpLineStrongPitchEnd;
 extern int sTrmpLineStrongPitchMid;
 extern Vector3 data_020a0ebc;
-extern Matrix4x3 data_0209b3ec; /* the view matrix, Graphics3D.cpp */
+extern Matrix4x3 gViewMtx; /* the view matrix, Graphics3D.cpp */
 extern int data_02092768[4];
-extern int data_020a0db0;
+extern int gGlobalTimer;
 
 void TrmpItem::GrowScale() {
     ApproachLinear(mScale.x, 0x1200, 0x80);
@@ -691,9 +691,9 @@ void TrmpItem::ProjectOnLine(TrampolineObjectCallbacks *jumper, Vector2 *current
 void TrmpItem::UpdateMatrix() {
     Matrix4x3 rotation;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRotation), &rotation);
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    MTX_Concat43(&rotation, &data_020a0e68, &data_020a0e68);
-    mModel->mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    MTX_Concat43(&rotation, &gScratchMtx, &gScratchMtx);
+    mModel->mat4x3 = gScratchMtx;
     mTexAnim.Update(mModel->data);
     mModel->ApplyOpacity(mAlpha, 0);
     mModel->Render(&mScale);
@@ -948,10 +948,10 @@ void TrmpLine::Draw() {
     int i;
     Matrix4x3 m2;
     Matrix4x3 m1;
-    Matrix4x3_FromTranslation(&data_020a0e68, mCenter.x, mCenter.y, mCenter.z);
-    MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m1);
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, mScale.x, mScale.y, mScale.z);
-    MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m2);
+    Matrix4x3_FromTranslation(&gScratchMtx, mCenter.x, mCenter.y, mCenter.z);
+    MTX_Concat43(&gScratchMtx, &gViewMtx, &m1);
+    Matrix4x3_ApplyInPlaceToScale(&gScratchMtx, mScale.x, mScale.y, mScale.z);
+    MTX_Concat43(&gScratchMtx, &gViewMtx, &m2);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(m1.m);
     G3_MtxMode(GX_MTXMODE_POSITION);
@@ -1056,7 +1056,7 @@ void TrmpLine::StateSettle() {
     int targetAmplitude, decayStep;
     int *restPosition, *position, *amplitude;
 
-    if ((data_020a0db0 & 1) != 0) {
+    if ((gGlobalTimer & 1) != 0) {
         if (ApproachLinear2(mAlpha, 0, 1) != 0) {
             mStatus = 0;
         }
@@ -1636,7 +1636,7 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
 void TrmpLine::DrawAll() {
     int light[3];
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
-    G3_LoadMtx43(&data_0209b3ec);
+    G3_LoadMtx43(&gViewMtx);
     light[0] = 0;
     light[1] = 0;
     light[2] = -0xff8;

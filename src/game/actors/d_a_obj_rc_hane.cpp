@@ -76,7 +76,7 @@ typedef char RcHaneModelFilePtr_size_must_be_8[sizeof(RcHaneModelFilePtr) == 8 ?
  * data_ov036_02114070 is a real SharedFilePtr in ov036 carrying no coined
  * alias, so the address-true name stands.
  *
- * data_020a0e68 (math/MtxStack.h) is the global scratch Matrix4x3 the
+ * gScratchMtx (math/MtxStack.h) is the global scratch Matrix4x3 the
  * Matrix4x3_* helpers compose into; UpdateModelTransform below copies the
  * finished matrix out of it. */
 
@@ -184,13 +184,13 @@ void daObjRc_Hane_c::UpdateModelTransform() {
     int v[3];
 
     Vec3_Asr(v, &mPos.x, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Matrix4x3_FromTranslation(&gScratchMtx, v[0], v[1], v[2]);
 
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
 
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* -------------------------------------------------------------------------- */

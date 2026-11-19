@@ -24,7 +24,7 @@ struct dThIcon_c {
     s16 mHalfW; /* 0x008 */
     s16 mHalfH; /* 0x00a */
     /* Frames left in a press. Press loads it from
-       mPressTime; Behavior counts it down by data_0208ee44 and, at zero,
+       mPressTime; Behavior counts it down by gFrameStep and, at zero,
        flips mOn back and re-arms mReady. dScEntry_c::icon_c::Render
        scales its sprite by it. */
     s32 mPressTimer; /* 0x00c */

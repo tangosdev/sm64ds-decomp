@@ -640,8 +640,8 @@ void daHanachan_c::StateDemoWaitInit()
             out.x = 0;
             out.y = 0;
             out.z = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, (short)(mSegmentRot[0].y + 0x200));
-            MTX_MultVec43(&in, &data_020a0e68, &out);
+            Matrix4x3_FromRotationY(&gScratchMtx, (short)(mSegmentRot[0].y + 0x200));
+            MTX_MultVec43(&in, &gScratchMtx, &out);
             Vec3_Add(&sum, &mSegmentPos[seg - 1], &out);
             mSegmentPos[seg].x = sum.x;
             mSegmentPos[seg].y = sum.y;
@@ -955,12 +955,12 @@ int daHanachan_c::Behavior()
         camA.x = 0; camA.y = 0x80000; camA.z = 0;
         camB.x = 0; camB.y = 0x80000; camB.z = 0x1f4000;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
-        MTX_MultVec43(&camA, &data_020a0e68, &scratch);
+        Matrix4x3_FromRotationY(&gScratchMtx, mSegmentRot[0].y);
+        MTX_MultVec43(&camA, &gScratchMtx, &scratch);
         Vec3_Add(&t0, &mPos, &scratch);
         camA = t0;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
-        MTX_MultVec43(&camB, &data_020a0e68, &scratch);
+        MTX_MultVec43(&camB, &gScratchMtx, &scratch);
         Vec3_Add(&t1, &mPos, &scratch);
         camB = t1;
         func_020092c4(cam, &cam->lookAt, &camA);
@@ -1070,8 +1070,8 @@ int daHanachan_c::InitResources()
             vb.x = zeroC;
             vb.y = zeroC;
             vb.z = zeroC;
-            Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
-            MTX_MultVec43(&va, &data_020a0e68, &vb);
+            Matrix4x3_FromRotationY(&gScratchMtx, mSegmentRot[0].y);
+            MTX_MultVec43(&va, &gScratchMtx, &vb);
             prev = i - 1;
             Vec3_Add(&out, &mSegmentPos[prev], &vb);
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = out.x;

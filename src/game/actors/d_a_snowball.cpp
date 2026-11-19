@@ -205,14 +205,14 @@ int daSnowball_c::SetState(daSnowball_StateRec *p) {
 }
 
 /* Builds the model's world matrix from position (>> 3 per axis, via Vec3_Asr)
- * and the three angles, through the scratch matrix data_020a0e68, and copies it
+ * and the three angles, through the scratch matrix gScratchMtx, and copies it
  * to mModel.mat4x3. */
 void daSnowball_c::UpdateModelMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* Releases the one shared file InitResources claimed. Touches no field: the

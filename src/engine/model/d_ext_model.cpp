@@ -57,7 +57,7 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 struct Model;
 struct MatAnimData;
 
-extern Matrix4x3 data_0209b3ec;
+extern Matrix4x3 gViewMtx;
 /* local extern: the camera-space matrix the Render paths use */
 /* local extern: no header declares it; sizes the transforms buffer from the file */
 extern "C" int func_02046564(void *file);
@@ -297,7 +297,7 @@ void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
 
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
     Matrix4x3 modelView;
-    MTX_Concat43(&mat4x3, &data_0209b3ec, &modelView);
+    MTX_Concat43(&mat4x3, &gViewMtx, &modelView);
     data.Render(&modelView, (Vector3 *)scale);
 }
 
@@ -615,7 +615,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
 
 void dExtCommonModel_c::Render(const Vector3 *scale) {
     Matrix4x3 modelView;
-    MTX_Concat43(&mat4x3, &data_0209b3ec, &modelView);
+    MTX_Concat43(&mat4x3, &gViewMtx, &modelView);
     data->Render(&modelView, (Vector3 *)scale);
 }
 
@@ -734,14 +734,14 @@ void dExtShadowModel_c::RenderAll() {
     if (node) {
         do {
             ModelComponents *model = node->data;
-            func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
-            MTX_Concat43(&data_020a0e68, node->mat, &data_020a0e68);
-            data_020a0e68.t.y += 0x2000;
-            MTX_Concat43(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
+            func_0203c178(&gScratchMtx, node->scale.x, node->scale.y, node->scale.z);
+            MTX_Concat43(&gScratchMtx, node->mat, &gScratchMtx);
+            gScratchMtx.t.y += 0x2000;
+            MTX_Concat43(&gScratchMtx, &gViewMtx, &gScratchMtx);
             model->SetShadowMask(node->opacity);
-            model->Render(&data_020a0e68, 0);
+            model->Render(&gScratchMtx, 0);
             model->SetShadowDraw(node->opacity, 1);
-            model->Render(&data_020a0e68, 0);
+            model->Render(&gScratchMtx, 0);
             node = node->next;
         } while (node);
     }

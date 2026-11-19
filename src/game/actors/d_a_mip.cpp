@@ -885,17 +885,17 @@ int daMip_c::SetState(void *record)
 
 void daMip_c::UpdateMatrixAndShadow()
 {
-    extern Matrix4x3 data_020a0e68;
+    extern Matrix4x3 gScratchMtx;
 
     char result[0x30];
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
     MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, result);
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
-    mShadowMtx = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
+    mShadowMtx = gScratchMtx;
     DropShadowRadHeight(mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
@@ -903,7 +903,7 @@ void daMip_c::UpdateMatrixAndShadow()
    offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot. */
 void daMip_c::UpdateCarriedMatrix()
 {
-    extern Matrix4x3 data_020a0e68;
+    extern Matrix4x3 gScratchMtx;
 
     int idx;
     Matrix4x3 *res;
@@ -919,15 +919,15 @@ void daMip_c::UpdateCarriedMatrix()
     }
     res = UpdateCarry(*mTalkingPlayer, data_ov085_021306ec[idx]);
     mAnmModel.mat4x3 = *res;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xc000) >> 3, mPos.z >> 3);
-    mShadowMtx = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0xc000) >> 3, mPos.z >> 3);
+    mShadowMtx = gScratchMtx;
     DropShadowRadHeight(mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
 /* Second shadow, on the far side of the mirror plane at x = 0x1086000. */
 void daMip_c::UpdateMirrorShadow()
 {
-    extern Matrix4x3 data_020a0e68;
+    extern Matrix4x3 gScratchMtx;
 
     Vector3 v;
     Vector3 res;
@@ -940,17 +940,17 @@ void daMip_c::UpdateMirrorShadow()
     vd = mPos;
     vd.x = 0x1086000;
     v.z = Vec3_HorzDist(&mPos, &vd);
-    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle(&mPos, &vd));
-    MTX_MultVec43(&v, &data_020a0e68, &res);
+    Matrix4x3_FromRotationY(&gScratchMtx, Vec3_HorzAngle(&mPos, &vd));
+    MTX_MultVec43(&v, &gScratchMtx, &res);
     {
         int t;
         vd.x = vd.x + res.x;
         t = mPos.y;
         vd.y = t;
         vd.z = vd.z + res.z;
-        Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
+        Matrix4x3_FromTranslation(&gScratchMtx, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
     }
-    mMirrorMtx = data_020a0e68;
+    mMirrorMtx = gScratchMtx;
     DropShadowRadHeight(mShadowModel2, mMirrorMtx, 0x46000, 0x258000, 0xf);
 }
 
@@ -1019,13 +1019,13 @@ int daMip_c::Render()
    UpdateMirrorShadow's plane. */
 void daMip_c::RenderMirrorImage()
 {
-    extern int data_020a0e68;
+    extern int gScratchMtx;
 
     Matrix4x3 saved;
     saved = mAnmModel.mat4x3;
     mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
-    func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
-    MTX_Concat33(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
+    func_0203c178(&gScratchMtx, -0x1000, 0x1000, 0x1000);
+    MTX_Concat33(&mAnmModel.mat4x3, &gScratchMtx, &mAnmModel.mat4x3);
     mAnmModel.ClearMaterialFlags(0x80);
     mAnmModel.SetMaterialFlags(0x40);
     mAnmModel.dExtAnmModel_c::Render(&mScale);
@@ -1038,7 +1038,7 @@ void daMip_c::RenderMirrorImage()
 /* The glowing-rabbit chase, and it is mostly a conversation.
  *
  * The opening gate depends on the mode. Normally mIsDisabled latches the rabbit
- * out of the level until data_0209caa0.file.flags2 clears bit 0x20000; in mode 0x32 the
+ * out of the level until gSaveBlock.file.flags2 clears bit 0x20000; in mode 0x32 the
  * test inverts -- the rabbit runs only for the player whose character id matches
  * mCharacterId and latches itself off for everyone else, which is what makes one
  * actor behave differently per player.
@@ -1071,7 +1071,7 @@ int daMip_c::Behavior()
 
     if (gCurrentSublevel != 0x32) {
         if (mIsDisabled == 1) {
-            if (data_0209caa0.file.flags2 & 0x20000)
+            if (gSaveBlock.file.flags2 & 0x20000)
                 mIsDisabled = 0;
             return 1;
         }
@@ -1079,14 +1079,14 @@ int daMip_c::Behavior()
         player = ClosestPlayer();
         if (player == 0)
             return 1;
-        if (!(data_0209caa0.file.flags2 & 0x20000) || mCharacterId != player->mCharacter) {
+        if (!(gSaveBlock.file.flags2 & 0x20000) || mCharacterId != player->mCharacter) {
             mIsDisabled = 1;
             return 1;
         }
         mIsDisabled = 0;
     }
 
-    if (mRabbitId == 7 && !(data_0209caa0.file.flags1 & 0x40))
+    if (mRabbitId == 7 && !(gSaveBlock.file.flags1 & 0x40))
         data_0209f33c = this;
 
     if (mIsGlowing != 0) {
@@ -1257,13 +1257,13 @@ int daMip_c::InitResources()
 
     rabbitId = mRabbitId;
     if (rabbitId != 7) {
-        if (!(data_0209caa0.file.flags1 & 0x40000000))
+        if (!(gSaveBlock.file.flags1 & 0x40000000))
             return 0;
     }
 
     if ((rabbitId == 5 && mCharacterId == 0) || (rabbitId == 1 && mCharacterId == 1) ||
         (rabbitId == 6 && mCharacterId == 3)) {
-        if (!(data_0209caa0.file.flags2 & 0x80000))
+        if (!(gSaveBlock.file.flags2 & 0x80000))
             return 0;
     }
 
@@ -1287,7 +1287,7 @@ int daMip_c::InitResources()
     mScale.y = mScale.z;
 
     if (mRabbitId == 7) {
-        if (data_0209caa0.file.flags1 & 0x40)
+        if (gSaveBlock.file.flags1 & 0x40)
             return 0;
         mIsDisabled = 1;
     } else {

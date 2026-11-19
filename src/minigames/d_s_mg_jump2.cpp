@@ -185,8 +185,8 @@ s32 dScMgJump2_c::InitResources() {
     bmdFile = dExtSimpleModel_c::LoadFile(sJump2Back02ModelFile);
 
     if (mModel.SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
-        Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        mModel.mat4x3 = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, 0, 0, 0);
+        mModel.mat4x3 = gScratchMtx;
         return 0;
     }
 
@@ -379,8 +379,8 @@ s32 dScMgJump2_c::Render() {
     Mg_DrawTopRightCounter(sJumpComboCount, 4);
     Jump2Popup_DrawAll();
     Jump2_SetLights();
-    Matrix4x3_FromTranslation(&data_020a0e68, 0, 0xffead000, -0xa0000);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, 0, 0xffead000, -0xa0000);
+    mModel.mat4x3 = gScratchMtx;
 
     /* Kept (#821 r77): the ROM copy-initializes the scale with one ldm/stm
        block move, which only a POD VecFx32 gives (a Vector3 copy is

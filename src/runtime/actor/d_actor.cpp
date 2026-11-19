@@ -186,9 +186,9 @@ u8 IsAreaShowing(int areaId);
 
 extern int data_0209fc68;
 /* nonzero forces the actor to think anyway */
-extern Matrix4x3 data_0209b3ec;
+extern Matrix4x3 gViewMtx;
 /* world -> camera */
-extern dClipper data_0209f43c;
+extern dClipper gClipper;
 /* the dClipper instance */
 extern u8 data_0209f274;
 /* doubles the clip distance when set */
@@ -223,10 +223,10 @@ int dActor_c::BeforeBehavior()
             scaledPos.x = mPos.x >> 3;
             scaledPos.y = (mPos.y + mClipOffsetY) >> 3;
             scaledPos.z = mPos.z >> 3;
-            MTX_MultVec43(&scaledPos, &data_0209b3ec, &mCamSpacePos);
+            MTX_MultVec43(&scaledPos, &gViewMtx, &mCamSpacePos);
         }
         if (mFlags & 0x10003) {
-            int r = data_0209f43c.ClipSphere(mCamSpacePos, mClipRadius, &mClipResult);
+            int r = gClipper.ClipSphere(mCamSpacePos, mClipRadius, &mClipResult);
             int thresh = mClipDistance;
             if (data_0209f274)
                 thresh <<= 1;
@@ -790,28 +790,28 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
        own matrix; only its translation survives. */
     dExtSimpleModel_c *body = (dExtSimpleModel_c *)player.GetBodyModel();
     Matrix4x3 *bones = body->data.transforms;
-    data_020a0e68 = body->mat4x3;
-    MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
-    t.x = data_020a0e68.t.x;
-    t.y = data_020a0e68.t.y;
-    t.z = data_020a0e68.t.z;
+    gScratchMtx = body->mat4x3;
+    MTX_Concat43(&bones[14], &gScratchMtx, &gScratchMtx);
+    t.x = gScratchMtx.t.x;
+    t.y = gScratchMtx.t.y;
+    t.z = gScratchMtx.t.z;
     mPrevAngle.y = player.mAngle.y;
     mAngle.y = mPrevAngle.y;
-    Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
     Vector3 asr;
     /* vec is a const reference; Vec3_Asr's definition is not const-qualified. */
     Vec3_Asr(&asr, const_cast<Vector3 *>(&vec), 3);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    mPos.x = data_020a0e68.t.x;
-    mPos.y = data_020a0e68.t.y;
-    mPos.z = data_020a0e68.t.z;
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, asr.x, asr.y, asr.z);
+    mPos.x = gScratchMtx.t.x;
+    mPos.y = gScratchMtx.t.y;
+    mPos.z = gScratchMtx.t.z;
     Vector3 lsl;
     Vec3_Lsl(&lsl, &mPos, 3);
     mPos.x = lsl.x;
     mPos.y = lsl.y;
     mPos.z = lsl.z;
-    return &data_020a0e68;
+    return &gScratchMtx;
 }
 
 extern dCamera_c *gCamera;

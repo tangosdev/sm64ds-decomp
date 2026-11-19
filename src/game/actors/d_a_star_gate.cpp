@@ -240,14 +240,14 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
         entry = &data_ov100_02148390[param1];
         isSpecial = entry->numStars == 0x50;
         notEnoughStars = NumStars() < entry->numStars;
-        isMario = data_0209caa0.file.mCharacter == 0;
+        isMario = gSaveBlock.file.mCharacter == 0;
 
         /* A door already unlocked in the save just opens. So does the 80-star
            door from behind (mScale.z <= 0), or for Mario with enough stars.
            Otherwise it shows its message (or, for Mario with enough stars,
            starts the unlock talk) and falls back to TryOpenDoor when that
            call returns 0. */
-        if (!(data_0209caa0.file.flags1 & (0x8000 << entry->saveFlag))) {
+        if (!(gSaveBlock.file.flags1 & (0x8000 << entry->saveFlag))) {
             if (!isSpecial || (mScale.z > 0 && (notEnoughStars || !isMario))) {
                 Vector3 messagePos(mPos.x, mPos.y + 0xb4000, mPos.z);
 
@@ -308,7 +308,7 @@ bool daStarGate_c::St_Unlocking_Main(daPly_c *player) {
     if (!player->IsOpeningDoorWithStar()) {
         daStarGateInfo *entry = &data_ov100_02148390[param1];
         s8 sh = entry->saveFlag;
-        data_0209caa0.file.flags1 |= 0x8000 << sh;
+        gSaveBlock.file.flags1 |= 0x8000 << sh;
         TryOpenDoor(player);
     }
     return true;

@@ -34,7 +34,7 @@
  *   reference spelling; a pointer emits identical ARM. SetState's `int`
  *   signedness is indistinguishable.
  * - func_0201267c (throw SFX 0xd2 at +0x74, mCamSpacePos),
- *   FX_SinCosTable_ (sin/cos pairs) and data_020a0e68 (arm9 scratch
+ *   FX_SinCosTable_ (sin/cos pairs) and gScratchMtx (arm9 scratch
  *   matrix) keep linker names.
  * - This TU claims .text only: the SharedFilePtr handles, the BCA/BTP
  *   pointer tables, the PMF state table data_ov077_02127bc4 and the
@@ -429,13 +429,13 @@ void daJgm_c::UpdateModels()
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     if (mState == 4) {
-        data_020a0e68 = mAnmModel.mat4x3;
+        gScratchMtx = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y1, 0);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y2, 0);
+        mAnmModel.mat4x3 = gScratchMtx;
     }
 
     mMatrix.t.x = mPos.x >> 3;
@@ -456,21 +456,21 @@ void daJgm_c::UpdateModels()
     Vector3 offset(-0x2000, 0x1800, 0x1000);
     Vector3 pos;
 
-    data_020a0e68 = mAnmModel.mat4x3;
-    MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    gScratchMtx = mAnmModel.mat4x3;
+    MTX_Concat43(&mAnmModel.data.transforms[3], &gScratchMtx, &gScratchMtx);
 
-    mThrowPos.x = data_020a0e68.t.x;
-    mThrowPos.y = data_020a0e68.t.y;
-    mThrowPos.z = data_020a0e68.t.z;
+    mThrowPos.x = gScratchMtx.t.x;
+    mThrowPos.y = gScratchMtx.t.y;
+    mThrowPos.z = gScratchMtx.t.z;
 
     Vec3_LslInPlace(&mThrowPos, 3);
     Vec3_Asr(&pos, &mThrowPos, 3);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, offset.x, offset.y, offset.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, offset.x, offset.y, offset.z);
 
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 }
 
 void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)

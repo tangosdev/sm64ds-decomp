@@ -444,7 +444,7 @@ int daJango_c::CleanupResources()
    1. dExtSimpleModel_c matrix: translation = mPos >> 3, rotation = mAngle X/Y/Z
       (Matrix4x3_ApplyInPlaceToRotationZXYExt), stored in mBlendAnmModel.mat4x3.
    2. If something is held: multiply bone 6 of the model by the model matrix into
-      mHeldMat, set mHeldPos to the translation row of data_020a0e68 shifted
+      mHeldMat, set mHeldPos to the translation row of gScratchMtx shifted
       back up by 3, then place the held actor with a fixed offset and rotation
       (one pair for a star, one for the cap) and hand it a pointer to mHeldMat.
    3. Shadow matrix: mPos >> 3 with Y lowered by 0x18000 (24 units). */
@@ -453,9 +453,9 @@ void daJango_c::UpdateModelAndShadow() {
     dActor_c* actor;
 
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mBlendAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mBlendAnmModel.mat4x3 = gScratchMtx;
 
     if (mHeldActorID != 0)
     {
@@ -466,31 +466,31 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPos.y = 0;
             mHeldPos.z = 0;
             MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
-            mHeldPos.x = data_020a0e68.t.x;
-            mHeldPos.y = data_020a0e68.t.y;
-            mHeldPos.z = data_020a0e68.t.z;
+            mHeldPos.x = gScratchMtx.t.x;
+            mHeldPos.y = gScratchMtx.t.y;
+            mHeldPos.z = gScratchMtx.t.z;
             mHeldPos.x <<= 3;
             mHeldPos.y <<= 3;
             mHeldPos.z <<= 3;
             if (mCarriedItem == CARRIES_STAR)
             {
                 /* Offset (-13.0, 3.0, -4.0), rotation X/Y/Z = 0, -180, -95.6 degrees. */
-                Matrix4x3_FromTranslation(&data_020a0e68, -0xd000, 0x3000, -0x4000);
-                Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, -0x8000, -0x4400);
+                Matrix4x3_FromTranslation(&gScratchMtx, -0xd000, 0x3000, -0x4000);
+                Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, 0, -0x8000, -0x4400);
             }
             else
             {
                 /* Offset (-7.0, 1.5, 0.0), rotation X/Y/Z = -67.5, -180, -90 degrees. */
-                Matrix4x3_FromTranslation(&data_020a0e68, -0x7000, 0x1800, 0);
-                Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x3000, -0x8000, -0x4000);
+                Matrix4x3_FromTranslation(&gScratchMtx, -0x7000, 0x1800, 0);
+                Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, -0x3000, -0x8000, -0x4000);
             }
-            MTX_Concat43(&data_020a0e68, &mHeldMat, &mHeldMat);
+            MTX_Concat43(&gScratchMtx, &mHeldMat, &mHeldMat);
             actor->mCarryMatrix = &mHeldMat;
         }
     }
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
-    mShadowMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
+    mShadowMat = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x40000, 0x258000, 0xf);
 }
 
@@ -524,9 +524,9 @@ int daJango_c::EnterFlyPathState() {
         in.x = 0; in.y = 0; in.z = 0;
         out.x = 0; out.y = 0; out.z = 0;
         in.z = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, -0x4000);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
         mSpeed.y = out.y;
         mStateTimer = 60;
     }
@@ -599,8 +599,8 @@ int daJango_c::UpdateFlyPathState() {
         zero[0] = 0;
         zero[1] = 0;
         zero[2] = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43((Vector3 *)zero, &data_020a0e68, &mSpeed);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43((Vector3 *)zero, &gScratchMtx, &mSpeed);
         ChangeState(JANGO_STATE_CIRCLE);
         return 1;
     }
@@ -871,9 +871,9 @@ int daJango_c::UpdateSwoopState() {
         ApproachLinear(mPrevAngle.x, pitch, (s16)(mStateParam + 0x500));
     }
     v.z = 0x1e000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    MTX_MultVec43(&v, &gScratchMtx, &mSpeed);
     HandleCylinderHit();
     if (mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
         mTimer = 30;
@@ -1172,9 +1172,9 @@ void daJango_c::UpdateCircleVelocity() {
         }
         v[0].z = 0x28000;
     }
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    MTX_MultVec43(&v[0], &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    MTX_MultVec43(&v[0], &gScratchMtx, &mSpeed);
 }
 
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body

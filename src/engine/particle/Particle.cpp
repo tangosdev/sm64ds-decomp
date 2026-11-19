@@ -30,7 +30,7 @@ extern "C" {
 void DecompressLZ16(const void* src, void* dst);
 }
 
-extern Matrix4x3 data_0209b3ec;
+extern Matrix4x3 gViewMtx;
 extern u32 sParticlePalVramLowCursor;
 extern u32 sParticlePalVramHighCursor;
 extern signed char gCurrentSublevel;
@@ -167,7 +167,7 @@ void RenderAll()
     if (!particle)
         return;
 
-    func_02049ee8(particle->mManager, &data_0209b3ec);
+    func_02049ee8(particle->mManager, &gViewMtx);
 }
 
 void *System::NewSimple(u32 uniqueID, fx32 x, fx32 y, fx32 z) {

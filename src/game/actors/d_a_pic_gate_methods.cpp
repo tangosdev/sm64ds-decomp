@@ -8,7 +8,7 @@
  * State 0 is the ripple mesh: fill the grid, count the wave down, draw a
  * triangle strip. State 1 fills that mesh and pulses the center, then each
  * frame slides picture 7 from mClosedPosX by 2050 once star 1 of level
- * 0x12 is in, and latches bit 0x40000 of data_0209caa0.file.flags2. The same shift
+ * 0x12 is in, and latches bit 0x40000 of gSaveBlock.file.flags2. The same shift
  * is what daChScene_c applies to an exit whose high param byte is 0x12.
  * Picture 4 in state 1 clears the two clip-enable flags. States 2 and 3
  * are the flat 2x2 quad; their other handlers are outside this run.
@@ -94,7 +94,7 @@ enum {
 };
 
 extern "C" {
-extern Matrix4x3 data_0209b3ec;
+extern Matrix4x3 gViewMtx;
 extern const u8 data_ov080_02127714[8] = {13, 14, 16, 20, 20, 25, 30, 0};
 extern void G3_LoadMtx43(void *mtx);
 extern const int data_ov080_02127834[5] = {0x3a000, 0x1111, 0x16c000, 0x384000, 0x64};
@@ -126,10 +126,10 @@ struct PicGateFilePtr : SharedFilePtr {
 
 /* State 1 behavior. Picture 7 slides open; every picture then ripples. */
 void daPicGate_c::UpdateContinuousRipple() {
-    if ((u8)((this->param1 >> 8) & 0x1f) == kPicSlide && !(data_0209caa0.file.flags2 & kOpened) &&
+    if ((u8)((this->param1 >> 8) & 0x1f) == kPicSlide && !(gSaveBlock.file.flags2 & kOpened) &&
         IsStarCollectedInLevel(kGateLevel, kGateStar)) {
         if (ApproachLinear(this->mPos.x, this->mClosedPosX + kSlide, kSlideStep))
-            data_0209caa0.file.flags2 |= kOpened;
+            gSaveBlock.file.flags2 |= kOpened;
         this->BuildGateMatrix();
     }
     this->HitTest();
@@ -186,7 +186,7 @@ void daPicGate_c::DrawRippleImage() {
     }
 
     G3_PushMtx();
-    MTX_Concat43(&this->mMtx, &data_0209b3ec, &modelView);
+    MTX_Concat43(&this->mMtx, &gViewMtx, &modelView);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     LoadMtx43(&modelView);
     G3_MtxMode(GX_MTXMODE_POSITION);
@@ -357,7 +357,7 @@ s32 daPicGate_c::InitResources() {
     if ((unsigned char)((param1 >> 8) & 0x1f) == kPicSlide) {
         if ((unsigned char)((param1 >> 13) & 3) == 1) {
             mClosedPosX = mPos.x;
-            if (data_0209caa0.file.flags2 & kOpened)
+            if (gSaveBlock.file.flags2 & kOpened)
                 mPos.x += kSlide;
         }
     }

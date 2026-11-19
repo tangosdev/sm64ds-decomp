@@ -113,9 +113,9 @@ int daWater_Hakidasi_c::State0() {
             delta.x = 0;
             delta.y = 0;
             delta.z = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, (s16)(HorzAngleToCPlayer() + 0x8000));
-            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
-            MTX_MultVec43(&vec, &data_020a0e68, &delta);
+            Matrix4x3_FromRotationY(&gScratchMtx, (s16)(HorzAngleToCPlayer() + 0x8000));
+            Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, -0x4000);
+            MTX_MultVec43(&vec, &gScratchMtx, &delta);
             playerPos = &player->mPos;
             vec.x = playerPos->x;
             vec.y = playerPos->y;

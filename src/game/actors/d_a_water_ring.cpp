@@ -174,10 +174,10 @@ int daWater_Ring_c::SetState(const State *state) {
 void daWater_Ring_c::UpdateModel() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
     mModel.ApplyOpacity(mOpacity, 1);
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 }
 
 int daWater_Ring_c::CleanupResources() {

@@ -1120,10 +1120,10 @@ void Trmp2Spinner_Update(char *raw) {
 }
 
 extern "C" void Trmp2Spinner_UpdateMatrix(char *raw) {
-    Matrix4x3_FromTranslation(&data_020a0e68, SPINNER(raw)->mPos.x, SPINNER(raw)->mPos.y,
+    Matrix4x3_FromTranslation(&gScratchMtx, SPINNER(raw)->mPos.x, SPINNER(raw)->mPos.y,
                               SPINNER(raw)->mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, SPINNER(raw)->mAngleZ);
-    SPINNER(raw)->mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, SPINNER(raw)->mAngleZ);
+    SPINNER(raw)->mModel.mat4x3 = gScratchMtx;
     SPINNER(raw)->mModel.Render(&SPINNER(raw)->mScale);
 }
 

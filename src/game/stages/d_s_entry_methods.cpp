@@ -89,7 +89,7 @@ extern "C" void func_02020028(int player, unsigned char mode);
 extern dGraph_c::callback_c *gGraphCallback;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern s32 data_0208ee44;
+extern s32 gFrameStep;
 
 /* The scene manager Behavior polls through its slot 5. */
 extern dFdBrightness_c *gSceneFader;
@@ -902,7 +902,7 @@ void dScEntry_c::EnterQuitMessage() {
 }
 
 void dScEntry_c::UpdateQuit() {
-    mStepDelay -= data_0208ee44;
+    mStepDelay -= gFrameStep;
     if (mStepDelay > 0)
         return;
     dScene_c::StartSceneFade(1, 0, 0);
@@ -1214,7 +1214,7 @@ void dScEntry_c::UpdateResults() {
                         acc |= gTouchInfo[i].held && gTouchInfo[i].edge;
                     }
                 }
-                mStepDelay -= data_0208ee44;
+                mStepDelay -= gFrameStep;
                 if (mStepDelay <= 0 || (mStepDelay < 540 && acc != 0)) {
                     func_02020334();
                     mStepWork[3] = 1;
@@ -1224,7 +1224,7 @@ void dScEntry_c::UpdateResults() {
                     func_02020124();
             }
         } else if (mStepWork[3] == 0) {
-            mStepDelay -= data_0208ee44;
+            mStepDelay -= gFrameStep;
             if (mStepDelay < 480) {
                 func_02020334();
                 mStepWork[3] = 1;
@@ -1329,7 +1329,7 @@ void dScEntry_c::UpdateMatchLoading() {
             mStepPhase = MATCH_LOAD_READY;
     }
     if (mStepDelay > 0) {
-        mStepDelay -= data_0208ee44;
+        mStepDelay -= gFrameStep;
     }
     if (mStepPhase < MATCH_LOAD_READY)
         return;
@@ -1492,7 +1492,7 @@ void dScEntry_c::UpdatePlayerSelectIntro() {
     }
 
     if (mStepDelay > 0) {
-        mStepDelay -= data_0208ee44;
+        mStepDelay -= gFrameStep;
         return;
     }
     if (!mStepPhase)
@@ -1634,7 +1634,7 @@ void dScEntry_c::RenderWaitingText() {
             mWaiting.waveDelay = 120;
     } else {
         OAM::RenderSub(glyph, 128, 96);
-        mWaiting.waveDelay -= data_0208ee44;
+        mWaiting.waveDelay -= gFrameStep;
         mWaiting.wavePhase = 0;
     }
 }
@@ -1786,7 +1786,7 @@ void dScEntry_c::RenderRecruitText() {
             mWaiting.waveDelay = 120;
     } else {
         OAM::RenderSub(attr, 128, 28);
-        mWaiting.waveDelay -= data_0208ee44;
+        mWaiting.waveDelay -= gFrameStep;
         mWaiting.wavePhase = 0;
     }
 }
@@ -1852,7 +1852,7 @@ void dScEntry_c::EnterStepFadeOut() {
 }
 
 void dScEntry_c::UpdateStepDelay() {
-    mStepDelay -= data_0208ee44;
+    mStepDelay -= gFrameStep;
     if (mStepDelay > 0)
         return;
     SetSteps(mPendingSteps);
@@ -2113,7 +2113,7 @@ s32 dScEntry_c::InitResources() {
         }
     }
 
-    data_0208ee44 = 2;
+    gFrameStep = 2;
     data_02092778 = 0;
     return 1;
 }

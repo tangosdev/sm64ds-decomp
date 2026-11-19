@@ -242,7 +242,7 @@ extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. */
 extern dFdBrightness_c *gSceneFader;
 extern u8 data_ov002_02111144;
-extern int data_020a0db0;
+extern int gGlobalTimer;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
 extern const int data_ov002_02100140[];
@@ -324,13 +324,13 @@ extern char *gCamera;
 extern VecFx32 data_ov002_0210b958;
 }
 
-/* local extern dropped: decl_common.h declares data_0209b41c */
+/* local extern dropped: decl_common.h declares gInvViewMtx */
 extern "C" {
 
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 
-/* local extern dropped: decl_common.h declares data_0209b41c */
-extern int data_0208ee44;
+/* local extern dropped: decl_common.h declares gInvViewMtx */
+extern int gFrameStep;
 extern int data_ov002_0210b970[3];
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];
@@ -338,7 +338,7 @@ extern daPly_c *gPlayers[];
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 extern int data_ov002_0210b964[3];
-extern Matrix4x3 data_0209b41c;
+extern Matrix4x3 gInvViewMtx;
 extern unsigned char gGameMode;
 extern char data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
@@ -405,7 +405,7 @@ extern "C" struct OamAttr *data_ov002_0210be1c[];
 void daDemo_c::func_ov002_020f20f4() {
     for (int i = 0; i < 3; i++) {
         if (mScroll->spriteActive[i] != 0) {
-            if ((data_020a0db0 & 1) == 0) {
+            if ((gGlobalTimer & 1) == 0) {
                 mScroll->spriteX[i] += mScroll->spriteVelX[i];
                 RandomIntInternal(&data_0209e650.value);
                 if (mScroll->spriteVelX[i] >= 0) {
@@ -524,7 +524,7 @@ int daDemo_c::func_ov002_020f23f0()
         }
         break;
     case 2:
-        if ((data_020a0db0 & 1) == 0) {
+        if ((gGlobalTimer & 1) == 0) {
             mScroll->bg1Y++;
             mScroll->bg0Y--;
             if (mScroll->bg1Y >= 0x80) {
@@ -553,7 +553,7 @@ int daDemo_c::func_ov002_020f23f0()
         func_ov002_020f237c();
         break;
     case 5:
-        if ((data_020a0db0 & 1) == 0) {
+        if ((gGlobalTimer & 1) == 0) {
             mScroll->bg1Y++;
             mScroll->bg0Y--;
             if (mScroll->bg1Y >= 0xe0) {
@@ -2738,7 +2738,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
          .data VecFx32 (a Vector3, which declares constructors, would be
          built by __sinit instead), and MtxStack.h's MTX_MultVec43 overload
          takes the game's Vector3. */
-        MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
+        MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &gInvViewMtx, &v);
         Vec3_LslInPlace((int *)&v, 3);
         func_ov002_020f6f48(&v, 8);
     }
@@ -2938,7 +2938,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         this->mAngle.z = 0;
         Message::func_0201f138();
     }
-    MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
+    MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &gInvViewMtx, (&this->mPos));
     Vec3_LslInPlace(&this->mPos.x, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         Message::func_0201ef38();
@@ -3005,7 +3005,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *src, int first) {
         dp->y = sum.y;
         dp->z = sum.z;
     }
-    MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &data_0209b41c, &this->mPos);
+    MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &gInvViewMtx, &this->mPos);
     Vec3_LslInPlace(&this->mPos.x, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
@@ -3018,7 +3018,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
     if (mode == gKuppaScriptFrame) {
         if (mode == 0) {
-            data_0208ee44 = 3;
+            gFrameStep = 3;
             return 1;
         }
 
@@ -3256,7 +3256,7 @@ int daDemo_c::Render() {
             Matrix4x3 *cur;
             Matrix4x3 *src;
         } s;
-        s.src = &data_0209b41c;
+        s.src = &gInvViewMtx;
         s.p = &mModel->mat4x3;
         s.cur = s.p;
         *s.cur = *s.src;
@@ -3329,20 +3329,20 @@ int daDemo_c::Behavior()
         }
     }
     Vec3_Asr(&asr, &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, asr.x, asr.y, asr.z);
     t = this->param1;
     if ((t >= 0x1a) && (t <= 0x2d)) {
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, this->mAngle.x, this->mAngle.y,
                                                this->mAngle.z);
     } else {
-        Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+        Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, this->mAngle.x, this->mAngle.y,
                                                this->mAngle.z);
     }
     if (this->mModel != 0) {
-        this->mModel->mat4x3 = data_020a0e68;
+        this->mModel->mat4x3 = gScratchMtx;
     }
     if (this->mAnmModel != 0) {
-        this->mAnmModel->mat4x3 = data_020a0e68;
+        this->mAnmModel->mat4x3 = gScratchMtx;
         (((anmModel_c *)this->mAnmModel))->func_ov002_020f64ac(data_ov002_0210bc88);
         (((anmModel_c *)this->mAnmModel))->func_ov002_020f65ec();
     }

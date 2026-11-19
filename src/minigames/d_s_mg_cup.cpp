@@ -96,7 +96,7 @@ extern PMF sCupStateTable[];
 extern AnimStep *sCupAnimTable[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern unsigned int LoadCompressedFileAt(int, void *);
 extern void *LoadFile(int);
 }
@@ -805,7 +805,7 @@ s32 dScMgCup_c::InitResources() {
     GXS_LoadOBJPltt(file, 0, 0xa0);
     Deallocate(file);
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     Mg_ResetRecordBannerPos();
     sMgClearBannerX = 0x80;
     sMgClearBannerY = 0x88;

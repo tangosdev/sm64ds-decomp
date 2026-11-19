@@ -1494,7 +1494,7 @@
       "evidence": "int *. Read here by func_0202b0e0. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f32c",
+      "symbol": "gWaterHeight",
       "address": "0x0209f32c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1529,7 +1529,7 @@
       "evidence": "void *. No reader in this TU. Read outside this TU by dMap_c::Behavior and daMip_c::Behavior (ov002, ov085), so global."
     },
     {
-      "symbol": "data_0209f340",
+      "symbol": "sLevelInfo",
       "address": "0x0209f340",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1648,7 +1648,7 @@
       "evidence": "dActor_c *[12]. STAR_MARKERS, dActor_c *[12] (0x30): SetStarMarker stores the actor and gStarMarkerTypes its type; dActor_c::TrackStar, daStar_c::AddStarMarker and daCoin_c look for a free slot and dMap_c::Behavior draws them. The old address name data_0209f40c named the same object and is retired."
     },
     {
-      "symbol": "data_0209f43c",
+      "symbol": "gClipper",
       "address": "0x0209f43c",
       "size": "0x5c",
       "evidence": "the file-scope dClipper. Retail __sinit_02074e84 calls _ZN8dClipperC1Ev and registers _ZN8dClipperD1Ev. sizeof is 0x5c; the next symbol is data_0209f498.",
@@ -2927,7 +2927,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f330"
     },
     {
-      "symbol": "data_0209f340",
+      "symbol": "sLevelInfo",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f340"
@@ -3025,7 +3025,7 @@
       "source": "0x02074ed0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209f43c",
+      "symbol": "gClipper",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209f43c"

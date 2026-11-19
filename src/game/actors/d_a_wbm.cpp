@@ -420,10 +420,10 @@ void daWbm_c::func_ov098_0213b584()
 {
     Vector3 shadowPos;
     Vec3_Asr(&shadowPos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, shadowPos.x, shadowPos.y, shadowPos.z);
-    mShadowMat = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, shadowPos.x, shadowPos.y, shadowPos.z);
+    mShadowMat = gScratchMtx;
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    mModel.mat4x3 = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0xa0, 0x3e8000, 6);
 }
 

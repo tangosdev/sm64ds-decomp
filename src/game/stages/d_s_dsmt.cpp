@@ -67,7 +67,7 @@ extern u8 gSoftResetPending;
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *gGraphCallback;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern void *data_020a0ea0;
 /* Linker-defined overlay IDs: the address is the overlay number. */
 extern int OVERLAY_100_ID;
@@ -140,43 +140,43 @@ u8 DSMT_MenuCallback(s32 command) {
         TurnBacklightOff();
     } else if (command == 8) {
         SaveData::EraseSaveFile(0, (char *)DSMT_GetFileBuffer(0));
-        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &data_0209caa0.file);
+        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &gSaveBlock.file);
     } else if (command == 9) {
         SaveData::EraseSaveFile(1, (char *)DSMT_GetFileBuffer(1));
-        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &data_0209caa0.file);
+        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &gSaveBlock.file);
     } else if (command == 10) {
         SaveData::EraseSaveFile(2, (char *)DSMT_GetFileBuffer(2));
-        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &data_0209caa0.file);
+        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &gSaveBlock.file);
     } else if (command == 11) {
         FileSaveData *fileBuffer = DSMT_GetFileBuffer(0);
         if (func_02013c84(0, fileBuffer, 1, DSMT_GetFileBuffer(1)) == 0)
             failed = 1;
-        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &data_0209caa0.file);
+        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &gSaveBlock.file);
     } else if (command == 12) {
         FileSaveData *fileBuffer = DSMT_GetFileBuffer(0);
         if (func_02013c84(0, fileBuffer, 2, DSMT_GetFileBuffer(2)) == 0)
             failed = 1;
-        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &data_0209caa0.file);
+        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &gSaveBlock.file);
     } else if (command == 13) {
         FileSaveData *fileBuffer = DSMT_GetFileBuffer(1);
         if (func_02013c84(1, fileBuffer, 0, DSMT_GetFileBuffer(0)) == 0)
             failed = 1;
-        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &data_0209caa0.file);
+        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &gSaveBlock.file);
     } else if (command == 14) {
         FileSaveData *fileBuffer = DSMT_GetFileBuffer(1);
         if (func_02013c84(1, fileBuffer, 2, DSMT_GetFileBuffer(2)) == 0)
             failed = 1;
-        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &data_0209caa0.file);
+        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &gSaveBlock.file);
     } else if (command == 15) {
         FileSaveData *fileBuffer = DSMT_GetFileBuffer(2);
         if (func_02013c84(2, fileBuffer, 0, DSMT_GetFileBuffer(0)) == 0)
             failed = 1;
-        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &data_0209caa0.file);
+        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &gSaveBlock.file);
     } else if (command == 16) {
         FileSaveData *fileBuffer = DSMT_GetFileBuffer(2);
         if (func_02013c84(2, fileBuffer, 1, DSMT_GetFileBuffer(1)) == 0)
             failed = 1;
-        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &data_0209caa0.file);
+        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &gSaveBlock.file);
     } else if (command == 17) {
         DSMT_SetPendingMusic(0x37, 8);
     } else if (command == 18) {
@@ -188,7 +188,7 @@ u8 DSMT_MenuCallback(s32 command) {
         for (saveSlot = 0; (s32)saveSlot < 3; saveSlot++, files++) {
             if (SaveData::ReadFileData(saveSlot, files) == 0)
                 failed = 1;
-            func_02013c84(saveSlot, files, -1, &data_0209caa0.file);
+            func_02013c84(saveSlot, files, -1, &gSaveBlock.file);
             DSMT_UpdateBootArgs(saveSlot);
         }
     } else if (command == 21) {
@@ -206,7 +206,7 @@ u8 DSMT_MenuCallback(s32 command) {
     } else if (command == 19) {
         Sound::StopLoadedMusic_Layer1(60);
     }
-    DSMT_UpdateBootArgs(data_0209caa0.activeFile);
+    DSMT_UpdateBootArgs(gSaveBlock.activeFile);
     return failed;
 }
 
@@ -231,7 +231,7 @@ s32 dScDSMT_c::InitResources() {
     ::Initialise3dGraphics(0);
     gGraphCallback = &mGraphCallback;
     dScene_c::SetFaders(&fader);
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     GX::DisableAllBanks();
     data_ov007_02103260 = -1;
     ((Ov007MenuHooks *)&data_ov007_02103290)->func_ov007_020b7138((Ov007BootArgs *)data_0209b340);
@@ -274,7 +274,7 @@ s32 dScDSMT_c::Behavior() {
         } else if (result == 5) {
             saveSlot = 2;
         }
-        func_02013c84(saveSlot, data_0209b33c + saveSlot, -1, &data_0209caa0.file);
+        func_02013c84(saveSlot, data_0209b33c + saveSlot, -1, &gSaveBlock.file);
         StartFile(1, 0);
     } else if (result == 6) {
         if (data_0209d524 == 0) {
@@ -323,7 +323,7 @@ void DSMT_UpdateBootArgs(u32 saveSlot) {
     }
 
     sBootArgs.backlightOn = data_0208ee3c;
-    data_0209b34b[saveSlot] = (data_0209caa0.file.flags1 & 1) != 0;
+    data_0209b34b[saveSlot] = (gSaveBlock.file.flags1 & 1) != 0;
 
     highestUnlockedPlusOne = 3;
     character = 2;

@@ -262,14 +262,14 @@ int daPgMthr_c::StateTalkUpdate() {
         break;
     case 1:
         if (ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514)) {
-            Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-            Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
+            Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+            Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+            Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, 0x300000, -0x480000);
             {
                 Vector3 mouth;
-                mouth.x = data_020a0e68.t.x;
-                mouth.y = data_020a0e68.t.y;
-                mouth.z = data_020a0e68.t.z;
+                mouth.x = gScratchMtx.t.x;
+                mouth.y = gScratchMtx.t.y;
+                mouth.z = gScratchMtx.t.z;
                 if (mPlayer->ShowMessage(*this, mMessageId, &mouth, 0, 0)) {
                     func_0201267c(0xdf, &mCamSpacePos);
                     mTalkStep++;
@@ -345,10 +345,10 @@ void daPgMthr_c::UpdateModelAndShadow() {
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
     if (mLookAngX != 0 || mLookAngY != 0) {
         Matrix4x3 *bone = &mAnmModel.data.transforms[LOOK_BONE];
-        data_020a0e68 = *bone;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookAngY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mLookAngX);
-        mAnmModel.data.transforms[LOOK_BONE] = data_020a0e68;
+        gScratchMtx = *bone;
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mLookAngY);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mLookAngX);
+        mAnmModel.data.transforms[LOOK_BONE] = gScratchMtx;
     }
 }
 

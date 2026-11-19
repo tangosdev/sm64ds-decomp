@@ -107,7 +107,7 @@ extern daPly_c *gPlayers[];
 extern u8 gZoomButtonActiveTimer;
 extern dCamera_c *gCamera;
 extern ControllerInput data_0209f498[];
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u32 gNextActorUpdateMask;
 extern u8 data_0209d660;
 extern signed char gNumStageStars[];
@@ -118,7 +118,7 @@ extern unsigned char gGameMode;
 extern unsigned char gPrevReturnState;
 extern unsigned char gNewStarCollected;
 extern unsigned char gLevelClearStep;
-extern int data_020a0db0;
+extern int gGlobalTimer;
 extern signed char gNumRedCoins[];
 extern signed char gCurrentSublevel;
 extern int SublevelToLevel(int i);
@@ -149,11 +149,11 @@ static inline int IsVsMode(void) {
 }
 
 /* 0 on the off frames of the blink after a new star is collected
-   (data_020a0db0 is FRAME_TIMER).
+   (gGlobalTimer is FRAME_TIMER).
    Flattening the nested ifs into one && chain changes the ROM's code. */
 static inline int StarCountVisible(void) {
     if (gNewStarCollected != 0) {
-        if (gLevelClearStep == 3 && (data_020a0db0 & 0x18) == 0)
+        if (gLevelClearStep == 3 && (gGlobalTimer & 0x18) == 0)
             return 0;
         return 1;
     }
@@ -342,7 +342,7 @@ int dMeter_c::InitResources() {
         mLifeCountX = 0x10;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
-    } else if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+    } else if (!(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
         gMeterCounterSlideState = 6;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
@@ -374,7 +374,7 @@ int dMeter_c::Behavior() {
 
     /* vs is computed only once the first test passes and is reused below. */
     if (gSceneFader->IsAtStart() == 0 ||
-        ((vs = IsVsMode()) == 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0))
+        ((vs = IsVsMode()) == 0 && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0))
         return 1;
     if (vs != 0) {
         UpdateVsTimer();
@@ -478,7 +478,7 @@ int dMeter_c::Render() {
                 }
             }
         }
-    } else if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0) {
+    } else if ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0) {
         unsigned char v = data_0209f20c;
         if (((gGamePaused | v | gVsExitScreenActive) & 0xff) == 0) {
             RenderHealthMeter();
@@ -531,9 +531,9 @@ void dMeter_c::UpdateHealthMeter() {
     if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) != 0)
         return;
     if (mHealthMeterHoldTimer != 0)
-        mHealthMeterHoldTimer -= data_0208ee44;
+        mHealthMeterHoldTimer -= gFrameStep;
     if (mHealthTickTimer != 0)
-        mHealthTickTimer -= data_0208ee44;
+        mHealthTickTimer -= gFrameStep;
     if (Event::GetBit(EVENT_COLLECTING_STAR)) {
         unsigned char s = mHealthMeterState;
         if (s != 0) {
@@ -678,7 +678,7 @@ void dMeter_c::UpdateVsTimer() {
         return;
 
     if (data_ov002_02111188 != 0)
-        data_ov002_02111188 = data_ov002_02111188 - data_0208ee44;
+        data_ov002_02111188 = data_ov002_02111188 - gFrameStep;
 
     if (data_0209f204 != 0)
         return;
@@ -938,7 +938,7 @@ void dMeter_c::RenderCameraButtons() {
     u8 t = gZoomButtonActiveTimer;
 
     if (t != 0)
-        gZoomButtonActiveTimer = t - data_0208ee44;
+        gZoomButtonActiveTimer = t - gFrameStep;
 
     if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
         return;

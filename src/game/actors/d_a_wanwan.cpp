@@ -311,8 +311,8 @@ void daWanwan_c::UpdateChainSegments() {
         }
     }
 
-    Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    MTX_MultVec43(&head, &data_020a0e68, &rotated);
+    Matrix4x3_FromRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    MTX_MultVec43(&head, &gScratchMtx, &rotated);
     Vec3_Add(&linkPos, &mPos, &rotated);
     saved.x = linkPos.x;
     saved.y = linkPos.y;
@@ -346,9 +346,9 @@ void daWanwan_c::UpdateChainSegments() {
 
         angY = cstd::atan2(dvec.x, dvec.z);
         angX = (short)(-cstd::atan2(dvec.y, Vec3_HorzLen(&dvec)));
-        Matrix4x3_FromRotationY(&data_020a0e68, angY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
-        MTX_MultVec43(&head, &data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&gScratchMtx, angY);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, angX);
+        MTX_MultVec43(&head, &gScratchMtx, &rotated);
 
         dst->x = seg->x;
         dst->y = seg->y;
@@ -429,9 +429,9 @@ void daWanwan_c::CapChainToPivot() {
         dir.z = diff.z;
         angY = cstd::atan2(dir.x, dir.z);
         angX = (short)(-cstd::atan2(dir.y, Vec3_HorzLen(&dir)));
-        Matrix4x3_FromRotationY(&data_020a0e68, angY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
-        MTX_MultVec43(&head, &data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&gScratchMtx, angY);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, angX);
+        MTX_MultVec43(&head, &gScratchMtx, &rotated);
         sum.x = cur->x;
         sum.y = cur->y;
         sum.z = cur->z;

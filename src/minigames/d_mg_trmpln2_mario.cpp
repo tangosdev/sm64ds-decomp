@@ -189,9 +189,9 @@ void dMgTrmpln2Mario_c::Render() {
 }
 
 void dMgTrmpln2Mario_c::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mRotY);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mRotY);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 void dMgTrmpln2Mario_c::Update() {
@@ -1018,9 +1018,9 @@ void dMgTrmpln3DMario_c::Render() {
 }
 
 void dMgTrmpln3DMario_c::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mRotY);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mRotY);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* The ROM relocates this call to 0x020cb134 (the 3D ApplyGravity); a byte

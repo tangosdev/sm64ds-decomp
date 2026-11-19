@@ -11,7 +11,7 @@ extern unsigned char data_0209d4e8;
 extern PadData data_020a0e58[];
 extern unsigned short data_0209d534[];
 extern int data_0209d51c;
-extern int data_020a0db0;
+extern int gGlobalTimer;
 extern unsigned char data_0209d4f0;
 extern unsigned char data_0209ee90[];
 extern int data_0209d514;
@@ -55,7 +55,7 @@ int func_02030e4c(void);
    start (func_02019390), the touch and button records (func_0203bb60,
    func_0203bc7c), the soft reset check (func_02023498), the scene spawn
    and the process lists (dScene_c::SpawnIfNecessary, func_02044120),
-   GraphCallback1 (func_02019404), the frame count data_020a0db0, the 3D
+   GraphCallback1 (func_02019404), the frame count gGlobalTimer, the 3D
    swap request (func_020190b8) with the VBlank IRQ held, the frame wait
    (func_0201a4bc) and the link step (func_0201ffcc). The active player's
    button word also goes into the 32-entry ring data_0209d534. Then the sound
@@ -82,7 +82,7 @@ void func_020197b8(void) {
         ProcessList::func_02044120();
         data_0209d50c = 5; func_02019404();
         data_0209d50c = 6;
-        data_020a0db0 = data_020a0db0 + 1;
+        gGlobalTimer = gGlobalTimer + 1;
         OS_DisableIrqMask(OS_IE_V_BLANK);
         func_020190b8();
         data_0209d4f0 = 1;

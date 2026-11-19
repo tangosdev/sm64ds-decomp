@@ -238,9 +238,9 @@ int daHyuhyu_c::CleanupResources() {
 void daHyuhyu_c::UpdateModelTransform() {
     Vector3 pos;
     Vec3_Asr(&pos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* Enter `state`, running its enter handler if it has one. */
@@ -367,9 +367,9 @@ int daHyuhyu_c::StateGustFlyMain() {
     fwd.y = 0;
     fwd.z = 0x1e000;
     mPrevAngle.x -= 0x80;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
-    MTX_MultVec43(&fwd, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPrevAngle.x);
+    MTX_MultVec43(&fwd, &gScratchMtx, &mSpeed);
     if (mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
         (mFlags & 8))
         MarkForDestruction();

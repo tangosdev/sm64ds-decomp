@@ -80,7 +80,7 @@ extern "C" int func_02035638(dBgCh_Actr *clsn);
 extern int           data_02092138;
 extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
-extern int           data_0209f32c;
+extern int gWaterHeight;
 
 extern Vector3       data_ov090_0213412c;
 extern MenboAnimationFilePtr data_ov090_02134480; /* patrol anim, file 0x3a1 */
@@ -140,12 +140,12 @@ void daMenbo_c::func_ov090_02130f94() {
         Vector3 v;
         Vector3 r;
 
-        data_020a0e68 = *src;
-        MTX_Concat43((const Matrix4x3 *)mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
-                     &data_020a0e68);
-        v.x = data_020a0e68.t.x;
-        v.y = data_020a0e68.t.y;
-        v.z = data_020a0e68.t.z;
+        gScratchMtx = *src;
+        MTX_Concat43((const Matrix4x3 *)mAnmModel.data.transforms + (6 + i * 3), &gScratchMtx,
+                     &gScratchMtx);
+        v.x = gScratchMtx.t.x;
+        v.y = gScratchMtx.t.y;
+        v.z = gScratchMtx.t.z;
         Vec3_Lsl(&r, &v, sh);
         v.x = r.x;
         v.y = r.y;
@@ -237,7 +237,7 @@ void daMenbo_c::func_ov090_021310b4() {
 }
 
 /* Ground probe. Mode 2 on course 0x12 skips it and only spawns ripples.
- * Otherwise a hit below the published water height (data_0209f32c) means
+ * Otherwise a hit below the published water height (gWaterHeight) means
  * the skeeter is on the water: record that line, mark mOnWater, ripple.
  * A higher floor is the line instead, and either way Y is clamped up to it. */
 void daMenbo_c::func_ov090_02131378() {
@@ -258,8 +258,8 @@ void daMenbo_c::func_ov090_02131378() {
         if (rg.DetectClsn() != 0)
             mFloorY = rg.clsnY;
     }
-    if (mFloorY < data_0209f32c) {
-        mSurfaceY = data_0209f32c;
+    if (mFloorY < gWaterHeight) {
+        mSurfaceY = gWaterHeight;
         if (mPos.y <= mSurfaceY) {
             mOnWater = 1;
             this->func_ov090_02130f94();
@@ -366,9 +366,9 @@ int daMenbo_c::func_ov090_02131648() {
     in.y = 0x64000;
     in.z = 0x1f4000;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, 0x2000);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
 
     b.x = a.x;
     b.x = a.x + out.x;
@@ -585,9 +585,9 @@ void daMenbo_c::func_ov090_02131e50() {
     src[1] = mPos.y;
     src[2] = mPos.z;
     Vec3_Asr(dst, src, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, dst[0], dst[1], dst[2]);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* The model and the four anims, released in this order. */

@@ -228,18 +228,18 @@ void daObjC1_Trap_c::UpdateModelTransform() {
     int y = mPos.y >> 3;
     int z = (mPos.z + offsetZ) >> 3;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, x, y, z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
-    mDoorModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, x, y, z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
+    mDoorModel.mat4x3 = gScratchMtx;
 }
 
 
 void daObjC1_Trap_c::UpdateCollisionTransform() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
-    mDoorMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
+    mDoorMat = gScratchMtx;
     mMeshCollider.Transform(mDoorMat, mAngle.y);
 }
 

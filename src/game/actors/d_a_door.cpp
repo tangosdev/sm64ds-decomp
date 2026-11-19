@@ -149,7 +149,7 @@ enum DoorSound {
     SND_SWING_END_ALT = 7
 };
 
-/* Bits of the save flags (data_0209caa0.file.flags1) the door uses. The shift is
+/* Bits of the save flags (gSaveBlock.file.flags1) the door uses. The shift is
    DoorEntry::flagShift, except for the key bit, which is shifted by
    DoorEntry::keyIndex. */
 enum DoorSaveFlag {
@@ -394,7 +394,7 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
         if (mTimer == 0) {
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 unsigned int ch = data_ov100_021480d0[mKeyModelIdx - 1];
-                if (ch == data_0209caa0.file.mCharacter)
+                if (ch == gSaveBlock.file.mCharacter)
                     ch = 3;
                 pl->SetRealCharacter(ch);
                 if (data_ov100_02148704 != 0) {
@@ -490,7 +490,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *player) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x1c)) != 0) {
             gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
             if (param1 != DOOR_LAST_KEY_MODEL) {
-                Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
+                Sound::PlayCharVoice(gSaveBlock.file.mCharacter, 0x21, mCamSpacePos);
             } else if (data_ov100_02148704 == 0) {
                 player->PlayMammaMiaSound();
             }
@@ -551,7 +551,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
             (((signed char *)data_ov100_02148204) +
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
-        data_0209caa0.file.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
+        gSaveBlock.file.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
         func_ov100_021453d8(&data_ov100_021488b4, (int)a2);
     }
     return 1;
@@ -612,7 +612,7 @@ int daDoor_c::func_ov100_02144bf4(daPly_c *a2) {
             (((signed char *)data_ov100_02148204) +
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
-        data_0209caa0.file.flags1 |= DOOR_SAVE_STAR_UNLOCKED << sh;
+        gSaveBlock.file.flags1 |= DOOR_SAVE_STAR_UNLOCKED << sh;
         func_ov100_021451c4(&data_ov100_021488f4, a2);
     }
     return 1;
@@ -682,7 +682,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
     if (func_ov100_021452e4(b)) {
         entry = &data_ov100_02148204[param1];
         if (entry->starsNeeded >= 0) {
-            if ((data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) == 0) {
+            if ((gSaveBlock.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) == 0) {
                 if (NumStars() < entry->starsNeeded) {
                     if (daDoor_c::func_ov100_02144f84() == 0)
                         return 1;
@@ -698,7 +698,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
         } else {
             int e9 = entry->keyIndex;
             if (e9 >= 0) {
-                int val = data_0209caa0.file.flags1;
+                int val = gSaveBlock.file.flags1;
                 if ((val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift)) == 0) {
                     if ((val & (DOOR_SAVE_HAVE_KEY << e9)) == 0) {
                         if (daDoor_c::func_ov100_02144f84() == 0)
@@ -713,7 +713,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                                 int inRange =
                                     (unsigned)idx2 >= DOOR_FIRST_KEY_MODEL && (unsigned)idx2 <= 0xb;
                                 if (!inRange) {
-                                    if (!(data_0209caa0.file.flags1 & 0xbe))
+                                    if (!(gSaveBlock.file.flags1 & 0xbe))
                                         sel = 0;
                                 }
                                 msg = sel ? entry->msg : 0x17;
@@ -721,7 +721,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                             if (b->ShowMessage(*this, (short)msg, &mSpeed, 0, 2) != 0) {
                                 func_ov100_021453d8(&data_ov100_021488c4, (int)b);
                                 if (entry->keyIndex == 5)
-                                    data_0209caa0.file.flags2 |= 0x10000;
+                                    gSaveBlock.file.flags2 |= 0x10000;
                                 return 1;
                             }
                         }
@@ -1072,13 +1072,13 @@ s32 daDoor_c::InitResources() {
     Vec3_Asr(&scaledPos, &mPos, 3);
     MtxStack::transS(scaledPos.x, scaledPos.y, scaledPos.z);
     MtxStack::YrotM(mAngle.y);
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 
     if (e->keyFile != 0) {
         mKeyModel = new dExtSimpleModel_c;
         f = dExtSimpleModel_c::LoadFile(*e->keyFile);
         mKeyModel->SetFile((BMD_File *)f, 1, -1);
-        mKeyModel->mat4x3 = data_020a0e68;
+        mKeyModel->mat4x3 = gScratchMtx;
     }
 
     {

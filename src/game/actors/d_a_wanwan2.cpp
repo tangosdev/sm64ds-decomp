@@ -177,7 +177,7 @@ int data_ov100_02147ff8[2] = {(int)&func_ov100_02143aa4, 0};
 int data_ov100_02148000[2] = {(int)&func_ov100_02143ae0, 0};
 s32 data_ov100_02148008[3] = {0, -0xa0000, 0};
 extern unsigned char gGameMode;
-extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 gScratchMtx;
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -358,7 +358,7 @@ void daWanwan2_c::func_ov100_021435e8() {
 
 /* -------------------------------------------------------------------------- */
 /* The chain. It is anchored 250 units (0xfa000) behind the chomp along its
-   rotation (data_020a0e68, MATRIX_SCRATCH_PAPER in symbols/verified.tsv, is
+   rotation (gScratchMtx, MATRIX_SCRATCH_PAPER in symbols/verified.tsv, is
    built from mAngle.x/.y/.z). The anchor is kept in a local; it is also written
    into mLinkPos[0], but the loop overwrites that. mChainTimer is then
    stepped, and each of the six links (positions mLinkPos, velocities
@@ -392,8 +392,8 @@ void daWanwan2_c::func_ov100_021437d4() {
     in.z = -0xfa000; in.x = 0; in.y = 0;    /* 250 units behind */
     out.x = 0; out.y = 0; out.z = 0;
 
-    Matrix4x3_FromRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y, this->mAngle.z);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationXYZExt(&gScratchMtx, this->mAngle.x, this->mAngle.y, this->mAngle.z);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     Vec3_Add(&added, &this->mPos, &out);
 
     {
@@ -435,9 +435,9 @@ void daWanwan2_c::func_ov100_021437d4() {
         ang = cstd::atan2(delta.x, delta.z);
         hlen = Vec3_HorzLen(&delta);
         angz = (s16)(-cstd::atan2(delta.y, hlen));
-        Matrix4x3_FromRotationY(&data_020a0e68, ang);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angz);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, ang);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, angz);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
         vel->x = pos->x; vel->y = pos->y; vel->z = pos->z;
         Vec3_Add(&v48, src, &out);
         pos->x = v48.x; pos->y = v48.y; pos->z = v48.z;

@@ -28,7 +28,7 @@
  *   Release). Both actor profiles are defined with their factories below.
  *   - HandleAttacks keeps five int[3] positions. One
  *   Vector3 in their place changes that function.
- *   - data_020a0e68 is the scratch matrix UpdateModelAndShadow fills
+ *   - gScratchMtx is the scratch matrix UpdateModelAndShadow fills
  *   before copying it onto the model. Actor id 0x135 is only the id that function shoves
  *   the segment away from.
  */
@@ -63,7 +63,7 @@ extern void Matrix4x3_FromTranslation(union Matrix4x3 *m, fx32 x, fx32 y, fx32 z
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 gScratchMtx;
 extern void func_02038414(void *p);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
@@ -469,15 +469,15 @@ void daSanbo_c::UpdateModelAndShadow() {
             int y;
 
             Vec3_Asr(&cam, &mPos, 3);
-            Matrix4x3_FromTranslation(&data_020a0e68, cam.x, cam.y, cam.z);
+            Matrix4x3_FromTranslation(&gScratchMtx, cam.x, cam.y, cam.z);
 
             y = OnAimedAtWithEgg() >> 3;
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
-            Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+            Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y, 0);
+            Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
 
             y = (-OnAimedAtWithEgg()) >> 3;
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
-            mModel.mat4x3 = data_020a0e68;
+            Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y, 0);
+            mModel.mat4x3 = gScratchMtx;
 
             mMatrix.t.x = mPos.x >> 3;
             mMatrix.t.y = mPos.y >> 3;

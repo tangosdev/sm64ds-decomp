@@ -83,11 +83,11 @@ int dEnemyBase_c::func_ov002_020ad660(void *clsnArg, void *modelArg, int flags) 
         mAngle.y += mSpinRateY;
         mAngle.z += mSpinRateZ;
         Vec3_Asr(&v, &mPos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
-        model->mat4x3 = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, OnAimedAtWithEgg() >> 3, 0);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, (-OnAimedAtWithEgg()) >> 3, 0);
+        model->mat4x3 = gScratchMtx;
     }
     return 1;
 }

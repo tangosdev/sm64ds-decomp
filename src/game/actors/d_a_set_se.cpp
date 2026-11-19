@@ -75,7 +75,7 @@ int daSetSE_c::InitResources()
 
     /* The same test as Message.cpp's and dMap_c's: the adventure, before
        the intro is done, with no cutscene script running. */
-    if (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+    if (IsGameMode(0) && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         !IsKuppaScriptRunning())
         disabled = 1;
     else

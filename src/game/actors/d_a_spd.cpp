@@ -539,13 +539,13 @@ void daSpd_c::func_ov071_0211f524() {
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     if (mAngle.x != 0) {
-        data_020a0e68 = mAnmModel.mat4x3;
+        gScratchMtx = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y1, 0);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y2, 0);
+        mAnmModel.mat4x3 = gScratchMtx;
     }
 
     mShadowMtx.t.x = mPos.x >> 3;

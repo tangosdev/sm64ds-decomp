@@ -141,8 +141,8 @@ s32 daMky_c::OnYoshiTryEat()
 
 void daMky_c::ReturnToPerch() {
 
-    extern dClipper data_0209f43c;
-    extern Matrix4x3 data_0209b3ec;
+    extern dClipper gClipper;
+    extern Matrix4x3 gViewMtx;
     struct Vector3 a, b, out, asr;
 
     if (DecIfAbove0_Byte(&this->mResetTimer))
@@ -163,7 +163,7 @@ void daMky_c::ReturnToPerch() {
     if (this->mPerchPos.y - this->mPos.y > 0x96000 || rc.DetectClsn()) {
         Vec3_Asr(&asr, &this->mPerchPos, 3);
 
-        if (data_0209f43c.TransformAndClip(data_0209b3ec, asr, 0x1f400, out) > 0xc350000) {
+        if (gClipper.TransformAndClip(gViewMtx, asr, 0x1f400, out) > 0xc350000) {
             this->mPos = this->mPerchPos;
             this->mSpawnPos = this->mPerchPos;
             this->mPrevPos = this->mPerchPos;

@@ -627,7 +627,7 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
     Vec3_Asr(&v, &mPos, 3);
     MtxStack::transS(v.x, v.y, v.z);
     MtxStack::YrotM(mAngle.y);
-    mAnmModel.mat4x3 = data_020a0e68;
+    mAnmModel.mat4x3 = gScratchMtx;
     /* No drop shadow while in Yoshi's mouth. */
     int inMouth = (mFlags & 0x40000) != 0;
     if (inMouth != 0)

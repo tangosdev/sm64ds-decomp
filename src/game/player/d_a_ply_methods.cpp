@@ -96,7 +96,7 @@
  * stay at file scope so the calls emit the plain ROM names. The macro is
  * what the compiler sees as extern "C"; writing that keyword here would
  * raise MtxStack.h's src/ redeclaration count. Including the header fights
- * this TU's local data_020a0e68 views. */
+ * this TU's local gScratchMtx views. */
 #define MTX_C_DECL extern "C"
 MTX_C_DECL void MTX_Concat43(const Matrix4x3 *, const Matrix4x3 *, Matrix4x3 *);
 MTX_C_DECL void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
@@ -1093,7 +1093,7 @@ extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
 extern signed char data_02092114;
 extern unsigned char data_0209f2bc;
-extern int data_0209f32c;
+extern int gWaterHeight;
 }
 
 extern void func_02035860(dBgCh_Actr *, const Vector3 *);
@@ -2094,7 +2094,7 @@ void daPly_c::SetRealCharacter(unsigned int chr_) {
     param1 = chr;
     mCharacter = (u8)chr;
     data_02092128[mPlayerNo] = (u8)param1;
-    data_0209caa0.file.mCharacter = (u8)param1;
+    gSaveBlock.file.mCharacter = (u8)param1;
     dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[mCharFileBase + (param1 & 3)]);
     PlayCharacterSound();
     this->Heal(0x880);
@@ -2718,7 +2718,7 @@ void daPly_c::func_ov002_020bf5e0() {
 
     if (mIsInShallowWater != 0 && mIsUnderwater == 0) {
         newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclHeavyStepRipple,
-                                                      this->mPos.x, data_0209f32c, this->mPos.z, 0);
+                                                      this->mPos.x, gWaterHeight, this->mPos.z, 0);
         mParticle1 = newId;
     }
 
@@ -3304,8 +3304,7 @@ int daPly_c::func_ov002_020c0d90(int y) {
                 Particle::System::NewSplash(this->mPos.x, y, this->mPos.z);
             } else {
                 this->mParticle1 = Particle::System::NewCheckWaterRipple(
-                    this->mParticle1, kPtclMegaSplash, this->mPos.x, data_0209f32c, this->mPos.z,
-                    0);
+                    this->mParticle1, kPtclMegaSplash, this->mPos.x, gWaterHeight, this->mPos.z, 0);
             }
         }
     }
@@ -3534,7 +3533,7 @@ void daPly_c::func_ov002_020c14b8() {
     if (rg.DetectClsn()) {
         if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
             mWaterSurfaceY = rg.clsnY;
-            data_0209f32c = mWaterSurfaceY;
+            gWaterHeight = mWaterSurfaceY;
         }
         if (func_02037e20((int *)&rg.surface) != 0) {
             mToxicSurfaceY = rg.clsnY;
@@ -4757,34 +4756,34 @@ void daPly_c::func_ov002_020c43c4(unsigned int idx) {
         return;
     switch (idx) {
     case 1:
-        if (data_0209caa0.file.flags2 & 0x400)
+        if (gSaveBlock.file.flags2 & 0x400)
             return;
-        data_0209caa0.file.flags2 |= 0x400;
+        gSaveBlock.file.flags2 |= 0x400;
         break;
     case 2:
-        if (data_0209caa0.file.flags2 & 0x800)
+        if (gSaveBlock.file.flags2 & 0x800)
             return;
-        data_0209caa0.file.flags2 |= 0x800;
+        gSaveBlock.file.flags2 |= 0x800;
         break;
     case 3:
-        if (data_0209caa0.file.flags2 & 0x1000)
+        if (gSaveBlock.file.flags2 & 0x1000)
             return;
-        data_0209caa0.file.flags2 |= 0x1000;
+        gSaveBlock.file.flags2 |= 0x1000;
         break;
     case 4:
-        if (data_0209caa0.file.flags2 & 0x2000)
+        if (gSaveBlock.file.flags2 & 0x2000)
             return;
-        data_0209caa0.file.flags2 |= 0x2000;
+        gSaveBlock.file.flags2 |= 0x2000;
         break;
     case 5:
-        if (data_0209caa0.file.flags2 & 0x4000)
+        if (gSaveBlock.file.flags2 & 0x4000)
             return;
-        data_0209caa0.file.flags2 |= 0x4000;
+        gSaveBlock.file.flags2 |= 0x4000;
         break;
     case 6:
-        if (data_0209caa0.file.flags2 & 0x10000000)
+        if (gSaveBlock.file.flags2 & 0x10000000)
             return;
-        data_0209caa0.file.flags2 |= 0x10000000;
+        gSaveBlock.file.flags2 |= 0x10000000;
         break;
     case 0:
         break;
@@ -4800,8 +4799,8 @@ int daPly_c::func_ov002_020c44c4() {
     int r4val;
 
     r4val = -1;
-    if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
-                        IsCastleFallCutsceneRunning()))
+    if (!IsVsMode() &&
+        ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning()))
         return 0;
 
     if (SaveData::CountStarsCollectedInLevel(SublevelToLevel(gCurrentSublevel)) != 0) {
@@ -4812,8 +4811,8 @@ int daPly_c::func_ov002_020c44c4() {
 
     switch (state) {
     case 2:
-        if ((data_0209caa0.file.flags2 & 0x200) == 0) {
-            data_0209caa0.file.flags2 |= 0x200;
+        if ((gSaveBlock.file.flags2 & 0x200) == 0) {
+            gSaveBlock.file.flags2 |= 0x200;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sLevelIntroOff(0, 0x96000, 0x64000);
             Vec3_RotateYAndTranslate(&pos, &mPos, this->mAngle.y, &sLevelIntroOff);
@@ -4848,7 +4847,7 @@ int daPly_c::func_ov002_020c44c4() {
         }
         break;
     case 31:
-        if (data_0209caa0.file.flags1 & 0x80000000) {
+        if (gSaveBlock.file.flags1 & 0x80000000) {
             return 0;
         }
         r4val = 12;
@@ -6041,7 +6040,7 @@ int daPly_c::St_Teleport_Main() {
     case 1:
         if (mStateWork != 0) {
             if (mStateWork >= 0x10) {
-                if (data_0209f32c > mPos.y + 0x64000)
+                if (gWaterHeight > mPos.y + 0x64000)
                     mIsUnderwater = 1;
             }
             (this->mStateWork)--;
@@ -6052,12 +6051,12 @@ int daPly_c::St_Teleport_Main() {
         if (mOpacity >= 0x1f) {
             int hit = 0;
             mOpacity = 0x1f;
-            if (data_0209f32c >= mPos.y + 0x64000) {
+            if (gWaterHeight >= mPos.y + 0x64000) {
                 Vector3 v;
                 dBgCh_Gnd rc;
                 {
                     int vz = mPos.z;
-                    int vy = data_0209f32c + 0x64000;
+                    int vy = gWaterHeight + 0x64000;
                     int vx = mPos.x;
                     v.x = vx;
                     v.y = vy;
@@ -6270,7 +6269,7 @@ void func_ov002_020c72a4(daPly_c *player) {
     if (rg.DetectClsn()) {
         if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
             player->mWaterSurfaceY = rg.clsnY;
-            data_0209f32c = player->mWaterSurfaceY;
+            gWaterHeight = player->mWaterSurfaceY;
         }
     }
     rg.mProbeHeight = 0x1f4000;
@@ -6340,7 +6339,7 @@ void daPly_c::func_ov002_020c7350() {
     }
 
     if (IsVsMode() ||
-        ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning()))
+        ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning()))
         this->SetAnim(0x47, 0, 0x1000, 0);
 
     mStateWork = 2;
@@ -7203,7 +7202,7 @@ int daPly_c::func_ov002_020c92fc() {
     if (this->FinishedAnim()) {
         if (mStateStep == 9) {
             if (!IsVsMode()) {
-                if ((data_0209caa0.file.flags2 & 0x10000000) == 0 &&
+                if ((gSaveBlock.file.flags2 & 0x10000000) == 0 &&
                     SaveData::IsCharacterUnlocked(0) == 0 && mHatCharacter == 0 &&
                     mPrevCharacter == 3) {
                     mStateStep = 0xa;
@@ -7301,7 +7300,7 @@ void daPly_c::func_ov002_020c9718() {
     if (mIsUnderwater == 0)
         return;
     mSpeed.y = func_ov002_020ceaf4();
-    r2 = data_0209f32c - 0x50000;
+    r2 = gWaterHeight - 0x50000;
     if (mPos.y < r2)
         return;
     if (mSpeed.y >= 0)
@@ -7852,7 +7851,7 @@ void daPly_c::func_ov002_020ca940() {
     if (mIsNoControl != 0)
         return;
 
-    if (!IsVsMode() && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
+    if (!IsVsMode() && !(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE))
         return;
 
     if (data_0209f498[gActivePlayerSlot].pressed & 0x8000) {
@@ -8753,7 +8752,7 @@ int daPly_c::St_HurtWater_Main() {
             return 1;
         }
     }
-    int lim = data_0209f32c - 0x50000;
+    int lim = gWaterHeight - 0x50000;
     if (mPos.y >= lim && (mClsnFlags & 1) == 0) {
         if (mSpeed.y >= 0) {
             mPos.y = lim;
@@ -8789,7 +8788,7 @@ int daPly_c::St_HurtWater_Init() {
 /* Metal Mario walking along the bottom underwater. Losing both the metal and
  * mega caps drops back to the swim state. While mStateWork is 0 the player
  * walks and sinks -- gravity and terminal velocity depend on whether the water
- * surface (data_0209f32c) is more than 0x46000 above (0xd2000 when mega).
+ * surface (gWaterHeight) is more than 0x46000 above (0xd2000 when mega).
  * Landing plays a thud, spawns a splash particle, and either returns to the
  * ground state or starts the landing animation.
  */
@@ -8823,7 +8822,7 @@ int daPly_c::St_MetalWaterWater_Main() {
         lim = py + 0x46000;
         if (mIsMega != 0)
             lim = py + 0xd2000;
-        if (data_0209f32c > lim) {
+        if (gWaterHeight > lim) {
             mVertAccel = -0x1800;
             mTerminalVelocity = -0x14000;
         } else {
@@ -8882,7 +8881,7 @@ int daPly_c::St_MetalWaterGround_Main() {
     if (UpdateSwimHealth())
         return 1;
     int u703 = mIsMega;
-    if ((data_0209f32c - 0x50000) < (mPos.y - 0xa000)) {
+    if ((gWaterHeight - 0x50000) < (mPos.y - 0xa000)) {
         mIsUnderwater = 0;
         this->ChangeState(data_ov002_0211013c);
         return 1;
@@ -8968,7 +8967,7 @@ extern "C" {
 extern "C" void func_ov002_020cd190(daPly_c *player) {
     if (player->mIsMega == 0)
         return;
-    if (player->mPos.y + 0x180000 <= data_0209f32c)
+    if (player->mPos.y + 0x180000 <= gWaterHeight)
         return;
     player->func_ov002_020ce8bc(player->mHorzSpeed);
 }
@@ -9513,7 +9512,7 @@ int daPly_c::func_ov002_020ce5f8() {
     int y, threshold;
     Vector3 pos;
 
-    threshold = data_0209f32c - 0x50000;
+    threshold = gWaterHeight - 0x50000;
     y = mPos.y;
     if (y >= threshold) {
         if ((mClsnFlags & 1) == 0) {
@@ -9555,7 +9554,7 @@ int daPly_c::func_ov002_020ce5f8() {
     }
     Vec3_LslInPlace((int *)&pos, 3);
 
-    if (pos.y < data_0209f32c - 0x1e000) {
+    if (pos.y < gWaterHeight - 0x1e000) {
         Particle::System::NewBubble(pos);
         if (mStateWaitTimer == 0) {
             Sound::PlayBank3(0xb, mCamSpacePos);
@@ -9571,9 +9570,9 @@ void daPly_c::func_ov002_020ce798() {
     if (!IsState(data_ov002_0211067c))
         return;
 
-    if (mPos.y >= data_0209f32c - 0x50000) {
+    if (mPos.y >= gWaterHeight - 0x50000) {
         if (!mMeshClsn.IsOnGround())
-            mPos.y = data_0209f32c - 0x50000;
+            mPos.y = gWaterHeight - 0x50000;
     }
 
     dBgCh_Lin rl;
@@ -9597,7 +9596,7 @@ void daPly_c::func_ov002_020ce798() {
 }
 
 void daPly_c::func_ov002_020ce8bc(int moving) {
-    Vector3 pos(mPos.x, data_0209f32c + 0x3000, mPos.z);
+    Vector3 pos(mPos.x, gWaterHeight + 0x3000, mPos.z);
 
     if (mIsMega != 0) {
         if (moving != 0) {
@@ -9622,13 +9621,13 @@ void daPly_c::func_ov002_020ce9c8() {
     Vector3 v = mPos;
     int effectID;
 
-    v.y = data_0209f32c + 0x4b000;
+    v.y = gWaterHeight + 0x4b000;
     effectID = 0xce;
     if (mIsMega)
         effectID = 0x54;
     Particle::System::NewFitWaterRaised(0, effectID, v.x, v.y, v.z, 0);
 
-    v.y = data_0209f32c + 0x3000;
+    v.y = gWaterHeight + 0x3000;
     effectID = 0xcf;
     if (mIsMega)
         effectID = 0x55;
@@ -9636,9 +9635,9 @@ void daPly_c::func_ov002_020ce9c8() {
 
     if (mIsMega)
         mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclMegaSplash, mPos.x,
-                                                           data_0209f32c, mPos.z, 0);
+                                                           gWaterHeight, mPos.z, 0);
     else
-        Particle::System::NewBigSplash(mPos.x, data_0209f32c, mPos.z);
+        Particle::System::NewBigSplash(mPos.x, gWaterHeight, mPos.z);
 
     if (mIsMega)
         Sound::PlayBank0(0xd4, mCamSpacePos);
@@ -9648,7 +9647,7 @@ void daPly_c::func_ov002_020ce9c8() {
 
 int daPly_c::func_ov002_020ceaf4() {
     int v;
-    if (data_0209f32c - 0x50000 - mPos.y < 0x1f4000)
+    if (gWaterHeight - 0x50000 - mPos.y < 0x1f4000)
         return 0x1800;
     v = data_ov002_020ff1e0[param1];
     return -(int)((((long long)v << 13) + 0x800) >> 12);
@@ -9657,7 +9656,7 @@ int daPly_c::func_ov002_020ceaf4() {
 /* Deeper than 0x8c below the water surface: N64's update_mario_health
  * recovers health only above waterLevel - 140. */
 int daPly_c::func_ov002_020ceb54() {
-    return data_0209f32c - 0x50000 >= mPos.y + 0x3c000;
+    return gWaterHeight - 0x50000 >= mPos.y + 0x3c000;
 }
 
 void daPly_c::func_ov002_020ceb7c() {
@@ -9665,12 +9664,12 @@ void daPly_c::func_ov002_020ceb7c() {
     struct CameraRaw *g = gCamera;
 
     if (mStateWork & 2) {
-        if (data_0209f32c - 0x50000 - mPos.y >= 0x64000)
+        if (gWaterHeight - 0x50000 - mPos.y >= 0x64000)
             return;
         ((::dCamera_c *)g)->func_0200d768(mPlayerNo);
         mStateWork ^= 2;
     } else {
-        if (data_0209f32c - 0x50000 - mPos.y <= 0x12c000)
+        if (gWaterHeight - 0x50000 - mPos.y <= 0x12c000)
             return;
         ((::dCamera_c *)g)->func_0200d72c(mPlayerNo);
         mStateWork |= 2;
@@ -9736,7 +9735,7 @@ fx32 daPly_c::func_ov002_020cedb0(fx32 a) {
 int daPly_c::func_ov002_020cede0() {
     Vector3 v;
     int y = mPos.y;
-    int g = data_0209f32c;
+    int g = gWaterHeight;
     if (g < y - 0x64000)
         return 0;
     {
@@ -9749,7 +9748,7 @@ int daPly_c::func_ov002_020cede0() {
     dBgCh_Gnd rg;
     {
         int z = mPos.z;
-        int yy = data_0209f32c + 0xc8000;
+        int yy = gWaterHeight + 0xc8000;
         int x = mPos.x;
         v.x = x;
         v.y = yy;
@@ -9767,12 +9766,12 @@ int daPly_c::func_ov002_020cede0() {
     rg.SetObjAndPos(v, this);
     if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
         mWaterSurfaceY = rg.clsnY;
-        data_0209f32c = mWaterSurfaceY;
+        gWaterHeight = mWaterSurfaceY;
         return 1;
     }
     if (gCurrentSublevel == 0x21) {
         mWaterSurfaceY = 0x80000000;
-        data_0209f32c = mWaterSurfaceY;
+        gWaterHeight = mWaterSurfaceY;
         return 0;
     }
     return 1;
@@ -11157,7 +11156,7 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
 
     if (mIsInShallowWater != 0) {
         u32 newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand, mPos.x,
-                                                          data_0209f32c, mPos.z, 0);
+                                                          gWaterHeight, mPos.z, 0);
         mParticle1 = newId;
         return;
     }
@@ -11245,8 +11244,8 @@ int daPly_c::St_Wait_Cleanup() {
     void *r4 = gCamera;
     ((dCamera_c *)r4)->mFlags &= ~0x2000;
     mSleepStage = 0;
-    if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
-                        IsCastleFallCutsceneRunning())) {
+    if (!IsVsMode() &&
+        ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning())) {
         if (mAnimScriptId == 0xf)
             mRootMotionMode = 0;
         mAnimScriptId = 0;
@@ -11289,7 +11288,7 @@ int daPly_c::St_Wait_Main() {
             }
         }
         case 0: {
-            if (!IsVsMode() && (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
+            if (!IsVsMode() && (!(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
                                 IsCastleFallCutsceneRunning()))
                 func_ov002_020bcdf0(this);
             else if (func_ov002_020d2fdc() != 0)
@@ -11406,7 +11405,7 @@ int daPly_c::St_Wait_Main() {
                 mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(1)) {
                 Sound::PlayCharVoice(mCharacter, 0x2a, mCamSpacePos);
             }
-            if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
+            if (!IsVsMode() && ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
                                 IsCastleFallCutsceneRunning()))
                 break;
             if (mStateTimer == 0) {
@@ -11464,7 +11463,7 @@ int daPly_c::St_Wait_Main() {
                 }
             }
             {
-                if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
+                if (!IsVsMode() && ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
                                     IsCastleFallCutsceneRunning()))
                     break;
                 if (func_ov002_020d2da0() == 1 || mSleepBubbleScale.x >= 0x3000 ||
@@ -11663,15 +11662,15 @@ int daPly_c::func_ov002_020d2fdc() {
 
 int daPly_c::St_Wait_Init() {
     mStatePhase = 0;
-    if (!IsVsMode() && ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 ||
-                        IsCastleFallCutsceneRunning())) {
+    if (!IsVsMode() &&
+        ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 || IsCastleFallCutsceneRunning())) {
         this->SetAnim(0xb3, 0, 0x1000, 0);
         mStateStep = 0;
         return 1;
     }
 
     if (mIsMega != 0) {
-        if (!IsVsMode() && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
+        if (!IsVsMode() && !(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE))
             this->SetAnim(0xa0, 0, 0x1000, 0);
         mStateTimer = 900;
         return 1;
@@ -12095,8 +12094,8 @@ int daPly_c::St_Walk_Init() {
     }
 
     if (data_0209f498[gActivePlayerSlot].mag == 0) {
-        if (IsVsMode() || ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
-                           !IsCastleFallCutsceneRunning())) {
+        if (IsVsMode() ||
+            ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning())) {
             if (mIsMega != 0) {
                 this->SetAnim(0xa0, 0, 0x1000, 0);
             } else {
@@ -12262,7 +12261,7 @@ void daPly_c::func_ov002_020d4748() {
             thr = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x955 : 0xaaa;
             if (data_0209f498[gActivePlayerSlot].mag > thr)
                 this->mStateStep = 0;
-            if (!IsVsMode() && (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
+            if (!IsVsMode() && (!(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
                                 IsCastleFallCutsceneRunning()))
                 this->mStateStep = 0;
         } else {
@@ -12304,7 +12303,7 @@ void daPly_c::PlayLandingEffects() {
     int id;
     if (mIsInShallowWater) {
         mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand,
-                                                           mPos.x, data_0209f32c, mPos.z, 0);
+                                                           mPos.x, gWaterHeight, mPos.z, 0);
     }
     if (mSinkDepth > 0x32000) {
         Sound::PlayBank0(0xb3, mCamSpacePos);
@@ -17725,7 +17724,7 @@ void daPly_c::func_ov002_020e032c() {
         return;
     mHasWings = 0;
     if (!IsVsMode()) {
-        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
+        if ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
             return;
         if (IsCastleFallCutsceneRunning())
             return;
@@ -19311,7 +19310,7 @@ int daPly_c::Render() {
         virtual void m14(void* a);
         virtual void m18(void* a, void* b);
     };
-    extern int data_020a0e68;
+    extern int gScratchMtx;
     if (IsVsMode()) {
         if (data_0209fc5c[mPlayerNo] == 0)
             return 1;
@@ -19354,11 +19353,11 @@ int daPly_c::Render() {
             if (mDrawnHasWings != 0) {
                 mModels.mAnmModel2.ApplyOpacity(mOpacity, 0);
                 if (mBodyModelId == 3) {
-                    Matrix4x3_FromTranslation((Matrix4x3 *)&data_020a0e68, -0x1b33, -0x666, 0);
-                    Matrix4x3_ApplyInPlaceToRotationZ((Matrix4x3 *)&data_020a0e68, 0x4000);
-                    MTX_Concat43((const Matrix4x3 *)&data_020a0e68, &bodyMdl->data.transforms[8],
-                                 (Matrix4x3 *)&data_020a0e68);
-                    ((VObj *)((char *)&mModels.mAnmModel2))->m18(&data_020a0e68, &mScale);
+                    Matrix4x3_FromTranslation((Matrix4x3 *)&gScratchMtx, -0x1b33, -0x666, 0);
+                    Matrix4x3_ApplyInPlaceToRotationZ((Matrix4x3 *)&gScratchMtx, 0x4000);
+                    MTX_Concat43((const Matrix4x3 *)&gScratchMtx, &bodyMdl->data.transforms[8],
+                                 (Matrix4x3 *)&gScratchMtx);
+                    ((VObj *)((char *)&mModels.mAnmModel2))->m18(&gScratchMtx, &mScale);
                 } else {
                     mModels.mAnmModel2.Virtual18((u32)&bodyMdl->data.transforms[15], &mScale);
                 }
@@ -19432,7 +19431,7 @@ int daPly_c::Render() {
        ambiguous at 0x02111b64; every other candidate is ambiguous at both. */
 
 extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsigned int opacity) {
-    extern int data_020a0e68[12];
+    extern int gScratchMtx[12];
     void func_0203c178(int *dst, int a, int b, int c);
     void MTX_Concat33(int *dst, const int *a, const int *b);
     int ip = (gCurrentSublevel == 0x2f);
@@ -19467,8 +19466,8 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     int diff = t - src->t.x;
     src->t.x = diff;
 
-    func_0203c178(data_020a0e68, -0x1000, 0x1000, 0x1000);
-    MTX_Concat33((int *)src, data_020a0e68, (int *)src);
+    func_0203c178(gScratchMtx, -0x1000, 0x1000, 0x1000);
+    MTX_Concat33((int *)src, gScratchMtx, (int *)src);
 
     obj->ClearMaterialFlags(0x80);
     obj->SetMaterialFlags(0x40);
@@ -19481,7 +19480,7 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
 }
 
 int daPly_c::func_ov002_020e3f90() {
-    extern Matrix4x3 data_020a0e68;
+    extern Matrix4x3 gScratchMtx;
     Vector3s angs;
     Vector3 v;
     Vector3 tgt;
@@ -19497,7 +19496,7 @@ int daPly_c::func_ov002_020e3f90() {
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    data_020a0e68 = *mGrabbedByActor->mCarryMatrix;
+    gScratchMtx = *mGrabbedByActor->mCarryMatrix;
     p = (daPly_c *)mGrabbedByActor;
     if (IsPlayerActor(p)) {
         if (!IsHoldingObject(p))
@@ -19525,37 +19524,37 @@ int daPly_c::func_ov002_020e3f90() {
         ApproachAngle(&mAngle.x, angs.x, 0x10, 0x1000, 0x100);
         ApproachAngle(&mAngle.y, angs.y, 0x10, 0x1000, 0x100);
         ApproachAngle(&mAngle.z, angs.z, 0x10, 0x1000, 0x100);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, mStateTarget.x, mStateTarget.y,
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, mStateTarget.x, mStateTarget.y,
                                             mStateTarget.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
     } else {
         if (IsActorID(p, 0xbd)) {
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x5800, -0x6800, -0x2000);
-            Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x3c71, 0x38e, -0x4e38);
+            Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0x5800, -0x6800, -0x2000);
+            Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, 0x3c71, 0x38e, -0x4e38);
         } else {
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x5800, 0x5000, 0xb000);
-            Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x600, -0x2600, 0);
+            Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0x5800, 0x5000, 0xb000);
+            Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, -0x600, -0x2600, 0);
         }
     }
-    mShadowMatrix = data_020a0e68;
-    v.x = data_020a0e68.t.x;
-    v.y = data_020a0e68.t.y;
-    v.z = data_020a0e68.t.z;
+    mShadowMatrix = gScratchMtx;
+    v.x = gScratchMtx.t.x;
+    v.y = gScratchMtx.t.y;
+    v.z = gScratchMtx.t.z;
     mPos.x = v.x << 3;
     mPos.y = v.y << 3;
     mPos.z = v.z << 3;
     mPrevAngle.y = mGrabbedByActor->mAngle.y;
     n = GetBodyModelID(param1 & 0xff, 0);
     m = (char *)mModels.mBodyModels[n];
-    ((dExtSimpleModel_c *)m)->mat4x3 = data_020a0e68;
-    mModels.mAnmModel2.mat4x3 = data_020a0e68;
+    ((dExtSimpleModel_c *)m)->mat4x3 = gScratchMtx;
+    mModels.mAnmModel2.mat4x3 = gScratchMtx;
     n = func_ov002_020becf4(param1 & 0xff, 0);
     if (n != 9 && n != 8) {
         m = (char *)mModels.mHeadModels[n];
         if (m != 0) {
-            ((dExtSimpleModel_c *)m)->mat4x3 = data_020a0e68;
+            ((dExtSimpleModel_c *)m)->mat4x3 = gScratchMtx;
         }
     }
     return 1;
@@ -19581,15 +19580,15 @@ void daPly_c::func_ov002_020e4374(int *p1, int *p2) {
 }
 
 void daPly_c::func_ov002_020e444c() {
-    extern union Matrix4x3 data_020a0e68;
+    extern union Matrix4x3 gScratchMtx;
     int depth, radius;
 
     if (func_ov002_020e3f90() == 0) {
         int y = mModelOffsetY + (mPos.y - mSinkDepth) + 0xf000;
         if (mIsBalloon != 0)
             y -= 0x70000;
-        Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, y >> 3, mPos.z >> 3);
-        mShadowMatrix = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, y >> 3, mPos.z >> 3);
+        mShadowMatrix = gScratchMtx;
 
         {
             Vector3 out;
@@ -19599,19 +19598,19 @@ void daPly_c::func_ov002_020e444c() {
             src.z = offsetZ;
             src.x = 0;
             Vec3_RotateYAndTranslate(&out, &mPos, mAngle.y, &src);
-            Matrix4x3_FromTranslation(&data_020a0e68, out.x >> 3, out.y >> 3, out.z >> 3);
+            Matrix4x3_FromTranslation(&gScratchMtx, out.x >> 3, out.y >> 3, out.z >> 3);
         }
 
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
 
         if (mIsBalloon == 0) {
             int bodyID = GetBodyModelID(param1 & 0xff, 0);
-            mModels.mBodyModels[bodyID]->mat4x3 = data_020a0e68;
-            mModels.mAnmModel2.mat4x3 = data_020a0e68;
+            mModels.mBodyModels[bodyID]->mat4x3 = gScratchMtx;
+            mModels.mAnmModel2.mat4x3 = gScratchMtx;
         } else {
-            mModels.mAnmModel1.mat4x3 = data_020a0e68;
+            mModels.mAnmModel1.mat4x3 = gScratchMtx;
         }
 
         {
@@ -19619,15 +19618,15 @@ void daPly_c::func_ov002_020e444c() {
             if (r0 != 9 && r0 != 8) {
                 dExtSimpleModel_c *q = mModels.mHeadModels[r0];
                 if (q != 0) {
-                    q->mat4x3 = data_020a0e68;
+                    q->mat4x3 = gScratchMtx;
                 }
             }
         }
 
         if (func_ov002_020d225c() != 0) {
             int z = FX_MUL(mSleepBubbleScale.z, 0x2400) + 0xc000;
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x7000, z);
-            mModels.mSleepBubbleModel->mat4x3 = data_020a0e68;
+            Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, 0x7000, z);
+            mModels.mSleepBubbleModel->mat4x3 = gScratchMtx;
         }
     }
 
@@ -19657,7 +19656,7 @@ void daPly_c::func_ov002_020e444c() {
 // local extern: include-free shard, the call passes the object as an untyped pointer so it cannot use the header member
 
 void daPly_c::func_ov002_020e4768() {
-    extern Matrix4x3 data_020a0e68;
+    extern Matrix4x3 gScratchMtx;
     unsigned int mid;
     dExtAnm2Model_c *comp;
     int idx;
@@ -19683,26 +19682,26 @@ void daPly_c::func_ov002_020e4768() {
         if (IsHoldingObject(this)) {
             mid = GetBodyModelID(param1 & 0xff, 0);
             comp = mModels.mBodyModels[mid];
-            data_020a0e68 = comp->mat4x3;
+            gScratchMtx = comp->mat4x3;
 
             mid = GetBodyModelID(param1 & 0xff, 0);
             comp = mModels.mBodyModels[mid];
-            MTX_Concat43(&comp->data.transforms[14], &data_020a0e68, &data_020a0e68);
+            MTX_Concat43(&comp->data.transforms[14], &gScratchMtx, &gScratchMtx);
 
-            mHeldObjMatrix = data_020a0e68;
+            mHeldObjMatrix = gScratchMtx;
             mCarryMatrix = &mHeldObjMatrix;
         }
     }
 
     mid = GetBodyModelID(param1 & 0xff, 0);
     comp = mModels.mBodyModels[mid];
-    data_020a0e68 = comp->mat4x3;
+    gScratchMtx = comp->mat4x3;
 
     mid = GetBodyModelID(param1 & 0xff, 0);
     comp = mModels.mBodyModels[mid];
-    MTX_Concat43(&comp->data.transforms[15], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&comp->data.transforms[15], &gScratchMtx, &gScratchMtx);
 
-    mHeadMatrix = data_020a0e68;
+    mHeadMatrix = gScratchMtx;
 }
 
 dExtAnm2Model_c *daPly_c::GetBodyModel() {
@@ -20092,7 +20091,7 @@ s32 daPly_c::InitResources() {
     }
     param1 = sub;
     if (!IsCastleFallCutsceneRunning() &&
-        (IsVsMode() || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0 ||
+        (IsVsMode() || (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0 ||
          IsKuppaScriptRunning())) {
         if (mPlayerNo == gLocalPlayerId) {
             PlayCharacterSound();

@@ -74,10 +74,10 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 a
     *(Mtx43 *)&invRotMat = scratch.rotation;
     MTX_Inverse43(&invRotMat, &invRotMat);
     invScale = FX_Inv(scale);
-    data_020a0e68 = mtx;
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->scale, this->scale, this->scale);
-    scratch.scaled = *(Mtx43 *)&data_020a0e68;
-    newScaledMat = data_020a0e68;
+    gScratchMtx = mtx;
+    Matrix4x3_ApplyInPlaceToScale(&gScratchMtx, this->scale, this->scale, this->scale);
+    scratch.scaled = *(Mtx43 *)&gScratchMtx;
+    newScaledMat = gScratchMtx;
     *(Mtx43 *)&invScaledMat = scratch.scaled;
     MTX_Inverse43(&invScaledMat, &invScaledMat);
     prevInvScaledMat = invScaledMat;
@@ -116,10 +116,10 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     MTX_Inverse43(&invRotMat, &invRotMat);
 
     scaledMat = newScaledMat;
-    data_020a0e68 = mtx;
+    gScratchMtx = mtx;
     s32 currentScale = scale;
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, currentScale, currentScale, currentScale);
-    newScaledMat = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToScale(&gScratchMtx, currentScale, currentScale, currentScale);
+    newScaledMat = gScratchMtx;
     prevInvScaledMat = invScaledMat;
     invScaledMat = newScaledMat;
     MTX_Inverse43(&invScaledMat, &invScaledMat);

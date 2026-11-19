@@ -54,7 +54,7 @@ void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *ptr);
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
@@ -449,7 +449,7 @@ s32 dScMgFlower_c::InitResources() {
 
     mScore = Mg_GetSavedRecord0();
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
 
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
                          GX_BG_CHARBASE_0x14000);

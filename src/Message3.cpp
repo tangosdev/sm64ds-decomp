@@ -93,12 +93,12 @@ extern int data_0209285c[];
 extern void (*data_02092830[])(void);
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
-extern s32 data_0208ee44;
+extern s32 gFrameStep;
 extern u32 gNextActorUpdateMask;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern u16 data_020a0e5a[];
-extern s32 data_020a0db0;
+extern s32 gGlobalTimer;
 extern struct OamAttr data_ov002_0210c390;
 extern struct OamAttr data_ov002_0210c398;
 extern struct OamAttr data_ov002_0210c3a0;
@@ -1061,14 +1061,14 @@ void Message::func_020326ac(void) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
             data_0209fcd0 = 0;
-        } else if (data_0209caa0.file.controllerMode == 0 &&
+        } else if (gSaveBlock.file.controllerMode == 0 &&
                    (data_020a0e5a[gActivePlayerSlot * 2] & 0x30)) {
             data_0209fcd0 ^= 1;
         }
         {
             int r5 = data_0209fcf4[data_0209fcd0] * 9 + data_0209fc6c + 12;
             int r4 = data_0209fce0 + (data_0209fc80 * 16) + 14;
-            if (data_020a0db0 & (0x10 / data_0208ee44)) {
+            if (gGlobalTimer & (0x10 / gFrameStep)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
                 OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -1088,14 +1088,14 @@ void Message::func_020326ac(void) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
             data_0209fcd0 = 0;
-        } else if (data_0209caa0.file.controllerMode == 0 &&
+        } else if (gSaveBlock.file.controllerMode == 0 &&
                    (data_020a0e5a[gActivePlayerSlot * 2] & 0xC0)) {
             data_0209fcd0 ^= 1;
         }
         {
             int r5 = data_0209fc6c + 12;
             int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 16) + 14;
-            if (data_020a0db0 & (0x10 / data_0208ee44)) {
+            if (gGlobalTimer & (0x10 / gFrameStep)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
                 OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -1154,7 +1154,7 @@ void Message::func_020326ac(void) {
                 }
                 break;
             }
-        } else if (data_0209caa0.file.controllerMode == 0) {
+        } else if (gSaveBlock.file.controllerMode == 0) {
             u16 mask = data_020a0e5a[idx * 2];
             if (mask & 0xC0) {
                 u8 target = (mask & 0x40) ? 0 : 2;
@@ -1170,7 +1170,7 @@ void Message::func_020326ac(void) {
         {
             int r5 = data_0209fc6c + 12;
             int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 16) + 14;
-            if (data_020a0db0 & (0x10 / data_0208ee44)) {
+            if (gGlobalTimer & (0x10 / gFrameStep)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
                 OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -1179,19 +1179,19 @@ void Message::func_020326ac(void) {
         }
     }
     case 7: {
-        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) && IsButtonInputValid() != 0) {
+        if ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) && IsButtonInputValid() != 0) {
             data_0209fd0c += 1;
             data_0209fcc4 = 1;
             data_0209fcbc = 0;
             data_0209fcc8 = 1;
         }
-        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+        if (!(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
             return;
         }
         {
             int r5 = ((data_0209fce4 * 2) - 6) - data_0209fc6c;
             int r4 = ((data_0209fcc0 * 2) + 2) - data_0209fce0;
-            if (!(data_020a0db0 & (0x10 / data_0208ee44))) {
+            if (!(gGlobalTimer & (0x10 / gFrameStep))) {
                 return;
             }
             if (data_0209fcd4 != 0) {

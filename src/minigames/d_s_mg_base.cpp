@@ -103,7 +103,7 @@ extern dGraph_c::callback_c *gGraphCallback;
 void Mg_UpdateFx(MgFx *c);
 extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern unsigned short data_020a0e5a[];
-extern int data_0208ee44;
+extern int gFrameStep;
 extern void Mg_CommitRecords(void);
 extern void FreeGfxSlotsById(int arg);
 void Mg_InitMusic();
@@ -2691,7 +2691,7 @@ int dScMgBase_c::BeforeBehavior()
             return 0;
     }
 
-    ApproachLinear(mCreditsShown, mCredits, data_0208ee44);
+    ApproachLinear(mCreditsShown, mCredits, gFrameStep);
 
     mFrameCounter++;
     if (mFrameCounter >= 0x28)
@@ -3790,7 +3790,7 @@ extern u8 gMainScreenLayers;
 int sMgStockCounterFiles[] = {194, 196, 191, 192, 193};
 extern u8 gSubScreenLayers;
 extern dGraph_c::callback_c *gGraphCallback;
-extern int data_0208ee44;
+extern int gFrameStep;
 }
 }
 
@@ -3799,7 +3799,7 @@ void dScMgBase_c::InitEngines() {
     using s20b265c::FreeGfxSlotsById;
     using s20b265c::GetGameLanguage;
     using s20b265c::Ov004_Deallocate;
-    using s20b265c::data_0208ee44;
+    using s20b265c::gFrameStep;
     using s20b265c::gSubScreenLayers;
     using s20b265c::gMainScreenLayers;
     using s20b265c::gGraphCallback;
@@ -3842,7 +3842,7 @@ void dScMgBase_c::InitEngines() {
     gGraphCallback = &sMgGraphCallback;
     Mg_ResetOverlays();
     FreeGfxSlotsById(0x1d);
-    data_0208ee44 = 1;
+    gFrameStep = 1;
 }
 
 namespace s20b27f4 {

@@ -218,11 +218,11 @@ void daTrs_c::func_ov063_021160d4() {
     this->mClsnOff.x = 0;
     this->mClsnOff.y = 0;
     this->mClsnOff.z = 0;
-    Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x, this->mPos.y, this->mPos.z);
-    MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
-    this->mClsnOff.x = data_020a0e68.t.x;
-    this->mClsnOff.y = data_020a0e68.t.y;
-    this->mClsnOff.z = data_020a0e68.t.z;
+    Matrix4x3_FromTranslation(&gScratchMtx, this->mPos.x, this->mPos.y, this->mPos.z);
+    MTX_Concat43(this->mAnmModel.data.transforms, &gScratchMtx, &gScratchMtx);
+    this->mClsnOff.x = gScratchMtx.t.x;
+    this->mClsnOff.y = gScratchMtx.t.y;
+    this->mClsnOff.z = gScratchMtx.t.z;
     VEC_Subtract(&this->mClsnOff, &this->mPos, &this->mClsnOff);
     VEC_Subtract(&this->mClsnOff, &this->mClsnBase, &this->mClsnOff);
     Vec3_MulScalarInPlace(&this->mClsnOff, 0x6800);
@@ -316,8 +316,8 @@ void daTrs_c::func_ov063_0211640c() {
 
     if (this->mState == 3) {
         Vec3_Asr(&t1, &pos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, t1.x, t1.y, t1.z);
-        this->mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, t1.x, t1.y, t1.z);
+        this->mAnmModel.mat4x3 = gScratchMtx;
         this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
         func_020167a4(&this->mAnmModel);
         {
@@ -329,23 +329,21 @@ void daTrs_c::func_ov063_0211640c() {
         this->mAnmModel.data.UpdateVertsUsingBones();
     } else {
         Vec3_Asr(&t2, &pos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, t2.x, t2.y, t2.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, ang);
-        this->mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, t2.x, t2.y, t2.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, ang);
+        this->mAnmModel.mat4x3 = gScratchMtx;
         this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
     }
 
     if (this->mOpacity >= 0x10) {
-        Matrix4x3_FromTranslation(&data_020a0e68,
-            pos.x >> 3, pos.y >> 3, pos.z >> 3);
-        this->mShadowMtx = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, pos.x >> 3, pos.y >> 3, pos.z >> 3);
+        this->mShadowMtx = gScratchMtx;
         DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
 
         if (this->mBooFlags.mirrored) {
             pos.x *= -1;
-            Matrix4x3_FromTranslation(&data_020a0e68,
-                pos.x >> 3, pos.y >> 3, pos.z >> 3);
-            this->mShadowMtx2 = data_020a0e68;
+            Matrix4x3_FromTranslation(&gScratchMtx, pos.x >> 3, pos.y >> 3, pos.z >> 3);
+            this->mShadowMtx2 = gScratchMtx;
             DropShadowRadHeight(this->mShadowModel2, this->mShadowMtx2, 0x12c000, 0xc8000, 0xf);
         }
     }
@@ -382,8 +380,8 @@ void daTrs_c::func_ov063_021166ac() {
 
     if (mState == 3 || mState == 3 || mState == 3 || mState == 3) {
         Vec3_Asr(&t1, &this->mPos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, t1.x, t1.y, t1.z);
-        this->mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, t1.x, t1.y, t1.z);
+        this->mAnmModel.mat4x3 = gScratchMtx;
         this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
         func_020167a4(&this->mAnmModel);
         {
@@ -395,15 +393,15 @@ void daTrs_c::func_ov063_021166ac() {
         this->mAnmModel.data.UpdateVertsUsingBones();
     } else {
         Vec3_Asr(&t2, &this->mPos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, t2.x, t2.y, t2.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
-        this->mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, t2.x, t2.y, t2.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, this->mAngle.y);
+        this->mAnmModel.mat4x3 = gScratchMtx;
         this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
     }
 
-    Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x >> 3, this->mPos.y >> 3,
+    Matrix4x3_FromTranslation(&gScratchMtx, this->mPos.x >> 3, this->mPos.y >> 3,
                               this->mPos.z >> 3);
-    this->mShadowMtx = data_020a0e68;
+    this->mShadowMtx = gScratchMtx;
     {
         if (IsActorID(this, TRS_ID_BOSS_TERESA))
             DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
@@ -1069,13 +1067,13 @@ void daTrs_c::func_ov063_02117cdc() {
         return;
     case 5: {
         int v0;
-        if (data_ov008_02111b6c == 0x1f000 || (data_0209caa0.file.flags1 & 0x10)) {
+        if (data_ov008_02111b6c == 0x1f000 || (gSaveBlock.file.flags1 & 0x10)) {
             v0 = 1;
         } else {
             v0 = 0;
         }
         if (v0 == 0) {
-            if ((data_0209caa0.file.flags1 & 0x10) == 0) {
+            if ((gSaveBlock.file.flags1 & 0x10) == 0) {
                 return;
             }
         }
@@ -1142,7 +1140,7 @@ void daTrs_c::func_ov063_02117cdc() {
             int x = 0 - this->mPos.x;
             int z = this->mPos.z;
             int y = this->mPos.y + 0xc8000;
-            int fl = data_0209caa0.file.flags1 & 0x10;
+            int fl = gSaveBlock.file.flags1 & 0x10;
             w.x = x;
             w.y = y;
             w.z = z;
@@ -3107,11 +3105,11 @@ int daTrs_c::InitResources()
     mClsnBase.x = 0;
     mClsnBase.y = 0;
     mClsnBase.z = 0;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
-    mClsnBase.x = data_020a0e68.t.x;
-    mClsnBase.y = data_020a0e68.t.y;
-    mClsnBase.z = data_020a0e68.t.z;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    MTX_Concat43(this->mAnmModel.data.transforms, &gScratchMtx, &gScratchMtx);
+    mClsnBase.x = gScratchMtx.t.x;
+    mClsnBase.y = gScratchMtx.t.y;
+    mClsnBase.z = gScratchMtx.t.z;
     VEC_Subtract(&mClsnBase, &mPos, &mClsnBase);
     mTalkStep = 0;
     mTargetAngleY = mPrevAngle.y;

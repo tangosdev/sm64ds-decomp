@@ -112,7 +112,7 @@ extern int GetGameLanguage(void);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int sAmidaPatternSpeedUp[];
-extern s32 data_0208ee44;
+extern s32 gFrameStep;
 extern char sAmidaPatterns[];
 extern char sAmidaPatternGoalShuffle[];
 extern char sAmidaPatternSpeeds[];
@@ -2031,7 +2031,7 @@ s32 dScMgAmida_c::InitResources() {
         mLineColor = 2;
     }
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_23);
     G2_BG0Mosaic(0);

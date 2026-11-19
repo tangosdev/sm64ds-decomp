@@ -162,17 +162,17 @@ daTrsTrap_c::~daTrsTrap_c()
 void daTrsTrap_c::UpdateModelTransform() {
     int v[3];
     Vec3_Asr(v, &mPos.x, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v[0], v[1], v[2]);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* The collision matrix mClsnMat from position and angles, then the moving
    mesh follows it. Called from InitResources and Behavior. */
 void daTrsTrap_c::UpdateClsnMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mClsnMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mClsnMat = gScratchMtx;
     mMovingMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 

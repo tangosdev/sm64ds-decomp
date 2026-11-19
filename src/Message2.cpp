@@ -81,7 +81,7 @@ extern int data_0209d700;
 extern int data_0209d704;
 extern u8 data_0209d710[];
 extern int data_0209d74c[];
-extern s32 data_0208ee44;
+extern s32 gFrameStep;
 extern u16 data_0208ee64[4];
 extern u8 data_0208ee6c[8];
 extern u8 data_0208ee74[];
@@ -95,7 +95,7 @@ extern u8 gGameMode;
 extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
 extern u16 data_020a0e5a[];
-extern s32 data_020a0db0;
+extern s32 gGlobalTimer;
 extern struct OamAttr data_ov002_0210c390;
 extern struct OamAttr data_ov002_0210c398;
 extern struct OamAttr data_ov002_0210c3a0;
@@ -789,7 +789,7 @@ void Message::Update() {
                 func_02012790(0x96);
             }
             gMsgChoiceIndex = 0;
-        } else if (data_0209caa0.file.controllerMode == 0 &&
+        } else if (gSaveBlock.file.controllerMode == 0 &&
                    (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0x30)) {
             gMsgChoiceIndex ^= 1;
             func_02012790(0x96);
@@ -797,7 +797,7 @@ void Message::Update() {
         {
             int r5 = gMsgChoicePositions[gMsgChoiceIndex] + gMsgBoxLeft + 12;
             int r4 = gMsgBoxTop + (gMsgChoiceLine * 16) + 14;
-            if (data_020a0db0 & (0x10 / data_0208ee44)) {
+            if (gGlobalTimer & (0x10 / gFrameStep)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
                 OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -823,7 +823,7 @@ void Message::Update() {
                 func_02012790(0x96);
             }
             gMsgChoiceIndex = 0;
-        } else if (data_0209caa0.file.controllerMode == 0 &&
+        } else if (gSaveBlock.file.controllerMode == 0 &&
                    (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0xC0)) {
             gMsgChoiceIndex ^= 1;
             func_02012790(0x96);
@@ -831,7 +831,7 @@ void Message::Update() {
         {
             int r5 = gMsgBoxLeft + 12;
             int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 16) + 14;
-            if (data_020a0db0 & (0x10 / data_0208ee44)) {
+            if (gGlobalTimer & (0x10 / gFrameStep)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
                 OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -894,7 +894,7 @@ void Message::Update() {
                 }
                 break;
             }
-        } else if (data_0209caa0.file.controllerMode == 0) {
+        } else if (gSaveBlock.file.controllerMode == 0) {
             u16 mask = data_020a0e5a[idx * 2];
             if (mask & 0xC0) {
                 u8 target = (mask & 0x40) ? 0 : 2;
@@ -911,7 +911,7 @@ void Message::Update() {
         {
             int r5 = gMsgBoxLeft + 12;
             int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 16) + 14;
-            if (data_020a0db0 & (0x10 / data_0208ee44)) {
+            if (gGlobalTimer & (0x10 / gFrameStep)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
                 OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -920,8 +920,8 @@ void Message::Update() {
         }
     }
     case 7: {
-        if (((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
-             !IsCastleFallCutsceneRunning() && IsButtonInputValid() != 0) ||
+        if (((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning() &&
+             IsButtonInputValid() != 0) ||
             data_0209d66c != 0) {
             data_0209d6f4 += 1;
             data_0209d69c = 1;
@@ -930,13 +930,13 @@ void Message::Update() {
             data_0209d6bc = 1;
             func_02012790(0x14);
         }
-        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+        if (!(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
             return;
         }
         {
             int r5 = ((gMsgBoxCenterX * 2) - 6) - gMsgBoxLeft;
             int r4 = ((gMsgBoxCenterY * 2) + 2) - gMsgBoxTop;
-            if (!(data_020a0db0 & (0x10 / data_0208ee44))) {
+            if (!(gGlobalTimer & (0x10 / gFrameStep))) {
                 return;
             }
             if (gMsgBoxStyle != 0) {
@@ -948,8 +948,8 @@ void Message::Update() {
         }
     }
     case 8: {
-        if (((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
-             !IsCastleFallCutsceneRunning() && IsButtonInputValid() != 0) ||
+        if (((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning() &&
+             IsButtonInputValid() != 0) ||
             data_0209d66c != 0) {
             data_0209d670 = 1;
             data_0209d66c = 0;

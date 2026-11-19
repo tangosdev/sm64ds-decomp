@@ -118,7 +118,7 @@ int sRouletteResultsTimer;
 extern int sRouletteResultIndex;
 RouletteStrip *sRouletteStrips[4];
 void *sRouletteLandedRacer;
-extern int data_020a0db0;
+extern int gGlobalTimer;
 /* The first of the two blink frames in sRouletteStripSprites for each strip's
    marker: {0, 2, 6, 8} for strips 0..3. A horizontal pair adds 2. */
 extern const s32 sRouletteStripSpriteBase[4] = {
@@ -453,7 +453,7 @@ s32 dScMgRoulette_c::Render() {
     {
         if (IsSpinStopped(mBoard)) {
             if (mPhase < 8) {
-                if (data_020a0db0 & 8) {
+                if (gGlobalTimer & 8) {
                     s16 idx = mBoard.mStopTile;
                     Hud_RenderSprite((void *)data_ov006_02138c18, sRouletteTiles[idx].x >> 12,
                                      sRouletteTiles[idx].y >> 12, -1, 1);
@@ -1071,9 +1071,9 @@ void RouletteBoard::StateSpin() {
     ballPos.x = FX_MUL(dist, val1);
     ballPos.y = FX_MUL(dist, 0x400) + 0x780;
     ballPos.z = FX_MUL(dist, val0);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, ballPos.x, ballPos.y, ballPos.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, ballPos.x, ballPos.y, ballPos.z);
 
-    mBall.mat4x3 = data_020a0e68;
+    mBall.mat4x3 = gScratchMtx;
 }
 
 void RouletteBoard_StartSlowdown(RouletteBoard *board) {
@@ -1170,17 +1170,17 @@ void RouletteBoard::StateSlow() {
     ballPos.x = x;
     ballPos.y = y;
     ballPos.z = z;
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, ballPos.x, ballPos.y, ballPos.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, ballPos.x, ballPos.y, ballPos.z);
 
-    mBall.mat4x3 = data_020a0e68;
+    mBall.mat4x3 = gScratchMtx;
 }
 
 void RouletteBoard_Update(RouletteBoard *c) {
     c->mBoardAngle += c->mBoardSpin;
     c->mWheel.data.bones[2].rotX = -c->mBoardAngle;
     c->mWheel.UpdateVerts();
-    Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-    c->mWheel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, 0, 0, 0);
+    c->mWheel.mat4x3 = gScratchMtx;
     (c->*(c->mState))();
     {
         short s = c->mRollSound;
@@ -1242,7 +1242,7 @@ void RouletteStrip_DrawRacers(RouletteStrip *strip) {
         payoutIndex = strip->payoutIndex;
         tile = racer->tile;
         frame = sRouletteStripSpriteBase[payoutIndex];
-        if (data_020a0db0 & 8)
+        if (gGlobalTimer & 8)
             frame++;
         if (tile >= 0xc && tile <= 0x13)
             frame += 2;

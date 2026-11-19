@@ -242,7 +242,7 @@ int daKpaFire_c::CleanupResources()
 }
 
 /* Per-frame drop shadow. Does nothing when mDropsShadow is 0. Otherwise it
- * builds a translation matrix in the shared scratch matrix data_020a0e68 at
+ * builds a translation matrix in the shared scratch matrix gScratchMtx at
  * the fire's x, its mGroundY and its z (each >> 3), copies it into the
  * Matrix4x3 at 0x32c of the actor, and draws the dExtShadowModel_c at 0x304 with
  * radius mShadowRadiusMul * mFireScale, the second fx32 argument (dActor_c.h
@@ -251,8 +251,8 @@ int daKpaFire_c::CleanupResources()
 void daKpaFire_c::func_ov060_02117624() {
     if (mDropsShadow == 0)
         return;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, mGroundY >> 3, mPos.z >> 3);
-    mShadowMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, mGroundY >> 3, mPos.z >> 3);
+    mShadowMat = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMat, mShadowRadiusMul * mFireScale, 0x1e000, 0xf);
 }
 

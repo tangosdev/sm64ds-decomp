@@ -429,15 +429,15 @@ int daBtfly_c::Behavior()
     if (mState != 4) {
         int t[3];
         Vec3_Asr(t, &mPos.x, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
+        Matrix4x3_FromTranslation(&gScratchMtx, t[0], t[1], t[2]);
         mAngle.y = mPrevAngle.y;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
         if (mUseAnimModel != 0) {
-            mAnmModel.mat4x3 = data_020a0e68;
+            mAnmModel.mat4x3 = gScratchMtx;
             DropShadowRadHeight(mShadowModel1, mAnmModel.mat4x3, 0x14000, 0x12c000, 0xf);
             mAnmModel.Advance();
         } else {
-            mModel.mat4x3 = data_020a0e68;
+            mModel.mat4x3 = gScratchMtx;
             DropShadowRadHeight(mShadowModel2, mModel.mat4x3, 0x64000, 0x12c000, 0xf);
         }
     }

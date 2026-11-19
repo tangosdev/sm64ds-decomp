@@ -3,7 +3,7 @@
  *
  * It turns toward the closest visible player within 700.0 (0x800 a frame)
  * and pulses in size from a frame table. With a player tracked, and while
- * it stands above data_0209f32c, it counts 115 frames and then spits: on
+ * it stands above gWaterHeight, it counts 115 frames and then spits: on
  * frame 30 of that animation it spawns KERONPA_FIRE (actor 0x10f, see
  * d_a_kp_fr.cpp) 80.0 in front of itself and plays sound 0x105. A collider
  * hit with flag 0x10 knocks it away tumbling (a mega kill, state 3). A
@@ -49,7 +49,7 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 #include "nitro/fx/fx_trig.h"
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern int data_0209f32c;
+extern int gWaterHeight;
 
 /* `return new daKrpa_c()` emits 0x50, calling the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). Historical aliases:
@@ -187,7 +187,7 @@ int daKrpa_c::EnterIdle() {
 }
 int daKrpa_c::ExecuteIdle() {
     if (this->mPlayer) {
-        if (this->mPos.y > data_0209f32c) {
+        if (this->mPos.y > gWaterHeight) {
             if (DecIfAbove0_Byte(&this->mStateTimer) == 0)
                 this->ChangeState(1);
         }

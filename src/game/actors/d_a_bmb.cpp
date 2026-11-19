@@ -701,7 +701,7 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
 }
 
 void daBmb_c::func_ov102_0214b53c() {
-    extern Matrix4x3 data_020a0e68;
+    extern Matrix4x3 gScratchMtx;
 
     Vector3 p;
     Vector3 eaterPos;
@@ -746,11 +746,11 @@ void daBmb_c::func_ov102_0214b53c() {
         p.x = 0;
         p.y = 0;
         p.z = 0;
-        data_020a0e68 = mAnmModel.mat4x3;
-        MTX_Concat43(&mAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        p.x = data_020a0e68.t.x;
-        p.y = data_020a0e68.t.y;
-        p.z = data_020a0e68.t.z;
+        gScratchMtx = mAnmModel.mat4x3;
+        MTX_Concat43(&mAnmModel.data.transforms[2], &gScratchMtx, &gScratchMtx);
+        p.x = gScratchMtx.t.x;
+        p.y = gScratchMtx.t.y;
+        p.z = gScratchMtx.t.z;
         Vec3_Lsl(&d, &p, 3);
         p = d;
         if (IsFlagSet(this, 0x4000)) {
@@ -761,10 +761,10 @@ void daBmb_c::func_ov102_0214b53c() {
             if (IsInYoshiMouth(this)) {
                 if (mEatingPlayer != 0) {
                     eaterPos = mEatingPlayer->mPos;
-                    data_020a0e68 = mEatingPlayer->mHeadMatrix;
-                    p.x = data_020a0e68.t.x;
-                    p.y = data_020a0e68.t.y;
-                    p.z = data_020a0e68.t.z;
+                    gScratchMtx = mEatingPlayer->mHeadMatrix;
+                    p.x = gScratchMtx.t.x;
+                    p.y = gScratchMtx.t.y;
+                    p.z = gScratchMtx.t.z;
                     Vec3_LslInPlace((int *)&p, 3);
                     daPly_c *eater = mEatingPlayer;
                     Vector3_16 rot = eater->mAngle;

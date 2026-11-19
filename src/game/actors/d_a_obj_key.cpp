@@ -397,12 +397,12 @@ void daObjKey_c::StateFlyToCenter()
         }
     }
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngle.y);
-    MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
-    v.x = data_020a0e68.t.x;
-    v.y = data_020a0e68.t.y;
-    v.z = data_020a0e68.t.z;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mPrevAngle.y);
+    MTX_Concat43(mAnmModel.data.transforms, &gScratchMtx, &gScratchMtx);
+    v.x = gScratchMtx.t.x;
+    v.y = gScratchMtx.t.y;
+    v.z = gScratchMtx.t.z;
     VEC_Subtract(&v, &mPos, &v);
     Vec3_LslInPlace(&v, 3);
     VEC_Add(&v, &mPos, &v);
@@ -654,11 +654,11 @@ void daObjKey_c::func_ov089_02131df4(daPly_c &p) {
     /* Word 1, bit (2 << kind): already collected. 1 asks dScStage_c/dMeter/daPly_c
      * for the new-star fanfare; 0 suppresses it. Kind 7 takes neither arm.
      * One arm is shorter (0x110 -> 0xe8); the ROM has both. */
-    if (data_0209caa0.file.flags1 & (2 << mState))
+    if (gSaveBlock.file.flags1 & (2 << mState))
         gNewStarCollected = 0;
     else
         gNewStarCollected = 1;
-    data_0209caa0.file.flags1 |= (2 << mState);
+    gSaveBlock.file.flags1 |= (2 << mState);
 
     if (mState <= 1) {
         player->SetNoControlState(3, -1, 0);
@@ -768,12 +768,12 @@ int daObjKey_c::Behavior()
                 mAngle.y = mPlayer->mAngle.y;
             }
             if (mAnmModel.Finished() == 0) {
-                Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-                MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
-                vec.x = data_020a0e68.t.x;
-                vec.y = data_020a0e68.t.y;
-                vec.z = data_020a0e68.t.z;
+                Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+                Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+                MTX_Concat43(mAnmModel.data.transforms, &gScratchMtx, &gScratchMtx);
+                vec.x = gScratchMtx.t.x;
+                vec.y = gScratchMtx.t.y;
+                vec.z = gScratchMtx.t.z;
                 VEC_Subtract(&vec, &mPos, &vec);
                 Vec3_LslInPlace(&vec, 3);
                 VEC_Add(&vec, &mPos, &vec);

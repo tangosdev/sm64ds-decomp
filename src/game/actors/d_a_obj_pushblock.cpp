@@ -142,8 +142,8 @@ int daObjPushblock_c::Behavior() {
         dst.z = 0;
         v.y = 0x96000;
         v.z = 0x96000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-        MTX_MultVec43(&v, &data_020a0e68, &dst);
+        Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+        MTX_MultVec43(&v, &gScratchMtx, &dst);
         VEC_Add(&dst, &mPos, &dst);
         dBgCh_Gnd ray;
         ray.SetObjAndPos(dst, 0);

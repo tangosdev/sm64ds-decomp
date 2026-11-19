@@ -157,10 +157,10 @@ dScMg3DEsp_c::~dScMg3DEsp_c() {}
 void dMg3DEspAnimSet_c::Render()
 {
     int i;
-    Matrix4x3_FromTranslation(&data_020a0e68, 0x8c000, 0x80000, 0x40000);
+    Matrix4x3_FromTranslation(&gScratchMtx, 0x8c000, 0x80000, 0x40000);
     for (i = 0; i < 3; i++) {
         if (mActive[i] != 0) {
-            mModels[i].mat4x3 = data_020a0e68;
+            mModels[i].mat4x3 = gScratchMtx;
             mMaterialChangers[i].Update(mModels[i].data);
             mModels[i].Render(0);
         }

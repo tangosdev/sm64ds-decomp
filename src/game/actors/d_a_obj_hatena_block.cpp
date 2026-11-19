@@ -79,7 +79,7 @@
  *     the caps and contents.
  *   FX_SinCosTable_ -- NitroSDK's sin/cos table; the bounce squash indexes it
  *     by mBounceAng.
- *   data_0209caa0, gGameMode, gCurrentSublevel, data_0209f32c, gCamera,
+ *   gSaveBlock, gGameMode, gCurrentSublevel, gWaterHeight, gCamera,
  *     data_0209e650, data_020a0edc -- arm9 globals.
  *
  * deslop leftovers:
@@ -151,7 +151,7 @@ enum {
     ACTOR_FEATHER = 345       /* 0x159 */
 };
 
-/* SaveData::flags1 (data_0209caa0.file.flags1) bit 31. Its meaning is not named in
+/* SaveData::flags1 (gSaveBlock.file.flags1) bit 31. Its meaning is not named in
    the tree; this class only tests it. While it is CLEAR, an actor 20
    (HATENA_BLOCK) is drawn as the animated model (mAnmModel), Behavior only
    advances that animation (while IDLE) and keeps the collider off, and the mega-player
@@ -161,7 +161,7 @@ enum { SAVE_FLAGS1_BIT31 = 0x80000000 };
 extern "C" {
 
 extern signed char gCurrentSublevel;
-extern int data_0209f32c;
+extern int gWaterHeight;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
 extern char data_020a0edc[];
@@ -439,7 +439,7 @@ int daObjHatenaBlock_c::Behavior()
         if (mMeshCollider.IsEnabled() != 0) {
             mMeshCollider.Disable();
         }
-    } else if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
+    } else if ((gSaveBlock.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
                IsActorID(this, ACTOR_HATENA_BLOCK)) {
         mAnmModel.Advance();
         if (mMeshCollider.IsEnabled() != 0) {
@@ -465,7 +465,7 @@ int daObjHatenaBlock_c::Behavior()
 int daObjHatenaBlock_c::Render()
 {
     if (mState != STATE_POPPED) {
-        if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
+        if ((gSaveBlock.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
             IsActorID(this, ACTOR_HATENA_BLOCK))
             mAnmModel.Render(0);
         else
@@ -556,7 +556,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = (mPos.y + mBounceYOffs) >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;
-    if (data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)
+    if (gSaveBlock.file.flags1 & SAVE_FLAGS1_BIT31)
         return;
     if (!IsActorID(this, ACTOR_HATENA_BLOCK))
         return;
@@ -642,7 +642,7 @@ void daObjHatenaBlock_c::EnterIdle() {
    by a mega character: virtual OnHitByMegaChar. */
 void daObjHatenaBlock_c::UpdateIdle() {
     daPly_c *player;
-    if (!(data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)) {
+    if (!(gSaveBlock.file.flags1 & SAVE_FLAGS1_BIT31)) {
         if (IsActorID(this, ACTOR_HATENA_BLOCK))
             return;
     }
@@ -1054,14 +1054,14 @@ void daObjHatenaBlock_c::SpawnCoinSpray(Vector3 *pos, int n, unsigned int speed,
 }
 
 /* Whether the block cannot be hit right now: returns 1 in level 0x15 when
-   mHomePosY - 0x32000 (50 units) is at or below data_0209f32c
+   mHomePosY - 0x32000 (50 units) is at or below gWaterHeight
    (WATER_HEIGHT in symbols/verified.tsv); in any other level except 0x21 (0
    there) when the closest player's mIsUnderwater is non-zero; otherwise 0.
    The levels are LEVEL_ID values (gCurrentSublevel); 0x15 is Wet-Dry World per
    dActor_c::GetWaterHeightWDW, the tree does not name 0x21. */
 int daObjHatenaBlock_c::IsHitBlocked() {
     if (gCurrentSublevel == 0x15) {
-        if ((mHomePosY - 0x32000) <= data_0209f32c)
+        if ((mHomePosY - 0x32000) <= gWaterHeight)
             return 1;
     } else {
         if (gCurrentSublevel == 0x21)

@@ -83,7 +83,7 @@ extern u8 gGameMode;
 extern dFdColor_c gSceneColorFader;
 extern char data_020a0d90[];
 extern u8 gMainScreenLayers;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern char data_0209ee90[];
 extern void Enable3dEngines(void);
 /* The print helper reads name; Behavior reads the signed level ID and entrance.
@@ -234,7 +234,7 @@ s32 dScTitle_c::InitResources() {
     GX_LoadOBJPltt(data_0208c178, 0, 0x200);
     gMainScreenLayers = 0x11;
     GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ);
-    data_0208ee44 = 2;
+    gFrameStep = 2;
     TitleScrollLevelList(this);
     G2_SetBG0Offset(0, 0);
     data_0209ee90[0x340] = 0;

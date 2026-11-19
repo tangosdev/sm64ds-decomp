@@ -78,7 +78,7 @@ extern dCamera_c::State data_0209b0f8;
 extern dCamera_c::State data_0209b108;
 extern dCamera_c::State data_0209b118;
 extern dCamera_c::State data_0209b128;
-extern Matrix4x3 data_0209b41c;
+extern Matrix4x3 gInvViewMtx;
 extern unsigned int gNextActorUpdateMask;
 
 extern void *data_02086efc;
@@ -109,11 +109,11 @@ extern u8 gLocalPlayerId;
 extern u8 gVsExitScreenActive;
 extern u8 gGamePaused;
 extern s8 gCurrentSublevel;
-extern s32 data_0209f32c;
+extern s32 gWaterHeight;
 extern daPly_c *gPlayers[];
-extern dClipper data_0209f43c;
+extern dClipper gClipper;
 extern s32 gRunningKuppaScript;
-extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 gScratchMtx;
 extern struct OamAttr data_ov002_0210c3b0;
 extern void *data_ov002_0210c3e0[2];
 
@@ -460,7 +460,7 @@ int dCamera_c::Behavior()
         else
             weather = -1;
         if (weather >= 0) {
-            MTX_MultVec43(&CAM_SPACE_CAM_POS_ASR_3, &data_0209b41c, &weatherPos);
+            MTX_MultVec43(&CAM_SPACE_CAM_POS_ASR_3, &gInvViewMtx, &weatherPos);
             Vec3_LslInPlace(&weatherPos.x, 3);
             int flag;
             if (weather != 0xbc)
@@ -479,7 +479,7 @@ int dCamera_c::Behavior()
     {
         if (IsPlayer(mTargetPlayer)) {
             daPly_c *player = (daPly_c *)mTargetPlayer;
-            s32 waterLine = data_0209f32c - FX_SinIdx((u16)mAngleX >> 4) * 0x10;
+            s32 waterLine = gWaterHeight - FX_SinIdx((u16)mAngleX >> 4) * 0x10;
             if (!(mFlags & CAM_FLAG_UNDERWATER)) {
                 if (player->mIsUnderwater != 0 || player->mIsInShallowWater != 0) {
                     if (pos.y <= waterLine) {
@@ -601,8 +601,8 @@ int dCamera_c::Render()
     G3i_LookAt_(&eye, (Vector3 *)up, &target, 1, &viewMat);
 
     if (roll != 0) {
-        Matrix4x3_FromRotationZ(&data_020a0e68, roll);
-        MTX_Concat43(&viewMat, &data_020a0e68, &viewMat);
+        Matrix4x3_FromRotationZ(&gScratchMtx, roll);
+        MTX_Concat43(&viewMat, &gScratchMtx, &viewMat);
     }
 
     dView_c::Render();
@@ -632,7 +632,7 @@ void dCamera_c::SetFovAngle(short arg) {
     int idx = (u16)arg >> 4;
     mInvSinFov = FX_Inv(FX_SinIdx(idx));
     mInvCosFov = FX_Inv(FX_CosIdx(idx));
-    data_0209f43c.Func_020156DC(mAspect, arg, mNear, mFar);
+    gClipper.Func_020156DC(mAspect, arg, mNear, mFar);
 }
 
 /* Shake from a point (landings, bonks, ground pounds, boss steps): if the
@@ -1490,7 +1490,7 @@ extern void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short ve
 extern void StarDanceBoundYaw(dCamera_c *cam, short ang, int threshold);
 
 extern dActor_c *STAR_MARKERS[12];
-extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 gScratchMtx;
 extern u8 data_0209f224;
 /* The per-player controller records, indexed by gActivePlayerSlot: the
    camera reads the turn buttons (held, pressed), the camera-input scale (mag)
@@ -2080,7 +2080,7 @@ void dCamera_c::func_0200af20(Vector3 *v1, Vector3 *v2, short *out) {
     }
 
     *out = 0xe38;
-    data_0209f43c.Func_020156DC(mAspect, *out, mNear, mFar);
+    gClipper.Func_020156DC(mAspect, *out, mNear, mFar);
     mFlags &= ~CAM_FLAG_UNDERWATER;
 }
 
@@ -2441,8 +2441,8 @@ s32 dCamera_c::func_02009e70() {
                             ground.StartDetectingWater();
                         sb = (ground.DetectClsn() != 0) ? ground.clsnY : y;
                         if (mode == &data_02086ff4) {
-                            if (sb < data_0209f32c)
-                                sb = data_0209f32c;
+                            if (sb < gWaterHeight)
+                                sb = gWaterHeight;
                             goalY = sb + 0x64000;
                         } else {
                             goalY = sb;
@@ -2774,10 +2774,10 @@ int func_020095e4(dCamera_c *cam) {
     }
 
     SetVec(v, 0, 0, -0x280000);
-    Matrix4x3_FromTranslation(&data_020a0e68, cam->pos.x, cam->pos.y, cam->pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, cam->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, cam->mAngleX);
-    MTX_MultVec43(&v, &data_020a0e68, &cam->lookAt);
+    Matrix4x3_FromTranslation(&gScratchMtx, cam->pos.x, cam->pos.y, cam->pos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, cam->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, cam->mAngleX);
+    MTX_MultVec43(&v, &gScratchMtx, &cam->lookAt);
     cam->mTargetPlayer->mAngle.y = cam->mAngleY - 0x8000;
     return 1;
 }
@@ -2937,10 +2937,10 @@ int dCamera_c::ApproachDist(int dist) {
     len = VEC_Mag(&v);
     r = Math_Function_0203b14c(&len, dist, 0x300, 0x60000, 0x200);
     SetVec(v, 0, 0, len);
-    Matrix4x3_FromTranslation(&data_020a0e68, lookAt.x, lookAt.y, lookAt.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    MTX_MultVec43(&v, &data_020a0e68, &pos);
+    Matrix4x3_FromTranslation(&gScratchMtx, lookAt.x, lookAt.y, lookAt.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngleX);
+    MTX_MultVec43(&v, &gScratchMtx, &pos);
     return r == 0;
 }
 

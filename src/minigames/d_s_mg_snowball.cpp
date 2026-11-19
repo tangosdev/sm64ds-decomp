@@ -80,7 +80,7 @@ extern OamAttr *sSnowballBitSprites[];
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
 extern void func_02012718(int a, int b);
-extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 gScratchMtx;
 extern u16 sSnowballCourseTiles[][4];
 extern unsigned char data_ov006_0212f3b0[];
 extern unsigned char data_ov006_0212f3ac[];
@@ -106,7 +106,7 @@ extern void Ov004_Deallocate(void *p);
 u32 LoadCompressedFileAt(int fileID, void *target);
 void *Ov004_LoadFileByPath(void *p);
 void DecompressLZ16(void *src, void *dst);
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 /* Where two recovered declarations disagreed, the more precise one is
@@ -642,11 +642,11 @@ void dScMgSnowball_c::UpdateCamera() {
     v.x = x;
     v.y = y;
     v.z = 0;
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mHeadingAngle);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mRollAngle);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mHeadingAngle);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mRollAngle);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 void dScMgSnowball_c::RedrawCourse() {
@@ -1737,7 +1737,7 @@ void dScMgSnowball_c::StartRound(int i) {
 s32 dScMgSnowball_c::InitResources() {
     void *buf;
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     mScreensSwapped = 1;
 

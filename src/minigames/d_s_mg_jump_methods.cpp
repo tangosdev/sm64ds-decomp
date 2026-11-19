@@ -248,8 +248,8 @@ s32 dScMgJump_c::InitResources()
     modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)sJumpBackFile);
     r = mModel.SetFile((BMD_File *)modelFile, 1, -1);
     if (r == 0) {
-        Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        mModel.mat4x3 = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, 0, 0, 0);
+        mModel.mat4x3 = gScratchMtx;
         return 0;
     }
     Mg_SetTopScreenYOffset(0x10);
@@ -435,7 +435,7 @@ s32 dScMgJump_c::Render()
         G3_LightVector(GX_LIGHTID_0, m[0], m[1], m[2]);
         G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
         G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
-        Matrix4x3_FromTranslation(&data_020a0e68, 0, -0xef000, 0);
+        Matrix4x3_FromTranslation(&gScratchMtx, 0, -0xef000, 0);
     }
     {
         int m[3];
@@ -446,7 +446,7 @@ s32 dScMgJump_c::Render()
         G3_LightVector(GX_LIGHTID_1, m[0], m[1], m[2]);
     }
 
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 
     {
         /* Kept (#821 r77): the ROM copy-initializes the scale with one

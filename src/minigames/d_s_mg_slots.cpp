@@ -97,7 +97,7 @@ extern SlotState sSlot3StateTable[];
 extern void *LoadFile(int handle);
 
 extern u8 gSubScreenLayers;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(int c);
@@ -842,7 +842,7 @@ s32 dScMgSlot3_c::InitResources() {
 
     Mg_SetTopScreenYOffset(0x20);
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
 
     mLamp1Angle = 0;
     mLamp2Angle = 0;
@@ -1454,7 +1454,7 @@ s32 dScMgSlot1_c::InitResources() {
     mBetIcon.Place();
     StartRound(3);
     Mg_SetTopScreenYOffset(0x20);
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     return 1;
 }
 

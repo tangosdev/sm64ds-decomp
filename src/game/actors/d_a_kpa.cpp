@@ -794,12 +794,12 @@ bool daKpa_c::Bowser_IsAnimAtLastFrame(){
 Per-frame model placement, called from Behavior. 1) On the ground and not held,
 set mAngle.x from the floor normal mGroundNormal and mAngle.y, and mAngle.z from the
 normal and mAngle.y - 0x4000 (a quarter turn), both through func_02010844.
-2) Build the model matrix in data_020a0e68: translation = position >> 3
+2) Build the model matrix in gScratchMtx: translation = position >> 3
 (Vec3_Asr by 3; the foot points below are shifted left 3 on the way back out),
 then rotations about Y, X and Z; copy it into the model and apply opacity
 mOpacity >> 3 (0..31). 3) For skeleton nodes 3 and 6 (mAnmModel.data.transforms
 [3] and [6]) multiply the node matrix by the model matrix (the product lands
-back in data_020a0e68), read its translation and shift it left 3 to
+back in gScratchMtx), read its translation and shift it left 3 to
 full scale: node 3 gives mFootPosB, node 6 gives mFootPosA, each with Y replaced
 by his own Y. 4) Unless mDropsShadow is 0, probe the floor with a dBgCh_Gnd from
 0x32000 (50 units) above him (floor height clsnY, or his own Y if there is
@@ -816,30 +816,30 @@ void daKpa_c::UpdateModelMatrix() {
         this->mAngle.z = func_02010844(&this->mGroundNormal, (s16)(this->mAngle.y - 0x4000));
     }
     Vec3_Asr(&v, &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, this->mAngle.z);
-    this->mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, this->mAngle.z);
+    this->mAnmModel.mat4x3 = gScratchMtx;
     this->mAnmModel.ApplyOpacity((unsigned char)(this->mOpacity >> 3), 1);
-    saved = data_020a0e68;
+    saved = gScratchMtx;
     this->mFootPosB.x = 0;
     this->mFootPosB.y = 0;
     this->mFootPosB.z = 0;
-    MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    this->mFootPosB.x = data_020a0e68.t.x;
-    this->mFootPosB.y = data_020a0e68.t.y;
-    this->mFootPosB.z = data_020a0e68.t.z;
+    MTX_Concat43(&this->mAnmModel.data.transforms[3], &gScratchMtx, &gScratchMtx);
+    this->mFootPosB.x = gScratchMtx.t.x;
+    this->mFootPosB.y = gScratchMtx.t.y;
+    this->mFootPosB.z = gScratchMtx.t.z;
     Vec3_LslInPlace(&this->mFootPosB, 3);
     this->mFootPosB.y = this->mPos.y;
     this->mFootPosA.x = 0;
     this->mFootPosA.y = 0;
     this->mFootPosA.z = 0;
-    data_020a0e68 = saved;
-    MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    this->mFootPosA.x = data_020a0e68.t.x;
-    this->mFootPosA.y = data_020a0e68.t.y;
-    this->mFootPosA.z = data_020a0e68.t.z;
+    gScratchMtx = saved;
+    MTX_Concat43(&this->mAnmModel.data.transforms[6], &gScratchMtx, &gScratchMtx);
+    this->mFootPosA.x = gScratchMtx.t.x;
+    this->mFootPosA.y = gScratchMtx.t.y;
+    this->mFootPosA.z = gScratchMtx.t.z;
     Vec3_LslInPlace(&this->mFootPosA, 3);
     this->mFootPosA.y = this->mPos.y;
     if (this->mDropsShadow == 0)
@@ -856,8 +856,8 @@ void daKpa_c::UpdateModelMatrix() {
         else
             pos.y = this->mPos.y;
         Vec3_Asr(&v2, &pos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
-        this->mShadowMtx = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, v2.x, v2.y, v2.z);
+        this->mShadowMtx = gScratchMtx;
         DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, 0x140000, 0x64000, 0xf);
     }
 }

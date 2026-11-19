@@ -320,12 +320,12 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
 }
 
 /* Both model matrices are edited through the shared scratch matrix
-   data_020a0e68: copied out whole, transformed in place, copied back.  The
+   gScratchMtx: copied out whole, transformed in place, copied back.  The
    slot-29 calls are this class's own OnAimedAtWithEgg, dispatched virtually
    exactly as the ROM does. */
 void daGmch_c::UpdateDrawMatrices()
 {
-    extern Matrix4x3 data_020a0e68;
+    extern Matrix4x3 gScratchMtx;
     extern Vector3 data_ov081_02128ef8;
 
     if (IsInYoshiMouth(this))
@@ -339,18 +339,19 @@ void daGmch_c::UpdateDrawMatrices()
     mAnmModel.ApplyOpacity(mState, 0);
 
     if (mAngle.x != 0) {
-        data_020a0e68 = mAnmModel.mat4x3;
+        gScratchMtx = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y1, 0);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y2, 0);
+        mAnmModel.mat4x3 = gScratchMtx;
     } else {
-        data_020a0e68 = mAnmModel.mat4x3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov081_02128ef8.x, data_ov081_02128ef8.y, data_ov081_02128ef8.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mSpinAngleY);
-        mModel.mat4x3 = data_020a0e68;
+        gScratchMtx = mAnmModel.mat4x3;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, data_ov081_02128ef8.x,
+                                            data_ov081_02128ef8.y, data_ov081_02128ef8.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mSpinAngleY);
+        mModel.mat4x3 = gScratchMtx;
     }
 
     mModel.ApplyOpacity((0x20 - mState) & 0xff, 0);

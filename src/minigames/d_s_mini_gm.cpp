@@ -82,7 +82,7 @@ extern short gSubBg0HOffset;
 extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern unsigned short data_020a0e5a[];
 
 /* ---- ov005 tables ---- */
@@ -283,7 +283,7 @@ s32 dScMiniGm_c::InitResources()
     Sound::LoadGroupAndSetBank(0x27, 5);
     Disable3dEngines();
 
-    if (!(data_0209caa0.mg.unlocked & 0x80000000)) {
+    if (!(gSaveBlock.mg.unlocked & 0x80000000)) {
         tbl = sMiniGmRows;
         for (i = 0; i < 36; i++) {
             for (j = 0; j < 5; j++) {
@@ -291,7 +291,7 @@ s32 dScMiniGm_c::InitResources()
             }
             tbl++;
         }
-        data_0209caa0.mg.unlocked |= 0x80000000;
+        gSaveBlock.mg.unlocked |= 0x80000000;
         gMgSaveDirty = 1;
     }
 
@@ -470,7 +470,7 @@ s32 dScMiniGm_c::InitResources()
     if (gMgSaveDirty == 1) {
         gSoftResetDisabled = 1;
     }
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     if (data_0209b2fc != 0) {
         dScene_c::SetFaders(&data_0209f61c);
     }

@@ -4778,7 +4778,7 @@ int KuppaScript::ContinueIfNecessary() {
     if (saved == sCutsceneEndingMarioFall) {
         gGameMode = 2;
         Sound::LoadInitialGroup(0x26);
-        data_0209caa0.file.flags1 &= ~0x204;
+        gSaveBlock.file.flags1 &= ~0x204;
         CollectStarInLevel(7, 1);
         CollectStarInLevel(8, 1);
     } else if (saved == sCutsceneCreditsBoB) {

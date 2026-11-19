@@ -492,7 +492,7 @@
       "evidence": "u8. Referenced by Message::DisplaySaving, Message::Update, Message::UpdateWindow, func_0201f32c. Global: also referenced from Message2.cpp."
     },
     {
-      "symbol": "data_0209d6d4",
+      "symbol": "gCurrentMsgId",
       "address": "0x0209d6d4",
       "size": "0x2",
       "binding": "STB_GLOBAL",

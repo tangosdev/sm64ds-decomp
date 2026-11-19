@@ -78,7 +78,7 @@ int sMCarloFaceCounts[8] = {
     10, 10, 10, 10, 10, 10, 10, 10,
 };
 /* the eight face weights */
-extern int data_020a0db0;
+extern int gGlobalTimer;
 
 extern unsigned short sMCarloCardFrameSprites[];
 
@@ -622,7 +622,7 @@ void dMgMCarloCardObj_c::Update(int slot) {
 /* Draw this card through the dMeter_c sprite bank.
  * Hidden cards (mVisible 0) and ones still waiting to be dealt (mState 0)
  * draw nothing, and a selected card blinks according to bit 3 of
- * data_020a0db0. The bank index is the face's bank (mFace + 1) of five flip
+ * gGlobalTimer. The bank index is the face's bank (mFace + 1) of five flip
  * frames -- (mLift >> 12), 0x4000 fully raised = frame 4 -- and the card
  * sits at its fixed-point position shifted to pixels plus a 24-pixel screen
  * offset. Slot 0 of the element vtable; Render is the class's key function,
@@ -635,7 +635,7 @@ void dMgMCarloCardObj_c::Render(void) {
     if (state == CARD_WAITING)
         return;
     if (state == CARD_SELECTED) {
-        if ((data_020a0db0 & 8) != 0)
+        if ((gGlobalTimer & 8) != 0)
             return;
     }
     {

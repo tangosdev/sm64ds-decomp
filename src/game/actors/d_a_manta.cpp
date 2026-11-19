@@ -216,17 +216,17 @@ int daManta_c::ChangeState(MantaState *state) {
 void daManta_c::UpdateModelAndRingPos() {
     Vector3 scaled;
     Vec3_Asr(&scaled, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, scaled.x, scaled.y, scaled.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
     mRingPos.x = 0;
     mRingPos.y = 0;
     mRingPos.z = 0;
-    data_020a0e68 = mAnmModel.mat4x3;
-    MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    mRingPos.x = data_020a0e68.t.x;
-    mRingPos.y = data_020a0e68.t.y;
-    mRingPos.z = data_020a0e68.t.z;
+    gScratchMtx = mAnmModel.mat4x3;
+    MTX_Concat43(&mAnmModel.data.transforms[3], &gScratchMtx, &gScratchMtx);
+    mRingPos.x = gScratchMtx.t.x;
+    mRingPos.y = gScratchMtx.t.y;
+    mRingPos.z = gScratchMtx.t.z;
     mRingPos.x <<= 3;
     mRingPos.y <<= 3;
     mRingPos.z <<= 3;
@@ -277,9 +277,9 @@ int daManta_c::Behavior() {
         mAngle.z = mPrevAngle.z;
         forward.y = forward.x = forward.z = 0;
         forward.z = MANTA_FORWARD;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
-        MTX_MultVec43(&forward, &data_020a0e68, &mSpeed);
+        Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPrevAngle.x);
+        MTX_MultVec43(&forward, &gScratchMtx, &mSpeed);
     }
     {
         int speed = mSpeed.y + mVertAccel;
