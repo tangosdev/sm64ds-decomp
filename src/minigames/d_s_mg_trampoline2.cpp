@@ -170,8 +170,8 @@ BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
 Tbl sTrmp2SpinnerSpeeds = {0x600, 0xc00, 0xe00};
 
 int sTrmp2ScoreGates[] = {1000, 5000, 10000, 20000};
-int sTrmp2PuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
-                               (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
+OamAttr **sTrmp2PuffXByLanguage[] = {sTrmpPuffEnglish, sTrmpPuffSpanish, sTrmpPuffFrench,
+                                     sTrmpPuffGerman, sTrmpPuffItalian};
 int sTrmp2NcgByLanguage[] = {0x107, 0x109, 0x104, 0x105, 0x106};
 OamAttr **sTrmp2TextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesSpanish,
                                            sMgTextSpritesFrench, sMgTextSpritesGerman,
