@@ -153,18 +153,6 @@
   "func_02018568": {
    "src/unnamed/arm9/0201/func_0201834c.cpp": ["param:#1 void *"]
   },
-  "func_0203d388": {
-   "src/minigames/d_s_mg_smartball.cpp": ["param:#1 Vector2 *"]
-  },
-  "func_0203d434": {
-   "src/minigames/d_s_mg_smartball.cpp": ["param:#1 Vector2 *"]
-  },
-  "func_0203d480": {
-   "src/minigames/d_s_mg_smartball.cpp": ["param:#1 Vector2 *", "param:#2 Vector2 *"]
-  },
-  "func_0203d630": {
-   "src/minigames/d_s_mg_smartball.cpp": ["param:#1 Vector2 *"]
-  },
   "func_02045e2c": {
    "src/engine/model/d_ext_model.cpp": ["param:#4 int"]
   },
