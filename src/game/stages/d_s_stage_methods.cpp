@@ -260,7 +260,7 @@ extern int data_02092130;
 extern unsigned int data_02092134;
 extern int data_02092138;
 extern u16 *data_0209214c[];
-extern s32 data_02092208[];
+extern LevelInfo *data_02092208[];
 extern s32 data_0209cef0;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -434,20 +434,20 @@ extern s8 data_0209f30d;
    sound is 0x19 + it) and each player's stars in a VS match. */
 s8 gNumStageStars[4];
 extern s8 data_0209f311;
-static int data_0209f314;
+static StageArea *data_0209f314;
 /* The stage's camera: LoadEntranceObjects spawns it (profile 0x14c) once the
    players are placed, and CleanupResources clears it. */
 dCamera_c *gCamera;
 static char *sFogObjs;
 static int data_0209f320;
-static void *data_0209f324;
+static dFdWipe_c *data_0209f324;
 static LVL_Overlay::StandardEntry *sEntranceObjs;
 s32 data_0209f32c;
 static void *sTeleportDestObjs;
 u16 *gMinimapTileObjs;
 void *gUnusedType13Objs;
 void *data_0209f33c;
-static char *data_0209f340;
+static LevelInfo *data_0209f340;
 u8 *data_0209f344;
 static short *sMinimapScaleObjs;
 static s32 sEventFlags;
@@ -2831,7 +2831,7 @@ void UpdateMinimap(MinimapDesc *desc, u32 a, u32 b, u32 c, u32 d) {
    which is sizeof(dFdWipe_c). dScStage_c::CleanupResources tears the array
    down and zeroes it. */
 void StartEntranceFaderWipe(int index) {
-    dFdWipe_c *f = &((dFdWipe_c *)data_0209f324)[index];
+    dFdWipe_c *f = &data_0209f324[index];
     dScene_c::SetFaders(f);
     f->SetToEnd();
 }
@@ -2842,7 +2842,7 @@ void StartExitCharacterWipe(void) {
 }
 
 extern "C" void StartExitFaderWipe(int index) {
-    dFdWipe_c *f = &((dFdWipe_c *)data_0209f324)[index];
+    dFdWipe_c *f = &data_0209f324[index];
     dScene_c::SetFaders(f);
     f->SetToStart();
 }
@@ -2873,7 +2873,7 @@ struct WipeFader {
 extern "C" void FUN_02029980(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = data_0209f324 + 6;
     WipeFader *o2 = (WipeFader *)wipe;
     data_0209d4b0 = wipe;
     o2->w8();
@@ -2883,7 +2883,7 @@ extern "C" void FUN_02029980(void) {
 void FUN_020299f4(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = data_0209f324 + 6;
     WipeFader *o2 = (WipeFader *)wipe;
     data_0209d4b0 = wipe;
     o2->w9();
@@ -2891,7 +2891,7 @@ void FUN_020299f4(void) {
 }
 
 extern "C" void FUN_02029a68(void) {
-    if (data_0209d4b0 == (dFdWipe_c *)data_0209f324 + 6) {
+    if (data_0209d4b0 == data_0209f324 + 6) {
         data_0209d4b0 = 0;
         G2_BlendNone();
     }
@@ -2908,7 +2908,7 @@ typedef struct WipeEntry {
 void FUN_02029ab0(void) {
     WipeEntry *entry;
     dScene_c::SetAndStopColorFader();
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = data_0209f324 + 6;
     entry = (WipeEntry *)wipe;
     data_0209d4b0 = wipe;
     entry->field4 = 0xc00;
@@ -3316,15 +3316,15 @@ int dScStage_c::GetSkyboxID() {
 }
 
 int func_0202a958(void) {
-    return ((LevelInfo *)data_0209f340)->minimapScale;
+    return data_0209f340->minimapScale;
 }
 
 int func_0202a96c(void) {
-    return ((LevelInfo *)data_0209f340)->minimapPaletteFile;
+    return data_0209f340->minimapPaletteFile;
 }
 
 int func_0202a980(void) {
-    return ((LevelInfo *)data_0209f340)->minimapTilesFile;
+    return data_0209f340->minimapTilesFile;
 }
 
 /* data_0209f314 points at mAreas (InitResources stores it). In each
@@ -3345,7 +3345,7 @@ struct MinimapChangeNode {
 
 void LoadMinimapChangeObject(int idx, fx32 val, s8 h) {
     struct MinimapChangeNode *nn = (MinimapChangeNode *)::operator new(sizeof(MinimapChangeNode));
-    StageArea *e = &((StageArea *)data_0209f314)[idx];
+    StageArea *e = &data_0209f314[idx];
     struct MinimapChangeNode *cur = (MinimapChangeNode *)e->mBlockList;
     struct MinimapChangeNode *prev = cur;
     if (cur != 0) {
@@ -3377,15 +3377,15 @@ void LoadMinimapChangeObject(int idx, fx32 val, s8 h) {
 }
 
 void HideArea(int idx) {
-    ((StageArea *)data_0209f314)[idx].mShowing = 0;
+    data_0209f314[idx].mShowing = 0;
 }
 
 void ShowArea(int idx) {
-    ((StageArea *)data_0209f314)[idx].mShowing = 1;
+    data_0209f314[idx].mShowing = 1;
 }
 
 unsigned char IsAreaShowing(int idx) {
-    return ((StageArea *)data_0209f314)[idx].mShowing;
+    return data_0209f314[idx].mShowing;
 }
 
 extern "C" void ChangeArea(int areaID) {
@@ -3526,7 +3526,7 @@ extern "C" void StartFile(s8 levelID, u8 entranceID) {
 }
 
 int StartWithFarCamera(void) {
-    return (((LevelInfo *)data_0209f340)->cameraFlags & 1) != 0;
+    return (data_0209f340->cameraFlags & 1) != 0;
 }
 
 unsigned char GetStarCameraSetting(int idx) {
@@ -3556,14 +3556,14 @@ void func_0202af80(short *table, int count) {
    height, or the level's own map when the area has none. */
 int GetMinimapID(dActor_c *actor, int arg) {
     int idx = actor->mAreaId;
-    char *g;
+    StageArea *areas;
     int val;
     struct MinimapChangeNode *node;
     if (idx < 0)
         idx = gCurrentAreaId;
-    g = (char *)data_0209f314;
-    if (g != 0) {
-        node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
+    areas = data_0209f314;
+    if (areas != 0) {
+        node = (MinimapChangeNode *)areas[idx].mBlockList;
         if (node != 0) {
             val = actor->mPos.y;
             while (node != 0) {
@@ -3579,7 +3579,7 @@ int GetMinimapID(dActor_c *actor, int arg) {
                 return node->minimapId;
         }
     }
-    return ((LevelInfo *)data_0209f340)->entries[idx].minimapId;
+    return data_0209f340->entries[idx].minimapId;
 }
 
 void func_0202b044(u16 *table, int count) {
@@ -3664,8 +3664,7 @@ void dScStage_c::RenderModelTransparent() {
     BMD_Bone *bone = components->modelFile->bones;
     StageArea *area = mAreas;
     int areaIndex;
-    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count;
-         areaIndex++, area++, bone++) {
+    for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++, area++, bone++) {
         if (area->mShowing != 0) {
             u8 *materialIds = bone->materialIds;
             u16 materialIndex;
@@ -3688,7 +3687,7 @@ void dScStage_c::RenderModel() {
     StageArea *area = mAreas;
     int areaIndex;
 
-    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++) {
+    for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++) {
         u8 showing = area->mShowing;
         u8 *materialIds = bone->materialIds;
 
@@ -3798,11 +3797,11 @@ extern "C" int CopyTexPalFromLevelModel(void *p) {
 }
 
 void dScStage_c::LoadTextureTransformers() {
-    struct LevelTexAnim *entry = ((LevelInfo *)data_0209f340)->entries;
+    struct LevelTexAnim *entry = data_0209f340->entries;
     StageArea *area = mAreas;
     BMD_File *modelFile = mModel.data.modelFile;
     int areaIndex;
-    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++) {
+    for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++) {
         if (entry->bta) {
             dExtAnmTexSRT_c::Prepare(*modelFile, *entry->bta);
             area->mTransformer = new dExtAnmTexSRT_c;
@@ -3814,7 +3813,7 @@ void dScStage_c::LoadTextureTransformers() {
 }
 
 void dScStage_c::LoadModel() {
-    mModel.LoadAndSetFile(((LevelInfo *)data_0209f340)->modelFile, 1, -1);
+    mModel.LoadAndSetFile(data_0209f340->modelFile, 1, -1);
     BMD_File *modelFile;
     unsigned int materialCount;
     BMD_Material *material;
@@ -3922,7 +3921,7 @@ int dScStage_c::Render() {
     if (((gVsExitScreenActive | (gGamePaused | data_0209f20c)) & 0xff) == 0) {
         StageArea *area = mAreas;
         int areaIndex;
-        for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++, area++) {
+        for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++, area++) {
             if (area->mShowing != 0 && area->mTransformer != 0)
                 area->mTransformer->Advance();
         }
@@ -4401,7 +4400,7 @@ int dScStage_c::CleanupResources() {
     {
         StageArea *area = mAreas;
         int areaIndex;
-        for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++, area++) {
+        for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++, area++) {
             dExtAnmTexSRT_c *transformer = area->mTransformer;
             if (transformer)
                 delete transformer;
@@ -4420,7 +4419,7 @@ int dScStage_c::CleanupResources() {
     data_0209f314 = 0;
     dScene_c::SetAndStopColorFader();
     data_0209d4b0 = 0;
-    delete[] (dFdWipe_c *)data_0209f324;
+    delete[] data_0209f324;
     data_0209f324 = 0;
     CleanCommonModelDataArr();
     mMeshCollider.Disable();
@@ -4574,7 +4573,7 @@ int dScStage_c::InitResources() {
         gCurrentEntranceId = sNextEntranceId;
         gCurrentStarId = gNextStarId;
         gCurrentAreaId = -1;
-        data_0209f314 = (int)mAreas;
+        data_0209f314 = mAreas;
         data_0209f32c = 0x80000000;
         data_0209f274 = 0;
         SublevelToLevel(gCurrentSublevel);
@@ -4722,7 +4721,7 @@ int dScStage_c::InitResources() {
             faderOffset += 0x60;
         } while (faderIndex < 7);
 
-        data_0209f340 = (char *)data_02092208[gCurrentSublevel];
+        data_0209f340 = data_02092208[gCurrentSublevel];
         LoadModel();
         data_0208ee44 = 2;
         LVL_Overlay *level = (LVL_Overlay *)data_0209f340;
