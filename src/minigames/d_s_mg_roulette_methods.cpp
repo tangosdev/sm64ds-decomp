@@ -108,7 +108,6 @@ void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
 void FreeGfxSlotsById(int a);
 
-void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);

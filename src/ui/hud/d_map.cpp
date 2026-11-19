@@ -114,9 +114,6 @@ extern s32  GetMinimapScale(s32 idx);
 struct MinimapDesc;
 extern void UpdateMinimap(MinimapDesc *a, u32 b, u32 c, u32 d, u32 e);
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s);
-extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
-}
 
 /* The centre of the 256x192 touch screen, (128, 96) in 20.12 fixed point:
  * the screen point the minimap is drawn around. A file-scope Vector3 with a

@@ -334,8 +334,6 @@ extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];
-extern void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short angle,
-                                     const Vector3 *src);
 extern int data_ov002_0210b964[3];
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;

@@ -59,7 +59,6 @@ void *sCardHudSprites[] = {data_ov006_02134074, data_ov006_02134124};
 extern int sCardSelectLocked;
 extern int sCardSwapRequested;
 extern int data_ov006_02141770;
-extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
 extern int sCardFaceWeights[6];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);

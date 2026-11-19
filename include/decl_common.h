@@ -642,7 +642,6 @@ extern void StartExitFaderWipe(int);
 extern void StartFile(s8, u8);
 extern void UnloadArchive(int);
 extern void UnloadArchives(void);
-extern int Vec3_ApproachHorz(void*, void*, int);
 extern void WarpPlayer(int, int);
 extern void data_ov052_02111e84(void *);
 extern void data_ov054_02111238(void *);

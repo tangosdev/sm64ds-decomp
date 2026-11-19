@@ -196,8 +196,6 @@ void LoadKeyModels(int idx);
 void UnloadKeyModels(int idx);
 extern "C" {
 int func_ov002_020ca78c(void *p);
-void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
-                              const Vector3 *v);
 int AngleDiff(int a, int b);
 }
 

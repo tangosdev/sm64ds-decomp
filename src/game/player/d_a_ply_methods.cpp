@@ -107,7 +107,6 @@ MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
 #undef MTX_C_DECL
 
 extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *, const Vector3 *, short, const Vector3 *);
 int func_01ffa344(int, int);
 void func_ov002_020bcdf0(daPly_c *);
 void func_ov002_020cd190(daPly_c *);

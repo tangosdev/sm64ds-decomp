@@ -350,7 +350,7 @@ void daObjKey_c::StateFlyToCenter()
         center2.x = 0;
         center2.y = 0;
         center2.z = 0;
-        Vec3_ApproachHorz(&mPos.x, &center2, mHorzSpeed);
+        Vec3_ApproachHorz(&mPos, &center2, mHorzSpeed);
         if (mBounceCount == 0) {
             if (mSpeed.y < 0) {
                 int floor = mHomePos.y;

@@ -43,10 +43,6 @@ extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
 extern dCamera_c *gCamera;
 
-/* arm9 / ov100 C helpers with no shared header. */
-extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short angle, const Vector3 *v);
-}
 u8 NumStars(void);
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` inherits fBase_c::operator new. */

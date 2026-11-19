@@ -175,9 +175,6 @@ extern const int sHanaFieldWigglerCounts[10] = {3, 4, 5, 4, 6, 3, 4, 5, 15, 15};
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 
-/* These helpers read or write two scalar words. Cast the Vector2 points
-   at the C ABI boundary rather than giving the externs new types. */
-extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 /* sHanaPickedLow is only read where it is unsigned and only written as a
    halfword, so the unsigned spelling costs the writer nothing. */
 extern unsigned short sHanaPickedLow;
@@ -529,7 +526,7 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
                 rot += (s16)FX_MUL(v, 0x1800 - B);
             }
         }
-        func_0203d680((Vector2 *)&vout, (const Vector2 *)&va, FX_SinIdx((u16)(ang * 2) >> 4));
+        func_0203d680(&vout, &va, FX_SinIdx((u16)(ang * 2) >> 4));
         pos.x = pos.x + vout.x;
         pos.y = pos.y + vout.y;
         res = GetFrame(i);
@@ -608,8 +605,7 @@ void dScMgHanachan_c::Wiggler::DrawField() {
         if (sHanaFieldWigglerCount >= 6) {
             rot = (short)(rot & 0xfc00);
         }
-        func_0203d680((Vector2 *)&s.vout, (const Vector2 *)&s.va,
-                      FX_SinIdx((unsigned short)(sway << 1) >> 4));
+        func_0203d680(&s.vout, &s.va, FX_SinIdx((unsigned short)(sway << 1) >> 4));
         s.pos.x += s.vout.x;
         s.pos.y += s.vout.y;
 
