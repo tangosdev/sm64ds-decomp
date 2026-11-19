@@ -15,15 +15,15 @@
  * mwccarm emits .text in reverse source order, so the definitions below
  * run ROM-descending.
  *
- *   func_0204a4c8  construct the 0x3c manager and its free lists
- *   func_0204a17c  parse the resource into mDefinitions and mTextures
- *   func_0204a0dc  upload textures
- *   func_0204a028  upload palettes
- *   func_02049f58  retire expired systems (dPa_c::Update)
- *   func_02049ee8  draw active systems (RenderAll)
- *   AddSystem      spawn one system
- *   func_02049d78  return one system's particles and the system itself
- *   func_02049d60  hand a system the free-particle list
+ *   SPLManager_New               construct the 0x3c manager and its free lists
+ *   SPLManager_LoadResources     parse the resource into mDefinitions and mTextures
+ *   SPLManager_UploadTexturesEx  upload textures
+ *   SPLManager_UploadPalettesEx  upload palettes
+ *   SPLManager_Update            retire expired systems (dPa_c::Update)
+ *   func_02049ee8                draw active systems (RenderAll)
+ *   AddSystem                    spawn one system
+ *   func_02049d78                return one system's particles and the system itself
+ *   func_02049d60                hand a system the free-particle list
  */
 #include "types.h"
 #include "nitro/gx/gx_load.h"
@@ -49,7 +49,7 @@ void SPLEmitter_Update(void *manager, void *system);
 
 typedef Particle::Manager::TextureEntry TextureEntry;
 
-/* SystemDefinition::Data::flags as func_0204a17c reads it. Each set bit means
+/* SystemDefinition::Data::flags as SPLManager_LoadResources reads it. Each set bit means
    one more record follows the 0x38-byte Data record, in bit order. */
 struct DefinitionFlags {
     unsigned : 8;
@@ -69,8 +69,8 @@ struct DefinitionFlags {
     unsigned : 2;
 };
 
-extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles,
-                               int minPolygonID, unsigned short maxPolygonID) {
+extern "C" char *SPLManager_New(char *(*alloc)(int), int numSystems, int numParticles,
+                                int minPolygonID, unsigned short maxPolygonID) {
     int i;
     Particle::Manager *manager;
     char *system;
@@ -105,7 +105,7 @@ extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParti
     return (char *)manager;
 }
 
-extern "C" void func_0204a17c(Particle::Manager *manager, char *resource) {
+extern "C" void SPLManager_LoadResources(Particle::Manager *manager, char *resource) {
     int offset = sizeof(ParticleResourceHeader);
     int i;
 
@@ -213,7 +213,8 @@ extern "C" void func_0204a17c(Particle::Manager *manager, char *resource) {
     }
 }
 
-extern "C" int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32)) {
+extern "C" int SPLManager_UploadTexturesEx(Particle::Manager *manager,
+                                           u32 (*allocTexVram)(u32, u32)) {
     int i;
     GX_BeginLoadTex();
     for (i = 0; i < manager->mNumTextures; i++) {
@@ -229,8 +230,9 @@ extern "C" int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32
     return 1;
 }
 
-extern "C" int func_0204a028(Particle::Manager *manager,
-                             unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
+extern "C" int SPLManager_UploadPalettesEx(Particle::Manager *manager,
+                                           unsigned int (*allocPalVram)(unsigned int,
+                                                                        unsigned int)) {
     int i;
 
     GX_BeginLoadTexPltt();
@@ -253,7 +255,7 @@ extern "C" int func_0204a028(Particle::Manager *manager,
     return 1;
 }
 
-extern "C" void func_02049f58(Particle::Manager *manager) {
+extern "C" void SPLManager_Update(Particle::Manager *manager) {
     Particle::System *system = manager->mActiveSystems.head;
     Particle::System *next;
     if (system == 0)

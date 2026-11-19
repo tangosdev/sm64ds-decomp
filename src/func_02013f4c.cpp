@@ -78,7 +78,7 @@ void func_02013f4c(void)
             if (cur & PAD_BUTTON_SELECT) {
                 mHeap::Heap_t *pa = data_020a0e9c;
                 mHeap::Heap_t *pb = (mHeap::Heap_t *)data_020a0ea0;
-                mHeap::Heap_t *pc = data_020a0eac;
+                mHeap::Heap_t *pc = GAME_HEAP_PTR;
                 if (cur & PAD_KEY_LEFT) {
                     pa->Rescue();
                 } else if (cur & PAD_KEY_RIGHT) {

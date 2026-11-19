@@ -119,7 +119,7 @@
       "evidence": "CLPS words for the second mechanism."
     },
     {
-      "symbol": "data_ov035_02112b80",
+      "symbol": "sTTCSpinnerSpeeds",
       "address": "0x02112b80",
       "size": "0x4",
       "binding": "STB_GLOBAL",

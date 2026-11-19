@@ -29,7 +29,7 @@ struct dScMgBase_c : dScene_c {
        itself or its immediate base, so descendants cannot reach dScene_c's.
        Removing this breaks D0 for all 32 of them. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, data_020a0eac);
+        Memory::Deallocate(ptr, GAME_HEAP_PTR);
     }
 
     /* param1, the spawn word; defined inline in d_s_mg_base.cpp. */

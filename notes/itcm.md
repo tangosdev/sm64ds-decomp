@@ -182,7 +182,7 @@ every source file that writes `/` or `%` on an `int` emits `bl _s32_div_f`. `eli
 rejects a file whose undefined references are not named in `config/**/symbols.txt`, so those
 files could byte-match forever and never enrol — the `bl` is a relocation, so the `.text`
 compares equal whether or not the target has a name. Adding the CodeWarrior spelling as a second
-symbol at the same address (the shape `_ZTV5Actor` / [data_0208e3a4](../config/arm9/symbols.txt) already uses) unblocked 64 files at once. Do not *rename* `__aeabi_idiv`: `tools/reloc_audit.py` maps the two spellings onto
+symbol at the same address (the shape the vtable aliases used before naming round 13 retired them) unblocked 64 files at once. Do not *rename* `__aeabi_idiv`: `tools/reloc_audit.py` maps the two spellings onto
 each other and wants both.
 
 **An alias must carry `size=0x0` (2026-08-04).** The aliases originally repeated the real size,
@@ -355,9 +355,9 @@ vendor code.
 
 ### Routing for whoever goes next
 
-`func_01ff859c` is `double -> unsigned long long`; `func_01ff8708` is the soft-double multiply;
+`_ll_ufrom_d` (0x01ff859c) is `double -> unsigned long long`; `func_01ff8708` is the soft-double multiply;
 `func_01ff8000` is the add; `func_01ff8e10` the subtract; `func_01ffa344` is `__aeabi_f2iz`;
-`func_01ffa440` is the int-to-float pair. All of them carry the caller-saved tell and several
+`_ffltu` (0x01ffa440) and `_fflt` are the int-to-float pair. All of them carry the caller-saved tell and several
 have no prologue at all, so the whole 0x01ff8000..0x01ffa9dc block -- about 9.2 KB -- is one
 hand-written soft-float library. Do not route cold C matching at it.
 
