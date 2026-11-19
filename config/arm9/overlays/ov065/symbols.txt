@@ -232,12 +232,12 @@ data_ov065_0211d19c kind:data(any) addr:0x0211d19c
 g_profile_CT_MECHA04S kind:data(any) addr:0x0211d1ac ambiguous
 g_profile_CT_MECHA04L kind:data(any) addr:0x0211d1c8 ambiguous
 _ZTV16daObjCtMecha04_c kind:data(any) addr:0x0211d1ec
-data_ov065_0211d26c kind:data(any) addr:0x0211d26c
+sTTCMovingBarRandomDelays kind:data(any) addr:0x0211d26c
 _ZTI16daObjCtMecha05_c kind:data(any) addr:0x0211d270
 _ZTS16daObjCtMecha05_c kind:data(any) addr:0x0211d27c
 g_profile_CT_MECHA05 kind:data(any) addr:0x0211d290 ambiguous
 _ZTV16daObjCtMecha05_c kind:data(any) addr:0x0211d2b4
-data_ov065_0211d334 kind:data(any) addr:0x0211d334
+sTTCCogNormalSpeeds kind:data(any) addr:0x0211d334
 _ZTI18daObjCtKaitendai_c kind:data(any) addr:0x0211d338
 _ZTS18daObjCtKaitendai_c kind:data(any) addr:0x0211d344
 data_ov065_0211d35c kind:data(any) addr:0x0211d35c
@@ -252,7 +252,7 @@ g_profile_CT_MECHA08A kind:data(any) addr:0x0211d454 ambiguous
 g_profile_CT_MECHA08B kind:data(any) addr:0x0211d470 ambiguous
 _ZTV16daObjCtMecha08_c kind:data(any) addr:0x0211d494
 _ZTI16daObjCtMecha09_c kind:data(any) addr:0x0211d514
-data_ov065_0211d520 kind:data(any) addr:0x0211d520
+sTTCElevatorSpeeds kind:data(any) addr:0x0211d520
 _ZTS16daObjCtMecha09_c kind:data(any) addr:0x0211d530
 g_profile_CT_MECHA09 kind:data(any) addr:0x0211d544 ambiguous
 _ZTV16daObjCtMecha09_c kind:data(any) addr:0x0211d568

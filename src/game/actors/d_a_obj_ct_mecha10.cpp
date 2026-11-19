@@ -39,7 +39,7 @@
 // actorID directly in the ifs reorders the body). dBgW_Kc::SetEdgeToleranceShift and
 // dBgW::SetBeforeClsnCallback are the out-of-line stores into the collider's
 // edgeToleranceShift and beforeClsnCallback; d_bg_w.cpp defines them.
-// Both data_ov035_02111ef0 stores stay (one local
+// Both sTTC2DRotatorSpeeds stores stay (one local
 // shrinks InitResources). unk_326 is written with no reader in this TU.
 // DecIfAbove0_Short, RandomIntInternal, the data_ov035_* files/tables/CLPS
 // block, data_0209f2c0, data_0209e650 keep linker names. The three
@@ -93,7 +93,7 @@ struct CLPS_Block {
 
 CLPS_Block data_ov035_021121d8 = {0x53504c43};
 
-extern const s16 data_ov035_02111ef0[2] = {0xfbbc, 0xf334};
+extern const s16 sTTC2DRotatorSpeeds[2] = {0xfbbc, 0xf334};
 
 extern const s16 data_ov035_02111ef4[2][4] = {
     {20, 5, 5, 0},
@@ -141,8 +141,8 @@ int daObjCtMecha10_c::InitResources() {
     }
 
     mStepTimer = data_ov035_02111ef4[mRotationState][data_0209f2c0];
-    mAngleYStep = data_ov035_02111ef0[mRotationState];
-    unk_326 = data_ov035_02111ef0[mRotationState];
+    mAngleYStep = sTTC2DRotatorSpeeds[mRotationState];
+    unk_326 = sTTC2DRotatorSpeeds[mRotationState];
     return 1;
 }
 
@@ -169,10 +169,10 @@ int daObjCtMecha10_c::Behavior() {
             u32 rnd = RandomIntInternal(&data_0209e650.value);
             if (DecIfAbove0_Short(&mDirTimer) == 0) {
                 if (rnd % 3 != 0) {
-                    mAngleYStep = data_ov035_02111ef0[mRotationState];
+                    mAngleYStep = sTTC2DRotatorSpeeds[mRotationState];
                     mDirTimer = (rnd & 3) * 60 + 90;
                 } else {
-                    mAngleYStep = -data_ov035_02111ef0[mRotationState];
+                    mAngleYStep = -sTTC2DRotatorSpeeds[mRotationState];
                     mDirTimer = ((rnd % 3) + 1) * 30;
                 }
             }
