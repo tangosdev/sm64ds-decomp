@@ -10740,3 +10740,4 @@ ov006	0x0211248c	_ZN19cMgSmartball_ball_c8AtSpringEPi	_ZN19cMgSmartball_ball_c8A
 ov006	0x02112504	_ZN19cMgSmartball_ball_c7OnSlopeEPi	_ZN19cMgSmartball_ball_c7OnSlopeEP7Vector2	parameter retype: int * -> Vector2 * (every caller passes a ball's Vector2 probe point); code bytes unchanged
 ov006	0x021126b4	_ZN19cMgSmartball_ball_c12NeedsRespawnEPi	_ZN19cMgSmartball_ball_c12NeedsRespawnEP7Vector2	parameter retype: int * -> Vector2 * (every caller passes a ball's Vector2 probe point); code bytes unchanged
 ov006	0x021092a0	_Z26RouletteRacer_PlaceAtStartPi	_Z26RouletteRacer_PlaceAtStartP13RouletteRacer	parameter retype: int * -> RouletteRacer * (its one caller passes a RouletteRacer; the body's alias cast is folded); code bytes unchanged
+arm9	0x0200d3f8	_ZN9dCamera_c13func_0200d3f8EhPv	_ZN9dCamera_c13func_0200d3f8EhP7Vector3	parameter retype: void * -> Vector3 * (stored straight into mLookTarget; callers pass a player's mStateTarget or 0); code bytes unchanged

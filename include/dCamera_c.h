@@ -265,7 +265,7 @@ struct dCamera_c : dView_c {
     void func_0200d508(unsigned char);
     void func_0200d474(unsigned char);
     void func_0200d438(unsigned char);
-    void func_0200d3f8(unsigned char, void *);
+    void func_0200d3f8(unsigned char, Vector3 *);
     void func_0200d148(unsigned char);
     void SetGrabBowserTailState(unsigned char);
     /* Follow, placement and state helpers. The follow modes are named for the

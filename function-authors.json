@@ -663,7 +663,7 @@
     },
     "arm9:0x0200d3f8": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200d3f8EhPv"
+      "name": "_ZN9dCamera_c13func_0200d3f8EhP7Vector3"
     },
     "arm9:0x0200d438": {
       "author": "tangosdev",
@@ -21271,151 +21271,151 @@
     },
     "ov006:0x020cd744": {
       "author": "tangosdev",
-      "name": "_Z18TrmpItem_GrowScaleP8TrmpItem"
+      "name": "_ZN8TrmpItem9GrowScaleEv"
     },
     "ov006:0x020cd7b8": {
       "author": "tangosdev",
-      "name": "_Z24TrmpItem_ProjectToScreenP8TrmpItemt"
+      "name": "_ZN8TrmpItem15ProjectToScreenEt"
     },
     "ov006:0x020cd864": {
       "author": "tangosdev",
-      "name": "_Z24TrmpItem_MotionSpinHoverP8TrmpItem"
+      "name": "_ZN8TrmpItem15MotionSpinHoverEv"
     },
     "ov006:0x020cd98c": {
       "author": "tangosdev",
-      "name": "_Z27TrmpItem_SetMotionSpinHoverP8TrmpItem"
+      "name": "_ZN8TrmpItem18SetMotionSpinHoverEv"
     },
     "ov006:0x020cd9b0": {
       "author": "tangosdev",
-      "name": "_Z24TrmpItem_MotionSpinDriftP8TrmpItem"
+      "name": "_ZN8TrmpItem15MotionSpinDriftEv"
     },
     "ov006:0x020cdad0": {
       "author": "tangosdev",
-      "name": "_Z27TrmpItem_SetMotionSpinDriftP8TrmpItem"
+      "name": "_ZN8TrmpItem18SetMotionSpinDriftEv"
     },
     "ov006:0x020cdaec": {
       "author": "tangosdev",
-      "name": "_Z23TrmpItem_MotionSpinSwayP8TrmpItem"
+      "name": "_ZN8TrmpItem14MotionSpinSwayEv"
     },
     "ov006:0x020cdc14": {
       "author": "tangosdev",
-      "name": "_Z26TrmpItem_SetMotionSpinSwayP8TrmpItem"
+      "name": "_ZN8TrmpItem17SetMotionSpinSwayEv"
     },
     "ov006:0x020cdc38": {
       "author": "ruspecial",
-      "name": "_Z20TrmpItem_MotionHoverPv"
+      "name": "_ZN8TrmpItem11MotionHoverEv"
     },
     "ov006:0x020cdc68": {
       "author": "tangosdev",
-      "name": "_Z23TrmpItem_SetMotionHoverP8TrmpItem"
+      "name": "_ZN8TrmpItem14SetMotionHoverEv"
     },
     "ov006:0x020cdc8c": {
       "author": "tangosdev",
-      "name": "_Z19TrmpItem_MotionSwayPv"
+      "name": "_ZN8TrmpItem10MotionSwayEv"
     },
     "ov006:0x020cdce4": {
       "author": "tangosdev",
-      "name": "_Z22TrmpItem_SetMotionSwayP8TrmpItem"
+      "name": "_ZN8TrmpItem13SetMotionSwayEv"
     },
     "ov006:0x020cdd08": {
       "author": "tangosdev",
-      "name": "_Z19TrmpItem_MotionSpinP8TrmpItem"
+      "name": "_ZN8TrmpItem10MotionSpinEv"
     },
     "ov006:0x020cde28": {
       "author": "tangosdev",
-      "name": "_Z22TrmpItem_SetMotionSpinP8TrmpItem"
+      "name": "_ZN8TrmpItem13SetMotionSpinEv"
     },
     "ov006:0x020cde4c": {
       "author": "tangosdev",
-      "name": "_Z18TrmpItem_MotionBobP8TrmpItem"
+      "name": "_ZN8TrmpItem9MotionBobEv"
     },
     "ov006:0x020cde7c": {
       "author": "tangosdev",
-      "name": "_Z21TrmpItem_SetMotionBobP8TrmpItem"
+      "name": "_ZN8TrmpItem12SetMotionBobEv"
     },
     "ov006:0x020cdea0": {
       "author": "tangosdev",
-      "name": "_Z21TrmpItem_MotionPatrolP8TrmpItem"
+      "name": "_ZN8TrmpItem12MotionPatrolEv"
     },
     "ov006:0x020cdeec": {
       "author": "tangosdev",
-      "name": "_Z24TrmpItem_SetMotionPatrolP8TrmpItem"
+      "name": "_ZN8TrmpItem15SetMotionPatrolEv"
     },
     "ov006:0x020cdf1c": {
       "author": "tangosdev",
-      "name": "_Z20TrmpItem_MotionStillv"
+      "name": "_ZN8TrmpItem11MotionStillEv"
     },
     "ov006:0x020cdf20": {
       "author": "tangosdev",
-      "name": "_Z23TrmpItem_SetMotionStillP8TrmpItem"
+      "name": "_ZN8TrmpItem14SetMotionStillEv"
     },
     "ov006:0x020cdf3c": {
       "author": "andrewboudreau",
-      "name": "_Z20TrmpItem_StateAppearP8TrmpItem"
+      "name": "_ZN8TrmpItem11StateAppearEv"
     },
     "ov006:0x020ce0ac": {
       "author": "tangosdev",
-      "name": "_Z20TrmpItem_StartAppearP8TrmpItem"
+      "name": "_ZN8TrmpItem11StartAppearEv"
     },
     "ov006:0x020ce108": {
       "author": "tangosdev",
-      "name": "_Z23TrmpItem_ReflectOffLineP8TrmpItemP25TrampolineObjectCallbacks"
+      "name": "_ZN8TrmpItem14ReflectOffLineEP25TrampolineObjectCallbacks"
     },
     "ov006:0x020ce46c": {
       "author": "andrewboudreau",
-      "name": "_Z25TrmpItem_UpdateWithJumperPvi"
+      "name": "_ZN8TrmpItem16UpdateWithJumperEP25TrampolineObjectCallbacksi"
     },
     "ov006:0x020ce674": {
       "author": "tangosdev",
-      "name": "_Z18TrmpItem_HitTest2DP8TrmpItemP25TrampolineObjectCallbacksi"
+      "name": "_ZN8TrmpItem9HitTest2DEP25TrampolineObjectCallbacksi"
     },
     "ov006:0x020ce8a0": {
       "author": "tangosdev",
-      "name": "_Z22TrmpItem_ProjectOnLineP8TrmpItemP25TrampolineObjectCallbacksP2V2S4_"
+      "name": "_ZN8TrmpItem13ProjectOnLineEP25TrampolineObjectCallbacksP7Vector2S3_"
     },
     "ov006:0x020ce988": {
       "author": "tangosdev",
-      "name": "_Z21TrmpItem_UpdateMatrixP8TrmpItem"
+      "name": "_ZN8TrmpItem12UpdateMatrixEv"
     },
     "ov006:0x020cea2c": {
       "author": "tangosdev",
-      "name": "_Z15TrmpItem_UpdateP8TrmpItem"
+      "name": "_ZN8TrmpItem6UpdateEv"
     },
     "ov006:0x020ceabc": {
       "author": "tangosdev",
-      "name": "TrmpItem_Init"
+      "name": "_ZN8TrmpItem4InitEPK7VecFx32PK7Vector3is"
     },
     "ov006:0x020cecb4": {
       "author": "tangosdev",
-      "name": "_Z13TrmpItem_HideP8TrmpItem"
+      "name": "_ZN8TrmpItem4HideEv"
     },
     "ov006:0x020cecc0": {
       "author": "tangosdev",
-      "name": "_Z13TrmpItem_LoadP8TrmpItem"
+      "name": "_ZN8TrmpItem4LoadEv"
     },
     "ov006:0x020ced84": {
       "author": "tangosdev",
-      "name": "_Z26TrmpItem_UpdateMatricesAllv"
+      "name": "_ZN8TrmpItem17UpdateMatricesAllEv"
     },
     "ov006:0x020cedf0": {
       "author": "tangosdev",
-      "name": "_Z18TrmpItem_UpdateAllv"
+      "name": "_ZN8TrmpItem9UpdateAllEv"
     },
     "ov006:0x020cee5c": {
       "author": "tangosdev",
-      "name": "_Z16TrmpItem_HideAllj"
+      "name": "_ZN8TrmpItem7HideAllEj"
     },
     "ov006:0x020ceedc": {
       "author": "tangosdev",
-      "name": "_Z21TrmpItem_ReleaseFilesv"
+      "name": "_ZN8TrmpItem12ReleaseFilesEv"
     },
     "ov006:0x020cef14": {
       "author": "tangosdev",
-      "name": "_Z16TrmpItem_LoadAllPci"
+      "name": "_ZN8TrmpItem7LoadAllEPci"
     },
     "ov006:0x020cefa4": {
       "author": "tangosdev",
-      "name": "_Z14TrmpItem_SpawniPiii"
+      "name": "_ZN8TrmpItem5SpawnEPK7VecFx32PK7Vector3is"
     },
     "ov006:0x020cf040": {
       "author": "tangosdev",

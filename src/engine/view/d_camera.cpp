@@ -148,6 +148,7 @@ extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(Vector3 *v, int sh);
 extern int *Vec3_AsrInPlace(Vector3 *, int);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
 extern void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short angle,
                                      const Vector3 *src);
 extern void MTX_MultVec43(void *dst, const Matrix4x3 *src, void *out);
@@ -812,11 +813,11 @@ void dCamera_c::func_0200d438(unsigned char playerID) {
     ChangeState(&data_0209b0c8);
 }
 
-void dCamera_c::func_0200d3f8(unsigned char playerID, void *ptr) {
+void dCamera_c::func_0200d3f8(unsigned char playerID, Vector3 *target) {
     unsigned char localID = gLocalPlayerId;
     if (playerID != localID)
         return;
-    mLookTarget = (Vector3 *)ptr;
+    mLookTarget = target;
     ChangeState(&data_0209b0d8);
 }
 

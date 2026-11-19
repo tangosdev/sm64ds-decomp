@@ -827,7 +827,7 @@
       "ordinal": 146
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200d3f8EhPv",
+      "symbol": "_ZN9dCamera_c13func_0200d3f8EhP7Vector3",
       "address": "0x0200d3f8",
       "size": "0x00000040",
       "legacy_source": "src/func_0200d3f8.c",
