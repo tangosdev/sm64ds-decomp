@@ -5,7 +5,7 @@
 #include "nitro/fx/fx.h"
 
 /* The six particle behaviours of the NitroSystem particle library (SPL).
- * func_0204a17c reads one record per behaviour bit of a definition's flags
+ * SPLManager_LoadResources reads one record per behaviour bit of a definition's flags
  * straight out of the particle resource and pairs it with its apply function
  * in the definition's SPLBehavior table; the particle update calls each entry
  * once per particle per frame.

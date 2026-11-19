@@ -181,11 +181,11 @@ struct dPa_c {
      *
      *   0x000 mResourceFile: Initialise stores either data_02075f14 in place
      *         or a heap buffer it fills with DecompressLZ16, then hands it to
-     *         the manager via func_0204a17c; ~dPa_c frees it only in the
+     *         the manager via SPLManager_LoadResources; ~dPa_c frees it only in the
      *         second case.
      *   0x004 mManager: the Particle::Manager. Initialise allocates it with
-     *         func_0204a4c8 and pokes 0x8000 into its +0x30; Update passes
-     *         it straight to func_02049f58.
+     *         SPLManager_New and pokes 0x8000 into its +0x30; Update passes
+     *         it straight to SPLManager_Update.
      *   0x008 mLevel: get() indexes `level + 0x708 + (id & 0xf) * 4`, so the
      *         bucket array is sixteen words at +0x708, and 0x708 + 16*4 =
      *         0x748 lands exactly on the callback bank at 0x750 = 0x8 + 0x748.

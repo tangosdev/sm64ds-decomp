@@ -37,13 +37,13 @@
 #include "Particle__System.h"
 #include "Ov007MenuMem.h"
 
-extern "C" void func_02049f58(Particle::Manager *);
+extern "C" void SPLManager_Update(Particle::Manager *);
 void func_02049ee8(Particle::Manager *, Matrix4x3 *);
 void func_02049d78(Particle::Manager *, Particle::System *);
-extern "C" int func_0204a0dc(Particle::Manager *, u32 (*allocTexVram)(u32, u32));
-extern "C" int func_0204a028(Particle::Manager *, u32 (*allocPalVram)(u32, u32));
-extern "C" char *func_0204a4c8(char *(*alloc)(int), int, int, int, unsigned short);
-extern "C" void func_0204a17c(Particle::Manager *, char *);
+extern "C" int SPLManager_UploadTexturesEx(Particle::Manager *, u32 (*allocTexVram)(u32, u32));
+extern "C" int SPLManager_UploadPalettesEx(Particle::Manager *, u32 (*allocPalVram)(u32, u32));
+extern "C" char *SPLManager_New(char *(*alloc)(int), int, int, int, unsigned short);
+extern "C" void SPLManager_LoadResources(Particle::Manager *, char *);
 int func_02045d00(void);
 extern "C" int func_02045ce0(void);
 
@@ -98,14 +98,14 @@ void func_ov007_020b782c(void) {
     data_ov007_02103448 = (char *)func_ov007_020c3df4(data_ov007_02102dd0, 0x3c00);
     data_ov007_02103444 = 0;
     data_ov007_0210344c =
-        (Particle::Manager *)func_0204a4c8(func_ov007_020b78d0, 2, 200, 0x23, 0x25);
+        (Particle::Manager *)SPLManager_New(func_ov007_020b78d0, 2, 200, 0x23, 0x25);
     i = 0;
     empty = 0;
     do {
         data_ov007_02103450[i] = empty;
         i++;
     } while (i < 2);
-    func_0204a17c(data_ov007_0210344c, static_cast<char *>(func_ov007_020b3f20(0x17)));
+    SPLManager_LoadResources(data_ov007_0210344c, static_cast<char *>(func_ov007_020b3f20(0x17)));
 }
 
 extern "C" void func_ov007_020b77ac(void) {
@@ -113,8 +113,8 @@ extern "C" void func_ov007_020b77ac(void) {
     data_ov007_0210343c = func_02045d00();
     data_ov007_02103438 = func_ov007_020c17f4();
     data_ov007_02103434 = func_02045ce0();
-    func_0204a0dc(data_ov007_0210344c, func_ov007_020b7948);
-    func_0204a028(data_ov007_0210344c, func_ov007_020b7914);
+    SPLManager_UploadTexturesEx(data_ov007_0210344c, func_ov007_020b7948);
+    SPLManager_UploadPalettesEx(data_ov007_0210344c, func_ov007_020b7914);
 }
 
 void func_ov007_020b7764(void) {
@@ -155,7 +155,7 @@ void *func_ov007_020b7690(int i) {
 
 void func_ov007_020b7658(Matrix4x3 *viewMatrix, int update) {
     if (update) {
-        func_02049f58(data_ov007_0210344c);
+        SPLManager_Update(data_ov007_0210344c);
     }
     func_02049ee8(data_ov007_0210344c, viewMatrix);
 }

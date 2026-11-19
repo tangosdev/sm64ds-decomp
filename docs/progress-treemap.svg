@@ -7721,23 +7721,23 @@ matched: yes</title></rect><rect x="221.86" y="614.64" width="7.41" height="10.1
 module: arm9
 addr: 0x02049ee8
 size: 112 bytes
-matched: yes</title></rect><rect x="229.27" y="614.64" width="13.77" height="10.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02049f58
+matched: yes</title></rect><rect x="229.27" y="614.64" width="13.77" height="10.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLManager_Update
 module: arm9
 addr: 0x02049f58
 size: 208 bytes
-matched: yes</title></rect><rect x="243.04" y="614.64" width="11.92" height="10.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204a028
+matched: yes</title></rect><rect x="243.04" y="614.64" width="11.92" height="10.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLManager_UploadPalettesEx
 module: arm9
 addr: 0x0204a028
 size: 180 bytes
-matched: yes</title></rect><rect x="254.96" y="614.64" width="10.59" height="10.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204a0dc
+matched: yes</title></rect><rect x="254.96" y="614.64" width="10.59" height="10.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLManager_UploadTexturesEx
 module: arm9
 addr: 0x0204a0dc
 size: 160 bytes
-matched: yes</title></rect><rect x="265.55" y="614.64" width="55.87" height="10.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204a17c
+matched: yes</title></rect><rect x="265.55" y="614.64" width="55.87" height="10.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLManager_LoadResources
 module: arm9
 addr: 0x0204a17c
 size: 844 bytes
-matched: yes</title></rect><rect x="5.00" y="624.78" width="22.37" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204a4c8
+matched: yes</title></rect><rect x="5.00" y="624.78" width="22.37" height="7.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLManager_New
 module: arm9
 addr: 0x0204a4c8
 size: 244 bytes
@@ -12265,7 +12265,7 @@ matched: yes</title></rect><rect x="331.42" y="5.00" width="12.70" height="44.69
 module: itcm
 addr: 0x01ff8000
 size: 1436 bytes
-matched: yes</title></rect><rect x="331.42" y="49.69" width="12.70" height="11.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ff859c
+matched: yes</title></rect><rect x="331.42" y="49.69" width="12.70" height="11.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ll_ufrom_d
 module: itcm
 addr: 0x01ff859c
 size: 364 bytes
@@ -12293,7 +12293,7 @@ matched: yes</title></rect><rect x="331.42" y="291.43" width="12.70" height="28.
 module: itcm
 addr: 0x01ff99a4
 size: 924 bytes
-matched: yes</title></rect><rect x="331.42" y="320.18" width="12.70" height="7.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ff9d40
+matched: yes</title></rect><rect x="331.42" y="320.18" width="12.70" height="7.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_deq
 module: itcm
 addr: 0x01ff9d40
 size: 236 bytes
@@ -12305,7 +12305,7 @@ matched: yes</title></rect><rect x="331.42" y="368.11" width="12.70" height="7.8
 module: itcm
 addr: 0x01ffa344
 size: 252 bytes
-matched: yes</title></rect><rect x="331.42" y="375.95" width="4.63" height="10.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffa440
+matched: yes</title></rect><rect x="331.42" y="375.95" width="4.63" height="10.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ffltu
 module: itcm
 addr: 0x01ffa440
 size: 124 bytes

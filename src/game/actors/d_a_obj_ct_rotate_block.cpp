@@ -43,7 +43,7 @@ enum daObjCtRotateBlock_c_AssetId {
 #include "decl_common.h"
 #undef data_ov065_0211c0a8
 extern void *const data_ov065_0211c0a8[2];
-u8 data_ov065_0211cfa4[4] = {
+u8 sTTCRotatingSolidInitialDelays[4] = {
     120,
     40,
     0,
@@ -190,7 +190,7 @@ int daObjCtRotateBlock_c::Behavior() {
                 break;
             Sound::PlayBank3(0x40, mCamSpacePos);
             mState = 0;
-            mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
+            mWaitTimer = sTTCRotatingSolidInitialDelays[data_0209f2c0];
             if (data_0209f2c0 == 2)
                 mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650.value) % 7 * 20 + 5;
             mTargetAngleZ += data_ov065_0211cfa8[mVariant];
@@ -248,7 +248,7 @@ int daObjCtRotateBlock_c::InitResources() {
     {
         Vector3 va;
         Vector3 vb;
-        mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
+        mWaitTimer = sTTCRotatingSolidInitialDelays[data_0209f2c0];
         va.x = 0;
         va.z = 0;
         vb.x = 0;
