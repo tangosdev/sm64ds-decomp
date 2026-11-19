@@ -173,8 +173,9 @@ tag or macro, followed transitively down the typedef chain) — and both sides o
 rename, because Git reports one `R` row and a definition can move and change signature
 in the same commit. `--symbol <name>` prints one symbol's whole declaration
 population; `--inventory` prints the headline and the worst offenders. It is a
-**ratchet**: the 23,151 disagreements the tree already carries are banked in
-`config/decl-agreement-baseline.json` and only a new one fails.
+**ratchet**: the disagreements the tree already carries are banked in
+`config/decl-agreement-baseline.json` and only a new one fails (`--inventory` gives the live count; prune
+banked rows that are gone with `--update`, which never adds rows on a clean tree).
 Do not treat a banked entry as a text edit — changing a declaration can change
 instruction selection at the call site, so fixing one is matching work that needs a
 rebuild and byte proof (`tools/match.py`), and the `declaration agreement` CI job will
