@@ -10,9 +10,6 @@
   "MTX_Scale43_": {
    "src/engine/model/ModelComponents.cpp": ["param:#1 Mtx43 *"]
   },
-  "Matrix4x3_ApplyInPlaceToRotationX": {
-   "src/game/actors/d_a_wanwan2.cpp": ["param:#2 int"]
-  },
   "PATH_DEFS": {
    "src/engine/path/PathPtr.cpp": ["return:PathDef *"]
   },

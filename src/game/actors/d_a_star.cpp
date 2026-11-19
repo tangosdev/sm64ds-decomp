@@ -76,6 +76,7 @@ enum daStar_c_AssetId {
 #include "Event.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
 #include "KuppaScript.h"
@@ -154,13 +155,7 @@ extern unsigned char IsAreaShowing(int idx);
 extern void func_02012694(unsigned int a, const Vector3 *p);
 
 extern "C" {
-extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
-/* local extern: in this block's void * spelling, like the helpers above. */
-extern void MTX_Concat43(void *a, void *b, void *out);
-extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void Matrix4x3_FromRotationY(void* m, int angle);
 }
 
 extern int SurfaceInfo_TestFlag0x20(int *p);
