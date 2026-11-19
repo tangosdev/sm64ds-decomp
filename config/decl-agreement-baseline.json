@@ -111,9 +111,6 @@
    "src/WBT_InitParent.cpp": ["return:int"],
    "src/unnamed/arm9/0206/func_02065af0.cpp": ["return:int"]
   },
-  "data_ov002_0210da28": {
-   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"]
-  },
   "data_ov002_0211092c": {
    "src/game/actors/d_a_star.cpp": ["return:StarModelFilePtr"]
   },

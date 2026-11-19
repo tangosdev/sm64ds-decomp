@@ -869,8 +869,6 @@ extern struct MgCamera *sMgMainCamera;
 extern void *sD3DLanguageFile;
 extern void *sJumpBackFile;
 extern void *sRouletteLandedRacer;
-extern void*data_ov016_021136dc[];
-extern void*data_ov016_021136e4[];
 extern void*data_ov016_021149d4[];
 extern void*data_ov023_02112088;
 /* data_ov026_02113f3c is defined by d_a_water_tatumaki.cpp. */
@@ -881,7 +879,6 @@ extern void*data_ov065_0211cd68[];
 extern void*data_ov065_0211cfd8[];
 extern float data_ov074_02122e4c[];
 extern void*data_ov074_02122e5c[];
-extern void*data_ov079_02127600[];
 extern void*data_ov100_0214857c[];
 extern void*func_0201787c(void*);
 extern void *NNS_SndArcGetSeqArcParam(int, int);

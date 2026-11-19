@@ -167,7 +167,7 @@ extern SharedFilePtr *const data_ov079_021275ec[5] = {
     &gBattanAttack01AnimationFile, &gBattanAttack02AnimationFile,  &gBattanRecoverAnimationFile,
     &gBattanWalkAnimationFile,     &gBattanWalkstartAnimationFile,
 };
-extern void *const data_ov079_02127600[6] = {
+extern SharedFilePtr *const data_ov079_02127600[6] = {
     &gBattanKingAttack01AnimationFile,  &gBattanKingAttack02AnimationFile,
     &gBattanKingRecoverAnimationFile,   &gBattanKingWalkAnimationFile,
     &gBattanKingWalkstartAnimationFile, &data_ov079_021281b0,
@@ -240,7 +240,7 @@ int daBtn_c::InitResources()
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
-            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov079_02127600[animIdx]);
+            dExtFrameCtrl_c::LoadFile(*data_ov079_02127600[animIdx]);
             animIdx += 1;
         } while (animIdx < 6);
         dExtAnmTexPat_c::LoadFile(data_ov079_02128178);
@@ -451,7 +451,7 @@ int daBtn_c::CleanupResources()
   if(mIsKing){
       data_ov079_02128168.Release();
       for (i = 0; i < 6; i++)
-          ((SharedFilePtr *)(data_ov079_02127600[i]))->Release();
+          data_ov079_02127600[i]->Release();
       data_ov079_02128178.Release();
   } else {
       data_ov079_02128170.Release();
@@ -683,7 +683,7 @@ void daBtn_c::func_ov079_021256d4()
         s16 t;
         void *anim;
         int five;
-        SharedFilePtr **tab;
+        SharedFilePtr *const *tab;
         dExtAnmModel_c *ma;
 
         Sound::StopLoadedMusic_Layer3();
@@ -693,7 +693,7 @@ void daBtn_c::func_ov079_021256d4()
         mPos.y = mSpawnPos.y;
         five = 5;
         mPos.z = mSpawnPos.z;
-        tab = (SharedFilePtr **)data_ov079_021275ec;
+        tab = data_ov079_021275ec;
         t = mSpawnAngleX;
         ma = &mAnmModel;
         mAngle.x = t;
@@ -709,7 +709,7 @@ void daBtn_c::func_ov079_021256d4()
         mPrevAngle.z = t;
         mTextureSequence.currFrame = 0;
         mHorzSpeed = 0;
-        anim = ((SharedFilePtr *)tab[mIsKing * five + 3])->filePtr;
+        anim = tab[mIsKing * five + 3]->filePtr;
         (ma)->SetAnim((BCA_File *)anim, 0, 0x1000, 0);
     }
 }

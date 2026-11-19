@@ -127,7 +127,7 @@ extern void UnloadSilverStarAndNumber(void);
 extern "C" {
 extern StarAnimationFileHandle data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
-extern int data_ov002_0210da28[];
+extern SharedFilePtr data_ov002_0210da28;
 extern signed char gNumStageStars[];
 }
 
@@ -2783,7 +2783,7 @@ void daStarBase_c::LinkSilverStarAndStarMarker(daStar_c *star) {
 
 void LoadSilverStarAndNumber(void)
 {
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da28);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210da28);
     dExtSimpleModel_c::LoadFile(data_ov002_02110954);
 }
 
@@ -2794,7 +2794,7 @@ void LoadSilverStarAndNumber(void)
 
 void UnloadSilverStarAndNumber(void)
 {
-    ((SharedFilePtr *)data_ov002_0210da28)->Release();
+    data_ov002_0210da28.Release();
     data_ov002_02110954.Release();
 }
 
