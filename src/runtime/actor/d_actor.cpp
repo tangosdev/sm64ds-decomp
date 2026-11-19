@@ -783,7 +783,7 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, fx3
 
 extern "C" {
 /* local extern: daPly_c has no accessor for the current body model. */
-void *func_ov002_020e496c(daPly_c *p);
+dExtAnm2Model_c *func_ov002_020e496c(daPly_c *p);
 }
 /* the player's current mBodyModels entry */
 

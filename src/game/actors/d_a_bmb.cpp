@@ -90,7 +90,7 @@ int AngleDiff(int, int);
 /* The out-of-line stores of mWithMeshClsn's radius and height. */
 /* local extern: no header declares these; each is spelled as its
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
-int func_ov002_020e496c(daPly_c *c);
+dExtAnm2Model_c *func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 int *Vec3_LslInPlace(int *v, int sh);
 /* Real definition: func_0201267c (arm9). The methods call through it so the
