@@ -54,6 +54,13 @@ BTA_File data_ov009_02112bc4 = {
     1,    0, data_ov009_02112238,
 };
 
+/* Floor properties for the block ahead of the water plane. */
+CLPS_Block data_ov009_02112c18 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+
 /* The water surface's collision properties: one floor entry. */
 CLPS_Block data_ov009_02112c38 = {
     0x53504c43,

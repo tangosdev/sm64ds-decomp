@@ -31,6 +31,7 @@ enum daObjFl_Ukiyuka_c_AssetId {
     ASSET_FL_UKI_YUKA_KCL = 0x0615
 };
 
+#include "SpawnInfo.h"
 #include "daObjFl_Ukiyuka_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -119,3 +120,23 @@ daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L(void) {
 daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA(void) {
     return new daObjFl_Ukiyuka_c;
 }
+
+extern "C" SpawnInfo<daObjFl_Ukiyuka_c> g_profile_FL_UKIYUKA = {
+    daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA,
+    75,
+    283,
+    0x00000002,
+    0x00000000,
+    0x00650000,
+    0x02000000,
+    0x00000000};
+
+extern "C" SpawnInfo<daObjFl_Ukiyuka_c> g_profile_FL_UKIYUKA_L = {
+    daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L,
+    76,
+    284,
+    0x00000002,
+    0x00000000,
+    0x01000000,
+    0x02000000,
+    0x00000000};

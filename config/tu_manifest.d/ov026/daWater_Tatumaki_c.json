@@ -30,9 +30,10 @@
       "end": "0x02112db4"
     },
     {
-      "name": ".data",
+      "name": ".data.wlLate",
       "start": "0x02113cec",
-      "end": "0x02113d0c"
+      "end": "0x02113dd0",
+      "input_section": ".data"
     },
     {
       "name": ".bss",
@@ -186,6 +187,32 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the spin record's enter pointer-to-member; retail first word is InitStateSpin (0x02111ed8)"
+    },
+    {
+      "symbol": "_ZTI18daWater_Tatumaki_c",
+      "address": "0x02113d0c",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTS18daWater_Tatumaki_c",
+      "address": "0x02113d18",
+      "size": "0x15",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "g_profile_WATER_TATUMAKI",
+      "address": "0x02113d30",
+      "size": "0x1c",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTV18daWater_Tatumaki_c",
+      "address": "0x02113d54",
+      "size": "0x84",
+      "evidence": "compiler emission of the class key function",
+      "emitted_storage_address": "0x02113d4c",
+      "address_point_bias": "0x8"
     }
   ],
   "bss": [
@@ -484,7 +511,7 @@
       "target_address": "0x02112c94"
     },
     {
-      "section": ".data",
+      "section": ".data.wlLate",
       "source": "0x02113cec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -494,7 +521,7 @@
       "target_address": "0x02111d4c"
     },
     {
-      "section": ".data",
+      "section": ".data.wlLate",
       "source": "0x02113cf4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -504,7 +531,7 @@
       "target_address": "0x02111cb4"
     },
     {
-      "section": ".data",
+      "section": ".data.wlLate",
       "source": "0x02113cfc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -514,7 +541,7 @@
       "target_address": "0x02111b24"
     },
     {
-      "section": ".data",
+      "section": ".data.wlLate",
       "source": "0x02113d04",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -522,6 +549,366 @@
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x02111ed8"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z28daWater_Tatumaki_c_classInitv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x021121bc"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI18daWater_Tatumaki_c",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02113d0c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113dcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113dc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113dc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113dc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113dbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113db8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113db4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113db0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113dac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113da8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113da4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113da0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daWater_Tatumaki_cD0Ev",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111ad8"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daWater_Tatumaki_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111fd4"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daWater_Tatumaki_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111fa4"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daWater_Tatumaki_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111fd8"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daWater_Tatumaki_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x021120ec"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daWater_Tatumaki_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x0211200c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daWater_Tatumaki_cD1Ev",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111aa0"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS18daWater_Tatumaki_c",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02113d18"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dEnemyBase_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021081c0"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113d0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
     }
   ],
   "notes": [
@@ -548,27 +935,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "This TU builds Vector3 values, so mwccarm re-emits Vector3's trivial vague-linkage D1. The cartridge keeps that body at arm9:0x020072c0, already owned by another source."
-    },
-    {
-      "symbol": "_ZTV18daWater_Tatumaki_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov026",
-      "canonical_address": "0x02113d54",
-      "reason": "Vtable for the key function, the out-of-line destructor. ROM home ov026:0x02113d54. The emitted copy is the duplicate production isolation discards."
-    },
-    {
-      "symbol": "_ZTI18daWater_Tatumaki_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov026",
-      "canonical_address": "0x02113d0c",
-      "reason": "Typeinfo record emitted with the vtable. ROM home ov026:0x02113d0c."
-    },
-    {
-      "symbol": "_ZTS18daWater_Tatumaki_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov026",
-      "canonical_address": "0x02113d18",
-      "reason": "Type-name string emitted with the vtable. ROM home ov026:0x02113d18."
     },
     {
       "symbol": "_ZTI12dEnemyBase_c",
@@ -667,9 +1033,6 @@
         63
       ],
       "data": [
-        "_ZTV18daWater_Tatumaki_c",
-        "_ZTI18daWater_Tatumaki_c",
-        "_ZTS18daWater_Tatumaki_c",
         "_ZTI12dEnemyBase_c",
         "_ZTS12dEnemyBase_c",
         "_ZTI8dActor_c",
@@ -681,16 +1044,13 @@
       ],
       "dataExternalized": [
         "_ZTI12dEnemyBase_c",
-        "_ZTI18daWater_Tatumaki_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
         "_ZTS12dEnemyBase_c",
-        "_ZTS18daWater_Tatumaki_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTV18daWater_Tatumaki_c"
+        "_ZTS8dActor_c"
       ]
     },
     "criteria": {
@@ -742,9 +1102,9 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.wlLate",
           "start": "0x02113cec",
-          "end": "0x02113d0c",
+          "end": "0x02113dd0",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -784,7 +1144,7 @@
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.wlLate",
             "original": [
               37,
               39,
@@ -821,7 +1181,7 @@
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.wlLate",
               "original": [
                 37,
                 39,

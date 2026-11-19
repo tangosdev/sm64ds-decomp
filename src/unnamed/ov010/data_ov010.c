@@ -23,6 +23,113 @@ extern u32 data_ov010_02112864[];
 extern u32 data_ov010_02112948[];
 
 /* 0x02112318..0x02112a78 (1888 bytes, 472 words) */
+extern u32 data_ov010_02112214[];
+extern u32 data_ov010_02112268[];
+extern u32 data_ov010_021122b8[];
+extern u32 data_ov010_021121d4[];
+extern u32 data_ov010_02112398[];
+extern u32 data_ov010_021123d8[];
+extern u32 data_ov010_02112338[];
+extern u32 data_ov010_02112234[];
+extern u32 data_ov010_021121e4[];
+extern u32 data_ov010_02112278[];
+extern u32 data_ov010_02112420[];
+extern u32 data_ov010_021121f4[];
+extern u32 data_ov010_02112258[];
+extern u32 data_ov010_02112224[];
+extern u32 data_ov010_02112358[];
+extern u32 data_ov010_021122d8[];
+extern u32 data_ov010_02112520[];
+extern u32 data_ov010_02112470[];
+extern u32 data_ov010_021126d0[];
+extern u32 data_ov010_021121ec[];
+extern u32 data_ov010_021124c0[];
+extern u32 data_ov010_02112318[];
+
+#pragma define_section c1TrapClpsPre ".data.c1TrapClpsPre" ".data.c1TrapClpsPre" ".data.c1TrapClpsPre" far_data
+#pragma section c1TrapClpsPre begin
+u32 data_ov010_021121c0[] = {
+    0x00000004,
+    0x00000001,
+    (u32)data_ov010_02112214,
+    0x00000002,
+    (u32)data_ov010_02112268,
+    0x00000200,
+    (u32)data_ov010_021122b8,
+    0x00000001,
+    (u32)data_ov010_021121d4,
+    0x00000400,
+    (u32)data_ov010_02112398,
+    0x00000009,
+    (u32)data_ov010_021123d8,
+    0x00000200,
+    (u32)data_ov010_02112338,
+    0x00000001,
+    (u32)data_ov010_02112234,
+    0x00000001,
+    (u32)data_ov010_021121e4,
+    0x00000002,
+    (u32)data_ov010_02112278,
+    0x00000500,
+    (u32)data_ov010_02112420,
+    0x00000001,
+    (u32)data_ov010_021121f4,
+    0x00000100,
+    (u32)data_ov010_02112258,
+    0x00000001,
+    (u32)data_ov010_02112224,
+    0x00000400,
+    (u32)data_ov010_02112358,
+    0x000006e9,
+    0x000006eb,
+    0x000006ed,
+    0x08980898,
+    0x08980898,
+    0x08980898,
+    0x00000898,
+    0x047f004b,
+    0xf6b702d5,
+    0x4000ffff,
+    0x070d0000,
+    0x00000200,
+    (u32)data_ov010_021122d8,
+    0x00000405,
+    (u32)data_ov010_02112318,
+    0x00000600,
+    (u32)data_ov010_02112520,
+    0x00000a05,
+    (u32)data_ov010_02112470,
+    0xff0e0000,
+    0x000effff,
+    0xffffff0c,
+    0xff0c001a,
+    0x0000ffff,
+    (u32)data_ov010_021126d0,
+    (u32)data_ov010_021121ec,
+    0x06e806f0,
+    0x06f206f1,
+    (u32)data_ov010_021124c0,
+    0x06400008,
+    0x0000000f,
+    0xfb820043,
+    0xf8940000,
+    0x00000000,
+    0xff040000,
+    0xfb820043,
+    0xf8940000,
+    0x00000000,
+    0xff0b0000,
+    0xf9a60050,
+    0x04de0000,
+    0x600001ff,
+    0x0af00000,
+    0x00000112,
+    0x00000000,
+    0x00000000,
+    0xffff0000,
+};
+#pragma section c1TrapClpsPre end
+
 u32 data_ov010_02112318[] = {
     0xfa88fe25,
     0xfed40177,

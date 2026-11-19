@@ -13,6 +13,7 @@
  * 0x02112610, under defer_codegen off. D2 is not in the ROM.
  */
 
+#include "SpawnInfo.h"
 #include "decl_Actor.h"
 #include "Particle__System.h"
 #include "decl_ActorBase.h"
@@ -143,3 +144,13 @@ daObj_volcanoCannon_c *daObj_volcanoCannon_c_classInit(void) {
 /* Static-init global (was the handwritten cannon initializer). The state
  * table is plain-copied from the ROM constants in retail order. */
 daObj_volcanoCannon_c::State data_ov022_02114690 = {data_ov022_0211442c, data_ov022_02114424};
+
+extern "C" SpawnInfo<daObj_volcanoCannon_c> g_profile_OBJ_VOLCANO_CANNON = {
+    daObj_volcanoCannon_c_classInit,
+    243,
+    101,
+    0x00000002,
+    0x00010000,
+    0x00060000,
+    0x04000000,
+    0x00000000};

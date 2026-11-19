@@ -38,6 +38,12 @@
       "end": "0x02112bdc"
     },
     {
+      "name": ".data.gap2",
+      "input_section": ".data",
+      "start": "0x02112c18",
+      "end": "0x02112c38"
+    },
+    {
       "name": ".data.data_ov009_02112c38",
       "input_section": ".data",
       "start": "0x02112c38",
@@ -109,6 +115,13 @@
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "texture-SRT file: 0x5b frames, constant scale and translation, one material record"
+    },
+    {
+      "symbol": "data_ov009_02112c18",
+      "address": "0x02112c18",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block immediately before the water surface properties"
     },
     {
       "symbol": "data_ov009_02112c38",
@@ -442,6 +455,13 @@
           "section": ".data.data_ov009_02112bc4",
           "start": "0x02112bc4",
           "end": "0x02112bdc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.gap2",
+          "start": "0x02112c18",
+          "end": "0x02112c38",
           "differingBytes": 0,
           "firstDiff": null
         },

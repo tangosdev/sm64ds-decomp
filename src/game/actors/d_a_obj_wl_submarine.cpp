@@ -23,6 +23,7 @@ enum daObjWlSubmarine_c_AssetId {
     ASSET_WL_SUBMARINE_KCL = 0x06dd
 };
 
+#include "SpawnInfo.h"
 #include "daObjWlSubmarine_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
@@ -102,3 +103,12 @@ daObjWlSubmarine_c *daObjWlSubmarine_c_classInit() {
  * file. */
 SubmarineModelFilePtr Submarine_ModelFile(ASSET_WL_SUBMARINE_BMD);    /* model */
 SubmarineCollisionFilePtr Submarine_ClsnFile(ASSET_WL_SUBMARINE_KCL); /* collision */
+
+extern "C" SpawnInfo<daObjWlSubmarine_c> g_profile_WL_SUBMARINE = {daObjWlSubmarine_c_classInit,
+                                                                   90,
+                                                                   251,
+                                                                   0x00000000,
+                                                                   0x00000000,
+                                                                   0x01000000,
+                                                                   0x00000000,
+                                                                   0x00000000};

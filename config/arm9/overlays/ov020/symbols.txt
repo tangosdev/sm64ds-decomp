@@ -220,6 +220,7 @@ g_profile_CHAIR kind:data(any) addr:0x021149f0 ambiguous
 data_ov020_021149fc kind:data(any) addr:0x021149fc ambiguous
 _ZTV9daChair_c kind:data(any) addr:0x02114a14
 data_ov020_02114a18 kind:data(any) addr:0x02114a18 ambiguous
+data_ov020_02114a90 kind:data(any) addr:0x02114a90
 data_ov020_02114aa0 kind:bss addr:0x02114aa0
 data_ov020_02114aa8 kind:bss addr:0x02114aa8
 data_ov020_02114ab0 kind:bss addr:0x02114ab0

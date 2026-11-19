@@ -29,6 +29,7 @@ enum daObjRc_Tikuwa_c_AssetId { ASSET_RC_TIKUWA_BMD = 0x06af, ASSET_RC_TIKUWA_KC
 
 #pragma defer_codegen off
 
+#include "SpawnInfo.h"
 #include "decl_common.h"
 #include "daObjRc_Tikuwa_c.h"
 #include "SharedFilePtr.h"
@@ -183,3 +184,12 @@ daObjRc_Tikuwa_c *daObjRc_Tikuwa_c_classInit() {
  * file 0x6b0. The compiler registers each destructor beside the object. */
 TikuwaModelFilePtr gRcTikuwaModelFile(ASSET_RC_TIKUWA_BMD);
 TikuwaCollisionFilePtr gRcTikuwaCollisionFile(ASSET_RC_TIKUWA_KCL);
+
+extern "C" SpawnInfo<daObjRc_Tikuwa_c> g_profile_RC_TIKUWA = {daObjRc_Tikuwa_c_classInit,
+                                                              126,
+                                                              256,
+                                                              0x02000006,
+                                                              0x0004b000,
+                                                              0x001f4000,
+                                                              0x01f40000,
+                                                              0x00320000};

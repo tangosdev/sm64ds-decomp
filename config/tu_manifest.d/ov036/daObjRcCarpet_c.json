@@ -974,6 +974,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.data_ov036_02112ba8",
+          "start": "0x02112ba8",
+          "end": "0x02112bc8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.data_ov036_02113f4c",
           "start": "0x02113f4c",
           "end": "0x02114020",

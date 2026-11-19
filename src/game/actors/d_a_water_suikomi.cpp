@@ -36,6 +36,7 @@
  *   where sibling actors rebuild their model matrix, but its body says
  *   nothing about its role.
  */
+#include "SpawnInfo.h"
 #include "daWater_Suikomi_c.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx.h"
@@ -163,3 +164,12 @@ SuikomiStateTable data_ov026_02113f58 = {
 #pragma cplusplus off
 Vector3 data_ov026_02113f4c;
 #pragma cplusplus on
+
+extern "C" SpawnInfo<daWater_Suikomi_c> g_profile_WATER_SUIKOMI = {daWater_Suikomi_c_classInit,
+                                                                   247,
+                                                                   105,
+                                                                   0x00000002,
+                                                                   0x01000000,
+                                                                   0x01000000,
+                                                                   0x01000000,
+                                                                   0x01000000};

@@ -114,9 +114,44 @@
   {
    "symbol": "PATH_DEFS",
    "address": "0x020a0d84",
-   "size": "0x34",
+   "size": "0x4",
    "binding": "STB_GLOBAL",
-   "evidence": "The level's PathDef table, node table and path count, then the 0x20-byte administrator name buffer func_0203ad84 fills."
+   "evidence": "The level's PathDef table."
+  },
+  {
+   "symbol": "PATH_NODES",
+   "address": "0x020a0d88",
+   "size": "0x4",
+   "binding": "STB_GLOBAL",
+   "evidence": "Flat node positions, three s16 each."
+  },
+  {
+   "symbol": "NUM_PATHS",
+   "address": "0x020a0d8c",
+   "size": "0x4",
+   "binding": "STB_GLOBAL",
+   "evidence": "Entries in PATH_DEFS."
+  },
+  {
+   "symbol": "data_020a0d90",
+   "address": "0x020a0d90",
+   "size": "0x20",
+   "binding": "STB_GLOBAL",
+   "evidence": "Administrator name buffer func_0203ad84 fills."
+  },
+  {
+   "symbol": "data_020a0db0",
+   "address": "0x020a0db0",
+   "size": "0x4",
+   "binding": "STB_GLOBAL",
+   "evidence": "Word that finishes the claimed BSS run."
+  },
+  {
+   "symbol": "data_020a0db4",
+   "address": "0x020a0db4",
+   "size": "0x4",
+   "binding": "STB_GLOBAL",
+   "evidence": "Word that finishes the claimed BSS run."
   }
  ],
  "notes": [

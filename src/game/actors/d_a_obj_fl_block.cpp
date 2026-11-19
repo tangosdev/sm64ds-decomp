@@ -33,6 +33,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_Block_c_AssetId { ASSET_FL_BLOCK_BMD = 0x05f1, ASSET_FL_BLOCK_KCL = 0x05f2 };
 
+#include "SpawnInfo.h"
 #include "daObjFl_Block_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -148,3 +149,6 @@ s32 daObjFl_Block_c::CleanupResources() {
  * destructors; the registration nodes are compiler temporaries. */
 FlBlockModelFilePtr data_ov022_02114558(ASSET_FL_BLOCK_BMD);
 FlBlockCollisionFilePtr data_ov022_02114550(ASSET_FL_BLOCK_KCL);
+
+extern "C" SpawnInfo<daObjFl_Block_c> g_profile_FL_BLOCK = {
+    daObjFl_Block_c_classInit, 74, 282, 0x00000002, 0x00080000, 0x00150000, 0x02000000, 0x02000000};

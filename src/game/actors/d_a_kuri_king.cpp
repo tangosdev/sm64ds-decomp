@@ -189,7 +189,6 @@ BTA_File *data_ov074_02122e5c[7] = {
     &data_ov009_02112404, &data_ov009_0211244c, &data_ov010_02112494, &data_ov010_021124c4,
     &data_ov010_02112464, &data_ov009_02112434, &data_ov010_021124ac,
 };
-extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};

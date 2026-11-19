@@ -102,12 +102,7 @@ extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern const int data_ov034_021138c4[];
 extern const short data_ov034_02113820[];
 extern void *const data_ov034_021138b0[];
-extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int data_ov034_02114488[];
-// local extern: no shared header declares Vec3_Add.
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int NormalizeVec3IfNonZero(Vector3 *v);
-extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern SharedFilePtr *const data_ov034_02113838[];
 extern SharedFilePtr *const data_ov034_0211384c[];
 extern void *const data_ov034_02113874[];
@@ -1245,7 +1240,7 @@ struct HanachanViewHead {
 struct HanachanViewTail {
     u8 pad[2];
     s16 angleY;
-    u16 unk_c;
+    u16 pad_c;
     u16 pad_e;
 };
 struct HanachanExit {
@@ -1341,9 +1336,9 @@ HanachanExit data_ov034_021140c0 = {
 HanachanObj data_ov034_021140d0 = {0x0014, 0x02ee, 0x03e8, 0x053c, 3, (s16)0xc000, 0, 0xffff};
 
 /* Area sub-tables: 6 standard objects, 24 simple objects, then the star row. */
-HanachanAreaObjsHead data_ov034_021140e0 = {
-    {0, 6, {0, 0}, &data_ov034_0211419c}, 5, 24, {0, 0}};
-HanachanAreaObjsTail data_ov034_021140ec = {&data_ov034_0211427c, 0xa0, 1, {0, 0}, &data_ov034_021140d0};
+HanachanAreaObjsHead data_ov034_021140e0 = {{0, 6, {0, 0}, &data_ov034_0211419c}, 5, 24, {0, 0}};
+HanachanAreaObjsTail data_ov034_021140ec = {
+    &data_ov034_0211427c, 0xa0, 1, {0, 0}, &data_ov034_021140d0};
 
 HanachanLevelHead data_ov034_021140f8 = {
     &data_ov034_021141fc, &data_ov034_02114094, 0x07e5, 0x07e1, 0x07e6, 0x07e7};
@@ -1380,56 +1375,53 @@ HanachanObj data_ov034_021141cc[3] = {
     {0x002c, (s16)0xf9f2, 0x0514, 0x0708, 0, 0, 0, 0x3c07},
 };
 
-CLPS_Block data_ov034_021141fc = {
-    0x53504c43,
-    8,
-    15,
-    {{0x00030fc4, 0x000000ff},
-     {0x00240fc0, 0x000000ff},
-     {0x001c0fcc, 0x000000ff},
-     {0x01000fc4, 0x000000ff},
-     {0x00000fc0, 0x000000ff},
-     {0x01030fc4, 0x000000ff},
-     {0x01002fc4, 0x000000ff},
-     {0x00040fc4, 0x000000ff},
-     {0x00030fc2, 0x000000ff},
-     {0x00030fcc, 0x000000ff},
-     {0x00032fc2, 0x000000ff},
-     {0x01042fcc, 0x000000ff},
-     {0x01040fcc, 0x000000ff},
-     {0x00052fc2, 0x000000ff},
-     {0x01052fc4, 0x000000ff}}};
+CLPS_Block data_ov034_021141fc = {0x53504c43,
+                                  8,
+                                  15,
+                                  {{0x00030fc4, 0x000000ff},
+                                   {0x00240fc0, 0x000000ff},
+                                   {0x001c0fcc, 0x000000ff},
+                                   {0x01000fc4, 0x000000ff},
+                                   {0x00000fc0, 0x000000ff},
+                                   {0x01030fc4, 0x000000ff},
+                                   {0x01002fc4, 0x000000ff},
+                                   {0x00040fc4, 0x000000ff},
+                                   {0x00030fc2, 0x000000ff},
+                                   {0x00030fcc, 0x000000ff},
+                                   {0x00032fc2, 0x000000ff},
+                                   {0x01042fcc, 0x000000ff},
+                                   {0x01040fcc, 0x000000ff},
+                                   {0x00052fc2, 0x000000ff},
+                                   {0x01052fc4, 0x000000ff}}};
 
 /* 24 simple objects. The fifth entry is split across the two labels. */
-HanachanSimpleHead data_ov034_0211427c = {
-    {{0xa226, 0x0384, 0x03e8, 0x03e8},
-     {0xa226, 0x05e3, 0x03e8, 0x00b0},
-     {0xa226, 0x0334, 0x03e8, (s16)0xfc8e},
-     {0xa226, (s16)0xfdef, 0x02ee, (s16)0xfdef}},
-    0xa226,
-    (s16)0xff30};
-HanachanSimpleTail data_ov034_021142a0 = {
-    0x03e8,
-    (s16)0xfabd,
-    {{0xa226, (s16)0xf8d0, 0x05dc, (s16)0xfbb4},
-     {0xa226, (s16)0xf90c, 0x03e8, 0x0110},
-     {0xa226, (s16)0xfe84, 0x0514, 0x044c},
-     {0x4c3f, 0, 0x073a, 0},
-     {0xe225, (s16)0xfc7c, 0x074f, (s16)0xfc7c},
-     {0xe225, (s16)0xfc18, 0x0766, (s16)0xfc18},
-     {0xe225, (s16)0xfbb4, 0x077d, (s16)0xfbb4},
-     {0xe225, (s16)0xfb50, 0x0794, (s16)0xfb50},
-     {0xe225, (s16)0xfaec, 0x07ab, (s16)0xfaec},
-     {0xe225, 0x0384, 0x074f, 0x0384},
-     {0xe225, 0x03e8, 0x0766, 0x03e8},
-     {0xe225, 0x044c, 0x077d, 0x044c},
-     {0xe225, 0x04b0, 0x0794, 0x04b0},
-     {0xe225, 0x0514, 0x07ab, 0x0514},
-     {0x0a3f, (s16)0xf8f8, 0x0226, (s16)0xfa56},
-     {0xe1ff, 0, 0x06f2, 0},
-     {0x0227, (s16)0xfcae, 0x0514, 0x04ce},
-     {0x0227, (s16)0xfcae, 0x0514, 0x05fa},
-     {0xce3f, (s16)0xf8b7, 0x062c, (s16)0xf8d0}}};
+HanachanSimpleHead data_ov034_0211427c = {{{0xa226, 0x0384, 0x03e8, 0x03e8},
+                                           {0xa226, 0x05e3, 0x03e8, 0x00b0},
+                                           {0xa226, 0x0334, 0x03e8, (s16)0xfc8e},
+                                           {0xa226, (s16)0xfdef, 0x02ee, (s16)0xfdef}},
+                                          0xa226,
+                                          (s16)0xff30};
+HanachanSimpleTail data_ov034_021142a0 = {0x03e8,
+                                          (s16)0xfabd,
+                                          {{0xa226, (s16)0xf8d0, 0x05dc, (s16)0xfbb4},
+                                           {0xa226, (s16)0xf90c, 0x03e8, 0x0110},
+                                           {0xa226, (s16)0xfe84, 0x0514, 0x044c},
+                                           {0x4c3f, 0, 0x073a, 0},
+                                           {0xe225, (s16)0xfc7c, 0x074f, (s16)0xfc7c},
+                                           {0xe225, (s16)0xfc18, 0x0766, (s16)0xfc18},
+                                           {0xe225, (s16)0xfbb4, 0x077d, (s16)0xfbb4},
+                                           {0xe225, (s16)0xfb50, 0x0794, (s16)0xfb50},
+                                           {0xe225, (s16)0xfaec, 0x07ab, (s16)0xfaec},
+                                           {0xe225, 0x0384, 0x074f, 0x0384},
+                                           {0xe225, 0x03e8, 0x0766, 0x03e8},
+                                           {0xe225, 0x044c, 0x077d, 0x044c},
+                                           {0xe225, 0x04b0, 0x0794, 0x04b0},
+                                           {0xe225, 0x0514, 0x07ab, 0x0514},
+                                           {0x0a3f, (s16)0xf8f8, 0x0226, (s16)0xfa56},
+                                           {0xe1ff, 0, 0x06f2, 0},
+                                           {0x0227, (s16)0xfcae, 0x0514, 0x04ce},
+                                           {0x0227, (s16)0xfcae, 0x0514, 0x05fa},
+                                           {0xce3f, (s16)0xf8b7, 0x062c, (s16)0xf8d0}}};
 
 /* Per-health state timer and the state-name strings the state table's name
  * pointers reference. */

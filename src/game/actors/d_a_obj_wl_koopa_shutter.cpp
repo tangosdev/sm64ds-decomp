@@ -23,6 +23,7 @@ enum daObjWlKoopaShutter_c_AssetId {
     ASSET_WL_KUPA_SHUTTER_KCL = 0x06da
 };
 
+#include "SpawnInfo.h"
 #include "daObjWlKoopaShutter_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
@@ -106,3 +107,13 @@ daObjWlKoopaShutter_c *daObjWlKoopaShutter_c_classInit() {
  * file. */
 KoopaShutterModelFilePtr BowserShutter_ModelFile(ASSET_WL_KUPA_SHUTTER_BMD);    /* model */
 KoopaShutterCollisionFilePtr BowserShutter_ClsnFile(ASSET_WL_KUPA_SHUTTER_KCL); /* collision */
+
+extern "C" SpawnInfo<daObjWlKoopaShutter_c> g_profile_WL_KOOPA_SHUTTER = {
+    daObjWlKoopaShutter_c_classInit,
+    91,
+    252,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000};

@@ -2,7 +2,7 @@
  * function skip each overlay-table entry's file_id (SHA1ProcessMessageBlock), and
  * return the previous setting. FS_AttachOverlayTable turns it on around the
  * overlay table's digest check. */
-int data_020a80c4;
+extern int data_020a80c4;
 
 int DGT_SetOverlayTableMode(int flag) {
     int prev = data_020a80c4;

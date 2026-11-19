@@ -727,7 +727,7 @@
   ],
   "data": [
     {
-      "symbol": "data_ov063_0211e7e0",
+      "symbol": "sBooHitRotations",
       "address": "0x0211e7e0",
       "size": "0x48",
       "binding": "STB_GLOBAL",

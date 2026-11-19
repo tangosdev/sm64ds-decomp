@@ -121,7 +121,9 @@
    "src/minigames/unit020b2c84.cpp": ["return:ElemFn"]
   },
   "data_02092114": {
-   "include/decl_common.h": ["return:unsigned char"]
+   "include/decl_common.h": ["return:unsigned char"],
+   "src/game/player/d_a_ply_methods.cpp": ["return:signed char"],
+   "src/ui/hud/CapIconMgr.cpp": ["return:signed char"]
   },
   "data_02092768": {
    "src/minigames/unit020bfec0.cpp": ["return:Quaternion"]

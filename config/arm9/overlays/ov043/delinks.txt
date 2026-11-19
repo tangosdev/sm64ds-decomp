@@ -62,3 +62,15 @@ src/unnamed/ov043/data_ov043_02112358.c:
 src/unnamed/ov043/data_ov043_02111ca0.c:
     complete
     .data start:0x02111ca0 end:0x02112270
+
+src/unnamed/ov043/data_ov043_0211229c.c:
+    complete
+    .data start:0x0211229c end:0x021122b8
+
+src/unnamed/ov043/data_ov043_02112428.c:
+    complete
+    .data start:0x02112428 end:0x02112438
+
+src/unnamed/ov043/data_ov043_0211244c.c:
+    complete
+    .data start:0x0211244c end:0x0211245c

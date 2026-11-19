@@ -32,8 +32,8 @@ PathDef *PATH_DEFS;
 Vector3_16 *PATH_NODES;
 int NUM_PATHS;
 char data_020a0d90[0x20];
-unsigned char data_020a0db0[4];
-unsigned char data_020a0db4[4];
+int data_020a0db0;
+int data_020a0db4;
 }
 
 void func_0203ad84(void) {

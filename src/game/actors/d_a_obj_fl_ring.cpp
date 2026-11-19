@@ -40,6 +40,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_Ring_c_AssetId { ASSET_FL_RING_BMD = 0x060e, ASSET_FL_RING_KCL = 0x060f };
 
+#include "SpawnInfo.h"
 #include "daObjFl_Ring_c.h"
 #include "SharedFilePtr.h"
 #include "daObj_volcanoCannon_c.h"
@@ -211,3 +212,6 @@ s32 daObjFl_Ring_c::CleanupResources() {
  * destructors; the registration nodes are compiler temporaries. */
 RingModelFilePtr gFlRingModelFile(ASSET_FL_RING_BMD);
 RingCollisionFilePtr gFlRingCollisionFile(ASSET_FL_RING_KCL);
+
+extern "C" SpawnInfo<daObjFl_Ring_c> g_profile_FL_RING = {
+    daObjFl_Ring_c_classInit, 71, 279, 0x00000002, 0x00000000, 0x00780000, 0x02000000, 0x00000000};

@@ -24,6 +24,7 @@
  * this TU.
  */
 
+#include "SpawnInfo.h"
 #include "daObjFl_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
@@ -61,7 +62,6 @@ int daObjFl_Fall_Block_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov022_0211427c);
 }
 
-
 /* Static-init globals (was the handwritten __sinit_ov022_02112fe4 shard).
  * Definition order is the retail initializer's construction order: the
  * model handle (file 0x5f9), then the collision handle (file 0x5fa). */
@@ -72,3 +72,12 @@ ResourceDescriptor data_ov022_0211427c = {
     &data_ov022_02114640,
     &data_ov064_0211ba8c,
 };
+
+extern "C" SpawnInfo<daObjFl_Fall_Block_c> g_profile_FL_KUZURE = {daObjFl_Fall_Block_c_classInit,
+                                                                  83,
+                                                                  291,
+                                                                  0x00000002,
+                                                                  0x00060000,
+                                                                  0x00150000,
+                                                                  0x01000000,
+                                                                  0x00000000};

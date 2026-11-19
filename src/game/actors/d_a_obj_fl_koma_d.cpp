@@ -28,6 +28,7 @@ enum daObjFl_Koma_D_c_AssetId { ASSET_FL_KOMA_D_BMD = 0x05f5, ASSET_FL_KOMA_D_KC
 //   pair flips, D2 is not emitted, and 13 RTTI/vtable symbols come out
 //   unlicensed.
 
+#include "SpawnInfo.h"
 #include "daObjFl_Koma_D_c.h"
 #include "SharedFilePtr.h"
 
@@ -87,3 +88,12 @@ ResourceDescriptor data_ov022_02113da4 = {
     &gFlKomaDCollisionFile,
     &data_ov064_0211bb4c,
 };
+
+extern "C" SpawnInfo<daObjFl_Koma_D_c> g_profile_FL_KOMA_D = {daObjFl_Koma_D_c_classInit,
+                                                              80,
+                                                              288,
+                                                              0x00000002,
+                                                              0x00060000,
+                                                              0x00380000,
+                                                              0x02000000,
+                                                              0x00000000};

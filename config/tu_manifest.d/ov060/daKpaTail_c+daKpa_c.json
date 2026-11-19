@@ -649,7 +649,7 @@
       "evidence": "six texture-sequence handles"
     },
     {
-      "symbol": "data_ov060_02119294",
+      "symbol": "sBowsertiltPlatformData",
       "address": "0x02119294",
       "size": "0x48",
       "binding": "STB_GLOBAL",

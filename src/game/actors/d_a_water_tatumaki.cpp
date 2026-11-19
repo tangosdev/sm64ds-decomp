@@ -43,6 +43,7 @@ enum daWater_Tatumaki_c_AssetId {
 
 #pragma defer_codegen off
 
+#include "SpawnInfo.h"
 #include "daWater_Tatumaki_c.h"
 #include "dActor_c.h"
 #include "common.h"
@@ -346,3 +347,12 @@ daWater_Tatumaki_c::State data_ov026_02113f3c = {
     &daWater_Tatumaki_c::InitStateDrag,
     &daWater_Tatumaki_c::StateDrag,
 };
+
+extern "C" SpawnInfo<daWater_Tatumaki_c> g_profile_WATER_TATUMAKI = {daWater_Tatumaki_c_classInit,
+                                                                     246,
+                                                                     104,
+                                                                     0x00000002,
+                                                                     0x01000000,
+                                                                     0x01000000,
+                                                                     0x01000000,
+                                                                     0x01000000};

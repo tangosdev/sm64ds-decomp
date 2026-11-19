@@ -58,3 +58,11 @@ src/unnamed/ov032/data_ov032_021138c4.c:
 src/unnamed/ov032/data_ov032_02113b1c.c:
     complete
     .bss start:0x02113b1c end:0x02113b20
+
+src/unnamed/ov032/data_ov032_021138a8.c:
+    complete
+    .data start:0x021138a8 end:0x021138ac
+
+src/unnamed/ov032/data_ov032_02113998.c:
+    complete
+    .data start:0x02113998 end:0x021139a4

@@ -909,34 +909,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@678",
+      "from": "@686",
       "to": "@620",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @680 to @626 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @626 to @623 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @623 to @660 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @660 to @672 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @672 to @677 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
-    },
-    {
-      "from": "@679",
-      "to": "@737",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @681 to @627 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @627 to @624 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @624 to @661 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @661 to @673 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @673 to @678 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
-    },
-    {
-      "from": "@681",
-      "to": "data_ov090_021342c0",
-      "evidence": "compiler PMF literal {InitStateSwim, 0} copied by __sinit into the swim row; retail word at 0x021342c0 is 0x02133290"
-    },
-    {
-      "from": "@683",
-      "to": "data_ov090_021342b8",
-      "evidence": "compiler PMF literal {StateSwim, 0} copied by __sinit; retail word at 0x021342b8 is 0x02133200"
-    },
-    {
-      "from": "@685",
-      "to": "data_ov090_021342d0",
-      "evidence": "compiler PMF literal {InitStatePause, 0}; retail word at 0x021342d0 is 0x021331c4"
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @680 to @626 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @626 to @623 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @623 to @660 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @660 to @672 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @672 to @677 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@687",
+      "to": "@737",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @681 to @627 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @627 to @624 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @624 to @661 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @661 to @673 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @673 to @678 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@689",
+      "to": "data_ov090_021342c0",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {InitStateSwim, 0} copied by __sinit into the swim row; retail word at 0x021342c0 is 0x02133290"
+    },
+    {
+      "from": "@691",
+      "to": "data_ov090_021342b8",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateSwim, 0} copied by __sinit; retail word at 0x021342b8 is 0x02133200"
+    },
+    {
+      "from": "@693",
+      "to": "data_ov090_021342d0",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {InitStatePause, 0}; retail word at 0x021342d0 is 0x021331c4"
+    },
+    {
+      "from": "@695",
       "to": "data_ov090_021342c8",
-      "evidence": "compiler PMF literal {StatePause, 0}; retail word at 0x021342c8 is 0x02133190"
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StatePause, 0}; retail word at 0x021342c8 is 0x02133190"
     }
   ],
   "rodata": null

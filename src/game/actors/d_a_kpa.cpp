@@ -3082,9 +3082,8 @@ extern SharedFilePtr *const data_ov060_0211927c[] = {&data_ov060_0211ac40, &data
 /* Arena-tilt rows: sign, scale and end frame; the final row's zero end frame
  * terminates the walk. */
 extern const short sBowsertiltPlatformData[][3] = {
-    {1, 10, 40},     {0, 0, 74},      {-1, -10, 114}, {1, -20, 134},
-    {-1, 20, 154},   {1, 40, 164},    {-1, -40, 174}, {1, -80, 179},
-    {-1, 80, 184},   {1, 160, 186},   {-1, -160, 186}, {1, 0, 0},
+    {1, 10, 40},    {0, 0, 74},    {-1, -10, 114}, {1, -20, 134}, {-1, 20, 154},   {1, 40, 164},
+    {-1, -40, 174}, {1, -80, 179}, {-1, 80, 184},  {1, 160, 186}, {-1, -160, 186}, {1, 0, 0},
 };
 extern SharedFilePtr *const data_ov060_021192dc[] = {
     &data_ov060_0211ac88, &data_ov060_0211ac50, &data_ov060_0211ac58, &data_ov060_0211ac60,

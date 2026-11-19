@@ -20,6 +20,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_wc_obj07_AssetId { ASSET_WC_OBJ07_BMD = 0x06d7, ASSET_WC_OBJ07_KCL = 0x06d8 };
 
+#include "SpawnInfo.h"
 #include "daObjWc_Obj07_c.h"
 #include "SharedFilePtr.h"
 
@@ -72,3 +73,6 @@ s32 daObjWc_Obj07_c::CleanupResources() {
    from these: one ctor veneer plus destructor registration per handle. */
 WcObj07ModelFilePtr gWcObj07ModelFile(ASSET_WC_OBJ07_BMD);
 WcObj07CollisionFilePtr gWcObj07CollisionFile(ASSET_WC_OBJ07_KCL);
+
+extern "C" SpawnInfo<daObjWc_Obj07_c> g_profile_WC_UKISIMA = {
+    daObjWc_Obj07_c_classInit, 94, 270, 0x00000002, 0x00000000, 0x00110000, 0x01c20000, 0x00640000};

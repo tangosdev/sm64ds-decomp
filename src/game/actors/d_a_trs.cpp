@@ -168,7 +168,6 @@ extern const int data_ov063_0211e1d0[3] = {0x1000, 0xfa0, 0xee0};
 extern int gMusicVolume;
 extern u8 data_0209d660;
 extern TrsAngleTable sBooHitRotations;
-extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 void func_02012694(unsigned int a, const Vector3 *p);
 extern void func_020167a4(dExtAnmModel_c *model);

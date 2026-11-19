@@ -10,7 +10,7 @@ src/game/actors/d_a_obj_c1_trap.cpp:
     .text start:0x021111a0 end:0x021119d0
     .init start:0x0211203c end:0x0211211c
     .ctor start:0x0211219c end:0x021121a0
-    .data start:0x02112a78 end:0x02112aa0
+    .data start:0x02112a78 end:0x02112b64
     .bss start:0x02112d00 end:0x02112d50
     .data.c1TrapClps start:0x021122f8 end:0x02112310
 
@@ -20,6 +20,8 @@ src/game/actors/d_a_obj_c1_hikari.cpp:
     .init start:0x0211211c end:0x0211215c
     .ctor start:0x021121a0 end:0x021121a4
     .bss start:0x02112d50 end:0x02112d64
+    .data start:0x02112b64 end:0x02112c24
+
 
 src/game/actors/d_a_obj_c1_peach.cpp:
     complete
@@ -27,11 +29,19 @@ src/game/actors/d_a_obj_c1_peach.cpp:
     .init start:0x0211215c end:0x0211219c
     .ctor start:0x021121a4 end:0x021121a8
     .bss start:0x02112d64 end:0x02112d78
+    .data start:0x02112c24 end:0x02112ce4
+
+src/unnamed/ov010/data_ov010_02112ce4.c:
+    complete
+    .data start:0x02112ce4 end:0x02112d00
+
 
 src/unnamed/ov010/data_ov010.c:
     complete
+    .data.c1TrapClpsPre start:0x021121c0 end:0x021122f8
     .data start:0x02112318 end:0x02112a78
 
 src/unnamed/ov010/data_ov010_02112d78.c:
     complete
     .bss start:0x02112d78 end:0x02112d80
+

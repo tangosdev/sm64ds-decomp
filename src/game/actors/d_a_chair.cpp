@@ -27,6 +27,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 
+#include "SpawnInfo.h"
 #include "common.h"
 #include "nitro/fx/fx.h"
 #include "daChair_c.h"
@@ -388,3 +389,6 @@ void daChair_c::State3() {
 }
 
 ChairModelFilePtr data_ov020_02114af0(ASSET_CHAIR_BMD);
+
+extern "C" SpawnInfo<daChair_c> g_profile_CHAIR = {
+    daChair_c_classInit, 326, 326, 0x00000002, 0x00064000, 0x00064000, 0x01000000, 0x01000000};

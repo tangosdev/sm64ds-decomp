@@ -1636,9 +1636,9 @@
       "source": "0x02135050",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov010_02112b08",
+      "symbol": "data_ov022_02112b08",
       "addend": 0,
-      "target_module": "overlays(10,18,22,24,26,29,32,35,36,45,56)",
+      "target_module": "overlays(18,22,24,26,29,32,35,36,45,56)",
       "target_address": "0x02112b08"
     },
     {

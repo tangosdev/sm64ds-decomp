@@ -65,10 +65,12 @@ src/game/actors/d_a_obj_wc_obj06.cpp:
 
 src/game/actors/d_a_obj_wc_obj07.cpp:
     complete
+    .data.gap3 start:0x02113fe0 end:0x02114098
     .text start:0x02112080 end:0x021121a4
     .init start:0x02112d24 end:0x02112d90
     .ctor start:0x02112e7c end:0x02112e80
     .data.data_ov029_02113fc4 start:0x02113fc4 end:0x02113fc8
+    .data.gap2 start:0x02113fc8 end:0x02113fd4
     .data.data_ov029_02113fd4 start:0x02113fd4 end:0x02113fe0
     .bss start:0x021142d4 end:0x021142fc
 
@@ -101,3 +103,19 @@ src/unnamed/ov029/data_ov029_rodata.c:
 src/unnamed/ov029/data_ov029_02113cd4.c:
     complete
     .data start:0x02113cd4 end:0x02113cf0
+
+src/unnamed/ov029/data_ov029_02113c14.c:
+    complete
+    .data start:0x02113c14 end:0x02113c20
+
+src/unnamed/ov029/data_ov029_02113c28.c:
+    complete
+    .data start:0x02113c28 end:0x02113c2c
+
+src/unnamed/ov029/data_ov029_02113da8.c:
+    complete
+    .data start:0x02113da8 end:0x02113db4
+
+src/unnamed/ov029/data_ov029_02113e6c.c:
+    complete
+    .data start:0x02113e6c end:0x02113e74

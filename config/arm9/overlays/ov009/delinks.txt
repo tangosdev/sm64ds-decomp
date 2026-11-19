@@ -24,6 +24,7 @@ src/game/actors/d_a_obj_mc_water.cpp:
     .init start:0x02112524 end:0x02112a5c
     .ctor start:0x02112b38 end:0x02112b3c
     .data.data_ov009_02112bc4 start:0x02112bc4 end:0x02112bdc
+    .data.gap2 start:0x02112c18 end:0x02112c38
     .data.data_ov009_02112c38 start:0x02112c38 end:0x02112c58
     .bss start:0x02113c68 end:0x02113e88
 
@@ -48,6 +49,8 @@ src/unnamed/ov009/data_ov009_bss.c:
 
 src/unnamed/ov009/data_ov009_02112c58.c:
     complete
+    .data.gap0 start:0x02112b60 end:0x02112bc4
+    .data.gap1 start:0x02112bdc end:0x02112bf8
     .data start:0x02112c58 end:0x021138fc
 
 src/unnamed/ov009/data_ov009_rodata.c:
@@ -57,3 +60,15 @@ src/unnamed/ov009/data_ov009_rodata.c:
 src/unnamed/ov009/data_ov009_02113b80.c:
     complete
     .data start:0x02113b80 end:0x02113b90
+
+src/unnamed/ov009/data_ov009_02113a00.c:
+    complete
+    .data start:0x02113a00 end:0x02113a18
+
+src/unnamed/ov009/data_ov009_02113aa0.c:
+    complete
+    .data start:0x02113aa0 end:0x02113aa4
+
+src/unnamed/ov009/data_ov009_02113b90.c:
+    complete
+    .data start:0x02113b90 end:0x02113ba0

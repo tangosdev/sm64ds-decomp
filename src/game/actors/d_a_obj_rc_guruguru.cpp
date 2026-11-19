@@ -25,6 +25,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_rc_guruguru_AssetId { ASSET_RC_GURUGURU_BMD = 0x06a4, ASSET_RC_GURUGURU_KCL = 0x06a5 };
 
+#include "SpawnInfo.h"
 #include "daObjRc_Guruguru_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -173,3 +174,12 @@ RcGuruguruAssets data_ov036_02113d78 = {
     &gRcGuruguruCollisionFile,
     reinterpret_cast<CLPS_Block *>(data_ov036_02112ac8),
 };
+
+extern "C" SpawnInfo<daObjRc_Guruguru_c> g_profile_RC_GURUGURU = {daObjRc_Guruguru_c_classInit,
+                                                                  132,
+                                                                  262,
+                                                                  0x00000002,
+                                                                  0x00000000,
+                                                                  0x00800000,
+                                                                  0x02000000,
+                                                                  0x00000000};

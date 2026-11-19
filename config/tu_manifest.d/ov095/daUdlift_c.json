@@ -726,59 +726,59 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@661",
+      "from": "@671",
       "to": "@100",
-      "evidence": "mwcc numbers this registration node @744 per TU and the fleet already defines a global @744, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @730 to @661 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@662",
-      "to": "@101",
-      "evidence": "mwcc numbers this registration node @745 per TU and the fleet already defines a global @745, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @731 to @662 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@663",
-      "to": "@102",
-      "evidence": "mwcc numbers this registration node @746 per TU and the fleet already defines a global @746, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @732 to @663 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@664",
-      "to": "@103",
-      "evidence": "mwcc numbers this registration node @747 per TU and the fleet already defines a global @747, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @733 to @664 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@665",
-      "to": "@104",
-      "evidence": "mwcc numbers this registration node @748 per TU and the fleet already defines a global @748, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @734 to @665 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@666",
-      "to": "@105",
-      "evidence": "mwcc numbers this registration node @749 per TU and the fleet already defines a global @749, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @735 to @666 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@668",
-      "to": "data_ov095_02137594",
-      "evidence": "compiler PMF literal {StateWait, 0}; retail word at 0x02137594 is 0x02136368"
-    },
-    {
-      "from": "@670",
-      "to": "data_ov095_0213757c",
-      "evidence": "compiler PMF literal {StateMoveUp, 0}; retail word at 0x0213757c is 0x02136298"
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @744 per TU and the fleet already defines a global @744, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @730 to @661 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@672",
-      "to": "data_ov095_02137584",
-      "evidence": "compiler PMF literal {StateMoveDown, 0}; retail word at 0x02137584 is 0x02136178"
+      "to": "@101",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @745 per TU and the fleet already defines a global @745, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @731 to @662 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@673",
+      "to": "@102",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @746 per TU and the fleet already defines a global @746, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @732 to @663 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@674",
-      "to": "data_ov095_0213758c",
-      "evidence": "compiler PMF literal {StateStop, 0}; retail word at 0x0213758c is 0x02136090"
+      "to": "@103",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @747 per TU and the fleet already defines a global @747, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @733 to @664 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@675",
+      "to": "@104",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @748 per TU and the fleet already defines a global @748, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @734 to @665 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@676",
+      "to": "@105",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @749 per TU and the fleet already defines a global @749, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @735 to @666 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@678",
+      "to": "data_ov095_02137594",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateWait, 0}; retail word at 0x02137594 is 0x02136368"
+    },
+    {
+      "from": "@680",
+      "to": "data_ov095_0213757c",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateMoveUp, 0}; retail word at 0x0213757c is 0x02136298"
+    },
+    {
+      "from": "@682",
+      "to": "data_ov095_02137584",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateMoveDown, 0}; retail word at 0x02137584 is 0x02136178"
+    },
+    {
+      "from": "@684",
+      "to": "data_ov095_0213758c",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateStop, 0}; retail word at 0x0213758c is 0x02136090"
+    },
+    {
+      "from": "@686",
       "to": "data_ov095_0213759c",
-      "evidence": "compiler PMF literal {StateStopAtBottom, 0}; retail word at 0x0213759c is 0x02136104"
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateStopAtBottom, 0}; retail word at 0x0213759c is 0x02136104"
     }
   ],
   "symbol_binding_rewrites": [

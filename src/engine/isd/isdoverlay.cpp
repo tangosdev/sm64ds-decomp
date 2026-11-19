@@ -137,7 +137,7 @@ void OverlayTable::func_0206d940(u32 nIndex) {
     unsigned int n;
     int i;
     if (nIndex > this->m_header.m_nInfoCount) {
-        cstd::__assert(data_020868fc, 66, &data_02086a30, 1);
+        cstd::__assert(data_020868fc, 66, data_02086a30, 1);
     }
     n = this->m_header.m_nInfoCount;
     if (n - nIndex != 0) {
@@ -151,7 +151,7 @@ void OverlayTable::func_0206d940(u32 nIndex) {
 void OverlayTable::func_0206d8c4(u32 nIndex) {
     unsigned int n;
     if (nIndex >= this->m_header.m_nInfoCount) {
-        cstd::__assert(data_020868fc, 85, &data_02086a08, 1);
+        cstd::__assert(data_020868fc, 85, data_02086a08, 1);
     }
     this->m_header.m_nInfoCount--;
     for (n = this->m_header.m_nInfoCount; nIndex < n; nIndex++)
@@ -243,7 +243,7 @@ int _ISDbgLib_RegistOverlayInfo(OVERLAYPROC type, u32 nVMA, u32 lma, u32 size) {
                         cstd::__assert(data_020868fc, 295, data_020869bc, 1);
                     }
                     if (!(pInfo->m_info[j].m_SIZE < 0xf0000000)) {
-                        cstd::__assert(data_020868fc, 296, &data_020869dc, 1);
+                        cstd::__assert(data_020868fc, 296, data_020869dc, 1);
                     }
                     break;
                 }

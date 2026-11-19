@@ -32,6 +32,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_c1_hikari_AssetId { ASSET_C1_HIKARI_BMD = 0x05ad };
 
+#include "SpawnInfo.h"
 #include "daObjC1Hikari_c.h"
 #include "Message.h"
 #include "daPly_c.h"
@@ -191,3 +192,6 @@ void daObjC1Hikari_c::UpdateModelTransform() {
  * registers its destructor; the registration node is a compiler
  * temporary. */
 C1HikariModelFilePtr gC1HikariModelFile(ASSET_C1_HIKARI_BMD);
+
+extern "C" SpawnInfo<daObjC1Hikari_c> g_profile_C1_HIKARI = {
+    daObjC1Hikari_c_classInit, 37, 324, 0x00000003, 0x00000000, 0x007d0000, 0x00fa0000, 0x00000000};

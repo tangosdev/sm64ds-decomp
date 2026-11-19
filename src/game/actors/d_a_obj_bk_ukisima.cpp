@@ -22,6 +22,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_bk_ukisima_AssetId { ASSET_BK_UKISIMA_BMD = 0x05a1, ASSET_BK_UKISIMA_KCL = 0x05a2 };
 
+#include "SpawnInfo.h"
 #include "daObjBk_Ukisima_c.h"
 #include "SharedFilePtr.h"
 
@@ -78,3 +79,12 @@ ResourceDescriptor data_ov015_021147a4 = {
     &gBkUkisimaCollisionFile,
     &data_ov015_02113614,
 };
+
+extern "C" SpawnInfo<daObjBk_Ukisima_c> g_profile_BK_UKISIMA = {daObjBk_Ukisima_c_classInit,
+                                                                50,
+                                                                203,
+                                                                0x00000002,
+                                                                0x003e8000,
+                                                                0x007d0000,
+                                                                0x02000000,
+                                                                0x00cd0000};
