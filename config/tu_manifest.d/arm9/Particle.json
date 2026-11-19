@@ -261,7 +261,7 @@
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
     "SysTracker is the single particle-engine owner living in the global at gParticleControl: mContents (a 0x748-byte registry), the 0x750..0x81c callback bank, mManager, and the resource-file pointer. The constructor emits the callback-bank member construction and vptr writes before its field writes; C2/D2 variants are emitted and deadstripped.",
     "System::New is the front door every wrapper reaches: it resolves uniqueID through Contents::FindData, refreshes the entry's System position/direction and fires the entry callback's SpawnParticles virtual, or falls through to Contents::Create. The seven fixed-effect-id wrappers (RunningSlidingDust, simple callbacks at 0x75c/0x774/0x780/0x798/0x7a4/0x7b0/0x7c0/0x7d0/0x7e0 slots, big splash, ripple, weather, callback_818, and the 0x7f0..0x808 bank) stay extern \"C\" under their ROM identifiers.",
-    "func_02023178 is the bump allocator Initialise passes to the manager factory func_0204a4c8 (whose first parameter is char*(*)(int)); it advances sParticleHeapCursor.",
+    "func_02023178 is the bump allocator Initialise passes to the manager factory SPLManager_New (whose first parameter is char*(*)(int)); it advances sParticleHeapCursor.",
     "mwccarm emits .text in reverse source order in this TU, so definitions run ROM-descending in the file; the manifest function list stays ROM-ascending."
   ],
   "verification": {

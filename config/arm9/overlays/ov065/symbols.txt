@@ -141,9 +141,9 @@ data_ov065_0211c078 kind:data(any) addr:0x0211c078
 data_ov065_0211c080 kind:data(any) addr:0x0211c080
 data_ov065_0211c08c kind:data(any) addr:0x0211c08c
 data_ov065_0211c0a8 kind:data(any) addr:0x0211c0a8
-data_ov065_0211c0b0 kind:data(any) addr:0x0211c0b0
+sTTCPendulumInitialAccels kind:data(any) addr:0x0211c0b0
 data_ov065_0211c0b8 kind:data(any) addr:0x0211c0b8
-data_ov065_0211c0c8 kind:data(any) addr:0x0211c0c8
+sTTCMovingBarDelays kind:data(any) addr:0x0211c0c8
 data_ov065_0211c0d0 kind:data(any) addr:0x0211c0d0
 data_ov065_0211c0d4 kind:data(any) addr:0x0211c0d4
 __sinit_d_a_yurei_mucho.cpp kind:function(arm,size=0x198) addr:0x0211c110
@@ -209,7 +209,7 @@ data_ov065_0211cf24 kind:data(any) addr:0x0211cf24
 data_ov065_0211cf44 kind:data(any) addr:0x0211cf44
 data_ov065_0211cf64 kind:data(any) addr:0x0211cf64
 data_ov065_0211cf84 kind:data(any) addr:0x0211cf84
-data_ov065_0211cfa4 kind:data(any) addr:0x0211cfa4
+sTTCRotatingSolidInitialDelays kind:data(any) addr:0x0211cfa4
 data_ov065_0211cfa8 kind:data(any) addr:0x0211cfa8
 _ZTI20daObjCtRotateBlock_c kind:data(any) addr:0x0211cfac
 _ZTS20daObjCtRotateBlock_c kind:data(any) addr:0x0211cfb8
