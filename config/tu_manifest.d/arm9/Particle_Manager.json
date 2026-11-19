@@ -6,10 +6,10 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "Contiguous .text 0x02049d60..0x0204a5bc. Nine functions tile the span with no hole and no tail: func_02049d60, func_02049d78, Particle::Manager::AddSystem, func_02049ee8, func_02049f58, func_0204a028, func_0204a0dc, func_0204a17c, func_0204a4c8.",
+    "Contiguous .text 0x02049d60..0x0204a5bc. Nine functions tile the span with no hole and no tail: func_02049d60, func_02049d78, Particle::Manager::AddSystem, func_02049ee8, SPLManager_Update, SPLManager_UploadPalettesEx, SPLManager_UploadTexturesEx, SPLManager_LoadResources, SPLManager_New.",
     "TOP EDGE: func_02049cd8 (0x02049cd8..0x02049d60) is the sound-context switch Sound.cpp calls (data_020a4c64 / data_020a4c70). It is not a Particle::Manager method.",
     "BOTTOM EDGE: SPLEmitter_Emit (0x0204a5bc..0x0204a5c8) is a 12-byte tail veneer to SPLEmitter_EmitParticles. Its arguments are (system, list), not the manager, and the system draw/update helpers continue from SPLManager_DoDraw.",
-    "Every function in the span takes the 0x3c manager (or returns one). Initialise calls func_0204a4c8 then func_0204a17c, func_0204a0dc and func_0204a028; SysTracker::Update calls func_02049f58; RenderAll calls func_02049ee8; dPa_c callbacks call func_02049d60; ov007 calls func_02049d78 to retire a system. AddSystem is the named spawn in the middle of that run.",
+    "Every function in the span takes the 0x3c manager (or returns one). Initialise calls SPLManager_New then SPLManager_LoadResources, SPLManager_UploadTexturesEx and SPLManager_UploadPalettesEx; SysTracker::Update calls SPLManager_Update; RenderAll calls func_02049ee8; dPa_c callbacks call func_02049d60; ov007 calls func_02049d78 to retire a system. AddSystem is the named spawn in the middle of that run.",
     "The callees AddSystem names are outside the span: SPLEmitter_Init at 0x0204ae2c, SPLList_PopFront at 0x0204d958, SPLList_PushFront at 0x0204d9a0. Particle.cpp is 0x020226d4..0x020233d4 and Particle_Behavior.cpp is 0x0204d4d0..0x0204d8e8, so this run is its own TU."
   ],
   "sections": [
@@ -49,35 +49,35 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_02049f58",
+      "symbol": "SPLManager_Update",
       "address": "0x02049f58",
       "size": "0xd0",
       "legacy_source": "src/unnamed/arm9/0204/func_02049f58.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_0204a028",
+      "symbol": "SPLManager_UploadPalettesEx",
       "address": "0x0204a028",
       "size": "0xb4",
       "legacy_source": "src/unnamed/arm9/0204/func_0204a028.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_0204a0dc",
+      "symbol": "SPLManager_UploadTexturesEx",
       "address": "0x0204a0dc",
       "size": "0xa0",
       "legacy_source": "src/unnamed/arm9/0204/func_0204a0dc.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_0204a17c",
+      "symbol": "SPLManager_LoadResources",
       "address": "0x0204a17c",
       "size": "0x34c",
       "legacy_source": "src/unnamed/arm9/0204/func_0204a17c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_0204a4c8",
+      "symbol": "SPLManager_New",
       "address": "0x0204a4c8",
       "size": "0xf4",
       "legacy_source": "src/unnamed/arm9/0204/func_0204a4c8.c",

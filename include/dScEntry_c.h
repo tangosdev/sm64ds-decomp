@@ -166,6 +166,21 @@ extern dScEntry_c::StepSet EntryDelaySteps;
 extern dScEntry_c::StepSet EntryFadeOutSteps;
 extern dScEntry_c::StepSet data_ov075_0211d930;
 
+/* A touch icon's width and height, in pixels. d_s_entry.cpp defines the
+ * per-language tables the sound-settings and type icons are sized from;
+ * d_s_entry_methods.cpp reads the widths when it places the two sound
+ * settings icons. */
+struct EntryPair {
+    short w;
+    short h;
+    EntryPair(int pw, int ph) : w((short)pw), h((short)ph) {}
+    ~EntryPair();
+};
+extern "C" EntryPair data_ov075_0211d948[];
+extern "C" EntryPair data_ov075_0211d72c[];
+extern "C" EntryPair data_ov075_0211d740[];
+extern "C" EntryPair data_ov075_0211d754[];
+
 struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
     void *compressedBg2Screen; /* 0x04 */
     dScEntry_c *entryScene;    /* 0x08 -- the scene whose icons GraphCallback2 renders */

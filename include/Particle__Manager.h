@@ -11,7 +11,7 @@ namespace Particle {
 struct System;
 
 /* One 0x20-byte entry in the manager's effect-definition table, filled by
-   func_0204a17c from the particle resource. Each pointer addresses a record
+   SPLManager_LoadResources from the particle resource. Each pointer addresses a record
    inside the resource; an optional record's pointer is 0 when the matching
    bit of data->flags is clear. */
 struct SystemDefinition {
@@ -42,16 +42,16 @@ struct Manager {
         s32 count;    /* 0x04 */
     };
 
-    /* func_0204a4c8 fills this with `b` nodes of 0x44 bytes, and func_02049d60
+    /* SPLManager_New fills this with `b` nodes of 0x44 bytes, and func_02049d60
        hands it to a system. The node is not Particle::Element (0x30). */
     struct FreeList {
         void *head; /* 0x00 */
         s32 count;  /* 0x04 */
     };
 
-    /* One 0x14-byte texture slot. func_0204a17c points `resource` at the
+    /* One 0x14-byte texture slot. SPLManager_LoadResources points `resource` at the
        texture's record in the particle resource and decodes its size;
-       func_0204a0dc and func_0204a028 store the VRAM addresses that
+       SPLManager_UploadTexturesEx and SPLManager_UploadPalettesEx store the VRAM addresses that
        Texture::AllocTexVram and Texture::AllocPalVram return. */
     struct TextureEntry {
         struct Resource {

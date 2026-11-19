@@ -1102,7 +1102,7 @@ extern u8 gMeterShownHealth;
 extern unsigned char gShowRaceTimer;
 extern struct P2 data_ov002_0210a084;
 extern struct P2 data_ov002_0210a34c;
-extern char *gPlayers[];
+extern daPly_c *gPlayers[];
 }
 
 extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
@@ -16585,10 +16585,9 @@ void daPly_c::func_ov002_020dd908() {
     if (!IsVsMode())
         return;
     for (i = 0; i < gNumPlayers; i++) {
-        char *o = gPlayers[i];
-        daPly_c *player = (daPly_c *)o;
+        daPly_c *player = gPlayers[i];
         int *p;
-        if (o == 0)
+        if (player == 0)
             continue;
         if (player->mClimbClsn == 0)
             continue;
