@@ -15,7 +15,7 @@ extern void SPLDraw_Child_DirectionalBillboard(void *self, void *node);
  * texture rebind each particle's own before drawing it
  * (SPLUtil_SetTexture_Stub is the no-op). pret's SPL splits this into SPLManager_DrawParticles and
  * SPLManager_DrawChildParticles. */
-void func_0204a5c8(char *self) {
+void SPLManager_DoDraw(char *self) {
     ManagerView *mgr = (ManagerView *)self;
     ParticleSystem *system = mgr->mCurrentSystem;
     PtclDef *def = system->mDefinition;

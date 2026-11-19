@@ -12,7 +12,7 @@ extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix *
 extern void SPLUtil_DrawXYPlane(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one particle as a quad stretched along its flight (draw type 1,
- * func_0204a5c8): alpha and the next polygon ID into POLYGON_ATTR (nothing
+ * SPLManager_DoDraw): alpha and the next polygon ID into POLYGON_ATTR (nothing
  * more when the alpha is 0); the quad's x axis is velocity x the view's z
  * axis turned into view space (nothing is drawn when they are parallel), y
  * at right angles to it, scaled by scale * animScale (x by aspectRatio too,
