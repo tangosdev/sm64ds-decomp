@@ -292,13 +292,13 @@ void daGmch_c::CheckPlayerContact()
 }
 
 /* Adjust vertical speed from the floor normal; callers need no result. */
-void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
+void daGmch_c::ApplySlopeToVertSpeed(dBgCh_Actr *clsn)
 {
     Vector3 floorNormal;
     Vector3 wallNormal;
     func_02038414(clsn);
-    if (((dBgCh_Actr *)clsn)->IsOnGround()) {
-        ((dBgCh_Actr *)clsn)->GetFloorResult()->surface.CopyNormalTo(floorNormal);
+    if (clsn->IsOnGround()) {
+        clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
             /* mSpeed.x / mSpeed.z: world velocity X/Z next to mSpeed.y. */
             s32 velX = mSpeed.x;
@@ -310,8 +310,8 @@ void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
             mSpeed.y = -(slope + 0x8000);
         }
     }
-    if (((dBgCh_Actr *)clsn)->IsOnWall()) {
-        ((dBgCh_Actr *)clsn)->GetWallResult()->surface.CopyNormalTo(wallNormal);
+    if (clsn->IsOnWall()) {
+        clsn->GetWallResult()->surface.CopyNormalTo(wallNormal);
     }
 }
 

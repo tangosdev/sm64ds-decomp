@@ -13098,7 +13098,7 @@ int daPly_c::func_ov002_020d6790() {
 int daPly_c::func_ov002_020d6998() {
     typedef int (*VFunc)(void*);
     s16 saved;
-    void* other;
+    dActor_c *other;
     u32 id;
 
     if (func_ov002_020bea7c()) {
@@ -13127,9 +13127,9 @@ int daPly_c::func_ov002_020d6998() {
         if (id != 0) {
             other = dActor_c::FindWithID(id);
             if (other != 0 && other != this) {
-                if (IsCollectingCap() == 0 && ((dActor_c *)other)->OnYoshiTryEat() != 0) {
-                    if (IsPlayerActor((dActor_c *)other)) {
-                        if (((dActor_c *)other)->param1 == 3) {
+                if (IsCollectingCap() == 0 && other->OnYoshiTryEat() != 0) {
+                    if (IsPlayerActor(other)) {
+                        if (other->param1 == 3) {
                             if (func_ov002_020d6c60((daPly_c *)other) != 0)
                                 return 1;
                         } else {
@@ -13139,7 +13139,7 @@ int daPly_c::func_ov002_020d6998() {
                             s16 angle;
                             int idx;
 
-                            angle = Vec3_HorzAngle(&((dActor_c *)other)->mPos, &mPos);
+                            angle = Vec3_HorzAngle(&other->mPos, &mPos);
                             idx = ((u16)angle >> 4) * 2;
 
                             pos16.x = FX_SinCosTable_[idx];
@@ -13150,7 +13150,7 @@ int daPly_c::func_ov002_020d6998() {
                             rotSrc.y = 0x32000;
                             rotSrc.z = 0x32000;
 
-                            Vec3_RotateYAndTranslate(&out, &((dActor_c *)other)->mPos, angle,
+                            Vec3_RotateYAndTranslate(&out, &other->mPos, angle,
                                                      &rotSrc);
 
                             Particle::System::New(0, kPtclTongueHitA, out.x, out.y, out.z,
@@ -13161,7 +13161,7 @@ int daPly_c::func_ov002_020d6998() {
                     } else {
                         int r;
                         if (func_ov002_020d7030(other) != 0) {
-                            r = ((dActor_c *)other)->OnYoshiTryEat();
+                            r = other->OnYoshiTryEat();
                             if (r == 4)
                                 DisableInteraction();
                             return 1;
@@ -13188,7 +13188,7 @@ int daPly_c::func_ov002_020d6c60(daPly_c *other) {
     Vector3 v;
     int b;
     int y;
-    void *sp;
+    dActor_c *sp;
     if (other->func_ov002_020d82f0() == 0 || HasObjInMouth(other))
         return 0;
     b = (other->mCharacter != other->param1);
@@ -13276,12 +13276,12 @@ int daPly_c::TongueWallProbe() {
     return 1;
 }
 
-int daPly_c::func_ov002_020d7030(void *b) {
-    if (IsFlagSet((dActor_c *)b, 0x60000))
+int daPly_c::func_ov002_020d7030(dActor_c *b) {
+    if (IsFlagSet(b, 0x60000))
         return 0;
-    ((dActor_c *)b)->mFlags |= 0x20000;
-    ((dActor_c *)b)->mEatingPlayer = this;
-    mObjInMouth = (dActor_c *)b;
+    b->mFlags |= 0x20000;
+    b->mEatingPlayer = this;
+    mObjInMouth = b;
     func_ov002_020d71ec(1);
     return 1;
 }

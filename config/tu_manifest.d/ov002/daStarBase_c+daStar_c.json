@@ -180,14 +180,14 @@
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8daStar_c17PlaceCameraOnRingEPv",
+      "symbol": "_ZN8daStar_c17PlaceCameraOnRingEP9dCamera_c",
       "address": "0x020e7934",
       "size": "0x0000035c",
       "legacy_source": "src/PlaceCameraOnRing.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN8daStar_c23PlaceCameraAtStarCameraEPv",
+      "symbol": "_ZN8daStar_c23PlaceCameraAtStarCameraEP9dCamera_c",
       "address": "0x020e7c90",
       "size": "0x00000078",
       "legacy_source": "src/PlaceCameraAtStarCamera.cpp",
@@ -341,7 +341,7 @@
       "ordinal": 42
     },
     {
-      "symbol": "_ZN8daStar_c12CollectByEggEi",
+      "symbol": "_ZN8daStar_c12CollectByEggEP7daPly_c",
       "address": "0x020e8e80",
       "size": "0x0000005c",
       "legacy_source": "src/CollectByEgg.c",
@@ -362,7 +362,7 @@
       "ordinal": 45
     },
     {
-      "symbol": "_ZN8daStar_c7CollectEPv",
+      "symbol": "_ZN8daStar_c7CollectEP7daPly_c",
       "address": "0x020e8ef0",
       "size": "0x0000041c",
       "legacy_source": "src/Collect.cpp",

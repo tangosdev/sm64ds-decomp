@@ -2873,7 +2873,7 @@
       "ordinal": 402
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020d7030EPv",
+      "symbol": "_ZN7daPly_c19func_ov002_020d7030EP8dActor_c",
       "address": "0x020d7030",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d7030.cpp",

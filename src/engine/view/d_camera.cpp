@@ -1166,8 +1166,7 @@ void dCamera_c::func_0200c9e0(s32 *minRise, s32 *maxRise) {
  * 0x1c), otherwise a ground check from up to 0x100 units above pos. Records
  * the choice in mAreaMode and mViewObj. Returns the player's ground height,
  * or the floor height when a type-4 view object takes over. */
-int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outFramed) {
-    Vector3 *pos = (Vector3 *)posArg;
+int dCamera_c::func_0200c66c(Vector3 *pos, int *viewArg, int *modeArg, int *outFramed) {
     void **outView = (void **)viewArg;
     void **outMode = (void **)modeArg;
     Vector3 above;
@@ -1269,7 +1268,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
  * mLookTargetPos midway between that point and pos at half their distance.
  * Otherwise the default follow mode maps the other area types to their modes.
  * Returns 0 when the current mode (flag 0x20) or mFlags 0x100 holds the mode. */
-int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outMode,
+int dCamera_c::func_0200c394(int areaType, void *viewArg, Vector3 *pos, void **outMode,
                              int *outFramed) {
     CamViewObj *view = (CamViewObj *)viewArg;
     CamMode *mode = mMode;
@@ -1288,7 +1287,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
         } else {
             SetVec(mLookTargetPos, view->x << 12, view->y << 12, view->z << 12);
         }
-        Vec3_Sub(&toFocus, &mLookTargetPos, (const Vector3 *)pos);
+        Vec3_Sub(&toFocus, &mLookTargetPos, pos);
         mFocusDist = VEC_Mag(&toFocus) >> 1;
         signed char level = gCurrentSublevel;
         int inLevel2d = level == 0x2d;
@@ -1305,7 +1304,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
         }
         if (level == 0x2f && mFocusDist > 0xc0000) {
             Vec3_MulScalarInPlace(&toFocus, FX_Div(0xc0000, mFocusDist << 1));
-            Vec3_Add(&focus, (const Vector3 *)pos, &toFocus);
+            Vec3_Add(&focus, pos, &toFocus);
             mLookTargetPos = focus;
             mFocusDist = 0xc0000;
         } else {

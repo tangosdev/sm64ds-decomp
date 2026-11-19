@@ -1667,7 +1667,7 @@ void daStar_c::CheckPickup() {
         if (b->mIsNoControl != 0) return;
         if (Event::GetBit(0x1e) != 0)
             return;
-        if (Collect(o) == 0)
+        if (Collect(b) == 0)
             return;
         if (mKind != KIND_6) return;
         o = dActor_c::FindWithID(mMarkerID);
@@ -1691,7 +1691,7 @@ void daStar_c::CheckPickup() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 46 -- Collect, 0x020e8ef0, size 0x41c */
 /* -------------------------------------------------------------------------- */
-/* Collects the star for player p. Unlinks the marker and moves to
+/* Collects the star for player. Unlinks the marker and moves to
  * STATE_TOUCHED. A silver star taken on a shell goes to STATE_SPIN_AND_END.
  * Otherwise the player is put in the no-control state for the talk state
  * PickTalkState gives (with message 0x186 for star id 0 or 0x187 for the
@@ -1700,7 +1700,7 @@ void daStar_c::CheckPickup() {
  * record). The star plays sound 0x2d, enters STATE_COLLECT_BEGIN with the
  * cutscene bits set, and a Power Star with a non-zero talk state heals the
  * player (0x880). Returns 0 when the player cannot be put in the state. */
-int daStar_c::Collect(void *p) {
+int daStar_c::Collect(daPly_c *player) {
     void* found;
     int r5;
     u8 r4;
@@ -1711,9 +1711,9 @@ int daStar_c::Collect(void *p) {
     if (found) {
         ((daStarBase_c *)((char *)found))->LinkSilverStarAndStarMarker(0);
     }
-    mPlayer = (daPly_c *)p;
+    mPlayer = player;
 
-    if (((daPly_c *)p)->IsOnShell() != 0) {
+    if (player->IsOnShell() != 0) {
         if (IsActorID(this, ACTOR_SILVER_STAR)) {
             mState = STATE_SPIN_AND_END;
             mBits.collectedModel = 0;
@@ -1737,18 +1737,18 @@ int daStar_c::Collect(void *p) {
         if (r4 != 0 && !(t1 = (gGameMode == 1)) && !(t2 = (actorID == ACTOR_SILVER_STAR)) &&
             mHomeState != STATE_WAIT_MARKER) {
             if (mStarID == 0) {
-                sb = ((daPly_c *)p)->SetNoControlState(r4, 0x186, 0);
+                sb = player->SetNoControlState(r4, 0x186, 0);
                 Message::PrepareTalk();
                 r5 = 1;
             } else if (func_ov002_020e9630() != 0) {
-                sb = ((daPly_c *)p)->SetNoControlState(r4, 0x187, 0);
+                sb = player->SetNoControlState(r4, 0x187, 0);
                 Message::PrepareTalk();
                 r5 = 1;
             } else {
-                sb = ((daPly_c *)p)->SetNoControlState(r4, -1, 0);
+                sb = player->SetNoControlState(r4, -1, 0);
             }
         } else {
-            sb = ((daPly_c *)p)->SetNoControlState(r4, -1, 0);
+            sb = player->SetNoControlState(r4, -1, 0);
         }
     }
 
@@ -1757,7 +1757,7 @@ int daStar_c::Collect(void *p) {
             if (!IsVsMode()) {
                 Event::SetBit(0x1e);
             } else {
-                GiveVsStars(((daPly_c *)p)->mPlayerNo, 1);
+                GiveVsStars(player->mPlayerNo, 1);
             }
         }
         if (r4 == 0) {
@@ -1785,7 +1785,7 @@ int daStar_c::Collect(void *p) {
                         int rec = SaveData::GetCoinRecord(lvl);
                         if (rec < NumCoins()) {
                             SaveData::SetCoinRecordIfHigher(
-                                lvl, (u8)(gNumCoins[((daPly_c *)p)->mPlayerNo] & 0xff));
+                                lvl, (u8)(gNumCoins[player->mPlayerNo] & 0xff));
                         }
                     }
                 }
@@ -1797,7 +1797,7 @@ int daStar_c::Collect(void *p) {
         }
         func_02012790(0x2d);
         mState = STATE_COLLECT_BEGIN;
-        mPlayer = (daPly_c *)p;
+        mPlayer = player;
         {
             if (!IsVsMode()) {
                 mPlayer->mFlags |= CUTSCENE_FLAG;
@@ -1809,7 +1809,7 @@ int daStar_c::Collect(void *p) {
         mdCc_c.Clear();
         {
             if (IsActorID(this, ACTOR_STAR) && r4 != 0) {
-                ((daPly_c *)p)->Heal(0x880);
+                player->Heal(0x880);
             }
         }
         StopMotion();
@@ -1831,23 +1831,23 @@ s32 daStar_c::OnYoshiTryEat() {
  * Matched byte-for-byte with mwccarm 2004/b56 (ov002).
  */
 void daStar_c::OnTurnIntoEgg(daPly_c &player) {
-    return CollectByEgg((int)&player);
+    return CollectByEgg(&player);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 43 -- CollectByEgg, 0x020e8e80, size 0x5c */
 /* -------------------------------------------------------------------------- */
 /* A Yoshi egg took the star (OnTurnIntoEgg): unlinks the marker, stops the
- * motion, clears the hidden flag and collects the star for player a. */
-void daStar_c::CollectByEgg(int a) {
+ * motion, clears the hidden flag and collects the star for player. */
+void daStar_c::CollectByEgg(daPly_c *player) {
     daStarBase_c *marker = (daStarBase_c *)dActor_c::FindWithID(mMarkerID);
     if (marker != 0)
         marker->LinkSilverStarAndStarMarker(0);
 
-    mPlayer = (daPly_c *)a;
+    mPlayer = player;
     StopMotion();
     mFlags &= ~0x40000;
-    Collect((void *)a);
+    Collect(player);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2452,14 +2452,14 @@ void daStar_c::ProbeGround() {
  * from the position of the marker whose star id matches. Returns 1 when one
  * was found. */
 
-int daStar_c::PlaceCameraAtStarCamera(void *cam) {
+int daStar_c::PlaceCameraAtStarCamera(dCamera_c *cam) {
     dActor_c *a = 0;
     for (;;) {
         a = dActor_c::FindWithActorID(ACTOR_CAMERA_MARKER, a);
         if (a == 0) break;
         if (mStarID == (a->param1 & 0xf)) {
-            ((dCamera_c *)cam)->SetLookAt(mPos);
-            ((dCamera_c *)cam)->SetPos(a->mPos);
+            cam->SetLookAt(mPos);
+            cam->SetPos(a->mPos);
             return 1;
         }
     }
@@ -2474,7 +2474,7 @@ int daStar_c::PlaceCameraAtStarCamera(void *cam) {
  * stepping up or down by 300.0 or 600.0 every four) until the line from the
  * star to the spot is not blocked (dBgCh_Lin). After 20 failures the saved
  * camera position is used. */
-void daStar_c::PlaceCameraOnRing(void *cam) {
+void daStar_c::PlaceCameraOnRing(dCamera_c *cam) {
     Vector3 vec[2];
     int flag;
     int dist;
@@ -2483,7 +2483,7 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
     vec[0].x = mPos.x;
     vec[0].y = mPos.y;
     vec[0].z = mPos.z;
-    ((dCamera_c *)cam)->SetLookAt(vec[0]);
+    cam->SetLookAt(vec[0]);
 
     vec[0].y += 0xc8000;
     vec[1] = vec[0];
@@ -2508,14 +2508,14 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
             short ang = Vec3_HorzAngle(&vec[0], &mCamPos);
             vec[0].x = FX_SinIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4) * 1000 + vec[0].x;
             vec[0].z = FX_CosIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4) * 1000 + vec[0].z;
-            ((dCamera_c *)cam)->SetPos(vec[0]);
+            cam->SetPos(vec[0]);
         } else {
             if (!IsAreaShowing(mAreaId))
                 return;
             short ang = Vec3_HorzAngle(&vec[0], &mCamPos);
             vec[0].x += FX_MUL(dist, FX_SinIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4));
             vec[0].z += FX_MUL(dist, FX_CosIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4));
-            ((dCamera_c *)cam)->SetPos(vec[0]);
+            cam->SetPos(vec[0]);
         }
 
         if (!IsAreaShowing(mAreaId))
@@ -2536,7 +2536,7 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
                 r6 = (r6 + 1) & 0xff;
                 vec[0] = vec[1];
                 if (r6 >= 0x14) {
-                    ((dCamera_c *)cam)->SetPos(mCamPos);
+                    cam->SetPos(mCamPos);
                     return;
                 }
                 continue;

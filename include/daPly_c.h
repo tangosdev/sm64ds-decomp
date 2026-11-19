@@ -1312,7 +1312,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020d674c();
     int func_ov002_020d6790();
     int func_ov002_020d6c60(daPly_c *);
-    int func_ov002_020d7030(void *);
+    int func_ov002_020d7030(dActor_c *);
     void func_ov002_020d71ec(const int);
     void func_ov002_020d80d0();
     void func_ov002_020d8118();

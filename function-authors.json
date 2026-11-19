@@ -575,11 +575,11 @@
     },
     "arm9:0x0200c394": {
       "author": "andrewboudreau",
-      "name": "_ZN9dCamera_c13func_0200c394EiPvS0_PS0_Pi"
+      "name": "_ZN9dCamera_c13func_0200c394EiPvP7Vector3PS0_Pi"
     },
     "arm9:0x0200c66c": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200c66cEPvPiS1_S1_"
+      "name": "_ZN9dCamera_c13func_0200c66cEP7Vector3PiS2_S2_"
     },
     "arm9:0x0200c9e0": {
       "author": "tangosdev",
@@ -15903,7 +15903,7 @@
     },
     "ov002:0x020d7030": {
       "author": "andrewboudreau",
-      "name": "_ZN7daPly_c19func_ov002_020d7030EPv"
+      "name": "_ZN7daPly_c19func_ov002_020d7030EP8dActor_c"
     },
     "ov002:0x020d708c": {
       "author": "ruspecial",
@@ -16867,11 +16867,11 @@
     },
     "ov002:0x020e7934": {
       "author": "andrewboudreau",
-      "name": "_ZN8daStar_c19func_ov002_020e7934EPv"
+      "name": "_ZN8daStar_c17PlaceCameraOnRingEP9dCamera_c"
     },
     "ov002:0x020e7c90": {
       "author": "tangosdev",
-      "name": "_ZN8daStar_c19func_ov002_020e7c90EPv"
+      "name": "_ZN8daStar_c23PlaceCameraAtStarCameraEP9dCamera_c"
     },
     "ov002:0x020e7d08": {
       "author": "tangosdev",
@@ -16959,7 +16959,7 @@
     },
     "ov002:0x020e8e80": {
       "author": "tangosdev",
-      "name": "_ZN8daStar_c19func_ov002_020e8e80Ei"
+      "name": "_ZN8daStar_c12CollectByEggEP7daPly_c"
     },
     "ov002:0x020e8edc": {
       "author": "ruspecial",
@@ -16971,7 +16971,7 @@
     },
     "ov002:0x020e8ef0": {
       "author": "tangosdev",
-      "name": "_ZN8daStar_c19func_ov002_020e8ef0EPv"
+      "name": "_ZN8daStar_c7CollectEP7daPly_c"
     },
     "ov002:0x020e930c": {
       "author": "andrewboudreau",
@@ -41731,7 +41731,7 @@
     },
     "ov081:0x02126950": {
       "author": "tangosdev",
-      "name": "_ZN8daGmch_c21ApplySlopeToVertSpeedEPv"
+      "name": "_ZN8daGmch_c21ApplySlopeToVertSpeedEP10dBgCh_Actr"
     },
     "ov081:0x02126a20": {
       "author": "tangosdev",
