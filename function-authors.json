@@ -19607,7 +19607,7 @@
     },
     "ov004:0x020b4b84": {
       "author": "tangosdev",
-      "name": "_ZN6Sprite11PlacePayoutEP5Vec2i"
+      "name": "_ZN6Sprite11PlacePayoutEP7Vector2"
     },
     "ov004:0x020b4c30": {
       "author": "tangosdev",
@@ -19643,7 +19643,7 @@
     },
     "ov004:0x020b5108": {
       "author": "tangosdev",
-      "name": "_ZN6Sprite6LaunchEP5Vec2i"
+      "name": "_ZN6Sprite6LaunchEP7Vector2"
     },
     "ov004:0x020b51e4": {
       "author": "tangosdev",

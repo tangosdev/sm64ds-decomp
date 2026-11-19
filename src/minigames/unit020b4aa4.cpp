@@ -88,7 +88,8 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
-#include "private/ov006_ec4dc_obj.h"
+#include "Vector2.h"
+#include "Vector2Math.h"
 
 /* One of the twenty records at sMgCoins. Positions are fx32
    screen pixels (Draw puts the sprite at mPos >> 12). */
@@ -102,11 +103,11 @@ struct Sprite {
     void Update();
     void Draw();
     void Hide();
-    void Launch(Vec2i *);
+    void Launch(Vector2 *);
     void SendOff();
     void Spend();
     void Return();
-    void PlacePayout(Vec2i *);
+    void PlacePayout(Vector2 *);
 
     /* The states Update runs through mState. */
     void Move();
@@ -119,9 +120,9 @@ struct Sprite {
     void FlyToCounter();
 
     SpriteFn mState;   /* 0x00 run every frame by Update */
-    Vec2i mPos;        /* 0x08 */
-    Vec2i mTarget;     /* 0x10 */
-    Vec2i mStep;       /* 0x18 per-frame step toward mTarget, both positive */
+    Vector2 mPos;      /* 0x08 */
+    Vector2 mTarget;   /* 0x10 */
+    Vector2 mStep;     /* 0x18 per-frame step toward mTarget, both positive */
     s16 mDelay;        /* 0x20 frames to wait; also the rise counter */
     u8 mVisible;       /* 0x22 drawn while nonzero */
 };
@@ -132,8 +133,6 @@ typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
 
 
 extern "C" {
-extern void Vec2_Sub(void *o, void *a, void *b);
-extern void func_0203d680(void *out, void *in, int scale);
 extern int GetGameLanguage(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 
@@ -377,7 +376,7 @@ void MgCoins_AddBetCoin(void) {
    (index * 16 + 8, -Mg_GetTopScreenYOffset() - 16) until all sprites in play
    are out. */
 void MgCoins_StepLaunch(void) {
-    Vec2i in;
+    Vector2 in;
     int n;
     int idx;
     if (gMgCoinsInPlay <= sMgCoinsIndex) return;
@@ -405,8 +404,8 @@ void MgCoins_StepLaunch(void) {
    sprites wait 0x18 frames and play the sound; the rest go one per frame,
    with no wait or sound. */
 void MgCoins_StepLaunchQuick(void) {
-    Vec2i inA;
-    Vec2i inB;
+    Vector2 inA;
+    Vector2 inB;
     if (gMgCoinsInPlay <= sMgCoinsIndex)
         return;
     if (sMgCoinsIndex < sMgCoinsSlowLaunches) {
@@ -638,7 +637,7 @@ void MgCoins_StartPayout(int count) {
 void MgCoins_StepPayoutLayout(void) {
     int step, idx, n, limit;
     int cx, rx;
-    Vec2i sp;
+    Vector2 sp;
     Sprite* e;
     int delay;
     if (ApproachLinear(sMgCoinsWait, 0, 1) == 0)
@@ -685,7 +684,7 @@ void MgCoins_StepPayoutLayout(void) {
 void MgCoins_StepPayoutNext(void) {
     int step, i, idx, n, limit;
     Sprite* e;
-    Vec2i sp;
+    Vector2 sp;
 
     e = sMgCoins;
     for (i = 0; i < 20; i++) {
@@ -778,7 +777,7 @@ void Sprite::Move() {
 
 /* State: move; on arrival call Mg_GainCredits(1), hide, and stop. */
 void Sprite::MoveThenBank() {
-    Vec2i out;
+    Vector2 out;
     ApproachLinear(mPos.x, mTarget.x, mStep.x);
     ApproachLinear(mPos.y, mTarget.y, mStep.y);
     Vec2_Sub(&out, &mTarget, &mPos);
@@ -798,9 +797,9 @@ void Sprite::Hide() {
 /* Launch from the corner (12, 12) to `in`, at 1/16 of the distance per
    frame. Unless the sprite is already in Sprite::MoveThenBank, call
    Mg_LoseCredits(1). */
-void Sprite::Launch(Vec2i *in) {
-    Vec2i loc0;
-    Vec2i loc2;
+void Sprite::Launch(Vector2 *in) {
+    Vector2 loc0;
+    Vector2 loc2;
     mVisible = 1;
     mPos.x = 0xc000;
     mPos.y = 0xc000;
@@ -828,8 +827,8 @@ void Sprite::Launch(Vec2i *in) {
 /* Send the sprite to x = 128 at 0xc0/0x1000 of the distance per frame
    (move state Sprite::MoveThenRise, then the rise in Sprite::Rise). */
 void Sprite::SendOff() {
-    Vec2i a;
-    Vec2i b;
+    Vector2 a;
+    Vector2 b;
     mTarget.x = 0x80000;
     Vec2_Sub(&a, &mTarget, &mPos);
     func_0203d680(&b, &a, 0xc0);
@@ -852,7 +851,7 @@ void Sprite::SendOff() {
 
 /* State: move; on arrival rise (Sprite::Rise). */
 void Sprite::MoveThenRise() {
-    Vec2i v;
+    Vector2 v;
     ApproachLinear(mPos.x, mTarget.x, mStep.x);
     ApproachLinear(mPos.y, mTarget.y, mStep.y);
     Vec2_Sub(&v, &mTarget, &mPos);
@@ -880,8 +879,8 @@ void Sprite::Rise() {
    (128, -Mg_GetTopScreenYOffset() - 16) (move state Sprite::MoveThenRiseSpent,
    then the rise in Sprite::RiseSpent). */
 void Sprite::Spend() {
-    Vec2i a;
-    Vec2i b;
+    Vector2 a;
+    Vector2 b;
     Mg_LoseCredits(1);
     mVisible = 1;
     mPos.x = 0xc000;
@@ -909,7 +908,7 @@ void Sprite::Spend() {
 
 /* State: move; on arrival rise (Sprite::RiseSpent). */
 void Sprite::MoveThenRiseSpent() {
-    Vec2i v;
+    Vector2 v;
     ApproachLinear(mPos.x, mTarget.x, mStep.x);
     ApproachLinear(mPos.y, mTarget.y, mStep.y);
     Vec2_Sub(&v, &mTarget, &mPos);
@@ -933,8 +932,8 @@ void Sprite::RiseSpent() {
 /* Send the sprite back to the corner (12, 12) at 0xc0/0x1000 of the
    distance per frame (Sprite::MoveThenRefund). */
 void Sprite::Return() {
-    Vec2i v1;
-    Vec2i v2;
+    Vector2 v1;
+    Vector2 v2;
     int a, b;
     mTarget.x = 0xc000;
     mTarget.y = 0xc000;
@@ -955,7 +954,7 @@ void Sprite::Return() {
 
 /* State: move; on arrival leave play, call Mg_GainCredits(1), reset. */
 void Sprite::MoveThenRefund() {
-    Vec2i v;
+    Vector2 v;
     ApproachLinear(mPos.x, mTarget.x, mStep.x);
     ApproachLinear(mPos.y, mTarget.y, mStep.y);
     Vec2_Sub(&v, &mTarget, &mPos);
@@ -970,9 +969,9 @@ void Sprite::MoveThenRefund() {
 
 /* Place a sprite at `in`, visible, aimed at the corner (12, 12) at 1/16 of
    the distance per frame (Sprite::FlyToCounter). */
-void Sprite::PlacePayout(Vec2i *in) {
-    Vec2i a;
-    Vec2i b;
+void Sprite::PlacePayout(Vector2 *in) {
+    Vector2 a;
+    Vector2 b;
     mPos.x = in->x;
     mPos.y = in->y;
     mDelay = 0;
@@ -1001,7 +1000,7 @@ void Sprite::PlacePayout(Vec2i *in) {
 /* State: wait out mDelay, then move; on arrival play sound 0x149, call
    Mg_GainCredits(1), take one from the layout count, and reset. */
 void Sprite::FlyToCounter() {
-    Vec2i t;
+    Vector2 t;
     if (ApproachLinear2(mDelay, 0, 1) == 0)
         return;
     ApproachLinear(mPos.x, mTarget.x, mStep.x);
