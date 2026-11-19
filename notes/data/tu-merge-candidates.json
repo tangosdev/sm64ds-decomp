@@ -12714,7 +12714,7 @@
     "src/unnamed/arm9/0204/func_0204a17c.cpp",
     "src/unnamed/arm9/0204/func_0204a4c8.c",
     "src/SPLEmitter_Emit.c",
-    "src/unnamed/arm9/0204/func_0204a5c8.c",
+    "src/SPLManager_DoDraw.c",
     "src/SPLEmitter_Update.c",
     "src/SPLEmitter_Init.c",
     "src/unnamed/arm9/0204/func_0204af38.c",

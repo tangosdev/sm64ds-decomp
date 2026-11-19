@@ -2118,7 +2118,7 @@ src/unnamed/arm9/0204/func_0204a028.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0204/func_0204a0dc.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0204/func_0204a4c8.c	PURE-C	arm9				1		None		-
 src/SPLEmitter_Emit.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0204/func_0204a5c8.c	PURE-C	arm9				1		None		-
+src/SPLManager_DoDraw.c	PURE-C	arm9				1		None		-
 src/SPLEmitter_Update.c	PURE-C	arm9				1		None		-
 src/SPLEmitter_Init.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0204/func_0204af38.c	PURE-C	arm9				1		None		-

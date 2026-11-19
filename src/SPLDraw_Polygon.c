@@ -12,7 +12,7 @@ extern void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz); /* scale matrix 
 extern void G3_LoadMtx43(void *m);                        /* load the 4x3 matrix */
 extern void G3_MultMtx43(void *m);                        /* multiply by the 4x3 matrix */
 
-/* Draw one particle as a textured quad (draw type 2, func_0204a5c8): alpha
+/* Draw one particle as a textured quad (draw type 2, SPLManager_DoDraw): alpha
  * and the next polygon ID into POLYGON_ATTR (nothing more when the alpha is
  * 0), rotate by its angle about
  * the definition's axis, scale by scale * animScale (x by aspectRatio too),

@@ -7819,7 +7819,7 @@
     },
     "arm9:0x0204a5c8": {
       "author": "tangosdev",
-      "name": "func_0204a5c8"
+      "name": "SPLManager_DoDraw"
     },
     "arm9:0x0204a730": {
       "author": "tangosdev",
