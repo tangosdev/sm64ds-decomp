@@ -42,6 +42,7 @@
 #include "nitro/gx/g3_util.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 struct BTP_File;
 
@@ -75,12 +76,7 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
 
 extern "C" {
 
-int RandomIntInternal(int *seed);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
-void Vec3_MulScalarInPlace(Vector3 *v, int scale);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
-unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
