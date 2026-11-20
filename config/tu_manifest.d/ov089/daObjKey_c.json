@@ -279,14 +279,14 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov089_02132c40",
+      "symbol": "gKoopaKeyGetDemoAnimationFile",
       "address": "0x02132c40",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "animation file handle constructed with file ID 0x44f; dExtFrameCtrl_c::LoadFile consumes it in InitResources and CleanupResources releases it"
     },
     {
-      "symbol": "data_ov089_02132c48",
+      "symbol": "gKoopaKeyWGetAnimationFile",
       "address": "0x02132c48",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -307,7 +307,7 @@
       "evidence": "model file handle constructed with file ID 0x49e; reached through the .rodata table at 0x02132894"
     },
     {
-      "symbol": "data_ov089_02132c60",
+      "symbol": "gKoopaKeyGetAnimationFile",
       "address": "0x02132c60",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -321,7 +321,7 @@
       "evidence": "model file handle constructed with file ID 0x49d; reached through the .rodata table at 0x02132894"
     },
     {
-      "symbol": "data_ov089_02132c70",
+      "symbol": "gKoopaKeyOpenAnimationFile",
       "address": "0x02132c70",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1034,7 +1034,7 @@
       "source": "0x02132884",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c60",
+      "symbol": "gKoopaKeyGetAnimationFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c60"
@@ -1044,7 +1044,7 @@
       "source": "0x02132888",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c70",
+      "symbol": "gKoopaKeyOpenAnimationFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c70"
@@ -1054,7 +1054,7 @@
       "source": "0x0213288c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c40",
+      "symbol": "gKoopaKeyGetDemoAnimationFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c40"
@@ -1064,7 +1064,7 @@
       "source": "0x02132890",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c48",
+      "symbol": "gKoopaKeyWGetAnimationFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c48"
@@ -1434,7 +1434,7 @@
       "source": "0x02132aa0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c60",
+      "symbol": "gKoopaKeyGetAnimationFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c60"
@@ -1464,7 +1464,7 @@
       "source": "0x02132ab0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c40",
+      "symbol": "gKoopaKeyGetDemoAnimationFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c40"
@@ -1484,7 +1484,7 @@
       "source": "0x02132abc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c70",
+      "symbol": "gKoopaKeyOpenAnimationFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c70"
@@ -1504,7 +1504,7 @@
       "source": "0x02132ac4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c48",
+      "symbol": "gKoopaKeyWGetAnimationFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c48"

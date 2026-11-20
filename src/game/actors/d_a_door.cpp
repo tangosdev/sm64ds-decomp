@@ -9,7 +9,7 @@
  * and 8 stars; 7..13 are key doors holding key indices 0..6; 14..18 carry
  * neither. A door is a state machine: the pointer at +0x140 (mState) names
  * the current state, a pair of pointers-to-member -- enter, then execute --
- * that func_ov100_021453d8 stores and calls the enter member of, and Behavior
+ * that SetState stores and calls the enter member of, and Behavior
  * calls the execute member of every frame with the player
  * func_ov100_02145370 returns. The nine states are the 16-byte tables
  * data_ov100_021488a4 .. data_ov100_02148924, which the module's static
@@ -38,7 +38,7 @@
  * This file is the whole linker unit 0x021443f4..0x021458d4, 32 functions:
  * D1 and D0 (daWanwan2_c_classInit, src/game/actors/d_a_wanwan2.cpp, ends exactly at
  * 0x021443f4 below them), the 24 helpers func_ov100_02144468 through
- * func_ov100_021453d8, CleanupResources, OnPendingDestroy, Render,
+ * SetState, CleanupResources, OnPendingDestroy, Render,
  * Behavior, InitResources, and last the registry factory daDoor_c_classInit
  * (0x0214589c); daStarGate_c's first function
  * (src/game/actors/d_a_star_gate.cpp) starts exactly at 0x021458d4 above
@@ -46,7 +46,7 @@
  * emits the vtable and the RTTI.
  *
  * It replaces the one-function sources for _ZN8daDoor_cD1Ev,
- * _ZN8daDoor_cD0Ev, func_ov100_02144468 .. func_ov100_021453d8,
+ * _ZN8daDoor_cD0Ev, func_ov100_02144468 .. 0x021453d8 (SetState),
  * _ZN8daDoor_c16CleanupResourcesEv, _ZN8daDoor_c16OnPendingDestroyEv,
  * _ZN8daDoor_c6RenderEv, _ZN8daDoor_c8BehaviorEv,
  * _ZN8daDoor_c13InitResourcesEv and daDoor_c_classInit. Each member keeps
@@ -176,7 +176,7 @@ enum { ACTOR_OBJ_KEY = 0x11a };
    handed over as an int. */
 typedef int (daDoor_c::*daDoor_StatePmf)(int);
 struct daDoor_StateRecord {
-    daDoor_StatePmf enter;   /* 0x0 -- called by func_ov100_021453d8 */
+    daDoor_StatePmf enter;   /* 0x0 -- called by SetState */
     daDoor_StatePmf execute; /* 0x8 -- called by Behavior every frame */
 };
 
@@ -351,7 +351,7 @@ int daDoor_c::func_ov100_02144468(int p) {
         } else {
             Sound::ChangeMusicVolume(0x7f, 0xcb33);
         }
-        func_ov100_021453d8(&data_ov100_021488b4, p);
+        SetState(&data_ov100_021488b4, p);
     }
     return 1;
 }
@@ -363,7 +363,7 @@ int daDoor_c::func_ov100_02144468(int p) {
    func_ov100_02144fcc reports the shared countdown done. Was a C source. */
 int daDoor_c::func_ov100_021444e8(int a1) {
     if (daDoor_c::func_ov100_02144fcc()) {
-        func_ov100_021453d8(&data_ov100_021488b4, a1);
+        SetState(&data_ov100_021488b4, a1);
     }
     return 1;
 }
@@ -472,9 +472,9 @@ int daDoor_c::func_ov100_02144730(daPly_c *player) {
     if (mModel.Finished() != 0) {
         int t;
         if (data_ov100_02148704 != 0)
-            func_ov100_021453d8(&data_ov100_021488a4, (int)player);
+            SetState(&data_ov100_021488a4, (int)player);
         else
-            func_ov100_021453d8(&data_ov100_021488b4, (int)player);
+            SetState(&data_ov100_021488b4, (int)player);
         if (mScale.z < 0)
             t = mAngle.x;
         else
@@ -552,7 +552,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
         gSaveBlock.file.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
-        func_ov100_021453d8(&data_ov100_021488b4, (int)a2);
+        SetState(&data_ov100_021488b4, (int)a2);
     }
     return 1;
 }
@@ -636,7 +636,7 @@ int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
     daDoor_c::func_ov100_02145014();
     if (r1->GetTalkState() == -1) {
         if (func_ov100_021452e4(r1) == 0) {
-            func_ov100_021453d8(&data_ov100_02148924, (int)r1);
+            SetState(&data_ov100_02148924, (int)r1);
         }
     }
     return 1;
@@ -687,11 +687,11 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                     if (daDoor_c::func_ov100_02144f84() == 0)
                         return 1;
                     if (b->ShowMessage(*this, entry->msg, &mSpeed, 0, 2) != 0) {
-                        func_ov100_021453d8(&data_ov100_021488c4, (int)b);
+                        SetState(&data_ov100_021488c4, (int)b);
                         return 1;
                     }
                 } else if (b->TryTalkToDoor(0) != 0) {
-                    func_ov100_021453d8(&data_ov100_021488d4, (int)b);
+                    SetState(&data_ov100_021488d4, (int)b);
                     return 1;
                 }
             }
@@ -719,14 +719,14 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                                 msg = sel ? entry->msg : 0x17;
                             }
                             if (b->ShowMessage(*this, (short)msg, &mSpeed, 0, 2) != 0) {
-                                func_ov100_021453d8(&data_ov100_021488c4, (int)b);
+                                SetState(&data_ov100_021488c4, (int)b);
                                 if (entry->keyIndex == 5)
                                     gSaveBlock.file.flags2 |= 0x10000;
                                 return 1;
                             }
                         }
                     } else if (b->TryTalkToKeyDoor() != 0) {
-                        func_ov100_021453d8(&data_ov100_021488e4, (int)b);
+                        SetState(&data_ov100_021488e4, (int)b);
                         return 1;
                     }
                 }
@@ -853,7 +853,7 @@ int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
     static Vector3 sEnterPos(0, 0, 0x64000);
     static Vector3 sEnterNeg(0, 0, -0x64000);
     func_ov100_02145170(r4, &sEnterPos, &sEnterNeg);
-    func_ov100_021453d8(r5, (int)r4);
+    SetState(r5, (int)r4);
     SetTouchScreenDelay();
     return 1;
 }
@@ -900,11 +900,11 @@ daPly_c *daDoor_c::func_ov100_02145370() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov100_021453d8, 0x021453d8, size 0x54 */
+/* ROM ordinal 25 -- SetState, 0x021453d8, size 0x54 */
 /* -------------------------------------------------------------------------- */
 /* Enter a state: store the address of the state table at +0x140 (mState) and
    call its enter member with the player, if it has one. */
-int daDoor_c::func_ov100_021453d8(void *p, int a2) {
+int daDoor_c::SetState(void *p, int a2) {
     mState = p;
     daDoor_StateRecord *q = (daDoor_StateRecord *)mState;
     if (q->enter == 0)
@@ -1098,9 +1098,9 @@ s32 daDoor_c::InitResources() {
     func_ov100_02145370();
 
     if (Abs(mScale.x) <= 0x4b000 && Abs(mScale.y) <= 0x32000 && Abs(mScale.z) <= 0x1f4000)
-        func_ov100_021453d8(&data_ov100_02148914, r4);
+        SetState(&data_ov100_02148914, r4);
     else
-        func_ov100_021453d8(&data_ov100_021488b4, r4);
+        SetState(&data_ov100_021488b4, r4);
     return 1;
 }
 

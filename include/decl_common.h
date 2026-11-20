@@ -811,7 +811,6 @@ extern void func_ov065_02115ff0(char *);
 extern void func_ov065_0211696c(char *);
 
 extern void func_ov070_02121c8c(void*);
-extern void func_ov070_02122044(void*, int);
 extern void func_ov096_0213585c(void *);
 extern void func_ov096_02135efc(void *);
 extern void func_ov096_021368b4(void *);

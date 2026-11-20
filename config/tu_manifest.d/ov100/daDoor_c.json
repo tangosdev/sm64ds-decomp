@@ -215,7 +215,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021453d8EPvi",
+      "symbol": "_ZN8daDoor_c8SetStateEPvi",
       "address": "0x021453d8",
       "size": "0x00000054",
       "legacy_source": "src/func_ov100_021453d8.cpp",

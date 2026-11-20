@@ -185,7 +185,7 @@ struct dEnemyBase_c : dActor_c {
     void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, fx32 unused_);
     int func_ov002_020ad660(void *clsnArg, void *modelArg, int flags);
     /* Death. KillByAttack starts the death mDeathState selects, through
-       the eight start handlers in data_ov002_0210db80; UpdateDeath runs one of
+       the eight start handlers in sEnemyDeathStartFuncs; UpdateDeath runs one of
        the per-frame handlers in sEnemyDeathFuncs each frame. */
     void KillByAttack(dActor_c *, dBgCh_Actr *);
     void func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *);

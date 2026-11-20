@@ -182,21 +182,21 @@ void dEnemyBase_c::SpawnCoin()
 
 /* Start the death the caller stored in mDeathState: clear mFlags bit
    0x10000000, zero mDeathTimer, run that state's start handler from
-   data_ov002_0210db80, then set mVertAccel to -0x2000 and clear the bit again.
+   sEnemyDeathStartFuncs, then set mVertAccel to -0x2000 and clear the bit again.
    The attacker and the (nullable) collision are passed through to the
    handler; the handlers read the attacker and ignore the collision. The body
    overwrites r3 before reading it: what callers leave there comes from their
    mDeathState store, not a fourth argument. ov004 has a different function at
    this address. */
 typedef void (dEnemyBase_c::*DeathStartPMF)(dActor_c *, dBgCh_Actr *);
-extern DeathStartPMF data_ov002_0210db80[];
+extern DeathStartPMF sEnemyDeathStartFuncs[];
 
 void dEnemyBase_c::KillByAttack(dActor_c *a, dBgCh_Actr *b) {
     if (mDeathState == 0)
         return;
     mFlags &= ~0x10000000;
     mDeathTimer = 0;
-    (this->*data_ov002_0210db80[mDeathState - 1])(a, b);
+    (this->*sEnemyDeathStartFuncs[mDeathState - 1])(a, b);
     mVertAccel = -0x2000;
     mFlags &= ~0x10000000;
 }
@@ -742,7 +742,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
    mDeathState; UpdateDeath dispatches the second on mDeathState. Non-const
    pointer-to-member arrays live in .bss, so mwcc generates this TU's static
    initializer to copy the descriptor records in at overlay load. */
-DeathStartPMF data_ov002_0210db80[8] = {
+DeathStartPMF sEnemyDeathStartFuncs[8] = {
     &dEnemyBase_c::func_ov002_020ae9f8, &dEnemyBase_c::func_ov002_020ae954,
     &dEnemyBase_c::func_ov002_020ae890, &dEnemyBase_c::func_ov002_020ae87c,
     &dEnemyBase_c::func_ov002_020ae844, &dEnemyBase_c::func_ov002_020ae80c,

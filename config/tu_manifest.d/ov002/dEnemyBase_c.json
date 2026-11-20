@@ -379,7 +379,7 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov002_0210db80",
+      "symbol": "sEnemyDeathStartFuncs",
       "address": "0x0210db80",
       "size": "0x40",
       "binding": "STB_GLOBAL",
@@ -1020,7 +1020,7 @@
       "source": "0x02100a9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210db80",
+      "symbol": "sEnemyDeathStartFuncs",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db80"
