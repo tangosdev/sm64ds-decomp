@@ -713,15 +713,15 @@ void daTrs_c::UpdateScriptedPathBoo() {
 /* Behavior handler for variant 0xf: the Big Boo that leaves the OBJ_KEY. */
 void daTrs_c::UpdateKeyBigBoo() {
     switch (this->mState) {
-    case 0: func_ov063_02118914(); break;
-    case 1: func_ov063_0211873c(); break;
+    case 0: UpdateKeyBooInit(); break;
+    case 1: UpdateKeyBooChase(); break;
     case 2: UpdateBigBooBouncedOn(); break;
-    case 3: func_ov063_021177b0(); break;
-    case 4: func_ov063_02118458(); break;
-    case 5: func_ov063_0211776c(); break;
-    case 6: func_ov063_02117364(); break;
-    case 7: func_ov063_02117cdc(); break;
-    case 8: func_ov063_02117b0c(); break;
+    case 3: UpdateKeyBooHit(); break;
+    case 4: UpdateKeyBooAttack(); break;
+    case 5: UpdateKeyBooDefeated(); break;
+    case 6: UpdateKeyBooRelocate(); break;
+    case 7: UpdateKeyBooIntro(); break;
+    case 8: UpdateKeyBooTalk(); break;
     }
     {
         int state = this->mState;
@@ -735,7 +735,7 @@ void daTrs_c::UpdateKeyBigBoo() {
 }
 
 
-void daTrs_c::func_ov063_02117364() {
+void daTrs_c::UpdateKeyBooRelocate() {
 
     Vector3 pos = this->mPos;
 
@@ -749,7 +749,7 @@ void daTrs_c::func_ov063_02117364() {
             {
                 this->mBooFlags.mirrored ^= 1;
             }
-            func_ov063_02117650();
+            RelocateAwayFromPlayer();
             this->mTargetOpacity = 0xff;
             this->mParticle1 = 0;
             this->mParticle0 = this->mParticle1;
@@ -788,7 +788,7 @@ void daTrs_c::func_ov063_02117364() {
 
 #undef New
 
-void daTrs_c::func_ov063_02117650() {
+void daTrs_c::RelocateAwayFromPlayer() {
 
     struct Vector3 ppos;
     struct Vector3 npos;
@@ -826,7 +826,7 @@ void daTrs_c::func_ov063_02117650() {
 }
 
 
-void daTrs_c::func_ov063_0211776c() {
+void daTrs_c::UpdateKeyBooDefeated() {
 
     Stop();
     unsigned short v = this->mStateTimer;
@@ -834,12 +834,12 @@ void daTrs_c::func_ov063_0211776c() {
         return;
     if (v != 0xf)
         return;
-    func_ov063_02118ddc();
+    SpawnKey();
     this->MarkForDestruction();
 }
 
 
-void daTrs_c::func_ov063_021177b0() {
+void daTrs_c::UpdateKeyBooHit() {
 
     if (this->mStateTimer == 0)
         this->mHitPoints--;
@@ -926,7 +926,7 @@ void daTrs_c::func_ov063_021177b0() {
 }
 
 
-void daTrs_c::func_ov063_02117b0c() {
+void daTrs_c::UpdateKeyBooTalk() {
 
     Vector3 v;
 
@@ -979,7 +979,7 @@ void daTrs_c::func_ov063_02117b0c() {
 }
 
 
-void daTrs_c::func_ov063_02117cdc() {
+void daTrs_c::UpdateKeyBooIntro() {
 
     s16 v[3];
     Vector3 w;
@@ -1179,7 +1179,7 @@ void daTrs_c::func_ov063_02117cdc() {
 }
 
 
-void daTrs_c::func_ov063_02118458() {
+void daTrs_c::UpdateKeyBooAttack() {
     int status = GetAttackStatus();
 
     ApproachLinear(this->mPrevAngle.y, this->mAngleToPlayer,
@@ -1241,7 +1241,7 @@ void daTrs_c::func_ov063_02118458() {
     func_02012694(0x152, &this->mCamSpacePos);
 }
 
-void daTrs_c::func_ov063_0211873c() {
+void daTrs_c::UpdateKeyBooChase() {
 
     short a;
     int b;
@@ -1299,7 +1299,7 @@ void daTrs_c::func_ov063_0211873c() {
     this->mHorzSpeed = 0;
 }
 
-void daTrs_c::func_ov063_02118914() {
+void daTrs_c::UpdateKeyBooInit() {
 
     s32 scale;
 
@@ -1456,7 +1456,7 @@ void daTrs_c::UpdateBigBooHit() {
 }
 
 
-void daTrs_c::func_ov063_02118ddc() {
+void daTrs_c::SpawnKey() {
 
   struct Vector3 v;
   v.x = this->mPos.x;
