@@ -87,11 +87,11 @@ _ZN13daObjMaruta_c15StoodOnCallbackEP4dBgWP8dActor_cS3_ kind:function(arm,size=0
 data_ov080_0212766c kind:data(any) addr:0x0212766c
 data_ov080_0212767c kind:data(any) addr:0x0212767c
 data_ov080_021276c4 kind:data(any) addr:0x021276c4
-data_ov080_02127714 kind:data(any) addr:0x02127714
+sGridRows kind:data(any) addr:0x02127714
 data_ov080_0212771c kind:data(any) addr:0x0212771c
 data_ov080_0212775c kind:data(any) addr:0x0212775c
 data_ov080_021277a8 kind:data(any) addr:0x021277a8
-data_ov080_02127834 kind:data(any) addr:0x02127834
+sDefaultWave kind:data(any) addr:0x02127834
 data_ov080_02127848 kind:data(any) addr:0x02127848 ambiguous
 __sinit_d_a_choropu.cpp kind:function(arm,size=0x1a0) addr:0x021278c0
 __sinit_d_a_btt_bk.cpp kind:function(arm,size=0xcc) addr:0x02127a60
@@ -196,7 +196,7 @@ gForExLuigiModelFile kind:bss addr:0x0212853c
 @514 kind:bss addr:0x02128604
 @515 kind:bss addr:0x02128610
 @517 kind:bss addr:0x0212861c
-data_ov080_02128628 kind:bss addr:0x02128628
+sStates kind:bss addr:0x02128628
 data_ov080_02128688 kind:bss addr:0x02128688
 data_ov080_0212869c kind:bss addr:0x0212869c
 data_ov080_02128858 kind:bss addr:0x02128858 ambiguous

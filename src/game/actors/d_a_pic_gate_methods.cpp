@@ -18,7 +18,7 @@
  * strip writer stores it to REG_NORMAL.
  *
  * The five handlers are daPicGate_c members bound through the four
- * data_ov080_02128628 state rows. Row 0 is N64's proximity-triggered image
+ * sStates state rows. Row 0 is N64's proximity-triggered image
  * painting (wall_painting_proximity_rippling, painting_ripple_image), row 1
  * its continuous, environment-mapped one (wall_painting_continuous_rippling,
  * painting_ripple_env_mapped); picture 7's slide is N64's move_ddd_painting.
@@ -95,9 +95,10 @@ enum {
 
 extern "C" {
 extern Matrix4x3 gViewMtx;
-extern const u8 data_ov080_02127714[8] = {13, 14, 16, 20, 20, 25, 30, 0};
+/* Rows for widths 3, 4, 5, 6, 7, 8 and 16: 13, 14, 16, 20, 20, 25, 30. */
+extern const u8 sGridRows[8] = {13, 14, 16, 20, 20, 25, 30, 0};
 extern void G3_LoadMtx43(void *mtx);
-extern const int data_ov080_02127834[5] = {0x3a000, 0x1111, 0x16c000, 0x384000, 0x64};
+extern const int sDefaultWave[5] = {0x3a000, 0x1111, 0x16c000, 0x384000, 0x64};
 }
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
 
@@ -106,10 +107,8 @@ extern int IsStarCollectedInLevel(signed char levelID, int starID);
 /* The helpers are daPicGate_c members declared on the class and defined in
  * src/game/actors/d_a_pic_gate.cpp. */
 #define LoadMtx43 G3_LoadMtx43
-#define kStates data_ov080_02128628
-#define kDefaultWave data_ov080_02127834
 
-extern daPicGate_c::State data_ov080_02128628[];
+extern daPicGate_c::State sStates[];
 
 /* A picture's texture/collision handle. The nineteen instances below are
    constructed by __sinit_d_a_pic_gate_methods.cpp and reached through the rodata
@@ -120,9 +119,6 @@ struct PicGateFilePtr : SharedFilePtr {
     PicGateFilePtr(u32 fileID);
     ~PicGateFilePtr();
 };
-
-/* Rows for widths 3, 4, 5, 6, 7, 8 and 16: 13, 14, 16, 20, 20, 25, 30. */
-#define kGridRows data_ov080_02127714
 
 /* State 1 behavior. Picture 7 slides open; every picture then ripples. */
 void daPicGate_c::UpdateContinuousRipple() {
@@ -300,27 +296,27 @@ s32 daPicGate_c::InitResources() {
         case 2:
             break;
         case 3:
-            mRows = kGridRows[0];
+            mRows = sGridRows[0];
             mCols = mRows;
             break;
         case 4:
-            mRows = kGridRows[1];
+            mRows = sGridRows[1];
             mCols = mRows;
             break;
         case 5:
-            mRows = kGridRows[2];
+            mRows = sGridRows[2];
             mCols = mRows;
             break;
         case 6:
-            mRows = kGridRows[3];
+            mRows = sGridRows[3];
             mCols = mRows;
             break;
         case 7:
-            mRows = kGridRows[4];
+            mRows = sGridRows[4];
             mCols = mRows;
             break;
         case 8:
-            mRows = kGridRows[5];
+            mRows = sGridRows[5];
             mCols = mRows;
             break;
         case 9:
@@ -332,7 +328,7 @@ s32 daPicGate_c::InitResources() {
         case 15:
             break;
         case 16:
-            mRows = kGridRows[6];
+            mRows = sGridRows[6];
             mCols = mRows;
             break;
         }
@@ -341,8 +337,8 @@ s32 daPicGate_c::InitResources() {
 
     mCells = (Vertex *)::operator new[]((unsigned)mNumCells * 0x18u);
     mTexRecord = (s32)this->LoadTexture((unsigned char)((param1 >> 8) & 0x1f));
-    mWaveParams = (const daPicGate_c::WaveParams *)&kDefaultWave;
-    mState = &kStates[(unsigned char)((param1 >> 13) & 3)];
+    mWaveParams = (const daPicGate_c::WaveParams *)&sDefaultWave;
+    mState = &sStates[(unsigned char)((param1 >> 13) & 3)];
     (this->*mState->init)();
 
     {
@@ -394,7 +390,7 @@ PicGateFilePtr gForExWarioModelFile(ASSET_FOR_EX_WARIO_BMD);
 PicGateFilePtr gForVsCrossModelFile(ASSET_FOR_VS_CROSS_BMD);
 PicGateFilePtr gForVsIslandModelFile(ASSET_FOR_VS_ISLAND_BMD);
 
-daPicGate_c::State data_ov080_02128628[4] = {
+daPicGate_c::State sStates[4] = {
     {&daPicGate_c::InitProximityRipple, &daPicGate_c::UpdateProximityRipple,
      &daPicGate_c::DrawRippleImage},
     {&daPicGate_c::InitContinuousRipple, &daPicGate_c::UpdateContinuousRipple,
