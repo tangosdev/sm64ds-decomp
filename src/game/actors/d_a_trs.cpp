@@ -544,27 +544,27 @@ void daTrs_c::func_ov063_02116bf4() {
 }
 
 /* Behavior handler for variant 5: the Boo carrying the cage (T_BASKET). */
-void daTrs_c::func_ov063_02116d38() {
+void daTrs_c::UpdateCageBoo() {
 
     switch(this->mState){
-        case 0: func_ov063_02116f48(); break;
-        case 1: func_ov063_02116e14(); break;
-        case 2: func_ov063_02116df0(); break;
-        case 3: func_ov063_02116dbc(); break;
-        case 4: func_ov063_02116d98(); break;
+        case 0: UpdateCageInactive(); break;
+        case 1: UpdateCageChase(); break;
+        case 2: UpdateCageBouncedOn(); break;
+        case 3: UpdateCageDying(); break;
+        case 4: UpdateCageNonlethalHit(); break;
     }
     ApproachTargetOpacityAndUpdateScale();
 }
 
 
-void daTrs_c::func_ov063_02116d98() {
+void daTrs_c::UpdateCageNonlethalHit() {
     if (UpdateDuringNonlethalHit(0x28)) {
         this->mState = 1;
     }
 }
 
 
-void daTrs_c::func_ov063_02116dbc() {
+void daTrs_c::UpdateCageDying() {
 
     if (UpdateDuringDeath() == 0)
         return;
@@ -573,14 +573,14 @@ void daTrs_c::func_ov063_02116dbc() {
 }
 
 
-void daTrs_c::func_ov063_02116df0() {
+void daTrs_c::UpdateCageBouncedOn() {
     if (UpdateAfterBouncedOn(0x14)) {
         this->mState = 1;
     }
 }
 
 
-void daTrs_c::func_ov063_02116e14() {
+void daTrs_c::UpdateCageChase() {
 
     this->mBooFlags.hitByParam3Player = 0;
     if (this->mChaseDelay == 0) {
@@ -616,7 +616,7 @@ void daTrs_c::func_ov063_02116e14() {
 }
 
 
-int daTrs_c::func_ov063_02116f48() {
+int daTrs_c::UpdateCageInactive() {
 
     this->mBigBooID = 0;
     this->mTargetOpacity = 0xff;
@@ -635,7 +635,7 @@ int daTrs_c::func_ov063_02116f48() {
 /* Behavior handler for variant 0xb: the scripted-path Boo. Hidden until
    canAppear, then waits for the player within 0x258000, flies a fixed path
    (hopping in state 4), then vanishes (opacity 0, hidden). */
-void daTrs_c::func_ov063_02116fac() {
+void daTrs_c::UpdateScriptedPathBoo() {
 
     Vector3 target = this->mHomePos;
     s16 r4 = 0xc00;
@@ -711,7 +711,7 @@ void daTrs_c::func_ov063_02116fac() {
 }
 
 /* Behavior handler for variant 0xf: the Big Boo that leaves the OBJ_KEY. */
-void daTrs_c::func_ov063_021172a8() {
+void daTrs_c::UpdateKeyBigBoo() {
     switch (this->mState) {
     case 0: func_ov063_02118914(); break;
     case 1: func_ov063_0211873c(); break;
@@ -1327,7 +1327,7 @@ void daTrs_c::func_ov063_02118914() {
 
 
 /* Behavior handler for variants 0xc/0xd/0xe: the Big Boo. */
-void daTrs_c::func_ov063_021189f4() {
+void daTrs_c::UpdateBigBoo() {
 
     if (this->mSoundCount != 0) {
         if (this->mVariant == 0xd) {
@@ -2750,7 +2750,7 @@ int daTrs_c::Behavior()
         func_ov063_02116a1c();
         break;
     case 5:
-        func_ov063_02116d38();
+        UpdateCageBoo();
         break;
     case 6:
     case 10:
@@ -2762,10 +2762,10 @@ int daTrs_c::Behavior()
     case 12:
     case 13:
     case 14:
-        func_ov063_021189f4();
+        UpdateBigBoo();
         break;
     case 15:
-        func_ov063_021172a8();
+        UpdateKeyBigBoo();
         break;
     case 8:
         func_ov063_02119274();
@@ -2774,7 +2774,7 @@ int daTrs_c::Behavior()
         UpdateBoo();
         break;
     case 11:
-        func_ov063_02116fac();
+        UpdateScriptedPathBoo();
     }
 
     if (mBooFlags.followHeading != 0)
