@@ -14,10 +14,11 @@
  * are `return new`.
  */
 // leftovers:
-// - func_ov080_02124418 is daChoro_Rock_c's. Its first argument is the rock,
-//   so it is not a daChoropu_c method.
+// - The matrix builder at 0x02124418 is daChoro_Rock_c's, not the mole's:
+//   its first argument is the rock. The two classes each have their own
+//   UpdateModelMatrix (daChoropu_c's is 0x021243d8).
 // - Throw's spawn id stays `py ? 0x137 : 0x137`.
-// - LAUND() in func_ov080_02124088 keeps the cylinder flags, mFlags and
+// - LAUND() in KnockUnderground keeps the cylinder flags, mFlags and
 //   mTimesHit addresses opaque.
 // - Throw reads mAngle.x/.y/.z as unsigned short. Hidden reads mHasTurn as
 //   signed char.
@@ -131,8 +132,7 @@ s32 daChoropu_c::OnAimedAtWithEgg()
  * exactly it also spawns particle effects 0x2a at the mole's position and 0x2b
  * 30 units (0x1e000) above it. When the animation finishes the mole is back in
  * state 1 (Hidden) and hands its turn on. */
-void daChoropu_c::func_ov080_02123860()
-{
+void daChoropu_c::UpdateLeap() {
     unsigned int idx;
 
     mAnmModel.Advance();
@@ -154,7 +154,7 @@ void daChoropu_c::func_ov080_02123860()
     if (mAnmModel.Finished() == 0)
         return;
     mState = daChoropu_ST_HIDDEN;
-    func_ov080_02124360();
+    PassTurn();
 }
 
 /* State 4 (Wait) update handler (table row 4, data_ov080_02127f98).
@@ -164,8 +164,7 @@ void daChoropu_c::func_ov080_02123860()
  * quarter turn (< 0x4000 = 90 degrees) of the way the mole faces (mAngle.y) and
  * less than 500 units (0x1f4000) away horizontally. With no daPly_c it just waits for the
  * animation to end. */
-void daChoropu_c::func_ov080_02123924()
-{
+void daChoropu_c::UpdateWait() {
     mAnmModel.Advance();
     if (mAnmModel.Finished()) {
         mState = daChoropu_ST_LEAP;
@@ -204,8 +203,7 @@ void daChoropu_c::func_ov080_02123924()
  * and the sound effect 0xd2 plays at the mole.
  * When the animation finishes: daPly_c closer than 1000 units (0x3e8000) -> state 5
  * (Leap), otherwise state 4 (Wait). */
-void daChoropu_c::func_ov080_02123a34()
-{
+void daChoropu_c::UpdateThrowRock() {
     mAnmModel.Advance();
     if (mAnmModel.WillHitFrame(10)) {
         Vector3_16 v16;
@@ -270,7 +268,7 @@ void daChoropu_c::func_ov080_02123a34()
  *
  * dExtFrameCtrl_c file 0x2d4 (data_ov080_021283d8). The collision cylinder's height is 0
  * for frames 0..5; the cylinder is already enabled and the mFlags bit already set from
- * the start of Emerge (func_ov080_02123ecc does both), and frame 6 does both again. From
+ * the start of Emerge (UpdateHidden does both), and frame 6 does both again. From
  * frame 6 through 25 the height follows data_ov080_021276c4 (24, 32, 40, 48, 56, 68,
  * 76, 80, 88, 94, 100, 100 x8, 90, 80 whole units, indexed by frame - 6) and particle
  * effect 0x29 is refreshed at the mole's position every frame (its ID is kept in
@@ -280,8 +278,7 @@ void daChoropu_c::func_ov080_02123a34()
  *     5 (Leap);
  *   - otherwise state 3 when there is no daPly_c or the daPly_c is within a quarter turn
  *     (< 0x4000) of the way the mole faces, state 4 (Wait) when it is behind. */
-void daChoropu_c::func_ov080_02123c24()
-{
+void daChoropu_c::UpdateEmerge() {
     int amt;
     unsigned int state;
     u32 raw;
@@ -369,9 +366,8 @@ void daChoropu_c::func_ov080_02123c24()
  *   - daPly_c 250 units (0xfa000) or more away: start emerging -- state 2, animation
  *     file 0x2d4, face the daPly_c (mAngle.y and mPrevAngle.y), enable the collision
  *     cylinder, set the mFlags bit, sound effect 0x116 at the mole;
- *   - daPly_c closer than 250 units: stay hidden and pass the turn on (func_ov080_02124360). */
-void daChoropu_c::func_ov080_02123ecc()
-{
+ *   - daPly_c closer than 250 units: stay hidden and pass the turn on (PassTurn). */
+void daChoropu_c::UpdateHidden() {
     daPly_c *p = ClosestPlayer();
     int dist;
     if (p == 0) dist = 0x5dc000;
@@ -394,7 +390,7 @@ void daChoropu_c::func_ov080_02123ecc()
         }
         return;
     }
-    func_ov080_02124360();
+    PassTurn();
 }
 
 /* State 0 (Setup) update handler (table row 0, data_ov080_02127fa0); the state
@@ -404,8 +400,7 @@ void daChoropu_c::func_ov080_02123ecc()
  * underground). A mole with mGroupMode != 0 then collects the unique IDs of the other
  * daChoropu_c actors with the same mGroupId into mPartnerIDs (at most four,
  * counted in mNumPartners). Either way the next state is 1 (Hidden). */
-void daChoropu_c::func_ov080_02123fcc()
-{
+void daChoropu_c::UpdateSetup() {
     {
         u32 *p150 = (u32 *)((int)&mdCcAc_c.flags);
         u32 *pb0 = (u32 *)((int)&mFlags);
@@ -431,21 +426,20 @@ void daChoropu_c::func_ov080_02123fcc()
     mState = daChoropu_ST_HIDDEN;
 }
 
-/* The mole has been knocked back underground (called from func_ov080_02124208 on a
+/* The mole has been knocked back underground (called from HandleCollision on a
  * hit, a stomp, or contact while the daPly_c is Metal or Mega).
  *
  * Back to state 1 (Hidden) with animation file 0x2d4 at frame 0, collision cylinder
  * disabled, mFlags bit cleared, sound effect 0xd5 at the mole, and a dust puff
  * (dActor_c::PoofDustAt) at the mole's position with y raised by its cylinder height
- * minus 80 units (0x50000). The turn is passed on (func_ov080_02124360).
+ * minus 80 units (0x50000). The turn is passed on (PassTurn).
  *
  * Then the group's hits are tallied: acc is this mole's mTimesHit plus that of every
  * partner that can still be found. While acc < 7 this mole's mTimesHit is incremented.
  * When acc == 7 exactly (this is the eighth hit counted) it spawns actor 0x114
  * (ONEUPKINOKO) 100 units (0x64000) above itself and sets mTimesHit to 8; with
  * acc > 7 nothing more happens. */
-void daChoropu_c::func_ov080_02124088()
-{
+void daChoropu_c::KnockUnderground() {
     Vector3 v1;
     Vector3 v3;
     Vector3 v2;
@@ -480,7 +474,7 @@ void daChoropu_c::func_ov080_02124088()
     v2.z = v1.z;
     PoofDustAt(v2);
 
-    func_ov080_02124360();
+    PassTurn();
 
     acc = mTimesHit;
     i = 0;
@@ -520,7 +514,7 @@ void daChoropu_c::func_ov080_02124088()
  * is the unique ID of whatever hit it) or when that actor cannot be found. With the
  * hit flags (mdCcAc_c.hitFlags):
  *   - any bit of 0x66fe0, the vulnerability mask InitResources registers: the mole is
- *     knocked underground (func_ov080_02124088);
+ *     knocked underground (KnockUnderground);
  *   - otherwise nothing unless bit 0x400000 (the daPly_c) is set;
  *   - daPly_c stomped the mole (JumpedOnByPlayer): knocked underground, then
  *     daPly_c::Bounce is called with 0x28000 (40.0 read as an fx32);
@@ -530,8 +524,7 @@ void daChoropu_c::func_ov080_02124088()
  *     underground;
  *   - anything else: daPly_c::Hurt, with the mole's position and the arguments
  *     (2, 0xc000, 1, 0, 1), which are not decoded here. */
-void daChoropu_c::func_ov080_02124208()
-{
+void daChoropu_c::HandleCollision() {
     daPly_c *p;
     unsigned int id = mdCcAc_c.otherOwner;
 
@@ -543,7 +536,7 @@ void daChoropu_c::func_ov080_02124208()
         return;
 
     if ((mdCcAc_c.hitFlags & 0x66fe0) != 0) {
-        func_ov080_02124088();
+        KnockUnderground();
         return;
     }
 
@@ -551,7 +544,7 @@ void daChoropu_c::func_ov080_02124208()
         return;
 
     if (JumpedOnByPlayer(mdCcAc_c, *p)) {
-        func_ov080_02124088();
+        KnockUnderground();
         p->Bounce(0x28000);
         return;
     }
@@ -560,14 +553,14 @@ void daChoropu_c::func_ov080_02124208()
         return;
 
     if (p->mIsMetal != 0) {
-        func_ov080_02124088();
+        KnockUnderground();
         return;
     }
 
     if ((mdCcAc_c.hitFlags & daChoropu_HIT_MEGA) != 0) {
         func_02012694(0x1d, &mCamSpacePos);
         p->IncMegaKillCount();
-        func_ov080_02124088();
+        KnockUnderground();
         return;
     }
 
@@ -584,8 +577,7 @@ void daChoropu_c::func_ov080_02124208()
  * 0 and keeps its turn. Otherwise it clears its own mHasTurn and picks partners at
  * random (mPartnerIDs[r % mNumPartners]) until it finds one that still exists and does
  * not hold the turn; that one gets mHasTurn = 1 and is returned. */
-void *daChoropu_c::func_ov080_02124360()
-{
+void *daChoropu_c::PassTurn() {
     unsigned char n = mGroupMode;
     daChoropu_c *obj;
     if (n == 0)
@@ -609,16 +601,15 @@ void *daChoropu_c::func_ov080_02124360()
 /* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngle.y,
  * with the translation (words 9..11) set to
  * the actor's position >> 3. */
-void daChoropu_c::func_ov080_021243d8()
-{
+void daChoropu_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
-/* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
-void daChoro_Rock_c::func_ov080_02124418() {
+/* Same as daChoropu_c::UpdateModelMatrix, for the rock's model (mModel.mat4x3). */
+void daChoro_Rock_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngle.y);
     this->mModel.mat4x3.t.x = this->mPos.x >> 3;
     this->mModel.mat4x3.t.y = this->mPos.y >> 3;
@@ -665,14 +656,14 @@ s32 daChoro_Rock_c::Render()
 
 /* The mole's per-frame update (vtable slot 6): Luigi-vanish bookkeeping for the
  * cylinder, the current state's update handler through the state table, then
- * func_ov080_02124208 (react to whatever touched the cylinder), func_ov080_021243d8
+ * HandleCollision (react to whatever touched the cylinder), UpdateModelMatrix
  * (rebuild the model matrix), and the cylinder's Clear and Update. */
 s32 daChoropu_c::Behavior()
 {
     MakeVanishLuigiWork(mdCcAc_c);
     (this->*data_ov080_02128438[mState].fn[0])();
-    func_ov080_02124208();
-    func_ov080_021243d8();
+    HandleCollision();
+    UpdateModelMatrix();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -688,7 +679,7 @@ s32 daChoropu_c::Behavior()
  * random heading (RandomIntInternal >> 8 as mPrevAngle.y), half its horizontal speed
  * and vertical speed 5 units (0x5000); then, big or small, it is marked for
  * destruction. After that: UpdatePos, UpdateWMClsn, the model matrix
- * (func_ov080_02124418), and the cylinder's Clear and Update. */
+ * (UpdateModelMatrix), and the cylinder's Clear and Update. */
 s32 daChoro_Rock_c::Behavior()
 {
     MakeVanishLuigiWork(mdCcAc_c);
@@ -744,7 +735,7 @@ s32 daChoro_Rock_c::Behavior()
 
     UpdatePos(0);
     UpdateWMClsn(mWithMeshClsn, 0);
-    this->func_ov080_02124418();
+    this->UpdateModelMatrix();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -830,10 +821,10 @@ ChoropuAnimationFilePtr data_ov080_021283d8(ASSET_CHOROPU_START_BCA);
 ChoropuAnimationFilePtr data_ov080_021283e0(ASSET_CHOROPU_THROW_BCA);
 
 ChoropuStateRow data_ov080_02128438[6] = {
-    {{&daChoropu_c::func_ov080_02123fcc}},
-    {{&daChoropu_c::func_ov080_02123ecc}},
-    {{&daChoropu_c::func_ov080_02123c24}},
-    {{&daChoropu_c::func_ov080_02123a34}},
-    {{&daChoropu_c::func_ov080_02123924}},
-    {{&daChoropu_c::func_ov080_02123860}},
+    {{&daChoropu_c::UpdateSetup}},     /* 0 daChoropu_ST_SETUP,      data_ov080_02127fa0 */
+    {{&daChoropu_c::UpdateHidden}},    /* 1 daChoropu_ST_HIDDEN,     data_ov080_02127f88 */
+    {{&daChoropu_c::UpdateEmerge}},    /* 2 daChoropu_ST_EMERGE,     data_ov080_02127fa8 */
+    {{&daChoropu_c::UpdateThrowRock}}, /* 3 daChoropu_ST_THROW_ROCK, data_ov080_02127f80 */
+    {{&daChoropu_c::UpdateWait}},      /* 4 daChoropu_ST_WAIT,       data_ov080_02127f98 */
+    {{&daChoropu_c::UpdateLeap}},      /* 5 daChoropu_ST_LEAP,       data_ov080_02127f90 */
 };

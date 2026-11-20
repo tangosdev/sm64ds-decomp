@@ -356,7 +356,7 @@
       "address": "0x0209d684",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. Referenced by Message::Update, daMip_c::StateSaveTalkMain, daMky_c::func_ov030_02112da0, daMky_c::func_ov030_02113324, daObjCloset_c::Behavior, daObjHatenaSwitch_c::Behavior, daObj_Mip_Key_c::StateCarried, daPgRcer_c::func_ov019_02111fec and 4 more. Global: also referenced from Message2.cpp, ov002, ov019, ov030, ov058, ov062, ov085."
+      "evidence": "u8. Referenced by Message::Update, daMip_c::StateSaveTalkMain, daMky_c::St_StarEaten_Main, daMky_c::St_StarGrabbed_Main, daObjCloset_c::Behavior, daObjHatenaSwitch_c::Behavior, daObj_Mip_Key_c::StateCarried, daPgRcer_c::func_ov019_02111fec and 4 more. Global: also referenced from Message2.cpp, ov002, ov019, ov030, ov058, ov062, ov085."
     },
     {
       "symbol": "gMsgChoiceLine",

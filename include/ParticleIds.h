@@ -76,9 +76,9 @@ enum ParticleId {
     kPtclChairBreakA = 0x025,           /* daChair_c::Break */
     kPtclChairBreakB = 0x026,           /* daChair_c::Break */
     kPtclDrainLidPounded = 0x028,       /* daObjTtFuta_c::OnGroundPounded */
-    kPtclMontyMoleEmerge = 0x029,       /* daChoropu_c::func_ov080_02123c24 */
-    kPtclMontyMoleLeapA = 0x02a,        /* daChoropu_c::func_ov080_02123860 */
-    kPtclMontyMoleLeapB = 0x02b,        /* daChoropu_c::func_ov080_02123860 */
+    kPtclMontyMoleEmerge = 0x029,       /* daChoropu_c::UpdateEmerge */
+    kPtclMontyMoleLeapA = 0x02a,        /* daChoropu_c::UpdateLeap */
+    kPtclMontyMoleLeapB = 0x02b,        /* daChoropu_c::UpdateLeap */
     kPtclYoshiEggTrail = 0x02c,         /* daYegg_c::func_ov002_020ecb0c */
     kPtclSpindelDust = 0x02d,           /* daDgr_c::Behavior */
     kPtclGrindelLanding = 0x02e,        /* daDkk_c::StateFall */
@@ -229,10 +229,10 @@ enum ParticleId {
     kPtclBigSplash = 0x0dd,             /* Particle::System::NewBigSplash */
     kPtclShallowWaterLand = 0x0de,      /* func_ov002_020d1f78 */
     kPtclSplash = 0x0df,                /* Particle::System::NewSplash */
-    kPtclShellRideTrail = 0x0e0,        /* daShl_c::func_ov102_0214c84c */
-    kPtclShellRideLava = 0x0e1,         /* daShl_c::func_ov102_0214c84c */
-    kPtclShellRideWaterA = 0x0e2,       /* daShl_c::func_ov102_0214c84c */
-    kPtclShellRideWaterB = 0x0e3,       /* daShl_c::func_ov102_0214c84c */
+    kPtclShellRideTrail = 0x0e0,        /* daShl_c::UpdateRideTrail */
+    kPtclShellRideLava = 0x0e1,         /* daShl_c::UpdateRideTrail */
+    kPtclShellRideWaterA = 0x0e2,       /* daShl_c::UpdateRideTrail */
+    kPtclShellRideWaterB = 0x0e3,       /* daShl_c::UpdateRideTrail */
     kPtclCurrentFlow = 0x0e7,           /* func_ov002_020bf800 */
     kPtclWaterSurfaceMove = 0x0e8,      /* daMip_c::StateFleeMain */
     kPtclWaterSurfaceStill = 0x0e9,     /* daPly_c::func_ov002_020ce8bc */
