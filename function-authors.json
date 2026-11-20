@@ -8183,7 +8183,7 @@
     },
     "arm9:0x0204effc": {
       "author": "tangosdev",
-      "name": "func_0204effc"
+      "name": "BeginSleep"
     },
     "arm9:0x0204f03c": {
       "author": "tangosdev",
@@ -8407,7 +8407,7 @@
     },
     "arm9:0x020500a4": {
       "author": "andrewboudreau",
-      "name": "func_020500a4"
+      "name": "AlarmCallback"
     },
     "arm9:0x020501b8": {
       "author": "tangosdev",
@@ -8575,27 +8575,27 @@
     },
     "arm9:0x02051454": {
       "author": "andrewboudreau",
-      "name": "func_02051454"
+      "name": "DisposeCallback"
     },
     "arm9:0x020514b4": {
       "author": "tangosdev",
-      "name": "func_020514b4"
+      "name": "LoadWaveArc"
     },
     "arm9:0x02051514": {
       "author": "tangosdev",
-      "name": "func_02051514"
+      "name": "LoadBank"
     },
     "arm9:0x02051574": {
       "author": "tangosdev",
-      "name": "func_02051574"
+      "name": "LoadSeqArc"
     },
     "arm9:0x020515d4": {
       "author": "tangosdev",
-      "name": "func_020515d4"
+      "name": "LoadSeq"
     },
     "arm9:0x02051634": {
       "author": "tangosdev",
-      "name": "func_02051634"
+      "name": "NNSi_SndArcLoadFile"
     },
     "arm9:0x020516d4": {
       "author": "andrewboudreau",
@@ -8655,7 +8655,7 @@
     },
     "arm9:0x02052008": {
       "author": "tangosdev",
-      "name": "func_02052008"
+      "name": "NNS_SndArcPlayerSetup"
     },
     "arm9:0x020520a4": {
       "author": "tangosdev",
@@ -12351,7 +12351,7 @@
     },
     "itcm:0x01ff859c": {
       "author": "ruspecial",
-      "name": "func_01ff859c"
+      "name": "_ll_ufrom_d"
     },
     "itcm:0x01ff8708": {
       "author": "ruspecial",
@@ -12379,7 +12379,7 @@
     },
     "itcm:0x01ff9d40": {
       "author": "ruspecial",
-      "name": "func_01ff9d40"
+      "name": "_deq"
     },
     "itcm:0x01ff9e2c": {
       "author": "ruspecial",
@@ -12391,7 +12391,7 @@
     },
     "itcm:0x01ffa440": {
       "author": "andrewboudreau",
-      "name": "func_01ffa440"
+      "name": "_ffltu"
     },
     "itcm:0x01ffa4bc": {
       "author": "ruspecial",
