@@ -82,7 +82,7 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -99,7 +99,7 @@ void daBasabasa_c::CheckTouch() {
         mDeathState = 4;
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -107,7 +107,7 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 3;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -115,13 +115,13 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -146,7 +146,7 @@ void daBasabasa_c::CheckTouch() {
     if (JumpedOnByPlayer(mdCcAc_c, *p) != 0) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }

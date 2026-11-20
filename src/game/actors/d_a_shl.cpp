@@ -10,7 +10,7 @@
  * wall breaks.
  *
  * A small state machine drives it. mState points at one of four file-scope
- * records {enter, tick}, each a pointer-to-member; func_ov102_0214d1f8
+ * records {enter, tick}, each a pointer-to-member; SetState
  * switches state and runs `enter`, Behavior runs `tick` every frame. The
  * records are .bss. __sinit_d_a_shl.cpp copies the PMF constants at
  * ov102:0x0214e5d4..0x0214e614 into them:
@@ -119,7 +119,7 @@ s32 daShl_c::InitResources()
     mCarrier = 0;
     mMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     mMeshClsn.StartDetectingWater();
-    func_ov102_0214d1f8(&data_ov102_0214ea68);
+    SetState(&data_ov102_0214ea68);
     mParticleHandle_3d4 = 0;
     mParticleHandle_3d0 = mParticleHandle_3d4;
     mParticleHandle_3cc = mParticleHandle_3d0;
@@ -138,7 +138,7 @@ s32 daShl_c::Behavior()
     if (UpdateYoshiEat(mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
             mSpawnAngleY = mPrevAngle.y;
-            func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
+            SetState(&data_ov102_0214ea78.rec);
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
         }
@@ -239,8 +239,7 @@ s32 daShl_c::CleanupResources()
 }
 
 /* Switch state: store the record, then run its `enter` if it has one. */
-int daShl_c::func_ov102_0214d1f8(ShlState *state)
-{
+int daShl_c::SetState(ShlState *state) {
     mState = state;
     ShlState *st = mState;
     if (st->enter == 0)
@@ -339,7 +338,7 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
         return 0;
     mCarrier = static_cast<daPly_c *>(player);
     if (mState != &data_ov102_0214ea48)
-        func_ov102_0214d1f8(&data_ov102_0214ea48);
+        SetState(&data_ov102_0214ea48);
     return 1;
 }
 
@@ -349,7 +348,7 @@ int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
     if (mState == &data_ov102_0214ea78.rec)
         return 0;
     mSpawnAngleY = kicker->mAngle.y;
-    func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
+    SetState(&data_ov102_0214ea78.rec);
     return 1;
 }
 
@@ -425,7 +424,7 @@ void daShl_c::func_ov102_0214cbec()
         if (player->TryGrab(*this) == 0)
             return;
         mCarrier = player;
-        func_ov102_0214d1f8(&data_ov102_0214ea58);
+        SetState(&data_ov102_0214ea58);
         return;
     }
 

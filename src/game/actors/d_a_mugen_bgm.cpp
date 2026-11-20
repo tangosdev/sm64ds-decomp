@@ -16,8 +16,8 @@
  * is the current one.
  *
  * Notes:
- * - data_ov002_02110af0 / 02110af4 / 02110af8 are this TU's stored area,
- *   angle and Fog instance; gLocalPlayerId, gPlayers, 020a0ebc, 0209caa0,
+ * - sEndlessStairsFogAreaId, data_ov002_02110af4 and sEndlessStairsFog are
+ *   this TU's stored area, angle and Fog instance; gLocalPlayerId, gPlayers, 020a0ebc, 0209caa0,
  *   gCamera, 0208e434 and gCurrentAreaId are arm9 scene state this TU does
  *   not own.
  * - g_profile_MUGEN_BGM lives outside this TU.
@@ -35,9 +35,9 @@
 #include "daDoor_c.h"
 #include "math/CalcLib.h"
 
-extern signed char data_ov002_02110af0;
+extern signed char sEndlessStairsFogAreaId;
 extern signed char gCurrentAreaId;
-extern void *data_ov002_02110af8;
+extern void *sEndlessStairsFog;
 extern u8 gLocalPlayerId;
 extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
@@ -67,11 +67,11 @@ int daMugenBGM_c::InitResources() {
     if (param1 != 1) {
         data_ov002_02110af4 = mAngle.y;
         p = ::operator new(0x28);
-        data_ov002_02110af8 = p;
+        sEndlessStairsFog = p;
         if (p != 0) {
             ((Fog *)p)->Init(0, 0x700, 0xd00);
         }
-        data_ov002_02110af0 = mAreaId;
+        sEndlessStairsFogAreaId = mAreaId;
     }
     mAreaId = -1;
     mAngle.y = -mAngle.y;
@@ -133,7 +133,7 @@ int daMugenBGM_c::Behavior() {
     }
 
     {
-        void *fog = data_ov002_02110af8;
+        void *fog = sEndlessStairsFog;
         if (fog != 0)
             ((Fog *)fog)->Init(0, (u16)depth, color);
     }
@@ -166,8 +166,8 @@ int daMugenBGM_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 Fog *daMugenBGM_c::GetActiveFog() {
-    if (data_ov002_02110af0 == gCurrentAreaId)
-        return (Fog *)data_ov002_02110af8;
+    if (sEndlessStairsFogAreaId == gCurrentAreaId)
+        return (Fog *)sEndlessStairsFog;
     return 0;
 }
 

@@ -44,7 +44,7 @@ extern char data_0208e538[], data_0208e548[], data_0208e54c[], data_0208e55c[];
 extern char data_0208e56c[], data_0208e57c[], data_0208e58c[], data_0208e59c[];
 extern char data_0208e5b0[], data_0208e5c0[], data_0208e5d4[], data_0208e5e4[];
 extern char data_0208e5f0[], data_0208e5fc[], data_0208e608[], data_0208e610[];
-extern char data_0208e624[], data_0208e634[], data_0208e648[], data_020a0d90[];
+extern char data_0208e624[], data_0208e634[], data_0208e648[], gBuildTimeString[];
 
 typedef struct {
     char c[52];
@@ -60,7 +60,7 @@ void ShowCrashScreen(void)
 
     nds_printt((unsigned short *)scr + 0x2f4, data_0208e538, (u32)func_020427c4());
     nds_print(scr, data_0208e548);
-    nds_print(scr + 6, data_020a0d90);
+    nds_print(scr + 6, gBuildTimeString);
     cc = gCurrentSublevel;
     nds_printf(scr + 0x40, data_0208e54c, cc, GetStageDebugName());
     nds_printf(scr + 0x80, data_0208e55c, gCurrentEntranceId);

@@ -206,7 +206,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_0212522cEP4dBgWP8dActor_cS3_",
+      "symbol": "_ZN7daBtn_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x0212522c",
       "size": "0x00000014",
       "legacy_source": "src/func_ov079_0212522c.c",

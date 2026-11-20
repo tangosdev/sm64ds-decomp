@@ -205,7 +205,10 @@ struct daKrb_c : dCapEnemy_c {
     };
 
     /* mDeathState (dEnemyBase_c) values this class writes in its hit reaction
-       (func_ov084_02129ed4), named for the hit that sets them. */
+       (func_ov084_02129ed4), named for the hit that sets them. On the
+       cartridge a stomp and a ground pound set 1, a punch 2, a breakdance, a
+       slide kick and the combo's kick 3, a dive 5, and a thrown Bob-omb's
+       blast 6 (include/dCc_c.h, the SEEN rows). */
     enum DeathState {
         DEATH_NONE = 0,
         DEATH_STOMPED = 1, /* jumped on, or a spin / ground-pound hit */

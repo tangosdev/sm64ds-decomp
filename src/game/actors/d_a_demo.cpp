@@ -242,7 +242,7 @@ extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. */
 extern dFdBrightness_c *gSceneFader;
-extern u8 data_ov002_02111144;
+extern u8 gMapIntroZooming;
 extern int gGlobalTimer;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
@@ -493,7 +493,7 @@ int daDemo_c::func_ov002_020f23d0()
  *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
  *      centerSpriteY[0] reaches 8 (it starts at -8)
  *   1  wait for mCue == 3 (written by script handler 26c4), then set
- *      data_ov002_02111144 to 1
+ *      gMapIntroZooming to 1
  *   2  on frames with FRAME_TIMER bit 0 clear, bg1Y++ and bg0Y--; at
  *      bg1Y 0x80, next state and sprite delays 1/0x41/0x81. Also runs the
  *      horizontal scroll (237c) and the fade step (1fcc)
@@ -520,7 +520,7 @@ int daDemo_c::func_ov002_020f23f0()
         break;
     case 1:
         if (this->mCue == 3) {
-            data_ov002_02111144 = 1;
+            gMapIntroZooming = 1;
             mScroll->state++;
         }
         break;

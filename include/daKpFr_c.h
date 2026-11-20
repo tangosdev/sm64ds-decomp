@@ -84,8 +84,8 @@ struct daKpFr_c : dActor_c {
     int func_ov070_02121f18();
     int func_ov070_02121fb0();
     void CallStateBehavior();
-    void func_ov070_0212200c();
-    void func_ov070_02122044(int idx);
+    void CallStateInit();
+    void SetState(int idx);
 };
 
 #ifndef SM64DS_PLATFORM_PC
