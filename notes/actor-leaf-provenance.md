@@ -187,8 +187,8 @@ Listed so the next reader does not repeat the search.
   0x182 is `(param1 >> 4) & 0xf`, 0x181 is 1 when 0x180 is 0 and `(param1 >> 8) & 1`
   otherwise. The ov080 TU promotion enrolled the readers, and three are now named
   from them: 0x16c `mPartnerIDs[4]` and 0x183 `mNumPartners` (filled from the
-  same-group moles by `func_ov080_02123fcc`, read by `func_ov080_02124088` and
-  `func_ov080_02124360`), and 0x17c `mState` (the index into `Behavior`'s state
+  same-group moles by `UpdateSetup`, read by `KnockUnderground` and
+  `PassTurn`), and 0x17c `mState` (the index into `Behavior`'s state
   table). 0x180..0x182, 0x184 and 0x188 are still `unk_`.
 - `daFRing_c` 0x214: zeroed in
   `src/game/actors/d_a_f_ring.cpp` InitResources, and Behavior reads it as the shock frame.
