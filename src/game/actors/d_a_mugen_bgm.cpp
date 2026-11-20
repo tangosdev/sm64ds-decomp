@@ -37,16 +37,12 @@
 
 extern signed char sEndlessStairsFogAreaId;
 extern signed char gCurrentAreaId;
-extern void *sEndlessStairsFog;
+extern Fog *sEndlessStairsFog;
 extern u8 gLocalPlayerId;
 extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
 extern dCamera_c *gCamera;
 
-/* arm9 / ov100 C helpers with no shared header. */
-extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short angle, const Vector3 *v);
-}
 u8 NumStars(void);
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` inherits fBase_c::operator new. */
@@ -57,7 +53,7 @@ daMugenBGM_c *daMugenBGM_c_classInit(void) {
 
 /* -------------------------------------------------------------------------- */
 int daMugenBGM_c::InitResources() {
-    void *p;
+    Fog *p;
     /* The param1 mask reads through a const view of `this`: `param1 &= 0xf`
        makes mwcc CSE the +8 field address into r1 (add r1,r4,#8 / ldr r0,[r1] /
        str r0,[r1]) and the function grows a word; the cartridge re-issues
@@ -66,10 +62,10 @@ int daMugenBGM_c::InitResources() {
     param1 = ro->param1 & 15;
     if (param1 != 1) {
         data_ov002_02110af4 = mAngle.y;
-        p = ::operator new(0x28);
+        p = new Fog;
         sEndlessStairsFog = p;
         if (p != 0) {
-            ((Fog *)p)->Init(0, 0x700, 0xd00);
+            p->Init(0, 0x700, 0xd00);
         }
         sEndlessStairsFogAreaId = mAreaId;
     }
@@ -133,9 +129,9 @@ int daMugenBGM_c::Behavior() {
     }
 
     {
-        void *fog = sEndlessStairsFog;
+        Fog *fog = sEndlessStairsFog;
         if (fog != 0)
-            ((Fog *)fog)->Init(0, (u16)depth, color);
+            fog->Init(0, (u16)depth, color);
     }
 
     if (mHorzSpeed == 0) {
@@ -167,7 +163,7 @@ int daMugenBGM_c::CleanupResources() {
 /* -------------------------------------------------------------------------- */
 Fog *daMugenBGM_c::GetActiveFog() {
     if (sEndlessStairsFogAreaId == gCurrentAreaId)
-        return (Fog *)sEndlessStairsFog;
+        return sEndlessStairsFog;
     return 0;
 }
 

@@ -583,7 +583,7 @@ int daOnms_c::InitResources()
 
     mMoveKind = param1 & 3;
     if (mMoveKind != kMoveAlongPath) {
-        mMoveSeq = ((s32 **)&data_ov092_02132294)[mMoveKind];
+        mMoveSeq = data_ov092_02132294[mMoveKind];
         mMoveSeqIndex = 0;
         mMoveDir = *mMoveSeq;
     } else {

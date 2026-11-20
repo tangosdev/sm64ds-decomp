@@ -64,7 +64,7 @@ struct daJango_c : dEnemyBase_c {
        `enter` at once, Behavior calls `update` (the +0x08 member) on `this`
        every frame, and the code compares it by address only against the HURT
        record (Behavior) and the SWOOP record (HandleCylinderHit); the other
-       records (data_ov062_0211e15c / _0211e16c / _0211e17c) are only passed to
+       records (sFlyPathState / sRiseState / sCircleState) are only passed to
        ChangeState. The five records are filled in by
        __sinit_ov062_0211d6fc; src/game/actors/d_a_jango.cpp names them. */
     void                        *mState;                /* 0x42c */

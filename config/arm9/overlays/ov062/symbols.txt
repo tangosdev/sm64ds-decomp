@@ -274,8 +274,8 @@ data_ov062_0211e114 kind:bss addr:0x0211e114
 @1117 kind:bss addr:0x0211e128
 @1115 kind:bss addr:0x0211e134
 @1116 kind:bss addr:0x0211e140
-data_ov062_0211e14c kind:bss addr:0x0211e14c
-data_ov062_0211e15c kind:bss addr:0x0211e15c
-data_ov062_0211e16c kind:bss addr:0x0211e16c
-data_ov062_0211e17c kind:bss addr:0x0211e17c
-data_ov062_0211e18c kind:bss addr:0x0211e18c
+sHurtState kind:bss addr:0x0211e14c
+sFlyPathState kind:bss addr:0x0211e15c
+sRiseState kind:bss addr:0x0211e16c
+sCircleState kind:bss addr:0x0211e17c
+sSwoopState kind:bss addr:0x0211e18c

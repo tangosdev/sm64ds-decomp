@@ -11,10 +11,8 @@ struct dScMgAmida_c_Piece {
     dScMgAmida_c_Piece() {}
     ~dScMgAmida_c_Piece() {}
 
-    s32 posX;    /* +0x00 */
-    s32 posY;    /* +0x04 */
-    s32 velX;    /* +0x08 */
-    s32 velY;    /* +0x0c */
+    Vector2 pos; /* +0x00 */
+    Vector2 vel; /* +0x08 */
     s32 timer;   /* +0x10 */
     u8  active;  /* +0x14 */
 };

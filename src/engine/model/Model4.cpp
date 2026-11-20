@@ -265,8 +265,9 @@ void RuntimeModel::func_020462d0(Desc *h, ElemA *arr) {
     }
 }
 
-extern "C" void *func_020462bc(int *p) {
-    return &((Matrix4x3 *)0)[p[1]];
+extern "C" int func_020462bc(void *p) {
+    BMD_File *s = (BMD_File *)p;
+    return (int)&((Matrix4x3 *)0)[s->numBones];
 }
 
 void func_020462b4(int *p, int v) {

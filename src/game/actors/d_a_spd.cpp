@@ -67,8 +67,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 /* dBgCh_Actr::Init's last two parameters are Vector3_16* (the S5_
  * back-references the pointer type). */
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
  * order, so this file is written ROM-descending and nearly every intra-TU call
  * is a forward reference. */

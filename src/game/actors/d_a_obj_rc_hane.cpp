@@ -59,6 +59,7 @@ enum d_a_obj_rc_hane_AssetId { ASSET_RC_HANE_BMD = 0x06a6 };
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
 
 /* 8-byte model handle. The constructor and destructor are the retail
@@ -81,10 +82,6 @@ typedef char RcHaneModelFilePtr_size_must_be_8[sizeof(RcHaneModelFilePtr) == 8 ?
  * finished matrix out of it. */
 
 extern RcHaneModelFilePtr data_ov036_02114070; /* the wing's BMD */
-
-extern "C" {
-void Vec3_Asr(void *dst, void *src, int n);
-}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -181,10 +178,10 @@ s32 daObjRc_Hane_c::Render() {
  * The rotation order is Y, X, Z -- yaw first, then the pitch the table
  * drives, then roll. */
 void daObjRc_Hane_c::UpdateModelTransform() {
-    int v[3];
+    Vector3 v;
 
-    Vec3_Asr(v, &mPos.x, 3);
-    Matrix4x3_FromTranslation(&gScratchMtx, v[0], v[1], v[2]);
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
 
     Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
     Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);

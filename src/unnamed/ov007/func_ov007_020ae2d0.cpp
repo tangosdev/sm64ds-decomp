@@ -23,7 +23,7 @@ void func_ov007_020ae2d0(Ov007ItemNode *self) {
 
     switch (id) {
     case 1: {
-        Ov007Work *q = WORK;
+        Ov007Work *q = gMenuWork;
         short a = q->states[0]->currentState;
         if (a == 0) {
             short b = q->states[1]->currentState;
@@ -58,7 +58,7 @@ void func_ov007_020ae2d0(Ov007ItemNode *self) {
         return;
     }
     case 7: {
-        Ov007Work *q = WORK;
+        Ov007Work *q = gMenuWork;
         Ov007ItemView *r = q->itemViews[8];
         Ov007Item *s = r->item;
         short t = s->state->currentState;

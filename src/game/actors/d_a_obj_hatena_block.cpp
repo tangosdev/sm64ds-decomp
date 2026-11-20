@@ -185,7 +185,7 @@ extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix,
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
 }
-void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);
+void func_ov102_02149684(Vector3 *dst, daObjHatenaBlock_c *src);
 
 /* gGameMode is 1 in VS mode: PrepareVsMode stores it. These int-returning
    predicates are what make the ROM materialize 0/1 before testing it. */
@@ -705,7 +705,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
     int ch;
     u16 typ;
     dActor_c *held;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     if (DecIfAbove0_Short(&mBounceTimer) != 0) {
 
         mScale.y = FX_MUL(FX_SinIdx((u16)mBounceAng >> 4) + 0x1000, 0x999) + 0x666;
@@ -873,12 +873,12 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
-void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src) {
+void func_ov102_02149684(Vector3 *dst, daObjHatenaBlock_c *src) {
     int z = src->mPos.z;
     int liftedY = src->mPos.y + 0x32000;
-    dst[0] = src->mPos.x;
-    dst[1] = liftedY;
-    dst[2] = z;
+    dst->x = src->mPos.x;
+    dst->y = liftedY;
+    dst->z = z;
 }
 
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40
@@ -906,7 +906,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     int rnd;
     dActor_c* o;
     dCamera_c* g;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     o = dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, p2 | (p1 << 8), pos, 0, mAreaId, -1);
     if (o == 0) return;
     g = gCamera;
@@ -929,7 +929,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
    1.5 units, base angle 0), then KillAndTrackInDeathTable. */
 void daObjHatenaBlock_c::SpawnPrizeCoins() {
     Vector3 pos;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     int count = (param1 >> 8) & 0xff;
     if (count == 0xff)
         count = 1;
@@ -942,7 +942,7 @@ void daObjHatenaBlock_c::SpawnPrizeCoins() {
    0x40 (the 0x40 bit is not interpreted here), then MarkForDestruction. */
 void daObjHatenaBlock_c::SpawnPrizeStar() {
     Vector3 pos;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     dActor_c::Spawn(ACTOR_STAR, mStarId | 0x40, pos, 0, mAreaId, -1);
     MarkForDestruction();
 }
@@ -951,7 +951,7 @@ void daObjHatenaBlock_c::SpawnPrizeStar() {
    KillAndTrackInDeathTable. */
 void daObjHatenaBlock_c::SpawnPrize1Up() {
     struct Vector3 pos;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     dActor_c::Spawn(ACTOR_ONEUPKINOKO, 0, pos, 0, mAreaId, -1);
     KillAndTrackInDeathTable();
 }
@@ -960,7 +960,7 @@ void daObjHatenaBlock_c::SpawnPrize1Up() {
    Does not kill the block. */
 void daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko() {
     Vector3 v;
-    func_ov102_02149684((int *)&v, this);
+    func_ov102_02149684(&v, this);
     signed char cc = mAreaId;
     dActor_c::Spawn(ACTOR_SCALEUP_KINOKO, 0, v, (const Vector3_16*)0, cc, -1);
 }
@@ -969,7 +969,7 @@ void daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko() {
    sets the new shell's mDespawnTimer to 0xb4 (180). */
 void daObjHatenaBlock_c::SpawnPrizeShell() {
     Vector3 v;
-    func_ov102_02149684((int *)&v, this);
+    func_ov102_02149684(&v, this);
     void *a = dActor_c::Spawn(ACTOR_SHELL, 0, v, 0, mAreaId, -1);
     if (a)
         ((daShl_c *)a)->mDespawnTimer = 180;
@@ -982,7 +982,7 @@ void daObjHatenaBlock_c::SpawnPrizeShell() {
 void daObjHatenaBlock_c::SpawnPrizeFeather() {
     struct Vector3 pos;
     struct Vector3_16 rot;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     /* Raw: as Vector3_16 the three loads become ldrsh where the ROM has ldrh
        (copy and field-wise both, measured 2026-11-14). */
     rot.x = *(u16 *)(data_020a0edc);
@@ -999,7 +999,7 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
 /* POWER_UP_ITEM prize: spawns a POWER_UP_ITEM (param 0) at the prize point. */
 void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
     Vector3 v;
-    func_ov102_02149684((int *)&v, this);
+    func_ov102_02149684(&v, this);
     dActor_c::Spawn(ACTOR_POWER_UP_ITEM, 0u, v, 0, mAreaId, -1);
 }
 
@@ -1009,7 +1009,7 @@ void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
    fuse). Callers discard the result of that helper. */
 void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     Vector3 v;
-    func_ov102_02149684((int *)&v, this);
+    func_ov102_02149684(&v, this);
     daBmb_c *a = (daBmb_c *)dActor_c::Spawn(ACTOR_BOMBHEI, 4, v, 0, mAreaId, -1);
     if (a == 0)
         return;

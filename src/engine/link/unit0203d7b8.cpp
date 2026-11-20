@@ -286,7 +286,7 @@ int WFS_GetStatus(void);
 void WFS_End(void);
 void WFS_Start(void);
 void WFSi_OnChildSystemCallback(void *arg);
-void WFSi_ReallocBitmap(char *thiz, int n);
+void WFSi_ReallocBitmap(WFSChildContext *child, int n);
 void WFSi_OnParentSystemCallback(void *arg);
 void func_0204175c(void);
 void WFSi_PortCallback(void *arg);
@@ -930,7 +930,7 @@ void WFSi_ReadRequest(FSFile *file) {
     int packetSize;
     int len;
     int pos;
-    WFSi_ReallocBitmap(data_020a2400, file->arg.readfile.len);
+    WFSi_ReallocBitmap(&data_020a1fc0.context.child, file->arg.readfile.len);
     data_020a1fc0.target_file = file;
     len = file->arg.readfile.len;
     pos = file->prop.file.pos;
@@ -1252,8 +1252,7 @@ void WFSi_OnParentSystemCallback(void *arg) {
 
 /* Grow the child's receive work (WBT's packet bitmap) to cover a read of n
  * bytes, or with n < 0 reallocate it at the current max_file_size. */
-void WFSi_ReallocBitmap(char *thiz, int n) {
-    WFSChildContext *child = (WFSChildContext *)thiz;
+void WFSi_ReallocBitmap(WFSChildContext *child, int n) {
     void *work;
     unsigned int size;
     if (n < 0) {
@@ -1280,7 +1279,7 @@ void WFSi_ReallocBitmap(char *thiz, int n) {
 void WFSi_OnChildSystemCallback(void *arg) {
     WBTCommand *cmd = (WBTCommand *)arg;
     int aid = WBT_AidbitmapToAid(cmd->peer_bmp);
-    WFSChildContext *child = (WFSChildContext *)data_020a2400;
+    WFSChildContext *child = &data_020a1fc0.context.child;
     switch (cmd->command) {
     case 2:
         if (cmd->target_bmp != 0) {
@@ -1477,10 +1476,10 @@ void func_02040c34(int isParent, int port, void (*stateCallback)(int),
             arr->block_id = 0;
             G->parent_packet_size = 0x80;
             arr->max_file_size = 0x100000;
-            WFSi_ReallocBitmap(base, -1);
+            WFSi_ReallocBitmap(arr, -1);
             G->parent_packet_size = 0;
             WFSi_LoadTables();
-            WFSi_ReallocBitmap(base, data_020a1fc0.table_size);
+            WFSi_ReallocBitmap(arr, data_020a1fc0.table_size);
             FlushFileShareArea(base, sizeof(WFSChildContext));
             DC_WaitWriteBufferEmpty();
             WBT_InitChild(WFSi_OnChildSystemCallback);
@@ -1498,7 +1497,7 @@ void WFS_Start(void) {
         /* WM_ReadStatus copies the WM status block into the child area's
            status (6 on a NULL buffer, then a cache-invalidated copy); its
            aid goes to WBT_SetOwnAid. */
-        WFSChildContext *child = (WFSChildContext *)data_020a2400;
+        WFSChildContext *child = &data_020a1fc0.context.child;
         WM_ReadStatus(&child->status);
         WBT_SetOwnAid(child->status.aid);
         WBT_RequestSync(1, WFSi_OnChildSystemCallback);
@@ -3141,7 +3140,7 @@ typedef struct {
    frames for the first and 0x258 for the rest; a wait that runs out flags
    data_020a0f1c bit 0, shuts the link down and parks the thread. Otherwise
    this console fills in its own profile from the owner settings. */
-void func_0203db64(void *parentParam, void *gameRegistry) {
+void func_0203db64(void *parentParam, const void *gameRegistry) {
     OwnerInfo buf;
 
     data_020a0ef0 = 0;

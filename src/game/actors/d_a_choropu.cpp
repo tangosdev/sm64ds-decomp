@@ -43,11 +43,7 @@ enum daChoropu_c_AssetId {
     ASSET_ROCK_BMD = 0x02d6
 };
 
-/* decl_common.h declares data_ov080_021276c4 as a non-const int[],
-   which cannot be this .rodata object. Hide that declaration. */
-#define data_ov080_021276c4 data_ov080_021276c4_decl
 #include "decl_common.h"
-#undef data_ov080_021276c4
 #include "daChoropu_c.h"
 #include "daChoro_Rock_c.h"
 #include "decl_Player.h"

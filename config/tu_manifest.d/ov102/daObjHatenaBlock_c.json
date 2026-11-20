@@ -143,7 +143,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "_Z19func_ov102_02149684PiP18daObjHatenaBlock_c",
+      "symbol": "_Z19func_ov102_02149684P7Vector3P18daObjHatenaBlock_c",
       "address": "0x02149684",
       "size": "0x00000020",
       "legacy_source": "src/func_ov102_02149684.c",

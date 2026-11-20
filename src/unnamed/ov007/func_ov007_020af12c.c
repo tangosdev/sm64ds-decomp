@@ -12,7 +12,7 @@ extern void PickerScene_Update(void);
  * the picker to state 2 and, once the picker reaches state 3, sends item view
  * 3's item to state 2. Then PickerScene_Update. */
 void func_ov007_020af12c(void) {
-    Ov007MenuState *s1 = WORK->states[1];
+    Ov007MenuState *s1 = gMenuWork->states[1];
     int state = s1->currentState;
     int ticks = s1->stateTicks;
     Ov007MenuState *picker;
@@ -25,7 +25,7 @@ void func_ov007_020af12c(void) {
         }
         picker = PickerScene_GetMainState();
         if (picker->currentState == 2)
-            WORK->states[1]->requestedState = 1;
+            gMenuWork->states[1]->requestedState = 1;
         break;
     case 1:
         if (ticks == 0) {
@@ -35,7 +35,7 @@ void func_ov007_020af12c(void) {
         }
         picker = PickerScene_GetMainState();
         if (picker->currentState == 3)
-            WORK->itemViews[3]->item->state->requestedState = 2;
+            gMenuWork->itemViews[3]->item->state->requestedState = 2;
         break;
     }
     PickerScene_Update();

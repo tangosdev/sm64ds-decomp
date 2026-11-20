@@ -14,12 +14,12 @@ extern void func_ov007_020b16f0(void);
  * the screen quads' corner colours to their end values
  * (FigureScene_SetScreenBlend(0x1000)). */
 void func_ov007_020b10dc(void) {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     int ticks = w->states[1]->stateTicks;
     if (ticks == 0) {
         w->callback(0x11);
     }
-    switch (WORK->figureIndex) {
+    switch (gMenuWork->figureIndex) {
     case 0:
         if (ticks == 30)
             func_ov007_020bdeb0(0x2b);

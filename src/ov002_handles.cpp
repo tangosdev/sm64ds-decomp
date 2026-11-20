@@ -46,8 +46,8 @@ Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
  * the handles' initializer is renamed from .text to .init, and a TU with no
  * ordinary function is refused. Defined after the handles so their @ counter
  * is unchanged. Death-state 8, the free-function sibling of
- * dEnemyBase_c::UpdateKillByInvincibleChar: the enemy, its collision and its
- * model arrive as raw pointers, and the wall test is IsOnWall rather than the
+ * dEnemyBase_c::UpdateKillByInvincibleChar: the collision and the model are
+ * passed in (either may be null), and the wall test is IsOnWall rather than the
  * ground-and-vertical-speed test. */
 #include "dEnemyBase_c.h"
 #include "dBgCh_Actr.h"
@@ -56,9 +56,7 @@ Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
-int dEnemyBase_c::func_ov002_020ad660(void *clsnArg, void *modelArg, int flags) {
-    dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
-    dExtSimpleModel_c *model = (dExtSimpleModel_c *)modelArg;
+int dEnemyBase_c::func_ov002_020ad660(dBgCh_Actr *clsn, dExtSimpleModel_c *model, int flags) {
     Vector3 v;
 
     if (mDeathState != 8)

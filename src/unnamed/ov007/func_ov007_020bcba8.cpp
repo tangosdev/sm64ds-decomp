@@ -20,7 +20,7 @@ extern void MenuText_LoadFontPalette(void);
  * 0x25 + language) and the BG palette (file 0x2b). */
 extern "C" void func_ov007_020bcba8(int idx) {
     Ov007Display *s;
-    Ov007Work *g = WORK;
+    Ov007Work *g = gMenuWork;
     s = g->display;
 
     switch (idx) {
@@ -42,7 +42,7 @@ extern "C" void func_ov007_020bcba8(int idx) {
         func_ov007_020b3edc(0x2c);
         func_ov007_020b3edc(0x2d);
 
-        langFile = WORK->settings->language + 0x25;
+        langFile = gMenuWork->settings->language + 0x25;
         GX_LoadBG3Char(func_ov007_020b3f20(langFile), 0, 0x4000);
         GX_LoadBGPltt(func_ov007_020b3f20(0x2b), 0, 0x200);
         func_ov007_020b3edc(langFile);

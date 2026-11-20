@@ -76,8 +76,6 @@ Vector3 gBmbCarryOffsets[4] = {
     Vector3(0x30000, -0x1e000, 0x3c000),
 };
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 /* --------------------------------------------------------------------------
  * The one file-scope extern "C" region.  Everything here is reached from a
  * C++-named member, which cannot declare it in its own body.
@@ -91,7 +89,6 @@ int AngleDiff(int, int);
 /* local extern: no header declares these; each is spelled as its
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
-int *Vec3_LslInPlace(int *v, int sh);
 /* Real definition: func_0201267c (arm9). The methods call through it so the
    name stays unmangled. */
 
@@ -765,7 +762,7 @@ void daBmb_c::func_ov102_0214b53c() {
                     p.x = gScratchMtx.t.x;
                     p.y = gScratchMtx.t.y;
                     p.z = gScratchMtx.t.z;
-                    Vec3_LslInPlace((int *)&p, 3);
+                    Vec3_LslInPlace(&p, 3);
                     daPly_c *eater = mEatingPlayer;
                     Vector3_16 rot = eater->mAngle;
                     Vector3_16 head = (const Vector3_16 &)eater->mHeadBoneRot;

@@ -63,8 +63,8 @@ extern u8 data_02092128[];
 extern signed char gNumLives;
 extern OamAttr data_ov001_020ab938;
 extern OamAttr data_ov001_020ab940;
-extern void *data_ov001_020abb18[];
-extern void *data_ov001_020abcb4[];
+extern OamAttr *data_ov001_020abb18[];
+extern OamAttr *data_ov001_020abcb4[];
 extern OamAttr data_ov001_020abbb4;
 extern OamAttr data_ov001_020abbf4;
 /* SaveData::IsCharacterUnlocked was declared three ways across the legacy
@@ -426,7 +426,7 @@ s32 dScStarSel_c::Render() {
                     OAM::RenderSub(&data_ov001_020ab940, mPlateX[i], 24);
                 }
             }
-            OAM::Render(0, (OamAttr *)data_ov001_020abb18[i], mPlateX[i], 8, -1, -1, 0);
+            OAM::Render(0, data_ov001_020abb18[i], mPlateX[i], 8, -1, -1, 0);
         }
 
         if (mCursorShown != 0) {
@@ -511,29 +511,24 @@ s32 dScStarSel_c::Render() {
                     if (mAnimMode == 2) {
                         if (i == GetCursorCharacter()) {
                             if (mAnimFlip == 0) {
-                                OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3], mCharX[i],
+                                OAM::Render(1, data_ov001_020abcb4[i + 3], mCharX[i], mCharY[i], -1,
+                                            -1, mIconScaleX, mIconScaleY, 0, -1);
+                                OAM::Render(1, data_ov001_020abcb4[mCharSprite[i]], mCharX[i],
                                             mCharY[i], -1, -1, mIconScaleX, mIconScaleY, 0, -1);
-                                OAM::Render(1, (OamAttr *)data_ov001_020abcb4[mCharSprite[i]],
-                                            mCharX[i], mCharY[i], -1, -1, mIconScaleX, mIconScaleY,
-                                            0, -1);
                             } else {
                                 OAM::Render(
-                                    1,
-                                    (OamAttr *)
-                                        data_ov001_020abcb4[mCharSprite[i ^ ((i != 0) ? 3 : 0)]],
+                                    1, data_ov001_020abcb4[mCharSprite[i ^ ((i != 0) ? 3 : 0)]],
                                     mCharX[i], mCharY[i], -1, -1, mIconScaleX, mIconScaleY, 0, -1);
                             }
                         } else if (mIdleIconScale != 0) {
-                            OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3], mCharX[i],
+                            OAM::Render(1, data_ov001_020abcb4[i + 3], mCharX[i], mCharY[i], -1, -1,
+                                        mIdleIconScale, mIdleIconScale, 0, -1);
+                            OAM::Render(1, data_ov001_020abcb4[mCharSprite[i]], mCharX[i],
                                         mCharY[i], -1, -1, mIdleIconScale, mIdleIconScale, 0, -1);
-                            OAM::Render(1, (OamAttr *)data_ov001_020abcb4[mCharSprite[i]],
-                                        mCharX[i], mCharY[i], -1, -1, mIdleIconScale,
-                                        mIdleIconScale, 0, -1);
                         }
                     } else {
-                        OAM::RenderSub((OamAttr *)data_ov001_020abcb4[i + 3], mCharX[i],
-                                       pressY + mCharY[i]);
-                        OAM::RenderSub((OamAttr *)data_ov001_020abcb4[mCharSprite[i]], mCharX[i],
+                        OAM::RenderSub(data_ov001_020abcb4[i + 3], mCharX[i], pressY + mCharY[i]);
+                        OAM::RenderSub(data_ov001_020abcb4[mCharSprite[i]], mCharX[i],
                                        pressY + mCharY[i]);
                     }
                 }

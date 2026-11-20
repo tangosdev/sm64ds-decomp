@@ -196,8 +196,6 @@ void LoadKeyModels(int idx);
 void UnloadKeyModels(int idx);
 extern "C" {
 int func_ov002_020ca78c(void *p);
-void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
-                              const Vector3 *v);
 int AngleDiff(int a, int b);
 }
 
@@ -244,7 +242,7 @@ extern signed char gNextSublevel;
 extern int gMusicVolume;
 extern int gSubVolume;
 extern Vector3 data_020a0ebc;
-extern char gPowerStarModelFile;
+extern SharedFilePtr gPowerStarModelFile;
 extern SharedFilePtr gKoopaKeyModelFile;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
    entries in that overlay's .rodata, the table LoadKeyModels loads into

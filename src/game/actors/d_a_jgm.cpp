@@ -101,7 +101,7 @@ extern DaJgmAnimationFilePtr data_ov077_02127b40;
 extern DaJgmTexSequenceFilePtr data_ov077_02127b20;
 extern DaJgmTexSequenceFilePtr data_ov077_02127b30;
 extern SharedFilePtr *data_ov077_02127238[];
-extern SharedFilePtr *data_ov077_02127230[];
+extern DaJgmTexSequenceFilePtr *data_ov077_02127230[];
 extern DaJgmStateHandlers data_ov077_02127bc4[];
 extern Vector3 data_ov077_02127b88;
 extern DaJgmStateHandler data_ov077_021277e0;
@@ -114,9 +114,7 @@ extern DaJgmStateHandler data_ov077_021277f0;
 extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-extern int *Vec3_LslInPlace(void *v, int sh);
 
 }
 
@@ -145,8 +143,7 @@ s32 daJgm_c::InitResources()
     for (int i = 0; i < 2; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov077_02127238[i]);
     for (int i = 0; i < 2; i++) {
-        DaJgmTexSequenceFilePtr *t =
-            (DaJgmTexSequenceFilePtr *)data_ov077_02127230[i];
+        DaJgmTexSequenceFilePtr *t = data_ov077_02127230[i];
         dExtAnmTexPat_c::LoadFile(*t);
         dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov077_02127b50.filePtr, *(BTP_File *)t->filePtr);
     }

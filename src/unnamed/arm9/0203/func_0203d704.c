@@ -1,3 +1,6 @@
+#include "Vector2.h"
+#include "Vector2Math.h"
+
 /* Empty. func_0201a054 calls it during boot, between PXI_Init and
    ClearSaveBlock. */
 void func_0203d740(void) {}
@@ -12,8 +15,8 @@ void func_0203d738(void) {}
 
 /* Add two Vector2s into o (Vector2.h). dScMgHanachan_c chains its body
    segments with it. */
-void func_0203d704(int *o, int *a, int *b) {
-    int ax = a[0], bx = b[0], ay = a[1], by = b[1];
-    o[0] = ax + bx;
-    o[1] = ay + by;
+void func_0203d704(Vector2 *o, Vector2 *a, Vector2 *b) {
+    int ax = a->x, bx = b->x, ay = a->y, by = b->y;
+    o->x = ax + bx;
+    o->y = ay + by;
 }

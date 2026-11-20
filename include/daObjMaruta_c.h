@@ -89,7 +89,7 @@ struct daObjMaruta_c : dBgActor_c {
     void HandlePlayerContact(dActor_c *);
     static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
     int CleanupResourcesFrom(ResourceDescriptor *arg);
-    int func_ov080_0212714c(int *maxDist);
+    int func_ov080_0212714c(const int *maxDist);
     int InitResourcesFrom(ResourceDescriptor *arg);
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
