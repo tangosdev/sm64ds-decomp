@@ -34,7 +34,7 @@
     },
     {
       "name": ".data",
-      "start": "0x021140d4",
+      "start": "0x021140b4",
       "end": "0x021141ac"
     }
   ],
@@ -83,6 +83,18 @@
     }
   ],
   "data": [
+    {
+      "symbol": "_ZTI17daObjFl_Ukiyuka_c",
+      "address": "0x021140b4",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTS17daObjFl_Ukiyuka_c",
+      "address": "0x021140c0",
+      "size": "0x14",
+      "evidence": "compiler emission of the class key function"
+    },
     {
       "symbol": "data_ov022_021140d4",
       "address": "0x021140d4",
@@ -176,20 +188,6 @@
     "Collision property member calls replace local helper declarations. Reconciled 4 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (32 sections, 112 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
   "compiler_only_output": [
-    {
-      "symbol": "_ZTI17daObjFl_Ukiyuka_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov022",
-      "canonical_address": "0x021140b4",
-      "reason": "Text-only TU: externalize to canonical public address 0x021140b4."
-    },
-    {
-      "symbol": "_ZTS17daObjFl_Ukiyuka_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov022",
-      "canonical_address": "0x021140c0",
-      "reason": "Text-only TU: externalize to canonical public address 0x021140c0."
-    },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
@@ -408,7 +406,7 @@
         },
         {
           "section": ".data",
-          "start": "0x021140d4",
+          "start": "0x021140b4",
           "end": "0x021141ac",
           "differingBytes": 0,
           "firstDiff": null
@@ -1209,6 +1207,36 @@
       "addend": 0,
       "target_module": "ov022",
       "target_address": "0x02111f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS17daObjFl_Ukiyuka_c",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021140c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI14daObjUkiyuka_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02109104"
     }
   ],
   "defined_symbol_renames": [

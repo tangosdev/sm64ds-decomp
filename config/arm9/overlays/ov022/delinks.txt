@@ -49,7 +49,7 @@ src/game/actors/d_a_obj_fl_ukiyuka.cpp:
     .text start:0x02111f6c end:0x02112130
     .init start:0x02112ec0 end:0x02112f78
     .ctor start:0x0211310c end:0x02113110
-    .data start:0x021140d4 end:0x021141ac
+    .data start:0x021140b4 end:0x021141ac
     .bss start:0x021145c8 end:0x02114618
 
 src/game/actors/d_a_obj_fl_uki_ki.cpp:
@@ -89,7 +89,4 @@ src/unnamed/ov022/data_ov022.c:
     .rodata start:0x02112950 end:0x02112c98
     .data start:0x02113140 end:0x02113cd4
 
-src/unnamed/ov022/data_ov022_021140b8.c:
-    complete
-    .data start:0x021140b8 end:0x021140c0
 
