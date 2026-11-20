@@ -2,7 +2,7 @@
 #define PRIVATE_WATCHDOG_ALARM_H
 
 /*
- * The game's watchdog: one file-scope object, data_0209d574, built around a
+ * The game's watchdog: one file-scope object, gWatchdog, built around a
  * Nitro SDK alarm. __sinit_func_0201a96c.cpp constructs it (func_0201aa18)
  * and registers its destructor (func_0201aaec).
  *
@@ -42,7 +42,7 @@ typedef struct WatchdogAlarm {
 extern "C" {
 #endif
 
-extern WatchdogAlarm data_0209d574;
+extern WatchdogAlarm gWatchdog;
 
 void func_0201a8b4(void *);
 u8 func_0201a96c(WatchdogAlarm *, int);

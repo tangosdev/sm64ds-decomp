@@ -45,16 +45,18 @@
 struct SpriteAttr {
     int a, b;
 };
+/* The petal's template. */
+extern SpriteAttr *data_ov006_0213abe0;
 
 extern "C" {
 extern void Mg_SetTopScreenYOffset(int n);
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *ptr);
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
@@ -115,10 +117,10 @@ void dScMgFlower_c::DealPetals() {
     int clearIndex;
     int baseAngle;
 
-    mCursorX = 0;
-    mCursorY = 0;
-    mPrevCursorX = mCursorX;
-    mPrevCursorY = mCursorY;
+    mCursor.x = 0;
+    mCursor.y = 0;
+    mPrevCursor.x = mCursor.x;
+    mPrevCursor.y = mCursor.y;
     Mg_SetTopScreenYOffset(0x20);
     for (clearIndex = 0; clearIndex < PETAL_NUM; clearIndex++) {
         mPetals[clearIndex].active = 0;
@@ -144,7 +146,7 @@ void dScMgFlower_c::DealPetals() {
         mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / mPetalsLeft;
         mPetals[petalIndex].pos.x = 0;
         mPetals[petalIndex].pos.y = 0x30000;
-        func_0203d388(&mPetals[petalIndex].pos.x, mPetals[petalIndex].angle);
+        func_0203d388(&mPetals[petalIndex].pos, mPetals[petalIndex].angle);
         mPetals[petalIndex].pos.x += 0x80000;
         mPetals[petalIndex].pos.y += 0x60000;
         mPetals[petalIndex].active = 1;
@@ -213,7 +215,7 @@ s32 dScMgFlower_c::Render() {
 
     for (i = 0; i < PETAL_NUM; i++) {
         if (mPetals[i].active != 0) {
-            SpriteAttr *spriteTemplate = (SpriteAttr *)data_ov006_0213abe0;
+            SpriteAttr *spriteTemplate = data_ov006_0213abe0;
             struct SpriteAttr attr = *spriteTemplate;
             int palette = 1;
             attr.a = (attr.a & 0xc1fffcff) | 0x100;
@@ -258,14 +260,14 @@ s32 dScMgFlower_c::Behavior() {
     }
     switch (mState) {
     case 0:
-        mPrevCursorX = mCursorX;
-        mPrevCursorY = mCursorY;
+        mPrevCursor.x = mCursor.x;
+        mPrevCursor.y = mCursor.y;
         playerSlot = gActivePlayerSlot;
         if (gTouchInfo[playerSlot].held != 0) {
             int touchY = gTouchInfo[playerSlot].y;
             int touchX = gTouchInfo[playerSlot].x;
-            mCursorX = touchX << 12;
-            mCursorY = touchY << 12;
+            mCursor.x = touchX << 12;
+            mCursor.y = touchY << 12;
         }
         if (mHoldTimer > 20) {
             if (mPetalsLeft > 0) {
@@ -290,7 +292,7 @@ s32 dScMgFlower_c::Behavior() {
                     if (mPetals[attachedIndex].active != 0 && mPetals[attachedIndex].held != 1 &&
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
-                        Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].pos.x, &mCursorX);
+                        Vec2_Sub(&toCursor, &mPetals[attachedIndex].pos, &mCursor);
                         withinGrabRadius = Vec2_Len(&toCursor) < 0x18000;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
@@ -298,8 +300,8 @@ s32 dScMgFlower_c::Behavior() {
                             mPetals[attachedIndex].driftX = 0;
                             mPetals[attachedIndex].fallSpeed = 0;
                             mHeldPetal = attachedIndex;
-                            mPetals[attachedIndex].touchStartX = mCursorX;
-                            mPetals[attachedIndex].touchStartY = mCursorY;
+                            mPetals[attachedIndex].touchStartX = mCursor.x;
+                            mPetals[attachedIndex].touchStartY = mCursor.y;
                             FreeGfxSlotsById(0x1d);
                             mFaceSprite = 2;
                             break;
@@ -311,15 +313,15 @@ s32 dScMgFlower_c::Behavior() {
                     for (freeIndex = 0; freeIndex < PETAL_NUM; freeIndex++) {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
-                            Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].pos.x, &mCursorX);
+                            Vec2_Sub(&toCursor2, &mPetals[freeIndex].pos, &mCursor);
                             withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
                                 mPetals[freeIndex].driftX = 0;
                                 mPetals[freeIndex].fallSpeed = 0;
                                 mHeldPetal = freeIndex;
-                                mPetals[freeIndex].touchStartX = mCursorX;
-                                mPetals[freeIndex].touchStartY = mCursorY;
+                                mPetals[freeIndex].touchStartX = mCursor.x;
+                                mPetals[freeIndex].touchStartY = mCursor.y;
                                 break;
                             }
                         }
@@ -329,8 +331,8 @@ s32 dScMgFlower_c::Behavior() {
         } else {
             newlyCounted = 0;
             if (gTouchInfo[playerSlot].held != 0) {
-                Vec2_Sub(&drag.x, &mCursorX, &mPrevCursorX);
-                PetalPos *pos = &mPetals[mHeldPetal].pos;
+                Vec2_Sub(&drag, &mCursor, &mPrevCursor);
+                Vector2 *pos = &mPetals[mHeldPetal].pos;
                 pos->x += drag.x;
                 pos->y += drag.y;
             } else {
@@ -449,7 +451,7 @@ s32 dScMgFlower_c::InitResources() {
 
     mScore = Mg_GetSavedRecord0();
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
 
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
                          GX_BG_CHARBASE_0x14000);

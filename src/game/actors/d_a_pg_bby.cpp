@@ -41,8 +41,8 @@ typedef char PgBbyAnimationFile_size_must_be_0x08[sizeof(PgBbyAnimationFile) == 
 
 extern "C" {
 
-extern dClipper data_0209f43c;
-extern Matrix4x3 data_0209b3ec;
+extern dClipper gClipper;
+extern Matrix4x3 gViewMtx;
 
 extern PgBbyModelFile gPenguinBabyModelFile;
 extern PgBbyAnimationFile gPenguinBabyDiveAnimationFile;
@@ -652,7 +652,7 @@ void daPgBby_c::CheckRespawn() {
         if (DecIfAbove0_Short(&mRespawnTimer) != 0) return;
     }
     Vec3_Asr(&scaledPos, &mSpawnPos, 3);
-    if (data_0209f43c.TransformAndClip(data_0209b3ec, scaledPos, 0x1f400, out) <= 0xc350000)
+    if (gClipper.TransformAndClip(gViewMtx, scaledPos, 0x1f400, out) <= 0xc350000)
         return;
     mPos.x = mSpawnPos.x;
     mPos.y = mSpawnPos.y;

@@ -1,6 +1,6 @@
 _ZN23daObjRotateUpdownLift_cD1Ev kind:function(arm,size=0x4c) addr:0x02130f00
 _ZN23daObjRotateUpdownLift_cD0Ev kind:function(arm,size=0x60) addr:0x02130f4c
-_ZN23daObjRotateUpdownLift_c19func_ov091_02130facEv kind:function(arm,size=0xc4) addr:0x02130fac
+_ZN23daObjRotateUpdownLift_c11ResetToHomeEv kind:function(arm,size=0xc4) addr:0x02130fac
 _ZN23daObjRotateUpdownLift_c4KillEv kind:function(arm,size=0x8c) addr:0x02131070
 _ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER7daPly_c kind:function(arm,size=0x64) addr:0x021310fc
 _ZN23daObjRotateUpdownLift_c19func_ov091_02131160Ev kind:function(arm,size=0x1e0) addr:0x02131160

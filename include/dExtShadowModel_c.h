@@ -14,8 +14,10 @@
  *   slot 2  0x02015ef4  DoSetFile(char *, int, int)
  *
  * Every live dExtShadowModel_c sits on a global intrusive doubly-linked list
- * (head data_0209cef4, freeze flag data_0209ceec): InitModel links in,
- * the destructor unlinks, RenderAll walks it and CleanAll empties it.
+ * (head sShadowModelList): InitModel links in, the destructor unlinks,
+ * RenderAll walks it and CleanAll empties it. RenderAll then sets
+ * sShadowModelsRendered, and until CleanAll clears it InitModel leaves the
+ * list alone.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- the
  * key-function arrangement from include/dExtModel_c.h, and the objisolate

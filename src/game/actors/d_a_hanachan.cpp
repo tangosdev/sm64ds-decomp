@@ -93,17 +93,17 @@ struct HanachanTextureSeqFileHandle : SharedFilePtr {
 extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
-extern void **data_ov034_02113888[];
-extern void **data_ov034_0211389c[];
-extern void **data_ov034_02113860[];
+extern SharedFilePtr *data_ov034_02113888[];
+extern SharedFilePtr *data_ov034_0211389c[];
+extern SharedFilePtr *data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern int data_ov034_021138c4[];
 extern short data_ov034_02113820[];
-extern void **data_ov034_021138b0[];
+extern SharedFilePtr *data_ov034_021138b0[];
 extern int data_ov034_02114488[];
 extern SharedFilePtr *data_ov034_02113838[];
 extern SharedFilePtr *data_ov034_0211384c[];
-extern void **data_ov034_02113874[];
+extern SharedFilePtr *data_ov034_02113874[];
 extern int func_ov002_020c51d0(void *, void *);
 extern unsigned char data_ov034_0211433c[];
 extern s32 data_ov034_021138d8[];
@@ -125,16 +125,15 @@ void daHanachan_c::StateDamageStartMain()
 
     for (i = 2; i < 5; i++) {
         if (mStateTimer == (i - 1) * 3)
-            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[i])->filePtr),
-                                  0x40000000, 0x1000, 0);
+            mAnmModels[i].SetAnim((BCA_File *)data_ov034_02113888[i]->filePtr, 0x40000000, 0x1000,
+                                  0);
     }
     {
         int idx;
         for (idx = 0; idx < 5; idx++) {
             if (mAnmModels[idx].Finished())
-                mAnmModels[idx].SetAnim(
-                    (BCA_File *)(((SharedFilePtr *)data_ov034_02113874[idx])->filePtr), 0, 0x1000,
-                    0);
+                mAnmModels[idx].SetAnim((BCA_File *)data_ov034_02113874[idx]->filePtr, 0, 0x1000,
+                                        0);
         }
     }
     {
@@ -142,7 +141,7 @@ void daHanachan_c::StateDamageStartMain()
         int i;
         flag = 1;
         for (i = 0; i < 5; i++) {
-            if (mAnmModels[i].file != ((SharedFilePtr *)data_ov034_02113874[i])->filePtr)
+            if (mAnmModels[i].file != data_ov034_02113874[i]->filePtr)
                 flag = 0;
         }
         if (flag == 1)
@@ -157,10 +156,8 @@ void daHanachan_c::StateDamageStartMain()
 void daHanachan_c::StateDamageStartInit()
 {
     mStateTimer = 0;
-    mAnmModels[0].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[0])->filePtr),
-                          0x40000000, 0x1000, 0);
-    mAnmModels[1].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[1])->filePtr),
-                          0x40000000, 0x1000, 0);
+    mAnmModels[0].SetAnim((BCA_File *)data_ov034_02113888[0]->filePtr, 0x40000000, 0x1000, 0);
+    mAnmModels[1].SetAnim((BCA_File *)data_ov034_02113888[1]->filePtr, 0x40000000, 0x1000, 0);
 }
 
 /* DAMAGE_WAIT: wait out the timer, then DAMAGE_START. */
@@ -186,15 +183,14 @@ void daHanachan_c::StateDamageStopMain()
 
     for (i = 2; i < 5; i++) {
         if (mStateTimer == (i - 1) * 3)
-            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[i])->filePtr),
-                                  0x40000000, 0x1000, 0);
+            mAnmModels[i].SetAnim((BCA_File *)data_ov034_0211389c[i]->filePtr, 0x40000000, 0x1000,
+                                  0);
     }
 
     if (mAnmModels[4].Finished()) {
         int i;
         for (i = 0; i < 5; i++)
-            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113860[i])->filePtr),
-                                  0, 0x1000, 0);
+            mAnmModels[i].SetAnim((BCA_File *)data_ov034_02113860[i]->filePtr, 0, 0x1000, 0);
     }
 
     {
@@ -202,7 +198,7 @@ void daHanachan_c::StateDamageStopMain()
         int i;
         flag = 1;
         for (i = 0; i < 5; i++) {
-            if (mAnmModels[i].file != ((SharedFilePtr *)data_ov034_02113860[i])->filePtr)
+            if (mAnmModels[i].file != data_ov034_02113860[i]->filePtr)
                 flag = 0;
         }
         if (flag == 1)
@@ -218,10 +214,8 @@ void daHanachan_c::StateDamageStopMain()
 void daHanachan_c::StateDamageStopInit()
 {
     mStateTimer = 0;
-    mAnmModels[0].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[0])->filePtr),
-                          0x40000000, 0x1000, 0);
-    mAnmModels[1].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[1])->filePtr),
-                          0x40000000, 0x1000, 0);
+    mAnmModels[0].SetAnim((BCA_File *)data_ov034_0211389c[0]->filePtr, 0x40000000, 0x1000, 0);
+    mAnmModels[1].SetAnim((BCA_File *)data_ov034_0211389c[1]->filePtr, 0x40000000, 0x1000, 0);
 }
 
 /* DEAD: poof one segment every five frames while the scales settle, then spawn the star and go to MOVE_START. */
@@ -306,8 +300,7 @@ void daHanachan_c::StateDamageTalkInit()
 {
     int i;
     for (i = 0; i < 5; i++)
-        mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113860[i])->filePtr), 0,
-                              0x1000, 0);
+        mAnmModels[i].SetAnim((BCA_File *)data_ov034_02113860[i]->filePtr, 0, 0x1000, 0);
 }
 
 /* DAMAGE: stop, face the player and start the hurt message, then DAMAGETALK. */
@@ -354,8 +347,7 @@ void daHanachan_c::StateDamageInit()
 {
     mParticle = 0;
     for (int i = 0; i < 5; i++) {
-        mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_021138b0[i])->filePtr),
-                              0x40000000, 0x1000, 0);
+        mAnmModels[i].SetAnim((BCA_File *)data_ov034_021138b0[i]->filePtr, 0x40000000, 0x1000, 0);
         mdCc_cs1[i].flags |= 4;
     }
     if (mHealth > 1)
@@ -444,17 +436,16 @@ void daHanachan_c::StateMoveStartMain()
 
     for (i = 2; i < 5; i++) {
         if (mStateTimer == (i - 1) * 3)
-            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[i])->filePtr),
-                                  0x40000000, 0x1000, 0);
+            mAnmModels[i].SetAnim((BCA_File *)data_ov034_02113888[i]->filePtr, 0x40000000, 0x1000,
+                                  0);
     }
 
     {
         int idx;
         for (idx = 0; idx < 5; idx++) {
             if (mAnmModels[idx].Finished())
-                mAnmModels[idx].SetAnim(
-                    (BCA_File *)(((SharedFilePtr *)data_ov034_02113874[idx])->filePtr), 0, 0x1000,
-                    0);
+                mAnmModels[idx].SetAnim((BCA_File *)data_ov034_02113874[idx]->filePtr, 0, 0x1000,
+                                        0);
         }
     }
 
@@ -464,7 +455,7 @@ void daHanachan_c::StateMoveStartMain()
         int i;
         flag = 1;
         for (i = 0; i < 5; i++) {
-            if (mAnmModels[i].file != ((SharedFilePtr *)data_ov034_02113874[i])->filePtr)
+            if (mAnmModels[i].file != data_ov034_02113874[i]->filePtr)
                 flag = 0;
         }
         if (flag == 1) {
@@ -495,10 +486,8 @@ void daHanachan_c::StateMoveStartInit()
     for (i = 0; i < 5; i++)
         mdCc_cs1[i].flags &= ~4;
     mStateTimer = 0;
-    mAnmModels[0].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[0])->filePtr),
-                          0x40000000, 0x1000, 0);
-    mAnmModels[1].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113888[1])->filePtr),
-                          0x40000000, 0x1000, 0);
+    mAnmModels[0].SetAnim((BCA_File *)data_ov034_02113888[0]->filePtr, 0x40000000, 0x1000, 0);
+    mAnmModels[1].SetAnim((BCA_File *)data_ov034_02113888[1]->filePtr, 0x40000000, 0x1000, 0);
 }
 
 /* MOVE_STOP: when the intro talk ends, start the music and enter MOVE_START. */
@@ -510,23 +499,20 @@ void daHanachan_c::StateMoveStopMain()
     ApproachLinear(mHorzSpeed, 0, 0x1000);
 
     if (mStateTimer == 0) {
-        mAnmModels[0].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[0])->filePtr),
-                              0x40000000, 0x1000, 0);
-        mAnmModels[1].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[1])->filePtr),
-                              0x40000000, 0x1000, 0);
+        mAnmModels[0].SetAnim((BCA_File *)data_ov034_0211389c[0]->filePtr, 0x40000000, 0x1000, 0);
+        mAnmModels[1].SetAnim((BCA_File *)data_ov034_0211389c[1]->filePtr, 0x40000000, 0x1000, 0);
     }
 
     for (i = 2; i < 5; i++) {
         if (mStateTimer == (i - 1) * 3)
-            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_0211389c[i])->filePtr),
-                                  0x40000000, 0x1000, 0);
+            mAnmModels[i].SetAnim((BCA_File *)data_ov034_0211389c[i]->filePtr, 0x40000000, 0x1000,
+                                  0);
     }
 
     if (mAnmModels[4].Finished()) {
         int i;
         for (i = 0; i < 5; i++)
-            mAnmModels[i].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113860[i])->filePtr),
-                                  0, 0x1000, 0);
+            mAnmModels[i].SetAnim((BCA_File *)data_ov034_02113860[i]->filePtr, 0, 0x1000, 0);
     }
 
     player = mPlayer;
@@ -536,7 +522,7 @@ void daHanachan_c::StateMoveStopMain()
         int i;
         flag = 1;
         for (i = 0; i < 5; i++) {
-            if (mAnmModels[i].file != ((SharedFilePtr *)data_ov034_02113860[i])->filePtr)
+            if (mAnmModels[i].file != data_ov034_02113860[i]->filePtr)
                 flag = 0;
         }
         if (flag == 1) {
@@ -640,8 +626,8 @@ void daHanachan_c::StateDemoWaitInit()
             out.x = 0;
             out.y = 0;
             out.z = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, (short)(mSegmentRot[0].y + 0x200));
-            MTX_MultVec43(&in, &data_020a0e68, &out);
+            Matrix4x3_FromRotationY(&gScratchMtx, (short)(mSegmentRot[0].y + 0x200));
+            MTX_MultVec43(&in, &gScratchMtx, &out);
             Vec3_Add(&sum, &mSegmentPos[seg - 1], &out);
             mSegmentPos[seg].x = sum.x;
             mSegmentPos[seg].y = sum.y;
@@ -800,11 +786,11 @@ int daHanachan_c::CleanupResources()
     for (i = 0; i < 5; i++) {
         data_ov034_02113838[i]->Release();
         data_ov034_0211384c[i]->Release();
-        ((SharedFilePtr *)data_ov034_02113860[i])->Release();
-        ((SharedFilePtr *)data_ov034_02113874[i])->Release();
-        ((SharedFilePtr *)data_ov034_02113888[i])->Release();
-        ((SharedFilePtr *)data_ov034_0211389c[i])->Release();
-        ((SharedFilePtr *)data_ov034_021138b0[i])->Release();
+        data_ov034_02113860[i]->Release();
+        data_ov034_02113874[i]->Release();
+        data_ov034_02113888[i]->Release();
+        data_ov034_0211389c[i]->Release();
+        data_ov034_021138b0[i]->Release();
     }
     return 1;
 }
@@ -851,9 +837,9 @@ int daHanachan_c::Behavior()
         LandingDust(true);
     }
 
-    if (mAnmModels[0].file == ((SharedFilePtr *)data_ov034_02113888[0])->filePtr ||
-        mAnmModels[0].file == ((SharedFilePtr *)data_ov034_02113874[0])->filePtr ||
-        mAnmModels[0].file == ((SharedFilePtr *)data_ov034_0211389c[0])->filePtr) {
+    if (mAnmModels[0].file == data_ov034_02113888[0]->filePtr ||
+        mAnmModels[0].file == data_ov034_02113874[0]->filePtr ||
+        mAnmModels[0].file == data_ov034_0211389c[0]->filePtr) {
         if (mWithMeshClsn.IsOnGround() != 0) {
             if ((((u32)mAnmModels[0].currFrame << 4) >> 16) == 6) {
                 if (mHealth == 2)
@@ -867,7 +853,7 @@ int daHanachan_c::Behavior()
         }
     }
 
-    animFile = (SharedFilePtr *)data_ov034_021138b0[0];
+    animFile = data_ov034_021138b0[0];
     if (mAnmModels[0].file == ((SharedFilePtr *)animFile)->filePtr &&
         (((u32)mAnmModels[0].currFrame << 4) >> 16) == 0xf) {
         func_0201267c(0x11e, &mCamSpacePos);
@@ -955,12 +941,12 @@ int daHanachan_c::Behavior()
         camA.x = 0; camA.y = 0x80000; camA.z = 0;
         camB.x = 0; camB.y = 0x80000; camB.z = 0x1f4000;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
-        MTX_MultVec43(&camA, &data_020a0e68, &scratch);
+        Matrix4x3_FromRotationY(&gScratchMtx, mSegmentRot[0].y);
+        MTX_MultVec43(&camA, &gScratchMtx, &scratch);
         Vec3_Add(&t0, &mPos, &scratch);
         camA = t0;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
-        MTX_MultVec43(&camB, &data_020a0e68, &scratch);
+        MTX_MultVec43(&camB, &gScratchMtx, &scratch);
         Vec3_Add(&t1, &mPos, &scratch);
         camB = t1;
         func_020092c4(cam, &cam->lookAt, &camA);
@@ -1044,12 +1030,12 @@ int daHanachan_c::InitResources()
         dExtSimpleModel_c::LoadFile(*modelFile);
         texFile = data_ov034_0211384c[i];
         dExtAnmTexPat_c::LoadFile(*texFile);
-        animFile = (SharedFilePtr *)data_ov034_02113860[i];
+        animFile = data_ov034_02113860[i];
         dExtFrameCtrl_c::LoadFile(*animFile);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_02113874[i]);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_02113888[i]);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_0211389c[i]);
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov034_021138b0[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov034_02113874[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov034_02113888[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov034_0211389c[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov034_021138b0[i]);
         animRow->SetFile((BMD_File *)modelFile->filePtr, one, minusOne);
         (animRow)->SetAnim((BCA_File *)animFile->filePtr, zeroA, 0x1000, zeroA);
         dExtAnmTexPat_c::Prepare(*(BMD_File *)modelFile->filePtr, *(BTP_File *)texFile->filePtr);
@@ -1070,8 +1056,8 @@ int daHanachan_c::InitResources()
             vb.x = zeroC;
             vb.y = zeroC;
             vb.z = zeroC;
-            Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
-            MTX_MultVec43(&va, &data_020a0e68, &vb);
+            Matrix4x3_FromRotationY(&gScratchMtx, mSegmentRot[0].y);
+            MTX_MultVec43(&va, &gScratchMtx, &vb);
             prev = i - 1;
             Vec3_Add(&out, &mSegmentPos[prev], &vb);
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = out.x;
@@ -1098,11 +1084,10 @@ int daHanachan_c::InitResources()
 
     mVertAccel = -0x1000;
     mTerminalVelocity = -0x64000;
-    mAnmModels[0].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113874[0])->filePtr), 0,
-                          0x1000, 0xc);
+    mAnmModels[0].SetAnim((BCA_File *)data_ov034_02113874[0]->filePtr, 0, 0x1000, 0xc);
     for (j = 1; j < 5; j++) {
-        mAnmModels[j].SetAnim((BCA_File *)(((SharedFilePtr *)data_ov034_02113874[j])->filePtr), 0,
-                              0x1000, (s16)((5 - j) * 3));
+        mAnmModels[j].SetAnim((BCA_File *)data_ov034_02113874[j]->filePtr, 0, 0x1000,
+                              (s16)((5 - j) * 3));
     }
 
     SetState(0);

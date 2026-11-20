@@ -40,14 +40,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN7daOts_c19func_ov064_02115f98EPc",
+      "symbol": "_ZN7daOts_c17SpawnHitParticlesEPc",
       "address": "0x02115f98",
       "size": "0x00000178",
       "legacy_source": "src/func_ov064_02115f98.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN7daOts_c19func_ov064_02116110Es",
+      "symbol": "_ZN7daOts_c16TurnTowardPlayerEs",
       "address": "0x02116110",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov064_02116110.cpp",
@@ -152,7 +152,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "_ZN7daOts_c19func_ov064_02116bacEv",
+      "symbol": "_ZN7daOts_c20UpdateModelAndShadowEv",
       "address": "0x02116bac",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov064_02116bac.cpp",

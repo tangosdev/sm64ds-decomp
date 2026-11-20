@@ -6,7 +6,7 @@ extern Ov007MenuState *func_ov007_020b2cdc(void);
 
 void func_ov007_020b1224(void)
 {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     if (w->itemViews[8]->item->state->currentState != 0)
         return;
     switch (w->chosenItemId) {
@@ -15,7 +15,7 @@ void func_ov007_020b1224(void)
     case 8: func_ov007_020b1390(3); break;
     }
     {
-        int val = WORK->chosenItemId;
+        int val = gMenuWork->chosenItemId;
         if (val == -1) return;
         /* func_ov007_020b2cdc returns the menu cursor's state
          * (func_ov007_020b2e64's Ov007Cursor::state) */

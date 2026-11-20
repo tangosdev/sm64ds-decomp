@@ -3,13 +3,13 @@
  * - The destructor stays inline. Out of line it emits D0 before D1,
  *   and a D2.
  * - data_ov026_02113ea0 is the BMD handle and data_ov026_02113a9c
- *   the collision offset. data_0209caa0 is the save block.
+ *   the collision offset. gSaveBlock is the save block.
  *   g_profile_WL_POLELIFT is outside this TU.
  *
  * daObjWlPolelift_c, the Wet-Dry World pole lift. It rides the path
  * in param1 at 10.0 a frame, pauses 60 frames at a dead end, and
  * drops a shadow. InitResources requires a bit of 0x204 in
- * data_0209caa0.file.flags1. .text 0x021111a0..0x021116c8. _ZTS17daObjWlPolelift_c
+ * gSaveBlock.file.flags1. .text 0x021111a0..0x021116c8. _ZTS17daObjWlPolelift_c
  * and the vtable at 0x02113ae0 name the class. classInit is
  * reconstructed.
  */
@@ -51,7 +51,7 @@ daObjWlPolelift_c *daObjWlPolelift_c_classInit() {
 s32 daObjWlPolelift_c::InitResources()
 {
     model.SetFile(dExtSimpleModel_c::LoadFile(data_ov026_02113ea0), 1, -1);
-    if ((data_0209caa0.file.flags1 & 0x204) == 0)
+    if ((gSaveBlock.file.flags1 & 0x204) == 0)
         return 0;
 
     shadow.InitCuboid();

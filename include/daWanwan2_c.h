@@ -48,7 +48,7 @@ struct daWanwan2_c : dEnemyBase_c {
     dExtShadowModel_c         mShadowModels[6];                     /* 0x550 -- the links' drop shadows */
     dExtShadowModel_c         mShadowModel;       /* 0x640 -- the body's drop shadow */
     /* The current state: a pair of pointers-to-member (enter, execute) that
-       func_ov100_02143b18 stores and calls and Behavior calls every frame --
+       SetState stores and calls and Behavior calls every frame --
        see ChompState in src/game/actors/d_a_wanwan2.cpp. */
     void               *mStatePair;         /* 0x668 */
     u8  pad_66c[0x34];
@@ -119,7 +119,7 @@ struct daWanwan2_c : dEnemyBase_c {
     void func_ov100_0214344c();
     void func_ov100_021435e8();
     void func_ov100_021437d4();
-    int func_ov100_02143b18(ChompState *p);
+    int SetState(ChompState *p);
 };
 
 #ifndef SM64DS_PLATFORM_PC

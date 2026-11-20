@@ -77,7 +77,7 @@ struct dMap_c : dBase_c {
     s16 mAngle;                         /* 0x21c -- map rotation, an s16 angle */
     s8 mPlayerMapIDs[4];                    /* 0x21e */
     s8 mStarMapIDs[12];                   /* 0x222 */
-    /* Per-star animation cursor. Render advances entry i by data_0208ee44,
+    /* Per-star animation cursor. Render advances entry i by gFrameStep,
        wraps it at 12, and uses `% 12 > 4` to pick between the two frames of a
        star marker; it is reset to 0 for any star not on the current map. Was
        flat padding. */

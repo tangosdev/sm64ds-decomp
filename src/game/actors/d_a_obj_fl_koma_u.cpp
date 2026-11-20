@@ -94,7 +94,7 @@ s32 daObjFl_KomaU_c::Behavior() {
     }
 
     UpdateModelPosAndRotY();
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
 
     for (int i = 0; i < 8; i++) {
         Vector3 in;
@@ -113,7 +113,7 @@ s32 daObjFl_KomaU_c::Behavior() {
            multiply is strength-reduced away. */
         in.z = i < 4 ? (i - 4) * 0x96000L - 0x64000 : (i - 3) * 0x96000L + 0x64000;
 
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
         VEC_Add(&out, &mPos, &out);
 
         mColliders[i].pos = out;

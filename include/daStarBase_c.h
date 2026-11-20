@@ -68,7 +68,7 @@ struct daStarBase_c : dActor_c {
                                      A dActor_c*, stored through an int. */
     u16 mAppearTimer;            /* 0x1d4 -- appear delay, in frames: Behavior sets
                                      it to 0x2a while this marker's star id is not
-                                     the next one in data_0209f344[data_0209f208]
+                                     the next one in gVsStarSpawnOrder[gNumVsStarsCollected]
                                      (VS_STAR_SPAWN_ORDER indexed by
                                      NUM_VS_STARS_COLLECTED), counts it down once
                                      it is, and shows the marker at 0 */

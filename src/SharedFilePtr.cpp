@@ -59,7 +59,7 @@ void Deallocate(void *ptr);
 extern "C" {
 /* The last file ID any handle touched: every entry point stores it first,
    so a crash mid-load names the file. */
-extern unsigned int data_0209d3bc;
+extern unsigned int gLastUsedFileID;
 
 unsigned int func_02018a24(unsigned int);
 int func_020186c0(unsigned int val);
@@ -80,7 +80,7 @@ void *SharedFilePtr::func_02017e48(unsigned int id) {
 }
 
 void *SharedFilePtr::func_02017e34() {
-    data_0209d3bc = fileID;
+    gLastUsedFileID = fileID;
     return this;
 }
 #endif
@@ -98,7 +98,7 @@ void SharedFilePtr::func_02017e0c(unsigned int id) {
    table or streamed from the card, decompress them if they are LZ-tagged,
    and stash and return the buffer. */
 void *SharedFilePtr::Load() {
-    data_0209d3bc = fileID;
+    gLastUsedFileID = fileID;
     int p = func_020186c0(fileID);
     if (p != 0) {
         unsigned int size;
@@ -160,7 +160,7 @@ void *SharedFilePtr::Load() {
 
 /* Frees the file once the last holder lets go. */
 void SharedFilePtr::func_02017c24() {
-    data_0209d3bc = fileID;
+    gLastUsedFileID = fileID;
     Memory::Deallocate(filePtr);
     filePtr = 0;
 }
@@ -168,7 +168,7 @@ void SharedFilePtr::func_02017c24() {
 /* Takes one reference and hands back the file. The first taker loads it;
    at 255 holders the count would wrap, so the call is refused instead. */
 void *SharedFilePtr::LoadFile() {
-    data_0209d3bc = fileID;
+    gLastUsedFileID = fileID;
 
     if (numRefs == 0) {
         if (!Load())
@@ -185,7 +185,7 @@ void *SharedFilePtr::LoadFile() {
 
 /* Hands one reference back and frees the file when it was the last. */
 void SharedFilePtr::Release() {
-    data_0209d3bc = fileID;
+    gLastUsedFileID = fileID;
 
     if (numRefs == 0)
         return;

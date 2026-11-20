@@ -10,7 +10,7 @@
  * lifecycle order the compiler emits for each class.
  *
  * The query scans keep the spellings that match: int pos rather than a
- * pointer local, the zero/one locals, and data_020a0c80 by its address
+ * pointer local, the zero/one locals, and gActiveMeshColliders by its address
  * name. SurfaceInfo::CopyFrom copies the five-word surface with a u64 so the
  * loads and stores interleave.
  */
@@ -48,14 +48,14 @@ int dBgCh_Gnd::DetectClsn()
 {
     int ret = 0;
     ResetResult();
-    dBgW *o = data_020a0c80[0];
+    dBgW *o = gActiveMeshColliders[0];
     if (o != 0 && !IsOwnedBy(o->GetActor()) && o->DetectClsn(*this) != 0) {
         dBgPi::SetCollider(0, o->GetActorUniqueID(), o->GetActor(), o);
         ret = 1;
     }
     Vector3 ownerPos;
     for (int i = 1; i < 24; i++) {
-        dBgW *obj = data_020a0c80[i];
+        dBgW *obj = gActiveMeshColliders[i];
         if (obj == 0) continue;
         dActor_c *owner = obj->GetActor();
         if (IsOwnedBy(owner))
@@ -92,7 +92,7 @@ int dBgCh_Gnd::DetectClsnSlot0() {
     int r = 0;
     dBgW *o;
     ResetResult();
-    o = data_020a0c80[0];
+    o = gActiveMeshColliders[0];
     if (o != 0) {
         if (!IsOwnedBy(o->GetActor())) {
             if (o->DetectClsn(*this) != 0) {
@@ -113,7 +113,7 @@ int dBgCh_SphCrr::DetectClsn()
 
     /* slot 0 first, then the rest of the table; e is reused for the sphere
        centre below -- the one local keeps the compiler's register shape */
-    char *e = (char *)data_020a0c80[0];
+    char *e = (char *)gActiveMeshColliders[0];
     if (e != 0) {
         if (!IsOwnedBy(((dBgW *)e)->GetActor())) {
             hits = ((dBgW *)e)->DetectClsn(*this);
@@ -137,7 +137,7 @@ int dBgCh_SphCrr::DetectClsn()
     e = (char *)&((dM3dGSph &)*this).centre;
     int reach = ((dM3dGSph &)*this).radius + 0x1000;
     for (int i = 1; i < 24; i++) {
-        dBgW *o = data_020a0c80[i];
+        dBgW *o = gActiveMeshColliders[i];
         if (o == 0) continue;
         dActor_c *owner = o->GetActor();
         if (IsOwnedBy(owner))
@@ -186,7 +186,7 @@ int dBgCh_SphCrr::DetectClsn()
    dScStage_c::LoadClsnAndObjects registers first and without an owner.
    Inferred name, after dBgCh_Gnd::DetectClsnSlot0. */
 int dBgCh_SphCrr::DetectClsnSlot0() {
-    dBgW *o = data_020a0c80[0];
+    dBgW *o = gActiveMeshColliders[0];
     int result = 0;
     int hits;
     if (o != 0 && !IsOwnedBy(o->GetActor()) && (hits = o->DetectClsn(*this)) != 0) {
@@ -210,7 +210,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
     int result = 0;
     int i;
     for (i = 1; i < 24; i++) {
-        dBgW *o = data_020a0c80[i];
+        dBgW *o = gActiveMeshColliders[i];
         if (o == 0)
             continue;
         dActor_c *owner = o->GetActor();
@@ -260,16 +260,15 @@ bool dBgCh_Lin::DetectClsn()
     dBgW *o;
     dActor_c *owner;
     int clipDist;
-    char *e;
+    dBgW *e;
     Vector3 *base;
     int reach;
-    e = (char *)data_020a0c80[0];
+    e = gActiveMeshColliders[0];
     if (e != 0) {
-        if (!IsOwnedBy(((dBgW *)e)->GetActor())) {
-            int mask = ((dBgW *)e)->DetectClsn(*this);
+        if (!IsOwnedBy(e->GetActor())) {
+            int mask = e->DetectClsn(*this);
             if (mask != 0) {
-                dBgPi::SetCollider(0, ((dBgW *)e)->GetActorUniqueID(), ((dBgW *)e)->GetActor(),
-                                   (dBgW *)e);
+                dBgPi::SetCollider(0, e->GetActorUniqueID(), e->GetActor(), e);
                 result = true;
             }
         }
@@ -279,7 +278,7 @@ bool dBgCh_Lin::DetectClsn()
     base = &sphere.centre;
     reach = sphere.radius;
     for (i = 1; i < 24; i++) {
-        o = data_020a0c80[i];
+        o = gActiveMeshColliders[i];
         if (o == 0) continue;
         owner = o->GetActor();
         if (IsOwnedBy(owner))
@@ -318,7 +317,7 @@ bool dBgCh_Lin::DetectClsn()
 /* The line scan against collider slot 0 only, the stage mesh; the
    dBgCh_SphCrr and dBgCh_Gnd scans have the same split. Inferred name. */
 int dBgCh_Lin::DetectClsnSlot0() {
-    dBgW *e = data_020a0c80[0];
+    dBgW *e = gActiveMeshColliders[0];
     int result = 0;
     if (e != 0) {
         if (!IsOwnedBy(e->GetActor())) {
@@ -348,7 +347,7 @@ int dBgCh_Lin::DetectClsnExceptSlot0() {
     base = &sphere.centre;
     reach = sphere.radius;
     for (i = 1; i < 24; i++) {
-        o = data_020a0c80[i];
+        o = gActiveMeshColliders[i];
         if (o == 0)
             continue;
         owner = o->GetActor();
@@ -432,14 +431,14 @@ void dBgS_MoveBgCrrPos(dBgPi *hit, Vector3 *pos, Vector3_16 *motionAng, Vector3_
     if (hit->HasCollider() == 0)
         return;
     idx = hit->GetColliderIndex();
-    obj = data_020a0c80[idx];
+    obj = gActiveMeshColliders[idx];
     if (obj == 0)
         return;
     if (obj->GetBeforeClsnCallback() == 0)
         return;
     if (dBgS_ChkPolySafe(hit) == 0)
         return;
-    obj->BeforeClsn(*hit, data_020a0c80[idx]->GetActor(), *pos, motionAng, ang);
+    obj->BeforeClsn(*hit, gActiveMeshColliders[idx]->GetActor(), *pos, motionAng, ang);
 }
 
 /* Enabled-collider gate: the record must be valid, name a live table slot,
@@ -456,7 +455,7 @@ int dBgS_ChkPolySafe(dBgPi *hit) {
     idx = hit->GetColliderIndex();
     if (idx < 0 || idx >= 24)
         return 0;
-    collider = data_020a0c80[idx];
+    collider = gActiveMeshColliders[idx];
     if (collider == 0)
         return 0;
     clsnID = collider->GetActorUniqueID();
@@ -476,7 +475,7 @@ void dBgS_RideCallBack(dBgPi *hit, dActor_c *rider) {
     if (dBgS_ChkPolySafe(hit) == 0)
         return;
     idx = hit->GetColliderIndex();
-    entry = data_020a0c80[idx];
+    entry = gActiveMeshColliders[idx];
     fn = entry->GetStoodOnCallback();
     if (fn == 0) return;
     fn(entry, entry->GetActor(), rider);

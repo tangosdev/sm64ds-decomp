@@ -35,7 +35,7 @@
 #include "SaveData.h"
 
 extern int data_ov002_0210b498[];  /* sound-ID table, 11 entries: 0x18d, 0x100-0x103, 0x81, 0x89, 0x9c-0x9e, 0; the _ZTV9daSetSE_c header follows it, so spawn params stay 0-10 */
-extern int data_ov002_02110aec;    /* WATERFALL_SOUNDS_DISABLED */
+extern int gWaterfallSoundsDisabled;
 extern int gCurrentMusicID;        /* current music ID */
 extern dCamera_c *gCamera;         /* CAMERA */
 extern s8 gCurrentSublevel;        /* LEVEL_ID */
@@ -75,13 +75,13 @@ int daSetSE_c::InitResources()
 
     /* The same test as Message.cpp's and dMap_c's: the adventure, before
        the intro is done, with no cutscene script running. */
-    if (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+    if (IsGameMode(0) && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         !IsKuppaScriptRunning())
         disabled = 1;
     else
         disabled = 0;
 
-    data_ov002_02110aec = disabled;
+    gWaterfallSoundsDisabled = disabled;
     return 1;
 }
 
@@ -91,7 +91,7 @@ int daSetSE_c::Behavior()
     int music;
     dCamera_c *cam;
 
-    if (data_ov002_02110aec != 0)
+    if (gWaterfallSoundsDisabled != 0)
         return 1;
 
     effect = param1;

@@ -16,7 +16,7 @@ struct dBgPi : dBgPc {
     /* 0x00 is the vptr; the dBgPc base occupies 0x04..0x17. */
     u16 triangleID;         /* 0x018 */
     /* Which registered collider produced this result: the slot index into
-       the 0x18-entry table data_020a0c80, written by the DetectClsn loops.
+       the 0x18-entry table gActiveMeshColliders, written by the DetectClsn loops.
        0x18 is the empty sentinel -- Reset stores it and the validity tests
        reject it. */
     u16 colliderIdx;        /* 0x01a */
