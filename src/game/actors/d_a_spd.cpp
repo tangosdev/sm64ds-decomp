@@ -186,7 +186,7 @@ int daSpd_c::InitResources() {
 
 int daSpd_c::Behavior() {
     DecIfAbove0_Short(&mTimer);
-    func_ov071_02120278();
+    CallStateMain();
     MakeVanishLuigiWork(mdCcAc_c);
     if (mWithMeshClsn.GetResultFlag1() &&
         mWithMeshClsn.TouchesWater()) {
@@ -224,22 +224,22 @@ int daSpd_c::CleanupResources() {
 
 void daSpd_c::SetState(int idx) {
     mStateRow = (ScuttlebugStateRow *)data_ov071_02122fa8 + idx;
-    func_ov071_021202b4();
+    CallStateInit();
 }
 
-void daSpd_c::func_ov071_021202b4() {
+void daSpd_c::CallStateInit() {
     PMF *p = (PMF *)mStateRow;
     (this->**p)();
 }
 
 /* Call the state's per-frame handler, one slot further into the row. */
 
-void daSpd_c::func_ov071_02120278() {
+void daSpd_c::CallStateMain() {
     PMF *p = (PMF *)mStateRow + 1;
     (this->**p)();
 }
 
-int daSpd_c::func_ov071_02120200() {
+int daSpd_c::St_Wait_Init() {
     int z;
     short ang;
 
@@ -260,13 +260,13 @@ int daSpd_c::func_ov071_02120200() {
     return 1;
 }
 
-int daSpd_c::func_ov071_021201b4() {
+int daSpd_c::St_Wait_Main() {
     if (mTimer) return 1;
     if (DistToCPlayer() < 0x5dc000) SetState(1);
     return 1;
 }
 
-int daSpd_c::func_ov071_02120130() {
+int daSpd_c::St_Drop_Init() {
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x3e000;
     mHorzSpeed = 0x16000;
@@ -279,7 +279,7 @@ int daSpd_c::func_ov071_02120130() {
     return 1;
 }
 
-int daSpd_c::func_ov071_02120028() {
+int daSpd_c::St_Drop_Main() {
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -303,7 +303,7 @@ int daSpd_c::func_ov071_02120028() {
     return 1;
 }
 
-int daSpd_c::func_ov071_0211ff84() {
+int daSpd_c::St_Walk_Init() {
     if (Vec3_Dist(&mPos, &mAnchor) > 0x5dc000) {
         SetState(5);
         return 1;
@@ -317,7 +317,7 @@ int daSpd_c::func_ov071_0211ff84() {
     return 1;
 }
 
-int daSpd_c::func_ov071_0211fee4() {
+int daSpd_c::St_Walk_Main() {
     mAngle.y = (short)(mAngle.y + 0x2bc);
     mPrevAngle.y = mAngle.y;
     mAnmModel.Advance();
@@ -334,7 +334,7 @@ int daSpd_c::func_ov071_0211fee4() {
     return 1;
 }
 
-int daSpd_c::func_ov071_0211fe38() {
+int daSpd_c::St_Leap_Init() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0xf000;
@@ -350,7 +350,7 @@ int daSpd_c::func_ov071_0211fe38() {
     return 1;
 }
 
-int daSpd_c::func_ov071_0211fd58() {
+int daSpd_c::St_Leap_Main() {
     mAnmModel.Advance();
     mLeapDist -= 0xf000;
     if (mLeapDist <= 0) {
@@ -371,7 +371,7 @@ int daSpd_c::func_ov071_0211fd58() {
     return 1;
 }
 
-int daSpd_c::func_ov071_0211fcd4() {
+int daSpd_c::St_Recoil_Init() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = -0x4000;
@@ -383,7 +383,7 @@ int daSpd_c::func_ov071_0211fcd4() {
     return 1;
 }
 
-int daSpd_c::func_ov071_0211fc60() {
+int daSpd_c::St_Recoil_Main() {
     mAnmModel.Advance();
     if (mWithMeshClsn.IsOnGround()) {
         mTimer = 60;
@@ -397,7 +397,7 @@ int daSpd_c::func_ov071_0211fc60() {
     return 1;
 }
 
-int daSpd_c::func_ov071_0211fbf4() {
+int daSpd_c::St_Return_Init() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x4000;
@@ -407,7 +407,7 @@ int daSpd_c::func_ov071_0211fbf4() {
     return 1;
 }
 
-int daSpd_c::func_ov071_0211fb24() {
+int daSpd_c::St_Return_Main() {
     short ang = Vec3_HorzAngle(&mPos, &mAnchor);
     ApproachLinear(mAngle.y, ang, 0x2bc);
     mPrevAngle.y = mAngle.y;
