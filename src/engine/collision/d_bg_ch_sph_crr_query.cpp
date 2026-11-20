@@ -260,16 +260,15 @@ bool dBgCh_Lin::DetectClsn()
     dBgW *o;
     dActor_c *owner;
     int clipDist;
-    char *e;
+    dBgW *e;
     Vector3 *base;
     int reach;
-    e = (char *)data_020a0c80[0];
+    e = data_020a0c80[0];
     if (e != 0) {
-        if (!IsOwnedBy(((dBgW *)e)->GetActor())) {
-            int mask = ((dBgW *)e)->DetectClsn(*this);
+        if (!IsOwnedBy(e->GetActor())) {
+            int mask = e->DetectClsn(*this);
             if (mask != 0) {
-                dBgPi::SetCollider(0, ((dBgW *)e)->GetActorUniqueID(), ((dBgW *)e)->GetActor(),
-                                   (dBgW *)e);
+                dBgPi::SetCollider(0, e->GetActorUniqueID(), e->GetActor(), e);
                 result = true;
             }
         }

@@ -28,9 +28,8 @@
 // leftovers: the DSMT_* helper and hook names are coined from their bodies
 // and from the Ov007MenuHooks fields (src/ui/menus/unit020b6eb4.cpp); the
 // ROM keeps no names for them. They keep C linkage because the menu reaches
-// the six hooks through a function-pointer table. data_0209b340
-// is decl_common.h's int[], but it is the Ov007BootArgs table
-// (Ov007Settings.h), so every access goes through the sBootArgs view. The
+// the six hooks through a function-pointer table. data_0209b340 is the
+// Ov007BootArgs table (Ov007Settings.h); this TU is its only reader. The
 // dispatcher reads the save block's active-file byte
 // (SaveBlock::activeFile). The overlay operands
 // pool-load the absolute linker constants ((int)&OVERLAY_100_ID/102_ID);
@@ -88,8 +87,9 @@ int func_ov007_020b6eb4(void);
 int IsStarCollected(int course, int star);
 void StartMinigameMenu(u8 returnToRecRoom);
 
-/* data_0209b340 (decl_common.h's int[]) is the download-play table. */
-#define sBootArgs (*(Ov007BootArgs *)data_0209b340)
+/* The download-play table, and the menu hooks InitResources hands it with. */
+extern Ov007BootArgs data_0209b340;
+extern Ov007MenuHooks data_ov007_02103290;
 
 /* Factory: the registry's spawn entry point. */
 dScDSMT_c *dScDSMT_c_classInit(void) {
@@ -213,7 +213,7 @@ u8 DSMT_MenuCallback(s32 command) {
 /* InitResources (key function): engines on, graph callback registered, session seeded. */
 s32 dScDSMT_c::InitResources() {
     if (gSoftResetPending != 0)
-        sBootArgs.status = 1;
+        data_0209b340.status = 1;
 
     func_02023544();
     UnloadArchives();
@@ -223,7 +223,7 @@ s32 dScDSMT_c::InitResources() {
     if (data_0209d524 != 0)
         func_0201a428();
 
-    sBootArgs.messages = (void *)data_0209d6fc;
+    data_0209b340.messages = (void *)data_0209d6fc;
     GX_SetPower(GX_POWER_ALL);
     GX_DispOn();
     GXS_DispOn();
@@ -234,7 +234,7 @@ s32 dScDSMT_c::InitResources() {
     data_0208ee44 = 1;
     GX::DisableAllBanks();
     data_ov007_02103260 = -1;
-    ((Ov007MenuHooks *)&data_ov007_02103290)->func_ov007_020b7138((Ov007BootArgs *)data_0209b340);
+    data_ov007_02103290.func_ov007_020b7138(&data_0209b340);
     func_ov007_020b7090(0, 0, 0, 0, 0);
     Sound::LoadInitialGroup(2);
     return 1;
@@ -244,8 +244,8 @@ s32 dScDSMT_c::InitResources() {
 s32 dScDSMT_c::CleanupResources() {
     gGraphCallback = 0;
     dScene_c::SetAndStopColorFader();
-    sBootArgs.bootFlags = func_ov007_020b6f4c();
-    sBootArgs.status = 2;
+    data_0209b340.bootFlags = func_ov007_020b6f4c();
+    data_0209b340.status = 2;
     Sound::UnsetPlayerVoiceGroup();
     ::operator delete[](data_0209b33c);
     data_0209b33c = 0;
@@ -315,14 +315,14 @@ void DSMT_UpdateBootArgs(u32 saveSlot) {
     int course;
 
     if (GetSoundMode() == 0) {
-        sBootArgs.soundModeItem = 1;
+        data_0209b340.soundModeItem = 1;
     } else if (GetSoundMode() == 1) {
-        sBootArgs.soundModeItem = 2;
+        data_0209b340.soundModeItem = 2;
     } else if (GetSoundMode() == 2) {
-        sBootArgs.soundModeItem = 0;
+        data_0209b340.soundModeItem = 0;
     }
 
-    sBootArgs.backlightOn = data_0208ee3c;
+    data_0209b340.backlightOn = data_0208ee3c;
     data_0209b34b[saveSlot] = (data_0209caa0.file.flags1 & 1) != 0;
 
     highestUnlockedPlusOne = 3;
@@ -335,10 +335,10 @@ void DSMT_UpdateBootArgs(u32 saveSlot) {
     } while (character >= 0);
     data_0209b34e[saveSlot] = highestUnlockedPlusOne;
     for (course = 0; course < 0xf; course++) {
-        sBootArgs.firstStar[saveSlot][course] = IsStarCollected(course, 0) != 0;
-        sBootArgs.otherStars[saveSlot][course] =
-            CountStarsCollectedInLevelToDisplay(course) - sBootArgs.firstStar[saveSlot][course];
-        sBootArgs.coinRecords[saveSlot][course] = SaveData::GetCoinRecord(course);
+        data_0209b340.firstStar[saveSlot][course] = IsStarCollected(course, 0) != 0;
+        data_0209b340.otherStars[saveSlot][course] =
+            CountStarsCollectedInLevelToDisplay(course) - data_0209b340.firstStar[saveSlot][course];
+        data_0209b340.coinRecords[saveSlot][course] = SaveData::GetCoinRecord(course);
     }
 
     data_0209b3d8[saveSlot] = CountStarsCollectedInLevelToDisplay(0x1d);

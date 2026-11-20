@@ -193,9 +193,8 @@ extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
-/* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
-   keep that spelling so the declarations of this symbol stay in agreement. */
-extern char data_ov002_0211094c;
+/* The power-star model file (0x8015). d_a_star.cpp defines it. */
+extern SharedFilePtr data_ov002_0211094c;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *const data_ov089_02132880[];
@@ -837,7 +836,7 @@ int daObjKey_c::InitResources()
     dExtFrameCtrl_c::LoadFile(*&data_ov002_02110964);
 
     if (mState == KEY_KIND_STAR) {
-        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)&data_ov002_0211094c)->filePtr, 1, 1) == 0)
+        if (mAnmModel.SetFile((BMD_File *)data_ov002_0211094c.filePtr, 1, 1) == 0)
             return 0;
         mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
         mScale.x = SCALE_STAR;

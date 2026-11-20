@@ -750,9 +750,9 @@ int daStar_c::CleanupResources()
         UnloadSilverStarAndNumber();
     }
     data_ov002_02110944.Release();
-    ((SharedFilePtr *)(&data_ov002_02110924))->Release();
-    ((SharedFilePtr *)(&data_ov002_02110964))->Release();
-    ((SharedFilePtr *)(&data_ov002_02110934))->Release();
+    data_ov002_02110924.Release();
+    data_ov002_02110964.Release();
+    data_ov002_02110934.Release();
     return 1;
 }
 
@@ -761,10 +761,10 @@ int daStar_c::CleanupResources()
 int daStarBase_c::CleanupResources()
 {
     if (mState != 0) {
-        ((SharedFilePtr *)(&data_ov002_0211092c))->Release();
+        data_ov002_0211092c.Release();
         data_ov002_0210d9a8.Release();
     } else {
-        ((SharedFilePtr *)(&data_ov002_0211093c))->Release();
+        data_ov002_0211093c.Release();
     }
     return 1;
 }

@@ -337,7 +337,7 @@ extern daPly_c *gPlayers[];
 extern int data_ov002_0210b964[3];
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
-extern char data_ov002_0211094c;
+extern SharedFilePtr data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
@@ -3392,8 +3392,7 @@ int daDemo_c::InitResources()
     } else if (param1 == 0x18) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c *)this->mModel)
-                ->func_ov002_020f6960((SharedFilePtr *)&data_ov002_0211094c, -1) == 0)
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_0211094c, -1) == 0)
             return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
