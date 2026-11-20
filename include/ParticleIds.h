@@ -236,7 +236,7 @@ enum ParticleId {
     kPtclCurrentFlow = 0x0e7,           /* func_ov002_020bf800 */
     kPtclWaterSurfaceMove = 0x0e8,      /* daMip_c::StateFleeMain */
     kPtclWaterSurfaceStill = 0x0e9,     /* daPly_c::func_ov002_020ce8bc */
-    kPtclSkeeterRipple = 0x0ea,         /* func_ov090_02130f94 */
+    kPtclSkeeterRipple = 0x0ea,         /* UpdateLegRipples */
     kPtclWaterfallMistCourse21 = 0x0eb, /* daObjWaterfall_c::InitResources */
     kPtclMg3DEspSparks = 0x0ec,         /* dMg3DEspModel_c::Behavior */
     kPtclMgJump3DJumpA = 0x0ed,         /* dMgJump3DMario_c::StateMove */

@@ -42959,51 +42959,51 @@
     },
     "ov090:0x02130f94": {
       "author": "tangosdev",
-      "name": "_Z19func_ov090_02130f94P9daMenbo_c"
+      "name": "_ZN9daMenbo_c16UpdateLegRipplesEv"
     },
     "ov090:0x021310b4": {
       "author": "ruspecial",
-      "name": "_ZN9daMenbo_c19func_ov090_021310b4Ev"
+      "name": "_ZN9daMenbo_c13HandleContactEv"
     },
     "ov090:0x02131378": {
       "author": "tangosdev",
-      "name": "_ZN9daMenbo_c19func_ov090_02131378Ev"
+      "name": "_ZN9daMenbo_c14UpdateSurfaceYEv"
     },
     "ov090:0x021314a0": {
       "author": "tangosdev",
-      "name": "func_ov090_021314a0"
+      "name": "_ZN9daMenbo_c17UpdateChaseTargetEv"
     },
     "ov090:0x02131584": {
       "author": "tangosdev",
-      "name": "func_ov090_02131584"
+      "name": "_ZN9daMenbo_c12St_Idle_MainEv"
     },
     "ov090:0x02131608": {
       "author": "tangosdev",
-      "name": "func_ov090_02131608"
+      "name": "_ZN9daMenbo_c12St_Idle_InitEv"
     },
     "ov090:0x02131648": {
       "author": "lunavyqo",
-      "name": "func_ov090_02131648"
+      "name": "_ZN9daMenbo_c14St_Patrol_MainEv"
     },
     "ov090:0x02131a74": {
       "author": "tangosdev",
-      "name": "func_ov090_02131a74"
+      "name": "_ZN9daMenbo_c14St_Patrol_InitEv"
     },
     "ov090:0x02131ac4": {
       "author": "tangosdev",
-      "name": "func_ov090_02131ac4"
+      "name": "_ZN9daMenbo_c17St_WaterRest_MainEv"
     },
     "ov090:0x02131b94": {
       "author": "tangosdev",
-      "name": "func_ov090_02131b94"
+      "name": "_ZN9daMenbo_c17St_WaterRest_InitEv"
     },
     "ov090:0x02131c48": {
       "author": "andrewboudreau",
-      "name": "func_ov090_02131c48"
+      "name": "_ZN9daMenbo_c18St_WaterChase_MainEv"
     },
     "ov090:0x02131db0": {
       "author": "tangosdev",
-      "name": "func_ov090_02131db0"
+      "name": "_ZN9daMenbo_c18St_WaterChase_InitEv"
     },
     "ov090:0x02131e00": {
       "author": "tangosdev",
@@ -43011,7 +43011,7 @@
     },
     "ov090:0x02131e50": {
       "author": "tangosdev",
-      "name": "_ZN9daMenbo_c19func_ov090_02131e50Ev"
+      "name": "_ZN9daMenbo_c17UpdateModelMatrixEv"
     },
     "ov090:0x02131edc": {
       "author": "tangosdev",
