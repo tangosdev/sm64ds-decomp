@@ -78,8 +78,8 @@ extern "C" {
 
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 
-extern dClipper data_0209f43c;
-extern Matrix4x3 data_0209b3ec;
+extern dClipper gClipper;
+extern Matrix4x3 gViewMtx;
 extern short data_02082614[];
 extern u8 data_0209fc5c[];
 extern signed char data_0209fc64[];
@@ -182,7 +182,7 @@ void UnknownVsPlayer::AnimFastGait() {
             return;
     }
     Vector3 screenPos;
-    data_0209f43c.TransformAndClip(data_0209b3ec, mPosition, 0, screenPos);
+    gClipper.TransformAndClip(gViewMtx, mPosition, 0, screenPos);
     func_0201251c(0, 0x20, &screenPos, mSpeed);
 }
 
@@ -199,7 +199,7 @@ void UnknownVsPlayer::AnimSlowGait() {
             return;
     }
     Vector3 screenPos;
-    data_0209f43c.TransformAndClip(data_0209b3ec, mPosition, 0, screenPos);
+    gClipper.TransformAndClip(gViewMtx, mPosition, 0, screenPos);
     func_0201251c(0, 0x20, &screenPos, mSpeed);
 }
 
@@ -228,7 +228,7 @@ void UnknownVsPlayer::AnimWalkSounds() {
         if (mModel.WillHitFrame(34) == 0)
             return;
     }
-    data_0209f43c.TransformAndClip(data_0209b3ec, mPosition, 0, screenPos);
+    gClipper.TransformAndClip(gViewMtx, mPosition, 0, screenPos);
     func_0201251c(0, 0x20, &screenPos, mSpeed);
 }
 
@@ -546,9 +546,9 @@ void UnknownVsPlayer::Render() {
 void UnknownVsPlayer::Behavior() {
     mFellOffThisFrame = 0;
     (this->*sVsPlayerMoveStates[mMoveState].state)();
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosition.x >> 3, mPosition.y >> 3, mPosition.z >> 3);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPosition.x >> 3, mPosition.y >> 3, mPosition.z >> 3);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    mModel.mat4x3 = gScratchMtx;
     (this->*sVsPlayerAnimStates[mAnimState].state)();
     mModel.Advance();
     mTextureSequence.Advance();
@@ -603,7 +603,7 @@ int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
 
 /* Send every present player's figure toward its exit, and pick the one the
  * camera follows: player 2, else 1, else 3, else 0. */
-void dEntObj_c::func_ov075_02114fa8() {
+void dEntObj_c::SendPlayersToExits() {
     int i;
     unsigned char *present = data_0209fc5c;
     UnknownVsPlayer *player = mPlayers;
@@ -690,8 +690,8 @@ void dEntObj_c::SetMarkerPosition(int playerNo) {
     markerPosition.z = position->z;
     markerPosition.y += 0x32000;
     Vec3_Asr(&renderPosition, &markerPosition, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, renderPosition.x, renderPosition.y, renderPosition.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, renderPosition.x, renderPosition.y, renderPosition.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* The exit x for player slot playerNo, from the row for the current player
@@ -735,7 +735,7 @@ void dEntObj_c::SetCamera() {
                       0);
     G3i_LookAt_(&mCamPos, &data_ov075_0211c660, &mCamTarget, true, &view);
     CopyToViewMat(&view);
-    data_0209f43c.Func_020156DC(0x1555, 0x105b, 0x1000, 0x1388000);
+    gClipper.Func_020156DC(0x1555, 0x105b, 0x1000, 0x1388000);
 }
 
 int dEntObj_c::CleanupResources() {
@@ -875,10 +875,10 @@ int dEntObj_c::InitResources() {
 
     mModel.SetFile((BMD_File *)data_ov075_0211d3fc.filePtr, 1, -1);
 
-    func_0203c178(&data_020a0e68, 0x7d000, 0x7d000, 0x7d000);
+    func_0203c178(&gScratchMtx, 0x7d000, 0x7d000, 0x7d000);
     /* 0x888 is +0x1c inside the dExtSimpleModel_c at 0x86c -- its mat4x3. The cartridge's own
        ~dEntObj_c proves the extent; see tools/dtor_members.py. */
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 
     if (param1 != 1) {
         mAnmModel.SetFile((BMD_File *)data_ov075_0211d3bc.filePtr, 1, -1);

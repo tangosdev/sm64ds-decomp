@@ -1073,8 +1073,7 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x318 texture-sequence handle"
-    }
-  ,
+    },
     {
       "symbol": "data_ov034_021148dc",
       "address": "0x021148dc",

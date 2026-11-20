@@ -142,7 +142,7 @@ extern "C" {
 }
 void func_02012694(unsigned int id, const Vector3 *pos);
 
-extern int data_02092138;
+extern int gLevelMinY;
 /* Per-variant spawn counters. The ROM gives each a four-byte slot even
  * though the code steps a byte. */
 u8 data_ov073_02123420[4];
@@ -202,7 +202,7 @@ int daObjEwbIce_c::StateArena_Update() {
     mVertAccel = -kFallAccel;
     UpdatePos(0);
     if (mVariant == 0) {
-        int surface = data_02092138 + kSurfaceAboveVoid;
+        int surface = gLevelMinY + kSurfaceAboveVoid;
         if (surface > mPos.y) {
             mPos.y = surface;
             mTimer = 0;
@@ -234,7 +234,7 @@ int daObjEwbIce_c::StateSink_Update() {
             ApproachLinear(mAngle.x, kTiltTarget, kTiltStep);
         }
     }
-    if (DecIfAbove0_Short(&mTimer) == 0 || data_02092138 - kDeathBelowVoid > mPos.y) {
+    if (DecIfAbove0_Short(&mTimer) == 0 || gLevelMinY - kDeathBelowVoid > mPos.y) {
         MarkForDestruction();
     }
     return 1;

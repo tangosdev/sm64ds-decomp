@@ -10,18 +10,20 @@
  * The file handles, the carry offsets, the ten state records and
  * g_profile_HOLHEI are this TU's statics; mwcc emits their initializer,
  * __sinit_d_a_holhei.cpp (0x0211cf30). Each file handle's filePtr is the
- * loaded BMD or BCA. The records keep their data_ov062_* address names, as
- * their handlers keep func_ov062_*.
+ * loaded BMD or BCA. The records keep their data_ov062_* address names;
+ * their two handlers are now named for the state they run.
  *
  * Known limits, measured in this TU:
  * - UpdateHeldShadow reloads mHeld before each pos word.
- *   func_ov062_02116a08 copies the player's position through one int
- *   pointer; three separate pl->mPos loads change the code.
+ *   St_Walk_Main copies the player's position through one int pointer;
+ *   three separate pl->mPos loads change the code.
  * - BuildHoldMatrix hands &mHoldMtx out through this object's
  *   mCarryMatrix; a grabbed actor's mCarryMatrix gates the hold path.
  *
- * Naming: helpers keep func_ov062_* names; ChangeState is coined. The
- * state handlers and ChangeState are members.
+ * Naming: ChangeState is coined, and so is every St_<State>_Init /
+ * St_<State>_Main pair -- the suffix names the record slot the handler
+ * sits in, as in daEykn_c and daPly_c. The state handlers and ChangeState
+ * are members.
  */
 
 #include "common.h"
@@ -50,9 +52,8 @@ struct HolheiState {
 extern void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);
-extern int data_02092138;
+extern int gLevelMinY;
 extern dCamera_c *gCamera;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern "C" int Math_Function_0203b14c(void *, int, int, int, int);
 extern signed char gCurrentSublevel;
 extern "C" int AngleDiff(int a, int b);
@@ -97,28 +98,19 @@ Vector3 data_ov062_0211df10[2] = {
     Vector3(0x44000, -0x14000, -0x78000),
 };
 
-/* State records: {enter, update}. The handlers keep their address names,
-   so the records keep theirs. */
-HolheiState data_ov062_0211ded0 = {&daHolhei_c::func_ov062_02116c78,
-                                   &daHolhei_c::func_ov062_02116bf8};
-HolheiState data_ov062_0211dee0 = {&daHolhei_c::func_ov062_02116b80,
-                                   &daHolhei_c::func_ov062_02116a08};
-HolheiState data_ov062_0211df00 = {&daHolhei_c::func_ov062_02116980,
-                                   &daHolhei_c::func_ov062_02116894};
-HolheiState data_ov062_0211de70 = {&daHolhei_c::func_ov062_02116850,
-                                   &daHolhei_c::func_ov062_021167c0};
-HolheiState data_ov062_0211de90 = {&daHolhei_c::func_ov062_02116784,
-                                   &daHolhei_c::func_ov062_021165e8};
-HolheiState data_ov062_0211dea0 = {&daHolhei_c::func_ov062_021165e0,
-                                   &daHolhei_c::func_ov062_021164e8};
-HolheiState data_ov062_0211dec0 = {&daHolhei_c::func_ov062_02116498,
-                                   &daHolhei_c::func_ov062_021163b0};
-HolheiState data_ov062_0211def0 = {&daHolhei_c::func_ov062_02116368,
-                                   &daHolhei_c::func_ov062_0211632c};
-HolheiState data_ov062_0211de80 = {&daHolhei_c::func_ov062_021162b8,
-                                   &daHolhei_c::func_ov062_02116274};
-HolheiState data_ov062_0211deb0 = {&daHolhei_c::func_ov062_02116238,
-                                   &daHolhei_c::func_ov062_021161a8};
+/* State records: {enter, update}. Each record's pair is named for the state
+   it runs; the records themselves keep their address names, because nothing
+   in the ROM says what this file called them. */
+HolheiState data_ov062_0211ded0 = {&daHolhei_c::St_TurnHome_Init, &daHolhei_c::St_TurnHome_Main};
+HolheiState data_ov062_0211dee0 = {&daHolhei_c::St_Walk_Init, &daHolhei_c::St_Walk_Main};
+HolheiState data_ov062_0211df00 = {&daHolhei_c::St_WallTurn_Init, &daHolhei_c::St_WallTurn_Main};
+HolheiState data_ov062_0211de70 = {&daHolhei_c::St_SlopeTurn_Init, &daHolhei_c::St_SlopeTurn_Main};
+HolheiState data_ov062_0211de90 = {&daHolhei_c::St_Charge_Init, &daHolhei_c::St_Charge_Main};
+HolheiState data_ov062_0211dea0 = {&daHolhei_c::St_Grabbed_Init, &daHolhei_c::St_Grabbed_Main};
+HolheiState data_ov062_0211dec0 = {&daHolhei_c::St_Thrown_Init, &daHolhei_c::St_Thrown_Main};
+HolheiState data_ov062_0211def0 = {&daHolhei_c::St_Lift_Init, &daHolhei_c::St_Lift_Main};
+HolheiState data_ov062_0211de80 = {&daHolhei_c::St_LiftLoop_Init, &daHolhei_c::St_LiftLoop_Main};
+HolheiState data_ov062_0211deb0 = {&daHolhei_c::St_Throw_Init, &daHolhei_c::St_Throw_Main};
 
 /* Actor ID 0xbf is PLAYER. The mFlags bits this file tests (0x100, 0x400,
    0x2000, 0x4000) are undocumented, so they go through IsFlagSet. Both are
@@ -331,7 +323,7 @@ int daHolhei_c::ChangeState(HolheiState *p) {
 }
 
 /* Face home, on the walk animation, and wait before turning. */
-int daHolhei_c::func_ov062_02116c78() {
+int daHolhei_c::St_TurnHome_Init() {
     mTurnWait = 60;
     mChargeStep = 0;
     mModel.speed = 0x1000;
@@ -341,7 +333,7 @@ int daHolhei_c::func_ov062_02116c78() {
 }
 
 /* Brake, then turn onto mTargetAngY and go back to the walk state. */
-int daHolhei_c::func_ov062_02116bf8() {
+int daHolhei_c::St_TurnHome_Main() {
     ApproachLinear(mHorzSpeed, 0, 0x2000);
     if (mTurnWait == 0) {
         ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
@@ -352,7 +344,7 @@ int daHolhei_c::func_ov062_02116bf8() {
 }
 
 /* Pick a random facing and a random time on the walk animation. */
-int daHolhei_c::func_ov062_02116b80() {
+int daHolhei_c::St_Walk_Init() {
     mTargetAngY = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
     mStateTimer =
         (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x64);
@@ -363,7 +355,7 @@ int daHolhei_c::func_ov062_02116b80() {
 
 /* Walk. A wall or the edge bails out; a player near home pulls Chuckya off
    the path once the chase cooldown has run out. */
-int daHolhei_c::func_ov062_02116a08() {
+int daHolhei_c::St_Walk_Main() {
     /* Zeroed and never read again; the three stores are in the ROM.
        Kept (#821 r84): deleted -> 0x10 shorter; plPos(0, 0, 0) in its place -> frame 8 smaller. */
     Vector3 unused(0, 0, 0);
@@ -407,7 +399,7 @@ int daHolhei_c::func_ov062_02116a08() {
 }
 
 /* Step back to the saved position and pick a new facing toward home. */
-int daHolhei_c::func_ov062_02116980() {
+int daHolhei_c::St_WallTurn_Init() {
     mPos.x = mPrevPosX;
     mPos.y = mPrevPosY;
     mPos.z = mPrevPosZ;
@@ -421,7 +413,7 @@ int daHolhei_c::func_ov062_02116980() {
 }
 
 /* After the timer, either commit the turn into a walk or keep steering. */
-int daHolhei_c::func_ov062_02116894() {
+int daHolhei_c::St_WallTurn_Main() {
     if (mStateTimer != 0)
         return 1;
     if (mHorzSpeed != 0) {
@@ -442,7 +434,7 @@ int daHolhei_c::func_ov062_02116894() {
 }
 
 /* Stop, and aim the next turn at home. */
-int daHolhei_c::func_ov062_02116850() {
+int daHolhei_c::St_SlopeTurn_Init() {
     mSpeed.y = 0;
     mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     mStateTimer = 20;
@@ -452,7 +444,7 @@ int daHolhei_c::func_ov062_02116850() {
 
 /* Turn toward mTargetAngY. Facing it starts the walk; otherwise the timer
    is refreshed. When the timer expires, cool down and return to the walk. */
-int daHolhei_c::func_ov062_021167c0() {
+int daHolhei_c::St_SlopeTurn_Main() {
     ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
     if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
         mHorzSpeed = 0xa000;
@@ -466,7 +458,7 @@ int daHolhei_c::func_ov062_021167c0() {
 }
 
 /* Restart the walk animation with the charge not yet begun. */
-int daHolhei_c::func_ov062_02116784() {
+int daHolhei_c::St_Charge_Init() {
     mChargeStep = 0;
     mModel.SetAnim((BCA_File *)(gHoruheiWalkAnimationFile.filePtr), 0, 0x1000, 0);
     return 1;
@@ -474,8 +466,7 @@ int daHolhei_c::func_ov062_02116784() {
 
 /* Charge the player. Step 0 turns, step 1 runs at the saved point, step 2
    gives up once Chuckya has gone past it. */
-int daHolhei_c::func_ov062_021165e8()
-{
+int daHolhei_c::St_Charge_Main() {
     daPly_c *player;
     int r;
     Vector3 pos;
@@ -527,14 +518,14 @@ int daHolhei_c::func_ov062_021165e8()
     return 1;
 }
 
-int daHolhei_c::func_ov062_021165e0() {
+/* Nothing to set up: the player's TryGrab has already filled mHeld. */
+int daHolhei_c::St_Grabbed_Init() {
     return 1;
 }
 
 /* While carried: play the grab animation once, then on release copy the
    holder's facing, mark the cylinder, and hop if param1 is 2. */
-int daHolhei_c::func_ov062_021164e8()
-{
+int daHolhei_c::St_Grabbed_Main() {
     if (mGrabAnim == 0 && IsFlagSet(this, 0x4000)) {
         mModel.SetAnim((BCA_File *)(gHoruheiStruggleAnimationFile.filePtr), 0, 0x1000, 0);
         mGrabAnim = 1;
@@ -554,7 +545,7 @@ int daHolhei_c::func_ov062_021164e8()
 }
 
 /* Pop off: gravity, a launch, and a clear of the runtime flags. */
-int daHolhei_c::func_ov062_02116498() {
+int daHolhei_c::St_Thrown_Init() {
     mVertAccel = -0x4000;
     mSpeed.y = 0x3c000;
     mHorzSpeed = 0xa000;
@@ -565,9 +556,9 @@ int daHolhei_c::func_ov062_02116498() {
 }
 
 /* Below the death plane, or on landing: poof, shake, drop coins, die. */
-int daHolhei_c::func_ov062_021163b0() {
+int daHolhei_c::St_Thrown_Main() {
     Vector3 v[2];
-    if (data_02092138 > mPos.y) {
+    if (gLevelMinY > mPos.y) {
         KillAndTrackInDeathTable();
         return 1;
     }
@@ -588,14 +579,15 @@ int daHolhei_c::func_ov062_021163b0() {
     return 1;
 }
 
-int daHolhei_c::func_ov062_02116368() {
+/* Play the lift animation once, from the top. */
+int daHolhei_c::St_Lift_Init() {
     mModel.SetAnim((BCA_File *)(gHoruheiLiftAnimationFile.filePtr), 0x40000000, 0x1000, 0);
     mChargeStep = 0;
     return 1;
 }
 
 /* When the animation finishes, leave this state. */
-int daHolhei_c::func_ov062_0211632c() {
+int daHolhei_c::St_Lift_Main() {
     if (mModel.Finished()) {
         mChargeStep = 0;
         ChangeState(&data_ov062_0211de80);
@@ -604,7 +596,7 @@ int daHolhei_c::func_ov062_0211632c() {
 }
 
 /* Start an animation, then wait a random few frames facing a random way. */
-int daHolhei_c::func_ov062_021162b8() {
+int daHolhei_c::St_LiftLoop_Init() {
     mModel.SetAnim((BCA_File *)(gHoruheiLiftLoopAnimationFile.filePtr), 0, 0x1000, 0);
     mStateTimer =
         (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x14);
@@ -613,21 +605,22 @@ int daHolhei_c::func_ov062_021162b8() {
 }
 
 /* Spin, and leave once the timer reaches zero. */
-int daHolhei_c::func_ov062_02116274() {
+int daHolhei_c::St_LiftLoop_Main() {
     mPrevAngle.y += 0x500;
     if (mStateTimer == 0)
         ChangeState(&data_ov062_0211deb0);
     return 1;
 }
 
-int daHolhei_c::func_ov062_02116238() {
+/* Play the throw animation once, from the top. */
+int daHolhei_c::St_Throw_Init() {
     mModel.SetAnim((BCA_File *)(gHoruheiThrowAnimationFile.filePtr), 0x40000000, 0x1000, 0);
     return 1;
 }
 
 /* On frame 0x14 of the throw animation, launch whoever is held. When the
    animation finishes, clear the cylinder bit and leave. */
-int daHolhei_c::func_ov062_021161a8() {
+int daHolhei_c::St_Throw_Main() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
         func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngle.y);
         mHeld = 0;

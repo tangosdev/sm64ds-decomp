@@ -129,7 +129,6 @@ BTA_File data_ov070_021231f4 = {
     0,
     (BTAMaterialRecord *)data_ov070_0212224c,
 };
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 int daBrq_c::InitResources() {
     BMD_File *bmd;

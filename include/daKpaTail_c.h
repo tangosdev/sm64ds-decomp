@@ -19,8 +19,8 @@
  *
  * The last 0x10 bytes (0x108..0x118) are Bowser's uniqueID, the daPly_c the tail
  * is holding, a three-state dispatch index, and two halfword counters. Each is
- * named from how daKpaTail_c's own state workers (func_ov060_02115b84 and its
- * three callees, in d_a_kpa.cpp) read and write it.
+ * named from how daKpaTail_c's own state workers (TailLoop and its three
+ * callees, in d_a_kpa.cpp) read and write it.
  *
  * sizeof is 0x118, which is not inferred from the fields: daKpaTail_c_classInit asks
  * fBase_c::operator new for 280 bytes.
@@ -67,10 +67,10 @@ struct daKpaTail_c : dActor_c {
     int InitResources();
 
     /* state-table dispatcher and handlers, in ROM order */
-    void func_ov060_02115b84();
-    void func_ov060_02115c1c();
-    void func_ov060_02115d50();
-    void func_ov060_02115d68();
+    void TailLoop();
+    void ActHolding();
+    void ActCooldown();
+    void ActFree();
 };
 
 #ifndef SM64DS_PLATFORM_PC

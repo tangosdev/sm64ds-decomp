@@ -37,7 +37,7 @@
 #include "dBgCh_Actr.h"
 
 struct daMenbo_c : dEnemyBase_c {
-    /* A state: {entry, update}. func_ov090_02131e00 installs one and runs
+    /* A state: {entry, update}. SetState installs one and runs
        its entry; Behavior runs the update every frame. */
     typedef int (daMenbo_c::*StateFn)();
 
@@ -46,12 +46,12 @@ struct daMenbo_c : dEnemyBase_c {
     dExtAnmModel_c mAnmModel;                         /* 0x30c */
     StateFn *mState;                                  /* 0x370 */
     /* Where the skeeter drops anchor: InitResources and, whenever it is off
-       the water, the water-rest and water-chase updates (02131ac4, 02131c48)
-       copy mPos here. Patrol (02131648) and 021314a0 aim back at it through
+       the water, St_WaterRest_Main and St_WaterChase_Main copy mPos here.
+       St_Patrol_Main and UpdateChaseTarget aim back at it through
        Vec3_HorzAngle, and patrol turns around past 0x3c0000 from it. Was
        unk_374/378/37c. */
     Vector3 mAnchorPos; /* 0x374 */
-    /* The four ripple particles func_ov090_02130f94 re-feeds every frame,
+    /* The four ripple particles UpdateLegRipples re-feeds every frame,
        one per leg bone, through Particle::System::New. Was pad_380. */
     u32 mRippleParticles[4]; /* 0x380 */
     /* Loops of the current anim: idle, patrol and water chase count it up
@@ -63,28 +63,30 @@ struct daMenbo_c : dEnemyBase_c {
     u16 mTurnTimer; /* 0x394 */
     /* Speed hold: patrol loads 0x1e after a turn or on spotting a player and
        re-picks speed and anim rate only once this and mTurnTimer are both 0;
-       its entry (02131a74) clears it. Behavior counts it down. Was unk_396. */
+       its entry St_Patrol_Init clears it. Behavior counts it down. Was
+       unk_396. */
     u16 mSpeedHoldTimer; /* 0x396 */
     /* Patrol re-jitters the heading by a random step whenever this reaches 0
        and reloads it with a random 0..0x3f; a turn or a spotted player
        reloads it too. Behavior counts it down. Was unk_398. */
     u16 mWanderTimer;                                   /* 0x398 */
     s16 mTargetAngleY;                                  /* 0x39a */
-    /* 1 while the skeeter stands on water: the ground probe (02131378) sets
-       it when the floor is below the water height and Y is at the water;
+    /* 1 while the skeeter stands on water: the ground probe UpdateSurfaceY
+       sets it when the floor is below the water height and Y is at the water;
        InitResources sets it for a surface with flag 0x20. Idle and patrol go
        to water rest on it; water chase and water rest go idle without it.
        Was unk_39c. */
     u8 mOnWater; /* 0x39c */
     /* Edge latches for patrol's turns, so each turn fires once: chase
-       (021314a0, a player in range), far (beyond 0x3c0000 of the anchor),
+       (UpdateChaseTarget, a player in range), far (beyond 0x3c0000 of the
+       anchor),
        wall (dBgCh_Actr::IsOnWall) and probe (the line probe ahead missed).
        Was pad_39d. */
     u8 mChaseLatch; /* 0x39d */
     u8 mFarLatch;   /* 0x39e */
     u8 mWallLatch;  /* 0x39f */
     u8 mProbeLatch; /* 0x3a0 */
-    /* func_ov090_021310b4 stores 3 when a 0x4380 hit kills the skeeter
+    /* HandleContact stores 3 when a 0x4380 hit kills the skeeter
        (mDeathState 3); Behavior's death branch then pitches it over and
        spins it while this is 3. Was unk_3a1. */
     u8 mDeathTumble; /* 0x3a1 */
@@ -93,11 +95,11 @@ struct daMenbo_c : dEnemyBase_c {
        a player, and Behavior copies it into the frame controller's speed
        each frame. Was unk_3a4. */
     s32 mAnimSpeed; /* 0x3a4 */
-    /* Floor height under the skeeter: the ground probe's clsnY (02131378,
-       InitResources), data_02092138 when InitResources finds none. Was
-       unk_3a8. */
+    /* Floor height under the skeeter: the ground probe's clsnY
+       (UpdateSurfaceY, InitResources), gLevelMinY when InitResources finds
+       none. Was unk_3a8. */
     s32 mFloorY; /* 0x3a8 */
-    /* The height it stands at: the water height data_0209f32c when the
+    /* The height it stands at: the water height gWaterHeight when the
        floor is below it, else mFloorY. Y is clamped up to it, ripples sit
        on it and dying at or below it pays the coins. Was unk_3ac. */
     s32 mSurfaceY; /* 0x3ac */
@@ -114,24 +116,24 @@ struct daMenbo_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
-    void func_ov090_02130f94();
-    void func_ov090_021310b4();
-    void func_ov090_02131378();
-    int func_ov090_021314a0();
+    void UpdateLegRipples();
+    void HandleContact();
+    void UpdateSurfaceY();
+    int UpdateChaseTarget();
 
-    /* State machine: the four nodes pair an entry with an update; both are
-       pointer-to-member slots on this class (idle, water chase, water rest,
-       patrol). */
-    int func_ov090_02131584();
-    int func_ov090_02131608();
-    int func_ov090_02131648();
-    int func_ov090_02131a74();
-    int func_ov090_02131ac4();
-    int func_ov090_02131b94();
-    int func_ov090_02131c48();
-    int func_ov090_02131db0();
-    int func_ov090_02131e00(StateFn *state);
-    void func_ov090_02131e50();
+    /* State machine: the four nodes pair an entry (_Init) with an update
+       (_Main); both are pointer-to-member slots on this class. Declared in
+       ROM address order, which is why each _Main precedes its _Init. */
+    int St_Idle_Main();
+    int St_Idle_Init();
+    int St_Patrol_Main();
+    int St_Patrol_Init();
+    int St_WaterRest_Main();
+    int St_WaterRest_Init();
+    int St_WaterChase_Main();
+    int St_WaterChase_Init();
+    int SetState(StateFn *state);
+    void UpdateModelMatrix();
 };
 
 #ifndef SM64DS_PLATFORM_PC

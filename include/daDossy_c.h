@@ -36,7 +36,7 @@ struct daDossyCap_c;
 struct DorriePlatform {
     Matrix4x3 mClsnNextMat;     /* 0x000 */
     dBgW_KcMbg mClsn;           /* 0x030 */
-    /* A Vector3s, not the POD Vector3_16: func_ov065_02118838 copies a
+    /* A Vector3s, not the POD Vector3_16: UpdatePlatformMatrices copies a
        Vector3s local in, and the ROM copies member by member (ldrsh/strh)
        as it does for a class with a declared destructor. A POD copy goes
        by word. */
@@ -56,9 +56,9 @@ struct daDossy_c : dActor_c {
     daDossyCap_c *mCap;         /* 0x0d4 */
     Vector3 mCapPos;            /* 0x0d8 */
     s16 mHeadRotX;              /* 0x0e4 */
-    /* Frames before Dorrie accepts a rider again. func_ov065_021180d4
+    /* Frames before Dorrie accepts a rider again. ReleaseCapIfTouched
        sets it to 30 when a player's hit (0x400000) pops the cap;
-       func_ov065_021183c8 counts it down and mounts the player only once
+       UpdateHeadDown counts it down and mounts the player only once
        it reaches 0. */
     u16 mRideCooldown;          /* 0x0e6 */
     u8  mHasCap;                /* 0x0e8 */
@@ -93,16 +93,47 @@ struct daDossy_c : dActor_c {
     virtual int Behavior();
     virtual int Render();
 
-    int func_ov065_02118248();
-    void func_ov065_021182e4();
-    void func_ov065_021183c8();
-    void func_ov065_02118634();
-    void func_ov065_02118838();
-    void func_ov065_02118cc4();
-    void func_ov065_0211956c(dActor_c *other);
-    void func_ov065_02119594(dActor_c *other);
-    static void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
-    static void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
+    /* Returns 1 while she is off screen, which is when it disables all seven
+       mPlatforms colliders; on screen it re-enables them. Behavior ignores
+       the result. */
+    int UpdatePlatformClsn();
+
+    /* The three mState handlers of the table at ov065 0x0211d7fc, declared
+       highest address first as the TU emits them. Each is named for the
+       animation the handler that enters it installs:
+         0 UpdateSwim      ASSET_DOSSY_SWIM_BCA, set by InitResources and by
+                           UpdateHeadUp. Circles the ring, steering at the
+                           player or along the tangent, until mCylClsn1 or a
+                           landed mCylClsn2 player advances mState.
+         1 UpdateHeadDown  ASSET_DOSSY_HEAD_DOWN_BCA, set by UpdateSwim.
+                           Dips mPushDownHeight to 0x64000 and back, then
+                           mounts the mClsnState 2 rider (head) once
+                           mRideCooldown is 0, or gives up after 150 frames.
+         2 UpdateHeadUp    ASSET_DOSSY_HEAD_UP_BCA, set by UpdateHeadDown.
+                           Lifts the rider, restores the swim animation,
+                           releases daPly_c no-control state 5 and returns
+                           to slot 0. */
+    void UpdateHeadUp();
+    void UpdateHeadDown();
+    void UpdateSwim();
+
+    /* Walks the seven mPlatforms against the animated bones named by
+       data_ov065_0211c078: each platform's mRot, mClsnNextMat and
+       dBgW_KcMbg::Transform. Platform 2 is the head, so it also derives
+       mHeadRotX, mHomePos and the cap's mCapPos from that bone. */
+    void UpdatePlatformMatrices();
+    void UpdateModelMatrix();
+
+    /* The mesh colliders' stood-on handlers, through the two veneers below.
+       InitResources wires platform 2 (gDossyHeadCollisionFile) to
+       HeadStoodOnCallback and platforms 0 and 1 (body, neck) to
+       BodyStoodOnCallback; each handler latches mClsnState -- 2 for the head,
+       1 for the body and neck -- and mClsnPlayer when the other actor is the
+       player (0xbf). UpdateHeadDown mounts only on mClsnState 2. */
+    void OnHeadStoodOn(dActor_c *other);
+    void OnBodyStoodOn(dActor_c *other);
+    static void BodyStoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other);
+    static void HeadStoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other);
 };
 
 #ifndef SM64DS_PLATFORM_PC

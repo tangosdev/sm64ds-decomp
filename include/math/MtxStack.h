@@ -12,11 +12,11 @@
  *
  * Every routine comes as a "set" form (FromRotationY: overwrite with a
  * rotation) and an "apply" form (ApplyInPlaceToRotationY: post-multiply in
- * place), the same S/M pairing EAD's GameCube library uses. data_020a0e68 is
+ * place), the same S/M pairing EAD's GameCube library uses. gScratchMtx is
  * one global Matrix4x3 that more than a hundred files load, transform, and
  * read back, which is how that library's matrix stack is used. MtxStack spells
  * that use as inline statics. Its name is coined; nothing of it reaches the
- * ROM, because every member inlines into a plain call on &data_020a0e68.
+ * ROM, because every member inlines into a plain call on &gScratchMtx.
  *
  * The routines are C: their definitions are .c files, so the prototypes
  * read as C too, and a .c file can include this header for them. Matrices
@@ -56,36 +56,36 @@ void MTX_RotX43_(Matrix4x3 *, int, int);
 void MTX_RotY43_(Matrix4x3 *, int, int);
 void MTX_RotZ43_(Matrix4x3 *, int, int);
 
-extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 gScratchMtx;
 
 #ifdef __cplusplus
 }
 
 struct MtxStack {
     static Matrix4x3 &get() {
-        return data_020a0e68;
+        return gScratchMtx;
     }
     static void copy(const Matrix4x3 &m) {
-        data_020a0e68 = m;
+        gScratchMtx = m;
     }
     /* now = m * now */
     static void concat(const Matrix4x3 &m) {
-        MTX_Concat43(&m, &data_020a0e68, &data_020a0e68);
+        MTX_Concat43(&m, &gScratchMtx, &gScratchMtx);
     }
     static void transS(int x, int y, int z) {
-        Matrix4x3_FromTranslation(&data_020a0e68, x, y, z);
+        Matrix4x3_FromTranslation(&gScratchMtx, x, y, z);
     }
     static void transM(int x, int y, int z) {
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, x, y, z);
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, x, y, z);
     }
     static void transM(const Vector3 &t) {
         transM(t.x, t.y, t.z);
     }
     static void YrotM(short y) {
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, y);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, y);
     }
     static void XYZrotM(int x, int y, int z) {
-        Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, x, y, z);
+        Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, x, y, z);
     }
     static void XYZrotM(const Vector3_16 &r) {
         XYZrotM(r.x, r.y, r.z);

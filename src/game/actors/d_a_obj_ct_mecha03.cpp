@@ -185,8 +185,8 @@ void daObjCtMecha03_c::UpdateShadow() {
     bobPos.z = 0;
     armOffset.x = 0;
     armOffset.z = 0;
-    Matrix4x3_FromRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    MTX_MultVec43(&armOffset, &data_020a0e68, &bobPos);
+    Matrix4x3_FromRotationZXYExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    MTX_MultVec43(&armOffset, &gScratchMtx, &bobPos);
     VEC_Add(&bobPos, &mPos, &bobPos);
     {
         int bobY = bobPos.y;

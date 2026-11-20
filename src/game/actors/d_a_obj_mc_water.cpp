@@ -39,7 +39,7 @@ struct CLPS_Block {
 };
 
 extern unsigned char gGameMode;
-extern int data_0209f32c;
+extern int gWaterHeight;
 
 /* The texture animation's keys and its one material record live in overlay
    .rodata; this TU only points at them. */
@@ -99,7 +99,7 @@ Vector3 data_ov009_02113d8c[7] = {
     Vector3(-0x141e000, -0x5a000, -0x100e000),
 };
 
-/* ... when bit 0x80000 of data_0209caa0.file.flags2 is set: */
+/* ... when bit 0x80000 of gSaveBlock.file.flags2 is set: */
 Vector3 data_ov009_02113e34[7] = {
     Vector3(-0x152c000, -0x320000, -0x97e000), Vector3(-0x1450000, -0x320000, -0xa46000),
     Vector3(-0x13a6000, -0x320000, -0xb2c000), Vector3(-0x1324000, -0x320000, -0xc30000),
@@ -131,7 +131,7 @@ static inline int IsVsMode(void) {
 /* -------------------------------------------------------------------------- */
 int daObjMcWater_c::InitResources() {
     if (!IsVsMode()) {
-        if (data_0209caa0.file.flags2 & 0x80000) {
+        if (gSaveBlock.file.flags2 & 0x80000) {
             mPos.y = -0x2bc000;
         }
     }
@@ -150,8 +150,8 @@ int daObjMcWater_c::InitResources() {
     mMeshCollider.Enable(this);
     {
         int v = mPos.y - 0x64000;
-        if (data_0209f32c > v)
-            data_0209f32c = v;
+        if (gWaterHeight > v)
+            gWaterHeight = v;
     }
     SpawnWaterfalls();
     return 1;
@@ -193,7 +193,7 @@ void daObjMcWater_c::SpawnWaterfalls() {
             return;
         vec = data_ov009_02113de0;
     } else {
-        vec = (data_0209caa0.file.flags2 & 0x80000) ? data_ov009_02113e34 : data_ov009_02113d8c;
+        vec = (gSaveBlock.file.flags2 & 0x80000) ? data_ov009_02113e34 : data_ov009_02113d8c;
     }
     for (i = 0; i < 7; i++) {
         dActor_c::Spawn(0xc5, 0, vec[i], 0, mAreaId, -1);

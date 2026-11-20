@@ -383,7 +383,7 @@ void dScEntry_c::SetSlotBorderPalette(int slot, int dim) {
 extern "C" {
 extern u8 data_ov075_0211c6e8[4];
 extern OamAttr data_ov075_0211c7c0[];
-extern char data_ov075_0211c8b0[];
+extern OamAttr data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211c870[];
 extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
@@ -409,8 +409,8 @@ void dScEntry_c::RenderPlayerScores() {
         int pid = EntryPlayerIndex(i);
         OAM::Render(false, data_ov075_0211c7c0, xbase + i * stride, 152, -1, -1, 0x1000, 0x1000, 0,
                     -1);
-        p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, xbase + 28 + i * stride, 152,
-                               -1, -1, 0x1000, 0);
+        p = (int *)OAM::Render(false, data_ov075_0211c8b0, xbase + 28 + i * stride, 152, -1, -1,
+                               0x1000, 0);
         if (p != 0) {
             int *q = p + 1;
             int val = *q;
@@ -427,8 +427,8 @@ void dScEntry_c::RenderPlayerScores() {
             rem = n % 100;
             tens = rem / 10;
             if (hundreds != 0) {
-                p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0,
-                                       xbase + 20 + i * stride, 176, -1, -1, 0x1000, 0);
+                p = (int *)OAM::Render(false, data_ov075_0211c8b0, xbase + 20 + i * stride, 176, -1,
+                                       -1, 0x1000, 0);
                 if (p != 0) {
                     int *q = p + 1;
                     int val = *q;
@@ -439,8 +439,8 @@ void dScEntry_c::RenderPlayerScores() {
                 dx = dx + 4;
             }
             if ((tens != 0) || (hundreds != 0)) {
-                p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0,
-                                       xbase + dx + i * stride, 176, -1, -1, 0x1000, 0);
+                p = (int *)OAM::Render(false, data_ov075_0211c8b0, xbase + dx + i * stride, 176, -1,
+                                       -1, 0x1000, 0);
                 if (p != 0) {
                     int *q = p + 1;
                     int val = *q;
@@ -450,8 +450,8 @@ void dScEntry_c::RenderPlayerScores() {
             } else {
                 dx = dx + 4;
             }
-            p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, xbase + dx + i * stride,
-                                   176, -1, -1, 0x1000, 0);
+            p = (int *)OAM::Render(false, data_ov075_0211c8b0, xbase + dx + i * stride, 176, -1, -1,
+                                   0x1000, 0);
             if (p != 0) {
                 int *q = p + 1;
                 int val = *q;

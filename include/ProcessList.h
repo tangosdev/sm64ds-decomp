@@ -22,7 +22,6 @@ struct ProcessList {
         callback = p;
     }
 
-    static void func_02044120();
     static int func_020441bc(int);
 };
 

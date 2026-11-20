@@ -97,8 +97,8 @@ int daObjCasket_c::InitResources() {
     worldOffset.x = 0;
     worldOffset.y = 0;
     worldOffset.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&localOffset, &data_020a0e68, &worldOffset);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&localOffset, &gScratchMtx, &worldOffset);
     Vector3 newPos;
     Vec3_Add(&newPos, &mPos, &worldOffset);
     mPos.x = newPos.x;
@@ -188,8 +188,8 @@ void daObjCasket_c::St_Wait_Main() {
         landWorld.x = 0;
         landWorld.y = 0;
         landWorld.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43(&landLocal, &data_020a0e68, &landWorld);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43(&landLocal, &gScratchMtx, &landWorld);
         VEC_Add(&landWorld, &mPos, &landWorld);
         dustPos.x = landWorld.x;
         dustPos.y = landWorld.y;
@@ -212,8 +212,8 @@ void daObjCasket_c::St_Wait_Main() {
         reachWorld.x = 0;
         reachWorld.y = 0;
         reachWorld.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43(&reachLocal, &data_020a0e68, &reachWorld);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43(&reachLocal, &gScratchMtx, &reachWorld);
         VEC_Add(&reachWorld, &mPos, &reachWorld);
         if (Vec3_HorzDist(&reachWorld, &playerPos) >= 0x12c000)
             return;

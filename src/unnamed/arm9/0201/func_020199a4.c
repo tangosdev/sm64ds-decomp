@@ -15,7 +15,7 @@ extern void func_02019ed0(void);
 extern void func_02011db4(void);
 extern unsigned char gSoftResetDisabled;
 extern int data_0209fc68;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern unsigned char data_0208ee48;
 extern unsigned char data_0209d4ec;
 extern unsigned char gSoundInitialized;
@@ -43,7 +43,7 @@ void func_02019ac4(void) {
     skip = IsSkipRequested();
     closed = PAD_DetectFold();
     t = data_0209fc68;
-    delta = data_0208ee44;
+    delta = gFrameStep;
     /* materialized compare kept: if (t == 6) or an inline predicate drops 3 insns */
     t = t == 6;
     if (t != false)
@@ -166,13 +166,13 @@ void func_020199a4(void) {
     int sl = 0xb4;
     if (data_0209d4ec == 7)
         data_0209d4ec = 0;
-    func_0201a9ec(&data_0209d574);
+    func_0201a9ec(&gWatchdog);
     for (;;) {
         int b = !(gGameMode == 1);
         if (b == 0)
             func_02030838();
         {
-            int dt = data_0208ee44;
+            int dt = gFrameStep;
             if (sl > 0)
                 sl -= dt;
             else

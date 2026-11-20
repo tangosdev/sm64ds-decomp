@@ -17,7 +17,7 @@
  *   rename the mangled symbol tree-wide.
  * - func_0203ad84 is unrelated to paths: it reads the ROM file
  *   data_020994d4 names ("/BUILDTIME", here "2005-01-13 08:50:39
- *   Administrator") into data_020a0d90, at most 0x1f chars plus a forced
+ *   Administrator") into gBuildTimeString, at most 0x1f chars plus a forced
  *   NUL, via func_02018434. Both globals keep their linker names. */
 #include "PathPtr.h"
 #include "common.h"
@@ -25,20 +25,19 @@
 extern "C" {
 void func_02018434(const char *path, int dst, int size);
 extern char data_020994d4[];
-
 /* PATH_DEFS through the administrator name buffer, then the two words that
  * finish the claimed BSS run at 0x020a0db8. One claim, the symbols.txt names. */
 PathDef *PATH_DEFS;
 Vector3_16 *PATH_NODES;
 int NUM_PATHS;
-char data_020a0d90[0x20];
-int data_020a0db0;
+char gBuildTimeString[0x20];
+int gGlobalTimer;
 int data_020a0db4;
 }
 
 void func_0203ad84(void) {
-    func_02018434(data_020994d4, (int)data_020a0d90, 31);
-    data_020a0d90[31] = 0;
+    func_02018434(data_020994d4, (int)gBuildTimeString, 31);
+    gBuildTimeString[31] = 0;
 }
 
 PathPtr::PathPtr() : def(0), unk_004(0) {}

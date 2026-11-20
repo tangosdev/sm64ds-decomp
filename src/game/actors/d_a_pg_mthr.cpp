@@ -69,7 +69,7 @@ enum {
      02113bf8  file 0x3fd  BTP   walk
      02113be8  file 0x407  BTP   stand/talk
      02112c04 = { &02113bf8, &02113be8 }
-     02112c0c = { &02113bf0, &02113c08 }   (decl_common spells this int[])
+     02112c0c = { &02113bf0, &02113c08 }
    SharedFilePtr declares no constructor of its own, so the
    model handle gets the func_02017acc/func_02017ab4 pair, the animation
    handles get SharedFilePtr::Construct/Destruct_Anim and the texture
@@ -107,6 +107,7 @@ extern PgMthrState data_ov018_02113c4c[3];
 typedef void (daPgMthr_c::*PMF)();
 extern PgMthrModelFileHandle data_ov018_02113c00;
 extern SharedFilePtr *data_ov018_02112c04[2];
+extern SharedFilePtr *data_ov018_02112c0c[2];
 }
 
 daPgMthr_c *daPgMthr_c_classInit() {
@@ -118,7 +119,7 @@ int daPgMthr_c::InitResources()
     BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov018_02113c00);
     mAnmModel.SetFile(m, 1, 1);
     for (int i = 0; i < 2; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov018_02112c0c[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov018_02112c0c[i]);
     for (int i = 0; i < 2; i++) {
         SharedFilePtr *t = data_ov018_02112c04[i];
         dExtAnmTexPat_c::LoadFile(*t);
@@ -181,7 +182,7 @@ int daPgMthr_c::CleanupResources()
 {
     data_ov018_02113c00.Release();
     for (int i = 0; i < 2; i++)
-        ((SharedFilePtr *)data_ov018_02112c0c[i])->Release();
+        data_ov018_02112c0c[i]->Release();
     for (int i = 0; i < 2; i++)
         data_ov018_02112c04[i]->Release();
     return 1;
@@ -226,7 +227,7 @@ int daPgMthr_c::StateStandUpdate() {
         /* Yoshi's baby is in his mouth; this path does not count it. */
         if (toucher->param1 != CHAR_YOSHI)
             held = toucher->mHeldObj;
-        BeginTalk(toucher, (char *)held);
+        BeginTalk(toucher, held);
     }
     near = ClosestPlayer();
     TurnHeadToward((char *)near);
@@ -262,14 +263,14 @@ int daPgMthr_c::StateTalkUpdate() {
         break;
     case 1:
         if (ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514)) {
-            Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-            Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
+            Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+            Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+            Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, 0x300000, -0x480000);
             {
                 Vector3 mouth;
-                mouth.x = data_020a0e68.t.x;
-                mouth.y = data_020a0e68.t.y;
-                mouth.z = data_020a0e68.t.z;
+                mouth.x = gScratchMtx.t.x;
+                mouth.y = gScratchMtx.t.y;
+                mouth.z = gScratchMtx.t.z;
                 if (mPlayer->ShowMessage(*this, mMessageId, &mouth, 0, 0)) {
                     func_0201267c(0xdf, &mCamSpacePos);
                     mTalkStep++;
@@ -345,10 +346,10 @@ void daPgMthr_c::UpdateModelAndShadow() {
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
     if (mLookAngX != 0 || mLookAngY != 0) {
         Matrix4x3 *bone = &mAnmModel.data.transforms[LOOK_BONE];
-        data_020a0e68 = *bone;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookAngY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mLookAngX);
-        mAnmModel.data.transforms[LOOK_BONE] = data_020a0e68;
+        gScratchMtx = *bone;
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mLookAngY);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mLookAngX);
+        mAnmModel.data.transforms[LOOK_BONE] = gScratchMtx;
     }
 }
 
@@ -439,9 +440,7 @@ void daPgMthr_c::TurnHeadToward(char *b) {
     ApproachLinear(mLookAngX, vert, 0x250);
 }
 
-void daPgMthr_c::BeginTalk(void *found, char *heldRaw) {
-    dActor_c *held = (dActor_c *)heldRaw;
-    daPly_c *who = (daPly_c *)found;
+void daPgMthr_c::BeginTalk(daPly_c *who, dActor_c *held) {
 
     if (held && IsActorID(held, ACTOR_BABY_PENGUIN) && held->param1 == BABY_OTHER) {
         mPlayer = who;

@@ -2243,13 +2243,14 @@ _SECTION_SYMBOL_FIELDS = {
 def manifest_owned_symbol_rows(entry):
     """All manifest-licensed non-text symbols, annotated with their section name."""
     out = []
+    routed = DSR.routes(entry)
     for section, field in _SECTION_SYMBOL_FIELDS.items():
         rows = entry.get(field, [])
         if not isinstance(rows, list):
             continue
         for row in rows:
             if isinstance(row, dict) and row.get("symbol"):
-                out.append((DSR.owned_section(entry, section, row), row))
+                out.append((DSR.owned_section(entry, section, row, routed), row))
     return out
 
 

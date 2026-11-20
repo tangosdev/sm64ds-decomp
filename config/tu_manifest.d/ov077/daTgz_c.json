@@ -67,161 +67,161 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02124c28Ev",
+      "symbol": "_ZN7daTgz_c19GetHeightAboveWaterEv",
       "address": "0x02124c28",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov077_02124c28.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02124ce4Ev",
+      "symbol": "_ZN7daTgz_c12IsUnderwaterEv",
       "address": "0x02124ce4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov077_02124ce4.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02124d08EP10dBgCh_Actr",
+      "symbol": "_ZN7daTgz_c21UpdateGroundCollisionEP10dBgCh_Actr",
       "address": "0x02124d08",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov077_02124d08.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02124eb0Ev",
+      "symbol": "_ZN7daTgz_c21HandlePlayerCollisionEv",
       "address": "0x02124eb0",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov077_02124eb0.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_021250a8Ev",
+      "symbol": "_ZN7daTgz_c29HandlePlayerCollisionSpinningEv",
       "address": "0x021250a8",
       "size": "0x00000128",
       "legacy_source": "src/func_ov077_021250a8.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_021251d0Ev",
+      "symbol": "_ZN7daTgz_c18UpdateTumbleMatrixEv",
       "address": "0x021251d0",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov077_021251d0.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125290Ev",
+      "symbol": "_ZN7daTgz_c17UpdateModelMatrixEv",
       "address": "0x02125290",
       "size": "0x00000074",
       "legacy_source": "src/func_ov077_02125290.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125304Ev",
+      "symbol": "_ZN7daTgz_c21UpdateMatrixAndShadowEv",
       "address": "0x02125304",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov077_02125304.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_021253a4Ev",
+      "symbol": "_ZN7daTgz_c19St_KnockedAway_MainEv",
       "address": "0x021253a4",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov077_021253a4.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125480Ev",
+      "symbol": "_ZN7daTgz_c19St_KnockedAway_InitEv",
       "address": "0x02125480",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov077_02125480.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125550Ev",
+      "symbol": "_ZN7daTgz_c12St_Spit_MainEv",
       "address": "0x02125550",
       "size": "0x00000164",
       "legacy_source": "src/func_ov077_02125550.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_021256b4Ev",
+      "symbol": "_ZN7daTgz_c12St_Spit_InitEv",
       "address": "0x021256b4",
       "size": "0x0000017c",
       "legacy_source": "src/func_ov077_021256b4.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125830Ev",
+      "symbol": "_ZN7daTgz_c18St_YoshiMouth_MainEv",
       "address": "0x02125830",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov077_02125830.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_021258dcEv",
+      "symbol": "_ZN7daTgz_c18St_YoshiMouth_InitEv",
       "address": "0x021258dc",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov077_021258dc.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125908Ev",
+      "symbol": "_ZN7daTgz_c17St_Knockback_MainEv",
       "address": "0x02125908",
       "size": "0x00000104",
       "legacy_source": "src/func_ov077_02125908.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125a0cEv",
+      "symbol": "_ZN7daTgz_c17St_Knockback_InitEv",
       "address": "0x02125a0c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov077_02125a0c.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125a54Ev",
+      "symbol": "_ZN7daTgz_c12St_Walk_MainEv",
       "address": "0x02125a54",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov077_02125a54.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125b1cEv",
+      "symbol": "_ZN7daTgz_c12St_Walk_InitEv",
       "address": "0x02125b1c",
       "size": "0x00000098",
       "legacy_source": "src/func_ov077_02125b1c.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125bb4Ev",
+      "symbol": "_ZN7daTgz_c12St_Spin_MainEv",
       "address": "0x02125bb4",
       "size": "0x00000220",
       "legacy_source": "src/func_ov077_02125bb4.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125dd4Ev",
+      "symbol": "_ZN7daTgz_c12St_Spin_InitEv",
       "address": "0x02125dd4",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov077_02125dd4.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125e20Ev",
+      "symbol": "_ZN7daTgz_c15CallStateUpdateEv",
       "address": "0x02125e20",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov077_02125e20.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125e5cEv",
+      "symbol": "_ZN7daTgz_c14CallStateEnterEv",
       "address": "0x02125e5c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov077_02125e5c.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125e94Ei",
+      "symbol": "_ZN7daTgz_c8SetStateEi",
       "address": "0x02125e94",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov077_02125e94.c",
@@ -409,13 +409,13 @@
       "address": "0x02127c28",
       "size": "0x60",
       "binding": "STB_GLOBAL",
-      "evidence": "six {enter, update} pointer-to-member records that the initializer fills from the twelve literals; func_ov077_02125e94 indexes it at state * 16"
+      "evidence": "six {enter, update} pointer-to-member records that the initializer fills from the twelve literals; SetState indexes it at state * 16"
     }
   ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
-    "34/34 MATCH, objisolate clean, reloc-destinations clean -- the largest TU reconstructed so far. Hand-assembled. Two dBgCh_Gnd shadow views of DIFFERENT sizes (0x50 and 0x54) are both stack-frame-load-bearing; the 0x54 view lives in namespace rg54, binding the same C symbols. InitResources byte-requires a THREE-argument call to func_ov077_02125e94 (r2 = 0x2c) against the TU's (void*, int) definition -- namespaced three-arg view. The hand-mangled D0 body is dropped (mwccarm ICE ELFgen.c:483 with a real destructor in the same TU); one ~daTgz_c() emits both variants. Spawn stores &_ZTV7daTgz_c[2].",
+    "34/34 MATCH, objisolate clean, reloc-destinations clean -- the largest TU reconstructed so far. Hand-assembled. Two dBgCh_Gnd shadow views of DIFFERENT sizes (0x50 and 0x54) are both stack-frame-load-bearing; the 0x54 view lives in namespace rg54, binding the same C symbols. InitResources byte-requires a THREE-argument call to SetState (r2 = 0x2c) against the TU's (void*, int) definition -- namespaced three-arg view. The hand-mangled D0 body is dropped (mwccarm ICE ELFgen.c:483 with a real destructor in the same TU); one ~daTgz_c() emits both variants. Spawn stores &_ZTV7daTgz_c[2].",
     "Static initializer folded: the walk animation handle (id 0x42b) and the six {enter, update} state records are real definitions in d_a_tgz.cpp, replacing the handwritten src/unnamed/ov077/__sinit_ov077_0212749c.cpp. mwcc emits __sinit_d_a_tgz.cpp (0x160), its .ctor word, the twelve PMF literals and the registration node itself; all are byte- and relocation-identical to retail. A record can only name a member, so the twelve extern \"C\" state handlers become daTgz_c members (same bodies, 34/34 MATCH). Ownership: ov077 .init, .ctor and .bss run in .text TU order; this initializer sits right after d_a_jgm's (0x02127240..0x0212749c), its .ctor word 0x021277d0 sits between jgm's 0x021277cc and popoi's 0x021277d4, its .bss 0x02127c14..0x02127c88 runs from jgm's end to popoi's start, and the twelve literals name only this TU's state handlers. The same change licenses the TU's whole .data run 0x021278e8..0x02127a00 (PMF literals, _ZTS/_ZTI, the new typed g_profile_TOGEZO and the vtable, whose 0x84-byte storage starts at 0x0212797c, two words ahead of the configured address point) and makes the TU intact-object.",
     "Collision property member calls replace local helper declarations. Reconciled 13 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (63 sections, 291 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
@@ -712,7 +712,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h declares Vector3 a deliberately empty inline destructor (`~Vector3() {}`), which makes the type non-POD everywhere, so every TU that gives a Vector3 automatic storage re-emits that destructor as vague linkage. This TU has six such locals: func_ov077_02124d08, func_ov077_021251d0, func_ov077_021253a4, func_ov077_02125550, func_ov077_021256b4 and func_ov077_02125bb4 each declare a block-scope Vector3 that is then passed by reference (dActor_c::SpawnCoins, dActor_c::DetectRaycastClsn, daPly_c::Hurt, Particle::System::New, dBgCh_Gnd::SetObjAndPos). The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), delinked to src/_ZN7Vector3D1Ev.cpp, which owns it; this object's copy is the identical 4-byte `bx lr` body. rombuild compares it against those cartridge bytes and refuses anything but byte-identical vague-linkage output before the duplicate is discarded, so the address cannot be lost -- the owning source still supplies it."
+      "reason": "include/types.h declares Vector3 a deliberately empty inline destructor (`~Vector3() {}`), which makes the type non-POD everywhere, so every TU that gives a Vector3 automatic storage re-emits that destructor as vague linkage. This TU has six such locals: UpdateGroundCollision, UpdateTumbleMatrix, St_KnockedAway_Main, St_Spit_Main, St_Spit_Init and St_Spin_Main each declare a block-scope Vector3 that is then passed by reference (dActor_c::SpawnCoins, dActor_c::DetectRaycastClsn, daPly_c::Hurt, Particle::System::New, dBgCh_Gnd::SetObjAndPos). The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), delinked to src/_ZN7Vector3D1Ev.cpp, which owns it; this object's copy is the identical 4-byte `bx lr` body. rombuild compares it against those cartridge bytes and refuses anything but byte-identical vague-linkage output before the duplicate is discarded, so the address cannot be lost -- the owning source still supplies it."
     }
   ],
   "init": [
@@ -1104,7 +1104,7 @@
       "source": "0x021278e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_021258dcEv",
+      "symbol": "_ZN7daTgz_c18St_YoshiMouth_InitEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x021258dc"
@@ -1114,7 +1114,7 @@
       "source": "0x021278f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125a54Ev",
+      "symbol": "_ZN7daTgz_c12St_Walk_MainEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125a54"
@@ -1124,7 +1124,7 @@
       "source": "0x021278f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125908Ev",
+      "symbol": "_ZN7daTgz_c17St_Knockback_MainEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125908"
@@ -1134,7 +1134,7 @@
       "source": "0x02127900",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125480Ev",
+      "symbol": "_ZN7daTgz_c19St_KnockedAway_InitEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125480"
@@ -1144,7 +1144,7 @@
       "source": "0x02127908",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125b1cEv",
+      "symbol": "_ZN7daTgz_c12St_Walk_InitEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125b1c"
@@ -1154,7 +1154,7 @@
       "source": "0x02127910",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125bb4Ev",
+      "symbol": "_ZN7daTgz_c12St_Spin_MainEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125bb4"
@@ -1164,7 +1164,7 @@
       "source": "0x02127918",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125a0cEv",
+      "symbol": "_ZN7daTgz_c17St_Knockback_InitEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125a0c"
@@ -1174,7 +1174,7 @@
       "source": "0x02127920",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_021253a4Ev",
+      "symbol": "_ZN7daTgz_c19St_KnockedAway_MainEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x021253a4"
@@ -1184,7 +1184,7 @@
       "source": "0x02127928",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125dd4Ev",
+      "symbol": "_ZN7daTgz_c12St_Spin_InitEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125dd4"
@@ -1194,7 +1194,7 @@
       "source": "0x02127930",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125550Ev",
+      "symbol": "_ZN7daTgz_c12St_Spit_MainEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125550"
@@ -1204,7 +1204,7 @@
       "source": "0x02127938",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_021256b4Ev",
+      "symbol": "_ZN7daTgz_c12St_Spit_InitEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x021256b4"
@@ -1214,7 +1214,7 @@
       "source": "0x02127940",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daTgz_c19func_ov077_02125830Ev",
+      "symbol": "_ZN7daTgz_c18St_YoshiMouth_MainEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02125830"

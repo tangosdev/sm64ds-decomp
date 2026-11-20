@@ -6,18 +6,18 @@
  *
  * Behavior runs one handler per mState out of the pointer-to-member table
  * data_ov079_02128280, which the static initializer fills at load:
- *    0 func_ov079_02125b44  waiting (the king's introduction talk)
- *    1 func_ov079_021258fc  walking
- *    2 func_ov079_021256d4  the king walking
- *    3 func_ov079_021254b4  leaning in
- *    4 func_ov079_0212538c  falling on its face
- *    5 func_ov079_02125240  slamming down
- *    6 func_ov079_02124b08  lying flat, getting up
- *    7 func_ov079_021249f0  turning back
- *    8 func_ov079_021246dc  defeated
- *    9 func_ov079_021246d8  the king beaten, waiting to go
- *   10 func_ov079_02124638  wobbling from a hit in front
- *   11 func_ov079_02124530  knocked over from behind
+ *    0 UpdateWaiting  waiting (the king's introduction talk)
+ *    1 UpdateWalking  walking
+ *    2 UpdateKingWalking  the king walking
+ *    3 UpdateLeaningIn  leaning in
+ *    4 UpdateFallingOnFace  falling on its face
+ *    5 UpdateSlammingDown  slamming down
+ *    6 UpdateGettingUp  lying flat, getting up
+ *    7 UpdateTurningBack  turning back
+ *    8 UpdateDefeated  defeated
+ *    9 UpdateKingBeaten  the king beaten, waiting to go
+ *   10 UpdateWobbling  wobbling from a hit in front
+ *   11 UpdateKnockedOver  knocked over from behind
  * The handlers are daBtn_c methods; their original names are unknown, so they
  * keep the address spellings.
  *
@@ -33,7 +33,7 @@
  * - func_ov079_02123d4c is really a Vector3-by-value member of daBtn_c, but
  *   that spelling gives the named return local its own stack home (no NRVO,
  *   +0xc): it stays a free function and callers use the vecret view.
- * - func_ov079_0212522c is the mesh collider's contact-callback trampoline;
+ * - StoodOnCallback is the mesh collider's contact-callback trampoline;
  *   its first parameter is the collider, not the object, so it stays free.
  *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S -- mwccarm emits one .text
@@ -97,7 +97,6 @@ void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" {
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
-int func_ov002_020dd8b8(void *c);
 }
 
 extern "C" {
@@ -167,7 +166,7 @@ extern SharedFilePtr *const data_ov079_021275ec[5] = {
     &gBattanAttack01AnimationFile, &gBattanAttack02AnimationFile,  &gBattanRecoverAnimationFile,
     &gBattanWalkAnimationFile,     &gBattanWalkstartAnimationFile,
 };
-extern void *const data_ov079_02127600[6] = {
+extern SharedFilePtr *const data_ov079_02127600[6] = {
     &gBattanKingAttack01AnimationFile,  &gBattanKingAttack02AnimationFile,
     &gBattanKingRecoverAnimationFile,   &gBattanKingWalkAnimationFile,
     &gBattanKingWalkstartAnimationFile, &data_ov079_021281b0,
@@ -177,7 +176,7 @@ extern void *const data_ov079_02127600[6] = {
 int data_ov079_02127ba0[8] = {
     0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
-void *data_ov079_02127bf0[2] = {
+SharedFilePtr *data_ov079_02127bf0[2] = {
     &gBattanCollisionFile,
     &gBattanKingCollisionFile,
 };
@@ -199,10 +198,10 @@ int data_ov079_02127cfc[96] = {
 
 /* Twelve state handlers. The initializer copies each member pointer into this table. */
 daBtn_c::StateFunc data_ov079_02128280[12] = {
-    &daBtn_c::func_ov079_02125b44, &daBtn_c::func_ov079_021258fc, &daBtn_c::func_ov079_021256d4,
-    &daBtn_c::func_ov079_021254b4, &daBtn_c::func_ov079_0212538c, &daBtn_c::func_ov079_02125240,
-    &daBtn_c::func_ov079_02124b08, &daBtn_c::func_ov079_021249f0, &daBtn_c::func_ov079_021246dc,
-    &daBtn_c::func_ov079_021246d8, &daBtn_c::func_ov079_02124638, &daBtn_c::func_ov079_02124530,
+    &daBtn_c::UpdateWaiting,    &daBtn_c::UpdateWalking,       &daBtn_c::UpdateKingWalking,
+    &daBtn_c::UpdateLeaningIn,  &daBtn_c::UpdateFallingOnFace, &daBtn_c::UpdateSlammingDown,
+    &daBtn_c::UpdateGettingUp,  &daBtn_c::UpdateTurningBack,   &daBtn_c::UpdateDefeated,
+    &daBtn_c::UpdateKingBeaten, &daBtn_c::UpdateWobbling,      &daBtn_c::UpdateKnockedOver,
 };
 
 /* OnAimedAtWithEggReturnVec's view of func_ov079_02123d4c: the (out, this)
@@ -240,7 +239,7 @@ int daBtn_c::InitResources()
         mAnmModel.SetFile((BMD_File *)bmd, 1, -1);
         animIdx = 0;
         do {
-            dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov079_02127600[animIdx]);
+            dExtFrameCtrl_c::LoadFile(*data_ov079_02127600[animIdx]);
             animIdx += 1;
         } while (animIdx < 6);
         dExtAnmTexPat_c::LoadFile(data_ov079_02128178);
@@ -256,7 +255,7 @@ int daBtn_c::InitResources()
     }
 
     idx = mIsKing;
-    dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
+    dBgW_Kc::LoadFile(*data_ov079_02127bf0[idx]);
 
     if (mShadowModel.InitCuboid() == 0) {
         return 0;
@@ -281,13 +280,12 @@ int daBtn_c::InitResources()
 
     idx = mIsKing;
     if (idx == 0) {
-        mMovingMeshCollider.dBgW_KcMbg::SetFile(
-            (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix, 0x199,
-            mAngle.y, *(CLPS_Block *)data_ov079_02127ba0);
+        mMovingMeshCollider.dBgW_KcMbg::SetFile((KCL_File *)data_ov079_02127bf0[idx]->filePtr,
+                                                mMeshMatrix, 0x199, mAngle.y,
+                                                *(CLPS_Block *)data_ov079_02127ba0);
     } else {
-        mMovingMeshCollider.dBgW_KcMbg::SetFile(
-            (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix, 0x1000,
-            mAngle.y, data_ov015_021135d4);
+        mMovingMeshCollider.dBgW_KcMbg::SetFile((KCL_File *)data_ov079_02127bf0[idx]->filePtr,
+                                                mMeshMatrix, 0x1000, mAngle.y, data_ov015_021135d4);
     }
 
     mMovingMeshCollider.SetShallowOnly();
@@ -311,7 +309,7 @@ int daBtn_c::InitResources()
     mSubTimer = 0;
 
     idx = mIsKing;
-    anim = ((SharedFilePtr *)data_ov079_021275ec[idx * 5 + 3])->filePtr;
+    anim = data_ov079_021275ec[idx * 5 + 3]->filePtr;
     mAnmModel.SetAnim((BCA_File *)anim, 0, 0x1000, 0);
 
     mSpawnPos.x = mPos.x;
@@ -385,7 +383,7 @@ int daBtn_c::Behavior()
         }
     }
 
-    func_ov079_02123f34();
+    TrackNearestPlayers();
     UpdatePos(0);
 
     if (mHorzSpeed != 0) {
@@ -448,16 +446,16 @@ int daBtn_c::CleanupResources()
   int i;
   if(mMovingMeshCollider.IsEnabled())
     mMovingMeshCollider.Disable();
-  ((SharedFilePtr *)(data_ov079_02127bf0[mIsKing]))->Release();
+  data_ov079_02127bf0[mIsKing]->Release();
   if(mIsKing){
       data_ov079_02128168.Release();
       for (i = 0; i < 6; i++)
-          ((SharedFilePtr *)(data_ov079_02127600[i]))->Release();
+          data_ov079_02127600[i]->Release();
       data_ov079_02128178.Release();
   } else {
       data_ov079_02128170.Release();
       for (i = 0; i < 5; i++)
-          ((SharedFilePtr *)(data_ov079_021275ec[i]))->Release();
+          data_ov079_021275ec[i]->Release();
   }
   return 1;
 }
@@ -467,14 +465,11 @@ int daBtn_c::CleanupResources()
    nearest player stands close (0x190000) and not far below it, start a
    talk, turn to face them, show message 0xa4, swap the music while the
    message box is up, and after the talk ends start walking (state 2). */
-void daBtn_c::func_ov079_02125b44()
-{
+void daBtn_c::UpdateWaiting() {
     Vector3 pos;
 
     if (mAnmModel.Finished() != 0) {
-        mAnmModel.SetAnim(
-            (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
-            0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 3]->filePtr, 0, 0x1000, 0);
     }
 
     if (mIsKing != 0) {
@@ -543,18 +538,16 @@ void daBtn_c::func_ov079_02125b44()
             break;
         case 6:
             mState = 2;
-            mAnmModel.SetAnim(
-                (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
-                0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 3]->filePtr, 0, 0x1000,
+                              0);
             break;
         }
         func_ov079_02125504();
     } else {
         if (mNearestDist < 0x3e8000) {
             mState = 1;
-            mAnmModel.SetAnim(
-                (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
-                0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 3]->filePtr, 0, 0x1000,
+                              0);
         }
         mAnmModel.Advance();
     }
@@ -565,8 +558,7 @@ void daBtn_c::func_ov079_02125b44()
    once 0x2bc000 from the spawn point -- 0xc8000 in level 0x27. A player
    dead ahead within 0xc8000 starts the lean (state 3); within 0x5dc000 the
    pace picks up. */
-void daBtn_c::func_ov079_021258fc()
-{
+void daBtn_c::UpdateWalking() {
     unsigned int frame;
     int king;   /* an int copy of idx: indexing data_ov079_021275dc by the u8 changes the code */
     u8 idx;
@@ -591,9 +583,8 @@ void daBtn_c::func_ov079_021258fc()
             mHorzSpeed = data_ov079_021275dc[king];
         }
         if (mAnmModel.Finished() != 0) {
-            mAnmModel.SetAnim(
-                (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
-                0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 3]->filePtr, 0, 0x1000,
+                              0);
         }
     } else {
         king = idx;
@@ -607,26 +598,23 @@ void daBtn_c::func_ov079_021258fc()
     mAnmModel.speed = 0x1000;
     if (::Vec3_HorzDist(&mPos, &mSpawnPos) > lim) {
         mState = 7;
-        mAnmModel.SetAnim(
-            (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
-            0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 3]->filePtr, 0, 0x1000, 0);
         mFlags &= ~0x2000000;
     } else {
         if (mFrontDist < 0x5dc000) {
             mHorzSpeed = 0x9000;
             mAnmModel.speed = data_ov079_021275dc[mIsKing];
         }
-        if (mAnmModel.file == ((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr) {
+        if (mAnmModel.file == data_ov079_021275ec[mIsKing * 5 + 3]->filePtr) {
             if (mFrontDist < 0xc8000) {
                 mState = 3;
-                mAnmModel.SetAnim(
-                    (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5])->filePtr),
-                    0x40000000, 0x1000, 0);
+                mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5]->filePtr, 0x40000000,
+                                  0x1000, 0);
             }
         }
     }
 
-    if (mAnmModel.file == ((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr) {
+    if (mAnmModel.file == data_ov079_021275ec[mIsKing * 5 + 3]->filePtr) {
         if (frame <= 7 || (frame >= 0x1e && frame <= 0x26)) {
             mHorzSpeed = 0;
             if (mStepPlayed == 0) {
@@ -646,15 +634,13 @@ void daBtn_c::func_ov079_021258fc()
    at a non-mega player dead ahead within 0x190000. If the nearest player
    ends up more than 0x37f000 below, give up: restore the music and put the
    king back where and how it spawned, waiting (state 0). */
-void daBtn_c::func_ov079_021256d4()
-{
+void daBtn_c::UpdateKingWalking() {
     daPly_c *r;
 
-    if (mAnmModel.file != ((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr) {
+    if (mAnmModel.file != data_ov079_021275ec[mIsKing * 5 + 3]->filePtr) {
         if (mAnmModel.Finished() != 0) {
-            mAnmModel.SetAnim(
-                (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
-                0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 3]->filePtr, 0, 0x1000,
+                              0);
         }
     }
 
@@ -673,9 +659,8 @@ void daBtn_c::func_ov079_021256d4()
         r = mPlayers[mFrontPlayer];
         if (r->mIsMega == 0) {
             if (mFrontDist < 0x190000) {
-                mAnmModel.SetAnim(
-                    (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5])->filePtr),
-                    0x40000000, 0x1000, 0);
+                mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5]->filePtr, 0x40000000,
+                                  0x1000, 0);
                 mState = 3;
             }
         }
@@ -694,7 +679,7 @@ void daBtn_c::func_ov079_021256d4()
         s16 t;
         void *anim;
         int five;
-        SharedFilePtr **tab;
+        SharedFilePtr *const *tab;
         dExtAnmModel_c *ma;
 
         Sound::StopLoadedMusic_Layer3();
@@ -704,7 +689,7 @@ void daBtn_c::func_ov079_021256d4()
         mPos.y = mSpawnPos.y;
         five = 5;
         mPos.z = mSpawnPos.z;
-        tab = (SharedFilePtr **)data_ov079_021275ec;
+        tab = data_ov079_021275ec;
         t = mSpawnAngleX;
         ma = &mAnmModel;
         mAngle.x = t;
@@ -720,7 +705,7 @@ void daBtn_c::func_ov079_021256d4()
         mPrevAngle.z = t;
         mTextureSequence.currFrame = 0;
         mHorzSpeed = 0;
-        anim = ((SharedFilePtr *)tab[mIsKing * five + 3])->filePtr;
+        anim = tab[mIsKing * five + 3]->filePtr;
         (ma)->SetAnim((BCA_File *)anim, 0, 0x1000, 0);
     }
 }
@@ -744,7 +729,7 @@ void daBtn_c::func_ov079_02125504()
         void *want;
         i = mIsKing;
         q = mAnmModel.currFrame;
-        e = (SharedFilePtr *)data_ov079_021275ec[i * 5 + 3];
+        e = data_ov079_021275ec[i * 5 + 3];
         cur = mAnmModel.file;
         want = e->filePtr;
         frame = (unsigned short)(q >> 12);
@@ -799,8 +784,7 @@ void daBtn_c::func_ov079_02125504()
 
 /* State 3, the lean: stand still until the topple animation reaches frame
    15, then start falling (state 4). */
-void daBtn_c::func_ov079_021254b4()
-{
+void daBtn_c::UpdateLeaningIn() {
     mHorzSpeed = 0;
     mAnmModel.Advance();
     if (!mAnmModel.WillHitFrame(15))
@@ -813,8 +797,7 @@ void daBtn_c::func_ov079_021254b4()
    and from frame 8 tip forward with a growing mPitchSpeed until the body is
    flat (mAngle.x 0x4000), which lands it in state 5. The mesh is raised with
    the tilt so the face stays on the ground. */
-void daBtn_c::func_ov079_0212538c()
-{
+void daBtn_c::UpdateFallingOnFace() {
     mMovingMeshCollider.ClearShallowOnly();
     mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
@@ -849,7 +832,7 @@ void daBtn_c::func_ov079_0212538c()
    the mesh collider, shake the camera, start the lying-down animation and
    move to state 6; from then on the collider's contact callback is the
    veneer above. The king lands with a heavier dust burst. */
-void daBtn_c::func_ov079_02125240(){
+void daBtn_c::UpdateSlammingDown() {
     Vector3 v;
     Vector3 a;
     Vector3 b;
@@ -861,15 +844,14 @@ void daBtn_c::func_ov079_02125240(){
     mMovingMeshCollider.ClearDepthByDir();
     mMovingMeshCollider.SetShallowOnly();
     mSubState++;
-    mAnmModel.SetAnim(
-        (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 1])->filePtr), 0x40000000,
-        0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 1]->filePtr, 0x40000000, 0x1000,
+                      0);
     v.x = mPos.x;
     v.y = mPos.y;
     v.z = mPos.z;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    mMovingMeshCollider.SetStoodOnCallback(daBtn_c::func_ov079_0212522c);
+    mMovingMeshCollider.SetStoodOnCallback(daBtn_c::StoodOnCallback);
     if (mIsKing != 0) {
         func_ov079_02123d4c(&a, this);
         func_0200fa04(&a, 0);
@@ -884,7 +866,7 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-void daBtn_c::func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daBtn_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off
@@ -894,7 +876,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 }
 
 /* Contact from the lying body's back. Only players count. A contact that
-   func_ov002_020dd8b8 accepts is a hit: it arms mPounded and remembers the
+   daPly_c::IsGroundPounding accepts is a hit: it arms mPounded and remembers the
    player (the king ignores it while a resumed state 0 is pending). Any
    other touch pays out one coin per contact while mCoinsLeft lasts -- for
    the king only when the player stands at least 0x2bc000 above it in
@@ -908,7 +890,7 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
     if (!IsPlayerActor(other))
         return;
     mTouched = 1;
-    if (func_ov002_020dd8b8(other) != 0) {
+    if (((daPly_c *)other)->IsGroundPounding() != 0) {
         if (mResumePending != 0 && mIsKing != 0) {
             if (mResumeState == 0) return;
         }
@@ -1035,8 +1017,7 @@ void daBtn_c::func_ov079_02124dec()
    waits 30 frames and gets up too. Phase 11 pitches back up to level, then
    either resumes the state a hit interrupted or walks again (state 1, or 2
    for the king); the mesh lift follows a per-frame table meanwhile. */
-void daBtn_c::func_ov079_02124b08()
-{
+void daBtn_c::UpdateGettingUp() {
     u8 st = mSubState;
 
     if (st < 0xa) {
@@ -1060,9 +1041,8 @@ void daBtn_c::func_ov079_02124b08()
             }
             unk_407 = 0;
             mSubState = 0xb;
-            mAnmModel.SetAnim(
-                (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 2])->filePtr),
-                0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 2]->filePtr, 0x40000000,
+                              0x1000, 0);
             mSubTimer = 0;
             return;
         }
@@ -1076,9 +1056,8 @@ void daBtn_c::func_ov079_02124b08()
             return;
         unk_407 = 0;
         mSubState++;
-        mAnmModel.SetAnim(
-            (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 2])->filePtr),
-            0x40000000, 0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 2]->filePtr, 0x40000000,
+                          0x1000, 0);
         mSubTimer = 0;
         return;
     }
@@ -1093,9 +1072,8 @@ void daBtn_c::func_ov079_02124b08()
         mPitchSpeed = 0;
         mAngle.x = 0;
         if (mAnmModel.Finished() != 0) {
-            mAnmModel.SetAnim(
-                (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 4])->filePtr),
-                0x40000000, 0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 4]->filePtr, 0x40000000,
+                              0x1000, 0);
 
             if (mIsKing == 0) {
                 mMovingMeshCollider.SetStoodOnCallback(0);
@@ -1132,8 +1110,7 @@ void daBtn_c::func_ov079_02124b08()
 /* State 7, turn back: spin in place 0x400 a frame for 32 frames, then walk
    off at the class's pace and hand over to state 1 after 42. A hit that
    interrupted this state resumes it where it left off. */
-void daBtn_c::func_ov079_021249f0()
-{
+void daBtn_c::UpdateTurningBack() {
     if ((unsigned int)(mResumeState - 10) <= 1) {
         mSubState = mSavedSubState;
         mStateTimer = mSavedStateTimer + 1;
@@ -1152,9 +1129,8 @@ void daBtn_c::func_ov079_021249f0()
         mHorzSpeed = data_ov079_021275dc[mIsKing];
         if (mStateTimer > 42) {
             mState = 1;
-            mAnmModel.SetAnim(
-                (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
-                0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 3]->filePtr, 0, 0x1000,
+                              0);
         }
     }
     mAnmModel.Advance();
@@ -1164,8 +1140,7 @@ void daBtn_c::func_ov079_021249f0()
    king first talks: start a conversation with the player that beat it,
    show message 0xa5 beside the nearest player, wait for it to close, then
    burst, spawn its star (star mStarID, from 0x64000 above it) and go. */
-void daBtn_c::func_ov079_021246dc()
-{
+void daBtn_c::UpdateDefeated() {
     Vector3 pos;
     Vector3 starPos;
     Vector3 v;
@@ -1231,15 +1206,12 @@ void daBtn_c::func_ov079_021246dc()
 }
 
 /* State 9: the king has been beaten and is waiting to be destroyed. */
-void daBtn_c::func_ov079_021246d8()
-{
-}
+void daBtn_c::UpdateKingBeaten() {}
 
 /* State 10, the hit wobble: rock about the pitch axis for 10 of the 90
    frames the hit armed, then sit level, then put back the state the hit
    interrupted. */
-void daBtn_c::func_ov079_02124638()
-{
+void daBtn_c::UpdateWobbling() {
     if (mWobbleTimer-- != 0) {
         u32 t = mWobbleTimer;
         if (t <= 0x50) {
@@ -1262,8 +1234,7 @@ void daBtn_c::func_ov079_02124638()
 /* State 11, knocked over from behind: finish the hop, then tip forward like
    state 4 with variant-specific pitch acceleration until flat, landing in
    state 5. While the hop plays the body rises. */
-void daBtn_c::func_ov079_02124530()
-{
+void daBtn_c::UpdateKnockedOver() {
     mAnmModel.Advance();
     if (mAnmModel.Finished()) {
         if (mIsKing)
@@ -1379,10 +1350,10 @@ void daBtn_c::func_ov079_02124188()
     pos.z += FX_MUL(lean, FX_CosIdx((unsigned short)mAngle.y >> 4));
 
     ::Vec3_Asr(&asr, &pos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (mAngle.y + mBodyYaw));
+    Matrix4x3_FromTranslation(&gScratchMtx, asr.x, asr.y, asr.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, (mAngle.y + mBodyYaw));
 
-    mShadowMatrix = data_020a0e68;
+    mShadowMatrix = gScratchMtx;
 
     if (mShouldRender == 0)
         return;
@@ -1436,8 +1407,7 @@ void daBtn_c::func_ov079_02124008()
 
 /* Survey the watched players: the nearest one (index, distance, bearing into
    mTargetAngle) and the nearest one ahead, within 0x2000 of the heading. */
-void daBtn_c::func_ov079_02123f34()
-{
+void daBtn_c::TrackNearestPlayers() {
     s16 minAngle;
     int minDist, minDist2;
     int dist;
@@ -1695,9 +1665,8 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             SpawnCoins(pos, 1, 0, 0);
         }
         mHorzSpeed = 0;
-        mAnmModel.SetAnim(
-            (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5])->filePtr), 0x40000000,
-            0x1000, 0);
+        mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5]->filePtr, 0x40000000, 0x1000,
+                          0);
         mAnmModel.speed = 0x4000;
         mState = 0xb;
         mResumePending = 1;

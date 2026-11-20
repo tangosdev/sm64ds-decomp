@@ -89,7 +89,7 @@ extern "C" void func_02020028(int player, unsigned char mode);
 extern dGraph_c::callback_c *gGraphCallback;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern s32 data_0208ee44;
+extern s32 gFrameStep;
 
 /* The scene manager Behavior polls through its slot 5. */
 extern dFdBrightness_c *gSceneFader;
@@ -145,10 +145,10 @@ extern "C" int func_0203d8fc(void);
 extern "C" int func_0201a1bc(void);
 extern "C" void func_0203d930(void);
 extern unsigned char EntryCourseLoadStarted;
-void func_0202deac(int level);
+void PreloadLevelOverlays(int level);
 extern "C" void func_0203d918();
 extern u8 data_0208a0e0;
-extern "C" u8 func_020202dc(void);
+extern "C" u8 GetParentCourseIndex(void);
 extern "C" u8 func_020200b8(void);
 extern "C" void func_02020078(u32 flags);
 extern "C" void func_0202029c(u32 idx);
@@ -173,7 +173,7 @@ extern u8 data_0209fc50;
 extern u8 data_0209fc58;
 /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
 extern char data_0209ee90[];
-extern u8 data_0208ee3c;
+extern u8 gBacklightEnabled;
 extern PadData data_020a0e58[];
 extern ControllerInput data_0209f498[];
 extern int data_ov075_0211c990[];
@@ -184,8 +184,8 @@ extern int data_ov075_0211c9b8[];
 extern int *data_ov075_0211c9cc[];
 extern OamAttr *data_ov075_0211c9e0[];
 extern OamAttr *data_ov075_0211c9f4[];
-extern char data_ov075_0211c790[];
-extern char data_ov075_0211c8b0[];
+extern OamAttr data_ov075_0211c790[];
+extern OamAttr data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211cb84;
 extern int data_ov075_0211ca64;
 extern int data_ov075_0211ca6c;
@@ -222,8 +222,8 @@ void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
 extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 starID, u32 loadMode);
 extern u8 data_02092778;
-extern "C" u8 func_02020364(int player);
-extern "C" u8 func_020201f0(int);
+extern "C" u8 IsPlayerReady(int player);
+extern "C" u8 IsPlayerReadyForRematch(int);
 
 extern dScEntry_c::StepSet data_ov075_0211d7e0;
 extern dScEntry_c::StepSet data_ov075_0211d810;
@@ -519,7 +519,7 @@ int dScEntry_c::ArePlayersReadyForRematch() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209fc5c[i]) {
-            int r = func_020201f0(i);
+            int r = IsPlayerReadyForRematch(i);
             if (!r)
                 return 0;
         }
@@ -532,7 +532,7 @@ int dScEntry_c::ArePlayersReady() {
     u8 *active = data_0209fc5c;
     for (;;) {
         if (*active != 0) {
-            int ready = func_02020364(player);
+            int ready = IsPlayerReady(player);
             if (ready == 0)
                 return 0;
         }
@@ -606,7 +606,7 @@ void dScEntry_c::RenderSoundSettings() {
         a1 = data_ov075_0211b5d4[j];
         a2 = 168;
     }
-    OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
+    OAM::RenderSub(data_ov075_0211c790, a1, a2);
 
     /* mStepWork[1] counts frames; its bit 3 bobs the three arrows. */
     mStepWork[1] += 1;
@@ -651,14 +651,14 @@ void dScEntry_c::UpdateSoundSettings() {
                     else
                         newmode = (mode + 1) & 0xff;
                     mIcons[1].mOn = 0;
-                    mIcons[1].func_ov001_020ab3f0();
+                    mIcons[1].Press();
                 } else {
                     if (mode == 0)
                         newmode = 2;
                     else
                         newmode = (mode - 1) & 0xff;
                     mIcons[0].mOn = 0;
-                    mIcons[0].func_ov001_020ab3f0();
+                    mIcons[0].Press();
                 }
                 SetSoundMode(newmode);
                 Message::DisplayOptionsMenuTextVS((GetSoundMode() + 9));
@@ -729,7 +729,7 @@ void dScEntry_c::EnterSoundSettings() {
     mIcons[3].Place(2, 0, 140, 104);
     mIcons[4].Place(2, 0, 204, 104);
 
-    if (data_0208ee3c != 0)
+    if (gBacklightEnabled != 0)
         mIcons[3].mOn = 1;
     else
         mIcons[4].mOn = 1;
@@ -758,7 +758,7 @@ void dScEntry_c::RenderControlSettings() {
         a1 = data_ov075_0211b5d4[j];
         a2 = 168;
     }
-    OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
+    OAM::RenderSub(data_ov075_0211c790, a1, a2);
 }
 
 void dScEntry_c::UpdateControlSettings() {
@@ -898,7 +898,7 @@ void dScEntry_c::EnterQuitMessage() {
 }
 
 void dScEntry_c::UpdateQuit() {
-    mStepDelay -= data_0208ee44;
+    mStepDelay -= gFrameStep;
     if (mStepDelay > 0)
         return;
     dScene_c::StartSceneFade(1, 0, 0);
@@ -1049,16 +1049,15 @@ void dScEntry_c::RenderWinCounts() {
             n = n % 100;
             tens = n / 10;
             if (tens != 0) {
-                p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, 206, yBase + yOff, 8,
-                                       -1, 0x1000, 0);
+                p = (int *)OAM::Render(false, data_ov075_0211c8b0, 206, yBase + yOff, 8, -1, 0x1000,
+                                       0);
                 if (p != 0) {
                     int *q = (p + 1);
                     int val = *q;
                     *q = (val & ~0x3ff) | ((tens + ((u32)(val << 22) >> 22)) & 0x3ff);
                 }
             }
-            p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, 216, yBase + yOff, 8, -1,
-                                   0x1000, 0);
+            p = (int *)OAM::Render(false, data_ov075_0211c8b0, 216, yBase + yOff, 8, -1, 0x1000, 0);
             if (p != 0) {
                 int *q = (p + 1);
                 int val = *q;
@@ -1210,7 +1209,7 @@ void dScEntry_c::UpdateResults() {
                         acc |= gTouchInfo[i].held && gTouchInfo[i].edge;
                     }
                 }
-                mStepDelay -= data_0208ee44;
+                mStepDelay -= gFrameStep;
                 if (mStepDelay <= 0 || (mStepDelay < 540 && acc != 0)) {
                     func_02020334();
                     mStepWork[3] = 1;
@@ -1220,7 +1219,7 @@ void dScEntry_c::UpdateResults() {
                     func_02020124();
             }
         } else if (mStepWork[3] == 0) {
-            mStepDelay -= data_0208ee44;
+            mStepDelay -= gFrameStep;
             if (mStepDelay < 480) {
                 func_02020334();
                 mStepWork[3] = 1;
@@ -1261,15 +1260,15 @@ void dScEntry_c::EnterResults() {
 
     if (data_0209b2f0[id] != 0) {
         LoadCompressedFileAt(0x8404, G2S_GetBG3ScrPtr());
-        mOamAnimations[0].func_02020820(&data_ov075_0211ca64, 1, 1, 1, 1);
-        mOamAnimations[1].func_02020820(&data_ov075_0211ca6c, 1, 0, 0, 0);
-        mOamAnimations[2].func_02020820(&data_ov075_0211ca74, 1, 1, 1, 1);
+        mOamAnimations[0].Init(&data_ov075_0211ca64, 1, 1, 1, 1);
+        mOamAnimations[1].Init(&data_ov075_0211ca6c, 1, 0, 0, 0);
+        mOamAnimations[2].Init(&data_ov075_0211ca74, 1, 1, 1, 1);
     } else {
         LoadCompressedFileAt(0x8401, G2S_GetBG3ScrPtr());
-        mOamAnimations[0].func_02020820(&data_ov075_0211cc44, 1, 1, 1, 1);
-        mOamAnimations[1].func_02020820(&data_ov075_0211cc4c, 1, 0, 0, 0);
-        mOamAnimations[2].func_02020820(&data_ov075_0211cc54, 1, 0, 0, 0);
-        mOamAnimations[3].func_02020820(&data_ov075_0211cc5c, 1, 0, 0, 0);
+        mOamAnimations[0].Init(&data_ov075_0211cc44, 1, 1, 1, 1);
+        mOamAnimations[1].Init(&data_ov075_0211cc4c, 1, 0, 0, 0);
+        mOamAnimations[2].Init(&data_ov075_0211cc54, 1, 0, 0, 0);
+        mOamAnimations[3].Init(&data_ov075_0211cc5c, 1, 0, 0, 0);
     }
 
     mOamAnimations[0].palette = id + 0xa;
@@ -1325,7 +1324,7 @@ void dScEntry_c::UpdateMatchLoading() {
             mStepPhase = MATCH_LOAD_READY;
     }
     if (mStepDelay > 0) {
-        mStepDelay -= data_0208ee44;
+        mStepDelay -= gFrameStep;
     }
     if (mStepPhase < MATCH_LOAD_READY)
         return;
@@ -1348,11 +1347,11 @@ void dScEntry_c::LoadCourseResources(int course) {
     LoadArchive(selectedArchive);
     previousHeap->SetDefault();
     gGameMode = 1;
-    func_0202deac(data_ov075_0211c6ec[course]);
+    PreloadLevelOverlays(data_ov075_0211c6ec[course]);
 }
 
 void dScEntry_c::EnterMatchLoading() {
-    mEntObj->func_ov075_02114fa8();
+    mEntObj->SendPlayersToExits();
     mStepDelay = 240;
     mStepPhase = MATCH_LOAD_RESOURCES;
     mSawLoadSignal = 0;
@@ -1366,8 +1365,8 @@ void dScEntry_c::RenderCourseSelectTitle() {
 }
 
 void dScEntry_c::UpdateCourseSelect() {
-    if (func_0203d974() && func_020202dc() != data_0209b2e4) {
-        data_0209b2e4 = func_020202dc();
+    if (func_0203d974() && GetParentCourseIndex() != data_0209b2e4) {
+        data_0209b2e4 = GetParentCourseIndex();
     }
     if (func_02020168()) {
         u8 action;
@@ -1376,7 +1375,7 @@ void dScEntry_c::UpdateCourseSelect() {
         action = func_020200b8();
         if (action == 0) {
             int index;
-            mIcons[data_0209b2e4].func_ov001_020ab3f0();
+            mIcons[data_0209b2e4].Press();
             mIcons[data_0209b2e4].mReady = 0;
             index = 0;
             for (; index < 4; index++) {
@@ -1488,7 +1487,7 @@ void dScEntry_c::UpdatePlayerSelectIntro() {
     }
 
     if (mStepDelay > 0) {
-        mStepDelay -= data_0208ee44;
+        mStepDelay -= gFrameStep;
         return;
     }
     if (!mStepPhase)
@@ -1630,7 +1629,7 @@ void dScEntry_c::RenderWaitingText() {
             mWaiting.waveDelay = 120;
     } else {
         OAM::RenderSub(glyph, 128, 96);
-        mWaiting.waveDelay -= data_0208ee44;
+        mWaiting.waveDelay -= gFrameStep;
         mWaiting.wavePhase = 0;
     }
 }
@@ -1782,7 +1781,7 @@ void dScEntry_c::RenderRecruitText() {
             mWaiting.waveDelay = 120;
     } else {
         OAM::RenderSub(attr, 128, 28);
-        mWaiting.waveDelay -= data_0208ee44;
+        mWaiting.waveDelay -= gFrameStep;
         mWaiting.wavePhase = 0;
     }
 }
@@ -1805,7 +1804,7 @@ void dScEntry_c::UpdateRecruit() {
                 return;
         }
     }
-    mIcons[0].func_ov001_020ab3f0();
+    mIcons[0].Press();
     if (playerCount <= 1) {
         ChangeStepsAfterDelay(&data_ov075_0211d8a0, 20);
     } else {
@@ -1848,7 +1847,7 @@ void dScEntry_c::EnterStepFadeOut() {
 }
 
 void dScEntry_c::UpdateStepDelay() {
-    mStepDelay -= data_0208ee44;
+    mStepDelay -= gFrameStep;
     if (mStepDelay > 0)
         return;
     SetSteps(mPendingSteps);
@@ -2109,7 +2108,7 @@ s32 dScEntry_c::InitResources() {
         }
     }
 
-    data_0208ee44 = 2;
+    gFrameStep = 2;
     data_02092778 = 0;
     return 1;
 }

@@ -41,7 +41,7 @@
 #include "SpawnInfo.h"
 
 extern "C" {
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
 OamAttr data_ov006_02134514[5] = {
     {0x8000, 0x01fd, 0x101a, 0x0000}, {0x80f0, 0x01fd, 0x101a, 0x0000},
     {0x0010, 0x01fd, 0x105a, 0x0000}, {0x0018, 0x01fd, 0x105a, 0x0000},
@@ -174,7 +174,7 @@ extern int sBomroomHatchPanelX[];
 extern int sBomroomHatchPanelY[];
 extern unsigned char *sBomroomBombFrameTimes[];
 extern unsigned char sBomroomBombFrameCounts[];
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern unsigned char *sBomroomBombSprites[];
 extern unsigned char *sBomroomBombLitSprites[];
 extern "C" char data_ov006_02133dd0[];
@@ -201,7 +201,7 @@ extern "C" char data_ov006_02133cc8[];
 extern "C" char data_ov006_02133cb0[];
 extern "C" char data_ov006_02133ce8[];
 extern "C" char data_ov006_02133d50[];
-extern void *sBomroomBombsSprites[];
+extern OamAttr *sBomroomBombsSprites[];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 OamAttr data_ov006_02134f34[21] = {
     {0x00f8, 0x01f8, 0x011d, 0x0000}, {0x00f8, 0x01f0, 0x011d, 0x0000},

@@ -58,7 +58,7 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     u8  mVariant;            /* 0x395 */
     u8  pad_396[0x2];
     /* The two UPDOWN_LIFTs the param1 0xffff watcher found within 0xa0000
-       (Behavior): it reads their mIsDead and calls func_ov091_02130fac on
+       (Behavior): it reads their mIsDead and calls ResetToHome on
        them, so these are daObjRotateUpdownLift_c pointers. Were s32. */
     daObjRotateUpdownLift_c *mPlatform0; /* 0x398 */
     daObjRotateUpdownLift_c *mPlatform1; /* 0x39c */
@@ -85,7 +85,7 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     int InitResources();
     int Render();
 
-    void func_ov091_02130fac();
+    void ResetToHome();
     void func_ov091_02131160();
     void func_ov091_02131340();
 

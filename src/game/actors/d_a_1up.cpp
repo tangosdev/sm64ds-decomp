@@ -979,26 +979,25 @@ extern PMF data_ov002_0210dc00[14];
 
 /* -------------------------------------------------------------------------- */
 /* Vtable slot 3. Releases the model file InitResources loaded -- the 1-Up's
-   (data_ov002_0210d9d8) for actorID 276, the other's (data_ov002_0210da30)
+   (gOneUpMushroomModelFile) for actorID 276, the other's (gScaleUpKinokoModelFile)
    otherwise -- except for types 11 and 12, which use the shared model
-   data_ov002_0210d9b8 and release nothing here. For types 11 and 12 it also
+   gCoinYellowPoly32ModelFile and release nothing here. For types 11 and 12 it also
    starts particle effect 0xd2 through Particle::System::NewSimple at the
    mushroom's position, 40 units (0x28000) above it. */
-int da1up_c::CleanupResources()
-{
-  extern SharedFilePtr data_ov002_0210d9d8;
-  extern SharedFilePtr data_ov002_0210da30;
+int da1up_c::CleanupResources() {
+    extern SharedFilePtr gOneUpMushroomModelFile;
+    extern SharedFilePtr gScaleUpKinokoModelFile;
 
-  int s = mMushroomType;
-  if (s != 0xb && s != 0xc){
-      if (IsActorID(this, ACTOR_ONEUPKINOKO))
-          data_ov002_0210d9d8.Release();
-      else
-          data_ov002_0210da30.Release();
-  }
-  if ((unsigned int)(mMushroomType - 0xb) <= 1)
-      Particle::System::NewSimple(PTCL_TYPE_11_12_CLEANUP, mPos.x, mPos.y + 0x28000, mPos.z);
-  return 1;
+    int s = mMushroomType;
+    if (s != 0xb && s != 0xc) {
+        if (IsActorID(this, ACTOR_ONEUPKINOKO))
+            gOneUpMushroomModelFile.Release();
+        else
+            gScaleUpKinokoModelFile.Release();
+    }
+    if ((unsigned int)(mMushroomType - 0xb) <= 1)
+        Particle::System::NewSimple(PTCL_TYPE_11_12_CLEANUP, mPos.x, mPos.y + 0x28000, mPos.z);
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1063,7 +1062,7 @@ int da1up_c::Behavior()
 /* Vtable slot 0, the largest member in the TU, and -- because the destructor is
    declared out of line above it -- NOT this class's key function.
    Order of work: mMushroomType from param1 bits 0..3; the model (the shared
-   data_ov002_0210d9b8 for types 11 and 12, otherwise the 1-Up's or the other
+   gCoinYellowPoly32ModelFile for types 11 and 12, otherwise the 1-Up's or the other
    actor's file by actorID) and the shadow cylinder; the dCcAc_c cylinder
    (types 6, 8, 11 and 12: radius 100 units, height 64 units, and 11 / 12 also
    get the yoshi-tongue bit in vulnFlags; otherwise 65 / 65 units for actorID 277
@@ -1084,9 +1083,9 @@ extern const unsigned char data_ov002_020ff050[16] = {0, 0, 0, 1, 0, 0, 1, 0,
                                                       1, 0, 0, 0, 0, 0, 0, 0};
 
 int da1up_c::InitResources() {
-    extern SharedFilePtr data_ov002_0210d9b8;
-    extern SharedFilePtr data_ov002_0210d9d8;
-    extern SharedFilePtr data_ov002_0210da30;
+    extern SharedFilePtr gCoinYellowPoly32ModelFile;
+    extern SharedFilePtr gOneUpMushroomModelFile;
+    extern SharedFilePtr gScaleUpKinokoModelFile;
     extern signed char gCurrentSublevel;
     extern unsigned char gCurrentStarId;
 
@@ -1098,19 +1097,19 @@ int da1up_c::InitResources() {
     isOneUp = (actorID == ACTOR_ONEUPKINOKO);
     if (isOneUp) {
         if ((unsigned int)(mMushroomType - 0xb) <= 1) {
-            if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
+            if (mModel.SetFile((BMD_File *)gCoinYellowPoly32ModelFile.filePtr, 1, 1) == 0)
                 return 0;
         } else {
-            f = dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+            f = dExtSimpleModel_c::LoadFile(gOneUpMushroomModelFile);
             if (mModel.SetFile(f, 1, 1) == 0)
                 return 0;
         }
     } else {
         if ((unsigned int)(mMushroomType - 0xb) <= 1) {
-            if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
+            if (mModel.SetFile((BMD_File *)gCoinYellowPoly32ModelFile.filePtr, 1, 1) == 0)
                 return 0;
         } else {
-            f = dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+            f = dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
             if (mModel.SetFile(f, 1, 1) == 0)
                 return 0;
         }

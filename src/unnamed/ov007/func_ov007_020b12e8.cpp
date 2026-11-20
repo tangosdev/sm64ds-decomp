@@ -10,5 +10,5 @@ extern "C" void func_ov007_020b1390(int mode);
  * (func_ov007_020b7eec). */
 extern "C" void func_ov007_020b12e8(void) {
     func_ov007_020b1390(0);
-    WORK->settings->bootArgs->func_ov007_020b7eec();
+    gMenuWork->settings->bootArgs->func_ov007_020b7eec();
 }

@@ -20,7 +20,7 @@
  * Notes:
  * - The TU claims .text and the .data resource block data_ov027_021138f4;
  *   g_profile_ICE_DONKETU stays outside it.
- * - func_ov064_02116110 (run) and func_ov064_0211616c (death) are daOts_c
+ * - TurnTowardPlayer (run) and func_ov064_0211616c (death) are daOts_c
  *   workers in ov064; they keep their labels with that class.
  * - D1/D0 are not written here: the inline destructor in the header
  *   emits them in cartridge order with no homeless D2. Behavior, the
@@ -140,7 +140,7 @@ void daIDonketu_c::UpdateDeathState() {
 int daIDonketu_c::UpdateRunState() {
     if (mStateTimer < 10) {
         mHorzSpeed = 0;
-        int result = func_ov064_02116110(0x700);
+        int result = TurnTowardPlayer(0x700);
         if (result != 0)
             return result;
         u16 *timer = &mStateTimer;

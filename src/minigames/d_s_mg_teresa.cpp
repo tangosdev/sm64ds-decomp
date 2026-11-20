@@ -73,7 +73,7 @@ extern void FreeGfxSlotsById(int arg);
 extern int GetGameLanguage(void);
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Hud_RenderSprite(void *fn, int a, int b, int c, int d);
+extern void Hud_RenderSprite(OamAttr *fn, int a, int b, int c, int d);
 extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 extern int Mg_IsNewRecord(void);
 #include "OAM.h"
@@ -351,7 +351,7 @@ OamAttr data_ov006_02133a60[2] = {
     {0x80f4, 0x01fc, 0x01ad, 0x0000},
     {0x0004, 0x01fc, 0x01ed, 0xffff},
 };
-void *sTeresaExclaimSprites = data_ov006_02133a60;
+OamAttr *sTeresaExclaimSprites = data_ov006_02133a60;
 OamAttr data_ov006_021341f8[1] = {
     {0x00f8, 0x41f8, 0x11c9, 0xffff},
 };
@@ -360,7 +360,7 @@ OamAttr data_ov006_0213424c[5] = {
     {0x00fb, 0x61fe, 0x110b, 0x0000}, {0x00f6, 0x01f5, 0x11ee, 0x0000},
     {0x00f7, 0x0001, 0x11ee, 0xffff},
 };
-void *sTeresaVanishPuffSprites[] = {data_ov006_021341f8, data_ov006_0213424c};
+OamAttr *sTeresaVanishPuffSprites[] = {data_ov006_021341f8, data_ov006_0213424c};
 OamAttr data_ov006_0213635c[57] = {
     {0x84d5, 0x01e4, 0x60d7, 0x0000}, {0x84d5, 0x11ec, 0x60d7, 0x0000},
     {0x04e5, 0x01e4, 0x60f7, 0x0000}, {0x04e5, 0x11ec, 0x60f7, 0x0000},

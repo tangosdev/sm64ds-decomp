@@ -99,7 +99,6 @@ extern PgDfdrTexSequenceFilePtr data_ov027_02113c94;
 extern PgDfdrAnimationFilePtr data_ov027_02113c84;
 extern PgDfdrAnimationFilePtr data_ov027_02113c74;
 extern PgDfdrAnimationFilePtr data_ov027_02113c8c;
-
 /* The three animation handles InitResources loads, in order; const, so the
    table lands in .rodata as the cartridge has it. */
 extern SharedFilePtr *const data_ov027_02112ca4[3] = {
@@ -107,7 +106,6 @@ extern SharedFilePtr *const data_ov027_02112ca4[3] = {
     &data_ov027_02113c74,
     &data_ov027_02113c8c,
 };
-
 extern DfdrStateTable data_ov027_02113ce4;
 struct PatrolStep {
     s32 distance;

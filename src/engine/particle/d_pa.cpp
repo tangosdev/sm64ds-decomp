@@ -37,10 +37,10 @@
 extern "C" {
 /* local extern: no header in include/ declares these (dClipper.h only
  * mentions the clipper instance, daPly_c.h only the water height). */
-extern dClipper data_0209f43c;
-extern Matrix4x3 data_0209b3ec;
-extern Matrix4x3 data_0209b41c;
-extern s32 data_0209f32c;
+extern dClipper gClipper;
+extern Matrix4x3 gViewMtx;
+extern Matrix4x3 gInvViewMtx;
+extern s32 gWaterHeight;
 void func_0204dab4(void *system, void *records, int count, u32 mask, void *callback);
 /* This initializer's 0xc-byte layout is evidenced, but its original class
  * name is not. Keep that single unresolved ABI boundary explicit. */
@@ -113,9 +113,9 @@ int dPa_c::level_c::splashCallback_c::OnUpdate(
         const s32 y = particle->offsetAsr3.y + particle->positionAsr3.y;
         const s32 z = particle->offsetAsr3.z + particle->positionAsr3.z;
 
-        if (particle->velocityAsr3.y < 0 && (y << 3) < data_0209f32c) {
+        if (particle->velocityAsr3.y < 0 && (y << 3) < gWaterHeight) {
             particle->age = particle->lifetime;
-            Particle::System::NewRipple(x << 3, data_0209f32c + 0x3000, z << 3);
+            Particle::System::NewRipple(x << 3, gWaterHeight + 0x3000, z << 3);
         }
         particle = particle->next;
     }
@@ -133,9 +133,9 @@ int dPa_c::level_c::bubbleCallback_c::OnUpdate(
         const s32 x = particle->offsetAsr3.x + particle->positionAsr3.x;
         const s32 z = particle->offsetAsr3.z + particle->positionAsr3.z;
 
-        if ((y << 3) > data_0209f32c) {
+        if ((y << 3) > gWaterHeight) {
             particle->age = particle->lifetime;
-            Particle::System::NewRipple(x << 3, data_0209f32c + 0x3000, z << 3);
+            Particle::System::NewRipple(x << 3, gWaterHeight + 0x3000, z << 3);
         }
         particle = particle->next;
     }
@@ -150,7 +150,7 @@ int dPa_c::level_c::fitWaterSimpleCallback_c::OnUpdate(
     Particle::ParticleNode *particle;
 
     particle = system.particles.head;
-    waterY = data_0209f32c >> 3;
+    waterY = gWaterHeight >> 3;
 
     while (particle != 0) {
         particle->offsetAsr3.y = waterY - particle->positionAsr3.y;
@@ -246,8 +246,7 @@ int dPa_c::level_c::checkWaterCallback_c::OnUpdate(
     }
 
     while (particle != 0) {
-        if (((particle->offsetAsr3.y + particle->positionAsr3.y) << 3)
-            > data_0209f32c) {
+        if (((particle->offsetAsr3.y + particle->positionAsr3.y) << 3) > gWaterHeight) {
             particle->age = particle->lifetime;
         }
         particle = particle->next;
@@ -273,9 +272,9 @@ int dPa_c::level_c::checkWaterRippleCallback_c::OnUpdate(
         s32 y = particle->offsetAsr3.y + particle->positionAsr3.y;
         s32 z = particle->offsetAsr3.z + particle->positionAsr3.z;
 
-        if (particle->velocityAsr3.y < 0 && (y << 3) < data_0209f32c) {
+        if (particle->velocityAsr3.y < 0 && (y << 3) < gWaterHeight) {
             particle->age = particle->lifetime;
-            Particle::System::NewRipple(x << 3, data_0209f32c + 0x3000, z << 3);
+            Particle::System::NewRipple(x << 3, gWaterHeight + 0x3000, z << 3);
         }
         particle = particle->next;
     }
@@ -295,7 +294,7 @@ int dPa_c::level_c::fitWaterCallback_c::OnUpdate(
             return 0;
     }
 
-    const s32 waterY = (waterOffset + data_0209f32c) >> 3;
+    const s32 waterY = (waterOffset + gWaterHeight) >> 3;
     while (particle != 0) {
         particle->offsetAsr3.y = waterY - particle->positionAsr3.y;
         particle = particle->next;
@@ -329,7 +328,7 @@ int dPa_c::level_c::clipCallback_c::OnUpdate(
         worldPos.y = particle->offsetAsr3.y + particle->positionAsr3.y;
         worldPos.z = particle->offsetAsr3.z + particle->positionAsr3.z;
 
-        result = data_0209f43c.TransformAndClip(data_0209b3ec, worldPos, 0x8000, clipPos);
+        result = gClipper.TransformAndClip(gViewMtx, worldPos, 0x8000, clipPos);
         if (result > 0x100000) {
             if (clipPos.y < -0x40000) {
                 particle->age = particle->lifetime;
@@ -342,7 +341,7 @@ int dPa_c::level_c::clipCallback_c::OnUpdate(
                     clipPos.x = clipPos.x < 0 ? 0x20000 : -0x20000;
                 }
 
-                MTX_MultVec43(&clipPos, &data_0209b41c, &adjustment);
+                MTX_MultVec43(&clipPos, &gInvViewMtx, &adjustment);
                 particle->offsetAsr3.x += adjustment.x - worldPos.x;
                 particle->offsetAsr3.y += adjustment.y - worldPos.y;
                 particle->offsetAsr3.z += adjustment.z - worldPos.z;

@@ -26,9 +26,9 @@
  *
  * Leftovers:
  *  - Measured spellings: the mOpacity += / -= 0x14 form; the angle-copy
- *    pointer in func_ov060_02115d68; the overwritten first pos[] stores in
- *    RunIntroTalk; the gotos in func_ov060_02115c1c; the
- *    sBowsertiltPlatformData[i][0..2] reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
+ *    pointer in ActFree; the overwritten first pos[] stores in RunIntroTalk;
+ *    the gotos in ActHolding; the sBowsertiltPlatformData[i][0..2] reads; and
+ *    the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
  *  - Address-named callees with a known body but no header: func_020092c4 eases
  *    a camera vector toward a target (d_camera.cpp); func_0200fa04 spawns the
  *    boss landing dust (d_actor.cpp); func_02038408 is the
@@ -114,7 +114,7 @@ enum daKpa_c_AssetId {
 /* Names for the numbers this file uses. A name describes what the value does
  * at its use sites here; it is not a recovered symbol. */
 
-/* daKpa_c::mState, the index into the state table at data_ov060_0211aed4. The
+/* daKpa_c::mState, the index into the state table at sBowserStateTable. The
  * handler for each state is named on its own header below. A state with no
  * writer in this file (0x12) is reached only through the table. */
 enum Bowser_State {
@@ -148,7 +148,7 @@ enum Bowser_State {
         0x13 /* tilts the KOOPA2BG arena (actor 0xa6) for a few frames, see ActTiltLavaPlatform */
 };
 
-/* daKpa_c::mHoldState, the index into the table at data_ov060_0211aeb4. */
+/* daKpa_c::mHoldState, the index into the table at sBowserHoldStateTable. */
 enum Bowser_HoldState {
     BOWSER_HOLD_NONE = 0,        /* normal: run the state table */
     BOWSER_HOLD_HELD = 1,        /* a daPly_c has grabbed the tail and is swinging Bowser by it */
@@ -171,7 +171,7 @@ enum Bowser_CondFlag {
     BOWSER_COND_BREATHING = 0x20000
 };
 
-/* daKpaTail_c::mState: the index into the table at data_ov060_0211ae9c. */
+/* daKpaTail_c::mState: the index into the table at sBowserTailStateTable. */
 enum BowserTail_State {
     BOWSER_TAIL_FREE = 0, /* waiting for a daPly_c to grab it */
     BOWSER_TAIL_COOLDOWN =
@@ -232,9 +232,9 @@ enum Bowser_Anim {
     BOWSER_ANIM_IDLE = 0x10
 };
 
-/* The state tables: daKpa_c's hold and state tables at
- * data_ov060_0211aeb4 / 0211aed4 use daKpa_c member pointers; the tail's at
- * data_ov060_0211ae9c uses KpaTailState / daKpaTail_c member pointers. */
+/* The state tables: daKpa_c's sBowserHoldStateTable and sBowserStateTable use
+ * daKpa_c member pointers; the tail's sBowserTailStateTable uses KpaTailState /
+ * daKpaTail_c member pointers. */
 typedef void (daKpa_c::*PMF)();
 
 /* One row of those tables: a single member-function pointer. */
@@ -259,10 +259,10 @@ struct KpaTexSequenceFilePtr : SharedFilePtr {
     ~KpaTexSequenceFilePtr();
 };
 
-/* Tail's own PMF: data_ov060_0211ae9c is a daKpaTail_c state table, unlike
+/* Tail's own PMF: sBowserTailStateTable is a daKpaTail_c state table, unlike
  * PmfEnt's daKpa_c one. */
 typedef void (daKpaTail_c::*KpaTailState)();
-extern KpaTailState data_ov060_0211ae9c[];
+extern KpaTailState sBowserTailStateTable[];
 
 /* C linkage for the external symbols this TU reaches without a header: the
  * data objects below have to stay unmangled, and the address-named callees are
@@ -274,12 +274,12 @@ extern dCamera_c *gCamera;
 extern int func_020092c4(void *, void *, void *);
 extern KpaAnimationFileHandle data_ov060_0211acd0;
 extern const unsigned char data_ov060_02119264[];
-extern PmfEnt data_ov060_0211aeb4[];
+extern PmfEnt sBowserHoldStateTable[];
 /* Sound::Play(3, id, pos) (sound/Sound.cpp). The legacy shards passed a third
  * argument the callee does not take; dropped rather than widening the
  * signature. */
 /* Veneer to dBgCh_Actr::UpdateContinuousExceptSlot0. */
-extern PmfEnt data_ov060_0211aed4[];
+extern PmfEnt sBowserStateTable[];
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
 extern KpaAnimationFileHandle data_ov060_0211abe0;
@@ -289,24 +289,24 @@ extern KpaAnimationFileHandle data_ov060_0211ac20;
 extern KpaAnimationFileHandle data_ov060_0211ac68;
 extern KpaAnimationFileHandle data_ov060_0211ac70;
 extern s16 data_ov060_0211a4e0[];
-extern int *Vec3_LslInPlace(void *v, int sh);
 /* Sound.cpp 0xc-byte cleanup veneer. */
 extern void func_02011cfc(void);
 /* One declaration per resource handle, typed from how InitResources and
  * CleanupResources use it:
  *
- *   data_ov060_021192dc / _0211927c  tables of handle pointers (the 0x1c
- *                                    animations / six texture sequences),
- *                                    indexed by i: LoadFile, then ->Release()
- *   data_ov089_02132c50              a model handle in ov089
- *   data_ov060_0211b208              a model handle (SharedFilePtr)
- *   data_ov060_0211ac78              Bowser's model handle (KpaModelFilePtr) */
-extern SharedFilePtr *const data_ov060_021192dc[];
-extern SharedFilePtr *const data_ov060_0211927c[];
-extern SharedFilePtr data_ov089_02132c50;
+ *   sKoopaAnimationFiles /
+ *   sKoopaTextureSequenceFiles  tables of handle pointers (the 0x1c animations
+ *                               / six texture sequences), indexed by i:
+ *                               LoadFile, then ->Release()
+ *   gKoopaKeyModelFile          Bowser's key model handle in ov089
+ *   data_ov060_0211b208         a model handle (SharedFilePtr)
+ *   sKoopaModelFile             Bowser's model handle (KpaModelFilePtr) */
+extern SharedFilePtr *const sKoopaAnimationFiles[];
+extern SharedFilePtr *const sKoopaTextureSequenceFiles[];
+extern SharedFilePtr gKoopaKeyModelFile;
 /* daFRing_c defines this handle. decl_common.h no longer declares it. */
 extern SharedFilePtr data_ov060_0211b208;
-extern KpaModelFilePtr data_ov060_0211ac78;
+extern KpaModelFilePtr sKoopaModelFile;
 extern KpaTexSequenceFilePtr data_ov060_0211ac28;
 /* The other texture-pattern handles InitAnimation picks from. */
 extern KpaTexSequenceFilePtr data_ov060_0211ac40;
@@ -406,23 +406,23 @@ int daKpa_c::InitResources()
     daKpaFire_c *fire;
     daKpaTail_c *tail;
 
-    this->mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211ac78), 1, 0x16);
+    this->mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(sKoopaModelFile), 1, 0x16);
 
     for (i = 0; i < 28; i++)
-        dExtFrameCtrl_c::LoadFile(*data_ov060_021192dc[i]);
+        dExtFrameCtrl_c::LoadFile(*sKoopaAnimationFiles[i]);
 
     for (i = 0; i < 6; i++)
-        dExtAnmTexPat_c::LoadFile(*data_ov060_0211927c[i]);
+        dExtAnmTexPat_c::LoadFile(*sKoopaTextureSequenceFiles[i]);
 
     dExtSimpleModel_c::LoadFile(data_ov060_0211b208);
-    dExtSimpleModel_c::LoadFile(data_ov089_02132c50);
+    dExtSimpleModel_c::LoadFile(gKoopaKeyModelFile);
 
     if (this->mShadowModel.InitCylinder() == 0)
         return 0;
 
     InitAnimation(BOWSER_ANIM_IDLE, 0);
 
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)sKoopaModelFile.filePtr,
                              *(BTP_File *)data_ov060_0211ac28.filePtr);
 
     this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac28.filePtr, 0, 0x1000, 0);
@@ -483,7 +483,7 @@ int daKpa_c::InitResources()
 /*
 Per frame: find Bowser by mBowserUniqueID (return 1 if he is gone), put the tail
 0x8c (140) units behind him -- his position plus 0x8c times the table entry for
-mPrevAngle.y + 0x8000, Y copied as is -- run func_ov060_02115b84, return 1.
+mPrevAngle.y + 0x8000, Y copied as is -- run TailLoop, return 1.
    The copy goes through a held `const Vector3 &`; `pos = a->mPos` directly is
    a word short (0xb4 vs 0xb8). */
 int daKpaTail_c::Behavior()
@@ -499,7 +499,7 @@ int daKpaTail_c::Behavior()
     mPos.y = pos.y;
     mPos.z = pos.z + FX_CosIdx((u16)ang >> 4) * 0x8c;
 
-    func_ov060_02115b84();
+    TailLoop();
     return 1;
 }
 
@@ -590,13 +590,13 @@ int daKpaTail_c::CleanupResources()
 int daKpa_c::CleanupResources()
 {
     int i;
-    data_ov060_0211ac78.Release();
+    sKoopaModelFile.Release();
     for (i = 0; i < 28; i++)
-        data_ov060_021192dc[i]->Release();
+        sKoopaAnimationFiles[i]->Release();
     for (i = 0; i < 6; i++)
-        data_ov060_0211927c[i]->Release();
+        sKoopaTextureSequenceFiles[i]->Release();
     data_ov060_0211b208.Release();
-    data_ov089_02132c50.Release();
+    gKoopaKeyModelFile.Release();
     func_02011cfc();
     return 1;
 }
@@ -613,7 +613,7 @@ angles (current and previous), the tail goes to BOWSER_TAIL_HOLDING and records
 the daPly_c, Bowser's body collider is switched off, Bowser goes to
 BOWSER_HOLD_HELD with the daPly_c in mGrabbedPlayer, and the hold countdown starts
 at 0x96 (150 frames). */
-void daKpaTail_c::func_ov060_02115d68(){
+void daKpaTail_c::ActFree() {
     daKpa_c *bowser = (daKpa_c *)dActor_c::FindWithID(this->mBowserUniqueID);
     this->mdCcAc_c.flags &= ~BOWSER_CC_DISABLED;
     if (bowser->mState == BOWSER_STATE_ARENA_TILT) {
@@ -650,7 +650,7 @@ void daKpaTail_c::func_ov060_02115d68(){
 /*
 Tail state BOWSER_TAIL_COOLDOWN (1), per frame: once mTimer is above 0x1e (30)
 the tail goes back to BOWSER_TAIL_FREE. */
-void daKpaTail_c::func_ov060_02115d50(){
+void daKpaTail_c::ActCooldown() {
     if (this->mTimer > 30)
         this->mState = BOWSER_TAIL_FREE;
 }
@@ -675,7 +675,7 @@ refills mHoldCountdown to 0x96 (150) and a zero one counts it down, dropping the
 daPly_c when it reaches 0. A drop (daPly_c::DropActor) puts the tail in cooldown
 and Bowser in BOWSER_HOLD_RELEASE_AFTER_ANIM. Every other path ends by switching
 the tail's collider off. */
-void daKpaTail_c::func_ov060_02115c1c(){
+void daKpaTail_c::ActHolding() {
     daKpa_c *bowser;
     daPly_c *held;
 
@@ -729,16 +729,16 @@ tail:
 
 /*
 The tail's per-frame dispatcher (called from daKpaTail_c::Behavior). Find
-Bowser; run the handler for mState through the table at data_ov060_0211ae9c
-(state 0 is func_ov060_02115d68, 1 is func_ov060_02115d50, 2 is
-func_ov060_02115c1c; the call is a member-function-pointer call on the tail
-itself); switch the tail's collider off if Bowser is defeated; count mTimer up
-and reset it to 0 when the handler changed mState; clear and refresh the tail's
-collider (dCc_c::Clear and Update). */
-void daKpaTail_c::func_ov060_02115b84(){
+Bowser; run the handler for mState through the table at sBowserTailStateTable
+(state 0 is ActFree, 1 is ActCooldown, 2 is ActHolding; the call is a
+member-function-pointer call on the tail itself); switch the tail's collider off
+if Bowser is defeated; count mTimer up and reset it to 0 when the handler
+changed mState; clear and refresh the tail's collider (dCc_c::Clear and
+Update). */
+void daKpaTail_c::TailLoop() {
     daKpa_c *bowser = (daKpa_c *)dActor_c::FindWithID(this->mBowserUniqueID);
     int idx = this->mState;
-    (this->*data_ov060_0211ae9c[idx])();
+    (this->*sBowserTailStateTable[idx])();
     if (bowser->mState == BOWSER_STATE_DEFEATED) {
         this->mdCcAc_c.flags |= BOWSER_CC_DISABLED;
     }
@@ -797,12 +797,12 @@ bool daKpa_c::Bowser_IsAnimAtLastFrame(){
 Per-frame model placement, called from Behavior. 1) On the ground and not held,
 set mAngle.x from the floor normal mGroundNormal and mAngle.y, and mAngle.z from the
 normal and mAngle.y - 0x4000 (a quarter turn), both through func_02010844.
-2) Build the model matrix in data_020a0e68: translation = position >> 3
+2) Build the model matrix in gScratchMtx: translation = position >> 3
 (Vec3_Asr by 3; the foot points below are shifted left 3 on the way back out),
 then rotations about Y, X and Z; copy it into the model and apply opacity
 mOpacity >> 3 (0..31). 3) For skeleton nodes 3 and 6 (mAnmModel.data.transforms
 [3] and [6]) multiply the node matrix by the model matrix (the product lands
-back in data_020a0e68), read its translation and shift it left 3 to
+back in gScratchMtx), read its translation and shift it left 3 to
 full scale: node 3 gives mFootPosB, node 6 gives mFootPosA, each with Y replaced
 by his own Y. 4) Unless mDropsShadow is 0, probe the floor with a dBgCh_Gnd from
 0x32000 (50 units) above him (floor height clsnY, or his own Y if there is
@@ -819,30 +819,30 @@ void daKpa_c::UpdateModelMatrix() {
         this->mAngle.z = func_02010844(&this->mGroundNormal, (s16)(this->mAngle.y - 0x4000));
     }
     Vec3_Asr(&v, &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, this->mAngle.z);
-    this->mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, this->mAngle.z);
+    this->mAnmModel.mat4x3 = gScratchMtx;
     this->mAnmModel.ApplyOpacity((unsigned char)(this->mOpacity >> 3), 1);
-    saved = data_020a0e68;
+    saved = gScratchMtx;
     this->mFootPosB.x = 0;
     this->mFootPosB.y = 0;
     this->mFootPosB.z = 0;
-    MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    this->mFootPosB.x = data_020a0e68.t.x;
-    this->mFootPosB.y = data_020a0e68.t.y;
-    this->mFootPosB.z = data_020a0e68.t.z;
+    MTX_Concat43(&this->mAnmModel.data.transforms[3], &gScratchMtx, &gScratchMtx);
+    this->mFootPosB.x = gScratchMtx.t.x;
+    this->mFootPosB.y = gScratchMtx.t.y;
+    this->mFootPosB.z = gScratchMtx.t.z;
     Vec3_LslInPlace(&this->mFootPosB, 3);
     this->mFootPosB.y = this->mPos.y;
     this->mFootPosA.x = 0;
     this->mFootPosA.y = 0;
     this->mFootPosA.z = 0;
-    data_020a0e68 = saved;
-    MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    this->mFootPosA.x = data_020a0e68.t.x;
-    this->mFootPosA.y = data_020a0e68.t.y;
-    this->mFootPosA.z = data_020a0e68.t.z;
+    gScratchMtx = saved;
+    MTX_Concat43(&this->mAnmModel.data.transforms[6], &gScratchMtx, &gScratchMtx);
+    this->mFootPosA.x = gScratchMtx.t.x;
+    this->mFootPosA.y = gScratchMtx.t.y;
+    this->mFootPosA.z = gScratchMtx.t.z;
     Vec3_LslInPlace(&this->mFootPosA, 3);
     this->mFootPosA.y = this->mPos.y;
     if (this->mDropsShadow == 0)
@@ -859,8 +859,8 @@ void daKpa_c::UpdateModelMatrix() {
         else
             pos.y = this->mPos.y;
         Vec3_Asr(&v2, &pos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
-        this->mShadowMtx = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, v2.x, v2.y, v2.z);
+        this->mShadowMtx = gScratchMtx;
         DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, 0x140000, 0x64000, 0xf);
     }
 }
@@ -2510,7 +2510,7 @@ Hold state BOWSER_HOLD_NONE (0), the normal per-frame handler, called through th
 hold table by BowserLoop. Clears mHoldStep. Unless he is defeated, if the
 body collider names an owner that is a daPly_c (actorID 0xbf), hurt him
 (daPly_c::Hurt at Bowser's position, arguments 2, 0x8000, 1, 0, 1). Then call the
-handler for mState from the table at data_ov060_0211aed4 (each row is a slot and
+handler for mState from the table at sBowserStateTable (each row is a slot and
 a packed target; target bit 0 selects a call through the vtable slot, the rest
 is the this-adjustment), count mTimer, and on a state change reset mStep and
 mTimer. Then: dActor_c::UpdatePos with the body collider; update the floor
@@ -2541,7 +2541,7 @@ void daKpa_c::FreeUpdate() {
     }
 
     s32 idx = this->mState;
-    (this->*data_ov060_0211aed4[idx].pmf)();
+    (this->*sBowserStateTable[idx].pmf)();
 
     this->mTimer++;
     if (this->mState != idx) {
@@ -2684,7 +2684,7 @@ Per-frame conditions, hold-state dispatch and opacity fade. Measure the
 horizontal distance and angle to the arena centre (the origin) into
 mDistToCenter and mAngleToCenter and rebuild the low byte of mCondFlags (see
 Bowser_CondFlag) from the four tests. Run the handler for mHoldState through the
-table at data_ov060_0211aeb4 (0: FreeUpdate, 1: HeldUpdate, 2
+table at sBowserHoldStateTable (0: FreeUpdate, 1: HeldUpdate, 2
 and 3: ThrownDroppedUpdate). Unless he is defeated, move mOpacity toward
 mTargetOpacity by 0x14 (20) per frame, clamping at 0xff and 0. */
 void daKpa_c::BowserLoop() {
@@ -2708,7 +2708,7 @@ void daKpa_c::BowserLoop() {
     if (this->mDistToTarget < 0x352000)
         this->mCondFlags |= BOWSER_COND_TARGET_NEAR;
 
-    (this->*data_ov060_0211aeb4[this->mHoldState].pmf)();
+    (this->*sBowserHoldStateTable[this->mHoldState].pmf)();
 
     if (this->mState == BOWSER_STATE_DEFEATED) return;
 
@@ -2883,7 +2883,7 @@ int daKpa_c::UpdateIntroCamera() {
 
 /*
 Switch the model to animation idx (entries 0..0x1b of the table at
-data_ov060_021192dc; each handle's filePtr is the file) and pick the texture
+sKoopaAnimationFiles; each handle's filePtr is the file) and pick the texture
 pattern that goes with it. The third parameter reaches dExtAnmModel_c::SetAnim
 unchanged as its flags word: the local `a` below is never assigned, and the ROM
 passes the caller's third argument (still in r2) straight through. Callers pass
@@ -2894,42 +2894,42 @@ with texture-sequence flags 0x40000000); 3 and 5 use ac10, 0xe uses abf0, and
 every other idx (0 included) uses ac28 (these three with flags 0). */
 void daKpa_c::InitAnimation(int idx, int animFlags) {
     int a;  /* deliberately never assigned: it is animFlags, still in r2 (see above) */
-    this->mAnmModel.SetAnim((BCA_File *)(data_ov060_021192dc[idx]->filePtr), a, 0x1000, 0);
+    this->mAnmModel.SetAnim((BCA_File *)(sKoopaAnimationFiles[idx]->filePtr), a, 0x1000, 0);
     switch (idx) {
     case 1:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)sKoopaModelFile.filePtr,
                                  *(BTP_File *)data_ov060_0211ac40.filePtr);
         this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac40.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 2:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)sKoopaModelFile.filePtr,
                                  *(BTP_File *)data_ov060_0211acb8.filePtr);
         this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211acb8.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 3:
     case 5:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)sKoopaModelFile.filePtr,
                                  *(BTP_File *)data_ov060_0211ac10.filePtr);
         this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac10.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
         return;
     case 14:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)sKoopaModelFile.filePtr,
                                  *(BTP_File *)data_ov060_0211abf0.filePtr);
         this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211abf0.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
         return;
     case 10:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)sKoopaModelFile.filePtr,
                                  *(BTP_File *)data_ov060_0211ac30.filePtr);
         this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac30.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0x40000000);
         return;
     case 0:
     default:
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov060_0211ac78.filePtr,
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)sKoopaModelFile.filePtr,
                                  *(BTP_File *)data_ov060_0211ac28.filePtr);
         this->mTextureSequence.SetFile(*(BTP_File *)data_ov060_0211ac28.filePtr, 0, 0x1000, 0);
         this->mTextureSequence.SetFlags(0);
@@ -3032,7 +3032,7 @@ void daKpa_c::UpdateFootfalls() {
 /* The static-init globals: one ctor veneer and destructor registration per
  * file handle (the @NNN nodes and .data descriptors are compiler
  * temporaries), then the three pointer-to-member state tables. */
-KpaModelFilePtr data_ov060_0211ac78(ASSET_KOOPA_MODEL_BMD);
+KpaModelFilePtr sKoopaModelFile(ASSET_KOOPA_MODEL_BMD);
 KpaAnimationFileHandle data_ov060_0211ac88(ASSET_KOOPA_DAMAGE_BCA);
 KpaAnimationFileHandle data_ov060_0211ac50(ASSET_KOOPA_DAMAGE2_ST_BCA);
 KpaAnimationFileHandle data_ov060_0211ac58(ASSET_KOOPA_DAMAGE2_ED_BCA);
@@ -3076,16 +3076,16 @@ extern const unsigned char data_ov060_02119264[] = {1, 1, 3, 0};
  * ground, indexed by mState. */
 extern const unsigned char data_ov060_02119268[] = {1, 0, 0, 1, 0, 0, 0, 1, 1, 1,
                                                     1, 1, 0, 0, 1, 1, 1, 0, 1, 1};
-extern SharedFilePtr *const data_ov060_0211927c[] = {&data_ov060_0211ac40, &data_ov060_0211acb8,
-                                                     &data_ov060_0211ac10, &data_ov060_0211abf0,
-                                                     &data_ov060_0211ac28, &data_ov060_0211ac30};
+extern SharedFilePtr *const sKoopaTextureSequenceFiles[] = {
+    &data_ov060_0211ac40, &data_ov060_0211acb8, &data_ov060_0211ac10,
+    &data_ov060_0211abf0, &data_ov060_0211ac28, &data_ov060_0211ac30};
 /* Arena-tilt rows: sign, scale and end frame; the final row's zero end frame
  * terminates the walk. */
 extern const short sBowsertiltPlatformData[][3] = {
     {1, 10, 40},    {0, 0, 74},    {-1, -10, 114}, {1, -20, 134}, {-1, 20, 154},   {1, 40, 164},
     {-1, -40, 174}, {1, -80, 179}, {-1, 80, 184},  {1, 160, 186}, {-1, -160, 186}, {1, 0, 0},
 };
-extern SharedFilePtr *const data_ov060_021192dc[] = {
+extern SharedFilePtr *const sKoopaAnimationFiles[] = {
     &data_ov060_0211ac88, &data_ov060_0211ac50, &data_ov060_0211ac58, &data_ov060_0211ac60,
     &data_ov060_0211ac18, &data_ov060_0211acd0, &data_ov060_0211ac68, &data_ov060_0211ac70,
     &data_ov060_0211ac20, &data_ov060_0211ac80, &data_ov060_0211abe8, &data_ov060_0211ac48,
@@ -3097,14 +3097,14 @@ s16 data_ov060_0211a4e0[] = {0x00cc, 0x00ce, 0x00d0, 0};
 }
 
 /* Indexed by mHoldState (Bowser_HoldState). */
-PmfEnt data_ov060_0211aeb4[4] = {
+PmfEnt sBowserHoldStateTable[4] = {
     {&daKpa_c::FreeUpdate},          /* BOWSER_HOLD_NONE */
     {&daKpa_c::HeldUpdate},          /* BOWSER_HOLD_HELD */
     {&daKpa_c::ThrownDroppedUpdate}, /* BOWSER_HOLD_RELEASE_NOW */
     {&daKpa_c::ThrownDroppedUpdate}  /* BOWSER_HOLD_RELEASE_AFTER_ANIM */
 };
 /* Indexed by mState (Bowser_State). */
-PmfEnt data_ov060_0211aed4[20] = {
+PmfEnt sBowserStateTable[20] = {
     {&daKpa_c::ActDefault},           /* BOWSER_STATE_IDLE */
     {&daKpa_c::ActThrown},            /* BOWSER_STATE_THROWN */
     {&daKpa_c::ActJumpOntoStage},     /* BOWSER_STATE_RECOVER */
@@ -3127,8 +3127,8 @@ PmfEnt data_ov060_0211aed4[20] = {
     {&daKpa_c::ActTiltLavaPlatform}   /* BOWSER_STATE_ARENA_TILT */
 };
 /* Indexed by the tail's mState (BowserTail_State). */
-KpaTailState data_ov060_0211ae9c[3] = {
-    &daKpaTail_c::func_ov060_02115d68,  /* BOWSER_TAIL_FREE */
-    &daKpaTail_c::func_ov060_02115d50,  /* BOWSER_TAIL_COOLDOWN */
-    &daKpaTail_c::func_ov060_02115c1c   /* BOWSER_TAIL_HOLDING */
+KpaTailState sBowserTailStateTable[3] = {
+    &daKpaTail_c::ActFree,     /* BOWSER_TAIL_FREE */
+    &daKpaTail_c::ActCooldown, /* BOWSER_TAIL_COOLDOWN */
+    &daKpaTail_c::ActHolding   /* BOWSER_TAIL_HOLDING */
 };

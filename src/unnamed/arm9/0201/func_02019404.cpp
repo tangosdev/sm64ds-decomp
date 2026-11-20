@@ -5,7 +5,7 @@
 extern dGraph_c::callback_c *gGraphCallback;
 
 /* Run the scene's GraphCallback1: the main loop runs it after the scene step
-   (func_02044120), before the frame wait. */
+   (fManager_c::mainLoop), before the frame wait. */
 void func_02019404(void) {
     dGraph_c::callback_c *callback = gGraphCallback;
     if (!callback)

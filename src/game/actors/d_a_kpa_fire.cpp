@@ -28,9 +28,8 @@
  * vectors; that inherited flat-field layout is not reconstructed here.
  *
  * leftovers:
- * - func_ov060_02116740, 02117624 stay free functions with
- *   the char * / unsigned char * decl_common.h declares. Their bodies
- *   compile as C++; 02117624 uses a POD matrix view for its block copy.
+ * - BurnPlayer and UpdateShadow are members; UpdateShadow copies the
+ *   scratch matrix into mShadowMat with a Matrix4x3 assignment.
  * - Particle::System::callbackScale and callbackVelocity are named.
  *   The word at +0x44 is Particle::System::emitRadius.
  * - Sound 0x180, player param1 == 3, and the particle kind pairs are
@@ -76,7 +75,7 @@ enum {
 };
 
 /* mVariant values the code compares against directly: 0 (InitResources) and 4
-   (Behavior) have names here; func_ov060_02116f90 also tests for 7 and still
+   (Behavior) have names here; UpdateFallAndBurn also tests for 7 and still
    spells it as a bare literal. The rest are told apart only by which handler
    the tables pick (see the banner). */
 enum {
@@ -89,7 +88,7 @@ enum {
 #define FIRE_PARAM(variant, sub) (((sub) << 4) | (variant))
 
 /* Particle ids, named by where they are used, not recovered names. 0x9a, 0x9c
-   and 0xa6 are passed to func_ov060_02116518, which also starts id + 1 in the
+   and 0xa6 are passed to KeepParticlePair, which also starts id + 1 in the
    second handle. 0x9e goes straight to NewCleanParticle (one handle only);
    0x9c, 0x9e, 0xa4 and 0x9f are kPtclFlame, kPtclFlameSmall, kPtclFlameBlue and
    kPtclFlameOutPuff (ParticleIds.h); 0x9f is a one-shot NewSimple. */
@@ -222,8 +221,8 @@ int daKpaFire_c::Behavior()
             }
         }
     }
-    func_ov060_02116740();
-    func_ov060_02117624();
+    BurnPlayer();
+    UpdateShadow();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -242,17 +241,17 @@ int daKpaFire_c::CleanupResources()
 }
 
 /* Per-frame drop shadow. Does nothing when mDropsShadow is 0. Otherwise it
- * builds a translation matrix in the shared scratch matrix data_020a0e68 at
+ * builds a translation matrix in the shared scratch matrix gScratchMtx at
  * the fire's x, its mGroundY and its z (each >> 3), copies it into the
  * Matrix4x3 at 0x32c of the actor, and draws the dExtShadowModel_c at 0x304 with
  * radius mShadowRadiusMul * mFireScale, the second fx32 argument (dActor_c.h
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
  * that value means is not decoded; every caller passes 0xf). */
-void daKpaFire_c::func_ov060_02117624() {
+void daKpaFire_c::UpdateShadow() {
     if (mDropsShadow == 0)
         return;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, mGroundY >> 3, mPos.z >> 3);
-    mShadowMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, mGroundY >> 3, mPos.z >> 3);
+    mShadowMat = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMat, mShadowRadiusMul * mFireScale, 0x1e000, 0xf);
 }
 
@@ -279,7 +278,7 @@ void daKpaFire_c::func_ov060_02117624() {
  * Bowser's position is copied into kpaPos after the sine entries are read.
  * Yaw is the unsigned half of mAngle.y. Frame count is the dExtFrameCtrl_c
  * inside mAnmModel. */
-void daKpaFire_c::func_ov060_0211747c() {
+void daKpaFire_c::UpdateRideMouth() {
     daKpa_c *koopa;
     int n;
     int yaw;
@@ -349,7 +348,7 @@ void daKpaFire_c::func_ov060_0211747c() {
  *     unlocked), sets the daKpa_c's mCapActorAlive to 1 if the spawn worked,
  *     and stops -- this branch returns whether or not the spawn worked;
  *   - otherwise it spawns a coin and zeroes the coin's three velocity words. */
-void daKpaFire_c::func_ov060_021172e0() {
+void daKpaFire_c::EndBurnOut() {
     Particle::System::NewSimple(kPtclFlameOutPuff, mPos.x, mPos.y, mPos.z);
     this->MarkForDestruction();
 
@@ -396,7 +395,7 @@ void daKpaFire_c::func_ov060_021172e0() {
 }
 
 /* 1 if more than n Behavior frames have passed (mFrameCount > n), else 0. */
-int daKpaFire_c::func_ov060_021172c8(unsigned int n) {
+int daKpaFire_c::FrameCountExceeds(unsigned int n) {
     return mFrameCount > n;
 }
 
@@ -404,7 +403,7 @@ int daKpaFire_c::func_ov060_021172c8(unsigned int n) {
  * with a 2 in 10 chance, else 10.0; horizontal speed 5.0 (0x5000); gravity
  * -1.0 (-0x1000) per frame per frame; mFireScale 1.0 plus a random 0..0xfff
  * (so from 1.0 to just under 2.0); shadow multiplier 0x10. */
-void daKpaFire_c::func_ov060_0211722c() {
+void daKpaFire_c::InitFall() {
     unsigned int r;
     this->mPrevAngle.y = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
     r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
@@ -422,7 +421,7 @@ void daKpaFire_c::func_ov060_0211722c() {
 /* Variant 7 init: random heading, vertical speed 10.0 units (0xa000), no
  * horizontal speed, mFireScale 6.0 (0x6000), shadow multiplier 0x10. Gravity
  * is left at the InitResources default. */
-void daKpaFire_c::func_ov060_021171e8() {
+void daKpaFire_c::InitTossUp() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     this->mPrevAngle.y = r >> 0x10;
     this->mSpeed.y = 0xa000;
@@ -436,7 +435,7 @@ void daKpaFire_c::func_ov060_021171e8() {
  * 64 steps of a full turn (0x10000) -- and nudges x by sin(heading) *
  * sin(phase) and z by cos(heading) * cos(phase), each `<< 2` then `/ 0x1000`
  * (the heading is mPrevAngle.y). */
-void daKpaFire_c::func_ov060_0211712c() {
+void daKpaFire_c::ApplySideWobble() {
     s16 phase = ((mTickCount + mPhaseOffset) & 0x3f) << 10;
     mPos.x += ((FX_SinIdx((u16)mPrevAngle.y >> 4) * FX_SinIdx((u16)phase >> 4)) << 2) / 0x1000;
     mPos.z += ((FX_CosIdx((u16)mPrevAngle.y >> 4) * FX_CosIdx((u16)phase >> 4)) << 2) / 0x1000;
@@ -458,8 +457,8 @@ void daKpaFire_c::func_ov060_0211712c() {
  * Once mLanded is set: shows kPtclFlame scaled by mFireScale (y
  * offset 12 * scale), clears flags bit 0 (cylinder enabled), and once
  * mFrameCount exceeds mFireScale * 10 / 0x1000 + 5 it shrinks mFireScale by
- * 0x266 (about 0.15) per frame; at 0 or below it ends in func_ov060_021172e0. */
-void daKpaFire_c::func_ov060_02116f90() {
+ * 0x266 (about 0.15) per frame; at 0 or below it ends in EndBurnOut. */
+void daKpaFire_c::UpdateFallAndBurn() {
     this->UpdatePos(0);
     if (this->mSpeed.y < -0x4000)
         this->mSpeed.y = -0x4000;
@@ -469,7 +468,7 @@ void daKpaFire_c::func_ov060_02116f90() {
             Particle::System::NewCleanParticle(this->mParticleHandle, kPtclFlameSmall, this->mPos.x,
                                                this->mPos.y + 0x37000, this->mPos.z, 0);
         this->mdCcAc_c.flags |= 1;
-        func_ov060_0211712c();
+        ApplySideWobble();
         if (this->mWithMeshClsn.IsOnGround()) {
             this->mLanded++;
             if (this->mVariant == 7) {
@@ -485,12 +484,12 @@ void daKpaFire_c::func_ov060_02116f90() {
             this->mParticleHandle = this->mParticleHandle2;
         }
     } else {
-        func_ov060_02116518(kPtclFlame, 1, this->mFireScale * 0xc);
+        KeepParticlePair(kPtclFlame, 1, this->mFireScale * 0xc);
         this->mdCcAc_c.flags &= ~1;
         if (this->mFrameCount > this->mFireScale * 0xa / 0x1000 + 5) {
             this->mFireScale -= 0x266;
             if (this->mFireScale <= 0)
-                func_ov060_021172e0();
+                EndBurnOut();
         }
     }
     if (this->mPos.y < 0)
@@ -500,7 +499,7 @@ void daKpaFire_c::func_ov060_02116f90() {
 /* Variant 5 init: horizontal speed is stored as the raw integer 30 (not
  * 30.0 units; variant 5's handler multiplies it straight into the sine
  * table values), mFireScale 2.0 (8192 = 0x2000), shadow multiplier 16. */
-void daKpaFire_c::func_ov060_02116f74() {
+void daKpaFire_c::InitSpray() {
     this->mHorzSpeed = 30;
     this->mFireScale = 0x2000;
     this->mShadowRadiusMul = 16;
@@ -521,7 +520,7 @@ void daKpaFire_c::func_ov060_02116f74() {
  * collision reports ground it spawns a variant 6 fire with a 16 in 17 chance
  * (random >> 16, % 17 != 0) and destroys this one; after 60 frames
  * (mFrameCount >= 0x3c) it destroys itself as well. */
-void daKpaFire_c::func_ov060_02116d78() {
+void daKpaFire_c::UpdateSpray() {
     if (mFireScale < 0x5000)
         mFireScale += 0x255;
     if (mPrevAngle.x > 0x800)
@@ -536,7 +535,7 @@ void daKpaFire_c::func_ov060_02116d78() {
     mPos.y += mSpeed.y;
     mPos.z += mSpeed.z;
 
-    func_ov060_02116518(PARTICLE_SCALED_9A, 1, mFireScale * 0xc);
+    KeepParticlePair(PARTICLE_SCALED_9A, 1, mFireScale * 0xc);
     if (mWithMeshClsn.IsOnGround() != 0) {
         u32 rnd = RandomIntInternal(&data_0209e650.value);
         unsigned int roll = rnd >> 16;
@@ -555,7 +554,7 @@ void daKpaFire_c::func_ov060_02116d78() {
  * whole units; gravity -1.0 (-0x1000); terminal velocity from
  * data_ov060_0211934c[mSubVariant] (-8.0, -6.0, -6.0 for sub-variants 0..2);
  * mFireScale 2.0 (0x2000); shadow multiplier 0x10. */
-void daKpaFire_c::func_ov060_02116c68() {
+void daKpaFire_c::InitFlight() {
     unsigned int r;
     this->mPrevAngle.y = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10);
     if (this->mSubVariant != 0) {
@@ -583,10 +582,10 @@ void daKpaFire_c::func_ov060_02116c68() {
  * ground it spawns a variant 7 fire (mSubVariant 0) or a variant 3 fire
  * (otherwise) at its position and destroys itself; while still airborne it
  * destroys itself once its y is below 0. */
-void daKpaFire_c::func_ov060_02116b68() {
-    func_ov060_02116518(data_ov060_02119358[this->mSubVariant], 0, 0x46000);
-    func_ov060_0211712c();
-    if (this->func_ov060_021172c8(0x1c2))
+void daKpaFire_c::UpdateFlight() {
+    KeepParticlePair(data_ov060_02119358[this->mSubVariant], 0, 0x46000);
+    ApplySideWobble();
+    if (this->FrameCountExceeds(0x1c2))
         this->MarkForDestruction();
     this->UpdatePos(0);
     if (this->mWithMeshClsn.IsOnGround()) {
@@ -605,7 +604,7 @@ void daKpaFire_c::func_ov060_02116b68() {
 /* Variant 1 init: vertical speed 7.0 units (0x7000), horizontal speed 17.5
  * (0x11800), gravity +1.0 (0x1000, upward -- unlike the InitResources
  * default), mFireScale 2.0, random phase, shadow multiplier 0x10. */
-void daKpaFire_c::func_ov060_02116b18() {
+void daKpaFire_c::InitGrow() {
     this->mSpeed.y = 0x7000;
     this->mHorzSpeed = 0x11800;
     this->mFireScale = 0x2000;
@@ -623,14 +622,14 @@ void daKpaFire_c::func_ov060_02116b18() {
  * children get this fire's pitch/heading words as their spawn rotation and
  * their mFireScale is set after the spawn returns. Then it destroys itself.
  * Before frame 21 it only grows and moves. */
-void daKpaFire_c::func_ov060_021169f8() {
+void daKpaFire_c::UpdateGrowAndSplit() {
     int i;
     daKpaFire_c* child;
     if (this->mFireScale < 0x5000) {
         this->mFireScale += 0x200;
     }
     this->UpdatePos(0);
-    func_ov060_02116518(PARTICLE_SCALED_9A, 1, 0x78000);
+    KeepParticlePair(PARTICLE_SCALED_9A, 1, 0x78000);
     if (this->mFrameCount <= 0x14)
         return;
     if (this->mSubVariant == 0) {
@@ -652,7 +651,7 @@ void daKpaFire_c::func_ov060_021169f8() {
 
 /* Variant 4 init. Vertical speed 30.0, horizontal speed 15.0, random
  * phase, SetLimMovFlag on the mesh collision, shadow multiplier 0x10. */
-void daKpaFire_c::func_ov060_021169b0() {
+void daKpaFire_c::InitBounce() {
     this->mSpeed.y = 0x1e000;
     this->mHorzSpeed = 0xf000;
     this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 16;
@@ -670,7 +669,7 @@ void daKpaFire_c::func_ov060_021169b0() {
  * mFrameCount exceeds 150 (0x96). It also destroys itself when Bowser is
  * still there, his hold state is idle, and he is within 150 units.
  */
-void daKpaFire_c::func_ov060_021168c4() {
+void daKpaFire_c::UpdateBounce() {
     daKpa_c* koopa;
     if (this->mFrameCount == 0) {
         dActor_c* found = dActor_c::FindWithActorID(ACTOR_KOOPA, 0);
@@ -683,8 +682,8 @@ void daKpaFire_c::func_ov060_021168c4() {
         this->mSpeed.y = 0x1e000;
     }
     this->UpdatePos(0);
-    func_ov060_02116518(PARTICLE_VARIANT_4, 0, 0x32000);
-    if (this->func_ov060_021172c8(0x96) != 0) {
+    KeepParticlePair(PARTICLE_VARIANT_4, 0, 0x32000);
+    if (this->FrameCountExceeds(0x96) != 0) {
         this->MarkForDestruction();
     }
     if (koopa == 0) return;
@@ -702,7 +701,7 @@ void daKpaFire_c::func_ov060_021168c4() {
  * being a full turn) and mFireScale copied from this one, then destroys itself.
  * The children are spawned with no rotation and have their pitch/heading words
  * written afterwards. */
-void daKpaFire_c::func_ov060_021167ec() {
+void daKpaFire_c::UpdateScatter() {
     dActor_c* player;
     if (this->mFrameCount != 0)
         return;
@@ -730,7 +729,7 @@ void daKpaFire_c::func_ov060_021167ec() {
 
 /* Init shared by variants 0 and 3: cylinder flags bit 0 set (cylinder
  * disabled), mFireScale 2.0 (0x2000), shadow multiplier 0x10. */
-void daKpaFire_c::func_ov060_021167c8() {
+void daKpaFire_c::InitNoCylinder() {
     this->mdCcAc_c.flags |= 1;
     this->mFireScale = 0x2000;
     this->mShadowRadiusMul = 0x10;
@@ -745,7 +744,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  * and looks that actor up; if it is the daPly_c (actor id 0xbf = ACTOR_PLAYER)
  * and neither daPly_c::mIsMetal nor daPly_c::mIsVanish is set it calls
  * daPly_c::Burn. */
-void daKpaFire_c::func_ov060_02116740() {
+void daKpaFire_c::BurnPlayer() {
     unsigned int id = mdCcAc_c.otherOwner;
     if (id == 0)
         return;
@@ -772,7 +771,7 @@ void daKpaFire_c::func_ov060_02116740() {
  * 0x9a also writes emitRadius and callbackVelocity from
  * mFireScale * 0x2800 and mFireScale * 0xa66.
  */
-void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
+void daKpaFire_c::KeepParticlePair(u32 kind, int resize, int yOffset) {
     Particle::System *sys;
 
     if (kind == 0xa2 || kind == kPtclFlameBlue) {
@@ -826,22 +825,22 @@ void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
  * pointer-adjustor (0). The descriptor order and the copy order are the ROM's
  * own. The handler named beside each descriptor is its ov060 relocs.txt
  * entry. */
-extern PMF data_ov060_0211a734;   /* func_ov060_021169b0 (variant 4 init) */
-extern PMF data_ov060_0211a73c;   /* func_ov060_02116c68 (variant 2 init) */
-extern PMF data_ov060_0211a744;   /* func_ov060_02116f90 (variant 6 Behavior) */
-extern PMF data_ov060_0211a74c;   /* func_ov060_021167c8 (variant 3 init) */
-extern PMF data_ov060_0211a754;   /* func_ov060_02116b18 (variant 1 init) */
-extern PMF data_ov060_0211a75c;   /* func_ov060_021167c8 (variant 0 init) */
-extern PMF data_ov060_0211a764;   /* func_ov060_021168c4 (variant 4 Behavior) */
-extern PMF data_ov060_0211a76c;   /* func_ov060_02116b68 (variant 2 Behavior) */
-extern PMF data_ov060_0211a774;   /* func_ov060_02116d78 (variant 5 Behavior) */
-extern PMF data_ov060_0211a77c;   /* func_ov060_021167ec (variant 3 Behavior) */
-extern PMF data_ov060_0211a784;   /* func_ov060_02116f90 (variant 7 Behavior) */
-extern PMF data_ov060_0211a78c;   /* func_ov060_021169f8 (variant 1 Behavior) */
-extern PMF data_ov060_0211a794;   /* func_ov060_0211747c (variant 0 Behavior) */
-extern PMF data_ov060_0211a79c;   /* func_ov060_021171e8 (variant 7 init) */
-extern PMF data_ov060_0211a7a4;   /* func_ov060_0211722c (variant 6 init) */
-extern PMF data_ov060_0211a7ac;   /* func_ov060_02116f74 (variant 5 init) */
+extern PMF data_ov060_0211a734; /* InitBounce (variant 4 init) */
+extern PMF data_ov060_0211a73c; /* InitFlight (variant 2 init) */
+extern PMF data_ov060_0211a744; /* UpdateFallAndBurn (variant 6 Behavior) */
+extern PMF data_ov060_0211a74c; /* InitNoCylinder (variant 3 init) */
+extern PMF data_ov060_0211a754; /* InitGrow (variant 1 init) */
+extern PMF data_ov060_0211a75c; /* InitNoCylinder (variant 0 init) */
+extern PMF data_ov060_0211a764; /* UpdateBounce (variant 4 Behavior) */
+extern PMF data_ov060_0211a76c; /* UpdateFlight (variant 2 Behavior) */
+extern PMF data_ov060_0211a774; /* UpdateSpray (variant 5 Behavior) */
+extern PMF data_ov060_0211a77c; /* UpdateScatter (variant 3 Behavior) */
+extern PMF data_ov060_0211a784; /* UpdateFallAndBurn (variant 7 Behavior) */
+extern PMF data_ov060_0211a78c; /* UpdateGrowAndSplit (variant 1 Behavior) */
+extern PMF data_ov060_0211a794; /* UpdateRideMouth (variant 0 Behavior) */
+extern PMF data_ov060_0211a79c; /* InitTossUp (variant 7 init) */
+extern PMF data_ov060_0211a7a4; /* InitFall (variant 6 init) */
+extern PMF data_ov060_0211a7ac; /* InitSpray (variant 5 init) */
 
 /* One definition emits D1, then D0, then a D2 the cartridge does not keep.
  * The PMF declarations above stay between the last member function and the

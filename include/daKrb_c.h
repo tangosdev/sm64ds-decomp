@@ -55,20 +55,20 @@ struct daKrb_c : dCapEnemy_c {
     /* Position sampled by Behavior to decide whether the Goomba is stuck. */
     Vector3 mStuckCheckPos; /* 0x428 */
     s32 mState;            /* 0x434 -- a State */
-    /* Result of ClosestPlayer(), refreshed by func_ov084_02129cf4. */
+    /* Result of ClosestPlayer(), refreshed by ChooseTarget. */
     daPly_c *mClosestPlayer; /* 0x438 */
     /* uniqueID of the Goomba King for a king minion (stored by daKuriKing_c). */
     s32 mTargetUniqueID;    /* 0x43c */
     /* Distance to the target the Goomba reacts to (it chases or flees from the
        player), 0x61a8000 (25000.0 units) when there is none; 0x7fffffff until
-       the first func_ov084_02129cf4 call. */
+       the first ChooseTarget call. */
     s32 mDistToPlayer;      /* 0x440 */
     /* Horizontal speed mHorzSpeed is being driven toward. Walk speed is
        data_ov084_02130228[type], run speed data_ov084_02130268[type]. */
     s32 mTargetHorzSpeed;   /* 0x444 */
     /* Range inside which a Goomba notices the player (a capped Goomba flees,
        a capless one chases), set by
-       func_ov084_021290d4: 500.0 units, shrinking for a capless Goomba that
+       UpdateChaseRadius: 500.0 units, shrinking for a capless Goomba that
        has been stuck more than 10 frames. */
     s32 mChaseRadius;       /* 0x448 */
     /* param1 as InitResources left it. The exit of STATE_TUMBLE stores this
@@ -83,13 +83,13 @@ struct daKrb_c : dCapEnemy_c {
        mStuckCheckPos; reset when it moves farther. */
     u16 mStuckTimer;            /* 0x456 */
     /* Unstick countdown. Behavior sets it to 90 when a Goomba with a cap has
-       been stuck 30 frames, and func_ov084_0212abd4 sets it to mStuckTimer for
-       a capless one stuck longer than 30; func_ov084_021290d4 counts it down.
+       been stuck 30 frames, and UpdateWalk sets it to mStuckTimer for
+       a capless one stuck longer than 30; UpdateChaseRadius counts it down.
        While it runs the Goomba is steered by its own branch of
-       func_ov084_0212abd4 and the chase radius is left alone. */
+       UpdateWalk and the chase radius is left alone. */
     u16 mUnstickTimer;      /* 0x458 */
     /* Spawn heading, later overwritten with the heading toward the chase target
-       or home (func_ov084_02129cf4). */
+       or home (ChooseTarget). */
     s16 mInitAngleY;            /* 0x45a */
     /* Heading mPrevAngle.y is turned toward. */
     s16 mTargetAngleY;      /* 0x45c */
@@ -102,14 +102,14 @@ struct daKrb_c : dCapEnemy_c {
     u8 mBounceCount;  /* 0x467 */
     u8  mMoveFlags;   /* 0x468 -- MoveFlags */
     u8  pad_469[0x3];
-    /* hitFlags of the last hit reaction, saved by func_ov084_02129ed4. */
+    /* hitFlags of the last hit reaction, saved by ReactToCollision. */
     u32 mLastHitFlags;      /* 0x46c */
     u8  pad_470[0x4];
     /* Slot among the king's minions; daKuriKing_c stores its running spawn
        count here and the Goomba hands it to func_ov074_0212087c. */
     u8  mMinionIndex;       /* 0x474 */
     /* Reloaded with 30 while the king's mState is 4 and mWalkSpeed is 0.
-       While func_ov084_0212af74's DecIfAbove0_Byte finds it nonzero the
+       While UpdateMinionWalk's DecIfAbove0_Byte finds it nonzero the
        minion leaves its spot beside the king and acts for itself (faces or
        hops at the player, or wanders), so it outlasts the king's stop by
        30 frames. */
@@ -133,30 +133,30 @@ struct daKrb_c : dCapEnemy_c {
     /* param1, the spawn word; defined inline in d_a_krb.cpp. */
     u32 GetParam1() const;
 
-    void func_ov084_021290d4();
-    void func_ov084_02129168(dActor_c *actor);
-    void func_ov084_02129238();
-    void func_ov084_0212934c();
-    void func_ov084_02129498();
-    void func_ov084_021294d0();
-    void func_ov084_021296b0(void *b);
-    void func_ov084_021296cc();
-    void func_ov084_02129864();
-    int func_ov084_021298d0();
-    int func_ov084_02129a00();
+    void UpdateChaseRadius();
+    void EnterTumble(dActor_c *actor);
+    void CheckHazardBelow();
+    void PlayFootstepSound();
+    void RemoveSelf();
+    void CheckGroundSurface();
+    void SetHomePos(Vector3 *pos);
+    void PayOutReward();
+    void TrackSilverStar();
+    int UpdateDeathState();
+    int UpdateYoshiEatAndHit();
     /* Named for the N64 functions they port (n64decomp/sm64 goomba.inc.c,
        names coined by that project); see d_a_krb.cpp. ActTumble and ActPause
        have no N64 counterpart. */
     void BeginJump();
-    void func_ov084_02129cf4(fx32 distThresh);
-    void func_ov084_02129ed4();
+    void ChooseTarget(fx32 distThresh);
+    void ReactToCollision();
     void ActPause();
     void ActTumble();
     void ActAttackedMario();
-    void func_ov084_0212abd4();
-    void func_ov084_0212af74();
+    void UpdateWalk();
+    void UpdateMinionWalk();
     void ActWalk();
-    void func_ov084_0212a580();
+    void UpdatePose();
     void ActJump();
 
     /* Size class, stored in mGoombaType by InitResources from the actor id
@@ -181,11 +181,11 @@ struct daKrb_c : dCapEnemy_c {
         /* ActWalk: wander, chase, or (minion) follow the king */
         STATE_WALK = 0,
         /* ActAttackedMario: start a hop (-> STATE_JUMP); set by
-           func_ov084_02129ed4 when the Goomba touches the player in STATE_WALK */
+           ReactToCollision when the Goomba touches the player in STATE_WALK */
         STATE_ATTACKED_MARIO = 1,
         /* ActJump: in the air, turning toward mTargetAngleY */
         STATE_JUMP = 2,
-        /* ActTumble: thrown clear (func_ov084_02129168) after the cap came off
+        /* ActTumble: thrown clear (EnterTumble) after the cap came off
            or a Yoshi-held Goomba landed */
         STATE_TUMBLE = 3,
         /* ActPause: stand still until mWanderRerollTimer runs out; nothing in
@@ -196,7 +196,7 @@ struct daKrb_c : dCapEnemy_c {
     /* mRewardType, from bits 4..7 of the spawn parameter. Types 1 and 2 both
        load the silver-star model and spawn a SILVER_STAR (179) plus a STARBASE
        (180) when the Goomba dies; type 2 only does so when mStarID equals
-       data_0209f344[data_0209f208[0]], and becomes 3 once it has. */
+       gVsStarSpawnOrder[gNumVsStarsCollected], and becomes 3 once it has. */
     enum RewardType {
         REWARD_NONE = 0,
         REWARD_SILVER_STAR = 1,
@@ -205,7 +205,10 @@ struct daKrb_c : dCapEnemy_c {
     };
 
     /* mDeathState (dEnemyBase_c) values this class writes in its hit reaction
-       (func_ov084_02129ed4), named for the hit that sets them. */
+       (ReactToCollision), named for the hit that sets them. On the
+       cartridge a stomp and a ground pound set 1, a punch 2, a breakdance, a
+       slide kick and the combo's kick 3, a dive 5, and a thrown Bob-omb's
+       blast 6 (include/dCc_c.h, the SEEN rows). */
     enum DeathState {
         DEATH_NONE = 0,
         DEATH_STOMPED = 1, /* jumped on, or a spin / ground-pound hit */

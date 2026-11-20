@@ -18,7 +18,7 @@ extern "C" void DecompressLZ16(void *dst, void *src);
 extern unsigned char data_0209d698;
 extern int data_0209d6f8;
 extern unsigned char data_0209d660;
-extern short data_0209d6d4;
+extern short gCurrentMsgId;
 
 extern "C" void LoadFont(unsigned char arg) {
     void *file;
@@ -45,5 +45,5 @@ extern "C" void LoadFont(unsigned char arg) {
     }
     Deallocate(chars);
     data_0209d660 = 0;
-    data_0209d6d4 = -1;
+    gCurrentMsgId = -1;
 }

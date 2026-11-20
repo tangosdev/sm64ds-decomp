@@ -273,7 +273,7 @@ struct daPly_c : dActor_c {
     Vector3 *mTrailPos; /* 0x578 */
     u8 *mTrailFlags;    /* 0x57c */
     /* Body bone 15's (face_1) final rotation, copied out by func_ov002_020e640c
-       after mHeadRotMode is applied; d_a_bmb.cpp's func_ov102_0214b53c reads it
+       after mHeadRotMode is applied; d_a_bmb.cpp's UpdateAttachedPose reads it
        back from the player eating the bomb. Every access is an unsigned halfword. */
     u16 mHeadBoneRot[3]; /* 0x580 */
     u8 pad_586[0x2];
@@ -287,7 +287,7 @@ struct daPly_c : dActor_c {
        grab path stores the full body matrix here as well. */
     union Matrix4x3 mShadowMatrix; /* 0x5bc */
     /* Body matrix times bone 15 (face_1), stored by func_ov002_020e4768;
-       d_a_bmb.cpp's func_ov102_0214b53c copies it out for the eating player. */
+       d_a_bmb.cpp's UpdateAttachedPose copies it out for the eating player. */
     union Matrix4x3 mHeadMatrix; /* 0x5ec */
     /* Yoshi's per-player material word for VS mode. func_ov002_020e5948 sets it
        to word +0x20 of material 0 of Yoshi's body model (GetBodyModelID(3))
@@ -301,7 +301,7 @@ struct daPly_c : dActor_c {
     s32 mParticle3;            /* 0x630 */
     /* Particle handles at the water surface. func_ov002_020ce8bc passes each
        back to Particle::System::NewFitWater at x/z of the player and
-       y = data_0209f32c + 0x3000: the first when its speed argument (mHorzSpeed
+       y = gWaterHeight + 0x3000: the first when its speed argument (mHorzSpeed
        or mPrevVertSpeed) is nonzero, the second when it is zero. Leaving Mega
        (func_ov002_020bdd2c) zeroes both along with mParticle1. */
     s32 mWaterMoveParticle;       /* 0x634 */
@@ -316,7 +316,7 @@ struct daPly_c : dActor_c {
     s32 mProbedGroundY; /* 0x648 */
     /* Height of the water surface above the player: set from a dBgCh_Gnd
        probe that detects water when the hit's CLPS has the water bit (0x20),
-       0x80000000 when there is none, and copied to data_0209f32c. Read by
+       0x80000000 when there is none, and copied to gWaterHeight. Read by
        St_Swim_Main and func_ov002_020c231c (no floor snap over water). */
     s32 mWaterSurfaceY; /* 0x64c */
     /* Height of the toxic-gas surface: func_ov002_020c14b8's water/toxic
@@ -620,7 +620,7 @@ struct daPly_c : dActor_c {
        down one per call while the hazard persists, cleared when it ends. */
     u8 mDamageTickTimer; /* 0x71d */
     /* A one-shot event sequence. func_ov002_020c43c4(id) latches the id
-       (once per save, via a bit in data_0209caa0.file.flags2) and zeroes the step;
+       (once per save, via a bit in gSaveBlock.file.flags2) and zeroes the step;
        func_ov002_020c4188 then walks mEventStep 0..4, holding mEventWait
        ticks before handing data_ov002_020ff26c[mEventId - 1] to
        func_0201f32c. */
@@ -1004,6 +1004,11 @@ struct daPly_c : dActor_c {
     void Bounce(const fx32);
     void SpinBounce(const fx32);
     void EnterWhirlpool();
+    int EnterTornado(dActor_c *);
+    int EatenByBubba(dActor_c *);
+    int EatenByYoshi(daPly_c *);
+    int IsGroundPounding();
+    dExtAnm2Model_c *GetBodyModel();
     void IncMegaKillCount();
     void InitBalloonMario();
     void InitFireYoshi();
@@ -1107,7 +1112,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020becf4(const int, const int);
     void func_ov002_020bf13c();
     void SetVertSpeedByCharFactor(const fx32);
-    void func_ov002_020bf36c(void *);
+    void func_ov002_020bf36c(dCc_c *);
     int func_ov002_020bf40c();
     void func_ov002_020bf5e0();
     void SpawnGroundDust();
@@ -1220,7 +1225,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020cede0();
     void func_ov002_020de428();
     int func_ov002_020df7ac();
-    int func_ov002_020df840(void *, Vector3 *);
+    int func_ov002_020df840(dActor_c *, Vector3 *);
 
     /* Helpers that were free functions taking the player as their first
        argument. A melonDS `this` sweep saw only the player in r0, and each
@@ -1244,7 +1249,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020bf800(const Vector3_16f);
     int func_ov002_020c179c(const int);
     void func_ov002_020c18b0(const int);
-    int func_ov002_020c2270(void *, void *);
+    int func_ov002_020c2270(Vector3 *, Vector3 *);
     int func_ov002_020c5244();
     int func_ov002_020c6e14();
     void DisableInteraction();
@@ -1281,7 +1286,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020cf384();
     int func_ov002_020cfaf0();
     int func_ov002_020cfbdc();
-    int func_ov002_020cfd84(void *, void *);
+    int func_ov002_020cfd84(Vector3 *, Vector3 *);
     int func_ov002_020cfea4();
     int func_ov002_020d0178(const int, const int);
     int func_ov002_020d0580();
@@ -1312,7 +1317,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020d674c();
     int func_ov002_020d6790();
     int func_ov002_020d6c60(daPly_c *);
-    int func_ov002_020d7030(void *);
+    int func_ov002_020d7030(dActor_c *);
     void func_ov002_020d71ec(const int);
     void func_ov002_020d80d0();
     void func_ov002_020d8118();
@@ -1359,7 +1364,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020e0478();
     void func_ov002_020e04a4();
     int func_ov002_020e0a64();
-    int func_ov002_020e0ccc(void *);
+    int func_ov002_020e0ccc(dActor_c *);
     void func_ov002_020e0f38(const int);
     void func_ov002_020e1c20();
     void PlayJumpSound(const int);

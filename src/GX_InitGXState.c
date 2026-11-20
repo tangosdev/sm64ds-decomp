@@ -3,19 +3,19 @@
 
 /* NitroSDK gx_state.c: no user holds a VRAM bank, and every bank is off. */
 void GX_InitGXState(void) {
-    data_020a6088.lcdc = 0;
-    data_020a6088.bg = 0;
-    data_020a6088.obj = 0;
-    data_020a6088.arm7 = 0;
-    data_020a6088.tex = 0;
-    data_020a6088.texPltt = 0;
-    data_020a6088.clrImg = 0;
-    data_020a6088.bgExtPltt = 0;
-    data_020a6088.objExtPltt = 0;
-    data_020a6088.sub_bg = 0;
-    data_020a6088.sub_obj = 0;
-    data_020a6088.sub_bgExtPltt = 0;
-    data_020a6088.sub_objExtPltt = 0;
+    gGXState.lcdc = 0;
+    gGXState.bg = 0;
+    gGXState.obj = 0;
+    gGXState.arm7 = 0;
+    gGXState.tex = 0;
+    gGXState.texPltt = 0;
+    gGXState.clrImg = 0;
+    gGXState.bgExtPltt = 0;
+    gGXState.objExtPltt = 0;
+    gGXState.sub_bg = 0;
+    gGXState.sub_obj = 0;
+    gGXState.sub_bgExtPltt = 0;
+    gGXState.sub_objExtPltt = 0;
 
     REG_VRAMCNT = 0;
     REG_VRAMCNT_E = 0;

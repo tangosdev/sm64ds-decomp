@@ -12,23 +12,25 @@
  * reduction's, not the source's.
  */
 // leftovers:
-// - These three helpers stay as address-named free-function seams. The
-//   original ownership and names are unproven; func_ov065_02119210 is typed
-//   with its caller's daDossyCap_c * view.
-// - func_ov065_02118838 reads each bone's angles z, y, x into a Vector3s
+// - Every method name below is a reconstruction from this TU's own code: the
+//   cartridge records none of them, and symbols/actor_renames.tsv carries the
+//   evidence per address. The three daDossyCap_c helpers (ReleaseCapIfTouched,
+//   UpdateModelMatrix, IsRealCap) are owned methods -- the ROM symbols are
+//   mangled into the class -- but their spellings are ours, not EAD's.
+// - UpdatePlatformMatrices reads each bone's angles z, y, x into a Vector3s
 //   before storing them x, y, z: assigning rot.x/y/z straight from the bone
 //   is 9 words off.
 // - daDossyCap_c::Render tests the cap-icon flag as `(flags << 30) >> 31`.
 //   `>> 1 & 1` selects asr/ands instead of lsl/lsrs.
 // - data_ov065_* keep their address names, including the state table
 //   data_ov065_0211d7fc.
-// - func_ov065_021195bc and func_ov065_021195d0 are veneers. The first
+// - HeadStoodOnCallback and BodyStoodOnCallback are veneers. The first
 //   argument is not the actor: each veneer calls the method on its second
 //   argument, passing the third.
-// - The BOOL/TRUE/FALSE spelling in func_ov065_02119594 and
-//   func_ov065_0211956c stays. `bool isPlayer = other->actorID == 0xbf`
-//   shrinks each function 0x28 to 0x1c: the ROM keeps the ternary 0/1
-//   materialization plus the `cmp r2, #0` re-test.
+// - The BOOL/TRUE/FALSE spelling in OnBodyStoodOn and OnHeadStoodOn stays.
+//   `bool isPlayer = other->actorID == 0xbf` shrinks each function 0x28 to
+//   0x1c: the ROM keeps the ternary 0/1 materialization plus the
+//   `cmp r2, #0` re-test.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDossy_c_AssetId {
@@ -146,19 +148,18 @@ int daDossyCap_c::OnYoshiTryEat()
 }
 
 #pragma long_calls on
-void daDossy_c::func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
-    static_cast<daDossy_c *>(owner)->func_ov065_02119594(other);
+void daDossy_c::BodyStoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daDossy_c *>(owner)->OnBodyStoodOn(other);
 }
 #pragma long_calls off
 
 #pragma long_calls on
-void daDossy_c::func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
-    static_cast<daDossy_c *>(owner)->func_ov065_0211956c(other);
+void daDossy_c::HeadStoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daDossy_c *>(owner)->OnHeadStoodOn(other);
 }
 #pragma long_calls off
 
-void daDossy_c::func_ov065_02119594(dActor_c *other)
-{
+void daDossy_c::OnBodyStoodOn(dActor_c *other) {
     BOOL isPlayer = (other->actorID == 0xbf) ? TRUE : FALSE;
     if (isPlayer) {
         mClsnState = 1;
@@ -166,8 +167,7 @@ void daDossy_c::func_ov065_02119594(dActor_c *other)
     }
 }
 
-void daDossy_c::func_ov065_0211956c(dActor_c *other)
-{
+void daDossy_c::OnHeadStoodOn(dActor_c *other) {
     BOOL isPlayer = (other->actorID == 0xbf) ? TRUE : FALSE;
     if (isPlayer) {
         mClsnState = 2;
@@ -194,8 +194,8 @@ int daDossy_c::InitResources()
     for (i = 0; i < 3; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov065_0211c080[i]);
     mAnmModel.SetAnim((BCA_File *)data_ov065_0211d770.filePtr, 0, 0x1000, 0);
-    func_ov065_02118cc4();
-    func_ov065_02118838();
+    UpdateModelMatrix();
+    UpdatePlatformMatrices();
 
     for (j = 0; j < 7; j++) {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
@@ -204,9 +204,9 @@ int daDossy_c::InitResources()
         if ((unsigned)j <= 2) {
             mPlatforms[j].mClsn.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
             if (j == 2)
-                mPlatforms[j].mClsn.SetStoodOnCallback(daDossy_c::func_ov065_021195bc);
+                mPlatforms[j].mClsn.SetStoodOnCallback(daDossy_c::HeadStoodOnCallback);
             else
-                mPlatforms[j].mClsn.SetStoodOnCallback(daDossy_c::func_ov065_021195d0);
+                mPlatforms[j].mClsn.SetStoodOnCallback(daDossy_c::BodyStoodOnCallback);
         }
         mPlatforms[j].mClsn.Enable(this);
     }
@@ -235,7 +235,7 @@ int daDossy_c::InitResources()
         mCapPos.x = 0;
         mCapPos.y = 0;
         mCapPos.z = 0;
-        func_ov065_02118838();
+        UpdatePlatformMatrices();
         daDossyCap_c *cap = (daDossyCap_c *)dActor_c::Spawn(0xa9, 0, mPos, &mAngle, mAreaId, -1);
         if (cap != 0) {
             mCap = cap;
@@ -247,7 +247,7 @@ int daDossy_c::InitResources()
     return 1;
 }
 
-int daDossyCap_c::func_ov065_02119210() {
+int daDossyCap_c::IsRealCap() {
     u32 flags = this->mCapIcon.mFlags << 30;
     return (flags >> 31) != 0;
 }
@@ -277,8 +277,8 @@ int daDossyCap_c::Behavior()
     mAngle.y = mCarrier->mAngle.y;
     unsigned int flags = mCapIcon.mFlags;
     if ((flags << 30) >> 31) {
-        this->func_ov065_02118c4c();
-        if (this->func_ov065_021180d4() != 0) {
+        this->UpdateModelMatrix();
+        if (this->ReleaseCapIfTouched() != 0) {
             mdCcAc_c.Clear();
             return 1;
         }
@@ -332,9 +332,9 @@ int daDossy_c::Behavior()
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     mPos.y = mSpawnPos.y - mSinkHeight - mPushDownHeight;
     mAnmModel.Advance();
-    func_ov065_02118cc4();
-    func_ov065_02118838();
-    func_ov065_02118248();
+    UpdateModelMatrix();
+    UpdatePlatformMatrices();
+    UpdatePlatformClsn();
     mClsnState = 0;
     mClsnPlayer = 0;
     return 1;
@@ -373,32 +373,31 @@ int daDossy_c::CleanupResources()
     return 1;
 }
 
-void daDossy_c::func_ov065_02118cc4()
-{
+void daDossy_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
-void daDossyCap_c::func_ov065_02118c4c() {
+void daDossyCap_c::UpdateModelMatrix() {
     Vector3 pos;
     Vec3_Asr(&pos, &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
-    this->mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mAngle.x);
+    this->mModel.mat4x3 = gScratchMtx;
 }
 
-void daDossy_c::func_ov065_02118838() {
+void daDossy_c::UpdatePlatformMatrices() {
     Vector3s rot;
     Vector3 v;
     Matrix4x3 base;
     s32 i;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    base = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    base = gScratchMtx;
     for (i = 0; i < 7; i++) {
         ModelBone *bone = &mAnmModel.data.bones[data_ov065_0211c078[i]];
         {
@@ -418,12 +417,12 @@ void daDossy_c::func_ov065_02118838() {
         v.x = 0;
         v.y = 0;
         v.z = 0;
-        data_020a0e68 = base;
-        MTX_Concat43(&mAnmModel.data.transforms[data_ov065_0211c078[i]], &data_020a0e68,
-                     &data_020a0e68);
-        v.x = data_020a0e68.t.x;
-        v.y = data_020a0e68.t.y;
-        v.z = data_020a0e68.t.z;
+        gScratchMtx = base;
+        MTX_Concat43(&mAnmModel.data.transforms[data_ov065_0211c078[i]], &gScratchMtx,
+                     &gScratchMtx);
+        v.x = gScratchMtx.t.x;
+        v.y = gScratchMtx.t.y;
+        v.z = gScratchMtx.t.z;
         VEC_Subtract(&v, &mPos, &v);
         Vec3_LslInPlace(&v, 3);
         VEC_Add(&v, &mPos, &v);
@@ -440,17 +439,16 @@ void daDossy_c::func_ov065_02118838() {
             mHomePos.y += 0x50000;
             mHomePos.z += FX_CosIdx((u16)mAngle.y >> 4) * 0x82;
         }
-        Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y + mPlatforms[i].mRot.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPlatforms[i].mRot.x);
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mPlatforms[i].mRot.z);
-        mPlatforms[i].mClsnNextMat = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y + mPlatforms[i].mRot.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPlatforms[i].mRot.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mPlatforms[i].mRot.z);
+        mPlatforms[i].mClsnNextMat = gScratchMtx;
         mPlatforms[i].mClsn.Transform(mPlatforms[i].mClsnNextMat, mAngle.y);
     }
 }
 
-void daDossy_c::func_ov065_02118634()
-{
+void daDossy_c::UpdateSwim() {
     int landed = 0;
 
     if (mCylClsn2.otherOwner != 0) {
@@ -502,8 +500,7 @@ void daDossy_c::func_ov065_02118634()
     }
 }
 
-void daDossy_c::func_ov065_021183c8()
-{
+void daDossy_c::UpdateHeadDown() {
     Vector3 playerPos;
 
     if (mStateState == 0) {
@@ -528,7 +525,7 @@ void daDossy_c::func_ov065_021183c8()
 
     if (mClsnPlayer != 0) {
         if (mClsnState == 2 && mRideCooldown == 0) {
-            if (mCap == 0 || mCap->func_ov065_02119210() == 0) {
+            if (mCap == 0 || mCap->IsRealCap() == 0) {
                 playerPos = mClsnPlayer->mPos;
                 if (playerPos.y >= mHomePos.y && Vec3_HorzDist(&playerPos, &mHomePos) < 0x88000 &&
                     ((daPly_c *)mClsnPlayer)->SetNoControlState(5, -1, 0) != 0) {
@@ -552,8 +549,7 @@ void daDossy_c::func_ov065_021183c8()
     }
 }
 
-void daDossy_c::func_ov065_021182e4()
-{
+void daDossy_c::UpdateHeadUp() {
     switch (mStateState) {
     case 0:
         if (mAnmModel.Finished() == 0)
@@ -579,8 +575,7 @@ static inline int IsOffScreen(dActor_c *actor) {
     return (actor->mFlags & 8) != 0;
 }
 
-int daDossy_c::func_ov065_02118248()
-{
+int daDossy_c::UpdatePlatformClsn() {
     int i;
 
     if (IsOffScreen(this)) {
@@ -601,7 +596,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-int daDossyCap_c::func_ov065_021180d4() {
+int daDossyCap_c::ReleaseCapIfTouched() {
     daPly_c *player;
     u32 id;
 
@@ -655,11 +650,17 @@ DossyCollisionFileHandle gDossyHeadCollisionFile(ASSET_DOSSY_HEAD_KCL);
 
 /* The state table Behavior dispatches through: three pointer-to-member
    records. Retail stores the records as compiler temporaries in .data
-   (0x0211cd2c, 0x0211cd1c, 0x0211cd24) and the live table in .bss. */
+   (0x0211cd2c, 0x0211cd1c, 0x0211cd24) and the live table in .bss.
+
+   Each handler is named for the animation the previous one installs before
+   advancing mState, which makes the ring closed: InitResources and
+   UpdateHeadUp both set ASSET_DOSSY_SWIM_BCA for slot 0, UpdateSwim sets
+   ASSET_DOSSY_HEAD_DOWN_BCA for slot 1, and UpdateHeadDown sets
+   ASSET_DOSSY_HEAD_UP_BCA for slot 2. */
 extern "C" StateFunc data_ov065_0211d7fc[3] = {
-    &daDossy_c::func_ov065_02118634,
-    &daDossy_c::func_ov065_021183c8,
-    &daDossy_c::func_ov065_021182e4,
+    &daDossy_c::UpdateSwim,
+    &daDossy_c::UpdateHeadDown,
+    &daDossy_c::UpdateHeadUp,
 };
 
 /* The seven collision-property blocks InitResources gives the platforms, and

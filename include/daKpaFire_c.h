@@ -45,22 +45,21 @@
  *   mFrameCount     Behavior calls so far, bumped AFTER the handler runs, so a
  *                   handler sees it one behind mTickCount.
  *   mPhaseOffset    start phase of the sideways wobble: the wobble helper
- *                   (func_ov060_0211712c) adds it to mTickCount. The variant 1,
+ *                   (ApplySideWobble) adds it to mTickCount. The variant 1,
  *                   2 and 4 inits set it randomly, but only variant 2's
  *                   Behavior reaches the wobble with it; variants 6/7 wobble
  *                   with it still 0.
  *   mGroundY        floor height found under the spawn position (the shadow is
  *                   drawn there), or the spawn y when no floor was found.
  *   mParticleHandle, mParticleHandle2
- *                   the two particle handles func_ov060_02116518 keeps alive:
+ *                   the two particle handles KeepParticlePair keeps alive:
  *                   `kind` in the first, `kind + 1` in the second. Variants 6/7
  *                   also start the falling particle in the first directly.
  *   mSoundHandle, mSoundID
  *                   the looping sound variant 0 plays (Sound::PlayLong); the
  *                   handle is reset when the id changes.
- * The 0x32c..0x35c block is a Matrix4x3 scratch that func_ov060_02117624 fills
- * each frame for the shadow. It retains byte storage here; the helper uses
- * a POD matrix view to preserve the block copy in C++. */
+ * The 0x32c..0x35c block is mShadowMat, the Matrix4x3 UpdateShadow fills
+ * each frame for the shadow. */
 #ifndef DAKPAFIRE_C_H
 #define DAKPAFIRE_C_H
 #include "types.h"
@@ -106,26 +105,26 @@ struct daKpaFire_c : dEnemyBase_c {
     int Render();
     int Behavior();
 
-    void func_ov060_02117624(); /* per-frame drop shadow */
-    void func_ov060_0211747c(); /* variant 0 handler */
-    void func_ov060_021172e0(); /* variant 6/7 handler */
-    int func_ov060_021172c8(unsigned int n);
-    void func_ov060_02116740();
-    void func_ov060_0211722c();
-    void func_ov060_021171e8();
-    void func_ov060_0211712c();
-    void func_ov060_02116f90();
-    void func_ov060_02116f74();
-    void func_ov060_02116d78();
-    void func_ov060_02116c68();
-    void func_ov060_02116b68();
-    void func_ov060_02116b18();
-    void func_ov060_021169f8();
-    void func_ov060_021169b0();
-    void func_ov060_021168c4();
-    void func_ov060_021167ec();
-    void func_ov060_021167c8();
-    void func_ov060_02116518(u32 kind, int resize, int yOffset);
+    void UpdateShadow();        /* per-frame drop shadow */
+    void UpdateRideMouth();     /* variant 0 handler */
+    void EndBurnOut();          /* variant 6/7 handler */
+    int FrameCountExceeds(unsigned int n);
+    void BurnPlayer();
+    void InitFall();
+    void InitTossUp();
+    void ApplySideWobble();
+    void UpdateFallAndBurn();
+    void InitSpray();
+    void UpdateSpray();
+    void InitFlight();
+    void UpdateFlight();
+    void InitGrow();
+    void UpdateGrowAndSplit();
+    void InitBounce();
+    void UpdateBounce();
+    void UpdateScatter();
+    void InitNoCylinder();
+    void KeepParticlePair(u32 kind, int resize, int yOffset);
 };
 
 #ifndef SM64DS_PLATFORM_PC

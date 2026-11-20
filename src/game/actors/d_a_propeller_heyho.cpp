@@ -3,18 +3,18 @@
  * inline destructor D1 then D0, plus the 25 functions below. It wanders
  * a home position, chases a player inside 1000 units, then dives or
  * (when param1's low byte is nonzero, half the time) spits a fireball.
- * func_ov070_0211f100 sorts contact. Source order is the reverse of the
+ * HandleContact sorts contact. Source order is the reverse of the
  * ROM, so the one .text section emits ascending.
  */
 /* leftovers: Finished and WillHitFrame stay qualified through mAnmModel; a char*
- * view of that member moves a word in func_ov070_0211f48c,
- * func_ov070_0211f62c and func_ov070_0211f6e0. daPly_c-position reads
- * through int* in func_ov070_0211fd98, func_ov070_0211fae4 and
- * func_ov070_0211f48c, and the Vector3 write through ((int *)&v)[i] in
- * func_ov070_0211f368, stay as written. The mPrevAngle triple keeps
+ * view of that member moves a word in St_Fire_Main,
+ * St_Settle_Main and St_Dive_Main. daPly_c-position reads
+ * through int* in St_Wander_Main, St_Chase_Main and
+ * St_Fire_Main, and the Vector3 write through ((int *)&v)[i] in
+ * St_Knocked_Main, stay as written. The mPrevAngle triple keeps
  * the base-class names.
  * FlyGuy_ChangeState keeps its C-ABI name. V3w keeps the ldm/stm copy in
- * func_ov070_0211f6e0 and func_ov070_0211f48c. The six state records and
+ * St_Dive_Main and St_Fire_Main. The six state records and
  * the file handles keep address names; this file's static initializer
  * fills them. daPropeller_Heyho_Fire_c is a separate TU.
  */
@@ -171,12 +171,12 @@ extern HeyhoAnimationFilePtr data_ov070_02123500;
 /* The six state records (each {init PMF, main PMF}, built by __sinit_ov070_02122afc
  * from PMF literals in .data). The role names below are read off the handler
  * bodies:
- *   data_ov070_0212359c  wander   init func_ov070_0211ffa8   main func_ov070_0211fd98
- *   data_ov070_021235ac  chase    init func_ov070_0211fd60   main func_ov070_0211fae4
- *   data_ov070_021235cc  dive     init func_ov070_0211fa80   main func_ov070_0211f6e0
- *   data_ov070_0212358c  fire     init func_ov070_0211f5f0   main func_ov070_0211f48c
- *   data_ov070_021235dc  settle   init func_ov070_0211f694   main func_ov070_0211f62c
- *   data_ov070_021235bc  knocked  init func_ov070_0211f450   main func_ov070_0211f368
+ *   data_ov070_0212359c  wander   init St_Wander_Init   main St_Wander_Main
+ *   data_ov070_021235ac  chase    init St_Chase_Init   main St_Chase_Main
+ *   data_ov070_021235cc  dive     init St_Dive_Init   main St_Dive_Main
+ *   data_ov070_0212358c  fire     init St_Fire_Init   main St_Fire_Main
+ *   data_ov070_021235dc  settle   init St_Settle_Init   main St_Settle_Main
+ *   data_ov070_021235bc  knocked  init St_Knocked_Init   main St_Knocked_Main
  * "dive" is the swoop at the player, "fire" the fireball spit, "settle" the
  * wind-down back to wander after a dive or when the player is lost, "knocked" a
  * short (3-frame) pop-up and tilt that ends in coins and death. */
@@ -250,13 +250,13 @@ int daPropeller_Heyho_c::Behavior()
                 mdCcAc_c.Update();
             }
         }
-        func_ov070_02120070();
+        UpdateModelAndShadow();
         return 1;
     }
 
     if (mDeathState != 0) {
         UpdateDeath(mWithMeshClsn);
-        func_ov070_02120070();
+        UpdateModelAndShadow();
         return 1;
     }
 
@@ -293,10 +293,10 @@ int daPropeller_Heyho_c::Behavior()
         mAngle.z = mPrevAngle.z;
     }
 
-    func_ov070_02120070();
+    UpdateModelAndShadow();
 
     if (mCurrentState != &data_ov070_021235bc) {
-        this->func_ov070_0211f100();
+        this->HandleContact();
     }
 
     mdCcAc_c.Clear();
@@ -356,14 +356,14 @@ int daPropeller_Heyho_c::CleanupResources()
  * and the three angles, copied into mAnmModel.mat4x3; the shadow matrix from the
  * position with Y lowered by 10.0 units, then DropShadowRadHeight(radius 118.0,
  * depth 800.0, opacity 15). Behavior calls it on every exit path. */
-void daPropeller_Heyho_c::func_ov070_02120070() {
+void daPropeller_Heyho_c::UpdateModelAndShadow() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
-    mShadowMatrix = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
+    mShadowMatrix = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 
@@ -383,7 +383,7 @@ int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p) {
 /* Wander init: heading = a random multiple of 0x1000 (one of 16 directions,
  * 22.5 degrees apart), timer = 50 + random 0..31 frames, plays the file-02123520
  * animation at speed 1.0. */
-int daPropeller_Heyho_c::func_ov070_0211ffa8() {
+int daPropeller_Heyho_c::St_Wander_Init() {
     this->mTargetAngY =
         (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
     this->mStateTimer =
@@ -408,7 +408,7 @@ extern daPropeller_Heyho_c::State data_ov070_021235ac;
  * the timer reaches 0 the state restarts (new heading). With the cooldown expired
  * and the actor within 1500 units of home, a non-vanished player within 1000 units
  * starts the chase. */
-int daPropeller_Heyho_c::func_ov070_0211fd98() {
+int daPropeller_Heyho_c::St_Wander_Main() {
     Vector3 in;
     Vector3 out;
     Vector3 t;
@@ -435,9 +435,9 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
                   0x50);
 
     in.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngle.x);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mPrevAngle.x);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
 
     ApproachLinear(this->mSpeed.x, out.x, 0x1000);
     ApproachLinear(this->mSpeed.y, out.y, 0x800);
@@ -469,7 +469,7 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
 
 /* (data_ov070_02123520: SharedFilePtr view declared earlier in this TU) */
 /* Chase init: plays the file-02123520 animation (the wander one) at speed 1.0. */
-int daPropeller_Heyho_c::func_ov070_0211fd60() {
+int daPropeller_Heyho_c::St_Chase_Init() {
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_02123520.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -492,7 +492,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212358c;
  * units of the aim point (900 when LEVEL_ID == 0x16) it zeroes the velocity words
  * and picks the dive or, when mCanSpitFire is non-zero and a random bit is 1, the
  * fire state. */
-int daPropeller_Heyho_c::func_ov070_0211fae4() {
+int daPropeller_Heyho_c::St_Chase_Main() {
     daPly_c *player;
     Vector3 vin;
     Vector3 vb;
@@ -546,9 +546,9 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
                   0x50);
 
     vin.z = 0xf000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngle.x);
-    MTX_MultVec43(&vin, &data_020a0e68, &this->mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mPrevAngle.x);
+    MTX_MultVec43(&vin, &gScratchMtx, &this->mSpeed);
 
     if (Vec3_Dist(&this->mPos, &this->mHomePos) > kHomeLeashDist) {
         FlyGuy_ChangeState(this, &data_ov070_0212359c);
@@ -581,7 +581,7 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
 /* Dive init: clears mHitDuringAttack and mStateStep, timer = 63 frames, heading
  * from HorzAngleToCPlayerOrAng, plays the file-02123518 animation (flags
  * 0x40000000) at speed 1.0. */
-int daPropeller_Heyho_c::func_ov070_0211fa80() {
+int daPropeller_Heyho_c::St_Dive_Init() {
     this->mHitDuringAttack = 0;
     this->mStateTimer = 63;
     this->mStateStep = 0;
@@ -604,7 +604,7 @@ typedef signed char s8;
 extern s8 gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
-extern s32 data_0209f32c;
+extern s32 gWaterHeight;
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation
  * has finished: the first time (mStateStep == 0) it starts the file-02123510
@@ -614,7 +614,7 @@ int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
  * It goes to the settle state, re-anchoring home at the current position (not
  * when LEVEL_ID == 0x16) with the X tilt cleared, when the timer has run out, the
  * actor touches a wall, or there is no non-vanished player. If the player is
- * flagged underwater and the water height (data_0209f32c) is above this actor's
+ * flagged underwater and the water height (gWaterHeight) is above this actor's
  * Y, it instead re-anchors home 200 units above the current position (not when
  * LEVEL_ID == 0x16), restores last frame's position and zeroes the timer and
  * vertical speed before settling. Otherwise it tilts toward a point 71.0 units
@@ -622,8 +622,7 @@ int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
  * words to a 17.0-unit/frame forward vector; while at or below that point + 5.0,
  * at or below the player's Y + 5.0, or beyond 1500 units from home, the timer
  * counts down and the speed drops to 9.0. */
-int daPropeller_Heyho_c::func_ov070_0211f6e0()
-{
+int daPropeller_Heyho_c::St_Dive_Main() {
     daPly_c *player;
     Vector3 abovePlayer;
     Vector3 v;
@@ -673,7 +672,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         return 1;
     }
 
-    if (player->mIsUnderwater != 0 && data_0209f32c > mPos.y) {
+    if (player->mIsUnderwater != 0 && gWaterHeight > mPos.y) {
         if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPos.x;
             mHomePosY = mPos.y;
@@ -722,9 +721,9 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     half = (mPrevAngle.y - mTargetAngY) / 2;
     ApproachAngle(&mPrevAngle.z, half, 0xa, 0x100, 0x50);
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
-    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPrevAngle.x);
+    MTX_MultVec43(&v, &gScratchMtx, &mSpeed);
 
     return 1;
 }
@@ -733,7 +732,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 
 /* Settle init: mStateStep = 0; plays the file-02123508 animation (flags
  * 0x40000000) unless mHitDuringAttack is set. */
-int daPropeller_Heyho_c::func_ov070_0211f694() {
+int daPropeller_Heyho_c::St_Settle_Init() {
     this->mStateStep = 0;
     if (this->mHitDuringAttack == 0) {
         this->mAnmModel.SetAnim((BCA_File *)data_ov070_02123508.filePtr, 0x40000000, 0x1000, 0);
@@ -750,8 +749,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
 /* Settle main: once the animation has finished, raises home by 300 units (not
  * when LEVEL_ID == 0x16), clears mStateStep, starts the 90-frame cooldown and
  * returns to wander. */
-int daPropeller_Heyho_c::func_ov070_0211f62c()
-{
+int daPropeller_Heyho_c::St_Settle_Main() {
     if (mAnmModel.dExtFrameCtrl_c::Finished() != 0) {
         if (gCurrentSublevel != kLevel0x16)
             mHomePosY += kHomeLiftRecover;
@@ -769,7 +767,7 @@ struct BCA_File;
 /* (data_ov070_02123500: SharedFilePtr view declared earlier in this TU) */
 
 /* Fire init: plays the file-02123500 animation (flags 0x40000000) at speed 1.0. */
-int daPropeller_Heyho_c::func_ov070_0211f5f0() {
+int daPropeller_Heyho_c::St_Fire_Init() {
     unsigned int flags = 0;
     BCA_File *file = (BCA_File *)data_ov070_02123500.filePtr;
     this->mAnmModel.SetAnim(file, 0x40000000, 0x1000, flags);
@@ -789,7 +787,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
  * mAngle.x/.y/.z whose X is the vertical angle to the player, and plays sound 0x105.
  * When the animation has finished it resets the frame to 0, starts the 90-frame
  * cooldown and returns to wander. */
-int daPropeller_Heyho_c::func_ov070_0211f48c() {
+int daPropeller_Heyho_c::St_Fire_Main() {
     daPly_c *pl;
     struct Vector3 posbuf;
     struct Vector3 fp;
@@ -832,7 +830,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
 /* Knocked init: zeroes the mSpeed velocity words, then
  * mSpeed.y = +50.0 units/frame (upward pop), mVertAccel = -5.0, timer = 3
  * frames and mFlags = 0. */
-short daPropeller_Heyho_c::func_ov070_0211f450() {
+short daPropeller_Heyho_c::St_Knocked_Init() {
     this->mSpeed.x = 0;
     this->mSpeed.y = 0;
     this->mSpeed.z = 0;
@@ -851,7 +849,7 @@ short daPropeller_Heyho_c::func_ov070_0211f450() {
  * 0x13b at the position + 80.0 units up each frame (their handles are fed back). Tilts mAngle.x toward
  * -0x4000 (a quarter turn) with ApproachAngle and then ApproachLinear. When the
  * timer reaches 0 it runs the defeat helper func_ov070_0211f0a4. */
-int daPropeller_Heyho_c::func_ov070_0211f368() {
+int daPropeller_Heyho_c::St_Knocked_Main() {
     if (this->mStateStep != 0) {
         Vector3 v;
         int x, y, z;
@@ -891,8 +889,7 @@ extern void func_02012694(unsigned int a, const Vector3 *b);
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding
  * actor from the collider (mdCcAc_c.otherOwner) and reads hitFlags: fire sends it
  * to the knocked state with mStateStep = 1 (particles); 0x20 kills it through
- * func_ov002_020aea30 (verified.tsv spells that address Enemy::KillByAttack) with
- * mDeathState = 1 (name only; arity differs); the punch/kick/egg/explosion mask sends it to the knocked
+ * KillByAttack with mDeathState = 1; the punch/kick/egg/explosion mask sends it to the knocked
  * state with mStateStep = 0. After that only the player actor counts, and only a
  * non-vanished one: JumpedOnByPlayer bounces the player (SpinBounce 40.0) and
  * kills as above; a mega-character hit spawns the mega particles, counts the
@@ -901,7 +898,7 @@ extern void func_02012694(unsigned int a, const Vector3 *b);
  * hurts the player (daPly_c::Hurt) and, in the dive state with mHitDuringAttack
  * still 0, plays the file-02123528 animation and sets mStateStep =
  * mHitDuringAttack = 1. */
-void daPropeller_Heyho_c::func_ov070_0211f100() {
+void daPropeller_Heyho_c::HandleContact() {
     daPly_c *hitPlayer;
     s32 hitFlags;
 
@@ -919,7 +916,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     }
     if (hitFlags & kHitSpinPound) {
         this->mDeathState = 1;
-        this->func_ov002_020aea30(hitPlayer, 0);
+        this->KillByAttack(hitPlayer, 0);
         return;
     }
     if (hitFlags & kHitAttackMask) {
@@ -936,7 +933,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     if (this->JumpedOnByPlayer(this->mdCcAc_c, *hitPlayer)) {
         hitPlayer->SpinBounce(0x28000);
         this->mDeathState = 1;
-        this->func_ov002_020aea30(hitPlayer, 0);
+        this->KillByAttack(hitPlayer, 0);
         return;
     }
 

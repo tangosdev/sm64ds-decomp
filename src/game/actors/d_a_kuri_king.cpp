@@ -143,9 +143,7 @@ extern unsigned short data_ov074_02122dfc[];
 extern const int data_ov074_0212290c[4] = {0, 0x320000, 0x258000, 0x190000};
 extern const int data_ov074_0212291c[4] = {0, 0, 0x70000, 0};
 extern float data_ov074_02122e4c[];
-extern "C" int *Vec3_LslInPlace(void *v, int n);
-extern union Matrix4x3 data_020a0e68;
-extern union Matrix4x3 IDENTITY_MATRIX4X3;
+extern union Matrix4x3 gScratchMtx;
 struct KuriKingBoneIdx {
     int v[3];
 };
@@ -192,7 +190,7 @@ BTA_File *data_ov074_02122e5c[7] = {
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
-extern SharedFilePtr data_ov002_0210da30;
+extern SharedFilePtr gScaleUpKinokoModelFile;
 extern SharedFilePtr data_ov084_02130cf8;
 extern BMA_File data_ov084_0213089c;
 extern KrbAnimationFileHandle data_ov084_02130cc8;
@@ -292,8 +290,8 @@ void daKuriKing_c::SetDefeatTalkCamera() {
     pos.z = this->mPos.z;
     look.y += 0x1a0000;
     in.z = 0x59c000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     pos.x = pos.x + out.x;
     pos.y = pos.y + 0x300000;
     pos.z = pos.z + out.z;
@@ -671,7 +669,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
     v2.x = this->mSpawnPosX;
     v2.y = this->mSpawnPosY;
     v2.z = this->mSpawnPosZ;
-    minion->func_ov084_021296b0(&v2);
+    minion->SetHomePos(&v2);
 
     minion->mMinionIndex = this->mSpawnedCount;
     /* Same pool-address increment as mSubState: 0x602 is not an ARM immediate. */
@@ -1234,23 +1232,23 @@ void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) {
     v->x = 0;
     v->y = 0;
     v->z = 0;
-    data_020a0e68 = self->mBodyMatrix;
+    gScratchMtx = self->mBodyMatrix;
     boneMat = self->mAnmModel.data.transforms + bone;
-    MTX_Concat43(boneMat, &data_020a0e68, &data_020a0e68);
-    v->x = data_020a0e68.t.x;
-    v->y = data_020a0e68.t.y;
-    v->z = data_020a0e68.t.z;
+    MTX_Concat43(boneMat, &gScratchMtx, &gScratchMtx);
+    v->x = gScratchMtx.t.x;
+    v->y = gScratchMtx.t.y;
+    v->z = gScratchMtx.t.z;
     Vec3_LslInPlace(v, 3);
 }
 
-extern "C" union Matrix4x3 data_020a0e68;
+extern "C" union Matrix4x3 gScratchMtx;
 void daKuriKing_c::UpdateBodyMatrix() {
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->mScale.x, this->mScale.y, this->mScale.z);
-    this->mBodyMatrix = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToScale(&gScratchMtx, this->mScale.x, this->mScale.y, this->mScale.z);
+    this->mBodyMatrix = gScratchMtx;
 }
 
 /* Sizes the four collision cylinders from the current scale and places the
@@ -1452,7 +1450,7 @@ int daKuriKing_c::CleanupResources()
     if (param1 == 0x1111) {
         return CleanupVanishResources();
     }
-    data_ov002_0210da30.Release();
+    gScaleUpKinokoModelFile.Release();
     UnloadKeyModels(2);
     data_ov084_02130cf8.Release();
     for (i = 0; i < 7; i++)
@@ -1583,7 +1581,7 @@ int daKuriKing_c::InitResources()
         return InitVanishResources();
     }
 
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+    dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
     LoadKeyModels(2);
     dExtSimpleModel_c::LoadFile(data_ov084_02130cf8);
 
@@ -1635,7 +1633,7 @@ int daKuriKing_c::InitResources()
     i = 0;
     do {
         dExtAnmTexSRT_c::Prepare(*(BMD_File *)gKurikingModelModelFile.filePtr,
-                                 *(BTA_File *)data_ov074_02122e5c[i]);
+                                 *data_ov074_02122e5c[i]);
         i++;
     } while (i < 7);
 
@@ -1704,12 +1702,12 @@ int daKuriKing_c::CleanupVanishResources() {
 int daKuriKing_c::RenderVanish() {
     Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x6400, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, 0x6400, 0);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, this->mAngle.x, this->mAngle.y,
                                            this->mAngle.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x6400, 0);
-    this->mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, -0x6400, 0);
+    this->mAnmModel.mat4x3 = gScratchMtx;
 
     if (this->mShouldRender == 0) return 1;
 

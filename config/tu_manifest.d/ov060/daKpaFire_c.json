@@ -54,140 +54,140 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116518Ejii",
+      "symbol": "_ZN11daKpaFire_c16KeepParticlePairEjii",
       "address": "0x02116518",
       "size": "0x00000228",
       "legacy_source": "src/func_ov060_02116518.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116740Ev",
+      "symbol": "_ZN11daKpaFire_c10BurnPlayerEv",
       "address": "0x02116740",
       "size": "0x00000088",
       "legacy_source": "src/func_ov060_02116740.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_021167c8Ev",
+      "symbol": "_ZN11daKpaFire_c14InitNoCylinderEv",
       "address": "0x021167c8",
       "size": "0x00000024",
       "legacy_source": "src/func_ov060_021167c8.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_021167ecEv",
+      "symbol": "_ZN11daKpaFire_c13UpdateScatterEv",
       "address": "0x021167ec",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov060_021167ec.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_021168c4Ev",
+      "symbol": "_ZN11daKpaFire_c12UpdateBounceEv",
       "address": "0x021168c4",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov060_021168c4.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_021169b0Ev",
+      "symbol": "_ZN11daKpaFire_c10InitBounceEv",
       "address": "0x021169b0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov060_021169b0.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_021169f8Ev",
+      "symbol": "_ZN11daKpaFire_c18UpdateGrowAndSplitEv",
       "address": "0x021169f8",
       "size": "0x00000120",
       "legacy_source": "src/func_ov060_021169f8.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116b18Ev",
+      "symbol": "_ZN11daKpaFire_c8InitGrowEv",
       "address": "0x02116b18",
       "size": "0x00000050",
       "legacy_source": "src/func_ov060_02116b18.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116b68Ev",
+      "symbol": "_ZN11daKpaFire_c12UpdateFlightEv",
       "address": "0x02116b68",
       "size": "0x00000100",
       "legacy_source": "src/func_ov060_02116b68.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116c68Ev",
+      "symbol": "_ZN11daKpaFire_c10InitFlightEv",
       "address": "0x02116c68",
       "size": "0x00000110",
       "legacy_source": "src/func_ov060_02116c68.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116d78Ev",
+      "symbol": "_ZN11daKpaFire_c11UpdateSprayEv",
       "address": "0x02116d78",
       "size": "0x000001fc",
       "legacy_source": "src/func_ov060_02116d78.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116f74Ev",
+      "symbol": "_ZN11daKpaFire_c9InitSprayEv",
       "address": "0x02116f74",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov060_02116f74.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116f90Ev",
+      "symbol": "_ZN11daKpaFire_c17UpdateFallAndBurnEv",
       "address": "0x02116f90",
       "size": "0x0000019c",
       "legacy_source": "src/func_ov060_02116f90.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_0211712cEv",
+      "symbol": "_ZN11daKpaFire_c15ApplySideWobbleEv",
       "address": "0x0211712c",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov060_0211712c.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_021171e8Ev",
+      "symbol": "_ZN11daKpaFire_c10InitTossUpEv",
       "address": "0x021171e8",
       "size": "0x00000044",
       "legacy_source": "src/func_ov060_021171e8.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_0211722cEv",
+      "symbol": "_ZN11daKpaFire_c8InitFallEv",
       "address": "0x0211722c",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov060_0211722c.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_021172c8Ej",
+      "symbol": "_ZN11daKpaFire_c17FrameCountExceedsEj",
       "address": "0x021172c8",
       "size": "0x00000018",
       "legacy_source": "src/func_ov060_021172c8.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_021172e0Ev",
+      "symbol": "_ZN11daKpaFire_c10EndBurnOutEv",
       "address": "0x021172e0",
       "size": "0x0000019c",
       "legacy_source": "src/func_ov060_021172e0.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_0211747cEv",
+      "symbol": "_ZN11daKpaFire_c15UpdateRideMouthEv",
       "address": "0x0211747c",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov060_0211747c.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02117624Ev",
+      "symbol": "_ZN11daKpaFire_c12UpdateShadowEv",
       "address": "0x02117624",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov060_02117624.cpp",

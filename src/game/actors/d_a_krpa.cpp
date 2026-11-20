@@ -3,7 +3,7 @@
  *
  * It turns toward the closest visible player within 700.0 (0x800 a frame)
  * and pulses in size from a frame table. With a player tracked, and while
- * it stands above data_0209f32c, it counts 115 frames and then spits: on
+ * it stands above gWaterHeight, it counts 115 frames and then spits: on
  * frame 30 of that animation it spawns KERONPA_FIRE (actor 0x10f, see
  * d_a_kp_fr.cpp) 80.0 in front of itself and plays sound 0x105. A collider
  * hit with flag 0x10 knocks it away tumbling (a mega kill, state 3). A
@@ -49,8 +49,7 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern int data_0209f32c;
+extern int gWaterHeight;
 
 /* `return new daKrpa_c()` emits 0x50, calling the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). Historical aliases:
@@ -66,7 +65,7 @@ daKrpa_c *daKrpa_c_classInit() {
  * daKrpa_c_SpawnInfo. The descriptor is at ov070:0x0212334c. */
 extern "C" SpawnInfo<daKrpa_c> g_profile_KERONPA = {
     daKrpa_c_classInit, 0x010e, 0x0081, 0x00000003, 0x00000000, 0x0002d000, 0x01000000, 0x00ed8000};
-void daKrpaFrameController::SetFrames(u32 *frames, u32 count, u32 mode) {
+void daKrpaFrameController::SetFrames(const u32 *frames, u32 count, u32 mode) {
     this->frames = frames;
     this->count = count;
     this->mode = mode;
@@ -289,14 +288,14 @@ extern const u32 data_ov070_02122404[] = {
 
 int daKrpa_c::EnterIdle() {
     this->mAnmModel.SetAnim(&data_ov070_021234c4, 0, 0x1000, 0);
-    this->mFrameController.SetFrames((u32 *)data_ov070_02122404, 0x64, 1);
+    this->mFrameController.SetFrames(data_ov070_02122404, 0x64, 1);
     this->mStateTimer = 115;
     this->mStateIndex = 0;
     return 1;
 }
 int daKrpa_c::ExecuteIdle() {
     if (this->mPlayer) {
-        if (this->mPos.y > data_0209f32c) {
+        if (this->mPos.y > gWaterHeight) {
             if (DecIfAbove0_Byte(&this->mStateTimer) == 0)
                 this->ChangeState(1);
         }
@@ -316,7 +315,7 @@ int daKrpa_c::ExecuteIdle() {
 }
 int daKrpa_c::EnterSpit() {
     this->mAnmModel.SetAnim(&data_ov070_021234dc, 0x40000000, 0x1000, 0);
-    this->mFrameController.SetFrames((u32 *)data_ov070_021222e8, 0x47, 0);
+    this->mFrameController.SetFrames(data_ov070_021222e8, 0x47, 0);
     this->mStateIndex = 1;
     return 1;
 }

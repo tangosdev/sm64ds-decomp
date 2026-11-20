@@ -17,26 +17,26 @@ extern void func_ov007_020b2614(int a, int b, int c);
  * to state 3. Figure 1 holds the growth at 0x1000. */
 void func_ov007_020b1b74(void)
 {
-    int ticks = WORK->states[1]->stateTicks;
+    int ticks = gMenuWork->states[1]->stateTicks;
     if (ticks == 0)
         func_ov007_020b2614(0, 0, -1);
 
     if (ticks == 10)
-        WORK->states[2]->requestedState = 3;
+        gMenuWork->states[2]->requestedState = 3;
 
     if (ticks >= 0 && ticks <= 10) {
         int rise = ProgressRatio(ticks, 10);
         int sq = (fx32)(((fx64)rise * rise) >> FX32_SHIFT);
-        WORK->modelGrowth = FX_MUL(sq, 0x17d0);
+        gMenuWork->modelGrowth = FX_MUL(sq, 0x17d0);
     } else if (ticks <= 30) {
         int fall = 0x1000 - RangeRatio(ticks, 10, 30);
         int sq = (fx32)(((fx64)fall * fall) >> FX32_SHIFT);
-        WORK->modelGrowth = FX_MUL(sq, 0x7d0) + 0x1000;
+        gMenuWork->modelGrowth = FX_MUL(sq, 0x7d0) + 0x1000;
     } else {
-        WORK->states[1]->requestedState = 0;
+        gMenuWork->states[1]->requestedState = 0;
     }
 
-    if (WORK->figureIndex == 1)
-        WORK->modelGrowth = 0x1000;
+    if (gMenuWork->figureIndex == 1)
+        gMenuWork->modelGrowth = 0x1000;
 }
 }

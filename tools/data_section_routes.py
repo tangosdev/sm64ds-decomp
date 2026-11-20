@@ -77,9 +77,14 @@ def _extent(row):
     return start, start + size
 
 
-def owned_section(entry, section, row):
-    """Select a named slice only from the object's complete declared extent."""
-    declared, errors = routes(entry)
+def owned_section(entry, section, row, routed=None):
+    """Select a named slice only from the object's complete declared extent.
+
+    ``routed`` is ``routes(entry)``, for callers asking about many rows of one entry.
+    Recomputing it per row made those callers quadratic: ov007's 443 routes cost
+    func_ov007_020bbe60.c two minutes of every ROM build.
+    """
+    declared, errors = routed if routed is not None else routes(entry)
     if errors or section not in _FIELDS:
         return section
     try:
@@ -130,7 +135,7 @@ def apply(raw, entry):
             errors.append(f"{target} owned objects must be a list")
             continue
         rows = [r for r in objects if isinstance(r, dict)
-                and owned_section(entry, origin, r) == target]
+                and owned_section(entry, origin, r, (declared, [])) == target]
         if not rows:
             errors.append(f"{target} has no complete manifest-owned objects")
             continue

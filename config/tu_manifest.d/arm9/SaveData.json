@@ -50,7 +50,7 @@
       "legacy_source": "src/unnamed/arm9/0201/func_0201361c.c"
     },
     {
-      "symbol": "_Z13func_02013638i",
+      "symbol": "_Z18IsMinigameUnlockedi",
       "address": "0x02013638",
       "size": "0x18",
       "ordinal": 5,

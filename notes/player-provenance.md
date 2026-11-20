@@ -259,7 +259,7 @@ Two details that are not free and are worth copying:
 Every "read by nothing matched" reason below was withdrawn on 2026-08-24. They
 were all decided by searching daKpa_c's own mangled methods, which is three files;
 daKpa_c's behaviour is in [ov060](../config/arm9/overlays/ov060/symbols.txt), dispatched through the pointer-to-member table
-[data_ov060_0211aeb4](../config/arm9/overlays/ov060/symbols.txt)`[*(int *)(this + 0x410)]` that [func_ov060_02112434](../src/game/actors/d_a_kpa.cpp) calls.
+[sBowserHoldStateTable](../config/arm9/overlays/ov060/symbols.txt)`[*(int *)(this + 0x410)]` that [func_ov060_02112434](../src/game/actors/d_a_kpa.cpp) calls.
 A data-table dispatch names no caller, so the call graph never reaches those
 state functions -- but `tools/handler_owner.py` attributes ~30 [ov060](../config/arm9/overlays/ov060/symbols.txt) handlers to
 daKpa_c decisively, and they read almost all of it. Named from that evidence:

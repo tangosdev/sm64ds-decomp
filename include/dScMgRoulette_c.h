@@ -24,6 +24,7 @@
 #include "BMD_File.h"
 #include "Dealer.h"
 #include "dExtSimpleModel_c.h"
+#include "Vector2.h"
 
 /* One racer the dealer hands out, 0x34 bytes; the scene holds five at
  * 0x51a8. The name is coined: the record has no vtable, so no RTTI names it.
@@ -31,23 +32,19 @@
  * (0x021079c8, in d_s_mg_roulette_methods.cpp) are both empty, and both are
  * out of line: the scene builds and tears down the array through
  * __cxa_vec_ctor / __cxa_vec_cleanup, which take their addresses.
- * x/y slide toward targetX/targetY by stepX/stepY. state: 0 handled with 3,
+ * pos slides toward target by step. state: 0 handled with 3,
  * 1 sliding, 2 under the stylus, 3 stopped, 4 about to hop, 5 hopping,
  * 6 settled, 7 sent to the side pile. */
 struct RouletteRacer {
     RouletteRacer();
     ~RouletteRacer();
 
-    s32 x;        /* 0x00 */
-    s32 y;        /* 0x04 */
+    Vector2 pos;  /* 0x00 */
     s32 grabX;    /* 0x08 */
     s32 grabY;    /* 0x0c */
-    s32 stepX;    /* 0x10 */
-    s32 stepY;    /* 0x14 */
-    s32 targetX;  /* 0x18 */
-    s32 targetY;  /* 0x1c */
-    s32 homeX;    /* 0x20, the deal spot AimAt sends it to; Release returns it there */
-    s32 homeY;    /* 0x24 */
+    Vector2 step; /* 0x10 */
+    Vector2 target; /* 0x18 */
+    Vector2 home;   /* 0x20, the deal spot AimAt sends it to; Release returns it there */
     s32 priority; /* 0x28, OAM priority for RenderOamBothScreens; Draw resets it
                      to 1, RouletteStrip_DrawRacers lifts it to 0 */
     s16 tile;     /* 0x2c, Roulette_TileAt's tile; 0x25 is off the board */
