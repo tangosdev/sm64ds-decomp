@@ -9,7 +9,7 @@ struct Thing;
 
 /* The process manager: the frame loop and the process tree and lists it
  * walks. The class and member names are NSMBW-decomp's
- * (include/game/framework/f_manager.hpp, source/dol/framework/f_manager.cpp),
+ * (its f_manager.hpp and f_manager.cpp),
  * and the ROM matches that file on every point checked:
  *
  *   - each manager is built from NSMBW's callback. The member-pointer
