@@ -9,13 +9,13 @@ struct OverlaySlot {
     int start;
     int size;
 };
-extern struct OverlaySlot data_0209d3c4[];
+extern struct OverlaySlot gLoadedOverlays[];
 
 void UnloadOverlay(int id) {
     FSOverlayInfo info;
     struct OverlaySlot *found = 0;
     unsigned int i;
-    struct OverlaySlot *r = data_0209d3c4;
+    struct OverlaySlot *r = gLoadedOverlays;
     for (i = 0; i < 12; i++, r++) {
         if (r->id == id) {
             r->id = -1;

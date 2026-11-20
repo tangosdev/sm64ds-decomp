@@ -7,7 +7,7 @@ struct OverlaySlot {
     int start;
     int size;
 };
-extern struct OverlaySlot data_0209d3c4[];
+extern struct OverlaySlot gLoadedOverlays[];
 
 /* UnloadOverlay for an overlay that may not be loaded: free its slot, and if
    it had one, unload ARM9 overlay `key` and, unless func_0203d7b8 says
@@ -18,7 +18,7 @@ void func_02017e94(int key) {
     struct OverlaySlot *found = 0;
     unsigned int i;
     for (i = 0; i < 12; i++) {
-        struct OverlaySlot *e = &data_0209d3c4[i];
+        struct OverlaySlot *e = &gLoadedOverlays[i];
         if (e->id == key) {
             e->id = -1;
             e->start = 0;

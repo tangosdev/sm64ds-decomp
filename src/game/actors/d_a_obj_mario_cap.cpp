@@ -34,7 +34,7 @@
  *                                                       OBJ_MARIO_CAP with 0x12 ORed into param1 and
  *                                                       removes itself a frame later. Otherwise:
  *                                                       touch check, and PlayerLoseCap + removal
- *                                                       below the kill height (data_02092138)
+ *                                                       below the kill height (gLevelMinY)
  *   df84    InitTimedWait  TimedWait   1                200-frame timer; removed when it runs out,
  *                                                       on touching the ground, below the kill
  *                                                       height, or off screen (mFlags & 8)
@@ -217,7 +217,7 @@ extern "C" {
 /* -- other modules -- */
 
 /* -- data -- */
-extern int            data_02092138;
+extern int gLevelMinY;
 extern u8 gGameMode;
 
 extern daObjMarioCapFileHandle data_ov002_0210de00, data_ov002_0210de08;
@@ -249,8 +249,9 @@ extern McapStatePmf data_ov002_0210958c, data_ov002_02109594;
 extern McapStatePmf data_ov002_0210959c, data_ov002_021095a4;
 
 extern SharedFilePtr *data_ov002_020ff0a0[];
+extern SharedFilePtr *data_ov002_020ff0ac[];
 extern SharedFilePtr *const data_ov002_020ff0b8[];
-extern int *const data_ov002_020ff0c4[];
+extern SharedFilePtr *const data_ov002_020ff0c4[];
 }
 
 /* gGameMode is 1 in VS mode: PrepareVsMode stores it. This int-returning
@@ -344,7 +345,7 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    SharedFilePtr *modelFile = (SharedFilePtr *)data_ov002_020ff0ac[mModelIndex];
+    SharedFilePtr *modelFile = data_ov002_020ff0ac[mModelIndex];
     if (mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(*modelFile), 1, -1) == 0)
         return 0;
 
@@ -587,35 +588,35 @@ void daObjMarioCap_c::OnPendingDestroy()
 
 /* Releases the character's model and the animation files InitResources
  * loaded for this type, in the same grouping. Always returns 1. */
-int daObjMarioCap_c::CleanupResources()
-{
-  int i = mModelIndex;
-  if (i >= 3) return 1;
-  ((SharedFilePtr *)(data_ov002_020ff0ac[i]))->Release();
-  switch (mType) {
-  case 0xf:
-    ((SharedFilePtr *)(&data_ov002_0210de50))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de60))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de48))->Release();
-    break;
-  case 0x14:
-  case 0x15:
-  case 0x16:
-    ((SharedFilePtr *)(&data_ov002_0210de28))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de08))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de20))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de40))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de10))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de00))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de58))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de18))->Release();
-    break;
-  default:
-    ((SharedFilePtr *)(&data_ov002_0210de30))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de38))->Release();
-    break;
-  }
-  return 1;
+int daObjMarioCap_c::CleanupResources() {
+    int i = mModelIndex;
+    if (i >= 3)
+        return 1;
+    data_ov002_020ff0ac[i]->Release();
+    switch (mType) {
+    case 0xf:
+        data_ov002_0210de50.Release();
+        data_ov002_0210de60.Release();
+        data_ov002_0210de48.Release();
+        break;
+    case 0x14:
+    case 0x15:
+    case 0x16:
+        data_ov002_0210de28.Release();
+        data_ov002_0210de08.Release();
+        data_ov002_0210de20.Release();
+        data_ov002_0210de40.Release();
+        data_ov002_0210de10.Release();
+        data_ov002_0210de00.Release();
+        data_ov002_0210de58.Release();
+        data_ov002_0210de18.Release();
+        break;
+    default:
+        data_ov002_0210de30.Release();
+        data_ov002_0210de38.Release();
+        break;
+    }
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -682,9 +683,9 @@ void daObjMarioCap_c::UpdateMatrix()
 
     /* position / 8: the model matrix's translation scale */
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 
     {
         McapStateRec *s = (McapStateRec *)mStateEntry;
@@ -751,7 +752,7 @@ int daObjMarioCap_c::InitWait()
  * reads 1, the frame after the spawn. Otherwise: if there is no override
  * matrix, widens the clip ranges (clip offset and radius 50 units, clip and
  * far distance 4096 units); runs the touch check; and below the kill height
- * (STAR_CAP_MIN_POS_Y, data_02092138) marks the cap lost for the player
+ * (STAR_CAP_MIN_POS_Y, gLevelMinY) marks the cap lost for the player
  * (SaveData::PlayerLoseCap) and removes it. The spawn arguments pass the
  * cap's own area ID. */
 int daObjMarioCap_c::Wait() {
@@ -770,7 +771,7 @@ int daObjMarioCap_c::Wait() {
         SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
     CheckTouch();
-    if (data_02092138 > mPos.y) {
+    if (gLevelMinY > mPos.y) {
         SaveData::PlayerLoseCap();
         MarkForDestruction();
     }
@@ -789,7 +790,7 @@ int daObjMarioCap_c::InitTimedWait()
  * Returns 1. */
 int daObjMarioCap_c::TimedWait()
 {
-    if (data_02092138 > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+    if (gLevelMinY > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
         (mFlags & 8)) {
         MarkForDestruction();
         return 1;
@@ -823,7 +824,7 @@ int daObjMarioCap_c::InitTimedWait2()
  * TimedWait. Returns 1. */
 int daObjMarioCap_c::TimedWait2()
 {
-    if (data_02092138 > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+    if (gLevelMinY > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
         (mFlags & 8)) {
         MarkForDestruction();
         return 1;
@@ -854,7 +855,7 @@ int daObjMarioCap_c::Fall() {
       SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
   }
-  if (data_02092138 > mPos.y) {
+  if (gLevelMinY > mPos.y) {
       SaveData::PlayerLoseCap();
       MarkForDestruction();
   }
@@ -1176,7 +1177,7 @@ int daObjMarioCap_c::InitAnim()
 /* df74's per-frame function. Types 10 and 15 copy the bound player's angles
  * and position onto the cap every frame. Once the animation has finished,
  * types 10, 15 and 22 remove the cap; type 21 does nothing more; type 20
- * starts its second animation (data_ov002_020ff0c4 entry [1]) once, setting
+ * starts its second animation (the file data_ov002_020ff0c4 holds) once, setting
  * mAnimStarted. Returns 1. */
 int daObjMarioCap_c::Anim()
 {
@@ -1213,7 +1214,7 @@ int daObjMarioCap_c::Anim()
 
         case 0x14:
             if (mAnimStarted == 0) {
-                mAnmModel.SetAnim((BCA_File *)((void *)data_ov002_020ff0c4[mModelIndex][1]), 0,
+                mAnmModel.SetAnim((BCA_File *)(data_ov002_020ff0c4[mModelIndex]->filePtr), 0,
                                   0x1000, 0);
                 mAnimStarted = 1;
             }
@@ -1367,12 +1368,12 @@ McapStateRec data_ov002_0210df44 = {data_ov002_02109584, data_ov002_0210953c};
 
 /* Initialized data this file is the only complete referrer for. */
 SharedFilePtr *const data_ov002_020ff0b8[3] = {
-    (SharedFilePtr *)&data_ov002_0210de28,
-    (SharedFilePtr *)&data_ov002_0210de08,
-    (SharedFilePtr *)&data_ov002_0210de20,
+    &data_ov002_0210de28,
+    &data_ov002_0210de08,
+    &data_ov002_0210de20,
 };
-int *const data_ov002_020ff0c4[3] = {
-    (int *)&data_ov002_0210de40,
-    (int *)&data_ov002_0210de10,
-    (int *)&data_ov002_0210de00,
+SharedFilePtr *const data_ov002_020ff0c4[3] = {
+    &data_ov002_0210de40,
+    &data_ov002_0210de10,
+    &data_ov002_0210de00,
 };

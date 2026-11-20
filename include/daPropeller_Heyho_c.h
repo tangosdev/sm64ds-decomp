@@ -50,7 +50,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     dExtAnmModel_c mAnmModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
-    /* Shadow matrix written by func_ov070_02120070 and passed to
+    /* Shadow matrix written by UpdateModelAndShadow and passed to
        DropShadowRadHeight. */
     Matrix4x3 mShadowMatrix;                            /* 0x38c */
     State                       *mCurrentState;         /* 0x3bc */
@@ -126,7 +126,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     int func_ov070_0211f48c();
     int func_ov070_0211f62c();
     int func_ov070_0211f6e0();
-    void func_ov070_02120070();
+    void UpdateModelAndShadow();
     int func_ov070_0211ffa8();
     int func_ov070_0211fd98();
     int func_ov070_0211fd60();

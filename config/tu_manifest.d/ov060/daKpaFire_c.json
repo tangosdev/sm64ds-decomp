@@ -61,7 +61,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02116740Ev",
+      "symbol": "_ZN11daKpaFire_c10BurnPlayerEv",
       "address": "0x02116740",
       "size": "0x00000088",
       "legacy_source": "src/func_ov060_02116740.cpp",
@@ -187,7 +187,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "_ZN11daKpaFire_c19func_ov060_02117624Ev",
+      "symbol": "_ZN11daKpaFire_c12UpdateShadowEv",
       "address": "0x02117624",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov060_02117624.cpp",

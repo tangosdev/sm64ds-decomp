@@ -81,7 +81,7 @@ void func_02012694(unsigned int a, const Vector3 *p);
 extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
 extern unsigned char gNumPlayers;
 extern daPly_c *gPlayers[];
-extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 gScratchMtx;
 
 /* File handles the static initializer constructs. The two models use
  * func_02017acc; the five animations use SharedFilePtr::Construct.
@@ -236,7 +236,7 @@ void daSnowman_c::CheckAttacks() {
 
     if (flags & 0x2000) {
         this->mDeathState = 2;
-        func_ov002_020aea30(found, 0);
+        KillByAttack(found, 0);
         this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
         hit = 1;
     }
@@ -249,7 +249,7 @@ void daSnowman_c::CheckAttacks() {
         if (found->mIsVanish != 0) return;
         if (found->mIsMetal == 1) {
             this->mDeathState = 2;
-            func_ov002_020aea30(found, 0);
+            KillByAttack(found, 0);
             this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
@@ -264,7 +264,7 @@ void daSnowman_c::CheckAttacks() {
         }
         if ((flags & 0x40) && found->param1 == 2) {
             this->mDeathState = 2;
-            func_ov002_020aea30(found, 0);
+            KillByAttack(found, 0);
             this->mDeathSound = 2;
             this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
@@ -479,10 +479,10 @@ int daSnowman_c::StateThrowSnowballExecute() {
                     v[0].y = v[1].y - this->mHandPos.y;
                     v[0].z = v[1].z - this->mHandPos.z;
                     angle = cstd::atan2(v[0].x, v[0].z);
-                    Matrix4x3_FromRotationY(&data_020a0e68, angle);
-                    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68,
+                    Matrix4x3_FromRotationY(&gScratchMtx, angle);
+                    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx,
                                                       (-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
-                    MTX_MultVec43(&in, &data_020a0e68, &out);
+                    MTX_MultVec43(&in, &gScratchMtx, &out);
                 }
                 out.y += 0x14000;
                 target->mSpeed.x = out.x;
@@ -735,11 +735,11 @@ void daSnowman_c::UpdateModelMatrices() {
     src.z = this->mPos.z;
     src.y = t + this->mSinkOffsetY;
     Vec3_Asr(&dst, &src, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, dst.x, dst.y, dst.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, dst.x, dst.y, dst.z);
 
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, this->mAngle.x, this->mAngle.y,
                                            this->mAngle.z);
-    this->mAnmModel.mat4x3 = data_020a0e68;
+    this->mAnmModel.mat4x3 = gScratchMtx;
 
     if (this->mCapUniqueID != 0) {
         this->mCapPos.x = 0;
@@ -750,9 +750,9 @@ void daSnowman_c::UpdateModelMatrices() {
             MTX_Concat43(&this->mAnmModel.data.transforms[5], &this->mAnmModel.mat4x3,
                          &this->mCapMatrix);
 
-            this->mCapPos.x = data_020a0e68.t.x;
-            this->mCapPos.y = data_020a0e68.t.y;
-            this->mCapPos.z = data_020a0e68.t.z;
+            this->mCapPos.x = gScratchMtx.t.x;
+            this->mCapPos.y = gScratchMtx.t.y;
+            this->mCapPos.z = gScratchMtx.t.z;
             this->mCapPos.x <<= 3;
             this->mCapPos.y <<= 3;
             this->mCapPos.z <<= 3;
@@ -760,9 +760,9 @@ void daSnowman_c::UpdateModelMatrices() {
             actor->mPos.y = this->mCapPos.y;
             actor->mPos.z = this->mCapPos.z;
 
-            Matrix4x3_FromTranslation(&data_020a0e68, 0, 0x4000, 0);
-            Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, 0x2000, 0);
-            MTX_Concat43(&data_020a0e68, &this->mCapMatrix, &this->mCapMatrix);
+            Matrix4x3_FromTranslation(&gScratchMtx, 0, 0x4000, 0);
+            Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, 0, 0x2000, 0);
+            MTX_Concat43(&gScratchMtx, &this->mCapMatrix, &this->mCapMatrix);
             actor->mCarryMatrix = &this->mCapMatrix;
         }
     }
@@ -770,13 +770,13 @@ void daSnowman_c::UpdateModelMatrices() {
     this->mHandPos.x = 0;
     this->mHandPos.y = 0;
     this->mHandPos.z = 0;
-    data_020a0e68 = this->mAnmModel.mat4x3;
-    MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xc000, -0x1000, 0);
+    gScratchMtx = this->mAnmModel.mat4x3;
+    MTX_Concat43(&this->mAnmModel.data.transforms[3], &gScratchMtx, &gScratchMtx);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0xc000, -0x1000, 0);
 
-    this->mHandPos.x = data_020a0e68.t.x;
-    this->mHandPos.y = data_020a0e68.t.y;
-    this->mHandPos.z = data_020a0e68.t.z;
+    this->mHandPos.x = gScratchMtx.t.x;
+    this->mHandPos.y = gScratchMtx.t.y;
+    this->mHandPos.z = gScratchMtx.t.z;
     this->mHandPos.x <<= 3;
     this->mHandPos.y <<= 3;
     this->mHandPos.z <<= 3;
@@ -784,9 +784,9 @@ void daSnowman_c::UpdateModelMatrices() {
     if (this->mType != 0)
         return;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x >> 3, (this->mPos.y - 0xe000) >> 3,
+    Matrix4x3_FromTranslation(&gScratchMtx, this->mPos.x >> 3, (this->mPos.y - 0xe000) >> 3,
                               this->mPos.z >> 3);
-    this->mShadowMatrix = data_020a0e68;
+    this->mShadowMatrix = gScratchMtx;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMatrix, 0x78000, 0xc8000, 0xf);
 }
 

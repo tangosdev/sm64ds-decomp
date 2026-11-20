@@ -251,23 +251,23 @@ void dBgW::UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Ve
 void func_02039218(void) {
     int slot;
     for (slot = 0; slot < 24; slot++)
-        data_020a0c80[slot] = 0;
+        gActiveMeshColliders[slot] = 0;
 }
 
 void dScStage_c::ResetMeshColliders() {
     int slot;
     for (slot = 0; slot < 24; slot++)
-        data_020a0c80[slot] = 0;
+        gActiveMeshColliders[slot] = 0;
 }
 
 void func_020391f0(void) {}
 
 int dBgW::Enable(dActor_c *actor) {
     for (s32 slot = 0; slot < 24; slot++) {
-        if (data_020a0c80[slot] == 0) {
+        if (gActiveMeshColliders[slot] == 0) {
             SetActor(actor);
             SetSlotIndex(slot);
-            data_020a0c80[slot] = this;
+            gActiveMeshColliders[slot] = this;
             return 1;
         }
     }
@@ -278,7 +278,7 @@ int dBgW::Disable() {
     int slot = GetSlotIndex();
     if (slot != 24) {
         ClearSlotIndex();
-        data_020a0c80[slot] = 0;
+        gActiveMeshColliders[slot] = 0;
     }
     return 1;
 }

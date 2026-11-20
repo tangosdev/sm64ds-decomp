@@ -5,7 +5,7 @@
  * param1's low two bits pick how it moves: 0..2 index data_ov092_02132294
  * for a canned sequence of moves, 3 makes it follow the path whose id is in
  * param1 bits 8..11. That choice is mMoveKind, and NextMove and
- * func_ov092_021313b0 branch on it to choose the next mMoveDir.
+ * NextPathNode branch on it to choose the next mMoveDir.
  *
  * SM64DS proves this class as daOnms_c through RTTI, allocation size and
  * vtable identity. The factory and profile spellings are reconstructed
@@ -61,7 +61,7 @@ struct daOnms_c : dBgActor_c {
     /* The movement states, indexed by mMoveDir through the member-pointer
        table this file defines. Every member name below is coined; the
        cartridge keeps none. The address is the method name. */
-    void func_ov092_021313b0();
+    void NextPathNode();
     void func_ov092_02131a88();
     void StateLand();               /* 0 - coined */
     void func_ov092_02131578();     /* 1 - wait, address name */

@@ -5,7 +5,7 @@
  * the two hardware windows: each scanline's WIN0H/WIN1H come from a 4-byte
  * table entry that the HBlank IRQ copies in, and outside the windows only the
  * backdrop colour shows. A single static instance lives in BSS at
- * data_0209f61c; scenes pick the shape with SetType. The CPU builds the next
+ * gSceneWipe; scenes pick the shape with SetType. The CPU builds the next
  * frame's table in one of the two 0x300-byte tables at data_0209f648 while
  * the IRQ reads the other. mwccarm emits .text in reverse source order, so
  * the definitions below run ROM-descending.
@@ -534,15 +534,15 @@ int dWipe_c::IsBetweenStartAndEnd()
 /* The wipe singleton. A namespace-scope object with a constructor and a
    destructor, so mwcc emits __sinit_d_wipe.cpp to build it and register
    ~dWipe_c() (was the handwritten __sinit_02074f80). The minigame
-   overlays still reach it by this address name. */
-dWipe_c data_0209f61c;
+   overlays reach it through the declaration in dWipe_c.h. */
+dWipe_c gSceneWipe;
 
 /* Scene-side wipe reset: disarm live windows, then return the singleton to
    its idle state. */
 void Wipe_Reset(void) {
-    if (data_0209f61c.needsCleanup == 1)
-        data_0209f61c.DisableWindows();
-    data_0209f61c.Reset();
+    if (gSceneWipe.needsCleanup == 1)
+        gSceneWipe.DisableWindows();
+    gSceneWipe.Reset();
 }
 
 void dWipe_c::Reset() {

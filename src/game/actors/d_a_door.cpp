@@ -9,7 +9,7 @@
  * and 8 stars; 7..13 are key doors holding key indices 0..6; 14..18 carry
  * neither. A door is a state machine: the pointer at +0x140 (mState) names
  * the current state, a pair of pointers-to-member -- enter, then execute --
- * that ChangeState stores and calls the enter member of, and Behavior
+ * that SetState stores and calls the enter member of, and Behavior
  * calls the execute member of every frame with the player
  * func_ov100_02145370 returns. The nine states are the 16-byte tables
  * data_ov100_021488a4 .. data_ov100_02148924, which the module's static
@@ -39,12 +39,12 @@
  * ("none" is the null pointer-to-member the initializer copies from
  * 0x02086b58.)
  *
- * STATE NAMES. The fourteen state members and ChangeState carried their ROM
+ * STATE NAMES. The fourteen state members and SetState carried their ROM
  * addresses until now; the names above are reconstructed, and the ROM records
  * none of them. They follow daStarGate_c (src/game/actors/d_a_star_gate.cpp,
  * include/daStarGate_c.h) -- the class whose code starts at 0x021458d4,
  * directly above this unit, and whose state machine is the same shape: a
- * 0x10 record of two pointers-to-member, a ChangeState that adopts a record
+ * 0x10 record of two pointers-to-member, a SetState that adopts a record
  * and runs its init half, a Behavior that runs the main half with the player,
  * and the same St_<state>_Init / St_<state>_Main spelling for the halves.
  * Four of its state names describe the same behaviour here and are reused
@@ -59,7 +59,7 @@
  * This file is the whole linker unit 0x021443f4..0x021458d4, 32 functions:
  * D1 and D0 (daWanwan2_c_classInit, src/game/actors/d_a_wanwan2.cpp, ends exactly at
  * 0x021443f4 below them), the 24 helpers in 0x02144468..0x021453d8
- * (St_CharIntro_Main first, ChangeState last), CleanupResources, OnPendingDestroy, Render,
+ * (St_CharIntro_Main first, SetState last), CleanupResources, OnPendingDestroy, Render,
  * Behavior, InitResources, and last the registry factory daDoor_c_classInit
  * (0x0214589c); daStarGate_c's first function
  * (src/game/actors/d_a_star_gate.cpp) starts exactly at 0x021458d4 above
@@ -173,7 +173,7 @@ enum DoorSound {
     SND_SWING_END_ALT = 7
 };
 
-/* Bits of the save flags (data_0209caa0.file.flags1) the door uses. The shift is
+/* Bits of the save flags (gSaveBlock.file.flags1) the door uses. The shift is
    DoorEntry::flagShift, except for the key bit, which is shifted by
    DoorEntry::keyIndex. */
 enum DoorSaveFlag {
@@ -200,7 +200,7 @@ enum { ACTOR_OBJ_KEY = 0x11a };
    handed over as an int. */
 typedef int (daDoor_c::*daDoor_StatePmf)(int);
 struct daDoor_StateRecord {
-    daDoor_StatePmf enter;   /* 0x0 -- called by ChangeState */
+    daDoor_StatePmf enter;   /* 0x0 -- called by SetState */
     daDoor_StatePmf execute; /* 0x8 -- called by Behavior every frame */
 };
 
@@ -220,8 +220,6 @@ void LoadKeyModels(int idx);
 void UnloadKeyModels(int idx);
 extern "C" {
 int func_ov002_020ca78c(void *p);
-void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
-                              const Vector3 *v);
 int AngleDiff(int a, int b);
 }
 
@@ -268,14 +266,14 @@ extern signed char gNextSublevel;
 extern int gMusicVolume;
 extern int gSubVolume;
 extern Vector3 data_020a0ebc;
-extern char data_ov002_0211094c;
-extern SharedFilePtr data_ov089_02132c50;
+extern SharedFilePtr gPowerStarModelFile;
+extern SharedFilePtr gKoopaKeyModelFile;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
    entries in that overlay's .rodata, the table LoadKeyModels loads into
    (bounds-checked `idx >= 8`). src/game/actors/d_a_obj_key.cpp, home of
    LoadKeyModels and UnloadKeyModels, declares it under this name with this
    element type. */
-extern void *data_ov089_02132894[];
+extern void *gKeyModelFiles[];
 
 /* The door's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -296,40 +294,40 @@ struct DoorAnimationFileHandle : SharedFilePtr {
 /* -------------------------------------------------------------------------- */
 /* The eleven model handles and the animation handle, in static-initializer
    order: the initializer constructs each and registers its destructor.
-   data_ov100_02148744 is the one the helpers release and hand to
+   gDoorOpenAnimationFile is the one the helpers release and hand to
    dExtFrameCtrl_c::LoadFile. */
 /* -------------------------------------------------------------------------- */
-DoorModelFilePtr data_ov100_0214875c(0x9c09);
-DoorModelFilePtr data_ov100_0214877c(0x9c0a);
+DoorModelFilePtr gRegularDoorModelFile(0x9c09);
+DoorModelFilePtr gDoorKeyHoleModelFile(0x9c0a);
 DoorModelFilePtr gObjDoor0StarModelFile(ASSET_OBJ_DOOR0_STAR_BMD);
 DoorModelFilePtr gObjDoor0Star1ModelFile(ASSET_OBJ_DOOR0_STAR1_BMD);
 DoorModelFilePtr gObjDoor0Star3ModelFile(ASSET_OBJ_DOOR0_STAR3_BMD);
 DoorModelFilePtr gObjDoor0Star10ModelFile(ASSET_OBJ_DOOR0_STAR10_BMD);
 DoorModelFilePtr gObjDoor1ModelFile(ASSET_OBJ_DOOR1_BMD);
 DoorModelFilePtr gObjDoor2BoroModelFile(ASSET_OBJ_DOOR2_BORO_BMD);
-DoorModelFilePtr data_ov100_0214874c(0x9c0b);
+DoorModelFilePtr gRustedMetalDoorModelFile(0x9c0b);
 DoorModelFilePtr gObjDoor4YamiModelFile(ASSET_OBJ_DOOR4_YAMI_BMD);
 DoorModelFilePtr gObjDoor5HorrorModelFile(ASSET_OBJ_DOOR5_HORROR_BMD);
-DoorAnimationFileHandle data_ov100_02148744(0x9c08);
+DoorAnimationFileHandle gDoorOpenAnimationFile(0x9c08);
 
 DoorEntry data_ov100_02148204[19] = {
-    {&data_ov100_0214875c, 0, -1, -1, -1, 0, -1, 0},
-    {&data_ov100_0214875c, &gObjDoor0StarModelFile, -1, -1, -1, 0, -1, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star1ModelFile, 1, -1, 0, 0, 25, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star1ModelFile, 1, -1, 1, 0, 25, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star3ModelFile, 3, -1, 2, 0, 26, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star3ModelFile, 3, -1, 3, 0, 26, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star10ModelFile, 8, -1, 4, 0, 27, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 0, 0, 0, 24, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 1, 1, 0, 24, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 2, 2, 0, 32, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 3, 3, 0, 33, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 4, 4, 0, 34, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 5, 5, 0, 24, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 6, 6, 0, 24, 0},
+    {&gRegularDoorModelFile, 0, -1, -1, -1, 0, -1, 0},
+    {&gRegularDoorModelFile, &gObjDoor0StarModelFile, -1, -1, -1, 0, -1, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star1ModelFile, 1, -1, 0, 0, 25, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star1ModelFile, 1, -1, 1, 0, 25, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star3ModelFile, 3, -1, 2, 0, 26, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star3ModelFile, 3, -1, 3, 0, 26, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star10ModelFile, 8, -1, 4, 0, 27, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 0, 0, 0, 24, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 1, 1, 0, 24, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 2, 2, 0, 32, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 3, 3, 0, 33, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 4, 4, 0, 34, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 5, 5, 0, 24, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 6, 6, 0, 24, 0},
     {&gObjDoor1ModelFile, 0, -1, -1, -1, 0, -1, 0},
     {&gObjDoor2BoroModelFile, 0, -1, -1, -1, 0, -1, 0},
-    {&data_ov100_0214874c, 0, -1, -1, -1, 0, -1, 0},
+    {&gRustedMetalDoorModelFile, 0, -1, -1, -1, 0, -1, 0},
     {&gObjDoor4YamiModelFile, 0, -1, -1, -1, 0, -1, 0},
     {&gObjDoor5HorrorModelFile, 0, -1, -1, -1, 0, -1, 0},
 };
@@ -375,7 +373,7 @@ int daDoor_c::St_CharIntro_Main(int p) {
         } else {
             Sound::ChangeMusicVolume(0x7f, 0xcb33);
         }
-        ChangeState(&data_ov100_021488b4, p);
+        SetState(&data_ov100_021488b4, p);
     }
     return 1;
 }
@@ -387,7 +385,7 @@ int daDoor_c::St_CharIntro_Main(int p) {
    func_ov100_02144fcc reports the shared countdown done. Was a C source. */
 int daDoor_c::St_Wait_Main(int a1) {
     if (daDoor_c::func_ov100_02144fcc()) {
-        ChangeState(&data_ov100_021488b4, a1);
+        SetState(&data_ov100_021488b4, a1);
     }
     return 1;
 }
@@ -418,7 +416,7 @@ int daDoor_c::St_CharChange_Main(daPly_c *pl) {
         if (mTimer == 0) {
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 unsigned int ch = data_ov100_021480d0[mKeyModelIdx - 1];
-                if (ch == data_0209caa0.file.mCharacter)
+                if (ch == gSaveBlock.file.mCharacter)
                     ch = 3;
                 pl->SetRealCharacter(ch);
                 if (data_ov100_02148704 != 0) {
@@ -496,9 +494,9 @@ int daDoor_c::St_OpenClose_Main(daPly_c *player) {
     if (mModel.Finished() != 0) {
         int t;
         if (data_ov100_02148704 != 0)
-            ChangeState(&data_ov100_021488a4, (int)player);
+            SetState(&data_ov100_021488a4, (int)player);
         else
-            ChangeState(&data_ov100_021488b4, (int)player);
+            SetState(&data_ov100_021488b4, (int)player);
         if (mScale.z < 0)
             t = mAngle.x;
         else
@@ -514,7 +512,7 @@ int daDoor_c::St_OpenClose_Main(daPly_c *player) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x1c)) != 0) {
             gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
             if (param1 != DOOR_LAST_KEY_MODEL) {
-                Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
+                Sound::PlayCharVoice(gSaveBlock.file.mCharacter, 0x21, mCamSpacePos);
             } else if (data_ov100_02148704 == 0) {
                 player->PlayMammaMiaSound();
             }
@@ -575,8 +573,8 @@ int daDoor_c::St_UnlockingWithKey_Main(daPly_c *a2) {
             (((signed char *)data_ov100_02148204) +
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
-        data_0209caa0.file.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
-        ChangeState(&data_ov100_021488b4, (int)a2);
+        gSaveBlock.file.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
+        SetState(&data_ov100_021488b4, (int)a2);
     }
     return 1;
 }
@@ -636,7 +634,7 @@ int daDoor_c::St_UnlockingWithStar_Main(daPly_c *a2) {
             (((signed char *)data_ov100_02148204) +
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
-        data_0209caa0.file.flags1 |= DOOR_SAVE_STAR_UNLOCKED << sh;
+        gSaveBlock.file.flags1 |= DOOR_SAVE_STAR_UNLOCKED << sh;
         func_ov100_021451c4(&data_ov100_021488f4, a2);
     }
     return 1;
@@ -660,7 +658,7 @@ int daDoor_c::St_TalkingToPlayer_Main(daPly_c *r1) {
     daDoor_c::func_ov100_02145014();
     if (r1->GetTalkState() == -1) {
         if (func_ov100_021452e4(r1) == 0) {
-            ChangeState(&data_ov100_02148924, (int)r1);
+            SetState(&data_ov100_02148924, (int)r1);
         }
     }
     return 1;
@@ -706,23 +704,23 @@ int daDoor_c::St_StayClosed_Main(daPly_c *b) {
     if (func_ov100_021452e4(b)) {
         entry = &data_ov100_02148204[param1];
         if (entry->starsNeeded >= 0) {
-            if ((data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) == 0) {
+            if ((gSaveBlock.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) == 0) {
                 if (NumStars() < entry->starsNeeded) {
                     if (daDoor_c::func_ov100_02144f84() == 0)
                         return 1;
                     if (b->ShowMessage(*this, entry->msg, &mSpeed, 0, 2) != 0) {
-                        ChangeState(&data_ov100_021488c4, (int)b);
+                        SetState(&data_ov100_021488c4, (int)b);
                         return 1;
                     }
                 } else if (b->TryTalkToDoor(0) != 0) {
-                    ChangeState(&data_ov100_021488d4, (int)b);
+                    SetState(&data_ov100_021488d4, (int)b);
                     return 1;
                 }
             }
         } else {
             int e9 = entry->keyIndex;
             if (e9 >= 0) {
-                int val = data_0209caa0.file.flags1;
+                int val = gSaveBlock.file.flags1;
                 if ((val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift)) == 0) {
                     if ((val & (DOOR_SAVE_HAVE_KEY << e9)) == 0) {
                         if (daDoor_c::func_ov100_02144f84() == 0)
@@ -737,20 +735,20 @@ int daDoor_c::St_StayClosed_Main(daPly_c *b) {
                                 int inRange =
                                     (unsigned)idx2 >= DOOR_FIRST_KEY_MODEL && (unsigned)idx2 <= 0xb;
                                 if (!inRange) {
-                                    if (!(data_0209caa0.file.flags1 & 0xbe))
+                                    if (!(gSaveBlock.file.flags1 & 0xbe))
                                         sel = 0;
                                 }
                                 msg = sel ? entry->msg : 0x17;
                             }
                             if (b->ShowMessage(*this, (short)msg, &mSpeed, 0, 2) != 0) {
-                                ChangeState(&data_ov100_021488c4, (int)b);
+                                SetState(&data_ov100_021488c4, (int)b);
                                 if (entry->keyIndex == 5)
-                                    data_0209caa0.file.flags2 |= 0x10000;
+                                    gSaveBlock.file.flags2 |= 0x10000;
                                 return 1;
                             }
                         }
                     } else if (b->TryTalkToKeyDoor() != 0) {
-                        ChangeState(&data_ov100_021488e4, (int)b);
+                        SetState(&data_ov100_021488e4, (int)b);
                         return 1;
                     }
                 }
@@ -877,7 +875,7 @@ int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
     static Vector3 sEnterPos(0, 0, 0x64000);
     static Vector3 sEnterNeg(0, 0, -0x64000);
     func_ov100_02145170(r4, &sEnterPos, &sEnterNeg);
-    ChangeState(r5, (int)r4);
+    SetState(r5, (int)r4);
     SetTouchScreenDelay();
     return 1;
 }
@@ -924,11 +922,11 @@ daPly_c *daDoor_c::func_ov100_02145370() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- ChangeState, 0x021453d8, size 0x54 */
+/* ROM ordinal 25 -- SetState, 0x021453d8, size 0x54 */
 /* -------------------------------------------------------------------------- */
 /* Enter a state: store the address of the state table at +0x140 (mState) and
    call its enter member with the player, if it has one. */
-int daDoor_c::ChangeState(void *p, int a2) {
+int daDoor_c::SetState(void *p, int a2) {
     mState = p;
     daDoor_StateRecord *q = (daDoor_StateRecord *)mState;
     if (q->enter == 0)
@@ -944,7 +942,7 @@ s32 daDoor_c::CleanupResources() {
     DoorEntry *e = &data_ov100_02148204[param1];
     dExtSimpleModel_c *key;
     e->file->Release();
-    data_ov100_02148744.Release();
+    gDoorOpenAnimationFile.Release();
     key = mKeyModel;
     if (key != 0) {
         delete key;
@@ -1070,17 +1068,17 @@ s32 daDoor_c::InitResources() {
     b = b == 0;
     if (b != 0) {
         if (e->starsNeeded > 0) {
-            mKeyFile = &data_ov002_0211094c;
+            mKeyFile = &gPowerStarModelFile;
         } else if (e->keyIndex >= 0) {
             unsigned int t = param1;
             if (t >= DOOR_FIRST_KEY_MODEL && t <= DOOR_LAST_KEY_MODEL) {
                 mKeyModelIdx = (t - 8);
                 LoadKeyModels(mKeyModelIdx + 1);
-                mKeyFile = data_ov089_02132894[mKeyModelIdx + 1];
+                mKeyFile = gKeyModelFiles[mKeyModelIdx + 1];
                 if (param1 == 0xc)
                     mKeyModelIdx = 0;
             } else {
-                mKeyFile = &data_ov089_02132c50;
+                mKeyFile = &gKoopaKeyModelFile;
             }
         }
         if (mKeyFile != 0) {
@@ -1089,20 +1087,20 @@ s32 daDoor_c::InitResources() {
         }
     }
 
-    an = dExtFrameCtrl_c::LoadFile(data_ov100_02148744);
+    an = dExtFrameCtrl_c::LoadFile(gDoorOpenAnimationFile);
     mModel.SetAnim((BCA_File *)an, 0x40000000, 0x1000, 0);
 
     /* The model matrix takes the position >> 3. */
     Vec3_Asr(&scaledPos, &mPos, 3);
     MtxStack::transS(scaledPos.x, scaledPos.y, scaledPos.z);
     MtxStack::YrotM(mAngle.y);
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 
     if (e->keyFile != 0) {
         mKeyModel = new dExtSimpleModel_c;
         f = dExtSimpleModel_c::LoadFile(*e->keyFile);
         mKeyModel->SetFile((BMD_File *)f, 1, -1);
-        mKeyModel->mat4x3 = data_020a0e68;
+        mKeyModel->mat4x3 = gScratchMtx;
     }
 
     {
@@ -1122,9 +1120,9 @@ s32 daDoor_c::InitResources() {
     func_ov100_02145370();
 
     if (Abs(mScale.x) <= 0x4b000 && Abs(mScale.y) <= 0x32000 && Abs(mScale.z) <= 0x1f4000)
-        ChangeState(&data_ov100_02148914, r4);
+        SetState(&data_ov100_02148914, r4);
     else
-        ChangeState(&data_ov100_021488b4, r4);
+        SetState(&data_ov100_021488b4, r4);
     return 1;
 }
 

@@ -16,7 +16,7 @@
  *
  * What stays: data_ov002_0210d8b4 / 0210d774 are CLPS blocks this TU does
  *   not own.
- * What stays: data_0209caa0 / data_0209d684 / data_0209d660 are arm9
+ * What stays: gSaveBlock / data_0209d684 / data_0209d660 are arm9
  *   scratch/save globals.
  */
 
@@ -137,7 +137,7 @@ s32 daObjHatenaSwitch_c::InitResources() {
 
     mStaticMeshCollider.SetStoodOnCallback(&daObjHatenaSwitch_c::AfterClsnCallback);
 
-    if (data_0209caa0.file.flags1 & 0x80000000) {
+    if (gSaveBlock.file.flags1 & 0x80000000) {
         mActiveMeshCollider = &mMovingMeshCollider;
         mAnmModel.currFrame = mAnmModel.GetFrameCount() << 12;
         mAnmModel.Advance();
@@ -206,7 +206,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
                 if (mActiveMeshCollider->IsEnabled() != 0)
                     mActiveMeshCollider->Disable();
                 mActiveMeshCollider = &mMovingMeshCollider;
-                data_0209caa0.file.flags1 |= 0x80000000;
+                gSaveBlock.file.flags1 |= 0x80000000;
                 {
                     Vector3 position(mPos.x, mPos.y + 0x64000, mPos.z);
                     Particle::System::NewSimple(kPtclHatenaSwitchPressA, position.x, position.y,
@@ -224,7 +224,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
         }
     }
 
-    if ((data_0209caa0.file.flags1 & 0x80000000) == 0)
+    if ((gSaveBlock.file.flags1 & 0x80000000) == 0)
         mActiveMeshCollider = &mStaticMeshCollider;
 
     if (UpdateClsnState() == 0) {
@@ -263,9 +263,9 @@ s32 daObjHatenaSwitch_c::CleanupResources() {
 void daObjHatenaSwitch_c::UpdateModelTransform() {
     Vector3 shifted;
     Vec3_Asr(&shifted, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, shifted.x, shifted.y, shifted.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, shifted.x, shifted.y, shifted.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    mAnmModel.mat4x3 = gScratchMtx;
     mModel.mat4x3 = mAnmModel.mat4x3;
 }
 

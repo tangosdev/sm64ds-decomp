@@ -540,7 +540,7 @@ extension links `cpp_demangle`):
 
 | function | callees in the draft |
 |---|---|
-| [func_ov102_0214b53c](../src/game/actors/d_a_bmb.cpp) | `Matrix4x3_FromRotationY`, `MulMat4x3Mat4x3`, `Vec3_Lsl`, `Vec3_LslInPlace`, `IsFrontSliding`, `LostGrabbedObject`, `UpdateCarry`, [func_ov002_020e496c](../src/game/player/d_a_ply_methods.cpp) |
+| [func_ov102_0214b53c](../src/game/actors/d_a_bmb.cpp) | `Matrix4x3_FromRotationY`, `MulMat4x3Mat4x3`, `Vec3_Lsl`, `Vec3_LslInPlace`, `IsFrontSliding`, `LostGrabbedObject`, `UpdateCarry`, [daPly_c::GetBodyModel](../src/game/player/d_a_ply_methods.cpp) |
 | `OAM::Render` | `GetObjWidth`, `GetObjHeight`, `LoadAffineParams`, `fdiv` — and the function itself comes back as `OAM::Render(...)` with 10 parameters, not `FUN_02020994` |
 | [func_ov006_020dbe9c](../src/minigames/d_s_mg_coin.cpp) | [func_ov004_020b023c](../src/minigames/d_s_mg_base.cpp) — **correctly attributed to [ov004](../config/arm9/overlays/ov004/symbols.txt)** |
 

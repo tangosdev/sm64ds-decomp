@@ -76,8 +76,8 @@
  *   takes C*. The sixteen state labels are descriptions; the sinit owns
  *   the records. The header's 0x504 size wrap stays.
  * - Vec3_* / Matrix4x3_* have no shared header this TU
- *   can include alone. gCamera, data_020a0e68 and data_0209e650 are arm9
- *   globals. data_ov002_0210da30 is ov002's; Cleanup only Releases it.
+ *   can include alone. gCamera, gScratchMtx and data_0209e650 are arm9
+ *   globals. gScaleUpKinokoModelFile is ov002's; Cleanup only Releases it.
  *   g_profile_KING_DONKETU is outside this TU.
  * - Behavior's opt_propagation off is a push/pop around that function.
  * - void* cam in UpdateDefeat / 0212128c / 02121388: a dCamera_c*
@@ -214,18 +214,20 @@ extern daKing_Donketu_c::State data_ov073_02123410;
 extern "C" {
 
 struct BCA_File;
-extern SharedFilePtr data_ov002_0210da30;
+extern SharedFilePtr gScaleUpKinokoModelFile;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void MTX_MultVec43(const Vector3 *in, const Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern dCamera_c *gCamera;
-extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 gScratchMtx;
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
 extern fx32 Vec3_HorzLen(const Vector3 *v);
+/* local extern: the same CalcLib.h clash; the spelling CalcLib.h declares. */
+extern int Vec3_ApproachHorz(Vector3 *, Vector3 *, int);
 
 extern u16 DecIfAbove0_Short(void* p);
 /* local extern: CalcLib.h conflicts with DecIfAbove0_Short(void *). */
@@ -267,8 +269,8 @@ void daKing_Donketu_c::RenewLoopedParticles() {
     Vec3_HorzAngle(&mPos, &mSpawnPos);
     in.z = 0; in.z = 0xc8000; in.x = 0; in.y = 0;
     out.x = 0; out.y = 0; out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     pos.x = pos.x + out.x;
     pos.z = pos.z + out.z;
     mParticleId0 = Particle::System::New(mParticleId0, 0x77, pos.x, pos.y, pos.z, 0, 0);
@@ -303,12 +305,12 @@ void daKing_Donketu_c::SpawnLandingEffects(int strength) {
     Vector3 shifted;
     Vector3 dustPos;
     gCamera->func_0200d8c8(&mPos, strength);
-    data_020a0e68 = mBlendAnmModel.mat4x3;
-    MTX_Concat43(&mBlendAnmModel.data.transforms[mStepBoneIdx], &data_020a0e68, &data_020a0e68);
+    gScratchMtx = mBlendAnmModel.mat4x3;
+    MTX_Concat43(&mBlendAnmModel.data.transforms[mStepBoneIdx], &gScratchMtx, &gScratchMtx);
     mStepBoneIdx ^= 1;
-    bonePos.x = data_020a0e68.t.x;
-    bonePos.y = data_020a0e68.t.y;
-    bonePos.z = data_020a0e68.t.z;
+    bonePos.x = gScratchMtx.t.x;
+    bonePos.y = gScratchMtx.t.y;
+    bonePos.z = gScratchMtx.t.z;
     Vec3_Lsl(&shifted, &bonePos, 3);
     bonePos = shifted;
     if (mState == &data_ov073_02123360) {
@@ -325,8 +327,8 @@ void daKing_Donketu_c::SpawnLandingEffects(int strength) {
         rotated.x = 0;
         rotated.y = 0;
         rotated.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43(&offset, &data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43(&offset, &gScratchMtx, &rotated);
         pos.x += rotated.x;
         pos.z += rotated.z;
     }
@@ -342,8 +344,7 @@ void daKing_Donketu_c::SpawnLandingEffects(int strength) {
    the boss itself. The ROM copies the difference vector once more before
    reading it (`dir = diff`) and holds &b->mPos across the copy of mPos
    (`target`); both are needed for the bytes. */
-void daKing_Donketu_c::SpawnHitParticles(void *pb) {
-    dActor_c *b = (dActor_c *)pb;
+void daKing_Donketu_c::SpawnHitParticles(dActor_c *b) {
     Vector3 dir, pos, aim, diff;
     s16 yaw, pitch;
     fx32 radius, horz;
@@ -678,8 +679,8 @@ int daKing_Donketu_c::UpdateDefeatCutscene2() {
     la.y -= 0x300000;
     in.z = -0x55e000;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
 
     ps.x = ps.x + out.x;
     ps.y = ps.y + 0x200000;
@@ -752,8 +753,8 @@ int daKing_Donketu_c::UpdateDefeatCutscene1() {
     look.y += 0x100000;
     in.z = -0x59c000;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
 
     pos.y -= 0x100000;
     pos.x = pos.x + out.x;
@@ -845,8 +846,8 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
         } else {
             offset.z = 0x1e000;
         }
-        Matrix4x3_FromRotationY(&data_020a0e68, horz);
-        MTX_MultVec43(&offset, &data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&gScratchMtx, horz);
+        MTX_MultVec43(&offset, &gScratchMtx, &rotated);
         mSpeed.x = rotated.x;
         mSpeed.z = rotated.z;
         if (mSpeed.y < 0) {
@@ -945,9 +946,9 @@ int daKing_Donketu_c::UpdateWaypointHop() {
         out.y = 0;
         out.z = 0;
         in.z = 0x50000;
-        Matrix4x3_FromRotationY(&data_020a0e68, hz);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, hz);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, vt);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
         mSpeed.x = out.x;
         mSpeed.z = out.z;
     }
@@ -1016,9 +1017,9 @@ int daKing_Donketu_c::func_ov073_02120610() {
         out.y = 0;
         out.z = 0;
         in.z = 0x28000;
-        Matrix4x3_FromRotationY(&data_020a0e68, hz);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, hz);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, vt);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
         mSpeed.x = out.x;
         if (mStateScratch != 0 || mSpeed.y < 0) {
             mSpeed.y = out.y;
@@ -1115,12 +1116,12 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngle.y + 0x8000));
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, (s16)(mAngle.y + 0x8000));
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     in.x = mEdgePos.x + out.x;
     in.y = mEdgePos.y;
     in.z = mEdgePos.z + out.z;
-    Vec3_ApproachHorz(&mPos.x, &in, 0x14000);
+    Vec3_ApproachHorz(&mPos, &in, 0x14000);
     mAngle.y = Vec3_HorzAngle(&mPos, &mSpawnPos);
     mPrevAngle.y = mAngle.y + 0x8000;
     mStateScratch += 0x500;
@@ -1561,20 +1562,20 @@ void daKing_Donketu_c::UpdateModelAndShadow() {
     Vector3 *p;
 
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
 
     p = mFootPos;
-    mBlendAnmModel.mat4x3 = data_020a0e68;
+    mBlendAnmModel.mat4x3 = gScratchMtx;
     saved = &mBlendAnmModel.mat4x3;
     sh = 3;
     i = 0;
     for (; i < 2; i++) {
-        data_020a0e68 = *saved;
-        MTX_Concat43(&mBlendAnmModel.data.transforms[i + 2], &data_020a0e68, &data_020a0e68);
-        p->x = data_020a0e68.t.x;
-        p->y = data_020a0e68.t.y;
-        p->z = data_020a0e68.t.z;
+        gScratchMtx = *saved;
+        MTX_Concat43(&mBlendAnmModel.data.transforms[i + 2], &gScratchMtx, &gScratchMtx);
+        p->x = gScratchMtx.t.x;
+        p->y = gScratchMtx.t.y;
+        p->z = gScratchMtx.t.z;
         Vec3_Lsl(&out, p, sh);
         mFootPos[i].x = out.x;
         mFootPos[i].y = out.y;
@@ -1594,8 +1595,8 @@ void daKing_Donketu_c::UpdateModelAndShadow() {
     if (m == &data_ov073_02123370)
         return;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
-    mShadowMtx = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
+    mShadowMtx = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x3e8000, 0xf);
 }
 
@@ -1608,7 +1609,7 @@ int daKing_Donketu_c::CleanupResources() {
     gKingIceDonketuJumpEdAnimationFile.Release();
     gKingIceDonketuJumpStAnimationFile.Release();
     gKingIceDonketuWaitAnimationFile.Release();
-    data_ov002_0210da30.Release();
+    gScaleUpKinokoModelFile.Release();
     gKingIceDonketuModelModelFile.Release();
     return 1;
 }
@@ -1651,7 +1652,7 @@ int daKing_Donketu_c::Render()
  *
  * `opt_propagation off` is what stops the many position temporaries being
  * folded (without it Behavior is 0x428, not 0x42c: pitch's 0x2000 and the
- * data_020a0e68 address are folded instead of held in r4). It is bracketed to this one member: under `defer_codegen off` above,
+ * gScratchMtx address are folded instead of held in r4). It is bracketed to this one member: under `defer_codegen off` above,
  * the bracket binds positionally, so the members before and after it keep
  * the file's default propagation. The closing `#pragma pop` must NOT follow
  * Behavior's closing brace directly: the parser reads one token past the `}`
@@ -1662,7 +1663,7 @@ int daKing_Donketu_c::Render()
  * Kept (#821, measured 2026-11-16 against ov073 0x021218a0, 0x42c):
  *   - bracket removed: 0x428; fdiff aligns 182 of 267 words, 85 replaced and
  *     1 deleted. `this` moves from r5 to r4 for the whole body, because r4 no
- *     longer holds the data_020a0e68 address across the ldm/stm copy and
+ *     longer holds the gScratchMtx address across the ldm/stm copy and
  *     MTX_Concat43, or 0x2000 across Matrix4x3_FromRotationY.
  *   - the same pragma at file level (no bracket): Behavior matches, but 10
  *     other members stop matching (SpawnHitParticles, UpdateDefeat,
@@ -1670,7 +1671,7 @@ int daKing_Donketu_c::Render()
  *     EnterHitReaction, UpdateChase, UpdateIntroTalkEnd,
  *     UpdateModelAndShadow and InitResources).
  *   - bracket removed, matrix block spelled as `Matrix4x3 *m =
- *     &data_020a0e68`, as `Matrix4x3 &m = data_020a0e68`, or with the bone
+ *     &gScratchMtx`, as `Matrix4x3 &m = gScratchMtx`, or with the bone
  *     position as one Vector3 copy from m[9]: each is 0x428, the same 85
  *     replaced words.
  *   SpawnLandingEffects (0x0211f2c0) is the same copy-and-concat block, and
@@ -1679,7 +1680,7 @@ int daKing_Donketu_c::Render()
  * the `C *` alias: with the bracket removed it is still 0x428, and the same
  * 182 equal / 85 replaced / 1 deleted words, so the launders were not what
  * needed the pragma. Ignoring register names (fdiff --align-shape), only two
- * sites differ: after MTX_Concat43 the bone reads reload &data_020a0e68 from
+ * sites differ: after MTX_Concat43 the bone reads reload &gScratchMtx from
  * the literal pool instead of using the copy held in r4, and 0x2000 goes to
  * Matrix4x3_ApplyInPlaceToRotationX as an immediate instead of being held in
  * r4 from before the dir.z if/else. Both are copy/constant propagation
@@ -1732,11 +1733,11 @@ int daKing_Donketu_c::Behavior()
 
     if ((mState == &data_ov073_02123330 || mState == &data_ov073_02123350) &&
         mBlendAnmModel.WillHitFrame(7) != 0) {
-        data_020a0e68 = mBlendAnmModel.mat4x3;
-        MTX_Concat43(&mBlendAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        bonePos.x = data_020a0e68.t.x;
-        bonePos.y = data_020a0e68.t.y;
-        bonePos.z = data_020a0e68.t.z;
+        gScratchMtx = mBlendAnmModel.mat4x3;
+        MTX_Concat43(&mBlendAnmModel.data.transforms[2], &gScratchMtx, &gScratchMtx);
+        bonePos.x = gScratchMtx.t.x;
+        bonePos.y = gScratchMtx.t.y;
+        bonePos.z = gScratchMtx.t.z;
         Vec3_Lsl(&shifted, &bonePos, 3);
         bonePos = shifted;
         func_02012694(SND_ANIM_FRAME_STOMP, &mCamSpacePos);
@@ -1768,9 +1769,9 @@ int daKing_Donketu_c::Behavior()
             dir.z = 0x258000;
         else
             dir.z = 0x12c000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, pitch);
-        MTX_MultVec43(&dir, &data_020a0e68, &ray);
+        Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, pitch);
+        MTX_MultVec43(&dir, &gScratchMtx, &ray);
         end = start;
         end.x += ray.x;
         end.y += ray.y;
@@ -1824,7 +1825,7 @@ int daKing_Donketu_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gKingIceDonketuJumpEdAnimationFile);
     dExtFrameCtrl_c::LoadFile(gKingIceDonketuJumpStAnimationFile);
     dExtFrameCtrl_c::LoadFile(gKingIceDonketuWaitAnimationFile);
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+    dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
     f = dExtSimpleModel_c::LoadFile(gKingIceDonketuModelModelFile);
     mBlendAnmModel.SetFile(f, 1, -1);
     mShadowModel.InitCylinder();

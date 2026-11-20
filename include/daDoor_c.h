@@ -58,7 +58,7 @@ class daPly_c;
  * include/dBgActor_c.h takes before its own dExtSimpleModel_c member). That leaves
  * 0x138..0x147 (0x10 = 16 bytes) as this class's own storage, touched by the sources in src/game/actors/d_a_door.cpp: two pointers at
  * 0x138/0x13c, a state pointer at 0x140 (read in Behavior as a
- * pointer-to-member dispatch, written by ChangeState), a key-model
+ * pointer-to-member dispatch, written by SetState), a key-model
  * index byte at 0x144 and a countdown byte at 0x145 (touched only by the
  * state helpers). 0x146..0x147 are untouched padding.
  *
@@ -106,20 +106,20 @@ struct daDoor_c : dActor_c {
          mKeyFile   -- a separate file the door pre-loads (dExtSimpleModel_c::LoadFile) only
                        in game mode 0 and Release()s in CleanupResources; it is
                        not mKeyModel's file (that is e->keyFile). Three
-                       sources: data_ov002_0211094c when the entry's
-                       starsNeeded is positive, data_ov089_02132894[mKeyModelIdx
+                       sources: gPowerStarModelFile when the entry's
+                       starsNeeded is positive, gKeyModelFiles[mKeyModelIdx
                        + 1] for a key door in the param1 9..0xd range, else
-                       data_ov089_02132c50; it stays null for a door with
+                       gKoopaKeyModelFile; it stays null for a door with
                        neither stars nor a key.
          mKeyModelIdx -- param1 - 8 for the 9..0xd range, re-zeroed for param1
                        0xc; mKeyModelIdx + 1 (taken before that re-zero, so
-                       param1 - 7) indexes LoadKeyModels/data_ov089_02132894.
+                       param1 - 7) indexes LoadKeyModels/gKeyModelFiles.
        [src/game/actors/d_a_door.cpp] */
     dExtSimpleModel_c *mKeyModel; /* 0x138 -- owned, see SIZE above */
     void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
     /* The current state: a 16-byte {enter, execute} pair of
        pointers-to-member, one of the nine tables data_ov100_021488a4 ..
-       data_ov100_02148924. ChangeState stores it and calls the enter
+       data_ov100_02148924. SetState stores it and calls the enter
        half; Behavior calls the execute half, a `void (daDoor_c::*)(int)` at
        +0x8, on this daDoor_c. [src/game/actors/d_a_door.cpp] */
     void *mState;                 /* 0x140 -- the state pair, see SIZE above */
@@ -155,7 +155,7 @@ struct daDoor_c : dActor_c {
        execute half always receives the player (as daPly_c* or, where the
        body only forwards it, the int the dispatch carries).
 
-       The St_<state>_Init / St_<state>_Main spelling and ChangeState are
+       The St_<state>_Init / St_<state>_Main spelling and SetState are
        reconstructions, not ROM text: they follow daStarGate_c
        (include/daStarGate_c.h), the adjacent ov100 class whose state machine
        is the same 0x10 two-PTMF record driven the same way, and each name is
@@ -186,7 +186,7 @@ struct daDoor_c : dActor_c {
     int func_ov100_021451c4(void *r5, daPly_c *r4);                /* send the player through */
     int func_ov100_021452e4(daPly_c *r1);     /* player inside the door's box */
     daPly_c *func_ov100_02145370();           /* the current player */
-    int ChangeState(void *p, int a2);         /* the state installer */
+    int SetState(void *p, int a2);            /* the state installer */
 };
 
 /* Holds the chain to the size daDoor_c_classInit's operator new(0x148) call

@@ -296,8 +296,6 @@ void daCoin_c::Step() {
  * FLOOR_DYNAMIC drops it 500 units with a fixed radius; FLOOR_FIXED sizes it
  * from the distance down to mFloorPosY. */
 void daCoin_c::UpdateModelMatrix() {
-    extern Matrix4x3 IDENTITY_MATRIX4X3;
-
     int inYoshiMouth;
     int floorState;
 
@@ -713,15 +711,15 @@ s32 daCoin_c::CleanupResources()
      * manager that spawned it and, unless it is disappearing on a timer, puts up
      * the collection sparkle a little above itself. */
     extern SharedFilePtr data_ov002_0210d9a8;
-    extern SharedFilePtr *const data_ov002_020ff06c[];
-    extern SharedFilePtr *const data_ov002_020ff060[];
+    extern SharedFilePtr *const sCoinPoly32ModelFiles[];
+    extern SharedFilePtr *const sCoinPoly4ModelFiles[];
 
     dActor_c *manager;
     if (IsActorID(this, 0x121))
         data_ov002_0210d9a8.Release();
     if (mCoinType == COIN_BLUE) {
-        data_ov002_020ff06c[mCoinType]->Release();
-        data_ov002_020ff060[mCoinType]->Release();
+        sCoinPoly32ModelFiles[mCoinType]->Release();
+        sCoinPoly4ModelFiles[mCoinType]->Release();
     }
     UntrackStar(mTrackStarID);
     manager = dActor_c::FindWithID(mPuzzleManagerID);
@@ -822,13 +820,12 @@ s32 daCoin_c::InitResources()
      * each one changes the code (measured per site); the plain `&=`/`|=`
      * sites take the member as is. */
 
-    extern Matrix4x3 IDENTITY_MATRIX4X3;
     extern s8 gCurrentSublevel;
     extern u8 gCurrentStarId;
     extern dActor_c *STAR_MARKERS[12];
     extern u8 gGameMode;
-    extern SharedFilePtr *const data_ov002_020ff06c[];
-    extern SharedFilePtr *const data_ov002_020ff060[];
+    extern SharedFilePtr *const sCoinPoly32ModelFiles[];
+    extern SharedFilePtr *const sCoinPoly4ModelFiles[];
     extern SharedFilePtr data_ov002_0210d9a8;
 
     s32 ccRadius;
@@ -918,19 +915,22 @@ s32 daCoin_c::InitResources()
 
     type = mCoinType;
     if (type < COIN_BLUE) {
-        if (mCommonModel1.SetFile((BMD_File *)data_ov002_020ff06c[type]->filePtr, 1, 1) == 0) {
+        if (mCommonModel1.SetFile((BMD_File *)sCoinPoly32ModelFiles[type]->filePtr, 1, 1) == 0) {
             return 0;
         }
-        if (mCommonModel2.SetFile((BMD_File *)data_ov002_020ff060[mCoinType]->filePtr, 1, 1) == 0) {
+        if (mCommonModel2.SetFile((BMD_File *)sCoinPoly4ModelFiles[mCoinType]->filePtr, 1, 1) ==
+            0) {
             return 0;
         }
     } else {
-        dExtSimpleModel_c::LoadFile(*data_ov002_020ff06c[type]);
-        dExtSimpleModel_c::LoadFile(*data_ov002_020ff060[mCoinType]);
-        if (mCommonModel1.SetFile((BMD_File *)data_ov002_020ff06c[mCoinType]->filePtr, 1, 1) == 0) {
+        dExtSimpleModel_c::LoadFile(*sCoinPoly32ModelFiles[type]);
+        dExtSimpleModel_c::LoadFile(*sCoinPoly4ModelFiles[mCoinType]);
+        if (mCommonModel1.SetFile((BMD_File *)sCoinPoly32ModelFiles[mCoinType]->filePtr, 1, 1) ==
+            0) {
             return 0;
         }
-        if (mCommonModel2.SetFile((BMD_File *)data_ov002_020ff060[mCoinType]->filePtr, 1, 1) == 0) {
+        if (mCommonModel2.SetFile((BMD_File *)sCoinPoly4ModelFiles[mCoinType]->filePtr, 1, 1) ==
+            0) {
             return 0;
         }
     }
@@ -1054,20 +1054,20 @@ CoinHandler data_ov002_0210dc70[9] = {
     &daCoin_c::StateFollowTarget};
 
 /* Initialized data this file is the only complete referrer for. */
-extern "C" char data_ov002_0210da48;
-extern "C" char data_ov002_0210da50;
-extern SharedFilePtr data_ov002_0210da00;
-extern SharedFilePtr data_ov002_0210d9b8;
-extern SharedFilePtr data_ov002_0210d9f8;
-extern SharedFilePtr data_ov002_0210d9c8;
-extern SharedFilePtr *const data_ov002_020ff060[3] = {
-    (SharedFilePtr *)&data_ov002_0210da48,
-    (SharedFilePtr *)&data_ov002_0210da50,
-    &data_ov002_0210da00,
+extern SharedFilePtr gCoinYellowPoly4ModelFile;
+extern SharedFilePtr gCoinRedPoly4ModelFile;
+extern SharedFilePtr gCoinBluePoly4ModelFile;
+extern SharedFilePtr gCoinYellowPoly32ModelFile;
+extern SharedFilePtr gCoinRedPoly32ModelFile;
+extern SharedFilePtr gCoinBluePoly32ModelFile;
+extern SharedFilePtr *const sCoinPoly4ModelFiles[3] = {
+    &gCoinYellowPoly4ModelFile,
+    &gCoinRedPoly4ModelFile,
+    &gCoinBluePoly4ModelFile,
 };
-extern SharedFilePtr *const data_ov002_020ff06c[3] = {
-    &data_ov002_0210d9b8,
-    &data_ov002_0210d9f8,
-    &data_ov002_0210d9c8,
+extern SharedFilePtr *const sCoinPoly32ModelFiles[3] = {
+    &gCoinYellowPoly32ModelFile,
+    &gCoinRedPoly32ModelFile,
+    &gCoinBluePoly32ModelFile,
 };
 extern const int data_ov002_020ff078[6] = {5, 0, 0, 10, 15, 20};

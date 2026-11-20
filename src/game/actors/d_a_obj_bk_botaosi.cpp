@@ -33,7 +33,7 @@
  *   does for its pair.
  * - data_ov015_02113574 is the CLPS block in overlay .data that
  *   this TU does not own; FX_SinCosTable_ is arm9's sin/cos table,
- *   data_020a0e68 arm9's scratch matrix, and gCurrentStarId / gCurrentSublevel
+ *   gScratchMtx arm9's scratch matrix, and gCurrentStarId / gCurrentSublevel
  *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel and Vec3_Add
  *   have no shared header, so they keep a local extern "C" block.
  * - g_profile_BK_BOTAOSI lives outside this TU.
@@ -315,8 +315,8 @@ int daObjBk_Botaosi_c::InitResources() {
     b.y = 0;
     b.z = 0;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&a, &data_020a0e68, &b);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&a, &gScratchMtx, &b);
     Vec3_Add(&c, &b, &mPos);
     c.y += 0x14000;
     /* The floor probe under the swing's far end. The ROM destroys it on
@@ -334,8 +334,8 @@ int daObjBk_Botaosi_c::InitResources() {
     b.y = 0;
     b.z = 0;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&a, &data_020a0e68, &b);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&a, &gScratchMtx, &b);
     Vec3_Add(&d, &b, &mPos);
 
     one = 1;

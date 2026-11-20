@@ -6,6 +6,8 @@
 #include "dExtAnmTexSRT_c.h"
 #include "Vector2.h"
 
+struct VecFx32;
+
 struct TrampolineObjectCallbacks;
 
 /* TrmpItem, one of Trampoline2's floating rings (its three models are
@@ -50,7 +52,7 @@ struct TrmpItem {
     void ProjectOnLine(TrampolineObjectCallbacks *jumper, Vector2 *current, Vector2 *previous);
     void UpdateMatrix();
     void Update();
-    void Init(int *position, int *normal, int itemType, short motionType);
+    void Init(const VecFx32 *pos, const Vector3 *normal, int itemType, short motion);
     void Hide();
     void Load();
 
@@ -61,7 +63,7 @@ struct TrmpItem {
     static void HideAll(u32);
     static void ReleaseFiles();
     static void LoadAll(char *items, int count);
-    static TrmpItem *Spawn(int position, int *normal, int itemType, short motionType);
+    static TrmpItem *Spawn(const VecFx32 *pos, const Vector3 *normal, int itemType, short motion);
 
     void (TrmpItem::*mState)(); /* 0x000 -- the current motion */
     Vector3 mPos;         /* 0x008 */

@@ -8,7 +8,7 @@
    byte layout; the configured labels inside it keep their symbols.txt
    addresses (the linker script defines them at their ROM address).
 
-   PATH_NODES, NUM_PATHS, data_020a0d90, data_020a0db0, data_020a0db4
+   PATH_NODES, NUM_PATHS, gBuildTimeString, gGlobalTimer, data_020a0db4
 */
 #include "types.h"
 

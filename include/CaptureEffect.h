@@ -1,8 +1,8 @@
 #ifndef CAPTUREEFFECT_H
 #define CAPTUREEFFECT_H
 
-/* The sound-capture effect at data_020a4c64. func_02049cd8 starts the
- * capture with func_02049ba8 as its callback and &data_020a4c64 as the
+/* The sound-capture effect at gCaptureEffect. func_02049cd8 starts the
+ * capture with func_02049ba8 as its callback and &gCaptureEffect as the
  * callback's argument; func_02049c48 switches the kind. On each captured
  * buffer func_02049ba8 runs the optional user callback, then the built-in
  * effect for kind: 0 none, 1 the stereo widener func_020499bc, 2 the
@@ -41,9 +41,7 @@ typedef char CaptureEffect_size_must_be_0xcc[sizeof(CaptureEffect) == 0xcc ? 1 :
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern CaptureEffect data_020a4c64;
-/* data_020a4c64.work: the ROM addresses it by its own symbol. */
-extern CaptureEffectWork data_020a4c70;
+extern CaptureEffect gCaptureEffect;
 
 void func_02049ba8(void *, void *, unsigned int, int, CaptureEffect *);
 void func_020499bc(short *, short *, unsigned int, CaptureEffect *);

@@ -8,8 +8,8 @@
    byte layout; the configured labels inside it keep their symbols.txt
    addresses (the linker script defines them at their ROM address).
 
-   data_020a4bbc, data_020a4bc0, data_020a4bc4, data_020a4bc8, data_020a4bcc,
-   data_020a4bd0, data_020a4bd4, data_020a4bd8, ...and 113 more
+   data_020a4bbc, data_020a4bc0, data_020a4bc4, sVramTex4x4TexelDataStart, sVramPalStart,
+   data_020a4bd0, data_020a4bd4, sVramPalEnd, ...and 113 more
 */
 #include "types.h"
 

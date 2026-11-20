@@ -108,7 +108,7 @@ struct daIbl_c : dEnemyBase_c {
     s32                          mMinSpawnDist;         /* 0x3c0 */
     s32                          mMaxSpawnDist;         /* 0x3c4 */
     /* Kind 3's Y floor: below it, or on touching a wall, the ball breaks up.
-       InitResources seeds it from data_02092138 (STAR_CAP_MIN_POS_Y in
+       InitResources seeds it from gLevelMinY (STAR_CAP_MIN_POS_Y in
        symbols/verified.tsv) and overrides it in three levels. */
     s32                          mKillY;                /* 0x3c8 */
     /* Sound::PlayLong's return, fed back on the next call (the rolling sound);

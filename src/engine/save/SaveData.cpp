@@ -23,7 +23,7 @@
  * d_a_obj_mario_cap.cpp) clears it with the lost-cap bit. mwccarm emits .text in reverse source order, so the
  * definitions below run ROM-descending; the roster reads ROM-ascending.
  *
- *   func_02013568..func_02013638 -- minigame record tables, seen and unlock bits.
+ *   func_02013568..IsMinigameUnlocked -- minigame record tables, seen and unlock bits.
  *   SetCoinRecordIfHigher..func_02013944 -- coin and star records, cannons,
  *     minigame keys, character intros, the rabbit-count bit.
  *   NumGlowingRabbitsFound -- rabbit bits 20..27 of the flags word.
@@ -62,16 +62,16 @@ extern void ClearCapHeldByToad(void); /* forward: called by func_02013a88 above 
 extern void UnlockMinigame(int minigame); /* forward: defined at the end of this file */
 
 void ClearSaveBlock(void) {
-    MI_CpuClear8(&data_0209caa0, 0x32c);
+    MI_CpuClear8(&gSaveBlock, 0x32c);
 }
 
 u32 SaveData::EraseAllSaveData() {
     u32 rc;
-    rc = SaveData::EraseSaveFile(0, (char *)&data_0209caa0.file);
-    rc |= SaveData::EraseSaveFile(1, (char *)&data_0209caa0.file);
-    rc |= SaveData::EraseSaveFile(2, (char *)&data_0209caa0.file);
-    SaveData::SetDefaultValuesMg(&data_0209caa0.mg);
-    return rc | SaveData::SaveMinigames(&data_0209caa0.mg);
+    rc = SaveData::EraseSaveFile(0, (char *)&gSaveBlock.file);
+    rc |= SaveData::EraseSaveFile(1, (char *)&gSaveBlock.file);
+    rc |= SaveData::EraseSaveFile(2, (char *)&gSaveBlock.file);
+    SaveData::SetDefaultValuesMg(&gSaveBlock.mg);
+    return rc | SaveData::SaveMinigames(&gSaveBlock.mg);
 }
 
 void SaveData::SetDefaultValues(FileSaveData *fsd_) {
@@ -90,7 +90,7 @@ int SaveData::ReadFileData(u32 fileID, FileSaveData *dest) {
             return 1;
         return 0;
     }
-    dest->minigameRabbits &= data_0209caa0.mg.unlocked;
+    dest->minigameRabbits &= gSaveBlock.mg.unlocked;
     return 1;
 }
 
@@ -111,7 +111,7 @@ int SaveData::EraseSaveFile(u32 fileID, char *saveArea) {
 extern "C" int func_02013c84(int fileID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
     MI_CpuCopy8(src, dest, 0x44);
     if (fileIndex < 0) {
-        data_0209caa0.activeFile = fileID;
+        gSaveBlock.activeFile = fileID;
         return 1;
     }
     return SaveData::SaveFile(fileIndex, dest);
@@ -140,9 +140,9 @@ int SaveData::SaveMinigames(MinigameSaveData *data) {
 }
 
 int SaveData::SaveCurrentFile() {
-    if (!SaveData::SaveFile(data_0209caa0.activeFile, &data_0209caa0.file))
+    if (!SaveData::SaveFile(gSaveBlock.activeFile, &gSaveBlock.file))
         return 0;
-    return SaveData::SaveMinigames(&data_0209caa0.mg);
+    return SaveData::SaveMinigames(&gSaveBlock.mg);
 }
 
 static inline int IsVsMode(void) {
@@ -150,7 +150,7 @@ static inline int IsVsMode(void) {
 }
 
 int SaveData::CanPlayerHaveCap() {
-    if (data_0209caa0.file.mCharacter != 3) {
+    if (gSaveBlock.file.mCharacter != 3) {
         if (!IsVsMode())
             return 1;
     }
@@ -160,43 +160,43 @@ int SaveData::CanPlayerHaveCap() {
 int SaveData::HasPlayerLostCap() {
     if (!SaveData::CanPlayerHaveCap())
         return 0;
-    return data_0209caa0.file.flags1 & (0x1000000u << data_0209caa0.file.mCharacter);
+    return gSaveBlock.file.flags1 & (0x1000000u << gSaveBlock.file.mCharacter);
 }
 
 void SaveData::PlayerLoseCap() {
     if (!SaveData::CanPlayerHaveCap())
         return;
-    data_0209caa0.file.flags1 |= (0x1000000u << data_0209caa0.file.mCharacter);
+    gSaveBlock.file.flags1 |= (0x1000000u << gSaveBlock.file.mCharacter);
 }
 
 void func_02013a88(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
-    data_0209caa0.file.flags1 &= ~(0x1000000u << data_0209caa0.file.mCharacter);
+    gSaveBlock.file.flags1 &= ~(0x1000000u << gSaveBlock.file.mCharacter);
     ClearCapHeldByToad();
 }
 
 extern "C" int func_02013a44(void) {
     if (!SaveData::CanPlayerHaveCap())
         return 0;
-    return data_0209caa0.file.flags1 & (0x8000000u << data_0209caa0.file.mCharacter);
+    return gSaveBlock.file.flags1 & (0x8000000u << gSaveBlock.file.mCharacter);
 }
 
 void func_02013a00(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
-    data_0209caa0.file.flags1 |= (0x8000000u << data_0209caa0.file.mCharacter);
+    gSaveBlock.file.flags1 |= (0x8000000u << gSaveBlock.file.mCharacter);
 }
 
 void ClearCapHeldByToad(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
-    data_0209caa0.file.flags1 &= ~(0x8000000u << data_0209caa0.file.mCharacter);
+    gSaveBlock.file.flags1 &= ~(0x8000000u << gSaveBlock.file.mCharacter);
 }
 
 int SaveData::NumGlowingRabbitsFound() {
     int count = 0;
-    int f = data_0209caa0.file.flags2;
+    int f = gSaveBlock.file.flags2;
     unsigned int mask = 0x100000;
     int i = 0;
     do {
@@ -211,23 +211,23 @@ int SaveData::NumGlowingRabbitsFound() {
 /* Sets flags2 bit (0x100000 << rabbit count). At 7 rabbits, also sets flags1 bit 0x80. */
 void func_02013944(void) {
     int count = SaveData::NumGlowingRabbitsFound();
-    data_0209caa0.file.flags2 |= (0x100000u << count);
+    gSaveBlock.file.flags2 |= (0x100000u << count);
     if (count >= 7)
-        data_0209caa0.file.flags1 |= 0x80u;
+        gSaveBlock.file.flags1 |= 0x80u;
 }
 
 s32 SaveData::IsCharacterUnlocked(u32 character) {
-    return data_0209caa0.file.flags2 & (1 << character);
+    return gSaveBlock.file.flags2 & (1 << character);
 }
 
 void SaveData::SetCharacterIntro(s32 character) {
-    data_0209caa0.file.flags2 |= 1 << character;
+    gSaveBlock.file.flags2 |= 1 << character;
 }
 
 int func_020138dc(void) {
     int count = 0;
     int i;
-    int f = data_0209caa0.file.minigameRabbits;
+    int f = gSaveBlock.file.minigameRabbits;
     for (i = 0; i < 28; i++) {
         if (f & (1 << i))
             count++;
@@ -237,11 +237,11 @@ int func_020138dc(void) {
 
 extern "C" int func_02013890(int rabbit, int character) {
     if (character < 0) {
-        int f = data_0209caa0.file.minigameRabbits;
+        int f = gSaveBlock.file.minigameRabbits;
         int m = 0xf << (rabbit * 4);
         return (f & m) == m;
     } else {
-        int f = data_0209caa0.file.minigameRabbits;
+        int f = gSaveBlock.file.minigameRabbits;
         return f & (1 << (character | (rabbit << 2)));
     }
 }
@@ -250,16 +250,16 @@ extern "C" int func_02013890(int rabbit, int character) {
    marks it in the file and unlocks the minigame of the same index. */
 void CollectMinigameKey(int rabbit, int character) {
     int minigame = (rabbit << 2) | character;
-    data_0209caa0.file.minigameRabbits |= 1 << minigame;
+    gSaveBlock.file.minigameRabbits |= 1 << minigame;
     UnlockMinigame(minigame);
 }
 
 int IsCannonOpen(int n) {
-    return data_0209caa0.file.cannonFlags & (1 << n);
+    return gSaveBlock.file.cannonFlags & (1 << n);
 }
 
 void OpenCannon(int n) {
-    data_0209caa0.file.cannonFlags |= 1 << n;
+    gSaveBlock.file.cannonFlags |= 1 << n;
 }
 
 int IsCannonOpenInLevel(s8 levelID) {
@@ -340,20 +340,20 @@ void SaveData::SetCoinRecordIfHigher(int courseID, u8 coins) {
  * one). The record tables at block + 0x54, five words each, are what
  * src/minigames/d_s_mg_base.cpp reads and writes. */
 
-int func_02013638(int minigame) {
-    return data_0209caa0.mg.unlocked & (1 << minigame);
+int IsMinigameUnlocked(int minigame) {
+    return gSaveBlock.mg.unlocked & (1 << minigame);
 }
 
 void UnlockMinigame(int minigame) {
-    data_0209caa0.mg.unlocked |= 1 << minigame;
+    gSaveBlock.mg.unlocked |= 1 << minigame;
 }
 
 int func_020135d0(int minigame) {
     int res;
     if (minigame < 28) {
-        res = !(data_0209caa0.mg.seenLo & (1 << minigame));
+        res = !(gSaveBlock.mg.seenLo & (1 << minigame));
     } else {
-        res = !(data_0209caa0.mg.seenHi & (1 << (minigame - 28)));
+        res = !(gSaveBlock.mg.seenHi & (1 << (minigame - 28)));
     }
     return res;
 }
@@ -362,8 +362,8 @@ int func_020135d0(int minigame) {
  * on ARM sets no bit; only the word store takes effect. */
 void func_02013598(int minigame) {
     if (minigame < 28)
-        data_0209caa0.mg.seenLo |= 1 << minigame;
-    data_0209caa0.mg.seenHi |= 1 << (minigame - 28);
+        gSaveBlock.mg.seenLo |= 1 << minigame;
+    gSaveBlock.mg.seenHi |= 1 << (minigame - 28);
 }
 
 int func_02013580(int table, int index) {

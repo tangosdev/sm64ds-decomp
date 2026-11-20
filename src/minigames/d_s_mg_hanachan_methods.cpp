@@ -28,11 +28,8 @@
  * does not establish the original translation-unit boundary.
  *
  * leftovers:
- * - the sixteen popups at sHanaPopups are read through
- *   four record spellings (HanaPopup_DrawAll, HanaPopup_UpdateAll,
- *   HanaPopup_Spawn, HanaPopup_ClearAll).
- * - the popup at sHanaStarPopup is read through the file-local
- *   HanaStarPopup view, and StarPopup_Update reaches its timer byte
+ * - the popup at sHanaStarPopup is declared as the file-local
+ *   HanaStarPopup record, and StarPopup_Update reaches its timer byte
  *   through a separate symbol, sHanaStarPopups.
  * - Wiggler::DrawTarget repeats Wiggler::DrawField's segment
  *   walk with Vector2 points, whose declared destructor is part of
@@ -86,8 +83,10 @@ extern int sHanaFieldWigglerCount;
 void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
 
-/* Kept (#821 r72): DrawField's points as Vector2 give 0x3d8 against the
-   ROM's 0x3e0; this plain pair keeps the frame. */
+/* Kept (#821 r72): DrawField's vb0 and s3.vc0 as Vector2 give 0x3d8 against
+   the ROM's 0x3e0; this plain pair keeps the frame. Re-measured 2026-11-19:
+   vb0 as Vector2 still differs by 22 words, while the grouped points in `s`
+   are Vector2 with identical bytes. */
 typedef struct {
     int x, y;
 } Vec2;
@@ -152,14 +151,15 @@ s16 atan2(s32, s32);
 extern "C" {
 /* This TU's own functions. */
 
-extern void *sWigglerSprites[];
+extern OamAttr *sWigglerSprites[];
 OamAttr data_ov006_021375b8[1] = {{0x00f0, 0x81f0, 0x3104, 0xffff}};
 OamAttr data_ov006_021375b0[1] = {{0x00f8, 0x41f8, 0x305e, 0xffff}};
 OamAttr data_ov006_021375a8[1] = {{0x00f8, 0x41f8, 0x301e, 0xffff}};
-void *sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0, data_ov006_021375a8};
+OamAttr *sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0,
+                                        data_ov006_021375a8};
 OamAttr data_ov006_02137598[1] = {{0x40f8, 0x81f0, 0x314a, 0xffff}};
 OamAttr data_ov006_02137590[1] = {{0x40f8, 0x81f0, 0x310a, 0xffff}};
-void *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
+OamAttr *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
 
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
@@ -173,9 +173,6 @@ extern const int sHanaFieldWigglerCounts[10] = {3, 4, 5, 4, 6, 3, 4, 5, 15, 15};
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 
-/* These helpers read or write two scalar words. Cast the Vector2 points
-   at the C ABI boundary rather than giving the externs new types. */
-extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 /* sHanaPickedLow is only read where it is unsigned and only written as a
    halfword, so the unsigned spelling costs the writer nothing. */
 extern unsigned short sHanaPickedLow;
@@ -194,27 +191,21 @@ extern void Hana_LoadBackground(void);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
-extern int func_0203d5dc(const int *a, const int *b);
 
-struct S_ea81c {
-    int x;                 /* +0x0 */
-    int y;                 /* +0x4 */
-    int z;                 /* +0x8 */
-    short w;               /* +0xc */
-    unsigned char inuse;   /* +0xe */
-    unsigned char f;       /* +0xf */
-    unsigned char g;       /* +0x10 */
-    unsigned char pad;     /* +0x11 */
-    unsigned char pad2[2]; /* +0x12 -> stride 0x14 */
+/* One of the sixteen popups at sHanaPopups, 0x14 bytes each. */
+struct HanaPopup {
+    int x;                 /* +0x00 */
+    int y;                 /* +0x04 */
+    int velY;              /* +0x08 */
+    unsigned short timer;  /* +0x0c */
+    unsigned char active;  /* +0x0e */
+    unsigned char visible; /* +0x0f */
+    unsigned char phase;   /* +0x10 */
+    unsigned char pad[3];
 };
 
-/* The popup records: one at sHanaStarPopup and sixteen at
-   sHanaPopups, 0x14 bytes each. The sixteen are declared with
-   HanaPopup_Spawn's layout, which it needs to match; the other
-   functions keep the spelling their own match used, through a cast. */
 extern "C" {
-extern char sHanaStarPopup[];
-extern struct S_ea81c sHanaPopups[];
+extern struct HanaPopup sHanaPopups[];
 extern OamAttr *sMgDigitSprites[];
 }
 
@@ -230,7 +221,7 @@ dScMgHanachan_c::~dScMgHanachan_c() {}
 
 /* The single popup at sHanaStarPopup, as StarPopup_Start, StarPopup_Update,
    StarPopup_Draw and StarPopup_Clear use it. Its byte fields differ from the
-   sixteen popups' S_ea81c layout. */
+   sixteen popups' HanaPopup layout. */
 struct HanaStarPopup {
     int x;      /* 0x00 fx32; clamped to 0x10000..0xf4000 at start */
     int y;      /* 0x04 fx32; kept at or above 0x8000 */
@@ -243,6 +234,7 @@ struct HanaStarPopup {
     u8 pad[3];
 };
 typedef char HanaStarPopup_size_must_be_0x14[sizeof(HanaStarPopup) == 0x14 ? 1 : -1];
+extern "C" HanaStarPopup sHanaStarPopup[];
 
 /* Draws the single popup while its visible flag is 1: a sprite from the
    language's table 8 pixels left of it and one from sMgDigitSprites
@@ -251,14 +243,14 @@ void StarPopup_Draw(void) {
     int x;
     int y;
     s32 r;
-    HanaStarPopup *popup = (HanaStarPopup *)sHanaStarPopup;
+    HanaStarPopup *popup = sHanaStarPopup;
     if (popup->visible != 1) {
         return;
     }
     x = popup->x >> 12;
     y = popup->y >> 12;
     r = GetGameLanguage();
-    Mg_RenderSubSpriteMtx(((void **)sHanaTextSpritesByLanguage[r])[13], x - 8, y, 0);
+    Mg_RenderSubSpriteMtx(sHanaTextSpritesByLanguage[r][13], x - 8, y, 0);
     Mg_RenderSubSpriteMtx(sMgDigitSprites[25], x + 8, y, 0);
 }
 
@@ -277,18 +269,18 @@ extern "C" Timer20 sHanaStarPopups[];
 
 void StarPopup_Update(int *timeLeft) {
     int i;
-    char *f = sHanaStarPopup;
-    for (i = 0; i < 1; i++, f += 0x14) {
+    HanaStarPopup *f = sHanaStarPopup;
+    for (i = 0; i < 1; i++, f++) {
         u8 ph;
-        if (((HanaStarPopup *)f)->active != 1)
+        if (f->active != 1)
             continue;
-        if (((HanaStarPopup *)f)->y < 0x8000)
-            ((HanaStarPopup *)f)->y = 0x8000;
-        ph = ((HanaStarPopup *)f)->phase;
+        if (f->y < 0x8000)
+            f->y = 0x8000;
+        ph = f->phase;
         if (ph == 0) {
-            ((HanaStarPopup *)(int)f)->y += ((HanaStarPopup *)f)->vy;
-            ((HanaStarPopup *)(int)f)->vy -= 0x100;
-            if (((HanaStarPopup *)f)->timer != 0) {
+            f->y += f->vy;
+            f->vy -= 0x100;
+            if (f->timer != 0) {
                 int v;
                 sHanaStarPopups[i].t--;
                 v = sHanaStarPopups[i].t;
@@ -296,10 +288,10 @@ void StarPopup_Update(int *timeLeft) {
                     sHanaStarPopups[i].t = 0;
                 return;
             }
-            ((HanaStarPopup *)f)->timer = 64;
-            ((HanaStarPopup *)f)->phase += 1;
+            f->timer = 64;
+            f->phase += 1;
         } else if (ph == 1) {
-            if (((HanaStarPopup *)f)->timer != 0) {
+            if (f->timer != 0) {
                 int v;
                 sHanaStarPopups[i].t--;
                 v = sHanaStarPopups[i].t;
@@ -307,8 +299,8 @@ void StarPopup_Update(int *timeLeft) {
                     sHanaStarPopups[i].t = 0;
                 return;
             }
-            ((HanaStarPopup *)f)->visible = 0;
-            ((HanaStarPopup *)f)->phase += 1;
+            f->visible = 0;
+            f->phase += 1;
             {
                 dScMgBase_c *g = gMgScene;
                 if (g != 0) {
@@ -320,16 +312,16 @@ void StarPopup_Update(int *timeLeft) {
             }
             Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
         } else {
-            if (((HanaStarPopup *)f)->ticks != 0) {
-                ((HanaStarPopup *)(int)f)->timer += 1;
-                if (((HanaStarPopup *)f)->timer >= 8) {
-                    ((HanaStarPopup *)f)->timer = 0;
-                    ((HanaStarPopup *)(int)f)->ticks -= 1;
+            if (f->ticks != 0) {
+                f->timer += 1;
+                if (f->timer >= 8) {
+                    f->timer = 0;
+                    f->ticks -= 1;
                     if (timeLeft != 0)
                         ApproachLinear(*timeLeft, 0x32, 1);
                 }
             } else {
-                ((HanaStarPopup *)f)->active = 0;
+                f->active = 0;
             }
         }
     }
@@ -338,51 +330,43 @@ void StarPopup_Update(int *timeLeft) {
 /* Starts the single popup at (x, y), x kept between 0x10000 and 0xf4000,
    unless it is already active. */
 void StarPopup_Start(int x, int y) {
-    char *g = sHanaStarPopup;
-    if (((HanaStarPopup *)g)->active != 0)
+    HanaStarPopup *g = sHanaStarPopup;
+    if (g->active != 0)
         return;
-    ((HanaStarPopup *)g)->active = 1;
+    g->active = 1;
     if (x < 0x10000)
         x = 0x10000;
     else if (x > 0xf4000)
         x = 0xf4000;
-    ((HanaStarPopup *)g)->x = x;
-    ((HanaStarPopup *)g)->y = y;
-    ((HanaStarPopup *)g)->timer = 24;
-    ((HanaStarPopup *)g)->phase = 0;
-    ((HanaStarPopup *)g)->visible = 1;
-    ((HanaStarPopup *)g)->ticks = 5;
-    ((HanaStarPopup *)g)->vy = -0x800;
+    g->x = x;
+    g->y = y;
+    g->timer = 24;
+    g->phase = 0;
+    g->visible = 1;
+    g->ticks = 5;
+    g->vy = -0x800;
 }
 
 /* Clears the single popup's active and draw flags. */
 unsigned char StarPopup_Clear(void) {
-    ((HanaStarPopup *)sHanaStarPopup)->active = 0;
-    ((HanaStarPopup *)sHanaStarPopup)->visible = 0;
+    sHanaStarPopup->active = 0;
+    sHanaStarPopup->visible = 0;
     return 0;
 }
 
-/* Draws each of the sixteen popups whose +0xb flag is set, as three
-   sprites 0x10 pixels apart. */
-typedef struct {
-    int x;
-    int y;
-    unsigned char pad0[7];
-    unsigned char flag;
-    int pad1;
-} Ent_ea670;
-
+/* Draws each of the sixteen visible popups as three sprites 0x10 pixels
+   apart. */
 void HanaPopup_DrawAll(void) {
     Matrix2x2 *a = 0, *b = 0, *c = 0;
     int i;
     for (i = 0; i < 16; i++) {
-        Ent_ea670 *e = &((Ent_ea670 *)sHanaPopups)[i];
-        if (e->flag != 0) {
+        HanaPopup *e = &sHanaPopups[i];
+        if (e->visible != 0) {
             int sb = e->x >> 12;
             int r8 = e->y >> 12;
             int idx = GetGameLanguage();
-            void *obj = sHanaTextSpritesByLanguage[idx];
-            Mg_RenderSubSpriteMtx(((void **)obj)[14], sb - 0x10, r8, a);
+            OamAttr **obj = sHanaTextSpritesByLanguage[idx];
+            Mg_RenderSubSpriteMtx(obj[14], sb - 0x10, r8, a);
             Mg_RenderSubSpriteMtx(sMgDigitSprites[41], sb, r8, b);
             Mg_RenderSubSpriteMtx(sMgDigitSprites[40], sb + 0x10, r8, c);
         }
@@ -393,44 +377,33 @@ void HanaPopup_DrawAll(void) {
    each by its velocity until its timer runs out, and phase 1 holds for 0x40
    frames and then clears it. The compound assignments go through (int)e,
    as StarPopup_Update's do. */
-typedef struct Ent71c {
-    int _0;    /* 0x00 */
-    int pos;   /* 0x04 */
-    int vel;   /* 0x08 */
-    u16 timer; /* 0x0c */
-    u8 active; /* 0x0e */
-    u8 fE;     /* 0x0f */
-    u8 phase;  /* 0x10 */
-    u8 pad[3];
-} Ent71c;
-
 void HanaPopup_UpdateAll(void) {
     int i;
     for (i = 0; i < 16; i++) {
-        Ent71c *e = &((Ent71c *)sHanaPopups)[i];
+        HanaPopup *e = &sHanaPopups[i];
         if (e->active) {
-            if (e->pos > 0xb8000)
-                e->pos = 0xb8000;
+            if (e->y > 0xb8000)
+                e->y = 0xb8000;
             if (e->phase == 0) {
                 if (e->timer != 0) {
-                    ((Ent71c *)(int)e)->timer -= 1;
+                    ((HanaPopup *)(int)e)->timer -= 1;
                     if ((s16)e->timer < 0)
                         e->timer = 0;
-                    ((Ent71c *)(int)e)->pos += e->vel;
-                    ((Ent71c *)(int)e)->vel += 0x100;
+                    ((HanaPopup *)(int)e)->y += e->velY;
+                    ((HanaPopup *)(int)e)->velY += 0x100;
                 } else {
                     e->timer = 64;
-                    ((Ent71c *)(int)e)->phase += 1;
+                    ((HanaPopup *)(int)e)->phase += 1;
                 }
             } else {
                 if (e->timer != 0) {
-                    ((Ent71c *)(int)e)->timer -= 1;
+                    ((HanaPopup *)(int)e)->timer -= 1;
                     if ((s16)e->timer < 0)
                         e->timer = 0;
                 } else {
                     e->timer = 0;
                     e->active = 0;
-                    e->fE = 0;
+                    e->visible = 0;
                 }
             }
         }
@@ -443,38 +416,31 @@ void HanaPopup_UpdateAll(void) {
 void HanaPopup_Spawn(int r0, int r1) {
     int i;
     for (i = 0; i < 16; i++) {
-        if (sHanaPopups[i].inuse == 0) {
-            sHanaPopups[i].inuse = 1;
-            sHanaPopups[i].f = 1;
-            sHanaPopups[i].w = 0x18;
+        if (sHanaPopups[i].active == 0) {
+            sHanaPopups[i].active = 1;
+            sHanaPopups[i].visible = 1;
+            sHanaPopups[i].timer = 0x18;
             if (r0 < 0x14000)
                 r0 = 0x14000;
             else if (r0 > 0xf0000)
                 r0 = 0xf0000;
             sHanaPopups[i].x = r0;
             sHanaPopups[i].y = r1;
-            sHanaPopups[i].z = 0x800;
-            sHanaPopups[i].g = 0;
+            sHanaPopups[i].velY = 0x800;
+            sHanaPopups[i].phase = 0;
             return;
         }
     }
 }
 
-/* Clears the +0xe and +0xf flags of every one of the sixteen popups whose
-   +0xe flag is already clear. */
-struct E6_ea8e0 {
-    unsigned char pad[0xe];
-    unsigned char e;
-    unsigned char f;
-    unsigned char pad2[4];
-};
-
+/* Clears the active and visible flags of every one of the sixteen popups
+   that is already inactive. */
 void HanaPopup_ClearAll(void) {
     int i;
     for (i = 0; i < 16; i++) {
-        if (((struct E6_ea8e0 *)sHanaPopups)[i].e == 0) {
-            ((struct E6_ea8e0 *)sHanaPopups)[i].e = 0;
-            ((struct E6_ea8e0 *)sHanaPopups)[i].f = 0;
+        if (sHanaPopups[i].active == 0) {
+            sHanaPopups[i].active = 0;
+            sHanaPopups[i].visible = 0;
         }
     }
 }
@@ -519,7 +485,7 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
         pos.x = pts[i].x;
         pos.y = pts[i].y;
         ang = (s16)(bob - A);
-        func_0203d388((int *)&va, -0x4000);
+        func_0203d388(&va, -0x4000);
         if (bloom == 0) {
             if (i == 0) {
                 rot += FX_SinIdx((u16)ang >> 4) >> 1;
@@ -528,24 +494,24 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
                 rot += (s16)FX_MUL(v, 0x1800 - B);
             }
         }
-        func_0203d680((Vector2 *)&vout, (const Vector2 *)&va, FX_SinIdx((u16)(ang * 2) >> 4));
+        func_0203d680(&vout, &va, FX_SinIdx((u16)(ang * 2) >> 4));
         pos.x = pos.x + vout.x;
         pos.y = pos.y + vout.y;
         res = GetFrame(i);
         px = pos.y >> 12;
         py = pos.x >> 12;
         a2i = GetFlag(i);
-        OAM::Render(0, (OamAttr *)sWigglerSprites[a2i], py, px, res, -1, 0x1000, (u16)rot);
+        OAM::Render(0, sWigglerSprites[a2i], py, px, res, -1, 0x1000, (u16)rot);
         if (i == 0) {
             if (bloom != 0) {
                 if (IsStarVisible() != 0) {
                     vb.x = 0x2000;
                     vb.y = -0x18000;
-                    func_0203d388((int *)&vb, rot);
+                    func_0203d388(&vb, rot);
                     vb.x = vb.x + pos.x;
                     vb.y = vb.y + pos.y;
-                    OAM::Render(0, (OamAttr *)sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12,
-                                -1, -1, FX_Inv((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
+                    OAM::Render(0, sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12, -1, -1,
+                                FX_Inv((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
                 }
             }
         }
@@ -560,7 +526,9 @@ void dScMgHanachan_c::Wiggler::DrawField() {
        Measured 2026-11-16 (#821 r22) against 0x3e0 bytes: plain Vector2
        locals give 0x3dc, the same locals unnested 0x3d8, DrawTarget's
        destructor-only point shape 0x3e4, and all 72 declaration orders of A/B with
-       the points as Vector2 miss the size. */
+       the points as Vector2 miss the size. Inside `s` the points are Vector2
+       (identical bytes; func_0203d388 takes a Vector2 *), at the cost of an
+       empty local-class destructor the TU manifest discards. */
     struct {
         int A, B, urot, va0x, res;
     } t;
@@ -569,7 +537,7 @@ void dScMgHanachan_c::Wiggler::DrawField() {
         Vec2 vc0;
     } s3;
     struct {
-        Vec2 pos, va, vb, vc, vout;
+        Vector2 pos, va, vb, vc, vout;
     } s;
     int px, py;
     int a2i;
@@ -591,7 +559,7 @@ void dScMgHanachan_c::Wiggler::DrawField() {
         s.va.x = t.va0x;
         s.va.y = 0x1000;
         sway = (short)(bob - t.A);
-        func_0203d388(&s.va.x, rot);
+        func_0203d388(&s.va, rot);
 
         if (bloom == 0) {
             if (i == 0) {
@@ -605,17 +573,15 @@ void dScMgHanachan_c::Wiggler::DrawField() {
         if (sHanaFieldWigglerCount >= 6) {
             rot = (short)(rot & 0xfc00);
         }
-        func_0203d680((Vector2 *)&s.vout, (const Vector2 *)&s.va,
-                      FX_SinIdx((unsigned short)(sway << 1) >> 4));
+        func_0203d680(&s.vout, &s.va, FX_SinIdx((unsigned short)(sway << 1) >> 4));
         s.pos.x += s.vout.x;
         s.pos.y += s.vout.y;
 
         t.res = GetFrame(i);
         px = s.pos.y >> 12;
         py = s.pos.x >> 12;
-        OAM::Render(
-            1, (OamAttr *)sWigglerSprites[(a2i = GetFlag(i), (t.urot = (unsigned short)rot), a2i)],
-            py, px, t.res, -1, 0x1000, t.urot);
+        OAM::Render(1, sWigglerSprites[(a2i = GetFlag(i), (t.urot = (unsigned short)rot), a2i)], py,
+                    px, t.res, -1, 0x1000, t.urot);
 
         if (i == 0) {
             if (bloom != 0 && flower > 0) {
@@ -624,15 +590,15 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                 fp2 = (0x3000 - flower) >> 12;
                 s.vb.x = vb0.x;
                 s.vb.y = vb0.y;
-                func_0203d388(&s.vb.x, rot);
+                func_0203d388(&s.vb, rot);
                 s.vb.x += s.pos.x;
                 s.vb.y += s.pos.y;
                 if (fp2 != 0)
                     scale = 0x1000;
                 else
                     scale = FX_Inv((FX_SinIdx((unsigned short)sway >> 4) >> 2) + 0xc00);
-                OAM::Render(1, (OamAttr *)sHanaWigglerTargetSprites[fp2], s.vb.x >> 12,
-                            s.vb.y >> 12, -1, -1, scale, t.urot);
+                OAM::Render(1, sHanaWigglerTargetSprites[fp2], s.vb.x >> 12, s.vb.y >> 12, -1, -1,
+                            scale, t.urot);
             } else if (state == &Wiggler::StateWait) {
                 if (hold > 0x1a && hold < 0x30) {
                     int idx = s3.vc0.x;
@@ -642,12 +608,11 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                         idx = 1;
                         s.vc.y -= (0x30 - hold) * 0x600;
                     }
-                    func_0203d388(&s.vc.x, rot);
+                    func_0203d388(&s.vc, rot);
                     s.vc.x += s.pos.x;
                     s.vc.y += s.pos.y;
-                    OAM::Render(1, (OamAttr *)sHanaWigglerFieldSprites[idx], s.vc.x >> 12,
-                                s.vc.y >> 12, -1, -1, 0x1000,
-                                (unsigned short)(short)(rot & 0xf800));
+                    OAM::Render(1, sHanaWigglerFieldSprites[idx], s.vc.x >> 12, s.vc.y >> 12, -1,
+                                -1, 0x1000, (unsigned short)(short)(rot & 0xf800));
                 }
             }
         }
@@ -716,8 +681,8 @@ void dScMgHanachan_c::Wiggler::StateHold() {
 }
 
 void dScMgHanachan_c::Wiggler::StateMoveA() {
-    int va[2];
-    int vb[2];
+    Vector2 va;
+    Vector2 vb;
     short tgt;
 
     ApproachLinear(flower, 0, 0x200);
@@ -730,14 +695,14 @@ void dScMgHanachan_c::Wiggler::StateMoveA() {
         }
         return;
     }
-    va[0] = 0;
-    va[1] = -0x10000;
+    va.x = 0;
+    va.y = -0x10000;
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
-    func_0203d388(va, ang[0]);
-    func_0203d704((int *)vb, (int *)&seg[1], (int *)va);
-    seg[0].x = vb[0];
-    seg[0].y = vb[1];
+    func_0203d388(&va, ang[0]);
+    func_0203d704(&vb, &seg[1], &va);
+    seg[0].x = vb.x;
+    seg[0].y = vb.y;
     {
         short cnt = timer;
         if ((cnt & 0x10) == 0 || cnt < 0x38)
@@ -772,8 +737,8 @@ void dScMgHanachan_c::Wiggler::StateWait() {
 }
 
 void dScMgHanachan_c::Wiggler::StateMoveB() {
-    int va[2];
-    int vb[2];
+    Vector2 va;
+    Vector2 vb;
     short tgt;
     short cnt;
 
@@ -797,14 +762,14 @@ void dScMgHanachan_c::Wiggler::StateMoveB() {
         state = sub;
         return;
     }
-    va[0] = 0;
-    va[1] = -0x10000;
+    va.x = 0;
+    va.y = -0x10000;
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
-    func_0203d388(va, ang[0]);
-    func_0203d704((int *)vb, (int *)&seg[1], (int *)va);
-    seg[0].x = vb[0];
-    seg[0].y = vb[1];
+    func_0203d388(&va, ang[0]);
+    func_0203d704(&vb, &seg[1], &va);
+    seg[0].x = vb.x;
+    seg[0].y = vb.y;
     cnt = timer;
     if ((cnt & 0x10) == 0 || cnt < 0x38)
         face = 1;
@@ -825,7 +790,7 @@ void dScMgHanachan_c::Wiggler::UpdateSway() {
 }
 
 void dScMgHanachan_c::Wiggler::Move() {
-    int v[2];
+    Vector2 v;
     int step;
     int v93;
 
@@ -834,11 +799,11 @@ void dScMgHanachan_c::Wiggler::Move() {
         if (speed < 0xa00)
             step = step >> 2;
         ApproachLinear(speed, speedTarget, step);
-        v[1] = -speed;
-        v[0] = 0;
-        func_0203d388(v, ang[1]);
-        seg[1].x += v[0];
-        seg[1].y += v[1];
+        v.y = -speed;
+        v.x = 0;
+        func_0203d388(&v, ang[1]);
+        seg[1].x += v.x;
+        seg[1].y += v.y;
         if (busy != 0) {
             flash--;
             if (flash == 0) {
@@ -864,7 +829,7 @@ void dScMgHanachan_c::Wiggler::Move() {
 int dScMgHanachan_c::Wiggler::HitTest(const Vector2 *touchPoint) {
     int segmentIndex;
     for (segmentIndex = 0; segmentIndex < 5; segmentIndex++) {
-        if (func_0203d5dc((const int *)(&seg[segmentIndex]), (const int *)touchPoint) < 0x14000)
+        if (func_0203d5dc(&seg[segmentIndex], touchPoint) < 0x14000)
             return 1;
     }
     return 0;
@@ -1106,10 +1071,10 @@ void dScMgHanachan_c::Wiggler::StepSegmentsA() {
     for (; segmentIndex < 5; segmentIndex++) {
         previousIndex = segmentIndex - 1;
         previousSegment = &seg[previousIndex];
-        Vec2_Sub((int *)&segmentOffset, (int *)(&seg[segmentIndex]), (int *)previousSegment);
-        if (func_0203d434((int *)&segmentOffset) != 0) {
+        Vec2_Sub(&segmentOffset, &seg[segmentIndex], previousSegment);
+        if (func_0203d434(&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, angleDifference;
-            func_0203d630((int *)&segmentOffset, stretch[segmentIndex] + segmentIndex * 0x2000);
+            func_0203d630(&segmentOffset, stretch[segmentIndex] + segmentIndex * 0x2000);
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
             previousAngle = ang[previousIndex];
             bendExcess = zero;
@@ -1125,9 +1090,9 @@ void dScMgHanachan_c::Wiggler::StepSegmentsA() {
             UpdateAngle(ang[segmentIndex], targetAngle, step, angleStep);
             angleCorrection = ang[segmentIndex];
             angleCorrection = targetAngle - angleCorrection;
-            func_0203d388((int *)&segmentOffset, (s16)(bendExcess - angleCorrection));
+            func_0203d388(&segmentOffset, (s16)(bendExcess - angleCorrection));
         }
-        func_0203d704((int *)&segmentPosition, (int *)previousSegment, (int *)&segmentOffset);
+        func_0203d704(&segmentPosition, previousSegment, &segmentOffset);
         seg[segmentIndex].x = segmentPosition.x;
         seg[segmentIndex].y = segmentPosition.y;
     }
@@ -1138,9 +1103,9 @@ void dScMgHanachan_c::Wiggler::StepSegmentsA() {
         headOffset.y = -0x10000;
         UpdateAngle(ang[0], (s16)(ang[1] + dd), 8, 0x100);
     }
-    func_0203d388((int *)&headOffset, ang[0]);
+    func_0203d388(&headOffset, ang[0]);
     segments = seg;
-    func_0203d704((int *)&headPosition, (int *)(segments + 1), (int *)&headOffset);
+    func_0203d704(&headPosition, segments + 1, &headOffset);
     seg[0].x = headPosition.x;
     seg[0].y = headPosition.y;
 }
@@ -1157,12 +1122,12 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
 
     for (; segmentIndex >= 1; segmentIndex--) {
         previousIndex = segmentIndex - 1;
-        Vec2_Sub((int *)&segmentOffset, (int *)segment, (int *)(&seg[previousIndex]));
-        if (func_0203d434((int *)&segmentOffset) != 0) {
+        Vec2_Sub(&segmentOffset, segment, &seg[previousIndex]);
+        if (func_0203d434(&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, targetAngle, bendExcess, angleDifference, currentAngle;
             {
                 int extraSpacing = stretch[segmentIndex];
-                func_0203d630((int *)&segmentOffset, extraSpacing + baseSpacing);
+                func_0203d630(&segmentOffset, extraSpacing + baseSpacing);
             }
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
             previousAngle = ang[previousIndex];
@@ -1177,9 +1142,9 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
                 targetAngle = (s16)(previousAngle + 0x2000);
             }
             currentAngle = ang[segmentIndex];
-            func_0203d388((int *)&segmentOffset, (s16)(bendExcess - (targetAngle - currentAngle)));
+            func_0203d388(&segmentOffset, (s16)(bendExcess - (targetAngle - currentAngle)));
         }
-        Vec2_Sub((int *)&segmentPosition, (int *)segment, (int *)&segmentOffset);
+        Vec2_Sub(&segmentPosition, segment, &segmentOffset);
         seg[previousIndex].x = segmentPosition.x;
         seg[previousIndex].y = segmentPosition.y;
         segment--;
@@ -1187,8 +1152,11 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
     }
     headOffset.x = 0;
     headOffset.y = -0x10000;
-    func_0203d388((int *)&headOffset, ang[0]);
-    func_0203d704((int *)&headPosition, (int *)((Vector2 *)(seg) + 1), (int *)&headOffset);
+    func_0203d388(&headOffset, ang[0]);
+    /* The (Vector2 *) spelling of the array decay is load-bearing: `&seg[1]`
+       and `seg + 1` both fold the head address differently (-1 instruction,
+       12 words moved, measured). */
+    func_0203d704(&headPosition, (Vector2 *)(seg) + 1, &headOffset);
     seg[0].x = headPosition.x;
     seg[0].y = headPosition.y;
 }
@@ -1204,10 +1172,10 @@ void dScMgHanachan_c::Wiggler::StepSegmentsC() {
 
     for (; segmentIndex < 5; segmentIndex++) {
         previousIndex = segmentIndex - 1;
-        Vec2_Sub((int *)&segmentOffset, (int *)segment, (int *)(&seg[previousIndex]));
-        if (func_0203d434((int *)&segmentOffset) != 0) {
+        Vec2_Sub(&segmentOffset, segment, &seg[previousIndex]);
+        if (func_0203d434(&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, targetAngle, bendExcess, angleDifference, currentAngle;
-            func_0203d630((int *)&segmentOffset, (segmentIndex * 2 + 0x10) << 12);
+            func_0203d630(&segmentOffset, (segmentIndex * 2 + 0x10) << 12);
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
             previousAngle = ang[previousIndex];
             bendExcess = 0;
@@ -1222,9 +1190,9 @@ void dScMgHanachan_c::Wiggler::StepSegmentsC() {
             }
             ang[segmentIndex] = targetAngle;
             currentAngle = ang[segmentIndex];
-            func_0203d388((int *)&segmentOffset, (s16)(bendExcess - (targetAngle - currentAngle)));
+            func_0203d388(&segmentOffset, (s16)(bendExcess - (targetAngle - currentAngle)));
         }
-        func_0203d704((int *)&segmentPosition, (int *)(&seg[previousIndex]), (int *)&segmentOffset);
+        func_0203d704(&segmentPosition, &seg[previousIndex], &segmentOffset);
         seg[segmentIndex].x = segmentPosition.x;
         seg[segmentIndex].y = segmentPosition.y;
         segment++;
@@ -1232,8 +1200,8 @@ void dScMgHanachan_c::Wiggler::StepSegmentsC() {
     headOffset.x = 0;
     headOffset.y = -0x10000;
     ang[0] = (s16)(ang[1] + (((ang[1] - ang[2]) << 14) >> 16));
-    func_0203d388((int *)&headOffset, ang[0]);
-    func_0203d704((int *)&headPosition, (int *)((Vector2 *)(seg) + 1), (int *)&headOffset);
+    func_0203d388(&headOffset, ang[0]);
+    func_0203d704(&headPosition, (Vector2 *)(seg) + 1, &headOffset);
     seg[0].x = headPosition.x;
     seg[0].y = headPosition.y;
 }
@@ -1486,9 +1454,9 @@ void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
         previousIndex = segmentIndex - 1;
         segmentOffset.x = 0;
         segmentOffset.y = (segmentIndex * 2 + 0x10) << 12;
-        func_0203d388((int *)&segmentOffset, (s16)(ang[previousIndex] + 0x2000));
+        func_0203d388(&segmentOffset, (s16)(ang[previousIndex] + 0x2000));
         ang[segmentIndex] = ang[previousIndex] + 0x2000;
-        func_0203d704((int *)&segmentPosition, (int *)(&seg[previousIndex]), (int *)&segmentOffset);
+        func_0203d704(&segmentPosition, &seg[previousIndex], &segmentOffset);
         seg[segmentIndex].x = segmentPosition.x;
         seg[segmentIndex].y = segmentPosition.y;
     }
@@ -1498,8 +1466,8 @@ void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
     headOffset.x = 0;
     headOffset.y = -0x10000;
     ang[0] = aim - 0x2000;
-    func_0203d388((int *)&headOffset, ang[0]);
-    func_0203d704((int *)&headPosition, (int *)(&seg[1]), (int *)&headOffset);
+    func_0203d388(&headOffset, ang[0]);
+    func_0203d704(&headPosition, &seg[1], &headOffset);
     seg[0].x = headPosition.x;
     seg[0].y = headPosition.y;
 
@@ -1574,8 +1542,8 @@ s32 dScMgHanachan_c::Render() {
 
     if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
         int idx = GetGameLanguage();
-        void *e = sHanaTextSpritesByLanguage[idx];
-        OamAttr *f = ((OamAttr **)e)[3];
+        OamAttr **e = sHanaTextSpritesByLanguage[idx];
+        OamAttr *f = e[3];
         DrawOamSprite(f, 128, 16, 0);
         Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
     }
@@ -1676,7 +1644,8 @@ void dScMgHanachan_c::BeginResult() {
 
 void dScMgHanachan_c::Phase_Play() {
     Vector2 a;
-    int vec[4];
+    Vector2 vec;
+    Vector2 popup;
     int b = 0;
     int idx = gActivePlayerSlot;
 
@@ -1690,8 +1659,8 @@ void dScMgHanachan_c::Phase_Play() {
         a.y = gTouchInfo[idx].y << 12;
         p = mTarget;
         src = p->seg;
-        vec[0] = src->x;
-        vec[1] = src->y;
+        vec.x = src->x;
+        vec.y = src->y;
 
         if (mTarget->IsStarVisible() != 0 && mTarget->HitTest(&a) != 0) {
             mHit = 1;
@@ -1703,8 +1672,8 @@ void dScMgHanachan_c::Phase_Play() {
                 else
                     Sound::PlayBank2_2D(0x1ee);
                 if (sHanaRoundPattern == 0)
-                    vec[0] -= 0x28000;
-                StarPopup_Start(vec[0], vec[1]);
+                    vec.x -= 0x28000;
+                StarPopup_Start(vec.x, vec.y);
                 BeginResult();
                 return;
             }
@@ -1744,9 +1713,9 @@ void dScMgHanachan_c::Phase_Play() {
                         ptr2 = mWiggler;
                         do {
                             Vector2 *s2 = ptr2->seg;
-                            vec[0] = s2->x;
-                            vec[1] = s2->y;
-                            ptr2->Retarget(func_0203d5dc((const int *)vec, (const int *)&a));
+                            vec.x = s2->x;
+                            vec.y = s2->y;
+                            ptr2->Retarget(func_0203d5dc(&vec, &a));
                             j++;
                             ptr2++;
                         } while (j < sHanaFieldWigglerCount);
@@ -1756,12 +1725,12 @@ void dScMgHanachan_c::Phase_Play() {
                 func_02012790(0xe);
                 {
                     Vector2 *s3 = sel->seg;
-                    vec[2] = s3->x;
-                    vec[3] = s3->y;
+                    popup.x = s3->x;
+                    popup.y = s3->y;
                 }
                 if (sHanaRoundPattern == 0)
-                    vec[2] -= 0x28000;
-                HanaPopup_Spawn(vec[2], vec[3]);
+                    popup.x -= 0x28000;
+                HanaPopup_Spawn(popup.x, popup.y);
 
                 {
                     int t = mTimeLeft - 10;
@@ -1951,19 +1920,19 @@ void Hana_LoadBackground(void) {
  * vu32* ring sHanaBackgroundParts. Non-constant initializers, so the
  * compiler emits __sinit_d_s_mg_hanachan_methods.cpp to copy them at load. */
 OamAttr data_ov006_021374bc[1] = {{0x80e0, 0xc1f0, 0x0018, 0xffff}};
-void *data_ov006_021374b8 = data_ov006_021374bc;
+OamAttr *data_ov006_021374b8 = data_ov006_021374bc;
 OamAttr data_ov006_021374c8[1] = {{0x80e0, 0xc1f0, 0x0100, 0xffff}};
-void *data_ov006_021374c4 = data_ov006_021374c8;
+OamAttr *data_ov006_021374c4 = data_ov006_021374c8;
 OamAttr data_ov006_021374b0[1] = {{0x80e0, 0xc1f0, 0x0000, 0xffff}};
-void *data_ov006_021374ac = data_ov006_021374b0;
-extern void *data_ov006_021374e8;
+OamAttr *data_ov006_021374ac = data_ov006_021374b0;
+extern OamAttr *data_ov006_021374e8;
 OamAttr data_ov006_021374f8[1] = {{0x80e0, 0xc1f0, 0x1006, 0xffff}};
-void *data_ov006_021374f4 = data_ov006_021374f8;
+OamAttr *data_ov006_021374f4 = data_ov006_021374f8;
 OamAttr data_ov006_021375d4[1] = {{0x80e8, 0xc1f0, 0x010e, 0xffff}};
 OamAttr data_ov006_021375cc[1] = {{0x80e8, 0xc1f0, 0x1112, 0xffff}};
-void *sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
+OamAttr *sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
 
-void *sWigglerSprites[11] = {
+OamAttr *sWigglerSprites[11] = {
     data_ov006_021374b8,
     data_ov006_021374c4,
     data_ov006_021374ac,
@@ -1971,9 +1940,9 @@ void *sWigglerSprites[11] = {
     data_ov006_021374f4,
     sHanaBackgroundPartsB[0],
     sHanaBackgroundPartsB[1],
-    (void *)sHanaBackgroundParts[0],
-    (void *)sHanaBackgroundParts[3],
-    (void *)sHanaBackgroundParts[6],
-    (void *)sHanaBackgroundParts[9],
+    (OamAttr *)sHanaBackgroundParts[0],
+    (OamAttr *)sHanaBackgroundParts[3],
+    (OamAttr *)sHanaBackgroundParts[6],
+    (OamAttr *)sHanaBackgroundParts[9],
 };
 }

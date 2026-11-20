@@ -68,7 +68,7 @@ struct daKrb_c : dCapEnemy_c {
     s32 mTargetHorzSpeed;   /* 0x444 */
     /* Range inside which a Goomba notices the player (a capped Goomba flees,
        a capless one chases), set by
-       func_ov084_021290d4: 500.0 units, shrinking for a capless Goomba that
+       UpdateChaseRadius: 500.0 units, shrinking for a capless Goomba that
        has been stuck more than 10 frames. */
     s32 mChaseRadius;       /* 0x448 */
     /* param1 as InitResources left it. The exit of STATE_TUMBLE stores this
@@ -84,7 +84,7 @@ struct daKrb_c : dCapEnemy_c {
     u16 mStuckTimer;            /* 0x456 */
     /* Unstick countdown. Behavior sets it to 90 when a Goomba with a cap has
        been stuck 30 frames, and func_ov084_0212abd4 sets it to mStuckTimer for
-       a capless one stuck longer than 30; func_ov084_021290d4 counts it down.
+       a capless one stuck longer than 30; UpdateChaseRadius counts it down.
        While it runs the Goomba is steered by its own branch of
        func_ov084_0212abd4 and the chase radius is left alone. */
     u16 mUnstickTimer;      /* 0x458 */
@@ -133,13 +133,13 @@ struct daKrb_c : dCapEnemy_c {
     /* param1, the spawn word; defined inline in d_a_krb.cpp. */
     u32 GetParam1() const;
 
-    void func_ov084_021290d4();
+    void UpdateChaseRadius();
     void func_ov084_02129168(dActor_c *actor);
     void func_ov084_02129238();
     void func_ov084_0212934c();
     void func_ov084_02129498();
     void func_ov084_021294d0();
-    void func_ov084_021296b0(void *b);
+    void SetHomePos(Vector3 *pos);
     void func_ov084_021296cc();
     void func_ov084_02129864();
     int func_ov084_021298d0();
@@ -196,7 +196,7 @@ struct daKrb_c : dCapEnemy_c {
     /* mRewardType, from bits 4..7 of the spawn parameter. Types 1 and 2 both
        load the silver-star model and spawn a SILVER_STAR (179) plus a STARBASE
        (180) when the Goomba dies; type 2 only does so when mStarID equals
-       data_0209f344[data_0209f208[0]], and becomes 3 once it has. */
+       gVsStarSpawnOrder[gNumVsStarsCollected], and becomes 3 once it has. */
     enum RewardType {
         REWARD_NONE = 0,
         REWARD_SILVER_STAR = 1,
@@ -205,7 +205,10 @@ struct daKrb_c : dCapEnemy_c {
     };
 
     /* mDeathState (dEnemyBase_c) values this class writes in its hit reaction
-       (func_ov084_02129ed4), named for the hit that sets them. */
+       (func_ov084_02129ed4), named for the hit that sets them. On the
+       cartridge a stomp and a ground pound set 1, a punch 2, a breakdance, a
+       slide kick and the combo's kick 3, a dive 5, and a thrown Bob-omb's
+       blast 6 (include/dCc_c.h, the SEEN rows). */
     enum DeathState {
         DEATH_NONE = 0,
         DEATH_STOMPED = 1, /* jumped on, or a spin / ground-pound hit */

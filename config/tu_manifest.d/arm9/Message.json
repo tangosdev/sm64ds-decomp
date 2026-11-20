@@ -492,7 +492,7 @@
       "evidence": "u8. Referenced by Message::DisplaySaving, Message::Update, Message::UpdateWindow, func_0201f32c. Global: also referenced from Message2.cpp."
     },
     {
-      "symbol": "data_0209d6d4",
+      "symbol": "gCurrentMsgId",
       "address": "0x0209d6d4",
       "size": "0x2",
       "binding": "STB_GLOBAL",
@@ -527,21 +527,21 @@
       "evidence": "u8[4]. Referenced by Message::AddChoice, Message::Update. Global: also referenced from Message2.cpp."
     },
     {
-      "symbol": "data_0209d6e8",
+      "symbol": "gMessageBankHeader",
       "address": "0x0209d6e8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "int. Referenced by Message::SetTextGlobals. Global: also referenced from _ZN7Message14SetTextGlobalsEv.cpp."
     },
     {
-      "symbol": "data_0209d6ec",
+      "symbol": "gMessageDataSection",
       "address": "0x0209d6ec",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "int. Referenced by Message::SetTextGlobals. Global: also referenced from _ZN7Message14SetTextGlobalsEv.cpp."
     },
     {
-      "symbol": "data_0209d6f0",
+      "symbol": "gCurrentMsgEntry",
       "address": "0x0209d6f0",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -562,7 +562,7 @@
       "evidence": "int. Referenced by LoadFont, Message::AddChar. Global: also referenced from LoadFont.cpp, Message2.cpp."
     },
     {
-      "symbol": "data_0209d6fc",
+      "symbol": "gMessageBankBase",
       "address": "0x0209d6fc",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -583,14 +583,14 @@
       "evidence": "s32. Referenced by Message::AddChar, Message::LayoutLine, func_0201d850. Global: also referenced from Message2.cpp."
     },
     {
-      "symbol": "data_0209d708",
+      "symbol": "gMessageEntries",
       "address": "0x0209d708",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "MessageEntry *. Referenced by Message::DisplayCourseNameForStarSelect, Message::DisplaySaving, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::SetTextGlobals, Message_DrawCenteredLine, Message_DrawLineBG2, func_0201d418 and 4 more. Global: also referenced from _ZN7Message14SetTextGlobalsEv.cpp."
     },
     {
-      "symbol": "data_0209d70c",
+      "symbol": "gMessageInfoSection",
       "address": "0x0209d70c",
       "size": "0x4",
       "binding": "STB_GLOBAL",

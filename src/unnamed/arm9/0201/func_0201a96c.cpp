@@ -39,4 +39,4 @@ inline WatchdogAlarm::WatchdogAlarm() {
 typedef char WatchdogAlarm_must_be_0x44[sizeof(WatchdogAlarm) == 0x44 ? 1 : -1];
 
 unsigned short data_0209d534[32];
-WatchdogAlarm data_0209d574;
+WatchdogAlarm gWatchdog;

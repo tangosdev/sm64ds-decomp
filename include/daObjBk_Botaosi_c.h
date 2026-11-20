@@ -25,7 +25,7 @@ struct daObjBk_Botaosi_c : dBgActor_c {
        before handing it to dActor_c::DropShadowScaleXYZ with mShadowModel. */
     Matrix4x3 mShadowMat; /* 0x348 */
     /* The point 0x32000 units in front of the plank: InitResources rotates
-       (0, 0, 0x32000) by mAngle.y through data_020a0e68 and adds the plank's own
+       (0, 0, 0x32000) by mAngle.y through gScratchMtx and adds the plank's own
        position. mFrontFloorY below is the ground height under it. */
     Vector3 mFrontPos; /* 0x378 */
     s32 mFrontFloorY;  /* 0x384 */

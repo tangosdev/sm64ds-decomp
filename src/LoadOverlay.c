@@ -10,7 +10,7 @@ struct OverlaySlot {
     u32 start;
     u32 size;
 };
-extern struct OverlaySlot data_0209d3c4[12];
+extern struct OverlaySlot gLoadedOverlays[12];
 
 void LoadOverlay(int id) {
     u32 start;
@@ -30,7 +30,7 @@ void LoadOverlay(int id) {
     total = info.header.ram_size + info.header.bss_size;
     start = (u32)info.header.ram_address;
     end = start + total;
-    for (r = data_0209d3c4, i = 0; i < 12; r++, i++) {
+    for (r = gLoadedOverlays, i = 0; i < 12; r++, i++) {
         if (r->id == 0xffffffff) {
             if (slot == 0) {
                 slot = r;

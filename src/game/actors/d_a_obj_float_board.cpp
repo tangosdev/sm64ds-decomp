@@ -37,7 +37,7 @@
 /* local extern: no shared header declares these. */
 extern "C" {
 extern s8 gCurrentSublevel; /* current stage id */
-extern int data_0209f32c;   /* the stage water's global height (written by d_a_obj_wc_mizu) */
+extern int gWaterHeight;    /* the stage water's global height (written by d_a_obj_wc_mizu) */
 
 /* Stores into the mesh collider's two callback slots (+0x1c / +0x18 of the
    embedded dBgW; the +0x0c store is dBgW::SetClipRadius). */
@@ -75,7 +75,7 @@ int daObjFloatBoard_c::UpdateWaterY() {
     if (gCurrentSublevel == 0x15) {
         s32 fallback = mFallbackWaterY;
         mWaterY = fallback;
-        s32 tide = data_0209f32c;
+        s32 tide = gWaterHeight;
         if (tide > fallback) {
             mWaterY = tide;
             return 1;

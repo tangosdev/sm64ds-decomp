@@ -15,10 +15,9 @@
  * (ov022 daObjFlMaruta_c, ov030 daObjHmMaruta_c).
  *
  * Notes:
- * - func_ov080_021274ac / 0212714c / 021270dc keep C linkage for now.
- *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward
- *   InitResources, Behavior and CleanupResources into them, so naming them
- *   means converting both leaves in the same change.
+ * - daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward
+ *   InitResources, Behavior and CleanupResources into InitResourcesFrom,
+ *   func_ov080_0212714c and CleanupResourcesFrom.
  * - func_02012694 (sound 0x1e at mCamSpacePos), Matrix4x3_FromRotationXYZExt,
  *   Vec3_Sub and AngleDiff are arm9 C helpers no header declares yet.
  * - Abstract class: the leaves own classInit.
@@ -88,9 +87,9 @@ void daObjMaruta_c::UpdateModelTransform() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov080_021270dc, 0x021270dc, size 0x48 */
+/* ROM ordinal 2 -- CleanupResourcesFrom, 0x021270dc, size 0x48 */
 /* -------------------------------------------------------------------------- */
-int daObjMaruta_c::func_ov080_021270dc(ResourceDescriptor *arg) {
+int daObjMaruta_c::CleanupResourcesFrom(ResourceDescriptor *arg) {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     arg->model->Release();
@@ -113,7 +112,7 @@ static inline int IsActorID(dActor_c *actor, int id) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
-int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
+int daObjMaruta_c::func_ov080_0212714c(const int *maxDist) {
     Vector3 offset;
     int len;
     int ang;
@@ -215,9 +214,9 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov080_021274ac, 0x021274ac, size 0xe0 */
+/* ROM ordinal 5 -- InitResourcesFrom, 0x021274ac, size 0xe0 */
 /* -------------------------------------------------------------------------- */
-int daObjMaruta_c::func_ov080_021274ac(ResourceDescriptor *arg) {
+int daObjMaruta_c::InitResourcesFrom(ResourceDescriptor *arg) {
     struct Vector3 d;
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
     UpdateModelTransform();
@@ -264,7 +263,7 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
 /* ROM ordinal 7 -- 0x02127658, size 0x14 */
 /* -------------------------------------------------------------------------- */
 /* Arg-shifting tail-call veneer, handed to the dBgW at mMeshCollider by
-   func_ov080_021274ac above. Drops the first argument and forwards the next
+   InitResourcesFrom above. Drops the first argument and forwards the next
    two; long_calls emits the pooled `ldr ip,[pc,#8]; bx ip` absolute
    tail-call. Bracketed closed immediately: long_calls is positional. */
 #pragma long_calls on

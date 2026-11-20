@@ -80,8 +80,6 @@ extern "C" void func_02016a14(dExtSimpleModel_c *, int);
 int func_02017ab4(int);
 unsigned int func_02012174(unsigned int, unsigned int);
 extern "C" {
-void func_0203ccd4(void *, short);
-void func_0203cd80(void *, short);
 void func_0203cebc(void *, void *, void *, void *);
 }
 
@@ -134,17 +132,17 @@ VecFx32 data_ov006_0213ace0[3] = {
     {0x27000, 0, -0x11000},
 };
 extern Quaternion data_02092768; /* identity */
-extern dClipper data_0209f43c;
+extern dClipper gClipper;
 extern dFdBrightness_c *gSceneFader;
 /* The presenter's BTA images: each name starts a file the face plays. */
-extern char sPresenterLoseLoopTexAnim[];
-extern char sPresenterSmileTexAnim[];
-extern char sPresenterLoseTexAnim[];
-extern char sPresenterIdleTexAnim[];
-extern char sPresenterMissTexAnim[];
-extern char sPresenterTextureAnim[];
-extern char sPresenterCheerTexAnim[];
-extern char sPresenterMatchTexAnim[];
+extern BTA_File sPresenterLoseLoopTexAnim;
+extern BTA_File sPresenterSmileTexAnim;
+extern BTA_File sPresenterLoseTexAnim;
+extern BTA_File sPresenterIdleTexAnim;
+extern BTA_File sPresenterMissTexAnim;
+extern BTA_File sPresenterTextureAnim;
+extern BTA_File sPresenterCheerTexAnim;
+extern BTA_File sPresenterMatchTexAnim;
 
 /* The file handles' constructors and destructors are the arm9 veneers the
    ROM calls: func_02017acc / func_02017ab4 for a model file,
@@ -464,9 +462,9 @@ void FallingPetal::UpdateMatrix() {
     Matrix4x3 rot;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mRot), &rot);
     MTX_MultVec33(&sPetalUpAxis, &rot.r, &mAxis);
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    MTX_Concat43(&rot, &data_020a0e68, &data_020a0e68);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    MTX_Concat43(&rot, &gScratchMtx, &gScratchMtx);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* ---- Presenter::Presenter ---- */
@@ -544,14 +542,14 @@ int Presenter::Load() {
     dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mSmileTexSeq.filePtr);
     dExtAnmTexPat_c::Prepare(*faceFile, *(BTP_File *)mSurprisedTexSeq.filePtr);
 
-    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterIdleTexAnim);
-    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterMissTexAnim);
-    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterMatchTexAnim);
-    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterLoseLoopTexAnim);
-    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterLoseTexAnim);
-    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterTextureAnim);
-    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterCheerTexAnim);
-    dExtAnmTexSRT_c::Prepare(*faceFile, *(BTA_File *)sPresenterSmileTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, sPresenterIdleTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, sPresenterMissTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, sPresenterMatchTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, sPresenterLoseLoopTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, sPresenterLoseTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, sPresenterTextureAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, sPresenterCheerTexAnim);
+    dExtAnmTexSRT_c::Prepare(*faceFile, sPresenterSmileTexAnim);
 
     PlayIdle();
     mPos.x = 0;
@@ -562,8 +560,8 @@ int Presenter::Load() {
     if (!mBack.SetFile(backFile, 1, -1))
         return 0;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-    mBack.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, 0, 0, 0);
+    mBack.mat4x3 = gScratchMtx;
     return 1;
 }
 
@@ -635,28 +633,28 @@ void Presenter::Update() {
 }
 
 void Presenter::Draw() {
-    int keyLight[3];
-    int fillLight[3];
+    Vector3 keyLight;
+    Vector3 fillLight;
     int *materials;
     ModelComponents *components;
 
-    keyLight[0] = 0;
-    keyLight[1] = 0;
-    keyLight[2] = -0xff8;
-    fillLight[0] = 0;
-    fillLight[1] = 0;
-    fillLight[2] = -0xff8;
+    keyLight.x = 0;
+    keyLight.y = 0;
+    keyLight.z = -0xff8;
+    fillLight.x = 0;
+    fillLight.y = 0;
+    fillLight.z = -0xff8;
     func_02016a04(&mFace, 0x3d6d);
-    func_0203cd80(keyLight, -0x2000);
-    func_0203ccd4(keyLight, 0x2000);
-    func_0203cd80(fillLight, 0x4200);
-    func_0203ccd4(fillLight, 0x7000);
+    func_0203cd80(&keyLight, -0x2000);
+    func_0203ccd4(&keyLight, 0x2000);
+    func_0203cd80(&fillLight, 0x4200);
+    func_0203ccd4(&fillLight, 0x7000);
 
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
-    G3_LightVector(GX_LIGHTID_0, keyLight[0], keyLight[1], keyLight[2]);
+    G3_LightVector(GX_LIGHTID_0, keyLight.x, keyLight.y, keyLight.z);
     components = &mFace.data;
     G3_LightColor(GX_LIGHTID_1, GX_RGB(11, 10, 10));
-    G3_LightVector(GX_LIGHTID_1, fillLight[0], fillLight[1], fillLight[2]);
+    G3_LightVector(GX_LIGHTID_1, fillLight.x, fillLight.y, fillLight.z);
 
     /* Materials 5 and 6, texture offsets at +0x14 and +0x18. */
     materials = (int *)components->materials;
@@ -704,7 +702,7 @@ void Presenter::PlayIdle() {
         }
         mFace.SetAnim(*(BCA_File *)mWaitAnim.filePtr, blendFrames, 0, 0x800, 0);
         mTexSeq.SetFile(*(BTP_File *)mWaitTexSeq.filePtr, 0, 0x800, 0);
-        mTexAnim.SetFile(*(BTA_File *)sPresenterIdleTexAnim, 0, 0x800, 0);
+        mTexAnim.SetFile(sPresenterIdleTexAnim, 0, 0x800, 0);
     }
     mState = &Presenter::StateIdle;
 }
@@ -714,7 +712,7 @@ void Presenter::StateIdle() {
         return;
     mFace.SetAnim(*(BCA_File *)mWaitAnim.filePtr, 0, 0, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mWaitTexSeq.filePtr, 0, 0x800, 0);
-    mTexAnim.SetFile(*(BTA_File *)sPresenterIdleTexAnim, 0, 0x800, 0);
+    mTexAnim.SetFile(sPresenterIdleTexAnim, 0, 0x800, 0);
 }
 
 void Presenter::PlayMatch() {
@@ -723,7 +721,7 @@ void Presenter::PlayMatch() {
     }
     mFace.SetAnim(*(BCA_File *)mWinAnim.filePtr, 4, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mWinTexSeq.filePtr, 0x40000000, 0x800, 0);
-    mTexAnim.SetFile(*(BTA_File *)sPresenterMatchTexAnim, 0x40000000, 0x800, 0);
+    mTexAnim.SetFile(sPresenterMatchTexAnim, 0x40000000, 0x800, 0);
     mState = &Presenter::StateWin;
 }
 
@@ -737,7 +735,7 @@ void Presenter::StateWin() {
 void Presenter::PlayMiss() {
     mFace.SetAnim(*(BCA_File *)mMistakeAnim.filePtr, 4, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mMistakeTexSeq.filePtr, 0x40000000, 0x800, 0);
-    mTexAnim.SetFile(*(BTA_File *)sPresenterMissTexAnim, 0x40000000, 0x800, 0);
+    mTexAnim.SetFile(sPresenterMissTexAnim, 0x40000000, 0x800, 0);
     mState = &Presenter::StateMistake;
 }
 
@@ -754,7 +752,7 @@ void Presenter::PlayCheer() {
     }
     mFace.SetAnim(*(BCA_File *)mSurprisedAnim.filePtr, 8, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mSurprisedTexSeq.filePtr, 0x40000000, 0x800, 0);
-    mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    mTexAnim.SetFile(sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
     mState = &Presenter::StateSurprisedThenSmile;
 }
 
@@ -767,7 +765,7 @@ void Presenter::StateSurprisedThenSmile() {
         Sound::PlayBank2_2D(0x1d1);
     mFace.SetAnim(*(BCA_File *)mSmileAnim.filePtr, 8, 0, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mSmileTexSeq.filePtr, 0, 0x800, 0);
-    mTexAnim.SetFile(*(BTA_File *)sPresenterSmileTexAnim, 0, 0x800, 0);
+    mTexAnim.SetFile(sPresenterSmileTexAnim, 0, 0x800, 0);
 }
 
 void Presenter::PlayLose() {
@@ -775,7 +773,7 @@ void Presenter::PlayLose() {
         Sound::PlayBank2_2D(0x1c9);
     mFace.SetAnim(*(BCA_File *)mLoseStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mLoseStartTexSeq.filePtr, 0x40000000, 0x800, 0);
-    mTexAnim.SetFile(*(BTA_File *)sPresenterLoseTexAnim, 0x40000000, 0x800, 0);
+    mTexAnim.SetFile(sPresenterLoseTexAnim, 0x40000000, 0x800, 0);
     mState = &Presenter::StateLoseStart;
 }
 
@@ -786,7 +784,7 @@ void Presenter::StateLoseStart() {
         return;
     mFace.SetAnim(*(BCA_File *)mLoseAnim.filePtr, 0, 0, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mLoseTexSeq.filePtr, 0, 0x800, 0);
-    mTexAnim.SetFile(*(BTA_File *)sPresenterLoseLoopTexAnim, 0, 0x800, 0);
+    mTexAnim.SetFile(sPresenterLoseLoopTexAnim, 0, 0x800, 0);
 }
 
 void Presenter::PlayCheerLoop() {
@@ -795,7 +793,7 @@ void Presenter::PlayCheerLoop() {
     }
     mFace.SetAnim(*(BCA_File *)mSurprisedAnim.filePtr, 8, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mSurprisedTexSeq.filePtr, 0x40000000, 0x800, 0);
-    mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    mTexAnim.SetFile(sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
     mState = &Presenter::StateSurprisedThenIdle;
 }
 
@@ -807,8 +805,8 @@ void Presenter::StateSurprisedThenIdle() {
 }
 
 void Presenter::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    mFace.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    mFace.mat4x3 = gScratchMtx;
 }
 
 /* Camera_InitPresenterView at 0x020c225c
@@ -893,15 +891,15 @@ void Mascot::Draw() {
 }
 
 void Mascot::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mRot[1]);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mRot[1]);
+    mModel.mat4x3 = gScratchMtx;
     mModel.UpdateVerts();
     /* bone 6, the head */
-    data_020a0e68 = mModel.data.transforms[6];
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mHeadYaw);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mHeadPitch);
-    mModel.data.transforms[6] = data_020a0e68;
+    gScratchMtx = mModel.data.transforms[6];
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mHeadYaw);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mHeadPitch);
+    mModel.data.transforms[6] = gScratchMtx;
 }
 
 void Mascot::LookAt(int *src) {
@@ -1457,12 +1455,12 @@ void MascotWalker::Draw() {
 void MascotWalker::UpdateMatrix() {
     mModel.UpdateVerts();
     /* Bone 6 takes the head angle. */
-    data_020a0e68 = mModel.data.transforms[6];
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mHeadAngle);
-    mModel.data.transforms[6] = data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    mModel.mat4x3 = data_020a0e68;
+    gScratchMtx = mModel.data.transforms[6];
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mHeadAngle);
+    mModel.data.transforms[6] = gScratchMtx;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 void MascotWalker::StartNextPath() {
@@ -1619,7 +1617,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
 
     CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 
-    data_0209f43c.Func_020156DC(0x1555, camera->mFovAngle, 0x1000, 0x1388000);
+    gClipper.Func_020156DC(0x1555, camera->mFovAngle, 0x1000, 0x1388000);
 }
 
 

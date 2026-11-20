@@ -1,4 +1,5 @@
 #include "Vector2.h"
+#include "Vector2Math.h"
 #include "nitro/fx/fx.h"
 
 /* Scale a Vector2 by an fx32 factor into out (Vector2.h). Callers include
@@ -13,7 +14,7 @@ void func_0203d680(Vector2 *out, const Vector2 *in, int scale) {
 /* Scale a Vector2 by an fx32 factor in place (Vector2.h); e.g. the amida
    and base minigame scenes damp velocities with it, and hanachan spaces
    its segments. */
-void func_0203d630(int *p, int m) {
-    p[0] = FX_MUL(p[0], m);
-    p[1] = FX_MUL(p[1], m);
+void func_0203d630(Vector2 *v, fx32 scale) {
+    v->x = FX_MUL(v->x, scale);
+    v->y = FX_MUL(v->y, scale);
 }
