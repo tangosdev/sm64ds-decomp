@@ -107,19 +107,20 @@ int Ov007MenuHooks::func_ov007_020b7138(Ov007BootArgs *bootArgs) {
     GXS_SetVisiblePlane(0);
     GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     Work_Create();
-    WORK->settings->bootArgs = bootArgs;
-    WORK->callback = this->callback;
+    sMenuWork->settings->bootArgs = bootArgs;
+    sMenuWork->callback = this->callback;
     func_ov007_020b30b0();
     MenuSound_Create();
-    func_ov007_020b8714((int)WORK->cameras[1], (int)WORK->textures[10], WORK->settings->language);
+    func_ov007_020b8714((int)sMenuWork->cameras[1], (int)sMenuWork->textures[10],
+                        sMenuWork->settings->language);
     func_ov007_020b782c();
     ScreenFade_Create();
     func_ov007_020be50c();
     func_ov007_020b6544();
     flags = bootArgs->bootFlags;
-    WORK->nextFigureIndex = flags & 1;
-    WORK->strokeStage[0] = (flags & 6) >> 1;
-    WORK->strokeStage[1] = (flags & 0x18) >> 3;
+    sMenuWork->nextFigureIndex = flags & 1;
+    sMenuWork->strokeStage[0] = (flags & 6) >> 1;
+    sMenuWork->strokeStage[1] = (flags & 0x18) >> 3;
     sFrameReady = 1;
     return 1;
 }
@@ -129,30 +130,30 @@ int func_ov007_020b7090(u16 x, u16 y, u16 touch, u16 validity, int keys) {
     int choice = 0;
 
     sFrameReady = 0;
-    Pad_Update(WORK->pad, &keys);
+    Pad_Update(sMenuWork->pad, &keys);
     sample.x = x;
     sample.y = y;
     sample.touch = touch;
     sample.validity = validity;
     func_ov007_020b2e64(&sample);
-    func_ov007_020c1db0(WORK->touch, &sample);
+    func_ov007_020c1db0(sMenuWork->touch, &sample);
     MenuSound_UpdateLoops();
     func_ov007_020aed98();
-    if (WORK->choiceReady != 0 || WORK->pendingChoice == 1)
-        choice = WORK->pendingChoice;
+    if (sMenuWork->choiceReady != 0 || sMenuWork->pendingChoice == 1)
+        choice = sMenuWork->pendingChoice;
     return choice;
 }
 
 extern "C" int func_ov007_020b7040(void) {
     func_ov007_020bcf90();
-    Display_DrawOam(WORK->display);
-    WORK->frameCount++;
+    Display_DrawOam(sMenuWork->display);
+    sMenuWork->frameCount++;
     sFrameReady = 1;
     return 1;
 }
 
 int func_ov007_020b6f4c(void) {
-    Ov007Work *work = WORK;
+    Ov007Work *work = sMenuWork;
     int flags = work->nextFigureIndex;
     unsigned int strokeBits = (work->strokeStage[0] << 1) | (work->strokeStage[1] << 3);
 
@@ -183,13 +184,13 @@ int func_ov007_020b6eb4(void) {
     if (sFrameReady != 0) {
         CP_SaveContext(&cpContext);
         ScreenFade_Update();
-        if (WORK->pendingCapture != 0) {
+        if (sMenuWork->pendingCapture != 0) {
             MenuGfx_StartCapture();
-            WORK->pendingCapture = 0;
+            sMenuWork->pendingCapture = 0;
         }
-        if (WORK->pendingBgMode != 0) {
-            MenuGfx_SetBgMode(WORK->pendingBgMode);
-            WORK->pendingBgMode = 0;
+        if (sMenuWork->pendingBgMode != 0) {
+            MenuGfx_SetBgMode(sMenuWork->pendingBgMode);
+            sMenuWork->pendingBgMode = 0;
         }
         Display_Upload();
         CPi_RestoreContext(&cpContext);

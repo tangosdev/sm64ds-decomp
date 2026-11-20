@@ -25,21 +25,21 @@ extern void func_ov007_020aec94(int a);
  * and MessageWindow_Close runs; once func_ov007_020b79e4 reads 0 it
  * replays the pending choice (func_ov007_020aec94). */
 void func_ov007_020b0834(void) {
-    if (WORK->states[1]->stateTicks == 0) {
-        func_ov007_020c0638(WORK->layerSlots[6]->layer, 0, 0, 0);
-        func_ov007_020b7d94(WORK->settings->dialogKind);
+    if (sMenuWork->states[1]->stateTicks == 0) {
+        func_ov007_020c0638(sMenuWork->layerSlots[6]->layer, 0, 0, 0);
+        func_ov007_020b7d94(sMenuWork->settings->dialogKind);
         func_ov007_020b2614(2, 0, 8);
         func_ov007_020c1d8c(0);
     }
 
-    switch (WORK->states[1]->stateWork) {
+    switch (sMenuWork->states[1]->stateWork) {
     case 0:
         if (func_ov007_020b79c8() == 0)
             return;
         {
-            Ov007Pad *pad = WORK->pad;
+            Ov007Pad *pad = sMenuWork->pad;
             if ((pad->keys & ~pad->prevKeys) == 0) {
-                Ov007Touch *touch = WORK->touch;
+                Ov007Touch *touch = sMenuWork->touch;
                 if (touch->cur.touch == 0)
                     return;
                 if (touch->prev.touch != 0)
@@ -49,28 +49,28 @@ void func_ov007_020b0834(void) {
             }
         }
         {
-            Ov007Settings *settings = WORK->settings;
+            Ov007Settings *settings = sMenuWork->settings;
             int filesFailed = (settings->filesFailed == 1);
             int minigamesFailed = (settings->minigamesFailed == 1);
             func_ov007_020bdeb0(0xc);
             if (filesFailed) {
-                if (WORK->pendingChoice == 9) {
-                    int v = WORK->callback(0x16);
-                    WORK->settings->filesFailed = v;
+                if (sMenuWork->pendingChoice == 9) {
+                    int v = sMenuWork->callback(0x16);
+                    sMenuWork->settings->filesFailed = v;
                 }
             }
             if (minigamesFailed) {
-                int v = WORK->callback(0x17);
-                WORK->settings->minigamesFailed = v;
+                int v = sMenuWork->callback(0x17);
+                sMenuWork->settings->minigamesFailed = v;
             }
             MessageWindow_Close();
-            WORK->states[1]->stateWork = 1;
+            sMenuWork->states[1]->stateWork = 1;
         }
         return;
     case 1:
         if (func_ov007_020b79e4() != 0)
             return;
-        func_ov007_020aec94(WORK->pendingChoice);
+        func_ov007_020aec94(sMenuWork->pendingChoice);
         return;
     }
 }

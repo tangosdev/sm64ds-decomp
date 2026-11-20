@@ -20,16 +20,16 @@ typedef char
  * keep the tree's int return, so the results are cast here. */
 void func_ov007_020aefb4(void) {
     int r6 = 0;
-    int n = WORK->states[1]->stateTicks - 60;
+    int n = sMenuWork->states[1]->stateTicks - 60;
     if (n >= 0) {
         int rem = FX_ModS32(n, 240);
         int quo = FX_DivS32(n - rem, 240);
         if (rem == 0) {
-            Ov007Item *p = WORK->itemNodes[1]->item;
+            Ov007Item *p = sMenuWork->itemNodes[1]->item;
             p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
         }
-        int r7 = WORK->states[0]->previousState == 3;
+        int r7 = sMenuWork->states[0]->previousState == 3;
         if (PickerScene_IsIdle() != 0 && quo >= r7) {
             int a = -1, b = -1;
             func_ov007_020af260(quo, rem, &a, &b);

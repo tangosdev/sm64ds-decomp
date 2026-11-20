@@ -14,20 +14,20 @@ void func_ov007_020b6a84(void) {
     unsigned char buf[0x54];
     int v;
 
-    WORK->states[0] = func_ov007_020c9388(0);
-    WORK->states[1] = func_ov007_020c9388(-1);
-    WORK->states[2] = func_ov007_020c9388(1);
-    WORK->cameras[0] = func_ov007_020c023c();
-    WORK->cameras[1] = func_ov007_020c023c();
-    WORK->lights[0] = func_ov007_020c241c(0);
-    WORK->lights[1] = func_ov007_020c241c(1);
-    WORK->touch = func_ov007_020c2068();
+    sMenuWork->states[0] = func_ov007_020c9388(0);
+    sMenuWork->states[1] = func_ov007_020c9388(-1);
+    sMenuWork->states[2] = func_ov007_020c9388(1);
+    sMenuWork->cameras[0] = func_ov007_020c023c();
+    sMenuWork->cameras[1] = func_ov007_020c023c();
+    sMenuWork->lights[0] = func_ov007_020c241c(0);
+    sMenuWork->lights[1] = func_ov007_020c241c(1);
+    sMenuWork->touch = func_ov007_020c2068();
 
-    WORK->pad = func_ov007_020c2304();
-    WORK->tweens[0] = func_ov007_020c908c(&WORK->tweenOut[0]);
-    WORK->tweens[1] = func_ov007_020c908c(&WORK->tweenOut[1]);
+    sMenuWork->pad = func_ov007_020c2304();
+    sMenuWork->tweens[0] = func_ov007_020c908c(&sMenuWork->tweenOut[0]);
+    sMenuWork->tweens[1] = func_ov007_020c908c(&sMenuWork->tweenOut[1]);
 
-    WORK->settings = func_ov007_020c3df4(0, sizeof(Ov007Settings));
+    sMenuWork->settings = func_ov007_020c3df4(0, sizeof(Ov007Settings));
 
     /* The owner-info language (0 Japanese ... 5 Spanish) to the menu's own
      * numbering. */
@@ -36,23 +36,23 @@ void func_ov007_020b6a84(void) {
     switch (v) {
     case 0:
     case 1:
-        WORK->settings->language = 1;
+        sMenuWork->settings->language = 1;
         break;
     case 2:
-        WORK->settings->language = 2;
+        sMenuWork->settings->language = 2;
         break;
     case 3:
-        WORK->settings->language = 3;
+        sMenuWork->settings->language = 3;
         break;
     case 4:
-        WORK->settings->language = 5;
+        sMenuWork->settings->language = 5;
         break;
     case 5:
-        WORK->settings->language = 4;
+        sMenuWork->settings->language = 4;
         break;
     default:
-        WORK->settings->language = 0;
+        sMenuWork->settings->language = 0;
         break;
     }
-    WORK->modelReady = 0;
+    sMenuWork->modelReady = 0;
 }

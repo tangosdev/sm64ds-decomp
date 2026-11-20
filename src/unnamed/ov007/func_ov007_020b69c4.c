@@ -12,21 +12,21 @@ extern Ov007PaletteBuf *func_ov007_020c946c(const void *source);
 void func_ov007_020b69c4(void) {
     int i;
 
-    WORK->model = 0;
-    WORK->figure = 0;
-    WORK->altFigure = 0;
-    WORK->figureIndex = WORK->nextFigureIndex = 0;
+    sMenuWork->model = 0;
+    sMenuWork->figure = 0;
+    sMenuWork->altFigure = 0;
+    sMenuWork->figureIndex = sMenuWork->nextFigureIndex = 0;
 
     for (i = 0; i < 2; i++) {
-        WORK->strokeStage[i] = 0;
+        sMenuWork->strokeStage[i] = 0;
     }
 
-    WORK->paletteState = (Ov007MenuState *)func_ov007_020c9388(0);
+    sMenuWork->paletteState = (Ov007MenuState *)func_ov007_020c9388(0);
 
     for (i = 0; i < 3; i++) {
-        WORK->paletteBufs[i] = func_ov007_020c946c(0);
+        sMenuWork->paletteBufs[i] = func_ov007_020c946c(0);
     }
 
-    WORK->paletteBufs[0]->source = WORK->paletteBufs[2]->colors;
-    WORK->paletteBufs[1]->source = WORK->paletteBufs[0]->colors;
+    sMenuWork->paletteBufs[0]->source = sMenuWork->paletteBufs[2]->colors;
+    sMenuWork->paletteBufs[1]->source = sMenuWork->paletteBufs[0]->colors;
 }

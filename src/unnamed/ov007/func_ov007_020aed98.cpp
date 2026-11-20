@@ -26,13 +26,13 @@ extern void func_ov007_020ad660(struct Ov007LayerSlot *slot);
 
 void func_ov007_020aed98(void)
 {
-    Ov007Work *g = WORK;
+    Ov007Work *g = sMenuWork;
     Ov007MenuState *r6 = g->states[0];
     Ov007MenuState *r5 = g->states[1];
     int i;
 
     for (i = 0; i < 24; i++) {
-        WORK->itemViews[i]->ItemView_HandleTouch(WORK->touch);
+        sMenuWork->itemViews[i]->ItemView_HandleTouch(sMenuWork->touch);
     }
 
     MessageWindow_Update();
@@ -53,7 +53,7 @@ void func_ov007_020aed98(void)
     func_ov007_020c92d0(r5);
 
     if (r6->stateTicks == 0 || r5->stateTicks == 0) {
-        func_ov007_020c2090(WORK->pad);
+        func_ov007_020c2090(sMenuWork->pad);
     }
 
     switch (r6->currentState) {
@@ -66,16 +66,16 @@ void func_ov007_020aed98(void)
     case 6: func_ov007_020b0324(); break;
     }
 
-    func_ov007_020c92d0(WORK->states[2]);
+    func_ov007_020c92d0(sMenuWork->states[2]);
 
-    WORK->chosenItemId = -1;
+    sMenuWork->chosenItemId = -1;
     for (i = 0; i < 24; i++) {
-        ItemView_Update(WORK->itemViews[i]);
+        ItemView_Update(sMenuWork->itemViews[i]);
     }
     for (i = 0; i < 9; i++) {
-        func_ov007_020add3c(WORK->itemNodes[i]);
+        func_ov007_020add3c(sMenuWork->itemNodes[i]);
     }
     for (i = 0; i < 8; i++) {
-        func_ov007_020ad660(WORK->layerSlots[i]);
+        func_ov007_020ad660(sMenuWork->layerSlots[i]);
     }
 }
