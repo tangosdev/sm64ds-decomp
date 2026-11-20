@@ -281,7 +281,7 @@ void TrmpFx_ClearAll(void) {
   return;
 }
 ```
-![Ghidra-TrmpFx_ClearAll_Decompiler-view](images/Ghidra-TrmpFx_ClearAll_Decompiler-view.png)
+![Ghidra-TrmpFx_ClearAll_decompiler-view](images/Ghidra-TrmpFx_ClearAll_decompiler-view.png)
 
 Looking with more attention, at the listing view image, we can see that the `.bss` *initialized memory* references for `sTrmpFxCount`, `sTrmpFxPool`, and `sTrmpFxList` are red. Something's wrong. When double-clicking on the red references, for example, `=>DAT_02142f70`, a warning:
 
