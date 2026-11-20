@@ -2100,7 +2100,7 @@ func_0204ff9c kind:function(arm,size=0x30) addr:0x0204ff9c
 func_0204ffcc kind:function(arm,size=0x3c) addr:0x0204ffcc
 func_02050008 kind:function(arm,size=0x30) addr:0x02050008
 func_02050038 kind:function(arm,size=0x6c) addr:0x02050038
-func_020500a4 kind:function(arm,size=0x114) addr:0x020500a4
+AlarmCallback kind:function(arm,size=0x114) addr:0x020500a4
 NNSi_SndCaptureEndSleep kind:function(arm,size=0xa0) addr:0x020501b8
 NNSi_SndCaptureBeginSleep kind:function(arm,size=0x60) addr:0x02050258
 NNSi_SndCaptureStop kind:function(arm,size=0xec) addr:0x020502b8
@@ -2142,12 +2142,12 @@ NNS_SndHeapCreate kind:function(arm,size=0x9c) addr:0x0205130c
 WaveArcDisposeCallback kind:function(arm,size=0x3c) addr:0x020513a8
 BankDisposeCallback kind:function(arm,size=0x3c) addr:0x020513e4
 SeqDisposeCallback kind:function(arm,size=0x34) addr:0x02051420
-func_02051454 kind:function(arm,size=0x60) addr:0x02051454
-func_020514b4 kind:function(arm,size=0x60) addr:0x020514b4
-func_02051514 kind:function(arm,size=0x60) addr:0x02051514
-func_02051574 kind:function(arm,size=0x60) addr:0x02051574
-func_020515d4 kind:function(arm,size=0x60) addr:0x020515d4
-func_02051634 kind:function(arm,size=0xa0) addr:0x02051634
+DisposeCallback kind:function(arm,size=0x60) addr:0x02051454
+LoadWaveArc kind:function(arm,size=0x60) addr:0x020514b4
+LoadBank kind:function(arm,size=0x60) addr:0x02051514
+LoadSeqArc kind:function(arm,size=0x60) addr:0x02051574
+LoadSeq kind:function(arm,size=0x60) addr:0x020515d4
+NNSi_SndArcLoadFile kind:function(arm,size=0xa0) addr:0x02051634
 func_020516d4 kind:function(arm,size=0xc8) addr:0x020516d4
 func_0205179c kind:function(arm,size=0x104) addr:0x0205179c
 func_020518a0 kind:function(arm,size=0x3c) addr:0x020518a0
@@ -3205,7 +3205,6 @@ data_020869dc kind:data(any) addr:0x020869dc
 data_02086a08 kind:data(any) addr:0x02086a08
 data_02086a30 kind:data(any) addr:0x02086a30
 data_02086a58 kind:data(any) addr:0x02086a58
-data_02086b58 kind:data(any) addr:0x02086b58
 __ptmf_null kind:data(any) addr:0x02086b58
 .p__sinit_d_camera.cpp kind:data(word) addr:0x02086b60
 .p__sinit_KuppaScript.cpp kind:data(word) addr:0x02086b64
@@ -3533,7 +3532,6 @@ data_0208e380 kind:data(any) addr:0x0208e380
 _ZTS8dActor_c kind:data(any) addr:0x0208e384
 _ZTI8dActor_c kind:data(any) addr:0x0208e390
 _ZTV8dActor_c kind:data(any) addr:0x0208e3a4
-data_0208e3a4 kind:data(any) addr:0x0208e3a4
 sSavedMusicVolume kind:data(any) addr:0x0208e420
 sSavedSubVolume kind:data(any) addr:0x0208e424
 sCurrentBank kind:data(any) addr:0x0208e428
@@ -3547,7 +3545,6 @@ sLayer3Music kind:data(any) addr:0x0208e444
 sPlayerSeqLimits kind:data(any) addr:0x0208e448
 data_0208e498 kind:data(byte[22]) addr:0x0208e498
 _ZTV7dBase_c kind:data(any) addr:0x0208e4b8
-data_0208e4b8 kind:data(any) addr:0x0208e4b8
 data_0208e500 kind:data(any) addr:0x0208e500
 data_0208e504 kind:data(any) addr:0x0208e504
 data_0208e538 kind:data(any) addr:0x0208e538
@@ -3580,7 +3577,6 @@ _ZTS10dCcAcPos_c kind:data(any) addr:0x0208e6a4
 _ZTV8dCcPos_c kind:data(any) addr:0x0208e6bc
 _ZTV7dCcAc_c kind:data(any) addr:0x0208e6d4
 _ZTV5dCc_c kind:data(any) addr:0x0208e6ec
-data_0208e6ec kind:data(any) addr:0x0208e6ec
 _ZTV10dCcAcPos_c kind:data(any) addr:0x0208e704
 _ZTI8dClipper kind:data(any) addr:0x0208e714
 _ZTS8dClipper kind:data(any) addr:0x0208e71c
@@ -3600,7 +3596,6 @@ _ZTS11dExtModel_c kind:data(any) addr:0x0208e7ac
 _ZTV15dExtAnmTexSRT_c kind:data(any) addr:0x0208e7c4
 _ZTV15dExtAnmTexPat_c kind:data(any) addr:0x0208e7d4
 _ZTV15dExtFrameCtrl_c kind:data(any) addr:0x0208e7e4
-data_0208e7e4 kind:data(any) addr:0x0208e7e4
 _ZTV17dExtAnmMaterial_c kind:data(any) addr:0x0208e7f4
 _ZTS14dExtAnmModel_c kind:data(any) addr:0x0208e7fc
 _ZTS15dExtAnmTexSRT_c kind:data(any) addr:0x0208e810
@@ -3674,7 +3669,6 @@ data_0208ecf4 kind:data(any) addr:0x0208ecf4
 data_0208edf8 kind:data(any) addr:0x0208edf8
 data_0208ee00 kind:data(any) addr:0x0208ee00
 _ZTIN8dGraph_c10callback_cE kind:data(any) addr:0x0208ee04
-data_0208ee14 kind:data(any) addr:0x0208ee14
 _ZTVN8dGraph_c10callback_cE kind:data(any) addr:0x0208ee14
 _ZTSN8dGraph_c10callback_cE kind:data(any) addr:0x0208ee24
 data_0208ee3c kind:data(any) addr:0x0208ee3c
@@ -4146,7 +4140,6 @@ _ZTS9dScBoot_c kind:data(any) addr:0x020914bc
 _ZTI9dScBoot_c kind:data(any) addr:0x020914c8
 _ZTI8dScene_c kind:data(any) addr:0x020914d4
 data_020914e0 kind:data(any) addr:0x020914e0
-data_02091528 kind:data(any) addr:0x02091528
 _ZTV9dScBoot_c kind:data(any) addr:0x02091528
 data_02091570 kind:data(any) addr:0x02091570
 data_020916d8 kind:data(any) addr:0x020916d8
@@ -4266,10 +4259,8 @@ g_profile_MULTIBOOT kind:data(any) addr:0x0209435c
 _ZTS7dScMB_c kind:data(any) addr:0x02094364
 _ZTI7dScMB_c kind:data(any) addr:0x02094370
 _ZTIN7dScMB_c15graphCallback_cE kind:data(any) addr:0x0209437c
-data_02094390 kind:data(any) addr:0x02094390
 _ZTVN7dScMB_c15graphCallback_cE kind:data(any) addr:0x02094390
 _ZTSN7dScMB_c15graphCallback_cE kind:data(any) addr:0x020943a0
-data_020943c4 kind:data(any) addr:0x020943c4
 _ZTV7dScMB_c kind:data(any) addr:0x020943c4
 data_0209440c kind:data(any) addr:0x0209440c
 data_0209444c kind:data(any) addr:0x0209444c
@@ -4333,7 +4324,6 @@ _ZTV12dBgCh_SphCrr kind:data(any) addr:0x02099338
 VTable_dBgPi_dBgCh_SphCrrThunk kind:data(any) addr:0x02099348
 VTable_dM3dGSph_dBgCh_SphCrrThunk kind:data(any) addr:0x02099358
 data_02099360 kind:data(any) addr:0x02099360
-data_02099368 kind:data(any) addr:0x02099368
 _ZTV5dBgPi kind:data(any) addr:0x02099368
 _ZTS4dBgW kind:data(any) addr:0x02099370
 _ZTI4dBgW kind:data(any) addr:0x02099378
@@ -4378,7 +4368,6 @@ data_02099ebc kind:data(any) addr:0x02099ebc
 data_02099ec4 kind:data(any) addr:0x02099ec4
 data_02099ecc kind:data(any) addr:0x02099ecc
 _ZTV7fBase_c kind:data(any) addr:0x02099edc
-data_02099edc kind:data(any) addr:0x02099edc
 data_02099f24 kind:data(any) addr:0x02099f24
 data_02099f28 kind:data(any) addr:0x02099f28
 data_02099f30 kind:data(any) addr:0x02099f30
@@ -4957,10 +4946,8 @@ data_020a0e98 kind:bss addr:0x020a0e98
 data_020a0e9c kind:bss addr:0x020a0e9c
 data_020a0ea0 kind:bss addr:0x020a0ea0
 _ZN6Memory14defaultHeapPtrE kind:bss addr:0x020a0ea0
-data_020a0ea4 kind:bss addr:0x020a0ea4
 ROOT_HEAP_ARENA_ID kind:bss addr:0x020a0ea4
 data_020a0ea8 kind:bss addr:0x020a0ea8
-data_020a0eac kind:bss addr:0x020a0eac
 GAME_HEAP_PTR kind:bss addr:0x020a0eac
 @1260 kind:bss addr:0x020a0eb0
 data_020a0ebc kind:bss addr:0x020a0ebc

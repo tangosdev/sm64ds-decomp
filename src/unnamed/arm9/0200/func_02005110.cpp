@@ -7,7 +7,6 @@
 
 extern "C" {
 
-extern int *Vec3_AsrInPlace(int *v, int sh);
 }
 
 /* Camera state main for following the player. The eye target is the
@@ -51,7 +50,7 @@ int func_02005110(dCamera_c *cam) {
         aim.x = sum.x;
         aim.y = sum.y;
         aim.z = sum.z;
-        Vec3_AsrInPlace((int *)(&aim), 1);
+        Vec3_AsrInPlace(&aim, 1);
         dist = Vec3_Dist(&eye, &aim);
         if (dist > 0x30000) {
             Vec3_Sub(&diff, &aim, &eye);
