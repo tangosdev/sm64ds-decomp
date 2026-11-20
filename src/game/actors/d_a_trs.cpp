@@ -717,15 +717,33 @@ void daTrs_c::UpdateScriptedPathBoo() {
 /* Behavior handler for variant 0xf: the Big Boo that leaves the OBJ_KEY. */
 void daTrs_c::UpdateKeyBigBoo() {
     switch (this->mState) {
-    case 0: func_ov063_02118914(); break;
-    case 1: func_ov063_0211873c(); break;
-    case 2: func_ov063_02118f50(); break;
-    case 3: func_ov063_021177b0(); break;
-    case 4: func_ov063_02118458(); break;
-    case 5: func_ov063_0211776c(); break;
-    case 6: func_ov063_02117364(); break;
-    case 7: func_ov063_02117cdc(); break;
-    case 8: func_ov063_02117b0c(); break;
+    case 0:
+        UpdateKeyBooInit();
+        break;
+    case 1:
+        UpdateKeyBooChase();
+        break;
+    case 2:
+        UpdateBigBooBouncedOn();
+        break;
+    case 3:
+        UpdateKeyBooHit();
+        break;
+    case 4:
+        UpdateKeyBooAttack();
+        break;
+    case 5:
+        UpdateKeyBooDefeated();
+        break;
+    case 6:
+        UpdateKeyBooRelocate();
+        break;
+    case 7:
+        UpdateKeyBooIntro();
+        break;
+    case 8:
+        UpdateKeyBooTalk();
+        break;
     }
     {
         int state = this->mState;
@@ -738,8 +756,7 @@ void daTrs_c::UpdateKeyBigBoo() {
     }
 }
 
-
-void daTrs_c::func_ov063_02117364() {
+void daTrs_c::UpdateKeyBooRelocate() {
 
     Vector3 pos = this->mPos;
 
@@ -753,7 +770,7 @@ void daTrs_c::func_ov063_02117364() {
             {
                 this->mBooFlags.mirrored ^= 1;
             }
-            func_ov063_02117650();
+            RelocateAwayFromPlayer();
             this->mTargetOpacity = 0xff;
             this->mParticle1 = 0;
             this->mParticle0 = this->mParticle1;
@@ -792,7 +809,7 @@ void daTrs_c::func_ov063_02117364() {
 
 #undef New
 
-void daTrs_c::func_ov063_02117650() {
+void daTrs_c::RelocateAwayFromPlayer() {
 
     struct Vector3 ppos;
     struct Vector3 npos;
@@ -829,8 +846,7 @@ void daTrs_c::func_ov063_02117650() {
     this->mPrevAngle.y = this->mAngle.y;
 }
 
-
-void daTrs_c::func_ov063_0211776c() {
+void daTrs_c::UpdateKeyBooDefeated() {
 
     Stop();
     unsigned short v = this->mStateTimer;
@@ -838,12 +854,11 @@ void daTrs_c::func_ov063_0211776c() {
         return;
     if (v != 0xf)
         return;
-    func_ov063_02118ddc();
+    SpawnKey();
     this->MarkForDestruction();
 }
 
-
-void daTrs_c::func_ov063_021177b0() {
+void daTrs_c::UpdateKeyBooHit() {
 
     if (this->mStateTimer == 0)
         this->mHitPoints--;
@@ -929,8 +944,7 @@ void daTrs_c::func_ov063_021177b0() {
     func_02012694(0x153, &this->mCamSpacePos);
 }
 
-
-void daTrs_c::func_ov063_02117b0c() {
+void daTrs_c::UpdateKeyBooTalk() {
 
     Vector3 v;
 
@@ -982,8 +996,7 @@ void daTrs_c::func_ov063_02117b0c() {
     }
 }
 
-
-void daTrs_c::func_ov063_02117cdc() {
+void daTrs_c::UpdateKeyBooIntro() {
 
     s16 v[3];
     Vector3 w;
@@ -1182,8 +1195,7 @@ void daTrs_c::func_ov063_02117cdc() {
     return;
 }
 
-
-void daTrs_c::func_ov063_02118458() {
+void daTrs_c::UpdateKeyBooAttack() {
     int status = GetAttackStatus();
 
     ApproachLinear(this->mPrevAngle.y, this->mAngleToPlayer,
@@ -1245,7 +1257,7 @@ void daTrs_c::func_ov063_02118458() {
     func_02012694(0x152, &this->mCamSpacePos);
 }
 
-void daTrs_c::func_ov063_0211873c() {
+void daTrs_c::UpdateKeyBooChase() {
 
     short a;
     int b;
@@ -1303,7 +1315,7 @@ void daTrs_c::func_ov063_0211873c() {
     this->mHorzSpeed = 0;
 }
 
-void daTrs_c::func_ov063_02118914() {
+void daTrs_c::UpdateKeyBooInit() {
 
     s32 scale;
 
@@ -1352,30 +1364,29 @@ void daTrs_c::UpdateBigBoo() {
 
     switch (this->mState) {
     case 0:
-        func_ov063_02119074();
+        UpdateBigBooInactive();
         break;
     case 1:
-        func_ov063_02118f74();
+        UpdateBigBooChase();
         break;
     case 2:
-        func_ov063_02118f50();
+        UpdateBigBooBouncedOn();
         break;
     case 3:
-        func_ov063_02118cd8();
+        UpdateBigBooHit();
         break;
     case 4:
-        func_ov063_02118b98();
+        UpdateBigBooDefeated();
         break;
     case 5:
-        func_ov063_02118b2c();
+        UpdateBigBooApproach();
         break;
     }
 
     ApproachTargetOpacityAndUpdateScale();
 }
 
-
-void daTrs_c::func_ov063_02118b2c() {
+void daTrs_c::UpdateBigBooApproach() {
     mHorzSpeed = 0x5000;
     int r = GetAttackStatus();
     if (r == -1) {
@@ -1391,8 +1402,7 @@ void daTrs_c::func_ov063_02118b2c() {
         mState = 1;
 }
 
-
-void daTrs_c::func_ov063_02118b98() {
+void daTrs_c::UpdateBigBooDefeated() {
     this->mBooFlags.hitByParam3Player = 0;
     Stop();
 
@@ -1431,8 +1441,7 @@ void daTrs_c::func_ov063_02118b98() {
     }
 }
 
-
-void daTrs_c::func_ov063_02118cd8() {
+void daTrs_c::UpdateBigBooHit() {
 
     if (this->mStateTimer == 0) {
         if (!this->mBooFlags.hitByParam3Player) {
@@ -1459,22 +1468,21 @@ void daTrs_c::func_ov063_02118cd8() {
     }
 }
 
+void daTrs_c::SpawnKey() {
 
-void daTrs_c::func_ov063_02118ddc() {
-
-  struct Vector3 v;
-  v.x = this->mPos.x;
-  int y = this->mPos.y;
-  v.y = y;
-  v.z = this->mPos.z;
-  v.y = y + 0x64000;
-  int s = this->mPos.x;
-  if(s < 0) s = -s;
-  v.x = s;
-  dActor_c::Spawn(TRS_ID_OBJ_KEY, 3, v, (0), this->mAreaIdx, -1);
-  func_02012694(0xbb, &this->mCamSpacePos);
+    struct Vector3 v;
+    v.x = this->mPos.x;
+    int y = this->mPos.y;
+    v.y = y;
+    v.z = this->mPos.z;
+    v.y = y + 0x64000;
+    int s = this->mPos.x;
+    if (s < 0)
+        s = -s;
+    v.x = s;
+    dActor_c::Spawn(TRS_ID_OBJ_KEY, 3, v, (0), this->mAreaIdx, -1);
+    func_02012694(0xbb, &this->mCamSpacePos);
 }
-
 
 void daTrs_c::func_ov063_02118e5c() {
 
@@ -1524,14 +1532,13 @@ void daTrsIcon_c::func_ov063_02118f24(const Vector3 &pos) {
     this->UntrackAndSpawnStar(this->mTrackStarID, this->mStarID, pos, val);
 }
 
-void daTrs_c::func_ov063_02118f50() {
+void daTrs_c::UpdateBigBooBouncedOn() {
 
     if (UpdateAfterBouncedOn(0x14))
         this->mState = 1;
 }
 
-
-void daTrs_c::func_ov063_02118f74() {
+void daTrs_c::UpdateBigBooChase() {
 
     short a2;
     int a3;
@@ -1576,8 +1583,7 @@ void daTrs_c::func_ov063_02118f74() {
     func_0201267c(0xc7, &this->mCamSpacePos);
 }
 
-
-void daTrs_c::func_ov063_02119074() {
+void daTrs_c::UpdateBigBooInactive() {
 
     /* ROM: beq body on ==0xc; bne after on !=0xf  =>  body when 0xc OR 0xf */
     if (this->mVariant == 0xc ||
@@ -1639,7 +1645,6 @@ void daTrs_c::func_ov063_02119074() {
         Stop();
     }
 }
-
 
 /* Behavior handler for variant 8. */
 void daTrs_c::func_ov063_02119274() {
