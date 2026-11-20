@@ -61,6 +61,7 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
+#include "Vector2.h"
 
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
 
@@ -881,17 +882,12 @@ void dScMgCoin_c::DrawBlocks() {
 /* A block falling into place. The panned landing sound plays on the frame
    vy turns from rising to falling; once it passes its row it rests (state
    4), bumps the running total and bursts an effect. */
-struct Pair_dd658 {
-    int a;
-    int b;
-};
-extern "C" void Mg_SpawnFx(int a, int b, struct Pair_dd658 *p2, struct Pair_dd658 *p3,
-                           struct Pair_dd658 *p4);
+extern "C" void Mg_SpawnFx(short state, short timer, Vector2 *pos, Vector2 *vecA, Vector2 *vecB);
 
 void dScMgCoin_c::Block_StateFallIn(int i) {
     int oldVy;
-    struct Pair_dd658 pa;
-    struct Pair_dd658 pb;
+    Vector2 pa;
+    Vector2 pb;
 
     oldVy = mBlocks[i].vy;
     mBlocks[i].y += oldVy;
@@ -922,10 +918,10 @@ void dScMgCoin_c::Block_StateFallIn(int i) {
         {
             int v1 = mBlocks[i].y;
             int v0 = mBlocks[i].x;
-            pb.a = 0x6c000;
-            pb.b = -0x80000;
-            pa.a = v0;
-            pa.b = v1;
+            pb.x = 0x6c000;
+            pb.y = -0x80000;
+            pa.x = v0;
+            pa.y = v1;
         }
         Mg_SpawnFx(1, 0x20, &pa, &pa, &pb);
     }

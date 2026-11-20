@@ -101,7 +101,7 @@ struct LifecycleSequence {
    heapStart and heapSize through those casts. include/Heap.h itself
    declares InitializeSolidHeapAsDefault as returning `void *`.
    Memory::Allocate and Memory::Deallocate come from include/Memory.h;
-   data_020a0eac, the actor heap they are handed, comes from
+   GAME_HEAP_PTR, the actor heap they are handed, comes from
    include/fBase_c.h, which needs it for its inline operator delete. */
 
 /* aliveState is 0 before the actor joins the lists, 1 while it is alive
@@ -347,7 +347,7 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
     if (lifecycleState)
         ((LifecycleSequence *)lifecycleState)->func_02044334();
     this->~fBase_c();   /* vtable+0x40 = slot 16 = D1 */
-    Memory::Deallocate(this, data_020a0eac);
+    Memory::Deallocate(this, GAME_HEAP_PTR);
 }
 
 /* vtable slot 6. The default update succeeds without doing any work. */
@@ -641,7 +641,7 @@ bool fBase_c::OnHeapCreated()
 /* Actor-heap allocation, cleared before construction. Every `new` of a
  * process class lands here. */
 void *fBase_c::operator new(size_t size) {
-    void *p = Memory::Allocate(size, -4, data_020a0eac);
+    void *p = Memory::Allocate(size, -4, GAME_HEAP_PTR);
     if (!p)
         return 0;
     memset(p, 0, size);

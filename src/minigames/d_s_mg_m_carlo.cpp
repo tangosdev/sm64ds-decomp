@@ -85,10 +85,6 @@ extern unsigned short sMCarloCardFrameSprites[];
 extern int sMgCardSprites[];
 
 extern int sMCarloCardSprites[];
-extern "C" {
-extern void func_0203d630(int *p, int m);
-}
-
 extern int sMgCoinsBetPlaced;
 
 extern int func_0203d5dc(const int *a, const int *b);
@@ -466,7 +462,7 @@ void dMgMCarloCardObj_c::DealIn(int slot) {
 
     Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
     mStep = delta;
-    func_0203d630(&mStep.x, 0x124);
+    func_0203d630(&mStep, 0x124);
 
     if (mStep.x < 0) {
         mStep.x = -mStep.x;

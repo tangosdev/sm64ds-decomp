@@ -39,6 +39,9 @@ int RandomIntInternal(int *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 /* ...and left; d may alias s. */
 void Vec3_Lsl(Vector3 *, const Vector3 *, int);
+/* The same two shifts applied to v itself; both return &v->x. */
+int *Vec3_AsrInPlace(Vector3 *, int);
+int *Vec3_LslInPlace(Vector3 *, int);
 
 #ifndef __cplusplus
 /* NitroSDK fx_vec (0x02053274..0x020538b8), seen from C under the game's

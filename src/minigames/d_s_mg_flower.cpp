@@ -144,7 +144,7 @@ void dScMgFlower_c::DealPetals() {
         mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / mPetalsLeft;
         mPetals[petalIndex].pos.x = 0;
         mPetals[petalIndex].pos.y = 0x30000;
-        func_0203d388(&mPetals[petalIndex].pos.x, mPetals[petalIndex].angle);
+        func_0203d388(&mPetals[petalIndex].pos, mPetals[petalIndex].angle);
         mPetals[petalIndex].pos.x += 0x80000;
         mPetals[petalIndex].pos.y += 0x60000;
         mPetals[petalIndex].active = 1;
@@ -330,7 +330,7 @@ s32 dScMgFlower_c::Behavior() {
             newlyCounted = 0;
             if (gTouchInfo[playerSlot].held != 0) {
                 Vec2_Sub(&drag.x, &mCursorX, &mPrevCursorX);
-                PetalPos *pos = &mPetals[mHeldPetal].pos;
+                Vector2 *pos = &mPetals[mHeldPetal].pos;
                 pos->x += drag.x;
                 pos->y += drag.y;
             } else {

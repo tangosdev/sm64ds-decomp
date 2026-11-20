@@ -36,13 +36,13 @@
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
 struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-extern "C" int *Vec3_AsrInPlace(VecFx32 *v, int n);
 void func_02012694(unsigned int, const Vector3 *);
 extern "C" int CopyTexPalFromLevelModel(void *);
 
@@ -214,7 +214,7 @@ void daKpa3Bg_c::StateFall() {
         pos.x = FX_SinIdx(ang >> 4) * 870 + (data_ov060_02119564[row].x << 12);
         pos.y = 0x12c000;
         pos.z = FX_CosIdx(ang >> 4) * 870 + (data_ov060_02119564[mVariant].z << 12);
-        Vec3_AsrInPlace((VecFx32 *)&pos, 3);
+        Vec3_AsrInPlace(&pos, 3);
         MTX_MultVec43(&pos, &data_0209b3ec, &mCamSpacePos);
         func_02012694(0xbc, &mCamSpacePos);
         mCamSpacePos = saved;

@@ -286,7 +286,7 @@ itself into a global list via `func_0203b244`, reads spawn data through
 three globals, and calls its own `SetRanges`. None of that is a wall by
 itself — bodies stay hand-written either way — but the synthesized part must
 already match, and today the hand-written form stores TWO different vtables
-to `+0` in sequence (`data_0208e4b8` then `data_0208e3a4`), which reads as
+to `+0` in sequence (`_ZTV7dBase_c` then `_ZTV8dActor_c`), which reads as
 an undeclared intermediate base. The fBase_c step is now settled and named
 `_ZN7fBase_cC2Ev`; the remaining work is to express `dBase_c` and then recover
 the two rich `dActor_c` variants without hand-written vptr stores.
@@ -352,14 +352,14 @@ RTTI names read straight off the vtables (typeinfo name strings):
 
 | object | RTTI name | note |
 |---|---|
-| `data_0208e4b8` | `7dBase_c` | the unnamed intermediate base §5b predicted; vtable already carries the class's 18 slots |
+| `_ZTV7dBase_c` | `7dBase_c` | the unnamed intermediate base §5b predicted; vtable already carries the class's 18 slots |
 | `_ZTV7dView_c` | `7dView_c` | overrides slot 9 (Render) + D1/D0 only; adds no new virtuals |
 | `_ZTV9dCamera_c` | `9dCamera_c` | the project's `dCamera_c` |
 
 Chain: **`dCamera_c : dView_c : dBase_c : fBase_c`**. The factory's three
 vptr stores walk it bottom-up (`dBase_c` store, `dView_c` store, then body +
 final `dCamera_c` store), and `dActor_c`'s double store in §5b starts with
-the same `data_0208e4b8` — everything sits on `dBase_c`, as the actor-vtables
+the same `_ZTV7dBase_c` — everything sits on `dBase_c`, as the actor-vtables
 note already said.
 
 Layout consequence: `dView_c` owns the 48-byte matrix at +0x50 (constructed
@@ -389,7 +389,7 @@ dBgPi's ROM pair (C1 0x0203816c / C2 0x0203819c) reads:
 
 ```text
 bl func_02037f18(this + 0x04)
-vptr = _ZTV5dBgPi (data_02099368)
+vptr = _ZTV5dBgPi
 bl func_020380c0(this)
 ```
 
@@ -485,7 +485,7 @@ asm transcription, or absent.
    `dCcAc_cC1/C2Ev` and `dCcAcPos_cC1Ev` are real C++ -- empty bodies over
    declared base steps, `dCcAc_c`'s `owner(0)` in the init list. `dCc_cC2Ev`
    stays hand-written extern "C" (its vtable data symbol is spelt
-   `data_0208e6ec`), and declaring `dCc_c()` in the header is what lets the
+   `_ZTV5dCc_c`), and declaring `dCc_c()` in the header is what lets the
    derived ones emit the base step by name. `dBgPcC2Ev` landed the same day:
    byte-identical to its C1 sibling, same five stores.
 7. **Hierarchy-rooted, hardest last**: `fBase_c9SceneNodeC1Ev` 0x0203b4c4
@@ -573,6 +573,6 @@ MATCH under strict relocs now, where the MI ones could never pass before.
 RTTI-correct `daTrsTrap_c` D1 is an empty body over typed `dExtSimpleModel_c` and
 `dBgW_KcMbg` members. Its first native D0 compiled 12 bytes short because a
 minimal `dActor_c` shadow fell back to global `operator delete`. Restoring the
-inherited inline operator that calls `Memory::Deallocate(ptr, data_020a0eac)`
+inherited inline operator that calls `Memory::Deallocate(ptr, GAME_HEAP_PTR)`
 made CodeWarrior emit the ROM's heap load and direct deallocation call after
 member/base teardown. Both D1 and D0 then linked VERIFIED with no blind slots.

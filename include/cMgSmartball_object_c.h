@@ -41,6 +41,7 @@
 #ifndef CMGSMARTBALL_OBJECT_C_H
 #define CMGSMARTBALL_OBJECT_C_H
 #include "types.h"
+#include "Vector2.h"
 
 struct dScMgSmartball_c;
 struct Vector2;
@@ -60,7 +61,7 @@ struct cMgSmartball_object_c {
     int PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2) {
         return PointInTriangle((int *)p, (int *)q0, (int *)q1, (int *)q2);
     }
-    void SetVel(int *v);           /* mVel0/mVel1 = v[0]/v[1] */
+    void SetVel(int *v); /* mVel = v[0]/v[1] */
 
     /* The C spelling of this class gets no explicit vtable member because
        no .c file declares it; every reader reaches these fields by raw
@@ -80,13 +81,11 @@ struct cMgSmartball_object_c {
     s32 mInitial0;    /* 0x018 -- constructor writes the same pair here and
                           at mCurrent */
     s32 mInitial1;    /* 0x01c */
-    s32 mVel0;        /* 0x020 -- constructor zeroes it. Velocity, x half:
+    Vector2 mVel;     /* 0x020 -- constructor zeroes it. Velocity:
                           cMgSmartball_ball_c::SaveSnapshot does
-                          `mCurrent0 += mVel0; mCurrent1 += mVel1;` and passes
-                          &mVel0 to Vec2_Len as a 2-vector. */
-    s32 mVel1;        /* 0x024 -- constructor zeroes it; the z half of that
-                          pair, and the value cMgSmartball_spring_c eases
-                          mCurrent1 back to rest with. */
+                          `mCurrent0 += mVel.x; mCurrent1 += mVel.y;`, and
+                          cMgSmartball_spring_c eases mCurrent1 back to rest
+                          with mVel.y. */
     s32 mRadius;      /* 0x028 -- constructor zeroes it and each child's own
                           constructor then writes its own constant (0x8000
                           ball, 0x14000 pakkun, 0x18000 board, 0x20000 dokan/

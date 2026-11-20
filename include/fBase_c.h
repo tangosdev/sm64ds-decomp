@@ -38,9 +38,9 @@
 #include "fListNode.h"
 
 /* The actor heap, for the inline operator delete at the end of the class.
-   data_020a0eac is the heap every actor is allocated from. */
+   GAME_HEAP_PTR is the heap every actor is allocated from. */
 #include "Memory.h"
-extern "C" mHeap::Heap_t *data_020a0eac;
+extern "C" mHeap::Heap_t *GAME_HEAP_PTR;
 
 struct fBase_c {
     /* Intrusive scene-graph node owned by every actor. */
@@ -203,14 +203,14 @@ struct fBase_c {
        a shared class declaration renumbers every consumer's @NNN. */
     static void *operator new(size_t);
     /* CW builds D0 (slot 17) as "run the destructor, then call operator delete".
-       The inline class overload selects the actor heap at data_020a0eac. The
+       The inline class overload selects the actor heap at GAME_HEAP_PTR. The
        global operator delete (arm9 0x0203cbcc) frees to Memory::defaultHeapPtr. The
        deleting destructor additionally calls the actor-heap deallocator.
        This inline overload reaches only fBase_c and dBase_c --
        CW inlines it from the class itself or its IMMEDIATE base -- which is why
        include/dActor_c.h carries its own copy. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, data_020a0eac);
+        Memory::Deallocate(ptr, GAME_HEAP_PTR);
     }
 };
 
