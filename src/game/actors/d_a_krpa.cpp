@@ -155,7 +155,7 @@ void daKrpa_c::ExecuteState() {
     daKrpaStateMethod *method = &this->mStateMethods->behavior;
     (this->**method)();
 }
-extern char data_ov070_021234c4[];
+extern BCA_File data_ov070_021234c4;
 extern char data_ov070_021234dc[];
 extern const u32 data_ov070_021222e8[] = {
     0x1007, 0x100b, 0x1012, 0x101e, 0x1036, 0x105d, 0x1098, 0x10eb, 0x115c, 0x11ee, 0x1379, 0x1638,
@@ -178,7 +178,7 @@ extern const u32 data_ov070_02122404[] = {
 };
 
 int daKrpa_c::EnterIdle() {
-    this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
+    this->mAnmModel.SetAnim(&data_ov070_021234c4, 0, 0x1000, 0);
     this->mFrameController.SetFrames((u32 *)data_ov070_02122404, 0x64, 1);
     this->mStateTimer = 115;
     this->mStateIndex = 0;
@@ -267,7 +267,7 @@ int daKrpa_c::EnterKnockedAway() {
     this->mScale.y = 0x1000;
     this->mScale.z = 0x1000;
     this->mStateTimer = 45;
-    this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
+    this->mAnmModel.SetAnim(&data_ov070_021234c4, 0, 0x1000, 0);
     Particle::System::NewSimple(kPtclKnockAwayA, this->mPos.x, this->mPos.y, this->mPos.z);
     Particle::System::NewSimple(kPtclKnockAwayB, this->mPos.x, this->mPos.y, this->mPos.z);
     this->mStateIndex = 3;
