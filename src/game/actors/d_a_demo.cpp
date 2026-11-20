@@ -319,7 +319,6 @@ extern "C" {
 /* The animation table of the anmModel_c variants: handlers 6c34 and 7038
    start an entry, and Behavior chains through it. */
 extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
-extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern dCamera_c *gCamera;
 extern VecFx32 data_ov002_0210b958;
@@ -482,8 +481,7 @@ void daDemo_c::ScrollBackgrounds()
 
 /* CleanupResources for param1 0x2f: free the scroll block. */
 
-int daDemo_c::FreeScroll()
-{
+int daDemo_c::FreeScroll() {
     ::operator delete(this->mScroll);
     return 1;
 }
@@ -506,8 +504,7 @@ int daDemo_c::FreeScroll()
  *   6  nothing
  * Every state then runs 2340, 2210 and 20f4. */
 
-int daDemo_c::UpdateScroll()
-{
+int daDemo_c::UpdateScroll() {
     switch (mScroll->state) {
     case 0:
         if (gSceneFader->IsAtStart() != 0) {
@@ -591,8 +588,7 @@ int daDemo_c::CreateScroll() {
 
 /* Script handler (table entry 23): mCue = p[0], the value 23f0 waits on. */
 
-int daDemo_c::SetCue(unsigned char *src)
-{
+int daDemo_c::SetCue(unsigned char *src) {
     this->mCue = src[0];
     return 1;
 }
@@ -2418,8 +2414,7 @@ void StaffRoll::func_ov002_020f5fe4() {
     func_ov002_020f5ad4();
 }
 
-int daDemo_c::FreeStaffRoll()
-{
+int daDemo_c::FreeStaffRoll() {
     this->mStaffRoll->func_ov002_020f5f60();
     if (this->mStaffRoll != 0) {
         ::operator delete(this->mStaffRoll);
@@ -2428,25 +2423,19 @@ int daDemo_c::FreeStaffRoll()
     return 1;
 }
 
-
-int daDemo_c::UpdateStaffRoll()
-{
+int daDemo_c::UpdateStaffRoll() {
     this->mStaffRoll->func_ov002_020f5fb8();
     this->mStaffRoll->func_ov002_020f5f8c();
     return 1;
 }
 
-
-int daDemo_c::SetStaffRollCue(unsigned char *src)
-{
+int daDemo_c::SetStaffRollCue(unsigned char *src) {
     this->mCue = *src;
     this->mStaffRoll->func_ov002_020f5dd8(this->mCue);
     return 1;
 }
 
-
-int daDemo_c::ApplyStaffRollCue()
-{
+int daDemo_c::ApplyStaffRollCue() {
     this->mStaffRoll->func_ov002_020f5f0c(this->mCue);
     return 1;
 }
@@ -2620,32 +2609,24 @@ daDemo_c::param_c::param_c() {
     mScale[0].z = 0;
 }
 
-
-int daDemo_c::Despawn()
-{
+int daDemo_c::Despawn() {
     MarkForDestruction();
     return 1;
 }
 
-
-int daDemo_c::PlayBank1Sound(unsigned char *p)
-{
+int daDemo_c::PlayBank1Sound(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
     Sound::Play(1, id, mCamSpacePos);
     return 1;
 }
 
-
-int daDemo_c::PlayLongSound(unsigned char *p)
-{
+int daDemo_c::PlayLongSound(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, id, mCamSpacePos, 0);
     return 1;
 }
 
-
-int daDemo_c::PlayBank3Sound(unsigned char *p)
-{
+int daDemo_c::PlayBank3Sound(unsigned char *p) {
     unsigned int v = ReadUnalignedInt(p);
     func_02012694(v, &mCamSpacePos);
     return 1;
@@ -2656,8 +2637,7 @@ int daDemo_c::PlayBank3Sound(unsigned char *p)
  * horizontal speed. The legacy per-function file recorded its match under
  * mwccarm 1.2/sp2p3; this TU builds under the 2004/b56 pin. */
 
-int daDemo_c::FaceTargetAndMove(unsigned char *p)
-{
+int daDemo_c::FaceTargetAndMove(unsigned char *p) {
     Vector3 target;
     int y, z;
     z = ReadUnalignedShort(p + 4) << 12;
@@ -2671,9 +2651,7 @@ int daDemo_c::FaceTargetAndMove(unsigned char *p)
     return 1;
 }
 
-
-s32 daDemo_c::SetPoseFromRecord(unsigned char *data)
-{
+s32 daDemo_c::SetPoseFromRecord(unsigned char *data) {
     s32 x, y, z;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
@@ -2686,16 +2664,12 @@ s32 daDemo_c::SetPoseFromRecord(unsigned char *data)
     return 1;
 }
 
-
-int daDemo_c::SetOpacity(unsigned char *src)
-{
+int daDemo_c::SetOpacity(unsigned char *src) {
     this->mOpacity = src[0];
     return 1;
 }
 
-
-int daDemo_c::PlayAnimationEntry(unsigned char *src)
-{
+int daDemo_c::PlayAnimationEntry(unsigned char *src) {
     unsigned char v = *src;
     ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514(data_ov002_0210bc88, v);
     return 1;
@@ -2740,7 +2714,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
          built by __sinit instead), and MtxStack.h's MTX_MultVec43 overload
          takes the game's Vector3. */
         MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
-        Vec3_LslInPlace((int *)&v, 3);
+        Vec3_LslInPlace(&v, 3);
         SteerTowardPoint(&v, 8);
     }
     this->mPrevAngle.x = this->mAngle.x;
@@ -2754,8 +2728,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
  * the animation's currFrame set from a random draw scaled by
  * numFramesAndFlags. */
 
-int daDemo_c::PlaceFromRecord(unsigned char *p)
-{
+int daDemo_c::PlaceFromRecord(unsigned char *p) {
     int b;
     int c0;
     int d;
@@ -2793,8 +2766,7 @@ int daDemo_c::PlaceFromRecord(unsigned char *p)
  * mSpeed.z to mMagnitude times the Z axis row of the animated model's
  * matrix. */
 
-void daDemo_c::SteerTowardPoint(struct Vector3 *v, int amt)
-{
+void daDemo_c::SteerTowardPoint(struct Vector3 *v, int amt) {
     Matrix4x3 *m;
     ApproachAngle(&this->mAngle.x, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
     ApproachAngle(&this->mAngle.y, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
@@ -2806,15 +2778,12 @@ void daDemo_c::SteerTowardPoint(struct Vector3 *v, int amt)
 
 /* Script handler 9: clear mFlags bit 0x2. */
 
-int daDemo_c::DisableRenderClip()
-{
+int daDemo_c::DisableRenderClip() {
     this->mFlags &= ~0x2;
     return 1;
 }
 
-
-int daDemo_c::UpdateDescent(int a, int arg)
-{
+int daDemo_c::UpdateDescent(int a, int arg) {
     if (arg == gKuppaScriptFrame) {
         mParticleID[0] = 0;
         mParticleID[1] = 0;
@@ -2854,9 +2823,7 @@ int daDemo_c::UpdateDescent(int a, int arg)
     return 1;
 }
 
-
-int daDemo_c::UpdateFadeIn(int a, int arg)
-{
+int daDemo_c::UpdateFadeIn(int a, int arg) {
     if (arg == 0) {
         if (arg == gKuppaScriptFrame) {
             this->mMagnitude = 0x10000;
@@ -2882,9 +2849,7 @@ int daDemo_c::UpdateFadeIn(int a, int arg)
     return 1;
 }
 
-
-int daDemo_c::UpdateSpin()
-{
+int daDemo_c::UpdateSpin() {
     this->mScale.x = 0x3000;
     this->mScale.y = 0x3000;
     this->mScale.z = 0x3000;
@@ -2900,9 +2865,7 @@ int daDemo_c::UpdateSpin()
     return 1;
 }
 
-
-int daDemo_c::UpdateRiseOrSink(unsigned char *flag, int val)
-{
+int daDemo_c::UpdateRiseOrSink(unsigned char *flag, int val) {
     if (*flag != 0) {
         if (val == gKuppaScriptFrame)
             func_02012790(0x17);
@@ -2940,7 +2903,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         Message::func_0201f138();
     }
     MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
-    Vec3_LslInPlace(&this->mPos.x, 3);
+    Vec3_LslInPlace(&this->mPos, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         Message::func_0201ef38();
     this->mOpacity = this->mMagnitude >> 12;
@@ -3007,7 +2970,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *src, int first) {
         dp->z = sum.z;
     }
     MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &data_0209b41c, &this->mPos);
-    Vec3_LslInPlace(&this->mPos.x, 3);
+    Vec3_LslInPlace(&this->mPos, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
@@ -3203,25 +3166,25 @@ void daDemo_c::RunCommand(unsigned char *command, int first, int last) {
         (PMF3)&daDemo_c::func_ov002_020f7780, /* 2 */
         (PMF3)&daDemo_c::func_ov002_020f7538, /* 3 */
         (PMF3)&daDemo_c::func_ov002_020f7410, /* 4 */
-        (PMF3)&daDemo_c::UpdateRiseOrSink, /* 5 */
-        (PMF3)&daDemo_c::UpdateSpin, /* 6 */
-        (PMF3)&daDemo_c::UpdateFadeIn, /* 7 */
-        (PMF3)&daDemo_c::UpdateDescent, /* 8 */
-        (PMF3)&daDemo_c::DisableRenderClip, /* 9 */
-        (PMF3)&daDemo_c::PlaceFromRecord, /* 10 */
+        (PMF3)&daDemo_c::UpdateRiseOrSink,    /* 5 */
+        (PMF3)&daDemo_c::UpdateSpin,          /* 6 */
+        (PMF3)&daDemo_c::UpdateFadeIn,        /* 7 */
+        (PMF3)&daDemo_c::UpdateDescent,       /* 8 */
+        (PMF3)&daDemo_c::DisableRenderClip,   /* 9 */
+        (PMF3)&daDemo_c::PlaceFromRecord,     /* 10 */
         (PMF3)&daDemo_c::func_ov002_020f6c60, /* 11 */
-        (PMF3)&daDemo_c::PlayAnimationEntry, /* 12 */
-        (PMF3)&daDemo_c::SetOpacity, /* 13 */
-        (PMF3)&daDemo_c::SetPoseFromRecord, /* 14 */
-        (PMF3)&daDemo_c::FaceTargetAndMove, /* 15 */
-        (PMF3)&daDemo_c::PlayBank3Sound, /* 16 */
-        (PMF3)&daDemo_c::PlayLongSound, /* 17 */
-        (PMF3)&daDemo_c::PlayBank1Sound, /* 18 */
-        (PMF3)&daDemo_c::Despawn, /* 19 */
-        (PMF3)&daDemo_c::CreateStaffRoll, /* 20 */
-        (PMF3)&daDemo_c::SetStaffRollCue, /* 21 */
-        (PMF3)&daDemo_c::StartScroll, /* 22 */
-        (PMF3)&daDemo_c::SetCue, /* 23 */
+        (PMF3)&daDemo_c::PlayAnimationEntry,  /* 12 */
+        (PMF3)&daDemo_c::SetOpacity,          /* 13 */
+        (PMF3)&daDemo_c::SetPoseFromRecord,   /* 14 */
+        (PMF3)&daDemo_c::FaceTargetAndMove,   /* 15 */
+        (PMF3)&daDemo_c::PlayBank3Sound,      /* 16 */
+        (PMF3)&daDemo_c::PlayLongSound,       /* 17 */
+        (PMF3)&daDemo_c::PlayBank1Sound,      /* 18 */
+        (PMF3)&daDemo_c::Despawn,             /* 19 */
+        (PMF3)&daDemo_c::CreateStaffRoll,     /* 20 */
+        (PMF3)&daDemo_c::SetStaffRollCue,     /* 21 */
+        (PMF3)&daDemo_c::StartScroll,         /* 22 */
+        (PMF3)&daDemo_c::SetCue,              /* 23 */
     };
     (this->*sCommandTable[command[6]])(command + 7, first, last);
 }

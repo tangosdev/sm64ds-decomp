@@ -219,7 +219,6 @@ _ZTV8daFish_c kind:data(any) addr:0x021484bc
 _ZTI15daObjPathLift_c kind:data(any) addr:0x02148538
 _ZTS15daObjPathLift_c kind:data(any) addr:0x02148544
 g_profile_PATH_LIFT kind:data(any) addr:0x02148558
-data_ov100_0214857c kind:data(any) addr:0x0214857c
 _ZTV15daObjPathLift_c kind:data(any) addr:0x0214857c
 gButterflyFlyAnimationFile kind:bss addr:0x02148600
 gButterflyModelFile kind:bss addr:0x02148608

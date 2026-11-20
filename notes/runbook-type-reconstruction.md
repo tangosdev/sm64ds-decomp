@@ -240,7 +240,7 @@ int *_ZN19daObjBlockItemTag_cD0Ev(int *t)
 {
     t[0] = (int)_ZTV19daObjBlockItemTag_c;
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(t, data_020a0eac);
+    _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(t, GAME_HEAP_PTR);
     return t;
 }
 ```

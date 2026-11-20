@@ -1336,7 +1336,7 @@ void dScEntry_c::UpdateMatchLoading() {
 }
 
 void dScEntry_c::LoadCourseResources(int course) {
-    mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
+    mHeap::Heap_t *previousHeap = GAME_HEAP_PTR->SetDefault();
     LoadArchive(7);
     int selectedArchive = course + 2;
     unsigned int archive;

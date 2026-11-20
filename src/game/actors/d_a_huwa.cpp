@@ -55,12 +55,10 @@ struct HuwaAnimationFileHandle : SharedFilePtr {
 extern HuwaModelFilePtr gHuwahuwaModelModelFile;
 extern HuwaAnimationFileHandle gHuwahuwaMoveAnimationFile;
 
-/* C helpers with no shared header: the arm9 vector routines and
+/* A C helper with no shared header:
  * func_ov002_020e10a8, daPly_c::IsState of the state SpinBounce enters. */
 extern "C" {
 extern int func_ov002_020e10a8(void *);
-
-int *Vec3_LslInPlace(Vector3 *v, int shift);
 }
 
 /* dCc_c hitFlags bits this actor tests. 0x10 / 0x2000 / 0x4000 / 0x40000 /
