@@ -21,13 +21,6 @@
  * Their layout is SharedFilePtr's own (include/SharedFilePtr.h).
  */
 
-/* Readable aliases for the three ov063 BSS handles, defined by
- * d_a_piano.cpp under the configured data_ov063_* names so mwcc emits the
- * static initializer that constructs them. */
-#define gPianoModelFile             data_ov063_0211ef80
-#define gPianoCollisionFile         data_ov063_0211ef88
-#define gPianoAttackAnimationFile   data_ov063_0211ef90
-
 #define MAD_PIANO_MODEL_ASSET              0x040a
 #define MAD_PIANO_COLLISION_ASSET          0x040b
 #define MAD_PIANO_ATTACK_ANIMATION_ASSET   0x040c

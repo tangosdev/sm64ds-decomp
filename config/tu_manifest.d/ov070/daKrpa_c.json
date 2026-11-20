@@ -205,7 +205,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "_ZN21daKrpaFrameController9SetFramesEPjjj",
+      "symbol": "_ZN21daKrpaFrameController9SetFramesEPKjjj",
       "address": "0x02121ae0",
       "size": "0x00000018",
       "legacy_source": "src/func_ov070_02121ae0.c",

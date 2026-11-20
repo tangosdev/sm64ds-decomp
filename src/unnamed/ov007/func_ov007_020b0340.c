@@ -3,5 +3,5 @@
 
 /* Clears the pending choice; func_ov007_020aed98 calls it for its case 6. */
 void func_ov007_020b0340(void) {
-    WORK->pendingChoice = 0;
+    gMenuWork->pendingChoice = 0;
 }

@@ -1,6 +1,8 @@
 #ifndef JUMP2POPUP_H
 #define JUMP2POPUP_H
 
+#include "Vector2.h"
+
 /* The list link at the head of each Jump2Popup (coined name). Spawn pushes a
  * popup onto the live list at sJump2PopupList with Link and Tick takes it back
  * out with Unlink; Jump2Popup_DrawAll walks the list. */
@@ -27,7 +29,7 @@ struct Jump2Popup : Jump2PopupLink {
     /* 0x04 -- 20.12 position */
     int targetX, targetY;
     /* 0x0c */
-    int speedX, speedY;
+    Vector2 speed;
     /* 0x14 */
     short life;
     /* 0x1c -- frames left */

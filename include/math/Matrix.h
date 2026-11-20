@@ -52,4 +52,8 @@ typedef char Matrix4x3_size_must_be_0x30[
 ];
 #endif
 
+/* The 4x3 identity: 0x1000 down the diagonal, no translation. Callers copy it
+ * whole into a matrix to reset it. */
+extern const Matrix4x3 IDENTITY_MATRIX4X3;
+
 #endif /* SM64DS_MATH_MATRIX_H */

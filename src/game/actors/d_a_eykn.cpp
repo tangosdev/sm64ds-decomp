@@ -110,7 +110,6 @@ int AngleDiff(int a, int b);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s8 gCurrentSublevel; /* current sublevel id */
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern SharedFilePtr data_ov002_0210da38; /* sleep-bubble model, out of ov002 */
 extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSequenceFile,
                                                             &gEyknOpenTextureSequenceFile};

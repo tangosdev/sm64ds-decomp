@@ -545,19 +545,19 @@ void daYurei_Mucho_c::HandleCollision() {
 
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x4380) {
         mDeathState = 3;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
@@ -576,13 +576,13 @@ void daYurei_Mucho_c::HandleCollision() {
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
@@ -597,7 +597,7 @@ void daYurei_Mucho_c::HandleCollision() {
     if (JumpedOnByPlayer(mdCcAc_c, *p)) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }

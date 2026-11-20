@@ -70,7 +70,7 @@ u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
 
 extern Matrix4x3 gViewMtx;
-extern char data_ov080_021277a8[];
+extern const daPicGate_c::WaveParams data_ov080_021277a8[];
 extern SharedFilePtr *data_ov080_0212775c[];
 extern unsigned char data_ov080_02128688[];
 extern unsigned char data_ov080_0212869c[];
@@ -388,7 +388,7 @@ void daPicGate_c::BeginWave(s32 a1, s32 a2, s32 a3) {
         if (a3 != 0)
             r0 += 6;
     }
-    mWaveParams = (const WaveParams *)(data_ov080_021277a8 + r0 * 0x14);
+    mWaveParams = &data_ov080_021277a8[r0];
     mWaveTimer = mWaveParams->duration;
 }
 

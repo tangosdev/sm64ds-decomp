@@ -23,6 +23,7 @@
 #include "Message.h"
 #include "MessageBank.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "SaveData.h"
 #include "Sound.h"
 
@@ -92,8 +93,7 @@ extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern u32 gNextActorUpdateMask;
 extern u8 gGameMode;
-extern s16 data_0209f4a2[];
-extern s16 data_0209f4a4[];
+extern ControllerInput data_0209f498[];
 extern u16 data_020a0e5a[];
 extern s32 gGlobalTimer;
 extern struct OamAttr data_ov002_0210c390;
@@ -778,7 +778,7 @@ void Message::Update() {
             data_0209d670 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a2 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].nx;
         if (t > 0x80) {
             if (gMsgChoiceIndex == 0) {
                 func_02012790(0x96);
@@ -812,7 +812,7 @@ void Message::Update() {
             data_0209d670 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a4 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].ny;
         if (t > 0x80) {
             if (gMsgChoiceIndex == 0) {
                 func_02012790(0x96);

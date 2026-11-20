@@ -20,12 +20,7 @@ enum d_a_obj_ki_fune_AssetId {
 };
 
 #include "daObjKi_Fune_c.h"
-/* decl_common.h spells these as non-const void*[], which cannot be this .rodata. */
-#define data_ov016_021136dc data_ov016_021136dc_decl
-#define data_ov016_021136e4 data_ov016_021136e4_decl
 #include "decl_common.h"
-#undef data_ov016_021136dc
-#undef data_ov016_021136e4
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "dBgW.h"
@@ -51,8 +46,8 @@ extern "C" {
 extern unsigned char gCurrentStarId;
 }
 extern int IsStarCollected(int a, int b);
-extern void *const data_ov016_021136e4[2];
-extern void *const data_ov016_021136dc[2];
+extern SharedFilePtr *const data_ov016_021136e4[2];
+extern SharedFilePtr *const data_ov016_021136dc[2];
 
 /* Actor 0x39 is the rocking hull, which uses model/collision index 0. */
 static inline int IsRockingHull(daObjKi_Fune_c *ship) {
@@ -77,13 +72,13 @@ int daObjKi_Fune_c::InitResources() {
     else
         mModelIndex = 1;
     idx = mModelIndex;
-    SharedFilePtr *modelFile = (SharedFilePtr *)data_ov016_021136e4[idx];
+    SharedFilePtr *modelFile = data_ov016_021136e4[idx];
     BMD_File *model = dExtSimpleModel_c::LoadFile(*modelFile);
     mModel.SetFile(model, 1, -1);
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
     idx = mModelIndex;
-    SharedFilePtr *collisionFile = (SharedFilePtr *)data_ov016_021136dc[idx];
+    SharedFilePtr *collisionFile = data_ov016_021136dc[idx];
     KCL_File *collision = dBgW_Kc::LoadFile(*collisionFile);
     CLPS_Block *clps = (CLPS_Block *)clpsBlocks[idx];
     mMeshCollider.SetFile(collision, mClsnMat, 0x1000, mAngle.y, *clps);
@@ -127,8 +122,8 @@ int daObjKi_Fune_c::Render() {
 int daObjKi_Fune_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)(data_ov016_021136e4[mModelIndex]))->Release();
-    ((SharedFilePtr *)(data_ov016_021136dc[mModelIndex]))->Release();
+    data_ov016_021136e4[mModelIndex]->Release();
+    data_ov016_021136dc[mModelIndex]->Release();
     return 1;
 }
 
@@ -167,11 +162,11 @@ void *data_ov016_021149d4[2] = {
     &data_ov016_02113c6c,
     &data_ov016_02113c4c,
 };
-extern void *const data_ov016_021136e4[2] = {
+extern SharedFilePtr *const data_ov016_021136e4[2] = {
     &gKiFuneUpModelFile,
     &gKiFuneDownAModelFile,
 };
-extern void *const data_ov016_021136dc[2] = {
+extern SharedFilePtr *const data_ov016_021136dc[2] = {
     &gKiFuneUpCollisionFile,
     &gKiFuneDownACollisionFile,
 };

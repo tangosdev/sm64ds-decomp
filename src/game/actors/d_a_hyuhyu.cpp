@@ -34,7 +34,7 @@
  *   two BCA SharedFilePtr handles; data_ov002_0210da40 / 0210d9a0 /
  *   0210d9c0 are shared ov002 files the cloud also claims. symbols.txt has
  *   no recovered names for any of them.
- * - func_ov002_020aea30 (fire hit), func_02012694 (sound at a
+ * - KillByAttack (fire hit), func_02012694 (sound at a
  *   camera-space position), FX_SinCosTable_ (sin/cos pairs) and
  *   data_0209e650 (random seed) keep linker names.
  */
@@ -397,7 +397,7 @@ void daHyuhyu_c::HandleCylinderHit() {
         hitFlags = mdCcAc_c.hitFlags;
         if ((hitFlags & 0x40000) != 0) {
             mDeathState = 4;
-            func_ov002_020aea30(player, 0);
+            KillByAttack(player, 0);
             return;
         }
         if ((hitFlags & 0x2000) != 0) {

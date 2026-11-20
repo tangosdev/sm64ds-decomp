@@ -66,8 +66,7 @@ extern u64 func_0206bdb4(u64 d, int mode);
 extern u64 func_0206c51c(u64 a, u64 b);
 extern int func_0206bc8c(u64 d);
 
-void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
-{
+void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
     int conv;
     int isg;
     int npfx;

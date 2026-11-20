@@ -84,7 +84,6 @@ extern SharedFilePtr data_ov002_0210d9c0;
 
 /* arm9 statics */
 extern s8 gCurrentSublevel;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
    it arrived, and that is load-bearing: St_Talk_Main tests the result to decide

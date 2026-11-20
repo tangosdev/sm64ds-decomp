@@ -7,6 +7,6 @@ extern void func_ov007_020b7364(struct Ov007Display *d);
  * display record's two OAM buffers and func_ov007_020b7364 uploads its main
  * and sub BG layer lists. */
 void Display_Upload(void) {
-    func_ov007_020b7384(WORK->display);
-    func_ov007_020b7364(WORK->display);
+    func_ov007_020b7384(gMenuWork->display);
+    func_ov007_020b7364(gMenuWork->display);
 }

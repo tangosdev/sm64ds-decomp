@@ -170,7 +170,7 @@ struct fBase_c {
          above this one), or null at the root.
        connectProc and the four packs: the callbacks of the process tree and
          the four process lists. Each is stored as a ProcessFunction constant
-         in .data (data_02099f60, f70, f48, f50, f68), so each keeps int ().
+         in .data (data_02099f60, f70, f50, f48, f68), so each keeps int ().
          Each pack runs Process with one do/before/after slot triple: create
          = slots 0-2, delete = 3-5, execute = 6-8, draw = 9-11.
        runCreate: create, then queue a process that is still being created.

@@ -52,7 +52,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN11ProcessList13func_02044120Ev",
+      "symbol": "_ZN10fManager_c8mainLoopEv",
       "address": "0x02044120",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0204/func_02044120.c",
@@ -97,35 +97,35 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_020a4b6c",
+      "symbol": "_ZN10fManager_c15m_connectManageE",
       "address": "0x020a4b6c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "3-word process-tree sentinel (head, callback). Retail copies data_02099f60 into the callback and zeroes the head. func_02044120 passes it to func_020441cc; ActorBase.cpp links scene nodes through it."
     },
     {
-      "symbol": "data_020a4b78",
+      "symbol": "_ZN10fManager_c15m_executeManageE",
       "address": "0x020a4b78",
       "size": "0x10",
       "binding": "STB_GLOBAL",
       "evidence": "4-word list sentinel (head, tail, callback). Retail zeroes the links and copies data_02099f48 into the callback. func_02044120 walks it in phase 3."
     },
     {
-      "symbol": "data_020a4b88",
+      "symbol": "_ZN10fManager_c14m_createManageE",
       "address": "0x020a4b88",
       "size": "0x10",
       "binding": "STB_GLOBAL",
       "evidence": "4-word list sentinel (head, tail, callback). Retail zeroes the links and copies data_02099f70 into the callback. func_02044120 walks it in phase 2."
     },
     {
-      "symbol": "data_020a4b98",
+      "symbol": "_ZN10fManager_c12m_drawManageE",
       "address": "0x020a4b98",
       "size": "0x10",
       "binding": "STB_GLOBAL",
       "evidence": "4-word list sentinel (head, tail, callback). Retail zeroes the links and copies data_02099f68 into the callback. func_02044120 walks it in phase 5."
     },
     {
-      "symbol": "data_020a4ba8",
+      "symbol": "_ZN10fManager_c14m_deleteManageE",
       "address": "0x020a4ba8",
       "size": "0x10",
       "binding": "STB_GLOBAL",
@@ -418,7 +418,7 @@
       "source": "0x0207521c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020a4b6c",
+      "symbol": "_ZN10fManager_c15m_connectManageE",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020a4b6c"
@@ -428,7 +428,7 @@
       "source": "0x02075220",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020a4b88",
+      "symbol": "_ZN10fManager_c14m_createManageE",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020a4b88"
@@ -438,7 +438,7 @@
       "source": "0x02075224",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020a4b78",
+      "symbol": "_ZN10fManager_c15m_executeManageE",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020a4b78"
@@ -448,7 +448,7 @@
       "source": "0x02075228",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020a4b98",
+      "symbol": "_ZN10fManager_c12m_drawManageE",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020a4b98"
@@ -458,7 +458,7 @@
       "source": "0x0207522c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020a4ba8",
+      "symbol": "_ZN10fManager_c14m_deleteManageE",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020a4ba8"

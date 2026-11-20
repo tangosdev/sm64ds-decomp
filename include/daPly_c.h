@@ -1112,7 +1112,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020becf4(const int, const int);
     void func_ov002_020bf13c();
     void SetVertSpeedByCharFactor(const fx32);
-    void func_ov002_020bf36c(void *);
+    void func_ov002_020bf36c(dCc_c *);
     int func_ov002_020bf40c();
     void func_ov002_020bf5e0();
     void SpawnGroundDust();
@@ -1225,7 +1225,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020cede0();
     void func_ov002_020de428();
     int func_ov002_020df7ac();
-    int func_ov002_020df840(void *, Vector3 *);
+    int func_ov002_020df840(dActor_c *, Vector3 *);
 
     /* Helpers that were free functions taking the player as their first
        argument. A melonDS `this` sweep saw only the player in r0, and each
@@ -1249,7 +1249,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020bf800(const Vector3_16f);
     int func_ov002_020c179c(const int);
     void func_ov002_020c18b0(const int);
-    int func_ov002_020c2270(void *, void *);
+    int func_ov002_020c2270(Vector3 *, Vector3 *);
     int func_ov002_020c5244();
     int func_ov002_020c6e14();
     void DisableInteraction();
@@ -1286,7 +1286,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020cf384();
     int func_ov002_020cfaf0();
     int func_ov002_020cfbdc();
-    int func_ov002_020cfd84(void *, void *);
+    int func_ov002_020cfd84(Vector3 *, Vector3 *);
     int func_ov002_020cfea4();
     int func_ov002_020d0178(const int, const int);
     int func_ov002_020d0580();
@@ -1317,7 +1317,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020d674c();
     int func_ov002_020d6790();
     int func_ov002_020d6c60(daPly_c *);
-    int func_ov002_020d7030(void *);
+    int func_ov002_020d7030(dActor_c *);
     void func_ov002_020d71ec(const int);
     void func_ov002_020d80d0();
     void func_ov002_020d8118();
@@ -1364,7 +1364,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020e0478();
     void func_ov002_020e04a4();
     int func_ov002_020e0a64();
-    int func_ov002_020e0ccc(void *);
+    int func_ov002_020e0ccc(dActor_c *);
     void func_ov002_020e0f38(const int);
     void func_ov002_020e1c20();
     void PlayJumpSound(const int);

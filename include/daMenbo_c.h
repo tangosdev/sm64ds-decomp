@@ -37,7 +37,7 @@
 #include "dBgCh_Actr.h"
 
 struct daMenbo_c : dEnemyBase_c {
-    /* A state: {entry, update}. func_ov090_02131e00 installs one and runs
+    /* A state: {entry, update}. SetState installs one and runs
        its entry; Behavior runs the update every frame. */
     typedef int (daMenbo_c::*StateFn)();
 
@@ -130,7 +130,7 @@ struct daMenbo_c : dEnemyBase_c {
     int func_ov090_02131b94();
     int func_ov090_02131c48();
     int func_ov090_02131db0();
-    int func_ov090_02131e00(StateFn *state);
+    int SetState(StateFn *state);
     void func_ov090_02131e50();
 };
 

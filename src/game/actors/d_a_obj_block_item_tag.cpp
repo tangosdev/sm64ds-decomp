@@ -32,9 +32,9 @@
 
 /* BSS file homes, one per item variant; Init loads them, Cleanup
  * releases them. */
-extern SharedFilePtr data_ov002_0210d9d8;
-extern SharedFilePtr data_ov002_0210da30;
-extern SharedFilePtr data_ov002_0210da18;
+extern SharedFilePtr gOneUpMushroomModelFile;
+extern SharedFilePtr gScaleUpKinokoModelFile;
+extern SharedFilePtr gShellGreenModelFile;
 
 /* Spawn heights above the tag, indexed by mActionIndex. */
 extern const s32 data_ov002_020ff090[4] = {0x64000, 0x64000, 0xa000, 0x64000};
@@ -114,13 +114,13 @@ void daObjBlockItemTag_c::SpawnSilverStar() {
 int daObjBlockItemTag_c::CleanupResources() {
     switch (actorID) {
     case 0x141:
-        data_ov002_0210d9d8.Release();
+        gOneUpMushroomModelFile.Release();
         break;
     case 0x142:
-        data_ov002_0210da30.Release();
+        gScaleUpKinokoModelFile.Release();
         break;
     case 0x143:
-        data_ov002_0210da18.Release();
+        gShellGreenModelFile.Release();
         break;
     case 0x144:
         UnloadSilverStarAndNumber();
@@ -165,15 +165,15 @@ int daObjBlockItemTag_c::InitResources() {
     switch (actorID) {
     case 0x141:
         mActionIndex = 0;
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+        dExtSimpleModel_c::LoadFile(gOneUpMushroomModelFile);
         break;
     case 0x142:
         mActionIndex = 1;
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+        dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
         break;
     case 0x143:
         mActionIndex = 2;
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
+        dExtSimpleModel_c::LoadFile(gShellGreenModelFile);
         break;
     case 0x144:
         mActionIndex = 3;

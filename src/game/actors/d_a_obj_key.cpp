@@ -1,7 +1,7 @@
 //cpp
 /* daObjKey_c (ov089): OBJ_KEY is actor 0x11a (282) and LAST_STAR is 0x11b
  * (283); both factories install this vtable. param1 & 7 picks the kind: 7 uses
- * the power-star model (data_ov002_0211094c, file 0x8015) and StateStarJump; 3
+ * the power-star model (gPowerStarModelFile, file 0x8015) and StateStarJump; 3
  * uses StateFlyToCenter; the other six kinds are StateDrop.
  *
  * The TU is the whole of ov089's .text, 0x02130f00..0x02132880: the destructor
@@ -180,23 +180,20 @@ extern "C" {
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern void func_ov002_020c3dbc(void *player);
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void *const data_ov089_021328b4[];
+extern SharedFilePtr *const data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
-extern ObjKeyAnimationFilePtr data_ov089_02132c60;
-extern ObjKeyAnimationFilePtr data_ov089_02132c40;
-extern ObjKeyAnimationFilePtr data_ov089_02132c70;
-extern ObjKeyAnimationFilePtr data_ov089_02132c48;
-extern ObjKeyModelFile data_ov089_02132c50;
+extern ObjKeyAnimationFilePtr gKoopaKeyGetAnimationFile;
+extern ObjKeyAnimationFilePtr gKoopaKeyGetDemoAnimationFile;
+extern ObjKeyAnimationFilePtr gKoopaKeyOpenAnimationFile;
+extern ObjKeyAnimationFilePtr gKoopaKeyWGetAnimationFile;
+extern ObjKeyModelFile gKoopaKeyModelFile;
 extern ObjKeyModelFile gLuigiKeyModelFile;
 extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
-extern int *Vec3_LslInPlace(void *v, int sh);
-/* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
-   keep that spelling so the declarations of this symbol stay in agreement. */
-extern char data_ov002_0211094c;
+/* The power-star model file (0x8015). d_a_star.cpp defines it. */
+extern SharedFilePtr gPowerStarModelFile;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *const data_ov089_02132880[];
@@ -254,10 +251,10 @@ void daObjKey_c::AimArcTo(Vector3 *target, int height) {
 void UnloadKeyModels(int kind) {
     if (kind >= 8)
         return;
-    ((SharedFilePtr *)data_ov089_02132894[kind])->Release();
+    ((SharedFilePtr *)gKeyModelFiles[kind])->Release();
     if (data_ov089_021328b4[kind] == 0)
         return;
-    ((SharedFilePtr *)data_ov089_021328b4[kind])->Release();
+    data_ov089_021328b4[kind]->Release();
 }
 
 /* LoadKeyModels, 0x02131114 */
@@ -265,8 +262,8 @@ void LoadKeyModels(int kind) {
     SharedFilePtr *extra;
     if (kind >= 8)
         return;
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov089_02132894[kind]);
-    extra = (SharedFilePtr *)data_ov089_021328b4[kind];
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gKeyModelFiles[kind]);
+    extra = data_ov089_021328b4[kind];
     if (extra == 0)
         return;
     dExtSimpleModel_c::LoadFile(*extra);
@@ -349,7 +346,7 @@ void daObjKey_c::StateFlyToCenter()
         center2.x = 0;
         center2.y = 0;
         center2.z = 0;
-        Vec3_ApproachHorz(&mPos.x, &center2, mHorzSpeed);
+        Vec3_ApproachHorz(&mPos, &center2, mHorzSpeed);
         if (mBounceCount == 0) {
             if (mSpeed.y < 0) {
                 int floor = mHomePos.y;
@@ -718,10 +715,10 @@ int daObjKey_c::CleanupResources()
     UnloadKeyModels(mState);
     (&data_ov002_02110964)->Release();
     if (mState != KEY_KIND_STAR) {
-        (&data_ov089_02132c60)->Release();
-        (&data_ov089_02132c40)->Release();
-        (&data_ov089_02132c70)->Release();
-        (&data_ov089_02132c48)->Release();
+        (&gKoopaKeyGetAnimationFile)->Release();
+        (&gKoopaKeyGetDemoAnimationFile)->Release();
+        (&gKoopaKeyOpenAnimationFile)->Release();
+        (&gKoopaKeyWGetAnimationFile)->Release();
     }
     Event::ClearBit(EVENT_KEY);
     return 1;
@@ -789,8 +786,8 @@ int daObjKey_c::Behavior()
         if (mAnmModel.Finished()) {
             /* The flag keeps the ROM's moveq and movne pair. */
             if (IsActorID(this, ACTOR_OBJ_KEY)) {
-                /* Anim 3's file (data_ov089_02132c40, id 0x44f) stays; the others die. */
-                if (mAnmModel.file != data_ov089_02132c40.filePtr)
+                /* Anim 3's file (gKoopaKeyGetDemoAnimationFile, id 0x44f) stays; the others die. */
+                if (mAnmModel.file != gKoopaKeyGetDemoAnimationFile.filePtr)
                     MarkForDestruction();
             }
         }
@@ -837,7 +834,7 @@ int daObjKey_c::InitResources()
     dExtFrameCtrl_c::LoadFile(*&data_ov002_02110964);
 
     if (mState == KEY_KIND_STAR) {
-        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)&data_ov002_0211094c)->filePtr, 1, 1) == 0)
+        if (mAnmModel.SetFile((BMD_File *)gPowerStarModelFile.filePtr, 1, 1) == 0)
             return 0;
         mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
         mScale.x = SCALE_STAR;
@@ -852,17 +849,17 @@ int daObjKey_c::InitResources()
         mVertAccel = 0;
         Sound::PlayBank3(SND_APPEAR, mCamSpacePos);
     } else {
-        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c60);
-        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c40);
-        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c70);
-        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c48);
-        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)data_ov089_02132894[mState])->filePtr, 1,
-                              1) == 0)
+        dExtFrameCtrl_c::LoadFile(*&gKoopaKeyGetAnimationFile);
+        dExtFrameCtrl_c::LoadFile(*&gKoopaKeyGetDemoAnimationFile);
+        dExtFrameCtrl_c::LoadFile(*&gKoopaKeyOpenAnimationFile);
+        dExtFrameCtrl_c::LoadFile(*&gKoopaKeyWGetAnimationFile);
+        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)gKeyModelFiles[mState])->filePtr, 1, 1) ==
+            0)
             return 0;
         {
-            void *extra = data_ov089_021328b4[mState];
+            SharedFilePtr *extra = data_ov089_021328b4[mState];
             if (extra != 0) {
-                if (mModel.SetFile((BMD_File *)((ObjKeyFile *)extra)->filePtr, 1, -1) == 0)
+                if (mModel.SetFile((BMD_File *)extra->filePtr, 1, -1) == 0)
                     return 0;
             }
         }
@@ -914,14 +911,14 @@ daObjKey_c *daObjKey_c_classInit_OBJ_KEY() {
  * model handles, then the four animation handles, then the state table the
  * descriptors are copied into. The offset vector between the nodes carries
  * no initializer and emits plain BSS. */
-ObjKeyModelFile data_ov089_02132c50(ASSET_KOOPA_KEY_BMD);
+ObjKeyModelFile gKoopaKeyModelFile(ASSET_KOOPA_KEY_BMD);
 ObjKeyModelFile gLuigiKeyModelFile(ASSET_LUIGI_KEY_BMD);
 ObjKeyModelFile gMarioKeyModelFile(ASSET_MARIO_KEY_BMD);
 ObjKeyModelFile gWarioKeyModelFile(ASSET_WARIO_KEY_BMD);
-ObjKeyAnimationFilePtr data_ov089_02132c60(ASSET_KOOPA_KEY_GET_BCA);
-ObjKeyAnimationFilePtr data_ov089_02132c40(ASSET_KOOPA_KEY_GET_DEMO_BCA);
-ObjKeyAnimationFilePtr data_ov089_02132c70(ASSET_KOOPA_KEY_OPEN_BCA);
-ObjKeyAnimationFilePtr data_ov089_02132c48(ASSET_KOOPA_KEY_W_GET_BCA);
+ObjKeyAnimationFilePtr gKoopaKeyGetAnimationFile(ASSET_KOOPA_KEY_GET_BCA);
+ObjKeyAnimationFilePtr gKoopaKeyGetDemoAnimationFile(ASSET_KOOPA_KEY_GET_DEMO_BCA);
+ObjKeyAnimationFilePtr gKoopaKeyOpenAnimationFile(ASSET_KOOPA_KEY_OPEN_BCA);
+ObjKeyAnimationFilePtr gKoopaKeyWGetAnimationFile(ASSET_KOOPA_KEY_W_GET_BCA);
 
 VecFx32 data_ov089_02132ca4;
 
@@ -935,12 +932,16 @@ extern "C" SharedFilePtr data_ov002_0210d9c0;
 struct DaMipModelFile;
 extern "C" DaMipModelFile data_ov085_021305d8;
 extern ObjKeyFile *const data_ov089_02132880[5] = {
-    0, &data_ov089_02132c60, &data_ov089_02132c70, &data_ov089_02132c40, &data_ov089_02132c48,
+    0,
+    &gKoopaKeyGetAnimationFile,
+    &gKoopaKeyOpenAnimationFile,
+    &gKoopaKeyGetDemoAnimationFile,
+    &gKoopaKeyWGetAnimationFile,
 };
-void *data_ov089_02132894[8] = {
-    &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile,  &gLuigiKeyModelFile,
-    &gWarioKeyModelFile,  &data_ov085_021305d8, &data_ov085_021305d8, &data_ov002_0211094c,
+void *gKeyModelFiles[8] = {
+    &gKoopaKeyModelFile, &gKoopaKeyModelFile,  &gMarioKeyModelFile,  &gLuigiKeyModelFile,
+    &gWarioKeyModelFile, &data_ov085_021305d8, &data_ov085_021305d8, &gPowerStarModelFile,
 };
-extern void *const data_ov089_021328b4[8] = {
+extern SharedFilePtr *const data_ov089_021328b4[8] = {
     0, 0, &data_ov002_0210da40, &data_ov002_0210d9a0, &data_ov002_0210d9c0, 0, 0, 0,
 };

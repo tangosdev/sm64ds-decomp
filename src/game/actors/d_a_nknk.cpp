@@ -76,8 +76,8 @@ extern const int data_ov062_0211cf0c[9];
 
 extern SharedFilePtr *const data_ov062_0211ced8[2];
 extern SharedFilePtr *const data_ov062_0211cee0[2];
-extern SharedFilePtr data_ov002_0210da18;
-extern SharedFilePtr data_ov002_0210da20;
+extern SharedFilePtr gShellGreenModelFile;
+extern SharedFilePtr gShellRedModelFile;
 
 int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
@@ -746,7 +746,7 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         mDeathState = 5;
-        func_ov002_020aea30(found, (dBgCh_Actr *)turnAround);
+        KillByAttack(found, (dBgCh_Actr *)turnAround);
         return;
     }
     if (flags & 0x4000) {
@@ -773,7 +773,7 @@ void daNknk_c::func_ov062_02117c98()
                 mScale.y = 0x1000;
                 mScale.z = 0x1000;
             }
-            func_ov002_020aea30(found, 0);
+            KillByAttack(found, 0);
             return;
         }
     } else {
@@ -788,7 +788,7 @@ void daNknk_c::func_ov062_02117c98()
                     DropShell();
                 } else {
                     mDeathState = 6;
-                    func_ov002_020aea30(found, 0);
+                    KillByAttack(found, 0);
                     return;
                 }
             } else {
@@ -804,7 +804,7 @@ void daNknk_c::func_ov062_02117c98()
                         DropShell();
                     } else {
                         mDeathState = 1;
-                        func_ov002_020aea30(found, 0);
+                        KillByAttack(found, 0);
                         mScale.x = 0x1000;
                         mScale.y = 0x1000;
                         mScale.z = 0x1000;
@@ -831,7 +831,7 @@ void daNknk_c::func_ov062_02117c98()
         }
     }
 
-    func_ov002_020aea30(found, &mWithMeshClsn);
+    KillByAttack(found, &mWithMeshClsn);
     if (turnAround)
         mAngle.y = (u16)(mPrevAngle.y + 0x8000);
 }
@@ -1051,8 +1051,8 @@ extern SharedFilePtr *const data_ov062_0211ced8[2] = {
     &gNokonokoRedModelFile,
 };
 extern SharedFilePtr *const data_ov062_0211cee0[2] = {
-    &data_ov002_0210da18,
-    &data_ov002_0210da20,
+    &gShellGreenModelFile,
+    &gShellRedModelFile,
 };
 extern NknkAnimationFileHandle *const data_ov062_0211cee8[9] = {
     &gNokonokoWalkStAnimationFile, &gNokonokoWalkAnimationFile,  &gNokonokoWalkEdAnimationFile,

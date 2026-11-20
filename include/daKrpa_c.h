@@ -50,11 +50,11 @@ typedef char daKrpaState_size_must_be_0x10[sizeof(daKrpaState) == 0x10 ? 1 : -1]
 
 struct daKrpaFrameController {
     u32 mode;
-    u32 *frames;
+    const u32 *frames;
     u32 count;
     u32 cursor;
 
-    void SetFrames(u32 *frames, u32 count, u32 mode);
+    void SetFrames(const u32 *frames, u32 count, u32 mode);
     u32 NextFrame();
 };
 

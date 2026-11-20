@@ -17,7 +17,7 @@
  * - dCamera_c::mAngleY (gCamera): the halfword InitResources and Behavior
  *   add 0x4000 to.
  * - gGameMode game-mode flag,
- *   gScratchMtx scratch matrix, data_ov002_0210da58 file handle: ROM labels.
+ *   gScratchMtx scratch matrix, gFeatherModelFile file handle: ROM labels.
  * - g_profile_FEATHER stays carved (unowned) between the stripped _ZTI/_ZTS
  *   and the stripped vtable (all three deadstrip-data, BBH-leaf shape);
  *   the profile is not reconstructed in this TU.
@@ -37,7 +37,7 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-extern SharedFilePtr data_ov002_0210da58;
+extern SharedFilePtr gFeatherModelFile;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
 
@@ -69,7 +69,7 @@ int daFeather_c::InitResources() {
     BMD_File *bmd;
     int b;
 
-    bmd = dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+    bmd = dExtSimpleModel_c::LoadFile(gFeatherModelFile);
     if (!mModel.SetFile(bmd, 1, 1))
         return 0;
     if (!mShadowModel.InitCylinder())
@@ -183,7 +183,7 @@ int daFeather_c::Render() {
  * ======================================================================== */
 
 int daFeather_c::CleanupResources() {
-    data_ov002_0210da58.Release();
+    gFeatherModelFile.Release();
     return 1;
 }
 
