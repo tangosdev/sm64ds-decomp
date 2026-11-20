@@ -54,98 +54,98 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144468Ei",
+      "symbol": "_ZN8daDoor_c17St_CharIntro_MainEi",
       "address": "0x02144468",
       "size": "0x00000080",
       "legacy_source": "src/func_ov100_02144468.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021444e8Ei",
+      "symbol": "_ZN8daDoor_c12St_Wait_MainEi",
       "address": "0x021444e8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov100_021444e8.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144528EP7daPly_c",
+      "symbol": "_ZN8daDoor_c18St_CharChange_MainEP7daPly_c",
       "address": "0x02144528",
       "size": "0x000001d0",
       "legacy_source": "src/func_ov100_02144528.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021446f8EP7daPly_c",
+      "symbol": "_ZN8daDoor_c18St_CharChange_InitEP7daPly_c",
       "address": "0x021446f8",
       "size": "0x00000038",
       "legacy_source": "src/func_ov100_021446f8.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144730EP7daPly_c",
+      "symbol": "_ZN8daDoor_c17St_OpenClose_MainEP7daPly_c",
       "address": "0x02144730",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov100_02144730.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_0214491cEv",
+      "symbol": "_ZN8daDoor_c24St_OpenClose_InitNearEndEv",
       "address": "0x0214491c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov100_0214491c.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144950EP7daPly_ci",
+      "symbol": "_ZN8daDoor_c17St_OpenClose_InitEP7daPly_ci",
       "address": "0x02144950",
       "size": "0x00000078",
       "legacy_source": "src/func_ov100_02144950.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021449c8EP7daPly_c",
+      "symbol": "_ZN8daDoor_c24St_UnlockingWithKey_MainEP7daPly_c",
       "address": "0x021449c8",
       "size": "0x00000070",
       "legacy_source": "src/func_ov100_021449c8.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144a38EP7daPly_c",
+      "symbol": "_ZN8daDoor_c24St_UnlockingWithKey_InitEP7daPly_c",
       "address": "0x02144a38",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov100_02144a38.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144bf4EP7daPly_c",
+      "symbol": "_ZN8daDoor_c25St_UnlockingWithStar_MainEP7daPly_c",
       "address": "0x02144bf4",
       "size": "0x00000070",
       "legacy_source": "src/func_ov100_02144bf4.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144c64Ev",
+      "symbol": "_ZN8daDoor_c25St_UnlockingWithStar_InitEv",
       "address": "0x02144c64",
       "size": "0x00000008",
       "legacy_source": "src/func_ov100_02144c64.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144c6cEP7daPly_c",
+      "symbol": "_ZN8daDoor_c23St_TalkingToPlayer_MainEP7daPly_c",
       "address": "0x02144c6c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov100_02144c6c.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144cccEv",
+      "symbol": "_ZN8daDoor_c23St_TalkingToPlayer_InitEv",
       "address": "0x02144ccc",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov100_02144ccc.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_02144cf8EP7daPly_c",
+      "symbol": "_ZN8daDoor_c18St_StayClosed_MainEP7daPly_c",
       "address": "0x02144cf8",
       "size": "0x0000028c",
       "legacy_source": "src/func_ov100_02144cf8.c",
@@ -215,7 +215,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021453d8EPvi",
+      "symbol": "_ZN8daDoor_c11ChangeStateEPvi",
       "address": "0x021453d8",
       "size": "0x00000054",
       "legacy_source": "src/func_ov100_021453d8.cpp",
@@ -300,21 +300,21 @@
       "address": "0x02148718",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "guard word of func_ov100_02144a38's function-local static sBackOff; the function tests and sets bit 0 exactly as retail"
+      "evidence": "guard word of St_UnlockingWithKey_Init's function-local static sBackOff; the function tests and sets bit 0 exactly as retail"
     },
     {
       "symbol": "_ZGVsKeyOff$786",
       "address": "0x0214871c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "guard word of func_ov100_02144a38's function-local static sKeyOff; the function tests and sets bit 0 exactly as retail"
+      "evidence": "guard word of St_UnlockingWithKey_Init's function-local static sKeyOff; the function tests and sets bit 0 exactly as retail"
     },
     {
       "symbol": "_ZGVsFrontOff$778",
       "address": "0x02148720",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "guard word of func_ov100_02144a38's function-local static sFrontOff; the function tests and sets bit 0 exactly as retail"
+      "evidence": "guard word of St_UnlockingWithKey_Init's function-local static sFrontOff; the function tests and sets bit 0 exactly as retail"
     },
     {
       "symbol": "gObjDoor0Star1ModelFile",
@@ -412,14 +412,14 @@
       "address": "0x02148790",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sBackOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @780. ov095 defines @780 and ov006 unit020cd744 defines @817, so the pin is the unused same-length @821"
+      "evidence": "destructor-registration node for sBackOff; St_UnlockingWithKey_Init passes it to __register_global_object. Emitted @780. ov095 defines @780 and ov006 unit020cd744 defines @817, so the pin is the unused same-length @821"
     },
     {
       "symbol": "sBackOff$782",
       "address": "0x0214879c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "func_ov100_02144a38's function-local static Vector3(0x4b000, 0, -0x6e000)"
+      "evidence": "St_UnlockingWithKey_Init's function-local static Vector3(0x4b000, 0, -0x6e000)"
     },
     {
       "symbol": "@569",
@@ -454,7 +454,7 @@
       "address": "0x021487d8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sKeyOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @784, which ov091 already defines, so renamed to the unused same-length @819"
+      "evidence": "destructor-registration node for sKeyOff; St_UnlockingWithKey_Init passes it to __register_global_object. Emitted @784, which ov091 already defines, so renamed to the unused same-length @819"
     },
     {
       "symbol": "sEnterPos$1008",
@@ -468,7 +468,7 @@
       "address": "0x021487f0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "func_ov100_02144a38's function-local static Vector3(-0x4c000, 0, 0x6d000)"
+      "evidence": "St_UnlockingWithKey_Init's function-local static Vector3(-0x4c000, 0, 0x6d000)"
     },
     {
       "symbol": "@1084",
@@ -524,7 +524,7 @@
       "address": "0x02148850",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node for sFrontOff; func_ov100_02144a38 passes it to __register_global_object. Emitted @776, which ov091 already defines, so renamed to the unused same-length @764"
+      "evidence": "destructor-registration node for sFrontOff; St_UnlockingWithKey_Init passes it to __register_global_object. Emitted @776, which ov091 already defines, so renamed to the unused same-length @764"
     },
     {
       "symbol": "@571",
@@ -552,7 +552,7 @@
       "address": "0x02148880",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "func_ov100_02144a38's function-local static Vector3(0x4b000, 0, 0x6e000)"
+      "evidence": "St_UnlockingWithKey_Init's function-local static Vector3(0x4b000, 0, 0x6e000)"
     },
     {
       "symbol": "@564",
@@ -633,12 +633,12 @@
     }
   ],
   "notes": [
-    "Thirty-two-function unit 0x021443f4..0x021458d4: D1 and D0 from the out-of-line destructor, the twenty-four helpers func_ov100_02144468..func_ov100_021453d8, CleanupResources, OnPendingDestroy, Render, Behavior, InitResources, and the folded registry factory daDoor_c_classInit as `return new daDoor_c;`.",
+    "Thirty-two-function unit 0x021443f4..0x021458d4: D1 and D0 from the out-of-line destructor, the twenty-four helpers in 0x02144468..0x021453d8 (St_CharIntro_Main first, ChangeState last), CleanupResources, OnPendingDestroy, Render, Behavior, InitResources, and the folded registry factory daDoor_c_classInit as `return new daDoor_c;`.",
     "Written in ROM order under `#pragma defer_codegen off`, which keeps D1 ahead of D0. None of the legacy shards carried a pragma.",
-    "The per-shard extern blocks are merged into one declaration per callee. Where shards disagreed (func_ov100_021453d8's argument types, the int/void* return of func_ov100_02145370, data_0209caa0 as bytes, words or a three-word struct, data_ov100_02148204 as bytes or a 16-byte entry) the TU keeps one spelling and casts at the call sites; every caller reproduces with it. The nine state tables are declared as the int include/decl_common.h gives two of them, and the helpers' daPly_c calls are member calls through include/daPly_c.h.",
+    "The per-shard extern blocks are merged into one declaration per callee. Where shards disagreed (ChangeState's argument types, the int/void* return of func_ov100_02145370, data_0209caa0 as bytes, words or a three-word struct, data_ov100_02148204 as bytes or a 16-byte entry) the TU keeps one spelling and casts at the call sites; every caller reproduces with it. The nine state tables are declared as the int include/decl_common.h gives two of them, and the helpers' daPly_c calls are member calls through include/daPly_c.h.",
     "Eighteen of the helpers, InitResources and the factory were C sources; they compile as C++ here. Their stack vectors stay a plain three-word struct so they carry no destructor. The six static offsets are function-local Vector3s. InitResources copies the door matrix into both models through a twelve-word array struct (the struct-copy lever of notes/cpp-class-form.md).",
     "InitResources is now the real daDoor_c::InitResources method rather than a C free function taking the object explicitly; the redundant (u32) cast on the param1 shift is still what keeps the offset folded into both accesses.",
-    "Fourteen helpers (func_ov100_02144468..func_ov100_02144cf8) are the enter/execute members of the door's nine states: pointer-to-member constants at ov100 0x021480d4..0x02148144, copied by the module's static initializer into the 16-byte tables data_ov100_021488a4..data_ov100_02148924. func_ov100_021453d8 stores a state at +0x140 and calls its enter half; Behavior calls the execute half.",
+    "Fourteen helpers (the St_* members, 0x02144468..0x02144cf8) are the enter/execute members of the door's nine states: pointer-to-member constants at ov100 0x021480d4..0x02148144, copied by the module's static initializer into the 16-byte tables data_ov100_021488a4..data_ov100_02148924. ChangeState stores a state at +0x140 and calls its enter half; Behavior calls the execute half.",
     "Folded __sinit_ov100_02147698: the eleven model-flavor and one animation SharedFilePtr-flavored resource handles, their twelve compiler-generated registration nodes and the nine {enter, execute} state records now emit from this TU. The six function-local Vector3 statics are declared in the functions that construct them; their guards extend this TU's .bss claim down to 0x0214870c.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way.",
     "Collision property member calls replace local helper declarations. Reconciled 18 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (96 sections, 326 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
