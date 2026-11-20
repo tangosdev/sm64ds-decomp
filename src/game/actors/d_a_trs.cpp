@@ -212,7 +212,7 @@ int daTrs_c::OnAimedAtWithEgg() {
     return mdCcAcPos_c.height / 2;
 }
 
-void daTrs_c::func_ov063_021160d4() {
+void daTrs_c::UpdateClsnOffset() {
 
     int *p;
     this->mClsnOff.x = 0;
@@ -230,7 +230,7 @@ void daTrs_c::func_ov063_021160d4() {
     *p += this->mClsnZBias;
 }
 
-int daTrs_c::func_ov063_02116190() {
+int daTrs_c::IsPlayerBeyondLimit() {
 
     Vector3 vec;
     daPly_c *p;
@@ -251,7 +251,7 @@ int daTrs_c::func_ov063_02116190() {
 }
 
 
-void daTrs_c::func_ov063_02116244() {
+void daTrs_c::SpawnStarMarker() {
 
     if (this->mBooDefeatCount < 5) return;
     if (this->mSpawnedActorID != 0) return;
@@ -262,7 +262,7 @@ void daTrs_c::func_ov063_02116244() {
 }
 
 
-void daTrs_c::func_ov063_021162c8() {
+void daTrs_c::BeginDefeat() {
 
     if (this->mBooFlags.hitByParam3Player) {
         this->mState = 4;
@@ -288,7 +288,7 @@ void daTrs_c::func_ov063_021162c8() {
 }
 
 
-unsigned char daTrs_c::func_ov063_021163d0() {
+unsigned char daTrs_c::IsTrapOccupied() {
 
     unsigned int id = this->mCachedActorID;
     if(id==0) return 0;
@@ -298,7 +298,7 @@ unsigned char daTrs_c::func_ov063_021163d0() {
 }
 
 
-void daTrs_c::func_ov063_0211640c() {
+void daTrs_c::UpdatePose() {
 
     struct Vector3 pos, t1, t2;
     s16 ang;
@@ -350,7 +350,7 @@ void daTrs_c::func_ov063_0211640c() {
         }
     }
 
-    func_ov063_021160d4();
+    UpdateClsnOffset();
 }
 
 static inline int IsActorID(dActor_c *actor, int id) {
@@ -365,7 +365,7 @@ void daTrs_c::func_ov063_021166ac() {
     Vector3 pos;
 
     if (mVariant == 0xf) {
-        func_ov063_0211640c();
+        UpdatePose();
         return;
     }
     if (!mBooFlags.visible)
@@ -426,7 +426,7 @@ void daTrs_c::func_ov063_021166ac() {
     }
     /* equal-arm ternary: the rot address (r2) is set up before pos (r1), as in the ROM */
     UpdateCapPos(pos, this ? rot : rot);
-    func_ov063_021160d4();
+    UpdateClsnOffset();
 }
 
 
@@ -1553,7 +1553,7 @@ void daTrs_c::func_ov063_02118f74() {
     ChaseMario(-0x64, a2, a3);
     r5v = GetAttackStatus();
     if (this->mVariant == 0xd) {
-        if (func_ov063_021163d0() == 0) {
+        if (IsTrapOccupied() == 0) {
             this->mState = 0;
         }
     } else {
@@ -1619,7 +1619,7 @@ void daTrs_c::func_ov063_02119074() {
                 this->mPrevAngle.y = Vec3_HorzAngle(&this->mPos, &((dActor_c *)r)->mPos);
         } else {
             if (this->mVariant == 0xe)
-                func_ov063_02116244();
+                SpawnStarMarker();
             this->mState = 1;
         }
 
@@ -1760,7 +1760,7 @@ void daTrs_c::func_ov063_0211934c() {
             this->mFoundActor = dActor_c::FindWithID(this->mBigBooID);
             found = this->mFoundActor;
             if (found != 0 && ((daTrs_c *)found)->mBooDefeatCount == 5) {
-                ((daTrs_c *)found)->func_ov063_02116244();
+                ((daTrs_c *)found)->SpawnStarMarker();
                 this->mSoundCount++;
             }
         }
@@ -1943,7 +1943,7 @@ void daTrs_c::HandleAttackStatus() {
         return;
     }
     if (r4 != 1) return;
-    func_ov063_021162c8();
+    BeginDefeat();
 }
 
 void daTrs_c::func_ov063_02119b84() {
@@ -2250,7 +2250,7 @@ int daTrs_c::UpdateDuringDeath() {
                     if (this->mVariant != 2) {
                         ((daTrs_c *)this->mFoundActor)->mBooDefeatCount += 1;
                     }
-                    ((daTrs_c *)this->mFoundActor)->func_ov063_02116244();
+                    ((daTrs_c *)this->mFoundActor)->SpawnStarMarker();
                 }
                 this->mFoundActor = 0;
             }
@@ -2464,7 +2464,7 @@ int daTrs_c::ShouldBeActive() {
     }
     v = this->mVariant;
     if (v == 0xd || v == 1) {
-        if (func_ov063_021163d0() != 0) return 1;
+        if (IsTrapOccupied() != 0) return 1;
         return 0;
     }
     if (ShouldBeStopped() == 0) {
@@ -2477,7 +2477,7 @@ int daTrs_c::ShouldBeStopped() {
 
     unsigned char v = this->mVariant;
     if (v == 0xd || v == 1) {
-        return func_ov063_021163d0() == 0;
+        return IsTrapOccupied() == 0;
     }
     return 0;
 }
@@ -2655,7 +2655,7 @@ int daTrs_c::Behavior()
     if (mSoundCount == 0) {
         /* Area-reset: when the home area is not showing or the leave test
            (02116190) passes, an undefeated Boo goes back to its home. */
-        if ((IsAreaShowing(mAreaIdx) == 0) || (func_ov063_02116190() != 0)) {
+        if ((IsAreaShowing(mAreaIdx) == 0) || (IsPlayerBeyondLimit() != 0)) {
             if (mBooFlags.defeated == 0) {
                 prev = &mPrevAngle;
                 mPos.x = mHomePos.x;
