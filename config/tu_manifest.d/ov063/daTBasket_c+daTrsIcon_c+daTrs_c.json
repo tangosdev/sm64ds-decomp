@@ -146,7 +146,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02116a1cEv",
+      "symbol": "_ZN7daTrs_c22UpdateStarGatedPathBooEv",
       "address": "0x02116a1c",
       "size": "0x000001d4",
       "legacy_source": "src/unnamed/ov063/func_ov063_02116a1c.c",
@@ -160,7 +160,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02116bf4Ev",
+      "symbol": "_ZN7daTrs_c18UpdateChildSpawnerEv",
       "address": "0x02116bf4",
       "size": "0x00000144",
       "legacy_source": "src/unnamed/ov063/func_ov063_02116bf4.c",
@@ -321,28 +321,28 @@
       "ordinal": 39
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02118e5cEv",
+      "symbol": "_ZN7daTrs_c19AwardStarAndArmTrapEv",
       "address": "0x02118e5c",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/ov063/func_ov063_02118e5c.c",
       "ordinal": 40
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02118ea0Ev",
+      "symbol": "_ZN7daTrs_c15AwardStarVeneerEv",
       "address": "0x02118ea0",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov063/func_ov063_02118ea0.c",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02118eacEv",
+      "symbol": "_ZN7daTrs_c9AwardStarEv",
       "address": "0x02118eac",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov063/func_ov063_02118eac.c",
       "ordinal": 42
     },
     {
-      "symbol": "_ZN11daTrsIcon_c19func_ov063_02118f24ERK7Vector3",
+      "symbol": "_ZN11daTrsIcon_c16SpawnTrackedStarERK7Vector3",
       "address": "0x02118f24",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/ov063/func_ov063_02118f24.c",
@@ -496,7 +496,7 @@
       "ordinal": 64
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a0a8Eiiii",
+      "symbol": "_ZN7daTrs_c12DeadbandStepEiiii",
       "address": "0x0211a0a8",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a0a8.c",

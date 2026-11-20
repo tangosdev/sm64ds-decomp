@@ -319,7 +319,7 @@ struct daTrs_c : dCapEnemy_c {
 
     /* The func_ov063_* methods. r0 is this Boo. The address is the name:
        the cartridge does not spell these. func_ov063_021169c4 lives on
-       daTBasket_c; func_ov063_02118f24 and func_ov063_0211a0a8 stay free
+       daTBasket_c; SpawnTrackedStar and DeadbandStep stay free
        (their first parameter is not a daTrs_c). */
     void UpdateClsnOffset();
     int IsPlayerBeyondLimit();
@@ -328,9 +328,9 @@ struct daTrs_c : dCapEnemy_c {
     unsigned char IsTrapOccupied();
     void UpdatePose();
     void          func_ov063_021166ac();
-    void          func_ov063_02116a1c();
+    void UpdateStarGatedPathBoo();
     void          func_ov063_02116bf0();
-    void          func_ov063_02116bf4();
+    void UpdateChildSpawner();
     void UpdateCageBoo();
     void UpdateCageNonlethalHit();
     void UpdateCageDying();
@@ -353,9 +353,9 @@ struct daTrs_c : dCapEnemy_c {
     void UpdateBigBooDefeated();
     void UpdateBigBooHit();
     void SpawnKey();
-    void          func_ov063_02118e5c();
-    void          func_ov063_02118ea0();
-    void          func_ov063_02118eac();
+    void AwardStarAndArmTrap();
+    void AwardStarVeneer();
+    void AwardStar();
     void UpdateBigBooBouncedOn();
     void UpdateBigBooChase();
     void UpdateBigBooInactive();
@@ -377,7 +377,7 @@ struct daTrs_c : dCapEnemy_c {
     void          func_ov063_02119cc0(int unused, s16 a2, int a3);
     void ChaseMario(int a1, short a2, int a3);
     void SetVelFromPlayerVel(int a, int b);
-    int func_ov063_0211a0a8(int a1, int a2, int a3, int a4);
+    int DeadbandStep(int a1, int a2, int a3, int a4);
     int GetAttackStatus();
     int UpdateDuringDeath();
     int UpdateDuringNonlethalHit(int speed);
