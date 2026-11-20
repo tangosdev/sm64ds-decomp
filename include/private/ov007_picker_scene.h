@@ -6,8 +6,8 @@
 #include "Ov007Picker.h"
 #include "Ov007Tween.h"
 
-/* data_ov007_02104ba0: the 0x4c-byte scene record PickerScene_Create
- * allocates. */
+/* The 0x4c-byte scene record PickerScene_Create allocates into
+ * sPickerScene. */
 typedef struct Ov007PickerScene {
     Ov007Picker *picker; /* 0x00: func_ov007_020c690c; freed by func_ov007_020c6684 */
     /* 0x04: func_ov007_020c9388; [0] runs the scene, [1] the display, [2]

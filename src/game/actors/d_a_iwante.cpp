@@ -336,7 +336,6 @@ extern dCamera_c *gCamera;
 /* ---- arm9 helpers (unmangled ROM names) ---- */
 extern "C" int AngleDiff(int a, int b);
 extern "C" int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
-extern "C" int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
 extern "C" int func_020092c4(void *cam, void *out, void *target);
 extern "C" void func_02011cfc(void);
 extern "C" void func_02011d2c(void);

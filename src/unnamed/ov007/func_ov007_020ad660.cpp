@@ -25,8 +25,8 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
     Ov007MenuState *menuState;
     int ticks;
 
-    mainState = WORK->states[0];
-    menuState = WORK->states[1];
+    mainState = gMenuWork->states[0];
+    menuState = gMenuWork->states[1];
 
     if (slot->layer->visible == 0) {
         return;
@@ -39,7 +39,7 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
     switch (slot->kind) {
     case 1:
     case 6: {
-        Ov007Item *obj = WORK->itemViews[8]->item;
+        Ov007Item *obj = gMenuWork->itemViews[8]->item;
         s16 v = obj->state->currentState;
         if (v == 3 || v == 4) {
             func_ov007_020c0638(slot->layer, 0, (obj->posY >> 12) - obj->layout->homeY, 0);
@@ -53,7 +53,7 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
         if (mainState->stateTicks == 0) {
             func_ov007_020c02d8(slot->layer->screen, 24, 0x300);
         }
-        if (WORK->paletteState->stateTicks != 0) {
+        if (gMenuWork->paletteState->stateTicks != 0) {
             return;
         }
         RequestScreenFade(9, 0, func_ov007_020ada70);
@@ -75,14 +75,14 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
                 slot->layer->priority = 2;
                 slot->state->requestedState = 1;
             }
-            if (WORK->figureIndex != 1) {
+            if (gMenuWork->figureIndex != 1) {
                 return;
             }
-            if (WORK->model->boneAnim->anim != 0) {
+            if (gMenuWork->model->boneAnim->anim != 0) {
                 return;
             }
             {
-                u16 frame = WORK->altFigure->model->boneAnim->frame;
+                u16 frame = gMenuWork->altFigure->model->boneAnim->frame;
                 if (frame == 0x11d || frame == 0x12c || frame == 0x13d || frame == 0x163 ||
                     frame == 0x178 || frame == 0x18f) {
                     slot->state->requestedState = 2;

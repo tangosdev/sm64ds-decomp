@@ -226,6 +226,8 @@ extern union Matrix4x3 data_020a0e68;
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
 extern fx32 Vec3_HorzLen(const Vector3 *v);
+/* local extern: the same CalcLib.h clash; the spelling CalcLib.h declares. */
+extern int Vec3_ApproachHorz(Vector3 *, Vector3 *, int);
 
 extern u16 DecIfAbove0_Short(void* p);
 /* local extern: CalcLib.h conflicts with DecIfAbove0_Short(void *). */
@@ -342,8 +344,7 @@ void daKing_Donketu_c::SpawnLandingEffects(int strength) {
    the boss itself. The ROM copies the difference vector once more before
    reading it (`dir = diff`) and holds &b->mPos across the copy of mPos
    (`target`); both are needed for the bytes. */
-void daKing_Donketu_c::SpawnHitParticles(void *pb) {
-    dActor_c *b = (dActor_c *)pb;
+void daKing_Donketu_c::SpawnHitParticles(dActor_c *b) {
     Vector3 dir, pos, aim, diff;
     s16 yaw, pitch;
     fx32 radius, horz;
@@ -1120,7 +1121,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     in.x = mEdgePos.x + out.x;
     in.y = mEdgePos.y;
     in.z = mEdgePos.z + out.z;
-    Vec3_ApproachHorz(&mPos.x, &in, 0x14000);
+    Vec3_ApproachHorz(&mPos, &in, 0x14000);
     mAngle.y = Vec3_HorzAngle(&mPos, &mSpawnPos);
     mPrevAngle.y = mAngle.y + 0x8000;
     mStateScratch += 0x500;

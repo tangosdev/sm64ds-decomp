@@ -75,6 +75,7 @@ struct MgJumpModelFilePtr : SharedFilePtr {
 };
 extern MgJumpModelFilePtr gJumpBack02ModelFile;
 extern MgJumpModelFilePtr gJumpBack01ModelFile;
+extern SharedFilePtr *sJumpBackFile;
 
 /* Everything below that decl_common.h does not declare. Keep it above the
  * first function: tools/tiers.py charges text between two functions to the
@@ -108,7 +109,7 @@ void Jump3D_StopGravity(void);
 void Jump3D_StartRoundLayout(void);
 int Jump3D_AllIdle(void);
 int Heyho_AllIdle(void);
-int Heyho_InitPool(void *ptr, int n);
+int Heyho_InitPool(Heyho *ptr, int n);
 void Jump3D_EnableInput(void);
 
 
@@ -244,7 +245,7 @@ s32 dScMgJump_c::InitResources()
     } else {
         sJumpBackFile = &gJumpBack01ModelFile;
     }
-    modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)sJumpBackFile);
+    modelFile = dExtSimpleModel_c::LoadFile(*sJumpBackFile);
     r = mModel.SetFile((BMD_File *)modelFile, 1, -1);
     if (r == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
@@ -473,7 +474,7 @@ s32 dScMgJump_c::Render()
 /* Slot 3. Releases the model file; `this` is never read. */
 s32 dScMgJump_c::CleanupResources()
 {
-    ((SharedFilePtr *)sJumpBackFile)->Release();
+    sJumpBackFile->Release();
     sJumpBackFile = 0;
     Mg_CommitRecords();
     return 1;

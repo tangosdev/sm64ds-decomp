@@ -18,7 +18,7 @@ extern void func_ov007_020b131c(void);
 }
 
 void func_ov007_020b066c(void) {
-    switch (WORK->states[0]->previousState) {
+    switch (gMenuWork->states[0]->previousState) {
     case 6:
         func_ov007_020b283c();
         break;
@@ -27,12 +27,12 @@ void func_ov007_020b066c(void) {
         break;
     case 5:
         func_ov007_020bf304();
-        WORK->callback(0x11);
+        gMenuWork->callback(0x11);
         break;
     default:
-        WORK->settings->minigamesFailed = WORK->callback(0x15);
-        WORK->settings->filesFailed = WORK->callback(0x14);
-        WORK->settings->dialogKind = 0;
+        gMenuWork->settings->minigamesFailed = gMenuWork->callback(0x15);
+        gMenuWork->settings->filesFailed = gMenuWork->callback(0x14);
+        gMenuWork->settings->dialogKind = 0;
         break;
     }
 
@@ -41,7 +41,7 @@ void func_ov007_020b066c(void) {
     func_ov007_020bca40(0);
 
     {
-        Ov007Work *bb = WORK;
+        Ov007Work *bb = gMenuWork;
         if ((unsigned short)(short)(bb->states[0]->previousState - 4) <= 2) {
             bb->states[1]->requestedState = 5;
         } else {
@@ -58,19 +58,19 @@ void func_ov007_020b066c(void) {
         }
     }
 
-    WORK->states[2]->requestedState = 0;
+    gMenuWork->states[2]->requestedState = 0;
 
-    WORK->figureIndex = WORK->nextFigureIndex;
+    gMenuWork->figureIndex = gMenuWork->nextFigureIndex;
 
-    if (WORK->nextFigureIndex == 0)
-        WORK->nextFigureIndex = 1;
+    if (gMenuWork->nextFigureIndex == 0)
+        gMenuWork->nextFigureIndex = 1;
     else
-        WORK->nextFigureIndex = 0;
+        gMenuWork->nextFigureIndex = 0;
 
     func_ov007_020bd1c0(0);
 
-    WORK->model->visible = 0;
-    WORK->figure->model->visible = 0;
-    WORK->altFigure->model->visible = 0;
+    gMenuWork->model->visible = 0;
+    gMenuWork->figure->model->visible = 0;
+    gMenuWork->altFigure->model->visible = 0;
     func_ov007_020b131c();
 }

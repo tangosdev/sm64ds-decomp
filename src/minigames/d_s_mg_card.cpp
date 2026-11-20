@@ -43,23 +43,22 @@ typedef struct OamAttrTmpl {
 
 extern "C" {
 extern unsigned short sCardFaceSprites[36];
-extern void *sCardObjSprites[];
-extern int sMgCardSprites[];
-extern void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
+extern OamAttr *sCardObjSprites[];
+extern OamAttr *sMgCardSprites[];
+extern void Hud_RenderSprite(OamAttr *sprite, int x, int y, int a3, int a4);
 extern "C" void *data_ov006_021369ec[];
 extern "C" void *data_ov006_021369b0[];
 extern "C" void *data_ov006_02136974[];
 extern "C" void *data_ov006_0213509c[];
 extern "C" void *data_ov006_02135018[];
 extern "C" void *data_ov006_02134fdc[];
-extern void **sCardPayoutHighlightSprites[];
+extern OamAttr **sCardPayoutHighlightSprites[];
 extern "C" OamAttr data_ov006_02134074[];
 extern "C" OamAttr data_ov006_02134124[];
-void *sCardHudSprites[] = {data_ov006_02134074, data_ov006_02134124};
+OamAttr *sCardHudSprites[] = {data_ov006_02134074, data_ov006_02134124};
 extern int sCardSelectLocked;
 extern int sCardSwapRequested;
 extern int data_ov006_02141770;
-extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
 extern int sCardFaceWeights[6];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
@@ -1522,12 +1521,11 @@ dMgCardObj_c::~dMgCardObj_c() {}
 /* The sprite-pointer table Render indexes by card kind: the elements are
  * not constant, so the cartridge fills it at load time from
  * sMgCardSprites in suit order. */
-void *sCardObjSprites[15] = {
-    (void *)sMgCardSprites[0],   (void *)sMgCardSprites[1],   (void *)sMgCardSprites[2],
-    (void *)sMgCardSprites[5],   (void *)sMgCardSprites[6],   (void *)sMgCardSprites[0xd],
-    (void *)sMgCardSprites[0xe], (void *)sMgCardSprites[0xb], (void *)sMgCardSprites[0xc],
-    (void *)sMgCardSprites[7],   (void *)sMgCardSprites[8],   (void *)sMgCardSprites[9],
-    (void *)sMgCardSprites[0xa], (void *)sMgCardSprites[3],   (void *)sMgCardSprites[4]};
+OamAttr *sCardObjSprites[15] = {sMgCardSprites[0],   sMgCardSprites[1],   sMgCardSprites[2],
+                                sMgCardSprites[5],   sMgCardSprites[6],   sMgCardSprites[0xd],
+                                sMgCardSprites[0xe], sMgCardSprites[0xb], sMgCardSprites[0xc],
+                                sMgCardSprites[7],   sMgCardSprites[8],   sMgCardSprites[9],
+                                sMgCardSprites[0xa], sMgCardSprites[3],   sMgCardSprites[4]};
 
 /* The card-table templates Init rewrites in place: attr0's shape field to 1
    and attr2's palette bank to 0, walking until attr3 == 0xffff. */

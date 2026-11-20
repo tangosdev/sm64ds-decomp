@@ -62,6 +62,12 @@ void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 
+/* out = trans + v turned about the Y axis by angle; y is not rotated. */
+void Vec3_RotateYAndTranslate(Vector3 *, const Vector3 *, short, const Vector3 *);
+/* Step out's x and z toward target by at most maxStep (y is left alone);
+   nonzero once out has reached it. */
+int Vec3_ApproachHorz(Vector3 *, Vector3 *, int);
+
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 fx32 Vec3_HorzLen(const Vector3 *);
 int Vec3_Dist(const Vector3 *, const Vector3 *);

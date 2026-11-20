@@ -20,11 +20,11 @@ typedef char Ov007Work_display_must_be_at_0x74[(int)&((Ov007Work *)0)->display =
  * 0x2000 bytes to the main OBJ characters, then frees the record and
  * releases the slot. */
 void func_ov007_020bcdb8(int idx) {
-    Ov007Display *s = WORK->display;
+    Ov007Display *s = gMenuWork->display;
     func_ov007_020c33d0(s->characters[idx], 5, 0);
     func_ov007_020c32e8(s->palettes[1], 2, 0, 0);
 
-    int k = WORK->settings->language - 2;
+    int k = gMenuWork->settings->language - 2;
     if (k < 0)
         return;
 

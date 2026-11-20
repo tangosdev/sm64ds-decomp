@@ -49,6 +49,7 @@ enum dScMgCoin_c_AssetId {
 
 #include "types.h"
 #include "OamAttr.h"
+#include "Matrix2x2.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "decl_common.h"
@@ -183,9 +184,8 @@ OamAttr **sCoinScorePlayerSprites[] = {
 extern int GetGameLanguage(void);
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 struct OamAttr;
-struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 OamAttr data_ov006_02133f00 = {0x00f0, 0x81f0, 0x10a0, 0xffff};
 OamAttr data_ov006_02133f08 = {0x00f0, 0x81f0, 0x1004, 0xffff};
 OamAttr *sCoinValuesSprites[] = {&data_ov006_02133f08, &data_ov006_02133f00};
@@ -195,7 +195,7 @@ OamAttr *sCoinSparkleSprites[] = {&data_ov006_02136e1c, &data_ov006_02136e14};
 OamAttr data_ov006_02134b3c = {0x00f0, 0x81f0, 0x512b, 0xffff};
 OamAttr data_ov006_02134b44 = {0x00f0, 0x81f0, 0x512f, 0xffff};
 OamAttr *sCoinBagSprites[] = {&data_ov006_02134b44, &data_ov006_02134b3c};
-extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
+extern void Mg_RenderSpriteBothPalMtx(OamAttr *obj, int x, int y, int w, Matrix2x2 *mtx);
 extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
@@ -301,14 +301,14 @@ void dScMgCoin_c::Bag_Draw() {
            (nitro/fx/fx_trig.h), with or without an index local, the
            function compiles to a different body. */
         int i = (idx_h >> 4) * 2;
-        int vec[4];
+        Matrix2x2 mtx;
         u8 idx_l = mBouncer[0].sprite;
 
-        vec[0] = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
-        vec[1] = FX_MUL(FX_SinCosTable_[i], 0x1000);
-        vec[2] = -FX_MUL(FX_SinCosTable_[i], 0x1000);
-        vec[3] = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
-        Mg_RenderSpriteBothPalMtx(sCoinBagSprites[idx_l], xr >> 12, yr >> 12, -1, vec);
+        mtx.m00 = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
+        mtx.m01 = FX_MUL(FX_SinCosTable_[i], 0x1000);
+        mtx.m10 = -FX_MUL(FX_SinCosTable_[i], 0x1000);
+        mtx.m11 = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
+        Mg_RenderSpriteBothPalMtx(sCoinBagSprites[idx_l], xr >> 12, yr >> 12, -1, &mtx);
     }
 }
 #pragma pop
@@ -634,7 +634,7 @@ void dScMgCoin_c::Popup_DrawAll() {
         y = sCoinPopupY[i];
         x = 0x10;
         for (j = 0; j < kTileCols; j++) {
-            Mg_RenderSpriteBothMtx(sCoinPopupSprites, x, y, (void *)0);
+            Mg_RenderSpriteBothMtx(sCoinPopupSprites, x, y, 0);
             x += kTileStep;
         }
     }

@@ -64,7 +64,7 @@ extern "C" {
 extern struct Jump2PopupLink *sJump2PopupList;
 extern int sJump2PopupCount;
 extern struct Jump2Popup *sJump2Popups;
-extern void *sJump2BackFile;
+extern SharedFilePtr *sJump2BackFile;
 void Mg_CommitRecords(void);
 int GetGameLanguage(void);
 struct OamAttr;
@@ -94,7 +94,7 @@ extern void Jump3D_SetTuning(int a);
 extern void Jump3D_StartRoundLayout(void);
 extern void Jump3D_SetLowGravity(void);
 extern void Heyho_ReactAll(void);
-extern int Heyho_InitPool(void *ptr, int n);
+extern int Heyho_InitPool(Heyho *ptr, int n);
 
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
@@ -419,7 +419,7 @@ s32 dScMgJump2_c::Render() {
 /* Slot 3. sJump2BackFile points at the model's file handle; it is
  * released and cleared. */
 s32 dScMgJump2_c::CleanupResources() {
-    ((SharedFilePtr *)sJump2BackFile)->Release();
+    sJump2BackFile->Release();
     sJump2BackFile = 0;
     Mg_CommitRecords();
     return 1;

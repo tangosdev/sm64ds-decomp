@@ -139,7 +139,7 @@ struct daKrb_c : dCapEnemy_c {
     void func_ov084_0212934c();
     void func_ov084_02129498();
     void func_ov084_021294d0();
-    void func_ov084_021296b0(void *b);
+    void func_ov084_021296b0(Vector3 *pos);
     void func_ov084_021296cc();
     void func_ov084_02129864();
     int func_ov084_021298d0();

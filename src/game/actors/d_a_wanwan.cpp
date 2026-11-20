@@ -73,15 +73,10 @@ extern WanwanModelFilePtr data_ov014_02114978;
 extern WanwanAnimationFileHandle data_ov014_02114980;
 extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
-extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern dCamera_c *gCamera;  /* CAMERA */
 
 int AngleDiff(int a, int b);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
-/* local extern: no header this file includes declares it, and it must keep C
- * linkage now that its caller StateEscapeDemoMain is a member. Nonzero once
- * the position has reached the target. */
-s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 }
 
 namespace cstd {

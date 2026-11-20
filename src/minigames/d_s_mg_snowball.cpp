@@ -95,7 +95,7 @@ extern void SetBg3Offset(int, int);
 extern void SetSubBg2Offset(int, int);
 extern void SetSubBg3Offset(int, int);
 extern Quaternion data_02092768; /* identity */
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 s32 GetGameLanguage(void);
 void FreeGfxSlotsById(int arg);

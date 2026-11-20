@@ -168,10 +168,10 @@ extern OamAttr data_ov002_0210ced0;
 extern OamAttr data_ov002_0210cf08;
 extern OamAttr data_ov002_0210cfa0;
 extern OamAttr data_ov002_0210caf4;
-extern void *data_ov001_020abd98[];
-extern void *data_ov001_020ac218[];
-extern void *data_ov001_020ac64c[];
-extern void *data_ov001_020acb68[];
+extern OamAttr *data_ov001_020abd98[];
+extern OamAttr *data_ov001_020ac218[];
+extern OamAttr *data_ov001_020ac64c[];
+extern OamAttr *data_ov001_020acb68[];
 }
 
 /* The level-state globals the stage's free functions below read and write: the
@@ -260,7 +260,7 @@ extern int data_02092130;
 extern unsigned int data_02092134;
 extern int data_02092138;
 extern u16 *data_0209214c[];
-extern s32 data_02092208[];
+extern LevelInfo *data_02092208[];
 extern s32 data_0209cef0;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -434,20 +434,20 @@ extern s8 data_0209f30d;
    sound is 0x19 + it) and each player's stars in a VS match. */
 s8 gNumStageStars[4];
 extern s8 data_0209f311;
-static int data_0209f314;
+static StageArea *data_0209f314;
 /* The stage's camera: LoadEntranceObjects spawns it (profile 0x14c) once the
    players are placed, and CleanupResources clears it. */
 dCamera_c *gCamera;
 static char *sFogObjs;
 static int data_0209f320;
-static void *data_0209f324;
+static dFdWipe_c *data_0209f324;
 static LVL_Overlay::StandardEntry *sEntranceObjs;
 s32 data_0209f32c;
 static void *sTeleportDestObjs;
 u16 *gMinimapTileObjs;
 void *gUnusedType13Objs;
-void *data_0209f33c;
-static char *data_0209f340;
+dActor_c *data_0209f33c;
+static LevelInfo *data_0209f340;
 u8 *data_0209f344;
 static short *sMinimapScaleObjs;
 static s32 sEventFlags;
@@ -469,7 +469,7 @@ u8 gMapCapIconCharacters[9];
 u8 gStarMarkerTypes[12];
 /* The live players, one per gNumPlayers slot; LevelObjects fills it. */
 daPly_c *gPlayers[4];
-void *data_0209f3a4[8];
+dActor_c *data_0209f3a4[8];
 /* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
 /* The cap slots: the actor whose cap each of the nine holds, 0 when free.
@@ -482,9 +482,6 @@ dActor_c *STAR_MARKERS[12];
    touch screen each frame and ResetInput clears them; the player, camera,
    meter and map read them. */
 ControllerInput data_0209f498[4];
-/* The mode byte of record 0 (+0x16); SetControllerMode, InitControllerMode
-   and PS_Update index it by player * 0x18. */
-extern u8 data_0209f4ae[];
 /* The actor death table: a 16-word bit row per level part, indexed by an
    actor's deathTableID. InitResources clears it only when the course
    changes, so it survives a reload of the same course. */
@@ -524,14 +521,14 @@ static inline int IsTouchJustBegun(int slot) {
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
-extern void *data_ov002_0210ca0c[];
-extern int data_ov002_0210cfd0[];
+extern OamAttr *data_ov002_0210ca0c[];
+extern OamAttr data_ov002_0210cfd0[];
 extern OamAttr data_ov002_0210d008;
-extern int data_ov002_0210d050[];
+extern OamAttr data_ov002_0210d050[];
 extern OamAttr data_ov002_0210d098;
-extern int data_ov002_0210d0e8[];
+extern OamAttr data_ov002_0210d0e8[];
 extern OamAttr data_ov002_0210d130;
-extern int data_ov002_0210d188[];
+extern OamAttr data_ov002_0210d188[];
 extern OamAttr data_ov002_0210d1c8;
 extern OamAttr data_ov002_0210d210;
 extern OamAttr data_ov002_0210d378;
@@ -1257,23 +1254,23 @@ void dScStage_c::PS_Render() {
             OAM::Render(true, &OAM::TINY_STAR, 38, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1, 0);
         }
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
@@ -1979,7 +1976,7 @@ void dScStage_c::PS_Update() {
         sNumMenuButtons = 3;
         sNextPauseState = 8;
         {
-            u8 cur = data_0209f4ae[gActivePlayerSlot * 0x18];
+            u8 cur = data_0209f498[gActivePlayerSlot].mode;
             sSelectedControllerMode = cur;
             sSelectedMenuButton = cur;
         }
@@ -2831,7 +2828,7 @@ void UpdateMinimap(MinimapDesc *desc, u32 a, u32 b, u32 c, u32 d) {
    which is sizeof(dFdWipe_c). dScStage_c::CleanupResources tears the array
    down and zeroes it. */
 void StartEntranceFaderWipe(int index) {
-    dFdWipe_c *f = &((dFdWipe_c *)data_0209f324)[index];
+    dFdWipe_c *f = &data_0209f324[index];
     dScene_c::SetFaders(f);
     f->SetToEnd();
 }
@@ -2842,7 +2839,7 @@ void StartExitCharacterWipe(void) {
 }
 
 extern "C" void StartExitFaderWipe(int index) {
-    dFdWipe_c *f = &((dFdWipe_c *)data_0209f324)[index];
+    dFdWipe_c *f = &data_0209f324[index];
     dScene_c::SetFaders(f);
     f->SetToStart();
 }
@@ -2873,7 +2870,7 @@ struct WipeFader {
 extern "C" void FUN_02029980(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = data_0209f324 + 6;
     WipeFader *o2 = (WipeFader *)wipe;
     data_0209d4b0 = wipe;
     o2->w8();
@@ -2883,7 +2880,7 @@ extern "C" void FUN_02029980(void) {
 void FUN_020299f4(void) {
     if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = data_0209f324 + 6;
     WipeFader *o2 = (WipeFader *)wipe;
     data_0209d4b0 = wipe;
     o2->w9();
@@ -2891,7 +2888,7 @@ void FUN_020299f4(void) {
 }
 
 extern "C" void FUN_02029a68(void) {
-    if (data_0209d4b0 == (dFdWipe_c *)data_0209f324 + 6) {
+    if (data_0209d4b0 == data_0209f324 + 6) {
         data_0209d4b0 = 0;
         G2_BlendNone();
     }
@@ -2908,7 +2905,7 @@ typedef struct WipeEntry {
 void FUN_02029ab0(void) {
     WipeEntry *entry;
     dScene_c::SetAndStopColorFader();
-    dFdWipe_c *wipe = (dFdWipe_c *)data_0209f324 + 6;
+    dFdWipe_c *wipe = data_0209f324 + 6;
     entry = (WipeEntry *)wipe;
     data_0209d4b0 = wipe;
     entry->field4 = 0xc00;
@@ -3060,13 +3057,13 @@ void dScStage_c::RenderVsModeNewStar() {
     data_0209f308 = timer - data_0208ee44;
     if (data_0209f308 % 60 >= 10) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         if (data_0209f1f4 != 0)
@@ -3109,8 +3106,8 @@ void dScStage_c::RenderVsModeCountdown() {
             OAM::Render(0, &data_ov002_0210d1c8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &data_ov002_0210d210, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000,
-                    0x1000, 0, -1);
+        OAM::Render(0, data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000, 0x1000, 0,
+                    -1);
         return;
     }
     if (data_0209f304 == 0)
@@ -3164,7 +3161,7 @@ void ClearSpikeBomb(int idx) {
         data_0209f3a4[idx] = 0;
 }
 
-extern "C" int AddSpikeBomb(void *p) {
+extern "C" int AddSpikeBomb(dActor_c *p) {
     int i;
     for (i = 0; i < 8; i++) {
         if (data_0209f3a4[i] == 0) {
@@ -3280,17 +3277,16 @@ extern "C" void func_0202a850(int a, int b) {
     data_0209212c += 0x64000;
 }
 
-/* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
-   is their +0x16, data_0209f4ae. The save file keeps the active player's
-   copy at data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
+/* The save file keeps the active player's controller mode at
+   data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
 void InitControllerMode(int idx, u8 val) {
-    data_0209f4ae[idx * 0x18] = val;
+    data_0209f498[idx].mode = val;
     if (idx == gActivePlayerSlot)
         data_0209caa0.file.controllerMode = val;
 }
 
 void SetControllerMode(unsigned char mode) {
-    data_0209f4ae[gActivePlayerSlot * 0x18] = mode;
+    data_0209f498[gActivePlayerSlot].mode = mode;
     data_0209caa0.file.controllerMode = mode;
 }
 
@@ -3316,15 +3312,15 @@ int dScStage_c::GetSkyboxID() {
 }
 
 int func_0202a958(void) {
-    return ((LevelInfo *)data_0209f340)->minimapScale;
+    return data_0209f340->minimapScale;
 }
 
 int func_0202a96c(void) {
-    return ((LevelInfo *)data_0209f340)->minimapPaletteFile;
+    return data_0209f340->minimapPaletteFile;
 }
 
 int func_0202a980(void) {
-    return ((LevelInfo *)data_0209f340)->minimapTilesFile;
+    return data_0209f340->minimapTilesFile;
 }
 
 /* data_0209f314 points at mAreas (InitResources stores it). In each
@@ -3345,7 +3341,7 @@ struct MinimapChangeNode {
 
 void LoadMinimapChangeObject(int idx, fx32 val, s8 h) {
     struct MinimapChangeNode *nn = (MinimapChangeNode *)::operator new(sizeof(MinimapChangeNode));
-    StageArea *e = &((StageArea *)data_0209f314)[idx];
+    StageArea *e = &data_0209f314[idx];
     struct MinimapChangeNode *cur = (MinimapChangeNode *)e->mBlockList;
     struct MinimapChangeNode *prev = cur;
     if (cur != 0) {
@@ -3377,15 +3373,15 @@ void LoadMinimapChangeObject(int idx, fx32 val, s8 h) {
 }
 
 void HideArea(int idx) {
-    ((StageArea *)data_0209f314)[idx].mShowing = 0;
+    data_0209f314[idx].mShowing = 0;
 }
 
 void ShowArea(int idx) {
-    ((StageArea *)data_0209f314)[idx].mShowing = 1;
+    data_0209f314[idx].mShowing = 1;
 }
 
 unsigned char IsAreaShowing(int idx) {
-    return ((StageArea *)data_0209f314)[idx].mShowing;
+    return data_0209f314[idx].mShowing;
 }
 
 extern "C" void ChangeArea(int areaID) {
@@ -3526,7 +3522,7 @@ extern "C" void StartFile(s8 levelID, u8 entranceID) {
 }
 
 int StartWithFarCamera(void) {
-    return (((LevelInfo *)data_0209f340)->cameraFlags & 1) != 0;
+    return (data_0209f340->cameraFlags & 1) != 0;
 }
 
 unsigned char GetStarCameraSetting(int idx) {
@@ -3556,14 +3552,14 @@ void func_0202af80(short *table, int count) {
    height, or the level's own map when the area has none. */
 int GetMinimapID(dActor_c *actor, int arg) {
     int idx = actor->mAreaId;
-    char *g;
+    StageArea *areas;
     int val;
     struct MinimapChangeNode *node;
     if (idx < 0)
         idx = gCurrentAreaId;
-    g = (char *)data_0209f314;
-    if (g != 0) {
-        node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
+    areas = data_0209f314;
+    if (areas != 0) {
+        node = (MinimapChangeNode *)areas[idx].mBlockList;
         if (node != 0) {
             val = actor->mPos.y;
             while (node != 0) {
@@ -3579,7 +3575,7 @@ int GetMinimapID(dActor_c *actor, int arg) {
                 return node->minimapId;
         }
     }
-    return ((LevelInfo *)data_0209f340)->entries[idx].minimapId;
+    return data_0209f340->entries[idx].minimapId;
 }
 
 void func_0202b044(u16 *table, int count) {
@@ -3664,8 +3660,7 @@ void dScStage_c::RenderModelTransparent() {
     BMD_Bone *bone = components->modelFile->bones;
     StageArea *area = mAreas;
     int areaIndex;
-    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count;
-         areaIndex++, area++, bone++) {
+    for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++, area++, bone++) {
         if (area->mShowing != 0) {
             u8 *materialIds = bone->materialIds;
             u16 materialIndex;
@@ -3688,7 +3683,7 @@ void dScStage_c::RenderModel() {
     StageArea *area = mAreas;
     int areaIndex;
 
-    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++) {
+    for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++) {
         u8 showing = area->mShowing;
         u8 *materialIds = bone->materialIds;
 
@@ -3798,11 +3793,11 @@ extern "C" int CopyTexPalFromLevelModel(void *p) {
 }
 
 void dScStage_c::LoadTextureTransformers() {
-    struct LevelTexAnim *entry = ((LevelInfo *)data_0209f340)->entries;
+    struct LevelTexAnim *entry = data_0209f340->entries;
     StageArea *area = mAreas;
     BMD_File *modelFile = mModel.data.modelFile;
     int areaIndex;
-    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++) {
+    for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++) {
         if (entry->bta) {
             dExtAnmTexSRT_c::Prepare(*modelFile, *entry->bta);
             area->mTransformer = new dExtAnmTexSRT_c;
@@ -3814,7 +3809,7 @@ void dScStage_c::LoadTextureTransformers() {
 }
 
 void dScStage_c::LoadModel() {
-    mModel.LoadAndSetFile(((LevelInfo *)data_0209f340)->modelFile, 1, -1);
+    mModel.LoadAndSetFile(data_0209f340->modelFile, 1, -1);
     BMD_File *modelFile;
     unsigned int materialCount;
     BMD_Material *material;
@@ -3922,7 +3917,7 @@ int dScStage_c::Render() {
     if (((gVsExitScreenActive | (gGamePaused | data_0209f20c)) & 0xff) == 0) {
         StageArea *area = mAreas;
         int areaIndex;
-        for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++, area++) {
+        for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++, area++) {
             if (area->mShowing != 0 && area->mTransformer != 0)
                 area->mTransformer->Advance();
         }
@@ -4401,7 +4396,7 @@ int dScStage_c::CleanupResources() {
     {
         StageArea *area = mAreas;
         int areaIndex;
-        for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++, area++) {
+        for (areaIndex = 0; areaIndex < data_0209f340->count; areaIndex++, area++) {
             dExtAnmTexSRT_c *transformer = area->mTransformer;
             if (transformer)
                 delete transformer;
@@ -4420,7 +4415,7 @@ int dScStage_c::CleanupResources() {
     data_0209f314 = 0;
     dScene_c::SetAndStopColorFader();
     data_0209d4b0 = 0;
-    delete[] (dFdWipe_c *)data_0209f324;
+    delete[] data_0209f324;
     data_0209f324 = 0;
     CleanCommonModelDataArr();
     mMeshCollider.Disable();
@@ -4544,8 +4539,8 @@ int dScStage_c::InitResources() {
             if ((s32)gNumPlayers > 0) {
                 int count = gNumPlayers;
                 int idx = 0;
-                u8 *p1 = (u8 *)gNumRedCoins;
-                u8 *vsStars = (u8 *)gNumStageStars;
+                s8 *p1 = gNumRedCoins;
+                s8 *vsStars = gNumStageStars;
                 /* Sampled once, before the loop: IsVsMode() here, or IsGameMode(1)
                    tested inside the loop, is 12 bytes short or 12 long. */
                 int vsModeCounters = IsGameMode(1);
@@ -4574,7 +4569,7 @@ int dScStage_c::InitResources() {
         gCurrentEntranceId = sNextEntranceId;
         gCurrentStarId = gNextStarId;
         gCurrentAreaId = -1;
-        data_0209f314 = (int)mAreas;
+        data_0209f314 = mAreas;
         data_0209f32c = 0x80000000;
         data_0209f274 = 0;
         SublevelToLevel(gCurrentSublevel);
@@ -4722,7 +4717,7 @@ int dScStage_c::InitResources() {
             faderOffset += 0x60;
         } while (faderIndex < 7);
 
-        data_0209f340 = (char *)data_02092208[gCurrentSublevel];
+        data_0209f340 = data_02092208[gCurrentSublevel];
         LoadModel();
         data_0208ee44 = 2;
         LVL_Overlay *level = (LVL_Overlay *)data_0209f340;

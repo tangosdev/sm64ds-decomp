@@ -10,7 +10,7 @@ void func_ov007_020aec00(void) {
     int sum;
     int k;
     i = 0;
-    settings = WORK->settings;
+    settings = gMenuWork->settings;
     for (; i < 3; i++) {
         Ov007BootArgs *s = settings->bootArgs;
         sum = 0;

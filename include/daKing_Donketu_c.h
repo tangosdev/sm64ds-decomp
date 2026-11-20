@@ -183,7 +183,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
     void RenewLoopedParticles();
     int func_ov073_0212081c();
     void SpawnLandingEffects(int strength);
-    void SpawnHitParticles(void *pb);
+    void SpawnHitParticles(dActor_c *b);
     s32 HandleHit();
     int UpdateDefeat();
     int func_ov073_0211fbec();
