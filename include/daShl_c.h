@@ -81,20 +81,20 @@ struct daShl_c : dEnemyBase_c {
     /* The shell's own helpers, under their ROM addresses. The four pairs
        marked state are the {enter, tick} records the state machine dispatches;
        SetState switches states and runs the new record's enter. */
-    void VanishOnWater();                        /* splash-floor check */
-    void UpdateRideTrail();                        /* ridden trail/sound */
-    void HandlePlayerTouch();                        /* touch resolution */
+    void VanishOnWater();                              /* splash-floor check */
+    void UpdateRideTrail();                            /* ridden trail/sound */
+    void HandlePlayerTouch();                          /* touch resolution */
     void UpdateModelAndShadow();                       /* model mtx + shadow */
-    int  OnKicked(dActor_c *kicker);        /* kicked -> sliding */
-    int  OnJumpedOn(dActor_c *player);        /* jumped on -> ridden */
-    int  St_Held_Main();                        /* state: held tick */
-    int  St_Held_Init();                        /* state: held enter */
-    int  St_Ridden_Main();                        /* state: ridden tick */
-    int  St_Ridden_Init();                        /* state: ridden enter */
-    int  St_Sliding_Main();                        /* state: sliding tick */
-    int  St_Sliding_Init();                        /* state: sliding enter */
-    int  St_Idle_Main();                        /* state: idle tick */
-    int  St_Idle_Init();                        /* state: idle enter */
+    int OnKicked(dActor_c *kicker);                    /* kicked -> sliding */
+    int OnJumpedOn(dActor_c *player);                  /* jumped on -> ridden */
+    int St_Held_Main();                                /* state: held tick */
+    int St_Held_Init();                                /* state: held enter */
+    int St_Ridden_Main();                              /* state: ridden tick */
+    int St_Ridden_Init();                              /* state: ridden enter */
+    int St_Sliding_Main();                             /* state: sliding tick */
+    int St_Sliding_Init();                             /* state: sliding enter */
+    int St_Idle_Main();                                /* state: idle tick */
+    int St_Idle_Init();                                /* state: idle enter */
     int SetState(ShlState *state);                     /* state switch */
 };
 
