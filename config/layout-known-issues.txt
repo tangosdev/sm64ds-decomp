@@ -38,7 +38,6 @@ L2 func_ov084_0212d564
 # shape. Every unit's ranges are claimed in its module's delinks.txt.
 L3 src/unnamed/ov008/data_ov008.c
 L3 src/unnamed/ov010/data_ov010.c
-L3 src/unnamed/ov015/data_ov015.c
 L3 src/unnamed/ov020/data_ov020.c
 L3 src/unnamed/ov022/data_ov022.c
 L3 src/unnamed/ov026/data_ov026.c
@@ -68,7 +67,6 @@ L3 src/unnamed/ov009/data_ov009_02112c58.c
 L3 src/unnamed/ov009/data_ov009_rodata.c
 L3 src/unnamed/ov029/data_ov029.c
 L3 src/unnamed/ov036/data_ov036_02112c28.c
-L3 src/unnamed/ov016/data_ov016_02113550.c
 L3 src/unnamed/ov032/data_ov032_02112fd0.c
 L3 src/unnamed/ov043/data_ov043_02111ca0.c
 L3 src/unnamed/ov056/data_ov056_02112bc0.c

@@ -1,5 +1,6 @@
     .text       start:0x021111a0 end:0x0211354c kind:code align:32
-    .rodata     start:0x0211354c end:0x021136ec kind:rodata align:4
+    .rodata     start:0x021136dc end:0x021136ec kind:rodata align:4
+    .rodata.slideBoxKeys start:0x0211354c end:0x021136dc kind:rodata align:4
     .init       start:0x021136ec end:0x02113abc kind:code align:4
     .ctor       start:0x02113abc end:0x02113ad0 kind:rodata align:4
     .data.slideBox start:0x02113ae0 end:0x02113bcc kind:data align:32
@@ -51,13 +52,11 @@ src/game/actors/d_a_obj_ki_ita.cpp:
 src/game/actors/d_a_slide_box.cpp:
     complete
     .text start:0x02112ff8 end:0x0211354c
+    .rodata.slideBoxKeys start:0x0211354c end:0x021136dc
     .init start:0x02113a50 end:0x02113abc
     .ctor start:0x02113acc end:0x02113ad0
     .data.slideBox start:0x02113bac end:0x02113bcc
     .bss start:0x02114e6c end:0x02114ea0
 
-src/unnamed/ov016/data_ov016_02113550.c:
-    complete
-    .rodata start:0x02113550 end:0x021136dc
 
 

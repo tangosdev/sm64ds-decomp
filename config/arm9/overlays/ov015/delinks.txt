@@ -75,6 +75,7 @@ src/game/actors/d_a_obj_bk_ukisima.cpp:
 src/game/actors/d_a_obj_bk_fall_block.cpp:
     complete
     .text start:0x02112cf4 end:0x02112e0c
+    .rodata start:0x02112e0c end:0x02112f9c
     .init start:0x021133a8 end:0x02113410
     .ctor start:0x02113428 end:0x0211342c
     .bss start:0x02114ad4 end:0x02114b00
@@ -82,7 +83,4 @@ src/game/actors/d_a_obj_bk_fall_block.cpp:
     .data start:0x02114868 end:0x02114880
     .data.fb_res start:0x02114880 end:0x0211488c
 
-src/unnamed/ov015/data_ov015.c:
-    complete
-    .rodata start:0x02112e0c end:0x02112f9c
 
