@@ -54,6 +54,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/mi/memory.h"
 #include "dScMgD3DBase_c.h"
+#include "Vector2.h"
 
 #pragma defer_codegen off
 
@@ -1254,19 +1255,19 @@ namespace s20adf70 {
 extern "C" {
 /* Fills record `c`. mDuration starts equal to mTimer; either vector may
    be omitted with a null pointer. */
-void Mg_InitFx(MgFx *e, short state, short timer, int *pos, int *vecA, int *vecB) {
+void Mg_InitFx(MgFx *e, short state, short timer, Vector2 *pos, Vector2 *vecA, Vector2 *vecB) {
     e->mState = state;
     e->mTimer = timer;
     e->mDuration = e->mTimer;
-    e->mPos[0] = pos[0];
-    e->mPos[1] = pos[1];
+    e->mPos[0] = pos->x;
+    e->mPos[1] = pos->y;
     if (vecA) {
-        e->mVecA[0] = vecA[0];
-        e->mVecA[1] = vecA[1];
+        e->mVecA[0] = vecA->x;
+        e->mVecA[1] = vecA->y;
     }
     if (vecB) {
-        e->mVecB[0] = vecB[0];
-        e->mVecB[1] = vecB[1];
+        e->mVecB[0] = vecB->x;
+        e->mVecB[1] = vecB->y;
     }
 }
 }
@@ -1274,14 +1275,10 @@ void Mg_InitFx(MgFx *e, short state, short timer, int *pos, int *vecA, int *vecB
 
 namespace s20adfc4 {
 extern "C" {
-extern void Mg_InitFx(void *rec, char *state, short timer, short pos, int *vecA, int *vecB);
+void Mg_InitFx(MgFx *e, short state, short timer, Vector2 *pos, Vector2 *vecA, Vector2 *vecB);
 /* Fills the first free record of the 0x40 at sMgFxPool (see
-   Mg_InitFx); does nothing without a position or a free record.
-   The parameter types are not the callers': `state` arrives as an int and
-   `pos` is the position pointer, tested whole (movs r4, r2). They are left
-   as they are because retyping them adds new disagreements with the
-   callers' differing declarations in the declaration-agreement gate. */
-void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *unused) {
+   Mg_InitFx); does nothing without a position or a free record. */
+void Mg_SpawnFx(short state, short timer, Vector2 *pos, Vector2 *vecA, Vector2 *vecB) {
     if (pos == 0)
         return;
     int i;

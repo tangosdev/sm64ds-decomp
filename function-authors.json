@@ -11743,7 +11743,7 @@
     },
     "arm9:0x0206ccd8": {
       "author": "tangosdev",
-      "name": "_Z13func_0206ccd8iz"
+      "name": "_Z13func_0206ccd8PKcz"
     },
     "arm9:0x0206cd44": {
       "author": "tangosdev",

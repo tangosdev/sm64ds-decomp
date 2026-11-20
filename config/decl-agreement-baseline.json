@@ -13,13 +13,6 @@
   "Matrix4x3_ApplyInPlaceToRotationX": {
    "src/game/actors/d_a_wanwan2.cpp": ["param:#2 int"]
   },
-  "Mg_InitFx": {
-   "src/minigames/d_s_mg_base.cpp": ["param:#2 char *", "param:#4 short"]
-  },
-  "Mg_SpawnFx": {
-   "src/minigames/d_s_mg_coin.cpp": ["arity:5"],
-   "src/minigames/unit020b2c84.cpp": ["arity:5"]
-  },
   "PATH_DEFS": {
    "src/engine/path/PathPtr.cpp": ["return:PathDef *"]
   },
@@ -178,9 +171,6 @@
   },
   "func_02046e28": {
    "src/engine/model/d_ext_model.cpp": ["param:#1 ModelComponents *", "param:#2 BMA_File *"]
-  },
-  "func_0206a928": {
-   "src/cstd3.cpp": ["arity:4"]
   },
   "func_ov079_02123d4c": {
    "src/game/actors/d_a_btn.cpp": ["arity:1", "return:Vector3"]
