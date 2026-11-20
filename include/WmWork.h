@@ -112,7 +112,4 @@ typedef char WmStartScanCallback_size_must_be_0xb8[sizeof(WmStartScanCallback) =
 typedef char WmParentRecord_size_must_be_0x180[sizeof(WmParentRecord) == 0x180 ? 1 : -1];
 typedef char WmWork_size_must_be_0x3700[sizeof(WmWork) == 0x3700 ? 1 : -1];
 
-/* The work buffer through its view; each consumer declares data_020a9db4. */
-#define WM_WORK ((WmWork *)data_020a9db4)
-
 #endif
