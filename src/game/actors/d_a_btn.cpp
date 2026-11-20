@@ -6,18 +6,18 @@
  *
  * Behavior runs one handler per mState out of the pointer-to-member table
  * data_ov079_02128280, which the static initializer fills at load:
- *    0 func_ov079_02125b44  waiting (the king's introduction talk)
- *    1 func_ov079_021258fc  walking
- *    2 func_ov079_021256d4  the king walking
- *    3 func_ov079_021254b4  leaning in
- *    4 func_ov079_0212538c  falling on its face
- *    5 func_ov079_02125240  slamming down
- *    6 func_ov079_02124b08  lying flat, getting up
- *    7 func_ov079_021249f0  turning back
- *    8 func_ov079_021246dc  defeated
- *    9 func_ov079_021246d8  the king beaten, waiting to go
- *   10 func_ov079_02124638  wobbling from a hit in front
- *   11 func_ov079_02124530  knocked over from behind
+ *    0 UpdateWaiting  waiting (the king's introduction talk)
+ *    1 UpdateWalking  walking
+ *    2 UpdateKingWalking  the king walking
+ *    3 UpdateLeaningIn  leaning in
+ *    4 UpdateFallingOnFace  falling on its face
+ *    5 UpdateSlammingDown  slamming down
+ *    6 UpdateGettingUp  lying flat, getting up
+ *    7 UpdateTurningBack  turning back
+ *    8 UpdateDefeated  defeated
+ *    9 UpdateKingBeaten  the king beaten, waiting to go
+ *   10 UpdateWobbling  wobbling from a hit in front
+ *   11 UpdateKnockedOver  knocked over from behind
  * The handlers are daBtn_c methods; their original names are unknown, so they
  * keep the address spellings.
  *
@@ -198,10 +198,10 @@ int data_ov079_02127cfc[96] = {
 
 /* Twelve state handlers. The initializer copies each member pointer into this table. */
 daBtn_c::StateFunc data_ov079_02128280[12] = {
-    &daBtn_c::func_ov079_02125b44, &daBtn_c::func_ov079_021258fc, &daBtn_c::func_ov079_021256d4,
-    &daBtn_c::func_ov079_021254b4, &daBtn_c::func_ov079_0212538c, &daBtn_c::func_ov079_02125240,
-    &daBtn_c::func_ov079_02124b08, &daBtn_c::func_ov079_021249f0, &daBtn_c::func_ov079_021246dc,
-    &daBtn_c::func_ov079_021246d8, &daBtn_c::func_ov079_02124638, &daBtn_c::func_ov079_02124530,
+    &daBtn_c::UpdateWaiting,    &daBtn_c::UpdateWalking,       &daBtn_c::UpdateKingWalking,
+    &daBtn_c::UpdateLeaningIn,  &daBtn_c::UpdateFallingOnFace, &daBtn_c::UpdateSlammingDown,
+    &daBtn_c::UpdateGettingUp,  &daBtn_c::UpdateTurningBack,   &daBtn_c::UpdateDefeated,
+    &daBtn_c::UpdateKingBeaten, &daBtn_c::UpdateWobbling,      &daBtn_c::UpdateKnockedOver,
 };
 
 /* OnAimedAtWithEggReturnVec's view of func_ov079_02123d4c: the (out, this)
@@ -465,8 +465,7 @@ int daBtn_c::CleanupResources()
    nearest player stands close (0x190000) and not far below it, start a
    talk, turn to face them, show message 0xa4, swap the music while the
    message box is up, and after the talk ends start walking (state 2). */
-void daBtn_c::func_ov079_02125b44()
-{
+void daBtn_c::UpdateWaiting() {
     Vector3 pos;
 
     if (mAnmModel.Finished() != 0) {
@@ -559,8 +558,7 @@ void daBtn_c::func_ov079_02125b44()
    once 0x2bc000 from the spawn point -- 0xc8000 in level 0x27. A player
    dead ahead within 0xc8000 starts the lean (state 3); within 0x5dc000 the
    pace picks up. */
-void daBtn_c::func_ov079_021258fc()
-{
+void daBtn_c::UpdateWalking() {
     unsigned int frame;
     int king;   /* an int copy of idx: indexing data_ov079_021275dc by the u8 changes the code */
     u8 idx;
@@ -636,8 +634,7 @@ void daBtn_c::func_ov079_021258fc()
    at a non-mega player dead ahead within 0x190000. If the nearest player
    ends up more than 0x37f000 below, give up: restore the music and put the
    king back where and how it spawned, waiting (state 0). */
-void daBtn_c::func_ov079_021256d4()
-{
+void daBtn_c::UpdateKingWalking() {
     daPly_c *r;
 
     if (mAnmModel.file != data_ov079_021275ec[mIsKing * 5 + 3]->filePtr) {
@@ -787,8 +784,7 @@ void daBtn_c::func_ov079_02125504()
 
 /* State 3, the lean: stand still until the topple animation reaches frame
    15, then start falling (state 4). */
-void daBtn_c::func_ov079_021254b4()
-{
+void daBtn_c::UpdateLeaningIn() {
     mHorzSpeed = 0;
     mAnmModel.Advance();
     if (!mAnmModel.WillHitFrame(15))
@@ -801,8 +797,7 @@ void daBtn_c::func_ov079_021254b4()
    and from frame 8 tip forward with a growing mPitchSpeed until the body is
    flat (mAngle.x 0x4000), which lands it in state 5. The mesh is raised with
    the tilt so the face stays on the ground. */
-void daBtn_c::func_ov079_0212538c()
-{
+void daBtn_c::UpdateFallingOnFace() {
     mMovingMeshCollider.ClearShallowOnly();
     mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
@@ -837,7 +832,7 @@ void daBtn_c::func_ov079_0212538c()
    the mesh collider, shake the camera, start the lying-down animation and
    move to state 6; from then on the collider's contact callback is the
    veneer above. The king lands with a heavier dust burst. */
-void daBtn_c::func_ov079_02125240(){
+void daBtn_c::UpdateSlammingDown() {
     Vector3 v;
     Vector3 a;
     Vector3 b;
@@ -1022,8 +1017,7 @@ void daBtn_c::func_ov079_02124dec()
    waits 30 frames and gets up too. Phase 11 pitches back up to level, then
    either resumes the state a hit interrupted or walks again (state 1, or 2
    for the king); the mesh lift follows a per-frame table meanwhile. */
-void daBtn_c::func_ov079_02124b08()
-{
+void daBtn_c::UpdateGettingUp() {
     u8 st = mSubState;
 
     if (st < 0xa) {
@@ -1116,8 +1110,7 @@ void daBtn_c::func_ov079_02124b08()
 /* State 7, turn back: spin in place 0x400 a frame for 32 frames, then walk
    off at the class's pace and hand over to state 1 after 42. A hit that
    interrupted this state resumes it where it left off. */
-void daBtn_c::func_ov079_021249f0()
-{
+void daBtn_c::UpdateTurningBack() {
     if ((unsigned int)(mResumeState - 10) <= 1) {
         mSubState = mSavedSubState;
         mStateTimer = mSavedStateTimer + 1;
@@ -1147,8 +1140,7 @@ void daBtn_c::func_ov079_021249f0()
    king first talks: start a conversation with the player that beat it,
    show message 0xa5 beside the nearest player, wait for it to close, then
    burst, spawn its star (star mStarID, from 0x64000 above it) and go. */
-void daBtn_c::func_ov079_021246dc()
-{
+void daBtn_c::UpdateDefeated() {
     Vector3 pos;
     Vector3 starPos;
     Vector3 v;
@@ -1214,15 +1206,12 @@ void daBtn_c::func_ov079_021246dc()
 }
 
 /* State 9: the king has been beaten and is waiting to be destroyed. */
-void daBtn_c::func_ov079_021246d8()
-{
-}
+void daBtn_c::UpdateKingBeaten() {}
 
 /* State 10, the hit wobble: rock about the pitch axis for 10 of the 90
    frames the hit armed, then sit level, then put back the state the hit
    interrupted. */
-void daBtn_c::func_ov079_02124638()
-{
+void daBtn_c::UpdateWobbling() {
     if (mWobbleTimer-- != 0) {
         u32 t = mWobbleTimer;
         if (t <= 0x50) {
@@ -1245,8 +1234,7 @@ void daBtn_c::func_ov079_02124638()
 /* State 11, knocked over from behind: finish the hop, then tip forward like
    state 4 with variant-specific pitch acceleration until flat, landing in
    state 5. While the hop plays the body rises. */
-void daBtn_c::func_ov079_02124530()
-{
+void daBtn_c::UpdateKnockedOver() {
     mAnmModel.Advance();
     if (mAnmModel.Finished()) {
         if (mIsKing)

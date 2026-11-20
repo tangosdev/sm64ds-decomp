@@ -124,7 +124,7 @@ struct daDoor_c : dActor_c {
        +0x8, on this daDoor_c. [src/game/actors/d_a_door.cpp] */
     void *mState;                 /* 0x140 -- the state pair, see SIZE above */
     s8   mKeyModelIdx;            /* 0x144 -- key-model index */
-    /* A countdown/phase byte. func_ov100_02144528 and func_ov100_02145080 tick
+    /* A countdown/phase byte. St_CharChange_Main and func_ov100_02145080 tick
        it with DecIfAbove0_Byte and also set it directly (0x40 and 0x78 ticks,
        or the 0/1 result of daPly_c::TryExitWhiteDoorWithStar), and it is zeroed
        when a swing starts. The comments in src/game/actors/d_a_door.cpp say what
@@ -153,22 +153,30 @@ struct daDoor_c : dActor_c {
        ones those call: each takes the door as its implicit this exactly
        where the old C sources took it explicitly. The state record's
        execute half always receives the player (as daPly_c* or, where the
-       body only forwards it, the int the dispatch carries). The original
-       names are not recovered; the addresses stand in. */
-    int func_ov100_02144468(int p);         /* state 021488a4 execute */
-    int func_ov100_021444e8(int a1);        /* state 02148924 execute */
-    int func_ov100_02144528(daPly_c *pl);   /* state 02148904 execute */
-    void func_ov100_021446f8(daPly_c *r1);  /* state 02148904 enter */
-    int func_ov100_02144730(daPly_c *player); /* states 021488f4/02148914 execute */
-    int func_ov100_0214491c();              /* state 02148914 enter */
-    int func_ov100_02144950(daPly_c *pl, int unused); /* state 021488f4 enter */
-    int func_ov100_021449c8(daPly_c *a2);             /* state 021488e4 execute */
-    int func_ov100_02144a38(daPly_c *p);              /* state 021488e4 enter */
-    int func_ov100_02144bf4(daPly_c *a2);             /* state 021488d4 execute */
-    int func_ov100_02144c64();              /* state 021488d4 enter */
-    int func_ov100_02144c6c(daPly_c *r1);   /* state 021488c4 execute */
-    int func_ov100_02144ccc();              /* state 021488c4 enter */
-    int func_ov100_02144cf8(daPly_c *b);    /* state 021488b4 execute */
+       body only forwards it, the int the dispatch carries).
+
+       The St_<state>_Init / St_<state>_Main spelling and SetState are
+       reconstructions, not ROM text: they follow daStarGate_c
+       (include/daStarGate_c.h), the adjacent ov100 class whose state machine
+       is the same 0x10 two-PTMF record driven the same way, and each name is
+       earned from the body in src/game/actors/d_a_door.cpp. Nine state
+       records, so a state with two entry points (021488f4 and 02148914 share
+       one Main) carries two Inits. The ten still-address-named members below
+       are the ones no state record, caller or callee names. */
+    int St_CharIntro_Main(int p);                   /* state 021488a4 execute */
+    int St_Wait_Main(int a1);                       /* state 02148924 execute */
+    int St_CharChange_Main(daPly_c *pl);            /* state 02148904 execute */
+    void St_CharChange_Init(daPly_c *r1);           /* state 02148904 enter */
+    int St_OpenClose_Main(daPly_c *player);         /* states 021488f4/02148914 execute */
+    int St_OpenClose_InitNearEnd();                 /* state 02148914 enter */
+    int St_OpenClose_Init(daPly_c *pl, int unused); /* state 021488f4 enter */
+    int St_UnlockingWithKey_Main(daPly_c *a2);      /* state 021488e4 execute */
+    int St_UnlockingWithKey_Init(daPly_c *p);       /* state 021488e4 enter */
+    int St_UnlockingWithStar_Main(daPly_c *a2);     /* state 021488d4 execute */
+    int St_UnlockingWithStar_Init();                /* state 021488d4 enter */
+    int St_TalkingToPlayer_Main(daPly_c *r1);       /* state 021488c4 execute */
+    int St_TalkingToPlayer_Init();                  /* state 021488c4 enter */
+    int St_StayClosed_Main(daPly_c *b);             /* state 021488b4 execute */
     static int func_ov100_02144f84();
     static int func_ov100_02144fcc();
     static int func_ov100_02145014();

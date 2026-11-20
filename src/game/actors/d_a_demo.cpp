@@ -71,8 +71,8 @@
  *   RunCommand's command table is a function-local static of member
  *   pointers, filled on first use behind its guard word; each handler is
  *   cast to the table's (unsigned char *, int, int) signature.
- *   func_ov002_020f26d4 is a member whose body is `return
- *   func_ov002_020f2630();`; under -interworking mwccarm emits that tail
+ *   StartScroll is a member whose body is `return
+ *   CreateScroll();`; under -interworking mwccarm emits that tail
  *   call as ldr ip, [pc]; bx ip; .word, the 12-byte shape in the ROM.
  *   The mStaffRoll heap block is daDemo_c::StaffRoll, a record recovered
  *   from its helpers (no RTTI names it). The step handlers are its
@@ -371,8 +371,7 @@ daDemo_c::~daDemo_c()
  * mask into bits 8..12 of 0x4001000, sets the blend to (0, 0x28, 0xc, 4),
  * advances the state and gives the three sprite slots delays 0x10/0x20/0x30. */
 
-void daDemo_c::func_ov002_020f1fcc()
-{
+void daDemo_c::StepFade() {
     int i, v;
     if (mScroll->fadeLevel == 0)
         return;
@@ -401,7 +400,7 @@ void daDemo_c::func_ov002_020f1fcc()
  * spriteDelay (slot + 1) << 5. Every active slot is drawn each frame. */
 extern "C" struct OamAttr *data_ov002_0210be1c[];
 
-void daDemo_c::func_ov002_020f20f4() {
+void daDemo_c::StepSprites() {
     for (int i = 0; i < 3; i++) {
         if (mScroll->spriteActive[i] != 0) {
             if ((gGlobalTimer & 1) == 0) {
@@ -426,8 +425,7 @@ void daDemo_c::func_ov002_020f20f4() {
  * zero on an idle slot, RNG bit 0 picks x -0x40 moving right or x 0x140 moving
  * left, and y is (rng >> 16) % 48 + 0x30 * slot. Does nothing in state 6. */
 
-void daDemo_c::func_ov002_020f2210()
-{
+void daDemo_c::RespawnSprites() {
     int i;
     int base;
     u8 state;
@@ -461,8 +459,7 @@ void daDemo_c::func_ov002_020f2210()
 
 /* Draw the two centre sprites at x 0x80. */
 
-void daDemo_c::func_ov002_020f2340()
-{
+void daDemo_c::DrawCenterSprites() {
     OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[0]);
     OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[1]);
 }
@@ -470,8 +467,7 @@ void daDemo_c::func_ov002_020f2340()
 /* Scroll the two sub-screen BG layers in opposite directions (bg1 x down
  * one, bg0 x up one) and write both offsets to the hardware. */
 
-void daDemo_c::func_ov002_020f237c()
-{
+void daDemo_c::ScrollBackgrounds() {
     mScroll->bg1X -= 1;
     mScroll->bg0X += 1;
     SetSubBg0Offset(mScroll->bg0X, mScroll->bg0Y);
@@ -480,8 +476,7 @@ void daDemo_c::func_ov002_020f237c()
 
 /* CleanupResources for param1 0x2f: free the scroll block. */
 
-int daDemo_c::func_ov002_020f23d0()
-{
+int daDemo_c::FreeScroll() {
     ::operator delete(this->mScroll);
     return 1;
 }
@@ -504,8 +499,7 @@ int daDemo_c::func_ov002_020f23d0()
  *   6  nothing
  * Every state then runs 2340, 2210 and 20f4. */
 
-int daDemo_c::func_ov002_020f23f0()
-{
+int daDemo_c::UpdateScroll() {
     switch (mScroll->state) {
     case 0:
         if (gSceneFader->IsAtStart() != 0) {
@@ -538,18 +532,18 @@ int daDemo_c::func_ov002_020f23f0()
                 }
             }
         }
-        func_ov002_020f237c();
-        func_ov002_020f1fcc();
+        ScrollBackgrounds();
+        StepFade();
         break;
     case 3:
-        func_ov002_020f1fcc();
-        func_ov002_020f237c();
+        StepFade();
+        ScrollBackgrounds();
         break;
     case 4:
         if (this->mCue == 4) {
             mScroll->state++;
         }
-        func_ov002_020f237c();
+        ScrollBackgrounds();
         break;
     case 5:
         if ((gGlobalTimer & 1) == 0) {
@@ -561,19 +555,19 @@ int daDemo_c::func_ov002_020f23f0()
                 GXS_SetVisiblePlane(gSubScreenLayers);
             }
         }
-        func_ov002_020f237c();
+        ScrollBackgrounds();
         break;
     case 6:
         break;
     }
 
-    func_ov002_020f2340();
-    func_ov002_020f2210();
-    func_ov002_020f20f4();
+    DrawCenterSprites();
+    RespawnSprites();
+    StepSprites();
     return 1;
 }
 
-int daDemo_c::func_ov002_020f2630() {
+int daDemo_c::CreateScroll() {
     this->mScroll = (daDemo_c::ScrollState *)::operator new(0x36);
     this->mScroll->bg0X = 0x30;
     this->mScroll->bg0Y = 0x20;
@@ -589,17 +583,16 @@ int daDemo_c::func_ov002_020f2630() {
 
 /* Script handler (table entry 23): mCue = p[0], the value 23f0 waits on. */
 
-int daDemo_c::func_ov002_020f26c4(unsigned char *src)
-{
+int daDemo_c::SetCue(unsigned char *src) {
     this->mCue = src[0];
     return 1;
 }
 
-/* func_ov002_020f26d4 @ 0x20f26d4 (ov002) -- tail call to func_ov002_020f2630 (0x20f2630),
+/* StartScroll @ 0x20f26d4 (ov002) -- tail call to CreateScroll (0x20f2630),
  * emitted as ldr ip, [pc]; bx ip; .word 0x20f2630. Command 22 in RunCommand's table.
  */
-int daDemo_c::func_ov002_020f26d4() {
-    return func_ov002_020f2630();
+int daDemo_c::StartScroll() {
+    return CreateScroll();
 }
 
 void StaffRoll::func_ov002_020f26e0() {
@@ -2415,8 +2408,7 @@ void StaffRoll::func_ov002_020f5fe4() {
     func_ov002_020f5ad4();
 }
 
-int daDemo_c::func_ov002_020f63a0()
-{
+int daDemo_c::FreeStaffRoll() {
     this->mStaffRoll->func_ov002_020f5f60();
     if (this->mStaffRoll != 0) {
         ::operator delete(this->mStaffRoll);
@@ -2425,30 +2417,24 @@ int daDemo_c::func_ov002_020f63a0()
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f63d4()
-{
+int daDemo_c::UpdateStaffRoll() {
     this->mStaffRoll->func_ov002_020f5fb8();
     this->mStaffRoll->func_ov002_020f5f8c();
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f63f8(unsigned char *src)
-{
+int daDemo_c::SetStaffRollCue(unsigned char *src) {
     this->mCue = *src;
     this->mStaffRoll->func_ov002_020f5dd8(this->mCue);
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f6424()
-{
+int daDemo_c::ApplyStaffRollCue() {
     this->mStaffRoll->func_ov002_020f5f0c(this->mCue);
     return 1;
 }
 
-int daDemo_c::func_ov002_020f6448(unsigned char *src) {
+int daDemo_c::CreateStaffRoll(unsigned char *src) {
     StaffRoll *p;
     this->mCue = *src;
     p = new StaffRoll;
@@ -2456,7 +2442,7 @@ int daDemo_c::func_ov002_020f6448(unsigned char *src) {
     if (this->mStaffRoll == 0)
         return 0;
     this->mStaffRoll->func_ov002_020f5fe4();
-    return func_ov002_020f6424();
+    return ApplyStaffRollCue();
 }
 
 void daDemo_c::anmModel_c::func_ov002_020f64ac(const AnimEntry *table) {
@@ -2617,32 +2603,24 @@ daDemo_c::param_c::param_c() {
     mScale[0].z = 0;
 }
 
-
-int daDemo_c::func_ov002_020f6a9c()
-{
+int daDemo_c::Despawn() {
     MarkForDestruction();
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f6ab8(unsigned char *p)
-{
+int daDemo_c::PlayBank1Sound(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
     Sound::Play(1, id, mCamSpacePos);
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
-{
+int daDemo_c::PlayLongSound(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, id, mCamSpacePos, 0);
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f6b28(unsigned char *p)
-{
+int daDemo_c::PlayBank3Sound(unsigned char *p) {
     unsigned int v = ReadUnalignedInt(p);
     func_02012694(v, &mCamSpacePos);
     return 1;
@@ -2653,8 +2631,7 @@ int daDemo_c::func_ov002_020f6b28(unsigned char *p)
  * horizontal speed. The legacy per-function file recorded its match under
  * mwccarm 1.2/sp2p3; this TU builds under the 2004/b56 pin. */
 
-int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
-{
+int daDemo_c::FaceTargetAndMove(unsigned char *p) {
     Vector3 target;
     int y, z;
     z = ReadUnalignedShort(p + 4) << 12;
@@ -2668,9 +2645,7 @@ int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
     return 1;
 }
 
-
-s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
-{
+s32 daDemo_c::SetPoseFromRecord(unsigned char *data) {
     s32 x, y, z;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
@@ -2683,16 +2658,12 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f6c24(unsigned char *src)
-{
+int daDemo_c::SetOpacity(unsigned char *src) {
     this->mOpacity = src[0];
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f6c34(unsigned char *src)
-{
+int daDemo_c::PlayAnimationEntry(unsigned char *src) {
     unsigned char v = *src;
     ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514(data_ov002_0210bc88, v);
     return 1;
@@ -2730,7 +2701,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
     if ((*flag) == 0) {
         /* First call stores the look-at point and registers ~Vector3(). */
         static __attribute__((aligned(8))) Vector3 sLookTarget(0xffdd6000, 0xbe4000, 0x2ae000);
-        func_ov002_020f6f48(&sLookTarget, 0x20);
+        SteerTowardPoint(&sLookTarget, 0x20);
     } else {
         /* Kept (#821 r77): data_ov002_0210b958 is a statically initialized
          .data VecFx32 (a Vector3, which declares constructors, would be
@@ -2738,7 +2709,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
          takes the game's Vector3. */
         MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &gInvViewMtx, &v);
         Vec3_LslInPlace(&v, 3);
-        func_ov002_020f6f48(&v, 8);
+        SteerTowardPoint(&v, 8);
     }
     this->mPrevAngle.x = this->mAngle.x;
     this->mPrevAngle.y = this->mAngle.y;
@@ -2751,8 +2722,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
  * the animation's currFrame set from a random draw scaled by
  * numFramesAndFlags. */
 
-int daDemo_c::func_ov002_020f6e48(unsigned char *p)
-{
+int daDemo_c::PlaceFromRecord(unsigned char *p) {
     int b;
     int c0;
     int d;
@@ -2790,8 +2760,7 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
  * mSpeed.z to mMagnitude times the Z axis row of the animated model's
  * matrix. */
 
-void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
-{
+void daDemo_c::SteerTowardPoint(struct Vector3 *v, int amt) {
     Matrix4x3 *m;
     ApproachAngle(&this->mAngle.x, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
     ApproachAngle(&this->mAngle.y, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
@@ -2803,15 +2772,12 @@ void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
 
 /* Script handler 9: clear mFlags bit 0x2. */
 
-int daDemo_c::func_ov002_020f7020()
-{
+int daDemo_c::DisableRenderClip() {
     this->mFlags &= ~0x2;
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f7038(int a, int arg)
-{
+int daDemo_c::UpdateDescent(int a, int arg) {
     if (arg == gKuppaScriptFrame) {
         mParticleID[0] = 0;
         mParticleID[1] = 0;
@@ -2851,9 +2817,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f71c4(int a, int arg)
-{
+int daDemo_c::UpdateFadeIn(int a, int arg) {
     if (arg == 0) {
         if (arg == gKuppaScriptFrame) {
             this->mMagnitude = 0x10000;
@@ -2879,9 +2843,7 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f72bc()
-{
+int daDemo_c::UpdateSpin() {
     this->mScale.x = 0x3000;
     this->mScale.y = 0x3000;
     this->mScale.z = 0x3000;
@@ -2897,9 +2859,7 @@ int daDemo_c::func_ov002_020f72bc()
     return 1;
 }
 
-
-int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
-{
+int daDemo_c::UpdateRiseOrSink(unsigned char *flag, int val) {
     if (*flag != 0) {
         if (val == gKuppaScriptFrame)
             func_02012790(0x17);
@@ -3200,25 +3160,25 @@ void daDemo_c::RunCommand(unsigned char *command, int first, int last) {
         (PMF3)&daDemo_c::func_ov002_020f7780, /* 2 */
         (PMF3)&daDemo_c::func_ov002_020f7538, /* 3 */
         (PMF3)&daDemo_c::func_ov002_020f7410, /* 4 */
-        (PMF3)&daDemo_c::func_ov002_020f7384, /* 5 */
-        (PMF3)&daDemo_c::func_ov002_020f72bc, /* 6 */
-        (PMF3)&daDemo_c::func_ov002_020f71c4, /* 7 */
-        (PMF3)&daDemo_c::func_ov002_020f7038, /* 8 */
-        (PMF3)&daDemo_c::func_ov002_020f7020, /* 9 */
-        (PMF3)&daDemo_c::func_ov002_020f6e48, /* 10 */
+        (PMF3)&daDemo_c::UpdateRiseOrSink,    /* 5 */
+        (PMF3)&daDemo_c::UpdateSpin,          /* 6 */
+        (PMF3)&daDemo_c::UpdateFadeIn,        /* 7 */
+        (PMF3)&daDemo_c::UpdateDescent,       /* 8 */
+        (PMF3)&daDemo_c::DisableRenderClip,   /* 9 */
+        (PMF3)&daDemo_c::PlaceFromRecord,     /* 10 */
         (PMF3)&daDemo_c::func_ov002_020f6c60, /* 11 */
-        (PMF3)&daDemo_c::func_ov002_020f6c34, /* 12 */
-        (PMF3)&daDemo_c::func_ov002_020f6c24, /* 13 */
-        (PMF3)&daDemo_c::func_ov002_020f6bc0, /* 14 */
-        (PMF3)&daDemo_c::func_ov002_020f6b4c, /* 15 */
-        (PMF3)&daDemo_c::func_ov002_020f6b28, /* 16 */
-        (PMF3)&daDemo_c::func_ov002_020f6ae4, /* 17 */
-        (PMF3)&daDemo_c::func_ov002_020f6ab8, /* 18 */
-        (PMF3)&daDemo_c::func_ov002_020f6a9c, /* 19 */
-        (PMF3)&daDemo_c::func_ov002_020f6448, /* 20 */
-        (PMF3)&daDemo_c::func_ov002_020f63f8, /* 21 */
-        (PMF3)&daDemo_c::func_ov002_020f26d4, /* 22 */
-        (PMF3)&daDemo_c::func_ov002_020f26c4, /* 23 */
+        (PMF3)&daDemo_c::PlayAnimationEntry,  /* 12 */
+        (PMF3)&daDemo_c::SetOpacity,          /* 13 */
+        (PMF3)&daDemo_c::SetPoseFromRecord,   /* 14 */
+        (PMF3)&daDemo_c::FaceTargetAndMove,   /* 15 */
+        (PMF3)&daDemo_c::PlayBank3Sound,      /* 16 */
+        (PMF3)&daDemo_c::PlayLongSound,       /* 17 */
+        (PMF3)&daDemo_c::PlayBank1Sound,      /* 18 */
+        (PMF3)&daDemo_c::Despawn,             /* 19 */
+        (PMF3)&daDemo_c::CreateStaffRoll,     /* 20 */
+        (PMF3)&daDemo_c::SetStaffRollCue,     /* 21 */
+        (PMF3)&daDemo_c::StartScroll,         /* 22 */
+        (PMF3)&daDemo_c::SetCue,              /* 23 */
     };
     (this->*sCommandTable[command[6]])(command + 7, first, last);
 }
@@ -3227,9 +3187,9 @@ int daDemo_c::CleanupResources()
 {
     int r1 = param1;
     if (r1 == 0x2e)
-        return func_ov002_020f63a0();
+        return FreeStaffRoll();
     if (r1 == 0x2f)
-        return func_ov002_020f23d0();
+        return FreeScroll();
     /* The guards are compiled in: bare deletes build 0x70, not the ROM's 0x80. */
     if (mModel)
         delete mModel;
@@ -3293,10 +3253,10 @@ int daDemo_c::Behavior()
     u32 t;
     t = this->param1;
     if (t == 0x2e) {
-        return func_ov002_020f63d4();
+        return UpdateStaffRoll();
     }
     if (t == 0x2f) {
-        return func_ov002_020f23f0();
+        return UpdateScroll();
     }
     if ((t >= 0x1a) && (t <= 0x2d)) {
         UpdatePosWithOnlySpeed(0);

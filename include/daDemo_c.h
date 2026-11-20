@@ -97,8 +97,8 @@ struct daDemo_c : dActor_c {
         virtual ~simpleModel_c();
     };
 
-    /* The 0x36-byte block param1 0x2f allocates (func_ov002_020f2630) and
-       steps through func_ov002_020f23f0's seven states. Names describe what
+    /* The 0x36-byte block param1 0x2f allocates (CreateScroll) and
+       steps through UpdateScroll's seven states. Names describe what
        the code does with each field; the source type is not recovered. The
        sprite arrays have four slots, of which the loops touch three. */
     struct ScrollState {
@@ -117,7 +117,7 @@ struct daDemo_c : dActor_c {
         u8 state;            /* 0x34 - 0..6 */
     };
 
-    /* The 0x518-byte block param1 0x2e allocates (func_ov002_020f6448),
+    /* The 0x518-byte block param1 0x2e allocates (CreateStaffRoll),
        sets up (func_ov002_020f5fe4: the D_2D_STAFF_ROLL_* and D_2D_ED_STAR
        assets), steps (5fb8) and draws (5f8c). The step handlers and the
        cue handlers are its members, dispatched through member-pointer
@@ -390,37 +390,37 @@ struct daDemo_c : dActor_c {
     /* Runs one KuppaScript record addressed to this actor: calls handler
        command[6] of the 24-entry table with (command + 7, first, last). */
     void RunCommand(unsigned char *command, int first, int last);
-    void func_ov002_020f1fcc();
-    void func_ov002_020f20f4();
-    void func_ov002_020f2210();
-    void func_ov002_020f2340();
-    void func_ov002_020f237c();
-    int func_ov002_020f23d0();
-    int func_ov002_020f23f0();
-    int func_ov002_020f2630();
-    int func_ov002_020f26c4(unsigned char *src);
-    int func_ov002_020f26d4();
-    int func_ov002_020f63a0();
-    int func_ov002_020f63d4();
-    int func_ov002_020f63f8(unsigned char *src);
-    int func_ov002_020f6424();
-    int func_ov002_020f6448(unsigned char *src);
-    int func_ov002_020f6a9c();
-    int func_ov002_020f6ab8(unsigned char *p);
-    int func_ov002_020f6ae4(unsigned char *p);
-    int func_ov002_020f6b28(unsigned char *p);
-    int func_ov002_020f6b4c(unsigned char *p);
-    s32 func_ov002_020f6bc0(unsigned char *data);
-    int func_ov002_020f6c24(unsigned char *src);
-    int func_ov002_020f6c34(unsigned char *src);
+    void StepFade();
+    void StepSprites();
+    void RespawnSprites();
+    void DrawCenterSprites();
+    void ScrollBackgrounds();
+    int FreeScroll();
+    int UpdateScroll();
+    int CreateScroll();
+    int SetCue(unsigned char *src);
+    int StartScroll();
+    int FreeStaffRoll();
+    int UpdateStaffRoll();
+    int SetStaffRollCue(unsigned char *src);
+    int ApplyStaffRollCue();
+    int CreateStaffRoll(unsigned char *src);
+    int Despawn();
+    int PlayBank1Sound(unsigned char *p);
+    int PlayLongSound(unsigned char *p);
+    int PlayBank3Sound(unsigned char *p);
+    int FaceTargetAndMove(unsigned char *p);
+    s32 SetPoseFromRecord(unsigned char *data);
+    int SetOpacity(unsigned char *src);
+    int PlayAnimationEntry(unsigned char *src);
     int func_ov002_020f6c60(void *src, int first, int last);
-    int func_ov002_020f6e48(unsigned char *p);
-    void func_ov002_020f6f48(Vector3 *v, int amt);
-    int func_ov002_020f7020();
-    int func_ov002_020f7038(int a, int arg);
-    int func_ov002_020f71c4(int a, int arg);
-    int func_ov002_020f72bc();
-    int func_ov002_020f7384(unsigned char *flag, int val);
+    int PlaceFromRecord(unsigned char *p);
+    void SteerTowardPoint(Vector3 *v, int amt);
+    int DisableRenderClip();
+    int UpdateDescent(int a, int arg);
+    int UpdateFadeIn(int a, int arg);
+    int UpdateSpin();
+    int UpdateRiseOrSink(unsigned char *flag, int val);
     int func_ov002_020f7410(unsigned char *in, int sel);
     int func_ov002_020f7538(unsigned char *src, int first);
     int func_ov002_020f7780(void *unused, int mode);
