@@ -835,7 +835,6 @@ extern void*data_0209f33c;
 extern void*data_020a4bd0;
 extern void*data_ov002_020ff790[];
 extern void*data_ov002_0210f350;
-extern void*data_ov002_02110af8;
 extern void *sMgMenuScreenByLanguage[];
 extern void*data_ov004_020bc0c0;
 extern struct OamAttr *sTrmpDoorSignSprites[];
