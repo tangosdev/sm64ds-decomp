@@ -719,7 +719,9 @@ void daTrs_c::UpdateKeyBigBoo() {
     switch (this->mState) {
     case 0: func_ov063_02118914(); break;
     case 1: func_ov063_0211873c(); break;
-    case 2: UpdateBigBooBouncedOn(); break;
+    case 2:
+        UpdateBigBooBouncedOn();
+        break;
     case 3: func_ov063_021177b0(); break;
     case 4: func_ov063_02118458(); break;
     case 5: func_ov063_0211776c(); break;
@@ -1374,7 +1376,6 @@ void daTrs_c::UpdateBigBoo() {
     ApproachTargetOpacityAndUpdateScale();
 }
 
-
 void daTrs_c::UpdateBigBooApproach() {
     mHorzSpeed = 0x5000;
     int r = GetAttackStatus();
@@ -1390,7 +1391,6 @@ void daTrs_c::UpdateBigBooApproach() {
     if (mStateTimer > 100)
         mState = 1;
 }
-
 
 void daTrs_c::UpdateBigBooDefeated() {
     this->mBooFlags.hitByParam3Player = 0;
@@ -1431,7 +1431,6 @@ void daTrs_c::UpdateBigBooDefeated() {
     }
 }
 
-
 void daTrs_c::UpdateBigBooHit() {
 
     if (this->mStateTimer == 0) {
@@ -1458,7 +1457,6 @@ void daTrs_c::UpdateBigBooHit() {
         this->mState = 1;
     }
 }
-
 
 void daTrs_c::func_ov063_02118ddc() {
 
@@ -1530,7 +1528,6 @@ void daTrs_c::UpdateBigBooBouncedOn() {
         this->mState = 1;
 }
 
-
 void daTrs_c::UpdateBigBooChase() {
 
     short a2;
@@ -1575,7 +1572,6 @@ void daTrs_c::UpdateBigBooChase() {
     this->mState = 3;
     func_0201267c(0xc7, &this->mCamSpacePos);
 }
-
 
 void daTrs_c::UpdateBigBooInactive() {
 
@@ -1639,7 +1635,6 @@ void daTrs_c::UpdateBigBooInactive() {
         Stop();
     }
 }
-
 
 /* Behavior handler for variant 8. */
 void daTrs_c::func_ov063_02119274() {
