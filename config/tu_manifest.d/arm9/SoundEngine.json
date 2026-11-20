@@ -60,7 +60,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_0204effc",
+      "symbol": "BeginSleep",
       "address": "0x0204effc",
       "legacy_source": "src/func_0204effc.c",
       "size": "0x00000040",
@@ -886,7 +886,7 @@
       "ordinal": 123
     },
     {
-      "symbol": "func_02052008",
+      "symbol": "NNS_SndArcPlayerSetup",
       "address": "0x02052008",
       "legacy_source": "src/func_02052008.c",
       "size": "0x0000009c",

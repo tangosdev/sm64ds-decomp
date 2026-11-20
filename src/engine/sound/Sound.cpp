@@ -50,7 +50,7 @@ extern "C" void NNS_SndInit(void);
 extern "C" struct SndHeap *NNS_SndHeapCreate(u32 addr, u32 size);
 extern "C" void NNS_SndArcInit(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
                                int loadSymbols);
-extern "C" int func_02052008(struct SndHeap *heap);
+extern "C" int NNS_SndArcPlayerSetup(struct SndHeap *heap);
 extern "C" void func_020506fc(int arg);
 extern "C" {
 
@@ -71,7 +71,7 @@ extern "C" void NNS_SndMain(void);
 extern "C" void *NNS_SndArcGetSeqArcParam(int a, int idx);
 extern void func_02049c48(int self);
 extern "C" void func_0204efe0(void);
-extern "C" void func_0204effc(void);
+extern "C" void BeginSleep(void);
 
 /* In-TU functions, declared once so callers ahead of their definitions link. */
 extern void func_02013524(NNSSndHandle *handle, int vol, int mode);
@@ -254,7 +254,7 @@ void func_020133bc(void) {
     func_0201a9fc(&gWatchdog);
     NNS_SndArcInit((data_020a5bb8_t *)&sSndArc, path, sSndHeap, 0);
     func_0201a9fc(&gWatchdog);
-    func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
+    NNS_SndArcPlayerSetup(func_0203d974() == 0 ? sSndHeap : 0);
     if (func_0203d974() == 0) {
         func_0201a9fc(&gWatchdog);
         func_020134d8((void *)1, sSndHeap);
@@ -890,7 +890,7 @@ int func_02011dcc(NNSSndHandle *handle, int x) {
 }
 
 extern "C" void func_02011dc0(void) {
-    func_0204effc();
+    BeginSleep();
 }
 
 extern "C" void func_02011db4(void) {
