@@ -98,7 +98,7 @@ void *sTrmpLinePlttAddr;
 void *sTrmpLineTexAddr;
 int sTrmpItemsHit;
 int sTrmpItemsActive;
-char *sTrmpItems;
+TrmpItem *sTrmpItems;
 int sTrmp2Score;
 int sTrmpItemCount;
 void *sTrmp2MarioPtrs[5];
@@ -543,9 +543,9 @@ void TrmpItem::ReflectOffLine(TrampolineObjectCallbacks *jumper) {
     VEC_Add(velocity, &normalVelocityChange, velocity);
 }
 
-/* The ROM re-reads sTrmpItems and recomputes the element address at each use;
-   caching it in a local reallocates the whole loop (load-bearing). */
-#define ELEM ((char *)sTrmpItems + itemIndex * 0x1d0)
+/* The ROM re-reads sTrmpItems and recomputes the element address at each use,
+   so UpdateWithJumper indexes sTrmpItems[itemIndex] afresh each time; caching
+   the element in a local reallocates the whole loop. */
 
 void TrmpItem::UpdateWithJumper(TrampolineObjectCallbacks *jumperObject, int arg1) {
     TrampolineJumperCounts *jumper = (TrampolineJumperCounts *)jumperObject;
@@ -560,10 +560,10 @@ void TrmpItem::UpdateWithJumper(TrampolineObjectCallbacks *jumperObject, int arg
     jumper->mItemPushCount = 0;
 
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
-        if (((TrmpItem *)ELEM)->mActive == 0)
+        if (sTrmpItems[itemIndex].mActive == 0)
             continue;
-        ((TrmpItem *)ELEM)->ReflectOffLine(jumper);
-        if (((TrmpItem *)ELEM)->HitTest2D(jumper, arg1) == 0)
+        sTrmpItems[itemIndex].ReflectOffLine(jumper);
+        if (sTrmpItems[itemIndex].HitTest2D(jumper, arg1) == 0)
             continue;
         ApproachLinear(sTrmpItemsHit, 0x270f, 1);
         hitCount = jumper->mItemHitCount;
@@ -574,25 +574,25 @@ void TrmpItem::UpdateWithJumper(TrampolineObjectCallbacks *jumperObject, int arg
             scoreIncrement <<= 1;
         switch (hitCount) {
         case 0:
-            D3D_PlaySeAtX(0x131, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x131, sTrmpItems[itemIndex].mPos.x);
             break;
         case 1:
-            D3D_PlaySeAtX(0x132, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x132, sTrmpItems[itemIndex].mPos.x);
             break;
         case 2:
-            D3D_PlaySeAtX(0x133, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x133, sTrmpItems[itemIndex].mPos.x);
             break;
         case 3:
-            D3D_PlaySeAtX(0x134, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x134, sTrmpItems[itemIndex].mPos.x);
             break;
         case 4:
         default:
-            D3D_PlaySeAtX(0x135, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x135, sTrmpItems[itemIndex].mPos.x);
             break;
         }
         ApproachLinear(sTrmp2Score, 0xf423f, scoreIncrement);
         Trmp2Spinner_InitAll(jumper->mItemHitCount);
-        ((TrmpItem *)ELEM)->ProjectToScreen((short)scoreIncrement);
+        sTrmpItems[itemIndex].ProjectToScreen((short)scoreIncrement);
         jumper->mItemHitCount++;
     }
 }
@@ -789,7 +789,7 @@ void TrmpItem::Load() {
 void TrmpItem::UpdateMatricesAll() {
     int itemIndex;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
-        TrmpItem *p = (TrmpItem *)(sTrmpItems + itemIndex * 0x1d0);
+        TrmpItem *p = &sTrmpItems[itemIndex];
         if (p->mActive != 0)
             p->UpdateMatrix();
     }
@@ -798,7 +798,7 @@ void TrmpItem::UpdateMatricesAll() {
 void TrmpItem::UpdateAll() {
     int itemIndex;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
-        TrmpItem *p = (TrmpItem *)(sTrmpItems + itemIndex * 0x1d0);
+        TrmpItem *p = &sTrmpItems[itemIndex];
         if (p->mActive != 0)
             p->Update();
     }
@@ -807,7 +807,7 @@ void TrmpItem::UpdateAll() {
 void TrmpItem::HideAll(u32) {
     int itemIndex;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++)
-        ((TrmpItem *)(sTrmpItems + itemIndex * 0x1d0))->Hide();
+        sTrmpItems[itemIndex].Hide();
     sTrmpItemsActive = 0;
     sTrmpItemsHit = 0;
     sTrmp2Score = 0;
@@ -824,26 +824,24 @@ void TrmpItem::LoadAll(char *items, int count) {
     dExtSimpleModel_c::LoadFile(sTrmpItemRingAModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingBModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingCModelFile);
-    sTrmpItems = items;
+    sTrmpItems = (TrmpItem *)items;
     sTrmpItemCount = count;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++)
-        ((TrmpItem *)(sTrmpItems + itemIndex * 0x1d0))->Load();
+        sTrmpItems[itemIndex].Load();
 }
 
 TrmpItem *TrmpItem::Spawn(const VecFx32 *pos, const Vector3 *normal, int itemType, short motion) {
     int itemIndex = 0;
-    char *base;
-    int itemOffset;
+    TrmpItem *base;
     if (sTrmpItemCount > 0) {
         base = sTrmpItems;
         do {
-            if (((TrmpItem *)base)->mActive == 0) {
-                itemOffset = itemIndex * 0x1d0;
-                ((TrmpItem *)(sTrmpItems + itemOffset))->Init(pos, normal, itemType, motion);
-                return (TrmpItem *)(sTrmpItems + itemOffset);
+            if (base->mActive == 0) {
+                sTrmpItems[itemIndex].Init(pos, normal, itemType, motion);
+                return &sTrmpItems[itemIndex];
             }
             itemIndex++;
-            base += 0x1d0;
+            base++;
         } while (itemIndex < sTrmpItemCount);
     }
     return 0;
