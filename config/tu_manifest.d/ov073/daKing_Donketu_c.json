@@ -32,7 +32,7 @@
     {
       "name": ".data",
       "start": "0x02122f40",
-      "end": "0x02123040"
+      "end": "0x0212304c"
     },
     {
       "name": ".bss",
@@ -595,6 +595,13 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler PMF record for daKing_Donketu_c::func_ov073_211fe8c"
+    },
+    {
+      "symbol": "data_ov073_02123040",
+      "address": "0x02123040",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision cylinder offset (0, -0x60000, 0) consumed by InitResources mdCcAcPos_c::Init and Behavior mdCcAcPos_c::SetPosRelativeToActor; no relocations"
     }
   ],
   "bss": [
@@ -960,7 +967,8 @@
     "classInit native reconstruction (2026-10-13): daKing_Donketu_c_classInit remains last in ROM source order and now returns new daKing_Donketu_c. Native construction preserves the 0x504 allocation, base/member initialization order and all three Vector3 arrays: mWaypointsA at 0x3e8 count 8, mWaypointsB at 0x448 count 8, unk_4d4 at 0x4d4 count 2, all stride 12 with the original func_0203d384 constructor callback and _ZN7Vector3D1Ev destructor callback. The emitted Vector3 default constructor is an exact four-byte relocation-free duplicate of arm9:0x0203d384 and uses the canonical duplicate policy. Removed factory-only ABI declarations and manual vptr assignment. All 40 compiler temporaries retain their original identity and existing manifest pins; complete bytes, metadata and incoming/outgoing typed references agree with the pre-change object. Normal intact-object preparation accepts all owned output. This supersedes the historical no-Vector3-constructor limitation recorded during the factory fold. Remaining class reconstruction limits remain documented in the Source header.",
     "sinit fold (2026-10): the handwritten src/unnamed/ov073/__sinit_ov073_02122874.c is retired; the class TU now defines the eight file handles and the sixteen State records the initializer fills, so mwcc emits __sinit_d_a_king_donketu.cpp itself. The three state-enter stubs func_ov073_0211fbec / _0211fc70 / _0211fe84 are PMF targets in the records, so they are members now (declared in the class header); func_ov073_0212000c returns short and is reinterpreted to the int-PMF slot. production_mode intact-object: this entry now licenses .init/.ctor/.data/.bss alongside .text.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "Collision property member calls replace local helper declarations. Reconciled 40 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (128 sections, 566 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 40 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (128 sections, 566 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "defined_symbol_renames re-keyed -1 on 2026-11-18: defining data_ov073_02123040 as a real TU global retires one source-level name slot, so every compiler temp @NNN is emitted one lower (measured: emitted set @1760..@1830 vs configured @1761..@1831; every section/size/order unchanged; data_ov073_02123040 itself is a named symbol). Targets are the configured names and do not move."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1080,7 +1088,7 @@
         {
           "section": ".data",
           "start": "0x02122f40",
-          "end": "0x02123040",
+          "end": "0x0212304c",
           "differingBytes": 0,
           "firstDiff": null
         },

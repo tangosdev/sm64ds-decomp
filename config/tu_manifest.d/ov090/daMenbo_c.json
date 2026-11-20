@@ -32,7 +32,7 @@
     {
       "name": ".data",
       "start": "0x021340e0",
-      "end": "0x02134120"
+      "end": "0x02134138"
     },
     {
       "name": ".bss",
@@ -291,6 +291,20 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the water-rest entry pointer-to-member descriptor; retail first word is 0x02131b94"
+    },
+    {
+      "symbol": "_ZTS9daMenbo_c",
+      "address": "0x02134120",
+      "size": "0xb",
+      "binding": "STB_LOPROC",
+      "evidence": "class name string; reaching the cylinder offset forces the class's own RTTI name into this claim"
+    },
+    {
+      "symbol": "data_ov090_0213412c",
+      "address": "0x0213412c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision-cylinder offset (0, 0x1e000, 0)"
     }
   ],
   "bss": [
@@ -1071,7 +1085,7 @@
         {
           "section": ".data",
           "start": "0x021340e0",
-          "end": "0x02134120",
+          "end": "0x02134138",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1351,13 +1365,6 @@
       "canonical_module": "ov090",
       "canonical_address": "0x02134138",
       "reason": "this class's own __si_class_type_info record, dragged in with the vtable because this TU defines the key function. The cartridge homes it in this overlay at 0x02134138, outside this TU's licensed .text; romdata_check verifies the words and the base pointer before text isolation"
-    },
-    {
-      "symbol": "_ZTS9daMenbo_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov090",
-      "canonical_address": "0x02134120",
-      "reason": "literal ROM RTTI type-name string for daMenbo_c at ov090:0x02134120, twelve bytes; romdata_check verifies the compiler copy before text isolation"
     },
     {
       "symbol": "_ZTV9daMenbo_c",
