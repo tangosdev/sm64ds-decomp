@@ -2076,7 +2076,7 @@ static const char *sAssetPaths[ASSET_HANDLE_COUNT] = {
 
 void InitializeAssetHandleTable(void) {
     /* Suspend the timer callback and allocate the zeroed file-ID table. */
-    unsigned char savedTimerState = func_0201a9ec(&data_0209d574);
+    unsigned char savedTimerState = func_0201a9ec(&gWatchdog);
     AllocAssetHandleTable(ASSET_HANDLE_COUNT);
 
     OSThread *currentThread = OSi_ThreadInfo.current;
@@ -2095,6 +2095,6 @@ void InitializeAssetHandleTable(void) {
     OS_SetThreadPriority(currentThread, savedPriority);
 
     /* Reset elapsed time before restoring the timer's previous state. */
-    func_0201a9fc(&data_0209d574);
-    func_0201a96c(&data_0209d574, savedTimerState);
+    func_0201a9fc(&gWatchdog);
+    func_0201a96c(&gWatchdog, savedTimerState);
 }

@@ -31,7 +31,7 @@
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
 
-extern int data_02092768[4];
+extern Quaternion data_02092768; /* identity */
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM
@@ -103,10 +103,10 @@ s32 daObjGuragura_c::Behavior() {
         return 1;
     }
     if (DecIfAbove0_Byte(&mSettleDelay) == 0) {
-        mTiltTarget[0] = data_02092768[0];
-        mTiltTarget[1] = data_02092768[1];
-        mTiltTarget[2] = data_02092768[2];
-        mTiltTarget[3] = data_02092768[3];
+        mTiltTarget[0] = data_02092768.x;
+        mTiltTarget[1] = data_02092768.y;
+        mTiltTarget[2] = data_02092768.z;
+        mTiltTarget[3] = data_02092768.w;
     }
     Quaternion_SLerp(mTilt, mTiltTarget, 0x199, mTilt);
     UpdateModelMatrix();

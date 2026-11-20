@@ -236,7 +236,7 @@ void daSnowman_c::CheckAttacks() {
 
     if (flags & 0x2000) {
         this->mDeathState = 2;
-        func_ov002_020aea30(found, 0);
+        KillByAttack(found, 0);
         this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
         hit = 1;
     }
@@ -249,7 +249,7 @@ void daSnowman_c::CheckAttacks() {
         if (found->mIsVanish != 0) return;
         if (found->mIsMetal == 1) {
             this->mDeathState = 2;
-            func_ov002_020aea30(found, 0);
+            KillByAttack(found, 0);
             this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;
         }
@@ -264,7 +264,7 @@ void daSnowman_c::CheckAttacks() {
         }
         if ((flags & 0x40) && found->param1 == 2) {
             this->mDeathState = 2;
-            func_ov002_020aea30(found, 0);
+            KillByAttack(found, 0);
             this->mDeathSound = 2;
             this->mPrevAngle.y = (this->HorzAngleToCPlayer() + 0x8000);
             hit = 1;

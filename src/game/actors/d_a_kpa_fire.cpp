@@ -28,9 +28,8 @@
  * vectors; that inherited flat-field layout is not reconstructed here.
  *
  * leftovers:
- * - func_ov060_02116740, 02117624 stay free functions with
- *   the char * / unsigned char * decl_common.h declares. Their bodies
- *   compile as C++; 02117624 uses a POD matrix view for its block copy.
+ * - BurnPlayer and UpdateShadow are members; UpdateShadow copies the
+ *   scratch matrix into mShadowMat with a Matrix4x3 assignment.
  * - Particle::System::callbackScale and callbackVelocity are named.
  *   The word at +0x44 is Particle::System::emitRadius.
  * - Sound 0x180, player param1 == 3, and the particle kind pairs are
@@ -222,8 +221,8 @@ int daKpaFire_c::Behavior()
             }
         }
     }
-    func_ov060_02116740();
-    func_ov060_02117624();
+    BurnPlayer();
+    UpdateShadow();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -248,7 +247,7 @@ int daKpaFire_c::CleanupResources()
  * radius mShadowRadiusMul * mFireScale, the second fx32 argument (dActor_c.h
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
  * that value means is not decoded; every caller passes 0xf). */
-void daKpaFire_c::func_ov060_02117624() {
+void daKpaFire_c::UpdateShadow() {
     if (mDropsShadow == 0)
         return;
     Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, mGroundY >> 3, mPos.z >> 3);
@@ -745,7 +744,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  * and looks that actor up; if it is the daPly_c (actor id 0xbf = ACTOR_PLAYER)
  * and neither daPly_c::mIsMetal nor daPly_c::mIsVanish is set it calls
  * daPly_c::Burn. */
-void daKpaFire_c::func_ov060_02116740() {
+void daKpaFire_c::BurnPlayer() {
     unsigned int id = mdCcAc_c.otherOwner;
     if (id == 0)
         return;

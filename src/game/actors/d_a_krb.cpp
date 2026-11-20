@@ -21,7 +21,7 @@
  * - dBgCh_Actr::GetFloorResult has no header member.
  * - dExtFrameCtrl_c::Advance is called on the subobject at +0x3c0.
  *   mAnmModel.Advance() this-adjusts.
- * - func_ov084_021290d4 recomputes the chase radius at each store.
+ * - UpdateChaseRadius recomputes the chase radius at each store.
  *   A named temporary DIFFs, and spelling mUnstickTimer on both
  *   sides of the decrement folds the halfword.
  * - OnTurnIntoEgg, the reward helper and InitResources mask param1
@@ -117,9 +117,11 @@ enum {
     ACTOR_KURIBO_L = 202
 };
 
-/* dCcAc_c hitFlags bits, with the names include/dCc_c.h gives its table. That
-   table is a best-effort reading; only the egg and explosion bits are proven
-   there. 0x20000 is not in it. */
+/* dCcAc_c hitFlags bits, with the names include/dCc_c.h gives its table. The
+   egg and explosion bits are proven by matched code; punch, kick, breakdance,
+   slide kick, dive, ground pound, explosion and the player bit were read on
+   the cartridge from this class's hit reaction (the table's SEEN rows).
+   0x20000 is not in it. */
 enum {
     HIT_MEGA = 0x10,
     HIT_SPIN_OR_POUND = 0x20,
@@ -172,8 +174,8 @@ extern StateHandler data_ov084_02130d74[];
 extern "C" int func_02037e20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
-extern u8 data_0209f208;
-extern u8 *data_0209f344;
+extern u8 gNumVsStarsCollected;
+extern u8 *gVsStarSpawnOrder;
 extern BMA_File data_ov084_0213088c;
 extern BMA_File data_ov084_0213089c;
 extern int data_ov084_02130248[];
@@ -220,7 +222,7 @@ inline s32 *chaseRadius(daKrb_c *goomba)
     return &goomba->mChaseRadius;
 }
 
-void daKrb_c::func_ov084_021290d4() {
+void daKrb_c::UpdateChaseRadius() {
     daKrb_c *self2;
     int state;
     if (mUnstickTimer != 0) {
@@ -428,9 +430,8 @@ void daKrb_c::func_ov084_021294d0() {
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
  * calls this on each minion it spawns, after the Spawn. */
 
-void daKrb_c::SetHomePos(void *b) {
+void daKrb_c::SetHomePos(Vector3 *pos) {
     daKrb_c *goomba = (daKrb_c *)this;
-    Vector3 *pos = (Vector3 *)b;
     goomba->mHomePos.x = pos->x;
     goomba->mHomePos.y = pos->y;
     goomba->mHomePos.z = pos->z;
@@ -453,7 +454,7 @@ inline u32 daKrb_c::GetParam1() const {
  * own position with parameter 0x10, give the silver star the marker's
  * uniqueID, link the two and play sound object 1.
  * REWARD_SILVER_STAR_IF_CURRENT: only when mStarID equals
- * data_0209f344[data_0209f208]; spawns both actors with parameter
+ * gVsStarSpawnOrder[gNumVsStarsCollected]; spawns both actors with parameter
  * mStarID | 0x30 at the Goomba's position, marks the reward spent, and
  * plays sound object 1. */
 void daKrb_c::func_ov084_021296cc() {
@@ -473,7 +474,7 @@ void daKrb_c::func_ov084_021296cc() {
     }
     if (mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
         return;
-    if (mStarID != data_0209f344[data_0209f208])
+    if (mStarID != gVsStarSpawnOrder[gNumVsStarsCollected])
         return;
     UntrackStar(mStarTracked);
     dActor_c::Spawn(ACTOR_STARBASE, mStarID | 0x30, mPos, 0, mAreaId, -1);
@@ -484,14 +485,14 @@ void daKrb_c::func_ov084_021296cc() {
 }
 
 /* For REWARD_SILVER_STAR_IF_CURRENT: while no star slot is tracked yet
- * (mStarTracked negative) and mStarID matches data_0209f344[data_0209f208],
+ * (mStarTracked negative) and mStarID matches gVsStarSpawnOrder[gNumVsStarsCollected],
  * claim a slot (TrackStar(mStarID, 1)). */
 void daKrb_c::func_ov084_02129864() {
     if (mRewardType != daKrb_c::REWARD_SILVER_STAR_IF_CURRENT)
         return;
     if (mStarTracked >= 0)
         return;
-    unsigned int current = data_0209f344[data_0209f208];
+    unsigned int current = gVsStarSpawnOrder[gNumVsStarsCollected];
     if (mStarID != current)
         return;
     mStarTracked = TrackStar(mStarID, 1);
@@ -560,7 +561,7 @@ int daKrb_c::func_ov084_021298d0() {
  *      20.0), its material animation is restarted and its cylinder cleared.
  *   3: halve the horizontal speed while on the ground.
  * A hit reported by SpawnParticlesIfHitOtherObj sets mDeathState to
- * DEATH_HIT_20000, hands the hit to func_ov002_020aea30, and sets bit 0 of
+ * DEATH_HIT_20000, hands the hit to KillByAttack, and sets bit 0 of
  * the dCcAc_c flags (disabled).
  * Otherwise the model and cap are placed (func_ov084_0212a580) and, while
  * Yoshi holds it (mEatenByYoshi != 0), the ground check runs
@@ -599,7 +600,7 @@ int daKrb_c::func_ov084_02129a00() {
         if (SpawnParticlesIfHitOtherObj(mdCcAc_c) != 0) {
             void *actor = dActor_c::FindWithID(mdCcAc_c.otherOwner);
             mDeathState = daKrb_c::DEATH_HIT_20000;
-            func_ov002_020aea30((dActor_c *)actor, &mWithMeshClsn);
+            KillByAttack((dActor_c *)actor, &mWithMeshClsn);
             mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
             mdCcAc_c.flags |= 1;
             return 1;
@@ -752,7 +753,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  *   vanished daPly_c does nothing; in STATE_WALK it goes to STATE_ATTACKED_MARIO
  *   first and then hurts the daPly_c only if the hit carries HIT_PLAYER.
  * If a death state was chosen the cap is released. In every case the hit is
- * handed to func_ov002_020aea30, and the Goomba is turned half a turn when the
+ * handed to KillByAttack, and the Goomba is turned half a turn when the
  * hit asked for it (turnAround). A king minion hit by a punch, kick, breakdance or
  * slide kick adds the attacker's horizontal speed to its own; one hit by a
  * dive adds 0x20.
@@ -931,7 +932,7 @@ void daKrb_c::func_ov084_02129ed4() {
         capReleaseOnExit.z = 0; /* 108.0 */
         ReleaseCap(capReleaseOnExit);
     }
-    func_ov002_020aea30((dActor_c *)other, &mWithMeshClsn);
+    KillByAttack((dActor_c *)other, &mWithMeshClsn);
     if (turnAround != 0) {
         mAngle.y = (mPrevAngle.y + 0x8000); /* half a turn */
     }
@@ -1099,7 +1100,7 @@ void daKrb_c::ActTumble() {
     if (SpawnParticlesIfHitOtherObj(mdCcAc_c) != 0) {
         void *a = dActor_c::FindWithID(mdCcAc_c.otherOwner);
         mDeathState = daKrb_c::DEATH_HIT_20000;
-        func_ov002_020aea30((dActor_c *)a, &mWithMeshClsn);
+        KillByAttack((dActor_c *)a, &mWithMeshClsn);
         mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         mdCcAc_c.flags |= 1;
     }
@@ -1433,7 +1434,7 @@ void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
                 dActor_c::Spawn(ACTOR_STARBASE, 0x50, mHomePos, 0, mAreaId, -1);
                 param1 = GetParam1() & 0xff0f;
             } else if (mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
-                if (mStarID == data_0209f344[data_0209f208]) {
+                if (mStarID == gVsStarSpawnOrder[gNumVsStarsCollected]) {
                     UntrackStar(mStarTracked);
                     mRewardType = REWARD_SPENT;
                     b4 = 1;
@@ -1506,7 +1507,7 @@ int daKrb_c::Render()
 
 /* Per-frame update; always returns 1.
  *
- * In order: func_ov084_02129864 (claim the star slot) and func_ov084_021290d4
+ * In order: func_ov084_02129864 (claim the star slot) and UpdateChaseRadius
  * (chase radius and unstick timer). GetCapState 0 ends the frame; 1 sets
  * mFlags bit 0x10000000 and poofs. A Goomba that is not a king minion,
  * tumbling, held by Yoshi or dying, and more than 1500.0 from the player, is
@@ -1534,7 +1535,7 @@ int daKrb_c::Behavior() {
     int st;
 
     func_ov084_02129864();
-    func_ov084_021290d4();
+    UpdateChaseRadius();
     r = GetCapState();
     if (r == 0)
         return 1;
@@ -1776,7 +1777,7 @@ int daKrb_c::InitResources() {
     mStuckCheckPos.y = mPos.y;
     mStuckCheckPos.z = mPos.z;
     mUnstickTimer = 0;
-    func_ov084_021290d4();
+    UpdateChaseRadius();
 
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;

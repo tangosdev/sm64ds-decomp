@@ -22,7 +22,7 @@
  *   0x12        anmModel_c, model data_ov085_0213074c
  *   0x13        anmModel_c; file set chosen by CURRENT_GAMEMODE == 2
  *   0x14..0x16  simpleModel_c, data_ov002_02110b70
- *   0x17, 0x18  simpleModel_c, data_ov002_02110b50 / data_ov002_0211094c
+ *   0x17, 0x18  simpleModel_c, data_ov002_02110b50 / gPowerStarModelFile
  *   0x19        simpleModel_c, data_ov002_02110b78; Render draws it three
  *               times at the positions in data_ov002_0210bb7c
  *   0x1a..0x2d  anmModel_c from data_ov009_02113c20; moved with
@@ -242,7 +242,7 @@ extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. */
 extern dFdBrightness_c *gSceneFader;
-extern u8 data_ov002_02111144;
+extern u8 gMapIntroZooming;
 extern int gGlobalTimer;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
@@ -265,7 +265,7 @@ extern struct OamAttr *data_ov002_0210bba0[];
 }
 
 extern "C" {
-extern int *data_ov002_0210b97c[];
+extern const int *data_ov002_0210b97c[];
 }
 
 extern "C" {
@@ -319,7 +319,6 @@ extern "C" {
 /* The animation table of the anmModel_c variants: handlers 6c34 and 7038
    start an entry, and Behavior chains through it. */
 extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
-extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern dCamera_c *gCamera;
 extern VecFx32 data_ov002_0210b958;
@@ -335,19 +334,18 @@ extern int gFrameStep;
 extern int data_ov002_0210b970[3];
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];
-/* void *: every caller passes &mPos.x and POD int[3] scratch; retyping that
-   scratch as Vector3 renumbers this TU's @NNN literals. */
-extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 extern int data_ov002_0210b964[3];
 extern Matrix4x3 gInvViewMtx;
 extern unsigned char gGameMode;
-extern char data_ov002_0211094c;
+extern SharedFilePtr gPowerStarModelFile;
 extern JugemModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
 extern SharedFilePtr *data_ov002_0210b608[1];
 extern SharedFilePtr *data_ov002_0210b60c[1];
 extern SharedFilePtr *data_ov002_0210b610[1];
+extern SharedFilePtr *data_ov002_0210bcf0[];
+extern SharedFilePtr *data_ov002_0210bd24[];
 extern int data_ov002_0210b614;
 extern JugemTexSequenceFilePtr data_ov085_0213073c;
 extern JugemAnimationFilePtr data_ov085_02130744;
@@ -493,7 +491,7 @@ int daDemo_c::func_ov002_020f23d0()
  *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
  *      centerSpriteY[0] reaches 8 (it starts at -8)
  *   1  wait for mCue == 3 (written by script handler 26c4), then set
- *      data_ov002_02111144 to 1
+ *      gMapIntroZooming to 1
  *   2  on frames with FRAME_TIMER bit 0 clear, bg1Y++ and bg0Y--; at
  *      bg1Y 0x80, next state and sprite delays 1/0x41/0x81. Also runs the
  *      horizontal scroll (237c) and the fade step (1fcc)
@@ -520,7 +518,7 @@ int daDemo_c::func_ov002_020f23f0()
         break;
     case 1:
         if (this->mCue == 3) {
-            data_ov002_02111144 = 1;
+            gMapIntroZooming = 1;
             mScroll->state++;
         }
         break;
@@ -864,7 +862,7 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
                 ok++;
         }
         if (ok) {
-            int* p;
+            const int *p;
             dolls[i].active = 1;
             dolls[i].visible = 1;
             p = data_ov002_0210b97c[idx];
@@ -1090,7 +1088,7 @@ void StaffRoll::func_ov002_020f396c() {
 
 extern "C" {
 
-extern void *data_ov002_0210b998[];
+extern OamAttr *data_ov002_0210b998[];
 }
 
 void StaffRoll::func_ov002_020f3978() {
@@ -1098,8 +1096,7 @@ void StaffRoll::func_ov002_020f3978() {
     int i;
     for (i = 0; i < 4; i++) {
         if (star->visible) {
-            OAM::Render(true, (OamAttr *)data_ov002_0210b998[i], star->x >> 0xc, star->y >> 0xc, -1,
-                        1, 0);
+            OAM::Render(true, data_ov002_0210b998[i], star->x >> 0xc, star->y >> 0xc, -1, 1, 0);
         }
         star++;
     }
@@ -2740,7 +2737,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
          built by __sinit instead), and MtxStack.h's MTX_MultVec43 overload
          takes the game's Vector3. */
         MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &gInvViewMtx, &v);
-        Vec3_LslInPlace((int *)&v, 3);
+        Vec3_LslInPlace(&v, 3);
         func_ov002_020f6f48(&v, 8);
     }
     this->mPrevAngle.x = this->mAngle.x;
@@ -2940,7 +2937,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         Message::func_0201f138();
     }
     MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &gInvViewMtx, (&this->mPos));
-    Vec3_LslInPlace(&this->mPos.x, 3);
+    Vec3_LslInPlace(&this->mPos, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         Message::func_0201ef38();
     this->mOpacity = this->mMagnitude >> 12;
@@ -3007,7 +3004,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *src, int first) {
         dp->z = sum.z;
     }
     MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &gInvViewMtx, &this->mPos);
-    Vec3_LslInPlace(&this->mPos.x, 3);
+    Vec3_LslInPlace(&this->mPos, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
@@ -3024,17 +3021,17 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
         }
 
         {
-            int v[3];
+            Vector3 v;
             unsigned char idx;
-            v[0] = data_ov002_0210b970[0];
-            v[1] = data_ov002_0210b970[1];
-            v[2] = data_ov002_0210b970[2];
+            v.x = data_ov002_0210b970[0];
+            v.y = data_ov002_0210b970[1];
+            v.z = data_ov002_0210b970[2];
 
             idx = gLocalPlayerId;
             {
                 short ang = ((dActor_c *)gPlayers[idx])->mAngle.y;
 
-                Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, (ang + 0x8000), v);
+                Vec3_RotateYAndTranslate(&this->mPos, &cam->pos, (ang + 0x8000), &v);
             }
         }
 
@@ -3104,8 +3101,8 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         this->mPrevAngle.x = 0x800;
         this->mOpacity = 0x1f;
     } else {
-        int v[3];
-        int w[3];
+        Vector3 v;
+        Vector3 w;
         int h;
         int t;
 
@@ -3117,13 +3114,13 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         ApproachAngle(&this->mAngle.y, (short)(this->mPrevAngle.y + 0x8000), 4, 0x4000, 0);
 
         data_ov002_02110ddc[2] = this->mMagnitude;
-        v[0] = data_ov002_0210b964[0];
-        v[1] = data_ov002_0210b964[1];
-        v[2] = data_ov002_0210b964[2];
-        w[0] = data_ov002_02110ddc[0];
-        w[1] = data_ov002_02110ddc[1];
-        w[2] = data_ov002_02110ddc[2];
-        Vec3_RotateYAndTranslate(&this->mPos.x, v, this->mPrevAngle.y, w);
+        v.x = data_ov002_0210b964[0];
+        v.y = data_ov002_0210b964[1];
+        v.z = data_ov002_0210b964[2];
+        w.x = data_ov002_02110ddc[0];
+        w.y = data_ov002_02110ddc[1];
+        w.z = data_ov002_02110ddc[2];
+        Vec3_RotateYAndTranslate(&this->mPos, &v, this->mPrevAngle.y, &w);
 
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
@@ -3142,7 +3139,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
 int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 {
     Vector3 v0, v1;
-    int src[3];
+    Vector3 src;
     fx32 dist;
     s16 vertAngle, heading;
     dCamera_c *cam;
@@ -3182,11 +3179,11 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
         heading += t2;
     }
 
-    src[0] = 0;
-    src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
-    src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
+    src.x = 0;
+    src.y = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
+    src.z = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
-    Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, heading, src);
+    Vec3_RotateYAndTranslate(&this->mPos, &cam->pos, heading, &src);
 
     this->mAngle.x = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
     this->mAngle.y = cstd::atan2(v1.x, v1.z);
@@ -3379,9 +3376,8 @@ int daDemo_c::InitResources()
                 return 0;
         } else {
             if (((anmModel_c *)this->mAnmModel)
-                    ->func_ov002_020f6618(&data_ov002_02110c18, 0xD,
-                                          (SharedFilePtr **)&data_ov002_0210bcf0, 1, 0xD,
-                                          (SharedFilePtr **)&data_ov002_0210bd24, 0x16) == 0)
+                    ->func_ov002_020f6618(&data_ov002_02110c18, 0xD, data_ov002_0210bcf0, 1, 0xD,
+                                          data_ov002_0210bd24, 0x16) == 0)
                 return 0;
         }
     } else if (param1 >= 0x14 && param1 <= 0x16) {
@@ -3397,8 +3393,7 @@ int daDemo_c::InitResources()
     } else if (param1 == 0x18) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c *)this->mModel)
-                ->func_ov002_020f6960((SharedFilePtr *)&data_ov002_0211094c, -1) == 0)
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&gPowerStarModelFile, -1) == 0)
             return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
@@ -3442,14 +3437,13 @@ daDemo_c *daDemo_c_classInit(void) {
    pointer-to-member copies. */
 extern "C" {
 
-int data_ov002_0210b658[2] = {(int)0x81f020f0, (int)0xffff0100};
-int data_ov002_0210b6e8[2] = {(int)0x81f020f0, (int)0xffff0118};
-int data_ov002_0210b768[2] = {(int)0x41f800f8, (int)0xffff701e};
-int data_ov002_0210b868[2] = {(int)0x41f800f8, (int)0xffff705e};
+OamAttr data_ov002_0210b658[1] = {{0x20f0, 0x81f0, 0x0100, 0xffff}};
+OamAttr data_ov002_0210b6e8[1] = {{0x20f0, 0x81f0, 0x0118, 0xffff}};
+OamAttr data_ov002_0210b768[1] = {{0x00f8, 0x41f8, 0x701e, 0xffff}};
+OamAttr data_ov002_0210b868[1] = {{0x00f8, 0x41f8, 0x705e, 0xffff}};
 }
 
-struct OamAttr *data_ov002_0210b6a8[2] = {(struct OamAttr *)data_ov002_0210b768,
-                                          (struct OamAttr *)data_ov002_0210b868};
+struct OamAttr *data_ov002_0210b6a8[2] = {data_ov002_0210b768, data_ov002_0210b868};
 extern "C" {
 
 DemoModelFile data_ov002_02110b50(0x49b);
@@ -3497,8 +3491,8 @@ SharedFilePtr *data_ov002_0210b60c[1] = {&data_ov085_02130744};
 SharedFilePtr *data_ov002_0210b610[1] = {&data_ov002_02110bf8};
 /* The last cue time func_ov002_020f6c60 played sound 0x6a for. */
 int data_ov002_0210b614 = -1;
-int data_ov002_0210b630[2] = {(int)0x81f020f0, (int)0xffff0108};
-int data_ov002_0210b638[2] = {(int)0x81f020f0, (int)0xffff0110};
+OamAttr data_ov002_0210b630[1] = {{0x20f0, 0x81f0, 0x0108, 0xffff}};
+OamAttr data_ov002_0210b638[1] = {{0x20f0, 0x81f0, 0x0110, 0xffff}};
 
 StaffRollCue data_ov002_02110f9c[22] = {
     &StaffRoll::func_ov002_020f5efc, &StaffRoll::func_ov002_020f5ef0,
@@ -3583,10 +3577,10 @@ const int data_ov002_02100250[20] = {
 VecFx32 data_ov002_0210b958 = {-0x29dc00, 0x0, -0x650c00};
 int data_ov002_0210b964[3] = {-0x468000, 0x230000, 0x1a08000};
 int data_ov002_0210b970[3] = {-0x64000, 0x64000, -0x12c000};
-int *data_ov002_0210b97c[3] = {
-    (int *)&data_ov002_021001b0,
-    (int *)&data_ov002_02100200,
-    (int *)&data_ov002_02100250,
+const int *data_ov002_0210b97c[3] = {
+    data_ov002_021001b0,
+    data_ov002_02100200,
+    data_ov002_02100250,
 };
 OamAttr data_ov002_0210b9cc[3] = {
     {0x00f0, 0x81df, 0x1019, 0x0000},
@@ -3612,14 +3606,14 @@ OamAttr data_ov002_0210bb5c[4] = {
     {0x80f8, 0x002c, 0x000c, 0xffff},
 };
 OamAttr *data_ov002_0210b988[4] = {
-    (OamAttr *)&data_ov002_0210bb5c,
-    (OamAttr *)&data_ov002_0210ba7c,
-    (OamAttr *)&data_ov002_0210b9cc,
-    (OamAttr *)&data_ov002_0210ba9c,
+    data_ov002_0210bb5c,
+    data_ov002_0210ba7c,
+    data_ov002_0210b9cc,
+    data_ov002_0210ba9c,
 };
-void *data_ov002_0210b998[4] = {
-    (void *)&data_ov002_0210b658,
-    (void *)&data_ov002_0210b630,
-    (void *)&data_ov002_0210b638,
-    (void *)&data_ov002_0210b6e8,
+OamAttr *data_ov002_0210b998[4] = {
+    data_ov002_0210b658,
+    data_ov002_0210b630,
+    data_ov002_0210b638,
+    data_ov002_0210b6e8,
 };

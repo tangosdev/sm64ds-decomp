@@ -1545,7 +1545,7 @@
       "source": "0x0211cee0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da18",
+      "symbol": "gShellGreenModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da18"
@@ -1555,7 +1555,7 @@
       "source": "0x0211cee4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da20",
+      "symbol": "gShellRedModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da20"

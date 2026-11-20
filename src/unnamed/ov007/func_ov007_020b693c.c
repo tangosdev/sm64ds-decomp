@@ -6,6 +6,6 @@ extern struct Ov007ItemView *ItemView_Create(int i);
 void func_ov007_020b693c(void) {
     int i;
     for (i = 0; i < 24; i++) {
-        WORK->itemViews[i] = ItemView_Create(i);
+        gMenuWork->itemViews[i] = ItemView_Create(i);
     }
 }

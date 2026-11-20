@@ -48,9 +48,9 @@ extern "C" dScMgMemory2_cState sMemory2StateTable[];
 extern "C" dScMgMemory2_cState sMemory2RoundTable[];
 
 extern "C" {
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemory2CardFrameSprites[];
-extern void *sMemory2CardSprites[];
+extern OamAttr *sMemory2CardSprites[];
 extern const s32 sMemory2FlyAwayLimitPerMode[3] = {
     4,
     6,
@@ -1138,17 +1138,15 @@ void *dScMgMemory2_c_classInit() {
 /* The non-actor profile is interleaved with the member-pointer constants. */
 extern "C" BaseSpawnInfo<void> g_profile_MG_MEMORY_J = {dScMgMemory2_c_classInit, 0x016b, 0x016b};
 
-extern "C" int sMgCardSprites[];
+extern "C" OamAttr *sMgCardSprites[];
 
-void *sMemory2CardSprites[23] = {
-    (void *)sMgCardSprites[0],  (void *)sMgCardSprites[1],  (void *)sMgCardSprites[2],
-    (void *)sMgCardSprites[11], (void *)sMgCardSprites[12], (void *)sMgCardSprites[13],
-    (void *)sMgCardSprites[14], (void *)sMgCardSprites[3],  (void *)sMgCardSprites[4],
-    (void *)sMgCardSprites[5],  (void *)sMgCardSprites[6],  (void *)sMgCardSprites[9],
-    (void *)sMgCardSprites[10], (void *)sMgCardSprites[7],  (void *)sMgCardSprites[8],
-    (void *)sMgCardSprites[15], (void *)sMgCardSprites[16], (void *)sMgCardSprites[17],
-    (void *)sMgCardSprites[18], (void *)sMgCardSprites[19], (void *)sMgCardSprites[20],
-    (void *)sMgCardSprites[21], (void *)sMgCardSprites[22],
+OamAttr *sMemory2CardSprites[23] = {
+    sMgCardSprites[0],  sMgCardSprites[1],  sMgCardSprites[2],  sMgCardSprites[11],
+    sMgCardSprites[12], sMgCardSprites[13], sMgCardSprites[14], sMgCardSprites[3],
+    sMgCardSprites[4],  sMgCardSprites[5],  sMgCardSprites[6],  sMgCardSprites[9],
+    sMgCardSprites[10], sMgCardSprites[7],  sMgCardSprites[8],  sMgCardSprites[15],
+    sMgCardSprites[16], sMgCardSprites[17], sMgCardSprites[18], sMgCardSprites[19],
+    sMgCardSprites[20], sMgCardSprites[21], sMgCardSprites[22],
 };
 dScMgMemory2_cState sMemory2StateTable[5] = {
     &dScMgMemory2_c::StateSetup,  &dScMgMemory2_c::StatePlay, &dScMgMemory2_c::StateJudge,

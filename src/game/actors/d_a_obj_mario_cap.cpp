@@ -249,8 +249,9 @@ extern McapStatePmf data_ov002_0210958c, data_ov002_02109594;
 extern McapStatePmf data_ov002_0210959c, data_ov002_021095a4;
 
 extern SharedFilePtr *data_ov002_020ff0a0[];
+extern SharedFilePtr *data_ov002_020ff0ac[];
 extern SharedFilePtr *const data_ov002_020ff0b8[];
-extern int *const data_ov002_020ff0c4[];
+extern SharedFilePtr *const data_ov002_020ff0c4[];
 }
 
 /* gGameMode is 1 in VS mode: PrepareVsMode stores it. This int-returning
@@ -344,7 +345,7 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    SharedFilePtr *modelFile = (SharedFilePtr *)data_ov002_020ff0ac[mModelIndex];
+    SharedFilePtr *modelFile = data_ov002_020ff0ac[mModelIndex];
     if (mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(*modelFile), 1, -1) == 0)
         return 0;
 
@@ -587,35 +588,35 @@ void daObjMarioCap_c::OnPendingDestroy()
 
 /* Releases the character's model and the animation files InitResources
  * loaded for this type, in the same grouping. Always returns 1. */
-int daObjMarioCap_c::CleanupResources()
-{
-  int i = mModelIndex;
-  if (i >= 3) return 1;
-  ((SharedFilePtr *)(data_ov002_020ff0ac[i]))->Release();
-  switch (mType) {
-  case 0xf:
-    ((SharedFilePtr *)(&data_ov002_0210de50))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de60))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de48))->Release();
-    break;
-  case 0x14:
-  case 0x15:
-  case 0x16:
-    ((SharedFilePtr *)(&data_ov002_0210de28))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de08))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de20))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de40))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de10))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de00))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de58))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de18))->Release();
-    break;
-  default:
-    ((SharedFilePtr *)(&data_ov002_0210de30))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210de38))->Release();
-    break;
-  }
-  return 1;
+int daObjMarioCap_c::CleanupResources() {
+    int i = mModelIndex;
+    if (i >= 3)
+        return 1;
+    data_ov002_020ff0ac[i]->Release();
+    switch (mType) {
+    case 0xf:
+        data_ov002_0210de50.Release();
+        data_ov002_0210de60.Release();
+        data_ov002_0210de48.Release();
+        break;
+    case 0x14:
+    case 0x15:
+    case 0x16:
+        data_ov002_0210de28.Release();
+        data_ov002_0210de08.Release();
+        data_ov002_0210de20.Release();
+        data_ov002_0210de40.Release();
+        data_ov002_0210de10.Release();
+        data_ov002_0210de00.Release();
+        data_ov002_0210de58.Release();
+        data_ov002_0210de18.Release();
+        break;
+    default:
+        data_ov002_0210de30.Release();
+        data_ov002_0210de38.Release();
+        break;
+    }
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1176,7 +1177,7 @@ int daObjMarioCap_c::InitAnim()
 /* df74's per-frame function. Types 10 and 15 copy the bound player's angles
  * and position onto the cap every frame. Once the animation has finished,
  * types 10, 15 and 22 remove the cap; type 21 does nothing more; type 20
- * starts its second animation (data_ov002_020ff0c4 entry [1]) once, setting
+ * starts its second animation (the file data_ov002_020ff0c4 holds) once, setting
  * mAnimStarted. Returns 1. */
 int daObjMarioCap_c::Anim()
 {
@@ -1213,7 +1214,7 @@ int daObjMarioCap_c::Anim()
 
         case 0x14:
             if (mAnimStarted == 0) {
-                mAnmModel.SetAnim((BCA_File *)((void *)data_ov002_020ff0c4[mModelIndex][1]), 0,
+                mAnmModel.SetAnim((BCA_File *)(data_ov002_020ff0c4[mModelIndex]->filePtr), 0,
                                   0x1000, 0);
                 mAnimStarted = 1;
             }
@@ -1367,12 +1368,12 @@ McapStateRec data_ov002_0210df44 = {data_ov002_02109584, data_ov002_0210953c};
 
 /* Initialized data this file is the only complete referrer for. */
 SharedFilePtr *const data_ov002_020ff0b8[3] = {
-    (SharedFilePtr *)&data_ov002_0210de28,
-    (SharedFilePtr *)&data_ov002_0210de08,
-    (SharedFilePtr *)&data_ov002_0210de20,
+    &data_ov002_0210de28,
+    &data_ov002_0210de08,
+    &data_ov002_0210de20,
 };
-int *const data_ov002_020ff0c4[3] = {
-    (int *)&data_ov002_0210de40,
-    (int *)&data_ov002_0210de10,
-    (int *)&data_ov002_0210de00,
+SharedFilePtr *const data_ov002_020ff0c4[3] = {
+    &data_ov002_0210de40,
+    &data_ov002_0210de10,
+    &data_ov002_0210de00,
 };

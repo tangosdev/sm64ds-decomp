@@ -272,7 +272,7 @@ int daRNk_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 0);
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
-    func_ov062_0211aac0();
+    UpdateModelAndShadow();
     return 1;
 }
 
@@ -288,7 +288,7 @@ int daRNk_c::Render()
 /* Drop shadow: build a matrix from the position (divided by 8, as the shadow
    matrix expects) and heading in the scratch matrix, copy it into the model's matrix,
    and give DropShadowRadHeight a radius and height of 160 units. */
-void daRNk_c::func_ov062_0211aac0(){
+void daRNk_c::UpdateModelAndShadow() {
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);

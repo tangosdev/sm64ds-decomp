@@ -133,9 +133,9 @@ extern TrsAnimationResFileHandle data_ov063_0211eddc;
 extern TrsAnimationResFileHandle data_ov063_0211ede4;
 extern TrsModelFileResHandle data_ov063_0211edec;
 extern TrsModelFileResHandle data_ov063_0211edf4;
-extern SharedFilePtr data_ov002_0210d9c8;
-extern SharedFilePtr data_ov002_0210d9f8;
-extern SharedFilePtr data_ov002_0210d9b8;
+extern SharedFilePtr gCoinBluePoly32ModelFile;
+extern SharedFilePtr gCoinRedPoly32ModelFile;
+extern SharedFilePtr gCoinYellowPoly32ModelFile;
 
 /* File-local helpers and engine entry points, with the C-linkage spellings
  * these bodies were matched against. */
@@ -3071,11 +3071,11 @@ int daTrs_c::InitResources()
     } else if (mVariant == 0 || mVariant == 1 || mVariant == 2 || mVariant == 6 || (unsigned)(unsigned char)(mVariant + 0xf8) <= 3) {
         unsigned short t = mCarriedID;
         if (t == TRS_ID_BLUE_COIN) {
-            mCarriedModel.SetFile((BMD_File *)data_ov002_0210d9c8.filePtr, 1, -1);
+            mCarriedModel.SetFile((BMD_File *)gCoinBluePoly32ModelFile.filePtr, 1, -1);
         } else if (t == TRS_ID_RED_COIN) {
-            mCarriedModel.SetFile((BMD_File *)data_ov002_0210d9f8.filePtr, 1, -1);
+            mCarriedModel.SetFile((BMD_File *)gCoinRedPoly32ModelFile.filePtr, 1, -1);
         } else {
-            mCarriedModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, -1);
+            mCarriedModel.SetFile((BMD_File *)gCoinYellowPoly32ModelFile.filePtr, 1, -1);
         }
         if (mVariant == 0xb) {
             mAreaId = -1;

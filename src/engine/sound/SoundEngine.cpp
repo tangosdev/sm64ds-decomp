@@ -343,7 +343,7 @@ extern void *data_020a5614[]; /* the message array of data_020a5600 */
 extern struct T data_020a5634;
 extern OSThread data_020a5684;
 extern struct Q data_020a5718[];
-extern char *sCurrent;
+extern data_020a5bb8_t *sCurrent;
 extern NNSFndList sFreeCommandList;
 extern NNSFndList data_020a5bc8;
 extern struct Obj_205212c data_020a5bd4[];
@@ -1280,7 +1280,7 @@ extern "C" void NNS_SndArcInit(data_020a5bb8_t *arc, const char *path, struct Sn
     FS_ReadFile(&arc->file, arc, 0x30);
     if (heap != 0)
         func_02050d54(arc, heap, loadSymbols);
-    sCurrent = (char *)arc;
+    sCurrent = arc;
 }
 
 extern "C" int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loadSymbols) {
@@ -1320,7 +1320,7 @@ extern "C" int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loa
 
 extern "C" int NNS_SndArcSetCurrent(int v) {
     int old = ((int)sCurrent);
-    *(int *)(&sCurrent) = (v);
+    sCurrent = (data_020a5bb8_t *)v;
     return old;
 }
 
@@ -1346,8 +1346,8 @@ extern "C" void *NNS_SndArcGetSeqArcParam(int a, int idx) {
 }
 
 Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(int id) {
-    char *root = sCurrent;
-    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    data_020a5bb8_t *root = sCurrent;
+    char *sub = (char *)root->info;
     int off = ((struct SndInfoBlock *)sub)->seqTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
@@ -1357,13 +1357,13 @@ Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(int id) {
     if (id >= table->count)
         return 0;
     int v = table->offset[id];
-    char *base = (char *)((data_020a5bb8_t *)root)->info;
+    char *base = (char *)root->info;
     return (v == 0) ? 0 : (InfoSequenceEntry *)(base + v);
 }
 
 extern "C" struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(int id) {
-    char *root = sCurrent;
-    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    data_020a5bb8_t *root = sCurrent;
+    char *sub = (char *)root->info;
     int off = ((struct SndInfoBlock *)sub)->seqArcTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
@@ -1373,13 +1373,13 @@ extern "C" struct SndArchiveInfo *NNS_SndArcGetSeqArcInfo(int id) {
     if (id >= table->count)
         return 0;
     int v = table->offset[id];
-    char *base = (char *)((data_020a5bb8_t *)root)->info;
+    char *base = (char *)root->info;
     return (v == 0) ? 0 : (struct SndArchiveInfo *)(base + v);
 }
 
 Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(int id) {
-    char *root = sCurrent;
-    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    data_020a5bb8_t *root = sCurrent;
+    char *sub = (char *)root->info;
     int off = ((struct SndInfoBlock *)sub)->bankTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
@@ -1389,13 +1389,13 @@ Sound::InfoInstrumentBankEntry *Sound::InfoInstrumentBankEntry::GetWithID(int id
     if (id >= table->count)
         return 0;
     int v = table->offset[id];
-    char *base = (char *)((data_020a5bb8_t *)root)->info;
+    char *base = (char *)root->info;
     return (v == 0) ? 0 : (InfoInstrumentBankEntry *)(base + v);
 }
 
 extern "C" struct SndArchiveInfo *NNS_SndArcGetWaveArcInfo(int id) {
-    char *root = sCurrent;
-    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    data_020a5bb8_t *root = sCurrent;
+    char *sub = (char *)root->info;
     int off = ((struct SndInfoBlock *)sub)->waveArcTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
@@ -1405,13 +1405,13 @@ extern "C" struct SndArchiveInfo *NNS_SndArcGetWaveArcInfo(int id) {
     if (id >= table->count)
         return 0;
     int v = table->offset[id];
-    char *base = (char *)((data_020a5bb8_t *)root)->info;
+    char *base = (char *)root->info;
     return (v == 0) ? 0 : (struct SndArchiveInfo *)(base + v);
 }
 
 extern "C" struct SndPlayerInfo *NNS_SndArcGetPlayerInfo(int id) {
-    char *root = sCurrent;
-    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    data_020a5bb8_t *root = sCurrent;
+    char *sub = (char *)root->info;
     int off = ((struct SndInfoBlock *)sub)->playerTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
@@ -1421,13 +1421,13 @@ extern "C" struct SndPlayerInfo *NNS_SndArcGetPlayerInfo(int id) {
     if (id >= table->count)
         return 0;
     int v = table->offset[id];
-    char *base = (char *)((data_020a5bb8_t *)root)->info;
+    char *base = (char *)root->info;
     return (v == 0) ? 0 : (struct SndPlayerInfo *)(base + v);
 }
 
 extern "C" struct List *NNS_SndArcGetGroupInfo(int id) {
-    char *root = sCurrent;
-    char *sub = (char *)((data_020a5bb8_t *)root)->info;
+    data_020a5bb8_t *root = sCurrent;
+    char *sub = (char *)root->info;
     int off = ((struct SndInfoBlock *)sub)->groupTable;
     char* tbl = (off == 0) ? 0 : sub + off;
     if (tbl == 0) return 0;
@@ -1437,18 +1437,18 @@ extern "C" struct List *NNS_SndArcGetGroupInfo(int id) {
     if (id >= table->count)
         return 0;
     int v = table->offset[id];
-    char *base = (char *)((data_020a5bb8_t *)root)->info;
+    char *base = (char *)root->info;
     return (v == 0) ? 0 : (struct List *)(base + v);
 }
 
 extern "C" int NNS_SndArcGetFileSize(unsigned int i) {
-    struct Hdr84 *h = ((data_020a5bb8_t *)sCurrent)->fileTable;
+    struct Hdr84 *h = sCurrent->fileTable;
     if (i >= (unsigned int)h->count) return 0;
     return h->entries[i].size;
 }
 
 extern "C" int NNS_SndArcReadFile(u32 fileId, void *buffer, u32 size, u32 offset) {
-    data_020a5bb8_t *arc = (data_020a5bb8_t *)sCurrent;
+    data_020a5bb8_t *arc = sCurrent;
     struct Hdr84 *fat = arc->fileTable;
     struct FatEntry *entry;
     u32 avail;
@@ -1468,14 +1468,14 @@ extern "C" int NNS_SndArcReadFile(u32 fileId, void *buffer, u32 size, u32 offset
 }
 
 extern "C" void *NNS_SndArcGetFileAddress(u32 fileId) {
-    struct Hdr84 *h = ((data_020a5bb8_t *)sCurrent)->fileTable;
+    struct Hdr84 *h = sCurrent->fileTable;
     if (fileId >= (unsigned int)h->count)
         return 0;
     return h->entries[fileId].address;
 }
 
 extern "C" void NNS_SndArcSetFileAddress(u32 fileId, void *address) {
-    ((data_020a5bb8_t *)sCurrent)->fileTable->entries[fileId].address = address;
+    sCurrent->fileTable->entries[fileId].address = address;
 }
 
 extern "C" void InfoDisposeCallback(void *mem, u32 size, u32 arc, u32 data2) {
