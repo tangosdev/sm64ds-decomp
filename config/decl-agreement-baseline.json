@@ -156,13 +156,13 @@
    "src/WBT_InitParent.cpp": ["return:int"],
    "src/unnamed/arm9/0206/func_02065af0.cpp": ["return:int"]
   },
-  "data_ov002_0210da28": {
+  "gSilverNumberModelFile": {
    "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"]
   },
   "data_ov002_0211092c": {
    "src/game/actors/d_a_star.cpp": ["return:StarModelFilePtr"]
   },
-  "data_ov002_0211094c": {
+  "gPowerStarModelFile": {
    "src/game/actors/d_a_star.cpp": ["return:StarModelFilePtr"]
   },
   "data_ov002_02110964": {
@@ -183,7 +183,7 @@
   "data_ov084_02130cf8": {
    "src/game/actors/d_a_kuri_king.cpp": ["return:SharedFilePtr"]
   },
-  "data_ov089_02132c50": {
+  "gKoopaKeyModelFile": {
    "src/game/actors/d_a_obj_key.cpp": ["return:ObjKeyModelFile"]
   },
   "fsi_card_lock_id": {

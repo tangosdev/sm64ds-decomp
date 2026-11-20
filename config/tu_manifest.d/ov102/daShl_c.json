@@ -156,7 +156,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN7daShl_c19func_ov102_0214d1f8EP8ShlState",
+      "symbol": "_ZN7daShl_c8SetStateEP8ShlState",
       "address": "0x0214d1f8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov102_0214d1f8.cpp",
@@ -682,7 +682,7 @@
       "source": "0x0214d70c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da18",
+      "symbol": "gShellGreenModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da18"
@@ -692,7 +692,7 @@
       "source": "0x0214d710",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da20",
+      "symbol": "gShellRedModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da20"

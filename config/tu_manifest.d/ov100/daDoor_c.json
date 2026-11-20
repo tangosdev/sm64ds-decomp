@@ -215,7 +215,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN8daDoor_c19func_ov100_021453d8EPvi",
+      "symbol": "_ZN8daDoor_c8SetStateEPvi",
       "address": "0x021453d8",
       "size": "0x00000054",
       "legacy_source": "src/func_ov100_021453d8.cpp",
@@ -345,14 +345,14 @@
       "evidence": "the door resource handle constructed with file ID 0x43e"
     },
     {
-      "symbol": "data_ov100_02148744",
+      "symbol": "gDoorOpenAnimationFile",
       "address": "0x02148744",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "the door resource handle constructed with file ID 0x9c08"
     },
     {
-      "symbol": "data_ov100_0214874c",
+      "symbol": "gRustedMetalDoorModelFile",
       "address": "0x0214874c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -366,7 +366,7 @@
       "evidence": "the door resource handle constructed with file ID 0x445"
     },
     {
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "address": "0x0214875c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -394,7 +394,7 @@
       "evidence": "the door resource handle constructed with file ID 0x443"
     },
     {
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "address": "0x0214877c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1649,7 +1649,7 @@
       "source": "0x2147978",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -1679,7 +1679,7 @@
       "source": "0x2147988",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214877c"
@@ -1819,7 +1819,7 @@
       "source": "0x21479d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214874c",
+      "symbol": "gRustedMetalDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214874c"
@@ -1879,7 +1879,7 @@
       "source": "0x21479fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_02148744",
+      "symbol": "gDoorOpenAnimationFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148744"
@@ -2169,7 +2169,7 @@
       "source": "0x02148204",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2179,7 +2179,7 @@
       "source": "0x02148214",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2199,7 +2199,7 @@
       "source": "0x02148224",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2219,7 +2219,7 @@
       "source": "0x02148234",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2239,7 +2239,7 @@
       "source": "0x02148244",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2259,7 +2259,7 @@
       "source": "0x02148254",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2279,7 +2279,7 @@
       "source": "0x02148264",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2299,7 +2299,7 @@
       "source": "0x02148274",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2309,7 +2309,7 @@
       "source": "0x02148278",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214877c"
@@ -2319,7 +2319,7 @@
       "source": "0x02148284",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2329,7 +2329,7 @@
       "source": "0x02148288",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214877c"
@@ -2339,7 +2339,7 @@
       "source": "0x02148294",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2349,7 +2349,7 @@
       "source": "0x02148298",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214877c"
@@ -2359,7 +2359,7 @@
       "source": "0x021482a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2369,7 +2369,7 @@
       "source": "0x021482a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214877c"
@@ -2379,7 +2379,7 @@
       "source": "0x021482b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2389,7 +2389,7 @@
       "source": "0x021482b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214877c"
@@ -2399,7 +2399,7 @@
       "source": "0x021482c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2409,7 +2409,7 @@
       "source": "0x021482c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214877c"
@@ -2419,7 +2419,7 @@
       "source": "0x021482d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214875c",
+      "symbol": "gRegularDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214875c"
@@ -2429,7 +2429,7 @@
       "source": "0x021482d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214877c",
+      "symbol": "gDoorKeyHoleModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214877c"
@@ -2459,7 +2459,7 @@
       "source": "0x02148304",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov100_0214874c",
+      "symbol": "gRustedMetalDoorModelFile",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214874c"

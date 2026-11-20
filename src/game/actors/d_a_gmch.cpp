@@ -794,13 +794,13 @@ int daGmch_c::Behavior()
 int daGmch_c::InitResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern SharedFilePtr data_ov002_0210d9b8;
+    extern SharedFilePtr gCoinYellowPoly32ModelFile;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
 
     Vector3 pos;
     BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov081_02128ed4);
     mAnmModel.SetFile(modelFile, 1, 1);
-    if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
+    if (mModel.SetFile((BMD_File *)gCoinYellowPoly32ModelFile.filePtr, 1, 1) == 0)
         return 0;
     for (int i = 0; i < 4; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov081_021280d8[i]);

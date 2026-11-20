@@ -65,7 +65,7 @@ int daKpFr_c::InitResources()
     mScale.x = 0x1000;
     mScale.y = 0x1000;
     mScale.z = 0x1000;
-    func_ov070_02122044(0);
+    SetState(0);
     mMatrix = IDENTITY_MATRIX4X3;
     return 1;
 }
@@ -110,13 +110,12 @@ extern daKpFrStateMethod data_ov070_021233fc;
 extern daKpFrStateMethod data_ov070_021233f4;
 extern daKpFrStateMethod data_ov070_02123404;
 
-void daKpFr_c::func_ov070_02122044(int idx)
-{
+void daKpFr_c::SetState(int idx) {
     mStateMethods = &data_ov070_021236ec[idx];
-    func_ov070_0212200c();
+    CallStateInit();
 }
 
-void daKpFr_c::func_ov070_0212200c() {
+void daKpFr_c::CallStateInit() {
     daKpFrStateMethod *method = &mStateMethods->init;
     (this->**method)();
 }
@@ -224,8 +223,8 @@ void daKpFr_c::func_ov070_02121cbc(){
   player = (daPly_c *)found;
   b = ((mFlags & 0x20000) != 0);
   if (b != 0) {
-    func_ov070_02122044(1);
-    return;
+      SetState(1);
+      return;
   }
   if (player->mIsVanish != 0) return;
   player->Burn();

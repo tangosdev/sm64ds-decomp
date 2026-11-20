@@ -12663,7 +12663,7 @@
     },
     "ov002:0x020ae5c8": {
       "author": "tangosdev",
-      "name": "_ZN12dEnemyBase_c19func_ov002_020ae5c8Ei"
+      "name": "_ZN12dEnemyBase_c16FinishStompDeathEi"
     },
     "ov002:0x020ae608": {
       "author": "tangosdev",
@@ -12699,7 +12699,7 @@
     },
     "ov002:0x020ae8b8": {
       "author": "tangosdev",
-      "name": "_ZN12dEnemyBase_c19func_ov002_020ae8b8EP8dActor_c"
+      "name": "_ZN12dEnemyBase_c16SetHighKnockbackEP8dActor_c"
     },
     "ov002:0x020ae954": {
       "author": "ruspecial",
@@ -12707,7 +12707,7 @@
     },
     "ov002:0x020ae968": {
       "author": "tangosdev",
-      "name": "_ZN12dEnemyBase_c19func_ov002_020ae968EP8dActor_c"
+      "name": "_ZN12dEnemyBase_c15SetLowKnockbackEP8dActor_c"
     },
     "ov002:0x020ae9f8": {
       "author": "ruspecial",
@@ -38359,11 +38359,11 @@
     },
     "ov070:0x0212200c": {
       "author": "tangosdev",
-      "name": "_ZN8daKpFr_c19func_ov070_0212200cEv"
+      "name": "_ZN8daKpFr_c13CallStateInitEv"
     },
     "ov070:0x02122044": {
       "author": "ruspecial",
-      "name": "_ZN8daKpFr_c19func_ov070_02122044Ei"
+      "name": "_ZN8daKpFr_c8SetStateEi"
     },
     "ov070:0x02122060": {
       "author": "andrewboudreau",
@@ -44847,7 +44847,7 @@
     },
     "ov100:0x021453d8": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_021453d8EPvi"
+      "name": "_ZN8daDoor_c8SetStateEPvi"
     },
     "ov100:0x0214542c": {
       "author": "tangosdev",
@@ -45507,7 +45507,7 @@
     },
     "ov102:0x0214d1f8": {
       "author": "tangosdev",
-      "name": "_ZN7daShl_c19func_ov102_0214d1f8EP8ShlState"
+      "name": "_ZN7daShl_c8SetStateEP8ShlState"
     },
     "ov102:0x0214d248": {
       "author": "tangosdev",

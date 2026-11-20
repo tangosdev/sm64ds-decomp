@@ -33,7 +33,7 @@
  * - func_ov079_02123d4c is really a Vector3-by-value member of daBtn_c, but
  *   that spelling gives the named return local its own stack home (no NRVO,
  *   +0xc): it stays a free function and callers use the vecret view.
- * - func_ov079_0212522c is the mesh collider's contact-callback trampoline;
+ * - StoodOnCallback is the mesh collider's contact-callback trampoline;
  *   its first parameter is the collider, not the object, so it stays free.
  *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S -- mwccarm emits one .text
@@ -868,7 +868,7 @@ void daBtn_c::func_ov079_02125240(){
     v.z = mPos.z;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    mMovingMeshCollider.SetStoodOnCallback(daBtn_c::func_ov079_0212522c);
+    mMovingMeshCollider.SetStoodOnCallback(daBtn_c::StoodOnCallback);
     if (mIsKing != 0) {
         func_ov079_02123d4c(&a, this);
         func_0200fa04(&a, 0);
@@ -883,7 +883,7 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-void daBtn_c::func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daBtn_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off

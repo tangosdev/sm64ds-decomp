@@ -83,7 +83,7 @@ void Vec3_Asr(void *d, void *s, int sh);
 int RandomIntInternal(int *seed);
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
-extern SharedFilePtr data_ov002_0210d9d8;
+extern SharedFilePtr gOneUpMushroomModelFile;
 extern BtflyAnimationFilePtr gButterflyFlyAnimationFile;
 extern SharedFilePtr data_ov100_02148668;
 extern BtflyModelFilePtr gButterflyModelFile;
@@ -381,7 +381,7 @@ int daBtfly_c::CleanupResources()
 {
     gButterflyModelFile.Release();
     gButterflyFlyAnimationFile.Release();
-    data_ov002_0210d9d8.Release();
+    gOneUpMushroomModelFile.Release();
     data_ov100_02148668.Release();
     return 1;
 }
@@ -446,7 +446,7 @@ int daBtfly_c::Behavior()
 
 int daBtfly_c::InitResources()
 {
-    dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+    dExtSimpleModel_c::LoadFile(gOneUpMushroomModelFile);
     dExtFrameCtrl_c::LoadFile(gButterflyFlyAnimationFile);
     dExtSimpleModel_c::LoadFile(data_ov100_02148668);
     BMD_File *bmd = dExtSimpleModel_c::LoadFile(gButterflyModelFile);

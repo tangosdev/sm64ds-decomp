@@ -126,7 +126,7 @@ extern void UnloadSilverStarAndNumber(void);
 extern "C" {
 extern StarAnimationFileHandle data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
-extern int data_ov002_0210da28[];
+extern int gSilverNumberModelFile[];
 extern signed char gNumStageStars[];
 }
 
@@ -212,9 +212,9 @@ extern StateHandler data_ov002_021109d8[];
 extern u8 gCurrentStarId;
 extern s32 data_0209cef0;
 extern s32 gLevelMinY;
-extern StarModelFilePtr data_ov002_0211094c;
+extern StarModelFilePtr gPowerStarModelFile;
 extern StarModelFilePtr data_ov002_02110954;
-extern StarModelFilePtr data_ov002_0211095c;
+extern StarModelFilePtr gTransparentStarModelFile;
 }
 
 extern void LoadSilverStarAndNumber(void);
@@ -306,8 +306,8 @@ s32 daStar_c::InitResources()
 
     b = (actorID == ACTOR_STAR);
     if (b != 0) {
-        if (mAnmModel1.SetFile((BMD_File *)data_ov002_0211094c.filePtr, 1, 1) == 0 ||
-            mAnmModel2.SetFile((BMD_File *)data_ov002_0211095c.filePtr, 1, 0x18) == 0)
+        if (mAnmModel1.SetFile((BMD_File *)gPowerStarModelFile.filePtr, 1, 1) == 0 ||
+            mAnmModel2.SetFile((BMD_File *)gTransparentStarModelFile.filePtr, 1, 0x18) == 0)
             ret = 0;
     } else {
         LoadSilverStarAndNumber();
@@ -2795,7 +2795,7 @@ void daStarBase_c::LinkSilverStarAndStarMarker(daStar_c *star) {
 
 void LoadSilverStarAndNumber(void)
 {
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da28);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gSilverNumberModelFile);
     dExtSimpleModel_c::LoadFile(data_ov002_02110954);
 }
 
@@ -2806,7 +2806,7 @@ void LoadSilverStarAndNumber(void)
 
 void UnloadSilverStarAndNumber(void)
 {
-    ((SharedFilePtr *)data_ov002_0210da28)->Release();
+    ((SharedFilePtr *)gSilverNumberModelFile)->Release();
     data_ov002_02110954.Release();
 }
 
@@ -2957,8 +2957,8 @@ void force_daStarBase_c_dtor_order() {
    model files (func_02017acc / func_02017ab4), then four animation files
    (SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim); the manifest
    aliases each wrapper ctor/dtor onto those ROM symbols. */
-StarModelFilePtr data_ov002_0211094c(0x8015);
-StarModelFilePtr data_ov002_0211095c(0x8017);
+StarModelFilePtr gPowerStarModelFile(0x8015);
+StarModelFilePtr gTransparentStarModelFile(0x8017);
 StarModelFilePtr data_ov002_02110954(0x8019);
 StarModelFilePtr data_ov002_0211093c(ASSET_STAR_BASE_BMD);
 StarModelFilePtr data_ov002_0211092c(0x801c);

@@ -3524,8 +3524,8 @@ data_0208a15c kind:data(any) addr:0x0208a15c
 gMgGroupBase kind:data(any) addr:0x0208a170
 gMgLastSelected kind:data(any) addr:0x0208a174
 data_0208a178 kind:data(any) addr:0x0208a178
-data_0208c178 kind:data(any) addr:0x0208c178
-data_0208c378 kind:data(any) addr:0x0208c378
+gFont2DNcl kind:data(any) addr:0x0208c178
+gDebugLevelSelectArrowNcg kind:data(any) addr:0x0208c378
 data_0208e378 kind:data(any) addr:0x0208e378
 data_0208e37c kind:data(any) addr:0x0208e37c
 data_0208e380 kind:data(any) addr:0x0208e380
@@ -4921,7 +4921,7 @@ data_020a0d60 kind:bss addr:0x020a0d60
 PATH_DEFS kind:bss addr:0x020a0d84
 PATH_NODES kind:bss addr:0x020a0d88
 NUM_PATHS kind:bss addr:0x020a0d8c
-data_020a0d90 kind:bss addr:0x020a0d90
+gBuildTimeString kind:bss addr:0x020a0d90
 gGlobalTimer kind:bss addr:0x020a0db0
 data_020a0db4 kind:bss addr:0x020a0db4
 data_020a0db8 kind:bss addr:0x020a0db8

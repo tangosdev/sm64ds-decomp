@@ -22,7 +22,7 @@
  *   0x12        anmModel_c, model data_ov085_0213074c
  *   0x13        anmModel_c; file set chosen by CURRENT_GAMEMODE == 2
  *   0x14..0x16  simpleModel_c, data_ov002_02110b70
- *   0x17, 0x18  simpleModel_c, data_ov002_02110b50 / data_ov002_0211094c
+ *   0x17, 0x18  simpleModel_c, data_ov002_02110b50 / gPowerStarModelFile
  *   0x19        simpleModel_c, data_ov002_02110b78; Render draws it three
  *               times at the positions in data_ov002_0210bb7c
  *   0x1a..0x2d  anmModel_c from data_ov009_02113c20; moved with
@@ -242,7 +242,7 @@ extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. */
 extern dFdBrightness_c *gSceneFader;
-extern u8 data_ov002_02111144;
+extern u8 gMapIntroZooming;
 extern int gGlobalTimer;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
@@ -341,7 +341,7 @@ extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src
 extern int data_ov002_0210b964[3];
 extern Matrix4x3 gInvViewMtx;
 extern unsigned char gGameMode;
-extern char data_ov002_0211094c;
+extern char gPowerStarModelFile;
 extern JugemModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
@@ -493,7 +493,7 @@ int daDemo_c::func_ov002_020f23d0()
  *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
  *      centerSpriteY[0] reaches 8 (it starts at -8)
  *   1  wait for mCue == 3 (written by script handler 26c4), then set
- *      data_ov002_02111144 to 1
+ *      gMapIntroZooming to 1
  *   2  on frames with FRAME_TIMER bit 0 clear, bg1Y++ and bg0Y--; at
  *      bg1Y 0x80, next state and sprite delays 1/0x41/0x81. Also runs the
  *      horizontal scroll (237c) and the fade step (1fcc)
@@ -520,7 +520,7 @@ int daDemo_c::func_ov002_020f23f0()
         break;
     case 1:
         if (this->mCue == 3) {
-            data_ov002_02111144 = 1;
+            gMapIntroZooming = 1;
             mScroll->state++;
         }
         break;
@@ -3398,7 +3398,7 @@ int daDemo_c::InitResources()
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
         if (((simpleModel_c *)this->mModel)
-                ->func_ov002_020f6960((SharedFilePtr *)&data_ov002_0211094c, -1) == 0)
+                ->func_ov002_020f6960((SharedFilePtr *)&gPowerStarModelFile, -1) == 0)
             return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;

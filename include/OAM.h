@@ -121,6 +121,13 @@ struct OAM {
     static OamAttr PAUSE;
     static OamAttr VS_PAUSE;
     static OamAttr VS_NEW_STAR_APPEARED;
+    /* dScStage_c's translations of its banners take the same _FR/_DE/_IT/_ES
+       suffixes as VS_TIME's below: GetOwnerLanguage() 2, 3, 4, 5, with the
+       unsuffixed sprite as the default. */
+    static OamAttr VS_NEW_STAR_APPEARED_FR;
+    static OamAttr VS_NEW_STAR_APPEARED_DE;
+    static OamAttr VS_NEW_STAR_APPEARED_IT;
+    static OamAttr VS_NEW_STAR_APPEARED_ES;
     static OamAttr VS_TIME;
     static OamAttr VS_TIME_UP;
     /* dMeter_c::RenderVsTimer's translations of VS_TIME and VS_TIME_UP,
@@ -134,6 +141,36 @@ struct OAM {
     static OamAttr VS_TIME_UP_DE;
     static OamAttr VS_TIME_UP_IT;
     static OamAttr VS_TIME_UP_ES;
+    /* The VS start countdown (dScStage_c::RenderVsModeCountdown): GET_THE_STAR
+       above VS_RED_NUMBERS[3 - n] while it counts down, then GO.
+       dMeter_c::RenderVsTimer draws the same red digits for the last three
+       seconds. */
+    static OamAttr *VS_RED_NUMBERS[];
+    static OamAttr VS_GET_THE_STAR;
+    static OamAttr VS_GO;
+    static OamAttr VS_GET_THE_STAR_FR;
+    static OamAttr VS_GET_THE_STAR_DE;
+    static OamAttr VS_GET_THE_STAR_IT;
+    static OamAttr VS_GET_THE_STAR_ES;
+    static OamAttr VS_GO_FR;
+    static OamAttr VS_GO_DE;
+    static OamAttr VS_GO_IT;
+    static OamAttr VS_GO_ES;
+    /* dScStage_c's level-clear banners: CONGRATULATIONS for levels 0xf..0x14,
+       HIGH_SCORE for a new record. */
+    static OamAttr LC_CONGRATULATIONS;
+    static OamAttr LC_HIGH_SCORE;
+    static OamAttr LC_CONGRATULATIONS_FR;
+    static OamAttr LC_CONGRATULATIONS_DE;
+    static OamAttr LC_CONGRATULATIONS_IT;
+    static OamAttr LC_CONGRATULATIONS_ES;
+    static OamAttr LC_HIGH_SCORE_FR;
+    static OamAttr LC_HIGH_SCORE_DE;
+    static OamAttr LC_HIGH_SCORE_IT;
+    static OamAttr LC_HIGH_SCORE_ES;
+    /* One collected silver star in the top-screen HUD row
+       (dMeter_c::RenderSilverStars). */
+    static OamAttr SILVER_STAR;
     static OamAttr TIME;
     /* dMeter_c::RenderTimeTimer's "TIME" caption for French, Italian and
        Spanish (GetOwnerLanguage() 2, 4, 5). */

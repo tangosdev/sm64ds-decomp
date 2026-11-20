@@ -176,7 +176,7 @@ extern BTA_File data_ov010_021124ac;
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
-extern SharedFilePtr data_ov002_0210da30;
+extern SharedFilePtr gScaleUpKinokoModelFile;
 extern SharedFilePtr data_ov084_02130cf8;
 extern BMA_File data_ov084_0213089c;
 extern KrbAnimationFileHandle data_ov084_02130cc8;
@@ -1409,7 +1409,7 @@ int daKuriKing_c::CleanupResources()
     if (param1 == 0x1111) {
         return CleanupVanishResources();
     }
-    data_ov002_0210da30.Release();
+    gScaleUpKinokoModelFile.Release();
     UnloadKeyModels(2);
     data_ov084_02130cf8.Release();
     for (i = 0; i < 7; i++)
@@ -1540,7 +1540,7 @@ int daKuriKing_c::InitResources()
         return InitVanishResources();
     }
 
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+    dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
     LoadKeyModels(2);
     dExtSimpleModel_c::LoadFile(data_ov084_02130cf8);
 

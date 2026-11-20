@@ -60,7 +60,7 @@
  *   spawn parameters handed to the prizes (STAR |0x40, COIN 2, BOMBHEI 4);
  *   what dBgActor_c::IsClsnInRange's two arguments and
  *   the two mesh-collider words poked in Behavior are; the files loaded at
- *   data_ov002_0210da58 / 0210d9a0 / 0210d9c0 / 0210da40; why
+ *   gFeatherModelFile and data_ov002_0210d9a0 / 0210d9c0 / 0210da40; why
  *   the hitter's param1 picks the prize column (it is clamped to 0..3 and
  *   the table has no column names); and why a lost cap swaps the prize for a
  *   BOMBHEI.
@@ -168,13 +168,13 @@ extern char data_020a0edc[];
 
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
-extern SharedFilePtr data_ov002_0210d9d8;
-extern SharedFilePtr data_ov002_0210d9e0;
+extern SharedFilePtr gOneUpMushroomModelFile;
+extern SharedFilePtr gBombheiModelFile;
 /* The ov002 model-file handles (src/ov002_handles.cpp defines all of them). */
-extern SharedFilePtr data_ov002_0210da18;
-extern SharedFilePtr data_ov002_0210da30;
+extern SharedFilePtr gShellGreenModelFile;
+extern SharedFilePtr gScaleUpKinokoModelFile;
 extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210da58;
+extern SharedFilePtr gFeatherModelFile;
 extern SharedFilePtr gPFlowerOpenModelFile;
 extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
@@ -302,7 +302,7 @@ daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
  *  1. Per actor ID (the switch on actorID - 20): the block's model, plus the
  *     extra shared files that type needs (HATENA_BLOCK also its animated
  *     model and animation; the three CAP_BLOCKs the matching cap file; both
- *     also load data_ov002_0210d9e0, which daBmb_c loads as the Bob-omb
+ *     also load gBombheiModelFile, which daBmb_c loads as the Bob-omb
  *     model).
  *  2. Sets the model, a cuboid shadow, state IDLE, terminal velocity
  *     -0x3c000 (-60 units), unit scale, the model and collider matrices, and
@@ -311,7 +311,7 @@ daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
  *     for CONTENT_STAR, mStarId = param1 bits 8..15 (0xff reads as 0) and the
  *     star is tracked.
  *  4. The VS block (22) forces mContentType to 0 and loads the file at
- *     data_ov002_0210da58.
+ *     gFeatherModelFile.
  *  5. For HATENA_BLOCK / ITEM_BLOCK only: load the shared files the chosen
  *     content type needs (1-up, shell, mushroom, the Power Flower models, and the Bob-omb model for CONTENT_POWER_UP_7).
  *     CleanupResources releases the same set. Always returns 1. */
@@ -323,7 +323,7 @@ int daObjHatenaBlock_c::InitResources()
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7e8);
         mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov102_0214e808), 1, 0x19);
         mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov102_0214e7f8), 0, 0x1000, 0);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(gBombheiModelFile);
         break;
     case 1:   /* ITEM_BLOCK */
     case 2:   /* VS_ITEM_BLOCK */
@@ -332,17 +332,17 @@ int daObjHatenaBlock_c::InitResources()
     case 3:   /* CAP_BLOCK_M */
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7f0);
         dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(gBombheiModelFile);
         break;
     case 5:   /* CAP_BLOCK_L */
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7d8);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(gBombheiModelFile);
         break;
     case 4:   /* CAP_BLOCK_W */
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7e0);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(gBombheiModelFile);
         break;
     }
 
@@ -373,7 +373,7 @@ int daObjHatenaBlock_c::InitResources()
 
     if (IsActorID(this, ACTOR_VS_ITEM_BLOCK)) {
         mContentType = 0;
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+        dExtSimpleModel_c::LoadFile(gFeatherModelFile);
     }
 
     if (IsActorID(this, ACTOR_HATENA_BLOCK) || IsActorID(this, ACTOR_ITEM_BLOCK)) {
@@ -382,21 +382,21 @@ int daObjHatenaBlock_c::InitResources()
         case CONTENT_STAR:
             break;
         case CONTENT_SHELL:
-            dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
+            dExtSimpleModel_c::LoadFile(gShellGreenModelFile);
             break;
         case CONTENT_ONEUP:
-            dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+            dExtSimpleModel_c::LoadFile(gOneUpMushroomModelFile);
             break;
         case CONTENT_SCALEUP_KINOKO:
-            dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+            dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
             break;
         case CONTENT_POWER_UP_7:
             dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
             dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
-            dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+            dExtSimpleModel_c::LoadFile(gBombheiModelFile);
             break;
         case CONTENT_POWER_UP_5:
-            dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+            dExtSimpleModel_c::LoadFile(gFeatherModelFile);
             dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
             dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
             break;
@@ -475,7 +475,7 @@ int daObjHatenaBlock_c::Render()
 }
 
 /* Switches the collider off, then releases what InitResources loaded, in
-   the same three groups: the VS block's data_ov002_0210da58 file; for
+   the same three groups: the VS block's gFeatherModelFile file; for
    HATENA_BLOCK / ITEM_BLOCK the per-content files (a CONTENT_STAR block also
    untracks its star); and the per-actor-ID files plus the shared KCL.
    Always returns 1. */
@@ -485,7 +485,7 @@ int daObjHatenaBlock_c::CleanupResources()
         mMeshCollider.Disable();
 
     if (IsActorID(this, ACTOR_VS_ITEM_BLOCK))
-        data_ov002_0210da58.Release();
+        gFeatherModelFile.Release();
 
     if (IsActorID(this, ACTOR_HATENA_BLOCK) || IsActorID(this, ACTOR_ITEM_BLOCK)) {
         switch (mContentType) {
@@ -493,21 +493,21 @@ int daObjHatenaBlock_c::CleanupResources()
             UntrackStar(mStarTracked);
             break;
         case CONTENT_SHELL:
-            data_ov002_0210da18.Release();
+            gShellGreenModelFile.Release();
             break;
         case CONTENT_ONEUP:
-            data_ov002_0210d9d8.Release();
+            gOneUpMushroomModelFile.Release();
             break;
         case CONTENT_SCALEUP_KINOKO:
-            data_ov002_0210da30.Release();
+            gScaleUpKinokoModelFile.Release();
             break;
         case CONTENT_POWER_UP_7:
             gPFlowerOpenModelFile.Release();
             gPFlowerCloseModelFile.Release();
-            data_ov002_0210d9e0.Release();
+            gBombheiModelFile.Release();
             break;
         case CONTENT_POWER_UP_5:
-            data_ov002_0210da58.Release();
+            gFeatherModelFile.Release();
             gPFlowerOpenModelFile.Release();
             gPFlowerCloseModelFile.Release();
             break;
@@ -523,7 +523,7 @@ int daObjHatenaBlock_c::CleanupResources()
         data_ov102_0214e7e8.Release();
         data_ov102_0214e808.Release();
         data_ov102_0214e7f8.Release();
-        data_ov002_0210d9e0.Release();
+        gBombheiModelFile.Release();
         break;
     case 1:   /* ITEM_BLOCK */
     case 2:   /* VS_ITEM_BLOCK */
@@ -532,17 +532,17 @@ int daObjHatenaBlock_c::CleanupResources()
     case 3:   /* CAP_BLOCK_M */
         data_ov102_0214e7f0.Release();
         data_ov002_0210da40.Release();
-        data_ov002_0210d9e0.Release();
+        gBombheiModelFile.Release();
         break;
     case 5:   /* CAP_BLOCK_L */
         data_ov102_0214e7d8.Release();
         data_ov002_0210d9a0.Release();
-        data_ov002_0210d9e0.Release();
+        gBombheiModelFile.Release();
         break;
     case 4:   /* CAP_BLOCK_W */
         data_ov102_0214e7e0.Release();
         data_ov002_0210d9c0.Release();
-        data_ov002_0210d9e0.Release();
+        gBombheiModelFile.Release();
     }
     data_ov102_0214e7d0.Release();
     return 1;

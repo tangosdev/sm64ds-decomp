@@ -716,7 +716,7 @@
       "evidence": "animation resource handle constructed with file ID 0x8016"
     },
     {
-      "symbol": "data_ov002_0211094c",
+      "symbol": "gPowerStarModelFile",
       "address": "0x0211094c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -730,7 +730,7 @@
       "evidence": "model resource handle constructed with file ID 0x8019"
     },
     {
-      "symbol": "data_ov002_0211095c",
+      "symbol": "gTransparentStarModelFile",
       "address": "0x0211095c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -748,14 +748,14 @@
       "address": "0x0211096c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov002_0211094c"
+      "evidence": "compiler-generated destructor-registration node for gPowerStarModelFile"
     },
     {
       "symbol": "@2224",
       "address": "0x02110978",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_ov002_0211095c"
+      "evidence": "compiler-generated destructor-registration node for gTransparentStarModelFile"
     },
     {
       "symbol": "@2225",
@@ -1869,7 +1869,7 @@
       "source": "0x0210706c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0211094c",
+      "symbol": "gPowerStarModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0211094c"
@@ -1899,7 +1899,7 @@
       "source": "0x0210707c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0211095c",
+      "symbol": "gTransparentStarModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0211095c"
