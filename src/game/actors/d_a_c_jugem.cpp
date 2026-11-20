@@ -108,7 +108,7 @@ struct JugemVec3 {
 extern "C" {
 
 /* Helpers not declared by the included headers. */
-int Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
+int Vec3_ApproachHorz(Vector3 *cur, Vector3 *tgt, int maxStep);
 int AngleDiff(int a, int b);
 
 /* other overlays / arm9 */

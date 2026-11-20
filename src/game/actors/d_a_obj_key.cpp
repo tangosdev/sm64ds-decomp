@@ -194,7 +194,6 @@ extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
-extern int *Vec3_LslInPlace(void *v, int sh);
 /* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
    keep that spelling so the declarations of this symbol stay in agreement. */
 extern char data_ov002_0211094c;

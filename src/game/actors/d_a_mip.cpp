@@ -65,7 +65,7 @@ extern "C" void Matrix4x3_FromRotationY(void *, int);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
 extern "C" void MTX_Concat43(void *, void *, void *);
 extern "C" void MTX_Concat33(void *, void *, void *);
-extern "C" void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+extern "C" void MTX_MultVec43(const Vector3 *, const Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
 extern "C" int func_02013890(int, int);
 void func_02013944(void);

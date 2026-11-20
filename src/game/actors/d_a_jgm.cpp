@@ -116,7 +116,6 @@ extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-extern int *Vec3_LslInPlace(void *v, int sh);
 
 }
 

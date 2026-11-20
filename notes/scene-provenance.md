@@ -229,7 +229,7 @@ now lives at `include/dScBoot_c.h` and the generated stub is gone.
 **Derivation.** `dScBoot_c` at 0x020914c8, vtable 0x02091528, single base `dScene_c`. A
 leaf.
 
-**Vtable.** `data_02091528` is 18 slots and `dScBoot_c` overrides two functionally —
+**Vtable.** `_ZTV9dScBoot_c` is 18 slots and `dScBoot_c` overrides two functionally —
 slot 0 `InitResources` ([arm9](../config/arm9/symbols.txt) 0x02005a58) and slot 6 `Behavior` ([arm9](../config/arm9/symbols.txt) 0x02005418) — plus
 the destructor pair at 16/17. Confirmed against [config/arm9/relocs.txt](../config/arm9/relocs.txt)'s vtable words
 at 0x02091528 and 0x02091540.

@@ -44,7 +44,7 @@
 inline void* operator new(size_t, void* p) { return p; }
 
 /* 0x020a0eac, already named in config/arm9/symbols.txt. */
-extern "C" Heap* GAME_HEAP_PTR;
+extern "C" mHeap::Heap_t *GAME_HEAP_PTR;
 /* 0x020a0ea8 -- where SetupSolidHeapAsDefault parks the outgoing default heap.
    Unnamed in config/arm9/symbols.txt; left as the address symbol rather than
    minted here, since naming it is a claim of its own. */

@@ -101,7 +101,6 @@ enum {
 void func_02012694(u32 id, const Vector3 *pos);
 int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, dActor_c *self, int v);
-extern "C" int *Vec3_LslInPlace(void *v, int sh);
 
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
 extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */

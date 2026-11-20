@@ -319,7 +319,6 @@ extern "C" {
 /* The animation table of the anmModel_c variants: handlers 6c34 and 7038
    start an entry, and Behavior chains through it. */
 extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
-extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern dCamera_c *gCamera;
 extern VecFx32 data_ov002_0210b958;
@@ -2740,7 +2739,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
          built by __sinit instead), and MtxStack.h's MTX_MultVec43 overload
          takes the game's Vector3. */
         MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
-        Vec3_LslInPlace((int *)&v, 3);
+        Vec3_LslInPlace(&v, 3);
         SteerTowardPoint(&v, 8);
     }
     this->mPrevAngle.x = this->mAngle.x;
@@ -2754,8 +2753,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
  * the animation's currFrame set from a random draw scaled by
  * numFramesAndFlags. */
 
-int daDemo_c::PlaceFromRecord(unsigned char *p)
-{
+int daDemo_c::PlaceFromRecord(unsigned char *p) {
     int b;
     int c0;
     int d;
@@ -2793,8 +2791,7 @@ int daDemo_c::PlaceFromRecord(unsigned char *p)
  * mSpeed.z to mMagnitude times the Z axis row of the animated model's
  * matrix. */
 
-void daDemo_c::SteerTowardPoint(struct Vector3 *v, int amt)
-{
+void daDemo_c::SteerTowardPoint(struct Vector3 *v, int amt) {
     Matrix4x3 *m;
     ApproachAngle(&this->mAngle.x, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
     ApproachAngle(&this->mAngle.y, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
@@ -2806,15 +2803,12 @@ void daDemo_c::SteerTowardPoint(struct Vector3 *v, int amt)
 
 /* Script handler 9: clear mFlags bit 0x2. */
 
-int daDemo_c::DisableRenderClip()
-{
+int daDemo_c::DisableRenderClip() {
     this->mFlags &= ~0x2;
     return 1;
 }
 
-
-int daDemo_c::UpdateDescent(int a, int arg)
-{
+int daDemo_c::UpdateDescent(int a, int arg) {
     if (arg == gKuppaScriptFrame) {
         mParticleID[0] = 0;
         mParticleID[1] = 0;
@@ -2854,9 +2848,7 @@ int daDemo_c::UpdateDescent(int a, int arg)
     return 1;
 }
 
-
-int daDemo_c::UpdateFadeIn(int a, int arg)
-{
+int daDemo_c::UpdateFadeIn(int a, int arg) {
     if (arg == 0) {
         if (arg == gKuppaScriptFrame) {
             this->mMagnitude = 0x10000;
@@ -2882,9 +2874,7 @@ int daDemo_c::UpdateFadeIn(int a, int arg)
     return 1;
 }
 
-
-int daDemo_c::UpdateSpin()
-{
+int daDemo_c::UpdateSpin() {
     this->mScale.x = 0x3000;
     this->mScale.y = 0x3000;
     this->mScale.z = 0x3000;
@@ -2900,9 +2890,7 @@ int daDemo_c::UpdateSpin()
     return 1;
 }
 
-
-int daDemo_c::UpdateRiseOrSink(unsigned char *flag, int val)
-{
+int daDemo_c::UpdateRiseOrSink(unsigned char *flag, int val) {
     if (*flag != 0) {
         if (val == gKuppaScriptFrame)
             func_02012790(0x17);
@@ -2940,7 +2928,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         Message::func_0201f138();
     }
     MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
-    Vec3_LslInPlace(&this->mPos.x, 3);
+    Vec3_LslInPlace(&this->mPos, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         Message::func_0201ef38();
     this->mOpacity = this->mMagnitude >> 12;
@@ -3007,7 +2995,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *src, int first) {
         dp->z = sum.z;
     }
     MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &data_0209b41c, &this->mPos);
-    Vec3_LslInPlace(&this->mPos.x, 3);
+    Vec3_LslInPlace(&this->mPos, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
@@ -3203,12 +3191,12 @@ void daDemo_c::RunCommand(unsigned char *command, int first, int last) {
         (PMF3)&daDemo_c::func_ov002_020f7780, /* 2 */
         (PMF3)&daDemo_c::func_ov002_020f7538, /* 3 */
         (PMF3)&daDemo_c::func_ov002_020f7410, /* 4 */
-        (PMF3)&daDemo_c::UpdateRiseOrSink, /* 5 */
-        (PMF3)&daDemo_c::UpdateSpin, /* 6 */
-        (PMF3)&daDemo_c::UpdateFadeIn, /* 7 */
-        (PMF3)&daDemo_c::UpdateDescent, /* 8 */
-        (PMF3)&daDemo_c::DisableRenderClip, /* 9 */
-        (PMF3)&daDemo_c::PlaceFromRecord, /* 10 */
+        (PMF3)&daDemo_c::UpdateRiseOrSink,    /* 5 */
+        (PMF3)&daDemo_c::UpdateSpin,          /* 6 */
+        (PMF3)&daDemo_c::UpdateFadeIn,        /* 7 */
+        (PMF3)&daDemo_c::UpdateDescent,       /* 8 */
+        (PMF3)&daDemo_c::DisableRenderClip,   /* 9 */
+        (PMF3)&daDemo_c::PlaceFromRecord,     /* 10 */
         (PMF3)&daDemo_c::func_ov002_020f6c60, /* 11 */
         (PMF3)&daDemo_c::PlayAnimationEntry, /* 12 */
         (PMF3)&daDemo_c::SetOpacity, /* 13 */

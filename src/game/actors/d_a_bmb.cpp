@@ -92,7 +92,6 @@ int AngleDiff(int, int);
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
 dExtAnm2Model_c *func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
-int *Vec3_LslInPlace(int *v, int sh);
 /* Real definition: func_0201267c (arm9). The methods call through it so the
    name stays unmangled. */
 
@@ -766,7 +765,7 @@ void daBmb_c::func_ov102_0214b53c() {
                     p.x = data_020a0e68.t.x;
                     p.y = data_020a0e68.t.y;
                     p.z = data_020a0e68.t.z;
-                    Vec3_LslInPlace((int *)&p, 3);
+                    Vec3_LslInPlace(&p, 3);
                     daPly_c *eater = mEatingPlayer;
                     Vector3_16 rot = eater->mAngle;
                     Vector3_16 head = (const Vector3_16 &)eater->mHeadBoneRot;
