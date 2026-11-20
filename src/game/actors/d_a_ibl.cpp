@@ -92,8 +92,6 @@ enum { daIbl_PTCL_BREAK = 0xf };
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02038414(void *p);
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 extern signed char gCurrentSublevel;
 extern int data_02092138;
 

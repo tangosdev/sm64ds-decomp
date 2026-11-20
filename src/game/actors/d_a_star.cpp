@@ -76,6 +76,7 @@ enum daStar_c_AssetId {
 #include "Event.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
 #include "KuppaScript.h"
@@ -126,7 +127,7 @@ extern void UnloadSilverStarAndNumber(void);
 extern "C" {
 extern StarAnimationFileHandle data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
-extern int data_ov002_0210da28[];
+extern SharedFilePtr data_ov002_0210da28;
 extern signed char gNumStageStars[];
 }
 
@@ -152,16 +153,6 @@ extern dCamera_c *gCamera;
 
 extern unsigned char IsAreaShowing(int idx);
 extern void func_02012694(unsigned int a, const Vector3 *p);
-
-extern "C" {
-extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
-/* local extern: in this block's void * spelling, like the helpers above. */
-extern void MTX_Concat43(void *a, void *b, void *out);
-extern Matrix4x3 data_020a0e68;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void Matrix4x3_FromRotationY(void* m, int angle);
-}
 
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" {
@@ -759,9 +750,9 @@ int daStar_c::CleanupResources()
         UnloadSilverStarAndNumber();
     }
     data_ov002_02110944.Release();
-    ((SharedFilePtr *)(&data_ov002_02110924))->Release();
-    ((SharedFilePtr *)(&data_ov002_02110964))->Release();
-    ((SharedFilePtr *)(&data_ov002_02110934))->Release();
+    data_ov002_02110924.Release();
+    data_ov002_02110964.Release();
+    data_ov002_02110934.Release();
     return 1;
 }
 
@@ -770,10 +761,10 @@ int daStar_c::CleanupResources()
 int daStarBase_c::CleanupResources()
 {
     if (mState != 0) {
-        ((SharedFilePtr *)(&data_ov002_0211092c))->Release();
+        data_ov002_0211092c.Release();
         data_ov002_0210d9a8.Release();
     } else {
-        ((SharedFilePtr *)(&data_ov002_0211093c))->Release();
+        data_ov002_0211093c.Release();
     }
     return 1;
 }
@@ -2792,7 +2783,7 @@ void daStarBase_c::LinkSilverStarAndStarMarker(daStar_c *star) {
 
 void LoadSilverStarAndNumber(void)
 {
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da28);
+    dExtSimpleModel_c::LoadFile(data_ov002_0210da28);
     dExtSimpleModel_c::LoadFile(data_ov002_02110954);
 }
 
@@ -2803,7 +2794,7 @@ void LoadSilverStarAndNumber(void)
 
 void UnloadSilverStarAndNumber(void)
 {
-    ((SharedFilePtr *)data_ov002_0210da28)->Release();
+    data_ov002_0210da28.Release();
     data_ov002_02110954.Release();
 }
 

@@ -94,13 +94,8 @@ typedef char MbBeacon_size_must_be_0x70[sizeof(MbBeacon) == 0x70 ? 1 : -1];
 
 extern MbBeaconSendStatus data_020a9d2c;
 /* data_020a9d40 must be the struct object itself: reached through a cast
- * (or a local pointer) the beacon stores reorder. The checksum span
- * (data, +8), the fixed piece (+0xe) and the volatile members (+0x10) are
- * addressed through their own symbols, each with its own literal-pool word. */
+ * (or a local pointer) the beacon stores reorder. */
 extern MbBeacon data_020a9d40;
-extern u16 data_020a9d48[];
-extern u8 data_020a9d4e[];
-extern u8 data_020a9d50[];
 
 void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent);
 int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag);
@@ -371,11 +366,11 @@ void MBi_SendFixedBeacon(void) {
         } else {
             data_020a9d40.data.fixed.size = (u8)(lim - (unsigned)cur);
             v = 0;
-            MI_CpuFill16((char *)data_020a9d4e + data_020a9d40.data.fixed.size, v,
+            MI_CpuFill16(data_020a9d40.data.fixed.data + data_020a9d40.data.fixed.size, v,
                          0x62 - data_020a9d40.data.fixed.size);
         }
     }
-    MI_CpuCopy16(data_020a9d2c.srcp, data_020a9d4e, data_020a9d40.data.fixed.size);
+    MI_CpuCopy16(data_020a9d2c.srcp, data_020a9d40.data.fixed.data, data_020a9d40.data.fixed.size);
 
     data_020a9d40.data.fixed.fragmentNo = data_020a9d2c.fragmentNo;
     data_020a9d40.data.fixed.fragmentMaxNum = data_020a9d2c.fragmentMaxNum;
@@ -386,7 +381,7 @@ void MBi_SendFixedBeacon(void) {
     data_020a9d40.fileNo = data_020a9d2c.nowGameInfop->fileNo;
     data_020a9d40.beaconNo = data_020a9d2c.beaconNo++;
     data_020a9d40.data.fixed.sum = 0;
-    data_020a9d40.data.fixed.sum = MBi_calc_cksum(data_020a9d48, 0x68);
+    data_020a9d40.data.fixed.sum = MBi_calc_cksum(&data_020a9d40.data.fixed.sum, 0x68);
 
     if (++data_020a9d2c.fragmentNo < data_020a9d2c.fragmentMaxNum)
         data_020a9d2c.srcp += 0x62;
@@ -447,12 +442,12 @@ void MBi_SendVolatBeacon(void) {
     data_020a9d40.data.volat.changePlayerFlag = ptr->volat.changePlayerFlag;
 
     zero = 0;
-    MI_CpuFill16(data_020a9d50, zero, 0x58);
+    MI_CpuFill16(data_020a9d40.data.volat.member, zero, 0x58);
 
     ptr = data_020a9d2c.nowGameInfop;
     mask = ptr->volat.broadcastedPlayerFlag ^ ptr->volat.nowPlayerFlag;
     count = 0;
-    dst = data_020a9d50;
+    dst = data_020a9d40.data.volat.member[0];
     for (i = 0; i < 15; i++) {
         if (mask & (2 << i)) {
             MI_CpuCopy16(&data_020a9d2c.nowGameInfop->volat.member[i], dst, 0x16);
@@ -466,11 +461,11 @@ void MBi_SendVolatBeacon(void) {
     }
 
     if (count < 4) {
-        data_020a9d50[count * 0x16] &= ~0xf0;
+        data_020a9d40.data.volat.member[count][0] &= ~0xf0;
     }
 
     data_020a9d40.data.volat.sum = 0;
-    data_020a9d40.data.volat.sum = MBi_calc_cksum(data_020a9d48, 0x68);
+    data_020a9d40.data.volat.sum = MBi_calc_cksum(&data_020a9d40.data.volat.sum, 0x68);
 
     ptr = data_020a9d2c.nowGameInfop;
     if (ptr->volat.broadcastedPlayerFlag == ptr->volat.nowPlayerFlag) {

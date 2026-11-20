@@ -9,12 +9,12 @@ extern void func_ov007_020b12e8(void);
  * 0, 8), item 9 as the chosen item and func_ov007_020b131c; on its second
  * tick, func_ov007_020b12e8. */
 void func_ov007_020b11bc(void) {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     int ticks = w->states[1]->stateTicks;
     if (ticks == 0) {
         w->states[2]->requestedState = 0xe;
         func_ov007_020b2614(2, 0, 8);
-        WORK->chosenItemId = 9;
+        gMenuWork->chosenItemId = 9;
         func_ov007_020b131c();
     }
     if (ticks == 1) {

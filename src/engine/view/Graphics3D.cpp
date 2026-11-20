@@ -19,11 +19,8 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "math/MtxStack.h"
 
-extern Matrix4x3 data_0209b3ec;
-/* the view matrix */
-extern Matrix4x3 data_0209b41c;
-/* its inverse */
-extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern Matrix4x3 data_0209b3ec; /* the view matrix */
+extern Matrix4x3 data_0209b41c; /* its inverse */
 void func_02045d9c(void);
 
 #include "nitro/gx/g3_util.h"

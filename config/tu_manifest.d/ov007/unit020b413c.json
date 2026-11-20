@@ -242,7 +242,7 @@
   ],
   "bss": [],
   "notes": [
-    "Text only: the .rodata tables, the work block data_ov007_0210342c and the choice word data_ov007_02103428 stay ROM-owned and are reached by extern, as the one-function sources did.",
+    "Text only: the .rodata tables, the work block gMenuWork and the choice word data_ov007_02103428 stay ROM-owned and are reached by extern, as the one-function sources did.",
     "Folded from 13 sources (10 C, 3 C++). Their shadow layouts are merged into one Ov007ItemView / Ov007Item / Ov007ItemLayout / Ov007HitBox set, and the number sprites, pad and settings words are read through Ov007Work.h's typed fields; func_ov007_020b413c's int-laundered address macros and func_ov007_020b5068's int return turned out unnecessary in the unit.",
     "The unit is compiled under one file-level #pragma opt_loop_invariants off, which func_ov007_020b413c needs (four bytes short without) and the other twelve functions tolerate; there is no per-function pragma bracket."
   ],
