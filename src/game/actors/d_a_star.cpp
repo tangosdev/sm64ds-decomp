@@ -158,7 +158,6 @@ extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 /* local extern: in this block's void * spelling, like the helpers above. */
 extern void MTX_Concat43(void *a, void *b, void *out);
-extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_FromRotationY(void* m, int angle);

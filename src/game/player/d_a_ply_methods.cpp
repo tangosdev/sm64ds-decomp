@@ -108,7 +108,6 @@ MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
 
 extern "C" {
 void Vec3_RotateYAndTranslate(Vector3 *, const Vector3 *, short, const Vector3 *);
-int *Vec3_LslInPlace(int *, int);
 int func_01ffa344(int, int);
 void func_ov002_020bcdf0(daPly_c *);
 void func_ov002_020cd190(daPly_c *);
@@ -9554,7 +9553,7 @@ int daPly_c::func_ov002_020ce5f8() {
         m2 = mModels.mBodyModels[idx2];
         MTX_MultVec43((Vector3 *)&base->t, &m2->mat4x3, &pos);
     }
-    Vec3_LslInPlace((int *)&pos, 3);
+    Vec3_LslInPlace(&pos, 3);
 
     if (pos.y < data_0209f32c - 0x1e000) {
         Particle::System::NewBubble(pos);
