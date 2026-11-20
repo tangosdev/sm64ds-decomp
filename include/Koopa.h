@@ -68,38 +68,50 @@ struct daNknk_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
-    /* State and behavior helpers. They keep their ROM addresses as names
-     * (the cartridge has no English names for them); the vtable and the
-     * sinit do not reference any of them, so these spellings only matter
-     * to this file and symbols.txt.
+    /* State and behavior helpers. The cartridge records no English names
+     * for them, so every spelling below is reconstructed from this TU's
+     * reads; the vtable and the sinit do not reference any of them, so
+     * these spellings only matter to this file and symbols.txt.
+     *
+     * Behavior dispatches on mKoopaVariant: 0 and 2 (shelled, normal and
+     * small) go to UpdateStateWithShell, 1 (shell popped) to
+     * UpdateStateNoShell. Those switch on mState:
+     *
+     *   mState  with shell (0, 2)   no shell (1)
+     *   0       WaitUntilGrounded   WaitUntilGrounded
+     *   1       UpdateWait          UpdateChaseShell
+     *   2       UpdateWalkWithShell UpdateDive
+     *   3       UpdateRun           UpdateDive
+     *   4       UpdateShellSlide    UpdateWait
+     *   5       --                  UpdateWalkNoShell
      */
     void KillOnWaterFloor();
     void SpawnLandingDust();
     void SpawnFootstepDust(unsigned int a1, unsigned int a2, unsigned int a3, unsigned short a4);
     void SetAnimByIndex(int idx);
     void SpawnBlueCoin();
-    void func_ov062_02117a3c();
-    void func_ov062_02117acc();
+    void UpdateStateNoShell();
+    void UpdateStateWithShell();
     void BounceOffHurtPlayer();
     int DistToClosestPlayer();
     dActor_c *FindNearestShell(); /* nearest SHELL (actor 0x11d), or 0 */
     void DropShell();
-    void func_ov062_02117c98();
+    void HandleCollision();
     void SlideToStop(int limit);
-    void func_ov062_02118058();
+    void TryStartRun();
     void UpdateWalkEnd();
     void UpdateWalk();
     void UpdateWalkStart();
     void UpdateClosestPlayer(int lim);
     void UpdateModelMatrixAndShadow();
-    void func_ov062_021183e0();
-    void func_ov062_02118588();
-    void func_ov062_02118718();
+    void UpdateWalkNoShell();
+    void UpdateDive();
+    void UpdateChaseShell();
     void WaitUntilGrounded();
-    void func_ov062_02118a50();
-    void func_ov062_02118b4c();
-    void func_ov062_02118cdc();
-    void func_ov062_02118de8();
+    void UpdateShellSlide();
+    void UpdateRun();
+    void UpdateWalkWithShell();
+    void UpdateWait();
 };
 
 // Community source compatibility name; retail RTTI is daNknk_c.

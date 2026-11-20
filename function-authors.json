@@ -35559,11 +35559,11 @@
     },
     "ov062:0x02117a3c": {
       "author": "tangosdev",
-      "name": "_ZN8daNknk_c19func_ov062_02117a3cEv"
+      "name": "_ZN8daNknk_c18UpdateStateNoShellEv"
     },
     "ov062:0x02117acc": {
       "author": "tangosdev",
-      "name": "_ZN8daNknk_c19func_ov062_02117accEv"
+      "name": "_ZN8daNknk_c20UpdateStateWithShellEv"
     },
     "ov062:0x02117b48": {
       "author": "tangosdev",
@@ -35583,7 +35583,7 @@
     },
     "ov062:0x02117c98": {
       "author": "ruspecial",
-      "name": "_ZN8daNknk_c19func_ov062_02117c98Ev"
+      "name": "_ZN8daNknk_c15HandleCollisionEv"
     },
     "ov062:0x02118004": {
       "author": "tangosdev",
@@ -35591,7 +35591,7 @@
     },
     "ov062:0x02118058": {
       "author": "tangosdev",
-      "name": "_ZN8daNknk_c19func_ov062_02118058Ev"
+      "name": "_ZN8daNknk_c11TryStartRunEv"
     },
     "ov062:0x021180d4": {
       "author": "tangosdev",
@@ -35615,15 +35615,15 @@
     },
     "ov062:0x021183e0": {
       "author": "tangosdev",
-      "name": "_ZN8daNknk_c19func_ov062_021183e0Ev"
+      "name": "_ZN8daNknk_c17UpdateWalkNoShellEv"
     },
     "ov062:0x02118588": {
       "author": "lunavyqo",
-      "name": "_ZN8daNknk_c19func_ov062_02118588Ev"
+      "name": "_ZN8daNknk_c10UpdateDiveEv"
     },
     "ov062:0x02118718": {
       "author": "tangosdev",
-      "name": "_ZN8daNknk_c19func_ov062_02118718Ev"
+      "name": "_ZN8daNknk_c16UpdateChaseShellEv"
     },
     "ov062:0x02118a00": {
       "author": "tangosdev",
@@ -35631,19 +35631,19 @@
     },
     "ov062:0x02118a50": {
       "author": "lunavyqo",
-      "name": "_ZN8daNknk_c19func_ov062_02118a50Ev"
+      "name": "_ZN8daNknk_c16UpdateShellSlideEv"
     },
     "ov062:0x02118b4c": {
       "author": "tangosdev",
-      "name": "_ZN8daNknk_c19func_ov062_02118b4cEv"
+      "name": "_ZN8daNknk_c9UpdateRunEv"
     },
     "ov062:0x02118cdc": {
       "author": "tangosdev",
-      "name": "_ZN8daNknk_c19func_ov062_02118cdcEv"
+      "name": "_ZN8daNknk_c19UpdateWalkWithShellEv"
     },
     "ov062:0x02118de8": {
       "author": "tangosdev",
-      "name": "_ZN8daNknk_c19func_ov062_02118de8Ev"
+      "name": "_ZN8daNknk_c10UpdateWaitEv"
     },
     "ov062:0x02118f04": {
       "author": "tangosdev",
@@ -39183,7 +39183,7 @@
     },
     "ov073:0x0211fbec": {
       "author": "tangosdev",
-      "name": "func_ov073_0211fbec"
+      "name": "_ZN16daKing_Donketu_c11EnterDefeatEv"
     },
     "ov073:0x0211fbf4": {
       "author": "tangosdev",
@@ -39191,7 +39191,7 @@
     },
     "ov073:0x0211fc70": {
       "author": "tangosdev",
-      "name": "func_ov073_0211fc70"
+      "name": "_ZN16daKing_Donketu_c20EnterDefeatCutscene3Ev"
     },
     "ov073:0x0211fc78": {
       "author": "andrewboudreau",
@@ -39199,7 +39199,7 @@
     },
     "ov073:0x0211fe84": {
       "author": "tangosdev",
-      "name": "func_ov073_0211fe84"
+      "name": "_ZN16daKing_Donketu_c20EnterDefeatCutscene2Ev"
     },
     "ov073:0x0211fe8c": {
       "author": "tangosdev",
@@ -39235,19 +39235,19 @@
     },
     "ov073:0x02120610": {
       "author": "tangosdev",
-      "name": "_ZN16daKing_Donketu_c19func_ov073_02120610Ev"
+      "name": "_ZN16daKing_Donketu_c22UpdateFirstWaypointHopEv"
     },
     "ov073:0x0212081c": {
       "author": "andrewboudreau",
-      "name": "_ZN16daKing_Donketu_c19func_ov073_0212081cEv"
+      "name": "_ZN16daKing_Donketu_c21EnterFirstWaypointHopEv"
     },
     "ov073:0x02120844": {
       "author": "tangosdev",
-      "name": "_ZN16daKing_Donketu_c19func_ov073_02120844Ev"
+      "name": "_ZN16daKing_Donketu_c16UpdateDefeatFallEv"
     },
     "ov073:0x021208e4": {
       "author": "tangosdev",
-      "name": "_ZN16daKing_Donketu_c19func_ov073_021208e4Ev"
+      "name": "_ZN16daKing_Donketu_c15EnterDefeatFallEv"
     },
     "ov073:0x02120910": {
       "author": "tangosdev",
@@ -39259,11 +39259,11 @@
     },
     "ov073:0x02120b78": {
       "author": "tangosdev",
-      "name": "_ZN16daKing_Donketu_c19func_ov073_02120b78Ev"
+      "name": "_ZN16daKing_Donketu_c20UpdateKnockedOffEdgeEv"
     },
     "ov073:0x02120c08": {
       "author": "tangosdev",
-      "name": "_ZN16daKing_Donketu_c19func_ov073_02120c08Ev"
+      "name": "_ZN16daKing_Donketu_c19EnterKnockedOffEdgeEv"
     },
     "ov073:0x02120c7c": {
       "author": "tangosdev",
