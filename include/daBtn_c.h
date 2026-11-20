@@ -164,18 +164,18 @@ struct daBtn_c : dEnemyBase_c {
     typedef void (daBtn_c::*StateFunc)();
 
     /* The mState handlers, in table order. */
-    void UpdateWaiting();                 /* 0: waiting / the king's introduction */
-    void UpdateWalking();                 /* 1: walking */
-    void UpdateKingWalking();                 /* 2: the king walking */
-    void UpdateLeaningIn();                 /* 3: leaning in */
-    void UpdateFallingOnFace();                 /* 4: falling on its face */
-    void UpdateSlammingDown();                 /* 5: slamming down */
-    void UpdateGettingUp();                 /* 6: lying flat, getting up */
-    void UpdateTurningBack();                 /* 7: turning back */
-    void UpdateDefeated();                 /* 8: defeated */
-    void UpdateKingBeaten();                 /* 9: the king beaten, waiting to go */
-    void UpdateWobbling();                 /* 10: wobbling from a hit in front */
-    void UpdateKnockedOver();                 /* 11: knocked over from behind */
+    void UpdateWaiting();       /* 0: waiting / the king's introduction */
+    void UpdateWalking();       /* 1: walking */
+    void UpdateKingWalking();   /* 2: the king walking */
+    void UpdateLeaningIn();     /* 3: leaning in */
+    void UpdateFallingOnFace(); /* 4: falling on its face */
+    void UpdateSlammingDown();  /* 5: slamming down */
+    void UpdateGettingUp();     /* 6: lying flat, getting up */
+    void UpdateTurningBack();   /* 7: turning back */
+    void UpdateDefeated();      /* 8: defeated */
+    void UpdateKingBeaten();    /* 9: the king beaten, waiting to go */
+    void UpdateWobbling();      /* 10: wobbling from a hit in front */
+    void UpdateKnockedOver();   /* 11: knocked over from behind */
 
     /* The king shoves the nearest player aside; returns 1 when it did. */
     int func_ov079_02123bcc();
