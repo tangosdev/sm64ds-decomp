@@ -12,7 +12,7 @@ extern "C" {
 extern char *GetStageDebugName(void);
 }
 
-#include "ProcessList.h"
+#include "fManager_c.h"
 extern "C" {
 
 extern int GetActorDebugName(unsigned int i);
@@ -29,7 +29,6 @@ extern signed char gCurrentSublevel;
 extern u8 gCurrentEntranceId;
 extern u8 gCurrentStarId;
 extern signed char gCurrentAreaId;
-extern int data_02099f24;
 extern void *data_020a4b68;
 extern u16 gCurrentSpawnID;
 extern u8 gBaseCreationState;
@@ -68,7 +67,7 @@ void ShowCrashScreen(void)
     nds_printf(scr + 0xc0, data_0208e56c, gCurrentStarId);
     nds_printf(scr + 0x100, data_0208e57c, gCurrentAreaId);
 
-    rr = data_02099f24;
+    rr = fManager_c::m_nowLoopProc;
     if (rr != 0 && rr < 6)
         nds_printf(scr + 0x180, data_0208e58c, rr, ProcessList::func_020441bc(rr));
 
