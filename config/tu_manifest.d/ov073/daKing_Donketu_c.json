@@ -91,7 +91,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_0211fbecEv",
+      "symbol": "_ZN16daKing_Donketu_c11EnterDefeatEv",
       "address": "0x0211fbec",
       "size": "0x00000008",
       "legacy_source": "src/func_ov073_0211fbec.c",
@@ -105,7 +105,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_0211fc70Ev",
+      "symbol": "_ZN16daKing_Donketu_c20EnterDefeatCutscene3Ev",
       "address": "0x0211fc70",
       "size": "0x00000008",
       "legacy_source": "src/func_ov073_0211fc70.c",
@@ -119,7 +119,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_0211fe84Ev",
+      "symbol": "_ZN16daKing_Donketu_c20EnterDefeatCutscene2Ev",
       "address": "0x0211fe84",
       "size": "0x00000008",
       "legacy_source": "src/func_ov073_0211fe84.c",
@@ -182,28 +182,28 @@
       "ordinal": 19
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_02120610Ev",
+      "symbol": "_ZN16daKing_Donketu_c22UpdateFirstWaypointHopEv",
       "address": "0x02120610",
       "size": "0x0000020c",
       "legacy_source": "src/func_ov073_02120610.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_0212081cEv",
+      "symbol": "_ZN16daKing_Donketu_c21EnterFirstWaypointHopEv",
       "address": "0x0212081c",
       "size": "0x00000028",
       "legacy_source": "src/func_ov073_0212081c.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_02120844Ev",
+      "symbol": "_ZN16daKing_Donketu_c16UpdateDefeatFallEv",
       "address": "0x02120844",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov073_02120844.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_021208e4Ev",
+      "symbol": "_ZN16daKing_Donketu_c15EnterDefeatFallEv",
       "address": "0x021208e4",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov073_021208e4.c",
@@ -224,14 +224,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_02120b78Ev",
+      "symbol": "_ZN16daKing_Donketu_c20UpdateKnockedOffEdgeEv",
       "address": "0x02120b78",
       "size": "0x00000090",
       "legacy_source": "src/func_ov073_02120b78.c",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_02120c08Ev",
+      "symbol": "_ZN16daKing_Donketu_c19EnterKnockedOffEdgeEv",
       "address": "0x02120c08",
       "size": "0x00000074",
       "legacy_source": "src/func_ov073_02120c08.c",
@@ -750,7 +750,7 @@
       "address": "0x02123370",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "state record: enter func_ov073_0211fbec, update func_ov073_0211fa74"
+      "evidence": "state record: enter EnterDefeat, update func_ov073_0211fa74"
     },
     {
       "symbol": "data_ov073_02123380",
@@ -785,7 +785,7 @@
       "address": "0x021233c0",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "state record: enter func_ov073_02120c08, update func_ov073_02120b78"
+      "evidence": "state record: enter EnterKnockedOffEdge, update UpdateKnockedOffEdge"
     },
     {
       "symbol": "data_ov073_021233d0",
@@ -799,28 +799,28 @@
       "address": "0x021233e0",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "state record: enter func_ov073_0211fe84, update func_ov073_0211fc78"
+      "evidence": "state record: enter EnterDefeatCutscene2, update func_ov073_0211fc78"
     },
     {
       "symbol": "data_ov073_021233f0",
       "address": "0x021233f0",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "state record: enter func_ov073_021208e4, update func_ov073_02120844"
+      "evidence": "state record: enter EnterDefeatFall, update UpdateDefeatFall"
     },
     {
       "symbol": "data_ov073_02123400",
       "address": "0x02123400",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "state record: enter func_ov073_0212081c, update func_ov073_02120610"
+      "evidence": "state record: enter EnterFirstWaypointHop, update UpdateFirstWaypointHop"
     },
     {
       "symbol": "data_ov073_02123410",
       "address": "0x02123410",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "state record: enter func_ov073_0211fc70, update func_ov073_0211fbf4"
+      "evidence": "state record: enter EnterDefeatCutscene3, update func_ov073_0211fbf4"
     }
   ],
   "notes": [
@@ -1694,7 +1694,7 @@
       "source": "0x02123030",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_02120c08Ev",
+      "symbol": "_ZN16daKing_Donketu_c19EnterKnockedOffEdgeEv",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02120c08"
@@ -1704,7 +1704,7 @@
       "source": "0x02122fa0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_02120b78Ev",
+      "symbol": "_ZN16daKing_Donketu_c20UpdateKnockedOffEdgeEv",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02120b78"
@@ -1734,7 +1734,7 @@
       "source": "0x02123008",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_021208e4Ev",
+      "symbol": "_ZN16daKing_Donketu_c15EnterDefeatFallEv",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x021208e4"
@@ -1744,7 +1744,7 @@
       "source": "0x02122fe0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_02120844Ev",
+      "symbol": "_ZN16daKing_Donketu_c16UpdateDefeatFallEv",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02120844"
@@ -1754,7 +1754,7 @@
       "source": "0x02123010",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_0212081cEv",
+      "symbol": "_ZN16daKing_Donketu_c21EnterFirstWaypointHopEv",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x0212081c"
@@ -1764,7 +1764,7 @@
       "source": "0x02122fb8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_02120610Ev",
+      "symbol": "_ZN16daKing_Donketu_c22UpdateFirstWaypointHopEv",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x02120610"
@@ -1854,7 +1854,7 @@
       "source": "0x02123020",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_0211fe84Ev",
+      "symbol": "_ZN16daKing_Donketu_c20EnterDefeatCutscene2Ev",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x0211fe84"
@@ -1874,7 +1874,7 @@
       "source": "0x02122ff8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_0211fc70Ev",
+      "symbol": "_ZN16daKing_Donketu_c20EnterDefeatCutscene3Ev",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x0211fc70"
@@ -1894,7 +1894,7 @@
       "source": "0x02122fd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN16daKing_Donketu_c19func_ov073_0211fbecEv",
+      "symbol": "_ZN16daKing_Donketu_c11EnterDefeatEv",
       "addend": 0,
       "target_module": "ov073",
       "target_address": "0x0211fbec"
