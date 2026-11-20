@@ -10,9 +10,6 @@ src/game/actors/d_a_obj_ewm_ice_block.cpp:
     .rodata start:0x021115cc end:0x02112b48
     .init start:0x02112b48 end:0x02112bb4
     .ctor start:0x02112bb4 end:0x02112bb8
-    .data start:0x02113314 end:0x02113320
+    .data start:0x02112bc0 end:0x02113320
     .bss start:0x02113400 end:0x02113440
 
-src/unnamed/ov056/data_ov056_02112bc0.c:
-    complete
-    .data start:0x02112bc0 end:0x02113314

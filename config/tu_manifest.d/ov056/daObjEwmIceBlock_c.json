@@ -35,7 +35,7 @@
     },
     {
       "name": ".data",
-      "start": "0x02113314",
+      "start": "0x02112bc0",
       "end": "0x02113320"
     },
     {
@@ -96,6 +96,13 @@
     }
   ],
   "data": [
+    {
+      "symbol": "data_ov056_02112bc0",
+      "address": "0x02112bc0",
+      "size": "0x754",
+      "binding": "STB_GLOBAL",
+      "evidence": "file tables that sit in front of this class's profile"
+    },
     {
       "symbol": "data_ov056_02113314",
       "address": "0x02113314",
@@ -374,7 +381,7 @@
         },
         {
           "section": ".data",
-          "start": "0x02113314",
+          "start": "0x02112bc0",
           "end": "0x02113320",
           "differingBytes": 0,
           "firstDiff": null
@@ -736,6 +743,216 @@
       "addend": 0,
       "target_module": "ov056",
       "target_address": "0x02112c24"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112bcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 244,
+      "target_module": "ov056",
+      "target_address": "0x02112cb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112bd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 84,
+      "target_module": "ov056",
+      "target_address": "0x02112c14"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112bf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 16,
+      "target_module": "ov056",
+      "target_address": "0x02112bd0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112bfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 116,
+      "target_module": "ov056",
+      "target_address": "0x02112c34"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 1172,
+      "target_module": "ov056",
+      "target_address": "0x02113054"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 708,
+      "target_module": "ov056",
+      "target_address": "0x02112e84"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_021115cc",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x021115cc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02111624",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02111624"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02111a60",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02111a60"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_021115d0",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x021115d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 388,
+      "target_module": "ov056",
+      "target_address": "0x02112d44"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 8,
+      "target_module": "ov056",
+      "target_address": "0x02112bc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112c5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 56,
+      "target_module": "ov056",
+      "target_address": "0x02112bf8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 516,
+      "target_module": "ov056",
+      "target_address": "0x02112dc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 308,
+      "target_module": "ov056",
+      "target_address": "0x02112cf4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 200,
+      "target_module": "ov056",
+      "target_address": "0x02112c88"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02112bc0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 168,
+      "target_module": "ov056",
+      "target_address": "0x02112c68"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112ce0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 24,
+      "target_module": "ov056",
+      "target_address": "0x02112bd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112ce8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 4,
+      "target_module": "ov056",
+      "target_address": "0x02112bc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112bc0",
+      "addend": 68,
+      "target_module": "ov056",
+      "target_address": "0x02112c04"
     }
   ],
   "defined_symbol_renames": [
