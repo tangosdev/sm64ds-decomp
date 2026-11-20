@@ -98,7 +98,7 @@ extern Matrix4x3 gViewMtx;
 /* Rows for widths 3, 4, 5, 6, 7, 8 and 16: 13, 14, 16, 20, 20, 25, 30. */
 extern const u8 sGridRows[8] = {13, 14, 16, 20, 20, 25, 30, 0};
 extern void G3_LoadMtx43(void *mtx);
-extern const int sDefaultWave[5] = {0x3a000, 0x1111, 0x16c000, 0x384000, 0x64};
+extern const daPicGate_c::WaveParams sDefaultWave = {0x3a000, 0x1111, 0x16c000, 0x384000, 0x64};
 }
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
 
@@ -337,7 +337,7 @@ s32 daPicGate_c::InitResources() {
 
     mCells = (Vertex *)::operator new[]((unsigned)mNumCells * 0x18u);
     mTexRecord = (s32)this->LoadTexture((unsigned char)((param1 >> 8) & 0x1f));
-    mWaveParams = (const daPicGate_c::WaveParams *)&sDefaultWave;
+    mWaveParams = &sDefaultWave;
     mState = &sStates[(unsigned char)((param1 >> 13) & 3)];
     (this->*mState->init)();
 

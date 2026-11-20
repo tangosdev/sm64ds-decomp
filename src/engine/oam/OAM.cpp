@@ -122,7 +122,7 @@ u8 OAM::GetObjHeight(int shape, int sizeBits)
 {
     /* The twin over the height table, 12 bytes past the width table -- one
      * row of four entries further on. */
-    return *(unsigned char *)&((int *)((char *)data_020755ac + sizeBits))[shape];
+    return *(unsigned char *)&((int *)(data_020755ac + sizeBits))[shape];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -133,7 +133,7 @@ u8 OAM::GetObjWidth(int shape, int sizeBits)
     /* OBJ shape (square / wide / tall) and size bits together pick one of
      * twelve widths. `sizeBits` is a BYTE offset added before the `[shape]`
      * index; the entry is then read as a single byte out of a stride-4 slot. */
-    return *(unsigned char *)&((int *)((char *)data_020755a0 + sizeBits))[shape];
+    return *(unsigned char *)&((int *)(data_020755a0 + sizeBits))[shape];
 }
 
 /* -------------------------------------------------------------------------- */
