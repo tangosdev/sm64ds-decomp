@@ -57,7 +57,7 @@
  *
  * LAYOUT is pinned by the Reset member (called from C2) and
  * Enable/Disable/IsEnabled: 0x18 in the slot byte means "not enabled",
- * and enabled colliders live in the 0x18-entry table at data_020a0c80.
+ * and enabled colliders live in the 0x18-entry table at gActiveMeshColliders.
  */
 
 struct dActor_c;
@@ -94,7 +94,7 @@ struct dBgW {
        own clip box": owner mClipOffsetY, and mClipRadius << 3 as the radius. */
     fx32 clipRadius;  /* 0x0c - init -0x1000 */
     fx32 clipOffsetY; /* 0x10 */
-    u8 slotIdx;       /* 0x14 - index into data_020a0c80; 0x18 = disabled */
+    u8 slotIdx;       /* 0x14 - index into gActiveMeshColliders; 0x18 = disabled */
     u8 pad_15[3];
     BeforeClsnCallback beforeClsnCallback; /* 0x18 */
     /* Run by dBgS_RideCallBack when an actor commits a floor hit on this collider
@@ -167,7 +167,7 @@ struct dBgW {
 /* The enabled-collider table: Enable puts a collider in the first free
    entry and records the index in slotIdx, Disable and
    dScStage_c::ResetMeshColliders clear entries, and the query TUs walk it. */
-extern "C" dBgW *data_020a0c80[];
+extern "C" dBgW *gActiveMeshColliders[];
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

@@ -55,12 +55,10 @@ struct HuwaAnimationFileHandle : SharedFilePtr {
 extern HuwaModelFilePtr gHuwahuwaModelModelFile;
 extern HuwaAnimationFileHandle gHuwahuwaMoveAnimationFile;
 
-/* C helpers with no shared header: the arm9 vector routines and
+/* A C helper with no shared header:
  * func_ov002_020e10a8, daPly_c::IsState of the state SpinBounce enters. */
 extern "C" {
 extern int func_ov002_020e10a8(void *);
-
-int *Vec3_LslInPlace(Vector3 *v, int shift);
 }
 
 /* dCc_c hitFlags bits this actor tests. 0x10 / 0x2000 / 0x4000 / 0x40000 /
@@ -118,12 +116,12 @@ void daHuwa_c::KillWithCoins() {
     coins.z = mPos.z;
     SpawnCoins(coins, 3, 0xa000, 0);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    MTX_Concat43(&mAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    MTX_Concat43(&mAnmModel.data.transforms[1], &gScratchMtx, &gScratchMtx);
 
-    dust.x = data_020a0e68.t.x;
-    dust.y = data_020a0e68.t.y;
-    dust.z = data_020a0e68.t.z;
+    dust.x = gScratchMtx.t.x;
+    dust.y = gScratchMtx.t.y;
+    dust.z = gScratchMtx.t.z;
     VEC_Subtract(&dust, &mPos, &dust);
     Vec3_LslInPlace(&dust, 3);
     VEC_Add(&dust, &mPos, &dust);

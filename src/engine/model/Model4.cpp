@@ -20,14 +20,30 @@
 #include "nitro/os/tcm.h"
 #include "nitro/os/system.h"
 
+/* The texture and palette VRAM allocators. Each value is a VRAM offset.
+   InitialiseVramGlobals resets them, and the getters below hand them to
+   other allocators. Texture VRAM has two free spans:
+   - [sVramTex4x4TexelDataStart, sVramTex4x4TexelDataEnd) starts as slot 0
+     (0..0x20000). 4x4-compressed texels grow up from the bottom, and plain
+     textures may be taken down from the top (GetVramOffset).
+   - [sVramTex4x4IndexDataStart, sVramTexEnd) starts at slot 1
+     (0x20000..GX_GetSizeOfTex()). The 4x4 index data grows up from the
+     bottom at half the texel rate, and plain textures are taken down from
+     the top.
+   sVramTexSize counts the texture bytes loaded. Palettes grow up from
+   sVramPalStart and are taken down from sVramPalEnd.
+   Most names are the community map's (VRAM_Tex4x4_TexelData_Start and so
+   on). sVramTex4x4TexelDataEnd is coined: the community map calls it
+   VRAM_Tex4x4_MaxSize, but it is an offset that GetVramOffset lowers, not
+   a size. */
 extern "C" {
-extern u32 data_020a4bc8;
-extern u32 data_020a4bcc;
-extern u32 data_020a4bd8;
-extern u32 data_020a4bdc;
-extern u32 data_020a4be0;
-extern u32 data_020a4be4;
-extern u32 data_020a4be8;
+extern u32 sVramTex4x4TexelDataStart;
+extern u32 sVramPalStart;
+extern u32 sVramPalEnd;
+extern u32 sVramTexEnd;
+extern u32 sVramTex4x4IndexDataStart;
+extern u32 sVramTexSize;
+extern u32 sVramTex4x4TexelDataEnd;
 }
 
 #define REBASE(p) ((char *)(p) + base)
@@ -249,8 +265,9 @@ void RuntimeModel::func_020462d0(Desc *h, ElemA *arr) {
     }
 }
 
-extern "C" void *func_020462bc(int *p) {
-    return &((Matrix4x3 *)0)[p[1]];
+extern "C" int func_020462bc(void *p) {
+    BMD_File *s = (BMD_File *)p;
+    return (int)&((Matrix4x3 *)0)[s->numBones];
 }
 
 void func_020462b4(int *p, int v) {
@@ -399,39 +416,39 @@ void func_02045d9c(void) {
 
 extern "C" void InitialiseVramGlobals(void) {
     int r = GX_GetSizeOfTex();
-    data_020a4be4 = 0;
-    data_020a4bc8 = 0;
-    data_020a4be0 = 0x20000;
-    data_020a4be8 = 0x20000;
-    data_020a4bdc = r;
-    data_020a4bd8 = GX_GetSizeOfTexPltt();
-    data_020a4bcc = 0;
+    sVramTexSize = 0;
+    sVramTex4x4TexelDataStart = 0;
+    sVramTex4x4IndexDataStart = 0x20000;
+    sVramTex4x4TexelDataEnd = 0x20000;
+    sVramTexEnd = r;
+    sVramPalEnd = GX_GetSizeOfTexPltt();
+    sVramPalStart = 0;
 }
 
 extern "C" int func_02045d10(void) {
-    return data_020a4bc8;
+    return sVramTex4x4TexelDataStart;
 }
 
 int func_02045d00(void) {
-    return data_020a4bdc;
+    return sVramTexEnd;
 }
 
 extern "C" int func_02045cf0(void) {
-    return data_020a4bcc;
+    return sVramPalStart;
 }
 
 extern "C" int func_02045ce0(void) {
-    return data_020a4bd8;
+    return sVramPalEnd;
 }
 
 u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     u32 *p;
-    u32 b = data_020a4be8 - data_020a4bc8;
-    u32 a = data_020a4bdc - data_020a4be0;
+    u32 b = sVramTex4x4TexelDataEnd - sVramTex4x4TexelDataStart;
+    u32 a = sVramTexEnd - sVramTex4x4IndexDataStart;
     if ((a << 1) > b && a > size) {
-        p = &data_020a4bdc;
+        p = &sVramTexEnd;
     } else if (b > size) {
-        p = &data_020a4be8;
+        p = &sVramTex4x4TexelDataEnd;
     } else {
         OS_Terminate();
     }
@@ -443,7 +460,7 @@ u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
     u32 vramOffset = GetVramOffset(size);
     GX_BeginLoadTex();
     GX_LoadTex(texData, vramOffset, size);
-    data_020a4be4 += size;
+    sVramTexSize += size;
     GX_EndLoadTex();
     return vramOffset;
 }
@@ -451,17 +468,17 @@ u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
 u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *dst) {
     u32 vramOffset;
 
-    if ((data_020a4be8 - data_020a4bc8) < size)
+    if ((sVramTex4x4TexelDataEnd - sVramTex4x4TexelDataStart) < size)
         OS_Terminate();
     GX_BeginLoadTex();
-    GX_LoadTex(src, data_020a4bc8, size);
-    data_020a4be4 += size;
-    GX_LoadTex(dst, data_020a4be0, size / 2);
-    data_020a4be4 += size >> 1;
+    GX_LoadTex(src, sVramTex4x4TexelDataStart, size);
+    sVramTexSize += size;
+    GX_LoadTex(dst, sVramTex4x4IndexDataStart, size / 2);
+    sVramTexSize += size >> 1;
     GX_EndLoadTex();
-    vramOffset = data_020a4bc8;
-    data_020a4bc8 += size;
-    data_020a4be0 += size >> 1;
+    vramOffset = sVramTex4x4TexelDataStart;
+    sVramTex4x4TexelDataStart += size;
+    sVramTex4x4IndexDataStart += size >> 1;
     return vramOffset;
 }
 
@@ -470,18 +487,18 @@ u32 func_02045ad8(const void *src, u32 size) {
     u32 slot;
     u32 end;
 
-    slot = data_020a4bcc;
-    end  = data_020a4bd8;
+    slot = sVramPalStart;
+    end = sVramPalEnd;
 
     if (slot + size > end)
         OS_Terminate();
 
     GX_BeginLoadTexPltt();
-    GX_LoadTexPltt(src, data_020a4bcc, size);
+    GX_LoadTexPltt(src, sVramPalStart, size);
     GX_EndLoadTexPltt();
 
-    slot = data_020a4bcc;
-    data_020a4bcc = slot + ((size + 0xf) & 0xfff0);
+    slot = sVramPalStart;
+    sVramPalStart = slot + ((size + 0xf) & 0xfff0);
 
     return slot;
 }
@@ -491,19 +508,19 @@ u32 func_02045a50(const void *src, u32 size) {
     u32 slot;
     u32 end;
 
-    slot = data_020a4bcc;
-    end  = data_020a4bd8;
+    slot = sVramPalStart;
+    end = sVramPalEnd;
 
     if (slot + size > end)
         OS_Terminate();
 
-    data_020a4bd8 -= (size + 0xf) & 0xfff0;
+    sVramPalEnd -= (size + 0xf) & 0xfff0;
 
     GX_BeginLoadTexPltt();
-    GX_LoadTexPltt(src, data_020a4bd8, size);
+    GX_LoadTexPltt(src, sVramPalEnd, size);
     GX_EndLoadTexPltt();
 
-    return data_020a4bd8;
+    return sVramPalEnd;
 }
 
 // 0x020458e0 (0x170)
@@ -530,16 +547,16 @@ void dExtSimpleModel_c::LoadTexAndPal(BMD_File &file) {
     for (i = 0; i < file.numPalettes; i++) {
         p = &file.palettes[i];
         sz = p->size;
-        if (data_020a4bcc + sz > data_020a4bd8)
+        if (sVramPalStart + sz > sVramPalEnd)
             OS_Terminate();
         if (sz <= 8) {
-            GX_LoadTexPltt(p->data, data_020a4bcc, sz);
-            p->vramOffset = data_020a4bcc;
-            data_020a4bcc = data_020a4bcc + ((sz + 7) & 0xfff8);
+            GX_LoadTexPltt(p->data, sVramPalStart, sz);
+            p->vramOffset = sVramPalStart;
+            sVramPalStart = sVramPalStart + ((sz + 7) & 0xfff8);
         } else {
-            data_020a4bd8 = data_020a4bd8 - ((sz + 0xf) & 0xfff0);
-            GX_LoadTexPltt(p->data, data_020a4bd8, sz);
-            p->vramOffset = data_020a4bd8;
+            sVramPalEnd = sVramPalEnd - ((sz + 0xf) & 0xfff0);
+            GX_LoadTexPltt(p->data, sVramPalEnd, sz);
+            p->vramOffset = sVramPalEnd;
         }
     }
 

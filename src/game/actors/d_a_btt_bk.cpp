@@ -27,16 +27,12 @@ enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
 /* State-table rows are 8-byte mwcc pointer-to-member pairs. */
 typedef void (daBttBk_c::*PMF)();
-
-/* arm9 C helpers. local extern: no shared header declares these. */
-extern "C" {
-int *Vec3_LslInPlace(Vector3 *v, int sh);
-}
 
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
  * SharedFilePtr pair; this TU does not define them. */
@@ -143,12 +139,12 @@ void daBttBk_c::UpdateModelTransform() {
                 t.y = ty;
                 t.z = tz;
                 carrier = mCarrier;
-                data_020a0e68 = *carrier->mCarryMatrix;
-                Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, t.x, t.y, t.z);
+                gScratchMtx = *carrier->mCarryMatrix;
+                Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, t.x, t.y, t.z);
 
-                mPos.x = data_020a0e68.t.x;
-                mPos.y = data_020a0e68.t.y;
-                mPos.z = data_020a0e68.t.z;
+                mPos.x = gScratchMtx.t.x;
+                mPos.y = gScratchMtx.t.y;
+                mPos.z = gScratchMtx.t.z;
                 Vec3_LslInPlace(&mPos, 3);
             }
         }

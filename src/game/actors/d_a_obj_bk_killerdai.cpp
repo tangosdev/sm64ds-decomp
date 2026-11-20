@@ -30,7 +30,7 @@
  *   spawn-height add.
  * - Actor 0xde is the bill, daKlr_c (g_profile_KILLER's id half reads
  *   0xde); Behavior hands it this launcher through daKlr_c::mLauncher.
- * - data_0209caa0 (per-level flags) keeps its linker name;
+ * - gSaveBlock (per-level flags) keeps its linker name;
  *   IsStarCollectedInCurLevel
  *   is a shared coined helper, naming belongs at its definition.
  * - Vec3_HorzDist / Vec3_HorzAngle stay local externs: their header copies
@@ -196,7 +196,7 @@ s32 daObjBkKillerdai_c::InitResources() {
 
     course = gCurrentSublevel;
     if (course == 0x12) {
-        if (data_0209caa0.file.flags1 & 0x204)
+        if (gSaveBlock.file.flags1 & 0x204)
             return 0;
     }
     if (course == 7) {

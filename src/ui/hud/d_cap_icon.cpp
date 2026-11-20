@@ -112,7 +112,7 @@ void dCapIcon_c::Link(dActor_c *owner, int character, int iconKind, unsigned cha
  * absorbed helper below is defined first so reverse emission puts it
  * highest (0x020ab3f0). */
 
-void dThIcon_c::func_ov001_020ab3f0() {
+void dThIcon_c::Press() {
     if (mOn != 0) {
         mOn = 0;
     } else {

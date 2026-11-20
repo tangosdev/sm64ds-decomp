@@ -22,7 +22,7 @@
  * touch bytes (gTouchInfo's held/edge) and driven by its x/y, both shifted
  * left 12 to become fixed-point:
  *   - "trigger" (a new flag byte set): sets mTriggered, zeroes the
- *     base's mVel0/mVel1, latches mGrabX/mDriveNow from the tables and
+ *     base's mVel, latches mGrabX/mDriveNow from the tables and
  *     mirrors each into mGrabXSaved/mDriveBase -- then, only if mCurrent1 is above
  *     the 0xa0000 baseline, pulls mDriveBase down by the excess.
  *   - "active" (mTriggered already 1): recomputes mDriveNow from the table each
@@ -30,9 +30,9 @@
  *     mCurrent1 from mDriveNow - mDriveBase + 0xa0000, and plays a sound via
  *     Sound_PlayIfNotActive (stored back into mSoundHandle) whenever that new
  *     mCurrent1 differs from the snapshot mSnapshot1.
- *   - "release": clears mTriggered and the base's mVel0/mVel1, OR (if neither
+ *   - "release": clears mTriggered and the base's mVel, OR (if neither
  *     the trigger nor the release condition holds) eases mCurrent1 back
- *     toward the 0xa0000 baseline using the base's mVel1 as velocity.
+ *     toward the 0xa0000 baseline using the base's mVel.y as velocity.
  *
  * The original spelled three of these updates through a raw pointer cast
  * that reads and writes the SAME address twice -- `int *p = (int *)(c +

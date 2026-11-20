@@ -123,6 +123,7 @@ struct BcSwitchCollisionFilePtr : SharedFilePtr {
 
 extern BcSwitchCollisionFilePtr daObjBC_Switch_c_ClsnFile;
 extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
+extern CLPS_Block data_ov002_0210d6f4;
 
 extern u8 IsAreaShowing(s32 idx);
 
@@ -204,8 +205,7 @@ int daObjBC_Switch_c::InitResources() {
 
     kcl = dBgW_Kc::LoadFile(daObjBC_Switch_c_ClsnFile);
     /* Collision scale 0x199 is 0.1 in 20.12. */
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngle.y,
-                          *(CLPS_Block *)(&data_ov002_0210d6f4));
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngle.y, data_ov002_0210d6f4);
 
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 

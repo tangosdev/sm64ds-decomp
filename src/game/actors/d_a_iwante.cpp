@@ -93,6 +93,7 @@ enum Eyerok_AssetId {
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -335,16 +336,6 @@ extern dCamera_c *gCamera;
 /* ---- arm9 helpers (unmangled ROM names) ---- */
 extern "C" int AngleDiff(int a, int b);
 extern "C" int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
-extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
-extern "C" int RandomIntInternal(int *seed);
-extern "C" int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
-/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
-extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern "C" void Vec3_Asr(void *d, void *s, int sh);
-/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
-extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-// local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
-extern "C" s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern "C" int func_020092c4(void *cam, void *out, void *target);
 extern "C" void func_02011cfc(void);
 extern "C" void func_02011d2c(void);
@@ -850,8 +841,8 @@ int daIwante_c::HandPattern9Execute() {
                 in.z = 0x3e8000;
 
                 ang = Vec3_HorzAngle(&mPos, &mTargetPos);
-                Matrix4x3_FromRotationY(&data_020a0e68, ang);
-                MTX_MultVec43(&in, &data_020a0e68, &out);
+                Matrix4x3_FromRotationY(&gScratchMtx, ang);
+                MTX_MultVec43(&in, &gScratchMtx, &out);
 
                 mTargetPos.x += out.x;
                 mTargetPos.z += out.z;
@@ -2080,8 +2071,8 @@ int daIwante_c::BodyTalkExecute() {
             in.y = 0x32000;
             in.z = -0x32000;
 
-            Matrix4x3_FromRotationY(&data_020a0e68, 0);
-            MTX_MultVec43(&in, &data_020a0e68, &out);
+            Matrix4x3_FromRotationY(&gScratchMtx, 0);
+            MTX_MultVec43(&in, &gScratchMtx, &out);
 
             out.x += mPos.x;
             out.y += mPos.y;
@@ -2198,14 +2189,14 @@ void daIwante_c::UpdateCollisionMatrix() {
  * 0xa0000 (160.0), each >> 3, passed to dActor_c::DropShadowRadHeight with
  * radius 0x140000 (320.0) and height 0x258000 (600.0). */
 void daIwante_c::UpdateModelMatrices() {
-    int v[3];
-    Vec3_Asr(v, &mPos.x, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
     if (mPartIdx == PART_MAIN)
-        mModel2.mat4x3 = data_020a0e68;
+        mModel2.mat4x3 = gScratchMtx;
     else
-        mBlendAnmModel.mat4x3 = data_020a0e68;
+        mBlendAnmModel.mat4x3 = gScratchMtx;
     if (mPartIdx == PART_MAIN)
         return;
     if (mRestPos.y >= mPos.y)
@@ -2216,10 +2207,10 @@ void daIwante_c::UpdateModelMatrices() {
             d = 0x64000;
         else
             d = -0x64000;
-        Matrix4x3_FromTranslation(&data_020a0e68, (mPos.x + d) >> 3, (mPos.y - 0x8000) >> 3,
+        Matrix4x3_FromTranslation(&gScratchMtx, (mPos.x + d) >> 3, (mPos.y - 0x8000) >> 3,
                                   (mPos.z + 0xa0000) >> 3);
     }
-    mShadowMtx = data_020a0e68;
+    mShadowMtx = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x140000, 0x258000, 0xf);
 }
 
@@ -2324,8 +2315,8 @@ int daIwante_c::Behavior() {
             if (mState != &data_ov066_0211b07c) {
                 if (mAngle.y != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
-                    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngle.y - 0x4000));
-                    MTX_MultVec43(&vin, &data_020a0e68, &vout);
+                    Matrix4x3_FromRotationY(&gScratchMtx, (s16)(mAngle.y - 0x4000));
+                    MTX_MultVec43(&vin, &gScratchMtx, &vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {
@@ -2339,8 +2330,8 @@ int daIwante_c::Behavior() {
             } else {
                 if (mAngle.y != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
-                    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngle.y - 0x4000));
-                    MTX_MultVec43(&vin, &data_020a0e68, &vout);
+                    Matrix4x3_FromRotationY(&gScratchMtx, (s16)(mAngle.y - 0x4000));
+                    MTX_MultVec43(&vin, &gScratchMtx, &vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {

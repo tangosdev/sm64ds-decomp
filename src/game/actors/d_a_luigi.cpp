@@ -124,11 +124,11 @@ int daLuigi_c::InitResources() {
     mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov002_0210eaa0), 0, kFxOne, 0);
 
     Vec3_Asr(&t, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
 
-    mAnmModel.mat4x3 = data_020a0e68;
-    mModel.mat4x3 = data_020a0e68;
+    mAnmModel.mat4x3 = gScratchMtx;
+    mModel.mat4x3 = gScratchMtx;
 
     SetState(&data_ov055_02111b70, CurrentPlayer());
 
@@ -146,7 +146,7 @@ int daLuigi_c::Behavior() {
         data_ov055_02111b6c = 0;
         data_ov055_02111a90 = kFadeFull;
         data_ov055_02111b60 = 0;
-    } else if ((data_ov055_02111b68 & kReqFade) && !(data_0209caa0.file.flags1 & kSysHold)) {
+    } else if ((data_ov055_02111b68 & kReqFade) && !(gSaveBlock.file.flags1 & kSysHold)) {
         ApproachLinear(data_ov055_02111b6c, kFadeFull, kFadeStep);
         data_ov055_02111b64 = (data_ov055_02111b64 & ~kHideBit) + (kFadeFull - data_ov055_02111b6c);
     }
@@ -192,8 +192,8 @@ int daLuigi_c::Render() {
     mat = &mAnmModel.mat4x3;
     *mat = body->mat4x3;
     mat->t.x = -mat->t.x;
-    func_0203c178(&data_020a0e68, kMirrorSx, kFxOne, kFxOne);
-    MTX_Concat33((const int *)mat, (const int *)&data_020a0e68, (int *)mat);
+    func_0203c178(&gScratchMtx, kMirrorSx, kFxOne, kFxOne);
+    MTX_Concat33((const int *)mat, (const int *)&gScratchMtx, (int *)mat);
     mModel.mat4x3 = *mat;
 
     if (data_ov055_02111b64 & kHideBit)

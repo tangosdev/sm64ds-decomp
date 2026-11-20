@@ -107,18 +107,15 @@ extern daPly_c *gPlayers[];
 extern u8 gZoomButtonActiveTimer;
 extern dCamera_c *gCamera;
 extern ControllerInput data_0209f498[];
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u32 gNextActorUpdateMask;
 extern u8 data_0209d660;
 extern signed char gNumStageStars[];
-/* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
-* so can never be the module this reaches. */
-extern int data_ov001_020abac8[];
 extern unsigned char gGameMode;
 extern unsigned char gPrevReturnState;
 extern unsigned char gNewStarCollected;
 extern unsigned char gLevelClearStep;
-extern int data_020a0db0;
+extern int gGlobalTimer;
 extern signed char gNumRedCoins[];
 extern signed char gCurrentSublevel;
 extern int SublevelToLevel(int i);
@@ -126,11 +123,10 @@ extern unsigned char gGamePaused;
 extern unsigned char data_0209f20c;
 extern unsigned char gVsExitScreenActive;
 extern unsigned char data_0209f204;
-extern struct OamAttr *data_ov002_0210ca0c[];
 extern int GetOwnerLanguage(void);
 
 extern unsigned char data_0209f2bc;
-extern unsigned short data_ov002_02111188;
+extern unsigned short gVsTimerTickTimer;
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMeterShownHealth;
 extern unsigned char gShowTouchScreenArrows;
@@ -149,11 +145,11 @@ static inline int IsVsMode(void) {
 }
 
 /* 0 on the off frames of the blink after a new star is collected
-   (data_020a0db0 is FRAME_TIMER).
+   (gGlobalTimer is FRAME_TIMER).
    Flattening the nested ifs into one && chain changes the ROM's code. */
 static inline int StarCountVisible(void) {
     if (gNewStarCollected != 0) {
-        if (gLevelClearStep == 3 && (data_020a0db0 & 0x18) == 0)
+        if (gLevelClearStep == 3 && (gGlobalTimer & 0x18) == 0)
             return 0;
         return 1;
     }
@@ -313,7 +309,7 @@ int dMeter_c::InitResources() {
         mVsTimer = 30;
     }
 
-    data_ov002_02111188 = 180;
+    gVsTimerTickTimer = 180;
     gShowRaceTimer = 0;
     gMeterShownHealth = gPlayers[gLocalPlayerId]->GetHealth();
     if (gMeterShownHealth == 8) {
@@ -342,7 +338,7 @@ int dMeter_c::InitResources() {
         mLifeCountX = 0x10;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
-    } else if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+    } else if (!(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
         gMeterCounterSlideState = 6;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
@@ -374,7 +370,7 @@ int dMeter_c::Behavior() {
 
     /* vs is computed only once the first test passes and is reused below. */
     if (gSceneFader->IsAtStart() == 0 ||
-        ((vs = IsVsMode()) == 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0))
+        ((vs = IsVsMode()) == 0 && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0))
         return 1;
     if (vs != 0) {
         UpdateVsTimer();
@@ -478,7 +474,7 @@ int dMeter_c::Render() {
                 }
             }
         }
-    } else if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0) {
+    } else if ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0) {
         unsigned char v = data_0209f20c;
         if (((gGamePaused | v | gVsExitScreenActive) & 0xff) == 0) {
             RenderHealthMeter();
@@ -531,9 +527,9 @@ void dMeter_c::UpdateHealthMeter() {
     if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) != 0)
         return;
     if (mHealthMeterHoldTimer != 0)
-        mHealthMeterHoldTimer -= data_0208ee44;
+        mHealthMeterHoldTimer -= gFrameStep;
     if (mHealthTickTimer != 0)
-        mHealthTickTimer -= data_0208ee44;
+        mHealthTickTimer -= gFrameStep;
     if (Event::GetBit(EVENT_COLLECTING_STAR)) {
         unsigned char s = mHealthMeterState;
         if (s != 0) {
@@ -677,21 +673,21 @@ void dMeter_c::UpdateVsTimer() {
     if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) != 0)
         return;
 
-    if (data_ov002_02111188 != 0)
-        data_ov002_02111188 = data_ov002_02111188 - data_0208ee44;
+    if (gVsTimerTickTimer != 0)
+        gVsTimerTickTimer = gVsTimerTickTimer - gFrameStep;
 
     if (data_0209f204 != 0)
         return;
 
-    if (data_ov002_02111188 == 0) {
-        data_ov002_02111188 = 180;
+    if (gVsTimerTickTimer == 0) {
+        gVsTimerTickTimer = 180;
         mVsTimer -= 1;
         v = mVsTimer;
         if (v <= 3 && v != 0)
             func_02012790(0x28);
         if (mVsTimer == 0) {
             data_0209f204 = 1;
-            data_ov002_02111188 = 60;
+            gVsTimerTickTimer = 60;
             func_02012790(0x29);
             gSubScreenLayers &= ~4;
         }
@@ -720,7 +716,7 @@ void dMeter_c::UpdateVsTimer() {
  *   >= 10   two glyphs at x=0x74 and x=0x84, recoloured to palette 0xb once
  *           mVsTimer <= 5 -- the last-five-seconds warning
  *   4..9    ONE glyph at x=0x7c, centred, there being no tens digit
- *   0..3    not a digit at all: data_ov002_0210ca0c[3 - ones], a separate
+ *   0..3    not a digit at all: OAM::VS_RED_NUMBERS[3 - ones], a separate
  *           countdown artwork set, indexed backwards
  *
  * Only the caption is drawn when any of gGamePaused / f20c / f294 is set;
@@ -754,7 +750,7 @@ void dMeter_c::RenderVsTimer() {
             if (ones > 3) {
                 OAM::Render(0, OAM::VS_YELLOW_NUMBERS[ones], 0x7c, mVsTimerY, -1, -1, 0x1000, 0);
             } else {
-                OAM::Render(false, data_ov002_0210ca0c[3 - ones], 0x84, mVsTimerY, -1, -1, 0);
+                OAM::Render(false, OAM::VS_RED_NUMBERS[3 - ones], 0x84, mVsTimerY, -1, -1, 0);
             }
         }
     } else {
@@ -921,7 +917,7 @@ void dMeter_c::RenderSilverStars() {
     if (sl < n) {
         sb = 0x10;
         do {
-            OAM::Render(0, (OamAttr *)data_ov001_020abac8, sb, 0xa, -1, 1, 0);
+            OAM::Render(0, &OAM::SILVER_STAR, sb, 0xa, -1, 1, 0);
             sl++;
             sb += 0x11;
         } while (sl < n);
@@ -938,7 +934,7 @@ void dMeter_c::RenderCameraButtons() {
     u8 t = gZoomButtonActiveTimer;
 
     if (t != 0)
-        gZoomButtonActiveTimer = t - data_0208ee44;
+        gZoomButtonActiveTimer = t - gFrameStep;
 
     if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
         return;

@@ -8,7 +8,7 @@
    byte layout; the configured labels inside it keep their symbols.txt
    addresses (the linker script defines them at their ROM address).
 
-   data_020a0c80
+   gActiveMeshColliders
 */
 #include "types.h"
 

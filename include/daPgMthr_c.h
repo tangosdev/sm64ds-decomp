@@ -73,7 +73,7 @@ struct daPgMthr_c : dActor_c {
        UpdateFloorAndWalls, UpdateModelAndShadow); the stand, talk and
        follow states are the N64 tuxies_mother_act_0/1/2 (tuxie.inc.c). */
     daPly_c *FindNewToucher();
-    void BeginTalk(void *found, char *heldRaw);
+    void BeginTalk(daPly_c *who, dActor_c *held);
     void TurnHeadToward(char *b);
     void CheckFollow();
     void UpdateFloorAndWalls(dBgCh_Actr *);

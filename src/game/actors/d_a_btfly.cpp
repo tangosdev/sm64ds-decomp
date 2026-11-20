@@ -54,6 +54,7 @@ enum daBtfly_c_AssetId {
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 /* Lays .text down in source order (see the note at the top). */
 #pragma defer_codegen off
@@ -74,16 +75,9 @@ struct BtflyAnimationFilePtr : SharedFilePtr {
 };
 
 extern "C" {
-// local extern: CalcLib.h also conflicts with this TU's retained Vec3_Asr and Vec3_HorzLen prototypes.
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-/* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_Asr (void *) */
-int Vec3_HorzLen(const Vector3 *v);
-void Vec3_Asr(void *d, void *s, int sh);
-int RandomIntInternal(int *seed);
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
-extern SharedFilePtr data_ov002_0210d9d8;
+extern SharedFilePtr gOneUpMushroomModelFile;
 extern BtflyAnimationFilePtr gButterflyFlyAnimationFile;
 extern SharedFilePtr data_ov100_02148668;
 extern BtflyModelFilePtr gButterflyModelFile;
@@ -381,7 +375,7 @@ int daBtfly_c::CleanupResources()
 {
     gButterflyModelFile.Release();
     gButterflyFlyAnimationFile.Release();
-    data_ov002_0210d9d8.Release();
+    gOneUpMushroomModelFile.Release();
     data_ov100_02148668.Release();
     return 1;
 }
@@ -427,17 +421,17 @@ int daBtfly_c::Behavior()
     }
 
     if (mState != 4) {
-        int t[3];
-        Vec3_Asr(t, &mPos.x, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
+        Vector3 t;
+        Vec3_Asr(&t, &mPos, 3);
+        Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
         mAngle.y = mPrevAngle.y;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
         if (mUseAnimModel != 0) {
-            mAnmModel.mat4x3 = data_020a0e68;
+            mAnmModel.mat4x3 = gScratchMtx;
             DropShadowRadHeight(mShadowModel1, mAnmModel.mat4x3, 0x14000, 0x12c000, 0xf);
             mAnmModel.Advance();
         } else {
-            mModel.mat4x3 = data_020a0e68;
+            mModel.mat4x3 = gScratchMtx;
             DropShadowRadHeight(mShadowModel2, mModel.mat4x3, 0x64000, 0x12c000, 0xf);
         }
     }
@@ -446,7 +440,7 @@ int daBtfly_c::Behavior()
 
 int daBtfly_c::InitResources()
 {
-    dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+    dExtSimpleModel_c::LoadFile(gOneUpMushroomModelFile);
     dExtFrameCtrl_c::LoadFile(gButterflyFlyAnimationFile);
     dExtSimpleModel_c::LoadFile(data_ov100_02148668);
     BMD_File *bmd = dExtSimpleModel_c::LoadFile(gButterflyModelFile);

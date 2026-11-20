@@ -152,8 +152,8 @@ void daFPknBall_c::UpdateVisuals() {
     if (mMirrored != 0)
         pos.x *= -1;
     Vec3_Asr(&shadowPos, &pos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, shadowPos.x, shadowPos.y, shadowPos.z);
-    mShadowMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, shadowPos.x, shadowPos.y, shadowPos.z);
+    mShadowMat = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x28000, 0x64000, 0xf);
 }
 

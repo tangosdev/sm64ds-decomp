@@ -38,8 +38,8 @@
  * base dtor" sequence.
  *
  * InitResources (func_0203506c) separately registers a GLOBAL
- * dScMB_c::graphCallback_c object (sMBGraphCallback, constructed by
- * func_02034b1c(&sMBGraphCallback, this)) with `this` as its context --
+ * dScMB_c::graphCallback_c object (sMBGraphCallback, set up by
+ * sMBGraphCallback.Init(this)) with `this` as its context --
  * NOT an embedded member of dScMB_c. That callback's layout is declared
  * below; it occupies no space in the scene.
  *
@@ -100,14 +100,14 @@ public:
                                 single unrotated sprite and count down */
     u8 mEnabled;    /* 0x0d -- nothing draws while 0 */
     u8 mAdvancing;  /* 0x0e -- gates the spin advance */
-    u8 mUnusedFlag; /* 0x0f -- func_02034b1c clears it with the three
+    u8 mUnusedFlag; /* 0x0f -- Init clears it with the three
                                 above, and nothing in the recovered ROM
                                 reads it; the name is coined. */
 
-    void func_02034b1c(void *owner);
+    void Init(void *owner);
 
     /* Clears only the owner; InitResources fills in the rest through
-       func_02034b1c. The global's static initializer runs this. */
+       Init. The global's static initializer runs this. */
     graphCallback_c() : mOwner(0) {}
 
     virtual int GraphCallback0(); /* slot 0 */

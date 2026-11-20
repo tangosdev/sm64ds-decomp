@@ -114,7 +114,7 @@ extern u8 data_0209d66c;               /* set to close the open message */
 extern s8 gNextSublevel;               /* NEXT_LEVEL_ID */
 extern PadData data_020a0e58[];        /* BUTTON_INPUT_ARR, one per player */
 extern dCamera_c *gCamera;             /* CAMERA */
-extern int data_ov002_02110aec;        /* WATERFALL_SOUNDS_DISABLED */
+extern int gWaterfallSoundsDisabled;
 
 /* Record fields are unaligned little-endian, so a script spells them byte by
  * byte. A pointer argument cannot be a constant byte, so each KS_PTR becomes a
@@ -4705,7 +4705,7 @@ void KuppaScript::Process() {
                 f->SetForwardTime(30, 0);
                 dScene_c::SetFaders(f);
             } else if (command == KS_WATERFALL_SOUNDS) {
-                data_ov002_02110aec = 0;
+                gWaterfallSoundsDisabled = 0;
             } else if (command == KS_CAMERA) {
                 RunCameraCommand(gCamera, s, first, last);
             } else if (command <= KS_PLAYER_LAST) {
@@ -4778,7 +4778,7 @@ int KuppaScript::ContinueIfNecessary() {
     if (saved == sCutsceneEndingMarioFall) {
         gGameMode = 2;
         Sound::LoadInitialGroup(0x26);
-        data_0209caa0.file.flags1 &= ~0x204;
+        gSaveBlock.file.flags1 &= ~0x204;
         CollectStarInLevel(7, 1);
         CollectStarInLevel(8, 1);
     } else if (saved == sCutsceneCreditsBoB) {

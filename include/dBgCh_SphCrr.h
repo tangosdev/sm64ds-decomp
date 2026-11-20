@@ -113,11 +113,11 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        (mClsnResult1/2/3). */
     void SetFloorNormal(const s32 *normal);
     void SetFloorCollider(int i, int clsnID, dActor_c *owner, dBgW *collider);
-    void RecordFloorHit(int triID, void *src);
+    void RecordFloorHit(int triID, SurfaceInfo *src);
     void SetWallCollider(int i, int clsnID, dActor_c *owner, dBgW *collider);
-    void RecordWallHit(int triID, void *src);
+    void RecordWallHit(int triID, SurfaceInfo *src);
     void SetUnderCollider(int i, int clsnID, dActor_c *owner, dBgW *collider);
-    void RecordUnderHit(int triID, void *src);
+    void RecordUnderHit(int triID, SurfaceInfo *src);
 
     /* Members the ROM keeps unnamed; each takes the SphCrr object as its
        first argument in the cartridge call graph and drives the evidenced

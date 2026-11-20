@@ -85,7 +85,7 @@ _ZN7daRNk_c19func_ov062_0211a168Ev kind:function(arm,size=0x8c) addr:0x0211a168
 _ZN7daRNk_c19func_ov062_0211a1f4Ev kind:function(arm,size=0x54c) addr:0x0211a1f4
 _ZN7daRNk_c19func_ov062_0211a740Ev kind:function(arm,size=0x284) addr:0x0211a740
 _ZN7daRNk_c19func_ov062_0211a9c4Ev kind:function(arm,size=0xfc) addr:0x0211a9c4
-_ZN7daRNk_c19func_ov062_0211aac0Ev kind:function(arm,size=0x90) addr:0x0211aac0
+_ZN7daRNk_c20UpdateModelAndShadowEv kind:function(arm,size=0x90) addr:0x0211aac0
 _ZN7daRNk_c6RenderEv kind:function(arm,size=0x38) addr:0x0211ab50
 _ZN7daRNk_c8BehaviorEv kind:function(arm,size=0x88) addr:0x0211ab88
 _ZN7daRNk_c16CleanupResourcesEv kind:function(arm,size=0x84) addr:0x0211ac10
@@ -274,8 +274,8 @@ data_ov062_0211e114 kind:bss addr:0x0211e114
 @1117 kind:bss addr:0x0211e128
 @1115 kind:bss addr:0x0211e134
 @1116 kind:bss addr:0x0211e140
-data_ov062_0211e14c kind:bss addr:0x0211e14c
-data_ov062_0211e15c kind:bss addr:0x0211e15c
-data_ov062_0211e16c kind:bss addr:0x0211e16c
-data_ov062_0211e17c kind:bss addr:0x0211e17c
-data_ov062_0211e18c kind:bss addr:0x0211e18c
+sHurtState kind:bss addr:0x0211e14c
+sFlyPathState kind:bss addr:0x0211e15c
+sRiseState kind:bss addr:0x0211e16c
+sCircleState kind:bss addr:0x0211e17c
+sSwoopState kind:bss addr:0x0211e18c

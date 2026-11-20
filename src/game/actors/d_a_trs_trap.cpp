@@ -85,6 +85,7 @@ enum d_a_trs_trap_AssetId {
 #include "Sound.h"
 #include "daBook_c.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 #pragma defer_codegen off
 
@@ -138,9 +139,6 @@ extern const signed char data_ov063_0211e26c[4] = {-8, 8, -4, 4};
 /* Staircase rise limits, indexed by mStepIndex. */
 extern const int data_ov063_0211e270[3] = {200, 400, 600};
 
-void Vec3_Asr(void *dst, void *src, int n);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 }
 u8 IsAreaShowing(int idx);
 
@@ -160,19 +158,19 @@ daTrsTrap_c::~daTrsTrap_c()
 /* The model matrix: position (>> 3) and the three angles, into
    mModel.mat4x3 at 0xf0. Called from Behavior. */
 void daTrsTrap_c::UpdateModelTransform() {
-    int v[3];
-    Vec3_Asr(v, &mPos.x, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3 = data_020a0e68;
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* The collision matrix mClsnMat from position and angles, then the moving
    mesh follows it. Called from InitResources and Behavior. */
 void daTrsTrap_c::UpdateClsnMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mClsnMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mClsnMat = gScratchMtx;
     mMovingMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 

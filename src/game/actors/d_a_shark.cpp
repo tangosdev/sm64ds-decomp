@@ -118,8 +118,8 @@ void daShark_c::CheckPlayerHit() {
         offset.z = 0x8c000;
     else if (mSwingPhase == 2)
         offset.z = -0x8c000;
-    Matrix4x3_FromRotationY(&data_020a0e68, 0);
-    MTX_MultVec43(&offset, &data_020a0e68, &mClsnOffset);
+    Matrix4x3_FromRotationY(&gScratchMtx, 0);
+    MTX_MultVec43(&offset, &gScratchMtx, &mClsnOffset);
     mdCcAcPos_c.SetPosRelativeToActor(mClsnOffset);
     if (mdCcAcPos_c.otherOwner == 0)
         return;
@@ -172,9 +172,9 @@ void daShark_c::UpdateModelMatrix() {
     Vector3 pos;
 
     Vec3_Asr(&pos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 int daShark_c::CleanupResources() {
@@ -220,9 +220,9 @@ int daShark_c::Behavior() {
         mAngle.z = mPrevAngle.z;
         velocity.y = velocity.x = velocity.z = 0;
         velocity.z = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
-        MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
+        Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPrevAngle.x);
+        MTX_MultVec43(&velocity, &gScratchMtx, &mSpeed);
     }
     {
         /* mSpeed.z is the z word of the vector just stored at mSpeed.x.

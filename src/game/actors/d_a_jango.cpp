@@ -15,7 +15,8 @@
  * nearby player to steal the cap, flies a four-node path (FLY_PATH) once it
  * carries or holds something, and is knocked into HURT by an attack. The five states are
  * records of two pointers-to-member (enter, update) built by
- * __sinit_ov062_0211d6fc; the JANGO_STATE_* macros below name them and the
+ * __sinit_ov062_0211d6fc, named sHurtState, sFlyPathState, sRiseState,
+ * sCircleState and sSwoopState below, and the
  * per-state functions say which enter/update pair they are.
  *
  * Source runs REVERSE of ROM (highest address first). Do not reorder; the
@@ -41,7 +42,7 @@
  *     are named only by where they are played; daPly_c::Hurt's last three
  *     arguments are not decoded; the level ids 0x10, 0x18 and 0x19 are not
  *     named.
- *   - the state record at data_ov062_0211e16c (RISE: b880 / b800) is not
+ *   - the state record sRiseState (RISE: b880 / b800) is not
  *     selected by any function in this file.
  */
 
@@ -115,12 +116,11 @@ extern JangoModelFile data_ov062_0211e0fc;
 extern JangoAnimationFilePtr data_ov062_0211e114;
 extern JangoAnimationFilePtr data_ov062_0211e10c;
 extern JangoAnimationFilePtr data_ov062_0211e104;
-extern JangoPMF data_ov062_0211e15c[2];
-extern JangoPMF data_ov062_0211e17c[2];
-extern JangoPMF data_ov062_0211e14c[2];
-extern JangoPMF data_ov062_0211e16c[2];
-extern JangoSwoopRec data_ov062_0211e18c;
-
+extern JangoPMF sFlyPathState[2];
+extern JangoPMF sCircleState[2];
+extern JangoPMF sHurtState[2];
+extern JangoPMF sRiseState[2];
+extern JangoSwoopRec sSwoopState;
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
@@ -172,11 +172,6 @@ enum { PARTICLE_AT_HURT_ENTER = 0x7e };
                                         never selected from this TU)
      CIRCLE    enter c218  update bd10   the default loop
      SWOOP     enter bc54  update ba84   dive at the player */
-#define JANGO_STATE_HURT      data_ov062_0211e14c
-#define JANGO_STATE_FLY_PATH  (&data_ov062_0211e15c)
-#define JANGO_STATE_RISE      data_ov062_0211e16c
-#define JANGO_STATE_CIRCLE    data_ov062_0211e17c
-#define JANGO_STATE_SWOOP     (&data_ov062_0211e18c)
 
 /* dActor_c::mFlags bit 0x08 is set by the framework while the actor is off
    screen. Int-returning, as the ROM materializes the 0/1 before testing it. */
@@ -211,7 +206,7 @@ s32 daJango_c::OnAimedAtWithEgg() {
      bits 12..15  mHeldItemParam, ORed into the star's own spawn parameter
 
    With a star the actor starts on its path node holding the star and flies the
-   path (JANGO_STATE_FLY_PATH). Without one it circles (JANGO_STATE_CIRCLE), and
+   path (sFlyPathState). Without one it circles (sCircleState), and
    if the player has already lost the cap it starts out holding it.
 
    The four handle wrappers are SharedFilePtrs; the loaders take them by
@@ -278,7 +273,7 @@ int daJango_c::InitResources()
         mPos.x = mPathNodePos.x;
         mPos.y = mPathNodePos.y;
         mPos.z = mPathNodePos.z;
-        ChangeState(JANGO_STATE_FLY_PATH);
+        ChangeState(&sFlyPathState);
     } else {
         pl = gPlayers[0];
         /* No star: if the player has already lost the cap (and param1 is not 3),
@@ -300,12 +295,12 @@ int daJango_c::InitResources()
         }
         /* Taken while mPos still equals mSpawnPos, so the two vectors are equal. */
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mSpawnPos);
-        ChangeState(JANGO_STATE_CIRCLE);
+        ChangeState(sCircleState);
     }
     return 1;
 }
 
-/* A state record, as __sinit_ov062_0211d6fc fills the five JANGO_STATE_*
+/* A state record, as __sinit_ov062_0211d6fc fills the five state
    records: two pointers-to-member, `enter` (called once by
    ChangeState when the state is selected) and `update` (called here
    every frame; the +0x08 member). */
@@ -376,13 +371,13 @@ int daJango_c::Behavior()
                 mHeldActorID = 0;
                 ((void (*)(int, int))func_02012790)(SND_HELD_RELEASED, 0);
                 mTimer = 30;
-                ChangeState(JANGO_STATE_CIRCLE);
+                ChangeState(sCircleState);
             }
         } else {
             mHeldActorID = 0;
             ((void (*)(int, int))func_02012790)(SND_HELD_RELEASED, 0);
             mTimer = 30;
-            ChangeState(JANGO_STATE_CIRCLE);
+            ChangeState(sCircleState);
         }
     } else if (mCarriedItem == CARRIES_STAR && mSilverStarFlag != 2) {
         /* Holding nothing: a star carrier (not the silver-star variant)
@@ -393,7 +388,7 @@ int daJango_c::Behavior()
 
     mBlendAnmModel.Advance();
     /* Hurt state excepted, test the cylinders for a hit or a player contact. */
-    if (mState != (void *)JANGO_STATE_HURT) {
+    if (mState != (void *)sHurtState) {
         HandleCylinderHit();
     }
 
@@ -444,7 +439,7 @@ int daJango_c::CleanupResources()
    1. dExtSimpleModel_c matrix: translation = mPos >> 3, rotation = mAngle X/Y/Z
       (Matrix4x3_ApplyInPlaceToRotationZXYExt), stored in mBlendAnmModel.mat4x3.
    2. If something is held: multiply bone 6 of the model by the model matrix into
-      mHeldMat, set mHeldPos to the translation row of data_020a0e68 shifted
+      mHeldMat, set mHeldPos to the translation row of gScratchMtx shifted
       back up by 3, then place the held actor with a fixed offset and rotation
       (one pair for a star, one for the cap) and hand it a pointer to mHeldMat.
    3. Shadow matrix: mPos >> 3 with Y lowered by 0x18000 (24 units). */
@@ -453,9 +448,9 @@ void daJango_c::UpdateModelAndShadow() {
     dActor_c* actor;
 
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mBlendAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mBlendAnmModel.mat4x3 = gScratchMtx;
 
     if (mHeldActorID != 0)
     {
@@ -466,31 +461,31 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPos.y = 0;
             mHeldPos.z = 0;
             MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
-            mHeldPos.x = data_020a0e68.t.x;
-            mHeldPos.y = data_020a0e68.t.y;
-            mHeldPos.z = data_020a0e68.t.z;
+            mHeldPos.x = gScratchMtx.t.x;
+            mHeldPos.y = gScratchMtx.t.y;
+            mHeldPos.z = gScratchMtx.t.z;
             mHeldPos.x <<= 3;
             mHeldPos.y <<= 3;
             mHeldPos.z <<= 3;
             if (mCarriedItem == CARRIES_STAR)
             {
                 /* Offset (-13.0, 3.0, -4.0), rotation X/Y/Z = 0, -180, -95.6 degrees. */
-                Matrix4x3_FromTranslation(&data_020a0e68, -0xd000, 0x3000, -0x4000);
-                Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, -0x8000, -0x4400);
+                Matrix4x3_FromTranslation(&gScratchMtx, -0xd000, 0x3000, -0x4000);
+                Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, 0, -0x8000, -0x4400);
             }
             else
             {
                 /* Offset (-7.0, 1.5, 0.0), rotation X/Y/Z = -67.5, -180, -90 degrees. */
-                Matrix4x3_FromTranslation(&data_020a0e68, -0x7000, 0x1800, 0);
-                Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x3000, -0x8000, -0x4000);
+                Matrix4x3_FromTranslation(&gScratchMtx, -0x7000, 0x1800, 0);
+                Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, -0x3000, -0x8000, -0x4000);
             }
-            MTX_Concat43(&data_020a0e68, &mHeldMat, &mHeldMat);
+            MTX_Concat43(&gScratchMtx, &mHeldMat, &mHeldMat);
             actor->mCarryMatrix = &mHeldMat;
         }
     }
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
-    mShadowMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
+    mShadowMat = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x40000, 0x258000, 0xf);
 }
 
@@ -524,9 +519,9 @@ int daJango_c::EnterFlyPathState() {
         in.x = 0; in.y = 0; in.z = 0;
         out.x = 0; out.y = 0; out.z = 0;
         in.z = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, -0x4000);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
         mSpeed.y = out.y;
         mStateTimer = 60;
     }
@@ -599,9 +594,9 @@ int daJango_c::UpdateFlyPathState() {
         zero[0] = 0;
         zero[1] = 0;
         zero[2] = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43((Vector3 *)zero, &data_020a0e68, &mSpeed);
-        ChangeState(JANGO_STATE_CIRCLE);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43((Vector3 *)zero, &gScratchMtx, &mSpeed);
+        ChangeState(sCircleState);
         return 1;
     }
 
@@ -743,7 +738,7 @@ int daJango_c::UpdateCircleState() {
                 }
                 if (Vec3_Dist(&mPos, &ppos) < thr) {
                     if (!IsNoControl(player) && player->mIsVanish == 0)
-                        ChangeState(JANGO_STATE_SWOOP);
+                        ChangeState(&sSwoopState);
                 }
                 /* fall through to shared b2fc + return */
             }
@@ -788,7 +783,7 @@ int daJango_c::UpdateCircleState() {
         path.FromID(mPathId);
         path.GetNode(node, mPathNodeIndex);
         if (AngleDiff(Vec3_HorzAngle(&mPos, &node), mAngle.y) < 0x2000) {
-            ChangeState(JANGO_STATE_FLY_PATH);
+            ChangeState(&sFlyPathState);
         }
     }
 
@@ -841,7 +836,7 @@ int daJango_c::UpdateSwoopState() {
     if (player != 0) {
         if (player->mIsVanish == 1) {
             mTimer = 30;
-            ChangeState(JANGO_STATE_CIRCLE);
+            ChangeState(sCircleState);
             return 1;
         }
 
@@ -871,13 +866,13 @@ int daJango_c::UpdateSwoopState() {
         ApproachLinear(mPrevAngle.x, pitch, (s16)(mStateParam + 0x500));
     }
     v.z = 0x1e000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    MTX_MultVec43(&v, &gScratchMtx, &mSpeed);
     HandleCylinderHit();
     if (mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
         mTimer = 30;
-        ChangeState(JANGO_STATE_CIRCLE);
+        ChangeState(sCircleState);
     }
     return 1;
 }
@@ -934,12 +929,12 @@ int daJango_c::UpdateHurtState() {
     int fc = mBlendAnmModel.GetFrameCount();
     if ((int)((unsigned int)(f << 4) >> 16) >= fc - 1) {
         mTimer = 30;
-        ChangeState(JANGO_STATE_CIRCLE);
+        ChangeState(sCircleState);
     }
     return 1;
 }
 
-/* RISE enter (state record data_ov062_0211e16c, which nothing in this file
+/* RISE enter (state record sRiseState, which nothing in this file
    selects): doubles the animation speed (0x2000 = 2.0), zeroes the three
    velocity words and mVertAccel, and starts jango_fly.bca (4 blend frames,
    flags 0, speed 1.0). */
@@ -967,7 +962,7 @@ int daJango_c::UpdateRiseState() {
         mSpeed.z = 0;
         mPos.y = mPathNodePos.y;
         mBlendAnmModel.speed = 0x1000;
-        ChangeState(JANGO_STATE_CIRCLE);
+        ChangeState(sCircleState);
     }
     return 1;
 }
@@ -1017,15 +1012,15 @@ int daJango_c::HandleCylinderHit() {
             return (int)pl;
         fl = mdCcAc_c1.hitFlags;
         if ((fl & 0x4000) != 0)
-            return ChangeState(JANGO_STATE_HURT);
+            return ChangeState(sHurtState);
         if ((fl & 0x27f0) != 0)
-            return ChangeState(JANGO_STATE_HURT);
+            return ChangeState(sHurtState);
         isPlayer = (enum Bool)(pl->actorID == ACTOR_PLAYER);
         if (isPlayer) {
             if (BumpedUnderneathByPlayer(*pl) == 1 ||
                 pl->mIsMetal == 1 ||
                 pl->IsOnShell() == 1)
-                return ChangeState(JANGO_STATE_HURT);
+                return ChangeState(sHurtState);
         }
     }
 
@@ -1038,7 +1033,7 @@ int daJango_c::HandleCylinderHit() {
     isPlayer = (enum Bool)(pl->actorID == ACTOR_PLAYER);
     if (!isPlayer)
         return (int)isPlayer;
-    state = JANGO_STATE_SWOOP;
+    state = &sSwoopState;
     if (mState != state)
         return (int)state;
     r = pl->IsCollectingCap();
@@ -1071,7 +1066,7 @@ int daJango_c::HandleCylinderHit() {
         if (sp != 0) {
             sp->SetRanges(0x64000, 0x258000, 0x1f40000, 0x1f40000);
             mHeldActorID = sp->uniqueID;
-            ChangeState(JANGO_STATE_CIRCLE);
+            ChangeState(sCircleState);
         }
     }
 
@@ -1087,7 +1082,7 @@ int daJango_c::HandleCylinderHit() {
     if (r == 0)
         return r;
     mTimer = 30;
-    return ChangeState(JANGO_STATE_CIRCLE);
+    return ChangeState(sCircleState);
 }
 
 /* Pick which of the four path nodes to fly to next, based on where the player is.
@@ -1172,9 +1167,9 @@ void daJango_c::UpdateCircleVelocity() {
         }
         v[0].z = 0x28000;
     }
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    MTX_MultVec43(&v[0], &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    MTX_MultVec43(&v[0], &gScratchMtx, &mSpeed);
 }
 
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
@@ -1212,24 +1207,24 @@ JangoAnimationFilePtr data_ov062_0211e114(ASSET_JANGO_ATTACK_BCA);
 JangoAnimationFilePtr data_ov062_0211e10c(ASSET_JANGO_DAMAGE_BCA);
 JangoAnimationFilePtr data_ov062_0211e104(ASSET_JANGO_FLY_BCA);
 
-JangoPMF data_ov062_0211e15c[2] = {
+JangoPMF sFlyPathState[2] = {
     &daJango_c::EnterFlyPathState,
     &daJango_c::UpdateFlyPathState,
 };
 
-JangoPMF data_ov062_0211e17c[2] = {
+JangoPMF sCircleState[2] = {
     &daJango_c::EnterCircleState,
     &daJango_c::UpdateCircleState,
 };
 
-JangoSwoopRec data_ov062_0211e18c;
+JangoSwoopRec sSwoopState;
 
-JangoPMF data_ov062_0211e14c[2] = {
+JangoPMF sHurtState[2] = {
     &daJango_c::EnterHurtState,
     &daJango_c::UpdateHurtState,
 };
 
-JangoPMF data_ov062_0211e16c[2] = {
+JangoPMF sRiseState[2] = {
     &daJango_c::EnterRiseState,
     &daJango_c::UpdateRiseState,
 };

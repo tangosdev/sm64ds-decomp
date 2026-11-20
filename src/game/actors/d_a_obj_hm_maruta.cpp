@@ -61,7 +61,7 @@ typedef char MarutaClsnFileHandle_size_must_be_8[sizeof(MarutaClsnFileHandle) ==
 
 #include "ResourceDescriptor.h"
 
-/* The model/collision/CLPS triple func_ov080_021274ac and _021270dc take.
+/* The model/collision/CLPS triple InitResourcesFrom and CleanupResourcesFrom take.
  * ov030's copy: its three words relocate to 0x02115ca8 and 0x02115cb0, this
  * overlay's model and collision SharedFilePtrs, and to the CLPS block at
  * 0x02114f24. */
@@ -94,7 +94,7 @@ daObjHmMaruta_c *daObjHmMaruta_c_classInit() {
 
 /* Vtable slot 0. */
 int daObjHmMaruta_c::InitResources() {
-    return this->func_ov080_021274ac(&data_ov030_02115a04);
+    return this->InitResourcesFrom(&data_ov030_02115a04);
 }
 
 /* Vtable slot 6. The word handed over reads 0x412000 on the cartridge. */
@@ -104,7 +104,7 @@ int daObjHmMaruta_c::Behavior() {
 
 /* Vtable slot 3. */
 int daObjHmMaruta_c::CleanupResources() {
-    return this->func_ov080_021270dc(&data_ov030_02115a04);
+    return this->CleanupResourcesFrom(&data_ov030_02115a04);
 }
 
 /* Retail construction order: model 1562, then collision 1563.

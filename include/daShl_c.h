@@ -80,11 +80,11 @@ struct daShl_c : dEnemyBase_c {
 
     /* The shell's own helpers, under their ROM addresses. The four pairs
        marked state are the {enter, tick} records the state machine dispatches;
-       func_ov102_0214d1f8 switches states and runs the new record's enter. */
+       SetState switches states and runs the new record's enter. */
     void func_ov102_0214c7fc();                        /* splash-floor check */
     void func_ov102_0214c84c();                        /* ridden trail/sound */
     void func_ov102_0214cbec();                        /* touch resolution */
-    void func_ov102_0214ce60();                        /* model mtx + shadow */
+    void UpdateModelAndShadow();                       /* model mtx + shadow */
     int  func_ov102_0214cf4c(dActor_c *kicker);        /* kicked -> sliding */
     int  func_ov102_0214cf98(dActor_c *player);        /* jumped on -> ridden */
     int  func_ov102_0214cfe4();                        /* state: held tick */
@@ -95,7 +95,7 @@ struct daShl_c : dEnemyBase_c {
     int  func_ov102_0214d148();                        /* state: sliding enter */
     int  func_ov102_0214d1b0();                        /* state: idle tick */
     int  func_ov102_0214d1b8();                        /* state: idle enter */
-    int  func_ov102_0214d1f8(ShlState *state);         /* state switch */
+    int SetState(ShlState *state);                     /* state switch */
 };
 
 #ifndef SM64DS_PLATFORM_PC

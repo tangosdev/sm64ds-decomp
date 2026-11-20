@@ -189,10 +189,10 @@ void dFdWipe_c::AdvanceFade()
         }
         if (currInterp != 0) {
             fx32 scale = FX_MUL(0x1000 - currInterp, 0x20000);
-            Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, -0x1000);
-            Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, scale, scale, scale);
-            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x4000);
-            model.data.Render(&data_020a0e68, 0);
+            Matrix4x3_FromTranslation(&gScratchMtx, 0, 0, -0x1000);
+            Matrix4x3_ApplyInPlaceToScale(&gScratchMtx, scale, scale, scale);
+            Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, 0x4000);
+            model.data.Render(&gScratchMtx, 0);
         }
     }
     if (currInterp == old)

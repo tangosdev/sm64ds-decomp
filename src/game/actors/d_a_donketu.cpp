@@ -15,7 +15,7 @@
 //   increment does not match UpdateRunState.
 // - The four Play*Sound methods call Sound.h's func_0201267c, the
 //   position-relative sound veneer, with mCamSpacePos.
-// - func_ov064_02116110 and func_ov064_0211616c are daOts_c's shared steppers
+// - TurnTowardPlayer and func_ov064_0211616c are daOts_c's shared steppers
 //   and keep their labels with that class. g_profile_DONKETU is not in this
 //   TU.
 
@@ -141,7 +141,7 @@ void daDonketu_c::UpdateDeathState() {
 int daDonketu_c::UpdateRunState() {
     if (mStateTimer < 10) {
         mHorzSpeed = 0;
-        int result = func_ov064_02116110(0x700);
+        int result = TurnTowardPlayer(0x700);
         if (result != 0)
             return result;
         u16 *timer = &mStateTimer;
