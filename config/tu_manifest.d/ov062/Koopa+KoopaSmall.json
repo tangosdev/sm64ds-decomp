@@ -90,14 +90,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117a3cEv",
+      "symbol": "_ZN8daNknk_c18UpdateStateNoShellEv",
       "address": "0x02117a3c",
       "size": "0x00000090",
       "legacy_source": "src/func_ov062_02117a3c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117accEv",
+      "symbol": "_ZN8daNknk_c20UpdateStateWithShellEv",
       "address": "0x02117acc",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov062_02117acc.c",
@@ -132,7 +132,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117c98Ev",
+      "symbol": "_ZN8daNknk_c15HandleCollisionEv",
       "address": "0x02117c98",
       "size": "0x0000036c",
       "legacy_source": "src/func_ov062_02117c98.c",
@@ -146,7 +146,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118058Ev",
+      "symbol": "_ZN8daNknk_c11TryStartRunEv",
       "address": "0x02118058",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov062_02118058.c",
@@ -188,21 +188,21 @@
       "ordinal": 20
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021183e0Ev",
+      "symbol": "_ZN8daNknk_c17UpdateWalkNoShellEv",
       "address": "0x021183e0",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov062_021183e0.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118588Ev",
+      "symbol": "_ZN8daNknk_c10UpdateDiveEv",
       "address": "0x02118588",
       "size": "0x00000190",
       "legacy_source": "src/func_ov062_02118588.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118718Ev",
+      "symbol": "_ZN8daNknk_c16UpdateChaseShellEv",
       "address": "0x02118718",
       "size": "0x000002e8",
       "legacy_source": "src/func_ov062_02118718.c",
@@ -216,28 +216,28 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118a50Ev",
+      "symbol": "_ZN8daNknk_c16UpdateShellSlideEv",
       "address": "0x02118a50",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov062_02118a50.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118b4cEv",
+      "symbol": "_ZN8daNknk_c9UpdateRunEv",
       "address": "0x02118b4c",
       "size": "0x00000190",
       "legacy_source": "src/func_ov062_02118b4c.c",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118cdcEv",
+      "symbol": "_ZN8daNknk_c19UpdateWalkWithShellEv",
       "address": "0x02118cdc",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov062_02118cdc.c",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118de8Ev",
+      "symbol": "_ZN8daNknk_c10UpdateWaitEv",
       "address": "0x02118de8",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov062_02118de8.cpp",
