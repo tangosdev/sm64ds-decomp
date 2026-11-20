@@ -99,7 +99,7 @@ extern u8 gMapIntroZooming;
 extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
 extern dActor_c *gSpikeBombs[];
-extern dActor_c *data_0209f33c;
+extern dActor_c *gCastleKeyRabbit;
 extern void SetSubBg2Offset(s32 a, s32 b);
 }
 
