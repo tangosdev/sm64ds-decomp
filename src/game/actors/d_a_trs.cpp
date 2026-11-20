@@ -547,22 +547,30 @@ void daTrs_c::func_ov063_02116bf4() {
 void daTrs_c::UpdateCageBoo() {
 
     switch(this->mState){
-        case 0: UpdateCageInactive(); break;
-        case 1: UpdateCageChase(); break;
-        case 2: UpdateCageBouncedOn(); break;
-        case 3: UpdateCageDying(); break;
-        case 4: UpdateCageNonlethalHit(); break;
+    case 0:
+        UpdateCageInactive();
+        break;
+    case 1:
+        UpdateCageChase();
+        break;
+    case 2:
+        UpdateCageBouncedOn();
+        break;
+    case 3:
+        UpdateCageDying();
+        break;
+    case 4:
+        UpdateCageNonlethalHit();
+        break;
     }
     ApproachTargetOpacityAndUpdateScale();
 }
-
 
 void daTrs_c::UpdateCageNonlethalHit() {
     if (UpdateDuringNonlethalHit(0x28)) {
         this->mState = 1;
     }
 }
-
 
 void daTrs_c::UpdateCageDying() {
 
@@ -572,13 +580,11 @@ void daTrs_c::UpdateCageDying() {
     func_0201267c(0xd5, &this->mCamSpacePos);
 }
 
-
 void daTrs_c::UpdateCageBouncedOn() {
     if (UpdateAfterBouncedOn(0x14)) {
         this->mState = 1;
     }
 }
-
 
 void daTrs_c::UpdateCageChase() {
 
@@ -615,7 +621,6 @@ void daTrs_c::UpdateCageChase() {
     this->mBooFlags.carrying = 0;
 }
 
-
 int daTrs_c::UpdateCageInactive() {
 
     this->mBigBooID = 0;
@@ -630,7 +635,6 @@ int daTrs_c::UpdateCageInactive() {
     if (r) { this->mState = 1; r = 1; }
     return r;
 }
-
 
 /* Behavior handler for variant 0xb: the scripted-path Boo. Hidden until
    canAppear, then waits for the player within 0x258000, flies a fixed path
