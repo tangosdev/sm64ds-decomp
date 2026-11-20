@@ -52,8 +52,8 @@
  * methods, and the handlers and the three per-style tables name them as
  * &MgBanner::handler. mwccarm emits each such use as its own {function, 0}
  * .data constant, which is the run of 37 pmf_Banner_* records at
- * 0x020bc154..0x020bc27c just below this unit's .data; data_02086b58 is
- * __ptmf_null, the null member pointer the tables copy.
+ * 0x020bc154..0x020bc27c just below this unit's .data; __ptmf_null is
+ * the null member pointer the tables copy.
  *
  * Retired one-function sources (ROM address order):
  *   0x020b2c84  Mg_FreeBannerFiles
@@ -142,9 +142,8 @@ void Deallocate(void *ptr);
 int GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-int Mg_CopySpriteList(int a, void *b, int c, int d);
-void func_0203d388(int *p, s16 angle);
-void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
+int Mg_CopySpriteList(void *src, void *dst, int add);
+void Mg_SpawnFx(short state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
@@ -1345,8 +1344,8 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
 
     {
         SlotCharNos charNo = sMgBannerGfxSlotCharNo;
-        e->mOamCount = Mg_CopySpriteList((int)sMgBannerSprites[e->mFileIndex], e->mOam,
-                                         charNo.v[e->mGfxSlot], e->mFileIndex);
+        e->mOamCount =
+            Mg_CopySpriteList(sMgBannerSprites[e->mFileIndex], e->mOam, charNo.v[e->mGfxSlot]);
     }
 
     if (sBannerSetupTable[e->mStyle])
@@ -1496,8 +1495,8 @@ void MgBanner::StartWaveBurst() {
 
     for (i = 0; i < 32; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
-        func_0203d388((int *)&burstVel, 0x800);
-        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d388(&burstVel, 0x800);
+        func_0203d388(&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
         Mg_SpawnFx(0, RAND_FX_SCALE(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxGravity);
@@ -1858,8 +1857,8 @@ void MgBanner::SetupZoomBurst() {
 
     for (i = 0; i < 32; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
-        func_0203d388((int *)&burstVel, 0x800);
-        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d388(&burstVel, 0x800);
+        func_0203d388(&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
         Mg_SpawnFx(0, RAND_FX_SCALE(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxGravity);
@@ -1909,7 +1908,7 @@ MgBanner::MgBanner() {
    sBannerUpdateTable, render sBannerDrawTable), and the words the
    29-entry file-id table copies. */
 extern "C" {
-extern ElemFn data_02086b58; /* __ptmf_null's address: the null member pointer */
+extern ElemFn __ptmf_null; /* the null member pointer */
 }
 
 namespace s20b955c {
@@ -1935,7 +1934,7 @@ OamAttr *sMgBannerSprites[MG_BANNER_FILE_NUM] = {
     sMgMsgTwoPairSpritesEnglish,   sMgMsgThreeCardSpritesEnglish,
     sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
     sMgMsgFiveCardSpritesEnglish};
-ElemFn sBannerSetupTable[13] = {data_02086b58,
+ElemFn sBannerSetupTable[13] = {__ptmf_null,
                                 &MgBanner::SetupSlideFromTop,
                                 &MgBanner::SetupSlideFromBottom,
                                 &MgBanner::SetupSlideFromLeft,
@@ -1948,7 +1947,7 @@ ElemFn sBannerSetupTable[13] = {data_02086b58,
                                 &MgBanner::SetupFall,
                                 &MgBanner::SetupDrop,
                                 &MgBanner::SetupNone};
-ElemFn sBannerUpdateTable[13] = {data_02086b58,
+ElemFn sBannerUpdateTable[13] = {__ptmf_null,
                                  &MgBanner::UpdateSlideFromTop,
                                  &MgBanner::UpdateSlideFromBottom,
                                  &MgBanner::UpdateSlideFromLeft,
@@ -1960,19 +1959,19 @@ ElemFn sBannerUpdateTable[13] = {data_02086b58,
                                  &MgBanner::UpdatePopSpin,
                                  &MgBanner::UpdateFall,
                                  &MgBanner::UpdateDrop,
-                                 data_02086b58};
-ElemFn sBannerDrawTable[13] = {data_02086b58,
-                               data_02086b58,
-                               data_02086b58,
-                               data_02086b58,
-                               data_02086b58,
+                                 __ptmf_null};
+ElemFn sBannerDrawTable[13] = {__ptmf_null,
+                               __ptmf_null,
+                               __ptmf_null,
+                               __ptmf_null,
+                               __ptmf_null,
                                &MgBanner::DrawZoomB,
                                &MgBanner::DrawPopSpinB,
                                &MgBanner::DrawZoomB,
                                &MgBanner::DrawZoomA,
                                &MgBanner::DrawPopSpinA,
                                &MgBanner::DrawSqueeze,
-                               data_02086b58,
+                               __ptmf_null,
                                &MgBanner::DrawLevelNumber};
 void *sMgBannerFiles[MG_BANNER_FILE_NUM];
 }

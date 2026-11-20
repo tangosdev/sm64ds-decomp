@@ -358,7 +358,7 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
     Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
 
     mStep = delta;
-    func_0203d630(&mStep.x, 0x124);
+    func_0203d630(&mStep, 0x124);
 
     if (mStep.x < 0)
         mStep.x = -mStep.x;

@@ -19,7 +19,7 @@
  * FOUR WITNESSES, which is one more than a leaf class ever gets:
  *
  *   _ZN7daOts_cD1Ev (ov064 0x02115ee0, 0x48) -- this class's own destructor. It stores
- *   data_ov064_0211b768 and destroys dExtShadowModel_c 0x370, dCcAc_c 0x33c,
+ *   _ZTV7daOts_c and destroys dExtShadowModel_c 0x370, dCcAc_c 0x33c,
  *   dBgCh_Actr 0x174, dExtAnmModel_c 0x110, then chains to _ZN12dEnemyBase_cD2Ev. D0 at
  *   0x02115f28 is the same plus Memory::Deallocate.
  *
@@ -33,7 +33,7 @@
  *   this class's, from the inlined base constructor, and then its own -- with the
  *   four members constructed between them at those same four offsets.
  *
- * The vtable is data_ov064_0211b768: the word before it is 0x021138bc, which is
+ * The vtable is _ZTV7daOts_c: the word before it is 0x021138bc, which is
  * _ZTI7daOts_c. (Reading that address out of the merged symbol table answers
  * `data_ov009_021138bc`, and the destructor answers `_ZN10daHolhei_cD1Ev` -- ov062
  * through ov066 all load their .text at 0x02115ee0. Resolve inside ov064 or the

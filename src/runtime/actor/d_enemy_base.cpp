@@ -597,7 +597,6 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c &clsn) {
 }
 
 extern "C" {
-extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
 }
 
 void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
@@ -650,7 +649,7 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         dst.x = delta.x;
         dst.y = delta.y;
         dst.z = delta.z;
-        Vec3_AsrInPlace(&dst.x, 1);
+        Vec3_AsrInPlace(&dst, 1);
         dst.y += 0x46000;
     }
 

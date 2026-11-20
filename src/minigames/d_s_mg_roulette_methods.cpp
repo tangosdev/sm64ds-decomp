@@ -612,12 +612,12 @@ void RouletteRacer_SetVelocityToward(RouletteRacer *racer, int *target, int scal
     racer->targetY = target[1];
     Vec2_Sub(&delta.x, &racer->targetX, &racer->x);
     func_0203d680(&step, &delta, scale);
-    racer->stepX = step.x;
-    racer->stepY = step.y;
-    if (racer->stepX < 0)
-        racer->stepX = -racer->stepX;
-    if (racer->stepY < 0)
-        racer->stepY = -racer->stepY;
+    racer->step.x = step.x;
+    racer->step.y = step.y;
+    if (racer->step.x < 0)
+        racer->step.x = -racer->step.x;
+    if (racer->step.y < 0)
+        racer->step.y = -racer->step.y;
 }
 
 void RouletteRacer_SetTarget(RouletteRacer *racer, int *target) {
@@ -625,15 +625,15 @@ void RouletteRacer_SetTarget(RouletteRacer *racer, int *target) {
     racer->targetX = target[0];
     racer->targetY = target[1];
     Vec2_Sub(&delta.x, &racer->targetX, &racer->x);
-    racer->stepX = delta.x;
-    racer->stepY = delta.y;
-    if (func_0203d434(&racer->stepX)) {
-        func_0203d630(&racer->stepX, 0x18000);
+    racer->step.x = delta.x;
+    racer->step.y = delta.y;
+    if (func_0203d434(&racer->step)) {
+        func_0203d630(&racer->step, 0x18000);
     }
-    if (racer->stepX < 0)
-        racer->stepX = -racer->stepX;
-    if (racer->stepY < 0)
-        racer->stepY = -racer->stepY;
+    if (racer->step.x < 0)
+        racer->step.x = -racer->step.x;
+    if (racer->step.y < 0)
+        racer->step.y = -racer->step.y;
 }
 
 /* Clamps the racer's target into a box round the tile's centre and slides
@@ -699,8 +699,8 @@ void RouletteRacer_PlaceAtStart(int *racer) {
     t->y = 0xc000;
     t->targetX = t->x;
     t->targetY = t->y;
-    t->stepX = 0;
-    t->stepY = 0;
+    t->step.x = 0;
+    t->step.y = 0;
     t->state = 6;
     t->tile = 0x25;
     t->payout = 0;
@@ -719,19 +719,19 @@ void RouletteRacer_Update(RouletteRacer *racer) {
 
     state = racer->state;
     if (state == 0 || state == 3) {
-        ApproachLinear(racer->x, racer->targetX, racer->stepX);
-        ApproachLinear(racer->y, racer->targetY, racer->stepY);
+        ApproachLinear(racer->x, racer->targetX, racer->step.x);
+        ApproachLinear(racer->y, racer->targetY, racer->step.y);
     }
 
     state = racer->state;
     if (state == 1) {
         RouletteRacer_CheckLandingA(racer);
-        ApproachLinear(racer->x, racer->targetX, racer->stepX);
-        ApproachLinear(racer->y, racer->targetY, racer->stepY);
+        ApproachLinear(racer->x, racer->targetX, racer->step.x);
+        ApproachLinear(racer->y, racer->targetY, racer->step.y);
     } else if (state == 7) {
         s32 out[2];
-        ApproachLinear(racer->x, racer->targetX, racer->stepX);
-        ApproachLinear(racer->y, racer->targetY, racer->stepY);
+        ApproachLinear(racer->x, racer->targetX, racer->step.x);
+        ApproachLinear(racer->y, racer->targetY, racer->step.y);
         Vec2_Sub(out, &racer->targetX, &racer->x);
         if (out[0] != 0)
             return;
@@ -741,8 +741,8 @@ void RouletteRacer_Update(RouletteRacer *racer) {
         Mg_GainCredits(1);
     } else if (state == 4) {
         s32 out[2];
-        ApproachLinear(racer->x, racer->targetX, racer->stepX);
-        ApproachLinear(racer->y, racer->targetY, racer->stepY);
+        ApproachLinear(racer->x, racer->targetX, racer->step.x);
+        ApproachLinear(racer->y, racer->targetY, racer->step.y);
         Vec2_Sub(out, &racer->targetX, &racer->x);
         if (out[0] != 0)
             return;
@@ -783,8 +783,8 @@ void RouletteRacer_Update(RouletteRacer *racer) {
             sRouletteLandedRacer = 0;
             racer->state = 1;
         }
-        ApproachLinear(racer->x, racer->targetX, racer->stepX);
-        ApproachLinear(racer->y, racer->targetY, racer->stepY);
+        ApproachLinear(racer->x, racer->targetX, racer->step.x);
+        ApproachLinear(racer->y, racer->targetY, racer->step.y);
     }
 }
 
