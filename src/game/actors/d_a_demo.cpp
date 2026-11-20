@@ -481,8 +481,7 @@ void daDemo_c::func_ov002_020f237c()
 
 /* CleanupResources for param1 0x2f: free the scroll block. */
 
-int daDemo_c::FreeScroll()
-{
+int daDemo_c::FreeScroll() {
     ::operator delete(this->mScroll);
     return 1;
 }
@@ -505,8 +504,7 @@ int daDemo_c::FreeScroll()
  *   6  nothing
  * Every state then runs 2340, 2210 and 20f4. */
 
-int daDemo_c::UpdateScroll()
-{
+int daDemo_c::UpdateScroll() {
     switch (mScroll->state) {
     case 0:
         if (gSceneFader->IsAtStart() != 0) {
@@ -590,8 +588,7 @@ int daDemo_c::CreateScroll() {
 
 /* Script handler (table entry 23): mCue = p[0], the value 23f0 waits on. */
 
-int daDemo_c::SetCue(unsigned char *src)
-{
+int daDemo_c::SetCue(unsigned char *src) {
     this->mCue = src[0];
     return 1;
 }
@@ -2417,8 +2414,7 @@ void StaffRoll::func_ov002_020f5fe4() {
     func_ov002_020f5ad4();
 }
 
-int daDemo_c::FreeStaffRoll()
-{
+int daDemo_c::FreeStaffRoll() {
     this->mStaffRoll->func_ov002_020f5f60();
     if (this->mStaffRoll != 0) {
         ::operator delete(this->mStaffRoll);
@@ -2427,25 +2423,19 @@ int daDemo_c::FreeStaffRoll()
     return 1;
 }
 
-
-int daDemo_c::UpdateStaffRoll()
-{
+int daDemo_c::UpdateStaffRoll() {
     this->mStaffRoll->func_ov002_020f5fb8();
     this->mStaffRoll->func_ov002_020f5f8c();
     return 1;
 }
 
-
-int daDemo_c::SetStaffRollCue(unsigned char *src)
-{
+int daDemo_c::SetStaffRollCue(unsigned char *src) {
     this->mCue = *src;
     this->mStaffRoll->func_ov002_020f5dd8(this->mCue);
     return 1;
 }
 
-
-int daDemo_c::ApplyStaffRollCue()
-{
+int daDemo_c::ApplyStaffRollCue() {
     this->mStaffRoll->func_ov002_020f5f0c(this->mCue);
     return 1;
 }
@@ -3191,10 +3181,10 @@ void daDemo_c::RunCommand(unsigned char *command, int first, int last) {
         (PMF3)&daDemo_c::PlayLongSound,       /* 17 */
         (PMF3)&daDemo_c::PlayBank1Sound,      /* 18 */
         (PMF3)&daDemo_c::Despawn,             /* 19 */
-        (PMF3)&daDemo_c::CreateStaffRoll, /* 20 */
-        (PMF3)&daDemo_c::SetStaffRollCue, /* 21 */
-        (PMF3)&daDemo_c::StartScroll, /* 22 */
-        (PMF3)&daDemo_c::SetCue, /* 23 */
+        (PMF3)&daDemo_c::CreateStaffRoll,     /* 20 */
+        (PMF3)&daDemo_c::SetStaffRollCue,     /* 21 */
+        (PMF3)&daDemo_c::StartScroll,         /* 22 */
+        (PMF3)&daDemo_c::SetCue,              /* 23 */
     };
     (this->*sCommandTable[command[6]])(command + 7, first, last);
 }
