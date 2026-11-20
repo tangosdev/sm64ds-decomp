@@ -622,8 +622,7 @@ int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
  * words to a 17.0-unit/frame forward vector; while at or below that point + 5.0,
  * at or below the player's Y + 5.0, or beyond 1500 units from home, the timer
  * counts down and the speed drops to 9.0. */
-int daPropeller_Heyho_c::St_Dive_Main()
-{
+int daPropeller_Heyho_c::St_Dive_Main() {
     daPly_c *player;
     Vector3 abovePlayer;
     Vector3 v;
@@ -750,8 +749,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
 /* Settle main: once the animation has finished, raises home by 300 units (not
  * when LEVEL_ID == 0x16), clears mStateStep, starts the 90-frame cooldown and
  * returns to wander. */
-int daPropeller_Heyho_c::St_Settle_Main()
-{
+int daPropeller_Heyho_c::St_Settle_Main() {
     if (mAnmModel.dExtFrameCtrl_c::Finished() != 0) {
         if (gCurrentSublevel != kLevel0x16)
             mHomePosY += kHomeLiftRecover;
