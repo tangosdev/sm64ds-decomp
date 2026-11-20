@@ -143,45 +143,45 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_02124530Ev",
+      "symbol": "_ZN7daBtn_c17UpdateKnockedOverEv",
       "address": "0x02124530",
       "size": "0x00000108",
-      "legacy_source": "src/func_ov079_02124530.c",
+      "legacy_source": "src/UpdateKnockedOver.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_02124638Ev",
+      "symbol": "_ZN7daBtn_c14UpdateWobblingEv",
       "address": "0x02124638",
       "size": "0x000000a0",
-      "legacy_source": "src/func_ov079_02124638.c",
+      "legacy_source": "src/UpdateWobbling.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_021246d8Ev",
+      "symbol": "_ZN7daBtn_c16UpdateKingBeatenEv",
       "address": "0x021246d8",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov079_021246d8.c",
+      "legacy_source": "src/UpdateKingBeaten.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_021246dcEv",
+      "symbol": "_ZN7daBtn_c14UpdateDefeatedEv",
       "address": "0x021246dc",
       "size": "0x00000314",
-      "legacy_source": "src/func_ov079_021246dc.c",
+      "legacy_source": "src/UpdateDefeated.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_021249f0Ev",
+      "symbol": "_ZN7daBtn_c17UpdateTurningBackEv",
       "address": "0x021249f0",
       "size": "0x00000118",
-      "legacy_source": "src/func_ov079_021249f0.c",
+      "legacy_source": "src/UpdateTurningBack.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_02124b08Ev",
+      "symbol": "_ZN7daBtn_c15UpdateGettingUpEv",
       "address": "0x02124b08",
       "size": "0x000002e4",
-      "legacy_source": "src/func_ov079_02124b08.c",
+      "legacy_source": "src/UpdateGettingUp.c",
       "ordinal": 18
     },
     {
@@ -213,24 +213,24 @@
       "ordinal": 22
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_02125240Ev",
+      "symbol": "_ZN7daBtn_c18UpdateSlammingDownEv",
       "address": "0x02125240",
       "size": "0x0000014c",
-      "legacy_source": "src/func_ov079_02125240.cpp",
+      "legacy_source": "src/UpdateSlammingDown.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_0212538cEv",
+      "symbol": "_ZN7daBtn_c19UpdateFallingOnFaceEv",
       "address": "0x0212538c",
       "size": "0x00000128",
-      "legacy_source": "src/func_ov079_0212538c.c",
+      "legacy_source": "src/UpdateFallingOnFace.c",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_021254b4Ev",
+      "symbol": "_ZN7daBtn_c15UpdateLeaningInEv",
       "address": "0x021254b4",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov079_021254b4.c",
+      "legacy_source": "src/UpdateLeaningIn.c",
       "ordinal": 25
     },
     {
@@ -241,24 +241,24 @@
       "ordinal": 26
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_021256d4Ev",
+      "symbol": "_ZN7daBtn_c17UpdateKingWalkingEv",
       "address": "0x021256d4",
       "size": "0x00000228",
-      "legacy_source": "src/func_ov079_021256d4.c",
+      "legacy_source": "src/UpdateKingWalking.c",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_021258fcEv",
+      "symbol": "_ZN7daBtn_c13UpdateWalkingEv",
       "address": "0x021258fc",
       "size": "0x00000248",
-      "legacy_source": "src/func_ov079_021258fc.c",
+      "legacy_source": "src/UpdateWalking.c",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN7daBtn_c19func_ov079_02125b44Ev",
+      "symbol": "_ZN7daBtn_c13UpdateWaitingEv",
       "address": "0x02125b44",
       "size": "0x0000036c",
-      "legacy_source": "src/func_ov079_02125b44.c",
+      "legacy_source": "src/UpdateWaiting.c",
       "ordinal": 29
     },
     {
@@ -317,42 +317,42 @@
       "address": "0x02127bc0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_0212538c"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateFallingOnFace"
     },
     {
       "symbol": "data_ov079_02127bc8",
       "address": "0x02127bc8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02125240"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateSlammingDown"
     },
     {
       "symbol": "data_ov079_02127bd0",
       "address": "0x02127bd0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021258fc"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateWalking"
     },
     {
       "symbol": "data_ov079_02127bd8",
       "address": "0x02127bd8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021254b4"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateLeaningIn"
     },
     {
       "symbol": "data_ov079_02127be0",
       "address": "0x02127be0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02124638"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateWobbling"
     },
     {
       "symbol": "data_ov079_02127be8",
       "address": "0x02127be8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021246dc"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateDefeated"
     },
     {
       "symbol": "data_ov079_02127bf0",
@@ -366,42 +366,42 @@
       "address": "0x02127bf8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021246d8"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateKingBeaten"
     },
     {
       "symbol": "data_ov079_02127c00",
       "address": "0x02127c00",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02125b44"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateWaiting"
     },
     {
       "symbol": "data_ov079_02127c08",
       "address": "0x02127c08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02124530"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateKnockedOver"
     },
     {
       "symbol": "data_ov079_02127c10",
       "address": "0x02127c10",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021256d4"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateKingWalking"
     },
     {
       "symbol": "data_ov079_02127c18",
       "address": "0x02127c18",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02124b08"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateGettingUp"
     },
     {
       "symbol": "data_ov079_02127c20",
       "address": "0x02127c20",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021249f0"
+      "evidence": "pointer-to-member image of daBtn_c::UpdateTurningBack"
     },
     {
       "symbol": "data_ov079_02127cfc",
@@ -1030,7 +1030,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h defines ~Vector3() {} in-class, so every TU holding a Vector3 local (OnHitByMegaChar's pos/dust, func_ov079_02123a8c's probe point, func_ov079_02124dec's coin position, func_ov079_02125240's quake and dust points) emits this 4-byte vague-linkage bx lr. The cartridge's single copy is arm9:0x020072c0; nothing in this TU's .text run calls it."
+      "reason": "include/types.h defines ~Vector3() {} in-class, so every TU holding a Vector3 local (OnHitByMegaChar's pos/dust, func_ov079_02123a8c's probe point, func_ov079_02124dec's coin position, UpdateSlammingDown's quake and dust points) emits this 4-byte vague-linkage bx lr. The cartridge's single copy is arm9:0x020072c0; nothing in this TU's .text run calls it."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -2324,7 +2324,7 @@
       "source": "0x02127bc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_0212538cEv",
+      "symbol": "_ZN7daBtn_c19UpdateFallingOnFaceEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x0212538c"
@@ -2334,7 +2334,7 @@
       "source": "0x02127bc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_02125240Ev",
+      "symbol": "_ZN7daBtn_c18UpdateSlammingDownEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02125240"
@@ -2344,7 +2344,7 @@
       "source": "0x02127bd0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_021258fcEv",
+      "symbol": "_ZN7daBtn_c13UpdateWalkingEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021258fc"
@@ -2354,7 +2354,7 @@
       "source": "0x02127bd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_021254b4Ev",
+      "symbol": "_ZN7daBtn_c15UpdateLeaningInEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021254b4"
@@ -2364,7 +2364,7 @@
       "source": "0x02127be0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_02124638Ev",
+      "symbol": "_ZN7daBtn_c14UpdateWobblingEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02124638"
@@ -2374,7 +2374,7 @@
       "source": "0x02127be8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_021246dcEv",
+      "symbol": "_ZN7daBtn_c14UpdateDefeatedEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021246dc"
@@ -2384,7 +2384,7 @@
       "source": "0x02127bf8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_021246d8Ev",
+      "symbol": "_ZN7daBtn_c16UpdateKingBeatenEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021246d8"
@@ -2394,7 +2394,7 @@
       "source": "0x02127c00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_02125b44Ev",
+      "symbol": "_ZN7daBtn_c13UpdateWaitingEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02125b44"
@@ -2404,7 +2404,7 @@
       "source": "0x02127c08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_02124530Ev",
+      "symbol": "_ZN7daBtn_c17UpdateKnockedOverEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02124530"
@@ -2414,7 +2414,7 @@
       "source": "0x02127c10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_021256d4Ev",
+      "symbol": "_ZN7daBtn_c17UpdateKingWalkingEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021256d4"
@@ -2424,7 +2424,7 @@
       "source": "0x02127c18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_02124b08Ev",
+      "symbol": "_ZN7daBtn_c15UpdateGettingUpEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02124b08"
@@ -2434,7 +2434,7 @@
       "source": "0x02127c20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daBtn_c19func_ov079_021249f0Ev",
+      "symbol": "_ZN7daBtn_c17UpdateTurningBackEv",
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x021249f0"
@@ -2525,62 +2525,62 @@
     {
       "from": "@794",
       "to": "data_ov079_02127c00",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02125b44. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @793 to @788 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @788 to @790 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @790 to @794 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateWaiting. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @793 to @788 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @788 to @790 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @790 to @794 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@796",
       "to": "data_ov079_02127bd0",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021258fc. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @795 to @790 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @790 to @792 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @792 to @796 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateWalking. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @795 to @790 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @790 to @792 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @792 to @796 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@798",
       "to": "data_ov079_02127c10",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021256d4. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @797 to @792 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @792 to @794 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @794 to @798 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateKingWalking. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @797 to @792 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @792 to @794 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @794 to @798 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@800",
       "to": "data_ov079_02127bd8",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021254b4. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @799 to @794 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @794 to @796 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @796 to @800 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateLeaningIn. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @799 to @794 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @794 to @796 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @796 to @800 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@802",
       "to": "data_ov079_02127bc0",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_0212538c. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @801 to @796 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @796 to @798 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @798 to @802 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateFallingOnFace. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @801 to @796 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @796 to @798 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @798 to @802 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@804",
       "to": "data_ov079_02127bc8",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02125240. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @803 to @798 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @798 to @800 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @800 to @804 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateSlammingDown. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @803 to @798 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @798 to @800 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @800 to @804 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@806",
       "to": "data_ov079_02127c18",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02124b08. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @805 to @800 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @800 to @802 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @802 to @806 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateGettingUp. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @805 to @800 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @800 to @802 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @802 to @806 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@808",
       "to": "data_ov079_02127c20",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021249f0. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @807 to @802 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @802 to @804 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @804 to @808 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateTurningBack. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @807 to @802 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @802 to @804 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @804 to @808 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@810",
       "to": "data_ov079_02127be8",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021246dc. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @809 to @804 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @804 to @806 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @806 to @810 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateDefeated. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @809 to @804 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @804 to @806 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @806 to @810 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@812",
       "to": "data_ov079_02127bf8",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021246d8. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @811 to @806 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @806 to @808 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @808 to @812 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateKingBeaten. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @811 to @806 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @806 to @808 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @808 to @812 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@814",
       "to": "data_ov079_02127be0",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02124638. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @813 to @808 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @808 to @810 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @810 to @814 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateWobbling. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @813 to @808 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @808 to @810 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @810 to @814 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     },
     {
       "from": "@816",
       "to": "data_ov079_02127c08",
-      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02124530. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @815 to @810 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @810 to @812 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @812 to @816 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "Member-pointer constant for daBtn_c::UpdateKnockedOver. The initializer relocation names that method, so this local keeps the configured image. Re-keyed from @815 to @810 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @810 to @812 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @812 to @816 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
     }
   ],
   "rodata": [
