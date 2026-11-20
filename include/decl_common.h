@@ -138,7 +138,6 @@ extern int data_02099368[];
 extern int data_02099edc;
 extern int data_02099fb0;
 extern int gTitleListTop;
-extern int data_0209b340[];
 extern int gMusicVolume;
 extern int gSubVolume;
 extern int gCurrentMusicID;
@@ -279,7 +278,6 @@ extern int data_ov006_021421b4;
    belongs here either. */
 extern int sTrmpAnyOnLedge;
 extern int data_ov007_02103260;
-extern int data_ov007_02103290;
 extern int data_ov007_02103340;
 extern int data_ov007_02103344;
 extern int data_ov014_02114700[];
