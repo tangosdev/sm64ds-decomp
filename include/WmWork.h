@@ -3,8 +3,8 @@
 
 #include "nitro/wm/wm.h"
 
-/* NitroSDK WM views over the wireless work buffer data_020a9db4 (0x3700
- * bytes, carved by MB_Init), the multiboot library's sWmWork in
+/* NitroSDK WM views over the wireless work buffer sWmWork (0x3700
+ * bytes, carved by MB_Init), the multiboot library's static in
  * src/engine/mb/MB_WmBase.c. SDK field names where the SDK has one; the
  * evidence for each is above WmWork. WMBssDesc, WMParentParam and WMStatus
  * come from nitro/wm/wm.h. Plain C types: some consumers do not include types.h. */
@@ -111,8 +111,5 @@ typedef struct {
 typedef char WmStartScanCallback_size_must_be_0xb8[sizeof(WmStartScanCallback) == 0xb8 ? 1 : -1];
 typedef char WmParentRecord_size_must_be_0x180[sizeof(WmParentRecord) == 0x180 ? 1 : -1];
 typedef char WmWork_size_must_be_0x3700[sizeof(WmWork) == 0x3700 ? 1 : -1];
-
-/* The work buffer through its view; each consumer declares data_020a9db4. */
-#define WM_WORK ((WmWork *)data_020a9db4)
 
 #endif

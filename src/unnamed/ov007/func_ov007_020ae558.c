@@ -9,7 +9,7 @@ extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int
 /* Picks the next state for one item node from the menu state and the item's
  * own state. */
 int func_ov007_020ae558(Ov007ItemNode *self) {
-    Ov007Work *g = WORK;
+    Ov007Work *g = gMenuWork;
     Ov007MenuState *mode = g->states[2];
     int modeTicks = mode->stateTicks;
     Ov007Item *item = self->item;
@@ -114,7 +114,7 @@ int func_ov007_020ae558(Ov007ItemNode *self) {
                 ret = 7;
             else {
                 /* the ROM reloads the work pointer here */
-                Ov007Work *g2 = data_ov007_0210342c;
+                Ov007Work *g2 = gMenuWork;
                 short menuState = g2->states[1]->currentState;
                 u8 nodeAnim = g2->itemNodes[1]->node->animIndex;
                 int x;

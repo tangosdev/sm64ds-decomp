@@ -126,7 +126,7 @@ extern const s16 data_ov002_021000a8[];
    clash with these. */
 
 extern int func_02035638(dBgCh_Actr *clsn);
-extern char *data_ov002_021000a0[];
+extern SharedFilePtr *data_ov002_021000a0[];
 /* Was spelled `func_02123804`, a name no symbols.txt defines. ov002's relocs
    record the call at 0x020ec718 as `overlays(77,78,79,80)`: four same-base
    overlays each put a function at 0x02123804. The call is gated on actor
@@ -1314,8 +1314,7 @@ int daYegg_c::InitResources()
 
     dExtFrameCtrl_c::LoadFile(data_ov002_0210e6b0);
     dExtFrameCtrl_c::LoadFile(data_ov002_0210eb78);
-    if (mAnmModel.SetFile((BMD_File *)((SharedFilePtr *)data_ov002_021000a0[idx])->filePtr, 1,
-                          -1) == 0)
+    if (mAnmModel.SetFile((BMD_File *)data_ov002_021000a0[idx]->filePtr, 1, -1) == 0)
         return 0;
 
     /* The predicate is asked a SECOND time rather than reusing idx: the ROM calls
