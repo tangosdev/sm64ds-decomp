@@ -36,8 +36,11 @@ L2 func_ov084_0212d564
 # unconsumed data of a code overlay, and a module whose section another unit has split
 # with its own claim needs one data unit per run. src/data/ is the retracted campaign's
 # shape. Every unit's ranges are claimed in its module's delinks.txt.
+# ov020's second file is the same kind of table: one mwcc translation unit stops
+# emitting named sections after about 90 of them, so the run is two files.
 L3 src/unnamed/ov008/data_ov008.c
 L3 src/unnamed/ov020/data_ov020.c
+L3 src/unnamed/ov020/data_ov020_02113b40.c
 L3 src/unnamed/ov026/data_ov026.c
 L3 src/unnamed/ov026/data_ov026_02112ffc.c
 L3 src/unnamed/ov041/data_ov041.c

@@ -3,28 +3,51 @@
  * Polelift/KoopaShutter/Submarine vtables at 0x02113a90 stay unclaimed. */
 #include "types.h"
 
-/* Words the other BTAs and the course table relocate point here.
- * sWhirlpoolBta's own key words live in daWater_Tatumaki_c. */
-extern u32 data_ov026_02112490[];
+extern u32 data_ov026_02112494[];
 extern u32 data_ov026_02112498[];
 extern u32 data_ov026_0211249c[];
 extern u32 data_ov026_021124a0[];
-extern u32 data_ov026_021124a4[];
-extern u32 data_ov026_021124e4[];
-extern u32 data_ov026_02112554[];
-extern u32 data_ov026_02112738[];
+extern u32 data_ov026_021124ac[];
+extern u32 data_ov026_0211251c[];
+extern u32 data_ov026_021125cc[];
+extern u32 data_ov026_02112dc0[];
+extern u32 data_ov026_02112dc4[];
 extern u32 data_ov026_02112dc8[];
+extern u32 data_ov026_02112dd0[];
 extern u32 data_ov026_02112dd8[];
 extern u32 data_ov026_02112de0[];
+extern u32 data_ov026_02112de8[];
+extern u32 data_ov026_02112df4[];
+extern u32 data_ov026_02112e00[];
+extern u32 data_ov026_02112e10[];
 extern u32 data_ov026_02112e20[];
 extern u32 data_ov026_02112e30[];
 extern u32 data_ov026_02112e40[];
 extern u32 data_ov026_02112e50[];
+extern u32 data_ov026_02112e5c[];
+extern u32 data_ov026_02112e60[];
+extern u32 data_ov026_02112e70[];
 extern u32 data_ov026_02112e80[];
+extern u32 data_ov026_02112e90[];
+extern u32 data_ov026_02112ea0[];
+extern u32 data_ov026_02112eb0[];
+extern u32 data_ov026_02112ec0[];
+extern u32 data_ov026_02112ed0[];
 extern u32 data_ov026_02112ee0[];
 extern u32 data_ov026_02112ef8[];
 extern u32 data_ov026_02112f10[];
 extern u32 data_ov026_02112f28[];
+extern u32 data_ov026_02112f2c[];
+extern u32 data_ov026_02112f58[];
+
+
+/* Words the other BTAs and the course table relocate point here.
+ * sWhirlpoolBta's own key words live in daWater_Tatumaki_c. */
+extern u32 data_ov026_02112490[];
+extern u32 data_ov026_021124a4[];
+extern u32 data_ov026_021124e4[];
+extern u32 data_ov026_02112554[];
+extern u32 data_ov026_02112738[];
 extern u32 data_ov026_02112f94[];
 extern u32 data_ov026_02113014[];
 extern u32 data_ov026_02113100[];
@@ -32,12 +55,36 @@ extern u32 data_ov026_02113450[];
 extern u32 data_ov026_021137c0[];
 
 /* 0x02112494..0x021124a4. The first word is the light/water rotation key. */
-const u32 data_ov026_02112494[] = {
+#pragma explicit_zero_data on
+#pragma define_section s_02112494 ".rodata.data_ov026_02112494" ".rodata.data_ov026_02112494" ".rodata.data_ov026_02112494" far_data
+#pragma section s_02112494 begin
+u32 data_ov026_02112494[1] = {
     0x00000000,
-    0x00001000,
-    0x00001000,
-    0x0000fad8
 };
+#pragma section s_02112494 end
+#pragma explicit_zero_data off
+
+#pragma define_section s_02112498 ".rodata.data_ov026_02112498" ".rodata.data_ov026_02112498" ".rodata.data_ov026_02112498" far_data
+#pragma section s_02112498 begin
+u32 data_ov026_02112498[1] = {
+    0x00001000,
+};
+#pragma section s_02112498 end
+
+#pragma define_section s_0211249c ".rodata.data_ov026_0211249c" ".rodata.data_ov026_0211249c" ".rodata.data_ov026_0211249c" far_data
+#pragma section s_0211249c begin
+u32 data_ov026_0211249c[1] = {
+    0x00001000,
+};
+#pragma section s_0211249c end
+
+#pragma define_section s_021124a0 ".rodata.data_ov026_021124a0" ".rodata.data_ov026_021124a0" ".rodata.data_ov026_021124a0" far_data
+#pragma section s_021124a0 begin
+u32 data_ov026_021124a0[1] = {
+    0x0000fad8,
+};
+#pragma section s_021124a0 end
+
 
 #pragma define_section rd124ac ".rodata.data_ov026_021124ac" ".rodata.data_ov026_021124ac" ".rodata.data_ov026_021124ac" far_data
 #pragma section rd124ac begin
@@ -451,109 +498,273 @@ u32 data_ov026_021125cc[] = {
 
 
 /* 0x02112dc0..0x02112f74 (436 bytes, 109 words) */
-u32 data_ov026_02112dc0[] = {
+#pragma define_section s_02112dc0 ".data.data_ov026_02112dc0" ".data.data_ov026_02112dc0" ".data.data_ov026_02112dc0" far_data
+#pragma section s_02112dc0 begin
+u32 data_ov026_02112dc0[1] = {
     0x000007f4,
+};
+#pragma section s_02112dc0 end
+
+#pragma define_section s_02112dc4 ".data.data_ov026_02112dc4" ".data.data_ov026_02112dc4" ".data.data_ov026_02112dc4" far_data
+#pragma section s_02112dc4 begin
+u32 data_ov026_02112dc4[1] = {
     0x00000004,
+};
+#pragma section s_02112dc4 end
+
+#pragma define_section s_02112dc8 ".data.data_ov026_02112dc8" ".data.data_ov026_02112dc8" ".data.data_ov026_02112dc8" far_data
+#pragma section s_02112dc8 begin
+u32 data_ov026_02112dc8[2] = {
     0x00000009,
     (u32)data_ov026_02113014,
+};
+#pragma section s_02112dc8 end
+
+#pragma define_section s_02112dd0 ".data.data_ov026_02112dd0" ".data.data_ov026_02112dd0" ".data.data_ov026_02112dd0" far_data
+#pragma section s_02112dd0 begin
+u32 data_ov026_02112dd0[2] = {
     0x6d757a75,
     0x00696b61,
+};
+#pragma section s_02112dd0 end
+
+#pragma define_section s_02112dd8 ".data.data_ov026_02112dd8" ".data.data_ov026_02112dd8" ".data.data_ov026_02112dd8" far_data
+#pragma section s_02112dd8 begin
+u32 data_ov026_02112dd8[2] = {
     0x00000003,
     (u32)data_ov026_02112ee0,
+};
+#pragma section s_02112dd8 end
+
+#pragma define_section s_02112de0 ".data.data_ov026_02112de0" ".data.data_ov026_02112de0" ".data.data_ov026_02112de0" far_data
+#pragma section s_02112de0 begin
+u32 data_ov026_02112de0[2] = {
     0x00000008,
     (u32)data_ov026_02112f94,
+};
+#pragma section s_02112de0 end
+
+#pragma define_section s_02112de8 ".data.data_ov026_02112de8" ".data.data_ov026_02112de8" ".data.data_ov026_02112de8" far_data
+#pragma section s_02112de8 begin
+u32 data_ov026_02112de8[3] = {
     0x6d757a75,
     0x31696b61,
     0x00000000,
+};
+#pragma section s_02112de8 end
+
+#pragma define_section s_02112df4 ".data.data_ov026_02112df4" ".data.data_ov026_02112df4" ".data.data_ov026_02112df4" far_data
+#pragma section s_02112df4 begin
+u32 data_ov026_02112df4[3] = {
     0x0320ff6a,
     0xc00000fa,
     0x000001ea,
+};
+#pragma section s_02112df4 end
+
+#pragma define_section s_02112e00 ".data.data_ov026_02112e00" ".data.data_ov026_02112e00" ".data.data_ov026_02112e00" far_data
+#pragma section s_02112e00 begin
+u32 data_ov026_02112e00[4] = {
     0xf9c01de2,
     0x0000e8c2,
     0x07010000,
     0x0000ffff,
+};
+#pragma section s_02112e00 end
+
+#pragma define_section s_02112e10 ".data.data_ov026_02112e10" ".data.data_ov026_02112e10" ".data.data_ov026_02112e10" far_data
+#pragma section s_02112e10 begin
+u32 data_ov026_02112e10[4] = {
     0xe412ff02,
     0x073a0b22,
     0x80000000,
     0x00000000,
+};
+#pragma section s_02112e10 end
+
+#pragma define_section s_02112e20 ".data.data_ov026_02112e20" ".data.data_ov026_02112e20" ".data.data_ov026_02112e20" far_data
+#pragma section s_02112e20 begin
+u32 data_ov026_02112e20[4] = {
     0x5f74616d,
     0x775f797a,
     0x72657461,
     0x0000305f,
+};
+#pragma section s_02112e20 end
+
+#pragma define_section s_02112e30 ".data.data_ov026_02112e30" ".data.data_ov026_02112e30" ".data.data_ov026_02112e30" far_data
+#pragma section s_02112e30 begin
+u32 data_ov026_02112e30[4] = {
     0x5f74616d,
     0x775f797a,
     0x72657461,
     0x0000315f,
+};
+#pragma section s_02112e30 end
+
+#pragma define_section s_02112e40 ".data.data_ov026_02112e40" ".data.data_ov026_02112e40" ".data.data_ov026_02112e40" far_data
+#pragma section s_02112e40 begin
+u32 data_ov026_02112e40[4] = {
     0x5f74616d,
     0x6c5f7a7a,
     0x74686769,
     0x0000305f,
+};
+#pragma section s_02112e40 end
+
+#pragma define_section s_02112e50 ".data.data_ov026_02112e50" ".data.data_ov026_02112e50" ".data.data_ov026_02112e50" far_data
+#pragma section s_02112e50 begin
+u32 data_ov026_02112e50[3] = {
     0x5f74616d,
     0x6c5f7a7a,
     0x74686769,
+};
+#pragma section s_02112e50 end
+
+#pragma define_section s_02112e5c ".data.data_ov026_02112e5c" ".data.data_ov026_02112e5c" ".data.data_ov026_02112e5c" far_data
+#pragma section s_02112e5c begin
+u32 data_ov026_02112e5c[1] = {
     0x0000315f,
+};
+#pragma section s_02112e5c end
+
+#pragma define_section s_02112e60 ".data.data_ov026_02112e60" ".data.data_ov026_02112e60" ".data.data_ov026_02112e60" far_data
+#pragma section s_02112e60 begin
+u32 data_ov026_02112e60[4] = {
     0xe2b60091,
     0x06dbfaf0,
     0x00000000,
     0x70010000,
+};
+#pragma section s_02112e60 end
+
+#pragma define_section s_02112e70 ".data.data_ov026_02112e70" ".data.data_ov026_02112e70" ".data.data_ov026_02112e70" far_data
+#pragma section s_02112e70 begin
+u32 data_ov026_02112e70[4] = {
     0xe2b60091,
     0x06dbfaf0,
     0x00000000,
     0x70010000,
+};
+#pragma section s_02112e70 end
+
+#pragma define_section s_02112e80 ".data.data_ov026_02112e80" ".data.data_ov026_02112e80" ".data.data_ov026_02112e80" far_data
+#pragma section s_02112e80 begin
+u32 data_ov026_02112e80[4] = {
     0x28d20014,
     0x10040546,
     0xc0000003,
     0xffff0000,
+};
+#pragma section s_02112e80 end
+
+#pragma define_section s_02112e90 ".data.data_ov026_02112e90" ".data.data_ov026_02112e90" ".data.data_ov026_02112e90" far_data
+#pragma section s_02112e90 begin
+u32 data_ov026_02112e90[4] = {
     0xe2b60091,
     0x06dbfaf0,
     0x00000000,
     0x70010000,
+};
+#pragma section s_02112e90 end
+
+#pragma define_section s_02112ea0 ".data.data_ov026_02112ea0" ".data.data_ov026_02112ea0" ".data.data_ov026_02112ea0" far_data
+#pragma section s_02112ea0 begin
+u32 data_ov026_02112ea0[4] = {
     0xba875701,
     0xb3b02af8,
     0xf7f78c01,
     0xea600000,
+};
+#pragma section s_02112ea0 end
+
+#pragma define_section s_02112eb0 ".data.data_ov026_02112eb0" ".data.data_ov026_02112eb0" ".data.data_ov026_02112eb0" far_data
+#pragma section s_02112eb0 begin
+u32 data_ov026_02112eb0[4] = {
     0xe2b60091,
     0x06dbfaf0,
     0x00000000,
     0x70010000,
+};
+#pragma section s_02112eb0 end
+
+#pragma define_section s_02112ec0 ".data.data_ov026_02112ec0" ".data.data_ov026_02112ec0" ".data.data_ov026_02112ec0" far_data
+#pragma section s_02112ec0 begin
+u32 data_ov026_02112ec0[4] = {
     0xe2b60091,
     0x06dbfaf0,
     0x00000000,
     0x70010000,
+};
+#pragma section s_02112ec0 end
+
+#pragma define_section s_02112ed0 ".data.data_ov026_02112ed0" ".data.data_ov026_02112ed0" ".data.data_ov026_02112ed0" far_data
+#pragma section s_02112ed0 begin
+u32 data_ov026_02112ed0[4] = {
     0xe2b60091,
     0x06dbfaf0,
     0x00000000,
     0x70010000,
+};
+#pragma section s_02112ed0 end
+
+#pragma define_section s_02112ee0 ".data.data_ov026_02112ee0" ".data.data_ov026_02112ee0" ".data.data_ov026_02112ee0" far_data
+#pragma section s_02112ee0 begin
+u32 data_ov026_02112ee0[6] = {
     0x00002d00,
     (u32)data_ov026_021137c0,
     0x00003605,
     (u32)data_ov026_02113450,
     0x00000160,
     (u32)data_ov026_02112e80,
+};
+#pragma section s_02112ee0 end
+
+#pragma define_section s_02112ef8 ".data.data_ov026_02112ef8" ".data.data_ov026_02112ef8" ".data.data_ov026_02112ef8" far_data
+#pragma section s_02112ef8 begin
+u32 data_ov026_02112ef8[6] = {
     0x0000005b,
     (u32)data_ov026_02112498,
     (u32)data_ov026_02112494,
     (u32)data_ov026_021125cc,
     0x00000002,
     (u32)data_ov026_021124ac,
+};
+#pragma section s_02112ef8 end
+
+#pragma define_section s_02112f10 ".data.data_ov026_02112f10" ".data.data_ov026_02112f10" ".data.data_ov026_02112f10" far_data
+#pragma section s_02112f10 begin
+u32 data_ov026_02112f10[6] = {
     (u32)data_ov026_02112de0,
     (u32)data_ov026_02112ef8,
     0x0cae0000,
     (u32)data_ov026_02112dd8,
     (u32)data_ov026_02112f28,
     0x0ea90000,
+};
+#pragma section s_02112f10 end
+
+#pragma define_section s_02112f28 ".data.data_ov026_02112f28" ".data.data_ov026_02112f28" ".data.data_ov026_02112f28" far_data
+#pragma section s_02112f28 begin
+u32 data_ov026_02112f28[1] = {
     0x0000005b,
+};
+#pragma section s_02112f28 end
+
+#pragma define_section s_02112f2c ".data.data_ov026_02112f2c" ".data.data_ov026_02112f2c" ".data.data_ov026_02112f2c" far_data
+#pragma section s_02112f2c begin
+u32 data_ov026_02112f2c[5] = {
     (u32)data_ov026_0211249c,
     (u32)data_ov026_021124a0,
     (u32)data_ov026_02112738,
     0x00000002,
     (u32)data_ov026_0211251c,
-    0x0000001e,
-    (u32)data_ov026_021124a4,
-    (u32)data_ov026_02112490,
-    (u32)data_ov026_02112554,
-    0x00000002,
-    (u32)data_ov026_021124e4,
+};
+#pragma section s_02112f2c end
+
+#pragma define_section s_02112f58 ".data.data_ov026_02112f58" ".data.data_ov026_02112f58" ".data.data_ov026_02112f58" far_data
+#pragma section s_02112f58 begin
+u32 data_ov026_02112f58[7] = {
     (u32)data_ov026_02113100,
     (u32)data_ov026_02112dc8,
     0x07f307f5,
@@ -562,3 +773,5 @@ u32 data_ov026_02112dc0[] = {
     0x08980002,
     0x0000001f,
 };
+#pragma section s_02112f58 end
+
