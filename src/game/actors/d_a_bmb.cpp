@@ -474,22 +474,22 @@ void daBmb_c::State1() {
  * Bob-omb's position.
  * ======================================================================== */
 
-void daBmb_c::State2(){
-  if (mWithMeshClsn.JustHitGround()) {
-    struct Vector3 v;
-    v.x = mPos.x;
-    v.y = mPos.y;
-    v.z = mPos.z;
-    func_0200fc44(&v, 1);
-  }
-  if (mWithMeshClsn.IsOnGround()) {
-    if (mChasePlayer == 0) {
-      mHorzSpeed = 0x5000;
+void daBmb_c::State2() {
+    if (mWithMeshClsn.JustHitGround()) {
+        struct Vector3 v;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
+        func_0200fc44(&v, 1);
     }
-    func_ov102_0214beb4();
-  } else {
-    State1();
-  }
+    if (mWithMeshClsn.IsOnGround()) {
+        if (mChasePlayer == 0) {
+            mHorzSpeed = 0x5000;
+        }
+        func_ov102_0214beb4();
+    } else {
+        State1();
+    }
 }
 
 /* ==========================================================================
