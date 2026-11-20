@@ -35705,7 +35705,7 @@ matched: yes</title></rect><rect x="1422.06" y="397.11" width="9.65" height="4.6
 module: ov063
 addr: 0x021169c4
 size: 88 bytes
-matched: yes</title></rect><rect x="1431.71" y="302.18" width="4.77" height="50.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c19func_ov063_02116a1cEv
+matched: yes</title></rect><rect x="1431.71" y="302.18" width="4.77" height="50.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c22UpdateStarGatedPathBooEv
 module: ov063
 addr: 0x02116a1c
 size: 468 bytes
@@ -35713,7 +35713,7 @@ matched: yes</title></rect><rect x="1431.71" y="352.42" width="4.77" height="0.4
 module: ov063
 addr: 0x02116bf0
 size: 4 bytes
-matched: yes</title></rect><rect x="1431.71" y="352.84" width="4.77" height="34.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c19func_ov063_02116bf4Ev
+matched: yes</title></rect><rect x="1431.71" y="352.84" width="4.77" height="34.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c18UpdateChildSpawnerEv
 module: ov063
 addr: 0x02116bf4
 size: 324 bytes
@@ -35805,19 +35805,19 @@ matched: yes</title></rect><rect x="1475.24" y="364.71" width="5.64" height="11.
 module: ov063
 addr: 0x02118ddc
 size: 128 bytes
-matched: yes</title></rect><rect x="1475.24" y="376.34" width="5.64" height="6.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c19func_ov063_02118e5cEv
+matched: yes</title></rect><rect x="1475.24" y="376.34" width="5.64" height="6.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c19AwardStarAndArmTrapEv
 module: ov063
 addr: 0x02118e5c
 size: 68 bytes
-matched: yes</title></rect><rect x="1475.24" y="382.52" width="5.64" height="1.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c19func_ov063_02118ea0Ev
+matched: yes</title></rect><rect x="1475.24" y="382.52" width="5.64" height="1.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c15AwardStarVeneerEv
 module: ov063
 addr: 0x02118ea0
 size: 12 bytes
-matched: yes</title></rect><rect x="1475.24" y="383.61" width="5.64" height="10.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c19func_ov063_02118eacEv
+matched: yes</title></rect><rect x="1475.24" y="383.61" width="5.64" height="10.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c9AwardStarEv
 module: ov063
 addr: 0x02118eac
 size: 120 bytes
-matched: yes</title></rect><rect x="1475.24" y="394.52" width="5.64" height="4.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsIcon_c19func_ov063_02118f24ERK7Vector3
+matched: yes</title></rect><rect x="1475.24" y="394.52" width="5.64" height="4.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsIcon_c16SpawnTrackedStarERK7Vector3
 module: ov063
 addr: 0x02118f24
 size: 44 bytes
@@ -35905,7 +35905,7 @@ matched: yes</title></rect><rect x="1545.41" y="302.18" width="6.41" height="9.5
 module: ov063
 addr: 0x0211a030
 size: 120 bytes
-matched: yes</title></rect><rect x="1551.82" y="302.18" width="2.78" height="9.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c19func_ov063_0211a0a8Eiiii
+matched: yes</title></rect><rect x="1551.82" y="302.18" width="2.78" height="9.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daTrs_c12DeadbandStepEiiii
 module: ov063
 addr: 0x0211a0a8
 size: 52 bytes
