@@ -262,7 +262,7 @@ enum ParticleId {
     kPtclPowerFlowerResting = 0x104,    /* daObjPowerUpItem_c::StateResting */
     kPtclPillarCrash = 0x107,           /* daObjKi_Hasira_c::Behavior */
     kPtclMegaMushroomTrail = 0x108,     /* da1up_c::func_ov002_020aeee4 */
-    kPtclRipple = 0x109,                /* daTgz_c::func_ov077_02125bb4 */
+    kPtclRipple = 0x109,                /* daTgz_c::St_Spin_Main */
     kPtclDossunbarBreak = 0x10a,        /* daObjBk_Dossunbar_c::Kill */
     kPtclClamLunge = 0x10b,             /* daObjShell_c::Behavior */
     kPtclClamShut = 0x10c,              /* daObjShell_c::Behavior */
