@@ -52,8 +52,6 @@ SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 int daKpFr_c::InitResources()
 {
     if (mShadowModel.InitCylinder() == 0)

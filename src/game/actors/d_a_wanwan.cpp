@@ -73,7 +73,6 @@ extern WanwanModelFilePtr data_ov014_02114978;
 extern WanwanAnimationFileHandle data_ov014_02114980;
 extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
-extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern dCamera_c *gCamera;  /* CAMERA */
 
 int AngleDiff(int a, int b);

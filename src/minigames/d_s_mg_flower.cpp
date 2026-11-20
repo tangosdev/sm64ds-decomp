@@ -45,6 +45,8 @@
 struct SpriteAttr {
     int a, b;
 };
+/* The petal's template. */
+extern SpriteAttr *data_ov006_0213abe0;
 
 extern "C" {
 extern void Mg_SetTopScreenYOffset(int n);
@@ -213,7 +215,7 @@ s32 dScMgFlower_c::Render() {
 
     for (i = 0; i < PETAL_NUM; i++) {
         if (mPetals[i].active != 0) {
-            SpriteAttr *spriteTemplate = (SpriteAttr *)data_ov006_0213abe0;
+            SpriteAttr *spriteTemplate = data_ov006_0213abe0;
             struct SpriteAttr attr = *spriteTemplate;
             int palette = 1;
             attr.a = (attr.a & 0xc1fffcff) | 0x100;

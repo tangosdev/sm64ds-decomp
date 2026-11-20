@@ -171,8 +171,6 @@ int data_ov100_02148000[2] = {(int)&func_ov100_02143ae0, 0};
 s32 data_ov100_02148008[3] = {0, -0xa0000, 0};
 extern unsigned char gGameMode;
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 /* -------------------------------------------------------------------------- */
 /* The compiler emits the whole body.
  *

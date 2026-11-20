@@ -61,7 +61,6 @@ enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
 extern "C" {
 extern void func_02038414(void *p);
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr

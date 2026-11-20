@@ -39,7 +39,7 @@ extern "C" void func_ov007_020b0a20(void) {
 
     done = 0;
     startFade = 0;
-    g = WORK;
+    g = gMenuWork;
     model = g->figure->model;
     ticks = g->states[1]->stateTicks;
     noSaveFiles = func_ov007_020aebac();
@@ -47,10 +47,10 @@ extern "C" void func_ov007_020b0a20(void) {
     if (ticks == 0) {
         RequestScreenFade(4, 6, 0);
         func_ov007_020b1fa4(4);
-        WORK->figure->update = func_ov007_020b0da0;
-        WORK->figure->func_ov007_020be980(1, 0);
-        WORK->figure->func_ov007_020be964();
-        func_ov007_020c0638(WORK->layerSlots[6]->layer, 0, 0, 0);
+        gMenuWork->figure->update = func_ov007_020b0da0;
+        gMenuWork->figure->func_ov007_020be980(1, 0);
+        gMenuWork->figure->func_ov007_020be964();
+        func_ov007_020c0638(gMenuWork->layerSlots[6]->layer, 0, 0, 0);
         MenuText_ClearMainPlane();
         model->scale.z = (func_ov007_020aebac() == 0) ? 0xDAC : 0x1770;
         model->scale.y = model->scale.z;
@@ -59,7 +59,7 @@ extern "C" void func_ov007_020b0a20(void) {
     if (ticks == 1) {
         if (noSaveFiles != 0) {
             func_ov007_020bdeb0(0x32);
-            WORK->itemNodes[8]->item->state->requestedState = 0;
+            gMenuWork->itemNodes[8]->item->state->requestedState = 0;
         } else {
             func_ov007_020bdeb0(0x33);
         }
@@ -67,9 +67,9 @@ extern "C" void func_ov007_020b0a20(void) {
     if (ticks == 30) {
         RequestScreenFade(7, 0x18, 0);
     }
-    if (WORK->figure->update == 0) {
+    if (gMenuWork->figure->update == 0) {
         if (model->boneAnim->state != 0) {
-            WORK->figure->func_ov007_020be980(1, 0);
+            gMenuWork->figure->func_ov007_020be980(1, 0);
         } else if (noSaveFiles != 0) {
             /* scale falls from 0x1770 to 0xdac over frames 0x10..0x14 */
             int shrink = RangeRatio(model->boneAnim->frame, 0x10, 0x14);
@@ -85,8 +85,8 @@ extern "C" void func_ov007_020b0a20(void) {
                model->boneAnim->frame == model->boneAnim->frameCount - 6) {
         done = 1;
     }
-    if (((WORK->pad->keys & ~WORK->pad->prevKeys) ||
-         (WORK->touch->cur.touch != 0 && WORK->touch->prev.touch == 0)) &&
+    if (((gMenuWork->pad->keys & ~gMenuWork->pad->prevKeys) ||
+         (gMenuWork->touch->cur.touch != 0 && gMenuWork->touch->prev.touch == 0)) &&
         ticks >= 4 && noSaveFiles == 0 && model->boneAnim->anim != -1 &&
         model->boneAnim->frame <= model->boneAnim->frameCount - 0x1F) {
         done = 1;
@@ -96,7 +96,7 @@ extern "C" void func_ov007_020b0a20(void) {
         } else {
             func_ov007_020bde70(0x33, 0x1E);
         }
-        WORK->figure->func_ov007_020be964();
+        gMenuWork->figure->func_ov007_020be964();
         model->boneAnim->framePos = (model->boneAnim->frameCount - 1) << 12;
     }
     if (startFade != 0) {
@@ -106,10 +106,10 @@ extern "C" void func_ov007_020b0a20(void) {
         return;
     }
     func_ov007_020b131c();
-    WORK->states[1]->requestedState = 0xA;
-    WORK->figure->update = 0;
+    gMenuWork->states[1]->requestedState = 0xA;
+    gMenuWork->figure->update = 0;
     model->scale.z = 0x1000;
     model->scale.y = model->scale.z;
     model->scale.x = model->scale.y;
-    WORK->itemNodes[8]->item->state->requestedState = 1;
+    gMenuWork->itemNodes[8]->item->state->requestedState = 1;
 }
