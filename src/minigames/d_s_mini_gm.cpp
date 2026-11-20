@@ -73,7 +73,6 @@ struct Off9 { int v[9]; };
 extern u8 gMgSaveDirty;
 extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
-extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
@@ -1080,7 +1079,7 @@ void dScMiniGm_c::UpdateGameSelect()
         gMgMenuRow.scoringMode = src->scoringMode;
         gMgMenuRow.scoreCap = src->scoreCap;
         gMgMenuRow.ownRecords = src->ownRecords;
-        gMgMenuRowMid = src->recordDefaults;
+        gMgMenuRow.recordDefaults = src->recordDefaults;
         gMgMenuRow.musicTrack = src->musicTrack;
         gMgMenuRow.musicMode = src->musicMode;
         gMgMenuRow.level = src->level;

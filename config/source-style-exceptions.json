@@ -860,14 +860,6 @@
     {
       "path": "src/engine/mb/MB_WmBase.c",
       "rule": "raw-offset",
-      "match": "(int*)(data_020a9db4+0x1428",
-      "count": 1,
-      "reason": "WmWork.status +0x10, a BOOL WM_ReadStatus fills in and MBi_ParentCallback tests before starting MP. Which SDK WMStatus field it is has not been pinned down, so the read keeps the offset rather than inventing a name. Follow-up: name the WMStatus field once a reference layout places +0x10.",
-      "evidence": "arm9/MB_WmBase 23/23 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from the standalone shards this fold absorbs (0x0206879c..0x0206a318), with the comment beside each access that says why it stays raw"
-    },
-    {
-      "path": "src/engine/mb/MB_WmBase.c",
-      "rule": "raw-offset",
       "match": "(char*)((a0+0x1f",
       "count": 1,
       "reason": "Not a field access: MB_Init rounds the caller's buffer address up to 32 bytes ((a0 + 0x1f) & ~0x1f) before carving the WmWork out of it. No follow-up.",
@@ -887,14 +879,6 @@
       "match": "(u16*)(base1+0x1e38",
       "count": 1,
       "reason": "MB_Init's parent-name copy into a halfword in WmWork's pad_1e2e region that nothing in this file reads back, so no field is placed there. It overlaps the 0x1e30 copy. Follow-up: place both copies in WmWork once a reader shows the layout.",
-      "evidence": "arm9/MB_WmBase 23/23 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from the standalone shards this fold absorbs (0x0206879c..0x0206a318), with the comment beside each access that says why it stays raw"
-    },
-    {
-      "path": "src/engine/mb/MB_WmBase.c",
-      "rule": "raw-offset",
-      "match": "(short*)(data_020a9db4+0x1e48",
-      "count": 1,
-      "reason": "MBi_StartCommon clears a halfword in WmWork's pad_1e2e region that nothing in this file reads back, so no field is placed there. Follow-up: place it in WmWork once a reader shows its role.",
       "evidence": "arm9/MB_WmBase 23/23 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from the standalone shards this fold absorbs (0x0206879c..0x0206a318), with the comment beside each access that says why it stays raw"
     },
     {

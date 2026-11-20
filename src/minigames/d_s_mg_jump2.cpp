@@ -64,7 +64,7 @@ extern "C" {
 extern struct Jump2PopupLink *sJump2PopupList;
 extern int sJump2PopupCount;
 extern struct Jump2Popup *sJump2Popups;
-extern void *sJump2BackFile;
+extern SharedFilePtr *sJump2BackFile;
 void Mg_CommitRecords(void);
 int GetGameLanguage(void);
 struct OamAttr;
@@ -419,7 +419,7 @@ s32 dScMgJump2_c::Render() {
 /* Slot 3. sJump2BackFile points at the model's file handle; it is
  * released and cleared. */
 s32 dScMgJump2_c::CleanupResources() {
-    ((SharedFilePtr *)sJump2BackFile)->Release();
+    sJump2BackFile->Release();
     sJump2BackFile = 0;
     Mg_CommitRecords();
     return 1;

@@ -168,10 +168,10 @@ extern OamAttr data_ov002_0210ced0;
 extern OamAttr data_ov002_0210cf08;
 extern OamAttr data_ov002_0210cfa0;
 extern OamAttr data_ov002_0210caf4;
-extern void *data_ov001_020abd98[];
-extern void *data_ov001_020ac218[];
-extern void *data_ov001_020ac64c[];
-extern void *data_ov001_020acb68[];
+extern OamAttr *data_ov001_020abd98[];
+extern OamAttr *data_ov001_020ac218[];
+extern OamAttr *data_ov001_020ac64c[];
+extern OamAttr *data_ov001_020acb68[];
 }
 
 /* The level-state globals the stage's free functions below read and write: the
@@ -446,7 +446,7 @@ s32 data_0209f32c;
 static void *sTeleportDestObjs;
 u16 *gMinimapTileObjs;
 void *gUnusedType13Objs;
-void *data_0209f33c;
+dActor_c *data_0209f33c;
 static LevelInfo *data_0209f340;
 u8 *data_0209f344;
 static short *sMinimapScaleObjs;
@@ -469,7 +469,7 @@ u8 gMapCapIconCharacters[9];
 u8 gStarMarkerTypes[12];
 /* The live players, one per gNumPlayers slot; LevelObjects fills it. */
 daPly_c *gPlayers[4];
-void *data_0209f3a4[8];
+dActor_c *data_0209f3a4[8];
 /* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
 /* The cap slots: the actor whose cap each of the nine holds, 0 when free.
@@ -482,9 +482,6 @@ dActor_c *STAR_MARKERS[12];
    touch screen each frame and ResetInput clears them; the player, camera,
    meter and map read them. */
 ControllerInput data_0209f498[4];
-/* The mode byte of record 0 (+0x16); SetControllerMode, InitControllerMode
-   and PS_Update index it by player * 0x18. */
-extern u8 data_0209f4ae[];
 /* The actor death table: a 16-word bit row per level part, indexed by an
    actor's deathTableID. InitResources clears it only when the course
    changes, so it survives a reload of the same course. */
@@ -524,14 +521,14 @@ static inline int IsTouchJustBegun(int slot) {
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
-extern void *data_ov002_0210ca0c[];
-extern int data_ov002_0210cfd0[];
+extern OamAttr *data_ov002_0210ca0c[];
+extern OamAttr data_ov002_0210cfd0[];
 extern OamAttr data_ov002_0210d008;
-extern int data_ov002_0210d050[];
+extern OamAttr data_ov002_0210d050[];
 extern OamAttr data_ov002_0210d098;
-extern int data_ov002_0210d0e8[];
+extern OamAttr data_ov002_0210d0e8[];
 extern OamAttr data_ov002_0210d130;
-extern int data_ov002_0210d188[];
+extern OamAttr data_ov002_0210d188[];
 extern OamAttr data_ov002_0210d1c8;
 extern OamAttr data_ov002_0210d210;
 extern OamAttr data_ov002_0210d378;
@@ -1257,23 +1254,23 @@ void dScStage_c::PS_Render() {
             OAM::Render(true, &OAM::TINY_STAR, 38, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1, 0);
         }
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
@@ -1979,7 +1976,7 @@ void dScStage_c::PS_Update() {
         sNumMenuButtons = 3;
         sNextPauseState = 8;
         {
-            u8 cur = data_0209f4ae[gActivePlayerSlot * 0x18];
+            u8 cur = data_0209f498[gActivePlayerSlot].mode;
             sSelectedControllerMode = cur;
             sSelectedMenuButton = cur;
         }
@@ -3060,13 +3057,13 @@ void dScStage_c::RenderVsModeNewStar() {
     data_0209f308 = timer - data_0208ee44;
     if (data_0209f308 % 60 >= 10) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         if (data_0209f1f4 != 0)
@@ -3109,8 +3106,8 @@ void dScStage_c::RenderVsModeCountdown() {
             OAM::Render(0, &data_ov002_0210d1c8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &data_ov002_0210d210, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000,
-                    0x1000, 0, -1);
+        OAM::Render(0, data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000, 0x1000, 0,
+                    -1);
         return;
     }
     if (data_0209f304 == 0)
@@ -3164,7 +3161,7 @@ void ClearSpikeBomb(int idx) {
         data_0209f3a4[idx] = 0;
 }
 
-extern "C" int AddSpikeBomb(void *p) {
+extern "C" int AddSpikeBomb(dActor_c *p) {
     int i;
     for (i = 0; i < 8; i++) {
         if (data_0209f3a4[i] == 0) {
@@ -3280,17 +3277,16 @@ extern "C" void func_0202a850(int a, int b) {
     data_0209212c += 0x64000;
 }
 
-/* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
-   is their +0x16, data_0209f4ae. The save file keeps the active player's
-   copy at data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
+/* The save file keeps the active player's controller mode at
+   data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
 void InitControllerMode(int idx, u8 val) {
-    data_0209f4ae[idx * 0x18] = val;
+    data_0209f498[idx].mode = val;
     if (idx == gActivePlayerSlot)
         data_0209caa0.file.controllerMode = val;
 }
 
 void SetControllerMode(unsigned char mode) {
-    data_0209f4ae[gActivePlayerSlot * 0x18] = mode;
+    data_0209f498[gActivePlayerSlot].mode = mode;
     data_0209caa0.file.controllerMode = mode;
 }
 
@@ -4543,8 +4539,8 @@ int dScStage_c::InitResources() {
             if ((s32)gNumPlayers > 0) {
                 int count = gNumPlayers;
                 int idx = 0;
-                u8 *p1 = (u8 *)gNumRedCoins;
-                u8 *vsStars = (u8 *)gNumStageStars;
+                s8 *p1 = gNumRedCoins;
+                s8 *vsStars = gNumStageStars;
                 /* Sampled once, before the loop: IsVsMode() here, or IsGameMode(1)
                    tested inside the loop, is 12 bytes short or 12 long. */
                 int vsModeCounters = IsGameMode(1);

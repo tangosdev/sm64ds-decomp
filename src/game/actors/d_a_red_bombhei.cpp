@@ -118,7 +118,6 @@ extern u8 gShowRedCoinMarkers;
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
 extern s16 data_0209d6d4;               /* message on screen */
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* -- other modules -- */
 int  IsCannonOpenInCurLevel(void);

@@ -51,8 +51,6 @@
 #include "BCA_File.h"
 #include "nitro/fx/fx_cp.h"
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 /* func_02046e28 uses these local C-layout views in its implementation TU. */
 struct Model;
 struct MatAnimData;
