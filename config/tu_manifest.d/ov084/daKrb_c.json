@@ -67,42 +67,42 @@
       "symbol": "_ZN7daKrb_c17UpdateChaseRadiusEv",
       "address": "0x021290d4",
       "size": "0x00000094",
-      "legacy_source": "src/UpdateChaseRadius.c",
+      "legacy_source": "src/func_ov084_021290d4.c",
       "ordinal": 2
     },
     {
       "symbol": "_ZN7daKrb_c11EnterTumbleEP8dActor_c",
       "address": "0x02129168",
       "size": "0x000000d0",
-      "legacy_source": "src/EnterTumble.cpp",
+      "legacy_source": "src/func_ov084_02129168.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN7daKrb_c16CheckHazardBelowEv",
       "address": "0x02129238",
       "size": "0x00000114",
-      "legacy_source": "src/CheckHazardBelow.cpp",
+      "legacy_source": "src/func_ov084_02129238.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN7daKrb_c17PlayFootstepSoundEv",
       "address": "0x0212934c",
       "size": "0x0000014c",
-      "legacy_source": "src/PlayFootstepSound.c",
+      "legacy_source": "src/func_ov084_0212934c.c",
       "ordinal": 5
     },
     {
       "symbol": "_ZN7daKrb_c10RemoveSelfEv",
       "address": "0x02129498",
       "size": "0x00000038",
-      "legacy_source": "src/RemoveSelf.c",
+      "legacy_source": "src/func_ov084_02129498.c",
       "ordinal": 6
     },
     {
       "symbol": "_ZN7daKrb_c18CheckGroundSurfaceEv",
       "address": "0x021294d0",
       "size": "0x000001e0",
-      "legacy_source": "src/CheckGroundSurface.cpp",
+      "legacy_source": "src/func_ov084_021294d0.cpp",
       "ordinal": 7
     },
     {
@@ -116,28 +116,28 @@
       "symbol": "_ZN7daKrb_c12PayOutRewardEv",
       "address": "0x021296cc",
       "size": "0x00000198",
-      "legacy_source": "src/PayOutReward.c",
+      "legacy_source": "src/func_ov084_021296cc.c",
       "ordinal": 9
     },
     {
       "symbol": "_ZN7daKrb_c15TrackSilverStarEv",
       "address": "0x02129864",
       "size": "0x0000006c",
-      "legacy_source": "src/TrackSilverStar.c",
+      "legacy_source": "src/func_ov084_02129864.c",
       "ordinal": 10
     },
     {
       "symbol": "_ZN7daKrb_c16UpdateDeathStateEv",
       "address": "0x021298d0",
       "size": "0x00000130",
-      "legacy_source": "src/UpdateDeathState.cpp",
+      "legacy_source": "src/func_ov084_021298d0.cpp",
       "ordinal": 11
     },
     {
       "symbol": "_ZN7daKrb_c20UpdateYoshiEatAndHitEv",
       "address": "0x02129a00",
       "size": "0x0000029c",
-      "legacy_source": "src/UpdateYoshiEatAndHit.c",
+      "legacy_source": "src/func_ov084_02129a00.c",
       "ordinal": 12
     },
     {
@@ -151,21 +151,21 @@
       "symbol": "_ZN7daKrb_c12ChooseTargetEi",
       "address": "0x02129cf4",
       "size": "0x000001e0",
-      "legacy_source": "src/ChooseTarget.c",
+      "legacy_source": "src/func_ov084_02129cf4.c",
       "ordinal": 14
     },
     {
       "symbol": "_ZN7daKrb_c16ReactToCollisionEv",
       "address": "0x02129ed4",
       "size": "0x000006ac",
-      "legacy_source": "src/ReactToCollision.c",
+      "legacy_source": "src/func_ov084_02129ed4.c",
       "ordinal": 15
     },
     {
       "symbol": "_ZN7daKrb_c10UpdatePoseEv",
       "address": "0x0212a580",
       "size": "0x00000178",
-      "legacy_source": "src/UpdatePose.cpp",
+      "legacy_source": "src/func_ov084_0212a580.cpp",
       "ordinal": 16
     },
     {
@@ -200,14 +200,14 @@
       "symbol": "_ZN7daKrb_c10UpdateWalkEv",
       "address": "0x0212abd4",
       "size": "0x000003a0",
-      "legacy_source": "src/UpdateWalk.c",
+      "legacy_source": "src/func_ov084_0212abd4.c",
       "ordinal": 21
     },
     {
       "symbol": "_ZN7daKrb_c16UpdateMinionWalkEv",
       "address": "0x0212af74",
       "size": "0x00000368",
-      "legacy_source": "src/UpdateMinionWalk.c",
+      "legacy_source": "src/func_ov084_0212af74.c",
       "ordinal": 22
     },
     {

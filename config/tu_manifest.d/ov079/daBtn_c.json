@@ -146,42 +146,42 @@
       "symbol": "_ZN7daBtn_c17UpdateKnockedOverEv",
       "address": "0x02124530",
       "size": "0x00000108",
-      "legacy_source": "src/UpdateKnockedOver.c",
+      "legacy_source": "src/func_ov079_02124530.c",
       "ordinal": 13
     },
     {
       "symbol": "_ZN7daBtn_c14UpdateWobblingEv",
       "address": "0x02124638",
       "size": "0x000000a0",
-      "legacy_source": "src/UpdateWobbling.c",
+      "legacy_source": "src/func_ov079_02124638.c",
       "ordinal": 14
     },
     {
       "symbol": "_ZN7daBtn_c16UpdateKingBeatenEv",
       "address": "0x021246d8",
       "size": "0x00000004",
-      "legacy_source": "src/UpdateKingBeaten.c",
+      "legacy_source": "src/func_ov079_021246d8.c",
       "ordinal": 15
     },
     {
       "symbol": "_ZN7daBtn_c14UpdateDefeatedEv",
       "address": "0x021246dc",
       "size": "0x00000314",
-      "legacy_source": "src/UpdateDefeated.c",
+      "legacy_source": "src/func_ov079_021246dc.c",
       "ordinal": 16
     },
     {
       "symbol": "_ZN7daBtn_c17UpdateTurningBackEv",
       "address": "0x021249f0",
       "size": "0x00000118",
-      "legacy_source": "src/UpdateTurningBack.c",
+      "legacy_source": "src/func_ov079_021249f0.c",
       "ordinal": 17
     },
     {
       "symbol": "_ZN7daBtn_c15UpdateGettingUpEv",
       "address": "0x02124b08",
       "size": "0x000002e4",
-      "legacy_source": "src/UpdateGettingUp.c",
+      "legacy_source": "src/func_ov079_02124b08.c",
       "ordinal": 18
     },
     {
@@ -216,21 +216,21 @@
       "symbol": "_ZN7daBtn_c18UpdateSlammingDownEv",
       "address": "0x02125240",
       "size": "0x0000014c",
-      "legacy_source": "src/UpdateSlammingDown.cpp",
+      "legacy_source": "src/func_ov079_02125240.cpp",
       "ordinal": 23
     },
     {
       "symbol": "_ZN7daBtn_c19UpdateFallingOnFaceEv",
       "address": "0x0212538c",
       "size": "0x00000128",
-      "legacy_source": "src/UpdateFallingOnFace.c",
+      "legacy_source": "src/func_ov079_0212538c.c",
       "ordinal": 24
     },
     {
       "symbol": "_ZN7daBtn_c15UpdateLeaningInEv",
       "address": "0x021254b4",
       "size": "0x00000050",
-      "legacy_source": "src/UpdateLeaningIn.c",
+      "legacy_source": "src/func_ov079_021254b4.c",
       "ordinal": 25
     },
     {
@@ -244,21 +244,21 @@
       "symbol": "_ZN7daBtn_c17UpdateKingWalkingEv",
       "address": "0x021256d4",
       "size": "0x00000228",
-      "legacy_source": "src/UpdateKingWalking.c",
+      "legacy_source": "src/func_ov079_021256d4.c",
       "ordinal": 27
     },
     {
       "symbol": "_ZN7daBtn_c13UpdateWalkingEv",
       "address": "0x021258fc",
       "size": "0x00000248",
-      "legacy_source": "src/UpdateWalking.c",
+      "legacy_source": "src/func_ov079_021258fc.c",
       "ordinal": 28
     },
     {
       "symbol": "_ZN7daBtn_c13UpdateWaitingEv",
       "address": "0x02125b44",
       "size": "0x0000036c",
-      "legacy_source": "src/UpdateWaiting.c",
+      "legacy_source": "src/func_ov079_02125b44.c",
       "ordinal": 29
     },
     {

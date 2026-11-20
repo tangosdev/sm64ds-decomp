@@ -86,70 +86,70 @@
       "symbol": "_ZN8daDemo_c8StepFadeEv",
       "address": "0x020f1fcc",
       "size": "0x00000128",
-      "legacy_source": "src/StepFade.c",
+      "legacy_source": "src/func_ov002_020f1fcc.c",
       "ordinal": 2
     },
     {
       "symbol": "_ZN8daDemo_c11StepSpritesEv",
       "address": "0x020f20f4",
       "size": "0x0000011c",
-      "legacy_source": "src/StepSprites.c",
+      "legacy_source": "src/func_ov002_020f20f4.c",
       "ordinal": 3
     },
     {
       "symbol": "_ZN8daDemo_c14RespawnSpritesEv",
       "address": "0x020f2210",
       "size": "0x00000130",
-      "legacy_source": "src/RespawnSprites.c",
+      "legacy_source": "src/func_ov002_020f2210.c",
       "ordinal": 4
     },
     {
       "symbol": "_ZN8daDemo_c17DrawCenterSpritesEv",
       "address": "0x020f2340",
       "size": "0x0000003c",
-      "legacy_source": "src/DrawCenterSprites.cpp",
+      "legacy_source": "src/func_ov002_020f2340.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN8daDemo_c17ScrollBackgroundsEv",
       "address": "0x020f237c",
       "size": "0x00000054",
-      "legacy_source": "src/ScrollBackgrounds.c",
+      "legacy_source": "src/func_ov002_020f237c.c",
       "ordinal": 6
     },
     {
       "symbol": "_ZN8daDemo_c10FreeScrollEv",
       "address": "0x020f23d0",
       "size": "0x00000020",
-      "legacy_source": "src/FreeScroll.c",
+      "legacy_source": "src/func_ov002_020f23d0.c",
       "ordinal": 7
     },
     {
       "symbol": "_ZN8daDemo_c12UpdateScrollEv",
       "address": "0x020f23f0",
       "size": "0x00000240",
-      "legacy_source": "src/UpdateScroll.c",
+      "legacy_source": "src/func_ov002_020f23f0.c",
       "ordinal": 8
     },
     {
       "symbol": "_ZN8daDemo_c12CreateScrollEv",
       "address": "0x020f2630",
       "size": "0x00000094",
-      "legacy_source": "src/CreateScroll.c",
+      "legacy_source": "src/func_ov002_020f2630.c",
       "ordinal": 9
     },
     {
       "symbol": "_ZN8daDemo_c6SetCueEPh",
       "address": "0x020f26c4",
       "size": "0x00000010",
-      "legacy_source": "src/SetCue.c",
+      "legacy_source": "src/func_ov002_020f26c4.c",
       "ordinal": 10
     },
     {
       "symbol": "_ZN8daDemo_c11StartScrollEv",
       "address": "0x020f26d4",
       "size": "0x0000000c",
-      "legacy_source": "src/StartScroll.c",
+      "legacy_source": "src/func_ov002_020f26d4.c",
       "ordinal": 11
     },
     {
@@ -786,35 +786,35 @@
       "symbol": "_ZN8daDemo_c13FreeStaffRollEv",
       "address": "0x020f63a0",
       "size": "0x00000034",
-      "legacy_source": "src/FreeStaffRoll.c",
+      "legacy_source": "src/func_ov002_020f63a0.c",
       "ordinal": 102
     },
     {
       "symbol": "_ZN8daDemo_c15UpdateStaffRollEv",
       "address": "0x020f63d4",
       "size": "0x00000024",
-      "legacy_source": "src/UpdateStaffRoll.c",
+      "legacy_source": "src/func_ov002_020f63d4.c",
       "ordinal": 103
     },
     {
       "symbol": "_ZN8daDemo_c15SetStaffRollCueEPh",
       "address": "0x020f63f8",
       "size": "0x0000002c",
-      "legacy_source": "src/SetStaffRollCue.c",
+      "legacy_source": "src/func_ov002_020f63f8.c",
       "ordinal": 104
     },
     {
       "symbol": "_ZN8daDemo_c17ApplyStaffRollCueEv",
       "address": "0x020f6424",
       "size": "0x00000024",
-      "legacy_source": "src/ApplyStaffRollCue.c",
+      "legacy_source": "src/func_ov002_020f6424.c",
       "ordinal": 105
     },
     {
       "symbol": "_ZN8daDemo_c15CreateStaffRollEPh",
       "address": "0x020f6448",
       "size": "0x00000064",
-      "legacy_source": "src/CreateStaffRoll.c",
+      "legacy_source": "src/func_ov002_020f6448.c",
       "ordinal": 106
     },
     {
@@ -898,56 +898,56 @@
       "symbol": "_ZN8daDemo_c7DespawnEv",
       "address": "0x020f6a9c",
       "size": "0x0000001c",
-      "legacy_source": "src/Despawn.c",
+      "legacy_source": "src/func_ov002_020f6a9c.c",
       "ordinal": 118
     },
     {
       "symbol": "_ZN8daDemo_c14PlayBank1SoundEPh",
       "address": "0x020f6ab8",
       "size": "0x0000002c",
-      "legacy_source": "src/PlayBank1Sound.c",
+      "legacy_source": "src/func_ov002_020f6ab8.c",
       "ordinal": 119
     },
     {
       "symbol": "_ZN8daDemo_c13PlayLongSoundEPh",
       "address": "0x020f6ae4",
       "size": "0x00000044",
-      "legacy_source": "src/PlayLongSound.c",
+      "legacy_source": "src/func_ov002_020f6ae4.c",
       "ordinal": 120
     },
     {
       "symbol": "_ZN8daDemo_c14PlayBank3SoundEPh",
       "address": "0x020f6b28",
       "size": "0x00000024",
-      "legacy_source": "src/PlayBank3Sound.c",
+      "legacy_source": "src/func_ov002_020f6b28.c",
       "ordinal": 121
     },
     {
       "symbol": "_ZN8daDemo_c17FaceTargetAndMoveEPh",
       "address": "0x020f6b4c",
       "size": "0x00000074",
-      "legacy_source": "src/FaceTargetAndMove.c",
+      "legacy_source": "src/func_ov002_020f6b4c.c",
       "ordinal": 122
     },
     {
       "symbol": "_ZN8daDemo_c17SetPoseFromRecordEPh",
       "address": "0x020f6bc0",
       "size": "0x00000064",
-      "legacy_source": "src/SetPoseFromRecord.c",
+      "legacy_source": "src/func_ov002_020f6bc0.c",
       "ordinal": 123
     },
     {
       "symbol": "_ZN8daDemo_c10SetOpacityEPh",
       "address": "0x020f6c24",
       "size": "0x00000010",
-      "legacy_source": "src/SetOpacity.c",
+      "legacy_source": "src/func_ov002_020f6c24.c",
       "ordinal": 124
     },
     {
       "symbol": "_ZN8daDemo_c18PlayAnimationEntryEPh",
       "address": "0x020f6c34",
       "size": "0x0000002c",
-      "legacy_source": "src/PlayAnimationEntry.c",
+      "legacy_source": "src/func_ov002_020f6c34.c",
       "ordinal": 125
     },
     {
@@ -961,49 +961,49 @@
       "symbol": "_ZN8daDemo_c15PlaceFromRecordEPh",
       "address": "0x020f6e48",
       "size": "0x00000100",
-      "legacy_source": "src/PlaceFromRecord.c",
+      "legacy_source": "src/func_ov002_020f6e48.c",
       "ordinal": 127
     },
     {
       "symbol": "_ZN8daDemo_c16SteerTowardPointEP7Vector3i",
       "address": "0x020f6f48",
       "size": "0x000000d8",
-      "legacy_source": "src/SteerTowardPoint.c",
+      "legacy_source": "src/func_ov002_020f6f48.c",
       "ordinal": 128
     },
     {
       "symbol": "_ZN8daDemo_c17DisableRenderClipEv",
       "address": "0x020f7020",
       "size": "0x00000018",
-      "legacy_source": "src/DisableRenderClip.c",
+      "legacy_source": "src/func_ov002_020f7020.c",
       "ordinal": 129
     },
     {
       "symbol": "_ZN8daDemo_c13UpdateDescentEii",
       "address": "0x020f7038",
       "size": "0x0000018c",
-      "legacy_source": "src/UpdateDescent.c",
+      "legacy_source": "src/func_ov002_020f7038.c",
       "ordinal": 130
     },
     {
       "symbol": "_ZN8daDemo_c12UpdateFadeInEii",
       "address": "0x020f71c4",
       "size": "0x000000f8",
-      "legacy_source": "src/UpdateFadeIn.c",
+      "legacy_source": "src/func_ov002_020f71c4.c",
       "ordinal": 131
     },
     {
       "symbol": "_ZN8daDemo_c10UpdateSpinEv",
       "address": "0x020f72bc",
       "size": "0x000000c8",
-      "legacy_source": "src/UpdateSpin.c",
+      "legacy_source": "src/func_ov002_020f72bc.c",
       "ordinal": 132
     },
     {
       "symbol": "_ZN8daDemo_c16UpdateRiseOrSinkEPhi",
       "address": "0x020f7384",
       "size": "0x0000008c",
-      "legacy_source": "src/UpdateRiseOrSink.c",
+      "legacy_source": "src/func_ov002_020f7384.c",
       "ordinal": 133
     },
     {

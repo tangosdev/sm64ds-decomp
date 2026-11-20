@@ -64,91 +64,91 @@
       "symbol": "_ZN19daPropeller_Heyho_c13HandleContactEv",
       "address": "0x0211f100",
       "size": "0x00000268",
-      "legacy_source": "src/HandleContact.cpp",
+      "legacy_source": "src/func_ov070_0211f100.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c15St_Knocked_MainEv",
       "address": "0x0211f368",
       "size": "0x000000e8",
-      "legacy_source": "src/St_Knocked_Main.cpp",
+      "legacy_source": "src/func_ov070_0211f368.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c15St_Knocked_InitEv",
       "address": "0x0211f450",
       "size": "0x0000003c",
-      "legacy_source": "src/St_Knocked_Init.c",
+      "legacy_source": "src/func_ov070_0211f450.c",
       "ordinal": 5
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c12St_Fire_MainEv",
       "address": "0x0211f48c",
       "size": "0x00000164",
-      "legacy_source": "src/St_Fire_Main.c",
+      "legacy_source": "src/func_ov070_0211f48c.c",
       "ordinal": 6
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c12St_Fire_InitEv",
       "address": "0x0211f5f0",
       "size": "0x0000003c",
-      "legacy_source": "src/St_Fire_Init.cpp",
+      "legacy_source": "src/func_ov070_0211f5f0.cpp",
       "ordinal": 7
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c14St_Settle_MainEv",
       "address": "0x0211f62c",
       "size": "0x00000068",
-      "legacy_source": "src/St_Settle_Main.c",
+      "legacy_source": "src/func_ov070_0211f62c.c",
       "ordinal": 8
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c14St_Settle_InitEv",
       "address": "0x0211f694",
       "size": "0x0000004c",
-      "legacy_source": "src/St_Settle_Init.cpp",
+      "legacy_source": "src/func_ov070_0211f694.cpp",
       "ordinal": 9
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c12St_Dive_MainEv",
       "address": "0x0211f6e0",
       "size": "0x000003a0",
-      "legacy_source": "src/St_Dive_Main.c",
+      "legacy_source": "src/func_ov070_0211f6e0.c",
       "ordinal": 10
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c12St_Dive_InitEv",
       "address": "0x0211fa80",
       "size": "0x00000064",
-      "legacy_source": "src/St_Dive_Init.c",
+      "legacy_source": "src/func_ov070_0211fa80.c",
       "ordinal": 11
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c13St_Chase_MainEv",
       "address": "0x0211fae4",
       "size": "0x0000027c",
-      "legacy_source": "src/St_Chase_Main.c",
+      "legacy_source": "src/func_ov070_0211fae4.c",
       "ordinal": 12
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c13St_Chase_InitEv",
       "address": "0x0211fd60",
       "size": "0x00000038",
-      "legacy_source": "src/St_Chase_Init.c",
+      "legacy_source": "src/func_ov070_0211fd60.c",
       "ordinal": 13
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c14St_Wander_MainEv",
       "address": "0x0211fd98",
       "size": "0x00000210",
-      "legacy_source": "src/St_Wander_Main.c",
+      "legacy_source": "src/func_ov070_0211fd98.c",
       "ordinal": 14
     },
     {
       "symbol": "_ZN19daPropeller_Heyho_c14St_Wander_InitEv",
       "address": "0x0211ffa8",
       "size": "0x00000078",
-      "legacy_source": "src/St_Wander_Init.cpp",
+      "legacy_source": "src/func_ov070_0211ffa8.cpp",
       "ordinal": 15
     },
     {
