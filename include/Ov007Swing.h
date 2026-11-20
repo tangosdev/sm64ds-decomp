@@ -40,7 +40,7 @@ typedef char Ov007SwingParams_size_must_be_0x30[sizeof(Ov007SwingParams) == 0x30
 #endif
 
 /* The 0x70-byte record func_ov007_020ca010 builds and func_ov007_020c9fa0
- * frees, one per menu item (data_ov007_02104bd4[4..11]); medium-confidence
+ * frees, one per menu item (sMeshScene[4..11]); medium-confidence
  * name. A chain of points hangs along z from a pinned first point, and two
  * pairs of side points (spread along x and along y) are tied to the mesh by
  * links (func_ov007_020c9d90). func_ov007_020c9a84 turns the chain's last

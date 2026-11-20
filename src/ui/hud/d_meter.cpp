@@ -113,7 +113,7 @@ extern u8 data_0209d660;
 extern signed char gNumStageStars[];
 /* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
 * so can never be the module this reaches. */
-extern int data_ov001_020abac8[];
+extern OamAttr data_ov001_020abac8[];
 extern unsigned char gGameMode;
 extern unsigned char gPrevReturnState;
 extern unsigned char gNewStarCollected;
@@ -921,7 +921,7 @@ void dMeter_c::RenderSilverStars() {
     if (sl < n) {
         sb = 0x10;
         do {
-            OAM::Render(0, (OamAttr *)data_ov001_020abac8, sb, 0xa, -1, 1, 0);
+            OAM::Render(0, data_ov001_020abac8, sb, 0xa, -1, 1, 0);
             sl++;
             sb += 0x11;
         } while (sl < n);

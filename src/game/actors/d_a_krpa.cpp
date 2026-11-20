@@ -155,8 +155,8 @@ void daKrpa_c::ExecuteState() {
     daKrpaStateMethod *method = &this->mStateMethods->behavior;
     (this->**method)();
 }
-extern char data_ov070_021234c4[];
-extern char data_ov070_021234dc[];
+extern BCA_File data_ov070_021234c4;
+extern BCA_File data_ov070_021234dc;
 extern const u32 data_ov070_021222e8[] = {
     0x1007, 0x100b, 0x1012, 0x101e, 0x1036, 0x105d, 0x1098, 0x10eb, 0x115c, 0x11ee, 0x1379, 0x1638,
     0x1948, 0x1bc6, 0x1ccd, 0x1c7c, 0x1bc4, 0x1af7, 0x1b5b, 0x1bc9, 0x1c3b, 0x1cad, 0x1d1a, 0x1d7b,
@@ -178,7 +178,7 @@ extern const u32 data_ov070_02122404[] = {
 };
 
 int daKrpa_c::EnterIdle() {
-    this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
+    this->mAnmModel.SetAnim(&data_ov070_021234c4, 0, 0x1000, 0);
     this->mFrameController.SetFrames((u32 *)data_ov070_02122404, 0x64, 1);
     this->mStateTimer = 115;
     this->mStateIndex = 0;
@@ -205,7 +205,7 @@ int daKrpa_c::ExecuteIdle() {
     return 1;
 }
 int daKrpa_c::EnterSpit() {
-    this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234dc, 0x40000000, 0x1000, 0);
+    this->mAnmModel.SetAnim(&data_ov070_021234dc, 0x40000000, 0x1000, 0);
     this->mFrameController.SetFrames((u32 *)data_ov070_021222e8, 0x47, 0);
     this->mStateIndex = 1;
     return 1;
@@ -267,7 +267,7 @@ int daKrpa_c::EnterKnockedAway() {
     this->mScale.y = 0x1000;
     this->mScale.z = 0x1000;
     this->mStateTimer = 45;
-    this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
+    this->mAnmModel.SetAnim(&data_ov070_021234c4, 0, 0x1000, 0);
     Particle::System::NewSimple(kPtclKnockAwayA, this->mPos.x, this->mPos.y, this->mPos.z);
     Particle::System::NewSimple(kPtclKnockAwayB, this->mPos.x, this->mPos.y, this->mPos.z);
     this->mStateIndex = 3;

@@ -1423,7 +1423,7 @@ int daBombking_c::Behavior()
     DecIfAbove0_Byte(&mSoundCooldown);
     DecIfAbove0_Byte(&mThrowCooldown);
 
-    if ((char *)mState != (char *)data_ov078_021270bc) {
+    if (mState != data_ov078_021270bc) {
         UpdatePos(&mdCcAcPos_c);
     } else {
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
@@ -1433,7 +1433,7 @@ int daBombking_c::Behavior()
         UpdateWMClsn(mWithMeshClsn, 0);
     }
 
-    if ((char *)mState == (char *)data_ov078_0212703c || (char *)mState == (char *)data_ov078_021270fc) {
+    if (mState == data_ov078_0212703c || mState == data_ov078_021270fc) {
         if (mWithMeshClsn.IsOnWall() != 0 || mWithMeshClsn.IsOnGround() == 0 ||
             (mArenaPos.y - 0x28000) > mPos.y) {
             KingBobOmb_SetState(data_ov078_021270bc);

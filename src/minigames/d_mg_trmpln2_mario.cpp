@@ -1112,7 +1112,7 @@ void dMgTrmpln3DMario_c::StateGoal() {
         Camera_ProjectToScreen(sMgSubCamera, &mPos, &va, &vb);
         vb = vb - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &mPos, &va, &vb);
+        Camera_ProjectToScreen(sMgMainCamera, &mPos, &va, &vb);
     }
     vb -= 0x20;
     TrmpFx_Spawn(vb << 12, (short)sTrmpComboCount);

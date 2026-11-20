@@ -166,7 +166,7 @@ static inline int IsActorID(dActor_c *actor, int id) {
 }
 void UnloadKeyModels(int i);
 void LoadKeyModels(int idx);
-extern void *data_ov074_02122e5c[];
+extern BTA_File *data_ov074_02122e5c[];
 /* Boss-overlay resource blobs, linked into the co-resident 0x0211xxxx
    overlay; ov074's image has no copy, so these bind cross-module. */
 extern BMA_File data_ov010_021123f4;
@@ -1590,7 +1590,7 @@ int daKuriKing_c::InitResources()
     i = 0;
     do {
         dExtAnmTexSRT_c::Prepare(*(BMD_File *)gKurikingModelModelFile.filePtr,
-                                 *(BTA_File *)data_ov074_02122e5c[i]);
+                                 *data_ov074_02122e5c[i]);
         i++;
     } while (i < 7);
 

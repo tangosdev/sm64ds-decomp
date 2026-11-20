@@ -5,7 +5,7 @@
  * upload: 0 sets the full layout, 1 hides layer 1, 2 shows layer 0, 3 hides
  * layers 1-3 and shows 4-7. */
 void func_ov007_020bca40(int sel) {
-    Ov007BgLayer **layers = WORK->display->bgLayers;
+    Ov007BgLayer **layers = gMenuWork->display->bgLayers;
     Ov007BgLayer *l;
     switch (sel) {
     case 0:
