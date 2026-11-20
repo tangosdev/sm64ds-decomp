@@ -372,7 +372,7 @@ daDemo_c::~daDemo_c()
  * mask into bits 8..12 of 0x4001000, sets the blend to (0, 0x28, 0xc, 4),
  * advances the state and gives the three sprite slots delays 0x10/0x20/0x30. */
 
-void daDemo_c::func_ov002_020f1fcc()
+void daDemo_c::StepFade()
 {
     int i, v;
     if (mScroll->fadeLevel == 0)
@@ -402,7 +402,7 @@ void daDemo_c::func_ov002_020f1fcc()
  * spriteDelay (slot + 1) << 5. Every active slot is drawn each frame. */
 extern "C" struct OamAttr *data_ov002_0210be1c[];
 
-void daDemo_c::func_ov002_020f20f4() {
+void daDemo_c::StepSprites() {
     for (int i = 0; i < 3; i++) {
         if (mScroll->spriteActive[i] != 0) {
             if ((data_020a0db0 & 1) == 0) {
@@ -427,7 +427,7 @@ void daDemo_c::func_ov002_020f20f4() {
  * zero on an idle slot, RNG bit 0 picks x -0x40 moving right or x 0x140 moving
  * left, and y is (rng >> 16) % 48 + 0x30 * slot. Does nothing in state 6. */
 
-void daDemo_c::func_ov002_020f2210()
+void daDemo_c::RespawnSprites()
 {
     int i;
     int base;
@@ -462,7 +462,7 @@ void daDemo_c::func_ov002_020f2210()
 
 /* Draw the two centre sprites at x 0x80. */
 
-void daDemo_c::func_ov002_020f2340()
+void daDemo_c::DrawCenterSprites()
 {
     OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[0]);
     OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[1]);
@@ -471,7 +471,7 @@ void daDemo_c::func_ov002_020f2340()
 /* Scroll the two sub-screen BG layers in opposite directions (bg1 x down
  * one, bg0 x up one) and write both offsets to the hardware. */
 
-void daDemo_c::func_ov002_020f237c()
+void daDemo_c::ScrollBackgrounds()
 {
     mScroll->bg1X -= 1;
     mScroll->bg0X += 1;
@@ -537,18 +537,18 @@ int daDemo_c::UpdateScroll() {
                 }
             }
         }
-        func_ov002_020f237c();
-        func_ov002_020f1fcc();
+        ScrollBackgrounds();
+        StepFade();
         break;
     case 3:
-        func_ov002_020f1fcc();
-        func_ov002_020f237c();
+        StepFade();
+        ScrollBackgrounds();
         break;
     case 4:
         if (this->mCue == 4) {
             mScroll->state++;
         }
-        func_ov002_020f237c();
+        ScrollBackgrounds();
         break;
     case 5:
         if ((data_020a0db0 & 1) == 0) {
@@ -560,15 +560,15 @@ int daDemo_c::UpdateScroll() {
                 GXS_SetVisiblePlane(gSubScreenLayers);
             }
         }
-        func_ov002_020f237c();
+        ScrollBackgrounds();
         break;
     case 6:
         break;
     }
 
-    func_ov002_020f2340();
-    func_ov002_020f2210();
-    func_ov002_020f20f4();
+    DrawCenterSprites();
+    RespawnSprites();
+    StepSprites();
     return 1;
 }
 

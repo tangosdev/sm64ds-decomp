@@ -390,11 +390,11 @@ struct daDemo_c : dActor_c {
     /* Runs one KuppaScript record addressed to this actor: calls handler
        command[6] of the 24-entry table with (command + 7, first, last). */
     void RunCommand(unsigned char *command, int first, int last);
-    void func_ov002_020f1fcc();
-    void func_ov002_020f20f4();
-    void func_ov002_020f2210();
-    void func_ov002_020f2340();
-    void func_ov002_020f237c();
+    void StepFade();
+    void StepSprites();
+    void RespawnSprites();
+    void DrawCenterSprites();
+    void ScrollBackgrounds();
     int FreeScroll();
     int UpdateScroll();
     int CreateScroll();
