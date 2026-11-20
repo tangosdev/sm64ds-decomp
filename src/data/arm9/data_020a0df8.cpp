@@ -9,7 +9,7 @@
    addresses (the linker script defines them at their ROM address).
 
    gActivePlayerSlot, data_020a0e44, data_020a0e48, data_020a0e50,
-   data_020a0e58, data_020a0e5a, data_020a0e68, data_020a0e98, ...and 5
+   data_020a0e58, data_020a0e5a, gScratchMtx, Memory::heapDamaged, ...and 5
    more
 */
 #include "types.h"

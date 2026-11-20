@@ -38,7 +38,6 @@
 /* The collider offset at 0x021230b8: Vector3's constructor keeps the three
  * stores in the sinit (bss, not .data). */
 extern Vector3 data_ov071_021230b8;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states:
  * Yoshi is eating the actor, then has it in his mouth. Actor ID 0xbf is
@@ -99,9 +98,9 @@ int daEyBm_c::Behavior() {
         velocity.z = mHorzSpeed;
         velocity.x = 0;
         velocity.y = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
-        MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
+        Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPrevAngle.x);
+        MTX_MultVec43(&velocity, &gScratchMtx, &mSpeed);
 
         /* Retail retains a typed whole-vector writeback after the transform.
            Kept (#821 r82): dropping it -> Behavior 0x11c of 0x134. */

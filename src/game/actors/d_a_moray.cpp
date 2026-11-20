@@ -12,7 +12,7 @@
  *
  * leftovers:
  * - currFrame >> 12 instead of the << 4 >> 16 shift shrinks 02111758
- *   and moves its pool off data_020a0e68.
+ *   and moves its pool off gScratchMtx.
  * - GetNode writes node 0 onto mPos, then node 1 over it. Filling a
  *   stack vector for the facing DIFFs InitResources by one word.
  * - UpdatePose walks mSegmentPos with a daMoray_c* advanced one Vector3 at
@@ -176,8 +176,8 @@ void daMoray_c::UpdateHitCylinders() {
         va.x = 0x15e0000;
         va.y = 0xfee90000;
         va.z = 0x65e000;
-        Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-        MTX_MultVec43(&vb, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+        MTX_MultVec43(&vb, &gScratchMtx, &out);
         va.x = va.x + out.x;
         va.y = va.y + out.y;
         va.z = va.z + out.z;
@@ -205,8 +205,8 @@ void daMoray_c::UpdateHitCylinders() {
     if (this->mCylSegment == 5)
         vb.z = 0x7c000;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-    MTX_MultVec43(&vb, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+    MTX_MultVec43(&vb, &gScratchMtx, &out);
 
     {
         /* Three int bases stepped by a byte index keep the * 0xc per axis. */
@@ -339,9 +339,9 @@ int daMoray_c::StateLungeMain() {
         } else {
             localOffset.z = 0x1f4000;
         }
-        Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
-        MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
+        Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mAngle.x);
+        MTX_MultVec43(&localOffset, &gScratchMtx, &worldTarget);
         worldTarget.x += this->mHomePos.x;
         worldTarget.y += this->mHomePos.y;
         worldTarget.z += this->mHomePos.z;
@@ -371,9 +371,9 @@ int daMoray_c::StateSwimOutMain() {
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
     worldTarget.x = 0; worldTarget.y = 0; worldTarget.z = 0;
     localOffset.z = 0x76c000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
-    MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
+    Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mAngle.x);
+    MTX_MultVec43(&localOffset, &gScratchMtx, &worldTarget);
     worldTarget.x += this->mHomePos.x;
     worldTarget.y += this->mHomePos.y;
     worldTarget.z += this->mHomePos.z;
@@ -463,9 +463,9 @@ int daMoray_c::StateDenWaitMain() {
             world.z = 0;
             thrHorz = 0x495000;
             thrVert = 0x6ee000;
-            Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
-            MTX_MultVec43(&local, &data_020a0e68, &world);
+            Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+            Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mAngle.x);
+            MTX_MultVec43(&local, &gScratchMtx, &world);
             world.x += this->mHomePos.x;
             world.y += this->mHomePos.y;
             world.z += this->mHomePos.z;
@@ -515,7 +515,7 @@ void daMoray_c::UpdatePose() {
     u32 starUniqueID;
 
     Vec3_Asr(&asr, &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, asr.x, asr.y, asr.z);
     localOffset.z = 0;
     localOffset.z = -0x190000;
     localOffset.x = 0;
@@ -523,13 +523,13 @@ void daMoray_c::UpdatePose() {
     worldTarget.x = 0;
     worldTarget.y = 0;
     worldTarget.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-    MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
-    Matrix4x3_FromTranslation(&data_020a0e68, (this->mPos.x + worldTarget.x) >> 3,
-                              this->mPos.y >> 3, (this->mPos.z + worldTarget.z) >> 3);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+    Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+    MTX_MultVec43(&localOffset, &gScratchMtx, &worldTarget);
+    Matrix4x3_FromTranslation(&gScratchMtx, (this->mPos.x + worldTarget.x) >> 3, this->mPos.y >> 3,
+                              (this->mPos.z + worldTarget.z) >> 3);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, this->mAngle.x, this->mAngle.y,
                                            this->mAngle.z);
-    this->mBlendAnmModel.mat4x3 = data_020a0e68;
+    this->mBlendAnmModel.mat4x3 = gScratchMtx;
     ApproachLinear(this->mSegmentAngle[6], this->mSegmentAngle[7], 0x40);
     modelMtx = &this->mBlendAnmModel.mat4x3;
     this->mSegmentAngle[5] = this->mSegmentAngle[6];
@@ -538,7 +538,7 @@ void daMoray_c::UpdatePose() {
         mSegmentPos[i].x = 0;
         mSegmentPos[i].y = 0;
         mSegmentPos[i].z = 0;
-        dst = &data_020a0e68;
+        dst = &gScratchMtx;
         *dst = *modelMtx;
         MTX_Concat43(&mBlendAnmModel.data.transforms[i], dst, dst);
         /* Measured (#821 r96): pos declared at the top of the loop is
@@ -565,13 +565,13 @@ void daMoray_c::UpdatePose() {
     this->mStarPos.z = 0;
     MTX_Concat43(&this->mBlendAnmModel.data.transforms[4], &this->mBlendAnmModel.mat4x3,
                  &this->mStarMtx);
-    Matrix4x3_FromTranslation(&data_020a0e68, 0x28000, 0, 0);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x8000, this->mStarSpinAngle);
-    MTX_Concat43(&data_020a0e68, &this->mStarMtx, &this->mStarMtx);
-    data_020a0e68 = this->mStarMtx;
-    this->mStarPos.x = data_020a0e68.t.x;
-    this->mStarPos.y = data_020a0e68.t.y;
-    this->mStarPos.z = data_020a0e68.t.z;
+    Matrix4x3_FromTranslation(&gScratchMtx, 0x28000, 0, 0);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, 0x4000, -0x8000, this->mStarSpinAngle);
+    MTX_Concat43(&gScratchMtx, &this->mStarMtx, &this->mStarMtx);
+    gScratchMtx = this->mStarMtx;
+    this->mStarPos.x = gScratchMtx.t.x;
+    this->mStarPos.y = gScratchMtx.t.y;
+    this->mStarPos.z = gScratchMtx.t.z;
     this->mStarPos.x <<= 3;
     this->mStarPos.y <<= 3;
     this->mStarPos.z <<= 3;

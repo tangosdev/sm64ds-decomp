@@ -9,7 +9,7 @@
  * type 2 a circle; `type == 1` is the escape hatch -- every override below
  * hands that case straight back to the base class (a plain colour fade).
  *
- * A single global static (data_0209f61c), never spawned. Derivation, size and
+ * A single global static (gSceneWipe), never spawned. Derivation, size and
  * vtable evidence: notes/scene-provenance.md. Its vtable storage at 0x020926f0
  * is named _ZTV7dWipe_c in config/arm9/symbols.txt, taken from the ROM's own
  * __si_class_type_info record for dWipe_c, so the destructors below can be real
@@ -74,6 +74,9 @@ struct dWipe_c : dFdColor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dWipe_c_size_must_be_0x2c[sizeof(dWipe_c) == 0x2c ? 1 : -1];
 #endif
+
+/* The one instance, src/runtime/graphics/fader/d_wipe.cpp. */
+extern dWipe_c gSceneWipe;
 #endif
 
 #endif

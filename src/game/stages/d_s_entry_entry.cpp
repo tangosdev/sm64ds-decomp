@@ -44,7 +44,7 @@ unsigned int func_02045ad8(const void *, unsigned int);
 unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the camera matrix, declared per consumer (d_ext_model.cpp,
    d_ent_obj.cpp). */
-extern Matrix4x3 data_0209b3ec;
+extern Matrix4x3 gViewMtx;
 /* File 0x8418. The ctor and dtor are func_020178cc / func_020178b4; this
    TU does not define them. The handler row is filled by the static
    initializer those two objects emit. */
@@ -74,12 +74,12 @@ void EntryMesh::SendMaterial() {
 /* Build mMtx from mPos (recentred on the 0xfa000 grid middle, in 1/8
  * units) and mAngleY, and keep its inverse in mInvMtx. */
 void EntryMesh::CalcMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, (mPos.x - 0xfa000) >> 3, (mPos.y - 0xfa000) >> 3,
+    Matrix4x3_FromTranslation(&gScratchMtx, (mPos.x - 0xfa000) >> 3, (mPos.y - 0xfa000) >> 3,
                               mPos.z >> 3);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    mMtx = data_020a0e68;
-    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
-    mInvMtx = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    mMtx = gScratchMtx;
+    MTX_Inverse43(&gScratchMtx, &gScratchMtx);
+    mInvMtx = gScratchMtx;
 }
 
 /* A BMD_Material's two colour words, which BMD_File.h still keeps inside
@@ -262,7 +262,7 @@ void EntryMesh::StartRipple(int x, int y) {
 }
 
 /* The render handler. Concatenates mMtx with the camera matrix
- * (data_0209b3ec) and loads the result as both the directional and the
+ * (gViewMtx) and loads the result as both the directional and the
  * position matrix, shines white light 3 straight down -z, sends the material,
  * then draws the (mGridDim[0] - 1) x mGridDim[1] grid as triangle strips:
  * each inner iteration emits vertex (i, j) and vertex (i + 1, j), its 1.19.12
@@ -272,7 +272,7 @@ void EntryMesh::DrawGrid() {
     int i, j;
 
     G3_PushMtx();
-    MTX_Concat43(&mMtx, &data_0209b3ec, &mtx);
+    MTX_Concat43(&mMtx, &gViewMtx, &mtx);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&mtx);
     G3_MtxMode(GX_MTXMODE_POSITION);

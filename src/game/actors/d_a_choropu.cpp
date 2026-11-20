@@ -43,11 +43,7 @@ enum daChoropu_c_AssetId {
     ASSET_ROCK_BMD = 0x02d6
 };
 
-/* decl_common.h declares data_ov080_021276c4 as a non-const int[],
-   which cannot be this .rodata object. Hide that declaration. */
-#define data_ov080_021276c4 data_ov080_021276c4_decl
 #include "decl_common.h"
-#undef data_ov080_021276c4
 #include "daChoropu_c.h"
 #include "daChoro_Rock_c.h"
 #include "decl_Player.h"
@@ -100,7 +96,7 @@ extern const int data_ov080_0212767c[18] = {
 extern const int data_ov080_021276c4[20] = {
     24, 32, 40, 48, 56, 68, 76, 80, 88, 94, 100, 100, 100, 100, 100, 100, 100, 100, 90, 80,
 };
-extern SharedFilePtr data_ov002_0210d9d8;
+extern SharedFilePtr gOneUpMushroomModelFile;
 extern SharedFilePtr *const data_ov080_0212766c[4] = {
     &data_ov080_021283e8,
     &data_ov080_021283d0,
@@ -630,12 +626,12 @@ void daChoro_Rock_c::func_ov080_02124418() {
 }
 
 /* Releases the shared model and animation files; never touches `this`: the model file
- * shared from ov002 (data_ov002_0210d9d8), the mole model (data_ov080_021283c0 = file
+ * shared from ov002 (gOneUpMushroomModelFile), the mole model (data_ov080_021283c0 = file
  * 0x2d1), the rock model (021283c8 = 0x2d6), then the four animation slots through
  * data_ov080_0212766c (files 0x2d2, 0x2d3, 0x2d4, 0x2d5). */
 s32 daChoropu_c::CleanupResources()
 {
-    data_ov002_0210d9d8.Release();
+    gOneUpMushroomModelFile.Release();
     data_ov080_021283c0.Release();
     data_ov080_021283c8.Release();
     int i = 0;
@@ -768,7 +764,7 @@ s32 daChoropu_c::InitResources()
 {
     int i;
     for (i = 0; i < 4; i++) dExtFrameCtrl_c::LoadFile(*data_ov080_0212766c[i]);
-    dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+    dExtSimpleModel_c::LoadFile(gOneUpMushroomModelFile);
     dExtSimpleModel_c::LoadFile(data_ov080_021283c8);
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov080_021283c0), 1, -1);
     mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0, 0x1000, 0);

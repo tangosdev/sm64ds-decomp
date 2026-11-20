@@ -5,8 +5,8 @@
  * constructor and destructor are inline in include/dThIcon_c.h, so this
  * TU anchors the vague-linkage group and emits no C1/C2/D0/D1/D2.
  * The unit spans ov001 .text 0x020ab41c..0x020ab5f8: Select, the pen
- * test TouchArea_Update, Render, Behavior, then Place. The press pulse func_ov001_020ab3f0 just
- * below it is defined in d_cap_icon.cpp.
+ * test TouchArea_Update, Render, Behavior, then Place. The press pulse,
+ * dThIcon_c::Press, just below it is defined in d_cap_icon.cpp.
  *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. mwccarm emits one .text
  * section per function, and with codegen deferred -- the default, which
@@ -25,7 +25,7 @@
 /* local extern: arm9 C helpers with no shared header. */
 extern "C" int func_0203da9c(void);
 
-extern int data_0208ee44;
+extern int gFrameStep;
 
 /* Place an icon: store its touch kind, centre and half extents, clear
  * mPressTimer, mOn and mPenInside, arm it at once when the kind is
@@ -50,7 +50,7 @@ void dThIcon_c::Behavior() {
     if (mPressTimer <= 0)
         return;
 
-    mPressTimer -= data_0208ee44;
+    mPressTimer -= gFrameStep;
     if (mPressTimer > 0)
         return;
 
@@ -104,5 +104,5 @@ void dThIcon_c::Select() {
         mOn = 1;
         return;
     }
-    func_ov001_020ab3f0();
+    Press();
 }

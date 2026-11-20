@@ -107,10 +107,10 @@ void daGrock_c::UpdateModelTransform() {
     Vector3 shifted;
 
     Vec3_Asr(&shifted, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, shifted.x, shifted.y, shifted.z);
-    mShadowMtx = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, shifted.x, shifted.y, shifted.z);
+    mShadowMtx = gScratchMtx;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3 = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x1f4000, 0x1f4000, 0xf);
 }
 

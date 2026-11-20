@@ -37,7 +37,7 @@
 #include "dBgCh_Actr.h"
 
 struct daMenbo_c : dEnemyBase_c {
-    /* A state: {entry, update}. func_ov090_02131e00 installs one and runs
+    /* A state: {entry, update}. SetState installs one and runs
        its entry; Behavior runs the update every frame. */
     typedef int (daMenbo_c::*StateFn)();
 
@@ -94,10 +94,10 @@ struct daMenbo_c : dEnemyBase_c {
        each frame. Was unk_3a4. */
     s32 mAnimSpeed; /* 0x3a4 */
     /* Floor height under the skeeter: the ground probe's clsnY (02131378,
-       InitResources), data_02092138 when InitResources finds none. Was
+       InitResources), gLevelMinY when InitResources finds none. Was
        unk_3a8. */
     s32 mFloorY; /* 0x3a8 */
-    /* The height it stands at: the water height data_0209f32c when the
+    /* The height it stands at: the water height gWaterHeight when the
        floor is below it, else mFloorY. Y is clamped up to it, ripples sit
        on it and dying at or below it pays the coins. Was unk_3ac. */
     s32 mSurfaceY; /* 0x3ac */
@@ -130,7 +130,7 @@ struct daMenbo_c : dEnemyBase_c {
     int func_ov090_02131b94();
     int func_ov090_02131c48();
     int func_ov090_02131db0();
-    int func_ov090_02131e00(StateFn *state);
+    int SetState(StateFn *state);
     void func_ov090_02131e50();
 };
 

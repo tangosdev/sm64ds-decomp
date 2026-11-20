@@ -32,7 +32,7 @@ extern Ov007NodeSprites data_ov007_020ccb7c[];
  * the nodes of items 2 and 6 go on neither list. */
 Ov007ItemNode *func_ov007_020ade58(int index) {
     Ov007ItemNode *s = func_ov007_020c3df4(0, 8);
-    Ov007Display *r6 = WORK->display;
+    Ov007Display *r6 = gMenuWork->display;
     Ov007OamNode *r4;
     Ov007SpriteBank **sl;
     int sb;

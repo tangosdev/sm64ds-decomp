@@ -18,14 +18,6 @@
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
-/* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
-   below), and the scratch scaled matrix.
-   local extern: no header in include/ declares them. */
-extern Vector3 data_020a0d60;
-extern dBgPi data_020a0d1c;
-}
-
 /* The shared scratch line, in collider space. A namespace-scope dBgCh_Lin,
    so mwcc emits __sinit_d_bg_w_kc_mbg.cpp to construct it and register
    ~dBgCh_Lin() (was the handwritten __sinit_0207501c). dBgW_KcMbgSclY
@@ -74,10 +66,10 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 a
     *(Mtx43 *)&invRotMat = scratch.rotation;
     MTX_Inverse43(&invRotMat, &invRotMat);
     invScale = FX_Inv(scale);
-    data_020a0e68 = mtx;
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->scale, this->scale, this->scale);
-    scratch.scaled = *(Mtx43 *)&data_020a0e68;
-    newScaledMat = data_020a0e68;
+    gScratchMtx = mtx;
+    Matrix4x3_ApplyInPlaceToScale(&gScratchMtx, this->scale, this->scale, this->scale);
+    scratch.scaled = *(Mtx43 *)&gScratchMtx;
+    newScaledMat = gScratchMtx;
     *(Mtx43 *)&invScaledMat = scratch.scaled;
     MTX_Inverse43(&invScaledMat, &invScaledMat);
     prevInvScaledMat = invScaledMat;
@@ -116,10 +108,10 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     MTX_Inverse43(&invRotMat, &invRotMat);
 
     scaledMat = newScaledMat;
-    data_020a0e68 = mtx;
+    gScratchMtx = mtx;
     s32 currentScale = scale;
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, currentScale, currentScale, currentScale);
-    newScaledMat = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToScale(&gScratchMtx, currentScale, currentScale, currentScale);
+    newScaledMat = gScratchMtx;
     prevInvScaledMat = invScaledMat;
     invScaledMat = newScaledMat;
     MTX_Inverse43(&invScaledMat, &invScaledMat);
@@ -297,10 +289,10 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
         fx32 distance = data_020a0d0c.clsnDist;
-        LocalToWorldPosition(data_020a0d60, worldPos);
+        LocalToWorldPosition(data_020a0d0c.lineEnd, worldPos);
         ray.SetClsnPos(worldPos);
         ray.clsnDist = distance;
-        (dBgPi &)ray = data_020a0d1c;
+        (dBgPi &)ray = data_020a0d0c;
         ray.hasClsn = 1;
     }
     return hit;

@@ -16,7 +16,7 @@
  *   and Render call them. Naming belongs with recovered members, not
  *   coined here.
  * Leftover: func_02013568 / func_02013580 / func_02013598 /
- *   func_020135d0 / func_02013638 are arm9 save-table helpers. This
+ *   func_020135d0 / IsMinigameUnlocked are arm9 save-table helpers. This
  *   TU's InitResources, IsUnlocked, IsNew,
  *   ClearNew, GetRecord, SetRecord
  *   call them; GetSaveTable reads the table's save-slot byte
@@ -73,7 +73,6 @@ struct Off9 { int v[9]; };
 extern u8 gMgSaveDirty;
 extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
-extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
@@ -81,8 +80,7 @@ extern short gSubBg3HOffset;
 extern short gSubBg0HOffset;
 extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
-extern dWipe_c data_0209f61c;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern unsigned short data_020a0e5a[];
 
 /* ---- ov005 tables ---- */
@@ -256,7 +254,7 @@ void func_02013568(int a, int b, int v);
 int  func_02013580(int a, int b);
 void func_02013598(int x);
 int  func_020135d0(int r0);
-int  func_02013638(int n);
+int IsMinigameUnlocked(int n);
 extern "C" void *LoadFile(int id);
 extern "C" void DecompressLZ16(void *src, void *dst);
 
@@ -283,7 +281,7 @@ s32 dScMiniGm_c::InitResources()
     Sound::LoadGroupAndSetBank(0x27, 5);
     Disable3dEngines();
 
-    if (!(data_0209caa0.mg.unlocked & 0x80000000)) {
+    if (!(gSaveBlock.mg.unlocked & 0x80000000)) {
         tbl = sMiniGmRows;
         for (i = 0; i < 36; i++) {
             for (j = 0; j < 5; j++) {
@@ -291,7 +289,7 @@ s32 dScMiniGm_c::InitResources()
             }
             tbl++;
         }
-        data_0209caa0.mg.unlocked |= 0x80000000;
+        gSaveBlock.mg.unlocked |= 0x80000000;
         gMgSaveDirty = 1;
     }
 
@@ -470,9 +468,9 @@ s32 dScMiniGm_c::InitResources()
     if (gMgSaveDirty == 1) {
         gSoftResetDisabled = 1;
     }
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     if (data_0209b2fc != 0) {
-        dScene_c::SetFaders(&data_0209f61c);
+        dScene_c::SetFaders(&gSceneWipe);
     }
 
     data_0209b2fc = 0;
@@ -1080,15 +1078,15 @@ void dScMiniGm_c::UpdateGameSelect()
         gMgMenuRow.scoringMode = src->scoringMode;
         gMgMenuRow.scoreCap = src->scoreCap;
         gMgMenuRow.ownRecords = src->ownRecords;
-        gMgMenuRowMid = src->recordDefaults;
+        gMgMenuRow.recordDefaults = src->recordDefaults;
         gMgMenuRow.musicTrack = src->musicTrack;
         gMgMenuRow.musicMode = src->musicMode;
         gMgMenuRow.level = src->level;
     }
     LoadIconPalette(sel);
     func_02012790(0x1e);
-    dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.SetType(0);
+    dScene_c::SetFaders(&gSceneWipe);
+    gSceneWipe.SetType(0);
     gMgMenuRow.level = mStartLevel;
     dScene_c::StartSceneFade(sMiniGmRows[gMgLastSelected[0]].id,
                              sMiniGmRows[gMgLastSelected[0]].sceneParam, 0);
@@ -1174,7 +1172,7 @@ int dScMiniGm_c::IsUnlocked(int n) {
     if (n < 8) {
         return 1;
     }
-    return func_02013638(n - 8);
+    return IsMinigameUnlocked(n - 8);
 }
 
 int dScMiniGm_c::IsNew(int n) {

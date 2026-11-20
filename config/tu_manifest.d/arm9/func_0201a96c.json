@@ -58,7 +58,7 @@
       "binding": "STB_GLOBAL"
     },
     {
-      "symbol": "data_0209d574",
+      "symbol": "gWatchdog",
       "address": "0x0209d574",
       "size": "0x44",
       "evidence": "the file-scope WatchdogAlarm. Retail __sinit calls func_0201aa18 on it and registers func_0201aaec. Suspended lives at 0x40; the next symbol is data_0209d5b8.",
@@ -157,7 +157,7 @@
       "source": "0x02074e38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209d574",
+      "symbol": "gWatchdog",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209d574"

@@ -130,9 +130,9 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     Vector3 sum, asr;
     Vec3_Add(&sum, &mPos, &pos);
     Vec3_Asr(&asr, &sum, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, rot.x, rot.y, rot.z);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, asr.x, asr.y, asr.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, rot.x, rot.y, rot.z);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 void dCapEnemy_c::RenderCapModel(const Vector3 * v)

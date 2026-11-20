@@ -54,7 +54,7 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
     int IsSettled();
     void Trigger();
     void RebuildVerts();
-    int HitTest(int *pos);
+    int HitTest(Vector2 *pos);
 
     s16 mAngle;        /* 0x032 -- wing angle: SaveSnapshot eases it toward
                            0x3000 by 0x200 a frame; RestoreInitial zeroes it */

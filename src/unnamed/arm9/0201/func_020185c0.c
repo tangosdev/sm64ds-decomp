@@ -26,7 +26,7 @@ int func_020185c0(FSFile *file, unsigned int id) {
         result = myFS_OpenFileFast(file, arg);
     } else {
         unsigned int i = 0;
-        ArchiveTableEntry *e = data_0208ecf4;
+        ArchiveTableEntry *e = gArchiveTable;
         do {
             if (e->firstFileId <= id && id < e->endFileId) {
                 if (e->archive == 0) {

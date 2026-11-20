@@ -139,7 +139,7 @@ struct daKrb_c : dCapEnemy_c {
     void PlayFootstepSound();
     void RemoveSelf();
     void CheckGroundSurface();
-    void func_ov084_021296b0(void *b);
+    void SetHomePos(Vector3 *pos);
     void PayOutReward();
     void TrackSilverStar();
     int UpdateDeathState();
@@ -196,7 +196,7 @@ struct daKrb_c : dCapEnemy_c {
     /* mRewardType, from bits 4..7 of the spawn parameter. Types 1 and 2 both
        load the silver-star model and spawn a SILVER_STAR (179) plus a STARBASE
        (180) when the Goomba dies; type 2 only does so when mStarID equals
-       data_0209f344[data_0209f208[0]], and becomes 3 once it has. */
+       gVsStarSpawnOrder[gNumVsStarsCollected], and becomes 3 once it has. */
     enum RewardType {
         REWARD_NONE = 0,
         REWARD_SILVER_STAR = 1,
@@ -205,7 +205,10 @@ struct daKrb_c : dCapEnemy_c {
     };
 
     /* mDeathState (dEnemyBase_c) values this class writes in its hit reaction
-       (ReactToCollision), named for the hit that sets them. */
+       (ReactToCollision), named for the hit that sets them. On the
+       cartridge a stomp and a ground pound set 1, a punch 2, a breakdance, a
+       slide kick and the combo's kick 3, a dive 5, and a thrown Bob-omb's
+       blast 6 (include/dCc_c.h, the SEEN rows). */
     enum DeathState {
         DEATH_NONE = 0,
         DEATH_STOMPED = 1, /* jumped on, or a spin / ground-pound hit */

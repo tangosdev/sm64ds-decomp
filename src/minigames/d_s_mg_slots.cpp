@@ -91,21 +91,21 @@ extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
-void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-extern void **sSlotLangSprites[];
+void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
+extern OamAttr **sSlotLangSprites[];
 extern SlotState sSlot3StateTable[];
 extern void *LoadFile(int handle);
 
 extern u8 gSubScreenLayers;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(int c);
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *m);
+void Mg_RenderSubSpriteMtx(OamAttr *a, int b, int c, Matrix2x2 *m);
 void Mg_GainCredits(int x);
 extern int Mg_GetSavedRecord0(void);
 extern int sSlot1ReelPos[][2];
-extern void *sSlot1Sprites[];
+extern OamAttr *sSlot1Sprites[];
 extern unsigned char sSlot1Payouts[];
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
@@ -115,7 +115,6 @@ extern int sSlotReelScrollSpeeds[];
 extern u8 sSlot1Payouts[];
 extern s16 sSlotMatchBlinkX[][2];
 extern s16 sSlotMatchBlinkY[][2];
-extern dWipe_c data_0209f61c;
 
 extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
@@ -595,17 +594,17 @@ s32 dScMgSlot3_c::Render() {
 
     if (mReelDrawY > 0) {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128, mReelDrawY + 0x10,
-                        -1, 2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, sSlot3FaceSprites[mWinSymbol * 3 + i], 128, mReelDrawY + 0x10, -1, 2,
+                        0x1000, 0x1000, 0, 1);
         }
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mNextWinSymbol * 3 + i], 128,
-                        mReelDrawY + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, sSlot3FaceSprites[mNextWinSymbol * 3 + i], 128, mReelDrawY + 0x60, -1, 2,
+                        0x1000, 0x1000, 0, 1);
         }
     } else {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128, 96, -1, 2, 0x1000,
-                        0x1000, 0, 1);
+            OAM::Render(0, sSlot3FaceSprites[mWinSymbol * 3 + i], 128, 96, -1, 2, 0x1000, 0x1000, 0,
+                        1);
         }
     }
 
@@ -842,7 +841,7 @@ s32 dScMgSlot3_c::InitResources() {
 
     Mg_SetTopScreenYOffset(0x20);
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
 
     mLamp1Angle = 0;
     mLamp2Angle = 0;
@@ -962,7 +961,7 @@ void dScMgSlot1_c::betIcon_c::OnTouch() {
     }
     BET_ICON(this)->mBetCount += 1;
     Mg_LoseCredits(1);
-    this->func_ov001_020ab3f0();
+    this->Press();
     sid = 0x163;
     Sound::PlayBank2_2D(sid);
 }
@@ -1318,8 +1317,8 @@ s32 dScMgSlot1_c::Behavior() {
         break;
     case 8:
         if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-            dScene_c::SetFaders(&data_0209f61c);
-            data_0209f61c.SetType(2);
+            dScene_c::SetFaders(&gSceneWipe);
+            gSceneWipe.SetType(2);
             dScene_c::StartSceneFade(5, 0, 0);
         }
         break;
@@ -1454,7 +1453,7 @@ s32 dScMgSlot1_c::InitResources() {
     mBetIcon.Place();
     StartRound(3);
     Mg_SetTopScreenYOffset(0x20);
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     return 1;
 }
 

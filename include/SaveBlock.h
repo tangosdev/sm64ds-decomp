@@ -93,7 +93,7 @@ struct SaveBlock {
 };
 
 /* The one save block. Every reader reaches its fields as members. */
-extern SaveBlock data_0209caa0;
+extern SaveBlock gSaveBlock;
 
 #endif
 

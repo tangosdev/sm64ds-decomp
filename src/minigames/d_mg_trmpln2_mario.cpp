@@ -189,9 +189,9 @@ void dMgTrmpln2Mario_c::Render() {
 }
 
 void dMgTrmpln2Mario_c::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mRotY);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mRotY);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 void dMgTrmpln2Mario_c::Update() {
@@ -889,19 +889,19 @@ void Trmp2Mario_PlaceAtStart(void) {
 }
 
 void Trmp2Mario_DrawAll(void) {
-    int v[3];
-    VecFx32 w;
+    Vector3 v;
+    Vector3 w;
     int i, n, off;
-    v[0] = 0;
-    v[1] = 0;
-    v[2] = -0xff8;
-    func_0203cd80(v, -0x2000);
-    func_0203ccd4(v, -0x3000);
-    G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
+    v.x = 0;
+    v.y = 0;
+    v.z = -0xff8;
+    func_0203cd80(&v, -0x2000);
+    func_0203ccd4(&v, -0x3000);
+    G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
     w.x = 0;
     w.y = 0;
     w.z = -0xff8;
-    func_0203cd80((int *)&w, -0x2000);
+    func_0203cd80(&w, -0x2000);
     G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
@@ -1018,9 +1018,9 @@ void dMgTrmpln3DMario_c::Render() {
 }
 
 void dMgTrmpln3DMario_c::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mRotY);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mRotY);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* The ROM relocates this call to 0x020cb134 (the 3D ApplyGravity); a byte
@@ -1112,7 +1112,7 @@ void dMgTrmpln3DMario_c::StateGoal() {
         Camera_ProjectToScreen(sMgSubCamera, &mPos, &va, &vb);
         vb = vb - (Mg_GetTopScreenYOffset() + 0xc0);
     } else {
-        Camera_ProjectToScreen((MgCamera *)sMgMainCamera, &mPos, &va, &vb);
+        Camera_ProjectToScreen(sMgMainCamera, &mPos, &va, &vb);
     }
     vb -= 0x20;
     TrmpFx_Spawn(vb << 12, (short)sTrmpComboCount);
@@ -1937,21 +1937,21 @@ void Trmp3DMario_StartAll(void) {
 }
 
 void Trmp3DMario_DrawAll(void) {
-    int v[3];
-    int w[3];
+    Vector3 v;
+    Vector3 w;
 
-    v[0] = 0;
-    v[1] = 0;
-    v[2] = -0xff8;
-    func_0203cd80((int *)v, 0x2000);
-    func_0203ccd4(v, 0);
-    G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
+    v.x = 0;
+    v.y = 0;
+    v.z = -0xff8;
+    func_0203cd80(&v, 0x2000);
+    func_0203ccd4(&v, 0);
+    G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
 
-    w[0] = 0;
-    w[1] = 0;
-    w[2] = -0xff8;
-    func_0203cd80((int *)w, -0x2000);
-    G3_LightVector(GX_LIGHTID_1, w[0], w[1], w[2]);
+    w.x = 0;
+    w.y = 0;
+    w.z = -0xff8;
+    func_0203cd80(&w, -0x2000);
+    G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
 
     {
         int i;

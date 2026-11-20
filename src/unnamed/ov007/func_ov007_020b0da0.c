@@ -28,7 +28,7 @@
  * hook at the top. The offset lands in bone 0's translation. */
 void func_ov007_020b0da0(Ov007Figure *figure) {
     Ov007Model *obj = figure->model;
-    Ov007MenuState *st = WORK->states[1];
+    Ov007MenuState *st = gMenuWork->states[1];
     int ticks = st->stateTicks;
     Matrix4x3 *mat = obj->model->transforms;
     int noSaveFiles = func_ov007_020aebac();
@@ -39,7 +39,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         data_ov007_02103340 = 0;
         data_ov007_02103344 = 0;
         if (noSaveFiles == 0) {
-            WORK->figure->update = 0;
+            gMenuWork->figure->update = 0;
         }
     }
 
@@ -50,7 +50,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         out.z = 0;
 
         if (!(st->stateWork & OV007_FIGURE_TOUCHED) && ticks >= 4) {
-            Ov007Touch *touch = WORK->touch;
+            Ov007Touch *touch = gMenuWork->touch;
             if (touch->cur.touch != 0) {
                 int x = touch->cur.x;
                 if (x >= 0x60 && x <= 0xa0) {
@@ -59,7 +59,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
                         st->stateWork |= OV007_FIGURE_TOUCHED;
                         data_ov007_02103340 = ticks;
                         func_ov007_020bdeb0(0x34);
-                        WORK->itemNodes[8]->item->state->requestedState = 4;
+                        gMenuWork->itemNodes[8]->item->state->requestedState = 4;
                     }
                 }
             }
@@ -82,7 +82,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             }
 
             if ((st->stateWork & OV007_FIGURE_TOUCHED) && (bob == 0 || bob == 0x800)) {
-                WORK->figure->update = 0;
+                gMenuWork->figure->update = 0;
             }
         }
 
@@ -100,7 +100,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             sq = (fx32)(((fx64)ratio * ratio) >> FX32_SHIFT);
             out.y = sq * 30;
             if (ratio >= 0x1000) {
-                WORK->figure->update = 0;
+                gMenuWork->figure->update = 0;
             }
         }
 

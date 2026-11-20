@@ -105,13 +105,12 @@ extern dGraph_c::callback_c *gGraphCallback;
 void Mg_UpdateFx(MgFx *c);
 extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern unsigned short data_020a0e5a[];
-extern int data_0208ee44;
+extern int gFrameStep;
 extern void Mg_CommitRecords(void);
 extern void FreeGfxSlotsById(int arg);
 void Mg_InitMusic();
 extern void Enable3dEngines(void);
 extern MgEntry gMgMenuRow;
-extern dWipe_c data_0209f61c;
 extern unsigned char data_0209d460;
 extern unsigned char data_0209d458;
 
@@ -1877,8 +1876,8 @@ void dScMgBase_c::UpdateMenu() {
         CloseMenu();
         return;
     case 1:
-        dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.SetType(1);
+        dScene_c::SetFaders(&gSceneWipe);
+        gSceneWipe.SetType(1);
         dScene_c::StartSceneFade(5, 0, 0);
         if (mQuitFadeStarted != 0)
             return;
@@ -2242,7 +2241,7 @@ void RenderSub(OamAttr *data, s32 x, s32 y, s32 palette, s32 priority);
 namespace s20af68c {
 extern "C" {
 extern "C" {
-void Hud_RenderSprite(void *attr, int x, int y, int palette, int priority) {
+void Hud_RenderSprite(OamAttr *attr, int x, int y, int palette, int priority) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -2250,11 +2249,11 @@ void Hud_RenderSprite(void *attr, int x, int y, int palette, int priority) {
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen != 0)
                 return;
-            OAM::Render(0, (OamAttr *)attr, x, y, palette, priority, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, attr, x, y, palette, priority, 0x1000, 0x1000, 0, -1);
             return;
         }
     }
-    OAM::RenderSub((OamAttr *)attr, x, y, palette, priority);
+    OAM::RenderSub(attr, x, y, palette, priority);
 }
 }
 }
@@ -2304,7 +2303,7 @@ void Mg_RenderSubSpritePalMtx(void *attr, int x, int y, int palette, int priorit
 
 namespace s20af948 {
 extern "C" {
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *m) {
+void Mg_RenderSubSpriteMtx(OamAttr *a, int b, int c, Matrix2x2 *m) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -2312,11 +2311,11 @@ void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *m) {
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen != 0)
                 return;
-            OAM::Render(false, (OamAttr *)a, b, c, -1, -1, m);
+            OAM::Render(false, a, b, c, -1, -1, m);
             return;
         }
     }
-    OAM::Render(true, (OamAttr *)a, b, c, -1, -1, m);
+    OAM::Render(true, a, b, c, -1, -1, m);
 }
 }
 }
@@ -2345,11 +2344,7 @@ extern "C" void RenderOamMainScreen(OamAttr *oam, int x, int y, int palette, int
 
 namespace s20afb20 {
 extern "C" {
-extern "C" {
-struct OamAttr;
-}
-
-extern "C" int Mg_RenderMainSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
+extern "C" int Mg_RenderMainSpriteScaled(OamAttr *a0, int a1, int a2, int a3, int a4, int a5,
                                          unsigned short a6) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -2358,10 +2353,10 @@ extern "C" int Mg_RenderMainSpriteScaled(void *a0, int a1, int a2, int a3, int a
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen != 1)
                 return 0;
-            return OAM::Render(0, (::OamAttr *)a0, a1, a2, a3, a4, a5, a6);
+            return OAM::Render(0, a0, a1, a2, a3, a4, a5, a6);
         }
     }
-    return OAM::Render(0, (::OamAttr *)a0, a1, a2, a3, a4, a5, a6);
+    return OAM::Render(0, a0, a1, a2, a3, a4, a5, a6);
 }
 }
 }
@@ -2406,24 +2401,23 @@ extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
 namespace s20afdd0 {
 extern "C" {
 extern "C" {
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
+void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
     if (scene->mMenuOpen == 0) {
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen == 1) {
-                OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, a4, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, a4, 0x1000, 0x1000, 0,
+                            -1);
                 return;
             }
-            OAM::Render(0, (OamAttr *)a0, a1, a2, a3, a4, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, a0, a1, a2, a3, a4, 0x1000, 0x1000, 0, -1);
             return;
         }
     }
-    OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, a4, 0x1000, 0x1000, 0,
-                -1);
-    OAM::RenderSub((OamAttr *)a0, a1, a2, a3, a4);
+    OAM::Render(0, a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, a4, 0x1000, 0x1000, 0, -1);
+    OAM::RenderSub(a0, a1, a2, a3, a4);
 }
 }
 }
@@ -2432,12 +2426,11 @@ void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
 namespace s20aff38 {
 extern "C" {
 extern "C" {
-struct OamAttr;
 extern int sMgTopScreenYOffset;
 }
 
-extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int a3, int a4,
-                                         fx32 a5, int a6) {
+extern "C" int Mg_RenderSpriteBothScaled(OamAttr *a0, int a1, int a2, int a3, int a4, fx32 a5,
+                                         int a6) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return 0;
@@ -2445,19 +2438,19 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
         if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen == 1) {
             int hp = sMgTopScreenYOffset;
             if (a2 >= -0x100 - hp && a2 < -hp) {
-                return OAM::Render(0, (::OamAttr *)a0, a1, a2 + 192 + hp, a3, a4, a5, a6);
+                return OAM::Render(0, a0, a1, a2 + 192 + hp, a3, a4, a5, a6);
             }
             if (a2 >= -0x40 && a2 < 0xc0) {
-                return OAM::Render(0, (::OamAttr *)a0, a1, a2, a3, a4, a5, a6);
+                return OAM::Render(0, a0, a1, a2, a3, a4, a5, a6);
             }
         }
     } else {
         int hp = sMgTopScreenYOffset;
         if (a2 >= -0x100 - hp && a2 < -hp) {
-            return OAM::Render(0, (::OamAttr *)a0, a1, a2 + 192 + hp, a3, a4, a5, a6);
+            return OAM::Render(0, a0, a1, a2 + 192 + hp, a3, a4, a5, a6);
         }
         if (a2 >= -0x40 && a2 < 0xc0) {
-            return OAM::Render(1, (::OamAttr *)a0, a1, a2, a3, a4, a5, a6);
+            return OAM::Render(1, a0, a1, a2, a3, a4, a5, a6);
         }
     }
     return 0;
@@ -2490,46 +2483,44 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, M
 
 namespace s20b023c {
 extern "C" {
-void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
+void Mg_RenderSpriteBothPalMtx(OamAttr *a0, int a1, int a2, int a3, Matrix2x2 *a4) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
     if (scene->mMenuOpen == 0) {
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen == 1) {
-                OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, -1,
-                            (Matrix2x2 *)a4);
+                OAM::Render(0, a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, -1, a4);
                 return;
             }
-            OAM::Render(0, (OamAttr *)a0, a1, a2, a3, -1, (Matrix2x2 *)a4);
+            OAM::Render(0, a0, a1, a2, a3, -1, a4);
             return;
         }
     }
-    OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, -1, (Matrix2x2 *)a4);
-    OAM::Render(1, (OamAttr *)a0, a1, a2, a3, -1, (Matrix2x2 *)a4);
+    OAM::Render(0, a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, -1, a4);
+    OAM::Render(1, a0, a1, a2, a3, -1, a4);
 }
 }
 }
 
 namespace s20b0380 {
 extern "C" {
-void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
+void Mg_RenderSpriteBothMtx(OamAttr *a0, int a1, int a2, Matrix2x2 *a3) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
     if (scene->mMenuOpen == 0) {
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen == 1) {
-                OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, -1, -1,
-                            (Matrix2x2 *)a3);
+                OAM::Render(0, a0, a1, a2 + 192 + sMgTopScreenYOffset, -1, -1, a3);
                 return;
             }
-            OAM::Render(0, (OamAttr *)a0, a1, a2, -1, -1, (Matrix2x2 *)a3);
+            OAM::Render(0, a0, a1, a2, -1, -1, a3);
             return;
         }
     }
-    OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, -1, -1, (Matrix2x2 *)a3);
-    OAM::Render(1, (OamAttr *)a0, a1, a2, -1, -1, (Matrix2x2 *)a3);
+    OAM::Render(0, a0, a1, a2 + 192 + sMgTopScreenYOffset, -1, -1, a3);
+    OAM::Render(1, a0, a1, a2, -1, -1, a3);
 }
 }
 }
@@ -2689,7 +2680,7 @@ int dScMgBase_c::BeforeBehavior()
             return 0;
     }
 
-    ApproachLinear(mCreditsShown, mCredits, data_0208ee44);
+    ApproachLinear(mCreditsShown, mCredits, gFrameStep);
 
     mFrameCounter++;
     if (mFrameCounter >= 0x28)
@@ -2752,8 +2743,8 @@ bool dScMgBase_c::BeforeInitResources()
     Mg_ResetBannerLayout();
     InitEngines();
     Mg_LoadBannerFiles();
-    dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.SetType(0);
+    dScene_c::SetFaders(&gSceneWipe);
+    gSceneWipe.SetType(0);
     data_0209d460 = 0;
     data_0209d458 = 0;
     InitSubScreenBg();
@@ -2940,7 +2931,7 @@ void Mg_ResetOverlays(void) {
 namespace s20b0d8c {
 extern "C" {
 extern s32 GetGameLanguage(void);
-extern void Hud_RenderSprite(void *fn, s32 a, s32 b, s32 r3arg, s32 stack_arg);
+extern void Hud_RenderSprite(OamAttr *fn, s32 a, s32 b, s32 r3arg, s32 stack_arg);
 }
 }
 
@@ -3246,7 +3237,7 @@ void dScMgBase_c::DrawRecordTable() {
 namespace s20b1710 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
 }
 }
 
@@ -3439,8 +3430,8 @@ void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a
 
 namespace s20b1cf0 {
 extern "C" {
-void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
-void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+void Mg_RenderSpriteBoth(OamAttr *a, int b, int c, int d, int e);
+void Hud_RenderSprite(OamAttr *a, int b, int c, int d, int e);
 void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 /* `sel` picks the wrapper: -1 Mg_RenderSpriteBoth, 0 Hud_RenderSprite,
    anything else RenderOamMainScreen; each is passed -1 in its place. */
@@ -3788,7 +3779,7 @@ extern u8 gMainScreenLayers;
 int sMgStockCounterFiles[] = {194, 196, 191, 192, 193};
 extern u8 gSubScreenLayers;
 extern dGraph_c::callback_c *gGraphCallback;
-extern int data_0208ee44;
+extern int gFrameStep;
 }
 }
 
@@ -3797,7 +3788,7 @@ void dScMgBase_c::InitEngines() {
     using s20b265c::FreeGfxSlotsById;
     using s20b265c::GetGameLanguage;
     using s20b265c::Ov004_Deallocate;
-    using s20b265c::data_0208ee44;
+    using s20b265c::gFrameStep;
     using s20b265c::gSubScreenLayers;
     using s20b265c::gMainScreenLayers;
     using s20b265c::gGraphCallback;
@@ -3840,7 +3831,7 @@ void dScMgBase_c::InitEngines() {
     gGraphCallback = &sMgGraphCallback;
     Mg_ResetOverlays();
     FreeGfxSlotsById(0x1d);
-    data_0208ee44 = 1;
+    gFrameStep = 1;
 }
 
 namespace s20b27f4 {

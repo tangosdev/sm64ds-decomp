@@ -97,9 +97,9 @@ void func_0201a054(void) {
         OS_DisableIrqMask(OS_IE_CARD_IREQ);
     if (!isChild)
         func_0203ad84();
-    func_0201a9fc(&data_0209d574);
+    func_0201a9fc(&gWatchdog);
     mHeap::Heap_t::InitializeGameHeap(0x3b000, 0);
-    func_0201a9fc(&data_0209d574);
+    func_0201a9fc(&gWatchdog);
     func_02019440();
     if (!isChild)
         func_020134c8();

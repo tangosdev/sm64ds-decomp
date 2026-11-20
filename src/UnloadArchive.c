@@ -5,7 +5,7 @@ extern void func_02018908(struct S82 *archive, void *heap);
 
 /* Give archive i back to the heap it came from, if it is mounted. */
 void UnloadArchive(int i) {
-    ArchiveTableEntry *p = &data_0208ecf4[i];
+    ArchiveTableEntry *p = &gArchiveTable[i];
     void *a = p->archive;
     if (a == 0)
         return;

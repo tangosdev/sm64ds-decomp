@@ -31,7 +31,7 @@
  *   calls; their fixed-point parameters are fx32, a plain s32.
  * - data_ov012_021124a8 / 021124a0 are this overlay's BMD/KCL handles,
  *   defined here. data_ov012_02111cd0 is the CLPS block this TU does
- *   not own. data_0209caa0 is an arm9 shared-flags global.
+ *   not own. gSaveBlock is an arm9 shared-flags global.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -94,13 +94,13 @@ daObjC0_Switch_c *daObjC0_Switch_c_classInit() {
  * UpdateModelPosAndRotY, UpdateClsnPosAndRot and dBgW_KcMbg::SetFile are
  * real method calls.
  *
- * mPos.y -= 0x64000 and mPressed = 1 only run when data_0209caa0.file.flags2 & 0x80000
+ * mPos.y -= 0x64000 and mPressed = 1 only run when gSaveBlock.file.flags2 & 0x80000
  * is set -- some other pillar in the group already reported pressed (see
  * OnGroundPounded), so this one starts sunk and pre-flagged. */
 int daObjC0_Switch_c::InitResources() {
     BMD_File *mdl = dExtSimpleModel_c::LoadFile(data_ov012_021124a8);
     mModel.SetFile(mdl, 1, -1);
-    if (data_0209caa0.file.flags2 & 0x80000) {
+    if (gSaveBlock.file.flags2 & 0x80000) {
         mPos.y -= 0x64000;
         mPressed = 1;
     }
@@ -143,7 +143,7 @@ s32 daObjC0_Switch_c::CleanupResources() {
  * class's own -- SWITCH_PILLAR 34). This one no-ops if already pressed;
  * otherwise it sinks, marks itself pressed, then returns at the first
  * non-this actorID-0x22 pillar and, if that one is already pressed, sets
- * the shared group flag in data_0209caa0.file.flags2 that InitResources reads. */
+ * the shared group flag in gSaveBlock.file.flags2 that InitResources reads. */
 void daObjC0_Switch_c::OnGroundPounded(dActor_c &other) {
     if (mPressed)
         return;
@@ -155,7 +155,7 @@ void daObjC0_Switch_c::OnGroundPounded(dActor_c &other) {
          p = dActor_c::FindWithActorID(0x22, p)) {
         if (p != this) {
             if (((daObjC0_Switch_c *)p)->mPressed) {
-                data_0209caa0.file.flags2 |= 0x80000;
+                gSaveBlock.file.flags2 |= 0x80000;
             }
             return;
         }

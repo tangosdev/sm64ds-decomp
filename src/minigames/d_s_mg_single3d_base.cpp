@@ -53,11 +53,11 @@ void Mg_ResetOverlays(void);
 void FreeGfxSlotsById(int id);
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern s32 data_020a0db0;
+extern s32 gGlobalTimer;
 extern int sMgTopScreenYOffset;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 extern int sSingle3DCommonNcgByLanguage[];
-extern int data_0208ee44;
+extern int gFrameStep;
 extern dGraph_c::callback_c *gGraphCallback;
 }
 
@@ -95,7 +95,7 @@ void dScMgSingle3DBase_c::InitEngines()
     GXS_LoadOBJPltt(fileData, 0x100u, 0x100u);
     Ov004_Deallocate(fileData);
     Mg_ResetOverlays();
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     FreeGfxSlotsById(0x1d);
@@ -117,7 +117,7 @@ int dScMgSingle3DBase_c::BeforeBehavior()
 {
     if (dScMgBase_c::BeforeBehavior() == 0)
         return 0;
-    if (data_020a0db0 & 1)
+    if (gGlobalTimer & 1)
         mParticle.Update();
     return 1;
 }
