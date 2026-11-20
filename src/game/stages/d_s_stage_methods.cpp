@@ -5136,12 +5136,18 @@ extern SharedFilePtr gPowerStarModelFile;
 extern StarModelFilePtr gTransparentStarModelFile;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr *const data_020756f0[12] = {
-    &gCoinYellowPoly4ModelFile, &gCoinYellowPoly32ModelFile,
-    &gCoinRedPoly4ModelFile,    &gCoinRedPoly32ModelFile,
-    &data_ov002_0210da40,       &data_ov002_0210d9a0,
-    &data_ov002_0210d9c0,       &data_ov002_0210e7d8,
-    &data_ov002_0210e3a0,       &gPowerStarModelFile,
-    (SharedFilePtr *)&gTransparentStarModelFile, &data_ov002_0210d9a8,
+    &gCoinYellowPoly4ModelFile,
+    &gCoinYellowPoly32ModelFile,
+    &gCoinRedPoly4ModelFile,
+    &gCoinRedPoly32ModelFile,
+    &data_ov002_0210da40,
+    &data_ov002_0210d9a0,
+    &data_ov002_0210d9c0,
+    &data_ov002_0210e7d8,
+    &data_ov002_0210e3a0,
+    &gPowerStarModelFile,
+    (SharedFilePtr *)&gTransparentStarModelFile,
+    &data_ov002_0210d9a8,
 };
 extern const char VS_STAR_SPAWN_ORDERS[6][12] = {
     {0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0}, {0, 1, 3, 2, 4, 0, 0, 0, 0, 0, 0, 0},

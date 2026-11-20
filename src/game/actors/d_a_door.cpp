@@ -337,8 +337,7 @@ daDoor_StateRecord data_ov100_02148904 = {(daDoor_StatePmf)&daDoor_c::St_CharCha
                                           (daDoor_StatePmf)&daDoor_c::St_CharChange_Main};
 daDoor_StateRecord data_ov100_02148914 = {(daDoor_StatePmf)&daDoor_c::St_OpenClose_InitNearEnd,
                                           (daDoor_StatePmf)&daDoor_c::St_OpenClose_Main};
-daDoor_StateRecord data_ov100_02148924 = {__ptmf_null,
-                                          (daDoor_StatePmf)&daDoor_c::St_Wait_Main};
+daDoor_StateRecord data_ov100_02148924 = {__ptmf_null, (daDoor_StatePmf)&daDoor_c::St_Wait_Main};
 daDoor_StateRecord data_ov100_021488a4 = {__ptmf_null,
                                           (daDoor_StatePmf)&daDoor_c::St_CharIntro_Main};
 

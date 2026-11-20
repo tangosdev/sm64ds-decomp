@@ -46,7 +46,7 @@
 #include "nitro/mi/memory.h"
 #include "nitro/gx/gx_load.h"
 
-extern u8 data_0209e660[];   /* sub-OAM suppress flag / single-buffer select */
+extern u8 data_0209e660[]; /* sub-OAM suppress flag / single-buffer select */
 extern int data_0209e67c[];
 extern int data_0209e694[];
 extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */

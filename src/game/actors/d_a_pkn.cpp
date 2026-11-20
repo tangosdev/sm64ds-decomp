@@ -102,8 +102,6 @@ extern const int data_ov084_02130320[5] = {-8, -0x20, -0x30, -0x40, -0x40};
 extern const int data_ov084_02130334[10] = {0x40, 0x80, 0xc0, 0xd0, 0xd0,
                                             0xd0, 0xd0, 0xc8, 0xc0, 0xc0};
 
-
-
 /* ==========================================================================
  *
  * Allocates sizeof(daPkn_c) (0x47c) through fBase_c::operator new and
