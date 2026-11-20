@@ -96,6 +96,68 @@ extern daWater_Tatumaki_c::State sSpinState;                   /* spin, waiting 
 extern daWater_Tatumaki_c::State sDragState;                   /* drag the player down */
 extern BTA_File sWhirlpoolBta;
 
+/* Key words sWhirlpoolBta points at. The header stays in the course-data run. */
+extern "C" u32 data_ov026_02112dd0[];
+extern "C" u32 data_ov026_02112de8[];
+extern "C" const u32 data_ov026_02112490[] = {
+    0x00000000
+};
+
+extern "C" const u32 data_ov026_021124a4[] = {
+    0x00000800,
+    0x00001000
+};
+
+extern "C" const u32 data_ov026_021124e4[] = {
+    0x0000ffff,
+    (u32)data_ov026_02112dd0,
+    0x00000001,
+    0x00010001,
+    0x00000001,
+    0x0000001e,
+    0x00000001,
+    0x0000ffff,
+    (u32)data_ov026_02112de8,
+    0x00000001,
+    0x00010001,
+    0x00000001,
+    0x0000001e,
+    0x00000001
+};
+
+extern "C" const u32 data_ov026_02112554[] = {
+    0x00000000,
+    0xfffffeef,
+    0xfffffdde,
+    0xfffffccd,
+    0xfffffbbc,
+    0xfffffaab,
+    0xfffff99a,
+    0xfffff889,
+    0xfffff777,
+    0xfffff666,
+    0xfffff555,
+    0xfffff444,
+    0xfffff333,
+    0xfffff222,
+    0xfffff111,
+    0xfffff000,
+    0xffffeeef,
+    0xffffedde,
+    0xffffeccd,
+    0xffffebbc,
+    0xffffeaab,
+    0xffffe99a,
+    0xffffe889,
+    0xffffe777,
+    0xffffe666,
+    0xffffe555,
+    0xffffe444,
+    0xffffe333,
+    0xffffe222,
+    0xffffe111
+};
+
 /* local extern: no shared header declares these. */
 extern "C" {
 extern void KillPlayer(void);

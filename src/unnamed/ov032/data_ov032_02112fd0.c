@@ -1,9 +1,16 @@
 #include "types.h"
 
-/* The water texture and collision bundle the file table above points
- * into. Every relocated word names the symbol it loads. */
-
-/* 0x02112fd0..0x0211377c: water texture and collision payload. */
+/* Shared course table, 0x02112fd0..0x0211377c. Sublevel 24 loads this
+ * overlay (sLevelOverlayIds[24] == 32). The user is dScStage_c:
+ * data_02092208[24] is the level record at 0x02112f7c (section tdMid,
+ * not this file), copied to sLevelInfo and passed to
+ * LoadClsnAndObjects. That record's CLPS is data_ov032_0211326c.
+ * Object tables 0x02112ecc and 0x02112ed4 point at data_ov032_02113008
+ * and data_ov032_02113040. Model file 0x07dc, kcl 0x07de. The area at
+ * 0x02112ee8 points at the BTA at 0x02112f34.
+ * daObjTdWater_c, daObjTdFuta_c, and daBakubaku_c do not relocate into
+ * this range. Water's CLPS ends at 0x02112fd0; Bubba's .data starts at
+ * 0x0211377c. Every relocated word names the symbol it loads. */
 extern u32 data_ov032_02112ec0;
 extern u32 data_ov032_02112ec4;
 extern u32 data_ov032_02112ec8;

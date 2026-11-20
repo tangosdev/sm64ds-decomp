@@ -1,4 +1,15 @@
-/* ov036 .data with no class source: 3628 bytes at 0x02112c28. */
+/* Shared course table for sublevel 28 (sLevelOverlayIds[28] == 36):
+ * gap0 0x02112a00..0x02112a88, gap2 0x02112b08..0x02112b28, and
+ * 0x02112c28..0x02113a54. The user is dScStage_c: data_02092208[28]
+ * is the level record at data_ov036_02112a6c, copied to sLevelInfo
+ * and passed to LoadClsnAndObjects. Its CLPS is data_ov036_02112d1c.
+ * Area subtables are data_ov036_02112a54; level-wide subtables are
+ * data_ov036_02112c94. Model file 0x07a9, kcl 0x07ab.
+ * daObjRcBuranko_c, daObjRc_Kaitendai_c, daObjRc_Hane_c,
+ * daObjRc_Tikuwa_c, daObjRc_Guruguru_c, daObjRc_Dorifu_c, and
+ * daObjRcCarpet_c already own their CLPS blocks and do not relocate
+ * into this file. data_ov036_02112b08 is a CLPS block with no
+ * relocation. Placeholder names stay. ROM words stay hex. */
 #include "types.h"
 
 extern u32 data_ov036_02112dfc[];

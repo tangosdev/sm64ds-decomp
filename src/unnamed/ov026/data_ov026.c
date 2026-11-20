@@ -1,25 +1,21 @@
-/* Overlay 26 course data the water-land actors never name: the .rodata table
- * and the first .data run. The Polelift/KoopaShutter/Submarine vtables at
- * 0x02113a90 belong to the class TUs and stay unclaimed. */
+/* Overlay 26 course data no one class owns: the light/water BTA keys and the
+ * first .data run. sWhirlpoolBta's keys are in daWater_Tatumaki_c. The
+ * Polelift/KoopaShutter/Submarine vtables at 0x02113a90 stay unclaimed. */
 #include "types.h"
 
-/* Words the overlay relocates point here. */
-extern u32 data_ov026_02112494[];
+/* Words the other BTAs and the course table relocate point here.
+ * sWhirlpoolBta's own key words live in daWater_Tatumaki_c. */
+extern u32 data_ov026_02112490[];
 extern u32 data_ov026_02112498[];
 extern u32 data_ov026_0211249c[];
 extern u32 data_ov026_021124a0[];
 extern u32 data_ov026_021124a4[];
-extern u32 data_ov026_021124ac[];
 extern u32 data_ov026_021124e4[];
-extern u32 data_ov026_0211251c[];
 extern u32 data_ov026_02112554[];
-extern u32 data_ov026_021125cc[];
 extern u32 data_ov026_02112738[];
 extern u32 data_ov026_02112dc8[];
-extern u32 data_ov026_02112dd0[];
 extern u32 data_ov026_02112dd8[];
 extern u32 data_ov026_02112de0[];
-extern u32 data_ov026_02112de8[];
 extern u32 data_ov026_02112e20[];
 extern u32 data_ov026_02112e30[];
 extern u32 data_ov026_02112e40[];
@@ -35,15 +31,17 @@ extern u32 data_ov026_02113100[];
 extern u32 data_ov026_02113450[];
 extern u32 data_ov026_021137c0[];
 
-/* 0x02112490..0x02112b7c (1772 bytes, 443 words) */
-const u32 data_ov026_02112490[] = {
+/* 0x02112494..0x021124a4. The first word is the light/water rotation key. */
+const u32 data_ov026_02112494[] = {
     0x00000000,
-    0x00000000,
     0x00001000,
     0x00001000,
-    0x0000fad8,
-    0x00000800,
-    0x00001000,
+    0x0000fad8
+};
+
+#pragma define_section rd124ac ".rodata.data_ov026_021124ac" ".rodata.data_ov026_021124ac" ".rodata.data_ov026_021124ac" far_data
+#pragma section rd124ac begin
+u32 data_ov026_021124ac[] = {
     0x0000ffff,
     (u32)data_ov026_02112e40,
     0x00000001,
@@ -57,21 +55,13 @@ const u32 data_ov026_02112490[] = {
     0x00000001,
     0x00000001,
     0x0000005b,
-    0x0000005b,
-    0x0000ffff,
-    (u32)data_ov026_02112dd0,
-    0x00000001,
-    0x00010001,
-    0x00000001,
-    0x0000001e,
-    0x00000001,
-    0x0000ffff,
-    (u32)data_ov026_02112de8,
-    0x00000001,
-    0x00010001,
-    0x00000001,
-    0x0000001e,
-    0x00000001,
+    0x0000005b
+};
+#pragma section rd124ac end
+
+#pragma define_section rd1251c ".rodata.data_ov026_0211251c" ".rodata.data_ov026_0211251c" ".rodata.data_ov026_0211251c" far_data
+#pragma section rd1251c begin
+u32 data_ov026_0211251c[] = {
     0x0000ffff,
     (u32)data_ov026_02112e50,
     0x00000001,
@@ -85,37 +75,13 @@ const u32 data_ov026_02112490[] = {
     0x00000001,
     0x00010001,
     0x005b005b,
-    0x00b6005b,
-    0x00000000,
-    0xfffffeef,
-    0xfffffdde,
-    0xfffffccd,
-    0xfffffbbc,
-    0xfffffaab,
-    0xfffff99a,
-    0xfffff889,
-    0xfffff777,
-    0xfffff666,
-    0xfffff555,
-    0xfffff444,
-    0xfffff333,
-    0xfffff222,
-    0xfffff111,
-    0xfffff000,
-    0xffffeeef,
-    0xffffedde,
-    0xffffeccd,
-    0xffffebbc,
-    0xffffeaab,
-    0xffffe99a,
-    0xffffe889,
-    0xffffe777,
-    0xffffe666,
-    0xffffe555,
-    0xffffe444,
-    0xffffe333,
-    0xffffe222,
-    0xffffe111,
+    0x00b6005b
+};
+#pragma section rd1251c end
+
+#pragma define_section rd125cc ".rodata.data_ov026_021125cc" ".rodata.data_ov026_021125cc" ".rodata.data_ov026_021125cc" far_data
+#pragma section rd125cc begin
+u32 data_ov026_021125cc[] = {
     0x00000000,
     0x0000002e,
     0x0000005b,
@@ -479,8 +445,10 @@ const u32 data_ov026_02112490[] = {
     0x00000027,
     0x0000001a,
     0x0000000c,
-    0x00000000,
+    0x00000000
 };
+#pragma section rd125cc end
+
 
 /* 0x02112dc0..0x02112f74 (436 bytes, 109 words) */
 u32 data_ov026_02112dc0[] = {
