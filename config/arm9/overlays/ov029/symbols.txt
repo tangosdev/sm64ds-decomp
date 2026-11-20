@@ -196,7 +196,6 @@ _ZTS15daObjWc_Obj05_c kind:data(any) addr:0x02113e3c
 g_profile_WC_OBJ05 kind:data(any) addr:0x02113e50 ambiguous
 data_ov029_02113e6c kind:data(any) addr:0x02113e6c ambiguous
 _ZTV15daObjWc_Obj05_c kind:data(any) addr:0x02113e74
-data_ov029_02113e88 kind:data(any) addr:0x02113e88 ambiguous
 _ZTI14daObjWcObj06_c kind:data(any) addr:0x02113ef4
 data_ov029_02113f00 kind:data(any) addr:0x02113f00
 _ZTS14daObjWcObj06_c kind:data(any) addr:0x02113f0c

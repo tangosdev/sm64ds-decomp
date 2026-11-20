@@ -22,7 +22,7 @@ src/game/actors/d_a_obj_wl_koopa_shutter.cpp:
     .init start:0x02112bbc end:0x02112c28
     .ctor start:0x02112da8 end:0x02112dac
     .bss start:0x02113eb4 end:0x02113edc
-    .data start:0x02112f74 end:0x02112f7c
+    .data start:0x02112f74 end:0x02112fd4
 
 src/game/actors/d_a_obj_wl_submarine.cpp:
     complete
@@ -54,10 +54,6 @@ src/unnamed/ov026/data_ov026.c:
     complete
     .rodata start:0x02112490 end:0x02112b7c
     .data start:0x02112dc0 end:0x02112f74
-
-src/unnamed/ov026/data_ov026_02112f7c.c:
-    complete
-    .data start:0x02112f7c end:0x02112fd4
 
 src/unnamed/ov026/data_ov026_02112ffc.c:
     complete

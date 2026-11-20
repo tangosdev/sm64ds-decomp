@@ -222,7 +222,8 @@ void daObjRotateUpdownLift_c::ResetToHome() {
     mPos.z = mBasePos.z;
     mWaypointIndex = (param1 & 15);
     Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &gScratchMtx, &offset);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &gScratchMtx,
+                  &offset);
     Vec3_Add(&pos, &mBasePos, &offset);
     mPos.x = pos.x;
     mPos.y = pos.y;
@@ -434,8 +435,9 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &gScratchMtx, &cur);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[prevIndex], &gScratchMtx, &prev);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &gScratchMtx,
+                  &cur);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &gScratchMtx, &prev);
     Vec3_Add(&target, &mBasePos, &cur);
     Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
@@ -525,7 +527,8 @@ int daObjRotateUpdownLift_c::InitResources()
     }
 
     Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &gScratchMtx, &rotated);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &gScratchMtx,
+                  &rotated);
     Vec3_Add(&placed, &mBasePos, &rotated);
     mPos.x = placed.x;
     mPos.y = placed.y;

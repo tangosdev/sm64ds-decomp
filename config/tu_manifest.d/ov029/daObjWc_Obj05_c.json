@@ -138,6 +138,7 @@
       "symbol": "_ZTI15daObjWc_Obj05_c",
       "address": "0x02113e30",
       "size": "0xc",
+      "binding": "STB_LOPROC",
       "evidence": "compiler emission of the class key function"
     },
     {

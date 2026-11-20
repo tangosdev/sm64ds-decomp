@@ -324,23 +324,23 @@ DoorEntry data_ov100_02148204[19] = {
    cartridge has them. */
 /* -------------------------------------------------------------------------- */
 daDoor_StateRecord data_ov100_021488b4 = {__ptmf_null,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144cf8};
-daDoor_StateRecord data_ov100_021488c4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144ccc,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144c6c};
-daDoor_StateRecord data_ov100_021488d4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144c64,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144bf4};
-daDoor_StateRecord data_ov100_021488e4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144a38,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_021449c8};
-daDoor_StateRecord data_ov100_021488f4 = {(daDoor_StatePmf)&daDoor_c::func_ov100_02144950,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144730};
-daDoor_StateRecord data_ov100_02148904 = {(daDoor_StatePmf)&daDoor_c::func_ov100_021446f8,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144528};
-daDoor_StateRecord data_ov100_02148914 = {(daDoor_StatePmf)&daDoor_c::func_ov100_0214491c,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144730};
+                                          (daDoor_StatePmf)&daDoor_c::St_StayClosed_Main};
+daDoor_StateRecord data_ov100_021488c4 = {(daDoor_StatePmf)&daDoor_c::St_TalkingToPlayer_Init,
+                                          (daDoor_StatePmf)&daDoor_c::St_TalkingToPlayer_Main};
+daDoor_StateRecord data_ov100_021488d4 = {(daDoor_StatePmf)&daDoor_c::St_UnlockingWithStar_Init,
+                                          (daDoor_StatePmf)&daDoor_c::St_UnlockingWithStar_Main};
+daDoor_StateRecord data_ov100_021488e4 = {(daDoor_StatePmf)&daDoor_c::St_UnlockingWithKey_Init,
+                                          (daDoor_StatePmf)&daDoor_c::St_UnlockingWithKey_Main};
+daDoor_StateRecord data_ov100_021488f4 = {(daDoor_StatePmf)&daDoor_c::St_OpenClose_Init,
+                                          (daDoor_StatePmf)&daDoor_c::St_OpenClose_Main};
+daDoor_StateRecord data_ov100_02148904 = {(daDoor_StatePmf)&daDoor_c::St_CharChange_Init,
+                                          (daDoor_StatePmf)&daDoor_c::St_CharChange_Main};
+daDoor_StateRecord data_ov100_02148914 = {(daDoor_StatePmf)&daDoor_c::St_OpenClose_InitNearEnd,
+                                          (daDoor_StatePmf)&daDoor_c::St_OpenClose_Main};
 daDoor_StateRecord data_ov100_02148924 = {__ptmf_null,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_021444e8};
+                                          (daDoor_StatePmf)&daDoor_c::St_Wait_Main};
 daDoor_StateRecord data_ov100_021488a4 = {__ptmf_null,
-                                          (daDoor_StatePmf)&daDoor_c::func_ov100_02144468};
+                                          (daDoor_StatePmf)&daDoor_c::St_CharIntro_Main};
 
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  *

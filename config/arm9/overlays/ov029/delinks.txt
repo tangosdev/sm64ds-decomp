@@ -87,13 +87,10 @@ src/game/actors/d_a_obj_wc_mizu.cpp:
     .data.data_ov029_02112fb8 start:0x02112fb8 end:0x02112fd0
     .data.data_ov029_02112fec start:0x02112fec end:0x0211300c
     .bss start:0x021142fc end:0x02114324
-    .rodata start:0x02112b2c end:0x02112b38
+    .rodata start:0x021129a0 end:0x02112b38
 
 src/unnamed/ov029/data_ov029.c:
     complete
     .data start:0x021130cc end:0x02113bdc
 
-src/unnamed/ov029/data_ov029_rodata.c:
-    complete
-    .rodata start:0x021129a0 end:0x02112b2c
 

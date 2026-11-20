@@ -42,7 +42,6 @@ L3 src/unnamed/ov015/data_ov015.c
 L3 src/unnamed/ov020/data_ov020.c
 L3 src/unnamed/ov022/data_ov022.c
 L3 src/unnamed/ov026/data_ov026.c
-L3 src/unnamed/ov026/data_ov026_02112f7c.c
 L3 src/unnamed/ov026/data_ov026_02112ffc.c
 L3 src/unnamed/ov041/data_ov041.c
 
@@ -68,7 +67,6 @@ L3 src/unnamed/ov053/data_ov053_021111a0.c
 L3 src/unnamed/ov009/data_ov009_02112c58.c
 L3 src/unnamed/ov009/data_ov009_rodata.c
 L3 src/unnamed/ov029/data_ov029.c
-L3 src/unnamed/ov029/data_ov029_rodata.c
 L3 src/unnamed/ov036/data_ov036_02112c28.c
 L3 src/unnamed/ov016/data_ov016_02113550.c
 L3 src/unnamed/ov032/data_ov032_02112fd0.c

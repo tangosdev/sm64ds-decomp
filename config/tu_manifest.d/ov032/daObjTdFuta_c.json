@@ -107,6 +107,7 @@
       "symbol": "_ZTI13daObjTdFuta_c",
       "address": "0x021138a0",
       "size": "0xc",
+      "binding": "STB_LOPROC",
       "evidence": "compiler emission of the class key function"
     },
     {

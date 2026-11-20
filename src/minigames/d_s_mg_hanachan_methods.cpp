@@ -167,7 +167,7 @@ extern OamAttr *sMgTextSpritesSpanish[];
 extern OamAttr *sMgTextSpritesFrench[];
 extern OamAttr *sMgTextSpritesGerman[];
 extern OamAttr *sMgTextSpritesItalian[];
-void *sHanaTextSpritesByLanguage[5] = {
+OamAttr **sHanaTextSpritesByLanguage[5] = {
     sMgTextSpritesEnglish, sMgTextSpritesSpanish, sMgTextSpritesFrench,
     sMgTextSpritesGerman,  sMgTextSpritesItalian,
 };
