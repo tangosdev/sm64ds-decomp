@@ -153,12 +153,12 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
     item = view->item;
     id = item->id;
     layout = item->layout;
-    bootArgs = WORK->settings->bootArgs;
+    bootArgs = gMenuWork->settings->bootArgs;
     t = item->state->stateTicks;
     kind = layout->kind;
     pops = (id == 3 || id == 4);
     thresh = pops ? 0x18 : 8;
-    pv = WORK->states[1];
+    pv = gMenuWork->states[1];
     posX = layout->homeX << 12;
     scale = 0x1000;
 
@@ -191,12 +191,12 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
                 break;
             case 12: /* the owner's command 4 turns the backlight on */
                 if (bootArgs->backlightOn == 0) {
-                    WORK->callback(4);
+                    gMenuWork->callback(4);
                 }
                 break;
             case 13: /* and command 5 off */
                 if (bootArgs->backlightOn != 0) {
-                    WORK->callback(5);
+                    gMenuWork->callback(5);
                 }
                 break;
             default:
@@ -204,7 +204,7 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
                 break;
             }
             if (flag != 0) {
-                WORK->settings->bootArgs->func_ov007_020b7eec();
+                gMenuWork->settings->bootArgs->func_ov007_020b7eec();
             }
         }
     }
@@ -292,14 +292,14 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
             break;
         case 3:
             next = 1;
-            WORK->states[0]->requestedState = 2;
+            gMenuWork->states[0]->requestedState = 2;
             break;
         case 4:
             next = 1;
-            WORK->states[0]->requestedState = 3;
+            gMenuWork->states[0]->requestedState = 3;
             break;
         case 6:
-            WORK->states[0]->requestedState = 4;
+            gMenuWork->states[0]->requestedState = 4;
             break;
         case 8:
             pv->requestedState = next;
@@ -338,7 +338,7 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
                 break;
             case 7: {
                 Ov007Work *d;
-                d = WORK;
+                d = gMenuWork;
                 if (d->selectedSlot != -1) {
                     d->selectedSlot = -1;
                 } else {
@@ -354,10 +354,10 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
         case 23:
             if (s == 0x16) {
                 data_ov007_02103428 = 2;
-                WORK->itemViews[0x17]->item->state->requestedState = 4;
+                gMenuWork->itemViews[0x17]->item->state->requestedState = 4;
             } else if (s == 0x17) {
                 data_ov007_02103428 = 3;
-                WORK->itemViews[0x16]->item->state->requestedState = 4;
+                gMenuWork->itemViews[0x16]->item->state->requestedState = 4;
             }
             MessageWindow_Close();
             next = 4;
@@ -380,7 +380,7 @@ void ItemView_UpdateIdle(Ov007ItemView *view) {
     if (id != 8 && id != 0x14 && id != 0x17)
         return;
 
-    pad = WORK->pad;
+    pad = gMenuWork->pad;
     if (!(pad->keys & 2))
         return;
     if (pad->prevKeys & 2)
@@ -422,10 +422,10 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
     view->slideFromY = view->slideToY;
 
     if (id >= 0 && id <= 2) {
-        sprite->frames[0] = WORK->textures[6];
+        sprite->frames[0] = gMenuWork->textures[6];
         sprite->texS = data_ov007_020d75e8[id];
         sprite->texT = data_ov007_020d75f8[id];
-        if (WORK->settings->language == 5) {
+        if (gMenuWork->settings->language == 5) {
             view->item->hitBox = (Ov007HitBox *)&data_ov007_020d76c0[hitBoxIndex - 1];
             view->item->layout = (Ov007ItemLayout *)&data_ov007_020d7680[id];
             if (id != 0) {
@@ -435,14 +435,14 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
             }
         }
     } else if (id >= 3 && id <= 6) {
-        sprite->frames[0] = WORK->textures[1];
+        sprite->frames[0] = gMenuWork->textures[1];
         sprite->texS = data_ov007_020d7608[id - 3];
         sprite->texT = data_ov007_020d7600[id - 3];
     } else if (id >= 7 && id <= 0xd) {
         if (id == 7) {
-            sprite->frames[0] = WORK->textures[6];
+            sprite->frames[0] = gMenuWork->textures[6];
         } else {
-            sprite->frames[0] = WORK->textures[8];
+            sprite->frames[0] = gMenuWork->textures[8];
         }
         switch (id) {
         case 7:
@@ -451,17 +451,17 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
         case 8:
             sprite->texS = 0xc0;
             sprite->texT = 0x20;
-            t = WORK->settings->language;
+            t = gMenuWork->settings->language;
             switch (t) {
             case 3:
-                sprite->frames[0] = WORK->textures[7];
+                sprite->frames[0] = gMenuWork->textures[7];
                 sprite->texS = 0;
                 sprite->texT = 0;
                 sprite->width = 80;
                 view->item->hitBox = (Ov007HitBox *)&data_ov007_020d7658;
                 break;
             case 4:
-                sprite->frames[0] = WORK->textures[7];
+                sprite->frames[0] = gMenuWork->textures[7];
                 sprite->texS = 0x50;
                 sprite->texT = 0;
                 sprite->width = 96;
@@ -484,11 +484,11 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
             break;
         }
     } else if (id >= 0xe && id <= 0x15) {
-        sprite->frames[0] = WORK->textures[2];
+        sprite->frames[0] = gMenuWork->textures[2];
         sprite->texS = data_ov007_020d7628[id - 0xe];
         sprite->texT = data_ov007_020d7638[id - 0xe];
     } else if (id >= 0x16 && id <= 0x17) {
-        sprite->frames[0] = WORK->textures[2];
+        sprite->frames[0] = gMenuWork->textures[2];
         sprite->texS = (id - 0x16) * 0x48;
         sprite->texT = 0x80;
     }
@@ -632,8 +632,8 @@ void Ov007ItemView::ItemView_HandleTouch(void *touch) {
             func_ov007_020b63e4((Ov007ItemView *)self);
         } else {
             u16 t = elem->item->id;
-            if ((t == 0xc && WORK->settings->bootArgs->backlightOn == 0) ||
-                (t == 0xd && WORK->settings->bootArgs->backlightOn != 0)) {
+            if ((t == 0xc && gMenuWork->settings->bootArgs->backlightOn == 0) ||
+                (t == 0xd && gMenuWork->settings->bootArgs->backlightOn != 0)) {
                 if (touching != 0) {
                     s32 x = tp->cur.x;
                     if (x >= 8 && x <= 0x66) {
@@ -653,7 +653,7 @@ void Ov007ItemView::ItemView_HandleTouch(void *touch) {
                 }
             }
         }
-    } else if (WORK->states[0]->currentState == 3) {
+    } else if (gMenuWork->states[0]->currentState == 3) {
         /* Through self, not elem: reading it through elem lets the compiler
          * keep the item in a register for elem_selectable and drops 12 bytes. */
         u16 t0 = ((Ov007ItemView *)self)->item->id;
@@ -804,8 +804,8 @@ extern "C" int func_ov007_020b4438(void) {
  * at the callers) with func_ov007_020b7d94. */
 extern "C" void func_ov007_020b43dc(int kind) {
     data_ov007_02103428 = 1;
-    WORK->itemViews[0x16]->item->state->requestedState = 3;
-    WORK->itemViews[0x17]->item->state->requestedState = 3;
+    gMenuWork->itemViews[0x16]->item->state->requestedState = 3;
+    gMenuWork->itemViews[0x17]->item->state->requestedState = 3;
     func_ov007_020b7d94(kind);
 }
 
@@ -813,22 +813,22 @@ extern "C" void func_ov007_020b43dc(int kind) {
  * texture 2 at the row's screen position, texel cell and size, parented to
  * item view 14's sprite for camera 1. */
 Ov007Sprite *NumberSprite_Create(int index) {
-    Ov007Sprite *parent = WORK->itemViews[14]->sprite;
+    Ov007Sprite *parent = gMenuWork->itemViews[14]->sprite;
     Ov007Sprite *obj;
-    WORK->numberSprites[index] = func_ov007_020c44e4(1);
-    obj = WORK->numberSprites[index];
+    gMenuWork->numberSprites[index] = func_ov007_020c44e4(1);
+    obj = gMenuWork->numberSprites[index];
     obj->screenX = data_ov007_020d761c[index][0] << 12;
     obj->screenY = data_ov007_020d761c[index][1] << 12;
     obj->depth = 0x14;
     obj->width = data_ov007_020d75f0[index][0];
     obj->height = data_ov007_020d75f0[index][1];
-    obj->frames[0] = WORK->textures[2];
+    obj->frames[0] = gMenuWork->textures[2];
     obj->texRepeat = 3;
     obj->texFlip = 0;
     obj->texColor0 = 1;
     obj->texS = data_ov007_020d75e0[index];
     obj->texT = data_ov007_020d75e4[index];
-    func_ov007_020c41dc(parent, obj, WORK->cameras[1]);
+    func_ov007_020c41dc(parent, obj, gMenuWork->cameras[1]);
     return obj;
 }
 
@@ -853,8 +853,8 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
         int j;
         int leadX;
         unsigned char *widths;
-        lead = WORK->numberSprites[0];
-        digit = WORK->numberSprites[2];
+        lead = gMenuWork->numberSprites[0];
+        digit = gMenuWork->numberSprites[2];
         x = lead->screenX;
         baseS = digit->texS;
         width = 0;
@@ -873,7 +873,7 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
             if (*d >= 0) {
                 digit->screenX += ((unsigned)widths[*d] >> 1) << 12;
                 digit->texS = (s16)(*d * digit->width + baseS);
-                func_ov007_020c4128(view->sprite, digit, WORK->cameras[1]);
+                func_ov007_020c4128(view->sprite, digit, gMenuWork->cameras[1]);
                 digit->screenX += (widths[*d] - ((unsigned)widths[*d] >> 1)) << 12;
             }
             d--;
@@ -881,10 +881,10 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
         digit->texS = baseS;
         leadX = lead->screenX;
         lead->screenX = x;
-        func_ov007_020c4128(view->sprite, lead, WORK->cameras[1]);
+        func_ov007_020c4128(view->sprite, lead, gMenuWork->cameras[1]);
         lead->screenX = leadX;
     } else {
-        func_ov007_020c4128(view->sprite, WORK->numberSprites[1], WORK->cameras[1]);
+        func_ov007_020c4128(view->sprite, gMenuWork->numberSprites[1], gMenuWork->cameras[1]);
     }
     G3_PopMtx(1);
 }

@@ -2031,9 +2031,9 @@ static const int *const *sPortraitStrokeProgressThresholds[6] = {
 extern Ov007PickerScene *sPickerScene;
 
 /* The per-figure stroke stages as a pointer: indexing through it, not
- * through WORK->strokeStage, gives the ROM's base + 0xfc then [idx] form. */
+ * through gMenuWork->strokeStage, gives the ROM's base + 0xfc then [idx] form. */
 static inline u8 *StrokeStages(void) {
-    return WORK->strokeStage;
+    return gMenuWork->strokeStage;
 }
 
 /* Loads figure idx's next portrait drawing (strokeStage[idx]: 0, 1, 2, then

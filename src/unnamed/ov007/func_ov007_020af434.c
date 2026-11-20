@@ -13,7 +13,7 @@ extern void func_ov007_020c1d78(int i);
 void func_ov007_020af434(void) {
     Ov007BgLayer **layers;
     Ov007BgLayer *a;
-    WORK->callback(0x12);
+    gMenuWork->callback(0x12);
     func_ov007_020b283c();
     func_ov007_020b76a0();
     func_ov007_020bcba8(3);
@@ -21,7 +21,7 @@ void func_ov007_020af434(void) {
     func_ov007_020bd1c0(2);
     RequestScreenFade(1, 2, 0);
     func_ov007_020aec00();
-    layers = WORK->display->bgLayers;
+    layers = gMenuWork->display->bgLayers;
     a = layers[6];
     a->scrollX = 0;
     a->scrollY = 0;

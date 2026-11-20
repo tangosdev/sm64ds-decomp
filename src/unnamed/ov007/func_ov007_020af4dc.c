@@ -10,11 +10,11 @@ extern void func_ov007_020af580(void);
  * 0x1e ticks in, it fades out to func_ov007_020b0520 (no choice pending)
  * or func_ov007_020af580, and passes 0x13 to the manager's callback. */
 void func_ov007_020af4dc(void) {
-    Ov007Work *g = WORK;
+    Ov007Work *g = gMenuWork;
     if (g->states[1]->stateTicks == 0) {
         func_ov007_020c1d8c(0);
     }
-    g = WORK;
+    g = gMenuWork;
     if (g->states[1]->stateTicks != 30)
         return;
     if (g->pendingChoice == 0) {
@@ -22,5 +22,5 @@ void func_ov007_020af4dc(void) {
     } else {
         RequestScreenFade(1, 0, func_ov007_020af580);
     }
-    WORK->callback(0x13);
+    gMenuWork->callback(0x13);
 }

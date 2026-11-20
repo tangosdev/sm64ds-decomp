@@ -13,16 +13,16 @@ extern int func_ov007_020c1da0(int i);
 extern "C" void func_ov007_020aec94(int r4);
 
 extern "C" void func_ov007_020b1cf0(void) {
-    Ov007Model *model = WORK->model;
-    Ov007MenuState *menu = WORK->states[1];
+    Ov007Model *model = gMenuWork->model;
+    Ov007MenuState *menu = gMenuWork->states[1];
     int hi = menu->previousState;
     int r5 = menu->stateTicks;
     int flag = 0;
 
     if (hi == 8 && r5 == 0) {
         int anim;
-        WORK->states[2]->requestedState = 3;
-        anim = (WORK->figureIndex == 1) ? 0x3d : 0x14;
+        gMenuWork->states[2]->requestedState = 3;
+        anim = (gMenuWork->figureIndex == 1) ? 0x3d : 0x14;
         func_ov007_020b2614(0, anim, 8);
     }
 
@@ -31,39 +31,39 @@ extern "C" void func_ov007_020b1cf0(void) {
         Ov007Item *p;
         switch (m) {
         case 0:
-            p = WORK->itemNodes[1]->item;
+            p = gMenuWork->itemNodes[1]->item;
             p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
             break;
         case 70:
-            p = WORK->itemViews[1]->item;
+            p = gMenuWork->itemViews[1]->item;
             p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
             break;
         case 140:
-            p = WORK->itemViews[0]->item;
+            p = gMenuWork->itemViews[0]->item;
             p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
             break;
         case 210:
-            p = WORK->itemViews[2]->item;
+            p = gMenuWork->itemViews[2]->item;
             p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
             break;
         }
     }
 
-    if (WORK->itemViews[7]->item->fade == 0x1000 && func_ov007_020c1da0(0) == 0) {
-        Ov007Touch *r1 = WORK->touch;
+    if (gMenuWork->itemViews[7]->item->fade == 0x1000 && func_ov007_020c1da0(0) == 0) {
+        Ov007Touch *r1 = gMenuWork->touch;
         if (r1->cur.touch != 0 && r1->prev.touch == 0 && r1->releasedFrames >= 1) {
             flag = 1;
-            WORK->transitionMode = 1;
+            gMenuWork->transitionMode = 1;
             func_ov007_020b2614(1, 0, 8);
         } else {
-            Ov007Pad *r1b = WORK->pad;
+            Ov007Pad *r1b = gMenuWork->pad;
             if (r1b->keys & 2) {
                 if (!(r1b->prevKeys & 2)) {
-                    WORK->transitionMode = 0;
+                    gMenuWork->transitionMode = 0;
                     flag = 1;
                 }
             }
@@ -71,7 +71,7 @@ extern "C" void func_ov007_020b1cf0(void) {
     }
 
     if (flag != 0) {
-        WORK->states[1]->requestedState = 4;
+        gMenuWork->states[1]->requestedState = 4;
         return;
     }
 

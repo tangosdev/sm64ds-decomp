@@ -15,7 +15,7 @@ typedef char Ov007Work_transitionMode_must_be_at_0x20[(int)&((Ov007Work *)0)->tr
 
 void func_ov007_020b0358(void)
 {
-    Ov007Work *b = WORK;
+    Ov007Work *b = gMenuWork;
     Ov007MenuState *s2 = b->states[1];
     int state = s2->currentState;
     int r5 = s2->stateTicks;
@@ -31,7 +31,7 @@ void func_ov007_020b0358(void)
             return;
         b->pendingBgMode = 3;
         func_ov007_020bca40(1);
-        WORK->states[1]->requestedState = 1;
+        gMenuWork->states[1]->requestedState = 1;
         return;
     case 1:
         if (r5 == 0) {
@@ -42,7 +42,7 @@ void func_ov007_020b0358(void)
             return;
         b->pendingBgMode = 4;
         func_ov007_020bca40(2);
-        WORK->states[1]->requestedState = 2;
+        gMenuWork->states[1]->requestedState = 2;
         return;
     case 2: {
         int hit = 0;
@@ -53,25 +53,25 @@ void func_ov007_020b0358(void)
             func_ov007_020bd1c0(1);
         }
         if (r5 == 40) {
-            WORK->states[2]->requestedState = 7;
+            gMenuWork->states[2]->requestedState = 7;
         }
-        st2 = WORK->transitionMode;
+        st2 = gMenuWork->transitionMode;
         switch (st2) {
         case 1:
             if (PickerScene_GetDisplayState()->currentState == 8) {
-                WORK->states[0]->requestedState = 2;
+                gMenuWork->states[0]->requestedState = 2;
                 hit = 1;
             }
             break;
         case 0:
             if (PickerScene_GetDisplayState()->currentState == 5) {
-                WORK->states[0]->requestedState = 3;
+                gMenuWork->states[0]->requestedState = 3;
                 hit = 1;
             }
             break;
         }
         if (hit) {
-            WORK->pendingBgMode = 5;
+            gMenuWork->pendingBgMode = 5;
         }
         return;
     }

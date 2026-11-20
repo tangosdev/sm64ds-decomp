@@ -145,7 +145,7 @@
   "bss": [],
   "notes": [
     "Text only: the bss words 0x02103360 / 0x02103364 and the .data tables stay ROM-owned and are reached by extern, as the one-function sources did.",
-    "Folded from 12 one-function sources. Each had its own partial Ov007Cursor and Ov007Pad and its own spelling of data_ov007_02103360 (char *, int *, int[], two local structs); the unit has one full 0x1c-byte Ov007Cursor and one 0x70-byte Ov007Pad, and declares data_ov007_02103360 as Ov007Cursor *, which no file outside this unit names.",
+    "Folded from 12 one-function sources. Each had its own partial Ov007Cursor and Ov007Pad and its own spelling of sCursor (char *, int *, int[], two local structs); the unit has one full 0x1c-byte Ov007Cursor and one 0x70-byte Ov007Pad, and declares sCursor as Ov007Cursor *, which no file outside this unit names.",
     "func_ov007_020b3c54 is defined void(void) with its mode an uninitialised local, as its one caller (func_ov007_020b3360) calls it; the shard spelled the leftover r1 as a second parameter."
   ],
   "verification": {

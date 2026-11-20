@@ -240,7 +240,7 @@ void PickerScene_HandleEditKeys(void) {
     u16 h;
 
     s = sPickerScene->picker;
-    pad = WORK->pad;
+    pad = gMenuWork->pad;
 
     {
         u32 w = pad->heldFrames[9];
@@ -398,7 +398,7 @@ void PickerScene_HandleEditKeys(void) {
  * committed stroke. */
 void PickerScene_HandleDrawingKeys(void) {
     Ov007Picker *r5 = sPickerScene->picker;
-    Ov007Pad *r4 = WORK->pad;
+    Ov007Pad *r4 = gMenuWork->pad;
     unsigned short r2 = r4->keys;
     int r3 = 0;
 
@@ -469,7 +469,7 @@ void PickerScene_HandleDrawingKeys(void) {
 
     {
         int r3b = 0;
-        Ov007Pad *r2p = WORK->pad;
+        Ov007Pad *r2p = gMenuWork->pad;
         unsigned short r1 = r2p->keys;
         if ((r1 & 0x100) && !(r2p->prevKeys & 0x100)) {
             r3b = 1;
@@ -486,7 +486,7 @@ void PickerScene_HandleDrawingKeys(void) {
     }
 
     {
-        Ov007Touch *touch = WORK->touch;
+        Ov007Touch *touch = gMenuWork->touch;
         if (touch->cur.touch != 0 || touch->releasedFrames < 1U)
             return;
     }
@@ -817,7 +817,7 @@ int PickerScene_UpdateIntro(int t) {
             sPickerScene->springSet = 0;
         }
         {
-            Ov007Camera *o = WORK->cameras[0];
+            Ov007Camera *o = gMenuWork->cameras[0];
             func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, &local);
         }
         PickerScene_UpdatePicker();
@@ -932,7 +932,7 @@ int PickerScene_UpdateDrawing(void) {
     Ov007PickerScene *mgr = sPickerScene;
     int r6 = 0;
     int r5;
-    Ov007Touch *r4 = WORK->touch;
+    Ov007Touch *r4 = gMenuWork->touch;
 
     if (mgr->awaitingTap != 0 && r4->cur.touch != 0 && r4->prev.touch == 0 &&
         r4->releasedFrames >= 1 && func_ov007_020c1da0(0) == 0) {
@@ -981,7 +981,7 @@ int PickerScene_UpdateDrawing(void) {
                                              ((Ov007PickerScene *)r3)->strokeTime >> 12);
                     func_ov007_020bdbcc(r4->deltaX, r4->deltaY);
                 } else {
-                    Ov007Touch *obj = WORK->touch;
+                    Ov007Touch *obj = gMenuWork->touch;
                     ((u32 *)obj)[11] = obj->flags | 1;
                 }
                 if (r5 == 2) {
@@ -989,11 +989,11 @@ int PickerScene_UpdateDrawing(void) {
                     sPickerScene->strokeTime = 0;
                     r6 = 1;
                 } else if (r5 == 1) {
-                    Ov007Touch *obj = WORK->touch;
+                    Ov007Touch *obj = gMenuWork->touch;
                     obj->countdown = 0;
                 }
             } else if (r4->cur.touch == 0) {
-                Ov007Touch *obj = WORK->touch;
+                Ov007Touch *obj = gMenuWork->touch;
                 if (obj->releasedFrames == 1) {
                     int res = func_ov007_020c6550(((Ov007PickerScene *)r3)->picker);
                     if (res != 0) {
@@ -1003,7 +1003,7 @@ int PickerScene_UpdateDrawing(void) {
                         s = sPickerScene;
                         s->strokeCount = s->picker->groupCount;
                         sPickerScene->strokeTime = 0;
-                        obj = WORK->touch;
+                        obj = gMenuWork->touch;
                         ((u32 *)obj)[11] = obj->flags | 1;
                     }
                 }
@@ -1057,7 +1057,7 @@ void PickerScene_BeginEdit(void) {
 
 void PickerScene_UpdateEdit(void) {
     Ov007Picker *r5 = sPickerScene->picker;
-    Ov007Touch *r4 = WORK->touch;
+    Ov007Touch *r4 = gMenuWork->touch;
     VecFx32 v;
 
     PickerScene_HandleEditKeys();
@@ -1065,7 +1065,7 @@ void PickerScene_UpdateEdit(void) {
     if (r4->cur.touch != 0 && r4->heldFrames >= 1 && func_ov007_020c1da0(0) == 0) {
         Ov007Camera *camera;
         sPickerScene->springSet = 0;
-        camera = WORK->cameras[0];
+        camera = gMenuWork->cameras[0];
         func_ov007_020bfe4c(camera, r4->cur.x << 12, r4->cur.y << 12, -camera->distance, &v);
         if (r4->heldFrames == 1) {
             int s;
@@ -1113,7 +1113,7 @@ void PickerScene_UpdateEdit(void) {
 
     func_ov007_020c5948(r5, &v);
 
-    if (r4->cur.touch != 0 || WORK->pad->keys != 0) {
+    if (r4->cur.touch != 0 || gMenuWork->pad->keys != 0) {
         sPickerScene->idleFrames = 0;
     } else {
         sPickerScene->idleFrames++;
@@ -1134,7 +1134,7 @@ extern "C" void PickerScene_Create(int mode, int drawingIndex) {
     sPickerSprites = (Ov007PickerSprites *)func_ov007_020c3df4(0, 0x14);
 
     sPickerScene->picker =
-        func_ov007_020c690c(0xc8, 0x1f4, 0x1f4, WORK->cameras[0], (void *)&data_ov007_020d7b60,
+        func_ov007_020c690c(0xc8, 0x1f4, 0x1f4, gMenuWork->cameras[0], (void *)&data_ov007_020d7b60,
                             (void *)data_ov007_020d7b80);
 
     sPickerScene->states[0] = (Ov007MenuState *)func_ov007_020c9388(0);
@@ -1162,11 +1162,11 @@ extern "C" void PickerScene_Create(int mode, int drawingIndex) {
         sprite = sPickerSprites->sprites[i];
 
         if (i == 0) {
-            sprite->frames[0] = WORK->textures[3];
+            sprite->frames[0] = gMenuWork->textures[3];
             sprite->depth = 0xfffcdf01;
             sprite->polygonId = 0x18;
         } else {
-            sprite->frames[0] = WORK->textures[4];
+            sprite->frames[0] = gMenuWork->textures[4];
             sprite->depth = -0x32000;
             sprite->polygonId = 0x17;
         }
@@ -1179,8 +1179,8 @@ extern "C" void PickerScene_Create(int mode, int drawingIndex) {
         sprite->height = (s16)size;
         sprite->alpha = startAlpha;
 
-        func_ov007_020c43bc(sprite, WORK->cameras[1]);
-        func_ov007_020c4388(sprite, WORK->cameras[1]);
+        func_ov007_020c43bc(sprite, gMenuWork->cameras[1]);
+        func_ov007_020c4388(sprite, gMenuWork->cameras[1]);
     }
 
     sPickerSprites->sprites[2] = func_ov007_020c44e4(1);
@@ -1203,12 +1203,12 @@ extern "C" void PickerScene_Create(int mode, int drawingIndex) {
     bar->drawFlags = bar->drawFlags | 1;
     bar->polygonId = 0x1a;
 
-    itemSprite = WORK->itemViews[5]->sprite;
+    itemSprite = gMenuWork->itemViews[5]->sprite;
     sPickerSprites->sprites[2]->depth = itemSprite->depth - 0x10;
     sPickerSprites->sprites[3]->depth = itemSprite->depth - 0xff;
 
-    func_ov007_020c43bc(sPickerSprites->sprites[2], WORK->cameras[1]);
-    func_ov007_020c43bc(sPickerSprites->sprites[3], WORK->cameras[1]);
+    func_ov007_020c43bc(sPickerSprites->sprites[2], gMenuWork->cameras[1]);
+    func_ov007_020c43bc(sPickerSprites->sprites[3], gMenuWork->cameras[1]);
 
     sPickerScene->strokeTime = 0;
     sPickerScene->tweens[0]->to = 0x800;
@@ -1410,7 +1410,7 @@ void func_ov007_020b91b4(void) {
         }
         sPickerScene->states[1]->requestedState = 5;
         {
-            Ov007Touch *o = WORK->touch;
+            Ov007Touch *o = gMenuWork->touch;
             /* the read through a const view is load-bearing: `o->flags |= 1`
              * builds 4 bytes longer */
             o->flags = ((const Ov007Touch *)o)->flags | 1;
@@ -1461,7 +1461,7 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
             b->screenY += (-d) << 8;
             break;
         }
-        func_ov007_020c4388(sPickerSprites->sprites[1], WORK->cameras[1]);
+        func_ov007_020c4388(sPickerSprites->sprites[1], gMenuWork->cameras[1]);
     }
     func_ov007_020c421c(sPickerSprites->sprites[0]);
     func_ov007_020c421c(sPickerSprites->sprites[1]);
@@ -1472,14 +1472,14 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
         f8 = (int)sPickerSprites;
         /* Kept (#821 r21). The ROM loads the scene pointer before the work
            pointer; the volatile reads are what hold that order. Plain sPickerScene
-           and WORK reads into c and g (in any order around the sprite read),
-           direct sPickerScene->/WORK->/sPickerSprites-> spellings with or without scene and
+           and gMenuWork reads into c and g (in any order around the sprite read),
+           direct sPickerScene->/gMenuWork->/sPickerSprites-> spellings with or without scene and
            sprite locals, and the sprite reads first all schedule the work
            chain ahead of the scene: 16 to 20 of 120 words wrong. */
         /* Kept (#821 r79): inline GetScene()/GetWork() accessors, for both reads, either one,
            or as initialisers, are 16 to 20 words off. */
         c = *((Ov007PickerScene *volatile *)&sPickerScene);
-        g = *((Ov007Work *volatile *)&data_ov007_0210342c);
+        g = *((Ov007Work *volatile *)&gMenuWork);
         flag = c->awaitingTap;
         p5 = g->itemViews[5];
         inner = c->picker;
