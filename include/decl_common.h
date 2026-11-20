@@ -989,7 +989,6 @@ extern int func_ov065_02119210(struct daDossyCap_c *);
 extern void func_ov065_021195bc(void *, void *, void *);
 extern void func_ov065_021195d0(void *, void *, void *);
 extern int func_ov070_0211f0a4(struct daPropeller_Heyho_c *);
-extern void func_ov070_0211f100(char *);
 extern void func_ov092_021313b0(void *);
 extern void func_ov092_02131a88(char *);
 extern void func_ov100_0214344c(struct daWanwan2_c *);
