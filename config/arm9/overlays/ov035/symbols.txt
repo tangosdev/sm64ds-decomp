@@ -106,8 +106,7 @@ g_profile_CT_MECHA12L kind:data(any) addr:0x02112ac0 ambiguous
 g_profile_CT_MECHA12S kind:data(any) addr:0x02112adc ambiguous
 _ZTV16daObjCtMecha10_c kind:data(any) addr:0x02112b00
 data_ov035_02112b08 kind:data(any) addr:0x02112b08 ambiguous
-data_ov035_02112b80 kind:data(any) addr:0x02112b80
-data_ov035_02112b84 kind:data(any) addr:0x02112b84 ambiguous
+sTTCSpinnerSpeeds kind:data(any) addr:0x02112b80
 _ZTI16daObjCtMecha11_c kind:data(any) addr:0x02112b88
 _ZTS16daObjCtMecha11_c kind:data(any) addr:0x02112b94
 g_profile_CT_MECHA11 kind:data(any) addr:0x02112ba8 ambiguous

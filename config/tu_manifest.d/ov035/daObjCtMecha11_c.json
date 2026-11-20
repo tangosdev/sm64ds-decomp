@@ -22,7 +22,7 @@
       "name": ".data.m11Ang",
       "input_section": ".data",
       "start": "0x02112b80",
-      "end": "0x02112b84"
+      "end": "0x02112b88"
     },
     {
       "name": ".text",
@@ -119,11 +119,11 @@
       "evidence": "CLPS words for the second mechanism."
     },
     {
-      "symbol": "data_ov035_02112b80",
+      "symbol": "sTTCSpinnerSpeeds",
       "address": "0x02112b80",
-      "size": "0x4",
+      "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "Two angle halfwords."
+      "evidence": "Four pitch-speed halfwords, one per clock setting (slow, fast, random, stopped): N64 ttc_spinner.inc.c's table, {200, 600, 200, 0}."
     }
   ],
   "bss": [
@@ -363,7 +363,7 @@
         {
           "section": ".data.m11Ang",
           "start": "0x02112b80",
-          "end": "0x02112b84",
+          "end": "0x02112b88",
           "differingBytes": 0,
           "firstDiff": null
         },

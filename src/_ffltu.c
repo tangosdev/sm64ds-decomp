@@ -1,6 +1,6 @@
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 //
-// _ffltu at 0x01ffa440 (ITCM), also known as func_01ffa440 -- unsigned 32-bit integer to
+// _ffltu at 0x01ffa440 (ITCM), formerly catalogued as func_01ffa440 -- unsigned 32-bit integer to
 // float conversion. Toolchain runtime, shipped as assembly; there is no C source for it in
 // the game. The name is the one mwccarm 2004/b56 itself emits a `bl` to for `(float)u` on
 // an unsigned (checked by compiling that expression).

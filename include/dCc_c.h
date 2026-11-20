@@ -3,9 +3,7 @@
 
 #include "types.h"
 
-/* The cylinder-collision root, vtable _ZTV5dCc_c at 0x0208e6ec
- * (also reachable as data_0208e6ec, kept as an alias so existing consumers
- * and their relocations stay untouched -- the #972 pattern).
+/* The cylinder-collision root, vtable _ZTV5dCc_c at 0x0208e6ec.
  *
  * VTABLE, 4 slots, read out of the ROM:
  *

@@ -38,6 +38,10 @@
   "__global_destructor_chain": {
    "src/__register_global_object.c": ["return:DestructorChain *"]
   },
+  "__ptmf_null": {
+   "src/game/actors/d_a_door.cpp": ["return:daDoor_StatePmf"],
+   "src/minigames/unit020b2c84.cpp": ["return:ElemFn"]
+  },
   "arc_list": {
    "src/engine/fs/FS_Archive.cpp": ["return:FSArchive *"]
   },
@@ -46,9 +50,6 @@
   },
   "data_02075f14": {
    "include/decl_common.h": ["return:char []"]
-  },
-  "data_02086b58": {
-   "src/minigames/unit020b2c84.cpp": ["return:ElemFn"]
   },
   "data_02092114": {
    "include/decl_common.h": ["return:unsigned char"]

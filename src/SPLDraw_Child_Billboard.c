@@ -9,7 +9,7 @@ extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix *
 extern void SPLUtil_DrawXYPlane(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one child particle as a camera-facing quad (child draw type 0,
- * func_0204a5c8): SPLDraw_Billboard with the child record's tile counts. The
+ * SPLManager_DoDraw): SPLDraw_Billboard with the child record's tile counts. The
  * name is pret's SPL's. */
 void SPLDraw_Child_Billboard(ManagerView *mgr, ParticleElement *ptcl) {
     ParticleSystem *sys = mgr->mCurrentSystem;

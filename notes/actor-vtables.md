@@ -11,10 +11,10 @@ emits no RTTI header, so the address stored into `[this+0x0]` *is* slot 0.
     ActorBase  →  ActorDerived  →  Actor  →  daPly_c
 
 `Actor` does **not** derive from `ActorBase` directly. `src/_ZN5ActorC2Ev.cpp` calls
-`ActorBase::ActorBase`, stores `&data_0208e4b8`, then immediately overwrites it with
-`&data_0208e3a4` — two consecutive vptr stores, which is what an inlined intermediate-base
+`ActorBase::ActorBase`, stores `&_ZTV7dBase_c`, then immediately overwrites it with
+`&_ZTV8dActor_c` — two consecutive vptr stores, which is what an inlined intermediate-base
 constructor looks like. `src/_ZN12ActorDerivedD1Ev.c` closes the loop: it stores
-`data_0208e4b8` and calls `_ZN9ActorBaseD2Ev`, so ActorDerived's immediate base is
+`_ZTV7dBase_c` and calls `_ZN9ActorBaseD2Ev`, so ActorDerived's immediate base is
 ActorBase.
 
 `ActorDerived::ActorDerived` and `~ActorDerived` are inline in the original — no standalone
@@ -23,15 +23,15 @@ Actor's C2/D2 bytes.
 
 ## Where they live
 
-| class | vtable | slots | also named | module |
+| class | vtable | slots | symbols.txt name | module |
 |---|---|---:|---|---|
-| `ActorBase` | `_ZTV9ActorBase` | 18 | `data_02099edc` | [arm9](../config/arm9/symbols.txt) |
-| `ActorDerived` | `_ZTV12ActorDerived` | 18 | `data_0208e4b8` | [arm9](../config/arm9/symbols.txt) |
-| `Actor` | `_ZTV5Actor` | 31 | `data_0208e3a4` | [arm9](../config/arm9/symbols.txt) |
-| `daPly_c` | `_ZTV7daPly_c` | 31 | `data_ov002_0210a83c` | [ov002](../config/arm9/overlays/ov002/symbols.txt) |
+| `ActorBase` | `_ZTV9ActorBase` | 18 | `_ZTV7fBase_c` | [arm9](../config/arm9/symbols.txt) |
+| `ActorDerived` | `_ZTV12ActorDerived` | 18 | `_ZTV7dBase_c` | [arm9](../config/arm9/symbols.txt) |
+| `Actor` | `_ZTV5Actor` | 31 | `_ZTV8dActor_c` | [arm9](../config/arm9/symbols.txt) |
+| `daPly_c` | `_ZTV7daPly_c` | 31 | `_ZTV7daPly_c` | [ov002](../config/arm9/overlays/ov002/symbols.txt) |
 
-The `data_` names are kept as aliases, not replaced: 45 `src/` files reference the three
-arm9 ones and 3 reference daPly_c's. `eligible.py` drops any file with an unresolvable
+The numeric `data_` aliases these vtables once carried are retired (naming round 13,
+2026-11): every reference spells the `_ZTV` name. `eligible.py` drops any file with an unresolvable
 reference, and gap objects import carved-out symbols weakly — so a stale name links silently
 to zero rather than erroring.
 

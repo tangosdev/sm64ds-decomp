@@ -125,9 +125,9 @@ void ShowCrashScreen(void)
         nds_print(scr + 0x280, data_0208e624);
     }
 
-    if (data_020a0eac->Intact()) {
-        int mx = data_020a0eac->MaxAllocationUnitSize();
-        nds_printf(scr + 0x2a0, data_0208e634, ((int)data_020a0eac->heapSize - mx) / 1024,
+    if (GAME_HEAP_PTR->Intact()) {
+        int mx = GAME_HEAP_PTR->MaxAllocationUnitSize();
+        nds_printf(scr + 0x2a0, data_0208e634, ((int)GAME_HEAP_PTR->heapSize - mx) / 1024,
                    mx / 1024);
     } else {
         nds_print(scr + 0x280, data_0208e648);
