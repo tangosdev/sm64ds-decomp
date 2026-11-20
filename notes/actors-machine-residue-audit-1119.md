@@ -203,11 +203,12 @@ real analysis first.
 
 ## Two tooling notes for whoever picks this up
 
-`tools/port_refcheck.py` **no longer exists** — deleted upstream — although
-`AGENTS.md` still lists it as required before a rename or file move. Symbol
-renames like the ones above do not move files, so `port/`'s by-path references
-are unaffected; a file move still needs some equivalent check, and there isn't
-one right now.
+The port reference check **no longer exists** in this tree, although
+`AGENTS.md` still lists it as required before a rename or file move. The port
+itself moved to its own repository (#5633), so a rename here is checked by
+that repository's build, not by a script in this one. Symbol renames like the
+ones above do not move files; a file move still needs the port repository's
+build to confirm nothing it points at went missing.
 
 `python tools/rombuild.py -j16 --no-rom`, the local byte gate `AGENTS.md`
 prescribes, **exits 1 on clean `main`** in this workspace. Measured over three
