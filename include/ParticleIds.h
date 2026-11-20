@@ -44,8 +44,8 @@ enum ParticleId {
     kPtclAbukuBubble = 0x001,           /* daObjAbuku_c::Behavior */
     kPtclAbukuPop = 0x002,              /* daObjAbuku_c::Pop */
     kPtclWhompPounded = 0x003,          /* daBtn_c::func_ov079_02124ed4 */
-    kPtclWhompKingDefeat = 0x004,       /* daBtn_c::func_ov079_021246dc */
-    kPtclWhompDefeat = 0x005,           /* daBtn_c::func_ov079_021246dc */
+    kPtclWhompKingDefeat = 0x004,       /* daBtn_c::UpdateDefeated */
+    kPtclWhompDefeat = 0x005,           /* daBtn_c::UpdateDefeated */
     kPtclBattaBlockBreak = 0x006,       /* daBttBk_c::HandleCollision */
     kPtclCannonShotA = 0x007,           /* daCnn_c::StateFire */
     kPtclCannonShotB = 0x008,           /* daCnn_c::StateFire */
