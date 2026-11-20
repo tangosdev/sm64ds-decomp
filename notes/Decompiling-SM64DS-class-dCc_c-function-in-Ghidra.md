@@ -306,3 +306,15 @@ We can double click the label, and another sub-window appears, where the problem
 ![Ghidra-Advanced-Reference-Editor-fix-ov006-DAT](images/Ghidra-Advanced-Reference-Editor-fix-ov006-DAT.png)
 
 The `Address` field is set to `02142f70`, which is correct, however, the main way of accessing the `.bss` section is through the `arm9_ov006.bss` segment, not through `ram:02142f70`. We can change it to `arm9_ov006.bss`, and click `OK`. The red text should disappear, and the decompiled code will now show the correct references to the `.bss` section.
+
+![Ghidra-TrmpFx_ClearAll_bss-sTrmpFxCount-fixed](images/Ghidra-TrmpFx_ClearAll_bss-sTrmpFxCount-fixed.png)
+
+In the decompiled view, we can rename the globals `sTrmpFxCount`, `sTrmpFxPool`, and `sTrmpFxList` to their correct names, and the decompiled code will get closer to the IDE source code:
+
+```text
+_DAT_02142f70 -> sTrmpFxCount
+_DAT_02142f68 -> sTrmpFxPool
+_DAT_02142f64 -> sTrmpFxList
+```
+
+![Ghidra-Decompiler-View-TrmpFx_ClearAll-Globals-Rename](images/Ghidra-Decompiler-View-TrmpFx_ClearAll-Globals-Rename.png)
