@@ -521,28 +521,28 @@
       "ordinal": 65
     },
     {
-      "symbol": "_ZN11daKpaTail_c19func_ov060_02115b84Ev",
+      "symbol": "_ZN11daKpaTail_c8TailLoopEv",
       "address": "0x02115b84",
       "size": "0x00000098",
       "legacy_source": "src/func_ov060_02115b84.cpp",
       "ordinal": 66
     },
     {
-      "symbol": "_ZN11daKpaTail_c19func_ov060_02115c1cEv",
+      "symbol": "_ZN11daKpaTail_c10ActHoldingEv",
       "address": "0x02115c1c",
       "size": "0x00000134",
       "legacy_source": "src/func_ov060_02115c1c.c",
       "ordinal": 67
     },
     {
-      "symbol": "_ZN11daKpaTail_c19func_ov060_02115d50Ev",
+      "symbol": "_ZN11daKpaTail_c11ActCooldownEv",
       "address": "0x02115d50",
       "size": "0x00000018",
       "legacy_source": "src/func_ov060_02115d50.c",
       "ordinal": 68
     },
     {
-      "symbol": "_ZN11daKpaTail_c19func_ov060_02115d68Ev",
+      "symbol": "_ZN11daKpaTail_c7ActFreeEv",
       "address": "0x02115d68",
       "size": "0x00000118",
       "legacy_source": "src/func_ov060_02115d68.cpp",
@@ -635,14 +635,14 @@
       "evidence": "health by variant, four bytes"
     },
     {
-      "symbol": "data_ov060_0211927c",
+      "symbol": "sKoopaTextureSequenceFiles",
       "address": "0x0211927c",
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "six texture-sequence handles"
     },
     {
-      "symbol": "data_ov060_021192dc",
+      "symbol": "sKoopaAnimationFiles",
       "address": "0x021192dc",
       "size": "0x70",
       "binding": "STB_GLOBAL",
@@ -746,21 +746,21 @@
       "address": "0x211a548",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c19func_ov060_02115c1cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c10ActHoldingEv"
     },
     {
       "symbol": "@3140",
       "address": "0x211a550",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c19func_ov060_02115d50Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c11ActCooldownEv"
     },
     {
       "symbol": "@3139",
       "address": "0x211a558",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c19func_ov060_02115d68Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daKpaTail_c7ActFreeEv"
     },
     {
       "symbol": "@3120",
@@ -982,7 +982,7 @@
       "evidence": "animation resource handle constructed with file ID 0x370"
     },
     {
-      "symbol": "data_ov060_0211ac78",
+      "symbol": "sKoopaModelFile",
       "address": "0x211ac78",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1339,21 +1339,21 @@
       "evidence": "compiler-generated destructor-registration node"
     },
     {
-      "symbol": "data_ov060_0211ae9c",
+      "symbol": "sBowserTailStateTable",
       "address": "0x211ae9c",
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "the three-entry daKpaTail_c pointer-to-member state table; the initializer copies the three descriptors into it"
     },
     {
-      "symbol": "data_ov060_0211aeb4",
+      "symbol": "sBowserHoldStateTable",
       "address": "0x211aeb4",
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "the four-entry daKpa_c pointer-to-member hold-state table; the initializer copies the four descriptors into it"
     },
     {
-      "symbol": "data_ov060_0211aed4",
+      "symbol": "sBowserStateTable",
       "address": "0x211aed4",
       "size": "0xa0",
       "binding": "STB_GLOBAL",
@@ -3256,7 +3256,7 @@
       "source": "0x211a548",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daKpaTail_c19func_ov060_02115c1cEv",
+      "symbol": "_ZN11daKpaTail_c10ActHoldingEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2115c1c"
@@ -3266,7 +3266,7 @@
       "source": "0x211a550",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daKpaTail_c19func_ov060_02115d50Ev",
+      "symbol": "_ZN11daKpaTail_c11ActCooldownEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2115d50"
@@ -3276,7 +3276,7 @@
       "source": "0x211a558",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daKpaTail_c19func_ov060_02115d68Ev",
+      "symbol": "_ZN11daKpaTail_c7ActFreeEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2115d68"
@@ -4106,7 +4106,7 @@
       "source": "0x2119bec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov060_0211ac78",
+      "symbol": "sKoopaModelFile",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ac78"
@@ -4836,7 +4836,7 @@
       "source": "0x2119d78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov060_0211aeb4",
+      "symbol": "sBowserHoldStateTable",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211aeb4"
@@ -4886,7 +4886,7 @@
       "source": "0x2119d8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov060_0211aed4",
+      "symbol": "sBowserStateTable",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211aed4"
@@ -5096,7 +5096,7 @@
       "source": "0x2119de0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov060_0211ae9c",
+      "symbol": "sBowserTailStateTable",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x211ae9c"
