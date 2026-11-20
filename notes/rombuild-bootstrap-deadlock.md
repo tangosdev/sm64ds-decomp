@@ -85,5 +85,6 @@ the byte proof:
 Until one is chosen, the working local gates for a rename or a match are
 per-function `tools/match.py` and
 `tools/prepush_linkcheck.py --range origin/main..HEAD`, both of which run fine
-in this workspace. The 190 symbol renames in #5703-#5732 were verified that
-way.
+in this workspace, as does `python tools/tubuild.py verify <module>/<Class>`
+for a promoted TU. The naming PRs #5703-#5732 were gated locally with per-TU
+strict `tubuild.py verify`, then by `PR validation`.
