@@ -218,14 +218,14 @@
       "evidence": "compiler-generated anim resource destructor-registration node"
     },
     {
-      "symbol": "data_ov026_02113f2c",
+      "symbol": "sSpinState",
       "address": "0x02113f2c",
       "size": "0x10",
       "binding": "STB_GLOBAL",
       "evidence": "spin state record; the initializer copies its two descriptors into it"
     },
     {
-      "symbol": "data_ov026_02113f3c",
+      "symbol": "sDragState",
       "address": "0x02113f3c",
       "size": "0x10",
       "binding": "STB_GLOBAL",
@@ -458,7 +458,7 @@
       "source": "0x02112d60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov026_02113f2c",
+      "symbol": "sSpinState",
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x02113f2c"
@@ -468,7 +468,7 @@
       "source": "0x02112d64",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov026_02113f3c",
+      "symbol": "sDragState",
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x02113f3c"

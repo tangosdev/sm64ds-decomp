@@ -177,7 +177,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z13Puff_ClearAllii",
+      "symbol": "_Z13Puff_ClearAlliPP7OamAttr",
       "address": "0x020c8a9c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_020c8a9c.c",

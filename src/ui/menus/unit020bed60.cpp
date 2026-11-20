@@ -7,7 +7,7 @@
  * unit<addr> name.
  *
  * What the code does. The module owns one 0x30-byte record,
- * data_ov007_02104bd4 (Ov007MeshScene): a grid mesh (func_ov007_020cbbb0),
+ * sMeshScene (Ov007MeshScene): a grid mesh (func_ov007_020cbbb0),
  * two materials it is drawn with, a wave that ripples it, and eight swings,
  * one per menu item, that tie item sprites to the mesh.
  * func_ov007_020bf428 builds it and func_ov007_020bf304 tears it down;
@@ -45,7 +45,7 @@
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
 
-/* data_ov007_02104bd4: the 0x30-byte record func_ov007_020bf428 allocates
+/* sMeshScene: the 0x30-byte record func_ov007_020bf428 allocates
  * and fills; medium-confidence name. The slot names follow their builders. */
 typedef struct Ov007MeshScene {
     Ov007Mesh *mesh;                 /* 0x00: func_ov007_020cbbb0 */
@@ -56,7 +56,7 @@ typedef struct Ov007MeshScene {
 
 typedef char Ov007MeshScene_size_must_be_0x30[sizeof(Ov007MeshScene) == 0x30 ? 1 : -1];
 
-extern Ov007MeshScene *data_ov007_02104bd4;
+extern Ov007MeshScene *sMeshScene;
 extern VecFx32 data_ov007_020d7d60;
 extern Ov007MeshParams data_ov007_020d7cb0;
 extern u8 data_ov007_020d7c98[];
@@ -88,8 +88,6 @@ extern "C" Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
 void func_ov007_020bed60(int x, int y, int strength);
 extern "C" void func_ov007_020beeb0(void);
 
-#define SCENE data_ov007_02104bd4
-
 /* Picks the grid point of the mesh under screen point (x, y): the point is
  * unprojected through the camera at the camera's depth, then
  * func_ov007_020c30ac finds the mesh vertex nearest it. Returns its index,
@@ -108,15 +106,15 @@ int Ov007Mesh::func_ov007_020bf630(Ov007Camera *camera, int x, int y, int maxDis
  * callers), is sized and moved into the world, and the swing takes its
  * position and world size and is bound to the mesh. */
 void func_ov007_020bf57c(Ov007Camera *camera, int idx) {
-    Ov007Sprite *e = WORK->itemViews[idx + 0xe]->sprite;
-    Ov007Swing *swing = SCENE->swings[idx];
+    Ov007Sprite *e = gMenuWork->itemViews[idx + 0xe]->sprite;
+    Ov007Swing *swing = sMeshScene->swings[idx];
 
     Ov007Sprite buf = *e;
     buf.depth = -camera->distance;
     func_ov007_020c43bc(&buf, camera);
     func_ov007_020c4388(&buf, camera);
     swing->func_ov007_020c9f10(&buf.pos, buf.worldWidth, buf.worldHeight);
-    swing->func_ov007_020c9d90(SCENE->mesh);
+    swing->func_ov007_020c9d90(sMeshScene->mesh);
 }
 
 /* Builds the mesh scene once: the 0xf x 0xe grid mesh, its two materials
@@ -129,31 +127,31 @@ extern "C" void func_ov007_020bf428(void) {
     u8 *bp;
     Ov007MeshMaterial *ret;
 
-    if (SCENE != 0)
+    if (sMeshScene != 0)
         return;
 
-    SCENE = (Ov007MeshScene *)func_ov007_020c3df4(0, sizeof(Ov007MeshScene));
-    SCENE->mesh = func_ov007_020cbbb0(15, 14, 0x6000, &data_ov007_020d7cb0);
+    sMeshScene = (Ov007MeshScene *)func_ov007_020c3df4(0, sizeof(Ov007MeshScene));
+    sMeshScene->mesh = func_ov007_020cbbb0(15, 14, 0x6000, &data_ov007_020d7cb0);
 
     w = data_ov007_020d7cf8;
     bp = data_ov007_020d7c98;
     for (i = 0; i < 2; i++) {
         ret = func_ov007_020cbf8c(w);
         w++;
-        SCENE->materials[i] = ret;
-        SCENE->materials[i]->texture = (struct Ov007Texture *)WORK->textures[*bp];
+        sMeshScene->materials[i] = ret;
+        sMeshScene->materials[i]->texture = (struct Ov007Texture *)gMenuWork->textures[*bp];
         bp++;
     }
 
-    SCENE->wave = func_ov007_020ca2a8(&data_ov007_020d7c9c);
+    sMeshScene->wave = func_ov007_020ca2a8(&data_ov007_020d7c9c);
 
     for (i = 0; i < 8; i++) {
-        SCENE->swings[i] = data_ov007_020d7cc8.func_ov007_020ca010();
-        func_ov007_020bf57c(WORK->cameras[0], i);
+        sMeshScene->swings[i] = data_ov007_020d7cc8.func_ov007_020ca010();
+        func_ov007_020bf57c(gMenuWork->cameras[0], i);
     }
 
     for (i = 0; i <= 2; i++) {
-        WORK->numberSprites[i] = NumberSprite_Create(i);
+        gMenuWork->numberSprites[i] = NumberSprite_Create(i);
     }
 
     for (i = 0; i < 20; i++) {
@@ -167,7 +165,7 @@ extern "C" void func_ov007_020bf304(void) {
     int i;
     Ov007MeshScene *g;
 
-    g = SCENE;
+    g = sMeshScene;
     if (g == 0) {
         return;
     }
@@ -176,38 +174,38 @@ extern "C" void func_ov007_020bf304(void) {
         Ov007Mesh *mesh = g->mesh;
         if (mesh != 0) {
             func_ov007_020cbb04(mesh);
-            SCENE->mesh = 0;
+            sMeshScene->mesh = 0;
         }
     }
 
     {
-        Ov007MeshWave *wave = SCENE->wave;
+        Ov007MeshWave *wave = sMeshScene->wave;
         if (wave != 0) {
             func_ov007_020ca26c(wave);
-            SCENE->wave = 0;
+            sMeshScene->wave = 0;
         }
     }
 
     for (i = 0; i < 2; i++) {
-        if (SCENE->materials[i] != 0) {
-            func_ov007_020c3d1c(SCENE->materials[i]);
-            SCENE->materials[i] = 0;
+        if (sMeshScene->materials[i] != 0) {
+            func_ov007_020c3d1c(sMeshScene->materials[i]);
+            sMeshScene->materials[i] = 0;
         }
     }
 
     for (i = 0; i < 8; i++) {
-        SCENE->swings[i]->func_ov007_020c9fa0();
+        sMeshScene->swings[i]->func_ov007_020c9fa0();
     }
 
     for (i = 0; i <= 2; i++) {
-        if (WORK->numberSprites[i] != 0) {
-            func_ov007_020c44c4(WORK->numberSprites[i]);
-            WORK->numberSprites[i] = 0;
+        if (gMenuWork->numberSprites[i] != 0) {
+            func_ov007_020c44c4(gMenuWork->numberSprites[i]);
+            gMenuWork->numberSprites[i] = 0;
         }
     }
 
-    func_ov007_020c3d1c(SCENE);
-    SCENE = 0;
+    func_ov007_020c3d1c(sMeshScene);
+    sMeshScene = 0;
 }
 
 /* One frame of the backdrop: pokes the mesh under the stylus (harder for a
@@ -221,24 +219,24 @@ void func_ov007_020beeb0(void) {
     int ambientTarget;
     Ov007Mesh *mesh;
 
-    mesh = SCENE->mesh;
+    mesh = sMeshScene->mesh;
 
-    if (WORK->touch->cur.touch != 0) {
+    if (gMenuWork->touch->cur.touch != 0) {
         int strength;
         if (func_ov007_020c1da0(0) == 0)
             strength = 0x1000;
         else
             strength = 0xbb8;
-        if (WORK->touch->heldFrames != 0) {
-            int dy = WORK->touch->deltaY;
-            int dx = WORK->touch->deltaX;
+        if (gMenuWork->touch->heldFrames != 0) {
+            int dy = gMenuWork->touch->deltaY;
+            int dx = gMenuWork->touch->deltaX;
             int speed = FX_DivS32(FX_Sqrt((dx * dx + dy * dy) << 12), 30);
             int t = FX_MUL(strength, speed);
             if (t >= 0x1000)
                 t = 0x1000;
             strength = (((s64)t * t) >> 12);
         }
-        func_ov007_020bed60(WORK->touch->cur.x, WORK->touch->cur.y, strength);
+        func_ov007_020bed60(gMenuWork->touch->cur.x, gMenuWork->touch->cur.y, strength);
     } else {
         /* the menu cursor's state (func_ov007_020b2cdc returns
          * Ov007Cursor::state) */
@@ -249,7 +247,7 @@ void func_ov007_020beeb0(void) {
             if (state >= 0 && state < 0x18) {
                 state = cursor->previousState;
                 if (state >= 0 && state < 0x18) {
-                    Ov007ItemView *view = WORK->itemViews[state];
+                    Ov007ItemView *view = gMenuWork->itemViews[state];
                     Ov007Item *item = view->item;
                     func_ov007_020bed60(item->posX >> 0xc, item->posY >> 0xc, 0x7d0);
                 }
@@ -257,14 +255,14 @@ void func_ov007_020beeb0(void) {
         }
     }
 
-    func_ov007_020ca1d4(SCENE->wave, mesh);
+    func_ov007_020ca1d4(sMeshScene->wave, mesh);
     func_ov007_020cba78(mesh, 2);
 
     for (int i = 0; i < 8; i++) {
-        Ov007Swing *swing = SCENE->swings[i];
-        Ov007ItemView *view = WORK->itemViews[i + 0xe];
+        Ov007Swing *swing = sMeshScene->swings[i];
+        Ov007ItemView *view = gMenuWork->itemViews[i + 0xe];
         if (view->item->state->stateWork == 2)
-            func_ov007_020bf57c(WORK->cameras[0], i);
+            func_ov007_020bf57c(gMenuWork->cameras[0], i);
         if (view->item->visible != 0) {
             swing->func_ov007_020c9c24(2);
             swing->func_ov007_020c9a84(&view->sprite->posOffset, &view->sprite->rotX,
@@ -275,7 +273,7 @@ void func_ov007_020beeb0(void) {
     }
 
     int fadeFrames;
-    switch (WORK->states[1]->currentState) {
+    switch (gMenuWork->states[1]->currentState) {
     case 0:
     case 1:
     case 11:
@@ -316,8 +314,8 @@ void func_ov007_020beeb0(void) {
     func_ov007_020bce70(palette, fadeFrames);
 
     {
-        Ov007MeshMaterial *mat = SCENE->materials[1];
-        int ticks = WORK->paletteState->stateTicks;
+        Ov007MeshMaterial *mat = sMeshScene->materials[1];
+        int ticks = gMenuWork->paletteState->stateTicks;
         u16 *diffuse = &mat->diffuse;
         u16 *ambient = &mat->ambient;
         int ratio = ProgressRatio(ticks, fadeFrames);
@@ -327,7 +325,7 @@ void func_ov007_020beeb0(void) {
 
     {
         int ratio;
-        Ov007MenuState *fileState = WORK->states[2];
+        Ov007MenuState *fileState = gMenuWork->states[2];
         int color = 0x7fff;
         ratio = 0x1000;
         int state = fileState->currentState;
@@ -337,7 +335,8 @@ void func_ov007_020beeb0(void) {
         } else if (state == 0xa) {
             ratio = ProgressRatio(fileState->stateTicks, 30);
         }
-        WORK->lights[0]->color = func_ov007_020c3be0(ratio, WORK->lights[0]->color, color);
+        gMenuWork->lights[0]->color =
+            func_ov007_020c3be0(ratio, gMenuWork->lights[0]->color, color);
     }
 }
 
@@ -346,18 +345,18 @@ void func_ov007_020beeb0(void) {
 void func_ov007_020bee14(void) {
     VecFx32 v = data_ov007_020d7d60;
     v.z += 0x200;
-    func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[0], &v, 0x3e8, 1);
-    func_ov007_020cb3dc(SCENE->mesh);
+    func_ov007_020ca5f0(sMeshScene->mesh, sMeshScene->materials[0], &v, 0x3e8, 1);
+    func_ov007_020cb3dc(sMeshScene->mesh);
     v.z += 0x200;
-    func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[1], &v, 0x3e8, 1);
+    func_ov007_020ca5f0(sMeshScene->mesh, sMeshScene->materials[1], &v, 0x3e8, 1);
 }
 
 /* Pokes the mesh at screen point (x, y): func_ov007_020bf630 picks the
  * grid point under it through the camera, func_ov007_020ca578 pushes that
  * point with that strength, and the waves hold off for 0x78 ticks. */
 void func_ov007_020bed60(int x, int y, int strength) {
-    Ov007Mesh *mesh = SCENE->mesh;
-    Ov007Camera *camera = WORK->cameras[0];
+    Ov007Mesh *mesh = sMeshScene->mesh;
+    Ov007Camera *camera = gMenuWork->cameras[0];
     int res = mesh->func_ov007_020bf630(camera, x, y, -1);
     if (res == -1)
         return;
@@ -366,5 +365,5 @@ void func_ov007_020bed60(int x, int y, int strength) {
         int d = FX_DivS32(res, mesh->grid->columns);
         func_ov007_020ca578(mesh, m, d, strength);
     }
-    SCENE->wave->delay = 120;
+    sMeshScene->wave->delay = 120;
 }

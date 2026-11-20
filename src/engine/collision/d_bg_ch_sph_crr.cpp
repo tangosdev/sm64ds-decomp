@@ -94,24 +94,24 @@ void dBgCh_SphCrr::GetPushOutBounds(Vector3 *outMin, Vector3 *outMax) {
 
 /* Hit-record forwarders for the three result slots (1 = floor, 2 = wall,
    3 = underneath): one copies the surface hit, one the collider identity. */
-void dBgCh_SphCrr::RecordFloorHit(int triID, void *src) {
-    mClsnResult1.RecordHit(triID, (SurfaceInfo *)src);
+void dBgCh_SphCrr::RecordFloorHit(int triID, SurfaceInfo *src) {
+    mClsnResult1.RecordHit(triID, src);
 }
 
 void dBgCh_SphCrr::SetFloorCollider(int i, int clsnID, dActor_c *owner, dBgW *collider) {
     mClsnResult1.SetCollider(i, clsnID, owner, collider);
 }
 
-void dBgCh_SphCrr::RecordWallHit(int triID, void *src) {
-    mClsnResult2.RecordHit(triID, (SurfaceInfo *)src);
+void dBgCh_SphCrr::RecordWallHit(int triID, SurfaceInfo *src) {
+    mClsnResult2.RecordHit(triID, src);
 }
 
 void dBgCh_SphCrr::SetWallCollider(int i, int clsnID, dActor_c *owner, dBgW *collider) {
     mClsnResult2.SetCollider(i, clsnID, owner, collider);
 }
 
-void dBgCh_SphCrr::RecordUnderHit(int triID, void *src) {
-    mClsnResult3.RecordHit(triID, (SurfaceInfo *)src);
+void dBgCh_SphCrr::RecordUnderHit(int triID, SurfaceInfo *src) {
+    mClsnResult3.RecordHit(triID, src);
 }
 
 void dBgCh_SphCrr::SetUnderCollider(int i, int clsnID, dActor_c *owner, dBgW *collider) {

@@ -126,7 +126,7 @@ extern const s16 data_ov002_021000a8[];
    clash with these. */
 
 extern int func_02035638(dBgCh_Actr *clsn);
-extern char *data_ov002_021000a0[];
+extern SharedFilePtr *data_ov002_021000a0[];
 /* Was spelled `func_02123804`, a name no symbols.txt defines. ov002's relocs
    record the call at 0x020ec718 as `overlays(77,78,79,80)`: four same-base
    overlays each put a function at 0x02123804. The call is gated on actor
@@ -289,7 +289,7 @@ void daYegg_c::PayOut() {
  * word) are dActor_c's
  * mPrevAngle.x/.y/.z and mHorzSpeed; whether the coin reads them as spawn
  * arguments is not shown here. */
-void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short heading) {
+void daYegg_c::SpawnBlueCoins(const Vector3 *b, int count, int sl, short heading) {
     unsigned int r;
     int zero;
     dActor_c *coin;
@@ -306,7 +306,7 @@ void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short heading) {
         return;
     zero = i;
     do {
-        coin = dActor_c::Spawn(ACTOR_BLUE_COIN, 2, *(const Vector3 *)b, 0, mAreaId, -1);
+        coin = dActor_c::Spawn(ACTOR_BLUE_COIN, 2, *b, 0, mAreaId, -1);
         if (coin != 0) {
             do {
                 rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) << 27) >>
@@ -1314,8 +1314,7 @@ int daYegg_c::InitResources()
 
     dExtFrameCtrl_c::LoadFile(gYEggRunAnimationFile);
     dExtFrameCtrl_c::LoadFile(gYEggWaitAnimationFile);
-    if (mAnmModel.SetFile((BMD_File *)((SharedFilePtr *)data_ov002_021000a0[idx])->filePtr, 1,
-                          -1) == 0)
+    if (mAnmModel.SetFile((BMD_File *)data_ov002_021000a0[idx]->filePtr, 1, -1) == 0)
         return 0;
 
     /* The predicate is asked a SECOND time rather than reusing idx: the ROM calls

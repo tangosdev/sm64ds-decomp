@@ -15,7 +15,7 @@ void func_ov007_020ae070(Ov007ItemNode *icon) {
     Ov007Item *item = icon->item;
     u16 id = item->id;
     int ticks = item->state->stateTicks;
-    Ov007Work *g = WORK;
+    Ov007Work *g = gMenuWork;
     short mode = g->states[2]->currentState;
 
     if (id != 1)

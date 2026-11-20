@@ -34,7 +34,6 @@
 extern Vector3 data_ov027_02113d10;
 
 extern "C" {
-int *Vec3_LslInPlace(Vector3 *, int);
 extern u8 gGameMode;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;

@@ -62,9 +62,9 @@ extern dScMgMemory_cCardState sMemoryCardTable[];
 extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
 
 extern "C" {
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemoryCardFrameSprites[];
-extern void *sMemoryCardSprites[];
+extern OamAttr *sMemoryCardSprites[];
 extern unsigned short sMemoryFlipFrameTimes[];
 extern void Mg_SaveRecordPair(int a, int b);
 extern u16 *sMemoryCardPositionsPerDifficulty[];
@@ -977,14 +977,13 @@ dScMgMemory_c *dScMgMemory_c_classInit() {
  * from native member-pointer constants, in retail copy order: the permuted sprite
  * pointers, the five main states, the six round states, the four result
  * states, the seven card states, then the three player states. */
-extern "C" int sMgCardSprites[];
+extern "C" OamAttr *sMgCardSprites[];
 
-void *sMemoryCardSprites[15] = {
-    (void *)sMgCardSprites[0],  (void *)sMgCardSprites[1],  (void *)sMgCardSprites[2],
-    (void *)sMgCardSprites[11], (void *)sMgCardSprites[12], (void *)sMgCardSprites[13],
-    (void *)sMgCardSprites[14], (void *)sMgCardSprites[3],  (void *)sMgCardSprites[4],
-    (void *)sMgCardSprites[5],  (void *)sMgCardSprites[6],  (void *)sMgCardSprites[9],
-    (void *)sMgCardSprites[10], (void *)sMgCardSprites[7],  (void *)sMgCardSprites[8],
+OamAttr *sMemoryCardSprites[15] = {
+    sMgCardSprites[0],  sMgCardSprites[1],  sMgCardSprites[2],  sMgCardSprites[11],
+    sMgCardSprites[12], sMgCardSprites[13], sMgCardSprites[14], sMgCardSprites[3],
+    sMgCardSprites[4],  sMgCardSprites[5],  sMgCardSprites[6],  sMgCardSprites[9],
+    sMgCardSprites[10], sMgCardSprites[7],  sMgCardSprites[8],
 };
 dScMgMemory_cState sMemoryStateTable[5] = {
     &dScMgMemory_c::StateSetup,  &dScMgMemory_c::StatePlay, &dScMgMemory_c::StateJudge,

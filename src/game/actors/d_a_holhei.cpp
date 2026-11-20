@@ -52,7 +52,6 @@ extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);
 extern int gLevelMinY;
 extern dCamera_c *gCamera;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern "C" int Math_Function_0203b14c(void *, int, int, int, int);
 extern signed char gCurrentSublevel;
 extern "C" int AngleDiff(int a, int b);

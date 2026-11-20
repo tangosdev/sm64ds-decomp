@@ -11,9 +11,11 @@
  * InitResources is the key function and this TU owns the RTTI/vtable.
  *
  * What stays:
- * - data_ov002_0210d9a8 / 0210d9e8 / 0210da08 / 0210da28: this TU
- *   consumes the four handles; overlay .bss owns them. symbols.txt has
- *   no recovered name, so they are not coined.
+ * - gSilverNumberModelFile with gSNumberTextureSequenceFile (param1 bit
+ *   4, the silver numbers), data_ov002_0210d9a8 with
+ *   gNumberTextureSequenceFile (the red ones): this TU consumes the four
+ *   handles; ov002_handles.cpp owns them. data_ov002_0210d9a8 is named
+ *   together with the player's handles, which share it.
  * - Particle::System::NewSimple(u32, const Vector3 &) is defined in this
  *   file, not in its header: Behavior's landing puff is its only user,
  *   and a body in Particle__System.h renumbers every includer's @NNN.
@@ -39,9 +41,9 @@ inline void *Particle::System::NewSimple(u32 id, const Vector3 &pos) {
     return NewSimple(id, pos.x, pos.y, pos.z);
 }
 
-extern SharedFilePtr data_ov002_0210da08;
-extern SharedFilePtr data_ov002_0210da28;
-extern SharedFilePtr data_ov002_0210d9e8;
+extern SharedFilePtr gSNumberTextureSequenceFile;
+extern SharedFilePtr gSilverNumberModelFile;
+extern SharedFilePtr gNumberTextureSequenceFile;
 extern SharedFilePtr data_ov002_0210d9a8;
 
 extern u32 gNextActorUpdateMask;
@@ -65,22 +67,23 @@ daObjNumber_c *daObjNumber_c_classInit(void) {
 /* -------------------------------------------------------------------------- */
 s32 daObjNumber_c::InitResources() {
     if (param1 & 0x10) {
-        dExtAnmTexPat_c::LoadFile(data_ov002_0210da08);
-        BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov002_0210da28);
+        dExtAnmTexPat_c::LoadFile(gSNumberTextureSequenceFile);
+        BMD_File *m = dExtSimpleModel_c::LoadFile(gSilverNumberModelFile);
         if (mModel.SetFile(m, 1, 1) == 0)
             return 0;
-        dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210da28.filePtr,
-                                 *(BTP_File *)data_ov002_0210da08.filePtr);
-        mTextureSequence.SetFile(*(BTP_File *)data_ov002_0210da08.filePtr, 0x40000000, 0, 0);
+        dExtAnmTexPat_c::Prepare(*(BMD_File *)gSilverNumberModelFile.filePtr,
+                                 *(BTP_File *)gSNumberTextureSequenceFile.filePtr);
+        mTextureSequence.SetFile(*(BTP_File *)gSNumberTextureSequenceFile.filePtr, 0x40000000, 0,
+                                 0);
         mTextureSequence.currFrame = (int)((((param1 & 15) % 10) << 16) >> 4);
     } else {
-        dExtAnmTexPat_c::LoadFile(data_ov002_0210d9e8);
+        dExtAnmTexPat_c::LoadFile(gNumberTextureSequenceFile);
         BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
         if (mModel.SetFile(m, 1, 1) == 0)
             return 0;
         dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210d9a8.filePtr,
-                                 *(BTP_File *)data_ov002_0210d9e8.filePtr);
-        mTextureSequence.SetFile(*(BTP_File *)data_ov002_0210d9e8.filePtr, 0x40000000, 0, 0);
+                                 *(BTP_File *)gNumberTextureSequenceFile.filePtr);
+        mTextureSequence.SetFile(*(BTP_File *)gNumberTextureSequenceFile.filePtr, 0x40000000, 0, 0);
         mTextureSequence.currFrame = (int)((((param1 & 15) % 10) << 16) >> 4);
     }
 
@@ -172,11 +175,11 @@ s32 daObjNumber_c::Render() {
 /* -------------------------------------------------------------------------- */
 s32 daObjNumber_c::CleanupResources() {
     if (param1 & 0x10) {
-        data_ov002_0210da28.Release();
-        data_ov002_0210da08.Release();
+        gSilverNumberModelFile.Release();
+        gSNumberTextureSequenceFile.Release();
     } else {
         data_ov002_0210d9a8.Release();
-        data_ov002_0210d9e8.Release();
+        gNumberTextureSequenceFile.Release();
     }
     return 1;
 }

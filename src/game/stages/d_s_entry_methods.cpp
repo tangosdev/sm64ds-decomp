@@ -145,7 +145,7 @@ extern "C" int func_0203d8fc(void);
 extern "C" int func_0201a1bc(void);
 extern "C" void func_0203d930(void);
 extern unsigned char EntryCourseLoadStarted;
-void func_0202deac(int level);
+void PreloadLevelOverlays(int level);
 extern "C" void func_0203d918();
 extern u8 data_0208a0e0;
 extern "C" u8 GetParentCourseIndex(void);
@@ -173,7 +173,7 @@ extern u8 data_0209fc50;
 extern u8 data_0209fc58;
 /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
 extern char data_0209ee90[];
-extern u8 data_0208ee3c;
+extern u8 gBacklightEnabled;
 extern PadData data_020a0e58[];
 extern ControllerInput data_0209f498[];
 extern int data_ov075_0211c990[];
@@ -184,8 +184,8 @@ extern int data_ov075_0211c9b8[];
 extern int *data_ov075_0211c9cc[];
 extern OamAttr *data_ov075_0211c9e0[];
 extern OamAttr *data_ov075_0211c9f4[];
-extern char data_ov075_0211c790[];
-extern char data_ov075_0211c8b0[];
+extern OamAttr data_ov075_0211c790[];
+extern OamAttr data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211cb84;
 extern int data_ov075_0211ca64;
 extern int data_ov075_0211ca6c;
@@ -606,7 +606,7 @@ void dScEntry_c::RenderSoundSettings() {
         a1 = data_ov075_0211b5d4[j];
         a2 = 168;
     }
-    OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
+    OAM::RenderSub(data_ov075_0211c790, a1, a2);
 
     /* mStepWork[1] counts frames; its bit 3 bobs the three arrows. */
     mStepWork[1] += 1;
@@ -729,7 +729,7 @@ void dScEntry_c::EnterSoundSettings() {
     mIcons[3].Place(2, 0, 140, 104);
     mIcons[4].Place(2, 0, 204, 104);
 
-    if (data_0208ee3c != 0)
+    if (gBacklightEnabled != 0)
         mIcons[3].mOn = 1;
     else
         mIcons[4].mOn = 1;
@@ -758,7 +758,7 @@ void dScEntry_c::RenderControlSettings() {
         a1 = data_ov075_0211b5d4[j];
         a2 = 168;
     }
-    OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
+    OAM::RenderSub(data_ov075_0211c790, a1, a2);
 }
 
 void dScEntry_c::UpdateControlSettings() {
@@ -1049,16 +1049,15 @@ void dScEntry_c::RenderWinCounts() {
             n = n % 100;
             tens = n / 10;
             if (tens != 0) {
-                p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, 206, yBase + yOff, 8,
-                                       -1, 0x1000, 0);
+                p = (int *)OAM::Render(false, data_ov075_0211c8b0, 206, yBase + yOff, 8, -1, 0x1000,
+                                       0);
                 if (p != 0) {
                     int *q = (p + 1);
                     int val = *q;
                     *q = (val & ~0x3ff) | ((tens + ((u32)(val << 22) >> 22)) & 0x3ff);
                 }
             }
-            p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, 216, yBase + yOff, 8, -1,
-                                   0x1000, 0);
+            p = (int *)OAM::Render(false, data_ov075_0211c8b0, 216, yBase + yOff, 8, -1, 0x1000, 0);
             if (p != 0) {
                 int *q = (p + 1);
                 int val = *q;
@@ -1261,15 +1260,15 @@ void dScEntry_c::EnterResults() {
 
     if (data_0209b2f0[id] != 0) {
         LoadCompressedFileAt(0x8404, G2S_GetBG3ScrPtr());
-        mOamAnimations[0].func_02020820(&data_ov075_0211ca64, 1, 1, 1, 1);
-        mOamAnimations[1].func_02020820(&data_ov075_0211ca6c, 1, 0, 0, 0);
-        mOamAnimations[2].func_02020820(&data_ov075_0211ca74, 1, 1, 1, 1);
+        mOamAnimations[0].Init(&data_ov075_0211ca64, 1, 1, 1, 1);
+        mOamAnimations[1].Init(&data_ov075_0211ca6c, 1, 0, 0, 0);
+        mOamAnimations[2].Init(&data_ov075_0211ca74, 1, 1, 1, 1);
     } else {
         LoadCompressedFileAt(0x8401, G2S_GetBG3ScrPtr());
-        mOamAnimations[0].func_02020820(&data_ov075_0211cc44, 1, 1, 1, 1);
-        mOamAnimations[1].func_02020820(&data_ov075_0211cc4c, 1, 0, 0, 0);
-        mOamAnimations[2].func_02020820(&data_ov075_0211cc54, 1, 0, 0, 0);
-        mOamAnimations[3].func_02020820(&data_ov075_0211cc5c, 1, 0, 0, 0);
+        mOamAnimations[0].Init(&data_ov075_0211cc44, 1, 1, 1, 1);
+        mOamAnimations[1].Init(&data_ov075_0211cc4c, 1, 0, 0, 0);
+        mOamAnimations[2].Init(&data_ov075_0211cc54, 1, 0, 0, 0);
+        mOamAnimations[3].Init(&data_ov075_0211cc5c, 1, 0, 0, 0);
     }
 
     mOamAnimations[0].palette = id + 0xa;
@@ -1348,7 +1347,7 @@ void dScEntry_c::LoadCourseResources(int course) {
     LoadArchive(selectedArchive);
     previousHeap->SetDefault();
     gGameMode = 1;
-    func_0202deac(data_ov075_0211c6ec[course]);
+    PreloadLevelOverlays(data_ov075_0211c6ec[course]);
 }
 
 void dScEntry_c::EnterMatchLoading() {

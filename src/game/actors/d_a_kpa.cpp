@@ -289,7 +289,6 @@ extern KpaAnimationFileHandle data_ov060_0211ac20;
 extern KpaAnimationFileHandle data_ov060_0211ac68;
 extern KpaAnimationFileHandle data_ov060_0211ac70;
 extern s16 data_ov060_0211a4e0[];
-extern int *Vec3_LslInPlace(void *v, int sh);
 /* Sound.cpp 0xc-byte cleanup veneer. */
 extern void func_02011cfc(void);
 /* One declaration per resource handle, typed from how InitResources and
@@ -298,12 +297,12 @@ extern void func_02011cfc(void);
  *   data_ov060_021192dc / _0211927c  tables of handle pointers (the 0x1c
  *                                    animations / six texture sequences),
  *                                    indexed by i: LoadFile, then ->Release()
- *   data_ov089_02132c50              a model handle in ov089
+ *   gKoopaKeyModelFile               Bowser's key model handle in ov089
  *   data_ov060_0211b208              a model handle (SharedFilePtr)
  *   data_ov060_0211ac78              Bowser's model handle (KpaModelFilePtr) */
 extern SharedFilePtr *const data_ov060_021192dc[];
 extern SharedFilePtr *const data_ov060_0211927c[];
-extern SharedFilePtr data_ov089_02132c50;
+extern SharedFilePtr gKoopaKeyModelFile;
 /* daFRing_c defines this handle. decl_common.h no longer declares it. */
 extern SharedFilePtr data_ov060_0211b208;
 extern KpaModelFilePtr data_ov060_0211ac78;
@@ -412,7 +411,7 @@ int daKpa_c::InitResources()
         dExtAnmTexPat_c::LoadFile(*data_ov060_0211927c[i]);
 
     dExtSimpleModel_c::LoadFile(data_ov060_0211b208);
-    dExtSimpleModel_c::LoadFile(data_ov089_02132c50);
+    dExtSimpleModel_c::LoadFile(gKoopaKeyModelFile);
 
     if (this->mShadowModel.InitCylinder() == 0)
         return 0;
@@ -593,7 +592,7 @@ int daKpa_c::CleanupResources()
     for (i = 0; i < 6; i++)
         data_ov060_0211927c[i]->Release();
     data_ov060_0211b208.Release();
-    data_ov089_02132c50.Release();
+    gKoopaKeyModelFile.Release();
     func_02011cfc();
     return 1;
 }

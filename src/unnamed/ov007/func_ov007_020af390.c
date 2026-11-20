@@ -13,7 +13,7 @@ extern void func_ov007_020beeb0(void);
  * choice ready. Then func_ov007_020beeb0. */
 void func_ov007_020af390(void)
 {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     short state = w->states[1]->currentState;
 
     switch (state) {

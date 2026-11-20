@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "Eleven consecutive delinked functions at 0x0203ac80..0x0203ad84, all complete: the five named PathPtr members (FromID, GetNode, Loops, NumNodes, C1) plus six anonymous func_ shards that resolve to the class's accessors (func_0203ad44 -> flags&0x7f, func_0203ad54 -> unk_004, func_0203ad6c -> def store called only by FromID) and its three path-table helpers (func_0203aca0/0203acbc/0203accc on data_020a0d84/88/8c, the PathDef/node tables LoadPathObjects hands it).",
-    "func_0203ad84 at 0x0203ad84 closes the run: a string-copy helper on unrelated globals (data_020994d4, data_020a0d90) with no PathPtr receiver, folded in under its func_ name the same way dBgPi kept its neighbouring shards.",
+    "func_0203ad84 at 0x0203ad84 closes the run: a string-copy helper on unrelated globals (data_020994d4, gBuildTimeString) with no PathPtr receiver, folded in under its func_ name the same way dBgPi kept its neighbouring shards.",
     "Preceded by the dM3dGSph member run ending at C2 0x0203ac70..0x0203ac80; followed by DecIfAbove0_Short's math family. The span is the whole class.",
     "PathPtr is non-polymorphic: no _ZTS/_ZTI/_ZTV for it exists in the ROM, so this is a text-only fold with no data or bss claim."
   ],

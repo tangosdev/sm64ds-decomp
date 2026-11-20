@@ -1,8 +1,6 @@
 #include "common.h"
 #include "math/MtxStack.h"
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 void Matrix4x3_FromRotationZXYExt(Matrix4x3 *m, int x, int y, int z) {
     Matrix4x3 rot;
     if (y != 0)

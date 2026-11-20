@@ -6,10 +6,6 @@
  * lands the ROM-ascending run.
  *
  * leftovers:
- * - func_0206a928's local extern keeps its 4-parameter spelling even
- *   though src/unnamed/arm9/0206/func_0206a928.c defines it with three
- *   (ctx, fmt, ap): func_0206ccd8's call passes the trailing `p` in r3,
- *   and dropping it diffs.
  * - The debugger bus pokes at 0x9fe2ffe / 0x9fe20f0 stay raw addresses:
  *   these two helpers are their only consumers and no header names them.
  *   The value written there is mirrored in the debugger block
@@ -30,11 +26,11 @@ extern const char data_020868a0[52];
 extern const char data_020868d4[40];
 int func_0206cf7c(int mask);
 /* local extern: no header declares it; func_0206ccd8 formats through it */
-void func_0206a928(void *a, int b, void *c, void *d);
+void func_0206a928(void *ctx, const char *fmt, void *ap);
 /* local extern: no header declares it; func_0206ccd8 stores it as the print callback */
 void func_0206cbc0(struct Csl *sl, u8 *sb, int count);
 }
-void func_0206ccd8(int fmt, ...);
+void func_0206ccd8(const char *fmt, ...);
 
 struct CardBusState {
     unsigned short exmemcnt;
@@ -85,12 +81,12 @@ void __builtin_trap();
 // line (data_020868d4) and return. isdoverlay.c is its only caller.
 void __assert(const char *file, int line, const char *exp, int stop) {
     if (stop) {
-        func_0206ccd8((int)&data_020868a0, file, line, exp);
+        func_0206ccd8(data_020868a0, file, line, exp);
         __builtin_trap();
         for (;;) {
         }
     } else {
-        func_0206ccd8((int)data_020868d4, file, line, exp);
+        func_0206ccd8(data_020868d4, file, line, exp);
     }
 }
 }
@@ -99,7 +95,7 @@ void __assert(const char *file, int line, const char *exp, int stop) {
  * through func_0206a928 with a print-argument struct and the func_0206cbc0
  * console callback. The print struct stays function-local. Lowest address
  * in the TU, so it goes last for reverse-source emission. */
-void func_0206ccd8(int fmt, ...) {
+void func_0206ccd8(const char *fmt, ...) {
     struct S { int f0, f1, f2, f3; void *cb; };
     S s;
     int *p;
@@ -111,6 +107,6 @@ void func_0206ccd8(int fmt, ...) {
         s.cb = (void *)func_0206cbc0;
 
         p = (int *)(((int)&fmt) & ~3) + 1;
-        func_0206a928(&s, fmt, &p, p);
+        func_0206a928(&s, fmt, &p);
     }
 }

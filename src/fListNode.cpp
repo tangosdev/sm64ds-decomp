@@ -1,6 +1,7 @@
 //cpp
-/* List-node destructors, the frame loop over the process lists, and the
- * pending lifecycle-sequence helpers fBase_c calls during cleanup.
+/* List-node destructors, the frame loop over the process lists
+ * (fManager_c::mainLoop, include/fManager_c.h), and the pending
+ * lifecycle-sequence helpers fBase_c calls during cleanup.
  * arm9 .text 0x020440e8..0x020443c8.
  *
  * leftovers:
@@ -9,10 +10,8 @@
  * - data_020a4b68 is the currently executing process node. It stays
  *   void *: ActorBase.cpp and ShowCrashScreen.c spell it that way, and
  *   the fLiNdBa_c destructor's old fLiNdBa_c * spelling was a second claim
- *   on the same word.
- * - The five list heads are defined here. ActorBase.cpp still spells them
- *   int []; that spelling is banked. decl_common.h spells data_020a4b6c as
- *   int, which is the plurality.
+ *   on the same word. NSMBW's fManager_c has no such member, so it keeps
+ *   its address name.
  * - The address-named helpers keep their linker names. Their roles are
  *   read from the bytes; the original names are not known.
  */
@@ -22,7 +21,6 @@
 #pragma defer_codegen off
 
 extern void *data_020a4b68;
-extern int data_02099f24;
 extern const int data_02082178[6];
 namespace Absorb02043fdc {
 struct ProcessListDescriptor {
@@ -56,40 +54,40 @@ struct Thing {
 };
 }
 
-/* The five process-list heads func_02044120 walks. The tree sentinel is three
+/* fManager_c's five managers, the heads mainLoop walks. The tree sentinel is three
  * words (head, then the callback). Each list sentinel is four (head, tail,
  * then the callback). The callbacks are the ROM's pointer-to-member constants;
  * copying them is not a constant expression, so mwcc emits __sinit_fListNode.cpp
  * (was the handwritten __sinit_02075154) in this definition order. No destructor
- * is registered. ActorBase.cpp still reaches the heads by their address names. */
+ * is registered. */
 extern fBase_c::ProcessFunction data_02099f60;
 extern fBase_c::ProcessFunction data_02099f70, data_02099f48, data_02099f68, data_02099f50;
 
-#include "ProcessList.h"
+#include "fManager_c.h"
 
-ProcessTree::Thing data_020a4b6c(data_02099f60);
-ProcessList data_020a4b88(data_02099f70);
-ProcessList data_020a4b78(data_02099f48);
-ProcessList data_020a4b98(data_02099f68);
-ProcessList data_020a4ba8(data_02099f50);
+ProcessTree::Thing fManager_c::m_connectManage(data_02099f60);
+ProcessList fManager_c::m_createManage(data_02099f70);
+ProcessList fManager_c::m_executeManage(data_02099f48);
+ProcessList fManager_c::m_drawManage(data_02099f68);
+ProcessList fManager_c::m_deleteManage(data_02099f50);
 
-/* One frame: walk each process list, recording the phase number in
- * data_02099f24 while it runs. */
-void ProcessList::func_02044120() {
-    data_02099f24 = 4;
-    ((Absorb02043fdc::ProcessListDescriptor *)&data_020a4ba8)->func_02043fdc();
-    data_02099f24 = 2;
-    ((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b88)->func_02043fdc();
-    data_02099f24 = 3;
-    ((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b78)->func_02043fdc();
-    data_02099f24 = 5;
-    ((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b98)->func_02043fdc();
-    data_02099f24 = 1;
-    data_020a4b6c.func_020441cc();
-    data_02099f24 = 0;
+/* One frame: walk each process list, recording the phase in m_nowLoopProc
+ * while it runs. */
+void fManager_c::mainLoop() {
+    m_nowLoopProc = DELETE;
+    ((Absorb02043fdc::ProcessListDescriptor *)&m_deleteManage)->func_02043fdc();
+    m_nowLoopProc = CREATE;
+    ((Absorb02043fdc::ProcessListDescriptor *)&m_createManage)->func_02043fdc();
+    m_nowLoopProc = EXECUTE;
+    ((Absorb02043fdc::ProcessListDescriptor *)&m_executeManage)->func_02043fdc();
+    m_nowLoopProc = DRAW;
+    ((Absorb02043fdc::ProcessListDescriptor *)&m_drawManage)->func_02043fdc();
+    m_nowLoopProc = CONNECT;
+    m_connectManage.func_020441cc();
+    m_nowLoopProc = NONE;
 }
 
-/* Table entry for frame-loop phase i (data_02099f24). The crash screen
+/* Table entry for frame-loop phase i (fManager_c::m_nowLoopProc). The crash screen
  * prints it. */
 int ProcessList::func_020441bc(int i) {
     return data_02082178[i];

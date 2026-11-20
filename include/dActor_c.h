@@ -53,7 +53,7 @@ struct dExtShadowModel_c;
 extern "C" mHeap::Heap_t *GAME_HEAP_PTR;
 
 struct dActor_c : dBase_c {
-    /* The global actor list (data_0209b468) threads through every actor: the
+    /* The global actor list (sActorList) threads through every actor: the
        constructor appends this node, the destructor unlinks it, and Next() walks
        the next link and reads its owner to get back to the actor. */
     fLiNdBa_c mActorListNode; /* 0x050 -- owner is always `this` */
