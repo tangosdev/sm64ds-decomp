@@ -137,15 +137,15 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     void *file;
     Ov007Model *model;
     int i, set;
-    int *setFiles, *figureFiles;
+    const int *setFiles, *figureFiles;
 
     if (figureIndex == 0 && stage == 0)
         set = 2;
     else
         set = figureIndex;
     file = func_ov007_020b3f20(data_ov007_020ccc48[figureIndex]);
-    setFiles = (int *)data_ov007_020ccc80[set];
-    figureFiles = (int *)data_ov007_020ccc68[figureIndex];
+    setFiles = data_ov007_020ccc80[set];
+    figureFiles = data_ov007_020ccc68[figureIndex];
     for (i = 0; i < 3; i++) {
         data_ov007_02103348[i] = func_ov007_020b3f20(setFiles[i]);
         data_ov007_02103354[i] = func_ov007_020b3f20(figureFiles[i]);
