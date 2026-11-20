@@ -44755,59 +44755,59 @@
     },
     "ov100:0x02144468": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144468Ei"
+      "name": "_ZN8daDoor_c17St_CharIntro_MainEi"
     },
     "ov100:0x021444e8": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_021444e8Ei"
+      "name": "_ZN8daDoor_c12St_Wait_MainEi"
     },
     "ov100:0x02144528": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144528EP6Player"
+      "name": "_ZN8daDoor_c18St_CharChange_MainEP6Player"
     },
     "ov100:0x021446f8": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_021446f8EP6Player"
+      "name": "_ZN8daDoor_c18St_CharChange_InitEP6Player"
     },
     "ov100:0x02144730": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144730EP6Player"
+      "name": "_ZN8daDoor_c17St_OpenClose_MainEP6Player"
     },
     "ov100:0x0214491c": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_0214491cEv"
+      "name": "_ZN8daDoor_c24St_OpenClose_InitNearEndEv"
     },
     "ov100:0x02144950": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144950EP6Playeri"
+      "name": "_ZN8daDoor_c17St_OpenClose_InitEP6Playeri"
     },
     "ov100:0x021449c8": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_021449c8EP6Player"
+      "name": "_ZN8daDoor_c24St_UnlockingWithKey_MainEP6Player"
     },
     "ov100:0x02144a38": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144a38EP6Player"
+      "name": "_ZN8daDoor_c24St_UnlockingWithKey_InitEP6Player"
     },
     "ov100:0x02144bf4": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144bf4EP6Player"
+      "name": "_ZN8daDoor_c25St_UnlockingWithStar_MainEP6Player"
     },
     "ov100:0x02144c64": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144c64Ev"
+      "name": "_ZN8daDoor_c25St_UnlockingWithStar_InitEv"
     },
     "ov100:0x02144c6c": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144c6cEP6Player"
+      "name": "_ZN8daDoor_c23St_TalkingToPlayer_MainEP6Player"
     },
     "ov100:0x02144ccc": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144cccEv"
+      "name": "_ZN8daDoor_c23St_TalkingToPlayer_InitEv"
     },
     "ov100:0x02144cf8": {
       "author": "tangosdev",
-      "name": "_ZN8daDoor_c19func_ov100_02144cf8EP6Player"
+      "name": "_ZN8daDoor_c18St_StayClosed_MainEP6Player"
     },
     "ov100:0x02144f84": {
       "author": "tangosdev",
