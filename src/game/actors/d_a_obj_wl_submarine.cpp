@@ -13,7 +13,7 @@
  *
  * NOTES:
  * - data_ov026_02112fd4 is the unnamed CLPS block this TU feeds SetFile.
- * - data_0209caa0.file.flags1: either of its unnamed bits
+ * - gSaveBlock.file.flags1: either of its unnamed bits
  *   0x204 keeps the collider disabled.
  */
 
@@ -84,7 +84,7 @@ s32 daObjWlSubmarine_c::InitResources() {
         KCL_File *k = dBgW_Kc::LoadFile(Submarine_ClsnFile);
         mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y, data_ov026_02112fd4);
     }
-    if (data_0209caa0.file.flags1 & 0x204)
+    if (gSaveBlock.file.flags1 & 0x204)
         return 0;
     mMeshCollider.Enable(this);
     return 1;

@@ -127,7 +127,7 @@ struct daRNk_c : dEnemyBase_c {
     void func_ov062_0211a1f4();      /* STATE_RACE */
     void func_ov062_0211a740();      /* STATE_OFFER_RACE */
     void func_ov062_0211a9c4();      /* STATE_WAIT_FOR_PLAYER */
-    void func_ov062_0211aac0();      /* drop shadow, every frame */
+    void UpdateModelAndShadow();     /* model matrix and drop shadow, every frame */
 
     /* mState: which handler Behavior runs this frame. Behavior indexes a table
        of six pointers-to-member at data_ov062_0211e0a4 (filled at start-up by

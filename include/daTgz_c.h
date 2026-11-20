@@ -32,7 +32,7 @@ struct daTgz_c : dActor_c {
        the shadow helper writes the translation as position >> 3. */
     Matrix4x3 mShadowMatrix; /* 0x3a0 */
     /* PMF pair. SetState stores &gTgzStates[i] (d_a_tgz.cpp).
-       RunStateInit calls slot 0; RunState calls slot 1. */
+       CallStateEnter calls slot 0; CallStateUpdate calls slot 1. */
     void *mStateDesc;                    /* 0x3d0 */
     /* daPly_c stored when a hit sends the Spiny into state 2 (Knockback),
        which reads it once for the heading away from him and then clears it.
@@ -83,7 +83,7 @@ struct daTgz_c : dActor_c {
     void St_Walk_Init();
     int St_Spin_Main();
     int St_Spin_Init();
-    int UpdateWaterY();
+    int GetHeightAboveWater();
     int IsUnderwater();
     void UpdateGroundCollision(dBgCh_Actr *clsn);
     void HandlePlayerCollision();
@@ -91,8 +91,8 @@ struct daTgz_c : dActor_c {
     void UpdateTumbleMatrix();
     void UpdateModelMatrix();
     void UpdateMatrixAndShadow();
-    void RunState();
-    void RunStateInit();
+    void CallStateUpdate();
+    void CallStateEnter();
     void SetState(int i);
 };
 

@@ -108,7 +108,7 @@ extern SharedFilePtr data_ov002_0210da38;   /* the sleep-bubble model, out of ov
 extern SharedFilePtr data_ov084_02130df4;   /* idle animation */
 extern SharedFilePtr data_ov084_02130e04;   /* spit animation */
 extern SharedFilePtr data_ov084_02130e14;   /* grow-in lunge animation */
-extern void *data_ov084_02130e1c[];         /* post-spit animation; decl_common.h's spelling */
+extern SharedFilePtr data_ov084_02130e1c;   /* post-spit animation */
 extern SharedFilePtr data_ov084_02130e24;   /* death animation */
 extern int data_ov084_0213029c[];           /* SpawnDeathBurst reach per frame */
 extern int data_ov084_021302c4[];           /* SpawnDeathBurst height per frame */
@@ -211,11 +211,11 @@ void daFPkn_c::UpdateClsnOffset()
     mClsnOffset.z = 0;
 
     Vec3_Asr(&pos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    mClsnOffset.x = data_020a0e68.t.x;
-    mClsnOffset.y = data_020a0e68.t.y;
-    mClsnOffset.z = data_020a0e68.t.z;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    MTX_Concat43(&mAnmModel.data.transforms[6], &gScratchMtx, &gScratchMtx);
+    mClsnOffset.x = gScratchMtx.t.x;
+    mClsnOffset.y = gScratchMtx.t.y;
+    mClsnOffset.z = gScratchMtx.t.z;
     Vec3_LslInPlace(&mClsnOffset, 3);
     VEC_Subtract(&mClsnOffset, &mPos, &mClsnOffset);
 
@@ -422,8 +422,7 @@ void daFPkn_c::StateSpit()
             else
                 func_0201267c(SND_SPIT_END, &mCamSpacePos);
             mState = STATE_WAIT;
-            mAnmModel.SetAnim((BCA_File *)(((SharedFilePtr *)data_ov084_02130e1c)->filePtr), 0,
-                              0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov084_02130e1c.filePtr, 0, 0x1000, 0);
         } else if (mStateTimer < 58) {
             targetAngle = mAngle.y;
             player = ClosestPlayer();

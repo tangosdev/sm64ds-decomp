@@ -43,7 +43,7 @@ enum Scuttlebug_AssetId {
  * Local value shapes carried from the legacy one-function files.
  * ------------------------------------------------------------------------ */
 
-/* Flat 0x30-byte matrix block, as func_ov071_0211f524 and the scratch matrix
+/* Flat 0x30-byte matrix block, as UpdateModelAndShadow and the scratch matrix
  * at arm9:0x020a0e68 are used: whole-block assignment, never by field. */
 
 typedef void (daSpd_c::*PMF)();
@@ -66,8 +66,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* dBgCh_Actr::Init's last two parameters are Vector3_16* (the S5_
  * back-references the pointer type). */
-
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
  * order, so this file is written ROM-descending and nearly every intra-TU call
@@ -180,19 +178,19 @@ int daSpd_c::InitResources() {
     mEatingPlayer = 0;
     mTimer = 60;
     mShadowMtx = IDENTITY_MATRIX4X3;
-    func_ov071_0211f524();
+    UpdateModelAndShadow();
     return 1;
 }
 
 int daSpd_c::Behavior() {
     DecIfAbove0_Short(&mTimer);
-    func_ov071_02120278();
+    RunState();
     MakeVanishLuigiWork(mdCcAc_c);
     if (mWithMeshClsn.GetResultFlag1() &&
         mWithMeshClsn.TouchesWater()) {
         func_ov071_0211f498();
     }
-    func_ov071_0211f524();
+    UpdateModelAndShadow();
     return 1;
 }
 
@@ -224,17 +222,17 @@ int daSpd_c::CleanupResources() {
 
 void daSpd_c::SetState(int idx) {
     mStateRow = (ScuttlebugStateRow *)data_ov071_02122fa8 + idx;
-    func_ov071_021202b4();
+    CallStateEnter();
 }
 
-void daSpd_c::func_ov071_021202b4() {
+void daSpd_c::CallStateEnter() {
     PMF *p = (PMF *)mStateRow;
     (this->**p)();
 }
 
 /* Call the state's per-frame handler, one slot further into the row. */
 
-void daSpd_c::func_ov071_02120278() {
+void daSpd_c::RunState() {
     PMF *p = (PMF *)mStateRow + 1;
     (this->**p)();
 }
@@ -527,7 +525,7 @@ int daSpd_c::func_ov071_0211f694() {
     return 1;
 }
 
-void daSpd_c::func_ov071_0211f524() {
+void daSpd_c::UpdateModelAndShadow() {
     if (IsInYoshiMouth(this)) {
         if (mState == 0)
             return;
@@ -539,13 +537,13 @@ void daSpd_c::func_ov071_0211f524() {
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     if (mAngle.x != 0) {
-        data_020a0e68 = mAnmModel.mat4x3;
+        gScratchMtx = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y1, 0);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y2, 0);
+        mAnmModel.mat4x3 = gScratchMtx;
     }
 
     mShadowMtx.t.x = mPos.x >> 3;

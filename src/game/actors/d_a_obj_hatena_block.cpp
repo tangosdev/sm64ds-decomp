@@ -60,7 +60,7 @@
  *   spawn parameters handed to the prizes (STAR |0x40, COIN 2, BOMBHEI 4);
  *   what dBgActor_c::IsClsnInRange's two arguments and
  *   the two mesh-collider words poked in Behavior are; the files loaded at
- *   data_ov002_0210da58 / 0210d9a0 / 0210d9c0 / 0210da40; why
+ *   gFeatherModelFile and data_ov002_0210d9a0 / 0210d9c0 / 0210da40; why
  *   the hitter's param1 picks the prize column (it is clamped to 0..3 and
  *   the table has no column names); and why a lost cap swaps the prize for a
  *   BOMBHEI.
@@ -79,7 +79,7 @@
  *     the caps and contents.
  *   FX_SinCosTable_ -- NitroSDK's sin/cos table; the bounce squash indexes it
  *     by mBounceAng.
- *   data_0209caa0, gGameMode, gCurrentSublevel, data_0209f32c, gCamera,
+ *   gSaveBlock, gGameMode, gCurrentSublevel, gWaterHeight, gCamera,
  *     data_0209e650, data_020a0edc -- arm9 globals.
  *
  * deslop leftovers:
@@ -151,7 +151,7 @@ enum {
     ACTOR_FEATHER = 345       /* 0x159 */
 };
 
-/* SaveData::flags1 (data_0209caa0.file.flags1) bit 31. Its meaning is not named in
+/* SaveData::flags1 (gSaveBlock.file.flags1) bit 31. Its meaning is not named in
    the tree; this class only tests it. While it is CLEAR, an actor 20
    (HATENA_BLOCK) is drawn as the animated model (mAnmModel), Behavior only
    advances that animation (while IDLE) and keeps the collider off, and the mega-player
@@ -161,20 +161,20 @@ enum { SAVE_FLAGS1_BIT31 = 0x80000000 };
 extern "C" {
 
 extern signed char gCurrentSublevel;
-extern int data_0209f32c;
+extern int gWaterHeight;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
 extern char data_020a0edc[];
 
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
-extern SharedFilePtr data_ov002_0210d9d8;
-extern SharedFilePtr data_ov002_0210d9e0;
+extern SharedFilePtr gOneUpMushroomModelFile;
+extern SharedFilePtr gBombheiModelFile;
 /* The ov002 model-file handles (src/ov002_handles.cpp defines all of them). */
-extern SharedFilePtr data_ov002_0210da18;
-extern SharedFilePtr data_ov002_0210da30;
+extern SharedFilePtr gShellGreenModelFile;
+extern SharedFilePtr gScaleUpKinokoModelFile;
 extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210da58;
+extern SharedFilePtr gFeatherModelFile;
 extern SharedFilePtr gPFlowerOpenModelFile;
 extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
@@ -185,7 +185,7 @@ extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix,
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
 }
-void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);
+void func_ov102_02149684(Vector3 *dst, daObjHatenaBlock_c *src);
 
 /* gGameMode is 1 in VS mode: PrepareVsMode stores it. These int-returning
    predicates are what make the ROM materialize 0/1 before testing it. */
@@ -302,7 +302,7 @@ daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
  *  1. Per actor ID (the switch on actorID - 20): the block's model, plus the
  *     extra shared files that type needs (HATENA_BLOCK also its animated
  *     model and animation; the three CAP_BLOCKs the matching cap file; both
- *     also load data_ov002_0210d9e0, which daBmb_c loads as the Bob-omb
+ *     also load gBombheiModelFile, which daBmb_c loads as the Bob-omb
  *     model).
  *  2. Sets the model, a cuboid shadow, state IDLE, terminal velocity
  *     -0x3c000 (-60 units), unit scale, the model and collider matrices, and
@@ -311,7 +311,7 @@ daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
  *     for CONTENT_STAR, mStarId = param1 bits 8..15 (0xff reads as 0) and the
  *     star is tracked.
  *  4. The VS block (22) forces mContentType to 0 and loads the file at
- *     data_ov002_0210da58.
+ *     gFeatherModelFile.
  *  5. For HATENA_BLOCK / ITEM_BLOCK only: load the shared files the chosen
  *     content type needs (1-up, shell, mushroom, the Power Flower models, and the Bob-omb model for CONTENT_POWER_UP_7).
  *     CleanupResources releases the same set. Always returns 1. */
@@ -323,7 +323,7 @@ int daObjHatenaBlock_c::InitResources()
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7e8);
         mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov102_0214e808), 1, 0x19);
         mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov102_0214e7f8), 0, 0x1000, 0);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(gBombheiModelFile);
         break;
     case 1:   /* ITEM_BLOCK */
     case 2:   /* VS_ITEM_BLOCK */
@@ -332,17 +332,17 @@ int daObjHatenaBlock_c::InitResources()
     case 3:   /* CAP_BLOCK_M */
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7f0);
         dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(gBombheiModelFile);
         break;
     case 5:   /* CAP_BLOCK_L */
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7d8);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(gBombheiModelFile);
         break;
     case 4:   /* CAP_BLOCK_W */
         modelFile = dExtSimpleModel_c::LoadFile(data_ov102_0214e7e0);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+        dExtSimpleModel_c::LoadFile(gBombheiModelFile);
         break;
     }
 
@@ -373,7 +373,7 @@ int daObjHatenaBlock_c::InitResources()
 
     if (IsActorID(this, ACTOR_VS_ITEM_BLOCK)) {
         mContentType = 0;
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+        dExtSimpleModel_c::LoadFile(gFeatherModelFile);
     }
 
     if (IsActorID(this, ACTOR_HATENA_BLOCK) || IsActorID(this, ACTOR_ITEM_BLOCK)) {
@@ -382,21 +382,21 @@ int daObjHatenaBlock_c::InitResources()
         case CONTENT_STAR:
             break;
         case CONTENT_SHELL:
-            dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
+            dExtSimpleModel_c::LoadFile(gShellGreenModelFile);
             break;
         case CONTENT_ONEUP:
-            dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+            dExtSimpleModel_c::LoadFile(gOneUpMushroomModelFile);
             break;
         case CONTENT_SCALEUP_KINOKO:
-            dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+            dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
             break;
         case CONTENT_POWER_UP_7:
             dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
             dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
-            dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+            dExtSimpleModel_c::LoadFile(gBombheiModelFile);
             break;
         case CONTENT_POWER_UP_5:
-            dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+            dExtSimpleModel_c::LoadFile(gFeatherModelFile);
             dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
             dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
             break;
@@ -439,7 +439,7 @@ int daObjHatenaBlock_c::Behavior()
         if (mMeshCollider.IsEnabled() != 0) {
             mMeshCollider.Disable();
         }
-    } else if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
+    } else if ((gSaveBlock.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
                IsActorID(this, ACTOR_HATENA_BLOCK)) {
         mAnmModel.Advance();
         if (mMeshCollider.IsEnabled() != 0) {
@@ -465,7 +465,7 @@ int daObjHatenaBlock_c::Behavior()
 int daObjHatenaBlock_c::Render()
 {
     if (mState != STATE_POPPED) {
-        if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
+        if ((gSaveBlock.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
             IsActorID(this, ACTOR_HATENA_BLOCK))
             mAnmModel.Render(0);
         else
@@ -475,7 +475,7 @@ int daObjHatenaBlock_c::Render()
 }
 
 /* Switches the collider off, then releases what InitResources loaded, in
-   the same three groups: the VS block's data_ov002_0210da58 file; for
+   the same three groups: the VS block's gFeatherModelFile file; for
    HATENA_BLOCK / ITEM_BLOCK the per-content files (a CONTENT_STAR block also
    untracks its star); and the per-actor-ID files plus the shared KCL.
    Always returns 1. */
@@ -485,7 +485,7 @@ int daObjHatenaBlock_c::CleanupResources()
         mMeshCollider.Disable();
 
     if (IsActorID(this, ACTOR_VS_ITEM_BLOCK))
-        data_ov002_0210da58.Release();
+        gFeatherModelFile.Release();
 
     if (IsActorID(this, ACTOR_HATENA_BLOCK) || IsActorID(this, ACTOR_ITEM_BLOCK)) {
         switch (mContentType) {
@@ -493,21 +493,21 @@ int daObjHatenaBlock_c::CleanupResources()
             UntrackStar(mStarTracked);
             break;
         case CONTENT_SHELL:
-            data_ov002_0210da18.Release();
+            gShellGreenModelFile.Release();
             break;
         case CONTENT_ONEUP:
-            data_ov002_0210d9d8.Release();
+            gOneUpMushroomModelFile.Release();
             break;
         case CONTENT_SCALEUP_KINOKO:
-            data_ov002_0210da30.Release();
+            gScaleUpKinokoModelFile.Release();
             break;
         case CONTENT_POWER_UP_7:
             gPFlowerOpenModelFile.Release();
             gPFlowerCloseModelFile.Release();
-            data_ov002_0210d9e0.Release();
+            gBombheiModelFile.Release();
             break;
         case CONTENT_POWER_UP_5:
-            data_ov002_0210da58.Release();
+            gFeatherModelFile.Release();
             gPFlowerOpenModelFile.Release();
             gPFlowerCloseModelFile.Release();
             break;
@@ -523,7 +523,7 @@ int daObjHatenaBlock_c::CleanupResources()
         data_ov102_0214e7e8.Release();
         data_ov102_0214e808.Release();
         data_ov102_0214e7f8.Release();
-        data_ov002_0210d9e0.Release();
+        gBombheiModelFile.Release();
         break;
     case 1:   /* ITEM_BLOCK */
     case 2:   /* VS_ITEM_BLOCK */
@@ -532,17 +532,17 @@ int daObjHatenaBlock_c::CleanupResources()
     case 3:   /* CAP_BLOCK_M */
         data_ov102_0214e7f0.Release();
         data_ov002_0210da40.Release();
-        data_ov002_0210d9e0.Release();
+        gBombheiModelFile.Release();
         break;
     case 5:   /* CAP_BLOCK_L */
         data_ov102_0214e7d8.Release();
         data_ov002_0210d9a0.Release();
-        data_ov002_0210d9e0.Release();
+        gBombheiModelFile.Release();
         break;
     case 4:   /* CAP_BLOCK_W */
         data_ov102_0214e7e0.Release();
         data_ov002_0210d9c0.Release();
-        data_ov002_0210d9e0.Release();
+        gBombheiModelFile.Release();
     }
     data_ov102_0214e7d0.Release();
     return 1;
@@ -556,7 +556,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = (mPos.y + mBounceYOffs) >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;
-    if (data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)
+    if (gSaveBlock.file.flags1 & SAVE_FLAGS1_BIT31)
         return;
     if (!IsActorID(this, ACTOR_HATENA_BLOCK))
         return;
@@ -642,7 +642,7 @@ void daObjHatenaBlock_c::EnterIdle() {
    by a mega character: virtual OnHitByMegaChar. */
 void daObjHatenaBlock_c::UpdateIdle() {
     daPly_c *player;
-    if (!(data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)) {
+    if (!(gSaveBlock.file.flags1 & SAVE_FLAGS1_BIT31)) {
         if (IsActorID(this, ACTOR_HATENA_BLOCK))
             return;
     }
@@ -705,7 +705,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
     int ch;
     u16 typ;
     dActor_c *held;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     if (DecIfAbove0_Short(&mBounceTimer) != 0) {
 
         mScale.y = FX_MUL(FX_SinIdx((u16)mBounceAng >> 4) + 0x1000, 0x999) + 0x666;
@@ -873,12 +873,12 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
-void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src) {
+void func_ov102_02149684(Vector3 *dst, daObjHatenaBlock_c *src) {
     int z = src->mPos.z;
     int liftedY = src->mPos.y + 0x32000;
-    dst[0] = src->mPos.x;
-    dst[1] = liftedY;
-    dst[2] = z;
+    dst->x = src->mPos.x;
+    dst->y = liftedY;
+    dst->z = z;
 }
 
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40
@@ -906,7 +906,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     int rnd;
     dActor_c* o;
     dCamera_c* g;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     o = dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, p2 | (p1 << 8), pos, 0, mAreaId, -1);
     if (o == 0) return;
     g = gCamera;
@@ -929,7 +929,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
    1.5 units, base angle 0), then KillAndTrackInDeathTable. */
 void daObjHatenaBlock_c::SpawnPrizeCoins() {
     Vector3 pos;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     int count = (param1 >> 8) & 0xff;
     if (count == 0xff)
         count = 1;
@@ -942,7 +942,7 @@ void daObjHatenaBlock_c::SpawnPrizeCoins() {
    0x40 (the 0x40 bit is not interpreted here), then MarkForDestruction. */
 void daObjHatenaBlock_c::SpawnPrizeStar() {
     Vector3 pos;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     dActor_c::Spawn(ACTOR_STAR, mStarId | 0x40, pos, 0, mAreaId, -1);
     MarkForDestruction();
 }
@@ -951,7 +951,7 @@ void daObjHatenaBlock_c::SpawnPrizeStar() {
    KillAndTrackInDeathTable. */
 void daObjHatenaBlock_c::SpawnPrize1Up() {
     struct Vector3 pos;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     dActor_c::Spawn(ACTOR_ONEUPKINOKO, 0, pos, 0, mAreaId, -1);
     KillAndTrackInDeathTable();
 }
@@ -960,7 +960,7 @@ void daObjHatenaBlock_c::SpawnPrize1Up() {
    Does not kill the block. */
 void daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko() {
     Vector3 v;
-    func_ov102_02149684((int *)&v, this);
+    func_ov102_02149684(&v, this);
     signed char cc = mAreaId;
     dActor_c::Spawn(ACTOR_SCALEUP_KINOKO, 0, v, (const Vector3_16*)0, cc, -1);
 }
@@ -969,7 +969,7 @@ void daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko() {
    sets the new shell's mDespawnTimer to 0xb4 (180). */
 void daObjHatenaBlock_c::SpawnPrizeShell() {
     Vector3 v;
-    func_ov102_02149684((int *)&v, this);
+    func_ov102_02149684(&v, this);
     void *a = dActor_c::Spawn(ACTOR_SHELL, 0, v, 0, mAreaId, -1);
     if (a)
         ((daShl_c *)a)->mDespawnTimer = 180;
@@ -982,7 +982,7 @@ void daObjHatenaBlock_c::SpawnPrizeShell() {
 void daObjHatenaBlock_c::SpawnPrizeFeather() {
     struct Vector3 pos;
     struct Vector3_16 rot;
-    func_ov102_02149684((int *)&pos, this);
+    func_ov102_02149684(&pos, this);
     /* Raw: as Vector3_16 the three loads become ldrsh where the ROM has ldrh
        (copy and field-wise both, measured 2026-11-14). */
     rot.x = *(u16 *)(data_020a0edc);
@@ -999,7 +999,7 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
 /* POWER_UP_ITEM prize: spawns a POWER_UP_ITEM (param 0) at the prize point. */
 void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
     Vector3 v;
-    func_ov102_02149684((int *)&v, this);
+    func_ov102_02149684(&v, this);
     dActor_c::Spawn(ACTOR_POWER_UP_ITEM, 0u, v, 0, mAreaId, -1);
 }
 
@@ -1009,7 +1009,7 @@ void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
    fuse). Callers discard the result of that helper. */
 void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     Vector3 v;
-    func_ov102_02149684((int *)&v, this);
+    func_ov102_02149684(&v, this);
     daBmb_c *a = (daBmb_c *)dActor_c::Spawn(ACTOR_BOMBHEI, 4, v, 0, mAreaId, -1);
     if (a == 0)
         return;
@@ -1054,14 +1054,14 @@ void daObjHatenaBlock_c::SpawnCoinSpray(Vector3 *pos, int n, unsigned int speed,
 }
 
 /* Whether the block cannot be hit right now: returns 1 in level 0x15 when
-   mHomePosY - 0x32000 (50 units) is at or below data_0209f32c
+   mHomePosY - 0x32000 (50 units) is at or below gWaterHeight
    (WATER_HEIGHT in symbols/verified.tsv); in any other level except 0x21 (0
    there) when the closest player's mIsUnderwater is non-zero; otherwise 0.
    The levels are LEVEL_ID values (gCurrentSublevel); 0x15 is Wet-Dry World per
    dActor_c::GetWaterHeightWDW, the tree does not name 0x21. */
 int daObjHatenaBlock_c::IsHitBlocked() {
     if (gCurrentSublevel == 0x15) {
-        if ((mHomePosY - 0x32000) <= data_0209f32c)
+        if ((mHomePosY - 0x32000) <= gWaterHeight)
             return 1;
     } else {
         if (gCurrentSublevel == 0x21)

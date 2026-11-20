@@ -12,7 +12,7 @@ union Matrix4x3;
 struct dClipper {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration.
        Vtable _ZTV8dClipper lives at 0x0208e730 (named in symbols.txt). The lone
-       instance, data_0209f43c in bss, is a file-scope object of
+       instance, gClipper in bss, is a file-scope object of
        d_s_stage_methods.cpp; this header stays POD-planed and adds no method. */
     /* The four clip-plane normals, written as a run by UpdateFrustumPlanes: it builds
        the frustum's four corner vectors on the stack, cross-multiplies adjacent

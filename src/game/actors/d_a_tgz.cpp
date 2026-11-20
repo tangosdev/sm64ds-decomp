@@ -71,7 +71,7 @@ struct TgzAnimFile : SharedFilePtr {
 TgzAnimFile gTgzWalkAnimFile(ASSET_TOGEZO_WALK_BCA);
 
 /* One {enter, update} record per state; SetState selects one and
- * RunStateInit / RunState call through it. State 1's entry returns
+ * CallStateEnter and CallStateUpdate call through it. State 1's entry returns
  * nothing, so its pointer is cast to the shared record type. */
 typedef int (daTgz_c::*TgzState)();
 
@@ -93,8 +93,7 @@ extern "C" {
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
 
-extern int data_0209f32c;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern int gWaterHeight;
 extern signed char gCurrentSublevel;
 }
 int SurfaceInfo_TestFlag0x20(int *p);
@@ -122,7 +121,7 @@ int daTgz_c::OnAimedAtWithEgg()
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height in mWaterY. Returns how far above it the Spiny is (0 while
  * nothing has been found). */
-int daTgz_c::UpdateWaterY() {
+int daTgz_c::GetHeightAboveWater() {
     if (this->mWaterY == 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
@@ -314,14 +313,14 @@ void daTgz_c::HandlePlayerCollisionSpinning() {
 void daTgz_c::UpdateTumbleMatrix() {
     int v[3];
     Vec3_Asr(reinterpret_cast<Vector3 *>(v), &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Matrix4x3_FromTranslation(&gScratchMtx, v[0], v[1], v[2]);
     int aimHeight = this->OnAimedAtWithEgg();
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, aimHeight >> 3, 0);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, this->mAngle.x, this->mAngle.y,
                                            this->mAngle.z);
     int aimHeightAgain = this->OnAimedAtWithEgg();
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-aimHeightAgain) >> 3, 0);
-    this->mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, (-aimHeightAgain) >> 3, 0);
+    this->mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* Upright matrix on the still model in states 0 and 4, otherwise on the anim. */
@@ -634,9 +633,9 @@ int daTgz_c::St_Spin_Main() {
     if (underwater) {
         if (mInWater == 0) {
             func_02012694(0xe2, &mCamSpacePos);
-            Particle::System::NewBigSplash(mPos.x, data_0209f32c, mPos.z);
+            Particle::System::NewBigSplash(mPos.x, gWaterHeight, mPos.z);
             mRippleId =
-                Particle::System::New(mRippleId, kPtclRipple, mPos.x, data_0209f32c, mPos.z, 0, 0);
+                Particle::System::New(mRippleId, kPtclRipple, mPos.x, gWaterHeight, mPos.z, 0, 0);
         }
         mVertAccel = -0x400;
         mTerminalVelocity = -0x5000;
@@ -691,19 +690,19 @@ int daTgz_c::St_Spin_Init() {
     return 1;
 }
 
-void daTgz_c::RunState() {
+void daTgz_c::CallStateUpdate() {
     TgzState *p = (TgzState *)this->mStateDesc + 1;
     (this->**p)();
 }
 
-void daTgz_c::RunStateInit() {
+void daTgz_c::CallStateEnter() {
     TgzState *p = (TgzState *)this->mStateDesc;
     (this->**p)();
 }
 
 void daTgz_c::SetState(int i) {
     this->mStateDesc = &gTgzStates[i];
-    this->RunStateInit();
+    this->CallStateEnter();
 }
 
 int daTgz_c::CleanupResources()
@@ -739,8 +738,8 @@ int daTgz_c::Behavior()
             return 1;
         }
     } else {
-        this->UpdateWaterY();
-        this->RunState();
+        this->GetHeightAboveWater();
+        this->CallStateUpdate();
         MakeVanishLuigiWork(mdCcAc_c);
         this->UpdateMatrixAndShadow();
         if (gCurrentSublevel == 0x1c && mPos.y <= -0x1600000) {

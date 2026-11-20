@@ -107,7 +107,6 @@ extern "C" BookModelFilePtr data_ov020_02114aa0;
 extern "C" BookModelFilePtr data_ov020_02114ab8;
 extern "C" BookAnimationFileHandle data_ov020_02114aa8;
 extern "C" BookAnimationFileHandle data_ov020_02114ab0;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 #pragma defer_codegen off
 

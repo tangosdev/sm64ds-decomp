@@ -250,8 +250,8 @@ void daObjFl_Puzzle_c::UpdateModelMatrix() {
  * matrix at 0x020a0e68, copies it into mClsnMat, and hands it to the moving
  * mesh collider along with the Y angle. */
 void daObjFl_Puzzle_c::UpdateClsnMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y + mShakeOffsetY, mPos.z);
-    mClsnMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y + mShakeOffsetY, mPos.z);
+    mClsnMat = gScratchMtx;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
