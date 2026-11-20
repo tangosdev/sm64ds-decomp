@@ -62,13 +62,6 @@ typedef char MessageInfoSection_SizeIs10[sizeof(MessageInfoSection) == 0x10 ? 1 
 typedef char MessageEntry_SizeIs8[sizeof(MessageEntry) == 8 ? 1 : -1];
 typedef char MessageDataSection_SizeIs8[sizeof(MessageDataSection) == 8 ? 1 : -1];
 
-/* Readable aliases retain the current symbols and therefore their relocations. */
-#define gMessageBankHeader           data_0209d6e8
-#define gMessageDataSection          data_0209d6ec
-#define gMessageBankBase             data_0209d6fc
-#define gMessageEntries              data_0209d708
-#define gMessageInfoSection          data_0209d70c
-
 #define MESSAGE_BANK_ENG_ASSET   0x0431
 #define MESSAGE_BANK_FRN_ASSET   0x0432
 #define MESSAGE_BANK_GMN_ASSET   0x0433

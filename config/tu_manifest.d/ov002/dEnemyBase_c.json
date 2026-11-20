@@ -109,21 +109,21 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae5c8Ei",
+      "symbol": "_ZN12dEnemyBase_c16FinishStompDeathEi",
       "address": "0x020ae5c8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020ae5c8.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "address": "0x020ae608",
       "size": "0x00000044",
       "legacy_source": "src/func_ov002_020ae608.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c16UpdateStompDeathER10dBgCh_Actr",
       "address": "0x020ae64c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov002_020ae64c.c",
@@ -144,14 +144,14 @@
       "ordinal": 14
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c19StartExplosionDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae80c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020ae80c.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c14StartDiveDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae844",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020ae844.c",
@@ -165,35 +165,35 @@
       "ordinal": 17
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c14StartKickDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae890",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020ae890.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae8b8EP8dActor_c",
+      "symbol": "_ZN12dEnemyBase_c16SetHighKnockbackEP8dActor_c",
       "address": "0x020ae8b8",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov002_020ae8b8.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c15StartPunchDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae954",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020ae954.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae968EP8dActor_c",
+      "symbol": "_ZN12dEnemyBase_c15SetLowKnockbackEP8dActor_c",
       "address": "0x020ae968",
       "size": "0x00000090",
       "legacy_source": "src/func_ov002_020ae968.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c15StartStompDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae9f8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020ae9f8.c",
@@ -214,7 +214,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020aea30EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c12KillByAttackEP8dActor_cP10dBgCh_Actr",
       "address": "0x020aea30",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020aea30.cpp",
@@ -379,14 +379,14 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov002_0210db80",
+      "symbol": "sEnemyDeathStartFuncs",
       "address": "0x0210db80",
       "size": "0x40",
       "binding": "STB_GLOBAL",
-      "evidence": "the eight-entry action table func_ov002_020aea30 dispatches on index f10c-1; the initializer copies the first eight descriptors into it"
+      "evidence": "the eight-entry action table dEnemyBase_c::KillByAttack dispatches on index f10c-1; the initializer copies the first eight descriptors into it"
     },
     {
-      "symbol": "data_ov002_0210dbc0",
+      "symbol": "sEnemyDeathFuncs",
       "address": "0x0210dbc0",
       "size": "0x40",
       "binding": "STB_GLOBAL",
@@ -481,7 +481,7 @@
     "Genuine lifecycle source form: dEnemyBase_c declares ~dEnemyBase_c as its first non-inline virtual and this TU defines it, so this TU owns the class's key function and the compiler emits the whole chain's vtable and typeinfo as vague-linkage passengers. One `~dEnemyBase_c()` definition emits D2, D0 and D1 -- ordinals 27, 28 and 29 -- in the cartridge's own order.",
     "_ZN12dEnemyBase_cC2Ev (ordinal 30) is written as a real constructor body, which is the form its legacy shard recovered and byte-matched. dEnemyBase_c.h DECLARES dEnemyBase_c() without defining it, so the base construction stays an out-of-line `bl` instead of being synthesised and inlined into the subclasses. One definition emits C1 and C2; the ROM keeps only C2, and the C1 this TU emits is licensed below as compiler-only output.",
     "Members are spelled over the real classes wherever the cartridge bytes allow it, and each claim below was measured, not assumed: ordinal 6 (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi) is a real dEnemyBase_c::IsGoingOffCliff method taking its two by-value Fix12i parameters as themselves over real dBgCh_Lin/dBgPi locals; ordinals 2 and 4 use types.h's Vector3 rather than a POD shadow of it; and ordinal 26 uses the real 0x14-byte SurfaceInfo from include/SurfaceInfo.h. All 31 functions still reproduce byte-for-byte with objisolate and reloc-destination checks clean.",
-    "The file-scope PMF tables data_ov002_0210db80 and data_ov002_0210dbc0 are defined in this TU as non-const arrays, so mwcc emits __sinit_d_enemy_base.cpp, the ctor word, and the sixteen anonymous pointer-to-member descriptors. The thirteen PMF targets, and func_ov002_020aea30 that dispatches the first table, are dEnemyBase_c members declared in dEnemyBase_c.h. They were first defined on two TU-local derived receivers, Aea30C and EnemyDeathC; moving them onto dEnemyBase_c is byte-identical, PMF calls and __sinit included. The handwritten src/__sinit_ov002_02100938.c is retired.",
+    "The file-scope PMF tables data_ov002_0210db80 and sEnemyDeathFuncs are defined in this TU as non-const arrays, so mwcc emits __sinit_d_enemy_base.cpp, the ctor word, and the sixteen anonymous pointer-to-member descriptors. The thirteen PMF targets, and KillByAttack that dispatches the first table, are dEnemyBase_c members declared in dEnemyBase_c.h. They were first defined on two TU-local derived receivers, Aea30C and EnemyDeathC; moving them onto dEnemyBase_c is byte-identical, PMF calls and __sinit included. The handwritten src/__sinit_ov002_02100938.c is retired.",
     "Local scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control (EU ASMP dump; the divergent bytes are NDS container/packaging fields outside every module range). The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set (f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b), symbol inventory, and the five owned ranges matched.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, symbol inventory and the five owned ranges all equal the canonical records).",
     "Collision property member calls replace local helper declarations. Reconciled 16 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (63 sections, 214 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
@@ -1020,7 +1020,7 @@
       "source": "0x02100a9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210db80",
+      "symbol": "sEnemyDeathStartFuncs",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210db80"
@@ -1160,7 +1160,7 @@
       "source": "0x02100ad4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210dbc0",
+      "symbol": "sEnemyDeathFuncs",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210dbc0"
@@ -1200,7 +1200,7 @@
       "source": "0x02108148",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae608"
@@ -1210,7 +1210,7 @@
       "source": "0x02108150",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c15StartPunchDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae954"
@@ -1220,7 +1220,7 @@
       "source": "0x02108158",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c14StartDiveDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae844"
@@ -1240,7 +1240,7 @@
       "source": "0x02108168",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c14StartKickDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae890"
@@ -1250,7 +1250,7 @@
       "source": "0x02108170",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c19StartExplosionDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae80c"
@@ -1280,7 +1280,7 @@
       "source": "0x02108188",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae608"
@@ -1290,7 +1290,7 @@
       "source": "0x02108190",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae608"
@@ -1320,7 +1320,7 @@
       "source": "0x021081a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae608"
@@ -1330,7 +1330,7 @@
       "source": "0x021081b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c16UpdateStompDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae64c"
@@ -1340,7 +1340,7 @@
       "source": "0x021081b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c15StartStompDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae9f8"
@@ -1353,7 +1353,7 @@
       "size": "0x8"
     },
     {
-      "symbol": "data_ov002_020ff01c",
+      "symbol": "sPlayerKnockbackStrength",
       "address": "0x020ff01c",
       "size": "0xc"
     }

@@ -18,7 +18,7 @@ struct dExtAnmTexSRT_c;
 #include "dGraph_c.h"
 
 /* One per level area, eight of them at dScStage_c+0x8bc. Area i pairs with
- * entry i of the level record's table (data_0209f340) and with bone i of the
+ * entry i of the level record's table (sLevelInfo) and with bone i of the
  * level model. dScStage_c::LoadTextureTransformers gives an area whose entry
  * carries a BTA file a 0x14-byte dExtAnmTexSRT_c, striding 0xc.
  * dScStage_c::CleanupResources destroys the transformer through its vtable

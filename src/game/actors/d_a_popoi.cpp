@@ -109,7 +109,7 @@ extern daPopoi_StateRecord data_ov077_02127cd8;
  * this file-scope region (extern data names are unmangled either way; they are
  * kept here too so each call site reads identically). */
 extern "C" {
-extern int data_0209f32c;               /* WATER_HEIGHT */
+extern int gWaterHeight;                /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
@@ -177,7 +177,7 @@ int daPopoi_c::InitResources()
  * handler at offset 8 (run each frame below). */
 /* The per-frame update (vtable slot 6).
  *
- * Below the water surface (data_0209f32c, WATER_HEIGHT) the actor is put back at its
+ * Below the water surface (gWaterHeight, WATER_HEIGHT) the actor is put back at its
  * spawn position and the frame ends. Otherwise: count down mStateTimer and
  * mCooldown, run the current state's update handler, UpdatePos with the sensor
  * (mdCcAcPos_c), measure the slope under the feet, undo the step if it would go
@@ -191,9 +191,9 @@ int daPopoi_c::Behavior()
     int slope;
     daPopoi_StateRecord *state;
 
-    /* Below the water surface (data_0209f32c): snap back to the spawn position
+    /* Below the water surface (gWaterHeight): snap back to the spawn position
      * and skip the frame. */
-    if (mPos.y < data_0209f32c) {
+    if (mPos.y < gWaterHeight) {
         mPos.x = mHomePos.x;
         mPos.y = mHomePos.y;
         mPos.z = mHomePos.z;
@@ -253,7 +253,7 @@ int daPopoi_c::Behavior()
 int daPopoi_c::Render()
 {
     /* Nothing below the water surface is drawn. */
-    if (mPos.y < data_0209f32c)
+    if (mPos.y < gWaterHeight)
         return 1;
     mAnmModel.Render(0);
     return 1;
@@ -654,8 +654,8 @@ int daPopoi_c::IsBlockedAhead() {
         start.z = mPos.z;
         start.y = y + 0x28000;
         dir.z = 0xc8000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43(&dir, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43(&dir, &gScratchMtx, &out);
         {
             int sx = start.x;
             int ox = out.x;
@@ -682,9 +682,9 @@ int daPopoi_c::IsBlockedAhead() {
         dir.x = 0;
         dir.y = 0;
         dir.z = 0x2c000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x3000);
-        MTX_MultVec43(&dir, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, 0x3000);
+        MTX_MultVec43(&dir, &gScratchMtx, &out);
         {
             int sx = start.x;
             int ox = out.x;

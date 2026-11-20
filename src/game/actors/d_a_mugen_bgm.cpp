@@ -4,7 +4,7 @@
  *
  * param1 == 1 steers gMusicTrackModeOverride from the rotated offset; otherwise it
  * drives Fog depth/color from the rotated offset, star count and
- * data_0209caa0.file.mCharacter, then keeps Sound sub 0x2e playing while
+ * gSaveBlock.file.mCharacter, then keeps Sound sub 0x2e playing while
  * func_ov100_02144f84 gates mHorzSpeed.
  *
  * This TU owns text only: ov002 delinks no .data here, so the _ZTV / _ZTI /
@@ -16,8 +16,8 @@
  * is the current one.
  *
  * Notes:
- * - data_ov002_02110af0 / 02110af4 / 02110af8 are this TU's stored area,
- *   angle and Fog instance; gLocalPlayerId, gPlayers, 020a0ebc, 0209caa0,
+ * - sEndlessStairsFogAreaId, data_ov002_02110af4 and sEndlessStairsFog are
+ *   this TU's stored area, angle and Fog instance; gLocalPlayerId, gPlayers, 020a0ebc, 0209caa0,
  *   gCamera, 0208e434 and gCurrentAreaId are arm9 scene state this TU does
  *   not own.
  * - g_profile_MUGEN_BGM lives outside this TU.
@@ -35,18 +35,14 @@
 #include "daDoor_c.h"
 #include "math/CalcLib.h"
 
-extern signed char data_ov002_02110af0;
+extern signed char sEndlessStairsFogAreaId;
 extern signed char gCurrentAreaId;
-extern void *data_ov002_02110af8;
+extern Fog *sEndlessStairsFog;
 extern u8 gLocalPlayerId;
 extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
 extern dCamera_c *gCamera;
 
-/* arm9 / ov100 C helpers with no shared header. */
-extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short angle, const Vector3 *v);
-}
 u8 NumStars(void);
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` inherits fBase_c::operator new. */
@@ -57,7 +53,7 @@ daMugenBGM_c *daMugenBGM_c_classInit(void) {
 
 /* -------------------------------------------------------------------------- */
 int daMugenBGM_c::InitResources() {
-    void *p;
+    Fog *p;
     /* The param1 mask reads through a const view of `this`: `param1 &= 0xf`
        makes mwcc CSE the +8 field address into r1 (add r1,r4,#8 / ldr r0,[r1] /
        str r0,[r1]) and the function grows a word; the cartridge re-issues
@@ -66,12 +62,12 @@ int daMugenBGM_c::InitResources() {
     param1 = ro->param1 & 15;
     if (param1 != 1) {
         data_ov002_02110af4 = mAngle.y;
-        p = ::operator new(0x28);
-        data_ov002_02110af8 = p;
+        p = new Fog;
+        sEndlessStairsFog = p;
         if (p != 0) {
-            ((Fog *)p)->Init(0, 0x700, 0xd00);
+            p->Init(0, 0x700, 0xd00);
         }
-        data_ov002_02110af0 = mAreaId;
+        sEndlessStairsFogAreaId = mAreaId;
     }
     mAreaId = -1;
     mAngle.y = -mAngle.y;
@@ -109,7 +105,7 @@ int daMugenBGM_c::Behavior() {
     color = depth;
     flag = 0;
 
-    if (NumStars() < 80 || data_0209caa0.file.mCharacter != 0) {
+    if (NumStars() < 80 || gSaveBlock.file.mCharacter != 0) {
         int x = rotated.x;
         color = 0xd00;
         if (x < 0)
@@ -133,9 +129,9 @@ int daMugenBGM_c::Behavior() {
     }
 
     {
-        void *fog = data_ov002_02110af8;
+        Fog *fog = sEndlessStairsFog;
         if (fog != 0)
-            ((Fog *)fog)->Init(0, (u16)depth, color);
+            fog->Init(0, (u16)depth, color);
     }
 
     if (mHorzSpeed == 0) {
@@ -166,8 +162,8 @@ int daMugenBGM_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 Fog *daMugenBGM_c::GetActiveFog() {
-    if (data_ov002_02110af0 == gCurrentAreaId)
-        return (Fog *)data_ov002_02110af8;
+    if (sEndlessStairsFogAreaId == gCurrentAreaId)
+        return sEndlessStairsFog;
     return 0;
 }
 

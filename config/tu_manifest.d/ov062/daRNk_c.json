@@ -123,7 +123,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "_ZN7daRNk_c19func_ov062_0211aac0Ev",
+      "symbol": "_ZN7daRNk_c20UpdateModelAndShadowEv",
       "address": "0x0211aac0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov062_0211aac0.c",

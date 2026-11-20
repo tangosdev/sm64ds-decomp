@@ -571,7 +571,7 @@
       "ordinal": 75
     },
     {
-      "symbol": "_ZN8dActor_c13func_02010da4Ev",
+      "symbol": "_ZN8dActor_c21ClampPosToWorldBoundsEv",
       "address": "0x02010da4",
       "size": "0x00000064",
       "legacy_source": "src/func_02010da4.c",
@@ -721,7 +721,7 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_0209b468",
+      "symbol": "sActorList",
       "address": "0x0209b468",
       "size": "0x8",
       "evidence": "the global actor list (first and last fLiNdBa_c links); retail __sinit_02074d90 zeroes both words and registers nothing. Every arm9 reader is a dActor_c member in this run: the constructor and destructor triple link and unlink mActorListNode through it, FindWithID/FindWithActorID search it, Next reads its first link. The next .bss, 0x0209b470, is Sound.cpp's.",
@@ -1014,7 +1014,7 @@
       "source": "0x02074da4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209b468",
+      "symbol": "sActorList",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209b468"

@@ -48,7 +48,7 @@
    CleanupResources releases them, so both C++-named members need one agreed
    spelling; the members below that read the loaded handle out of the same bytes
    take their own view with a cast rather than a second declaration. */
-extern SharedFilePtr data_ov002_0210d9e0;
+extern SharedFilePtr gBombheiModelFile;
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daBmb_c_AssetId { ASSET_BOMBHEI_CARRY_BCA = 0x02b7, ASSET_BOMBHEI_WALK_BCA = 0x02b8 };
@@ -76,8 +76,6 @@ Vector3 gBmbCarryOffsets[4] = {
     Vector3(0x30000, -0x1e000, 0x3c000),
 };
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 /* --------------------------------------------------------------------------
  * The one file-scope extern "C" region.  Everything here is reached from a
  * C++-named member, which cannot declare it in its own body.
@@ -90,7 +88,6 @@ int AngleDiff(int, int);
 /* The out-of-line stores of mWithMeshClsn's radius and height. */
 /* local extern: no header declares these; each is spelled as its
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
-dExtAnm2Model_c *func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 /* Real definition: func_0201267c (arm9). The methods call through it so the
    name stays unmangled. */
@@ -161,7 +158,7 @@ int daBmb_c::InitResources()
 
     dExtFrameCtrl_c::LoadFile(gBmbWalkAnimFile);
     dExtFrameCtrl_c::LoadFile(gBmbCarryAnimFile);
-    bmd = dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+    bmd = dExtSimpleModel_c::LoadFile(gBombheiModelFile);
     if (mAnmModel.SetFile(bmd, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
@@ -343,7 +340,7 @@ int daBmb_c::Render()
 
 int daBmb_c::CleanupResources()
 {
-    data_ov002_0210d9e0.Release();
+    gBombheiModelFile.Release();
     gBmbWalkAnimFile.Release();
     gBmbCarryAnimFile.Release();
     return 1;
@@ -701,7 +698,7 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
 }
 
 void daBmb_c::UpdateAttachedPose() {
-    extern Matrix4x3 data_020a0e68;
+    extern Matrix4x3 gScratchMtx;
 
     Vector3 p;
     Vector3 eaterPos;
@@ -715,7 +712,7 @@ void daBmb_c::UpdateAttachedPose() {
         daPly_c *player0;
         if ((IsFlagSet(this, 0x4000) && ((player0 = mCarrier) != 0)) &&
             (player0->mCarryMatrix != 0)) {
-            dExtAnmModel_c *ret = (dExtAnmModel_c *)func_ov002_020e496c(player0);
+            dExtAnmModel_c *ret = (dExtAnmModel_c *)player0->GetBodyModel();
             u8 idx = 0;
             if (mCarrier->IsFrontSliding() != 0) {
                 idx = 1;
@@ -746,11 +743,11 @@ void daBmb_c::UpdateAttachedPose() {
         p.x = 0;
         p.y = 0;
         p.z = 0;
-        data_020a0e68 = mAnmModel.mat4x3;
-        MTX_Concat43(&mAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        p.x = data_020a0e68.t.x;
-        p.y = data_020a0e68.t.y;
-        p.z = data_020a0e68.t.z;
+        gScratchMtx = mAnmModel.mat4x3;
+        MTX_Concat43(&mAnmModel.data.transforms[2], &gScratchMtx, &gScratchMtx);
+        p.x = gScratchMtx.t.x;
+        p.y = gScratchMtx.t.y;
+        p.z = gScratchMtx.t.z;
         Vec3_Lsl(&d, &p, 3);
         p = d;
         if (IsFlagSet(this, 0x4000)) {
@@ -761,10 +758,10 @@ void daBmb_c::UpdateAttachedPose() {
             if (IsInYoshiMouth(this)) {
                 if (mEatingPlayer != 0) {
                     eaterPos = mEatingPlayer->mPos;
-                    data_020a0e68 = mEatingPlayer->mHeadMatrix;
-                    p.x = data_020a0e68.t.x;
-                    p.y = data_020a0e68.t.y;
-                    p.z = data_020a0e68.t.z;
+                    gScratchMtx = mEatingPlayer->mHeadMatrix;
+                    p.x = gScratchMtx.t.x;
+                    p.y = gScratchMtx.t.y;
+                    p.z = gScratchMtx.t.z;
                     Vec3_LslInPlace(&p, 3);
                     daPly_c *eater = mEatingPlayer;
                     Vector3_16 rot = eater->mAngle;

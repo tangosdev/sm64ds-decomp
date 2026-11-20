@@ -1360,7 +1360,7 @@ void MgBanner::DrawLevelNumber() {
     int originX = mX;
     int n;
     /* the first OAM record's 9-bit signed x, made positive */
-    int oamX = ((GXOamAttr *)mOam)->x;
+    int oamX = mOam->x;
     int w;
     unsigned long left;
     n = Mg_GetLevel() + 1;
@@ -1393,7 +1393,7 @@ void MgBanner::DrawLevelNumber() {
 void MgBanner::SetupNone() {}
 
 void MgBanner::DrawSpin() {
-    GXOamAttr *oam = (GXOamAttr *)mOam;
+    GXOamAttr *oam = mOam;
     int angle = (u16)mTimer;
     Matrix2x2 m;
     u16 flag;
@@ -1443,7 +1443,7 @@ void MgBanner::SetupDrop() {
 }
 
 void MgBanner::DrawWave() {
-    GXOamAttr *oam = (GXOamAttr *)mOam;
+    GXOamAttr *oam = mOam;
     int x = mTimer >> 2;
     int t = 0x1000;
     u16 flag;
@@ -1494,10 +1494,10 @@ void MgBanner::StartWaveBurst() {
     static Vector2 sBannerWaveFxGravity(0, 0xc0);
 
     for (i = 0; i < 32; i++) {
-        func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
+        func_0203d704(&spawnPos, &center, &ringOffset);
         func_0203d388(&burstVel, 0x800);
         func_0203d388(&ringOffset, 0x800);
-        func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
+        func_0203d704(&spawnVel, &liftVel, &burstVel);
 
         Mg_SpawnFx(0, RAND_FX_SCALE(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxGravity);
     }
@@ -1510,7 +1510,7 @@ void MgBanner::DrawSqueeze() {
         return;
     m = FX_MUL(mTimer, 0xcc);
     {
-        GXOamAttr *oam = (GXOamAttr *)mOam;
+        GXOamAttr *oam = mOam;
         t = FX_MUL(FX_Div(m, 0x1000), 0x1000);
         v = FX_Inv(m);
         {
@@ -1549,7 +1549,7 @@ void MgBanner::DrawPopSpinA() {
     if (mTimer == 0)
         return;
     {
-        GXOamAttr *oam = (GXOamAttr *)mOam;
+        GXOamAttr *oam = mOam;
         if (mTimer < 0x18000) {
             int v = 0x2000;
             if (mTimer >= 0x14000) {
@@ -1596,7 +1596,7 @@ void MgBanner::DrawPopSpinB() {
     if (mTimer == 0)
         return;
     {
-        GXOamAttr *oam = (GXOamAttr *)mOam;
+        GXOamAttr *oam = mOam;
         if (mTimer < 0x18000) {
             int v = 0x2000;
             if (mTimer >= 0x14000) {
@@ -1656,7 +1656,7 @@ int Banner_IsPressFinished(MgBanner *e) {
 }
 
 void MgBanner::DrawPressed() {
-    GXOamAttr *oam = (GXOamAttr *)mOam;
+    GXOamAttr *oam = mOam;
     int x = mTimer;
     u16 ang = (unsigned int)x >> 1;
     fx16 s = FX_SinIdx(ang >> 4);
@@ -1715,7 +1715,7 @@ void MgBanner::DrawZoomA() {
     int val = mTimer;
     if (val == 0) return;
     {
-        GXOamAttr *oam = (GXOamAttr *)mOam;
+        GXOamAttr *oam = mOam;
         if (val < 0x1e000) {
             int d;
             int scale;
@@ -1777,7 +1777,7 @@ void MgBanner::DrawZoomB() {
     int val = mTimer;
     if (val == 0) return;
     {
-        GXOamAttr *oam = (GXOamAttr *)mOam;
+        GXOamAttr *oam = mOam;
         if (val < 0x1e000) {
             int d;
             int scale;
@@ -1856,10 +1856,10 @@ void MgBanner::SetupZoomBurst() {
     static Vector2 sBannerZoomFxGravity(0, 0xc0);
 
     for (i = 0; i < 32; i++) {
-        func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
+        func_0203d704(&spawnPos, &center, &ringOffset);
         func_0203d388(&burstVel, 0x800);
         func_0203d388(&ringOffset, 0x800);
-        func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
+        func_0203d704(&spawnVel, &liftVel, &burstVel);
 
         Mg_SpawnFx(0, RAND_FX_SCALE(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxGravity);
     }

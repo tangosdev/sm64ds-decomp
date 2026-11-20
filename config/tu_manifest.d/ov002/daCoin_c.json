@@ -1039,7 +1039,7 @@
       "source": "0x020ff060",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da48",
+      "symbol": "gCoinYellowPoly4ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da48"
@@ -1049,7 +1049,7 @@
       "source": "0x020ff064",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da50",
+      "symbol": "gCoinRedPoly4ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da50"
@@ -1059,7 +1059,7 @@
       "source": "0x020ff068",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da00",
+      "symbol": "gCoinBluePoly4ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da00"
@@ -1069,7 +1069,7 @@
       "source": "0x020ff06c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9b8",
+      "symbol": "gCoinYellowPoly32ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9b8"
@@ -1079,7 +1079,7 @@
       "source": "0x020ff070",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9f8",
+      "symbol": "gCoinRedPoly32ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9f8"
@@ -1089,7 +1089,7 @@
       "source": "0x020ff074",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9c8",
+      "symbol": "gCoinBluePoly32ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9c8"
@@ -1513,12 +1513,12 @@
   ],
   "rodata": [
     {
-      "symbol": "data_ov002_020ff060",
+      "symbol": "sCoinPoly4ModelFiles",
       "address": "0x020ff060",
       "size": "0xc"
     },
     {
-      "symbol": "data_ov002_020ff06c",
+      "symbol": "sCoinPoly32ModelFiles",
       "address": "0x020ff06c",
       "size": "0xc"
     },

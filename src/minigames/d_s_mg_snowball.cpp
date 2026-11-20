@@ -78,7 +78,7 @@ extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, Matrix2x2 *f);
 extern OamAttr *sSnowballBitSprites[];
 extern void func_02012718(int a, int b);
-extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 gScratchMtx;
 extern u16 sSnowballCourseTiles[][4];
 extern unsigned char data_ov006_0212f3b0[];
 extern unsigned char data_ov006_0212f3ac[];
@@ -95,8 +95,7 @@ extern void SetBg3Offset(int, int);
 extern void SetSubBg2Offset(int, int);
 extern void SetSubBg3Offset(int, int);
 extern Quaternion data_02092768; /* identity */
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-void func_0203cd80(int *m, short angle);
+void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 s32 GetGameLanguage(void);
 void FreeGfxSlotsById(int arg);
@@ -104,7 +103,7 @@ extern void Ov004_Deallocate(void *p);
 u32 LoadCompressedFileAt(int fileID, void *target);
 void *Ov004_LoadFileByPath(void *p);
 void DecompressLZ16(void *src, void *dst);
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 /* Where two recovered declarations disagreed, the more precise one is
@@ -640,11 +639,11 @@ void dScMgSnowball_c::UpdateCamera() {
     v.x = x;
     v.y = y;
     v.z = 0;
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mHeadingAngle);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mRollAngle);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mHeadingAngle);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mRollAngle);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 void dScMgSnowball_c::RedrawCourse() {
@@ -1259,7 +1258,7 @@ void dScMgSnowball_c::ResetScene() {
 /* Slot 9. Draws the course meter, the snowball, and every live mArray1 and
  * mArray2 slot inside the visible scroll window. */
 s32 dScMgSnowball_c::Render() {
-    int light[3];
+    Vector3 light;
     Vector3 scale;
 
     mAnimCounter++;
@@ -1274,11 +1273,11 @@ s32 dScMgSnowball_c::Render() {
     }
     Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 240, 96, -1, 0);
 
-    light[2] = -0xff8;
-    light[1] = 0;
-    light[0] = 0;
-    func_0203cd80(light, -0x2000);
-    G3_LightVector(GX_LIGHTID_0, light[0], light[1], light[2]);
+    light.z = -0xff8;
+    light.y = 0;
+    light.x = 0;
+    func_0203cd80(&light, -0x2000);
+    G3_LightVector(GX_LIGHTID_0, light.x, light.y, light.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
 
     {
@@ -1391,7 +1390,7 @@ s32 dScMgSnowball_c::Behavior() {
     int slot, held, touched;
     s16 heading;
     Vector2 steer;
-    int moved[2];
+    Vector2 moved;
     Vector3 part;
     int v, q, t;
     unsigned short m;
@@ -1495,8 +1494,8 @@ s32 dScMgSnowball_c::Behavior() {
 
         if (mBallSize >= 0x37000)
             mBallSize = 0x37000;
-        Vec2_Sub(moved, &mPos.x, &mSoundPos.x);
-        gate = Vec2_Len((const Vector2 *)moved) >= 0x30000;
+        Vec2_Sub(&moved, &mPos, &mSoundPos);
+        gate = Vec2_Len(&moved) >= 0x30000;
         if (gate != 0) {
             mSoundPos = mPos;
             if (mBallSize < 0x10000)
@@ -1735,7 +1734,7 @@ void dScMgSnowball_c::StartRound(int i) {
 s32 dScMgSnowball_c::InitResources() {
     void *buf;
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     mScreensSwapped = 1;
 

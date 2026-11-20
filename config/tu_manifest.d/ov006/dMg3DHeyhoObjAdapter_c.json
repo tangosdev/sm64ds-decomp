@@ -91,7 +91,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_Z14Heyho_InitPoolPvi",
+      "symbol": "_Z14Heyho_InitPoolP5Heyhoi",
       "address": "0x020c4684",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020c4684.c",

@@ -61,7 +61,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_ZN6Sprite11PlacePayoutEP5Vec2i",
+      "symbol": "_ZN6Sprite11PlacePayoutEP7Vector2",
       "address": "0x020b4b84",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4b84.c",
@@ -124,7 +124,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN6Sprite6LaunchEP5Vec2i",
+      "symbol": "_ZN6Sprite6LaunchEP7Vector2",
       "address": "0x020b5108",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov004_020b5108.c",
@@ -1125,12 +1125,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@187",
+      "from": "@199",
       "to": "data_ov004_020bfa28",
-      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h and drops its local __aeabi_idiv declaration (two named parameters); candidate ELF emits @200 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof. Re-keyed from @200 to @198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @198 to @187 when the Coin_ free functions became Sprite members (their prototypes' named parameters went) (paired by consumer relocation)."
+      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h and drops its local __aeabi_idiv declaration (two named parameters); candidate ELF emits @200 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof. Re-keyed from @200 to @198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @198 to @187 when the Coin_ free functions became Sprite members (their prototypes' named parameters went) (paired by consumer relocation). Re-keyed from @187 to @199 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "__arraydtor$186",
+      "from": "__arraydtor$198",
       "to": "__arraydtor$192",
       "owned_function": {
         "module": "ov004",
@@ -1140,57 +1140,67 @@
         "raw_type": "STT_FUNC",
         "raw_binding": "STB_LOCAL"
       },
-      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from __arraydtor$197 to __arraydtor$186 when the Coin_ free functions became Sprite members (their prototypes' named parameters went) (paired by consumer relocation)."
+      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from __arraydtor$197 to __arraydtor$186 when the Coin_ free functions became Sprite members (their prototypes' named parameters went) (paired by consumer relocation). Re-keyed from __arraydtor$186 to __arraydtor$198 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@579",
+      "from": "@591",
       "to": "pmf_Coin_MoveThenRise",
-      "evidence": "Compiler PMF literal: Sprite::SendOff assigns &Sprite::MoveThenRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::SendOff+0x98 loads 0x020bc7d8 in the ROM) and by its own relocation target (Sprite::MoveThenRise at 0x020b4ff0)."
+      "evidence": "Compiler PMF literal: Sprite::SendOff assigns &Sprite::MoveThenRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::SendOff+0x98 loads 0x020bc7d8 in the ROM) and by its own relocation target (Sprite::MoveThenRise at 0x020b4ff0). Re-keyed from @579 to @591 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@623",
+      "from": "@635",
       "to": "pmf_Coin_RiseSpent",
-      "evidence": "Compiler PMF literal: Sprite::MoveThenRiseSpent assigns &Sprite::RiseSpent, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenRiseSpent+0x78 loads 0x020bc7e0 in the ROM) and by its own relocation target (Sprite::RiseSpent at 0x020b4d50)."
+      "evidence": "Compiler PMF literal: Sprite::MoveThenRiseSpent assigns &Sprite::RiseSpent, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenRiseSpent+0x78 loads 0x020bc7e0 in the ROM) and by its own relocation target (Sprite::RiseSpent at 0x020b4d50). Re-keyed from @623 to @635 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@504",
+      "from": "@516",
       "to": "pmf_Coin_Move",
-      "evidence": "Compiler PMF literal: Sprite::Reset assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Reset+0x30 loads 0x020bc7e8 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288)."
+      "evidence": "Compiler PMF literal: Sprite::Reset assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Reset+0x30 loads 0x020bc7e8 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288). Re-keyed from @504 to @516 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@535",
+      "from": "@547",
       "to": "pmf_Coin_Move_2",
-      "evidence": "Compiler PMF literal: Sprite::MoveThenBank assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenBank+0x94 loads 0x020bc7f0 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288)."
+      "evidence": "Compiler PMF literal: Sprite::MoveThenBank assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenBank+0x94 loads 0x020bc7f0 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288). Re-keyed from @535 to @547 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@590",
+      "from": "@602",
       "to": "pmf_Coin_Rise",
-      "evidence": "Compiler PMF literal: Sprite::MoveThenRise assigns &Sprite::Rise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenRise+0x78 loads 0x020bc7f8 in the ROM) and by its own relocation target (Sprite::Rise at 0x020b4f44)."
+      "evidence": "Compiler PMF literal: Sprite::MoveThenRise assigns &Sprite::Rise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenRise+0x78 loads 0x020bc7f8 in the ROM) and by its own relocation target (Sprite::Rise at 0x020b4f44). Re-keyed from @590 to @602 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@553",
+      "from": "@565",
       "to": "pmf_Coin_MoveThenBank",
-      "evidence": "Compiler PMF literal: Sprite::Launch assigns &Sprite::MoveThenBank, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Launch+0xd4 loads 0x020bc800 in the ROM) and by its own relocation target (Sprite::MoveThenBank at 0x020b51f0)."
+      "evidence": "Compiler PMF literal: Sprite::Launch assigns &Sprite::MoveThenBank, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Launch+0xd4 loads 0x020bc800 in the ROM) and by its own relocation target (Sprite::MoveThenBank at 0x020b51f0). Re-keyed from @553 to @565 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@669",
+      "from": "@681",
       "to": "pmf_Coin_FlyToCounter",
-      "evidence": "Compiler PMF literal: Sprite::PlacePayout assigns &Sprite::FlyToCounter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::PlacePayout+0xa8 loads 0x020bc808 in the ROM) and by its own relocation target (Sprite::FlyToCounter at 0x020b4aa4)."
+      "evidence": "Compiler PMF literal: Sprite::PlacePayout assigns &Sprite::FlyToCounter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::PlacePayout+0xa8 loads 0x020bc808 in the ROM) and by its own relocation target (Sprite::FlyToCounter at 0x020b4aa4). Re-keyed from @669 to @681 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@612",
+      "from": "@624",
       "to": "pmf_Coin_MoveThenRiseSpent",
-      "evidence": "Compiler PMF literal: Sprite::Spend assigns &Sprite::MoveThenRiseSpent, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Spend+0xc8 loads 0x020bc810 in the ROM) and by its own relocation target (Sprite::MoveThenRiseSpent at 0x020b4dfc)."
+      "evidence": "Compiler PMF literal: Sprite::Spend assigns &Sprite::MoveThenRiseSpent, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Spend+0xc8 loads 0x020bc810 in the ROM) and by its own relocation target (Sprite::MoveThenRiseSpent at 0x020b4dfc). Re-keyed from @612 to @624 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@645",
+      "from": "@657",
       "to": "pmf_Coin_MoveThenRefund",
-      "evidence": "Compiler PMF literal: Sprite::Return assigns &Sprite::MoveThenRefund, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Return+0x88 loads 0x020bc818 in the ROM) and by its own relocation target (Sprite::MoveThenRefund at 0x020b4c30)."
+      "evidence": "Compiler PMF literal: Sprite::Return assigns &Sprite::MoveThenRefund, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Return+0x88 loads 0x020bc818 in the ROM) and by its own relocation target (Sprite::MoveThenRefund at 0x020b4c30). Re-keyed from @645 to @657 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
     },
     {
-      "from": "@561",
+      "from": "@573",
       "to": "pmf_Coin_Move_3",
-      "evidence": "Compiler PMF literal: Sprite::Launch assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Launch+0xd8 loads 0x020bc820 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288)."
+      "evidence": "Compiler PMF literal: Sprite::Launch assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Launch+0xd8 loads 0x020bc820 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288). Re-keyed from @561 to @573 when Vec2i became Vector2 and Vector2Math.h replaced the local Vec2_Sub/func_0203d680 externs (round 10; code bytes unchanged) (measured from the compiled object)."
+    }
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "Sprite's Vector2 mPos/mTarget/mStep and its Vector2 locals register ~Vector2() (round 10: Vec2i -> Vector2). include/Vector2.h defines that destructor inline, so this TU emits a 4-byte copy; the body is NullDestructor_0203d47c at 0x0203d47c."
     }
   ]
 }

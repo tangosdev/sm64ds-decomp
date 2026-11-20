@@ -170,7 +170,7 @@ struct fBase_c {
          above this one), or null at the root.
        connectProc and the four packs: the callbacks of the process tree and
          the four process lists. Each is stored as a ProcessFunction constant
-         in .data (data_02099f60, f70, f48, f50, f68), so each keeps int ().
+         in .data (data_02099f60, f70, f50, f48, f68), so each keeps int ().
          Each pack runs Process with one do/before/after slot triple: create
          = slots 0-2, delete = 3-5, execute = 6-8, draw = 9-11.
        runCreate: create, then queue a process that is still being created.
@@ -196,6 +196,18 @@ struct fBase_c {
     static fBase_c *fBase_make(int, void *, u32, int);
     static fBase_c *createChild(u32, fBase_c *, u32, int);
     static int createRoot(int, u32, int);
+    /* The create path's statics, under NSMBW's f_base.hpp names.
+       m_rootUniqueID is the next uniqueID the constructor hands out and
+       post-increments. The four m_tmpCt* words are what setTmpCtData stages and the
+       constructor reads back: param1, the profile (actorID), the group type,
+       and the parent scene node it links under. Widths are the ROM's loads
+       and stores; the parent stays void *, which the constructor casts at
+       its one read. */
+    static u32 m_rootUniqueID;
+    static u32 m_tmpCtParam;
+    static u16 m_tmpCtProfName;
+    static u8 m_tmpCtGroupType;
+    static void *m_tmpCtConnectParent;
     /* The actor-heap allocator every process is created through; defined in
        src/runtime/actor/ActorBase.cpp. size_t is unsigned long under mwccarm,
        so this is _ZN7fBase_cnwEm, and `new T` on any class derived from this

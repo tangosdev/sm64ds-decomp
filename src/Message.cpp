@@ -8,13 +8,12 @@
  *   last-wins for the whole file.
  * - Display is the only Message method here that takes this. The others are
  *   static and drive the globals around data_0209d660.
- * - data_0209d708 is the bank's MessageEntry array (MessageBank.h). Where
+ * - gMessageEntries is the bank's MessageEntry array (MessageBank.h). Where
  *   indexing it by a runtime index swaps the base and index registers, the
- *   entry is addressed as (char *)data_0209d708 + idx * 8 and read through
+ *   entry is addressed as (char *)gMessageEntries + idx * 8 and read through
  *   a MessageEntry cast.
- *   data_0209d70c stays int * (decl_common.h spells it so); [1] is
- *   MessageInfoSection::sectionSize. data_0209d6f0 stays u8 * for the same
- *   reason (Message2.cpp) and is read back through a MessageEntry cast.
+ *   gCurrentMsgEntry stays u8 * (Message2.cpp spells it so) and is read
+ *   back through a MessageEntry cast.
  * - data_0209d6f4 is int here; Message2.cpp reads the same word as u8 *.
  *   The course-name lines set the cursor and then step it past three
  *   leading bytes with `+= 3`, and both stores emit.
@@ -110,7 +109,7 @@ u8 gMsgBoxStyle;
 u8 gMsgBoxCenterY;
 u8 gMsgBoxTop;
 u8 gMsgBoxCenterX;
-s16 data_0209d6d4;
+s16 gCurrentMsgId;
 s16 data_0209d6d8;
 s16 data_0209d6dc;
 u16 data_0209d6e0;
@@ -118,19 +117,18 @@ u16 data_0209d6e0;
    bound is the 4-byte slot the object occupies. */
 u8 gMsgChoicePositions[4];
 /* The message bank pointers Message::SetTextGlobals splits the loaded bank
-   into; MessageBank.h gives data_0209d6e8, data_0209d6ec, data_0209d6fc,
-   data_0209d708 and data_0209d70c readable aliases. */
-int data_0209d6e8;
-int data_0209d6ec;
-u8 *data_0209d6f0;
+   into (MessageBank.h describes the sections they point at). */
+int gMessageBankHeader;
+int gMessageDataSection;
+u8 *gCurrentMsgEntry;
 /* The text cursor. Message2.cpp reads it as u8 *. */
 int data_0209d6f4;
 int data_0209d6f8;
-int data_0209d6fc;
+int gMessageBankBase;
 int data_0209d700;
 s32 data_0209d704;
-MessageEntry *data_0209d708;
-int *data_0209d70c;
+MessageEntry *gMessageEntries;
+MessageInfoSection *gMessageInfoSection;
 u8 data_0209d710[0x3c];
 s32 data_0209d74c[0x3c0];
 extern u8 data_0208ee74[];
@@ -142,7 +140,7 @@ extern u8 gGameMode;
 extern s32 gRunningKuppaScript;
 extern s8 gNextSublevel;
 extern u32 gNextActorUpdateMask;
-extern s32 data_0208ee44;
+extern s32 gFrameStep;
 extern "C" {
 
 extern void SetBg1Offset(int a, int b);
@@ -171,12 +169,12 @@ void dScStage_c::UpdateMessage() {
             return;
         }
 
-        if (data_0209d6d4 == 0x295) {
+        if (gCurrentMsgId == 0x295) {
             if (data_0209d67c == 60) {
                 SaveData::SaveCurrentFile();
             }
             if (data_0209d67c != 0) {
-                data_0209d67c -= data_0208ee44;
+                data_0209d67c -= gFrameStep;
                 if (data_0209d67c == 0) {
                     data_0209d670 = 1;
                 }
@@ -185,7 +183,7 @@ void dScStage_c::UpdateMessage() {
         }
 
         if (data_0209d67c != 0) {
-            data_0209d67c -= data_0208ee44;
+            data_0209d67c -= gFrameStep;
             if (data_0209d67c == 0) {
                 data_0209d670 = 1;
             }
@@ -196,7 +194,7 @@ void dScStage_c::UpdateMessage() {
     if (data_0209d654 != 0) {
         if (data_0209d660 != 0)
             return;
-        if (data_0209d6d4 != 0x295) {
+        if (gCurrentMsgId != 0x295) {
             data_0209d654 = 0;
             return;
         }
@@ -218,12 +216,12 @@ void Message::func_0201cd08(int arg) {
     s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
     MI_CpuFill16((void *)s, ls, 0x800);
-    data_0209d6d4 = arg;
-    func_0201d418(data_0209d6d4 == 0x29a ? 0x105 : 0xc5, 0xb0);
-    data_0209d6d4 = 0x293;
+    gCurrentMsgId = arg;
+    func_0201d418(gCurrentMsgId == 0x29a ? 0x105 : 0xc5, 0xb0);
+    gCurrentMsgId = 0x293;
     data_0209d6a8 = data_0209d6a8 << 1;
     Message_DrawCenteredLine(0x285, 0xa);
-    data_0209d6d4 = data_0209d6d4 + 1;
+    gCurrentMsgId = gCurrentMsgId + 1;
     Message_DrawCenteredLine(0x291, 0xa);
 }
 
@@ -232,7 +230,7 @@ void Message::DisplaySaveStatusText(unsigned short n)
     volatile int li;
     volatile unsigned short ls;
     int p, s;
-    data_0209d6d4 = n;
+    gCurrentMsgId = n;
     data_0209d660 = 0;
     func_0201eaac();
     data_0209d668 = 1;
@@ -250,7 +248,7 @@ void Message::DisplaySaveStatusText(unsigned short n)
 void Message::func_0201cebc(short a0) {
     volatile unsigned short v;
     volatile int z;
-    data_0209d6d4 = a0;
+    gCurrentMsgId = a0;
     data_0209d660 = 0;
     func_0201eaac();
     data_0209d668 = 1;
@@ -267,19 +265,19 @@ void Message::func_0201cebc(short a0) {
         MI_CpuFill16(dst, v, 0x800);
     }
     Message_DrawCenteredLine(0x100, 0x20);
-    data_0209d6d4 = 0x27e;
+    gCurrentMsgId = 0x27e;
     Message_DrawCenteredLine(0x1c0, 0x20);
 }
 
 void Message::DisplayLevelClearText(u16 msgID, u8 course) {
     func_0201d850(course);
-    data_0209d6d4 = msgID;
+    gCurrentMsgId = msgID;
     data_0209d668 = 1;
     func_0201e220(1);
 }
 
 void Message::func_0201cfb8(int msgID) {
-    data_0209d6d4 = msgID;
+    gCurrentMsgId = msgID;
     data_0209d660 = 0;
     func_0201eaac();
     data_0209d668 = 1;
@@ -298,13 +296,13 @@ void Message::DisplayOptionsMenuText(s16 n) {
     ls = 0x2ff;
     MI_CpuFill16((void *)s, ls, 0x800);
     func_0201cfb8(n);
-    data_0209d6d4 = 0x287;
+    gCurrentMsgId = 0x287;
     data_0209d6c0 = 1;
     func_0201d418(0x18f, 0x28);
-    data_0209d6d4 = data_0209d6d4 + 1;
+    gCurrentMsgId = gCurrentMsgId + 1;
     func_0201d418(0x197, 0x28);
     data_0209d6a8 = data_0209d6a8 << 1;
-    data_0209d6d4 = 0x283;
+    gCurrentMsgId = 0x283;
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
@@ -314,7 +312,7 @@ void LoadControllerModeText(int param0) {
     int m, i;
     short *scr;
 
-    data_0209d6d4 = param0;
+    gCurrentMsgId = param0;
     data_0209d660 = 0;
     Message::func_0201eaac();
 
@@ -340,7 +338,7 @@ void LoadControllerModeText(int param0) {
         } while (i < m);
     }
 
-    data_0209d6d4++;
+    gCurrentMsgId++;
     Message_DrawLineBG2();
     n = data_0209d6b0;
     m = (n + 7) / 8;
@@ -363,7 +361,7 @@ void LoadControllerModeText(int param0) {
         } while (i < mm);
     }
 
-    data_0209d6d4++;
+    gCurrentMsgId++;
     Message_DrawLineBG2();
     n = data_0209d6b0;
     m = (n + 7) / 8;
@@ -392,7 +390,7 @@ void Message::DisplayControllerModeText(unsigned short n)
     volatile int li;
     volatile unsigned short ls;
     int p, s;
-    data_0209d6d4 = n;
+    gCurrentMsgId = n;
     data_0209d660 = 0;
     func_0201eaac();
     data_0209d668 = 1;
@@ -405,24 +403,24 @@ void Message::DisplayControllerModeText(unsigned short n)
     ls = 0x2ff;
     MI_CpuFill16((void *)s, ls, 0x800);
     func_0201d418(0xa9, 0x70);
-    data_0209d6d4 = data_0209d6d4 + 1;
+    gCurrentMsgId = gCurrentMsgId + 1;
     func_0201d418(0x149, 0x70);
-    data_0209d6d4 = data_0209d6d4 + 1;
+    gCurrentMsgId = gCurrentMsgId + 1;
     func_0201d418(0x1e9, 0x70);
     data_0209d6a8 = data_0209d6a8 << 1;
-    data_0209d6d4 = data_0209d6d4 + 1;
+    gCurrentMsgId = gCurrentMsgId + 1;
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
 void Message::func_0201d418(int p0, int p1) {
     volatile int li;
     int i;
-    int idx = data_0209d6d4;
-    char *base = (char*)data_0209d708;
+    int idx = gCurrentMsgId;
+    char *base = (char *)gMessageEntries;
     int n = (p1 >> 3) & 0xff;
-    data_0209d6f0 = (u8*)(base + idx * 8);
-    data_0209d6f4 =
-        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)(base + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)(base + idx * 8))->textOffset;
     data_0209d6bc = 0;
     do {
         func_0201b6f8(0);
@@ -453,11 +451,11 @@ void Message::func_0201d418(int p0, int p1) {
 void Message_DrawLineBG2(void) {
     volatile int li;
     int n;
-    int idx = data_0209d6d4;
-    char *base = (char*)data_0209d708;
-    data_0209d6f0 = (u8*)(base + idx * 8);
-    data_0209d6f4 =
-        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
+    int idx = gCurrentMsgId;
+    char *base = (char *)gMessageEntries;
+    gCurrentMsgEntry = (u8 *)(base + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)(base + idx * 8))->textOffset;
     Message::func_0201b6f8(1);
     data_0209d65c = 0;
     n = ((data_0209d6b0 + 7) / 8) << 6;
@@ -480,15 +478,15 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
     int bytes;
     u8 *p;
     int i;
-    int idx = data_0209d6d4;
-    char *base = (char *)data_0209d708;
+    int idx = gCurrentMsgId;
+    char *base = (char *)gMessageEntries;
     u16 *map;
     int col;
     int old;
 
-    data_0209d6f0 = (u8 *)(base + idx * 8);
-    data_0209d6f4 =
-        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)(base + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)(base + idx * 8))->textOffset;
     Message::func_0201b6f8(1);
     old = data_0209d6b0;
     data_0209d65c = ((width * 8 - old) & 0xf) >> 1;
@@ -542,15 +540,15 @@ void Message::func_0201d850(u32 course) {
     SetBg3Offset(0, 0);
 
     if (course < 0xf) {
-        MessageEntry *ep = &data_0209d708[0x28d];
+        MessageEntry *ep = &gMessageEntries[0x28d];
         s32 base;
         s32 num;
         s32 n;
         s32 i;
         u16 *p;
 
-        data_0209d6f0 = (u8 *)ep;
-        base = data_0209d6fc + 0x28 + data_0209d70c[1];
+        gCurrentMsgEntry = (u8 *)ep;
+        base = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
         data_0209d6f4 = base + ep->textOffset;
         Message::LayoutLine();
         Message::AddChar(0x4d);
@@ -586,10 +584,11 @@ void Message::func_0201d850(u32 course) {
 
         data_0209d65c = 0;
         data_0209d6a4 = 0;
-        data_0209d6f0 = (u8 *)((char *)data_0209d708 + (course + 0x196) * 8);
+        gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + (course + 0x196) * 8);
         {
-            s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                      ((MessageEntry *)((char *)data_0209d708 + (course + 0x196) * 8))->textOffset;
+            s32 sum =
+                gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                ((MessageEntry *)((char *)gMessageEntries + (course + 0x196) * 8))->textOffset;
             data_0209d6f4 = sum;
             data_0209d6f4 += 3;
         }
@@ -640,19 +639,19 @@ void Message::func_0201d850(u32 course) {
         if (course < 0xf) {
             if (data_0209f20c != 0) {
                 s32 off = course * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + gCollectedStarId];
+                gCurrentMsgEntry = (u8 *)&gMessageEntries[off + gCollectedStarId];
             } else {
                 s32 off = course * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + gCurrentStarId];
+                gCurrentMsgEntry = (u8 *)&gMessageEntries[off + gCurrentStarId];
             }
             mapPos = 0x140;
         } else {
-            data_0209d6f0 = (u8 *)&data_0209d708[0x21d];
+            gCurrentMsgEntry = (u8 *)&gMessageEntries[0x21d];
             mapPos = 0x100;
         }
         {
-            s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];
-            data_0209d6f4 = base + ((MessageEntry *)data_0209d6f0)->textOffset;
+            s32 base = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
+            data_0209d6f4 = base + ((MessageEntry *)gCurrentMsgEntry)->textOffset;
         }
         Message::LayoutLine();
         data_0209d65c = 0;
@@ -682,13 +681,13 @@ void Message::func_0201d850(u32 course) {
         s32 i;
 
         if (course < 0xf || course >= 0x15)
-            data_0209d6f0 = (u8 *)&data_0209d708[0x28c];
+            gCurrentMsgEntry = (u8 *)&gMessageEntries[0x28c];
         else
-            data_0209d6f0 = (u8 *)&data_0209d708[0x2b3];
+            gCurrentMsgEntry = (u8 *)&gMessageEntries[0x2b3];
         data_0209d6b8 = 0;
         {
-            s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];
-            data_0209d6f4 = base + ((MessageEntry *)data_0209d6f0)->textOffset;
+            s32 base = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
+            data_0209d6f4 = base + ((MessageEntry *)gCurrentMsgEntry)->textOffset;
         }
         Message::LayoutLine();
 
@@ -709,14 +708,14 @@ void Message::func_0201d850(u32 course) {
 
     data_0209d6b8 = 0;
     {
-        MessageEntry *ep = &data_0209d708[0x28e];
+        MessageEntry *ep = &gMessageEntries[0x28e];
         s32 base;
         s32 n;
         u16 *p;
         s32 i;
 
-        data_0209d6f0 = (u8 *)ep;
-        base = data_0209d6fc + 0x28 + data_0209d70c[1];
+        gCurrentMsgEntry = (u8 *)ep;
+        base = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
         data_0209d6f4 = base + ep->textOffset;
         Message::LayoutLine();
 
@@ -736,7 +735,7 @@ void Message::DisplayPauseText(unsigned short n, unsigned char b)
     volatile unsigned short ls;
     int p, s;
     func_0201d850(b);
-    data_0209d6d4 = n;
+    gCurrentMsgId = n;
     data_0209d6a8 = 0;
     data_0209d668 = 1;
     p = (u32)G2S_GetBG0CharPtr() + 0x4000;
@@ -746,11 +745,11 @@ void Message::DisplayPauseText(unsigned short n, unsigned char b)
     ls = 0x2ff;
     MI_CpuFill16((void *)s, ls, 0x800);
     Message_DrawCenteredLine(0x80, 0x20);
-    data_0209d6d4 = data_0209d6d4 + 1;
+    gCurrentMsgId = gCurrentMsgId + 1;
     Message_DrawCenteredLine(0x260, 0x20);
-    data_0209d6d4 = data_0209d6d4 + 1;
+    gCurrentMsgId = gCurrentMsgId + 1;
     Message_DrawCenteredLine(0x120, 0x20);
-    data_0209d6d4 = 0x28b;
+    gCurrentMsgId = 0x28b;
     Message_DrawCenteredLine(0x1c0, 0x20);
 }
 
@@ -769,12 +768,12 @@ void Message::DisplayDontSaveText(unsigned short n)
     s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
     MI_CpuFill16((void *)s, ls, 0x800);
-    data_0209d6d4 = n;
+    gCurrentMsgId = n;
     func_0201d418(0x105, 0xb0);
-    data_0209d6d4 = 0x293;
+    gCurrentMsgId = 0x293;
     data_0209d6a8 = data_0209d6a8 << 1;
     Message_DrawCenteredLine(0x285, 0xa);
-    data_0209d6d4 = data_0209d6d4 + 1;
+    gCurrentMsgId = gCurrentMsgId + 1;
     Message_DrawCenteredLine(0x291, 0xa);
 }
 
@@ -790,22 +789,22 @@ void Message::func_0201e220(int arg) {
     MI_CpuFill16((void *)s, ls, 0x800);
     if (arg == 0) {
         Message_DrawCenteredLine(0x160, 0x20);
-        data_0209d6d4 = data_0209d6d4 + 1;
+        gCurrentMsgId = gCurrentMsgId + 1;
         Message_DrawCenteredLine(0x200, 0x20);
-        data_0209d6d4 = data_0209d6d4 + 1;
+        gCurrentMsgId = gCurrentMsgId + 1;
         Message_DrawCenteredLine(0xc0, 0x20);
     } else {
         Message_DrawCenteredLine(0xc0, 0x20);
-        data_0209d6d4 = data_0209d6d4 + 1;
+        gCurrentMsgId = gCurrentMsgId + 1;
         Message_DrawCenteredLine(0x160, 0x20);
-        data_0209d6d4 = data_0209d6d4 + 1;
+        gCurrentMsgId = gCurrentMsgId + 1;
         Message_DrawCenteredLine(0x200, 0x20);
     }
 }
 
 void Message::DisplaySaveMenuText(u16 msgID)
 {
-    data_0209d6d4 = msgID;
+    gCurrentMsgId = msgID;
     data_0209d660 = 0;
     func_0201eaac();
     data_0209d6a8 = 0;
@@ -823,19 +822,19 @@ void Message::DisplayText(int t) {
     int cnt, mapPos;
     int base;
 
-    data_0209d6d4 = t;
+    gCurrentMsgId = t;
     data_0209d660 = 0;
     func_0201eaac();
 
-    base = data_0209d6fc;
-    idx = data_0209d6d4;
+    base = gMessageBankBase;
+    idx = gCurrentMsgId;
     gMsgBoxStyle = 1;
     data_0209d6c0 = 0;
     data_0209d668 = 0;
     data_0209d6a8 = 0;
-    data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = base + 0x28 + data_0209d70c[1] +
-                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    data_0209d6f4 = base + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
 
     p = (int)G2_GetBG3CharPtr() + 0x4000;
     li = 0;
@@ -887,7 +886,7 @@ void Message::Display(unsigned int msg)
     ls = 0x2ff;
     MI_CpuFill16((void *)s, ls, 0x800);
     DisplayText(msg);
-    data_0209d6d4 = 0x276;
+    gCurrentMsgId = 0x276;
     gMsgBoxStyle = 0;
     data_0209d668 = 1;
     data_0209d6a8 = 0;
@@ -898,11 +897,11 @@ void Message::Display(unsigned int msg)
     ls2 = 0x2ff;
     MI_CpuFill16((void *)s, ls2, 0x800);
     Message_DrawCenteredLine(0xa0, 0x20);
-    data_0209d6d4 = 0x279;
+    gCurrentMsgId = 0x279;
     Message_DrawCenteredLine(0x140, 0x20);
-    data_0209d6d4 = 0x28b;
+    gCurrentMsgId = 0x28b;
     Message_DrawCenteredLine(0x1e0, 0x20);
-    data_0209d6d4 = 0x28f;
+    gCurrentMsgId = 0x28f;
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
@@ -914,16 +913,16 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     u16* q;
     int i;
 
-    data_0209d6d4 = (msg + (SublevelToLevel(gNextSublevel) * 7 + 0x1b4));
+    gCurrentMsgId = (msg + (SublevelToLevel(gNextSublevel) * 7 + 0x1b4));
     data_0209d660 = 0;
     func_0201eaac();
 
-    idx = data_0209d6d4;
+    idx = gCurrentMsgId;
     data_0209d6c0 = 2;
     gMsgBoxStyle = 1;
-    data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
     func_0201b6f8(0);
 
     data_0209d65c = (256 - data_0209d6b0) / 2;
@@ -957,14 +956,14 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     int i;
     int j;
 
-    data_0209d6d4 = (base + 0x196);
+    gCurrentMsgId = (base + 0x196);
     data_0209d660 = 0;
     func_0201eaac();
 
-    idx = data_0209d6d4;
-    data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
-          ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    idx = gCurrentMsgId;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    sum = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+          ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
     data_0209d6f4 = sum;
     data_0209d6f4 += 3;
     func_0201b6f8(0);
@@ -983,7 +982,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
         MI_CpuFill16(scr, blank, 0x800);
     }
 
-    if (data_0209d6d4 >= 0x1a5) {
+    if (gCurrentMsgId >= 0x1a5) {
         gMsgBoxStyle = 0;
         map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x400);
     } else {
@@ -997,15 +996,15 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     LayoutLine();
     func_0201b388(data_0209d6a8);
 
-    if (data_0209d6d4 >= 0x1a5)
+    if (gCurrentMsgId >= 0x1a5)
         return;
 
     data_0209d6c0 = 1;
     {
-        MessageEntry *e = &data_0209d708[0x28e];
-        data_0209d6f0 = (u8*)e;
-        sum = data_0209d6fc + 0x28;
-        sum += data_0209d70c[1];
+        MessageEntry *e = &gMessageEntries[0x28e];
+        gCurrentMsgEntry = (u8 *)e;
+        sum = gMessageBankBase + 0x28;
+        sum += gMessageInfoSection->sectionSize;
         sum += e->textOffset;
         data_0209d6f4 = sum;
     }
@@ -1061,7 +1060,7 @@ void Message::DisplaySaving(unsigned short n)
     MessageEntry *base;
     MessageEntry *entry;
 
-    data_0209d6d4 = n;
+    gCurrentMsgId = n;
     func_0201eaac();
 
     data_0209d67c = 60;
@@ -1072,11 +1071,11 @@ void Message::DisplaySaving(unsigned short n)
     gMsgBoxStyle = 0;
     func_02012790(4);
 
-    idx = data_0209d6d4;
-    base = data_0209d708;
+    idx = gCurrentMsgId;
+    base = gMessageEntries;
     entry = (MessageEntry *)((char *)base + idx * 8);
-    data_0209d6f0 = (u8 *)entry;
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
+    gCurrentMsgEntry = (u8 *)entry;
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
                     ((MessageEntry *)((char *)base + idx * 8))->textOffset;
 
     tiles = entry->width / 8;
@@ -1105,7 +1104,7 @@ void Message::DisplaySaving(unsigned short n)
     SetBg3Offset(-gMsgBoxLeft, 4 - gMsgBoxTop);
 
     cols = data_0209d6a8;
-    for (i = 0; i < cols * ((MessageEntry *)data_0209d6f0)->lineCount * 2; i++) {
+    for (i = 0; i < cols * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2; i++) {
         rem = i % cols;
         map[rem] = (u16)(i + 0x200);
         if (cols - 1 == rem)
@@ -1163,15 +1162,15 @@ void Message::func_0201ef50(int arg) {
     if (arg < 0)
         return;
 
-    data_0209d6d4 = (arg + 0x24e);
-    idx = data_0209d6d4;
-    data_0209d6f0 = (u8 *)((char *)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgId = (arg + 0x24e);
+    idx = gCurrentMsgId;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
     data_0209d6a8 = 0x20;
     data_0209d680 = 0;
     data_0209d65c = 0;
-    lines = ((MessageEntry *)((char *)data_0209d708 + idx * 8))->lineCount;
+    lines = ((MessageEntry *)((char *)gMessageEntries + idx * 8))->lineCount;
     top = 0xc - lines;
     charOffset = (u16)(top << 10);
     data_0209d6e0 = (top << 5);
@@ -1206,19 +1205,19 @@ void Message::func_0201f138(void) {
     int i, cnt, rem, div;
     u8* bcPtr;
 
-    data_0209d6d4 = 0;
+    gCurrentMsgId = 0;
     func_0201eaac();
 
-    idx = data_0209d6d4;
+    idx = gCurrentMsgId;
     gMsgBoxWinLeft = 0x7f;
     gMsgBoxWinTop = 0x87;
     data_0209d660 = 0;
     gMsgBoxStyle = 1;
-    data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
 
-    data_0209d6a8 = ((((((MessageEntry *)data_0209d6f0)->width / 8) * 9) + 7) / 8);
+    data_0209d6a8 = ((((((MessageEntry *)gCurrentMsgEntry)->width / 8) * 9) + 7) / 8);
     data_0209d680 = 0;
     data_0209d65c = 0;
 
@@ -1232,14 +1231,14 @@ void Message::func_0201f138(void) {
 
     q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x42);
     div = data_0209d6a8;
-    cnt = div * ((MessageEntry *)data_0209d6f0)->lineCount * 2;
+    cnt = div * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2;
     for (i = 0; i < cnt; i++) {
         rem = i % div;
         q[rem] = (i + 0x200);
         if (div - 1 == rem) {
             q += 0x20;
         }
-        cnt = div * ((MessageEntry *)data_0209d6f0)->lineCount * 2;
+        cnt = div * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2;
     }
 
     bcPtr = &data_0209d6bc;
@@ -1280,16 +1279,16 @@ void Message::func_0201f32c(int msgID) {
     volatile s32 subZero;
     volatile s32 bg3Zero;
 
-    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)msgID)
+    if (gMessageInfoSection->messageCount <= (u16)msgID)
         return;
 
-    data_0209d6d4 = msgID;
+    gCurrentMsgId = msgID;
     func_0201eaac();
 
     data_0209d660 = 1;
     gMsgBoxWinLeft = 0x7f;
     gMsgBoxWinTop = 0x87;
-    if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
+    if (gCurrentMsgId >= 0x2a && gCurrentMsgId < 0x83) {
         gMsgBoxStyle = 1;
         func_02012790(0x20);
     } else {
@@ -1298,16 +1297,16 @@ void Message::func_0201f32c(int msgID) {
             func_02012790(4);
     }
 
-    entry = &data_0209d708[data_0209d6d4];
-    data_0209d6f0 = (u8 *)entry;
+    entry = &gMessageEntries[gCurrentMsgId];
+    gCurrentMsgEntry = (u8 *)entry;
     {
         s32 ev = entry->textOffset;
-        s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1];
+        s32 sum = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
         data_0209d6f4 = sum + ev;
     }
     data_0209d6a8 = ((entry->width + 7) / 8);
 
-    if (IsGameMode(0) && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
+    if (IsGameMode(0) && !(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
         !IsKuppaScriptRunning()) {
         gMsgBoxLeft = 0x10;
         gMsgBoxTop = 0x64;
@@ -1384,7 +1383,7 @@ void Message::func_0201f32c(int msgID) {
     }
 
     divisor = data_0209d6a8;
-    for (i = 0; i < (divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2); i++) {
+    for (i = 0; i < (divisor * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2); i++) {
         s32 rem = i % divisor;
         map[rem] = tile;
         if (divisor - 1 == rem)
@@ -1416,7 +1415,7 @@ void Message::func_0201f32c(int msgID) {
         return;
     }
 
-    if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
+    if (gCurrentMsgId >= 0x2a && gCurrentMsgId < 0x83) {
         G2_SetBlendBrightness(gMainScreenLayers & ~0x38, 7);
     } else {
         G2_SetBlendBrightness(gMainScreenLayers & ~0x38, -8);
@@ -1441,7 +1440,7 @@ int Message::func_0201fb4c(void) {
     if (data_0209d664 != 0) goto no;
     b = (gGameMode == 2);
     if (b != 0) goto no;
-    v = data_0209d6d4;
+    v = gCurrentMsgId;
     if (v == 0xcc) goto no;
     if (v == 0xce) goto no;
     if (v == 0xd0) goto no;

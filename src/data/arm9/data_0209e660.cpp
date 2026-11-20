@@ -8,8 +8,8 @@
    byte layout; the configured labels inside it keep their symbols.txt
    addresses (the linker script defines them at their ROM address).
 
-   data_0209e664, data_0209e668, data_0209e66c, data_0209e670, data_0209e674,
-   data_0209e67c, data_0209e694, data_0209ea74, ...and 8 more
+   OAM::objCountMain, OAM::curAffineSetMain, OAM::curAffineSetSub, OAM::objCountSub, OAM::bufferMain,
+   data_0209e67c, data_0209e694, OAM::bufferSub, ...and 8 more
 */
 #include "types.h"
 

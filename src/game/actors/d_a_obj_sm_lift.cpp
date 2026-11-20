@@ -78,11 +78,11 @@ void daObjSm_Lift_c::OnHitByMegaChar(daPly_c &player) {
 void daObjSm_Lift_c::UpdateModelTransform() {
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, 0x4000);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, 0x4000);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 s32 daObjSm_Lift_c::CleanupResources() {

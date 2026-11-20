@@ -58,9 +58,8 @@
  *   mSoundHandle, mSoundID
  *                   the looping sound variant 0 plays (Sound::PlayLong); the
  *                   handle is reset when the id changes.
- * The 0x32c..0x35c block is a Matrix4x3 scratch that func_ov060_02117624 fills
- * each frame for the shadow. It retains byte storage here; the helper uses
- * a POD matrix view to preserve the block copy in C++. */
+ * The 0x32c..0x35c block is mShadowMat, the Matrix4x3 UpdateShadow fills
+ * each frame for the shadow. */
 #ifndef DAKPAFIRE_C_H
 #define DAKPAFIRE_C_H
 #include "types.h"
@@ -106,11 +105,11 @@ struct daKpaFire_c : dEnemyBase_c {
     int Render();
     int Behavior();
 
-    void func_ov060_02117624(); /* per-frame drop shadow */
+    void UpdateShadow();        /* per-frame drop shadow */
     void func_ov060_0211747c(); /* variant 0 handler */
     void func_ov060_021172e0(); /* variant 6/7 handler */
     int func_ov060_021172c8(unsigned int n);
-    void func_ov060_02116740();
+    void BurnPlayer();
     void func_ov060_0211722c();
     void func_ov060_021171e8();
     void func_ov060_0211712c();

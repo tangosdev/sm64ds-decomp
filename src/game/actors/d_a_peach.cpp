@@ -68,11 +68,10 @@ PeachAnimFile gPeachJumpAnimationFile(ASSET_PEACH_JUMP_BCA);
 PeachAnimFile gPeachJumpEndAnimationFile(ASSET_PEACH_JUMP_END_BCA);
 PeachAnimFile gPeachJumpLoopAnimationFile(ASSET_PEACH_JUMP_LOOP_BCA);
 PeachAnimFile gPeachOpWaitAnimationFile(ASSET_PEACH_OP_WAIT_BCA);
-extern const int data_ov085_0212f280[7] = {
-    (int)&gPeachWaitAnimationFile,    (int)&gPeachWalkAnimationFile,
-    (int)&gPeachRunAnimationFile,     (int)&gPeachJumpAnimationFile,
-    (int)&gPeachJumpEndAnimationFile, (int)&gPeachJumpLoopAnimationFile,
-    (int)&gPeachOpWaitAnimationFile,
+extern SharedFilePtr *const data_ov085_0212f280[7] = {
+    &gPeachWaitAnimationFile,   &gPeachWalkAnimationFile,    &gPeachRunAnimationFile,
+    &gPeachJumpAnimationFile,   &gPeachJumpEndAnimationFile, &gPeachJumpLoopAnimationFile,
+    &gPeachOpWaitAnimationFile,
 };
 
 /* SetState indexes this by state. Each record is {init, behavior} as SetState
@@ -184,16 +183,16 @@ int daPeach_c::IsTouchingPlayer() {
 
 /* The model matrix is rebuilt from the body angle and the position, then
  * the head joint's own matrix (bone 18 of the animated model) is rotated by
- * the two look angles through the scratch matrix at data_020a0e68. */
+ * the two look angles through the scratch matrix at gScratchMtx. */
 void daPeach_c::UpdateModel() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
-    data_020a0e68 = mAnmModel.data.transforms[18];
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookHorzAngle);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mLookVertAngle);
-    mAnmModel.data.transforms[18] = data_020a0e68;
+    gScratchMtx = mAnmModel.data.transforms[18];
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mLookHorzAngle);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mLookVertAngle);
+    mAnmModel.data.transforms[18] = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x8c000, 0x32000, 15);
 }
 
@@ -327,7 +326,7 @@ int daPeach_c::CleanupResources() {
     gPeachModelFile.Release();
     s32 i = 0;
     do {
-        ((SharedFilePtr *)data_ov085_0212f280[i])->Release();
+        data_ov085_0212f280[i]->Release();
         i++;
     } while (i < 7);
     return 1;
@@ -361,7 +360,7 @@ int daPeach_c::InitResources() {
     BMD_File *f = dExtSimpleModel_c::LoadFile(gPeachModelFile);
     mAnmModel.SetFile(f, 1, -1);
     for (int i = 0; i < 7; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov085_0212f280[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov085_0212f280[i]);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mCylinder.Init(this, 0x90000, 0xc0000, 0x4800004, 0);

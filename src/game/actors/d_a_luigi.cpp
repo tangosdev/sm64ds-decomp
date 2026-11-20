@@ -21,7 +21,7 @@
  *   0x1b0). The u64 destination round trip stays.
  * - Render: inlining mBodyModels[GetBodyModelID(mBodyModelId, 1)] differs
  *   (size stays 0x1b0, 2 relocation destinations wrong). The ROM calls
- *   func_ov002_020e496c.
+ *   daPly_c::GetBodyModel.
  * - ExecuteMirror: direct mPos.x, mPos.z, mPos.y reads differ (size stays
  *   0x034). One pointer, x then z then y, stays.
  * - func_ov055_02111264: Sound::Play2D(3, 0x179) differs (size stays 0x024,
@@ -88,8 +88,6 @@ unsigned int func_0201277c(unsigned int soundID);
 
 /* Depth from mModelOffsetY, mPos.y, mSinkDepth and mGroundY; radius from that,
  * mIsBalloon, mIsMega and mScale.y. The definition takes char *. */
-/* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)]. */
-dExtAnm2Model_c *func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
 void MTX_Concat33(const int *a, const int *b, int *dst);
@@ -126,11 +124,11 @@ int daLuigi_c::InitResources() {
     mAnmModel.SetAnim(dExtFrameCtrl_c::LoadFile(data_ov002_0210eaa0), 0, kFxOne, 0);
 
     Vec3_Asr(&t, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
 
-    mAnmModel.mat4x3 = data_020a0e68;
-    mModel.mat4x3 = data_020a0e68;
+    mAnmModel.mat4x3 = gScratchMtx;
+    mModel.mat4x3 = gScratchMtx;
 
     SetState(&data_ov055_02111b70, CurrentPlayer());
 
@@ -148,7 +146,7 @@ int daLuigi_c::Behavior() {
         data_ov055_02111b6c = 0;
         data_ov055_02111a90 = kFadeFull;
         data_ov055_02111b60 = 0;
-    } else if ((data_ov055_02111b68 & kReqFade) && !(data_0209caa0.file.flags1 & kSysHold)) {
+    } else if ((data_ov055_02111b68 & kReqFade) && !(gSaveBlock.file.flags1 & kSysHold)) {
         ApproachLinear(data_ov055_02111b6c, kFadeFull, kFadeStep);
         data_ov055_02111b64 = (data_ov055_02111b64 & ~kHideBit) + (kFadeFull - data_ov055_02111b6c);
     }
@@ -177,7 +175,7 @@ int daLuigi_c::Render() {
         return 1;
 
     player = CurrentPlayer();
-    body = (dExtSimpleModel_c *)func_ov002_020e496c(player);
+    body = (dExtSimpleModel_c *)player->GetBodyModel();
 
     comps = &mAnmModel.data;
     file = comps->modelFile;
@@ -194,8 +192,8 @@ int daLuigi_c::Render() {
     mat = &mAnmModel.mat4x3;
     *mat = body->mat4x3;
     mat->t.x = -mat->t.x;
-    func_0203c178(&data_020a0e68, kMirrorSx, kFxOne, kFxOne);
-    MTX_Concat33((const int *)mat, (const int *)&data_020a0e68, (int *)mat);
+    func_0203c178(&gScratchMtx, kMirrorSx, kFxOne, kFxOne);
+    MTX_Concat33((const int *)mat, (const int *)&gScratchMtx, (int *)mat);
     mModel.mat4x3 = *mat;
 
     if (data_ov055_02111b64 & kHideBit)

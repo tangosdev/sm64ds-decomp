@@ -96,7 +96,7 @@ OamAttr *sGameOverGlyphTemplates[9] = {
 /* External scene services not declared by the included headers. */
 extern "C" {
 extern dFdBrightness_c *gSceneFader;
-extern int data_0208ee44;
+extern int gFrameStep;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
  * the spelling the rest of the tree uses for this pair. */
 extern u8 gMainScreenLayers;
@@ -290,7 +290,7 @@ s32 dScGameOver_c::InitResources() {
     data_0209f204 = 1;
     Sound::LoadInitialGroup(2);
     Sound::LoadAndSetMusic_Layer1(0x15);
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     return 1;
 }
 
@@ -322,10 +322,10 @@ s32 dScGameOver_c::Behavior() {
                  (unsigned char)(gTouchInfo[idx].y - 56) < 32) ||
                 (mSelection == 0 && IsButtonInputValid())) {
                 if (mSelection == 0)
-                    mFlashTimer = (data_0208ee44 << 3);
+                    mFlashTimer = (gFrameStep << 3);
                 mSelection = 0;
                 UpdateButtonPalettes(0);
-                mCommitTimer = (data_0208ee44 << 4);
+                mCommitTimer = (gFrameStep << 4);
                 func_02012790(0x9a);
                 mCursorState = 1;
                 break;
@@ -335,10 +335,10 @@ s32 dScGameOver_c::Behavior() {
                  (unsigned char)(gTouchInfo[idx].y - 104) < 32) ||
                 (mSelection == 1 && IsButtonInputValid())) {
                 if (mSelection == 1)
-                    mFlashTimer = (data_0208ee44 << 3);
+                    mFlashTimer = (gFrameStep << 3);
                 mSelection = 1;
                 UpdateButtonPalettes(0);
-                mCommitTimer = (data_0208ee44 << 4);
+                mCommitTimer = (gFrameStep << 4);
                 func_02012790(0x9b);
                 mCursorState = 1;
             }
@@ -346,12 +346,12 @@ s32 dScGameOver_c::Behavior() {
         }
         case 1:
             if (mFlashTimer != 0) {
-                mFlashTimer -= data_0208ee44;
+                mFlashTimer -= gFrameStep;
                 if (mFlashTimer == 0)
                     UpdateButtonPalettes(0);
             }
             if (mCommitTimer != 0) {
-                mCommitTimer -= data_0208ee44;
+                mCommitTimer -= gFrameStep;
                 if (mCommitTimer == 0) {
                     if (mSelection == 0)
                         func_0202ae74();
