@@ -106,7 +106,7 @@ struct daDoor_c : dActor_c {
          mKeyFile   -- a separate file the door pre-loads (dExtSimpleModel_c::LoadFile) only
                        in game mode 0 and Release()s in CleanupResources; it is
                        not mKeyModel's file (that is e->keyFile). Three
-                       sources: data_ov002_0211094c when the entry's
+                       sources: gPowerStarModelFile when the entry's
                        starsNeeded is positive, data_ov089_02132894[mKeyModelIdx
                        + 1] for a key door in the param1 9..0xd range, else
                        data_ov089_02132c50; it stays null for a door with

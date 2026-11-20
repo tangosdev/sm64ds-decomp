@@ -76,8 +76,8 @@ extern const int data_ov062_0211cf0c[9];
 
 extern SharedFilePtr *const data_ov062_0211ced8[2];
 extern SharedFilePtr *const data_ov062_0211cee0[2];
-extern SharedFilePtr data_ov002_0210da18;
-extern SharedFilePtr data_ov002_0210da20;
+extern SharedFilePtr gShellGreenModelFile;
+extern SharedFilePtr gShellRedModelFile;
 
 int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
@@ -1051,8 +1051,8 @@ extern SharedFilePtr *const data_ov062_0211ced8[2] = {
     &gNokonokoRedModelFile,
 };
 extern SharedFilePtr *const data_ov062_0211cee0[2] = {
-    &data_ov002_0210da18,
-    &data_ov002_0210da20,
+    &gShellGreenModelFile,
+    &gShellRedModelFile,
 };
 extern NknkAnimationFileHandle *const data_ov062_0211cee8[9] = {
     &gNokonokoWalkStAnimationFile, &gNokonokoWalkAnimationFile,  &gNokonokoWalkEdAnimationFile,

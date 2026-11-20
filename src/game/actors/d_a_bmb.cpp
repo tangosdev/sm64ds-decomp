@@ -48,7 +48,7 @@
    CleanupResources releases them, so both C++-named members need one agreed
    spelling; the members below that read the loaded handle out of the same bytes
    take their own view with a cast rather than a second declaration. */
-extern SharedFilePtr data_ov002_0210d9e0;
+extern SharedFilePtr gBombheiModelFile;
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daBmb_c_AssetId { ASSET_BOMBHEI_CARRY_BCA = 0x02b7, ASSET_BOMBHEI_WALK_BCA = 0x02b8 };
@@ -161,7 +161,7 @@ int daBmb_c::InitResources()
 
     dExtFrameCtrl_c::LoadFile(gBmbWalkAnimFile);
     dExtFrameCtrl_c::LoadFile(gBmbCarryAnimFile);
-    bmd = dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+    bmd = dExtSimpleModel_c::LoadFile(gBombheiModelFile);
     if (mAnmModel.SetFile(bmd, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
@@ -343,7 +343,7 @@ int daBmb_c::Render()
 
 int daBmb_c::CleanupResources()
 {
-    data_ov002_0210d9e0.Release();
+    gBombheiModelFile.Release();
     gBmbWalkAnimFile.Release();
     gBmbCarryAnimFile.Release();
     return 1;

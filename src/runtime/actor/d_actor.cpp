@@ -969,18 +969,18 @@ s32 dActor_c::GetWaterHeightWDW()
     return height;
 }
 
-extern SharedFilePtr data_ov002_0210da00;
+extern SharedFilePtr gCoinBluePoly4ModelFile;
 /* the blue coin's two model files */
-extern SharedFilePtr data_ov002_0210d9c8;
+extern SharedFilePtr gCoinBluePoly32ModelFile;
 
 void dActor_c::LoadBlueCoinModel() {
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da00);
-    dExtSimpleModel_c::LoadFile(data_ov002_0210d9c8);
+    dExtSimpleModel_c::LoadFile(gCoinBluePoly4ModelFile);
+    dExtSimpleModel_c::LoadFile(gCoinBluePoly32ModelFile);
 }
 
 void dActor_c::UnloadBlueCoinModel() {
-    data_ov002_0210da00.Release();
-    data_ov002_0210d9c8.Release();
+    gCoinBluePoly4ModelFile.Release();
+    gCoinBluePoly32ModelFile.Release();
 }
 
 void dActor_c::PoofDust()

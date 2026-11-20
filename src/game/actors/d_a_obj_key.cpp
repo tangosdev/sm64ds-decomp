@@ -1,7 +1,7 @@
 //cpp
 /* daObjKey_c (ov089): OBJ_KEY is actor 0x11a (282) and LAST_STAR is 0x11b
  * (283); both factories install this vtable. param1 & 7 picks the kind: 7 uses
- * the power-star model (data_ov002_0211094c, file 0x8015) and StateStarJump; 3
+ * the power-star model (gPowerStarModelFile, file 0x8015) and StateStarJump; 3
  * uses StateFlyToCenter; the other six kinds are StateDrop.
  *
  * The TU is the whole of ov089's .text, 0x02130f00..0x02132880: the destructor
@@ -196,7 +196,7 @@ extern VecFx32 data_ov089_02132ca4;
 extern int *Vec3_LslInPlace(void *v, int sh);
 /* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
    keep that spelling so the declarations of this symbol stay in agreement. */
-extern char data_ov002_0211094c;
+extern char gPowerStarModelFile;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *const data_ov089_02132880[];
@@ -837,7 +837,7 @@ int daObjKey_c::InitResources()
     dExtFrameCtrl_c::LoadFile(*&data_ov002_02110964);
 
     if (mState == KEY_KIND_STAR) {
-        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)&data_ov002_0211094c)->filePtr, 1, 1) == 0)
+        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)&gPowerStarModelFile)->filePtr, 1, 1) == 0)
             return 0;
         mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
         mScale.x = SCALE_STAR;
@@ -939,7 +939,7 @@ extern ObjKeyFile *const data_ov089_02132880[5] = {
 };
 void *data_ov089_02132894[8] = {
     &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile,  &gLuigiKeyModelFile,
-    &gWarioKeyModelFile,  &data_ov085_021305d8, &data_ov085_021305d8, &data_ov002_0211094c,
+    &gWarioKeyModelFile,  &data_ov085_021305d8, &data_ov085_021305d8, &gPowerStarModelFile,
 };
 extern void *const data_ov089_021328b4[8] = {
     0, 0, &data_ov002_0210da40, &data_ov002_0210d9a0, &data_ov002_0210d9c0, 0, 0, 0,

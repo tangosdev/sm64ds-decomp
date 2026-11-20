@@ -1144,7 +1144,7 @@
       "source": "0x021328b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0211094c",
+      "symbol": "gPowerStarModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0211094c"

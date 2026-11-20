@@ -244,7 +244,7 @@ extern signed char gNextSublevel;
 extern int gMusicVolume;
 extern int gSubVolume;
 extern Vector3 data_020a0ebc;
-extern char data_ov002_0211094c;
+extern char gPowerStarModelFile;
 extern SharedFilePtr data_ov089_02132c50;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
    entries in that overlay's .rodata, the table LoadKeyModels loads into
@@ -1046,7 +1046,7 @@ s32 daDoor_c::InitResources() {
     b = b == 0;
     if (b != 0) {
         if (e->starsNeeded > 0) {
-            mKeyFile = &data_ov002_0211094c;
+            mKeyFile = &gPowerStarModelFile;
         } else if (e->keyIndex >= 0) {
             unsigned int t = param1;
             if (t >= DOOR_FIRST_KEY_MODEL && t <= DOOR_LAST_KEY_MODEL) {

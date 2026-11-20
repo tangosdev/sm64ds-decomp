@@ -22,7 +22,7 @@
  *   0x12        anmModel_c, model data_ov085_0213074c
  *   0x13        anmModel_c; file set chosen by CURRENT_GAMEMODE == 2
  *   0x14..0x16  simpleModel_c, data_ov002_02110b70
- *   0x17, 0x18  simpleModel_c, data_ov002_02110b50 / data_ov002_0211094c
+ *   0x17, 0x18  simpleModel_c, data_ov002_02110b50 / gPowerStarModelFile
  *   0x19        simpleModel_c, data_ov002_02110b78; Render draws it three
  *               times at the positions in data_ov002_0210bb7c
  *   0x1a..0x2d  anmModel_c from data_ov009_02113c20; moved with
@@ -341,7 +341,7 @@ extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src
 extern int data_ov002_0210b964[3];
 extern Matrix4x3 gInvViewMtx;
 extern unsigned char gGameMode;
-extern char data_ov002_0211094c;
+extern char gPowerStarModelFile;
 extern JugemModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
@@ -3398,7 +3398,7 @@ int daDemo_c::InitResources()
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
         if (((simpleModel_c *)this->mModel)
-                ->func_ov002_020f6960((SharedFilePtr *)&data_ov002_0211094c, -1) == 0)
+                ->func_ov002_020f6960((SharedFilePtr *)&gPowerStarModelFile, -1) == 0)
             return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
