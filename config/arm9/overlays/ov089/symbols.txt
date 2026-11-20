@@ -37,13 +37,13 @@ _ZTS10daObjKey_c kind:data(any) addr:0x02132b58
 g_profile_OBJ_KEY kind:data(any) addr:0x02132b68
 g_profile_LAST_STAR kind:data(any) addr:0x02132b84
 _ZTV10daObjKey_c kind:data(any) addr:0x02132ba8
-data_ov089_02132c40 kind:bss addr:0x02132c40
-data_ov089_02132c48 kind:bss addr:0x02132c48
+gKoopaKeyGetDemoAnimationFile kind:bss addr:0x02132c40
+gKoopaKeyWGetAnimationFile kind:bss addr:0x02132c48
 gKoopaKeyModelFile kind:bss addr:0x02132c50
 gWarioKeyModelFile kind:bss addr:0x02132c58
-data_ov089_02132c60 kind:bss addr:0x02132c60
+gKoopaKeyGetAnimationFile kind:bss addr:0x02132c60
 gMarioKeyModelFile kind:bss addr:0x02132c68
-data_ov089_02132c70 kind:bss addr:0x02132c70
+gKoopaKeyOpenAnimationFile kind:bss addr:0x02132c70
 gLuigiKeyModelFile kind:bss addr:0x02132c78
 @1180 kind:bss addr:0x02132c80
 @1181 kind:bss addr:0x02132c8c

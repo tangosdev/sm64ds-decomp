@@ -183,10 +183,10 @@ extern void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *const data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
-extern ObjKeyAnimationFilePtr data_ov089_02132c60;
-extern ObjKeyAnimationFilePtr data_ov089_02132c40;
-extern ObjKeyAnimationFilePtr data_ov089_02132c70;
-extern ObjKeyAnimationFilePtr data_ov089_02132c48;
+extern ObjKeyAnimationFilePtr gKoopaKeyGetAnimationFile;
+extern ObjKeyAnimationFilePtr gKoopaKeyGetDemoAnimationFile;
+extern ObjKeyAnimationFilePtr gKoopaKeyOpenAnimationFile;
+extern ObjKeyAnimationFilePtr gKoopaKeyWGetAnimationFile;
 extern ObjKeyModelFile gKoopaKeyModelFile;
 extern ObjKeyModelFile gLuigiKeyModelFile;
 extern ObjKeyModelFile gMarioKeyModelFile;
@@ -718,10 +718,10 @@ int daObjKey_c::CleanupResources()
     UnloadKeyModels(mState);
     (&data_ov002_02110964)->Release();
     if (mState != KEY_KIND_STAR) {
-        (&data_ov089_02132c60)->Release();
-        (&data_ov089_02132c40)->Release();
-        (&data_ov089_02132c70)->Release();
-        (&data_ov089_02132c48)->Release();
+        (&gKoopaKeyGetAnimationFile)->Release();
+        (&gKoopaKeyGetDemoAnimationFile)->Release();
+        (&gKoopaKeyOpenAnimationFile)->Release();
+        (&gKoopaKeyWGetAnimationFile)->Release();
     }
     Event::ClearBit(EVENT_KEY);
     return 1;
@@ -789,8 +789,8 @@ int daObjKey_c::Behavior()
         if (mAnmModel.Finished()) {
             /* The flag keeps the ROM's moveq and movne pair. */
             if (IsActorID(this, ACTOR_OBJ_KEY)) {
-                /* Anim 3's file (data_ov089_02132c40, id 0x44f) stays; the others die. */
-                if (mAnmModel.file != data_ov089_02132c40.filePtr)
+                /* Anim 3's file (gKoopaKeyGetDemoAnimationFile, id 0x44f) stays; the others die. */
+                if (mAnmModel.file != gKoopaKeyGetDemoAnimationFile.filePtr)
                     MarkForDestruction();
             }
         }
@@ -852,10 +852,10 @@ int daObjKey_c::InitResources()
         mVertAccel = 0;
         Sound::PlayBank3(SND_APPEAR, mCamSpacePos);
     } else {
-        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c60);
-        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c40);
-        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c70);
-        dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c48);
+        dExtFrameCtrl_c::LoadFile(*&gKoopaKeyGetAnimationFile);
+        dExtFrameCtrl_c::LoadFile(*&gKoopaKeyGetDemoAnimationFile);
+        dExtFrameCtrl_c::LoadFile(*&gKoopaKeyOpenAnimationFile);
+        dExtFrameCtrl_c::LoadFile(*&gKoopaKeyWGetAnimationFile);
         if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)gKeyModelFiles[mState])->filePtr, 1, 1) ==
             0)
             return 0;
@@ -918,10 +918,10 @@ ObjKeyModelFile gKoopaKeyModelFile(ASSET_KOOPA_KEY_BMD);
 ObjKeyModelFile gLuigiKeyModelFile(ASSET_LUIGI_KEY_BMD);
 ObjKeyModelFile gMarioKeyModelFile(ASSET_MARIO_KEY_BMD);
 ObjKeyModelFile gWarioKeyModelFile(ASSET_WARIO_KEY_BMD);
-ObjKeyAnimationFilePtr data_ov089_02132c60(ASSET_KOOPA_KEY_GET_BCA);
-ObjKeyAnimationFilePtr data_ov089_02132c40(ASSET_KOOPA_KEY_GET_DEMO_BCA);
-ObjKeyAnimationFilePtr data_ov089_02132c70(ASSET_KOOPA_KEY_OPEN_BCA);
-ObjKeyAnimationFilePtr data_ov089_02132c48(ASSET_KOOPA_KEY_W_GET_BCA);
+ObjKeyAnimationFilePtr gKoopaKeyGetAnimationFile(ASSET_KOOPA_KEY_GET_BCA);
+ObjKeyAnimationFilePtr gKoopaKeyGetDemoAnimationFile(ASSET_KOOPA_KEY_GET_DEMO_BCA);
+ObjKeyAnimationFilePtr gKoopaKeyOpenAnimationFile(ASSET_KOOPA_KEY_OPEN_BCA);
+ObjKeyAnimationFilePtr gKoopaKeyWGetAnimationFile(ASSET_KOOPA_KEY_W_GET_BCA);
 
 VecFx32 data_ov089_02132ca4;
 
@@ -935,7 +935,11 @@ extern "C" SharedFilePtr data_ov002_0210d9c0;
 struct DaMipModelFile;
 extern "C" DaMipModelFile data_ov085_021305d8;
 extern ObjKeyFile *const data_ov089_02132880[5] = {
-    0, &data_ov089_02132c60, &data_ov089_02132c70, &data_ov089_02132c40, &data_ov089_02132c48,
+    0,
+    &gKoopaKeyGetAnimationFile,
+    &gKoopaKeyOpenAnimationFile,
+    &gKoopaKeyGetDemoAnimationFile,
+    &gKoopaKeyWGetAnimationFile,
 };
 void *gKeyModelFiles[8] = {
     &gKoopaKeyModelFile, &gKoopaKeyModelFile,  &gMarioKeyModelFile,  &gLuigiKeyModelFile,

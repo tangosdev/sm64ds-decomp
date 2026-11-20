@@ -31,8 +31,8 @@ struct daTgz_c : dActor_c {
     /* Drop-shadow matrix. InitResources copies IDENTITY_MATRIX4X3 here and
        the shadow helper writes the translation as position >> 3. */
     Matrix4x3 mShadowMatrix; /* 0x3a0 */
-    /* PMF pair. func_ov077_02125e94 stores &gTgzStates[i] (d_a_tgz.cpp).
-       func_ov077_02125e5c calls slot 0; CallStateUpdate calls slot 1. */
+    /* PMF pair. SetState stores &gTgzStates[i] (d_a_tgz.cpp).
+       CallStateEnter calls slot 0; CallStateUpdate calls slot 1. */
     void *mStateDesc;                    /* 0x3d0 */
     /* daPly_c stored when a hit sends the Spiny into state 2. */
     daPly_c *mChasePlayer; /* 0x3d4 */
@@ -89,8 +89,8 @@ struct daTgz_c : dActor_c {
     void func_ov077_02125290();
     void func_ov077_02125304();
     void CallStateUpdate();
-    void func_ov077_02125e5c();
-    void func_ov077_02125e94(int i);
+    void CallStateEnter();
+    void SetState(int i);
 };
 
 #ifndef SM64DS_PLATFORM_PC

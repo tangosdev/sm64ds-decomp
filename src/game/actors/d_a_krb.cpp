@@ -117,9 +117,11 @@ enum {
     ACTOR_KURIBO_L = 202
 };
 
-/* dCcAc_c hitFlags bits, with the names include/dCc_c.h gives its table. That
-   table is a best-effort reading; only the egg and explosion bits are proven
-   there. 0x20000 is not in it. */
+/* dCcAc_c hitFlags bits, with the names include/dCc_c.h gives its table. The
+   egg and explosion bits are proven by matched code; punch, kick, breakdance,
+   slide kick, dive, ground pound, explosion and the player bit were read on
+   the cartridge from this class's hit reaction (the table's SEEN rows).
+   0x20000 is not in it. */
 enum {
     HIT_MEGA = 0x10,
     HIT_SPIN_OR_POUND = 0x20,

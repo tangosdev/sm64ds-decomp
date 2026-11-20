@@ -156,14 +156,6 @@ extern int gGlobalTimer;
 extern u8 gVsExitingCourse;
 extern u8 gMeterCounterSlideState;
 extern u8 gZoomButtonActiveTimer;
-extern OamAttr data_ov002_0210cea8;
-extern OamAttr data_ov002_0210cee8;
-extern OamAttr data_ov002_0210cf28;
-extern OamAttr data_ov002_0210cf78;
-extern OamAttr data_ov002_0210ce90;
-extern OamAttr data_ov002_0210ced0;
-extern OamAttr data_ov002_0210cf08;
-extern OamAttr data_ov002_0210cfa0;
 extern void *data_ov001_020abd98[];
 extern void *data_ov001_020ac218[];
 extern void *data_ov001_020ac64c[];
@@ -562,18 +554,6 @@ static inline int IsTouchJustBegun(int slot) {
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
-extern int data_ov002_0210cfd0[];
-extern OamAttr data_ov002_0210d008;
-extern int data_ov002_0210d050[];
-extern OamAttr data_ov002_0210d098;
-extern int data_ov002_0210d0e8[];
-extern OamAttr data_ov002_0210d130;
-extern int data_ov002_0210d188[];
-extern OamAttr data_ov002_0210d1c8;
-extern OamAttr data_ov002_0210d378;
-extern OamAttr data_ov002_0210d3a0;
-extern OamAttr data_ov002_0210d3c0;
-extern OamAttr data_ov002_0210d3e0;
 extern u16 gVsTimerTickTimer;
 }
 
@@ -812,13 +792,13 @@ void dScStage_c::LC_Render() {
     if (SublevelToLevel(gLastCourseSublevel) >= 0xf &&
         SublevelToLevel(gLastCourseSublevel) < 0x15) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, &data_ov002_0210cea8, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS_ES, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, &data_ov002_0210cee8, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS_IT, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, &data_ov002_0210cf28, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS_DE, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, &data_ov002_0210cf78, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS_FR, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &OAM::LC_CONGRATULATIONS, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
     }
@@ -826,24 +806,24 @@ void dScStage_c::LC_Render() {
     if (sLevelClearNewRecord != 0) {
         if (data_0209f20c != 0 && SublevelToLevel(gLastCourseSublevel) >= 0xf) {
             if (GetOwnerLanguage() == 5)
-                OAM::Render(0, &data_ov002_0210ce90, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_ES, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 4)
-                OAM::Render(0, &data_ov002_0210ced0, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_IT, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 3)
-                OAM::Render(0, &data_ov002_0210cf08, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_DE, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 2)
-                OAM::Render(0, &data_ov002_0210cfa0, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_FR, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else
                 OAM::Render(0, &OAM::LC_HIGH_SCORE, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             if (GetOwnerLanguage() == 5)
-                OAM::Render(0, &data_ov002_0210ce90, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_ES, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 4)
-                OAM::Render(0, &data_ov002_0210ced0, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_IT, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 3)
-                OAM::Render(0, &data_ov002_0210cf08, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_DE, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 2)
-                OAM::Render(0, &data_ov002_0210cfa0, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_FR, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else
                 OAM::Render(0, &OAM::LC_HIGH_SCORE, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
         }
@@ -3095,13 +3075,13 @@ void dScStage_c::RenderVsModeNewStar() {
     sVsNewStarTimer = timer - gFrameStep;
     if (sVsNewStarTimer % 60 >= 10) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED_ES, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED_IT, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED_DE, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED_FR, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         if (sVsNewStarSoundPlayed != 0)
@@ -3135,13 +3115,13 @@ void dScStage_c::RenderVsModeCountdown() {
         return;
     if (data_0209f2bc != 0) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, &data_ov002_0210d008, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR_ES, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, &data_ov002_0210d098, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR_IT, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, &data_ov002_0210d130, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR_DE, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, &data_ov002_0210d1c8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR_FR, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &OAM::VS_GET_THE_STAR, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         OAM::Render(0, OAM::VS_RED_NUMBERS[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000, 0x1000, 0,
@@ -3151,13 +3131,13 @@ void dScStage_c::RenderVsModeCountdown() {
     if (sVsCountdownTimer == 0)
         return;
     if (GetOwnerLanguage() == 5)
-        OAM::Render(0, &data_ov002_0210d378, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO_ES, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 4)
-        OAM::Render(0, &data_ov002_0210d3a0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO_IT, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 3)
-        OAM::Render(0, &data_ov002_0210d3c0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO_DE, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 2)
-        OAM::Render(0, &data_ov002_0210d3e0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO_FR, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else
         OAM::Render(0, &OAM::VS_GO, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
 }

@@ -174,7 +174,7 @@ method that matches -- which is the strongest form of check this note describes.
 
 `KillByAttack` was on ov004 0x020aea30, whose body walks an 8-byte table to an
 0xffff sentinel: r0 is a table base, not an actor. The ov002 function at the same
-address dispatches a pointer-to-member from `data_ov002_0210db80[mDeathState - 1]`
+address dispatches a pointer-to-member from `sEnemyDeathStartFuncs[mDeathState - 1]`
 after clearing bit 0x10000000 of mFlags and zeroing mDeathTimer -- an enemy method,
 and the one all 34 enemy-overlay call sites reach. ov004's is now
 `func_ov004_020aea30`. ov002's first kept its placeholder, but the community

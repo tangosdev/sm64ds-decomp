@@ -58,7 +58,7 @@ class daPly_c;
  * include/dBgActor_c.h takes before its own dExtSimpleModel_c member). That leaves
  * 0x138..0x147 (0x10 = 16 bytes) as this class's own storage, touched by the sources in src/game/actors/d_a_door.cpp: two pointers at
  * 0x138/0x13c, a state pointer at 0x140 (read in Behavior as a
- * pointer-to-member dispatch, written by func_ov100_021453d8), a key-model
+ * pointer-to-member dispatch, written by SetState), a key-model
  * index byte at 0x144 and a countdown byte at 0x145 (touched only by the
  * state helpers). 0x146..0x147 are untouched padding.
  *
@@ -119,7 +119,7 @@ struct daDoor_c : dActor_c {
     void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
     /* The current state: a 16-byte {enter, execute} pair of
        pointers-to-member, one of the nine tables data_ov100_021488a4 ..
-       data_ov100_02148924. func_ov100_021453d8 stores it and calls the enter
+       data_ov100_02148924. SetState stores it and calls the enter
        half; Behavior calls the execute half, a `void (daDoor_c::*)(int)` at
        +0x8, on this daDoor_c. [src/game/actors/d_a_door.cpp] */
     void *mState;                 /* 0x140 -- the state pair, see SIZE above */
@@ -178,7 +178,7 @@ struct daDoor_c : dActor_c {
     int func_ov100_021451c4(void *r5, daPly_c *r4);                /* send the player through */
     int func_ov100_021452e4(daPly_c *r1);     /* player inside the door's box */
     daPly_c *func_ov100_02145370();           /* the current player */
-    int func_ov100_021453d8(void *p, int a2); /* the state installer */
+    int SetState(void *p, int a2);            /* the state installer */
 };
 
 /* Holds the chain to the size daDoor_c_classInit's operator new(0x148) call
