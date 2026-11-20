@@ -188,9 +188,6 @@ extern int gMgCoinsInPlay;   /* sprites in play */
 extern int sMgCoinsSlowLaunches;   /* MgCoins_StepLaunchQuick steps this many with a delay */
 extern void (*sMgCoinsStep)(); /* the current step; 0 when idle */
 extern int sMgCoinsDeltaShown;   /* nonzero: MgCoins_Draw shows the count */
-/* The address of sMgCoins[0].mVisible; the ROM indexes the
-   array's visible bytes from it. */
-extern unsigned char sMgCoinsVisible[];
 extern int data_020a0db0;
 }
 extern void MgCoins_StepPayoutFinish(void);
@@ -507,7 +504,7 @@ void MgCoins_StepLose(void) {
             sMgCoinsWait = 0x10;
         return;
     }
-    if (sMgCoinsVisible[sMgCoinsLastLost * 0x24] != 0)
+    if (sMgCoins[sMgCoinsLastLost].mVisible != 0)
         return;
     sMgCoinsWait = 0x3c;
     sMgCoinsStep = MgCoins_StepHoldThenFinish;
@@ -533,7 +530,7 @@ void MgCoins_StepLoseOneMore(void) {
             sMgCoinsWait = 0x10;
         return;
     }
-    if (sMgCoinsVisible[sMgCoinsLastLostAlt * 0x24] != 0)
+    if (sMgCoins[sMgCoinsLastLostAlt].mVisible != 0)
         return;
     sMgCoinsWait = 0x3c;
     sMgCoinsStep = MgCoins_StepHoldThenFinish;
@@ -571,7 +568,7 @@ void MgCoins_StepSpend(void) {
             sMgCoinsWait = 0x10;
         return;
     }
-    if (sMgCoinsVisible[sMgCoinsLastSpent * 0x24] != 0)
+    if (sMgCoins[sMgCoinsLastSpent].mVisible != 0)
         return;
     sMgCoinsWait = 0x3c;
     sMgCoinsStep = MgCoins_StepSpendHold;
@@ -600,7 +597,7 @@ void MgCoins_StepRefund() {
         }
         return;
     }
-    if (sMgCoinsVisible[sMgCoinsLastReturned * 0x24] != 0)
+    if (sMgCoins[sMgCoinsLastReturned].mVisible != 0)
         return;
     gMgCoinsStatus = 1;
     sMgCoinsStep = 0;

@@ -119,7 +119,7 @@ extern "C" {
 extern void Trmp2Spinner_UpdateMatrix(char *c);
 extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
-extern unsigned char *sTrmp2Spinners;
+extern char *sTrmp2Spinners;
 extern int sTrmp2BrushWord[];
 extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
@@ -170,8 +170,8 @@ BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
 Tbl sTrmp2SpinnerSpeeds = {0x600, 0xc00, 0xe00};
 
 int sTrmp2ScoreGates[] = {1000, 5000, 10000, 20000};
-int sTrmp2PuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
-                               (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
+OamAttr **sTrmp2PuffXByLanguage[] = {sTrmpPuffEnglish, sTrmpPuffSpanish, sTrmpPuffFrench,
+                                     sTrmpPuffGerman, sTrmpPuffItalian};
 int sTrmp2NcgByLanguage[] = {0x107, 0x109, 0x104, 0x105, 0x106};
 OamAttr **sTrmp2TextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesSpanish,
                                            sMgTextSpritesFrench, sMgTextSpritesGerman,
@@ -993,7 +993,7 @@ Trmp2Spinner::~Trmp2Spinner() {
 extern "C" {
 void Trmp2Spinner_LoadAll(int x, int count) {
     int i;
-    sTrmp2Spinners = (unsigned char *)x;
+    sTrmp2Spinners = (char *)x;
     sTrmp2SpinnerCount = count;
     for (i = 0; i < sTrmp2SpinnerCount; i++) {
         Trmp2Spinner_SetModel((sTrmp2Spinners + i * 0x78));
@@ -1005,8 +1005,8 @@ extern "C" {
 void Trmp2Spinner_InitAll(int hitCount) {
     int i = 0;
     int n = sTrmp2SpinnerCount;
-    unsigned char *base;
-    unsigned char *p;
+    char *base;
+    char *p;
     if (n <= 0) {
         return;
     }
@@ -1041,7 +1041,7 @@ extern "C" {
 void Trmp2Spinner_UpdateAll(void) {
     int i;
     for (i = 0; i < sTrmp2SpinnerCount; i++) {
-        char *obj = (char *)sTrmp2Spinners + i * 0x78;
+        char *obj = sTrmp2Spinners + i * 0x78;
         if (((Trmp2Spinner *)obj)->mLifeTimer != 0) {
             Trmp2Spinner_Update(obj);
         }
@@ -1053,7 +1053,7 @@ extern "C" {
 void Trmp2Spinner_UpdateMatricesAll(void) {
     int i;
     for (i = 0; i < sTrmp2SpinnerCount; i++) {
-        char *obj = (char *)sTrmp2Spinners + i * 0x78;
+        char *obj = sTrmp2Spinners + i * 0x78;
         if (((Trmp2Spinner *)obj)->mLifeTimer != 0) {
             Trmp2Spinner_UpdateMatrix(obj);
         }

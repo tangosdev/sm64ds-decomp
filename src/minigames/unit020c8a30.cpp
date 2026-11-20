@@ -151,13 +151,13 @@ void Puff::Draw() {
     Hud_RenderSprite(sprite, drawX >> 12, y >> 12, -1, -1);
 }
 
-void Puff_ClearAll(int a0, int a1) {
+void Puff_ClearAll(int nextIndex, OamAttr **xTable) {
     int i;
     for (i = 0; i < 3; i++) {
         sPuffs[i].Clear();
     }
-    sPuffNextIndex = a0;
-    sPuffXTable = (OamAttr **)a1;
+    sPuffNextIndex = nextIndex;
+    sPuffXTable = xTable;
 }
 
 void Puff_UpdateAll(void) {

@@ -134,7 +134,7 @@ extern const int sRoulettePayoutMultipliers[4] = {
     3,
     2,
 };
-extern void *sRouletteRacerSprites;
+extern OamAttr *sRouletteRacerSprites;
 /* Bet tiles: 0..0xb are single numbers, 0xc..0x1c pairs of numbers and
  * 0x1d..0x22 groups of four (RouletteRacer_GetPayout checks 1, 2 and 4
  * table entries for them and pays 12, 6 and 3). */

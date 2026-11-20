@@ -10,7 +10,7 @@ extern u8 data_ov007_020ccc44[];
 extern void func_ov007_020c0288(u16 *entries, int count, int palette);
 extern void func_ov007_020c0638(Ov007BgLayer *layer, int x, int y, u16 tile);
 void func_ov007_020b1390(int mode) {
-    Ov007Work *g = WORK;
+    Ov007Work *g = gMenuWork;
     Ov007BgLayer *p6 = g->layerSlots[1]->layer;
     Ov007Item *p5 = g->itemNodes[7]->item;
     int v;
@@ -43,7 +43,7 @@ void func_ov007_020b1390(int mode) {
     }
 
     case 3: {
-        Ov007ItemView *r2 = WORK->itemViews[8];
+        Ov007ItemView *r2 = gMenuWork->itemViews[8];
         unsigned int o = r2->sprite->width;
         o = o >> 1;
         o = o + 12;

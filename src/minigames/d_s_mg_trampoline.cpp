@@ -124,8 +124,6 @@ void TrmpLine_LoadTextures(void);
 extern "C" void Trmp3DMario_ResetAll(unsigned int n, int spawnHeight);
 void TrmpFx_ClearAll(void);
 
-extern int sTrmpPuffXByLanguage[];
-void Puff_ClearAll(int a0, int a1);
 
 extern "C" void func_02012718(int, int);
 void TrmpFx_UpdateAll(void);
@@ -249,8 +247,8 @@ OamAttr **sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesS
                                           sMgTextSpritesFrench, sMgTextSpritesGerman,
                                           sMgTextSpritesItalian};
 
-int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
-                              (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
+OamAttr **sTrmpPuffXByLanguage[] = {sTrmpPuffEnglish, sTrmpPuffSpanish, sTrmpPuffFrench,
+                                    sTrmpPuffGerman, sTrmpPuffItalian};
 
 TrmpScorePopup::TrmpScorePopup() {}
 

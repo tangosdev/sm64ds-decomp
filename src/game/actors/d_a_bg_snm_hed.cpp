@@ -9,9 +9,7 @@
 
 #pragma defer_codegen off
 
-#define data_ov072_02121ffc data_ov072_02121ffc_decl
 #include "decl_common.h"
-#undef data_ov072_02121ffc
 #include "daBgSnmHed_c.h"
 #include "SpawnInfo.h"
 #include "daPly_c.h"
@@ -229,7 +227,7 @@ int daBgSnmHed_c::CleanupResources() {
     gBgSnmHedModelFile.Release();
     int i = 0;
     do {
-        ((SharedFilePtr **)&data_ov072_02121ffc)[i]->Release();
+        data_ov072_02121ffc[i]->Release();
         i++;
     } while (i < 2);
     return 1;
@@ -258,7 +256,7 @@ int daBgSnmHed_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(gBgSnmHedModelFile), 1, -1);
 
     for (i = 0; i < 2; i++) {
-        SharedFilePtr *tex = ((SharedFilePtr **)&data_ov072_02121ffc)[i];
+        SharedFilePtr *tex = data_ov072_02121ffc[i];
         dExtAnmTexPat_c::LoadFile(*tex);
         dExtAnmTexPat_c::Prepare(*(BMD_File *)gBgSnmHedModelFile.filePtr,
                                  *(BTP_File *)tex->filePtr);

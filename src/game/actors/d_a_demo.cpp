@@ -337,7 +337,7 @@ extern daPly_c *gPlayers[];
 extern int data_ov002_0210b964[3];
 extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
-extern char data_ov002_0211094c;
+extern SharedFilePtr data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
@@ -1086,7 +1086,7 @@ void StaffRoll::func_ov002_020f396c() {
 
 extern "C" {
 
-extern void *data_ov002_0210b998[];
+extern OamAttr *data_ov002_0210b998[];
 }
 
 void StaffRoll::func_ov002_020f3978() {
@@ -1094,8 +1094,7 @@ void StaffRoll::func_ov002_020f3978() {
     int i;
     for (i = 0; i < 4; i++) {
         if (star->visible) {
-            OAM::Render(true, (OamAttr *)data_ov002_0210b998[i], star->x >> 0xc, star->y >> 0xc, -1,
-                        1, 0);
+            OAM::Render(true, data_ov002_0210b998[i], star->x >> 0xc, star->y >> 0xc, -1, 1, 0);
         }
         star++;
     }
@@ -3393,8 +3392,7 @@ int daDemo_c::InitResources()
     } else if (param1 == 0x18) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c *)this->mModel)
-                ->func_ov002_020f6960((SharedFilePtr *)&data_ov002_0211094c, -1) == 0)
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_0211094c, -1) == 0)
             return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
@@ -3438,14 +3436,13 @@ daDemo_c *daDemo_c_classInit(void) {
    pointer-to-member copies. */
 extern "C" {
 
-int data_ov002_0210b658[2] = {(int)0x81f020f0, (int)0xffff0100};
-int data_ov002_0210b6e8[2] = {(int)0x81f020f0, (int)0xffff0118};
-int data_ov002_0210b768[2] = {(int)0x41f800f8, (int)0xffff701e};
-int data_ov002_0210b868[2] = {(int)0x41f800f8, (int)0xffff705e};
+OamAttr data_ov002_0210b658[1] = {{0x20f0, 0x81f0, 0x0100, 0xffff}};
+OamAttr data_ov002_0210b6e8[1] = {{0x20f0, 0x81f0, 0x0118, 0xffff}};
+OamAttr data_ov002_0210b768[1] = {{0x00f8, 0x41f8, 0x701e, 0xffff}};
+OamAttr data_ov002_0210b868[1] = {{0x00f8, 0x41f8, 0x705e, 0xffff}};
 }
 
-struct OamAttr *data_ov002_0210b6a8[2] = {(struct OamAttr *)data_ov002_0210b768,
-                                          (struct OamAttr *)data_ov002_0210b868};
+struct OamAttr *data_ov002_0210b6a8[2] = {data_ov002_0210b768, data_ov002_0210b868};
 extern "C" {
 
 DemoModelFile data_ov002_02110b50(0x49b);
@@ -3493,8 +3490,8 @@ SharedFilePtr *data_ov002_0210b60c[1] = {&data_ov085_02130744};
 SharedFilePtr *data_ov002_0210b610[1] = {&data_ov002_02110bf8};
 /* The last cue time func_ov002_020f6c60 played sound 0x6a for. */
 int data_ov002_0210b614 = -1;
-int data_ov002_0210b630[2] = {(int)0x81f020f0, (int)0xffff0108};
-int data_ov002_0210b638[2] = {(int)0x81f020f0, (int)0xffff0110};
+OamAttr data_ov002_0210b630[1] = {{0x20f0, 0x81f0, 0x0108, 0xffff}};
+OamAttr data_ov002_0210b638[1] = {{0x20f0, 0x81f0, 0x0110, 0xffff}};
 
 StaffRollCue data_ov002_02110f9c[22] = {
     &StaffRoll::func_ov002_020f5efc, &StaffRoll::func_ov002_020f5ef0,
@@ -3608,14 +3605,14 @@ OamAttr data_ov002_0210bb5c[4] = {
     {0x80f8, 0x002c, 0x000c, 0xffff},
 };
 OamAttr *data_ov002_0210b988[4] = {
-    (OamAttr *)&data_ov002_0210bb5c,
-    (OamAttr *)&data_ov002_0210ba7c,
-    (OamAttr *)&data_ov002_0210b9cc,
-    (OamAttr *)&data_ov002_0210ba9c,
+    data_ov002_0210bb5c,
+    data_ov002_0210ba7c,
+    data_ov002_0210b9cc,
+    data_ov002_0210ba9c,
 };
-void *data_ov002_0210b998[4] = {
-    (void *)&data_ov002_0210b658,
-    (void *)&data_ov002_0210b630,
-    (void *)&data_ov002_0210b638,
-    (void *)&data_ov002_0210b6e8,
+OamAttr *data_ov002_0210b998[4] = {
+    data_ov002_0210b658,
+    data_ov002_0210b630,
+    data_ov002_0210b638,
+    data_ov002_0210b6e8,
 };
