@@ -193,7 +193,7 @@ struct dEnemyBase_c : dActor_c {
     void StartKickDeath(dActor_c *, dBgCh_Actr *);
     void func_ov002_020ae87c(dActor_c *, dBgCh_Actr *);
     void StartDiveDeath(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae80c(dActor_c *, dBgCh_Actr *);
+    void StartExplosionDeath(dActor_c *, dBgCh_Actr *);
     void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
     void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
     int UpdateStompDeath(dBgCh_Actr &);
@@ -203,7 +203,8 @@ struct dEnemyBase_c : dActor_c {
     int func_ov002_020aea24(dBgCh_Actr &);
     /* Knock-back speeds from the attacker (a player's param1 indexes the
        strength table), shared by the death start handlers: the punch and
-       dive starts use the low arc, the kick start the high one. */
+       dive starts use the low arc, the kick, slot-4 and explosion starts
+       the high one. */
     void SetLowKnockback(dActor_c *);
     void SetHighKnockback(dActor_c *);
     /* Stomp-death tail; its caller passes an argument the body ignores. */
