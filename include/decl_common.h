@@ -830,8 +830,6 @@ extern void*HEAP;
 extern void*data_0208a0e4[];
 extern void*data_02099d90;
 extern void*data_0209b2e8;
-extern void*data_0209b450;
-extern void*data_0209b458;
 extern void *sParticleHeapCursor;
 extern void *sParticleHeapEnd;
 extern void *sParticleHeapBase;

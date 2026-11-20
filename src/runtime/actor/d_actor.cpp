@@ -198,6 +198,10 @@ extern u8 gVsExitScreenActive;
 /* This frame's actor update mask, copied from gNextActorUpdateMask; see
    ACTOR_UPDATE_MASK_STAGE_ENDING in dActor_c.h. */
 extern u32 gActorUpdateMask;
+extern daPly_c *data_0209b458;
+/* the cached closest player; null makes ClosestPlayer search again */
+extern daPly_c *data_0209b450;
+/* the cached farthest player */
 
 /* Culls the actor for this frame: flags 0x38 plus a far-away camera position
    when its area is hidden or the dClipper rejects it, then the pause and
@@ -462,7 +466,7 @@ daPly_c *dActor_c::ClosestPlayer() {
             }
         }
     }
-    return (daPly_c *)data_0209b458;
+    return data_0209b458;
 }
 
 daPly_c *dActor_c::ClosestNonVanishPlayer() {
@@ -487,7 +491,7 @@ daPly_c *dActor_c::ClosestNonVanishPlayer() {
             }
         }
     }
-    return (daPly_c *)data_0209b458;
+    return data_0209b458;
 }
 
 s32 dActor_c::DistToCPlayer()
@@ -499,7 +503,7 @@ s32 dActor_c::DistToCPlayer()
 s16 dActor_c::HorzAngleToCPlayer()
 {
     ClosestPlayer();
-    return Vec3_HorzAngle(&mPos, &((dActor_c *)data_0209b458)->mPos);
+    return Vec3_HorzAngle(&mPos, &data_0209b458->mPos);
 }
 
 s16 dActor_c::HorzAngleToCPlayerOrAng()
@@ -507,7 +511,7 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
     dActor_c *player;
 
     ClosestPlayer();
-    player = (dActor_c *)data_0209b458;
+    player = data_0209b458;
     if (player == 0)
         return mAngle.y;
 
@@ -516,13 +520,13 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
 
 daPly_c *dActor_c::FarthestPlayer() {
     ClosestPlayer();
-    return (daPly_c *)data_0209b450;
+    return data_0209b450;
 }
 
 s16 dActor_c::HorzAngleToFPlayer()
 {
     ClosestPlayer();
-    return Vec3_HorzAngle(&mPos, &((dActor_c *)data_0209b450)->mPos);
+    return Vec3_HorzAngle(&mPos, &data_0209b450->mPos);
 }
 
 dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
