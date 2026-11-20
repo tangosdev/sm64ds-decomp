@@ -134,14 +134,14 @@
       "symbol": "_ZN7daBmb_c5ThrowEv",
       "address": "0x0214b3b8",
       "size": "0x00000038",
-      "legacy_source": "src/Throw.c",
+      "legacy_source": "src/func_ov102_0214b3b8.c",
       "ordinal": 13
     },
     {
       "symbol": "_ZN7daBmb_c6PickUpEi",
       "address": "0x0214b3f0",
       "size": "0x00000054",
-      "legacy_source": "src/PickUp.c",
+      "legacy_source": "src/func_ov102_0214b3f0.c",
       "ordinal": 14
     },
     {
@@ -155,7 +155,7 @@
       "symbol": "_ZN7daBmb_c18UpdateAttachedPoseEv",
       "address": "0x0214b53c",
       "size": "0x0000044c",
-      "legacy_source": "src/UpdateAttachedPose.c",
+      "legacy_source": "src/func_ov102_0214b53c.c",
       "ordinal": 16
     },
     {
@@ -190,7 +190,7 @@
       "symbol": "_ZN7daBmb_c11BeginThrownEv",
       "address": "0x0214bc20",
       "size": "0x000000a8",
-      "legacy_source": "src/BeginThrown.c",
+      "legacy_source": "src/func_ov102_0214bc20.c",
       "ordinal": 21
     },
     {
@@ -204,14 +204,14 @@
       "symbol": "_ZN7daBmb_c12BeginCarriedEv",
       "address": "0x0214bd20",
       "size": "0x00000070",
-      "legacy_source": "src/BeginCarried.cpp",
+      "legacy_source": "src/func_ov102_0214bd20.cpp",
       "ordinal": 23
     },
     {
       "symbol": "_ZN7daBmb_c6State2Ev",
       "address": "0x0214bd90",
       "size": "0x0000008c",
-      "legacy_source": "src/State2.c",
+      "legacy_source": "src/func_ov102_0214bd90.c",
       "ordinal": 24
     },
     {

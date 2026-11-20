@@ -146,84 +146,84 @@
       "symbol": "_ZN7daSpd_c14St_Return_MainEv",
       "address": "0x0211fb24",
       "size": "0x000000d0",
-      "legacy_source": "src/St_Return_Main.cpp",
+      "legacy_source": "src/func_ov071_0211fb24.cpp",
       "ordinal": 15
     },
     {
       "symbol": "_ZN7daSpd_c14St_Return_InitEv",
       "address": "0x0211fbf4",
       "size": "0x0000006c",
-      "legacy_source": "src/St_Return_Init.c",
+      "legacy_source": "src/func_ov071_0211fbf4.c",
       "ordinal": 16
     },
     {
       "symbol": "_ZN7daSpd_c14St_Recoil_MainEv",
       "address": "0x0211fc60",
       "size": "0x00000074",
-      "legacy_source": "src/St_Recoil_Main.c",
+      "legacy_source": "src/func_ov071_0211fc60.c",
       "ordinal": 17
     },
     {
       "symbol": "_ZN7daSpd_c14St_Recoil_InitEv",
       "address": "0x0211fcd4",
       "size": "0x00000084",
-      "legacy_source": "src/St_Recoil_Init.c",
+      "legacy_source": "src/func_ov071_0211fcd4.c",
       "ordinal": 18
     },
     {
       "symbol": "_ZN7daSpd_c12St_Leap_MainEv",
       "address": "0x0211fd58",
       "size": "0x000000e0",
-      "legacy_source": "src/St_Leap_Main.cpp",
+      "legacy_source": "src/func_ov071_0211fd58.cpp",
       "ordinal": 19
     },
     {
       "symbol": "_ZN7daSpd_c12St_Leap_InitEv",
       "address": "0x0211fe38",
       "size": "0x000000ac",
-      "legacy_source": "src/St_Leap_Init.c",
+      "legacy_source": "src/func_ov071_0211fe38.c",
       "ordinal": 20
     },
     {
       "symbol": "_ZN7daSpd_c12St_Walk_MainEv",
       "address": "0x0211fee4",
       "size": "0x000000a0",
-      "legacy_source": "src/St_Walk_Main.cpp",
+      "legacy_source": "src/func_ov071_0211fee4.cpp",
       "ordinal": 21
     },
     {
       "symbol": "_ZN7daSpd_c12St_Walk_InitEv",
       "address": "0x0211ff84",
       "size": "0x000000a4",
-      "legacy_source": "src/St_Walk_Init.c",
+      "legacy_source": "src/func_ov071_0211ff84.c",
       "ordinal": 22
     },
     {
       "symbol": "_ZN7daSpd_c12St_Drop_MainEv",
       "address": "0x02120028",
       "size": "0x00000108",
-      "legacy_source": "src/St_Drop_Main.c",
+      "legacy_source": "src/func_ov071_02120028.c",
       "ordinal": 23
     },
     {
       "symbol": "_ZN7daSpd_c12St_Drop_InitEv",
       "address": "0x02120130",
       "size": "0x00000084",
-      "legacy_source": "src/St_Drop_Init.c",
+      "legacy_source": "src/func_ov071_02120130.c",
       "ordinal": 24
     },
     {
       "symbol": "_ZN7daSpd_c12St_Wait_MainEv",
       "address": "0x021201b4",
       "size": "0x0000004c",
-      "legacy_source": "src/St_Wait_Main.cpp",
+      "legacy_source": "src/func_ov071_021201b4.cpp",
       "ordinal": 25
     },
     {
       "symbol": "_ZN7daSpd_c12St_Wait_InitEv",
       "address": "0x02120200",
       "size": "0x00000078",
-      "legacy_source": "src/St_Wait_Init.c",
+      "legacy_source": "src/func_ov071_02120200.c",
       "ordinal": 26
     },
     {
