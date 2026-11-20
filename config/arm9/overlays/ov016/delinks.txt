@@ -17,7 +17,7 @@ src/game/actors/d_a_moray.cpp:
     .text start:0x021111a0 end:0x0211260c
     .init start:0x021136ec end:0x021138bc
     .ctor start:0x02113abc end:0x02113ac0
-    .data start:0x02114878 end:0x021148c8
+    .data start:0x02114878 end:0x02114908
     .data.morayBend start:0x02114908 end:0x02114950
     .bss start:0x02114d20 end:0x02114dcc
 
@@ -60,7 +60,4 @@ src/unnamed/ov016/data_ov016_02113550.c:
     complete
     .rodata start:0x02113550 end:0x021136dc
 
-src/unnamed/ov016/data_ov016_021148f0.c:
-    complete
-    .data start:0x021148f0 end:0x02114908
 

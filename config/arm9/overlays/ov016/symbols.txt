@@ -164,6 +164,7 @@ _ZTS9daMoray_c kind:data(any) addr:0x021148c8
 _ZTI9daMoray_c kind:data(any) addr:0x021148d4
 g_profile_MORAY kind:data(any) addr:0x021148e0 ambiguous
 data_ov016_021148f0 kind:data(any) addr:0x021148f0 ambiguous
+data_ov016_021148fc kind:data(word[3]) addr:0x021148fc
 data_ov016_02114908 kind:data(any) addr:0x02114908
 _ZTV9daMoray_c kind:data(any) addr:0x02114958
 data_ov016_021149d4 kind:data(any) addr:0x021149d4

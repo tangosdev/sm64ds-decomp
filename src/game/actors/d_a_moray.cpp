@@ -38,6 +38,7 @@ enum daMoray_c_AssetId {
 
 #include "common.h"
 #include "daMoray_c.h"
+#include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
 #include "dExtFrameCtrl_c.h"
@@ -782,6 +783,14 @@ s32 daMoray_c::InitResources()
 daMoray_c *daMoray_c_classInit() {
     return new daMoray_c;
 }
+
+extern "C" SpawnInfo<daMoray_c> g_profile_MORAY = {
+    daMoray_c_classInit, 242, 98, 0x00000000, 0x00000000, 0x003e8000, 0x01f40000, 0x01f40000};
+
+/* Twelve zero bytes between the profile and the bend table. */
+#pragma explicit_zero_data on
+extern "C" u32 data_ov016_021148fc[3] = {0, 0, 0};
+#pragma explicit_zero_data off
 
 /* Construction order is source order: the four file handles first, then the
  * five State rows in the order the initializer copies them. The registration
