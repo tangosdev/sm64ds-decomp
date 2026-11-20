@@ -34,7 +34,10 @@ struct daTgz_c : dActor_c {
     /* PMF pair. SetState stores &gTgzStates[i] (d_a_tgz.cpp).
        CallStateEnter calls slot 0; CallStateUpdate calls slot 1. */
     void *mStateDesc;                    /* 0x3d0 */
-    /* daPly_c stored when a hit sends the Spiny into state 2. */
+    /* daPly_c stored when a hit sends the Spiny into state 2 (Knockback),
+       which reads it once for the heading away from him and then clears it.
+       The "Chase" in the name is a coined guess that the body does not bear
+       out; the state hops away from this player, not after him. */
     daPly_c *mChasePlayer; /* 0x3d4 */
     /* Render draws the still dExtSimpleModel_c in states 0 and 4 and the dExtAnmModel_c
        otherwise. Behavior keeps states 4 and 5 running however far the
@@ -68,26 +71,26 @@ struct daTgz_c : dActor_c {
     int Render();
 
     /* State handlers, named by gTgzStates in d_a_tgz.cpp. */
-    int func_ov077_021253a4();
-    int func_ov077_02125480();
-    int func_ov077_02125550();
-    int func_ov077_021256b4();
-    int func_ov077_02125830();
-    int func_ov077_021258dc();
-    int func_ov077_02125908();
-    int func_ov077_02125a0c();
-    int func_ov077_02125a54();
-    void func_ov077_02125b1c();
-    int func_ov077_02125bb4();
-    int func_ov077_02125dd4();
+    int St_KnockedAway_Main();
+    int St_KnockedAway_Init();
+    int St_Spit_Main();
+    int St_Spit_Init();
+    int St_YoshiMouth_Main();
+    int St_YoshiMouth_Init();
+    int St_Knockback_Main();
+    int St_Knockback_Init();
+    int St_Walk_Main();
+    void St_Walk_Init();
+    int St_Spin_Main();
+    int St_Spin_Init();
     int GetHeightAboveWater();
-    int func_ov077_02124ce4();
-    void func_ov077_02124d08(dBgCh_Actr *clsn);
-    void func_ov077_02124eb0();
-    void func_ov077_021250a8();
-    void func_ov077_021251d0();
-    void func_ov077_02125290();
-    void func_ov077_02125304();
+    int IsUnderwater();
+    void UpdateGroundCollision(dBgCh_Actr *clsn);
+    void HandlePlayerCollision();
+    void HandlePlayerCollisionSpinning();
+    void UpdateTumbleMatrix();
+    void UpdateModelMatrix();
+    void UpdateMatrixAndShadow();
     void CallStateUpdate();
     void CallStateEnter();
     void SetState(int i);
