@@ -480,8 +480,6 @@ extern u16 data_ov002_0210a5cc[];
 extern u16 sStarSelectSubBackdropColor;
 extern u16 data_ov074_02122dfc[];
 extern u16 data_ov074_02122e04[];
-extern u16 data_ov091_02134504[];
-extern u16 data_ov091_02134514[];
 extern u16 *gMinimapTileObjs;
 extern struct TPData *func_0203dabc(int);
 extern const u32 data_02075238[];
