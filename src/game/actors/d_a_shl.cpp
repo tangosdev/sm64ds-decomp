@@ -248,8 +248,7 @@ int daShl_c::SetState(ShlState *state) {
 
 /* Idle: enter. Stop sliding; the variant shell also stops falling and
    becomes grabbable. */
-int daShl_c::St_Idle_Init()
-{
+int daShl_c::St_Idle_Init() {
     mHorzSpeed = 0;
 
     if (mVariant != 0) {
@@ -262,15 +261,13 @@ int daShl_c::St_Idle_Init()
 }
 
 /* The tick of a state that has nothing to do each frame. */
-int daShl_c::St_Idle_Main()
-{
+int daShl_c::St_Idle_Main() {
     return 1;
 }
 
 /* Sliding: enter. Face mSpawnAngleY -- the kicker's heading, or the one
    Yoshi spat it along -- slide at 30.0, and arm the second cylinder. */
-int daShl_c::St_Sliding_Init()
-{
+int daShl_c::St_Sliding_Init() {
     mPrevAngle.y = mSpawnAngleY;
     mAngle.y = mPrevAngle.y;
     mHorzSpeed = 0x1e000;
@@ -280,8 +277,7 @@ int daShl_c::St_Sliding_Init()
 }
 
 /* Sliding: tick. Spin, and keep the second cylinder live. */
-int daShl_c::St_Sliding_Main()
-{
+int daShl_c::St_Sliding_Main() {
     mAngle.y += 0x1000;
     mdCc_c2.Clear();
     mdCc_c2.Update();
@@ -289,8 +285,7 @@ int daShl_c::St_Sliding_Main()
 }
 
 /* Ridden: enter. The body cylinder is re-initialised with no extent. */
-int daShl_c::St_Ridden_Init()
-{
+int daShl_c::St_Ridden_Init() {
     mdCc_c.Init(this, 0, 0, 0x100002, 0);
     mFlags &= ~3;
     mDespawnTimer = 100;
@@ -299,8 +294,7 @@ int daShl_c::St_Ridden_Init()
 
 /* Ridden: tick. Follow the rider while he is still on the shell; once he
    is off, the shell breaks. */
-int daShl_c::St_Ridden_Main()
-{
+int daShl_c::St_Ridden_Main() {
     if (mCarrier == 0 || mCarrier->IsOnShell() == 0) {
         PoofDust();
         MarkForDestruction();
@@ -312,16 +306,14 @@ int daShl_c::St_Ridden_Main()
 }
 
 /* Held: enter. */
-int daShl_c::St_Held_Init()
-{
+int daShl_c::St_Held_Init() {
     mdCc_c.flags |= 2;
     mdCc_c.flags &= ~4;
     return 1;
 }
 
 /* Held: tick. Once the holder lets go (flag 0x100 clears), it breaks. */
-int daShl_c::St_Held_Main()
-{
+int daShl_c::St_Held_Main() {
     int b = (mFlags & 0x100) != 0;
     if (!b) {
         PoofDust();
@@ -331,8 +323,7 @@ int daShl_c::St_Held_Main()
 }
 
 /* The player jumps on: remember him and switch to ridden. */
-int daShl_c::OnJumpedOn(dActor_c *player)
-{
+int daShl_c::OnJumpedOn(dActor_c *player) {
     if (mCarrier != 0)
         return 0;
     mCarrier = static_cast<daPly_c *>(player);
@@ -342,8 +333,7 @@ int daShl_c::OnJumpedOn(dActor_c *player)
 }
 
 /* Kicked: take the kicker's heading and switch to the sliding state. */
-int daShl_c::OnKicked(dActor_c *kicker)
-{
+int daShl_c::OnKicked(dActor_c *kicker) {
     if (mState == &data_ov102_0214ea78.rec)
         return 0;
     mSpawnAngleY = kicker->mAngle.y;
@@ -384,8 +374,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
    model 1 is kicked away by an attack (0x3c0) and hurts the player while
    sliding; model 0 hurts while sliding and, idle, can be jumped on and
    ridden. */
-void daShl_c::HandlePlayerTouch()
-{
+void daShl_c::HandlePlayerTouch() {
     daPly_c *player;
     s32 hit;
     u32 id;
@@ -465,8 +454,7 @@ void daShl_c::HandlePlayerTouch()
    surface sound from what it finds; otherwise just the idle trail. Water
    detection is on, so ground.clsnY is the hit height of a water surface
    or a floor. */
-void daShl_c::UpdateRideTrail()
-{
+void daShl_c::UpdateRideTrail() {
     Vector3 trail = mPos;
 
     if (mState == &data_ov102_0214ea48 && mCarrier != 0 && mCarrier->mIsAirborne == 0) {
@@ -542,8 +530,7 @@ void daShl_c::UpdateRideTrail()
    mMeshClsn.StartDetectingWater(), and UpdateRideTrail's probe calls
    StartDetectingWater before it tests the same bit. The floor result is
    a dBgPi. */
-void daShl_c::VanishOnWater()
-{
+void daShl_c::VanishOnWater() {
     if (!mMeshClsn.IsOnGround())
         return;
     dBgPi *floor = mMeshClsn.GetFloorResult();
