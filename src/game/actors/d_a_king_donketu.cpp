@@ -217,7 +217,7 @@ struct BCA_File;
 extern SharedFilePtr data_ov002_0210da30;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
-extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+extern void MTX_MultVec43(const Vector3 *in, const Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern dCamera_c *gCamera;

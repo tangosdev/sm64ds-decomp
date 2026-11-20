@@ -96,7 +96,7 @@ extern void SetBg2Offset(int, int);
 extern void SetBg3Offset(int, int);
 extern void SetSubBg2Offset(int, int);
 extern void SetSubBg3Offset(int, int);
-extern s32 data_02092768[4];
+extern Quaternion data_02092768; /* identity */
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
 void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
@@ -1227,10 +1227,10 @@ void dScMgSnowball_c::ResetScene() {
     mSpinAxis = sUnitY;
     func_0203ce80(&axis, &mSpinAxis);
 
-    mSpinQuat[0] = data_02092768[0];
-    mSpinQuat[1] = data_02092768[1];
-    mSpinQuat[2] = data_02092768[2];
-    mSpinQuat[3] = data_02092768[3];
+    mSpinQuat[0] = data_02092768.x;
+    mSpinQuat[1] = data_02092768.y;
+    mSpinQuat[2] = data_02092768.z;
+    mSpinQuat[3] = data_02092768.w;
     Quaternion_FromVector3(mSpinQuat, &sUnitY, &mSpinAxis);
     Quaternion_Normalize(mSpinQuat);
 

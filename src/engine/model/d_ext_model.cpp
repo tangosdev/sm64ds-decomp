@@ -98,8 +98,8 @@ extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
    while blendWeight is still below 1.0. Definition takes char *. */
 extern "C" void func_0204531c(ModelComponents *data, int weight);
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
-   file. Spelled (int *) the way func_020462bc.c defines it */
-extern "C" u32 func_020462bc(int *file);
+   file: numBones matrices. */
+extern "C" int func_020462bc(void *file);
 /* local extern: no header declares it; initializes ModelComponents' side of
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
 void func_020462b4(int *data, int buf);
@@ -466,7 +466,7 @@ int dExtBlendAnmModel_c::DoSetFile(char *file, int a, int b) {
    hands it plus the ModelComponents member to func_020462b4. It sits between
    UpdateVerts and DoSetFile in the ROM. Coined name. */
 int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
-    mBlendBuffer = ::operator new[](func_020462bc((int *)file));
+    mBlendBuffer = ::operator new[](func_020462bc(file));
     void *p = mBlendBuffer;
     if (p == 0)
         return 0;
