@@ -7,7 +7,6 @@
 
 extern "C" {
 
-extern int *Vec3_AsrInPlace(int *v, int sh);
 }
 
 /* Camera state main for following the player. The eye target is the
@@ -31,7 +30,7 @@ int func_02005110(dCamera_c *cam) {
         eye.y += 0x64000;
     }
     eyeDist = 0x48000;
-    target = (Vector3 *)cam->mLookTarget;
+    target = cam->mLookTarget;
     if (target == 0) {
         aim.x = eye.x;
         aim.y = eye.y;
@@ -51,7 +50,7 @@ int func_02005110(dCamera_c *cam) {
         aim.x = sum.x;
         aim.y = sum.y;
         aim.z = sum.z;
-        Vec3_AsrInPlace((int *)(&aim), 1);
+        Vec3_AsrInPlace(&aim, 1);
         dist = Vec3_Dist(&eye, &aim);
         if (dist > 0x30000) {
             Vec3_Sub(&diff, &aim, &eye);
@@ -65,7 +64,7 @@ int func_02005110(dCamera_c *cam) {
         fall = 0x2000;
         {
             Vector3 *playerPos = &cam->mTargetPlayer->mPos;
-            s32 fallDist = Vec3_Dist((Vector3 *)cam->mLookTarget, playerPos);
+            s32 fallDist = Vec3_Dist(cam->mLookTarget, playerPos);
             s32 t = fallDist - 0x200000;
             if (t > 0) {
                 s16 scaled = (((((s64)t) << 2) + 0x800) >> 12);
@@ -75,12 +74,12 @@ int func_02005110(dCamera_c *cam) {
                 fall -= scaled;
             }
         }
-        s16 diffAngle = Vec3_HorzAngle((Vector3 *)cam->mLookTarget, &eye) - cam->mAngleY;
+        s16 diffAngle = Vec3_HorzAngle(cam->mLookTarget, &eye) - cam->mAngleY;
         fall = (diffAngle >= 0) ? (-fall) : (fall);
         /* Does nothing, but without it the build does not match the ROM. */
         if ((!newAim.x) && (!newAim.x)) {
         }
-        horzAngle = (s16)(Vec3_HorzAngle((Vector3 *)cam->mLookTarget, &eye) + fall);
+        horzAngle = (s16)(Vec3_HorzAngle(cam->mLookTarget, &eye) + fall);
     }
     {
         s32 vert = Vec3_VertAngle(&aim, &eye);

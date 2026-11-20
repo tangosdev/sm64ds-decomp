@@ -38,7 +38,7 @@
 #include "dBgCh_Actr.h"
 
 struct daPly_c;
-
+struct dCamera_c;
 
 struct daStar_c : dEnemyBase_c {
     /* ---- state, indexing data_ov002_021109d8 (the 14-entry pointer-to-member
@@ -218,8 +218,8 @@ struct daStar_c : dEnemyBase_c {
     void RelinkMarker();
     void LinkRandomFreeMarker();
     void StepCameraCutscene();
-    void PlaceCameraOnRing(void *cam);
-    int PlaceCameraAtStarCamera(void *cam);
+    void PlaceCameraOnRing(dCamera_c *cam);
+    int PlaceCameraAtStarCamera(dCamera_c *cam);
     void ProbeGround();
     int RearmSoundObj6();
     void SpawnSoundObj6();
@@ -239,8 +239,8 @@ struct daStar_c : dEnemyBase_c {
     void ReturnToHome();
     void CheckBounds();
     int MaybeAddStarMarker();
-    void CollectByEgg(int a);
-    int Collect(void *p);
+    void CollectByEgg(daPly_c *player);
+    int Collect(daPly_c *player);
     void CheckPickup();
     void SetDefaultGravity();
     void StopMotion();

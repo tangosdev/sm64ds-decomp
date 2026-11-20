@@ -23,6 +23,7 @@
 #include "Message.h"
 #include "MessageBank.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "SaveData.h"
 #include "Sound.h"
 
@@ -74,7 +75,7 @@ extern u16 data_0209d6e0;
    mode-1 (horizontal) choice, which state 4 reads, or the line for modes 2 and
    3, which states 5 and 6 read. */
 extern u8 gMsgChoicePositions[];
-extern u8 *data_0209d6f0;
+extern u8 *gCurrentMsgEntry;
 extern u8 *data_0209d6f4;
 extern int data_0209d6f8;
 extern int data_0209d700;
@@ -92,8 +93,7 @@ extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern u32 gNextActorUpdateMask;
 extern u8 gGameMode;
-extern s16 data_0209f4a2[];
-extern s16 data_0209f4a4[];
+extern ControllerInput data_0209f498[];
 extern u16 data_020a0e5a[];
 extern s32 gGlobalTimer;
 extern struct OamAttr data_ov002_0210c390;
@@ -251,10 +251,10 @@ void Message::func_0201adfc(void) {
         p = (u32 *)((int)G2_GetBG3CharPtr() + 0x4000);
     }
 
-    for (i = 0; i < data_0209d6f0[6] * 2; i++) {
+    for (i = 0; i < gCurrentMsgEntry[6] * 2; i++) {
         for (j = 0; j < data_0209d6a8; j++) {
             MI_CpuCopy32(p + 4, p, 0x10);
-            if (i == data_0209d6f0[6] * 2 - 1) {
+            if (i == gCurrentMsgEntry[6] * 2 - 1) {
                 p[4] = 0;
                 p[5] = 0;
                 p[6] = 0;
@@ -266,7 +266,7 @@ void Message::func_0201adfc(void) {
         }
     }
 
-    n = data_0209d6f0[6] * 2;
+    n = gCurrentMsgEntry[6] * 2;
     if (data_0209d698 != 0) {
         p = (u32 *)((u32)G2S_GetBG1CharPtr() + ((data_0209d6a8 * (n - 1) + 0x200) << 5) + 0x10);
     } else {
@@ -562,7 +562,7 @@ void Message::LayoutLine() {
                 data_0209d6b4 = data_0209d6b4 + 1;
             } else {
                 if (data_0209d69c != 0) {
-                    u8 *p = data_0209d6f0;
+                    u8 *p = gCurrentMsgEntry;
                     u8 v = data_0209d6b4;
                     if (v < p[6]) {
                         data_0209d6b4 = v + 1;
@@ -611,7 +611,7 @@ void Message::LayoutLine() {
 
         case 0xfd:
             if (data_0209d69c != 0) {
-                u8 *p = data_0209d6f0;
+                u8 *p = gCurrentMsgEntry;
                 u8 v = data_0209d6b4;
                 if (v != p[6]) {
                     data_0209d6b4 = v + 1;
@@ -625,7 +625,7 @@ void Message::LayoutLine() {
                 data_0209d6bc = 7;
                 return;
             } else {
-                u8 *p = data_0209d6f0;
+                u8 *p = gCurrentMsgEntry;
                 u8 v = data_0209d6b4;
                 if (v != p[6]) {
                     data_0209d6b4 = v + 1;
@@ -749,7 +749,7 @@ void Message::Update() {
             data_0209d65c = 0;
         } else {
             func_0201b6f8(0);
-            data_0209d65c = (u8)((((MessageEntry *)data_0209d6f0)->width - data_0209d6b0) >> 1);
+            data_0209d65c = (u8)((((MessageEntry *)gCurrentMsgEntry)->width - data_0209d6b0) >> 1);
         }
         LayoutLine();
         return;
@@ -778,7 +778,7 @@ void Message::Update() {
             data_0209d670 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a2 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].nx;
         if (t > 0x80) {
             if (gMsgChoiceIndex == 0) {
                 func_02012790(0x96);
@@ -812,7 +812,7 @@ void Message::Update() {
             data_0209d670 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a4 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].ny;
         if (t > 0x80) {
             if (gMsgChoiceIndex == 0) {
                 func_02012790(0x96);

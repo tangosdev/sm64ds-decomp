@@ -27,7 +27,7 @@
  * (Behavior) are all null, so each leaf brings its own rolling logic; this class
  * supplies only 9 (Render), 16 (D1), 17 (D0) and 27 (OnHitByMegaChar). The
  * leaves forward those three null slots into the shared ov080 helpers
- * func_ov080_021274ac / 0212714c / 021270dc.
+ * InitResourcesFrom / func_ov080_0212714c / CleanupResourcesFrom.
  *
  * TWO DESCENDANTS: daObjFlMaruta_c (daObjFlMaruta_c, ov022) and daObjHmMaruta_c
  * (daObjHmMaruta_c, ov030). Each one's destructor stores this class's vtable between
@@ -88,9 +88,9 @@ struct daObjMaruta_c : dBgActor_c {
        drops its first argument and forwards to this. */
     void HandlePlayerContact(dActor_c *);
     static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
-    int func_ov080_021270dc(ResourceDescriptor *arg);
-    int func_ov080_0212714c(int *maxDist);
-    int func_ov080_021274ac(ResourceDescriptor *arg);
+    int CleanupResourcesFrom(ResourceDescriptor *arg);
+    int func_ov080_0212714c(const int *maxDist);
+    int InitResourcesFrom(ResourceDescriptor *arg);
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero

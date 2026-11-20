@@ -77,7 +77,7 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(dBgCh_Actr *clsn);
 
-extern int           data_02092138;
+extern int gLevelMinY;
 extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
 extern int gWaterHeight;
@@ -177,23 +177,23 @@ void daMenbo_c::func_ov090_021310b4() {
 
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)p)) {
         ((daPly_c *)p)->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (flags & 0x20) {
@@ -202,7 +202,7 @@ void daMenbo_c::func_ov090_021310b4() {
         mSpeed.y = 0;
         mSpeed.z = 0;
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (flags & 0x10) {
@@ -216,7 +216,7 @@ void daMenbo_c::func_ov090_021310b4() {
     if (flags & 0x4380) {
         mDeathTumble = 3;
         mDeathState = 3;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (!IsPlayerActor(p))
@@ -312,9 +312,9 @@ int daMenbo_c::func_ov090_02131584()
     if (v >= 0x3b)
         mAnimLoops += 1;
     if (mAnimLoops > 2 || this->func_ov090_021314a0() == 1)
-        this->func_ov090_02131e00(data_ov090_02134514);
+        this->SetState(data_ov090_02134514);
     if (mOnWater == 1)
-        this->func_ov090_02131e00(data_ov090_02134504);
+        this->SetState(data_ov090_02134504);
     return 1;
 }
 
@@ -460,11 +460,11 @@ int daMenbo_c::func_ov090_02131648() {
     }
 
     if (mAnimLoops > 0x1e && mFarLatch == 0) {
-        func_ov090_02131e00(data_ov090_021344e4);
+        SetState(data_ov090_021344e4);
     }
 
     if (mOnWater == 1) {
-        func_ov090_02131e00(data_ov090_02134504);
+        SetState(data_ov090_02134504);
     }
 
     return 1;
@@ -494,11 +494,11 @@ int daMenbo_c::func_ov090_02131ac4()
         mAnchorPos.y = mPos.y;
         mAnchorPos.z = mPos.z;
         mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
-        this->func_ov090_02131e00(data_ov090_021344e4);
+        this->SetState(data_ov090_021344e4);
     }
     ApproachAngle(&mPrevAngle.y, mTargetAngleY, 1, 0x100, 0x100);
     if (mStateTimer == 0)
-        this->func_ov090_02131e00(data_ov090_021344f4);
+        this->SetState(data_ov090_021344f4);
     return 1;
 }
 
@@ -544,7 +544,7 @@ int daMenbo_c::func_ov090_02131c48()
         if (mAnmModel.Finished()) {
             mAnimLoops++;
             if (mAnimLoops > 0x14)
-                this->func_ov090_02131e00(data_ov090_02134504);
+                this->SetState(data_ov090_02134504);
         }
     }
 
@@ -553,7 +553,7 @@ int daMenbo_c::func_ov090_02131c48()
         mAnchorPos.y = mPos.y;
         mAnchorPos.z = mPos.z;
         mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) << 13);
-        this->func_ov090_02131e00(data_ov090_021344e4);
+        this->SetState(data_ov090_021344e4);
     }
 
     return 1;
@@ -569,7 +569,7 @@ int daMenbo_c::func_ov090_02131db0()
 }
 
 /* Install a state and run its entry. A null entry PMF means there is none. */
-int daMenbo_c::func_ov090_02131e00(StateFn *state) {
+int daMenbo_c::SetState(StateFn *state) {
     mState = state;
     if (*mState == 0)
         return 1;
@@ -674,7 +674,7 @@ int daMenbo_c::Behavior()
                 mSpeed.y = 0;
                 mSpeed.z = 0;
                 mDeathState = 1;
-                func_ov002_020aea30(ClosestPlayer(), 0);
+                KillByAttack(ClosestPlayer(), 0);
                 return 1;
             }
         }
@@ -697,7 +697,7 @@ int daMenbo_c::Behavior()
         mSpeed.y = 0;
         mSpeed.z = 0;
         mDeathState = 1;
-        func_ov002_020aea30(ClosestPlayer(), 0);
+        KillByAttack(ClosestPlayer(), 0);
         return 1;
     }
 
@@ -758,7 +758,7 @@ int daMenbo_c::InitResources()
         mAnchorPos.x = mPos.x;
         mAnchorPos.y = mPos.y;
         mAnchorPos.z = mPos.z;
-        this->func_ov090_02131e00(data_ov090_021344f4);
+        this->SetState(data_ov090_021344f4);
         return 1;
     }
 
@@ -776,7 +776,7 @@ int daMenbo_c::InitResources()
             pos.z = pz;
         }
         ground.SetObjAndPos(pos, this);
-        mFloorY = data_02092138;
+        mFloorY = gLevelMinY;
         if (ground.DetectClsn() != 0) {
             if (SurfaceInfo_TestFlag0x20((int *)&ground.surface) != 0) {
                 mOnWater = 1;
@@ -793,7 +793,7 @@ int daMenbo_c::InitResources()
         mAnchorPos.z = mPos.z;
 
         if (mOnWater != 0) {
-            this->func_ov090_02131e00(data_ov090_021344f4);
+            this->SetState(data_ov090_021344f4);
             return 1;
         }
 
@@ -804,7 +804,7 @@ int daMenbo_c::InitResources()
             mPrevAngle.y = mTargetAngleY;
             mAngle.y = mPrevAngle.y;
         }
-        this->func_ov090_02131e00(data_ov090_021344e4);
+        this->SetState(data_ov090_021344e4);
     }
 
     return 1;

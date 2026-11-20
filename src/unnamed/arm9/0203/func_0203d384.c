@@ -1,28 +1,26 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-
-typedef short s16;
-
-extern void func_0203d480(fx32 *out, fx32 *in);
+#include "Vector2.h"
+#include "Vector2Math.h"
 
 /* Normalize a Vector2 (Vector2.h): 0 for the zero vector, else 1 after
    func_0203d480 normalizes it. */
-int func_0203d434(fx32 *in) {
-    fx32 out[3];
-    if (in[0] == 0 && in[1] == 0)
+int func_0203d434(Vector2 *v) {
+    Vector2 out;
+    if (v->x == 0 && v->y == 0)
         return 0;
-    func_0203d480(out, in);
+    func_0203d480(&out, v);
     return 1;
 }
 
 /* Rotate a Vector2 by angle, the first of Vector2.h's 2-vector helpers. */
-void func_0203d388(int *p, s16 angle) {
+void func_0203d388(Vector2 *v, s16 angle) {
     int s = FX_SinIdx((unsigned short)angle >> 4);
     int c = FX_CosIdx((unsigned short)angle >> 4);
-    int x = p[0];
-    int z = p[1];
-    p[0] = FX_MUL(c, x) - FX_MUL(s, z);
-    p[1] = FX_MUL(s, x) + FX_MUL(c, z);
+    int x = v->x;
+    int y = v->y;
+    v->x = FX_MUL(c, x) - FX_MUL(s, y);
+    v->y = FX_MUL(s, x) + FX_MUL(c, y);
 }
 
 /* Vector3's empty constructor. daDpLift_c passes it to __cxa_vec_ctor

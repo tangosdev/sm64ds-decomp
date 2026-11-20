@@ -10,7 +10,6 @@
  * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosAndAngs on the collider.
  * - data_ov046_021115bc is the CLPS block SetFile takes. gScratchMtx is
  *   the scratch matrix both matrix helpers write.
- * - Vec3_Asr writes int pos[4]. A Vector3 there would emit its destructor.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -23,6 +22,7 @@ enum daKpa2Bg_c_AssetId { ASSET_KB2_STAGE_BMD = 0x0623, ASSET_KB2_STAGE_KCL = 0x
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 struct CLPS_Block;
 
@@ -44,10 +44,6 @@ extern Kpa2BgModelFilePtr daKpa2Bg_c_ModelFile;
 extern Kpa2BgCollisionFilePtr daKpa2Bg_c_ClsnFile;
 extern CLPS_Block data_ov046_021115bc;
 
-/* local extern: arm9 C helpers with no shared header yet. */
-extern "C" {
-void Vec3_Asr(void *dst, void *src, int shift);
-}
 int Sound_PlayIfNotActive(int handle, int a, int b, short c);
 
 daKpa2Bg_c::~daKpa2Bg_c() {}
@@ -71,9 +67,9 @@ void daKpa2Bg_c::UpdateClsnMatrix() {
 /* Rebuilds the model matrix the same way from the position shifted down by 3
    bits. The Y angle is not part of this matrix build. */
 void daKpa2Bg_c::UpdateModelMatrix() {
-    int pos[4];
-    Vec3_Asr(&pos, &mPos.x, 3);
-    Matrix4x3_FromTranslation(&gScratchMtx, pos[0], pos[1], pos[2]);
+    Vector3 pos;
+    Vec3_Asr(&pos, &mPos, 3);
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
     Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
     mModel2.mat4x3 = gScratchMtx;

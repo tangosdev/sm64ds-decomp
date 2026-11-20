@@ -143,9 +143,7 @@ extern unsigned short data_ov074_02122dfc[];
 extern const int data_ov074_0212290c[4] = {0, 0x320000, 0x258000, 0x190000};
 extern const int data_ov074_0212291c[4] = {0, 0, 0x70000, 0};
 extern float data_ov074_02122e4c[];
-extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern union Matrix4x3 gScratchMtx;
-extern union Matrix4x3 IDENTITY_MATRIX4X3;
 struct KuriKingBoneIdx {
     int v[3];
 };
@@ -168,7 +166,7 @@ static inline int IsActorID(dActor_c *actor, int id) {
 }
 void UnloadKeyModels(int i);
 void LoadKeyModels(int idx);
-extern void *data_ov074_02122e5c[];
+extern BTA_File *data_ov074_02122e5c[];
 /* Boss-overlay resource blobs, linked into the co-resident 0x0211xxxx
    overlay; ov074's image has no copy, so these bind cross-module. */
 extern BMA_File data_ov010_021123f4;
@@ -176,7 +174,7 @@ extern BTA_File data_ov010_021124ac;
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
-extern SharedFilePtr data_ov002_0210da30;
+extern SharedFilePtr gScaleUpKinokoModelFile;
 extern SharedFilePtr data_ov084_02130cf8;
 extern BMA_File data_ov084_0213089c;
 extern KrbAnimationFileHandle data_ov084_02130cc8;
@@ -1409,7 +1407,7 @@ int daKuriKing_c::CleanupResources()
     if (param1 == 0x1111) {
         return CleanupVanishResources();
     }
-    data_ov002_0210da30.Release();
+    gScaleUpKinokoModelFile.Release();
     UnloadKeyModels(2);
     data_ov084_02130cf8.Release();
     for (i = 0; i < 7; i++)
@@ -1540,7 +1538,7 @@ int daKuriKing_c::InitResources()
         return InitVanishResources();
     }
 
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+    dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
     LoadKeyModels(2);
     dExtSimpleModel_c::LoadFile(data_ov084_02130cf8);
 
@@ -1592,7 +1590,7 @@ int daKuriKing_c::InitResources()
     i = 0;
     do {
         dExtAnmTexSRT_c::Prepare(*(BMD_File *)gKurikingModelModelFile.filePtr,
-                                 *(BTA_File *)data_ov074_02122e5c[i]);
+                                 *data_ov074_02122e5c[i]);
         i++;
     } while (i < 7);
 

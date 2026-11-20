@@ -8,13 +8,12 @@
  *   last-wins for the whole file.
  * - Display is the only Message method here that takes this. The others are
  *   static and drive the globals around data_0209d660.
- * - data_0209d708 is the bank's MessageEntry array (MessageBank.h). Where
+ * - gMessageEntries is the bank's MessageEntry array (MessageBank.h). Where
  *   indexing it by a runtime index swaps the base and index registers, the
- *   entry is addressed as (char *)data_0209d708 + idx * 8 and read through
+ *   entry is addressed as (char *)gMessageEntries + idx * 8 and read through
  *   a MessageEntry cast.
- *   data_0209d70c stays int * (decl_common.h spells it so); [1] is
- *   MessageInfoSection::sectionSize. data_0209d6f0 stays u8 * for the same
- *   reason (Message2.cpp) and is read back through a MessageEntry cast.
+ *   gCurrentMsgEntry stays u8 * (Message2.cpp spells it so) and is read
+ *   back through a MessageEntry cast.
  * - data_0209d6f4 is int here; Message2.cpp reads the same word as u8 *.
  *   The course-name lines set the cursor and then step it past three
  *   leading bytes with `+= 3`, and both stores emit.
@@ -118,19 +117,18 @@ u16 data_0209d6e0;
    bound is the 4-byte slot the object occupies. */
 u8 gMsgChoicePositions[4];
 /* The message bank pointers Message::SetTextGlobals splits the loaded bank
-   into; MessageBank.h gives data_0209d6e8, data_0209d6ec, data_0209d6fc,
-   data_0209d708 and data_0209d70c readable aliases. */
-int data_0209d6e8;
-int data_0209d6ec;
-u8 *data_0209d6f0;
+   into (MessageBank.h describes the sections they point at). */
+int gMessageBankHeader;
+int gMessageDataSection;
+u8 *gCurrentMsgEntry;
 /* The text cursor. Message2.cpp reads it as u8 *. */
 int data_0209d6f4;
 int data_0209d6f8;
-int data_0209d6fc;
+int gMessageBankBase;
 int data_0209d700;
 s32 data_0209d704;
-MessageEntry *data_0209d708;
-int *data_0209d70c;
+MessageEntry *gMessageEntries;
+MessageInfoSection *gMessageInfoSection;
 u8 data_0209d710[0x3c];
 s32 data_0209d74c[0x3c0];
 extern u8 data_0208ee74[];
@@ -418,11 +416,11 @@ void Message::func_0201d418(int p0, int p1) {
     volatile int li;
     int i;
     int idx = gCurrentMsgId;
-    char *base = (char*)data_0209d708;
+    char *base = (char *)gMessageEntries;
     int n = (p1 >> 3) & 0xff;
-    data_0209d6f0 = (u8*)(base + idx * 8);
-    data_0209d6f4 =
-        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)(base + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)(base + idx * 8))->textOffset;
     data_0209d6bc = 0;
     do {
         func_0201b6f8(0);
@@ -454,10 +452,10 @@ void Message_DrawLineBG2(void) {
     volatile int li;
     int n;
     int idx = gCurrentMsgId;
-    char *base = (char*)data_0209d708;
-    data_0209d6f0 = (u8*)(base + idx * 8);
-    data_0209d6f4 =
-        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
+    char *base = (char *)gMessageEntries;
+    gCurrentMsgEntry = (u8 *)(base + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)(base + idx * 8))->textOffset;
     Message::func_0201b6f8(1);
     data_0209d65c = 0;
     n = ((data_0209d6b0 + 7) / 8) << 6;
@@ -481,14 +479,14 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
     u8 *p;
     int i;
     int idx = gCurrentMsgId;
-    char *base = (char *)data_0209d708;
+    char *base = (char *)gMessageEntries;
     u16 *map;
     int col;
     int old;
 
-    data_0209d6f0 = (u8 *)(base + idx * 8);
-    data_0209d6f4 =
-        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)(base + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)(base + idx * 8))->textOffset;
     Message::func_0201b6f8(1);
     old = data_0209d6b0;
     data_0209d65c = ((width * 8 - old) & 0xf) >> 1;
@@ -542,15 +540,15 @@ void Message::func_0201d850(u32 course) {
     SetBg3Offset(0, 0);
 
     if (course < 0xf) {
-        MessageEntry *ep = &data_0209d708[0x28d];
+        MessageEntry *ep = &gMessageEntries[0x28d];
         s32 base;
         s32 num;
         s32 n;
         s32 i;
         u16 *p;
 
-        data_0209d6f0 = (u8 *)ep;
-        base = data_0209d6fc + 0x28 + data_0209d70c[1];
+        gCurrentMsgEntry = (u8 *)ep;
+        base = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
         data_0209d6f4 = base + ep->textOffset;
         Message::LayoutLine();
         Message::AddChar(0x4d);
@@ -586,10 +584,11 @@ void Message::func_0201d850(u32 course) {
 
         data_0209d65c = 0;
         data_0209d6a4 = 0;
-        data_0209d6f0 = (u8 *)((char *)data_0209d708 + (course + 0x196) * 8);
+        gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + (course + 0x196) * 8);
         {
-            s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                      ((MessageEntry *)((char *)data_0209d708 + (course + 0x196) * 8))->textOffset;
+            s32 sum =
+                gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                ((MessageEntry *)((char *)gMessageEntries + (course + 0x196) * 8))->textOffset;
             data_0209d6f4 = sum;
             data_0209d6f4 += 3;
         }
@@ -640,19 +639,19 @@ void Message::func_0201d850(u32 course) {
         if (course < 0xf) {
             if (data_0209f20c != 0) {
                 s32 off = course * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + gCollectedStarId];
+                gCurrentMsgEntry = (u8 *)&gMessageEntries[off + gCollectedStarId];
             } else {
                 s32 off = course * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + gCurrentStarId];
+                gCurrentMsgEntry = (u8 *)&gMessageEntries[off + gCurrentStarId];
             }
             mapPos = 0x140;
         } else {
-            data_0209d6f0 = (u8 *)&data_0209d708[0x21d];
+            gCurrentMsgEntry = (u8 *)&gMessageEntries[0x21d];
             mapPos = 0x100;
         }
         {
-            s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];
-            data_0209d6f4 = base + ((MessageEntry *)data_0209d6f0)->textOffset;
+            s32 base = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
+            data_0209d6f4 = base + ((MessageEntry *)gCurrentMsgEntry)->textOffset;
         }
         Message::LayoutLine();
         data_0209d65c = 0;
@@ -682,13 +681,13 @@ void Message::func_0201d850(u32 course) {
         s32 i;
 
         if (course < 0xf || course >= 0x15)
-            data_0209d6f0 = (u8 *)&data_0209d708[0x28c];
+            gCurrentMsgEntry = (u8 *)&gMessageEntries[0x28c];
         else
-            data_0209d6f0 = (u8 *)&data_0209d708[0x2b3];
+            gCurrentMsgEntry = (u8 *)&gMessageEntries[0x2b3];
         data_0209d6b8 = 0;
         {
-            s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];
-            data_0209d6f4 = base + ((MessageEntry *)data_0209d6f0)->textOffset;
+            s32 base = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
+            data_0209d6f4 = base + ((MessageEntry *)gCurrentMsgEntry)->textOffset;
         }
         Message::LayoutLine();
 
@@ -709,14 +708,14 @@ void Message::func_0201d850(u32 course) {
 
     data_0209d6b8 = 0;
     {
-        MessageEntry *ep = &data_0209d708[0x28e];
+        MessageEntry *ep = &gMessageEntries[0x28e];
         s32 base;
         s32 n;
         u16 *p;
         s32 i;
 
-        data_0209d6f0 = (u8 *)ep;
-        base = data_0209d6fc + 0x28 + data_0209d70c[1];
+        gCurrentMsgEntry = (u8 *)ep;
+        base = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
         data_0209d6f4 = base + ep->textOffset;
         Message::LayoutLine();
 
@@ -827,15 +826,15 @@ void Message::DisplayText(int t) {
     data_0209d660 = 0;
     func_0201eaac();
 
-    base = data_0209d6fc;
+    base = gMessageBankBase;
     idx = gCurrentMsgId;
     gMsgBoxStyle = 1;
     data_0209d6c0 = 0;
     data_0209d668 = 0;
     data_0209d6a8 = 0;
-    data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = base + 0x28 + data_0209d70c[1] +
-                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    data_0209d6f4 = base + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
 
     p = (int)G2_GetBG3CharPtr() + 0x4000;
     li = 0;
@@ -921,9 +920,9 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     idx = gCurrentMsgId;
     data_0209d6c0 = 2;
     gMsgBoxStyle = 1;
-    data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
     func_0201b6f8(0);
 
     data_0209d65c = (256 - data_0209d6b0) / 2;
@@ -962,9 +961,9 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     func_0201eaac();
 
     idx = gCurrentMsgId;
-    data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
-          ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    sum = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+          ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
     data_0209d6f4 = sum;
     data_0209d6f4 += 3;
     func_0201b6f8(0);
@@ -1002,10 +1001,10 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
 
     data_0209d6c0 = 1;
     {
-        MessageEntry *e = &data_0209d708[0x28e];
-        data_0209d6f0 = (u8*)e;
-        sum = data_0209d6fc + 0x28;
-        sum += data_0209d70c[1];
+        MessageEntry *e = &gMessageEntries[0x28e];
+        gCurrentMsgEntry = (u8 *)e;
+        sum = gMessageBankBase + 0x28;
+        sum += gMessageInfoSection->sectionSize;
         sum += e->textOffset;
         data_0209d6f4 = sum;
     }
@@ -1073,10 +1072,10 @@ void Message::DisplaySaving(unsigned short n)
     func_02012790(4);
 
     idx = gCurrentMsgId;
-    base = data_0209d708;
+    base = gMessageEntries;
     entry = (MessageEntry *)((char *)base + idx * 8);
-    data_0209d6f0 = (u8 *)entry;
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
+    gCurrentMsgEntry = (u8 *)entry;
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
                     ((MessageEntry *)((char *)base + idx * 8))->textOffset;
 
     tiles = entry->width / 8;
@@ -1105,7 +1104,7 @@ void Message::DisplaySaving(unsigned short n)
     SetBg3Offset(-gMsgBoxLeft, 4 - gMsgBoxTop);
 
     cols = data_0209d6a8;
-    for (i = 0; i < cols * ((MessageEntry *)data_0209d6f0)->lineCount * 2; i++) {
+    for (i = 0; i < cols * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2; i++) {
         rem = i % cols;
         map[rem] = (u16)(i + 0x200);
         if (cols - 1 == rem)
@@ -1165,13 +1164,13 @@ void Message::func_0201ef50(int arg) {
 
     gCurrentMsgId = (arg + 0x24e);
     idx = gCurrentMsgId;
-    data_0209d6f0 = (u8 *)((char *)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
     data_0209d6a8 = 0x20;
     data_0209d680 = 0;
     data_0209d65c = 0;
-    lines = ((MessageEntry *)((char *)data_0209d708 + idx * 8))->lineCount;
+    lines = ((MessageEntry *)((char *)gMessageEntries + idx * 8))->lineCount;
     top = 0xc - lines;
     charOffset = (u16)(top << 10);
     data_0209d6e0 = (top << 5);
@@ -1214,11 +1213,11 @@ void Message::func_0201f138(void) {
     gMsgBoxWinTop = 0x87;
     data_0209d660 = 0;
     gMsgBoxStyle = 1;
-    data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
+    gCurrentMsgEntry = (u8 *)((char *)gMessageEntries + idx * 8);
+    data_0209d6f4 = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize +
+                    ((MessageEntry *)((char *)gMessageEntries + idx * 8))->textOffset;
 
-    data_0209d6a8 = ((((((MessageEntry *)data_0209d6f0)->width / 8) * 9) + 7) / 8);
+    data_0209d6a8 = ((((((MessageEntry *)gCurrentMsgEntry)->width / 8) * 9) + 7) / 8);
     data_0209d680 = 0;
     data_0209d65c = 0;
 
@@ -1232,14 +1231,14 @@ void Message::func_0201f138(void) {
 
     q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x42);
     div = data_0209d6a8;
-    cnt = div * ((MessageEntry *)data_0209d6f0)->lineCount * 2;
+    cnt = div * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2;
     for (i = 0; i < cnt; i++) {
         rem = i % div;
         q[rem] = (i + 0x200);
         if (div - 1 == rem) {
             q += 0x20;
         }
-        cnt = div * ((MessageEntry *)data_0209d6f0)->lineCount * 2;
+        cnt = div * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2;
     }
 
     bcPtr = &data_0209d6bc;
@@ -1280,7 +1279,7 @@ void Message::func_0201f32c(int msgID) {
     volatile s32 subZero;
     volatile s32 bg3Zero;
 
-    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)msgID)
+    if (gMessageInfoSection->messageCount <= (u16)msgID)
         return;
 
     gCurrentMsgId = msgID;
@@ -1298,11 +1297,11 @@ void Message::func_0201f32c(int msgID) {
             func_02012790(4);
     }
 
-    entry = &data_0209d708[gCurrentMsgId];
-    data_0209d6f0 = (u8 *)entry;
+    entry = &gMessageEntries[gCurrentMsgId];
+    gCurrentMsgEntry = (u8 *)entry;
     {
         s32 ev = entry->textOffset;
-        s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1];
+        s32 sum = gMessageBankBase + 0x28 + gMessageInfoSection->sectionSize;
         data_0209d6f4 = sum + ev;
     }
     data_0209d6a8 = ((entry->width + 7) / 8);
@@ -1384,7 +1383,7 @@ void Message::func_0201f32c(int msgID) {
     }
 
     divisor = data_0209d6a8;
-    for (i = 0; i < (divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2); i++) {
+    for (i = 0; i < (divisor * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2); i++) {
         s32 rem = i % divisor;
         map[rem] = tile;
         if (divisor - 1 == rem)

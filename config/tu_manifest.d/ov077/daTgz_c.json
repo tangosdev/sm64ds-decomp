@@ -67,7 +67,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02124c28Ev",
+      "symbol": "_ZN7daTgz_c19GetHeightAboveWaterEv",
       "address": "0x02124c28",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov077_02124c28.cpp",
@@ -214,14 +214,14 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125e5cEv",
+      "symbol": "_ZN7daTgz_c14CallStateEnterEv",
       "address": "0x02125e5c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov077_02125e5c.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN7daTgz_c19func_ov077_02125e94Ei",
+      "symbol": "_ZN7daTgz_c8SetStateEi",
       "address": "0x02125e94",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov077_02125e94.c",

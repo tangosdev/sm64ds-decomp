@@ -29,6 +29,7 @@
 #include "dCamera_c.h"
 #include "dClipper.h"
 #include "Memory.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
 /* One tree instance's list node: the billboard/clip center in
@@ -62,17 +63,6 @@ enum {
     kFadeBase = 0x10000,
     kOpacityFull = 31,
 };
-
-/* Shared ABI seams. local extern: no shared header declares this helper. */
-extern "C" {
-/* Spelled Vector3 * for the object actually passed. The definition in
- * src/Vec3_AsrInPlace.c says int *, and the tree also carries s32 * and a
- * file-local `struct Vec3 { int x, y, z; }` in src/game/actors/d_a_kpa3_bg.cpp --
- * four spellings of the same three-word layout, none of them typedefs of each
- * other. The disagreement is nominal, not a contract difference, and int * is
- * the slop spelling this cleanup exists to retire. */
-int *Vec3_AsrInPlace(Vector3 *v, int shift);
-}
 
 extern TreeNode *data_ov002_02110a48[kNumVariants];
 extern u16 data_ov002_0210abb8[];

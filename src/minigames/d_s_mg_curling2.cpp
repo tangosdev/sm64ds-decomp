@@ -59,14 +59,14 @@ extern void Mg_SubmitScore(int self);
 extern int Mg_IsNewRecord(void);
 extern int Mg_GetTopRecord(void);
 extern void *Ov004_LoadFileByPath(const char *p);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
+extern void Mg_RenderSubSpriteMtx(OamAttr *a, int b, int c, Matrix2x2 *matrix);
 extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_SetSharedState(s32 state);
 extern void Mg_DrawTopLeftCounter(int self);
 extern void Mg_DrawTopRightCounter(int a, int b);
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
-extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
+extern void Mg_RenderSpriteBoth(OamAttr *a, int b, int c, int d, int e);
 extern void func_02012718(int id, int v);
 struct OamAttr;
 struct Matrix2x2;
@@ -94,7 +94,7 @@ extern int sCurling2ScrollX[];
 extern int sCurling2ScrollY[];
 extern OamAttr *sCurlingBitSprites[];
 extern OamAttr **sCurling2CounterSprites[];
-extern int sCurling2CursorSprites[];
+extern OamAttr sCurling2CursorSprites[];
 extern char sCurling2BgJokyuNcgPath;
 
 /* The seven pointer-to-member state tables this file's functions dispatch
@@ -776,7 +776,7 @@ void dScMgCurling2_c::DrawStones() {
     int i;
 
     for (i = 0; i < STONE_NUM; i++) {
-        void *tex;
+        OamAttr *tex;
         if (mStone[i].active == 0)
             continue;
         if (mStone[i].visible == 0)

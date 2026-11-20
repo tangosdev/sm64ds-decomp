@@ -42,6 +42,7 @@ enum daMip_c_AssetId {
 #include "daObj_Mip_Key_c.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
@@ -60,12 +61,7 @@ int SurfaceInfo_TestFlag0x20(int *);
 
 /* maths and the still-unnamed helpers */
 extern "C" int AngleDiff(int, int);
-extern "C" void Matrix4x3_FromTranslation(void *, int, int, int);
-extern "C" void Matrix4x3_FromRotationY(void *, int);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
-extern "C" void MTX_Concat43(void *, void *, void *);
 extern "C" void MTX_Concat33(void *, void *, void *);
-extern "C" void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
 extern "C" int func_02013890(int, int);
 void func_02013944(void);
@@ -885,15 +881,13 @@ int daMip_c::SetState(void *record)
 
 void daMip_c::UpdateMatrixAndShadow()
 {
-    extern Matrix4x3 gScratchMtx;
-
-    char result[0x30];
+    Matrix4x3 result;
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = gScratchMtx;
-    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, result);
+    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, &result);
     Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
     mShadowMtx = gScratchMtx;
     DropShadowRadHeight(mShadowModel1, mShadowMtx, 0x46000, 0x258000, 0xf);
@@ -903,8 +897,6 @@ void daMip_c::UpdateMatrixAndShadow()
    offsets at data_ov085_021306ec. Sliding and param1 == 2 pick the slot. */
 void daMip_c::UpdateCarriedMatrix()
 {
-    extern Matrix4x3 gScratchMtx;
-
     int idx;
     Matrix4x3 *res;
     if (!mTalkingPlayer) return;
@@ -927,8 +919,6 @@ void daMip_c::UpdateCarriedMatrix()
 /* Second shadow, on the far side of the mirror plane at x = 0x1086000. */
 void daMip_c::UpdateMirrorShadow()
 {
-    extern Matrix4x3 gScratchMtx;
-
     Vector3 v;
     Vector3 res;
     Vector3 vd;
@@ -1019,8 +1009,6 @@ int daMip_c::Render()
    UpdateMirrorShadow's plane. */
 void daMip_c::RenderMirrorImage()
 {
-    extern int gScratchMtx;
-
     Matrix4x3 saved;
     saved = mAnmModel.mat4x3;
     mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
@@ -1060,7 +1048,7 @@ int daMip_c::Behavior()
 {
     extern s8 gCurrentSublevel;
     extern s8 gCurrentAreaId;
-    extern void* data_0209f33c;
+    extern dActor_c *gCastleKeyRabbit;
     extern DaMipAnimationFilePtr data_ov085_021305c0;
     extern MipStatePair data_ov085_0213068c;
     extern MipStatePair data_ov085_021306ac;
@@ -1087,7 +1075,7 @@ int daMip_c::Behavior()
     }
 
     if (mRabbitId == 7 && !(gSaveBlock.file.flags1 & 0x40))
-        data_0209f33c = this;
+        gCastleKeyRabbit = this;
 
     if (mIsGlowing != 0) {
         Vector3 pv = mPos;

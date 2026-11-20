@@ -10,7 +10,7 @@
 extern void ResetCrashScreen(void);
 extern void ShowCrashScreen(void);
 extern u8 data_0208a178[];
-extern u8 data_0208c178[];
+extern u8 gFont2DNcl[];
 
 void InitCrashScreen(void)
 {
@@ -23,7 +23,7 @@ void InitCrashScreen(void)
                      GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_01);
     GX_LoadBG1Char(data_0208a178, 0, 0x2000);
     *(volatile short *)0x5000000 = 0x7c00;
-    GX_LoadBGPltt(data_0208c178, 0x1a0, 0x60);
+    GX_LoadBGPltt(gFont2DNcl, 0x1a0, 0x60);
     ResetCrashScreen();
     ShowCrashScreen();
     GX_DispOn();

@@ -74,7 +74,7 @@ enum {
 };
 
 extern MantaModelFilePtr data_ov090_02134524;
-extern SharedFilePtr data_ov002_0210da10;
+extern SharedFilePtr gWRingModelFile;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern MantaAnimationFilePtr data_ov090_0213452c;
 extern unsigned char gGameMode;
@@ -234,7 +234,7 @@ void daManta_c::UpdateModelAndRingPos() {
 
 int daManta_c::CleanupResources() {
     data_ov090_02134524.Release();
-    data_ov002_0210da10.Release();
+    gWRingModelFile.Release();
     data_ov002_0210d9a8.Release();
     data_ov090_0213452c.Release();
     return 1;
@@ -303,7 +303,7 @@ static inline int IsGameMode(int mode) {
 
 int daManta_c::InitResources() {
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov090_02134524), 1, -1);
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
+    dExtSimpleModel_c::LoadFile(gWRingModelFile);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
     dExtFrameCtrl_c::LoadFile(data_ov090_0213452c);
 

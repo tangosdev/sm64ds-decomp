@@ -2,6 +2,7 @@
 #define TRMPSCOREPOPUP_H
 
 #include "types.h"
+#include "Vector2.h"
 
 /* TrmpScorePopup, one floating score of the Trampoline scenes' five-slot pool
  * (dScMgTrampoline_c at 0x5cd0, dScMgTrampoline2_c::mScorePopups). Spawned
@@ -23,9 +24,8 @@ struct TrmpScorePopup {
     int y;       /* +0x08 */
     int targetX; /* +0x0c */
     int targetY; /* +0x10 */
-    int speedX;  /* +0x14 */
-    int speedY;  /* +0x18 -- func_0203d630 damps it with speedX (it
-                       scales both words); not applied here */
+    Vector2 speed; /* +0x14 -- x is applied to x each step and func_0203d630
+                      damps both; y is not applied */
     s16 life;    /* +0x1c */
     s16 number;  /* +0x1e */
     s16 active;  /* +0x20 */

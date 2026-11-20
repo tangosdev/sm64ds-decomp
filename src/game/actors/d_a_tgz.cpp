@@ -1,7 +1,7 @@
 //cpp
 /* daTgz_c -- the Spiny on the castle roof, ov077.
  *
- * Six PMF state records (func_ov077_02125e94 picks one). State 0 is the
+ * Six PMF state records (SetState picks one). State 0 is the
  * spinning bounce that settles back into the walk (state 1); state 4 spins
  * the same way after its carrier lets go. State 5 is the knock-up: it springs
  * up at vertical speed 40.0, flips backward 0x1000 a frame, and on landing
@@ -69,8 +69,8 @@ struct TgzAnimFile : SharedFilePtr {
 
 TgzAnimFile gTgzWalkAnimFile(ASSET_TOGEZO_WALK_BCA);
 
-/* One {enter, update} record per state; func_ov077_02125e94 selects one and
- * func_ov077_02125e5c and CallStateUpdate call through it. State 1's entry returns
+/* One {enter, update} record per state; SetState selects one and
+ * CallStateEnter and CallStateUpdate call through it. State 1's entry returns
  * nothing, so its pointer is cast to the shared record type. */
 typedef int (daTgz_c::*TgzState)();
 
@@ -93,7 +93,6 @@ extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
 
 extern int gWaterHeight;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern signed char gCurrentSublevel;
 }
 int SurfaceInfo_TestFlag0x20(int *p);
@@ -121,7 +120,7 @@ int daTgz_c::OnAimedAtWithEgg()
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height in mWaterY. Returns how far above it the Spiny is (0 while
  * nothing has been found). */
-int daTgz_c::func_ov077_02124c28() {
+int daTgz_c::GetHeightAboveWater() {
     if (this->mWaterY == 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
@@ -233,7 +232,7 @@ void daTgz_c::func_ov077_02124eb0() {
 
     b = ((this->mFlags & 0x20000) != 0);
     if (b != 0) {
-        this->func_ov077_02125e94(3);
+        this->SetState(3);
         return;
     }
 
@@ -243,14 +242,14 @@ void daTgz_c::func_ov077_02124eb0() {
             return;
         Sound::PlayBank0(0xb5, this->mCamSpacePos);
         this->mChasePlayer = player;
-        this->func_ov077_02125e94(2);
+        this->SetState(2);
         return;
     }
 
     if (this->mdCcAc_c.hitFlags & 0x10) {
         this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
         player->IncMegaKillCount();
-        this->func_ov077_02125e94(5);
+        this->SetState(5);
         return;
     }
 
@@ -286,7 +285,7 @@ void daTgz_c::func_ov077_021250a8() {
     if (!IsPlayerActor(player))
         return;
     if (IsBeingEaten(this)) {
-        this->func_ov077_02125e94(3);
+        this->SetState(3);
         return;
     }
     int flags = this->mdCcAc_c.hitFlags;
@@ -294,7 +293,7 @@ void daTgz_c::func_ov077_021250a8() {
         this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
         this->mAngle.y = this->mPrevAngle.y + 0x8000;
         player->IncMegaKillCount();
-        this->func_ov077_02125e94(5);
+        this->SetState(5);
         return;
     }
     if ((flags & 0x40000) != 0)
@@ -425,7 +424,7 @@ int daTgz_c::func_ov077_02125550() {
             mSpeed.y = 0;
             mAngle.x = 0;
             mWithMeshClsn.ClearLimMovFlag();
-            this->func_ov077_02125e94(1);
+            this->SetState(1);
         }
     }
 
@@ -513,10 +512,10 @@ int daTgz_c::func_ov077_02125830() {
         mPos.z = src[2];
     }
     if (IsFlagSet(this, 0x80000))
-        this->func_ov077_02125e94(4);
+        this->SetState(4);
     else if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
         mEatingPlayer = 0;
-        this->func_ov077_02125e94(1);
+        this->SetState(1);
     }
     return 1;
 }
@@ -541,7 +540,7 @@ int daTgz_c::func_ov077_02125908() {
         mWithMeshClsn.ClearLimMovFlag();
         mChasePlayer = 0;
         mPrevAngle.y = mAngle.y;
-        this->func_ov077_02125e94(1);
+        this->SetState(1);
     }
 
     if (mWaterY != 0)
@@ -595,7 +594,7 @@ int daTgz_c::func_ov077_02125a54() {
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     if (DecIfAbove0_Byte(&mActionTimer) == 0)
-        this->func_ov077_02125e94(1);
+        this->SetState(1);
     return 1;
 }
 
@@ -657,7 +656,7 @@ int daTgz_c::func_ov077_02125bb4() {
             mAngle.z = mPrevAngle.z;
             mWithMeshClsn.ClearLimMovFlag();
             mFlags |= 0x10000000u;
-            this->func_ov077_02125e94(1);
+            this->SetState(1);
         } else {
             x = mPos.x;
             y = mPos.y + 0x28000;
@@ -691,14 +690,14 @@ void daTgz_c::CallStateUpdate() {
     (this->**p)();
 }
 
-void daTgz_c::func_ov077_02125e5c() {
+void daTgz_c::CallStateEnter() {
     TgzState *p = (TgzState *)this->mStateDesc;
     (this->**p)();
 }
 
-void daTgz_c::func_ov077_02125e94(int i) {
+void daTgz_c::SetState(int i) {
     this->mStateDesc = &gTgzStates[i];
-    this->func_ov077_02125e5c();
+    this->CallStateEnter();
 }
 
 int daTgz_c::CleanupResources()
@@ -734,7 +733,7 @@ int daTgz_c::Behavior()
             return 1;
         }
     } else {
-        this->func_ov077_02124c28();
+        this->GetHeightAboveWater();
         this->CallStateUpdate();
         MakeVanishLuigiWork(mdCcAc_c);
         this->func_ov077_02125304();
@@ -764,7 +763,7 @@ int daTgz_c::InitResources()
     mScale.y = 0x1000;
     mScale.z = 0x1000;
     mDespawnTimer = 44;
-    this->func_ov077_02125e94(0);
+    this->SetState(0);
     mShadowMatrix = IDENTITY_MATRIX4X3;
     this->func_ov077_02125304();
     return 1;

@@ -101,7 +101,6 @@ enum {
 void func_02012694(u32 id, const Vector3 *pos);
 int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, dActor_c *self, int v);
-extern "C" int *Vec3_LslInPlace(void *v, int sh);
 
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
 extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */
@@ -109,7 +108,7 @@ extern SharedFilePtr data_ov002_0210da38;   /* the sleep-bubble model, out of ov
 extern SharedFilePtr data_ov084_02130df4;   /* idle animation */
 extern SharedFilePtr data_ov084_02130e04;   /* spit animation */
 extern SharedFilePtr data_ov084_02130e14;   /* grow-in lunge animation */
-extern void *data_ov084_02130e1c[];         /* post-spit animation; decl_common.h's spelling */
+extern SharedFilePtr data_ov084_02130e1c;   /* post-spit animation */
 extern SharedFilePtr data_ov084_02130e24;   /* death animation */
 extern int data_ov084_0213029c[];           /* SpawnDeathBurst reach per frame */
 extern int data_ov084_021302c4[];           /* SpawnDeathBurst height per frame */
@@ -423,8 +422,7 @@ void daFPkn_c::StateSpit()
             else
                 func_0201267c(SND_SPIT_END, &mCamSpacePos);
             mState = STATE_WAIT;
-            mAnmModel.SetAnim((BCA_File *)(((SharedFilePtr *)data_ov084_02130e1c)->filePtr), 0,
-                              0x1000, 0);
+            mAnmModel.SetAnim((BCA_File *)data_ov084_02130e1c.filePtr, 0, 0x1000, 0);
         } else if (mStateTimer < 58) {
             targetAngle = mAngle.y;
             player = ClosestPlayer();

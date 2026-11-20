@@ -74,7 +74,7 @@ struct Entry {
 extern "C" {
 
 /* --- shared ov004, main and library helpers --- */
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern int Mg_GetSubmittedScore(void);
@@ -98,7 +98,7 @@ extern void GX_LoadBG3Scr(void *, u32, u32);
 /* --- ROM data this TU reads --- */
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern int sPachinkoPipeSprites[];
+extern OamAttr *sPachinkoPipeSprites[];
 /* Sprite lists: each run ends at the entry whose attr3 is 0xffff. */
 OamAttr data_ov006_02136c7c[11] = {
     {0x00f0, 0x41e9, 0x501a, 0x0000}, {0x00f4, 0x41f4, 0x501c, 0x0000},
@@ -255,7 +255,7 @@ void dScMgPachinko2_c::CupSlot_DrawAll() {
     int i;
     for (i = 0; i < 2; i++) {
         if (mCups[i].visible) {
-            Mg_RenderSpriteBoth((void *)sPachinkoPipeSprites[mCups[i].frame], mCups[i].x >> 12,
+            Mg_RenderSpriteBoth(sPachinkoPipeSprites[mCups[i].frame], mCups[i].x >> 12,
                                 mCups[i].y >> 12, -1, 2);
         }
     }

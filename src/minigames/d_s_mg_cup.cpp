@@ -85,13 +85,14 @@ struct CupShuffleOffset {
     s8 x, y;
 };
 extern CupShuffleOffset sCupShuffleOffsets[];
-void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawStockCounter(int count, int asIcons);
 void Mg_DrawScoreTally(void *a, int b, int c, int d);
-char data_ov006_02139df4[24] = {(char)0xe8, 0,          (char)0xe5, 65, (char)0xb6, 53,
-                                0,          0,          (char)0xf8, 64, (char)0xdd, 65,
-                                (char)0xfc, 53,         0,          0,  0,          64,
-                                (char)0xe1, (char)0x81, (char)0xd8, 53, (char)0xff, (char)0xff};
+OamAttr data_ov006_02139df4[3] = {
+    {0x00e8, 0x41e5, 0x35b6, 0x0000},
+    {0x40f8, 0x41dd, 0x35fc, 0x0000},
+    {0x4000, 0x81e1, 0x35d8, 0xffff},
+};
 extern PMF sCupStateTable[];
 extern AnimStep *sCupAnimTable[];
 extern u8 gMainScreenLayers;

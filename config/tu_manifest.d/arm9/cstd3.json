@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z13func_0206ccd8iz",
+      "symbol": "_Z13func_0206ccd8PKcz",
       "address": "0x0206ccd8",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206ccd8.c",
