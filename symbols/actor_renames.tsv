@@ -10729,3 +10729,11 @@ ov002	0x020f7038	func_ov002_020f7038	_ZN8daDemo_c13UpdateDescentEii	reconstructe
 ov002	0x020f71c4	func_ov002_020f71c4	_ZN8daDemo_c12UpdateFadeInEii	reconstructed name; ramps mMagnitude into mOpacity and spawns kPtclDemoFadeInA/B/C; exact SM64DS spelling not preserved
 ov002	0x020f72bc	func_ov002_020f72bc	_ZN8daDemo_c10UpdateSpinEv	reconstructed name; fixed scale/opacity with mAngle.y += 0x400 per call, spawns kPtclDemoSpinA/B/C; exact SM64DS spelling not preserved
 ov002	0x020f7384	func_ov002_020f7384	_ZN8daDemo_c16UpdateRiseOrSinkEPhi	reconstructed name; the flag byte picks rising with sound 0x17 or sinking with sound 0x16, driving mPos.y and mOpacity; exact SM64DS spelling not preserved
+ov002	0x020f6a9c	func_ov002_020f6a9c	_ZN8daDemo_c7DespawnEv	reconstructed name; the whole body is MarkForDestruction(); exact SM64DS spelling not preserved
+ov002	0x020f6ab8	func_ov002_020f6ab8	_ZN8daDemo_c14PlayBank1SoundEPh	reconstructed name; Sound::Play(1, id, mCamSpacePos) with the id read unaligned from the script record; exact SM64DS spelling not preserved
+ov002	0x020f6ae4	func_ov002_020f6ae4	_ZN8daDemo_c13PlayLongSoundEPh	reconstructed name; Sound::PlayLong(mSoundHandle, 3, id, mCamSpacePos, 0), retaining the handle for a sound that outlives the call; exact SM64DS spelling not preserved
+ov002	0x020f6b28	func_ov002_020f6b28	_ZN8daDemo_c14PlayBank3SoundEPh	reconstructed name; calls the arm9 veneer at 0x02012694, whose body is Sound::Play(3, id, *v) alongside Sound::PlayBank3; exact SM64DS spelling not preserved
+ov002	0x020f6b4c	func_ov002_020f6b4c	_ZN8daDemo_c17FaceTargetAndMoveEPh	reconstructed name; mAngle.y becomes the horizontal angle to the record's point and mHorzSpeed the short at p+6; exact SM64DS spelling not preserved
+ov002	0x020f6bc0	func_ov002_020f6bc0	_ZN8daDemo_c17SetPoseFromRecordEPh	reconstructed name; sets the mPos triple and mAngle.y/mPrevAngle.y straight from the record with no interpolation; exact SM64DS spelling not preserved
+ov002	0x020f6c24	func_ov002_020f6c24	_ZN8daDemo_c10SetOpacityEPh	reconstructed name; the whole body is mOpacity = src[0]; exact SM64DS spelling not preserved
+ov002	0x020f6c34	func_ov002_020f6c34	_ZN8daDemo_c18PlayAnimationEntryEPh	reconstructed name; applies entry *src of the animation table at data_ov002_0210bc88 through anmModel_c's apply method; exact SM64DS spelling not preserved
