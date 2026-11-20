@@ -37367,35 +37367,35 @@
     },
     "ov065:0x021180d4": {
       "author": "andrewboudreau",
-      "name": "_Z19func_ov065_021180d4P12daDossyCap_c"
+      "name": "_ZN12daDossyCap_c19ReleaseCapIfTouchedEv"
     },
     "ov065:0x02118248": {
       "author": "tangosdev",
-      "name": "_ZN9daDossy_c19func_ov065_02118248Ev"
+      "name": "_ZN9daDossy_c18UpdatePlatformClsnEv"
     },
     "ov065:0x021182e4": {
       "author": "tangosdev",
-      "name": "_ZN9daDossy_c19func_ov065_021182e4Ev"
+      "name": "_ZN9daDossy_c12UpdateHeadUpEv"
     },
     "ov065:0x021183c8": {
       "author": "ruspecial",
-      "name": "_ZN9daDossy_c19func_ov065_021183c8Ev"
+      "name": "_ZN9daDossy_c14UpdateHeadDownEv"
     },
     "ov065:0x02118634": {
       "author": "lunavyqo",
-      "name": "_ZN9daDossy_c19func_ov065_02118634Ev"
+      "name": "_ZN9daDossy_c10UpdateSwimEv"
     },
     "ov065:0x02118838": {
       "author": "tangosdev",
-      "name": "_ZN9daDossy_c19func_ov065_02118838Ev"
+      "name": "_ZN9daDossy_c22UpdatePlatformMatricesEv"
     },
     "ov065:0x02118c4c": {
       "author": "tangosdev",
-      "name": "_Z19func_ov065_02118c4cP12daDossyCap_c"
+      "name": "_ZN12daDossyCap_c17UpdateModelMatrixEv"
     },
     "ov065:0x02118cc4": {
       "author": "tangosdev",
-      "name": "_ZN9daDossy_c19func_ov065_02118cc4Ev"
+      "name": "_ZN9daDossy_c17UpdateModelMatrixEv"
     },
     "ov065:0x02118d04": {
       "author": "tangosdev",
@@ -37419,7 +37419,7 @@
     },
     "ov065:0x02119210": {
       "author": "tangosdev",
-      "name": "_Z19func_ov065_02119210P12daDossyCap_c"
+      "name": "_ZN12daDossyCap_c9IsRealCapEv"
     },
     "ov065:0x02119228": {
       "author": "lunavyqo",
@@ -37431,19 +37431,19 @@
     },
     "ov065:0x0211956c": {
       "author": "tangosdev",
-      "name": "_ZN9daDossy_c19func_ov065_0211956cEP8dActor_c"
+      "name": "_ZN9daDossy_c13OnHeadStoodOnEP8dActor_c"
     },
     "ov065:0x02119594": {
       "author": "tangosdev",
-      "name": "_ZN9daDossy_c19func_ov065_02119594EP8dActor_c"
+      "name": "_ZN9daDossy_c13OnBodyStoodOnEP8dActor_c"
     },
     "ov065:0x021195bc": {
       "author": "tangosdev",
-      "name": "_Z19func_ov065_021195bcP4dBgWP8dActor_cS2_"
+      "name": "_ZN9daDossy_c19HeadStoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov065:0x021195d0": {
       "author": "tangosdev",
-      "name": "_Z19func_ov065_021195d0P4dBgWP8dActor_cS2_"
+      "name": "_ZN9daDossy_c19BodyStoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov065:0x021195e4": {
       "author": "andrewboudreau",
