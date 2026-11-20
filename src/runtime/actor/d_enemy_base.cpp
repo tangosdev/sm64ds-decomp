@@ -41,7 +41,7 @@
  *     the ROM's 0xfc (measured). SpawnParticlesIfHitOtherObj keeps its
  *     coin tests as nested int compares: neither bool nor a single `&&`
  *     matches (the `&&` form is 0xa0 against 0xb8).
- *   - Death slots 4, 6, 7 and 8 keep address-derived names: no hit that
+ *   - Death slots 4, 7 and 8 keep address-derived names: no hit that
  *     selects them was produced on the cartridge (see the table comment at
  *     the end of this file).
  */
@@ -218,9 +218,12 @@ void dEnemyBase_c::StartStompDeath(dActor_c *, dBgCh_Actr *) {
     mFlags &= ~0x1;
 }
 
-/* Knock-back strengths, indexed by the attacking player's param1. */
+/* Knock-back strength per player character, indexed by the attacking
+   player's param1. On the cartridge param1 reads 0 for Mario, 1 for Luigi
+   and 3 for Yoshi; 2 is Wario, whose combo kick the player code also
+   lengthens on param1 == 2. Entries 4 and 5 are not identified. */
 extern "C" {
-extern const u16 data_ov002_020ff01c[];
+extern const u16 sPlayerKnockbackStrength[];
 }
 
 /* Actor ID 0xbf is the player. Int-returning, as the 0/1 the ROM
@@ -234,7 +237,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 void dEnemyBase_c::SetLowKnockback(dActor_c *arg) {
     mSpeed.y = 0x14000;
     if (IsPlayerActor(arg)) {
-        u16 t = data_ov002_020ff01c[(u16)arg->param1];
+        u16 t = sPlayerKnockbackStrength[(u16)arg->param1];
         mHorzSpeed = (t << 0xf) / 50;
     } else {
         mHorzSpeed = 0x14000;
@@ -252,7 +255,7 @@ void dEnemyBase_c::StartPunchDeath(dActor_c *a, dBgCh_Actr *) {
    strength * 0.08 along the ground (44.0 and 12.0 at strength 150). */
 void dEnemyBase_c::SetHighKnockback(dActor_c *arg) {
     if (IsPlayerActor(arg)) {
-        u16 t = data_ov002_020ff01c[(u16)arg->param1];
+        u16 t = sPlayerKnockbackStrength[(u16)arg->param1];
         int scaled = t << 3;
         int ip = scaled << 12;
         int d1 = ip / 100;
@@ -283,7 +286,10 @@ void dEnemyBase_c::StartDiveDeath(dActor_c *a, dBgCh_Actr *) {
     SetLowKnockback(a);
 }
 
-void dEnemyBase_c::func_ov002_020ae80c(dActor_c *a, dBgCh_Actr *) {
+/* Slot 6. A thrown Bob-omb's blast selects it on the cartridge: the enemy
+   is knocked away from the attacker's position on the high arc, which for a
+   non-player attacker is a fixed 10.0 along the ground and 40.0 up. */
+void dEnemyBase_c::StartExplosionDeath(dActor_c *a, dBgCh_Actr *) {
     mPrevAngle.y = Vec3_HorzAngle(&a->mPos, &mPos);
     SetHighKnockback(a);
 }
@@ -293,7 +299,7 @@ void dEnemyBase_c::func_ov002_020ae73c(dActor_c *a, dBgCh_Actr *) {
     mSpeed.y = 0xa000;
 
     if (IsPlayerActor(a))
-        mHorzSpeed = (data_ov002_020ff01c[(unsigned short)a->param1] << 15) / 50;
+        mHorzSpeed = (sPlayerKnockbackStrength[(unsigned short)a->param1] << 15) / 50;
     else
         mHorzSpeed = 0x14000;
 
@@ -750,16 +756,18 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
    initializer to copy the descriptor records in at overlay load.
 
    The slot names come from hitting a Goomba (daKrb_c) on the cartridge,
-   with breakpoints on its hit reaction and on KillByAttack. A stomp or
-   a ground pound sets mDeathState 1, a punch 2, a breakdance or a slide
-   kick 3, and a dive 5. Other enemies pick the slot for a hit kind
-   differently: daMenbo_c and daBasabasa_c send a dive or an egg to slot 2.
-   Slots 4 (fire in daKrb_c, daMenbo_c and daBasabasa_c), 6 (explosion in
-   daKrb_c and daNknk_c) and 7 were not produced, and slot 8 is empty. */
+   with breakpoints on its hit reaction, on KillByAttack and on the start
+   handlers. A stomp or a ground pound sets mDeathState 1, a punch 2, a
+   breakdance, a slide kick or the third hit of the punch combo 3, a dive 5,
+   and a thrown Bob-omb's blast 6. Other enemies pick the slot for a hit kind
+   differently: daMenbo_c and daBasabasa_c send a dive or an egg to slot 2,
+   and daNknk_c sends a metal player's touch to slot 6. Slots 4 (fire in
+   daKrb_c, daMenbo_c and daBasabasa_c) and 7 were not produced, and slot 8
+   is empty. */
 DeathStartPMF sEnemyDeathStartFuncs[8] = {
     &dEnemyBase_c::StartStompDeath,     &dEnemyBase_c::StartPunchDeath,
     &dEnemyBase_c::StartKickDeath,      &dEnemyBase_c::func_ov002_020ae87c,
-    &dEnemyBase_c::StartDiveDeath,      &dEnemyBase_c::func_ov002_020ae80c,
+    &dEnemyBase_c::StartDiveDeath,      &dEnemyBase_c::StartExplosionDeath,
     &dEnemyBase_c::func_ov002_020ae73c, &dEnemyBase_c::func_ov002_020aea2c,
 };
 
@@ -772,4 +780,4 @@ DeathPMF sEnemyDeathFuncs[8] = {
 
 /* Initialized data this file is the only complete referrer for. */
 const unsigned short data_ov002_020ff014[4] = {288, 289, 290, 0};
-const unsigned short data_ov002_020ff01c[6] = {150, 150, 400, 80, 400, 0};
+const unsigned short sPlayerKnockbackStrength[6] = {150, 150, 400, 80, 400, 0};

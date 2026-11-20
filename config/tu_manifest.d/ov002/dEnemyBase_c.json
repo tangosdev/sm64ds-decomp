@@ -144,7 +144,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c19StartExplosionDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae80c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020ae80c.c",
@@ -1250,7 +1250,7 @@
       "source": "0x02108170",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c19StartExplosionDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae80c"
@@ -1353,7 +1353,7 @@
       "size": "0x8"
     },
     {
-      "symbol": "data_ov002_020ff01c",
+      "symbol": "sPlayerKnockbackStrength",
       "address": "0x020ff01c",
       "size": "0xc"
     }
