@@ -101,6 +101,7 @@ extern PgDfdrTexSequenceFilePtr data_ov027_02113c94;
 extern PgDfdrAnimationFilePtr data_ov027_02113c84;
 extern PgDfdrAnimationFilePtr data_ov027_02113c74;
 extern PgDfdrAnimationFilePtr data_ov027_02113c8c;
+extern SharedFilePtr *data_ov027_02112ca4[3];
 extern DfdrDesc data_ov027_021139d4;
 extern DfdrDesc data_ov027_021139cc;
 extern DfdrDesc data_ov027_021139dc;
@@ -127,7 +128,7 @@ s32 daPgDfdr_c::InitResources() {
     mAnmModel.SetFile((BMD_File *)file, 1, -1);
 
     for (i = 0; i < 3; i++) {
-        SharedFilePtr *anim = (SharedFilePtr *)data_ov027_02112ca4[i];
+        SharedFilePtr *anim = data_ov027_02112ca4[i];
         dExtFrameCtrl_c::LoadFile(*anim);
     }
 
@@ -196,7 +197,7 @@ s32 daPgDfdr_c::CleanupResources() {
     int i;
     data_ov027_02113c7c.Release();
     for (i = 0; i < 3; i++) {
-        ((SharedFilePtr *)data_ov027_02112ca4[i])->Release();
+        data_ov027_02112ca4[i]->Release();
     }
     data_ov027_02113c94.Release();
     if (mMeshCollider.IsEnabled()) {
