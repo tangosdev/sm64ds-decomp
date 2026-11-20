@@ -101,7 +101,6 @@ extern void func_ov002_020b5fc4(void *collider, void *board, void *other);
 extern void func_ov066_0211a35c(void *a, void *b, void *c);
 extern char*data_ov002_021000a0[];
 extern char*data_ov002_02108ab8[];
-extern char*data_ov007_02104ba0;
 extern char*func_02023178(int);
 extern char*func_0204a4c8(char*(*alloc)(int), int, int, int, unsigned short);
 extern int AngleDiff(int, int);

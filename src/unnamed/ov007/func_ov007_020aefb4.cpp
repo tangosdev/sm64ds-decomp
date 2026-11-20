@@ -16,7 +16,7 @@ typedef char
 /* Every 0xf0 ticks of states[1], from tick 0x3c on, re-arms item node 1's
  * 0x3c-frame wiggle; func_ov007_020af260 picks the state requests below.
  * PickerScene_GetScaleAnimState and PickerScene_GetMoveAnimState return the picker scene's
- * states[2] and states[3] (data_ov007_02104ba0[3] and [4]); their externs
+ * states[2] and states[3] (sPickerScene's words [3] and [4]); their externs
  * keep the tree's int return, so the results are cast here. */
 void func_ov007_020aefb4(void) {
     int r6 = 0;

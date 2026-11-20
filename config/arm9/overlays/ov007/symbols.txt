@@ -1239,8 +1239,8 @@ data_ov007_02103998 kind:bss addr:0x02103998
 data_ov007_02103f98 kind:bss addr:0x02103f98
 data_ov007_02104598 kind:bss addr:0x02104598
 data_ov007_02104b98 kind:bss addr:0x02104b98
-data_ov007_02104b9c kind:bss addr:0x02104b9c
-data_ov007_02104ba0 kind:bss addr:0x02104ba0
+sPickerSprites kind:bss addr:0x02104b9c
+sPickerScene kind:bss addr:0x02104ba0
 data_ov007_02104ba4 kind:bss addr:0x02104ba4
 data_ov007_02104ba8 kind:bss addr:0x02104ba8
 data_ov007_02104bac kind:bss addr:0x02104bac
