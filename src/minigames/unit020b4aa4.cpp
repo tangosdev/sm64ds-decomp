@@ -85,6 +85,7 @@
 #include "types.h"
 #include "PlayerInput.h"
 #include "dScMgBase_c.h"
+#include "OamAttr.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -134,7 +135,7 @@ typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
 
 extern "C" {
 extern int GetGameLanguage(void);
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
 
 extern void Mg_GainCredits(int c);
 extern void Mg_LoseCredits(int x);
@@ -142,7 +143,7 @@ extern void Mg_DrawCreditsIcon(int a, int b, int c, int d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_GetScoringMode(void);
 extern void Mg_SubmitScore(int score);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, struct Matrix2x2 *d);
+extern void Mg_RenderSubSpriteMtx(OamAttr *a, int b, int c, struct Matrix2x2 *d);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
 /* const folds Coin_Rise and Coin_RiseSpent. This int has to stay a load, in .rodata. */
@@ -152,29 +153,23 @@ int sMgCoinRiseFrames = 20;
 #pragma section coinframes end
 int sMgCoinsBetCap = 5;    /* cap MgCoins_AddBetCoin raises the count to */
 int gMgCoinsShowDelta = 1; /* nonzero: sequences also show their count */
-extern int data_ov006_021338c4[];
-extern int data_ov006_021338ac[];
-extern int data_ov006_021338b8[];
-extern int data_ov006_021338a0[];
-extern int data_ov006_021338d0[];
-int *sMgCoinsButtonSprites[] = {
-    data_ov006_021338c4,
-    data_ov006_021338ac,
-    data_ov006_021338b8,
-    data_ov006_021338a0,
-    data_ov006_021338d0,
+extern OamAttr *data_ov006_021338c4[];
+extern OamAttr *data_ov006_021338ac[];
+extern OamAttr *data_ov006_021338b8[];
+extern OamAttr *data_ov006_021338a0[];
+extern OamAttr *data_ov006_021338d0[];
+OamAttr **sMgCoinsButtonSprites[] = {
+    data_ov006_021338c4, data_ov006_021338ac, data_ov006_021338b8,
+    data_ov006_021338a0, data_ov006_021338d0,
 };
-extern struct OamAttr *sMgTextSpritesEnglish[];
-extern struct OamAttr *sMgTextSpritesSpanish[];
-extern struct OamAttr *sMgTextSpritesFrench[];
-extern struct OamAttr *sMgTextSpritesGerman[];
-extern struct OamAttr *sMgTextSpritesItalian[];
-unsigned char *sMgCoinsDeltaSprites[] = {
-    (unsigned char *)sMgTextSpritesEnglish,
-    (unsigned char *)sMgTextSpritesSpanish,
-    (unsigned char *)sMgTextSpritesFrench,
-    (unsigned char *)sMgTextSpritesGerman,
-    (unsigned char *)sMgTextSpritesItalian,
+extern OamAttr *sMgTextSpritesEnglish[];
+extern OamAttr *sMgTextSpritesSpanish[];
+extern OamAttr *sMgTextSpritesFrench[];
+extern OamAttr *sMgTextSpritesGerman[];
+extern OamAttr *sMgTextSpritesItalian[];
+OamAttr **sMgCoinsDeltaSprites[] = {
+    sMgTextSpritesEnglish, sMgTextSpritesSpanish, sMgTextSpritesFrench,
+    sMgTextSpritesGerman,  sMgTextSpritesItalian,
 };
 extern short gMgCoinsStatus; /* 1 when a sequence finishes; 2, 3, 4 while one runs */
 extern int sMgCoinsDelta;   /* the count MgCoins_DrawDelta shows */
@@ -193,9 +188,6 @@ extern int gMgCoinsInPlay;   /* sprites in play */
 extern int sMgCoinsSlowLaunches;   /* MgCoins_StepLaunchQuick steps this many with a delay */
 extern void (*sMgCoinsStep)(); /* the current step; 0 when idle */
 extern int sMgCoinsDeltaShown;   /* nonzero: MgCoins_Draw shows the count */
-/* The address of sMgCoins[0].mVisible; the ROM indexes the
-   array's visible bytes from it. */
-extern unsigned char sMgCoinsVisible[];
 extern int data_020a0db0;
 }
 extern void MgCoins_StepPayoutFinish(void);
@@ -274,22 +266,22 @@ void MgCoins_Update(void) {
 void MgCoins_DrawDelta(int arg) {
     int absv;
     int r4;
-    int gfx;
+    OamAttr *gfx;
 
     if (arg < 0) absv = -arg; else absv = arg;
 
     if (arg >= 0) {
         int idx = GetGameLanguage();
         r4 = 0x14;
-        gfx = ((int *)sMgCoinsDeltaSprites[idx])[13];
+        gfx = sMgCoinsDeltaSprites[idx][13];
     } else {
         int idx = GetGameLanguage();
         r4 = 0x28;
-        gfx = ((int *)sMgCoinsDeltaSprites[idx])[14];
+        gfx = sMgCoinsDeltaSprites[idx][14];
     }
 
     Mg_DrawCreditsIcon(0x6e, 0x60, 0, -1);
-    Mg_RenderSubSpriteMtx((void *)gfx, 0x80, 0x60, 0);
+    Mg_RenderSubSpriteMtx(gfx, 0x80, 0x60, 0);
     Mg_DrawBigNumber(0x92, 0x60, absv, 0, -1, 2, r4);
 }
 
@@ -301,11 +293,11 @@ void MgCoins_Draw(void) {
     Sprite *p;
     if (sMgCoinsBetPlaced == 0 && gMgCoinsInPlay != 0) {
         if (data_020a0db0 & 0x10) {
-            Hud_RenderSprite((void*)sMgCoinsButtonSprites[GetGameLanguage()][0], 0x14, 0x30, -1, -1);
+            Hud_RenderSprite(sMgCoinsButtonSprites[GetGameLanguage()][0], 0x14, 0x30, -1, -1);
         } else {
-            Hud_RenderSprite((void*)sMgCoinsButtonSprites[GetGameLanguage()][1], 0x14, 0x30, -1, -1);
+            Hud_RenderSprite(sMgCoinsButtonSprites[GetGameLanguage()][1], 0x14, 0x30, -1, -1);
         }
-        Hud_RenderSprite((void*)sMgCoinsButtonSprites[GetGameLanguage()][2], 0x14, 0x30, -1, -1);
+        Hud_RenderSprite(sMgCoinsButtonSprites[GetGameLanguage()][2], 0x14, 0x30, -1, -1);
     }
     if (sMgCoinsDeltaShown != 0) {
         MgCoins_DrawDelta(sMgCoinsDelta);
@@ -512,7 +504,7 @@ void MgCoins_StepLose(void) {
             sMgCoinsWait = 0x10;
         return;
     }
-    if (sMgCoinsVisible[sMgCoinsLastLost * 0x24] != 0)
+    if (sMgCoins[sMgCoinsLastLost].mVisible != 0)
         return;
     sMgCoinsWait = 0x3c;
     sMgCoinsStep = MgCoins_StepHoldThenFinish;
@@ -538,7 +530,7 @@ void MgCoins_StepLoseOneMore(void) {
             sMgCoinsWait = 0x10;
         return;
     }
-    if (sMgCoinsVisible[sMgCoinsLastLostAlt * 0x24] != 0)
+    if (sMgCoins[sMgCoinsLastLostAlt].mVisible != 0)
         return;
     sMgCoinsWait = 0x3c;
     sMgCoinsStep = MgCoins_StepHoldThenFinish;
@@ -576,7 +568,7 @@ void MgCoins_StepSpend(void) {
             sMgCoinsWait = 0x10;
         return;
     }
-    if (sMgCoinsVisible[sMgCoinsLastSpent * 0x24] != 0)
+    if (sMgCoins[sMgCoinsLastSpent].mVisible != 0)
         return;
     sMgCoinsWait = 0x3c;
     sMgCoinsStep = MgCoins_StepSpendHold;
@@ -605,7 +597,7 @@ void MgCoins_StepRefund() {
         }
         return;
     }
-    if (sMgCoinsVisible[sMgCoinsLastReturned * 0x24] != 0)
+    if (sMgCoins[sMgCoinsLastReturned].mVisible != 0)
         return;
     gMgCoinsStatus = 1;
     sMgCoinsStep = 0;

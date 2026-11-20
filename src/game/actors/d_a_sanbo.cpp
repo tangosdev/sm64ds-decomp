@@ -55,17 +55,12 @@ enum daSanbo_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
 extern "C" {
-extern void Matrix4x3_FromTranslation(union Matrix4x3 *m, fx32 x, fx32 y, fx32 z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
-extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern union Matrix4x3 data_020a0e68;
 extern void func_02038414(void *p);
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr

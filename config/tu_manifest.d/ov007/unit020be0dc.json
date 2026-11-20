@@ -170,7 +170,7 @@
   ],
   "notes": [
     "Text only: the bss word 0x02104bc0 and array 0x02104bc4..0x02104bd4, the .data words 0x02103230 / 0x02103234 and the tables 0x020d7c58 / 0x020d7c5c / 0x020d7c6c stay ROM-owned and are reached by extern, as the one-function sources did.",
-    "Folded from 8 one-function sources. They spelled data_ov007_02104bc0 as char *, int * and char ** and each had a partial view of the OAM node, sprite group and model; the unit declares it Ov007ParticleSprites * (no file outside the unit names it) with one full set of views.",
+    "Folded from 8 one-function sources. They spelled sParticleSprites as char *, int * and char ** and each had a partial view of the OAM node, sprite group and model; the unit declares it Ov007ParticleSprites * (no file outside the unit names it) with one full set of views.",
     "func_ov007_020be3bc was matched by its one-function source only under a file-scope #pragma opt_strength_reduction off, which would be unit-wide here and breaks func_ov007_020be8b8 and func_ov007_020be684. The unit writes it as a plain loop over GXOamAttr entries (oam + i * 4), which matches with strength reduction on and needs no pragma.",
     "func_ov007_020be850 returns Ov007Figure * and func_ov007_020be7a8 takes the particle position as void *, its func_0204dab4 callback shape; neither has a caller outside the unit.",
     "Extended by the six figure functions 0x020be964..0x020bed60 (one-function sources folded in). The shards each had a partial view of the figure, model and animation player; the unit has one Ov007Figure (0x1c bytes) and one view of each. func_ov007_020beaa0 keeps a pointer-typed conditional for particleIndex: every int spelling tried swaps the moveq/movne arms."

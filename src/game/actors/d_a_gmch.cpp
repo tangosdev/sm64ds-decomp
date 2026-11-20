@@ -793,7 +793,6 @@ int daGmch_c::InitResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
     extern SharedFilePtr data_ov002_0210d9b8;
-    extern Matrix4x3 IDENTITY_MATRIX4X3;
 
     Vector3 pos;
     BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov081_02128ed4);

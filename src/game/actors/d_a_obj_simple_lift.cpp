@@ -58,12 +58,7 @@ enum daObjSimpleLift_c_AssetId {
 };
 
 #include "daObjSimpleLift_c.h"
-/* decl_common.h spells these as non-const u16[], which cannot be this .rodata. */
-#define data_ov091_02134504 data_ov091_02134504_decl
-#define data_ov091_02134514 data_ov091_02134514_decl
 #include "decl_common.h"
-#undef data_ov091_02134504
-#undef data_ov091_02134514
 extern const u16 data_ov091_02134504[8] = {
     69, 80, 78, 80, 60, 150, 50, 0,
 };

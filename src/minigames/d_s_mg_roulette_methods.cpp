@@ -101,7 +101,7 @@ Vector2 sRouletteTiles[37] = {
 extern "C" {
 
 int GetGameLanguage(void);
-void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
 void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
@@ -126,15 +126,15 @@ extern const s32 sRouletteStripSpriteBase[4] = {
     6,
     8,
 };
-extern void *sRouletteStripSprites[];
-extern void **sRouletteTextSpritesByLanguage[];
+extern OamAttr *sRouletteStripSprites[];
+extern OamAttr **sRouletteTextSpritesByLanguage[];
 extern const int sRoulettePayoutMultipliers[4] = {
     12,
     6,
     3,
     2,
 };
-extern void *sRouletteRacerSprites;
+extern OamAttr *sRouletteRacerSprites;
 /* Bet tiles: 0..0xb are single numbers, 0xc..0x1c pairs of numbers and
  * 0x1d..0x22 groups of four (RouletteRacer_GetPayout checks 1, 2 and 4
  * table entries for them and pays 12, 6 and 3). */
@@ -455,7 +455,7 @@ s32 dScMgRoulette_c::Render() {
             if (mPhase < 8) {
                 if (data_020a0db0 & 8) {
                     s16 idx = mBoard.mStopTile;
-                    Hud_RenderSprite((void *)data_ov006_02138c18, sRouletteTiles[idx].x >> 12,
+                    Hud_RenderSprite(data_ov006_02138c18, sRouletteTiles[idx].x >> 12,
                                      sRouletteTiles[idx].y >> 12, -1, 1);
                 }
             }
@@ -1218,7 +1218,7 @@ void RouletteStrip_AddRacer(RouletteStrip *strip, RouletteRacer *racer) {
 
 void RouletteStrip_Draw(RouletteStrip *strip, int y) {
     int idx = GetGameLanguage();
-    void *p = sRouletteTextSpritesByLanguage[idx][20];
+    OamAttr *p = sRouletteTextSpritesByLanguage[idx][20];
     Hud_RenderSprite(p, 0xc, y, -1, -1);
 
     Mg_DrawBigNumber(0x1e, y, sRoulettePayoutMultipliers[strip->payoutIndex], 0, -1, 2, 0);

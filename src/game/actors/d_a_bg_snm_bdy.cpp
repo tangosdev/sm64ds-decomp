@@ -100,8 +100,6 @@ daBgSnmBdy_c::StateEntry gBgSnmBdyStates[6] = {
 Vector3 gBgSnmBdyReachPoint(-0xad0000, 0x290000, -0x9d0000);
 Vector3 gBgSnmBdyLandingPoint(-0x1004000, -0x591000, 0x6fe000);
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 /* The NitroSDK fixed-point products, written as local inlines the way
  * d_s_mg_base.cpp and d_s_mg_pachinko.cpp spell FX_Mul. FX_Mul is a 20.12
  * product rounded at bit 11; FX_Mul32x64c multiplies by a 32.32 constant

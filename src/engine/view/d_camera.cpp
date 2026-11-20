@@ -115,7 +115,7 @@ extern dClipper data_0209f43c;
 extern s32 gRunningKuppaScript;
 extern Matrix4x3 data_020a0e68;
 extern struct OamAttr data_ov002_0210c3b0;
-extern void *data_ov002_0210c3e0[2];
+extern OamAttr *data_ov002_0210c3e0[2];
 
 extern "C" {
 /* Siblings below 0x0200bec4 (defined at the end of the file). */
@@ -545,12 +545,12 @@ int dCamera_c::Render()
                 G2_SetBlendAlpha(0x10, 0x2f, 0xc, 6);
             } else {
                 if (flags & CAM_FLAG_TURN_LEFT) {
-                    OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[0], 0x14, 0x60, -1, -1, 0x1000,
-                                0x1000, 0, -1);
+                    OAM::Render(0, data_ov002_0210c3e0[0], 0x14, 0x60, -1, -1, 0x1000, 0x1000, 0,
+                                -1);
                 }
                 if (mFlags & CAM_FLAG_TURN_RIGHT) {
-                    OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[1], 0xec, 0x60, -1, -1, 0x1000,
-                                0x1000, 0, -1);
+                    OAM::Render(0, data_ov002_0210c3e0[1], 0xec, 0x60, -1, -1, 0x1000, 0x1000, 0,
+                                -1);
                 }
             }
             s32 blend = mFovBlend;

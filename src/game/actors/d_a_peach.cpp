@@ -68,11 +68,10 @@ PeachAnimFile gPeachJumpAnimationFile(ASSET_PEACH_JUMP_BCA);
 PeachAnimFile gPeachJumpEndAnimationFile(ASSET_PEACH_JUMP_END_BCA);
 PeachAnimFile gPeachJumpLoopAnimationFile(ASSET_PEACH_JUMP_LOOP_BCA);
 PeachAnimFile gPeachOpWaitAnimationFile(ASSET_PEACH_OP_WAIT_BCA);
-extern const int data_ov085_0212f280[7] = {
-    (int)&gPeachWaitAnimationFile,    (int)&gPeachWalkAnimationFile,
-    (int)&gPeachRunAnimationFile,     (int)&gPeachJumpAnimationFile,
-    (int)&gPeachJumpEndAnimationFile, (int)&gPeachJumpLoopAnimationFile,
-    (int)&gPeachOpWaitAnimationFile,
+extern SharedFilePtr *const data_ov085_0212f280[7] = {
+    &gPeachWaitAnimationFile,   &gPeachWalkAnimationFile,    &gPeachRunAnimationFile,
+    &gPeachJumpAnimationFile,   &gPeachJumpEndAnimationFile, &gPeachJumpLoopAnimationFile,
+    &gPeachOpWaitAnimationFile,
 };
 
 /* SetState indexes this by state. Each record is {init, behavior} as SetState
@@ -327,7 +326,7 @@ int daPeach_c::CleanupResources() {
     gPeachModelFile.Release();
     s32 i = 0;
     do {
-        ((SharedFilePtr *)data_ov085_0212f280[i])->Release();
+        data_ov085_0212f280[i]->Release();
         i++;
     } while (i < 7);
     return 1;
@@ -361,7 +360,7 @@ int daPeach_c::InitResources() {
     BMD_File *f = dExtSimpleModel_c::LoadFile(gPeachModelFile);
     mAnmModel.SetFile(f, 1, -1);
     for (int i = 0; i < 7; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov085_0212f280[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov085_0212f280[i]);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mCylinder.Init(this, 0x90000, 0xc0000, 0x4800004, 0);
