@@ -2733,7 +2733,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
     if ((*flag) == 0) {
         /* First call stores the look-at point and registers ~Vector3(). */
         static __attribute__((aligned(8))) Vector3 sLookTarget(0xffdd6000, 0xbe4000, 0x2ae000);
-        func_ov002_020f6f48(&sLookTarget, 0x20);
+        SteerTowardPoint(&sLookTarget, 0x20);
     } else {
         /* Kept (#821 r77): data_ov002_0210b958 is a statically initialized
          .data VecFx32 (a Vector3, which declares constructors, would be
@@ -2741,7 +2741,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
          takes the game's Vector3. */
         MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
         Vec3_LslInPlace((int *)&v, 3);
-        func_ov002_020f6f48(&v, 8);
+        SteerTowardPoint(&v, 8);
     }
     this->mPrevAngle.x = this->mAngle.x;
     this->mPrevAngle.y = this->mAngle.y;
@@ -2754,7 +2754,7 @@ int daDemo_c::func_ov002_020f6c60(void *src, int first, int last) {
  * the animation's currFrame set from a random draw scaled by
  * numFramesAndFlags. */
 
-int daDemo_c::func_ov002_020f6e48(unsigned char *p)
+int daDemo_c::PlaceFromRecord(unsigned char *p)
 {
     int b;
     int c0;
@@ -2793,7 +2793,7 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
  * mSpeed.z to mMagnitude times the Z axis row of the animated model's
  * matrix. */
 
-void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
+void daDemo_c::SteerTowardPoint(struct Vector3 *v, int amt)
 {
     Matrix4x3 *m;
     ApproachAngle(&this->mAngle.x, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
@@ -2806,14 +2806,14 @@ void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
 
 /* Script handler 9: clear mFlags bit 0x2. */
 
-int daDemo_c::func_ov002_020f7020()
+int daDemo_c::DisableRenderClip()
 {
     this->mFlags &= ~0x2;
     return 1;
 }
 
 
-int daDemo_c::func_ov002_020f7038(int a, int arg)
+int daDemo_c::UpdateDescent(int a, int arg)
 {
     if (arg == gKuppaScriptFrame) {
         mParticleID[0] = 0;
@@ -2855,7 +2855,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
 }
 
 
-int daDemo_c::func_ov002_020f71c4(int a, int arg)
+int daDemo_c::UpdateFadeIn(int a, int arg)
 {
     if (arg == 0) {
         if (arg == gKuppaScriptFrame) {
@@ -2883,7 +2883,7 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
 }
 
 
-int daDemo_c::func_ov002_020f72bc()
+int daDemo_c::UpdateSpin()
 {
     this->mScale.x = 0x3000;
     this->mScale.y = 0x3000;
@@ -2901,7 +2901,7 @@ int daDemo_c::func_ov002_020f72bc()
 }
 
 
-int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
+int daDemo_c::UpdateRiseOrSink(unsigned char *flag, int val)
 {
     if (*flag != 0) {
         if (val == gKuppaScriptFrame)
@@ -3203,12 +3203,12 @@ void daDemo_c::RunCommand(unsigned char *command, int first, int last) {
         (PMF3)&daDemo_c::func_ov002_020f7780, /* 2 */
         (PMF3)&daDemo_c::func_ov002_020f7538, /* 3 */
         (PMF3)&daDemo_c::func_ov002_020f7410, /* 4 */
-        (PMF3)&daDemo_c::func_ov002_020f7384, /* 5 */
-        (PMF3)&daDemo_c::func_ov002_020f72bc, /* 6 */
-        (PMF3)&daDemo_c::func_ov002_020f71c4, /* 7 */
-        (PMF3)&daDemo_c::func_ov002_020f7038, /* 8 */
-        (PMF3)&daDemo_c::func_ov002_020f7020, /* 9 */
-        (PMF3)&daDemo_c::func_ov002_020f6e48, /* 10 */
+        (PMF3)&daDemo_c::UpdateRiseOrSink, /* 5 */
+        (PMF3)&daDemo_c::UpdateSpin, /* 6 */
+        (PMF3)&daDemo_c::UpdateFadeIn, /* 7 */
+        (PMF3)&daDemo_c::UpdateDescent, /* 8 */
+        (PMF3)&daDemo_c::DisableRenderClip, /* 9 */
+        (PMF3)&daDemo_c::PlaceFromRecord, /* 10 */
         (PMF3)&daDemo_c::func_ov002_020f6c60, /* 11 */
         (PMF3)&daDemo_c::func_ov002_020f6c34, /* 12 */
         (PMF3)&daDemo_c::func_ov002_020f6c24, /* 13 */
