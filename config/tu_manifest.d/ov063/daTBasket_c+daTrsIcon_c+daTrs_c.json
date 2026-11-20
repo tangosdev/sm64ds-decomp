@@ -223,66 +223,66 @@
       "ordinal": 25
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02117364Ev",
+      "symbol": "_ZN7daTrs_c20UpdateKeyBooRelocateEv",
       "address": "0x02117364",
       "size": "0x000002ec",
-      "legacy_source": "src/unnamed/ov063/func_ov063_02117364.c",
+      "legacy_source": "src/unnamed/ov063/UpdateKeyBooRelocate.c",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02117650Ev",
+      "symbol": "_ZN7daTrs_c22RelocateAwayFromPlayerEv",
       "address": "0x02117650",
       "size": "0x0000011c",
-      "legacy_source": "src/unnamed/ov063/func_ov063_02117650.c",
+      "legacy_source": "src/unnamed/ov063/RelocateAwayFromPlayer.c",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211776cEv",
+      "symbol": "_ZN7daTrs_c20UpdateKeyBooDefeatedEv",
       "address": "0x0211776c",
       "size": "0x00000044",
-      "legacy_source": "src/unnamed/ov063/func_ov063_0211776c.cpp",
+      "legacy_source": "src/unnamed/ov063/UpdateKeyBooDefeated.cpp",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_021177b0Ev",
+      "symbol": "_ZN7daTrs_c15UpdateKeyBooHitEv",
       "address": "0x021177b0",
       "size": "0x0000035c",
-      "legacy_source": "src/unnamed/ov063/func_ov063_021177b0.c",
+      "legacy_source": "src/unnamed/ov063/UpdateKeyBooHit.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02117b0cEv",
+      "symbol": "_ZN7daTrs_c16UpdateKeyBooTalkEv",
       "address": "0x02117b0c",
       "size": "0x000001d0",
-      "legacy_source": "src/unnamed/ov063/func_ov063_02117b0c.c",
+      "legacy_source": "src/unnamed/ov063/UpdateKeyBooTalk.c",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02117cdcEv",
+      "symbol": "_ZN7daTrs_c17UpdateKeyBooIntroEv",
       "address": "0x02117cdc",
       "size": "0x0000077c",
-      "legacy_source": "src/unnamed/ov063/func_ov063_02117cdc.c",
+      "legacy_source": "src/unnamed/ov063/UpdateKeyBooIntro.c",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02118458Ev",
+      "symbol": "_ZN7daTrs_c18UpdateKeyBooAttackEv",
       "address": "0x02118458",
       "size": "0x000002e4",
-      "legacy_source": "src/unnamed/ov063/func_ov063_02118458.c",
+      "legacy_source": "src/unnamed/ov063/UpdateKeyBooAttack.c",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211873cEv",
+      "symbol": "_ZN7daTrs_c17UpdateKeyBooChaseEv",
       "address": "0x0211873c",
       "size": "0x000001d8",
-      "legacy_source": "src/unnamed/ov063/func_ov063_0211873c.c",
+      "legacy_source": "src/unnamed/ov063/UpdateKeyBooChase.c",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02118914Ev",
+      "symbol": "_ZN7daTrs_c16UpdateKeyBooInitEv",
       "address": "0x02118914",
       "size": "0x000000e0",
-      "legacy_source": "src/unnamed/ov063/func_ov063_02118914.c",
+      "legacy_source": "src/unnamed/ov063/UpdateKeyBooInit.c",
       "ordinal": 34
     },
     {
@@ -314,10 +314,10 @@
       "ordinal": 38
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02118ddcEv",
+      "symbol": "_ZN7daTrs_c8SpawnKeyEv",
       "address": "0x02118ddc",
       "size": "0x00000080",
-      "legacy_source": "src/unnamed/ov063/func_ov063_02118ddc.cpp",
+      "legacy_source": "src/unnamed/ov063/SpawnKey.cpp",
       "ordinal": 39
     },
     {
