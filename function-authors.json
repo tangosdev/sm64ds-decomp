@@ -35967,7 +35967,7 @@
     },
     "ov063:0x02116a1c": {
       "author": "lunavyqo",
-      "name": "_ZN7daTrs_c19func_ov063_02116a1cEv"
+      "name": "_ZN7daTrs_c22UpdateStarGatedPathBooEv"
     },
     "ov063:0x02116bf0": {
       "author": "tangosdev",
@@ -35975,7 +35975,7 @@
     },
     "ov063:0x02116bf4": {
       "author": "andrewboudreau",
-      "name": "_ZN7daTrs_c19func_ov063_02116bf4Ev"
+      "name": "_ZN7daTrs_c18UpdateChildSpawnerEv"
     },
     "ov063:0x02116d38": {
       "author": "tangosdev",
@@ -36067,19 +36067,19 @@
     },
     "ov063:0x02118e5c": {
       "author": "tangosdev",
-      "name": "_ZN7daTrs_c19func_ov063_02118e5cEv"
+      "name": "_ZN7daTrs_c19AwardStarAndArmTrapEv"
     },
     "ov063:0x02118ea0": {
       "author": "ruspecial",
-      "name": "_ZN7daTrs_c19func_ov063_02118ea0Ev"
+      "name": "_ZN7daTrs_c15AwardStarVeneerEv"
     },
     "ov063:0x02118eac": {
       "author": "tangosdev",
-      "name": "_ZN7daTrs_c19func_ov063_02118eacEv"
+      "name": "_ZN7daTrs_c9AwardStarEv"
     },
     "ov063:0x02118f24": {
       "author": "tangosdev",
-      "name": "_Z19func_ov063_02118f24P11daTrsIcon_cRK7Vector3"
+      "name": "_ZN11daTrsIcon_c16SpawnTrackedStarERK7Vector3"
     },
     "ov063:0x02118f50": {
       "author": "tangosdev",
@@ -36167,7 +36167,7 @@
     },
     "ov063:0x0211a0a8": {
       "author": "tangosdev",
-      "name": "_Z19func_ov063_0211a0a8iiiii"
+      "name": "_ZN7daTrs_c12DeadbandStepEiiii"
     },
     "ov063:0x0211a0dc": {
       "author": "lunavyqo",

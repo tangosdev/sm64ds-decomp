@@ -29,7 +29,7 @@ struct daTrsIcon_c : dActor_c {
     /* --- vtable --- */
     virtual ~daTrsIcon_c();
     virtual int InitResources();
-    void func_ov063_02118f24(const Vector3 &pos);
+    void SpawnTrackedStar(const Vector3 &pos);
 };
 
 #ifndef SM64DS_PLATFORM_PC
