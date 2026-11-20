@@ -880,7 +880,7 @@
       "ordinal": 118
     },
     {
-      "symbol": "_Z13func_0202deaci",
+      "symbol": "_Z20PreloadLevelOverlaysi",
       "address": "0x0202deac",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0202/func_0202deac.c",
@@ -1186,14 +1186,14 @@
       "evidence": "u8. Read here by LoadLevelOverlays and func_0202deac. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f27c",
+      "symbol": "sBuzzerSoundJustPlayed",
       "address": "0x0209f27c",
       "size": "0x1",
       "binding": "STB_GLOBAL",
       "evidence": "u8. Read here by IsButtonInputValid. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f280",
+      "symbol": "sStopMusicDuringFade",
       "address": "0x0209f280",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -2759,13 +2759,13 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f278"
     },
     {
-      "symbol": "data_0209f27c",
+      "symbol": "sBuzzerSoundJustPlayed",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f27c"
     },
     {
-      "symbol": "data_0209f280",
+      "symbol": "sStopMusicDuringFade",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f280"

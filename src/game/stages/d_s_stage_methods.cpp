@@ -118,7 +118,7 @@ void TurnBacklightOn(void);
 void TurnBacklightOff(void);
 
 extern int gFrameStep;
-extern u8 data_0208ee3c;
+extern u8 gBacklightEnabled;
 extern u8 data_0208ee40;
 extern s8 gLastCourseSublevel;
 extern s16 gPlayerHealth[];
@@ -255,7 +255,7 @@ extern s8 gReturnSublevel;
 extern s8 gCurrentAreaId;
 extern u8 data_02092128[];
 extern int sLoadedLevelOverlay;
-extern unsigned int data_02092134;
+extern unsigned int gStarCameraSettings;
 extern int gLevelMinY;
 extern u16 *data_0209214c[];
 extern LevelInfo *data_02092208[];
@@ -333,8 +333,8 @@ static u8 sReturnState;
 static u8 sCheckpointStarId;
 u8 data_0209f274;
 static u8 sLevelOverlaysPreloaded;
-static u8 data_0209f27c;
-static u8 data_0209f280;
+static u8 sBuzzerSoundJustPlayed;
+static u8 sStopMusicDuringFade;
 /* Non-zero while a talk or event is pointing the player at the Touch Screen:
    dMeter_c::Render then calls RenderBouncingArrows, which draws the three
    down-arrows along the foot of the top screen. Every writer that sets it
@@ -403,7 +403,7 @@ static u8 sSelectedMenuButton;
 static u8 sSoundBoxFlashTimer;
 u8 gNumMinimapTileObjs;
 /* The backlight button drawn selected on the options page: 0 the left (on)
-   and 1 the right (off). Seeded from data_0208ee3c ^ 1 when the page opens;
+   and 1 the right (off). Seeded from gBacklightEnabled ^ 1 when the page opens;
    touching a button sets it, and the toggle flips it. The buttons show it only
    when PS_UpdateOptionsMenu repaints the page. */
 static u8 sSelectedBacklightButton;
@@ -592,7 +592,7 @@ void ResetInput(void);
 int IsLevelTinyHugeIslandOutside(int level);
 int IsLevelInsideCastle(int level);
 int GetSoundGroupID(int group, int sub);
-void func_0202deac(int levelID);
+void PreloadLevelOverlays(int levelID);
 s8 GetLevelPart(s32 level);
 void OpenCannonInLevel(s8 levelID);
 int IsCannonOpenInLevel(s8 levelID);
@@ -842,12 +842,12 @@ void dScStage_c::LC_Update() {
         gMainScreenLayers |= DISPLAY_LAYER_BG3;
         sLevelClearCoinCount = 0;
         gLevelClearStep = 1;
-        data_0209f280 = 0;
+        sStopMusicDuringFade = 0;
         if (gNumCoins[0] != 0)
             return;
         if (gNewStarCollected != 0) {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
-            data_0209f280 = 1;
+            sStopMusicDuringFade = 1;
         }
         sMenuWaitTimer = 30;
         return;
@@ -862,7 +862,7 @@ void dScStage_c::LC_Update() {
             if (gNumCoins[0] == sLevelClearCoinCount) {
                 if (gNewStarCollected != 0) {
                     Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
-                    data_0209f280 = 1;
+                    sStopMusicDuringFade = 1;
                 }
                 sMenuWaitTimer = 30;
                 if (level < 0xf) {
@@ -880,7 +880,7 @@ void dScStage_c::LC_Update() {
                     return;
                 func_02012790(0x22);
                 Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
-                data_0209f280 = 1;
+                sStopMusicDuringFade = 1;
                 return;
             }
             func_02012790(0x15);
@@ -888,7 +888,7 @@ void dScStage_c::LC_Update() {
         }
         if (sLevelClearCoinCount == 0 && level >= 0xf && level < 0x15) {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
-            data_0209f280 = 1;
+            sStopMusicDuringFade = 1;
         }
         sMenuWaitTimer = 60;
         gNumCoins[0] = 0;
@@ -1001,9 +1001,9 @@ void dScStage_c::LC_Update() {
             gLevelClearStep = 6;
         return;
     case 6:
-        if (data_0209f280 != 0) {
+        if (sStopMusicDuringFade != 0) {
             Sound::PlaySub(0x23, 0x7f, 0, 0x15666, 0);
-            data_0209f280 = 0;
+            sStopMusicDuringFade = 0;
         }
         gMainScreenLayers &= ~(DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
         gSubScreenLayers &= ~3;
@@ -1477,14 +1477,14 @@ void dScStage_c::PS_Cleanup() {
     }
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     gSubScreenLayers &= ~3;
-    if (data_0209f280 == 0)
+    if (sStopMusicDuringFade == 0)
         Sound::UnpauseMusic();
     else
         Sound::StopLoadedMusic_Layer1(60);
     sPauseInputLockout = 0xf;
     G2_BlendNone();
     G2S_BlendNone();
-    data_0209f280 = 0;
+    sStopMusicDuringFade = 0;
     gGamePaused = 0;
 }
 // Pen-down edge on a held touch.
@@ -1939,7 +1939,7 @@ void dScStage_c::PS_Update() {
         dScene_c::StartSceneFade(1, 0, 0);
         gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
         gActorUpdateMask = gNextActorUpdateMask;
-        data_0209f280 = 1;
+        sStopMusicDuringFade = 1;
         dScStage_c::PS_Cleanup();
         return;
     }
@@ -2178,7 +2178,7 @@ void dScStage_c::PS_Update() {
                           GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
         sNextPauseState = 0xa;
         data_0209f234 = GetSoundMode();
-        sSelectedBacklightButton = data_0208ee3c ^ 1;
+        sSelectedBacklightButton = gBacklightEnabled ^ 1;
         data_0209f1fc = data_0208ee40;
         sPressedPauseArrow = 0;
         Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
@@ -2563,7 +2563,7 @@ void dScStage_c::PS_Update() {
             return;
         }
         dScene_c::StartSceneFade(1, 0, 0);
-        data_0209f280 = 1;
+        sStopMusicDuringFade = 1;
         dScStage_c::PS_Cleanup();
         gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
         gActorUpdateMask = gNextActorUpdateMask;
@@ -2647,7 +2647,7 @@ void dScStage_c::PS_Update() {
             return;
         }
         dScene_c::StartSceneFade(1, 0, 0);
-        data_0209f280 = 1;
+        sStopMusicDuringFade = 1;
         dScStage_c::PS_Cleanup();
         gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
         gActorUpdateMask = gNextActorUpdateMask;
@@ -2656,7 +2656,7 @@ void dScStage_c::PS_Update() {
     case 0x13: {
         if (IsVsMode() && data_0209fc68 == 0) {
             dScene_c::StartSceneFade(6, 1, 0);
-            data_0209f280 = 1;
+            sStopMusicDuringFade = 1;
             dScStage_c::PS_Cleanup();
             gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
             gActorUpdateMask = gNextActorUpdateMask;
@@ -2665,7 +2665,7 @@ void dScStage_c::PS_Update() {
         LoadLevelNoReturn(2, 0, -1, 0);
         gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
         gActorUpdateMask = gNextActorUpdateMask;
-        data_0209f280 = 1;
+        sStopMusicDuringFade = 1;
         gGamePaused = 2;
         return;
     }
@@ -2720,7 +2720,7 @@ void dScStage_c::PS_Init() {
     data_0209f23c = 0;
     sMenuHighlightDelay = 0;
     sBackButtonSelected = 0;
-    data_0209f280 = 0;
+    sStopMusicDuringFade = 0;
 
     mainBlendTargets = mainLayers ^ 0x10;
     subBlendTargets = subLayers ^ DISPLAY_LAYER_OBJ;
@@ -2781,16 +2781,16 @@ extern "C" int IsButtonInputValid(void) {
     }
     val = data_020a0e5a[gActivePlayerSlot * 2];
     if (val & 0xc) {
-        data_0209f27c = 0;
+        sBuzzerSoundJustPlayed = 0;
         return 1;
     }
     if (val & ~0xc) {
-        if (data_0209f27c == 0) {
+        if (sBuzzerSoundJustPlayed == 0) {
             func_02012790(0xe);
-            data_0209f27c = 1;
+            sBuzzerSoundJustPlayed = 1;
         }
     } else {
-        data_0209f27c = 0;
+        sBuzzerSoundJustPlayed = 0;
     }
     return 0;
 }
@@ -3528,7 +3528,7 @@ int StartWithFarCamera(void) {
 }
 
 unsigned char GetStarCameraSetting(int idx) {
-    return (data_02092134 >> (idx * 4)) & 0xf;
+    return (gStarCameraSettings >> (idx * 4)) & 0xf;
 }
 
 int GetMinimapScale(int idx) {
@@ -4664,7 +4664,7 @@ int dScStage_c::InitResources() {
         gNumMinimapTileObjs = 0;
         sNumMinimapScaleObjs = 0;
         gUnusedType13Objs = 0;
-        data_02092134 = 0x44444444;
+        gStarCameraSettings = 0x44444444;
         LoadLevelOverlays(gCurrentSublevel);
 
         if (!IsCastleFallCutsceneRunning()) {
@@ -5015,7 +5015,10 @@ void UnloadLevelOverlays(int levelID) {
     LoadOrUnloadObjectOverlays(UnloadOverlay, levelID);
 }
 
-void func_0202deac(int levelID) {
+/* The entry scene's early load: bring a level's overlays in before the
+   stage starts, and leave sLevelOverlaysPreloaded set so the stage's own
+   LoadLevelOverlays call only checks the overlay and clears it. Coined name. */
+void PreloadLevelOverlays(int levelID) {
     LoadLevelOverlays(levelID);
     sLevelOverlaysPreloaded = 1;
 }

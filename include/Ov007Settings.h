@@ -20,7 +20,7 @@ typedef struct Ov007BootArgs {
      * GetSoundMode 0/1/2 to 1/2/0, func_ov007_020b64a8 steps it and
      * func_ov007_020b7eec shows its message */
     u8 soundModeItem;
-    /* 0x09: the backlight setting (data_0208ee3c[0]); picks which of menu
+    /* 0x09: the backlight setting (gBacklightEnabled); picks which of menu
      * items 0xc and 0xd is live */
     u8 backlightOn;
     char pad_0a;

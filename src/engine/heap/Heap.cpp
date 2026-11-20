@@ -488,8 +488,8 @@ bool Heap_t::Intact()
 
     /* Latched once and never cleared -- the first corrupted heap in the run is
        the one worth reporting. */
-    if (!data_020a0e98)
-        data_020a0e98 = 1;
+    if (!Memory::heapDamaged)
+        Memory::heapDamaged = 1;
     return intact;
 }
 

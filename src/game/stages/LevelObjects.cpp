@@ -46,7 +46,7 @@ extern dCamera_c *gCamera;
 extern void *gUnusedType13Objs;
 extern daPly_c *gPlayers[];
 extern u8 data_0209fc5c[];
-extern unsigned int data_02092134;
+extern unsigned int gStarCameraSettings;
 extern u8 data_02092128[];
 
 /* The loaders' lookup tables, all ov002 .data. sEntranceWipes is the
@@ -290,7 +290,7 @@ void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
 /* Take the first word of the star-camera table and publish it. Reads no count,
  * unlike most of this family: it wants one value, not a list. */
 void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_02092134 = *(unsigned int *)table.entries;
+    gStarCameraSettings = *(unsigned int *)table.entries;
 }
 
 /* Walk the outer object table and dispatch each sub-table to the category

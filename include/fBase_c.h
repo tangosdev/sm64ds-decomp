@@ -196,6 +196,18 @@ struct fBase_c {
     static fBase_c *fBase_make(int, void *, u32, int);
     static fBase_c *createChild(u32, fBase_c *, u32, int);
     static int createRoot(int, u32, int);
+    /* The create path's statics, under NSMBW's f_base.hpp names.
+       m_rootUniqueID is the next uniqueID the constructor hands out and
+       post-increments. The four m_tmpCt* words are what setTmpCtData stages and the
+       constructor reads back: param1, the profile (actorID), the group type,
+       and the parent scene node it links under. Widths are the ROM's loads
+       and stores; the parent stays void *, which the constructor casts at
+       its one read. */
+    static u32 m_rootUniqueID;
+    static u32 m_tmpCtParam;
+    static u16 m_tmpCtProfName;
+    static u8 m_tmpCtGroupType;
+    static void *m_tmpCtConnectParent;
     /* The actor-heap allocator every process is created through; defined in
        src/runtime/actor/ActorBase.cpp. size_t is unsigned long under mwccarm,
        so this is _ZN7fBase_cnwEm, and `new T` on any class derived from this

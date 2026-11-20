@@ -31,11 +31,11 @@ extern u8 gCurrentStarId;
 extern signed char gCurrentAreaId;
 extern int data_02099f24;
 extern void *data_020a4b68;
-extern u16 data_020a4b50;
-extern u8 data_020a4b4c;
-extern unsigned int data_0209d3bc;
+extern u16 gCurrentSpawnID;
+extern u8 gBaseCreationState;
+extern unsigned int gLastUsedFileID;
 extern int data_020a0f38;
-extern int *data_0209cddc;
+extern int *gSavedRegisterValues;
 extern int data_0209cde0;
 extern int data_0209cdd8;
 extern void *data_0209cdd4;
@@ -72,14 +72,14 @@ void ShowCrashScreen(void)
     if (rr != 0 && rr < 6)
         nds_printf(scr + 0x180, data_0208e58c, rr, ProcessList::func_020441bc(rr));
 
-    hp = (data_020a4b68 != 0) ? ((fLiNdBaPr_c *)data_020a4b68)->owner->actorID : *&data_020a4b50;
+    hp = (data_020a4b68 != 0) ? ((fLiNdBaPr_c *)data_020a4b68)->owner->actorID : *&gCurrentSpawnID;
     if (hp != 0xffff) {
-        int bb = data_020a4b4c;
+        int bb = gBaseCreationState;
         nds_printf(scr + 0x1c0, data_0208e59c, hp, bb, GetActorDebugName(hp));
     }
 
-    if (data_0209d3bc != 0)
-        nds_printf(scr + 0x200, data_0208e5b0, data_0209d3bc);
+    if (gLastUsedFileID != 0)
+        nds_printf(scr + 0x200, data_0208e5b0, gLastUsedFileID);
 
     {
         u32 dispb = REG_IF;
@@ -91,14 +91,14 @@ void ShowCrashScreen(void)
         nds_printf(scr + 0x2c0, data_0208e5d4, data_020a0f38);
 
     {
-        int *regs = data_0209cddc;
+        int *regs = gSavedRegisterValues;
         if (regs != 0) {
             Buf52 buf = data_0208e504;
             int i;
             int *tail;
             { i = 0; if (i < 17) do { nds_printf(scr + (i + 3) * 0x40 + 0x28, data_0208e5e4,
                     &buf.c[i * 3], regs[i]); i++; } while (i < 17); }
-            tail = data_0209cddc + 0x19;
+            tail = gSavedRegisterValues + 0x19;
             nds_printf(scr + 0x528, data_0208e5f0, tail[0]);
             nds_printf(scr + 0x568, data_0208e5fc, tail[1]);
         }

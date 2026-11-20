@@ -84,11 +84,6 @@ extern int  data_020a4b88[];
 extern int  data_020a4b98[];
 extern int  data_020a4ba8[];
 extern int data_02099f24;
-extern u32  data_02099e70;
-extern u32  data_020a4b60;
-extern u16  data_020a4b54;
-extern u8   data_020a4b48;
-extern void *data_020a4b64;
 extern fBaseActorInfo **data_020a4bb8;
 
 struct LifecycleSequence {
@@ -238,15 +233,15 @@ fLiNdBa_c *ActorList::func_02043f4c(unsigned int key, fLiNdBa_c *after) {
 
 fBase_c::fBase_c() : manager(this)
 {
-    uniqueID = data_02099e70;
-    data_02099e70++;
-    param1 = data_020a4b60;
-    actorID = data_020a4b54;
-    mGroupType = data_020a4b48;
+    uniqueID = m_rootUniqueID;
+    m_rootUniqueID++;
+    param1 = m_tmpCtParam;
+    actorID = m_tmpCtProfName;
+    mGroupType = m_tmpCtGroupType;
 
     ((Absorb0203b438::N *)data_020a4b6c)
         ->func_0203b438((Absorb0203b438::N *)&manager.sceneNode,
-                        (Absorb0203b438::N *)data_020a4b64);
+                        (Absorb0203b438::N *)m_tmpCtConnectParent);
 
     fBaseActorInfo *info = data_020a4bb8[actorID];
     manager.SetBehaviorPriority(info->behaviorPriority);
@@ -697,14 +692,14 @@ extern int func_02043060(int actorID);
 extern "C" {
 
 /* The create hooks a scene installs, and the create entry's progress:
-   data_020a4b4c steps 2..5 through fBase_make and data_020a4b50 holds
+   gBaseCreationState steps 2..5 through fBase_make and gCurrentSpawnID holds
    the profile being created (0xffff when idle). */
 extern void (*data_020a4b5c)(int actorID);
 extern int (*data_020a4b58)(int actorID);
 }
 
-extern u16 data_020a4b50;
-extern u8 data_020a4b4c;
+extern u16 gCurrentSpawnID;
+extern u8 gBaseCreationState;
 
 int fBase_c::createPack() {
     return Process(data_02099ebc, data_02099ec4, data_02099e94);
@@ -762,36 +757,36 @@ int fBase_c::checkChildProcessCreateState() {
 /* Stage the arguments fBase_c::fBase_c reads while the factory runs, in
    NSMBW's setTmpCtData store order (param, profile, group type, parent). */
 void fBase_c::setTmpCtData(int actorID, void *parentNode, u32 param1, int groupType) {
-    data_020a4b60 = param1;
-    data_020a4b54 = actorID;
-    data_020a4b48 = groupType;
-    data_020a4b64 = parentNode;
+    m_tmpCtParam = param1;
+    m_tmpCtProfName = actorID;
+    m_tmpCtGroupType = groupType;
+    m_tmpCtConnectParent = parentNode;
 }
 
 /* The create entry: ask the scene's hook, stage the constructor's
    arguments, run the profile's factory, then link the new process. NSMBW's
    fBase_make has the same core (setTmpCtData, classInit, runCreate on a
-   built process); the scene hook and the data_020a4b4c progress steps are
+   built process); the scene hook and the gBaseCreationState progress steps are
    this game's own. */
 fBase_c *fBase_c::fBase_make(int actorID, void *parentNode, u32 param1, int groupType) {
     fBase_c *actor;
-    data_020a4b50 = (u16)actorID;
-    data_020a4b4c = 2;
+    gCurrentSpawnID = (u16)actorID;
+    gBaseCreationState = 2;
     if (func_02043060(actorID) == 3)
         return 0;
-    data_020a4b4c = 3;
+    gBaseCreationState = 3;
     setTmpCtData(actorID, parentNode, param1, groupType);
-    data_020a4b4c = 4;
+    gBaseCreationState = 4;
     actor = data_020a4bb8[actorID]->classInit();
     if (actor == 0) {
-        data_020a4b4c = 0;
-        data_020a4b50 = 0xffff;
+        gBaseCreationState = 0;
+        gCurrentSpawnID = 0xffff;
         return 0;
     }
-    data_020a4b4c = 5;
+    gBaseCreationState = 5;
     actor->runCreate();
-    data_020a4b4c = 0;
-    data_020a4b50 = 0xffff;
+    gBaseCreationState = 0;
+    gCurrentSpawnID = 0xffff;
     return actor;
 }
 

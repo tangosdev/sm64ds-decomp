@@ -57,7 +57,7 @@ extern FileSaveData *data_0209b33c;
 extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
 extern u8 data_0209b3d8[];
-extern u8 data_0208ee3c;
+extern u8 gBacklightEnabled;
 extern MinigameSaveData data_0209cae4;
 extern u8 gSoftResetPending;
 /* The scene's graph callback: the scene registers its own object here and
@@ -322,7 +322,7 @@ void DSMT_UpdateBootArgs(u32 saveSlot) {
         sBootArgs.soundModeItem = 0;
     }
 
-    sBootArgs.backlightOn = data_0208ee3c;
+    sBootArgs.backlightOn = gBacklightEnabled;
     data_0209b34b[saveSlot] = (gSaveBlock.file.flags1 & 1) != 0;
 
     highestUnlockedPlusOne = 3;

@@ -5,8 +5,8 @@
  * every member is static, the two OAM staging buffers and their counters
  * included, so the key-function/vtable partition rules never engage. The run is
  * contiguous and exhaustive: bounded below by func_02020768 and above by
- * dPa_c::level_c::cutTable. The OamAttr field initializer
- * func_02020820 opens the run under its own address name.
+ * dPa_c::level_c::cutTable. OamAnimation::Init, which arms an animation
+ * player from a {frames, count} pair, opens the run.
  *
  * Source order is ROM-ascending under `#pragma defer_codegen off` -- the
  * deferred default would read optimization pragmas last-wins at end of file
@@ -58,7 +58,7 @@ int func_0202043c(OamAnimation *anim);
 
 /* -------------------------------------------------------------------------- */
 
-void OamAnimation::func_02020820(int *src, int screen, int loops, u8 enabled, u8 affine) {
+void OamAnimation::Init(int *src, int screen, int loops, u8 enabled, u8 affine) {
     this->frames = (const OamAnimFrame *)src[0];
     this->frameCount = src[1];
     func_0202043c(this);
