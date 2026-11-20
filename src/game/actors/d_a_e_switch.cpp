@@ -6,7 +6,7 @@
  * daECreate_c spawns actor 0xce when its event bit rises and hands it to
  * daBmb_c::func_ov102_0214ad14, the Bob-omb's chase start (src/game/actors/
  * d_a_bmb.cpp).
- * data_ov002_0210d9e0 is the ov002 model handle daECreate_c loads.
+ * gBombheiModelFile is the ov002 model handle daECreate_c loads.
  */
 #include "EnemySwitchTag.h"
 #include "EnemySpawner.h"
@@ -15,7 +15,7 @@
 #include "Event.h"
 #include "daBmb_c.h"
 
-extern SharedFilePtr data_ov002_0210d9e0;
+extern SharedFilePtr gBombheiModelFile;
 
 daESwitch_c *daESwitch_c_classInit() {
     return new daESwitch_c;
@@ -42,12 +42,12 @@ int daECreate_c::InitResources() {
     mActorToSpawn = 0xce;
     mEventBit = mAngle.z & 0x1f;
     mPreviousEventBit = Event::GetBit(mEventBit);
-    dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+    dExtSimpleModel_c::LoadFile(gBombheiModelFile);
     return 1;
 }
 
 int daECreate_c::CleanupResources() {
-    data_ov002_0210d9e0.Release();
+    gBombheiModelFile.Release();
     return 1;
 }
 

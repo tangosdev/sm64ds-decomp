@@ -27,6 +27,7 @@
  * fBase_make, createChild and createRoot.
  */
 #include "fBase_c.h"
+#include "fManager_c.h"
 #include "Heap.h"
 #include "Memory.h"
 #include "msl/string.h"
@@ -78,12 +79,6 @@ extern int  func_0203b2ec(void *l, void *n, void *p);
 }
 
 extern void *data_020a4b68;
-extern int  data_020a4b6c[];
-extern int  data_020a4b78[];
-extern int  data_020a4b88[];
-extern int  data_020a4b98[];
-extern int  data_020a4ba8[];
-extern int data_02099f24;
 extern fBaseActorInfo **data_020a4bb8;
 
 struct LifecycleSequence {
@@ -100,7 +95,8 @@ struct LifecycleSequence {
    include/fBase_c.h, which needs it for its inline operator delete. */
 
 /* aliveState is 0 before the actor joins the lists, 1 while it is alive
- * in them and 2 once it is dying; data_02099f24 is the frame loop's phase word.
+ * in them and 2 once it is dying; fManager_c::m_nowLoopProc is the frame
+ * loop's phase.
  * These int-returning predicates are what make the ROM materialize 0/1
  * before testing it. */
 static inline int IsPendingState(u32 state) {
@@ -112,8 +108,8 @@ static inline int IsAliveState(u32 state) {
 static inline int IsDyingState(u32 state) {
     return state == 2;
 }
-static inline int GlobalModeIs(int value) {
-    return data_02099f24 == value;
+static inline int IsNowLoopProc(int value) {
+    return fManager_c::m_nowLoopProc == value;
 }
 static inline int PriorityChanged(fLiNdBaPr_c *node) {
     return node->nextPriority != node->currentPriority;
@@ -239,7 +235,7 @@ fBase_c::fBase_c() : manager(this)
     actorID = m_tmpCtProfName;
     mGroupType = m_tmpCtGroupType;
 
-    ((Absorb0203b438::N *)data_020a4b6c)
+    ((Absorb0203b438::N *)&fManager_c::m_connectManage)
         ->func_0203b438((Absorb0203b438::N *)&manager.sceneNode,
                         (Absorb0203b438::N *)m_tmpCtConnectParent);
 
@@ -295,20 +291,19 @@ bool fBase_c::BeforeInitResources()
 }
 
 /* vtable slot 2. Only acts on VS_SUCCESS (2): unlink from the pending list,
- * then either flag the actor as deferred (when the global at data_02099f24
- * reads 3) or link it into both the behaviour and render lists and mark it
- * alive. */
+ * then either flag the actor as deferred (while the execute loop runs) or
+ * link it into both the behaviour and render lists and mark it alive. */
 void fBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
-    func_0203b27c(data_020a4b88, &manager.behaviorNode);
-    if (GlobalModeIs(3)) {
+    func_0203b27c(&fManager_c::m_createManage, &manager.behaviorNode);
+    if (IsNowLoopProc(fManager_c::EXECUTE)) {
         mDeferExecute = 1;
         return;
     }
-    ((Absorb0204405c::L *)data_020a4b78)->func_0204405c(&manager.behaviorNode);
-    ((Absorb0204405c::L *)data_020a4b98)->func_0204405c(&manager.renderNode);
+    ((Absorb0204405c::L *)&fManager_c::m_executeManage)->func_0204405c(&manager.behaviorNode);
+    ((Absorb0204405c::L *)&fManager_c::m_drawManage)->func_0204405c(&manager.renderNode);
     aliveState = 1;
 }
 
@@ -334,9 +329,9 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
-    ((Absorb0203b3c0::Node *)data_020a4b6c)
+    ((Absorb0203b3c0::Node *)&fManager_c::m_connectManage)
         ->func_0203b3c0((Absorb0203b3c0::Node *)&manager.sceneNode);
-    func_0203b27c(data_020a4ba8, &manager.behaviorNode);
+    func_0203b27c(&fManager_c::m_deleteManage, &manager.behaviorNode);
     if (heap)
         ((Heap *)heap)->_Destroy();
     if (lifecycleState)
@@ -401,12 +396,12 @@ int fBase_c::connectProc() {
         fBase_c::SceneNode *it;
         shouldBeKilled = 0;
         if (IsAliveState(aliveState)) {
-            func_0203b27c(data_020a4b78, &manager.behaviorNode);
-            func_0203b27c(data_020a4b98, &manager.renderNode);
+            func_0203b27c(&fManager_c::m_executeManage, &manager.behaviorNode);
+            func_0203b27c(&fManager_c::m_drawManage, &manager.renderNode);
         } else {
-            func_0203b27c(data_020a4b88, &manager.behaviorNode);
+            func_0203b27c(&fManager_c::m_createManage, &manager.behaviorNode);
         }
-        func_0203b20c(data_020a4ba8, &manager.behaviorNode);
+        func_0203b20c(&fManager_c::m_deleteManage, &manager.behaviorNode);
         aliveState = 2;
         for (it = manager.sceneNode.child; it != 0; it = it->next) {
             it->owner->MarkForDestruction();
@@ -430,30 +425,32 @@ int fBase_c::connectProc() {
                 fLiNdBaPr_c *n = (&manager.behaviorNode);
                 if (PriorityChanged(n)) {
                     fLiNdBaPr_c *m;
-                    func_0203b27c(data_020a4b78, &manager.behaviorNode);
+                    func_0203b27c(&fManager_c::m_executeManage, &manager.behaviorNode);
                     m = (&manager.behaviorNode);
                     m->currentPriority = m->nextPriority;
-                    ((Absorb0204405c::L *)data_020a4b78)->func_0204405c(m);
+                    ((Absorb0204405c::L *)&fManager_c::m_executeManage)->func_0204405c(m);
                 }
             }
             {
                 fLiNdBaPr_c *n = (&manager.renderNode);
                 if (PriorityChanged(n)) {
                     fLiNdBaPr_c *m;
-                    func_0203b27c(data_020a4b98, &manager.renderNode);
+                    func_0203b27c(&fManager_c::m_drawManage, &manager.renderNode);
                     m = (&manager.renderNode);
                     m->currentPriority = m->nextPriority;
-                    ((Absorb0204405c::L *)data_020a4b98)->func_0204405c(m);
+                    ((Absorb0204405c::L *)&fManager_c::m_drawManage)->func_0204405c(m);
                 }
             }
         } else if (!IsDyingState(state)) {
             if (mDeferRetryCreate != 0) {
                 mDeferRetryCreate = 0;
-                func_0203b244(data_020a4b88, &manager.behaviorNode);
+                func_0203b244(&fManager_c::m_createManage, &manager.behaviorNode);
             } else if (mDeferExecute != 0) {
                 mDeferExecute = 0;
-                ((Absorb0204405c::L *)data_020a4b78)->func_0204405c(&manager.behaviorNode);
-                ((Absorb0204405c::L *)data_020a4b98)->func_0204405c(&manager.renderNode);
+                ((Absorb0204405c::L *)&fManager_c::m_executeManage)
+                    ->func_0204405c(&manager.behaviorNode);
+                ((Absorb0204405c::L *)&fManager_c::m_drawManage)
+                    ->func_0204405c(&manager.renderNode);
                 aliveState = 1;
             }
         }
@@ -648,7 +645,7 @@ void *fBase_c::operator new(size_t size) {
 
 /* fBase_make calls this on each new process. Same test order as NSMBW's
  * runCreate: not delete-requested, not deferred, still creating; then flag
- * a retry while the create loop runs (data_02099f24 == 2), or queue it on
+ * a retry while the create loop runs (m_nowLoopProc == CREATE), or queue it on
  * the create list. */
 void fBase_c::runCreate() {
     createPack();
@@ -658,11 +655,11 @@ void fBase_c::runCreate() {
         return;
     if (!IsPendingState(aliveState))
         return;
-    if (GlobalModeIs(2)) {
+    if (IsNowLoopProc(fManager_c::CREATE)) {
         mDeferRetryCreate = 1;
         return;
     }
-    func_0203b244(data_020a4b88, &manager.behaviorNode);
+    func_0203b244(&fManager_c::m_createManage, &manager.behaviorNode);
 }
 
 /* The four Process wrappers below 0x020433b8. Each runs Process with one

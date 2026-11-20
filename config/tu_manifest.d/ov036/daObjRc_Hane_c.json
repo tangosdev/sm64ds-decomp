@@ -304,6 +304,11 @@
       "canonical_module": "ov036",
       "canonical_address": "0x02113c38",
       "reason": "This class's own vtable, vague-linkage and emitted here because the inline destructor declared first makes this TU the key-function home. The cartridge's own copy lives at ov036:0x02113c38, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does. MEASURED in extracted/dsd/arm9_overlays/ov036.bin: symbols.txt's 0x02113c38 IS the address point -- 0x02113c30 is the offset-to-top word 0, 0x02113c34 is 0x02113bf4 (&_ZTI14daObjRc_Hane_c), and 0x02113c38 is slot 0 = 0x02111854 (InitResources). The table is 31 words and ends at 0x02113cb4, which is already daObjRc_Tikuwa_c's typeinfo; _ZTV8dActor_c is the same 31 words, so there is no slot 31 to carry Kill."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "reason": "Vector3's empty destructor from include/types.h, dragged in by UpdateModelTransform's Vector3 local (the Vec3_Asr result, round 10). It HAS a ROM home -- arm9:0x020072c0, kind:function(arm,size=0x4) in config/arm9/symbols.txt -- owned by another source, so this object's copy is a vague-linkage duplicate rather than compiler-only output. rombuild proves the body against the cartridge before discarding it."
     }
   ],
   "verification": {
@@ -469,9 +474,9 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@391",
+      "from": "@425",
       "to": "@307",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @321 now; licensed under the existing pin @307 | re-keyed by __sinit relocation-site order after including math/MtxStack.h (its inline statics) shifted the TU's @NNN uniquifier; Re-keyed +5 (@374 -> @379) when Behavior reads the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @379 to @372 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @372 to @384 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @384 to @389 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @389 to @391 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @321 now; licensed under the existing pin @307 | re-keyed by __sinit relocation-site order after including math/MtxStack.h (its inline statics) shifted the TU's @NNN uniquifier; Re-keyed +5 (@374 -> @379) when Behavior reads the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @379 to @372 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @372 to @384 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @384 to @389 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @389 to @391 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @391 to @425 when UpdateModelTransform's Vec3_Asr result became a Vector3 local (round 10; code bytes unchanged) (measured from the compiled object)."
     }
   ]
 }

@@ -70,10 +70,10 @@ void SetSubBg0Offset(int a, int b);
 void FreeGfxSlotsById(int arg);
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+void Hud_RenderSprite(OamAttr *a, int b, int c, int d, int e);
 void Mg_SubmitScore(int a);
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *d);
-void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
+void Mg_RenderSubSpriteMtx(OamAttr *a, int b, int c, Matrix2x2 *d);
+void Mg_RenderSpriteBoth(OamAttr *a, int b, int c, int d, int e);
 void Mg_SetSharedState(int a);
 void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Mg_DrawBigNumber(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
@@ -98,12 +98,12 @@ dScMgPanel_c::~dScMgPanel_c() {}
 /* Draw the live particles: 64 slots of 0x18 bytes, sprite chosen by the
    slot's kind byte and positioned from its fx32 x/y. */
 void dScMgPanel_c::Particle_DrawAll() {
-    extern int sPanelParticleSprites[];
+    extern OamAttr *sPanelParticleSprites[];
     int i;
     for (i = 0; i < 64; i++) {
         if (mParticles[i].visible != 0) {
-            Mg_RenderSpriteBoth((void *)sPanelParticleSprites[mParticles[i].kind],
-                                mParticles[i].x >> 12, mParticles[i].y >> 12, -1, -1);
+            Mg_RenderSpriteBoth(sPanelParticleSprites[mParticles[i].kind], mParticles[i].x >> 12,
+                                mParticles[i].y >> 12, -1, -1);
         }
     }
 }
@@ -329,7 +329,7 @@ void dScMgPanel_c::Shake_Stop() {
 }
 
 void dScMgPanel_c::Banner_Draw() {
-    extern void *sPanelBannerSprites[];
+    extern OamAttr *sPanelBannerSprites[];
     if (mBanner.visible == 0)
         return;
     Mg_RenderSubSpriteMtx(sPanelBannerSprites[0], mBanner.x >> 12, mBanner.y >> 12, 0);
@@ -380,15 +380,15 @@ void dScMgPanel_c::Banner_Show(int i) {
 }
 
 void dScMgPanel_c::DrawCursor() {
-    extern void *sPanelCursorSprites[];
+    extern OamAttr *sPanelCursorSprites[];
     if (mCreditsOn == 0)
         return;
     Hud_RenderSprite(sPanelCursorSprites[mCredits], 0xf0, 0x24, -1, -1);
 }
 
 void dScMgPanel_c::DrawHud() {
-    extern void *sPanelHudSprites[];
-    extern void *data_ov006_02136de8[];
+    extern OamAttr *sPanelHudSprites[];
+    extern OamAttr *data_ov006_02136de8[];
     if (mSlideFlag == 0)
         return;
     if (mSlideStep != 4) {

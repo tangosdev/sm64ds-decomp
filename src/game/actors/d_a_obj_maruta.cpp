@@ -112,7 +112,7 @@ static inline int IsActorID(dActor_c *actor, int id) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
-int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
+int daObjMaruta_c::func_ov080_0212714c(const int *maxDist) {
     Vector3 offset;
     int len;
     int ang;

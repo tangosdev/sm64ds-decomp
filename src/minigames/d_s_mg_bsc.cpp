@@ -73,7 +73,7 @@ extern void Mg_SetSharedState(int v);
 extern void Mg_SaveRecordPair(int a, int b);
 extern int sMgCoinsBetPlaced;
 extern void FreeGfxSlotsById(int arg);
-void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
+void Hud_RenderSprite(OamAttr *sprite, int x, int y, int a3, int a4);
 extern unsigned char gMainScreenLayers;
 extern int gFrameStep;
 extern s32 GetGameLanguage(void);

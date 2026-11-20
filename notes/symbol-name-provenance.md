@@ -174,13 +174,16 @@ method that matches -- which is the strongest form of check this note describes.
 
 `KillByAttack` was on ov004 0x020aea30, whose body walks an 8-byte table to an
 0xffff sentinel: r0 is a table base, not an actor. The ov002 function at the same
-address dispatches a pointer-to-member from `data_ov002_0210db80[mDeathState - 1]`
+address dispatches a pointer-to-member from `sEnemyDeathStartFuncs[mDeathState - 1]`
 after clearing bit 0x10000000 of mFlags and zeroing mDeathTimer -- an enemy method,
 and the one all 34 enemy-overlay call sites reach. ov004's is now
-`func_ov004_020aea30`; ov002's keeps its placeholder rather than inherit a name
-coined against the wrong body, but its arity is settled: an unused fourth argument
-makes it match, and the call sites spell the first three
-`(dActor_c *attacker, dBgCh_Actr *clsn, int kind)`.
+`func_ov004_020aea30`. ov002's first kept its placeholder, but the community
+spelling `Enemy::KillByAttack(Actor &)` describes an enemy method taking an
+attacker, which is the ov002 body, not the ov004 table walk; only this repo's
+overlay placement was wrong. Naming r25 gave it the name:
+`dEnemyBase_c::KillByAttack(dActor_c *, dBgCh_Actr *)`, beside
+`KillByInvincibleChar`. Every caller stores the death kind in mDeathState from
+its hit flags, then passes the attacker.
 
 **The lesson for this note.** An arity disagreement is worth treating as a symptom,
 not just a defect in the count. Both of these turned out to be the name pointing at

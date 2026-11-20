@@ -196,7 +196,7 @@ struct daBtn_c : dEnemyBase_c {
     /* Contact while the body lies flat: hits arm mPounded, other touches
        pay out one coin apiece while mCoinsLeft lasts. */
     void func_ov079_02125058(dActor_c *other);
-    static void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
+    static void StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other);
     void func_ov079_02124dec();
     void func_ov079_02124ed4();
     void func_ov079_02125504();

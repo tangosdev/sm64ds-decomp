@@ -77,15 +77,15 @@ struct daKpFr_c : dActor_c {
     void func_ov070_02121be4();
     void func_ov070_02121c8c();
     void func_ov070_02121cbc();
-    void func_ov070_02121d50(void *vclsn);
+    void func_ov070_02121d50(dBgCh_Actr *clsn);
     void UpdateShadow();
     int func_ov070_02121eb0();
     int func_ov070_02121ef8();
     int func_ov070_02121f18();
     int func_ov070_02121fb0();
     void CallStateBehavior();
-    void func_ov070_0212200c();
-    void func_ov070_02122044(int idx);
+    void CallStateInit();
+    void SetState(int idx);
 };
 
 #ifndef SM64DS_PLATFORM_PC

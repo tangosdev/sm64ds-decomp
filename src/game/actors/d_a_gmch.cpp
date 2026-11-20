@@ -292,13 +292,12 @@ void daGmch_c::CheckPlayerContact()
 }
 
 /* Adjust vertical speed from the floor normal; callers need no result. */
-void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
-{
+void daGmch_c::ApplySlopeToVertSpeed(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
     func_02038414(clsn);
-    if (((dBgCh_Actr *)clsn)->IsOnGround()) {
-        ((dBgCh_Actr *)clsn)->GetFloorResult()->surface.CopyNormalTo(floorNormal);
+    if (clsn->IsOnGround()) {
+        clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
             /* mSpeed.x / mSpeed.z: world velocity X/Z next to mSpeed.y. */
             s32 velX = mSpeed.x;
@@ -310,8 +309,8 @@ void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
             mSpeed.y = -(slope + 0x8000);
         }
     }
-    if (((dBgCh_Actr *)clsn)->IsOnWall()) {
-        ((dBgCh_Actr *)clsn)->GetWallResult()->surface.CopyNormalTo(wallNormal);
+    if (clsn->IsOnWall()) {
+        clsn->GetWallResult()->surface.CopyNormalTo(wallNormal);
     }
 }
 
@@ -794,13 +793,12 @@ int daGmch_c::Behavior()
 int daGmch_c::InitResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern SharedFilePtr data_ov002_0210d9b8;
-    extern Matrix4x3 IDENTITY_MATRIX4X3;
+    extern SharedFilePtr gCoinYellowPoly32ModelFile;
 
     Vector3 pos;
     BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov081_02128ed4);
     mAnmModel.SetFile(modelFile, 1, 1);
-    if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
+    if (mModel.SetFile((BMD_File *)gCoinYellowPoly32ModelFile.filePtr, 1, 1) == 0)
         return 0;
     for (int i = 0; i < 4; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov081_021280d8[i]);

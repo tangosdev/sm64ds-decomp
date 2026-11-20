@@ -9,6 +9,6 @@ void func_ov007_020b697c(void) {
     int i;
     void *n = func_ov007_020b3f20(0x16);
     for (i = 0; i < 11; i++) {
-        WORK->textures[i] = func_ov007_020b2308(n, i);
+        gMenuWork->textures[i] = func_ov007_020b2308(n, i);
     }
 }

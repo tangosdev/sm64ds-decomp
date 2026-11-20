@@ -34,7 +34,7 @@ typedef struct Ov007BootArgs {
     u8 firstStar[3][15];   /* 0x6b: per save file and course, star 0 collected */
     u8 level1dStars[3];    /* 0x98: the displayed star count of level 0x1d */
     char pad_9b;
-    /* 0x9c: dScDSMT_c::InitResources copies data_0209d6fc here, the
+    /* 0x9c: dScDSMT_c::InitResources copies gMessageBankBase here, the
      * message file Message.cpp reads */
     void *messages;
 #ifdef __cplusplus

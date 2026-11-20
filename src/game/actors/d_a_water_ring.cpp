@@ -41,14 +41,14 @@ extern int (daWater_Ring_c::*data_ov064_0211c3c8)();
 extern int (daWater_Ring_c::*data_ov064_0211c3c0)();
 extern int (daWater_Ring_c::*data_ov064_0211c3b8)();
 extern Vector3 data_ov064_0211c3d0; /* the collider offset */
-extern char data_ov002_0210d6dc[];  /* the ring's BTA */
+extern BTA_File data_ov002_0210d6dc; /* the ring's BTA */
 
 /* local extern: no shared header declares these. */
 extern "C" {
 int AngleDiff(int a, int b);
 }
 
-extern SharedFilePtr data_ov002_0210da10; /* the ring's BMD */
+extern SharedFilePtr gWRingModelFile; /* the ring's BMD */
 
 daWater_Ring_c::~daWater_Ring_c() {}
 
@@ -181,7 +181,7 @@ void daWater_Ring_c::UpdateModel() {
 }
 
 int daWater_Ring_c::CleanupResources() {
-    data_ov002_0210da10.Release();
+    gWRingModelFile.Release();
     return 1;
 }
 
@@ -209,7 +209,7 @@ int daWater_Ring_c::Behavior() {
 }
 
 int daWater_Ring_c::InitResources() {
-    BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
+    BMD_File *f = dExtSimpleModel_c::LoadFile(gWRingModelFile);
     if (mModel.SetFile(f, 1, -1) == 0)
         return 0;
 
@@ -218,9 +218,8 @@ int daWater_Ring_c::InitResources() {
         mRingType = 0;
     }
 
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov002_0210da10.filePtr,
-                             *(BTA_File *)data_ov002_0210d6dc);
-    mTextureTransformer.SetFile(*(BTA_File *)data_ov002_0210d6dc, 0, 0x1000, 0);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gWRingModelFile.filePtr, data_ov002_0210d6dc);
+    mTextureTransformer.SetFile(data_ov002_0210d6dc, 0, 0x1000, 0);
 
     mTextureTransformer.speed = 0x1000;
     mScale.x = 0x1000;

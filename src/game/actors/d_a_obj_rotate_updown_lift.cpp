@@ -56,6 +56,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
 
@@ -128,12 +129,6 @@ extern UpdownClpsSlot data_ov091_02134c38[];
 extern s8 gCurrentSublevel;
 
 extern "C" {
-void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-void VEC_Subtract(void *a, void *b, void *c);
-int VEC_Mag(void *v);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
                                             int scale, s16 angY, CLPS_Block *clps);
 }
@@ -394,7 +389,7 @@ int daObjRotateUpdownLift_c::Behavior()
         mPitchBase += mPitchStep;
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
-        VEC_Subtract(&mPos.x, &stepVec, &mPos.x);
+        VEC_Subtract(&mPos, &stepVec, &mPos);
     }
 
     if (arrived != 0) {

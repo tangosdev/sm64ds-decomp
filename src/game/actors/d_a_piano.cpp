@@ -44,9 +44,9 @@ struct PianoAnimationFilePtr : SharedFilePtr {
     ~PianoAnimationFilePtr();
 };
 
-extern PianoModelFilePtr gPianoModelFile;
-extern PianoCollisionFilePtr gPianoCollisionFile;
-extern PianoAnimationFilePtr gPianoAttackAnimationFile;
+extern PianoModelFilePtr sPianoModelFile;
+extern PianoCollisionFilePtr sPianoCollisionFile;
+extern PianoAnimationFilePtr sPianoAttackAnimationFile;
 int data_ov063_0211ecb8[8] = {0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
                               0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 
@@ -64,12 +64,12 @@ int daPiano_c::InitResources() {
     dCcAcPos_c *cylinder;
     void *f;
 
-    f = dExtSimpleModel_c::LoadFile(gPianoModelFile);
+    f = dExtSimpleModel_c::LoadFile(sPianoModelFile);
     mAnmModel.SetFile((BMD_File *)f, 1, -1);
     mShadowModel1.InitCuboid();
     mShadowModel2.InitCuboid();
     mShadowModel3.InitCylinder();
-    f = dExtFrameCtrl_c::LoadFile(gPianoAttackAnimationFile);
+    f = dExtFrameCtrl_c::LoadFile(sPianoAttackAnimationFile);
     mAnmModel.SetAnim((BCA_File *)f, 0, 0x1000, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -84,7 +84,7 @@ int daPiano_c::InitResources() {
         cylinder->Init(this, mPos, 0x9b000, 0xfa000, 0x200004, 0);
         cylinder++;
     }
-    f = dBgW_Kc::LoadFile(gPianoCollisionFile);
+    f = dBgW_Kc::LoadFile(sPianoCollisionFile);
     mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x199, mAngle.y,
                           /* Kept (#821 r76): genuine; this TU defines the CLPS block as its words
                              and CLPS_Block is opaque (CLPS.h). */
@@ -134,9 +134,9 @@ int daPiano_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
-    gPianoModelFile.Release();
-    gPianoAttackAnimationFile.Release();
-    gPianoCollisionFile.Release();
+    sPianoModelFile.Release();
+    sPianoAttackAnimationFile.Release();
+    sPianoCollisionFile.Release();
     return 1;
 }
 
@@ -397,9 +397,9 @@ void daPiano_c::UpdateShadows() {
  * PMF table copies its four {ptr, adj} records. mwcc emits all of it as
  * __sinit_d_a_piano.cpp in .init; the handwritten __sinit_ov063_0211e5fc.c
  * is retired. */
-PianoModelFilePtr data_ov063_0211ef80(MAD_PIANO_MODEL_ASSET);
-PianoCollisionFilePtr data_ov063_0211ef88(MAD_PIANO_COLLISION_ASSET);
-PianoAnimationFilePtr data_ov063_0211ef90(MAD_PIANO_ATTACK_ANIMATION_ASSET);
+PianoModelFilePtr sPianoModelFile(MAD_PIANO_MODEL_ASSET);
+PianoCollisionFilePtr sPianoCollisionFile(MAD_PIANO_COLLISION_ASSET);
+PianoAnimationFilePtr sPianoAttackAnimationFile(MAD_PIANO_ATTACK_ANIMATION_ASSET);
 
 PianoStateEntry data_ov063_0211efbc[2] = {
     {&daPiano_c::InitStateSearch, &daPiano_c::StateSearch},

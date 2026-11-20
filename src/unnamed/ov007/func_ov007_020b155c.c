@@ -9,7 +9,7 @@ extern void func_ov007_020b1604(void);
  * fade 2 for pending choices 0xa and 0xb, fade 1 otherwise. Unless the
  * choice is 8 it also passes 0x13 to the work block's callback. */
 void func_ov007_020b155c(void) {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     if (w->states[1]->stateTicks != 0)
         return;
     {
@@ -22,7 +22,7 @@ void func_ov007_020b155c(void) {
             } else {
                 RequestScreenFade(1, 0, func_ov007_020b1604);
             }
-            WORK->callback(0x13);
+            gMenuWork->callback(0x13);
         }
     }
     func_ov007_020c1d8c(0);

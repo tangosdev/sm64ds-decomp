@@ -30,7 +30,7 @@ void func_0203bc7c(void);
 }
 
 void func_02023498(void);
-#include "ProcessList.h"
+#include "fManager_c.h"
 void func_02019404(void);
 extern "C" {
 
@@ -54,7 +54,7 @@ int func_02030e4c(void);
    step it is in. Each frame: the lid check (func_02019ac4), the frame
    start (func_02019390), the touch and button records (func_0203bb60,
    func_0203bc7c), the soft reset check (func_02023498), the scene spawn
-   and the process lists (dScene_c::SpawnIfNecessary, func_02044120),
+   and the process lists (dScene_c::SpawnIfNecessary, fManager_c::mainLoop),
    GraphCallback1 (func_02019404), the frame count gGlobalTimer, the 3D
    swap request (func_020190b8) with the VBlank IRQ held, the frame wait
    (func_0201a4bc) and the link step (func_0201ffcc). The active player's
@@ -79,7 +79,7 @@ void func_020197b8(void) {
         data_0209d50c = 3;
         dScene_c::SpawnIfNecessary();
         data_0209d50c = 4;
-        ProcessList::func_02044120();
+        fManager_c::mainLoop();
         data_0209d50c = 5; func_02019404();
         data_0209d50c = 6;
         gGlobalTimer = gGlobalTimer + 1;

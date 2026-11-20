@@ -50,7 +50,6 @@ unsigned char NumStars(void);
 void SetTouchScreenDelay(void);
 u8 IsAreaShowing(int areaID);
 extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, const Vector3 *in);
 int AngleDiff(int a, int b);
 }
 extern u8 gLocalPlayerId;

@@ -79,7 +79,7 @@ data_ov001_020aba60 kind:data(any) addr:0x020aba60
 data_ov001_020aba68 kind:data(any) addr:0x020aba68
 _ZN3OAM7NUMBERSE kind:data(any) addr:0x020aba70 ambiguous
 _ZN3OAM16SMALL_STAR_EMPTYE kind:data(any) addr:0x020abac0 ambiguous
-data_ov001_020abac8 kind:data(any) addr:0x020abac8 ambiguous
+_ZN3OAM11SILVER_STARE kind:data(any) addr:0x020abac8 ambiguous
 _ZN3OAM10POWER_STARE kind:data(any) addr:0x020abad0 ambiguous
 _ZN3OAM4COINE kind:data(any) addr:0x020abad8 ambiguous
 data_ov001_020abae0 kind:data(any) addr:0x020abae0

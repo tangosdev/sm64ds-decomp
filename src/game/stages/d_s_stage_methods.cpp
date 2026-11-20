@@ -153,23 +153,13 @@ extern u8 gSubScreenLayers;
 extern Timer gRaceTimer;
 extern int data_0209fc68;
 extern int gGlobalTimer;
-extern u8 data_ov002_02111150;
+extern u8 gVsExitingCourse;
 extern u8 gMeterCounterSlideState;
 extern u8 gZoomButtonActiveTimer;
-extern OamAttr data_ov002_0210cea8;
-extern OamAttr data_ov002_0210cee8;
-extern OamAttr data_ov002_0210cf28;
-extern OamAttr data_ov002_0210cf78;
-extern OamAttr data_ov002_0210cb14;
-extern OamAttr data_ov002_0210ce90;
-extern OamAttr data_ov002_0210ced0;
-extern OamAttr data_ov002_0210cf08;
-extern OamAttr data_ov002_0210cfa0;
-extern OamAttr data_ov002_0210caf4;
-extern void *data_ov001_020abd98[];
-extern void *data_ov001_020ac218[];
-extern void *data_ov001_020ac64c[];
-extern void *data_ov001_020acb68[];
+extern OamAttr *data_ov001_020abd98[];
+extern OamAttr *data_ov001_020ac218[];
+extern OamAttr *data_ov001_020ac64c[];
+extern OamAttr *data_ov001_020acb68[];
 }
 
 /* The level-state globals the stage's free functions below read and write: the
@@ -461,7 +451,7 @@ extern s8 data_0209f30d;
    sound is 0x19 + it) and each player's stars in a VS match. */
 s8 gNumStageStars[4];
 extern s8 data_0209f311;
-static int data_0209f314;
+static StageArea *data_0209f314;
 /* The stage's camera: LoadEntranceObjects spawns it (profile 0x14c) once the
    players are placed, and CleanupResources clears it. */
 dCamera_c *gCamera;
@@ -478,7 +468,7 @@ void *gUnusedType13Objs;
 /* The castle rabbit with the star key: daMip_c rabbit 7 registers itself
    while save flags1 bit 0x40 is clear, and dMap_c blinks its icon on the
    map under the same test. */
-void *gCastleKeyRabbit;
+dActor_c *gCastleKeyRabbit;
 static LevelInfo *sLevelInfo;
 /* The row of VS_STAR_SPAWN_ORDERS the stars appear in: InitResources picks
    row func_0203dad4() % 6. */
@@ -509,7 +499,7 @@ u8 gStarMarkerTypes[12];
 daPly_c *gPlayers[4];
 /* The level's spike bombs (daKirai_c), registered by AddSpikeBomb and
    removed by ClearSpikeBomb; dMap_c draws an icon for each. */
-void *gSpikeBombs[8];
+dActor_c *gSpikeBombs[8];
 /* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
 /* The cap slots: the actor whose cap each of the nine holds, 0 when free.
@@ -522,9 +512,6 @@ dActor_c *STAR_MARKERS[12];
    touch screen each frame and ResetInput clears them; the player, camera,
    meter and map read them. */
 ControllerInput data_0209f498[4];
-/* The mode byte of record 0 (+0x16); SetControllerMode, InitControllerMode
-   and PS_Update index it by player * 0x18. */
-extern u8 data_0209f4ae[];
 /* The actor death table: a 16-word bit row per level part, indexed by an
    actor's deathTableID. InitResources clears it only when the course
    changes, so it survives a reload of the same course. */
@@ -564,22 +551,7 @@ static inline int IsTouchJustBegun(int slot) {
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
-extern void *data_ov002_0210ca0c[];
-extern int data_ov002_0210cfd0[];
-extern OamAttr data_ov002_0210d008;
-extern int data_ov002_0210d050[];
-extern OamAttr data_ov002_0210d098;
-extern int data_ov002_0210d0e8[];
-extern OamAttr data_ov002_0210d130;
-extern int data_ov002_0210d188[];
-extern OamAttr data_ov002_0210d1c8;
-extern OamAttr data_ov002_0210d210;
-extern OamAttr data_ov002_0210d378;
-extern OamAttr data_ov002_0210d3a0;
-extern OamAttr data_ov002_0210d3c0;
-extern OamAttr data_ov002_0210d3e0;
-extern OamAttr data_ov002_0210d420;
-extern u16 data_ov002_02111188;
+extern u16 gVsTimerTickTimer;
 }
 
 /* The free functions this file defines, declared ahead of their first use
@@ -712,7 +684,7 @@ void dScStage_c::VE_Update() {
             sMenuWaitTimer = gFrameStep << 3;
             dScStage_c::UpdateMenuButtons(0);
             sVsExitScreenStep = 1;
-            data_ov002_02111150 = 1;
+            gVsExitingCourse = 1;
             func_02012790(0x9a);
             if ((u8)(gTouchInfo[gActivePlayerSlot].x - 40) < 176)
                 return;
@@ -730,7 +702,7 @@ void dScStage_c::VE_Update() {
             dScStage_c::UpdateMenuButtons(0);
             sMenuWaitTimer = gFrameStep << 3;
             sVsExitScreenStep = 1;
-            data_ov002_02111150 = 1;
+            gVsExitingCourse = 1;
             func_02012790(0x9b);
             if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                 return;
@@ -817,40 +789,40 @@ void dScStage_c::LC_Render() {
     if (SublevelToLevel(gLastCourseSublevel) >= 0xf &&
         SublevelToLevel(gLastCourseSublevel) < 0x15) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, &data_ov002_0210cea8, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS_ES, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, &data_ov002_0210cee8, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS_IT, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, &data_ov002_0210cf28, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS_DE, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, &data_ov002_0210cf78, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS_FR, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, &data_ov002_0210cb14, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
     }
 
     if (sLevelClearNewRecord != 0) {
         if (data_0209f20c != 0 && SublevelToLevel(gLastCourseSublevel) >= 0xf) {
             if (GetOwnerLanguage() == 5)
-                OAM::Render(0, &data_ov002_0210ce90, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_ES, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 4)
-                OAM::Render(0, &data_ov002_0210ced0, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_IT, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 3)
-                OAM::Render(0, &data_ov002_0210cf08, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_DE, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 2)
-                OAM::Render(0, &data_ov002_0210cfa0, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_FR, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else
-                OAM::Render(0, &data_ov002_0210caf4, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             if (GetOwnerLanguage() == 5)
-                OAM::Render(0, &data_ov002_0210ce90, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_ES, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 4)
-                OAM::Render(0, &data_ov002_0210ced0, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_IT, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 3)
-                OAM::Render(0, &data_ov002_0210cf08, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_DE, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 2)
-                OAM::Render(0, &data_ov002_0210cfa0, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE_FR, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else
-                OAM::Render(0, &data_ov002_0210caf4, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
         }
     }
 
@@ -1297,23 +1269,23 @@ void dScStage_c::PS_Render() {
             OAM::Render(true, &OAM::TINY_STAR, 38, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1, 0);
         }
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                        0x1000, 0, -1);
             return;
         }
         OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
@@ -1956,7 +1928,7 @@ void dScStage_c::PS_Update() {
                 dScStage_c::UpdateMenuButtons(0);
                 sMenuWaitTimer = gFrameStep << 3;
                 sNextPauseState = 0x13;
-                data_ov002_02111150 = 1;
+                gVsExitingCourse = 1;
                 func_02012790(0x56);
                 return;
             }
@@ -1972,7 +1944,7 @@ void dScStage_c::PS_Update() {
             dScStage_c::UpdateMenuButtons(0);
             sMenuWaitTimer = gFrameStep << 3;
             sNextPauseState = 6;
-            data_ov002_02111150 = 1;
+            gVsExitingCourse = 1;
             func_02012790(0x55);
             return;
         }
@@ -2019,7 +1991,7 @@ void dScStage_c::PS_Update() {
         sNumMenuButtons = 3;
         sNextPauseState = 8;
         {
-            u8 cur = data_0209f4ae[gActivePlayerSlot * 0x18];
+            u8 cur = data_0209f498[gActivePlayerSlot].mode;
             sSelectedControllerMode = cur;
             sSelectedMenuButton = cur;
         }
@@ -2789,7 +2761,7 @@ void dScStage_c::PS_Init() {
 
 int func_02029600(int x) {
     if (!IsCastleFallCutsceneRunning()) {
-        unsigned char saved = *&data_ov002_02111148;
+        unsigned char saved = *&gCurrentMinimapID;
         int r = GetMinimapID((dActor_c *)x, -1);
         if (r == saved)
             return 1;
@@ -3100,13 +3072,13 @@ void dScStage_c::RenderVsModeNewStar() {
     sVsNewStarTimer = timer - gFrameStep;
     if (sVsNewStarTimer % 60 >= 10) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED_ES, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED_IT, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED_DE, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED_FR, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         if (sVsNewStarSoundPlayed != 0)
@@ -3140,31 +3112,31 @@ void dScStage_c::RenderVsModeCountdown() {
         return;
     if (data_0209f2bc != 0) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, &data_ov002_0210d008, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR_ES, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, &data_ov002_0210d098, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR_IT, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, &data_ov002_0210d130, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR_DE, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, &data_ov002_0210d1c8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR_FR, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, &data_ov002_0210d210, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000,
-                    0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::VS_RED_NUMBERS[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000, 0x1000, 0,
+                    -1);
         return;
     }
     if (sVsCountdownTimer == 0)
         return;
     if (GetOwnerLanguage() == 5)
-        OAM::Render(0, &data_ov002_0210d378, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO_ES, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 4)
-        OAM::Render(0, &data_ov002_0210d3a0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO_IT, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 3)
-        OAM::Render(0, &data_ov002_0210d3c0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO_DE, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 2)
-        OAM::Render(0, &data_ov002_0210d3e0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO_FR, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else
-        OAM::Render(0, &data_ov002_0210d420, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
 extern "C" s32 NumVsStarsObtained(void) {
@@ -3204,7 +3176,7 @@ void ClearSpikeBomb(int idx) {
         gSpikeBombs[idx] = 0;
 }
 
-extern "C" int AddSpikeBomb(void *p) {
+extern "C" int AddSpikeBomb(dActor_c *p) {
     int i;
     for (i = 0; i < 8; i++) {
         if (gSpikeBombs[i] == 0) {
@@ -3320,17 +3292,16 @@ extern "C" void func_0202a850(int a, int b) {
     gLevelMaxY += 0x64000;
 }
 
-/* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
-   is their +0x16, data_0209f4ae. The save file keeps the active player's
-   copy at gSaveBlock+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
+/* The save file keeps the active player's controller mode at
+   gSaveBlock+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
 void InitControllerMode(int idx, u8 val) {
-    data_0209f4ae[idx * 0x18] = val;
+    data_0209f498[idx].mode = val;
     if (idx == gActivePlayerSlot)
         gSaveBlock.file.controllerMode = val;
 }
 
 void SetControllerMode(unsigned char mode) {
-    data_0209f4ae[gActivePlayerSlot * 0x18] = mode;
+    data_0209f498[gActivePlayerSlot].mode = mode;
     gSaveBlock.file.controllerMode = mode;
 }
 
@@ -3385,7 +3356,7 @@ struct MinimapChangeNode {
 
 void LoadMinimapChangeObject(int idx, fx32 val, s8 h) {
     struct MinimapChangeNode *nn = (MinimapChangeNode *)::operator new(sizeof(MinimapChangeNode));
-    StageArea *e = &((StageArea *)data_0209f314)[idx];
+    StageArea *e = &data_0209f314[idx];
     struct MinimapChangeNode *cur = (MinimapChangeNode *)e->mBlockList;
     struct MinimapChangeNode *prev = cur;
     if (cur != 0) {
@@ -3417,15 +3388,15 @@ void LoadMinimapChangeObject(int idx, fx32 val, s8 h) {
 }
 
 void HideArea(int idx) {
-    ((StageArea *)data_0209f314)[idx].mShowing = 0;
+    data_0209f314[idx].mShowing = 0;
 }
 
 void ShowArea(int idx) {
-    ((StageArea *)data_0209f314)[idx].mShowing = 1;
+    data_0209f314[idx].mShowing = 1;
 }
 
 unsigned char IsAreaShowing(int idx) {
-    return ((StageArea *)data_0209f314)[idx].mShowing;
+    return data_0209f314[idx].mShowing;
 }
 
 extern "C" void ChangeArea(int areaID) {
@@ -3596,14 +3567,14 @@ void SetMinimapScaleObjs(short *table, int count) {
    height, or the level's own map when the area has none. */
 int GetMinimapID(dActor_c *actor, int arg) {
     int idx = actor->mAreaId;
-    char *g;
+    StageArea *areas;
     int val;
     struct MinimapChangeNode *node;
     if (idx < 0)
         idx = gCurrentAreaId;
-    g = (char *)data_0209f314;
-    if (g != 0) {
-        node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
+    areas = data_0209f314;
+    if (areas != 0) {
+        node = (MinimapChangeNode *)areas[idx].mBlockList;
         if (node != 0) {
             val = actor->mPos.y;
             while (node != 0) {
@@ -3937,7 +3908,7 @@ int dScStage_c::CanPause() {
         return 1;
     if (data_0209fc68 != 0)
         return 0;
-    if (data_0209f2bc != 0 || (data_ov002_02111188 == 0 && data_0209f204 != 0))
+    if (data_0209f2bc != 0 || (gVsTimerTickTimer == 0 && data_0209f204 != 0))
         return 0;
     return 1;
 }
@@ -4111,7 +4082,7 @@ int dScStage_c::Behavior() {
                     }
                 }
             }
-            if (data_ov002_02111188 == 0 && data_0209f204 != 0) {
+            if (gVsTimerTickTimer == 0 && data_0209f204 != 0) {
                 if (data_0209fc68 == 0) {
                     if (gNextSublevel < 0 && data_0209d4b0 == 0) {
                         if (gVsExitScreenActive == 0 && sVsExitScreenStep == 0)
@@ -4582,8 +4553,8 @@ int dScStage_c::InitResources() {
             if ((s32)gNumPlayers > 0) {
                 int count = gNumPlayers;
                 int idx = 0;
-                u8 *p1 = (u8 *)gNumRedCoins;
-                u8 *vsStars = (u8 *)gNumStageStars;
+                s8 *p1 = gNumRedCoins;
+                s8 *vsStars = gNumStageStars;
                 /* Sampled once, before the loop: IsVsMode() here, or IsGameMode(1)
                    tested inside the loop, is 12 bytes short or 12 long. */
                 int vsModeCounters = IsGameMode(1);
@@ -4612,7 +4583,7 @@ int dScStage_c::InitResources() {
         gCurrentEntranceId = sNextEntranceId;
         gCurrentStarId = gNextStarId;
         gCurrentAreaId = -1;
-        data_0209f314 = (int)mAreas;
+        data_0209f314 = mAreas;
         gWaterHeight = 0x80000000;
         data_0209f274 = 0;
         SublevelToLevel(gCurrentSublevel);

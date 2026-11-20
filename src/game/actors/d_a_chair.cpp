@@ -60,7 +60,6 @@ struct ChairModelFilePtr : SharedFilePtr {
 /* The chair model's shared file, defined at the end of this file so the
  * constructor does not enter .text. Init loads it, Cleanup releases it. */
 extern ChairModelFilePtr data_ov020_02114af0;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* Actor IDs from the ROM's actor table. */
 enum ChairActorId {
