@@ -73,22 +73,22 @@ struct cMgSmartball_object_c {
     Vector2 mSnapshot;           /* 0x010 -- written from mCurrent by SaveSnapshot */
     Vector2 mInitial;            /* 0x018 -- constructor writes the same pair here and
                                     at mCurrent */
-    Vector2 mVel;     /* 0x020 -- constructor zeroes it. Velocity:
-                          cMgSmartball_ball_c::SaveSnapshot does
-                          `mCurrent.x += mVel.x; mCurrent.y += mVel.y;`, and
-                          cMgSmartball_spring_c eases mCurrent.y back to rest
-                          with mVel.y. */
-    s32 mRadius;      /* 0x028 -- constructor zeroes it and each child's own
-                          constructor then writes its own constant (0x8000
-                          ball, 0x14000 pakkun, 0x18000 board, 0x20000 dokan/
-                          propeller/spring, 0x7000 kinoko). Both readers use it
-                          as a distance: cMgSmartball_ball_c::SaveSnapshot
-                          compares a signed plane distance against -mRadius,
-                          and cMgSmartball_kinoko_c eases it to 0 and back to
-                          0x7000 as the mushroom squashes, with that class's
-                          Update turning it into a render scale. Ten other
-                          files in this family read or write it, the
-                          most-touched field of the class. */
+    Vector2 mVel;                /* 0x020 -- constructor zeroes it. Velocity:
+                                    cMgSmartball_ball_c::SaveSnapshot does
+                                    `mCurrent.x += mVel.x; mCurrent.y += mVel.y;`, and
+                                    cMgSmartball_spring_c eases mCurrent.y back to rest
+                                    with mVel.y. */
+    s32 mRadius;                 /* 0x028 -- constructor zeroes it and each child's own
+                                    constructor then writes its own constant (0x8000
+                                    ball, 0x14000 pakkun, 0x18000 board, 0x20000 dokan/
+                                    propeller/spring, 0x7000 kinoko). Both readers use it
+                                    as a distance: cMgSmartball_ball_c::SaveSnapshot
+                                    compares a signed plane distance against -mRadius,
+                                    and cMgSmartball_kinoko_c eases it to 0 and back to
+                                    0x7000 as the mushroom squashes, with that class's
+                                    Update turning it into a render scale. Ten other
+                                    files in this family read or write it, the
+                                    most-touched field of the class. */
     s32 mIndex;       /* 0x02c -- the constructor's second argument: this
                           object's slot in the manager's tables.
                           QueueBehind compares it against mgr+0x4664
