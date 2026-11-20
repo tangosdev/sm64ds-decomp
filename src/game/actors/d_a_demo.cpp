@@ -71,8 +71,8 @@
  *   RunCommand's command table is a function-local static of member
  *   pointers, filled on first use behind its guard word; each handler is
  *   cast to the table's (unsigned char *, int, int) signature.
- *   func_ov002_020f26d4 is a member whose body is `return
- *   func_ov002_020f2630();`; under -interworking mwccarm emits that tail
+ *   StartScroll is a member whose body is `return
+ *   CreateScroll();`; under -interworking mwccarm emits that tail
  *   call as ldr ip, [pc]; bx ip; .word, the 12-byte shape in the ROM.
  *   The mStaffRoll heap block is daDemo_c::StaffRoll, a record recovered
  *   from its helpers (no RTTI names it). The step handlers are its
@@ -482,7 +482,7 @@ void daDemo_c::func_ov002_020f237c()
 
 /* CleanupResources for param1 0x2f: free the scroll block. */
 
-int daDemo_c::func_ov002_020f23d0()
+int daDemo_c::FreeScroll()
 {
     ::operator delete(this->mScroll);
     return 1;
@@ -506,7 +506,7 @@ int daDemo_c::func_ov002_020f23d0()
  *   6  nothing
  * Every state then runs 2340, 2210 and 20f4. */
 
-int daDemo_c::func_ov002_020f23f0()
+int daDemo_c::UpdateScroll()
 {
     switch (mScroll->state) {
     case 0:
@@ -575,7 +575,7 @@ int daDemo_c::func_ov002_020f23f0()
     return 1;
 }
 
-int daDemo_c::func_ov002_020f2630() {
+int daDemo_c::CreateScroll() {
     this->mScroll = (daDemo_c::ScrollState *)::operator new(0x36);
     this->mScroll->bg0X = 0x30;
     this->mScroll->bg0Y = 0x20;
@@ -591,17 +591,17 @@ int daDemo_c::func_ov002_020f2630() {
 
 /* Script handler (table entry 23): mCue = p[0], the value 23f0 waits on. */
 
-int daDemo_c::func_ov002_020f26c4(unsigned char *src)
+int daDemo_c::SetCue(unsigned char *src)
 {
     this->mCue = src[0];
     return 1;
 }
 
-/* func_ov002_020f26d4 @ 0x20f26d4 (ov002) -- tail call to func_ov002_020f2630 (0x20f2630),
+/* StartScroll @ 0x20f26d4 (ov002) -- tail call to CreateScroll (0x20f2630),
  * emitted as ldr ip, [pc]; bx ip; .word 0x20f2630. Command 22 in RunCommand's table.
  */
-int daDemo_c::func_ov002_020f26d4() {
-    return func_ov002_020f2630();
+int daDemo_c::StartScroll() {
+    return CreateScroll();
 }
 
 void StaffRoll::func_ov002_020f26e0() {
@@ -2418,7 +2418,7 @@ void StaffRoll::func_ov002_020f5fe4() {
     func_ov002_020f5ad4();
 }
 
-int daDemo_c::func_ov002_020f63a0()
+int daDemo_c::FreeStaffRoll()
 {
     this->mStaffRoll->func_ov002_020f5f60();
     if (this->mStaffRoll != 0) {
@@ -2429,7 +2429,7 @@ int daDemo_c::func_ov002_020f63a0()
 }
 
 
-int daDemo_c::func_ov002_020f63d4()
+int daDemo_c::UpdateStaffRoll()
 {
     this->mStaffRoll->func_ov002_020f5fb8();
     this->mStaffRoll->func_ov002_020f5f8c();
@@ -2437,7 +2437,7 @@ int daDemo_c::func_ov002_020f63d4()
 }
 
 
-int daDemo_c::func_ov002_020f63f8(unsigned char *src)
+int daDemo_c::SetStaffRollCue(unsigned char *src)
 {
     this->mCue = *src;
     this->mStaffRoll->func_ov002_020f5dd8(this->mCue);
@@ -2445,13 +2445,13 @@ int daDemo_c::func_ov002_020f63f8(unsigned char *src)
 }
 
 
-int daDemo_c::func_ov002_020f6424()
+int daDemo_c::ApplyStaffRollCue()
 {
     this->mStaffRoll->func_ov002_020f5f0c(this->mCue);
     return 1;
 }
 
-int daDemo_c::func_ov002_020f6448(unsigned char *src) {
+int daDemo_c::CreateStaffRoll(unsigned char *src) {
     StaffRoll *p;
     this->mCue = *src;
     p = new StaffRoll;
@@ -2459,7 +2459,7 @@ int daDemo_c::func_ov002_020f6448(unsigned char *src) {
     if (this->mStaffRoll == 0)
         return 0;
     this->mStaffRoll->func_ov002_020f5fe4();
-    return func_ov002_020f6424();
+    return ApplyStaffRollCue();
 }
 
 void daDemo_c::anmModel_c::func_ov002_020f64ac(const AnimEntry *table) {
@@ -3218,10 +3218,10 @@ void daDemo_c::RunCommand(unsigned char *command, int first, int last) {
         (PMF3)&daDemo_c::PlayLongSound, /* 17 */
         (PMF3)&daDemo_c::PlayBank1Sound, /* 18 */
         (PMF3)&daDemo_c::Despawn, /* 19 */
-        (PMF3)&daDemo_c::func_ov002_020f6448, /* 20 */
-        (PMF3)&daDemo_c::func_ov002_020f63f8, /* 21 */
-        (PMF3)&daDemo_c::func_ov002_020f26d4, /* 22 */
-        (PMF3)&daDemo_c::func_ov002_020f26c4, /* 23 */
+        (PMF3)&daDemo_c::CreateStaffRoll, /* 20 */
+        (PMF3)&daDemo_c::SetStaffRollCue, /* 21 */
+        (PMF3)&daDemo_c::StartScroll, /* 22 */
+        (PMF3)&daDemo_c::SetCue, /* 23 */
     };
     (this->*sCommandTable[command[6]])(command + 7, first, last);
 }
@@ -3230,9 +3230,9 @@ int daDemo_c::CleanupResources()
 {
     int r1 = param1;
     if (r1 == 0x2e)
-        return func_ov002_020f63a0();
+        return FreeStaffRoll();
     if (r1 == 0x2f)
-        return func_ov002_020f23d0();
+        return FreeScroll();
     /* The guards are compiled in: bare deletes build 0x70, not the ROM's 0x80. */
     if (mModel)
         delete mModel;
@@ -3296,10 +3296,10 @@ int daDemo_c::Behavior()
     u32 t;
     t = this->param1;
     if (t == 0x2e) {
-        return func_ov002_020f63d4();
+        return UpdateStaffRoll();
     }
     if (t == 0x2f) {
-        return func_ov002_020f23f0();
+        return UpdateScroll();
     }
     if ((t >= 0x1a) && (t <= 0x2d)) {
         UpdatePosWithOnlySpeed(0);

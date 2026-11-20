@@ -10737,3 +10737,13 @@ ov002	0x020f6b4c	func_ov002_020f6b4c	_ZN8daDemo_c17FaceTargetAndMoveEPh	reconstr
 ov002	0x020f6bc0	func_ov002_020f6bc0	_ZN8daDemo_c17SetPoseFromRecordEPh	reconstructed name; sets the mPos triple and mAngle.y/mPrevAngle.y straight from the record with no interpolation; exact SM64DS spelling not preserved
 ov002	0x020f6c24	func_ov002_020f6c24	_ZN8daDemo_c10SetOpacityEPh	reconstructed name; the whole body is mOpacity = src[0]; exact SM64DS spelling not preserved
 ov002	0x020f6c34	func_ov002_020f6c34	_ZN8daDemo_c18PlayAnimationEntryEPh	reconstructed name; applies entry *src of the animation table at data_ov002_0210bc88 through anmModel_c's apply method; exact SM64DS spelling not preserved
+ov002	0x020f23d0	func_ov002_020f23d0	_ZN8daDemo_c10FreeScrollEv	reconstructed name; CleanupResources for param1 0x2f, the body is operator delete(mScroll); exact SM64DS spelling not preserved
+ov002	0x020f23f0	func_ov002_020f23f0	_ZN8daDemo_c12UpdateScrollEv	reconstructed name; Behavior for param1 0x2f, the scroll block's seven-state machine over mScroll->state; exact SM64DS spelling not preserved
+ov002	0x020f2630	func_ov002_020f2630	_ZN8daDemo_c12CreateScrollEv	reconstructed name; allocates the 0x36-byte ScrollState, seeds the BG offsets and writes both to the hardware; exact SM64DS spelling not preserved
+ov002	0x020f26c4	func_ov002_020f26c4	_ZN8daDemo_c6SetCueEPh	reconstructed name; script table entry 23, sets mCue to src[0], the value UpdateScroll's states 1 and 4 wait on; exact SM64DS spelling not preserved
+ov002	0x020f26d4	func_ov002_020f26d4	_ZN8daDemo_c11StartScrollEv	reconstructed name; command 22 in RunCommand's table, a tail-call veneer to CreateScroll; exact SM64DS spelling not preserved
+ov002	0x020f63a0	func_ov002_020f63a0	_ZN8daDemo_c13FreeStaffRollEv	reconstructed name; CleanupResources for param1 0x2e, tears the StaffRoll down then deletes it; exact SM64DS spelling not preserved
+ov002	0x020f63d4	func_ov002_020f63d4	_ZN8daDemo_c15UpdateStaffRollEv	reconstructed name; Behavior for param1 0x2e, steps then draws the StaffRoll; exact SM64DS spelling not preserved
+ov002	0x020f63f8	func_ov002_020f63f8	_ZN8daDemo_c15SetStaffRollCueEPh	reconstructed name; stores the record's cue byte in mCue and hands it to the StaffRoll's cue entry point; exact SM64DS spelling not preserved
+ov002	0x020f6424	func_ov002_020f6424	_ZN8daDemo_c17ApplyStaffRollCueEv	reconstructed name; re-applies the already-stored mCue to the StaffRoll, used by both the cue handler and creation; exact SM64DS spelling not preserved
+ov002	0x020f6448	func_ov002_020f6448	_ZN8daDemo_c15CreateStaffRollEPh	reconstructed name; stores the cue byte, news the 0x518-byte StaffRoll, runs its asset setup and then ApplyStaffRollCue; exact SM64DS spelling not preserved

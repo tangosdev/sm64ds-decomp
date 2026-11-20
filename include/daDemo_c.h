@@ -97,8 +97,8 @@ struct daDemo_c : dActor_c {
         virtual ~simpleModel_c();
     };
 
-    /* The 0x36-byte block param1 0x2f allocates (func_ov002_020f2630) and
-       steps through func_ov002_020f23f0's seven states. Names describe what
+    /* The 0x36-byte block param1 0x2f allocates (CreateScroll) and
+       steps through UpdateScroll's seven states. Names describe what
        the code does with each field; the source type is not recovered. The
        sprite arrays have four slots, of which the loops touch three. */
     struct ScrollState {
@@ -117,7 +117,7 @@ struct daDemo_c : dActor_c {
         u8 state;            /* 0x34 - 0..6 */
     };
 
-    /* The 0x518-byte block param1 0x2e allocates (func_ov002_020f6448),
+    /* The 0x518-byte block param1 0x2e allocates (CreateStaffRoll),
        sets up (func_ov002_020f5fe4: the D_2D_STAFF_ROLL_* and D_2D_ED_STAR
        assets), steps (5fb8) and draws (5f8c). The step handlers and the
        cue handlers are its members, dispatched through member-pointer
@@ -395,16 +395,16 @@ struct daDemo_c : dActor_c {
     void func_ov002_020f2210();
     void func_ov002_020f2340();
     void func_ov002_020f237c();
-    int func_ov002_020f23d0();
-    int func_ov002_020f23f0();
-    int func_ov002_020f2630();
-    int func_ov002_020f26c4(unsigned char *src);
-    int func_ov002_020f26d4();
-    int func_ov002_020f63a0();
-    int func_ov002_020f63d4();
-    int func_ov002_020f63f8(unsigned char *src);
-    int func_ov002_020f6424();
-    int func_ov002_020f6448(unsigned char *src);
+    int FreeScroll();
+    int UpdateScroll();
+    int CreateScroll();
+    int SetCue(unsigned char *src);
+    int StartScroll();
+    int FreeStaffRoll();
+    int UpdateStaffRoll();
+    int SetStaffRollCue(unsigned char *src);
+    int ApplyStaffRollCue();
+    int CreateStaffRoll(unsigned char *src);
     int Despawn();
     int PlayBank1Sound(unsigned char *p);
     int PlayLongSound(unsigned char *p);
