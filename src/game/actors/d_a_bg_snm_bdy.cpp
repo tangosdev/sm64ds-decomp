@@ -68,8 +68,8 @@
 extern "C" {
 
 /* arm9 statics this TU reads but does not own. */
-extern dClipper data_0209f43c;
-extern Matrix4x3 data_0209b3ec;
+extern dClipper gClipper;
+extern Matrix4x3 gViewMtx;
 }
 
 /* The model handle. dExtSimpleModel_c reaches its file through this wrapper's
@@ -99,8 +99,6 @@ daBgSnmBdy_c::StateEntry gBgSnmBdyStates[6] = {
  * State3 turns toward and snaps onto (IsPlayerNearCenter measures from it). */
 Vector3 gBgSnmBdyReachPoint(-0xad0000, 0x290000, -0x9d0000);
 Vector3 gBgSnmBdyLandingPoint(-0x1004000, -0x591000, 0x6fe000);
-
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* The NitroSDK fixed-point products, written as local inlines the way
  * d_s_mg_base.cpp and d_s_mg_pachinko.cpp spell FX_Mul. FX_Mul is a 20.12
@@ -445,7 +443,7 @@ int daBgSnmBdy_c::State5()
     Vector3 clipResult;
     Vector3 homePos;
     Vec3_Asr(&homePos, &mHomePos, 3);
-    if (data_0209f43c.TransformAndClip(data_0209b3ec, homePos, 0x1f400, clipResult) < 0x1194000)
+    if (gClipper.TransformAndClip(gViewMtx, homePos, 0x1f400, clipResult) < 0x1194000)
         return 1;
     mPos.x = mHomePos.x;
     mPos.y = mHomePos.y;

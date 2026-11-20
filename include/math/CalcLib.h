@@ -39,6 +39,9 @@ int RandomIntInternal(int *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 /* ...and left; d may alias s. */
 void Vec3_Lsl(Vector3 *, const Vector3 *, int);
+/* The same two shifts applied to v itself; both return &v->x. */
+int *Vec3_AsrInPlace(Vector3 *, int);
+int *Vec3_LslInPlace(Vector3 *, int);
 
 #ifndef __cplusplus
 /* NitroSDK fx_vec (0x02053274..0x020538b8), seen from C under the game's
@@ -59,11 +62,23 @@ void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 
+/* out = trans + v turned about the Y axis by angle; y is not rotated. */
+void Vec3_RotateYAndTranslate(Vector3 *, const Vector3 *, short, const Vector3 *);
+/* Step out's x and z toward target by at most maxStep (y is left alone);
+   nonzero once out has reached it. */
+int Vec3_ApproachHorz(Vector3 *, Vector3 *, int);
+
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 fx32 Vec3_HorzLen(const Vector3 *);
 int Vec3_Dist(const Vector3 *, const Vector3 *);
 int Vec3_Equal(const Vector3 *, const Vector3 *);
 int Vec3_HorzDist(const Vector3 *, const Vector3 *);
+
+/* Rotate v in place about the X, Y and Z axes by angle, with the table sine
+   and cosine at angle >> 4; the axis component is kept. */
+void func_0203cd80(Vector3 *, short);
+void func_0203ccd4(Vector3 *, short);
+void func_0203cc28(Vector3 *, int);
 
 /* The in-place normalizer: 0 when the vector was too short. */
 int NormalizeVec3IfNonZero(Vector3 *);

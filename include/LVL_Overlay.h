@@ -153,7 +153,7 @@ struct LVL_Overlay {
     /* ==== THE RECORD ITSELF ====
        dScStage_c::LoadClsnAndObjects reads clps, objTable, kclFileId, areas
        and areaCount. d_s_stage_methods.cpp reads the same record through
-       data_0209f340: the model file (dScStage_c::LoadModel), the minimap
+       sLevelInfo: the model file (dScStage_c::LoadModel), the minimap
        files and each area's texture animation and minimap. */
     CLPS_Block *clps;       /* 0x00 */
     ObjTable *objTable;     /* 0x04 -- the level-wide objects, area -1 */

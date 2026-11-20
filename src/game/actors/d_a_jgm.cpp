@@ -34,7 +34,7 @@
  *   reference spelling; a pointer emits identical ARM. SetState's `int`
  *   signedness is indistinguishable.
  * - func_0201267c (throw SFX 0xd2 at +0x74, mCamSpacePos),
- *   FX_SinCosTable_ (sin/cos pairs) and data_020a0e68 (arm9 scratch
+ *   FX_SinCosTable_ (sin/cos pairs) and gScratchMtx (arm9 scratch
  *   matrix) keep linker names.
  * - This TU claims .text only: the SharedFilePtr handles, the BCA/BTP
  *   pointer tables, the PMF state table data_ov077_02127bc4 and the
@@ -101,7 +101,7 @@ extern DaJgmAnimationFilePtr data_ov077_02127b40;
 extern DaJgmTexSequenceFilePtr data_ov077_02127b20;
 extern DaJgmTexSequenceFilePtr data_ov077_02127b30;
 extern SharedFilePtr *data_ov077_02127238[];
-extern SharedFilePtr *data_ov077_02127230[];
+extern DaJgmTexSequenceFilePtr *data_ov077_02127230[];
 extern DaJgmStateHandlers data_ov077_02127bc4[];
 extern Vector3 data_ov077_02127b88;
 extern DaJgmStateHandler data_ov077_021277e0;
@@ -114,9 +114,7 @@ extern DaJgmStateHandler data_ov077_021277f0;
 extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-extern int *Vec3_LslInPlace(void *v, int sh);
 
 }
 
@@ -145,8 +143,7 @@ s32 daJgm_c::InitResources()
     for (int i = 0; i < 2; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov077_02127238[i]);
     for (int i = 0; i < 2; i++) {
-        DaJgmTexSequenceFilePtr *t =
-            (DaJgmTexSequenceFilePtr *)data_ov077_02127230[i];
+        DaJgmTexSequenceFilePtr *t = data_ov077_02127230[i];
         dExtAnmTexPat_c::LoadFile(*t);
         dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov077_02127b50.filePtr, *(BTP_File *)t->filePtr);
     }
@@ -429,13 +426,13 @@ void daJgm_c::UpdateModels()
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     if (mState == 4) {
-        data_020a0e68 = mAnmModel.mat4x3;
+        gScratchMtx = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y1, 0);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, y2, 0);
+        mAnmModel.mat4x3 = gScratchMtx;
     }
 
     mMatrix.t.x = mPos.x >> 3;
@@ -456,21 +453,21 @@ void daJgm_c::UpdateModels()
     Vector3 offset(-0x2000, 0x1800, 0x1000);
     Vector3 pos;
 
-    data_020a0e68 = mAnmModel.mat4x3;
-    MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    gScratchMtx = mAnmModel.mat4x3;
+    MTX_Concat43(&mAnmModel.data.transforms[3], &gScratchMtx, &gScratchMtx);
 
-    mThrowPos.x = data_020a0e68.t.x;
-    mThrowPos.y = data_020a0e68.t.y;
-    mThrowPos.z = data_020a0e68.t.z;
+    mThrowPos.x = gScratchMtx.t.x;
+    mThrowPos.y = gScratchMtx.t.y;
+    mThrowPos.z = gScratchMtx.t.z;
 
     Vec3_LslInPlace(&mThrowPos, 3);
     Vec3_Asr(&pos, &mThrowPos, 3);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, offset.x, offset.y, offset.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, offset.x, offset.y, offset.z);
 
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 }
 
 void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)

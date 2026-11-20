@@ -82,7 +82,7 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -99,7 +99,7 @@ void daBasabasa_c::CheckTouch() {
         mDeathState = 4;
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -107,7 +107,7 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 3;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -115,13 +115,13 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -146,7 +146,7 @@ void daBasabasa_c::CheckTouch() {
     if (JumpedOnByPlayer(mdCcAc_c, *p) != 0) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -194,8 +194,8 @@ int daBasabasa_c::ExecuteReturn() {
     ApproachAngle(&mPrevAngle.x, 0, 0xa, 0x200, 0x100);
     ApproachAngle(&mPrevAngle.y, mTargetAngleY, 0xa, 0x200, 0x100);
     v.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&v, &gScratchMtx, &mSpeed);
     if (mStateTimer == 0) {
         SetState(&data_ov065_0211d6f0);
     }
@@ -223,9 +223,9 @@ int daBasabasa_c::ExecuteChase() {
     ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x500);
     ApproachLinear(mPrevAngle.x, 0x100, 0x500);
     v.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
-    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPrevAngle.x);
+    MTX_MultVec43(&v, &gScratchMtx, &mSpeed);
     if (Vec3_Dist(&mPos, &mHomePos) > 0x5dc000 || mStateTimer == 0) {
         mPerchTimer = 0;
         SetState(&data_ov065_0211d6f0);
@@ -310,15 +310,15 @@ int daBasabasa_c::SetState(State *state) {
 void daBasabasa_c::UpdateModelTransform() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
     if (mIsFlying == 1) {
-        mAnmModel1.mat4x3 = data_020a0e68;
+        mAnmModel1.mat4x3 = gScratchMtx;
     } else {
-        mAnmModel2.mat4x3 = data_020a0e68;
+        mAnmModel2.mat4x3 = gScratchMtx;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
-    mShadowMatrix = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
+    mShadowMatrix = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMatrix, 0x32000, 0x258000, 0xf);
 }
 

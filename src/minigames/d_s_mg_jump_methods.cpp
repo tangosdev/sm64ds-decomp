@@ -75,6 +75,7 @@ struct MgJumpModelFilePtr : SharedFilePtr {
 };
 extern MgJumpModelFilePtr gJumpBack02ModelFile;
 extern MgJumpModelFilePtr gJumpBack01ModelFile;
+extern SharedFilePtr *sJumpBackFile;
 
 /* Everything below that decl_common.h does not declare. Keep it above the
  * first function: tools/tiers.py charges text between two functions to the
@@ -87,7 +88,6 @@ struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-void func_0203cd80(int *m, short angle);
 void FreeGfxSlotsById(int arg);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -109,7 +109,7 @@ void Jump3D_StopGravity(void);
 void Jump3D_StartRoundLayout(void);
 int Jump3D_AllIdle(void);
 int Heyho_AllIdle(void);
-int Heyho_InitPool(void *ptr, int n);
+int Heyho_InitPool(Heyho *ptr, int n);
 void Jump3D_EnableInput(void);
 
 
@@ -245,11 +245,11 @@ s32 dScMgJump_c::InitResources()
     } else {
         sJumpBackFile = &gJumpBack01ModelFile;
     }
-    modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)sJumpBackFile);
+    modelFile = dExtSimpleModel_c::LoadFile(*sJumpBackFile);
     r = mModel.SetFile((BMD_File *)modelFile, 1, -1);
     if (r == 0) {
-        Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        mModel.mat4x3 = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, 0, 0, 0);
+        mModel.mat4x3 = gScratchMtx;
         return 0;
     }
     Mg_SetTopScreenYOffset(0x10);
@@ -427,26 +427,26 @@ s32 dScMgJump_c::Render()
     }
 
     {
-        int m[3];
-        m[0] = 0;
-        m[1] = 0;
-        m[2] = -0xff8;
-        func_0203cd80(m, -0x2000);
-        G3_LightVector(GX_LIGHTID_0, m[0], m[1], m[2]);
+        Vector3 m;
+        m.x = 0;
+        m.y = 0;
+        m.z = -0xff8;
+        func_0203cd80(&m, -0x2000);
+        G3_LightVector(GX_LIGHTID_0, m.x, m.y, m.z);
         G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
         G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
-        Matrix4x3_FromTranslation(&data_020a0e68, 0, -0xef000, 0);
+        Matrix4x3_FromTranslation(&gScratchMtx, 0, -0xef000, 0);
     }
     {
-        int m[3];
-        m[0] = 0;
-        m[1] = 0;
-        m[2] = -0xff8;
-        func_0203cd80(m, -0x2000);
-        G3_LightVector(GX_LIGHTID_1, m[0], m[1], m[2]);
+        Vector3 m;
+        m.x = 0;
+        m.y = 0;
+        m.z = -0xff8;
+        func_0203cd80(&m, -0x2000);
+        G3_LightVector(GX_LIGHTID_1, m.x, m.y, m.z);
     }
 
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 
     {
         /* Kept (#821 r77): the ROM copy-initializes the scale with one
@@ -474,7 +474,7 @@ s32 dScMgJump_c::Render()
 /* Slot 3. Releases the model file; `this` is never read. */
 s32 dScMgJump_c::CleanupResources()
 {
-    ((SharedFilePtr *)sJumpBackFile)->Release();
+    sJumpBackFile->Release();
     sJumpBackFile = 0;
     Mg_CommitRecords();
     return 1;

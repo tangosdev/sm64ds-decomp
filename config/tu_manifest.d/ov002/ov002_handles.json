@@ -35,7 +35,7 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ad660EPvS0_i",
+      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ad660EP10dBgCh_ActrP17dExtSimpleModel_ci",
       "address": "0x020ad660",
       "size": "0x1d8",
       "legacy_source": "src/ov002_handles.cpp",
@@ -73,7 +73,7 @@
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210d9b8",
+      "symbol": "gCoinYellowPoly32ModelFile",
       "address": "0x0210d9b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -87,7 +87,7 @@
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210d9c8",
+      "symbol": "gCoinBluePoly32ModelFile",
       "address": "0x0210d9c8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -101,21 +101,21 @@
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210d9d8",
+      "symbol": "gOneUpMushroomModelFile",
       "address": "0x0210d9d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210d9e0",
+      "symbol": "gBombheiModelFile",
       "address": "0x0210d9e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210d9e8",
+      "symbol": "gNumberTextureSequenceFile",
       "address": "0x0210d9e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -129,56 +129,56 @@
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210d9f8",
+      "symbol": "gCoinRedPoly32ModelFile",
       "address": "0x0210d9f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da00",
+      "symbol": "gCoinBluePoly4ModelFile",
       "address": "0x0210da00",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da08",
+      "symbol": "gSNumberTextureSequenceFile",
       "address": "0x0210da08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da10",
+      "symbol": "gWRingModelFile",
       "address": "0x0210da10",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da18",
+      "symbol": "gShellGreenModelFile",
       "address": "0x0210da18",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da20",
+      "symbol": "gShellRedModelFile",
       "address": "0x0210da20",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da28",
+      "symbol": "gSilverNumberModelFile",
       "address": "0x0210da28",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da30",
+      "symbol": "gScaleUpKinokoModelFile",
       "address": "0x0210da30",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -199,21 +199,21 @@
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da48",
+      "symbol": "gCoinYellowPoly4ModelFile",
       "address": "0x0210da48",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da50",
+      "symbol": "gCoinRedPoly4ModelFile",
       "address": "0x0210da50",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "file handle constructed by this TU's static initializer"
     },
     {
-      "symbol": "data_ov002_0210da58",
+      "symbol": "gFeatherModelFile",
       "address": "0x0210da58",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1202,7 +1202,7 @@
       "source": "0x02100814",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da18",
+      "symbol": "gShellGreenModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da18"
@@ -1232,7 +1232,7 @@
       "source": "0x02100824",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da20",
+      "symbol": "gShellRedModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da20"
@@ -1252,7 +1252,7 @@
       "source": "0x0210082c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9d8",
+      "symbol": "gOneUpMushroomModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9d8"
@@ -1272,7 +1272,7 @@
       "source": "0x02100838",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da30",
+      "symbol": "gScaleUpKinokoModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da30"
@@ -1292,7 +1292,7 @@
       "source": "0x02100844",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9e0",
+      "symbol": "gBombheiModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9e0"
@@ -1312,7 +1312,7 @@
       "source": "0x02100850",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da48",
+      "symbol": "gCoinYellowPoly4ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da48"
@@ -1332,7 +1332,7 @@
       "source": "0x0210085c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9b8",
+      "symbol": "gCoinYellowPoly32ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9b8"
@@ -1352,7 +1352,7 @@
       "source": "0x02100868",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da50",
+      "symbol": "gCoinRedPoly4ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da50"
@@ -1372,7 +1372,7 @@
       "source": "0x02100874",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9f8",
+      "symbol": "gCoinRedPoly32ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9f8"
@@ -1392,7 +1392,7 @@
       "source": "0x02100880",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da00",
+      "symbol": "gCoinBluePoly4ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da00"
@@ -1412,7 +1412,7 @@
       "source": "0x0210088c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9c8",
+      "symbol": "gCoinBluePoly32ModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9c8"
@@ -1432,7 +1432,7 @@
       "source": "0x02100898",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da58",
+      "symbol": "gFeatherModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da58"
@@ -1572,7 +1572,7 @@
       "source": "0x021008ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da28",
+      "symbol": "gSilverNumberModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da28"
@@ -1592,7 +1592,7 @@
       "source": "0x021008f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210d9e8",
+      "symbol": "gNumberTextureSequenceFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210d9e8"
@@ -1622,7 +1622,7 @@
       "source": "0x02100908",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da08",
+      "symbol": "gSNumberTextureSequenceFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da08"
@@ -1662,7 +1662,7 @@
       "source": "0x02100920",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov002_0210da10",
+      "symbol": "gWRingModelFile",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210da10"

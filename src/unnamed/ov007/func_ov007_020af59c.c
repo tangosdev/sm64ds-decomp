@@ -19,7 +19,7 @@ extern void func_ov007_020aec00(void);
  * cancels), 10 erases it through the owner's command 8 + slot, re-sums the
  * star totals (func_ov007_020aec00) and shows the outcome. */
 void func_ov007_020af59c(void) {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     Ov007MenuState *menu = w->states[1];
     int state = menu->currentState;
     int ticks = menu->stateTicks;
@@ -30,16 +30,16 @@ void func_ov007_020af59c(void) {
         if (ticks == 0) {
             func_ov007_020c1d78(0);
             func_ov007_020b0244();
-            WORK->states[2]->requestedState = 0xd;
+            gMenuWork->states[2]->requestedState = 0xd;
         }
         switch (menu->stateWork) {
         case 0: {
-            int idx = WORK->selectedSlot;
+            int idx = gMenuWork->selectedSlot;
             if (idx == -1)
                 return;
             if (fileUsed[idx] == 0) {
                 func_ov007_020b7d94(3);
-                WORK->selectedSlot = -1;
+                gMenuWork->selectedSlot = -1;
                 menu->stateWork = 1;
             } else {
                 func_ov007_020b43dc(0xc);
@@ -59,7 +59,7 @@ void func_ov007_020af59c(void) {
             }
             if (func_ov007_020b4438() != 3)
                 return;
-            WORK->selectedSlot = -1;
+            gMenuWork->selectedSlot = -1;
             menu->stateWork = 0;
             return;
         }
@@ -76,8 +76,8 @@ void func_ov007_020af59c(void) {
             if (func_ov007_020b79c8() == 0)
                 return;
             /* ids 8..10: the owner erases save file 0..2 (DSMT_MenuCallback) */
-            r = WORK->callback(WORK->selectedSlot + 8);
-            WORK->selectedSlot = -1;
+            r = gMenuWork->callback(gMenuWork->selectedSlot + 8);
+            gMenuWork->selectedSlot = -1;
             switch (r) {
             case 0:
                 func_ov007_020aec00();

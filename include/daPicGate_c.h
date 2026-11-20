@@ -104,7 +104,7 @@ struct daPicGate_c : dActor_c {
     void DrawRippleEnvMapped();              /* painting_ripple_env_mapped */
 
     /* The rippling state handlers, bound through the State rows in
-       data_ov080_02128628. Row 0 is N64's proximity-triggered image
+       sStates. Row 0 is N64's proximity-triggered image
        painting, row 1 its continuous, environment-mapped one. */
     void UpdateContinuousRipple(); /* wall_painting_continuous_rippling */
     void InitContinuousRipple();

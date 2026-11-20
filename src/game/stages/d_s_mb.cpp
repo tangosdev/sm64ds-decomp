@@ -88,7 +88,7 @@ extern u8 gSubScreenLayers;
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *gGraphCallback;
-extern int data_0208ee44;
+extern int gFrameStep;
 }
 void *func_0201a3e4(void);
 
@@ -156,14 +156,14 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
             } while (1);
 
             if (mAdvancing != 0) {
-                mSpinAngle += (data_0208ee44 << 10);
+                mSpinAngle += (gFrameStep << 10);
                 if (anyOnArc == 0)
                     mStillTimer = 120;
             }
         } else {
             OAM::Render(0, sprite, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             OAM::RenderSub(sprite, 128, 128);
-            mStillTimer -= data_0208ee44;
+            mStillTimer -= gFrameStep;
             mSpinAngle = 0;
         }
     }
@@ -329,7 +329,7 @@ s32 dScMB_c::InitResources() {
     dScene_c::SetFaders(&fader);
 
     fader.color = 0x7fff;
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     sMBJobDone = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
 
     return 1;

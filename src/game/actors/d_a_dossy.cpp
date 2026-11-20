@@ -378,10 +378,10 @@ void daDossy_c::func_ov065_02118cc4()
 void daDossyCap_c::func_ov065_02118c4c() {
     Vector3 pos;
     Vec3_Asr(&pos, &this->mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngle.x);
-    this->mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mAngle.x);
+    this->mModel.mat4x3 = gScratchMtx;
 }
 
 void daDossy_c::func_ov065_02118838() {
@@ -390,9 +390,9 @@ void daDossy_c::func_ov065_02118838() {
     Matrix4x3 base;
     s32 i;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    base = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    base = gScratchMtx;
     for (i = 0; i < 7; i++) {
         ModelBone *bone = &mAnmModel.data.bones[data_ov065_0211c078[i]];
         {
@@ -412,12 +412,12 @@ void daDossy_c::func_ov065_02118838() {
         v.x = 0;
         v.y = 0;
         v.z = 0;
-        data_020a0e68 = base;
-        MTX_Concat43(&mAnmModel.data.transforms[data_ov065_0211c078[i]], &data_020a0e68,
-                     &data_020a0e68);
-        v.x = data_020a0e68.t.x;
-        v.y = data_020a0e68.t.y;
-        v.z = data_020a0e68.t.z;
+        gScratchMtx = base;
+        MTX_Concat43(&mAnmModel.data.transforms[data_ov065_0211c078[i]], &gScratchMtx,
+                     &gScratchMtx);
+        v.x = gScratchMtx.t.x;
+        v.y = gScratchMtx.t.y;
+        v.z = gScratchMtx.t.z;
         VEC_Subtract(&v, &mPos, &v);
         Vec3_LslInPlace(&v, 3);
         VEC_Add(&v, &mPos, &v);
@@ -434,11 +434,11 @@ void daDossy_c::func_ov065_02118838() {
             mHomePos.y += 0x50000;
             mHomePos.z += FX_CosIdx((u16)mAngle.y >> 4) * 0x82;
         }
-        Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y + mPlatforms[i].mRot.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPlatforms[i].mRot.x);
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mPlatforms[i].mRot.z);
-        mPlatforms[i].mClsnNextMat = data_020a0e68;
+        Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y + mPlatforms[i].mRot.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPlatforms[i].mRot.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mPlatforms[i].mRot.z);
+        mPlatforms[i].mClsnNextMat = gScratchMtx;
         mPlatforms[i].mClsn.Transform(mPlatforms[i].mClsnNextMat, mAngle.y);
     }
 }

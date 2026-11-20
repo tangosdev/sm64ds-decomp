@@ -1,7 +1,7 @@
 #ifndef ARM9_ARCHIVE_TABLE_H
 #define ARM9_ARCHIVE_TABLE_H
 
-/* The game's thirteen NARC archives, data_0208ecf4. File ids from 0x8000 up
+/* The game's thirteen NARC archives, gArchiveTable. File ids from 0x8000 up
  * live in them: an entry holds [firstFileId, endFileId), endFileId being
  * firstFileId plus the archive's file count. The first ids step by 0x400;
  * that is only the spacing of the ranges, not their size. The ROM's
@@ -32,7 +32,7 @@ enum { ARCHIVE_TABLE_COUNT = 13 };
 
 typedef char ArchiveTableEntry_size_must_be_0x14[sizeof(ArchiveTableEntry) == 0x14 ? 1 : -1];
 
-extern ArchiveTableEntry data_0208ecf4[];
+extern ArchiveTableEntry gArchiveTable[];
 
 /* The archive a file lookup had to mount itself (func_020185c0,
  * func_020186c0), -1 for none; func_02018770 unloads it. */

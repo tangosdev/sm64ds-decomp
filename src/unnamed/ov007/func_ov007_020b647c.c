@@ -7,5 +7,5 @@
 void func_ov007_020b647c(int id, int index, short state) {
     if (id == index)
         return;
-    WORK->itemViews[index]->item->state->requestedState = state;
+    gMenuWork->itemViews[index]->item->state->requestedState = state;
 }

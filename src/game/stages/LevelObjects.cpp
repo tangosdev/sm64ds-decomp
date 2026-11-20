@@ -31,7 +31,7 @@
  * one spelling of each. */
 extern "C" {
 
-/* data_0209caa0 is the live save block; its first 0x44 bytes are the
+/* gSaveBlock is the live save block; its first 0x44 bytes are the
  * current file. LoadEntranceObjects reads the character, LoadClsnAndObjects
  * flags2. */
 
@@ -46,7 +46,7 @@ extern dCamera_c *gCamera;
 extern void *gUnusedType13Objs;
 extern daPly_c *gPlayers[];
 extern u8 data_0209fc5c[];
-extern unsigned int data_02092134;
+extern unsigned int gStarCameraSettings;
 extern u8 data_02092128[];
 
 /* The loaders' lookup tables, all ov002 .data. sEntranceWipes is the
@@ -96,7 +96,7 @@ static inline int IsGameMode(int mode) {
 
 /* Game mode 0 with bit 0x80 of the current file's flags2 clear. */
 static inline int IntroAllowed() {
-    return IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
+    return IsGameMode(0) && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
 }
 
 /* Spawn simple actors, or hand a minimap-change sentinel to
@@ -152,7 +152,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
         u16 param = entry->param;
         entranceKind = (param >> 7) & 15;
 
-        int savedCharacter = data_0209caa0.file.mCharacter;
+        int savedCharacter = gSaveBlock.file.mCharacter;
         int playerCharacter = data_02092128[playerIndex];
         if (IsGameMode(1)) {
             savedCharacter = 3;
@@ -290,7 +290,7 @@ void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
 /* Take the first word of the star-camera table and publish it. Reads no count,
  * unlike most of this family: it wants one value, not a list. */
 void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_02092134 = *(unsigned int *)table.entries;
+    gStarCameraSettings = *(unsigned int *)table.entries;
 }
 
 /* Walk the outer object table and dispatch each sub-table to the category

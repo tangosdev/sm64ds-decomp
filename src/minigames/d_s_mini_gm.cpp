@@ -73,7 +73,6 @@ struct Off9 { int v[9]; };
 extern u8 gMgSaveDirty;
 extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
-extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
@@ -81,8 +80,7 @@ extern short gSubBg3HOffset;
 extern short gSubBg0HOffset;
 extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
-extern dWipe_c data_0209f61c;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern unsigned short data_020a0e5a[];
 
 /* ---- ov005 tables ---- */
@@ -283,7 +281,7 @@ s32 dScMiniGm_c::InitResources()
     Sound::LoadGroupAndSetBank(0x27, 5);
     Disable3dEngines();
 
-    if (!(data_0209caa0.mg.unlocked & 0x80000000)) {
+    if (!(gSaveBlock.mg.unlocked & 0x80000000)) {
         tbl = sMiniGmRows;
         for (i = 0; i < 36; i++) {
             for (j = 0; j < 5; j++) {
@@ -291,7 +289,7 @@ s32 dScMiniGm_c::InitResources()
             }
             tbl++;
         }
-        data_0209caa0.mg.unlocked |= 0x80000000;
+        gSaveBlock.mg.unlocked |= 0x80000000;
         gMgSaveDirty = 1;
     }
 
@@ -470,9 +468,9 @@ s32 dScMiniGm_c::InitResources()
     if (gMgSaveDirty == 1) {
         gSoftResetDisabled = 1;
     }
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     if (data_0209b2fc != 0) {
-        dScene_c::SetFaders(&data_0209f61c);
+        dScene_c::SetFaders(&gSceneWipe);
     }
 
     data_0209b2fc = 0;
@@ -1080,15 +1078,15 @@ void dScMiniGm_c::UpdateGameSelect()
         gMgMenuRow.scoringMode = src->scoringMode;
         gMgMenuRow.scoreCap = src->scoreCap;
         gMgMenuRow.ownRecords = src->ownRecords;
-        gMgMenuRowMid = src->recordDefaults;
+        gMgMenuRow.recordDefaults = src->recordDefaults;
         gMgMenuRow.musicTrack = src->musicTrack;
         gMgMenuRow.musicMode = src->musicMode;
         gMgMenuRow.level = src->level;
     }
     LoadIconPalette(sel);
     func_02012790(0x1e);
-    dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.SetType(0);
+    dScene_c::SetFaders(&gSceneWipe);
+    gSceneWipe.SetType(0);
     gMgMenuRow.level = mStartLevel;
     dScene_c::StartSceneFade(sMiniGmRows[gMgLastSelected[0]].id,
                              sMiniGmRows[gMgLastSelected[0]].sceneParam, 0);

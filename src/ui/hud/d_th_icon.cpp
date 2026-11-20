@@ -25,7 +25,7 @@
 /* local extern: arm9 C helpers with no shared header. */
 extern "C" int func_0203da9c(void);
 
-extern int data_0208ee44;
+extern int gFrameStep;
 
 /* Place an icon: store its touch kind, centre and half extents, clear
  * mPressTimer, mOn and mPenInside, arm it at once when the kind is
@@ -50,7 +50,7 @@ void dThIcon_c::Behavior() {
     if (mPressTimer <= 0)
         return;
 
-    mPressTimer -= data_0208ee44;
+    mPressTimer -= gFrameStep;
     if (mPressTimer > 0)
         return;
 

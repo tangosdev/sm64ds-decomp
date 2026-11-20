@@ -17,7 +17,7 @@ extern "C" {
 extern void OS_GetOwnerInfo(unsigned char *dst);
 }
 
-extern "C" void func_0203db64(void *a, void *b);
+extern "C" void func_0203db64(void *a, const void *b);
 extern "C" int func_0203daac(void);
 
 void func_0201fec8(void)
@@ -25,28 +25,28 @@ void func_0201fec8(void)
     unsigned char buf[0x50];
     unsigned char saved;
     if (data_0209e64c != 0) return;
-    saved = func_0201a9ec(&data_0209d574);
+    saved = func_0201a9ec(&gWatchdog);
     OS_GetOwnerInfo(buf);
     switch (buf[0]) {
     case 2:
-        func_0203db64(data_02075358, (char *)data_02075320);
+        func_0203db64(data_02075358, data_02075320);
         break;
     case 3:
-        func_0203db64(data_02075358, (char *)data_0207533c);
+        func_0203db64(data_02075358, data_0207533c);
         break;
     case 4:
-        func_0203db64(data_02075358, (char *)data_020752cc);
+        func_0203db64(data_02075358, data_020752cc);
         break;
     case 5:
-        func_0203db64(data_02075358, (char *)data_020752e8);
+        func_0203db64(data_02075358, data_020752e8);
         break;
     default:
-        func_0203db64(data_02075358, (char *)data_02075304);
+        func_0203db64(data_02075358, data_02075304);
         break;
     }
     data_0208f274 = func_0203daac();
-    func_0201a9fc(&data_0209d574);
-    func_0201a96c(&data_0209d574, saved);
+    func_0201a9fc(&gWatchdog);
+    func_0201a96c(&gWatchdog, saved);
     data_0209e64c = 1;
 }
 

@@ -88,7 +88,7 @@ struct daSpd_c : dActor_c {
     int  func_ov071_0211f7d4();
     int  func_ov071_0211f6f8();
     int  func_ov071_0211f694();
-    void func_ov071_0211f524();
+    void UpdateModelAndShadow();
     void func_ov071_0211f498();
     void func_ov071_0211f29c();
     void func_ov071_0211f148(dBgCh_Actr *w);

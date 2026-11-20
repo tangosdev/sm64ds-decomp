@@ -108,7 +108,6 @@ struct JugemVec3 {
 extern "C" {
 
 /* Helpers not declared by the included headers. */
-int Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int AngleDiff(int a, int b);
 
 /* other overlays / arm9 */
@@ -208,7 +207,7 @@ int daC_Jugem_c::StateIntroMain() {
             daPly_c *player = ClosestPlayer();
             if (player != 0) {
                 func_ov002_020c3e8c(player);
-                data_0209caa0.file.flags2 |= FILE_FLAGS2_INTRO_DONE;
+                gSaveBlock.file.flags2 |= FILE_FLAGS2_INTRO_DONE;
             }
             SetState(data_ov085_021307e0);
         }
@@ -583,7 +582,7 @@ int daC_Jugem_c::StateTalkMain()
 
 int daC_Jugem_c::StateTalkInit()
 {
-    SaveBlock *save = &data_0209caa0;
+    SaveBlock *save = &gSaveBlock;
     save->file.flags2 |= 0x20000;
     mTalkStep = 0;
     return 1;
@@ -617,8 +616,8 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     out.y = 0;
     out.z = 0;
     in.z = 0xc8000;
-    Matrix4x3_FromRotationY(&data_020a0e68, 0);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, 0);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     out.x += p->mPos.x;
     out.y += p->mPos.y + 0x70000;
     out.z += p->mPos.z;
@@ -651,7 +650,7 @@ int daC_Jugem_c::StateHiddenMain()
     if (p != 0) {
         /* Measured (#821 r68): copied as a Vector3 this is memberwise, not the ROM's ldm/stm. */
         VecFx32 v = *(VecFx32 *)&p->mPos;
-        if ((data_0209caa0.file.flags2 & 0x10000) != 0 && v.z > -0x28000 &&
+        if ((gSaveBlock.file.flags2 & 0x10000) != 0 && v.z > -0x28000 &&
             p->SetNoControlState(0x12, -1, 0) != 0) {
             p->mStateTarget = mPos;
             *(VecFx32 *)&mPos = v;
@@ -703,8 +702,8 @@ int daC_Jugem_c::StateHoverMain()
     mPos.y = plpos.y;
     mPos.z = plpos.z;
     in.z = ::Vec3_HorzDist(&plpos, &mPos);
-    Matrix4x3_FromRotationY(&data_020a0e68, ::Vec3_HorzAngle(&plpos, &mPos));
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, ::Vec3_HorzAngle(&plpos, &mPos));
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     mPos.x += out.x;
     if (gCurrentSublevel == 0x2f) {
         if (mPos.x > 0x79e000) {
@@ -736,11 +735,11 @@ void daC_Jugem_c::UpdateShadow()
 {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel1.mat4x3 = data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
-    mShadowMat1 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel1.mat4x3 = gScratchMtx;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
+    mShadowMat1 = gScratchMtx;
     DropShadowRadHeight(mShadowModel1, mShadowMat1, 0x46000, 0x258000, 0xf);
 }
 
@@ -759,12 +758,12 @@ void daC_Jugem_c::UpdateShadowPlayer()
     Vector3 *ps;
 
     Vec3_Asr(&t, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel1.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel1.mat4x3 = gScratchMtx;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
-    mShadowMat1 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
+    mShadowMat1 = gScratchMtx;
 
     DropShadowRadHeight(mShadowModel1, mShadowMat1, 0x46000, 0x258000, 0xf);
 
@@ -796,18 +795,18 @@ void daC_Jugem_c::UpdateShadowPlayer()
     z1.z = ::Vec3_HorzDist(&pp, &p);
     {
         short ang = ::Vec3_HorzAngle(&pp, &p);
-        Matrix4x3_FromRotationY(&data_020a0e68, ang);
+        Matrix4x3_FromRotationY(&gScratchMtx, ang);
     }
-    MTX_MultVec43(&z1, &data_020a0e68, &off);
+    MTX_MultVec43(&z1, &gScratchMtx, &off);
 
     p.x = p.x + off.x;
     p.y = pp.y;
     p.z = p.z + off.z;
-    Matrix4x3_FromTranslation(&data_020a0e68, p.x >> 3, p.y >> 3, p.z >> 3);
+    Matrix4x3_FromTranslation(&gScratchMtx, p.x >> 3, p.y >> 3, p.z >> 3);
 
     pl->func_ov002_020e4374(&p1, &p2);
 
-    mShadowMat2 = data_020a0e68;
+    mShadowMat2 = gScratchMtx;
     DropShadowRadHeight(mShadowModel2, mShadowMat2, p2, p1, 0xf);
 }
 
@@ -877,13 +876,13 @@ int daC_Jugem_c::InitResources()
         SetState(data_ov085_021307d0);
         break;
     case 1: {
-        int v = data_0209caa0.file.flags2;
+        int v = gSaveBlock.file.flags2;
         if (v & 0x20000)
             return 0;
         if (v & 0x10000)
-            data_0209caa0.file.flags2 = v & ~0x10000;
+            gSaveBlock.file.flags2 = v & ~0x10000;
         mHidden = 1;
-        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
+        if (!(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE))
             SetState(data_ov085_02130790);
         else
             SetState(data_ov085_021307e0);

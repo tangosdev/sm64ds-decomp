@@ -19,7 +19,7 @@
  *   own, so the node's collision cylinder needs no explicit construction.
  * - data_ov002_02110a48 / data_ov002_0210abb8 / g_profile_TREE: overlay
  *   bss/data owns them (S14); this TU's delinks span is .text-only.
- * - data_0209f43c / data_0209b3ec: arm9 bss, the dClipper singleton and the
+ * - gClipper / gViewMtx: arm9 bss, the dClipper singleton and the
  *   live view matrix it clips against (CopyToViewMat's object); read here,
  *   owned elsewhere.
  */
@@ -29,6 +29,7 @@
 #include "dCamera_c.h"
 #include "dClipper.h"
 #include "Memory.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
 /* One tree instance's list node: the billboard/clip center in
@@ -63,21 +64,10 @@ enum {
     kOpacityFull = 31,
 };
 
-/* Shared ABI seams. local extern: no shared header declares this helper. */
-extern "C" {
-/* Spelled Vector3 * for the object actually passed. The definition in
- * src/Vec3_AsrInPlace.c says int *, and the tree also carries s32 * and a
- * file-local `struct Vec3 { int x, y, z; }` in src/game/actors/d_a_kpa3_bg.cpp --
- * four spellings of the same three-word layout, none of them typedefs of each
- * other. The disagreement is nominal, not a contract difference, and int * is
- * the slop spelling this cleanup exists to retire. */
-int *Vec3_AsrInPlace(Vector3 *v, int shift);
-}
-
 extern TreeNode *data_ov002_02110a48[kNumVariants];
 extern u16 data_ov002_0210abb8[];
-extern dClipper data_0209f43c;
-extern Matrix4x3 data_0209b3ec;
+extern dClipper gClipper;
+extern Matrix4x3 gViewMtx;
 extern dCamera_c *gCamera;
 
 daTree_c *daTree_c_classInit() {
@@ -146,7 +136,7 @@ int daTree_c::Render()
         node = *slot;
         while (node != 0) {
             Vector3 out;
-            int dist = data_0209f43c.TransformAndClip(data_0209b3ec, node->pos, kCanopyLift, out);
+            int dist = gClipper.TransformAndClip(gViewMtx, node->pos, kCanopyLift, out);
             if (dist > kClipNear && dist < kClipFar) {
                 int opacity = kOpacityFull;
                 if (dist < kFadeDist)

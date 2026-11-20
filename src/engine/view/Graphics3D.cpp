@@ -9,8 +9,8 @@
  * top of the run down.
  *
  * leftovers:
- * - data_0209b3ec is the view matrix and data_0209b41c its inverse; both
- *   stay linker names, and neither is claimed here.
+ * - gViewMtx is the view matrix and gInvViewMtx its inverse; neither
+ *   is claimed here.
  */
 #include "common.h"
 #include "nitro/gx/gx_vramcnt.h"
@@ -19,11 +19,8 @@
 #include "nitro/gx/g3imm_cmd.h"
 #include "math/MtxStack.h"
 
-extern Matrix4x3 data_0209b3ec;
-/* the view matrix */
-extern Matrix4x3 data_0209b41c;
-/* its inverse */
-extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern Matrix4x3 gViewMtx;    /* the view matrix */
+extern Matrix4x3 gInvViewMtx; /* its inverse */
 void func_02045d9c(void);
 
 #include "nitro/gx/g3_util.h"
@@ -50,8 +47,8 @@ void func_0200f4f4(void) {
     GX_SetBankForTex(GX_VRAM_TEX_01_AB);
     GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_01234_EF);
     func_02045d9c();
-    data_0209b3ec = IDENTITY_MATRIX4X3;
-    MTX_Inverse43(&data_0209b3ec, &data_0209b41c);
+    gViewMtx = IDENTITY_MATRIX4X3;
+    MTX_Inverse43(&gViewMtx, &gInvViewMtx);
 }
 
 // Reset the matrix stacks: identity texture matrix, then back to
@@ -65,8 +62,8 @@ void func_0200f4b4(void) {
 
 // Copy the camera matrix into the live view, then invert it.
 void CopyToViewMat(const Matrix4x3 *src) {
-    data_0209b3ec = *src;
-    MTX_Inverse43(&data_0209b3ec, &data_0209b41c);
+    gViewMtx = *src;
+    MTX_Inverse43(&gViewMtx, &gInvViewMtx);
 }
 
 /* OS_Terminate-screen and title font. 0x2000 bytes; the tail is zero. */

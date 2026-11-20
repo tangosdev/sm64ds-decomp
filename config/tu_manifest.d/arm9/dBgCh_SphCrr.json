@@ -138,7 +138,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr14RecordUnderHitEiPv",
+      "symbol": "_ZN12dBgCh_SphCrr14RecordUnderHitEiP11SurfaceInfo",
       "address": "0x0203798c",
       "size": "0x00000010",
       "legacy_source": "src/func_0203798c.c",
@@ -152,7 +152,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr13RecordWallHitEiPv",
+      "symbol": "_ZN12dBgCh_SphCrr13RecordWallHitEiP11SurfaceInfo",
       "address": "0x020379c0",
       "size": "0x00000010",
       "legacy_source": "src/func_020379c0.c",
@@ -166,7 +166,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr14RecordFloorHitEiPv",
+      "symbol": "_ZN12dBgCh_SphCrr14RecordFloorHitEiP11SurfaceInfo",
       "address": "0x020379f4",
       "size": "0x00000010",
       "legacy_source": "src/func_020379f4.c",
