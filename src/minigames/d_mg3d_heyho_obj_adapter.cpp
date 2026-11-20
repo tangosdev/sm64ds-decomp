@@ -1223,12 +1223,12 @@ int Heyho::IsChasing() {
 }
 
 /* ---- Heyho_InitPool ---- */
-int Heyho_InitPool(void *heyhos, int count) {
+int Heyho_InitPool(Heyho *heyhos, int count) {
     int i;
     sHeyhoScorePopups = 0;
     sHeyhoCount = count;
     sHeyhoUnsettledCount = count;
-    sHeyhos = (Heyho *)heyhos;
+    sHeyhos = heyhos;
     for (i = 0; i < sHeyhoCount; i++) {
         if (sHeyhos[i].LoadResources() == 0)
             return 0;

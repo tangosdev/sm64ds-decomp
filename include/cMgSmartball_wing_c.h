@@ -54,7 +54,7 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
     int IsSettled();
     void Trigger();
     void RebuildVerts();
-    int HitTest(int *pos);
+    int HitTest(Vector2 *pos);
 
     s16 mAngle;        /* 0x032 -- wing angle: SaveSnapshot eases it toward
                            0x3000 by 0x200 a frame; RestoreInitial zeroes it */
@@ -71,6 +71,10 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
                            IsTableAtRest; while set, SaveSnapshot leaves
                            the angle alone */
     u8 pad_045[3];     /* align the collision vertices */
+    /* A plain {x, y} pair, not Vector2: the vertices go to func_0203d388 as
+       Vector2 *, but a Vector2[8] member gives the constructor an array
+       construction it does not have (both constructors 0x50 -> 0x74, and
+       SpawnObjects / AfterCleanupResources grow, measured 2026-11-19). */
     struct CollisionVertex {
         s32 x, y;
     };

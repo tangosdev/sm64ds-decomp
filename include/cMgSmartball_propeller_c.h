@@ -16,7 +16,7 @@
  * RestoreInitial zeroes 0x36, sets 0x34 to 0x40 (the default target speed),
  * and (through the base call) zeroes mCurrent. Update never touches 0x34+
  * at all -- it only reads mAngle and the position
- * (mCurrent0/mCurrent1) to look up a rotation matrix and draw two sprites.
+ * (mCurrent) to look up a rotation matrix and draw two sprites.
  *
  * Update reads mAngle unsigned: it indexes a sine table with `>> 4` (lsr,
  * not asr).
@@ -24,7 +24,7 @@
  * THE TAIL FROM 0x38 TO 0x77 IS mVertices[8], eight (x, y) pairs. Both
  * readers are in d_s_mg_smartball.cpp: RebuildVerts (called from SaveSnapshot
  * and RestoreInitial) seeds the eight blade-tip offsets, rotates each by
- * mAngle and adds mCurrent0/mCurrent1; HitTest reads them back
+ * mAngle and adds mCurrent; HitTest reads them back
  * as the corners of four triangles -- {0,1,2}, {3,1,2}, {4,5,6}, {7,5,6} --
  * for its PointInTriangle tests. The wing models its own vertex ring the
  * same way (cMgSmartball_wing_c::mVertices).
@@ -56,7 +56,7 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
     /* Recovered helpers: HitTest runs the ball-vs-blade fan collision (the
        0x38..0x77 tip ring); RebuildVerts rewrites that ring from mAngle and
        the mCurrent position. */
-    int  HitTest(int *pos);
+    int HitTest(Vector2 *pos);
     void RebuildVerts();
 
     s16 mAngle;           /* 0x032 -- blade angle; SaveSnapshot adds mSpinSpeed
@@ -72,6 +72,10 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
                               every frame -- which is what makes
                               it an angular speed rather than an angle.
                               RestoreInitial zeroes it. */
+    /* A plain {x, y} pair, not Vector2: the vertices go to func_0203d388 as
+       Vector2 *, but a Vector2[8] member gives the constructor an array
+       construction it does not have (both constructors 0x50 -> 0x74, and
+       SpawnObjects / AfterCleanupResources grow, measured 2026-11-19). */
     struct CollisionVertex {
         s32 x, y;
     };

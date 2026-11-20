@@ -34,7 +34,6 @@
 extern Vector3 data_ov027_02113d10;
 
 extern "C" {
-int *Vec3_LslInPlace(Vector3 *, int);
 extern u8 gGameMode;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
@@ -128,13 +127,13 @@ void SnowmanBreathParticle::CheckSnowman()
 
 void SnowmanBreathParticle::UpdatePosition()
 {
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, 0x50000);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngleX);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, 0, 0x50000);
     Vector3 offset;
-    offset.x = data_020a0e68.t.x;
-    offset.y = data_020a0e68.t.y;
-    offset.z = data_020a0e68.t.z;
+    offset.x = gScratchMtx.t.x;
+    offset.y = gScratchMtx.t.y;
+    offset.z = gScratchMtx.t.z;
     VEC_Add(&mPos, &offset, &mPos);
 }
 
@@ -192,10 +191,10 @@ int daSnmBth_c::IsPlayerInRange()
 
     Vector3 playerPos;
     Vec3_Asr(&playerPos, &player->mPos, 3);
-    data_020a0e68 = mInvModelMat;
+    gScratchMtx = mInvModelMat;
 
     Vector3 localPos;
-    MTX_MultVec43(&playerPos, &data_020a0e68, &localPos);
+    MTX_MultVec43(&playerPos, &gScratchMtx, &localPos);
     Vec3_LslInPlace(&localPos, 3);
 
     if (localPos.x >= -0xe1000 && localPos.x <= 0xe1000 && localPos.y >= -0x5000 &&
@@ -317,10 +316,10 @@ int daSnmBth_c::InitResources()
     mAngle.y = 0x5d30;
     Vector3 pos;
     Vec3_Asr(&pos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
-    mInvModelMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    MTX_Inverse43(&gScratchMtx, &gScratchMtx);
+    mInvModelMat = gScratchMtx;
     return 1;
 }
 

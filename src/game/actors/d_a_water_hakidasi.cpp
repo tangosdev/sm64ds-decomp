@@ -72,7 +72,7 @@ extern int SublevelToLevel(int);
 }
 extern int IsStarCollected(int r0, int r1);
 
-extern SharedFilePtr data_ov002_0210da10;
+extern SharedFilePtr gWRingModelFile;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
@@ -113,9 +113,9 @@ int daWater_Hakidasi_c::State0() {
             delta.x = 0;
             delta.y = 0;
             delta.z = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, (s16)(HorzAngleToCPlayer() + 0x8000));
-            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
-            MTX_MultVec43(&vec, &data_020a0e68, &delta);
+            Matrix4x3_FromRotationY(&gScratchMtx, (s16)(HorzAngleToCPlayer() + 0x8000));
+            Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, -0x4000);
+            MTX_MultVec43(&vec, &gScratchMtx, &delta);
             playerPos = &player->mPos;
             vec.x = playerPos->x;
             vec.y = playerPos->y;
@@ -255,7 +255,7 @@ void daWater_Hakidasi_c::func_ov064_0211987c() {}
  * not in this overlay: the class borrows models the always-resident module
  * owns, so the handles are released rather than freed. */
 s32 daWater_Hakidasi_c::CleanupResources() {
-    data_ov002_0210da10.Release();
+    gWRingModelFile.Release();
     data_ov002_0210d9a8.Release();
     return 1;
 }
@@ -286,7 +286,7 @@ s32 daWater_Hakidasi_c::Behavior() {
 }
 
 s32 daWater_Hakidasi_c::InitResources() {
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
+    dExtSimpleModel_c::LoadFile(gWRingModelFile);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
     mStarID = (param1 >> 0xc) & 0xf;
     mNoRings = param1 & 1;

@@ -41,6 +41,7 @@
 #ifndef CMGSMARTBALL_OBJECT_C_H
 #define CMGSMARTBALL_OBJECT_C_H
 #include "types.h"
+#include "Vector2.h"
 
 struct dScMgSmartball_c;
 struct Vector2;
@@ -54,13 +55,8 @@ struct cMgSmartball_object_c {
        child's HitTest calls on `this` (the receiver is never read). SetVel is
        the writer half of the mVelocity pair accessors -- the reader halves
        take (out, obj) order, so they stay free functions in the TU. */
-    int  PointInTriangle(int *p, int *q0, int *q1, int *q2);
-    /* Callers that keep a corner in a Vector2 pass its address; the layout
-       is the same pair of ints, so forward to the array body. */
-    int PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2) {
-        return PointInTriangle((int *)p, (int *)q0, (int *)q1, (int *)q2);
-    }
-    void SetVel(int *v);           /* mVel0/mVel1 = v[0]/v[1] */
+    int PointInTriangle(Vector2 *p, Vector2 *q0, Vector2 *q1, Vector2 *q2);
+    void SetVel(Vector2 *v); /* mVel = *v */
 
     /* The C spelling of this class gets no explicit vtable member because
        no .c file declares it; every reader reaches these fields by raw
@@ -73,31 +69,26 @@ struct cMgSmartball_object_c {
                                     mgr+0x4670/0x46bc the kinoko count and
                                     table, mgr+0x595c/0x595d two pause
                                     flags). */
-    s32 mCurrent0;    /* 0x008 -- restored from mInitial by RestoreInitial */
-    s32 mCurrent1;    /* 0x00c */
-    s32 mSnapshot0;   /* 0x010 -- written from mCurrent by SaveSnapshot */
-    s32 mSnapshot1;   /* 0x014 */
-    s32 mInitial0;    /* 0x018 -- constructor writes the same pair here and
-                          at mCurrent */
-    s32 mInitial1;    /* 0x01c */
-    s32 mVel0;        /* 0x020 -- constructor zeroes it. Velocity, x half:
-                          cMgSmartball_ball_c::SaveSnapshot does
-                          `mCurrent0 += mVel0; mCurrent1 += mVel1;` and passes
-                          &mVel0 to Vec2_Len as a 2-vector. */
-    s32 mVel1;        /* 0x024 -- constructor zeroes it; the z half of that
-                          pair, and the value cMgSmartball_spring_c eases
-                          mCurrent1 back to rest with. */
-    s32 mRadius;      /* 0x028 -- constructor zeroes it and each child's own
-                          constructor then writes its own constant (0x8000
-                          ball, 0x14000 pakkun, 0x18000 board, 0x20000 dokan/
-                          propeller/spring, 0x7000 kinoko). Both readers use it
-                          as a distance: cMgSmartball_ball_c::SaveSnapshot
-                          compares a signed plane distance against -mRadius,
-                          and cMgSmartball_kinoko_c eases it to 0 and back to
-                          0x7000 as the mushroom squashes, with that class's
-                          Update turning it into a render scale. Ten other
-                          files in this family read or write it, the
-                          most-touched field of the class. */
+    Vector2 mCurrent;            /* 0x008 -- restored from mInitial by RestoreInitial */
+    Vector2 mSnapshot;           /* 0x010 -- written from mCurrent by SaveSnapshot */
+    Vector2 mInitial;            /* 0x018 -- constructor writes the same pair here and
+                                    at mCurrent */
+    Vector2 mVel;                /* 0x020 -- constructor zeroes it. Velocity:
+                                    cMgSmartball_ball_c::SaveSnapshot does
+                                    `mCurrent.x += mVel.x; mCurrent.y += mVel.y;`, and
+                                    cMgSmartball_spring_c eases mCurrent.y back to rest
+                                    with mVel.y. */
+    s32 mRadius;                 /* 0x028 -- constructor zeroes it and each child's own
+                                    constructor then writes its own constant (0x8000
+                                    ball, 0x14000 pakkun, 0x18000 board, 0x20000 dokan/
+                                    propeller/spring, 0x7000 kinoko). Both readers use it
+                                    as a distance: cMgSmartball_ball_c::SaveSnapshot
+                                    compares a signed plane distance against -mRadius,
+                                    and cMgSmartball_kinoko_c eases it to 0 and back to
+                                    0x7000 as the mushroom squashes, with that class's
+                                    Update turning it into a render scale. Ten other
+                                    files in this family read or write it, the
+                                    most-touched field of the class. */
     s32 mIndex;       /* 0x02c -- the constructor's second argument: this
                           object's slot in the manager's tables.
                           QueueBehind compares it against mgr+0x4664

@@ -2028,14 +2028,12 @@ static const int *const *sPortraitStrokeProgressThresholds[6] = {
     data_ov007_020d80ec, data_ov007_020d8574, data_ov007_020d8724,
     data_ov007_020d7fac, data_ov007_020d83e4, data_ov007_020d8264};
 
-extern char *data_ov007_02104ba0;
-
-#define SCENE ((Ov007PickerScene *)data_ov007_02104ba0)
+extern Ov007PickerScene *sPickerScene;
 
 /* The per-figure stroke stages as a pointer: indexing through it, not
- * through WORK->strokeStage, gives the ROM's base + 0xfc then [idx] form. */
+ * through gMenuWork->strokeStage, gives the ROM's base + 0xfc then [idx] form. */
 static inline u8 *StrokeStages(void) {
-    return WORK->strokeStage;
+    return gMenuWork->strokeStage;
 }
 
 /* Loads figure idx's next portrait drawing (strokeStage[idx]: 0, 1, 2, then
@@ -2043,14 +2041,14 @@ static inline u8 *StrokeStages(void) {
  * drawing gets 1.5 times that. */
 void func_ov007_020bbe60(int idx) {
     int drawing = idx * 3 + StrokeStages()[idx];
-    func_ov007_020c6784(SCENE->picker, sPortraitStrokeCounts[drawing],
+    func_ov007_020c6784(sPickerScene->picker, sPortraitStrokeCounts[drawing],
                         sPortraitStrokePointCounts[drawing], sPortraitStrokeXCoords[drawing],
                         sPortraitStrokeYCoords[drawing], sPortraitStrokeProgressThresholds[drawing],
                         1);
-    SCENE->replayFrames = 120;
+    sPickerScene->replayFrames = 120;
     if (idx == 0 && StrokeStages()[idx] == 2) {
-        int frames = FX_MUL(SCENE->replayFrames << 12, 0x1800);
-        SCENE->replayFrames = frames >> 12;
+        int frames = FX_MUL(sPickerScene->replayFrames << 12, 0x1800);
+        sPickerScene->replayFrames = frames >> 12;
     }
     StrokeStages()[idx]++;
     if (StrokeStages()[idx] >= 3)

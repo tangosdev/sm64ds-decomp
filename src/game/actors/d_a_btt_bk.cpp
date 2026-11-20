@@ -139,12 +139,12 @@ void daBttBk_c::UpdateModelTransform() {
                 t.y = ty;
                 t.z = tz;
                 carrier = mCarrier;
-                data_020a0e68 = *carrier->mCarryMatrix;
-                Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, t.x, t.y, t.z);
+                gScratchMtx = *carrier->mCarryMatrix;
+                Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, t.x, t.y, t.z);
 
-                mPos.x = data_020a0e68.t.x;
-                mPos.y = data_020a0e68.t.y;
-                mPos.z = data_020a0e68.t.z;
+                mPos.x = gScratchMtx.t.x;
+                mPos.y = gScratchMtx.t.y;
+                mPos.z = gScratchMtx.t.z;
                 Vec3_LslInPlace(&mPos, 3);
             }
         }

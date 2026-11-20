@@ -9,7 +9,7 @@ extern "C" void func_ov007_020aec94(int);
  * in 7 the first tap selects, tapping the selection again clears it and any
  * other slot becomes the target; in 9 it selects only when nothing is. */
 void func_ov007_020b6134(int arg){
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     switch (w->states[1]->currentState) {
     case 0:
         func_ov007_020aec94(arg + 3);

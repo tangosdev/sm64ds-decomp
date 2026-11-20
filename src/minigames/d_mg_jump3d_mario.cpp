@@ -132,7 +132,7 @@ int D3D_PlaySeAtX(int a, int b);
 void Puff_Spawn(int a, int b);
 void Puff_DrawAll(void);
 void Puff_UpdateAll(void);
-void Puff_ClearAll(int a, int b);
+void Puff_ClearAll(int a, OamAttr **b);
 
 /* Rescales the six tuning words at 0213b008..0213b01c from one input,
  * clamped to 0x3000. */
@@ -338,9 +338,9 @@ void *dMgJump3DMario_c::GetPos() {
 /* Rebuilds the model matrix from mPos and mAngleY. */
 void dMgJump3DMario_c::UpdateModelMatrix()
 {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* OAM shadow sprite plus the model render. */

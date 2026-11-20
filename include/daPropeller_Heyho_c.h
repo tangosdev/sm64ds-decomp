@@ -50,7 +50,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     dExtAnmModel_c mAnmModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
-    /* Shadow matrix written by UpdatePose and passed to
+    /* Shadow matrix written by UpdateModelAndShadow and passed to
        DropShadowRadHeight. */
     Matrix4x3 mShadowMatrix;                            /* 0x38c */
     State                       *mCurrentState;         /* 0x3bc */
@@ -126,7 +126,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     int St_Fire_Main();
     int St_Settle_Main();
     int St_Dive_Main();
-    void UpdatePose();
+    void UpdateModelAndShadow();
     int St_Wander_Init();
     int St_Wander_Main();
     int St_Chase_Init();

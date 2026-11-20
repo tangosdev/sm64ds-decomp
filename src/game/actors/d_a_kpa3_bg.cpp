@@ -55,7 +55,7 @@ typedef struct Kpa3BgPieceSpot {
 } Kpa3BgPieceSpot;
 
 extern const Kpa3BgPieceSpot data_ov060_02119564[10];
-extern Matrix4x3 data_0209b3ec;
+extern Matrix4x3 gViewMtx;
 
 extern SharedFilePtr *const data_ov060_02119514[];
 extern SharedFilePtr *const data_ov060_0211953c[];
@@ -215,7 +215,7 @@ void daKpa3Bg_c::StateFall() {
         pos.y = 0x12c000;
         pos.z = FX_CosIdx(ang >> 4) * 870 + (data_ov060_02119564[mVariant].z << 12);
         Vec3_AsrInPlace(&pos, 3);
-        MTX_MultVec43(&pos, &data_0209b3ec, &mCamSpacePos);
+        MTX_MultVec43(&pos, &gViewMtx, &mCamSpacePos);
         func_02012694(0xbc, &mCamSpacePos);
         mCamSpacePos = saved;
     }

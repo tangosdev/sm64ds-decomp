@@ -39,7 +39,7 @@ extern dFdBrightness_c *gSceneFader;
    .bss; only InitResources and Behavior read it. */
 extern u8 sBootJobDone;
 extern PadData data_020a0e58[];
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern dFdColor_c gSceneColorFader;
@@ -140,7 +140,7 @@ s32 dScBoot_c::InitResources() {
     mState = STATE_BOOT_WAIT;
     mButtonFlashTimer = 0;
     mInputLockTimer = 0;
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     func_020233f4();
 
     gSceneColorFader.color = 0x7fff;
@@ -153,14 +153,14 @@ s32 dScBoot_c::InitResources() {
  *
  * The boot menu's state machine, in mState: wait out the fade (0/7), watch
  * the touch screen for the two confirmation buttons (1/3), confirm (2/6),
- * and run the "erase all save data" countdown (4/5). data_0208ee44 is the
+ * and run the "erase all save data" countdown (4/5). gFrameStep is the
  * frame step, so every countdown decrements by it rather than by one.
  */
 s32 dScBoot_c::Behavior() {
     u16 keysHeld, keysPressed;
     int frameStep;
 
-    frameStep = data_0208ee44;
+    frameStep = gFrameStep;
     keysHeld = data_020a0e58[gActivePlayerSlot].held;
     keysPressed = data_020a0e58[gActivePlayerSlot].pressed;
 

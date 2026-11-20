@@ -127,7 +127,6 @@ enum {
 };
 
 extern "C" {
-extern dExtAnm2Model_c *func_ov002_020e496c(daPly_c *p);
 extern short data_ov002_020ff0d0[];
 extern const VecFx32 data_ov002_020ff0d4[];
 
@@ -936,7 +935,7 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
 /* -------------------------------------------------------------------------- */
 /* Put the sign on its holder (Behavior's step 2 and Render both call this).
  * `body` is the holder's current body dExtAnmModel_c, from the shared helper
- * func_ov002_020e496c; its mat4x3 is copied out and the matrix of bone 14
+ * daPly_c::GetBodyModel; its mat4x3 is copied out and the matrix of bone 14
  * (data.transforms[14]) is multiplied in. r4 picks a pose, 0 or 1: 1 when
  * the holder is front-sliding, or has lost its grabbed object while the body
  * animation's currFrame satisfies (frame << 4) >> 16 < 0xe. The X angle
@@ -951,7 +950,7 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
 void daObjTatefuda_c::AttachToHolder() {
     Vector3 v;
     Vector3 lo;
-    dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(mHoldingPlayer);
+    dExtAnmModel_c *body = (dExtAnmModel_c *)mHoldingPlayer->GetBodyModel();
     Matrix4x3 *bones = body->data.transforms;
     int r4 = 0;
 
@@ -967,30 +966,30 @@ void daObjTatefuda_c::AttachToHolder() {
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    data_020a0e68 = body->mat4x3;
-    MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
-    v.x = data_020a0e68.t.x;
-    v.y = data_020a0e68.t.y;
-    v.z = data_020a0e68.t.z;
+    gScratchMtx = body->mat4x3;
+    MTX_Concat43(&bones[14], &gScratchMtx, &gScratchMtx);
+    v.x = gScratchMtx.t.x;
+    v.y = gScratchMtx.t.y;
+    v.z = gScratchMtx.t.z;
 
     mPrevAngle.y = mHoldingPlayer->mAngle.y;
     mAngle.y = mPrevAngle.y;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x,
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, 0x8c00, 0);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, -0x8c00, 0);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, data_ov002_020ff0d4[r4].x,
                                         data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
 
-    mPos.x = data_020a0e68.t.x;
-    mPos.y = data_020a0e68.t.y;
-    mPos.z = data_020a0e68.t.z;
+    mPos.x = gScratchMtx.t.x;
+    mPos.y = gScratchMtx.t.y;
+    mPos.z = gScratchMtx.t.z;
     Vec3_Lsl(&lo, &mPos, 3);
     mPos.x = lo.x;
     mPos.y = lo.y;
     mPos.z = lo.z;
-    mModel.mat4x3 = data_020a0e68;
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1000,16 +999,16 @@ void daObjTatefuda_c::AttachToHolder() {
 /* Rebuild the model matrix from the sign's own position and angles: a
  * translation to position >> 3 (matrix units are position >> 3), a pivot
  * offset of 0x8c00 up, the rotation (Matrix4x3_ApplyInPlaceToRotationZXYExt), the pivot offset back
- * down, stored into mModel at 0xf0 through the scratch matrix data_020a0e68.
+ * down, stored into mModel at 0xf0 through the scratch matrix gScratchMtx.
  * Called by DROPPED's update, and by Behavior while the state is THROWN. */
 void daObjTatefuda_c::RebuildModelMatrix() {
     struct Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, 0x8c00, 0);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, -0x8c00, 0);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* Rebuild the drop shadow's matrix: a rotation about Y by the sign's angle,

@@ -48,8 +48,39 @@
     "functions_matched": 2,
     "functions_declared": 2,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": []
+      "requested": [
+        "_ZN13RouletteRacerC2Ev",
+        "_ZN13RouletteBoardD1Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev",
+        "_ZN7Vector2D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN13RouletteBoardD1Ev",
+        "_ZN13RouletteRacerC2Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev",
+        "_ZN7Vector2D1Ev"
+      ],
+      "droppedSections": [
+        7,
+        8,
+        9,
+        10,
+        12,
+        13
+      ],
+      "data": [],
+      "dataExternalized": [],
+      "canonicalDuplicates": [
+        {
+          "symbol": "_ZN7Vector2D1Ev",
+          "canonicalSymbol": "NullDestructor_0203d47c",
+          "module": "arm9",
+          "address": "0x0203d47c",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        }
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -74,6 +105,14 @@
       "symbol": "_ZN19dScMgSingle3DBase_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Base-object destructor of dScMgSingle3DBase_c, emitted as vague linkage once the factory's `new dScMgRoulette_c` expands the inline constructor chain (the same byproduct ov006/dScMgFlower_c, ov006/dScMgMemory2_c and ov006/dMg3DEspAnimSet_c license for theirs). dScMgRoulette_c's D1/D0 inline the base destructor rather than chain to it, and no module's symbols.txt gives _ZN19dScMgSingle3DBase_cD2Ev a home. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "RouletteRacer's step is a Vector2 member (include/dScMgRoulette_c.h), so the out-of-line RouletteRacer constructor here names ~Vector2() for its member. include/Vector2.h defines the empty ~Vector2() inline, so this TU emits its own 4-byte vague-linkage copy; that body is the arm9 element destructor at 0x0203d47c, so this copy is discarded."
     }
   ]
 }
