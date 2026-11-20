@@ -59,8 +59,8 @@ s16 atan2(s32, s32);
 
 /* The spawn arguments func_02010e78 stages for the constructor. */
 
-extern s16 *data_0209b460;
-extern s16 *data_0209b45c;
+extern Vector3 *data_0209b460;
+extern const Vector3_16 *data_0209b45c;
 extern s16 data_0208e378;
 extern "C" {
 /* local extern: no header declares it. */
@@ -96,24 +96,24 @@ static inline int IsGameMode(int mode) {
 dActor_c::dActor_c() : mActorListNode(this) {
     func_0203b244(&data_0209b468, &mActorListNode);
     {
-        int *spawnPos = (int *)data_0209b460;
+        Vector3 *spawnPos = data_0209b460;
         if (spawnPos) {
-            mPos.x = spawnPos[0];
-            mPos.y = spawnPos[1];
-            mPos.z = spawnPos[2];
+            mPos.x = spawnPos->x;
+            mPos.y = spawnPos->y;
+            mPos.z = spawnPos->z;
         }
     }
     {
-        short *spawnRot = data_0209b45c;
+        const Vector3_16 *spawnRot = data_0209b45c;
         if (spawnRot) {
-            mAngle.x = spawnRot[0];
-            mAngle.y = spawnRot[1];
-            mAngle.z = spawnRot[2];
+            mAngle.x = spawnRot->x;
+            mAngle.y = spawnRot->y;
+            mAngle.z = spawnRot->z;
             /* The ROM reloads the global. Folding the two reads drops an ldr. */
             spawnRot = data_0209b45c;
-            mPrevAngle.x = spawnRot[0];
-            mPrevAngle.y = spawnRot[1];
-            mPrevAngle.z = spawnRot[2];
+            mPrevAngle.x = spawnRot->x;
+            mPrevAngle.y = spawnRot->y;
+            mPrevAngle.z = spawnRot->z;
         }
     }
     mAreaId = data_0209b44c;
@@ -323,8 +323,8 @@ struct SpawnArg {
 };
 
 void SpawnArg::func_02010e78(const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
-    data_0209b460 = (s16 *)this;
-    data_0209b45c = (s16 *)rot;
+    data_0209b460 = (Vector3 *)this;
+    data_0209b45c = rot;
     data_0209b44c = areaID;
     data_0208e378 = deathTableID;
     data_0209b458 = 0;
