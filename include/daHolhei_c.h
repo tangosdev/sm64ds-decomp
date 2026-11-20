@@ -31,7 +31,7 @@ struct daHolhei_c : dEnemyBase_c {
        the translation, and pass it to DropShadowRadHeight. */
     Matrix4x3   mShadowMtx;    /* 0x390 */
     Vector3 mHomePos;          /* 0x3c0 -- InitResources copies mPos here */
-    /* func_ov062_021165e8 stores the closest player's pos when the charge starts. */
+    /* St_Charge_Main stores the closest player's pos when the charge starts. */
     Vector3 mChasePos; /* 0x3cc */
     /* Not dActor_c::mPrevPos at 0x068. Behavior rewinds mPos from these on a
        cliff or level-fence trip, then republishes them. */
@@ -40,15 +40,16 @@ struct daHolhei_c : dEnemyBase_c {
     s32         mPrevPosZ;     /* 0x3e0 */
     /* 1 when IsGoingOffCliff or the level fence trips, else 0. */
     u8          mEdgeStop;     /* 0x3e4 */
-    /* func_ov062_021164e8 sets this once it has started the grab animation. */
+    /* St_Grabbed_Main sets this once it has started the grab animation. */
     u8          mGrabAnim;     /* 0x3e5 */
-    /* Behavior counts this down. func_ov062_02116bf8 will not turn while it is set. */
+    /* Behavior counts this down. St_TurnHome_Main will not turn while it is set. */
     u16         mTurnWait;     /* 0x3e6 */
-    /* Behavior counts this down. func_ov062_02116a08 will not re-engage the
-       player while it is set; 021167c0 and 02116894 reload it with 0x1e. */
+    /* Behavior counts this down. St_Walk_Main will not re-engage the player
+       while it is set; St_SlopeTurn_Main and St_WallTurn_Main reload it with
+       0x1e. */
     u16         mChaseCooldown;/* 0x3e8 */
     u8          pad_3ea[2];    /* 0x3ea */
-    /* Sound::PlayLong handle. func_ov062_021165e8 and 02116a08 pass id 0x18a. */
+    /* Sound::PlayLong handle. St_Charge_Main and St_Walk_Main pass id 0x18a. */
     u32         mMoveSound;    /* 0x3ec */
     /* 0 aim at the player, 1 run, 2 past the point saved in mChasePos. */
     s32         mChargeStep;   /* 0x3f0 */
@@ -77,26 +78,40 @@ struct daHolhei_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
-    int func_ov062_021161a8();
-    int func_ov062_02116238();
-    int func_ov062_02116274();
-    int func_ov062_021162b8();
-    int func_ov062_0211632c();
-    int func_ov062_02116368();
-    int func_ov062_021163b0();
-    int func_ov062_02116498();
-    int func_ov062_021164e8();
-    int func_ov062_021165e0();
-    int func_ov062_021165e8();
-    int func_ov062_02116784();
-    int func_ov062_021167c0();
-    int func_ov062_02116850();
-    int func_ov062_02116894();
-    int func_ov062_02116980();
-    int func_ov062_02116a08();
-    int func_ov062_02116b80();
-    int func_ov062_02116bf8();
-    int func_ov062_02116c78();
+    /* The ten state records in d_a_holhei.cpp hold these as {enter, update}:
+       _Init is slot 0, _Main is slot 1. Declared below in the handlers' own
+       ascending-address order, which is the record each pair belongs to:
+         St_Throw_*      data_ov062_0211deb0
+         St_LiftLoop_*   data_ov062_0211de80
+         St_Lift_*       data_ov062_0211def0
+         St_Thrown_*     data_ov062_0211dec0
+         St_Grabbed_*    data_ov062_0211dea0
+         St_Charge_*     data_ov062_0211de90
+         St_SlopeTurn_*  data_ov062_0211de70
+         St_WallTurn_*   data_ov062_0211df00
+         St_Walk_*       data_ov062_0211dee0  -- InitResources enters this one
+         St_TurnHome_*   data_ov062_0211ded0
+       Every one returns 1. The state names are coined. */
+    int St_Throw_Main();
+    int St_Throw_Init();
+    int St_LiftLoop_Main();
+    int St_LiftLoop_Init();
+    int St_Lift_Main();
+    int St_Lift_Init();
+    int St_Thrown_Main();
+    int St_Thrown_Init();
+    int St_Grabbed_Main();
+    int St_Grabbed_Init();
+    int St_Charge_Main();
+    int St_Charge_Init();
+    int St_SlopeTurn_Main();
+    int St_SlopeTurn_Init();
+    int St_WallTurn_Main();
+    int St_WallTurn_Init();
+    int St_Walk_Main();
+    int St_Walk_Init();
+    int St_TurnHome_Main();
+    int St_TurnHome_Init();
     int ChangeState(HolheiState *);
     void UpdateHeldShadow();
     void UpdateShadow();

@@ -67,140 +67,140 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_021161a8Ev",
+      "symbol": "_ZN10daHolhei_c13St_Throw_MainEv",
       "address": "0x021161a8",
       "size": "0x00000090",
       "legacy_source": "src/func_ov062_021161a8.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116238Ev",
+      "symbol": "_ZN10daHolhei_c13St_Throw_InitEv",
       "address": "0x02116238",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov062_02116238.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116274Ev",
+      "symbol": "_ZN10daHolhei_c16St_LiftLoop_MainEv",
       "address": "0x02116274",
       "size": "0x00000044",
       "legacy_source": "src/func_ov062_02116274.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_021162b8Ev",
+      "symbol": "_ZN10daHolhei_c16St_LiftLoop_InitEv",
       "address": "0x021162b8",
       "size": "0x00000074",
       "legacy_source": "src/func_ov062_021162b8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_0211632cEv",
+      "symbol": "_ZN10daHolhei_c12St_Lift_MainEv",
       "address": "0x0211632c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov062_0211632c.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116368Ev",
+      "symbol": "_ZN10daHolhei_c12St_Lift_InitEv",
       "address": "0x02116368",
       "size": "0x00000048",
       "legacy_source": "src/func_ov062_02116368.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_021163b0Ev",
+      "symbol": "_ZN10daHolhei_c14St_Thrown_MainEv",
       "address": "0x021163b0",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov062_021163b0.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116498Ev",
+      "symbol": "_ZN10daHolhei_c14St_Thrown_InitEv",
       "address": "0x02116498",
       "size": "0x00000050",
       "legacy_source": "src/func_ov062_02116498.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_021164e8Ev",
+      "symbol": "_ZN10daHolhei_c15St_Grabbed_MainEv",
       "address": "0x021164e8",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov062_021164e8.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_021165e0Ev",
+      "symbol": "_ZN10daHolhei_c15St_Grabbed_InitEv",
       "address": "0x021165e0",
       "size": "0x00000008",
       "legacy_source": "src/func_ov062_021165e0.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_021165e8Ev",
+      "symbol": "_ZN10daHolhei_c14St_Charge_MainEv",
       "address": "0x021165e8",
       "size": "0x0000019c",
       "legacy_source": "src/func_ov062_021165e8.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116784Ev",
+      "symbol": "_ZN10daHolhei_c14St_Charge_InitEv",
       "address": "0x02116784",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov062_02116784.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_021167c0Ev",
+      "symbol": "_ZN10daHolhei_c17St_SlopeTurn_MainEv",
       "address": "0x021167c0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov062_021167c0.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116850Ev",
+      "symbol": "_ZN10daHolhei_c17St_SlopeTurn_InitEv",
       "address": "0x02116850",
       "size": "0x00000044",
       "legacy_source": "src/func_ov062_02116850.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116894Ev",
+      "symbol": "_ZN10daHolhei_c16St_WallTurn_MainEv",
       "address": "0x02116894",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov062_02116894.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116980Ev",
+      "symbol": "_ZN10daHolhei_c16St_WallTurn_InitEv",
       "address": "0x02116980",
       "size": "0x00000088",
       "legacy_source": "src/func_ov062_02116980.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116a08Ev",
+      "symbol": "_ZN10daHolhei_c12St_Walk_MainEv",
       "address": "0x02116a08",
       "size": "0x00000178",
       "legacy_source": "src/func_ov062_02116a08.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116b80Ev",
+      "symbol": "_ZN10daHolhei_c12St_Walk_InitEv",
       "address": "0x02116b80",
       "size": "0x00000078",
       "legacy_source": "src/func_ov062_02116b80.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116bf8Ev",
+      "symbol": "_ZN10daHolhei_c16St_TurnHome_MainEv",
       "address": "0x02116bf8",
       "size": "0x00000080",
       "legacy_source": "src/func_ov062_02116bf8.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116c78Ev",
+      "symbol": "_ZN10daHolhei_c16St_TurnHome_InitEv",
       "address": "0x02116c78",
       "size": "0x00000060",
       "legacy_source": "src/func_ov062_02116c78.cpp",
@@ -639,44 +639,45 @@
   "notes": [
     "@NNN re-key 2026-11-12: dActor_c's member declarations and the removed TU-local externs shifted this TU's compiler-local numbering by -3; defined_symbol_renames follows the compiled object.",
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning: RAW: src/func_ov062_021162b8.cpp (func_ov062_021162b8) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_0211632c.cpp (func_ov062_0211632c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_02116894.cpp (func_ov062_02116894) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_02116b80.cpp (func_ov062_02116b80) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_02116c78.cpp (func_ov062_02116c78) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov062_021162b8.cpp (St_LiftLoop_Init) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov062_0211632c.cpp (St_Lift_Main) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov062_02116894.cpp (St_WallTurn_Main) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov062_02116b80.cpp (St_Walk_Init) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov062_02116c78.cpp (St_TurnHome_Init) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov062_02116edc.cpp (func_ov062_02116edc) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021161a8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021161a8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_02116274; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov062_02115f84 and the one that held func_ov062_021163b0; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021163b0; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_02116498; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov062_02116238 and the one that held func_ov062_021164e8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021164e8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021165e8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021165e8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov062_02116238 and the one that held func_ov062_02116784; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov062_021165e8 and the one that held func_ov062_021167c0; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021167c0; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov062_02116850 and the one that held func_ov062_02116980; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_021165e8 and the one that held func_ov062_02116a08; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_02116a08; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov062_021165e8 and the one that held func_ov062_02116a08; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov062_021165e8 and the one that held func_ov062_02116a08; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound8PlayLongEjjjRK7Vector3s' differs between the legacy file that used to hold func_ov062_021165e8 and the one that held func_ov062_02116a08; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov062_021165e8 and the one that held func_ov062_02116bf8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'AngleDiff' differs between the legacy file that used to hold func_ov062_021167c0 and the one that held func_ov062_02116bf8; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_02116bf8; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_Throw_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_Throw_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_LiftLoop_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov062_02115f84 and the one that held St_Thrown_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_Thrown_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_Thrown_Init; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold St_Throw_Init and the one that held St_Grabbed_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_Grabbed_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_Charge_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_Charge_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN14dExtAnmModel_c7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold St_Throw_Init and the one that held St_Charge_Init; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold St_Charge_Main and the one that held St_SlopeTurn_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_SlopeTurn_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold St_SlopeTurn_Init and the one that held St_WallTurn_Init; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold St_Charge_Main and the one that held St_Walk_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_Walk_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold St_Charge_Main and the one that held St_Walk_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold St_Charge_Main and the one that held St_Walk_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound8PlayLongEjjjRK7Vector3s' differs between the legacy file that used to hold St_Charge_Main and the one that held St_Walk_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold St_Charge_Main and the one that held St_TurnHome_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'AngleDiff' differs between the legacy file that used to hold St_SlopeTurn_Main and the one that held St_TurnHome_Main; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held St_TurnHome_Main; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov062_02115f84 and the one that held func_ov062_02116dbc; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x35Fix12IiES5_j' differs between the legacy file that used to hold func_ov062_02116d28 and the one that held func_ov062_02116dbc; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov062_0211dde8' differs between the legacy file that used to hold func_ov062_02116368 and the one that held _ZN10daHolhei_c13InitResourcesEv; kept the first, the other is commented out for review",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov062_0211dee0' differs between the legacy file that used to hold func_ov062_021167c0 and the one that held _ZN10daHolhei_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov062_0211dde8' differs between the legacy file that used to hold St_Lift_Init and the one that held _ZN10daHolhei_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov062_0211dee0' differs between the legacy file that used to hold St_SlopeTurn_Main and the one that held _ZN10daHolhei_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'daHolhei_c_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held _ZN10daHolhei_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold daHolhei_c_ChangeState and the one that held daHolhei_c_ChangeState; kept the first, the other is commented out for review",
     "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src/game/actors/d_a_holhei.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py.",
     "S21 rename Chuckya -> daHolhei_c from ROM _ZTS10daHolhei_c before promotion. Coined C name daHolhei_c_ChangeState: class ownership, PMF dispatch, inbound calls and codegen proven; original English name and (C*, PMF*) vs (void*, void*) parameter types are not. daPly_c::Hurt keeps a scalar-slot wrapper (Fix12<int> by value, wall 6az). Factory is return new daHolhei_c(); this TU emits the vtable. CONVERTED identities were rewritten onto dest#symbol, never --update.",
     "Static initializer folded: the model and five animation handles gain declared constructors and destructors, and the two Vector3 carry offsets and the ten two-PMF state records are real definitions in d_a_holhei.cpp, replacing the handwritten src/unnamed/ov062/__sinit_ov062_0211cf30.cpp. mwcc emits __sinit_d_a_holhei.cpp (0x3a8), its .ctor word, the twenty PMF literals and the eight registration nodes itself; all are byte- and relocation-identical to retail. Ownership: the ov062 .ctor words run in .text TU order (0x0211d8cc holhei, 0x0211d8d0 d_a_nknk, 0x0211d8d4 d_a_r_nk, 0x0211d8d8 d_a_r_flag), and this initializer constructs asset 0x327 (the Chuckya model) and fills the records only this TU's daHolhei_c_ChangeState reads. Naming a handler in a record needs a member, so the thirteen extern \"C\" handlers that took daHolhei_c *self are now daHolhei_c members; each reproduces its retail body byte for byte (match.py), and their symbols.txt rows and attribution overrides take the mangled names. The same change licenses the TU's whole .data run 0x0211d900..0x0211da5c (PMF literals, _ZTI/_ZTS, the new typed g_profile_HOLHEI and the vtable, whose storage starts at 0x0211d9d8) and makes it intact-object. The carry-offset array data_ov062_0211df10 is the TU's last .bss object, so symbols.txt gives it an explicit size (0x18) and sizes the three interior labels it covers to zero: data_ov062_0211df14 and data_ov062_0211df18 stay because dsd resolves func_ov062_02116edc's pool words for the y and z fields to them, and data_ov062_0211df1c stays for the initializer's element-1 pool word (0x0211d258); the manifest records that word as data_ov062_0211df10 + 0xc, as mwcc emits it.",
-    "Collision property member calls replace local helper declarations. Reconciled 28 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (96 sections, 328 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 28 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (96 sections, 328 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "naming/holhei-r1-1119: the twenty state handlers are members with coined names, St_<State>_Init / St_<State>_Main for slot 0 / slot 1 of the ten {enter, update} records (the spelling daEykn_c and daPly_c use); their symbols.txt rows were renamed in place and include/daHolhei_c.h maps each pair to its record address. Name only -- no body, signature, declaration or relocation destination changes, so the @NNN compiler-temp keys above are untouched. The notes above now say St_* where they named a handler; each functions[].legacy_source keeps the src/func_ov062_*.c path of the file that was absorbed. The ten records themselves stay address-named: nothing in the ROM says what this TU called them."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1137,7 +1138,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so ClassifyObstruction and func_ov062_021163b0 re-emit it as vague linkage. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body. deadstrip-duplicate makes rombuild prove this body against the ROM before discarding it."
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so ClassifyObstruction and St_Thrown_Main re-emit it as vague linkage. The cartridge keeps one copy at arm9:0x020072c0 and src/_ZN7Vector3D1Ev.cpp owns it; this object's copy is the identical 4-byte bx lr body. deadstrip-duplicate makes rombuild prove this body against the ROM before discarding it."
     }
   ],
   "init": [
@@ -2158,7 +2159,7 @@
       "source": "0x0211d900",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116784Ev",
+      "symbol": "_ZN10daHolhei_c14St_Charge_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116784"
@@ -2168,7 +2169,7 @@
       "source": "0x0211d908",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_021167c0Ev",
+      "symbol": "_ZN10daHolhei_c17St_SlopeTurn_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x021167c0"
@@ -2178,7 +2179,7 @@
       "source": "0x0211d910",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_0211632cEv",
+      "symbol": "_ZN10daHolhei_c12St_Lift_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211632c"
@@ -2188,7 +2189,7 @@
       "source": "0x0211d918",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_021165e8Ev",
+      "symbol": "_ZN10daHolhei_c14St_Charge_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x021165e8"
@@ -2198,7 +2199,7 @@
       "source": "0x0211d920",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116850Ev",
+      "symbol": "_ZN10daHolhei_c17St_SlopeTurn_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116850"
@@ -2208,7 +2209,7 @@
       "source": "0x0211d928",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116274Ev",
+      "symbol": "_ZN10daHolhei_c16St_LiftLoop_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116274"
@@ -2218,7 +2219,7 @@
       "source": "0x0211d930",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_021163b0Ev",
+      "symbol": "_ZN10daHolhei_c14St_Thrown_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x021163b0"
@@ -2228,7 +2229,7 @@
       "source": "0x0211d938",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116bf8Ev",
+      "symbol": "_ZN10daHolhei_c16St_TurnHome_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116bf8"
@@ -2238,7 +2239,7 @@
       "source": "0x0211d940",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116c78Ev",
+      "symbol": "_ZN10daHolhei_c16St_TurnHome_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116c78"
@@ -2248,7 +2249,7 @@
       "source": "0x0211d948",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116238Ev",
+      "symbol": "_ZN10daHolhei_c13St_Throw_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116238"
@@ -2258,7 +2259,7 @@
       "source": "0x0211d950",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116a08Ev",
+      "symbol": "_ZN10daHolhei_c12St_Walk_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116a08"
@@ -2268,7 +2269,7 @@
       "source": "0x0211d958",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116980Ev",
+      "symbol": "_ZN10daHolhei_c16St_WallTurn_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116980"
@@ -2278,7 +2279,7 @@
       "source": "0x0211d960",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116894Ev",
+      "symbol": "_ZN10daHolhei_c16St_WallTurn_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116894"
@@ -2288,7 +2289,7 @@
       "source": "0x0211d968",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_021162b8Ev",
+      "symbol": "_ZN10daHolhei_c16St_LiftLoop_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x021162b8"
@@ -2298,7 +2299,7 @@
       "source": "0x0211d970",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_021161a8Ev",
+      "symbol": "_ZN10daHolhei_c13St_Throw_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x021161a8"
@@ -2308,7 +2309,7 @@
       "source": "0x0211d978",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116368Ev",
+      "symbol": "_ZN10daHolhei_c12St_Lift_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116368"
@@ -2318,7 +2319,7 @@
       "source": "0x0211d980",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_021165e0Ev",
+      "symbol": "_ZN10daHolhei_c15St_Grabbed_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x021165e0"
@@ -2328,7 +2329,7 @@
       "source": "0x0211d988",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116498Ev",
+      "symbol": "_ZN10daHolhei_c14St_Thrown_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116498"
@@ -2338,7 +2339,7 @@
       "source": "0x0211d990",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_021164e8Ev",
+      "symbol": "_ZN10daHolhei_c15St_Grabbed_MainEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x021164e8"
@@ -2348,7 +2349,7 @@
       "source": "0x0211d998",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116b80Ev",
+      "symbol": "_ZN10daHolhei_c12St_Walk_InitEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x02116b80"
