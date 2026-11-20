@@ -22,7 +22,7 @@
  *     dCcAc_c     0x378 + 0x034 = 0x3ac  -> mState
  *
  * Two cylinder collisions: mdCc_c is set up in InitResources, mdCc_c2 only
- * when the shell is spat out and sent sliding (func_ov102_0214d148).
+ * when the shell is spat out and sent sliding (St_Sliding_Init).
  *
  * The vtable (ov102:0x0214e650, 31 slots) was read slot by slot: only the
  * slots declared below differ from dEnemyBase_c's inherited words.
@@ -81,20 +81,20 @@ struct daShl_c : dEnemyBase_c {
     /* The shell's own helpers, under their ROM addresses. The four pairs
        marked state are the {enter, tick} records the state machine dispatches;
        SetState switches states and runs the new record's enter. */
-    void func_ov102_0214c7fc();                        /* splash-floor check */
-    void func_ov102_0214c84c();                        /* ridden trail/sound */
-    void func_ov102_0214cbec();                        /* touch resolution */
+    void VanishOnWater();                        /* splash-floor check */
+    void UpdateRideTrail();                        /* ridden trail/sound */
+    void HandlePlayerTouch();                        /* touch resolution */
     void UpdateModelAndShadow();                       /* model mtx + shadow */
-    int  func_ov102_0214cf4c(dActor_c *kicker);        /* kicked -> sliding */
-    int  func_ov102_0214cf98(dActor_c *player);        /* jumped on -> ridden */
-    int  func_ov102_0214cfe4();                        /* state: held tick */
-    int  func_ov102_0214d020();                        /* state: held enter */
-    int  func_ov102_0214d044();                        /* state: ridden tick */
-    int  func_ov102_0214d0bc();                        /* state: ridden enter */
-    int  func_ov102_0214d114();                        /* state: sliding tick */
-    int  func_ov102_0214d148();                        /* state: sliding enter */
-    int  func_ov102_0214d1b0();                        /* state: idle tick */
-    int  func_ov102_0214d1b8();                        /* state: idle enter */
+    int  OnKicked(dActor_c *kicker);        /* kicked -> sliding */
+    int  OnJumpedOn(dActor_c *player);        /* jumped on -> ridden */
+    int  St_Held_Main();                        /* state: held tick */
+    int  St_Held_Init();                        /* state: held enter */
+    int  St_Ridden_Main();                        /* state: ridden tick */
+    int  St_Ridden_Init();                        /* state: ridden enter */
+    int  St_Sliding_Main();                        /* state: sliding tick */
+    int  St_Sliding_Init();                        /* state: sliding enter */
+    int  St_Idle_Main();                        /* state: idle tick */
+    int  St_Idle_Init();                        /* state: idle enter */
     int SetState(ShlState *state);                     /* state switch */
 };
 
