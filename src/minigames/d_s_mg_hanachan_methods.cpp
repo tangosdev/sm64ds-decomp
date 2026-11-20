@@ -28,9 +28,6 @@
  * does not establish the original translation-unit boundary.
  *
  * leftovers:
- * - the sixteen popups at sHanaPopups are read through
- *   four record spellings (HanaPopup_DrawAll, HanaPopup_UpdateAll,
- *   HanaPopup_Spawn, HanaPopup_ClearAll).
  * - the popup at sHanaStarPopup is declared as the file-local
  *   HanaStarPopup record, and StarPopup_Update reaches its timer byte
  *   through a separate symbol, sHanaStarPopups.
@@ -195,24 +192,20 @@ extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short 
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
 
-struct S_ea81c {
-    int x;                 /* +0x0 */
-    int y;                 /* +0x4 */
-    int z;                 /* +0x8 */
-    short w;               /* +0xc */
-    unsigned char inuse;   /* +0xe */
-    unsigned char f;       /* +0xf */
-    unsigned char g;       /* +0x10 */
-    unsigned char pad;     /* +0x11 */
-    unsigned char pad2[2]; /* +0x12 -> stride 0x14 */
+/* One of the sixteen popups at sHanaPopups, 0x14 bytes each. */
+struct HanaPopup {
+    int x;                 /* +0x00 */
+    int y;                 /* +0x04 */
+    int velY;              /* +0x08 */
+    unsigned short timer;  /* +0x0c */
+    unsigned char active;  /* +0x0e */
+    unsigned char visible; /* +0x0f */
+    unsigned char phase;   /* +0x10 */
+    unsigned char pad[3];
 };
 
-/* The popup records: one at sHanaStarPopup and sixteen at
-   sHanaPopups, 0x14 bytes each. The sixteen are declared with
-   HanaPopup_Spawn's layout, which it needs to match; the other
-   functions keep the spelling their own match used, through a cast. */
 extern "C" {
-extern struct S_ea81c sHanaPopups[];
+extern struct HanaPopup sHanaPopups[];
 extern OamAttr *sMgDigitSprites[];
 }
 
@@ -228,7 +221,7 @@ dScMgHanachan_c::~dScMgHanachan_c() {}
 
 /* The single popup at sHanaStarPopup, as StarPopup_Start, StarPopup_Update,
    StarPopup_Draw and StarPopup_Clear use it. Its byte fields differ from the
-   sixteen popups' S_ea81c layout. */
+   sixteen popups' HanaPopup layout. */
 struct HanaStarPopup {
     int x;      /* 0x00 fx32; clamped to 0x10000..0xf4000 at start */
     int y;      /* 0x04 fx32; kept at or above 0x8000 */
@@ -361,22 +354,14 @@ unsigned char StarPopup_Clear(void) {
     return 0;
 }
 
-/* Draws each of the sixteen popups whose +0xb flag is set, as three
-   sprites 0x10 pixels apart. */
-typedef struct {
-    int x;
-    int y;
-    unsigned char pad0[7];
-    unsigned char flag;
-    int pad1;
-} Ent_ea670;
-
+/* Draws each of the sixteen visible popups as three sprites 0x10 pixels
+   apart. */
 void HanaPopup_DrawAll(void) {
     Matrix2x2 *a = 0, *b = 0, *c = 0;
     int i;
     for (i = 0; i < 16; i++) {
-        Ent_ea670 *e = &((Ent_ea670 *)sHanaPopups)[i];
-        if (e->flag != 0) {
+        HanaPopup *e = &sHanaPopups[i];
+        if (e->visible != 0) {
             int sb = e->x >> 12;
             int r8 = e->y >> 12;
             int idx = GetGameLanguage();
@@ -392,44 +377,33 @@ void HanaPopup_DrawAll(void) {
    each by its velocity until its timer runs out, and phase 1 holds for 0x40
    frames and then clears it. The compound assignments go through (int)e,
    as StarPopup_Update's do. */
-typedef struct Ent71c {
-    int _0;    /* 0x00 */
-    int pos;   /* 0x04 */
-    int vel;   /* 0x08 */
-    u16 timer; /* 0x0c */
-    u8 active; /* 0x0e */
-    u8 fE;     /* 0x0f */
-    u8 phase;  /* 0x10 */
-    u8 pad[3];
-} Ent71c;
-
 void HanaPopup_UpdateAll(void) {
     int i;
     for (i = 0; i < 16; i++) {
-        Ent71c *e = &((Ent71c *)sHanaPopups)[i];
+        HanaPopup *e = &sHanaPopups[i];
         if (e->active) {
-            if (e->pos > 0xb8000)
-                e->pos = 0xb8000;
+            if (e->y > 0xb8000)
+                e->y = 0xb8000;
             if (e->phase == 0) {
                 if (e->timer != 0) {
-                    ((Ent71c *)(int)e)->timer -= 1;
+                    ((HanaPopup *)(int)e)->timer -= 1;
                     if ((s16)e->timer < 0)
                         e->timer = 0;
-                    ((Ent71c *)(int)e)->pos += e->vel;
-                    ((Ent71c *)(int)e)->vel += 0x100;
+                    ((HanaPopup *)(int)e)->y += e->velY;
+                    ((HanaPopup *)(int)e)->velY += 0x100;
                 } else {
                     e->timer = 64;
-                    ((Ent71c *)(int)e)->phase += 1;
+                    ((HanaPopup *)(int)e)->phase += 1;
                 }
             } else {
                 if (e->timer != 0) {
-                    ((Ent71c *)(int)e)->timer -= 1;
+                    ((HanaPopup *)(int)e)->timer -= 1;
                     if ((s16)e->timer < 0)
                         e->timer = 0;
                 } else {
                     e->timer = 0;
                     e->active = 0;
-                    e->fE = 0;
+                    e->visible = 0;
                 }
             }
         }
@@ -442,38 +416,31 @@ void HanaPopup_UpdateAll(void) {
 void HanaPopup_Spawn(int r0, int r1) {
     int i;
     for (i = 0; i < 16; i++) {
-        if (sHanaPopups[i].inuse == 0) {
-            sHanaPopups[i].inuse = 1;
-            sHanaPopups[i].f = 1;
-            sHanaPopups[i].w = 0x18;
+        if (sHanaPopups[i].active == 0) {
+            sHanaPopups[i].active = 1;
+            sHanaPopups[i].visible = 1;
+            sHanaPopups[i].timer = 0x18;
             if (r0 < 0x14000)
                 r0 = 0x14000;
             else if (r0 > 0xf0000)
                 r0 = 0xf0000;
             sHanaPopups[i].x = r0;
             sHanaPopups[i].y = r1;
-            sHanaPopups[i].z = 0x800;
-            sHanaPopups[i].g = 0;
+            sHanaPopups[i].velY = 0x800;
+            sHanaPopups[i].phase = 0;
             return;
         }
     }
 }
 
-/* Clears the +0xe and +0xf flags of every one of the sixteen popups whose
-   +0xe flag is already clear. */
-struct E6_ea8e0 {
-    unsigned char pad[0xe];
-    unsigned char e;
-    unsigned char f;
-    unsigned char pad2[4];
-};
-
+/* Clears the active and visible flags of every one of the sixteen popups
+   that is already inactive. */
 void HanaPopup_ClearAll(void) {
     int i;
     for (i = 0; i < 16; i++) {
-        if (((struct E6_ea8e0 *)sHanaPopups)[i].e == 0) {
-            ((struct E6_ea8e0 *)sHanaPopups)[i].e = 0;
-            ((struct E6_ea8e0 *)sHanaPopups)[i].f = 0;
+        if (sHanaPopups[i].active == 0) {
+            sHanaPopups[i].active = 0;
+            sHanaPopups[i].visible = 0;
         }
     }
 }
