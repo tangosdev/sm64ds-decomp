@@ -103,7 +103,7 @@ extern s32 data_ov007_02103468;                 /* text cursor: line in tile row
 extern Ov007Sprite *data_ov007_0210346c;        /* the window fill */
 extern struct Ov007Camera *data_ov007_02103470; /* the camera the window is placed with */
 extern s32 data_ov007_02103474;                 /* the language: column of data_ov007_020d7b04 */
-extern s32 *data_ov007_02103478[3];             /* the three character planes */
+extern u32 *data_ov007_02103478[3];             /* the three character planes */
 extern u16 data_ov007_02103484[];               /* the frame's tile map */
 extern u16 data_ov007_02103998[];               /* BG screen, 32x24 */
 extern u16 data_ov007_02103f98[];               /* BG screen copy */
@@ -204,7 +204,7 @@ void MenuText_DrawGlyph(int plane, int glyph) {
     q = pos >> 3;
     rem = pos - (q << 3);
 
-    dst = (u32 *)data_ov007_02103478[plane] + (q + data_ov007_02103468 * 32) * 8;
+    dst = data_ov007_02103478[plane] + (q + data_ov007_02103468 * 32) * 8;
     src = data_ov007_0210345c + t * 8;
 
     shift = rem * 4;
@@ -485,9 +485,9 @@ void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *
 
     data_ov007_02102dd8 = 0xe;
 
-    data_ov007_02103478[0] = (s32 *)plane0;
-    data_ov007_02103478[1] = (s32 *)plane1;
-    data_ov007_02103478[2] = (s32 *)plane2;
+    data_ov007_02103478[0] = (u32 *)plane0;
+    data_ov007_02103478[1] = (u32 *)plane1;
+    data_ov007_02103478[2] = (u32 *)plane2;
 
     {
         volatile int v1 = 0;

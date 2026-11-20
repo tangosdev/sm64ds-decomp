@@ -17,7 +17,7 @@ extern void func_ov007_020b0834(void);
 /* Runs the handler for states[1]'s current state; state 7 just marks the
  * choice ready. */
 void func_ov007_020b0548(void) {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     switch (w->states[1]->currentState) {
     case 0:
         func_ov007_020b1cf0();

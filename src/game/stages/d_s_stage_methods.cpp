@@ -446,7 +446,7 @@ s32 data_0209f32c;
 static void *sTeleportDestObjs;
 u16 *gMinimapTileObjs;
 void *gUnusedType13Objs;
-void *data_0209f33c;
+dActor_c *data_0209f33c;
 static LevelInfo *data_0209f340;
 u8 *data_0209f344;
 static short *sMinimapScaleObjs;
@@ -469,7 +469,7 @@ u8 gMapCapIconCharacters[9];
 u8 gStarMarkerTypes[12];
 /* The live players, one per gNumPlayers slot; LevelObjects fills it. */
 daPly_c *gPlayers[4];
-void *data_0209f3a4[8];
+dActor_c *data_0209f3a4[8];
 /* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
 /* The cap slots: the actor whose cap each of the nine holds, 0 when free.
@@ -3161,7 +3161,7 @@ void ClearSpikeBomb(int idx) {
         data_0209f3a4[idx] = 0;
 }
 
-extern "C" int AddSpikeBomb(void *p) {
+extern "C" int AddSpikeBomb(dActor_c *p) {
     int i;
     for (i = 0; i < 8; i++) {
         if (data_0209f3a4[i] == 0) {
@@ -4539,8 +4539,8 @@ int dScStage_c::InitResources() {
             if ((s32)gNumPlayers > 0) {
                 int count = gNumPlayers;
                 int idx = 0;
-                u8 *p1 = (u8 *)gNumRedCoins;
-                u8 *vsStars = (u8 *)gNumStageStars;
+                s8 *p1 = gNumRedCoins;
+                s8 *vsStars = gNumStageStars;
                 /* Sampled once, before the loop: IsVsMode() here, or IsGameMode(1)
                    tested inside the loop, is 12 bytes short or 12 long. */
                 int vsModeCounters = IsGameMode(1);

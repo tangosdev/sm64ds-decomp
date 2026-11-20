@@ -19,8 +19,8 @@ inline Ov007Item *view_item(Ov007ItemView *view) {
  * state 9), the item's layout kind and its id. Otherwise the item keeps
  * its requested state. */
 int func_ov007_020b58e4(Ov007ItemView *view) {
-    Ov007Work *g = WORK;
-    Ov007MenuState *b = WORK->states[2];
+    Ov007Work *g = gMenuWork;
+    Ov007MenuState *b = gMenuWork->states[2];
     int flag = b->stateTicks;
     Ov007Item *a = view_item(view);
     int sel = b->currentState;
@@ -80,7 +80,7 @@ int func_ov007_020b58e4(Ov007ItemView *view) {
     case 7:
         if (r7) {
             if (lr_v == 2) {
-                int e = WORK->transitionMode;
+                int e = gMenuWork->transitionMode;
                 if (((e == 1) && (ip_v == 4)) || ((e == 0) && ((ip_v == 3) || (ip_v == 5)))) {
                     ret = 3;
                 }
@@ -137,7 +137,7 @@ int func_ov007_020b58e4(Ov007ItemView *view) {
 
     case 8:
         if (r7) {
-            int t = WORK->states[1]->previousState;
+            int t = gMenuWork->states[1]->previousState;
             if (t < 0) {
                 if (lr_v == 3) {
                     ret = 0;

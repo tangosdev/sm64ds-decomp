@@ -25,7 +25,7 @@ int func_ov007_020b6208(int code)
     case 14:
     case 15:
     case 16: {
-        Ov007Work *p0 = WORK;
+        Ov007Work *p0 = gMenuWork;
         int r3 = code - 0xe;
         switch (p0->states[1]->currentState) {
         case 0:
@@ -65,7 +65,7 @@ int func_ov007_020b6208(int code)
         r1 = 0x16;
         break;
     case 12: {
-        Ov007Work *p0 = WORK;
+        Ov007Work *p0 = gMenuWork;
         if (p0->settings->bootArgs->backlightOn != 0)
             r1 = 0x19;
         else
@@ -73,7 +73,7 @@ int func_ov007_020b6208(int code)
         break;
     }
     case 13: {
-        Ov007Work *p0 = WORK;
+        Ov007Work *p0 = gMenuWork;
         if (p0->settings->bootArgs->backlightOn == 0)
             r1 = 0x19;
         else
@@ -85,7 +85,7 @@ int func_ov007_020b6208(int code)
         break;
     case 22:
     case 23: {
-        Ov007Work *p0 = WORK;
+        Ov007Work *p0 = gMenuWork;
         switch (p0->states[1]->currentState) {
         case 7:
             r1 = (code == 22) ? 0xa : 0xb;

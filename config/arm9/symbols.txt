@@ -5255,10 +5255,10 @@ data_020a9d40 kind:bss addr:0x020a9d40
 data_020a9d48 kind:bss addr:0x020a9d48
 data_020a9d4e kind:bss addr:0x020a9d4e
 data_020a9d50 kind:bss addr:0x020a9d50
-data_020a9db0 kind:bss addr:0x020a9db0
-data_020a9db4 kind:bss addr:0x020a9db4
+sDmaNo kind:bss addr:0x020a9db0
+sWmWork kind:bss addr:0x020a9db4
 mbc kind:bss addr:0x020a9db8
-data_020a9dc0 kind:bss addr:0x020a9dc0
+sScanParam kind:bss addr:0x020a9dc0
 CTRDGi_Work kind:bss addr:0x020a9de0
 data_020a9de4 kind:bss addr:0x020a9de4
 data_020a9de8 kind:bss addr:0x020a9de8

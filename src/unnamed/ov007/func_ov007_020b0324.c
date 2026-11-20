@@ -3,5 +3,5 @@
 
 /* Sends states[0] to state 0. */
 void func_ov007_020b0324(void) {
-    WORK->states[0]->requestedState = 0;
+    gMenuWork->states[0]->requestedState = 0;
 }

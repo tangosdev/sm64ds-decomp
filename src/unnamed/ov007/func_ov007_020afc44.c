@@ -21,11 +21,11 @@ extern void MenuText_ScrollRecordBoard(int n);
  * another slot, 5 slides over to it, 6 slides the board out. Tween 0 drives
  * the scroll of layers 6 and 7, tween 1 the board's (MenuText_ScrollRecordBoard). */
 void func_ov007_020afc44(void) {
-    Ov007MenuState *menu = WORK->states[1];
-    unsigned char *fileUsed = WORK->settings->bootArgs->fileUsed;
+    Ov007MenuState *menu = gMenuWork->states[1];
+    unsigned char *fileUsed = gMenuWork->settings->bootArgs->fileUsed;
     int ticks = menu->stateTicks;
-    Ov007Tween *tween0 = WORK->tweens[0];
-    Ov007Tween *tween1 = WORK->tweens[1];
+    Ov007Tween *tween0 = gMenuWork->tweens[0];
+    Ov007Tween *tween1 = gMenuWork->tweens[1];
     int arrived0 = func_ov007_020c8f98(tween0);
     int arrived1 = func_ov007_020c8f98(tween1);
     int scrollLayers = (arrived0 == 0);
@@ -37,16 +37,16 @@ void func_ov007_020afc44(void) {
         if (ticks == 0) {
             func_ov007_020c1d78(0);
             func_ov007_020b0244();
-            WORK->states[2]->requestedState = 0xa;
+            gMenuWork->states[2]->requestedState = 0xa;
         }
         switch (menu->stateWork) {
         case 0: {
-            int idx = WORK->selectedSlot;
+            int idx = gMenuWork->selectedSlot;
             if (idx != -1) {
                 if (fileUsed[idx] != 0) {
                     menu->requestedState = 4;
                 } else {
-                    WORK->selectedSlot = -1;
+                    gMenuWork->selectedSlot = -1;
                     func_ov007_020b7d94(3);
                     menu->stateWork = 1;
                 }
@@ -64,8 +64,9 @@ void func_ov007_020afc44(void) {
         if (ticks == 0) {
             func_ov007_020c1d8c(0);
             RequestScreenFade(8, 0xa, 0);
-            WORK->states[2]->requestedState = 0xb;
-            MenuText_DrawRecordBoard(WORK->selectedSlot, WORK->settings, WORK->recordBoardAlt);
+            gMenuWork->states[2]->requestedState = 0xb;
+            MenuText_DrawRecordBoard(gMenuWork->selectedSlot, gMenuWork->settings,
+                                     gMenuWork->recordBoardAlt);
             tween0->state = 1;
             tween0->mode = 1;
             tween0->t = 0;
@@ -89,9 +90,9 @@ void func_ov007_020afc44(void) {
             func_ov007_020c1d78(0);
         }
         {
-            int target = WORK->targetSlot;
+            int target = gMenuWork->targetSlot;
             if (target != -1) {
-                if (target != WORK->selectedSlot) {
+                if (target != gMenuWork->selectedSlot) {
                     menu->requestedState = 5;
                 }
             }
@@ -99,9 +100,9 @@ void func_ov007_020afc44(void) {
         break;
     case 5: {
         int fromX = 0x20000;
-        int target = WORK->targetSlot;
+        int target = gMenuWork->targetSlot;
         int toX = -0x20000;
-        if (target < WORK->selectedSlot) {
+        if (target < gMenuWork->selectedSlot) {
             toX = 0x20000;
             fromX = -0x20000;
         }
@@ -117,8 +118,8 @@ void func_ov007_020afc44(void) {
         } else if (arrived0 != 0) {
             switch (menu->stateWork) {
             case 1:
-                WORK->selectedSlot = target;
-                WORK->targetSlot = -1;
+                gMenuWork->selectedSlot = target;
+                gMenuWork->targetSlot = -1;
                 menu->requestedState = 2;
                 break;
             case 0:
@@ -128,10 +129,10 @@ void func_ov007_020afc44(void) {
                         func_ov007_020c1d8c(0);
                         if (menu->stateWork == 2) {
                             RequestScreenFade(8, 0xa, 0);
-                            WORK->states[2]->requestedState = 0xb;
+                            gMenuWork->states[2]->requestedState = 0xb;
                         }
-                        MenuText_DrawRecordBoard(WORK->targetSlot, WORK->settings,
-                                                 WORK->recordBoardAlt);
+                        MenuText_DrawRecordBoard(gMenuWork->targetSlot, gMenuWork->settings,
+                                                 gMenuWork->recordBoardAlt);
                         scrollLayers = 1;
                         tween0->state = 1;
                         tween0->mode = 1;
@@ -152,12 +153,12 @@ void func_ov007_020afc44(void) {
                 } else {
                     int t;
                     RequestScreenFade(8, 8, 0);
-                    WORK->states[2]->requestedState = 0xa;
-                    t = WORK->selectedSlot;
-                    WORK->selectedSlot = WORK->targetSlot;
-                    WORK->targetSlot = t;
+                    gMenuWork->states[2]->requestedState = 0xa;
+                    t = gMenuWork->selectedSlot;
+                    gMenuWork->selectedSlot = gMenuWork->targetSlot;
+                    gMenuWork->targetSlot = t;
                     func_ov007_020b7d94(3);
-                    func_ov007_020c0638(WORK->layerSlots[6]->layer, 0, 0, 0);
+                    func_ov007_020c0638(gMenuWork->layerSlots[6]->layer, 0, 0, 0);
                     menu->stateWork = 2;
                 }
                 break;
@@ -172,7 +173,7 @@ void func_ov007_020afc44(void) {
                 menu->requestedState = 0;
             } else {
                 RequestScreenFade(8, 8, 0);
-                WORK->states[2]->requestedState = 0xa;
+                gMenuWork->states[2]->requestedState = 0xa;
                 tween1->state = 1;
                 tween1->mode = 1;
                 tween1->t = 0;
@@ -196,10 +197,12 @@ void func_ov007_020afc44(void) {
     if (func_ov007_020b79e4() != 0)
         return;
     if (scrollLayers != 0) {
-        func_ov007_020c0638(WORK->layerSlots[6]->layer, (WORK->tweenOut[0] >> 12) * 8, 0, 0);
-        func_ov007_020c0638(WORK->layerSlots[7]->layer, (WORK->tweenOut[0] >> 12) * 8, 0, 0);
+        func_ov007_020c0638(gMenuWork->layerSlots[6]->layer, (gMenuWork->tweenOut[0] >> 12) * 8, 0,
+                            0);
+        func_ov007_020c0638(gMenuWork->layerSlots[7]->layer, (gMenuWork->tweenOut[0] >> 12) * 8, 0,
+                            0);
     }
     if (scrollBoard == 0)
         return;
-    MenuText_ScrollRecordBoard(WORK->tweenOut[1] >> 12);
+    MenuText_ScrollRecordBoard(gMenuWork->tweenOut[1] >> 12);
 }
