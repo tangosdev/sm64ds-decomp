@@ -93,6 +93,7 @@ enum Eyerok_AssetId {
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -335,16 +336,6 @@ extern dCamera_c *gCamera;
 /* ---- arm9 helpers (unmangled ROM names) ---- */
 extern "C" int AngleDiff(int a, int b);
 extern "C" int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
-extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
-extern "C" int RandomIntInternal(int *seed);
-extern "C" int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
-/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
-extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern "C" void Vec3_Asr(void *d, void *s, int sh);
-/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
-extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-// local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
-extern "C" s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern "C" int func_020092c4(void *cam, void *out, void *target);
 extern "C" void func_02011cfc(void);
 extern "C" void func_02011d2c(void);
@@ -2198,9 +2189,9 @@ void daIwante_c::UpdateCollisionMatrix() {
  * 0xa0000 (160.0), each >> 3, passed to dActor_c::DropShadowRadHeight with
  * radius 0x140000 (320.0) and height 0x258000 (600.0). */
 void daIwante_c::UpdateModelMatrices() {
-    int v[3];
-    Vec3_Asr(v, &mPos.x, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     if (mPartIdx == PART_MAIN)
         mModel2.mat4x3 = data_020a0e68;

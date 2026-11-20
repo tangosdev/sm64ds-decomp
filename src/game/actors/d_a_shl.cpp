@@ -79,8 +79,7 @@ extern SharedFilePtr *const data_ov102_0214d70c[2] = {
 };
 
 /* -- other modules -- */
-int func_ov002_020cc16c(void *player, void *actor);
-
+int func_ov002_020cc16c(daPly_c *player, daShl_c *shell);
 }
 int SurfaceInfo_TestFlag0x20(int *si);
 

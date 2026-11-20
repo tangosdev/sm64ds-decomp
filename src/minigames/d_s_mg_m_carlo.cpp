@@ -29,7 +29,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "nitro/gx/gx_bgcnt.h"
 #include "Vector2Math.h"
 extern "C" void FreeGfxSlotsById(int);
-extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
+extern "C" void Hud_RenderSprite(OamAttr *attr, int, int, int, int);
 extern "C" s32 GetGameLanguage(void);
 void MgCoins_Reset(void);
 void MgCoins_Update(void);
@@ -82,9 +82,9 @@ extern int data_020a0db0;
 
 extern unsigned short sMCarloCardFrameSprites[];
 
-extern int sMgCardSprites[];
+extern OamAttr *sMgCardSprites[];
 
-extern int sMCarloCardSprites[];
+extern OamAttr *sMCarloCardSprites[];
 extern int sMgCoinsBetPlaced;
 
 extern "C" {
@@ -636,8 +636,8 @@ void dMgMCarloCardObj_c::Render(void) {
     {
         int frameIndex = (mFace + 1) * 5 + (mLift >> 12);
         unsigned short sprite = sMCarloCardFrameSprites[frameIndex];
-        Hud_RenderSprite((void *)sMCarloCardSprites[sprite], (mPos.x >> 12) + 24,
-                         (mPos.y >> 12) + 24, -1, -1);
+        Hud_RenderSprite(sMCarloCardSprites[sprite], (mPos.x >> 12) + 24, (mPos.y >> 12) + 24, -1,
+                         -1);
     }
 }
 
@@ -914,7 +914,7 @@ dMgMCarloCardObj_c::~dMgMCarloCardObj_c() {}
 /* The sprite-index remap table. Its initializer reads the retail table, so
  * it is not a constant expression: the compiler emits
  * __sinit_d_s_mg_m_carlo.cpp to copy the 19 words at overlay load. */
-int sMCarloCardSprites[19] = {
+OamAttr *sMCarloCardSprites[19] = {
     sMgCardSprites[0],  sMgCardSprites[1],  sMgCardSprites[2],  sMgCardSprites[11],
     sMgCardSprites[12], sMgCardSprites[13], sMgCardSprites[14], sMgCardSprites[3],
     sMgCardSprites[4],  sMgCardSprites[5],  sMgCardSprites[6],  sMgCardSprites[9],

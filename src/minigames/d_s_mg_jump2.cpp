@@ -37,6 +37,7 @@ enum d_s_mg_jump2_AssetId {
 #include "Vector2Math.h"
 #include "Particle__System.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g3x.h"
@@ -63,7 +64,7 @@ extern "C" {
 extern struct Jump2PopupLink *sJump2PopupList;
 extern int sJump2PopupCount;
 extern struct Jump2Popup *sJump2Popups;
-extern void *sJump2BackFile;
+extern SharedFilePtr *sJump2BackFile;
 void Mg_CommitRecords(void);
 int GetGameLanguage(void);
 struct OamAttr;
@@ -93,7 +94,7 @@ extern void Jump3D_SetTuning(int a);
 extern void Jump3D_StartRoundLayout(void);
 extern void Jump3D_SetLowGravity(void);
 extern void Heyho_ReactAll(void);
-extern int Heyho_InitPool(void *ptr, int n);
+extern int Heyho_InitPool(Heyho *ptr, int n);
 
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
@@ -343,24 +344,24 @@ s32 dScMgJump2_c::Behavior() {
 
 
 void Jump2_SetLights(void) {
-    int light0[3];
-    int light1[3];
+    Vector3 light0;
+    Vector3 light1;
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
-    light0[0] = 0;
-    light0[1] = 0;
-    light0[2] = -0xff8;
-    func_0203cd80(light0, 0x2000);
-    func_0203ccd4(light0, 0);
-    G3_LightVector(GX_LIGHTID_0, light0[0], light0[1], light0[2]);
-    light1[2] = -0xff8;
-    light1[0] = 0;
-    light1[1] = 0;
+    light0.x = 0;
+    light0.y = 0;
+    light0.z = -0xff8;
+    func_0203cd80(&light0, 0x2000);
+    func_0203ccd4(&light0, 0);
+    G3_LightVector(GX_LIGHTID_0, light0.x, light0.y, light0.z);
+    light1.z = -0xff8;
+    light1.x = 0;
+    light1.y = 0;
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_Identity();
-    func_0203cd80(light1, 0x2000);
-    func_0203ccd4(light1, 0);
-    G3_LightVector(GX_LIGHTID_1, light1[0], light1[1], light1[2]);
+    func_0203cd80(&light1, 0x2000);
+    func_0203ccd4(&light1, 0);
+    G3_LightVector(GX_LIGHTID_1, light1.x, light1.y, light1.z);
 }
 
 /* Slot 9. */
@@ -418,7 +419,7 @@ s32 dScMgJump2_c::Render() {
 /* Slot 3. sJump2BackFile points at the model's file handle; it is
  * released and cleared. */
 s32 dScMgJump2_c::CleanupResources() {
-    ((SharedFilePtr *)sJump2BackFile)->Release();
+    sJump2BackFile->Release();
     sJump2BackFile = 0;
     Mg_CommitRecords();
     return 1;

@@ -45,7 +45,7 @@ struct KiraiModelFilePtr : SharedFilePtr {
 
 /* arm9 C helpers with no shared header. */
 void ClearSpikeBomb(int idx);
-extern "C" int AddSpikeBomb(void *p);
+extern "C" int AddSpikeBomb(dActor_c *p);
 void func_02012694(unsigned int a, const Vector3 *b);
 
 extern KiraiModelFilePtr data_ov060_0211b1c4;

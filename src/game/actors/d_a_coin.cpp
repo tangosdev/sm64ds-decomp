@@ -296,8 +296,6 @@ void daCoin_c::Step() {
  * FLOOR_DYNAMIC drops it 500 units with a fixed radius; FLOOR_FIXED sizes it
  * from the distance down to mFloorPosY. */
 void daCoin_c::UpdateModelMatrix() {
-    extern Matrix4x3 IDENTITY_MATRIX4X3;
-
     int inYoshiMouth;
     int floorState;
 
@@ -822,7 +820,6 @@ s32 daCoin_c::InitResources()
      * each one changes the code (measured per site); the plain `&=`/`|=`
      * sites take the member as is. */
 
-    extern Matrix4x3 IDENTITY_MATRIX4X3;
     extern s8 gCurrentSublevel;
     extern u8 gCurrentStarId;
     extern dActor_c *STAR_MARKERS[12];
@@ -1054,15 +1051,15 @@ CoinHandler data_ov002_0210dc70[9] = {
     &daCoin_c::StateFollowTarget};
 
 /* Initialized data this file is the only complete referrer for. */
-extern "C" char data_ov002_0210da48;
-extern "C" char data_ov002_0210da50;
+extern SharedFilePtr data_ov002_0210da48;
+extern SharedFilePtr data_ov002_0210da50;
 extern SharedFilePtr data_ov002_0210da00;
 extern SharedFilePtr data_ov002_0210d9b8;
 extern SharedFilePtr data_ov002_0210d9f8;
 extern SharedFilePtr data_ov002_0210d9c8;
 extern SharedFilePtr *const data_ov002_020ff060[3] = {
-    (SharedFilePtr *)&data_ov002_0210da48,
-    (SharedFilePtr *)&data_ov002_0210da50,
+    &data_ov002_0210da48,
+    &data_ov002_0210da50,
     &data_ov002_0210da00,
 };
 extern SharedFilePtr *const data_ov002_020ff06c[3] = {

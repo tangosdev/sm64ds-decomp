@@ -45,10 +45,6 @@
 #include "math/MtxStack.h"
 #include "MgCamera.h"
 
-/* The one raw-pointer walk left: TrmpLine::Create finds a free slot through
-   byte offsets, so it reads each candidate through this cast. */
-#define TRMPLINE(p) ((TrmpLine *)(p))
-
 #pragma defer_codegen off
 
 /* The jumper a line bounces: a trampoline Mario, read through the five virtual
@@ -102,7 +98,7 @@ void *sTrmpLinePlttAddr;
 void *sTrmpLineTexAddr;
 int sTrmpItemsHit;
 int sTrmpItemsActive;
-char *sTrmpItems;
+TrmpItem *sTrmpItems;
 int sTrmp2Score;
 int sTrmpItemCount;
 void *sTrmp2MarioPtrs[5];
@@ -231,7 +227,7 @@ void TrmpItem::MotionSpinHover() {
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -255,7 +251,7 @@ void TrmpItem::MotionSpinDrift() {
 
     struct Vector3 normalCopy, tangent, tangentCopy;
 
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -278,7 +274,7 @@ void TrmpItem::MotionSpinSway() {
     struct Vector3 normalCopy;
     struct Vector3 tangent;
     struct Vector3 tangentCopy;
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -338,7 +334,7 @@ void TrmpItem::MotionSpin() {
 
     struct Vector3 normalCopy, tangent, tangentCopy;
 
-    func_0203cc28((int *)&mForward, 0x100);
+    func_0203cc28(&mForward, 0x100);
     func_0203ce80(&normalCopy, &mForward);
     func_0203cf00(&tangent, &mForward, &sUnitZ);
     mSide.x = tangent.x;
@@ -547,9 +543,9 @@ void TrmpItem::ReflectOffLine(TrampolineObjectCallbacks *jumper) {
     VEC_Add(velocity, &normalVelocityChange, velocity);
 }
 
-/* The ROM re-reads sTrmpItems and recomputes the element address at each use;
-   caching it in a local reallocates the whole loop (load-bearing). */
-#define ELEM ((char *)sTrmpItems + itemIndex * 0x1d0)
+/* The ROM re-reads sTrmpItems and recomputes the element address at each use,
+   so UpdateWithJumper indexes sTrmpItems[itemIndex] afresh each time; caching
+   the element in a local reallocates the whole loop. */
 
 void TrmpItem::UpdateWithJumper(TrampolineObjectCallbacks *jumperObject, int arg1) {
     TrampolineJumperCounts *jumper = (TrampolineJumperCounts *)jumperObject;
@@ -564,10 +560,10 @@ void TrmpItem::UpdateWithJumper(TrampolineObjectCallbacks *jumperObject, int arg
     jumper->mItemPushCount = 0;
 
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
-        if (((TrmpItem *)ELEM)->mActive == 0)
+        if (sTrmpItems[itemIndex].mActive == 0)
             continue;
-        ((TrmpItem *)ELEM)->ReflectOffLine(jumper);
-        if (((TrmpItem *)ELEM)->HitTest2D(jumper, arg1) == 0)
+        sTrmpItems[itemIndex].ReflectOffLine(jumper);
+        if (sTrmpItems[itemIndex].HitTest2D(jumper, arg1) == 0)
             continue;
         ApproachLinear(sTrmpItemsHit, 0x270f, 1);
         hitCount = jumper->mItemHitCount;
@@ -578,25 +574,25 @@ void TrmpItem::UpdateWithJumper(TrampolineObjectCallbacks *jumperObject, int arg
             scoreIncrement <<= 1;
         switch (hitCount) {
         case 0:
-            D3D_PlaySeAtX(0x131, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x131, sTrmpItems[itemIndex].mPos.x);
             break;
         case 1:
-            D3D_PlaySeAtX(0x132, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x132, sTrmpItems[itemIndex].mPos.x);
             break;
         case 2:
-            D3D_PlaySeAtX(0x133, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x133, sTrmpItems[itemIndex].mPos.x);
             break;
         case 3:
-            D3D_PlaySeAtX(0x134, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x134, sTrmpItems[itemIndex].mPos.x);
             break;
         case 4:
         default:
-            D3D_PlaySeAtX(0x135, ((TrmpItem *)ELEM)->mPos.x);
+            D3D_PlaySeAtX(0x135, sTrmpItems[itemIndex].mPos.x);
             break;
         }
         ApproachLinear(sTrmp2Score, 0xf423f, scoreIncrement);
         Trmp2Spinner_InitAll(jumper->mItemHitCount);
-        ((TrmpItem *)ELEM)->ProjectToScreen((short)scoreIncrement);
+        sTrmpItems[itemIndex].ProjectToScreen((short)scoreIncrement);
         jumper->mItemHitCount++;
     }
 }
@@ -714,23 +710,23 @@ void TrmpItem::Update() {
     mPrevSide.z = mSide.z;
 }
 
-void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) {
+void TrmpItem::Init(const VecFx32 *pos, const Vector3 *normal, int itemType, short motion) {
     /* The axis the starting rotation is built about, built on first use. */
     static Vector3 sUnitY(0, 0x1000, 0);
 
-    mPos.x = position[0];
-    mPos.y = position[1];
-    mPos.z = position[2];
-    mForward.x = normal[0];
-    mForward.y = normal[1];
-    mForward.z = normal[2];
+    mPos.x = pos->x;
+    mPos.y = pos->y;
+    mPos.z = pos->z;
+    mForward.x = normal->x;
+    mForward.y = normal->y;
+    mForward.z = normal->z;
     {
         Vector3 *normalComponents = &mForward;
         mSide.x = normalComponents->x;
         mSide.y = normalComponents->y;
         mSide.z = normalComponents->z;
     }
-    func_0203cc28((int *)&mSide, -0x4000);
+    func_0203cc28(&mSide, -0x4000);
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
     mPrevPos.z = mPos.z;
@@ -752,7 +748,7 @@ void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) 
     mRotation[3] = data_02092768.w;
     Quaternion_FromVector3(mRotation, &sUnitY, &mForward);
     mSizeIdx = itemType;
-    mMotionKind = motionType;
+    mMotionKind = motion;
     mActive = 1;
     switch (mSizeIdx) {
     case 0:
@@ -793,7 +789,7 @@ void TrmpItem::Load() {
 void TrmpItem::UpdateMatricesAll() {
     int itemIndex;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
-        TrmpItem *p = (TrmpItem *)(sTrmpItems + itemIndex * 0x1d0);
+        TrmpItem *p = &sTrmpItems[itemIndex];
         if (p->mActive != 0)
             p->UpdateMatrix();
     }
@@ -802,7 +798,7 @@ void TrmpItem::UpdateMatricesAll() {
 void TrmpItem::UpdateAll() {
     int itemIndex;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
-        TrmpItem *p = (TrmpItem *)(sTrmpItems + itemIndex * 0x1d0);
+        TrmpItem *p = &sTrmpItems[itemIndex];
         if (p->mActive != 0)
             p->Update();
     }
@@ -811,7 +807,7 @@ void TrmpItem::UpdateAll() {
 void TrmpItem::HideAll(u32) {
     int itemIndex;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++)
-        ((TrmpItem *)(sTrmpItems + itemIndex * 0x1d0))->Hide();
+        sTrmpItems[itemIndex].Hide();
     sTrmpItemsActive = 0;
     sTrmpItemsHit = 0;
     sTrmp2Score = 0;
@@ -828,27 +824,24 @@ void TrmpItem::LoadAll(char *items, int count) {
     dExtSimpleModel_c::LoadFile(sTrmpItemRingAModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingBModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingCModelFile);
-    sTrmpItems = items;
+    sTrmpItems = (TrmpItem *)items;
     sTrmpItemCount = count;
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++)
-        ((TrmpItem *)(sTrmpItems + itemIndex * 0x1d0))->Load();
+        sTrmpItems[itemIndex].Load();
 }
 
-TrmpItem *TrmpItem::Spawn(int position, int *normal, int itemType, short motionType) {
+TrmpItem *TrmpItem::Spawn(const VecFx32 *pos, const Vector3 *normal, int itemType, short motion) {
     int itemIndex = 0;
-    char *base;
-    int itemOffset;
+    TrmpItem *base;
     if (sTrmpItemCount > 0) {
         base = sTrmpItems;
         do {
-            if (((TrmpItem *)base)->mActive == 0) {
-                itemOffset = itemIndex * 0x1d0;
-                ((TrmpItem *)(sTrmpItems + itemOffset))
-                    ->Init((int *)position, normal, itemType, motionType);
-                return (TrmpItem *)(sTrmpItems + itemOffset);
+            if (base->mActive == 0) {
+                sTrmpItems[itemIndex].Init(pos, normal, itemType, motion);
+                return &sTrmpItems[itemIndex];
             }
             itemIndex++;
-            base += 0x1d0;
+            base++;
         } while (itemIndex < sTrmpItemCount);
     }
     return 0;
@@ -1634,14 +1627,14 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
 }
 
 void TrmpLine::DrawAll() {
-    int light[3];
+    Vector3 light;
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&data_0209b3ec);
-    light[0] = 0;
-    light[1] = 0;
-    light[2] = -0xff8;
-    func_0203cd80(light, -0x2000);
-    G3_LightVector(GX_LIGHTID_1, light[0], light[1], light[2]);
+    light.x = 0;
+    light.y = 0;
+    light.z = -0xff8;
+    func_0203cd80(&light, -0x2000);
+    G3_LightVector(GX_LIGHTID_1, light.x, light.y, light.z);
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     int i;
     for (i = 0; i < 4; i++) {
@@ -1738,15 +1731,15 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
     int absoluteX;
     int slotIndex;
     int otherSlotIndex;
-    char *candidateSlot;
-    char *p;
+    TrmpLine *candidateSlot;
+    TrmpLine *p;
     int firstCross;
     int secondCross;
     long long weightedYProduct;
     int weightedY;
     int scaledDirectionLength;
     int slotOffset;
-    char *newLine;
+    TrmpLine *newLine;
 
     func_0203b958(deltaPixels, startPoint, endPoint);
 
@@ -1806,18 +1799,18 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
         endPoint[1] = (s16)(adjustedEnd.y >> 12);
     }
 
-    candidateSlot = (char *)sTrmpLines;
+    candidateSlot = sTrmpLines;
     slotIndex = 0;
     do {
-        if (TRMPLINE(candidateSlot)->mStatus == 0) {
-            p = (char *)sTrmpLines;
+        if (candidateSlot->mStatus == 0) {
+            p = sTrmpLines;
             otherSlotIndex = 0;
             do {
                 if (slotIndex != otherSlotIndex) {
-                    if (TRMPLINE(p)->mStatus == 1) {
+                    if (p->mStatus == 1) {
                         func_0203b958(testDirection, endPoint, startPoint);
-                        func_0203b958(firstOffset, TRMPLINE(p)->mStart, startPoint);
-                        func_0203b958(secondOffset, TRMPLINE(p)->mEnd, startPoint);
+                        func_0203b958(firstOffset, p->mStart, startPoint);
+                        func_0203b958(secondOffset, p->mEnd, startPoint);
 
                         {
                             s16 ax = testDirection[0];
@@ -1832,13 +1825,13 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
                             }
                         }
                         if (firstCross * secondCross <= 0) {
-                            func_0203b958(otherDirection, TRMPLINE(p)->mEnd, TRMPLINE(p)->mStart);
+                            func_0203b958(otherDirection, p->mEnd, p->mStart);
                             testDirection[0] = otherDirection[0];
                             testDirection[1] = otherDirection[1];
-                            func_0203b958(firstEndpointOffset, startPoint, TRMPLINE(p)->mStart);
+                            func_0203b958(firstEndpointOffset, startPoint, p->mStart);
                             firstOffset[0] = firstEndpointOffset[0];
                             firstOffset[1] = firstEndpointOffset[1];
-                            func_0203b958(secondEndpointOffset, endPoint, TRMPLINE(p)->mStart);
+                            func_0203b958(secondEndpointOffset, endPoint, p->mStart);
                             secondOffset[0] = secondEndpointOffset[0];
                             secondOffset[1] = secondEndpointOffset[1];
 
@@ -1860,7 +1853,7 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
                     }
                 }
                 otherSlotIndex++;
-                p += 0x32c;
+                p++;
             } while (otherSlotIndex < 4);
 
             startCopy[0] = startPoint[0];
@@ -1868,15 +1861,15 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
             endCopy[0] = endPoint[0];
             endCopy[1] = endPoint[1];
             slotOffset = slotIndex * 0x32c;
-            newLine = (char *)sTrmpLines + slotOffset;
-            ((TrmpLine *)newLine)->Build(startCopy, endCopy);
+            newLine = &sTrmpLines[slotIndex];
+            newLine->Build(startCopy, endCopy);
             *(s16 *)((int)&sTrmpLines[0].mBouncesLeft + slotOffset) = 1;
             *(u16 *)((int)&sTrmpLines[0].mBounceCount + slotOffset) = 0;
             *(s16 *)((int)&sTrmpLines[0].mSlotIndex + slotOffset) = (s16)slotIndex;
             return (int)newLine;
         }
         slotIndex++;
-        candidateSlot += 0x32c;
+        candidateSlot++;
     } while (slotIndex < 3);
 
     return 0;

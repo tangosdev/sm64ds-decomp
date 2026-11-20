@@ -10,7 +10,7 @@ extern void func_ov007_020b16f0(void);
  * end values and fades to func_ov007_020b16f0, with fade 1 / 2 when states[0]
  * came from state 6 and 2 / 3 otherwise. */
 void func_ov007_020b166c(void) {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     int fromState6 = (w->states[0]->previousState == 6);
     if (w->states[1]->stateTicks != 0)
         return;

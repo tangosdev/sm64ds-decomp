@@ -31,8 +31,6 @@
 extern "C" {
 /* local extern: these camera vector helpers have no header outside the
    decl_common.h catch-all, which is C. */
-extern void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short ang,
-                                     const Vector3 *add);
 extern void Vec3fGetDistAndAngle(const Vector3 *from, const Vector3 *to, int *outDist,
                                  short *outVertAng, short *outHorzAng);
 extern void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang,

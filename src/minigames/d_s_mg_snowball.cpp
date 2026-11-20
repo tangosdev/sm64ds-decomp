@@ -95,8 +95,7 @@ extern void SetBg3Offset(int, int);
 extern void SetSubBg2Offset(int, int);
 extern void SetSubBg3Offset(int, int);
 extern Quaternion data_02092768; /* identity */
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-void func_0203cd80(int *m, short angle);
+void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 s32 GetGameLanguage(void);
 void FreeGfxSlotsById(int arg);
@@ -1259,7 +1258,7 @@ void dScMgSnowball_c::ResetScene() {
 /* Slot 9. Draws the course meter, the snowball, and every live mArray1 and
  * mArray2 slot inside the visible scroll window. */
 s32 dScMgSnowball_c::Render() {
-    int light[3];
+    Vector3 light;
     Vector3 scale;
 
     mAnimCounter++;
@@ -1274,11 +1273,11 @@ s32 dScMgSnowball_c::Render() {
     }
     Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 240, 96, -1, 0);
 
-    light[2] = -0xff8;
-    light[1] = 0;
-    light[0] = 0;
-    func_0203cd80(light, -0x2000);
-    G3_LightVector(GX_LIGHTID_0, light[0], light[1], light[2]);
+    light.z = -0xff8;
+    light.y = 0;
+    light.x = 0;
+    func_0203cd80(&light, -0x2000);
+    G3_LightVector(GX_LIGHTID_0, light.x, light.y, light.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
 
     {

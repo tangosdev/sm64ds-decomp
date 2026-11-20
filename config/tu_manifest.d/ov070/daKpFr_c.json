@@ -77,7 +77,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daKpFr_c19func_ov070_02121d50EPv",
+      "symbol": "_ZN8daKpFr_c19func_ov070_02121d50EP10dBgCh_Actr",
       "address": "0x02121d50",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov070_02121d50.cpp",

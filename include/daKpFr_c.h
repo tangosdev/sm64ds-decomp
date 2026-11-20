@@ -77,7 +77,7 @@ struct daKpFr_c : dActor_c {
     void func_ov070_02121be4();
     void func_ov070_02121c8c();
     void func_ov070_02121cbc();
-    void func_ov070_02121d50(void *vclsn);
+    void func_ov070_02121d50(dBgCh_Actr *clsn);
     void func_ov070_02121e14();
     int func_ov070_02121eb0();
     int func_ov070_02121ef8();
