@@ -45,10 +45,6 @@
 #include "math/MtxStack.h"
 #include "MgCamera.h"
 
-/* The one raw-pointer walk left: TrmpLine::Create finds a free slot through
-   byte offsets, so it reads each candidate through this cast. */
-#define TRMPLINE(p) ((TrmpLine *)(p))
-
 #pragma defer_codegen off
 
 /* The jumper a line bounces: a trampoline Mario, read through the five virtual
@@ -1737,15 +1733,15 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
     int absoluteX;
     int slotIndex;
     int otherSlotIndex;
-    char *candidateSlot;
-    char *p;
+    TrmpLine *candidateSlot;
+    TrmpLine *p;
     int firstCross;
     int secondCross;
     long long weightedYProduct;
     int weightedY;
     int scaledDirectionLength;
     int slotOffset;
-    char *newLine;
+    TrmpLine *newLine;
 
     func_0203b958(deltaPixels, startPoint, endPoint);
 
@@ -1805,18 +1801,18 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
         endPoint[1] = (s16)(adjustedEnd.y >> 12);
     }
 
-    candidateSlot = (char *)sTrmpLines;
+    candidateSlot = sTrmpLines;
     slotIndex = 0;
     do {
-        if (TRMPLINE(candidateSlot)->mStatus == 0) {
-            p = (char *)sTrmpLines;
+        if (candidateSlot->mStatus == 0) {
+            p = sTrmpLines;
             otherSlotIndex = 0;
             do {
                 if (slotIndex != otherSlotIndex) {
-                    if (TRMPLINE(p)->mStatus == 1) {
+                    if (p->mStatus == 1) {
                         func_0203b958(testDirection, endPoint, startPoint);
-                        func_0203b958(firstOffset, TRMPLINE(p)->mStart, startPoint);
-                        func_0203b958(secondOffset, TRMPLINE(p)->mEnd, startPoint);
+                        func_0203b958(firstOffset, p->mStart, startPoint);
+                        func_0203b958(secondOffset, p->mEnd, startPoint);
 
                         {
                             s16 ax = testDirection[0];
@@ -1831,13 +1827,13 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
                             }
                         }
                         if (firstCross * secondCross <= 0) {
-                            func_0203b958(otherDirection, TRMPLINE(p)->mEnd, TRMPLINE(p)->mStart);
+                            func_0203b958(otherDirection, p->mEnd, p->mStart);
                             testDirection[0] = otherDirection[0];
                             testDirection[1] = otherDirection[1];
-                            func_0203b958(firstEndpointOffset, startPoint, TRMPLINE(p)->mStart);
+                            func_0203b958(firstEndpointOffset, startPoint, p->mStart);
                             firstOffset[0] = firstEndpointOffset[0];
                             firstOffset[1] = firstEndpointOffset[1];
-                            func_0203b958(secondEndpointOffset, endPoint, TRMPLINE(p)->mStart);
+                            func_0203b958(secondEndpointOffset, endPoint, p->mStart);
                             secondOffset[0] = secondEndpointOffset[0];
                             secondOffset[1] = secondEndpointOffset[1];
 
@@ -1859,7 +1855,7 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
                     }
                 }
                 otherSlotIndex++;
-                p += 0x32c;
+                p++;
             } while (otherSlotIndex < 4);
 
             startCopy[0] = startPoint[0];
@@ -1867,15 +1863,15 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
             endCopy[0] = endPoint[0];
             endCopy[1] = endPoint[1];
             slotOffset = slotIndex * 0x32c;
-            newLine = (char *)sTrmpLines + slotOffset;
-            ((TrmpLine *)newLine)->Build(startCopy, endCopy);
+            newLine = &sTrmpLines[slotIndex];
+            newLine->Build(startCopy, endCopy);
             *(s16 *)((int)&sTrmpLines[0].mBouncesLeft + slotOffset) = 1;
             *(u16 *)((int)&sTrmpLines[0].mBounceCount + slotOffset) = 0;
             *(s16 *)((int)&sTrmpLines[0].mSlotIndex + slotOffset) = (s16)slotIndex;
             return (int)newLine;
         }
         slotIndex++;
-        candidateSlot += 0x32c;
+        candidateSlot++;
     } while (slotIndex < 3);
 
     return 0;

@@ -4539,8 +4539,8 @@ int dScStage_c::InitResources() {
             if ((s32)gNumPlayers > 0) {
                 int count = gNumPlayers;
                 int idx = 0;
-                u8 *p1 = (u8 *)gNumRedCoins;
-                u8 *vsStars = (u8 *)gNumStageStars;
+                s8 *p1 = gNumRedCoins;
+                s8 *vsStars = gNumStageStars;
                 /* Sampled once, before the loop: IsVsMode() here, or IsGameMode(1)
                    tested inside the loop, is 12 bytes short or 12 long. */
                 int vsModeCounters = IsGameMode(1);
