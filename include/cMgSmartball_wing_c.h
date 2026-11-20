@@ -71,6 +71,10 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
                            IsTableAtRest; while set, SaveSnapshot leaves
                            the angle alone */
     u8 pad_045[3];     /* align the collision vertices */
+    /* A plain {x, y} pair, not Vector2: the vertices go to func_0203d388 as
+       Vector2 *, but a Vector2[8] member gives the constructor an array
+       construction it does not have (both constructors 0x50 -> 0x74, and
+       SpawnObjects / AfterCleanupResources grow, measured 2026-11-19). */
     struct CollisionVertex {
         s32 x, y;
     };

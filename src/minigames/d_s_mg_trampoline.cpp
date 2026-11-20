@@ -45,6 +45,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "decl_common.h"
+#include "Vector2Math.h"
 #include "dMgTrmplnShared.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -1007,8 +1008,8 @@ void TrmpFx_Unlink(TrmpScorePopup *node) {
 void TrmpScorePopup::Spawn(int y, int number) {
     x = 0x110000;
     this->y = y;
-    speedX = -0x4000;
-    speedY = 0;
+    speed.x = -0x4000;
+    speed.y = 0;
     targetX = 0xc0000;
     targetY = y;
     life = 0x80;
@@ -1016,7 +1017,6 @@ void TrmpScorePopup::Spawn(int y, int number) {
     this->number = number;
     TrmpFx_Link(this);
 }
-extern "C" void func_0203d630(int *p, int m);
 
 void TrmpScorePopup::Update() {
     if (active == 0) {
@@ -1026,9 +1026,9 @@ void TrmpScorePopup::Update() {
         TrmpFx_Unlink(this);
         active = 0;
     }
-    x += speedX;
+    x += speed.x;
     ApproachLinear(y, targetY, 0x1800);
-    func_0203d630(&speedX, 0xf00);
+    func_0203d630(&speed, 0xf00);
 }
 
 void TrmpScorePopup::Render() {

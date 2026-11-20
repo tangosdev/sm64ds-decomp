@@ -34,6 +34,7 @@ enum d_s_mg_jump2_AssetId {
 #include "SharedFilePtr.h"
 #include "types.h"
 #include "decl_common.h"
+#include "Vector2Math.h"
 #include "Particle__System.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
@@ -59,7 +60,6 @@ extern Jump2ModelFile gOV006JumpBack01ModelFile; /* model file 0x203 */
 extern Jump2ModelFile sJump2Back02ModelFile;     /* model file 0x204 */
 
 extern "C" {
-extern void func_0203d630(int *p, int m);
 extern struct Jump2PopupLink *sJump2PopupList;
 extern int sJump2PopupCount;
 extern struct Jump2Popup *sJump2Popups;
@@ -486,8 +486,8 @@ void Jump2PopupLink::Unlink() {
 void Jump2Popup ::Spawn(int startX, int startY, int value) {
     x = startX;
     y = startY;
-    speedX = 0;
-    speedY = 0x4000;
+    speed.x = 0;
+    speed.y = 0x4000;
     targetX = startX;
     targetY = startY - 0x40000;
     if (targetY < 0x8000 && targetY > -(Mg_GetTopScreenYOffset() << 12))
@@ -507,9 +507,9 @@ void Jump2Popup::Tick() {
         Unlink();
         active = 0;
     }
-    ApproachLinear(x, targetX, speedX);
-    ApproachLinear(y, targetY, speedY);
-    func_0203d630(&speedX, 0xf00);
+    ApproachLinear(x, targetX, speed.x);
+    ApproachLinear(y, targetY, speed.y);
+    func_0203d630(&speed, 0xf00);
 }
 
 void Jump2Popup::DrawNumber() {
