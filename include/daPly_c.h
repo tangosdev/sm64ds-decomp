@@ -273,7 +273,7 @@ struct daPly_c : dActor_c {
     Vector3 *mTrailPos; /* 0x578 */
     u8 *mTrailFlags;    /* 0x57c */
     /* Body bone 15's (face_1) final rotation, copied out by func_ov002_020e640c
-       after mHeadRotMode is applied; d_a_bmb.cpp's func_ov102_0214b53c reads it
+       after mHeadRotMode is applied; d_a_bmb.cpp's UpdateAttachedPose reads it
        back from the player eating the bomb. Every access is an unsigned halfword. */
     u16 mHeadBoneRot[3]; /* 0x580 */
     u8 pad_586[0x2];
@@ -287,7 +287,7 @@ struct daPly_c : dActor_c {
        grab path stores the full body matrix here as well. */
     union Matrix4x3 mShadowMatrix; /* 0x5bc */
     /* Body matrix times bone 15 (face_1), stored by func_ov002_020e4768;
-       d_a_bmb.cpp's func_ov102_0214b53c copies it out for the eating player. */
+       d_a_bmb.cpp's UpdateAttachedPose copies it out for the eating player. */
     union Matrix4x3 mHeadMatrix; /* 0x5ec */
     /* Yoshi's per-player material word for VS mode. func_ov002_020e5948 sets it
        to word +0x20 of material 0 of Yoshi's body model (GetBodyModelID(3))

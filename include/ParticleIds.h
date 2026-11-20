@@ -55,13 +55,13 @@ enum ParticleId {
     kPtclHatenaBlockBreak = 0x00c,      /* daObjHatenaBlock_c::func_ov102_021498e0 */
     kPtclBlockBreakB = 0x00d,           /* daObjHatenaBlock_c::func_ov102_021498e0 */
     kPtclItemBlockBreak = 0x010,        /* daObjHatenaBlock_c::func_ov102_021498e0 */
-    kPtclBobOmbCarried = 0x013,         /* daBmb_c::func_ov102_0214b53c */
+    kPtclBobOmbCarried = 0x013,         /* daBmb_c::UpdateAttachedPose */
     kPtclBobOmbExplodeA = 0x014,        /* func_ov102_0214ae1c */
     kPtclBobOmbExplodeB = 0x015,        /* func_ov102_0214ae1c */
     kPtclBobOmbExplodeC = 0x016,        /* func_ov102_0214ae1c */
     kPtclBobOmbExplodeD = 0x017,        /* func_ov102_0214ae1c */
     kPtclBobOmbExplodeE = 0x018,        /* func_ov102_0214ae1c */
-    kPtclBobOmbFuse = 0x019,            /* daBmb_c::func_ov102_0214b53c */
+    kPtclBobOmbFuse = 0x019,            /* daBmb_c::UpdateAttachedPose */
     kPtclKingBobOmbDefeat = 0x01a,      /* daBombking_c::func_ov078_021238ac */
     kPtclBossLandingDust = 0x01b,       /* func_0200fa04 */
     kPtclWaterBombBurstA = 0x01c,       /* daWbm_c::func_ov098_0213b6e0 */
