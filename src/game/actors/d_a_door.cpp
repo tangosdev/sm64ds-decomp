@@ -14,31 +14,52 @@
  * func_ov100_02145370 returns. The nine states are the 16-byte tables
  * data_ov100_021488a4 .. data_ov100_02148924, which the module's static
  * initializer fills from the pointer-to-member constants at
- * 0x021480d4..0x02148144; every helper from func_ov100_02144468 to
- * func_ov100_02144cf8 is one of those members, the rest are what they call.
- * Which members each table holds (enter / execute), read off that
- * initializer:
+ * 0x021480d4..0x02148144; the fourteen St_* members below are those
+ * members, the rest are what they call. Which members each table holds
+ * (enter / execute), read off that initializer:
  *
- *   021488a4  none      / func_ov100_02144468   the exit sequence of
- *                                               func_ov100_02145080
- *   021488b4  none      / func_ov100_02144cf8   the closed door
- *   021488c4  02144ccc  / func_ov100_02144c6c   a message was shown
- *   021488d4  02144c64  / func_ov100_02144bf4   star door: TryTalkToDoor took
- *   021488e4  02144a38  / func_ov100_021449c8   key door: TryTalkToKeyDoor took
- *   021488f4  02144950  / func_ov100_02144730   the swing
- *   02148904  021446f8  / func_ov100_02144528   animation, character switch,
- *                                               then on into the swing
- *   02148914  0214491c  / func_ov100_02144730   the swing, starting 0x18
- *                                               frames from its end
- *   02148924  none      / func_ov100_021444e8   wait for the countdown, then
- *                                               back to the closed door
+ *   021488a4  none                      / St_CharIntro_Main
+ *               -- the exit sequence of func_ov100_02145080
+ *   021488b4  none                      / St_StayClosed_Main
+ *               -- the closed door
+ *   021488c4  St_TalkingToPlayer_Init   / St_TalkingToPlayer_Main
+ *               -- a message was shown
+ *   021488d4  St_UnlockingWithStar_Init / St_UnlockingWithStar_Main
+ *               -- star door: TryTalkToDoor took
+ *   021488e4  St_UnlockingWithKey_Init  / St_UnlockingWithKey_Main
+ *               -- key door: TryTalkToKeyDoor took
+ *   021488f4  St_OpenClose_Init         / St_OpenClose_Main
+ *               -- the swing
+ *   02148904  St_CharChange_Init        / St_CharChange_Main
+ *               -- animation, character switch, then on into the swing
+ *   02148914  St_OpenClose_InitNearEnd  / St_OpenClose_Main
+ *               -- the swing, starting 0x18 frames from its end
+ *   02148924  none                      / St_Wait_Main
+ *               -- wait for the countdown, then back to the closed door
  * ("none" is the null pointer-to-member the initializer copies from
  * 0x02086b58.)
  *
+ * STATE NAMES. The fourteen state members and SetState carried their ROM
+ * addresses until now; the names above are reconstructed, and the ROM records
+ * none of them. They follow daStarGate_c (src/game/actors/d_a_star_gate.cpp,
+ * include/daStarGate_c.h) -- the class whose code starts at 0x021458d4,
+ * directly above this unit, and whose state machine is the same shape: a
+ * 0x10 record of two pointers-to-member, a SetState that adopts a record
+ * and runs its init half, a Behavior that runs the main half with the player,
+ * and the same St_<state>_Init / St_<state>_Main spelling for the halves.
+ * Four of its state names describe the same behaviour here and are reused
+ * verbatim -- St_StayClosed_Main, St_OpenClose_Init/_Main,
+ * St_TalkingToPlayer_Init/_Main and St_Wait_Main. This class splits
+ * daStarGate_c's single St_Unlocking into St_UnlockingWithStar and
+ * St_UnlockingWithKey because a door has both paths (one gated on the star
+ * count, one on a held key) and they are separate state records here. Each
+ * name is earned from the body below it; the ten functions that are still
+ * address-named are the ones nothing in the unit names.
+ *
  * This file is the whole linker unit 0x021443f4..0x021458d4, 32 functions:
  * D1 and D0 (daWanwan2_c_classInit, src/game/actors/d_a_wanwan2.cpp, ends exactly at
- * 0x021443f4 below them), the 24 helpers func_ov100_02144468 through
- * SetState, CleanupResources, OnPendingDestroy, Render,
+ * 0x021443f4 below them), the 24 helpers in 0x02144468..0x021453d8
+ * (St_CharIntro_Main first, SetState last), CleanupResources, OnPendingDestroy, Render,
  * Behavior, InitResources, and last the registry factory daDoor_c_classInit
  * (0x0214589c); daStarGate_c's first function
  * (src/game/actors/d_a_star_gate.cpp) starts exactly at 0x021458d4 above
@@ -46,7 +67,9 @@
  * emits the vtable and the RTTI.
  *
  * It replaces the one-function sources for _ZN8daDoor_cD1Ev,
- * _ZN8daDoor_cD0Ev, func_ov100_02144468 .. 0x021453d8 (SetState),
+ * _ZN8daDoor_cD0Ev, the 24 helpers (each of those sources was named for the
+ * address it held; config/tu_manifest.d/ov100/daDoor_c.json still lists them
+ * under legacy_source),
  * _ZN8daDoor_c16CleanupResourcesEv, _ZN8daDoor_c16OnPendingDestroyEv,
  * _ZN8daDoor_c6RenderEv, _ZN8daDoor_c8BehaviorEv,
  * _ZN8daDoor_c13InitResourcesEv and daDoor_c_classInit. Each member keeps
@@ -58,8 +81,9 @@
  * pointer-to-member into this class, and the rest are called on the door.
  *
  * comment leftovers:
- * - the member names keep their addresses (nothing here says what the
- *   original called them). func_ov100_02144f84 / func_ov100_02144fcc /
+ * - the ten members that are still address-named are the ones no state
+ *   record, caller or callee in this unit names; see STATE NAMES above.
+ *   func_ov100_02144f84 / func_ov100_02144fcc /
  *   func_ov100_02145014 / func_ov100_02145070 are static: they take no door.
  * - the callees with Fix12<int> parameters (Sound, dExtAnmModel_c::SetAnim),
  *   the SaveData, Sound::PlayCharVoice and dExtFrameCtrl_c::LoadFile calls, and the
@@ -142,9 +166,9 @@ enum DoorVariant {
    door's camera-space position). Named by when they play; what the
    cartridge called them is not recovered. */
 enum DoorSound {
-    SND_SWING_START = 4,     /* func_ov100_02144950: the swing is starting */
+    SND_SWING_START = 4,     /* St_OpenClose_Init: the swing is starting */
     SND_SWING_END = 5,       /* the door animation has finished (also in
-                                   func_ov100_02144730, as the area changes) */
+                                   St_OpenClose_Main, as the area changes) */
     SND_SWING_START_ALT = 6, /* the same two for DOOR_ALT_SOUND */
     SND_SWING_END_ALT = 7
 };
@@ -157,13 +181,13 @@ enum DoorSaveFlag {
                                         TryTalkToKeyDoor; read here as "the
                                         player holds that key" */
     DOOR_SAVE_KEY_UNLOCKED = 0x100,  /* << flagShift: set by the key door's
-                                        execute state; func_ov100_02144cf8
+                                        execute state; St_StayClosed_Main
                                         then lets the player straight through */
     DOOR_SAVE_STAR_UNLOCKED = 0x8000 /* << flagShift: set by the star door's
                                         execute state, with the same effect */
 };
 
-/* dCamera_c::mFlags bits the door sets when a swing starts (func_ov100_02144950)
+/* dCamera_c::mFlags bits the door sets when a swing starts (St_OpenClose_Init)
    and clears near and at its end. Not documented in include/dCamera_c.h. */
 #define DOOR_CAMERA_FLAGS 0xc00
 
@@ -200,11 +224,11 @@ int AngleDiff(int a, int b);
 }
 
 extern DoorEntry data_ov100_02148204[19];
-/* Indexed by mKeyModelIdx - 1: the character func_ov100_02144528 switches the
+/* Indexed by mKeyModelIdx - 1: the character St_CharChange_Main switches the
    player to (the first four bytes are 00 01 02 00). */
 extern unsigned char data_ov100_021480d0[];
-/* Latch: set (func_ov100_02144a38) when the door being opened has a nonzero
-   mKeyModelIdx, cleared by func_ov100_02144468; the swing and exit states
+/* Latch: set (St_UnlockingWithKey_Init) when the door being opened has a nonzero
+   mKeyModelIdx, cleared by St_CharIntro_Main; the swing and exit states
    branch on it. */
 extern unsigned char data_ov100_02148704;
 /* The shared countdown: ticked by func_ov100_02145014, started by
@@ -333,7 +357,7 @@ daDoor_StateRecord data_ov100_021488a4 = {__ptmf_null, data_ov100_02148114};
 daDoor_c::~daDoor_c() {}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov100_02144468, 0x02144468, size 0x80 */
+/* ROM ordinal 2 -- St_CharIntro_Main, 0x02144468, size 0x80 */
 /* -------------------------------------------------------------------------- */
 /* State 021488a4, execute member. Once func_ov100_02145080 lets the player
    out (it returns 0), clear the data_ov100_02148704 latch, call
@@ -341,7 +365,7 @@ daDoor_c::~daDoor_c() {}
    Sound::ChangeMusicVolume(0x7f, 0xcb33 = 12.7 as fx32)) and go to state
    data_ov100_021488b4. The player is taken as the int the member-pointer call
    passes. Was a C source. */
-int daDoor_c::func_ov100_02144468(int p) {
+int daDoor_c::St_CharIntro_Main(int p) {
     if (!func_ov100_02145080((daPly_c *)p)) {
         data_ov100_02148704 = 0;
         if (param1 != DOOR_LAST_KEY_MODEL) {
@@ -355,11 +379,11 @@ int daDoor_c::func_ov100_02144468(int p) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov100_021444e8, 0x021444e8, size 0x40 */
+/* ROM ordinal 3 -- St_Wait_Main, 0x021444e8, size 0x40 */
 /* -------------------------------------------------------------------------- */
 /* State 02148924, execute member. Go to state data_ov100_021488b4 once
    func_ov100_02144fcc reports the shared countdown done. Was a C source. */
-int daDoor_c::func_ov100_021444e8(int a1) {
+int daDoor_c::St_Wait_Main(int a1) {
     if (daDoor_c::func_ov100_02144fcc()) {
         SetState(&data_ov100_021488b4, a1);
     }
@@ -367,7 +391,7 @@ int daDoor_c::func_ov100_021444e8(int a1) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov100_02144528, 0x02144528, size 0x1d0 */
+/* ROM ordinal 4 -- St_CharChange_Main, 0x02144528, size 0x1d0 */
 /* -------------------------------------------------------------------------- */
 /* State 02148904, execute member. Run the door animation; once it has
    finished, and while mTimer is zero:
@@ -386,7 +410,7 @@ int daDoor_c::func_ov100_021444e8(int a1) {
    latch, open the big door; when it refuses, mTimer is left at 1. While it
    is still counting, variant 0xd with the latch clear calls
    ChangeMusicVolume(0x7f, 0xcb33) as mTimer reaches 0xa. Was a C source. */
-int daDoor_c::func_ov100_02144528(daPly_c *pl) {
+int daDoor_c::St_CharChange_Main(daPly_c *pl) {
     mModel.Advance();
     if (mModel.Finished() != 0) {
         if (mTimer == 0) {
@@ -432,18 +456,18 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov100_021446f8, 0x021446f8, size 0x38 */
+/* ROM ordinal 5 -- St_CharChange_Init, 0x021446f8, size 0x38 */
 /* -------------------------------------------------------------------------- */
 /* State 02148904, enter member. Open the big door, zero mTimer and carry on
-   through func_ov100_02144950. Was a C source. */
-void daDoor_c::func_ov100_021446f8(daPly_c *r1) {
+   through St_OpenClose_Init. Was a C source. */
+void daDoor_c::St_CharChange_Init(daPly_c *r1) {
     r1->OpenBigDoor();
     mTimer = 0;
-    func_ov100_02144950(r1, 0);
+    St_OpenClose_Init(r1, 0);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov100_02144730, 0x02144730, size 0x1ec */
+/* ROM ordinal 6 -- St_OpenClose_Main, 0x02144730, size 0x1ec */
 /* -------------------------------------------------------------------------- */
 /* States 021488f4 and 02148914, execute member: the door swinging. Under the
    data_ov100_02148704 latch, once the current frame is past the animation's
@@ -459,7 +483,7 @@ void daDoor_c::func_ov100_021446f8(daPly_c *r1) {
    from the end, it sends the camera behind the player (dCamera_c::GoBehindPlayer
    with the current player id) and, when the next-level id is not negative,
    zeroes the animation's speed. */
-int daDoor_c::func_ov100_02144730(daPly_c *player) {
+int daDoor_c::St_OpenClose_Main(daPly_c *player) {
     mModel.Advance();
     if (data_ov100_02148704 != 0) {
         int f = mModel.currFrame;
@@ -504,12 +528,12 @@ int daDoor_c::func_ov100_02144730(daPly_c *player) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov100_0214491c, 0x0214491c, size 0x34 */
+/* ROM ordinal 7 -- St_OpenClose_InitNearEnd, 0x0214491c, size 0x34 */
 /* -------------------------------------------------------------------------- */
 /* State 02148914, enter member: start the door animation 0x18 (24) frames
    from its end (the current frame is 20.12, hence the << 12) and zero mTimer.
    Was a C source. */
-int daDoor_c::func_ov100_0214491c() {
+int daDoor_c::St_OpenClose_InitNearEnd() {
     int n = mModel.GetFrameCount();
     int f = ((unsigned short)(n - 0x18)) << 12;
     mModel.currFrame = f;
@@ -518,15 +542,15 @@ int daDoor_c::func_ov100_0214491c() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov100_02144950, 0x02144950, size 0x78 */
+/* ROM ordinal 8 -- St_OpenClose_Init, 0x02144950, size 0x78 */
 /* -------------------------------------------------------------------------- */
-/* State 021488f4, enter member (and what func_ov100_021446f8 carries on
+/* State 021488f4, enter member (and what St_CharChange_Init carries on
    with): rewind the door animation, show both areas the door joins (the low
    bytes of mAngle.x and mAngle.z), set the camera flag bits DOOR_CAMERA_FLAGS,
    play the swing-start sound and zero mTimer. Was a C source, which read the
-   two area halfwords through an inline helper; func_ov100_021446f8 calls it
+   two area halfwords through an inline helper; St_CharChange_Init calls it
    with the player and a third argument it never reads. */
-int daDoor_c::func_ov100_02144950(daPly_c *pl, int unused) {
+int daDoor_c::St_OpenClose_Init(daPly_c *pl, int unused) {
     mModel.currFrame = 0;
     ShowArea((signed char)mAngle.x);
     ShowArea((signed char)mAngle.z);
@@ -538,12 +562,12 @@ int daDoor_c::func_ov100_02144950(daPly_c *pl, int unused) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov100_021449c8, 0x021449c8, size 0x70 */
+/* ROM ordinal 9 -- St_UnlockingWithKey_Main, 0x021449c8, size 0x70 */
 /* -------------------------------------------------------------------------- */
 /* State 021488e4, execute member. Once daPly_c::Unk_020ca488 returns 0, set
    this door's DOOR_SAVE_KEY_UNLOCKED save-flag bit and go to state
    data_ov100_021488b4. */
-int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
+int daDoor_c::St_UnlockingWithKey_Main(daPly_c *a2) {
     if (!a2->Unk_020ca488()) {
         signed char sh =
             (((signed char *)data_ov100_02148204) +
@@ -556,7 +580,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov100_02144a38, 0x02144a38, size 0x1bc */
+/* ROM ordinal 10 -- St_UnlockingWithKey_Init, 0x02144a38, size 0x1bc */
 /* -------------------------------------------------------------------------- */
 /* State 021488e4, enter member. Open the big door, place the player at the
    door's front or back (func_ov100_02145170, offsets (75, 0, 110) and
@@ -565,7 +589,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
    player's facing, then start the key's animation 2 through
    func_ov089_0213115c. A nonzero mKeyModelIdx sets the
    data_ov100_02148704 latch. Was a C source. */
-int daDoor_c::func_ov100_02144a38(daPly_c *p) {
+int daDoor_c::St_UnlockingWithKey_Init(daPly_c *p) {
     Vector3 pos;
     DoorEntry *e;
 
@@ -599,12 +623,12 @@ int daDoor_c::func_ov100_02144a38(daPly_c *p) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov100_02144bf4, 0x02144bf4, size 0x70 */
+/* ROM ordinal 11 -- St_UnlockingWithStar_Main, 0x02144bf4, size 0x70 */
 /* -------------------------------------------------------------------------- */
 /* State 021488d4, execute member. Unless the player is opening the door
    with a star, set this door's DOOR_SAVE_STAR_UNLOCKED save-flag bit and
    send the player through (state data_ov100_021488f4). */
-int daDoor_c::func_ov100_02144bf4(daPly_c *a2) {
+int daDoor_c::St_UnlockingWithStar_Main(daPly_c *a2) {
     if (!a2->IsOpeningDoorWithStar()) {
         signed char sh =
             (((signed char *)data_ov100_02148204) +
@@ -617,20 +641,20 @@ int daDoor_c::func_ov100_02144bf4(daPly_c *a2) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov100_02144c64, 0x02144c64, size 0x8 */
+/* ROM ordinal 12 -- St_UnlockingWithStar_Init, 0x02144c64, size 0x8 */
 /* -------------------------------------------------------------------------- */
 /* State 021488d4, enter member: does nothing. Was a C source. */
-int daDoor_c::func_ov100_02144c64() {
+int daDoor_c::St_UnlockingWithStar_Init() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov100_02144c6c, 0x02144c6c, size 0x60 */
+/* ROM ordinal 13 -- St_TalkingToPlayer_Main, 0x02144c6c, size 0x60 */
 /* -------------------------------------------------------------------------- */
 /* State 021488c4, execute member. Tick the shared countdown; once
    daPly_c::GetTalkState() returns -1 and the player has left the door's box,
    go to state data_ov100_02148924. Was a C source. */
-int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
+int daDoor_c::St_TalkingToPlayer_Main(daPly_c *r1) {
     daDoor_c::func_ov100_02145014();
     if (r1->GetTalkState() == -1) {
         if (func_ov100_021452e4(r1) == 0) {
@@ -641,18 +665,18 @@ int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov100_02144ccc, 0x02144ccc, size 0x2c */
+/* ROM ordinal 14 -- St_TalkingToPlayer_Init, 0x02144ccc, size 0x2c */
 /* -------------------------------------------------------------------------- */
 /* State 021488c4, enter member. Play sound 0xb8 at the door and start the
    shared countdown at 0x87 (135). Was a C source. */
-int daDoor_c::func_ov100_02144ccc() {
+int daDoor_c::St_TalkingToPlayer_Init() {
     func_02012694(0xb8, &mCamSpacePos);
     daDoor_c::func_ov100_02145070(0x87);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov100_02144cf8, 0x02144cf8, size 0x28c */
+/* ROM ordinal 15 -- St_StayClosed_Main, 0x02144cf8, size 0x28c */
 /* -------------------------------------------------------------------------- */
 /* State 021488b4, execute member: the closed door. When the player is in its
    box (func_ov100_021452e4), decide:
@@ -674,7 +698,7 @@ int daDoor_c::func_ov100_02144ccc() {
    Where ShowMessage, TryTalkToDoor or TryTalkToKeyDoor returns 0, control
    goes to the last case. The message position is mSpeed (see
    InitResources). Was a C source. */
-int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
+int daDoor_c::St_StayClosed_Main(daPly_c *b) {
     DoorEntry *entry;
 
     if (func_ov100_021452e4(b)) {
@@ -1008,7 +1032,7 @@ inline u32 daDoor_c::GetParam1() const {
  * matrix stores are the same store to the door model and the key model.
  *
  * The block near the end writes mPos.x, mPos.y + 0xb4000 (180 units up) and
- * mPos.z into mSpeed. That vector is the one func_ov100_02144cf8 hands to
+ * mPos.z into mSpeed. That vector is the one St_StayClosed_Main hands to
  * daPly_c::ShowMessage: a door reuses the velocity it never moves by as
  * the message position. Left spelt as dActor_c has it, because renaming
  * a base field on one derived class's evidence is a dActor_c change, not
