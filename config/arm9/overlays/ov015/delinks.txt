@@ -79,12 +79,10 @@ src/game/actors/d_a_obj_bk_fall_block.cpp:
     .ctor start:0x02113428 end:0x0211342c
     .bss start:0x02114ad4 end:0x02114b00
     .data.fb_clps start:0x021136b4 end:0x021136d4
+    .data start:0x02114868 end:0x02114880
     .data.fb_res start:0x02114880 end:0x0211488c
 
 src/unnamed/ov015/data_ov015.c:
     complete
     .rodata start:0x02112e0c end:0x02112f9c
 
-src/unnamed/ov015/data_ov015_0211487c.c:
-    complete
-    .data start:0x0211487c end:0x02114880

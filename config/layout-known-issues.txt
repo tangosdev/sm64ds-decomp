@@ -76,4 +76,3 @@ L3 src/unnamed/ov043/data_ov043_02111ca0.c
 L3 src/unnamed/ov056/data_ov056_02112bc0.c
 # Same shape as the block above: a data_ stem is not an address name to srcpath,
 # so each new word-table or align-32 tail in src/unnamed/ is listed here.
-L3 src/unnamed/ov015/data_ov015_0211487c.c
