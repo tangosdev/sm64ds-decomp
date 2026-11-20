@@ -987,7 +987,7 @@
       "address": "0x0209f208",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior, daStar_c::AddStarMarker, daStar_c::Collect and 1 more (ov002, ov084), so global."
+      "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::PayOutReward, daKrb_c::TrackSilverStar, daStarBase_c::Behavior, daStar_c::AddStarMarker, daStar_c::Collect and 1 more (ov002, ov084), so global."
     },
     {
       "symbol": "data_0209f20c",
@@ -1540,7 +1540,7 @@
       "address": "0x0209f344",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "u8 *. The VS star spawn order: InitResources points it at one of the six VS_STAR_SPAWN_ORDERS rows at random. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior and daStar_c::StateWaitMarker (ov002, ov084), so global."
+      "evidence": "u8 *. The VS star spawn order: InitResources points it at one of the six VS_STAR_SPAWN_ORDERS rows at random. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::PayOutReward, daKrb_c::TrackSilverStar, daStarBase_c::Behavior and daStar_c::StateWaitMarker (ov002, ov084), so global."
     },
     {
       "symbol": "sMinimapScaleObjs",
