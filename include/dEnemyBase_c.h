@@ -188,25 +188,27 @@ struct dEnemyBase_c : dActor_c {
        the eight start handlers in sEnemyDeathStartFuncs; UpdateDeath runs one of
        the per-frame handlers in sEnemyDeathFuncs each frame. */
     void KillByAttack(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae954(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae890(dActor_c *, dBgCh_Actr *);
+    void StartStompDeath(dActor_c *, dBgCh_Actr *);
+    void StartPunchDeath(dActor_c *, dBgCh_Actr *);
+    void StartKickDeath(dActor_c *, dBgCh_Actr *);
     void func_ov002_020ae87c(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae844(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae80c(dActor_c *, dBgCh_Actr *);
+    void StartDiveDeath(dActor_c *, dBgCh_Actr *);
+    void StartExplosionDeath(dActor_c *, dBgCh_Actr *);
     void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
     void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
-    int func_ov002_020ae64c(dBgCh_Actr &);
-    int func_ov002_020ae608(dBgCh_Actr &);
+    int UpdateStompDeath(dBgCh_Actr &);
+    int UpdateKnockbackDeath(dBgCh_Actr &);
     int func_ov002_020ae4cc(dBgCh_Actr &);
     int func_ov002_020ae454(dBgCh_Actr &);
     int func_ov002_020aea24(dBgCh_Actr &);
     /* Knock-back speeds from the attacker (a player's param1 indexes the
-       strength table), shared by the death start handlers. */
-    void func_ov002_020ae968(dActor_c *);
-    void func_ov002_020ae8b8(dActor_c *);
-    /* Shrink-death tail; its caller passes an argument the body ignores. */
-    int func_ov002_020ae5c8(int);
+       strength table), shared by the death start handlers: the punch and
+       dive starts use the low arc, the kick, slot-4 and explosion starts
+       the high one. */
+    void SetLowKnockback(dActor_c *);
+    void SetHighKnockback(dActor_c *);
+    /* Stomp-death tail; its caller passes an argument the body ignores. */
+    int FinishStompDeath(int);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header
