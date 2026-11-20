@@ -611,7 +611,7 @@ int daKing_Donketu_c::UpdateDefeat() {
 }
 
 /* ..3370 enter: nothing to do. */
-int daKing_Donketu_c::func_ov073_0211fbec()
+int daKing_Donketu_c::EnterDefeat()
 {
     return 1;
 }
@@ -630,7 +630,7 @@ int daKing_Donketu_c::UpdateDefeatCutscene3() {
 }
 
 /* ..3410 enter: nothing to do. */
-int daKing_Donketu_c::func_ov073_0211fc70()
+int daKing_Donketu_c::EnterDefeatCutscene3()
 {
     return 1;
 }
@@ -707,7 +707,7 @@ int daKing_Donketu_c::UpdateDefeatCutscene2() {
 }
 
 /* ..33e0 enter: nothing to do. */
-int daKing_Donketu_c::func_ov073_0211fe84()
+int daKing_Donketu_c::EnterDefeatCutscene2()
 {
     return 1;
 }
@@ -986,7 +986,7 @@ int daKing_Donketu_c::EnterWaypointHop() {
    advance), and at timer 0 the aim speed is 40.0 (0x28000). Once mStateScratch
    is set or the boss is falling, mSpeed.y also follows the aim. The landing
    sets mJumpCount to 1 and goes to ..3320. */
-int daKing_Donketu_c::func_ov073_02120610() {
+int daKing_Donketu_c::UpdateFirstWaypointHop() {
     Vector3 v;
 
     if (mStateTimer != 0) {
@@ -1044,7 +1044,7 @@ int daKing_Donketu_c::func_ov073_02120610() {
 
 /* ..3400 enter: mStateTimer = 10, mStateScratch = 0, mJumpCount = 0,
    mLandedWaypoint = 0xff. */
-int daKing_Donketu_c::func_ov073_0212081c() {
+int daKing_Donketu_c::EnterFirstWaypointHop() {
     mStateTimer = 10;
     mStateScratch = 0;
     mJumpCount = 0;
@@ -1056,7 +1056,7 @@ int daKing_Donketu_c::func_ov073_0212081c() {
    with the looped sound playing. Once the boss is below mSpawnPos.y and on the
    ground it shakes the camera (0x7d0000), plays SND_BIG_LANDING, zeroes
    mHorzSpeed and goes to ..33b0. */
-int daKing_Donketu_c::func_ov073_02120844()
+int daKing_Donketu_c::UpdateDefeatFall()
 {
     ApproachLinear(mAngle.x, -0x4000, 0x400);
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x170, mCamSpacePos, 0);
@@ -1071,7 +1071,7 @@ int daKing_Donketu_c::func_ov073_02120844()
 
 /* ..33f0 enter: mHorzSpeed 0x14000 (20.0), mSpeed.y 0x1e000 (30.0),
    mVertAccel -0x3000 (-3.0); clears the sound handle. */
-int daKing_Donketu_c::func_ov073_021208e4() {
+int daKing_Donketu_c::EnterDefeatFall() {
     mHorzSpeed = 0x14000;
     mSpeed.y = 0x1e000;
     mVertAccel = -0x3000;
@@ -1159,7 +1159,7 @@ int daKing_Donketu_c::EnterEdgeWobble() {
    below mSpawnPos.y and on the ground it shakes the camera (0xfa0000), stops,
    turns to face mSpawnPos (both angles), plays SND_BIG_LANDING and goes to
    ..3400. */
-int daKing_Donketu_c::func_ov073_02120b78() {
+int daKing_Donketu_c::UpdateKnockedOffEdge() {
     ApproachLinear(mAngle.x, -0x4000, 0x400);
     if (mSpawnPos.y > mPos.y) {
         if (mWithMeshClsn.IsOnGround()) {
@@ -1177,7 +1177,7 @@ int daKing_Donketu_c::func_ov073_02120b78() {
 /* ..33c0 enter: animation gKingIceDonketuWalkAnimationFile.filePtr at speed 0x4000;
    mHorzSpeed 0x14000 (20.0), mSpeed.y 0x1e000 (30.0), mVertAccel -0x3000
    (-3.0); mAngle.x and mStateScratch cleared. */
-int daKing_Donketu_c::func_ov073_02120c08()
+int daKing_Donketu_c::EnterKnockedOffEdge()
 {
     mBlendAnmModel.SetAnim(*(BCA_File *)gKingIceDonketuWalkAnimationFile.filePtr, 4, 0, 0x1000, 0);
     mBlendAnmModel.speed = 0x4000;
@@ -1893,14 +1893,14 @@ daKing_Donketu_c::State data_ov073_02123390 = {&daKing_Donketu_c::EnterTurnToSpa
                                                &daKing_Donketu_c::UpdateTurnToSpawn};
 daKing_Donketu_c::State data_ov073_021233a0 = {&daKing_Donketu_c::EnterHitReaction,
                                                &daKing_Donketu_c::UpdateHitReaction};
-daKing_Donketu_c::State data_ov073_021233c0 = { &daKing_Donketu_c::func_ov073_02120c08,
-                                                &daKing_Donketu_c::func_ov073_02120b78 };
+daKing_Donketu_c::State data_ov073_021233c0 = { &daKing_Donketu_c::EnterKnockedOffEdge,
+                                                &daKing_Donketu_c::UpdateKnockedOffEdge };
 daKing_Donketu_c::State data_ov073_021233d0 = {&daKing_Donketu_c::EnterEdgeWobble,
                                                &daKing_Donketu_c::UpdateEdgeWobble};
-daKing_Donketu_c::State data_ov073_021233f0 = { &daKing_Donketu_c::func_ov073_021208e4,
-                                                &daKing_Donketu_c::func_ov073_02120844 };
-daKing_Donketu_c::State data_ov073_02123400 = { &daKing_Donketu_c::func_ov073_0212081c,
-                                                &daKing_Donketu_c::func_ov073_02120610 };
+daKing_Donketu_c::State data_ov073_021233f0 = { &daKing_Donketu_c::EnterDefeatFall,
+                                                &daKing_Donketu_c::UpdateDefeatFall };
+daKing_Donketu_c::State data_ov073_02123400 = { &daKing_Donketu_c::EnterFirstWaypointHop,
+                                                &daKing_Donketu_c::UpdateFirstWaypointHop };
 daKing_Donketu_c::State data_ov073_02123320 = {&daKing_Donketu_c::EnterWaypointHop,
                                                &daKing_Donketu_c::UpdateWaypointHop};
 daKing_Donketu_c::State data_ov073_02123340 = {&daKing_Donketu_c::EnterLeapToSpawn,
@@ -1910,9 +1910,9 @@ daKing_Donketu_c::State data_ov073_02123380 = {&daKing_Donketu_c::EnterJumpEnd,
 daKing_Donketu_c::State data_ov073_021233b0 = {(int(daKing_Donketu_c::*)()) &
                                                    daKing_Donketu_c::EnterDefeatCutscene1,
                                                &daKing_Donketu_c::UpdateDefeatCutscene1};
-daKing_Donketu_c::State data_ov073_021233e0 = {&daKing_Donketu_c::func_ov073_0211fe84,
+daKing_Donketu_c::State data_ov073_021233e0 = {&daKing_Donketu_c::EnterDefeatCutscene2,
                                                &daKing_Donketu_c::UpdateDefeatCutscene2};
-daKing_Donketu_c::State data_ov073_02123410 = {&daKing_Donketu_c::func_ov073_0211fc70,
+daKing_Donketu_c::State data_ov073_02123410 = {&daKing_Donketu_c::EnterDefeatCutscene3,
                                                &daKing_Donketu_c::UpdateDefeatCutscene3};
-daKing_Donketu_c::State data_ov073_02123370 = {&daKing_Donketu_c::func_ov073_0211fbec,
+daKing_Donketu_c::State data_ov073_02123370 = {&daKing_Donketu_c::EnterDefeat,
                                                &daKing_Donketu_c::UpdateDefeat};

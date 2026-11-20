@@ -65,7 +65,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
     daPly_c *mTalkPlayer; /* 0x3e4 */
     /* Two eight-entry waypoint sets, both seeded with the boss's own position by
        InitResources and refilled by daObjEwbIce_c::StateReport_Update. The steering helpers
-       (UpdateWaypointHop / _02120610) index one of them with mWaypointCursor
+       (UpdateWaypointHop / UpdateFirstWaypointHop) index one of them with mWaypointCursor
        and hand the element to Vec3_HorzAngle/Vec3_VertAngle as the point to
        turn towards -- set B while mHitsRemaining reads 2, set A otherwise. */
     Vector3 mWaypointsA[8];                                /* 0x3e8 */
@@ -102,7 +102,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        (+1, modulo 8) at the launch frame of each hop. */
     u8  mWaypointCursor;                                   /* 0x4c4 */
     /* InitResources stores 0xff, several state handlers store 0xff, ..3340's wait stores 0, and the
-       two hop-landing handlers (UpdateWaypointHop / _02120610) copy
+       two hop-landing handlers (UpdateWaypointHop / UpdateFirstWaypointHop) copy
        mWaypointCursor into it; nothing in this file reads it. The reader
        is d_a_obj_ewb_ice.cpp's touch helper (daObjEwbIce_c::OnStoodOn): a rink
        ice piece touched by the boss moves on to its next state only when
@@ -181,16 +181,16 @@ struct daKing_Donketu_c : dEnemyBase_c {
     virtual void OnPendingDestroy();
 
     void RenewLoopedParticles();
-    int func_ov073_0212081c();
+    int EnterFirstWaypointHop();
     void SpawnLandingEffects(int strength);
     void SpawnHitParticles(dActor_c *b);
     s32 HandleHit();
     int UpdateDefeat();
-    int func_ov073_0211fbec();
+    int EnterDefeat();
     int UpdateDefeatCutscene3();
-    int func_ov073_0211fc70();
+    int EnterDefeatCutscene3();
     int UpdateDefeatCutscene2();
-    int func_ov073_0211fe84();
+    int EnterDefeatCutscene2();
     int UpdateDefeatCutscene1();
     short EnterDefeatCutscene1();
     int UpdateJumpEnd();
@@ -199,13 +199,13 @@ struct daKing_Donketu_c : dEnemyBase_c {
     int EnterLeapToSpawn();
     int UpdateWaypointHop();
     int EnterWaypointHop();
-    int func_ov073_02120610();
-    int func_ov073_02120844();
-    int func_ov073_021208e4();
+    int UpdateFirstWaypointHop();
+    int UpdateDefeatFall();
+    int EnterDefeatFall();
     int UpdateEdgeWobble();
     int EnterEdgeWobble();
-    int func_ov073_02120b78();
-    int func_ov073_02120c08();
+    int UpdateKnockedOffEdge();
+    int EnterKnockedOffEdge();
     int UpdateHitReaction();
     int EnterHitReaction();
     int UpdateTurnToSpawn();
