@@ -13,7 +13,6 @@
  * - The ray runs from 20.0 above the board down to the water height. The
  *   component stores follow the ROM's order, including the y stores that
  *   are overwritten at once.
- * - g_profile_WC_OBJ01 is ov029 data outside this TU (S14).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -22,6 +21,7 @@ enum d_a_obj_wc_obj01_AssetId { ASSET_WC_OBJ01_BMD = 0x06cc, ASSET_WC_OBJ01_KCL 
 #include "daObjWcObj01_c.h"
 #include "dBgCh_Lin.h"
 #include "SharedFilePtr.h"
+#include "SpawnInfo.h"
 
 /* The board's model, collision and collision-properties table. The handles
    themselves are constructed below, with the TU's other static-init globals. */
@@ -48,6 +48,11 @@ daObjFloatBoard_c_Resources data_ov029_02113be8 = {
     &gWcObj01CollisionFile,
     &data_ov029_0211300c,
 };
+
+daObjWcObj01_c *daObjWcObj01_c_classInit();
+
+extern "C" SpawnInfo<daObjWcObj01_c> g_profile_WC_OBJ01 = {
+    daObjWcObj01_c_classInit, 95, 271, 0x00000002, 0x00060000, 0x00300000, 0x02000000, 0x00000000};
 
 enum {
     kRayStartAbove = 0x14000 /* 20.0 */

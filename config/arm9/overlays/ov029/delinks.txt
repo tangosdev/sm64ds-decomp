@@ -22,7 +22,7 @@ src/game/actors/d_a_obj_wc_obj01.cpp:
     .init start:0x02112b38 end:0x02112ba4
     .ctor start:0x02112e68 end:0x02112e6c
     .bss start:0x02114220 end:0x02114248
-    .data start:0x02113be8 end:0x02113bf4
+    .data start:0x02113bdc end:0x02113cac
 
 src/game/actors/d_a_obj_wc_obj02.cpp:
     complete
@@ -98,12 +98,4 @@ src/unnamed/ov029/data_ov029.c:
 src/unnamed/ov029/data_ov029_rodata.c:
     complete
     .rodata start:0x021129a0 end:0x02112b2c
-
-src/unnamed/ov029/data_ov029_02113c14.c:
-    complete
-    .data start:0x02113c14 end:0x02113c20
-
-src/unnamed/ov029/data_ov029_02113c28.c:
-    complete
-    .data start:0x02113c28 end:0x02113c2c
 

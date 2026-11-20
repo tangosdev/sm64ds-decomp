@@ -11,11 +11,8 @@
  * daObjKm1_Kuruma_c_classInit is reconstructed (RTTI daObjKm1_Kuruma_c,
  * KM1_KURUMA registry). Retail does not store that spelling.
  *
- * Notes:
- * - data_ov043_02112418 is overlay data this TU does not own; the BMD/KCL
- *   SharedFilePtrs and CLPS_Block are still data_ov043_*.
- * - g_profile_KM1_KURUMA is overlay data; its definition here is a
- *   deadstripped duplicate.
+ * data_ov043_02112418 sits between this class's typeinfo and its name.
+ * g_profile_KM1_KURUMA follows the name and precedes the vtable.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

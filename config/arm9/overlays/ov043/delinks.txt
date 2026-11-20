@@ -32,7 +32,7 @@ src/game/actors/d_a_obj_km1_kurumajiku.cpp:
     .init start:0x02111868 end:0x021118d4
     .ctor start:0x02111aec end:0x02111af0
     .bss start:0x02112608 end:0x02112630
-    .data start:0x02112344 end:0x02112350
+    .data start:0x02112338 end:0x0211240c
     .data.data_ov043_02111bc0 start:0x02111bc0 end:0x02111bd4
 
 src/game/actors/d_a_obj_km1_kuruma.cpp:
@@ -41,7 +41,7 @@ src/game/actors/d_a_obj_km1_kuruma.cpp:
     .init start:0x021118d4 end:0x02111940
     .ctor start:0x02111af0 end:0x02111af4
     .bss start:0x02112630 end:0x02112658
-    .data start:0x02112418 end:0x02112424
+    .data start:0x0211240c end:0x021124dc
 
 src/game/actors/d_a_obj_km1_dorifu.cpp:
     complete
@@ -56,18 +56,6 @@ src/game/actors/d_a_obj_km1_dorifu.cpp:
     .ctor start:0x02111af4 end:0x02111af8
     .bss start:0x02112658 end:0x02112720
 
-src/unnamed/ov043/data_ov043_02112358.c:
-    complete
-    .data start:0x02112358 end:0x02112368
-
 src/unnamed/ov043/data_ov043_02111ca0.c:
     complete
     .data start:0x02111ca0 end:0x02112270
-
-src/unnamed/ov043/data_ov043_02112428.c:
-    complete
-    .data start:0x02112428 end:0x02112438
-
-src/unnamed/ov043/data_ov043_0211244c.c:
-    complete
-    .data start:0x0211244c end:0x0211245c
