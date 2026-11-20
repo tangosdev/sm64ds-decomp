@@ -106,8 +106,8 @@ struct daKpaFire_c : dEnemyBase_c {
     int Behavior();
 
     void UpdateShadow();        /* per-frame drop shadow */
-    void UpdateRideMouth(); /* variant 0 handler */
-    void EndBurnOut(); /* variant 6/7 handler */
+    void UpdateRideMouth();     /* variant 0 handler */
+    void EndBurnOut();          /* variant 6/7 handler */
     int FrameCountExceeds(unsigned int n);
     void BurnPlayer();
     void InitFall();

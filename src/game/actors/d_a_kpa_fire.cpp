@@ -825,22 +825,22 @@ void daKpaFire_c::KeepParticlePair(u32 kind, int resize, int yOffset) {
  * pointer-adjustor (0). The descriptor order and the copy order are the ROM's
  * own. The handler named beside each descriptor is its ov060 relocs.txt
  * entry. */
-extern PMF data_ov060_0211a734;   /* InitBounce (variant 4 init) */
-extern PMF data_ov060_0211a73c;   /* InitFlight (variant 2 init) */
-extern PMF data_ov060_0211a744;   /* UpdateFallAndBurn (variant 6 Behavior) */
-extern PMF data_ov060_0211a74c;   /* InitNoCylinder (variant 3 init) */
-extern PMF data_ov060_0211a754;   /* InitGrow (variant 1 init) */
-extern PMF data_ov060_0211a75c;   /* InitNoCylinder (variant 0 init) */
-extern PMF data_ov060_0211a764;   /* UpdateBounce (variant 4 Behavior) */
-extern PMF data_ov060_0211a76c;   /* UpdateFlight (variant 2 Behavior) */
-extern PMF data_ov060_0211a774;   /* UpdateSpray (variant 5 Behavior) */
-extern PMF data_ov060_0211a77c;   /* UpdateScatter (variant 3 Behavior) */
-extern PMF data_ov060_0211a784;   /* UpdateFallAndBurn (variant 7 Behavior) */
-extern PMF data_ov060_0211a78c;   /* UpdateGrowAndSplit (variant 1 Behavior) */
-extern PMF data_ov060_0211a794;   /* UpdateRideMouth (variant 0 Behavior) */
-extern PMF data_ov060_0211a79c;   /* InitTossUp (variant 7 init) */
-extern PMF data_ov060_0211a7a4;   /* InitFall (variant 6 init) */
-extern PMF data_ov060_0211a7ac;   /* InitSpray (variant 5 init) */
+extern PMF data_ov060_0211a734; /* InitBounce (variant 4 init) */
+extern PMF data_ov060_0211a73c; /* InitFlight (variant 2 init) */
+extern PMF data_ov060_0211a744; /* UpdateFallAndBurn (variant 6 Behavior) */
+extern PMF data_ov060_0211a74c; /* InitNoCylinder (variant 3 init) */
+extern PMF data_ov060_0211a754; /* InitGrow (variant 1 init) */
+extern PMF data_ov060_0211a75c; /* InitNoCylinder (variant 0 init) */
+extern PMF data_ov060_0211a764; /* UpdateBounce (variant 4 Behavior) */
+extern PMF data_ov060_0211a76c; /* UpdateFlight (variant 2 Behavior) */
+extern PMF data_ov060_0211a774; /* UpdateSpray (variant 5 Behavior) */
+extern PMF data_ov060_0211a77c; /* UpdateScatter (variant 3 Behavior) */
+extern PMF data_ov060_0211a784; /* UpdateFallAndBurn (variant 7 Behavior) */
+extern PMF data_ov060_0211a78c; /* UpdateGrowAndSplit (variant 1 Behavior) */
+extern PMF data_ov060_0211a794; /* UpdateRideMouth (variant 0 Behavior) */
+extern PMF data_ov060_0211a79c; /* InitTossUp (variant 7 init) */
+extern PMF data_ov060_0211a7a4; /* InitFall (variant 6 init) */
+extern PMF data_ov060_0211a7ac; /* InitSpray (variant 5 init) */
 
 /* One definition emits D1, then D0, then a D2 the cartridge does not keep.
  * The PMF declarations above stay between the last member function and the

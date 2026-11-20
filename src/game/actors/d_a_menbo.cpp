@@ -304,8 +304,7 @@ int daMenbo_c::UpdateChaseTarget() {
 
 /* Idle. Speed stays zero. After a few loops of the idle anim, or as soon
  * as a player is in range, start patrolling. On the water, rest instead. */
-int daMenbo_c::St_Idle_Main()
-{
+int daMenbo_c::St_Idle_Main() {
     unsigned int v;
     mHorzSpeed = 0;
     v = ((unsigned int)mAnmModel.currFrame << 4) >> 0x10;
@@ -319,8 +318,7 @@ int daMenbo_c::St_Idle_Main()
 }
 
 /* Idle entry. */
-int daMenbo_c::St_Idle_Init()
-{
+int daMenbo_c::St_Idle_Init() {
     mAnimLoops = 0;
     mAnimSpeed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)data_ov090_02134498.filePtr, 0, 0x1000, 0);
@@ -471,8 +469,7 @@ int daMenbo_c::St_Patrol_Main() {
 }
 
 /* Patrol entry. */
-int daMenbo_c::St_Patrol_Init()
-{
+int daMenbo_c::St_Patrol_Init() {
     mAnimSpeed = 0x1000;
     mSpeedHoldTimer = 0;
     mWanderTimer = 50;
@@ -485,8 +482,7 @@ int daMenbo_c::St_Patrol_Init()
  * on the water, drop the anchor here, pick a random heading and go idle.
  * When the rest timer expires, start the water chase. The heading keeps
  * easing either way. */
-int daMenbo_c::St_WaterRest_Main()
-{
+int daMenbo_c::St_WaterRest_Main() {
     ApproachLinear(mHorzSpeed, 0, 0x1000);
     if (mHorzSpeed > 0) return 1;
     if (mOnWater == 0) {
@@ -504,8 +500,7 @@ int daMenbo_c::St_WaterRest_Main()
 
 /* Water-rest entry. Two random draws jitter the heading, a third sets how
  * long the rest lasts, then the rest anim starts. */
-int daMenbo_c::St_WaterRest_Init()
-{
+int daMenbo_c::St_WaterRest_Init() {
     unsigned int r;
     short *s;
     r = RandomIntInternal(&data_0209e650.value);
@@ -524,8 +519,7 @@ int daMenbo_c::St_WaterRest_Init()
 /* Water chase. Full speed after a few frames, and a wall close to the
  * heading kicks the target by a quarter turn. When the anim has looped
  * enough, go back to water rest. Off the water, drop the anchor and idle. */
-int daMenbo_c::St_WaterChase_Main()
-{
+int daMenbo_c::St_WaterChase_Main() {
     if ((((unsigned)mAnmModel.currFrame) << 4) >> 16 >= 4)
         mHorzSpeed = 0x19000;
 
@@ -560,8 +554,7 @@ int daMenbo_c::St_WaterChase_Main()
 }
 
 /* Water-chase entry. The 0x40000000 flag is passed straight through. */
-int daMenbo_c::St_WaterChase_Init()
-{
+int daMenbo_c::St_WaterChase_Init() {
     mAnmModel.SetAnim((BCA_File *)data_ov090_02134488.filePtr, 0x40000000, 0x1000, 0);
     mAnimSpeed = 0x1000;
     mAnimLoops = 0;
