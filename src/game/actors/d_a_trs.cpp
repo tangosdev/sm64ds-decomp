@@ -717,15 +717,33 @@ void daTrs_c::UpdateScriptedPathBoo() {
 /* Behavior handler for variant 0xf: the Big Boo that leaves the OBJ_KEY. */
 void daTrs_c::UpdateKeyBigBoo() {
     switch (this->mState) {
-    case 0: UpdateKeyBooInit(); break;
-    case 1: UpdateKeyBooChase(); break;
-    case 2: UpdateBigBooBouncedOn(); break;
-    case 3: UpdateKeyBooHit(); break;
-    case 4: UpdateKeyBooAttack(); break;
-    case 5: UpdateKeyBooDefeated(); break;
-    case 6: UpdateKeyBooRelocate(); break;
-    case 7: UpdateKeyBooIntro(); break;
-    case 8: UpdateKeyBooTalk(); break;
+    case 0:
+        UpdateKeyBooInit();
+        break;
+    case 1:
+        UpdateKeyBooChase();
+        break;
+    case 2:
+        UpdateBigBooBouncedOn();
+        break;
+    case 3:
+        UpdateKeyBooHit();
+        break;
+    case 4:
+        UpdateKeyBooAttack();
+        break;
+    case 5:
+        UpdateKeyBooDefeated();
+        break;
+    case 6:
+        UpdateKeyBooRelocate();
+        break;
+    case 7:
+        UpdateKeyBooIntro();
+        break;
+    case 8:
+        UpdateKeyBooTalk();
+        break;
     }
     {
         int state = this->mState;
@@ -737,7 +755,6 @@ void daTrs_c::UpdateKeyBigBoo() {
         ApproachTargetOpacityAndUpdateScale();
     }
 }
-
 
 void daTrs_c::UpdateKeyBooRelocate() {
 
@@ -829,7 +846,6 @@ void daTrs_c::RelocateAwayFromPlayer() {
     this->mPrevAngle.y = this->mAngle.y;
 }
 
-
 void daTrs_c::UpdateKeyBooDefeated() {
 
     Stop();
@@ -841,7 +857,6 @@ void daTrs_c::UpdateKeyBooDefeated() {
     SpawnKey();
     this->MarkForDestruction();
 }
-
 
 void daTrs_c::UpdateKeyBooHit() {
 
@@ -929,7 +944,6 @@ void daTrs_c::UpdateKeyBooHit() {
     func_02012694(0x153, &this->mCamSpacePos);
 }
 
-
 void daTrs_c::UpdateKeyBooTalk() {
 
     Vector3 v;
@@ -981,7 +995,6 @@ void daTrs_c::UpdateKeyBooTalk() {
         break;
     }
 }
-
 
 void daTrs_c::UpdateKeyBooIntro() {
 
@@ -1181,7 +1194,6 @@ void daTrs_c::UpdateKeyBooIntro() {
     }
     return;
 }
-
 
 void daTrs_c::UpdateKeyBooAttack() {
     int status = GetAttackStatus();
@@ -1456,22 +1468,21 @@ void daTrs_c::UpdateBigBooHit() {
     }
 }
 
-
 void daTrs_c::SpawnKey() {
 
-  struct Vector3 v;
-  v.x = this->mPos.x;
-  int y = this->mPos.y;
-  v.y = y;
-  v.z = this->mPos.z;
-  v.y = y + 0x64000;
-  int s = this->mPos.x;
-  if(s < 0) s = -s;
-  v.x = s;
-  dActor_c::Spawn(TRS_ID_OBJ_KEY, 3, v, (0), this->mAreaIdx, -1);
-  func_02012694(0xbb, &this->mCamSpacePos);
+    struct Vector3 v;
+    v.x = this->mPos.x;
+    int y = this->mPos.y;
+    v.y = y;
+    v.z = this->mPos.z;
+    v.y = y + 0x64000;
+    int s = this->mPos.x;
+    if (s < 0)
+        s = -s;
+    v.x = s;
+    dActor_c::Spawn(TRS_ID_OBJ_KEY, 3, v, (0), this->mAreaIdx, -1);
+    func_02012694(0xbb, &this->mCamSpacePos);
 }
-
 
 void daTrs_c::func_ov063_02118e5c() {
 
