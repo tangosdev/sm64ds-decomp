@@ -80,4 +80,3 @@ L3 src/unnamed/ov056/data_ov056_02112bc0.c
 # so each new word-table or align-32 tail in src/unnamed/ is listed here.
 L3 src/unnamed/ov015/data_ov015_0211487c.c
 L3 src/unnamed/ov022/data_ov022_021140b8.c
-L3 src/unnamed/ov026/data_ov026_02113a9c.c

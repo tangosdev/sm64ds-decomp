@@ -2,11 +2,13 @@
     .rodata     start:0x02112490 end:0x02112b7c kind:rodata align:4
     .init       start:0x02112b7c end:0x02112da4 kind:code align:4
     .ctor       start:0x02112da4 end:0x02112db8 kind:rodata align:4
-    .data       start:0x02112dc0 end:0x02113aa8 kind:data align:32
+    .data       start:0x02112dc0 end:0x02113a90 kind:data align:32
+    .data.data_ov026_02113a90 start:0x02113a90 end:0x02113aa8 kind:data align:4
     .data.wlLate start:0x02113aa8 end:0x02113ea0 kind:data align:4
     .bss        start:0x02113ea0 end:0x02113f80 kind:bss align:32
 src/game/actors/d_a_obj_wl_polelift.cpp:
     complete
+    .data.data_ov026_02113a90 start:0x02113a90 end:0x02113aa8
     .data.wlLate start:0x02113aa8 end:0x02113b5c
     .text start:0x021111a0 end:0x021116c8
     .init start:0x02112b7c end:0x02112bbc
@@ -61,7 +63,4 @@ src/unnamed/ov026/data_ov026_02112ffc.c:
     complete
     .data start:0x02112ffc end:0x02113a90
 
-src/unnamed/ov026/data_ov026_02113a9c.c:
-    complete
-    .data start:0x02113a9c end:0x02113aa8
 

@@ -40,10 +40,9 @@ extern "C" {
 extern PoleliftModelFile data_ov026_02113ea0;
 }
 
-/* Collider offset (0, 0x28000, 0), defined in data_ov026_02113a9c.c.
- * A C++ Vector3 here would register ~Vector3, and it would also invert
- * ov026's link order against the data that precedes this address. */
-extern Vector3 data_ov026_02113a9c;
+/* Collider offset (0, 0x28000, 0), between this class's typeinfo and its
+ * name. Three ints, not a Vector3: the C++ type would register ~Vector3. */
+extern "C" int data_ov026_02113a9c[3] = {0, 0x28000, 0};
 
 daObjWlPolelift_c *daObjWlPolelift_c_classInit() {
     return new daObjWlPolelift_c();
@@ -62,9 +61,9 @@ s32 daObjWlPolelift_c::InitResources() {
     moveSpeed = 1;
 
     Vector3 offset;
-    offset.x = data_ov026_02113a9c.x;
-    offset.y = data_ov026_02113a9c.y;
-    offset.z = data_ov026_02113a9c.z;
+    offset.x = data_ov026_02113a9c[0];
+    offset.y = data_ov026_02113a9c[1];
+    offset.z = data_ov026_02113a9c[2];
     clsn.Init(this, offset, 0x50000, 0x12c000, 0x80000c, 0);
     UpdateModelTransform();
     return 1;
@@ -149,9 +148,9 @@ s32 daObjWlPolelift_c::Behavior() {
         if (ray.DetectClsn())
             groundY = ray.clsnY;
 
-        clsnOffset.x = data_ov026_02113a9c.x;
-        clsnOffset.y = data_ov026_02113a9c.y;
-        clsnOffset.z = data_ov026_02113a9c.z;
+        clsnOffset.x = data_ov026_02113a9c[0];
+        clsnOffset.y = data_ov026_02113a9c[1];
+        clsnOffset.z = data_ov026_02113a9c[2];
         clsn.SetPosRelativeToActor(clsnOffset);
         clsn.Update();
         UpdateModelTransform();

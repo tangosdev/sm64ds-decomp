@@ -34,6 +34,12 @@
       "end": "0x02113eb4"
     },
     {
+      "name": ".data.data_ov026_02113a90",
+      "input_section": ".data",
+      "start": "0x02113a90",
+      "end": "0x02113aa8"
+    },
+    {
       "name": ".data.wlLate",
       "input_section": ".data",
       "start": "0x02113aa8",
@@ -234,6 +240,13 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
+          "section": ".data.data_ov026_02113a90",
+          "start": "0x02113a90",
+          "end": "0x02113aa8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.wlLate",
           "start": "0x02113aa8",
           "end": "0x02113b5c",
@@ -346,13 +359,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x0208e384",
       "reason": "Vague-linkage type-name string for the direct base dActor_c. Cartridge copy at arm9:0x0208e384, outside this entry's .text claim."
-    },
-    {
-      "symbol": "_ZTI17daObjWlPolelift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov026",
-      "canonical_address": "0x02113a90",
-      "reason": "This class's own typeinfo record, vague-linkage. The cartridge copy at ov026:0x02113a90 is inside this module's .data but OUTSIDE the 0x021111a0..0x021116c8 .text run this entry claims. It is an __si_class_type_info whose base pointer is arm9:0x0208e390 = _ZTI8dActor_c."
     }
   ],
   "init": [
@@ -806,9 +812,52 @@
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x021111a0"
+    },
+    {
+      "section": ".data.data_ov026_02113a90",
+      "source": "0x02113a90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.data_ov026_02113a90",
+      "source": "0x02113a94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS17daObjWlPolelift_c",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02113aa8"
+    },
+    {
+      "section": ".data.data_ov026_02113a90",
+      "source": "0x02113a98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
     }
   ],
   "data": [
+    {
+      "symbol": "_ZTI17daObjWlPolelift_c",
+      "address": "0x02113a90",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "data_ov026_02113a9c",
+      "address": "0x02113a9c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collider offset (0, 0x28000, 0) between the typeinfo and the name"
+    },
     {
       "symbol": "_ZTS17daObjWlPolelift_c",
       "address": "0x02113aa8",

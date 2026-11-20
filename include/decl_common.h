@@ -41,7 +41,7 @@ extern Vector3 data_020755d4;
 extern Vector3 data_ov009_02113d8c[];
 extern Vector3 data_ov009_02113de0[];
 extern Vector3 data_ov009_02113e34[];
-extern Vector3 data_ov026_02113a9c;
+extern int data_ov026_02113a9c[3];
 extern struct CylinderOffset data_ov073_02123040;
 extern struct MantaCylinderOffset data_ov090_02134200;
 extern struct VecFx32 data_ov100_02148948;
