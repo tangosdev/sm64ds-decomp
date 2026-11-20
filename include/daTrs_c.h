@@ -321,12 +321,12 @@ struct daTrs_c : dCapEnemy_c {
        the cartridge does not spell these. func_ov063_021169c4 lives on
        daTBasket_c; func_ov063_02118f24 and func_ov063_0211a0a8 stay free
        (their first parameter is not a daTrs_c). */
-    void          UpdateClsnOffset();
-    int           IsPlayerBeyondLimit();
-    void          SpawnStarMarker();
-    void          BeginDefeat();
+    void UpdateClsnOffset();
+    int IsPlayerBeyondLimit();
+    void SpawnStarMarker();
+    void BeginDefeat();
     unsigned char IsTrapOccupied();
-    void          UpdatePose();
+    void UpdatePose();
     void          func_ov063_021166ac();
     void          func_ov063_02116a1c();
     void          func_ov063_02116bf0();

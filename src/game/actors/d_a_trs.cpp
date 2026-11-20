@@ -250,7 +250,6 @@ int daTrs_c::IsPlayerBeyondLimit() {
     return 0;
 }
 
-
 void daTrs_c::SpawnStarMarker() {
 
     if (this->mBooDefeatCount < 5) return;
@@ -260,7 +259,6 @@ void daTrs_c::SpawnStarMarker() {
     if (this->mFoundActor != 0) this->mSpawnedActorID = this->mFoundActor->uniqueID;
     this->mFoundActor = 0;
 }
-
 
 void daTrs_c::BeginDefeat() {
 
@@ -287,7 +285,6 @@ void daTrs_c::BeginDefeat() {
     func_0201267c(0x14a, &this->mCamSpacePos);
 }
 
-
 unsigned char daTrs_c::IsTrapOccupied() {
 
     unsigned int id = this->mCachedActorID;
@@ -296,7 +293,6 @@ unsigned char daTrs_c::IsTrapOccupied() {
     if(a==0) return 0;
     return a->mOccupiedFlag;
 }
-
 
 void daTrs_c::UpdatePose() {
 
@@ -2473,7 +2469,8 @@ int daTrs_c::ShouldBeActive() {
     }
     v = this->mVariant;
     if (v == 0xd || v == 1) {
-        if (IsTrapOccupied() != 0) return 1;
+        if (IsTrapOccupied() != 0)
+            return 1;
         return 0;
     }
     if (ShouldBeStopped() == 0) {
