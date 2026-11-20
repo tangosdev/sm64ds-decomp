@@ -2619,32 +2619,24 @@ daDemo_c::param_c::param_c() {
     mScale[0].z = 0;
 }
 
-
-int daDemo_c::Despawn()
-{
+int daDemo_c::Despawn() {
     MarkForDestruction();
     return 1;
 }
 
-
-int daDemo_c::PlayBank1Sound(unsigned char *p)
-{
+int daDemo_c::PlayBank1Sound(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
     Sound::Play(1, id, mCamSpacePos);
     return 1;
 }
 
-
-int daDemo_c::PlayLongSound(unsigned char *p)
-{
+int daDemo_c::PlayLongSound(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, id, mCamSpacePos, 0);
     return 1;
 }
 
-
-int daDemo_c::PlayBank3Sound(unsigned char *p)
-{
+int daDemo_c::PlayBank3Sound(unsigned char *p) {
     unsigned int v = ReadUnalignedInt(p);
     func_02012694(v, &mCamSpacePos);
     return 1;
@@ -2655,8 +2647,7 @@ int daDemo_c::PlayBank3Sound(unsigned char *p)
  * horizontal speed. The legacy per-function file recorded its match under
  * mwccarm 1.2/sp2p3; this TU builds under the 2004/b56 pin. */
 
-int daDemo_c::FaceTargetAndMove(unsigned char *p)
-{
+int daDemo_c::FaceTargetAndMove(unsigned char *p) {
     Vector3 target;
     int y, z;
     z = ReadUnalignedShort(p + 4) << 12;
@@ -2670,9 +2661,7 @@ int daDemo_c::FaceTargetAndMove(unsigned char *p)
     return 1;
 }
 
-
-s32 daDemo_c::SetPoseFromRecord(unsigned char *data)
-{
+s32 daDemo_c::SetPoseFromRecord(unsigned char *data) {
     s32 x, y, z;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
@@ -2685,16 +2674,12 @@ s32 daDemo_c::SetPoseFromRecord(unsigned char *data)
     return 1;
 }
 
-
-int daDemo_c::SetOpacity(unsigned char *src)
-{
+int daDemo_c::SetOpacity(unsigned char *src) {
     this->mOpacity = src[0];
     return 1;
 }
 
-
-int daDemo_c::PlayAnimationEntry(unsigned char *src)
-{
+int daDemo_c::PlayAnimationEntry(unsigned char *src) {
     unsigned char v = *src;
     ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514(data_ov002_0210bc88, v);
     return 1;
@@ -3198,14 +3183,14 @@ void daDemo_c::RunCommand(unsigned char *command, int first, int last) {
         (PMF3)&daDemo_c::DisableRenderClip,   /* 9 */
         (PMF3)&daDemo_c::PlaceFromRecord,     /* 10 */
         (PMF3)&daDemo_c::func_ov002_020f6c60, /* 11 */
-        (PMF3)&daDemo_c::PlayAnimationEntry, /* 12 */
-        (PMF3)&daDemo_c::SetOpacity, /* 13 */
-        (PMF3)&daDemo_c::SetPoseFromRecord, /* 14 */
-        (PMF3)&daDemo_c::FaceTargetAndMove, /* 15 */
-        (PMF3)&daDemo_c::PlayBank3Sound, /* 16 */
-        (PMF3)&daDemo_c::PlayLongSound, /* 17 */
-        (PMF3)&daDemo_c::PlayBank1Sound, /* 18 */
-        (PMF3)&daDemo_c::Despawn, /* 19 */
+        (PMF3)&daDemo_c::PlayAnimationEntry,  /* 12 */
+        (PMF3)&daDemo_c::SetOpacity,          /* 13 */
+        (PMF3)&daDemo_c::SetPoseFromRecord,   /* 14 */
+        (PMF3)&daDemo_c::FaceTargetAndMove,   /* 15 */
+        (PMF3)&daDemo_c::PlayBank3Sound,      /* 16 */
+        (PMF3)&daDemo_c::PlayLongSound,       /* 17 */
+        (PMF3)&daDemo_c::PlayBank1Sound,      /* 18 */
+        (PMF3)&daDemo_c::Despawn,             /* 19 */
         (PMF3)&daDemo_c::func_ov002_020f6448, /* 20 */
         (PMF3)&daDemo_c::func_ov002_020f63f8, /* 21 */
         (PMF3)&daDemo_c::func_ov002_020f26d4, /* 22 */
