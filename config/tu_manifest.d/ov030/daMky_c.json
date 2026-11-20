@@ -131,7 +131,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_021122b0Ev",
+      "symbol": "_ZN7daMky_c12St_Flee_MainEv",
       "address": "0x021122b0",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov030_021122b0.cpp",
@@ -145,7 +145,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02112400Ev",
+      "symbol": "_ZN7daMky_c12St_Wait_MainEv",
       "address": "0x02112400",
       "size": "0x00000160",
       "legacy_source": "src/func_ov030_02112400.cpp",
@@ -159,7 +159,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02112578Ev",
+      "symbol": "_ZN7daMky_c16St_PushCage_MainEv",
       "address": "0x02112578",
       "size": "0x0000049c",
       "legacy_source": "src/func_ov030_02112578.c",
@@ -173,7 +173,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02112a84Ev",
+      "symbol": "_ZN7daMky_c18St_LeaveMouth_MainEv",
       "address": "0x02112a84",
       "size": "0x00000190",
       "legacy_source": "src/func_ov030_02112a84.c",
@@ -187,7 +187,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02112da0Ev",
+      "symbol": "_ZN7daMky_c17St_StarEaten_MainEv",
       "address": "0x02112da0",
       "size": "0x00000258",
       "legacy_source": "src/func_ov030_02112da0.c",
@@ -201,7 +201,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02113094Ev",
+      "symbol": "_ZN7daMky_c18St_ThiefEaten_MainEv",
       "address": "0x02113094",
       "size": "0x00000240",
       "legacy_source": "src/func_ov030_02113094.c",
@@ -215,7 +215,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02113324Ev",
+      "symbol": "_ZN7daMky_c19St_StarGrabbed_MainEv",
       "address": "0x02113324",
       "size": "0x000002e8",
       "legacy_source": "src/func_ov030_02113324.cpp",
@@ -229,7 +229,7 @@
       "ordinal": 26
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_021136b0Ev",
+      "symbol": "_ZN7daMky_c20St_ThiefGrabbed_MainEv",
       "address": "0x021136b0",
       "size": "0x000003d0",
       "legacy_source": "src/func_ov030_021136b0.c",
@@ -243,7 +243,7 @@
       "ordinal": 28
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02113b38Ev",
+      "symbol": "_ZN7daMky_c12St_Jump_MainEv",
       "address": "0x02113b38",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov030_02113b38.cpp",
@@ -257,7 +257,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02113d20Ev",
+      "symbol": "_ZN7daMky_c16St_KeepAway_MainEv",
       "address": "0x02113d20",
       "size": "0x000002b8",
       "legacy_source": "src/func_ov030_02113d20.c",
@@ -271,7 +271,7 @@
       "ordinal": 32
     },
     {
-      "symbol": "_ZN7daMky_c19func_ov030_02113ff0Ev",
+      "symbol": "_ZN7daMky_c14St_Follow_MainEv",
       "address": "0x02113ff0",
       "size": "0x00000134",
       "legacy_source": "src/func_ov030_02113ff0.cpp",
@@ -393,14 +393,14 @@
       "address": "0x02115ad0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02112578Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c16St_PushCage_MainEv"
     },
     {
       "symbol": "@2087",
       "address": "0x02115ad8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02113324Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19St_StarGrabbed_MainEv"
     },
     {
       "symbol": "@2093",
@@ -456,42 +456,42 @@
       "address": "0x02115b18",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_021136b0Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c20St_ThiefGrabbed_MainEv"
     },
     {
       "symbol": "@2091",
       "address": "0x02115b20",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02113094Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c18St_ThiefEaten_MainEv"
     },
     {
       "symbol": "@2095",
       "address": "0x02115b28",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02112da0Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c17St_StarEaten_MainEv"
     },
     {
       "symbol": "@2099",
       "address": "0x02115b30",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02112a84Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c18St_LeaveMouth_MainEv"
     },
     {
       "symbol": "@2111",
       "address": "0x02115b38",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_021122b0Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c12St_Flee_MainEv"
     },
     {
       "symbol": "@2079",
       "address": "0x02115b40",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02113b38Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c12St_Jump_MainEv"
     },
     {
       "symbol": "@2081",
@@ -505,7 +505,7 @@
       "address": "0x02115b50",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02113d20Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c16St_KeepAway_MainEv"
     },
     {
       "symbol": "@2089",
@@ -519,7 +519,7 @@
       "address": "0x02115b60",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02113ff0Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c14St_Follow_MainEv"
     },
     {
       "symbol": "@1161",
@@ -533,7 +533,7 @@
       "address": "0x02115b70",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c19func_ov030_02112400Ev"
+      "evidence": "pointer-to-member constant copied into the state table; targets _ZN7daMky_c12St_Wait_MainEv"
     }
   ],
   "bss": [
@@ -1580,7 +1580,7 @@
       "source": "0x02115ad0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02112578Ev",
+      "symbol": "_ZN7daMky_c16St_PushCage_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02112578"
@@ -1590,7 +1590,7 @@
       "source": "0x02115ad8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02113324Ev",
+      "symbol": "_ZN7daMky_c19St_StarGrabbed_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02113324"
@@ -1670,7 +1670,7 @@
       "source": "0x02115b18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_021136b0Ev",
+      "symbol": "_ZN7daMky_c20St_ThiefGrabbed_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x021136b0"
@@ -1680,7 +1680,7 @@
       "source": "0x02115b20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02113094Ev",
+      "symbol": "_ZN7daMky_c18St_ThiefEaten_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02113094"
@@ -1690,7 +1690,7 @@
       "source": "0x02115b28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02112da0Ev",
+      "symbol": "_ZN7daMky_c17St_StarEaten_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02112da0"
@@ -1700,7 +1700,7 @@
       "source": "0x02115b30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02112a84Ev",
+      "symbol": "_ZN7daMky_c18St_LeaveMouth_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02112a84"
@@ -1710,7 +1710,7 @@
       "source": "0x02115b38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_021122b0Ev",
+      "symbol": "_ZN7daMky_c12St_Flee_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x021122b0"
@@ -1720,7 +1720,7 @@
       "source": "0x02115b40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02113b38Ev",
+      "symbol": "_ZN7daMky_c12St_Jump_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02113b38"
@@ -1740,7 +1740,7 @@
       "source": "0x02115b50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02113d20Ev",
+      "symbol": "_ZN7daMky_c16St_KeepAway_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02113d20"
@@ -1760,7 +1760,7 @@
       "source": "0x02115b60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02113ff0Ev",
+      "symbol": "_ZN7daMky_c14St_Follow_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02113ff0"
@@ -1780,7 +1780,7 @@
       "source": "0x02115b70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daMky_c19func_ov030_02112400Ev",
+      "symbol": "_ZN7daMky_c12St_Wait_MainEv",
       "addend": 0,
       "target_module": "ov030",
       "target_address": "0x02112400"

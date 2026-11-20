@@ -102,7 +102,7 @@ struct daMky_c : dActor_c {
     u8  mActionTimer;       /* 0x3c6 -- EnterState10 arms 0x1e; DecIfAbove0_Byte */
     u8 mSubState;           /* 0x3c7 -- this TU switches on it; not padding */
     u8  mHasSpawnedCap;     /* 0x3c8 */
-    u8 mPlayerWasOwnCharacter; /* 0x3c9 -- state 3 update: daPly_c mCharacter == param1 */
+    u8 mPlayerWasOwnCharacter; /* 0x3c9 -- St_ThiefGrabbed_Main: daPly_c mCharacter == param1 */
     u8  mAnimIdx;           /* 0x3ca -- 02111a00 indexes data_ov030_02115bc8 */
     u8 mResetTimer;         /* 0x3cb -- counts down from 0x96 before perch-reset checks */
 
@@ -123,8 +123,8 @@ struct daMky_c : dActor_c {
     s32  EnterState9();        /* 0x02112560 -- PMF record 8 of 22 */
     s32  EnterState10();       /* 0x021123a4 -- PMF record 6 of 22 */
 
-    /* The func_ov030_* methods. r0 is this Ukiki. The address is the
-     * name: the cartridge does not spell these. */
+    /* The helpers the ticks below call. r0 is this Ukiki; the cartridge does
+     * not spell any of these names. */
     void ReturnToPerch();
     void PlayRunFootstepSound();
     void PlayIdleSounds();
@@ -135,17 +135,35 @@ struct daMky_c : dActor_c {
     int RevertOffLedge();
     void UpdateFloorAndWalls(dBgCh_Actr *w);
     void UpdateModelAndCap();
-    int func_ov030_021122b0();
-    int func_ov030_02112400();
-    int func_ov030_02112578();
-    int func_ov030_02112a84();
-    int func_ov030_02112da0();
-    int func_ov030_02113094();
-    int func_ov030_02113324();
-    int func_ov030_021136b0();
-    int func_ov030_02113b38();
-    int func_ov030_02113d20();
-    int func_ov030_02113ff0();
+    /* The eleven tick halves: descriptor N's second pointer-to-member, the one
+       Behavior reaches through CallStateUpdate. The PMF record index is the
+       cartridge's own proof of member-ness; the state number comes from the table
+       at the bottom of src/game/actors/d_a_mky.cpp, whose matched __sinit copy
+       order is what pairs a tick with the EnterState above that writes that
+       number. The words are coined from what each body does.
+
+           state  0  St_Follow_Main        0x02113ff0  PMF record 19 of 22
+           state  1  St_KeepAway_Main      0x02113d20  PMF record 17 of 22
+           state  2  St_Jump_Main          0x02113b38  PMF record 15 of 22
+           state  3  St_ThiefGrabbed_Main  0x021136b0  PMF record 10 of 22
+           state  4  St_StarGrabbed_Main   0x02113324  PMF record  2 of 22
+           state  5  St_ThiefEaten_Main    0x02113094  PMF record 11 of 22
+           state  6  St_StarEaten_Main     0x02112da0  PMF record 12 of 22
+           state  7  St_LeaveMouth_Main    0x02112a84  PMF record 13 of 22
+           state  8  St_PushCage_Main      0x02112578  PMF record  1 of 22
+           state  9  St_Wait_Main          0x02112400  PMF record 21 of 22
+           state 10  St_Flee_Main          0x021122b0  PMF record 14 of 22 */
+    int St_Flee_Main();
+    int St_Wait_Main();
+    int St_PushCage_Main();
+    int St_LeaveMouth_Main();
+    int St_StarEaten_Main();
+    int St_ThiefEaten_Main();
+    int St_StarGrabbed_Main();
+    int St_ThiefGrabbed_Main();
+    int St_Jump_Main();
+    int St_KeepAway_Main();
+    int St_Follow_Main();
     void CallStateUpdate();
     void CallStateEnter();
     void ChangeState(int idx);
