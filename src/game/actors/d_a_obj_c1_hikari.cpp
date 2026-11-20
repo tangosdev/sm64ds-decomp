@@ -22,7 +22,7 @@
  *   side.
  * - gC1HikariModelFile is the model SharedFilePtr this Init LoadFile's,
  *   defined at the end of this file (constructed as file ID 1453)
- * - data_0209caa0.file.flags1 & 0x80000000; this Init is the consumer, no recovered
+ * - gSaveBlock.file.flags1 & 0x80000000; this Init is the consumer, no recovered
  *   name for that save-flag bit
  * - Sound::PlaySmallSecretSound stays TU-local; Sound.h has no declaration.
  *   Vec3_Add, AngleDiff and NumStars have no shared header either, so they keep a local extern "C" block.
@@ -82,7 +82,7 @@ int daObjC1Hikari_c::InitResources() {
     dExtSimpleModel_c::LoadFile(gC1HikariModelFile);
     if (NumStars() < 14)
         return 0;
-    if (data_0209caa0.file.flags1 & 0x80000000)
+    if (gSaveBlock.file.flags1 & 0x80000000)
         return 0;
     mModel.SetFile((BMD_File *)gC1HikariModelFile.filePtr, 1, 0x13);
     mCylinder.Init(this, mPos, 0xf0000, 0x8c000, 0x4800002, 0);
@@ -113,8 +113,8 @@ int daObjC1Hikari_c::Behavior() {
         vMid.x = 0;
         vMid.y = 0;
         vMid.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43(&vIn, &data_020a0e68, &vMid);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43(&vIn, &gScratchMtx, &vMid);
         Vec3_Add(&vRes, &mPos, &vMid);
 
         switch (p->GetTalkState()) {
@@ -158,8 +158,8 @@ int daObjC1Hikari_c::Behavior() {
     vMid2.x = 0;
     vMid2.y = 0;
     vMid2.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&vIn2, &data_020a0e68, &vMid2);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&vIn2, &gScratchMtx, &vMid2);
     Vec3_Add(&vRes2, &mPos, &vMid2);
     mCylinder.pos.x = vRes2.x;
     mCylinder.pos.y = vRes2.y;

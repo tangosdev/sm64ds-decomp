@@ -70,6 +70,15 @@ struct MkyAnimFilePtr : SharedFilePtr {
     ~MkyAnimFilePtr();
 };
 
+extern MkyAnimFilePtr gMonkeyHoldAnimationFile;
+extern MkyAnimFilePtr gMonkeyJumpStAnimationFile;
+extern MkyAnimFilePtr gMonkeyJumpEdAnimationFile;
+extern MkyAnimFilePtr gMonkeyRunAnimationFile;
+extern MkyAnimFilePtr data_ov030_02115cf0; /* wait 1 */
+extern MkyAnimFilePtr gMonkeyWait2AnimationFile;
+extern MkyAnimFilePtr gMonkeyWait3AnimationFile;
+extern MkyAnimFilePtr gMonkeyWait4AnimationFile;
+
 /* The carry offsets, one per hold pose: UpdateModelAndCap picks one by
  * index. The table is defined at the bottom, in retail __sinit order. */
 struct MkyOff {
@@ -110,8 +119,8 @@ static inline int IsFlagSet(dActor_c *actor, u32 flag) {
     return (actor->mFlags & flag) != 0;
 }
 
-static inline int IsPlayingAnim(daMky_c *mky, int *animFile) {
-    return (int)mky->mAnmModel.file == animFile[1];
+static inline int IsPlayingAnim(daMky_c *mky, SharedFilePtr &animFile) {
+    return mky->mAnmModel.file == animFile.filePtr;
 }
 
 /* ~daMky_c is the first virtual DECLARED in include/daMky_c.h and it is
@@ -141,8 +150,8 @@ s32 daMky_c::OnYoshiTryEat()
 
 void daMky_c::ReturnToPerch() {
 
-    extern dClipper data_0209f43c;
-    extern Matrix4x3 data_0209b3ec;
+    extern dClipper gClipper;
+    extern Matrix4x3 gViewMtx;
     struct Vector3 a, b, out, asr;
 
     if (DecIfAbove0_Byte(&this->mResetTimer))
@@ -163,7 +172,7 @@ void daMky_c::ReturnToPerch() {
     if (this->mPerchPos.y - this->mPos.y > 0x96000 || rc.DetectClsn()) {
         Vec3_Asr(&asr, &this->mPerchPos, 3);
 
-        if (data_0209f43c.TransformAndClip(data_0209b3ec, asr, 0x1f400, out) > 0xc350000) {
+        if (gClipper.TransformAndClip(gViewMtx, asr, 0x1f400, out) > 0xc350000) {
             this->mPos = this->mPerchPos;
             this->mSpawnPos = this->mPerchPos;
             this->mPrevPos = this->mPerchPos;
@@ -173,7 +182,6 @@ void daMky_c::ReturnToPerch() {
     }
 }
 void daMky_c::PlayRunFootstepSound() {
-    extern int gMonkeyRunAnimationFile[];
     if (!IsPlayingAnim(this, gMonkeyRunAnimationFile))
         return;
     int v = (short)((unsigned int)this->mAnmModel.currFrame << 4 >> 16);
@@ -181,10 +189,6 @@ void daMky_c::PlayRunFootstepSound() {
         func_0201267c(0xea, &this->mCamSpacePos);
 }
 void daMky_c::PlayIdleSounds() {
-    extern int data_ov030_02115cf0[];
-    extern int gMonkeyWait2AnimationFile[];
-    extern int gMonkeyWait3AnimationFile[];
-
     int frame = (short)(((unsigned)(this->mAnmModel.currFrame << 4)) >> 16);
 
     if (IsPlayingAnim(this, data_ov030_02115cf0)) {
@@ -201,10 +205,6 @@ void daMky_c::PlayIdleSounds() {
     }
 }
 int daMky_c::CycleIdleAnimation() {
-    extern int data_ov030_02115cf0[];
-    extern int gMonkeyWait2AnimationFile[];
-    extern int gMonkeyWait3AnimationFile[];
-    extern int gMonkeyWait4AnimationFile[];
     extern void** data_ov030_02115bc8[];
     PlayIdleSounds();
     if (this->mAnmModel.WillHitFrame(0) != 0 || (!IsPlayingAnim(this, data_ov030_02115cf0) &&
@@ -434,9 +434,7 @@ int daMky_c::func_ov030_021122b0()
     return 1;
 }
 int daMky_c::EnterState10(){
-    struct S { int w[2]; };
-    extern struct S gMonkeyRunAnimationFile;
-    mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile.w[1]), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.filePtr, 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x13000;
     mActionTimer = 30;
@@ -480,11 +478,6 @@ int daMky_c::EnterState9()
 int daMky_c::func_ov030_02112578()
 {
 
-    extern void *gMonkeyWait2AnimationFile[];
-    extern void *gMonkeyWait3AnimationFile[];
-    extern void *gMonkeyJumpStAnimationFile[];
-    extern void *gMonkeyJumpEdAnimationFile[];
-    extern void *gMonkeyRunAnimationFile[];
     dActor_c *cage = dActor_c::FindWithActorID(0x67, 0);
     daPly_c *player = this->ClosestPlayer();
     Vector3 v;
@@ -495,7 +488,7 @@ int daMky_c::func_ov030_02112578()
     switch (this->mSubState) {
     case 0:
         if (FollowPath() != 0) {
-            this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait2AnimationFile[1], 0, 0x1000, 0);
+            this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait2AnimationFile.filePtr, 0, 0x1000, 0);
             this->mAnmModel.speed = 0x1000;
             this->mHorzSpeed = 0;
             this->mSubState++;
@@ -517,7 +510,7 @@ int daMky_c::func_ov030_02112578()
         Vector3 sp = this->mPos;
         sp.y += 0x50000;
         if (player->ShowMessage(*this, 0xbd, &sp, 1, 0) != 0) {
-            this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait3AnimationFile[1], 0, 0x1000, 0);
+            this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait3AnimationFile.filePtr, 0, 0x1000, 0);
             this->mAnmModel.SetFlags(0);
             func_0201267c(0xd1, &this->mCamSpacePos);
             this->mSubState++;
@@ -527,14 +520,14 @@ int daMky_c::func_ov030_02112578()
     case 3:
         if (player->GetTalkState() == 2) {
             player->HasFinishedTalking();
-            this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile[1], 0, 0x1000, 0);
+            this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.filePtr, 0, 0x1000, 0);
             this->mSubState++;
         }
         break;
     case 4:
         if (ApproachLinear(this->mAngle.y, -0x1fb2, 0x400) != 0) {
-            this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile[1], 0x40000000, 0x1000,
-                                    0);
+            this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile.filePtr, 0x40000000,
+                                    0x1000, 0);
             this->mPrevAngle.y = this->mAngle.y;
             this->mHorzSpeed = 0xf000;
             this->mSpeed.y = 0x2f000;
@@ -544,15 +537,15 @@ int daMky_c::func_ov030_02112578()
         break;
     case 5:
         if (this->mWithMeshClsn.JustHitGround() != 0) {
-            this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpEdAnimationFile[1], 0x40000000, 0x1000,
-                                    0);
+            this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpEdAnimationFile.filePtr, 0x40000000,
+                                    0x1000, 0);
             this->mHorzSpeed = 0;
             this->mSubState++;
         }
         break;
     case 6:
         if (this->mAnmModel.Finished() != 0) {
-            this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait2AnimationFile[1], 0, 0x1000, 0);
+            this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait2AnimationFile.filePtr, 0, 0x1000, 0);
             this->mAnmModel.speed = 0x1000;
             cage->mHorzSpeed = 0x400;
             Sound::PlaySub(0x20, 0x14, 0x7f, 0x15666, 0);
@@ -576,7 +569,8 @@ int daMky_c::func_ov030_02112578()
         }
         break;
     case 9:
-        this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile[1], 0x40000000, 0x1000, 0);
+        this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile.filePtr, 0x40000000, 0x1000,
+                                0);
         cage->mVertAccel = -0x2000;
         cage->mTerminalVelocity = -0x3c000;
         this->mSubState++;
@@ -597,9 +591,7 @@ int daMky_c::func_ov030_02112578()
     return 1;
 }
 int daMky_c::EnterState8() {
-    struct G { void *a; void *b; };
-    extern struct G gMonkeyRunAnimationFile;
-    this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.b, 0, 0x1000, 0);
+    this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.filePtr, 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     this->mPathPtr.FromID(this->param1 & 0xff);
     mPathNode = 1;
@@ -641,7 +633,6 @@ int daMky_c::EnterState7()
     typedef unsigned char u8;
     typedef unsigned short u16;
     typedef short s16;
-    extern void *gMonkeyJumpStAnimationFile[];
     int *pos;
     int *py;
     int *pz;
@@ -651,7 +642,7 @@ int daMky_c::EnterState7()
     s16 s;
     int mul = 0x4b000;
     mFlags &= ~0x80000;
-    this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile[1], 0x40000000, 0x1000, 0);
+    this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     this->mHorzSpeed = 0xa000;
     this->mSpeed.y = 0;
     other = this->mPlayer;
@@ -923,8 +914,7 @@ int daMky_c::func_ov030_02113324()
     return 1;
 }
 int daMky_c::EnterState4(){
-    extern int gMonkeyHoldAnimationFile[];
-    this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyHoldAnimationFile[1]), 0, 0x1000, 0);
+    this->mAnmModel.SetAnim((BCA_File *)gMonkeyHoldAnimationFile.filePtr, 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
         this->mPos.y > mPerchPos.y - 0x12c000) {
@@ -1084,7 +1074,6 @@ int daMky_c::func_ov030_021136b0()
 }
 int daMky_c::EnterState3()
 {
-    extern MkyAnimFilePtr gMonkeyHoldAnimationFile;
     this->mAnmModel.SetAnim((BCA_File *)gMonkeyHoldAnimationFile.filePtr, 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     if (mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap()) {
@@ -1106,13 +1095,12 @@ int daMky_c::EnterState3()
 
 int daMky_c::func_ov030_02113b38()
 {
-    extern int gMonkeyRunAnimationFile[];
     this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAc_c);
     UpdateFloorAndWalls(&this->mWithMeshClsn);
     if (this->mWithMeshClsn.JustHitGround() != 0) {
         this->mWithMeshClsn.ClearLimMovFlag();
-        this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile[1]), 0, 0x1000, 0);
+        this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.filePtr, 0, 0x1000, 0);
         this->mAnmModel.speed = 0x1000;
         this->mSpawnPos = this->mPos;
         ChangeState(this->mPrevState);
@@ -1124,7 +1112,6 @@ int daMky_c::func_ov030_02113b38()
 int daMky_c::EnterState2() {
     typedef short s16;
 
-    extern SharedFilePtr gMonkeyJumpStAnimationFile;
     daPly_c *p;
 
     p = this->mPlayer;
@@ -1156,7 +1143,6 @@ int daMky_c::func_ov030_02113d20()
 {
     typedef short s16;
 
-    extern SharedFilePtr gMonkeyRunAnimationFile;
     daPly_c *p;
     fx32 dist;
     s16 angle;
@@ -1241,11 +1227,10 @@ int daMky_c::EnterState1(){
 int daMky_c::func_ov030_02113ff0()
 {
     typedef short s16;
-    extern int gMonkeyRunAnimationFile[];
     int dist = this->DistToCPlayer();
     if (dist > 0x15e000) {
         this->mHorzSpeed = 0xc000;
-        this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile[1]), 0, 0x1000, 0);
+        this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.filePtr, 0, 0x1000, 0);
     } else if (dist <= 0xfa000) {
         this->mHorzSpeed = 0;
         CycleIdleAnimation();
@@ -1289,7 +1274,6 @@ void daMky_c::ChangeState(int idx) {
     CallStateEnter();
 }
 extern MkyModelFilePtr data_ov030_02115d00;
-extern MkyAnimFilePtr data_ov030_02115cf0;
 
 /* File-scope extern "C" for the six virtuals below. A block-scope extern
  * inside a daMky_c method gets C++ linkage and the reference mangles a

@@ -351,8 +351,8 @@ int daOwl_c::UpdateHover() {
     unk_3e8 += 0x200;
     ApproachLinear(mPos.y, mAnchor.y + FX_MUL(FX_SinIdx((u16)(s16)unk_3e8 >> 4), 0x64000), 0x3000);
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-    MTX_MultVec43(&step, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+    MTX_MultVec43(&step, &gScratchMtx, &mSpeed);
     return 1;
 }
 
@@ -428,8 +428,8 @@ int daOwl_c::UpdateDormant() {
             d.x = 0;
             d.y = 0;
             d.z = 0x320000;
-            Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
-            MTX_MultVec43(&d, &data_020a0e68, &mAnchor);
+            Matrix4x3_FromRotationY(&gScratchMtx, 0x4000);
+            MTX_MultVec43(&d, &gScratchMtx, &mAnchor);
             {
                 mAnchor.x += mPos.x;
                 mAnchor.y += mPos.y;
@@ -464,13 +464,13 @@ void daOwl_c::UpdateModelTransform() {
     Matrix4x3 out;
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.ApplyOpacity(mOpacity, 1);
-    mAnmModel.mat4x3 = data_020a0e68;
+    mAnmModel.mat4x3 = gScratchMtx;
     MTX_Concat43(&mAnmModel.data.transforms[1], &mAnmModel.mat4x3, &out);
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
-    mShadowMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
+    mShadowMat = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x64000, 0x320000, 0xf);
 }
 
@@ -483,18 +483,18 @@ void daOwl_c::FollowRiderMatrix() {
         return;
     Vector3 v(0, 0, 0);
     m = mRider;
-    data_020a0e68 = *m->mCarryMatrix;
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3000, 0, 0);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x6000, 0x1000, 0x4000);
-    v.x = data_020a0e68.t.x;
-    v.y = data_020a0e68.t.y;
-    v.z = data_020a0e68.t.z;
+    gScratchMtx = *m->mCarryMatrix;
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0x3000, 0, 0);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, -0x6000, 0x1000, 0x4000);
+    v.x = gScratchMtx.t.x;
+    v.y = gScratchMtx.t.y;
+    v.z = gScratchMtx.t.z;
     mPos.x = v.x << 3;
     mPos.y = v.y << 3;
     mPos.z = v.z << 3;
     mPrevAngle.y = mRider->mAngle.y;
     mPrevAngle.x = 0;
-    mAnmModel.mat4x3 = data_020a0e68;
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 int daOwl_c::CleanupResources()

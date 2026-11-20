@@ -60,7 +60,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_0204effc",
+      "symbol": "BeginSleep",
       "address": "0x0204effc",
       "legacy_source": "src/func_0204effc.c",
       "size": "0x00000040",
@@ -452,7 +452,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "func_020500a4",
+      "symbol": "AlarmCallback",
       "address": "0x020500a4",
       "legacy_source": "src/func_020500a4.c",
       "size": "0x00000114",
@@ -746,42 +746,42 @@
       "ordinal": 103
     },
     {
-      "symbol": "func_02051454",
+      "symbol": "DisposeCallback",
       "address": "0x02051454",
       "legacy_source": "src/func_02051454.c",
       "size": "0x00000060",
       "ordinal": 104
     },
     {
-      "symbol": "func_020514b4",
+      "symbol": "LoadWaveArc",
       "address": "0x020514b4",
       "legacy_source": "src/func_020514b4.c",
       "size": "0x00000060",
       "ordinal": 105
     },
     {
-      "symbol": "func_02051514",
+      "symbol": "LoadBank",
       "address": "0x02051514",
       "legacy_source": "src/func_02051514.c",
       "size": "0x00000060",
       "ordinal": 106
     },
     {
-      "symbol": "func_02051574",
+      "symbol": "LoadSeqArc",
       "address": "0x02051574",
       "legacy_source": "src/func_02051574.c",
       "size": "0x00000060",
       "ordinal": 107
     },
     {
-      "symbol": "func_020515d4",
+      "symbol": "LoadSeq",
       "address": "0x020515d4",
       "legacy_source": "src/func_020515d4.c",
       "size": "0x00000060",
       "ordinal": 108
     },
     {
-      "symbol": "func_02051634",
+      "symbol": "NNSi_SndArcLoadFile",
       "address": "0x02051634",
       "legacy_source": "src/func_02051634.c",
       "size": "0x000000a0",
@@ -886,7 +886,7 @@
       "ordinal": 123
     },
     {
-      "symbol": "func_02052008",
+      "symbol": "NNS_SndArcPlayerSetup",
       "address": "0x02052008",
       "legacy_source": "src/func_02052008.c",
       "size": "0x0000009c",

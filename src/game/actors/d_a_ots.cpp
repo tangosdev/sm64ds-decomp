@@ -132,7 +132,7 @@ enum {
     kSfxDeath = 0xce        /* PlayDeathSound: the actor enters STATE_DYING */
 };
 
-/* Particle effect id func_ov064_02115f98 spawns at the point the bully's hit
+/* Particle effect id SpawnHitParticles spawns at the point the bully's hit
  * reaction aims at. */
 enum { kParticleHit = 0xf6 };
 
@@ -304,7 +304,7 @@ int daOts_c::BehaviorCommon()
     mStateTimer++;
     if (four != tail().mState)
         mStateTimer = 0;
-    func_ov064_02116bac();
+    UpdateModelAndShadow();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -359,7 +359,7 @@ int daOts_c::CleanupResources()
  * translation rows are positions divided by 8 (>> 3). The shadow's radius
  * shrinks by 3/32 (0x180 / 0x1000) of the actor's height above the floor, but not
  * below 10 units, and its depth is that height plus 40 units. Opacity is 0xf. */
-void daOts_c::func_ov064_02116bac(){
+void daOts_c::UpdateModelAndShadow() {
     Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
     this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
     this->mAnmModel.mat4x3.t.y = (this->mPos.y + tail().mModelYOffset) >> 3;
@@ -438,7 +438,7 @@ void daOts_c::CheckMarioCollision() {
             this->mHorzSpeed = kHitSpeedLight;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
-        func_ov064_02115f98((char *)hitPlayer);
+        SpawnHitParticles((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -450,7 +450,7 @@ void daOts_c::CheckMarioCollision() {
         this->mHorzSpeed = kHitSpeedLight;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
-        func_ov064_02115f98((char *)hitPlayer);
+        SpawnHitParticles((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -474,7 +474,7 @@ void daOts_c::CheckMarioCollision() {
         this->mHorzSpeed = kHitSpeedBit40000;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
-        func_ov064_02115f98((char *)hitPlayer);
+        SpawnHitParticles((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -489,7 +489,7 @@ void daOts_c::CheckMarioCollision() {
             this->mHorzSpeed = kHitSpeedLight;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
-        func_ov064_02115f98((char *)hitPlayer);
+        SpawnHitParticles((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -503,7 +503,7 @@ void daOts_c::CheckMarioCollision() {
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
         this->PlayShellHitSound();
-        func_ov064_02115f98((char *)hitPlayer);
+        SpawnHitParticles((char *)hitPlayer);
         tail().mState = STATE_KNOCKED_BACK;
         tail().mHopCount = 0;
         this->PlayHitSound();
@@ -523,7 +523,7 @@ void daOts_c::CheckMarioCollision() {
         v.y = this->mPos.y;
         v.z = this->mPos.z;
         if (hitPlayer->Hurt(v, 0, 0x14000, 1, 0, 1) != 0) {
-            func_ov064_02115f98((char*)hitPlayer);
+            SpawnHitParticles((char *)hitPlayer);
         }
     }
 
@@ -795,7 +795,7 @@ int daOts_c::func_ov064_0211616c() {
 /* Turns mPrevAngle.y toward the closest player by up to `step` a call. Returns 1
  * once it has reached that angle, else 0 (also 0 when there is no player). The
  * children's UpdateRunState use it to face the player. */
-int daOts_c::func_ov064_02116110(short step){
+int daOts_c::TurnTowardPlayer(short step) {
     dActor_c *p = (dActor_c *)this->ClosestPlayer();
     if(p != 0){
         short ang = Vec3_HorzAngle(&this->mPos, &p->mPos);
@@ -814,8 +814,7 @@ int daOts_c::func_ov064_02116110(short step){
  * the SDK table through FX_SinIdx/FX_CosIdx at angle >> 4: the heading's sine
  * scales the x offset, its cosine the z offset, and the elevation's sine the
  * y offset. */
-void daOts_c::func_ov064_02115f98(char* a1)
-{
+void daOts_c::SpawnHitParticles(char *a1) {
     Vector3 scratch;
     Vector3 pos0;
     Vector3 pos1;

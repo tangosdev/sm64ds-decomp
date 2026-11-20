@@ -8,7 +8,7 @@
  * ov007's work block: Work_Create allocates it,
  * func_ov007_020c3df4(data_ov007_02102dc4, 0x188), data_ov007_02102dc4 being
  * the heap-name string "global data", and stores it in
- * data_ov007_0210342c; func_ov007_020b65e0 frees it with func_ov007_020c3d1c.
+ * gMenuWork; func_ov007_020b65e0 frees it with func_ov007_020c3d1c.
  * Each field below was named by the files that use it; where they agreed on
  * a name but not a type, the typed pointer is the one kept. Words no file
  * names stay padding. */
@@ -116,9 +116,7 @@ typedef char Ov007Work_size_must_be_0x188[sizeof(Ov007Work) == 0x188 ? 1 : -1];
 #endif
 
 /* The work block itself (Work_Create stores it, func_ov007_020b65e0
- * frees and clears it). WORK is this tree's short name for it; the ROM
- * gives the global no name. */
-extern Ov007Work *data_ov007_0210342c;
-#define WORK data_ov007_0210342c
+ * frees and clears it). The ROM gives the global no name. */
+extern Ov007Work *gMenuWork;
 
 #endif

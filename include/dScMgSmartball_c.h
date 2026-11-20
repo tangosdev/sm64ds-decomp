@@ -63,7 +63,10 @@ struct cMgSmartball_wing_c;
 
 /* One 0x24-byte spark of the burst EmitSparks seeds, UpdateSparks moves and
    RenderSparks draws. The name is coined; the fields are read off those three
-   methods. */
+   methods. mPos and mVel go to the Vector2 helpers, but they stay s32 pairs:
+   as Vector2 members they give SmartballSpark an implicit constructor and
+   destructor, so classInit (0xdc -> 0x104), the destructors (+0x1c each)
+   and UpdateSparks (0x1cc -> 0x1d8) all change (measured 2026-11-19). */
 struct SmartballSpark {
     s32 mOrigin[2]; /* 0x00 -- the burst's centre */
     s32 mPos[2];    /* 0x08 -- origin plus a random rotated offset */
@@ -112,7 +115,7 @@ struct dScMgSmartball_c : dScMgBase_c {
        and the collision poofs; the Count* counters feed the score popup the
        emitter queue plays back; EmitScore is the 5-slot popup queue. */
     int  SparksActive();
-    void EmitSparks(int *pair, int a3);
+    void EmitSparks(Vector2 *pair, int a3);
     void RenderSparks();
     void UpdateSparks();
     void ResetSparks();
@@ -130,7 +133,7 @@ struct dScMgSmartball_c : dScMgBase_c {
     void UpdateDust();
     void SpawnDust(int *origin);
     void UpdateScores();
-    void EmitScore(int *src, int v2, int v3, int v5);
+    void EmitScore(Vector2 *src, int v2, int v3, int v5);
     void KickGate(int idx);
     int  IsTableAtRest();
     void ResolveBallPair(int b, int c, u8 *d, u8 *e);

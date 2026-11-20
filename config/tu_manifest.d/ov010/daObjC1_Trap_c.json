@@ -145,7 +145,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_ZN14daObjC1_Trap_c19func_ov010_02111984EP4dBgWP8dActor_cS3_",
+      "symbol": "_ZN14daObjC1_Trap_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x02111984",
       "size": "0x00000014",
       "legacy_source": "src/func_ov010_02111984.c",

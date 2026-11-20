@@ -145,7 +145,7 @@ struct dEntObj_c : dBase_c {
 
     /* Send every present figure toward its exit and pick the one the camera
        follows. */
-    void func_ov075_02114fa8();
+    void SendPlayersToExits();
     /* Stop the selection animation and return the chosen figure to idle. */
     void func_ov075_0211505c();
     /* Once every figure is idle, play the selection one-shot on player

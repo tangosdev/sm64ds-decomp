@@ -19,7 +19,7 @@
  * FOUR WITNESSES, which is one more than a leaf class ever gets:
  *
  *   _ZN7daOts_cD1Ev (ov064 0x02115ee0, 0x48) -- this class's own destructor. It stores
- *   data_ov064_0211b768 and destroys dExtShadowModel_c 0x370, dCcAc_c 0x33c,
+ *   _ZTV7daOts_c and destroys dExtShadowModel_c 0x370, dCcAc_c 0x33c,
  *   dBgCh_Actr 0x174, dExtAnmModel_c 0x110, then chains to _ZN12dEnemyBase_cD2Ev. D0 at
  *   0x02115f28 is the same plus Memory::Deallocate.
  *
@@ -33,7 +33,7 @@
  *   this class's, from the inlined base constructor, and then its own -- with the
  *   four members constructed between them at those same four offsets.
  *
- * The vtable is data_ov064_0211b768: the word before it is 0x021138bc, which is
+ * The vtable is _ZTV7daOts_c: the word before it is 0x021138bc, which is
  * _ZTI7daOts_c. (Reading that address out of the merged symbol table answers
  * `data_ov009_021138bc`, and the destructor answers `_ZN10daHolhei_cD1Ev` -- ov062
  * through ov066 all load their .text at 0x02115ee0. Resolve inside ov064 or the
@@ -100,7 +100,7 @@ struct SharedFilePtr;
 struct BullyResourceConfig {
     SharedFilePtr *files[5]; /* +0x00 -- see kFileModel / kAnim* in d_a_ots.cpp */
     /* +0x14 -- dCcAc_c radius; also how far along the aim direction
-       func_ov064_02115f98 places the hit effect */
+       SpawnHitParticles places the hit effect */
     s32 cylinderRadius;
     s32 cylinderHeight; /* +0x18 -- dCcAc_c height (InitResourcesCommon) */
     s32 horzDecel;      /* +0x1c -- copied to Tail::mHorzDecel */
@@ -137,7 +137,7 @@ struct daOts_c : dEnemyBase_c {
            handler overwrites it with the spot the actor died at (y set 5 units above
            the floor), which is where func_ov064_0211616c spawns its particles. */
         Vector3 mHomePos; /* 0x3a8 */
-        /* Handed to DropShadowRadHeight; func_ov064_02116bac rebuilds it every
+        /* Handed to DropShadowRadHeight; UpdateModelAndShadow rebuilds it every
            frame as a Y rotation by mAngle.y with the translation row set to the
            position divided by 8. */
         Matrix4x3 mShadowMtx;   /* 0x3b4 */
@@ -149,7 +149,7 @@ struct daOts_c : dEnemyBase_c {
            shadowRadius. mHorzDecel is the rate STATE_KNOCKED_BACK slows mHorzSpeed
            to zero. mModelYOffset is added to mPos.y for the model matrix and for the
            floor probe's origin. mShadowRadius is the drop shadow's radius at ground
-           level; func_ov064_02116bac shrinks it as the actor rises. */
+           level; UpdateModelAndShadow shrinks it as the actor rises. */
         s32 mHorzDecel;         /* 0x3e8 */
         s32 mModelYOffset;      /* 0x3ec */
         s32 mShadowRadius;      /* 0x3f0 */
@@ -227,10 +227,10 @@ struct daOts_c : dEnemyBase_c {
        method names. */
     int InitResourcesCommon();
     int BehaviorCommon();
-    void func_ov064_02115f98(char* a1);
-    int func_ov064_02116110(short step);
+    void SpawnHitParticles(char *a1);
+    int TurnTowardPlayer(short step);
     int func_ov064_0211616c();
-    void func_ov064_02116bac();
+    void UpdateModelAndShadow();
 
     /* Named for the N64 functions they port (n64decomp/sm64 bully.inc.c and
        obj_behaviors.c names, coined by that project); see d_a_ots.cpp. */

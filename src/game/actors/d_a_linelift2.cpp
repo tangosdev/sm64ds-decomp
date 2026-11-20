@@ -281,7 +281,7 @@ int daLinelift2_c::StepAlongPath() {
         }
         return result;
     }
-    func_02010da4();
+    ClampPosToWorldBounds();
     return 0;
 }
 

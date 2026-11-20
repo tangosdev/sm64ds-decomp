@@ -94,7 +94,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN7daSpd_c19func_ov071_0211f524Ev",
+      "symbol": "_ZN7daSpd_c20UpdateModelAndShadowEv",
       "address": "0x0211f524",
       "size": "0x00000170",
       "legacy_source": "src/func_ov071_0211f524.cpp",
@@ -227,17 +227,17 @@
       "ordinal": 26
     },
     {
-      "symbol": "_ZN7daSpd_c13CallStateMainEv",
+      "symbol": "_ZN7daSpd_c8RunStateEv",
       "address": "0x02120278",
       "size": "0x0000003c",
-      "legacy_source": "src/CallStateMain.cpp",
+      "legacy_source": "src/func_ov071_02120278.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN7daSpd_c13CallStateInitEv",
+      "symbol": "_ZN7daSpd_c14CallStateEnterEv",
       "address": "0x021202b4",
       "size": "0x00000038",
-      "legacy_source": "src/CallStateInit.cpp",
+      "legacy_source": "src/func_ov071_021202b4.cpp",
       "ordinal": 28
     },
     {

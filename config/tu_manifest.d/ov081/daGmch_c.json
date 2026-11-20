@@ -97,7 +97,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZN8daGmch_c21ApplySlopeToVertSpeedEPv",
+      "symbol": "_ZN8daGmch_c21ApplySlopeToVertSpeedEP10dBgCh_Actr",
       "address": "0x02126950",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov081_02126950.cpp",

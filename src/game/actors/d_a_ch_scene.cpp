@@ -104,9 +104,9 @@ s32 daChScene_c::Behavior() {
         MTX_MultVec43(&player->mPos, &mInvMat, &out1);
         if (out1.z > mHorzSpeed || out1.z < -0x300000) {
             out1.z = mHorzSpeed;
-            data_020a0e68 = mInvMat;
-            MTX_Inverse43(&data_020a0e68, &data_020a0e68);
-            MTX_MultVec43(&out1, &data_020a0e68, &player->mPos);
+            gScratchMtx = mInvMat;
+            MTX_Inverse43(&gScratchMtx, &gScratchMtx);
+            MTX_MultVec43(&out1, &gScratchMtx, &player->mPos);
         }
         mHorzSpeed -= 0x20000;
         if (mHorzSpeed < -0x300000) {

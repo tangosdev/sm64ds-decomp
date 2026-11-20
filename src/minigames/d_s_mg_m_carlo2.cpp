@@ -25,7 +25,7 @@
 #include "math/CalcLib.h"
 #include "Vector2Math.h"
 extern "C" void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
-extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
+extern "C" void Hud_RenderSprite(OamAttr *attr, int, int, int, int);
 extern "C" void Mg_CommitRecords(void);
 extern "C" s32 GetGameLanguage(void);
 
@@ -57,11 +57,11 @@ extern s16 sMCarlo2BoardStep;
 /* difficulty row into sMCarlo2BoardRows */
 extern int sMCarlo2FaceCounts[];
 /* per-face weights the picker draws from  */
-extern int sMgCardSprites[];
+extern OamAttr *sMgCardSprites[];
 
 /* Twenty-three sprite words. The static initializer copies them out of
  * sMgCardSprites in this order; an in-order copy does not. */
-extern int sMCarlo2CardSprites[23];
+extern OamAttr *sMCarlo2CardSprites[23];
 
 extern unsigned short sMCarlo2CardFrameSprites[];
 
@@ -69,7 +69,7 @@ extern int sMCarlo2StartFaceCounts[];
 /* the starting weights                     */
 extern int sMCarlo2BoardRows[][10];
 /* per-difficulty weight top-ups          */
-extern int data_020a0db0;
+extern int gGlobalTimer;
 
 extern unsigned char gSubScreenLayers;
 
@@ -80,7 +80,6 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
 
-int func_0203d5dc(const int *a, const int *b);
 void LoadCard2SubBg3(void *);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdle(Dealer *dealer);
@@ -355,10 +354,10 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
     mTarget.y = ((slot / 5) * 0x30) << 12;
     mSlot = slot;
 
-    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
+    Vec2_Sub(&delta, &mTarget, &mPos);
 
     mStep = delta;
-    func_0203d630(&mStep.x, 0x124);
+    func_0203d630(&mStep, 0x124);
 
     if (mStep.x < 0)
         mStep.x = -mStep.x;
@@ -466,7 +465,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         ApproachLinear(mPos.x, mTarget.x, mStep.x);
         ApproachLinear(mPos.y, mTarget.y, mStep.y);
         ApproachLinear(mLift, 0x4000, 0x300);
-        if (func_0203d5dc(&mPos.x, &mTarget.x) != 0)
+        if (func_0203d5dc(&mPos, &mTarget) != 0)
             return;
         if (mLift != 0x4000)
             return;
@@ -489,14 +488,14 @@ void dMgMCarlo2CardObj_c::Render()
     state = mState;
     if (state == 0) return;
     if (state == 3) {
-        if ((data_020a0db0 & 8) != 0)
+        if ((gGlobalTimer & 8) != 0)
             return;
     }
     {
         int idx = (mFace + 1) * 5 + (mLift >> 12);
         unsigned short sprite = sMCarlo2CardFrameSprites[idx];
-        Hud_RenderSprite((void *)sMCarlo2CardSprites[sprite], (mPos.x >> 12) + 0x18,
-                         (mPos.y >> 12) + 0x18, -1, -1);
+        Hud_RenderSprite(sMCarlo2CardSprites[sprite], (mPos.x >> 12) + 0x18, (mPos.y >> 12) + 0x18,
+                         -1, -1);
     }
 }
 
@@ -799,7 +798,7 @@ dMgMCarlo2CardObj_c::~dMgMCarlo2CardObj_c()
  * here makes the compiler emit both out of line in cartridge order. */
 
 /* Retail copy order is not address order. mwcc emits __sinit_d_s_mg_m_carlo2.cpp. */
-int sMCarlo2CardSprites[23] = {
+OamAttr *sMCarlo2CardSprites[23] = {
     sMgCardSprites[0],  sMgCardSprites[1],  sMgCardSprites[2],  sMgCardSprites[11],
     sMgCardSprites[12], sMgCardSprites[13], sMgCardSprites[14], sMgCardSprites[3],
     sMgCardSprites[4],  sMgCardSprites[5],  sMgCardSprites[6],  sMgCardSprites[9],

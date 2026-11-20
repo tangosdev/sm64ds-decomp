@@ -15,9 +15,9 @@
  * makes emission ROM-ascending, so this file is written in ROM order.
  */
 
-// leftovers: func_02034b1c initialises the global graph callback, retaining
-// the raw store to its unmodelled byte at +0x0f; it keeps its placeholder name
-// and its untyped parameters because include/decl_common.h declares it.
+// leftovers: graphCallback_c::Init initialises the global graph callback,
+// retaining the raw store to its unmodelled byte at +0x0f; its untyped
+// parameter is measured (see the note on it below).
 // LoadMultiBootResources stays free (no receiver).
 #include "dScMB_c.h"
 #include "nitro/hw/registers.h"
@@ -88,7 +88,7 @@ extern u8 gSubScreenLayers;
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *gGraphCallback;
-extern int data_0208ee44;
+extern int gFrameStep;
 }
 void *func_0201a3e4(void);
 
@@ -112,7 +112,7 @@ dScMB_c::~dScMB_c() {}
 /* The untyped parameter pair is measured, not sloppy: spelling `c` as
    dScMB_c::graphCallback_c * (or `owner` as dScMB_c *, with `this` at the one
    call site) moves this function's bytes. The casts stay. */
-void dScMB_c::graphCallback_c::func_02034b1c(void *owner) {
+void dScMB_c::graphCallback_c::Init(void *owner) {
     dScMB_c::graphCallback_c *callback = (dScMB_c::graphCallback_c *)this;
     callback->mOwner = owner;
     callback->mSpinAngle = 0;
@@ -156,14 +156,14 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
             } while (1);
 
             if (mAdvancing != 0) {
-                mSpinAngle += (data_0208ee44 << 10);
+                mSpinAngle += (gFrameStep << 10);
                 if (anyOnArc == 0)
                     mStillTimer = 120;
             }
         } else {
             OAM::Render(0, sprite, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             OAM::RenderSub(sprite, 128, 128);
-            mStillTimer -= data_0208ee44;
+            mStillTimer -= gFrameStep;
             mSpinAngle = 0;
         }
     }
@@ -321,7 +321,7 @@ s32 dScMB_c::InitResources() {
     GX_DispOn();
 
     GXS_DispOn();
-    sMBGraphCallback.func_02034b1c(this);
+    sMBGraphCallback.Init(this);
 
     gGraphCallback = &sMBGraphCallback;
     mStep = 0;
@@ -329,7 +329,7 @@ s32 dScMB_c::InitResources() {
     dScene_c::SetFaders(&fader);
 
     fader.color = 0x7fff;
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     sMBJobDone = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
 
     return 1;

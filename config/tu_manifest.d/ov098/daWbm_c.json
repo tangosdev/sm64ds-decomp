@@ -64,7 +64,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN7daWbm_c19func_ov098_0213b584Ev",
+      "symbol": "_ZN7daWbm_c20UpdateModelAndShadowEv",
       "address": "0x0213b584",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov098_0213b584.c",

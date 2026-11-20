@@ -130,7 +130,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8daOnms_c19func_ov092_021313b0Ev",
+      "symbol": "_ZN8daOnms_c12NextPathNodeEv",
       "address": "0x021313b0",
       "size": "0x00000120",
       "legacy_source": "src/func_ov092_021313b0.cpp",

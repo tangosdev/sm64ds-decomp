@@ -77,10 +77,10 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(dBgCh_Actr *clsn);
 
-extern int           data_02092138;
+extern int gLevelMinY;
 extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
-extern int           data_0209f32c;
+extern int gWaterHeight;
 
 extern Vector3       data_ov090_0213412c;
 extern MenboAnimationFilePtr data_ov090_02134480; /* patrol anim, file 0x3a1 */
@@ -140,12 +140,12 @@ void daMenbo_c::func_ov090_02130f94() {
         Vector3 v;
         Vector3 r;
 
-        data_020a0e68 = *src;
-        MTX_Concat43((const Matrix4x3 *)mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
-                     &data_020a0e68);
-        v.x = data_020a0e68.t.x;
-        v.y = data_020a0e68.t.y;
-        v.z = data_020a0e68.t.z;
+        gScratchMtx = *src;
+        MTX_Concat43((const Matrix4x3 *)mAnmModel.data.transforms + (6 + i * 3), &gScratchMtx,
+                     &gScratchMtx);
+        v.x = gScratchMtx.t.x;
+        v.y = gScratchMtx.t.y;
+        v.z = gScratchMtx.t.z;
         Vec3_Lsl(&r, &v, sh);
         v.x = r.x;
         v.y = r.y;
@@ -177,23 +177,23 @@ void daMenbo_c::func_ov090_021310b4() {
 
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)p)) {
         ((daPly_c *)p)->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (flags & 0x20) {
@@ -202,7 +202,7 @@ void daMenbo_c::func_ov090_021310b4() {
         mSpeed.y = 0;
         mSpeed.z = 0;
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (flags & 0x10) {
@@ -216,7 +216,7 @@ void daMenbo_c::func_ov090_021310b4() {
     if (flags & 0x4380) {
         mDeathTumble = 3;
         mDeathState = 3;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         return;
     }
     if (!IsPlayerActor(p))
@@ -237,7 +237,7 @@ void daMenbo_c::func_ov090_021310b4() {
 }
 
 /* Ground probe. Mode 2 on course 0x12 skips it and only spawns ripples.
- * Otherwise a hit below the published water height (data_0209f32c) means
+ * Otherwise a hit below the published water height (gWaterHeight) means
  * the skeeter is on the water: record that line, mark mOnWater, ripple.
  * A higher floor is the line instead, and either way Y is clamped up to it. */
 void daMenbo_c::func_ov090_02131378() {
@@ -258,8 +258,8 @@ void daMenbo_c::func_ov090_02131378() {
         if (rg.DetectClsn() != 0)
             mFloorY = rg.clsnY;
     }
-    if (mFloorY < data_0209f32c) {
-        mSurfaceY = data_0209f32c;
+    if (mFloorY < gWaterHeight) {
+        mSurfaceY = gWaterHeight;
         if (mPos.y <= mSurfaceY) {
             mOnWater = 1;
             this->func_ov090_02130f94();
@@ -312,9 +312,9 @@ int daMenbo_c::func_ov090_02131584()
     if (v >= 0x3b)
         mAnimLoops += 1;
     if (mAnimLoops > 2 || this->func_ov090_021314a0() == 1)
-        this->func_ov090_02131e00(data_ov090_02134514);
+        this->SetState(data_ov090_02134514);
     if (mOnWater == 1)
-        this->func_ov090_02131e00(data_ov090_02134504);
+        this->SetState(data_ov090_02134504);
     return 1;
 }
 
@@ -366,9 +366,9 @@ int daMenbo_c::func_ov090_02131648() {
     in.y = 0x64000;
     in.z = 0x1f4000;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, 0x2000);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
 
     b.x = a.x;
     b.x = a.x + out.x;
@@ -460,11 +460,11 @@ int daMenbo_c::func_ov090_02131648() {
     }
 
     if (mAnimLoops > 0x1e && mFarLatch == 0) {
-        func_ov090_02131e00(data_ov090_021344e4);
+        SetState(data_ov090_021344e4);
     }
 
     if (mOnWater == 1) {
-        func_ov090_02131e00(data_ov090_02134504);
+        SetState(data_ov090_02134504);
     }
 
     return 1;
@@ -494,11 +494,11 @@ int daMenbo_c::func_ov090_02131ac4()
         mAnchorPos.y = mPos.y;
         mAnchorPos.z = mPos.z;
         mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
-        this->func_ov090_02131e00(data_ov090_021344e4);
+        this->SetState(data_ov090_021344e4);
     }
     ApproachAngle(&mPrevAngle.y, mTargetAngleY, 1, 0x100, 0x100);
     if (mStateTimer == 0)
-        this->func_ov090_02131e00(data_ov090_021344f4);
+        this->SetState(data_ov090_021344f4);
     return 1;
 }
 
@@ -544,7 +544,7 @@ int daMenbo_c::func_ov090_02131c48()
         if (mAnmModel.Finished()) {
             mAnimLoops++;
             if (mAnimLoops > 0x14)
-                this->func_ov090_02131e00(data_ov090_02134504);
+                this->SetState(data_ov090_02134504);
         }
     }
 
@@ -553,7 +553,7 @@ int daMenbo_c::func_ov090_02131c48()
         mAnchorPos.y = mPos.y;
         mAnchorPos.z = mPos.z;
         mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) << 13);
-        this->func_ov090_02131e00(data_ov090_021344e4);
+        this->SetState(data_ov090_021344e4);
     }
 
     return 1;
@@ -569,7 +569,7 @@ int daMenbo_c::func_ov090_02131db0()
 }
 
 /* Install a state and run its entry. A null entry PMF means there is none. */
-int daMenbo_c::func_ov090_02131e00(StateFn *state) {
+int daMenbo_c::SetState(StateFn *state) {
     mState = state;
     if (*mState == 0)
         return 1;
@@ -585,9 +585,9 @@ void daMenbo_c::func_ov090_02131e50() {
     src[1] = mPos.y;
     src[2] = mPos.z;
     Vec3_Asr(dst, src, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, dst[0], dst[1], dst[2]);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* The model and the four anims, released in this order. */
@@ -674,7 +674,7 @@ int daMenbo_c::Behavior()
                 mSpeed.y = 0;
                 mSpeed.z = 0;
                 mDeathState = 1;
-                func_ov002_020aea30(ClosestPlayer(), 0);
+                KillByAttack(ClosestPlayer(), 0);
                 return 1;
             }
         }
@@ -697,7 +697,7 @@ int daMenbo_c::Behavior()
         mSpeed.y = 0;
         mSpeed.z = 0;
         mDeathState = 1;
-        func_ov002_020aea30(ClosestPlayer(), 0);
+        KillByAttack(ClosestPlayer(), 0);
         return 1;
     }
 
@@ -758,7 +758,7 @@ int daMenbo_c::InitResources()
         mAnchorPos.x = mPos.x;
         mAnchorPos.y = mPos.y;
         mAnchorPos.z = mPos.z;
-        this->func_ov090_02131e00(data_ov090_021344f4);
+        this->SetState(data_ov090_021344f4);
         return 1;
     }
 
@@ -776,7 +776,7 @@ int daMenbo_c::InitResources()
             pos.z = pz;
         }
         ground.SetObjAndPos(pos, this);
-        mFloorY = data_02092138;
+        mFloorY = gLevelMinY;
         if (ground.DetectClsn() != 0) {
             if (SurfaceInfo_TestFlag0x20((int *)&ground.surface) != 0) {
                 mOnWater = 1;
@@ -793,7 +793,7 @@ int daMenbo_c::InitResources()
         mAnchorPos.z = mPos.z;
 
         if (mOnWater != 0) {
-            this->func_ov090_02131e00(data_ov090_021344f4);
+            this->SetState(data_ov090_021344f4);
             return 1;
         }
 
@@ -804,7 +804,7 @@ int daMenbo_c::InitResources()
             mPrevAngle.y = mTargetAngleY;
             mAngle.y = mPrevAngle.y;
         }
-        this->func_ov090_02131e00(data_ov090_021344e4);
+        this->SetState(data_ov090_021344e4);
     }
 
     return 1;

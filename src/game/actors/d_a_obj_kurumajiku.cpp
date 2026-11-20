@@ -95,8 +95,8 @@ s32 daObjKurumajiku_c::Behavior() {
                 mid.x = 0;
                 mid.y = 0;
                 mid.z = 0;
-                Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-                MTX_MultVec43(&data_ov002_0210ddd0[i], &data_020a0e68, &mid);
+                Matrix4x3_FromRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+                MTX_MultVec43(&data_ov002_0210ddd0[i], &gScratchMtx, &mid);
                 Vec3_Add(&res, &mPos, &mid);
                 rider->mPos.x = res.x;
                 rider->mPos.y = res.y;

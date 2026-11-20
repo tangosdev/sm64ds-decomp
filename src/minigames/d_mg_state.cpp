@@ -52,7 +52,7 @@
  *     0x020bc8bc..0x020bca44.
  *   - The scene is gMgScene, a dScMgBase_c; the states call its StartRound,
  *     CanEndState and OnNewRecord (slots 18-20) and read its mCredits.
- *     W2 preserves the two-word storage view of data_02086b58.
+ *     W2 preserves the two-word storage view of __ptmf_null.
  *   - mState doubles as the id passed to the scene's CanEndState and,
  *     through CallStartRound, to its StartRound.
  *
@@ -111,6 +111,7 @@
 #include "dScMgBase_c.h"
 #include "dScene_c.h"
 #include "dWipe_c.h"
+#include "OamAttr.h"
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -124,7 +125,7 @@ extern int Mg_IsNewRecord(void);
 extern void Mg_RestoreMusic(void);
 extern void Mg_PlayJingle(void *c);
 extern void Mg_StartMusic(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, struct Matrix2x2 *d);
+extern void Mg_RenderSubSpriteMtx(OamAttr *a, int b, int c, struct Matrix2x2 *d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_CheckBannerButton(int arg);
 extern void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
@@ -133,9 +134,8 @@ extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void func_02012dd0(void *c);
 extern void Mg_SetNextBanner(int);
 
-extern void (dMgState_c::*data_02086b58)(); /* __ptmf_null's address: the null member pointer */
+extern void (dMgState_c::*__ptmf_null)(); /* the null member pointer */
 extern dFdBrightness_c *gSceneFader;
-extern dWipe_c data_0209f61c;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
 extern int gMgCoinsShowDelta;
@@ -168,16 +168,14 @@ int sMgTopBannerY = 0x60;
 int sMgTopBannerX = 0x80;
 int sMgMainBannerY = 0x40;
 int sMgMainBannerX = 0x80;
-struct OamAttr;
-extern struct OamAttr *sMgTextSpritesEnglish[];
-extern struct OamAttr *sMgTextSpritesSpanish[];
-extern struct OamAttr *sMgTextSpritesFrench[];
-extern struct OamAttr *sMgTextSpritesGerman[];
-extern struct OamAttr *sMgTextSpritesItalian[];
-unsigned char *sMgStateTextSpritesByLanguage[] = {
-    (unsigned char *)sMgTextSpritesEnglish, (unsigned char *)sMgTextSpritesSpanish,
-    (unsigned char *)sMgTextSpritesFrench,  (unsigned char *)sMgTextSpritesGerman,
-    (unsigned char *)sMgTextSpritesItalian,
+extern OamAttr *sMgTextSpritesEnglish[];
+extern OamAttr *sMgTextSpritesSpanish[];
+extern OamAttr *sMgTextSpritesFrench[];
+extern OamAttr *sMgTextSpritesGerman[];
+extern OamAttr *sMgTextSpritesItalian[];
+OamAttr **sMgStateTextSpritesByLanguage[] = {
+    sMgTextSpritesEnglish, sMgTextSpritesSpanish, sMgTextSpritesFrench,
+    sMgTextSpritesGerman,  sMgTextSpritesItalian,
 };
 
 void Mg_ResetBannerLayout(void) {
@@ -385,8 +383,8 @@ void dMgState_c ::RetryPrompt_Update() {
         fader = gSceneFader;
         if (fader->IsBetweenStartAndEnd())
             return;
-        dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.SetType(2);
+        dScene_c::SetFaders(&gSceneWipe);
+        gSceneWipe.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -507,8 +505,8 @@ void dMgState_c::UpdateGameOverToMenu() {
     fader = gSceneFader;
     if (fader->IsBetweenStartAndEnd() != 0)
         return;
-    dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.SetType(2);
+    dScene_c::SetFaders(&gSceneWipe);
+    gSceneWipe.SetType(2);
     dScene_c::StartSceneFade(5, 0, 0);
     func_02012dd0((void *)0x3c);
 }
@@ -639,8 +637,8 @@ void dMgState_c ::RetryPromptB_Update() {
         fader = gSceneFader;
         if (fader->IsBetweenStartAndEnd())
             return;
-        dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.SetType(2);
+        dScene_c::SetFaders(&gSceneWipe);
+        gSceneWipe.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -704,8 +702,8 @@ void dMgState_c::UpdateRetryPrompt() {
         }
         if (gSceneFader->IsBetweenStartAndEnd() != 0)
             return;
-        dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.SetType(2);
+        dScene_c::SetFaders(&gSceneWipe);
+        gSceneWipe.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -779,7 +777,7 @@ void dMgState_c::Results_Update() {
         return;
     func_02012790(0x62);
     FreeGfxSlotsById(7);
-    mRender = data_02086b58;
+    mRender = __ptmf_null;
     RetryPromptWide_Enter();
 }
 
@@ -809,7 +807,7 @@ void dMgState_c::ResultsNewRecord_Update() {
         if (flag != 0) {
             FreeGfxSlotsById(7);
             func_02012790(0x62);
-            mRender = data_02086b58;
+            mRender = __ptmf_null;
             RetryPromptWide_Enter();
         }
     }
@@ -858,7 +856,7 @@ void dMgState_c::GameOver_Update() {
     }
     if (g->CanEndState(mState) == 0)
         return;
-    mRender = data_02086b58;
+    mRender = __ptmf_null;
     FreeGfxSlotsById(0x1d);
     if (Mg_IsNewRecord() != 0) {
         ResultsNewRecord_Enter();
@@ -895,7 +893,7 @@ void dMgState_c::Finished_Update() {
     }
     if (g->CanEndState(mState) == 0)
         return;
-    mRender = data_02086b58;
+    mRender = __ptmf_null;
     FreeGfxSlotsById(0x1d);
     if (Mg_IsNewRecord() != 0) {
         ResultsNewRecord_Enter();
@@ -929,11 +927,11 @@ void dMgState_c::DrawScoreDigits() {
     Mg_DrawBigNumber(sMgScoreDigitsX + 0x2c, sMgScoreDigitsY, r % 10, -1, -1, 1, 0);
 
     idx = GetGameLanguage();
-    Mg_RenderSubSpriteMtx(((void **)sMgStateTextSpritesByLanguage[idx])[3], sMgScoreDigitsX - 0x24,
+    Mg_RenderSubSpriteMtx(sMgStateTextSpritesByLanguage[idx][3], sMgScoreDigitsX - 0x24,
                           sMgScoreDigitsY, 0);
 
     idx = GetGameLanguage();
-    Mg_RenderSubSpriteMtx(((void **)sMgStateTextSpritesByLanguage[idx])[7], sMgScoreDigitsX + 0x10,
+    Mg_RenderSubSpriteMtx(sMgStateTextSpritesByLanguage[idx][7], sMgScoreDigitsX + 0x10,
                           sMgScoreDigitsY, 0);
 }
 

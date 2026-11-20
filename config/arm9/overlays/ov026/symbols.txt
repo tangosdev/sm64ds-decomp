@@ -114,7 +114,7 @@ data_ov026_02112ef8 kind:data(any) addr:0x02112ef8
 data_ov026_02112f10 kind:data(any) addr:0x02112f10
 data_ov026_02112f28 kind:data(any) addr:0x02112f28
 data_ov026_02112f2c kind:data(any) addr:0x02112f2c ambiguous
-data_ov026_02112f40 kind:data(any) addr:0x02112f40
+sWhirlpoolBta kind:data(any) addr:0x02112f40
 data_ov026_02112f58 kind:data(any) addr:0x02112f58 ambiguous
 data_ov026_02112f74 kind:data(any) addr:0x02112f74
 data_ov026_02112f7c kind:data(any) addr:0x02112f7c ambiguous
@@ -171,7 +171,6 @@ data_ov026_02113a9c kind:data(any) addr:0x02113a9c
 data_ov026_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 _ZTS17daObjWlPolelift_c kind:data(any) addr:0x02113aa8
 g_profile_WL_POLELIFT kind:data(any) addr:0x02113abc ambiguous
-data_ov026_02113ae0 kind:data(any) addr:0x02113ae0
 _ZTV17daObjWlPolelift_c kind:data(any) addr:0x02113ae0
 data_ov026_02113b10 kind:data(any) addr:0x02113b10 ambiguous
 data_ov026_02113b2c kind:data(any) addr:0x02113b2c ambiguous
@@ -226,7 +225,7 @@ gWaterTatumakiAnimationFile kind:bss addr:0x02113f04
 gWaterTatumakiModelFile kind:bss addr:0x02113f0c
 @742 kind:bss addr:0x02113f14
 @743 kind:bss addr:0x02113f20
-data_ov026_02113f2c kind:bss addr:0x02113f2c
-data_ov026_02113f3c kind:bss addr:0x02113f3c
+sSpinState kind:bss addr:0x02113f2c
+sDragState kind:bss addr:0x02113f3c
 data_ov026_02113f4c kind:bss addr:0x02113f4c
 data_ov026_02113f58 kind:bss addr:0x02113f58

@@ -98,7 +98,7 @@ _Z15Heyho_SettleAllv kind:function(arm,size=0x114) addr:0x020c4148
 _Z13Heyho_DrawAllv kind:function(arm,size=0x60) addr:0x020c425c
 _Z17Heyho_SeparateAllv kind:function(arm,size=0x1f8) addr:0x020c42bc
 _Z14Heyho_SpawnAllPvi kind:function(arm,size=0x1d0) addr:0x020c44b4
-_Z14Heyho_InitPoolPvi kind:function(arm,size=0x8c) addr:0x020c4684
+_Z14Heyho_InitPoolP5Heyhoi kind:function(arm,size=0x8c) addr:0x020c4684
 _ZN5Heyho9IsChasingEv kind:function(arm,size=0xc4) addr:0x020c4710
 _ZN5Heyho9CheckHitAEv kind:function(arm,size=0x204) addr:0x020c47d4
 _ZN5Heyho9CheckHitBEv kind:function(arm,size=0x228) addr:0x020c49d8
@@ -183,7 +183,7 @@ _ZN16dMgJump3DMario_cD1Ev kind:function(arm,size=0xc8) addr:0x020c893c
 _ZN16dMgJump3DMario_cC1Ev kind:function(arm,size=0x2c) addr:0x020c8a04
 _Z12Puff_DrawAllv kind:function(arm,size=0x34) addr:0x020c8a30
 _Z14Puff_UpdateAllv kind:function(arm,size=0x38) addr:0x020c8a64
-_Z13Puff_ClearAllii kind:function(arm,size=0x58) addr:0x020c8a9c
+_Z13Puff_ClearAlliPP7OamAttr kind:function(arm,size=0x58) addr:0x020c8a9c
 _ZN4Puff4DrawEv kind:function(arm,size=0xb4) addr:0x020c8af4
 _ZN4Puff6UpdateEv kind:function(arm,size=0xc4) addr:0x020c8ba8
 _ZN4Puff5ClearEv kind:function(arm,size=0xc) addr:0x020c8c6c
@@ -307,7 +307,7 @@ _ZN8TrmpItem9HitTest2DEP25TrampolineObjectCallbacksi kind:function(arm,size=0x22
 _ZN8TrmpItem13ProjectOnLineEP25TrampolineObjectCallbacksP7Vector2S3_ kind:function(arm,size=0xe8) addr:0x020ce8a0
 _ZN8TrmpItem12UpdateMatrixEv kind:function(arm,size=0xa4) addr:0x020ce988
 _ZN8TrmpItem6UpdateEv kind:function(arm,size=0x90) addr:0x020cea2c
-_ZN8TrmpItem4InitEPiS0_is kind:function(arm,size=0x1f8) addr:0x020ceabc
+_ZN8TrmpItem4InitEPK7VecFx32PK7Vector3is kind:function(arm,size=0x1f8) addr:0x020ceabc
 _ZN8TrmpItem4HideEv kind:function(arm,size=0xc) addr:0x020cecb4
 _ZN8TrmpItem4LoadEv kind:function(arm,size=0xc4) addr:0x020cecc0
 _ZN8TrmpItem17UpdateMatricesAllEv kind:function(arm,size=0x6c) addr:0x020ced84
@@ -315,7 +315,7 @@ _ZN8TrmpItem9UpdateAllEv kind:function(arm,size=0x6c) addr:0x020cedf0
 _ZN8TrmpItem7HideAllEj kind:function(arm,size=0x80) addr:0x020cee5c
 _ZN8TrmpItem12ReleaseFilesEv kind:function(arm,size=0x38) addr:0x020ceedc
 _ZN8TrmpItem7LoadAllEPci kind:function(arm,size=0x90) addr:0x020cef14
-_ZN8TrmpItem5SpawnEiPiis kind:function(arm,size=0x9c) addr:0x020cefa4
+_ZN8TrmpItem5SpawnEPK7VecFx32PK7Vector3is kind:function(arm,size=0x9c) addr:0x020cefa4
 _ZN8TrmpLine13PointDistanceEP7Vector3PKS0_ kind:function(arm,size=0xe4) addr:0x020cf040
 _ZN8TrmpLine14ComputeNormalsEv kind:function(arm,size=0x1d8) addr:0x020cf124
 _ZN8TrmpLine4DrawEv kind:function(arm,size=0x45c) addr:0x020cf2fc
@@ -1342,12 +1342,12 @@ _Z27RouletteRacer_CheckLandingBP13RouletteRacer kind:function(arm,size=0xfc) add
 _Z27RouletteRacer_CheckLandingAP13RouletteRacer kind:function(arm,size=0x108) addr:0x02108e24
 _Z20RouletteRacer_UpdateP13RouletteRacer kind:function(arm,size=0x350) addr:0x02108f2c
 _Z21RouletteRacer_ReleaseP13RouletteRacer kind:function(arm,size=0x24) addr:0x0210927c
-_Z26RouletteRacer_PlaceAtStartPi kind:function(arm,size=0x48) addr:0x021092a0
+_Z26RouletteRacer_PlaceAtStartP13RouletteRacer kind:function(arm,size=0x48) addr:0x021092a0
 _Z18RouletteRacer_InitP13RouletteRacer kind:function(arm,size=0x74) addr:0x021092e8
 _Z24RouletteRacer_MoveToTileP13RouletteRaceri kind:function(arm,size=0x150) addr:0x0210935c
-_Z23RouletteRacer_SetTargetP13RouletteRacerPi kind:function(arm,size=0x84) addr:0x021094ac
-_Z31RouletteRacer_SetVelocityTowardP13RouletteRacerPii kind:function(arm,size=0x7c) addr:0x02109530
-_Z19RouletteRacer_AimAtP13RouletteRacerPi kind:function(arm,size=0x20) addr:0x021095ac
+_Z23RouletteRacer_SetTargetP13RouletteRacerP7Vector2 kind:function(arm,size=0x84) addr:0x021094ac
+_Z31RouletteRacer_SetVelocityTowardP13RouletteRacerP7Vector2i kind:function(arm,size=0x7c) addr:0x02109530
+_Z19RouletteRacer_AimAtP13RouletteRacerP7Vector2 kind:function(arm,size=0x20) addr:0x021095ac
 _ZN15dScMgRoulette_c10StartRoundEi kind:function(arm,size=0xfc) addr:0x021095cc
 _ZN15dScMgRoulette_c11CanEndStateEi kind:function(arm,size=0x144) addr:0x021096c8
 _ZN15dScMgRoulette_c16CleanupResourcesEv kind:function(arm,size=0x28) addr:0x0210980c
@@ -1414,7 +1414,7 @@ _Z21SmartballObj_ElemDtorv kind:function(arm,size=0x4) addr:0x0210d894
 _ZN19cMgSmartball_wing_c9IsSettledEv kind:function(arm,size=0x24) addr:0x0210d898
 _ZN19cMgSmartball_wing_c7TriggerEv kind:function(arm,size=0x80) addr:0x0210d8bc
 _ZN19cMgSmartball_wing_c12RebuildVertsEv kind:function(arm,size=0x274) addr:0x0210d93c
-_ZN19cMgSmartball_wing_c7HitTestEPi kind:function(arm,size=0x240) addr:0x0210dbb0
+_ZN19cMgSmartball_wing_c7HitTestEP7Vector2 kind:function(arm,size=0x240) addr:0x0210dbb0
 _ZN19cMgSmartball_wing_c6UpdateEv kind:function(arm,size=0x224) addr:0x0210ddf0
 _ZN19cMgSmartball_wing_c12SaveSnapshotEv kind:function(arm,size=0x84) addr:0x0210e014
 _ZN19cMgSmartball_wing_c14RestoreInitialEv kind:function(arm,size=0x38) addr:0x0210e098
@@ -1451,7 +1451,7 @@ _ZN20cMgSmartball_dokan_c6UpdateEv kind:function(arm,size=0xf8) addr:0x02110928
 _ZN20cMgSmartball_dokan_c12SaveSnapshotEv kind:function(arm,size=0x194) addr:0x02110a20
 _ZN20cMgSmartball_dokan_c14RestoreInitialEv kind:function(arm,size=0xc) addr:0x02110bb4
 _ZN20cMgSmartball_dokan_cC1EP16dScMgSmartball_ci7Vector2 kind:function(arm,size=0x48) addr:0x02110bc0
-_ZN24cMgSmartball_propeller_c7HitTestEPi kind:function(arm,size=0x220) addr:0x02110c08
+_ZN24cMgSmartball_propeller_c7HitTestEP7Vector2 kind:function(arm,size=0x220) addr:0x02110c08
 _ZN24cMgSmartball_propeller_c12RebuildVertsEv kind:function(arm,size=0x204) addr:0x02110e28
 _ZN24cMgSmartball_propeller_c6UpdateEv kind:function(arm,size=0x118) addr:0x0211102c
 _ZN24cMgSmartball_propeller_c12SaveSnapshotEv kind:function(arm,size=0xac) addr:0x02111144
@@ -1471,7 +1471,7 @@ _ZN21cMgSmartball_kinoko_c6UpdateEv kind:function(arm,size=0x170) addr:0x021117b
 _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv kind:function(arm,size=0x1f4) addr:0x0211192c
 _ZN21cMgSmartball_kinoko_c14RestoreInitialEv kind:function(arm,size=0x20) addr:0x02111b20
 _ZN21cMgSmartball_kinoko_cC1EP16dScMgSmartball_ci7Vector2 kind:function(arm,size=0x50) addr:0x02111b40
-_ZN19cMgSmartball_ball_c12PlayHitSoundEiPi kind:function(arm,size=0x1bc) addr:0x02111b90
+_ZN19cMgSmartball_ball_c12PlayHitSoundEiP7Vector2 kind:function(arm,size=0x1bc) addr:0x02111b90
 _ZN19cMgSmartball_ball_c6FreezeEv kind:function(arm,size=0x20) addr:0x02111d4c
 _ZN19cMgSmartball_ball_c6HasHitEv kind:function(arm,size=0x8) addr:0x02111d6c
 _ZN19cMgSmartball_ball_c5IsOutEv kind:function(arm,size=0x58) addr:0x02111d74
@@ -1479,16 +1479,16 @@ _ZN19cMgSmartball_ball_c9ArmExpireEi kind:function(arm,size=0x28) addr:0x02111dc
 _ZN19cMgSmartball_ball_c10IsFinishedEv kind:function(arm,size=0x54) addr:0x02111df4
 _ZN19cMgSmartball_ball_c5BurstEv kind:function(arm,size=0x34) addr:0x02111e48
 _ZN19cMgSmartball_ball_c9PutInPlayEv kind:function(arm,size=0x14) addr:0x02111e7c
-_ZN19cMgSmartball_ball_c7HitWingEPi kind:function(arm,size=0x58) addr:0x02111e90
-_ZN19cMgSmartball_ball_c11HitSwitchesEPi kind:function(arm,size=0xa4) addr:0x02111ee8
-_ZN19cMgSmartball_ball_c10HitPakkunsEPi kind:function(arm,size=0xa4) addr:0x02111f8c
-_ZN19cMgSmartball_ball_c9HitDokansEPi kind:function(arm,size=0xa4) addr:0x02112030
-_ZN19cMgSmartball_ball_c13HitPropellersEPi kind:function(arm,size=0xbc) addr:0x021120d4
-_ZN19cMgSmartball_ball_c10HitKinokosEPi kind:function(arm,size=0x150) addr:0x02112190
-_ZN19cMgSmartball_ball_c10CheckExitsEPi kind:function(arm,size=0x1ac) addr:0x021122e0
-_ZN19cMgSmartball_ball_c8AtSpringEPi kind:function(arm,size=0x78) addr:0x0211248c
-_ZN19cMgSmartball_ball_c7OnSlopeEPi kind:function(arm,size=0x1b0) addr:0x02112504
-_ZN19cMgSmartball_ball_c12NeedsRespawnEPi kind:function(arm,size=0x248) addr:0x021126b4
+_ZN19cMgSmartball_ball_c7HitWingEP7Vector2 kind:function(arm,size=0x58) addr:0x02111e90
+_ZN19cMgSmartball_ball_c11HitSwitchesEP7Vector2 kind:function(arm,size=0xa4) addr:0x02111ee8
+_ZN19cMgSmartball_ball_c10HitPakkunsEP7Vector2 kind:function(arm,size=0xa4) addr:0x02111f8c
+_ZN19cMgSmartball_ball_c9HitDokansEP7Vector2 kind:function(arm,size=0xa4) addr:0x02112030
+_ZN19cMgSmartball_ball_c13HitPropellersEP7Vector2 kind:function(arm,size=0xbc) addr:0x021120d4
+_ZN19cMgSmartball_ball_c10HitKinokosEP7Vector2 kind:function(arm,size=0x150) addr:0x02112190
+_ZN19cMgSmartball_ball_c10CheckExitsEP7Vector2 kind:function(arm,size=0x1ac) addr:0x021122e0
+_ZN19cMgSmartball_ball_c8AtSpringEP7Vector2 kind:function(arm,size=0x78) addr:0x0211248c
+_ZN19cMgSmartball_ball_c7OnSlopeEP7Vector2 kind:function(arm,size=0x1b0) addr:0x02112504
+_ZN19cMgSmartball_ball_c12NeedsRespawnEP7Vector2 kind:function(arm,size=0x248) addr:0x021126b4
 _ZN19cMgSmartball_ball_c11QueueBehindEv kind:function(arm,size=0x1dc) addr:0x021128fc
 _ZN19cMgSmartball_ball_c13UpdatePhysicsEv kind:function(arm,size=0x113c) addr:0x02112ad8
 _ZN19cMgSmartball_ball_c10DrawMarkerEv kind:function(arm,size=0x240) addr:0x02113c14
@@ -1496,11 +1496,11 @@ _ZN19cMgSmartball_ball_c6UpdateEv kind:function(arm,size=0xc8) addr:0x02113e54
 _ZN19cMgSmartball_ball_c12SaveSnapshotEv kind:function(arm,size=0x53c) addr:0x02113f1c
 _ZN19cMgSmartball_ball_c14RestoreInitialEv kind:function(arm,size=0xf0) addr:0x02114458
 _ZN19cMgSmartball_ball_cC1EP16dScMgSmartball_ci7Vector2 kind:function(arm,size=0x48) addr:0x02114548
-_ZN21cMgSmartball_object_c15PointInTriangleEPiS0_S0_S0_ kind:function(arm,size=0x11c) addr:0x02114590
+_ZN21cMgSmartball_object_c15PointInTriangleEP7Vector2S1_S1_S1_ kind:function(arm,size=0x11c) addr:0x02114590
 _ZN21cMgSmartball_kinoko_c11HitRadiusSqEv kind:function(arm,size=0x20) addr:0x021146ac
-_ZN21cMgSmartball_object_c6SetVelEPi kind:function(arm,size=0x14) addr:0x021146cc
+_ZN21cMgSmartball_object_c6SetVelEP7Vector2 kind:function(arm,size=0x14) addr:0x021146cc
 _Z13CopyObjectVelPvS_ kind:function(arm,size=0x14) addr:0x021146e0
-_Z14GetObjectDeltaPvP21cMgSmartball_object_c kind:function(arm,size=0x18) addr:0x021146f4
+_Z14GetObjectDeltaP7Vector2P21cMgSmartball_object_c kind:function(arm,size=0x18) addr:0x021146f4
 _Z13CopyObjectPosPvS_ kind:function(arm,size=0x14) addr:0x0211470c
 _ZN21cMgSmartball_object_c6UpdateEv kind:function(arm,size=0x4) addr:0x02114720
 _ZN21cMgSmartball_object_c12SaveSnapshotEv kind:function(arm,size=0x14) addr:0x02114724
@@ -1508,7 +1508,7 @@ _ZN21cMgSmartball_object_c14RestoreInitialEv kind:function(arm,size=0x14) addr:0
 _ZN21cMgSmartball_object_cC2EP16dScMgSmartball_ci7Vector2 kind:function(arm,size=0x60) addr:0x0211474c
 _ZN16dScMgSmartball_c16OnGraphCallback3Ev kind:function(arm,size=0x24) addr:0x021147ac
 _ZN16dScMgSmartball_c12SparksActiveEv kind:function(arm,size=0x30) addr:0x021147d0
-_ZN16dScMgSmartball_c10EmitSparksEPii kind:function(arm,size=0x310) addr:0x02114800
+_ZN16dScMgSmartball_c10EmitSparksEP7Vector2i kind:function(arm,size=0x310) addr:0x02114800
 _ZN16dScMgSmartball_c12RenderSparksEv kind:function(arm,size=0xf4) addr:0x02114b10
 _ZN16dScMgSmartball_c12UpdateSparksEv kind:function(arm,size=0x1cc) addr:0x02114c04
 _ZN16dScMgSmartball_c11ResetSparksEv kind:function(arm,size=0x2c) addr:0x02114dd0
@@ -1526,7 +1526,7 @@ _ZN16dScMgSmartball_c7GetTileEPi kind:function(arm,size=0xd4) addr:0x0211507c
 _ZN16dScMgSmartball_c10UpdateDustEv kind:function(arm,size=0xf8) addr:0x02115150
 _ZN16dScMgSmartball_c9SpawnDustEPi kind:function(arm,size=0x238) addr:0x02115248
 _ZN16dScMgSmartball_c12UpdateScoresEv kind:function(arm,size=0x118) addr:0x02115480
-_ZN16dScMgSmartball_c9EmitScoreEPiiii kind:function(arm,size=0xe8) addr:0x02115598
+_ZN16dScMgSmartball_c9EmitScoreEP7Vector2iii kind:function(arm,size=0xe8) addr:0x02115598
 _ZN16dScMgSmartball_c8KickGateEi kind:function(arm,size=0x78) addr:0x02115680
 _ZN16dScMgSmartball_c13IsTableAtRestEv kind:function(arm,size=0x138) addr:0x021156f8
 _ZN16dScMgSmartball_c15ResolveBallPairEiiPhS0_ kind:function(arm,size=0x22c) addr:0x02115830
@@ -1721,7 +1721,7 @@ _Z14TrmpFx_DrawAllv kind:function(arm,size=0x38) addr:0x02120c08
 _Z16TrmpFx_UpdateAllv kind:function(arm,size=0x60) addr:0x02120c40
 _Z15TrmpFx_ClearAllv kind:function(arm,size=0x6c) addr:0x02120ca0
 _Z12TrmpFx_Spawnii kind:function(arm,size=0x80) addr:0x02120d0c
-_Z15TrmpFx_InitPoolPvi kind:function(arm,size=0x1c) addr:0x02120d8c
+_Z15TrmpFx_InitPoolP14TrmpScorePopupi kind:function(arm,size=0x1c) addr:0x02120d8c
 _ZN17dScMgTrampoline_c11PaintSquareEiiii kind:function(arm,size=0x170) addr:0x02120da8
 _ZN17dScMgTrampoline_c9InitBrushEi kind:function(arm,size=0x104) addr:0x02120f18
 _ZN17dScMgTrampoline_c16OnGraphCallback0Ev kind:function(arm,size=0x1a0) addr:0x0212101c
@@ -3452,7 +3452,6 @@ sBomroomBombSprites kind:data(any) addr:0x0213bb18
 sBomroomBombLitSprites kind:data(any) addr:0x0213bb28
 _ZTS14dScMgBomroom_c kind:data(any) addr:0x0213bb38
 sBomroomBombsSprites kind:data(any) addr:0x0213bb4c
-data_ov006_0213bbb4 kind:data(any) addr:0x0213bbb4
 _ZTV14dScMgBomroom_c kind:data(any) addr:0x0213bbb4
 sCardDrawsLeft kind:data(any) addr:0x0213bc44
 _ZTI12dMgCardObj_c kind:data(any) addr:0x0213bc48
@@ -3502,7 +3501,6 @@ sCoinBlocksSprites kind:data(any) addr:0x0213bf0c
 _ZTI11dScMgCoin_c kind:data(any) addr:0x0213bf18
 _ZTS11dScMgCoin_c kind:data(any) addr:0x0213bf24
 sCoinScorePlayerSprites kind:data(word[5]) addr:0x0213bf34
-data_ov006_0213bf50 kind:data(any) addr:0x0213bf50
 _ZTV11dScMgCoin_c kind:data(any) addr:0x0213bf50
 sCupFxTemplate3 kind:data(any) addr:0x0213bfe0
 pmf_dScMgCup_c_StateIdle kind:data(any) addr:0x0213bfe8
@@ -3563,7 +3561,6 @@ pmf_dScMgCurling_c_Aim_Swing kind:data(any) addr:0x0213c2bc
 _ZTI14dScMgCurling_c kind:data(any) addr:0x0213c2c4
 _ZTS14dScMgCurling_c kind:data(any) addr:0x0213c2d0
 sCurlingAimMarkerSprites kind:data(any) addr:0x0213c2e4
-data_ov006_0213c304 kind:data(any) addr:0x0213c304
 _ZTV14dScMgCurling_c kind:data(any) addr:0x0213c304
 sCurlingMgDirPath kind:data(any) addr:0x0213c394
 data_ov006_0213c398 kind:data(any) addr:0x0213c398 ambiguous
@@ -3601,7 +3598,6 @@ _ZTI15dScMgCurling2_c kind:data(any) addr:0x0213c4bc
 _ZTS15dScMgCurling2_c kind:data(any) addr:0x0213c4c8
 sCurling2CounterSprites kind:data(any) addr:0x0213c4dc
 sCurling2CursorSprites kind:data(any) addr:0x0213c4f0
-data_ov006_0213c510 kind:data(any) addr:0x0213c510
 _ZTV15dScMgCurling2_c kind:data(any) addr:0x0213c510
 sCurling2BgJokyuNcgPath kind:data(any) addr:0x0213c5a0
 data_ov006_0213c5bc kind:data(any) addr:0x0213c5bc ambiguous
@@ -3697,7 +3693,6 @@ pmf_Wiggler_TurnTowardAim_10 kind:data(any) addr:0x0213ca74
 _ZTI15dScMgHanachan_c kind:data(any) addr:0x0213ca7c
 _ZTS15dScMgHanachan_c kind:data(any) addr:0x0213ca88
 sHanaTextSpritesByLanguage kind:data(any) addr:0x0213ca9c
-data_ov006_0213cab8 kind:data(any) addr:0x0213cab8
 _ZTV15dScMgHanachan_c kind:data(any) addr:0x0213cab8
 sJumpLastPick kind:data(any) addr:0x0213cb48
 pmf_dScMgJump_c_State_Result kind:data(any) addr:0x0213cb4c
@@ -3759,7 +3754,6 @@ sLuigiBoardModes kind:data(any) addr:0x0213ce98
 sLuigiBoardMovers kind:data(any) addr:0x0213ceac
 sLuigiWantedPicks kind:data(any) addr:0x0213cec0
 sLuigiPlaceLimits kind:data(any) addr:0x0213cee0
-data_ov006_0213cf10 kind:data(any) addr:0x0213cf10
 _ZTV12dScMgLuigi_c kind:data(any) addr:0x0213cf10
 sLuigiBg1NcgPath kind:data(any) addr:0x0213cfa0
 pmf_dScMgMemory_c_StatePlay kind:data(any) addr:0x0213cfc0 local
@@ -3896,7 +3890,6 @@ _ZTI15dScMgPachinko_c kind:data(any) addr:0x0213d948
 sPachinkoPopScores kind:data(any) addr:0x0213d954
 _ZTS15dScMgPachinko_c kind:data(any) addr:0x0213d960
 sPachinkoWaveSlots kind:data(any) addr:0x0213d974
-data_ov006_0213d9cc kind:data(any) addr:0x0213d9cc
 _ZTV15dScMgPachinko_c kind:data(any) addr:0x0213d9cc
 pmf_dScMgPachinko2_c_Paddle_StateOrbit kind:data(any) addr:0x0213da5c
 g_profile_MG_TAMAIRE kind:data(any) addr:0x0213da64 ambiguous
@@ -3933,7 +3926,6 @@ _ZTS16dScMgPachinko2_c kind:data(any) addr:0x0213db58
 sPachinko2PaddleDescendLimits kind:data(any) addr:0x0213db6c
 sPachinko2PaddleSweepLimits kind:data(any) addr:0x0213db84
 sPachinko2PaddleGatherTargets kind:data(any) addr:0x0213db9c
-data_ov006_0213dbbc kind:data(any) addr:0x0213dbbc
 _ZTV16dScMgPachinko2_c kind:data(any) addr:0x0213dbbc
 @2236 kind:data(any) addr:0x0213dc4c
 @2240 kind:data(any) addr:0x0213dc54
@@ -4006,7 +3998,6 @@ data_ov006_0213e140 kind:data(any) addr:0x0213e140
 data_ov006_0213e174 kind:data(any) addr:0x0213e174
 data_ov006_0213e1b4 kind:data(any) addr:0x0213e1b4
 data_ov006_0213e1fc kind:data(any) addr:0x0213e1fc
-data_ov006_0213e24c kind:data(any) addr:0x0213e24c
 _ZTV12dScMgPanel_c kind:data(any) addr:0x0213e24c
 sRouletteResultIndex kind:data(any) addr:0x0213e2dc
 data_ov006_0213e2e0 kind:data(any) addr:0x0213e2e0
@@ -4093,7 +4084,6 @@ sSlotReelSymbols kind:data(any) addr:0x0213e9e0
 sSlotReelSymbolsAlt kind:data(any) addr:0x0213ea20
 data_ov006_0213ea60 kind:data(any) addr:0x0213ea60
 _ZTV12dScMgSlot3_c kind:data(any) addr:0x0213eaa8
-data_ov006_0213eb40 kind:data(any) addr:0x0213eb40
 _ZTV12dScMgSlot1_c kind:data(any) addr:0x0213eb40
 g_profile_MG_SMARTBALL kind:data(any) addr:0x0213ebd0 ambiguous
 _ZTI21cMgSmartball_object_c kind:data(any) addr:0x0213ebd8
@@ -4249,14 +4239,10 @@ sSoundPopsSprites kind:data(any) addr:0x0213f6f0
 sSoundNotePositions kind:data(any) addr:0x0213f6fc
 _ZTS12dScMgSound_c kind:data(any) addr:0x0213f708
 sSoundNotePositions6 kind:data(any) addr:0x0213f718
-data_ov006_0213f718 kind:data(any) addr:0x0213f718
 sSoundNotesSprites kind:data(any) addr:0x0213f730
 sSoundNotePositions8 kind:data(any) addr:0x0213f74c
-data_ov006_0213f74c kind:data(any) addr:0x0213f74c
 sSoundNotePositions10 kind:data(any) addr:0x0213f76c
-data_ov006_0213f76c kind:data(any) addr:0x0213f76c
 sSoundNotePlaybackKinds kind:data(any) addr:0x0213f794
-data_ov006_0213f794 kind:data(any) addr:0x0213f794
 sSoundNoteSfx kind:data(any) addr:0x0213f7e8
 _ZTV12dScMgSound_c kind:data(any) addr:0x0213f844
 pmf_dScMgTeresa_c_Boo_StateFound kind:data(any) addr:0x0213f8d4
@@ -4291,7 +4277,6 @@ _ZTI13dScMgTeresa_c kind:data(any) addr:0x0213f9b4
 _ZTS13dScMgTeresa_c kind:data(any) addr:0x0213f9c0
 sTeresaCountdownSprites kind:data(any) addr:0x0213f9d0
 sTeresaPaintMask kind:data(any) addr:0x0213f9e4
-data_ov006_0213fa0c kind:data(any) addr:0x0213fa0c
 _ZTV13dScMgTeresa_c kind:data(any) addr:0x0213fa0c
 sTrmpTouchBlocked kind:data(any) addr:0x0213fa9c
 pmf_dScMgTrampoline_c_StateWaitExit kind:data(any) addr:0x0213faa0

@@ -44,18 +44,16 @@
 inline void* operator new(size_t, void* p) { return p; }
 
 /* 0x020a0eac, already named in config/arm9/symbols.txt. */
-extern "C" Heap* GAME_HEAP_PTR;
-/* 0x020a0ea8 -- where SetupSolidHeapAsDefault parks the outgoing default heap.
-   Unnamed in config/arm9/symbols.txt; left as the address symbol rather than
-   minted here, since naming it is a claim of its own. */
-extern "C" Heap* data_020a0ea8;
+extern "C" mHeap::Heap_t *GAME_HEAP_PTR;
 
 extern "C" {
-/* `extern' is load-bearing on both of these, and specifically because they
-       sit inside a BRACED linkage block. Written `extern "C" u32 X;' on its own
+/* `extern' is load-bearing here, and specifically because the declaration
+       sits inside a BRACED linkage block. Written `extern "C" u32 X;' on its own
        line the extern specifier is implied and the line is a declaration.
        Written `extern "C" { u32 X; }' mwccarm emits a DEFINITION, which
-       collides with the ROM's own bss:
+       collides with the ROM's own bss. The root-heap pointer (now
+       Memory::rootHeapPtr, declared in Memory.h) was declared here once and
+       hit exactly that:
 
          mwldarm.exe: Multiply-defined: "data_020a0e9c" in ...SetupRootHeapEv.o
          mwldarm.exe: Previously defined in _dsd_gap@main_40.o
@@ -63,7 +61,6 @@ extern "C" {
        build_pin.verify compiles a single file and never links, so it returned
        (True, '2004/b56') on the broken spelling. Only rombuild.py caught it. */
 extern u32 ROOT_HEAP_ARENA_ID; /* 0x020a0ea4 */
-extern mHeap::Heap_t *data_020a0e9c; /* the root heap; unnamed */
 
 unsigned int OS_GetArenaLo(s32 arena);
 unsigned int OS_GetArenaHi(s32 arena);
@@ -164,7 +161,7 @@ Heap_t* Heap_t::SetupRootHeap()
         Heap* heap = CreateRootHeap(mem, sz);
         if (heap != 0)
         {
-            data_020a0e9c = heap;
+            Memory::rootHeapPtr = heap;
             Memory::defaultHeapPtr = heap;
         }
         return heap;
@@ -491,8 +488,8 @@ bool Heap_t::Intact()
 
     /* Latched once and never cleared -- the first corrupted heap in the run is
        the one worth reporting. */
-    if (!data_020a0e98)
-        data_020a0e98 = 1;
+    if (!Memory::heapDamaged)
+        Memory::heapDamaged = 1;
     return intact;
 }
 
@@ -989,7 +986,7 @@ void* Heap_t::SetupSolidHeapAsDefault(u32 size, Heap_t* root, int align)
     if (!heap)
         return 0;
 
-    data_020a0ea8 = Memory::defaultHeapPtr;
+    Memory::tmpHeapPtr = Memory::defaultHeapPtr;
     heap->SetDefault();
     return heap;
 }
@@ -1009,8 +1006,8 @@ void* Heap_t::InitializeSolidHeapAsDefault(u32 size, Heap_t* root, int align)
    the scratch heap was pushed, and drop the saved pointer. */
 void Heap_t::RestoreFromTemporary()
 {
-    data_020a0ea8->SetDefault();
-    data_020a0ea8 = 0;
+    Memory::tmpHeapPtr->SetDefault();
+    Memory::tmpHeapPtr = 0;
 }
 
 /* Three-word tail-call veneer to Allocate(u32, int) (0x0203c6cc). */

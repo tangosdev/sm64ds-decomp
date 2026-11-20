@@ -29,7 +29,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "nitro/gx/gx_bgcnt.h"
 #include "Vector2Math.h"
 extern "C" void FreeGfxSlotsById(int);
-extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
+extern "C" void Hud_RenderSprite(OamAttr *attr, int, int, int, int);
 extern "C" s32 GetGameLanguage(void);
 void MgCoins_Reset(void);
 void MgCoins_Update(void);
@@ -78,20 +78,15 @@ int sMCarloFaceCounts[8] = {
     10, 10, 10, 10, 10, 10, 10, 10,
 };
 /* the eight face weights */
-extern int data_020a0db0;
+extern int gGlobalTimer;
 
 extern unsigned short sMCarloCardFrameSprites[];
 
-extern int sMgCardSprites[];
+extern OamAttr *sMgCardSprites[];
 
-extern int sMCarloCardSprites[];
-extern "C" {
-extern void func_0203d630(int *p, int m);
-}
-
+extern OamAttr *sMCarloCardSprites[];
 extern int sMgCoinsBetPlaced;
 
-extern int func_0203d5dc(const int *a, const int *b);
 extern "C" {
 void MgCoins_Draw(void);
 }
@@ -464,9 +459,9 @@ void dMgMCarloCardObj_c::DealIn(int slot) {
     mTarget.y = ((slot / 5) * 0x30) << 12;
     mSlot = (short)slot;
 
-    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
+    Vec2_Sub(&delta, &mTarget, &mPos);
     mStep = delta;
-    func_0203d630(&mStep.x, 0x124);
+    func_0203d630(&mStep, 0x124);
 
     if (mStep.x < 0) {
         mStep.x = -mStep.x;
@@ -598,7 +593,7 @@ void dMgMCarloCardObj_c::Update(int slot) {
         ApproachLinear(mPos.x, mTarget.x, mStep.x);
         ApproachLinear(mPos.y, mTarget.y, mStep.y);
         ApproachLinear(mLift, 0x4000, 0x300);
-        if (func_0203d5dc(&mPos.x, &mTarget.x) != 0)
+        if (func_0203d5dc(&mPos, &mTarget) != 0)
             return;
         if (mLift != 0x4000)
             return;
@@ -622,7 +617,7 @@ void dMgMCarloCardObj_c::Update(int slot) {
 /* Draw this card through the dMeter_c sprite bank.
  * Hidden cards (mVisible 0) and ones still waiting to be dealt (mState 0)
  * draw nothing, and a selected card blinks according to bit 3 of
- * data_020a0db0. The bank index is the face's bank (mFace + 1) of five flip
+ * gGlobalTimer. The bank index is the face's bank (mFace + 1) of five flip
  * frames -- (mLift >> 12), 0x4000 fully raised = frame 4 -- and the card
  * sits at its fixed-point position shifted to pixels plus a 24-pixel screen
  * offset. Slot 0 of the element vtable; Render is the class's key function,
@@ -635,14 +630,14 @@ void dMgMCarloCardObj_c::Render(void) {
     if (state == CARD_WAITING)
         return;
     if (state == CARD_SELECTED) {
-        if ((data_020a0db0 & 8) != 0)
+        if ((gGlobalTimer & 8) != 0)
             return;
     }
     {
         int frameIndex = (mFace + 1) * 5 + (mLift >> 12);
         unsigned short sprite = sMCarloCardFrameSprites[frameIndex];
-        Hud_RenderSprite((void *)sMCarloCardSprites[sprite], (mPos.x >> 12) + 24,
-                         (mPos.y >> 12) + 24, -1, -1);
+        Hud_RenderSprite(sMCarloCardSprites[sprite], (mPos.x >> 12) + 24, (mPos.y >> 12) + 24, -1,
+                         -1);
     }
 }
 
@@ -919,7 +914,7 @@ dMgMCarloCardObj_c::~dMgMCarloCardObj_c() {}
 /* The sprite-index remap table. Its initializer reads the retail table, so
  * it is not a constant expression: the compiler emits
  * __sinit_d_s_mg_m_carlo.cpp to copy the 19 words at overlay load. */
-int sMCarloCardSprites[19] = {
+OamAttr *sMCarloCardSprites[19] = {
     sMgCardSprites[0],  sMgCardSprites[1],  sMgCardSprites[2],  sMgCardSprites[11],
     sMgCardSprites[12], sMgCardSprites[13], sMgCardSprites[14], sMgCardSprites[3],
     sMgCardSprites[4],  sMgCardSprites[5],  sMgCardSprites[6],  sMgCardSprites[9],

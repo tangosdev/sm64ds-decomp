@@ -88,13 +88,13 @@ extern "C" {
 /* Functions the members call need C linkage at file scope. Data names do
    not mangle, so the data_* declarations stay next to their users. */
 extern s32 GetGameLanguage(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
-extern int Mg_RenderMainSpriteScaled(void *attr, int a1, int a2, int a3, int a4, int a5,
+extern void Mg_RenderSubSpriteMtx(OamAttr *a, int b, int c, Matrix2x2 *matrix);
+extern int Mg_RenderMainSpriteScaled(OamAttr *attr, int a1, int a2, int a3, int a4, int a5,
                                      unsigned short a6);
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
-extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
+extern void Hud_RenderSprite(OamAttr *sprite, int b, int c, int d, int e);
 extern void FreeGfxSlotsById(int arg);
 extern void Mg_SetSharedState(int c);
 }
@@ -656,8 +656,8 @@ OamAttr data_ov006_0213abc0[1] = {{0x00f0, 0x81f0, 0x4084, 0xffff}};
 OamAttr data_ov006_0213abb8[1] = {{0x00f0, 0x81f0, 0x5088, 0xffff}};
 OamAttr data_ov006_0213abb0[1] = {{0x00f0, 0x81f0, 0x608c, 0xffff}};
 OamAttr data_ov006_0213aba8[1] = {{0x00f0, 0x81f0, 0x7080, 0xffff}};
-void *sLuigiPictureSprites[] = {data_ov006_0213abc0, data_ov006_0213abb8, data_ov006_0213abb0,
-                                data_ov006_0213aba8};
+OamAttr *sLuigiPictureSprites[] = {data_ov006_0213abc0, data_ov006_0213abb8, data_ov006_0213abb0,
+                                   data_ov006_0213aba8};
 
 void dScMgLuigi_c::DrawPictures() {
     int i;

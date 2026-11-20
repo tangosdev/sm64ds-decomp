@@ -200,21 +200,21 @@
   ],
   "bss": [
     {
-      "symbol": "data_ov063_0211ef80",
+      "symbol": "sPianoModelFile",
       "address": "0x0211ef80",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "model resource handle constructed with file ID 0x40a; InitResources loads it and CleanupResources releases it"
     },
     {
-      "symbol": "data_ov063_0211ef88",
+      "symbol": "sPianoCollisionFile",
       "address": "0x0211ef88",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "collision resource handle constructed with file ID 0x40b; InitResources loads it and CleanupResources releases it"
     },
     {
-      "symbol": "data_ov063_0211ef90",
+      "symbol": "sPianoAttackAnimationFile",
       "address": "0x0211ef90",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -771,7 +771,7 @@
       "source": "0x0211e6b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211ef80",
+      "symbol": "sPianoModelFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211ef80"
@@ -801,7 +801,7 @@
       "source": "0x0211e6c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211ef88",
+      "symbol": "sPianoCollisionFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211ef88"
@@ -831,7 +831,7 @@
       "source": "0x0211e6d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov063_0211ef90",
+      "symbol": "sPianoAttackAnimationFile",
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211ef90"

@@ -48,12 +48,12 @@ struct dCc_c;
 union Matrix4x3;
 struct dExtShadowModel_c;
 
-/* data_020a0eac is the heap every actor is allocated from. operator delete
+/* GAME_HEAP_PTR is the heap every actor is allocated from. operator delete
    passes it to Memory::Deallocate, declared in Memory.h via fBase_c.h. */
-extern "C" mHeap::Heap_t *data_020a0eac;
+extern "C" mHeap::Heap_t *GAME_HEAP_PTR;
 
 struct dActor_c : dBase_c {
-    /* The global actor list (data_0209b468) threads through every actor: the
+    /* The global actor list (sActorList) threads through every actor: the
        constructor appends this node, the destructor unlinks it, and Next() walks
        the next link and reads its owner to get back to the actor. */
     fLiNdBa_c mActorListNode; /* 0x050 -- owner is always `this` */
@@ -241,7 +241,7 @@ struct dActor_c : dBase_c {
        0x1000 and the player then grabbed this actor; otherwise null. */
     daPly_c *func_02010304(dCc_c *clsn);
     /* Clamps each axis of mPos to the world bounds, +-32000.0. */
-    void func_02010da4();
+    void ClampPosToWorldBounds();
 
     /* The dust group: an `...At` worker taking a position, and a no-argument
        wrapper that copies this actor's own position into a stack Vector3 and
@@ -338,7 +338,7 @@ struct dActor_c : dBase_c {
        base. Without this every dActor_c-derived D0 calls the global operator
        delete, which frees to the default heap instead of the actor heap. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, data_020a0eac);
+        Memory::Deallocate(ptr, GAME_HEAP_PTR);
     }
 };
 

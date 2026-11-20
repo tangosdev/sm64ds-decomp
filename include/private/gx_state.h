@@ -30,7 +30,7 @@ typedef char GXVRamCnt_size_must_be_0x1a[sizeof(GXVRamCnt) == 0x1a ? 1 : -1];
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern GXVRamCnt data_020a6088; /* gGXState */
+extern GXVRamCnt gGXState;
 #ifdef __cplusplus
 }
 #endif

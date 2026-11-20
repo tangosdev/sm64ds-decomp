@@ -58,7 +58,7 @@ extern "C" void Mg_ShowBanner(int, int, int, int, int, short);
 extern "C" void Mg_SetSharedState(s32);
 extern "C" void FreeGfxSlotsById(int);
 extern "C" void Mg_SetTopScreenYOffset(int);
-extern "C" void Mg_RenderSubSpriteMtx(void *a, int, int, Matrix2x2 *m);
+extern "C" void Mg_RenderSubSpriteMtx(OamAttr *a, int, int, Matrix2x2 *m);
 extern "C" int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short);
 extern "C" void Mg_SubmitScore(int);
 void Mg_SetNextBanner(int);
@@ -157,10 +157,10 @@ dScMg3DEsp_c::~dScMg3DEsp_c() {}
 void dMg3DEspAnimSet_c::Render()
 {
     int i;
-    Matrix4x3_FromTranslation(&data_020a0e68, 0x8c000, 0x80000, 0x40000);
+    Matrix4x3_FromTranslation(&gScratchMtx, 0x8c000, 0x80000, 0x40000);
     for (i = 0; i < 3; i++) {
         if (mActive[i] != 0) {
-            mModels[i].mat4x3 = data_020a0e68;
+            mModels[i].mat4x3 = gScratchMtx;
             mMaterialChangers[i].Update(mModels[i].data);
             mModels[i].Render(0);
         }
@@ -471,7 +471,7 @@ OamAttr data_ov006_02133a14[1] = {{0x00f8, 0x41f8, 0x0006, 0xffff}};
 OamAttr data_ov006_02133a0c[1] = {{0x00f8, 0x41f8, 0x0004, 0xffff}};
 OamAttr data_ov006_02133a04[1] = {{0x00f8, 0x41f8, 0x0002, 0xffff}};
 OamAttr data_ov006_021339fc[1] = {{0x00f8, 0x41f8, 0x0000, 0xffff}};
-void *sEsp3DAnimSetSlotsSprites[] = {
+OamAttr *sEsp3DAnimSetSlotsSprites[] = {
     data_ov006_02133a34, data_ov006_02133a2c, data_ov006_02133a24, data_ov006_02133a1c,
     data_ov006_02133a14, data_ov006_02133a0c, data_ov006_02133a04, data_ov006_021339fc,
 };
@@ -482,7 +482,7 @@ void dScMg3DEsp_c::RenderSlots() {
         if (mSlots[i].mVisible) {
             int x = mSlots[i].mX >> 12;
             int y = mSlots[i].mY >> 12;
-            void *sprite = sEsp3DAnimSetSlotsSprites[mSlots[i].mFrame];
+            OamAttr *sprite = sEsp3DAnimSetSlotsSprites[mSlots[i].mFrame];
             Mg_RenderSubSpriteMtx(sprite, x, y, 0);
         }
     }
@@ -643,7 +643,7 @@ void dScMg3DEsp_c::ResetSlots() {
 }
 
 OamAttr data_ov006_02136e3c[1] = {{0x00e0, 0xc1e0, 0x1040, 0xffff}};
-int sEsp3DAnimSetRowsSprites = (int)data_ov006_02136e3c;
+OamAttr *sEsp3DAnimSetRowsSprites = data_ov006_02136e3c;
 
 void dScMg3DEsp_c::RenderRows()
 {
@@ -654,8 +654,8 @@ void dScMg3DEsp_c::RenderRows()
             int y = mRows[i].mY >> 12;
             int priority = mRows[i].mPriority;
             int scale = mRows[i].mScale;
-            GXOamAttr *oam = (GXOamAttr *)Mg_RenderSubSpriteScaled((void *)sEsp3DAnimSetRowsSprites,
-                                                                   x, y, -1, priority, scale, 0);
+            GXOamAttr *oam = (GXOamAttr *)Mg_RenderSubSpriteScaled(sEsp3DAnimSetRowsSprites, x, y,
+                                                                   -1, priority, scale, 0);
             if (mRows[i].mState == 2) {
                 G2_SetOBJMode(oam, GX_OAM_MODE_XLU, oam->cParam);
             }
