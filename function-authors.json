@@ -45355,11 +45355,11 @@
     },
     "ov102:0x0214b3b8": {
       "author": "tangosdev",
-      "name": "_ZN7daBmb_c19func_ov102_0214b3b8Ev"
+      "name": "_ZN7daBmb_c5ThrowEv"
     },
     "ov102:0x0214b3f0": {
       "author": "tangosdev",
-      "name": "_ZN7daBmb_c19func_ov102_0214b3f0Ei"
+      "name": "_ZN7daBmb_c6PickUpEi"
     },
     "ov102:0x0214b444": {
       "author": "tangosdev",
@@ -45367,7 +45367,7 @@
     },
     "ov102:0x0214b53c": {
       "author": "lunavyqo",
-      "name": "func_ov102_0214b53c"
+      "name": "_ZN7daBmb_c18UpdateAttachedPoseEv"
     },
     "ov102:0x0214b988": {
       "author": "tangosdev",
@@ -45387,7 +45387,7 @@
     },
     "ov102:0x0214bc20": {
       "author": "andrewboudreau",
-      "name": "_ZN7daBmb_c19func_ov102_0214bc20Ev"
+      "name": "_ZN7daBmb_c11BeginThrownEv"
     },
     "ov102:0x0214bcc8": {
       "author": "tangosdev",
@@ -45395,11 +45395,11 @@
     },
     "ov102:0x0214bd20": {
       "author": "tangosdev",
-      "name": "_ZN7daBmb_c19func_ov102_0214bd20Ev"
+      "name": "_ZN7daBmb_c12BeginCarriedEv"
     },
     "ov102:0x0214bd90": {
       "author": "tangosdev",
-      "name": "_ZN7daBmb_c19func_ov102_0214bd90Ev"
+      "name": "_ZN7daBmb_c6State2Ev"
     },
     "ov102:0x0214be1c": {
       "author": "tangosdev",

@@ -21,7 +21,7 @@
  *   loaded BCA is still the word at +4.
  * - mWithMeshClsn.SetRadius / SetHeight are out of line. Storing mRadius /
  *   mHeight directly drops the call.
- * - func_ov102_0214b53c reads the eating
+ * - UpdateAttachedPose reads the eating
  *   player (mEatingPlayer, not the carrier): mPos, mAngle.x/.y/.z, mHeadMatrix
  *   and mHeadBoneRot, which d_a_ply_methods.cpp fills from bone 15's
  *   rotX/rotY/rotZ.
@@ -244,7 +244,7 @@ int daBmb_c::Behavior()
         if (flag != false) {
             mDeathState = 0;
         } else if (mDeathState != 0) {
-            func_ov102_0214b53c();
+            UpdateAttachedPose();
             mdCc_c.Clear();
             mdCc_c.Update();
             return 1;
@@ -314,7 +314,7 @@ int daBmb_c::Behavior()
             }
         }
 
-        func_ov102_0214b53c();
+        UpdateAttachedPose();
         mdCc_c.Clear();
         mdCc_c.Update();
         func_ov102_0214ad40();
@@ -475,7 +475,7 @@ void daBmb_c::State1() {
  * Bob-omb's position.
  * ======================================================================== */
 
-void daBmb_c::func_ov102_0214bd90(){
+void daBmb_c::State2(){
   if (mWithMeshClsn.JustHitGround()) {
     struct Vector3 v;
     v.x = mPos.x;
@@ -496,7 +496,7 @@ void daBmb_c::func_ov102_0214bd90(){
 /* ==========================================================================
  * ======================================================================== */
 
-void daBmb_c::func_ov102_0214bd20() {
+void daBmb_c::BeginCarried() {
     mState = 3;
     mVertAccel = 0;
     mHorzSpeed = 0;
@@ -509,8 +509,8 @@ void daBmb_c::func_ov102_0214bd20() {
 /* ==========================================================================
  *
  * mState arm 3 (COINED NAME -- ov102 carries this address and no identifier;
- * func_ov102_0214b03c switching on mState is what proves the index): the held arm: on mFlags bit 0x400 it runs func_ov102_0214b3b8 (which checks
- * mState == 3, runs func_ov102_0214bc20, copies the carrier's facing angle and
+ * func_ov102_0214b03c switching on mState is what proves the index): the held arm: on mFlags bit 0x400 it runs Throw (which checks
+ * mState == 3, runs BeginThrown, copies the carrier's facing angle and
  * clears mCarrier), on bit 0x100 it does nothing at all, and otherwise it hands off
  * to func_ov102_0214c0b8.  Always advances the animation.
  * ======================================================================== */
@@ -528,7 +528,7 @@ void daBmb_c::State3()
      * The empty 0x100 arm is real -- on that bit this state does nothing at all,
      * and the else-branch is what carries the work. */
     if (IsFlagSet(this, 0x400)) {
-        func_ov102_0214b3b8();
+        Throw();
     } else if (IsFlagSet(this, 0x100)) {
     } else {
         func_ov102_0214c0b8();
@@ -553,7 +553,7 @@ extern "C" Quad data_ov102_0214e514 = {{0x28000, 0x28000, 0x50000, 0x28000}};
 extern "C" Quad data_ov102_0214e524 = {{0xa000, 0xa000, 0x1a000, 0xa000}};
 }
 
-void daBmb_c::func_ov102_0214bc20() {
+void daBmb_c::BeginThrown() {
     Quad a1 = data_ov102_0214e514;
     Quad a2 = data_ov102_0214e524;
     daPly_c *p = mCarrier;
@@ -701,7 +701,7 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
 }
 
-void daBmb_c::func_ov102_0214b53c() {
+void daBmb_c::UpdateAttachedPose() {
     extern Matrix4x3 data_020a0e68;
 
     Vector3 p;
@@ -824,12 +824,12 @@ void daBmb_c::UpdateShadow() {
 
 extern "C" {
 
-void daBmb_c::func_ov102_0214b3f0(int a1) {
+void daBmb_c::PickUp(int a1) {
     if (mState == 3 || mState == 4)
         return;
     if (mFuse > 4 || mFuse == 0) {
         mCarrier = (daPly_c *)a1;
-        func_ov102_0214bd20();
+        BeginCarried();
     }
 }
 }
@@ -839,10 +839,10 @@ void daBmb_c::func_ov102_0214b3f0(int a1) {
 
 extern "C" {
 
-void daBmb_c::func_ov102_0214b3b8() {
+void daBmb_c::Throw() {
     if (mState != 3)
         return;
-    func_ov102_0214bc20();
+    BeginThrown();
     mPrevAngle.y = mCarrier->mAngle.y;
     mCarrier = 0;
 }
@@ -920,7 +920,7 @@ void daBmb_c::func_ov102_0214b128() {
     }
     t = (int)func_02010304(&mdCc_c);
     if (t) {
-        func_ov102_0214b3f0(t);
+        PickUp(t);
         return;
     }
     t = mdCc_c.hitFlags;
@@ -935,7 +935,7 @@ void daBmb_c::func_ov102_0214b128() {
     {
         dActor_c *hitter = dActor_c::FindWithID(mdCc_c.otherOwner);
         if (!hitter) return;
-        func_ov102_0214bc20();
+        BeginThrown();
         mPrevAngle.y = hitter->mAngle.y;
         UpdatePos(&mdCc_c);
         mWithMeshClsn.ClearGroundFlag();
@@ -959,7 +959,7 @@ void daBmb_c::func_ov102_0214b03c() {
         State1();
         return;
     case 2:
-        func_ov102_0214bd90();
+        State2();
         return;
     case 3:
         State3();
@@ -1139,7 +1139,7 @@ int daBmb_c::func_ov102_0214ab1c() {
                 mdCc_c.dCc_c::Update();
             }
         }
-        func_ov102_0214b53c();
+        UpdateAttachedPose();
         return 1;
     }
     return 0;
@@ -1151,12 +1151,12 @@ int daBmb_c::func_ov102_0214ab1c() {
 int daBmb_c::func_ov102_0214aa18() {
     if (mVariant == 2) {
         if (mCarryMatrix != 0) {
-            func_ov102_0214b53c();
+            UpdateAttachedPose();
             return 1;
         }
         UpdatePos(&mdCc_c);
         UpdateWMClsn(mWithMeshClsn, 0);
-        func_ov102_0214b53c();
+        UpdateAttachedPose();
         func_ov102_0214ad40();
         mdCc_c.Clear();
         mdCc_c.dCc_c::Update();
