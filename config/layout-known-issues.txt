@@ -67,7 +67,6 @@ L3 src/unnamed/ov053/data_ov053_021111a0.c
 # addresses.
 L3 src/unnamed/ov009/data_ov009_02112c58.c
 L3 src/unnamed/ov009/data_ov009_rodata.c
-L3 src/unnamed/ov029/data_ov029_clps.c
 L3 src/unnamed/ov029/data_ov029.c
 L3 src/unnamed/ov029/data_ov029_rodata.c
 L3 src/unnamed/ov036/data_ov036_02112c28.c

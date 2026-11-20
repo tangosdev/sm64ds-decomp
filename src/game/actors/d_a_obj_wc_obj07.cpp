@@ -11,9 +11,8 @@
  * daObjWc_Obj07_c_classInit is reconstructed (RTTI daObjWc_Obj07_c,
  * WC_UKISIMA registry). Retail does not store that spelling.
  *
- * What stays: the BMD/KCL SharedFilePtrs and the CLPS block are still
- *   data_ov029_*; the start-angle slot 02113fc4 sits 4 bytes before this
- *   class's typeinfo at 02113fc8 and is defined here.
+ * The CLPS block is data_ov029_021130ac, defined here. The start-angle
+ * slot 02113fc4 sits 4 bytes before this class's typeinfo at 02113fc8.
  * What stays: g_profile_WC_UKISIMA lives outside this TU (S14).
  */
 
@@ -26,10 +25,16 @@ enum d_a_obj_wc_obj07_AssetId { ASSET_WC_OBJ07_BMD = 0x06d7, ASSET_WC_OBJ07_KCL 
 
 #include "ResourceDescriptor.h"
 
-/* The board's model, collision and collision-properties table; the CLPS block
-   it points at is shared with the other WDW platform actors. The two handles
-   themselves are constructed below, with the TU's other static-init globals. */
-extern CLPS_Block data_ov029_021130ac;
+/* Collision properties: the 'CLPS' tag, the 8-byte stride header with two
+ * entries, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+CLPS_Block data_ov029_021130ac = {
+    0x53504c43, 0x00020008, {0x01000fc4, 0x000000ff, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
