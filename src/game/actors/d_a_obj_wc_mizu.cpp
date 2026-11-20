@@ -70,7 +70,7 @@ extern const int data_ov029_02112b2c[3] = {
 extern BTA_File data_ov029_02112fb8;
 extern CLPS_Block data_ov029_02112fec;
 extern u8 data_0209f2c0;
-extern int data_0209f32c;
+extern int gWaterHeight;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -99,7 +99,7 @@ int daObjWc_Mizu_c::InitResources() {
         mPos.y = data_ov029_02112b2c[idx];
     }
     mTargetPosY = mPos.y;
-    data_0209f32c = mPos.y;
+    gWaterHeight = mPos.y;
 
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
@@ -152,7 +152,7 @@ int daObjWc_Mizu_c::Behavior() {
 
     mPhaseAngle += 0x200;
     mWaterHeight = FX_SinIdx((u16)mPhaseAngle >> 4) * 15 + mPos.y;
-    data_0209f32c = mWaterHeight;
+    gWaterHeight = mWaterHeight;
     UpdateModelTransform();
     UpdateClsnTransform();
     mTextureTransformer.speed = 0x1000;

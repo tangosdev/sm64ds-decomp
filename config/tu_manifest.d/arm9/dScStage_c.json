@@ -516,14 +516,14 @@
       "ordinal": 66
     },
     {
-      "symbol": "_Z13func_0202a96cv",
+      "symbol": "_Z21GetMinimapPaletteFilev",
       "address": "0x0202a96c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0202/func_0202a96c.c",
       "ordinal": 67
     },
     {
-      "symbol": "_Z13func_0202a980v",
+      "symbol": "_Z19GetMinimapTilesFilev",
       "address": "0x0202a980",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0202/func_0202a980.c",
@@ -649,7 +649,7 @@
       "ordinal": 85
     },
     {
-      "symbol": "_Z13func_0202af80Psi",
+      "symbol": "_Z19SetMinimapScaleObjsPsi",
       "address": "0x0202af80",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202af80.c",
@@ -663,14 +663,14 @@
       "ordinal": 87
     },
     {
-      "symbol": "_Z13func_0202b044Pti",
+      "symbol": "_Z18SetMinimapTileObjsPti",
       "address": "0x0202b044",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b044.c",
       "ordinal": 88
     },
     {
-      "symbol": "_Z13func_0202b060Pci",
+      "symbol": "_Z10SetFogObjsPci",
       "address": "0x0202b060",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b060.c",
@@ -684,7 +684,7 @@
       "ordinal": 90
     },
     {
-      "symbol": "_Z13func_0202b090Pvi",
+      "symbol": "_Z19SetTeleportDestObjsPvi",
       "address": "0x0202b090",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b090.c",
@@ -698,14 +698,14 @@
       "ordinal": 92
     },
     {
-      "symbol": "_Z13func_0202b0c4Pvi",
+      "symbol": "_Z11SetViewObjsPvi",
       "address": "0x0202b0c4",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b0c4.c",
       "ordinal": 93
     },
     {
-      "symbol": "_ZN11LVL_Overlay13StandardEntry13func_0202b0e0Ei",
+      "symbol": "_ZN11LVL_Overlay13StandardEntry15SetEntranceObjsEi",
       "address": "0x0202b0e0",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b0e0.c",
@@ -880,7 +880,7 @@
       "ordinal": 118
     },
     {
-      "symbol": "_Z13func_0202deaci",
+      "symbol": "_Z20PreloadLevelOverlaysi",
       "address": "0x0202deac",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0202/func_0202deac.c",
@@ -911,21 +911,21 @@
   "data": [],
   "rodata": [
     {
-      "symbol": "data_02075804",
+      "symbol": "sActorBankOverlayIds",
       "address": "0x02075804",
       "size": "0xc4",
       "binding": "STB_GLOBAL",
       "evidence": "seven-by-seven overlay table the stage indexes"
     },
     {
-      "symbol": "data_020758c8",
+      "symbol": "sLevelOverlayIds",
       "address": "0x020758c8",
       "size": "0xd0",
       "binding": "STB_GLOBAL",
       "evidence": "per-level words indexed by the stage"
     },
     {
-      "symbol": "data_02075998",
+      "symbol": "sLevelActorBanks",
       "address": "0x02075998",
       "size": "0x16c",
       "binding": "STB_GLOBAL",
@@ -948,7 +948,7 @@
       "evidence": "u8. Read here by LoadLevel, SetNextLevel, SetNextStar and dScStage_c::InitResources. Read outside this TU by dScStarSel_c::Behavior (ov003), so global."
     },
     {
-      "symbol": "data_0209f1f4",
+      "symbol": "sVsNewStarSoundPlayed",
       "address": "0x0209f1f4",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -983,11 +983,11 @@
       "evidence": "u8. Read here by IsButtonInputValid, dScStage_c::Behavior, dScStage_c::CanPause, dScStage_c::InitResources and dScStage_c::RenderVsModeNewStar. Read outside this TU by dMap_c::Behavior, dMeter_c::Render, dMeter_c::RenderVsTimer, dMeter_c::UpdateVsTimer and dScGameOver_c::InitResources (ov002, ov003), so global."
     },
     {
-      "symbol": "data_0209f208",
+      "symbol": "gNumVsStarsCollected",
       "address": "0x0209f208",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior, daStar_c::AddStarMarker, daStar_c::Collect and 1 more (ov002, ov084), so global."
+      "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::PayOutReward, daKrb_c::TrackSilverStar, daStarBase_c::Behavior, daStar_c::AddStarMarker, daStar_c::Collect and 1 more (ov002, ov084), so global."
     },
     {
       "symbol": "data_0209f20c",
@@ -1060,7 +1060,7 @@
       "evidence": "u8. Read here by dScStage_c::PS_Init. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f234",
+      "symbol": "sSelectedSoundMode",
       "address": "0x0209f234",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1081,7 +1081,7 @@
       "evidence": "u8. Read here by dScStage_c::PS_Init and dScStage_c::PS_Update. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f240",
+      "symbol": "sOkBackRowPressed",
       "address": "0x0209f240",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1179,21 +1179,21 @@
       "evidence": "u8. Read here by FUN_02029a68, FUN_02029ab0 and dScStage_c::InitResources. Read outside this TU by dActor_c::BeforeBehavior (arm9), so global."
     },
     {
-      "symbol": "data_0209f278",
+      "symbol": "sLevelOverlaysPreloaded",
       "address": "0x0209f278",
       "size": "0x1",
       "binding": "STB_GLOBAL",
       "evidence": "u8. Read here by LoadLevelOverlays and func_0202deac. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f27c",
+      "symbol": "sBuzzerSoundJustPlayed",
       "address": "0x0209f27c",
       "size": "0x1",
       "binding": "STB_GLOBAL",
       "evidence": "u8. Read here by IsButtonInputValid. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f280",
+      "symbol": "sStopMusicDuringFade",
       "address": "0x0209f280",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1221,7 +1221,7 @@
       "evidence": "u8. No reader in this TU. Read outside this TU by daPly_c::St_CameraZoom_Init (ov002), so global."
     },
     {
-      "symbol": "data_0209f290",
+      "symbol": "sVsExitScreenStep",
       "address": "0x0209f290",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1235,7 +1235,7 @@
       "evidence": "u8. Read here by IsButtonInputValid, dScStage_c::Behavior, dScStage_c::CheckCameraInput, dScStage_c::InitResources, dScStage_c::Render and dScStage_c::VE_Init. Read outside this TU by dActor_c::BeforeBehavior, dCamera_c::Behavior, dCamera_c::Render, dMap_c::Behavior, dMap_c::Render, dMeter_c::Render and 3 more (arm9, ov002), so global."
     },
     {
-      "symbol": "data_0209f298",
+      "symbol": "sReturnToRecRoom",
       "address": "0x0209f298",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1249,14 +1249,14 @@
       "evidence": "u8. Read here by dScStage_c::PS_Init, dScStage_c::PS_Render, dScStage_c::PS_Update and dScStage_c::PS_UpdateOkAndBackButtons. No reader outside this TU, so static. Was gBackButtonSelected; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f2a0",
+      "symbol": "sPausedDuringTimer",
       "address": "0x0209f2a0",
       "size": "0x1",
       "binding": "STB_GLOBAL",
       "evidence": "u8. Read here by dScStage_c::Behavior and dScStage_c::PS_Cleanup. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f2a4",
+      "symbol": "sLastSmallButton",
       "address": "0x0209f2a4",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1291,7 +1291,7 @@
       "evidence": "u8. Read here by dScStage_c::LC_Update, dScStage_c::PS_Update, dScStage_c::PS_UpdateOkAndBackButtons, dScStage_c::UpdateMenuButtons and dScStage_c::VE_Init. No reader outside this TU, so static. Was gNumMenuButtons; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f2b8",
+      "symbol": "sSaveMenuTimer",
       "address": "0x0209f2b8",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1424,14 +1424,14 @@
       "evidence": "u16. u16 lockout: PS_Init and PS_Cleanup set it to 0xf, Behavior counts it down, PS_Update's pages return while it is non-zero and Behavior opens no pause until it is 0. Name from the blind melonDS round suite14 (10/10)."
     },
     {
-      "symbol": "data_0209f304",
+      "symbol": "sVsCountdownTimer",
       "address": "0x0209f304",
       "size": "0x2",
       "binding": "STB_GLOBAL",
       "evidence": "u16. Read here by dScStage_c::Behavior, dScStage_c::InitResources and dScStage_c::RenderVsModeCountdown. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f308",
+      "symbol": "sVsNewStarTimer",
       "address": "0x0209f308",
       "size": "0x2",
       "binding": "STB_GLOBAL",
@@ -1473,14 +1473,14 @@
       "evidence": "char *. Read here by dScStage_c::LoadFog and func_0202b060. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f320",
+      "symbol": "sLevelModelData",
       "address": "0x0209f320",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "int. Read here by CopyTexPalFromLevelModel, dScStage_c::CleanupResources and dScStage_c::LoadModel. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f324",
+      "symbol": "sWipes",
       "address": "0x0209f324",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1494,7 +1494,7 @@
       "evidence": "int *. Read here by func_0202b0e0. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f32c",
+      "symbol": "gWaterHeight",
       "address": "0x0209f32c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1522,25 +1522,25 @@
       "evidence": "void *. LoadUnusedType13Objects stores the type-13 entry array here. Read here by dScStage_c::InitResources. Read outside this TU by LoadUnusedType13Objects (ov002), so global."
     },
     {
-      "symbol": "data_0209f33c",
+      "symbol": "gCastleKeyRabbit",
       "address": "0x0209f33c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "void *. No reader in this TU. Read outside this TU by dMap_c::Behavior and daMip_c::Behavior (ov002, ov085), so global."
     },
     {
-      "symbol": "data_0209f340",
+      "symbol": "sLevelInfo",
       "address": "0x0209f340",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "char *. Read here by GetMinimapID, StartWithFarCamera, dScStage_c::CleanupResources, dScStage_c::GetSkyboxID, dScStage_c::InitResources, dScStage_c::LoadModel and 7 more. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f344",
+      "symbol": "gVsStarSpawnOrder",
       "address": "0x0209f344",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "u8 *. The VS star spawn order: InitResources points it at one of the six VS_STAR_SPAWN_ORDERS rows at random. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior and daStar_c::StateWaitMarker (ov002, ov084), so global."
+      "evidence": "u8 *. The VS star spawn order: InitResources points it at one of the six VS_STAR_SPAWN_ORDERS rows at random. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::PayOutReward, daKrb_c::TrackSilverStar, daStarBase_c::Behavior and daStar_c::StateWaitMarker (ov002, ov084), so global."
     },
     {
       "symbol": "sMinimapScaleObjs",
@@ -1557,7 +1557,7 @@
       "evidence": "s32. Read here by Event::ClearBit, Event::GetBit, Event::SetBit and dScStage_c::InitResources. No reader outside this TU, so static. Was gEventFlags; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f350",
+      "symbol": "gCameraPressState",
       "address": "0x0209f350",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1585,7 +1585,7 @@
       "evidence": "u16[4]. Read here by dScStage_c::LC_Update, dScStage_c::PS_Update, dScStage_c::UpdateMenuButtons and dScStage_c::VE_Init. No reader outside this TU, so static. Was gMenuButtonTileOffsets; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f368",
+      "symbol": "sCameraTouchMasks",
       "address": "0x0209f368",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1620,7 +1620,7 @@
       "binding": "STB_GLOBAL"
     },
     {
-      "symbol": "data_0209f3a4",
+      "symbol": "gSpikeBombs",
       "address": "0x0209f3a4",
       "size": "0x20",
       "evidence": "eight pointers between the player list and the graph callback. Same .bss claim.",
@@ -1648,7 +1648,7 @@
       "evidence": "dActor_c *[12]. STAR_MARKERS, dActor_c *[12] (0x30): SetStarMarker stores the actor and gStarMarkerTypes its type; dActor_c::TrackStar, daStar_c::AddStarMarker and daCoin_c look for a free slot and dMap_c::Behavior draws them. The old address name data_0209f40c named the same object and is retired."
     },
     {
-      "symbol": "data_0209f43c",
+      "symbol": "gClipper",
       "address": "0x0209f43c",
       "size": "0x5c",
       "evidence": "the file-scope dClipper. Retail __sinit_02074e84 calls _ZN8dClipperC1Ev and registers _ZN8dClipperD1Ev. sizeof is 0x5c; the next symbol is data_0209f498.",
@@ -2633,7 +2633,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f1ec"
     },
     {
-      "symbol": "data_0209f1f4",
+      "symbol": "sVsNewStarSoundPlayed",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f1f4"
@@ -2675,7 +2675,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f230"
     },
     {
-      "symbol": "data_0209f234",
+      "symbol": "sSelectedSoundMode",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f234"
@@ -2693,7 +2693,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f23c"
     },
     {
-      "symbol": "data_0209f240",
+      "symbol": "sOkBackRowPressed",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f240"
@@ -2753,31 +2753,31 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f270"
     },
     {
-      "symbol": "data_0209f278",
+      "symbol": "sLevelOverlaysPreloaded",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f278"
     },
     {
-      "symbol": "data_0209f27c",
+      "symbol": "sBuzzerSoundJustPlayed",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f27c"
     },
     {
-      "symbol": "data_0209f280",
+      "symbol": "sStopMusicDuringFade",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f280"
     },
     {
-      "symbol": "data_0209f290",
+      "symbol": "sVsExitScreenStep",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f290"
     },
     {
-      "symbol": "data_0209f298",
+      "symbol": "sReturnToRecRoom",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f298"
@@ -2789,13 +2789,13 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f29c"
     },
     {
-      "symbol": "data_0209f2a0",
+      "symbol": "sPausedDuringTimer",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f2a0"
     },
     {
-      "symbol": "data_0209f2a4",
+      "symbol": "sLastSmallButton",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f2a4"
@@ -2819,7 +2819,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f2b4"
     },
     {
-      "symbol": "data_0209f2b8",
+      "symbol": "sSaveMenuTimer",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f2b8"
@@ -2879,13 +2879,13 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f300"
     },
     {
-      "symbol": "data_0209f304",
+      "symbol": "sVsCountdownTimer",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f304"
     },
     {
-      "symbol": "data_0209f308",
+      "symbol": "sVsNewStarTimer",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f308"
@@ -2903,13 +2903,13 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f31c"
     },
     {
-      "symbol": "data_0209f320",
+      "symbol": "sLevelModelData",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f320"
     },
     {
-      "symbol": "data_0209f324",
+      "symbol": "sWipes",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f324"
@@ -2927,7 +2927,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f330"
     },
     {
-      "symbol": "data_0209f340",
+      "symbol": "sLevelInfo",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f340"
@@ -2957,7 +2957,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f360"
     },
     {
-      "symbol": "data_0209f368",
+      "symbol": "sCameraTouchMasks",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f368"
@@ -3025,7 +3025,7 @@
       "source": "0x02074ed0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209f43c",
+      "symbol": "gClipper",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209f43c"

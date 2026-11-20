@@ -99,7 +99,7 @@ enum dScMgAmida_c_AssetId {
 
 extern "C" {
 /* --- shared ov004 and main helpers --- */
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -111,27 +111,13 @@ extern int GetGameLanguage(void);
 /* --- data --- */
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern int sAmidaPatternSpeedUp[];
-extern s32 data_0208ee44;
-extern char sAmidaPatterns[];
-extern char sAmidaPatternGoalShuffle[];
-extern char sAmidaPatternSpeeds[];
-extern char sAmidaPatternRungSkip[];
-extern char sAmidaPatternExtraRungs[];
+extern s32 gFrameStep;
 
-/* File-local view of one 0x1c-byte pattern record, indexed by
-   mPatternIndex. Each field but walkerStagger has its own symbol above
-   (sAmidaPatterns is the record's first word, the walker count), and the
-   readers keep those symbols. walkerStagger (+0x14) has none: the round
-   setup multiplies it by 0x3c and the walker index into mWalkerDelay, so
-   it is the seconds between walkers. */
-/* First word of one 0x1c-stride pattern table (speeds, shuffle, rung skip, extra rungs). */
-struct AmidaTableWord {
-    s32 word;
-    char tail[0x18];
-};
-typedef char AmidaTableWord_size_must_be_0x1c[sizeof(AmidaTableWord) == 0x1c ? 1 : -1];
-
+/* One 0x1c-byte pattern record, indexed by mPatternIndex. Every field but
+   walkerStagger also carries a linker label of its own (noted beside it);
+   the readers reach them all through sAmidaPatterns. walkerStagger (+0x14)
+   has none: the round setup multiplies it by 0x3c and the walker index into
+   mWalkerDelay, so it is the seconds between walkers. */
 struct AmidaPattern {
     s32 walkerCount;   /* 0x00 sAmidaPatterns */
     s32 goalShuffle;   /* 0x04 sAmidaPatternGoalShuffle */
@@ -142,14 +128,15 @@ struct AmidaPattern {
     s32 speedUp;       /* 0x18 sAmidaPatternSpeedUp */
 };
 typedef char AmidaPattern_size_must_be_0x1c[sizeof(AmidaPattern) == 0x1c ? 1 : -1];
-extern void *sAmidaWalkerSprite;
-extern void *sAmidaSideSprite;
-extern void *sAmidaHurryButtonSprite;
-extern void *sAmidaBoardAnimSprites[];
-extern void *sAmidaLaneAnimSprites[];
-extern void *sAmidaPieceSprites[];
-extern int sAmidaLaneResultSprites[];
-extern int sAmidaLaneWantSprites[];
+extern AmidaPattern sAmidaPatterns[];
+extern OamAttr *sAmidaWalkerSprite;
+extern OamAttr *sAmidaSideSprite;
+extern OamAttr *sAmidaHurryButtonSprite;
+extern OamAttr *sAmidaBoardAnimSprites[];
+extern OamAttr *sAmidaLaneAnimSprites[];
+extern OamAttr *sAmidaPieceSprites[];
+extern OamAttr *sAmidaLaneResultSprites[];
+extern OamAttr *sAmidaLaneWantSprites[];
 struct AmidaBoardFrames {
     int a[13];
 };
@@ -1055,8 +1042,7 @@ void dScMgAmida_c::StepWalkers() {
                             if (mScore > 0x270f) {
                                 mScore = 0x270f;
                             }
-                            speedMode = sAmidaPatternSpeedUp[mPatternIndex *
-                                                             (sizeof(AmidaPattern) / sizeof(s32))];
+                            speedMode = sAmidaPatterns[mPatternIndex].speedUp;
                             switch (speedMode) {
                             case 0:
                                 break;
@@ -1397,8 +1383,7 @@ void dScMgAmida_c::InitWalkers() {
         if (this->IsVariant2() != 0) {
             this->mWalkerDelay[i] = 0;
         } else {
-            this->mWalkerDelay[i] =
-                i * ((AmidaPattern *)sAmidaPatterns)[this->mPatternIndex].walkerStagger * 0x3c;
+            this->mWalkerDelay[i] = i * sAmidaPatterns[this->mPatternIndex].walkerStagger * 0x3c;
         }
         this->mWalkerCell[i].x = (this->mLanePerm[i] << 6) + 0x20;
         if (this->IsVariant2() != 0) {
@@ -1446,10 +1431,10 @@ void dScMgAmida_c::SetupRound() {
     if (IsVariant2() != 0) {
         mWalkerCount = 4;
     } else {
-        mWalkerCount = ((AmidaPattern *)sAmidaPatterns)[mPatternIndex].walkerCount;
+        mWalkerCount = sAmidaPatterns[mPatternIndex].walkerCount;
     }
 
-    mScrollSpeed = ((((AmidaTableWord *)sAmidaPatternSpeeds)[mPatternIndex].word - 1) * 5) + 0xb;
+    mScrollSpeed = ((sAmidaPatterns[mPatternIndex].speed - 1) * 5) + 0xb;
 
     {
         u32 stage = mLevel;
@@ -1497,7 +1482,7 @@ void dScMgAmida_c::SetupRound() {
 
     mRoundCount = 0;
     InitWalkers();
-    ShuffleGoals(((AmidaTableWord *)sAmidaPatternGoalShuffle)[mPatternIndex].word);
+    ShuffleGoals(sAmidaPatterns[mPatternIndex].goalShuffle);
     Mg_SetTopScreenYOffset(0x20);
 
     mSetupInk = 1;
@@ -1547,7 +1532,7 @@ void dScMgAmida_c::SetupRound() {
                 }
             } while (remaining > 0);
         } else {
-            int sel = ((AmidaTableWord *)sAmidaPatternRungSkip)[mPatternIndex].word;
+            int sel = sAmidaPatterns[mPatternIndex].rungSkip;
             switch (sel) {
             case 0:
                 break;
@@ -1589,7 +1574,7 @@ void dScMgAmida_c::SetupRound() {
                 break;
             }
         } else {
-            sel2 = ((AmidaTableWord *)sAmidaPatternRungSkip)[mPatternIndex].word;
+            sel2 = sAmidaPatterns[mPatternIndex].rungSkip;
         }
 
         switch (sel2) {
@@ -1625,7 +1610,7 @@ void dScMgAmida_c::SetupRound() {
 
     mLineCount++;
     if (IsVariant2() == 0) {
-        int v = ((AmidaTableWord *)sAmidaPatternExtraRungs)[mPatternIndex].word;
+        int v = sAmidaPatterns[mPatternIndex].extraRungs;
         if (v != 0 && v == 1) {
             Mg_DrawLine(0x60, 0x2d, 0xa0, 0x2d, mLineColor, 1);
             Mg_DrawLine(0x20, 0x5a, 0x60, 0x5a, mLineColor, 1);
@@ -1752,13 +1737,13 @@ void dScMgAmida_c::RenderBoardAlt() {
         Mg_RenderSpriteBoth(sAmidaHurryButtonSprite, 128, 176, -1, 0);
     }
     for (i = 0; i < 4; i++) {
-        Mg_RenderSpriteBoth((void *)sAmidaLaneWantSprites[mLaneWants[i]], mWalkerCell[i].x,
+        Mg_RenderSpriteBoth(sAmidaLaneWantSprites[mLaneWants[i]], mWalkerCell[i].x,
                             mWalkerCell[i].y, -1, 0);
     }
     j = 0;
     x = 0x20;
     for (; j < 4; x += 0x40, j++) {
-        Mg_RenderSpriteBoth((void *)sAmidaLaneResultSprites[mLaneResult[j]], x, 120, -1, 0);
+        Mg_RenderSpriteBoth(sAmidaLaneResultSprites[mLaneResult[j]], x, 120, -1, 0);
     }
 }
 s32 dScMgAmida_c::Render() {
@@ -1795,7 +1780,7 @@ s32 dScMgAmida_c::Render() {
             for (piece = 0; piece < 128; piece++) {
                 if (mPieces[piece].active != 0) {
                     Mg_RenderSpriteBoth(sAmidaPieceSprites[mPieces[piece].timer / 4],
-                                        mPieces[piece].posX >> 12, mPieces[piece].posY >> 12, -1,
+                                        mPieces[piece].pos.x >> 12, mPieces[piece].pos.y >> 12, -1,
                                         0);
                 }
             }
@@ -1944,12 +1929,16 @@ s32 dScMgAmida_c::Behavior() {
 
         for (piece = 0; piece < 128; piece++) {
             if (mPieces[piece].active != 0) {
-                mPieces[piece].posX += mPieces[piece].velX;
-                mPieces[piece].posY += mPieces[piece].velY;
-                speed = Vec2_Len((const Vector2 *)&mPieces[piece].velX);
+                mPieces[piece].pos.x += mPieces[piece].vel.x;
+                mPieces[piece].pos.y += mPieces[piece].vel.y;
+                /* The explicit const conversion is load-bearing: left
+                   implicit, mwcc strength-reduces &mPieces[piece].vel into a
+                   second induction register for this call and Behavior
+                   grows from 0x774 to 0x77c (measured 2026-11-19). */
+                speed = Vec2_Len((const Vector2 *)&mPieces[piece].vel);
                 speed = speed * 7 / 8;
-                if (func_0203d434(&mPieces[piece].velX) != 0)
-                    func_0203d630(&mPieces[piece].velX, speed);
+                if (func_0203d434(&mPieces[piece].vel) != 0)
+                    func_0203d630(&mPieces[piece].vel, speed);
                 mPieces[piece].timer += 1;
                 if (mPieces[piece].timer >= 16)
                     mPieces[piece].active = 0;
@@ -1969,20 +1958,20 @@ s32 dScMgAmida_c::Behavior() {
                         idxA = (int)((randAngle15 << 17) >> 16) >> 4;
                         cosA = FX_CosIdx(idxA);
                         {
-                            mPieces[slot].posX = FX_MUL(cosB, FX_MUL(0x8000, cosA));
+                            mPieces[slot].pos.x = FX_MUL(cosB, FX_MUL(0x8000, cosA));
                             sinA = FX_SinIdx(idxA);
-                            mPieces[slot].posY = FX_MUL(cosB, FX_MUL(0x8000, sinA));
-                            mPieces[slot].posX += mLanePos[j].x;
-                            mPieces[slot].posY += mLanePos[j].y;
+                            mPieces[slot].pos.y = FX_MUL(cosB, FX_MUL(0x8000, sinA));
+                            mPieces[slot].pos.x += mLanePos[j].x;
+                            mPieces[slot].pos.y += mLanePos[j].y;
                             /* (int)cosA: without the cast, or with cosA
                                declared int, Behavior differs by 13 words.
                                Kept (#821 r81): re-measured, the plain cosA
                                still differs; cosA is a local, so no accessor
                                or block-copy lever applies. */
-                            mPieces[slot].velX = FX_MUL(cosB, FX_MUL(0x1000, (int)cosA));
-                            mPieces[slot].velY = FX_MUL(cosB, FX_MUL(0x1000, sinA));
+                            mPieces[slot].vel.x = FX_MUL(cosB, FX_MUL(0x1000, (int)cosA));
+                            mPieces[slot].vel.y = FX_MUL(cosB, FX_MUL(0x1000, sinA));
                         }
-                        mPieces[slot].velY -= 0x400;
+                        mPieces[slot].vel.y -= 0x400;
                         mPieces[slot].active = 1;
                         mPieces[slot].timer = 0;
                         break;
@@ -2031,7 +2020,7 @@ s32 dScMgAmida_c::InitResources() {
         mLineColor = 2;
     }
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_23);
     G2_BG0Mosaic(0);

@@ -82,11 +82,7 @@
 #define DSCMGFLOWER_C_H
 #include "dScMgSingle3DBase_c.h"
 #include "FlowerFace.h"
-
-struct PetalPos {
-    int x;
-    int y;
-};
+#include "Vector2.h"
 
 struct dScMgFlower_c : dScMgSingle3DBase_c {
     /* Declared first and defined out of line, in src/minigames/d_s_mg_flower.cpp:
@@ -138,7 +134,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
         u8 released;     /* 0x01, detached from the flower */
         u8 held;         /* 0x02, follows the stylus */
         u8 counted;      /* 0x03, pull already counted in the round */
-        PetalPos pos;    /* 0x04, fx32 screen position; y at 0x08 */
+        Vector2 pos;     /* 0x04, fx32 screen position; y at 0x08 */
         s32 driftX;      /* 0x0c */
         s32 fallSpeed;   /* 0x10 */
         s32 touchStartX; /* 0x14, cursor position when picked up */
@@ -150,12 +146,10 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     Petal mPetals[PETAL_NUM]; /* 0x4f38, 0x20-byte records */
     FlowerFace mFace;   /* 0x51f8 -- Yoshi and the falling petals; the
                               FlowerFace_* helpers take its address */
-    u8 pad_5fa4[0x14];  /* 0x5fa4 -- untouched up to mCursorX */
-    s32 mCursorX;       /* 0x5fb8 -- fx32 stylus position, from the touch
+    u8 pad_5fa4[0x14];  /* 0x5fa4 -- untouched up to mCursor */
+    Vector2 mCursor;    /* 0x5fb8 -- fx32 stylus position, from the touch
                               sample gTouchInfo x/y << 12 */
-    s32 mCursorY;       /* 0x5fbc */
-    s32 mPrevCursorX;   /* 0x5fc0 -- last tick's mCursor; the drag delta */
-    s32 mPrevCursorY;   /* 0x5fc4 */
+    Vector2 mPrevCursor; /* 0x5fc0 -- last tick's mCursor; the drag delta */
     s32 mHeldPetal;     /* 0x5fc8 -- mPetals index being dragged, -1 for none */
     u8 mPetalToggle;    /* 0x5fcc -- flips on every petal pulled; picks the
                               "loves me" or "loves me not" banner and sound */

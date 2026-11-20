@@ -129,14 +129,14 @@ struct daBmb_c : dEnemyBase_c {
        field to choose between them.  State0/1/3/4/5 are coined -- ov102 carries
        these addresses and no identifier -- so they claim the index and nothing
        more; what each arm does is written at its body.  Arm 2 is
-       func_ov102_0214bd90.  Where nothing in the cartridge says what a method is
+       State2.  Where nothing in the cartridge says what a method is
        for, the address is the method name. */
     void State0();
     void State1();
     void State3();
     int  State4();
     void State5();
-    void func_ov102_0214bd90();
+    void State2();
     void func_ov102_0214beb4();
     void func_ov102_0214b03c();
     void func_ov102_0214b988();
@@ -146,8 +146,8 @@ struct daBmb_c : dEnemyBase_c {
     /* Counts mFuse down with the fuse-tick sound, swells the body over the
        last four frames, and detonates at 1 (returns 0 then, else 1). */
     int UpdateFuse();
-    void func_ov102_0214b3b8();
-    void func_ov102_0214b3f0(int);
+    void Throw();
+    void PickUp(int);
     /* Drops the shadow from the floor height below the body, or from the
        carrier's height while it is held. */
     void UpdateShadow();
@@ -156,7 +156,7 @@ struct daBmb_c : dEnemyBase_c {
     int func_ov102_0214ab1c();
     void func_ov102_0214ad40();
     void func_ov102_0214b128();
-    void func_ov102_0214b53c();
+    void UpdateAttachedPose();
 
     /* The arm entries and the fuse. bd20 enters arm 3 (held), bc20 arm 4
        (thrown), baa0 arm 5 (dormant at the home position; a variant other
@@ -165,8 +165,8 @@ struct daBmb_c : dEnemyBase_c {
        explosion and ad14 starts the chase with a 0x96 fuse. ov002, ov014,
        ov078 and ov098 call ad14, ae1c and b384 on a Bob-omb they hold or
        spawned. */
-    void func_ov102_0214bd20();
-    void func_ov102_0214bc20();
+    void BeginCarried();
+    void BeginThrown();
     void func_ov102_0214baa0();
     void func_ov102_0214b384(unsigned int);
     void func_ov102_0214ae1c();

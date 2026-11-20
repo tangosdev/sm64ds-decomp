@@ -168,12 +168,12 @@ int daObj_Mip_Key_c::StateCarriedEnter() {
             mPlayer->SetNoControlState(2, 0x189, 1);
             mTalkState = 0;
         } else {
-            data_0209caa0.file.flags1 |= 0x40;
+            gSaveBlock.file.flags1 |= 0x40;
             mPlayer->SetNoControlState(2, 0x18c, 1);
             mTalkState = 6;
         }
     } else {
-        data_0209caa0.file.flags1 |= 0x80;
+        gSaveBlock.file.flags1 |= 0x80;
         mPlayer->SetNoControlState(2, 0x149, 1);
         mTalkState = 6;
     }
@@ -211,9 +211,9 @@ int daObj_Mip_Key_c::StateLoose() {
     mPrevAngle.y = Vec3_HorzAngle(&mPos, &pp);
     mPrevAngle.x = Vec3_VertAngle(&mPos, &pp);
     v.z = 0x14000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
-    MTX_MultVec43(&v, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPrevAngle.x);
+    MTX_MultVec43(&v, &gScratchMtx, &out);
     ApproachLinear(mSpeed.x, out.x, 0x1000);
     ApproachLinear(mSpeed.y, out.y, 0x1000);
     ApproachLinear(mSpeed.z, out.z, 0x1000);
@@ -246,10 +246,10 @@ int daObj_Mip_Key_c::ChangeState(MipKeyState *p) {
 void daObj_Mip_Key_c::UpdateModelAndShadow() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mModel.mat4x3 = data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x32000) >> 3, mPos.z >> 3);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mModel.mat4x3 = gScratchMtx;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x32000) >> 3, mPos.z >> 3);
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x23000, 0x12c000, 15);
 }
 

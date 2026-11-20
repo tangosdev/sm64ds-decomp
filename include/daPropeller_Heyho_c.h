@@ -50,7 +50,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     dExtAnmModel_c mAnmModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x364 */
-    /* Shadow matrix written by func_ov070_02120070 and passed to
+    /* Shadow matrix written by UpdateModelAndShadow and passed to
        DropShadowRadHeight. */
     Matrix4x3 mShadowMatrix;                            /* 0x38c */
     State                       *mCurrentState;         /* 0x3bc */
@@ -59,8 +59,8 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
        and add a Y lift (0xc8000 / 0x12c000). Keep both component names and
        the Vector3 view over the same 0x3c0-0x3cc storage. 0211fd98 only reads
        it; 0211f62c writes `+= 0x12c000`.
-       [InitResources / func_ov070_0211f62c / func_ov070_0211fae4 /
-        func_ov070_0211f6e0, in src/game/actors/d_a_propeller_heyho.cpp] */
+       [InitResources / St_Settle_Main / St_Chase_Main /
+        St_Dive_Main, in src/game/actors/d_a_propeller_heyho.cpp] */
     union {
         struct {
             s32 mHomePosX, mHomePosY, mHomePosZ;
@@ -70,14 +70,14 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     /* Attack cooldown, in frames. Behavior ticks it with DecIfAbove0_Short;
        wander skips its chase trigger while it is non-zero; fire/dive/settle exits store
        0x5a (90 frames).
-       [Behavior / func_ov070_0211fd98 / func_ov070_0211f48c /
-        func_ov070_0211f62c / func_ov070_0211f6e0,
+       [Behavior / St_Wander_Main / St_Fire_Main /
+        St_Settle_Main / St_Dive_Main,
         in src/game/actors/d_a_propeller_heyho.cpp] */
     u16                          mCooldown;             /* 0x3cc */
     u8  pad_3ce[0x2];
     /* Particle uniqueIDs: System::New 0x13a and NewCleanParticle 0x13b in
        the defeated-state helper, only while mStateStep is set.
-       [func_ov070_0211f368, in src/game/actors/d_a_propeller_heyho.cpp] */
+       [St_Knocked_Main, in src/game/actors/d_a_propeller_heyho.cpp] */
     u32                          mParticle0;            /* 0x3d0 */
     u32                          mParticle1;            /* 0x3d4 */
     /* Per-state step/sub-phase word. Dive init (0211fa80), settle init
@@ -87,26 +87,26 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
        starts the 02123528 animation, and 0 for the attack-mask and metal/shell
        knock-outs; the mega-character knock-out leaves it unchanged. The knocked-state main (0211f368) spawns its particles only
        while it is non-zero.
-       [func_ov070_0211fa80 / func_ov070_0211f694 / func_ov070_0211f62c /
-        func_ov070_0211f100, in src/game/actors/d_a_propeller_heyho.cpp] */
+       [St_Dive_Init / St_Settle_Init / St_Settle_Main /
+        HandleContact, in src/game/actors/d_a_propeller_heyho.cpp] */
     s32                          mStateStep;            /* 0x3d8 */
     /* Set 1 by 0211f100 when a contact that called daPly_c::Hurt starts the
        02123528 animation during the dive state; only the dive init (0211fa80)
        clears it. 0211f694 only reads it. Dive's finished-anim path only
        returns to wander while this is 1.
-       [func_ov070_0211f100 / func_ov070_0211fa80 / func_ov070_0211f6e0 /
-        func_ov070_0211f694, in src/game/actors/d_a_propeller_heyho.cpp] */
+       [HandleContact / St_Dive_Init / St_Dive_Main /
+        St_Settle_Init, in src/game/actors/d_a_propeller_heyho.cpp] */
     s32                          mHitDuringAttack;      /* 0x3dc */
     /* param1 & 0xff, with 0xff folded to 0. Zero disables the fireball
        state; non-zero is a 50% roll in the chase helper.
-       [InitResources / func_ov070_0211fae4,
+       [InitResources / St_Chase_Main,
         in src/game/actors/d_a_propeller_heyho.cpp] */
     s32                          mCanSpitFire;          /* 0x3e0 */
     u8  pad_3e4[0x2];
     /* Heading toward the player or home. Chase/fire/dive inits and
        ApproachAngle targets write it.
-       [func_ov070_0211fa80 / func_ov070_0211fae4 / func_ov070_0211fd98 /
-        func_ov070_0211f48c / func_ov070_0211f6e0,
+       [St_Dive_Init / St_Chase_Main / St_Wander_Main /
+        St_Fire_Main / St_Dive_Main,
         in src/game/actors/d_a_propeller_heyho.cpp] */
     s16                          mTargetAngY;           /* 0x3e6 */
 
@@ -123,20 +123,20 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
-    int func_ov070_0211f48c();
-    int func_ov070_0211f62c();
-    int func_ov070_0211f6e0();
-    void func_ov070_02120070();
-    int func_ov070_0211ffa8();
-    int func_ov070_0211fd98();
-    int func_ov070_0211fd60();
-    int func_ov070_0211fae4();
-    int func_ov070_0211fa80();
-    int func_ov070_0211f694();
-    int func_ov070_0211f5f0();
-    short func_ov070_0211f450();
-    int func_ov070_0211f368();
-    void func_ov070_0211f100();
+    int St_Fire_Main();
+    int St_Settle_Main();
+    int St_Dive_Main();
+    void UpdateModelAndShadow();
+    int St_Wander_Init();
+    int St_Wander_Main();
+    int St_Chase_Init();
+    int St_Chase_Main();
+    int St_Dive_Init();
+    int St_Settle_Init();
+    int St_Fire_Init();
+    short St_Knocked_Init();
+    int St_Knocked_Main();
+    void HandleContact();
     int func_ov070_0211f0a4();
 };
 

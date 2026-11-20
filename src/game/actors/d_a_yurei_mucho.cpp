@@ -263,28 +263,28 @@ void daYurei_Mucho_c::UpdateModelTransform() {
     Vector3 v;
 
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
 
-    mAnmModel.mat4x3 = data_020a0e68;
+    mAnmModel.mat4x3 = gScratchMtx;
     mShotPos.x = 0;
     mShotPos.y = 0;
     mShotPos.z = 0;
-    data_020a0e68 = mAnmModel.mat4x3;
+    gScratchMtx = mAnmModel.mat4x3;
 
-    MTX_Concat43(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&mAnmModel.data.transforms[4], &gScratchMtx, &gScratchMtx);
 
-    mShotPos.x = data_020a0e68.t.x;
-    mShotPos.y = data_020a0e68.t.y;
-    mShotPos.z = data_020a0e68.t.z;
+    mShotPos.x = gScratchMtx.t.x;
+    mShotPos.y = gScratchMtx.t.y;
+    mShotPos.z = gScratchMtx.t.z;
     mShotPos.x <<= 3;
     mShotPos.y <<= 3;
     mShotPos.y -= 0xa000;
     mShotPos.z <<= 3;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
 
-    mShadowMat = data_020a0e68;
+    mShadowMat = gScratchMtx;
 
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x64000, 0x258000, 0xf);
 }
@@ -343,8 +343,8 @@ int daYurei_Mucho_c::UpdateIdle() {
     ApproachAngle(&mPrevAngle.x, 0, 1, 0x500, 0x500);
 
     in.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    MTX_MultVec43(&in, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    MTX_MultVec43(&in, &gScratchMtx, &mSpeed);
 
     if (mStateTimer == 0) {
         ChangeState(&data_ov065_0211d670);
@@ -413,8 +413,8 @@ int daYurei_Mucho_c::UpdateChase() {
             v.z = -0x1000;
             v.x = 0;
             v.y = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-            MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
+            Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+            MTX_MultVec43(&v, &gScratchMtx, &mSpeed);
         }
     } else {
         mStateTimer = pitch;
@@ -460,9 +460,9 @@ int daYurei_Mucho_c::UpdateShoot() {
                 shotVel.x = 0;
                 shotVel.y = 0;
                 shotVel.z = 0;
-                Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-                Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-                MTX_MultVec43(&shotSpeed, &data_020a0e68, &shotVel);
+                Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+                Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+                MTX_MultVec43(&shotSpeed, &gScratchMtx, &shotVel);
                 shot->mSpeed.x = shotVel.x;
                 shot->mSpeed.y = shotVel.y;
                 shot->mSpeed.z = shotVel.z;
@@ -545,19 +545,19 @@ void daYurei_Mucho_c::HandleCollision() {
 
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x4380) {
         mDeathState = 3;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
@@ -576,13 +576,13 @@ void daYurei_Mucho_c::HandleCollision() {
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
@@ -597,7 +597,7 @@ void daYurei_Mucho_c::HandleCollision() {
     if (JumpedOnByPlayer(mdCcAc_c, *p)) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(p, 0);
+        KillByAttack(p, 0);
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }

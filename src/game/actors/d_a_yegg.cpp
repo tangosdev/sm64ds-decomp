@@ -126,7 +126,7 @@ extern const s16 data_ov002_021000a8[];
    clash with these. */
 
 extern int func_02035638(dBgCh_Actr *clsn);
-extern char *data_ov002_021000a0[];
+extern SharedFilePtr *data_ov002_021000a0[];
 /* Was spelled `func_02123804`, a name no symbols.txt defines. ov002's relocs
    record the call at 0x020ec718 as `overlays(77,78,79,80)`: four same-base
    overlays each put a function at 0x02123804. The call is gated on actor
@@ -289,7 +289,7 @@ void daYegg_c::PayOut() {
  * word) are dActor_c's
  * mPrevAngle.x/.y/.z and mHorzSpeed; whether the coin reads them as spawn
  * arguments is not shown here. */
-void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short heading) {
+void daYegg_c::SpawnBlueCoins(const Vector3 *b, int count, int sl, short heading) {
     unsigned int r;
     int zero;
     dActor_c *coin;
@@ -306,7 +306,7 @@ void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short heading) {
         return;
     zero = i;
     do {
-        coin = dActor_c::Spawn(ACTOR_BLUE_COIN, 2, *(const Vector3 *)b, 0, mAreaId, -1);
+        coin = dActor_c::Spawn(ACTOR_BLUE_COIN, 2, *b, 0, mAreaId, -1);
         if (coin != 0) {
             do {
                 rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) << 27) >>
@@ -677,8 +677,8 @@ void daYegg_c::ExecuteFollowPlayer() {
         out.x = 0; out.y = 0; out.z = 0;
         in.z = mHoldOffsetZ;
 
-        Matrix4x3_FromRotationZXYExt(&data_020a0e68, mEasedAngleX, mEasedAngleY, mEasedAngleZ);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationZXYExt(&gScratchMtx, mEasedAngleX, mEasedAngleY, mEasedAngleZ);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
 
         if (mPlayer->mClimbClsn != 0 || func_ov002_020cf700(mPlayer) != 0 ||
             mPlayer->func_ov002_020d0d2c() != 0) {
@@ -973,22 +973,22 @@ void daYegg_c::UpdateModelMatrix() {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
     if (on && mPlayer) {
         Vector3 v(0, 0, 0);
-        data_020a0e68 = *mPlayer->mCarryMatrix;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
-        v.x = data_020a0e68.t.x;
-        v.y = data_020a0e68.t.y;
-        v.z = data_020a0e68.t.z;
+        gScratchMtx = *mPlayer->mCarryMatrix;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0x3f, 9, 0xb);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
+        v.x = gScratchMtx.t.x;
+        v.y = gScratchMtx.t.y;
+        v.z = gScratchMtx.t.z;
         mPos.x = v.x << 3;
         mPos.y = v.y << 3;
         mPos.z = v.z << 3;
         return;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, ((((long long)mPos.x << 9) + 0x800) >> 12),
+    Matrix4x3_FromTranslation(&gScratchMtx, ((((long long)mPos.x << 9) + 0x800) >> 12),
                               FX_MUL(mPos.y + 0x14000, 0x200),
                               ((((long long)mPos.z << 9) + 0x800) >> 12));
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1259,8 +1259,8 @@ int daYegg_c::Behavior()
             vmid.y = 0;
             vmid.z = 0;
             ang = &mPlayer->mAngle.x;
-            Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
-            MTX_MultVec43(&vin, &data_020a0e68, &vmid);
+            Matrix4x3_FromRotationZXYExt(&gScratchMtx, ang[0], ang[1], ang[2]);
+            MTX_MultVec43(&vin, &gScratchMtx, &vmid);
             Vec3_Add(&vout, &mPlayer->mPos, &vmid);
             mPos.x = vout.x;
             mPos.y = vout.y;
@@ -1314,8 +1314,7 @@ int daYegg_c::InitResources()
 
     dExtFrameCtrl_c::LoadFile(gYEggRunAnimationFile);
     dExtFrameCtrl_c::LoadFile(gYEggWaitAnimationFile);
-    if (mAnmModel.SetFile((BMD_File *)((SharedFilePtr *)data_ov002_021000a0[idx])->filePtr, 1,
-                          -1) == 0)
+    if (mAnmModel.SetFile((BMD_File *)data_ov002_021000a0[idx]->filePtr, 1, -1) == 0)
         return 0;
 
     /* The predicate is asked a SECOND time rather than reusing idx: the ROM calls

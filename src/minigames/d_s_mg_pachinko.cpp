@@ -97,7 +97,7 @@ namespace Sound {
 extern "C" {
 
 /* --- shared ov004, main and library helpers --- */
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawBigNumber(int x, int y, int h, int a, int b, int c, int d);
 extern int Mg_GetSubmittedScore(void);
 extern void Mg_DrawTopRightCounter(int a, int b);
@@ -111,7 +111,7 @@ struct OamAttr;
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
+extern void Mg_RenderSpriteBothPalMtx(OamAttr *sprite, int x, int y, int a3, Matrix2x2 *m);
 extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
 extern void Mg_SetTopScreenYOffset(int a);
@@ -128,7 +128,7 @@ extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
 extern unsigned char gMainScreenLayers;
 extern u8 gSubScreenLayers;
 
-extern void *sPachinkoDecoSprite;
+extern OamAttr *sPachinkoDecoSprite;
 extern unsigned char sPachinkoPipeRiseStartFrames[];
 extern unsigned char sPachinkoPipeSinkStartFrames[];
 extern unsigned char sPachinkoPipeRiseFrames[];
@@ -141,15 +141,15 @@ extern s32   data_ov006_0212eb44[];
 extern int sPachinkoPipeRiseStops[];
 extern s32 sPachinkoPipeSinkStops[];
 extern int sPachinkoTargetX[];
-extern int sPachinkoFxSpritesA[];
-extern int sPachinkoFxSpritesB[];
-extern int sPachinkoPipeSprites[];
-extern int sPachinkoTargetSprites[];
-extern int sPachinkoFlyerSprites[];
+extern OamAttr *sPachinkoFxSpritesA[];
+extern OamAttr *sPachinkoFxSpritesB[];
+extern OamAttr *sPachinkoPipeSprites[];
+extern OamAttr *sPachinkoTargetSprites[];
+extern OamAttr *sPachinkoFlyerSprites[];
 extern int sPachinkoWaveColumnX[];
 extern int sPachinkoPopSfx[];
-extern int sPachinkoBallSprites[];
-extern int sPachinkoBobOmbSprites;
+extern OamAttr *sPachinkoBallSprites[];
+extern OamAttr *sPachinkoBobOmbSprites;
 extern u16 sPachinkoPopScores[];
 extern u8 sPachinkoWaveSlots[];
 
@@ -174,8 +174,8 @@ dScMgPachinko_c::~dScMgPachinko_c()
 void dScMgPachinko_c::Deco_DrawAll() {
     for (int i = 0; i < 3; i++) {
         if (mRow[i].visible != 0) {
-            OAM::Render(false, (OamAttr *)sPachinkoDecoSprite, mRow[i].x >> 12, mRow[i].y >> 12, -1,
-                        -1, 0x1000, 0x1000, mRow[i].angle, -1);
+            OAM::Render(false, sPachinkoDecoSprite, mRow[i].x >> 12, mRow[i].y >> 12, -1, -1,
+                        0x1000, 0x1000, mRow[i].angle, -1);
         }
     }
 }
@@ -328,8 +328,8 @@ void dScMgPachinko_c::Target_DrawAll() {
     int i;
     for (i = 0; i < 4; i++) {
         if (mTarget[i].visible != 0) {
-            Mg_RenderSpriteBoth((void *)sPachinkoTargetSprites[mTarget[i].sprite],
-                                mTarget[i].x >> 0xc, mTarget[i].y >> 0xc, -1, 1);
+            Mg_RenderSpriteBoth(sPachinkoTargetSprites[mTarget[i].sprite], mTarget[i].x >> 0xc,
+                                mTarget[i].y >> 0xc, -1, 1);
         }
     }
 }
@@ -358,8 +358,7 @@ void dScMgPachinko_c::Flyer_Draw() {
         return;
     int x = mFlyer[0].x;
     int y = mFlyer[0].y;
-    Mg_RenderSpriteBoth((void *)sPachinkoFlyerSprites[mFlyer[0].facing], x >> 0xc, y >> 0xc, -1,
-                        -1);
+    Mg_RenderSpriteBoth(sPachinkoFlyerSprites[mFlyer[0].facing], x >> 0xc, y >> 0xc, -1, -1);
 }
 
 void dScMgPachinko_c::Flyer_CheckHits(int idx) {
@@ -552,9 +551,9 @@ void dScMgPachinko_c::Fx_DrawAll() {
             int y = mFx[i].y >> 12;
             int idx = mFx[i].frame;
             if (type != 2) {
-                Mg_RenderSpriteBoth((void *)sPachinkoFxSpritesA[idx], x, y, -1, -1);
+                Mg_RenderSpriteBoth(sPachinkoFxSpritesA[idx], x, y, -1, -1);
             } else {
-                Mg_RenderSpriteBoth((void *)sPachinkoFxSpritesB[idx], x, y, -1, -1);
+                Mg_RenderSpriteBoth(sPachinkoFxSpritesB[idx], x, y, -1, -1);
             }
         }
     }
@@ -864,7 +863,7 @@ void dScMgPachinko_c::Pipe_DrawAll() {
     int i;
     for (i = 0; i < 2; i++) {
         if (mPipe[i].visible != 0)
-            Mg_RenderSpriteBoth((void *)sPachinkoPipeSprites[mPipe[i].sprite], mPipe[i].x >> 12,
+            Mg_RenderSpriteBoth(sPachinkoPipeSprites[mPipe[i].sprite], mPipe[i].x >> 12,
                                 mPipe[i].y >> 12, -1, 2);
     }
 }
@@ -1093,7 +1092,7 @@ void dScMgPachinko_c::Ball_DrawAll() {
             m.m01 = sinv;
             m.m10 = -sinv;
             m.m11 = cosv;
-            Mg_RenderSpriteBothPalMtx((void *)sPachinkoBallSprites[sprite], x, y, -1, &m);
+            Mg_RenderSpriteBothPalMtx(sPachinkoBallSprites[sprite], x, y, -1, &m);
         }
     }
 }
@@ -1647,8 +1646,8 @@ void dScMgPachinko_c::BobOmb_DrawAll() {
     for (i = 0; i < SHOT_NUM; i++) {
         if (mShot[i].visible == 0)
             continue;
-        Mg_RenderSpriteBothScaled((OamAttr *)sPachinkoBobOmbSprites, mShot[i].x >> 12,
-                                  mShot[i].y >> 12, -1, -1, 0x1000, 0);
+        Mg_RenderSpriteBothScaled(sPachinkoBobOmbSprites, mShot[i].x >> 12, mShot[i].y >> 12, -1,
+                                  -1, 0x1000, 0);
     }
 }
 

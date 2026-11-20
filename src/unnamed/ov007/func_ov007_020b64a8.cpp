@@ -7,21 +7,21 @@
  * header. Ids 1/2/3 are the owner's sound-mode commands: its dispatcher
  * DSMT_MenuCallback maps them to SetSoundMode(2/0/1). */
 extern "C" void func_ov007_020b64a8(int step) {
-    int idx = WORK->settings->bootArgs->soundModeItem + step;
+    int idx = gMenuWork->settings->bootArgs->soundModeItem + step;
     if (idx < 0)
         idx = 2;
     else if (idx > 2)
         idx = 0;
     switch (idx) {
     case 0:
-        WORK->callback(1);
+        gMenuWork->callback(1);
         break;
     case 1:
-        WORK->callback(2);
+        gMenuWork->callback(2);
         break;
     case 2:
-        WORK->callback(3);
+        gMenuWork->callback(3);
         break;
     }
-    WORK->settings->bootArgs->func_ov007_020b7eec();
+    gMenuWork->settings->bootArgs->func_ov007_020b7eec();
 }

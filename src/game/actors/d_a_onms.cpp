@@ -143,7 +143,7 @@ s32 *data_ov092_02132294[3] = {
     data_ov092_02132350,
     data_ov092_021323dc,
 };
-extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 gScratchMtx;
 
 /* D1 tears down dCcAcPos_c, dBgCh_Actr and the inline dBgActor_c base.
    D0 is that teardown plus the actor-heap free. */
@@ -290,7 +290,7 @@ void daOnms_c::StateKnocked()
 }
 
 /* Path mode: step to the next path node and pick the roll that heads for it. */
-void daOnms_c::func_ov092_021313b0() {
+void daOnms_c::NextPathNode() {
     Vector3 old;
 
     old = mPathNode;
@@ -316,7 +316,7 @@ void daOnms_c::func_ov092_021313b0() {
 void daOnms_c::NextMove()
 {
     if (mMoveKind == kMoveAlongPath) {
-        func_ov092_021313b0();
+        NextPathNode();
     } else {
         mMoveSeqIndex++;
         s32 *seq = mMoveSeq;
@@ -508,11 +508,11 @@ void daOnms_c::func_ov092_02131a88() {
 void daOnms_c::UpdateModelMtx()
 {
     if (mTumbling != 0) {
-        data_020a0e68 = mBaseMtx;
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-        mModel.mat4x3 = data_020a0e68;
+        gScratchMtx = mBaseMtx;
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+        mModel.mat4x3 = gScratchMtx;
         mModel.mat4x3.t.x = mPos.x >> 3;
         mModel.mat4x3.t.y = mPos.y >> 3;
         mModel.mat4x3.t.z = mPos.z >> 3;
@@ -583,7 +583,7 @@ int daOnms_c::InitResources()
 
     mMoveKind = param1 & 3;
     if (mMoveKind != kMoveAlongPath) {
-        mMoveSeq = ((s32 **)&data_ov092_02132294)[mMoveKind];
+        mMoveSeq = data_ov092_02132294[mMoveKind];
         mMoveSeqIndex = 0;
         mMoveDir = *mMoveSeq;
     } else {
@@ -591,7 +591,7 @@ int daOnms_c::InitResources()
         mPathNodeCount = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
         mPathPtr.GetNode(mPathNode, mPathNodeIndex);
-        func_ov092_021313b0();
+        NextPathNode();
     }
 
     mPos.y += 0xfa000;
@@ -600,8 +600,8 @@ int daOnms_c::InitResources()
     mRestPos.z = mPos.z;
     Vec3_Asr(&scaledPos, ActorPos(this), 3);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, scaledPos.x, scaledPos.y, scaledPos.z);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, scaledPos.x, scaledPos.y, scaledPos.z);
+    mModel.mat4x3 = gScratchMtx;
     mBaseMtx = mModel.mat4x3;
 
     func_ov092_02131a88();

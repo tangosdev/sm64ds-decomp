@@ -69,8 +69,8 @@ extern "C" void *func_0201787c(SharedFilePtr *sfp);
 u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
 
-extern Matrix4x3 data_0209b3ec;
-extern char data_ov080_021277a8[];
+extern Matrix4x3 gViewMtx;
+extern const daPicGate_c::WaveParams data_ov080_021277a8[];
 extern SharedFilePtr *data_ov080_0212775c[];
 extern unsigned char data_ov080_02128688[];
 extern unsigned char data_ov080_0212869c[];
@@ -108,13 +108,13 @@ void daPicGate_c::LoadMaterial() {
 void daPicGate_c::BuildGateMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(
-        &data_020a0e68, -(((unsigned char)(param1 & 15) + 1) * 0x64000) / 2 >> 3, 0, 0);
-    mMtx = data_020a0e68;
-    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
-    mInvMtx = data_020a0e68;
+        &gScratchMtx, -(((unsigned char)(param1 & 15) + 1) * 0x64000) / 2 >> 3, 0, 0);
+    mMtx = gScratchMtx;
+    MTX_Inverse43(&gScratchMtx, &gScratchMtx);
+    mInvMtx = gScratchMtx;
 }
 
 /* LoadTexture: one 0x18-byte record per picture id, decompressed to VRAM on
@@ -172,9 +172,9 @@ void daPicGate_c::HitTest() {
 
     Vec3_Asr(&a, &r5->mPrevPos, 3);
     Vec3_Asr(&b, &r5->mPos, 3);
-    data_020a0e68 = mInvMtx;
-    MTX_MultVec43(&a, &data_020a0e68, &oa);
-    MTX_MultVec43(&b, &data_020a0e68, &ob);
+    gScratchMtx = mInvMtx;
+    MTX_MultVec43(&a, &gScratchMtx, &oa);
+    MTX_MultVec43(&b, &gScratchMtx, &ob);
 
     if ((oa.z > 0 && ob.z <= 0) || (oa.z < 0 && ob.z >= 0)) {
         x = ob.x << 3;
@@ -388,7 +388,7 @@ void daPicGate_c::BeginWave(s32 a1, s32 a2, s32 a3) {
         if (a3 != 0)
             r0 += 6;
     }
-    mWaveParams = (const WaveParams *)(data_ov080_021277a8 + r0 * 0x14);
+    mWaveParams = &data_ov080_021277a8[r0];
     mWaveTimer = mWaveParams->duration;
 }
 
@@ -426,7 +426,7 @@ void daPicGate_c::DrawFlat() {
     Vertex *p;
 
     G3_PushMtx();
-    MTX_Concat43(&mMtx, &data_0209b3ec, &modelView);
+    MTX_Concat43(&mMtx, &gViewMtx, &modelView);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&modelView);
     G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
@@ -484,7 +484,7 @@ void daPicGate_c::DrawRippleEnvMapped() {
     Matrix4x3 modelView;
     int i, j;
 
-    MTX_Concat43(&mMtx, &data_0209b3ec, &modelView);
+    MTX_Concat43(&mMtx, &gViewMtx, &modelView);
     G3_PushMtx();
     G3_LoadTexMtxEnv(data_ov080_0212771c);
     G3_MultMtx43(&modelView);

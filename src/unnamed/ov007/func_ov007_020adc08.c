@@ -15,7 +15,7 @@ extern void func_ov007_020c02d8(void *screen, int rows, unsigned short tile);
  * source behind a fresh buffer, 5 starts from a blank (tile 0x300) screen. */
 Ov007LayerSlot *func_ov007_020adc08(int type, Ov007BgLayer *layer) {
     Ov007LayerSlot *slot = func_ov007_020c3df4(0, sizeof(Ov007LayerSlot));
-    Ov007Display *display = WORK->display;
+    Ov007Display *display = gMenuWork->display;
     slot->kind = type;
     slot->layer = layer;
     slot->state = func_ov007_020c9388(0);

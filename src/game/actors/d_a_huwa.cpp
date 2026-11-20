@@ -116,12 +116,12 @@ void daHuwa_c::KillWithCoins() {
     coins.z = mPos.z;
     SpawnCoins(coins, 3, 0xa000, 0);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    MTX_Concat43(&mAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    MTX_Concat43(&mAnmModel.data.transforms[1], &gScratchMtx, &gScratchMtx);
 
-    dust.x = data_020a0e68.t.x;
-    dust.y = data_020a0e68.t.y;
-    dust.z = data_020a0e68.t.z;
+    dust.x = gScratchMtx.t.x;
+    dust.y = gScratchMtx.t.y;
+    dust.z = gScratchMtx.t.z;
     VEC_Subtract(&dust, &mPos, &dust);
     Vec3_LslInPlace(&dust, 3);
     VEC_Add(&dust, &mPos, &dust);

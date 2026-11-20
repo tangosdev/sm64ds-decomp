@@ -84,7 +84,7 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
             break;
         case 7: {
             u16 id = item->id;
-            Ov007BootArgs *bootArgs = WORK->settings->bootArgs;
+            Ov007BootArgs *bootArgs = gMenuWork->settings->bootArgs;
             s16 v = item->state->currentState;
 
             if ((v == 2 && (id == 9 || (id == 0xc && bootArgs->backlightOn != 0) ||

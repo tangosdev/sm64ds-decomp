@@ -10,7 +10,7 @@
  * wall breaks.
  *
  * A small state machine drives it. mState points at one of four file-scope
- * records {enter, tick}, each a pointer-to-member; func_ov102_0214d1f8
+ * records {enter, tick}, each a pointer-to-member; SetState
  * switches state and runs `enter`, Behavior runs `tick` every frame. The
  * records are .bss. __sinit_d_a_shl.cpp copies the PMF constants at
  * ov102:0x0214e5d4..0x0214e614 into them:
@@ -71,16 +71,15 @@ extern ShlState data_ov102_0214ea48;
 extern ShlState data_ov102_0214ea58;
 extern ShlState data_ov102_0214ea68;
 extern ShlStateEnd data_ov102_0214ea78;
-extern SharedFilePtr data_ov002_0210da18;
-extern SharedFilePtr data_ov002_0210da20;
+extern SharedFilePtr gShellGreenModelFile;
+extern SharedFilePtr gShellRedModelFile;
 extern SharedFilePtr *const data_ov102_0214d70c[2] = {
-    &data_ov002_0210da18,
-    &data_ov002_0210da20,
+    &gShellGreenModelFile,
+    &gShellRedModelFile,
 };
 
 /* -- other modules -- */
-int func_ov002_020cc16c(void *player, void *actor);
-
+int func_ov002_020cc16c(daPly_c *player, daShl_c *shell);
 }
 int SurfaceInfo_TestFlag0x20(int *si);
 
@@ -119,7 +118,7 @@ s32 daShl_c::InitResources()
     mCarrier = 0;
     mMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     mMeshClsn.StartDetectingWater();
-    func_ov102_0214d1f8(&data_ov102_0214ea68);
+    SetState(&data_ov102_0214ea68);
     mParticleHandle_3d4 = 0;
     mParticleHandle_3d0 = mParticleHandle_3d4;
     mParticleHandle_3cc = mParticleHandle_3d0;
@@ -138,11 +137,11 @@ s32 daShl_c::Behavior()
     if (UpdateYoshiEat(mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
             mSpawnAngleY = mPrevAngle.y;
-            func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
+            SetState(&data_ov102_0214ea78.rec);
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
         }
-        func_ov102_0214ce60();
+        UpdateModelAndShadow();
         mdCc_c.Clear();
         return 1;
     }
@@ -199,7 +198,7 @@ s32 daShl_c::Behavior()
 
     if (mModelIndex == 0)
         func_ov102_0214c84c();
-    func_ov102_0214ce60();
+    UpdateModelAndShadow();
     mdCc_c.Clear();
     if (mState != &data_ov102_0214ea48)
         mdCc_c.Update();
@@ -239,8 +238,7 @@ s32 daShl_c::CleanupResources()
 }
 
 /* Switch state: store the record, then run its `enter` if it has one. */
-int daShl_c::func_ov102_0214d1f8(ShlState *state)
-{
+int daShl_c::SetState(ShlState *state) {
     mState = state;
     ShlState *st = mState;
     if (st->enter == 0)
@@ -339,7 +337,7 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
         return 0;
     mCarrier = static_cast<daPly_c *>(player);
     if (mState != &data_ov102_0214ea48)
-        func_ov102_0214d1f8(&data_ov102_0214ea48);
+        SetState(&data_ov102_0214ea48);
     return 1;
 }
 
@@ -349,15 +347,14 @@ int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
     if (mState == &data_ov102_0214ea78.rec)
         return 0;
     mSpawnAngleY = kicker->mAngle.y;
-    func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
+    SetState(&data_ov102_0214ea78.rec);
     return 1;
 }
 
 /* dExtSimpleModel_c matrix and drop shadow. While carried (flag 0x4000) the model
    follows the carrier's hands; otherwise it sits at mPos turned by
    mAngle.y. Flag 0x40000 (hidden) skips the shadow. */
-void daShl_c::func_ov102_0214ce60()
-{
+void daShl_c::UpdateModelAndShadow() {
     int carried = (mFlags & 0x4000) != 0;
     if (carried) {
         Vector3 offset;
@@ -426,7 +423,7 @@ void daShl_c::func_ov102_0214cbec()
         if (player->TryGrab(*this) == 0)
             return;
         mCarrier = player;
-        func_ov102_0214d1f8(&data_ov102_0214ea58);
+        SetState(&data_ov102_0214ea58);
         return;
     }
 

@@ -145,7 +145,7 @@ struct daYegg_c : dEnemyBase_c {
     int func_ov002_020ec654();
     void HandleWallHit(int arg);
     void PayOut();
-    void SpawnBlueCoins(void *b, int count, int sl, short heading);
+    void SpawnBlueCoins(const Vector3 *b, int count, int sl, short heading);
     void ExecuteDrop();
     void EnterDrop();
     void ExecuteWobble();
