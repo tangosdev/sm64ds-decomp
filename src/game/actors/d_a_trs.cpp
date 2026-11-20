@@ -715,7 +715,7 @@ void daTrs_c::UpdateKeyBigBoo() {
     switch (this->mState) {
     case 0: func_ov063_02118914(); break;
     case 1: func_ov063_0211873c(); break;
-    case 2: func_ov063_02118f50(); break;
+    case 2: UpdateBigBooBouncedOn(); break;
     case 3: func_ov063_021177b0(); break;
     case 4: func_ov063_02118458(); break;
     case 5: func_ov063_0211776c(); break;
@@ -1348,22 +1348,22 @@ void daTrs_c::UpdateBigBoo() {
 
     switch (this->mState) {
     case 0:
-        func_ov063_02119074();
+        UpdateBigBooInactive();
         break;
     case 1:
-        func_ov063_02118f74();
+        UpdateBigBooChase();
         break;
     case 2:
-        func_ov063_02118f50();
+        UpdateBigBooBouncedOn();
         break;
     case 3:
-        func_ov063_02118cd8();
+        UpdateBigBooHit();
         break;
     case 4:
-        func_ov063_02118b98();
+        UpdateBigBooDefeated();
         break;
     case 5:
-        func_ov063_02118b2c();
+        UpdateBigBooApproach();
         break;
     }
 
@@ -1371,7 +1371,7 @@ void daTrs_c::UpdateBigBoo() {
 }
 
 
-void daTrs_c::func_ov063_02118b2c() {
+void daTrs_c::UpdateBigBooApproach() {
     mHorzSpeed = 0x5000;
     int r = GetAttackStatus();
     if (r == -1) {
@@ -1388,7 +1388,7 @@ void daTrs_c::func_ov063_02118b2c() {
 }
 
 
-void daTrs_c::func_ov063_02118b98() {
+void daTrs_c::UpdateBigBooDefeated() {
     this->mBooFlags.hitByParam3Player = 0;
     Stop();
 
@@ -1428,7 +1428,7 @@ void daTrs_c::func_ov063_02118b98() {
 }
 
 
-void daTrs_c::func_ov063_02118cd8() {
+void daTrs_c::UpdateBigBooHit() {
 
     if (this->mStateTimer == 0) {
         if (!this->mBooFlags.hitByParam3Player) {
@@ -1520,14 +1520,14 @@ void daTrsIcon_c::func_ov063_02118f24(const Vector3 &pos) {
     this->UntrackAndSpawnStar(this->mTrackStarID, this->mStarID, pos, val);
 }
 
-void daTrs_c::func_ov063_02118f50() {
+void daTrs_c::UpdateBigBooBouncedOn() {
 
     if (UpdateAfterBouncedOn(0x14))
         this->mState = 1;
 }
 
 
-void daTrs_c::func_ov063_02118f74() {
+void daTrs_c::UpdateBigBooChase() {
 
     short a2;
     int a3;
@@ -1573,7 +1573,7 @@ void daTrs_c::func_ov063_02118f74() {
 }
 
 
-void daTrs_c::func_ov063_02119074() {
+void daTrs_c::UpdateBigBooInactive() {
 
     /* ROM: beq body on ==0xc; bne after on !=0xf  =>  body when 0xc OR 0xf */
     if (this->mVariant == 0xc ||
