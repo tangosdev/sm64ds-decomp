@@ -10,7 +10,6 @@
 
 extern u32 data_0209cde4;
 extern u8 data_0209cdcc;
-extern mHeap::Heap_t *data_020a0e9c;
 extern void *data_020a0ea0;
 
 extern void InitCrashScreen(void);
@@ -76,9 +75,9 @@ void func_02013f4c(void)
         }
         if (old & PAD_BUTTON_A) {
             if (cur & PAD_BUTTON_SELECT) {
-                mHeap::Heap_t *pa = data_020a0e9c;
+                mHeap::Heap_t *pa = Memory::rootHeapPtr;
                 mHeap::Heap_t *pb = (mHeap::Heap_t *)data_020a0ea0;
-                mHeap::Heap_t *pc = data_020a0eac;
+                mHeap::Heap_t *pc = GAME_HEAP_PTR;
                 if (cur & PAD_KEY_LEFT) {
                     pa->Rescue();
                 } else if (cur & PAD_KEY_RIGHT) {

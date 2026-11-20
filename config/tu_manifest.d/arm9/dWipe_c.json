@@ -220,7 +220,7 @@
       "binding": "STB_GLOBAL"
     },
     {
-      "symbol": "data_0209f61c",
+      "symbol": "gSceneWipe",
       "address": "0x0209f61c",
       "size": "0x2c",
       "evidence": "the namespace-scope dWipe_c singleton (sizeof 0x2c); retail __sinit_02074f80 calls _ZN7dWipe_cC1Ev on it and registers _ZN7dWipe_cD1Ev. Bracketed by this TU's own scanline tables at 0x0209f648 above and its IRQ index words at 0x0209f5f8..0x0209f60c below.",
@@ -456,7 +456,7 @@
       "source": "0x02074fac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209f61c",
+      "symbol": "gSceneWipe",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209f61c"

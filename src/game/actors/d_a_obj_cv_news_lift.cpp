@@ -34,7 +34,7 @@
  * - MainMeshCallback and Platform0Callback: testing actorID == 0xbf
  *   inline is 0x34 against 0x40. The int temporary stays on all five
  *   callbacks.
- * - data_02092768 and data_020a0e68 stay address names.
+ * - data_02092768 stays an address name.
  */
 
 #include "daObjCvNewsLift_c.h"
@@ -89,9 +89,8 @@ Vector3 gNewsLiftPlatformOffsets[4] = {
 extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
-/* The identity quaternion. Its other readers still declare it int[4], so this
-   TU copies it through a Quaternion view. */
-extern s32 data_02092768[];
+/* The identity quaternion. */
+extern Quaternion data_02092768;
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
 extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
@@ -115,12 +114,12 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
     mPlayerOnMesh = 1;
     mResetTimer = 300;
     if (mBumped) {
-        mTargetRotation = *(Quaternion *)data_02092768;
+        mTargetRotation = data_02092768;
     } else {
-        data_020a0e68 = mClsnMat;
-        MTX_Inverse43(&data_020a0e68, &data_020a0e68);
+        gScratchMtx = mClsnMat;
+        MTX_Inverse43(&gScratchMtx, &gScratchMtx);
         Vector3 inFrame;
-        MTX_MultVec43(&player->mPos, &data_020a0e68, &inFrame);
+        MTX_MultVec43(&player->mPos, &gScratchMtx, &inFrame);
         inFrame.y *= 48;
         Vector3 axis;
         axis.x = 0;
@@ -326,7 +325,7 @@ s32 daObjCvNewsLift_c::Behavior() {
                 ray->y = 0;
                 ray->z = 0;
             }
-            Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+            Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
             {
                 Vector3 *start = rayStart;
                 Vector3 *from = rayFrom;
@@ -334,8 +333,8 @@ s32 daObjCvNewsLift_c::Behavior() {
                 for (i = 0; i < 3; i++) {
                     ahead = *start;
                     ahead.z += 0x28000;
-                    MTX_MultVec43(start, &data_020a0e68, from);
-                    MTX_MultVec43(&ahead, &data_020a0e68, to);
+                    MTX_MultVec43(start, &gScratchMtx, from);
+                    MTX_MultVec43(&ahead, &gScratchMtx, to);
                     VEC_Add(from, &mPos, from);
                     VEC_Add(to, &mPos, to);
                     start++;
@@ -370,7 +369,7 @@ s32 daObjCvNewsLift_c::Behavior() {
             }
         }
         if (!DecIfAbove0_Byte(&mTiltHoldTimer)) {
-            mTargetRotation = *(Quaternion *)data_02092768;
+            mTargetRotation = data_02092768;
         }
     }
     Quaternion_SLerp((int *)&mRotation, (int *)&mTargetRotation, 0x199, (int *)&mRotation);
@@ -378,8 +377,8 @@ s32 daObjCvNewsLift_c::Behavior() {
         mResetTimer = 300;
     if (!DecIfAbove0_Short(&mResetTimer)) {
         mPos = mHomePos;
-        mRotation = *(Quaternion *)data_02092768;
-        mTargetRotation = *(Quaternion *)data_02092768;
+        mRotation = data_02092768;
+        mTargetRotation = data_02092768;
         mLoweredPlatform = -1;
         mWobblePhase = 0;
         mBumped = 0;
@@ -436,23 +435,23 @@ void daObjCvNewsLift_c::UpdateModelTransforms() {
 
     Matrix4x3_FromQuaternion(&mRotation, &tilt);
     Vec3_Asr(&pos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
     MtxStack::concat(tilt);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    mModel.mat4x3 = gScratchMtx;
     mainMat = &mModel.mat4x3;
     offset = gNewsLiftPlatformOffsets;
     for (i = 0; i < 4; i++) {
         hang = *offset;
         if (mLoweredPlatform == i && !mBumped)
             hang.y -= 0x1e000;
-        data_020a0e68 = *mainMat;
+        gScratchMtx = *mainMat;
         Vec3_Asr(&scaled, &hang, 3);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, sNewsLiftPlatformYaws[i]);
-        mPlatformModels[i].mat4x3 = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, scaled.x, scaled.y, scaled.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, sNewsLiftPlatformYaws[i]);
+        mPlatformModels[i].mat4x3 = gScratchMtx;
         offset++;
     }
 
@@ -474,12 +473,12 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
     Vector3 hang;
 
     Matrix4x3_FromQuaternion(&mRotation, &tilt);
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
     MtxStack::concat(tilt);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    mClsnMat = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    mClsnMat = gScratchMtx;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 
     offset = gNewsLiftPlatformOffsets;
@@ -491,11 +490,11 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
         hang = *offset;
         if (mLoweredPlatform == i && !mBumped)
             hang.y -= 0x1e000;
-        data_020a0e68 = mClsnMat;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, hang.x, hang.y, hang.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, sNewsLiftPlatformYaws[i]);
+        gScratchMtx = mClsnMat;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, hang.x, hang.y, hang.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, sNewsLiftPlatformYaws[i]);
         /* this stepped one matrix at a time. An index or *platformMat misses. */
-        cursor->mPlatformMats[0] = data_020a0e68;
+        cursor->mPlatformMats[0] = gScratchMtx;
         platformCollider->Transform(*platformMat, mAngle.y);
         offset++;
         cursor = (daObjCvNewsLift_c *)((Matrix4x3 *)cursor + 1);

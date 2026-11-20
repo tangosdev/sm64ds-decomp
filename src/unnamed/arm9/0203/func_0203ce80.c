@@ -3,7 +3,7 @@
 #include "common.h"
 #include "math/CalcLib.h"
 
-void func_0203cf00(Vector3 *out, Vector3 *a, Vector3 *b) {
+void Vec3_Cross(Vector3 *out, Vector3 *a, Vector3 *b) {
     Vector3 cross;
     VEC_CrossProduct(a, b, &cross);
     out->x = cross.x;

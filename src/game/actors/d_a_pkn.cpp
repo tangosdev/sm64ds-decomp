@@ -95,7 +95,6 @@ extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f
 extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern const u8 data_ov084_021302ec[8] = {0, 3, 4, 5, 6, 0, 0, 0};
 
-extern "C" int *Vec3_LslInPlace(int *v, int sh);
 
 
 /* ==========================================================================
@@ -691,10 +690,10 @@ void daPkn_c::UpdatePose()
     int scale;
 
     Vec3_Asr(&pos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    saved = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, pos.x, pos.y, pos.z);
+    saved = gScratchMtx;
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    mAnmModel.mat4x3 = gScratchMtx;
 
     ang.x = 0;
     ang.y = 0;
@@ -708,12 +707,12 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.x = 0;
     mHeadClsnOffset.y = 0;
     mHeadClsnOffset.z = 0;
-    data_020a0e68 = saved;
-    MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    mHeadClsnOffset.x = data_020a0e68.t.x;
-    mHeadClsnOffset.y = data_020a0e68.t.y;
-    mHeadClsnOffset.z = data_020a0e68.t.z;
-    Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
+    gScratchMtx = saved;
+    MTX_Concat43(&mAnmModel.data.transforms[6], &gScratchMtx, &gScratchMtx);
+    mHeadClsnOffset.x = gScratchMtx.t.x;
+    mHeadClsnOffset.y = gScratchMtx.t.y;
+    mHeadClsnOffset.z = gScratchMtx.t.z;
+    Vec3_LslInPlace(&mHeadClsnOffset, 3);
     VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads

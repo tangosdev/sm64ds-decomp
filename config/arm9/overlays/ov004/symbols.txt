@@ -171,7 +171,7 @@ _ZN8MgBannerC1Ev kind:function(arm,size=0xc) addr:0x020b4a70
 __arraydtor$954 kind:function(arm,size=0x24) addr:0x020b4a7c
 _ZN8MgBannerD1Ev kind:function(arm,size=0x4) addr:0x020b4aa0
 _ZN6Sprite12FlyToCounterEv kind:function(arm,size=0xe0) addr:0x020b4aa4
-_ZN6Sprite11PlacePayoutEP5Vec2i kind:function(arm,size=0xac) addr:0x020b4b84
+_ZN6Sprite11PlacePayoutEP7Vector2 kind:function(arm,size=0xac) addr:0x020b4b84
 _ZN6Sprite14MoveThenRefundEv kind:function(arm,size=0x94) addr:0x020b4c30
 _ZN6Sprite6ReturnEv kind:function(arm,size=0x8c) addr:0x020b4cc4
 _ZN6Sprite9RiseSpentEv kind:function(arm,size=0xac) addr:0x020b4d50
@@ -180,7 +180,7 @@ _ZN6Sprite5SpendEv kind:function(arm,size=0xcc) addr:0x020b4e78
 _ZN6Sprite4RiseEv kind:function(arm,size=0xac) addr:0x020b4f44
 _ZN6Sprite12MoveThenRiseEv kind:function(arm,size=0x7c) addr:0x020b4ff0
 _ZN6Sprite7SendOffEv kind:function(arm,size=0x9c) addr:0x020b506c
-_ZN6Sprite6LaunchEP5Vec2i kind:function(arm,size=0xdc) addr:0x020b5108
+_ZN6Sprite6LaunchEP7Vector2 kind:function(arm,size=0xdc) addr:0x020b5108
 _ZN6Sprite4HideEv kind:function(arm,size=0xc) addr:0x020b51e4
 _ZN6Sprite12MoveThenBankEv kind:function(arm,size=0x98) addr:0x020b51f0
 _ZN6Sprite4MoveEv kind:function(arm,size=0x30) addr:0x020b5288
@@ -587,11 +587,9 @@ sMgStockCounterFiles kind:data(any) addr:0x020bbfe4
 sMgPauseBgNcgByLanguage kind:data(any) addr:0x020bbff8
 sMgOptionNcgByLanguage kind:data(any) addr:0x020bc00c
 sMgMenuItem0SpritesByLanguage kind:data(any) addr:0x020bc020
-data_ov004_020bc03c kind:data(any) addr:0x020bc03c
 _ZTVN11dScMgBase_c15graphCallback_cE kind:data(any) addr:0x020bc03c
 _ZTSN11dScMgBase_c15graphCallback_cE kind:data(any) addr:0x020bc04c
 sMgSceneKindByGame kind:data(any) addr:0x020bc070
-data_ov004_020bc0c0 kind:data(any) addr:0x020bc0c0
 _ZTV11dScMgBase_c kind:data(any) addr:0x020bc0c0
 sMgBannerButtonsArmed kind:data(any) addr:0x020bc150
 pmf_Banner_UpdateZoom kind:data(any) addr:0x020bc154

@@ -15,7 +15,7 @@ _Z19func_ov001_020ab2e4v kind:function(arm,size=0x90) addr:0x020ab2e4
 _ZN10dCapIcon_cD0Ev kind:function(arm,size=0x2c) addr:0x020ab374
 _ZN10dCapIcon_cD1Ev kind:function(arm,size=0x24) addr:0x020ab3a0
 _ZN10dCapIcon_cC1Ev kind:function(arm,size=0x2c) addr:0x020ab3c4
-_ZN9dThIcon_c19func_ov001_020ab3f0Ev kind:function(arm,size=0x2c) addr:0x020ab3f0
+_ZN9dThIcon_c5PressEv kind:function(arm,size=0x2c) addr:0x020ab3f0
 _ZN9dThIcon_c6SelectEv kind:function(arm,size=0x34) addr:0x020ab41c
 _Z16TouchArea_UpdatePvi kind:function(arm,size=0xfc) addr:0x020ab450
 _ZN9dThIcon_c6RenderEv kind:function(arm,size=0x4) addr:0x020ab54c
@@ -79,7 +79,7 @@ data_ov001_020aba60 kind:data(any) addr:0x020aba60
 data_ov001_020aba68 kind:data(any) addr:0x020aba68
 _ZN3OAM7NUMBERSE kind:data(any) addr:0x020aba70 ambiguous
 _ZN3OAM16SMALL_STAR_EMPTYE kind:data(any) addr:0x020abac0 ambiguous
-data_ov001_020abac8 kind:data(any) addr:0x020abac8 ambiguous
+_ZN3OAM11SILVER_STARE kind:data(any) addr:0x020abac8 ambiguous
 _ZN3OAM10POWER_STARE kind:data(any) addr:0x020abad0 ambiguous
 _ZN3OAM4COINE kind:data(any) addr:0x020abad8 ambiguous
 data_ov001_020abae0 kind:data(any) addr:0x020abae0
@@ -136,7 +136,6 @@ _ZTV10dCapIcon_c kind:data(any) addr:0x020ad470
 data_ov001_020ad470 kind:data(any) addr:0x020ad470
 _ZTI9dThIcon_c kind:data(any) addr:0x020ad478
 _ZTS9dThIcon_c kind:data(any) addr:0x020ad480
-data_ov001_020ad494 kind:data(any) addr:0x020ad494 ambiguous
 _ZTV9dThIcon_c kind:data(any) addr:0x020ad494
 data_ov001_020ad49c kind:data(any) addr:0x020ad49c
 data_ov001_020ad4a8 kind:data(any) addr:0x020ad4a8

@@ -51,13 +51,11 @@
 #include "BCA_File.h"
 #include "nitro/fx/fx_cp.h"
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 /* func_02046e28 uses these local C-layout views in its implementation TU. */
 struct Model;
 struct MatAnimData;
 
-extern Matrix4x3 data_0209b3ec;
+extern Matrix4x3 gViewMtx;
 /* local extern: the camera-space matrix the Render paths use */
 /* local extern: no header declares it; sizes the transforms buffer from the file */
 extern "C" int func_02046564(void *file);
@@ -79,9 +77,6 @@ int func_020469e0(void *ptr);
 extern "C" void Deallocate(void *ptr);
 /* local extern: game heap pointer TrimModelFile reads */
 extern void *data_020a0ea0;
-/* decl_common.h's int[] spelling. The records are 0xc-byte CommonModelData. */
-extern int data_0209cef8[];
-extern int data_0209cefc[];
 /* local extern: no header declares it; CleanCommonModelDataArr clears it.
    int, not void *: the other readers declare int, and the store of 0 is
    the same word. */
@@ -98,14 +93,15 @@ extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
    while blendWeight is still below 1.0. Definition takes char *. */
 extern "C" void func_0204531c(ModelComponents *data, int weight);
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
-   file. Spelled (int *) the way func_020462bc.c defines it */
-extern "C" u32 func_020462bc(int *file);
+   file: numBones matrices. */
+extern "C" int func_020462bc(void *file);
 /* local extern: no header declares it; initializes ModelComponents' side of
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
 void func_020462b4(int *data, int buf);
-/* local extern: dExtShadowModel_c's live list head and freeze flag */
-extern dExtShadowModel_c *data_0209cef4;
-extern u8 data_0209ceec;
+/* local extern: dExtShadowModel_c's live list head, and the flag RenderAll
+   sets once it has drawn the list (InitModel stops linking until CleanAll) */
+extern dExtShadowModel_c *sShadowModelList;
+extern u8 sShadowModelsRendered;
 /* The two shadow model files live in the shared overlay-0/1 region: arm9's own
  * symbols.txt rows for 0x020ad524/0x020ad560 sit past .bss and name nothing
  * the link defines. In overlay 0 both addresses fall inside asset path
@@ -126,14 +122,18 @@ void func_020470e8(BMD_File *model, BMA_File *file);
 void func_02046e28(ModelComponents *model, BMA_File *file, unsigned short frame);
 }
 
-/* 0xc-byte records in the common model data array at data_0209cefc, counted
-   by data_0209cef8. GetCommonModelComponents fills the two owned slots; the destructors
-   and CleanCommonModelDataArr free them. */
+/* 0xc-byte records in the common model data array sCommonModelDataArr,
+   counted by sNumCommonModelData. GetCommonModelComponents fills the two
+   owned slots; the destructors and CleanCommonModelDataArr free them. */
 struct CommonModelData {
     BMD_File *file;              /* 0x00 */
     ModelComponents *components; /* 0x04 */
     void *buffer;                /* 0x08 */
 };
+
+/* The pool and its count; no other file reads them. */
+extern int sNumCommonModelData;
+extern CommonModelData sCommonModelDataArr[];
 
 /* ---------------------------------------------------------------------------
    dExtModel_c and dExtSimpleModel_c, 0x020169d8..0x02017168: the
@@ -191,9 +191,9 @@ void dExtSimpleModel_c::LoadAndSetFile(u16 ov0ID, int a, int b) {
 }
 
 void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {
-    CommonModelData *p = (CommonModelData *)data_0209cefc;
+    CommonModelData *p = sCommonModelDataArr;
     int i = 0;
-    int n = data_0209cef8[0];
+    int n = sNumCommonModelData;
     while (i < n) {
         if (&file == p->file)
             return p;
@@ -203,7 +203,7 @@ void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {
     p->file = &file;
     p->components = 0;
     p->buffer = 0;
-    data_0209cef8[0] = data_0209cef8[0] + 1;
+    sNumCommonModelData = sNumCommonModelData + 1;
     if (data_0208e738 == 0)
         return p;
     LoadTexAndPal(file);
@@ -234,10 +234,10 @@ ModelComponents *GetCommonModelComponents(BMD_File *file) {
 }
 
 extern "C" void CleanCommonModelDataArr(void) {
-    CommonModelData *e = (CommonModelData *)data_0209cefc;
+    CommonModelData *e = sCommonModelDataArr;
     int i = 0;
 
-    if (data_0209cef8[0] > 0) {
+    if (sNumCommonModelData > 0) {
         do {
             if (e->buffer)
                 ::operator delete[](e->buffer);
@@ -245,10 +245,10 @@ extern "C" void CleanCommonModelDataArr(void) {
                 ::operator delete(e->components);
             i++;
             e++;
-        } while (i < data_0209cef8[0]);
+        } while (i < sNumCommonModelData);
     }
 
-    data_0209cef8[0] = 0;
+    sNumCommonModelData = 0;
     data_0209cef0 = 0;
 }
 
@@ -297,7 +297,7 @@ void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
 
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
     Matrix4x3 modelView;
-    MTX_Concat43(&mat4x3, &data_0209b3ec, &modelView);
+    MTX_Concat43(&mat4x3, &gViewMtx, &modelView);
     data.Render(&modelView, (Vector3 *)scale);
 }
 
@@ -466,7 +466,7 @@ int dExtBlendAnmModel_c::DoSetFile(char *file, int a, int b) {
    hands it plus the ModelComponents member to func_020462b4. It sits between
    UpdateVerts and DoSetFile in the ROM. Coined name. */
 int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
-    mBlendBuffer = ::operator new[](func_020462bc((int *)file));
+    mBlendBuffer = ::operator new[](func_020462bc(file));
     void *p = mBlendBuffer;
     if (p == 0)
         return 0;
@@ -615,7 +615,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
 
 void dExtCommonModel_c::Render(const Vector3 *scale) {
     Matrix4x3 modelView;
-    MTX_Concat43(&mat4x3, &data_0209b3ec, &modelView);
+    MTX_Concat43(&mat4x3, &gViewMtx, &modelView);
     data->Render(&modelView, (Vector3 *)scale);
 }
 
@@ -640,8 +640,9 @@ void dExtCommonModel_c::SetPolygonID(u32 id) {
    dExtShadowModel_c, 0x02015d38..0x0201609c: the dExtModel_c sibling that
    draws an actor's ground shadow from a shared cylinder or cuboid BMD_File.
    Every live instance sits on a global intrusive doubly-linked list (head
-   data_0209cef4, freeze flag data_0209ceec): InitModel links in, the
-   destructor unlinks, RenderAll walks the list and CleanAll empties it.
+   sShadowModelList): InitModel links in, the destructor unlinks, RenderAll
+   walks the list and sets sShadowModelsRendered, and CleanAll empties it and
+   clears the flag. InitModel does not link while the flag is set.
    --------------------------------------------------------------------------- */
 
 /* An empty body; the three null stores after the vptr are exactly the member
@@ -658,8 +659,8 @@ dExtShadowModel_c::dExtShadowModel_c() : mat(0), prev(0), next(0) {}
 dExtShadowModel_c::~dExtShadowModel_c() {
     if (prev)
         prev->next = next;
-    else if (data_0209cef4 == this)
-        data_0209cef4 = next;
+    else if (sShadowModelList == this)
+        sShadowModelList = next;
 
     if (next)
         next->prev = prev;
@@ -704,48 +705,48 @@ void dExtShadowModel_c::InitModel(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz, u8 op
     scale.y = sy;
     scale.z = sz;
     this->opacity = opacity;
-    if (data_0209ceec)
+    if (sShadowModelsRendered)
         return;
-    next = data_0209cef4;
-    if (data_0209cef4)
-        data_0209cef4->prev = this;
-    data_0209cef4 = this;
+    next = sShadowModelList;
+    if (sShadowModelList)
+        sShadowModelList->prev = this;
+    sShadowModelList = this;
 }
 
 void dExtShadowModel_c::CleanAll() {
-    if (data_0209cef4) {
+    if (sShadowModelList) {
         do {
-            dExtShadowModel_c *nx = data_0209cef4->next;
+            dExtShadowModel_c *nx = sShadowModelList->next;
             if (nx)
                 nx->prev = 0;
             /* the ROM re-reads the head for this store instead of keeping
                it in a register */
-            data_0209cef4->next = 0;
-            data_0209cef4 = nx;
-        } while (data_0209cef4);
+            sShadowModelList->next = 0;
+            sShadowModelList = nx;
+        } while (sShadowModelList);
     }
-    data_0209ceec = 0;
+    sShadowModelsRendered = 0;
 }
 
 /* The scratch matrix's translation y is lifted two units so the shadow sits
    above the ground. */
 void dExtShadowModel_c::RenderAll() {
-    dExtShadowModel_c *node = data_0209cef4;
+    dExtShadowModel_c *node = sShadowModelList;
     if (node) {
         do {
             ModelComponents *model = node->data;
-            func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
-            MTX_Concat43(&data_020a0e68, node->mat, &data_020a0e68);
-            data_020a0e68.t.y += 0x2000;
-            MTX_Concat43(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
+            func_0203c178(&gScratchMtx, node->scale.x, node->scale.y, node->scale.z);
+            MTX_Concat43(&gScratchMtx, node->mat, &gScratchMtx);
+            gScratchMtx.t.y += 0x2000;
+            MTX_Concat43(&gScratchMtx, &gViewMtx, &gScratchMtx);
             model->SetShadowMask(node->opacity);
-            model->Render(&data_020a0e68, 0);
+            model->Render(&gScratchMtx, 0);
             model->SetShadowDraw(node->opacity, 1);
-            model->Render(&data_020a0e68, 0);
+            model->Render(&gScratchMtx, 0);
             node = node->next;
         } while (node);
     }
-    data_0209ceec = 1;
+    sShadowModelsRendered = 1;
 }
 
 /* ---------------------------------------------------------------------------

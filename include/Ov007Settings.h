@@ -20,7 +20,7 @@ typedef struct Ov007BootArgs {
      * GetSoundMode 0/1/2 to 1/2/0, func_ov007_020b64a8 steps it and
      * func_ov007_020b7eec shows its message */
     u8 soundModeItem;
-    /* 0x09: the backlight setting (data_0208ee3c[0]); picks which of menu
+    /* 0x09: the backlight setting (gBacklightEnabled); picks which of menu
      * items 0xc and 0xd is live */
     u8 backlightOn;
     char pad_0a;
@@ -34,7 +34,7 @@ typedef struct Ov007BootArgs {
     u8 firstStar[3][15];   /* 0x6b: per save file and course, star 0 collected */
     u8 level1dStars[3];    /* 0x98: the displayed star count of level 0x1d */
     char pad_9b;
-    /* 0x9c: dScDSMT_c::InitResources copies data_0209d6fc here, the
+    /* 0x9c: dScDSMT_c::InitResources copies gMessageBankBase here, the
      * message file Message.cpp reads */
     void *messages;
 #ifdef __cplusplus

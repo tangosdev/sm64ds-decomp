@@ -250,13 +250,13 @@ int daPropeller_Heyho_c::Behavior()
                 mdCcAc_c.Update();
             }
         }
-        func_ov070_02120070();
+        UpdateModelAndShadow();
         return 1;
     }
 
     if (mDeathState != 0) {
         UpdateDeath(mWithMeshClsn);
-        func_ov070_02120070();
+        UpdateModelAndShadow();
         return 1;
     }
 
@@ -293,7 +293,7 @@ int daPropeller_Heyho_c::Behavior()
         mAngle.z = mPrevAngle.z;
     }
 
-    func_ov070_02120070();
+    UpdateModelAndShadow();
 
     if (mCurrentState != &data_ov070_021235bc) {
         this->func_ov070_0211f100();
@@ -356,14 +356,14 @@ int daPropeller_Heyho_c::CleanupResources()
  * and the three angles, copied into mAnmModel.mat4x3; the shadow matrix from the
  * position with Y lowered by 10.0 units, then DropShadowRadHeight(radius 118.0,
  * depth 800.0, opacity 15). Behavior calls it on every exit path. */
-void daPropeller_Heyho_c::func_ov070_02120070() {
+void daPropeller_Heyho_c::UpdateModelAndShadow() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
-    mShadowMatrix = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
+    mShadowMatrix = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 
@@ -435,9 +435,9 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
                   0x50);
 
     in.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngle.x);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mPrevAngle.x);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
 
     ApproachLinear(this->mSpeed.x, out.x, 0x1000);
     ApproachLinear(this->mSpeed.y, out.y, 0x800);
@@ -546,9 +546,9 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
                   0x50);
 
     vin.z = 0xf000;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngle.x);
-    MTX_MultVec43(&vin, &data_020a0e68, &this->mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, this->mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mPrevAngle.x);
+    MTX_MultVec43(&vin, &gScratchMtx, &this->mSpeed);
 
     if (Vec3_Dist(&this->mPos, &this->mHomePos) > kHomeLeashDist) {
         FlyGuy_ChangeState(this, &data_ov070_0212359c);
@@ -604,7 +604,7 @@ typedef signed char s8;
 extern s8 gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
-extern s32 data_0209f32c;
+extern s32 gWaterHeight;
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation
  * has finished: the first time (mStateStep == 0) it starts the file-02123510
@@ -614,7 +614,7 @@ int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
  * It goes to the settle state, re-anchoring home at the current position (not
  * when LEVEL_ID == 0x16) with the X tilt cleared, when the timer has run out, the
  * actor touches a wall, or there is no non-vanished player. If the player is
- * flagged underwater and the water height (data_0209f32c) is above this actor's
+ * flagged underwater and the water height (gWaterHeight) is above this actor's
  * Y, it instead re-anchors home 200 units above the current position (not when
  * LEVEL_ID == 0x16), restores last frame's position and zeroes the timer and
  * vertical speed before settling. Otherwise it tilts toward a point 71.0 units
@@ -673,7 +673,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         return 1;
     }
 
-    if (player->mIsUnderwater != 0 && data_0209f32c > mPos.y) {
+    if (player->mIsUnderwater != 0 && gWaterHeight > mPos.y) {
         if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPos.x;
             mHomePosY = mPos.y;
@@ -722,9 +722,9 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     half = (mPrevAngle.y - mTargetAngY) / 2;
     ApproachAngle(&mPrevAngle.z, half, 0xa, 0x100, 0x50);
 
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
-    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mPrevAngle.x);
+    MTX_MultVec43(&v, &gScratchMtx, &mSpeed);
 
     return 1;
 }
@@ -891,8 +891,7 @@ extern void func_02012694(unsigned int a, const Vector3 *b);
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding
  * actor from the collider (mdCcAc_c.otherOwner) and reads hitFlags: fire sends it
  * to the knocked state with mStateStep = 1 (particles); 0x20 kills it through
- * func_ov002_020aea30 (verified.tsv spells that address Enemy::KillByAttack) with
- * mDeathState = 1 (name only; arity differs); the punch/kick/egg/explosion mask sends it to the knocked
+ * KillByAttack with mDeathState = 1; the punch/kick/egg/explosion mask sends it to the knocked
  * state with mStateStep = 0. After that only the player actor counts, and only a
  * non-vanished one: JumpedOnByPlayer bounces the player (SpinBounce 40.0) and
  * kills as above; a mega-character hit spawns the mega particles, counts the
@@ -919,7 +918,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     }
     if (hitFlags & kHitSpinPound) {
         this->mDeathState = 1;
-        this->func_ov002_020aea30(hitPlayer, 0);
+        this->KillByAttack(hitPlayer, 0);
         return;
     }
     if (hitFlags & kHitAttackMask) {
@@ -936,7 +935,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     if (this->JumpedOnByPlayer(this->mdCcAc_c, *hitPlayer)) {
         hitPlayer->SpinBounce(0x28000);
         this->mDeathState = 1;
-        this->func_ov002_020aea30(hitPlayer, 0);
+        this->KillByAttack(hitPlayer, 0);
         return;
     }
 

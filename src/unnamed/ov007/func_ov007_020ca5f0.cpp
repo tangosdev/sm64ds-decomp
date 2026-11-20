@@ -15,7 +15,7 @@ extern void func_ov007_020caeac(VecFx32 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv,
                                 s32 u0, s32 v0, s32 du, s32 dv, s32 su, s32 sv, s32 shift);
 extern void func_ov007_020ca86c(VecFx32 *vtx, Vector3_16 *nrm, s32 w, s32 h, s32 shift);
 
-/* Draws the mesh (data_ov007_02104bd4[0]) with one of its materials
+/* Draws the mesh (sMeshScene[0]) with one of its materials
  * ([1] or [2]): sets the material's light colours, texture and polygon
  * attributes, translates by pos and scales z by scaleZ, then emits the
  * grid. With smooth set it is drawn textured with the per-point normals

@@ -17,7 +17,7 @@
  * - data_ov010_02112d08 / 02112d00 are this file's resource handles;
  *   data_ov010_02112d28 is the state record the compiler copies into .bss;
  *   data_ov010_021122f8 is CLPS
- * - func_ov010_02111984 three-argument C ABI collider adapter
+ * - StoodOnCallback three-argument C ABI collider adapter
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -77,7 +77,7 @@ extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
 
 /*
  * registered directly in InitResources. */
-void daObjC1_Trap_c::func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daObjC1_Trap_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
 
@@ -173,7 +173,7 @@ int daObjC1_Trap_c::InitResources() {
     UpdateCollisionTransform();
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000, mAngle.y,
                           data_ov010_021122f8);
-    mMeshCollider.SetStoodOnCallback(daObjC1_Trap_c::func_ov010_02111984);
+    mMeshCollider.SetStoodOnCallback(daObjC1_Trap_c::StoodOnCallback);
     mMeshCollider.Enable(this);
     mOpenSpeed = 0;
     mState = 0;
@@ -228,18 +228,18 @@ void daObjC1_Trap_c::UpdateModelTransform() {
     int y = mPos.y >> 3;
     int z = (mPos.z + offsetZ) >> 3;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, x, y, z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
-    mDoorModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, x, y, z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
+    mDoorModel.mat4x3 = gScratchMtx;
 }
 
 
 void daObjC1_Trap_c::UpdateCollisionTransform() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
-    mDoorMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x, mPos.y, mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mAngle.z);
+    mDoorMat = gScratchMtx;
     mMeshCollider.Transform(mDoorMat, mAngle.y);
 }
 

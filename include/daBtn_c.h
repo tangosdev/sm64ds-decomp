@@ -50,11 +50,11 @@ struct daBtn_c : dEnemyBase_c {
        and hands it to dActor_c::DropShadowScaleXYZ. */
     Matrix4x3 mShadowMatrix; /* 0x36c */
     /* InitResources zeroes all four and then refills as many as gNumPlayers
-       says from gPlayers, the live player list. func_ov079_02123f34
+       says from gPlayers, the live player list. TrackNearestPlayers
        measures each one's distance and bearing. */
     daPly_c *mPlayers[4]; /* 0x39c */
     /* The player whose touch counted as a hit this frame: func_ov079_02125058
-       records it when func_ov002_020dd8b8 accepts the contact. The king's
+       records it when daPly_c::IsGroundPounding accepts the contact. The king's
        lying-down handler bursts a particle at it, and the defeat talk
        (state 8) is addressed to it. */
     daPly_c *mPounder; /* 0x3ac */
@@ -65,7 +65,7 @@ struct daBtn_c : dEnemyBase_c {
     /* The state a hit interrupted (func_ov079_02123804 saves it), put back by
        the wobble (state 10) and by the get-up in state 6. */
     s32                          mResumeState;          /* 0x3b4 */
-    /* func_ov079_02123f34: the bearing to the nearest watched player. */
+    /* TrackNearestPlayers: the bearing to the nearest watched player. */
     s16                          mTargetAngle;          /* 0x3b8 */
     u8  pad_3ba[0x2];
     /* InitResources copies mPos.x/mPos.y/mPos.z here once. */
@@ -88,7 +88,7 @@ struct daBtn_c : dEnemyBase_c {
     s16                          mSpawnAngleX;          /* 0x3e6 */
     s16                          mSpawnAngleY;          /* 0x3e8 */
     s16                          mSpawnAngleZ;          /* 0x3ea */
-    /* func_ov079_02123f34: index into mPlayers of the nearest player, of the
+    /* TrackNearestPlayers: index into mPlayers of the nearest player, of the
        nearest one in front (within 0x2000 of the facing), and their distances. */
     s32                          mNearestPlayer;        /* 0x3ec */
     s32                          mFrontPlayer;          /* 0x3f0 */
@@ -186,7 +186,7 @@ struct daBtn_c : dEnemyBase_c {
        facing: wobbles from the front, knocked over from behind. */
     void func_ov079_02123804(dActor_c *other);
     /* Surveys the watched players: nearest overall and nearest in front. */
-    void func_ov079_02123f34();
+    void TrackNearestPlayers();
     /* Rebuilds the collision mesh's matrix from the model's. */
     void func_ov079_02124008();
     /* Rebuilds the drop shadow's matrix and hands it to DropShadowScaleXYZ. */
@@ -196,7 +196,7 @@ struct daBtn_c : dEnemyBase_c {
     /* Contact while the body lies flat: hits arm mPounded, other touches
        pay out one coin apiece while mCoinsLeft lasts. */
     void func_ov079_02125058(dActor_c *other);
-    static void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
+    static void StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other);
     void func_ov079_02124dec();
     void func_ov079_02124ed4();
     void func_ov079_02125504();

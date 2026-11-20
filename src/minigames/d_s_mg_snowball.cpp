@@ -77,10 +77,8 @@ enum dScMgSnowball_c_AssetId {
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, Matrix2x2 *f);
 extern OamAttr *sSnowballBitSprites[];
-extern int func_0203d434(int *p);
-extern void func_0203d630(int *p, int m);
 extern void func_02012718(int a, int b);
-extern union Matrix4x3 data_020a0e68;
+extern union Matrix4x3 gScratchMtx;
 extern u16 sSnowballCourseTiles[][4];
 extern unsigned char data_ov006_0212f3b0[];
 extern unsigned char data_ov006_0212f3ac[];
@@ -96,9 +94,8 @@ extern void SetBg2Offset(int, int);
 extern void SetBg3Offset(int, int);
 extern void SetSubBg2Offset(int, int);
 extern void SetSubBg3Offset(int, int);
-extern s32 data_02092768[4];
-void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-void func_0203cd80(int *m, short angle);
+extern Quaternion data_02092768; /* identity */
+void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 s32 GetGameLanguage(void);
 void FreeGfxSlotsById(int arg);
@@ -106,7 +103,7 @@ extern void Ov004_Deallocate(void *p);
 u32 LoadCompressedFileAt(int fileID, void *target);
 void *Ov004_LoadFileByPath(void *p);
 void DecompressLZ16(void *src, void *dst);
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 /* Where two recovered declarations disagreed, the more precise one is
@@ -406,13 +403,13 @@ void dScMgSnowball_c::UpdateSnowball() {
     int zNotAllWater;
     s16 angle;
     int j;
-    int sample[2];
+    Vector2 sample;
     Vector2 hit;
-    int response[2];
-    int hitNormal[2];
-    int waterNormal[2];
-    int push[2];
-    int rotPush[2];
+    Vector2 response;
+    Vector2 hitNormal;
+    Vector2 waterNormal;
+    Vector2 push;
+    Vector2 rotPush;
     int startPoint[2];
     int wallProbe[2];
     int breakableProbe[2];
@@ -456,36 +453,36 @@ void dScMgSnowball_c::UpdateSnowball() {
         angle = zNoHit;
         for (j = zNoHit; j < 32; j++) {
             mProbeHit[j] = 0;
-            sample[0] = 0;
-            sample[1] = 0;
-            sample[1] += mBallSize;
-            func_0203d388(sample, angle);
-            sample[0] += mPos.x;
-            sample[1] += mPos.y;
-            wallProbe[0] = sample[0];
-            wallProbe[1] = sample[1];
+            sample.x = 0;
+            sample.y = 0;
+            sample.y += mBallSize;
+            func_0203d388(&sample, angle);
+            sample.x += mPos.x;
+            sample.y += mPos.y;
+            wallProbe[0] = sample.x;
+            wallProbe[1] = sample.y;
             if (HitsWall(wallProbe) != 0) {
                 mProbeHit[j] = 1;
                 mProbePush[j] = 1;
                 anyHit = 1;
                 if (Vec2_Len(&mVel) >= 0x800)
                     fastWallHit = 1;
-                hit.x = sample[0];
-                hit.y = sample[1];
+                hit.x = sample.x;
+                hit.y = sample.y;
             } else {
-                breakableProbe[0] = sample[0];
-                breakableProbe[1] = sample[1];
+                breakableProbe[0] = sample.x;
+                breakableProbe[1] = sample.y;
                 if (HitsBreakable(breakableProbe) != 0) {
                     mProbeHit[j] = 1;
                     anyHit = 1;
                     mProbePush[j] = 1;
                     mHitBreakable = 1;
-                    hit.x = sample[0];
-                    hit.y = sample[1];
+                    hit.x = sample.x;
+                    hit.y = sample.y;
                 }
             }
-            waterProbe[0] = sample[0];
-            waterProbe[1] = sample[1];
+            waterProbe[0] = sample.x;
+            waterProbe[1] = sample.y;
             if (IsInWater(waterProbe) != 0)
                 mProbeWater[j] = 1;
             else
@@ -493,44 +490,44 @@ void dScMgSnowball_c::UpdateSnowball() {
             angle += 0x800;
         }
 
-        response[0] = zOrigin;
-        response[1] = zOrigin;
+        response.x = zOrigin;
+        response.y = zOrigin;
         angle = zOrigin;
         if (anyHit != 0) {
             for (i = 0; i < 32; i++) {
                 if (mProbeHit[i] == 1) {
-                    hitNormal[0] = pushDirX;
-                    hitNormal[1] = pushDirY;
-                    func_0203d388(hitNormal, angle);
-                    response[0] += hitNormal[0];
-                    response[1] += hitNormal[1];
+                    hitNormal.x = pushDirX;
+                    hitNormal.y = pushDirY;
+                    func_0203d388(&hitNormal, angle);
+                    response.x += hitNormal.x;
+                    response.y += hitNormal.y;
                 }
                 angle += 0x800;
             }
-            func_0203d434(response);
+            func_0203d434(&response);
             if (Vec2_Len(&mVel) < 0x800)
-                func_0203d630(response, Vec2_Len(&mVel));
+                func_0203d630(&response, Vec2_Len(&mVel));
             else
-                func_0203d630(response, pushDirY);
-            mPos.x -= response[0];
-            mPos.y -= response[1];
+                func_0203d630(&response, pushDirY);
+            mPos.x -= response.x;
+            mPos.y -= response.y;
         } else if (startedInWater == 1) {
             allWater = 1;
             for (i = 0; i < 32; i++) {
                 if (mProbeWater[i] == 1) {
-                    waterNormal[0] = floatDirX;
-                    waterNormal[1] = floatDirY;
-                    func_0203d388(waterNormal, angle);
-                    response[0] += waterNormal[0];
-                    response[1] += waterNormal[1];
+                    waterNormal.x = floatDirX;
+                    waterNormal.y = floatDirY;
+                    func_0203d388(&waterNormal, angle);
+                    response.x += waterNormal.x;
+                    response.y += waterNormal.y;
                 } else {
                     allWater = zNotAllWater;
                 }
                 angle += 0x800;
             }
-            func_0203d434(response);
-            mVel.x += response[0];
-            mVel.y += response[1];
+            func_0203d434(&response);
+            mVel.x += response.x;
+            mVel.y += response.y;
             if (allWater == 1)
                 mAllWater = 1;
         }
@@ -580,28 +577,28 @@ void dScMgSnowball_c::UpdateSnowball() {
 
     k = 0;
     mSoundPending = 0;
-    push[0] = 0;
-    push[1] = 0;
+    push.x = 0;
+    push.y = 0;
     do {
         if (mProbePush[k] == 1) {
-            rotPush[0] = 0;
-            rotPush[1] = 0x1000;
-            func_0203d388(rotPush, k * 0x10000 / 32);
-            push[0] -= rotPush[0];
-            push[1] -= rotPush[1];
+            rotPush.x = 0;
+            rotPush.y = 0x1000;
+            func_0203d388(&rotPush, k * 0x10000 / 32);
+            push.x -= rotPush.x;
+            push.y -= rotPush.y;
         }
         k = k + 1;
     } while (k < 32);
 
-    if (push[0] == 0 && push[1] == 0)
+    if (push.x == 0 && push.y == 0)
         return;
 
-    func_0203d434(push);
-    normalVelocity = FX_MUL(mVel.x, push[0]) + FX_MUL(mVel.y, push[1]);
+    func_0203d434(&push);
+    normalVelocity = FX_MUL(mVel.x, push.x) + FX_MUL(mVel.y, push.y);
     if (mHitBreakable == 1) {
         normalVelocity = FX_MUL(normalVelocity, 0x1800);
-        mVel.x -= FX_MUL(normalVelocity, push[0]);
-        mVel.y -= FX_MUL(normalVelocity, push[1]);
+        mVel.x -= FX_MUL(normalVelocity, push.x);
+        mVel.y -= FX_MUL(normalVelocity, push.y);
         headingComponent = FX_SinIdx((unsigned short)cstd::atan2(mVel.y, mVel.x) >> 4);
         vx = mVel.x;
         mVel.x = vx / 8 + FX_MUL(vx, headingComponent) / 4;
@@ -609,8 +606,8 @@ void dScMgSnowball_c::UpdateSnowball() {
         mVel.y = vy / 8 + FX_MUL(vy, headingComponent) / 4;
     } else {
         normalVelocity = FX_MUL(normalVelocity, 0x1200);
-        mVel.x -= FX_MUL(normalVelocity, push[0]);
-        mVel.y -= FX_MUL(normalVelocity, push[1]);
+        mVel.x -= FX_MUL(normalVelocity, push.x);
+        mVel.y -= FX_MUL(normalVelocity, push.y);
     }
 }
 
@@ -642,11 +639,11 @@ void dScMgSnowball_c::UpdateCamera() {
     v.x = x;
     v.y = y;
     v.z = 0;
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mHeadingAngle);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mRollAngle);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationZ(&gScratchMtx, mHeadingAngle);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mRollAngle);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngleY);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 void dScMgSnowball_c::RedrawCourse() {
@@ -1227,10 +1224,10 @@ void dScMgSnowball_c::ResetScene() {
     mSpinAxis = sUnitY;
     func_0203ce80(&axis, &mSpinAxis);
 
-    mSpinQuat[0] = data_02092768[0];
-    mSpinQuat[1] = data_02092768[1];
-    mSpinQuat[2] = data_02092768[2];
-    mSpinQuat[3] = data_02092768[3];
+    mSpinQuat[0] = data_02092768.x;
+    mSpinQuat[1] = data_02092768.y;
+    mSpinQuat[2] = data_02092768.z;
+    mSpinQuat[3] = data_02092768.w;
     Quaternion_FromVector3(mSpinQuat, &sUnitY, &mSpinAxis);
     Quaternion_Normalize(mSpinQuat);
 
@@ -1261,7 +1258,7 @@ void dScMgSnowball_c::ResetScene() {
 /* Slot 9. Draws the course meter, the snowball, and every live mArray1 and
  * mArray2 slot inside the visible scroll window. */
 s32 dScMgSnowball_c::Render() {
-    int light[3];
+    Vector3 light;
     Vector3 scale;
 
     mAnimCounter++;
@@ -1276,11 +1273,11 @@ s32 dScMgSnowball_c::Render() {
     }
     Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 240, 96, -1, 0);
 
-    light[2] = -0xff8;
-    light[1] = 0;
-    light[0] = 0;
-    func_0203cd80(light, -0x2000);
-    G3_LightVector(GX_LIGHTID_0, light[0], light[1], light[2]);
+    light.z = -0xff8;
+    light.y = 0;
+    light.x = 0;
+    func_0203cd80(&light, -0x2000);
+    G3_LightVector(GX_LIGHTID_0, light.x, light.y, light.z);
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
 
     {
@@ -1392,8 +1389,8 @@ s32 dScMgSnowball_c::Behavior() {
     int speed;
     int slot, held, touched;
     s16 heading;
-    int steer[2];
-    int moved[2];
+    Vector2 steer;
+    Vector2 moved;
     Vector3 part;
     int v, q, t;
     unsigned short m;
@@ -1447,36 +1444,36 @@ s32 dScMgSnowball_c::Behavior() {
             mTouch.y = vb;
         } else if (held != 0) {
             int tx = gTouchInfo[slot].x;
-            steer[0] = ((tx - mTouch.x) << 12) / 296;
+            steer.x = ((tx - mTouch.x) << 12) / 296;
             int ty = gTouchInfo[slot].y;
-            steer[1] = ((ty - mTouch.y) << 12) / 296;
+            steer.y = ((ty - mTouch.y) << 12) / 296;
             mTouch.x = tx;
             mTouch.y = ty;
-            if (Vec2_Len((const Vector2 *)steer) >= 0x400) {
-                steer[0] = 0;
-                steer[1] = 0;
+            if (Vec2_Len(&steer) >= 0x400) {
+                steer.x = 0;
+                steer.y = 0;
             }
             heading = cstd::atan2(mVel.y, mVel.x);
-            func_0203d388(steer, -heading);
-            steer[1] = steer[1] << 2;
-            func_0203d388(steer, heading);
+            func_0203d388(&steer, -heading);
+            steer.y = steer.y << 2;
+            func_0203d388(&steer, heading);
             if (mVel.y >= 0) {
-                if (steer[1] > 0)
-                    steer[1] = 0;
+                if (steer.y > 0)
+                    steer.y = 0;
             }
-            if (steer[1] > 0) {
-                if (steer[1] >= -mVel.y) {
+            if (steer.y > 0) {
+                if (steer.y >= -mVel.y) {
                     mVel.y = 0;
-                    steer[1] = 0;
+                    steer.y = 0;
                 }
             }
-            mVel.x += steer[0];
-            mVel.y += steer[1];
+            mVel.x += steer.x;
+            mVel.y += steer.y;
         }
 
         if (mVel.x != 0 || mVel.y != 0) {
-            if (Vec2_Len(&mVel) >= 0x8000 && func_0203d434(&mVel.x) != 0)
-                func_0203d630(&mVel.x, 0x8000);
+            if (Vec2_Len(&mVel) >= 0x8000 && func_0203d434(&mVel) != 0)
+                func_0203d630(&mVel, 0x8000);
         }
         UpdateSnowball();
 
@@ -1497,8 +1494,8 @@ s32 dScMgSnowball_c::Behavior() {
 
         if (mBallSize >= 0x37000)
             mBallSize = 0x37000;
-        Vec2_Sub(moved, &mPos.x, &mSoundPos.x);
-        gate = Vec2_Len((const Vector2 *)moved) >= 0x30000;
+        Vec2_Sub(&moved, &mPos, &mSoundPos);
+        gate = Vec2_Len(&moved) >= 0x30000;
         if (gate != 0) {
             mSoundPos = mPos;
             if (mBallSize < 0x10000)
@@ -1578,8 +1575,8 @@ s32 dScMgSnowball_c::Behavior() {
             if (speed < 0) {
                 mVel.x = 0;
                 mVel.y = 0;
-            } else if (func_0203d434(&mVel.x) != 0) {
-                func_0203d630(&mVel.x, speed);
+            } else if (func_0203d434(&mVel) != 0) {
+                func_0203d630(&mVel, speed);
             }
         }
 
@@ -1612,8 +1609,8 @@ s32 dScMgSnowball_c::Behavior() {
                 speed = Vec2_Len(&mVel) + 0x100;
                 if (speed >= 0x8000)
                     speed = 0x8000;
-                if (func_0203d434(&mVel.x) != 0)
-                    func_0203d630(&mVel.x, speed);
+                if (func_0203d434(&mVel) != 0)
+                    func_0203d630(&mVel, speed);
             }
             mCrashTimer += 1;
         } else if (mCrashTimer == 60) {
@@ -1737,7 +1734,7 @@ void dScMgSnowball_c::StartRound(int i) {
 s32 dScMgSnowball_c::InitResources() {
     void *buf;
 
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     mScreensSwapped = 1;
 

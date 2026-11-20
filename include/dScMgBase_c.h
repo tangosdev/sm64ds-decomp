@@ -29,7 +29,7 @@ struct dScMgBase_c : dScene_c {
        itself or its immediate base, so descendants cannot reach dScene_c's.
        Removing this breaks D0 for all 32 of them. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, data_020a0eac);
+        Memory::Deallocate(ptr, GAME_HEAP_PTR);
     }
 
     /* param1, the spawn word; defined inline in d_s_mg_base.cpp. */
@@ -175,7 +175,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
      GraphCallback0 (slot 23): the main loop's frame start, func_02019390.
        A 0 return skips OAM::Reset and the 3D flush.
      GraphCallback1 (slot 22): the main loop after the scene step
-       (func_02044120), before the frame wait, func_02019404.
+       (fManager_c::mainLoop), before the frame wait, func_02019404.
      GraphCallback2 (slot 24): the VBlank IRQ, func_02019144, before the OAM
        flush and the display-register commit; a 0 return skips the commit.
        dScMgD3DBase_c swaps its 3D capture between the screens here.

@@ -3,12 +3,12 @@
 struct OverlaySlot {
     int id, start, size;
 };
-extern struct OverlaySlot data_0209d3c4[];
+extern struct OverlaySlot gLoadedOverlays[];
 
 /* Free every loaded-overlay slot. */
 void func_02017e60(void) {
     unsigned int i;
-    struct OverlaySlot *p = data_0209d3c4;
+    struct OverlaySlot *p = gLoadedOverlays;
     for (i = 0; i < 12; i++, p++) {
         p->id = -1;
         p->start = 0;

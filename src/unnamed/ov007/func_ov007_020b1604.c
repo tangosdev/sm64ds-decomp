@@ -7,11 +7,11 @@ extern void func_ov007_020af34c(void);
  * clears the choice and runs func_ov007_020af34c; choice 8 sends states[0]
  * to state 6, any other states[1] to state 7. */
 void func_ov007_020b1604(void) {
-    Ov007Work *w = WORK;
+    Ov007Work *w = gMenuWork;
     int choice = w->pendingChoice;
     if (choice == 9) {
         w->choiceReady = 0;
-        WORK->pendingChoice = 0;
+        gMenuWork->pendingChoice = 0;
         func_ov007_020af34c();
         return;
     }

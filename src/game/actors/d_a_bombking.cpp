@@ -150,10 +150,9 @@ extern unsigned char gCurrentStarId;
 
 extern dCamera_c *gCamera;
 
-extern int data_02092138;
+extern int gLevelMinY;
 }
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02011cfc(void);
 
@@ -210,12 +209,12 @@ int daBombking_c::TickDefeated() {
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    data_020a0e68 = this->mBlendAnmModel.mat4x3;
-    MTX_Concat43(&this->mBlendAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
+    gScratchMtx = this->mBlendAnmModel.mat4x3;
+    MTX_Concat43(&this->mBlendAnmModel.data.transforms[1], &gScratchMtx, &gScratchMtx);
 
-    v.x = data_020a0e68.t.x;
-    v.y = data_020a0e68.t.y;
-    v.z = data_020a0e68.t.z;
+    v.x = gScratchMtx.t.x;
+    v.y = gScratchMtx.t.y;
+    v.z = gScratchMtx.t.z;
     Vec3_Lsl(&t, &v, 3);
     v.x = t.x;
     v.y = t.y;
@@ -576,11 +575,11 @@ int daBombking_c::TickHomeTalk() {
         a.x = 0;
         a.y = 0;
         a.z = 0;
-        data_020a0e68 = this->mBlendAnmModel.mat4x3;
-        MTX_Concat43(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-        a.x = data_020a0e68.t.x;
-        a.y = data_020a0e68.t.y;
-        a.z = data_020a0e68.t.z;
+        gScratchMtx = this->mBlendAnmModel.mat4x3;
+        MTX_Concat43(&this->mBlendAnmModel.data.transforms[6], &gScratchMtx, &gScratchMtx);
+        a.x = gScratchMtx.t.x;
+        a.y = gScratchMtx.t.y;
+        a.z = gScratchMtx.t.z;
         Vec3_Lsl(&scaled, &a, 3);
         a.x = scaled.x;
         dust.x = scaled.x;
@@ -611,8 +610,8 @@ int daBombking_c::TickHomeTalk() {
         pos.z = this->mPos.z;
         look.y += 0x100000;
         in.z = 0x800000;
-        Matrix4x3_FromRotationY(&data_020a0e68, ang);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, ang);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
         pos.y += 0x100000;
         pos.x += out.x;
         pos.z += out.z;
@@ -664,9 +663,9 @@ int daBombking_c::TickReturnHome() {
         vC.x = 0;
         vC.y = 0;
         vC.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, this->mPrevAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngle.x);
-        MTX_MultVec43(&vB, &data_020a0e68, &vC);
+        Matrix4x3_FromRotationY(&gScratchMtx, this->mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mPrevAngle.x);
+        MTX_MultVec43(&vB, &gScratchMtx, &vC);
         this->mSpeed.x = vC.x;
         if (this->mActionStep == 0) {
             this->mSpeed.y = vC.y;
@@ -758,7 +757,7 @@ int daBombking_c::EnterReturnHome() {
 int daBombking_c::TickBounceOffHill() {
     if (this->mStateTimer != 0)
         return 1;
-    if (*&data_02092138 > this->mPos.y) {
+    if (*&gLevelMinY > this->mPos.y) {
         KingBobOmb_SetState(data_ov078_021270bc);
         return 1;
     }
@@ -937,8 +936,8 @@ int daBombking_c::TickThrowBomb() {
                     v[0].x = v[1].x - this->mThrowPos.x;
                     v[0].y = v[1].y - this->mThrowPos.y;
                     v[0].z = v[1].z - this->mThrowPos.z;
-                    Matrix4x3_FromRotationY(&data_020a0e68, cstd::atan2(v[0].x, v[0].z));
-                    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68,
+                    Matrix4x3_FromRotationY(&gScratchMtx, cstd::atan2(v[0].x, v[0].z));
+                    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx,
                                                       (-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
                     out.y += 0x14000;
                     target->func_ov102_0214ad14();
@@ -947,7 +946,7 @@ int daBombking_c::TickThrowBomb() {
                     target->mSpeed.z = out.z;
                     target->mHorzSpeed = 0x14000;
                     target->mVertAccel = -0x2000;
-                    MTX_MultVec43(&in, &data_020a0e68, &out);
+                    MTX_MultVec43(&in, &gScratchMtx, &out);
                 }
                 this->mSpawnedThrown[this->mSpawnSlot] = 1;
                 target->mCarryMatrix = 0;
@@ -1125,11 +1124,11 @@ int daBombking_c::TickActivate() {
         s.x = 0;
         s.y = 0;
         s.z = 0;
-        data_020a0e68 = this->mBlendAnmModel.mat4x3;
-        MTX_Concat43(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-        s.x = data_020a0e68.t.x;
-        s.y = data_020a0e68.t.y;
-        s.z = data_020a0e68.t.z;
+        gScratchMtx = this->mBlendAnmModel.mat4x3;
+        MTX_Concat43(&this->mBlendAnmModel.data.transforms[6], &gScratchMtx, &gScratchMtx);
+        s.x = gScratchMtx.t.x;
+        s.y = gScratchMtx.t.y;
+        s.z = gScratchMtx.t.z;
         Vec3_Lsl(&d, &s, 3);
         s.x = d.x;
         v.x = d.x;
@@ -1337,10 +1336,10 @@ void daBombking_c::UpdateHandMatrix() {
         if (actor == 0)
             continue;
 
-        data_020a0e68 = this->mHoldMtx;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xb000, -0x7000, -0x6000);
-        Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x1000, 0x2000);
-        this->mHoldMtx = data_020a0e68;
+        gScratchMtx = this->mHoldMtx;
+        Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0xb000, -0x7000, -0x6000);
+        Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, 0x4000, -0x1000, 0x2000);
+        this->mHoldMtx = gScratchMtx;
         ((dActor_c *)actor)->mCarryMatrix = &this->mHoldMtx;
     }
 }
@@ -1424,7 +1423,7 @@ int daBombking_c::Behavior()
     DecIfAbove0_Byte(&mSoundCooldown);
     DecIfAbove0_Byte(&mThrowCooldown);
 
-    if ((char *)mState != (char *)data_ov078_021270bc) {
+    if (mState != data_ov078_021270bc) {
         UpdatePos(&mdCcAcPos_c);
     } else {
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
@@ -1434,7 +1433,7 @@ int daBombking_c::Behavior()
         UpdateWMClsn(mWithMeshClsn, 0);
     }
 
-    if ((char *)mState == (char *)data_ov078_0212703c || (char *)mState == (char *)data_ov078_021270fc) {
+    if (mState == data_ov078_0212703c || mState == data_ov078_021270fc) {
         if (mWithMeshClsn.IsOnWall() != 0 || mWithMeshClsn.IsOnGround() == 0 ||
             (mArenaPos.y - 0x28000) > mPos.y) {
             KingBobOmb_SetState(data_ov078_021270bc);

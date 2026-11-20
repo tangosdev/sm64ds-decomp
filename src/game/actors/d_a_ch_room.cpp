@@ -25,7 +25,6 @@
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *out, void *m, s16 ang, const Vector3 *in);
 void ChangeArea(int);
 }
 

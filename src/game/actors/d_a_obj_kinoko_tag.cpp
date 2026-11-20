@@ -16,8 +16,8 @@
  * retail D1/D0 plus the class RTTI, type name, and vtable.
  *
  * Notes:
- * - data_ov002_0210da30 is the ov002 SharedFilePtr handle; symbols.txt has
- *   no recovered name, so it is not coined.
+ * - gScaleUpKinokoModelFile is the ov002 SharedFilePtr handle for
+ *   scale_up_kinoko.bmd; ov002_handles.cpp owns it.
  * - Behavior links the nearest PILE (actor ID 0x1b) back to this tag through
  *   daObjPile_c::mLinkedTag.
  */
@@ -29,7 +29,7 @@
 #include "daObjPile_c.h"
 #include "math/CalcLib.h"
 
-extern SharedFilePtr data_ov002_0210da30;
+extern SharedFilePtr gScaleUpKinokoModelFile;
 
 daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG() {
     return new daObjKinokoTag_c();
@@ -57,7 +57,7 @@ extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_CREATE_TAG = {
 s32 daObjKinokoTag_c::InitResources() {
     mMovingCylinderClsn.Init(this, 0x12c000, 0x32000, 0x800002, 0x20);
     mGroupId = param1;
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+    dExtSimpleModel_c::LoadFile(gScaleUpKinokoModelFile);
     return 1;
 }
 
@@ -109,7 +109,7 @@ s32 daObjKinokoTag_c::Behavior() {
 }
 
 s32 daObjKinokoTag_c::CleanupResources() {
-    data_ov002_0210da30.Release();
+    gScaleUpKinokoModelFile.Release();
     return 1;
 }
 

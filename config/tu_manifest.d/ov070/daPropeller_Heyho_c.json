@@ -159,7 +159,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_02120070Ev",
+      "symbol": "_ZN19daPropeller_Heyho_c20UpdateModelAndShadowEv",
       "address": "0x02120070",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov070_02120070.cpp",
@@ -2118,7 +2118,7 @@
           },
           {
             "ordinal": 17,
-            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_02120070Ev",
+            "symbol": "_ZN19daPropeller_Heyho_c20UpdateModelAndShadowEv",
             "identical": true,
             "relocCount": 6,
             "differences": []
@@ -2335,7 +2335,7 @@
             "size": "0x00000050"
           },
           {
-            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_02120070Ev",
+            "symbol": "_ZN19daPropeller_Heyho_c20UpdateModelAndShadowEv",
             "section": ".text",
             "size": "0x000000e0"
           },
@@ -2902,7 +2902,7 @@
           },
           {
             "ordinal": 17,
-            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_02120070Ev",
+            "symbol": "_ZN19daPropeller_Heyho_c20UpdateModelAndShadowEv",
             "identical": true,
             "relocCount": 6,
             "differences": []
@@ -3119,7 +3119,7 @@
             "size": "0x00000050"
           },
           {
-            "symbol": "_ZN19daPropeller_Heyho_c19func_ov070_02120070Ev",
+            "symbol": "_ZN19daPropeller_Heyho_c20UpdateModelAndShadowEv",
             "section": ".text",
             "size": "0x000000e0"
           },

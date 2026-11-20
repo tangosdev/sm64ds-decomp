@@ -137,15 +137,15 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     void *file;
     Ov007Model *model;
     int i, set;
-    int *setFiles, *figureFiles;
+    const int *setFiles, *figureFiles;
 
     if (figureIndex == 0 && stage == 0)
         set = 2;
     else
         set = figureIndex;
     file = func_ov007_020b3f20(data_ov007_020ccc48[figureIndex]);
-    setFiles = (int *)data_ov007_020ccc80[set];
-    figureFiles = (int *)data_ov007_020ccc68[figureIndex];
+    setFiles = data_ov007_020ccc80[set];
+    figureFiles = data_ov007_020ccc68[figureIndex];
     for (i = 0; i < 3; i++) {
         data_ov007_02103348[i] = func_ov007_020b3f20(setFiles[i]);
         data_ov007_02103354[i] = func_ov007_020b3f20(figureFiles[i]);
@@ -171,16 +171,17 @@ extern "C" void func_ov007_020b2998(void) {
     Vector3 pos;
 
     func_ov007_020b283c();
-    WORK->model = func_ov007_020b2bd4(WORK->figureIndex, WORK->strokeStage[WORK->figureIndex]);
-    WORK->figure = func_ov007_020beaa0(0, WORK->figureIndex);
-    WORK->altFigure = func_ov007_020beaa0(1, WORK->figureIndex);
+    gMenuWork->model =
+        func_ov007_020b2bd4(gMenuWork->figureIndex, gMenuWork->strokeStage[gMenuWork->figureIndex]);
+    gMenuWork->figure = func_ov007_020beaa0(0, gMenuWork->figureIndex);
+    gMenuWork->altFigure = func_ov007_020beaa0(1, gMenuWork->figureIndex);
     pos.x = pos.y = pos.z = 0;
     func_ov007_020b7708(0, &pos);
     func_ov007_020b7708(1, &pos);
-    WORK->modelGrowth = 0x1000;
+    gMenuWork->modelGrowth = 0x1000;
     for (i = 0; i < 3; i++) {
-        WORK->screenSprites[i] = func_ov007_020c44e4(1);
-        sprite = WORK->screenSprites[i];
+        gMenuWork->screenSprites[i] = func_ov007_020c44e4(1);
+        sprite = gMenuWork->screenSprites[i];
         sprite->screenX = 0x80000;
         sprite->screenY = 0x60000;
         sprite->width = sprite->height = 256;
@@ -195,7 +196,7 @@ extern "C" void func_ov007_020b2998(void) {
         case 1:
             sprite->polygonId = 0x15;
             sprite->depth = -0x32000;
-            *sprite->frames = WORK->textures[9];
+            *sprite->frames = gMenuWork->textures[9];
             sprite->texS = 0x20;
             sprite->repeatU = 4;
             sprite->repeatV = 1;
@@ -209,10 +210,10 @@ extern "C" void func_ov007_020b2998(void) {
             sprite->drawFlags |= 1;
             break;
         }
-        func_ov007_020c43bc(sprite, WORK->cameras[1]);
-        func_ov007_020c4388(sprite, WORK->cameras[1]);
+        func_ov007_020c43bc(sprite, gMenuWork->cameras[1]);
+        func_ov007_020c4388(sprite, gMenuWork->cameras[1]);
     }
-    WORK->modelReady = 1;
+    gMenuWork->modelReady = 1;
 }
 
 /* Tears down what func_ov007_020b2998 built, if modelReady is set: releases
@@ -226,10 +227,10 @@ void func_ov007_020b283c(void) {
     int stage;
     int i;
 
-    if (WORK->modelReady == 0)
+    if (gMenuWork->modelReady == 0)
         return;
-    figureIndex = WORK->figureIndex;
-    stage = WORK->strokeStage[figureIndex];
+    figureIndex = gMenuWork->figureIndex;
+    stage = gMenuWork->strokeStage[figureIndex];
     set = figureIndex;
     if (figureIndex == 0 && stage == 0)
         set = 2;
@@ -239,26 +240,26 @@ void func_ov007_020b283c(void) {
         func_ov007_020b3edc(data_ov007_020ccc68[set][i]);
     }
 
-    if (WORK->model != 0) {
-        func_ov007_020bc53c(WORK->model);
-        WORK->model = 0;
+    if (gMenuWork->model != 0) {
+        func_ov007_020bc53c(gMenuWork->model);
+        gMenuWork->model = 0;
     }
-    if (WORK->figure != 0) {
-        WORK->figure->func_ov007_020bea44();
-        WORK->figure = 0;
+    if (gMenuWork->figure != 0) {
+        gMenuWork->figure->func_ov007_020bea44();
+        gMenuWork->figure = 0;
     }
-    if (WORK->altFigure != 0) {
-        WORK->altFigure->func_ov007_020bea44();
-        WORK->altFigure = 0;
+    if (gMenuWork->altFigure != 0) {
+        gMenuWork->altFigure->func_ov007_020bea44();
+        gMenuWork->altFigure = 0;
     }
     for (i = 0; i < 3; i++) {
-        if (WORK->screenSprites[i] != 0) {
-            func_ov007_020c44c4(WORK->screenSprites[i]);
-            WORK->screenSprites[i] = 0;
+        if (gMenuWork->screenSprites[i] != 0) {
+            func_ov007_020c44c4(gMenuWork->screenSprites[i]);
+            gMenuWork->screenSprites[i] = 0;
         }
     }
 
-    WORK->modelReady = 0;
+    gMenuWork->modelReady = 0;
 }
 
 /* Q12 product, truncated. */
@@ -276,7 +277,7 @@ extern "C" void FigureScene_SetScreenBlend(int t) {
     int falling = 0x1000 - (t - 0x800) * 2;
     int rising = t * 2;
     for (i = 0; i < 2; i++) {
-        sprite = WORK->screenSprites[i];
+        sprite = gMenuWork->screenSprites[i];
         sprite->cornerColors[3] =
             func_ov007_020c3be0(t, data_ov007_020ccc50[i].outer, data_ov007_020ccc5c[i].outer);
         sprite->cornerColors[0] = sprite->cornerColors[3];

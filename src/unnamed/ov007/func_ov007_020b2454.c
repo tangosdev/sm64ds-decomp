@@ -14,7 +14,7 @@ void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
     Vector3 b;
     Vector3 a;
 
-    m = WORK;
+    m = gMenuWork;
     /* bone 0's transform */
     in = m->model->model->transforms;
     a.z = 0;

@@ -2,11 +2,11 @@
 /* arm9/OAM -- the sprite/OAM manager. 0x02020820..0x02021a04, 13 functions.
  *
  * OAM is not polymorphic (no RTTI, no vtable, no ctor/dtor -- include/OAM.h):
- * every member is static and the two OAM staging buffers are file-scope bss,
- * so the key-function/vtable partition rules never engage. The run is
+ * every member is static, the two OAM staging buffers and their counters
+ * included, so the key-function/vtable partition rules never engage. The run is
  * contiguous and exhaustive: bounded below by func_02020768 and above by
- * dPa_c::level_c::cutTable. The OamAttr field initializer
- * func_02020820 opens the run under its own address name.
+ * dPa_c::level_c::cutTable. OamAnimation::Init, which arms an animation
+ * player from a {frames, count} pair, opens the run.
  *
  * Source order is ROM-ascending under `#pragma defer_codegen off` -- the
  * deferred default would read optimization pragmas last-wins at end of file
@@ -47,14 +47,8 @@
 #include "nitro/gx/gx_load.h"
 
 extern u8  data_0209e660;    /* sub-OAM suppress flag / single-buffer select */
-extern int data_0209e664;    /* main-buffer fill counter */
-extern int data_0209e668;    /* main-buffer affine-slot counter */
-extern int data_0209e66c;    /* sub-buffer affine-slot counter */
-extern int data_0209e670;    /* sub-buffer fill counter */
-extern GXOamAttr data_0209e674[]; /* main OAM staging buffer: 128 x 8B */
 extern int data_0209e67c[];
 extern int data_0209e694[];
-extern GXOamAttr data_0209ea74[];             /* sub OAM staging buffer: 128 x 8B */
 extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
 extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 
@@ -64,7 +58,7 @@ int func_0202043c(OamAnimation *anim);
 
 /* -------------------------------------------------------------------------- */
 
-void OamAnimation::func_02020820(int *src, int screen, int loops, u8 enabled, u8 affine) {
+void OamAnimation::Init(int *src, int screen, int loops, u8 enabled, u8 affine) {
     this->frames = (const OamAnimFrame *)src[0];
     this->frameCount = src[1];
     func_0202043c(this);
@@ -128,7 +122,7 @@ u8 OAM::GetObjHeight(int shape, int sizeBits)
 {
     /* The twin over the height table, 12 bytes past the width table -- one
      * row of four entries further on. */
-    return *(unsigned char *)&((int *)((char *)data_020755ac + sizeBits))[shape];
+    return *(unsigned char *)&((int *)(data_020755ac + sizeBits))[shape];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -139,7 +133,7 @@ u8 OAM::GetObjWidth(int shape, int sizeBits)
     /* OBJ shape (square / wide / tall) and size bits together pick one of
      * twelve widths. `sizeBits` is a BYTE offset added before the `[shape]`
      * index; the entry is then read as a single byte out of a stride-4 slot. */
-    return *(unsigned char *)&((int *)((char *)data_020755a0 + sizeBits))[shape];
+    return *(unsigned char *)&((int *)(data_020755a0 + sizeBits))[shape];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -207,13 +201,13 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
     int om;
 
     if (!sub || data_0209e660 == 1) {
-        pCount = &data_0209e664;
-        dst = data_0209e674 + *pCount;
-        pAff = &data_0209e668;
+        pCount = &objCountMain;
+        dst = bufferMain + *pCount;
+        pAff = &curAffineSetMain;
     } else {
-        pCount = &data_0209e670;
-        dst = data_0209ea74 + *pCount;
-        pAff = &data_0209e66c;
+        pCount = &objCountSub;
+        dst = bufferSub + *pCount;
+        pAff = &curAffineSetSub;
     }
 
     sinIdx = ((u16)(s16)rotation >> 4) * 2;
@@ -417,21 +411,21 @@ OamAttr *OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio
     scale = scale0;
     rot = rot0;
     if ((!draw) || (data_0209e660 == 1)) {
-        counter = &data_0209e664;
+        counter = &objCountMain;
         cnt = *counter;
         if (cnt >= 128) {
             return 0;
         }
-        res = &data_0209e674[cnt];
-        affctr = &data_0209e668;
+        res = &bufferMain[cnt];
+        affctr = &curAffineSetMain;
     } else {
-        counter = &data_0209e670;
+        counter = &objCountSub;
         cnt = *counter;
         if (cnt >= 128) {
             return 0;
         }
-        res = &data_0209ea74[cnt];
-        affctr = &data_0209e66c;
+        res = &bufferSub[cnt];
+        affctr = &curAffineSetSub;
     }
     x = obj->x;
     if (x >= 0x100) {
@@ -578,19 +572,19 @@ void OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio, Ma
     int y;
 
     if (!draw || data_0209e660 == 1) {
-        counter = &data_0209e664;
+        counter = &objCountMain;
         cnt = *counter;
         if (cnt >= 128)
             return;
-        res = &data_0209e674[cnt];
-        affctr = &data_0209e668;
+        res = &bufferMain[cnt];
+        affctr = &curAffineSetMain;
     } else {
-        counter = &data_0209e670;
+        counter = &objCountSub;
         cnt = *counter;
         if (cnt >= 128)
             return;
-        res = &data_0209ea74[cnt];
-        affctr = &data_0209e66c;
+        res = &bufferSub[cnt];
+        affctr = &curAffineSetSub;
     }
 
     x = obj->x;
@@ -680,20 +674,20 @@ void OAM::Reset() {
     int i;
     if (data_0209e660 != 0) {
         for (i = 0; i < 128; i++) {
-            data_0209e674[i].attr01 = 0xc0;
-            data_0209e674[i].attr2 = 0;
+            bufferMain[i].attr01 = 0xc0;
+            bufferMain[i].attr2 = 0;
         }
     } else {
-        data_0209e674[0].attr01 = 0xc0;
-        data_0209e674[0].attr2 = 0;
-        MI_CpuCopy32(data_0209e674, data_0209e67c, 0x18);
-        MI_CpuCopyFast(data_0209e674, data_0209e694, 0x3e0);
-        MI_CpuCopyFast(data_0209e674, data_0209ea74, 0x400);
-        data_0209e670 = 0;
-        data_0209e66c = 0;
+        bufferMain[0].attr01 = 0xc0;
+        bufferMain[0].attr2 = 0;
+        MI_CpuCopy32(bufferMain, data_0209e67c, 0x18);
+        MI_CpuCopyFast(bufferMain, data_0209e694, 0x3e0);
+        MI_CpuCopyFast(bufferMain, bufferSub, 0x400);
+        objCountSub = 0;
+        curAffineSetSub = 0;
     }
-    data_0209e664 = 0;
-    data_0209e668 = 0;
+    objCountMain = 0;
+    curAffineSetMain = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -704,8 +698,8 @@ void OAM::Flush()
     /* Flush the two 0x400-byte staging buffers out of the data cache so the
      * DMA that follows reads what the CPU just wrote. 0x400 is 128 entries
      * of 8 bytes, the full hardware OAM. */
-    DC_FlushRange(data_0209e674, 0x400);
-    DC_FlushRange(data_0209ea74, 0x400);
+    DC_FlushRange(bufferMain, 0x400);
+    DC_FlushRange(bufferSub, 0x400);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -719,15 +713,15 @@ void OAM::Load()
      * bit 15: which engine drives the top screen), so each engine gets the
      * buffer assembled for the screen it is currently on. */
     if (data_0209e660) {
-        GX_LoadOAM(data_0209e674, 0, 0x400);
+        GX_LoadOAM(bufferMain, 0, 0x400);
         return;
     }
     if (GX_GetDispSelect() == GX_DISP_SELECT_MAIN_SUB) {
-        GX_LoadOAM(data_0209e674, 0, 0x400);
-        GXS_LoadOAM(data_0209ea74, 0, 0x400);
+        GX_LoadOAM(bufferMain, 0, 0x400);
+        GXS_LoadOAM(bufferSub, 0, 0x400);
     } else {
-        GX_LoadOAM(data_0209ea74, 0, 0x400);
-        GXS_LoadOAM(data_0209e674, 0, 0x400);
+        GX_LoadOAM(bufferSub, 0, 0x400);
+        GXS_LoadOAM(bufferMain, 0, 0x400);
     }
 }
 

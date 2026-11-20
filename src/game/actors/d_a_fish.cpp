@@ -29,7 +29,7 @@
  * What stays, and why:
  * - SharedFilePtr::filePtr is a void *, so LoadedBCA casts it to the
  *   BCA_File * SetAnim takes.
- * - data_0209caa0 / data_0209f32c are the arm9 level-state words that
+ * - gSaveBlock / gWaterHeight are the arm9 level-state words that
  *   carry the "has water" flag and the water height; neither is named yet.
  * - func_0203b9b4, Vec3_Sub and Vec3_Asr have no shared header, so they
  *   keep a local extern "C" block.
@@ -93,7 +93,7 @@ extern SharedFilePtr *const data_ov100_021473b0[3] = {
     &gFishAbSwimAnimationFile,
 };
 extern daFishState data_ov100_02148a1c[];
-extern int data_0209f32c;
+extern int gWaterHeight;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
@@ -153,10 +153,10 @@ s32 daFish_c::Behavior() {
             mStateTimer++;
         }
         Vec3_Asr(&shiftedPos, &mPos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, shiftedPos.x, shiftedPos.y, shiftedPos.z);
+        Matrix4x3_FromTranslation(&gScratchMtx, shiftedPos.x, shiftedPos.y, shiftedPos.z);
         mAngle.y = mPrevAngle.y;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
-        mAnmModel.mat4x3 = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mAngle.y);
+        mAnmModel.mat4x3 = gScratchMtx;
         mAnmModel.Advance();
     }
     return 1;
@@ -199,8 +199,8 @@ void daFish_c::StateWaitForPlayer() {
     if (Vec3_HorzLen(&diff) >= 0x1388000)
         return;
 
-    if (data_0209caa0.file.flags2 & 0x80000) {
-        int lim = data_0209f32c - 0x64000;
+    if (gSaveBlock.file.flags2 & 0x80000) {
+        int lim = gWaterHeight - 0x64000;
         if (this->mSurfaceY > lim) {
             this->mSurfaceY = lim;
         }

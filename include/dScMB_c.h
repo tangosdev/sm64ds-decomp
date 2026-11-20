@@ -18,7 +18,7 @@
  * downloads the game over multiplayer.
  *
  * BASE. dScene_c, confirmed by the RTTI edge (dScMB_c arm9:0x02094370 ->
- * dScene_c arm9:0x020914d4) and independently by the vtable: data_020943c4
+ * dScene_c arm9:0x020914d4) and independently by the vtable: _ZTV7dScMB_c
  * (18 slots, matching dScene_c's own 18) overrides exactly six --
  * 0, 3, 6, 9, 16, 17 -- and every other slot is still whatever dScene_c's
  * own table holds there.
@@ -28,7 +28,7 @@
  * read directly off the allocator call.
  *
  * The same constructor writes the vtable chain fBase_c -> (dBase_c/dScene_c
- * inlined) -> data_020943c4 (dScMB_c's own vtable), sets the usual two
+ * inlined) -> _ZTV7dScMB_c (dScMB_c's own vtable), sets the usual two
  * spawn-flag bits at fBase_c's own 0x13, then placement-constructs a
  * dFdColor_c member at 0x50 (writes the dFader_c -> dFdBrightness_c ->
  * dFdColor_c vtable chain and dFdColor_c's own fields, touching nothing
@@ -38,8 +38,8 @@
  * base dtor" sequence.
  *
  * InitResources (func_0203506c) separately registers a GLOBAL
- * dScMB_c::graphCallback_c object (sMBGraphCallback, constructed by
- * func_02034b1c(&sMBGraphCallback, this)) with `this` as its context --
+ * dScMB_c::graphCallback_c object (sMBGraphCallback, set up by
+ * sMBGraphCallback.Init(this)) with `this` as its context --
  * NOT an embedded member of dScMB_c. That callback's layout is declared
  * below; it occupies no space in the scene.
  *
@@ -100,14 +100,14 @@ public:
                                 single unrotated sprite and count down */
     u8 mEnabled;    /* 0x0d -- nothing draws while 0 */
     u8 mAdvancing;  /* 0x0e -- gates the spin advance */
-    u8 mUnusedFlag; /* 0x0f -- func_02034b1c clears it with the three
+    u8 mUnusedFlag; /* 0x0f -- Init clears it with the three
                                 above, and nothing in the recovered ROM
                                 reads it; the name is coined. */
 
-    void func_02034b1c(void *owner);
+    void Init(void *owner);
 
     /* Clears only the owner; InitResources fills in the rest through
-       func_02034b1c. The global's static initializer runs this. */
+       Init. The global's static initializer runs this. */
     graphCallback_c() : mOwner(0) {}
 
     virtual int GraphCallback0(); /* slot 0 */

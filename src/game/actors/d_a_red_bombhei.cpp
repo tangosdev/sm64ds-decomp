@@ -117,8 +117,7 @@ extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
-extern s16 data_0209d6d4;               /* message on screen */
-extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern s16 gCurrentMsgId;               /* message on screen */
 
 /* -- other modules -- */
 int  IsCannonOpenInCurLevel(void);
@@ -320,14 +319,14 @@ int daRedBombhei_c::PanCameraToShutter() {
             offset.x = 0;
             offset.y = 0;
             offset.z = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, shutter->mAngle.y);
-            MTX_MultVec43(&targetLookAt, &data_020a0e68, &offset);
+            Matrix4x3_FromRotationY(&gScratchMtx, shutter->mAngle.y);
+            MTX_MultVec43(&targetLookAt, &gScratchMtx, &offset);
             Vec3_Add(&sum, &shutter->mPos, &offset);
             targetLookAt = sum;
             offset.x = 0;
             offset.y = 0;
             offset.z = 0;
-            MTX_MultVec43(&targetPos, &data_020a0e68, &offset);
+            MTX_MultVec43(&targetPos, &gScratchMtx, &offset);
             Vec3_Add(&sum2, &shutter->mPos, &offset);
             targetPos = sum2;
             {
@@ -471,8 +470,8 @@ void daRedBombhei_c::UpdateTalk() {
     case 0:
         if (ApproachLinear(this->mAngle.y, angle, 0x800) != 0) {
             if (IsRedCoinRole() != 0) {
-                if ((data_0209caa0.file.flags2 & 0x8000) == 0) {
-                    data_0209caa0.file.flags2 |= 0x8000;
+                if ((gSaveBlock.file.flags2 & 0x8000) == 0) {
+                    gSaveBlock.file.flags2 |= 0x8000;
                     msg = 0x15b;
                 } else if (NumRedCoins() <= 3) {
                     msg = 0x15c;
@@ -530,7 +529,7 @@ void daRedBombhei_c::UpdateTalk() {
         }
     }
 
-    shownMsg = data_0209d6d4;
+    shownMsg = gCurrentMsgId;
     if (shownMsg == 0x15c || shownMsg == 0x15e || IsCharacterSpecific() != 0) {
         if (this->mMsgPage == 0)
             gShowTouchScreenArrows = 1;

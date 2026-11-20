@@ -92,10 +92,8 @@ enum { daIbl_PTCL_BREAK = 0xf };
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02038414(void *p);
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 extern signed char gCurrentSublevel;
-extern int data_02092138;
+extern int gLevelMinY;
 
 /* The model handle reaches its file through this wrapper's constructor and
  * destructor veneers; the manifest maps each to the retail destination.
@@ -742,7 +740,7 @@ int daIbl_c::InitResources()
         }
         AdvancePath();
         mPrevAngle.y = mHeadingToNode;
-        mKillY = data_02092138;
+        mKillY = gLevelMinY;
         d = gCurrentSublevel;
         /* Sublevel 0x19 is the half-size ball: speed 10 units/frame, scale
            0.5 (0x800), collider radius and height 30 units. */

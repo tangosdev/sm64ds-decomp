@@ -23,15 +23,15 @@ struct dThIcon_c {
     s16 mY;     /* 0x006 */
     s16 mHalfW; /* 0x008 */
     s16 mHalfH; /* 0x00a */
-    /* Frames left in a press. func_ov001_020ab3f0 loads it from
-       mPressTime; Behavior counts it down by data_0208ee44 and, at zero,
+    /* Frames left in a press. Press loads it from
+       mPressTime; Behavior counts it down by gFrameStep and, at zero,
        flips mOn back and re-arms mReady. dScEntry_c::icon_c::Render
        scales its sprite by it. */
     s32 mPressTimer; /* 0x00c */
-    /* Lit / pressed: func_ov001_020ab3f0 toggles it, Behavior toggles it
+    /* Lit / pressed: Press toggles it, Behavior toggles it
        back; the derived Renders pick the lit sprite or palette by it. */
     u8 mOn; /* 0x010 */
-    /* TouchArea_Update returns 0 unless set. func_ov001_020ab3f0 clears
+    /* TouchArea_Update returns 0 unless set. Press clears
        it; Place and Behavior set it when mTouchKind >= 1. */
     u8 mReady; /* 0x011 */
     /* TouchArea_Update stores whether the pen is inside this frame, so
@@ -57,7 +57,7 @@ struct dThIcon_c {
     void Place(int, s16, s16, s16, s16);
     virtual void Behavior();
     virtual void Render();
-    void func_ov001_020ab3f0();
+    void Press();
 };
 
 #ifndef SM64DS_PLATFORM_PC
