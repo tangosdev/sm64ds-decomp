@@ -35083,7 +35083,7 @@
     },
     "ov060:0x02116518": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_02116518Ejii"
+      "name": "_ZN11daKpaFire_c16KeepParticlePairEjii"
     },
     "ov060:0x02116740": {
       "author": "tangosdev",
@@ -35091,71 +35091,71 @@
     },
     "ov060:0x021167c8": {
       "author": "andrewboudreau",
-      "name": "_ZN11daKpaFire_c19func_ov060_021167c8Ev"
+      "name": "_ZN11daKpaFire_c14InitNoCylinderEv"
     },
     "ov060:0x021167ec": {
       "author": "ruspecial",
-      "name": "_ZN11daKpaFire_c19func_ov060_021167ecEv"
+      "name": "_ZN11daKpaFire_c13UpdateScatterEv"
     },
     "ov060:0x021168c4": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_021168c4Ev"
+      "name": "_ZN11daKpaFire_c12UpdateBounceEv"
     },
     "ov060:0x021169b0": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_021169b0Ev"
+      "name": "_ZN11daKpaFire_c10InitBounceEv"
     },
     "ov060:0x021169f8": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_021169f8Ev"
+      "name": "_ZN11daKpaFire_c18UpdateGrowAndSplitEv"
     },
     "ov060:0x02116b18": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_02116b18Ev"
+      "name": "_ZN11daKpaFire_c8InitGrowEv"
     },
     "ov060:0x02116b68": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_02116b68Ev"
+      "name": "_ZN11daKpaFire_c12UpdateFlightEv"
     },
     "ov060:0x02116c68": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_02116c68Ev"
+      "name": "_ZN11daKpaFire_c10InitFlightEv"
     },
     "ov060:0x02116d78": {
       "author": "lunavyqo",
-      "name": "_ZN11daKpaFire_c19func_ov060_02116d78Ev"
+      "name": "_ZN11daKpaFire_c11UpdateSprayEv"
     },
     "ov060:0x02116f74": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_02116f74Ev"
+      "name": "_ZN11daKpaFire_c9InitSprayEv"
     },
     "ov060:0x02116f90": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_02116f90Ev"
+      "name": "_ZN11daKpaFire_c17UpdateFallAndBurnEv"
     },
     "ov060:0x0211712c": {
       "author": "ruspecial",
-      "name": "_ZN11daKpaFire_c19func_ov060_0211712cEv"
+      "name": "_ZN11daKpaFire_c15ApplySideWobbleEv"
     },
     "ov060:0x021171e8": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_021171e8Ev"
+      "name": "_ZN11daKpaFire_c10InitTossUpEv"
     },
     "ov060:0x0211722c": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_0211722cEv"
+      "name": "_ZN11daKpaFire_c8InitFallEv"
     },
     "ov060:0x021172c8": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_021172c8Ej"
+      "name": "_ZN11daKpaFire_c17FrameCountExceedsEj"
     },
     "ov060:0x021172e0": {
       "author": "tangosdev",
-      "name": "_ZN11daKpaFire_c19func_ov060_021172e0Ev"
+      "name": "_ZN11daKpaFire_c10EndBurnOutEv"
     },
     "ov060:0x0211747c": {
       "author": "andrewboudreau",
-      "name": "_ZN11daKpaFire_c19func_ov060_0211747cEv"
+      "name": "_ZN11daKpaFire_c15UpdateRideMouthEv"
     },
     "ov060:0x02117624": {
       "author": "tangosdev",
