@@ -587,11 +587,9 @@ sMgStockCounterFiles kind:data(any) addr:0x020bbfe4
 sMgPauseBgNcgByLanguage kind:data(any) addr:0x020bbff8
 sMgOptionNcgByLanguage kind:data(any) addr:0x020bc00c
 sMgMenuItem0SpritesByLanguage kind:data(any) addr:0x020bc020
-data_ov004_020bc03c kind:data(any) addr:0x020bc03c
 _ZTVN11dScMgBase_c15graphCallback_cE kind:data(any) addr:0x020bc03c
 _ZTSN11dScMgBase_c15graphCallback_cE kind:data(any) addr:0x020bc04c
 sMgSceneKindByGame kind:data(any) addr:0x020bc070
-data_ov004_020bc0c0 kind:data(any) addr:0x020bc0c0
 _ZTV11dScMgBase_c kind:data(any) addr:0x020bc0c0
 sMgBannerButtonsArmed kind:data(any) addr:0x020bc150
 pmf_Banner_UpdateZoom kind:data(any) addr:0x020bc154

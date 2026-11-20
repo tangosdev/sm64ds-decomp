@@ -119,8 +119,8 @@ extern "C" {
 
 /* Data. 0x0210e6b0 and 0x0210eb78 are the two shared animation file
    handles; d_a_ply_methods.cpp's static initializer constructs both. */
-extern SharedFilePtr data_ov002_0210e6b0;
-extern SharedFilePtr data_ov002_0210eb78;
+extern SharedFilePtr gYEggRunAnimationFile;
+extern SharedFilePtr gYEggWaitAnimationFile;
 extern const s16 data_ov002_021000a8[];
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
    clash with these. */
@@ -346,7 +346,7 @@ void daYegg_c::ExecuteDrop() {
  * speed, zeroes the horizontal speed and sets gravity to -0x2000 (-2 units
  * per frame squared). */
 void daYegg_c::EnterDrop() {
-    mAnmModel.SetAnim((BCA_File *)data_ov002_0210eb78.filePtr, 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gYEggWaitAnimationFile.filePtr, 0, 0x1000, 0);
     mHorzSpeed = 0;
     mVertAccel = -0x2000;
 }
@@ -398,7 +398,7 @@ void daYegg_c::ExecuteWobble() {
  * animation (file 0x0210eb78) at normal speed. */
 void daYegg_c::EnterWobble() {
     mHorzSpeed = 0;
-    mAnmModel.SetAnim((BCA_File *)data_ov002_0210eb78.filePtr, 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gYEggWaitAnimationFile.filePtr, 0, 0x1000, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -599,7 +599,7 @@ void daYegg_c::ExecuteSeek() {
 void daYegg_c::EnterSeek() {
     dActor_c *r5;
     mTargetId = 0;
-    mAnmModel.SetAnim((BCA_File *)data_ov002_0210e6b0.filePtr, 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gYEggRunAnimationFile.filePtr, 0, 0x1000, 0);
     mHorzSpeed = 0x64000;
     if (!func_ov002_020ec654()) {
         mVertAccel = 0;
@@ -748,9 +748,9 @@ void daYegg_c::ExecuteFollowPlayer() {
         int speed = idx << 8;
         if (mPlayer->mIsAirborne != 0) speed = 0;
         if (v98 != 0) {
-            mAnmModel.SetAnim((BCA_File *)data_ov002_0210e6b0.filePtr, 0, speed, 0);
+            mAnmModel.SetAnim((BCA_File *)gYEggRunAnimationFile.filePtr, 0, speed, 0);
         } else {
-            mAnmModel.SetAnim((BCA_File *)data_ov002_0210eb78.filePtr, 0, speed, 0);
+            mAnmModel.SetAnim((BCA_File *)gYEggWaitAnimationFile.filePtr, 0, speed, 0);
         }
     }
 
@@ -1199,8 +1199,8 @@ int daYegg_c::HandleCylinderHit() {
    unloads the blue-coin model InitResources loaded. */
 int daYegg_c::CleanupResources()
 {
-    data_ov002_0210e6b0.Release();
-    data_ov002_0210eb78.Release();
+    gYEggRunAnimationFile.Release();
+    gYEggWaitAnimationFile.Release();
     if (HasBlueCoinPayout() != 0)
         UnloadBlueCoinModel();
     return 1;
@@ -1312,8 +1312,8 @@ int daYegg_c::InitResources()
     if (func_ov002_020ec654() != 0)
         idx = 1;
 
-    dExtFrameCtrl_c::LoadFile(data_ov002_0210e6b0);
-    dExtFrameCtrl_c::LoadFile(data_ov002_0210eb78);
+    dExtFrameCtrl_c::LoadFile(gYEggRunAnimationFile);
+    dExtFrameCtrl_c::LoadFile(gYEggWaitAnimationFile);
     if (mAnmModel.SetFile((BMD_File *)data_ov002_021000a0[idx]->filePtr, 1, -1) == 0)
         return 0;
 
@@ -1327,7 +1327,7 @@ int daYegg_c::InitResources()
             return 0;
     }
 
-    mAnmModel.SetAnim((BCA_File *)data_ov002_0210eb78.filePtr, 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)gYEggWaitAnimationFile.filePtr, 0, 0x1000, 0);
 
     mAreaId = -1;
     mSpawnPos.x = mPos.x;

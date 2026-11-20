@@ -25,7 +25,7 @@ struct Tex
 
 /* Bind a particle texture record: set its image and palette (texture
    coordinates from the texcoord command, texGen 1), then load a texture
-   matrix that scales by its width and height. func_0204a5c8 binds the system's
+   matrix that scales by its width and height. SPLManager_DoDraw binds the system's
    texture with it, and each particle's own when the texture animates. */
 void SPLUtil_SetTexture(struct Tex *self) {
     struct TexParam p = self->param;

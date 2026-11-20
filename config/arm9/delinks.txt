@@ -1563,7 +1563,7 @@ src/SPLEmitter_Emit.c:
     complete
     .text start:0x0204a5bc end:0x0204a5c8
 
-src/unnamed/arm9/0204/func_0204a5c8.c:
+src/SPLManager_DoDraw.c:
     complete
     .text start:0x0204a5c8 end:0x0204a730
 

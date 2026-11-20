@@ -136,7 +136,6 @@ _ZTV10dCapIcon_c kind:data(any) addr:0x020ad470
 data_ov001_020ad470 kind:data(any) addr:0x020ad470
 _ZTI9dThIcon_c kind:data(any) addr:0x020ad478
 _ZTS9dThIcon_c kind:data(any) addr:0x020ad480
-data_ov001_020ad494 kind:data(any) addr:0x020ad494 ambiguous
 _ZTV9dThIcon_c kind:data(any) addr:0x020ad494
 data_ov001_020ad49c kind:data(any) addr:0x020ad49c
 data_ov001_020ad4a8 kind:data(any) addr:0x020ad4a8

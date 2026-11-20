@@ -213,7 +213,7 @@ extern unsigned short data_ov100_02148708[];
 /* The pointer-to-member records the nine states are built from
    (0x021480d4..0x02148144 in .data), and the null member the initializer
    copies for the states that have no enter member. */
-extern daDoor_StatePmf data_02086b58;
+extern daDoor_StatePmf __ptmf_null;
 extern daDoor_StatePmf data_ov100_021480d4;
 extern daDoor_StatePmf data_ov100_021480dc;
 extern daDoor_StatePmf data_ov100_021480e4;
@@ -311,18 +311,18 @@ DoorEntry data_ov100_02148204[19] = {
 /* -------------------------------------------------------------------------- */
 /* The nine door states, in static-initializer order. Each is a
    16-byte {enter, execute} pointer-to-member pair; the enterless states
-   copy the null record arm9 keeps at data_02086b58. The .data records
+   copy the null record arm9 keeps at __ptmf_null. The .data records
    above carry the individual members. */
 /* -------------------------------------------------------------------------- */
-daDoor_StateRecord data_ov100_021488b4 = {data_02086b58, data_ov100_0214813c};
+daDoor_StateRecord data_ov100_021488b4 = {__ptmf_null, data_ov100_0214813c};
 daDoor_StateRecord data_ov100_021488c4 = {data_ov100_021480dc, data_ov100_021480e4};
 daDoor_StateRecord data_ov100_021488d4 = {data_ov100_021480f4, data_ov100_021480ec};
 daDoor_StateRecord data_ov100_021488e4 = {data_ov100_0214810c, data_ov100_021480fc};
 daDoor_StateRecord data_ov100_021488f4 = {data_ov100_0214811c, data_ov100_02148104};
 daDoor_StateRecord data_ov100_02148904 = {data_ov100_02148124, data_ov100_0214812c};
 daDoor_StateRecord data_ov100_02148914 = {data_ov100_02148144, data_ov100_021480d4};
-daDoor_StateRecord data_ov100_02148924 = {data_02086b58, data_ov100_02148134};
-daDoor_StateRecord data_ov100_021488a4 = {data_02086b58, data_ov100_02148114};
+daDoor_StateRecord data_ov100_02148924 = {__ptmf_null, data_ov100_02148134};
+daDoor_StateRecord data_ov100_021488a4 = {__ptmf_null, data_ov100_02148114};
 
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  *

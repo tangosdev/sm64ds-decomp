@@ -17,9 +17,9 @@
  */
 struct dFdBrightness_c;
 
-/* data_020a0eac is the actor heap. operator delete passes it to
+/* GAME_HEAP_PTR is the actor heap. operator delete passes it to
    Memory::Deallocate, the same way fBase_c does. */
-extern "C" mHeap::Heap_t *data_020a0eac;
+extern "C" mHeap::Heap_t *GAME_HEAP_PTR;
 
 struct dScene_c : dBase_c {
     /* No separate dScene_c constructor exists in the ROM. This body is
@@ -40,7 +40,7 @@ struct dScene_c : dBase_c {
        copy is also what all ten direct subclasses find as THEIR immediate
        base, so it unlocks their D0s too. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, data_020a0eac);
+        Memory::Deallocate(ptr, GAME_HEAP_PTR);
     }
 
     /* --- overrides, in _ZTV8dScene_c order. Signatures must match fBase_c's
