@@ -38,21 +38,21 @@ extern "C" void func_ov007_020bd1c0(int n) {
 
     /* Kept (#821 r76): the Ov007Texture member calls keep this file C++ (r75: a C probe is
        identical), and C++ copies a VecFx32 memberwise (here and below). */
-    *(Vector3Bits *)&WORK->lights[0]->source = *(Vector3Bits *)&data_ov007_020d7c34[n];
+    *(Vector3Bits *)&gMenuWork->lights[0]->source = *(Vector3Bits *)&data_ov007_020d7c34[n];
 
     h = func_ov007_020b3f20(0x16);
     for (i = 0; i < 11; i++) {
-        func_ov007_020b22e0(WORK->textures[i], h, i);
+        func_ov007_020b22e0(gMenuWork->textures[i], h, i);
     }
 
     {
-        int t = WORK->settings->language - 2;
+        int t = gMenuWork->settings->language - 2;
         if (t >= 0) {
             void *h2;
             res = t + 0x20;
             h2 = func_ov007_020b3f20(res);
-            func_ov007_020b22e0(WORK->textures[2], h2, 0);
-            func_ov007_020b22e0(WORK->textures[6], h2, 1);
+            func_ov007_020b22e0(gMenuWork->textures[2], h2, 0);
+            func_ov007_020b22e0(gMenuWork->textures[6], h2, 1);
         }
     }
 
@@ -60,40 +60,40 @@ extern "C" void func_ov007_020bd1c0(int n) {
     case 0: {
         func_ov007_020b1fa4(1);
         G3X_SetShading(GX_SHADING_TOON);
-        *(Vector3Bits *)&WORK->lights[1]->source = *(Vector3Bits *)&data_ov007_020d7c28;
-        WORK->lights[1]->color = 0x18c6;
+        *(Vector3Bits *)&gMenuWork->lights[1]->source = *(Vector3Bits *)&data_ov007_020d7c28;
+        gMenuWork->lights[1]->color = 0x18c6;
         func_ov007_020bd4a0(0);
         func_ov007_020b2998();
-        WORK->modelGrowth = 0;
-        func_ov007_020bfbdc(WORK->cameras[0]);
+        gMenuWork->modelGrowth = 0;
+        func_ov007_020bfbdc(gMenuWork->cameras[0]);
         func_ov007_020bd4a0(1);
-        ((Ov007Texture *)WORK->textures[8])->func_ov007_020c14b8();
-        ((Ov007Texture *)WORK->textures[7])->func_ov007_020c14b8();
-        ((Ov007Texture *)WORK->textures[6])->func_ov007_020c14b8();
-        ((Ov007Texture *)WORK->textures[9])->func_ov007_020c14b8();
-        ((Ov007Texture *)WORK->textures[10])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[8])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[7])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[6])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[9])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[10])->func_ov007_020c14b8();
         func_ov007_020b77ac();
     } break;
     case 1:
         func_ov007_020b1fa4(2);
         func_ov007_020bd4a0(0);
-        func_ov007_020bfbdc(WORK->cameras[0]);
+        func_ov007_020bfbdc(gMenuWork->cameras[0]);
         func_ov007_020bd4a0(1);
-        ((Ov007Texture *)WORK->textures[1])->func_ov007_020c14b8();
-        ((Ov007Texture *)WORK->textures[3])->func_ov007_020c14b8();
-        ((Ov007Texture *)WORK->textures[4])->func_ov007_020c14b8();
-        PickerScene_Create(WORK->transitionMode, WORK->figureIndex);
+        ((Ov007Texture *)gMenuWork->textures[1])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[3])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[4])->func_ov007_020c14b8();
+        PickerScene_Create(gMenuWork->transitionMode, gMenuWork->figureIndex);
         break;
     case 2: {
         func_ov007_020b1fa4(3);
         G3X_SetShading(GX_SHADING_HIGHLIGHT);
         func_ov007_020bce70(4, 0);
         func_ov007_020bd4a0(0);
-        func_ov007_020bfbdc(WORK->cameras[0]);
+        func_ov007_020bfbdc(gMenuWork->cameras[0]);
         func_ov007_020bd4a0(1);
-        ((Ov007Texture *)WORK->textures[2])->func_ov007_020c14b8();
-        ((Ov007Texture *)WORK->textures[0])->func_ov007_020c14b8();
-        ((Ov007Texture *)WORK->textures[10])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[2])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[0])->func_ov007_020c14b8();
+        ((Ov007Texture *)gMenuWork->textures[10])->func_ov007_020c14b8();
         func_ov007_020bf428();
     } break;
     }

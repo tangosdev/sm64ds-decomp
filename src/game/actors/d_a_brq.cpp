@@ -102,7 +102,6 @@ extern SharedFilePtr *const data_ov070_021222e0[2] = {
     &data_ov070_0212360c,
 };
 extern BTA_File data_ov070_021231f4;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 int daBrq_c::InitResources() {
     BMD_File *bmd;

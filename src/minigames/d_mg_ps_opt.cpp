@@ -24,14 +24,6 @@
 /* The blitter's 2x2 matrix. This panel always passes none. */
 struct Matrix2x2;
 
-/* {halfW, halfH} records, stride 4. The ROM reads the width through the
-   array's own symbol and the height through a second linker symbol two
-   bytes in (sPsOptIconPosAY and friends), and loads each base on its own.
-   The width reads are plain sPsOptIconPosA[i].mHalfW; the height reads
-   keep the byte stride: sPsOptIconPosAY[i * 2] changes PsOpt_PlaceIcon's size
-   (measured). */
-#define HALF_H_AT(base, i) (*(short *)((char *)(base) + (i) * 4))
-
 /* dThIcon_c leaves these two unk_. The other derived icons do not agree
    on names, so the names stay in this file.
      unk_01c mStyle                  which graphic
@@ -119,10 +111,6 @@ PsOptHalfSize sPsOptStylePos[7] = {
     PsOptHalfSize(0x08, 0x10), PsOptHalfSize(0x18, 0x10), PsOptHalfSize(0x28, 0x10),
     PsOptHalfSize(0x20, 0x10),
 };
-/* The heights, two bytes into each array. */
-extern short sPsOptIconPosAY[];
-extern short sPsOptIconPosBY[];
-extern short sPsOptStylePosY[];
 
 dMgPsOpt_c::TouchIcon_c::TouchIcon_c() {}
 
@@ -313,13 +301,13 @@ void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, shor
     if (style == kStyleSoundLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        icon->Place(kind, x, y, sPsOptIconPosA[lang].mHalfW, HALF_H_AT(sPsOptIconPosAY, lang2));
+        icon->Place(kind, x, y, sPsOptIconPosA[lang].mHalfW, sPsOptIconPosA[lang2].mHalfH);
     } else if (style == kStyleLightLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        icon->Place(kind, x, y, sPsOptIconPosB[lang].mHalfW, HALF_H_AT(sPsOptIconPosBY, lang2));
+        icon->Place(kind, x, y, sPsOptIconPosB[lang].mHalfW, sPsOptIconPosB[lang2].mHalfH);
     } else {
-        icon->Place(kind, x, y, sPsOptStylePos[style].mHalfW, HALF_H_AT(sPsOptStylePosY, style));
+        icon->Place(kind, x, y, sPsOptStylePos[style].mHalfW, sPsOptStylePos[style].mHalfH);
     }
 }
 

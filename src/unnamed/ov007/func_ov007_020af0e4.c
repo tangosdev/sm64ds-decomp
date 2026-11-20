@@ -10,7 +10,7 @@ extern void func_ov007_020c1d78(int i);
 void func_ov007_020af0e4(void) {
     Ov007MenuState *picker = PickerScene_GetMainState();
     picker->requestedState = 5;
-    if (WORK->states[0]->previousState != 1)
-        WORK->states[2]->requestedState = 5;
+    if (gMenuWork->states[0]->previousState != 1)
+        gMenuWork->states[2]->requestedState = 5;
     func_ov007_020c1d78(0);
 }

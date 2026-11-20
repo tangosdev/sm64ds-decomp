@@ -2,6 +2,7 @@
 #define MGBANNER_H
 
 #include "types.h"
+#include "nitro/gx/gxcommon.h"
 
 /* One of the three 0x134-byte records at gMgBanners: a graphic
    loaded from the file table and drawn as a list of OAM records. The class
@@ -12,6 +13,7 @@
 struct MgBanner;
 typedef void (MgBanner::*ElemFn)();
 typedef char ElemFn_size_must_be_0x8[sizeof(ElemFn) == 0x8 ? 1 : -1];
+typedef char GXOamAttr_size_must_be_0x8[sizeof(GXOamAttr) == 0x8 ? 1 : -1];
 struct MgBanner {
     ElemFn mBehavior; /* 0x00 run by Banner_Update */
     ElemFn mRender;   /* 0x08 run by Banner_Draw; 0 draws plainly */
@@ -29,9 +31,10 @@ struct MgBanner {
     s16 mGfxSlot;     /* 0x30 0..2, see sMgBannerGfxSlotUsed */
     u16 mArrived;     /* 0x32 set when mX reaches mTargetX
                             (UpdateSlideFromRight, UpdateSlideFromLeft) */
-    u8 mOam[0x100];   /* 0x34 GXOamAttr records; the one whose attr3 is 0xffff is the
-                            last drawn. The squeeze and zoom draws read x, the 9-bit
-                            screen position, and fold values above 0x100 negative. */
+    GXOamAttr mOam[0x20]; /* 0x34 the sprite list Mg_CopySpriteList copied; the
+                               record whose attr3 is 0xffff is the last drawn. The
+                               squeeze and zoom draws read x, the 9-bit screen
+                               position, and fold values above 0x100 negative. */
     MgBanner();
     ~MgBanner() {}
 

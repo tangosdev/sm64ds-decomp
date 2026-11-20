@@ -45,11 +45,12 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "decl_common.h"
+#include "Vector2Math.h"
 #include "dMgTrmplnShared.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
-extern "C" void Mg_RenderSpriteBoth(void *a0, int, int, int, int);
+extern "C" void Mg_RenderSpriteBoth(OamAttr *a0, int, int, int, int);
 extern "C" void DrawOamSprite(OamAttr *attr, int, int, Matrix2x2 *mtx);
 extern "C" void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
 extern "C" void Mg_CommitRecords(void);
@@ -59,7 +60,7 @@ extern "C" s32 GetGameLanguage(void);
 extern int sTrmpRowScreenY[];
 
 OamAttr data_ov006_02134f28[1] = {{0x00f0, 0x81f0, 0x101c, 0xffff}};
-int sTrmpRowMarkerSprite = (int)data_ov006_02134f28;
+OamAttr *sTrmpRowMarkerSprite = data_ov006_02134f28;
 void TrmpFx_Link(TrmpScorePopup *entry);
 
 extern TrmpScorePopup *sTrmpFxList;
@@ -118,27 +119,25 @@ extern "C" void InitialiseVramGlobals(void);
 
 extern const s16 data_02082414[];
 extern "C" int Trmp3DMario_InitPool(unsigned char *a0, int a1);
-void TrmpFx_InitPool(void *records, int count);
+void TrmpFx_InitPool(TrmpScorePopup *records, int count);
 void TrmpLine_LoadTextures(void);
 extern "C" void Trmp3DMario_ResetAll(unsigned int n, int spawnHeight);
 void TrmpFx_ClearAll(void);
 
-extern int sTrmpPuffXByLanguage[];
-void Puff_ClearAll(int a0, int a1);
 
 extern "C" void func_02012718(int, int);
 void TrmpFx_UpdateAll(void);
 void TrmpFx_DrawAll(void);
 OamAttr data_ov006_02134ef8[1] = {{0x40fc, 0x01f8, 0x1078, 0xffff}};
 OamAttr data_ov006_02134ef0[1] = {{0x40fc, 0x01f8, 0x107a, 0xffff}};
-void *sTrmpDoorSignSprites[] = {data_ov006_02134ef8, data_ov006_02134ef0};
+OamAttr *sTrmpDoorSignSprites[] = {data_ov006_02134ef8, data_ov006_02134ef0};
 
 OamAttr data_ov006_02134f0c[3] = {
     {0x00e0, 0x81f0, 0x1014, 0x0000},
     {0x4000, 0x81f0, 0x1018, 0x0000},
     {0x4010, 0x41f0, 0x1058, 0xffff},
 };
-void *sTrmpArrowSprite = data_ov006_02134f0c;
+OamAttr *sTrmpArrowSprite = data_ov006_02134f0c;
 extern "C" void Trmp3DMario_DrawAll(void);
 void TrmpLine_DrawAll(void);
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
@@ -248,8 +247,8 @@ OamAttr **sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesS
                                           sMgTextSpritesFrench, sMgTextSpritesGerman,
                                           sMgTextSpritesItalian};
 
-int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
-                              (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
+OamAttr **sTrmpPuffXByLanguage[] = {sTrmpPuffEnglish, sTrmpPuffSpanish, sTrmpPuffFrench,
+                                    sTrmpPuffGerman, sTrmpPuffItalian};
 
 TrmpScorePopup::TrmpScorePopup() {}
 
@@ -927,8 +926,8 @@ void dScMgTrampoline_c::PaintSquare(int cx, int cy, int colour, int size) {
 }
 
 /* .c-derived member: C linkage for the whole block */
-void TrmpFx_InitPool(void *records, int count) {
-    sTrmpFxPool = (TrmpScorePopup *)records;
+void TrmpFx_InitPool(TrmpScorePopup *records, int count) {
+    sTrmpFxPool = records;
     sTrmpFxCount = count;
 }
 
@@ -1007,8 +1006,8 @@ void TrmpFx_Unlink(TrmpScorePopup *node) {
 void TrmpScorePopup::Spawn(int y, int number) {
     x = 0x110000;
     this->y = y;
-    speedX = -0x4000;
-    speedY = 0;
+    speed.x = -0x4000;
+    speed.y = 0;
     targetX = 0xc0000;
     targetY = y;
     life = 0x80;
@@ -1016,7 +1015,6 @@ void TrmpScorePopup::Spawn(int y, int number) {
     this->number = number;
     TrmpFx_Link(this);
 }
-extern "C" void func_0203d630(int *p, int m);
 
 void TrmpScorePopup::Update() {
     if (active == 0) {
@@ -1026,9 +1024,9 @@ void TrmpScorePopup::Update() {
         TrmpFx_Unlink(this);
         active = 0;
     }
-    x += speedX;
+    x += speed.x;
     ApproachLinear(y, targetY, 0x1800);
-    func_0203d630(&speedX, 0xf00);
+    func_0203d630(&speed, 0xf00);
 }
 
 void TrmpScorePopup::Render() {
@@ -1073,8 +1071,7 @@ void dScMgTrampoline_DoorMark::Render(int scrollY) {
         return;
     if (shown == 0)
         return;
-    Mg_RenderSpriteBoth((void *)sTrmpRowMarkerSprite, 208, sTrmpRowScreenY[row] - scrollY - 8, -1,
-                        -1);
+    Mg_RenderSpriteBoth(sTrmpRowMarkerSprite, 208, sTrmpRowScreenY[row] - scrollY - 8, -1, -1);
 }
 
 TrmpScorePopup::~TrmpScorePopup() {}

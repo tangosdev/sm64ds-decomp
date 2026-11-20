@@ -132,7 +132,7 @@ int D3D_PlaySeAtX(int a, int b);
 void Puff_Spawn(int a, int b);
 void Puff_DrawAll(void);
 void Puff_UpdateAll(void);
-void Puff_ClearAll(int a, int b);
+void Puff_ClearAll(int a, OamAttr **b);
 
 /* Rescales the six tuning words at 0213b008..0213b01c from one input,
  * clamped to 0x3000. */

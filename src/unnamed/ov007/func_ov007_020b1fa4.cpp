@@ -11,11 +11,11 @@ extern void func_ov007_020c0078(Ov007Camera *cam);
 
 /* preset: 1 (func_ov007_020b10dc), 4 (func_ov007_020b0a20), 2 and 3. */
 extern "C" void func_ov007_020b1fa4(int preset) {
-    Ov007Camera *cam = WORK->cameras[0];
+    Ov007Camera *cam = gMenuWork->cameras[0];
     func_ov007_020c0128(cam);
     switch (preset) {
     case 1:
-        switch (WORK->figureIndex) {
+        switch (gMenuWork->figureIndex) {
         case 0:
             cam->target.y = -0x3e8;
             cam->distance = 0x1e000;
@@ -44,5 +44,5 @@ extern "C" void func_ov007_020b1fa4(int preset) {
     func_ov007_020bffb8(cam);
     G3i_LookAt_(&cam->eye, &cam->up, &cam->target, true, &cam->viewMatrix);
     func_ov007_020c0078(cam);
-    WORK->cameraPreset = preset;
+    gMenuWork->cameraPreset = preset;
 }

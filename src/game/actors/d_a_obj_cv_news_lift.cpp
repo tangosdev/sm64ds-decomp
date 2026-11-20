@@ -89,9 +89,8 @@ Vector3 gNewsLiftPlatformOffsets[4] = {
 extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
-/* The identity quaternion. Its other readers still declare it int[4], so this
-   TU copies it through a Quaternion view. */
-extern s32 data_02092768[];
+/* The identity quaternion. */
+extern Quaternion data_02092768;
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
 extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
@@ -115,7 +114,7 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
     mPlayerOnMesh = 1;
     mResetTimer = 300;
     if (mBumped) {
-        mTargetRotation = *(Quaternion *)data_02092768;
+        mTargetRotation = data_02092768;
     } else {
         gScratchMtx = mClsnMat;
         MTX_Inverse43(&gScratchMtx, &gScratchMtx);
@@ -370,7 +369,7 @@ s32 daObjCvNewsLift_c::Behavior() {
             }
         }
         if (!DecIfAbove0_Byte(&mTiltHoldTimer)) {
-            mTargetRotation = *(Quaternion *)data_02092768;
+            mTargetRotation = data_02092768;
         }
     }
     Quaternion_SLerp((int *)&mRotation, (int *)&mTargetRotation, 0x199, (int *)&mRotation);
@@ -378,8 +377,8 @@ s32 daObjCvNewsLift_c::Behavior() {
         mResetTimer = 300;
     if (!DecIfAbove0_Short(&mResetTimer)) {
         mPos = mHomePos;
-        mRotation = *(Quaternion *)data_02092768;
-        mTargetRotation = *(Quaternion *)data_02092768;
+        mRotation = data_02092768;
+        mTargetRotation = data_02092768;
         mLoweredPlatform = -1;
         mWobblePhase = 0;
         mBumped = 0;

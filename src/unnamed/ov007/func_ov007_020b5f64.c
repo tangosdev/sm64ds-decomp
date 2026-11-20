@@ -16,7 +16,7 @@ void func_ov007_020b5f64(Ov007ItemView *view) {
 
     p = view->item;
     slot = p->id - 0xe;
-    g = WORK;
+    g = gMenuWork;
     sel = g->states[1]->currentState;
     x = view->slideToX;
     y = view->slideToY;

@@ -296,8 +296,6 @@ void daCoin_c::Step() {
  * FLOOR_DYNAMIC drops it 500 units with a fixed radius; FLOOR_FIXED sizes it
  * from the distance down to mFloorPosY. */
 void daCoin_c::UpdateModelMatrix() {
-    extern Matrix4x3 IDENTITY_MATRIX4X3;
-
     int inYoshiMouth;
     int floorState;
 
@@ -822,7 +820,6 @@ s32 daCoin_c::InitResources()
      * each one changes the code (measured per site); the plain `&=`/`|=`
      * sites take the member as is. */
 
-    extern Matrix4x3 IDENTITY_MATRIX4X3;
     extern s8 gCurrentSublevel;
     extern u8 gCurrentStarId;
     extern dActor_c *STAR_MARKERS[12];
@@ -1057,15 +1054,15 @@ CoinHandler data_ov002_0210dc70[9] = {
     &daCoin_c::StateFollowTarget};
 
 /* Initialized data this file is the only complete referrer for. */
-extern "C" char gCoinYellowPoly4ModelFile;
-extern "C" char gCoinRedPoly4ModelFile;
+extern SharedFilePtr gCoinYellowPoly4ModelFile;
+extern SharedFilePtr gCoinRedPoly4ModelFile;
 extern SharedFilePtr gCoinBluePoly4ModelFile;
 extern SharedFilePtr gCoinYellowPoly32ModelFile;
 extern SharedFilePtr gCoinRedPoly32ModelFile;
 extern SharedFilePtr gCoinBluePoly32ModelFile;
 extern SharedFilePtr *const sCoinPoly4ModelFiles[3] = {
-    (SharedFilePtr *)&gCoinYellowPoly4ModelFile,
-    (SharedFilePtr *)&gCoinRedPoly4ModelFile,
+    &gCoinYellowPoly4ModelFile,
+    &gCoinRedPoly4ModelFile,
     &gCoinBluePoly4ModelFile,
 };
 extern SharedFilePtr *const sCoinPoly32ModelFiles[3] = {

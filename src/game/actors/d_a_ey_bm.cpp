@@ -38,7 +38,6 @@
 /* The collider offset at 0x021230b8: Vector3's constructor keeps the three
  * stores in the sinit (bss, not .data). */
 extern Vector3 data_ov071_021230b8;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states:
  * Yoshi is eating the actor, then has it in his mouth. Actor ID 0xbf is

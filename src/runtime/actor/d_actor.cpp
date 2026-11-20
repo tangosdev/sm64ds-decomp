@@ -59,8 +59,8 @@ s16 atan2(s32, s32);
 
 /* The spawn arguments func_02010e78 stages for the constructor. */
 
-extern s16 *data_0209b460;
-extern s16 *data_0209b45c;
+extern Vector3 *data_0209b460;
+extern const Vector3_16 *data_0209b45c;
 extern s16 data_0208e378;
 extern "C" {
 /* local extern: no header declares it. */
@@ -96,24 +96,24 @@ static inline int IsGameMode(int mode) {
 dActor_c::dActor_c() : mActorListNode(this) {
     func_0203b244(&sActorList, &mActorListNode);
     {
-        int *spawnPos = (int *)data_0209b460;
+        Vector3 *spawnPos = data_0209b460;
         if (spawnPos) {
-            mPos.x = spawnPos[0];
-            mPos.y = spawnPos[1];
-            mPos.z = spawnPos[2];
+            mPos.x = spawnPos->x;
+            mPos.y = spawnPos->y;
+            mPos.z = spawnPos->z;
         }
     }
     {
-        short *spawnRot = data_0209b45c;
+        const Vector3_16 *spawnRot = data_0209b45c;
         if (spawnRot) {
-            mAngle.x = spawnRot[0];
-            mAngle.y = spawnRot[1];
-            mAngle.z = spawnRot[2];
+            mAngle.x = spawnRot->x;
+            mAngle.y = spawnRot->y;
+            mAngle.z = spawnRot->z;
             /* The ROM reloads the global. Folding the two reads drops an ldr. */
             spawnRot = data_0209b45c;
-            mPrevAngle.x = spawnRot[0];
-            mPrevAngle.y = spawnRot[1];
-            mPrevAngle.z = spawnRot[2];
+            mPrevAngle.x = spawnRot->x;
+            mPrevAngle.y = spawnRot->y;
+            mPrevAngle.z = spawnRot->z;
         }
     }
     mAreaId = data_0209b44c;
@@ -198,6 +198,10 @@ extern u8 gVsExitScreenActive;
 /* This frame's actor update mask, copied from gNextActorUpdateMask; see
    ACTOR_UPDATE_MASK_STAGE_ENDING in dActor_c.h. */
 extern u32 gActorUpdateMask;
+extern daPly_c *data_0209b458;
+/* the cached closest player; null makes ClosestPlayer search again */
+extern daPly_c *data_0209b450;
+/* the cached farthest player */
 
 /* Culls the actor for this frame: flags 0x38 plus a far-away camera position
    when its area is hidden or the dClipper rejects it, then the pause and
@@ -319,8 +323,8 @@ struct SpawnArg {
 };
 
 void SpawnArg::func_02010e78(const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
-    data_0209b460 = (s16 *)this;
-    data_0209b45c = (s16 *)rot;
+    data_0209b460 = (Vector3 *)this;
+    data_0209b45c = rot;
     data_0209b44c = areaID;
     data_0208e378 = deathTableID;
     data_0209b458 = 0;
@@ -462,7 +466,7 @@ daPly_c *dActor_c::ClosestPlayer() {
             }
         }
     }
-    return (daPly_c *)data_0209b458;
+    return data_0209b458;
 }
 
 daPly_c *dActor_c::ClosestNonVanishPlayer() {
@@ -487,7 +491,7 @@ daPly_c *dActor_c::ClosestNonVanishPlayer() {
             }
         }
     }
-    return (daPly_c *)data_0209b458;
+    return data_0209b458;
 }
 
 s32 dActor_c::DistToCPlayer()
@@ -499,7 +503,7 @@ s32 dActor_c::DistToCPlayer()
 s16 dActor_c::HorzAngleToCPlayer()
 {
     ClosestPlayer();
-    return Vec3_HorzAngle(&mPos, &((dActor_c *)data_0209b458)->mPos);
+    return Vec3_HorzAngle(&mPos, &data_0209b458->mPos);
 }
 
 s16 dActor_c::HorzAngleToCPlayerOrAng()
@@ -507,7 +511,7 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
     dActor_c *player;
 
     ClosestPlayer();
-    player = (dActor_c *)data_0209b458;
+    player = data_0209b458;
     if (player == 0)
         return mAngle.y;
 
@@ -516,13 +520,13 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
 
 daPly_c *dActor_c::FarthestPlayer() {
     ClosestPlayer();
-    return (daPly_c *)data_0209b450;
+    return data_0209b450;
 }
 
 s16 dActor_c::HorzAngleToFPlayer()
 {
     ClosestPlayer();
-    return Vec3_HorzAngle(&mPos, &((dActor_c *)data_0209b450)->mPos);
+    return Vec3_HorzAngle(&mPos, &data_0209b450->mPos);
 }
 
 dActor_c *dActor_c::ClosestWithActorID(u32 actorID)

@@ -143,9 +143,7 @@ extern unsigned short data_ov074_02122dfc[];
 extern const int data_ov074_0212290c[4] = {0, 0x320000, 0x258000, 0x190000};
 extern const int data_ov074_0212291c[4] = {0, 0, 0x70000, 0};
 extern float data_ov074_02122e4c[];
-extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern union Matrix4x3 gScratchMtx;
-extern union Matrix4x3 IDENTITY_MATRIX4X3;
 struct KuriKingBoneIdx {
     int v[3];
 };
@@ -168,7 +166,7 @@ static inline int IsActorID(dActor_c *actor, int id) {
 }
 void UnloadKeyModels(int i);
 void LoadKeyModels(int idx);
-extern void *data_ov074_02122e5c[];
+extern BTA_File *data_ov074_02122e5c[];
 /* Boss-overlay resource blobs, linked into the co-resident 0x0211xxxx
    overlay; ov074's image has no copy, so these bind cross-module. */
 extern BMA_File data_ov010_021123f4;
@@ -1592,7 +1590,7 @@ int daKuriKing_c::InitResources()
     i = 0;
     do {
         dExtAnmTexSRT_c::Prepare(*(BMD_File *)gKurikingModelModelFile.filePtr,
-                                 *(BTA_File *)data_ov074_02122e5c[i]);
+                                 *data_ov074_02122e5c[i]);
         i++;
     } while (i < 7);
 

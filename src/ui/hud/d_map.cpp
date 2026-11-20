@@ -98,7 +98,8 @@ extern u8 gMapIntroRotating;
 extern u8 gMapIntroZooming;
 extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
-extern void *gSpikeBombs[];
+extern dActor_c *gSpikeBombs[];
+extern dActor_c *data_0209f33c;
 extern void SetSubBg2Offset(s32 a, s32 b);
 }
 
@@ -114,9 +115,6 @@ extern s32  GetMinimapScale(s32 idx);
 struct MinimapDesc;
 extern void UpdateMinimap(MinimapDesc *a, u32 b, u32 c, u32 d, u32 e);
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s);
-extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
-}
 
 /* The centre of the 256x192 touch screen, (128, 96) in 20.12 fixed point:
  * the screen point the minimap is drawn around. A file-scope Vector3 with a
@@ -757,7 +755,7 @@ s32 dMap_c::Behavior()
 
         /* The star key: Render blinks it under the same two flag tests. */
         if (!(gSaveBlock.file.flags1 & 0x40) && (gSaveBlock.file.flags2 & 0x20000)) {
-            dActor_c *o = (dActor_c *)gCastleKeyRabbit;
+            dActor_c *o = gCastleKeyRabbit;
             if (o == 0) {
                 this->mStarKeyMapID = -1;
             } else {
@@ -770,7 +768,7 @@ s32 dMap_c::Behavior()
         }
 
         for (i = 0; i < 8; i++) {
-            dActor_c *o = (dActor_c *)gSpikeBombs[i];
+            dActor_c *o = gSpikeBombs[i];
             if (o != 0) {
                 GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
                                 &miniPos);
