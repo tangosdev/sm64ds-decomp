@@ -63,9 +63,20 @@ struct daDossyCap_c : dActor_c {
     virtual s32 Render();              /* slot 9 */
     virtual int OnYoshiTryEat();       /* slot 18 */
 
-    int func_ov065_021180d4();
-    void func_ov065_02118c4c();
-    int func_ov065_02119210();
+    /* Behavior's per-frame hit test. When mdCcAc_c registers hitFlags
+       0x400000 (the player bit) from a grounded player who is not already in
+       daPly_c no-control state 5, it spawns the loose cap (actor 0x10d,
+       ACTOR_OBJ_MARIO_CAP) ahead of them, relinks mCapIcon with iconKind 0 so
+       the real bit clears and Render stops drawing, reloads the carrier's
+       mRideCooldown with 30, and returns 1. Returns 0 when nothing was
+       released. */
+    int ReleaseCapIfTouched();
+    void UpdateModelMatrix();
+    /* mCapIcon.mFlags bit 1 -- "this node's cap is the real one", documented
+       in include/CapIcon.h, where Dorrie's cap is the observed case: Render
+       draws only while it is set and tests that bit alone. daDossy_c's
+       UpdateHeadDown asks through mCap before letting a rider mount. */
+    int IsRealCap();
 };
 
 #ifndef SM64DS_PLATFORM_PC
