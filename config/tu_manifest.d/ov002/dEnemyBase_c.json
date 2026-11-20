@@ -109,21 +109,21 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae5c8Ei",
+      "symbol": "_ZN12dEnemyBase_c16FinishStompDeathEi",
       "address": "0x020ae5c8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020ae5c8.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "address": "0x020ae608",
       "size": "0x00000044",
       "legacy_source": "src/func_ov002_020ae608.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c16UpdateStompDeathER10dBgCh_Actr",
       "address": "0x020ae64c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov002_020ae64c.c",
@@ -151,7 +151,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c14StartDiveDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae844",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020ae844.c",
@@ -165,35 +165,35 @@
       "ordinal": 17
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c14StartKickDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae890",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020ae890.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae8b8EP8dActor_c",
+      "symbol": "_ZN12dEnemyBase_c16SetHighKnockbackEP8dActor_c",
       "address": "0x020ae8b8",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov002_020ae8b8.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c15StartPunchDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae954",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020ae954.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae968EP8dActor_c",
+      "symbol": "_ZN12dEnemyBase_c15SetLowKnockbackEP8dActor_c",
       "address": "0x020ae968",
       "size": "0x00000090",
       "legacy_source": "src/func_ov002_020ae968.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c15StartStompDeathEP8dActor_cP10dBgCh_Actr",
       "address": "0x020ae9f8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020ae9f8.c",
@@ -1200,7 +1200,7 @@
       "source": "0x02108148",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae608"
@@ -1210,7 +1210,7 @@
       "source": "0x02108150",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c15StartPunchDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae954"
@@ -1220,7 +1220,7 @@
       "source": "0x02108158",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c14StartDiveDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae844"
@@ -1240,7 +1240,7 @@
       "source": "0x02108168",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c14StartKickDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae890"
@@ -1280,7 +1280,7 @@
       "source": "0x02108188",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae608"
@@ -1290,7 +1290,7 @@
       "source": "0x02108190",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae608"
@@ -1320,7 +1320,7 @@
       "source": "0x021081a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c20UpdateKnockbackDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae608"
@@ -1330,7 +1330,7 @@
       "source": "0x021081b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c16UpdateStompDeathER10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae64c"
@@ -1340,7 +1340,7 @@
       "source": "0x021081b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr",
+      "symbol": "_ZN12dEnemyBase_c15StartStompDeathEP8dActor_cP10dBgCh_Actr",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae9f8"

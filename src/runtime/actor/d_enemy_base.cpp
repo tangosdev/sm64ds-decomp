@@ -33,7 +33,7 @@
  *     defined_symbol_renames rows pair the numbers mwcc emits now with the
  *     pinned names; a change that adds or drops a named local has to shift
  *     their `from` side to match.
- *   - func_ov002_020ae5c8 keeps an int parameter it never reads: its caller
+ *   - FinishStompDeath keeps an int parameter it never reads: its caller
  *     passes one; the form without it comes out 0x50 against the ROM's
  *     0x5c (measured note in place).
  *   - func_ov002_020ae4cc passes its particle position as
@@ -41,8 +41,9 @@
  *     the ROM's 0xfc (measured). SpawnParticlesIfHitOtherObj keeps its
  *     coin tests as nested int compares: neither bool nor a single `&&`
  *     matches (the `&&` form is 0xa0 against 0xb8).
- *   - Address-derived member names stand until the handlers' semantics are
- *     recovered.
+ *   - Death slots 4, 6, 7 and 8 keep address-derived names: no hit that
+ *     selects them was produced on the cartridge (see the table comment at
+ *     the end of this file).
  */
 #include "dEnemyBase_c.h"
 #include "Particle__System.h"
@@ -208,8 +209,9 @@ int dEnemyBase_c::func_ov002_020aea24(dBgCh_Actr &) {
 }
 
 /* Stop the enemy (zero mHorzSpeed and mSpeed.y), start a 0xf-frame
-   mDeathTimer, then clear mFlags bit 0x1. */
-void dEnemyBase_c::func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *) {
+   mDeathTimer, then clear mFlags bit 0x1. UpdateStompDeath flattens the
+   enemy while the timer runs. */
+void dEnemyBase_c::StartStompDeath(dActor_c *, dBgCh_Actr *) {
     mHorzSpeed = 0;
     mSpeed.y = 0;
     mDeathTimer = 15;
@@ -227,7 +229,9 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-void dEnemyBase_c::func_ov002_020ae968(dActor_c *arg) {
+/* The flatter of the two knock-backs: 20.0 up and, from a player,
+   strength * 0.16 along the ground (24.0 at strength 150); then sound 9. */
+void dEnemyBase_c::SetLowKnockback(dActor_c *arg) {
     mSpeed.y = 0x14000;
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
@@ -239,12 +243,14 @@ void dEnemyBase_c::func_ov002_020ae968(dActor_c *arg) {
     Sound::PlayBank0(9, mCamSpacePos);
 }
 
-void dEnemyBase_c::func_ov002_020ae954(dActor_c *a, dBgCh_Actr *) {
+void dEnemyBase_c::StartPunchDeath(dActor_c *a, dBgCh_Actr *) {
     mPrevAngle.y = a->mAngle.y;
-    func_ov002_020ae968(a);
+    SetLowKnockback(a);
 }
 
-void dEnemyBase_c::func_ov002_020ae8b8(dActor_c *arg) {
+/* The steeper of the two: from a player, strength * 0.08 + 32.0 up and
+   strength * 0.08 along the ground (44.0 and 12.0 at strength 150). */
+void dEnemyBase_c::SetHighKnockback(dActor_c *arg) {
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
         int scaled = t << 3;
@@ -260,26 +266,26 @@ void dEnemyBase_c::func_ov002_020ae8b8(dActor_c *arg) {
     mFlags &= ~1;
 }
 
-void dEnemyBase_c::func_ov002_020ae890(dActor_c *a, dBgCh_Actr *) {
+void dEnemyBase_c::StartKickDeath(dActor_c *a, dBgCh_Actr *) {
     mPrevAngle.y = a->mAngle.y;
-    func_ov002_020ae8b8(a);
+    SetHighKnockback(a);
     Sound::PlayBank0(0xa, mCamSpacePos);
 }
 
 void dEnemyBase_c::func_ov002_020ae87c(dActor_c *a, dBgCh_Actr *) {
     mPrevAngle.y = a->mAngle.y;
-    func_ov002_020ae8b8(a);
+    SetHighKnockback(a);
 }
 
-void dEnemyBase_c::func_ov002_020ae844(dActor_c *a, dBgCh_Actr *) {
+void dEnemyBase_c::StartDiveDeath(dActor_c *a, dBgCh_Actr *) {
     s16 angle = Vec3_HorzAngle(&a->mPos, &mPos);
     mPrevAngle.y = angle;
-    func_ov002_020ae968(a);
+    SetLowKnockback(a);
 }
 
 void dEnemyBase_c::func_ov002_020ae80c(dActor_c *a, dBgCh_Actr *) {
     mPrevAngle.y = Vec3_HorzAngle(&a->mPos, &mPos);
-    func_ov002_020ae8b8(a);
+    SetHighKnockback(a);
 }
 
 void dEnemyBase_c::func_ov002_020ae73c(dActor_c *a, dBgCh_Actr *) {
@@ -313,18 +319,18 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
     return ret;
 }
 
-/* func_ov002_020ae5c8 is written LOWER in this file (the whole TU runs highest
+/* FinishStompDeath is written LOWER in this file (the whole TU runs highest
    ROM address first).
 
    ITS int PARAMETER IS REAL AND IS LOAD-BEARING, and merging is what proved
-   it. func_ov002_020ae5c8's own file defined it as `(void *c)` and never read a
+   it. FinishStompDeath's own file defined it as `(void *c)` and never read a
    second argument; this file declared it `(char *, int)` and passed one. Built
    the one-argument way, this function comes out 0x50 against the ROM's 0x5c --
    twelve bytes and three instructions short, because `x` no longer has to
    survive the body in a callee-saved register. So both observations are true at once: the
    caller passes it, the callee ignores it, and the definition below carries
    the parameter unused. */
-int dEnemyBase_c::func_ov002_020ae64c(dBgCh_Actr &clsn) {
+int dEnemyBase_c::UpdateStompDeath(dBgCh_Actr &clsn) {
     int x = (int)&clsn;
     if (mDeathTimer >= 5) {
         int v = mScale.y - 0x23d;
@@ -334,10 +340,10 @@ int dEnemyBase_c::func_ov002_020ae64c(dBgCh_Actr &clsn) {
         mScale.z = 0x2000 - mScale.y;
         mScale.x = mScale.z;
     }
-    return func_ov002_020ae5c8(x);
+    return FinishStompDeath(x);
 }
 
-int dEnemyBase_c::func_ov002_020ae608(dBgCh_Actr &clsn) {
+int dEnemyBase_c::UpdateKnockbackDeath(dBgCh_Actr &clsn) {
     if (clsn.IsOnGround() == 0)
         return 0;
     SpawnCoin();
@@ -346,8 +352,8 @@ int dEnemyBase_c::func_ov002_020ae608(dBgCh_Actr &clsn) {
     return 1;
 }
 
-/* `x` is unused on purpose -- see the note on func_ov002_020ae64c, which passes it. */
-int dEnemyBase_c::func_ov002_020ae5c8(int x) {
+/* `x` is unused on purpose -- see the note on UpdateStompDeath, which passes it. */
+int dEnemyBase_c::FinishStompDeath(int x) {
     if (mDeathTimer != 0)
         return 0;
     SpawnCoin();
@@ -741,19 +747,27 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
 /* The two state-handler tables. KillByAttack dispatches the first on
    mDeathState; UpdateDeath dispatches the second on mDeathState. Non-const
    pointer-to-member arrays live in .bss, so mwcc generates this TU's static
-   initializer to copy the descriptor records in at overlay load. */
+   initializer to copy the descriptor records in at overlay load.
+
+   The slot names come from hitting a Goomba (daKrb_c) on the cartridge,
+   with breakpoints on its hit reaction and on KillByAttack. A stomp or
+   a ground pound sets mDeathState 1, a punch 2, a breakdance or a slide
+   kick 3, and a dive 5. Other enemies pick the slot for a hit kind
+   differently: daMenbo_c and daBasabasa_c send a dive or an egg to slot 2.
+   Slots 4 (fire in daKrb_c, daMenbo_c and daBasabasa_c), 6 (explosion in
+   daKrb_c and daNknk_c) and 7 were not produced, and slot 8 is empty. */
 DeathStartPMF sEnemyDeathStartFuncs[8] = {
-    &dEnemyBase_c::func_ov002_020ae9f8, &dEnemyBase_c::func_ov002_020ae954,
-    &dEnemyBase_c::func_ov002_020ae890, &dEnemyBase_c::func_ov002_020ae87c,
-    &dEnemyBase_c::func_ov002_020ae844, &dEnemyBase_c::func_ov002_020ae80c,
+    &dEnemyBase_c::StartStompDeath,     &dEnemyBase_c::StartPunchDeath,
+    &dEnemyBase_c::StartKickDeath,      &dEnemyBase_c::func_ov002_020ae87c,
+    &dEnemyBase_c::StartDiveDeath,      &dEnemyBase_c::func_ov002_020ae80c,
     &dEnemyBase_c::func_ov002_020ae73c, &dEnemyBase_c::func_ov002_020aea2c,
 };
 
 DeathPMF sEnemyDeathFuncs[8] = {
-    &dEnemyBase_c::func_ov002_020ae64c, &dEnemyBase_c::func_ov002_020ae608,
-    &dEnemyBase_c::func_ov002_020ae608, &dEnemyBase_c::func_ov002_020ae4cc,
-    &dEnemyBase_c::func_ov002_020ae608, &dEnemyBase_c::func_ov002_020ae608,
-    &dEnemyBase_c::func_ov002_020ae454, &dEnemyBase_c::func_ov002_020aea24,
+    &dEnemyBase_c::UpdateStompDeath,     &dEnemyBase_c::UpdateKnockbackDeath,
+    &dEnemyBase_c::UpdateKnockbackDeath, &dEnemyBase_c::func_ov002_020ae4cc,
+    &dEnemyBase_c::UpdateKnockbackDeath, &dEnemyBase_c::UpdateKnockbackDeath,
+    &dEnemyBase_c::func_ov002_020ae454,  &dEnemyBase_c::func_ov002_020aea24,
 };
 
 /* Initialized data this file is the only complete referrer for. */

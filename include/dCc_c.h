@@ -53,18 +53,31 @@ struct dCc_c {
      * way the offsets are -- same caveat as the field NAMES note atop this
      * file. Two are proven by our own matched code: bit 0x2000 matches
      * dActor_c::FindEgg's mask, and bit 0x4000 matches
-     * dActor_c::FindExplosionActor's. The rest are a plausible reading from
-     * the surrounding game mechanics, not independently verified.
+     * dActor_c::FindExplosionActor's.
+     *
+     * Bits marked (SEEN) were read on the cartridge: Luigi hit a Goomba
+     * (daKrb_c) in Bob-omb Battlefield, and a breakpoint on its hit reaction
+     * read its dCcAc_c's hitFlags.
+     *   punch (A)                          0x42      = 0x40 | 0x02
+     *   breakdance (R, then R+A, standing) 0x102     = 0x100 | 0x02
+     *   slide kick (R, then R+A, running)  0x202     = 0x200 | 0x02
+     *   dive (A while running)             0x1402    = 0x1000 | 0x400 | 0x02
+     *   ground pound (B, then R above it)  0x22      = 0x20 | 0x02
+     *   landing on it, or walking into it  0x400008  = 0x400000 | 0x08
+     * A jump kick never registered as a kick: the landing stomp took it. The
+     * kick, spin, mega, fire and shell bits were not produced. The rest are a
+     * plausible reading from the surrounding game mechanics, not
+     * independently verified.
      *
      * vulnFlags (which kinds of hit this clsn can register) and hitFlags
      * (which of those actually hit it this frame) share the same bit table:
-     *   0x0001 disabled           0x0002 char movement        0x0004 char projectile
-     *   0x0008 char body          0x0010 mega character       0x0020 spin/ground-pound
-     *   0x0040 punch              0x0080 kick                 0x0100 breakdance
-     *   0x0200 slide kick         0x0400 dive                 0x1000 grab
+     *   0x0001 disabled           0x0002 char movement (SEEN) 0x0004 char projectile
+     *   0x0008 char body (SEEN)   0x0010 mega character       0x0020 spin/ground-pound (SEEN pound)
+     *   0x0040 punch (SEEN)       0x0080 kick                 0x0100 breakdance (SEEN)
+     *   0x0200 slide kick (SEEN)  0x0400 dive (SEEN)          0x1000 grab (SEEN with dive)
      *   0x2000 egg (PROVEN)       0x4000 explosion (PROVEN)   0x8000 yoshi tongue
      *   0x40000 fire              0x100000 collectable        0x200000 enemy
-     *   0x400000 player           0x800000 player interact    0x1000000 tree
+     *   0x400000 player (SEEN)    0x800000 player interact    0x1000000 tree
      *   0x2000000 handstand */
 
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
