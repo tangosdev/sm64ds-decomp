@@ -198,7 +198,7 @@ extern int sTrmpLineStrongPitchEnd;
 extern int sTrmpLineStrongPitchMid;
 extern Vector3 data_020a0ebc;
 extern Matrix4x3 data_0209b3ec; /* the view matrix, Graphics3D.cpp */
-extern int data_02092768[4];
+extern Quaternion data_02092768; /* identity */
 extern int data_020a0db0;
 
 void TrmpItem::GrowScale() {
@@ -746,10 +746,10 @@ void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) 
     mPrevSide.x = mSide.x;
     mPrevSide.y = mSide.y;
     mPrevSide.z = mSide.z;
-    mRotation[0] = data_02092768[0];
-    mRotation[1] = data_02092768[1];
-    mRotation[2] = data_02092768[2];
-    mRotation[3] = data_02092768[3];
+    mRotation[0] = data_02092768.x;
+    mRotation[1] = data_02092768.y;
+    mRotation[2] = data_02092768.z;
+    mRotation[3] = data_02092768.w;
     Quaternion_FromVector3(mRotation, &sUnitY, &mForward);
     mSizeIdx = itemType;
     mMotionKind = motionType;

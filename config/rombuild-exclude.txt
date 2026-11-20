@@ -57,5 +57,5 @@
 # The bytes are the tail of _dmul and func_01ffa4bc, after each routine's literal pool,
 # so the enrolled object owns them and the gap does not.
 
-# func_01ffa440 is enrolled. Its two branches into func_01ffa4bc are raw
+# _ffltu (0x01ffa440) is enrolled. Its two branches into func_01ffa4bc are raw
 # PC-relative words (dcd), not relocations.

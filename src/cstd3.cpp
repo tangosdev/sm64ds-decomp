@@ -8,8 +8,11 @@
  * leftovers:
  * - func_0206a928's local extern keeps its 4-parameter spelling even
  *   though src/unnamed/arm9/0206/func_0206a928.c defines it with three
- *   (ctx, fmt, ap): func_0206ccd8's call passes the trailing `p` in r3,
- *   and dropping it diffs.
+ *   (ctx, fmt, ap). Dropping the trailing `p` from the call compiles
+ *   identical, but the three-parameter spelling then disagrees on fmt:
+ *   func_0206ccd8 takes it as int. Typed const char *, the TU's bytes
+ *   are unchanged and only its mangled name moves (_Z13func_0206ccd8iz
+ *   to _Z13func_0206ccd8PKcz), which is a symbols.txt rename.
  * - The debugger bus pokes at 0x9fe2ffe / 0x9fe20f0 stay raw addresses:
  *   these two helpers are their only consumers and no header names them.
  *   The value written there is mirrored in the debugger block

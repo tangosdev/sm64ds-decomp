@@ -140,15 +140,16 @@ extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern "C" int Vec3_HorzLen(const Vector3 *v);
 extern "C" {
 extern int VEC_Mag(void *v);
-extern void Vec3_Add(void *out, const void *a, const void *b);
-extern void Vec3_Sub(void *out, const void *a, const void *b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void VEC_Add(void *a, void *b, void *c);
 extern void VEC_Subtract(void *a, void *b, void *c);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
-extern int *Vec3_LslInPlace(int *v, int sh);
+extern int *Vec3_LslInPlace(Vector3 *v, int sh);
+extern int *Vec3_AsrInPlace(Vector3 *, int);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
-extern void MTX_MultVec43(void *dst, Matrix4x3 *src, void *out);
+extern void MTX_MultVec43(void *dst, const Matrix4x3 *src, void *out);
 }
 
 /* local extern: CalcLib.h clashes with this TU's C Vec3_HorzLen (int) and Vec3_MulScalarInPlace (void *) */
@@ -461,7 +462,7 @@ int dCamera_c::Behavior()
             weather = -1;
         if (weather >= 0) {
             MTX_MultVec43(&CAM_SPACE_CAM_POS_ASR_3, &data_0209b41c, &weatherPos);
-            Vec3_LslInPlace(&weatherPos.x, 3);
+            Vec3_LslInPlace(&weatherPos, 3);
             int flag;
             if (weather != 0xbc)
                 flag = 1;
