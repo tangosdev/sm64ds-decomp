@@ -35015,19 +35015,19 @@
     },
     "ov060:0x02115b84": {
       "author": "lunavyqo",
-      "name": "_ZN11daKpaTail_c19func_ov060_02115b84Ev"
+      "name": "_ZN11daKpaTail_c8TailLoopEv"
     },
     "ov060:0x02115c1c": {
       "author": "lunavyqo",
-      "name": "_ZN11daKpaTail_c19func_ov060_02115c1cEv"
+      "name": "_ZN11daKpaTail_c10ActHoldingEv"
     },
     "ov060:0x02115d50": {
       "author": "lunavyqo",
-      "name": "_ZN11daKpaTail_c19func_ov060_02115d50Ev"
+      "name": "_ZN11daKpaTail_c11ActCooldownEv"
     },
     "ov060:0x02115d68": {
       "author": "lunavyqo",
-      "name": "_ZN11daKpaTail_c19func_ov060_02115d68Ev"
+      "name": "_ZN11daKpaTail_c7ActFreeEv"
     },
     "ov060:0x02115e80": {
       "author": "tangosdev",
