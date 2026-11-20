@@ -76,9 +76,9 @@ enum ParticleId {
     kPtclChairBreakA = 0x025,           /* daChair_c::Break */
     kPtclChairBreakB = 0x026,           /* daChair_c::Break */
     kPtclDrainLidPounded = 0x028,       /* daObjTtFuta_c::OnGroundPounded */
-    kPtclMontyMoleEmerge = 0x029,       /* daChoropu_c::func_ov080_02123c24 */
-    kPtclMontyMoleLeapA = 0x02a,        /* daChoropu_c::func_ov080_02123860 */
-    kPtclMontyMoleLeapB = 0x02b,        /* daChoropu_c::func_ov080_02123860 */
+    kPtclMontyMoleEmerge = 0x029,       /* daChoropu_c::UpdateEmerge */
+    kPtclMontyMoleLeapA = 0x02a,        /* daChoropu_c::UpdateLeap */
+    kPtclMontyMoleLeapB = 0x02b,        /* daChoropu_c::UpdateLeap */
     kPtclYoshiEggTrail = 0x02c,         /* daYegg_c::func_ov002_020ecb0c */
     kPtclSpindelDust = 0x02d,           /* daDgr_c::Behavior */
     kPtclGrindelLanding = 0x02e,        /* daDkk_c::StateFall */

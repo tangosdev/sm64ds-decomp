@@ -46,15 +46,15 @@ enum {
  * holds the update handler's address and a zero word. The names say what the
  * handler does; they are not labels recovered from the cartridge.
  *
- *   state  handler                 what it does
- *   0 SETUP       func_ov080_02123fcc  collision off, collect the group's partners, go to 1
- *   1 HIDDEN      func_ov080_02123ecc  underground; starts emerging when it has the turn and
- *                                      the daPly_c is 250..1500 units away
- *   2 EMERGE      func_ov080_02123c24  animation 0x2d4, cylinder grows; then picks 3, 4 or 5
- *   3 THROW_ROCK  func_ov080_02123a34  animation 0x2d5; spawns a daChoro_Rock_c on frame 10
- *   4 WAIT        func_ov080_02123924  animation 0x2d3; to 5 when it ends or the daPly_c is close
- *   5 LEAP        func_ov080_02123860  animation 0x2d2; cylinder height curve peaks at 288
- *                                      units, collision off from frame 15; back to 1
+ *    state      handler         address     what it does
+ * 0  SETUP      UpdateSetup     0x02123fcc  collision off, collect the group's partners, go to 1
+ * 1  HIDDEN     UpdateHidden    0x02123ecc  underground; starts emerging when it has the turn and
+ *                                           the daPly_c is 250..1500 units away
+ * 2  EMERGE     UpdateEmerge    0x02123c24  animation 0x2d4, cylinder grows; then picks 3, 4 or 5
+ * 3  THROW_ROCK UpdateThrowRock 0x02123a34  animation 0x2d5; spawns a daChoro_Rock_c on frame 10
+ * 4  WAIT       UpdateWait      0x02123924  animation 0x2d3; to 5 when it ends or a daPly_c nears
+ * 5  LEAP       UpdateLeap      0x02123860  animation 0x2d2; cylinder height curve peaks at 288
+ *                                           units, collision off from frame 15; back to 1
  */
 enum {
     daChoropu_ST_SETUP      = 0,
@@ -66,7 +66,7 @@ enum {
 };
 
 /* mGroupMode (param1 & 0xf): 0 = works alone, anything else gathers partners; 2 picks
- * its next state at random after emerging (see func_ov080_02123c24). Only 0 and 2 are
+ * its next state at random after emerging (see UpdateEmerge). Only 0 and 2 are
  * distinguished by the code in this TU. */
 enum {
     daChoropu_GROUP_SOLO   = 0,
@@ -101,8 +101,9 @@ struct daChoropu_c : dActor_c {
     u32 mPartnerIDs[4];     /* 0x16c -- unique IDs of the other daChoropu_c with the same mGroupId (filled by Setup) */
     s32 mState;             /* 0x17c -- row of the state table, daChoropu_ST_* */
     u8  mGroupMode;         /* 0x180 -- param1 & 0xf, see daChoropu_GROUP_* */
-    u8  mHasTurn;           /* 0x181 -- 1 while this mole is the one allowed to emerge; passed on by func_ov080_02124360.
-                                        A solo mole (mGroupMode 0) starts with 1; otherwise it starts as param1 bit 8 */
+    /* 0x181 -- 1 while this mole is the one allowed to emerge; passed on by PassTurn.
+       A solo mole (mGroupMode 0) starts with 1; otherwise it starts as param1 bit 8 */
+    u8 mHasTurn;
     u8  mGroupId;           /* 0x182 -- (param1 >> 4) & 0xf; moles with equal values are partners */
     u8  mNumPartners;       /* 0x183 -- entries used in mPartnerIDs */
     u8  mTimesHit;          /* 0x184 -- bumped each time this mole is knocked underground while the group's total is below 7 */
@@ -120,18 +121,21 @@ struct daChoropu_c : dActor_c {
     virtual s32  OnAimedAtWithEgg();      /* slot 29 */
 
     /* Non-virtual. The first parameter was this mole, so each is a member.
-       The cartridge keeps no English spelling; the ROM address is the name.
-       func_ov080_02124418 is not one of these: its first argument is a rock. */
-    void func_ov080_02123860();
-    void func_ov080_02123924();
-    void func_ov080_02123a34();
-    void func_ov080_02123c24();
-    void func_ov080_02123ecc();
-    void func_ov080_02123fcc();
-    void func_ov080_02124088();
-    void func_ov080_02124208();
-    void *func_ov080_02124360();
-    void func_ov080_021243d8();
+       The cartridge keeps no English spelling; every name below is
+       reconstructed from what the body does and from the state table slot it
+       sits in (symbols/actor_renames.tsv records the evidence per address).
+       The matrix builder at 0x02124418 is NOT one of these: its first
+       argument is a rock, so it is daChoro_Rock_c::UpdateModelMatrix. */
+    void UpdateLeap();        /* 0x02123860 -- state 5 */
+    void UpdateWait();        /* 0x02123924 -- state 4 */
+    void UpdateThrowRock();   /* 0x02123a34 -- state 3 */
+    void UpdateEmerge();      /* 0x02123c24 -- state 2 */
+    void UpdateHidden();      /* 0x02123ecc -- state 1 */
+    void UpdateSetup();       /* 0x02123fcc -- state 0 */
+    void KnockUnderground();  /* 0x02124088 -- the knock-back, from HandleCollision */
+    void HandleCollision();   /* 0x02124208 -- run by Behavior after the state handler */
+    void *PassTurn();         /* 0x02124360 -- hands mHasTurn to a partner, returns it */
+    void UpdateModelMatrix(); /* 0x021243d8 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
