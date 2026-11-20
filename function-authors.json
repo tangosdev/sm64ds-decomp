@@ -35403,83 +35403,83 @@
     },
     "ov062:0x021161a8": {
       "author": "ruspecial",
-      "name": "func_ov062_021161a8"
+      "name": "_ZN10daHolhei_c13St_Throw_MainEv"
     },
     "ov062:0x02116238": {
       "author": "tangosdev",
-      "name": "func_ov062_02116238"
+      "name": "_ZN10daHolhei_c13St_Throw_InitEv"
     },
     "ov062:0x02116274": {
       "author": "tangosdev",
-      "name": "func_ov062_02116274"
+      "name": "_ZN10daHolhei_c16St_LiftLoop_MainEv"
     },
     "ov062:0x021162b8": {
       "author": "tangosdev",
-      "name": "func_ov062_021162b8"
+      "name": "_ZN10daHolhei_c16St_LiftLoop_InitEv"
     },
     "ov062:0x0211632c": {
       "author": "tangosdev",
-      "name": "func_ov062_0211632c"
+      "name": "_ZN10daHolhei_c12St_Lift_MainEv"
     },
     "ov062:0x02116368": {
       "author": "tangosdev",
-      "name": "func_ov062_02116368"
+      "name": "_ZN10daHolhei_c12St_Lift_InitEv"
     },
     "ov062:0x021163b0": {
       "author": "andrewboudreau",
-      "name": "func_ov062_021163b0"
+      "name": "_ZN10daHolhei_c14St_Thrown_MainEv"
     },
     "ov062:0x02116498": {
       "author": "tangosdev",
-      "name": "func_ov062_02116498"
+      "name": "_ZN10daHolhei_c14St_Thrown_InitEv"
     },
     "ov062:0x021164e8": {
       "author": "ruspecial",
-      "name": "_ZN10daHolhei_c19func_ov062_021164e8Ev"
+      "name": "_ZN10daHolhei_c15St_Grabbed_MainEv"
     },
     "ov062:0x021165e0": {
       "author": "tangosdev",
-      "name": "func_ov062_021165e0"
+      "name": "_ZN10daHolhei_c15St_Grabbed_InitEv"
     },
     "ov062:0x021165e8": {
       "author": "andrewboudreau",
-      "name": "_ZN10daHolhei_c19func_ov062_021165e8Ev"
+      "name": "_ZN10daHolhei_c14St_Charge_MainEv"
     },
     "ov062:0x02116784": {
       "author": "tangosdev",
-      "name": "func_ov062_02116784"
+      "name": "_ZN10daHolhei_c14St_Charge_InitEv"
     },
     "ov062:0x021167c0": {
       "author": "tangosdev",
-      "name": "_ZN10daHolhei_c19func_ov062_021167c0Ev"
+      "name": "_ZN10daHolhei_c17St_SlopeTurn_MainEv"
     },
     "ov062:0x02116850": {
       "author": "tangosdev",
-      "name": "func_ov062_02116850"
+      "name": "_ZN10daHolhei_c17St_SlopeTurn_InitEv"
     },
     "ov062:0x02116894": {
       "author": "tangosdev",
-      "name": "_ZN10daHolhei_c19func_ov062_02116894Ev"
+      "name": "_ZN10daHolhei_c16St_WallTurn_MainEv"
     },
     "ov062:0x02116980": {
       "author": "tangosdev",
-      "name": "_ZN10daHolhei_c19func_ov062_02116980Ev"
+      "name": "_ZN10daHolhei_c16St_WallTurn_InitEv"
     },
     "ov062:0x02116a08": {
       "author": "ruspecial",
-      "name": "func_ov062_02116a08"
+      "name": "_ZN10daHolhei_c12St_Walk_MainEv"
     },
     "ov062:0x02116b80": {
       "author": "tangosdev",
-      "name": "func_ov062_02116b80"
+      "name": "_ZN10daHolhei_c12St_Walk_InitEv"
     },
     "ov062:0x02116bf8": {
       "author": "tangosdev",
-      "name": "_ZN10daHolhei_c19func_ov062_02116bf8Ev"
+      "name": "_ZN10daHolhei_c16St_TurnHome_MainEv"
     },
     "ov062:0x02116c78": {
       "author": "tangosdev",
-      "name": "_ZN10daHolhei_c19func_ov062_02116c78Ev"
+      "name": "_ZN10daHolhei_c16St_TurnHome_InitEv"
     },
     "ov062:0x02116cd8": {
       "author": "tangosdev",
