@@ -379,7 +379,7 @@ extern void *func_ov007_020c3df4(const char *, int);
 extern int func_ov025_0211123c(char *);
 extern int func_ov062_02115f84(void *);
 extern int func_ov080_0212714c(void *, void *);
-extern int *gMessageInfoSection;
+extern struct MessageInfoSection *gMessageInfoSection;
 extern struct OamAttr *sFlowerFaceSprites[];
 extern struct OamAttr **sJumpTextSpritesByLanguage[];
 extern struct OamAttr **sJump2TextSpritesByLanguage[];
