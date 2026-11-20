@@ -99,7 +99,7 @@ extern "C" void *func_ov007_020c9388(int initialState);
 /* Writes a stylus touch at the current item's position, in pixels: touch
  * down, both axes valid. */
 void Cursor_TouchItem(TPData *sample) {
-    Ov007Item *item = sMenuWork->itemViews[sCursor->state->currentState]->item;
+    Ov007Item *item = gMenuWork->itemViews[sCursor->state->currentState]->item;
     int x = item->posX;
     int y = item->posY;
     sample->x = x >> 0xc;
@@ -139,7 +139,7 @@ void Cursor_GetModeOffset(int mode, s16 *dx, s16 *dy) {
  * polygon id and shadow offset, and its depth; then sizes it in world space
  * through camera 1 (func_ov007_020c43bc). */
 void Cursor_SetSpriteMode(Ov007Sprite *sprite, int idx) {
-    sprite->frames[0] = sMenuWork->textures[data_ov007_020d7dc8[idx]];
+    sprite->frames[0] = gMenuWork->textures[data_ov007_020d7dc8[idx]];
     sprite->texS = data_ov007_020d7dd0[idx * 2];
     sprite->texT = data_ov007_020d7dd1[idx * 2];
     sprite->width = data_ov007_020d7ddc[idx * 2];
@@ -151,7 +151,7 @@ void Cursor_SetSpriteMode(Ov007Sprite *sprite, int idx) {
         sprite->depth = -0x10c0;
     else
         sprite->depth = 0xffffef38;
-    func_ov007_020c43bc(sprite, sMenuWork->cameras[1]);
+    func_ov007_020c43bc(sprite, gMenuWork->cameras[1]);
 }
 
 /* Maps the cursor state to a sprite mode (0..5) and re-dresses the sprite;
@@ -175,7 +175,7 @@ void Cursor_UpdateMode(void) {
     case 12:
     case 13:
         mode = 2;
-        sMenuWork->chosenItemId = st;
+        gMenuWork->chosenItemId = st;
         break;
     case 14:
     case 15:
@@ -353,10 +353,10 @@ int Cursor_NextState(void) {
             next = 0x14;
         break;
     case 0x14:
-        if (dir == 3 && sMenuWork->states[1]->currentState == 0) {
+        if (dir == 3 && gMenuWork->states[1]->currentState == 0) {
             next = 0x15;
         } else if (dir == 0) {
-            if (sMenuWork->states[1]->currentState == 1) {
+            if (gMenuWork->states[1]->currentState == 1) {
                 next = 0x13;
             } else {
                 next = p->previousState;
@@ -390,7 +390,7 @@ int Cursor_NextState(void) {
 
     if (next != 0xfd) {
         if (next == 0xfe) {
-            int st = sMenuWork->states[1]->currentState;
+            int st = gMenuWork->states[1]->currentState;
             switch (st) {
             case 0:
                 next = (cur == 0x10) ? 0x14 : 0x15;
@@ -414,7 +414,7 @@ int Cursor_NextState(void) {
             }
         }
     } else {
-        u8 b = sMenuWork->settings->bootArgs->backlightOn;
+        u8 b = gMenuWork->settings->bootArgs->backlightOn;
         next = (b != 0) ? 0xc : 0xd;
     }
 
@@ -457,11 +457,11 @@ void Cursor_UpdateState(void) {
     }
 
     {
-        int state1 = sMenuWork->states[0]->currentState;
+        int state1 = gMenuWork->states[0]->currentState;
 
         switch (state1) {
         case 0: {
-            Ov007MenuState *s2 = sMenuWork->states[1];
+            Ov007MenuState *s2 = gMenuWork->states[1];
             int state2 = s2->currentState;
             switch (state2) {
             case 0:
@@ -473,12 +473,12 @@ void Cursor_UpdateState(void) {
             case 8:
                 if (s2->stateTicks <= 1) {
                     {
-                        Ov007Pad *o = sMenuWork->pad;
+                        Ov007Pad *o = gMenuWork->pad;
                         o->inputLock = Pad_GetInputLock(o) | 1;
                     }
-                    func_ov007_020c2090(sMenuWork->pad);
+                    func_ov007_020c2090(gMenuWork->pad);
                 }
-                if (sMenuWork->states[1]->requestedState == -1)
+                if (gMenuWork->states[1]->requestedState == -1)
                     sCursor->state->requestedState = Cursor_NextState();
                 else
                     sCursor->state->requestedState = 0xff;
@@ -490,7 +490,7 @@ void Cursor_UpdateState(void) {
             break;
         }
         case 5: {
-            Ov007MenuState *s2 = sMenuWork->states[1];
+            Ov007MenuState *s2 = gMenuWork->states[1];
             if (s2->stateTicks == 0) {
                 int state3 = s2->currentState;
                 switch (state3) {
@@ -536,7 +536,7 @@ void Cursor_UpdateState(void) {
                 a = 1;
                 if (cur != 0x16 && cur != 0x17)
                     a = 0;
-                b = (sMenuWork->itemViews[0x16]->item->state->currentState == 0);
+                b = (gMenuWork->itemViews[0x16]->item->state->currentState == 0);
                 if (a == 0 && b != 0) {
                     p->requestedState = 0x17;
                     if (sCursor->state->currentState == 0xff)
@@ -573,7 +573,7 @@ void Cursor_UpdateState(void) {
  * 3; from states[0] 5 (unless states[1] is 0xb or 0xc) cursor state 0xe and
  * sound 3. states[1] 8 requests cursor state 9 at once. */
 void Cursor_UpdateParked(void) {
-    Ov007Work *g = sMenuWork;
+    Ov007Work *g = gMenuWork;
     int state1 = g->states[0]->currentState;
 
     switch (state1) {
@@ -584,12 +584,12 @@ void Cursor_UpdateParked(void) {
             int accept = 0;
             int pressed = 0;
             if (func_ov007_020c1da0(0) == 0) {
-                Ov007Pad *p = sMenuWork->pad;
+                Ov007Pad *p = gMenuWork->pad;
                 if (p->keys & ~p->prevKeys)
                     pressed = 1;
             }
             if (pressed) {
-                Ov007Pad *p2 = sMenuWork->pad;
+                Ov007Pad *p2 = gMenuWork->pad;
                 if ((p2->keys & 2) == 0)
                     accept = 1;
             }
@@ -610,18 +610,18 @@ void Cursor_UpdateParked(void) {
         int pressed = 0;
         int st;
         if (func_ov007_020c1da0(0) == 0) {
-            Ov007Pad *p = sMenuWork->pad;
+            Ov007Pad *p = gMenuWork->pad;
             if (p->keys & ~p->prevKeys)
                 pressed = 1;
         }
         if (pressed) {
-            Ov007Pad *p2 = sMenuWork->pad;
+            Ov007Pad *p2 = gMenuWork->pad;
             if ((p2->keys & 2) == 0)
                 accept = 1;
         }
         if (accept == 0)
             return;
-        st = sMenuWork->states[1]->currentState;
+        st = gMenuWork->states[1]->currentState;
         if (st == 0xc)
             return;
         if (st == 0xb)
@@ -678,7 +678,7 @@ void func_ov007_020b2e64(TPData *sample) {
     int accept;
 
     sCursor->confirm = 0;
-    held = sMenuWork->pad->heldFrames;
+    held = gMenuWork->pad->heldFrames;
 
     if (func_ov007_020c1da0(0) != 0) {
         dir = -1;
@@ -698,7 +698,7 @@ void func_ov007_020b2e64(TPData *sample) {
 
     accept = 0;
     if (func_ov007_020c1da0(0) == 0) {
-        Ov007Pad *p = sMenuWork->pad;
+        Ov007Pad *p = gMenuWork->pad;
         int flag = 1;
         if (p->heldFrames[4] != 1) {
             if (p->heldFrames[10] != 1)
@@ -751,7 +751,7 @@ void func_ov007_020b2cf0(void) {
     Cursor_GetModeOffset(sCursor->mode, &dx, &dy);
 
     {
-        Ov007Sprite *q = sMenuWork->itemViews[sCursor->state->currentState]->sprite;
+        Ov007Sprite *q = gMenuWork->itemViews[sCursor->state->currentState]->sprite;
         x = dx + (q->screenX >> 12);
         y = dy + (q->screenY >> 12);
     }
@@ -763,7 +763,7 @@ void func_ov007_020b2cf0(void) {
     }
     sCursor->sprite->screenX = easeX + (x << 12);
     sCursor->sprite->screenY = easeY + (y << 12);
-    func_ov007_020c4388(sCursor->sprite, sMenuWork->cameras[1]);
+    func_ov007_020c4388(sCursor->sprite, gMenuWork->cameras[1]);
     func_ov007_020c421c(sCursor->sprite);
 }
 

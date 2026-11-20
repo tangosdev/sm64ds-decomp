@@ -347,7 +347,7 @@ void func_ov007_020be8b8(void) {
  * figureIndex 1, the second figure); otherwise the figure only in main
  * state 0xb. */
 Ov007Figure *func_ov007_020be850(void) {
-    Ov007Work *work = sMenuWork;
+    Ov007Work *work = gMenuWork;
     Ov007AnimPlayer *r2;
     Ov007Figure *res = 0;
     if (work->modelReady == 0)
@@ -372,12 +372,12 @@ void func_ov007_020be7a8(void *pos, unsigned short *outX, unsigned short *outY, 
     int x;
     int y;
 
-    func_ov007_020bfd70(sMenuWork->cameras[0], pos, &x, &y);
+    func_ov007_020bfd70(gMenuWork->cameras[0], pos, &x, &y);
 
-    if (sMenuWork->cameraPreset == 4) {
+    if (gMenuWork->cameraPreset == 4) {
         y = y + 331;
     } else {
-        y = y + data_ov007_020d7c58[sMenuWork->figureIndex];
+        y = y + data_ov007_020d7c58[gMenuWork->figureIndex];
     }
 
     *outX = x;
@@ -426,7 +426,7 @@ void func_ov007_020be50c(void) {
     Ov007SpriteItem *item;
     int i;
 
-    banks = sMenuWork->display->spriteBanks;
+    banks = gMenuWork->display->spriteBanks;
 
     sParticleSprites = (Ov007ParticleSprites *)func_ov007_020c3df4(0, sizeof(Ov007ParticleSprites));
     sParticleSprites->group = func_ov007_020c3f00(&data_ov007_020d7c6c, 2);
@@ -434,7 +434,7 @@ void func_ov007_020be50c(void) {
     sParticleSprites->tracking = (TrackingRecord *)func_ov007_020c3df4(
         data_ov007_02103234, data_ov007_020d7c6c * sizeof(TrackingRecord));
 
-    func_ov007_020c3ee8(sParticleSprites->group, sMenuWork->display->oamListSub);
+    func_ov007_020c3ee8(sParticleSprites->group, gMenuWork->display->oamListSub);
 
     for (i = 0; i < sParticleSprites->group->layout[0]; i++) {
         item = sParticleSprites->group->items[i];
@@ -470,7 +470,7 @@ void func_ov007_020be47c(void) {
 /* Once func_ov007_020b7690 has particle systems 0 and 1, copies the sixteen
  * affine matrices into the sub screen's OAM buffer, Q12 down to Q8. */
 void func_ov007_020be3bc(void) {
-    GXOamAttr *oam = (GXOamAttr *)sMenuWork->display->oamSub;
+    GXOamAttr *oam = (GXOamAttr *)gMenuWork->display->oamSub;
     int i;
     if (func_ov007_020b7690(0) == 0)
         return;
@@ -532,12 +532,12 @@ int func_ov007_020be0dc(void) {
         }
 
         pos = &Bone0(fig)->t;
-        func_ov007_020bfd70(sMenuWork->cameras[0], pos, &screenX, &screenY);
+        func_ov007_020bfd70(gMenuWork->cameras[0], pos, &screenX, &screenY);
 
-        if (sMenuWork->cameraPreset == 4)
+        if (gMenuWork->cameraPreset == 4)
             screenY += 331;
         else
-            screenY += data_ov007_020d7c58[sMenuWork->figureIndex];
+            screenY += data_ov007_020d7c58[gMenuWork->figureIndex];
 
         {
             int x = (short)screenX << 12;

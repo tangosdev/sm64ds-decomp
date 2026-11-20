@@ -10,17 +10,17 @@ extern void ItemView_ResetSprite(struct Ov007ItemView *view, struct Ov007Camera 
 void func_ov007_020b6544(void)
 {
     func_ov007_020c1d8c(0);
-    sMenuWork->pendingCapture = 0;
-    sMenuWork->pendingBgMode = 1;
-    sMenuWork->pendingChoice = 0;
-    sMenuWork->choiceReady = 0;
-    sMenuWork->frameCount = 0;
-    sMenuWork->chosenItemId = -1;
-    sMenuWork->cameraPreset = 0;
-    sMenuWork->transitionMode = 1;
+    gMenuWork->pendingCapture = 0;
+    gMenuWork->pendingBgMode = 1;
+    gMenuWork->pendingChoice = 0;
+    gMenuWork->choiceReady = 0;
+    gMenuWork->frameCount = 0;
+    gMenuWork->chosenItemId = -1;
+    gMenuWork->cameraPreset = 0;
+    gMenuWork->transitionMode = 1;
     func_ov007_020b20e8();
     int i;
     for (i = 0; i < 24; i++) {
-        ItemView_ResetSprite(sMenuWork->itemViews[i], sMenuWork->cameras[1]);
+        ItemView_ResetSprite(gMenuWork->itemViews[i], gMenuWork->cameras[1]);
     }
 }

@@ -10,7 +10,7 @@
 #include "math/ProgressRatio.h"
 
 /* recovered: per-frame update of a two-mode screen transition driven by the
- * manager at sMenuWork. Mode 1 eases a scale toward 0x1000 over
+ * manager at gMenuWork. Mode 1 eases a scale toward 0x1000 over
  * 12 frames and flags completion when the slot reaches its end; mode 0 copies
  * the start positions on frame 0, then lerps the camera's target x/y and
  * distance along a smoothstep-squared curve and flags completion at frame 0x28.
@@ -34,24 +34,24 @@ extern unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void FigureScene_SetScreenBlend(int a);
 
 void func_ov007_020b1718(void) {
-    Ov007Model *F = sMenuWork->model;
+    Ov007Model *F = gMenuWork->model;
     int r7val;
     int v;
     int flag = 0;
     int divisor;
     int mode;
 
-    v = sMenuWork->states[1]->stateTicks;
+    v = gMenuWork->states[1]->stateTicks;
 
     if (v == 0)
-        sMenuWork->states[2]->requestedState = 2;
+        gMenuWork->states[2]->requestedState = 2;
 
-    if (v == 0 && sMenuWork->figureIndex == 0)
+    if (v == 0 && gMenuWork->figureIndex == 0)
         func_ov007_020bdeb0(0x1c);
-    else if (v == 0 && sMenuWork->figureIndex == 1)
+    else if (v == 0 && gMenuWork->figureIndex == 1)
         func_ov007_020bdeb0(0x1d);
 
-    mode = sMenuWork->transitionMode;
+    mode = gMenuWork->transitionMode;
     switch (mode) {
     case 1: {
         Ov007AnimPlayer *F18 = F->boneAnim;
@@ -72,9 +72,9 @@ void func_ov007_020b1718(void) {
             else
                 s = (int)((((s64)1 - (r3 - 0x3000)) * 0x800) >> 12) + 0x800;
 
-            sMenuWork->modelGrowth = 0x1000 - (s >> 2);
+            gMenuWork->modelGrowth = 0x1000 - (s >> 2);
         } else {
-            sMenuWork->modelGrowth = 0x1000;
+            gMenuWork->modelGrowth = 0x1000;
         }
 
         F18b = F->boneAnim;
@@ -88,7 +88,7 @@ void func_ov007_020b1718(void) {
         break;
     }
     case 0: {
-        Ov007Camera *m = sMenuWork->cameras[0];
+        Ov007Camera *m = gMenuWork->cameras[0];
         int q, t, w, r3, u;
 
         if (v == 0) {
@@ -138,17 +138,17 @@ void func_ov007_020b1718(void) {
     }
 
     if (flag != 0) {
-        sMenuWork->pendingBgMode = 2;
-        sMenuWork->states[0]->requestedState = 1;
+        gMenuWork->pendingBgMode = 2;
+        gMenuWork->states[0]->requestedState = 1;
     }
 
     if (v >= 2 && r7val >= 0) {
         int w;
         int qq;
         func_ov007_020bce70(2, 15);
-        w = sMenuWork->paletteState->stateTicks;
+        w = gMenuWork->paletteState->stateTicks;
         qq = ProgressRatio(w, 15);
-        sMenuWork->lights[1]->color = func_ov007_020c3be0(qq, sMenuWork->lights[1]->color, 0);
+        gMenuWork->lights[1]->color = func_ov007_020c3be0(qq, gMenuWork->lights[1]->color, 0);
     }
 
     {

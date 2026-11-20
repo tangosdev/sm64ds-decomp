@@ -21,7 +21,7 @@ extern void MessageWindow_Close(void);
 
 void func_ov007_020af84c(void)
 {
-    Ov007Work *b = sMenuWork;
+    Ov007Work *b = gMenuWork;
     Ov007MenuState *s2 = b->states[1];
     int state = s2->currentState;
     int r2var = s2->stateTicks;
@@ -32,11 +32,11 @@ void func_ov007_020af84c(void)
         if (r2var == 0) {
             func_ov007_020c1d78(0);
             func_ov007_020b0244();
-            sMenuWork->states[2]->requestedState = 0xc;
+            gMenuWork->states[2]->requestedState = 0xc;
         }
         switch (s2->stateWork) {
         case 0: {
-            int idx = sMenuWork->selectedSlot;
+            int idx = gMenuWork->selectedSlot;
             if (idx == -1)
                 return;
             if (base[idx] != 0) {
@@ -44,19 +44,19 @@ void func_ov007_020af84c(void)
                 return;
             }
             func_ov007_020b7d94(3);
-            sMenuWork->selectedSlot = -1;
+            gMenuWork->selectedSlot = -1;
             s2->stateWork = 2;
             return;
         }
         case 1: {
-            int idx = sMenuWork->selectedSlot;
+            int idx = gMenuWork->selectedSlot;
             if (idx == -1) {
                 s2->stateWork = 0;
                 func_ov007_020c1d78(0);
                 return;
             }
             {
-                int idx2 = sMenuWork->targetSlot;
+                int idx2 = gMenuWork->targetSlot;
                 if (idx2 == -1)
                     return;
                 if (base[idx2] == 0) {
@@ -80,7 +80,7 @@ void func_ov007_020af84c(void)
             }
             if (func_ov007_020b4438() != 3)
                 return;
-            sMenuWork->targetSlot = -1;
+            gMenuWork->targetSlot = -1;
             s2->stateWork = 0;
             return;
         }
@@ -96,8 +96,8 @@ void func_ov007_020af84c(void)
             int r;
             if (func_ov007_020b79c8() == 0)
                 return;
-            r = sMenuWork->callback(
-                ((int(*)[3])data_ov007_020ccc20)[sMenuWork->selectedSlot][sMenuWork->targetSlot]);
+            r = gMenuWork->callback(
+                ((int(*)[3])data_ov007_020ccc20)[gMenuWork->selectedSlot][gMenuWork->targetSlot]);
             func_ov007_020aec00();
             switch (r) {
             case 0:
@@ -118,9 +118,9 @@ void func_ov007_020af84c(void)
             if (func_ov007_020b79e4() != 0)
                 return;
             bb = (s2->stateWork == 1);
-            func_ov007_020b7d94(bb ? 5 : sMenuWork->targetSlot + 6);
-            sMenuWork->targetSlot = -1;
-            sMenuWork->selectedSlot = sMenuWork->targetSlot;
+            func_ov007_020b7d94(bb ? 5 : gMenuWork->targetSlot + 6);
+            gMenuWork->targetSlot = -1;
+            gMenuWork->selectedSlot = gMenuWork->targetSlot;
             s2->stateWork = bb ? 4 : 3;
             return;
         }
@@ -128,11 +128,11 @@ void func_ov007_020af84c(void)
             if (func_ov007_020b79c8() == 0)
                 return;
             {
-                Ov007Pad *p54 = sMenuWork->pad;
+                Ov007Pad *p54 = gMenuWork->pad;
                 unsigned short aa = p54->prevKeys;
                 unsigned short bx = p54->keys;
                 if ((bx & ~aa) == 0) {
-                    Ov007Touch *p50 = sMenuWork->touch;
+                    Ov007Touch *p50 = gMenuWork->touch;
                     if (p50->cur.touch == 0)
                         return;
                     if (p50->prev.touch != 0)

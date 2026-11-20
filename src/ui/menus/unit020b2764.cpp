@@ -171,17 +171,17 @@ extern "C" void func_ov007_020b2998(void) {
     Vector3 pos;
 
     func_ov007_020b283c();
-    sMenuWork->model =
-        func_ov007_020b2bd4(sMenuWork->figureIndex, sMenuWork->strokeStage[sMenuWork->figureIndex]);
-    sMenuWork->figure = func_ov007_020beaa0(0, sMenuWork->figureIndex);
-    sMenuWork->altFigure = func_ov007_020beaa0(1, sMenuWork->figureIndex);
+    gMenuWork->model =
+        func_ov007_020b2bd4(gMenuWork->figureIndex, gMenuWork->strokeStage[gMenuWork->figureIndex]);
+    gMenuWork->figure = func_ov007_020beaa0(0, gMenuWork->figureIndex);
+    gMenuWork->altFigure = func_ov007_020beaa0(1, gMenuWork->figureIndex);
     pos.x = pos.y = pos.z = 0;
     func_ov007_020b7708(0, &pos);
     func_ov007_020b7708(1, &pos);
-    sMenuWork->modelGrowth = 0x1000;
+    gMenuWork->modelGrowth = 0x1000;
     for (i = 0; i < 3; i++) {
-        sMenuWork->screenSprites[i] = func_ov007_020c44e4(1);
-        sprite = sMenuWork->screenSprites[i];
+        gMenuWork->screenSprites[i] = func_ov007_020c44e4(1);
+        sprite = gMenuWork->screenSprites[i];
         sprite->screenX = 0x80000;
         sprite->screenY = 0x60000;
         sprite->width = sprite->height = 256;
@@ -196,7 +196,7 @@ extern "C" void func_ov007_020b2998(void) {
         case 1:
             sprite->polygonId = 0x15;
             sprite->depth = -0x32000;
-            *sprite->frames = sMenuWork->textures[9];
+            *sprite->frames = gMenuWork->textures[9];
             sprite->texS = 0x20;
             sprite->repeatU = 4;
             sprite->repeatV = 1;
@@ -210,10 +210,10 @@ extern "C" void func_ov007_020b2998(void) {
             sprite->drawFlags |= 1;
             break;
         }
-        func_ov007_020c43bc(sprite, sMenuWork->cameras[1]);
-        func_ov007_020c4388(sprite, sMenuWork->cameras[1]);
+        func_ov007_020c43bc(sprite, gMenuWork->cameras[1]);
+        func_ov007_020c4388(sprite, gMenuWork->cameras[1]);
     }
-    sMenuWork->modelReady = 1;
+    gMenuWork->modelReady = 1;
 }
 
 /* Tears down what func_ov007_020b2998 built, if modelReady is set: releases
@@ -227,10 +227,10 @@ void func_ov007_020b283c(void) {
     int stage;
     int i;
 
-    if (sMenuWork->modelReady == 0)
+    if (gMenuWork->modelReady == 0)
         return;
-    figureIndex = sMenuWork->figureIndex;
-    stage = sMenuWork->strokeStage[figureIndex];
+    figureIndex = gMenuWork->figureIndex;
+    stage = gMenuWork->strokeStage[figureIndex];
     set = figureIndex;
     if (figureIndex == 0 && stage == 0)
         set = 2;
@@ -240,26 +240,26 @@ void func_ov007_020b283c(void) {
         func_ov007_020b3edc(data_ov007_020ccc68[set][i]);
     }
 
-    if (sMenuWork->model != 0) {
-        func_ov007_020bc53c(sMenuWork->model);
-        sMenuWork->model = 0;
+    if (gMenuWork->model != 0) {
+        func_ov007_020bc53c(gMenuWork->model);
+        gMenuWork->model = 0;
     }
-    if (sMenuWork->figure != 0) {
-        sMenuWork->figure->func_ov007_020bea44();
-        sMenuWork->figure = 0;
+    if (gMenuWork->figure != 0) {
+        gMenuWork->figure->func_ov007_020bea44();
+        gMenuWork->figure = 0;
     }
-    if (sMenuWork->altFigure != 0) {
-        sMenuWork->altFigure->func_ov007_020bea44();
-        sMenuWork->altFigure = 0;
+    if (gMenuWork->altFigure != 0) {
+        gMenuWork->altFigure->func_ov007_020bea44();
+        gMenuWork->altFigure = 0;
     }
     for (i = 0; i < 3; i++) {
-        if (sMenuWork->screenSprites[i] != 0) {
-            func_ov007_020c44c4(sMenuWork->screenSprites[i]);
-            sMenuWork->screenSprites[i] = 0;
+        if (gMenuWork->screenSprites[i] != 0) {
+            func_ov007_020c44c4(gMenuWork->screenSprites[i]);
+            gMenuWork->screenSprites[i] = 0;
         }
     }
 
-    sMenuWork->modelReady = 0;
+    gMenuWork->modelReady = 0;
 }
 
 /* Q12 product, truncated. */
@@ -277,7 +277,7 @@ extern "C" void FigureScene_SetScreenBlend(int t) {
     int falling = 0x1000 - (t - 0x800) * 2;
     int rising = t * 2;
     for (i = 0; i < 2; i++) {
-        sprite = sMenuWork->screenSprites[i];
+        sprite = gMenuWork->screenSprites[i];
         sprite->cornerColors[3] =
             func_ov007_020c3be0(t, data_ov007_020ccc50[i].outer, data_ov007_020ccc5c[i].outer);
         sprite->cornerColors[0] = sprite->cornerColors[3];

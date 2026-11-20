@@ -6,12 +6,12 @@
  * and stops both figures' bone animations (state 2). */
 void func_ov007_020b257c(void) {
     int* p;
-    p = &sMenuWork->model->boneAnim->state;
+    p = &gMenuWork->model->boneAnim->state;
     if (*p == 0) *p = 1;
-    p = &sMenuWork->model->texSrtAnim->state;
+    p = &gMenuWork->model->texSrtAnim->state;
     if (*p == 0) *p = 1;
-    p = &sMenuWork->model->texSeqAnim->state;
+    p = &gMenuWork->model->texSeqAnim->state;
     if (*p == 0) *p = 1;
-    sMenuWork->figure->model->boneAnim->state = 2;
-    sMenuWork->altFigure->model->boneAnim->state = 2;
+    gMenuWork->figure->model->boneAnim->state = 2;
+    gMenuWork->altFigure->model->boneAnim->state = 2;
 }

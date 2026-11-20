@@ -34,12 +34,12 @@ void func_ov007_020bcf90(void) {
     int i;
     int j;
     int drawModel = 1;
-    s0 = sMenuWork->states[0];
-    s1 = sMenuWork->states[1];
+    s0 = gMenuWork->states[0];
+    s1 = gMenuWork->states[1];
     if (s0->currentState != 0 && (s0->currentState != 1 || s1->currentState != 0)) {
         drawModel = 0;
     }
-    func_ov007_020c93b4(sMenuWork->paletteBufs[0]);
+    func_ov007_020c93b4(gMenuWork->paletteBufs[0]);
     G3X_Reset();
     G3X_ResetMtxStack();
     G3X_SetClearColor(0x7fff, 0, 0x7fff, 0x3f, true);
@@ -49,18 +49,18 @@ void func_ov007_020bcf90(void) {
         break;
     case 1:
         if (s1->currentState == 2) {
-            func_ov007_020b8fd4(sMenuWork->cameras[1]);
+            func_ov007_020b8fd4(gMenuWork->cameras[1]);
         }
         break;
     case 2:
     case 3:
     case 4:
-        func_ov007_020b8fd4(sMenuWork->cameras[1]);
+        func_ov007_020b8fd4(gMenuWork->cameras[1]);
         break;
     case 5:
         for (i = 0xe; i <= 0x10; i++) {
-            s16 *total = &sMenuWork->settings->starCounts[i - 0xe];
-            func_ov007_020b413c(sMenuWork->itemViews[i], *total);
+            s16 *total = &gMenuWork->settings->starCounts[i - 0xe];
+            func_ov007_020b413c(gMenuWork->itemViews[i], *total);
         }
         break;
     case 6:
@@ -74,17 +74,17 @@ void func_ov007_020bcf90(void) {
         func_ov007_020b7a00();
     }
     for (j = 0; j < 24; j++) {
-        func_ov007_020b4464(sMenuWork->itemViews[j], sMenuWork->cameras[1]);
+        func_ov007_020b4464(gMenuWork->itemViews[j], gMenuWork->cameras[1]);
     }
 
     func_ov007_020b2cf0();
     func_ov007_020b2160(0);
-    func_ov007_020c2390(sMenuWork->lights[0]);
-    func_ov007_020c232c(sMenuWork->lights[0]);
+    func_ov007_020c2390(gMenuWork->lights[0]);
+    func_ov007_020c232c(gMenuWork->lights[0]);
     switch (s0->currentState) {
     case 0:
-        func_ov007_020c2390(sMenuWork->lights[1]);
-        func_ov007_020c232c(sMenuWork->lights[1]);
+        func_ov007_020c2390(gMenuWork->lights[1]);
+        func_ov007_020c232c(gMenuWork->lights[1]);
         break;
     case 1:
         if (s1->currentState == 2) {
@@ -103,9 +103,9 @@ void func_ov007_020bcf90(void) {
         break;
     }
 
-    func_ov007_020b7658(&sMenuWork->cameras[0]->viewMatrix, 1);
+    func_ov007_020b7658(&gMenuWork->cameras[0]->viewMatrix, 1);
     if (drawModel != 0) {
         func_ov007_020b2370();
     }
-    ScreenFade_Draw(sMenuWork->cameras[0]);
+    ScreenFade_Draw(gMenuWork->cameras[0]);
 }

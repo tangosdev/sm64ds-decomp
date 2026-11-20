@@ -16,19 +16,19 @@ extern "C" void func_ov007_020bc32c(Ov007Model *m, int i, int startFrame);
  * (func_ov007_020be964). */
 extern "C" void func_ov007_020b2614(int anim, int startFrame, int fadeFrames) {
     if (fadeFrames > 0) {
-        func_ov007_020bc374(sMenuWork->model, anim, startFrame, fadeFrames);
+        func_ov007_020bc374(gMenuWork->model, anim, startFrame, fadeFrames);
     } else {
-        func_ov007_020bc3dc(sMenuWork->model, anim, startFrame);
-        sMenuWork->model->visible = 1;
-        sMenuWork->model->animTick = 1;
+        func_ov007_020bc3dc(gMenuWork->model, anim, startFrame);
+        gMenuWork->model->visible = 1;
+        gMenuWork->model->animTick = 1;
     }
-    func_ov007_020bc2e4(sMenuWork->model, anim, startFrame);
-    func_ov007_020bc32c(sMenuWork->model, anim, startFrame);
+    func_ov007_020bc2e4(gMenuWork->model, anim, startFrame);
+    func_ov007_020bc32c(gMenuWork->model, anim, startFrame);
     if (anim == 0) {
-        sMenuWork->figure->func_ov007_020be980(0, startFrame);
-        sMenuWork->altFigure->func_ov007_020be980(0, startFrame);
+        gMenuWork->figure->func_ov007_020be980(0, startFrame);
+        gMenuWork->altFigure->func_ov007_020be980(0, startFrame);
     } else {
-        sMenuWork->figure->func_ov007_020be964();
-        sMenuWork->altFigure->func_ov007_020be964();
+        gMenuWork->figure->func_ov007_020be964();
+        gMenuWork->altFigure->func_ov007_020be964();
     }
 }
