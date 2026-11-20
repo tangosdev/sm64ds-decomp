@@ -193,7 +193,7 @@ extern int sTrmpLineWeakPitchMid;
 extern int sTrmpLineStrongPitchEnd;
 extern int sTrmpLineStrongPitchMid;
 extern Vector3 data_020a0ebc;
-extern Matrix4x3 gViewMtx; /* the view matrix, Graphics3D.cpp */
+extern Matrix4x3 gViewMtx;       /* the view matrix, Graphics3D.cpp */
 extern Quaternion data_02092768; /* identity */
 extern int gGlobalTimer;
 
