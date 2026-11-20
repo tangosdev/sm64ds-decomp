@@ -74,16 +74,15 @@ extern "C" {
  * Behavior's `% 0x36` is an unsigned reduction; the array spelling was only
  * ever read at [0]. */
 extern u32 gTitleCursor;
-extern GXOamAttr data_0209e674[];
 extern dFdBrightness_c *gSceneFader;
 extern PadData data_020a0e58[];
 extern u8 gGameMode;
 /* The scene-wide colour fader, dScene_c's dFdColor_c in
    src/game/stages/d_scene.cpp. */
 extern dFdColor_c gSceneColorFader;
-extern char data_020a0d90[];
+extern char gBuildTimeString[];
 extern u8 gMainScreenLayers;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern char data_0209ee90[];
 extern void Enable3dEngines(void);
 /* The print helper reads name; Behavior reads the signed level ID and entrance.
@@ -221,7 +220,7 @@ s32 dScTitle_c::InitResources() {
                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
     G2_BG0Mosaic(0);
     GX_LoadBG0Char(data_0208a178, 0, 0x2000);
-    GX_LoadBGPltt(data_0208c178, 0, 0x200);
+    GX_LoadBGPltt(gFont2DNcl, 0, 0x200);
     {
         u16 *scr = (u16 *)G2_GetBG0ScrPtr();
         int i = 0;
@@ -230,11 +229,11 @@ s32 dScTitle_c::InitResources() {
             i++;
         } while (i < 0x1800);
     }
-    GX_LoadOBJ(data_0208c378, 0, 0x2000);
-    GX_LoadOBJPltt(data_0208c178, 0, 0x200);
+    GX_LoadOBJ(gDebugLevelSelectArrowNcg, 0, 0x2000);
+    GX_LoadOBJPltt(gFont2DNcl, 0, 0x200);
     gMainScreenLayers = 0x11;
     GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ);
-    data_0208ee44 = 2;
+    gFrameStep = 2;
     TitleScrollLevelList(this);
     G2_SetBG0Offset(0, 0);
     data_0209ee90[0x340] = 0;
@@ -308,9 +307,9 @@ s32 dScTitle_c::Render() {
     OamTmp tmp;
     OAM::EnableSubOAM(&tmp);
     {
-        int idx = data_0209e664;
+        int idx = OAM::objCountMain;
         unsigned int v = ((gTitleCursor - gTitleListTop + 2) << 3) & 0xff;
-        GXOamAttr *p = &data_0209e674[idx];
+        GXOamAttr *p = &OAM::bufferMain[idx];
         p->attr01 = v | 0x80000;
         p->attr2 = 0;
     }
@@ -351,7 +350,7 @@ void TitleScrollLevelList(void *) {
         TitlePrintLevelRow(j, i, 3);
         j++;
     }
-    TitlePrintString((signed char *)data_020a0d90, 0, 0);
+    TitlePrintString((signed char *)gBuildTimeString, 0, 0);
 }
 
 /* [1] [0] 0x020ad69c (D0) and 0x020ad660 (D1) -- neither is written here.

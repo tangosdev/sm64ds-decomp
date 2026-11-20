@@ -73,15 +73,10 @@ extern WanwanModelFilePtr data_ov014_02114978;
 extern WanwanAnimationFileHandle data_ov014_02114980;
 extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
-extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern dCamera_c *gCamera;  /* CAMERA */
 
 int AngleDiff(int a, int b);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
-/* local extern: no header this file includes declares it, and it must keep C
- * linkage now that its caller StateEscapeDemoMain is a member. Nonzero once
- * the position has reached the target. */
-s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 }
 
 namespace cstd {
@@ -311,8 +306,8 @@ void daWanwan_c::UpdateChainSegments() {
         }
     }
 
-    Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    MTX_MultVec43(&head, &data_020a0e68, &rotated);
+    Matrix4x3_FromRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    MTX_MultVec43(&head, &gScratchMtx, &rotated);
     Vec3_Add(&linkPos, &mPos, &rotated);
     saved.x = linkPos.x;
     saved.y = linkPos.y;
@@ -346,9 +341,9 @@ void daWanwan_c::UpdateChainSegments() {
 
         angY = cstd::atan2(dvec.x, dvec.z);
         angX = (short)(-cstd::atan2(dvec.y, Vec3_HorzLen(&dvec)));
-        Matrix4x3_FromRotationY(&data_020a0e68, angY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
-        MTX_MultVec43(&head, &data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&gScratchMtx, angY);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, angX);
+        MTX_MultVec43(&head, &gScratchMtx, &rotated);
 
         dst->x = seg->x;
         dst->y = seg->y;
@@ -429,9 +424,9 @@ void daWanwan_c::CapChainToPivot() {
         dir.z = diff.z;
         angY = cstd::atan2(dir.x, dir.z);
         angX = (short)(-cstd::atan2(dir.y, Vec3_HorzLen(&dir)));
-        Matrix4x3_FromRotationY(&data_020a0e68, angY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
-        MTX_MultVec43(&head, &data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&gScratchMtx, angY);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, angX);
+        MTX_MultVec43(&head, &gScratchMtx, &rotated);
         sum.x = cur->x;
         sum.y = cur->y;
         sum.z = cur->z;

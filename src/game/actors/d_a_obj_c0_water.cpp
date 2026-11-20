@@ -23,9 +23,9 @@
  * - data_ov012_02111c24 / 02111c90 BTA / CLPS handles; this TU consumes
  *   them, overlay .data owns them. The 021124c8 / 021124d0 KCL / BMD
  *   handles are defined at the end of this file.
- * - data_0209caa0.file.flags2 & 0x80000 is the same group flag
+ * - gSaveBlock.file.flags2 & 0x80000 is the same group flag
  *   daObjC0_Switch_c::OnGroundPounded writes; this water drains when it is
- *   set. data_0209f32c is the arm9 water-height word this TU publishes.
+ *   set. gWaterHeight is the arm9 water-height word this TU publishes.
  * - no daPly_c.h.
  * - homeless _ZN10dBgActor_cD2Ev from the inline dtor chain (deadstrip).
  */
@@ -112,7 +112,7 @@ const fx32 data_ov012_0211191c[91] = {
 CLPS_Block data_ov012_02111c90 = {
     0x53504c43, 0x00010008, 0x00000fe0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
-extern int data_0209f32c;
+extern int gWaterHeight;
 
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: BasementWater_Spawn.
@@ -139,7 +139,7 @@ int daObjC0Water_c::InitResources() {
                           data_ov012_02111c90);
     mMeshCollider.Enable(this);
     mLoweredY = mPos.y - 0x4b0000;
-    if (data_0209caa0.file.flags2 & 0x80000) {
+    if (gSaveBlock.file.flags2 & 0x80000) {
         mPos.y = mLoweredY;
     }
     return 1;
@@ -150,7 +150,7 @@ int daObjC0Water_c::Behavior() {
         Sound::PlaySecretSound(this, &mSoundTimer);
     if (mPos.y <= mLoweredY) {
         mPos.y = mLoweredY;
-    } else if (data_0209caa0.file.flags2 & 0x80000) {
+    } else if (gSaveBlock.file.flags2 & 0x80000) {
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
         mPos.y -= 0x5000;
         mWasJustDrained = 1;
@@ -159,7 +159,7 @@ int daObjC0Water_c::Behavior() {
             dMap_c::UpdateLevelSpecific();
         }
     }
-    data_0209f32c = mPos.y;
+    gWaterHeight = mPos.y;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mTextureTransformer.speed = 0x1000;

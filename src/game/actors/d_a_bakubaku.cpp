@@ -15,7 +15,7 @@
  *
  * The same sinit constructs the resource handles: 02113a40 model 0x295,
  * 02113a48 bite anim 0x296, 02113a50 swim anim 0x297 (the word at +4
- * is the loaded BCA/BMD). data_0209f32c is the stage water height
+ * is the loaded BCA/BMD). gWaterHeight is the stage water height
  * (daObjC0Water_c publishes it); data_ov032_021137cc / 021137d8 are
  * the body and head cylinder offsets.
  */
@@ -84,15 +84,13 @@ extern daBakubaku_c::State data_ov032_02113a9c; /* pause */
 extern daBakubaku_c::State data_ov032_02113aac; /* chase */
 extern daBakubaku_c::State data_ov032_02113a7c; /* surface */
 extern daBakubaku_c::State data_ov032_02113abc; /* dive */
-extern s32 data_0209f32c;
+extern s32 gWaterHeight;
 
 extern VecFx32 data_ov032_021137cc; /* body cylinder */
 extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
 extern "C" int AngleDiff(int a, int b);
 
-/* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
-extern "C" int func_ov002_020c5cd8(daPly_c *a, dActor_c *self);
 /* Sound::Play with bank 3. */
 void func_02012694(unsigned int a, const Vector3 *p);
 
@@ -226,11 +224,11 @@ s32 daBakubaku_c::CleanupResources()
 void daBakubaku_c::UpdateModelMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    mAnmModel.mat4x3 = data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x5a000) >> 3, mPos.z >> 3);
-    mShadowMat = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    mAnmModel.mat4x3 = gScratchMtx;
+    Matrix4x3_FromTranslation(&gScratchMtx, mPos.x >> 3, (mPos.y - 0x5a000) >> 3, mPos.z >> 3);
+    mShadowMat = gScratchMtx;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0xfa000, 0x258000, 0xf);
 }
 
@@ -277,9 +275,9 @@ int daBakubaku_c::ExecuteWander() {
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+    MTX_MultVec43(&in, &gScratchMtx, &out);
     mSpeed.y = out.y;
     if (FindChaseTarget() == 1) {
         SetState(&data_ov032_02113aac);
@@ -376,10 +374,10 @@ int daBakubaku_c::EnterDive() {
 int daBakubaku_c::ExecuteDive() {
     s16 speed;
     speed = 0x3000;
-    if (data_0209f32c - 0x64000 > mPos.y)
+    if (gWaterHeight - 0x64000 > mPos.y)
         speed = 0;
     if (mLungePhase == 0) {
-        if (data_0209f32c > mPos.y) {
+        if (gWaterHeight > mPos.y) {
             if (mAngTarget > 0)
                 mLungePhase = 1;
         }
@@ -400,14 +398,14 @@ int daBakubaku_c::ExecuteDive() {
             rotatedOffset.y = 0;
             rotatedOffset.z = 0;
             forwardOffset.z = 0xa0000;
-            Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-            MTX_MultVec43(&forwardOffset, &data_020a0e68, &rotatedOffset);
+            Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+            MTX_MultVec43(&forwardOffset, &gScratchMtx, &rotatedOffset);
             splashPosition.x += rotatedOffset.x;
             splashPosition.z += rotatedOffset.z;
             Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntrySurface, splashPosition.x,
                                                 splashPosition.y, splashPosition.z, 0);
             mSplashParticle = Particle::System::NewCheckWaterRipple(
-                mSplashParticle, kPtclMegaSplash, splashPosition.x, data_0209f32c, splashPosition.z,
+                mSplashParticle, kPtclMegaSplash, splashPosition.x, gWaterHeight, splashPosition.z,
                 0);
             splashPosition.y += 0x4b000;
             Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntryRaised, splashPosition.x,
@@ -431,9 +429,9 @@ int daBakubaku_c::ExecuteDive() {
         out2.x = 0;
         out2.y = 0;
         out2.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-        MTX_MultVec43(&in2, &data_020a0e68, &out2);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+        MTX_MultVec43(&in2, &gScratchMtx, &out2);
         mSpeed.y = out2.y;
     }
     ApproachLinear(mAngTarget, speed, 0x200);
@@ -494,9 +492,9 @@ int daBakubaku_c::ExecuteSurface() {
         out.x = 0;
         out.y = 0;
         out.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
-        MTX_MultVec43(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mAngle.x);
+        MTX_MultVec43(&in, &gScratchMtx, &out);
         mSpeed.y = out.y;
     }
 
@@ -521,7 +519,7 @@ int daBakubaku_c::ExecuteSurface() {
         vec.x = playerPos[0];
         vec.y = playerPos[1];
         vec.z = playerPos[2];
-        if (data_0209f32c > mPos.y) {
+        if (gWaterHeight > mPos.y) {
             ApproachLinear(mPrevAngle.x, 0, 0x200);
         } else {
             ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &vec), 0x200);
@@ -558,7 +556,7 @@ void daBakubaku_c::HandleCylinderHit() {
                 return;
             }
             if (mMouthOpen != 0) {
-                if (func_ov002_020c5cd8(f, this) == 1) {
+                if (f->EatenByBubba(this) == 1) {
                     func_02012694(0xf6, &mCamSpacePos);
                     return;
                 }
@@ -607,7 +605,7 @@ int daBakubaku_c::ShouldReturnHome() {
     if (Vec3_HorzDist(&mSpawnPos, &mPos) > 0x4b0000)
         return 1;
     if (mState != &data_ov032_02113abc) {
-        if (data_0209f32c < mPos.y)
+        if (gWaterHeight < mPos.y)
             return 1;
     }
     return 0;
@@ -630,7 +628,7 @@ int daBakubaku_c::FindChaseTarget() {
         if (pl->mIsUnderwater == 0)
             return 0;
     }
-    d = pl->mGroundY - data_0209f32c;
+    d = pl->mGroundY - gWaterHeight;
     if (d < 0) d = -d;
     if (d < 0xb4000)
         return 0;

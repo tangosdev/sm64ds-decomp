@@ -72,10 +72,10 @@ extern u8 gLocalPlayerId;
 extern u8 gLevelClearStep;
 extern u8 gGameMode;
 extern daPly_c *gPlayers[];
-extern s8 data_ov002_02111148;
+extern s8 gCurrentMinimapID;
 /* Per star-marker slot: the marker type (4 = draw a red-coin icon instead). */
 extern u8 gStarMarkerTypes[];
-extern int data_0208ee44;
+extern int gFrameStep;
 /* Set by the red Bob-omb Buddy's red-coin hint (messages 0x15b..0x15f) until
    that talk ends: type-4 marker slots draw MM_RED_COIN. */
 extern u8 gShowRedCoinMarkers;
@@ -84,21 +84,22 @@ extern u8 gShowRedCoinMarkers;
 extern u8 gMapCapIconShown[];
 extern u8 gMapCapIconCharacters[];
 extern u8 data_0209d660;
-extern s32 data_020a0db0;
+extern s32 gGlobalTimer;
 extern dFdBrightness_c *gSceneFader;
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
-extern u8   data_0209f350[];
+extern u8 gCameraPressState[];
 extern s8 gNextSublevel;
 extern u8   data_0209f204;
-extern u8   data_ov002_02111150;
+extern u8 gVsExitingCourse;
 extern ControllerInput data_0209f498[];
 extern u8 gSubScreenLayers;
 extern u8 gMapIntroRotating;
-extern u8   data_ov002_02111144;
+extern u8 gMapIntroZooming;
 extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
-extern void *data_0209f3a4[];
+extern dActor_c *gSpikeBombs[];
+extern dActor_c *gCastleKeyRabbit;
 extern void SetSubBg2Offset(s32 a, s32 b);
 }
 
@@ -114,9 +115,6 @@ extern s32  GetMinimapScale(s32 idx);
 struct MinimapDesc;
 extern void UpdateMinimap(MinimapDesc *a, u32 b, u32 c, u32 d, u32 e);
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s);
-extern "C" {
-void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
-}
 
 /* The centre of the 256x192 touch screen, (128, 96) in 20.12 fixed point:
  * the screen point the minimap is drawn around. A file-scope Vector3 with a
@@ -167,7 +165,8 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
         return;
     if (gCurrentSublevel != 5)
         return;
-    if (data_ov002_02111148 != 2) return;
+    if (gCurrentMinimapID != 2)
+        return;
 
     if (v->z <= p0.z) {
         int factor;
@@ -185,7 +184,7 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
 
 /* Per-sublevel touch-ups to the BG3 buffer that GetBG3CharPtr returns. Each
  * case writes rows of consecutive u16 tile numbers, and only when its
- * condition holds (cases 7 and 8 also need gCurrentStarId >= 2): a star collected, an event bit, or a bit in data_0209caa0. */
+ * condition holds (cases 7 and 8 also need gCurrentStarId >= 2): a star collected, an event bit, or a bit in gSaveBlock. */
 void dMap_c::UpdateLevelSpecific()
 {
     int sublevel = gCurrentSublevel;
@@ -232,7 +231,7 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0.file.flags1 & 0x204))
+        if (!(gSaveBlock.file.flags1 & 0x204))
             return;
         p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x748);
         tile = 0x35d;
@@ -249,7 +248,7 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0.file.flags2 & 0x80000))
+        if (!(gSaveBlock.file.flags2 & 0x80000))
             return;
         p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x73a);
         tile = 0x396;
@@ -273,7 +272,7 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0.file.flags2 & 0x80000))
+        if (!(gSaveBlock.file.flags2 & 0x80000))
             return;
         p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x1ca4);
         tile = 0x38e;
@@ -374,7 +373,7 @@ int dMap_c::Render()
     u8 idx = gLocalPlayerId;
 
     if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 ||
-        !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
+        !(gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
         (flag20c != 0 && gLevelClearStep < 3)) {
         daPly_c *player = gPlayers[idx];
         if (IsVsMode()) {
@@ -398,7 +397,7 @@ int dMap_c::Render()
                         if (ICON_Y_VISIBLE(y)) {
                             int x = this->mPlayerIconX[i];
                             if (ICON_X_VISIBLE(x)) {
-                                if (data_ov002_02111148 == this->mPlayerMapIDs[i]) {
+                                if (gCurrentMinimapID == this->mPlayerMapIDs[i]) {
                                     OAM::RenderSub(
                                         OAM::MM_VS_PLAYER_ICONS_S[j + gPlayers[i]->param1], x, y,
                                         -1, 2);
@@ -422,7 +421,7 @@ int dMap_c::Render()
                     OAM::RenderSub(OAM::MM_PLAYER_ICONS[icon], this->mPlayerIconX[idx],
                                    this->mPlayerIconY[idx], -1, 2);
                 }
-                if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
+                if (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
                     u8 s = this->mArrowType;
                     if (s != 0) {
                         u16 ang;
@@ -451,8 +450,8 @@ int dMap_c::Render()
                 s8 lvl = this->mStarMapIDs[i];
                 if (lvl >= 0) {
                     if (*p != 4) {
-                        if (data_ov002_02111148 == lvl) {
-                            this->mStarIconAnimFrame[i] += data_0208ee44;
+                        if (gCurrentMinimapID == lvl) {
+                            this->mStarIconAnimFrame[i] += gFrameStep;
                             if (this->mStarIconAnimFrame[i] >= 12)
                                 this->mStarIconAnimFrame[i] = 0;
                             {
@@ -494,7 +493,7 @@ int dMap_c::Render()
             OamAttr **tbl = IsVsMode() ? OAM::MM_VS_CAP_ICONS : OAM::MM_CAP_ICONS;
             for (i = 0; i < 9; i++, p1++, p2++) {
                 if (*p1 != 0) {
-                    if (data_ov002_02111148 == this->mCapMapIDs[i]) {
+                    if (gCurrentMinimapID == this->mCapMapIDs[i]) {
                         int y = this->mCapIconY[i];
                         if (ICON_Y_VISIBLE(y)) {
                             int x = this->mCapIconX[i];
@@ -507,12 +506,12 @@ int dMap_c::Render()
             }
         }
 
-        if (!(data_0209caa0.file.flags1 & 0x40) && (data_0209caa0.file.flags2 & 0x20000)) {
+        if (!(gSaveBlock.file.flags1 & 0x40) && (gSaveBlock.file.flags2 & 0x20000)) {
             this->mStarKeyBlinkTimer += 1;
             if (this->mStarKeyBlinkTimer >= 5)
                 this->mStarKeyBlinkTimer = 0;
             if (this->mStarKeyMapID >= 0) {
-                if (data_0209d660 == 0 || !(data_020a0db0 & 8)) {
+                if (data_0209d660 == 0 || !(gGlobalTimer & 8)) {
                     int sel = this->mStarKeyBlinkTimer < 2;
                     OAM::Render(true, OAM::MM_STAR_KEYS[sel], this->mStarKeyIconX,
                                 this->mStarKeyIconY, -1, 2, 0);
@@ -521,7 +520,7 @@ int dMap_c::Render()
         }
 
         for (i = 0; i < 8; i++) {
-            if (data_ov002_02111148 == this->mSpikeBombMapIDs[i]) {
+            if (gCurrentMinimapID == this->mSpikeBombMapIDs[i]) {
                 int y = this->mSpikeBombIconY[i];
                 if (ICON_Y_VISIBLE(y)) {
                     int x = this->mSpikeBombIconX[i];
@@ -554,15 +553,16 @@ s32 dMap_c::Behavior()
     focus = 0;
 
     if (gSceneFader->IsAtStart() != 0 && !(gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING) &&
-        data_0209d4b0 == 0 && data_0209f350[gLocalPlayerId] == 0 && player->Unk_020ca8f8() != 1) {
+        data_0209d4b0 == 0 && gCameraPressState[gLocalPlayerId] == 0 &&
+        player->Unk_020ca8f8() != 1) {
         u8 touching;
 
         if (this->mTouchCircleTimer != 0) {
-            this->mTouchCircleTimer -= data_0208ee44;
+            this->mTouchCircleTimer -= gFrameStep;
         }
 
         flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
-        if (!(u8)flagsOr && gNextSublevel < 0 && data_0209f204 == 0 && data_ov002_02111150 == 0 &&
+        if (!(u8)flagsOr && gNextSublevel < 0 && data_0209f204 == 0 && gVsExitingCourse == 0 &&
             data_0209d660 == 0 &&
             ((touching = data_0209f498[gActivePlayerSlot].touching) != 0 ||
              this->mTouchCircleTimer != 0)) {
@@ -580,7 +580,7 @@ s32 dMap_c::Behavior()
                 G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16,
                                       GX_BG_SCRBASE_0xa800, GX_BG_CHARBASE_0x00000);
         } else {
-            if (IsVsMode() || (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
+            if (IsVsMode() || (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 gSubScreenLayers &= ~4;
                 if (!(u8)flagsOr) {
                     GXS_SetVisiblePlane(gSubScreenLayers);
@@ -590,7 +590,7 @@ s32 dMap_c::Behavior()
             }
         }
     } else {
-        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) || data_0209d4b0 != 0)
+        if ((gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) || data_0209d4b0 != 0)
             gSubScreenLayers &= ~4;
     }
 
@@ -599,7 +599,7 @@ s32 dMap_c::Behavior()
              gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
             SublevelToLevel(gCurrentSublevel) == 4 ||
             (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
-            (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+            (IsGameMode(0) && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
              this->mInIntroCutscene == 0)) {
             this->mAngle = 0;
         } else if (this->mInIntroCutscene != 0) {
@@ -617,11 +617,11 @@ s32 dMap_c::Behavior()
 
     if (focus != 0) {
         if (this->mInIntroCutscene != 0) {
-            if (data_ov002_02111144 != 0) {
+            if (gMapIntroZooming != 0) {
                 this->mInvScale -= 9;
                 if (this->mTargetInvScale > this->mInvScale) {
                     this->mInvScale = this->mTargetInvScale;
-                    data_ov002_02111144 = 0;
+                    gMapIntroZooming = 0;
                     gMapIntroRotating = 1;
                 }
             }
@@ -718,7 +718,7 @@ s32 dMap_c::Behavior()
                 if (i != gLocalPlayerId)
                     this->mPlayerMapIDs[i] = GetMinimapID(o, -1);
                 else
-                    this->mPlayerMapIDs[i] = GetMinimapID(o, data_ov002_02111148);
+                    this->mPlayerMapIDs[i] = GetMinimapID(o, gCurrentMinimapID);
             } else {
                 this->mPlayerMapIDs[i] = -1;
             }
@@ -754,8 +754,8 @@ s32 dMap_c::Behavior()
         }
 
         /* The star key: Render blinks it under the same two flag tests. */
-        if (!(data_0209caa0.file.flags1 & 0x40) && (data_0209caa0.file.flags2 & 0x20000)) {
-            dActor_c *o = (dActor_c *)data_0209f33c;
+        if (!(gSaveBlock.file.flags1 & 0x40) && (gSaveBlock.file.flags2 & 0x20000)) {
+            dActor_c *o = gCastleKeyRabbit;
             if (o == 0) {
                 this->mStarKeyMapID = -1;
             } else {
@@ -768,7 +768,7 @@ s32 dMap_c::Behavior()
         }
 
         for (i = 0; i < 8; i++) {
-            dActor_c *o = (dActor_c *)data_0209f3a4[i];
+            dActor_c *o = gSpikeBombs[i];
             if (o != 0) {
                 GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
                                 &miniPos);
@@ -782,8 +782,8 @@ s32 dMap_c::Behavior()
     }
 
     {
-        s32 id = GetMinimapID(focus, data_ov002_02111148);
-        if (id != data_ov002_02111148 && id < 0x10) {
+        s32 id = GetMinimapID(focus, gCurrentMinimapID);
+        if (id != gCurrentMinimapID && id < 0x10) {
             if (id >= 0) {
                 if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
                      gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
@@ -798,7 +798,7 @@ s32 dMap_c::Behavior()
                 gSubScreenLayers &= ~DISPLAY_LAYER_BG3;
             }
             GXS_SetVisiblePlane(gSubScreenLayers);
-            data_ov002_02111148 = id;
+            gCurrentMinimapID = id;
             this->mTargetInvScale = GetMinimapScale(id);
         }
     }
@@ -810,14 +810,14 @@ s32 dMap_c::Behavior()
 
 /* What InitResources loads the map graphics with. */
 
-int func_0202a980(void);
+int GetMinimapTilesFile(void);
 extern "C" {
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
 
 extern "C" void Deallocate(void *ptr);
-int func_0202a96c(void);
+int GetMinimapPaletteFile(void);
 
 int func_0202a958(void);
 extern "C" {
@@ -841,7 +841,7 @@ int dMap_c::InitResources()
     G2S_BG3Mosaic(0);
 
     {
-        int id1 = func_0202a980();
+        int id1 = GetMinimapTilesFile();
         if (id1 != 0) {
             void *f1 = LoadFile(id1);
             DecompressLZ16(f1, G2S_GetBG3CharPtr());
@@ -850,7 +850,7 @@ int dMap_c::InitResources()
     }
 
     {
-        int id2 = func_0202a96c();
+        int id2 = GetMinimapPaletteFile();
         if (id2 != 0) {
             void *f2 = LoadFile(id2);
             GXS_BeginLoadBGExtPltt();
@@ -879,16 +879,15 @@ int dMap_c::InitResources()
         }
     }
 
-    data_ov002_02111148 = GetMinimapID(gPlayers[gLocalPlayerId], -1);
+    gCurrentMinimapID = GetMinimapID(gPlayers[gLocalPlayerId], -1);
 
-    if (data_ov002_02111148 >= 0) {
+    if (gCurrentMinimapID >= 0) {
         if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
              gCurrentSublevel != 0x33 && gCurrentSublevel != 3) ||
             SublevelToLevel(gCurrentSublevel) == 4 ||
             (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
             SublevelToLevel(gCurrentSublevel) == -1) {
-            REG_DB_BG3CNT =
-                (((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010));
+            REG_DB_BG3CNT = (((0x1f - gCurrentMinimapID) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010));
             mMapWidth = 256;
             mMapCenterOffset = 0x80;
 
@@ -909,7 +908,7 @@ int dMap_c::InitResources()
             }
             mArrowType = 1;
         } else {
-            REG_DB_BG3CNT = (((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10));
+            REG_DB_BG3CNT = (((0x1f - gCurrentMinimapID) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10));
             mMapWidth = 128;
             mMapCenterOffset = 0x40;
             mMapOrigin.x = 0;
@@ -922,9 +921,9 @@ int dMap_c::InitResources()
         gSubScreenLayers &= ~DISPLAY_LAYER_BG3;
     }
 
-    mTargetInvScale = GetMinimapScale(data_ov002_02111148);
+    mTargetInvScale = GetMinimapScale(gCurrentMinimapID);
 
-    if (IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+    if (IsGameMode(0) && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         !IsKuppaScriptRunning()) {
         mInvScale = mTargetInvScale << 1;
         mAngle = 0;
@@ -934,7 +933,7 @@ int dMap_c::InitResources()
         mInIntroCutscene = 0;
     }
 
-    data_ov002_02111150 = 0;
+    gVsExitingCourse = 0;
     mBgMatrixA = 0x1000;
     mBgMatrixB = 0;
     mBgMatrixC = 0;

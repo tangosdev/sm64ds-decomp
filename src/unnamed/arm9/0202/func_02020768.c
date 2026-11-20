@@ -3,9 +3,9 @@
 extern int func_0202044c(struct OamAnimation *anim, int idx);
 extern int func_0202043c(struct OamAnimation *anim);
 
-extern int data_0208ee44;
+extern int gFrameStep;
 
-/* Advance an enabled animation by data_0208ee44 ticks: once elapsed reaches
+/* Advance an enabled animation by gFrameStep ticks: once elapsed reaches
  * frameDuration, step to the next frame (func_0202044c); past the last one,
  * restart (func_0202043c) -- forever with loops 0, otherwise until loops
  * counts down to 1, where it stops. */
@@ -13,7 +13,7 @@ void func_02020768(struct OamAnimation *anim) {
     if (anim->enabled == 0)
         return;
 
-    anim->elapsed += data_0208ee44;
+    anim->elapsed += gFrameStep;
 
     if (anim->elapsed < anim->frameDuration)
         return;

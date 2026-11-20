@@ -19,7 +19,7 @@
  *   places it between Kill and UpdateKillByMegaChar.
  * - daPly_c is only forward-declared here, so the closest player's position
  *   is read through a dActor_c cast rather than pulling in daPly_c.h.
- * - data_020a0e68 is the shared scratch matrix; no header owns it, TU-local.
+ * - gScratchMtx is the shared scratch matrix; no header owns it, TU-local.
  */
 #include "dBgActor_c.h"
 #include "Particle__System.h"
@@ -415,8 +415,8 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, f
     rayEnd.x = 0;
     rayEnd.y = 0;
     rayEnd.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
-    MTX_MultVec43(&probe, &data_020a0e68, &rayEnd);
+    Matrix4x3_FromRotationY(&gScratchMtx, mPrevAngle.y);
+    MTX_MultVec43(&probe, &gScratchMtx, &rayEnd);
     Vec3_Add(&sum, &mPos, &rayEnd);
     rayEnd = sum;
 
@@ -439,11 +439,11 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, f
 void dBgActor_c::func_ov002_020ee5d0(int pivotY) {
     Vector3 modelPos;
     Vec3_Asr(&modelPos, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, modelPos.x, modelPos.y, modelPos.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, pivotY >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -pivotY >> 3, 0);
-    mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&gScratchMtx, modelPos.x, modelPos.y, modelPos.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, pivotY >> 3, 0);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, -pivotY >> 3, 0);
+    mModel.mat4x3 = gScratchMtx;
 }
 
 /* Slot 31, the one virtual this class adds (and the key function). Poof 100

@@ -36,15 +36,15 @@
  *
  * Leftover: no member conversion was reverted. Each of the 25 helpers
  *   matched at its original size.
- * Leftover: func_ov002_020e496c, func_ov002_020ef228, func_ov002_020f02c8,
- *   func_ov002_020f030c and func_ov002_020f035c stay calls into ov002.
+ * Leftover: func_ov002_020ef228, func_ov002_020f02c8, func_ov002_020f030c
+ *   and func_ov002_020f035c stay calls into ov002.
  * Leftover: mFlags bits 0x100 / 0x400 / 0x2000 / 0x4000 / 0x80000 / 0x4000000 and
  *   dCc_c flags bits 0x2000 / 0x8000 are not named in dActor_c.h / dCc_c.h;
  *   they are written as numbers and described by what reading them does.
  * Leftover: sound banks 0x41 / 0x51, the PlayLong id 0x93 and the particle ids
  *   0xe / 0x13a / 0x13b have no names in the tree.
  * Leftover: what func_02035638 tests beyond being a sibling of IsOnWall, what
- *   func_ov002_020ef228 / func_ov002_020e496c compute, the result of
+ *   func_ov002_020ef228 computes, the result of
  *   func_ov002_020f030c (daPly_c.h names it a slide loss factor; the value
  *   is discarded here), the extra arguments of Math_Function_0203b14c and
  *   IsClsnInRangeOnScreen, the 0x199 passed to dBgW_KcMbg::SetFile, and what
@@ -132,7 +132,6 @@ void RunningSlidingDustAt(s32, s32, s32);
 int SurfaceInfo_TestFlag0x20(int *p);
 #include "BgChEvt.h"
 int func_ov002_020f030c(int x);
-extern "C" dExtAnm2Model_c *func_ov002_020e496c(daPly_c *c);
 
 extern "C" int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 
@@ -1020,7 +1019,7 @@ void daObjBlockS_c::UpdateMeshCollider() {
  * crate follows the player's hand: it picks a row r5 of the carry-offset
  * table (data_ov098_0213bf60, one Vector3 per row) -- 0 normally, 1 if the
  * player is front-sliding, or if it has lost its grabbed
- * object and the player's current body model (func_ov002_020e496c) is
+ * object and the player's current body model (daPly_c::GetBodyModel) is
  * before whole frame 14 of its animation, plus 2 if the player's param1 is 2 -- eases
  * mCarryOffset toward that row, takes the matrix UpdateCarry returns as the
  * model matrix, and sets mFlags bit 0x4000000. The rows, in units, are
@@ -1036,7 +1035,7 @@ void daObjBlockS_c::UpdateModelMatrix() {
     if (obj != 0) {
         b = ((mFlags & 0x4000) != 0);
         if (b != 0 && obj->mCarryMatrix != 0) {
-            dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(obj);
+            dExtAnmModel_c *body = (dExtAnmModel_c *)obj->GetBodyModel();
             int r5 = 0;
             if (mHoldingPlayer->IsFrontSliding() != 0)
                 r5 = 1;

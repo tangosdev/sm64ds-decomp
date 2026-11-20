@@ -45,18 +45,18 @@ struct PmfEntry {
 
 
 extern "C" {
-extern void Hud_RenderSprite(void *a, int b, int c, int d, int e);
-extern void *sSoundWinSpriteBSprites[];
+extern void Hud_RenderSprite(OamAttr *a, int b, int c, int d, int e);
+extern OamAttr *sSoundWinSpriteBSprites[];
 /* WinSpriteB reads indices 0 through 2; the fourth stored value is unused here. */
 extern const u16 sSoundWinSpriteBTimes[4] = {50, 3, 3, 50};
-extern void *sSoundWinSpriteASprites[];
+extern OamAttr *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
 extern void Mg_DrawStockCounter(int a, int b);
 OamAttr data_ov006_0213f544 = {0x8000, 0x8000, 0x002e, 0x0000};
 OamAttr data_ov006_0213f54c = {0x8000, 0x8000, 0x2028, 0x0000};
 OamAttr data_ov006_0213f65c = {0x8000, 0x8000, 0x0028, 0x0000};
-void *sSoundPopsSprites[3] = {&data_ov006_0213f54c, &data_ov006_0213f544, &data_ov006_0213f65c};
+OamAttr *sSoundPopsSprites[3] = {&data_ov006_0213f54c, &data_ov006_0213f544, &data_ov006_0213f65c};
 extern const int sSoundPop12XOffsets[3] = {0, 32768, -32768};
 extern const int sSoundPop12VX[3] = {0, 2560, -2560};
 extern const int sSoundPop11XOffsets[3] = {0, 32768, -32768};
@@ -1376,7 +1376,7 @@ void dScMgSound_c::Pop12_Finish(int slot) {
     }
 }
 
-extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4);
+extern "C" void Mg_RenderSpriteBothPalMtx(OamAttr *a0, int a1, int a2, int a3, Matrix2x2 *a4);
 
 void dScMgSound_c::DrawPops() {
     int slot;
@@ -1404,16 +1404,16 @@ void dScMgSound_c::DrawPops() {
     }
 }
 
-extern u8 data_ov006_02133c58[];
-extern u8 data_ov006_02133c40[];
-extern u8 data_ov006_02133c10[];
-extern u8 data_ov006_02133c28[];
-extern u8 data_ov006_02133bf0[];
-extern u8 data_ov006_02133be0[];
-extern u8 data_ov006_02133c00[];
-void *sSoundNotesSprites[7] = {data_ov006_02133c58, data_ov006_02133c40, data_ov006_02133c10,
-                               data_ov006_02133c28, data_ov006_02133bf0, data_ov006_02133be0,
-                               data_ov006_02133c00};
+extern OamAttr data_ov006_02133c58[];
+extern OamAttr data_ov006_02133c40[];
+extern OamAttr data_ov006_02133c10[];
+extern OamAttr data_ov006_02133c28[];
+extern OamAttr data_ov006_02133bf0[];
+extern OamAttr data_ov006_02133be0[];
+extern OamAttr data_ov006_02133c00[];
+OamAttr *sSoundNotesSprites[7] = {data_ov006_02133c58, data_ov006_02133c40, data_ov006_02133c10,
+                                  data_ov006_02133c28, data_ov006_02133bf0, data_ov006_02133be0,
+                                  data_ov006_02133c00};
 void dScMgSound_c::DrawNotes() {
     int slot;
     for (slot = 0; slot < 10; slot++) {

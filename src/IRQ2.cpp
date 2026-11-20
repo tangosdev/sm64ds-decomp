@@ -4,7 +4,7 @@
  * func_0201a4d0 and func_0201a4bc are the threads' side, sleeping on them.
  *
  * - data_0209d4fc is woken on every VBlank: func_0201a4d0 sleeps on it.
- * - data_0209d500 is woken every data_0208ee44 VBlanks while data_0209d4f0
+ * - data_0209d500 is woken every gFrameStep VBlanks while data_0209d4f0
  *   is up: func_0201a4bc, the main loop's frame wait, sleeps on it.
  *
  * Edges: the two queues are referenced by these four functions and nothing
@@ -26,7 +26,7 @@
 
 extern "C" {
 extern int data_0209d514;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern u8 data_0209d4f0;
 extern u16 data_0209d500;
 extern u16 data_0209d4fc;
@@ -41,7 +41,7 @@ namespace IRQ {
 void VBlankHandler(void) {
     u16 *waiter;
     data_0209d514 = data_0209d514 + 1;
-    if ((data_0209d514 >= data_0208ee44) && (data_0209d4f0 != 0)) {
+    if ((data_0209d514 >= gFrameStep) && (data_0209d4f0 != 0)) {
         OS_WakeupThread(&data_0209d500);
         data_0209d514 = 0;
         func_02019144();

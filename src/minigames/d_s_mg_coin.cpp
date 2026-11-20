@@ -49,6 +49,7 @@ enum dScMgCoin_c_AssetId {
 
 #include "types.h"
 #include "OamAttr.h"
+#include "Matrix2x2.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "decl_common.h"
@@ -61,6 +62,7 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
+#include "Vector2.h"
 
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
 
@@ -182,9 +184,8 @@ OamAttr **sCoinScorePlayerSprites[] = {
 extern int GetGameLanguage(void);
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 struct OamAttr;
-struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteBoth(OamAttr *a0, int a1, int a2, int a3, int a4);
 OamAttr data_ov006_02133f00 = {0x00f0, 0x81f0, 0x10a0, 0xffff};
 OamAttr data_ov006_02133f08 = {0x00f0, 0x81f0, 0x1004, 0xffff};
 OamAttr *sCoinValuesSprites[] = {&data_ov006_02133f08, &data_ov006_02133f00};
@@ -194,7 +195,7 @@ OamAttr *sCoinSparkleSprites[] = {&data_ov006_02136e1c, &data_ov006_02136e14};
 OamAttr data_ov006_02134b3c = {0x00f0, 0x81f0, 0x512b, 0xffff};
 OamAttr data_ov006_02134b44 = {0x00f0, 0x81f0, 0x512f, 0xffff};
 OamAttr *sCoinBagSprites[] = {&data_ov006_02134b44, &data_ov006_02134b3c};
-extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
+extern void Mg_RenderSpriteBothPalMtx(OamAttr *obj, int x, int y, int w, Matrix2x2 *mtx);
 extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
@@ -221,7 +222,7 @@ extern void DecompressLZ16(void *src, void *dst);
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern int data_0208ee44;
+extern int gFrameStep;
 extern void func_0203b9b4(int *p, int v);
 }
 extern void func_020127a4(int a, int b, int c, int d);
@@ -300,14 +301,14 @@ void dScMgCoin_c::Bag_Draw() {
            (nitro/fx/fx_trig.h), with or without an index local, the
            function compiles to a different body. */
         int i = (idx_h >> 4) * 2;
-        int vec[4];
+        Matrix2x2 mtx;
         u8 idx_l = mBouncer[0].sprite;
 
-        vec[0] = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
-        vec[1] = FX_MUL(FX_SinCosTable_[i], 0x1000);
-        vec[2] = -FX_MUL(FX_SinCosTable_[i], 0x1000);
-        vec[3] = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
-        Mg_RenderSpriteBothPalMtx(sCoinBagSprites[idx_l], xr >> 12, yr >> 12, -1, vec);
+        mtx.m00 = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
+        mtx.m01 = FX_MUL(FX_SinCosTable_[i], 0x1000);
+        mtx.m10 = -FX_MUL(FX_SinCosTable_[i], 0x1000);
+        mtx.m11 = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
+        Mg_RenderSpriteBothPalMtx(sCoinBagSprites[idx_l], xr >> 12, yr >> 12, -1, &mtx);
     }
 }
 #pragma pop
@@ -633,7 +634,7 @@ void dScMgCoin_c::Popup_DrawAll() {
         y = sCoinPopupY[i];
         x = 0x10;
         for (j = 0; j < kTileCols; j++) {
-            Mg_RenderSpriteBothMtx(sCoinPopupSprites, x, y, (void *)0);
+            Mg_RenderSpriteBothMtx(sCoinPopupSprites, x, y, 0);
             x += kTileStep;
         }
     }
@@ -881,17 +882,12 @@ void dScMgCoin_c::DrawBlocks() {
 /* A block falling into place. The panned landing sound plays on the frame
    vy turns from rising to falling; once it passes its row it rests (state
    4), bumps the running total and bursts an effect. */
-struct Pair_dd658 {
-    int a;
-    int b;
-};
-extern "C" void Mg_SpawnFx(int a, int b, struct Pair_dd658 *p2, struct Pair_dd658 *p3,
-                           struct Pair_dd658 *p4);
+extern "C" void Mg_SpawnFx(short state, short timer, Vector2 *pos, Vector2 *vecA, Vector2 *vecB);
 
 void dScMgCoin_c::Block_StateFallIn(int i) {
     int oldVy;
-    struct Pair_dd658 pa;
-    struct Pair_dd658 pb;
+    Vector2 pa;
+    Vector2 pb;
 
     oldVy = mBlocks[i].vy;
     mBlocks[i].y += oldVy;
@@ -922,10 +918,10 @@ void dScMgCoin_c::Block_StateFallIn(int i) {
         {
             int v1 = mBlocks[i].y;
             int v0 = mBlocks[i].x;
-            pb.a = 0x6c000;
-            pb.b = -0x80000;
-            pa.a = v0;
-            pa.b = v1;
+            pb.x = 0x6c000;
+            pb.y = -0x80000;
+            pa.x = v0;
+            pa.y = v1;
         }
         Mg_SpawnFx(1, 0x20, &pa, &pa, &pb);
     }
@@ -1441,7 +1437,7 @@ int dScMgCoin_c::InitResources() {
 
     mCredits = 0;
     mCreditsShown = mCredits;
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     this->ResetRound();
     this->LayOutCoins();
     this->Caption_Show();

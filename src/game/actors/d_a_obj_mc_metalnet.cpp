@@ -76,7 +76,7 @@ s32 daObjMc_Metalnet_c::InitResources() {
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov009_02112bf8);
 
     if ((param1 & 0xff) == 0xff) {
-        if (!IsVsMode() && (data_0209caa0.file.flags2 & 0x80000) != 0)
+        if (!IsVsMode() && (gSaveBlock.file.flags2 & 0x80000) != 0)
             return 0;
     } else {
         if (!IsVsMode() && NumStars() >= 150)
