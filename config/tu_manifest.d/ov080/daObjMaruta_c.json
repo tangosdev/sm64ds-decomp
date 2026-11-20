@@ -68,7 +68,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "_ZN13daObjMaruta_c19func_ov080_0212714cEPi",
+      "symbol": "_ZN13daObjMaruta_c19func_ov080_0212714cEPKi",
       "address": "0x0212714c",
       "size": "0x00000360",
       "legacy_source": "src/func_ov080_0212714c.c",

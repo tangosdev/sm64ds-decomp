@@ -100,6 +100,9 @@ extern struct CamMode data_0208747c;
 extern struct CamMode data_020871ac;
 extern struct CamMode data_020871d4;
 extern struct CamMode data_02087404;
+extern struct CamMode data_0208733c;
+extern struct CamMode data_020873dc;
+extern struct CamMode data_0208742c;
 extern u8 data_0208738c;
 extern s8 gNextSublevel;
 extern s32 data_0209ee90[];
@@ -416,7 +419,7 @@ int dCamera_c::Behavior()
     mPrevLookAt = lookAt;
     mPrevPos = pos;
     mFlags &= ~CAM_FLAG_USER_TURN;
-    if ((u32)mAreaMode != (u32)&data_0208733c) {
+    if (mAreaMode != &data_0208733c) {
         mFlags &= ~CAM_FLAG_TURNING;
     }
     flags = mFlags;
@@ -2227,15 +2230,15 @@ s32 dCamera_c::func_02009e70() {
             data_0209f498[gActivePlayerSlot].pressed & (CAM_BUTTON_BEHIND | CAM_BUTTON_TURN);
         if (mFocusActor != 0) {
             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
-        } else if (mode == (CamMode *)&data_0208733c) {
+        } else if (mode == &data_0208733c) {
             Mode8DirectionsCamera(view);
             turnInput = 0;
-        } else if (mode == (CamMode *)&data_020873dc) {
+        } else if (mode == &data_020873dc) {
             UpdateFixedCamera(view, r6);
         } else if ((mFlags & 0x400) == 0) {
             if (mode == &data_02087404) {
                 UpdateSpiralStairsCamera(view, r6);
-            } else if (mode == (CamMode *)&data_0208742c) {
+            } else if (mode == &data_0208742c) {
                 UpdateParallelTrackingCamera(view, r6);
             } else {
                 mFlags |= CAM_FLAG_USER_TURN;

@@ -3140,7 +3140,7 @@ typedef struct {
    frames for the first and 0x258 for the rest; a wait that runs out flags
    data_020a0f1c bit 0, shuts the link down and parks the thread. Otherwise
    this console fills in its own profile from the owner settings. */
-void func_0203db64(void *parentParam, void *gameRegistry) {
+void func_0203db64(void *parentParam, const void *gameRegistry) {
     OwnerInfo buf;
 
     data_020a0ef0 = 0;

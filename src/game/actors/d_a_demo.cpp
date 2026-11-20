@@ -265,7 +265,7 @@ extern struct OamAttr *data_ov002_0210bba0[];
 }
 
 extern "C" {
-extern int *data_ov002_0210b97c[];
+extern const int *data_ov002_0210b97c[];
 }
 
 extern "C" {
@@ -344,6 +344,8 @@ extern SharedFilePtr *data_ov002_0210b604[1];
 extern SharedFilePtr *data_ov002_0210b608[1];
 extern SharedFilePtr *data_ov002_0210b60c[1];
 extern SharedFilePtr *data_ov002_0210b610[1];
+extern SharedFilePtr *data_ov002_0210bcf0[];
+extern SharedFilePtr *data_ov002_0210bd24[];
 extern int data_ov002_0210b614;
 extern JugemTexSequenceFilePtr data_ov085_0213073c;
 extern JugemAnimationFilePtr data_ov085_02130744;
@@ -860,7 +862,7 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
                 ok++;
         }
         if (ok) {
-            int* p;
+            const int *p;
             dolls[i].active = 1;
             dolls[i].visible = 1;
             p = data_ov002_0210b97c[idx];
@@ -3374,9 +3376,8 @@ int daDemo_c::InitResources()
                 return 0;
         } else {
             if (((anmModel_c *)this->mAnmModel)
-                    ->func_ov002_020f6618(&data_ov002_02110c18, 0xD,
-                                          (SharedFilePtr **)&data_ov002_0210bcf0, 1, 0xD,
-                                          (SharedFilePtr **)&data_ov002_0210bd24, 0x16) == 0)
+                    ->func_ov002_020f6618(&data_ov002_02110c18, 0xD, data_ov002_0210bcf0, 1, 0xD,
+                                          data_ov002_0210bd24, 0x16) == 0)
                 return 0;
         }
     } else if (param1 >= 0x14 && param1 <= 0x16) {
@@ -3576,10 +3577,10 @@ const int data_ov002_02100250[20] = {
 VecFx32 data_ov002_0210b958 = {-0x29dc00, 0x0, -0x650c00};
 int data_ov002_0210b964[3] = {-0x468000, 0x230000, 0x1a08000};
 int data_ov002_0210b970[3] = {-0x64000, 0x64000, -0x12c000};
-int *data_ov002_0210b97c[3] = {
-    (int *)&data_ov002_021001b0,
-    (int *)&data_ov002_02100200,
-    (int *)&data_ov002_02100250,
+const int *data_ov002_0210b97c[3] = {
+    data_ov002_021001b0,
+    data_ov002_02100200,
+    data_ov002_02100250,
 };
 OamAttr data_ov002_0210b9cc[3] = {
     {0x00f0, 0x81df, 0x1019, 0x0000},

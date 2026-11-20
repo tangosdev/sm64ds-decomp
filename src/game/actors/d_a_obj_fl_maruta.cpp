@@ -44,7 +44,7 @@ int daObjFlMaruta_c::CleanupResources()
 int daObjFlMaruta_c::Behavior()
 {
     mMeshCollider.SetClipRadius(0x500000);
-    return this->func_ov080_0212714c((int *)data_ov022_02112c98) & 0xff;
+    return this->func_ov080_0212714c(data_ov022_02112c98) & 0xff;
 }
 
 int daObjFlMaruta_c::InitResources()
