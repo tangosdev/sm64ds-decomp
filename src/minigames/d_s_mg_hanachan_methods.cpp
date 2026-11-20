@@ -28,11 +28,8 @@
  * does not establish the original translation-unit boundary.
  *
  * leftovers:
- * - the sixteen popups at sHanaPopups are read through
- *   four record spellings (HanaPopup_DrawAll, HanaPopup_UpdateAll,
- *   HanaPopup_Spawn, HanaPopup_ClearAll).
- * - the popup at sHanaStarPopup is read through the file-local
- *   HanaStarPopup view, and StarPopup_Update reaches its timer byte
+ * - the popup at sHanaStarPopup is declared as the file-local
+ *   HanaStarPopup record, and StarPopup_Update reaches its timer byte
  *   through a separate symbol, sHanaStarPopups.
  * - Wiggler::DrawTarget repeats Wiggler::DrawField's segment
  *   walk with Vector2 points, whose declared destructor is part of
@@ -154,14 +151,15 @@ s16 atan2(s32, s32);
 extern "C" {
 /* This TU's own functions. */
 
-extern void *sWigglerSprites[];
+extern OamAttr *sWigglerSprites[];
 OamAttr data_ov006_021375b8[1] = {{0x00f0, 0x81f0, 0x3104, 0xffff}};
 OamAttr data_ov006_021375b0[1] = {{0x00f8, 0x41f8, 0x305e, 0xffff}};
 OamAttr data_ov006_021375a8[1] = {{0x00f8, 0x41f8, 0x301e, 0xffff}};
-void *sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0, data_ov006_021375a8};
+OamAttr *sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0,
+                                        data_ov006_021375a8};
 OamAttr data_ov006_02137598[1] = {{0x40f8, 0x81f0, 0x314a, 0xffff}};
 OamAttr data_ov006_02137590[1] = {{0x40f8, 0x81f0, 0x310a, 0xffff}};
-void *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
+OamAttr *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
 
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
@@ -194,25 +192,20 @@ extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short 
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
 
-struct S_ea81c {
-    int x;                 /* +0x0 */
-    int y;                 /* +0x4 */
-    int z;                 /* +0x8 */
-    short w;               /* +0xc */
-    unsigned char inuse;   /* +0xe */
-    unsigned char f;       /* +0xf */
-    unsigned char g;       /* +0x10 */
-    unsigned char pad;     /* +0x11 */
-    unsigned char pad2[2]; /* +0x12 -> stride 0x14 */
+/* One of the sixteen popups at sHanaPopups, 0x14 bytes each. */
+struct HanaPopup {
+    int x;                 /* +0x00 */
+    int y;                 /* +0x04 */
+    int velY;              /* +0x08 */
+    unsigned short timer;  /* +0x0c */
+    unsigned char active;  /* +0x0e */
+    unsigned char visible; /* +0x0f */
+    unsigned char phase;   /* +0x10 */
+    unsigned char pad[3];
 };
 
-/* The popup records: one at sHanaStarPopup and sixteen at
-   sHanaPopups, 0x14 bytes each. The sixteen are declared with
-   HanaPopup_Spawn's layout, which it needs to match; the other
-   functions keep the spelling their own match used, through a cast. */
 extern "C" {
-extern char sHanaStarPopup[];
-extern struct S_ea81c sHanaPopups[];
+extern struct HanaPopup sHanaPopups[];
 extern OamAttr *sMgDigitSprites[];
 }
 
@@ -228,7 +221,7 @@ dScMgHanachan_c::~dScMgHanachan_c() {}
 
 /* The single popup at sHanaStarPopup, as StarPopup_Start, StarPopup_Update,
    StarPopup_Draw and StarPopup_Clear use it. Its byte fields differ from the
-   sixteen popups' S_ea81c layout. */
+   sixteen popups' HanaPopup layout. */
 struct HanaStarPopup {
     int x;      /* 0x00 fx32; clamped to 0x10000..0xf4000 at start */
     int y;      /* 0x04 fx32; kept at or above 0x8000 */
@@ -241,6 +234,7 @@ struct HanaStarPopup {
     u8 pad[3];
 };
 typedef char HanaStarPopup_size_must_be_0x14[sizeof(HanaStarPopup) == 0x14 ? 1 : -1];
+extern "C" HanaStarPopup sHanaStarPopup[];
 
 /* Draws the single popup while its visible flag is 1: a sprite from the
    language's table 8 pixels left of it and one from sMgDigitSprites
@@ -249,7 +243,7 @@ void StarPopup_Draw(void) {
     int x;
     int y;
     s32 r;
-    HanaStarPopup *popup = (HanaStarPopup *)sHanaStarPopup;
+    HanaStarPopup *popup = sHanaStarPopup;
     if (popup->visible != 1) {
         return;
     }
@@ -275,18 +269,18 @@ extern "C" Timer20 sHanaStarPopups[];
 
 void StarPopup_Update(int *timeLeft) {
     int i;
-    char *f = sHanaStarPopup;
-    for (i = 0; i < 1; i++, f += 0x14) {
+    HanaStarPopup *f = sHanaStarPopup;
+    for (i = 0; i < 1; i++, f++) {
         u8 ph;
-        if (((HanaStarPopup *)f)->active != 1)
+        if (f->active != 1)
             continue;
-        if (((HanaStarPopup *)f)->y < 0x8000)
-            ((HanaStarPopup *)f)->y = 0x8000;
-        ph = ((HanaStarPopup *)f)->phase;
+        if (f->y < 0x8000)
+            f->y = 0x8000;
+        ph = f->phase;
         if (ph == 0) {
-            ((HanaStarPopup *)(int)f)->y += ((HanaStarPopup *)f)->vy;
-            ((HanaStarPopup *)(int)f)->vy -= 0x100;
-            if (((HanaStarPopup *)f)->timer != 0) {
+            f->y += f->vy;
+            f->vy -= 0x100;
+            if (f->timer != 0) {
                 int v;
                 sHanaStarPopups[i].t--;
                 v = sHanaStarPopups[i].t;
@@ -294,10 +288,10 @@ void StarPopup_Update(int *timeLeft) {
                     sHanaStarPopups[i].t = 0;
                 return;
             }
-            ((HanaStarPopup *)f)->timer = 64;
-            ((HanaStarPopup *)f)->phase += 1;
+            f->timer = 64;
+            f->phase += 1;
         } else if (ph == 1) {
-            if (((HanaStarPopup *)f)->timer != 0) {
+            if (f->timer != 0) {
                 int v;
                 sHanaStarPopups[i].t--;
                 v = sHanaStarPopups[i].t;
@@ -305,8 +299,8 @@ void StarPopup_Update(int *timeLeft) {
                     sHanaStarPopups[i].t = 0;
                 return;
             }
-            ((HanaStarPopup *)f)->visible = 0;
-            ((HanaStarPopup *)f)->phase += 1;
+            f->visible = 0;
+            f->phase += 1;
             {
                 dScMgBase_c *g = gMgScene;
                 if (g != 0) {
@@ -318,16 +312,16 @@ void StarPopup_Update(int *timeLeft) {
             }
             Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
         } else {
-            if (((HanaStarPopup *)f)->ticks != 0) {
-                ((HanaStarPopup *)(int)f)->timer += 1;
-                if (((HanaStarPopup *)f)->timer >= 8) {
-                    ((HanaStarPopup *)f)->timer = 0;
-                    ((HanaStarPopup *)(int)f)->ticks -= 1;
+            if (f->ticks != 0) {
+                f->timer += 1;
+                if (f->timer >= 8) {
+                    f->timer = 0;
+                    f->ticks -= 1;
                     if (timeLeft != 0)
                         ApproachLinear(*timeLeft, 0x32, 1);
                 }
             } else {
-                ((HanaStarPopup *)f)->active = 0;
+                f->active = 0;
             }
         }
     }
@@ -336,46 +330,38 @@ void StarPopup_Update(int *timeLeft) {
 /* Starts the single popup at (x, y), x kept between 0x10000 and 0xf4000,
    unless it is already active. */
 void StarPopup_Start(int x, int y) {
-    char *g = sHanaStarPopup;
-    if (((HanaStarPopup *)g)->active != 0)
+    HanaStarPopup *g = sHanaStarPopup;
+    if (g->active != 0)
         return;
-    ((HanaStarPopup *)g)->active = 1;
+    g->active = 1;
     if (x < 0x10000)
         x = 0x10000;
     else if (x > 0xf4000)
         x = 0xf4000;
-    ((HanaStarPopup *)g)->x = x;
-    ((HanaStarPopup *)g)->y = y;
-    ((HanaStarPopup *)g)->timer = 24;
-    ((HanaStarPopup *)g)->phase = 0;
-    ((HanaStarPopup *)g)->visible = 1;
-    ((HanaStarPopup *)g)->ticks = 5;
-    ((HanaStarPopup *)g)->vy = -0x800;
+    g->x = x;
+    g->y = y;
+    g->timer = 24;
+    g->phase = 0;
+    g->visible = 1;
+    g->ticks = 5;
+    g->vy = -0x800;
 }
 
 /* Clears the single popup's active and draw flags. */
 unsigned char StarPopup_Clear(void) {
-    ((HanaStarPopup *)sHanaStarPopup)->active = 0;
-    ((HanaStarPopup *)sHanaStarPopup)->visible = 0;
+    sHanaStarPopup->active = 0;
+    sHanaStarPopup->visible = 0;
     return 0;
 }
 
-/* Draws each of the sixteen popups whose +0xb flag is set, as three
-   sprites 0x10 pixels apart. */
-typedef struct {
-    int x;
-    int y;
-    unsigned char pad0[7];
-    unsigned char flag;
-    int pad1;
-} Ent_ea670;
-
+/* Draws each of the sixteen visible popups as three sprites 0x10 pixels
+   apart. */
 void HanaPopup_DrawAll(void) {
     Matrix2x2 *a = 0, *b = 0, *c = 0;
     int i;
     for (i = 0; i < 16; i++) {
-        Ent_ea670 *e = &((Ent_ea670 *)sHanaPopups)[i];
-        if (e->flag != 0) {
+        HanaPopup *e = &sHanaPopups[i];
+        if (e->visible != 0) {
             int sb = e->x >> 12;
             int r8 = e->y >> 12;
             int idx = GetGameLanguage();
@@ -391,44 +377,33 @@ void HanaPopup_DrawAll(void) {
    each by its velocity until its timer runs out, and phase 1 holds for 0x40
    frames and then clears it. The compound assignments go through (int)e,
    as StarPopup_Update's do. */
-typedef struct Ent71c {
-    int _0;    /* 0x00 */
-    int pos;   /* 0x04 */
-    int vel;   /* 0x08 */
-    u16 timer; /* 0x0c */
-    u8 active; /* 0x0e */
-    u8 fE;     /* 0x0f */
-    u8 phase;  /* 0x10 */
-    u8 pad[3];
-} Ent71c;
-
 void HanaPopup_UpdateAll(void) {
     int i;
     for (i = 0; i < 16; i++) {
-        Ent71c *e = &((Ent71c *)sHanaPopups)[i];
+        HanaPopup *e = &sHanaPopups[i];
         if (e->active) {
-            if (e->pos > 0xb8000)
-                e->pos = 0xb8000;
+            if (e->y > 0xb8000)
+                e->y = 0xb8000;
             if (e->phase == 0) {
                 if (e->timer != 0) {
-                    ((Ent71c *)(int)e)->timer -= 1;
+                    ((HanaPopup *)(int)e)->timer -= 1;
                     if ((s16)e->timer < 0)
                         e->timer = 0;
-                    ((Ent71c *)(int)e)->pos += e->vel;
-                    ((Ent71c *)(int)e)->vel += 0x100;
+                    ((HanaPopup *)(int)e)->y += e->velY;
+                    ((HanaPopup *)(int)e)->velY += 0x100;
                 } else {
                     e->timer = 64;
-                    ((Ent71c *)(int)e)->phase += 1;
+                    ((HanaPopup *)(int)e)->phase += 1;
                 }
             } else {
                 if (e->timer != 0) {
-                    ((Ent71c *)(int)e)->timer -= 1;
+                    ((HanaPopup *)(int)e)->timer -= 1;
                     if ((s16)e->timer < 0)
                         e->timer = 0;
                 } else {
                     e->timer = 0;
                     e->active = 0;
-                    e->fE = 0;
+                    e->visible = 0;
                 }
             }
         }
@@ -441,38 +416,31 @@ void HanaPopup_UpdateAll(void) {
 void HanaPopup_Spawn(int r0, int r1) {
     int i;
     for (i = 0; i < 16; i++) {
-        if (sHanaPopups[i].inuse == 0) {
-            sHanaPopups[i].inuse = 1;
-            sHanaPopups[i].f = 1;
-            sHanaPopups[i].w = 0x18;
+        if (sHanaPopups[i].active == 0) {
+            sHanaPopups[i].active = 1;
+            sHanaPopups[i].visible = 1;
+            sHanaPopups[i].timer = 0x18;
             if (r0 < 0x14000)
                 r0 = 0x14000;
             else if (r0 > 0xf0000)
                 r0 = 0xf0000;
             sHanaPopups[i].x = r0;
             sHanaPopups[i].y = r1;
-            sHanaPopups[i].z = 0x800;
-            sHanaPopups[i].g = 0;
+            sHanaPopups[i].velY = 0x800;
+            sHanaPopups[i].phase = 0;
             return;
         }
     }
 }
 
-/* Clears the +0xe and +0xf flags of every one of the sixteen popups whose
-   +0xe flag is already clear. */
-struct E6_ea8e0 {
-    unsigned char pad[0xe];
-    unsigned char e;
-    unsigned char f;
-    unsigned char pad2[4];
-};
-
+/* Clears the active and visible flags of every one of the sixteen popups
+   that is already inactive. */
 void HanaPopup_ClearAll(void) {
     int i;
     for (i = 0; i < 16; i++) {
-        if (((struct E6_ea8e0 *)sHanaPopups)[i].e == 0) {
-            ((struct E6_ea8e0 *)sHanaPopups)[i].e = 0;
-            ((struct E6_ea8e0 *)sHanaPopups)[i].f = 0;
+        if (sHanaPopups[i].active == 0) {
+            sHanaPopups[i].active = 0;
+            sHanaPopups[i].visible = 0;
         }
     }
 }
@@ -533,7 +501,7 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
         px = pos.y >> 12;
         py = pos.x >> 12;
         a2i = GetFlag(i);
-        OAM::Render(0, (OamAttr *)sWigglerSprites[a2i], py, px, res, -1, 0x1000, (u16)rot);
+        OAM::Render(0, sWigglerSprites[a2i], py, px, res, -1, 0x1000, (u16)rot);
         if (i == 0) {
             if (bloom != 0) {
                 if (IsStarVisible() != 0) {
@@ -542,8 +510,8 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
                     func_0203d388(&vb, rot);
                     vb.x = vb.x + pos.x;
                     vb.y = vb.y + pos.y;
-                    OAM::Render(0, (OamAttr *)sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12,
-                                -1, -1, FX_Inv((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
+                    OAM::Render(0, sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12, -1, -1,
+                                FX_Inv((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
                 }
             }
         }
@@ -612,9 +580,8 @@ void dScMgHanachan_c::Wiggler::DrawField() {
         t.res = GetFrame(i);
         px = s.pos.y >> 12;
         py = s.pos.x >> 12;
-        OAM::Render(
-            1, (OamAttr *)sWigglerSprites[(a2i = GetFlag(i), (t.urot = (unsigned short)rot), a2i)],
-            py, px, t.res, -1, 0x1000, t.urot);
+        OAM::Render(1, sWigglerSprites[(a2i = GetFlag(i), (t.urot = (unsigned short)rot), a2i)], py,
+                    px, t.res, -1, 0x1000, t.urot);
 
         if (i == 0) {
             if (bloom != 0 && flower > 0) {
@@ -630,8 +597,8 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                     scale = 0x1000;
                 else
                     scale = FX_Inv((FX_SinIdx((unsigned short)sway >> 4) >> 2) + 0xc00);
-                OAM::Render(1, (OamAttr *)sHanaWigglerTargetSprites[fp2], s.vb.x >> 12,
-                            s.vb.y >> 12, -1, -1, scale, t.urot);
+                OAM::Render(1, sHanaWigglerTargetSprites[fp2], s.vb.x >> 12, s.vb.y >> 12, -1, -1,
+                            scale, t.urot);
             } else if (state == &Wiggler::StateWait) {
                 if (hold > 0x1a && hold < 0x30) {
                     int idx = s3.vc0.x;
@@ -644,9 +611,8 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                     func_0203d388(&s.vc, rot);
                     s.vc.x += s.pos.x;
                     s.vc.y += s.pos.y;
-                    OAM::Render(1, (OamAttr *)sHanaWigglerFieldSprites[idx], s.vc.x >> 12,
-                                s.vc.y >> 12, -1, -1, 0x1000,
-                                (unsigned short)(short)(rot & 0xf800));
+                    OAM::Render(1, sHanaWigglerFieldSprites[idx], s.vc.x >> 12, s.vc.y >> 12, -1,
+                                -1, 0x1000, (unsigned short)(short)(rot & 0xf800));
                 }
             }
         }
@@ -1954,19 +1920,19 @@ void Hana_LoadBackground(void) {
  * vu32* ring sHanaBackgroundParts. Non-constant initializers, so the
  * compiler emits __sinit_d_s_mg_hanachan_methods.cpp to copy them at load. */
 OamAttr data_ov006_021374bc[1] = {{0x80e0, 0xc1f0, 0x0018, 0xffff}};
-void *data_ov006_021374b8 = data_ov006_021374bc;
+OamAttr *data_ov006_021374b8 = data_ov006_021374bc;
 OamAttr data_ov006_021374c8[1] = {{0x80e0, 0xc1f0, 0x0100, 0xffff}};
-void *data_ov006_021374c4 = data_ov006_021374c8;
+OamAttr *data_ov006_021374c4 = data_ov006_021374c8;
 OamAttr data_ov006_021374b0[1] = {{0x80e0, 0xc1f0, 0x0000, 0xffff}};
-void *data_ov006_021374ac = data_ov006_021374b0;
-extern void *data_ov006_021374e8;
+OamAttr *data_ov006_021374ac = data_ov006_021374b0;
+extern OamAttr *data_ov006_021374e8;
 OamAttr data_ov006_021374f8[1] = {{0x80e0, 0xc1f0, 0x1006, 0xffff}};
-void *data_ov006_021374f4 = data_ov006_021374f8;
+OamAttr *data_ov006_021374f4 = data_ov006_021374f8;
 OamAttr data_ov006_021375d4[1] = {{0x80e8, 0xc1f0, 0x010e, 0xffff}};
 OamAttr data_ov006_021375cc[1] = {{0x80e8, 0xc1f0, 0x1112, 0xffff}};
-void *sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
+OamAttr *sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
 
-void *sWigglerSprites[11] = {
+OamAttr *sWigglerSprites[11] = {
     data_ov006_021374b8,
     data_ov006_021374c4,
     data_ov006_021374ac,
@@ -1974,9 +1940,9 @@ void *sWigglerSprites[11] = {
     data_ov006_021374f4,
     sHanaBackgroundPartsB[0],
     sHanaBackgroundPartsB[1],
-    (void *)sHanaBackgroundParts[0],
-    (void *)sHanaBackgroundParts[3],
-    (void *)sHanaBackgroundParts[6],
-    (void *)sHanaBackgroundParts[9],
+    (OamAttr *)sHanaBackgroundParts[0],
+    (OamAttr *)sHanaBackgroundParts[3],
+    (OamAttr *)sHanaBackgroundParts[6],
+    (OamAttr *)sHanaBackgroundParts[9],
 };
 }

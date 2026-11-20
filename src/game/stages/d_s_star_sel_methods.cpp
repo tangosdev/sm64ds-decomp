@@ -63,7 +63,7 @@ extern u8 data_02092128[];
 extern signed char gNumLives;
 extern OamAttr data_ov001_020ab938;
 extern OamAttr data_ov001_020ab940;
-extern void *data_ov001_020abb18[];
+extern OamAttr *data_ov001_020abb18[];
 extern OamAttr *data_ov001_020abcb4[];
 extern OamAttr data_ov001_020abbb4;
 extern OamAttr data_ov001_020abbf4;
@@ -426,7 +426,7 @@ s32 dScStarSel_c::Render() {
                     OAM::RenderSub(&data_ov001_020ab940, mPlateX[i], 24);
                 }
             }
-            OAM::Render(0, (OamAttr *)data_ov001_020abb18[i], mPlateX[i], 8, -1, -1, 0);
+            OAM::Render(0, data_ov001_020abb18[i], mPlateX[i], 8, -1, -1, 0);
         }
 
         if (mCursorShown != 0) {

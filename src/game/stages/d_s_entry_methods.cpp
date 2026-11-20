@@ -184,7 +184,7 @@ extern int data_ov075_0211c9b8[];
 extern int *data_ov075_0211c9cc[];
 extern OamAttr *data_ov075_0211c9e0[];
 extern OamAttr *data_ov075_0211c9f4[];
-extern char data_ov075_0211c790[];
+extern OamAttr data_ov075_0211c790[];
 extern OamAttr data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211cb84;
 extern int data_ov075_0211ca64;
@@ -606,7 +606,7 @@ void dScEntry_c::RenderSoundSettings() {
         a1 = data_ov075_0211b5d4[j];
         a2 = 168;
     }
-    OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
+    OAM::RenderSub(data_ov075_0211c790, a1, a2);
 
     /* mStepWork[1] counts frames; its bit 3 bobs the three arrows. */
     mStepWork[1] += 1;
@@ -758,7 +758,7 @@ void dScEntry_c::RenderControlSettings() {
         a1 = data_ov075_0211b5d4[j];
         a2 = 168;
     }
-    OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
+    OAM::RenderSub(data_ov075_0211c790, a1, a2);
 }
 
 void dScEntry_c::UpdateControlSettings() {

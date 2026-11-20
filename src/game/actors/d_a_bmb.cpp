@@ -76,8 +76,6 @@ Vector3 gBmbCarryOffsets[4] = {
     Vector3(0x30000, -0x1e000, 0x3c000),
 };
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 /* --------------------------------------------------------------------------
  * The one file-scope extern "C" region.  Everything here is reached from a
  * C++-named member, which cannot declare it in its own body.

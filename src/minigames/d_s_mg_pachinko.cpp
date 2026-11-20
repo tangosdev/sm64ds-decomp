@@ -128,7 +128,7 @@ extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
 extern unsigned char gMainScreenLayers;
 extern u8 gSubScreenLayers;
 
-extern void *sPachinkoDecoSprite;
+extern OamAttr *sPachinkoDecoSprite;
 extern unsigned char sPachinkoPipeRiseStartFrames[];
 extern unsigned char sPachinkoPipeSinkStartFrames[];
 extern unsigned char sPachinkoPipeRiseFrames[];
@@ -174,8 +174,8 @@ dScMgPachinko_c::~dScMgPachinko_c()
 void dScMgPachinko_c::Deco_DrawAll() {
     for (int i = 0; i < 3; i++) {
         if (mRow[i].visible != 0) {
-            OAM::Render(false, (OamAttr *)sPachinkoDecoSprite, mRow[i].x >> 12, mRow[i].y >> 12, -1,
-                        -1, 0x1000, 0x1000, mRow[i].angle, -1);
+            OAM::Render(false, sPachinkoDecoSprite, mRow[i].x >> 12, mRow[i].y >> 12, -1, -1,
+                        0x1000, 0x1000, mRow[i].angle, -1);
         }
     }
 }

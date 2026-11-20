@@ -87,6 +87,7 @@
 #include "dCc_c.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -160,14 +161,6 @@ struct dCc_c;
 void func_02012694(unsigned int, const Vector3 *);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
-extern "C" {
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, int angle);
-void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
-/* local extern: math/MtxStack.h declares it, but clashes with the void *
-   Matrix4x3_* spellings above. */
-void MTX_MultVec43(const Vector3 *in, const Matrix4x3 *m, Vector3 *out);
-}
 
 extern SharedFilePtr data_ov002_0211092c;
 extern ChompState data_ov100_021486f4;
@@ -177,9 +170,6 @@ int data_ov100_02147ff8[2] = {(int)&func_ov100_02143aa4, 0};
 int data_ov100_02148000[2] = {(int)&func_ov100_02143ae0, 0};
 s32 data_ov100_02148008[3] = {0, -0xa0000, 0};
 extern unsigned char gGameMode;
-extern Matrix4x3 data_020a0e68;
-
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* -------------------------------------------------------------------------- */
 /* The compiler emits the whole body.
@@ -383,7 +373,8 @@ void daWanwan2_c::func_ov100_021437d4() {
     int *heights;
     int loop;
     int angOff;
-    int idx, val, ang, hlen, angz;
+    int idx, val, ang, hlen;
+    s16 angz;
 
     pos = this->mLinkPos;
     vel = this->mLinkVel;
@@ -434,7 +425,7 @@ void daWanwan2_c::func_ov100_021437d4() {
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);
         hlen = Vec3_HorzLen(&delta);
-        angz = (s16)(-cstd::atan2(delta.y, hlen));
+        angz = -cstd::atan2(delta.y, hlen);
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angz);
         MTX_MultVec43(&in, &data_020a0e68, &out);

@@ -3,9 +3,7 @@
 #include "types.h"
 
 /* The five saved records a minigame starts with, words 5..9 of a menu row.
-   The ROM keeps this part of the selected row as its own symbol,
-   gMgMenuRowMid (gMgMenuRow+0x14), and dScMiniGm_c copies it in with one
-   struct copy. */
+   dScMiniGm_c copies them into gMgMenuRow with one struct copy. */
 struct MgRecordDefaults {
     s32 v[5];
 };
