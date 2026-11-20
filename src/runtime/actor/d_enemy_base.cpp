@@ -191,7 +191,7 @@ void dEnemyBase_c::SpawnCoin()
 typedef void (dEnemyBase_c::*DeathStartPMF)(dActor_c *, dBgCh_Actr *);
 extern DeathStartPMF data_ov002_0210db80[];
 
-void dEnemyBase_c::func_ov002_020aea30(dActor_c *a, dBgCh_Actr *b) {
+void dEnemyBase_c::KillByAttack(dActor_c *a, dBgCh_Actr *b) {
     if (mDeathState == 0)
         return;
     mFlags &= ~0x10000000;
@@ -300,14 +300,14 @@ void dEnemyBase_c::func_ov002_020ae73c(dActor_c *a, dBgCh_Actr *) {
 /* mDeathState selects which death handler from a table of POINTERS TO MEMBER
    FUNCTION, then the position and mesh collision are updated regardless. */
 typedef int (dEnemyBase_c::*DeathPMF)(dBgCh_Actr &);
-extern DeathPMF data_ov002_0210dbc0[];
+extern DeathPMF sEnemyDeathFuncs[];
 
 int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
     int ret;
     if (mDeathState == 0)
         return 0;
     DecIfAbove0_Short(&mDeathTimer);
-    ret = (this->*data_ov002_0210dbc0[mDeathState - 1])(clsn);
+    ret = (this->*sEnemyDeathFuncs[mDeathState - 1])(clsn);
     UpdatePos(0);
     UpdateWMClsn(clsn, 0);
     return ret;
@@ -738,7 +738,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
     return 1;
 }
 
-/* The two state-handler tables. func_ov002_020aea30 dispatches the first on
+/* The two state-handler tables. KillByAttack dispatches the first on
    mDeathState; UpdateDeath dispatches the second on mDeathState. Non-const
    pointer-to-member arrays live in .bss, so mwcc generates this TU's static
    initializer to copy the descriptor records in at overlay load. */
@@ -749,7 +749,7 @@ DeathStartPMF data_ov002_0210db80[8] = {
     &dEnemyBase_c::func_ov002_020ae73c, &dEnemyBase_c::func_ov002_020aea2c,
 };
 
-DeathPMF data_ov002_0210dbc0[8] = {
+DeathPMF sEnemyDeathFuncs[8] = {
     &dEnemyBase_c::func_ov002_020ae64c, &dEnemyBase_c::func_ov002_020ae608,
     &dEnemyBase_c::func_ov002_020ae608, &dEnemyBase_c::func_ov002_020ae4cc,
     &dEnemyBase_c::func_ov002_020ae608, &dEnemyBase_c::func_ov002_020ae608,

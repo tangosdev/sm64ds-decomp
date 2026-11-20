@@ -187,7 +187,7 @@ extern ObjKeyAnimationFilePtr data_ov089_02132c60;
 extern ObjKeyAnimationFilePtr data_ov089_02132c40;
 extern ObjKeyAnimationFilePtr data_ov089_02132c70;
 extern ObjKeyAnimationFilePtr data_ov089_02132c48;
-extern ObjKeyModelFile data_ov089_02132c50;
+extern ObjKeyModelFile gKoopaKeyModelFile;
 extern ObjKeyModelFile gLuigiKeyModelFile;
 extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
@@ -254,7 +254,7 @@ void daObjKey_c::AimArcTo(Vector3 *target, int height) {
 void UnloadKeyModels(int kind) {
     if (kind >= 8)
         return;
-    ((SharedFilePtr *)data_ov089_02132894[kind])->Release();
+    ((SharedFilePtr *)gKeyModelFiles[kind])->Release();
     if (data_ov089_021328b4[kind] == 0)
         return;
     ((SharedFilePtr *)data_ov089_021328b4[kind])->Release();
@@ -265,7 +265,7 @@ void LoadKeyModels(int kind) {
     SharedFilePtr *extra;
     if (kind >= 8)
         return;
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov089_02132894[kind]);
+    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gKeyModelFiles[kind]);
     extra = (SharedFilePtr *)data_ov089_021328b4[kind];
     if (extra == 0)
         return;
@@ -856,8 +856,8 @@ int daObjKey_c::InitResources()
         dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c40);
         dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c70);
         dExtFrameCtrl_c::LoadFile(*&data_ov089_02132c48);
-        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)data_ov089_02132894[mState])->filePtr, 1,
-                              1) == 0)
+        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)gKeyModelFiles[mState])->filePtr, 1, 1) ==
+            0)
             return 0;
         {
             void *extra = data_ov089_021328b4[mState];
@@ -914,7 +914,7 @@ daObjKey_c *daObjKey_c_classInit_OBJ_KEY() {
  * model handles, then the four animation handles, then the state table the
  * descriptors are copied into. The offset vector between the nodes carries
  * no initializer and emits plain BSS. */
-ObjKeyModelFile data_ov089_02132c50(ASSET_KOOPA_KEY_BMD);
+ObjKeyModelFile gKoopaKeyModelFile(ASSET_KOOPA_KEY_BMD);
 ObjKeyModelFile gLuigiKeyModelFile(ASSET_LUIGI_KEY_BMD);
 ObjKeyModelFile gMarioKeyModelFile(ASSET_MARIO_KEY_BMD);
 ObjKeyModelFile gWarioKeyModelFile(ASSET_WARIO_KEY_BMD);
@@ -937,9 +937,9 @@ extern "C" DaMipModelFile data_ov085_021305d8;
 extern ObjKeyFile *const data_ov089_02132880[5] = {
     0, &data_ov089_02132c60, &data_ov089_02132c70, &data_ov089_02132c40, &data_ov089_02132c48,
 };
-void *data_ov089_02132894[8] = {
-    &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile,  &gLuigiKeyModelFile,
-    &gWarioKeyModelFile,  &data_ov085_021305d8, &data_ov085_021305d8, &gPowerStarModelFile,
+void *gKeyModelFiles[8] = {
+    &gKoopaKeyModelFile, &gKoopaKeyModelFile,  &gMarioKeyModelFile,  &gLuigiKeyModelFile,
+    &gWarioKeyModelFile, &data_ov085_021305d8, &data_ov085_021305d8, &gPowerStarModelFile,
 };
 extern void *const data_ov089_021328b4[8] = {
     0, 0, &data_ov002_0210da40, &data_ov002_0210d9a0, &data_ov002_0210d9c0, 0, 0, 0,

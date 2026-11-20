@@ -254,7 +254,7 @@
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
     },
     {
-      "symbol": "data_ov089_02132894",
+      "symbol": "gKeyModelFiles",
       "address": "0x02132894",
       "size": "0x20",
       "binding": "STB_GLOBAL",
@@ -293,7 +293,7 @@
       "evidence": "animation file handle constructed with file ID 0x451; dExtFrameCtrl_c::LoadFile consumes it in InitResources and CleanupResources releases it"
     },
     {
-      "symbol": "data_ov089_02132c50",
+      "symbol": "gKoopaKeyModelFile",
       "address": "0x02132c50",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -1074,7 +1074,7 @@
       "source": "0x02132894",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c50",
+      "symbol": "gKoopaKeyModelFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c50"
@@ -1084,7 +1084,7 @@
       "source": "0x02132898",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c50",
+      "symbol": "gKoopaKeyModelFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c50"
@@ -1344,7 +1344,7 @@
       "source": "0x02132a6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov089_02132c50",
+      "symbol": "gKoopaKeyModelFile",
       "addend": 0,
       "target_module": "ov089",
       "target_address": "0x02132c50"

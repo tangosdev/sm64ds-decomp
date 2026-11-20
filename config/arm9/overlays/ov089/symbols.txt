@@ -19,7 +19,7 @@ _ZN10daObjKey_c13InitResourcesEv kind:function(arm,size=0x32c) addr:0x021324a4
 _Z30daObjKey_c_classInit_LAST_STARv kind:function(arm,size=0x58) addr:0x021327d0
 _Z28daObjKey_c_classInit_OBJ_KEYv kind:function(arm,size=0x58) addr:0x02132828
 data_ov089_02132880 kind:data(any) addr:0x02132880
-data_ov089_02132894 kind:data(any) addr:0x02132894
+gKeyModelFiles kind:data(any) addr:0x02132894
 data_ov089_021328b4 kind:data(any) addr:0x021328b4
 __sinit_d_a_obj_key.cpp kind:function(arm,size=0x220) addr:0x021328d4
 .p__sinit_d_a_obj_key.cpp kind:data(word) addr:0x02132af4
@@ -39,7 +39,7 @@ g_profile_LAST_STAR kind:data(any) addr:0x02132b84
 _ZTV10daObjKey_c kind:data(any) addr:0x02132ba8
 data_ov089_02132c40 kind:bss addr:0x02132c40
 data_ov089_02132c48 kind:bss addr:0x02132c48
-data_ov089_02132c50 kind:bss addr:0x02132c50
+gKoopaKeyModelFile kind:bss addr:0x02132c50
 gWarioKeyModelFile kind:bss addr:0x02132c58
 data_ov089_02132c60 kind:bss addr:0x02132c60
 gMarioKeyModelFile kind:bss addr:0x02132c68

@@ -560,7 +560,7 @@ int daKrb_c::func_ov084_021298d0() {
  *      20.0), its material animation is restarted and its cylinder cleared.
  *   3: halve the horizontal speed while on the ground.
  * A hit reported by SpawnParticlesIfHitOtherObj sets mDeathState to
- * DEATH_HIT_20000, hands the hit to func_ov002_020aea30, and sets bit 0 of
+ * DEATH_HIT_20000, hands the hit to KillByAttack, and sets bit 0 of
  * the dCcAc_c flags (disabled).
  * Otherwise the model and cap are placed (func_ov084_0212a580) and, while
  * Yoshi holds it (mEatenByYoshi != 0), the ground check runs
@@ -599,7 +599,7 @@ int daKrb_c::func_ov084_02129a00() {
         if (SpawnParticlesIfHitOtherObj(mdCcAc_c) != 0) {
             void *actor = dActor_c::FindWithID(mdCcAc_c.otherOwner);
             mDeathState = daKrb_c::DEATH_HIT_20000;
-            func_ov002_020aea30((dActor_c *)actor, &mWithMeshClsn);
+            KillByAttack((dActor_c *)actor, &mWithMeshClsn);
             mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
             mdCcAc_c.flags |= 1;
             return 1;
@@ -752,7 +752,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  *   vanished daPly_c does nothing; in STATE_WALK it goes to STATE_ATTACKED_MARIO
  *   first and then hurts the daPly_c only if the hit carries HIT_PLAYER.
  * If a death state was chosen the cap is released. In every case the hit is
- * handed to func_ov002_020aea30, and the Goomba is turned half a turn when the
+ * handed to KillByAttack, and the Goomba is turned half a turn when the
  * hit asked for it (turnAround). A king minion hit by a punch, kick, breakdance or
  * slide kick adds the attacker's horizontal speed to its own; one hit by a
  * dive adds 0x20.
@@ -931,7 +931,7 @@ void daKrb_c::func_ov084_02129ed4() {
         capReleaseOnExit.z = 0; /* 108.0 */
         ReleaseCap(capReleaseOnExit);
     }
-    func_ov002_020aea30((dActor_c *)other, &mWithMeshClsn);
+    KillByAttack((dActor_c *)other, &mWithMeshClsn);
     if (turnAround != 0) {
         mAngle.y = (mPrevAngle.y + 0x8000); /* half a turn */
     }
@@ -1099,7 +1099,7 @@ void daKrb_c::ActTumble() {
     if (SpawnParticlesIfHitOtherObj(mdCcAc_c) != 0) {
         void *a = dActor_c::FindWithID(mdCcAc_c.otherOwner);
         mDeathState = daKrb_c::DEATH_HIT_20000;
-        func_ov002_020aea30((dActor_c *)a, &mWithMeshClsn);
+        KillByAttack((dActor_c *)a, &mWithMeshClsn);
         mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         mdCcAc_c.flags |= 1;
     }

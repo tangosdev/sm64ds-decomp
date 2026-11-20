@@ -746,7 +746,7 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         mDeathState = 5;
-        func_ov002_020aea30(found, (dBgCh_Actr *)turnAround);
+        KillByAttack(found, (dBgCh_Actr *)turnAround);
         return;
     }
     if (flags & 0x4000) {
@@ -773,7 +773,7 @@ void daNknk_c::func_ov062_02117c98()
                 mScale.y = 0x1000;
                 mScale.z = 0x1000;
             }
-            func_ov002_020aea30(found, 0);
+            KillByAttack(found, 0);
             return;
         }
     } else {
@@ -788,7 +788,7 @@ void daNknk_c::func_ov062_02117c98()
                     DropShell();
                 } else {
                     mDeathState = 6;
-                    func_ov002_020aea30(found, 0);
+                    KillByAttack(found, 0);
                     return;
                 }
             } else {
@@ -804,7 +804,7 @@ void daNknk_c::func_ov062_02117c98()
                         DropShell();
                     } else {
                         mDeathState = 1;
-                        func_ov002_020aea30(found, 0);
+                        KillByAttack(found, 0);
                         mScale.x = 0x1000;
                         mScale.y = 0x1000;
                         mScale.z = 0x1000;
@@ -831,7 +831,7 @@ void daNknk_c::func_ov062_02117c98()
         }
     }
 
-    func_ov002_020aea30(found, &mWithMeshClsn);
+    KillByAttack(found, &mWithMeshClsn);
     if (turnAround)
         mAngle.y = (u16)(mPrevAngle.y + 0x8000);
 }

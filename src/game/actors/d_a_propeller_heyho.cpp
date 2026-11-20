@@ -891,8 +891,7 @@ extern void func_02012694(unsigned int a, const Vector3 *b);
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding
  * actor from the collider (mdCcAc_c.otherOwner) and reads hitFlags: fire sends it
  * to the knocked state with mStateStep = 1 (particles); 0x20 kills it through
- * func_ov002_020aea30 (verified.tsv spells that address Enemy::KillByAttack) with
- * mDeathState = 1 (name only; arity differs); the punch/kick/egg/explosion mask sends it to the knocked
+ * KillByAttack with mDeathState = 1; the punch/kick/egg/explosion mask sends it to the knocked
  * state with mStateStep = 0. After that only the player actor counts, and only a
  * non-vanished one: JumpedOnByPlayer bounces the player (SpinBounce 40.0) and
  * kills as above; a mega-character hit spawns the mega particles, counts the
@@ -919,7 +918,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     }
     if (hitFlags & kHitSpinPound) {
         this->mDeathState = 1;
-        this->func_ov002_020aea30(hitPlayer, 0);
+        this->KillByAttack(hitPlayer, 0);
         return;
     }
     if (hitFlags & kHitAttackMask) {
@@ -936,7 +935,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     if (this->JumpedOnByPlayer(this->mdCcAc_c, *hitPlayer)) {
         hitPlayer->SpinBounce(0x28000);
         this->mDeathState = 1;
-        this->func_ov002_020aea30(hitPlayer, 0);
+        this->KillByAttack(hitPlayer, 0);
         return;
     }
 

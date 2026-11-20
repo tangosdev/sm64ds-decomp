@@ -107,13 +107,13 @@ struct daDoor_c : dActor_c {
                        in game mode 0 and Release()s in CleanupResources; it is
                        not mKeyModel's file (that is e->keyFile). Three
                        sources: gPowerStarModelFile when the entry's
-                       starsNeeded is positive, data_ov089_02132894[mKeyModelIdx
+                       starsNeeded is positive, gKeyModelFiles[mKeyModelIdx
                        + 1] for a key door in the param1 9..0xd range, else
-                       data_ov089_02132c50; it stays null for a door with
+                       gKoopaKeyModelFile; it stays null for a door with
                        neither stars nor a key.
          mKeyModelIdx -- param1 - 8 for the 9..0xd range, re-zeroed for param1
                        0xc; mKeyModelIdx + 1 (taken before that re-zero, so
-                       param1 - 7) indexes LoadKeyModels/data_ov089_02132894.
+                       param1 - 7) indexes LoadKeyModels/gKeyModelFiles.
        [src/game/actors/d_a_door.cpp] */
     dExtSimpleModel_c *mKeyModel; /* 0x138 -- owned, see SIZE above */
     void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */

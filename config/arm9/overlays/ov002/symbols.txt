@@ -23,7 +23,7 @@ _ZN12dEnemyBase_c19func_ov002_020ae968EP8dActor_c kind:function(arm,size=0x90) a
 _ZN12dEnemyBase_c19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr kind:function(arm,size=0x2c) addr:0x020ae9f8
 _ZN12dEnemyBase_c19func_ov002_020aea24ER10dBgCh_Actr kind:function(arm,size=0x8) addr:0x020aea24
 _ZN12dEnemyBase_c19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr kind:function(arm,size=0x4) addr:0x020aea2c
-_ZN12dEnemyBase_c19func_ov002_020aea30EP8dActor_cP10dBgCh_Actr kind:function(arm,size=0x8c) addr:0x020aea30
+_ZN12dEnemyBase_c12KillByAttackEP8dActor_cP10dBgCh_Actr kind:function(arm,size=0x8c) addr:0x020aea30
 _ZN12dEnemyBase_c9SpawnCoinEv kind:function(arm,size=0x13c) addr:0x020aeabc
 _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj kind:function(arm,size=0x120) addr:0x020aebf8
 _ZN12dEnemyBase_cD2Ev kind:function(arm,size=0x24) addr:0x020aed18
@@ -2539,7 +2539,7 @@ _ZN3OAM20MM_VS_PLAYER_ICONS_SE kind:data(any) addr:0x0210c9b4
 _ZN3OAM15VS_RED_NUMBER_1E kind:data(any) addr:0x0210c9f4
 _ZN3OAM15VS_RED_NUMBER_2E kind:data(any) addr:0x0210c9fc
 _ZN3OAM15VS_RED_NUMBER_3E kind:data(any) addr:0x0210ca04
-data_ov002_0210ca0c kind:data(any) addr:0x0210ca0c
+_ZN3OAM14VS_RED_NUMBERSE kind:data(any) addr:0x0210ca0c
 _ZN3OAM7VS_TIMEE kind:data(any) addr:0x0210ca18
 _ZN3OAM10VS_TIME_UPE kind:data(any) addr:0x0210ca20
 _ZN3OAM18VS_YELLOW_NUMBER_9E kind:data(any) addr:0x0210ca38
@@ -2561,8 +2561,8 @@ _ZN3OAM18MM_STAR_KEY_BRIGHTE kind:data(any) addr:0x0210cad4
 _ZN3OAM11MM_STAR_KEYE kind:data(any) addr:0x0210cadc
 _ZN3OAM12MM_STAR_KEYSE kind:data(any) addr:0x0210cae4
 _ZN3OAM13MM_SPIKE_BOMBE kind:data(any) addr:0x0210caec
-data_ov002_0210caf4 kind:data(any) addr:0x0210caf4
-data_ov002_0210cb14 kind:data(any) addr:0x0210cb14
+_ZN3OAM13LC_HIGH_SCOREE kind:data(any) addr:0x0210caf4
+_ZN3OAM18LC_CONGRATULATIONSE kind:data(any) addr:0x0210cb14
 _ZN3OAM8VS_PAUSEE kind:data(any) addr:0x0210cb4c
 sEntranceWipes kind:data(any) addr:0x0210cb5c
 sDoorVariants kind:data(any) addr:0x0210cb70
@@ -2586,7 +2586,7 @@ data_ov002_0210d0e8 kind:data(any) addr:0x0210d0e8
 data_ov002_0210d130 kind:data(any) addr:0x0210d130
 data_ov002_0210d188 kind:data(any) addr:0x0210d188
 data_ov002_0210d1c8 kind:data(any) addr:0x0210d1c8
-data_ov002_0210d210 kind:data(any) addr:0x0210d210
+_ZN3OAM15VS_GET_THE_STARE kind:data(any) addr:0x0210d210
 _ZN3OAM20VS_NEW_STAR_APPEAREDE kind:data(any) addr:0x0210d250
 _ZN3OAM10VS_TIME_ESE kind:data(any) addr:0x0210d290
 _ZN3OAM13VS_TIME_UP_ESE kind:data(any) addr:0x0210d2a0
@@ -2600,7 +2600,7 @@ data_ov002_0210d378 kind:data(any) addr:0x0210d378
 data_ov002_0210d3a0 kind:data(any) addr:0x0210d3a0
 data_ov002_0210d3c0 kind:data(any) addr:0x0210d3c0
 data_ov002_0210d3e0 kind:data(any) addr:0x0210d3e0
-data_ov002_0210d420 kind:data(any) addr:0x0210d420
+_ZN3OAM5VS_GOE kind:data(any) addr:0x0210d420
 data_ov002_0210d438 kind:data(any) addr:0x0210d438
 data_ov002_0210d448 kind:data(any) addr:0x0210d448
 data_ov002_0210d458 kind:data(any) addr:0x0210d458
@@ -2700,7 +2700,7 @@ gFeatherModelFile kind:bss addr:0x0210da58
 @314 kind:bss addr:0x0210db68
 @318 kind:bss addr:0x0210db74
 data_ov002_0210db80 kind:bss addr:0x0210db80
-data_ov002_0210dbc0 kind:bss addr:0x0210dbc0
+sEnemyDeathFuncs kind:bss addr:0x0210dbc0
 data_ov002_0210dc00 kind:bss addr:0x0210dc00
 data_ov002_0210dc70 kind:bss addr:0x0210dc70
 data_ov002_0210dcb8 kind:bss addr:0x0210dcb8
@@ -3698,10 +3698,10 @@ daObjBC_Switch_c_ClsnFile kind:bss addr:0x02110ac4
 daObjBC_Switch_c_ModelFile kind:bss addr:0x02110acc
 @87 kind:bss addr:0x02110ad4
 @86 kind:bss addr:0x02110ae0
-data_ov002_02110aec kind:bss addr:0x02110aec
-data_ov002_02110af0 kind:bss addr:0x02110af0
+gWaterfallSoundsDisabled kind:bss addr:0x02110aec
+sEndlessStairsFogAreaId kind:bss addr:0x02110af0
 data_ov002_02110af4 kind:bss addr:0x02110af4
-data_ov002_02110af8 kind:bss addr:0x02110af8
+sEndlessStairsFog kind:bss addr:0x02110af8
 _ZGVsViewEnd$3750 kind:bss addr:0x02110afc
 data_ov002_02110b00 kind:bss addr:0x02110b00
 _ZGVsViewStart$3746 kind:bss addr:0x02110b04
@@ -3796,10 +3796,10 @@ data_ov002_02110f34 kind:bss addr:0x02110f34
 data_ov002_02110f9c kind:bss addr:0x02110f9c
 data_ov002_0211104c kind:bss addr:0x0211104c
 data_ov002_0211110c kind:bss addr:0x0211110c
-data_ov002_02111144 kind:bss addr:0x02111144
-data_ov002_02111148 kind:bss addr:0x02111148
+gMapIntroZooming kind:bss addr:0x02111144
+gCurrentMinimapID kind:bss addr:0x02111148
 gMapIntroRotating kind:bss addr:0x0211114c
-data_ov002_02111150 kind:bss addr:0x02111150
+gVsExitingCourse kind:bss addr:0x02111150
 gMapCapIconShown kind:bss addr:0x02111154
 @528 kind:bss addr:0x02111160
 sMapScreenCenter kind:bss addr:0x0211116c
@@ -3807,6 +3807,6 @@ gMeterCounterSlideState kind:bss addr:0x02111178
 gMeterShownHealth kind:bss addr:0x0211117c
 gZoomButtonActiveTimer kind:bss addr:0x02111180
 gShowRaceTimer kind:bss addr:0x02111184
-data_ov002_02111188 kind:bss addr:0x02111188
+gVsTimerTickTimer kind:bss addr:0x02111188
 sNextDeathTableID kind:bss addr:0x0211118c
 data_ov002_02111190 kind:bss addr:0x02111190

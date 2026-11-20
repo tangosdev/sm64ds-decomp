@@ -245,13 +245,13 @@ extern int gMusicVolume;
 extern int gSubVolume;
 extern Vector3 data_020a0ebc;
 extern char gPowerStarModelFile;
-extern SharedFilePtr data_ov089_02132c50;
+extern SharedFilePtr gKoopaKeyModelFile;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
    entries in that overlay's .rodata, the table LoadKeyModels loads into
    (bounds-checked `idx >= 8`). src/game/actors/d_a_obj_key.cpp, home of
    LoadKeyModels and UnloadKeyModels, declares it under this name with this
    element type. */
-extern void *data_ov089_02132894[];
+extern void *gKeyModelFiles[];
 
 /* The door's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -272,40 +272,40 @@ struct DoorAnimationFileHandle : SharedFilePtr {
 /* -------------------------------------------------------------------------- */
 /* The eleven model handles and the animation handle, in static-initializer
    order: the initializer constructs each and registers its destructor.
-   data_ov100_02148744 is the one the helpers release and hand to
+   gDoorOpenAnimationFile is the one the helpers release and hand to
    dExtFrameCtrl_c::LoadFile. */
 /* -------------------------------------------------------------------------- */
-DoorModelFilePtr data_ov100_0214875c(0x9c09);
-DoorModelFilePtr data_ov100_0214877c(0x9c0a);
+DoorModelFilePtr gRegularDoorModelFile(0x9c09);
+DoorModelFilePtr gDoorKeyHoleModelFile(0x9c0a);
 DoorModelFilePtr gObjDoor0StarModelFile(ASSET_OBJ_DOOR0_STAR_BMD);
 DoorModelFilePtr gObjDoor0Star1ModelFile(ASSET_OBJ_DOOR0_STAR1_BMD);
 DoorModelFilePtr gObjDoor0Star3ModelFile(ASSET_OBJ_DOOR0_STAR3_BMD);
 DoorModelFilePtr gObjDoor0Star10ModelFile(ASSET_OBJ_DOOR0_STAR10_BMD);
 DoorModelFilePtr gObjDoor1ModelFile(ASSET_OBJ_DOOR1_BMD);
 DoorModelFilePtr gObjDoor2BoroModelFile(ASSET_OBJ_DOOR2_BORO_BMD);
-DoorModelFilePtr data_ov100_0214874c(0x9c0b);
+DoorModelFilePtr gRustedMetalDoorModelFile(0x9c0b);
 DoorModelFilePtr gObjDoor4YamiModelFile(ASSET_OBJ_DOOR4_YAMI_BMD);
 DoorModelFilePtr gObjDoor5HorrorModelFile(ASSET_OBJ_DOOR5_HORROR_BMD);
-DoorAnimationFileHandle data_ov100_02148744(0x9c08);
+DoorAnimationFileHandle gDoorOpenAnimationFile(0x9c08);
 
 DoorEntry data_ov100_02148204[19] = {
-    {&data_ov100_0214875c, 0, -1, -1, -1, 0, -1, 0},
-    {&data_ov100_0214875c, &gObjDoor0StarModelFile, -1, -1, -1, 0, -1, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star1ModelFile, 1, -1, 0, 0, 25, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star1ModelFile, 1, -1, 1, 0, 25, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star3ModelFile, 3, -1, 2, 0, 26, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star3ModelFile, 3, -1, 3, 0, 26, 0},
-    {&data_ov100_0214875c, &gObjDoor0Star10ModelFile, 8, -1, 4, 0, 27, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 0, 0, 0, 24, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 1, 1, 0, 24, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 2, 2, 0, 32, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 3, 3, 0, 33, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 4, 4, 0, 34, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 5, 5, 0, 24, 0},
-    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 6, 6, 0, 24, 0},
+    {&gRegularDoorModelFile, 0, -1, -1, -1, 0, -1, 0},
+    {&gRegularDoorModelFile, &gObjDoor0StarModelFile, -1, -1, -1, 0, -1, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star1ModelFile, 1, -1, 0, 0, 25, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star1ModelFile, 1, -1, 1, 0, 25, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star3ModelFile, 3, -1, 2, 0, 26, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star3ModelFile, 3, -1, 3, 0, 26, 0},
+    {&gRegularDoorModelFile, &gObjDoor0Star10ModelFile, 8, -1, 4, 0, 27, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 0, 0, 0, 24, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 1, 1, 0, 24, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 2, 2, 0, 32, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 3, 3, 0, 33, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 4, 4, 0, 34, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 5, 5, 0, 24, 0},
+    {&gRegularDoorModelFile, &gDoorKeyHoleModelFile, -1, 6, 6, 0, 24, 0},
     {&gObjDoor1ModelFile, 0, -1, -1, -1, 0, -1, 0},
     {&gObjDoor2BoroModelFile, 0, -1, -1, -1, 0, -1, 0},
-    {&data_ov100_0214874c, 0, -1, -1, -1, 0, -1, 0},
+    {&gRustedMetalDoorModelFile, 0, -1, -1, -1, 0, -1, 0},
     {&gObjDoor4YamiModelFile, 0, -1, -1, -1, 0, -1, 0},
     {&gObjDoor5HorrorModelFile, 0, -1, -1, -1, 0, -1, 0},
 };
@@ -920,7 +920,7 @@ s32 daDoor_c::CleanupResources() {
     DoorEntry *e = &data_ov100_02148204[param1];
     dExtSimpleModel_c *key;
     e->file->Release();
-    data_ov100_02148744.Release();
+    gDoorOpenAnimationFile.Release();
     key = mKeyModel;
     if (key != 0) {
         delete key;
@@ -1052,11 +1052,11 @@ s32 daDoor_c::InitResources() {
             if (t >= DOOR_FIRST_KEY_MODEL && t <= DOOR_LAST_KEY_MODEL) {
                 mKeyModelIdx = (t - 8);
                 LoadKeyModels(mKeyModelIdx + 1);
-                mKeyFile = data_ov089_02132894[mKeyModelIdx + 1];
+                mKeyFile = gKeyModelFiles[mKeyModelIdx + 1];
                 if (param1 == 0xc)
                     mKeyModelIdx = 0;
             } else {
-                mKeyFile = &data_ov089_02132c50;
+                mKeyFile = &gKoopaKeyModelFile;
             }
         }
         if (mKeyFile != 0) {
@@ -1065,7 +1065,7 @@ s32 daDoor_c::InitResources() {
         }
     }
 
-    an = dExtFrameCtrl_c::LoadFile(data_ov100_02148744);
+    an = dExtFrameCtrl_c::LoadFile(gDoorOpenAnimationFile);
     mModel.SetAnim((BCA_File *)an, 0x40000000, 0x1000, 0);
 
     /* The model matrix takes the position >> 3. */

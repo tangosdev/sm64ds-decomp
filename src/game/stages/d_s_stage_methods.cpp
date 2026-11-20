@@ -153,19 +153,17 @@ extern u8 gSubScreenLayers;
 extern Timer gRaceTimer;
 extern int data_0209fc68;
 extern int gGlobalTimer;
-extern u8 data_ov002_02111150;
+extern u8 gVsExitingCourse;
 extern u8 gMeterCounterSlideState;
 extern u8 gZoomButtonActiveTimer;
 extern OamAttr data_ov002_0210cea8;
 extern OamAttr data_ov002_0210cee8;
 extern OamAttr data_ov002_0210cf28;
 extern OamAttr data_ov002_0210cf78;
-extern OamAttr data_ov002_0210cb14;
 extern OamAttr data_ov002_0210ce90;
 extern OamAttr data_ov002_0210ced0;
 extern OamAttr data_ov002_0210cf08;
 extern OamAttr data_ov002_0210cfa0;
-extern OamAttr data_ov002_0210caf4;
 extern void *data_ov001_020abd98[];
 extern void *data_ov001_020ac218[];
 extern void *data_ov001_020ac64c[];
@@ -564,7 +562,6 @@ static inline int IsTouchJustBegun(int slot) {
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
 extern u16 data_020a0e5a[];
-extern void *data_ov002_0210ca0c[];
 extern int data_ov002_0210cfd0[];
 extern OamAttr data_ov002_0210d008;
 extern int data_ov002_0210d050[];
@@ -573,13 +570,11 @@ extern int data_ov002_0210d0e8[];
 extern OamAttr data_ov002_0210d130;
 extern int data_ov002_0210d188[];
 extern OamAttr data_ov002_0210d1c8;
-extern OamAttr data_ov002_0210d210;
 extern OamAttr data_ov002_0210d378;
 extern OamAttr data_ov002_0210d3a0;
 extern OamAttr data_ov002_0210d3c0;
 extern OamAttr data_ov002_0210d3e0;
-extern OamAttr data_ov002_0210d420;
-extern u16 data_ov002_02111188;
+extern u16 gVsTimerTickTimer;
 }
 
 /* The free functions this file defines, declared ahead of their first use
@@ -712,7 +707,7 @@ void dScStage_c::VE_Update() {
             sMenuWaitTimer = gFrameStep << 3;
             dScStage_c::UpdateMenuButtons(0);
             sVsExitScreenStep = 1;
-            data_ov002_02111150 = 1;
+            gVsExitingCourse = 1;
             func_02012790(0x9a);
             if ((u8)(gTouchInfo[gActivePlayerSlot].x - 40) < 176)
                 return;
@@ -730,7 +725,7 @@ void dScStage_c::VE_Update() {
             dScStage_c::UpdateMenuButtons(0);
             sMenuWaitTimer = gFrameStep << 3;
             sVsExitScreenStep = 1;
-            data_ov002_02111150 = 1;
+            gVsExitingCourse = 1;
             func_02012790(0x9b);
             if ((u8)(gTouchInfo[gActivePlayerSlot].x - 8) < 240)
                 return;
@@ -825,7 +820,7 @@ void dScStage_c::LC_Render() {
         else if (GetOwnerLanguage() == 2)
             OAM::Render(0, &data_ov002_0210cf78, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, &data_ov002_0210cb14, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::LC_CONGRATULATIONS, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
     }
 
     if (sLevelClearNewRecord != 0) {
@@ -839,7 +834,7 @@ void dScStage_c::LC_Render() {
             else if (GetOwnerLanguage() == 2)
                 OAM::Render(0, &data_ov002_0210cfa0, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else
-                OAM::Render(0, &data_ov002_0210caf4, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             if (GetOwnerLanguage() == 5)
                 OAM::Render(0, &data_ov002_0210ce90, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -850,7 +845,7 @@ void dScStage_c::LC_Render() {
             else if (GetOwnerLanguage() == 2)
                 OAM::Render(0, &data_ov002_0210cfa0, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else
-                OAM::Render(0, &data_ov002_0210caf4, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &OAM::LC_HIGH_SCORE, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
         }
     }
 
@@ -1956,7 +1951,7 @@ void dScStage_c::PS_Update() {
                 dScStage_c::UpdateMenuButtons(0);
                 sMenuWaitTimer = gFrameStep << 3;
                 sNextPauseState = 0x13;
-                data_ov002_02111150 = 1;
+                gVsExitingCourse = 1;
                 func_02012790(0x56);
                 return;
             }
@@ -1972,7 +1967,7 @@ void dScStage_c::PS_Update() {
             dScStage_c::UpdateMenuButtons(0);
             sMenuWaitTimer = gFrameStep << 3;
             sNextPauseState = 6;
-            data_ov002_02111150 = 1;
+            gVsExitingCourse = 1;
             func_02012790(0x55);
             return;
         }
@@ -2789,7 +2784,7 @@ void dScStage_c::PS_Init() {
 
 int func_02029600(int x) {
     if (!IsCastleFallCutsceneRunning()) {
-        unsigned char saved = *&data_ov002_02111148;
+        unsigned char saved = *&gCurrentMinimapID;
         int r = GetMinimapID((dActor_c *)x, -1);
         if (r == saved)
             return 1;
@@ -3148,9 +3143,9 @@ void dScStage_c::RenderVsModeCountdown() {
         else if (GetOwnerLanguage() == 2)
             OAM::Render(0, &data_ov002_0210d1c8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, &data_ov002_0210d210, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000,
-                    0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_GET_THE_STAR, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::VS_RED_NUMBERS[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000, 0x1000, 0,
+                    -1);
         return;
     }
     if (sVsCountdownTimer == 0)
@@ -3164,7 +3159,7 @@ void dScStage_c::RenderVsModeCountdown() {
     else if (GetOwnerLanguage() == 2)
         OAM::Render(0, &data_ov002_0210d3e0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else
-        OAM::Render(0, &data_ov002_0210d420, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_GO, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
 extern "C" s32 NumVsStarsObtained(void) {
@@ -3937,7 +3932,7 @@ int dScStage_c::CanPause() {
         return 1;
     if (data_0209fc68 != 0)
         return 0;
-    if (data_0209f2bc != 0 || (data_ov002_02111188 == 0 && data_0209f204 != 0))
+    if (data_0209f2bc != 0 || (gVsTimerTickTimer == 0 && data_0209f204 != 0))
         return 0;
     return 1;
 }
@@ -4111,7 +4106,7 @@ int dScStage_c::Behavior() {
                     }
                 }
             }
-            if (data_ov002_02111188 == 0 && data_0209f204 != 0) {
+            if (gVsTimerTickTimer == 0 && data_0209f204 != 0) {
                 if (data_0209fc68 == 0) {
                     if (gNextSublevel < 0 && data_0209d4b0 == 0) {
                         if (gVsExitScreenActive == 0 && sVsExitScreenStep == 0)
