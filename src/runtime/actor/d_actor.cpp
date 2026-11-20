@@ -17,7 +17,7 @@
  * reconciled to the headers that own each type (fBase_c, dBase_c, dCc_c,
  * daPly_c, dBgCh_Gnd/Lin, SpawnInfo, SharedFilePtr, Sound) and spelled with
  * those headers' field names -- dCc_c's hitFlags/otherOwner/pushback, fBase_c's
- * MarkForDestruction, SharedFilePtr's Release. data_0209b468, the global actor
+ * MarkForDestruction, SharedFilePtr's Release. sActorList, the global actor
  * list, is defined here as ActorList (a coined name); the list helpers
  * func_0203b244 and func_0203b27c take its address and stay free C functions.
  *
@@ -59,8 +59,8 @@ s16 atan2(s32, s32);
 
 /* The spawn arguments func_02010e78 stages for the constructor. */
 
-extern s16 *data_0209b460;
-extern s16 *data_0209b45c;
+extern Vector3 *data_0209b460;
+extern const Vector3_16 *data_0209b45c;
 extern s16 data_0208e378;
 extern "C" {
 /* local extern: no header declares it. */
@@ -85,7 +85,7 @@ struct ActorList {
     fLiNdBa_c *func_02043f98(unsigned int key);
     fLiNdBa_c *func_02043f4c(unsigned int key, fLiNdBa_c *after);
 };
-ActorList data_0209b468;
+ActorList sActorList;
 
 static inline int IsGameMode(int mode) {
     return gGameMode == mode;
@@ -94,26 +94,26 @@ static inline int IsGameMode(int mode) {
 /* Constructor first in source: reverse emission puts C1/C2 above the
    destructor. Both variants are this one body. */
 dActor_c::dActor_c() : mActorListNode(this) {
-    func_0203b244(&data_0209b468, &mActorListNode);
+    func_0203b244(&sActorList, &mActorListNode);
     {
-        int *spawnPos = (int *)data_0209b460;
+        Vector3 *spawnPos = data_0209b460;
         if (spawnPos) {
-            mPos.x = spawnPos[0];
-            mPos.y = spawnPos[1];
-            mPos.z = spawnPos[2];
+            mPos.x = spawnPos->x;
+            mPos.y = spawnPos->y;
+            mPos.z = spawnPos->z;
         }
     }
     {
-        short *spawnRot = data_0209b45c;
+        const Vector3_16 *spawnRot = data_0209b45c;
         if (spawnRot) {
-            mAngle.x = spawnRot[0];
-            mAngle.y = spawnRot[1];
-            mAngle.z = spawnRot[2];
+            mAngle.x = spawnRot->x;
+            mAngle.y = spawnRot->y;
+            mAngle.z = spawnRot->z;
             /* The ROM reloads the global. Folding the two reads drops an ldr. */
             spawnRot = data_0209b45c;
-            mPrevAngle.x = spawnRot[0];
-            mPrevAngle.y = spawnRot[1];
-            mPrevAngle.z = spawnRot[2];
+            mPrevAngle.x = spawnRot->x;
+            mPrevAngle.y = spawnRot->y;
+            mPrevAngle.z = spawnRot->z;
         }
     }
     mAreaId = data_0209b44c;
@@ -144,7 +144,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
 }
 
 dActor_c::~dActor_c() {
-    func_0203b27c(&data_0209b468, &mActorListNode);
+    func_0203b27c(&sActorList, &mActorListNode);
 }
 
 static inline int IsFlagSet(dActor_c *actor, u32 bit) {
@@ -186,9 +186,9 @@ u8 IsAreaShowing(int areaId);
 
 extern int data_0209fc68;
 /* nonzero forces the actor to think anyway */
-extern Matrix4x3 data_0209b3ec;
+extern Matrix4x3 gViewMtx;
 /* world -> camera */
-extern dClipper data_0209f43c;
+extern dClipper gClipper;
 /* the dClipper instance */
 extern u8 data_0209f274;
 /* doubles the clip distance when set */
@@ -198,6 +198,10 @@ extern u8 gVsExitScreenActive;
 /* This frame's actor update mask, copied from gNextActorUpdateMask; see
    ACTOR_UPDATE_MASK_STAGE_ENDING in dActor_c.h. */
 extern u32 gActorUpdateMask;
+extern daPly_c *data_0209b458;
+/* the cached closest player; null makes ClosestPlayer search again */
+extern daPly_c *data_0209b450;
+/* the cached farthest player */
 
 /* Culls the actor for this frame: flags 0x38 plus a far-away camera position
    when its area is hidden or the dClipper rejects it, then the pause and
@@ -223,10 +227,10 @@ int dActor_c::BeforeBehavior()
             scaledPos.x = mPos.x >> 3;
             scaledPos.y = (mPos.y + mClipOffsetY) >> 3;
             scaledPos.z = mPos.z >> 3;
-            MTX_MultVec43(&scaledPos, &data_0209b3ec, &mCamSpacePos);
+            MTX_MultVec43(&scaledPos, &gViewMtx, &mCamSpacePos);
         }
         if (mFlags & 0x10003) {
-            int r = data_0209f43c.ClipSphere(mCamSpacePos, mClipRadius, &mClipResult);
+            int r = gClipper.ClipSphere(mCamSpacePos, mClipRadius, &mClipResult);
             int thresh = mClipDistance;
             if (data_0209f274)
                 thresh <<= 1;
@@ -282,7 +286,7 @@ void dActor_c::AfterRender(u32 vfSuccess)
 
 dActor_c *dActor_c::FindWithID(u32 id)
 {
-    fLiNdBa_c *node = data_0209b468.func_02043f98(id);
+    fLiNdBa_c *node = sActorList.func_02043f98(id);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -291,9 +295,9 @@ dActor_c *dActor_c::FindWithID(u32 id)
 dActor_c *dActor_c::FindWithActorID(u32 actorID, dActor_c *after) {
     fLiNdBa_c *node;
     if (after)
-        node = data_0209b468.func_02043f4c(actorID, &after->mActorListNode);
+        node = sActorList.func_02043f4c(actorID, &after->mActorListNode);
     else
-        node = data_0209b468.func_02043f4c(actorID, 0);
+        node = sActorList.func_02043f4c(actorID, 0);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -305,7 +309,7 @@ dActor_c *dActor_c::Next(const dActor_c *after)
     if (after)
         node = after->mActorListNode.next;
     else
-        node = data_0209b468.first;
+        node = sActorList.first;
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -319,8 +323,8 @@ struct SpawnArg {
 };
 
 void SpawnArg::func_02010e78(const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
-    data_0209b460 = (s16 *)this;
-    data_0209b45c = (s16 *)rot;
+    data_0209b460 = (Vector3 *)this;
+    data_0209b45c = rot;
     data_0209b44c = areaID;
     data_0208e378 = deathTableID;
     data_0209b458 = 0;
@@ -345,7 +349,7 @@ void dActor_c::SetRanges(fx32 clipOffsetY, fx32 clipRadius, fx32 clipDistance, f
 }
 
 /* Clamps each axis of mPos to +-32000.0, the edge of the world. */
-void dActor_c::func_02010da4() {
+void dActor_c::ClampPosToWorldBounds() {
     s32 v;
     v = mPos.x;
     if (v < -0x7d00000)
@@ -372,7 +376,7 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
         mPos.x += clsn->pushback.x;
         mPos.z += clsn->pushback.z;
     }
-    func_02010da4();
+    ClampPosToWorldBounds();
 }
 
 /* Splits mHorzSpeed along mPrevAngle.y (the heading the velocity follows) into
@@ -462,7 +466,7 @@ daPly_c *dActor_c::ClosestPlayer() {
             }
         }
     }
-    return (daPly_c *)data_0209b458;
+    return data_0209b458;
 }
 
 daPly_c *dActor_c::ClosestNonVanishPlayer() {
@@ -487,7 +491,7 @@ daPly_c *dActor_c::ClosestNonVanishPlayer() {
             }
         }
     }
-    return (daPly_c *)data_0209b458;
+    return data_0209b458;
 }
 
 s32 dActor_c::DistToCPlayer()
@@ -499,7 +503,7 @@ s32 dActor_c::DistToCPlayer()
 s16 dActor_c::HorzAngleToCPlayer()
 {
     ClosestPlayer();
-    return Vec3_HorzAngle(&mPos, &((dActor_c *)data_0209b458)->mPos);
+    return Vec3_HorzAngle(&mPos, &data_0209b458->mPos);
 }
 
 s16 dActor_c::HorzAngleToCPlayerOrAng()
@@ -507,7 +511,7 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
     dActor_c *player;
 
     ClosestPlayer();
-    player = (dActor_c *)data_0209b458;
+    player = data_0209b458;
     if (player == 0)
         return mAngle.y;
 
@@ -516,13 +520,13 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
 
 daPly_c *dActor_c::FarthestPlayer() {
     ClosestPlayer();
-    return (daPly_c *)data_0209b450;
+    return data_0209b450;
 }
 
 s16 dActor_c::HorzAngleToFPlayer()
 {
     ClosestPlayer();
-    return Vec3_HorzAngle(&mPos, &((dActor_c *)data_0209b450)->mPos);
+    return Vec3_HorzAngle(&mPos, &data_0209b450->mPos);
 }
 
 dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
@@ -781,12 +785,6 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, fx3
     return ball;
 }
 
-extern "C" {
-/* local extern: daPly_c has no accessor for the current body model. */
-dExtAnm2Model_c *func_ov002_020e496c(daPly_c *p);
-}
-/* the player's current mBodyModels entry */
-
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
     t.x = 0;
@@ -794,30 +792,30 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     t.z = 0;
     /* Bone 14 of the body model, carried into world space by the model's
        own matrix; only its translation survives. */
-    dExtSimpleModel_c *body = (dExtSimpleModel_c *)func_ov002_020e496c(&player);
+    dExtSimpleModel_c *body = (dExtSimpleModel_c *)player.GetBodyModel();
     Matrix4x3 *bones = body->data.transforms;
-    data_020a0e68 = body->mat4x3;
-    MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
-    t.x = data_020a0e68.t.x;
-    t.y = data_020a0e68.t.y;
-    t.z = data_020a0e68.t.z;
+    gScratchMtx = body->mat4x3;
+    MTX_Concat43(&bones[14], &gScratchMtx, &gScratchMtx);
+    t.x = gScratchMtx.t.x;
+    t.y = gScratchMtx.t.y;
+    t.z = gScratchMtx.t.z;
     mPrevAngle.y = player.mAngle.y;
     mAngle.y = mPrevAngle.y;
-    Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_FromTranslation(&gScratchMtx, t.x, t.y, t.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, mAngle.x, mAngle.y, mAngle.z);
     Vector3 asr;
     /* vec is a const reference; Vec3_Asr's definition is not const-qualified. */
     Vec3_Asr(&asr, const_cast<Vector3 *>(&vec), 3);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    mPos.x = data_020a0e68.t.x;
-    mPos.y = data_020a0e68.t.y;
-    mPos.z = data_020a0e68.t.z;
+    Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, asr.x, asr.y, asr.z);
+    mPos.x = gScratchMtx.t.x;
+    mPos.y = gScratchMtx.t.y;
+    mPos.z = gScratchMtx.t.z;
     Vector3 lsl;
     Vec3_Lsl(&lsl, &mPos, 3);
     mPos.x = lsl.x;
     mPos.y = lsl.y;
     mPos.z = lsl.z;
-    return &data_020a0e68;
+    return &gScratchMtx;
 }
 
 extern dCamera_c *gCamera;
@@ -975,18 +973,18 @@ s32 dActor_c::GetWaterHeightWDW()
     return height;
 }
 
-extern SharedFilePtr data_ov002_0210da00;
+extern SharedFilePtr gCoinBluePoly4ModelFile;
 /* the blue coin's two model files */
-extern SharedFilePtr data_ov002_0210d9c8;
+extern SharedFilePtr gCoinBluePoly32ModelFile;
 
 void dActor_c::LoadBlueCoinModel() {
-    dExtSimpleModel_c::LoadFile(data_ov002_0210da00);
-    dExtSimpleModel_c::LoadFile(data_ov002_0210d9c8);
+    dExtSimpleModel_c::LoadFile(gCoinBluePoly4ModelFile);
+    dExtSimpleModel_c::LoadFile(gCoinBluePoly32ModelFile);
 }
 
 void dActor_c::UnloadBlueCoinModel() {
-    data_ov002_0210da00.Release();
-    data_ov002_0210d9c8.Release();
+    gCoinBluePoly4ModelFile.Release();
+    gCoinBluePoly32ModelFile.Release();
 }
 
 void dActor_c::PoofDust()

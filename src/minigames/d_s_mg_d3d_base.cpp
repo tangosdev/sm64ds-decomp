@@ -64,8 +64,8 @@ extern unsigned char gMainScreenLayers;
 extern unsigned char data_0209e660;
 extern unsigned char data_0209f5f8;
 extern dGraph_c::callback_c *gGraphCallback;
-extern int data_020a0db0;
-extern int data_0208ee44;
+extern int gGlobalTimer;
+extern int gFrameStep;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 
 /* arm9 / ov004 helpers with no project header. */
@@ -232,7 +232,7 @@ void dScMgD3DBase_c::InitEngines()
     InitialiseVramGlobals();
     Mg_ResetOverlays();
     D3D_DrawSpriteTable();
-    data_0208ee44 = 1;
+    gFrameStep = 1;
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     GXS_SetGraphicsMode(GX_BGMODE_5);
     REG_DISPCNT &= 0xffcfffefu;
@@ -267,7 +267,7 @@ void dScMgD3DBase_c::AfterInitResources(unsigned int vfSuccess)
 int dScMgD3DBase_c::BeforeBehavior()
 {
     if (dScMgBase_c::BeforeBehavior() == 0) return 0;
-    if (data_020a0db0 & 1)
+    if (gGlobalTimer & 1)
         mParticle.Update();
     return 1;
 }

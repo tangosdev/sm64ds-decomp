@@ -140,7 +140,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "_ZN9daMenbo_c19func_ov090_02131e00EPMS_FivE",
+      "symbol": "_ZN9daMenbo_c8SetStateEPMS_FivE",
       "address": "0x02131e00",
       "size": "0x00000050",
       "legacy_source": "src/func_ov090_02131e00.cpp",

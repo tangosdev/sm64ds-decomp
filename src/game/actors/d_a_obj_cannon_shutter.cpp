@@ -143,8 +143,8 @@ int daObjCannonShutter_c::Behavior() {
         } else {
             slide.y = -0x1000; /* -1.0 down */
         }
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
-        MTX_MultVec43(&slide, &data_020a0e68, &rotated);
+        Matrix4x3_FromRotationY(&gScratchMtx, mAngle.y);
+        MTX_MultVec43(&slide, &gScratchMtx, &rotated);
         VEC_Add(&mPos, &rotated, &mPos);
         if (Vec3_Dist(&mHomePos, &mPos) > 0xa000) {
             mOpenPhase = 1; /* past 10.0: go forward */

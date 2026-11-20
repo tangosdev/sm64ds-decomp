@@ -31,7 +31,7 @@
  * one spelling of each. */
 extern "C" {
 
-/* data_0209caa0 is the live save block; its first 0x44 bytes are the
+/* gSaveBlock is the live save block; its first 0x44 bytes are the
  * current file. LoadEntranceObjects reads the character, LoadClsnAndObjects
  * flags2. */
 
@@ -46,7 +46,7 @@ extern dCamera_c *gCamera;
 extern void *gUnusedType13Objs;
 extern daPly_c *gPlayers[];
 extern u8 data_0209fc5c[];
-extern unsigned int data_02092134;
+extern unsigned int gStarCameraSettings;
 extern u8 data_02092128[];
 
 /* The loaders' lookup tables, all ov002 .data. sEntranceWipes is the
@@ -66,11 +66,11 @@ extern u16 sObjToActorIdTable[];
 extern s16 sNextDeathTableID;
 }
 
-void func_0202af80(short *entries, int count);
-void func_0202b044(unsigned short *entries, int count);
-void func_0202b060(char *entries, int count);
-void func_0202b090(void *entries, s32 count);
-void func_0202b0c4(void *entries, s32 count);
+void SetMinimapScaleObjs(short *entries, int count);
+void SetMinimapTileObjs(unsigned short *entries, int count);
+void SetFogObjs(char *entries, int count);
+void SetTeleportDestObjs(void *entries, s32 count);
+void SetViewObjs(void *entries, s32 count);
 void StartEntranceFaderWipe(int index);
 extern "C" {
 
@@ -96,7 +96,7 @@ static inline int IsGameMode(int mode) {
 
 /* Game mode 0 with bit 0x80 of the current file's flags2 clear. */
 static inline int IntroAllowed() {
-    return IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
+    return IsGameMode(0) && (gSaveBlock.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
 }
 
 /* Spawn simple actors, or hand a minimap-change sentinel to
@@ -141,7 +141,7 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) 
 void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranceIndex) {
     u32 entranceKind; /* declared first: at its first assignment it is 20 words off */
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
-    entry->func_0202b0e0(table.count);
+    entry->SetEntranceObjs(table.count);
     entry += entranceIndex;
     entranceKind = 0;
     int entranceId = 15;
@@ -152,7 +152,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
         u16 param = entry->param;
         entranceKind = (param >> 7) & 15;
 
-        int savedCharacter = data_0209caa0.file.mCharacter;
+        int savedCharacter = gSaveBlock.file.mCharacter;
         int playerCharacter = data_02092128[playerIndex];
         if (IsGameMode(1)) {
             savedCharacter = 3;
@@ -197,7 +197,7 @@ void LoadPathObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 }
 
 void LoadViewObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202b0c4(table.entries, table.count);
+    SetViewObjs(table.entries, table.count);
 }
 
 /* One teleport-source actor (id 0x15b) per entry. Simpler than its exit-loader
@@ -215,11 +215,11 @@ void LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 p
 }
 
 void LoadTeleportDestObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202b090(table.entries, table.count);
+    SetTeleportDestObjs(table.entries, table.count);
 }
 
 void LoadFogObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202b060((char *)table.entries, table.count);
+    SetFogObjs((char *)table.entries, table.count);
 }
 
 /* One door actor per entry. The actor id and the high half of its parameter come
@@ -272,11 +272,11 @@ void LoadExitObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 }
 
 void LoadMinimapTileObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202b044((unsigned short *)table.entries, table.count);
+    SetMinimapTileObjs((unsigned short *)table.entries, table.count);
 }
 
 void LoadMinimapScaleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202af80((short *)table.entries, table.count);
+    SetMinimapScaleObjs((short *)table.entries, table.count);
 }
 
 /* Stash the entry array's ADDRESS and do nothing with it. Not a mistake in the
@@ -290,7 +290,7 @@ void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
 /* Take the first word of the star-camera table and publish it. Reads no count,
  * unlike most of this family: it wants one value, not a list. */
 void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_02092134 = *(unsigned int *)table.entries;
+    gStarCameraSettings = *(unsigned int *)table.entries;
 }
 
 /* Walk the outer object table and dispatch each sub-table to the category

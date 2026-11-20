@@ -249,9 +249,9 @@ gThDownBCollisionFile kind:bss addr:0x0211ef58
 gThDownBModelFile kind:bss addr:0x0211ef60
 @97 kind:bss addr:0x0211ef68
 @96 kind:bss addr:0x0211ef74
-data_ov063_0211ef80 kind:bss addr:0x0211ef80
-data_ov063_0211ef88 kind:bss addr:0x0211ef88
-data_ov063_0211ef90 kind:bss addr:0x0211ef90
+sPianoModelFile kind:bss addr:0x0211ef80
+sPianoCollisionFile kind:bss addr:0x0211ef88
+sPianoAttackAnimationFile kind:bss addr:0x0211ef90
 @792 kind:bss addr:0x0211ef98
 @793 kind:bss addr:0x0211efa4
 @794 kind:bss addr:0x0211efb0

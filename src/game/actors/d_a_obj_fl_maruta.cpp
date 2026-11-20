@@ -17,17 +17,15 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_dCcAc_c.h"
-/* decl_common.h spells this as a non-const int[], which cannot be this .rodata. */
-#define data_ov022_02112c9c data_ov022_02112c9c_decl
 #include "decl_common.h"
-#undef data_ov022_02112c9c
 
 #include "daObjFlMaruta_c.h"
 #include "SharedFilePtr.h"
+#include "ResourceDescriptor.h"
 
 extern CLPS_Block data_ov064_0211bbcc;
 extern "C" const int data_ov022_02112c98[];
-extern "C" const int data_ov022_02112c9c[];
+extern "C" const ResourceDescriptor data_ov022_02112c9c;
 
 #pragma defer_codegen off
 
@@ -40,18 +38,18 @@ daObjFlMaruta_c::~daObjFlMaruta_c()
 
 int daObjFlMaruta_c::CleanupResources()
 {
-    return this->func_ov080_021270dc((ResourceDescriptor *)data_ov022_02112c9c);
+    return this->CleanupResourcesFrom((ResourceDescriptor *)&data_ov022_02112c9c);
 }
 
 int daObjFlMaruta_c::Behavior()
 {
     mMeshCollider.SetClipRadius(0x500000);
-    return this->func_ov080_0212714c((int *)data_ov022_02112c98) & 0xff;
+    return this->func_ov080_0212714c(data_ov022_02112c98) & 0xff;
 }
 
 int daObjFlMaruta_c::InitResources()
 {
-    return this->func_ov080_021274ac((ResourceDescriptor *)data_ov022_02112c9c);
+    return this->InitResourcesFrom((ResourceDescriptor *)&data_ov022_02112c9c);
 }
 
 int *daObjFlMaruta_c_classInit(void) {
@@ -78,9 +76,6 @@ FlLogModelFile gFlLogModelFile(0x05fb);
 FlLogCollisionFile gFlLogCollisionFile(0x05fc);
 extern "C" {
 extern const int data_ov022_02112c98[1] = {0x7d0000};
-extern const int data_ov022_02112c9c[3] = {
-    (int)&gFlLogModelFile,
-    (int)&gFlLogCollisionFile,
-    (int)&data_ov064_0211bbcc,
-};
+extern const ResourceDescriptor data_ov022_02112c9c = {&gFlLogModelFile, &gFlLogCollisionFile,
+                                                       &data_ov064_0211bbcc};
 }

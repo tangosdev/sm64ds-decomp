@@ -77,14 +77,14 @@
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daKpFr_c19func_ov070_02121d50EPv",
+      "symbol": "_ZN8daKpFr_c19func_ov070_02121d50EP10dBgCh_Actr",
       "address": "0x02121d50",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov070_02121d50.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN8daKpFr_c19func_ov070_02121e14Ev",
+      "symbol": "_ZN8daKpFr_c12UpdateShadowEv",
       "address": "0x02121e14",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov070_02121e14.cpp",
@@ -119,21 +119,21 @@
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daKpFr_c19func_ov070_02121fd0Ev",
+      "symbol": "_ZN8daKpFr_c17CallStateBehaviorEv",
       "address": "0x02121fd0",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov070_02121fd0.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8daKpFr_c19func_ov070_0212200cEv",
+      "symbol": "_ZN8daKpFr_c13CallStateInitEv",
       "address": "0x0212200c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov070_0212200c.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN8daKpFr_c19func_ov070_02122044Ei",
+      "symbol": "_ZN8daKpFr_c8SetStateEi",
       "address": "0x02122044",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov070_02122044.c",

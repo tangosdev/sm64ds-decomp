@@ -115,7 +115,7 @@ struct dScMgSmartball_c : dScMgBase_c {
        and the collision poofs; the Count* counters feed the score popup the
        emitter queue plays back; EmitScore is the 5-slot popup queue. */
     int  SparksActive();
-    void EmitSparks(int *pair, int a3);
+    void EmitSparks(Vector2 *pair, int a3);
     void RenderSparks();
     void UpdateSparks();
     void ResetSparks();
@@ -133,7 +133,7 @@ struct dScMgSmartball_c : dScMgBase_c {
     void UpdateDust();
     void SpawnDust(int *origin);
     void UpdateScores();
-    void EmitScore(int *src, int v2, int v3, int v5);
+    void EmitScore(Vector2 *src, int v2, int v3, int v5);
     void KickGate(int idx);
     int  IsTableAtRest();
     void ResolveBallPair(int b, int c, u8 *d, u8 *e);

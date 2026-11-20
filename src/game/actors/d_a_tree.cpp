@@ -19,7 +19,7 @@
  *   own, so the node's collision cylinder needs no explicit construction.
  * - data_ov002_02110a48 / data_ov002_0210abb8 / g_profile_TREE: overlay
  *   bss/data owns them (S14); this TU's delinks span is .text-only.
- * - data_0209f43c / data_0209b3ec: arm9 bss, the dClipper singleton and the
+ * - gClipper / gViewMtx: arm9 bss, the dClipper singleton and the
  *   live view matrix it clips against (CopyToViewMat's object); read here,
  *   owned elsewhere.
  */
@@ -66,8 +66,8 @@ enum {
 
 extern TreeNode *data_ov002_02110a48[kNumVariants];
 extern u16 data_ov002_0210abb8[];
-extern dClipper data_0209f43c;
-extern Matrix4x3 data_0209b3ec;
+extern dClipper gClipper;
+extern Matrix4x3 gViewMtx;
 extern dCamera_c *gCamera;
 
 daTree_c *daTree_c_classInit() {
@@ -136,7 +136,7 @@ int daTree_c::Render()
         node = *slot;
         while (node != 0) {
             Vector3 out;
-            int dist = data_0209f43c.TransformAndClip(data_0209b3ec, node->pos, kCanopyLift, out);
+            int dist = gClipper.TransformAndClip(gViewMtx, node->pos, kCanopyLift, out);
             if (dist > kClipNear && dist < kClipFar) {
                 int opacity = kOpacityFull;
                 if (dist < kFadeDist)

@@ -30,7 +30,7 @@ typedef char Ov007MeshParams_size_must_be_0x18[sizeof(Ov007MeshParams) == 0x18 ?
 struct Ov007Camera;
 
 /* The 0x38-byte grid mesh that func_ov007_020cbbb0 builds and
- * func_ov007_020cbb04 frees (data_ov007_02104bd4[0]): a grid of spring
+ * func_ov007_020cbb04 frees (sMeshScene[0]): a grid of spring
  * points with a link across each cell's diagonal, and the normals and
  * texture scratch func_ov007_020ca5f0 draws it with. */
 typedef struct Ov007Mesh {
@@ -60,7 +60,7 @@ typedef char Ov007Mesh_size_must_be_0x38[sizeof(Ov007Mesh) == 0x38 ? 1 : -1];
 struct Ov007Texture;
 
 /* The 0x34-byte material func_ov007_020cbf8c copies from a template
- * (data_ov007_02104bd4[1] and [2]) and func_ov007_020ca5f0 draws the mesh
+ * (sMeshScene[1] and [2]) and func_ov007_020ca5f0 draws the mesh
  * with. */
 typedef struct Ov007MeshMaterial {
     struct Ov007Texture *texture; /* 0x00: one of Ov007Work's textures, or none */

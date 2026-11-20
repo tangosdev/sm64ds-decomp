@@ -20,7 +20,7 @@
  *   codegen, unlike the star Spawn's).
  * - Vec3_* helpers, func_020138dc / func_02013a44,
  *   ObjectMessageIDToActualMessageID, IsStarCollectedInCurLevel,
- *   NumStars and gCurrentSublevel / data_0209caa0 keep linker names; the
+ *   NumStars and gCurrentSublevel / gSaveBlock keep linker names; the
  *   ov002 file handles stay address-named.
  */
 #include "common.h"
@@ -84,7 +84,6 @@ extern SharedFilePtr data_ov002_0210d9c0;
 
 /* arm9 statics */
 extern s8 gCurrentSublevel;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
    it arrived, and that is load-bearing: St_Talk_Main tests the result to decide
@@ -174,8 +173,8 @@ void daKinopio_c::St_Talk_Main()
         if (ApproachLinear(mAngle.y, angleToPlayer, 0x800) == 0)
             return;
         if (gCurrentSublevel == 0x32) {
-            if ((data_0209caa0.file.flags1 & 0x40000000) == 0)
-                data_0209caa0.file.flags1 |= 0x40000000;
+            if ((gSaveBlock.file.flags1 & 0x40000000) == 0)
+                gSaveBlock.file.flags1 |= 0x40000000;
         }
         if (Sound::PlaySub(0x25, 20, 127, 0x15666, 1) == 0)
             return;
@@ -288,10 +287,10 @@ void daKinopio_c::UpdateModelPose()
     mAnmModel.mat4x3.t.y = (mPos.y + 0x4000) >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
-    data_020a0e68 = mAnmModel.data.transforms[5];
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mHeadYaw);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mHeadPitch);
-    mAnmModel.data.transforms[5] = data_020a0e68;
+    gScratchMtx = mAnmModel.data.transforms[5];
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, mHeadYaw);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, mHeadPitch);
+    mAnmModel.data.transforms[5] = gScratchMtx;
 
     id = mCapUniqueID;
     if (id != 0) {
@@ -303,16 +302,14 @@ void daKinopio_c::UpdateModelPose()
             dst = &mAnmModel.data.transforms[5];
             MTX_Concat43(dst, &mAnmModel.mat4x3, &mCapTransform);
 
-            data_020a0e68 = mCapTransform;
-            Matrix4x3_ApplyInPlaceToTranslation(
-                &data_020a0e68, 0, 0x4000, -0xa00);
-            Matrix4x3_ApplyInPlaceToRotationXYZExt(
-                &data_020a0e68, -0x1000, 0, 0);
-            mCapTransform = data_020a0e68;
+            gScratchMtx = mCapTransform;
+            Matrix4x3_ApplyInPlaceToTranslation(&gScratchMtx, 0, 0x4000, -0xa00);
+            Matrix4x3_ApplyInPlaceToRotationXYZExt(&gScratchMtx, -0x1000, 0, 0);
+            mCapTransform = gScratchMtx;
 
-            capPos.x = data_020a0e68.t.x;
-            capPos.y = data_020a0e68.t.y;
-            capPos.z = data_020a0e68.t.z;
+            capPos.x = gScratchMtx.t.x;
+            capPos.y = gScratchMtx.t.y;
+            capPos.z = gScratchMtx.t.z;
             capPos.y <<= 3;
             capPos.x <<= 3;
             capPos.z <<= 3;

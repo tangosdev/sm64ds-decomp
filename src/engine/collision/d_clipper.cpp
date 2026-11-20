@@ -1,6 +1,6 @@
 //cpp
 /* The view clipper (arm9 .text 0x020150e8..0x0201577c): dClipper culls actor
- * positions against the camera frustum. The lone instance, data_0209f43c in
+ * positions against the camera frustum. The lone instance, gClipper in
  * bss, is a file-scope object of d_s_stage_methods.cpp; the camera setup path feeds it the
  * projection parameters through Func_020156DC, and dActor_c::BeforeBehavior
  * queries it per actor.

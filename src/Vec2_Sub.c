@@ -1,5 +1,8 @@
-void Vec2_Sub(int* o, int* a, int* b){
-  int a0 = a[0], b0 = b[0], a1 = a[1], b1 = b[1];
-  o[0] = a0 - b0;
-  o[1] = a1 - b1;
+#include "Vector2.h"
+#include "Vector2Math.h"
+
+void Vec2_Sub(Vector2 *o, Vector2 *a, Vector2 *b) {
+    int ax = a->x, bx = b->x, ay = a->y, by = b->y;
+    o->x = ax - bx;
+    o->y = ay - by;
 }

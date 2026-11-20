@@ -12,8 +12,8 @@
  *
  * ControllerInput is the 0x18-byte record at data_0209f498. CheckInput
  * fills it from the pad and the touch screen every frame and ResetInput
- * clears it; SetControllerMode and InitControllerMode write the mode byte
- * (data_0209f4ae). The layout is CheckInput's; d_s_stage_methods.cpp still
+ * clears it; SetControllerMode and InitControllerMode write its mode byte.
+ * The layout is CheckInput's; d_s_stage_methods.cpp still
  * carries it as its local PadData and CamInput. */
 typedef struct PadData {
     u16 held;    /* 0x00 */

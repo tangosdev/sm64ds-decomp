@@ -52,8 +52,6 @@ SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
 
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-
 int daKpFr_c::InitResources()
 {
     if (mShadowModel.InitCylinder() == 0)
@@ -65,15 +63,15 @@ int daKpFr_c::InitResources()
     mScale.x = 0x1000;
     mScale.y = 0x1000;
     mScale.z = 0x1000;
-    func_ov070_02122044(0);
+    SetState(0);
     mMatrix = IDENTITY_MATRIX4X3;
     return 1;
 }
 
 int daKpFr_c::Behavior()
 {
-    func_ov070_02121fd0();
-    func_ov070_02121e14();
+    CallStateBehavior();
+    UpdateShadow();
     return 1;
 }
 
@@ -110,18 +108,17 @@ extern daKpFrStateMethod data_ov070_021233fc;
 extern daKpFrStateMethod data_ov070_021233f4;
 extern daKpFrStateMethod data_ov070_02123404;
 
-void daKpFr_c::func_ov070_02122044(int idx)
-{
+void daKpFr_c::SetState(int idx) {
     mStateMethods = &data_ov070_021236ec[idx];
-    func_ov070_0212200c();
+    CallStateInit();
 }
 
-void daKpFr_c::func_ov070_0212200c() {
+void daKpFr_c::CallStateInit() {
     daKpFrStateMethod *method = &mStateMethods->init;
     (this->**method)();
 }
 
-void daKpFr_c::func_ov070_02121fd0() {
+void daKpFr_c::CallStateBehavior() {
     daKpFrStateMethod *method = &mStateMethods->behavior;
     (this->**method)();
 }
@@ -175,26 +172,25 @@ int daKpFr_c::func_ov070_02121eb0() {
     return 1;
 }
 
-void daKpFr_c::func_ov070_02121e14() {
-  int shadowDepth;
-  mMatrix.t.x = mPos.x >> 3;
-  mMatrix.t.y = mPos.y >> 3;
-  mMatrix.t.z = mPos.z >> 3;
-  dBgCh_Gnd ground;
-  ground.SetObjAndPos(mPos, this);
-  if (ground.DetectClsn() != 0)
-      shadowDepth = (mPos.y - ground.clsnY) + 0x1e000;
-  else
-    shadowDepth = 0x12c000;
-  DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 15);
+void daKpFr_c::UpdateShadow() {
+    int shadowDepth;
+    mMatrix.t.x = mPos.x >> 3;
+    mMatrix.t.y = mPos.y >> 3;
+    mMatrix.t.z = mPos.z >> 3;
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(mPos, this);
+    if (ground.DetectClsn() != 0)
+        shadowDepth = (mPos.y - ground.clsnY) + 0x1e000;
+    else
+        shadowDepth = 0x12c000;
+    DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 15);
 }
 
 /* GetFloorResult is not declared in the shared header yet; keep only that
  * proven typed ABI seam. ROM calls the UpdateContinuous veneer, not the
  * method. FX_MUL's 64-bit product is the smull the ROM uses. */
 
-void daKpFr_c::func_ov070_02121d50(void* vclsn) {
-    dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
+void daKpFr_c::func_ov070_02121d50(dBgCh_Actr *clsn) {
     Vector3 normal;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
@@ -224,8 +220,8 @@ void daKpFr_c::func_ov070_02121cbc(){
   player = (daPly_c *)found;
   b = ((mFlags & 0x20000) != 0);
   if (b != 0) {
-    func_ov070_02122044(1);
-    return;
+      SetState(1);
+      return;
   }
   if (player->mIsVanish != 0) return;
   player->Burn();
