@@ -30,6 +30,7 @@ import tempfile
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import asm_policy as AP  # noqa: E402
+import objisolate as OI  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
 
 FUNC_RE = re.compile(
@@ -1514,8 +1515,71 @@ def _data_anchor(row):
     return (row.get("module"), addr, size)
 
 
+def _spans_cover(spans, start, end):
+    """True when every byte of ``[start, end)`` sits in the union of half-open spans."""
+    if end <= start:
+        return False
+    cursor = start
+    for span_start, span_end in spans:
+        if span_end <= cursor:
+            continue
+        if span_start > cursor:
+            return False
+        cursor = span_end
+        if cursor >= end:
+            return True
+    return False
+
+
+def _head_cover(head_rows):
+    """Proven ranges per module, plus the vtable preamble the checker does not score.
+
+    ``romdata_check`` reports ``_ZTV`` at the slot array and compares only past
+    ``objisolate.VTABLE_PREAMBLE``. The two words below that address are still the
+    emitted object: offset-to-top and typeinfo. A label that names those words is
+    covered by the vtable even though the verified row starts eight bytes later.
+    ``_ZTS`` is lengthened to its four-byte alignment for the same reason: the
+    reported size is the string, and the label extent includes the pad.
+    """
+    real = collections.defaultdict(list)
+    preamble = collections.defaultdict(list)
+    for row in head_rows:
+        anchor = _data_anchor(row)
+        if anchor is None:
+            continue
+        module, addr, size = anchor
+        if size <= 0:
+            continue
+        symbol = row.get("symbol") or ""
+        end = addr + size
+        # `_ZTS` is reported as the string length. mwcc pads it to four bytes,
+        # and a label's extent runs through that padding to the next symbol.
+        if symbol.startswith("_ZTS"):
+            end = (end + 3) & ~3
+        real[module].append((addr, end))
+        if symbol.startswith("_ZTV") and addr >= OI.VTABLE_PREAMBLE:
+            preamble[module].append((addr - OI.VTABLE_PREAMBLE, addr))
+    return real, preamble
+
+
+def _covered_by_other_proof(anchor, real, preamble):
+    """True when this range is inside head proofs other than its own exact span.
+
+    An exact copy of the same span is the one-to-one rename case and must not
+    excuse a second symbol standing on those same bytes. A larger object, several
+    objects, or the unscored vtable preamble may.
+    """
+    module, addr, size = anchor
+    end = addr + size
+    spans = [(start, stop) for start, stop in real.get(module, [])
+             if not (start == addr and stop == end)]
+    spans.extend(preamble.get(module, []))
+    spans.sort()
+    return _spans_cover(spans, addr, end)
+
+
 def _data_departures(base_rows, head_rows):
-    """Base identities absent from head, after cancelling address-anchored renames.
+    """Base identities absent from head, after proven bytes have been accounted for.
 
     Identity by ``(module, symbol)`` alone reads every symbol RENAME as a deletion,
     which is what blocked adopting the ROM's own RTTI name over a coined one. The
@@ -1523,11 +1587,12 @@ def _data_departures(base_rows, head_rows):
     that address to appear in the report at all, and neither an alias row in
     `symbols.txt` nor the PR's own rename ledger takes part in the decision.
 
-    Matching is strictly one-to-one per anchor, so two departures answered by a
-    single arrival still lose one symbol, and a departure whose only arrival sits at
-    a different address -- or proves a different number of bytes -- is still a loss.
-    A row carrying no anchor, on either side, never matches; that is exactly the
-    pre-existing name-only behaviour.
+    An exact ``(module, addr, bytes)`` match is one-to-one, so two names for the
+    same span cannot both hide behind one arrival. A departure whose bytes sit
+    inside other verified ranges -- one larger object, or several -- is not a loss:
+    the label was ours, and the cartridge bytes are still proven. A shorter proof,
+    a different address, or another module is still a loss. A row carrying no
+    anchor never matches; that is the pre-existing name-only behaviour.
     """
     head_ids = {_data_identity(r) for r in head_rows}
     base_ids = {_data_identity(r) for r in base_rows}
@@ -1536,11 +1601,14 @@ def _data_departures(base_rows, head_rows):
         anchor for anchor in (_data_anchor(r) for r in head_rows
                               if _data_identity(r) not in base_ids)
         if anchor is not None)
+    real, preamble = _head_cover(head_rows)
     lost = []
     for row in sorted(gone, key=lambda r: (r.get("module") or "", r["symbol"])):
         anchor = _data_anchor(row)
         if anchor is not None and arrivals[anchor] > 0:
             arrivals[anchor] -= 1
+            continue
+        if anchor is not None and _covered_by_other_proof(anchor, real, preamble):
             continue
         lost.append(_data_identity(row))
     return lost
