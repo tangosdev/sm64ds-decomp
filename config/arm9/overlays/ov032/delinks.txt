@@ -1,5 +1,5 @@
     .text       start:0x021111a0 end:0x021128f0 kind:code align:32
-    .rodata     start:0x021128f0 end:0x021128f4 kind:rodata align:4
+    .rodata      start:0x021128f0 end:0x021128f4 kind:rodata align:4
     .rodata.w28f4 start:0x021128f4 end:0x021128fc kind:rodata align:4
     .rodata.tdWaterScale start:0x021128fc end:0x02112900 kind:rodata align:4
     .rodata.w2900 start:0x02112900 end:0x0211291c kind:rodata align:4
@@ -15,34 +15,7 @@
     .data.tdMid   start:0x02112f7c end:0x02112f98 kind:data align:4
     .data.tdFuta  start:0x02112f98 end:0x02112fb8 kind:data align:4
     .data.tdClps  start:0x02112fb8 end:0x02112fd0 kind:data align:4
-    .data.data_ov032_02112fd0 start:0x02112fd0 end:0x02112fd8 kind:data align:4
-    .data.data_ov032_02112fd8 start:0x02112fd8 end:0x02112ffc kind:data align:4
-    .data.data_ov032_02112ffc start:0x02112ffc end:0x02113008 kind:data align:4
-    .data.data_ov032_02113008 start:0x02113008 end:0x02113040 kind:data align:4
-    .data.data_ov032_02113040 start:0x02113040 end:0x02113080 kind:data align:4
-    .data.data_ov032_02113080 start:0x02113080 end:0x021130c8 kind:data align:4
-    .data.data_ov032_021130c8 start:0x021130c8 end:0x021130cc kind:data align:4
-    .data.data_ov032_021130cc start:0x021130cc end:0x021130d0 kind:data align:4
-    .data.data_ov032_021130d0 start:0x021130d0 end:0x02113148 kind:data align:4
-    .data.data_ov032_02113148 start:0x02113148 end:0x021131c8 kind:data align:4
-    .data.data_ov032_021131c8 start:0x021131c8 end:0x02113228 kind:data align:4
-    .data.data_ov032_02113228 start:0x02113228 end:0x0211326c kind:data align:4
-    .data.data_ov032_0211326c start:0x0211326c end:0x021132ec kind:data align:4
-    .data.data_ov032_021132ec start:0x021132ec end:0x02113344 kind:data align:4
-    .data.data_ov032_02113344 start:0x02113344 end:0x0211336c kind:data align:4
-    .data.data_ov032_0211336c start:0x0211336c end:0x021133a8 kind:data align:4
-    .data.data_ov032_021133a8 start:0x021133a8 end:0x02113434 kind:data align:4
-    .data.data_ov032_02113434 start:0x02113434 end:0x0211346c kind:data align:4
-    .data.data_ov032_0211346c start:0x0211346c end:0x02113518 kind:data align:4
-    .data.data_ov032_02113518 start:0x02113518 end:0x02113534 kind:data align:4
-    .data.data_ov032_02113534 start:0x02113534 end:0x02113554 kind:data align:4
-    .data.data_ov032_02113554 start:0x02113554 end:0x021135d4 kind:data align:4
-    .data.data_ov032_021135d4 start:0x021135d4 end:0x021135f4 kind:data align:4
-    .data.data_ov032_021135f4 start:0x021135f4 end:0x021136d4 kind:data align:4
-    .data.data_ov032_021136d4 start:0x021136d4 end:0x021136f4 kind:data align:4
-    .data.data_ov032_021136f4 start:0x021136f4 end:0x0211373c kind:data align:4
-    .data.data_ov032_0211373c start:0x0211373c end:0x0211377c kind:data align:4
-    .data       start:0x0211377c end:0x02113a40 kind:data align:4
+    .data        start:0x02112fd0 end:0x02113a40 kind:data align:4
     .bss        start:0x02113a40 end:0x02113b20 kind:bss align:32
 src/game/actors/d_a_bakubaku.cpp:
     complete
@@ -78,31 +51,53 @@ src/game/actors/d_a_obj_td_water.cpp:
 
 src/unnamed/ov032/data_ov032_02112fd0.c:
     complete
-    .data.data_ov032_02112fd0 start:0x02112fd0 end:0x02112fd8
-    .data.data_ov032_02112fd8 start:0x02112fd8 end:0x02112ffc
-    .data.data_ov032_02112ffc start:0x02112ffc end:0x02113008
-    .data.data_ov032_02113008 start:0x02113008 end:0x02113040
-    .data.data_ov032_02113040 start:0x02113040 end:0x02113080
-    .data.data_ov032_02113080 start:0x02113080 end:0x021130c8
-    .data.data_ov032_021130c8 start:0x021130c8 end:0x021130cc
-    .data.data_ov032_021130cc start:0x021130cc end:0x021130d0
-    .data.data_ov032_021130d0 start:0x021130d0 end:0x02113148
-    .data.data_ov032_02113148 start:0x02113148 end:0x021131c8
-    .data.data_ov032_021131c8 start:0x021131c8 end:0x02113228
-    .data.data_ov032_02113228 start:0x02113228 end:0x0211326c
-    .data.data_ov032_0211326c start:0x0211326c end:0x021132ec
-    .data.data_ov032_021132ec start:0x021132ec end:0x02113344
-    .data.data_ov032_02113344 start:0x02113344 end:0x0211336c
-    .data.data_ov032_0211336c start:0x0211336c end:0x021133a8
-    .data.data_ov032_021133a8 start:0x021133a8 end:0x02113434
-    .data.data_ov032_02113434 start:0x02113434 end:0x0211346c
-    .data.data_ov032_0211346c start:0x0211346c end:0x02113518
-    .data.data_ov032_02113518 start:0x02113518 end:0x02113534
-    .data.data_ov032_02113534 start:0x02113534 end:0x02113554
-    .data.data_ov032_02113554 start:0x02113554 end:0x021135d4
-    .data.data_ov032_021135d4 start:0x021135d4 end:0x021135f4
-    .data.data_ov032_021135f4 start:0x021135f4 end:0x021136d4
-    .data.data_ov032_021136d4 start:0x021136d4 end:0x021136f4
-    .data.data_ov032_021136f4 start:0x021136f4 end:0x0211373c
-    .data.data_ov032_0211373c start:0x0211373c end:0x0211377c
+    .data start:0x02112fd0 end:0x02112ffc
+
+src/unnamed/ov032/data_ov032_02112ffc.c:
+    complete
+    .data start:0x02112ffc end:0x021130c8
+
+src/unnamed/ov032/data_ov032_021130c8.c:
+    complete
+    .data start:0x021130c8 end:0x021130d0
+
+src/unnamed/ov032/data_ov032_021130d0.c:
+    complete
+    .data start:0x021130d0 end:0x021131c8
+
+src/unnamed/ov032/data_ov032_021131c8.c:
+    complete
+    .data start:0x021131c8 end:0x02113228
+
+src/unnamed/ov032/data_ov032_02113228.c:
+    complete
+    .data start:0x02113228 end:0x021132ec
+
+src/unnamed/ov032/data_ov032_021132ec.c:
+    complete
+    .data start:0x021132ec end:0x02113344
+
+src/unnamed/ov032/data_ov032_02113344.c:
+    complete
+    .data start:0x02113344 end:0x02113434
+
+src/unnamed/ov032/data_ov032_02113434.c:
+    complete
+    .data start:0x02113434 end:0x02113518
+
+src/unnamed/ov032/data_ov032_02113518.c:
+    complete
+    .data start:0x02113518 end:0x021135d4
+
+src/unnamed/ov032/data_ov032_021135d4.c:
+    complete
+    .data start:0x021135d4 end:0x021136d4
+
+src/unnamed/ov032/data_ov032_021136d4.c:
+    complete
+    .data start:0x021136d4 end:0x0211373c
+
+src/unnamed/ov032/data_ov032_0211373c.c:
+    complete
+    .data start:0x0211373c end:0x0211377c
 

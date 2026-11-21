@@ -1,12 +1,6 @@
     .text       start:0x021111a0 end:0x0211354c kind:code align:32
-    .rodata     start:0x021136dc end:0x021136ec kind:rodata align:4
+    .rodata      start:0x02113550 end:0x021136ec kind:rodata align:4
     .rodata.slideBoxKeys start:0x0211354c end:0x02113550 kind:rodata align:4
-    .rodata.data_ov016_02113550 start:0x02113550 end:0x02113554 kind:rodata align:4
-    .rodata.data_ov016_02113554 start:0x02113554 end:0x02113570 kind:rodata align:4
-    .rodata.data_ov016_02113570 start:0x02113570 end:0x021135d4 kind:rodata align:4
-    .rodata.data_ov016_021135d4 start:0x021135d4 end:0x021135f4 kind:rodata align:4
-    .rodata.data_ov016_021135f4 start:0x021135f4 end:0x021136d4 kind:rodata align:4
-    .rodata.data_ov016_021136d4 start:0x021136d4 end:0x021136dc kind:rodata align:4
     .init       start:0x021136ec end:0x02113abc kind:code align:4
     .ctor       start:0x02113abc end:0x02113ad0 kind:rodata align:4
     .data.slideBox start:0x02113ae0 end:0x02113bcc kind:data align:32
@@ -15,7 +9,7 @@
     .data.hasira_mid start:0x02113c0c end:0x02113c4c kind:data align:4
     .data.kiFuneClps start:0x02113c4c end:0x02113c8c kind:data align:4
     .data.hasira start:0x02113c8c end:0x02114878 kind:data align:4
-    .data       start:0x02114878 end:0x02114908 kind:data align:4
+    .data        start:0x02114878 end:0x02114908 kind:data align:4
     .data.morayBend start:0x02114908 end:0x02114950 kind:data align:4
     .data.morayTail start:0x02114950 end:0x02114d20 kind:data align:4
     .bss        start:0x02114d20 end:0x02114ea0 kind:bss align:32
@@ -68,9 +62,13 @@ src/game/actors/d_a_slide_box.cpp:
 
 src/unnamed/ov016/data_ov016_02113550.c:
     complete
-    .rodata.data_ov016_02113550 start:0x02113550 end:0x02113554
-    .rodata.data_ov016_02113554 start:0x02113554 end:0x02113570
-    .rodata.data_ov016_02113570 start:0x02113570 end:0x021135d4
-    .rodata.data_ov016_021135d4 start:0x021135d4 end:0x021135f4
-    .rodata.data_ov016_021135f4 start:0x021135f4 end:0x021136d4
-    .rodata.data_ov016_021136d4 start:0x021136d4 end:0x021136dc
+    .rodata start:0x02113550 end:0x021135d4
+
+src/unnamed/ov016/data_ov016_021135d4.c:
+    complete
+    .rodata start:0x021135d4 end:0x021136d4
+
+src/unnamed/ov016/data_ov016_021136d4.c:
+    complete
+    .rodata start:0x021136d4 end:0x021136dc
+

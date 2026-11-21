@@ -1,0 +1,13 @@
+#include "types.h"
+
+const u32 data_ov053_021120a4[6] = {
+    0xfffffe32, 0xfffffe4c, 0xfffffe6f, 0xfffffe98, 0xfffffec9, 0xfffffeff,
+};
+
+const u32 data_ov053_021120bc[7] = {
+    0xffffff39, 0xffffff77, 0xffffffb8, 0xfffffffa, 0x0000003c, 0x0000007e, 0x000000bf,
+};
+
+const u32 data_ov053_021120d8[8] = {
+    0x000000fd, 0x00000137, 0x0000016d, 0x0000019d, 0x000001c7, 0x000001e9, 0x00000203, 0x00000213,
+};

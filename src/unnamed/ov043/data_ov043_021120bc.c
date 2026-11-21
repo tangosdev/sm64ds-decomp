@@ -1,0 +1,9 @@
+#include "types.h"
+
+u32 data_ov043_021120bc[7] = {
+    0xffff0000, 0xe79b001e, 0x0ee5f4f2, 0x00000000, 0xff060000, 0xf6d2001f, 0x0e10fb82,
+};
+
+u32 data_ov043_021120d8[8] = {
+    0x00000000, 0xff020000, 0xec78001f, 0xf7c205aa, 0x00000000, 0x03000000, 0xed8b001f, 0xfed40546,
+};
