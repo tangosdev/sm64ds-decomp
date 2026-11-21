@@ -147,19 +147,20 @@ class PortedBarCountsFunctions(Scratch):
         self.assertEqual((t["linked"], t["linkedOf"]), (7, 9))
         self.assertEqual((t["ported"], t["portedOf"]), (2, 3))
 
-    def test_the_readme_rows_say_functions_or_tus(self):
+    def test_the_readme_block_does_not_print_ported(self):
         self.stamp()
         self.listing()
-        block = lambda: tiers.bar_block({"matched": None,
-                                         "linked": {"linked": 7, "of": 9, "pct": 77.78},
-                                         "ported": tiers.ported()})
-        self.assertTrue(block().splitlines()[-2].endswith("2 / 5 functions"))
-        self.assertTrue(block().splitlines()[-3].endswith("7 / 9 functions"))
+        block = tiers.bar_block({"matched": None,
+                                 "linked": {"linked": 7, "of": 9, "pct": 77.78},
+                                 "ported": tiers.ported()})
+        self.assertNotIn("PORTED", block)
+        self.assertTrue(block.splitlines()[-2].endswith("7 / 9 functions"))
         (self.root / "config" / "port_linked_functions.txt").unlink()
         block2 = tiers.bar_block({"matched": None,
                                   "linked": {"linked": 7, "of": 9, "pct": 77.78},
-                                  "ported": tiers.ported()}).splitlines()
-        self.assertTrue(block2[-2].endswith("2 / 3 matched TUs"), block2)
+                                  "ported": tiers.ported()})
+        self.assertNotIn("PORTED", block2)
+        self.assertTrue(block2.splitlines()[-2].endswith("7 / 9 functions"))
 
 
 class LinkedIsLiveRomLink(Scratch):
